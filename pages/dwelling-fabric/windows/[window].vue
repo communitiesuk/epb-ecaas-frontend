@@ -287,7 +287,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<FormKit
-		id="securityRisk"
+			id="securityRisk"
 			name="securityRisk"
 			type="govBoolean"
 			label="Is having this window open a security risk?"

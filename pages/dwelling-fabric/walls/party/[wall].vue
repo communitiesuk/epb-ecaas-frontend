@@ -6,7 +6,7 @@ const title = "Party wall";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const partyWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data
+const partyWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data;
 const wallData = useItemToEdit("wall", partyWallData);
 const wallId = wallData?.data.id ?? uuidv4();
 const index = getStoreIndex(partyWallData);

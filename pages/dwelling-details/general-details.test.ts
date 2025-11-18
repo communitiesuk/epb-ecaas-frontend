@@ -219,6 +219,6 @@ describe("General details", () => {
 		expect(
 			errorSummary.textContent.includes("Select Mains gas, LPG (Liquid petroleum gas) or select Electricity is the only energy source"),
 		).toBe(true);
-	})
+	});
 });
 

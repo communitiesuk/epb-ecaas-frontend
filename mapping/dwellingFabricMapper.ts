@@ -6,41 +6,41 @@ import type { Length } from "../utils/units/length";
 import { asMetres } from "../utils/units/length";
 
 function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
-  // note - use parseFloat and toFixed to avoid JS precision issues
-  return parseFloat((1 - openingToFrameRatio).toFixed(10));
+	// note - use parseFloat and toFixed to avoid JS precision issues
+	return parseFloat((1 - openingToFrameRatio).toFixed(10));
 }
 
 export function mapLivingSpaceFabricData(
-  state: ResolvedState
+	state: ResolvedState,
 ): Partial<FhsInputSchema> {
-  const zoneParameterData = mapZoneParametersData(state);
-  const lightingData = mapLightingData(state);
-  const floorData = mapFloorData(state);
-  const wallData = mapWallData(state);
-  const ceilingAndRoofData = mapCeilingAndRoofData(state);
-  const doorData = mapDoorData(state);
-  const windowData = mapWindowData(state);
-  const thermalBridgingData = mapThermalBridgingData(state);
+	const zoneParameterData = mapZoneParametersData(state);
+	const lightingData = mapLightingData(state);
+	const floorData = mapFloorData(state);
+	const wallData = mapWallData(state);
+	const ceilingAndRoofData = mapCeilingAndRoofData(state);
+	const doorData = mapDoorData(state);
+	const windowData = mapWindowData(state);
+	const thermalBridgingData = mapThermalBridgingData(state);
 
-  return merge.all([
-    zoneParameterData,
-    lightingData,
-    floorData,
-    wallData,
-    ceilingAndRoofData,
-    doorData,
-    windowData,
-    thermalBridgingData,
-  ]);
+	return merge.all([
+		zoneParameterData,
+		lightingData,
+		floorData,
+		wallData,
+		ceilingAndRoofData,
+		doorData,
+		windowData,
+		thermalBridgingData,
+	]);
 }
 
 const defaultUValue = 0.01;
 const suffixName = (name: string, suffix: string) => `${name} (${suffix})`;
 
 export function mapZoneParametersData(
-  state: ResolvedState
+	state: ResolvedState,
 ): Pick<FhsInputSchema, "HeatingControlType" | "Zone"> {
-  const { dwellingSpaceZoneParameters } = state.dwellingFabric;
+	const { dwellingSpaceZoneParameters } = state.dwellingFabric;
 
 	const spaceHeatingSystemNames = [
 		state.heatingAndCoolingSystems.heatEmitting.wetDistribution.map(x => x.name),
@@ -72,13 +72,13 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zon
 		},
 	};
 
-  return {
-    Zone: {
-      [defaultZoneName]: {
-        Lighting: lightingData,
-      } as Partial<SchemaZoneInput>,
-    },
-  } as Pick<FhsInputSchema, "HeatingControlType" | "Zone">;
+	return {
+		Zone: {
+			[defaultZoneName]: {
+				Lighting: lightingData,
+			} as Partial<SchemaZoneInput>,
+		},
+	} as Pick<FhsInputSchema, "HeatingControlType" | "Zone">;
 }
 
 export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "GroundFloorArea" | "Zone"> {
@@ -443,18 +443,18 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 	const doorSuffix = "door";
-  const { dwellingSpaceInternalWall, dwellingSpaceExternalWall } =
+	const { dwellingSpaceInternalWall, dwellingSpaceExternalWall } =
     state.dwellingFabric.dwellingSpaceWalls;
-  const { dwellingSpaceCeilings, dwellingSpaceRoofs } =
+	const { dwellingSpaceCeilings, dwellingSpaceRoofs } =
     state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map((x) => {
-      const associatedHeatedSpaceElement = getResolvedTaggedItem(
-        [dwellingSpaceInternalWall, dwellingSpaceCeilings],
-        x.associatedItemId
-      )!;
-    const commonFields = {
-      pitch: extractPitch(associatedHeatedSpaceElement),
+		const associatedHeatedSpaceElement = getResolvedTaggedItem(
+			[dwellingSpaceInternalWall, dwellingSpaceCeilings],
+			x.associatedItemId,
+		)!;
+		const commonFields = {
+			pitch: extractPitch(associatedHeatedSpaceElement),
 			area: x.surfaceArea,
 			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
@@ -482,16 +482,16 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	});
 
 	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalGlazedDoor.map((x) => {
-		  const associatedWallRoof = getResolvedTaggedItem(
-        [dwellingSpaceExternalWall, dwellingSpaceRoofs],
-        x.associatedItemId
-      )!;
-    const nameWithSuffix = suffixName(x.name, doorSuffix);
+		const associatedWallRoof = getResolvedTaggedItem(
+			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
+			x.associatedItemId,
+		)!;
+		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
 		const glazedDoor = {
 			type: "BuildingElementTransparent",
-      pitch: extractPitch(associatedWallRoof),
-      orientation360: associatedWallRoof.orientation!,
+			pitch: extractPitch(associatedWallRoof),
+			orientation360: associatedWallRoof.orientation!,
 			height: x.height,
 			mid_height: x.midHeight,
 			width: x.width,
@@ -515,16 +515,16 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 
 	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalUnglazedDoor.map((x) => {
 		const associatedWallRoof = getResolvedTaggedItem(
-        [dwellingSpaceExternalWall, dwellingSpaceRoofs],
-        x.associatedItemId
-      )!;
-    const nameWithSuffix = suffixName(x.name, doorSuffix);
+			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
+			x.associatedItemId,
+		)!;
+		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementOpaque",
-        pitch: extractPitch(associatedWallRoof),
-        orientation360: associatedWallRoof.orientation!,
+				pitch: extractPitch(associatedWallRoof),
+				orientation360: associatedWallRoof.orientation!,
 				height: x.height,
 				width: x.width,
 				base_height: x.elevationalHeight,
@@ -554,8 +554,8 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 
 export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceWindows } = state.dwellingFabric;
-  const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
-  const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+	const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
+	const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	const windowSuffix = "window";
 
 	function mapWindowPartList(data: WindowData): SchemaWindowPart[] {
@@ -623,16 +623,16 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			depth: inMetres(x.sideFinRightDepth),
 			distance: inMetres(x.sideFinRightDistance),
 		}] : [];
-    const associatedElement = getResolvedTaggedItem(
-      [dwellingSpaceExternalWall, dwellingSpaceRoofs],
-      x.taggedItem
-      )!;
+		const associatedElement = getResolvedTaggedItem(
+			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
+			x.taggedItem,
+		)!;
 
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementTransparent",
-        pitch: extractPitch(associatedElement),
-        orientation360: associatedElement.orientation!,
+				pitch: extractPitch(associatedElement),
+				orientation360: associatedElement.orientation!,
 				height: x.height,
 				width: x.width,
 				base_height: x.elevationalHeight,
@@ -659,19 +659,19 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 }
 
 export function mapThermalBridgingData(
-  state: ResolvedState
+	state: ResolvedState,
 ): Pick<FhsInputSchema, "Zone"> {
-  const {
-    dwellingSpaceLinearThermalBridges,
-    dwellingSpacePointThermalBridges,
-  } = state.dwellingFabric.dwellingSpaceThermalBridging;
-  const bridgeSuffix = "bridge";
+	const {
+		dwellingSpaceLinearThermalBridges,
+		dwellingSpacePointThermalBridges,
+	} = state.dwellingFabric.dwellingSpaceThermalBridging;
+	const bridgeSuffix = "bridge";
 
-  const linearThermalBridgesData: Record<
-    string,
-    SchemaThermalBridgingLinearFhs
-  >[] = dwellingSpaceLinearThermalBridges.map((x) => {
-    const nameWithSuffix = suffixName(x.name, bridgeSuffix);
+	const linearThermalBridgesData: Record<
+		string,
+		SchemaThermalBridgingLinearFhs
+	>[] = dwellingSpaceLinearThermalBridges.map((x) => {
+		const nameWithSuffix = suffixName(x.name, bridgeSuffix);
 
 		return {
 			[nameWithSuffix]: {

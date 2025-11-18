@@ -160,27 +160,27 @@ export const useEcaasStore = defineStore("ecaas", {
 			};
 		},
 	},
-	  actions: {
-    removeTaggedAssociations() {
-      return <T extends Record<string, unknown>>(
-        sections: EcaasFormList<T>[],
-        idToRemove: string | undefined,
-        keyToCheck: keyof T = "associatedItemId"
-      ) => {
-        for (const section of sections) {
-          section.data.find((item) => {
-            const idOfTaggedItem = (item.data as Partial<T>)[keyToCheck];
-            if (idOfTaggedItem === idToRemove) {
-              this.$patch(() => {
-                (item.data as Partial<T>)[keyToCheck] = undefined;
-                item.complete = false;
-                section.complete = false;
-              });
-            }
-          });
-        }
-      };
-    },
+	actions: {
+		removeTaggedAssociations() {
+			return <T extends Record<string, unknown>>(
+				sections: EcaasFormList<T>[],
+				idToRemove: string | undefined,
+				keyToCheck: keyof T = "associatedItemId",
+			) => {
+				for (const section of sections) {
+					section.data.find((item) => {
+						const idOfTaggedItem = (item.data as Partial<T>)[keyToCheck];
+						if (idOfTaggedItem === idToRemove) {
+							this.$patch(() => {
+								(item.data as Partial<T>)[keyToCheck] = undefined;
+								item.complete = false;
+								section.complete = false;
+							});
+						}
+					});
+				}
+			};
+		},
 		async postEcaasState (){
 			try {
 				await $fetch("/api/session", {

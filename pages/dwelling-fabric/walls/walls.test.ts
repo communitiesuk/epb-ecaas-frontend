@@ -22,96 +22,96 @@ describe("walls", () => {
 	afterEach(() => {
 		store.$reset();
 	});
-   const external1: ExternalWallData = {
-    id: "8bb5eda9-3c31-44d0-801b-f130a63b9f6a",
-    name: "External wall 1",
-    pitchOption: "90",
-    pitch: 90,
-    orientation: 0,
-    height: 0.5,
-    length: 20,
-    elevationalHeight: 20,
-    surfaceArea: 10,
-    uValue: 1,
+	const external1: ExternalWallData = {
+		id: "8bb5eda9-3c31-44d0-801b-f130a63b9f6a",
+		name: "External wall 1",
+		pitchOption: "90",
+		pitch: 90,
+		orientation: 0,
+		height: 0.5,
+		length: 20,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		uValue: 1,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
-    massDistributionClass: "I",
-  };
+		massDistributionClass: "I",
+	};
 
-  const external2: ExternalWallData = {
-    ...external1,
-    id: "eaa950f1-d534-4e06-aeec-22796e79215e",
-    name: "External wall 2",
-  };
+	const external2: ExternalWallData = {
+		...external1,
+		id: "eaa950f1-d534-4e06-aeec-22796e79215e",
+		name: "External wall 2",
+	};
 
-  const external3: ExternalWallData = {
-    ...external1,
-    id: "116eb859-e576-4ec1-8802-dfc66916e88b",
-    name: "External wall 3",
-  };
+	const external3: ExternalWallData = {
+		...external1,
+		id: "116eb859-e576-4ec1-8802-dfc66916e88b",
+		name: "External wall 3",
+	};
 
-  const internal1: InternalWallData = {
-    id: "cb995019-718c-4074-b56c-37826abf1fc5",
-    name: "Internal wall 1",
-    surfaceAreaOfElement: 5,
-    arealHeatCapacity: "Very light",
-    massDistributionClass: "I",
-    pitchOption: "custom",
-    pitch: 3,
-  };
+	const internal1: InternalWallData = {
+		id: "cb995019-718c-4074-b56c-37826abf1fc5",
+		name: "Internal wall 1",
+		surfaceAreaOfElement: 5,
+		arealHeatCapacity: "Very light",
+		massDistributionClass: "I",
+		pitchOption: "custom",
+		pitch: 3,
+	};
 
-  const internal2: InternalWallData = {
-    ...internal1,
-    name: "Internal wall 2",
-  };
+	const internal2: InternalWallData = {
+		...internal1,
+		name: "Internal wall 2",
+	};
 
-  const internal3: InternalWallData = {
-    ...internal1,
-    name: "Internal wall 3",
-  };
+	const internal3: InternalWallData = {
+		...internal1,
+		name: "Internal wall 3",
+	};
 
-  const toUnheatedSpace1: WallsToUnheatedSpaceData = {
-    id: "7da5aa7a-f24a-40f7-a5a3-97ea4d6f31d7",
-    name: "Wall to heated space 1",
-    surfaceAreaOfElement: 500,
-    uValue: 10,
-    arealHeatCapacity: "Medium",
-    massDistributionClass: "E",
-    pitchOption: "90",
-    pitch: 90,
-    thermalResistanceOfAdjacentUnheatedSpace: 1,
-  };
+	const toUnheatedSpace1: WallsToUnheatedSpaceData = {
+		id: "7da5aa7a-f24a-40f7-a5a3-97ea4d6f31d7",
+		name: "Wall to heated space 1",
+		surfaceAreaOfElement: 500,
+		uValue: 10,
+		arealHeatCapacity: "Medium",
+		massDistributionClass: "E",
+		pitchOption: "90",
+		pitch: 90,
+		thermalResistanceOfAdjacentUnheatedSpace: 1,
+	};
 
-  const toUnheatedSpace2: WallsToUnheatedSpaceData = {
-    ...toUnheatedSpace1,
-    name: "Wall to heated space 2",
-  };
+	const toUnheatedSpace2: WallsToUnheatedSpaceData = {
+		...toUnheatedSpace1,
+		name: "Wall to heated space 2",
+	};
 
-  const toUnheatedSpace3: WallsToUnheatedSpaceData = {
-    ...toUnheatedSpace1,
-    name: "Wall to heated space 3",
-  };
+	const toUnheatedSpace3: WallsToUnheatedSpaceData = {
+		...toUnheatedSpace1,
+		name: "Wall to heated space 3",
+	};
 
-  const party1: PartyWallData = {
-    id: "974e8749-f465-4f43-a38a-3d0b97060a64",
-    name: "Party wall 1",
-    pitchOption: "90",
-    pitch: 90,
-    surfaceArea: 10,
-    uValue: 0.01,
-    arealHeatCapacity: "Very light",
-    massDistributionClass: "I",
-  };
+	const party1: PartyWallData = {
+		id: "974e8749-f465-4f43-a38a-3d0b97060a64",
+		name: "Party wall 1",
+		pitchOption: "90",
+		pitch: 90,
+		surfaceArea: 10,
+		uValue: 0.01,
+		arealHeatCapacity: "Very light",
+		massDistributionClass: "I",
+	};
 
-  const party2: PartyWallData = {
-    ...party1,
-    name: "Party wall 2",
-  };
+	const party2: PartyWallData = {
+		...party1,
+		name: "Party wall 2",
+	};
 
-  const party3: PartyWallData = {
-    ...party1,
-    name: "Party wall 3",
-  };
+	const party3: PartyWallData = {
+		...party1,
+		name: "Party wall 3",
+	};
 
 
 	describe("External walls", () => {
@@ -160,75 +160,75 @@ describe("walls", () => {
 			expect(within(populatedList).queryByText("External wall 2")).toBeNull();
 		});
 
-    test("when an external wall is removed its also removed from any store item that references it", async () => {
-      const vent1: Partial<VentData> = {
-        name: "Vent 1",
-        associatedItemId: external1.id,
-      };
+		test("when an external wall is removed its also removed from any store item that references it", async () => {
+			const vent1: Partial<VentData> = {
+				name: "Vent 1",
+				associatedItemId: external1.id,
+			};
 
-      const window1: Partial<WindowData> = {
-        id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
-        name: "Window 1",
-        taggedItem: external1.id,
-      };
+			const window1: Partial<WindowData> = {
+				id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
+				name: "Window 1",
+				taggedItem: external1.id,
+			};
 
-      const externalUnglazed: Partial<ExternalUnglazedDoorData> = {
-        name: "external unglazed name",
-        associatedItemId: external1.id,
-      };
+			const externalUnglazed: Partial<ExternalUnglazedDoorData> = {
+				name: "external unglazed name",
+				associatedItemId: external1.id,
+			};
 
-      const externalGlazed: Partial<ExternalGlazedDoorData> = {
-        name: "external glazed name",
-        associatedItemId: external1.id,
-      };
+			const externalGlazed: Partial<ExternalGlazedDoorData> = {
+				name: "external glazed name",
+				associatedItemId: external1.id,
+			};
 
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceExternalWall: {
-              data: [{ data: external1 }],
-            },
-          },
-          dwellingSpaceWindows: {
-            data: [{ data: window1, complete: true }],
-          },
-          dwellingSpaceDoors: {
-            dwellingSpaceExternalGlazedDoor: {
-              data: [{ data: externalGlazed, complete: true }],
-            },
-            dwellingSpaceExternalUnglazedDoor: {
-              data: [{ data: externalUnglazed, complete: true }],
-            },
-          },
-        },
-        infiltrationAndVentilation: {
-          vents: {
-            data: [{ data: vent1, complete: true }],
-          },
-        },
-      });
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: external1 }],
+						},
+					},
+					dwellingSpaceWindows: {
+						data: [{ data: window1, complete: true }],
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: externalGlazed, complete: true }],
+						},
+						dwellingSpaceExternalUnglazedDoor: {
+							data: [{ data: externalUnglazed, complete: true }],
+						},
+					},
+				},
+				infiltrationAndVentilation: {
+					vents: {
+						data: [{ data: vent1, complete: true }],
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
+			await renderSuspended(Walls);
 
-      await user.click(await screen.findByTestId("external_remove_0"));
+			await user.click(await screen.findByTestId("external_remove_0"));
 
-      const vent = store.infiltrationAndVentilation.vents.data[0];
-      expect(vent?.data.associatedItemId).toBeUndefined();
-      expect(vent?.complete).toBe(false);
+			const vent = store.infiltrationAndVentilation.vents.data[0];
+			expect(vent?.data.associatedItemId).toBeUndefined();
+			expect(vent?.complete).toBe(false);
 
-      const window = store.dwellingFabric.dwellingSpaceWindows.data[0];
-      expect(window?.data.taggedItem).toBeUndefined();
-      expect(window?.complete).toBe(false);
+			const window = store.dwellingFabric.dwellingSpaceWindows.data[0];
+			expect(window?.data.taggedItem).toBeUndefined();
+			expect(window?.complete).toBe(false);
 
-      const glazedDoor =
+			const glazedDoor =
         store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor
-          .data[0]?.data;
-      expect(glazedDoor?.associatedItemId).toBeUndefined();
-      const unglazedDoor =
+        	.data[0]?.data;
+			expect(glazedDoor?.associatedItemId).toBeUndefined();
+			const unglazedDoor =
         store.dwellingFabric.dwellingSpaceDoors
-          .dwellingSpaceExternalUnglazedDoor.data[0]?.data;
-      expect(unglazedDoor?.associatedItemId).toBeUndefined();
-    });
+        	.dwellingSpaceExternalUnglazedDoor.data[0]?.data;
+			expect(unglazedDoor?.associatedItemId).toBeUndefined();
+		});
 
 		test("wall is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
@@ -342,41 +342,41 @@ describe("walls", () => {
 			expect(within(populatedList).queryByText("Internal wall 2")).toBeNull();
 		});
 
-     test("when an internal wall is removed its also removed from any store item that references it", async () => {
-      const doorToHeatedSpace: Partial<InternalDoorData> = {
-        typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
-        name: "Internal door to heated",
-        associatedItemId: internal1.id,
-      };
-      const vent1: Partial<VentData> = {
-        name: "Vent 1",
-        associatedItemId: internal1.id,
-      };
+		test("when an internal wall is removed its also removed from any store item that references it", async () => {
+			const doorToHeatedSpace: Partial<InternalDoorData> = {
+				typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+				name: "Internal door to heated",
+				associatedItemId: internal1.id,
+			};
+			const vent1: Partial<VentData> = {
+				name: "Vent 1",
+				associatedItemId: internal1.id,
+			};
 
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceInternalWall: {
-              data: [{ data: internal1 }],
-            },
-          },
-          dwellingSpaceDoors: {
-            dwellingSpaceInternalDoor: {
-              data: [{ data: doorToHeatedSpace, complete: true }],
-            },
-          },
-        },
-      });
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceInternalWall: {
+							data: [{ data: internal1 }],
+						},
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceInternalDoor: {
+							data: [{ data: doorToHeatedSpace, complete: true }],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
+			await renderSuspended(Walls);
 
-      await user.click(await screen.findByTestId("internal_remove_0"));
+			await user.click(await screen.findByTestId("internal_remove_0"));
 
-      const unheatedDoor =
+			const unheatedDoor =
         store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor
-          .data[0]?.data;
-      expect(unheatedDoor?.associatedItemId).toBeUndefined();
-    });
+        	.data[0]?.data;
+			expect(unheatedDoor?.associatedItemId).toBeUndefined();
+		});
 
 		test("wall is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
@@ -496,41 +496,41 @@ describe("walls", () => {
 			).toBeNull();
 		});
 
-     test("when a wall to unheated space is removed its also removed from any store item that references it", async () => {
-      const doorToUnheatedSpace: Partial<InternalDoorData> = {
-        typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
-        name: "Internal to unheated",
-        associatedItemId: toUnheatedSpace1.id,
-      };
-      const vent1: Partial<VentData> = {
-        name: "Vent 1",
-        associatedItemId: toUnheatedSpace1.id,
-      };
+		test("when a wall to unheated space is removed its also removed from any store item that references it", async () => {
+			const doorToUnheatedSpace: Partial<InternalDoorData> = {
+				typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+				name: "Internal to unheated",
+				associatedItemId: toUnheatedSpace1.id,
+			};
+			const vent1: Partial<VentData> = {
+				name: "Vent 1",
+				associatedItemId: toUnheatedSpace1.id,
+			};
 
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceWallToUnheatedSpace: {
-              data: [{ data: toUnheatedSpace1 }],
-            },
-          },
-          dwellingSpaceDoors: {
-            dwellingSpaceInternalDoor: {
-              data: [{ data: doorToUnheatedSpace, complete: true }],
-            },
-          },
-        },
-      });
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceWallToUnheatedSpace: {
+							data: [{ data: toUnheatedSpace1 }],
+						},
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceInternalDoor: {
+							data: [{ data: doorToUnheatedSpace, complete: true }],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
+			await renderSuspended(Walls);
 
-      await user.click(await screen.findByTestId("toHeatedSpace_remove_0"));
+			await user.click(await screen.findByTestId("toHeatedSpace_remove_0"));
 
-      const door =
+			const door =
         store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor
-          .data[0]?.data;
-      expect(door?.associatedItemId).toBeUndefined();
-    });
+        	.data[0]?.data;
+			expect(door?.associatedItemId).toBeUndefined();
+		});
 
 		test("wall is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
@@ -644,43 +644,43 @@ describe("walls", () => {
 			expect(within(populatedList).queryByText("Party wall 2")).toBeNull();
 		});
 
-     test("when a party wall is removed its also removed from any store item that references it", async () => {
-      const doorToUnheatedSpace: Partial<InternalDoorData> = {
-        typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
-        name: "Internal to unheated",
-        associatedItemId: party1.id,
-      };
+		test("when a party wall is removed its also removed from any store item that references it", async () => {
+			const doorToUnheatedSpace: Partial<InternalDoorData> = {
+				typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+				name: "Internal to unheated",
+				associatedItemId: party1.id,
+			};
 
-      const vent1: Partial<VentData> = {
-        name: "Vent 1",
-        associatedItemId: party1.id,
-      };
+			const vent1: Partial<VentData> = {
+				name: "Vent 1",
+				associatedItemId: party1.id,
+			};
 
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpacePartyWall: {
-              data: [{ data: party1 }],
-            },
-          },
-          dwellingSpaceDoors: {
-            dwellingSpaceInternalDoor: {
-              data: [{ data: doorToUnheatedSpace, complete: true }],
-            },
-          },
-        },
-      });
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpacePartyWall: {
+							data: [{ data: party1 }],
+						},
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceInternalDoor: {
+							data: [{ data: doorToUnheatedSpace, complete: true }],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
+			await renderSuspended(Walls);
 
-      await user.click(await screen.findByTestId("party_remove_0"));
+			await user.click(await screen.findByTestId("party_remove_0"));
 
-      const door =
+			const door =
         store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor
-          .data[0]?.data;
-      expect(door?.associatedItemId).toBeUndefined();
+        	.data[0]?.data;
+			expect(door?.associatedItemId).toBeUndefined();
 
-    });
+		});
 
 		test("wall is duplicated when duplicate link is clicked", async () => {
 			store.$patch({

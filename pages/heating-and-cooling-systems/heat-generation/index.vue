@@ -4,8 +4,8 @@ import formStatus from "~/constants/formStatus";
 const title = "Heat generation";
 const page = usePage();
 const store = useEcaasStore();
-const { hotWaterCylinder } = store.domesticHotWater.waterHeating
-const { wetDistribution } = store.heatingAndCoolingSystems.heatEmitting
+const { hotWaterCylinder } = store.domesticHotWater.waterHeating;
+const { wetDistribution } = store.heatingAndCoolingSystems.heatEmitting;
 
 type HeatGenerationType = keyof typeof store.heatingAndCoolingSystems.heatGeneration;
 

@@ -78,10 +78,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			:validation-rules="{ uniqueName: uniqueName(store.dwellingDetails.shading.data, { index }) }"
-				validation="required | uniqueName"
-				:validation-messages="{
-					uniqueName: 'An element with this name already exists. Please enter a unique name.'
-				}"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="startAngle"

@@ -216,213 +216,213 @@ describe("infiltration ventilation mapper", () => {
 		expect(firstMechVent?.ductwork).toBeUndefined();
 	});
 
-  it("maps vents to FHS input request", async () => {
-    const ventName = "Acme";
+	it("maps vents to FHS input request", async () => {
+		const ventName = "Acme";
 
-    // Arrange
-    const externalWallId = "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421";
-    const externalWall: EcaasForm<ExternalWallData>[] = [
-      {
-        ...baseForm,
-        data: {
-          id: externalWallId,
-          name: "External wall 1",
-          pitchOption: "custom",
-          pitch: 45,
-          orientation: 180,
-          length: 20,
-          height: 0.5,
-          elevationalHeight: 20,
-          surfaceArea: 10,
-          uValue: 1,
+		// Arrange
+		const externalWallId = "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421";
+		const externalWall: EcaasForm<ExternalWallData>[] = [
+			{
+				...baseForm,
+				data: {
+					id: externalWallId,
+					name: "External wall 1",
+					pitchOption: "custom",
+					pitch: 45,
+					orientation: 180,
+					length: 20,
+					height: 0.5,
+					elevationalHeight: 20,
+					surfaceArea: 10,
+					uValue: 1,
 					colour: "Intermediate",
 					arealHeatCapacity: "Very light",
-          massDistributionClass: "I",
-        },
-      },
-    ];
+					massDistributionClass: "I",
+				},
+			},
+		];
 
-    const window: WindowData = {
-      id: "test-id-1",
-      name: "Window 1",
-      taggedItem: externalWallId,
-      height: 1,
-      width: 1,
-      uValue: 1,
-      solarTransmittance: 0.1,
-      elevationalHeight: 1,
-      midHeight: 1,
-      numberOpenableParts: "1",
-      overhangDepth: unitValue(1000, millimetre),
-      overhangDistance: unitValue(1000, millimetre),
-      sideFinRightDepth: unitValue(1000, millimetre),
-      sideFinRightDistance: unitValue(1000, millimetre),
-      sideFinLeftDepth: unitValue(1000, millimetre),
-      sideFinLeftDistance: unitValue(1000, millimetre),
-      curtainsOrBlinds: true,
-      treatmentType: "blinds",
-      thermalResistivityIncrease: 1,
-      solarTransmittanceReduction: 0.1,
-      midHeightOpenablePart1: 1,
-      openingToFrameRatio: 0.3,
-      maximumOpenableArea: 1,
-      heightOpenableArea: 1,
-      securityRisk: false
-    };
+		const window: WindowData = {
+			id: "test-id-1",
+			name: "Window 1",
+			taggedItem: externalWallId,
+			height: 1,
+			width: 1,
+			uValue: 1,
+			solarTransmittance: 0.1,
+			elevationalHeight: 1,
+			midHeight: 1,
+			numberOpenableParts: "1",
+			overhangDepth: unitValue(1000, millimetre),
+			overhangDistance: unitValue(1000, millimetre),
+			sideFinRightDepth: unitValue(1000, millimetre),
+			sideFinRightDistance: unitValue(1000, millimetre),
+			sideFinLeftDepth: unitValue(1000, millimetre),
+			sideFinLeftDistance: unitValue(1000, millimetre),
+			curtainsOrBlinds: true,
+			treatmentType: "blinds",
+			thermalResistivityIncrease: 1,
+			solarTransmittanceReduction: 0.1,
+			midHeightOpenablePart1: 1,
+			openingToFrameRatio: 0.3,
+			maximumOpenableArea: 1,
+			heightOpenableArea: 1,
+			securityRisk: false,
+		};
 
-    const ventData: EcaasForm<VentData>[] = [
-      {
-        ...baseForm,
-        data: {
-          name: ventName,
-          typeOfVent: "airBrick",
-          associatedItemId: window.id,
-          effectiveVentilationArea: 100,
-          openingRatio: 0.6,
-          midHeightOfZone: 1.5,
-        },
-      },
-    ];
-    store.$patch({
-      infiltrationAndVentilation: {
-        vents: {
-          ...baseForm,
-          data: ventData,
-        },
-      },
-      dwellingFabric: {
-        dwellingSpaceWalls: {
-          dwellingSpaceExternalWall: {
-            ...baseForm,
-            data: externalWall,
-          },
-        },
-        dwellingSpaceWindows: {
-          data: [
-            {
-              data: window,
-              complete: true,
-            },
-          ],
-          complete: true,
-        },
-      },
-    });
+		const ventData: EcaasForm<VentData>[] = [
+			{
+				...baseForm,
+				data: {
+					name: ventName,
+					typeOfVent: "airBrick",
+					associatedItemId: window.id,
+					effectiveVentilationArea: 100,
+					openingRatio: 0.6,
+					midHeightOfZone: 1.5,
+				},
+			},
+		];
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					...baseForm,
+					data: ventData,
+				},
+			},
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						...baseForm,
+						data: externalWall,
+					},
+				},
+				dwellingSpaceWindows: {
+					data: [
+						{
+							data: window,
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+		});
 
-    // Act
-    const fhsInputData = mapVentsData(resolveState(store.$state));
+		// Act
+		const fhsInputData = mapVentsData(resolveState(store.$state));
 
-    // Assert
-    const vent = fhsInputData[ventName];
-    expect(vent?.area_cm2).toBe(100);
-    expect(vent?.mid_height_air_flow_path).toBe(1.5);
-    expect(vent?.orientation360).toBe(180);
-    expect(vent?.pitch).toBe(45);
-  });
+		// Assert
+		const vent = fhsInputData[ventName];
+		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.mid_height_air_flow_path).toBe(1.5);
+		expect(vent?.orientation360).toBe(180);
+		expect(vent?.pitch).toBe(45);
+	});
 
-  it("maps vents to FHS input request", async () => {
-    const ventName = "Acme";
+	it("maps vents to FHS input request", async () => {
+		const ventName = "Acme";
 
-    // Arrange
-    const externalWallId = "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421";
-    const externalWall: EcaasForm<ExternalWallData>[] = [
-      {
-        ...baseForm,
-        data: {
-          id: externalWallId,
-          name: "External wall 1",
-          pitchOption: "custom",
-          pitch: 45,
-          orientation: 180,
-          length: 20,
-          height: 0.5,
-          elevationalHeight: 20,
-          surfaceArea: 10,
-          uValue: 1,
+		// Arrange
+		const externalWallId = "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421";
+		const externalWall: EcaasForm<ExternalWallData>[] = [
+			{
+				...baseForm,
+				data: {
+					id: externalWallId,
+					name: "External wall 1",
+					pitchOption: "custom",
+					pitch: 45,
+					orientation: 180,
+					length: 20,
+					height: 0.5,
+					elevationalHeight: 20,
+					surfaceArea: 10,
+					uValue: 1,
 					colour: "Intermediate",
 					arealHeatCapacity: "Very light",
-          massDistributionClass: "I",
-        },
-      },
-    ];
+					massDistributionClass: "I",
+				},
+			},
+		];
 
-    const window: WindowData = {
-      id: "test-id-1",
-      name: "Window 1",
-      taggedItem: externalWallId,
-      height: 1,
-      width: 1,
-      uValue: 1,
-      solarTransmittance: 0.1,
-      elevationalHeight: 1,
-      midHeight: 1,
-      numberOpenableParts: "1",
-      overhangDepth: unitValue(1000, millimetre),
-      overhangDistance: unitValue(1000, millimetre),
-      sideFinRightDepth: unitValue(1000, millimetre),
-      sideFinRightDistance: unitValue(1000, millimetre),
-      sideFinLeftDepth: unitValue(1000, millimetre),
-      sideFinLeftDistance: unitValue(1000, millimetre),
-      curtainsOrBlinds: true,
-      treatmentType: "blinds",
-      thermalResistivityIncrease: 1,
-      solarTransmittanceReduction: 0.1,
-      midHeightOpenablePart1: 1,
-      openingToFrameRatio: 0.3,
-      maximumOpenableArea: 1,
-      heightOpenableArea: 1,
-      securityRisk: false
-    };
+		const window: WindowData = {
+			id: "test-id-1",
+			name: "Window 1",
+			taggedItem: externalWallId,
+			height: 1,
+			width: 1,
+			uValue: 1,
+			solarTransmittance: 0.1,
+			elevationalHeight: 1,
+			midHeight: 1,
+			numberOpenableParts: "1",
+			overhangDepth: unitValue(1000, millimetre),
+			overhangDistance: unitValue(1000, millimetre),
+			sideFinRightDepth: unitValue(1000, millimetre),
+			sideFinRightDistance: unitValue(1000, millimetre),
+			sideFinLeftDepth: unitValue(1000, millimetre),
+			sideFinLeftDistance: unitValue(1000, millimetre),
+			curtainsOrBlinds: true,
+			treatmentType: "blinds",
+			thermalResistivityIncrease: 1,
+			solarTransmittanceReduction: 0.1,
+			midHeightOpenablePart1: 1,
+			openingToFrameRatio: 0.3,
+			maximumOpenableArea: 1,
+			heightOpenableArea: 1,
+			securityRisk: false,
+		};
 
-    const ventData: EcaasForm<VentData>[] = [
-      {
-        ...baseForm,
-        data: {
-          name: ventName,
-          typeOfVent: "airBrick",
-          associatedItemId: window.id,
-          effectiveVentilationArea: 100,
-          openingRatio: 0.6,
-          midHeightOfZone: 1.5,
-        },
-      },
-    ];
-    store.$patch({
-      infiltrationAndVentilation: {
-        vents: {
-          ...baseForm,
-          data: ventData,
-        },
-      },
-      dwellingFabric: {
-        dwellingSpaceWalls: {
-          dwellingSpaceExternalWall: {
-            ...baseForm,
-            data: externalWall,
-          },
-        },
-        dwellingSpaceWindows: {
-          data: [
-            {
-              data: window,
-              complete: true,
-            },
-          ],
-          complete: true,
-        },
-      },
-    });
+		const ventData: EcaasForm<VentData>[] = [
+			{
+				...baseForm,
+				data: {
+					name: ventName,
+					typeOfVent: "airBrick",
+					associatedItemId: window.id,
+					effectiveVentilationArea: 100,
+					openingRatio: 0.6,
+					midHeightOfZone: 1.5,
+				},
+			},
+		];
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					...baseForm,
+					data: ventData,
+				},
+			},
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						...baseForm,
+						data: externalWall,
+					},
+				},
+				dwellingSpaceWindows: {
+					data: [
+						{
+							data: window,
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+		});
 
-    // Act
-    const fhsInputData = mapVentsData(resolveState(store.$state));
+		// Act
+		const fhsInputData = mapVentsData(resolveState(store.$state));
 
-    // Assert
-    const vent = fhsInputData[ventName];
-    expect(vent?.area_cm2).toBe(100);
-    expect(vent?.mid_height_air_flow_path).toBe(1.5);
-    expect(vent?.orientation360).toBe(180);
-    expect(vent?.pitch).toBe(45);
-  });
+		// Assert
+		const vent = fhsInputData[ventName];
+		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.mid_height_air_flow_path).toBe(1.5);
+		expect(vent?.orientation360).toBe(180);
+		expect(vent?.pitch).toBe(45);
+	});
 
 
 	it("maps ventilation data to extract needed fields", async () => {

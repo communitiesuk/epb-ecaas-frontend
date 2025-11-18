@@ -53,7 +53,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<VentsInfo />
-	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+	<FormKit
+		v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="ventErrorSummary"/>
 		<FormKit
@@ -79,7 +80,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfVent"
 			validation="required"
 		/>
-		<FieldsAssociatedWallWindow id="associatedItemId" name="associatedItemId"
+		<FieldsAssociatedWallWindow
+			id="associatedItemId" name="associatedItemId"
 			label="Associated wall or window"
 			help="Select the wall or window that this vent is in. It should have the same orientation and pitch as the vent." />
 		<FormKit
@@ -120,7 +122,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</table>
 			</GovDetails>
 		</FormKit>
-		<FormKit id="midHeightOfZone" type="govInputWithSuffix" label="Mid height of zone"
+		<FormKit
+			id="midHeightOfZone" type="govInputWithSuffix" label="Mid height of zone"
 			help="Enter the mid height of the zone that the vent serves. Typically between 1.2m and 1.8m."
 			name="midHeightOfZone" validation="required | number | min:1 | max:60" suffix-text="m"
 			data-field="InfiltrationVentilation.Vents.mid_height_air_flow_path" />

@@ -21,36 +21,36 @@ describe("doors", () => {
 		store.$reset();
 	});
 
-  const externalWall: ExternalWallData = {
-    id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
-    name: "External wall 1",
-    pitchOption: "90",
-    pitch: 90,
-    orientation: 0,
-    length: 20,
-    height: 0.5,
-    elevationalHeight: 20,
-    surfaceArea: 10,
-    uValue: 1,
+	const externalWall: ExternalWallData = {
+		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+		name: "External wall 1",
+		pitchOption: "90",
+		pitch: 90,
+		orientation: 0,
+		length: 20,
+		height: 0.5,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		uValue: 1,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
-    massDistributionClass: "I",
-  };
+		massDistributionClass: "I",
+	};
 
-  const internalWall: InternalWallData = {
-    id: "06cce939-0899-42cc-aa46-0d47c11a6ede",
-    name: "Internal 1",
-    surfaceAreaOfElement: 5,
-    arealHeatCapacity: "Very light",
-    massDistributionClass: "I",
-    pitchOption: "90",
+	const internalWall: InternalWallData = {
+		id: "06cce939-0899-42cc-aa46-0d47c11a6ede",
+		name: "Internal 1",
+		surfaceAreaOfElement: 5,
+		arealHeatCapacity: "Very light",
+		massDistributionClass: "I",
+		pitchOption: "90",
 		pitch: 90,
-  };
+	};
 
 	const externalUnglazed1: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 1 name",
-	    associatedItemId: externalWall.id,
+			associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
@@ -65,7 +65,7 @@ describe("doors", () => {
 	const externalUnglazed2: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 2 name",
-      associatedItemId: externalWall.id,
+			associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
@@ -80,7 +80,7 @@ describe("doors", () => {
 	const externalUnglazed3: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 3 name",
-      associatedItemId: externalWall.id,
+			associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
@@ -95,7 +95,7 @@ describe("doors", () => {
 	const externalGlazed1: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed1 name",
-      associatedItemId: externalWall.id,
+			associatedItemId: externalWall.id,
 			height: 1,
 			width: 1,
 			uValue: 1,
@@ -113,7 +113,7 @@ describe("doors", () => {
 	const externalGlazed2: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed2 name",
-      associatedItemId: externalWall.id,
+			associatedItemId: externalWall.id,
 			height: 1,
 			width: 1,
 			uValue: 1,
@@ -131,7 +131,7 @@ describe("doors", () => {
 	const externalGlazed3: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed3 name",
-      associatedItemId: externalWall.id,
+			associatedItemId: externalWall.id,
 			height: 1,
 			width: 1,
 			uValue: 1,
@@ -150,7 +150,7 @@ describe("doors", () => {
 		data: {
 			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 			name: "Internal 1",
-      associatedItemId: internalWall.id,
+			associatedItemId: internalWall.id,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
@@ -161,8 +161,8 @@ describe("doors", () => {
 		data: {
 			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 			name: "Internal 2",
-      associatedItemId: internalWall.id,
-      surfaceArea: 5,
+			associatedItemId: internalWall.id,
+			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 		},
@@ -172,7 +172,7 @@ describe("doors", () => {
 		data: {
 			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 			name: "Internal 3",
-      associatedItemId: internalWall.id,
+			associatedItemId: internalWall.id,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",

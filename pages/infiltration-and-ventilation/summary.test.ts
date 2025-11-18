@@ -12,57 +12,57 @@ import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
 vi.mock("uuid");
 
 const mechanicalVentilationData: MechanicalVentilationData = {
-  id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
-  name: "Mechanical name 1",
-  typeOfMechanicalVentilationOptions: "MVHR",
-  airFlowRate: 12,
-  mvhrLocation: "inside",
-  mvhrEfficiency: 0.2,
+	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
+	name: "Mechanical name 1",
+	typeOfMechanicalVentilationOptions: "MVHR",
+	airFlowRate: 12,
+	mvhrLocation: "inside",
+	mvhrEfficiency: 0.2,
 };
 
 const ductworkData: DuctworkData = {
-  name: "Ducktwork 1",
-  mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
-  ductworkCrossSectionalShape: "circular",
-  ductType: "intake",
-  internalDiameterOfDuctwork: 300,
-  externalDiameterOfDuctwork: 1000,
-  insulationThickness: 100,
-  lengthOfDuctwork: 100,
-  thermalInsulationConductivityOfDuctwork: 10,
-  surfaceReflectivity: true,
+	name: "Ducktwork 1",
+	mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
+	ductworkCrossSectionalShape: "circular",
+	ductType: "intake",
+	internalDiameterOfDuctwork: 300,
+	externalDiameterOfDuctwork: 1000,
+	insulationThickness: 100,
+	lengthOfDuctwork: 100,
+	thermalInsulationConductivityOfDuctwork: 10,
+	surfaceReflectivity: true,
 };
 
 const externalWall: ExternalWallData = {
-  id: "0b77e247-53c5-42b8-9dbd-83cbfc8ccccc",
-  name: "External wall 1",
-  pitchOption: "90",
-  pitch: 90,
-  orientation: 0,
-  length: 20,
-  height: 0.5,
-  elevationalHeight: 20,
-  surfaceArea: 10,
-  uValue: 1,
-  colour: "Intermediate",
-  arealHeatCapacity: "Very light",
-  massDistributionClass: "I",
+	id: "0b77e247-53c5-42b8-9dbd-83cbfc8ccccc",
+	name: "External wall 1",
+	pitchOption: "90",
+	pitch: 90,
+	orientation: 0,
+	length: 20,
+	height: 0.5,
+	elevationalHeight: 20,
+	surfaceArea: 10,
+	uValue: 1,
+	colour: "Intermediate",
+	arealHeatCapacity: "Very light",
+	massDistributionClass: "I",
 };
 const ventData: VentData = {
-  name: "Vent 1",
-  typeOfVent: "trickle",
-  associatedItemId: externalWall.id,
-  effectiveVentilationArea: 10,
-  openingRatio: 1,
-  midHeightOfZone: 1,
+	name: "Vent 1",
+	typeOfVent: "trickle",
+	associatedItemId: externalWall.id,
+	effectiveVentilationArea: 10,
+	openingRatio: 1,
+	midHeightOfZone: 1,
 };
 
 const ventilationData: VentilationData = {
-  dwellingElevationalLevelAtBase: 1,
-  crossVentilationPossible: true,
-  maxRequiredAirChangeRate: 1,
-  ventilationZoneHeight: 1,
-  dwellingEnvelopeArea: 1,
+	dwellingElevationalLevelAtBase: 1,
+	crossVentilationPossible: true,
+	maxRequiredAirChangeRate: 1,
+	ventilationZoneHeight: 1,
+	dwellingEnvelopeArea: 1,
 };
 
 const airPermeabilityData: AirPermeabilityData = {
@@ -220,98 +220,98 @@ describe("Infiltration and ventilation summary", () => {
 		expect(screen.queryByText("No ductwork added")).toBeNull();
 	});
 
- it("should display the correct data for the vents section", async () => {
-    store.$patch({
-      dwellingFabric: {
-        dwellingSpaceWalls: {
-          dwellingSpaceExternalWall: {
-            data: [{ data: externalWall }],
-          },
-        },
-      },
-      infiltrationAndVentilation: {
-        vents: {
-          data: [{ data: ventData }],
-        },
-      },
-    });
+	it("should display the correct data for the vents section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall }],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				vents: {
+					data: [{ data: ventData }],
+				},
+			},
+		});
 
-    await renderSuspended(Summary);
+		await renderSuspended(Summary);
 
-    const expectedResult = {
-      Name: "Vent 1",
-      "Type of vent": "Trickle",
-      "Effective ventilation area": `10 ${centimetresSquare.suffix}`,
-      "Mid height of zone": `1 ${metre.suffix}`,
-      Orientation: `0 ${degrees.suffix}`,
-      Pitch: `90 ${degrees.suffix}`,
-    };
+		const expectedResult = {
+			Name: "Vent 1",
+			"Type of vent": "Trickle",
+			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
+			"Mid height of zone": `1 ${metre.suffix}`,
+			Orientation: `0 ${degrees.suffix}`,
+			Pitch: `90 ${degrees.suffix}`,
+		};
 
-    for (const [key, value] of Object.entries(expectedResult)) {
-      const lineResult = await screen.findByTestId(
-        `summary-vents-${hyphenate(key)}`
-      );
-      expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-      expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-    }
-  });
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = await screen.findByTestId(
+				`summary-vents-${hyphenate(key)}`,
+			);
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
 
-  it("displays the correct data for the vents section when tagged with an item which is tagged with another item", async () => {
-    const externalWall: Partial<ExternalWallData> = {
-      id: "0b77e247-53c5-42b8-9dbd-83cbfc8ccccc",
-      name: "External wall 1",
-      pitchOption: "custom",
-      pitch: 66,
-      orientation: 77,
-    };
+	it("displays the correct data for the vents section when tagged with an item which is tagged with another item", async () => {
+		const externalWall: Partial<ExternalWallData> = {
+			id: "0b77e247-53c5-42b8-9dbd-83cbfc8ccccc",
+			name: "External wall 1",
+			pitchOption: "custom",
+			pitch: 66,
+			orientation: 77,
+		};
 
-    const window1: Partial<WindowData> = {
-      id: "0b77e247-53c5-42b8-9dbd-83cbfc8ffffff",
-      name: "Window 1",
-      taggedItem: externalWall.id,
-    };
+		const window1: Partial<WindowData> = {
+			id: "0b77e247-53c5-42b8-9dbd-83cbfc8ffffff",
+			name: "Window 1",
+			taggedItem: externalWall.id,
+		};
 
-    const ventData: Partial<VentData> = {
-      name: "Vent 1",
-      typeOfVent: "trickle",
-      associatedItemId: window1.id,
-    };
+		const ventData: Partial<VentData> = {
+			name: "Vent 1",
+			typeOfVent: "trickle",
+			associatedItemId: window1.id,
+		};
 
-    store.$patch({
-      dwellingFabric: {
-        dwellingSpaceWindows: {
-          data: [{ data: window1 }],
-        },
-        dwellingSpaceWalls: {
-          dwellingSpaceExternalWall: {
-            data: [{ data: externalWall }],
-          },
-        },
-      },
-      infiltrationAndVentilation: {
-        vents: {
-          data: [{ data: ventData }],
-        },
-      },
-    });
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [{ data: window1 }],
+				},
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall }],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				vents: {
+					data: [{ data: ventData }],
+				},
+			},
+		});
 
-    await renderSuspended(Summary);
+		await renderSuspended(Summary);
 
-    const expectedResult = {
-      Name: "Vent 1",
-      "Type of vent": "Trickle",
-      Orientation: `77 ${degrees.suffix}`,
-      Pitch: `66 ${degrees.suffix}`,
-    };
+		const expectedResult = {
+			Name: "Vent 1",
+			"Type of vent": "Trickle",
+			Orientation: `77 ${degrees.suffix}`,
+			Pitch: `66 ${degrees.suffix}`,
+		};
 
-    for (const [key, value] of Object.entries(expectedResult)) {
-      const lineResult = await screen.findByTestId(
-        `summary-vents-${hyphenate(key)}`
-      );
-      expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-      expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-    }
-  });
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = await screen.findByTestId(
+				`summary-vents-${hyphenate(key)}`,
+			);
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
 
 	it("should display the correct data for the ventilation section", async () => {
 		store.$patch({

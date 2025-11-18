@@ -10,7 +10,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const heatPumpStoreData = store.heatingAndCoolingSystems.heatGeneration.heatPump.data;
-const index = getStoreIndex(heatPumpStoreData)
+const index = getStoreIndex(heatPumpStoreData);
 const heatPumpData = useItemToEdit("pump", heatPumpStoreData);
 const model = ref(heatPumpData?.data);
 

@@ -2,8 +2,8 @@ import type { BuildingElementGround, BuildingElementOfType, SchemaThermalBridgin
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type {
-  DwellingSpaceLightingData,
-  DwellingSpaceZoneParametersData,
+	DwellingSpaceLightingData,
+	DwellingSpaceZoneParametersData,
 } from "~/stores/ecaasStore.schema";
 import { centimetre, millimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
@@ -14,8 +14,8 @@ type BuildingElementAdjacentUnconditionedSpaceSimple = BuildingElementOfType<"Bu
 type BuildingElementTransparent = BuildingElementOfType<"BuildingElementTransparent">;
 
 const baseForm = {
-  data: [],
-  complete: true as const,
+	data: [],
+	complete: true as const,
 };
 
 describe("dwelling fabric mapper", () => {
@@ -305,7 +305,7 @@ describe("dwelling fabric mapper", () => {
 		const externalWall: EcaasForm<ExternalWallData> = {
 			...baseForm,
 			data: {
-        id: "ex-id",
+				id: "ex-id",
 				name: "External wall 1",
 				pitchOption: "90",
 				pitch: 90,
@@ -324,7 +324,7 @@ describe("dwelling fabric mapper", () => {
 		const internalWall: EcaasForm<InternalWallData> = {
 			...baseForm,
 			data: {
-        id: "in-id",
+				id: "in-id",
 				name: "Internal 1",
 				surfaceAreaOfElement: 5,
 				arealHeatCapacity: "Very light",
@@ -337,7 +337,7 @@ describe("dwelling fabric mapper", () => {
 		const partyWall: EcaasForm<PartyWallData> = {
 			...baseForm,
 			data: {
-        id: "party-id",
+				id: "party-id",
 				name: "Party wall 1",
 				pitchOption: "90",
 				pitch: 90,
@@ -351,7 +351,7 @@ describe("dwelling fabric mapper", () => {
 		const wallToUnheatedSpace: EcaasForm<WallsToUnheatedSpaceData> = {
 			...baseForm,
 			data: {
-        id: "unheated-id",
+				id: "unheated-id",
 				name: "Wall to unheated space 1",
 				surfaceAreaOfElement: 500,
 				uValue: 10,
@@ -440,7 +440,7 @@ describe("dwelling fabric mapper", () => {
 	it("maps ceiling and roof input state to FHS input request", () => {
 		// Arrange
 		const ceiling: CeilingData = {
-      id: "ceiling-id",
+			id: "ceiling-id",
 			type: AdjacentSpaceType.unheatedSpace,
 			name: "Ceiling 1",
 			surfaceArea: 5,
@@ -453,7 +453,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		const roof: RoofData = {
-      id: "roof-id",
+			id: "roof-id",
 			name: "Roof 1",
 			typeOfRoof: "flat",
 			pitchOption: "custom",
@@ -522,13 +522,13 @@ describe("dwelling fabric mapper", () => {
 		// Arrange
 		
 		const externalWall: EcaasForm<ExternalWallData> = {
-      ...baseForm,
-      data: {
-        id: "cbb78615-d2de-482b-a8f1-ce48534aaa05",
-        name: "External wall 1",
-        pitchOption: "90",
-        pitch: 90,
-      	orientation: 0,
+			...baseForm,
+			data: {
+				id: "cbb78615-d2de-482b-a8f1-ce48534aaa05",
+				name: "External wall 1",
+				pitchOption: "90",
+				pitch: 90,
+				orientation: 0,
 				length: 20,
 				height: 0.5,
 				elevationalHeight: 20,
@@ -537,26 +537,26 @@ describe("dwelling fabric mapper", () => {
 				colour: "Light",
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
-      },
-    };
+			},
+		};
 		
 		const internalWall: EcaasForm<InternalWallData> = {
-      ...baseForm,
-      data: {
-        id: "e36223a9-420f-422f-ad3f-ccfcec1455c7",
-        name: "Internal 1",
-        surfaceAreaOfElement: 5,
-    		arealHeatCapacity: "Very light",
+			...baseForm,
+			data: {
+				id: "e36223a9-420f-422f-ad3f-ccfcec1455c7",
+				name: "Internal 1",
+				surfaceAreaOfElement: 5,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				pitchOption: "90",
 				pitch: 90,
-      },
-    };
+			},
+		};
 
 		const internalDoor: InternalDoorData = {
 			typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 			name: "Internal 1",
-      associatedItemId: internalWall.data.id,
+			associatedItemId: internalWall.data.id,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
@@ -582,7 +582,7 @@ describe("dwelling fabric mapper", () => {
 
 		const externalUnglazedDoor: ExternalUnglazedDoorData = {
 			name: "External unglazed door 1",
-     	associatedItemId: externalWall.data.id,
+			associatedItemId: externalWall.data.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
@@ -597,16 +597,16 @@ describe("dwelling fabric mapper", () => {
 		 
 		store.$patch({
 			dwellingFabric: {
-				  dwellingSpaceWalls: {
-          dwellingSpaceExternalWall: {
-            data: [externalWall],
-            complete: true,
-          },
-          dwellingSpaceInternalWall: {
-            data: [internalWall],
-            complete: true,
-          },
-        },
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [externalWall],
+						complete: true,
+					},
+					dwellingSpaceInternalWall: {
+						data: [internalWall],
+						complete: true,
+					},
+				},
 				dwellingSpaceDoors: {
 					dwellingSpaceInternalDoor: { ...baseForm, data: [{ ...baseForm, data: internalDoor }] },
 					dwellingSpaceExternalGlazedDoor: { ...baseForm, data: [{ ...baseForm, data: externalGlazedDoor }] },
@@ -623,45 +623,45 @@ describe("dwelling fabric mapper", () => {
 		const externalGlazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalGlazedDoor.name + doorSuffix]! as BuildingElementTransparent;
 		const externalUnglazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalUnglazedDoor.name + doorSuffix]! as BuildingElementOpaque;
 
-    const expectedInternalDoor: BuildingElementAdjacentUnconditionedSpaceSimple =
+		const expectedInternalDoor: BuildingElementAdjacentUnconditionedSpaceSimple =
       {
-        type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-        pitch: extractPitch(internalWall.data),
-        area: internalDoor.surfaceArea,
-        u_value: internalDoor.uValue,
-				areal_heat_capacity: internalDoor.arealHeatCapacity,
-				mass_distribution_class: fullMassDistributionClass(internalDoor.massDistributionClass),
-				thermal_resistance_unconditioned_space: internalDoor.thermalResistanceOfAdjacentUnheatedSpace,
+      	type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+      	pitch: extractPitch(internalWall.data),
+      	area: internalDoor.surfaceArea,
+      	u_value: internalDoor.uValue,
+      	areal_heat_capacity: internalDoor.arealHeatCapacity,
+      	mass_distribution_class: fullMassDistributionClass(internalDoor.massDistributionClass),
+      	thermal_resistance_unconditioned_space: internalDoor.thermalResistanceOfAdjacentUnheatedSpace,
+      };
+
+		expect(internalDoorElement).toEqual(expectedInternalDoor);
+
+		const expectedExternalGlazedDoor: BuildingElementTransparent = {
+			type: "BuildingElementTransparent",
+			pitch: extractPitch(externalWall.data),
+			orientation360: externalWall.data.orientation,
+			height: externalGlazedDoor.height,
+			width: externalGlazedDoor.width,
+			mid_height: externalGlazedDoor.midHeight,
+			base_height: externalGlazedDoor.elevationalHeight,
+			g_value: externalGlazedDoor.solarTransmittance,
+			u_value: externalGlazedDoor.uValue,
+			frame_area_fraction: 1 - externalGlazedDoor.openingToFrameRatio,
+			max_window_open_area: externalGlazedDoor.maximumOpenableArea,
+			free_area_height: externalGlazedDoor.heightOpenableArea,
+			window_part_list: [
+				{ mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
+			],
+			shading: [],
+			security_risk: false,
 		};
 
-    expect(internalDoorElement).toEqual(expectedInternalDoor);
+		expect(externalGlazedDoorElement).toEqual(expectedExternalGlazedDoor);
 
-	    const expectedExternalGlazedDoor: BuildingElementTransparent = {
-      type: "BuildingElementTransparent",
-      pitch: extractPitch(externalWall.data),
-      orientation360: externalWall.data.orientation,
-      height: externalGlazedDoor.height,
-      width: externalGlazedDoor.width,
-      mid_height: externalGlazedDoor.midHeight,
-      base_height: externalGlazedDoor.elevationalHeight,
-      g_value: externalGlazedDoor.solarTransmittance,
-      u_value: externalGlazedDoor.uValue,
-      frame_area_fraction: 1 - externalGlazedDoor.openingToFrameRatio,
-      max_window_open_area: externalGlazedDoor.maximumOpenableArea,
-      free_area_height: externalGlazedDoor.heightOpenableArea,
-      window_part_list: [
-        { mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
-      ],
-      shading: [],
-			security_risk:false
-    };
-
-    expect(externalGlazedDoorElement).toEqual(expectedExternalGlazedDoor);
-
-    const expectedUnglazedDoor: BuildingElementOpaque = {
-      type: "BuildingElementOpaque",
-      pitch: externalWall.data.pitch!,
-      orientation360: externalWall.data.orientation,
+		const expectedUnglazedDoor: BuildingElementOpaque = {
+			type: "BuildingElementOpaque",
+			pitch: externalWall.data.pitch!,
+			orientation360: externalWall.data.orientation,
 			height: externalUnglazedDoor.height,
 			width: externalUnglazedDoor.width,
 			base_height: externalUnglazedDoor.elevationalHeight,
@@ -673,127 +673,127 @@ describe("dwelling fabric mapper", () => {
 			colour: "Intermediate",
 		};
 
-    expect(externalUnglazedDoorElement).toEqual(expectedUnglazedDoor);
-  });
+		expect(externalUnglazedDoorElement).toEqual(expectedUnglazedDoor);
+	});
 
-it("maps windows input state to FHS input request", () => {
-    // Arrange
-    const externalWall: EcaasForm<ExternalWallData> = {
-      ...baseForm,
-      data: {
-        id: "cbb78615-d2de-482b-a8f1-ce48534aaa05",
-        name: "External wall 1",
-        pitchOption: "90",
-        pitch: 90,
-        orientation: 0,
-        length: 20,
-        height: 0.5,
-        elevationalHeight: 20,
-        surfaceArea: 10,
-        uValue: 1,
+	it("maps windows input state to FHS input request", () => {
+		// Arrange
+		const externalWall: EcaasForm<ExternalWallData> = {
+			...baseForm,
+			data: {
+				id: "cbb78615-d2de-482b-a8f1-ce48534aaa05",
+				name: "External wall 1",
+				pitchOption: "90",
+				pitch: 90,
+				orientation: 0,
+				length: 20,
+				height: 0.5,
+				elevationalHeight: 20,
+				surfaceArea: 10,
+				uValue: 1,
 				colour: "Intermediate",
 				arealHeatCapacity: "Very light",
-        massDistributionClass: "I",
-      },
-    };
+				massDistributionClass: "I",
+			},
+		};
 
-    const window: WindowData = {
-      id: "test-id-1",
-      name: "Window 1",
-      taggedItem: externalWall.data.id,
-      height: 1,
-      width: 1,
-      uValue: 1,
-      solarTransmittance: 0.1,
-      elevationalHeight: 1,
-      midHeight: 1,
-      numberOpenableParts: "1",
-      overhangDepth: unitValue(1000, millimetre),
-      overhangDistance: unitValue(1000, millimetre),
-      sideFinRightDepth: unitValue(1000, millimetre),
-      sideFinRightDistance: unitValue(1000, millimetre),
-      sideFinLeftDepth: unitValue(1000, millimetre),
-      sideFinLeftDistance: unitValue(1000, millimetre),
-      curtainsOrBlinds: true,
-      treatmentType: "blinds",
-      thermalResistivityIncrease: 1,
-      solarTransmittanceReduction: 0.1,
-      midHeightOpenablePart1: 1,
-      openingToFrameRatio: 0.3,
-      maximumOpenableArea: 1,
-      heightOpenableArea: 1,
-			securityRisk: false
-    };
+		const window: WindowData = {
+			id: "test-id-1",
+			name: "Window 1",
+			taggedItem: externalWall.data.id,
+			height: 1,
+			width: 1,
+			uValue: 1,
+			solarTransmittance: 0.1,
+			elevationalHeight: 1,
+			midHeight: 1,
+			numberOpenableParts: "1",
+			overhangDepth: unitValue(1000, millimetre),
+			overhangDistance: unitValue(1000, millimetre),
+			sideFinRightDepth: unitValue(1000, millimetre),
+			sideFinRightDistance: unitValue(1000, millimetre),
+			sideFinLeftDepth: unitValue(1000, millimetre),
+			sideFinLeftDistance: unitValue(1000, millimetre),
+			curtainsOrBlinds: true,
+			treatmentType: "blinds",
+			thermalResistivityIncrease: 1,
+			solarTransmittanceReduction: 0.1,
+			midHeightOpenablePart1: 1,
+			openingToFrameRatio: 0.3,
+			maximumOpenableArea: 1,
+			heightOpenableArea: 1,
+			securityRisk: false,
+		};
 
-    const windowSuffix = " (window)";
+		const windowSuffix = " (window)";
 
-    store.$patch({
-      dwellingFabric: {
-        dwellingSpaceWalls: {
-          dwellingSpaceExternalWall: {
-            data: [externalWall],
-            complete: true,
-          },
-        },
-        dwellingSpaceWindows: {
-          data: [
-            {
-              data: window,
-              complete: true,
-            },
-          ],
-          complete: true,
-        },
-      },
-    });
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [externalWall],
+						complete: true,
+					},
+				},
+				dwellingSpaceWindows: {
+					data: [
+						{
+							data: window,
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+		});
 
-    // Act
-    const fhsInputData = mapWindowData(resolveState(store.$state));
+		// Act
+		const fhsInputData = mapWindowData(resolveState(store.$state));
 
-    // Assert
-    const windowElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[
-      window.name + windowSuffix
-    ]! as BuildingElementTransparent;
+		// Assert
+		const windowElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[
+			window.name + windowSuffix
+		]! as BuildingElementTransparent;
 
-    const expectedWindow: BuildingElementTransparent = {
-      type: "BuildingElementTransparent",
-      pitch: externalWall.data.pitch!,
-      orientation360: externalWall.data.orientation,
-      height: window.height,
-      width: window.width,
-      base_height: window.elevationalHeight,
-      u_value: window.uValue,
-      g_value: window.solarTransmittance,
-      mid_height: window.midHeight,
-      frame_area_fraction: 1 - window.openingToFrameRatio,
+		const expectedWindow: BuildingElementTransparent = {
+			type: "BuildingElementTransparent",
+			pitch: externalWall.data.pitch!,
+			orientation360: externalWall.data.orientation,
+			height: window.height,
+			width: window.width,
+			base_height: window.elevationalHeight,
+			u_value: window.uValue,
+			g_value: window.solarTransmittance,
+			mid_height: window.midHeight,
+			frame_area_fraction: 1 - window.openingToFrameRatio,
 			security_risk: false,
-      max_window_open_area: window.maximumOpenableArea,
-      free_area_height: window.heightOpenableArea,
-      window_part_list: [
-        {
-          mid_height_air_flow_path: window.midHeightOpenablePart1,
-        },
-      ],
-      shading: [
-        {
-          type: "overhang",
-          depth: 1,
-          distance: 1,
-        },
-        {
-          type: "sidefinleft",
-          depth: 1,
-          distance: 1,
-        },
-        {
-          type: "sidefinright",
-          depth: 1,
-          distance: 1,
-        },
-      ],
-    };
-    expect(windowElement).toEqual(expectedWindow);
-  });
+			max_window_open_area: window.maximumOpenableArea,
+			free_area_height: window.heightOpenableArea,
+			window_part_list: [
+				{
+					mid_height_air_flow_path: window.midHeightOpenablePart1,
+				},
+			],
+			shading: [
+				{
+					type: "overhang",
+					depth: 1,
+					distance: 1,
+				},
+				{
+					type: "sidefinleft",
+					depth: 1,
+					distance: 1,
+				},
+				{
+					type: "sidefinright",
+					depth: 1,
+					distance: 1,
+				},
+			],
+		};
+		expect(windowElement).toEqual(expectedWindow);
+	});
 
 	it("maps thermal bridging input state to FHS input request", () => {
 		// Arrange

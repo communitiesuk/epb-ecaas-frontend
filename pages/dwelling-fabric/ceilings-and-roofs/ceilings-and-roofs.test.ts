@@ -23,7 +23,7 @@ describe("ceilings and roofs", () => {
 
 	const ceiling1: EcaasForm<CeilingData> = {
 		data: {
-      id: "bf19cff9-225b-4e38-80d7-a3e1adf5da3f",
+			id: "bf19cff9-225b-4e38-80d7-a3e1adf5da3f",
 			name: "Ceiling 1",
 			type: AdjacentSpaceType.heatedSpace,
 			surfaceArea: 5,
@@ -38,7 +38,7 @@ describe("ceilings and roofs", () => {
 		data: {
 			...ceiling1.data,
 			name: "Ceiling 2",
-      id: "bf19cff9-225b-4e38-80d7-a111111111",
+			id: "bf19cff9-225b-4e38-80d7-a111111111",
 		},
 	};
 
@@ -46,13 +46,13 @@ describe("ceilings and roofs", () => {
 		data: {
 			...ceiling1.data,
 			name: "Ceiling 3",
-      id: "bf19cff9-225b-4e38-80d7-a222222222",
+			id: "bf19cff9-225b-4e38-80d7-a222222222",
 		},
 	};
 
 	const roof1: EcaasForm<RoofData> = {
 		data: {
-      id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
+			id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
 			name: "Roof 1",
 			typeOfRoof: "flat",
 			pitchOption: "0",
@@ -72,7 +72,7 @@ describe("ceilings and roofs", () => {
 		data: {
 			...roof1.data,
 			name: "Roof 2",
-      id: "41a6e9c4-1b6d-4e5c-8bdc-950b0292cf52",
+			id: "41a6e9c4-1b6d-4e5c-8bdc-950b0292cf52",
 		},
 	};
 
@@ -80,7 +80,7 @@ describe("ceilings and roofs", () => {
 		data: {
 			...roof1.data,
 			name: "Roof 3",
-      id: "9f0112b6-6fe0-49fe-9223-ea749db34307",
+			id: "9f0112b6-6fe0-49fe-9223-ea749db34307",
 		},
 	};
 
@@ -126,50 +126,50 @@ describe("ceilings and roofs", () => {
 			expect(within(populatedList).queryByText("Ceiling 2")).toBeNull();
 		});
 
-    it("when a ceiling is removed it's also removed from any store item that references it", async () => {
-      const doorToHeatedSpace: EcaasForm<InternalDoorData> = {
-        data: {
-          typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
-          name: "Internal 1",
-          associatedItemId: ceiling1.data.id,
-          surfaceArea: 5,
-			    arealHeatCapacity: "Very light",
-          massDistributionClass: "I",
-        },
-      };
+		it("when a ceiling is removed it's also removed from any store item that references it", async () => {
+			const doorToHeatedSpace: EcaasForm<InternalDoorData> = {
+				data: {
+					typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+					name: "Internal 1",
+					associatedItemId: ceiling1.data.id,
+					surfaceArea: 5,
+					arealHeatCapacity: "Very light",
+					massDistributionClass: "I",
+				},
+			};
 
-      const doorToUnheatedSpace: EcaasForm<InternalDoorData> = {
-        data: {
-          ...doorToHeatedSpace.data,
-          associatedItemId: ceiling2.data.id,
-          typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
-          uValue: 0.1,
-          thermalResistanceOfAdjacentUnheatedSpace: 0,
-        },
-      };
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceCeilingsAndRoofs: {
-            dwellingSpaceCeilings: {
-              data: [ceiling1, ceiling2],
-            },
-          },
-          dwellingSpaceDoors: {
-            dwellingSpaceInternalDoor: {
-              data: [doorToHeatedSpace, doorToUnheatedSpace],
-            },
-          },
-        },
-      });
+			const doorToUnheatedSpace: EcaasForm<InternalDoorData> = {
+				data: {
+					...doorToHeatedSpace.data,
+					associatedItemId: ceiling2.data.id,
+					typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+					uValue: 0.1,
+					thermalResistanceOfAdjacentUnheatedSpace: 0,
+				},
+			};
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceCeilings: {
+							data: [ceiling1, ceiling2],
+						},
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceInternalDoor: {
+							data: [doorToHeatedSpace, doorToUnheatedSpace],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(CeilingsAndRoofs);
-      await user.click(await screen.findByTestId("ceilings_remove_0"));
+			await renderSuspended(CeilingsAndRoofs);
+			await user.click(await screen.findByTestId("ceilings_remove_0"));
 
-      const doors =
+			const doors =
         store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data;
-      expect(doors[0]?.data.associatedItemId).toBeUndefined();
-      expect(doors[1]?.data.associatedItemId).toBe(ceiling2.data.id);
-    });
+			expect(doors[0]?.data.associatedItemId).toBeUndefined();
+			expect(doors[1]?.data.associatedItemId).toBe(ceiling2.data.id);
+		});
 
 		test("ceiling is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
@@ -274,96 +274,96 @@ describe("ceilings and roofs", () => {
 			expect(within(populatedList).queryByText("Roof 2")).toBeNull();
 		});
 
-     it("when a roof is removed its also removed from any store item that references it", async () => {
+		it("when a roof is removed its also removed from any store item that references it", async () => {
 
-      const window1: EcaasForm<WindowData> = {
-        data: {
-          id: "test-id-1",
-          name: "Window 1",
-          taggedItem: roof1.data.id,
-          height: 1,
-          width: 1,
-          uValue: 1,
-          solarTransmittance: 0.1,
-          elevationalHeight: 1,
-          midHeight: 1,
-          numberOpenableParts: "0",
-          openingToFrameRatio: 0.2,
-          curtainsOrBlinds: false,
-          securityRisk: false
-        },
-        complete: true,
-      };
-      const externalUnglazed: EcaasForm<ExternalUnglazedDoorData> = {
-        data: {
-          name: "external unglazed name",
-          associatedItemId: roof1.data.id,
-          height: 0.5,
-          width: 20,
-          elevationalHeight: 20,
-          surfaceArea: 10,
-          uValue: 1,
-          colour: "Intermediate",
-			    arealHeatCapacity: "Very light",
-          massDistributionClass: "I",
-        },
-      };
+			const window1: EcaasForm<WindowData> = {
+				data: {
+					id: "test-id-1",
+					name: "Window 1",
+					taggedItem: roof1.data.id,
+					height: 1,
+					width: 1,
+					uValue: 1,
+					solarTransmittance: 0.1,
+					elevationalHeight: 1,
+					midHeight: 1,
+					numberOpenableParts: "0",
+					openingToFrameRatio: 0.2,
+					curtainsOrBlinds: false,
+					securityRisk: false,
+				},
+				complete: true,
+			};
+			const externalUnglazed: EcaasForm<ExternalUnglazedDoorData> = {
+				data: {
+					name: "external unglazed name",
+					associatedItemId: roof1.data.id,
+					height: 0.5,
+					width: 20,
+					elevationalHeight: 20,
+					surfaceArea: 10,
+					uValue: 1,
+					colour: "Intermediate",
+					arealHeatCapacity: "Very light",
+					massDistributionClass: "I",
+				},
+			};
 
-      const externalGlazed: EcaasForm<ExternalGlazedDoorData> = {
-        data: {
-          name: "external glazed name",
-          associatedItemId: roof1.data.id,
-          height: 1,
-          width: 1,
-          uValue: 1,
-          solarTransmittance: 0.1,
-          elevationalHeight: 1,
-          midHeight: 1,
-          openingToFrameRatio: 0.2,
-          midHeightOpenablePart1: 2,
-          heightOpenableArea: 1,
-          maximumOpenableArea: 1,
-          securityRisk: false
-        },
-      };
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceCeilingsAndRoofs: {
-            dwellingSpaceRoofs: {
-              data: [roof1, roof2],
-            },
-          },
-          dwellingSpaceWindows: {
-            data: [window1],
-          },
-          dwellingSpaceDoors: {
-            dwellingSpaceExternalGlazedDoor: {
-              data: [externalGlazed],
-            },
-            dwellingSpaceExternalUnglazedDoor: {
-              data: [externalUnglazed],
-            },
-          },
-        },
-      });
+			const externalGlazed: EcaasForm<ExternalGlazedDoorData> = {
+				data: {
+					name: "external glazed name",
+					associatedItemId: roof1.data.id,
+					height: 1,
+					width: 1,
+					uValue: 1,
+					solarTransmittance: 0.1,
+					elevationalHeight: 1,
+					midHeight: 1,
+					openingToFrameRatio: 0.2,
+					midHeightOpenablePart1: 2,
+					heightOpenableArea: 1,
+					maximumOpenableArea: 1,
+					securityRisk: false,
+				},
+			};
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceRoofs: {
+							data: [roof1, roof2],
+						},
+					},
+					dwellingSpaceWindows: {
+						data: [window1],
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [externalGlazed],
+						},
+						dwellingSpaceExternalUnglazedDoor: {
+							data: [externalUnglazed],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(CeilingsAndRoofs);
+			await renderSuspended(CeilingsAndRoofs);
 
-      await user.click(await screen.findByTestId("roofs_remove_1"));
-      await user.click(await screen.findByTestId("roofs_remove_0"));
+			await user.click(await screen.findByTestId("roofs_remove_1"));
+			await user.click(await screen.findByTestId("roofs_remove_0"));
 
 
-      const window = store.dwellingFabric.dwellingSpaceWindows.data[0]?.data;
-      expect(window?.taggedItem).toBeUndefined();
-      const glazedDoor =
+			const window = store.dwellingFabric.dwellingSpaceWindows.data[0]?.data;
+			expect(window?.taggedItem).toBeUndefined();
+			const glazedDoor =
         store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor
-          .data[0]?.data;
-      expect(glazedDoor?.associatedItemId).toBeUndefined();
-      const unglazedDoor =
+        	.data[0]?.data;
+			expect(glazedDoor?.associatedItemId).toBeUndefined();
+			const unglazedDoor =
         store.dwellingFabric.dwellingSpaceDoors
-          .dwellingSpaceExternalUnglazedDoor.data[0]?.data;
-      expect(unglazedDoor?.associatedItemId).toBeUndefined();
-    });
+        	.dwellingSpaceExternalUnglazedDoor.data[0]?.data;
+			expect(unglazedDoor?.associatedItemId).toBeUndefined();
+		});
     
 		test("roof is duplicated when duplicate link is clicked", async () => {
 			store.$patch({

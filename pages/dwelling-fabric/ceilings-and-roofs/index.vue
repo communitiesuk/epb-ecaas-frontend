@@ -6,11 +6,11 @@ import { v4 as uuidv4 } from "uuid";
 const title = "Ceilings and roofs";
 const page = usePage();
 const store = useEcaasStore();
-const { vents } = store.infiltrationAndVentilation
-const { dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors
-const { dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors
-const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors
-const { dwellingSpaceWindows } = store.dwellingFabric
+const { vents } = store.infiltrationAndVentilation;
+const { dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
+const { dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
+const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+const { dwellingSpaceWindows } = store.dwellingFabric;
 
 
 type CeilingAndRoofType = keyof typeof store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
@@ -19,8 +19,8 @@ type CeilingAndRoofData = EcaasForm<CeilingData> & EcaasForm<RoofData>;
 function handleRemove(ceilingAndRoofType: CeilingAndRoofType, index: number) {
 	const items = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType]?.data;
 
-	let roofId = ceilingAndRoofType === "dwellingSpaceRoofs" && store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[index]?.data.id;
-	let ceilingId = ceilingAndRoofType === "dwellingSpaceCeilings" && store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[index]?.data.id;
+	const roofId = ceilingAndRoofType === "dwellingSpaceRoofs" && store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[index]?.data.id;
+	const ceilingId = ceilingAndRoofType === "dwellingSpaceCeilings" && store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[index]?.data.id;
 
 	if (items) {
 		items.splice(index, 1);
@@ -98,15 +98,17 @@ const hasIncompleteEntries = () =>
 	<p class="govuk-hint">For ceilings next to roofs, both ceiling and roof details should be inputted as one roof
 		element. Where you have a multiple storey dwelling, internal floors should be inputted as floors or ceilings. You do
 		not need to enter both.</p>
-	<CustomList id="ceilings" title="Ceilings" :form-url="`${page?.url!}/ceilings`" :items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data.filter(x => isEcaasForm(x)).map(x => ({
-		name: x.data?.name,
-		status: x.complete ? formStatus.complete : formStatus.inProgress
-	}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceCeilings', index)"
+	<CustomList
+		id="ceilings" title="Ceilings" :form-url="`${page?.url!}/ceilings`" :items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceCeilings', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceCeilings', index)" />
-	<CustomList id="roofs" title="Roofs" :form-url="`${page?.url!}/roofs`" :items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.filter(x => isEcaasForm(x)).map(x => ({
-		name: x.data?.name,
-		status: x.complete ? formStatus.complete : formStatus.inProgress
-	}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceRoofs', index)"
+	<CustomList
+		id="roofs" title="Roofs" :form-url="`${page?.url!}/roofs`" :items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceRoofs', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceRoofs', index)" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-fabric" secondary>

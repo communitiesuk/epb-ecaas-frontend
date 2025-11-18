@@ -2,21 +2,21 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Summary from "./summary.vue";
 import { screen } from "@testing-library/vue";
 import type {
-  CeilingsAndRoofsData,
-  DoorsData,
-  FloorsData,
-  DwellingSpaceZoneParametersData,
-  ThermalBridgingData,
-  WallsData,
-  WindowData,
-  DwellingSpaceLightingData,
+	CeilingsAndRoofsData,
+	DoorsData,
+	FloorsData,
+	DwellingSpaceZoneParametersData,
+	ThermalBridgingData,
+	WallsData,
+	WindowData,
+	DwellingSpaceLightingData,
 } from "~/stores/ecaasStore.schema";
 import { metre, millimetre } from "~/utils/units/length";
 import {
-  squareMeterKelvinPerWatt,
-  wattsPerKelvin,
-  wattsPerMeterKelvin,
-  wattsPerSquareMeterKelvin,
+	squareMeterKelvinPerWatt,
+	wattsPerKelvin,
+	wattsPerMeterKelvin,
+	wattsPerSquareMeterKelvin,
 } from "~/utils/units/thermalConductivity";
 import { degrees } from "~/utils/units/angle";
 import { metresSquare } from "~/utils/units/area";
@@ -25,7 +25,7 @@ import { unitValue } from "~/utils/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
-  return navigateToMock;
+	return navigateToMock;
 });
 
 const zoneParametersData: DwellingSpaceZoneParametersData = {
@@ -96,7 +96,7 @@ const wallsData: WallsData = {
 	dwellingSpaceExternalWall: {
 		data: [{
 			data: {
-        id: externalWallId,
+				id: externalWallId,
 				name: "External wall 1",
 				pitchOption: "90",
 				pitch: 90,
@@ -115,7 +115,7 @@ const wallsData: WallsData = {
 	dwellingSpaceInternalWall: {
 		data: [{
 			data: {
-        id: internalWallId,
+				id: internalWallId,
 				name: "Internal 1",
 				surfaceAreaOfElement: 5,
 				arealHeatCapacity: "Very light",
@@ -128,7 +128,7 @@ const wallsData: WallsData = {
 	dwellingSpaceWallToUnheatedSpace: {
 		data: [{
 			data: {
-        id: "a6865ced-8495-41c4-a193-4ff08902892a",
+				id: "a6865ced-8495-41c4-a193-4ff08902892a",
 				name: "Wall to unheated space 1",
 				surfaceAreaOfElement: 500,
 				uValue: 10,
@@ -143,7 +143,7 @@ const wallsData: WallsData = {
 	dwellingSpacePartyWall: {
 		data: [{
 			data: {
-        id: "96dcfa21-edec-4318-bbca-7e92b1d7c02c",
+				id: "96dcfa21-edec-4318-bbca-7e92b1d7c02c",
 				name: "Party wall 1",
 				pitchOption: "90",
 				pitch: 90,
@@ -212,7 +212,7 @@ const doorsData: DoorsData = {
 			data:
 			{
 				name: "External unglazed door 1",
-        associatedItemId: externalWallId,
+				associatedItemId: externalWallId,
 				height: 0.5,
 				width: 20,
 				elevationalHeight: 20,
@@ -228,7 +228,7 @@ const doorsData: DoorsData = {
 		data: [{
 			data: {
 				name: "External glazed door 1",
-        associatedItemId: externalWallId,
+				associatedItemId: externalWallId,
 				height: 1,
 				width: 1,
 				uValue: 1,
@@ -247,7 +247,7 @@ const doorsData: DoorsData = {
 			data: {
 				typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 				name: "Internal 1",
-        associatedItemId: internalWallId,
+				associatedItemId: internalWallId,
 				surfaceArea: 5,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
@@ -258,9 +258,9 @@ const doorsData: DoorsData = {
 
 const windowData: EcaasForm<WindowData> = {
 	data: {
-    id: "test-id-1",
+		id: "test-id-1",
 		name: "Window 1",
-    taggedItem: externalWallId,
+		taggedItem: externalWallId,
 		height: 1,
 		width: 1,
 		uValue: 1,
@@ -284,28 +284,28 @@ const windowData: EcaasForm<WindowData> = {
 };
 
 const thermalBridgingData: ThermalBridgingData = {
-  dwellingSpaceLinearThermalBridges: {
-    data: [
-      {
-        data: {
-          name: "E1: Steel lintel with perforated steel base plate",
-          typeOfThermalBridge: "E1",
-          linearThermalTransmittance: 1,
-          length: 2,
-        },
-      },
-    ],
-  },
-  dwellingSpacePointThermalBridges: {
-    data: [
-      {
-        data: {
-          name: "Point 1",
-          heatTransferCoefficient: 1,
-        },
-      },
-    ],
-  },
+	dwellingSpaceLinearThermalBridges: {
+		data: [
+			{
+				data: {
+					name: "E1: Steel lintel with perforated steel base plate",
+					typeOfThermalBridge: "E1",
+					linearThermalTransmittance: 1,
+					length: 2,
+				},
+			},
+		],
+	},
+	dwellingSpacePointThermalBridges: {
+		data: [
+			{
+				data: {
+					name: "Point 1",
+					heatTransferCoefficient: 1,
+				},
+			},
+		],
+	},
 };
 
 describe("Dwelling space fabric summary", () => {
@@ -698,17 +698,17 @@ describe("Dwelling space fabric summary", () => {
 		});
 
 		it("should display the correct data for the external unglazed doors section", async () => {
-	      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
-          },
-          dwellingSpaceDoors: {
-            dwellingSpaceExternalUnglazedDoor:
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalUnglazedDoor:
               doorsData.dwellingSpaceExternalUnglazedDoor,
-          },
-        },
-      });
+					},
+				},
+			});
 
 			await renderSuspended(Summary);
 
@@ -734,17 +734,17 @@ describe("Dwelling space fabric summary", () => {
 		});
 
 		it("should display the correct data for the external glazed doors section", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
-          },
-          dwellingSpaceDoors: {
-            dwellingSpaceExternalGlazedDoor:
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor:
               doorsData.dwellingSpaceExternalGlazedDoor,
-          },
-        },
-      });
+					},
+				},
+			});
 
 			await renderSuspended(Summary);
 
@@ -768,16 +768,16 @@ describe("Dwelling space fabric summary", () => {
 		});
 
 		it("should display the correct data for the internal doors section", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceInternalWall: wallsData.dwellingSpaceInternalWall,
-          },
-          dwellingSpaceDoors: {
-            dwellingSpaceInternalDoor: doorsData.dwellingSpaceInternalDoor,
-          },
-        },
-      });
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceInternalWall: wallsData.dwellingSpaceInternalWall,
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceInternalDoor: doorsData.dwellingSpaceInternalDoor,
+					},
+				},
+			});
 			
 			await renderSuspended(Summary);
 
@@ -813,9 +813,9 @@ describe("Dwelling space fabric summary", () => {
 						data: [windowData],
 						complete: true,
 					},
-					 dwellingSpaceWalls: {
-            dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
-          },
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+					},
 				},
 			});
 

@@ -245,10 +245,10 @@ const expectedHouseInput: FhsInputSchema = {
 			product_reference: "HEATPUMP-LARGE",
 		},
 	},
-		Zone: {
+	Zone: {
 		[defaultZoneName]: {
 			BuildingElement: {
-					"external wall 1 (wall)": {
+				"external wall 1 (wall)": {
 					type: "BuildingElementOpaque",
 					area: 20,
 					areal_heat_capacity: "Very light",
@@ -935,7 +935,7 @@ describe("FHS input mapper", () => {
 
 	it("maps input state with a build type of house to an FHS input request", () => {
 		// Arrange
-    const externalWallId = "c846a753-51ac-43c8-b6a8-823cab609d5e";
+		const externalWallId = "c846a753-51ac-43c8-b6a8-823cab609d5e";
 		const dwellingDetails: DwellingDetails = {
 			generalSpecifications: {
 				...baseForm,
@@ -1007,11 +1007,11 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						typeOfVent: "airBrick",
-            associatedItemId: externalWallId,
-            effectiveVentilationArea: 75,
+						associatedItemId: externalWallId,
+						effectiveVentilationArea: 75,
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
-						},
+					},
 				}],
 			},
 			combustionAppliances: {
@@ -1103,29 +1103,29 @@ describe("FHS input mapper", () => {
 				},
 			},
 			dwellingSpaceWalls: {
-		  dwellingSpaceExternalWall: {
-          ...baseForm,
-          data: [
-            {
-              ...baseForm,
-              data: {
-                id: externalWallId,
-                name: "external wall 1",
-                pitchOption: "custom",
-                pitch: 90,
-                orientation: 30,
-                height: 2.6,
-                length: 3,
-                elevationalHeight: 1,
-                surfaceArea: 20,
-                uValue: 1,
+				dwellingSpaceExternalWall: {
+					...baseForm,
+					data: [
+						{
+							...baseForm,
+							data: {
+								id: externalWallId,
+								name: "external wall 1",
+								pitchOption: "custom",
+								pitch: 90,
+								orientation: 30,
+								height: 2.6,
+								length: 3,
+								elevationalHeight: 1,
+								surfaceArea: 20,
+								uValue: 1,
 								colour: "Intermediate",
 								arealHeatCapacity: "Very light",
-                massDistributionClass: "D",
-              },
-            },
-          ],
-        },
+								massDistributionClass: "D",
+							},
+						},
+					],
+				},
 				dwellingSpaceInternalWall: {
 					...baseForm,
 				},
@@ -1358,8 +1358,8 @@ describe("FHS input mapper", () => {
 
 	it("maps input state with a build type of flat to an FHS input request", () => {
 		// Arrange
-    const externalWallId = "c846a753-51ac-43c8-b6a8-823cab609d5e";
-    const internalWallId = "743eb2b5-fc43-46ec-acf3-4d0b6eb173b3";
+		const externalWallId = "c846a753-51ac-43c8-b6a8-823cab609d5e";
+		const internalWallId = "743eb2b5-fc43-46ec-acf3-4d0b6eb173b3";
 
 		const dwellingDetails: DwellingDetails = {
 			generalSpecifications: {
@@ -1481,10 +1481,10 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						typeOfVent: "airBrick",
-            associatedItemId: externalWallId,
+						associatedItemId: externalWallId,
 						effectiveVentilationArea: 75,
 						openingRatio: 0.2,
-						midHeightOfZone: 1.9	
+						midHeightOfZone: 1.9,	
 					},
 				}],
 			},
@@ -1640,7 +1640,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
-              id: externalWallId,       
+							id: externalWallId,       
 							name: "party wall 1",
 							pitchOption: "90",
 							pitch: 90,
@@ -1657,7 +1657,7 @@ describe("FHS input mapper", () => {
 						{
 							...baseForm,
 							data: {
-                id: externalWallId,
+								id: externalWallId,
 								name: "external wall 1",
 								pitchOption: "custom",
 								pitch: 45,
@@ -1679,7 +1679,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
-              id: internalWallId,
+							id: internalWallId,
 							name: "internal wall 1",
 							pitchOption: "90",
 							pitch: 90,
@@ -1694,7 +1694,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
-              id: "17a405ad-3fc8-41a2-b4b2-6206db6085a9",
+							id: "17a405ad-3fc8-41a2-b4b2-6206db6085a9",
 							name: "wall to garage",
 							pitchOption: "custom",
 							pitch: 90,
@@ -1713,7 +1713,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
-              id: "26e6be91-d436-4ccf-a106-feddaf625edb",
+							id: "26e6be91-d436-4ccf-a106-feddaf625edb",
 							name: "ceiling to heated space",
 							type: AdjacentSpaceType.heatedSpace,
 							surfaceArea: 16,
@@ -1725,7 +1725,7 @@ describe("FHS input mapper", () => {
 					{
 						...baseForm,
 						data: {
-              id: "1d60a23a-789e-4843-8da4-ab4b90609280",
+							id: "1d60a23a-789e-4843-8da4-ab4b90609280",
 							name: "ceiling to unheated space",
 							type: AdjacentSpaceType.unheatedSpace,
 							surfaceArea: 20,
@@ -1744,7 +1744,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
-              id: "85343964-1c5f-416b-b4af-0d16c06d3046",
+							id: "85343964-1c5f-416b-b4af-0d16c06d3046",
 							name: "roof 1",
 							typeOfRoof: "flat",
 							pitch: 20,
@@ -1822,7 +1822,7 @@ describe("FHS input mapper", () => {
 							surfaceArea: 1.4,
 							arealHeatCapacity: "Very light",
 							massDistributionClass: "IE",
-						  associatedItemId: internalWallId,
+							associatedItemId: internalWallId,
 							uValue: 1,
 							thermalResistanceOfAdjacentUnheatedSpace: 2.5,
 						},
@@ -1835,8 +1835,8 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: {
 						id: "0b77e247-53c5-42b8-9dbd-83cbfc8cffff",
-            name: "bedroom window",
-            taggedItem: externalWallId,
+						name: "bedroom window",
+						taggedItem: externalWallId,
 						height: 2,
 						width: 2,
 						uValue: 0.1,
