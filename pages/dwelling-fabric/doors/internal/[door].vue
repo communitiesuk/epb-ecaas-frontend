@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AdjacentSpaceType, standardPitchOptions, getUrl, uniqueName } from "#imports";
+import { AdjacentSpaceType, getUrl, uniqueName } from "#imports";
 
 const title = "Internal door";
 const store = useEcaasStore();

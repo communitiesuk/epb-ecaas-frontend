@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl, uniqueName } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 
 const title = "External unglazed door";
 const store = useEcaasStore();

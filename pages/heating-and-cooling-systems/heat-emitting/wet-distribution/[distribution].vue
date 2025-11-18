@@ -5,7 +5,6 @@ import { ecoDesignControllerOptions, uniqueName } from "#imports";
 
 const title = "Wet distribution";
 const store = useEcaasStore();
-const route = useRoute();
 
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
@@ -32,7 +31,6 @@ const saveForm = (fields: WetDistributionData) => {
 
 	store.$patch((state) => {
 		const { wetDistribution } = state.heatingAndCoolingSystems.heatEmitting;
-		const storeData = store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data;
 
 		const commonFields = {
 			name: fields.name,

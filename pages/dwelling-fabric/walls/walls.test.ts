@@ -348,10 +348,6 @@ describe("walls", () => {
 				name: "Internal door to heated",
 				associatedItemId: internal1.id,
 			};
-			const vent1: Partial<VentData> = {
-				name: "Vent 1",
-				associatedItemId: internal1.id,
-			};
 
 			store.$patch({
 				dwellingFabric: {
@@ -502,10 +498,6 @@ describe("walls", () => {
 				name: "Internal to unheated",
 				associatedItemId: toUnheatedSpace1.id,
 			};
-			const vent1: Partial<VentData> = {
-				name: "Vent 1",
-				associatedItemId: toUnheatedSpace1.id,
-			};
 
 			store.$patch({
 				dwellingFabric: {
@@ -648,11 +640,6 @@ describe("walls", () => {
 			const doorToUnheatedSpace: Partial<InternalDoorData> = {
 				typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 				name: "Internal to unheated",
-				associatedItemId: party1.id,
-			};
-
-			const vent1: Partial<VentData> = {
-				name: "Vent 1",
 				associatedItemId: party1.id,
 			};
 

@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from "uuid";
 const title = "Ceilings and roofs";
 const page = usePage();
 const store = useEcaasStore();
-const { vents } = store.infiltrationAndVentilation;
 const { dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
 const { dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
 const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
