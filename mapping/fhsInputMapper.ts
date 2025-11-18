@@ -1,6 +1,6 @@
 import type { StripDefs } from "./mapping.types";
 import type { SchemaEnergySupplyElectricity, SchemaFhsInputSchema, SchemaStorageTank } from "~/schema/api-schema.types";
-import type { SchemaHeatSourceWetHeatPumpWithProductReference, SchemaSimulationTime } from "~/schema/aliases";
+import type { SchemaHeatSourceWetHeatPumpWithProductReference } from "~/schema/aliases";
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
 import { mapInfiltrationVentilationData } from "./infiltrationVentilationMapper";
@@ -42,7 +42,6 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		},
 	};
 
-	const control: Pick<FhsInputSchema, "Control"> = { Control: {} };
 	const events: Pick<FhsInputSchema, "Events"> = { Events: {} };
 
 	const defaultColdWaterSource: Pick<FhsInputSchema, "ColdWaterSource"> = {
@@ -52,13 +51,6 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 				temperatures: [3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
 				time_series_step: 1,
 			},
-		},
-	};
-	const defaultSimulationTime: Pick<FhsInputSchema, "SimulationTime"> = {
-		SimulationTime: {
-			start: 0,
-			end: 8,
-			step: 1,
 		},
 	};
 	const defaultAppliances: Pick<FhsInputSchema, "Appliances"> = {
@@ -79,6 +71,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 				product_reference: heatPump.productReference,
 				type: "HeatPump",
 				EnergySupply: defaultElectricityEnergySupplyName,
+				is_heat_network: false,
 			};
 			return [
 				heatPump.name,
@@ -97,9 +90,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		domesticHotWaterData,
 		pvData,
 		defaultColdWaterSource,
-		control,
 		events,
-		defaultSimulationTime,
 	]) as FhsInputSchema;
 
 	console.log(fhsInput);
@@ -107,5 +98,4 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	return fhsInput;
 }
 
-// override the SimulationTime field for now as this is incompletely defined in the schema (NB. it will be removed in a coming version)
-export type FhsInputSchema = Simplify<Omit<StripDefs<SchemaFhsInputSchema>, "SimulationTime"> & { SimulationTime: SchemaSimulationTime }>;
+export type FhsInputSchema = Simplify<StripDefs<SchemaFhsInputSchema>>;

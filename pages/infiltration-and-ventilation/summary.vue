@@ -99,34 +99,6 @@ const airPermeabilitySummary: SummarySection = {
 	editUrl: getUrl("airPermeability"),
 };
 
-// const { combustionAppliances } = store.infiltrationAndVentilation;
-
-// function getCombustionApplianceData(type: string, data: CombustionApplianceData[]) {
-// 	return data.map(x => {
-// 		return {
-// 			"Type": type,
-// 			"Name": x.name,
-// 			"Air supply to appliance": sentenceCase(x.airSupplyToAppliance),
-// 			"Exhaust method from appliance": displayFlueGasExhaustSituation(x.exhaustMethodFromAppliance),
-// 			"Type of fuel": x.typeOfFuel
-// 		};
-// 	});
-// }
-
-// const combustionAppliancesSummary: SummarySection = {
-// 	id: 'combustionAppliances',
-// 	label: 'Combustion appliances',
-// 	data: [
-// 		getCombustionApplianceData('Closed fire', combustionAppliances[CombustionApplianceType.closed_fire].data),
-// 		getCombustionApplianceData('Closed fireplace with fan', combustionAppliances[CombustionApplianceType.closed_with_fan].data),
-// 		getCombustionApplianceData('Open fireplace', combustionAppliances[CombustionApplianceType.open_fireplace].data),
-// 		getCombustionApplianceData('Open gas fire', combustionAppliances[CombustionApplianceType.open_gas_fire].data),
-// 		getCombustionApplianceData('Open gas flue balancer', combustionAppliances[CombustionApplianceType.open_gas_flue_balancer].data),
-// 		getCombustionApplianceData('Open gas kitchen stove', combustionAppliances[CombustionApplianceType.open_gas_kitchen_stove].data)
-// 	].flat(),
-// 	editUrl: getUrl('combustionAppliances')
-// };
-
 const numOfMvhrItems = mechanicalVentilationData.filter(x => x.data.typeOfMechanicalVentilationOptions === "MVHR").length;
 </script>
 

@@ -295,6 +295,7 @@ describe("dwelling fabric mapper", () => {
 			mass_distribution_class: fullMassDistributionClass(exposedFloor.massDistributionClass),
 			orientation360: exposedFloor.orientation,
 			is_external_door: false,
+			is_unheated_pitched_roof: false,
 		};
 
 		expect(exposedFloorElement).toEqual(expectedExposedFloor);
@@ -398,6 +399,7 @@ describe("dwelling fabric mapper", () => {
 			areal_heat_capacity: externalWall.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(externalWall.data.massDistributionClass),
 			is_external_door: false,
+			is_unheated_pitched_roof: false,
 		};
 
 		expect(externalWallElement).toEqual(expectedExternalWall);
@@ -670,6 +672,7 @@ describe("dwelling fabric mapper", () => {
 			areal_heat_capacity: externalUnglazedDoor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(externalUnglazedDoor.massDistributionClass),
 			is_external_door: true,
+			is_unheated_pitched_roof: false,
 			colour: "Intermediate",
 		};
 

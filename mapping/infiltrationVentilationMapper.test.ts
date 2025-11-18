@@ -1,4 +1,4 @@
-import { mapAirPermeabilityData, mapCombustionAppliancesData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
+import { mapAirPermeabilityData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
 import type { SchemaMechanicalVentilation } from "~/schema/aliases";
@@ -477,37 +477,5 @@ describe("infiltration ventilation mapper", () => {
 		// Assert
 		expect(fhsInputData.test_pressure).toBe("Standard");
 		expect(fhsInputData.test_result).toBe(5);
-	});
-
-	it("maps combustion appliances data to FHS input request", () => {
-		// Arrange
-		const combustionAppliances: CombustionApplianceData[] = [{
-			name: "Gas Boiler",
-			airSupplyToAppliance: "room_air",
-			exhaustMethodFromAppliance: "into_mech_vent",
-			typeOfFuel: "gas",
-		}];
-
-		store.$patch({
-			infiltrationAndVentilation: {
-				combustionAppliances: {
-					open_gas_fire: {
-						...baseForm,
-						data: combustionAppliances,
-					},
-				},
-			},
-		});
-
-		// Act
-		const fhsInputData = mapCombustionAppliancesData(resolveState(store.$state));
-
-		// Assert
-		const gasBoiler = fhsInputData["Gas Boiler"];
-		expect(gasBoiler).toBeDefined();
-		expect(gasBoiler?.supply_situation).toBe("room_air");
-		expect(gasBoiler?.exhaust_situation).toBe("into_mech_vent");
-		expect(gasBoiler?.fuel_type).toBe("gas");
-		expect(gasBoiler?.appliance_type).toBe("open_gas_fire");
 	});
 });

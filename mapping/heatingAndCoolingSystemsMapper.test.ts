@@ -1,6 +1,6 @@
 import { mapGeneralData, mapHeatEmittingData, mapSpaceCoolSystems } from "./heatingAndCoolingSystemsMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
-import { defaultControlName, defaultZoneName } from "./common";
+import { defaultZoneName } from "./common";
 
 const baseForm = {
 	data: [],
@@ -135,9 +135,7 @@ describe("heat emitting mapper", () => {
 					thermal_mass: 400,
 					type: "WetDistribution",
 					Zone: defaultZoneName,
-					Control: defaultControlName,
 					variable_flow: false,
-					pipework: [],
 				},
 			},
 		};
@@ -229,9 +227,7 @@ describe("heat emitting mapper", () => {
 					thermal_mass: 400,
 					type: "WetDistribution",
 					Zone: defaultZoneName,
-					Control: defaultControlName,
 					variable_flow: false,
-					pipework: [],
 				},
 			},
 		};
@@ -277,7 +273,6 @@ describe("heat emitting mapper", () => {
 					rated_power: 100,
 					convective_type: "Air heating (convectors, fan coils etc.)",
 					EnergySupply: "mains elec",
-					Control: defaultControlName,
 				},
 			},
 		};

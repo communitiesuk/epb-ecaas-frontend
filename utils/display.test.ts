@@ -116,23 +116,6 @@ describe("Show string in sentence case", () => {
 	});
 });
 
-describe("Show flue gas exhaust situation in display", () => {
-	it('should display correct representiation of flue gas exhasut situation "into room"', () => {
-		const result = displayFlueGasExhaustSituation("into_room");
-		expect(result).toBe("Into room");
-	});
-
-	it('should display correct representiation of flue gas exhasut situation "into mechanical vent"', () => {
-		const result = displayFlueGasExhaustSituation("into_mech_vent");
-		expect(result).toBe("Into mechanical vent");
-	});
-
-	it('should display correct representiation of flue gas exhasut situation "into separate duct"', () => {
-		const result = displayFlueGasExhaustSituation("into_separate_duct");
-		expect(result).toBe("Into separate duct");
-	});
-});
-
 describe("displaySnakeToSentenceCase", () => {
 	it("should convert snake_case to Sentence Case", () => {
 		const result = displaySnakeToSentenceCase("hello_world");

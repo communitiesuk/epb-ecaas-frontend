@@ -1,7 +1,7 @@
 import type { SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower, SchemaWaterPipework } from "~/schema/aliases";
 import type { SchemaStorageTank } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
-import { defaultControlMaxName, defaultControlMinName, defaultElectricityEnergySupplyName } from "./common";
+import { defaultElectricityEnergySupplyName } from "./common";
 import { asLitres } from "../utils/units/volume";
 
 export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputSchema> {
@@ -115,9 +115,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 					heater_position: 0.1,
 					type: "HeatSourceWet",
 					thermostat_position: 0.33,
-					Controlmax: defaultControlMaxName,
-					Controlmin: defaultControlMinName,
-					temp_flow_limit_upper: 65, // upstream needs a value here at 0.36
+					temp_flow_limit_upper: 65,
 				},
 			},
 			...(primaryPipeworkEntries.length !== 0 ? { primary_pipework: primaryPipeworkEntries } : {}),

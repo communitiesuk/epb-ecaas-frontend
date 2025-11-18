@@ -3,11 +3,11 @@ import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { asCubicMetresPerHour } from "~/utils/units/flowRate";
-import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation, SchemaCombustionAppliance, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/aliases";
+import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/aliases";
 import type { SchemaMechVentCommon } from "~/schema/api-schema.types";
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
-	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentilationPossible } = mapVentilationData(state);
+	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase } = mapVentilationData(state);
 	const mechanicalVentilation = mapMechanicalVentilationData(state);
 
 	const infiltrationVentilation: Omit<SchemaInfiltrationVentilation, InfiltrationFieldsFromDwelling> = {
@@ -16,8 +16,6 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 			env_area: dwellingEnvelopeArea,
 			...mapAirPermeabilityData(state),
 		},
-		CombustionAppliances: mapCombustionAppliancesData(state),
-		cross_vent_possible: crossVentilationPossible,
 		ventilation_zone_base_height: dwellingElevationalLevelAtBase,
 		ach_max_static_calcs: 2, // suggested default
 		MechanicalVentilation: objectFromEntries(objectEntries(mechanicalVentilation).map(([name, mechanicalVentData]) => {
@@ -172,52 +170,4 @@ export function mapAirPermeabilityData(state: ResolvedState): Pick<SchemaVentila
 		test_pressure: testPressure,
 		test_result: airTightnessTestResult,
 	};
-}
-
-export function mapCombustionAppliancesData(state: ResolvedState): Record<string, SchemaCombustionAppliance> {
-	const combustionApplianceEntries = objectEntries(state.infiltrationAndVentilation.combustionAppliances).map(([key, value]) => {
-		return value.map<[string, SchemaCombustionAppliance]>((appliance) => {
-			const { name, airSupplyToAppliance, exhaustMethodFromAppliance, typeOfFuel } = appliance;
-
-			let applianceInput: SchemaCombustionAppliance;
-
-			const commonFields: Pick<SchemaCombustionAppliance, "supply_situation" | "exhaust_situation"> = {
-				supply_situation: airSupplyToAppliance,
-				exhaust_situation: exhaustMethodFromAppliance,
-			};
-
-			switch (key) {
-				case "closed_fire":
-					applianceInput = {
-						...commonFields,
-						fuel_type: typeOfFuel as "oil" | "coal",
-						appliance_type: key,
-					};
-					break;
-				case "closed_with_fan":
-				case "open_gas_flue_balancer":
-				case "open_gas_kitchen_stove":
-				case "open_gas_fire":
-					applianceInput = {
-						...commonFields,
-						fuel_type: "gas",
-						appliance_type: key,
-					};
-					break;
-				case "open_fireplace":
-					applianceInput = {
-						...commonFields,
-						fuel_type: "wood",
-						appliance_type: key,
-					};
-					break;
-				default:
-					key satisfies never;
-					throw new Error(`Unknown type of combustion appliance "${key}" encountered.`);
-			}
-
-			return [name, applianceInput];
-		});
-	}).flat();
-	return objectFromEntries(combustionApplianceEntries);
 }

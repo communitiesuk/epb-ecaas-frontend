@@ -78,7 +78,3 @@ export const defaultHeatSourceWetDetails = {
 	time_delay_backup: 2,
 	var_flow_temp_ctrl_during_test: true,
 } as const satisfies SchemaHeatSourceWetDetails;
-
-export const defaultControlName = "default";
-export const defaultControlMinName = "min";
-export const defaultControlMaxName = "max";

@@ -17,7 +17,6 @@ export type SchemaSpaceCoolSystemDetails = Exclude<FhsSchema["SpaceCoolSystem"],
 export type SchemaZoneInput = FhsSchema["Zone"][string];
 export type SchemaHotWaterSourceDetails = Exclude<FhsSchema["HotWaterSource"]["hw cylinder"], undefined>;
 export type MassDistributionClass = SchemaMassDistributionClass;
-export type CombustionFuelType = SchemaInfiltrationVentilation["CombustionAppliances"][string]["fuel_type"];
 export type MVHRLocation = SchemaDefs["MechVentMVHR"]["mvhr_location"];
 export type FloorType = SchemaBuildingElementGround["floor_type"];
 export type SchemaBuildingElement = FhsSchema["Zone"][string]["BuildingElement"][string];
@@ -34,14 +33,12 @@ export function externalConditions(shading: SchemaShadingSegment[]): SchemaExter
 		shading_segments: shading,
 	};
 }
-export type SchemaCombustionAirSupplySituation = SchemaInfiltrationVentilation["CombustionAppliances"][string]["supply_situation"];
 type HotWaterDemand = Simplify<Exclude<Required<FhsSchema["HotWaterDemand"]>, undefined>>;
 export type SchemaBathDetails = HotWaterDemand["Bath"][string];
 export type SchemaOtherWaterUseDetails = HotWaterDemand["Other"][string];
 export type SchemaShower = HotWaterDemand["Shower"][string];
 export type SchemaInverterType = OnSiteGeneration[string]["inverter_type"];
 export type SchemaBatteryLocation = SchemaDefs["ElectricBattery"]["battery_location"];
-export type SchemaFlueGasExhaustSituation = SchemaInfiltrationVentilation["CombustionAppliances"][string]["exhaust_situation"];
 type Ductwork = components["schemas"]["MechVentMVHR"]["ductwork"][number];
 export type SchemaDuctShape = Ductwork["cross_section_shape"];
 export type SchemaDuctType = Ductwork["duct_type"];
@@ -58,13 +55,12 @@ export type SchemaWaterPipework = Exclude<SchemaDefs["HotWaterTankCommon"]["prim
 export type SchemaWaterPipeworkLocation = Exclude<SchemaWaterPipework["location"], undefined>;
 export type SchemaWaterPipeContentsType = Exclude<SchemaWaterPipework["pipe_contents"], undefined | "air">;
 export type SchemaWindowShadingObject = SchemaDefs["BuildingElementTransparent"]["shading"][number];
-export type SchemaCombustionApplianceType = Exclude<SchemaInfiltrationVentilation["CombustionAppliances"][string]["appliance_type"], undefined>;
 export type SchemaMechVentType = VentType;
 export type SchemaFuelType = Exclude<FhsSchema["EnergySupply"][string]["fuel"], "gas" | "custom" | "wood" | "gas" | "oil" | "coal" | "electricity" >;
 export type SchemaFuelTypeExtended = SchemaFuelType | "elecOnly";
 export type SchemaPhotovoltaicVentilationStrategy = OnSiteGenerationVentilationStrategy;
 type HeatPump = SchemaDefs["HeatSourceWetHeatPump"];
-export type SchemaHeatSourceWetHeatPumpWithProductReference = Extract<HeatPump, { product_reference: string }>;
+export type SchemaHeatSourceWetHeatPumpWithProductReference = Extract<HeatPump, { product_reference: string }> & { is_heat_network: false };
 type HeatPumpFull = Exclude<HeatPump, { product_reference: string }>;
 export type SchemaHeatPumpBackupControlType = HeatPumpFull["backup_ctrl_type"];
 export type SchemaHeatPumpSinkType = HeatPumpFull["sink_type"];
@@ -74,19 +70,13 @@ export type SchemaLighting = FhsSchema["Zone"][string]["Lighting"];
 export type SchemaThermalBridgingLinearFhs = SchemaDefs["ThermalBridgeLinear"]; 
 export type SchemaThermalBridgingPoint = SchemaDefs["ThermalBridgePoint"];
 export type SchemaEdgeInsulationHorizontal = Simplify<SchemaDefs["SlabEdgeInsulation"]["edge_insulation"] & { type: "horizontal" }>;
-export type SchemaCombustionAppliance = SchemaInfiltrationVentilation["CombustionAppliances"][string];
 export type SchemaMechanicalVentilationDuctwork = SchemaDefs["MechVentMVHR"]["ductwork"][number];
 export type SchemaVent = FhsSchema["InfiltrationVentilation"]["Vents"][string];
 export type SchemaVentilationLeaks = FhsSchema["InfiltrationVentilation"]["Leaks"];
 export type SchemaLeaksTestPressure = SchemaVentilationLeaks["test_pressure"];
 export type SchemaArealHeatCapacity = BuildingElementGround["areal_heat_capacity"];
 export type SchemaThermalBridgeJunctionType = SchemaThermalBridgingLinearFhs["junction_type"];
-export type SchemaColour = SchemaBuildingElementOpaque["colour"];
-export type SchemaSimulationTime = {
-	start: number;
-	end: number;
-	step: number;
-};
+export type SchemaColour = Exclude<SchemaBuildingElementOpaque["colour"], undefined>;
 export type SchemaConvectiveType = SchemaDefs["InstantElecHeater"]["convective_type"];
 export type SchemaEdgeInsulation = SchemaDefs["SlabEdgeInsulation"]["edge_insulation"];
 export type SchemaLightingBulbs = FhsSchema["Zone"][string]["Lighting"]["bulbs"];

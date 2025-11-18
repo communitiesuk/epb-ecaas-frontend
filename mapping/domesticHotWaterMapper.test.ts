@@ -2,7 +2,6 @@ import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { litre } from "../utils/units/volume";
 import { unitValue } from "~/utils/units";
-import { defaultControlMaxName, defaultControlMinName } from "./common";
 
 const baseForm = {
 	data: [],
@@ -95,8 +94,6 @@ describe("domestic hot water mapper", () => {
 							name: heatPumpName,
 							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33,
-							Controlmin: defaultControlMinName,
-							Controlmax: defaultControlMaxName,
 						},
 					},
 					daily_losses: 3,
@@ -209,8 +206,6 @@ describe("domestic hot water mapper", () => {
 							name: heatPumpName,
 							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33,
-							Controlmax: defaultControlMaxName,
-							Controlmin: defaultControlMinName,
 						},
 					},
 					daily_losses: 3,

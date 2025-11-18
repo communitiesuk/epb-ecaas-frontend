@@ -3,10 +3,9 @@ import { ajv } from "../schema/validator";
 import { mapFhsInputData } from "./fhsInputMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
-import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
+import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { centimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
-import type { SchemaSimulationTime } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
@@ -31,7 +30,6 @@ const expectedHouseInput: FhsInputSchema = {
 			time_series_step: 1,
 		},
 	},
-	Control: {},
 	EnergySupply: {
 		["mains elec"]: {
 			fuel: "electricity",
@@ -104,7 +102,7 @@ const expectedHouseInput: FhsInputSchema = {
 	},
 	General: {
 		build_type: "house",
-		storeys_in_building: 2,
+		storeys_in_dwelling: 2,
 	},
 	HeatingControlType: "SeparateTempControl",
 	HotWaterDemand: {
@@ -129,8 +127,6 @@ const expectedHouseInput: FhsInputSchema = {
 					type: "HeatSourceWet",
 					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
-					Controlmin: "min",
-					Controlmax: "max",
 				},
 			},
 			daily_losses: 34,
@@ -140,7 +136,6 @@ const expectedHouseInput: FhsInputSchema = {
 		},
 	},
 	InfiltrationVentilation: {
-		CombustionAppliances: {},
 		Leaks: {
 			ventilation_zone_height: 8,
 			env_area: 320,
@@ -168,7 +163,6 @@ const expectedHouseInput: FhsInputSchema = {
 		},
 		ach_max_static_calcs: 2,
 		altitude: 100,
-		cross_vent_possible: false,
 		noise_nuisance: false,
 		shield_class: "Shielded",
 		terrain_class: "Suburban",
@@ -186,11 +180,6 @@ const expectedHouseInput: FhsInputSchema = {
 	NumberOfTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
 	NumberOfWetRooms: 0,
-	SimulationTime: {
-		start: 0,
-		end: 8,
-		step: 1,
-	},
 	SpaceCoolSystem: {
 		// "some-aircon-unit-name": {
 		// 	type: "AirConditioning",
@@ -232,9 +221,7 @@ const expectedHouseInput: FhsInputSchema = {
 			],
 			temp_diff_emit_dsgn: 31,
 			thermal_mass: 0.14,
-			Control: defaultControlName,
 			variable_flow: false,
-			pipework: [],
 		},
 	},
 	GroundFloorArea: 40,
@@ -243,6 +230,7 @@ const expectedHouseInput: FhsInputSchema = {
 			EnergySupply: defaultElectricityEnergySupplyName,
 			type: "HeatPump",
 			product_reference: "HEATPUMP-LARGE",
+			is_heat_network: false,
 		},
 	},
 	Zone: {
@@ -261,6 +249,7 @@ const expectedHouseInput: FhsInputSchema = {
 					width: 3,
 					pitch: 90,
 					colour: "Intermediate",
+					is_unheated_pitched_roof: false,
 				},
 				"ground-floor (floor)": {
 					type: "BuildingElementGround",
@@ -312,7 +301,6 @@ const expectedFlatInput: FhsInputSchema = {
 			time_series_step: 1,
 		},
 	},
-	Control: {},
 	EnergySupply: {
 		["mains elec"]: {
 			fuel: "electricity",
@@ -436,7 +424,7 @@ const expectedFlatInput: FhsInputSchema = {
 	},
 	General: {
 		build_type: "flat",
-		storeys_in_building: 6,
+		storeys_in_dwelling: 6,
 		storey_of_dwelling: 3,
 	},
 	HeatingControlType: "SeparateTempControl",
@@ -499,8 +487,6 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "HeatSourceWet",
 					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
-					Controlmin: "min",
-					Controlmax: "max",
 				},
 			},
 			daily_losses: 10,
@@ -530,7 +516,6 @@ const expectedFlatInput: FhsInputSchema = {
 		},
 	},
 	InfiltrationVentilation: {
-		CombustionAppliances: {},
 		Leaks: {
 			ventilation_zone_height: 1,
 			env_area: 5,
@@ -596,7 +581,6 @@ const expectedFlatInput: FhsInputSchema = {
 		},
 		ach_max_static_calcs: 2,
 		altitude: 30,
-		cross_vent_possible: true,
 		noise_nuisance: true,
 		shield_class: "Normal",
 		terrain_class: "OpenField",
@@ -629,25 +613,18 @@ const expectedFlatInput: FhsInputSchema = {
 	NumberOfTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
 	NumberOfWetRooms: 0,
-	SimulationTime: {
-		start: 0,
-		end: 8,
-		step: 1,
-	} as SchemaSimulationTime,
 	SpaceCoolSystem: {},
 	SpaceHeatSystem: {
 		"instant elec heater 1": {
 			rated_power: 10,
 			type: "InstantElecHeater",
 			EnergySupply: "mains elec",
-			Control: defaultControlName,
 			convective_type: "Air heating (convectors, fan coils etc.)",
 		},
 		"instant elec heater 2": {
 			rated_power: 13,
 			type: "InstantElecHeater",
 			EnergySupply: "mains elec",
-			Control: defaultControlName,
 			convective_type: "Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves",
 		},
 	},
@@ -657,6 +634,7 @@ const expectedFlatInput: FhsInputSchema = {
 			EnergySupply: defaultElectricityEnergySupplyName,
 			type: "HeatPump",
 			product_reference: "HEATPUMP-SMALL",
+			is_heat_network: false,
 		},
 	},
 	Zone: {
@@ -725,6 +703,7 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "BuildingElementOpaque",
 					is_external_door: false,
 					colour: "Dark",
+					is_unheated_pitched_roof: false,
 				},
 				"party wall 1 (wall)": {
 					area: 15,
@@ -746,6 +725,7 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 1,
 					width: 3,
 					pitch: 45,
+					is_unheated_pitched_roof: false,
 					colour: "Light",
 				},
 				"internal wall 1 (wall)": {
@@ -767,6 +747,7 @@ const expectedFlatInput: FhsInputSchema = {
 					orientation360: 30,
 					pitch: 45,
 					type: "BuildingElementOpaque",
+					is_unheated_pitched_roof: false,
 					u_value: 1,
 					width: 1.2,
 				},
@@ -920,7 +901,7 @@ const expectedFlatInput: FhsInputSchema = {
 // custom vitest matcher so we can get more useful JSON validation errors
 expect.extend({
 	toPassJsonSchema(isValid: boolean, validator: ValidateFunction<unknown>) {
-		const errors = validator.errors?.map(({ message }) => message).join("; ");
+		const errors = validator.errors?.map(({ keyword, instancePath, schemaPath, message }) => `${message} (${keyword}; ${instancePath}; ${schemaPath})`).join("; ");
 		return {
 			message: () => isValid ? "" : `JSON validation errors: ${errors}`,
 			pass: isValid,
@@ -1014,27 +995,6 @@ describe("FHS input mapper", () => {
 					},
 				}],
 			},
-			combustionAppliances: {
-				"open_fireplace": {
-					...baseForm,
-				},
-				"closed_with_fan": {
-					...baseForm,
-				},
-				"open_gas_flue_balancer": {
-					...baseForm,
-				},
-				"open_gas_kitchen_stove": {
-					...baseForm,
-				},
-				"open_gas_fire": {
-					...baseForm,
-				},
-				"closed_fire": {
-					...baseForm,
-				},
-			},
-			// skipping combustion appliances they have been removed for summer
 			naturalVentilation: {
 				...baseForm,
 				data: {
@@ -1487,26 +1447,6 @@ describe("FHS input mapper", () => {
 						midHeightOfZone: 1.9,	
 					},
 				}],
-			},
-			combustionAppliances: {
-				"open_fireplace": {
-					...baseForm,
-				},
-				"closed_with_fan": {
-					...baseForm,
-				},
-				"open_gas_flue_balancer": {
-					...baseForm,
-				},
-				"open_gas_kitchen_stove": {
-					...baseForm,
-				},
-				"open_gas_fire": {
-					...baseForm,
-				},
-				"closed_fire": {
-					...baseForm,
-				},
 			},
 			naturalVentilation: {
 				...baseForm,

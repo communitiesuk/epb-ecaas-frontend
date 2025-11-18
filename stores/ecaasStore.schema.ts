@@ -2,11 +2,11 @@ import { standardPitchOption } from "./../utils/pitchOptions";
 import type { TaggedUnion } from "type-fest";
 import type { PageId } from "~/data/pages/pages";
 import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
-import type { SchemaCombustionApplianceType, FloorType, SchemaMechVentType, MassDistributionClass } from "~/schema/aliases";
+import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/schema/aliases";
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, colourZod, combustionAirSupplySituationZod, combustionFuelTypeZod, convectiveTypeZod, ductShapeZod, flueGasExhaustSituationZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, colourZod, convectiveTypeZod, ductShapeZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 
 const fraction = z.number().min(0).max(1);
 const percentage = z.number().min(0).max(100);
@@ -685,7 +685,6 @@ export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	mechanicalVentilation: EcaasFormList<MechanicalVentilationData>;
 	ductwork: EcaasFormList<DuctworkData>;
 	vents: EcaasFormList<VentData>;
-	combustionAppliances: CombustionAppliancesData;
 	naturalVentilation: EcaasForm<VentilationData>;
 	airPermeability: EcaasForm<AirPermeabilityData>;
 }>;
@@ -740,16 +739,6 @@ const ventDataZod = z.object({
 });
 
 export type VentData = z.infer<typeof ventDataZod>;
-
-export type CombustionAppliancesData = Record<SchemaCombustionApplianceType, EcaasForm<CombustionApplianceData[]>>;
-
-const combustionApplianceDataZod = named.extend({
-	airSupplyToAppliance: combustionAirSupplySituationZod,
-	exhaustMethodFromAppliance: flueGasExhaustSituationZod,
-	typeOfFuel: combustionFuelTypeZod,
-});
-
-export type CombustionApplianceData = z.infer<typeof combustionApplianceDataZod>;
 
 const ventilationDataZod = z.object({
 	ventilationZoneHeight: z.number().min(1).max(20),
@@ -1030,12 +1019,6 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"infiltrationAndVentilation/mechanicalVentilation": mechanicalVentilationDataZod,
 	"infiltrationAndVentilation/ductwork": ductworkDataZod,
 	"infiltrationAndVentilation/vents": ventDataZod,
-	"infiltrationAndVentilation/combustionAppliances/closed_fire": combustionApplianceDataZod,
-	"infiltrationAndVentilation/combustionAppliances/closed_with_fan": combustionApplianceDataZod,
-	"infiltrationAndVentilation/combustionAppliances/open_fireplace": combustionApplianceDataZod,
-	"infiltrationAndVentilation/combustionAppliances/open_gas_fire": combustionApplianceDataZod,
-	"infiltrationAndVentilation/combustionAppliances/open_gas_flue_balancer": combustionApplianceDataZod,
-	"infiltrationAndVentilation/combustionAppliances/open_gas_kitchen_stove": combustionApplianceDataZod,
 	"infiltrationAndVentilation/naturalVentilation": ventilationDataZod,
 	"infiltrationAndVentilation/airPermeability": airPermeabilityDataZod,
 	"heatingAndCoolingSystems/general": generalHeatingAndCoolingSystemsDataZod,

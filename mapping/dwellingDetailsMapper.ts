@@ -39,12 +39,12 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 			generalDetails.typeOfDwelling === "flat"
 				? {
 					build_type: "flat",
-					storeys_in_building: generalDetails.storeysInDwelling,
+					storeys_in_dwelling: generalDetails.storeysInDwelling,
 					storey_of_dwelling: generalDetails.storeyOfFlat,
 				}
 				: {
 					build_type: "house",
-					storeys_in_building: generalDetails.storeysInDwelling,
+					storeys_in_dwelling: generalDetails.storeysInDwelling,
 				},
 		BuildingLength: generalDetails.buildingLength,
 		BuildingWidth: generalDetails.buildingWidth,

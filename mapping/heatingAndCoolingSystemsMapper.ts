@@ -1,7 +1,7 @@
 import { objectFromEntries } from "ts-extras";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { SchemaSpaceCoolSystemDetails, SchemaSpaceHeatSystemDetails } from "~/schema/aliases";
-import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
+import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 
 export function mapHeatingAndCoolingSystemsData(state: ResolvedState): Pick<FhsInputSchema, "SpaceHeatSystem" | "SpaceCoolSystem"> {
 	return {
@@ -66,9 +66,7 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 			thermal_mass: thermalMass,
 			type: "WetDistribution",
 			Zone: defaultZoneName,
-			Control: defaultControlName,
 			variable_flow: false,
-			pipework: [], // TODO: does pipework need to be added?
 		};
 		return [
 			name,
@@ -84,7 +82,6 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 			EnergySupply: defaultElectricityEnergySupplyName,
 			rated_power: heater.ratedPower,
 			convective_type: heater.convectiveType,
-			Control: defaultControlName,
 		},
 	]);
 

@@ -1,6 +1,6 @@
 import { objectFromEntries } from "ts-extras";
 import type { DisplayProduct } from "~/pcdb/products";
-import type { SchemaApplianceType, SchemaColour, SchemaFlueGasExhaustSituation, SchemaFuelTypeExtended, SchemaLeaksTestPressure } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaLeaksTestPressure } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
@@ -72,20 +72,6 @@ export function sentenceCase(value: string): string {
 }
 
 export type FlueGasExhaustSituationDisplay = "Into separate duct" | "Into room" | "Into mechanical vent";
-
-export function displayFlueGasExhaustSituation(value: SchemaFlueGasExhaustSituation): FlueGasExhaustSituationDisplay {
-	switch (value) {
-		case "into_separate_duct":
-			return "Into separate duct";
-		case "into_room":
-			return "Into room";
-		case "into_mech_vent":
-			return "Into mechanical vent";
-		default:
-			value satisfies never;
-			throw new Error(`Missed a flue gas exhaust situation case: ${value}`);
-	}
-}
 
 export function displaySnakeToSentenceCase(value: string): string {
 	const replaced = value.replaceAll(/_/g, " ");
