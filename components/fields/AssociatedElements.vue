@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { AdjacentSpaceType, getUrl } from "#imports";
 
-const { adjacentSpaceType } = defineProps<{
+const {
+	adjacentSpaceType,
+	help = undefined,
+	validation = undefined,
+	validationRules = undefined,
+	validationMessages = undefined,
+} = defineProps<{
 	id: string;
 	name: string;
 	label: string;
