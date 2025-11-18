@@ -52,6 +52,7 @@ describe("heat emitting mapper", () => {
 		const heatPump: HeatPumpData = {
 			id: "some-heat-pump-id",
 			name: "Acme heat pump",
+			typeOfHeatPump: "airSource",
 			productReference: "HEATPUMP-LARGE",
 		};
 
@@ -148,6 +149,7 @@ describe("heat emitting mapper", () => {
 		const heatPump: HeatPumpData = {
 			id: "some-heat-pump-id",
 			name: "Acme heat pump",
+			typeOfHeatPump: "airSource",
 			productReference: "HEATPUMP-SMALL",
 		};
 

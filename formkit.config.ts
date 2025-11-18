@@ -14,7 +14,7 @@ import FormKitCheckboxes from "./components/form-kit/Checkboxes.vue";
 import FormKitCheckboxesWithExclusive from "./components/form-kit/CheckboxesWithExclusive.vue";
 import FormKitInputText from "./components/form-kit/InputText.vue";
 import FormKitInputTextWithSuffix from "./components/form-kit/InputTextWithSuffix.vue";
-import { FormKitBoolean } from "#components";
+import { FormKitBoolean, FormKitPcdbProduct } from "#components";
 import type { LengthUnit } from "./utils/units/length";
 import type { VolumeUnit } from "./utils/units/volume";
 import type { FlowRateUnit } from "./utils/units/flowRate";
@@ -75,6 +75,9 @@ declare module "@formkit/inputs" {
 			trueLabel?: string;
 			falseLabel?: string;
 		};
+		govPcdbProduct: {
+			type: "govPcdbProduct";
+		}
 	}
 }
 
@@ -133,6 +136,11 @@ export default defineFormKitConfig(() => {
 			govBoolean: {
 				type: "input",
 				component: FormKitBoolean,
+			},
+			govPcdbProduct: {
+				type: "input",
+				component: FormKitPcdbProduct,
+
 			},
 		},
 	};

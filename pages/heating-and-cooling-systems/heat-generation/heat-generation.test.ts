@@ -7,7 +7,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
 import HeatGeneration from "./index.vue";
-import HeatPumpForm from "./heat-pump/[pump].vue";
+import HeatPumpForm from "./heat-pump/[pump]/index.vue";
 import BoilerForm from "./boiler/[boiler].vue";
 import HeatBatteryForm from "./heat-battery/[battery].vue";
 import HeatNetworkForm from "./heat-network/[network].vue";
@@ -33,6 +33,8 @@ const heatGenerationData = (): Pick<heatingAndCoolingSystems, "heatGeneration"> 
 							id: "1b6a1e50-0e1f-4bc1-b198-f84587a7fdf2",
 							name: "Heat pump 1",
 							productReference: "HEATPUMP-MEDIUM",
+							typeOfHeatPump: "airSource",
+
 						},
 						complete: true,
 					},
@@ -94,18 +96,22 @@ describe("heat generation", () => {
 			id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a1o",
 			name: "Heat pump 1",
 			productReference: "HEATPUMP-LARGE",
+			typeOfHeatPump: "airSource",
+
 		};
 
 		const heatPump2: HeatPumpData = {
 			id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a2q",
 			name: "Heat pump 2",
 			productReference: "HEATPUMP-MEDIUM",
+			typeOfHeatPump: "airSource",
 		};
 
 		const heatPump3: HeatPumpData = {
 			id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a3f",
 			name: "Heat pump 3",
 			productReference: "HEATPUMP-SMALL",
+			typeOfHeatPump: "airSource",
 		};
 
 		afterEach(() => {

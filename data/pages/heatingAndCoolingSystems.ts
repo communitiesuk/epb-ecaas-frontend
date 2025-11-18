@@ -31,6 +31,13 @@ const heatingAndCoolingSystemsPages = [
 		parentId: "heatGeneration",
 	},
 	{
+		id: "airSourceProducts",
+		title: "Select an air source heat pump",
+		url: "/heating-and-cooling-systems/heat-generation/heat-pump/:pump/air-source-products",
+		type: PageType.Task,
+		parentId: "heatPump",
+	},
+	{
 		id: "heatPumpCreate",
 		title: "Heat pump",
 		url: "/heating-and-cooling-systems/heat-generation/heat-pump/create",

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { objectFromEntries } from "ts-extras";
 import { v4 as uuidv4 } from "uuid";
-import { displayProduct } from "~/utils/display";
 import { getUrl, type HeatPumpData, uniqueName } from "#imports";
 
 const title = "Heat pump";
@@ -19,8 +17,24 @@ const { data: heatPumps } = await useFetch("/api/products", { query: { category:
 // sort into Small, Medium, Large (to retain while we are using test fake heat pumps and don't have better means to sort them by)
 heatPumps.value?.sort((a, b) => -a.reference.localeCompare(b.reference));
 
-const heatPumpOptions = objectFromEntries(heatPumps.value!.map(entity => [entity.reference, displayProduct(entity.product)]));
 const id =  heatPumpData?.data.id ?? uuidv4();
+
+type HeatPumpTypeDisplay = "Air source" |"Ground source"| "Water source" | "Booster" | "Hot water only" | "Exhaust air MEV" | "Exhaust air MVHR" | "Exhaust air Mixed";
+
+const heatPumpType = {
+	"airSource": "Air source",
+	"groundSource": "Ground source",
+	"waterSource": "Water source",
+	"booster": "Booster",
+	"hotWaterOnly": "Hot water only",
+	"exhaustAirMev": "Exhaust air MEV",
+	"exhaustAirMvhr": "Exhaust air MVHR",
+	"exhaustAirMixed": "Exhaust air Mixed",
+} as const satisfies Record<HeatPumpType, HeatPumpTypeDisplay>;
+
+const isProductSelected = () => {
+	return heatPumpStoreData[index]?.data.productReference ? true : false; 
+};
 
 const saveForm = (fields: HeatPumpData) => {
 	store.$patch((state) => {
@@ -31,6 +45,7 @@ const saveForm = (fields: HeatPumpData) => {
 				id,
 				name: fields.name,
 				productReference: fields.productReference,
+				typeOfHeatPump: fields.typeOfHeatPump,
 			},
 			complete: true,
 		};
@@ -82,14 +97,26 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<FormKit
-			id="productReference"
+			id="typeOfHeatPump"
 			type="govRadios"
-			label="Heat pump"
-			:options="heatPumpOptions"
-			name="productReference"
-			help="For this release you will only be allowed to specify the approximate size of the heat pump. In future releases you will be able to select specific models."
+			label="Type of heat pump"
+			:options="heatPumpType"
+			name="typeOfHeatPump"
 			validation="required"
 		/>
+		<template v-if="model?.typeOfHeatPump !== undefined">
+			<FormKit
+				id="selectHeatPump"
+				type="govPcdbProduct"
+				label="Select a heat pump"
+				name="productReference"
+				:validation-rules="{ isProductSelected }"
+				validation="required | isProductSelected"
+				help="Select the air source heat pump type from the PCDB using the button below."
+				:selected-product-reference="heatPumpStoreData[index]?.data.productReference"
+				products-id="airSourceProducts"
+			/>
+		</template>
 		<GovLLMWarning />
 
 		<div class="govuk-button-group">

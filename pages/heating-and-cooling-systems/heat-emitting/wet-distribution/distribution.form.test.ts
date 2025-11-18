@@ -14,6 +14,7 @@ const heatPump: HeatPumpData = {
 	id: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
 	name: "Heat pump 1",
 	productReference: "HEATPUMP-MEDIUM",
+	typeOfHeatPump: "airSource",
 };
 
 const wetDistribution1: WetDistributionData = {

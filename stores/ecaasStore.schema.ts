@@ -783,7 +783,10 @@ export type HeatGeneration = AssertFormKeysArePageIds<{
 
 const heatPumpDataZod = namedWithId.extend({
 	productReference: z.string().trim().min(1),
+	typeOfHeatPump: z.string(),
 });
+
+export type HeatPumpType = "airSource" | "groundSource" | "waterSource" | "booster" | "hotWaterOnly" | "exhaustAirMev" | "exhaustAirMvhr" | "exhaustAirMixed";
 
 export type HeatPumpData = z.infer<typeof heatPumpDataZod>;
 
