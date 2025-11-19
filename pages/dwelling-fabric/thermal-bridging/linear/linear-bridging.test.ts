@@ -26,7 +26,6 @@ describe("linear thermal bridges", () => {
 	});
 
 	const populateValidForm = async () => {
-		await user.type(screen.getByTestId("name"), "E1: Steel lintel with perforated steel base plate");
 		await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
 		await user.type(screen.getByTestId("linearThermalTransmittance"), "1");
 		await user.type(screen.getByTestId("length"), "2");
@@ -74,8 +73,15 @@ describe("linear thermal bridges", () => {
 		await renderSuspended(LinearBridging);
 
 		await user.click(screen.getByTestId("saveAndComplete"));
-
 		expect((await screen.findByTestId("typeOfThermalBridge_error"))).toBeDefined();
+	});
+
+	it("shows required error messages when only type of thermal bridge is submitted", async () => {
+		await renderSuspended(LinearBridging);
+
+		await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
+		await user.click(screen.getByTestId("saveAndComplete"));
+
 		expect((await screen.findByTestId("linearThermalTransmittance_error"))).toBeDefined();
 		expect((await screen.findByTestId("length_error"))).toBeDefined();
 	});
@@ -118,7 +124,7 @@ describe("linear thermal bridges", () => {
 			await user.tab();
 
 			const actualLinearBridge = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[0]!;
-			expect(actualLinearBridge.data.name).toBe("Linear thermal bridge");
+			expect(actualLinearBridge.data.name).toBe("E1: Steel lintel with perforated steel base plate");
 			expect(actualLinearBridge.data.length).toBeUndefined();
 		});
 
@@ -129,11 +135,13 @@ describe("linear thermal bridges", () => {
 				},
 			});
 
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
 			await user.type(screen.getByTestId("linearThermalTransmittance"), "5");
 			await user.tab();
 
 			const actualLinearBridge = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[0]!;
-			expect(actualLinearBridge.data.name).toBe("Linear thermal bridge");
+
+			expect(actualLinearBridge.data.name).toBe("E1: Steel lintel with perforated steel base plate");
 			expect(actualLinearBridge.data.linearThermalTransmittance).toBe(5);
 			expect(actualLinearBridge.data.length).toBeUndefined();
 		});
@@ -155,6 +163,7 @@ describe("linear thermal bridges", () => {
 				},
 			});
 
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
 			await user.clear(screen.getByTestId("length"));
 			await user.clear(screen.getByTestId("linearThermalTransmittance"));
 			await user.tab();
@@ -186,6 +195,7 @@ describe("linear thermal bridges", () => {
 				},
 			});
 
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
 			await user.type(screen.getByTestId("length"), "10");
 			await user.tab();
 
@@ -211,6 +221,7 @@ describe("linear thermal bridges", () => {
 					params: { linear: "0" },
 				},
 			});
+
 			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "");
 			await user.tab();
 

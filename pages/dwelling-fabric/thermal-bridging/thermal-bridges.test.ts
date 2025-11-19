@@ -340,9 +340,12 @@ describe("thermal bridges", () => {
 					params: { linear: "create" },
 				},
 			});
+
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
 			await user.type(screen.getByTestId("length"), "13");
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
+			
 			expect(
 				store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete,
 			).toBe(false);
@@ -356,9 +359,11 @@ describe("thermal bridges", () => {
 				},
 			});
 
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
 			await user.clear(screen.getByTestId("length"));
 			await user.type(screen.getByTestId("length"), "13");
 			await user.tab();
+
 			expect(
 				store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges?.complete,
 			).toBe(false);

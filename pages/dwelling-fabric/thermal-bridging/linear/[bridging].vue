@@ -90,12 +90,29 @@ const saveForm = (fields: LinearThermalBridgeData) => {
 autoSaveElementForm<LinearThermalBridgeData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges,
-	defaultName,
+	defaultName: "",
 	onPatch: (state, newData, index) => {
+		if (!newData.data.name) {
+			newData.data.name = getDefaultName(newData.data.typeOfThermalBridge) ?? defaultName;
+
+			model.value = {
+				...model.value,
+				name: newData.data.name
+			};
+		}
+
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
 	},
 });
+
+const getDefaultName = (typeOfThermalBridge: SchemaThermalBridgeJunctionType): string | undefined => {
+	const options = junctionTypeOptions.find(o => Object.hasOwn(o, typeOfThermalBridge as PropertyKey)) as Record<string, string>;
+
+	if (options) {
+		return options[typeOfThermalBridge as string];
+	}
+};
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -124,37 +141,39 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="junctionTypeOptions"
 			data-field="Zone.ThermalBridging.*.junction_type"
 		/>
-		<FormKit
-			id="name"
-			type="govInputText"
-			label="Name"
-			help="Provide a name for this element so that it can be identified later"
-			name="name"
-			:validation-rules="{ uniqueName: uniqueName(linearThermalBridgeStoreData, { index }) }"
-			validation="required | uniqueName"
-			:validation-messages="{
-				uniqueName: 'An element with this name already exists. Please enter a unique name.'
-			}"
-		/>
-		<FormKit
-			id="linearThermalTransmittance"
-			type="govInputWithSuffix"
-			label="Linear thermal transmittance"
-			help="Enter the linear thermal transmittance of the thermal bridge"
-			name="linearThermalTransmittance"
-			validation="required | number | min:0 | max:2"
-			suffix-text="W/(m·K)"
-			data-field="Zone.ThermalBridging.*.linear_thermal_transmittance"
-		/>
-		<FormKit
-			id="length"
-			type="govInputWithSuffix"
-			label="Length of thermal bridge"
-			name="length"
-			validation="required | number | min:0 | max:10000"
-			suffix-text="m"
-			data-field="Zone.ThermalBridging.*.length"
-		/>
+		<template v-if="model?.typeOfThermalBridge">
+			<FormKit
+				id="name"
+				type="govInputText"
+				label="Name"
+				help="Provide a name for this element so that it can be identified later"
+				name="name"
+				:validation-rules="{ uniqueName: uniqueName(linearThermalBridgeStoreData, { index }) }"
+				validation="required | uniqueName"
+				:validation-messages="{
+					uniqueName: 'An element with this name already exists. Please enter a unique name.'
+				}"
+			/>
+			<FormKit
+				id="linearThermalTransmittance"
+				type="govInputWithSuffix"
+				label="Linear thermal transmittance"
+				help="Enter the linear thermal transmittance of the thermal bridge"
+				name="linearThermalTransmittance"
+				validation="required | number | min:0 | max:2"
+				suffix-text="W/(m·K)"
+				data-field="Zone.ThermalBridging.*.linear_thermal_transmittance"
+			/>
+			<FormKit
+				id="length"
+				type="govInputWithSuffix"
+				label="Length of thermal bridge"
+				name="length"
+				validation="required | number | min:0 | max:10000"
+				suffix-text="m"
+				data-field="Zone.ThermalBridging.*.length"
+			/>
+		</template>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
