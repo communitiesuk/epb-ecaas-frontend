@@ -20,7 +20,7 @@ const heatPumpOptions = objectFromEntries(heatPumps.value!.map(entity => [entity
 const saveForm = (fields: Partial<HeatPumpData>) => {
 	store.$patch((state) => {
 		const { heatPump } = state.heatingAndCoolingSystems.heatGeneration;
-		heatPump.data[0]!.data.productReference = fields.productReference;	
+		heatPump.data[0]!.data.productReference = fields.productReference;	// index temporarily hardcoded - this will need updating when this page is completed
 	});
 
 	navigateTo("/heating-and-cooling-systems/heat-generation");

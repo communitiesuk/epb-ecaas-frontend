@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, type HeatPumpData, uniqueName } from "#imports";
-
+import { heatPumpTypes } from "../../../../../utils/display";
 const title = "Heat pump";
 const store = useEcaasStore();
 
@@ -18,19 +18,6 @@ const { data: heatPumps } = await useFetch("/api/products", { query: { category:
 heatPumps.value?.sort((a, b) => -a.reference.localeCompare(b.reference));
 
 const id =  heatPumpData?.data.id ?? uuidv4();
-
-type HeatPumpTypeDisplay = "Air source" |"Ground source"| "Water source" | "Booster" | "Hot water only" | "Exhaust air MEV" | "Exhaust air MVHR" | "Exhaust air Mixed";
-
-const heatPumpType = {
-	"airSource": "Air source",
-	"groundSource": "Ground source",
-	"waterSource": "Water source",
-	"booster": "Booster",
-	"hotWaterOnly": "Hot water only",
-	"exhaustAirMev": "Exhaust air MEV",
-	"exhaustAirMvhr": "Exhaust air MVHR",
-	"exhaustAirMixed": "Exhaust air Mixed",
-} as const satisfies Record<HeatPumpType, HeatPumpTypeDisplay>;
 
 const isProductSelected = () => {
 	return heatPumpStoreData[index]?.data.productReference ? true : false; 
@@ -100,7 +87,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="typeOfHeatPump"
 			type="govRadios"
 			label="Type of heat pump"
-			:options="heatPumpType"
+			:options="heatPumpTypes"
 			name="typeOfHeatPump"
 			validation="required"
 		/>

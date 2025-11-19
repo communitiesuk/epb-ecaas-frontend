@@ -252,3 +252,20 @@ export const colourOptionsMap = {
 export function displayColour(colour: SchemaColour | undefined): colourDisplay | typeof emptyValueRendering {
 	return colourOptionsMap[colour!] ?? emptyValueRendering;
 }
+
+export type HeatPumpTypeDisplay = "Air source" |"Ground source"| "Water source" | "Booster" | "Hot water only" | "Exhaust air MEV" | "Exhaust air MVHR" | "Exhaust air Mixed";
+
+export const heatPumpTypes = {
+	"airSource": "Air source",
+	"groundSource": "Ground source",
+	"waterSource": "Water source",
+	"booster": "Booster",
+	"hotWaterOnly": "Hot water only",
+	"exhaustAirMev": "Exhaust air MEV",
+	"exhaustAirMvhr": "Exhaust air MVHR",
+	"exhaustAirMixed": "Exhaust air Mixed",
+} as const satisfies Record<HeatPumpType, HeatPumpTypeDisplay>;
+
+export function displayHeatPumpType( type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
+	return heatPumpTypes[type!] ?? emptyValueRendering;
+}

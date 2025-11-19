@@ -144,7 +144,7 @@ describe("Heating and cooling systems summary page", () => {
 			});
 			await renderSuspended(heatingAndCoolingSystemsSummary);
 
-			await verifyDataInSection("heatPump", { "Name": "Heat pump 1", "Product": "HEATPUMP-LARGE" });
+			await verifyDataInSection("heatPump", { "Name": "Heat pump 1", "Type of heat pump": "Air source", "Product": "HEATPUMP-LARGE" });
 
 		});
 

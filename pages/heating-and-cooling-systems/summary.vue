@@ -25,6 +25,7 @@ const heatPumpSummary: SummarySection = {
 		heatPumps.map((pump) => {
 			return {
 				Name: show(pump.data.name),
+				"Type of heat pump": displayHeatPumpType(pump.data.typeOfHeatPump),
 				Product: show(pump.data.productReference),
 			};
 		}) || [],
