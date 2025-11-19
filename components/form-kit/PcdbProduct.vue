@@ -7,6 +7,8 @@ const props = defineProps<{
 }>();
 
 const { label, help, id, attrs: { "selected-product-reference": selectedProductReference } } = props.context;
+
+//TODO - url & index are temporarily hardcoded
 </script>
 
 <template>
