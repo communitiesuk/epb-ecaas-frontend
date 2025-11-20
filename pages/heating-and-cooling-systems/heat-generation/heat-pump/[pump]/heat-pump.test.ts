@@ -6,7 +6,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import HeatPump from "./index.vue";
-import AirSourceProducts from "./air-source-products.vue";
+import AirSourceProducts from "./[products].vue";
 import { v4 as uuidv4 } from "uuid";
 import { productsInCategory } from "~/server/services/products";
 
@@ -164,19 +164,22 @@ describe("heatPump", () => {
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(HeatPump);
-
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(await screen.findByTestId("heatPumpErrorSummary")).toBeDefined();
 	});
 
 	it("the 'Select a product' element navigates user to a page listing all products of the selected heat pump type", async () => {
-		await renderSuspended(HeatPump);
+		await renderSuspended(HeatPump, {
+			route: {
+				params: { pump: "create" },
+			},
+		});
 
 		await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
 		const chooseAProductButton = screen.getByTestId("chooseAProductButton");
 		expect(chooseAProductButton.getAttribute("href")).toBe(
-			"/heating-and-cooling-systems/heat-generation/heat-pump/0/air-source-products",
+			"/0/air-source-products",
 		);
 	});
 

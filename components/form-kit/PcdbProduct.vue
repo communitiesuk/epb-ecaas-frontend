@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from "@formkit/core";
 import { showErrorState, getErrorMessage } from "#imports";
+import hyphenate from "~/utils/hyphenate";
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
 }>();
 
-const { label, help, id, attrs: { "selected-product-reference": selectedProductReference } } = props.context;
+const { label, help, id, attrs: { "selected-product-reference": selectedProductReference, "selected-product-type": selectedProductType, "page-url": pageUrl , "page-index": index } } = props.context;
 
-//TODO - url & index are temporarily hardcoded
+const regex = new RegExp("/[^/]*$");
+const url = pageUrl.replace(regex, `/${index}`);
+const productsPageUrl = url + "/" + hyphenate(selectedProductType) + "-products";
+
 </script>
 
 <template>
@@ -20,7 +24,7 @@ const { label, help, id, attrs: { "selected-product-reference": selectedProductR
 		<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 			<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 		</p>
-		<GovButton v-show="!selectedProductReference" data-testId="chooseAProductButton" href="/heating-and-cooling-systems/heat-generation/heat-pump/0/air-source-products">
+		<GovButton v-show="!selectedProductReference" data-testId="chooseAProductButton" :href="productsPageUrl">
 			Choose a product
 		</GovButton>
 		<div v-if="selectedProductReference">
@@ -31,7 +35,7 @@ const { label, help, id, attrs: { "selected-product-reference": selectedProductR
 				<li>Model Qualifier: <span class="bold">Heat pump Qualifier</span></li>
 				<li>Flow temperature: <span class="bold">45</span></li>
 			</ul>
-			<GovButton secondary data-testId="selectAProductButton" href="/heating-and-cooling-systems/heat-generation/heat-pump/0/air-source-products">
+			<GovButton secondary data-testId="selectAProductButton" :href="productsPageUrl">
 				Select a different product
 			</GovButton>
 		</div>

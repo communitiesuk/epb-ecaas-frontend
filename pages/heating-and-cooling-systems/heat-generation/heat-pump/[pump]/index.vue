@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getUrl, type HeatPumpData, uniqueName } from "#imports";
 import { heatPumpTypes } from "../../../../../utils/display";
 const title = "Heat pump";
+const route = useRoute();
 const store = useEcaasStore();
 
 const { autoSaveElementForm, getStoreIndex } = useForm();
@@ -11,12 +12,6 @@ const heatPumpStoreData = store.heatingAndCoolingSystems.heatGeneration.heatPump
 const index = getStoreIndex(heatPumpStoreData);
 const heatPumpData = useItemToEdit("pump", heatPumpStoreData);
 const model = ref(heatPumpData?.data);
-
-const { data: heatPumps } = await useFetch("/api/products", { query: { category: "heatPump" } });
-
-// sort into Small, Medium, Large (to retain while we are using test fake heat pumps and don't have better means to sort them by)
-heatPumps.value?.sort((a, b) => -a.reference.localeCompare(b.reference));
-
 const id =  heatPumpData?.data.id ?? uuidv4();
 
 const isProductSelected = () => {
@@ -94,6 +89,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<template v-if="model?.typeOfHeatPump !== undefined">
 			<FormKit
 				id="selectHeatPump"
+				:key="model.typeOfHeatPump"
 				type="govPcdbProduct"
 				label="Select a heat pump"
 				name="productReference"
@@ -101,7 +97,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | isProductSelected"
 				help="Select the air source heat pump type from the PCDB using the button below."
 				:selected-product-reference="heatPumpStoreData[index]?.data.productReference"
-				products-id="airSourceProducts"
+				:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
+				:page-url="route.fullPath"
+				:page-index="index"
 			/>
 		</template>
 		<GovLLMWarning />
