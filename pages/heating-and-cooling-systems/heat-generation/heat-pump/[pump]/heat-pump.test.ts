@@ -6,7 +6,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import HeatPump from "./index.vue";
-import AirSourceProducts from "./[products].vue";
+import Products from "./[products].vue";
 import { v4 as uuidv4 } from "uuid";
 import { productsInCategory } from "~/server/services/products";
 
@@ -42,7 +42,7 @@ describe("heatPump", () => {
 	});
 
 	const selectProduct = async () => {
-		await renderSuspended(AirSourceProducts);
+		await renderSuspended(Products);
 		await user.click(screen.getByTestId("productReference_HEATPUMP-LARGE"));
 		await user.click(screen.getByTestId("saveAndComplete"));
 	};
@@ -177,9 +177,28 @@ describe("heatPump", () => {
 		});
 
 		await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
-		const chooseAProductButton = screen.getByTestId("chooseAProductButton");
+		let chooseAProductButton = screen.getByTestId("chooseAProductButton");
 		expect(chooseAProductButton.getAttribute("href")).toBe(
 			"/0/air-source-products",
+		);
+			store.$patch({
+				heatingAndCoolingSystems: {
+					heatGeneration: {
+						heatPump: {
+							data: [{ data: smallHeatPump }, { data: largeHeatPump }, { data: { typeOfHeatPump: "exhaustAirMixed"}}],
+						},
+					},
+				},
+			});
+				await renderSuspended(HeatPump, {
+			route: {
+				params: { pump: "2" },
+			},
+		});
+		
+		chooseAProductButton = screen.getByTestId("chooseAProductButton");
+		expect(chooseAProductButton.getAttribute("href")).toBe(
+			"/2/exhaust-air-mixed-products",
 		);
 	});
 
