@@ -1,8 +1,8 @@
 {
     "HEATPUMP-LARGE": {
-        "ID": 1234,
+        "id": 1234,
         "manufacturer": {
-            "ID": "345",
+            "id": "345",
             "manufacturerReferenceNo": "10001",
             "currentName": "Acme Inc.",
             "secondaryAddressable": null,
@@ -109,9 +109,9 @@
         ]
     },
     "HEATPUMP-MEDIUM": {
-        "ID": 1235,
+        "id": 1235,
         "manufacturer": {
-            "ID": "345",
+            "id": "345",
             "manufacturerReferenceNo": "10001",
             "currentName": "Acme Inc.",
             "secondaryAddressable": null,
@@ -218,9 +218,9 @@
         ]
     },
     "HEATPUMP-SMALL": {
-        "ID": 1236,
+        "id": 1236,
         "manufacturer": {
-            "ID": "345",
+            "id": "345",
             "manufacturerReferenceNo": "10001",
             "currentName": "Acme Inc.",
             "secondaryAddressable": null,

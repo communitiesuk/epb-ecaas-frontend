@@ -14,14 +14,12 @@ async function productsForTechnologies<T extends TechnologyType[]>(technologies:
 				brandName,
 				modelName,
 				modelQualifier,
-				firstYearOfManufacture,
 				technologyType,
 			} = product;
 			const displayProduct: DisplayProduct = {
 				brandName,
 				modelName,
 				modelQualifier,
-				firstYearOfManufacture,
 				technologyType,
 			};
 			return {

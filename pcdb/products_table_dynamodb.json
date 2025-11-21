@@ -1,0 +1,74 @@
+{
+	"TableName": "products",
+	"AttributeDefinitions": [
+		{
+			"AttributeName": "id",
+			"AttributeType": "N"
+		},
+		{
+			"AttributeName": "technologyType",
+			"AttributeType": "S"
+		},
+		{
+			"AttributeName": "sk",
+			"AttributeType": "S"
+		},
+		{
+			"AttributeName": "sk_by_model",
+			"AttributeType": "S"
+		}
+	],
+	"KeySchema": [
+		{
+			"AttributeName": "id",
+			"KeyType": "HASH"
+		}
+	],
+	"GlobalSecondaryIndexes": [
+		{
+			"IndexName": "by-brand",
+			"KeySchema": [
+				{
+					"AttributeName": "technologyType",
+					"KeyType": "HASH"
+				},
+				{
+					"AttributeName": "sk",
+					"KeyType": "RANGE"
+				}
+			],
+			"Projection": {
+				"ProjectionType": "INCLUDE",
+				"NonKeyAttributes": [
+					"ID",
+					"brandName",
+					"modelName",
+					"modelQualifier"
+				]
+			}
+		},
+		{
+			"IndexName": "by-model",
+			"KeySchema": [
+				{
+					"AttributeName": "technologyType",
+					"KeyType": "HASH"
+				},
+				{
+					"AttributeName": "sk_by_model",
+					"KeyType": "RANGE"
+				}
+			],
+			"Projection": {
+				"ProjectionType": "INCLUDE",
+				"NonKeyAttributes": [
+					"id",
+					"brandName",
+					"modelName",
+					"modelQualifier"
+				]
+			}
+		}
+	],
+	"BillingMode": "PAY_PER_REQUEST"
+}

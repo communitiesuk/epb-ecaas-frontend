@@ -1,4 +1,5 @@
 import * as z from "zod";
+import type { Simplify } from "type-fest";
 import products from "./products.json";
 import { objectEntries, objectKeys } from "ts-extras";
 import { heatPumpBackupControlTypeZod, heatPumpSinkTypeZod, heatPumpSourceTypeZod } from "~/stores/zod";
@@ -6,7 +7,7 @@ import { heatPumpBackupControlTypeZod, heatPumpSinkTypeZod, heatPumpSourceTypeZo
 const IntString = z.string().regex(/^\d+$/);
 
 const Manufacturer = z.object({
-	ID: IntString,
+	id: IntString,
 	manufacturerReferenceNo: IntString,
 	currentName: z.string(),
 	secondaryAddressable: z.nullable(z.string()),
@@ -23,7 +24,7 @@ const Manufacturer = z.object({
 });
 
 const BaseProduct = z.object({
-	ID: z.int(),
+	id: z.int(),
 	manufacturer: Manufacturer,
 	originalManufacturerName: z.nullable(z.string()),
 	brandName: z.string(),
@@ -99,6 +100,6 @@ export type ProductEntity<T> = {
 	product: T
 };
 
-export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier" | "firstYearOfManufacture"> & { technologyType: TechnologyType };
+export type DisplayProduct = Simplify<Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier" > & { technologyType: TechnologyType }>;
 
 export default productsMap;
