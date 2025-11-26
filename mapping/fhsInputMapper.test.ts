@@ -1196,18 +1196,19 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 			},
-			cooling: {
-				airConditioning: {
-					...baseForm,
-					data: [{
-						data: {
-							name: "some-aircon-unit-name",
-							coolingCapacity: 60,
-							seasonalEnergyEfficiencyRatio: 4,
-							convectionFraction: 0.2,
-						},
-					}],
-				},
+		};
+
+		const cooling: Cooling = {
+			airConditioning: {
+				...baseForm,
+				data: [{
+					data: {
+						name: "some-aircon-unit-name",
+						coolingCapacity: 60,
+						seasonalEnergyEfficiencyRatio: 4,
+						convectionFraction: 0.2,
+					},
+				}],
 			},
 		};
 
@@ -1305,6 +1306,7 @@ describe("FHS input mapper", () => {
 			infiltrationAndVentilation,
 			heatingAndCoolingSystems,
 			pvAndBatteries,
+			cooling,
 		};
 
 		const expectedResult: FhsInputSchema = expectedHouseInput;
@@ -1445,7 +1447,7 @@ describe("FHS input mapper", () => {
 						associatedItemId: externalWallId,
 						effectiveVentilationArea: 75,
 						openingRatio: 0.2,
-						midHeightOfZone: 1.9,	
+						midHeightOfZone: 1.9,
 					},
 				}],
 			},
@@ -1581,7 +1583,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
-							id: externalWallId,       
+							id: externalWallId,
 							name: "party wall 1",
 							pitchOption: "90",
 							pitch: 90,
@@ -1908,10 +1910,11 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 			},
-			cooling: {
-				airConditioning: {
-					...baseForm,
-				},
+		};
+
+		const cooling: Cooling = {
+			airConditioning: {
+				...baseForm,
 			},
 		};
 
@@ -2160,6 +2163,7 @@ describe("FHS input mapper", () => {
 			infiltrationAndVentilation,
 			heatingAndCoolingSystems,
 			pvAndBatteries,
+			cooling,
 		};
 
 		const expectedResult: FhsInputSchema = expectedFlatInput;

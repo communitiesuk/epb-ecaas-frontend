@@ -1,13 +1,12 @@
 import { objectFromEntries } from "ts-extras";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
-import type { SchemaSpaceCoolSystemDetails, SchemaSpaceHeatSystemDetails } from "~/schema/aliases";
+import type { SchemaSpaceHeatSystemDetails } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 
-export function mapHeatingAndCoolingSystemsData(state: ResolvedState): Pick<FhsInputSchema, "SpaceHeatSystem" | "SpaceCoolSystem"> {
+export function mapHeatingAndCoolingSystemsData(state: ResolvedState): Pick<FhsInputSchema, "SpaceHeatSystem"> {
 	return {
 		...mapGeneralData(state),
 		...mapHeatEmittingData(state),
-		...mapSpaceCoolSystems(state),
 	};
 }
 
@@ -89,25 +88,6 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 
 	return {
 		SpaceHeatSystem: objectFromEntries([...wetDistributionEntries, ...instantElectricHeaterEntries]),
-	};
-}
-
-export function mapSpaceCoolSystems(state: ResolvedState): Pick<FhsInputSchema, "SpaceCoolSystem"> {
-	const spaceCoolSystems = state.heatingAndCoolingSystems.cooling.airConditioning.map((x): [string, SchemaSpaceCoolSystemDetails] => {
-		const key = x.name;
-		const val: SchemaSpaceCoolSystemDetails = {
-			EnergySupply: defaultElectricityEnergySupplyName,
-			cooling_capacity: x.coolingCapacity,
-			frac_convective: x.convectionFraction,
-			efficiency: x.seasonalEnergyEfficiencyRatio,
-			type: "AirConditioning",
-		};
-
-		return [key, val];
-	});
-
-	return {
-		SpaceCoolSystem: Object.fromEntries(spaceCoolSystems),
 	};
 }
 

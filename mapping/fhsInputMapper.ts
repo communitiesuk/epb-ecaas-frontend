@@ -11,6 +11,7 @@ import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from "~/mapping/common";
 import { objectFromEntries } from "ts-extras";
 import type { Simplify, SimplifyDeep } from "type-fest";
+import { mapCoolingData } from "./coolingMapper";
 
 export type ResolvedState = SimplifyDeep<Resolved<EcaasState>>;
 
@@ -19,6 +20,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const infiltrationVentilationData = mapInfiltrationVentilationData(state);
 	const dwellingFabricData = mapDwellingFabricData(state);
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
+	const coolingData = mapCoolingData(state);
 
 	const [pvData, electricBatteries, diverter] = mapPvAndElectricBatteriesData(state);
 	const heatingCooling = mapHeatingAndCoolingSystemsData(state);
@@ -32,6 +34,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	};
 	const heatingAndCoolingSystemsData = {
 		...heatingCooling,
+		...coolingData,
 		EnergySupply: {
 			[defaultElectricityEnergySupplyName]: {
 				...(fuelType && fuelType[defaultElectricityEnergySupplyName]),
@@ -55,7 +58,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	};
 	const defaultAppliances: Pick<FhsInputSchema, "Appliances"> = {
 		Appliances: {},
-	}; 
+	};
 	// Below uses default values until heat pump is set up to come from PCDB
 	const { HotWaterSource } = domesticHotWaterData;
 	const heatPumpName: string = Object.keys((HotWaterSource!["hw cylinder"] as SchemaStorageTank).HeatSource)[0]!;
