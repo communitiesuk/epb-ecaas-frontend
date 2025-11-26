@@ -1,14 +1,11 @@
 import {
 	mockNuxtImport,
 	renderSuspended,
-	registerEndpoint,
 } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import HeatPump from "./index.vue";
-import Products from "./[products].vue";
 import { v4 as uuidv4 } from "uuid";
-import { productsInCategory } from "~/server/services/products";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -17,11 +14,16 @@ mockNuxtImport("navigateTo", () => {
 
 vi.mock("uuid");
 
-registerEndpoint("/api/products", async () => productsInCategory("heatPump"));
-
 describe("heatPump", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
+	
+	const smallHeatPump: HeatPumpData = {
+		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+		name: "Heat pump 2",
+		productReference: "HEATPUMP-SMALL",
+		typeOfHeatPump: "airSource",
+	};
 
 	const largeHeatPump: HeatPumpData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
@@ -30,22 +32,9 @@ describe("heatPump", () => {
 		typeOfHeatPump: "airSource",
 	};
 
-	const smallHeatPump: HeatPumpData = {
-		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-		name: "Heat pump 2",
-		productReference: "HEATPUMP-SMALL",
-		typeOfHeatPump: "airSource",
-	};
-
 	afterEach(() => {
 		store.$reset();
 	});
-
-	const selectProduct = async () => {
-		await renderSuspended(Products);
-		await user.click(screen.getByTestId("productReference_HEATPUMP-LARGE"));
-		await user.click(screen.getByTestId("saveAndComplete"));
-	};
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Heat pump 1");
@@ -77,7 +66,6 @@ describe("heatPump", () => {
 		});
 
 		await populateValidForm();
-		await selectProduct();
 
 		await renderSuspended(HeatPump, {
 			route: {
@@ -86,7 +74,11 @@ describe("heatPump", () => {
 		});
 
 		const { data } = store.heatingAndCoolingSystems.heatGeneration.heatPump;
-		expect(data[0]?.data).toEqual(largeHeatPump);
+		expect(data[0]?.data).toEqual({
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+			name: "Heat pump 1",
+			productReference: undefined,
+			typeOfHeatPump: "airSource" });
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
@@ -181,16 +173,16 @@ describe("heatPump", () => {
 		expect(chooseAProductButton.getAttribute("href")).toBe(
 			"/0/air-source-products",
 		);
-			store.$patch({
-				heatingAndCoolingSystems: {
-					heatGeneration: {
-						heatPump: {
-							data: [{ data: smallHeatPump }, { data: largeHeatPump }, { data: { typeOfHeatPump: "exhaustAirMixed"}}],
-						},
+		store.$patch({
+			heatingAndCoolingSystems: {
+				heatGeneration: {
+					heatPump: {
+						data: [{ data: smallHeatPump }, { data: largeHeatPump }, { data: { typeOfHeatPump: "exhaustAirMixed" } }],
 					},
 				},
-			});
-				await renderSuspended(HeatPump, {
+			},
+		});
+		await renderSuspended(HeatPump, {
 			route: {
 				params: { pump: "2" },
 			},

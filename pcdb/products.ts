@@ -99,6 +99,11 @@ export type ProductEntity<T> = {
 	product: T
 };
 
-export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier" | "firstYearOfManufacture"> & { technologyType: TechnologyType };
+export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier" | "firstYearOfManufacture" > & { technologyType: TechnologyType };
 
+export type DisplayProductWithFlowTemp = DisplayProduct & {
+	testData?: {
+		designFlowTemperature: number;
+	}[];
+};
 export default productsMap;

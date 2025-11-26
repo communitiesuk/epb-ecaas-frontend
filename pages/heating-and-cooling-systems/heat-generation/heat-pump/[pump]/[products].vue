@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { objectFromEntries } from "ts-extras";
-// const { getStoreIndex } = useForm();
-// const { autoSaveForm } = useForm();
+import type { PageId } from "~/data/pages/pages";
+
+definePageMeta({ layout: false });
 
 const store = useEcaasStore();
 const heatPumpStoreData = store.heatingAndCoolingSystems.heatGeneration.heatPump.data;
@@ -9,44 +9,38 @@ const route = useRoute();
 const params = route.path.split("/");
 const index = Number(params[params.length -2]);
 
-const heatPumpData = useItemToEdit("pump", heatPumpStoreData);
-const model = ref(heatPumpData?.data);
+const pageId = params[params.length -1]!.replace(/-([a-z])/g, function (g) { return g[1]!.toUpperCase(); });
+const title = getTitle(pageId as PageId);
 
+const currentHeatPump = useItemToEdit("pump", heatPumpStoreData);
+const model = ref(currentHeatPump?.data);
 
-const { data: heatPumps } = await useFetch("/api/products", { query: { category: "heatPump" } });
+const { data: heatPumps } = await useFetch("/api/products", { query: { category: "heatPump" } }); // currently getting all heat pumps - but this will need to fetch heat pumps depending on the heat pump type chosen
 
 // sort into Small, Medium, Large (to retain while we are using test fake heat pumps and don't have better means to sort them by)
 heatPumps.value?.sort((a, b) => -a.reference.localeCompare(b.reference));
-
-const heatPumpOptions = objectFromEntries(heatPumps.value!.map(entity => [entity.reference, displayProduct(entity.product)]));
-
-const saveForm = (fields: Partial<HeatPumpData>) => {
-	store.$patch((state) => {
-		const { heatPump } = state.heatingAndCoolingSystems.heatGeneration;
-		heatPump.data[index]!.data.productReference = fields.productReference;
-	});
-
-	navigateTo(`/heating-and-cooling-systems/heat-generation/heat-pump/${index}`);
-};
 </script>
 
 <template>
+	<Head>
+		<Title>{{ title }}</Title>
+	</Head>
+	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<FormKit
 		v-model="model"
 		type="form"
 		:actions="false"
 		:incomplete-message="false"
-		@submit="saveForm"
 	>
-		<FormKit
-			id="productReference"
-			type="govRadios"
-			label="Heat pump"
-			:options="heatPumpOptions"
-			name="productReference"
-			help="For this release you will only be allowed to specify the approximate size of the heat pump. In future releases you will be able to select specific models."
-			validation="required"
+		<GovProductsTable 
+			id="productsTable"
+			:products="heatPumps!"
+			:has-flow-temp="true"
+			section="heatPump"
+			:page-index="index"
+			:url="route.path"
 		/>
-		<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+
+		<GovButton secondary :href="`/heating-and-cooling-systems/heat-generation/heat-pump/${index}`" test-id="backToHeatPumpButton">Back to heat pump</GovButton> 
 	</Formkit>
 </template>

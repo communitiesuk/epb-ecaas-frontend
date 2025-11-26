@@ -1,5 +1,5 @@
 import { arrayIncludes } from "ts-extras";
-import type { Category, DisplayProduct, ProductEntity, ProductReference, TechnologyType } from "~/pcdb/products";
+import type { Category, DisplayProduct, DisplayProductWithFlowTemp, ProductEntity, ProductReference, TechnologyType } from "~/pcdb/products";
 import products, { categoryTechnologies } from "~/pcdb/products";
 
 export async function productsInCategory(category: Category): Promise<ProductEntity<DisplayProduct>[]> {
@@ -16,13 +16,16 @@ async function productsForTechnologies<T extends TechnologyType[]>(technologies:
 				modelQualifier,
 				firstYearOfManufacture,
 				technologyType,
+				testData,
 			} = product;
-			const displayProduct: DisplayProduct = {
+			const displayProduct: DisplayProductWithFlowTemp = {
 				brandName,
 				modelName,
 				modelQualifier,
 				firstYearOfManufacture,
 				technologyType,
+				testData,
+
 			};
 			return {
 				reference: reference as ProductReference,
