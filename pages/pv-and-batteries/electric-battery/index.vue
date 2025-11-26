@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { object } from "zod";
 import type { SchemaBatteryLocation } from "~/schema/aliases";
 import { getUrl } from "~/utils/page";
 
@@ -44,11 +43,11 @@ watch(model, async (newData, initialData) => {
 
 	store.$patch(state => {
 		state.pvAndBatteries.electricBattery.data[0] = {
-				data: {
-					...newData,
-					name: newData.name?.trim() || defaultName,
-				},
-			};
+			data: {
+				...newData,
+				name: newData.name?.trim() || defaultName,
+			},
+		};
 
 		state.pvAndBatteries.electricBattery.complete = false;
 	});
