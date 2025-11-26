@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { object } from "zod";
 import type { SchemaBatteryLocation } from "~/schema/aliases";
 import { getUrl } from "~/utils/page";
 
@@ -34,38 +35,23 @@ const saveForm = (fields: ElectricBatteryData) => {
 };
 
 watch(model, async (newData, initialData) => {
-	const storeData = store.pvAndBatteries.electricBattery.data[0];
 
 	if (initialData === undefined || newData === undefined) {
 		return;
-	}
+	};
 
 	const defaultName = "Electric battery";
-	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
-			Object.values(newData).some(x => x !== undefined);
 
-	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
-		if (initialData[key]  !== newData[key]) {
-			store.$patch(state => {
-				if (!storeData && isFirstEdit) {
-					state.pvAndBatteries.electricBattery.data = [{
-						data: {
-							...newData,
-							name: newData.name?.trim() || defaultName,
-						},
-					}];
-				} else {
-					state.pvAndBatteries.electricBattery.data[0] = {
-						data: {
-							...newData,
-							name: newData.name?.trim() || defaultName,
-						},
-					};
-				}
+	store.$patch(state => {
+		state.pvAndBatteries.electricBattery.data[0] = {
+				data: {
+					...newData,
+					name: newData.name?.trim() || defaultName,
+				},
+			};
 
-				state.pvAndBatteries.electricBattery.complete = false;
-			});
-		}}
+		state.pvAndBatteries.electricBattery.complete = false;
+	});
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
