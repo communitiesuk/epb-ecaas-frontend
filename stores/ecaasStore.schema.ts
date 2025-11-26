@@ -34,6 +34,7 @@ export type EcaasState = AssertEachKeyIsPageId<{
 	infiltrationAndVentilation: InfiltrationAndVentilation;
 	heatingAndCoolingSystems: heatingAndCoolingSystems;
 	pvAndBatteries: PvAndBatteries;
+	cooling: Cooling;
 }> & {
 	lastResult?: ComplianceResult;
 };
@@ -761,7 +762,6 @@ export type heatingAndCoolingSystems = AssertEachKeyIsPageId<{
 	general: EcaasForm<GeneralHeatingAndCoolingSystems>,
 	heatGeneration: HeatGeneration,
 	heatEmitting: HeatEmitting;
-	cooling: Cooling
 }>;
 
 const heatingControlType = z.enum(["separateTemperatureControl", "separateTimeAndTemperatureControl"]);
@@ -918,9 +918,9 @@ const pvDiverterDataZod = z.object({
 
 export type PvDiverterData = z.infer<typeof pvDiverterDataZod>;
 
-export interface Cooling {
+export type  Cooling = {
 	airConditioning: EcaasFormList<AirConditioningData>;
-}
+};
 
 const airConditioningDataZod = z.object({
 	name: z.string().trim().min(1),
@@ -1043,7 +1043,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"heatingAndCoolingSystems/heatEmitting/instantElectricHeater": instantElectricStorageDataZod,
 	"heatingAndCoolingSystems/heatEmitting/electricStorageHeater": electricStorageHeaterDataZod,
 	"heatingAndCoolingSystems/heatEmitting/warmAirHeatPump": warmAirHeatPumpDataZod,
-	"heatingAndCoolingSystems/cooling/airConditioning": airConditioningDataZod,
+	"cooling/airConditioning": airConditioningDataZod,
 	"pvAndBatteries/pvSystems": pvSystemDataZod,
 	"pvAndBatteries/electricBattery": electricBatteryDataZod,
 	"pvAndBatteries/diverters": pvDiverterDataZod,

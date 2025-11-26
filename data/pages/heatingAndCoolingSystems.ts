@@ -43,7 +43,7 @@ const heatingAndCoolingSystemsPages = [
 		url: "/heating-and-cooling-systems/heat-generation/heat-pump/:pump/:products",
 		type: PageType.Task,
 		parentId: "heatPump",
-	},	
+	},
 	{
 		id: "groundSourceProducts",
 		title: "Select a ground source heat pump",
@@ -169,27 +169,6 @@ const heatingAndCoolingSystemsPages = [
 		url: "/heating-and-cooling-systems/heat-emitting/warm-air-heat-pump/:pump",
 		type: PageType.Task,
 		parentId: "heatEmitting",
-	},
-	{
-		id: "cooling",
-		title: "Cooling",
-		url: "/heating-and-cooling-systems/cooling",
-		type: PageType.TaskGroup,
-		parentId: "heatingAndCoolingSystems",
-	},
-	{
-		id: "airConditioning",
-		title: "Air conditioning system",
-		url: "/heating-and-cooling-systems/cooling/air-conditioning/:airConditioning",
-		type: PageType.Task,
-		parentId: "cooling",
-	},
-	{
-		id: "airConditioningCreate",
-		title: "Air conditioning system",
-		url: "/heating-and-cooling-systems/cooling/air-conditioning/create",
-		type: PageType.Task,
-		parentId: "cooling",
 	},
 	{
 		id: "heatingAndCoolingSystemsSummary",

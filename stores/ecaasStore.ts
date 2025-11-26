@@ -89,9 +89,9 @@ export function getInitialState(): EcaasState {
 				electricStorageHeater: { data: [] },
 				warmAirHeatPump: { data: [] },
 			},
-			cooling: {
-				airConditioning: { data: [] },
-			},
+		},
+		cooling: {
+			airConditioning: { data: [] },
 		},
 		pvAndBatteries: {
 			pvSystems: { data: [] },
@@ -173,7 +173,7 @@ export const useEcaasStore = defineStore("ecaas", {
 				}
 			};
 		},
-		async postEcaasState (){
+		async postEcaasState() {
 			try {
 				await $fetch("/api/session", {
 					method: "POST",

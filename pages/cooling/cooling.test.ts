@@ -37,11 +37,9 @@ describe("cooling", () => {
 	describe("cooling", () => {
 		it("air conditioning is removed when remove link is clicked", async () => {
 			store.$patch({
-				heatingAndCoolingSystems: {
-					cooling: {
-						airConditioning: {
-							data: [{ data: airConditioning1 }],
-						},
+				cooling: {
+					airConditioning: {
+						data: [{ data: airConditioning1 }],
 					},
 				},
 			});
@@ -57,11 +55,9 @@ describe("cooling", () => {
 
 		it("should only remove the air conditioning object that is clicked", async () => {
 			store.$patch({
-				heatingAndCoolingSystems: {
-					cooling: {
-						airConditioning: {
-							data: [{ data: airConditioning1 }, { data: airConditioning2 }, { data: airConditioning3 }],
-						},
+				cooling: {
+					airConditioning: {
+						data: [{ data: airConditioning1 }, { data: airConditioning2 }, { data: airConditioning3 }],
 					},
 				},
 			});
@@ -82,11 +78,9 @@ describe("cooling", () => {
 
 		it("air conditioning is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
-				heatingAndCoolingSystems: {
-					cooling: {
-						airConditioning: {
-							data: [{ data: airConditioning1 }, { data: airConditioning2 }],
-						},
+				cooling: {
+					airConditioning: {
+						data: [{ data: airConditioning1 }, { data: airConditioning2 }],
 					},
 				},
 			});
@@ -114,7 +108,7 @@ describe("cooling", () => {
 
 			await user.click(screen.getByTestId("markAsCompleteButton"));
 
-			expect(store.heatingAndCoolingSystems.cooling.airConditioning.complete).toBe(true);
+			expect(store.cooling.airConditioning.complete).toBe(true);
 			expect(screen.getByTestId("markAsCompleteButton").style.display).toBe("none");
 			expect(screen.queryByTestId("completeSectionCompleted")?.style.display).not.toBe("none");
 			expect(navigateToMock).toHaveBeenCalledWith("/heating-and-cooling-systems");
@@ -123,11 +117,9 @@ describe("cooling", () => {
 		describe("after section has been marked as complete", () => {
 			const addCoolingDataToStore = async () => {
 				store.$patch({
-					heatingAndCoolingSystems: {
-						cooling: {
-							airConditioning: {
-								data: [{ data: airConditioning1, complete: true }],
-							},
+					cooling: {
+						airConditioning: {
+							data: [{ data: airConditioning1, complete: true }],
 						},
 					},
 				});
@@ -149,14 +141,14 @@ describe("cooling", () => {
 			});
 
 			it("marks all cooling items as complete", async () => {
-				const { airConditioning } = store.heatingAndCoolingSystems.cooling;
+				const { airConditioning } = store.cooling;
 				expect(airConditioning?.complete).toBe(true);
 			});
 
 			it("marks cooling items as not complete if an item is removed", async () => {
 				await user.click(screen.getByTestId("airConditioning_remove_0"));
 
-				const { airConditioning } = store.heatingAndCoolingSystems.cooling;
+				const { airConditioning } = store.cooling;
 				expect(airConditioning?.complete).toBe(false);
 				expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
 				expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeFalsy();
@@ -165,7 +157,7 @@ describe("cooling", () => {
 			it("marks heat emitters as not complete if an item is duplicated", async () => {
 				await user.click(screen.getByTestId("airConditioning_duplicate_0"));
 
-				const { airConditioning } = store.heatingAndCoolingSystems.cooling;
+				const { airConditioning } = store.cooling;
 				expect(airConditioning?.complete).toBe(false);
 				expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
 				expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeFalsy();
@@ -181,7 +173,7 @@ describe("cooling", () => {
 				await user.type(screen.getByTestId("name"), "New AC");
 				await user.tab();
 
-				expect(store.heatingAndCoolingSystems.cooling.airConditioning.complete).toBe(false);
+				expect(store.cooling.airConditioning.complete).toBe(false);
 			});
 
 			it("marks cooling as not complete after editing an existing cooling item", async () => {
@@ -195,7 +187,7 @@ describe("cooling", () => {
 				await user.type(screen.getByTestId("name"), "Updated AC");
 				await user.tab();
 
-				expect(store.heatingAndCoolingSystems.cooling.airConditioning.complete).toBe(false);
+				expect(store.cooling.airConditioning.complete).toBe(false);
 			});
 		});
 	});

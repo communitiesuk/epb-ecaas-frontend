@@ -16,7 +16,7 @@ describe("Air conditioning", () => {
 	afterEach(() => {
 		store.$reset();
 	});
-		
+
 	const state: AirConditioningData = {
 		name: "Air conditioner 1",
 		coolingCapacity: 10,
@@ -33,7 +33,7 @@ describe("Air conditioning", () => {
 	};
 
 	test("data is saved to store state when form is valid", async () => {
-		
+
 		await renderSuspended(AirConditioning, {
 			route: {
 				params: { airConditioning: "create" },
@@ -44,18 +44,16 @@ describe("Air conditioning", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data } = store.heatingAndCoolingSystems.cooling.airConditioning;
+		const { data } = store.cooling.airConditioning;
 
 		expect(data[0]?.data).toEqual(state);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
-			heatingAndCoolingSystems: {
-				cooling: {
-					airConditioning: {
-						data: [{ data: state }],
-					},
+			cooling: {
+				airConditioning: {
+					data: [{ data: state }],
 				},
 			},
 		});
@@ -89,6 +87,15 @@ describe("Air conditioning", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("airConditioningErrorSummary"))).toBeDefined();
+	});
+
+	it("should navigate to the cooling page when form is saved", async () => {
+		await renderSuspended(AirConditioning);
+		await populateValidForm();
+		await user.click(screen.getByTestId("saveAndComplete"));
+		expect(navigateToMock).toHaveBeenCalledWith(
+			"/cooling",
+		);
 	});
 
 });

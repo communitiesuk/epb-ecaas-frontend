@@ -193,9 +193,6 @@ const twoHeatPumps: Pick<EcaasState, "heatingAndCoolingSystems"> = {
 				"data": [],
 			},
 		},
-		"cooling": {
-			"airConditioning": { "data": [] },
-		},
 	},
 };
 

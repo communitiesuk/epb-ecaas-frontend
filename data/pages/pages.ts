@@ -6,6 +6,7 @@ import heatingAndCoolingSystemsPages from "./heatingAndCoolingSystems";
 import infiltrationAndVentilationPages from "./infiltrationAndVentilation";
 import dwellingFabricPages from "./dwellingFabric";
 import pvAndBatteriesPages from "./pvAndBatteries";
+import coolingPages from "./cooling";
 
 const pagesData = [
 	{
@@ -21,6 +22,7 @@ const pagesData = [
 	// ...restOfDwellingPages,
 	...domesticHotWaterPages,
 	...pvAndBatteriesPages,
+	...coolingPages,
 	{
 		id: "outputs",
 		title: "Outputs",
