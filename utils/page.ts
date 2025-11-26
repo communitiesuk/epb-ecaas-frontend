@@ -5,5 +5,5 @@ export function getUrl(pageId: PageId): string {
 }
 
 export function getTitle(pageId: PageId) {
-		return page(pageId).title;
+	return page(pageId).title;
 }
