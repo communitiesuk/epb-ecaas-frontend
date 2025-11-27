@@ -37,7 +37,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		store.$patch({
-			heatingAndCoolingSystems: {
+			spaceHeating: {
 				heatEmitting: {
 					wetDistribution: {
 						...baseForm,

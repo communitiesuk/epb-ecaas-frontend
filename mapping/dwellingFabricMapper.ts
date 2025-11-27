@@ -43,8 +43,8 @@ export function mapZoneParametersData(
 	const { dwellingSpaceZoneParameters } = state.dwellingFabric;
 
 	const spaceHeatingSystemNames = [
-		state.heatingAndCoolingSystems.heatEmitting.wetDistribution.map(x => x.name),
-		state.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.map(x => x.name),
+		state.spaceHeating.heatEmitting.wetDistribution.map(x => x.name),
+		state.spaceHeating.heatEmitting.instantElectricHeater.map(x => x.name),
 	].flat();
 
 	return {
@@ -446,9 +446,9 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 	const doorSuffix = "door";
 	const { dwellingSpaceInternalWall, dwellingSpaceExternalWall } =
-    state.dwellingFabric.dwellingSpaceWalls;
+		state.dwellingFabric.dwellingSpaceWalls;
 	const { dwellingSpaceCeilings, dwellingSpaceRoofs } =
-    state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map((x) => {
 		const associatedHeatedSpaceElement = getResolvedTaggedItem(

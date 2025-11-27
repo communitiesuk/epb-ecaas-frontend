@@ -1128,7 +1128,7 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const heatingAndCoolingSystems: heatingAndCoolingSystems = {
+		const spaceHeating: spaceHeating = {
 			general: {
 				...baseForm,
 				data: {
@@ -1304,7 +1304,7 @@ describe("FHS input mapper", () => {
 			domesticHotWater,
 			dwellingFabric,
 			infiltrationAndVentilation,
-			heatingAndCoolingSystems,
+			spaceHeating,
 			pvAndBatteries,
 			cooling,
 		};
@@ -1846,7 +1846,7 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const heatingAndCoolingSystems: heatingAndCoolingSystems = {
+		const spaceHeating: spaceHeating = {
 			general: {
 				...baseForm,
 				data: {
@@ -2161,7 +2161,7 @@ describe("FHS input mapper", () => {
 			domesticHotWater,
 			dwellingFabric,
 			infiltrationAndVentilation,
-			heatingAndCoolingSystems,
+			spaceHeating,
 			pvAndBatteries,
 			cooling,
 		};

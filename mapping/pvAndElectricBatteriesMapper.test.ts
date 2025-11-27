@@ -169,9 +169,9 @@ describe("PV and electric batteries mapper", () => {
 			},
 			complete: true,
 		};
-		
+
 		store.$patch({
-			heatingAndCoolingSystems: {
+			spaceHeating: {
 				heatGeneration: {
 					heatPump: {
 						data: [{

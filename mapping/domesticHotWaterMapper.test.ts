@@ -67,7 +67,7 @@ describe("domestic hot water mapper", () => {
 					},
 				},
 			},
-			heatingAndCoolingSystems: {
+			spaceHeating: {
 				heatGeneration: {
 					heatPump: {
 						data: [{
@@ -178,7 +178,7 @@ describe("domestic hot water mapper", () => {
 					},
 				},
 			},
-			heatingAndCoolingSystems: {
+			spaceHeating: {
 				heatGeneration: {
 					heatPump: {
 						data: [{

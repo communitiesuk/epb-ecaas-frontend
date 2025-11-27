@@ -25,7 +25,7 @@ beforeEach(() => {
 describe("zone parameters", () => {
 
 	// store.$patch({
-	// 	heatingAndCoolingSystems: {
+	// 	spaceHeating: {
 	// 		heatEmitting: {
 	// 			wetDistribution: {
 	// 				data: [{

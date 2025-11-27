@@ -1,6 +1,6 @@
 
 import { renderSuspended } from "@nuxt/test-utils/runtime";
-import heatingAndCoolingSystemsSummary from "./summary.vue";
+import spaceHeatingSummary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
 import { kilowatt } from "~/utils/units/power";
 
@@ -36,13 +36,13 @@ describe("Cooling section", () => {
 	};
 
 	it("should contain the correct tabs for air conditioning systems", async () => {
-		await renderSuspended(heatingAndCoolingSystemsSummary);
+		await renderSuspended(spaceHeatingSummary);
 
 		expect(screen.getByRole("link", { name: "Air conditioning systems" })).not.toBeNull();
 	});
 
 	it("displays 'No air conditioning systems added' and link to create air conditioning item when no data exists", async () => {
-		await renderSuspended(heatingAndCoolingSystemsSummary);
+		await renderSuspended(spaceHeatingSummary);
 
 		expect(screen.getByText("No air conditioning systems added")).not.toBeNull();
 		const addAirConditioningLink: HTMLAnchorElement = screen.getByRole("link", {
@@ -62,7 +62,7 @@ describe("Cooling section", () => {
 				},
 			},
 		});
-		await renderSuspended(heatingAndCoolingSystemsSummary);
+		await renderSuspended(spaceHeatingSummary);
 
 		const expectedAirConditioningData = {
 			"Name": "Air conditioning 1",
@@ -70,7 +70,7 @@ describe("Cooling section", () => {
 			"Seasonal energy efficiency ratio": "1",
 			"Convection fraction": "1",
 		};
-		await renderSuspended(heatingAndCoolingSystemsSummary);
+		await renderSuspended(spaceHeatingSummary);
 		await verifyDataInSection("airConditioning", expectedAirConditioningData);
 	});
 
@@ -83,7 +83,7 @@ describe("Cooling section", () => {
 				},
 			},
 		});
-		await renderSuspended(heatingAndCoolingSystemsSummary);
+		await renderSuspended(spaceHeatingSummary);
 		for (const [key] of Object.entries(store.cooling)) {
 			const coolingSection = screen.getByTestId(key);
 

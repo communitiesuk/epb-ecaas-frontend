@@ -14,7 +14,7 @@ defineProps<{
 
 const store = useEcaasStore();
 
-const { heatPump, boiler, heatBattery, heatNetwork, heatInterfaceUnit } = store.heatingAndCoolingSystems.heatGeneration;
+const { heatPump, boiler, heatBattery, heatNetwork, heatInterfaceUnit } = store.spaceHeating.heatGeneration;
 
 const heatGenerators = [
 	heatPump.data.map(x => x ? [x.data.id, x.data.name] as [string, string] : undefined),

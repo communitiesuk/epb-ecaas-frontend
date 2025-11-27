@@ -55,7 +55,7 @@ describe("Domestic hot water summary", () => {
 						},
 					},
 				},
-				heatingAndCoolingSystems: {
+				spaceHeating: {
 					heatGeneration: {
 						heatPump: {
 							data: [{
