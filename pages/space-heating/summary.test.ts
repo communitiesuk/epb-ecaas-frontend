@@ -29,7 +29,7 @@ describe("Heating and cooling systems summary page", () => {
 
 	it("displays the correct title", async () => {
 		await renderSuspended(spaceHeatingSummary);
-		expect(screen.getByRole("heading", { name: "Heating system summary" }));
+		expect(screen.getByRole("heading", { name: "Space heating summary" }));
 	});
 
 	describe("General section", () => {

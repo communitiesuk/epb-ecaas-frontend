@@ -2,7 +2,7 @@
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl } from "#imports";
 const store = useEcaasStore();
-const title = "Heating system summary";
+const title = "Space heating summary";
 
 const { heatingControlType, coolingRequired } = store.spaceHeating.general.data;
 const generalSummary: SummarySection = {
