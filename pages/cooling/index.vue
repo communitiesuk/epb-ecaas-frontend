@@ -72,6 +72,7 @@ function handleComplete() {
 		<GovButton href="/" secondary>
 			Return to overview
 		</GovButton>
+		<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
 		<CompleteElement
 			:is-complete="store.cooling.airConditioning?.complete ?? false"
 			:disabled="store.cooling.airConditioning.data.some(s => !s.complete)"
