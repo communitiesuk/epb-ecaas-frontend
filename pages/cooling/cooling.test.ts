@@ -111,7 +111,7 @@ describe("cooling", () => {
 			expect(store.cooling.airConditioning.complete).toBe(true);
 			expect(screen.getByTestId("markAsCompleteButton").style.display).toBe("none");
 			expect(screen.queryByTestId("completeSectionCompleted")?.style.display).not.toBe("none");
-			expect(navigateToMock).toHaveBeenCalledWith("/heating-and-cooling-systems");
+			expect(navigateToMock).toHaveBeenCalledWith("/");
 		});
 
 		describe("after section has been marked as complete", () => {
@@ -137,7 +137,7 @@ describe("cooling", () => {
 			});
 
 			it("navigates to heating systems page", async () => {
-				expect(navigateToMock).toHaveBeenCalledWith("/heating-and-cooling-systems");
+				expect(navigateToMock).toHaveBeenCalledWith("/");
 			});
 
 			it("marks all cooling items as complete", async () => {

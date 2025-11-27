@@ -44,7 +44,7 @@ function handleComplete() {
 		},
 	});
 		
-	navigateTo("/heating-and-cooling-systems");		
+	navigateTo("/");		
 }
 
 </script>
@@ -69,8 +69,8 @@ function handleComplete() {
 		@duplicate="handleDuplicate"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/heating-and-cooling-systems" secondary>
-			Return to heating and cooling systems
+		<GovButton href="/" secondary>
+			Return to overview
 		</GovButton>
 		<CompleteElement
 			:is-complete="store.cooling.airConditioning?.complete ?? false"
