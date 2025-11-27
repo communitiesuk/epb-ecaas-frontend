@@ -41,6 +41,6 @@ heatPumps.value?.sort((a, b) => -a.reference.localeCompare(b.reference));
 			:url="route.path"
 		/>
 
-		<GovButton secondary :href="`/spaceHeating/heat-generation/heat-pump/${index}`" test-id="backToHeatPumpButton">Back to heat pump</GovButton> 
+		<GovButton secondary :href="`/space-heating/heat-generation/heat-pump/${index}`" test-id="backToHeatPumpButton">Back to heat pump</GovButton> 
 	</Formkit>
 </template>

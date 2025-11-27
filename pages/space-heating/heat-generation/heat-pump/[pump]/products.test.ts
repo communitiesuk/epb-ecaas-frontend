@@ -155,7 +155,7 @@ describe("Heat pumps products page", () => {
 		await renderSuspended(Products);
 		const backButton = screen.getByTestId("backToHeatPumpButton");
 		expect(backButton.getAttribute("href")).toBe(
-			"/spaceHeating/heat-generation/heat-pump/1",
+			"/space-heating/heat-generation/heat-pump/1",
 		);
 	});
 });
