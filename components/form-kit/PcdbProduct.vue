@@ -7,11 +7,14 @@ const props = defineProps<{
 	context: FormKitFrameworkContext
 }>();
 
-const { label, help, id, attrs: { "selected-product-reference": selectedProductReference, "selected-product-type": selectedProductType, "page-url": pageUrl , "page-index": index } } = props.context;
+const { label, help, id, attrs: { "selected-product-reference": selectedProductReference, "selected-product-type": selectedProductType, "page-url": pageUrl, "page-index": index } } = props.context;
 
-const regex = new RegExp("/[^/]*$");
-const url = pageUrl.replace(regex, `/${index}`);
-const productsPageUrl = url + "/" + hyphenate(selectedProductType) + "-products";
+function appendItemIndexToUrl(url: string, index: number) {
+	const lastUrlSegment = new RegExp("/[^/]*$");
+	return url.replace(lastUrlSegment, `/${index}`);
+}
+
+const productsPageUrl = appendItemIndexToUrl(pageUrl, index) + "/" + hyphenate(selectedProductType) + "-products";
 
 </script>
 
@@ -29,7 +32,7 @@ const productsPageUrl = url + "/" + hyphenate(selectedProductType) + "-products"
 		</GovButton>
 		<div v-if="selectedProductReference">
 			<ul class="govuk-list">
-				<li>Product reference: <span class="bold">{{ selectedProductReference}}</span></li>
+				<li>Product reference: <span class="bold">{{ selectedProductReference }}</span></li>
 				<li>Brand: <span class="bold">Koef</span></li>
 				<li>Model: <span class="bold">Heat pump model 1</span></li>
 				<li>Model Qualifier: <span class="bold">Heat pump Qualifier</span></li>
@@ -43,7 +46,6 @@ const productsPageUrl = url + "/" + hyphenate(selectedProductType) + "-products"
 </template>
 
 <style scoped lang="scss">
-
 govuk-list {
 	line-height: 1.2;
 }
