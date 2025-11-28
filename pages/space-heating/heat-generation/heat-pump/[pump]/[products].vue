@@ -9,7 +9,10 @@ const route = useRoute();
 const params = route.path.split("/");
 const index = Number(params[params.length -2]);
 
-const pageId = params[params.length -1]!.replace(/-([a-z])/g, function (g) { return g[1]!.toUpperCase(); });
+function kebabToCamelCase(text: string){
+	return text.replace(/-([a-z])/g, function (g) { return g[1]!.toUpperCase(); });
+}
+const pageId = kebabToCamelCase(params[params.length -1]!);
 const title = getTitle(pageId as PageId);
 
 const currentHeatPump = useItemToEdit("pump", heatPumpStoreData);
