@@ -84,6 +84,6 @@ describe("heatNetwork", () => {
 		await populateValidForm();
 		await user.click(screen.getByRole("button"));
 
-		expect(navigateToMock).toHaveBeenCalledWith("/spaceHeating/heat-generation");
+		expect(navigateToMock).toHaveBeenCalledWith("/space-heating/heat-generation");
 	});
 });

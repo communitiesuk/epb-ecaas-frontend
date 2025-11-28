@@ -13,10 +13,10 @@ const generalSummary: SummarySection = {
 		"Cooling required": displayBoolean(coolingRequired),
 	},
 
-	editUrl: "/spaceHeating/general",
+	editUrl: "/space-heating/general",
 };
 
-const heatGenerationUrl = "/spaceHeating/heat-generation";
+const heatGenerationUrl = "/space-heating/heat-generation";
 const heatPumps = store.spaceHeating.heatGeneration.heatPump.data;
 const heatPumpSummary: SummarySection = {
 	id: "heatPump",
@@ -100,7 +100,7 @@ const heatGenerationData = [
 	.flat()
 	.map((x) => ({ id: x.data.id, name: x.data.name }));
 
-const heatEmittingUrl = "/spaceHeating/heat-emitting";
+const heatEmittingUrl = "/space-heating/heat-emitting";
 
 const wetDistributions = store.spaceHeating.heatEmitting.wetDistribution.data;
 const wetDistributionSummary: SummarySection = {

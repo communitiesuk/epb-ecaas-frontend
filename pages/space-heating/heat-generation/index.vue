@@ -44,7 +44,7 @@ function handleComplete() {
 		},
 	});
 
-	navigateTo("/spaceHeating");
+	navigateTo("/space-heating");
 }
 
 function checkIsComplete(){
@@ -110,10 +110,10 @@ function hasIncompleteEntries() {
 	<!--	/>-->
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton
-			href="/spaceHeating"
+			href="/space-heating"
 			secondary
 		>
-			Return to heating and cooling systems
+			Return to space heating 
 		</GovButton>
 		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 	</div>

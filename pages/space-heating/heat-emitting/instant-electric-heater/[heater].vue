@@ -36,7 +36,7 @@ const saveForm = (fields: InstantElectricStorageData) => {
 		instantElectricHeater.complete = false;
 	});
 
-	navigateTo("/spaceHeating/heat-emitting");
+	navigateTo("/space-heating/heat-emitting");
 };
 
 autoSaveElementForm<InstantElectricStorageData>({

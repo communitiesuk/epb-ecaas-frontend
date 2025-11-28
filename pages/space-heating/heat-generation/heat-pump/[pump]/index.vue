@@ -36,7 +36,7 @@ const saveForm = (fields: HeatPumpData) => {
 		heatPump.complete = false;
 	});
 
-	navigateTo("/spaceHeating/heat-generation");
+	navigateTo("/space-heating/heat-generation");
 };
 
 autoSaveElementForm<HeatPumpData>({

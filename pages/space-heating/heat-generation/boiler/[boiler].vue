@@ -21,7 +21,7 @@ const saveForm = (fields: BoilerData) => {
 		boiler.complete = false;
 	});
 
-	navigateTo("/spaceHeating/heat-generation");
+	navigateTo("/space-heating/heat-generation");
 };
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

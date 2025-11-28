@@ -18,7 +18,7 @@ const saveForm = (fields: WarmAirHeatPumpData) => {
 		warmAirHeatPump.complete = false;
 	});
 
-	navigateTo("/spaceHeating/heat-emitting");
+	navigateTo("/space-heating/heat-emitting");
 };
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

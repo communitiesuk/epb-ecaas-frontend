@@ -309,7 +309,7 @@ describe("heat generation", () => {
 			expect(
 				screen.getByTestId("completeSectionCompleted")?.style.display,
 			).not.toBe("none");
-			expect(navigateToMock).toHaveBeenCalledWith("/spaceHeating");
+			expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
 		});
 
 		it("marks heat generation section as complete after 'mark as complete' button is clicked", async () => {

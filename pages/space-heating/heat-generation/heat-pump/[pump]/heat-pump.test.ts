@@ -78,7 +78,7 @@ describe("heatPump", () => {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 			name: "Heat pump 1",
 			productReference: undefined,
-			typeOfHeatPump: "airSource"
+			typeOfHeatPump: "airSource",
 		});
 	});
 
@@ -202,7 +202,7 @@ describe("heatPump", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(navigateToMock).toHaveBeenCalledWith(
-			"/spaceHeating/heat-generation",
+			"/space-heating/heat-generation",
 		);
 	});
 
@@ -305,7 +305,7 @@ describe("heatPump", () => {
 			await user.click(screen.getByTestId("saveProgress"));
 
 			expect(navigateToMock).toHaveBeenCalledWith(
-				"/spaceHeating/heat-generation",
+				"/space-heating/heat-generation",
 			);
 		});
 	});

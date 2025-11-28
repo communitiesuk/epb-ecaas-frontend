@@ -313,7 +313,7 @@ describe("Wet distribution", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 		expect(navigateToMock).toHaveBeenCalledWith(
-			"/spaceHeating/heat-emitting",
+			"/space-heating/heat-emitting",
 		);
 	});
 });

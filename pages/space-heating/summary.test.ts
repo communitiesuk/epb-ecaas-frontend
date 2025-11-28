@@ -78,7 +78,7 @@ describe("Heating and cooling systems summary page", () => {
 			const generalSection = screen.getByTestId("general");
 			const editLink: HTMLAnchorElement = within(generalSection).getByText("Edit");
 
-			expect(new URL(editLink.href).pathname).toBe("/spaceHeating/general");
+			expect(new URL(editLink.href).pathname).toBe("/space-heating/general");
 		});
 	});
 
@@ -252,7 +252,7 @@ describe("Heating and cooling systems summary page", () => {
 				);
 				expect(editLink).not.toBeNull();
 				expect(new URL(editLink.href).pathname).toBe(
-					"/spaceHeating/heat-generation",
+					"/space-heating/heat-generation",
 				);
 			}
 		});
@@ -570,7 +570,7 @@ describe("Heating and cooling systems summary page", () => {
 				);
 				expect(editLink).not.toBeNull();
 				expect(new URL(editLink.href).pathname).toBe(
-					"/spaceHeating/heat-emitting",
+					"/space-heating/heat-emitting",
 				);
 			}
 		});

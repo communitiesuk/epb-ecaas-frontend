@@ -543,7 +543,7 @@ describe("heat emitting", () => {
 			});
 
 			it("navigates to the heating systems page", async () => {
-				expect(navigateToMock).toHaveBeenCalledWith("/spaceHeating");
+				expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
 			});
 
 			it("marks all heat emitters as complete", async () => {
