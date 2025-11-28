@@ -3,17 +3,18 @@ import type { PageId } from "~/data/pages/pages";
 
 definePageMeta({ layout: false });
 
-const store = useEcaasStore();
-const heatPumpStoreData = store.spaceHeating.heatGeneration.heatPump.data;
-const route = useRoute();
-const params = route.path.split("/");
-const index = Number(params[params.length -2]);
-
 function kebabToCamelCase(text: string){
 	return text.replace(/-([a-z])/g, function (g) { return g[1]!.toUpperCase(); });
 }
-const pageId = kebabToCamelCase(params[params.length -1]!);
+const store = useEcaasStore();
+const heatPumpStoreData = store.spaceHeating.heatGeneration.heatPump.data;
+const route = useRoute()
+const urlSegments = route.path.split("/");
+
+const pageId = kebabToCamelCase(urlSegments[urlSegments.length -1]!);
 const title = getTitle(pageId as PageId);
+
+const index = Number(urlSegments[urlSegments.length -2]);
 
 const currentHeatPump = useItemToEdit("pump", heatPumpStoreData);
 const model = ref(currentHeatPump?.data);
