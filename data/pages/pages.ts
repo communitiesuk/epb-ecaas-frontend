@@ -7,6 +7,7 @@ import infiltrationAndVentilationPages from "./infiltrationAndVentilation";
 import dwellingFabricPages from "./dwellingFabric";
 import pvAndBatteriesPages from "./pvAndBatteries";
 import coolingPages from "./cooling";
+import spaceHeatingNewPages from "./spaceHeatingNew";
 
 const pagesData = [
 	{
@@ -19,6 +20,7 @@ const pagesData = [
 	...dwellingFabricPages,
 	...infiltrationAndVentilationPages,
 	...spaceHeatingPages,
+	...spaceHeatingNewPages,
 	// ...restOfDwellingPages,
 	...domesticHotWaterPages,
 	...pvAndBatteriesPages,

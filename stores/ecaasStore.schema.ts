@@ -33,6 +33,7 @@ export type EcaasState = AssertEachKeyIsPageId<{
 	dwellingFabric: DwellingFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
 	spaceHeating: spaceHeating;
+	spaceHeatingNew: spaceHeatingNew;
 	pvAndBatteries: PvAndBatteries;
 	cooling: Cooling;
 }> & {
@@ -869,6 +870,24 @@ const wetDistributionDataZod = z.discriminatedUnion(
 
 export type WetDistributionData = z.infer<typeof wetDistributionDataZod>;
 
+export type spaceHeatingNew = AssertEachKeyIsPageId<{
+	heatSource: EcaasFormList<HeatSourceData>,
+}>;
+
+const heatSourceDataZod = namedWithId.extend({
+	typeOfHeatSource: z.enum([
+		"heatPump",
+		"boiler",
+		"heatNetwork",
+		"heatBattery",
+		"solarThermalSystem",
+	]),
+});
+
+export type HeatSourceType = z.infer<typeof heatSourceDataZod>["typeOfHeatSource"];
+
+export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
+
 export type PvAndBatteries = AssertFormKeysArePageIds<{
 	pvSystems: EcaasFormList<PvSystemData>;
 	electricBattery: EcaasFormList<ElectricBatteryData>;
@@ -1043,6 +1062,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"spaceHeating/heatEmitting/instantElectricHeater": instantElectricStorageDataZod,
 	"spaceHeating/heatEmitting/electricStorageHeater": electricStorageHeaterDataZod,
 	"spaceHeating/heatEmitting/warmAirHeatPump": warmAirHeatPumpDataZod,
+	"spaceHeatingNew/heatSource": heatSourceDataZod,
 	"cooling/airConditioning": airConditioningDataZod,
 	"pvAndBatteries/pvSystems": pvSystemDataZod,
 	"pvAndBatteries/electricBattery": electricBatteryDataZod,

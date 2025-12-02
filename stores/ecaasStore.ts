@@ -90,6 +90,9 @@ export function getInitialState(): EcaasState {
 				warmAirHeatPump: { data: [] },
 			},
 		},
+		spaceHeatingNew: {
+			heatSource: { data: [] },
+		},
 		cooling: {
 			airConditioning: { data: [] },
 		},
