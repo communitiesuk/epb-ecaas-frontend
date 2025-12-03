@@ -1,5 +1,5 @@
 import { objectFromEntries } from "ts-extras";
-import type { DisplayProduct } from "~/pcdb/products";
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaLeaksTestPressure } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";

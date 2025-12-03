@@ -10,7 +10,11 @@
 			"AttributeType": "S"
 		},
 		{
-			"AttributeName": "sk",
+			"AttributeName": "modelQualifier",
+			"AttributeType": "S"
+		},
+		{
+			"AttributeName": "sk-by-brand",
 			"AttributeType": "S"
 		},
 		{
@@ -33,14 +37,14 @@
 					"KeyType": "HASH"
 				},
 				{
-					"AttributeName": "sk",
+					"AttributeName": "sk-by-brand",
 					"KeyType": "RANGE"
 				}
 			],
 			"Projection": {
 				"ProjectionType": "INCLUDE",
 				"NonKeyAttributes": [
-					"ID",
+					"id",
 					"brandName",
 					"modelName",
 					"modelQualifier"
@@ -56,6 +60,28 @@
 				},
 				{
 					"AttributeName": "sk_by_model",
+					"KeyType": "RANGE"
+				}
+			],
+			"Projection": {
+				"ProjectionType": "INCLUDE",
+				"NonKeyAttributes": [
+					"id",
+					"brandName",
+					"modelName",
+					"modelQualifier"
+				]
+			}
+		},
+		{
+			"IndexName": "by-model-qualifier",
+			"KeySchema": [
+				{
+					"AttributeName": "technologyType",
+					"KeyType": "HASH"
+				},
+				{
+					"AttributeName": "modelQualifier",
 					"KeyType": "RANGE"
 				}
 			],

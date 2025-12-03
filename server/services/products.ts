@@ -1,6 +1,6 @@
 import { arrayIncludes } from "ts-extras";
-import type { Category, DisplayProduct, ProductEntity, ProductReference, TechnologyType } from "~/pcdb/products";
-import products, { categoryTechnologies } from "~/pcdb/products";
+import type { Category, DisplayProduct, ProductEntity, ProductReference, TechnologyType } from "~/pcdb/pcdb.types";
+import products, { categoryTechnologies } from "~/pcdb/pcdb.types";
 
 export async function productsInCategory(category: Category): Promise<ProductEntity<DisplayProduct>[]> {
 	return productsForTechnologies(categoryTechnologies[category]);

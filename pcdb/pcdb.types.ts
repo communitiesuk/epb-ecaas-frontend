@@ -1,18 +1,18 @@
 import * as z from "zod";
 import type { Simplify } from "type-fest";
-import products from "./products.json";
+import products from "./data/products.json";
 import { objectEntries, objectKeys } from "ts-extras";
 import { heatPumpBackupControlTypeZod, heatPumpSinkTypeZod, heatPumpSourceTypeZod } from "~/stores/zod";
 
 const IntString = z.string().regex(/^\d+$/);
 
-const Manufacturer = z.object({
+export const manufacturerZod = z.object({
 	id: IntString,
 	manufacturerReferenceNo: IntString,
 	currentName: z.string(),
 	secondaryAddressable: z.nullable(z.string()),
 	primaryAddressable: z.nullable(z.string()),
-	streetName: z.string(),
+	streetName: z.nullable(z.string()),
 	localityName: z.nullable(z.string()),
 	townName: z.string(),
 	administrativeAreaName: z.nullable(z.string()),
@@ -25,16 +25,29 @@ const Manufacturer = z.object({
 
 const BaseProduct = z.object({
 	id: z.int(),
-	manufacturer: Manufacturer,
+	manufacturerId: IntString,
+	manufacturer: manufacturerZod,
 	originalManufacturerName: z.nullable(z.string()),
 	brandName: z.string(),
 	modelName: z.string(),
-	modelQualifier: z.string(),
+	modelQualifier: z.nullable(z.string()),
 	firstYearOfManufacture: z.int(),
 	finalYearOfManufacture: z.union([z.literal("current"), z.int()]),
 });
 
-const AirSourceHeatPump = BaseProduct.extend({
+export const airSourceHeatPumpTestDataZod = z.object({
+	productId: z.int(),
+	designFlowTemperature: z.int(),
+	testCondition: z.enum(["A", "B", "C", "D", "E", "F"]), // there is a possible 'E' value here, which diverges from SchemaTestLetter
+	testConditionTemperature: z.int(),
+	inletTemperature: z.number(),
+	outletTemperature: z.number(),
+	heatingCapacity: z.number(),
+	coefficientOfPerformance: z.number(),
+	degradationCoefficient: z.number(),
+});
+
+export const airSourceHeatPumpZod = BaseProduct.extend({
 	technologyType: z.literal("Air Source Heat Pump"),
 	fuel: z.string(), // need a better type for this
 	sourceType: heatPumpSourceTypeZod,
@@ -44,7 +57,9 @@ const AirSourceHeatPump = BaseProduct.extend({
 	standardRatingCapacity20C: z.nullable(z.number()),
 	standardRatingCapacity35C: z.nullable(z.number()),
 	standardRatingCapacity55C: z.nullable(z.number()),
-	minimumModulationRate: z.nullable(z.number()),
+	minimumModulationRate20: z.nullable(z.number()),
+	minimumModulationRate35: z.nullable(z.number()),
+	minimumModulationRate55: z.nullable(z.number()),
 	timeConstantOnOffOperation: z.nullable(z.int()),
 	tempReturnFeedMax: z.nullable(z.number()),
 	tempLowerOperatingLimit: z.nullable(z.number()),
@@ -57,20 +72,11 @@ const AirSourceHeatPump = BaseProduct.extend({
 	powerCrankcaseHeater: z.nullable(z.number()),
 	powerOff: z.nullable(z.number()),
 	powerMaximumBackup: z.nullable(z.number()),
-	testData: z.array(z.object({
-		designFlowTemperature: z.int(),
-		testCondition: z.enum(["A", "B", "C", "D", "E", "F"]), // there is a possible 'E' value here, which diverges from SchemaTestLetter
-		testConditionTemperature: z.int(),
-		inletTemperature: z.number(),
-		outletTemperature: z.number(),
-		heatingCapacity: z.number(),
-		coefficientOfPerformance: z.number(),
-		degradationCoefficient: z.number(),
-	})),
+	testData: z.array(airSourceHeatPumpTestDataZod),
 });
 
 export const Products = z.map(z.string(), z.discriminatedUnion("technologyType", [
-	AirSourceHeatPump,
+	airSourceHeatPumpZod,
 ]));
 
 export type Products = z.infer<typeof Products>;

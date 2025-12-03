@@ -1,6 +1,6 @@
 import { arrayIncludes } from "ts-extras";
 import { productsInCategory } from "../services/products";
-import { knownCategories } from "~/pcdb/products";
+import { knownCategories } from "~/pcdb/pcdb.types";
 
 export default defineEventHandler(async (event) => {
 
