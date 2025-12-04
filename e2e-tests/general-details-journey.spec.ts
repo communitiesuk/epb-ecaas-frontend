@@ -19,7 +19,7 @@ const fillGeneralDetailsForm = async (page: Page) => {
 	await page.getByTestId("numOfWCs").fill("2");
 	await page.getByTestId("numOfHabitableRooms").fill("7");
 	await page.getByTestId("numOfRoomsWithTappingPoints").fill("1");
-	await page.getByTestId("fuelType_electricity").click();
+	await page.getByTestId("fuelType_elecOnly").click();
 
 	//save form
 	await page.getByTestId("saveAndComplete").click();
@@ -53,7 +53,7 @@ test.describe("General details form data persistence", () => {
 		await expect(page.getByTestId("numOfWCs")).toHaveValue("2");
 		await expect(page.getByTestId("numOfHabitableRooms")).toHaveValue("7");
 		await expect(page.getByTestId("numOfRoomsWithTappingPoints")).toHaveValue("1");
-		await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
+		await expect(page.getByTestId("fuelType_elecOnly")).toBeChecked();
 	});
 
 	test("should persist data when page is reloaded", async ({ page }) => {
@@ -71,7 +71,7 @@ test.describe("General details form data persistence", () => {
 		await expect(page.getByTestId("numOfWCs")).toHaveValue("2");
 		await expect(page.getByTestId("numOfHabitableRooms")).toHaveValue("7");
 		await expect(page.getByTestId("numOfRoomsWithTappingPoints")).toHaveValue("1");
-		await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
+		await expect(page.getByTestId("fuelType_elecOnly")).toBeChecked();
 	});
 
 	test.skip("should persist data when local storage is cleared and page is reloaded", async ({ page }) => {
@@ -93,6 +93,6 @@ test.describe("General details form data persistence", () => {
 		await expect(page.getByTestId("numOfWCs")).toHaveValue("2");
 		await expect(page.getByTestId("numOfHabitableRooms")).toHaveValue("7");
 		await expect(page.getByTestId("numOfRoomsWithTappingPoints")).toHaveValue("1");
-		await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
+		await expect(page.getByTestId("fuelType_elecOnly")).toBeChecked();
 	});
 });
