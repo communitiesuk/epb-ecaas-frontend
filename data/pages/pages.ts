@@ -2,10 +2,11 @@ import { PageType } from "./pages.types";
 import type { Page } from "./pages.types";
 import domesticHotWaterPages from "./domesticHotWater";
 import dwellingDetailsPages from "./dwellingDetails";
-import heatingAndCoolingSystemsPages from "./heatingAndCoolingSystems";
+import spaceHeatingPages from "./spaceHeating";
 import infiltrationAndVentilationPages from "./infiltrationAndVentilation";
 import dwellingFabricPages from "./dwellingFabric";
 import pvAndBatteriesPages from "./pvAndBatteries";
+import coolingPages from "./cooling";
 
 const pagesData = [
 	{
@@ -17,10 +18,11 @@ const pagesData = [
 	...dwellingDetailsPages,
 	...dwellingFabricPages,
 	...infiltrationAndVentilationPages,
-	...heatingAndCoolingSystemsPages,
+	...spaceHeatingPages,
 	// ...restOfDwellingPages,
 	...domesticHotWaterPages,
 	...pvAndBatteriesPages,
+	...coolingPages,
 	{
 		id: "outputs",
 		title: "Outputs",

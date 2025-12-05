@@ -16,7 +16,7 @@ const heatPumpId = "56ddc6ce-7a91-4263-b051-96c7216bb01e";
 
 const addHeatPumpAndHotWaterCylinder = () => {
 	store.$patch({
-		heatingAndCoolingSystems: {
+		spaceHeating: {
 			heatGeneration: {
 				heatPump: {
 					data: [{
@@ -135,7 +135,7 @@ describe("Diverters", () => {
 		await renderSuspended(Diverters);
 		expect((await screen.findByTestId(`hotWaterCylinder_${hotWaterCylinderId}`)).hasAttribute("checked")).toBe(true);
 	});
-	
+
 	describe("partially saving data", () => {
 		it("creates a new diverter automatically with given name", async () => {
 			await renderSuspended(Diverters);

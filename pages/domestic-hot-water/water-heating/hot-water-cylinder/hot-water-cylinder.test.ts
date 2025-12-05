@@ -35,7 +35,7 @@ describe("hot water cylinder", () => {
 
 	const addStoreData = () => {
 		store.$patch({
-			heatingAndCoolingSystems: {
+			spaceHeating: {
 				heatGeneration: {
 					heatPump: {
 						data: [{

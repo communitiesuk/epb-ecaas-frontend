@@ -97,7 +97,7 @@ autoSaveElementForm<LinearThermalBridgeData>({
 
 			model.value = {
 				...model.value,
-				name: newData.data.name
+				name: newData.data.name,
 			};
 		}
 

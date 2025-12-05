@@ -29,7 +29,7 @@ describe("PV and electric batteries summary page", () => {
 				inverterType: "optimised_inverter",
 			},
 		};
-		
+
 		it("displays the pv systems tab", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
 			expect(screen.getByRole("link", { name: "PV systems" })).not.toBeNull();
@@ -37,9 +37,9 @@ describe("PV and electric batteries summary page", () => {
 
 		it("displays an empty tab state when no data is present", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
-        
+
 			expect(screen.getByText("No PV systems added")).not.toBeNull();
-            
+
 			const addPVSystemsLink: HTMLAnchorElement = screen.getByRole("link", {
 				name: "Add PV systems",
 			});
@@ -97,7 +97,7 @@ describe("PV and electric batteries summary page", () => {
 				maximumDischargeRate: 2.3,
 			},
 		};
-		
+
 		it("displays the battery tab", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
 			expect(screen.getByRole("link", { name: "Electric batteries" })).not.toBeNull();
@@ -105,9 +105,9 @@ describe("PV and electric batteries summary page", () => {
 
 		it("displays an empty tab state when no data is present", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
-        
+
 			expect(screen.getByText("No electric batteries added")).not.toBeNull();
-            
+
 			const addPVSystemsLink: HTMLAnchorElement = screen.getByRole("link", {
 				name: "Add electric battery",
 			});
@@ -185,7 +185,7 @@ describe("PV and electric batteries summary page", () => {
 			};
 
 			store.$patch({
-				heatingAndCoolingSystems: {
+				spaceHeating: {
 					heatGeneration: {
 						heatPump: {
 							data: [{

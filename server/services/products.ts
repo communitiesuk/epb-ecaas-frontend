@@ -1,5 +1,5 @@
-import { noopClient } from './../../pcdb/clients/no-op_client';
-import type { Category, DisplayProduct, ProductEntity, ProductReference, TechnologyType } from "~/pcdb/pcdb.types";
+import { noopClient } from "./../../pcdb/clients/no-op_client";
+import type { Category, DisplayProduct, ProductEntity, TechnologyType } from "~/pcdb/pcdb.types";
 import  { categoryTechnologies } from "~/pcdb/pcdb.types";
 
 export async function productsInCategory(category: Category): Promise<ProductEntity<DisplayProduct>[]> {
@@ -15,12 +15,15 @@ async function productsForTechnologies<T extends TechnologyType[]>(technologies:
 				modelName,
 				modelQualifier,
 				technologyType,
+				testData,
 			} = product;
-			const displayProduct: DisplayProduct = {
+			const displayProduct: DisplayProductWithFlowTemp = {
 				brandName,
 				modelName,
 				modelQualifier,
 				technologyType,
+				testData,
+
 			};
 			return {
 				reference: reference as ProductReference,
@@ -29,7 +32,7 @@ async function productsForTechnologies<T extends TechnologyType[]>(technologies:
 		}) as ProductEntity<DisplayProduct>[];*/
 
 	const products = noopClient({
-		technologyType: "Air Source Heat Pump"
+		technologyType: "Air Source Heat Pump",
 	});
 
 	return Promise.resolve(products);

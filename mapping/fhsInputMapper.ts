@@ -4,13 +4,14 @@ import type { SchemaHeatSourceWetHeatPumpWithProductReference } from "~/schema/a
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
 import { mapInfiltrationVentilationData } from "./infiltrationVentilationMapper";
-import { mapHeatingAndCoolingSystemsData } from "./heatingAndCoolingSystemsMapper";
+import { mapspaceHeatingData } from "./spaceHeatingMapper";
 import { mapLivingSpaceFabricData as mapDwellingFabricData } from "./dwellingFabricMapper";
 import { mapPvAndElectricBatteriesData } from "./pvAndElectricBatteriesMapper";
 import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from "~/mapping/common";
 import { objectFromEntries } from "ts-extras";
 import type { Simplify, SimplifyDeep } from "type-fest";
+import { mapCoolingData } from "./coolingMapper";
 
 export type ResolvedState = SimplifyDeep<Resolved<EcaasState>>;
 
@@ -19,9 +20,10 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const infiltrationVentilationData = mapInfiltrationVentilationData(state);
 	const dwellingFabricData = mapDwellingFabricData(state);
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
+	const coolingData = mapCoolingData(state);
 
 	const [pvData, electricBatteries, diverter] = mapPvAndElectricBatteriesData(state);
-	const heatingCooling = mapHeatingAndCoolingSystemsData(state);
+	const heatingCooling = mapspaceHeatingData(state);
 	const fuelType = dwellingDetailsData.EnergySupply;
 
 	// specify the electricity tariff with other needed data points with default values as used in example FHS files in case it is needed (TODO: should it be necessary to pass in a tariff here?)
@@ -30,8 +32,9 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		threshold_prices: [20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0],
 		tariff: "Variable Time of Day Tariff",
 	};
-	const heatingAndCoolingSystemsData = {
+	const spaceHeatingData = {
 		...heatingCooling,
+		...coolingData,
 		EnergySupply: {
 			[defaultElectricityEnergySupplyName]: {
 				...(fuelType && fuelType[defaultElectricityEnergySupplyName]),
@@ -55,11 +58,11 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	};
 	const defaultAppliances: Pick<FhsInputSchema, "Appliances"> = {
 		Appliances: {},
-	}; 
+	};
 	// Below uses default values until heat pump is set up to come from PCDB
 	const { HotWaterSource } = domesticHotWaterData;
 	const heatPumpName: string = Object.keys((HotWaterSource!["hw cylinder"] as SchemaStorageTank).HeatSource)[0]!;
-	const heatPumps = state.heatingAndCoolingSystems.heatGeneration.heatPump;
+	const heatPumps = state.spaceHeating.heatGeneration.heatPump;
 
 	// use the picked heat pump if one is picked, otherwise fall back to the default
 	// TODO: correct this at point other heat sources are being added
@@ -86,7 +89,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		infiltrationVentilationData,
 		dwellingFabricData,
 		heatSourceWetData,
-		heatingAndCoolingSystemsData,
+		spaceHeatingData,
 		domesticHotWaterData,
 		pvData,
 		defaultColdWaterSource,

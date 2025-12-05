@@ -1,7 +1,6 @@
 import * as z from "zod";
-import type { Simplify } from "type-fest";
-import products from "./data/products.json";
-import { objectEntries, objectKeys } from "ts-extras";
+import type products from "./data/products.json";
+import { objectKeys } from "ts-extras";
 import { heatPumpBackupControlTypeZod, heatPumpSinkTypeZod, heatPumpSourceTypeZod } from "~/stores/zod";
 
 const IntString = z.string().regex(/^\d+$/);
@@ -74,7 +73,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 ]);
 export type Product = z.infer<typeof productSchema>;
 
-export const Products = z.array(productSchema)
+export const Products = z.array(productSchema);
 
 export type TechnologyType = Product["technologyType"];
 
@@ -97,4 +96,10 @@ export type ProductEntity<T> = {
 	product: T
 };
 
-export type DisplayProduct = Simplify<Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier" > & { technologyType: TechnologyType }>;
+export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier" > & { technologyType: TechnologyType };
+
+export type DisplayProductWithFlowTemp = DisplayProduct & {
+	testData?: {
+		designFlowTemperature: number;
+	}[];
+};
