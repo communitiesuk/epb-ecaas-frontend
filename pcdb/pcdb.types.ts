@@ -25,18 +25,12 @@ export const manufacturerZod = z.object({
 
 const BaseProduct = z.object({
 	id: z.int(),
-	manufacturerId: IntString,
-	manufacturer: manufacturerZod,
-	originalManufacturerName: z.nullable(z.string()),
 	brandName: z.string(),
 	modelName: z.string(),
 	modelQualifier: z.nullable(z.string()),
-	firstYearOfManufacture: z.int(),
-	finalYearOfManufacture: z.union([z.literal("current"), z.int()]),
 });
 
 export const airSourceHeatPumpTestDataZod = z.object({
-	productId: z.int(),
 	designFlowTemperature: z.int(),
 	testCondition: z.enum(["A", "B", "C", "D", "E", "F"]), // there is a possible 'E' value here, which diverges from SchemaTestLetter
 	testConditionTemperature: z.int(),
@@ -75,17 +69,14 @@ export const airSourceHeatPumpZod = BaseProduct.extend({
 	testData: z.array(airSourceHeatPumpTestDataZod),
 });
 
-export const Products = z.map(z.string(), z.discriminatedUnion("technologyType", [
+export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
-]));
+]);
+export type Product = z.infer<typeof productSchema>;
 
-export type Products = z.infer<typeof Products>;
-
-export type Product = Products extends Map<string, infer I> ? I : never;
+export const Products = z.array(productSchema)
 
 export type TechnologyType = Product["technologyType"];
-
-const productsMap = new Map(objectEntries(products)) as Products;
 
 export const categoryTechnologies = {
 	heatPump: [
@@ -107,5 +98,3 @@ export type ProductEntity<T> = {
 };
 
 export type DisplayProduct = Simplify<Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier" > & { technologyType: TechnologyType }>;
-
-export default productsMap;
