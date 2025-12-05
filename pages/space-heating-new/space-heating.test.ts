@@ -25,19 +25,21 @@ describe("space heating", () => {
 	const heatSource1: HeatSourceData = {
 		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
 		name: "Heat source 1",
-		typeOfHeatSource: "heatPump",
+		typeOfHeatSource: "boiler",
+		typeOfBoiler: BoilerType.combiBoiler,
 	};
 
 	const heatSource2: HeatSourceData = {
 		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
 		name: "Heat source 2",
-		typeOfHeatSource: "heatPump",
+		typeOfHeatSource: "boiler",
+		typeOfBoiler: BoilerType.regularBoiler,
 	};
 
 	const heatSource3: HeatSourceData = {
 		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8c",
 		name: "Heat source 3",
-		typeOfHeatSource: "heatPump",
+		typeOfHeatSource: "heatNetwork",
 	};
 
 	describe("heat source", () => {

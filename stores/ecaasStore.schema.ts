@@ -874,17 +874,47 @@ export type spaceHeatingNew = AssertEachKeyIsPageId<{
 	heatSource: EcaasFormList<HeatSourceData>,
 }>;
 
-const heatSourceDataZod = namedWithId.extend({
-	typeOfHeatSource: z.enum([
-		"heatPump",
-		"boiler",
-		"heatNetwork",
-		"heatBattery",
-		"solarThermalSystem",
-	]),
-});
+const baseHeatSource = namedWithId;
 
-export type HeatSourceType = z.infer<typeof heatSourceDataZod>["typeOfHeatSource"];
+export enum BoilerType {
+	combiBoiler = "combiBoiler",
+	regularBoiler = "regularBoiler",
+};
+
+const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
+	baseHeatSource.extend({
+		typeOfHeatSource: z.literal("heatPump"),
+		typeOfHeatPump: z.enum([
+			"airSource",
+			"groundSource",
+			"waterSource",
+			"booster",
+			"hotWaterOnly",
+			"exhaustAirMev",
+			"exhaustAirMvhr",
+			"exhaustAirMixed",
+		]),
+	// productReference: z.string().trim().min(1),
+	}),
+	baseHeatSource.extend({
+		typeOfHeatSource: z.literal("boiler"),
+		typeOfBoiler: z.enum([BoilerType.combiBoiler, BoilerType.regularBoiler]),
+	}),
+	baseHeatSource.extend({
+		typeOfHeatSource: z.literal("heatNetwork"),
+	}),
+	baseHeatSource.extend({
+		typeOfHeatSource: z.literal("heatBattery"),
+	}),
+	baseHeatSource.extend({
+		typeOfHeatSource: z.literal("solarThermalSystem"),
+	}),
+]);
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const heatSourceType = z.enum(["heatPump", "boiler", "heatNetwork", "heatBattery", "solarThermalSystem"]);
+
+export type HeatSourceType = z.infer<typeof heatSourceType>;
 
 export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { getUrl, type HeatSourceData, uniqueName } from "#imports";
+import { getUrl, type HeatSourceData } from "#imports";
 import { heatSourceTypes } from "../../../utils/display";
 
 const title = "Heat source";
@@ -17,15 +17,36 @@ const saveForm = (fields: HeatSourceData) => {
 	store.$patch((state) => {
 		const { heatSource } = state.spaceHeatingNew;
 
-		console.log(id);
-		const heatSourceItem: EcaasForm<HeatSourceData> = {
-			data: {
-				id,
-				name: fields.name,
-				typeOfHeatSource: fields.typeOfHeatSource,
-			},
-			complete: true,
+		const commonFields = {
+			id,
+			name: fields.name,
 		};
+
+	let heatSourceItem: EcaasForm<HeatSourceData>;
+
+	if (fields.typeOfHeatSource === "heatPump") {
+			heatSourceItem = {
+				data: {
+					...commonFields,
+					typeOfHeatSource: fields.typeOfHeatSource,
+					typeOfHeatPump: fields.typeOfHeatPump,
+					// productReference: fields.productReference,
+				},
+				complete: true,
+			};
+		} else if (fields.typeOfHeatSource === "boiler") {
+			heatSourceItem = {
+				data: {
+					...commonFields,
+					typeOfHeatSource: fields.typeOfHeatSource,
+					typeOfBoiler: fields.typeOfBoiler,
+
+				},
+				complete: true,
+			};
+		} else {
+			throw new Error("Invalid heat source type");
+		}
 
 		heatSource.data[index] = heatSourceItem;
 		heatSource.complete = false;
@@ -70,7 +91,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfHeatSource"
 			validation="required"
 		/>
-		<FormKit
+		<!-- <FormKit
 			id="name"
 			type="govInputText"
 			label="Name"
@@ -81,24 +102,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
-		/>
+		/> -->
 		
-		<!-- <template v-if="model?.typeOfHeatPump !== undefined">
-			<FormKit
-				id="selectHeatPump"
-				:key="model.typeOfHeatPump"
-				type="govPcdbProduct"
-				label="Select a heat pump"
-				name="productReference"
-				:validation-rules="{ isProductSelected }"
-				validation="required | isProductSelected"
-				help="Select the air source heat pump type from the PCDB using the button below."
-				:selected-product-reference="heatPumpStoreData[index]?.data.productReference"
-				:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
-				:page-url="route.fullPath"
-				:page-index="index"
-			/>
-		</template> -->
+		<template v-if="model?.typeOfHeatSource === 'heatPump'">
+			<HeatPump/>
+		</template>
 		<GovLLMWarning />
 
 		<div class="govuk-button-group">
