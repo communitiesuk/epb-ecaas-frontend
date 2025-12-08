@@ -1,7 +1,7 @@
 [
     {
         "id": 1234,
-        "technologyType": "Air Source Heat Pump",
+        "technologyType": "Air source heat pumps",
         "brandName": "Test",
         "modelName": "Large Heat Pump",
         "modelQualifier": "HPLARGE",
@@ -93,7 +93,7 @@
     },
     {
         "id": 1235,
-        "technologyType": "Air Source Heat Pump",
+        "technologyType": "Air source heat pumps",
         "brandName": "Test",
         "modelName": "Medium Heat Pump",
         "modelQualifier": "HPMEDIUM",
@@ -185,7 +185,7 @@
     },
     {
         "id": 1236,
-        "technologyType": "Air Source Heat Pump",
+        "technologyType": "Air source heat pumps",
         "brandName": "Test",
         "modelName": "Small Heat Pump",
         "modelQualifier": "HPSMALL",

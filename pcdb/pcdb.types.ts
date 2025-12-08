@@ -1,5 +1,4 @@
 import * as z from "zod";
-import type products from "./data/products.json";
 import { objectKeys } from "ts-extras";
 import { heatPumpBackupControlTypeZod, heatPumpSinkTypeZod, heatPumpSourceTypeZod } from "~/stores/zod";
 
@@ -26,7 +25,7 @@ const BaseProduct = z.object({
 	id: z.int(),
 	brandName: z.string(),
 	modelName: z.string(),
-	modelQualifier: z.nullable(z.string()),
+	modelQualifier: z.optional(z.nullable(z.string())),
 });
 
 export const airSourceHeatPumpTestDataZod = z.object({
@@ -41,7 +40,7 @@ export const airSourceHeatPumpTestDataZod = z.object({
 });
 
 export const airSourceHeatPumpZod = BaseProduct.extend({
-	technologyType: z.literal("Air Source Heat Pump"),
+	technologyType: z.literal("Air source heat pumps"),
 	fuel: z.string(), // need a better type for this
 	sourceType: heatPumpSourceTypeZod,
 	sinkType: heatPumpSinkTypeZod,
@@ -79,9 +78,11 @@ export type TechnologyType = Product["technologyType"];
 
 export const categoryTechnologies = {
 	heatPump: [
-		"Air Source Heat Pump",
+		"Air source heat pumps",
 	],
 } as const satisfies Record<string, TechnologyType[]>;
+
+export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMap(x => categoryTechnologies[x]);
 
 export const knownCategories = objectKeys(categoryTechnologies);
 
@@ -89,17 +90,13 @@ export type Category = keyof typeof categoryTechnologies;
 
 export type ProductForCategory<T extends Category> = Extract<Product, { technologyType: (typeof categoryTechnologies)[T][number] }>;
 
-export type ProductReference = keyof typeof products;
-
-export type ProductEntity<T> = {
-	reference: ProductReference,
-	product: T
-};
-
-export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier" > & { technologyType: TechnologyType };
+export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier" > & { technologyType: TechnologyType };
 
 export type DisplayProductWithFlowTemp = DisplayProduct & {
-	testData?: {
-		designFlowTemperature: number;
-	}[];
+	designFlowTemperature?: number;
 };
+
+export interface PaginatedResult<T> {
+	data: T[];
+	lastEvaluationKey?: string;
+}

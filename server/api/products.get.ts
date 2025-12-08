@@ -1,14 +1,18 @@
 import { arrayIncludes } from "ts-extras";
-import { productsInCategory } from "../services/products";
-import { knownCategories } from "~/pcdb/pcdb.types";
+import { productsByTechnologyType } from "../services/products";
+import type { TechnologyType } from "~/pcdb/pcdb.types";
+import { technologyTypes } from "~/pcdb/pcdb.types";
 
 export default defineEventHandler(async (event) => {
 
-	const { category } = getQuery(event);
+	const { technologyType, pageSize, startKey } = getQuery(event);
 
-	if (!category || !arrayIncludes(knownCategories, category)) {
-		throw createError({ statusCode: 400, statusMessage: "Expected a category query parameter." });
+	if (!technologyType || !arrayIncludes(technologyTypes, technologyType)) {
+		throw createError({ statusCode: 400, statusMessage: "Expected a technology type query parameter." });
 	}
 
-	return await productsInCategory(category);
+	return await productsByTechnologyType(
+		technologyType as TechnologyType,
+		pageSize ? parseInt(pageSize.toString()) : undefined,
+		startKey?.toString());
 });

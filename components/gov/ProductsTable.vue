@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import type { DisplayProduct, DisplayProductWithFlowTemp, ProductEntity, ProductReference } from "~/pcdb/products";
+import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
 
 const store = useEcaasStore();
 const props = defineProps<{
-	products: ProductEntity<DisplayProduct>[];
-	hasFlowTemp: boolean
-	section: keyof HeatGeneration
-	pageIndex: number
-	url: string
+	products: PaginatedResult<DisplayProduct>;
+	hasFlowTemp?: boolean;
+	section: keyof HeatGeneration;
+	pageIndex: number;
+	url: string;
 }>();
+
 function selectProduct(reference: string) {
 	store.$patch((state) => {
 		// currently hardcoding heatPumps
@@ -19,9 +20,10 @@ function selectProduct(reference: string) {
 	});
 }
 
-function getFlowTemperature(reference: ProductReference) {
-	const fullProduct = props.products.find(p => p.reference === reference) as ProductEntity<DisplayProductWithFlowTemp> | undefined;
-	return fullProduct?.product.testData?.[0]?.designFlowTemperature ?? "-";
+function getFlowTemperature(reference: number) {
+	/*const fullProduct = props.products.find(p => p.reference === reference) as ProductEntity<DisplayProductWithFlowTemp> | undefined;
+	return fullProduct?.product.testData?.[0]?.designFlowTemperature ?? "-";*/
+	return "-";
 }
 
 </script>
@@ -32,7 +34,7 @@ function getFlowTemperature(reference: ProductReference) {
 		<table class="govuk-table govuk-!-margin-top-4">
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row">
-					<th scope="col" class="govuk-table__header">Product reference</th>
+					<th scope="col" class="govuk-table__header">Product ID</th>
 					<th scope="col" class="govuk-table__header">Brand</th>
 					<th scope="col" class="govuk-table__header">Model</th>
 					<th scope="col" class="govuk-table__header">Model qualifier</th>
@@ -43,24 +45,24 @@ function getFlowTemperature(reference: ProductReference) {
 
 			<tbody class="govuk-table__body">
 				<tr
-					v-for=" {reference, product }, index in products"
-					:key="reference"
+					v-for="product, index in products.data"
+					:key="product.id"
 					class="govuk-table__row"
 				>
-					<td class="govuk-table__cell">{{ reference }}</td>
+					<td class="govuk-table__cell">{{ product.id }}</td>
 					<td class="govuk-table__cell">{{ product.brandName }}</td>
 					<td class="govuk-table__cell">{{ product.modelName }}</td>
-					<td class="govuk-table__cell">{{ product.modelQualifier }}</td>
-					<td  v-if="hasFlowTemp" class="govuk-table__cell">{{ `${getFlowTemperature(reference)}°C` }}</td>
+					<td class="govuk-table__cell">{{ product.modelQualifier ?? '-' }}</td>
+					<td  v-if="hasFlowTemp" class="govuk-table__cell">{{ `${getFlowTemperature(product.id)}` }}</td>
 					<td class="govuk-table__cell" style="white-space:nowrap;">
-						<a :href="`${url}/${reference}`" class="govuk-link govuk-!-margin-right-3">
+						<a :href="`${url}/${product.id}`" class="govuk-link govuk-!-margin-right-3">
 							More details
 						</a>
 						<GovButton
 							type="button"
 							secondary
 							:test-id="`selectProductButton_${index}`"
-							@click="selectProduct(reference)"
+							@click="selectProduct(product.id.toString())"
 						>
 							Select
 						</GovButton>

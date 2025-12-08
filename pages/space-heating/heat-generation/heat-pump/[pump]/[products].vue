@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
+import { getTitle } from "~/utils/page";
 
 definePageMeta({ layout: false });
 
@@ -19,10 +20,13 @@ const index = Number(urlSegments[urlSegments.length -2]);
 const currentHeatPump = useItemToEdit("pump", heatPumpStoreData);
 const model = ref(currentHeatPump?.data);
 
-const { data: heatPumps } = await useFetch("/api/products", { query: { category: "heatPump" } }); // currently getting all heat pumps - but this will need to fetch heat pumps depending on the heat pump type chosen
-
-// sort into Small, Medium, Large (to retain while we are using test fake heat pumps and don't have better means to sort them by)
-heatPumps.value?.sort((a, b) => -a.reference.localeCompare(b.reference));
+// currently getting all air source heat pumps - but this will need to fetch heat pumps depending on the heat pump type chosen
+const { data: heatPumps } = await useFetch("/api/products", {
+	query: {
+		technologyType: "Air source heat pumps",
+		pageSize: 12
+	}
+});
 </script>
 
 <template>
@@ -39,7 +43,6 @@ heatPumps.value?.sort((a, b) => -a.reference.localeCompare(b.reference));
 		<GovProductsTable 
 			id="productsTable"
 			:products="heatPumps!"
-			:has-flow-temp="true"
 			section="heatPump"
 			:page-index="index"
 			:url="route.path"

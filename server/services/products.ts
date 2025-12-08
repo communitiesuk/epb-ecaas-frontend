@@ -1,39 +1,19 @@
-import { noopClient } from "./../../pcdb/clients/no-op_client";
-import type { Category, DisplayProduct, ProductEntity, TechnologyType } from "~/pcdb/pcdb.types";
-import  { categoryTechnologies } from "~/pcdb/pcdb.types";
+import { dynamodbClient } from "~/pcdb/clients/dynamodb_client";
+//import { noopClient } from "./../../pcdb/clients/no-op_client";
+import type { DisplayProduct, PaginatedResult, TechnologyType } from "~/pcdb/pcdb.types";
 
-export async function productsInCategory(category: Category): Promise<ProductEntity<DisplayProduct>[]> {
-	return productsForTechnologies(categoryTechnologies[category]);
-}
+export async function productsByTechnologyType(technologyType: TechnologyType, pageSize?: number, startKey?: string): Promise<PaginatedResult<DisplayProduct>> {
+	/*const result = await noopClient({
+		technologyType,
+		pageSize,
+		startKey,
+	});*/
 
-async function productsForTechnologies<T extends TechnologyType[]>(technologies: T) {
-	/*const technologyProducts = Array.from(products.entries())
-		.filter(([_, product]) => arrayIncludes(technologies, product["technologyType"]))
-		.map(([reference, product]) => {
-			const {
-				brandName,
-				modelName,
-				modelQualifier,
-				technologyType,
-				testData,
-			} = product;
-			const displayProduct: DisplayProductWithFlowTemp = {
-				brandName,
-				modelName,
-				modelQualifier,
-				technologyType,
-				testData,
-
-			};
-			return {
-				reference: reference as ProductReference,
-				product: displayProduct,
-			};
-		}) as ProductEntity<DisplayProduct>[];*/
-
-	const products = noopClient({
-		technologyType: "Air Source Heat Pump",
+	const result = await dynamodbClient({
+		technologyType,
+		pageSize,
+		startKey,
 	});
 
-	return Promise.resolve(products);
+	return result as PaginatedResult<DisplayProduct>;
 }

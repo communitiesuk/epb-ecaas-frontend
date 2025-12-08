@@ -1,5 +1,4 @@
-import type { NonNegativeInteger } from "type-fest";
-import type { DisplayProduct, Product, TechnologyType } from "../pcdb.types";
+import type { DisplayProduct, PaginatedResult, Product, TechnologyType } from "../pcdb.types";
 
 type ProductForTechnology<T extends TechnologyType> = Extract<Product, { technologyType: T }>;
 
@@ -42,14 +41,15 @@ type DisplayTechnologyProducts = {
 	name: "displayTechnologyProducts",
 	input: {
 		technologyType: TechnologyType,
-		page?: NonNegativeInteger<number>,
+		pageSize?: number,
+		startKey?: string,
 	} & ({
 		brandStartsWith?: string,
 	} | {
 		brandName?: string,
 		modelStartsWith?: string,
 	}),
-	output: DisplayProduct[],
+	output: PaginatedResult<DisplayProduct>,
 };
 
 export type Command<T extends TechnologyType> = DisplayById | FullProductById<T> | BrandsStartingWith | ModelsStartingWith | DisplayTechnologyProducts;
