@@ -2,6 +2,7 @@ import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
 import Products from "./[products].vue";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
 
 describe("Heat pumps products page", () => {
 	const store = useEcaasStore();
@@ -19,38 +20,31 @@ describe("Heat pumps products page", () => {
 		mockRoute.mockReset();
 	});
 
-	const MOCKED_HEAT_PUMPS = [
-		{
-			reference: "HEATPUMP-SMALL",
-			product: {
+	const MOCKED_HEAT_PUMPS: PaginatedResult<DisplayProduct> = {
+		data: [
+			{
+				id: "1000",
 				brandName: "Test",
-				firstYearOfManufacture: 2023,
 				modelName: "Small Heat Pump",
 				modelQualifier: "HPSMALL",
-				technologyType: "Air Source Heat Pump",
+				technologyType: "Air source heat pumps",
 			},
-		},
-		{
-			reference: "HEATPUMP-MEDIUM",
-			product: {
+			{
+				id: "1001",
 				brandName: "Test",
-				firstYearOfManufacture: 2023,
 				modelName: "Medium Heat Pump",
 				modelQualifier: "HPMEDIUM",
-				technologyType: "Air Source Heat Pump",
+				technologyType: "Air source heat pumps",
 			},
-		},
-		{
-			reference: "HEATPUMP-LARGE",
-			product: {
+			{
+				id: "1002",
 				brandName: "Test",
-				firstYearOfManufacture: 2023,
 				modelName: "Large Heat Pump",
 				modelQualifier: "HPLARGE",
-				technologyType: "Air Source Heat Pump",
+				technologyType: "Air source heat pumps",
 			},
-		},
-	];
+		],
+	};
 	beforeEach(() => {
 		mockFetch.mockReturnValue({
 			data: ref(MOCKED_HEAT_PUMPS),
@@ -62,6 +56,7 @@ describe("Heat pumps products page", () => {
 		name: "Heat pump small",
 		typeOfHeatPump: "airSource",
 	};
+
 	const heatPump2: Partial<HeatPumpData> = {
 		id: "463c94f6-566c-49b2-af27-111111111",
 		name: "Heat pump large",
@@ -113,20 +108,6 @@ describe("Heat pumps products page", () => {
 		);
 	});
 
-	test("displays flow temperature column for heat pumps and boilers", async () => {
-		mockRoute.mockReturnValue({
-			params: {
-				pump: "0",
-				products: "air-source-products",
-			},
-			path: "/0/air-source-products",
-		});
-		await renderSuspended(Products);
-		const flowTempHeader = screen.queryByText("Flow temp", { selector: "th" });
-		expect(flowTempHeader).not.toBeNull();
-		//TODO add test for boilers
-	});
-
 	test("when a user selects a product its product reference gets stored", async () => {
 		mockRoute.mockReturnValue({
 			params: {
@@ -138,10 +119,11 @@ describe("Heat pumps products page", () => {
 		await renderSuspended(Products);
 
 		await user.click(screen.getByTestId("selectProductButton_1"));
+
 		expect(
 			store.spaceHeating.heatGeneration.heatPump.data[1]!.data
 				.productReference,
-		).toBe(MOCKED_HEAT_PUMPS[1]?.reference);
+		).toBe(MOCKED_HEAT_PUMPS.data[1]?.id);
 	});
 
 	test("'Back to heat pump' navigates user to the heat pump at the correct index", async () => {

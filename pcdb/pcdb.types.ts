@@ -22,7 +22,7 @@ export const manufacturerZod = z.object({
 });
 
 const BaseProduct = z.object({
-	id: z.int(),
+	id: z.string(),
 	brandName: z.string(),
 	modelName: z.string(),
 	modelQualifier: z.optional(z.nullable(z.string())),

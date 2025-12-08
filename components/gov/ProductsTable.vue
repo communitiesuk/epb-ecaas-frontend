@@ -4,7 +4,6 @@ import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
 const store = useEcaasStore();
 const props = defineProps<{
 	products: PaginatedResult<DisplayProduct>;
-	hasFlowTemp?: boolean;
 	section: keyof HeatGeneration;
 	pageIndex: number;
 	url: string;
@@ -20,7 +19,7 @@ function selectProduct(reference: string) {
 	});
 }
 
-function getFlowTemperature(reference: number) {
+function getFlowTemperature(reference: string) {
 	/*const fullProduct = props.products.find(p => p.reference === reference) as ProductEntity<DisplayProductWithFlowTemp> | undefined;
 	return fullProduct?.product.testData?.[0]?.designFlowTemperature ?? "-";*/
 	return "-";
@@ -38,7 +37,6 @@ function getFlowTemperature(reference: number) {
 					<th scope="col" class="govuk-table__header">Brand</th>
 					<th scope="col" class="govuk-table__header">Model</th>
 					<th scope="col" class="govuk-table__header">Model qualifier</th>
-					<th v-if="hasFlowTemp" scope="col" class="govuk-table__header">Flow temp</th>
 					<th class="govuk-table__header">&nbsp;</th>
 				</tr>
 			</thead>
@@ -53,7 +51,6 @@ function getFlowTemperature(reference: number) {
 					<td class="govuk-table__cell">{{ product.brandName }}</td>
 					<td class="govuk-table__cell">{{ product.modelName }}</td>
 					<td class="govuk-table__cell">{{ product.modelQualifier ?? '-' }}</td>
-					<td  v-if="hasFlowTemp" class="govuk-table__cell">{{ `${getFlowTemperature(product.id)}` }}</td>
 					<td class="govuk-table__cell" style="white-space:nowrap;">
 						<a :href="`${url}/${product.id}`" class="govuk-link govuk-!-margin-right-3">
 							More details

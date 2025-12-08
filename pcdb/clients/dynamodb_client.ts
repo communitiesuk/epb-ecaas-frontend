@@ -50,7 +50,7 @@ export const dynamodbClient: Client = async <
 
 		const products = result.Items?.map(x => {
 			const product: DisplayProduct = {
-				id: x.id?.N as unknown as number,
+				id: x.id?.N as string,
 				brandName: x.brandName?.S as string,
 				modelName: x.modelName?.S as string,
 				modelQualifier: x.modelQualifier?.S as string,
