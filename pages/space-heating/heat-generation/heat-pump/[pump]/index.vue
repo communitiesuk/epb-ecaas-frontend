@@ -86,22 +86,24 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfHeatPump"
 			validation="required"
 		/>
-		<template v-if="model?.typeOfHeatPump !== undefined">
-			<FormKit
-				id="selectHeatPump"
-				:key="model.typeOfHeatPump"
-				type="govPcdbProduct"
-				label="Select a heat pump"
-				name="productReference"
-				:validation-rules="{ isProductSelected }"
-				validation="required | isProductSelected"
-				help="Select the air source heat pump type from the PCDB using the button below."
-				:selected-product-reference="heatPumpStoreData[index]?.data.productReference"
-				:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
-				:page-url="route.fullPath"
-				:page-index="index"
-			/>
-		</template>
+		<ClientOnly>
+			<template v-if="model?.typeOfHeatPump !== undefined">
+				<FormKit
+					id="selectHeatPump"
+					:key="model.typeOfHeatPump"
+					type="govPcdbProduct"
+					label="Select a heat pump"
+					name="productReference"
+					:validation-rules="{ isProductSelected }"
+					validation="required | isProductSelected"
+					help="Select the air source heat pump type from the PCDB using the button below."
+					:selected-product-reference="heatPumpStoreData[index]?.data.productReference"
+					:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
+					:page-url="route.fullPath"
+					:page-index="index"
+				/>
+			</template>
+		</ClientOnly>
 		<GovLLMWarning />
 
 		<div class="govuk-button-group">

@@ -27,21 +27,21 @@ describe("Heat pumps products page", () => {
 				brandName: "Test",
 				modelName: "Small Heat Pump",
 				modelQualifier: "HPSMALL",
-				technologyType: "Air source heat pumps",
+				technologyType: "air source heat pumps",
 			},
 			{
 				id: "1001",
 				brandName: "Test",
 				modelName: "Medium Heat Pump",
 				modelQualifier: "HPMEDIUM",
-				technologyType: "Air source heat pumps",
+				technologyType: "air source heat pumps",
 			},
 			{
 				id: "1002",
 				brandName: "Test",
 				modelName: "Large Heat Pump",
 				modelQualifier: "HPLARGE",
-				technologyType: "Air source heat pumps",
+				technologyType: "air source heat pumps",
 			},
 		],
 	};
@@ -91,20 +91,6 @@ describe("Heat pumps products page", () => {
 
 		expect(
 			screen.getByRole("heading", { name: "Select an air source heat pump" }),
-		);
-
-		mockRoute.mockReturnValue({
-			params: {
-				pump: "0",
-				products: "exhaust-air-mvhr-products",
-			},
-			path: "/0/exhaust-air-mvhr-products",
-		});
-		await renderSuspended(Products);
-		expect(
-			screen.getByRole("heading", {
-				name: "Select an exhaust air MVHR heat pump",
-			}),
 		);
 	});
 

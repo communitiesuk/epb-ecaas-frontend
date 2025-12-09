@@ -20,10 +20,17 @@ const index = Number(urlSegments[urlSegments.length -2]);
 const currentHeatPump = useItemToEdit("pump", heatPumpStoreData);
 const model = ref(currentHeatPump?.data);
 
+if (!(pageId in pcdbTechnologyTypes)) {
+	throw createError({
+		statusCode: 400,
+		statusMessage: "No product type selected"
+	})
+}
+
 // currently getting all air source heat pumps - but this will need to fetch heat pumps depending on the heat pump type chosen
 const { data: heatPumps } = await useFetch("/api/products", {
 	query: {
-		technologyType: "Air source heat pumps",
+		technologyType: pcdbTechnologyTypes[pageId as keyof typeof pcdbTechnologyTypes],
 		pageSize: 12
 	}
 });

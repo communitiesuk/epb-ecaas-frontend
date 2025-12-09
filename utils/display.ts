@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaL
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { ConciseMassDistributionClass } from "~/stores/ecaasStore.schema";
+import type { ConciseMassDistributionClass, HeatPumpType } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -265,6 +265,10 @@ export const heatPumpTypes = {
 	"exhaustAirMvhr": "Exhaust air MVHR",
 	"exhaustAirMixed": "Exhaust air Mixed",
 } as const satisfies Record<HeatPumpType, HeatPumpTypeDisplay>;
+
+export const pcdbTechnologyTypes = {
+	"airSourceProducts": "air source heat pumps",
+} as const satisfies Record<string, string>;
 
 export function displayHeatPumpType( type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
 	return heatPumpTypes[type!] ?? emptyValueRendering;

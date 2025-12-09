@@ -1,7 +1,7 @@
-import { DynamoDBClient, QueryCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import type { DisplayProduct, PaginatedResult, TechnologyType } from "../pcdb.types";
 import type { Command, Client } from "./client.types";
-import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 const localConfig = {
 	region: "fakeRegion", 
@@ -43,18 +43,18 @@ export const dynamodbClient: Client = async <
 			TableName: "products",
 			IndexName: "by-brand",
 			KeyConditionExpression: "technologyType = :technologyType",
-			ExpressionAttributeValues: { ":technologyType": { "S": query.technologyType } },
+			ExpressionAttributeValues: { ":technologyType": query.technologyType },
 			Limit: query.pageSize,
 			...query.startKey && { ExclusiveStartKey: JSON.parse(query.startKey) },
 		}));
 
 		const products = result.Items?.map(x => {
 			const product: DisplayProduct = {
-				id: x.id?.N as string,
-				brandName: x.brandName?.S as string,
-				modelName: x.modelName?.S as string,
-				modelQualifier: x.modelQualifier?.S as string,
-				technologyType: x.technologyType?.S as TechnologyType,
+				id: x.id as string,
+				brandName: x.brandName as string,
+				modelName: x.modelName as string,
+				modelQualifier: x.modelQualifier as string,
+				technologyType: x.technologyType as TechnologyType,
 			};
 
 			return product;

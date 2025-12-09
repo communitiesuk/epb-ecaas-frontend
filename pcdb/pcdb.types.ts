@@ -40,7 +40,7 @@ export const airSourceHeatPumpTestDataZod = z.object({
 });
 
 export const airSourceHeatPumpZod = BaseProduct.extend({
-	technologyType: z.literal("Air source heat pumps"),
+	technologyType: z.literal("air source heat pumps"),
 	fuel: z.string(), // need a better type for this
 	sourceType: heatPumpSourceTypeZod,
 	sinkType: heatPumpSinkTypeZod,
@@ -78,7 +78,7 @@ export type TechnologyType = Product["technologyType"];
 
 export const categoryTechnologies = {
 	heatPump: [
-		"Air source heat pumps",
+		"air source heat pumps",
 	],
 } as const satisfies Record<string, TechnologyType[]>;
 
