@@ -12,11 +12,11 @@ import BoilerForm from "./boiler/[boiler].vue";
 import HeatBatteryForm from "./heat-battery/[battery].vue";
 import HeatNetworkForm from "./heat-network/[network].vue";
 import HeatInterfaceUnitForm from "./heat-interface-unit/[interface].vue";
-import { productsByTechnologyType } from "~/server/services/products";
+import { getProducts } from "~/server/services/products";
 import formStatus from "~/constants/formStatus";
 
 
-registerEndpoint("/api/products", async () => productsByTechnologyType("Air source heat pumps"));
+registerEndpoint("/api/products", async () => getProducts("air source heat pumps"));
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {

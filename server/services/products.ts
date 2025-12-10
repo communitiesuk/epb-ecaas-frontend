@@ -1,19 +1,20 @@
-import { dynamodbClient } from "~/pcdb/clients/dynamodb_client";
-//import { noopClient } from "./../../pcdb/clients/no-op_client";
-import type { DisplayProduct, PaginatedResult, TechnologyType } from "~/pcdb/pcdb.types";
+import { arrayIncludes } from "ts-extras";
+import { technologyTypes, type DisplayProduct, type PaginatedResult, type TechnologyType } from "~/pcdb/pcdb.types";
+import { createPcdbClient } from "~/pcdb/clients/pcdb_client";
 
-export async function productsByTechnologyType(technologyType: TechnologyType, pageSize?: number, startKey?: string): Promise<PaginatedResult<DisplayProduct>> {
-	/*const result = await noopClient({
+export async function getProducts(technologyType: TechnologyType, pageSize?: number, startKey?: string): Promise<PaginatedResult<DisplayProduct>> {
+	if (!technologyType || !arrayIncludes(technologyTypes, technologyType as string)) {
+		throw createError({
+			statusCode: 400,
+			statusMessage: "Expected a technology type query parameter.",
+		});
+	}
+
+	const client = createPcdbClient();
+
+	return await client({
 		technologyType,
 		pageSize,
 		startKey,
-	});*/
-
-	const result = await dynamodbClient({
-		technologyType,
-		pageSize,
-		startKey,
-	});
-
-	return result as PaginatedResult<DisplayProduct>;
+	}) as PaginatedResult<DisplayProduct>;
 }
