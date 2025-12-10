@@ -24,6 +24,13 @@ const spaceHeatingNewPages = [
 		parentId: "spaceHeatingNew",
 	},
 	{
+		id: "heatSourceProduct",
+		title: "Select a heat pump",
+		url: "/space-heating-new/heat-source/:heatSource/:products",
+		type: PageType.Task,
+		parentId: "spaceHeatingNew",
+	},
+	{
 		id: "spaceHeatingNewSummary",
 		title: "Summary",
 		url: "/space-heating-new/summary",

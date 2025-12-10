@@ -3,7 +3,7 @@ import Products from "./[products].vue";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 
-describe("Heat pumps products page", () => {
+describe("Heat source products page", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 	const { mockFetch, mockRoute } = vi.hoisted(() => ({
@@ -57,24 +57,24 @@ describe("Heat pumps products page", () => {
 		});
 	});
 
-	const heatPump1: Partial<HeatPumpData> = {
+	const heatSource1: Partial<HeatSourceData> = {
 		id: "463c94f6-566c-49b2-af27-222222222",
-		name: "Heat pump small",
+		name: "Heat source 1",
+		typeOfHeatSource: "heatPump",
 		typeOfHeatPump: "airSource",
 	};
-	const heatPump2: Partial<HeatPumpData> = {
+	const heatSource2: Partial<HeatSourceData> = {
 		id: "463c94f6-566c-49b2-af27-111111111",
-		name: "Heat pump large",
+		name: "Heat source 2",
+		typeOfHeatSource: "heatPump",
 		typeOfHeatPump: "airSource",
 	};
 
 	beforeEach(async () => {
 		store.$patch({
-			spaceHeating: {
-				heatGeneration: {
-					heatPump: {
-						data: [{ data: heatPump2 }, { data: heatPump1 }],
-					},
+			spaceHeatingNew: {
+				heatSource: {
+					data: [{ data: heatSource2 }, { data: heatSource1 }],
 				},
 			},
 		});
@@ -84,78 +84,33 @@ describe("Heat pumps products page", () => {
 		store.$reset();
 	});
 
-	test("title dependant on the type of heat pump", async () => {
-		mockRoute.mockReturnValue({
-			params: {
-				pump: "0",
-				products: "air-source-products",
-			},
-			path: "/0/air-source-products",
-		});
-		await renderSuspended(Products);
-
-		expect(
-			screen.getByRole("heading", { name: "Select an air source heat pump" }),
-		);
-
-		mockRoute.mockReturnValue({
-			params: {
-				pump: "0",
-				products: "exhaust-air-mvhr-products",
-			},
-			path: "/0/exhaust-air-mvhr-products",
-		});
-		await renderSuspended(Products);
-		expect(
-			screen.getByRole("heading", {
-				name: "Select an exhaust air MVHR heat pump",
-			}),
-		);
-	});
-
-	test("displays flow temperature column for heat pumps and boilers", async () => {
-		mockRoute.mockReturnValue({
-			params: {
-				pump: "0",
-				products: "air-source-products",
-			},
-			path: "/0/air-source-products",
-		});
-		await renderSuspended(Products);
-		const flowTempHeader = screen.queryByText("Flow temp", { selector: "th" });
-		expect(flowTempHeader).not.toBeNull();
-		//TODO add test for boilers
-	});
-
 	test("when a user selects a product its product reference gets stored", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				pump: "1",
-				products: "air-source-products",
+				"heatSource": "1",
+				"products": "products",
 			},
-			path: "/1/air-source-products",
+			path: "/1/products",
 		});
 		await renderSuspended(Products);
-
+	
 		await user.click(screen.getByTestId("selectProductButton_1"));
-		expect(
-			store.spaceHeating.heatGeneration.heatPump.data[1]!.data
-				.productReference,
-		).toBe(MOCKED_HEAT_PUMPS[1]?.reference);
+		expect(store.spaceHeatingNew.heatSource.data[1]!.data.productReference).toBe(MOCKED_HEAT_PUMPS[1]?.reference);
 	});
 
-	test("'Back to heat pump' navigates user to the heat pump at the correct index", async () => {
+	test("'Back to heat source' navigates user to the heat source at the correct index", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				pump: "1",
-				products: "air-source-products",
+				"heatSource": "1",
+				"products": "products",
 			},
-			path: "/1/air-source-products",
+			path: "/1/products",
 		});
 		await renderSuspended(Products);
-		const backButton = screen.getByTestId("backToHeatPumpButton");
+		const backButton = screen.getByTestId("backToHeatSourceButton");
+
 		expect(backButton.getAttribute("href")).toBe(
-			"/space-heating/heat-generation/heat-pump/1",
+			"/space-heating-new/heat-source/1",
 		);
 	});
 });

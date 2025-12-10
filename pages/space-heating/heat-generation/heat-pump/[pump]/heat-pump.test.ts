@@ -172,7 +172,7 @@ describe("heatPump", () => {
 		await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
 		let chooseAProductButton = screen.getByTestId("chooseAProductButton");
 		expect(chooseAProductButton.getAttribute("href")).toBe(
-			"/0/air-source-products",
+			"/0/products",
 		);
 		store.$patch({
 			spaceHeating: {
@@ -191,7 +191,7 @@ describe("heatPump", () => {
 
 		chooseAProductButton = screen.getByTestId("chooseAProductButton");
 		expect(chooseAProductButton.getAttribute("href")).toBe(
-			"/2/exhaust-air-mixed-products",
+			"/2/products",
 		);
 	});
 

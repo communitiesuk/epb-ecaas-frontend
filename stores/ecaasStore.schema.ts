@@ -894,21 +894,22 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 			"exhaustAirMvhr",
 			"exhaustAirMixed",
 		]),
-	// productReference: z.string().trim().min(1),
+		productReference: z.string().trim().min(1),
 	}),
 	baseHeatSource.extend({
 		typeOfHeatSource: z.literal("boiler"),
 		typeOfBoiler: z.enum([BoilerType.combiBoiler, BoilerType.regularBoiler]),
+		productReference: z.string().trim().min(1),
 	}),
-	baseHeatSource.extend({
-		typeOfHeatSource: z.literal("heatNetwork"),
-	}),
-	baseHeatSource.extend({
-		typeOfHeatSource: z.literal("heatBattery"),
-	}),
-	baseHeatSource.extend({
-		typeOfHeatSource: z.literal("solarThermalSystem"),
-	}),
+	// baseHeatSource.extend({
+	// 	typeOfHeatSource: z.literal("heatNetwork"),
+	// }),
+	// baseHeatSource.extend({
+	// 	typeOfHeatSource: z.literal("heatBattery"),
+	// }),
+	// baseHeatSource.extend({
+	// 	typeOfHeatSource: z.literal("solarThermalSystem"),
+	// }),
 ]);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

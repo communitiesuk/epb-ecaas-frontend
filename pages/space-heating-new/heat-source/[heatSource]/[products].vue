@@ -3,20 +3,15 @@ import type { PageId } from "~/data/pages/pages";
 
 definePageMeta({ layout: false });
 
-function kebabToCamelCase(text: string){
-	return text.replace(/-([a-z])/g, function (g) { return g[1]!.toUpperCase(); });
-}
-const store = useEcaasStore();
-const heatPumpStoreData = store.spaceHeating.heatGeneration.heatPump.data;
 const route = useRoute();
-const urlSegments = route.path.split("/");
+const store = useEcaasStore();
 
-const pageId = kebabToCamelCase(urlSegments[urlSegments.length -1]!);
+const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
+const pageId = "heatSourceProduct";
 const title = getTitle(pageId as PageId);
+const index = Number(route.params["heatSource"]);
 
-const index = Number(urlSegments[urlSegments.length -2]);
-
-const currentHeatPump = useItemToEdit("pump", heatPumpStoreData);
+const currentHeatPump = useItemToEdit("heatSource", heatSourceStoreData);
 const model = ref(currentHeatPump?.data);
 
 const { data: heatPumps } = await useFetch("/api/products", { query: { category: "heatPump" } }); // currently getting all heat pumps - but this will need to fetch heat pumps depending on the heat pump type chosen
@@ -40,11 +35,10 @@ heatPumps.value?.sort((a, b) => -a.reference.localeCompare(b.reference));
 			id="productsTable"
 			:products="heatPumps!"
 			:has-flow-temp="true"
-			section="heatPump"
+			section="heatSource"
 			:page-index="index"
 			:url="route.path"
 		/>
-
-		<GovButton secondary :href="`/space-heating/heat-generation/heat-pump/${index}`" test-id="backToHeatPumpButton">Back to heat pump</GovButton> 
+		<GovButton secondary :href="`/space-heating-new/heat-source/${index}`" test-id="backToHeatSourceButton">Back to heat source</GovButton> 
 	</Formkit>
 </template>

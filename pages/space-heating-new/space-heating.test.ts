@@ -39,7 +39,8 @@ describe("space heating", () => {
 	const heatSource3: HeatSourceData = {
 		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8c",
 		name: "Heat source 3",
-		typeOfHeatSource: "heatNetwork",
+		typeOfHeatSource: "boiler",
+		typeOfBoiler: BoilerType.regularBoiler,
 	};
 
 	describe("heat source", () => {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, type HeatSourceData } from "#imports";
-import { heatSourceTypes } from "../../../utils/display";
+import { heatSourceTypes } from "../../../../utils/display";
 
 const title = "Heat source";
 const store = useEcaasStore();
@@ -13,6 +13,8 @@ const heatSourceData = useItemToEdit("heatSource", heatSourceStoreData);
 const model = ref(heatSourceData?.data);
 const id =  heatSourceData?.data.id ?? uuidv4();
 
+export type heatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
+
 const saveForm = (fields: HeatSourceData) => {
 	store.$patch((state) => {
 		const { heatSource } = state.spaceHeatingNew;
@@ -22,15 +24,15 @@ const saveForm = (fields: HeatSourceData) => {
 			name: fields.name,
 		};
 
-	let heatSourceItem: EcaasForm<HeatSourceData>;
+		let heatSourceItem: EcaasForm<HeatSourceData>;
 
-	if (fields.typeOfHeatSource === "heatPump") {
+		if (fields.typeOfHeatSource === "heatPump") {
 			heatSourceItem = {
 				data: {
 					...commonFields,
 					typeOfHeatSource: fields.typeOfHeatSource,
 					typeOfHeatPump: fields.typeOfHeatPump,
-					// productReference: fields.productReference,
+					productReference: fields.productReference,
 				},
 				complete: true,
 			};
@@ -40,6 +42,7 @@ const saveForm = (fields: HeatSourceData) => {
 					...commonFields,
 					typeOfHeatSource: fields.typeOfHeatSource,
 					typeOfBoiler: fields.typeOfBoiler,
+					productReference: fields.productReference,
 
 				},
 				complete: true,
@@ -91,24 +94,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfHeatSource"
 			validation="required"
 		/>
-		<!-- <FormKit
-			id="name"
-			type="govInputText"
-			label="Name"
-			help="Provide a name for this heat source so that it can be identified later"
-			name="name"
-			:validation-rules="{ uniqueName: uniqueName(heatSourceStoreData, { index }) }"
-			validation="required | uniqueName"
-			:validation-messages="{
-				uniqueName: 'An element with this name already exists. Please enter a unique name.'
-			}"
-		/> -->
-		
-		<template v-if="model?.typeOfHeatSource === 'heatPump'">
-			<HeatPump/>
-		</template>
+		<HeatPump
+			v-if="model?.typeOfHeatSource === 'heatPump'"
+			:model="model as heatPumpModelType"/>
 		<GovLLMWarning />
-
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('spaceHeatingNew')" secondary test-id="saveProgress">Save progress</GovButton>

@@ -54,7 +54,7 @@ function hasIncompleteEntries() {
 	</h1>
 	<CustomList
 		id="heatSource"
-		title="Heat source"
+		title="Heat sources"
 		:form-url="`${page?.url!}/heat-source`"
 		:items="store.spaceHeatingNew.heatSource.data.map(x => ({
 			name: x.data?.name,

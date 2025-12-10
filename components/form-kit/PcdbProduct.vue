@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from "@formkit/core";
 import { showErrorState, getErrorMessage } from "#imports";
-import hyphenate from "~/utils/hyphenate";
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
@@ -14,7 +13,7 @@ function appendItemIndexToUrl(url: string, index: number) {
 	return url.replace(lastUrlSegment, `/${index}`);
 }
 
-const productsPageUrl = appendItemIndexToUrl(pageUrl, index) + "/" + hyphenate(selectedProductType) + "-products";
+const productsPageUrl = appendItemIndexToUrl(pageUrl, index) + "/products";
 
 </script>
 

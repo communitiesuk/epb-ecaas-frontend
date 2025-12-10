@@ -5,17 +5,13 @@ const store = useEcaasStore();
 const props = defineProps<{
 	products: ProductEntity<DisplayProduct>[];
 	hasFlowTemp: boolean
-	section: keyof HeatGeneration
+	section: keyof spaceHeatingNew
 	pageIndex: number
 	url: string
 }>();
 function selectProduct(reference: string) {
 	store.$patch((state) => {
-		// currently hardcoding heatPumps
-		state.spaceHeating.heatGeneration.heatPump.data[props.pageIndex]!.data.productReference = reference;
-		// update heatGeneration type to use ECaasFormList and add productReference key to each heatGeneration section item eg boiler - then use the lines below 
-		// const section = props.section
-		// state.spaceHeating.heatGeneration[section].data[props.pageIndex]!.data.productReference = reference
+		state.spaceHeatingNew.heatSource.data[props.pageIndex]!.data.productReference = reference;
 	});
 }
 
