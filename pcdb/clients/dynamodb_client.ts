@@ -1,6 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import type { DisplayProduct, PaginatedResult, TechnologyType } from "../pcdb.types";
-import type { Command, Client } from "./client.types";
+import type { Command, Client, DisplayTechnologyProducts } from "./client.types";
 import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 const localConfig = {
@@ -39,34 +39,38 @@ export const dynamodbClient: Client = async <
 		return [] as unknown as U["output"];
 	}
 	if ("technologyType" in query) {
-		const result = await docClient.send(new QueryCommand({
-			TableName: "products",
-			IndexName: "by-brand",
-			KeyConditionExpression: "technologyType = :technologyType",
-			ExpressionAttributeValues: { ":technologyType": query.technologyType },
-			Limit: query.pageSize,
-			...query.startKey && { ExclusiveStartKey: JSON.parse(query.startKey) },
-		}));
-
-		const products = result.Items?.map(x => {
-			const product: DisplayProduct = {
-				id: x.id as string,
-				brandName: x.brandName as string,
-				modelName: x.modelName as string,
-				modelQualifier: x.modelQualifier as string,
-				technologyType: x.technologyType as TechnologyType,
-			};
-
-			return product;
-		}) ?? [];
-
-		const paginatedProducts: PaginatedResult<DisplayProduct> = {
-			data: products,
-			lastEvaluationKey: result.LastEvaluatedKey ? encodeURIComponent(JSON.stringify(result.LastEvaluatedKey)) : undefined,
-		};
-
-		return paginatedProducts;
+		return await getProductsByTechnologyType(query);
 	}
 
 	return undefined as U["output"];
+};
+
+const getProductsByTechnologyType = async <U extends DisplayTechnologyProducts>(query: U["input"]): Promise<U["output"]> => {
+	const result = await docClient.send(new QueryCommand({
+		TableName: "products",
+		IndexName: "by-brand",
+		KeyConditionExpression: "technologyType = :technologyType",
+		ExpressionAttributeValues: { ":technologyType": query.technologyType },
+		Limit: query.pageSize,
+		...query.startKey && { ExclusiveStartKey: JSON.parse(query.startKey) },
+	}));
+
+	const products = result.Items?.map(x => {
+		const product: DisplayProduct = {
+			id: x.id as string,
+			brandName: x.brandName as string,
+			modelName: x.modelName as string,
+			modelQualifier: x.modelQualifier as string,
+			technologyType: x.technologyType as TechnologyType,
+		};
+
+		return product;
+	}) ?? [];
+
+	const paginatedProducts: PaginatedResult<DisplayProduct> = {
+		data: products,
+		lastEvaluationKey: result.LastEvaluatedKey ? encodeURIComponent(JSON.stringify(result.LastEvaluatedKey)) : undefined,
+	};
+
+	return paginatedProducts;
 };

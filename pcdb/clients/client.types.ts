@@ -37,7 +37,7 @@ type ModelsStartingWith = {
 	output: Set<string>,
 };
 
-type DisplayTechnologyProducts = {
+export type DisplayTechnologyProducts = {
 	name: "displayTechnologyProducts",
 	input: {
 		technologyType: TechnologyType,

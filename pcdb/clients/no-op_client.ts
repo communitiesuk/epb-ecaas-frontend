@@ -1,5 +1,5 @@
 import type { DisplayProduct, PaginatedResult, TechnologyType } from "../pcdb.types";
-import type { Command, Client } from "./client.types";
+import type { Command, Client, DisplayTechnologyProducts } from "./client.types";
 import data from "@/pcdb/data/products.json";
 
 export const noopClient: Client = async <
@@ -26,29 +26,33 @@ export const noopClient: Client = async <
 		return [] as unknown as U["output"];
 	}
 	if ("technologyType" in query) {
-		const filteredProducts = data.filter(p => p.technologyType === query.technologyType);
-
-		const startIndex = query.startKey ? parseInt(query.startKey) : 0;
-		const pageSize = !query.pageSize || query.pageSize > filteredProducts.length ? filteredProducts.length : query.pageSize;
-		
-		let endIndex: number | undefined = startIndex + pageSize;
-		endIndex = endIndex < filteredProducts.length ? endIndex : undefined;
-
-		const products = filteredProducts.slice(startIndex, endIndex)
-			.map(x => ({
-				id: x.id,
-				brandName: x.brandName,
-				modelName: x.modelName,
-				modelQualifier: x.modelQualifier,
-			})) as DisplayProduct[];
-
-		const paginatedProducts: PaginatedResult<DisplayProduct> = {
-			data: products,
-			lastEvaluationKey: endIndex?.toString(),
-		};
-
-		return paginatedProducts;
+		return getProductsByTechnologyType(query);
 	}
 
 	return undefined as U["output"];
+};
+
+const getProductsByTechnologyType = <U extends DisplayTechnologyProducts>(query: U["input"]): U["output"] => {
+	const filteredProducts = data.filter(p => p.technologyType === query.technologyType);
+
+	const startIndex = query.startKey ? parseInt(query.startKey) : 0;
+	const pageSize = !query.pageSize || query.pageSize > filteredProducts.length ? filteredProducts.length : query.pageSize;
+	
+	let endIndex: number | undefined = startIndex + pageSize;
+	endIndex = endIndex < filteredProducts.length ? endIndex : undefined;
+
+	const products = filteredProducts.slice(startIndex, endIndex)
+		.map(x => ({
+			id: x.id,
+			brandName: x.brandName,
+			modelName: x.modelName,
+			modelQualifier: x.modelQualifier,
+		})) as DisplayProduct[];
+
+	const paginatedProducts: PaginatedResult<DisplayProduct> = {
+		data: products,
+		lastEvaluationKey: endIndex?.toString(),
+	};
+
+	return paginatedProducts;
 };
