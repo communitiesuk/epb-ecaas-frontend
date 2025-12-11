@@ -132,7 +132,7 @@ export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): 
 }
 
 export function displayApplianceType(appliances: SchemaApplianceType[] | undefined) {
-	if(appliances === undefined) return emptyValueRendering;
+	if (appliances === undefined) return emptyValueRendering;
 	return appliances.map(appliance => displayApplianceKey(appliance)).join(", ");
 }
 
@@ -197,7 +197,7 @@ export function displayFuelType(fuelType: SchemaFuelTypeExtended): FuelTypeDispl
 	}
 }
 
-export type FuelTypeDisplay = "LPG (Liquid petroleum gas)" | "Electricity is the only energy source" | "Mains gas" ;
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas)" | "Electricity is the only energy source" | "Mains gas";
 
 export const ecoDesignControllerOptions = {
 	1: "I: On/Off Room Thermostat",
@@ -253,7 +253,7 @@ export function displayColour(colour: SchemaColour | undefined): colourDisplay |
 	return colourOptionsMap[colour!] ?? emptyValueRendering;
 }
 
-export type HeatPumpTypeDisplay = "Air source" |"Ground source"| "Water source" | "Booster" | "Hot water only" | "Exhaust air MEV" | "Exhaust air MVHR" | "Exhaust air Mixed";
+export type HeatPumpTypeDisplay = "Air source" | "Ground source" | "Water source" | "Booster" | "Hot water only" | "Exhaust air MEV" | "Exhaust air MVHR" | "Exhaust air Mixed";
 
 export const heatPumpTypes = {
 	"airSource": "Air source",
@@ -266,7 +266,7 @@ export const heatPumpTypes = {
 	"exhaustAirMixed": "Exhaust air Mixed",
 } as const satisfies Record<HeatPumpType, HeatPumpTypeDisplay>;
 
-export function displayHeatPumpType( type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
+export function displayHeatPumpType(type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
 	return heatPumpTypes[type!] ?? emptyValueRendering;
 }
 
