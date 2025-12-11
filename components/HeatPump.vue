@@ -5,7 +5,7 @@ const route = useRoute();
 const store = useEcaasStore();
 const { getStoreIndex } = useForm();
 
-const props = defineProps<{
+defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatPump" }>;
 }>();
 
@@ -37,14 +37,13 @@ const index = getStoreIndex(heatSourceStoreData);
 	<FormKit
 		v-if="model?.typeOfHeatPump !== undefined"
 		id="selectHeatPump"
-		:key="props.model.typeOfHeatPump"
 		type="govPcdbProduct"
 		label="Select a heat pump"
 		name="productReference"
 		validation="required"
 		help="Select the air source heat pump type from the PCDB using the button below."
 		:selected-product-reference="model.productReference"
-		:selected-product-type="heatPumpTypes[props.model.typeOfHeatPump]"
+		:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
 		:page-url="route.fullPath"
 		:page-index="index"
 	/>
