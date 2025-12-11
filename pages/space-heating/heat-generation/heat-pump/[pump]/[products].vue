@@ -13,7 +13,7 @@ const route = useRoute();
 const urlSegments = route.path.split("/");
 
 const pageId = kebabToCamelCase(urlSegments[urlSegments.length -1]!);
-const title = getTitle(pageId as PageId);
+const title = getTitle(`${pageId + "Products" as PageId}`);
 
 const index = Number(urlSegments[urlSegments.length -2]);
 

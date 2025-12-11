@@ -25,7 +25,7 @@ function appendItemIndexToUrl(url: string, index: number) {
 	return url.replace(lastUrlSegment, `/${index}`);
 }
 
-const productsPageUrl = appendItemIndexToUrl(pageUrl, index) + "/" + hyphenate(selectedProductType) + "-products";
+const productsPageUrl = appendItemIndexToUrl(pageUrl, index) + "/" + hyphenate(selectedProductType);
 let productData: DisplayProduct | undefined | null;
 
 if (selectedProductReference) {

@@ -1,5 +1,5 @@
 import { objectFromEntries } from "ts-extras";
-import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import type { DisplayProduct, TechnologyType } from "~/pcdb/pcdb.types";
 import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaLeaksTestPressure } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
@@ -267,8 +267,8 @@ export const heatPumpTypes = {
 } as const satisfies Record<HeatPumpType, HeatPumpTypeDisplay>;
 
 export const pcdbTechnologyTypes = {
-	"airSourceProducts": "air source heat pumps",
-} as const satisfies Record<string, string>;
+	"airSource": "air source heat pumps",
+} as Record<HeatPumpType, TechnologyType>;
 
 export function displayHeatPumpType( type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
 	return heatPumpTypes[type!] ?? emptyValueRendering;

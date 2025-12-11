@@ -83,9 +83,9 @@ describe("Heat pumps products page", () => {
 		mockRoute.mockReturnValue({
 			params: {
 				pump: "0",
-				products: "air-source-products",
+				products: "air-source",
 			},
-			path: "/0/air-source-products",
+			path: "/0/air-source",
 		});
 		await renderSuspended(Products);
 
@@ -98,9 +98,9 @@ describe("Heat pumps products page", () => {
 		mockRoute.mockReturnValue({
 			params: {
 				pump: "1",
-				products: "air-source-products",
+				products: "air-source",
 			},
-			path: "/1/air-source-products",
+			path: "/1/air-source",
 		});
 		await renderSuspended(Products);
 
@@ -116,9 +116,9 @@ describe("Heat pumps products page", () => {
 		mockRoute.mockReturnValue({
 			params: {
 				pump: "1",
-				products: "air-source-products",
+				products: "air-source",
 			},
-			path: "/1/air-source-products",
+			path: "/1/air-source",
 		});
 		await renderSuspended(Products);
 		const backButton = screen.getByTestId("backToHeatPumpButton");
