@@ -95,10 +95,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfHeatSource"
 			validation="required"
 		/>
-		<HeatPump
+		<HeatPumpSection
 			v-if="model?.typeOfHeatSource === 'heatPump'"
 			:model="model as heatPumpModelType"/>
-		<Boiler
+		<BoilerSection
 			v-if="model?.typeOfHeatSource === 'boiler'"
 			:model="model as boilerModelType"/>
 		<GovLLMWarning />
