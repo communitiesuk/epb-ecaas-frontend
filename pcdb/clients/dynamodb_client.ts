@@ -1,7 +1,7 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import type { DisplayProduct, PaginatedResult, TechnologyType } from "../pcdb.types";
-import type { Command, Client, DisplayTechnologyProducts } from "./client.types";
-import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import type { Command, Client, DisplayTechnologyProducts, DisplayById } from "./client.types";
+import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 const localConfig = {
 	region: "fakeRegion", 
@@ -27,8 +27,7 @@ export const dynamodbClient: Client = async <
 		return undefined as U["output"];
 	}
 	if ("id" in query) {
-		// displayById → DisplayProduct | undefined
-		return undefined as U["output"];
+		return await getProductById(query);
 	}
 	if ("startsWith" in query && "technologyType" in query) {
 		// brandsStartingWith → string[]
@@ -43,6 +42,29 @@ export const dynamodbClient: Client = async <
 	}
 
 	return undefined as U["output"];
+};
+
+const getProductById = async <U extends DisplayById>(query: U["input"]): Promise<U["output"]> => {
+	const result = await docClient.send(new GetCommand({
+		TableName: "products",
+		Key: { id: query.id },
+	}));
+
+	const { Item } = result;
+
+	if (!Item) {
+		return undefined;
+	}
+
+	const product: DisplayProduct = {
+		id: Item.id as string,
+		brandName: Item.brandName as string,
+		modelName: Item.modelName as string,
+		modelQualifier: Item.modelQualifier as string,
+		technologyType: Item.technologyType as TechnologyType,
+	};
+
+	return product;
 };
 
 const getProductsByTechnologyType = async <U extends DisplayTechnologyProducts>(query: U["input"]): Promise<U["output"]> => {

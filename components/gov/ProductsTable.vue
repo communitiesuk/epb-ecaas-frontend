@@ -1,30 +1,13 @@
 <script setup lang="ts">
 import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
 
-const store = useEcaasStore();
 const props = defineProps<{
 	products: PaginatedResult<DisplayProduct>;
 	section: keyof HeatGeneration;
 	pageIndex: number;
 	url: string;
+	onSelectProduct: (reference: string) => void;
 }>();
-
-function selectProduct(reference: string) {
-	store.$patch((state) => {
-		// currently hardcoding heatPumps
-		state.spaceHeating.heatGeneration.heatPump.data[props.pageIndex]!.data.productReference = reference;
-		// update heatGeneration type to use ECaasFormList and add productReference key to each heatGeneration section item eg boiler - then use the lines below 
-		// const section = props.section
-		// state.spaceHeating.heatGeneration[section].data[props.pageIndex]!.data.productReference = reference
-	});
-}
-
-function getFlowTemperature(reference: string) {
-	/*const fullProduct = props.products.find(p => p.reference === reference) as ProductEntity<DisplayProductWithFlowTemp> | undefined;
-	return fullProduct?.product.testData?.[0]?.designFlowTemperature ?? "-";*/
-	return "-";
-}
-
 </script>
 
 <template>
@@ -59,7 +42,7 @@ function getFlowTemperature(reference: string) {
 							type="button"
 							secondary
 							:test-id="`selectProductButton_${index}`"
-							@click="selectProduct(product.id.toString())"
+							@click="() => onSelectProduct(product.id.toString())"
 						>
 							Select
 						</GovButton>
@@ -70,6 +53,7 @@ function getFlowTemperature(reference: string) {
 
 	</div>
 </template>
+
 <style scoped lang="scss">
 .govuk-table__header {
 	color:  #1d70b8

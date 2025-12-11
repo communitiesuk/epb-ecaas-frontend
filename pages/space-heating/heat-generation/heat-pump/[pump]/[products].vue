@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PageId } from "~/data/pages/pages";
+import { page, type PageId } from "~/data/pages/pages";
 import { getTitle } from "~/utils/page";
 
 definePageMeta({ layout: false });
@@ -9,7 +9,7 @@ function kebabToCamelCase(text: string){
 }
 const store = useEcaasStore();
 const heatPumpStoreData = store.spaceHeating.heatGeneration.heatPump.data;
-const route = useRoute()
+const route = useRoute();
 const urlSegments = route.path.split("/");
 
 const pageId = kebabToCamelCase(urlSegments[urlSegments.length -1]!);
@@ -34,6 +34,14 @@ const { data: heatPumps } = await useFetch("/api/products", {
 		pageSize: 12
 	}
 });
+
+function selectProduct(reference: string) {
+	store.$patch((state) => {
+		state.spaceHeating.heatGeneration.heatPump.data[index]!.data.productReference = reference;
+	});
+
+	navigateTo(page("heatPump").url.replace(":pump", `${index}`));
+}
 </script>
 
 <template>
@@ -53,6 +61,7 @@ const { data: heatPumps } = await useFetch("/api/products", {
 			section="heatPump"
 			:page-index="index"
 			:url="route.path"
+			:onSelectProduct="selectProduct"
 		/>
 
 		<GovButton secondary :href="`/space-heating/heat-generation/heat-pump/${index}`" test-id="backToHeatPumpButton">Back to heat pump</GovButton> 

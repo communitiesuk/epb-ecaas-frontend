@@ -1,4 +1,4 @@
-import { getProducts } from "../services/products";
+import { getProducts } from "../../services/products";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
 
 export default defineEventHandler(async (event) => {

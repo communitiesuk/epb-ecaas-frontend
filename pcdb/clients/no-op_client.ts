@@ -1,5 +1,5 @@
 import type { DisplayProduct, PaginatedResult, TechnologyType } from "../pcdb.types";
-import type { Command, Client, DisplayTechnologyProducts } from "./client.types";
+import type { Command, Client, DisplayTechnologyProducts, DisplayById } from "./client.types";
 import data from "@/pcdb/data/products.json";
 
 export const noopClient: Client = async <
@@ -14,8 +14,7 @@ export const noopClient: Client = async <
 		return undefined as U["output"];
 	}
 	if ("id" in query) {
-		// displayById → DisplayProduct | undefined
-		return undefined as U["output"];
+		return getProductById(query);
 	}
 	if ("startsWith" in query && "technologyType" in query) {
 		// brandsStartingWith → string[]
@@ -30,6 +29,24 @@ export const noopClient: Client = async <
 	}
 
 	return undefined as U["output"];
+};
+
+const getProductById = <U extends DisplayById>(query: U["input"]): U["output"] => {
+	const product = data.find(p => p.id === query.id.toString());
+
+	if (!product) {
+		return undefined;
+	}
+
+	const displayProduct: DisplayProduct = {
+		id: product.id,
+		brandName: product.brandName,
+		modelName: product.modelName,
+		modelQualifier: product.modelQualifier,
+		technologyType: product.technologyType as TechnologyType,
+	};
+
+	return displayProduct;
 };
 
 const getProductsByTechnologyType = <U extends DisplayTechnologyProducts>(query: U["input"]): U["output"] => {

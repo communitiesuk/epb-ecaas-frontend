@@ -2,7 +2,7 @@ import type { DisplayProduct, PaginatedResult, Product, TechnologyType } from ".
 
 type ProductForTechnology<T extends TechnologyType> = Extract<Product, { technologyType: T }>;
 
-type DisplayById = {
+export type DisplayById = {
 	name: "displayById",
 	input: {
 		id: number,
