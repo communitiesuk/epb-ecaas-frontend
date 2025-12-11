@@ -14,6 +14,7 @@ const model = ref(heatSourceData?.data);
 const id =  heatSourceData?.data.id ?? uuidv4();
 
 export type heatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
+export type boilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
 
 const saveForm = (fields: HeatSourceData) => {
 	store.$patch((state) => {
@@ -43,7 +44,7 @@ const saveForm = (fields: HeatSourceData) => {
 					typeOfHeatSource: fields.typeOfHeatSource,
 					typeOfBoiler: fields.typeOfBoiler,
 					productReference: fields.productReference,
-
+					locationOfBoiler: fields.locationOfBoiler,
 				},
 				complete: true,
 			};
@@ -97,6 +98,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<HeatPump
 			v-if="model?.typeOfHeatSource === 'heatPump'"
 			:model="model as heatPumpModelType"/>
+		<Boiler
+			v-if="model?.typeOfHeatSource === 'boiler'"
+			:model="model as boilerModelType"/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

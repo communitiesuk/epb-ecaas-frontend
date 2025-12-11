@@ -269,3 +269,20 @@ export const heatPumpTypes = {
 export function displayHeatPumpType( type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
 	return heatPumpTypes[type!] ?? emptyValueRendering;
 }
+
+export type BoilerTypeDisplay = "Combi boiler" | "Regular boiler";
+export type BoilerLocationDisplay = "Heated space" | "Unheated space";
+
+export type HeatSourceTypeDisplay = "Heat pump" | "Boiler" | "Heat network" | "Heat battery" | "Solar thermal system";
+
+export const heatSourceTypes = {
+	"heatPump": "Heat pump",
+	"boiler": "Boiler",
+	"heatNetwork": "Heat network",
+	"heatBattery": "Heat battery",
+	"solarThermalSystem": "Solar thermal system",
+} as const satisfies Record<HeatSourceType, HeatSourceTypeDisplay>;
+
+export function displayHeatSourceType(type: HeatSourceType | undefined): HeatSourceTypeDisplay | typeof emptyValueRendering {
+	return heatSourceTypes[type!] ?? emptyValueRendering;
+}

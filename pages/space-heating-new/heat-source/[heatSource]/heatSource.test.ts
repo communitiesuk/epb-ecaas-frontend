@@ -15,17 +15,17 @@ describe("heatSource", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const heatSource1: HeatSourceData = {
+	const heatPump1: HeatSourceData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-		name: "Heat source 1",
+		name: "Heat pump 1",
 		typeOfHeatSource: "heatPump",
 		typeOfHeatPump: "airSource",
 		productReference: "HEATPUMP-SMALL",
 	};
 
-	const heatSource2: HeatSourceData = {
+	const heatPump2: HeatSourceData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-		name: "Heat source 2",
+		name: "Heat pump 2",
 		typeOfHeatSource: "heatPump",
 		typeOfHeatPump: "airSource",
 		productReference: "HEATPUMP-LARGE",
@@ -37,7 +37,7 @@ describe("heatSource", () => {
 
 	const populateValidHeatPumpForm = async () => {
 		await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-		await user.type(screen.getByTestId("name"), "Heat source 1");
+		await user.type(screen.getByTestId("name"), "Heat pump 1");
 		await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
 	};
 
@@ -81,7 +81,7 @@ describe("heatSource", () => {
 		});
 
 		test("heat source data is saved to store state when form is valid", async () => {
-			vi.mocked(uuidv4).mockReturnValue(heatSource1.id as unknown as Buffer);
+			vi.mocked(uuidv4).mockReturnValue(heatPump1.id as unknown as Buffer);
 
 			await renderSuspended(HeatSourceForm, {
 				route: {
@@ -94,7 +94,7 @@ describe("heatSource", () => {
 			const { data } = store.spaceHeatingNew.heatSource;
 			expect(data[0]?.data).toEqual({
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-				name: "Heat source 1",
+				name: "Heat pump 1",
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "airSource",
 			});
@@ -104,7 +104,7 @@ describe("heatSource", () => {
 			store.$patch({
 				spaceHeatingNew: {
 					heatSource: {
-						data: [{ data: heatSource1 }],
+						data: [{ data: heatPump1 }],
 					},
 				},
 			});
@@ -115,14 +115,14 @@ describe("heatSource", () => {
 				},
 			});
 
-			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat source 1");
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat pump 1");
 		});
 
 		test("heat source is updated when data with id exists in store", async () => {
 			store.$patch({
 				spaceHeatingNew: {
 					heatSource: {
-						data: [{ data: heatSource2 }],
+						data: [{ data: heatPump2 }],
 					},
 				},
 			});
@@ -140,10 +140,126 @@ describe("heatSource", () => {
 
 			const { data } = store.spaceHeatingNew.heatSource;
 
-			expect(data[0]!.data.id).toBe(heatSource2.id);
+			expect(data[0]!.data.id).toBe(heatPump2.id);
 			expect(data[0]!.data.name).toBe("Updated heat pump");
 		});
+	});
 
+	describe("boiler", () => {
+
+		const populateValidBoilerForm = async () => {
+			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+			await user.type(screen.getByTestId("name"), "Boiler 1");
+			await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));
+			await user.click(screen.getByTestId("locationOfBoiler_heatedSpace"));
+
+		};
+		const boiler1: HeatSourceData = {
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+			name: "Boiler 1",
+			typeOfHeatSource: "boiler",
+			typeOfBoiler: "combiBoiler",
+			productReference: "BOILER_SMALL",
+			locationOfBoiler: AdjacentSpaceType.heatedSpace,
+		};
+
+		const boiler2: HeatSourceData = {
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+			name: "Boiler 2",
+			typeOfHeatSource: "boiler",
+			typeOfBoiler: "combiBoiler",
+			productReference: "BOILER_MEDIUM",
+			locationOfBoiler: AdjacentSpaceType.heatedSpace,
+		};
+
+		test("boiler component displays when type of heat source is boiler", async () => {
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+			expect(screen.getByTestId("name")).toBeDefined();
+			expect(screen.getByTestId("typeOfBoiler")).toBeDefined();
+			expect(screen.queryByTestId("selectBoiler")).toBeDefined();
+			expect(screen.getByTestId("locationOfBoiler")).toBeDefined();
+		});
+
+		test("the 'Select a product' element navigates user to the products page", async () => {
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/products");
+		});
+
+		test("boiler data is saved to store state when form is valid", async () => {
+			vi.mocked(uuidv4).mockReturnValue(boiler1.id as unknown as Buffer);
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			await populateValidBoilerForm();
+
+			const { data } = store.spaceHeatingNew.heatSource;
+			expect(data[0]?.data).toEqual({
+				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+				name: "Boiler 1",
+				typeOfHeatSource: "boiler",
+				typeOfBoiler: "combiBoiler",
+				locationOfBoiler: AdjacentSpaceType.heatedSpace,
+			});
+		});
+
+		test("form is prepopulated when data exists in state", async () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: boiler1 }],
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+				},
+			});
+
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Boiler 1");
+		});
+
+		test("boiler is updated when data with id exists in store", async () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: boiler1 }, { data: boiler2 }],
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "1" },
+				},
+			});
+
+			await user.clear(screen.getByTestId("name"));
+			await user.type(screen.getByTestId("name"), "Updated boiler");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const { data } = store.spaceHeatingNew.heatSource;
+
+			expect(data[1]!.data.id).toBe(boiler2.id);
+			expect(data[1]!.data.name).toBe("Updated boiler");
+		});
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -216,7 +332,7 @@ describe("heatSource", () => {
 			store.$patch({
 				spaceHeatingNew: {
 					heatSource: {
-						data: [{ data: heatSource2 }],
+						data: [{ data: heatPump2 }],
 					},
 				},
 			});
@@ -242,7 +358,7 @@ describe("heatSource", () => {
 		// 	store.$patch({
 		// 		spaceHeatingNew: {
 		// 			heatSource: {
-		// 				data: [{ data: heatSource1 }, { data: heatSource2 }],
+		// 				data: [{ data: heatPump1 }, { data: heatPump2 }],
 		// 			},
 		// 		},
 		// 	});
