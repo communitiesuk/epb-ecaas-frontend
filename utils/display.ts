@@ -1,10 +1,10 @@
 import { objectFromEntries } from "ts-extras";
-import type { DisplayProduct } from "~/pcdb/products";
+import type { DisplayProduct, TechnologyType } from "~/pcdb/pcdb.types";
 import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaLeaksTestPressure } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { ConciseMassDistributionClass } from "~/stores/ecaasStore.schema";
+import type { ConciseMassDistributionClass, HeatPumpType } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -266,7 +266,11 @@ export const heatPumpTypes = {
 	"exhaustAirMixed": "Exhaust air Mixed",
 } as const satisfies Record<HeatPumpType, HeatPumpTypeDisplay>;
 
-export function displayHeatPumpType(type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
+export const pcdbTechnologyTypes = {
+	"airSource": "air source heat pumps",
+} as Record<HeatPumpType, TechnologyType>;
+
+export function displayHeatPumpType( type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
 	return heatPumpTypes[type!] ?? emptyValueRendering;
 }
 

@@ -1,37 +1,42 @@
 import { arrayIncludes } from "ts-extras";
-import type { Category, DisplayProduct, DisplayProductWithFlowTemp, ProductEntity, ProductReference, TechnologyType } from "~/pcdb/products";
-import products, { categoryTechnologies } from "~/pcdb/products";
+import { technologyTypes, type DisplayProduct, type PaginatedResult, type TechnologyType } from "~/pcdb/pcdb.types";
+import { createPcdbClient } from "~/pcdb/clients/pcdb_client";
 
-export async function productsInCategory(category: Category): Promise<ProductEntity<DisplayProduct>[]> {
-	return productsForTechnologies(categoryTechnologies[category]);
-}
+export async function getProducts(technologyType: TechnologyType, pageSize?: number, startKey?: string): Promise<PaginatedResult<DisplayProduct>> {
+	if (!technologyType || !arrayIncludes(technologyTypes, technologyType as string)) {
+		throw createError({
+			statusCode: 400,
+			statusMessage: "Expected a technology type query parameter.",
+		});
+	}
 
-async function productsForTechnologies<T extends TechnologyType[]>(technologies: T) {
-	const technologyProducts = Array.from(products.entries())
-		.filter(([_, product]) => arrayIncludes(technologies, product["technologyType"]))
-		.map(([reference, product]) => {
-			const {
-				brandName,
-				modelName,
-				modelQualifier,
-				firstYearOfManufacture,
-				technologyType,
-				testData,
-			} = product;
-			const displayProduct: DisplayProductWithFlowTemp = {
-				brandName,
-				modelName,
-				modelQualifier,
-				firstYearOfManufacture,
-				technologyType,
-				testData,
+	const client = createPcdbClient();
 
-			};
-			return {
-				reference: reference as ProductReference,
-				product: displayProduct,
-			};
-		}) as ProductEntity<DisplayProduct>[];
+	return await client({
+		technologyType,
+		pageSize,
+		startKey,
+	}) as PaginatedResult<DisplayProduct>;
+};
 
-	return Promise.resolve(technologyProducts);
+export async function getProduct(id: number): Promise<DisplayProduct | undefined> {
+	if (isNaN(id)) {
+		throw createError({
+			statusCode: 400,
+			statusMessage: "Invalid product ID",
+		});
+	}
+
+	const client = createPcdbClient();
+
+	const product = await client({ id }) as DisplayProduct | undefined;
+
+	if (!product) {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "Product not found",
+		});
+	}
+
+	return product;
 }

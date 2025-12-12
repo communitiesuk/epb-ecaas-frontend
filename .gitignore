@@ -32,3 +32,5 @@ tmp
 /blob-report/
 /playwright/.cache/
 
+# Docker DynamoDB
+docker/dynamodb

@@ -77,7 +77,7 @@ describe("heatSource", () => {
 			});
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
 			await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
-			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/products");
+			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/air-source");
 		});
 
 		test("heat source data is saved to store state when form is valid", async () => {
@@ -193,7 +193,7 @@ describe("heatSource", () => {
 				},
 			});
 			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
-			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/products");
+			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/");
 		});
 
 		test("boiler data is saved to store state when form is valid", async () => {

@@ -2,6 +2,7 @@ import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
 import Products from "./[products].vue";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
 
 describe("Heat source products page", () => {
 	const store = useEcaasStore();
@@ -19,38 +20,31 @@ describe("Heat source products page", () => {
 		mockRoute.mockReset();
 	});
 
-	const MOCKED_HEAT_PUMPS = [
-		{
-			reference: "HEATPUMP-SMALL",
-			product: {
+	const MOCKED_HEAT_PUMPS: PaginatedResult<DisplayProduct> = {
+		data: [
+			{
+				id: "1000",
 				brandName: "Test",
-				firstYearOfManufacture: 2023,
 				modelName: "Small Heat Pump",
 				modelQualifier: "HPSMALL",
-				technologyType: "Air Source Heat Pump",
+				technologyType: "air source heat pumps",
 			},
-		},
-		{
-			reference: "HEATPUMP-MEDIUM",
-			product: {
+			{
+				id: "1001",
 				brandName: "Test",
-				firstYearOfManufacture: 2023,
 				modelName: "Medium Heat Pump",
 				modelQualifier: "HPMEDIUM",
-				technologyType: "Air Source Heat Pump",
+				technologyType: "air source heat pumps",
 			},
-		},
-		{
-			reference: "HEATPUMP-LARGE",
-			product: {
+			{
+				id: "1002",
 				brandName: "Test",
-				firstYearOfManufacture: 2023,
 				modelName: "Large Heat Pump",
 				modelQualifier: "HPLARGE",
-				technologyType: "Air Source Heat Pump",
+				technologyType: "air source heat pumps",
 			},
-		},
-	];
+		],
+	};
 	beforeEach(() => {
 		mockFetch.mockReturnValue({
 			data: ref(MOCKED_HEAT_PUMPS),
@@ -84,27 +78,46 @@ describe("Heat source products page", () => {
 		store.$reset();
 	});
 
+	test("title dependant on the type of heat pump", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				pump: "0",
+				products: "air-source",
+			},
+			path: "/0/air-source",
+		});
+		await renderSuspended(Products);
+
+		expect(
+			screen.getByRole("heading", { name: "Select an air source heat pump" }),
+		);
+	});
+
 	test("when a user selects a product its product reference gets stored", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				"heatSource": "1",
-				"products": "products",
+				pump: "1",
+				products: "air-source",
 			},
-			path: "/1/products",
+			path: "/1/air-source",
 		});
 		await renderSuspended(Products);
 	
 		await user.click(screen.getByTestId("selectProductButton_1"));
-		expect(store.spaceHeatingNew.heatSource.data[1]!.data.productReference).toBe(MOCKED_HEAT_PUMPS[1]?.reference);
+
+		expect(
+			store.spaceHeatingNew.heatSource.data[1]!.data
+				.productReference,
+		).toBe(MOCKED_HEAT_PUMPS.data[1]?.id);
 	});
 
 	test("'Back to heat source' navigates user to the heat source at the correct index", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				"heatSource": "1",
-				"products": "products",
+				pump: "1",
+				products: "air-source",
 			},
-			path: "/1/products",
+			path: "/1/air-source",
 		});
 		await renderSuspended(Products);
 		const backButton = screen.getByTestId("backToHeatSourceButton");

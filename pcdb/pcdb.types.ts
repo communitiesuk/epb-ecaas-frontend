@@ -1,17 +1,16 @@
 import * as z from "zod";
-import products from "./products.json";
-import { objectEntries, objectKeys } from "ts-extras";
+import { objectKeys } from "ts-extras";
 import { heatPumpBackupControlTypeZod, heatPumpSinkTypeZod, heatPumpSourceTypeZod } from "~/stores/zod";
 
 const IntString = z.string().regex(/^\d+$/);
 
-const Manufacturer = z.object({
-	ID: IntString,
+export const manufacturerZod = z.object({
+	id: IntString,
 	manufacturerReferenceNo: IntString,
 	currentName: z.string(),
 	secondaryAddressable: z.nullable(z.string()),
 	primaryAddressable: z.nullable(z.string()),
-	streetName: z.string(),
+	streetName: z.nullable(z.string()),
 	localityName: z.nullable(z.string()),
 	townName: z.string(),
 	administrativeAreaName: z.nullable(z.string()),
@@ -23,18 +22,25 @@ const Manufacturer = z.object({
 });
 
 const BaseProduct = z.object({
-	ID: z.int(),
-	manufacturer: Manufacturer,
-	originalManufacturerName: z.nullable(z.string()),
+	id: z.string(),
 	brandName: z.string(),
 	modelName: z.string(),
-	modelQualifier: z.string(),
-	firstYearOfManufacture: z.int(),
-	finalYearOfManufacture: z.union([z.literal("current"), z.int()]),
+	modelQualifier: z.optional(z.nullable(z.string())),
 });
 
-const AirSourceHeatPump = BaseProduct.extend({
-	technologyType: z.literal("Air Source Heat Pump"),
+export const airSourceHeatPumpTestDataZod = z.object({
+	designFlowTemperature: z.int(),
+	testCondition: z.enum(["A", "B", "C", "D", "E", "F"]), // there is a possible 'E' value here, which diverges from SchemaTestLetter
+	testConditionTemperature: z.int(),
+	inletTemperature: z.number(),
+	outletTemperature: z.number(),
+	heatingCapacity: z.number(),
+	coefficientOfPerformance: z.number(),
+	degradationCoefficient: z.number(),
+});
+
+export const airSourceHeatPumpZod = BaseProduct.extend({
+	technologyType: z.literal("air source heat pumps"),
 	fuel: z.string(), // need a better type for this
 	sourceType: heatPumpSourceTypeZod,
 	sinkType: heatPumpSinkTypeZod,
@@ -43,7 +49,9 @@ const AirSourceHeatPump = BaseProduct.extend({
 	standardRatingCapacity20C: z.nullable(z.number()),
 	standardRatingCapacity35C: z.nullable(z.number()),
 	standardRatingCapacity55C: z.nullable(z.number()),
-	minimumModulationRate: z.nullable(z.number()),
+	minimumModulationRate20: z.nullable(z.number()),
+	minimumModulationRate35: z.nullable(z.number()),
+	minimumModulationRate55: z.nullable(z.number()),
 	timeConstantOnOffOperation: z.nullable(z.int()),
 	tempReturnFeedMax: z.nullable(z.number()),
 	tempLowerOperatingLimit: z.nullable(z.number()),
@@ -56,35 +64,25 @@ const AirSourceHeatPump = BaseProduct.extend({
 	powerCrankcaseHeater: z.nullable(z.number()),
 	powerOff: z.nullable(z.number()),
 	powerMaximumBackup: z.nullable(z.number()),
-	testData: z.array(z.object({
-		designFlowTemperature: z.int(),
-		testCondition: z.enum(["A", "B", "C", "D", "E", "F"]), // there is a possible 'E' value here, which diverges from SchemaTestLetter
-		testConditionTemperature: z.int(),
-		inletTemperature: z.number(),
-		outletTemperature: z.number(),
-		heatingCapacity: z.number(),
-		coefficientOfPerformance: z.number(),
-		degradationCoefficient: z.number(),
-	})),
+	testData: z.array(airSourceHeatPumpTestDataZod),
 });
 
-export const Products = z.map(z.string(), z.discriminatedUnion("technologyType", [
-	AirSourceHeatPump,
-]));
+export const productSchema = z.discriminatedUnion("technologyType", [
+	airSourceHeatPumpZod,
+]);
+export type Product = z.infer<typeof productSchema>;
 
-export type Products = z.infer<typeof Products>;
-
-export type Product = Products extends Map<string, infer I> ? I : never;
+export const Products = z.array(productSchema);
 
 export type TechnologyType = Product["technologyType"];
 
-const productsMap = new Map(objectEntries(products)) as Products;
-
 export const categoryTechnologies = {
 	heatPump: [
-		"Air Source Heat Pump",
+		"air source heat pumps",
 	],
 } as const satisfies Record<string, TechnologyType[]>;
+
+export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMap(x => categoryTechnologies[x]);
 
 export const knownCategories = objectKeys(categoryTechnologies);
 
@@ -92,18 +90,13 @@ export type Category = keyof typeof categoryTechnologies;
 
 export type ProductForCategory<T extends Category> = Extract<Product, { technologyType: (typeof categoryTechnologies)[T][number] }>;
 
-export type ProductReference = keyof typeof products;
-
-export type ProductEntity<T> = {
-	reference: ProductReference,
-	product: T
-};
-
-export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier" | "firstYearOfManufacture" > & { technologyType: TechnologyType };
+export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier" > & { technologyType: TechnologyType };
 
 export type DisplayProductWithFlowTemp = DisplayProduct & {
-	testData?: {
-		designFlowTemperature: number;
-	}[];
+	designFlowTemperature?: number;
 };
-export default productsMap;
+
+export interface PaginatedResult<T> {
+	data: T[];
+	lastEvaluationKey?: string;
+}
