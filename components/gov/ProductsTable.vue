@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
 
 const props = defineProps<{
-	products: PaginatedResult<DisplayProduct>;
-	section: keyof HeatGeneration;
-	pageIndex: number;
-	url: string;
+	products: DisplayProduct[];
+	totalPages: number;
 	onSelectProduct: (reference: string) => void;
 }>();
+
+const route = useRoute();
 </script>
 
 <template>
@@ -26,7 +26,7 @@ const props = defineProps<{
 
 			<tbody class="govuk-table__body">
 				<tr
-					v-for="product, index in products.data"
+					v-for="product, index in products"
 					:key="product.id"
 					class="govuk-table__row"
 				>
@@ -35,7 +35,7 @@ const props = defineProps<{
 					<td class="govuk-table__cell">{{ product.modelName }}</td>
 					<td class="govuk-table__cell">{{ product.modelQualifier ?? '-' }}</td>
 					<td class="govuk-table__cell" style="white-space:nowrap;">
-						<a :href="`${url}/${product.id}`" class="govuk-link govuk-!-margin-right-3">
+						<a :href="`${route.path}/${product.id}`" class="govuk-link govuk-!-margin-right-3">
 							More details
 						</a>
 						<GovButton
@@ -51,6 +51,7 @@ const props = defineProps<{
 			</tbody>
 		</table>
 
+		<GovPagination :total-pages="totalPages" :range="3" />
 	</div>
 </template>
 
