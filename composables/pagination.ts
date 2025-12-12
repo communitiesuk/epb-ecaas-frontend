@@ -8,7 +8,7 @@ export function usePagination<T>(data: Array<T>, pageSize: number) {
 	const totalPages = Array.isArray(data) ? Math.ceil(data.length / pageSize) : 1;
 
 	function getData() {
-		const pageNumber = parseInt(route.query.page as string) || 1;
+		const pageNumber = parseInt(route.query?.page as string) || 1;
 		const start = (pageNumber - 1) * pageSize;
 
 		return data.slice(start, start + pageSize);

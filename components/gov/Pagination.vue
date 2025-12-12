@@ -5,7 +5,7 @@
 	}>();
 
 	const route = useRoute();
-	const getPageNumber = () => parseInt(route.query.page as string) || 1;
+	const getPageNumber = () => parseInt(route.query?.page as string) || 1;
 
 	const minPageNumbers = 3;
 	const minPageNumbersToTruncate = 6;
