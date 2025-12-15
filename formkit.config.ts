@@ -53,8 +53,8 @@ declare module "@formkit/inputs" {
 			options: FormKitOptionsProp;
 			help?: string;
 		};
-		govCheckboxesDivided: {
-			type: "govCheckboxesDivided";
+		govCheckboxesWithExclusive: {
+			type: "govCheckboxesWithExclusive";
 			options: FormKitOptionsProp;
 			extraOption: FormKitOptionsProp;
 			help?: string;
@@ -117,7 +117,7 @@ export default defineFormKitConfig(() => {
 				type: "input",
 				component: FormKitCheckboxes,
 			},
-			govCheckboxesDivided: {
+			govCheckboxesWithExclusive: {
 				type: "input",
 				component: FormKitCheckboxesWithExclusive,
 			},

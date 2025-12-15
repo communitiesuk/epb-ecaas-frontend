@@ -214,7 +214,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="fuelType"
-			type="govCheckboxesDivided"
+			type="govCheckboxesWithExclusive"
 			name="fuelType"
 			label="Energy sources"
 			help="Electricity is assumed to be present in the dwellings. Select the other energy sources that will be present in the dwelling, if any."
