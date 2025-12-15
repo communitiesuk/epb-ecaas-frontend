@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
+import type { SchemaBuildType, SchemaFuelType, SchemaFuelTypeExtended } from "~/schema/aliases";
 import { isInteger } from "~/utils/validation";
 import { getUrl, type GeneralDetailsData } from "#imports";
 
@@ -10,7 +10,7 @@ const { autoSaveForm } = useForm();
 const fuelTypeOptions = {
 	"mains_gas": "Mains gas",
 	"lpg_bulk": "LPG (Liquid petroleum gas)",
-} as const satisfies Record<SchemaFuelType, FuelTypeDisplay>;
+} as const satisfies Record<Exclude<SchemaFuelType, "electricity">, FuelTypeDisplay>;
 
 
 const model = ref({

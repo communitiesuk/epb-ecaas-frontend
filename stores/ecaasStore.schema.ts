@@ -876,6 +876,9 @@ export type spaceHeatingNew = AssertEachKeyIsPageId<{
 
 const baseHeatSource = namedWithId;
 
+const boilerType = z.enum(["combiBoiler", "regularBoiler"]);
+const heatBatteryType = z.enum(["pcm", "dryCore"]);
+
 const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	baseHeatSource.extend({
 		typeOfHeatSource: z.literal("heatPump"),
@@ -893,28 +896,25 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	}),
 	baseHeatSource.extend({
 		typeOfHeatSource: z.literal("boiler"),
-		typeOfBoiler: z.enum(["combiBoiler", "regularBoiler"]),
+		typeOfBoiler: boilerType,
 		productReference: z.string().trim().min(1),
 		locationOfBoiler: z.enum([AdjacentSpaceType.heatedSpace, AdjacentSpaceType.unheatedSpace]),
 	}),
-	// baseHeatSource.extend({
-	// 	typeOfHeatSource: z.literal("heatNetwork"),
-	// }),
-	// baseHeatSource.extend({
-	// 	typeOfHeatSource: z.literal("heatBattery"),
-	// }),
-	// baseHeatSource.extend({
-	// 	typeOfHeatSource: z.literal("solarThermalSystem"),
-	// }),
+	baseHeatSource.extend({
+		typeOfHeatSource: z.literal("heatBattery"),
+		typeOfHeatBattery: heatBatteryType,
+		productReference: z.string().trim().min(1),
+		numberOfUnits: z.number(),
+		energySupply: fuelTypeWithElecZod,
+	}),
 ]);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const heatSourceType = z.enum(["heatPump", "boiler", "heatNetwork", "heatBattery", "solarThermalSystem"]);
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const boilerType = z.enum(["combiBoiler", "regularBoiler"]);
 
 export type HeatSourceType = z.infer<typeof heatSourceType>;
 export type BoilerType = z.infer<typeof boilerType>;
+export type HeatBatteryType = z.infer<typeof heatBatteryType>;
 
 export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
 

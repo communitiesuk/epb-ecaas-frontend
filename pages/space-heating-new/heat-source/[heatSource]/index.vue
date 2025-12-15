@@ -15,6 +15,8 @@ const id =  heatSourceData?.data.id ?? uuidv4();
 
 export type heatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
 export type boilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
+export type heatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
+
 
 const saveForm = (fields: HeatSourceData) => {
 	store.$patch((state) => {
@@ -48,7 +50,20 @@ const saveForm = (fields: HeatSourceData) => {
 				},
 				complete: true,
 			};
-		} else {
+		} else if (fields.typeOfHeatSource === "heatBattery") {
+			heatSourceItem = {
+				data: {
+					...commonFields,
+					typeOfHeatSource: fields.typeOfHeatSource,
+					typeOfHeatBattery: fields.typeOfHeatBattery,
+					productReference: fields.productReference,
+					numberOfUnits: fields.numberOfUnits,
+					energySupply: fields.energySupply,
+				},
+				complete: true,
+			};
+		} 
+		else {
 			throw new Error("Invalid heat source type");
 		}
 
@@ -101,6 +116,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<BoilerSection
 			v-if="model?.typeOfHeatSource === 'boiler'"
 			:model="model as boilerModelType"/>
+		<HeatBatterySection
+			v-if="model?.typeOfHeatSource === 'heatBattery'"
+			:model="model as heatBatteryModelType"/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
