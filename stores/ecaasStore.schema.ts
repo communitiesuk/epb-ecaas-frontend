@@ -878,6 +878,7 @@ const baseHeatSource = namedWithId;
 
 const boilerType = z.enum(["combiBoiler", "regularBoiler"]);
 const heatBatteryType = z.enum(["pcm", "dryCore"]);
+const locationOfCollectorLoopPipingType = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
 
 const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	baseHeatSource.extend({
@@ -906,6 +907,22 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 		productReference: z.string().trim().min(1),
 		numberOfUnits: z.number(),
 		energySupply: fuelTypeWithElecZod,
+	}),
+	baseHeatSource.extend({
+		typeOfHeatSource: z.literal("solarThermalSystem"),
+		locationOfCollectorLoopPiping: locationOfCollectorLoopPipingType,
+		collectorModuleArea: z.number(),
+		numberOfCollectorModules: z.number(),
+		peakCollectorEfficiency: fraction,
+		incidenceAngleModifier: fraction,
+		firstOrderHeatLossCoefficient: z.number(),
+		secondOrderHeatLossCoefficient: z.number(),
+		heatLossCoefficientOfSolarLoopPipe: z.number(),
+		collectorMassFlowRate: z.number(),
+		powerOfCollectorPump: z.number(),
+		powerOfCollectorPumpController: z.number(),
+		pitch: z.number().min(0).lt(180),
+		orientation,
 	}),
 ]);
 

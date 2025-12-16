@@ -412,6 +412,179 @@ describe("heatSource", () => {
 		});
 	});
 
+	describe("solar thermal system", () => {
+
+		const populateValidSolarThermalSystemForm = async () => {
+			await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
+			await user.type(screen.getByTestId("name"), "Solar thermal system 1");
+			await user.click(screen.getByTestId("locationOfCollectorLoopPiping_outside"));
+			await user.type(screen.getByTestId("collectorModuleArea"), "1");
+			await user.type(screen.getByTestId("numberOfCollectorModules"), "2");
+			await user.type(screen.getByTestId("peakCollectorEfficiency"), "0");
+			await user.type(screen.getByTestId("incidenceAngleModifier"), "1");
+			await user.type(screen.getByTestId("firstOrderHeatLossCoefficient"), "1");
+			await user.type(screen.getByTestId("secondOrderHeatLossCoefficient"), "10");
+			await user.type(screen.getByTestId("heatLossCoefficientOfSolarLoopPipe"), "100");
+			await user.type(screen.getByTestId("collectorMassFlowRate"), "2");
+			await user.type(screen.getByTestId("powerOfCollectorPump"), "30");
+			await user.type(screen.getByTestId("powerOfCollectorPumpController"), "30");
+			await user.type(screen.getByTestId("pitch"), "60");
+			await user.type(screen.getByTestId("orientation"), "60");
+			await user.tab();
+		};
+
+		const solarThermalSystem1: HeatSourceData = {
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
+			name: "Solar thermal system 1",
+			typeOfHeatSource: "solarThermalSystem",
+			locationOfCollectorLoopPiping: "outside",
+			collectorModuleArea: 1,
+			numberOfCollectorModules: 2,
+			peakCollectorEfficiency: 0,
+			incidenceAngleModifier: 1,
+			firstOrderHeatLossCoefficient: 1,
+			secondOrderHeatLossCoefficient: 10,
+			heatLossCoefficientOfSolarLoopPipe: 100,
+			collectorMassFlowRate: 2,
+			powerOfCollectorPump: 30,
+			powerOfCollectorPumpController: 30,
+			pitch: 60,
+			orientation: 60,
+		};
+
+		const solarThermalSystem2: HeatSourceData = {
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c4444",
+			name: "Solar thermal system 2",
+			typeOfHeatSource: "solarThermalSystem",
+			locationOfCollectorLoopPiping: "heatedSpace",
+			collectorModuleArea: 2,
+			numberOfCollectorModules: 4,
+			peakCollectorEfficiency: 1,
+			incidenceAngleModifier: 30,
+			firstOrderHeatLossCoefficient: 2,
+			secondOrderHeatLossCoefficient: 20,
+			heatLossCoefficientOfSolarLoopPipe: 200,
+			collectorMassFlowRate: 10,
+			powerOfCollectorPump: 100,
+			powerOfCollectorPumpController: 100,
+			pitch: 90,
+			orientation: 90,
+		};
+
+		test("'SolarThermalSystemSection' component displays when type of heat source is solar thermal system", async () => {
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
+			expect(screen.getByTestId("name")).toBeDefined();
+			expect(screen.getByTestId("locationOfCollectorLoopPiping")).toBeDefined();
+			expect(screen.queryByTestId("collectorModuleArea")).toBeDefined();
+			expect(screen.getByTestId("numberOfCollectorModules")).toBeDefined();
+			expect(screen.getByTestId("peakCollectorEfficiency")).toBeDefined();
+			expect(screen.getByTestId("incidenceAngleModifier")).toBeDefined();
+			expect(screen.getByTestId("firstOrderHeatLossCoefficient")).toBeDefined();
+			expect(screen.getByTestId("secondOrderHeatLossCoefficient")).toBeDefined();
+			expect(screen.getByTestId("heatLossCoefficientOfSolarLoopPipe")).toBeDefined();
+			expect(screen.getByTestId("collectorMassFlowRate")).toBeDefined();
+			expect(screen.getByTestId("powerOfCollectorPump")).toBeDefined();
+			expect(screen.getByTestId("powerOfCollectorPumpController")).toBeDefined();
+			expect(screen.getByTestId("pitch")).toBeDefined();
+			expect(screen.getByTestId("orientation")).toBeDefined();
+		});
+
+		test("solar thermal system data is saved to store state when form is valid", async () => {
+			vi.mocked(uuidv4).mockReturnValue(solarThermalSystem1.id as unknown as Buffer);
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			await populateValidSolarThermalSystemForm();
+
+			const { data } = store.spaceHeatingNew.heatSource;
+			expect(data[0]?.data).toEqual({
+				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
+				name: "Solar thermal system 1",
+				typeOfHeatSource: "solarThermalSystem",
+				locationOfCollectorLoopPiping: "outside",
+				collectorModuleArea: 1,
+				numberOfCollectorModules: 2,
+				peakCollectorEfficiency: 0,
+				incidenceAngleModifier: 1,
+				firstOrderHeatLossCoefficient: 1,
+				secondOrderHeatLossCoefficient: 10,
+				heatLossCoefficientOfSolarLoopPipe: 100,
+				collectorMassFlowRate: 2,
+				powerOfCollectorPump: 30,
+				powerOfCollectorPumpController: 30,
+				pitch: 60,
+				orientation: 60,
+			});
+		});
+
+		test("form is prepopulated when data exists in state", async () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: solarThermalSystem1 }],
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+				},
+			});
+
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Solar thermal system 1");
+			expect((await screen.findByTestId("locationOfCollectorLoopPiping_outside")).hasAttribute("checked"));
+			expect((await screen.findByTestId<HTMLInputElement>("collectorModuleArea")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("numberOfCollectorModules")).value).toBe("2");
+			expect((await screen.findByTestId<HTMLInputElement>("peakCollectorEfficiency")).value).toBe("0");
+			expect((await screen.findByTestId<HTMLInputElement>("incidenceAngleModifier")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("firstOrderHeatLossCoefficient")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("secondOrderHeatLossCoefficient")).value).toBe("10");
+			expect((await screen.findByTestId<HTMLInputElement>("heatLossCoefficientOfSolarLoopPipe")).value).toBe("100");
+			expect((await screen.findByTestId<HTMLInputElement>("collectorMassFlowRate")).value).toBe("2");
+			expect((await screen.findByTestId<HTMLInputElement>("powerOfCollectorPump")).value).toBe("30");
+			expect((await screen.findByTestId<HTMLInputElement>("powerOfCollectorPumpController")).value).toBe("30");
+			expect((await screen.findByTestId<HTMLInputElement>("pitch")).value).toBe("60");
+			expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("60");
+		});
+
+		test("solar thermal system is updated when data with id exists in store", async () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: solarThermalSystem1 }, { data: solarThermalSystem2 }],
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "1" },
+				},
+			});
+
+			await user.clear(screen.getByTestId("name"));
+			await user.type(screen.getByTestId("name"), "Updated solar thermal system");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const { data } = store.spaceHeatingNew.heatSource;
+
+			expect(data[1]!.data.id).toBe(solarThermalSystem2.id);
+			expect(data[1]!.data.name).toBe("Updated solar thermal system");
+		});
+	});
+
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(HeatSourceForm, {
 			route: {

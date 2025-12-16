@@ -10,13 +10,13 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
 const index = getStoreIndex(heatSourceStoreData);
 const heatSourceData = useItemToEdit("heatSource", heatSourceStoreData);
-const model = ref(heatSourceData?.data);
+const model = ref(heatSourceData?.data as HeatSourceData);
 const id =  heatSourceData?.data.id ?? uuidv4();
 
 export type heatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
 export type boilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
 export type heatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
-
+export type solarThermalModelType = Extract<HeatSourceData, { typeOfHeatSource: "solarThermalSystem" }>;
 
 const saveForm = (fields: HeatSourceData) => {
 	store.$patch((state) => {
@@ -62,8 +62,28 @@ const saveForm = (fields: HeatSourceData) => {
 				},
 				complete: true,
 			};
-		} 
-		else {
+		} else if (fields.typeOfHeatSource === "solarThermalSystem") {
+			heatSourceItem = {
+				data: {
+					...commonFields,
+					typeOfHeatSource: fields.typeOfHeatSource,
+					locationOfCollectorLoopPiping: fields.locationOfCollectorLoopPiping,
+					collectorModuleArea: fields.collectorModuleArea,
+					numberOfCollectorModules: fields.numberOfCollectorModules,
+					peakCollectorEfficiency: fields.peakCollectorEfficiency,
+					incidenceAngleModifier: fields.incidenceAngleModifier,
+					firstOrderHeatLossCoefficient: fields.firstOrderHeatLossCoefficient,
+					secondOrderHeatLossCoefficient: fields.secondOrderHeatLossCoefficient,
+					heatLossCoefficientOfSolarLoopPipe: fields.heatLossCoefficientOfSolarLoopPipe,
+					collectorMassFlowRate: fields.collectorMassFlowRate,
+					powerOfCollectorPump: fields.powerOfCollectorPump,
+					powerOfCollectorPumpController: fields.powerOfCollectorPumpController,
+					pitch: fields.pitch,
+					orientation: fields.orientation,
+				},
+				complete: true,
+			};
+		} else {
 			throw new Error("Invalid heat source type");
 		}
 
@@ -119,6 +139,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<HeatBatterySection
 			v-if="model?.typeOfHeatSource === 'heatBattery'"
 			:model="model as heatBatteryModelType"/>
+		<SolarThermalSystemSection
+			v-if="model?.typeOfHeatSource === 'solarThermalSystem'"
+			:model="model as solarThermalModelType"/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
