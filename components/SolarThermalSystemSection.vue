@@ -17,7 +17,7 @@ const locationOfCollectorLoopPipingOptions = {
   "outside": "Outside",
 	"heatedSpace": "Heated space",
 	"unheatedSpace": "Unheated space",
-} as const satisfies Record<AdjacentSpaceType | "outside", BoilerLocationDisplay | "Outside">; // Update to correct types
+} as const satisfies Record<LocationOfCollectorLoopPipingType, LocationOfCollectorLoopPipingTypeDisplay>;
 
 </script>
 
@@ -26,7 +26,7 @@ const locationOfCollectorLoopPipingOptions = {
     id="name"
     type="govInputText"
     label="Name"
-    help="Provide a name for this boiler so that it can be identified later"
+    help="Provide a name for this element so that it can be identified later"
     name="name"
     :validation-rules="{ uniqueName: uniqueName(heatSourceStoreData, { index }) }"
     validation="required | uniqueName"

@@ -932,6 +932,7 @@ const heatSourceType = z.enum(["heatPump", "boiler", "heatNetwork", "heatBattery
 export type HeatSourceType = z.infer<typeof heatSourceType>;
 export type BoilerType = z.infer<typeof boilerType>;
 export type HeatBatteryType = z.infer<typeof heatBatteryType>;
+export type LocationOfCollectorLoopPipingType = z.infer<typeof locationOfCollectorLoopPipingType>;
 
 export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
 
