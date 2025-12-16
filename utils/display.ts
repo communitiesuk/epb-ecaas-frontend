@@ -178,9 +178,17 @@ export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressure
 	}
 }
 
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas)" | "Electricity is the only energy source" | "Mains gas" | "Electricity";
+
 export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined) {
 	if (fuelTypes === undefined) return emptyValueRendering;
-	return fuelTypes.map(type => displayFuelType(type)).join(", ");
+
+	const result = fuelTypes.map(type => displayFuelType(type)).join(", ");
+	
+	if(!result.includes("Electricity")){
+		return result + ", Electricity"
+	}
+	return result
 }
 
 export function displayFuelType(fuelType: SchemaFuelTypeExtended): FuelTypeDisplay {
@@ -188,7 +196,7 @@ export function displayFuelType(fuelType: SchemaFuelTypeExtended): FuelTypeDispl
 		case "lpg_bulk":
 			return "LPG (Liquid petroleum gas)";
 		case "elecOnly":
-			return "Electricity is the only energy source";
+			return "Electricity";
 		case "mains_gas":
 			return "Mains gas";
 		default:
@@ -196,8 +204,6 @@ export function displayFuelType(fuelType: SchemaFuelTypeExtended): FuelTypeDispl
 			throw new Error(`Missed a fuel type case: ${fuelType}`);
 	}
 }
-
-export type FuelTypeDisplay = "LPG (Liquid petroleum gas)" | "Electricity is the only energy source" | "Mains gas" ;
 
 export const ecoDesignControllerOptions = {
 	1: "I: On/Off Room Thermostat",
