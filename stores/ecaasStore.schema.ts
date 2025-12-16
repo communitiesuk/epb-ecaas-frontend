@@ -921,7 +921,7 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 		collectorMassFlowRate: z.number(),
 		powerOfCollectorPump: z.number(),
 		powerOfCollectorPumpController: z.number(),
-		pitch: z.number().min(0).lt(180),
+		pitch: z.number().min(0).max(90),
 		orientation,
 	}),
 ]);
