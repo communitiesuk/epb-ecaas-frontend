@@ -42,7 +42,7 @@ describe("heatSource", () => {
 	};
 
 	describe("heat pump", () => {
-		test("HeatPump component displays when type of heat source is heat pump", async () => {
+		test("'HeatPumpSection' component displays when type of heat source is heat pump", async () => {
 			await renderSuspended(HeatSourceForm, {
 				route: {
 					params: { "heatSource": "create" },
@@ -80,7 +80,7 @@ describe("heatSource", () => {
 			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/air-source");
 		});
 
-		test("heat source data is saved to store state when form is valid", async () => {
+		test("heat pump data is saved to store state when form is valid", async () => {
 			vi.mocked(uuidv4).mockReturnValue(heatPump1.id as unknown as Buffer);
 
 			await renderSuspended(HeatSourceForm, {
@@ -115,10 +115,12 @@ describe("heatSource", () => {
 				},
 			});
 
+			expect((await screen.findByTestId("typeOfHeatSource_heatPump")).hasAttribute("checked"));
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat pump 1");
+			expect((await screen.findByTestId("typeOfHeatPump_airSource")).hasAttribute("checked"));
 		});
 
-		test("heat source is updated when data with id exists in store", async () => {
+		test("heat pump is updated when data with id exists in store", async () => {
 			store.$patch({
 				spaceHeatingNew: {
 					heatSource: {
@@ -172,7 +174,7 @@ describe("heatSource", () => {
 			locationOfBoiler: AdjacentSpaceType.heatedSpace,
 		};
 
-		test("boiler component displays when type of heat source is boiler", async () => {
+		test("'BoilerSection' component displays when type of heat source is boiler", async () => {
 			await renderSuspended(HeatSourceForm, {
 				route: {
 					params: { "heatSource": "create" },
@@ -232,7 +234,10 @@ describe("heatSource", () => {
 				},
 			});
 
+			expect((await screen.findByTestId("typeOfHeatSource_boiler")).hasAttribute("checked"));
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Boiler 1");
+			expect((await screen.findByTestId("typeOfBoiler_combiBoiler")).hasAttribute("checked"));
+			expect((await screen.findByTestId("locationOfBoiler_heatedSpace")).hasAttribute("checked"));
 		});
 
 		test("boiler is updated when data with id exists in store", async () => {
@@ -299,7 +304,7 @@ describe("heatSource", () => {
 			energySupply: "lpg_bulk",
 		};
 
-		test("heat battery component displays when type of heat source is heat battery", async () => {
+		test("'HeatBatterySection' component displays when type of heat source is heat battery", async () => {
 			await renderSuspended(HeatSourceForm, {
 				route: {
 					params: { "heatSource": "create" },
@@ -348,6 +353,11 @@ describe("heatSource", () => {
 
 		test("form is prepopulated when data exists in state", async () => {
 			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { fuelType: ["mains_gas"] },
+					},
+				},
 				spaceHeatingNew: {
 					heatSource: {
 						data: [{ data: heatBattery1 }],
@@ -361,7 +371,11 @@ describe("heatSource", () => {
 				},
 			});
 
+			expect((await screen.findByTestId("typeOfHeatSource_heatBattery")).hasAttribute("checked"));
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat battery 1");
+			expect((await screen.findByTestId("typeOfHeatBattery_pcm")).hasAttribute("checked"));
+			expect((await screen.findByTestId<HTMLInputElement>("numberOfUnits")).value).toBe("1");
+			expect((await screen.findByTestId("energySupply_mains_gas")).hasAttribute("checked"));
 		});
 
 		test("heat battery is updated when data with id exists in store", async () => {
