@@ -10,13 +10,6 @@ const spaceHeatingPages = [
 		parentId: "taskList",
 	},
 	{
-		id: "general",
-		title: "General",
-		url: "/space-heating/general",
-		type: PageType.Task,
-		parentId: "spaceHeating",
-	},
-	{
 		id: "heatGeneration",
 		title: "Heat generation",
 		url: "/space-heating/heat-generation",

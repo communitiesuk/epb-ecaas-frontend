@@ -1,4 +1,4 @@
-import General from "./general.vue";
+import HeatingControls from "./index.vue";
 import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
@@ -8,7 +8,7 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-describe("General", () => {
+describe("Heating controls", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
@@ -16,72 +16,90 @@ describe("General", () => {
 		store.$reset();
 	});
 
-	const state: EcaasForm<GeneralspaceHeating> = {
-		data: {
-			heatingControlType: "separateTemperatureControl",
-			coolingRequired: true,
-		},
+	const heatingControl: HeatingControlData = {
+		name: "Separate temperature control",
+		heatingControlType: "separateTemperatureControl",
 	};
 
 	const populateValidForm = async () => {
 		await user.click(screen.getByTestId("heatingControlType_separateTemperatureControl"));
-		await user.click(screen.getByTestId("coolingRequired_yes"));
 		await user.tab();
 	};
 
 	test("data is saved to store state when form is valid", async () => {
-		await renderSuspended(General);
+		await renderSuspended(HeatingControls, {
+			route: {
+				params: { "heatingControl": "create" },
+			},
+		});
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data } = store.spaceHeating.general;
+		const { data } = store.spaceHeatingNew.heatingControls;
 
-		expect(data).toEqual(state.data);
+		expect(data[0]?.data).toEqual(heatingControl);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
-			spaceHeating: {
-				general: state,
+			spaceHeatingNew: {
+				heatingControls: { 
+					data: [{ data: heatingControl }],
+				},
 			},
 		});
 
-		await renderSuspended(General);
-
+		await renderSuspended(HeatingControls, {
+			route: {
+				params: { "heatingControl": "0" },
+			},
+		});
+		
 		expect((await screen.findByTestId("heatingControlType_separateTemperatureControl")).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId("coolingRequired_yes")).hasAttribute("checked")).toBe(true);
-
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
-		await renderSuspended(General);
+		await renderSuspended(HeatingControls, {
+			route: {
+				params: { "heatingControl": "create" },
+			},
+		});
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("heatingControlType_error"))).toBeDefined();
-		expect((await screen.findByTestId("coolingRequired_error"))).toBeDefined();
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
-		await renderSuspended(General);
+		await renderSuspended(HeatingControls, {
+			route: {
+				params: { "heatingControl": "create" },
+			},
+		});
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		expect((await screen.findByTestId("generalErrorSummary"))).toBeDefined();
+		expect((await screen.findByTestId("heatingControlsErrorSummary"))).toBeDefined();
 	});
 
 	describe("partially saving data", () => {
 		test("updated form data is automatically saved to store ", async () => {
 			store.$patch({
-				spaceHeating: {
-					general: state,
+				spaceHeatingNew: {
+					heatingControls: { data: [{ data: heatingControl }] },
 				},
 			});
 
-			await renderSuspended(General);
-			await user.click(screen.getByTestId("coolingRequired_no"));
+			await renderSuspended(HeatingControls, {
+				route: {
+					params: { "heatingControl": "0" },
+				},
+			});
+			await user.click(screen.getByTestId("heatingControlType_separateTimeAndTemperatureControl"));
+			await user.tab();
 
-			expect(store.spaceHeating.general.data.coolingRequired).toBe(false);
+			expect(store.spaceHeatingNew.heatingControls.data[0]?.data.name).toBe("Separate time and temperature control");
+			expect(store.spaceHeatingNew.heatingControls.data[0]?.data.heatingControlType).toBe("separateTimeAndTemperatureControl");
 		});
 	});
 });

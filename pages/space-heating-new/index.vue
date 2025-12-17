@@ -63,6 +63,18 @@ function hasIncompleteEntries() {
 		:show-status="true"
 		@remove="(index: number) => handleRemove('heatSource', index)"
 	/>
+	<CustomList
+		id="heatSource"
+		title="Heating controls"
+		:form-url="`${page?.url!}/heating-controls`"
+		:items="store.spaceHeatingNew.heatingControls.data.map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
+		:max-number-of-items=1
+		@remove="(index: number) => handleRemove('heatingControls', index)"
+	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton
 			href="/"

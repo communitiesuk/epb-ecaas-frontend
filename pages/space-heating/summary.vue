@@ -4,18 +4,6 @@ import { getTabItems, getUrl } from "#imports";
 const store = useEcaasStore();
 const title = "Space heating summary";
 
-const { heatingControlType, coolingRequired } = store.spaceHeating.general.data;
-const generalSummary: SummarySection = {
-	id: "general",
-	label: "General",
-	data: {
-		"Type of heating control": displayCamelToSentenceCase(show(heatingControlType)),
-		"Cooling required": displayBoolean(coolingRequired),
-	},
-
-	editUrl: "/space-heating/general",
-};
-
 const heatGenerationUrl = "/space-heating/heat-generation";
 const heatPumps = store.spaceHeating.heatGeneration.heatPump.data;
 const heatPumpSummary: SummarySection = {
@@ -189,9 +177,6 @@ const heatEmittingSummary: SummarySection[] = [
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovTabs v-slot="tabProps" :items="getTabItems([generalSummary])">
-		<SummaryTab :summary="generalSummary" :selected="tabProps.currentTab === 0" />
-	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems(heatGenerationSummary)">
 		<SummaryTab :summary="heatPumpSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>

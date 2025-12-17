@@ -31,6 +31,13 @@ const spaceHeatingNewPages = [
 		parentId: "spaceHeatingNew",
 	},
 	{
+		id: "heatingControls",
+		title: "Heating controls",
+		url: "/space-heating-new/heating-controls",
+		type: PageType.Task,
+		parentId: "spaceHeatingNew",
+	},
+	{
 		id: "spaceHeatingNewSummary",
 		title: "Summary",
 		url: "/space-heating-new/summary",

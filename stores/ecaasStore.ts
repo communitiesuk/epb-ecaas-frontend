@@ -75,7 +75,6 @@ export function getInitialState(): EcaasState {
 			dwellingSpaceLighting: { data: {} },
 		},
 		spaceHeating: {
-			general: { data: {} },
 			heatGeneration: {
 				heatPump: { data: [] },
 				boiler: { data: [] },
@@ -92,6 +91,7 @@ export function getInitialState(): EcaasState {
 		},
 		spaceHeatingNew: {
 			heatSource: { data: [] },
+			heatingControls: { data: [] },
 		},
 		cooling: {
 			airConditioning: { data: [] },
