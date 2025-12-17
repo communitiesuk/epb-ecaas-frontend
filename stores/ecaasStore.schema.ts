@@ -880,9 +880,16 @@ const boilerType = z.enum(["combiBoiler", "regularBoiler"]);
 const heatBatteryType = z.enum(["pcm", "dryCore"]);
 const locationOfCollectorLoopPipingType = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
 
+export enum HeatSourceType {
+	heatPump = "heatPump",
+	boiler = "boiler",
+	heatNetwork = "heatNetwork",
+	heatBattery = "heatBattery",
+	solarThermalSystem = "solarThermalSystem",
+}
 const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	baseHeatSource.extend({
-		typeOfHeatSource: z.literal("heatPump"),
+		typeOfHeatSource: z.literal(HeatSourceType.heatPump),
 		typeOfHeatPump: z.enum([
 			"airSource",
 			"groundSource",
@@ -896,20 +903,20 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 		productReference: z.string().trim().min(1),
 	}),
 	baseHeatSource.extend({
-		typeOfHeatSource: z.literal("boiler"),
+		typeOfHeatSource: z.literal(HeatSourceType.boiler),
 		typeOfBoiler: boilerType,
 		productReference: z.string().trim().min(1),
 		locationOfBoiler: z.enum([AdjacentSpaceType.heatedSpace, AdjacentSpaceType.unheatedSpace]),
 	}),
 	baseHeatSource.extend({
-		typeOfHeatSource: z.literal("heatBattery"),
+		typeOfHeatSource: z.literal(HeatSourceType.heatBattery),
 		typeOfHeatBattery: heatBatteryType,
 		productReference: z.string().trim().min(1),
 		numberOfUnits: z.number(),
 		energySupply: fuelTypeWithElecZod,
 	}),
 	baseHeatSource.extend({
-		typeOfHeatSource: z.literal("solarThermalSystem"),
+		typeOfHeatSource: z.literal(HeatSourceType.solarThermalSystem),
 		locationOfCollectorLoopPiping: locationOfCollectorLoopPipingType,
 		collectorModuleArea: z.number(),
 		numberOfCollectorModules: z.number(),
@@ -926,10 +933,6 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	}),
 ]);
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const heatSourceType = z.enum(["heatPump", "boiler", "heatNetwork", "heatBattery", "solarThermalSystem"]);
-
-export type HeatSourceType = z.infer<typeof heatSourceType>;
 export type BoilerType = z.infer<typeof boilerType>;
 export type HeatBatteryType = z.infer<typeof heatBatteryType>;
 export type LocationOfCollectorLoopPipingType = z.infer<typeof locationOfCollectorLoopPipingType>;

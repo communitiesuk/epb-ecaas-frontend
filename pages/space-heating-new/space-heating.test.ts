@@ -5,7 +5,6 @@ import {
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
 import SpaceHeatingNew from "./index.vue";
-// import HeatSourceForm from "./heat-source/[heatSource].vue";
 import formStatus from "~/constants/formStatus";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -25,7 +24,7 @@ describe("space heating", () => {
 	const heatSource1: HeatSourceData = {
 		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
 		name: "Heat source 1",
-		typeOfHeatSource: "boiler",
+		typeOfHeatSource: HeatSourceType.boiler,
 		typeOfBoiler: "combiBoiler",
 		productReference: "BOILER_SMALL",
 		locationOfBoiler: AdjacentSpaceType.heatedSpace,
@@ -34,7 +33,7 @@ describe("space heating", () => {
 	const heatSource2: HeatSourceData = {
 		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
 		name: "Heat source 2",
-		typeOfHeatSource: "boiler",
+		typeOfHeatSource: HeatSourceType.boiler,
 		typeOfBoiler: "combiBoiler",
 		productReference: "BOILER_MEDIUM",
 		locationOfBoiler: AdjacentSpaceType.heatedSpace,
@@ -43,7 +42,7 @@ describe("space heating", () => {
 	const heatSource3: HeatSourceData = {
 		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8c",
 		name: "Heat source 3",
-		typeOfHeatSource: "boiler",
+		typeOfHeatSource: HeatSourceType.boiler,
 		typeOfBoiler: "regularBoiler",
 		productReference: "BOILER_LARGE",
 		locationOfBoiler: AdjacentSpaceType.heatedSpace,

@@ -18,7 +18,7 @@ describe("heatSource", () => {
 	const heatPump1: HeatSourceData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 		name: "Heat pump 1",
-		typeOfHeatSource: "heatPump",
+		typeOfHeatSource: HeatSourceType.heatPump,
 		typeOfHeatPump: "airSource",
 		productReference: "HEATPUMP-SMALL",
 	};
@@ -26,7 +26,7 @@ describe("heatSource", () => {
 	const heatPump2: HeatSourceData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 		name: "Heat pump 2",
-		typeOfHeatSource: "heatPump",
+		typeOfHeatSource: HeatSourceType.heatPump,
 		typeOfHeatPump: "airSource",
 		productReference: "HEATPUMP-LARGE",
 	};
@@ -95,7 +95,7 @@ describe("heatSource", () => {
 			expect(data[0]?.data).toEqual({
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Heat pump 1",
-				typeOfHeatSource: "heatPump",
+		  	typeOfHeatSource: HeatSourceType.heatPump,
 				typeOfHeatPump: "airSource",
 			});
 		});
@@ -159,7 +159,7 @@ describe("heatSource", () => {
 		const boiler1: HeatSourceData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
 			name: "Boiler 1",
-			typeOfHeatSource: "boiler",
+			typeOfHeatSource: HeatSourceType.boiler,
 			typeOfBoiler: "combiBoiler",
 			productReference: "BOILER_SMALL",
 			locationOfBoiler: AdjacentSpaceType.heatedSpace,
@@ -168,7 +168,7 @@ describe("heatSource", () => {
 		const boiler2: HeatSourceData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
 			name: "Boiler 2",
-			typeOfHeatSource: "boiler",
+			typeOfHeatSource: HeatSourceType.boiler,
 			typeOfBoiler: "combiBoiler",
 			productReference: "BOILER_MEDIUM",
 			locationOfBoiler: AdjacentSpaceType.heatedSpace,
@@ -213,7 +213,7 @@ describe("heatSource", () => {
 			expect(data[0]?.data).toEqual({
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
 				name: "Boiler 1",
-				typeOfHeatSource: "boiler",
+				typeOfHeatSource: HeatSourceType.boiler,
 				typeOfBoiler: "combiBoiler",
 				locationOfBoiler: AdjacentSpaceType.heatedSpace,
 			});
@@ -287,7 +287,7 @@ describe("heatSource", () => {
 		const heatBattery1: HeatSourceData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
 			name: "Heat battery 1",
-			typeOfHeatSource: "heatBattery",
+			typeOfHeatSource: HeatSourceType.heatBattery,
 			typeOfHeatBattery: "pcm",
 			productReference: "HEAT_BATTERY_SMALL",
 			numberOfUnits: 1,
@@ -297,7 +297,7 @@ describe("heatSource", () => {
 		const heatBattery2: HeatSourceData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c2222",
 			name: "Heat battery 2",
-			typeOfHeatSource: "heatBattery",
+			typeOfHeatSource: HeatSourceType.heatBattery,
 			typeOfHeatBattery: "dryCore",
 			productReference: "HEAT_BATTERY_MEDIUM",
 			numberOfUnits: 2,
@@ -344,7 +344,7 @@ describe("heatSource", () => {
 			expect(data[0]?.data).toEqual({
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
 				name: "Heat battery 1",
-				typeOfHeatSource: "heatBattery",
+				typeOfHeatSource: HeatSourceType.heatBattery,
 				typeOfHeatBattery: "pcm",
 				numberOfUnits: 1,
 				energySupply: "mains_gas",
@@ -450,7 +450,7 @@ describe("heatSource", () => {
 		const solarThermalSystem1: HeatSourceData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
 			name: "Solar thermal system 1",
-			typeOfHeatSource: "solarThermalSystem",
+			typeOfHeatSource: HeatSourceType.solarThermalSystem,
 			locationOfCollectorLoopPiping: "outside",
 			collectorModuleArea: 1,
 			numberOfCollectorModules: 2,
@@ -469,7 +469,7 @@ describe("heatSource", () => {
 		const solarThermalSystem2: HeatSourceData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c4444",
 			name: "Solar thermal system 2",
-			typeOfHeatSource: "solarThermalSystem",
+			typeOfHeatSource: HeatSourceType.solarThermalSystem,
 			locationOfCollectorLoopPiping: "heatedSpace",
 			collectorModuleArea: 2,
 			numberOfCollectorModules: 4,
@@ -524,7 +524,7 @@ describe("heatSource", () => {
 			expect(data[0]?.data).toEqual({
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
 				name: "Solar thermal system 1",
-				typeOfHeatSource: "solarThermalSystem",
+				typeOfHeatSource: HeatSourceType.solarThermalSystem,
 				locationOfCollectorLoopPiping: "outside",
 				collectorModuleArea: 1,
 				numberOfCollectorModules: 2,
@@ -651,18 +651,33 @@ describe("heatSource", () => {
 			expect(actualHeatSource.data.name).toBe("New heat source");
 		});
 
-		it("creates a new heat source automatically with default name after other data is entered", async () => {
+		it("creates a new heat source automatically with default name", async () => {
 			await renderSuspended(HeatSourceForm, {
 				route: {
 					params: { "heatSource": "create" },
 				},
 			});
-			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
 			await user.tab();
 
 			const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-			expect(actualHeatSource.data.name).toBe("Heat source");
-			expect(actualHeatSource.data.typeOfHeatSource).toBe("boiler");
+			expect(actualHeatSource.data.name).toBe("Heat pump");
+			expect(actualHeatSource.data.typeOfHeatSource).toBe("heatPump");
+		});
+
+		it("creates a new heat source automatically with default name when product type is selected", async () => {
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+			await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
+
+			await user.tab();
+
+			const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
+			expect(actualHeatSource.data.name).toBe("Air source heat pump");
 		});
 
 		it("saves updated form data to store automatically", async () => {
