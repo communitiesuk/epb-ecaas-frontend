@@ -95,7 +95,7 @@ describe("heatSource", () => {
 			expect(data[0]?.data).toEqual({
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Heat pump 1",
-		  	typeOfHeatSource: HeatSourceType.heatPump,
+				typeOfHeatSource: HeatSourceType.heatPump,
 				typeOfHeatPump: "airSource",
 			});
 		});

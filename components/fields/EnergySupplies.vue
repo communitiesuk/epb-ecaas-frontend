@@ -20,7 +20,7 @@ const { fuelType } = store.dwellingDetails.generalSpecifications.data;
 const energySupplyOptions = {
 	"mains_gas": "Mains gas",
 	"lpg_bulk": "LPG (Liquid petroleum gas)",
-	"elecOnly": "Electricity"
+	"elecOnly": "Electricity",
 } as const satisfies Record<SchemaFuelTypeExtended, FuelTypeDisplay | "Electricity">;
 
 const energySupplies = fuelType !== undefined ?

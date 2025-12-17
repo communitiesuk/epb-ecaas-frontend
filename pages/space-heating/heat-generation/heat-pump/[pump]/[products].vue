@@ -20,14 +20,14 @@ const model = ref(currentHeatPump?.data);
 if (!(pageId in pcdbTechnologyTypes)) {
 	throw createError({
 		statusCode: 400,
-		statusMessage: "Invalid product type selected"
-	})
+		statusMessage: "Invalid product type selected",
+	});
 }
 
 const { data: heatPumps } = await useFetch("/api/products", {
 	query: {
-		technologyType: pcdbTechnologyTypes[pageId as keyof typeof pcdbTechnologyTypes]
-	}
+		technologyType: pcdbTechnologyTypes[pageId as keyof typeof pcdbTechnologyTypes],
+	},
 });
 
 const heatPumpData = heatPumps.value?.data ?? [];
@@ -58,7 +58,7 @@ function selectProduct(reference: string) {
 		<GovProductsTable 
 			:products="getData()"
 			:total-pages="totalPages"
-			:onSelectProduct="selectProduct"
+			:on-select-product="selectProduct"
 		/>
 
 		<GovButton secondary :href="`/space-heating/heat-generation/heat-pump/${index}`" test-id="backToHeatPumpButton">Back to heat pump</GovButton> 

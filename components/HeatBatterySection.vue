@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { uniqueName } from '#imports';
-import type { HeatBatteryType } from '~/stores/ecaasStore.schema';
-import type { HeatBatteryTypeDisplay } from '~/utils/display';
-import EnergySupplies from './fields/EnergySupplies.vue';
+import { uniqueName } from "#imports";
+import type { HeatBatteryType } from "~/stores/ecaasStore.schema";
+import type { HeatBatteryTypeDisplay } from "~/utils/display";
+import EnergySupplies from "./fields/EnergySupplies.vue";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -25,18 +25,18 @@ const heatBatteryTypeOptions = {
 </script>
 
 <template>	
-  <FormKit
-    id="name"
-    type="govInputText"
-    label="Name"
-    help="Provide a name for this element so that it can be identified later"
-    name="name"
-    :validation-rules="{ uniqueName: uniqueName(heatSourceStoreData, { index }) }"
-    validation="required | uniqueName"
-    :validation-messages="{
-      uniqueName: 'An element with this name already exists. Please enter a unique name.'
-    }"
-  />
+	<FormKit
+		id="name"
+		type="govInputText"
+		label="Name"
+		help="Provide a name for this element so that it can be identified later"
+		name="name"
+		:validation-rules="{ uniqueName: uniqueName(heatSourceStoreData, { index }) }"
+		validation="required | uniqueName"
+		:validation-messages="{
+			uniqueName: 'An element with this name already exists. Please enter a unique name.'
+		}"
+	/>
 	<FormKit
 		id="typeOfHeatBattery"
 		type="govRadios"
@@ -61,10 +61,10 @@ const heatBatteryTypeOptions = {
 		id="numberOfUnits"
 		type="govInputInt"
 		name="numberOfUnits"
-    	label="Number of units"
+		label="Number of units"
 		validation="required | isInteger | min:1"
-    	:validation-messages="{
-      		isInteger: `Number of units must be an integer.`,
+		:validation-messages="{
+			isInteger: `Number of units must be an integer.`,
 		}"
 	/>
 	<FieldsEnergySupplies

@@ -26,8 +26,8 @@ if (!(pageId in pcdbTechnologyTypes)) {
 
 const { data: heatSources } = await useFetch("/api/products", {
 	query: {
-		technologyType: pcdbTechnologyTypes[pageId as keyof typeof pcdbTechnologyTypes]
-	}
+		technologyType: pcdbTechnologyTypes[pageId as keyof typeof pcdbTechnologyTypes],
+	},
 });
 
 const heatSourceData = heatSources.value?.data ?? [];
@@ -58,7 +58,7 @@ function selectProduct(reference: string) {
 		<GovProductsTable 
 			:products="getData()"
 			:total-pages="totalPages"
-			:onSelectProduct="selectProduct"
+			:on-select-product="selectProduct"
 		/>
 		<GovButton secondary :href="`/space-heating-new/heat-source/${index}`" test-id="backToHeatSourceButton">Back to heat source</GovButton> 
 	</Formkit>
