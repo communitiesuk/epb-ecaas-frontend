@@ -868,6 +868,7 @@ export type spaceHeatingNew = AssertEachKeyIsPageId<{
 const baseHeatSource = namedWithId;
 
 const boilerType = z.enum(["combiBoiler", "regularBoiler"]);
+const heatNetworkType = z.enum(["sleevedDistrict", "unsleevedDistrict", "communal"]);
 const heatBatteryType = z.enum(["pcm", "dryCore"]);
 const locationOfCollectorLoopPipingType = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
 
@@ -900,6 +901,19 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 		locationOfBoiler: z.enum([AdjacentSpaceType.heatedSpace, AdjacentSpaceType.unheatedSpace]),
 	}),
 	baseHeatSource.extend({
+		typeOfHeatSource: z.literal(HeatSourceType.heatNetwork),
+		typeOfHeatNetwork: heatNetworkType,
+		isHeatNetworkInPcdb: z.boolean(),
+		doesHeatNetworkUseHeatInterfaceUnits: z.boolean(),
+		heatInterfaceUnitProductReference: z.string().trim().min(1),
+		heatNetworkProductReference: z.string().trim().min(1),
+		energySupply: fuelTypeWithElecZod,
+		emissionsFactor: z.number(),
+		outOfScopeEmissionsFactor: z.number(),
+		primaryEnergyFactor: z.number(),
+		canEnergyBeExported: z.boolean(),
+	}),
+	baseHeatSource.extend({
 		typeOfHeatSource: z.literal(HeatSourceType.heatBattery),
 		typeOfHeatBattery: heatBatteryType,
 		productReference: z.string().trim().min(1),
@@ -925,6 +939,7 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 ]);
 
 export type BoilerType = z.infer<typeof boilerType>;
+export type HeatNetworkType = z.infer<typeof heatNetworkType>;
 export type HeatBatteryType = z.infer<typeof heatBatteryType>;
 export type LocationOfCollectorLoopPipingType = z.infer<typeof locationOfCollectorLoopPipingType>;
 
