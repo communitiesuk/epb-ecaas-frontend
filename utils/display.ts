@@ -274,9 +274,9 @@ export function displayHeatPumpType( type: HeatPumpType | undefined): HeatPumpTy
 
 export type BoilerTypeDisplay = "Combi boiler" | "Regular boiler";
 export type BoilerLocationDisplay = "Heated space" | "Unheated space";
-export type LocationOfCollectorLoopPipingTypeDisplay = "Outside" | "Heated space" | "Unheated space";
-
+export type HeatNetworkTypeDisplay = "Sleeved district heat network" | "Unsleeved district heat network" | "Communal heat network";
 export type HeatBatteryTypeDisplay = "PCM" | "Dry core";
+export type LocationOfCollectorLoopPipingTypeDisplay = "Outside" | "Heated space" | "Unheated space";
 
 export type HeatSourceTypeDisplay = "Heat pump" | "Boiler" | "Heat network" | "Heat battery" | "Solar thermal system";
 

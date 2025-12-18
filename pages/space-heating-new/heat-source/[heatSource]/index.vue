@@ -15,6 +15,7 @@ const id =  heatSourceData?.data.id ?? uuidv4();
 
 export type heatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
 export type boilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
+export type heatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
 export type heatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
 export type solarThermalModelType = Extract<HeatSourceData, { typeOfHeatSource: "solarThermalSystem" }>;
 
@@ -136,6 +137,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<BoilerSection
 			v-if="model?.typeOfHeatSource === 'boiler'"
 			:model="model as boilerModelType"/>
+		<HeatNetworkSection
+			v-if="model?.typeOfHeatSource === 'heatNetwork'"
+			:model="model as heatNetworkModelType"/>
 		<HeatBatterySection
 			v-if="model?.typeOfHeatSource === 'heatBattery'"
 			:model="model as heatBatteryModelType"/>
