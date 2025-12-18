@@ -6,7 +6,6 @@ const page = usePage();
 const store = useEcaasStore();
 
 type SpaceHeatingType = keyof typeof store.spaceHeatingNew;
-// type SpaceHeatingData = EcaasForm<HeatSourceData>;
 
 function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 	const data = store.spaceHeatingNew[spaceHeatingType]?.data;
@@ -25,6 +24,7 @@ function handleComplete() {
 	store.$patch({
 		spaceHeatingNew: {
 			heatSource: { complete: true },
+			heatingControls: { complete: true },
 		},
 	});
 
