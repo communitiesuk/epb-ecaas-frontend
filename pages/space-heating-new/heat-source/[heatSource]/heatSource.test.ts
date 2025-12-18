@@ -404,7 +404,7 @@ describe("heatSource", () => {
 			expect(data[1]!.data.name).toBe("Updated heat battery");
 		});
 
-		test("electricity is an energy supply option when fuel type is not 'elecOnly'", async () => {
+		test("electricity is always displayed as a energy supply option", async () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -422,7 +422,7 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
 			expect(screen.getByTestId("energySupply_mains_gas")).toBeDefined();
 			expect(screen.getByTestId("energySupply_lpg_bulk")).toBeDefined();
-			expect(screen.getByTestId("energySupply_elecOnly")).toBeDefined();
+			expect(screen.getByTestId("energySupply_electricity")).toBeDefined();
 		});
 	});
 
