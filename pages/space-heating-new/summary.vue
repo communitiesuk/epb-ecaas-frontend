@@ -31,9 +31,9 @@ const boilerSummary: SummarySection = {
 			const summary = {
 				Name: show(heatSource.name),
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
-				"Type of boiler": "typeOfBoiler" in heatSource ? displayCamelToSentenceCase(heatSource.typeOfBoiler): emptyValueRendering,
+				"Type of boiler": "typeOfBoiler" in heatSource && heatSource.typeOfBoiler? displayCamelToSentenceCase(heatSource.typeOfBoiler): emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-				"Location of boiler": "locationOfBoiler" in heatSource ? displayCamelToSentenceCase(heatSource.locationOfBoiler): emptyValueRendering, 
+				"Location of boiler": "locationOfBoiler" in heatSource && heatSource.locationOfBoiler ? displayCamelToSentenceCase(heatSource.locationOfBoiler): emptyValueRendering, 
 			}
 			return summary
 		}) || [],
@@ -49,7 +49,7 @@ const heatPumpSummary: SummarySection = {
 			const summary = {
 				Name: show(heatSource.name),
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
-				"Type of heat pump":  "typeOfHeatPump" in heatSource ? displayCamelToSentenceCase(heatSource.typeOfHeatPump) : emptyValueRendering,
+				"Type of heat pump":  "typeOfHeatPump" in heatSource && heatSource.typeOfHeatPump ? displayCamelToSentenceCase(heatSource.typeOfHeatPump) : emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference: emptyValueRendering,
 			}
 			return summary
@@ -83,10 +83,10 @@ const heatBatterySummary: SummarySection = {
 			const summary = {
 				Name: show(heatSource.name),
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
-				"Type of heat battery": "typeOfHeatBattery" in heatSource ? displayCamelToSentenceCase(heatSource.typeOfHeatBattery): emptyValueRendering,
+				"Type of heat battery": "typeOfHeatBattery" in heatSource && heatSource.typeOfHeatBattery? displayCamelToSentenceCase(heatSource.typeOfHeatBattery): emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference: emptyValueRendering,
 				"Number of units": "numberOfUnits" in heatSource ? heatSource.numberOfUnits: emptyValueRendering,
-				// "Energy supply": "energySupply" in heatSource ? displayFuelType(heatSource.energySupply): emptyValueRendering, //TODO
+				// "Energy supply": "energySupply" in heatSource && heatSource.energySupply ? displayFuelType(heatSource.energySupply): emptyValueRendering, //TODO
 			}
 			return summary
 		}) || [],
@@ -105,7 +105,7 @@ const solarThermalSystemSummary: SummarySection = {
 
 			"Location of collector loop piping":
 				"locationOfCollectorLoopPiping" in heatSource
-					? displayCamelToSentenceCase(heatSource.locationOfCollectorLoopPiping)
+					&& heatSource.locationOfCollectorLoopPiping ? displayCamelToSentenceCase(heatSource.locationOfCollectorLoopPiping)
 					: emptyValueRendering,
 
 			"Collector module area": 
