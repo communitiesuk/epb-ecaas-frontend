@@ -21,7 +21,7 @@ const verifyDataInSection = async (
 		expect(lineResult!.querySelector("dd")?.textContent).toBe(value);
 	}
 };
-describe.skip("Heating and cooling systems summary page", () => {
+describe("Heating and cooling systems summary page", () => {
 	const store = useEcaasStore();
 	beforeEach(() => {
 		store.$reset();
@@ -30,56 +30,6 @@ describe.skip("Heating and cooling systems summary page", () => {
 	it("displays the correct title", async () => {
 		await renderSuspended(spaceHeatingSummary);
 		expect(screen.getByRole("heading", { name: "Space heating summary" }));
-	});
-
-	describe("General section", () => {
-		it("displays general tab", async () => {
-			await renderSuspended(spaceHeatingSummary);
-
-			expect(screen.getByRole("link", { name: "General" })).not.toBeNull();
-		});
-
-		it("displays an empty section if no data has been added", async () => {
-			await renderSuspended(spaceHeatingSummary);
-
-			const expectedSectionData = {
-				"Type of heating control": "-",
-				"Cooling required": "-",
-			};
-
-			await verifyDataInSection("general", expectedSectionData);
-		});
-
-		it("displays the correct data when data has been added", async () => {
-			store.$patch({
-				spaceHeating: {
-					general: {
-						data: {
-							heatingControlType: "separateTemperatureControl",
-							coolingRequired: true,
-						},
-					},
-				},
-			});
-
-			await renderSuspended(spaceHeatingSummary);
-
-			const expectedSectionData = {
-				"Type of heating control": "Separate temperature control",
-				"Cooling required": "Yes",
-			};
-
-			await verifyDataInSection("general", expectedSectionData);
-		});
-
-		it("displays an edit link that navigates to the general form page when clicked", async () => {
-			await renderSuspended(spaceHeatingSummary);
-
-			const generalSection = screen.getByTestId("general");
-			const editLink: HTMLAnchorElement = within(generalSection).getByText("Edit");
-
-			expect(new URL(editLink.href).pathname).toBe("/space-heating/general");
-		});
 	});
 
 	describe("Heat generation section", () => {

@@ -166,7 +166,7 @@ const heatSourceSections: SummarySection[] = [
 	heatBatterySummary,
 	solarThermalSystemSummary
 ];
-
+const heatingControlsUrl = "/space-heating-new/heating-controls";
 const heatingControls = store.spaceHeatingNew.heatingControls.data;
 const heatingControlsSummary: SummarySection = {
 	id: "heatingControls",
@@ -177,7 +177,7 @@ const heatingControlsSummary: SummarySection = {
 				"Type of heating control": displayCamelToSentenceCase(show(x.heatingControlType)),
 			};
 		}) || [],
-	editUrl: spaceHeatingUrl,
+	editUrl: heatingControlsUrl,
 };
 
 </script>

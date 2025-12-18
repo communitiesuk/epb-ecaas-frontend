@@ -1,9 +1,20 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import SpaceHeatingSummary from "./summary.vue";
-// import { kilowatt, kilowattHour, kilowattPeak } from "~/utils/units/power";
-// import { degrees } from "~/utils/units/angle";
-// import { metre } from "~/utils/units/length";
+
+type expectedData = { [key: string]: string };
+const verifyDataInSection = async (
+	section: string,
+	expectedSectionData: expectedData,
+) => {
+	for (const [key, value] of Object.entries(expectedSectionData)) {
+		const lineResult = screen.queryByTestId(
+			`summary-${section}-${hyphenate(key)}`,
+		);
+		expect(lineResult!.querySelector("dt")?.textContent).toBe(key);
+		expect(lineResult!.querySelector("dd")?.textContent).toBe(value);
+	}
+};
 
 describe("Space heating summary page", () => {
 	it("displays the correct title", async () => {
@@ -221,5 +232,63 @@ describe("Space heating summary page", () => {
 	// 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 	// 		}
 	// 	});
+	});
+
+	describe("Heating control section", () => {
+		const store = useEcaasStore();
+		beforeEach(() => {
+			store.$reset();
+		});
+
+		const heatingControl: HeatingControlData = {
+			name: "Separate temperature control",
+			heatingControlType: "separateTemperatureControl",		
+		};
+
+		it("displays heating control tab", async () => {
+			await renderSuspended(SpaceHeatingSummary);
+
+			expect(screen.getByRole("link", { name: "Heating controls" })).not.toBeNull();
+		});
+
+		it("displays a link to add heating controls if no data has been added", async () => {
+			await renderSuspended(SpaceHeatingSummary);
+
+			expect(screen.getByRole("link", { name: "Add heating controls" })).toBeDefined();
+		});
+
+		it("displays the correct data when data has been added", async () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatingControls: {
+						data: [{ data: heatingControl }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedSectionData = {
+				"Type of heating control": "Separate temperature control",
+			};
+
+			await verifyDataInSection("heatingControls", expectedSectionData);
+		});
+
+		it("displays an edit link that navigates to the heating control form page when clicked", async () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatingControls: {
+						data: [{ data: heatingControl }],
+					},
+				},
+			});
+			await renderSuspended(SpaceHeatingSummary);
+
+			const heatingControlSection = screen.getByTestId("heatingControls");
+			const editLink: HTMLAnchorElement = within(heatingControlSection).getByText("Edit");
+
+			expect(new URL(editLink.href).pathname).toBe("/space-heating-new/heating-controls");
+		});
 	});
 });
