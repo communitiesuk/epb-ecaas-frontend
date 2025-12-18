@@ -172,12 +172,9 @@ const heatingControls = store.spaceHeatingNew.heatingControls.data;
 const heatingControlsSummary: SummarySection = {
 	id: "heatingControls",
 	label: "Heating controls",
-	data:
-		heatingControls.map( ({ data: x } ) => {
-			return {
-				"Type of heating control": displayCamelToSentenceCase(show(x.heatingControlType)),
-			};
-		}) || [],
+	data: {
+		"Type of heating control": heatingControls.length ? displayCamelToSentenceCase(heatingControls[0]?.data.heatingControlType!) : emptyValueRendering,
+	},
 	editUrl: heatingControlsUrl,
 };
 
@@ -210,14 +207,7 @@ const heatingControlsSummary: SummarySection = {
 		</template>
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems([heatingControlsSummary])">
-		<SummaryTab :summary="heatingControlsSummary" :selected="tabProps.currentTab === 0">
-			<template #empty>
-				<h2 class="govuk-heading-m">No heating controls added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('heatingControls')"> 
-					Add heating controls
-				</NuxtLink>
-			</template>
-		</SummaryTab>
+		<SummaryTab :summary="heatingControlsSummary" :selected="tabProps.currentTab === 0"/>
 	</GovTabs>
 	<GovButton href="/">Return to overview</GovButton>
 </template>

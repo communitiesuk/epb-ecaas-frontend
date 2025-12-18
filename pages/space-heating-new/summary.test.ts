@@ -375,12 +375,6 @@ describe("Space heating summary page", () => {
 			expect(screen.getByRole("link", { name: "Heating controls" })).not.toBeNull();
 		});
 
-		it("displays a link to add heating controls if no data has been added", async () => {
-			await renderSuspended(SpaceHeatingSummary);
-
-			expect(screen.getByRole("link", { name: "Add heating controls" })).toBeDefined();
-		});
-
 		it("displays the correct data when data has been added", async () => {
 			store.$patch({
 				spaceHeatingNew: {
