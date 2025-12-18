@@ -86,7 +86,7 @@ const heatBatterySummary: SummarySection = {
 				"Type of heat battery": "typeOfHeatBattery" in heatSource && heatSource.typeOfHeatBattery? displayCamelToSentenceCase(heatSource.typeOfHeatBattery): emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference: emptyValueRendering,
 				"Number of units": "numberOfUnits" in heatSource ? heatSource.numberOfUnits: emptyValueRendering,
-				// "Energy supply": "energySupply" in heatSource && heatSource.energySupply ? displayFuelType(heatSource.energySupply): emptyValueRendering, //TODO
+				"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply]: emptyValueRendering,
 			}
 			return summary
 		}) || [],
@@ -159,13 +159,14 @@ function getNonEmptySections(summarySections: SummarySection[]){
 }
 
 const heatSourceSections: SummarySection[] = [
-	heatSourcesSummary,
 	boilerSummary,
 	heatPumpSummary,
 	heatNetworkSummary,
 	heatBatterySummary,
 	solarThermalSystemSummary
 ];
+const sections = getNonEmptySections(heatSourceSections)
+
 const heatingControlsUrl = "/space-heating-new/heating-controls";
 const heatingControls = store.spaceHeatingNew.heatingControls.data;
 const heatingControlsSummary: SummarySection = {
@@ -186,8 +187,19 @@ const heatingControlsSummary: SummarySection = {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovTabs v-slot="tabProps" :items="getNonEmptySections(heatSourceSections)">
-		<template v-for="section, i of getNonEmptySections(heatSourceSections)">
+	<GovTabs v-slot="tabProps" :items="sections">
+		<template v-if="sections.length === 0">
+		<SummaryTab :summary="heatSourcesSummary" :selected="tabProps.currentTab === 0">
+				<template #empty>
+					<h2 class="govuk-heading-m">No heat sources added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('heatSourceCreate')"> 
+						Add heat source
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
+		<template v-else>
+		<template v-for="section, i of sections">
 			<SummaryTab :summary="section" :selected="tabProps.currentTab === i">
 				<template #empty>
 					<h2 class="govuk-heading-m">No heat sources added</h2>
@@ -196,6 +208,7 @@ const heatingControlsSummary: SummarySection = {
 					</NuxtLink>
 				</template>
 			</SummaryTab>
+		</template>
 		</template>
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems([heatingControlsSummary])">
