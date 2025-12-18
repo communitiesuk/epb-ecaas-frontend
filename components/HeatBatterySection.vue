@@ -2,7 +2,6 @@
 import { uniqueName } from "#imports";
 import type { HeatBatteryType } from "~/stores/ecaasStore.schema";
 import type { HeatBatteryTypeDisplay } from "~/utils/display";
-import EnergySupplies from "./fields/EnergySupplies.vue";
 
 const route = useRoute();
 const store = useEcaasStore();

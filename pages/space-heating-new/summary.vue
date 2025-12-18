@@ -8,25 +8,25 @@ const title = "Space heating NEW summary";
 const spaceHeatingUrl = "/space-heating-new";
 
 const heatSources = store.spaceHeatingNew.heatSource.data;
-const boilers = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.boiler)
-const heatPumps = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.heatPump)
+const boilers = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.boiler);
+const heatPumps = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.heatPump);
 // const heatNetworks = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.heatNetwork)
-const heatNetworks: [] = []
-const heatBatteries = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.heatBattery)
-const solarThermalSystem = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.solarThermalSystem)
+const heatNetworks: [] = [];
+const heatBatteries = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.heatBattery);
+const solarThermalSystem = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.solarThermalSystem);
 
 const heatSourcesSummary: SummarySection = {
 	id: "heatSourceSummary",
 	label: "Heat sources",
-	data:[],
-	editUrl: spaceHeatingUrl
-}
+	data: [],
+	editUrl: spaceHeatingUrl,
+};
 
 const boilerSummary: SummarySection = {
 	id: "boilerSummary",
 	label: "Boilers",
 	data:
-		boilers.map(({data: heatSource}) => {
+		boilers.map(({ data: heatSource }) => {
 
 			const summary = {
 				Name: show(heatSource.name),
@@ -34,8 +34,8 @@ const boilerSummary: SummarySection = {
 				"Type of boiler": "typeOfBoiler" in heatSource && heatSource.typeOfBoiler? displayCamelToSentenceCase(heatSource.typeOfBoiler): emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 				"Location of boiler": "locationOfBoiler" in heatSource && heatSource.locationOfBoiler ? displayCamelToSentenceCase(heatSource.locationOfBoiler): emptyValueRendering, 
-			}
-			return summary
+			};
+			return summary;
 		}) || [],
 	editUrl: spaceHeatingUrl,
 };
@@ -44,15 +44,15 @@ const heatPumpSummary: SummarySection = {
 	id: "heatPumpSummary",
 	label: "Heat pumps",
 	data:
-		heatPumps.map(({data: heatSource}) => {
+		heatPumps.map(({ data: heatSource }) => {
 
 			const summary = {
 				Name: show(heatSource.name),
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
-				"Type of heat pump":  "typeOfHeatPump" in heatSource && heatSource.typeOfHeatPump ? displayCamelToSentenceCase(heatSource.typeOfHeatPump) : emptyValueRendering,
+				"Type of heat pump": "typeOfHeatPump" in heatSource && heatSource.typeOfHeatPump ? displayCamelToSentenceCase(heatSource.typeOfHeatPump) : emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference: emptyValueRendering,
-			}
-			return summary
+			};
+			return summary;
 		}) || [],
 	editUrl: spaceHeatingUrl,
 };
@@ -61,15 +61,15 @@ const heatNetworkSummary: SummarySection = {
 	id: "heatNetworkSummary",
 	label: "Heat networks",
 	data:
-		heatNetworks.map(({data: heatSource}) => {
+		heatNetworks.map(({ data: heatSource }) => {
 
 			const summary = {
 				// Name: show(heatSource.name),
 				// "Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
 				// "Type of heat network": "typeOfHeatNetwork" in heatSource && displayCamelToSentenceCase(heatSource.typeOfHeatNetwork),
 				// "Product reference": "productReference" in heatSource && heatSource.productReference,
-			}
-			return summary
+			};
+			return summary;
 		}) || [],
 	editUrl: spaceHeatingUrl,
 };
@@ -78,7 +78,7 @@ const heatBatterySummary: SummarySection = {
 	id: "heatBatterySummary",
 	label: "Heat batteries",
 	data:
-		heatBatteries.map(({data: heatSource}) => {
+		heatBatteries.map(({ data: heatSource }) => {
 
 			const summary = {
 				Name: show(heatSource.name),
@@ -87,8 +87,8 @@ const heatBatterySummary: SummarySection = {
 				"Product reference": "productReference" in heatSource ? heatSource.productReference: emptyValueRendering,
 				"Number of units": "numberOfUnits" in heatSource ? heatSource.numberOfUnits: emptyValueRendering,
 				"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply]: emptyValueRendering,
-			}
-			return summary
+			};
+			return summary;
 		}) || [],
 	editUrl: spaceHeatingUrl,
 };
@@ -97,65 +97,65 @@ const solarThermalSystemSummary: SummarySection = {
 	id: "solarThermalSystemSummary",
 	label: "Solar thermal system",
 	data:
-		solarThermalSystem.map(({data: heatSource}) => {
+		solarThermalSystem.map(({ data: heatSource }) => {
 
 			const summary = {
-			Name: show(heatSource.name),
-			"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
+				Name: show(heatSource.name),
+				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
 
-			"Location of collector loop piping":
+				"Location of collector loop piping":
 				"locationOfCollectorLoopPiping" in heatSource
 					&& heatSource.locationOfCollectorLoopPiping ? displayCamelToSentenceCase(heatSource.locationOfCollectorLoopPiping)
 					: emptyValueRendering,
 
-			"Collector module area": 
+				"Collector module area": 
 				"collectorModuleArea" in heatSource ? heatSource.collectorModuleArea : emptyValueRendering,
 
-			"Number of collector modules": 
+				"Number of collector modules": 
 				"numberOfCollectorModules" in heatSource ? heatSource.numberOfCollectorModules : emptyValueRendering,
 
-			"Peak collector efficiency": 
+				"Peak collector efficiency": 
 				"peakCollectorEfficiency" in heatSource ? heatSource.peakCollectorEfficiency : emptyValueRendering,
 
-			"Incidence angle modifier": 
+				"Incidence angle modifier": 
 				"incidenceAngleModifier" in heatSource ? heatSource.incidenceAngleModifier : emptyValueRendering,
 
-			"First order heat loss coefficient": 
+				"First order heat loss coefficient": 
 				"firstOrderHeatLossCoefficient" in heatSource ? heatSource.firstOrderHeatLossCoefficient : emptyValueRendering,
 
-			"Second order heat loss coefficient": 
+				"Second order heat loss coefficient": 
 				"secondOrderHeatLossCoefficient" in heatSource ? heatSource.secondOrderHeatLossCoefficient : emptyValueRendering,
 
-			"Heat loss coefficient of solar loop piping": 
+				"Heat loss coefficient of solar loop piping": 
 				"heatLossCoefficientOfSolarLoopPipe" in heatSource
 					? heatSource.heatLossCoefficientOfSolarLoopPipe
 					: emptyValueRendering,
 
-			"Collector mass flow rate": 
+				"Collector mass flow rate": 
 				"collectorMassFlowRate" in heatSource ? heatSource.collectorMassFlowRate : emptyValueRendering,
 
-			"Power of collector pump": 
+				"Power of collector pump": 
 				"powerOfCollectorPump" in heatSource ? heatSource.powerOfCollectorPump : emptyValueRendering,
 
-			"Power of collector pump controller": 
+				"Power of collector pump controller": 
 				"powerOfCollectorPumpController" in heatSource
 					? heatSource.powerOfCollectorPumpController
 					: emptyValueRendering,
 
-			"Pitch": 
+				"Pitch": 
 				"pitch" in heatSource ? dim(heatSource.pitch, "degrees"): emptyValueRendering,
 
-			"Orientation": 
+				"Orientation": 
 				"orientation" in heatSource ? dim(heatSource.orientation, "degrees"): emptyValueRendering,
-}
+			};
 
-			return summary
+			return summary;
 		}) || [],
 	editUrl: spaceHeatingUrl,
 };
 
 function getNonEmptySections(summarySections: SummarySection[]){
-	return summarySections.filter(x => Array.isArray(x.data) && x.data.length > 0)
+	return summarySections.filter(x => Array.isArray(x.data) && x.data.length > 0);
 }
 
 const heatSourceSections: SummarySection[] = [
@@ -163,9 +163,9 @@ const heatSourceSections: SummarySection[] = [
 	heatPumpSummary,
 	heatNetworkSummary,
 	heatBatterySummary,
-	solarThermalSystemSummary
+	solarThermalSystemSummary,
 ];
-const sections = getNonEmptySections(heatSourceSections)
+const sections = getNonEmptySections(heatSourceSections);
 
 const heatingControlsUrl = "/space-heating-new/heating-controls";
 const heatingControls = store.spaceHeatingNew.heatingControls.data;
@@ -189,7 +189,7 @@ const heatingControlsSummary: SummarySection = {
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovTabs v-slot="tabProps" :items="sections">
 		<template v-if="sections.length === 0">
-		<SummaryTab :summary="heatSourcesSummary" :selected="tabProps.currentTab === 0">
+			<SummaryTab :summary="heatSourcesSummary" :selected="tabProps.currentTab === 0">
 				<template #empty>
 					<h2 class="govuk-heading-m">No heat sources added</h2>
 					<NuxtLink class="govuk-link" :to="getUrl('heatSourceCreate')"> 
@@ -198,7 +198,6 @@ const heatingControlsSummary: SummarySection = {
 				</template>
 			</SummaryTab>
 		</template>
-		<template v-else>
 		<template v-for="section, i of sections">
 			<SummaryTab :summary="section" :selected="tabProps.currentTab === i">
 				<template #empty>
@@ -208,7 +207,6 @@ const heatingControlsSummary: SummarySection = {
 					</NuxtLink>
 				</template>
 			</SummaryTab>
-		</template>
 		</template>
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems([heatingControlsSummary])">

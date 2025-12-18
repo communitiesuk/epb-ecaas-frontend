@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { AdjacentSpaceType, HeatSourceData } from "#imports";
+import type { HeatSourceData } from "#imports";
 import { isInteger, uniqueName } from "#imports";
-const route = useRoute();
+
 const store = useEcaasStore();
 const { getStoreIndex } = useForm();
 

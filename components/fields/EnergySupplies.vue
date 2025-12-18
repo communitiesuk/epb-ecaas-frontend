@@ -20,7 +20,7 @@ const energySupplies = fuelType !== undefined ?
 	[...new Set([...fuelType, "elecOnly" as keyof typeof energySupplyOptions])].map( x => {
 
 		if(x === "elecOnly"){
-			return ["electricity", energySupplyOptions[x]] as [string, string]
+			return ["electricity", energySupplyOptions[x]] as [string, string];
 		}
 		return [x, energySupplyOptions[x]] as [string, string];
 	

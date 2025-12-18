@@ -190,7 +190,7 @@ export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined
 	if (fuelTypes === undefined) return emptyValueRendering;
 	const result = fuelTypes.map(type => energySupplyOptions[type]).join(", ");
 	if(!result.includes("Electricity")) {
-		return result + ", Electricity"
+		return result + ", Electricity";
 	}
 	return result;
 }

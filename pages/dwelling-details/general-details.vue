@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SchemaBuildType, SchemaFuelType, SchemaFuelTypeExtended } from "~/schema/aliases";
+import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
 import { isInteger } from "~/utils/validation";
 import { getUrl, type GeneralDetailsData } from "#imports";
 
