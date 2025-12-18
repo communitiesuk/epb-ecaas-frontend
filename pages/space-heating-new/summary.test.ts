@@ -1,6 +1,7 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen, within } from "@testing-library/vue";
 import SpaceHeatingSummary from "./summary.vue";
+import { degrees } from "~/utils/units/angle";
 
 type expectedData = { [key: string]: string };
 const verifyDataInSection = async (
@@ -22,43 +23,39 @@ describe("Space heating summary page", () => {
 		expect(screen.getByRole("heading", { name: "Space heating NEW summary" }));
 	});
 
-	describe.skip("Heat sources section", () => {
+	describe("Heat sources section", () => {
 
-	
-	const heatSource1: HeatSourceData = {
-		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
-		name: "Heat source 1",
-		typeOfHeatSource: HeatSourceType.boiler,
-		typeOfBoiler: "combiBoiler",
-		productReference: "BOILER_SMALL",
-		locationOfBoiler: AdjacentSpaceType.heatedSpace,
-	};
-
-		it("displays the heat sources tab", async () => {
-			await renderSuspended(SpaceHeatingSummary);
-			expect(screen.getByRole("link", { name: "Heat sources" })).not.toBeNull();
-		});
-
-		it("displays an empty tab state when no data is present", async () => {
-			await renderSuspended(SpaceHeatingSummary);
-
+    
+    it("displays an empty tab state when no data is present", async () => {
+      await renderSuspended(SpaceHeatingSummary);
+      
 			expect(screen.getByText("No heat sources added")).not.toBeNull();
-
+      
 			const addHeatSourceLink: HTMLAnchorElement = screen.getByRole("link", {
-				name: "Add heat source",
+        name: "Add heat source",
 			});
-
+      
 			expect(new URL(addHeatSourceLink.href).pathname).toBe(
-				getUrl("heatSourceCreate"),
+        getUrl("heatSourceCreate"),
 			);
 		});
+    
+		it("displays the correct data for the boiler summary", async () => {
 
-		it("displays the correct data for the heat sources summary", async () => {
-			const store = useEcaasStore();
+      const boiler1: HeatSourceData = {
+        id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+        name: "Boiler 1",
+        typeOfHeatSource: HeatSourceType.boiler,
+        typeOfBoiler: "combiBoiler",
+        productReference: "BOILER_SMALL",
+        locationOfBoiler: AdjacentSpaceType.heatedSpace,
+      };
+
+      const store = useEcaasStore();
 		  store.$patch({
 				spaceHeatingNew: {
 					heatSource: {
-						data: [{ data: heatSource1 }],
+						data: [{ data: boiler1 }],
 					},
 				},
 			});
@@ -66,20 +63,148 @@ describe("Space heating summary page", () => {
 			await renderSuspended(SpaceHeatingSummary);
 
 			const expectedResult = {
-				Name: "Heat source 1",
-				"Type of heat source": HeatSourceType.boiler,
+				Name: "Boiler 1",
+				"Type of heat source": "Boiler",
         "Type of boiler" : "Combi boiler",
         "Product reference": "BOILER_SMALL",
-        "Location of boiler": AdjacentSpaceType.heatedSpace,
+        "Location of boiler": "Heated space",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-pvSystems-${hyphenate(key)}`));
+        const lineResult = (await screen.findByTestId(`summary-boilerSummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+    
+    it("displays the correct data for the heat pump summary", async () => {
+
+    const heatPump1: HeatSourceData = {
+		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+		name: "Heat pump 1",
+		typeOfHeatSource: HeatSourceType.heatPump,
+		typeOfHeatPump: "airSource",
+		productReference: "HEAT_PUMP_SMALL",
+	};
+			const store = useEcaasStore();
+		  store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: heatPump1 }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedResult = {
+				Name: "Heat pump 1",
+				"Type of heat source": "Heat pump",
+        "Type of heat pump" : "Air source",
+        "Product reference": "HEAT_PUMP_SMALL",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+        const lineResult = (await screen.findByTestId(`summary-heatPumpSummary-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 
+    it("displays the correct data for the heat battery summary", async () => {
+
+  		const heatBattery1: HeatSourceData = {
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
+			name: "Heat battery 1",
+			typeOfHeatSource: HeatSourceType.heatBattery,
+			typeOfHeatBattery: "pcm",
+			productReference: "HEAT_BATTERY_SMALL",
+			numberOfUnits: 1,
+			energySupply: "electricity",
+		};
+			const store = useEcaasStore();
+		  store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: heatBattery1 }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedResult = {
+				Name: "Heat battery 1",
+				"Type of heat source": "Heat battery",
+        "Type of heat battery" : "Pcm",
+        "Product reference": "HEAT_BATTERY_SMALL",
+        "Number of units": "1",
+        "Energy supply": "Electricity"
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+        const lineResult = (await screen.findByTestId(`summary-heatBatterySummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+        
+    it("displays the correct data for the solar thermal system summary", async () => {
+      
+	const solarThermalSystem1: HeatSourceData = {
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
+			name: "Solar thermal system",
+			typeOfHeatSource: HeatSourceType.solarThermalSystem,
+			locationOfCollectorLoopPiping: "outside",
+			collectorModuleArea: 1,
+			numberOfCollectorModules: 2,
+			peakCollectorEfficiency: 0,
+			incidenceAngleModifier: 1,
+			firstOrderHeatLossCoefficient: 1,
+			secondOrderHeatLossCoefficient: 10,
+			heatLossCoefficientOfSolarLoopPipe: 100,
+			collectorMassFlowRate: 2,
+			powerOfCollectorPump: 30,
+			powerOfCollectorPumpController: 30,
+			pitch: 60,
+			orientation: 60,
+		};
+			const store = useEcaasStore();
+		  store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: solarThermalSystem1 }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedResult = {
+				Name: "Solar thermal system",
+				"Type of heat source": "Solar thermal system",
+        "Location of collector loop piping": "Outside",
+        "Collector module area": "1",
+        "Number of collector modules": "2",
+        "Peak collector efficiency": "0",
+        "Incidence angle modifier": "1",
+        "First order heat loss coefficient": "1",
+        "Second order heat loss coefficient": "10",
+        "Heat loss coefficient of solar loop piping": "100",
+        "Collector mass flow rate": "2",
+        "Power of collector pump": "30",
+        "Power of collector pump controller": "30",
+        "Pitch": `60 ${degrees.suffix}`,
+        "Orientation":`60 ${degrees.suffix}`,
+			};
+ 
+			for (const [key, value] of Object.entries(expectedResult)) {
+        const lineResult = (await screen.findByTestId(`summary-solarThermalSystemSummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+  });
 	// describe("Electric battery section", () => {
 	// 	const battery: EcaasForm<ElectricBatteryData> = {
 	// 		data: {
@@ -232,7 +357,6 @@ describe("Space heating summary page", () => {
 	// 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 	// 		}
 	// 	});
-	});
 
 	describe("Heating control section", () => {
 		const store = useEcaasStore();
