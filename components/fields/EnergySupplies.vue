@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
-import type { SchemaFuelType, SchemaFuelTypeExtended } from "~/schema/aliases";
+import { energySupplyOptions, getUrl } from "#imports";
 
 defineProps<{
 	id: string;
@@ -16,12 +15,6 @@ defineProps<{
 const store = useEcaasStore();
 
 const { fuelType } = store.dwellingDetails.generalSpecifications.data; 
-
-const energySupplyOptions = {
-	"mains_gas": "Mains gas",
-	"lpg_bulk": "LPG (Liquid petroleum gas)",
-	"elecOnly": "Electricity",
-} as const satisfies Record<SchemaFuelTypeExtended, FuelTypeDisplay | "Electricity">;
 
 const energySupplies = fuelType !== undefined ?
 	[...new Set([...fuelType, "elecOnly" as keyof typeof energySupplyOptions])].map( x => {
