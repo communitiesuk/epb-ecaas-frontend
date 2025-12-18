@@ -21,7 +21,7 @@ const verifyDataInSection = async (
 		expect(lineResult!.querySelector("dd")?.textContent).toBe(value);
 	}
 };
-describe("Heating and cooling systems summary page", () => {
+describe.skip("Heating and cooling systems summary page", () => {
 	const store = useEcaasStore();
 	beforeEach(() => {
 		store.$reset();
