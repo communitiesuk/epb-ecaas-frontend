@@ -26,6 +26,12 @@ const energySupplies = fuelType !== undefined ?
 	
 	}).filter(x => typeof x !== "undefined") : [];
 
+function getDefaultEnergySupply(supplies: [string, string][]) {
+	if(supplies.length === 1){
+		return supplies[0]![0];
+	}
+}
+
 </script>
 
 <template>
@@ -37,6 +43,7 @@ const energySupplies = fuelType !== undefined ?
 			:label="label"
 			:help="help"
 			:name="name"
+			:value="getDefaultEnergySupply(energySupplies)"
 			:validation="validation ?? 'required'"
 			:validation-rules="validationRules"
 			:validation-messages="validationMessages"
