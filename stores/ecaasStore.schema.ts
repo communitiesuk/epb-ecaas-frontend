@@ -879,6 +879,45 @@ export enum HeatSourceType {
 	heatBattery = "heatBattery",
 	solarThermalSystem = "solarThermalSystem",
 }
+
+const baseHeatNetwork = namedWithId.extend({
+	typeOfHeatSource: z.literal(HeatSourceType.heatNetwork),
+	typeOfHeatNetwork: heatNetworkType,
+});
+
+const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
+	baseHeatNetwork.extend({
+		isHeatNetworkInPcdb: z.literal(true),
+		heatNetworkProductReference: z.string().trim().min(1),
+		energySupply: fuelTypeWithElecZod,
+		doesHeatNetworkUseHeatInterfaceUnits: z.literal(true),
+		heatInterfaceUnitProductReference: z.string().trim().min(1),
+	}),
+	baseHeatNetwork.extend({
+		isHeatNetworkInPcdb: z.literal(true),
+		heatNetworkProductReference: z.string().trim().min(1),
+		energySupply: fuelTypeWithElecZod,
+		doesHeatNetworkUseHeatInterfaceUnits: z.literal(false),
+	}),
+	baseHeatNetwork.extend({
+		isHeatNetworkInPcdb: z.literal(false),
+		emissionsFactor: z.number(),
+		outOfScopeEmissionsFactor: z.number(),
+		primaryEnergyFactor: z.number(),
+		canEnergyBeExported: z.boolean(),
+		doesHeatNetworkUseHeatInterfaceUnits: z.literal(true),
+		heatInterfaceUnitProductReference: z.string().trim().min(1),
+	}),
+	baseHeatNetwork.extend({
+		isHeatNetworkInPcdb: z.literal(false),
+		emissionsFactor: z.number(),
+		outOfScopeEmissionsFactor: z.number(),
+		primaryEnergyFactor: z.number(),
+		canEnergyBeExported: z.boolean(),
+		doesHeatNetworkUseHeatInterfaceUnits: z.literal(false),
+	}),
+]);
+
 const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	baseHeatSource.extend({
 		typeOfHeatSource: z.literal(HeatSourceType.heatPump),
@@ -900,19 +939,7 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 		productReference: z.string().trim().min(1),
 		locationOfBoiler: z.enum([AdjacentSpaceType.heatedSpace, AdjacentSpaceType.unheatedSpace]),
 	}),
-	baseHeatSource.extend({
-		typeOfHeatSource: z.literal(HeatSourceType.heatNetwork),
-		typeOfHeatNetwork: heatNetworkType,
-		isHeatNetworkInPcdb: z.boolean(),
-		doesHeatNetworkUseHeatInterfaceUnits: z.boolean(),
-		heatInterfaceUnitProductReference: z.string().trim().min(1),
-		heatNetworkProductReference: z.string().trim().min(1),
-		energySupply: fuelTypeWithElecZod,
-		emissionsFactor: z.number(),
-		outOfScopeEmissionsFactor: z.number(),
-		primaryEnergyFactor: z.number(),
-		canEnergyBeExported: z.boolean(),
-	}),
+	heatNetworkZodData,
 	baseHeatSource.extend({
 		typeOfHeatSource: z.literal(HeatSourceType.heatBattery),
 		typeOfHeatBattery: heatBatteryType,
