@@ -6,6 +6,7 @@ import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
 import SpaceHeatingNew from "./index.vue";
 import formStatus from "~/constants/formStatus";
+// import HeatSourceForm from "./heat-source/[heatSource]/index.vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -87,7 +88,7 @@ describe("space heating", () => {
 			expect(within(populatedList).queryByText("Heat source 2")).toBeNull();
 		});
 
-		// Refactor when all heat sources are correctly added to the new space heating section
+		// TODO
 		// it("when a heat pump is removed its also removed from store object which references it", async () => {
 
 		// 			const cylinder: HotWaterCylinderData = {
@@ -189,55 +190,9 @@ describe("space heating", () => {
 
 			expect(screen.getByTestId("heatSource_status_0").textContent).toBe(formStatus.complete.text);
 		});
-
-		it("marks section as not complete if a heat source is removed after marking complete", async () => {
-			await renderSuspended(SpaceHeatingNew);
-
-			store.$patch({
-				spaceHeatingNew: {
-					heatSource: {
-						data: [
-							{ ...heatSource1, complete: false },
-						],
-					},
-				},
-			});
-
-			await user.click(await screen.findByTestId("markAsCompleteButton"));
-			await user.click(await screen.findByTestId("heatSource_remove_0"));
-
-			expect(store.spaceHeatingNew.heatSource?.complete).toBe(false);
-			expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
-		});
-
-		// To-do
-		// it("marks heat sources section as not complete after saving an existing heat source", async () => {
-		// 	store.$patch({
-		// 		spaceHeatingNew: {
-		// 			heatSource: {
-		// 				data: [{ ...heatSource1, complete: true }],
-		// 			},
-		// 		},
-		// 	});
-
-		// 	await renderSuspended(SpaceHeatingNew);
-		// 	await user.click(await screen.findByTestId("markAsCompleteButton"));
-		// 	expect(store.spaceHeatingNew.heatSource?.complete).toBe(true);
-
-		// 	await renderSuspended(HeatSourceForm, {
-		// 		route: {
-		// 			params: { "heatSource": "1" },
-		// 		},
-		// 	});
-		// 	await user.click(await screen.findByTestId("saveAndComplete"));
-		// 	expect(store.spaceHeatingNew.heatSource?.complete).toBe(false);
-
-		// 	await renderSuspended(SpaceHeatingNew);
-		// 	expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-		// });
 	});
 
-	describe("marks section as complete", () => {
+	describe("mark space heating as complete", () => {
 		beforeEach(async () => {
 			await renderSuspended(SpaceHeatingNew);
 		});
@@ -285,5 +240,55 @@ describe("space heating", () => {
 			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
 			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 		});
+	});
+
+	describe("mark space heating as not complete", async () => {
+		it("marks section as not complete if a heat source is removed after marking complete", async () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [
+							{ ...heatSource1, complete: false },
+						],
+					},
+				},
+			});
+			
+			await renderSuspended(SpaceHeatingNew);
+			await user.click(await screen.findByTestId("markAsCompleteButton"));
+			
+			expect(store.spaceHeatingNew.heatSource?.complete).toBe(true);
+
+			await user.click(await screen.findByTestId("heatSource_remove_0"));
+
+			expect(store.spaceHeatingNew.heatSource?.complete).toBe(false);
+			expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
+		});
+		
+		// TODO
+		// it("marks heat sources section as not complete after saving an existing heat source", async () => {
+		// 	store.$patch({
+		// 		spaceHeatingNew: {
+		// 			heatSource: {
+		// 				data: [{ ...heatSource1, complete: true }],
+		// 			},
+		// 		},
+		// 	});
+
+		// 	await renderSuspended(SpaceHeatingNew);
+		// 	await user.click(await screen.findByTestId("markAsCompleteButton"));
+		// 	expect(store.spaceHeatingNew.heatSource?.complete).toBe(true);
+
+		// 	await renderSuspended(HeatSourceForm, {
+		// 		route: {
+		// 			params: { "heatSource": "0" },
+		// 		},
+		// 	});
+		// 	await user.click(await screen.findByTestId("saveAndComplete"));
+		// 	expect(store.spaceHeatingNew.heatSource?.complete).toBe(false);
+
+		// 	await renderSuspended(SpaceHeatingNew);
+		// 	expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		// });
 	});
 });
