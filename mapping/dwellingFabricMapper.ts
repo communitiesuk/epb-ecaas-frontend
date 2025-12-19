@@ -65,11 +65,11 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zon
 	const { dwellingSpaceLighting: { numberOfBulbs, power, efficacy } } = state.dwellingFabric;
 
 	const lightingData: SchemaLighting = {
-		bulbs: {
+		bulbs: [{
 			count: numberOfBulbs,
 			power,
 			efficacy,
-		},
+		}],
 	};
 
 	return {

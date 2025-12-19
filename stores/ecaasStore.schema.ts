@@ -903,7 +903,6 @@ const electricBatteryDataZod = z.object({
 	capacity: z.number().min(0).max(50),
 	chargeEfficiency: fraction,
 	location: batteryLocationZod,
-	gridChargingPossible: z.boolean(),
 	maximumChargeRate: z.number(),
 	minimumChargeRate: z.number(),
 	maximumDischargeRate: z.number(),

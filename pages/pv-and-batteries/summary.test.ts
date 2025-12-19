@@ -91,7 +91,6 @@ describe("PV and electric batteries summary page", () => {
 				capacity: 10,
 				chargeEfficiency: 0.7,
 				location: "inside",
-				gridChargingPossible: false,
 				maximumChargeRate: 6.2,
 				minimumChargeRate: 4.5,
 				maximumDischargeRate: 2.3,

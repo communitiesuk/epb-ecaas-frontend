@@ -75,8 +75,8 @@ export function mapEnergySupplyFuelTypeData(
 						fuelType,
 						{
 							fuel: fuelType,
-							...(fuelType === "lpg_bulk" && {
-								factor: { is_export_capable: false },
+							...(["LPG_bulk", "LPG_bottled"].includes(fuelType) && {
+								is_export_capable: false,
 							}),
 						},
 					])

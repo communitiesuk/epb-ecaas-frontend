@@ -1,4 +1,4 @@
-import type { SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower, SchemaWaterPipework } from "~/schema/aliases";
+import type { SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower, SchemaWaterPipework, SchemaColdWaterSourceType } from "~/schema/aliases";
 import type { SchemaStorageTank } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
@@ -102,11 +102,11 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 			storageCylinderVolumeInLitres = asLitres(x.storageCylinderVolume);
 		}
 
-		const val: SchemaStorageTank = {
+		const val: SchemaStorageTank & { ColdWaterSource: SchemaColdWaterSourceType } = {
 			daily_losses: x.dailyEnergyLoss,
 			type: "StorageTank",
 			volume: storageCylinderVolumeInLitres,
-			ColdWaterSource: "mains water", // a cold water source is de facto required here
+			ColdWaterSource: "mains water" as SchemaColdWaterSourceType, // a cold water source is de facto required here
 			HeatSource: {
 				// Adding these values as default until heat pump is set up to come from PCDB
 				[heatPumpName]: {

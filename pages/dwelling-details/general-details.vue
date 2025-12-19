@@ -9,7 +9,8 @@ const store = useEcaasStore();
 const { autoSaveForm } = useForm();
 const fuelTypeOptions = {
 	"mains_gas": "Mains gas",
-	"lpg_bulk": "LPG (Liquid petroleum gas)",
+	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
+	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled"
 } as const satisfies Record<SchemaFuelType, FuelTypeDisplay>;
 
 
@@ -61,7 +62,7 @@ const areSelectedOptionsValid = (node: FormKitNode) => {
 	if (parent && parent.value) {
 		const formValue = parent.value as GeneralDetailsData;
 		const { fuelType } = formValue;
-		if(fuelType.includes("elecOnly") && (fuelType.includes("mains_gas") || fuelType.includes("lpg_bulk")) ){
+		if(fuelType.includes("elecOnly") && (fuelType.includes("mains_gas") || fuelType.includes("LPG_bulk") || fuelType.includes("LPG_bottled")) ){
 			return false;
 		}
 	}

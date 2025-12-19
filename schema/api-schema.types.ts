@@ -187,11 +187,8 @@ export interface components {
             maximum_discharge_rate_one_way_trip: number;
             /** @enum {unknown} */
             battery_location: "inside" | "outside";
-            grid_charging_possible: boolean;
         };
         HotWaterTankHeatSourceCommon: {
-            /** @enum {unknown} */
-            type: "ImmersionHeater" | "SolarThermalSystem" | "HeatSourceWet" | "HeatPump_HWOnly" | "Boiler";
             name?: string;
             heater_position: number;
             thermostat_position: number;
@@ -208,7 +205,7 @@ export interface components {
             /** @constant */
             type: "SolarThermalSystem";
             /** @enum {unknown} */
-            solar_loc: "OUT" | "NHS" | "HS";
+            sol_loc: "OUT" | "NHS" | "HS";
             area_module: number;
             modules: number;
             peak_collector_efficiency: number;
@@ -220,7 +217,7 @@ export interface components {
             power_pump_control: number;
             EnergySupply: string;
             tilt: number;
-            orientation: number;
+            orientation360: number;
             solar_loop_piping_hlc: number;
         };
         /** @description A possible heat source for a hot water tank */
@@ -283,6 +280,81 @@ export interface components {
             /** @enum {unknown} */
             type: "HeatPump" | "Boiler" | "HIU" | "HeatBattery";
             EnergySupply: string;
+        };
+        /** ScheduleRepeaterEntryForDouble */
+        ScheduleRepeaterEntryForDouble: number | null;
+        /** ScheduleRepeaterValueForDouble */
+        ScheduleRepeaterValueForDouble: string | components["schemas"]["ScheduleRepeaterEntryForDouble"];
+        /**
+         * ScheduleRepeaterForDouble
+         * @description Defines a repeating pattern for double (float) schedule values.
+         *
+         *     Examples:
+         *         # Repeat temperature setpoint 21.5°C 24 times (once per hour)
+         *         {"repeat": 24, "value": 21.5}
+         *
+         *         # Reference another schedule, repeat 7 times (once per day)
+         *         {"repeat": 7, "value": "weekday_temp_schedule"}
+         *
+         *         # Repeat power level 2.5 kW for 8 hours
+         *         {"repeat": 8, "value": 2.5}
+         */
+        ScheduleRepeaterForDouble: {
+            /**
+             * Repeat
+             * @description Number of times to repeat the value
+             */
+            repeat: number;
+            /** @description Value to repeat or schedule reference */
+            value: components["schemas"]["ScheduleRepeaterValueForDouble"];
+        };
+        /**
+         * ScheduleEntryForDouble
+         * @description A schedule entry that can be a direct value, repeating pattern, or reference.
+         *
+         *     Examples:
+         *         # Direct float value (temperature setpoint)
+         *         21.5
+         *
+         *         # Repeating pattern (21.5°C for 8 hours, 18°C for 16 hours)
+         *         {"repeat": 24, "value": 21.5}
+         *
+         *         # Reference to another schedule
+         *         "weekday_temp_schedule"
+         *
+         *         # Complex repeating pattern with reference
+         *         {"repeat": 7, "value": "daily_temp_pattern"}
+         *
+         *         # Power level schedule
+         *         2.5  # 2.5 kW constant power
+         */
+        ScheduleEntryForDouble: number | components["schemas"]["ScheduleRepeaterForDouble"] | string | null;
+        /**
+         * ScheduleForDouble
+         * @description A dictionary of schedule entries where:
+         *     - Keys are user-defined names (e.g., "main", "week", "weekday", "weekend")
+         *     - Values are lists of ScheduleEntryForDouble
+         *     - The "main" entry is required
+         */
+        ScheduleForDouble: {
+            [key: string]: components["schemas"]["ScheduleEntryForDouble"][];
+        };
+        /** BoilerCostScheduleHybrid */
+        BoilerCostScheduleHybrid: {
+            /** @description Cost data for the fuel used by the hybrid's boiler (can be any units, typically p/kWh) */
+            cost_schedule_boiler: components["schemas"]["ScheduleForDouble"];
+            /** @description Cost data for the fuel used by the hybrid's heat pump (can be any units, typically p/kWh) */
+            cost_schedule_hp: components["schemas"]["ScheduleForDouble"];
+            /**
+             * Cost Schedule Start Day
+             * @description Day on which the cost data series begins
+             */
+            cost_schedule_start_day: number;
+            /**
+             * Cost Schedule Time Series Step
+             * @description Time step of the cost data series
+             */
+            cost_schedule_time_series_step: number;
         };
         PCMBattery: {
             /** @constant */
@@ -426,7 +498,6 @@ export interface components {
             areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
             mass_distribution_class: components["schemas"]["MassDistributionClass"];
             area: number;
-            is_party_wall?: boolean;
         };
         SlabNoEdgeInsulation: {
             /** @constant */
@@ -447,7 +518,7 @@ export interface components {
             floor_type: "Suspended_floor";
             height_upper_surface: number;
             thermal_transm_walls: number;
-            area_per_perimeter_vent?: number;
+            area_per_perimeter_vent: number;
             /** @enum {unknown} */
             shield_fact_location: "Sheltered" | "Average" | "Exposed";
             thickness_walls: number;
@@ -469,6 +540,18 @@ export interface components {
             thermal_transm_walls: number;
             height_basement_walls: number;
         };
+        /**
+         * PartyWallLiningType
+         * @description Types of party wall lining
+         * @enum {string}
+         */
+        PartyWallLiningType: "wet_plaster" | "dry_lined";
+        /**
+         * PartyWallCavityType
+         * @description Types of party wall cavity configurations
+         * @enum {string}
+         */
+        PartyWallCavityType: "solid" | "unfilled_unsealed" | "unfilled_sealed" | "filled_sealed" | "filled_unsealed" | "defined_resistance";
         /** @enum {string} */
         ApplianceValue: "Not Installed" | "Default";
         /**
@@ -496,19 +579,11 @@ export interface components {
                 HeatSource: string;
             };
             ElectricBattery?: components["schemas"]["ElectricBattery"];
-            /** @description threshold_charges is required when there is an ElectricBattery with grid_charging_possible */
-            threshold_charges?: number[];
-            /** @description threshold_prices is required when there is an ElectricBattery with grid_charging_possible */
-            threshold_prices?: number[];
-            /** @description tariff is required when there is an ElectricBattery with grid_charging_possible */
-            tariff?: string;
         };
         EnergySupplyOther: {
             /** @enum {unknown} */
-            fuel: "lpg_bulk";
-            factor?: {
-                is_export_capable: boolean;
-            };
+            fuel: "LPG_bulk" | "LPG_bottled";
+            is_export_capable: boolean;
         };
         /** @description A possible hot water source */
         StorageTank: components["schemas"]["HotWaterTankCommon"] & {
@@ -556,13 +631,19 @@ export interface components {
              * @description Rejected energy factor 1 for combi boiler efficiency calculations (unit: kWh)
              * @default null
              */
-            rejected_energy_1?: number | null;
+            rejected_energy_1: number | null;
             /**
              * Rejected Factor 3
              * @description Rejected energy factor 3 for combi boiler efficiency calculations (dimensionless)
              * @default null
              */
             rejected_factor_3?: number | null;
+            /**
+             * Storage Loss Factor 1
+             * @description Storage loss factor 1 for combi boiler efficiency calculations (unit: kWh/day)
+             * @default null
+             */
+            storage_loss_factor_1?: number | null;
             /**
              * Storage Loss Factor 2
              * @description Storage loss factor 2 for combi boiler efficiency calculations (dimensionless)
@@ -575,7 +656,7 @@ export interface components {
              */
             daily_HW_usage: number;
             /** @enum {unknown} */
-            ColdWaterSource: "header tank" | "mains water";
+            ColdWaterSource?: "header tank" | "mains water";
             /**
              * Setpoint Temp
              * @description Temperature setpoint for the combi boiler hot water output (unit: ˚C)
@@ -611,9 +692,9 @@ export interface components {
             /** @constant */
             type: "HeatPump";
             /** @enum {unknown} */
-            source_type: "Ground" | "OutsideAir" | "ExhaustAirMEV" | "ExhaustAirMVHR" | "ExhaustAirMixed" | "WaterGround" | "WaterSurface";
+            source_type: "Ground" | "OutsideAir" | "ExhaustAirMEV" | "ExhaustAirMVHR" | "ExhaustAirMixed" | "WaterGround" | "WaterSurface" | "HeatNetwork";
             /** @enum {unknown} */
-            sink_type: "Air" | "Water";
+            sink_type: "Air" | "Water" | "Glycol25";
             /** @enum {unknown} */
             backup_ctrl_type: "None" | "TopUp" | "Substitute";
             modulating_control: boolean;
@@ -628,16 +709,100 @@ export interface components {
             power_standby: number;
             power_crankcase_heater: number;
             power_off: number;
-            power_max_backup: number;
+            /**
+             * Power Max Backup
+             * @default null
+             */
+            power_max_backup: number | null;
             BufferTank?: {
                 daily_losses: number;
                 pump_fixed_flow_rate: number;
                 pump_power_at_flow_rate: number;
                 volume: number;
             };
+            /**
+             * HeatPumpBoiler
+             * @description Boiler used as backup for heat pump systems
+             */
+            boiler?: {
+                /**
+                 * Energysupply
+                 * @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply
+                 */
+                EnergySupply: string;
+                /**
+                 * Energysupply Aux
+                 * @description References a key in $.EnergySupply for auxiliary electrical power
+                 */
+                EnergySupply_aux: string;
+                /**
+                 * HeatSourceLocation
+                 * @description Location of the boiler (internal or external to the building)
+                 * @enum {string}
+                 */
+                boiler_location: "internal" | "external";
+                /**
+                 * Efficiency Full Load
+                 * @description Boiler net efficiency at full load (dimensionless, 0-1)
+                 */
+                efficiency_full_load: number;
+                /**
+                 * Efficiency Part Load
+                 * @description Boiler net efficiency at part load (dimensionless, 0-1.12). Net efficiencies may exceed 1 in test data.
+                 */
+                efficiency_part_load: number;
+                /**
+                 * Electricity Circ Pump
+                 * @description Electrical power consumption of circulation pump (unit: kW)
+                 */
+                electricity_circ_pump: number;
+                /**
+                 * Electricity Full Load
+                 * @description Electrical power consumption at full load (unit: kW)
+                 */
+                electricity_full_load: number;
+                /**
+                 * Electricity Part Load
+                 * @description Electrical power consumption at part load (unit: kW)
+                 */
+                electricity_part_load: number;
+                /**
+                 * Electricity Standby
+                 * @description Electrical power consumption in standby mode (unit: kW)
+                 */
+                electricity_standby: number;
+                /**
+                 * Modulation Load
+                 * @description Modulation load ratio (dimensionless, 0-1)
+                 */
+                modulation_load: number;
+                /**
+                 * Rated Power
+                 * @description Rated power output of the boiler (unit: kW)
+                 */
+                rated_power: number;
+                /** @default null */
+                cost_schedule_hybrid?: components["schemas"]["BoilerCostScheduleHybrid"] | null;
+            };
             time_delay_backup: number;
             power_heating_warm_air_fan?: number;
             time_constant_onoff_operation: number;
+            /** @description required if HeatNetwork source type, should not be provided otherwise */
+            temp_distribution_heat_network?: number;
+            /** @description required if HeatNetwork source type, should not be provided otherwise */
+            EnergySupply_heat_network?: string | {
+                name: string;
+                is_export_capable: boolean;
+                factor: {
+                    "Emissions Factor kgCO2e/kWh": number;
+                    "Emissions Factor kgCO2e/kWh including out-of-scope emissions": number;
+                    "Primary Energy Factor kWh/kWh delivered": number;
+                };
+            };
+            /** @description required if ExhaustAirMixed source type, should not be provided otherwise */
+            eahp_mixed_max_temp?: number;
+            /** @description required if ExhaustAirMixed source type, should not be provided otherwise */
+            eahp_mixed_min_temp?: number;
             test_data_EN14825: {
                 /** @enum {unknown} */
                 test_letter: "A" | "B" | "C" | "D" | "F";
@@ -647,6 +812,10 @@ export interface components {
                 temp_outlet: number;
                 temp_source: number;
                 temp_test: number;
+                /** @description provided if source type is ExhaustAirMixed, otherwise not provided */
+                air_flow_rate?: number;
+                /** @description provided if source type is ExhaustAirMixed, otherwise not provided */
+                eahp_mixed_ext_air_ratio?: number;
             }[];
         });
         /** @description A possible wet heat source */
@@ -700,8 +869,8 @@ export interface components {
             n_units: number;
             EnergySupply: string;
             Zone: string;
-            ESH_min_output: number[][];
-            ESH_max_output: number[][];
+            dry_core_min_output: number[][];
+            dry_core_max_output: number[][];
             /**
              * State Of Charge Init
              * @description State of charge at initialisation of dry core heat storage (ratio)
@@ -731,7 +900,7 @@ export interface components {
                 frac_convective: number;
             } & (components["schemas"]["Radiator"] | components["schemas"]["Ufh"] | components["schemas"]["Fancoil"]))[];
             temp_diff_emit_dsgn: number;
-            bypass_percentage_recirculated?: number;
+            bypass_fraction_recirculated?: number;
             HeatSource: {
                 name: string;
                 temp_flow_limit_upper?: number;
@@ -851,13 +1020,13 @@ export interface components {
             /** @enum {unknown} */
             areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
             mass_distribution_class: components["schemas"]["MassDistributionClass"];
+            /** @description Degrees from north. Recommend choosing 180 in cases of flat elements i.e. where pitch = 0 or 180. NB. must be provided if pitch not 0 or 180, otherwise must not be provided */
             orientation360?: number;
             base_height: number;
             height: number;
             width: number;
             area: number;
-            is_party_wall?: boolean;
-        } & (unknown & unknown);
+        } & (unknown & unknown & unknown);
         BuildingElementTransparent: {
             /** @constant */
             type: "BuildingElementTransparent";
@@ -1010,7 +1179,7 @@ export interface components {
             HotWaterSource: {
                 "hw cylinder"?: {
                     /** @enum {unknown} */
-                    ColdWaterSource?: "header tank" | "mains water";
+                    ColdWaterSource: "header tank" | "mains water";
                 } & (components["schemas"]["StorageTank"] | components["schemas"]["SmartHotWaterTank"] | components["schemas"]["PointOfUse"] | components["schemas"]["CombiBoiler"] | components["schemas"]["HeatBattery"]);
             };
             HeatSourceWet?: {
@@ -1023,11 +1192,12 @@ export interface components {
                      */
                     heat_network_type: "sleeved DHN" | "unsleeved DHN" | "communal";
                     EnergySupply?: string | {
+                        name?: string;
+                        is_export_capable?: boolean;
                         factor?: {
                             "Emissions Factor kgCO2e/kWh": number;
                             "Emissions Factor kgCO2e/kWh including out-of-scope emissions": number;
                             "Primary Energy Factor kWh/kWh delivered": number;
-                            is_export_capable: boolean;
                         };
                     };
                 } | {
@@ -1048,7 +1218,7 @@ export interface components {
                         HotWaterSource?: string;
                     };
                 };
-                Other?: {
+                Other: {
                     [key: string]: {
                         flowrate: number;
                         /** @enum {unknown} */
@@ -1152,7 +1322,7 @@ export interface components {
                             count: number;
                             power: number;
                             efficacy: number;
-                        };
+                        }[];
                     };
                     BuildingElement: {
                         [key: string]: ({
@@ -1201,12 +1371,6 @@ export interface components {
                         HeatSource: string;
                     };
                     ElectricBattery?: components["schemas"]["ElectricBattery"];
-                    /** @description threshold_charges is required when there is an ElectricBattery with grid_charging_possible */
-                    threshold_charges?: number[];
-                    /** @description threshold_prices is required when there is an ElectricBattery with grid_charging_possible */
-                    threshold_prices?: number[];
-                    /** @description tariff is required when there is an ElectricBattery with grid_charging_possible */
-                    tariff?: string;
                 };
                 ElectricBattery: {
                     capacity: number;
@@ -1216,7 +1380,6 @@ export interface components {
                     maximum_discharge_rate_one_way_trip: number;
                     /** @enum {unknown} */
                     battery_location: "inside" | "outside";
-                    grid_charging_possible: boolean;
                 };
                 EnergySupplyElectricityCommon: {
                     /** @constant */
@@ -1232,10 +1395,8 @@ export interface components {
                 };
                 EnergySupplyOther: {
                     /** @enum {unknown} */
-                    fuel: "lpg_bulk";
-                    factor?: {
-                        is_export_capable: boolean;
-                    };
+                    fuel: "LPG_bulk" | "LPG_bottled";
+                    is_export_capable: boolean;
                 };
                 HotWaterTankCommon: {
                     volume: number;
@@ -1260,8 +1421,6 @@ export interface components {
                     heat_exchanger_surface_area?: number;
                 };
                 HotWaterTankHeatSourceCommon: {
-                    /** @enum {unknown} */
-                    type: "ImmersionHeater" | "SolarThermalSystem" | "HeatSourceWet" | "HeatPump_HWOnly" | "Boiler";
                     name?: string;
                     heater_position: number;
                     thermostat_position: number;
@@ -1278,7 +1437,7 @@ export interface components {
                     /** @constant */
                     type: "SolarThermalSystem";
                     /** @enum {unknown} */
-                    solar_loc: "OUT" | "NHS" | "HS";
+                    sol_loc: "OUT" | "NHS" | "HS";
                     area_module: number;
                     modules: number;
                     peak_collector_efficiency: number;
@@ -1290,7 +1449,7 @@ export interface components {
                     power_pump_control: number;
                     EnergySupply: string;
                     tilt: number;
-                    orientation: number;
+                    orientation360: number;
                     solar_loop_piping_hlc: number;
                 };
                 /** @description A possible heat source for a hot water tank */
@@ -1373,13 +1532,19 @@ export interface components {
                      * @description Rejected energy factor 1 for combi boiler efficiency calculations (unit: kWh)
                      * @default null
                      */
-                    rejected_energy_1?: number | null;
+                    rejected_energy_1: number | null;
                     /**
                      * Rejected Factor 3
                      * @description Rejected energy factor 3 for combi boiler efficiency calculations (dimensionless)
                      * @default null
                      */
                     rejected_factor_3?: number | null;
+                    /**
+                     * Storage Loss Factor 1
+                     * @description Storage loss factor 1 for combi boiler efficiency calculations (unit: kWh/day)
+                     * @default null
+                     */
+                    storage_loss_factor_1?: number | null;
                     /**
                      * Storage Loss Factor 2
                      * @description Storage loss factor 2 for combi boiler efficiency calculations (dimensionless)
@@ -1392,7 +1557,7 @@ export interface components {
                      */
                     daily_HW_usage: number;
                     /** @enum {unknown} */
-                    ColdWaterSource: "header tank" | "mains water";
+                    ColdWaterSource?: "header tank" | "mains water";
                     /**
                      * Setpoint Temp
                      * @description Temperature setpoint for the combi boiler hot water output (unit: ˚C)
@@ -1433,9 +1598,9 @@ export interface components {
                     /** @constant */
                     type: "HeatPump";
                     /** @enum {unknown} */
-                    source_type: "Ground" | "OutsideAir" | "ExhaustAirMEV" | "ExhaustAirMVHR" | "ExhaustAirMixed" | "WaterGround" | "WaterSurface";
+                    source_type: "Ground" | "OutsideAir" | "ExhaustAirMEV" | "ExhaustAirMVHR" | "ExhaustAirMixed" | "WaterGround" | "WaterSurface" | "HeatNetwork";
                     /** @enum {unknown} */
-                    sink_type: "Air" | "Water";
+                    sink_type: "Air" | "Water" | "Glycol25";
                     /** @enum {unknown} */
                     backup_ctrl_type: "None" | "TopUp" | "Substitute";
                     modulating_control: boolean;
@@ -1450,16 +1615,100 @@ export interface components {
                     power_standby: number;
                     power_crankcase_heater: number;
                     power_off: number;
-                    power_max_backup: number;
+                    /**
+                     * Power Max Backup
+                     * @default null
+                     */
+                    power_max_backup: number | null;
                     BufferTank?: {
                         daily_losses: number;
                         pump_fixed_flow_rate: number;
                         pump_power_at_flow_rate: number;
                         volume: number;
                     };
+                    /**
+                     * HeatPumpBoiler
+                     * @description Boiler used as backup for heat pump systems
+                     */
+                    boiler?: {
+                        /**
+                         * Energysupply
+                         * @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply
+                         */
+                        EnergySupply: string;
+                        /**
+                         * Energysupply Aux
+                         * @description References a key in $.EnergySupply for auxiliary electrical power
+                         */
+                        EnergySupply_aux: string;
+                        /**
+                         * HeatSourceLocation
+                         * @description Location of the boiler (internal or external to the building)
+                         * @enum {string}
+                         */
+                        boiler_location: "internal" | "external";
+                        /**
+                         * Efficiency Full Load
+                         * @description Boiler net efficiency at full load (dimensionless, 0-1)
+                         */
+                        efficiency_full_load: number;
+                        /**
+                         * Efficiency Part Load
+                         * @description Boiler net efficiency at part load (dimensionless, 0-1.12). Net efficiencies may exceed 1 in test data.
+                         */
+                        efficiency_part_load: number;
+                        /**
+                         * Electricity Circ Pump
+                         * @description Electrical power consumption of circulation pump (unit: kW)
+                         */
+                        electricity_circ_pump: number;
+                        /**
+                         * Electricity Full Load
+                         * @description Electrical power consumption at full load (unit: kW)
+                         */
+                        electricity_full_load: number;
+                        /**
+                         * Electricity Part Load
+                         * @description Electrical power consumption at part load (unit: kW)
+                         */
+                        electricity_part_load: number;
+                        /**
+                         * Electricity Standby
+                         * @description Electrical power consumption in standby mode (unit: kW)
+                         */
+                        electricity_standby: number;
+                        /**
+                         * Modulation Load
+                         * @description Modulation load ratio (dimensionless, 0-1)
+                         */
+                        modulation_load: number;
+                        /**
+                         * Rated Power
+                         * @description Rated power output of the boiler (unit: kW)
+                         */
+                        rated_power: number;
+                        /** @default null */
+                        cost_schedule_hybrid?: components["schemas"]["BoilerCostScheduleHybrid"] | null;
+                    };
                     time_delay_backup: number;
                     power_heating_warm_air_fan?: number;
                     time_constant_onoff_operation: number;
+                    /** @description required if HeatNetwork source type, should not be provided otherwise */
+                    temp_distribution_heat_network?: number;
+                    /** @description required if HeatNetwork source type, should not be provided otherwise */
+                    EnergySupply_heat_network?: string | {
+                        name: string;
+                        is_export_capable: boolean;
+                        factor: {
+                            "Emissions Factor kgCO2e/kWh": number;
+                            "Emissions Factor kgCO2e/kWh including out-of-scope emissions": number;
+                            "Primary Energy Factor kWh/kWh delivered": number;
+                        };
+                    };
+                    /** @description required if ExhaustAirMixed source type, should not be provided otherwise */
+                    eahp_mixed_max_temp?: number;
+                    /** @description required if ExhaustAirMixed source type, should not be provided otherwise */
+                    eahp_mixed_min_temp?: number;
                     test_data_EN14825: {
                         /** @enum {unknown} */
                         test_letter: "A" | "B" | "C" | "D" | "F";
@@ -1469,6 +1718,10 @@ export interface components {
                         temp_outlet: number;
                         temp_source: number;
                         temp_test: number;
+                        /** @description provided if source type is ExhaustAirMixed, otherwise not provided */
+                        air_flow_rate?: number;
+                        /** @description provided if source type is ExhaustAirMixed, otherwise not provided */
+                        eahp_mixed_ext_air_ratio?: number;
                     }[];
                 });
                 /** @description A possible wet heat source */
@@ -1581,8 +1834,8 @@ export interface components {
                     n_units: number;
                     EnergySupply: string;
                     Zone: string;
-                    ESH_min_output: number[][];
-                    ESH_max_output: number[][];
+                    dry_core_min_output: number[][];
+                    dry_core_max_output: number[][];
                     /**
                      * State Of Charge Init
                      * @description State of charge at initialisation of dry core heat storage (ratio)
@@ -1612,7 +1865,7 @@ export interface components {
                         frac_convective: number;
                     } & (components["schemas"]["Radiator"] | components["schemas"]["Ufh"] | components["schemas"]["Fancoil"]))[];
                     temp_diff_emit_dsgn: number;
-                    bypass_percentage_recirculated?: number;
+                    bypass_fraction_recirculated?: number;
                     HeatSource: {
                         name: string;
                         temp_flow_limit_upper?: number;
@@ -1775,7 +2028,6 @@ export interface components {
                     areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
                     mass_distribution_class: components["schemas"]["MassDistributionClass"];
                     area: number;
-                    is_party_wall?: boolean;
                 };
                 BuildingElementAdjacentConditionedSpace: components["schemas"]["BuildingElementAdjacentCommon"] & {
                     /** @constant */
@@ -1818,7 +2070,7 @@ export interface components {
                     floor_type: "Suspended_floor";
                     height_upper_surface: number;
                     thermal_transm_walls: number;
-                    area_per_perimeter_vent?: number;
+                    area_per_perimeter_vent: number;
                     /** @enum {unknown} */
                     shield_fact_location: "Sheltered" | "Average" | "Exposed";
                     thickness_walls: number;
@@ -1853,13 +2105,58 @@ export interface components {
                     /** @enum {unknown} */
                     areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
                     mass_distribution_class: components["schemas"]["MassDistributionClass"];
+                    /** @description Degrees from north. Recommend choosing 180 in cases of flat elements i.e. where pitch = 0 or 180. NB. must be provided if pitch not 0 or 180, otherwise must not be provided */
                     orientation360?: number;
                     base_height: number;
                     height: number;
                     width: number;
                     area: number;
-                    is_party_wall?: boolean;
-                } & (unknown & unknown);
+                } & (unknown & unknown & unknown);
+                BuildingElementPartyWall: ({
+                    /**
+                     * Area
+                     * @description Area of the building element (m²), must be positive
+                     */
+                    area: number;
+                    /** @enum {unknown} */
+                    areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
+                    mass_distribution_class: components["schemas"]["MassDistributionClass"];
+                    /**
+                     * Pitch
+                     * @description Tilt angle of the surface from horizontal, between 60 and 120 degrees (wall range), where 90 means vertical (unit: °)
+                     */
+                    pitch: number;
+                    /** @description Type of party wall cavity construction affecting heat loss through air movement */
+                    party_wall_cavity_type: components["schemas"]["PartyWallCavityType"];
+                } & (unknown & unknown)) | {
+                    /**
+                     * PartyWallCavityType
+                     * @description Types of party wall cavity configurations
+                     * @enum {string}
+                     */
+                    party_wall_cavity_type: "unfilled_unsealed" | "unfilled_sealed" | "filled_unsealed";
+                    /** @description Type of party wall lining. Required only when party_wall_cavity_type is unfilled_unsealed, unfilled_sealed, or filled_unsealed */
+                    party_wall_lining_type: components["schemas"]["PartyWallLiningType"];
+                } | {
+                    /**
+                     * PartyWallCavityType
+                     * @description Types of party wall cavity configurations
+                     * @constant
+                     */
+                    party_wall_cavity_type?: "defined_resistance";
+                    /**
+                     * Thermal Resistance Cavity
+                     * @description Effective thermal resistance of the party wall cavity (unit: m².K/W). Required only when party_wall_cavity_type is 'defined_resistance'. For other cavity types, this is calculated automatically.
+                     */
+                    thermal_resistance_cavity: number;
+                } | {
+                    /**
+                     * PartyWallCavityType
+                     * @description Types of party wall cavity configurations
+                     * @enum {string}
+                     */
+                    party_wall_cavity_type: "solid" | "filled_sealed";
+                };
                 BuildingElementTransparent: {
                     /** @constant */
                     type: "BuildingElementTransparent";
@@ -1905,6 +2202,93 @@ export interface components {
                     type: "ThermalBridgePoint";
                     heat_transfer_coeff: number;
                 };
+                /** BoilerCostScheduleHybrid */
+                BoilerCostScheduleHybrid: {
+                    /** @description Cost data for the fuel used by the hybrid's boiler (can be any units, typically p/kWh) */
+                    cost_schedule_boiler: components["schemas"]["ScheduleForDouble"];
+                    /** @description Cost data for the fuel used by the hybrid's heat pump (can be any units, typically p/kWh) */
+                    cost_schedule_hp: components["schemas"]["ScheduleForDouble"];
+                    /**
+                     * Cost Schedule Start Day
+                     * @description Day on which the cost data series begins
+                     */
+                    cost_schedule_start_day: number;
+                    /**
+                     * Cost Schedule Time Series Step
+                     * @description Time step of the cost data series
+                     */
+                    cost_schedule_time_series_step: number;
+                };
+                /**
+                 * ScheduleForDouble
+                 * @description A dictionary of schedule entries where:
+                 *     - Keys are user-defined names (e.g., "main", "week", "weekday", "weekend")
+                 *     - Values are lists of ScheduleEntryForDouble
+                 *     - The "main" entry is required
+                 */
+                ScheduleForDouble: {
+                    [key: string]: components["schemas"]["ScheduleEntryForDouble"][];
+                };
+                /**
+                 * ScheduleEntryForDouble
+                 * @description A schedule entry that can be a direct value, repeating pattern, or reference.
+                 *
+                 *     Examples:
+                 *         # Direct float value (temperature setpoint)
+                 *         21.5
+                 *
+                 *         # Repeating pattern (21.5°C for 8 hours, 18°C for 16 hours)
+                 *         {"repeat": 24, "value": 21.5}
+                 *
+                 *         # Reference to another schedule
+                 *         "weekday_temp_schedule"
+                 *
+                 *         # Complex repeating pattern with reference
+                 *         {"repeat": 7, "value": "daily_temp_pattern"}
+                 *
+                 *         # Power level schedule
+                 *         2.5  # 2.5 kW constant power
+                 */
+                ScheduleEntryForDouble: number | components["schemas"]["ScheduleRepeaterForDouble"] | string | null;
+                /**
+                 * ScheduleRepeaterForDouble
+                 * @description Defines a repeating pattern for double (float) schedule values.
+                 *
+                 *     Examples:
+                 *         # Repeat temperature setpoint 21.5°C 24 times (once per hour)
+                 *         {"repeat": 24, "value": 21.5}
+                 *
+                 *         # Reference another schedule, repeat 7 times (once per day)
+                 *         {"repeat": 7, "value": "weekday_temp_schedule"}
+                 *
+                 *         # Repeat power level 2.5 kW for 8 hours
+                 *         {"repeat": 8, "value": 2.5}
+                 */
+                ScheduleRepeaterForDouble: {
+                    /**
+                     * Repeat
+                     * @description Number of times to repeat the value
+                     */
+                    repeat: number;
+                    /** @description Value to repeat or schedule reference */
+                    value: components["schemas"]["ScheduleRepeaterValueForDouble"];
+                };
+                /** ScheduleRepeaterValueForDouble */
+                ScheduleRepeaterValueForDouble: string | components["schemas"]["ScheduleRepeaterEntryForDouble"];
+                /** ScheduleRepeaterEntryForDouble */
+                ScheduleRepeaterEntryForDouble: number | null;
+                /**
+                 * PartyWallCavityType
+                 * @description Types of party wall cavity configurations
+                 * @enum {string}
+                 */
+                PartyWallCavityType: "solid" | "unfilled_unsealed" | "unfilled_sealed" | "filled_sealed" | "filled_unsealed" | "defined_resistance";
+                /**
+                 * PartyWallLiningType
+                 * @description Types of party wall lining
+                 * @enum {string}
+                 */
+                PartyWallLiningType: "wet_plaster" | "dry_lined";
             };
         };
     };
@@ -1943,6 +2327,12 @@ export type SchemaHeatPumpHwOnly = components['schemas']['HeatPump_HWOnly'];
 export type SchemaBoiler = components['schemas']['Boiler'];
 export type SchemaHotWaterTankCommon = components['schemas']['HotWaterTankCommon'];
 export type SchemaHeatSourceWetCommon = components['schemas']['HeatSourceWetCommon'];
+export type SchemaScheduleRepeaterEntryForDouble = components['schemas']['ScheduleRepeaterEntryForDouble'];
+export type SchemaScheduleRepeaterValueForDouble = components['schemas']['ScheduleRepeaterValueForDouble'];
+export type SchemaScheduleRepeaterForDouble = components['schemas']['ScheduleRepeaterForDouble'];
+export type SchemaScheduleEntryForDouble = components['schemas']['ScheduleEntryForDouble'];
+export type SchemaScheduleForDouble = components['schemas']['ScheduleForDouble'];
+export type SchemaBoilerCostScheduleHybrid = components['schemas']['BoilerCostScheduleHybrid'];
 export type SchemaPcmBattery = components['schemas']['PCMBattery'];
 export type SchemaDryCoreBattery = components['schemas']['DryCoreBattery'];
 export type SchemaColdWaterSource = components['schemas']['ColdWaterSource'];
@@ -1961,6 +2351,8 @@ export type SchemaSuspendedFloor = components['schemas']['SuspendedFloor'];
 export type SchemaBasementCommon = components['schemas']['BasementCommon'];
 export type SchemaHeatedBasement = components['schemas']['HeatedBasement'];
 export type SchemaUnheatedBasement = components['schemas']['UnheatedBasement'];
+export type SchemaPartyWallLiningType = components['schemas']['PartyWallLiningType'];
+export type SchemaPartyWallCavityType = components['schemas']['PartyWallCavityType'];
 export type SchemaApplianceValue = components['schemas']['ApplianceValue'];
 export type SchemaApplianceValueDefault = components['schemas']['ApplianceValueDefault'];
 export type SchemaHeaderTankOrMainsWater = components['schemas']['HeaderTankOrMainsWater'];

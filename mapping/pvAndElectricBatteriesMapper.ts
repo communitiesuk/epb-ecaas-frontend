@@ -49,7 +49,6 @@ export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery
 				battery_location: electricBattery.location,
 				capacity: electricBattery.capacity,
 				charge_discharge_efficiency_round_trip: electricBattery.chargeEfficiency,
-				grid_charging_possible: electricBattery.gridChargingPossible,
 				maximum_charge_rate_one_way_trip: electricBattery.maximumChargeRate,
 				maximum_discharge_rate_one_way_trip: electricBattery.maximumDischargeRate,
 				minimum_charge_rate_one_way_trip: electricBattery.minimumChargeRate,

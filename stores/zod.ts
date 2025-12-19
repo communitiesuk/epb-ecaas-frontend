@@ -38,12 +38,13 @@ const convectiveTypes = ["Air heating (convectors, fan coils etc.)",
 const ductShapes = ["circular", "rectangular"] as const satisfies SchemaDuctShape[];
 const ductTypes = ["intake", "supply", "extract", "exhaust"] as const satisfies SchemaDuctType[];
 const fuelTypes = [
-	"lpg_bulk",
+	"LPG_bulk",
+	"LPG_bottled",
 	"mains_gas",
 	"elecOnly",
 ] as const satisfies SchemaFuelTypeExtended[];
 const heatPumpBackupControlTypes = ["None", "Substitute", "TopUp"] as const satisfies SchemaHeatPumpBackupControlType[];
-const heatPumpSinkTypes = ["Air", "Water"] as const satisfies SchemaHeatPumpSinkType[];
+const heatPumpSinkTypes = ["Air", "Water", "Glycol25"] as const satisfies SchemaHeatPumpSinkType[];
 const heatPumpSourceTypes = [
 	"ExhaustAirMEV",
 	"ExhaustAirMVHR",
@@ -51,7 +52,8 @@ const heatPumpSourceTypes = [
 	"Ground",
 	"OutsideAir",
 	"WaterGround",
-	"WaterSurface"] as const satisfies SchemaHeatPumpSourceType[];
+	"WaterSurface",
+	"HeatNetwork"] as const satisfies SchemaHeatPumpSourceType[];
 const inverterTypes = ["optimised_inverter", "string_inverter"] as const satisfies SchemaInverterType[];
 const massDistributionClasses = ["D", "E", "I", "IE", "M"] as const satisfies ConciseMassDistributionClass[];
 const mhvrLocations = ["inside", "outside"] as const satisfies MVHRLocation[];

@@ -81,3 +81,4 @@ export type SchemaConvectiveType = SchemaDefs["InstantElecHeater"]["convective_t
 export type SchemaEdgeInsulation = SchemaDefs["SlabEdgeInsulation"]["edge_insulation"];
 export type SchemaLightingBulbs = FhsSchema["Zone"][string]["Lighting"]["bulbs"];
 export type SchemaApplianceType = Exclude<keyof FhsSchema["Appliances"], "Kettle" | "Microwave" | "Otherdevices">;
+export type SchemaColdWaterSourceType = components["schemas"]["ColdWaterSource"]["ColdWaterSource"];

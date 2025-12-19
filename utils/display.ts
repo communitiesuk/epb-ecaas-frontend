@@ -178,7 +178,7 @@ export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressure
 	}
 }
 
-export type FuelTypeDisplay = "LPG (Liquid petroleum gas)" | "Electricity is the only energy source" | "Mains gas" | "Electricity";
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" |"LPG (Liquid petroleum gas) - bottled" | "Electricity is the only energy source" | "Mains gas" | "Electricity";
 
 export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined) {
 	if (fuelTypes === undefined) return emptyValueRendering;
@@ -186,15 +186,17 @@ export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined
 	const result = fuelTypes.map(type => displayFuelType(type)).join(", ");
 	
 	if(!result.includes("Electricity")){
-		return result + ", Electricity"
+		return result + ", Electricity";
 	}
-	return result
+	return result;
 }
 
 export function displayFuelType(fuelType: SchemaFuelTypeExtended): FuelTypeDisplay {
 	switch (fuelType) {
-		case "lpg_bulk":
-			return "LPG (Liquid petroleum gas)";
+		case "LPG_bulk":
+			return "LPG (Liquid petroleum gas) - bulk";
+		case "LPG_bottled":
+			return "LPG (Liquid petroleum gas) - bottled";
 		case "elecOnly":
 			return "Electricity";
 		case "mains_gas":
