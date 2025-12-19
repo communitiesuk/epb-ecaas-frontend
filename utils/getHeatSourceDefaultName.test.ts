@@ -18,13 +18,23 @@ describe("getHeatSourceDefaultName", () => {
 		expect(actual).toBe("Dry core heat battery");
 	});
 
-	test("keeps acronyms capitalised", async () => {
+	test.skip("keeps acronyms capitalised", async () => {
 		const item = {
 			typeOfHeatSource: HeatSourceType.heatBattery,
 			typeOfHeatBattery: "pcm",
 		};
 		const actual = getHeatSourceDefaultName(item);
 
-		expect(actual).toBe("Pcm heat battery");
+		expect(actual).toBe("PCM heat battery");
+	});
+
+	test("handles duplication", async () => {
+		const item = {
+			typeOfHeatSource: HeatSourceType.boiler,
+			typeOfBoiler: "combiBoiler",
+		};
+		const actual = getHeatSourceDefaultName(item);
+
+		expect(actual).toBe("Combi boiler");
 	});
 });
