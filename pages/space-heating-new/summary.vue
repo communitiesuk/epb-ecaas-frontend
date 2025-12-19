@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl, HeatSourceType } from "#imports";
+import type { SchemaFuelType } from "~/schema/aliases";
 
 const store = useEcaasStore();
 const title = "Space heating NEW summary";
@@ -10,8 +11,7 @@ const spaceHeatingUrl = "/space-heating-new";
 const heatSources = store.spaceHeatingNew.heatSource.data;
 const boilers = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.boiler);
 const heatPumps = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.heatPump);
-// const heatNetworks = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.heatNetwork)
-const heatNetworks: [] = [];
+const heatNetworks = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.heatNetwork);
 const heatBatteries = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.heatBattery);
 const solarThermalSystem = heatSources.filter(x => x.data.typeOfHeatSource === HeatSourceType.solarThermalSystem);
 
@@ -61,13 +61,31 @@ const heatNetworkSummary: SummarySection = {
 	id: "heatNetworkSummary",
 	label: "Heat networks",
 	data:
-		heatNetworks.map(({ data: heatSource }) => {
-
+		heatNetworks.map((x) => {
+			
+			const heatSource = x.data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
 			const summary = {
-				// Name: show(heatSource.name),
-				// "Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
-				// "Type of heat network": "typeOfHeatNetwork" in heatSource && displayCamelToSentenceCase(heatSource.typeOfHeatNetwork),
-				// "Product reference": "productReference" in heatSource && heatSource.productReference,
+				Name: show(heatSource.name),
+				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
+				"Type of heat network": "typeOfHeatNetwork" in heatSource && heatSource.typeOfHeatNetwork ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork): emptyValueRendering,
+				"Is the heat network in the PCDB": "isHeatNetworkInPcdb" in heatSource ? displayBoolean(heatSource.isHeatNetworkInPcdb) : emptyValueRendering,
+				...(heatSource.isHeatNetworkInPcdb === true && {
+					"Heat network product reference": "heatNetworkProductReference" in heatSource ? heatSource.heatNetworkProductReference : emptyValueRendering,
+					"Energy supply": "energySupply" in heatSource ? energySupplyOptions[heatSource.energySupply]: emptyValueRendering,
+					"Product reference": "heatNetworkProductReference" in heatSource ? heatSource.heatNetworkProductReference : emptyValueRendering,
+				}),
+				...(heatSource.isHeatNetworkInPcdb === false && {
+					"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply as SchemaFuelType]: emptyValueRendering,
+					"Emissions factor including out of scope emissions": "emissionsFactor" in heatSource ? heatSource.emissionsFactor : emptyValueRendering,
+					"Primary energy factor": "primaryEnergyFactor" in heatSource ? heatSource.primaryEnergyFactor : emptyValueRendering,
+					"Can energy from the heat network be exported": "canEnergyBeExported" in heatSource ? heatSource.canEnergyBeExported : emptyValueRendering,
+				}),
+				...(heatSource.isHeatNetworkInPcdb !== undefined && {
+					"Will the heat network use heat interface units": "doesHeatNetworkUseHeatInterfaceUnits" in heatSource ? displayBoolean(heatSource.doesHeatNetworkUseHeatInterfaceUnits) : emptyValueRendering,
+				}),
+				...(heatSource.doesHeatNetworkUseHeatInterfaceUnits === true && {
+					"Heat interface unit product reference": "heatInterfaceUnitProductReference" in heatSource ? heatSource.heatInterfaceUnitProductReference : emptyValueRendering,
+				}),
 			};
 			return summary;
 		}) || [],

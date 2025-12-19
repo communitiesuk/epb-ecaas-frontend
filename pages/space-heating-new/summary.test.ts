@@ -148,6 +148,46 @@ describe("Space heating summary page", () => {
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
+
+		it("displays the correct data for the heat network summary", async () => {
+
+			const heatNetwork1: HeatSourceData = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+				name: "Heat network 1",
+				typeOfHeatSource: HeatSourceType.heatNetwork,
+				typeOfHeatNetwork: "communal",
+				isHeatNetworkInPcdb: true,
+				heatNetworkProductReference: "HEAT_NETWORK-LARGE",
+				energySupply: "electricity",
+				doesHeatNetworkUseHeatInterfaceUnits: false,
+			};
+			const store = useEcaasStore();
+			store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: heatNetwork1 }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedResult = {
+				Name: "Heat network 1",
+				"Type of heat source": "Heat network",
+				"Type of heat network": "Communal",
+				"Is the heat network in the PCDB": "Yes",
+				"Heat network product reference": "HEAT_NETWORK-LARGE",
+				"Energy supply": "Electricity",
+				"Will the heat network use heat interface units": "No",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-heatNetworkSummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
         
 		it("displays the correct data for the solar thermal system summary", async () => {
       
