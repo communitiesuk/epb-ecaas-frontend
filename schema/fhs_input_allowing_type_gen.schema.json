@@ -424,34 +424,37 @@
         "HotWaterSource": {
             "type": "object",
             "unevaluatedProperties": false,
-            "additionalProperties": {
-                "type": "object",
-                "unevaluatedProperties": false,
-                "properties": {
-                    "ColdWaterSource": {
-                        "enum": [
-                            "header tank",
-                            "mains water"
-                        ]
-                    }
-                },
-                "oneOf": [
-                    {
-                        "$ref": "#/$defs/StorageTank"
+            "properties": {
+                "hw cylinder": {
+                    "type": "object",
+                    "unevaluatedProperties": false,
+                    "required": ["type", "ColdWaterSource"],
+                    "properties": {
+                        "ColdWaterSource": {
+                            "enum": [
+                                "header tank",
+                                "mains water"
+                            ]
+                        }
                     },
-                    {
-                        "$ref": "#/$defs/SmartHotWaterTank"
-                    },
-                    {
-                        "$ref": "#/$defs/PointOfUse"
-                    },
-                    {
-                        "$ref": "#/$defs/CombiBoiler"
-                    },
-                    {
-                        "$ref": "#/$defs/HeatBattery"
-                    }
-                ]
+                    "oneOf": [
+                        {
+                            "$ref": "#/$defs/StorageTank"
+                        },
+                        {
+                            "$ref": "#/$defs/SmartHotWaterTank"
+                        },
+                        {
+                            "$ref": "#/$defs/PointOfUse"
+                        },
+                        {
+                            "$ref": "#/$defs/CombiBoiler"
+                        },
+                        {
+                            "$ref": "#/$defs/HeatBattery"
+                        }
+                    ]
+                }
             }
         },
         "HeatSourceWet": {
@@ -478,20 +481,20 @@
                                             {
                                                 "type": "object",
                                                 "properties": {
+                                                    "name": {"type": "string"},
+                                                    "is_export_capable": {"type": "boolean"},
                                                     "factor": {
                                                         "type": "object",
                                                         "unevaluatedProperties": false,
                                                         "required": [
                                                             "Emissions Factor kgCO2e/kWh",
                                                             "Emissions Factor kgCO2e/kWh including out-of-scope emissions",
-                                                            "Primary Energy Factor kWh/kWh delivered",
-                                                            "is_export_capable"
+                                                            "Primary Energy Factor kWh/kWh delivered"
                                                         ],
                                                         "properties": {
                                                             "Emissions Factor kgCO2e/kWh": {"type": "number"},
                                                             "Emissions Factor kgCO2e/kWh including out-of-scope emissions": {"type": "number"},
-                                                            "Primary Energy Factor kWh/kWh delivered": {"type": "number"},
-                                                            "is_export_capable": {"type": "boolean"}
+                                                            "Primary Energy Factor kWh/kWh delivered": {"type": "number"}
                                                         }
                                                     }
                                                 }
@@ -533,6 +536,9 @@
         "HotWaterDemand": {
             "type": "object",
             "unevaluatedProperties": false,
+            "required": [
+                "Other"
+            ],
             "properties": {
                 "Shower": {
                     "type": "object",
@@ -598,7 +604,8 @@
                                 "type": "string"
                             }
                         }
-                    }
+                    },
+                    "minProperties": 1
                 }
             }
         },
@@ -992,25 +999,29 @@
                         ],
                         "properties": {
                             "bulbs": {
-                                "type": "object",
-                                "unevaluatedProperties": false,
-                                "required": [
-                                    "count",
-                                    "power",
-                                    "efficacy"
-                                ],
-                                "properties": {
-                                    "count": {
-                                        "type": "integer",
-                                        "minimum": 1
-                                    },
-                                    "power": {
-                                        "type": "number",
-                                        "minimum": 0
-                                    },
-                                    "efficacy": {
-                                        "type": "number",
-                                        "minimum": 0
+                                "type": "array",
+                                "minItems": 1,
+                                "items": {
+                                    "type": "object",
+                                    "unevaluatedProperties": false,
+                                    "required": [
+                                        "count",
+                                        "power",
+                                        "efficacy"
+                                    ],
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "minimum": 1
+                                        },
+                                        "power": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "efficacy": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        }
                                     }
                                 }
                             }
@@ -1232,24 +1243,6 @@
                 "ElectricBattery": {
                     "type": "object",
                     "$ref": "#/$defs/ElectricBattery"
-                },
-                "threshold_charges": {
-                    "description": "threshold_charges is required when there is an ElectricBattery with grid_charging_possible",
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    }
-                },
-                "threshold_prices": {
-                    "description": "threshold_prices is required when there is an ElectricBattery with grid_charging_possible",
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    }
-                },
-                "tariff": {
-                    "description": "tariff is required when there is an ElectricBattery with grid_charging_possible",
-                    "type": "string"
                 }
             }
         },
@@ -1260,8 +1253,7 @@
                 "minimum_charge_rate_one_way_trip",
                 "maximum_charge_rate_one_way_trip",
                 "maximum_discharge_rate_one_way_trip",
-                "battery_location",
-                "grid_charging_possible"
+                "battery_location"
             ],
             "properties": {
                 "capacity": {
@@ -1291,9 +1283,6 @@
                         "inside",
                         "outside"
                     ]
-                },
-                "grid_charging_possible": {
-                    "type": "boolean"
                 }
             }
         },
@@ -1336,26 +1325,17 @@
         },
         "EnergySupplyOther": {
             "required": [
-                "fuel"
+                "fuel",
+                "is_export_capable"
             ],
             "properties": {
                 "fuel": {
                     "enum": [
-                        "lpg_bulk"
+                        "LPG_bulk",
+                        "LPG_bottled"
                     ]
                 },
-                "factor": {
-                    "type": "object",
-                    "unevaluatedProperties": false,
-                    "required": [
-                        "is_export_capable"
-                    ],
-                    "properties": {
-                        "is_export_capable": {
-                            "type": "boolean"
-                        }
-                    }
-                }
+                "is_export_capable": {"type": "boolean"}
             }
         },
         "HotWaterTankCommon": {
@@ -1523,7 +1503,7 @@
                 {
                     "required": [
                         "type",
-                        "solar_loc",
+                        "sol_loc",
                         "area_module",
                         "modules",
                         "peak_collector_efficiency",
@@ -1535,14 +1515,14 @@
                         "power_pump_control",
                         "EnergySupply",
                         "tilt",
-                        "orientation",
+                        "orientation360",
                         "solar_loop_piping_hlc"
                     ],
                     "properties": {
                         "type": {
                             "const": "SolarThermalSystem"
                         },
-                        "solar_loc": {
+                        "sol_loc": {
                             "enum": [
                                 "OUT",
                                 "NHS",
@@ -1583,7 +1563,7 @@
                         "power_pump": {
                             "type": "number",
                             "minimum": 0,
-                            "maximum": 2000
+                            "maximum": 2
                         },
                         "power_pump_control": {
                             "type": "number",
@@ -1597,10 +1577,10 @@
                             "minimum": 0,
                             "maximum": 90
                         },
-                        "orientation": {
+                        "orientation360": {
                             "type": "number",
-                            "minimum": -180,
-                            "maximum": 180
+                            "minimum": 0,
+                            "maximum": 360
                         },
                         "solar_loop_piping_hlc": {
                             "type": "number",
@@ -1832,11 +1812,11 @@
             "description": "A possible hot water source",
             "required": [
                 "type",
-                "ColdWaterSource",
                 "HeatSourceWet",
                 "daily_HW_usage",
                 "separate_DHW_tests",
-                "setpoint_temp"
+                "setpoint_temp",
+                "rejected_energy_1"
             ],
             "properties": {
                 "type": {
@@ -1885,6 +1865,20 @@
                     "description": "Rejected energy factor 3 for combi boiler efficiency calculations (dimensionless)",
                     "title": "Rejected Factor 3"
                 },
+                "storage_loss_factor_1": {
+                    "anyOf": [
+                        {
+                        "minimum": 0,
+                        "type": "number"
+                        },
+                        {
+                        "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Storage loss factor 1 for combi boiler efficiency calculations (unit: kWh/day)",
+                    "title": "Storage Loss Factor 1"
+                    },
                 "storage_loss_factor_2": {
                     "anyOf": [
                         {
@@ -2029,13 +2023,15 @@
                                         "ExhaustAirMVHR",
                                         "ExhaustAirMixed",
                                         "WaterGround",
-                                        "WaterSurface"
+                                        "WaterSurface",
+                                        "HeatNetwork"
                                     ]
                                 },
                                 "sink_type": {
                                     "enum": [
                                         "Air",
-                                        "Water"
+                                        "Water",
+                                        "Glycol25"
                                     ]
                                 },
                                 "backup_ctrl_type": {
@@ -2097,8 +2093,16 @@
                                     "minimum": 0
                                 },
                                 "power_max_backup": {
-                                    "type": "number",
-                                    "minimum": 0
+                                    "anyOf": [
+                                        {
+                                            "type": "number"
+                                        },
+                                        {
+                                            "type": "null"
+                                        }
+                                    ],
+                                    "default": null,
+                                    "title": "Power Max Backup"
                                 },
                                 "BufferTank": {
                                     "type": "object",
@@ -2124,6 +2128,110 @@
                                         "volume"
                                     ]
                                 },
+                                "boiler": {
+                                    "unevaluatedProperties": false,
+                                    "description": "Boiler used as backup for heat pump systems",
+                                    "properties": {
+                                        "EnergySupply": {
+                                            "description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply",
+                                            "reference_to": "$.energy_supply",
+                                            "title": "Energysupply",
+                                            "type": "string"
+                                        },
+                                        "EnergySupply_aux": {
+                                            "description": "References a key in $.EnergySupply for auxiliary electrical power",
+                                            "reference_to": "$.energy_supply",
+                                            "title": "Energysupply Aux",
+                                            "type": "string"
+                                        },
+                                        "boiler_location": {
+                                            "description": "Location of the boiler (internal or external to the building)",
+                                            "enum": [
+                                                "internal",
+                                                "external"
+                                            ],
+                                            "title": "HeatSourceLocation",
+                                            "type": "string"
+                                        },
+                                        "efficiency_full_load": {
+                                            "description": "Boiler net efficiency at full load (dimensionless, 0-1)",
+                                            "maximum": 1,
+                                            "minimum": 0,
+                                            "title": "Efficiency Full Load",
+                                            "type": "number"
+                                        },
+                                        "efficiency_part_load": {
+                                            "description": "Boiler net efficiency at part load (dimensionless, 0-1.12). Net efficiencies may exceed 1 in test data.",
+                                            "exclusiveMinimum": 0,
+                                            "maximum": 1.12,
+                                            "title": "Efficiency Part Load",
+                                            "type": "number"
+                                        },
+                                        "electricity_circ_pump": {
+                                            "description": "Electrical power consumption of circulation pump (unit: kW)",
+                                            "minimum": 0,
+                                            "title": "Electricity Circ Pump",
+                                            "type": "number"
+                                        },
+                                        "electricity_full_load": {
+                                            "description": "Electrical power consumption at full load (unit: kW)",
+                                            "minimum": 0,
+                                            "title": "Electricity Full Load",
+                                            "type": "number"
+                                        },
+                                        "electricity_part_load": {
+                                            "description": "Electrical power consumption at part load (unit: kW)",
+                                            "minimum": 0,
+                                            "title": "Electricity Part Load",
+                                            "type": "number"
+                                        },
+                                        "electricity_standby": {
+                                            "description": "Electrical power consumption in standby mode (unit: kW)",
+                                            "minimum": 0,
+                                            "title": "Electricity Standby",
+                                            "type": "number"
+                                        },
+                                        "modulation_load": {
+                                            "description": "Modulation load ratio (dimensionless, 0-1)",
+                                            "maximum": 1,
+                                            "minimum": 0,
+                                            "title": "Modulation Load",
+                                            "type": "number"
+                                        },
+                                        "rated_power": {
+                                            "description": "Rated power output of the boiler (unit: kW)",
+                                            "exclusiveMinimum": 0,
+                                            "title": "Rated Power",
+                                            "type": "number"
+                                        },
+                                        "cost_schedule_hybrid": {
+                                            "anyOf": [
+                                                {
+                                                "$ref": "#/$defs/BoilerCostScheduleHybrid"
+                                                },
+                                                {
+                                                "type": "null"
+                                                }
+                                            ],
+                                            "default": null
+                                        }
+                                    },
+                                    "required": [
+                                        "EnergySupply",
+                                        "EnergySupply_aux",
+                                        "boiler_location",
+                                        "efficiency_full_load",
+                                        "efficiency_part_load",
+                                        "electricity_circ_pump",
+                                        "electricity_full_load",
+                                        "electricity_part_load",
+                                        "electricity_standby",
+                                        "modulation_load",
+                                        "rated_power"
+                                    ],
+                                    "title": "HeatPumpBoiler",
+                                    "type": "object"
+                                },
                                 "time_delay_backup": {
                                     "type": "number",
                                     "minimum": 0
@@ -2134,6 +2242,50 @@
                                 },
                                 "time_constant_onoff_operation": {
                                     "type": "number"
+                                },
+                                "temp_distribution_heat_network": {
+                                    "description": "required if HeatNetwork source type, should not be provided otherwise",
+                                    "type": "number",
+                                    "minimum": -273.15
+                                },
+                                "EnergySupply_heat_network": {
+                                    "description": "required if HeatNetwork source type, should not be provided otherwise",
+                                    "oneOf": [
+                                        {"type": "string"},
+                                        {
+                                            "type": "object",
+                                            "unevaluatedProperties": false,
+                                            "required": ["name", "factor", "is_export_capable"],
+                                            "properties": {
+                                                "name": {"type": "string"},
+                                                "is_export_capable": {"type": "boolean"},
+                                                "factor": {
+                                                    "type": "object",
+                                                    "unevaluatedProperties": false,
+                                                    "required": [
+                                                        "Emissions Factor kgCO2e/kWh",
+                                                        "Emissions Factor kgCO2e/kWh including out-of-scope emissions",
+                                                        "Primary Energy Factor kWh/kWh delivered"
+                                                    ],
+                                                    "properties": {
+                                                        "Emissions Factor kgCO2e/kWh": {"type": "number"},
+                                                        "Emissions Factor kgCO2e/kWh including out-of-scope emissions": {"type": "number"},
+                                                        "Primary Energy Factor kWh/kWh delivered": {"type": "number"}
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                "eahp_mixed_max_temp": {
+                                    "description": "required if ExhaustAirMixed source type, should not be provided otherwise",
+                                    "type": "number",
+                                    "minimum": -273.15
+                                },
+                                "eahp_mixed_min_temp": {
+                                    "description": "required if ExhaustAirMixed source type, should not be provided otherwise",
+                                    "type": "number",
+                                    "minimum": -273.15
                                 },
                                 "test_data_EN14825": {
                                     "type": "array",
@@ -2178,6 +2330,16 @@
                                             },
                                             "temp_test": {
                                                 "type": "number"
+                                            },
+                                            "air_flow_rate": {
+                                                "description": "provided if source type is ExhaustAirMixed, otherwise not provided",
+                                                "type":"number",
+                                                "minimum":0
+                                            },
+                                            "eahp_mixed_ext_air_ratio": {
+                                                "description": "provided if source type is ExhaustAirMixed, otherwise not provided",
+                                                "type":"number",
+                                                "minimum":0,"maximum":1
                                             }
                                         }
                                     }
@@ -2529,7 +2691,7 @@
                         },
                         "flowrate": {
                             "type": "number",
-                            "minimum": 0,
+                            "minimum": 8,
                             "maximum": 15
                         },
                         "HotWaterSource": {
@@ -2586,8 +2748,8 @@
                 "n_units",
                 "EnergySupply",
                 "Zone",
-                "ESH_min_output",
-                "ESH_max_output",
+                "dry_core_min_output",
+                "dry_core_max_output",
                 "state_of_charge_init"
             ],
             "properties": {
@@ -2623,7 +2785,7 @@
                 "Zone": {
                     "type": "string"
                 },
-                "ESH_min_output": {
+                "dry_core_min_output": {
                     "type": "array",
                     "items": {
                         "type": "array",
@@ -2632,7 +2794,7 @@
                         }
                     }
                 },
-                "ESH_max_output": {
+                "dry_core_max_output": {
                     "type": "array",
                     "items": {
                         "type": "array",
@@ -2754,7 +2916,7 @@
                     "type": "number",
                     "maximum": 70
                 },
-                "bypass_percentage_recirculated": {
+                "bypass_fraction_recirculated": {
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1
@@ -3072,7 +3234,7 @@
                 },
                 "design_outdoor_air_flow_rate": {
                     "type": "number",
-                    "minimum": 0
+                    "exclusiveMinimum": 0
                 },
                 "SFP_in_use_factor": {
                     "minimum": 1,
@@ -3397,9 +3559,6 @@
                     "type": "number",
                     "minimum": 0.01,
                     "maximum": 10000
-                },
-                "is_party_wall": {
-                    "type": "boolean"
                 }
             }
         },
@@ -3571,7 +3730,8 @@
                 "thermal_transm_walls",
                 "shield_fact_location",
                 "thickness_walls",
-                "thermal_resist_insul"
+                "thermal_resist_insul",
+                "area_per_perimeter_vent"
             ],
             "properties": {
                 "floor_type": {
@@ -3725,7 +3885,8 @@
                 "orientation360": {
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 360
+                    "maximum": 360,
+                    "description": "Degrees from north. Recommend choosing 180 in cases of flat elements i.e. where pitch = 0 or 180. NB. must be provided if pitch not 0 or 180, otherwise must not be provided"
                 },
                 "base_height": {
                     "type": "number",
@@ -3746,9 +3907,6 @@
                     "type": "number",
                     "minimum": 0.01,
                     "maximum": 10000
-                },
-                "is_party_wall": {
-                    "type": "boolean"
                 }
             },
             "allOf": [
@@ -3777,6 +3935,158 @@
                     },
                     "then": {
                         "required": ["is_external_door", "orientation360", "colour"]
+                    }
+                },
+                {
+                    "if": {
+                        "not": {
+                            "anyOf": [
+                                {"properties": {"pitch": {"const": 0}}},
+                                {"properties": {"pitch": {"const": 180}}}
+                            ]
+                        }
+                    },
+                    "then": {
+                        "required": ["orientation360"],
+                        "properties": {
+                            "orientation360": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 360,
+                                "description": "Degrees from north. Recommend choosing 180 in cases of flat elements i.e. where pitch = 0 or 180"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "BuildingElementPartyWall": {
+            "required": [
+                "area",
+                "areal_heat_capacity",
+                "mass_distribution_class",
+                "pitch",
+                "type",
+                "party_wall_cavity_type"
+            ],
+            "properties": {
+                "area": {
+                    "description": "Area of the building element (m\u00b2), must be positive",
+                    "exclusiveMinimum": 0,
+                    "title": "Area",
+                    "type": "number"
+                },
+                "areal_heat_capacity": {
+                    "enum": ["Very light", "Light", "Medium", "Heavy", "Very heavy"]
+                },
+                "mass_distribution_class": {
+                    "$ref": "#/$defs/MassDistributionClass"
+                },
+                "pitch": {
+                    "description": "Tilt angle of the surface from horizontal, between 60 and 120 degrees (wall range), where 90 means vertical (unit: \u00b0)",
+                    "maximum": 120.0,
+                    "minimum": 60.0,
+                    "title": "Pitch",
+                    "type": "number"
+                },
+                "party_wall_cavity_type": {
+                    "$ref": "#/$defs/PartyWallCavityType",
+                    "description": "Type of party wall cavity construction affecting heat loss through air movement"
+                }
+            },
+            "anyOf": [
+                {
+                    "required": [
+                        "party_wall_cavity_type",
+                        "party_wall_lining_type"
+                    ],
+                    "properties": {
+                        "party_wall_cavity_type": {
+                            "description": "Types of party wall cavity configurations",
+                            "enum": [
+                                "unfilled_unsealed",
+                                "unfilled_sealed",
+                                "filled_unsealed"
+                            ],
+                            "title": "PartyWallCavityType",
+                            "type": "string"
+                        },
+                        "party_wall_lining_type": {
+                            "$ref": "#/$defs/PartyWallLiningType",
+                            "description": "Type of party wall lining. Required only when party_wall_cavity_type is unfilled_unsealed, unfilled_sealed, or filled_unsealed"
+                        }
+                    }
+                },
+                {
+                    "required": [
+                        "party_wall_lining_type",
+                        "thermal_resistance_cavity"
+                    ],
+                    "properties": {
+                        "party_wall_cavity_type": {
+                            "description": "Types of party wall cavity configurations",
+                            "const": "defined_resistance",
+                            "title": "PartyWallCavityType",
+                            "type": "string"
+                        },
+                        "thermal_resistance_cavity": {
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "description": "Effective thermal resistance of the party wall cavity (unit: m\u00b2.K/W). Required only when party_wall_cavity_type is 'defined_resistance'. For other cavity types, this is calculated automatically.",
+                            "title": "Thermal Resistance Cavity"
+                        }
+                    }
+                },
+                {
+                    "required": [
+                        "party_wall_cavity_type"
+                    ],
+                    "properties": {
+                        "party_wall_cavity_type": {
+                            "description": "Types of party wall cavity configurations",
+                            "enum": [
+                                "solid",
+                                "filled_sealed"
+                            ],
+                            "title": "PartyWallCavityType",
+                            "type": "string"
+                        }
+                    }
+                }
+            ],
+            "allOf": [
+                {
+                    "if": {
+                        "anyOf": [
+                            {"properties": {"party_wall_cavity_type": {"const": "unfilled_unsealed"}}},
+                            {"properties": {"party_wall_cavity_type": {"const": "unfilled_sealed"}}},
+                            {"properties": {"party_wall_cavity_type": {"const": "filled_unsealed"}}}
+                        ]
+                    },
+                    "then": {
+                        "required": ["party_wall_lining_type"],
+                        "properties": {
+                            "party_wall_lining_type": {
+                                "$ref": "#/$defs/PartyWallLiningType",
+                                "description": "Type of party wall lining. Required only when party_wall_cavity_type is unfilled_unsealed, unfilled_sealed, or filled_unsealed"
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {"party_wall_cavity_type": {"const": "defined_resistance"}}
+                    },
+                    "then": {
+                        "required": ["thermal_resistance_cavity"],
+                        "properties": {
+                            "thermal_resistance_cavity": {
+                                "type": "number",
+                                "exclusiveMinimum": 0,
+                                "description": "Effective thermal resistance of the party wall cavity (unit: m\u00b2.K/W). Required only when party_wall_cavity_type is 'defined_resistance'. For other cavity types, this is calculated automatically.",
+                                "title": "Thermal Resistance Cavity"
+                            }
+                        }
                     }
                 }
             ]
@@ -4023,6 +4333,134 @@
                     "maximum": 2
                 }
             }
+        },
+        "BoilerCostScheduleHybrid": {
+            "additionalProperties": false,
+            "properties": {
+                "cost_schedule_boiler": {
+                    "$ref": "#/$defs/ScheduleForDouble",
+                    "description": "Cost data for the fuel used by the hybrid's boiler (can be any units, typically p/kWh)"
+                },
+                "cost_schedule_hp": {
+                    "$ref": "#/$defs/ScheduleForDouble",
+                    "description": "Cost data for the fuel used by the hybrid's heat pump (can be any units, typically p/kWh)"
+                },
+                "cost_schedule_start_day": {
+                    "description": "Day on which the cost data series begins",
+                    "maximum": 365,
+                    "minimum": 0,
+                    "title": "Cost Schedule Start Day",
+                    "type": "integer"
+                },
+                "cost_schedule_time_series_step": {
+                    "description": "Time step of the cost data series",
+                    "title": "Cost Schedule Time Series Step",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "cost_schedule_boiler",
+                "cost_schedule_hp",
+                "cost_schedule_start_day",
+                "cost_schedule_time_series_step"
+            ],
+            "title": "BoilerCostScheduleHybrid",
+            "type": "object"
+        },
+        "ScheduleForDouble": {
+            "additionalProperties": {
+                "items": {
+                    "$ref": "#/$defs/ScheduleEntryForDouble"
+                },
+                "type": "array"
+            },
+            "description": "A dictionary of schedule entries where:\n- Keys are user-defined names (e.g., \"main\", \"week\", \"weekday\", \"weekend\")\n- Values are lists of ScheduleEntryForDouble\n- The \"main\" entry is required",
+            "title": "ScheduleForDouble",
+            "type": "object"
+        },
+        "ScheduleEntryForDouble": {
+            "anyOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "$ref": "#/$defs/ScheduleRepeaterForDouble"
+                },
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "description": "A schedule entry that can be a direct value, repeating pattern, or reference.\n\nExamples:\n    # Direct float value (temperature setpoint)\n    21.5\n\n    # Repeating pattern (21.5\u00b0C for 8 hours, 18\u00b0C for 16 hours)\n    {\"repeat\": 24, \"value\": 21.5}\n\n    # Reference to another schedule\n    \"weekday_temp_schedule\"\n\n    # Complex repeating pattern with reference\n    {\"repeat\": 7, \"value\": \"daily_temp_pattern\"}\n\n    # Power level schedule\n    2.5  # 2.5 kW constant power",
+            "title": "ScheduleEntryForDouble"
+        },
+        "ScheduleRepeaterForDouble": {
+            "additionalProperties": false,
+            "description": "Defines a repeating pattern for double (float) schedule values.\n\nExamples:\n    # Repeat temperature setpoint 21.5\u00b0C 24 times (once per hour)\n    {\"repeat\": 24, \"value\": 21.5}\n\n    # Reference another schedule, repeat 7 times (once per day)\n    {\"repeat\": 7, \"value\": \"weekday_temp_schedule\"}\n\n    # Repeat power level 2.5 kW for 8 hours\n    {\"repeat\": 8, \"value\": 2.5}",
+            "properties": {
+                "repeat": {
+                    "description": "Number of times to repeat the value",
+                    "minimum": 0,
+                    "title": "Repeat",
+                    "type": "integer"
+                },
+                "value": {
+                    "$ref": "#/$defs/ScheduleRepeaterValueForDouble",
+                    "description": "Value to repeat or schedule reference"
+                }
+            },
+            "required": [
+                "repeat",
+                "value"
+            ],
+            "title": "ScheduleRepeaterForDouble",
+            "type": "object"
+        },
+        "ScheduleRepeaterValueForDouble": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "$ref": "#/$defs/ScheduleRepeaterEntryForDouble"
+                }
+            ],
+            "title": "ScheduleRepeaterValueForDouble"
+        },
+        "ScheduleRepeaterEntryForDouble": {
+            "anyOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "ScheduleRepeaterEntryForDouble"
+        },
+        "PartyWallCavityType": {
+            "description": "Types of party wall cavity configurations",
+            "enum": [
+                "solid",
+                "unfilled_unsealed",
+                "unfilled_sealed",
+                "filled_sealed",
+                "filled_unsealed",
+                "defined_resistance"
+            ],
+            "title": "PartyWallCavityType",
+            "type": "string"
+        },
+        "PartyWallLiningType": {
+            "description": "Types of party wall lining",
+            "enum": [
+                "wet_plaster",
+                "dry_lined"
+            ],
+            "title": "PartyWallLiningType",
+            "type": "string"
         }
     }
 }
