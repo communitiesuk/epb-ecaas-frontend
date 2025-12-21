@@ -133,7 +133,6 @@ describe("PV and electric batteries summary page", () => {
 				Capacity: `10 ${kilowattHour.suffix}`,
 				"Charge efficiency": "0.7",
 				Location: "Inside",
-				"Grid charging possible": "No",
 				"Maximum charge rate": `6.2 ${kilowatt.suffix}`,
 				"Minimum charge rate": `4.5 ${kilowatt.suffix}`,
 				"Maximum discharge rate": `2.3 ${kilowatt.suffix}`,

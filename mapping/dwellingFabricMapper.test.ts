@@ -93,7 +93,7 @@ describe("dwelling fabric mapper", () => {
 		// Act
 		const fhsInputData = mapLightingData(resolveState(store.$state));
 
-		const bulbs = [fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs] as unknown as SchemaLightingBulbs;
+		const bulbs = fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs!;
 
 		// Assert
 		expect(bulbs[0]!.count).toBe(state.numberOfBulbs);

@@ -168,7 +168,7 @@ describe("dwelling details mapper", () => {
 					mains_gas: {
 						fuel: "mains_gas",
 					},
-					"lpg_bulk": {
+					"LPG_bulk": {
 						fuel: "LPG_bulk",
 						is_export_capable: false,
 					},
