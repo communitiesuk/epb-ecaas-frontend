@@ -5,18 +5,39 @@
 	}>();
 
 	const route = useRoute();
-	const getPageNumber = () => parseInt(route.query?.page as string) || 1;
+	const routeQuery = computed(() => route.query);
+	const getPageNumber = () => parseInt(routeQuery.value?.page as string) || 1;
 
 	const minPageNumbers = 3;
 	const minPageNumbersToTruncate = 6;
 	const adjacentPageNumbers = Math.floor(range / 2);
+
+	const getSearchParams = () => {
+		if (!routeQuery.value) {
+			return "";
+		}
+
+		const queryValues = Object.entries(routeQuery.value)
+			.filter(e => e[0] !== "page" && !!e[1])
+			.map(e => [e[0], e[1]!.toString()]);
+
+		const params = new URLSearchParams(queryValues);
+		
+		return !!params.size ? `${params}&` : "";
+	};
+
+	const query = ref(getSearchParams());
+
+	watch(routeQuery, () => {
+		query.value = getSearchParams();
+	});
 </script>
 
 <template>
 	<div class="govuk-pagination govuk-!-margin-bottom-3" aria-label="Pagination">
 		<!-- Show previous link if current page is greater than 1 -->
 		<div class="govuk-pagination__prev" v-if="getPageNumber() > 1">
-			<NuxtLink class="govuk-link govuk-pagination__link" :href="`?page=${getPageNumber() - 1}`" rel="prev">
+			<NuxtLink class="govuk-link govuk-pagination__link" :href="`?${query}page=${getPageNumber() - 1}`" rel="prev">
 				<svg class="govuk-pagination__icon govuk-pagination__icon--prev"
 					xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true"
 					focusable="false" viewBox="0 0 15 13">
@@ -34,7 +55,7 @@
 		<ul class="govuk-pagination__list" v-if="totalPages >= minPageNumbers && totalPages < minPageNumbersToTruncate">
 			<li class="govuk-pagination__item" v-for="pageNumber in totalPages"
 				:class="getPageNumber() === pageNumber ? 'govuk-pagination__item--current' : ''">
-				<NuxtLink class="govuk-link govuk-pagination__link" :href="`?page=${pageNumber}`" :aria-label="`Page ${pageNumber}`">
+				<NuxtLink class="govuk-link govuk-pagination__link" :href="`?${query}page=${pageNumber}`" :aria-label="`Page ${pageNumber}`">
 					{{ pageNumber }}
 				</NuxtLink>
 			</li>
@@ -43,7 +64,7 @@
 		<!-- Truncate page numbers if total pages is greater than the minimum to truncate -->
 		<ul class="govuk-pagination__list" v-if="totalPages >= minPageNumbersToTruncate">
 			<li class="govuk-pagination__item" :class="getPageNumber() === 1 ? 'govuk-pagination__item--current' : ''">
-				<NuxtLink class="govuk-link govuk-pagination__link" href="?page=1" :aria-label="`Page 1`">
+				<NuxtLink class="govuk-link govuk-pagination__link" :href="`?${query}page=1`" :aria-label="`Page 1`">
 					1
 				</NuxtLink>
 			</li>
@@ -63,7 +84,7 @@
 					class="govuk-pagination__item"
 					:class="pageNumber === getPageNumber() ? 'govuk-pagination__item--current' : ''"
 				>
-					<NuxtLink class="govuk-link govuk-pagination__link" :href="`?page=${pageNumber}`" :aria-label="`Page ${pageNumber}`">
+					<NuxtLink class="govuk-link govuk-pagination__link" :href="`?${query}page=${pageNumber}`" :aria-label="`Page ${pageNumber}`">
 						{{ pageNumber }}
 					</NuxtLink>
 				</li>
@@ -72,7 +93,7 @@
 				&ctdot;
 			</li>
 			<li class="govuk-pagination__item" :class="getPageNumber() === totalPages ? 'govuk-pagination__item--current' : ''">
-				<NuxtLink class="govuk-link govuk-pagination__link" :href="`?page=${totalPages}`" :aria-label="`Page ${totalPages}`">
+				<NuxtLink class="govuk-link govuk-pagination__link" :href="`?${query}page=${totalPages}`" :aria-label="`Page ${totalPages}`">
 					{{ totalPages }}
 				</NuxtLink>
 			</li>
@@ -80,7 +101,7 @@
 
 		<!-- Show next link if current page is less than total pages -->
 		<div class="govuk-pagination__next" v-if="getPageNumber() < totalPages">
-			<NuxtLink class="govuk-link govuk-pagination__link" :href="`?page=${getPageNumber() + 1}`" rel="next">
+			<NuxtLink class="govuk-link govuk-pagination__link" :href="`?${query}page=${getPageNumber() + 1}`" rel="next">
 				<span class="govuk-pagination__link-title">
 					Next<span class="govuk-visually-hidden"> page</span>
 				</span>

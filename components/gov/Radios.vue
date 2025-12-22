@@ -14,7 +14,8 @@ interface RadiosProps {
 	ariaDescribedBy?: string;
 	handleInput: (e: Event) => void;
 	currentValue: string | undefined;
-	attrs: Record<string, unknown>
+	attrs: Record<string, unknown>;
+	classNames?: Record<string, string>;
 }
 
 const {
@@ -24,6 +25,7 @@ const {
 	help = undefined,
 	ariaDescribedBy = undefined,
 	attrs,
+	classNames
 } = defineProps<RadiosProps>();
 
 const { mounted } = useMounted();
@@ -49,7 +51,7 @@ const idWithKey = (key: string) => `${id}_${key.replaceAll(/ /g, "_")}`;
 			<p v-if="invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 				<span class="govuk-visually-hidden">Error:</span> {{ showErrorMessage() }}
 			</p>
-			<div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
+			<div :class="`govuk-radios govuk-radios--small ${classNames?.radios || ``}`" data-module="govuk-radios">
 				<div v-for="key in options.keys()" :key="key" class="govuk-radios__item">
 					<input
 						:id="idWithKey(key)"

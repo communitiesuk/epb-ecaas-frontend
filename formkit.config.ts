@@ -26,6 +26,7 @@ declare module "@formkit/inputs" {
 			type: "govRadios";
 			options: Record<string, string | RadioOption> | Map<string, string>;
 			valueType?: "string" | "number";
+			classNames?: Record<string, string>;
 		};
 		govButton: {
 			type: "govButton";

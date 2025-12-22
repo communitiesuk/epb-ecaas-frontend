@@ -45,7 +45,7 @@ function handleBlur(e: FocusEvent) {
 			:value="mounted ? props.context._value : ''"
 			:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 			:data-testid="id"
-			:placeholder="placeholder as string"
+			:placeholder="placeholder"
 			v-bind="props.context.attrs"
 			@change="handleInput"
 			@blur="handleBlur"

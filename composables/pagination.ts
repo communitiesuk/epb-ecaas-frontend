@@ -1,9 +1,14 @@
 
+export interface Pagination<T> {
+	getData: () => T[];
+	totalPages: number;
+}
+
 /**
  * Provides data and functions for pagination
  * @returns Total pages and function for returning data for the current page
  */
-export function usePagination<T>(data: Array<T>, pageSize: number) {
+export function usePagination<T>(data: Array<T>, pageSize: number): Pagination<T> {
 	const route = useRoute();
 	const totalPages = Array.isArray(data) ? Math.ceil(data.length / pageSize) : 1;
 
