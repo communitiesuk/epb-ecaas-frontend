@@ -80,7 +80,6 @@ describe("floors", () => {
 	const exposed1: ExposedFloorData = {
 		name: "Exposed floor 1",
 		pitch: 0,
-		orientation: 0,
 		length: 0.5,
 		width: 20,
 		elevationalHeight: 20,
@@ -94,7 +93,6 @@ describe("floors", () => {
 	const exposed2: ExposedFloorData = {
 		name: "Exposed floor 2",
 		pitch: 0,
-		orientation: 0,
 		length: 0.5,
 		width: 20,
 		elevationalHeight: 20,
@@ -108,7 +106,6 @@ describe("floors", () => {
 	const exposed3: ExposedFloorData = {
 		name: "Exposed floor 3",
 		pitch: 0,
-		orientation: 0,
 		length: 0.5,
 		width: 20,
 		elevationalHeight: 20,

@@ -1,4 +1,4 @@
-import type { BuildingElementGround, BuildingElementOfType, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaEdgeInsulationHorizontal, SchemaLightingBulbs } from "~/schema/aliases";
+import type { BuildingElementGround, BuildingElementOfType, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaEdgeInsulationHorizontal } from "~/schema/aliases";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type {
@@ -93,7 +93,9 @@ describe("dwelling fabric mapper", () => {
 		// Act
 		const fhsInputData = mapLightingData(resolveState(store.$state));
 
-		const bulbs = fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs!;
+		let bulbs = fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs;
+
+		bulbs = bulbs as NonNullable<typeof bulbs>;
 
 		// Assert
 		expect(bulbs[0]!.count).toBe(state.numberOfBulbs);
@@ -165,7 +167,6 @@ describe("dwelling fabric mapper", () => {
 		const exposedFloor: ExposedFloorData = {
 			name: "Exposed Floor 1",
 			pitch: 180,
-			orientation: 0,
 			length: 0.5,
 			width: 20,
 			elevationalHeight: 20,
@@ -293,7 +294,6 @@ describe("dwelling fabric mapper", () => {
 			colour: exposedFloor.colour,
 			areal_heat_capacity: exposedFloor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(exposedFloor.massDistributionClass),
-			orientation360: exposedFloor.orientation,
 			is_external_door: false,
 			is_unheated_pitched_roof: false,
 		};

@@ -114,7 +114,12 @@ const expectedHouseInput: FhsInputSchema = {
 			},
 		},
 		Bath: {},
-		Other: {},
+		Other: {
+			"other": {
+				flowrate: 8,
+				ColdWaterSource: "mains water",
+			},
+		},
 	},
 	HotWaterSource: {
 		"hw cylinder": {
@@ -668,7 +673,6 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: "Medium",
 					mass_distribution_class: "D: Mass equally distributed",
 					pitch: 180,
-					orientation360: 0,
 					u_value: 0.1,
 					type: "BuildingElementOpaque",
 					is_external_door: false,
@@ -1242,6 +1246,14 @@ describe("FHS input mapper", () => {
 				},
 				otherOutlets: {
 					...baseForm,
+					data: [{
+						...baseForm,
+						data: {
+							id: "other",
+							name: "other",
+							flowRate: 8,
+						},
+					}],
 				},
 			},
 			pipework: {
@@ -1541,7 +1553,6 @@ describe("FHS input mapper", () => {
 							massDistributionClass: "D",
 							pitch: 180,
 							colour: "Dark",
-							orientation: 0,
 							uValue: 0.1,
 						},
 					}],
@@ -2145,7 +2156,7 @@ describe("FHS input mapper", () => {
 		expect(fhsInputData).toEqual(expectedResult);
 	});
 
-	test.skip("the expected results pass against the current FHS input schema", () => {
+	test("the expected results pass against the current FHS input schema", () => {
 		const expectedsToTest = [
 			expectedHouseInput,
 			expectedFlatInput,

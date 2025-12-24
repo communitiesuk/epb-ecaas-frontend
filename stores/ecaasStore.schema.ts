@@ -155,7 +155,6 @@ export type InternalFloorData = z.infer<typeof internalFloorDataZod>;
 
 const exposedFloorDataZod = named.extend({
 	pitch: z.number().min(0).lt(180),
-	orientation,
 	length: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),

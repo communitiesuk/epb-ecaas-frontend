@@ -264,7 +264,6 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				pitch: x.pitch,
-				orientation360: x.orientation,
 				is_external_door: false,
 				is_unheated_pitched_roof: false, // this may need to be limited to opaque elements with pitch <= 60
 			},

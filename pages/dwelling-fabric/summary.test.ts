@@ -76,7 +76,6 @@ const floorsData: FloorsData = {
 			data: {
 				name: "Exposed Floor 1",
 				pitch: 0,
-				orientation: 0,
 				length: 0.5,
 				width: 20,
 				elevationalHeight: 20,
