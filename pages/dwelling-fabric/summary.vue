@@ -191,6 +191,9 @@ const partyWallSummary: SummarySection = {
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Cavity type": displaySnakeToSentenceCase(show(x.partyWallCavityType)),
+			"Lining type": displaySnakeToSentenceCase(show(x.partyWallLiningType)),
+			"Thermal resistance of cavity": dim(x.thermalResistanceCavity, "square metre kelvin per watt"),
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceWalls"),

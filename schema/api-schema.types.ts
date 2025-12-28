@@ -1059,6 +1059,53 @@ export interface components {
             height: number;
             width: number;
         };
+        BuildingElementPartyWall: {
+            /** @constant */
+            type: "BuildingElementPartyWall";
+            /**
+             * Area
+             * @description Area of the building element (m²), must be positive
+             */
+            area: number;
+            /** @enum {unknown} */
+            areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
+            mass_distribution_class: components["schemas"]["MassDistributionClass"];
+            /**
+             * Pitch
+             * @description Tilt angle of the surface from horizontal, between 60 and 120 degrees (wall range), where 90 means vertical (unit: °)
+             */
+            pitch: number;
+            /** @description Type of party wall cavity construction affecting heat loss through air movement */
+            party_wall_cavity_type: components["schemas"]["PartyWallCavityType"];
+        } & ({
+            /**
+             * PartyWallCavityType
+             * @description Types of party wall cavity configurations
+             * @enum {string}
+             */
+            party_wall_cavity_type: "unfilled_unsealed" | "unfilled_sealed" | "filled_unsealed";
+            /** @description Type of party wall lining. Required only when party_wall_cavity_type is unfilled_unsealed, unfilled_sealed, or filled_unsealed */
+            party_wall_lining_type: components["schemas"]["PartyWallLiningType"];
+        } | {
+            /**
+             * PartyWallCavityType
+             * @description Types of party wall cavity configurations
+             * @constant
+             */
+            party_wall_cavity_type: "defined_resistance";
+            /**
+             * Thermal Resistance Cavity
+             * @description Effective thermal resistance of the party wall cavity (unit: m².K/W). Required only when party_wall_cavity_type is 'defined_resistance'. For other cavity types, this is calculated automatically.
+             */
+            thermal_resistance_cavity: number;
+        } | {
+            /**
+             * PartyWallCavityType
+             * @description Types of party wall cavity configurations
+             * @enum {string}
+             */
+            party_wall_cavity_type: "solid" | "filled_sealed";
+        });
         ThermalBridgeLinear: {
             /** @constant */
             type: "ThermalBridgeLinear";
@@ -1331,7 +1378,7 @@ export interface components {
                         } | {
                             thermal_resistance_construction?: number;
                             u_value: number;
-                        }) & (components["schemas"]["BuildingElementAdjacentConditionedSpace"] | components["schemas"]["BuildingElementAdjacentUnconditionedSpace_Simple"] | components["schemas"]["BuildingElementGround"] | components["schemas"]["BuildingElementOpaque"] | components["schemas"]["BuildingElementTransparent"]);
+                        }) & (components["schemas"]["BuildingElementAdjacentConditionedSpace"] | components["schemas"]["BuildingElementAdjacentUnconditionedSpace_Simple"] | components["schemas"]["BuildingElementGround"] | components["schemas"]["BuildingElementOpaque"] | components["schemas"]["BuildingElementTransparent"] | components["schemas"]["BuildingElementPartyWall"]);
                     };
                     ThermalBridging: {
                         [key: string]: components["schemas"]["ThermalBridgeLinear"] | components["schemas"]["ThermalBridgePoint"];
@@ -2112,7 +2159,9 @@ export interface components {
                     width: number;
                     area: number;
                 } & (unknown & unknown & unknown);
-                BuildingElementPartyWall: ({
+                BuildingElementPartyWall: {
+                    /** @constant */
+                    type: "BuildingElementPartyWall";
                     /**
                      * Area
                      * @description Area of the building element (m²), must be positive
@@ -2128,7 +2177,7 @@ export interface components {
                     pitch: number;
                     /** @description Type of party wall cavity construction affecting heat loss through air movement */
                     party_wall_cavity_type: components["schemas"]["PartyWallCavityType"];
-                } & (unknown & unknown)) | {
+                } & ({
                     /**
                      * PartyWallCavityType
                      * @description Types of party wall cavity configurations
@@ -2143,7 +2192,7 @@ export interface components {
                      * @description Types of party wall cavity configurations
                      * @constant
                      */
-                    party_wall_cavity_type?: "defined_resistance";
+                    party_wall_cavity_type: "defined_resistance";
                     /**
                      * Thermal Resistance Cavity
                      * @description Effective thermal resistance of the party wall cavity (unit: m².K/W). Required only when party_wall_cavity_type is 'defined_resistance'. For other cavity types, this is calculated automatically.
@@ -2156,7 +2205,7 @@ export interface components {
                      * @enum {string}
                      */
                     party_wall_cavity_type: "solid" | "filled_sealed";
-                };
+                });
                 BuildingElementTransparent: {
                     /** @constant */
                     type: "BuildingElementTransparent";
@@ -2383,6 +2432,7 @@ export type SchemaBuildingElementAdjacentUnconditionedSpaceSimple = components['
 export type SchemaBuildingElementGround = components['schemas']['BuildingElementGround'];
 export type SchemaBuildingElementOpaque = components['schemas']['BuildingElementOpaque'];
 export type SchemaBuildingElementTransparent = components['schemas']['BuildingElementTransparent'];
+export type SchemaBuildingElementPartyWall = components['schemas']['BuildingElementPartyWall'];
 export type SchemaThermalBridgeLinear = components['schemas']['ThermalBridgeLinear'];
 export type SchemaThermalBridgePoint = components['schemas']['ThermalBridgePoint'];
 export type SchemaFhsInputSchema = components['schemas']['fhs_input.schema'];

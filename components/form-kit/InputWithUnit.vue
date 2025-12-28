@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from "@formkit/core";
 import { showErrorState, getErrorMessage } from "#imports";
-import type { Unit } from "~/utils/units/types";
+import type { Unit, UnitName } from "~/utils/units/types";
+import { asUnit } from "~/utils/units/units";
 
 const props = defineProps<{
-	context: FormKitFrameworkContext & { attrs: { unit: Unit } }
+	context: FormKitFrameworkContext & { attrs: { unit: Unit | UnitName } }
 }>();
 
 const {
@@ -14,6 +15,8 @@ const {
 	label,
 	help,
 } = props.context;
+
+const { name: unitName, suffix: unitSuffix } = typeof unit === "string" ? asUnit(unit) : unit;
 
 const { mounted } = useMounted();
 
@@ -33,7 +36,7 @@ function handleInput(e: Event) {
 	if (typeof value === "number") {
 		props.context.node.input({
 			amount: value,
-			unit: unit.name,
+			unit: unitName,
 		});
 	} else {
 		props.context.node.input(undefined);
@@ -70,7 +73,7 @@ function handleBlur(e: FocusEvent) {
 				@change="handleInput"
 				@blur="handleBlur"
 			>
-			<div class="govuk-input__suffix" aria-hidden="true">{{unit.suffix}}</div>
+			<div class="govuk-input__suffix" aria-hidden="true">{{ unitSuffix }}</div>
 		</div>
 	</div>
 </template>

@@ -6,7 +6,7 @@ import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/sch
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, colourZod, convectiveTypeZod, ductShapeZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, colourZod, convectiveTypeZod, ductShapeZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 
 const fraction = z.number().min(0).max(1);
 const percentage = z.number().min(0).max(100);
@@ -267,13 +267,18 @@ const wallsToUnheatedSpaceDataZod = namedWithId.extend({
 
 export type WallsToUnheatedSpaceData = z.infer<typeof wallsToUnheatedSpaceDataZod>;
 
+export const thermalResistanceCavityZod = z.optional(z.number().gt(0));
+
 const partyWallDataZod = namedWithId.extend({
 	pitchOption: standardPitchOption,
-	pitch: z.optional(z.number().min(0).lt(180)),
+	pitch: z.optional(z.number().min(60).max(120)),
 	surfaceArea: z.number().min(0.01).max(10000),
 	uValue,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
+	partyWallCavityType: partyWallCavityTypeZod,
+	partyWallLiningType: z.optional(partyWallLiningTypeZod),
+	thermalResistanceCavity: thermalResistanceCavityZod,
 });
 
 export type PartyWallData = z.infer<typeof partyWallDataZod>;

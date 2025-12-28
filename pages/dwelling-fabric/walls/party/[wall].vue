@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { standardPitchOptions, getUrl, uniqueName } from "#imports";
+import { standardPitchOptions, getUrl, uniqueName, type SnakeToSentenceCase } from "#imports";
+import type { SchemaPartyWallCavityType, SchemaPartyWallLiningType } from "~/schema/api-schema.types";
+import { thermalResistanceCavityZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "#imports";
 
 const title = "Party wall";
 const store = useEcaasStore();
@@ -11,6 +14,19 @@ const wallData = useItemToEdit("wall", partyWallData);
 const wallId = wallData?.data.id ?? uuidv4();
 const index = getStoreIndex(partyWallData);
 const model: Ref<PartyWallData | undefined> = ref(wallData?.data);
+
+const partyWallCavityTypeOptions = {
+	defined_resistance: "Defined resistance",
+	filled_sealed: "Filled sealed",
+	filled_unsealed: "Filled unsealed",
+	solid: "Solid",
+	unfilled_sealed: "Unfilled sealed",
+	unfilled_unsealed: "Unfilled unsealed",
+} as const satisfies Record<SchemaPartyWallCavityType, SnakeToSentenceCase<SchemaPartyWallCavityType>>;
+const partyWallLiningTypeOptions = {
+	dry_lined: "Dry lined",
+	wet_plaster: "Wet plaster",
+} as const satisfies Record<SchemaPartyWallLiningType, SnakeToSentenceCase<SchemaPartyWallLiningType>>;
 
 const saveForm = (fields: PartyWallData) => {
 	store.$patch((state) => {
@@ -28,6 +44,9 @@ const saveForm = (fields: PartyWallData) => {
 				uValue: fields.uValue,
 				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
+				partyWallCavityType: fields.partyWallCavityType,
+				partyWallLiningType: fields.partyWallLiningType,
+				thermalResistanceCavity: fields.thermalResistanceCavity,
 			},
 			complete: true,
 		};
@@ -85,6 +104,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
+			help="Tilt angle of the surface from horizontal, between 60 and 120 degrees (wall range), where 90 means vertical"
+			:suppress-standard-guidance="true"
+			:custom-pitch-range="[60, 120]"
 			data-field="Zone.BuildingElement.*.pitch"
 		/>
 		<FormKit
@@ -114,6 +136,36 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</FormKit>
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<FormKit
+			id="partyWallCavityType"
+			name="partyWallCavityType"
+			type="govRadios"
+			label="Cavity type"
+			help="Type of party wall cavity construction affecting heat loss through air movement"
+			:options="partyWallCavityTypeOptions"
+			validation="required"
+			data-field="Zone.BuildingElement.*.party_wall_cavity_type"
+		/>
+		<FormKit
+			v-if="['filled_unsealed', 'unfilled_sealed', 'unfilled_unsealed'].includes(model?.partyWallCavityType!)"
+			id="partyWallLiningType"
+			name="partyWallLiningType"
+			type="govRadios"
+			label="Lining type"
+			:options="partyWallLiningTypeOptions"
+			validation="required"
+			data-field="Zone.BuildingElement.*.party_wall_lining_type"
+		/>
+		<FormKit
+			v-if="model?.partyWallCavityType === 'defined_resistance'"
+			id="thermalResistanceCavity"
+			name="thermalResistanceCavity"
+			type="govInputWithUnit"
+			unit="square metre kelvin per watt"
+			label="Thermal resistance of cavity"
+			help="Effective thermal resistance of the party wall cavity"
+			:validation="`required | ${ zodTypeAsFormKitValidation(thermalResistanceCavityZod) }`"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

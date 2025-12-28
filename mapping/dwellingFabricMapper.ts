@@ -326,17 +326,20 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		};
 	}) || [];
 
-	const partyWallData: { [key: string]: SchemaBuildingElement }[] = dwellingSpacePartyWall?.map(x => {
+	const partyWallData = dwellingSpacePartyWall?.map(x => {
 		const nameWithSuffix = suffixName(x.name, wallSuffix);
 
 		return {
 			[nameWithSuffix]: {
-				type: "BuildingElementAdjacentConditionedSpace",
+				type: "BuildingElementPartyWall",
 				pitch: extractPitch(x),
 				area: x.surfaceArea,
 				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
+				party_wall_cavity_type: x.partyWallCavityType,
+				...(["unfilled_unsealed", "unfilled_sealed", "filled_unsealed"].includes(x.partyWallCavityType) && { party_wall_lining_type: x.partyWallLiningType }),
+				...(x.partyWallCavityType === "defined_resistance" && { thermal_resistance_cavity: x.thermalResistanceCavity }),
 			},
 		};
 	}) || [];

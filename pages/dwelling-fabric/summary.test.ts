@@ -150,6 +150,8 @@ const wallsData: WallsData = {
 				uValue: 1,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
+				partyWallCavityType: "unfilled_sealed",
+				partyWallLiningType: "wet_plaster",
 			},
 		}],
 	},

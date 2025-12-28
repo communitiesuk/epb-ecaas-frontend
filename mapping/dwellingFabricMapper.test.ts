@@ -4,6 +4,8 @@ import { defaultZoneName } from "./common";
 import type {
 	DwellingSpaceLightingData,
 	DwellingSpaceZoneParametersData,
+	EcaasForm,
+	PartyWallData,
 } from "~/stores/ecaasStore.schema";
 import { centimetre, millimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
@@ -12,6 +14,7 @@ type BuildingElementOpaque = BuildingElementOfType<"BuildingElementOpaque">;
 type BuildingElementAdjacentConditionedSpace = BuildingElementOfType<"BuildingElementAdjacentConditionedSpace">;
 type BuildingElementAdjacentUnconditionedSpaceSimple = BuildingElementOfType<"BuildingElementAdjacentUnconditionedSpace_Simple">;
 type BuildingElementTransparent = BuildingElementOfType<"BuildingElementTransparent">;
+type BuildingElementPartyWall = BuildingElementOfType<"BuildingElementPartyWall">;
 
 const baseForm = {
 	data: [],
@@ -335,10 +338,10 @@ describe("dwelling fabric mapper", () => {
 			},
 		};
 
-		const partyWall: EcaasForm<PartyWallData> = {
+		const partyWallWithLiningType: EcaasForm<PartyWallData> = {
 			...baseForm,
 			data: {
-				id: "party-id",
+				id: "party-id-with-lining-type",
 				name: "Party wall 1",
 				pitchOption: "90",
 				pitch: 90,
@@ -346,6 +349,39 @@ describe("dwelling fabric mapper", () => {
 				uValue: 1,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
+				partyWallCavityType: "filled_unsealed",
+				partyWallLiningType: "dry_lined",
+			},
+		};
+
+		const partyWallWithThermalResistanceCavity: EcaasForm<PartyWallData> = {
+			...baseForm,
+			data: {
+				id: "party-id-with-thermal-resistance-cavity",
+				name: "Party wall 2",
+				pitchOption: "90",
+				pitch: 90,
+				surfaceArea: 10,
+				uValue: 2,
+				arealHeatCapacity: "Light",
+				massDistributionClass: "E",
+				partyWallCavityType: "defined_resistance",
+				thermalResistanceCavity: 24,
+			},
+		};
+
+		const partyWallWithoutExtraAttributes: EcaasForm<PartyWallData> = {
+			...baseForm,
+			data: {
+				id: "party-id-without-extra-attrs",
+				name: "Party wall 3",
+				pitchOption: "90",
+				pitch: 90,
+				surfaceArea: 10,
+				uValue: 1.5,
+				arealHeatCapacity: "Medium",
+				massDistributionClass: "D",
+				partyWallCavityType: "solid",
 			},
 		};
 
@@ -371,7 +407,7 @@ describe("dwelling fabric mapper", () => {
 				dwellingSpaceWalls: {
 					dwellingSpaceExternalWall: { ...baseForm, data: [externalWall] },
 					dwellingSpaceInternalWall: { ...baseForm, data: [internalWall] },
-					dwellingSpacePartyWall: { ...baseForm, data: [partyWall] },
+					dwellingSpacePartyWall: { ...baseForm, data: [partyWallWithLiningType, partyWallWithThermalResistanceCavity, partyWallWithoutExtraAttributes] },
 					dwellingSpaceWallToUnheatedSpace: { ...baseForm, data: [wallToUnheatedSpace] },
 				},
 			},
@@ -383,7 +419,9 @@ describe("dwelling fabric mapper", () => {
 		// Assert
 		const externalWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalWall.data.name + wallSuffix]! as BuildingElementOpaque;
 		const internalWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalWall.data.name + wallSuffix]! as BuildingElementAdjacentConditionedSpace;
-		const partyWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyWall.data.name + wallSuffix]! as BuildingElementOpaque;
+		const partyWallWithLiningTypeElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyWallWithLiningType.data.name + wallSuffix]! as BuildingElementPartyWall;
+		const partyWallWithThermalResistanceCavityElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyWallWithThermalResistanceCavity.data.name + wallSuffix]! as BuildingElementPartyWall;
+		const partyWallWithoutExtraAttributesElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyWallWithoutExtraAttributes.data.name + wallSuffix]! as BuildingElementPartyWall;
 		const wallToUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[wallToUnheatedSpace.data.name + wallSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
 
 		const expectedExternalWall: BuildingElementOpaque = {
@@ -415,16 +453,43 @@ describe("dwelling fabric mapper", () => {
 
 		expect(internalWallElement).toEqual(expectedInternalWall);
 
-		const expectedPartyWall: BuildingElementAdjacentConditionedSpace = {
-			type: "BuildingElementAdjacentConditionedSpace",
-			pitch: partyWall.data.pitch!,
-			area: partyWall.data.surfaceArea,
-			u_value: partyWall.data.uValue,
-			areal_heat_capacity: partyWall.data.arealHeatCapacity,
-			mass_distribution_class: fullMassDistributionClass(partyWall.data.massDistributionClass),
+		const expectedPartyWallWithLiningType: BuildingElementPartyWall = {
+			type: "BuildingElementPartyWall",
+			pitch: partyWallWithLiningType.data.pitch!,
+			area: partyWallWithLiningType.data.surfaceArea,
+			u_value: partyWallWithLiningType.data.uValue,
+			areal_heat_capacity: partyWallWithLiningType.data.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(partyWallWithLiningType.data.massDistributionClass),
+			party_wall_cavity_type: "filled_unsealed",
+			party_wall_lining_type: "dry_lined",
 		};
 
-		expect(partyWallElement).toEqual(expectedPartyWall);
+		expect(partyWallWithLiningTypeElement).toEqual(expectedPartyWallWithLiningType);
+
+		const expectPartyWallWithThermalResistanceCavity: BuildingElementPartyWall = {
+			type: "BuildingElementPartyWall",
+			pitch: partyWallWithThermalResistanceCavity.data.pitch!,
+			area: partyWallWithThermalResistanceCavity.data.surfaceArea,
+			u_value: partyWallWithThermalResistanceCavity.data.uValue,
+			areal_heat_capacity: partyWallWithThermalResistanceCavity.data.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(partyWallWithThermalResistanceCavity.data.massDistributionClass),
+			party_wall_cavity_type: "defined_resistance",
+			thermal_resistance_cavity: 24,
+		};
+
+		expect(partyWallWithThermalResistanceCavityElement).toEqual(expectPartyWallWithThermalResistanceCavity);
+
+		const expectPartyWallWithoutExtraAttributes: BuildingElementPartyWall = {
+			type: "BuildingElementPartyWall",
+			pitch: partyWallWithoutExtraAttributes.data.pitch!,
+			area: partyWallWithoutExtraAttributes.data.surfaceArea,
+			u_value: partyWallWithoutExtraAttributes.data.uValue,
+			areal_heat_capacity: partyWallWithoutExtraAttributes.data.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(partyWallWithoutExtraAttributes.data.massDistributionClass),
+			party_wall_cavity_type: "solid",
+		};
+
+		expect(partyWallWithoutExtraAttributesElement).toEqual(expectPartyWallWithoutExtraAttributes);
 
 		const expectedWallToUnheatedSpace: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",

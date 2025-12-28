@@ -1083,6 +1083,9 @@
                                 },
                                 {
                                     "$ref": "#/$defs/BuildingElementTransparent"
+                                },
+                                {
+                                    "$ref": "#/$defs/BuildingElementPartyWall"
                                 }
                             ]
                         }
@@ -3970,6 +3973,9 @@
                 "party_wall_cavity_type"
             ],
             "properties": {
+                "type": {
+                    "const": "BuildingElementPartyWall"
+                },
                 "area": {
                     "description": "Area of the building element (m\u00b2), must be positive",
                     "exclusiveMinimum": 0,
@@ -3994,7 +4000,7 @@
                     "description": "Type of party wall cavity construction affecting heat loss through air movement"
                 }
             },
-            "anyOf": [
+            "oneOf": [
                 {
                     "required": [
                         "party_wall_cavity_type",
@@ -4019,7 +4025,7 @@
                 },
                 {
                     "required": [
-                        "party_wall_lining_type",
+                        "party_wall_cavity_type",
                         "thermal_resistance_cavity"
                     ],
                     "properties": {
@@ -4050,42 +4056,6 @@
                             ],
                             "title": "PartyWallCavityType",
                             "type": "string"
-                        }
-                    }
-                }
-            ],
-            "allOf": [
-                {
-                    "if": {
-                        "anyOf": [
-                            {"properties": {"party_wall_cavity_type": {"const": "unfilled_unsealed"}}},
-                            {"properties": {"party_wall_cavity_type": {"const": "unfilled_sealed"}}},
-                            {"properties": {"party_wall_cavity_type": {"const": "filled_unsealed"}}}
-                        ]
-                    },
-                    "then": {
-                        "required": ["party_wall_lining_type"],
-                        "properties": {
-                            "party_wall_lining_type": {
-                                "$ref": "#/$defs/PartyWallLiningType",
-                                "description": "Type of party wall lining. Required only when party_wall_cavity_type is unfilled_unsealed, unfilled_sealed, or filled_unsealed"
-                            }
-                        }
-                    }
-                },
-                {
-                    "if": {
-                        "properties": {"party_wall_cavity_type": {"const": "defined_resistance"}}
-                    },
-                    "then": {
-                        "required": ["thermal_resistance_cavity"],
-                        "properties": {
-                            "thermal_resistance_cavity": {
-                                "type": "number",
-                                "exclusiveMinimum": 0,
-                                "description": "Effective thermal resistance of the party wall cavity (unit: m\u00b2.K/W). Required only when party_wall_cavity_type is 'defined_resistance'. For other cavity types, this is calculated automatically.",
-                                "title": "Thermal Resistance Cavity"
-                            }
                         }
                     }
                 }
