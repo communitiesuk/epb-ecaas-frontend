@@ -52,6 +52,8 @@ describe("exposed floor", () => {
 		
 		expect(dwellingSpaceExposedFloor?.data[0]?.data).toEqual(exposedFloor);
 		expect(dwellingSpaceExposedFloor?.data[0]?.complete).toEqual(true);
+
+		expect(exposedFloorDataZod.parse(exposedFloor)).toBeTruthy();
 	});
 	
 	test("form is prepopulated when data exists in state", async () => {

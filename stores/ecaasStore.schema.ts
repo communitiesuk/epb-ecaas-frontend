@@ -153,8 +153,8 @@ const internalFloorDataZod = z.discriminatedUnion(
 
 export type InternalFloorData = z.infer<typeof internalFloorDataZod>;
 
-const exposedFloorDataZod = named.extend({
-	pitch: z.number().min(0).lt(180),
+export const exposedFloorDataZod = named.extend({
+	pitch: z.number().min(0).max(180),
 	length: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),
