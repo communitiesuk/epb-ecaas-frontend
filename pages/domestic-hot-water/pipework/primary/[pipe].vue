@@ -10,9 +10,8 @@ const store = useEcaasStore();
 const pipeworkData = useItemToEdit("pipe", store.domesticHotWater.pipework.primaryPipework.data);
 const model = ref(pipeworkData?.data);
 
-const pipeContentsOptions: Record<WaterPipeContentsType, string> = {
+const pipeContentsOptions: Record<Exclude<WaterPipeContentsType, "air">, string> = {
 	water: "Water",
-	air: "Air",
 	glycol25: "Glycol 25",
 };
 

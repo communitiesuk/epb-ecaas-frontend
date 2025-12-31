@@ -662,7 +662,7 @@ const primaryPipeworkDataZod = z.object({
 	insulationThickness: z.number(),
 	thermalConductivity: z.number(),
 	surfaceReflectivity: z.boolean(),
-	pipeContents: z.enum(WaterPipeContentsType),
+	pipeContents: z.enum(Object.values(WaterPipeContentsType).filter(x => x !== WaterPipeContentsType.air)),
 	hotWaterCylinder: z.string(),
 	location: z.enum(WaterPipeworkLocation),
 });
