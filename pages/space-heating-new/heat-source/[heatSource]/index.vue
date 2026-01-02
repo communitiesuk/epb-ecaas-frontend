@@ -12,7 +12,7 @@ const index = getStoreIndex(heatSourceStoreData);
 const heatSourceData = useItemToEdit("heatSource", heatSourceStoreData);
 const model = ref(heatSourceData?.data as HeatSourceData);
 const id =  heatSourceData?.data.id ?? uuidv4();
-
+console.log(store.spaceHeatingNew.heatSource.data, "store in heat source page");
 export type heatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
 export type boilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
 export type heatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
@@ -130,6 +130,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="heatSourceTypes"
 			name="typeOfHeatSource"
 			validation="required"
+			@change="() => {'productReference' in model && (model.productReference = '')}"
 		/>
 		<HeatPumpSection
 			v-if="model?.typeOfHeatSource === 'heatPump'"
