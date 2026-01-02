@@ -6,7 +6,8 @@ import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
 import SpaceHeatingNew from "./index.vue";
 import formStatus from "~/constants/formStatus";
-// import HeatSourceForm from "./heat-source/[heatSource]/index.vue";
+import HeatSourceForm from "./heat-source/[heatSource]/index.vue"
+import { litre } from "~/utils/units/volume";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -51,6 +52,33 @@ describe("space heating", () => {
 
 	describe("heat source", () => {
 
+		it("heat source is duplicated when duplicate link is clicked", async () => {
+						store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [
+							{ data: heatSource1 },
+							{ data: heatSource2 },
+
+						],
+					},
+				},
+			});
+					await renderSuspended(SpaceHeatingNew);
+					await userEvent.click(screen.getByTestId("heatSource_duplicate_0"));
+					await userEvent.click(screen.getByTestId("heatSource_duplicate_0"));
+					await userEvent.click(screen.getByTestId("heatSource_duplicate_2"));
+					await userEvent.click(screen.getByTestId("heatSource_duplicate_2"));
+		
+					expect(screen.queryAllByTestId("heatSource_item").length).toBe(6);
+					expect(screen.getByText("Heat source 1")).toBeDefined();
+					expect(screen.getByText("Heat source 1 (1)")).toBeDefined();
+					expect(screen.getByText("Heat source 1 (2)")).toBeDefined();
+					expect(screen.getByText("Heat source 1 (1) (1)")).toBeDefined();
+					expect(screen.getByText("Heat source 1 (1) (2)")).toBeDefined();
+		
+				});
+
 		it("removes an item when remove link is clicked", async () => {
 			store.$patch({
 				spaceHeatingNew: {
@@ -88,71 +116,87 @@ describe("space heating", () => {
 			expect(within(populatedList).queryByText("Heat source 2")).toBeNull();
 		});
 
-		// TODO
-		// it("when a heat pump is removed its also removed from store object which references it", async () => {
+		
+		it.skip("when a heat pump is removed its also removed from store object which references it", async () => {
 
-		// 			const cylinder: HotWaterCylinderData = {
-		// 				id: "Any Id",
-		// 				heatSource: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a2q",
-		// 				storageCylinderVolume: unitValue(150, litre),
-		// 				dailyEnergyLoss: 73,
-		// 				name: "Hot water cylinder 1",
-		// 			};
-		// 			const wetDistribution: WetDistributionData = {
-		// 				name: "Wet distribution 1",
-		// 				heatSource: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a2q",
-		// 				thermalMass: 2,
-		// 				designTempDiffAcrossEmitters: 0.4,
-		// 				designFlowTemp: 32,
-		// 				designFlowRate: 5,
-		// 				typeOfSpaceHeater: "radiator",
-		// 				exponent: 1.3,
-		// 				constant: 0.08,
-		// 				convectionFractionWet: 0.2,
-		// 				ecoDesignControllerClass: "1",
-		// 				minimumFlowTemp: 20,
-		// 				minOutdoorTemp: 0,
-		// 				maxOutdoorTemp: 15,
-		// 				numberOfRadiators: 1,
 
-		// 			};
+			const heatPump1: HeatSourceData = {
+			id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+			name: "Heat source 1",
+			typeOfHeatSource: HeatSourceType.heatPump,
+			typeOfHeatPump: "airSource",
+			productReference: "HEATPUMP_LARGE",
+			};
+			
+			const heatPump2: HeatSourceData = {
+			id: "0b77e247-53c5-42b8-9dbd-83cbfc8c22222",
+			name: "Heat source 1",
+			typeOfHeatSource: HeatSourceType.heatPump,
+			typeOfHeatPump: "airSource",
+			productReference: "HEATPUMP_LARGE",
+			};
 
-		// 			store.$patch({
-		// 				spaceHeating: {
-		// 					heatGeneration: {
-		// 						heatPump: {
-		// 							data: [
-		// 								{ data: heatPump1 },
-		// 								{ data: heatPump2 },
-		// 							],
-		// 						},
-		// 					},
-		// 					heatEmitting: {
-		// 						wetDistribution: {
-		// 							data: [
-		// 								{ data: wetDistribution },
-		// 							],
-		// 						},
-		// 					},
-		// 				},
-		// 				domesticHotWater: {
-		// 					waterHeating: {
-		// 						hotWaterCylinder: {
-		// 							data: [{ data: cylinder }],
-		// 						},
-		// 					},
-		// 				},
+			const cylinder: HotWaterCylinderData = {
+				id: "Any Id",
+				heatSource: heatPump1.id,
+				storageCylinderVolume: unitValue(150, litre),
+				dailyEnergyLoss: 73,
+				name: "Hot water cylinder 1",
+			};
 
-		// 			});
-		// 			await renderSuspended(HeatGeneration);
-		// 			await user.click(await screen.findByTestId("heatPump_remove_1"));
+			const wetDistribution: WetDistributionData = {
+				name: "Wet distribution 1",
+				heatSource: heatPump1.id,
+				thermalMass: 2,
+				designTempDiffAcrossEmitters: 0.4,
+				designFlowTemp: 32,
+				designFlowRate: 5,
+				typeOfSpaceHeater: "radiator",
+				exponent: 1.3,
+				constant: 0.08,
+				convectionFractionWet: 0.2,
+				ecoDesignControllerClass: "1",
+				minimumFlowTemp: 20,
+				minOutdoorTemp: 0,
+				maxOutdoorTemp: 15,
+				numberOfRadiators: 1,
 
-		// 			const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.data;
-		// 			expect(hotWaterCylinderData?.heatSource).toBeUndefined();
+			};
 
-		// 			const wetDistributionData = store.spaceHeating.heatEmitting.wetDistribution.data[0]?.data;
-		// 			expect(wetDistributionData?.heatSource).toBeUndefined();
-		// 		});
+			store.$patch({
+				spaceHeatingNew: {
+						heatSource: {
+							data: [
+								{ data: heatPump1 },
+								{ data: heatPump2 },
+							],
+				},
+					// heatEmitting: {
+					// 	wetDistribution: {
+					// 		data: [
+					// 			{ data: wetDistribution },
+					// 		],
+					// 	},
+					// },
+				},
+				domesticHotWater: {
+					waterHeating: {
+						hotWaterCylinder: {
+							data: [{ data: cylinder }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingNew);
+			await user.click(await screen.findByTestId("heatSource_remove_1"));
+
+			const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.data;
+			expect(hotWaterCylinderData?.heatSource).toBeUndefined();
+
+			const wetDistributionData = store.spaceHeating.heatEmitting.wetDistribution.data[0]?.data;
+			expect(wetDistributionData?.heatSource).toBeUndefined();
+		});
 
 		it("displays an in-progress indicator when an entry is not marked as complete", async () => {
 			store.$patch({

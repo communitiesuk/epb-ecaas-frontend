@@ -20,6 +20,26 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 	}
 };
 
+function handleDuplicate(spaceHeatingType: SpaceHeatingType, index: number) {
+
+	const { data } = store.spaceHeatingNew[spaceHeatingType];
+	const item = data?.[index];
+    
+	if (item) {
+		const duplicates = data.filter(f => f && f.data.name.match(duplicateNamePattern(item.data.name)));
+
+		store.$patch((state) => {
+			const newItem = {
+				data: { ...item.data, name: `${item.data.name} (${duplicates.length})` },
+				complete: item.complete,
+			};
+
+			state.spaceHeatingNew[spaceHeatingType].data.push(newItem);
+			state.spaceHeatingNew[spaceHeatingType].complete = false;
+		});
+	}
+}
+
 function handleComplete() {
 	store.$patch({
 		spaceHeatingNew: {
@@ -61,6 +81,7 @@ function hasIncompleteEntries() {
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))"
 		:show-status="true"
+		@duplicate="(index: number) => handleDuplicate('heatSource', index)"
 		@remove="(index: number) => handleRemove('heatSource', index)"
 	/>
 	<CustomList
