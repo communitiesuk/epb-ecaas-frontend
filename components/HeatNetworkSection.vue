@@ -73,20 +73,20 @@ const heatNetworkTypeOptions = {
 		id="emissionsFactor"
 		type="govInputWithSuffix"
 		label="Emissions factor"
-		suffix-text="kgCO2e/kWh"
+		suffix-text="kgCO₂e/kWh"
 		name="emissionsFactor"
 		validation="required | number"
-		help="Equivalent amount of CO2 emissions per KWh used. CO2e is the CO2 equivalent, including other greenhouse gases like methane which may have been emitted in addition to CO2."
+		help="Equivalent amount of CO₂ emissions per KWh used. CO₂e is the CO₂ equivalent, including other greenhouse gases like methane which may have been emitted in addition to CO₂."
 	/>
 	<FormKit
 		v-if="model.isHeatNetworkInPcdb === false"
 		id="outOfScopeEmissionsFactor"
 		type="govInputWithSuffix"
 		label="Emissions factor including out of scope emissions"
-		suffix-text="kgCO2e/kWh"
+		suffix-text="kgCO₂e/kWh"
 		name="outOfScopeEmissionsFactor"
 		validation="required | number"
-		help="Equivalent amount of CO2 emissions per kWh used, including out-of-scope emissions"
+		help="Equivalent amount of CO₂ emissions per kWh used, including out-of-scope emissions"
 	/>
 	<FormKit
 		v-if="model.isHeatNetworkInPcdb === false"

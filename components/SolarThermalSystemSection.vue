@@ -75,7 +75,7 @@ const locationOfCollectorLoopPipingOptions = {
 		label="Incidence angle modifier"
 		name="incidenceAngleModifier"
 		validation="required | number | min:0 | max:1"
-		help="Enter the Hemispherical incidence angle modifier, as a decimal between 0 and 1"
+		help="Enter the hemispherical incidence angle modifier, as a decimal between 0 and 1"
 	/>
 	<FormKit
 		id="firstOrderHeatLossCoefficient"

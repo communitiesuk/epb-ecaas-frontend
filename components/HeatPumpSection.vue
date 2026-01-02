@@ -15,6 +15,14 @@ const index = getStoreIndex(heatSourceStoreData);
 
 <template>	
 	<FormKit
+		id="typeOfHeatPump"
+		type="govRadios"
+		label="Type of heat pump"
+		:options="heatPumpTypes"
+		name="typeOfHeatPump"
+		validation="required"
+	/>
+	<FormKit
 		id="name"
 		type="govInputText"
 		label="Name"
@@ -27,21 +35,13 @@ const index = getStoreIndex(heatSourceStoreData);
 		}"
 	/>
 	<FormKit
-		id="typeOfHeatPump"
-		type="govRadios"
-		label="Type of heat pump"
-		:options="heatPumpTypes"
-		name="typeOfHeatPump"
-		validation="required"
-	/>
-	<FormKit
 		v-if="model?.typeOfHeatPump !== undefined"
 		id="selectHeatPump"
 		type="govPcdbProduct"
 		label="Select a heat pump"
 		name="productReference"
 		validation="required"
-		help="Select the air source heat pump type from the PCDB using the button below."
+		help="Select the air source heat pump type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
 		:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
 		:page-url="route.fullPath"
