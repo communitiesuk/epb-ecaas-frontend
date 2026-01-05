@@ -1,7 +1,7 @@
 import type { PageId } from "~/data/pages/pages";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 
-export function useProductsPage() {
+export function useProductsPage(indexParam: string) {
 	const route = useRoute();
 	const routeQuery = computed(() => route.query);
 	const pageId = kebabToCamelCase(route.params.products as string);
@@ -14,7 +14,7 @@ export function useProductsPage() {
 	}
 
 	const title = getTitle(pageId + "Products" as PageId);
-	const index = Number(route.params.pump);
+	const index = Number(route.params[indexParam]);
 
 	const getSearchModelFromQuery = (): ProductSearchModel => {
 		const productId = (routeQuery.value?.productId as string | undefined)?.trim();
@@ -34,10 +34,8 @@ export function useProductsPage() {
 
 	const searchModel = ref(getSearchModelFromQuery());
 
-	const searchData = (productData: DisplayProduct[]) => {
+	const searchData = (productData: DisplayProduct[], pageSize: number = 12) => {
 		const productResults = ref(useProductSearch(productData, searchModel.value));
-
-		const pageSize = 12;
 		const pagination = ref(usePagination(productResults.value, pageSize));
 
 		watch(routeQuery, (currentRoute, previousRoute) => {

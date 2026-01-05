@@ -1,7 +1,6 @@
 <script setup lang="ts">
 	import type { DisplayProduct } from '~/pcdb/pcdb.types';
-	import ProductSearchField from './ProductSearchField.vue';
-import { SearchOption } from '~/composables/productSearch';
+	import { SearchOption } from '~/composables/productSearch';
 
 	const { products, model: searchModel } = defineProps<{
 		products: DisplayProduct[];
@@ -84,7 +83,7 @@ import { SearchOption } from '~/composables/productSearch';
 			/>
 			<div class="search-fields">
 				<template v-if="model.searchOption === 'productId'">
-					<ProductSearchField
+					<FieldsProductSearch
 						id="productId"
 						name="productId"
 						label="Product ID"
@@ -93,7 +92,7 @@ import { SearchOption } from '~/composables/productSearch';
 					/>
 				</template>
 				<template v-else>
-					<ProductSearchField
+					<FieldsProductSearch
 						id="brandName"
 						name="brandName"
 						label="Brand name"
@@ -102,7 +101,7 @@ import { SearchOption } from '~/composables/productSearch';
 						v-on:select="setBrandName"
 						:value="model.brandName"
 					/>
-					<ProductSearchField
+					<FieldsProductSearch
 						id="modelName"
 						name="modelName"
 						label="Model name"
@@ -111,7 +110,7 @@ import { SearchOption } from '~/composables/productSearch';
 						v-on:select="setModelName"
 						:value="model.modelName"
 					/>
-					<ProductSearchField
+					<FieldsProductSearch
 						id="modelQualifier"
 						name="modelQualifier"
 						label="Model qualifier"

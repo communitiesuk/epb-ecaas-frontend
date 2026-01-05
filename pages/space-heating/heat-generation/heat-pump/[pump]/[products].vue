@@ -4,7 +4,7 @@ import { page } from "~/data/pages/pages";
 definePageMeta({ layout: false });
 
 const store = useEcaasStore();
-const { pageId, title, index, searchModel, searchData } = useProductsPage();
+const { pageId, title, index, searchModel, searchData } = useProductsPage("pump");
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
