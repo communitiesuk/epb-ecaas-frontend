@@ -1004,7 +1004,7 @@ describe("heatSource", () => {
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
 			expect(screen.getByTestId("energySupply_mains_gas")).toBeDefined();
-			expect(screen.getByTestId("energySupply_lpg_bulk")).toBeDefined();
+			expect(screen.getByTestId("energySupply_LPG_bulk")).toBeDefined();
 			expect(screen.getByTestId("energySupply_electricity")).toBeDefined();
 		});
 
