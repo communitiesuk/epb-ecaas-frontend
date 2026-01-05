@@ -46,7 +46,8 @@ const fuelTypes = [
 ] as const satisfies SchemaFuelTypeExtended[];
 
 const fuelTypesWithElec = [
-	"lpg_bulk",
+	"LPG_bulk",
+	"LPG_bottled",
 	"mains_gas",
 	"electricity",
 ] as const satisfies SchemaFuelType[];

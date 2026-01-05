@@ -1,5 +1,3 @@
-import { SchemaHeatSourceWetHeatPumpWithProductReference } from './../../../../schema/aliases';
-import { ProductForCategory } from './../../../../pcdb/pcdb.types';
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
@@ -863,7 +861,7 @@ describe("heatSource", () => {
 			typeOfHeatBattery: "dryCore",
 			productReference: "HEAT_BATTERY_MEDIUM",
 			numberOfUnits: 2,
-			energySupply: "lpg_bulk",
+			energySupply: "LPG_bulk",
 		};
 
 		test("'HeatBatterySection' component displays when type of heat source is heat battery", async () => {
@@ -970,7 +968,7 @@ describe("heatSource", () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
-						data: { fuelType: ["mains_gas", "lpg_bulk"] },
+						data: { fuelType: ["mains_gas", "LPG_bulk"] },
 					},
 				},
 			});
@@ -1240,20 +1238,21 @@ describe("heatSource", () => {
 		test("product reference is cleared when heat source type changes", async () => {
 			
 			const heatPump: HeatSourceData = {
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-			name: "Heat pump 1",
-			typeOfHeatSource: HeatSourceType.heatPump,
-			typeOfHeatPump: "airSource",
-			productReference: "HEATPUMP-SMALL",
-		};
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+				name: "Heat pump 1",
+				typeOfHeatSource: HeatSourceType.heatPump,
+				typeOfHeatPump: "airSource",
+				productReference: "HEATPUMP-SMALL",
+			};
 
-				store.$patch({
+			store.$patch({
 				spaceHeatingNew: {
 					heatSource: {
 						data: [{ data: heatPump }],
 					},
 				},
 			});
+
 			await renderSuspended(HeatSourceForm, {
 				route: {
 					params: { "heatSource": "0" },
@@ -1261,11 +1260,13 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+			
 			const { data } = store.spaceHeatingNew.heatSource;
 			const heatSourceItem = data[0]!.data;
+
 			if ("productReference" in heatSourceItem) {
 				expect(heatSourceItem.productReference).toBeUndefined();
-		}
+			}
 		});
 
 		test("form is prepopulated when data exists in state", async () => {
