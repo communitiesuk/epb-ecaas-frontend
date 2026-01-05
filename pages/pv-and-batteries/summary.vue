@@ -38,7 +38,6 @@ const batterySummary: SummarySection = {
 			"Capacity": dim(x.capacity, "kilowatt-hour"),
 			"Charge efficiency": show(x.chargeEfficiency),
 			"Location": displayCamelToSentenceCase(show(x.location)),
-			"Grid charging possible": displayBoolean(x.gridChargingPossible),
 			"Maximum charge rate": dim(x.maximumChargeRate, "kilowatt"),
 			"Minimum charge rate": dim(x.minimumChargeRate, "kilowatt"),
 			"Maximum discharge rate": dim(x.maximumDischargeRate, "kilowatt"),

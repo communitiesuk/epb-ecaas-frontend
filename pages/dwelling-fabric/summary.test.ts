@@ -76,7 +76,6 @@ const floorsData: FloorsData = {
 			data: {
 				name: "Exposed Floor 1",
 				pitch: 0,
-				orientation: 0,
 				length: 0.5,
 				width: 20,
 				elevationalHeight: 20,
@@ -151,6 +150,8 @@ const wallsData: WallsData = {
 				uValue: 1,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
+				partyWallCavityType: "unfilled_sealed",
+				partyWallLiningType: "wet_plaster",
 			},
 		}],
 	},

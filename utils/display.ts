@@ -180,7 +180,8 @@ export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressure
 
 export const energySupplyOptions = {
 	"mains_gas": "Mains gas",
-	"lpg_bulk": "LPG (Liquid petroleum gas)",
+	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
+	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
 	"elecOnly": "Electricity",
 	"electricity": "Electricity",
 } as const satisfies Record<SchemaFuelTypeExtended | "electricity", FuelTypeDisplay >;
@@ -195,7 +196,7 @@ export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined
 	return result;
 }
 
-export type FuelTypeDisplay = "LPG (Liquid petroleum gas)" | "Electricity" | "Mains gas";
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" |"LPG (Liquid petroleum gas) - bottled" | "Electricity" | "Mains gas";
 
 export const ecoDesignControllerOptions = {
 	1: "I: On/Off Room Thermostat",

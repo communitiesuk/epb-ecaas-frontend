@@ -96,7 +96,7 @@ describe("Heat source products page", () => {
 	test("when a user selects a product its product reference gets stored", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				pump: "1",
+				heatSource: "1",
 				products: "air-source",
 			},
 			path: "/1/air-source",
@@ -106,15 +106,14 @@ describe("Heat source products page", () => {
 		await user.click(screen.getByTestId("selectProductButton_1"));
 
 		expect(
-			store.spaceHeatingNew.heatSource.data[1]!.data
-				.productReference,
+			store.spaceHeatingNew.heatSource.data[1]!.data.id,
 		).toBe(MOCKED_HEAT_PUMPS.data[1]?.id);
 	});
 
 	test("'Back to heat source' navigates user to the heat source at the correct index", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				pump: "1",
+				heatSource: "1",
 				products: "air-source",
 			},
 			path: "/1/air-source",

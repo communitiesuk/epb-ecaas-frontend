@@ -6,7 +6,7 @@ import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/sch
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, colourZod, convectiveTypeZod, ductShapeZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, colourZod, convectiveTypeZod, ductShapeZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 
 const fraction = z.number().min(0).max(1);
 const percentage = z.number().min(0).max(100);
@@ -154,9 +154,8 @@ const internalFloorDataZod = z.discriminatedUnion(
 
 export type InternalFloorData = z.infer<typeof internalFloorDataZod>;
 
-const exposedFloorDataZod = named.extend({
-	pitch: z.number().min(0).lt(180),
-	orientation,
+export const exposedFloorDataZod = named.extend({
+	pitch: z.number().min(0).max(180),
 	length: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),
@@ -269,13 +268,18 @@ const wallsToUnheatedSpaceDataZod = namedWithId.extend({
 
 export type WallsToUnheatedSpaceData = z.infer<typeof wallsToUnheatedSpaceDataZod>;
 
+export const thermalResistanceCavityZod = z.optional(z.number().gt(0));
+
 const partyWallDataZod = namedWithId.extend({
 	pitchOption: standardPitchOption,
-	pitch: z.optional(z.number().min(0).lt(180)),
+	pitch: z.optional(z.number().min(60).max(120)),
 	surfaceArea: z.number().min(0.01).max(10000),
 	uValue,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
+	partyWallCavityType: partyWallCavityTypeZod,
+	partyWallLiningType: z.optional(partyWallLiningTypeZod),
+	thermalResistanceCavity: thermalResistanceCavityZod,
 });
 
 export type PartyWallData = z.infer<typeof partyWallDataZod>;
@@ -1014,7 +1018,6 @@ const electricBatteryDataZod = z.object({
 	capacity: z.number().min(0).max(50),
 	chargeEfficiency: fraction,
 	location: batteryLocationZod,
-	gridChargingPossible: z.boolean(),
 	maximumChargeRate: z.number(),
 	minimumChargeRate: z.number(),
 	maximumDischargeRate: z.number(),

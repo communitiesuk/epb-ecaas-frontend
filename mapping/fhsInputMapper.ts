@@ -1,5 +1,5 @@
 import type { StripDefs } from "./mapping.types";
-import type { SchemaEnergySupplyElectricity, SchemaFhsInputSchema, SchemaStorageTank } from "~/schema/api-schema.types";
+import type { SchemaFhsInputSchema, SchemaStorageTank } from "~/schema/api-schema.types";
 import type { SchemaHeatSourceWetHeatPumpWithProductReference } from "~/schema/aliases";
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
@@ -26,12 +26,6 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const heatingCooling = mapspaceHeatingData(state);
 	const fuelType = dwellingDetailsData.EnergySupply;
 
-	// specify the electricity tariff with other needed data points with default values as used in example FHS files in case it is needed (TODO: should it be necessary to pass in a tariff here?)
-	const defaultTariffData: Pick<SchemaEnergySupplyElectricity, "threshold_charges" | "threshold_prices" | "tariff"> = {
-		threshold_charges: [0.8, 0.8, 0.7, 0.4, 0.0, 0.0, 0.0, 0.2, 0.5, 0.7, 0.8, 0.8],
-		threshold_prices: [20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0],
-		tariff: "Variable Time of Day Tariff",
-	};
 	const spaceHeatingData = {
 		...heatingCooling,
 		...coolingData,
@@ -40,7 +34,6 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 				...(fuelType && fuelType[defaultElectricityEnergySupplyName]),
 				...electricBatteries,
 				...diverter,
-				...(Object.values(electricBatteries).length > 0 ? defaultTariffData : {}),
 			},
 		},
 	};

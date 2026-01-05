@@ -7,6 +7,8 @@ const props = defineProps<{
 	pitchOption?: string;
 	options?: Record<string, string>;
 	help?: string;
+	suppressStandardGuidance?: boolean,
+	customPitchRange?: [number, number],
 	dataField?: string;
 }>();
 
@@ -24,7 +26,7 @@ const helpText = props.help ?? "Enter the tilt angle of the external surface. 0Â
 			name="pitchOption"
 			validation="required"
 			:data-field="dataField">
-			<GovDetails summary-text="Help with this input">
+			<GovDetails summary-text="Help with this input" v-if="!suppressStandardGuidance">
 				<div class="govuk-!-margin-bottom-3">
 					<a href="/guidance/pitch" target="_blank" class="govuk-link">
 						Guidance on pitch (opens in another window)
@@ -39,7 +41,7 @@ const helpText = props.help ?? "Enter the tilt angle of the external surface. 0Â
 			type="govInputWithSuffix"
 			suffix-text="Â°"
 			:name="name ?? 'pitch'"
-			validation="required | number | min:0 | max:180"
+			:validation="`required | number | ${ customPitchRange ? `min:${customPitchRange[0]} | max:${customPitchRange[1]}` : 'min:0 | max:180' }`"
 			:data-field="dataField"
 		/>
 	</template>

@@ -24,6 +24,7 @@ describe("party wall", () => {
 		uValue: 1,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
+		partyWallCavityType: "solid",
 	};
 
 	afterEach(() => {
@@ -45,6 +46,7 @@ describe("party wall", () => {
 		await user.type(screen.getByTestId("uValue"), "1");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
+		await user.click(screen.getByTestId("partyWallCavityType_solid"));
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 

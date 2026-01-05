@@ -18,7 +18,6 @@ const saveForm = (fields: ExposedFloorData) => {
 		const floor: ExposedFloorData = {
 			name: fields.name,
 			pitch: 180,
-			orientation: 0,
 			length: fields.length,
 			width: fields.width,
 			elevationalHeight: fields.elevationalHeight,

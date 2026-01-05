@@ -72,7 +72,6 @@ describe("pv systems and electric battery", () => {
 			maximumChargeRate: 1.5,
 			maximumDischargeRate: 1.25,
 			location: "outside",
-			gridChargingPossible: false,
 		},
 	};
 

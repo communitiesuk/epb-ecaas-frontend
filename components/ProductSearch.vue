@@ -1,0 +1,164 @@
+<script setup lang="ts">
+	import type { DisplayProduct } from '~/pcdb/pcdb.types';
+	import { SearchOption } from '~/composables/productSearch';
+
+	const { products, model: searchModel } = defineProps<{
+		products: DisplayProduct[];
+		model: ProductSearchModel;
+	}>();
+
+	const model = ref<ProductSearchModel>({
+		...searchModel,
+		searchOption: searchModel.searchOption || SearchOption.productId
+	});
+	
+	const brandNames = ref<string[]>([]);
+	const modelNames = ref<string[]>([]);
+	const modelQualifiers = ref<string[]>([]);
+
+	const searchOptions: Record<string, string> = {
+		[SearchOption.productId]: "Product ID",
+		[SearchOption.modelAndBrand]: "Brand and model"
+	};
+
+	const setBrandName = (name: string) => model.value = {
+		...model.value,
+		brandName: name
+	};
+
+	const setModelName = (name: string) => model.value = {
+		...model.value,
+		modelName: name
+	};
+
+	const setModelQualifier = (qualifier: string) => model.value = {
+		...model.value,
+		modelQualifier: qualifier
+	};
+
+	const handleSubmit = (fields: typeof model.value) => {
+		const query = Object.entries(fields).filter(e => !!e[1]);
+		const params = new URLSearchParams(query);
+
+		navigateTo(`?${params}`);
+	};
+
+	const filterProducts = (currentModel: ProductSearchModel): DisplayProduct[] => {
+		return useProductSearch(products, currentModel);
+	}
+
+	watch(model, (currentModel: ProductSearchModel, previousModel: ProductSearchModel) => {
+		if (currentModel.brandName !== previousModel.brandName && (currentModel.brandName?.length || 0) > 2) {
+			const filtered = filterProducts(currentModel);
+			brandNames.value = Array.from(new Set(filtered.map(p => p.brandName)));
+			return;
+		}
+
+		if (currentModel.modelName !== previousModel.modelName && (currentModel.modelName?.length || 0) > 2) {
+			const filtered = filterProducts(currentModel);
+			modelNames.value = Array.from(new Set(filtered.map(p => p.modelName)));
+			return;
+		}
+
+		if (currentModel.modelQualifier !== previousModel.modelQualifier && (currentModel.modelQualifier?.length || 0) > 2) {
+			const filtered = filterProducts(currentModel);
+			modelQualifiers.value = Array.from(new Set(filtered.map(p => p.modelQualifier!)));
+			return;
+		}
+	});
+</script>
+
+<template>
+	<div class="search-container">
+		<FormKit type="form" method="get" :actions="false" :incomplete-message="false" v-model="model" @submit="handleSubmit">
+			<FormKit
+				id="searchOption"
+				type="govRadios"
+				name="searchOption"
+				label="Search by"
+				:options="searchOptions"
+				:classNames="{
+					radios: 'search-options'
+				}"
+			/>
+			<div class="search-fields">
+				<template v-if="model.searchOption === 'productId'">
+					<FieldsProductSearch
+						id="productId"
+						name="productId"
+						label="Product ID"
+						placeholder="Enter product ID"
+						:value="model.productId"
+					/>
+				</template>
+				<template v-else>
+					<FieldsProductSearch
+						id="brandName"
+						name="brandName"
+						label="Brand name"
+						placeholder="Enter brand"
+						:suggested-values="brandNames"
+						v-on:select="setBrandName"
+						:value="model.brandName"
+					/>
+					<FieldsProductSearch
+						id="modelName"
+						name="modelName"
+						label="Model name"
+						placeholder="Enter model"
+						:suggested-values="modelNames"
+						v-on:select="setModelName"
+						:value="model.modelName"
+					/>
+					<FieldsProductSearch
+						id="modelQualifier"
+						name="modelQualifier"
+						label="Model qualifier"
+						placeholder="Enter qualifier"
+						:suggested-values="modelQualifiers"
+						v-on:select="setModelQualifier"
+						:value="model.modelQualifier"
+					/>
+				</template>
+				
+				<div>
+					<FormKit type="govButton" label="Search" :ignore="true" :classes="{ button: 'search-btn' }" />
+				</div>
+			</div>
+		</FormKit>
+	</div>
+</template>
+
+<style lang="scss">
+	@use "sass:map";
+
+	.search-container {
+		background-color: map.get($govuk-colours, "light-grey");
+		padding: 20px;
+	}
+
+	.search-fields {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		gap: 25px;
+	}
+
+	.search-btn {
+		margin: 30px 0 2px;
+	}
+
+	.search-options {
+		display: flex;
+		flex-direction: row;
+		gap: 25px;
+
+		.govuk-radios__label {
+			max-width: unset;
+
+			&::before {
+				background-color: white;
+			}
+		}
+	}
+</style>

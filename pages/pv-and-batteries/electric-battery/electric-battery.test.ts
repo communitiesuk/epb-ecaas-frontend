@@ -23,7 +23,6 @@ describe("Electric battery", () => {
 			capacity: 40,
 			chargeEfficiency: 0.9,
 			location: "inside",
-			gridChargingPossible: false,
 			maximumChargeRate: 30,
 			minimumChargeRate: 20,
 			maximumDischargeRate: 35,
@@ -35,7 +34,6 @@ describe("Electric battery", () => {
 		await user.type(screen.getByTestId("capacity"), "40");
 		await user.type(screen.getByTestId("chargeEfficiency"), "0.9");
 		await user.click(screen.getByTestId("location_inside"));
-		await user.click(screen.getByTestId("gridChargingPossible_no"));
 		await user.type(screen.getByTestId("maximumChargeRate"), "30");
 		await user.type(screen.getByTestId("minimumChargeRate"), "20");
 		await user.type(screen.getByTestId("maximumDischargeRate"), "35");
@@ -86,7 +84,6 @@ describe("Electric battery", () => {
 		await user.type(screen.getByTestId("capacity"), "40");
 		await user.type(screen.getByTestId("chargeEfficiency"), "0.9");
 		await user.click(screen.getByTestId("location_inside"));
-		await user.click(screen.getByTestId("gridChargingPossible_no"));
 		await user.type(screen.getByTestId("maximumChargeRate"), "15");
 		await user.type(screen.getByTestId("minimumChargeRate"), "25");
 		await user.type(screen.getByTestId("maximumDischargeRate"), "35");
@@ -105,7 +102,6 @@ describe("Electric battery", () => {
 		await user.type(screen.getByTestId("capacity"), "40");
 		await user.type(screen.getByTestId("chargeEfficiency"), "2.9");
 		await user.click(screen.getByTestId("location_inside"));
-		await user.click(screen.getByTestId("gridChargingPossible_no"));
 		await user.type(screen.getByTestId("maximumChargeRate"), "25");
 		await user.type(screen.getByTestId("minimumChargeRate"), "15");
 		await user.type(screen.getByTestId("maximumDischargeRate"), "35");

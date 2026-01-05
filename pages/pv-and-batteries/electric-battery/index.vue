@@ -18,7 +18,6 @@ const saveForm = (fields: ElectricBatteryData) => {
 				capacity: fields.capacity,
 				chargeEfficiency: fields.chargeEfficiency,
 				location: fields.location,
-				gridChargingPossible: fields.gridChargingPossible,
 				maximumChargeRate: fields.maximumChargeRate,
 				minimumChargeRate: fields.minimumChargeRate,
 				maximumDischargeRate: fields.maximumDischargeRate,
@@ -119,13 +118,6 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 			:options="locationOptions"
 			label="Is the battery inside or outside the thermal envelope of the dwelling?"
 			name="location"
-			validation="required"
-		/>
-		<FormKit
-			id="gridChargingPossible"
-			type="govBoolean"
-			label="Is charging from the grid possible?"
-			name="gridChargingPossible"
 			validation="required"
 		/>
 		<FormKit

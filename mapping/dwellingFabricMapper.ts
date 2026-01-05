@@ -65,11 +65,11 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zon
 	const { dwellingSpaceLighting: { numberOfBulbs, power, efficacy } } = state.dwellingFabric;
 
 	const lightingData: SchemaLighting = {
-		bulbs: {
+		bulbs: [{
 			count: numberOfBulbs,
 			power,
 			efficacy,
-		},
+		}],
 	};
 
 	return {
@@ -264,7 +264,6 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				pitch: x.pitch,
-				orientation360: x.orientation,
 				is_external_door: false,
 				is_unheated_pitched_roof: false, // this may need to be limited to opaque elements with pitch <= 60
 			},
@@ -327,17 +326,20 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		};
 	}) || [];
 
-	const partyWallData: { [key: string]: SchemaBuildingElement }[] = dwellingSpacePartyWall?.map(x => {
+	const partyWallData = dwellingSpacePartyWall?.map(x => {
 		const nameWithSuffix = suffixName(x.name, wallSuffix);
 
 		return {
 			[nameWithSuffix]: {
-				type: "BuildingElementAdjacentConditionedSpace",
+				type: "BuildingElementPartyWall",
 				pitch: extractPitch(x),
 				area: x.surfaceArea,
 				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
+				party_wall_cavity_type: x.partyWallCavityType,
+				...(["unfilled_unsealed", "unfilled_sealed", "filled_unsealed"].includes(x.partyWallCavityType) && { party_wall_lining_type: x.partyWallLiningType }),
+				...(x.partyWallCavityType === "defined_resistance" && { thermal_resistance_cavity: x.thermalResistanceCavity }),
 			},
 		};
 	}) || [];

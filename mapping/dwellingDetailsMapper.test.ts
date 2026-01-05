@@ -144,7 +144,7 @@ describe("dwelling details mapper", () => {
 				numOfWCs: 1,
 				numOfHabitableRooms: 3,
 				numOfRoomsWithTappingPoints: 2,
-				fuelType: ["mains_gas", "lpg_bulk"],
+				fuelType: ["mains_gas", "LPG_bulk"],
 			};
 	
 			store.$patch({
@@ -168,11 +168,9 @@ describe("dwelling details mapper", () => {
 					mains_gas: {
 						fuel: "mains_gas",
 					},
-					"lpg_bulk": {
-						fuel: "lpg_bulk",
-						factor: {
-							is_export_capable: false,
-						},	
+					"LPG_bulk": {
+						fuel: "LPG_bulk",
+						is_export_capable: false,
 					},
 				},
 			};

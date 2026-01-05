@@ -15,7 +15,6 @@ describe("exposed floor", () => {
 	const exposedFloor: ExposedFloorData = {
 		name: "Exposed Floor 1",
 		pitch: 180,
-		orientation: 0,
 		length: 0.5,
 		width: 20,
 		elevationalHeight: 20,
@@ -53,6 +52,8 @@ describe("exposed floor", () => {
 		
 		expect(dwellingSpaceExposedFloor?.data[0]?.data).toEqual(exposedFloor);
 		expect(dwellingSpaceExposedFloor?.data[0]?.complete).toEqual(true);
+
+		expect(exposedFloorDataZod.parse(exposedFloor)).toBeTruthy();
 	});
 	
 	test("form is prepopulated when data exists in state", async () => {

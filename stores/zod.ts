@@ -4,6 +4,7 @@ import type { UnionToTuple } from "type-fest";
 import * as z from "zod";
 import type { SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour, SchemaConvectiveType, SchemaApplianceType, SchemaFuelTypeExtended, SchemaFuelType } from "~/schema/aliases";
 import type { ConciseMassDistributionClass } from "./ecaasStore.schema";
+import type { SchemaPartyWallCavityType, SchemaPartyWallLiningType } from "~/schema/api-schema.types";
 
 type NoneEmptyArray = readonly unknown[] & { 0: unknown };
 type CompareUnionWithArray<P, Q extends NoneEmptyArray> = Exclude<P, Q[number]> extends never
@@ -38,7 +39,8 @@ const convectiveTypes = ["Air heating (convectors, fan coils etc.)",
 const ductShapes = ["circular", "rectangular"] as const satisfies SchemaDuctShape[];
 const ductTypes = ["intake", "supply", "extract", "exhaust"] as const satisfies SchemaDuctType[];
 const fuelTypes = [
-	"lpg_bulk",
+	"LPG_bulk",
+	"LPG_bottled",
 	"mains_gas",
 	"elecOnly",
 ] as const satisfies SchemaFuelTypeExtended[];
@@ -50,7 +52,7 @@ const fuelTypesWithElec = [
 ] as const satisfies SchemaFuelType[];
 
 const heatPumpBackupControlTypes = ["None", "Substitute", "TopUp"] as const satisfies SchemaHeatPumpBackupControlType[];
-const heatPumpSinkTypes = ["Air", "Water"] as const satisfies SchemaHeatPumpSinkType[];
+const heatPumpSinkTypes = ["Air", "Water", "Glycol25"] as const satisfies SchemaHeatPumpSinkType[];
 const heatPumpSourceTypes = [
 	"ExhaustAirMEV",
 	"ExhaustAirMVHR",
@@ -58,10 +60,13 @@ const heatPumpSourceTypes = [
 	"Ground",
 	"OutsideAir",
 	"WaterGround",
-	"WaterSurface"] as const satisfies SchemaHeatPumpSourceType[];
+	"WaterSurface",
+	"HeatNetwork"] as const satisfies SchemaHeatPumpSourceType[];
 const inverterTypes = ["optimised_inverter", "string_inverter"] as const satisfies SchemaInverterType[];
 const massDistributionClasses = ["D", "E", "I", "IE", "M"] as const satisfies ConciseMassDistributionClass[];
 const mhvrLocations = ["inside", "outside"] as const satisfies MVHRLocation[];
+const partyWallCavityTypes = ["defined_resistance", "filled_sealed", "filled_unsealed", "solid", "unfilled_sealed", "unfilled_unsealed"] as const satisfies SchemaPartyWallCavityType[];
+const partyWallLiningTypes = ["dry_lined", "wet_plaster"] as const satisfies SchemaPartyWallLiningType[];
 const photovoltaicVentilationStrategies = [
 	"unventilated",
 	"moderately_ventilated",
@@ -94,6 +99,8 @@ export const heatPumpSourceTypeZod = zodForTypeOptions(ensureAllUnion<SchemaHeat
 export const inverterTypeZod = zodForTypeOptions(ensureAllUnion<SchemaInverterType, (typeof inverterTypes)>(inverterTypes));
 export const massDistributionClassZod = zodForTypeOptions(ensureAllUnion<ConciseMassDistributionClass, (typeof massDistributionClasses)>(massDistributionClasses));
 export const mvhrLocationZod = zodForTypeOptions(ensureAllUnion<MVHRLocation, (typeof mhvrLocations)>(mhvrLocations));
+export const partyWallCavityTypeZod = zodForTypeOptions(ensureAllUnion<SchemaPartyWallCavityType, (typeof partyWallCavityTypes)>(partyWallCavityTypes));
+export const partyWallLiningTypeZod = zodForTypeOptions(ensureAllUnion<SchemaPartyWallLiningType, (typeof partyWallLiningTypes)>(partyWallLiningTypes));
 export const photovoltaicVentilationStrategyZod = zodForTypeOptions(ensureAllUnion<SchemaPhotovoltaicVentilationStrategy, (typeof photovoltaicVentilationStrategies)>(photovoltaicVentilationStrategies));
 export const shadingObjectTypeZod = zodForTypeOptions(ensureAllUnion<SchemaShadingObjectType, (typeof shadingObjectTypes)>(shadingObjectTypes));
 export const terrainClassZod = zodForTypeOptions(ensureAllUnion<SchemaTerrainClass, (typeof terrainClasses)>(terrainClasses));

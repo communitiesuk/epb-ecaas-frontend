@@ -27,7 +27,7 @@ const state: DwellingDetailSummary = {
 		numOfWCs: 1,
 		numOfHabitableRooms: 4,
 		numOfRoomsWithTappingPoints: 2,
-		fuelType: ["mains_gas", "lpg_bulk"],
+		fuelType: ["mains_gas", "LPG_bulk"],
 	},
 	shading: [{
 		name: "Shading 1",
@@ -86,7 +86,7 @@ describe("Dwelling details summary", () => {
 			"Number of WCs": "1",
 			"Number of habitable rooms": "4",
 			"Total number of rooms with tapping points": "2",
-			"Energy sources": "Mains gas, LPG (Liquid petroleum gas), Electricity",
+			"Energy sources": "Mains gas, LPG (Liquid petroleum gas) - bulk, Electricity",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
