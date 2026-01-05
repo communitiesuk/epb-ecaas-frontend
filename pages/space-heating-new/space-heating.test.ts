@@ -6,7 +6,7 @@ import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
 import SpaceHeatingNew from "./index.vue";
 import formStatus from "~/constants/formStatus";
-import HeatSourceForm from "./heat-source/[heatSource]/index.vue"
+import HeatSourceForm from "./heat-source/[heatSource]/index.vue";
 import { litre } from "~/utils/units/volume";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -53,7 +53,7 @@ describe("space heating", () => {
 	describe("heat source", () => {
 
 		it("heat source is duplicated when duplicate link is clicked", async () => {
-						store.$patch({
+			store.$patch({
 				spaceHeatingNew: {
 					heatSource: {
 						data: [
@@ -64,20 +64,20 @@ describe("space heating", () => {
 					},
 				},
 			});
-					await renderSuspended(SpaceHeatingNew);
-					await userEvent.click(screen.getByTestId("heatSource_duplicate_0"));
-					await userEvent.click(screen.getByTestId("heatSource_duplicate_0"));
-					await userEvent.click(screen.getByTestId("heatSource_duplicate_2"));
-					await userEvent.click(screen.getByTestId("heatSource_duplicate_2"));
+			await renderSuspended(SpaceHeatingNew);
+			await userEvent.click(screen.getByTestId("heatSource_duplicate_0"));
+			await userEvent.click(screen.getByTestId("heatSource_duplicate_0"));
+			await userEvent.click(screen.getByTestId("heatSource_duplicate_2"));
+			await userEvent.click(screen.getByTestId("heatSource_duplicate_2"));
 		
-					expect(screen.queryAllByTestId("heatSource_item").length).toBe(6);
-					expect(screen.getByText("Heat source 1")).toBeDefined();
-					expect(screen.getByText("Heat source 1 (1)")).toBeDefined();
-					expect(screen.getByText("Heat source 1 (2)")).toBeDefined();
-					expect(screen.getByText("Heat source 1 (1) (1)")).toBeDefined();
-					expect(screen.getByText("Heat source 1 (1) (2)")).toBeDefined();
+			expect(screen.queryAllByTestId("heatSource_item").length).toBe(6);
+			expect(screen.getByText("Heat source 1")).toBeDefined();
+			expect(screen.getByText("Heat source 1 (1)")).toBeDefined();
+			expect(screen.getByText("Heat source 1 (2)")).toBeDefined();
+			expect(screen.getByText("Heat source 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Heat source 1 (1) (2)")).toBeDefined();
 		
-				});
+		});
 
 		it("removes an item when remove link is clicked", async () => {
 			store.$patch({
@@ -121,19 +121,19 @@ describe("space heating", () => {
 
 
 			const heatPump1: HeatSourceData = {
-			id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
-			name: "Heat source 1",
-			typeOfHeatSource: HeatSourceType.heatPump,
-			typeOfHeatPump: "airSource",
-			productReference: "HEATPUMP_LARGE",
+				id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+				name: "Heat source 1",
+				typeOfHeatSource: HeatSourceType.heatPump,
+				typeOfHeatPump: "airSource",
+				productReference: "HEATPUMP_LARGE",
 			};
 			
 			const heatPump2: HeatSourceData = {
-			id: "0b77e247-53c5-42b8-9dbd-83cbfc8c22222",
-			name: "Heat source 1",
-			typeOfHeatSource: HeatSourceType.heatPump,
-			typeOfHeatPump: "airSource",
-			productReference: "HEATPUMP_LARGE",
+				id: "0b77e247-53c5-42b8-9dbd-83cbfc8c22222",
+				name: "Heat source 1",
+				typeOfHeatSource: HeatSourceType.heatPump,
+				typeOfHeatPump: "airSource",
+				productReference: "HEATPUMP_LARGE",
 			};
 
 			const cylinder: HotWaterCylinderData = {
@@ -165,12 +165,12 @@ describe("space heating", () => {
 
 			store.$patch({
 				spaceHeatingNew: {
-						heatSource: {
-							data: [
-								{ data: heatPump1 },
-								{ data: heatPump2 },
-							],
-				},
+					heatSource: {
+						data: [
+							{ data: heatPump1 },
+							{ data: heatPump2 },
+						],
+					},
 					// heatEmitting: {
 					// 	wetDistribution: {
 					// 		data: [
@@ -310,7 +310,7 @@ describe("space heating", () => {
 		});
 		
 		it("marks heat sources section as not complete after saving an existing heat source", async () => {
-				store.$patch({
+			store.$patch({
 				spaceHeatingNew: {
 					heatSource: {
 						data: [{ data: heatSource1, complete: true }],

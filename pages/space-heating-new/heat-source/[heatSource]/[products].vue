@@ -20,7 +20,7 @@ const selectProduct = (reference: string) => {
 	});
 
 	navigateTo(page("heatSource").url.replace(":heatSource", `${index}`));
-}
+};
 </script>
 
 <template>
@@ -32,7 +32,7 @@ const selectProduct = (reference: string) => {
 	<GovProductsTable 
 		:products="pagination.getData()"
 		:total-pages="pagination.totalPages"
-		:onSelectProduct="selectProduct"
+		:on-select-product="selectProduct"
 	/>
 	<GovButton
 		secondary

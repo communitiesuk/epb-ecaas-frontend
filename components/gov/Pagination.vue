@@ -1,44 +1,45 @@
 <script setup lang="ts">
-	const { totalPages, range } = defineProps<{
-		totalPages: number;
-		range: number;
-	}>();
+const { totalPages, range } = defineProps<{
+	totalPages: number;
+	range: number;
+}>();
 
-	const route = useRoute();
-	const routeQuery = computed(() => route.query);
-	const getPageNumber = () => parseInt(routeQuery.value?.page as string) || 1;
+const route = useRoute();
+const routeQuery = computed(() => route.query);
+const getPageNumber = () => parseInt(routeQuery.value?.page as string) || 1;
 
-	const minPageNumbers = 3;
-	const minPageNumbersToTruncate = 6;
-	const adjacentPageNumbers = Math.floor(range / 2);
+const minPageNumbers = 3;
+const minPageNumbersToTruncate = 6;
+const adjacentPageNumbers = Math.floor(range / 2);
 
-	const getSearchParams = () => {
-		if (!routeQuery.value) {
-			return "";
-		}
+const getSearchParams = () => {
+	if (!routeQuery.value) {
+		return "";
+	}
 
-		const queryValues = Object.entries(routeQuery.value)
-			.filter(e => e[0] !== "page" && !!e[1])
-			.map(e => [e[0], e[1]!.toString()]);
+	const queryValues = Object.entries(routeQuery.value)
+		.filter(e => e[0] !== "page" && !!e[1])
+		.map(e => [e[0], e[1]!.toString()]);
 
-		const params = new URLSearchParams(queryValues);
+	const params = new URLSearchParams(queryValues);
 		
-		return !!params.size ? `${params}&` : "";
-	};
+	return params.size ? `${params}&` : "";
+};
 
-	const query = ref(getSearchParams());
+const query = ref(getSearchParams());
 
-	watch(routeQuery, () => {
-		query.value = getSearchParams();
-	});
+watch(routeQuery, () => {
+	query.value = getSearchParams();
+});
 </script>
 
 <template>
 	<div class="govuk-pagination govuk-!-margin-bottom-3" aria-label="Pagination">
 		<!-- Show previous link if current page is greater than 1 -->
-		<div class="govuk-pagination__prev" v-if="getPageNumber() > 1">
+		<div v-if="getPageNumber() > 1" class="govuk-pagination__prev">
 			<NuxtLink class="govuk-link govuk-pagination__link" :href="`?${query}page=${getPageNumber() - 1}`" rel="prev">
-				<svg class="govuk-pagination__icon govuk-pagination__icon--prev"
+				<svg
+					class="govuk-pagination__icon govuk-pagination__icon--prev"
 					xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true"
 					focusable="false" viewBox="0 0 15 13">
 					<path
@@ -101,7 +102,7 @@
 		</ul>
 
 		<!-- Show next link if current page is less than total pages -->
-		<div class="govuk-pagination__next" v-if="getPageNumber() < totalPages">
+		<div v-if="getPageNumber() < totalPages" class="govuk-pagination__next">
 			<NuxtLink class="govuk-link govuk-pagination__link" :href="`?${query}page=${getPageNumber() + 1}`" rel="next">
 				<span class="govuk-pagination__link-title">
 					Next<span class="govuk-visually-hidden"> page</span>

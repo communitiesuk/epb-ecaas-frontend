@@ -2,10 +2,10 @@
 
 const props = defineProps<{
 	help?: string;
-  selectedProductReference?: string;
-  selectedProductType?: string;
-  pageUrl?: string;
-  pageIndex?: number;
+	selectedProductReference?: string;
+	selectedProductType?: string;
+	pageUrl?: string;
+	pageIndex?: number;
 }>();
 </script>
 
@@ -17,7 +17,7 @@ const props = defineProps<{
 		name="productReference"
 		validation="required"
 		:help="help"
-	  :selected-product-reference="selectedProductReference"
+		:selected-product-reference="selectedProductReference"
 		:selected-product-type="selectedProductType"
 		:page-url="pageUrl"
 		:page-index="pageIndex"

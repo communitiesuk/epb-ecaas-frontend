@@ -26,7 +26,7 @@ const helpText = props.help ?? "Enter the tilt angle of the external surface. 0Â
 			name="pitchOption"
 			validation="required"
 			:data-field="dataField">
-			<GovDetails summary-text="Help with this input" v-if="!suppressStandardGuidance">
+			<GovDetails v-if="!suppressStandardGuidance" summary-text="Help with this input">
 				<div class="govuk-!-margin-bottom-3">
 					<a href="/guidance/pitch" target="_blank" class="govuk-link">
 						Guidance on pitch (opens in another window)

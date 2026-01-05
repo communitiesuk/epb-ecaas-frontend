@@ -1,83 +1,83 @@
 <script setup lang="ts">
-	import type { DisplayProduct } from '~/pcdb/pcdb.types';
-	import { SearchOption } from '~/composables/productSearch';
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import { SearchOption } from "~/composables/productSearch";
 
-	const { products, model: searchModel } = defineProps<{
-		products: DisplayProduct[];
-		model: ProductSearchModel;
-	}>();
+const { products, model: searchModel } = defineProps<{
+	products: DisplayProduct[];
+	model: ProductSearchModel;
+}>();
 
-	const model = ref<ProductSearchModel>({
-		...searchModel,
-		searchOption: searchModel.searchOption || SearchOption.productId
-	});
+const model = ref<ProductSearchModel>({
+	...searchModel,
+	searchOption: searchModel.searchOption || SearchOption.productId,
+});
 	
-	const brandNames = ref<string[]>([]);
-	const modelNames = ref<string[]>([]);
-	const modelQualifiers = ref<string[]>([]);
+const brandNames = ref<string[]>([]);
+const modelNames = ref<string[]>([]);
+const modelQualifiers = ref<string[]>([]);
 
-	const searchOptions: Record<string, string> = {
-		[SearchOption.productId]: "Product ID",
-		[SearchOption.modelAndBrand]: "Brand and model"
-	};
+const searchOptions: Record<string, string> = {
+	[SearchOption.productId]: "Product ID",
+	[SearchOption.modelAndBrand]: "Brand and model",
+};
 
-	const setBrandName = (name: string) => model.value = {
-		...model.value,
-		brandName: name
-	};
+const setBrandName = (name: string) => model.value = {
+	...model.value,
+	brandName: name,
+};
 
-	const setModelName = (name: string) => model.value = {
-		...model.value,
-		modelName: name
-	};
+const setModelName = (name: string) => model.value = {
+	...model.value,
+	modelName: name,
+};
 
-	const setModelQualifier = (qualifier: string) => model.value = {
-		...model.value,
-		modelQualifier: qualifier
-	};
+const setModelQualifier = (qualifier: string) => model.value = {
+	...model.value,
+	modelQualifier: qualifier,
+};
 
-	const handleSubmit = (fields: typeof model.value) => {
-		const query = Object.entries(fields).filter(e => !!e[1]);
-		const params = new URLSearchParams(query);
+const handleSubmit = (fields: typeof model.value) => {
+	const query = Object.entries(fields).filter(e => !!e[1]);
+	const params = new URLSearchParams(query);
 
-		navigateTo(`?${params}`);
-	};
+	navigateTo(`?${params}`);
+};
 
-	const filterProducts = (currentModel: ProductSearchModel): DisplayProduct[] => {
-		return useProductSearch(products, currentModel);
+const filterProducts = (currentModel: ProductSearchModel): DisplayProduct[] => {
+	return useProductSearch(products, currentModel);
+};
+
+watch(model, (currentModel: ProductSearchModel, previousModel: ProductSearchModel) => {
+	if (currentModel.brandName !== previousModel.brandName && (currentModel.brandName?.length || 0) > 2) {
+		const filtered = filterProducts(currentModel);
+		brandNames.value = Array.from(new Set(filtered.map(p => p.brandName)));
+		return;
 	}
 
-	watch(model, (currentModel: ProductSearchModel, previousModel: ProductSearchModel) => {
-		if (currentModel.brandName !== previousModel.brandName && (currentModel.brandName?.length || 0) > 2) {
-			const filtered = filterProducts(currentModel);
-			brandNames.value = Array.from(new Set(filtered.map(p => p.brandName)));
-			return;
-		}
+	if (currentModel.modelName !== previousModel.modelName && (currentModel.modelName?.length || 0) > 2) {
+		const filtered = filterProducts(currentModel);
+		modelNames.value = Array.from(new Set(filtered.map(p => p.modelName)));
+		return;
+	}
 
-		if (currentModel.modelName !== previousModel.modelName && (currentModel.modelName?.length || 0) > 2) {
-			const filtered = filterProducts(currentModel);
-			modelNames.value = Array.from(new Set(filtered.map(p => p.modelName)));
-			return;
-		}
-
-		if (currentModel.modelQualifier !== previousModel.modelQualifier && (currentModel.modelQualifier?.length || 0) > 2) {
-			const filtered = filterProducts(currentModel);
-			modelQualifiers.value = Array.from(new Set(filtered.map(p => p.modelQualifier!)));
-			return;
-		}
-	});
+	if (currentModel.modelQualifier !== previousModel.modelQualifier && (currentModel.modelQualifier?.length || 0) > 2) {
+		const filtered = filterProducts(currentModel);
+		modelQualifiers.value = Array.from(new Set(filtered.map(p => p.modelQualifier!)));
+		return;
+	}
+});
 </script>
 
 <template>
 	<div class="search-container">
-		<FormKit type="form" method="get" :actions="false" :incomplete-message="false" v-model="model" @submit="handleSubmit">
+		<FormKit v-model="model" type="form" method="get" :actions="false" :incomplete-message="false" @submit="handleSubmit">
 			<FormKit
 				id="searchOption"
 				type="govRadios"
 				name="searchOption"
 				label="Search by"
 				:options="searchOptions"
-				:classNames="{
+				:class-names="{
 					radios: 'search-options'
 				}"
 			/>
@@ -98,8 +98,8 @@
 						label="Brand name"
 						placeholder="Enter brand"
 						:suggested-values="brandNames"
-						v-on:select="setBrandName"
 						:value="model.brandName"
+						@select="setBrandName"
 					/>
 					<FieldsProductSearch
 						id="modelName"
@@ -107,8 +107,8 @@
 						label="Model name"
 						placeholder="Enter model"
 						:suggested-values="modelNames"
-						v-on:select="setModelName"
 						:value="model.modelName"
+						@select="setModelName"
 					/>
 					<FieldsProductSearch
 						id="modelQualifier"
@@ -116,8 +116,8 @@
 						label="Model qualifier"
 						placeholder="Enter qualifier"
 						:suggested-values="modelQualifiers"
-						v-on:select="setModelQualifier"
 						:value="model.modelQualifier"
+						@select="setModelQualifier"
 					/>
 				</template>
 				

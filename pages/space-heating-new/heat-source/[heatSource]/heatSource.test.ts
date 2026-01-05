@@ -146,9 +146,9 @@ describe("heatSource", () => {
 			expect(data[0]!.data.name).toBe("Updated heat pump");
 		});
 
-	test("product reference is cleared when heat pump type changes", async () => {
+		test("product reference is cleared when heat pump type changes", async () => {
 			
-				store.$patch({
+			store.$patch({
 				spaceHeatingNew: {
 					heatSource: {
 						data: [{ data: heatPump1 }],
@@ -166,7 +166,7 @@ describe("heatSource", () => {
 			const heatSourceItem = data[0]!.data;
 			if ("productReference" in heatSourceItem) {
 				expect(heatSourceItem.productReference).toBeUndefined();
-		}
+			}
 		});
 
 		test("required error messages are displayed when empty form is submitted", async () => {
@@ -1482,7 +1482,7 @@ describe("heatSource", () => {
 
 	test("product reference is cleared when heat source type changes", async () => {
 			
-			const heatPump: HeatSourceData = {
+		const heatPump: HeatSourceData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 			name: "Heat pump 1",
 			typeOfHeatSource: HeatSourceType.heatPump,
@@ -1490,26 +1490,26 @@ describe("heatSource", () => {
 			productReference: "HEATPUMP-SMALL",
 		};
 
-				store.$patch({
-				spaceHeatingNew: {
-					heatSource: {
-						data: [{ data: heatPump }],
-					},
+		store.$patch({
+			spaceHeatingNew: {
+				heatSource: {
+					data: [{ data: heatPump }],
 				},
-			});
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
-			const { data } = store.spaceHeatingNew.heatSource;
-			const heatSourceItem = data[0]!.data;
-			if ("productReference" in heatSourceItem) {
-				expect(heatSourceItem.productReference).toBeUndefined();
-		}
+			},
 		});
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+		const { data } = store.spaceHeatingNew.heatSource;
+		const heatSourceItem = data[0]!.data;
+		if ("productReference" in heatSourceItem) {
+			expect(heatSourceItem.productReference).toBeUndefined();
+		}
+	});
 
 
 	test("required error messages are displayed when empty form is submitted", async () => {
