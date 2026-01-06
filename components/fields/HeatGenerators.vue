@@ -14,14 +14,10 @@ defineProps<{
 
 const store = useEcaasStore();
 
-const { heatPump, boiler, heatBattery, heatNetwork, heatInterfaceUnit } = store.spaceHeating.heatGeneration;
+const { heatSource } = store.spaceHeatingNew;
 
 const heatGenerators = [
-	heatPump.data.map(x => x ? [x.data.id, x.data.name] as [string, string] : undefined),
-	boiler.data.map(x => x ? [x.id, x.name] as [string, string] : undefined),
-	heatBattery.data.map(x => x ? [x.id, x.name] as [string, string]: undefined),
-	heatNetwork.data.map(x => x ? [x.id, x.name] as [string, string] : undefined),
-	heatInterfaceUnit.data.map(x => x ? [x.id, x.name] as [string, string]: undefined),
+	heatSource.data.map(x => x ? [x.data.id, x.data.name] as [string, string] : undefined)
 ].flat().filter(x => typeof x !== "undefined");
 </script>
 

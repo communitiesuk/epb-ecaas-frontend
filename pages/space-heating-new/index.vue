@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
+import { v4 as uuidv4 } from "uuid";
 
 const title = "Space heating NEW";
 const page = usePage();
@@ -7,16 +8,28 @@ const store = useEcaasStore();
 
 type SpaceHeatingType = keyof typeof store.spaceHeatingNew;
 
-function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
-	const data = store.spaceHeatingNew[spaceHeatingType]?.data;
+const { hotWaterCylinder } = store.domesticHotWater.waterHeating;
+// const { wetDistribution } = store.spaceHeatingNew.heatEmitting;
 
-	if (data) {
-		data.splice(index, 1);
+function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
+	const items = store.spaceHeatingNew[spaceHeatingType]?.data;
+	
+	let heatSourceId
+
+	if(items[index]?.data && "typeOfHeatSource" in items[index].data){
+		heatSourceId = store.spaceHeatingNew.heatSource.data[index]?.data.id;
+	}
+	if (items) {
+		items.splice(index, 1);
 
 		store.$patch((state) => {
-			state.spaceHeatingNew[spaceHeatingType].data = data.length ? data : [];
+			state.spaceHeatingNew[spaceHeatingType].data = items.length ? items : [];
 			state.spaceHeatingNew[spaceHeatingType].complete = false;
 		});
+
+		if(heatSourceId) {
+			store.removeTaggedAssociations()([ hotWaterCylinder], heatSourceId, "heatSource");
+		}
 	}
 };
 

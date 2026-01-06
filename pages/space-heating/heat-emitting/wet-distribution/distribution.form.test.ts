@@ -19,7 +19,7 @@ const heatPump: HeatPumpData = {
 
 const wetDistribution1: WetDistributionData = {
 	name: "Wet distribution 1",
-	heatSource: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
+	heatSource: heatPump.id,
 	thermalMass: 2,
 	designTempDiffAcrossEmitters: 0.4,
 	designFlowTemp: 32,
@@ -40,10 +40,26 @@ const wetDistribution2: WetDistributionData = {
 	name: "Wet distribution 2",
 };
 
+const store = useEcaasStore();
+
+beforeEach(() => {	
+		store.$patch({
+			spaceHeatingNew: {
+				heatSource: {
+						data: [{ data: heatPump }],
+				},
+			},
+		});
+});
+
+afterEach(() => {
+		store.$reset();
+	});
+
 const populateValidForm = async () => {
 	await user.type(screen.getByTestId("name"), "Wet distribution 1");
 	await user.click(
-		screen.getByTestId("heatSource_7184f2fe-a78f-4a56-ba5a-1a7751ac507r"),
+		screen.getByTestId(`heatSource_${heatPump.id}`),
 	);
 	await user.type(screen.getByTestId("thermalMass"), "2");
 	await user.type(screen.getByTestId("designTempDiffAcrossEmitters"), "0.4");
@@ -58,7 +74,7 @@ const populateValidForm = async () => {
 };
 
 describe("Wet distribution", () => {
-	const store = useEcaasStore();
+
 
 	afterEach(() => {
 		store.$reset();
@@ -106,15 +122,6 @@ describe("Wet distribution", () => {
 	// });
 
 	it("should list the Heat sources perviously added", async () => {
-		store.$patch({
-			spaceHeating: {
-				heatGeneration: {
-					heatPump: {
-						data: [{ data: heatPump }],
-					},
-				},
-			},
-		});
 
 		await renderSuspended(WetDistribution);
 		expect(screen.getByText("Heat pump 1")).toBeDefined();
@@ -161,15 +168,6 @@ describe("Wet distribution", () => {
 	});
 
 	it("should save data to store when form is valid and type of space heater is radiators", async () => {
-		store.$patch({
-			spaceHeating: {
-				heatGeneration: {
-					heatPump: {
-						data: [{ data: heatPump }],
-					},
-				},
-			},
-		});
 
 		await renderSuspended(WetDistribution, {
 			route: {
@@ -184,15 +182,6 @@ describe("Wet distribution", () => {
 	});
 
 	// it("should save data to store when form is valid and type of space heater is under floor heating (UFH)", async () => {
-	// 	store.$patch({
-	// 		spaceHeating: {
-	// 			heatGeneration: {
-	// 				heatPump: {
-	// 					data: [heatPump],
-	// 				},
-	// 			},
-	// 		},
-	// 	});
 
 	// 	await renderSuspended(WetDistribution);
 
@@ -225,11 +214,6 @@ describe("Wet distribution", () => {
 	it("should populate form when exists in store", async () => {
 		store.$patch({
 			spaceHeating: {
-				heatGeneration: {
-					heatPump: {
-						data: [{ data: heatPump }],
-					},
-				},
 				heatEmitting: {
 					wetDistribution: {
 						data: [{ data: wetDistribution1 }],
@@ -300,15 +284,7 @@ describe("Wet distribution", () => {
 	});
 
 	it("should navigate to the heat emitting page when form is saved", async () => {
-		store.$patch({
-			spaceHeating: {
-				heatGeneration: {
-					heatPump: {
-						data: [{ data: heatPump }],
-					},
-				},
-			},
-		});
+
 		await renderSuspended(WetDistribution);
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -319,11 +295,6 @@ describe("Wet distribution", () => {
 });
 
 describe("partially saving data", () => {
-	const store = useEcaasStore();
-
-	afterEach(() => {
-		store.$reset();
-	});
 
 	it("creates a new wet distribution automatically with given name", async () => {
 		await renderSuspended(WetDistribution, {

@@ -35,16 +35,14 @@ describe("hot water cylinder", () => {
 
 	const addStoreData = () => {
 		store.$patch({
-			spaceHeating: {
-				heatGeneration: {
-					heatPump: {
+			spaceHeatingNew: {
+				heatSource: {
 						data: [{
 							data: {
 								id: heatPumpId,
 								name: "Heat pump",
 							},
 						}],
-					},
 				},
 			},
 		});

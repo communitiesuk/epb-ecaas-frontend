@@ -133,19 +133,10 @@ describe("space heating", () => {
 		});
 
 		
-		it.skip("when a heat pump is removed its also removed from store object which references it", async () => {
-
-
+		it("when a heat source is removed its also removed from store object which references it", async () => {
+			//TODO - test when heat source is removed - its removed from wet distribution 
 			const heatPump1: HeatSourceData = {
 				id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
-				name: "Heat source 1",
-				typeOfHeatSource: HeatSourceType.heatPump,
-				typeOfHeatPump: "airSource",
-				productReference: "HEATPUMP_LARGE",
-			};
-			
-			const heatPump2: HeatSourceData = {
-				id: "0b77e247-53c5-42b8-9dbd-83cbfc8c22222",
 				name: "Heat source 1",
 				typeOfHeatSource: HeatSourceType.heatPump,
 				typeOfHeatPump: "airSource",
@@ -160,31 +151,29 @@ describe("space heating", () => {
 				name: "Hot water cylinder 1",
 			};
 
-			const wetDistribution: WetDistributionData = {
-				name: "Wet distribution 1",
-				heatSource: heatPump1.id,
-				thermalMass: 2,
-				designTempDiffAcrossEmitters: 0.4,
-				designFlowTemp: 32,
-				designFlowRate: 5,
-				typeOfSpaceHeater: "radiator",
-				exponent: 1.3,
-				constant: 0.08,
-				convectionFractionWet: 0.2,
-				ecoDesignControllerClass: "1",
-				minimumFlowTemp: 20,
-				minOutdoorTemp: 0,
-				maxOutdoorTemp: 15,
-				numberOfRadiators: 1,
-
-			};
+			// const wetDistribution: WetDistributionData = {
+			// 	name: "Wet distribution 1",
+			// 	heatSource: heatPump1.id,
+			// 	thermalMass: 2,
+			// 	designTempDiffAcrossEmitters: 0.4,
+			// 	designFlowTemp: 32,
+			// 	designFlowRate: 5,
+			// 	typeOfSpaceHeater: "radiator",
+			// 	exponent: 1.3,
+			// 	constant: 0.08,
+			// 	convectionFractionWet: 0.2,
+			// 	ecoDesignControllerClass: "1",
+			// 	minimumFlowTemp: 20,
+			// 	minOutdoorTemp: 0,
+			// 	maxOutdoorTemp: 15,
+			// 	numberOfRadiators: 1,
+			// };
 
 			store.$patch({
 				spaceHeatingNew: {
 					heatSource: {
 						data: [
 							{ data: heatPump1 },
-							{ data: heatPump2 },
 						],
 					},
 					// heatEmitting: {
@@ -205,13 +194,13 @@ describe("space heating", () => {
 			});
 
 			await renderSuspended(SpaceHeatingNew);
-			await user.click(await screen.findByTestId("heatSource_remove_1"));
+			await user.click(await screen.findByTestId("heatSource_remove_0"));
 
-			const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.data;
-			expect(hotWaterCylinderData?.heatSource).toBeUndefined();
+			const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data;
+			expect(hotWaterCylinderData[0]?.data.heatSource).toBeUndefined();
 
-			const wetDistributionData = store.spaceHeating.heatEmitting.wetDistribution.data[0]?.data;
-			expect(wetDistributionData?.heatSource).toBeUndefined();
+			// const wetDistributionData = store.spaceHeating.heatEmitting.wetDistribution.data[0]?.data;
+			// expect(wetDistributionData?.heatSource).toBeUndefined();
 		});
 
 		it("displays an in-progress indicator when an entry is not marked as complete", async () => {

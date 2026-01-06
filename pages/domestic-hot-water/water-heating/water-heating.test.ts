@@ -36,9 +36,8 @@ const populateValidForm = async () => {
 
 beforeEach(() => {
 	store.$patch({
-		spaceHeating: {
-			heatGeneration: {
-				heatPump: {
+		spaceHeatingNew: {
+			heatSource: {
 					data: [{
 						data: {
 							id: "test-heat-pump",
@@ -47,7 +46,6 @@ beforeEach(() => {
 					}],
 					complete: true,
 				},
-			},
 		},
 	});
 });
