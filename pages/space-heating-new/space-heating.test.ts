@@ -76,7 +76,23 @@ describe("space heating", () => {
 			expect(screen.getByText("Heat source 1 (2)")).toBeDefined();
 			expect(screen.getByText("Heat source 1 (1) (1)")).toBeDefined();
 			expect(screen.getByText("Heat source 1 (1) (2)")).toBeDefined();
-		
+		});
+
+	it("duplicated heat source has a unique id", async () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [
+							{ data: heatSource1 },
+						],
+					},
+				},
+			});
+			await renderSuspended(SpaceHeatingNew);
+			await userEvent.click(screen.getByTestId("heatSource_duplicate_0"));
+	
+	const heatSources = store.spaceHeatingNew.heatSource.data;
+			expect(heatSources[1]?.data.id).not.toBe(heatSource1.id);
 		});
 
 		it("removes an item when remove link is clicked", async () => {

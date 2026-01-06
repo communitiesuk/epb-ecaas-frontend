@@ -30,7 +30,7 @@ function handleDuplicate(spaceHeatingType: SpaceHeatingType, index: number) {
 
 		store.$patch((state) => {
 			const newItem = {
-				data: { ...item.data, name: `${item.data.name} (${duplicates.length})` },
+				data: { ...item.data, name: `${item.data.name} (${duplicates.length})`, id: uuidv4() },
 				complete: item.complete,
 			};
 
