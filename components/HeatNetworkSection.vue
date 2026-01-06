@@ -21,7 +21,7 @@ const heatNetworkTypeOptions = {
 watch(() => props.model.typeOfHeatNetwork, (newHeatNetworkType, initialHeatNetworkType) => {
 	if (newHeatNetworkType !== initialHeatNetworkType) {
 		if ("productReference" in props.model) {
-		props.model.productReference = "";
+			props.model.productReference = "";
 		}
 		const heatNetworkType = getHeatSourceDefaultName(props.model);
 		props.model.name = heatNetworkType;

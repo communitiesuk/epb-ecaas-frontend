@@ -115,22 +115,22 @@ const saveForm = (fields: HeatSourceData) => {
 };
 
 watch(
-  () => model.value,
-  (newData, initialData) => {
-    if (!newData?.typeOfHeatSource) return;
+	() => model.value,
+	(newData, initialData) => {
+		if (!newData?.typeOfHeatSource) return;
 
-    if (
-      initialData?.typeOfHeatSource &&
+		if (
+			initialData?.typeOfHeatSource &&
       initialData.typeOfHeatSource !== newData.typeOfHeatSource
-    ) {
-			const validKeys = ['id', 'typeOfHeatSource'];
-			Object.keys(model.value!).forEach((key) => validKeys.includes(key) || delete model.value![key])
-			model.value!.typeOfHeatSource = newData.typeOfHeatSource;
-    }
-	if(model.value && !model.value.name){
-      model.value.name = getHeatSourceDefaultName(model.value);
-  }
-	}
+		) {
+			const validKeys = ["id", "typeOfHeatSource"];
+			Object.keys(model.value).forEach((key) => validKeys.includes(key) || delete model.value[key]);
+			model.value.typeOfHeatSource = newData.typeOfHeatSource;
+		}
+		if(model.value && !model.value.name){
+			model.value.name = getHeatSourceDefaultName(model.value);
+		}
+	},
 );
 
 autoSaveElementForm<HeatSourceData>({
