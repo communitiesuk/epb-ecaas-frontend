@@ -12,7 +12,6 @@ const index = getStoreIndex(heatSourceStoreData);
 const heatSourceData = useItemToEdit("heatSource", heatSourceStoreData);
 const model = ref(heatSourceData?.data as HeatSourceData);
 const id =  heatSourceData?.data.id ?? uuidv4();
-console.log(store.spaceHeatingNew.heatSource.data, "store in heat source page");
 export type heatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
 export type boilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
 export type heatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
@@ -48,6 +47,26 @@ const saveForm = (fields: HeatSourceData) => {
 					typeOfBoiler: fields.typeOfBoiler,
 					productReference: fields.productReference,
 					locationOfBoiler: fields.locationOfBoiler,
+				},
+				complete: true,
+			};
+		} else if (fields.typeOfHeatSource === "heatNetwork") {
+			heatSourceItem = {
+				data: {
+					...commonFields,
+					typeOfHeatSource: fields.typeOfHeatSource,
+					typeOfHeatNetwork: fields.typeOfHeatNetwork,
+					isHeatNetworkInPcdb: fields.isHeatNetworkInPcdb,
+					doesHeatNetworkUseHeatInterfaceUnits: fields.doesHeatNetworkUseHeatInterfaceUnits,
+					...(fields.isHeatNetworkInPcdb === true ? {
+						heatNetworkProductReference: fields.heatNetworkProductReference,
+						energySupply: fields.energySupply,
+					} : {
+						emissionsFactor: fields.emissionsFactor,
+						outOfScopeEmissionsFactor: fields.outOfScopeEmissionsFactor,
+						primaryEnergyFactor: fields.primaryEnergyFactor,
+						canEnergyBeExported: fields.canEnergyBeExported,
+					}),
 				},
 				complete: true,
 			};
@@ -95,6 +114,25 @@ const saveForm = (fields: HeatSourceData) => {
 	navigateTo("/space-heating-new");
 };
 
+watch(
+  () => model.value,
+  (newData, initialData) => {
+    if (!newData?.typeOfHeatSource) return;
+
+    if (
+      initialData?.typeOfHeatSource &&
+      initialData.typeOfHeatSource !== newData.typeOfHeatSource
+    ) {
+			const validKeys = ['id', 'typeOfHeatSource'];
+			Object.keys(model.value!).forEach((key) => validKeys.includes(key) || delete model.value![key])
+			model.value!.typeOfHeatSource = newData.typeOfHeatSource;
+    }
+	if(model.value && !model.value.name){
+      model.value.name = getHeatSourceDefaultName(model.value);
+  }
+	}
+);
+
 autoSaveElementForm<HeatSourceData>({
 	model,
 	storeData: store.spaceHeatingNew.heatSource,
@@ -130,7 +168,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="heatSourceTypes"
 			name="typeOfHeatSource"
 			validation="required"
-			@change="() => {'productReference' in model && (model.productReference = '')}"
+			@change="() => {model &&'productReference' in model && (model.productReference = '')}"
 		/>
 		<HeatPumpSection
 			v-if="model?.typeOfHeatSource === 'heatPump'"

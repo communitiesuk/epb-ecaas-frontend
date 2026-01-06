@@ -5,7 +5,7 @@ const route = useRoute();
 const store = useEcaasStore();
 const { getStoreIndex } = useForm();
 
-defineProps<{
+const props = defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatNetwork" }>;
 }>();
 
@@ -17,6 +17,18 @@ const heatNetworkTypeOptions = {
 	"unsleevedDistrict": "Unsleeved district heat network",
 	"communal": "Communal heat network",
 } as const satisfies Record<HeatNetworkType, HeatNetworkTypeDisplay>;
+
+watch(() => props.model.typeOfHeatNetwork, (newHeatNetworkType, initialHeatNetworkType) => {
+	if (newHeatNetworkType !== initialHeatNetworkType) {
+		if ("productReference" in props.model) {
+		props.model.productReference = "";
+		}
+		const heatNetworkType = getHeatSourceDefaultName(props.model);
+		props.model.name = heatNetworkType;
+		store.spaceHeatingNew.heatSource.data[index]!.data.name = heatNetworkType;
+	}
+},
+);
 
 </script>
 

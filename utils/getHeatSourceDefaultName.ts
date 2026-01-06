@@ -1,26 +1,41 @@
-export const getHeatSourceDefaultName = (
-	updatedItem: HeatSourceWithoutName,
-): string => {
-	const heatSourceType = updatedItem?.typeOfHeatSource;
-	const heatSourceTypeFormatted =
-    heatSourceType.charAt(0).toUpperCase() + heatSourceType.slice(1);
-	const heatSourceSubtype = updatedItem[`typeOf${heatSourceTypeFormatted}`];
+export const getHeatSourceDefaultName = (item: HeatSourceFormData): string => {
+  if (!item?.typeOfHeatSource) return "Heat source";
+  const heatSourceType = item?.typeOfHeatSource;
+	
+  let heatSourceSubtype;
 
-	return heatSourceSubtype
-		? getDefaultProductName(heatSourceType, heatSourceSubtype)
-		: getDefaultProductName(heatSourceType);
+  if ("typeOfHeatPump" in item) {
+    heatSourceSubtype = item.typeOfHeatPump;
+  }
+  if ("typeOfBoiler" in item) {
+    heatSourceSubtype = item.typeOfBoiler;
+  }
+  if ("typeOfHeatNetwork" in item) {
+    heatSourceSubtype = item.typeOfHeatNetwork;
+  }
+  if ("typeOfHeatBattery" in item) {
+    heatSourceSubtype = item.typeOfHeatBattery;
+  }
+
+  return heatSourceSubtype
+    ? getDefaultProductName(heatSourceType, heatSourceSubtype)
+    : getDefaultProductName(heatSourceType);
 };
 
-export type HeatSourceWithoutName = {
-	typeOfHeatSource: HeatSourceType;
-} & Record<string, string | undefined>;
-
-function getDefaultProductName(productType: HeatSourceType, productSubtype = "") {
-
-	const productTypeFormatted =
+function getDefaultProductName(
+  productType: HeatSourceType,
+  productSubtype = ""
+) {
+  const productTypeFormatted =
     productType[0]?.toUpperCase() + productType.slice(1);
 
-	return !productSubtype.match(productTypeFormatted)
-		? displayCamelToSentenceCase(productSubtype + productTypeFormatted)
-		: displayCamelToSentenceCase(productSubtype);
+  return !productSubtype.match(productTypeFormatted)
+    ? displayCamelToSentenceCase(productSubtype + productTypeFormatted)
+    : displayCamelToSentenceCase(productSubtype);
 }
+
+type HeatSourceFormData = Partial<HeatSourceData> & {
+  id: string;
+  typeOfHeatSource?: HeatSourceType;
+  name?: string;
+};

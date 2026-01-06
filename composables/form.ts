@@ -1,5 +1,4 @@
 import type { EcaasForm, EcaasFormList, PartialExceptName } from "~/stores/ecaasStore.schema";
-import { getHeatSourceDefaultName } from "~/utils/getHeatSourceDefaultName";
 
 export function useForm() {
 	const route = useRoute();
@@ -132,9 +131,6 @@ export function useForm() {
 	 */
 export const getName = <T extends object>(updatedItem: T, defaultName: string): string => {
 	
-	if(defaultName === "Heat source"){
-		defaultName = getHeatSourceDefaultName(updatedItem as HeatSourceWithoutName);
-	}
 	if ("name" in updatedItem && typeof updatedItem.name === "string") {
 		return updatedItem.name.trim() || defaultName;
 	}

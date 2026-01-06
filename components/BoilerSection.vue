@@ -6,7 +6,7 @@ const route = useRoute();
 const store = useEcaasStore();
 const { getStoreIndex } = useForm();
 
-defineProps<{
+const props = defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "boiler" }>;
 }>();
 
@@ -23,6 +23,16 @@ const locationOfBoilerOptions = {
 	"unheatedSpace": "Unheated space",
 } as const satisfies Record<AdjacentSpaceType, BoilerLocationDisplay>;
 
+watch(() => props.model.typeOfBoiler, (newBoilerType, initialBoilerType) => {
+	if (newBoilerType !== initialBoilerType) {
+		props.model.productReference = "";
+		const boilerType = displayCamelToSentenceCase(newBoilerType);
+		props.model.name = boilerType;
+		store.spaceHeatingNew.heatSource.data[index]!.data.name = boilerType;
+	}
+},
+);
+
 </script>
 
 <template>	
@@ -34,12 +44,15 @@ const locationOfBoilerOptions = {
 		name="typeOfBoiler"
 		validation="required"
 	/>
+	<template
+	v-if="model.typeOfBoiler">
 	<FormKit
 		id="name"
 		type="govInputText"
 		label="Name"
 		help="Provide a name for this element so that it can be identified later"
 		name="name"
+		:value="model.name"
 		:validation-rules="{ uniqueName: uniqueName(heatSourceStoreData, { index }) }"
 		validation="required | uniqueName"
 		:validation-messages="{
@@ -47,18 +60,20 @@ const locationOfBoilerOptions = {
 		}"
 	/>
 	<FormKit
+		v-if="model.typeOfBoiler" 
 		id="selectBoiler"
 		type="govPcdbProduct"
 		label="Select a boiler"
 		name="productReference"
 		validation="required"
-		help="Select the boiler type from the PCDB using the button below."
+		help="Select the boiler model from the PCDB using the button below."
 		:selected-product-reference="model.productReference"
 		:selected-product-type="boilerTypeOptions[model.typeOfBoiler]"
 		:page-url="route.fullPath"
 		:page-index="index"
 	/>
 	<FormKit
+		v-if="model.typeOfBoiler" 
 		id="locationOfBoiler"
 		type="govRadios"
 		label="Location of boiler"
@@ -66,4 +81,5 @@ const locationOfBoilerOptions = {
 		name="locationOfBoiler"
 		validation="required"
 	/>
+	</template>
 </template>

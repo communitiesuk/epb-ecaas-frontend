@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type HeatSourceData, uniqueName } from "#imports";
+import { getHeatSourceDefaultName, type HeatSourceData, uniqueName } from "#imports";
 import { heatPumpTypes } from "../utils/display";
 const route = useRoute();
 const store = useEcaasStore();
@@ -12,13 +12,16 @@ const props = defineProps<{
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
 const index = getStoreIndex(heatSourceStoreData);
 
-watch(() => props.model.typeOfHeatPump, (newData, initialData) => {
-	if (newData !== initialData) {
+
+watch(() => props.model, (newHeatPump, initialHeatPump) => {
+	if (newHeatPump.typeOfHeatPump !== initialHeatPump.typeOfHeatPump) {
 		props.model.productReference = "";
+		const heatPumpName = getHeatSourceDefaultName(newHeatPump);
+		props.model.name = heatPumpName;
+		store.spaceHeatingNew.heatSource.data[index]!.data.name = heatPumpName;
 	}
 },
 );
-
 </script>
 
 <template>	
@@ -31,7 +34,9 @@ watch(() => props.model.typeOfHeatPump, (newData, initialData) => {
 		validation="required"
 	/>
 	<FormKit
+		v-if="model.typeOfHeatPump" 
 		id="name"
+		:value="model.name"
 		type="govInputText"
 		label="Name"
 		help="Provide a name for this element so that it can be identified later"

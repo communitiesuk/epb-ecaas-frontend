@@ -22,7 +22,6 @@ describe("heatSource", () => {
 	describe("heat pump", () => {
 		const populateValidHeatPumpForm = async () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.type(screen.getByTestId("name"), "Heat pump 1");
 			await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
 		};
 
@@ -50,9 +49,9 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+			await user.click(screen.getByTestId("typeOfHeatPump_booster"));
 			expect(screen.getByTestId("name")).toBeDefined();
-			expect(screen.getByTestId("typeOfHeatPump")).toBeDefined();
-			expect(screen.queryByTestId("selectHeatPump")).toBeNull();
+			expect(screen.queryByTestId("selectHeatPump")).toBeDefined();
 		});
 
 		test("select heat pump section only displays when type of heat pump has been selected", async () => {
@@ -94,7 +93,7 @@ describe("heatSource", () => {
 			const { data } = store.spaceHeatingNew.heatSource;
 			expect(data[0]?.data).toEqual({
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-				name: "Heat pump 1",
+				name: "Air source heat pump",
 				typeOfHeatSource: HeatSourceType.heatPump,
 				typeOfHeatPump: "airSource",
 			});
@@ -179,13 +178,11 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 		
-			expect(await screen.findByTestId("name_error")).toBeDefined();
 			expect(await screen.findByTestId("typeOfHeatPump_error")).toBeDefined();
 		
 			await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
 			await user.click(screen.getByTestId("saveAndComplete"));
-			
-			expect(await screen.findByTestId("name_error")).toBeDefined();
+		
 			expect(await screen.findByTestId("selectHeatPump_error")).toBeDefined();
 		
 		});
@@ -204,7 +201,7 @@ describe("heatSource", () => {
 		});
 
 		describe("partially saving data", () => {
-			it("creates a new heat pump with given name", async () => {
+			it("creates a new heat pump with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
@@ -212,24 +209,22 @@ describe("heatSource", () => {
 				});
 
 				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-				await user.type(screen.getByTestId("name"), "New heat pump");
-				await user.tab();
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-				expect(actualHeatSource.data.name).toBe("New heat pump");
-			});
-
-			it("creates new heat pump with 'Heat pump' as name when type of heat pump is not selected", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-				await user.tab();
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.name).toBe("Heat pump");
+			});
+
+			it("adds heat pump type to name when heat pump type is selected", async () => {
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "create" },
+					},
+				});
+				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+				await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
+
+				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
+				expect(actualHeatSource.data.name).toBe("Air source heat pump");
 			});
 
 			it("creates new heat pump with default name when type of heat pump is selected", async () => {
@@ -262,12 +257,10 @@ describe("heatSource", () => {
 				});
 
 				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-				await user.type(screen.getByTestId("name"), "New heat network");
-				await user.tab();
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatNetwork");
-				expect(actualHeatSource.data.name).toBe("New heat network");
+				expect(actualHeatSource.data.name).toBe("Heat network");
 			});
 
 			it("saves updated form data to correct store object automatically", async () => {
@@ -286,11 +279,9 @@ describe("heatSource", () => {
 				});
 
 				await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
-				await user.type(screen.getByTestId("name"), "New solar thermal system");
-				await user.tab();
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[1]!;
-				expect(actualHeatSource.data.name).toBe("New solar thermal system");
+				expect(actualHeatSource.data.name).toBe("Solar thermal system");
 				expect(actualHeatSource.data.typeOfHeatSource).toBe("solarThermalSystem");
 			});
 
@@ -312,7 +303,6 @@ describe("heatSource", () => {
 	describe("boiler", () => {
 		const populateValidBoilerForm = async () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
-			await user.type(screen.getByTestId("name"), "Boiler 1");
 			await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));
 			await user.click(screen.getByTestId("locationOfBoiler_heatedSpace"));
 
@@ -344,6 +334,7 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+			await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));	
 			expect(screen.getByTestId("name")).toBeDefined();
 			expect(screen.getByTestId("typeOfBoiler")).toBeDefined();
 			expect(screen.queryByTestId("selectBoiler")).toBeDefined();
@@ -357,7 +348,8 @@ describe("heatSource", () => {
 				},
 			});
 			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
-			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/");
+			await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));
+			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/combi-boiler");
 		});
 
 		test("boiler data is saved to store state when form is valid", async () => {
@@ -374,9 +366,10 @@ describe("heatSource", () => {
 			const { data } = store.spaceHeatingNew.heatSource;
 			expect(data[0]?.data).toEqual({
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
-				name: "Boiler 1",
+				name: "Combi boiler",
 				typeOfHeatSource: HeatSourceType.boiler,
 				typeOfBoiler: "combiBoiler",
+				productReference: "",
 				locationOfBoiler: AdjacentSpaceType.heatedSpace,
 			});
 		});
@@ -436,10 +429,10 @@ describe("heatSource", () => {
 			});
 		
 			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+			await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));
+
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect((await screen.findByTestId("typeOfBoiler_error"))).toBeDefined();
-			expect((await screen.findByTestId("name_error"))).toBeDefined();
 			expect((await screen.findByTestId("selectBoiler_error"))).toBeDefined();
 			expect((await screen.findByTestId("locationOfBoiler_error"))).toBeDefined();
 		});
@@ -458,7 +451,7 @@ describe("heatSource", () => {
 		});
 
 		describe("partially saving data", () => {
-			it("creates a new boiler with given name", async () => {
+			it("creates a new boiler with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
@@ -466,27 +459,11 @@ describe("heatSource", () => {
 				});
 
 				await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
-				await user.type(screen.getByTestId("name"), "New boiler");
-				await user.tab();
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-				expect(actualHeatSource.data.name).toBe("New boiler");
-			});
-
-			it("creates new boiler with 'Boiler' as name when type of boiler is not selected", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-				await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
-				await user.tab();
-
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.name).toBe("Boiler");
 			});
 
-			it("creates new boiler with default name when type of boiler is selected", async () => {
+			it("adds boiler type to name when boiler type is selected", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
@@ -516,12 +493,10 @@ describe("heatSource", () => {
 				});
 
 				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-				await user.type(screen.getByTestId("name"), "New heat network");
-				await user.tab();
-
+		
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatNetwork");
-				expect(actualHeatSource.data.name).toBe("New heat network");
+				expect(actualHeatSource.data.name).toBe("Heat network");
 			});
 
 			it("saves updated form data to correct store object automatically", async () => {
@@ -540,11 +515,10 @@ describe("heatSource", () => {
 				});
 
 				await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
-				await user.type(screen.getByTestId("name"), "New solar thermal system");
-				await user.tab();
+
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[1]!;
-				expect(actualHeatSource.data.name).toBe("New solar thermal system");
+				expect(actualHeatSource.data.name).toBe("Solar thermal system");
 				expect(actualHeatSource.data.typeOfHeatSource).toBe("solarThermalSystem");
 			});
 
@@ -573,11 +547,11 @@ describe("heatSource", () => {
 				},
 			});
 			await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-			await user.type(screen.getByTestId("name"), "Heat network 1");
 			await user.click(screen.getByTestId("typeOfHeatNetwork_communal"));
 			await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
 			await user.click(screen.getByTestId("energySupply_electricity"));
 			await user.click(screen.getByTestId("doesHeatNetworkUseHeatInterfaceUnits_no"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 		};
 
 		const patchHeatNetworkDataToStore = async () => {
@@ -672,7 +646,7 @@ describe("heatSource", () => {
 			const { data } = store.spaceHeatingNew.heatSource;
 			expect(data[0]?.data).toEqual({
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-				name: "Heat network 1",
+				name: "Communal heat network",
 				typeOfHeatSource: HeatSourceType.heatNetwork,
 				typeOfHeatNetwork: "communal",
 				isHeatNetworkInPcdb: true,
@@ -710,7 +684,6 @@ describe("heatSource", () => {
 			await user.clear(screen.getByTestId("name"));
 			await user.type(screen.getByTestId("name"), "Updated heat network");
 			await user.tab();
-			await user.click(screen.getByTestId("typeOfHeatNetwork_unsleevedDistrict"));
 
 			const { data } = store.spaceHeatingNew.heatSource;
 
@@ -727,7 +700,6 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect((await screen.findByTestId("name_error"))).toBeDefined();
 			expect((await screen.findByTestId("typeOfHeatNetwork_error"))).toBeDefined();
 			expect((await screen.findByTestId("isHeatNetworkInPcdb_error"))).toBeDefined();
 		});
@@ -746,7 +718,7 @@ describe("heatSource", () => {
 		});
 
 		describe("partially saving data", () => {
-			it("creates a new heat network with given name", async () => {
+			it("creates a new heat network with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
@@ -754,24 +726,22 @@ describe("heatSource", () => {
 				});
 
 				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-				await user.type(screen.getByTestId("name"), "New heat network");
-				await user.tab();
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-				expect(actualHeatSource.data.name).toBe("New heat network");
-			});
-
-			it("creates new heat network with 'Heat network' as name when type of heat network is not selected", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-				await user.tab();
-
+		
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.name).toBe("Heat network");
+			});
+
+			it("adds heat network type to name when type of heat network is selected", async () => {
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "create" },
+					},
+				});
+				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
+				await user.click(screen.getByTestId("typeOfHeatNetwork_unsleevedDistrict"));
+
+				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
+				expect(actualHeatSource.data.name).toBe("Unsleeved district heat network");
 			});
 
 			it("creates new heat network with default name when type of heat network is selected", async () => {
@@ -804,12 +774,10 @@ describe("heatSource", () => {
 				});
 
 				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-				await user.type(screen.getByTestId("name"), "New heat pump");
-				await user.tab();
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatPump");
-				expect(actualHeatSource.data.name).toBe("New heat pump");
+				expect(actualHeatSource.data.name).toBe("Heat pump");
 			});
 
 			it("saves updated form data to correct store object automatically", async () => {
@@ -828,11 +796,10 @@ describe("heatSource", () => {
 				});
 
 				await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
-				await user.type(screen.getByTestId("name"), "New solar thermal system");
 				await user.tab();
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[1]!;
-				expect(actualHeatSource.data.name).toBe("New solar thermal system");
+				expect(actualHeatSource.data.name).toBe("Solar thermal system");
 				expect(actualHeatSource.data.typeOfHeatSource).toBe("solarThermalSystem");
 			});
 
@@ -861,7 +828,7 @@ describe("heatSource", () => {
 				},
 			});
 			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
-			await user.type(screen.getByTestId("name"), "Heat battery 1");
+			// await user.type(screen.getByTestId("name"), "Heat battery 1");
 			await user.click(screen.getByTestId("typeOfHeatBattery_pcm"));
 			await user.type(screen.getByTestId("numberOfUnits"), "1");
 			await user.click(screen.getByTestId("energySupply_mains_gas"));
@@ -926,9 +893,10 @@ describe("heatSource", () => {
 			const { data } = store.spaceHeatingNew.heatSource;
 			expect(data[0]?.data).toEqual({
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
-				name: "Heat battery 1",
+				name: "Pcm heat battery",
 				typeOfHeatSource: HeatSourceType.heatBattery,
 				typeOfHeatBattery: "pcm",
+				productReference: "",
 				numberOfUnits: 1,
 				energySupply: "mains_gas",
 			});
@@ -1018,7 +986,6 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect((await screen.findByTestId("name_error"))).toBeDefined();
 			expect((await screen.findByTestId("typeOfHeatBattery_error"))).toBeDefined();
 			expect((await screen.findByTestId("selectHeatBattery_error"))).toBeDefined();
 			expect((await screen.findByTestId("numberOfUnits_error"))).toBeDefined();
@@ -1039,27 +1006,13 @@ describe("heatSource", () => {
 		});
 
 		describe("partially saving data", () => {
-			it("creates a new heat battery with given name", async () => {
+			it("creates a new heat battery with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
 					},
 				});
 
-				await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
-				await user.type(screen.getByTestId("name"), "New heat battery");
-				await user.tab();
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-				expect(actualHeatSource.data.name).toBe("New heat battery");
-			});
-
-			it("creates new heat battery with 'Heat battery' as name when type of heat battery is not selected", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
 				await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
 				await user.tab();
 
@@ -1067,7 +1020,7 @@ describe("heatSource", () => {
 				expect(actualHeatSource.data.name).toBe("Heat battery");
 			});
 
-			it("creates new heat battery with default name when type of heat battery is selected", async () => {
+			it("adds heat battery type to name when type has been selected", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
@@ -1097,12 +1050,11 @@ describe("heatSource", () => {
 				});
 
 				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-				await user.type(screen.getByTestId("name"), "New heat pump");
-				await user.tab();
+	
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatPump");
-				expect(actualHeatSource.data.name).toBe("New heat pump");
+				expect(actualHeatSource.data.name).toBe("Heat pump");
 			});
 
 			it("saves updated form data to correct store object automatically", async () => {
@@ -1121,11 +1073,10 @@ describe("heatSource", () => {
 				});
 
 				await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
-				await user.type(screen.getByTestId("name"), "New solar thermal system");
-				await user.tab();
+
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[1]!;
-				expect(actualHeatSource.data.name).toBe("New solar thermal system");
+				expect(actualHeatSource.data.name).toBe("Solar thermal system");
 				expect(actualHeatSource.data.typeOfHeatSource).toBe("solarThermalSystem");
 			});
 
@@ -1147,7 +1098,6 @@ describe("heatSource", () => {
 	describe("solar thermal system", () => {
 		const populateValidSolarThermalSystemForm = async () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
-			await user.type(screen.getByTestId("name"), "Solar thermal system 1");
 			await user.click(screen.getByTestId("locationOfCollectorLoopPiping_outside"));
 			await user.type(screen.getByTestId("collectorModuleArea"), "1");
 			await user.type(screen.getByTestId("numberOfCollectorModules"), "2");
@@ -1240,7 +1190,7 @@ describe("heatSource", () => {
 			const { data } = store.spaceHeatingNew.heatSource;
 			expect(data[0]?.data).toEqual({
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
-				name: "Solar thermal system 1",
+				name: "Solar thermal system",
 				typeOfHeatSource: HeatSourceType.solarThermalSystem,
 				locationOfCollectorLoopPiping: "outside",
 				collectorModuleArea: 1,
@@ -1359,7 +1309,6 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect((await screen.findByTestId("name_error"))).toBeDefined();
 			expect((await screen.findByTestId("locationOfCollectorLoopPiping_error")).hasAttribute("checked"));
 			expect((await screen.findByTestId("collectorModuleArea_error"))).toBeDefined();
 			expect((await screen.findByTestId("numberOfCollectorModules_error"))).toBeDefined();
@@ -1389,22 +1338,8 @@ describe("heatSource", () => {
 		});
 
 		describe("partially saving data", () => {
-			it("creates a new solar thermal system with given name", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
-				await user.type(screen.getByTestId("name"), "New solar thermal system");
-				await user.tab();
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-				expect(actualHeatSource.data.name).toBe("New solar thermal system");
-			});
-
-			it("creates new solar thermal system with 'Solar thermal system' as name when name is not given", async () => {
+		
+			it("creates new solar thermal system with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
@@ -1433,12 +1368,12 @@ describe("heatSource", () => {
 				});
 
 				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-				await user.type(screen.getByTestId("name"), "New heat pump");
+				await user.click(screen.getByTestId("typeOfHeatPump_booster"));
 				await user.tab();
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatPump");
-				expect(actualHeatSource.data.name).toBe("New heat pump");
+				expect(actualHeatSource.data.name).toBe("Booster heat pump");
 			});
 
 			it("saves updated form data to correct store object automatically", async () => {
@@ -1457,11 +1392,11 @@ describe("heatSource", () => {
 				});
 
 				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-				await user.type(screen.getByTestId("name"), "New heat pump");
+				await user.click(screen.getByTestId("typeOfHeatPump_booster"));
 				await user.tab();
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[1]!;
-				expect(actualHeatSource.data.name).toBe("New heat pump");
+				expect(actualHeatSource.data.name).toBe("Booster heat pump");
 				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatPump");
 			});
 

@@ -7,7 +7,7 @@ const route = useRoute();
 const store = useEcaasStore();
 const { getStoreIndex } = useForm();
 
-defineProps<{
+const props = defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatBattery" }>;
 }>();
 
@@ -20,6 +20,15 @@ const heatBatteryTypeOptions = {
 	"dryCore": "Dry core",
 } as const satisfies Record<HeatBatteryType, HeatBatteryTypeDisplay>;
 
+watch(() => props.model.typeOfHeatBattery, (newHeatBatteryType, initialHeatBatteryType) => {
+	if (newHeatBatteryType !== initialHeatBatteryType) {
+		props.model.productReference = "";
+		const heatBatteryType = getHeatSourceDefaultName(props.model);
+		props.model.name = heatBatteryType;
+		store.spaceHeatingNew.heatSource.data[index]!.data.name = heatBatteryType;
+	}
+},
+);
 
 </script>
 
