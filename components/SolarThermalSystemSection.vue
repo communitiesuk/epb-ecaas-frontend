@@ -125,21 +125,14 @@ const locationOfCollectorLoopPipingOptions = {
 		name="powerOfCollectorPumpController"
 		validation="required | number | min:0 | max:10000"
 	/>
-	<FormKit
-		id="pitch"
-		type="govInputWithSuffix"
-		label="Pitch"
-		help="Enter the tilt angle, or inclination, of the PV array from horizontal measured upwards facing, where 0° is a horizontal surface and 90° is a vertical surface"
-		name="pitch"
-		validation="required | number | min:0 | max: 90"
-		suffix-text="°"
-	/>
-	<FormKit
-		id="orientation"
-		type="govInputWithSuffix"
-		suffix-text="°"
-		label="Orientation"
-		name="orientation"
-		validation="required | number | min:0 | max:360"
-	/>
+	<FieldsPitch
+			label="Pitch"
+			help="Enter the tilt angle, or inclination, of the PV array from horizontal measured upwards facing, where 0° is a horizontal surface and 90° is a vertical surface"
+			validation="required | number | min:0 | max: 90"
+			data-field="Zone.BuildingElement.*.pitch"
+		/>
+	<FieldsOrientation
+				label="Orientation"
+				data-field="Zone.BuildingElement.*.orientation"
+		/>
 </template>
