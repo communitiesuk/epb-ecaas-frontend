@@ -1,4 +1,4 @@
-import { getProduct } from "../../services/products";
+import { getProduct } from "@/server/services/products";
 
 export default defineEventHandler(async (event) => {
 	const id = getRouterParam(event, "id");

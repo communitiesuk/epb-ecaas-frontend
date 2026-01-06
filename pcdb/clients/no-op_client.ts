@@ -1,5 +1,5 @@
 import type { DisplayProduct, PaginatedResult, TechnologyType } from "../pcdb.types";
-import type { Command, Client, DisplayTechnologyProducts, DisplayById } from "./client.types";
+import type { Command, Client, DisplayTechnologyProducts, DisplayById, FullProductById } from "./client.types";
 import data from "@/pcdb/data/products.json";
 
 export const noopClient: Client = async <
@@ -11,7 +11,7 @@ export const noopClient: Client = async <
 	// Return sensible no-op values per command type
 	if ("id" in query && "technologyType" in query) {
 		// fullProductById → ProductForTechnology<T> | undefined
-		return undefined as U["output"];
+		return getProductDetailsById(query);
 	}
 	if ("id" in query) {
 		return getProductById(query);
@@ -47,6 +47,10 @@ const getProductById = <U extends DisplayById>(query: U["input"]): U["output"] =
 	};
 
 	return displayProduct;
+};
+
+const getProductDetailsById = async <T extends TechnologyType, U extends FullProductById<T>>(query: { id: number; }) => {
+	return data.find(p => p.id === query.id.toString()) as U["output"];
 };
 
 const getProductsByTechnologyType = <U extends DisplayTechnologyProducts>(query: U["input"]): U["output"] => {

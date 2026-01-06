@@ -1,6 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import type { DisplayProduct, PaginatedResult, TechnologyType } from "../pcdb.types";
-import type { Command, Client, DisplayTechnologyProducts, DisplayById } from "./client.types";
+import type { Command, Client, DisplayTechnologyProducts, DisplayById, FullProductById } from "./client.types";
 import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 const localConfig = {
@@ -24,7 +24,7 @@ export const dynamodbClient: Client = async <
 	// Return sensible no-op values per command type
 	if ("id" in query && "technologyType" in query) {
 		// fullProductById → ProductForTechnology<T> | undefined
-		return undefined as U["output"];
+		return await getProductDetailsById(query);
 	}
 	if ("id" in query) {
 		return await getProductById(query);
@@ -65,6 +65,17 @@ const getProductById = async <U extends DisplayById>(query: U["input"]): Promise
 	};
 
 	return product;
+};
+
+const getProductDetailsById = async <T extends TechnologyType, U extends FullProductById<T>>(query: { id: number; }) => {
+	const result = await docClient.send(new GetCommand({
+		TableName: "products",
+		Key: { id: query.id },
+	}));
+
+	const { Item } = result;
+
+	return Item as U["output"];
 };
 
 const getProductsByTechnologyType = async <U extends DisplayTechnologyProducts>(query: U["input"]): Promise<U["output"]> => {

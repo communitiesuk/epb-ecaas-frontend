@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { page } from "~/data/pages/pages";
-
 definePageMeta({ layout: false });
 
 const store = useEcaasStore();
@@ -19,7 +17,7 @@ const selectProduct = (reference: string) => {
 		state.spaceHeating.heatGeneration.heatPump.data[index]!.data.productReference = reference;
 	});
 
-	navigateTo(page("heatPump").url.replace(":pump", `${index}`));
+	navigateTo(getUrl("heatPump").replace(":pump", `${index}`));
 };
 </script>
 
