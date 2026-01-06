@@ -34,8 +34,12 @@ function getDefaultProductName(
 		: displayCamelToSentenceCase(productSubtype);
 }
 
-type HeatSourceFormData = Partial<HeatSourceData> & {
+export type HeatSourceFormData = {
 	id: string;
-	typeOfHeatSource?: HeatSourceType;
+	typeOfHeatSource: HeatSourceType;
 	name?: string;
+	typeOfHeatPump?: HeatPumpType;
+	typeOfBoiler?: BoilerType;
+	typeOfHeatNetwork?: HeatNetworkType;
+	typeOfHeatBattery?: HeatBatteryType;
 };
