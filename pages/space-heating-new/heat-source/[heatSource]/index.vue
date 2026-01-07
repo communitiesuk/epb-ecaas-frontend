@@ -127,7 +127,7 @@ watch(
 		) {
 			errorMessages.value = [];
 			const validKeys = ["id", "typeOfHeatSource"];
-			Object.keys(model.value).forEach((key) => validKeys.includes(key) || delete model.value[key]);
+			Object.keys(model.value).forEach((key) => validKeys.includes(key) || delete model.value[key as keyof HeatSourceData]);
 			model.value.typeOfHeatSource = newData.typeOfHeatSource;
 		}
 		if(model.value && !model.value.name){
@@ -150,7 +150,7 @@ autoSaveElementForm<HeatSourceData>({
 
 
 function updateHeatSource(type: string) {
-	watch(() => model.value[`${type}`], (newHeatBatteryType, initialHeatBatteryType) => {
+	watch(() => model.value[`${type}` as keyof HeatSourceData], (newHeatBatteryType, initialHeatBatteryType) => {
 		if (newHeatBatteryType !== initialHeatBatteryType) {
 			if("productReference" in model.value){
 				model.value.productReference = "";
