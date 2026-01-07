@@ -4,7 +4,7 @@ describe("getHeatSourceDefaultName", () => {
 	test("returns only the heat source type when there is no heat source product type", async () => {
 		const item: HeatSourceFormData = { 
 			id: "123", 
-			typeOfHeatSource: HeatSourceType.solarThermalSystem 
+			typeOfHeatSource: HeatSourceType.solarThermalSystem, 
 		
 		};
 		const actual = getHeatSourceDefaultName(item);

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { getHeatSourceDefaultName, type HeatSourceData, uniqueName } from "#imports";
+import { type HeatSourceData, uniqueName } from "#imports";
 import { heatPumpTypes } from "../utils/display";
 const route = useRoute();
 const store = useEcaasStore();
 const { getStoreIndex } = useForm();
 
-const props = defineProps<{
+defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatPump" }>;
 }>();
 

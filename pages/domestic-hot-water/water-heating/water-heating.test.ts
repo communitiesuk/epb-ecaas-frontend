@@ -38,14 +38,14 @@ beforeEach(() => {
 	store.$patch({
 		spaceHeatingNew: {
 			heatSource: {
-					data: [{
-						data: {
-							id: "test-heat-pump",
-							name: "Test Heat Pump",
-						},
-					}],
-					complete: true,
-				},
+				data: [{
+					data: {
+						id: "test-heat-pump",
+						name: "Test Heat Pump",
+					},
+				}],
+				complete: true,
+			},
 		},
 	});
 });

@@ -126,13 +126,13 @@ const locationOfCollectorLoopPipingOptions = {
 		validation="required | number | min:0 | max:10000"
 	/>
 	<FieldsPitch
-			label="Pitch"
-			help="Enter the tilt angle, or inclination, of the PV array from horizontal measured upwards facing, where 0° is a horizontal surface and 90° is a vertical surface"
-			validation="required | number | min:0 | max: 90"
-			data-field="Zone.BuildingElement.*.pitch"
-		/>
+		label="Pitch"
+		help="Enter the tilt angle, or inclination, of the PV array from horizontal measured upwards facing, where 0° is a horizontal surface and 90° is a vertical surface"
+		validation="required | number | min:0 | max: 90"
+		data-field="Zone.BuildingElement.*.pitch"
+	/>
 	<FieldsOrientation
-				label="Orientation"
-				data-field="Zone.BuildingElement.*.orientation"
-		/>
+		label="Orientation"
+		data-field="Zone.BuildingElement.*.orientation"
+	/>
 </template>

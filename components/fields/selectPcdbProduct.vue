@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-const props = defineProps<{
+defineProps<{
 	help?: string;
 	selectedProductReference?: string;
 	selectedProductType?: string;

@@ -7,7 +7,7 @@ const route = useRoute();
 const store = useEcaasStore();
 const { getStoreIndex } = useForm();
 
-const props = defineProps<{
+defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatBattery" }>;
 }>();
 

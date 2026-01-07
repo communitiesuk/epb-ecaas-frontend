@@ -43,18 +43,18 @@ const wetDistribution2: WetDistributionData = {
 const store = useEcaasStore();
 
 beforeEach(() => {	
-		store.$patch({
-			spaceHeatingNew: {
-				heatSource: {
-						data: [{ data: heatPump }],
-				},
+	store.$patch({
+		spaceHeatingNew: {
+			heatSource: {
+				data: [{ data: heatPump }],
 			},
-		});
+		},
+	});
 });
 
 afterEach(() => {
-		store.$reset();
-	});
+	store.$reset();
+});
 
 const populateValidForm = async () => {
 	await user.type(screen.getByTestId("name"), "Wet distribution 1");

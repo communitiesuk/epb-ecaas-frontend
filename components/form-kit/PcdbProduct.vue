@@ -36,29 +36,29 @@ if (selectedProductReference) {
 
 <template>
 	<div class="govuk-form-group">
-	<div :data-testid="id" :class="`govuk-form-group ${showErrorState(props.context) ? 'govuk-form-group--error' : ''}`">
-		<label class="govuk-label govuk-label--m">
-			{{ label }}
-		</label>
-		<div v-if="help" :id="`${id}_hint`" class="govuk-hint">{{ help }}</div>
-		<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
-			<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
-		</p>
-		<GovButton v-show="!productData" data-testId="chooseAProductButton" :href="productsPageUrl">
-			Choose a product
-		</GovButton>
-		<div v-if="productData">
-			<ul class="govuk-list">
-				<li>Product reference: <span class="bold">{{ selectedProductReference }}</span></li>
-				<li>Brand: <span class="bold">{{ productData?.brandName }}</span></li>
-				<li>Model: <span class="bold">{{ productData?.modelName }}</span></li>
-				<li>Model Qualifier: <span class="bold">{{ productData?.modelQualifier ?? '-' }}</span></li>
-			</ul>
-			<GovButton secondary data-testId="selectAProductButton" :href="productsPageUrl">
-				Select a different product
+		<div :data-testid="id" :class="`govuk-form-group ${showErrorState(props.context) ? 'govuk-form-group--error' : ''}`">
+			<label class="govuk-label govuk-label--m">
+				{{ label }}
+			</label>
+			<div v-if="help" :id="`${id}_hint`" class="govuk-hint">{{ help }}</div>
+			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
+				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
+			</p>
+			<GovButton v-show="!productData" data-testId="chooseAProductButton" :href="productsPageUrl">
+				Choose a product
 			</GovButton>
+			<div v-if="productData">
+				<ul class="govuk-list">
+					<li>Product reference: <span class="bold">{{ selectedProductReference }}</span></li>
+					<li>Brand: <span class="bold">{{ productData?.brandName }}</span></li>
+					<li>Model: <span class="bold">{{ productData?.modelName }}</span></li>
+					<li>Model Qualifier: <span class="bold">{{ productData?.modelQualifier ?? '-' }}</span></li>
+				</ul>
+				<GovButton secondary data-testId="selectAProductButton" :href="productsPageUrl">
+					Select a different product
+				</GovButton>
+			</div>
 		</div>
-	</div>
 	</div>
 </template>
 

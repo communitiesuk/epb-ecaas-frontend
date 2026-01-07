@@ -17,7 +17,7 @@ const store = useEcaasStore();
 const { heatSource } = store.spaceHeatingNew;
 
 const heatGenerators = [
-	heatSource.data.map(x => x ? [x.data.id, x.data.name] as [string, string] : undefined)
+	heatSource.data.map(x => x ? [x.data.id, x.data.name] as [string, string] : undefined),
 ].flat().filter(x => typeof x !== "undefined");
 </script>
 

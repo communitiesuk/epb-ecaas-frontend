@@ -78,7 +78,7 @@ describe("space heating", () => {
 			expect(screen.getByText("Heat source 1 (1) (2)")).toBeDefined();
 		});
 
-	it("duplicated heat source has a unique id", async () => {
+		it("duplicated heat source has a unique id", async () => {
 			store.$patch({
 				spaceHeatingNew: {
 					heatSource: {
@@ -91,7 +91,7 @@ describe("space heating", () => {
 			await renderSuspended(SpaceHeatingNew);
 			await userEvent.click(screen.getByTestId("heatSource_duplicate_0"));
 	
-	const heatSources = store.spaceHeatingNew.heatSource.data;
+			const heatSources = store.spaceHeatingNew.heatSource.data;
 			expect(heatSources[1]?.data.id).not.toBe(heatSource1.id);
 		});
 

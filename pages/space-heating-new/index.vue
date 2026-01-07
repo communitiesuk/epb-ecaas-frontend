@@ -14,7 +14,7 @@ const { hotWaterCylinder } = store.domesticHotWater.waterHeating;
 function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 	const items = store.spaceHeatingNew[spaceHeatingType]?.data;
 	
-	let heatSourceId
+	let heatSourceId;
 
 	if(items[index]?.data && "typeOfHeatSource" in items[index].data){
 		heatSourceId = store.spaceHeatingNew.heatSource.data[index]?.data.id;

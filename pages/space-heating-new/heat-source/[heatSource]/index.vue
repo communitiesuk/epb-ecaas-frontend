@@ -150,17 +150,17 @@ autoSaveElementForm<HeatSourceData>({
 
 
 function updateHeatSource(type: string) {
-watch(() => model.value[`${type}`], (newHeatBatteryType, initialHeatBatteryType) => {
-	if (newHeatBatteryType !== initialHeatBatteryType) {
-		if("productReference" in model.value){
-			model.value.productReference = "";
+	watch(() => model.value[`${type}`], (newHeatBatteryType, initialHeatBatteryType) => {
+		if (newHeatBatteryType !== initialHeatBatteryType) {
+			if("productReference" in model.value){
+				model.value.productReference = "";
+			}
+			const heatBatteryType = getHeatSourceDefaultName(model.value);
+			model.value.name = heatBatteryType;
+			store.spaceHeatingNew.heatSource.data[index]!.data.name = heatBatteryType;
 		}
-		const heatBatteryType = getHeatSourceDefaultName(model.value);
-		model.value.name = heatBatteryType;
-		store.spaceHeatingNew.heatSource.data[index]!.data.name = heatBatteryType;
-	}
-},
-);
+	},
+	);
 }
 </script>
 
@@ -185,7 +185,7 @@ watch(() => model.value[`${type}`], (newHeatBatteryType, initialHeatBatteryType)
 			:options="heatSourceTypes"
 			name="typeOfHeatSource"
 			validation="required"
-				/>
+		/>
 		<HeatPumpSection
 			v-if="model?.typeOfHeatSource === 'heatPump'"
 			:model="model as heatPumpModelType"

@@ -37,12 +37,12 @@ describe("hot water cylinder", () => {
 		store.$patch({
 			spaceHeatingNew: {
 				heatSource: {
-						data: [{
-							data: {
-								id: heatPumpId,
-								name: "Heat pump",
-							},
-						}],
+					data: [{
+						data: {
+							id: heatPumpId,
+							name: "Heat pump",
+						},
+					}],
 				},
 			},
 		});
