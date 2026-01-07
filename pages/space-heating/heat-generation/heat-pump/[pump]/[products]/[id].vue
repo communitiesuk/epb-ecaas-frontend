@@ -1,34 +1,34 @@
 <script setup lang="ts">
-	import { displayCamelToSentenceCase } from '#imports';
+import { displayCamelToSentenceCase } from "#imports";
 
-	definePageMeta({ layout: "one-column" });
+definePageMeta({ layout: "one-column" });
 
-	const store = useEcaasStore();
-	const router = useRouter();
-	const { params } = useRoute();
+const store = useEcaasStore();
+const router = useRouter();
+const { params } = useRoute();
 
-	const pageId = kebabToCamelCase(params.products as string);
-	const index = Number(params.pump);
+const pageId = kebabToCamelCase(params.products as string);
+const index = Number(params.pump);
 
-	const { data } = await useFetch(`/api/products/${params.id}/details`, {
-		query: {
-			technologyType: pcdbTechnologyTypes[pageId as keyof typeof pcdbTechnologyTypes]
-		}
+const { data } = await useFetch(`/api/products/${params.id}/details`, {
+	query: {
+		technologyType: pcdbTechnologyTypes[pageId as keyof typeof pcdbTechnologyTypes],
+	},
+});
+
+const backUrl = getUrl("airSourceProducts")
+	.replace(":pump", params.pump as string)
+	.replace(":products", params.products as string);
+
+const productType = pcdbTechnologyTypes[pageId as HeatPumpType];
+
+const selectProduct = () => {
+	store.$patch((state) => {
+		state.spaceHeating.heatGeneration.heatPump.data[index]!.data.productReference = data.value?.id;
 	});
 
-	const backUrl = getUrl('airSourceProducts')
-		.replace(':pump', params.pump as string)
-		.replace(':products', params.products as string);
-
-	const productType = pcdbTechnologyTypes[pageId as HeatPumpType];
-
-	const selectProduct = () => {
-		store.$patch((state) => {
-			state.spaceHeating.heatGeneration.heatPump.data[index]!.data.productReference = data.value?.id;
-		});
-
-		navigateTo(getUrl("heatPump").replace(":pump", `${index}`));
-	};
+	navigateTo(getUrl("heatPump").replace(":pump", `${index}`));
+};
 </script>
 
 <template>

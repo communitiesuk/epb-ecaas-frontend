@@ -16,8 +16,8 @@ const {
 		"selected-product-reference": selectedProductReference,
 		"selected-product-type": selectedProductType,
 		"page-url": pageUrl,
-		"page-index": index
-	}
+		"page-index": index,
+	},
 } = props.context;
 
 function appendItemIndexToUrl(url: string, index: number) {

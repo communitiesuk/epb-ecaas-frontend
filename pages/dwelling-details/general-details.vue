@@ -10,7 +10,7 @@ const { autoSaveForm } = useForm();
 const fuelTypeOptions = {
 	"mains_gas": "Mains gas",
 	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
-	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled"
+	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
 } as const satisfies Record<SchemaFuelType, FuelTypeDisplay>;
 
 

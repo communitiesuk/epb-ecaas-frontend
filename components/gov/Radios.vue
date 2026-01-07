@@ -25,7 +25,7 @@ const {
 	help = undefined,
 	ariaDescribedBy = undefined,
 	attrs,
-	classNames
+	classNames,
 } = defineProps<RadiosProps>();
 
 const { mounted } = useMounted();
