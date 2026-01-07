@@ -16,7 +16,7 @@ const { productData, pagination } = searchData(value?.data ?? []);
 
 const selectProduct = (reference: string) => {
 	store.$patch((state) => {
-		state.spaceHeatingNew.heatSource.data[index]!.data.id = reference;
+		state.spaceHeatingNew.heatSource.data[index]!.data.productReference = reference;
 	});
 
 	navigateTo(page("heatSource").url.replace(":heatSource", `${index}`));

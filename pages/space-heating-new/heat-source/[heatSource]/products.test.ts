@@ -106,7 +106,7 @@ describe("Heat source products page", () => {
 		await user.click(screen.getByTestId("selectProductButton_1"));
 
 		expect(
-			store.spaceHeatingNew.heatSource.data[1]!.data.id,
+			store.spaceHeatingNew.heatSource.data[1]!.data.productReference,
 		).toBe(MOCKED_HEAT_PUMPS.data[1]?.id);
 	});
 

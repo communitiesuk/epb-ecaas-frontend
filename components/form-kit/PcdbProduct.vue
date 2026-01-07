@@ -35,6 +35,7 @@ if (selectedProductReference) {
 </script>
 
 <template>
+	<div class="govuk-form-group">
 	<div :data-testid="id" :class="`govuk-form-group ${showErrorState(props.context) ? 'govuk-form-group--error' : ''}`">
 		<label class="govuk-label govuk-label--m">
 			{{ label }}
@@ -58,13 +59,13 @@ if (selectedProductReference) {
 			</GovButton>
 		</div>
 	</div>
+	</div>
 </template>
 
 <style scoped lang="scss">
 govuk-list {
 	line-height: 1.2;
 }
-
 .bold {
 	font-weight: bold;
 }
