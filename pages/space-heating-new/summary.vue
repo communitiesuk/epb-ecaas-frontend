@@ -81,9 +81,9 @@ const heatNetworkSummary: SummarySection = {
 					"Can energy from the heat network be exported": "canEnergyBeExported" in heatSource ? heatSource.canEnergyBeExported : emptyValueRendering,
 				}),
 				...(heatSource.isHeatNetworkInPcdb !== undefined && {
-					"Will the heat network use heat interface units": "doesHeatNetworkUseHeatInterfaceUnits" in heatSource ? displayBoolean(heatSource.doesHeatNetworkUseHeatInterfaceUnits) : emptyValueRendering,
+					"Will the heat network use heat interface units": "usesHeatInterfaceUnits" in heatSource ? displayBoolean(heatSource.usesHeatInterfaceUnits) : emptyValueRendering,
 				}),
-				...(heatSource.doesHeatNetworkUseHeatInterfaceUnits === true && {
+				...(heatSource.usesHeatInterfaceUnits === true && {
 					"Heat interface unit product reference": "heatInterfaceUnitProductReference" in heatSource ? heatSource.heatInterfaceUnitProductReference : emptyValueRendering,
 				}),
 			};

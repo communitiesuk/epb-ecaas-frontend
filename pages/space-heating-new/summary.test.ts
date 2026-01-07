@@ -159,7 +159,7 @@ describe("Space heating summary page", () => {
 				isHeatNetworkInPcdb: true,
 				productReference: "HEAT_NETWORK-LARGE",
 				energySupply: "electricity",
-				doesHeatNetworkUseHeatInterfaceUnits: false,
+				usesHeatInterfaceUnits: false,
 			};
 			const store = useEcaasStore();
 			store.$patch({

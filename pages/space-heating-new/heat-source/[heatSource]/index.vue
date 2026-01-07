@@ -57,7 +57,7 @@ const saveForm = (fields: HeatSourceData) => {
 					typeOfHeatSource: fields.typeOfHeatSource,
 					typeOfHeatNetwork: fields.typeOfHeatNetwork,
 					isHeatNetworkInPcdb: fields.isHeatNetworkInPcdb,
-					doesHeatNetworkUseHeatInterfaceUnits: fields.doesHeatNetworkUseHeatInterfaceUnits,
+					usesHeatInterfaceUnits: fields.usesHeatInterfaceUnits,
 					...(fields.isHeatNetworkInPcdb === true ? {
 						productReference: fields.productReference,
 						energySupply: fields.energySupply,

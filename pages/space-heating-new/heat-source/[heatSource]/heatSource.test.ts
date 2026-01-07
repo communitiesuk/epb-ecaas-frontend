@@ -549,7 +549,7 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfHeatNetwork_communal"));
 			await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
 			await user.click(screen.getByTestId("energySupply_electricity"));
-			await user.click(screen.getByTestId("doesHeatNetworkUseHeatInterfaceUnits_no"));
+			await user.click(screen.getByTestId("usesHeatInterfaceUnits_no"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 		};
 
@@ -576,7 +576,7 @@ describe("heatSource", () => {
 			isHeatNetworkInPcdb: true,
 			productReference: "HEATNETWORK-LARGE",
 			energySupply: "electricity",
-			doesHeatNetworkUseHeatInterfaceUnits: false,
+			usesHeatInterfaceUnits: false,
 		};
 
 		const heatNetwork2: HeatSourceData = {
@@ -589,7 +589,7 @@ describe("heatSource", () => {
 			outOfScopeEmissionsFactor: 2,
 			primaryEnergyFactor: 3,
 			canEnergyBeExported: true,
-			doesHeatNetworkUseHeatInterfaceUnits: false,
+			usesHeatInterfaceUnits: false,
 		};
 
 		test("'HeatNetworkSection' component displays when type of heat source is heat network", async () => {
@@ -650,7 +650,7 @@ describe("heatSource", () => {
 				typeOfHeatNetwork: "communal",
 				isHeatNetworkInPcdb: true,
 				energySupply: "electricity",
-				doesHeatNetworkUseHeatInterfaceUnits: false,
+				usesHeatInterfaceUnits: false,
 			});
 		});
 
@@ -668,7 +668,7 @@ describe("heatSource", () => {
 			expect((await screen.findByTestId("typeOfHeatNetwork_communal")).hasAttribute("checked"));
 			expect((await screen.findByTestId("isHeatNetworkInPcdb_yes")).hasAttribute("checked"));
 			expect((await screen.findByTestId("energySupply_electricity")).hasAttribute("checked"));
-			expect((await screen.findByTestId("doesHeatNetworkUseHeatInterfaceUnits_no")).hasAttribute("checked"));
+			expect((await screen.findByTestId("usesHeatInterfaceUnits_no")).hasAttribute("checked"));
 		});
 
 		test("heat network is updated when data with id exists in store", async () => {

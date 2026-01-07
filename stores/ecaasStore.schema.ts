@@ -894,14 +894,14 @@ const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
 		isHeatNetworkInPcdb: z.boolean("true"),
 		productReference: z.string().trim().min(1),
 		energySupply: fuelTypeWithElecZod,
-		doesHeatNetworkUseHeatInterfaceUnits: z.boolean("true"),
+		usesHeatInterfaceUnits: z.boolean("true"),
 		heatInterfaceUnitProductReference: z.string().trim().min(1),
 	}),
 	baseHeatNetwork.extend({
 		isHeatNetworkInPcdb: z.boolean("true"),
 		productReference: z.string().trim().min(1),
 		energySupply: fuelTypeWithElecZod,
-		doesHeatNetworkUseHeatInterfaceUnits: z.boolean("false"),
+		usesHeatInterfaceUnits: z.boolean("false"),
 	}),
 	baseHeatNetwork.extend({
 		isHeatNetworkInPcdb: z.boolean("false"),
@@ -909,7 +909,7 @@ const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
 		outOfScopeEmissionsFactor: z.number(),
 		primaryEnergyFactor: z.number(),
 		canEnergyBeExported: z.boolean(),
-		doesHeatNetworkUseHeatInterfaceUnits: z.boolean("true"),
+		usesHeatInterfaceUnits: z.boolean("true"),
 		heatInterfaceUnitProductReference: z.string().trim().min(1),
 	}),
 	baseHeatNetwork.extend({
@@ -918,7 +918,7 @@ const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
 		outOfScopeEmissionsFactor: z.number(),
 		primaryEnergyFactor: z.number(),
 		canEnergyBeExported: z.boolean(),
-		doesHeatNetworkUseHeatInterfaceUnits: z.boolean("false"),
+		usesHeatInterfaceUnits: z.boolean("false"),
 	}),
 ]);
 

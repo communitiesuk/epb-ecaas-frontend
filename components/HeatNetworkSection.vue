@@ -112,14 +112,14 @@ const emit = defineEmits(["update-heat-network-model"]);
 	/>
 	<FormKit
 		v-if="model.isHeatNetworkInPcdb !== undefined"
-		id="doesHeatNetworkUseHeatInterfaceUnits"
+		id="usesHeatInterfaceUnits"
 		type="govBoolean"
 		label="Will the heat network use heat interface units?"
-		name="doesHeatNetworkUseHeatInterfaceUnits"
+		name="usesHeatInterfaceUnits"
 		validation="required"
 	/>
 	<FormKit
-		v-if="model.doesHeatNetworkUseHeatInterfaceUnits === true"
+		v-if="model.usesHeatInterfaceUnits === true"
 		id="selectHeatInterfaceUnit"
 		type="govPcdbProduct"
 		label="Select a heat interface unit"
