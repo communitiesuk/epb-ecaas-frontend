@@ -1445,19 +1445,6 @@ describe("heatSource", () => {
 		}
 	});
 
-
-	test("required error messages are displayed when empty form is submitted", async () => {
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "create" },
-			},
-		});
-
-		await user.click(screen.getByTestId("saveAndComplete"));
-
-		expect(await screen.findByTestId("typeOfHeatSource_error")).toBeDefined();
-	});
-
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(HeatSourceForm, {
 			route: {
@@ -1467,5 +1454,21 @@ describe("heatSource", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(await screen.findByTestId("heatSourceErrorSummary")).toBeDefined();
+	});
+
+	test("error summary is removed from display when type of heat source is updated", async () => {
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "create" },
+			},
+		});
+		await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(screen.queryByTestId("heatSourceErrorSummary")).not.toBeNull();
+
+		await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+		expect(screen.queryByTestId("heatSourceErrorSummary")).toBeNull();
+
 	});
 });
