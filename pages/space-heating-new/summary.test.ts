@@ -157,7 +157,7 @@ describe("Space heating summary page", () => {
 				typeOfHeatSource: HeatSourceType.heatNetwork,
 				typeOfHeatNetwork: "communal",
 				isHeatNetworkInPcdb: true,
-				heatNetworkProductReference: "HEAT_NETWORK-LARGE",
+				productReference: "HEAT_NETWORK-LARGE",
 				energySupply: "electricity",
 				doesHeatNetworkUseHeatInterfaceUnits: false,
 			};

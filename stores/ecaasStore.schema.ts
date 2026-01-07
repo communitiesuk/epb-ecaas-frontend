@@ -892,14 +892,14 @@ const baseHeatNetwork = namedWithId.extend({
 const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
 	baseHeatNetwork.extend({
 		isHeatNetworkInPcdb: z.boolean("true"),
-		heatNetworkProductReference: z.string().trim().min(1),
+		productReference: z.string().trim().min(1),
 		energySupply: fuelTypeWithElecZod,
 		doesHeatNetworkUseHeatInterfaceUnits: z.boolean("true"),
 		heatInterfaceUnitProductReference: z.string().trim().min(1),
 	}),
 	baseHeatNetwork.extend({
 		isHeatNetworkInPcdb: z.boolean("true"),
-		heatNetworkProductReference: z.string().trim().min(1),
+		productReference: z.string().trim().min(1),
 		energySupply: fuelTypeWithElecZod,
 		doesHeatNetworkUseHeatInterfaceUnits: z.boolean("false"),
 	}),

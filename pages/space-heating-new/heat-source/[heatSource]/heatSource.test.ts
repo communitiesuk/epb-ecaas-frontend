@@ -575,7 +575,7 @@ describe("heatSource", () => {
 			typeOfHeatSource: HeatSourceType.heatNetwork,
 			typeOfHeatNetwork: "communal",
 			isHeatNetworkInPcdb: true,
-			heatNetworkProductReference: "HEATNETWORK-LARGE",
+			productReference: "HEATNETWORK-LARGE",
 			energySupply: "electricity",
 			doesHeatNetworkUseHeatInterfaceUnits: false,
 		};

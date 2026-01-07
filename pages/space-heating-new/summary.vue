@@ -70,9 +70,9 @@ const heatNetworkSummary: SummarySection = {
 				"Type of heat network": "typeOfHeatNetwork" in heatSource && heatSource.typeOfHeatNetwork ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork): emptyValueRendering,
 				"Is the heat network in the PCDB": "isHeatNetworkInPcdb" in heatSource ? displayBoolean(heatSource.isHeatNetworkInPcdb) : emptyValueRendering,
 				...(heatSource.isHeatNetworkInPcdb === true && {
-					"Heat network product reference": "heatNetworkProductReference" in heatSource ? heatSource.heatNetworkProductReference : emptyValueRendering,
+					"Heat network product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 					"Energy supply": "energySupply" in heatSource ? energySupplyOptions[heatSource.energySupply]: emptyValueRendering,
-					"Product reference": "heatNetworkProductReference" in heatSource ? heatSource.heatNetworkProductReference : emptyValueRendering,
+					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 				}),
 				...(heatSource.isHeatNetworkInPcdb === false && {
 					"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply as SchemaFuelType]: emptyValueRendering,
