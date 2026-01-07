@@ -18,17 +18,7 @@ const heatNetworkTypeOptions = {
 	"communal": "Communal heat network",
 } as const satisfies Record<HeatNetworkType, HeatNetworkTypeDisplay>;
 
-watch(() => props.model.typeOfHeatNetwork, (newHeatNetworkType, initialHeatNetworkType) => {
-	if (newHeatNetworkType !== initialHeatNetworkType) {
-		if ("productReference" in props.model) {
-			props.model.productReference = "";
-		}
-		const heatNetworkType = getHeatSourceDefaultName(props.model);
-		props.model.name = heatNetworkType;
-		store.spaceHeatingNew.heatSource.data[index]!.data.name = heatNetworkType;
-	}
-},
-);
+const emit = defineEmits(["update-heat-network-model"]);
 
 </script>
 
@@ -52,6 +42,8 @@ watch(() => props.model.typeOfHeatNetwork, (newHeatNetworkType, initialHeatNetwo
 		:options="heatNetworkTypeOptions"
 		name="typeOfHeatNetwork"
 		validation="required"
+		@click="emit('update-heat-network-model', 'typeOfHeatNetwork')"
+
 	/>
 	<FormKit
 		id="isHeatNetworkInPcdb"
@@ -65,7 +57,7 @@ watch(() => props.model.typeOfHeatNetwork, (newHeatNetworkType, initialHeatNetwo
 		id="selectHeatNetwork"
 		type="govPcdbProduct"
 		label="Select a heat network"
-		name="heatNetworkProductReference"
+		name="productReference"
 		validation="required"
 		help="Select the heat network type from the PCDB using the button below."
 		:selected-product-reference="model.typeOfHeatNetwork"

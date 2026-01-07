@@ -114,6 +114,8 @@ const saveForm = (fields: HeatSourceData) => {
 	navigateTo("/space-heating-new");
 };
 
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
 watch(
 	() => model.value,
 	(newData, initialData) => {
@@ -123,6 +125,7 @@ watch(
 			initialData?.typeOfHeatSource &&
       initialData.typeOfHeatSource !== newData.typeOfHeatSource
 		) {
+			errorMessages.value = [];
 			const validKeys = ["id", "typeOfHeatSource"];
 			Object.keys(model.value).forEach((key) => validKeys.includes(key) || delete model.value[key]);
 			model.value.typeOfHeatSource = newData.typeOfHeatSource;
@@ -132,6 +135,7 @@ watch(
 		}
 	},
 );
+
 
 autoSaveElementForm<HeatSourceData>({
 	model,
@@ -144,7 +148,20 @@ autoSaveElementForm<HeatSourceData>({
 	},
 });
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
+function updateHeatSource(type: string) {
+watch(() => model.value[`${type}`], (newHeatBatteryType, initialHeatBatteryType) => {
+	if (newHeatBatteryType !== initialHeatBatteryType) {
+		if("productReference" in model.value){
+			model.value.productReference = "";
+		}
+		const heatBatteryType = getHeatSourceDefaultName(model.value);
+		model.value.name = heatBatteryType;
+		store.spaceHeatingNew.heatSource.data[index]!.data.name = heatBatteryType;
+	}
+},
+);
+}
 </script>
 
 
@@ -168,20 +185,23 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="heatSourceTypes"
 			name="typeOfHeatSource"
 			validation="required"
-			@change="() => {model &&'productReference' in model && (model.productReference = '')}"
-		/>
+				/>
 		<HeatPumpSection
 			v-if="model?.typeOfHeatSource === 'heatPump'"
-			:model="model as heatPumpModelType"/>
+			:model="model as heatPumpModelType"
+			@update-heat-pump-model="updateHeatSource"/>
 		<BoilerSection
 			v-if="model?.typeOfHeatSource === 'boiler'"
-			:model="model as boilerModelType"/>
+			:model="model as boilerModelType"
+			@update-boiler-model="updateHeatSource"/>
 		<HeatNetworkSection
 			v-if="model?.typeOfHeatSource === 'heatNetwork'"
-			:model="model as heatNetworkModelType"/>
+			:model="model as heatNetworkModelType"
+			@update-heat-network-model="updateHeatSource"/>
 		<HeatBatterySection
 			v-if="model?.typeOfHeatSource === 'heatBattery'"
-			:model="model as heatBatteryModelType"/>
+			:model="model as heatBatteryModelType"
+			@update-heat-battery-model="updateHeatSource"/>
 		<SolarThermalSystemSection
 			v-if="model?.typeOfHeatSource === 'solarThermalSystem'"
 			:model="model as solarThermalModelType"/>

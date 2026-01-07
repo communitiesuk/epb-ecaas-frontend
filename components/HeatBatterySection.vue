@@ -20,15 +20,7 @@ const heatBatteryTypeOptions = {
 	"dryCore": "Dry core",
 } as const satisfies Record<HeatBatteryType, HeatBatteryTypeDisplay>;
 
-watch(() => props.model.typeOfHeatBattery, (newHeatBatteryType, initialHeatBatteryType) => {
-	if (newHeatBatteryType !== initialHeatBatteryType) {
-		props.model.productReference = "";
-		const heatBatteryType = getHeatSourceDefaultName(props.model);
-		props.model.name = heatBatteryType;
-		store.spaceHeatingNew.heatSource.data[index]!.data.name = heatBatteryType;
-	}
-},
-);
+const emit = defineEmits(["update-heat-battery-model"]);
 
 </script>
 
@@ -52,6 +44,7 @@ watch(() => props.model.typeOfHeatBattery, (newHeatBatteryType, initialHeatBatte
 		:options="heatBatteryTypeOptions"
 		name="typeOfHeatBattery"
 		validation="required"
+		@click="emit('update-heat-battery-model', 'typeOfHeatBattery')"
 	/>
 	<FormKit
 		id="selectHeatBattery"

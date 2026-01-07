@@ -23,15 +23,7 @@ const locationOfBoilerOptions = {
 	"unheatedSpace": "Unheated space",
 } as const satisfies Record<AdjacentSpaceType, BoilerLocationDisplay>;
 
-watch(() => props.model.typeOfBoiler, (newBoilerType, initialBoilerType) => {
-	if (newBoilerType !== initialBoilerType) {
-		props.model.productReference = "";
-		const boilerType = displayCamelToSentenceCase(newBoilerType);
-		props.model.name = boilerType;
-		store.spaceHeatingNew.heatSource.data[index]!.data.name = boilerType;
-	}
-},
-);
+const emit = defineEmits(["update-boiler-model"]);
 
 </script>
 
@@ -43,6 +35,7 @@ watch(() => props.model.typeOfBoiler, (newBoilerType, initialBoilerType) => {
 		:options="boilerTypeOptions"
 		name="typeOfBoiler"
 		validation="required"
+		@click="emit('update-boiler-model', 'typeOfBoiler')"
 	/>
 	<template
 		v-if="model.typeOfBoiler">

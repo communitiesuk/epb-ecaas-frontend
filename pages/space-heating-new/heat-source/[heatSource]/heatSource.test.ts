@@ -369,7 +369,6 @@ describe("heatSource", () => {
 				name: "Combi boiler",
 				typeOfHeatSource: HeatSourceType.boiler,
 				typeOfBoiler: "combiBoiler",
-				productReference: "",
 				locationOfBoiler: AdjacentSpaceType.heatedSpace,
 			});
 		});

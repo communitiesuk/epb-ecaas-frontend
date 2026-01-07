@@ -11,17 +11,8 @@ const props = defineProps<{
 
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
 const index = getStoreIndex(heatSourceStoreData);
+const emit = defineEmits(["update-heat-pump-model"]);
 
-
-watch(() => props.model, (newHeatPump, initialHeatPump) => {
-	if (newHeatPump.typeOfHeatPump !== initialHeatPump.typeOfHeatPump) {
-		props.model.productReference = "";
-		const heatPumpName = getHeatSourceDefaultName(newHeatPump);
-		props.model.name = heatPumpName;
-		store.spaceHeatingNew.heatSource.data[index]!.data.name = heatPumpName;
-	}
-},
-);
 </script>
 
 <template>	
@@ -32,6 +23,7 @@ watch(() => props.model, (newHeatPump, initialHeatPump) => {
 		:options="heatPumpTypes"
 		name="typeOfHeatPump"
 		validation="required"
+		@click="emit('update-heat-pump-model', 'typeOfHeatPump')"
 	/>
 	<FormKit
 		v-if="model.typeOfHeatPump" 
