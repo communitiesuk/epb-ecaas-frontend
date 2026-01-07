@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ layout: false });
+definePageMeta({ layout: "one-column" });
 
 const store = useEcaasStore();
 const { pageId, title, index, searchModel, searchData } = useProductsPage("pump");
