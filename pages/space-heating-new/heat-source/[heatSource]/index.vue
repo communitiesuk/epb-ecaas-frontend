@@ -57,7 +57,6 @@ const saveForm = (fields: HeatSourceData) => {
 					typeOfHeatSource: fields.typeOfHeatSource,
 					typeOfHeatNetwork: fields.typeOfHeatNetwork,
 					isHeatNetworkInPcdb: fields.isHeatNetworkInPcdb,
-					usesHeatInterfaceUnits: fields.usesHeatInterfaceUnits,
 					...(fields.isHeatNetworkInPcdb === true ? {
 						productReference: fields.productReference,
 						energySupply: fields.energySupply,
@@ -66,6 +65,11 @@ const saveForm = (fields: HeatSourceData) => {
 						outOfScopeEmissionsFactor: fields.outOfScopeEmissionsFactor,
 						primaryEnergyFactor: fields.primaryEnergyFactor,
 						canEnergyBeExported: fields.canEnergyBeExported,
+					}),
+					usesHeatInterfaceUnits: fields.usesHeatInterfaceUnits,
+					...(fields.usesHeatInterfaceUnits === true && {
+						heatInterfaceUnitProductReference: fields.heatInterfaceUnitProductReference,
+
 					}),
 				},
 				complete: true,
