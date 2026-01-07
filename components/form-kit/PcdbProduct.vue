@@ -44,7 +44,7 @@ if (selectedProductReference) {
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 			</p>
-			<GovButton v-show="!productData" data-testId="chooseAProductButton" :href="productsPageUrl">
+			<GovButton class="govuk-button__margin-bottom" v-show="!productData" data-testId="chooseAProductButton" :href="productsPageUrl">
 				Choose a product
 			</GovButton>
 			<div v-if="productData">
@@ -65,6 +65,9 @@ if (selectedProductReference) {
 <style scoped lang="scss">
 govuk-list {
 	line-height: 1.2;
+}
+.govuk-button__margin-bottom {
+	margin-bottom: 0px;
 }
 .bold {
 	font-weight: bold;
