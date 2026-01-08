@@ -125,14 +125,15 @@ const locationOfCollectorLoopPipingOptions = {
 		name="powerOfCollectorPumpController"
 		validation="required | number | min:0 | max:10000"
 	/>
-	<FieldsPitch
+	<FormKit
+		id="pitch"
+		type="govInputWithSuffix"
 		label="Pitch"
 		help="Enter the tilt angle, or inclination, of the PV array from horizontal measured upwards facing, where 0° is a horizontal surface and 90° is a vertical surface"
+		name="pitch"
 		validation="required | number | min:0 | max: 90"
+		suffix-text="°"
 		data-field="Zone.BuildingElement.*.pitch"
-	/>
-	<FieldsOrientation
-		label="Orientation"
-		data-field="Zone.BuildingElement.*.orientation"
-	/>
+		/>
+	<FieldsOrientation details-caption="To define the orientation, measure the angle of the panel clockwise from true North, accurate to the nearest degree. If the panel is facing true north then the orientation is 0°. If the panel is facing south then the orientation is 180°." cleared-non-llm />
 </template>
