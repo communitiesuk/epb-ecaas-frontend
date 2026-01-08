@@ -106,8 +106,8 @@ describe("Heat source products page", () => {
 		await user.click(screen.getByTestId("selectProductButton_1"));
 
 		expect(
-			store.spaceHeatingNew.heatSource.data[1]!.data.productReference,
-		).toBe(MOCKED_HEAT_PUMPS.data[1]?.id);
+			store.spaceHeatingNew.heatSource.data[1]!.data,
+		).toEqual(expect.objectContaining({productReference: MOCKED_HEAT_PUMPS.data[1]?.id}));
 	});
 
 	test("'Back to heat source' navigates user to the heat source at the correct index", async () => {
