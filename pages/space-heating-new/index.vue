@@ -13,10 +13,10 @@ const { hotWaterCylinder } = store.domesticHotWater.waterHeating;
 
 function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 	const items = store.spaceHeatingNew[spaceHeatingType]?.data;
-	
+
 	let heatSourceId;
 
-	if(items[index]?.data && "typeOfHeatSource" in items[index].data){
+	if (items[index]?.data && "typeOfHeatSource" in items[index].data) {
 		heatSourceId = store.spaceHeatingNew.heatSource.data[index]?.data.id;
 	}
 	if (items) {
@@ -27,28 +27,28 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 			state.spaceHeatingNew[spaceHeatingType].complete = false;
 		});
 
-		if(heatSourceId) {
-			store.removeTaggedAssociations()([ hotWaterCylinder], heatSourceId, "heatSource");
+		if (heatSourceId) {
+			store.removeTaggedAssociations()([hotWaterCylinder], heatSourceId, "heatSource");
 		}
 	}
 };
 
-function handleDuplicate(spaceHeatingType: SpaceHeatingType, index: number) {
+function handleDuplicate(index: number) {
 
-	const { data } = store.spaceHeatingNew[spaceHeatingType];
+	const { data } = store.spaceHeatingNew.heatSource;
 	const item = data?.[index];
-    
+
 	if (item) {
 		const duplicates = data.filter(f => f && f.data.name.match(duplicateNamePattern(item.data.name)));
 
 		store.$patch((state) => {
 			const newItem = {
 				data: { ...item.data, name: `${item.data.name} (${duplicates.length})`, id: uuidv4() },
-				complete: item.complete,
-			};
+				complete: item.complete
+			} as EcaasForm<HeatSourceData>
 
-			state.spaceHeatingNew[spaceHeatingType].data.push(newItem);
-			state.spaceHeatingNew[spaceHeatingType].complete = false;
+			state.spaceHeatingNew.heatSource.data.push(newItem)
+			state.spaceHeatingNew.heatSource.complete = false;
 		});
 	}
 }
@@ -64,14 +64,14 @@ function handleComplete() {
 	navigateTo("/space-heating-new");
 };
 
-function checkIsComplete(){
+function checkIsComplete() {
 	const generators = store.spaceHeatingNew;
 	return Object.values(generators).every(generator => generator.complete);
 };
 
 function hasIncompleteEntries() {
 	const spaceHeatingTypes = store.spaceHeatingNew;
-	
+
 	return Object.values(spaceHeatingTypes).some(
 		items => items.data.some(
 			item => isEcaasForm(item) ? !item.complete : false));
@@ -79,44 +79,27 @@ function hasIncompleteEntries() {
 </script>
 
 <template>
+
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<CustomList
-		id="heatSource"
-		title="Heat sources"
-		:form-url="`${page?.url!}/heat-source`"
-		:items="store.spaceHeatingNew.heatSource.data.map(x => ({
-			name: x.data?.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))"
-		:show-status="true"
-		@duplicate="(index: number) => handleDuplicate('heatSource', index)"
-		@remove="(index: number) => handleRemove('heatSource', index)"
-	/>
-	<CustomList
-		id="heatSource"
-		title="Heating controls"
-		:form-url="`${page?.url!}/heating-controls`"
-		:items="store.spaceHeatingNew.heatingControls.data.map(x => ({
-			name: x.data?.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))"
-		:show-status="true"
-		:max-number-of-items=1
-		@remove="(index: number) => handleRemove('heatingControls', index)"
-	/>
+	<CustomList id="heatSource" title="Heat sources" :form-url="`${page?.url!}/heat-source`" :items="store.spaceHeatingNew.heatSource.data.map(x => ({
+		name: x.data?.name,
+		status: x.complete ? formStatus.complete : formStatus.inProgress
+	}))" :show-status="true" @duplicate="(index: number) => handleDuplicate(index)"
+		@remove="(index: number) => handleRemove('heatSource', index)" />
+	<CustomList id="heatSource" title="Heating controls" :form-url="`${page?.url!}/heating-controls`" :items="store.spaceHeatingNew.heatingControls.data.map(x => ({
+		name: x.data?.name,
+		status: x.complete ? formStatus.complete : formStatus.inProgress
+	}))" :show-status="true" :max-number-of-items=1 @remove="(index: number) => handleRemove('heatingControls', index)" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton
-			href="/"
-			secondary
-		>
+		<GovButton href="/" secondary>
 			Return to overivew
 		</GovButton>
 		<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
-		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete" />
 	</div>
 </template>
