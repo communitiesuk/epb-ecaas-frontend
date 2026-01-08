@@ -107,7 +107,7 @@ describe("Heat source products page", () => {
 
 		expect(
 			store.spaceHeatingNew.heatSource.data[1]!.data,
-		).toEqual(expect.objectContaining({productReference: MOCKED_HEAT_PUMPS.data[1]?.id}));
+		).toEqual(expect.objectContaining({ productReference: MOCKED_HEAT_PUMPS.data[1]?.id }));
 	});
 
 	test("'Back to heat source' navigates user to the heat source at the correct index", async () => {

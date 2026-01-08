@@ -11,7 +11,7 @@ const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
 const index = getStoreIndex(heatSourceStoreData);
 const heatSourceData = useItemToEdit("heatSource", heatSourceStoreData);
 const model = ref(heatSourceData?.data as HeatSourceData);
-const id =  heatSourceData?.data.id ?? uuidv4();
+const id = heatSourceData?.data.id ?? uuidv4();
 export type heatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
 export type boilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
 export type heatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
@@ -71,7 +71,7 @@ const saveForm = (fields: HeatSourceData) => {
 						usesHeatInterfaceUnits: fields.usesHeatInterfaceUnits,
 						heatInterfaceUnitProductReference: fields.heatInterfaceUnitProductReference,
 					} : {
-						usesHeatInterfaceUnits: fields.usesHeatInterfaceUnits
+						usesHeatInterfaceUnits: fields.usesHeatInterfaceUnits,
 					}),
 				},
 				complete: true,
@@ -116,7 +116,7 @@ const saveForm = (fields: HeatSourceData) => {
 		heatSource.data[index] = heatSourceItem;
 		heatSource.complete = false;
 	});
-	
+
 	navigateTo("/space-heating-new");
 };
 
@@ -129,14 +129,14 @@ watch(
 
 		if (
 			initialData?.typeOfHeatSource &&
-      initialData.typeOfHeatSource !== newData.typeOfHeatSource
+			initialData.typeOfHeatSource !== newData.typeOfHeatSource
 		) {
 			errorMessages.value = [];
 			const validKeys = ["id", "typeOfHeatSource"];
 			Object.keys(model.value).forEach((key) => validKeys.includes(key) || delete model.value[key as keyof HeatSourceData]);
 			model.value.typeOfHeatSource = newData.typeOfHeatSource;
 		}
-		if(model.value && !model.value.name){
+		if (model.value && !model.value.name) {
 			model.value.name = getHeatSourceDefaultName(model.value);
 		}
 	},
@@ -158,7 +158,7 @@ autoSaveElementForm<HeatSourceData>({
 function updateHeatSource(type: string) {
 	watch(() => model.value[`${type}` as keyof HeatSourceData], (newHeatBatteryType, initialHeatBatteryType) => {
 		if (newHeatBatteryType !== initialHeatBatteryType) {
-			if("productReference" in model.value){
+			if ("productReference" in model.value) {
 				model.value.productReference = "";
 			}
 			const heatBatteryType = getHeatSourceDefaultName(model.value);
@@ -172,45 +172,33 @@ function updateHeatSource(type: string) {
 
 
 <template>
+
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<FormKit
-		v-model="model"
-		type="form"
-		:actions="false"
-		:incomplete-message="false"
-		@submit="saveForm"
+		v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
-		<GovErrorSummary :error-list="errorMessages" test-id="heatSourceErrorSummary"/>
+		<GovErrorSummary :error-list="errorMessages" test-id="heatSourceErrorSummary" />
 		<FormKit
-			id="typeOfHeatSource"
-			type="govRadios"
-			label="Type of heat source"
-			:options="heatSourceTypes"
-			name="typeOfHeatSource"
-			validation="required"
-		/>
+			id="typeOfHeatSource" type="govRadios" label="Type of heat source" :options="heatSourceTypes"
+			name="typeOfHeatSource" validation="required" />
 		<HeatPumpSection
-			v-if="model?.typeOfHeatSource === 'heatPump'"
-			:model="model as heatPumpModelType"
-			@update-heat-pump-model="updateHeatSource"/>
+			v-if="model?.typeOfHeatSource === 'heatPump'" :model="model as heatPumpModelType"
+			@update-heat-pump-model="updateHeatSource" />
 		<BoilerSection
-			v-if="model?.typeOfHeatSource === 'boiler'"
-			:model="model as boilerModelType"
-			@update-boiler-model="updateHeatSource"/>
+			v-if="model?.typeOfHeatSource === 'boiler'" :model="model as boilerModelType"
+			@update-boiler-model="updateHeatSource" />
 		<HeatNetworkSection
-			v-if="model?.typeOfHeatSource === 'heatNetwork'"
-			:model="model as heatNetworkModelType"
-			@update-heat-network-model="updateHeatSource"/>
+			v-if="model?.typeOfHeatSource === 'heatNetwork'" :model="model as heatNetworkModelType"
+			@update-heat-network-model="updateHeatSource" />
 		<HeatBatterySection
-			v-if="model?.typeOfHeatSource === 'heatBattery'"
-			:model="model as heatBatteryModelType"
-			@update-heat-battery-model="updateHeatSource"/>
+			v-if="model?.typeOfHeatSource === 'heatBattery'" :model="model as heatBatteryModelType"
+			@update-heat-battery-model="updateHeatSource" />
 		<SolarThermalSystemSection
 			v-if="model?.typeOfHeatSource === 'solarThermalSystem'"
-			:model="model as solarThermalModelType"/>
+			:model="model as solarThermalModelType" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

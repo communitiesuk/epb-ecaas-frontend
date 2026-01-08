@@ -17,22 +17,22 @@ const { productData, pagination } = searchData(value?.data ?? []);
 const selectProduct = (reference: string) => {
 	store.$patch((state) => {
 
-		const item = state.spaceHeatingNew.heatSource.data[index]
+		const item = state.spaceHeatingNew.heatSource.data[index];
 
 		if (item) {
-			const data = item.data as HeatSourceData
+			const data = item.data as HeatSourceData;
 			if (data.typeOfHeatSource === HeatSourceType.heatPump) {
-				data.productReference = reference
-			}
+				data.productReference = reference;
+			};
 			if (data.typeOfHeatSource === HeatSourceType.heatBattery) {
-				data.productReference = reference
-			}
+				data.productReference = reference;
+			};
 			if (data.typeOfHeatSource === HeatSourceType.boiler) {
-				data.productReference = reference
-			}
+				data.productReference = reference;
+			};
 			if (data.typeOfHeatSource === HeatSourceType.heatNetwork && data.isHeatNetworkInPcdb === true) {
-				data.productReference
-			}
+				data.productReference = reference;
+			};
 		}
 	});
 

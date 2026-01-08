@@ -44,7 +44,7 @@ if (selectedProductReference) {
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 			</p>
-			<GovButton class="govuk-button__margin-bottom" v-show="!productData" data-testId="chooseAProductButton" :href="productsPageUrl">
+			<GovButton v-show="!productData" class="govuk-button__margin-bottom" data-testId="chooseAProductButton" :href="productsPageUrl">
 				Choose a product
 			</GovButton>
 			<div v-if="productData">
