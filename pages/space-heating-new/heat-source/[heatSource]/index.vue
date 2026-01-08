@@ -56,20 +56,22 @@ const saveForm = (fields: HeatSourceData) => {
 					...commonFields,
 					typeOfHeatSource: fields.typeOfHeatSource,
 					typeOfHeatNetwork: fields.typeOfHeatNetwork,
-					isHeatNetworkInPcdb: fields.isHeatNetworkInPcdb,
 					...(fields.isHeatNetworkInPcdb === true ? {
+						isHeatNetworkInPcdb: fields.isHeatNetworkInPcdb,
 						productReference: fields.productReference,
 						energySupply: fields.energySupply,
 					} : {
+						isHeatNetworkInPcdb: fields.isHeatNetworkInPcdb,
 						emissionsFactor: fields.emissionsFactor,
 						outOfScopeEmissionsFactor: fields.outOfScopeEmissionsFactor,
 						primaryEnergyFactor: fields.primaryEnergyFactor,
 						canEnergyBeExported: fields.canEnergyBeExported,
 					}),
-					usesHeatInterfaceUnits: fields.usesHeatInterfaceUnits,
-					...(fields.usesHeatInterfaceUnits === true && {
+					...(fields.usesHeatInterfaceUnits === true ? {
+						usesHeatInterfaceUnits: fields.usesHeatInterfaceUnits,
 						heatInterfaceUnitProductReference: fields.heatInterfaceUnitProductReference,
-
+					} : {
+						usesHeatInterfaceUnits: fields.usesHeatInterfaceUnits
 					}),
 				},
 				complete: true,
