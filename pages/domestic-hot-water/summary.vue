@@ -35,10 +35,10 @@ const immersionHeaterSummary: SummarySection = {
 	label: "Immersion heaters",
 	data: immersionHeaterData.map(d => {
 		return {
-			"Name": show(d.name),
-			"Rated power": dim(d.ratedPower, "kilowatt"),
-			"Heater position": displayHeaterPosition(d.heaterPosition),
-			"Thermostat position": displayHeaterPosition(d.thermostatPosition),
+			"Name": show(d.data.name),
+			"Rated power": dim(d.data.ratedPower, "kilowatt"),
+			"Heater position": displayHeaterPosition(d.data.heaterPosition),
+			"Thermostat position": displayHeaterPosition(d.data.thermostatPosition),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -50,7 +50,7 @@ const solarThermalSummary: SummarySection = {
 	label: "Solar thermal",
 	data: solarThermalData.map(d => {
 		return {
-			"Name": show(d.name),
+			"Name": show(d.data.name),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -62,9 +62,9 @@ const pointOfUseSummary: SummarySection = {
 	label: "Point of use",
 	data: pointOfUseData.map(d => {
 		return {
-			"Name": show(d.name),
-			"Setpoint temperature": dim(d.setpointTemperature, "celsius"),
-			"Heater efficiency": show(d.heaterEfficiency),
+			"Name": show(d.data.name),
+			"Setpoint temperature": dim(d.data.setpointTemperature, "celsius"),
+			"Heater efficiency": show(d.data.heaterEfficiency),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -88,7 +88,7 @@ const combiBoilerSummary: SummarySection = {
 	label: "Combi boilers",
 	data: combiBoilerData.map(d => {
 		return {
-			"Name": show(d.name),
+			"Name": show(d.data.name),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -100,7 +100,7 @@ const heatBatterySummary: SummarySection = {
 	label: "Heat batteries",
 	data: heatBatteryData.map(d => {
 		return {
-			"Name": show(d.name),
+			"Name": show(d.data.name),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -112,7 +112,7 @@ const smartHotWaterTankSummary: SummarySection = {
 	label: "Smart hot water tanks",
 	data: smartHotWaterTankData.map(d => {
 		return {
-			"Name": show(d.name),
+			"Name": show(d.data.name),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -124,7 +124,7 @@ const heatInterfaceUnitSummary: SummarySection = {
 	label: "Heat interface units",
 	data: heatInterfaceUnitData.map(d => {
 		return {
-			"Name": show(d.name),
+			"Name": show(d.data.name),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),

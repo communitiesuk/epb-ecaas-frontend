@@ -4,7 +4,7 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const smartHotWaterTankData = useItemToEdit("smartHotWaterTank", store.domesticHotWater.waterHeating.smartHotWaterTank.data);
-const model: Ref<SmartHotWaterTankData> = ref(smartHotWaterTankData!);
+const model = ref(smartHotWaterTankData?.data);
 
 const saveForm = (fields: SmartHotWaterTankData) => {
 	store.$patch((state) => {
@@ -13,8 +13,14 @@ const saveForm = (fields: SmartHotWaterTankData) => {
 		const smartHotWaterTankItem: SmartHotWaterTankData = {
 			name: fields.name,
 		};
+
+		const smartHotWaterTankForm: EcaasForm<SmartHotWaterTankData> = {
+			complete: true,
+			data: smartHotWaterTankItem,
+		};
+
 		smartHotWaterTank.complete = false;
-		saveToList(smartHotWaterTankItem, smartHotWaterTank);
+		saveToList(smartHotWaterTankForm, smartHotWaterTank);
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");

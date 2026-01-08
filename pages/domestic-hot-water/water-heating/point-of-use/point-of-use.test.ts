@@ -18,6 +18,11 @@ describe("point of use", () => {
 		heaterEfficiency: 0.5,
 	};
 
+	const pointOfUseForm: EcaasForm<PointOfUseData> = {
+		data: pointOfUse,
+		complete: true,
+	};
+
 	afterEach(() => {
 		store.$reset();
 	});
@@ -37,7 +42,7 @@ describe("point of use", () => {
 
 		const { data } = store.domesticHotWater.waterHeating.pointOfUse;
 
-		expect(data[0]).toEqual(pointOfUse);
+		expect(data[0]).toEqual(pointOfUseForm);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
@@ -45,7 +50,7 @@ describe("point of use", () => {
 			domesticHotWater: {
 				waterHeating: {
 					pointOfUse: {
-						data: [pointOfUse],
+						data: [pointOfUseForm],
 					},
 				},
 			},

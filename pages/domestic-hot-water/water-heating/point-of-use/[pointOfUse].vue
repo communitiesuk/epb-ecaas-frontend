@@ -4,7 +4,7 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const pointOfUseData = useItemToEdit("pointOfUse", store.domesticHotWater.waterHeating.pointOfUse.data);
-const model: Ref<PointOfUseData> = ref(pointOfUseData!);
+const model = ref(pointOfUseData?.data);
 
 const saveForm = (fields: PointOfUseData) => {
 	store.$patch((state) => {
@@ -16,7 +16,12 @@ const saveForm = (fields: PointOfUseData) => {
 			heaterEfficiency: fields.heaterEfficiency,
 		};
 
-		saveToList(pointOfUseItem, pointOfUse);
+		const pointOfUseForm: EcaasForm<PointOfUseData> = {
+			complete: true,
+			data: pointOfUseItem,
+		};
+
+		saveToList(pointOfUseForm, pointOfUse);
 		pointOfUse.complete = false;
 	});
 

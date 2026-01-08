@@ -18,6 +18,11 @@ describe("immersion heater", () => {
 		heaterPosition: "top",
 		thermostatPosition: "top",
 	};
+	
+	const immersionHeaterForm: EcaasForm<ImmersionHeaterData> = {
+		data: immersionHeater,
+		complete: true,
+	};
 
 	afterEach(() => {
 		store.$reset();
@@ -39,7 +44,7 @@ describe("immersion heater", () => {
 
 		const { data } = store.domesticHotWater.waterHeating.immersionHeater;
 		
-		expect(data[0]).toEqual(immersionHeater);
+		expect(data[0]).toEqual(immersionHeaterForm);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
@@ -47,7 +52,7 @@ describe("immersion heater", () => {
 			domesticHotWater: {
 				waterHeating: {
 					immersionHeater: {
-						data: [immersionHeater],
+						data: [immersionHeaterForm],
 					},
 				},
 			},

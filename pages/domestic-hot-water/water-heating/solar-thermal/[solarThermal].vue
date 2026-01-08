@@ -4,7 +4,7 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const solarThermalData = useItemToEdit("solarThermal", store.domesticHotWater.waterHeating.solarThermal.data);
-const model: Ref<SolarThermalData> = ref(solarThermalData!);
+const model = ref(solarThermalData?.data);
 
 const saveForm = (fields: SolarThermalData) => {
 	store.$patch((state) => {
@@ -13,8 +13,14 @@ const saveForm = (fields: SolarThermalData) => {
 		const solarThermalItem: SolarThermalData = {
 			name: fields.name,
 		};
+
+		const solarThermalForm: EcaasForm<SolarThermalData> = {
+			complete: true,
+			data: solarThermalItem,
+		};
+		
 		solarThermal.complete = false;
-		saveToList(solarThermalItem, solarThermal);
+		saveToList(solarThermalForm, solarThermal);
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");

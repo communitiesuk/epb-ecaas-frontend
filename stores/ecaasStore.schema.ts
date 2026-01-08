@@ -555,14 +555,14 @@ export interface DomesticHotWater {
 
 export type WaterHeating = AssertFormKeysArePageIds<{
 	hotWaterCylinder: EcaasFormList<HotWaterCylinderData>;
-	immersionHeater: EcaasForm<ImmersionHeaterData[]>;
-	solarThermal: EcaasForm<SolarThermalData[]>;
-	pointOfUse: EcaasForm<PointOfUseData[]>;
+	immersionHeater: EcaasFormList<ImmersionHeaterData>;
+	solarThermal: EcaasFormList<SolarThermalData>;
+	pointOfUse: EcaasFormList<PointOfUseData>;
 	heatPump: EcaasFormList<HotWaterHeatPumpData>;
-	combiBoiler: EcaasForm<CombiBoilerData[]>;
-	heatBattery: EcaasForm<WaterHeatingHeatBatteryData[]>;
-	smartHotWaterTank: EcaasForm<SmartHotWaterTankData[]>;
-	heatInterfaceUnit: EcaasForm<WaterHeatingHeatInterfaceUnitData[]>;
+	combiBoiler: EcaasFormList<CombiBoilerData>;
+	heatBattery: EcaasFormList<WaterHeatingHeatBatteryData>;
+	smartHotWaterTank: EcaasFormList<SmartHotWaterTankData>;
+	heatInterfaceUnit: EcaasFormList<WaterHeatingHeatInterfaceUnitData>;
 }>;
 
 const hotWaterCylinderDataZod = namedWithId.extend({
