@@ -16,7 +16,24 @@ const { productData, pagination } = searchData(value?.data ?? []);
 
 const selectProduct = (reference: string) => {
 	store.$patch((state) => {
-		state.spaceHeatingNew.heatSource.data[index]!.data.productReference = reference;
+
+		const item = state.spaceHeatingNew.heatSource.data[index]
+
+		if (item) {
+			const data = item.data as HeatSourceData
+			if (data.typeOfHeatSource === HeatSourceType.heatPump) {
+				data.productReference = reference
+			}
+			if (data.typeOfHeatSource === HeatSourceType.heatBattery) {
+				data.productReference = reference
+			}
+			if (data.typeOfHeatSource === HeatSourceType.boiler) {
+				data.productReference = reference
+			}
+			if (data.typeOfHeatSource === HeatSourceType.heatNetwork && data.isHeatNetworkInPcdb === true) {
+				data.productReference
+			}
+		}
 	});
 
 	navigateTo(page("heatSource").url.replace(":heatSource", `${index}`));
