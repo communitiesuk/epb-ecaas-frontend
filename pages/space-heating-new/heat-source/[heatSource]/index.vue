@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { getUrl, type HeatSourceData } from "#imports";
+import { getUrl, HeatSourceType, type HeatSourceData } from "#imports";
 import { heatSourceTypes } from "../../../../utils/display";
 
 const title = "Heat source";
@@ -12,11 +12,11 @@ const index = getStoreIndex(heatSourceStoreData);
 const heatSourceData = useItemToEdit("heatSource", heatSourceStoreData);
 const model = ref(heatSourceData?.data as HeatSourceData);
 const id = heatSourceData?.data.id ?? uuidv4();
-export type heatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
-export type boilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
-export type heatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
-export type heatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
-export type solarThermalModelType = Extract<HeatSourceData, { typeOfHeatSource: "solarThermalSystem" }>;
+export type heatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: HeatSourceType.heatPump }>;
+export type boilerModelType = Extract<HeatSourceData, { typeOfHeatSource: HeatSourceType.boiler }>;
+export type heatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: HeatSourceType.heatNetwork }>;
+export type heatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: HeatSourceType.heatBattery }>;
+export type solarThermalModelType = Extract<HeatSourceData, { typeOfHeatSource: HeatSourceType.solarThermalSystem }>;
 
 const saveForm = (fields: HeatSourceData) => {
 	store.$patch((state) => {
@@ -29,7 +29,7 @@ const saveForm = (fields: HeatSourceData) => {
 
 		let heatSourceItem: EcaasForm<HeatSourceData>;
 
-		if (fields.typeOfHeatSource === "heatPump") {
+		if (fields.typeOfHeatSource ===  HeatSourceType.heatPump) {
 			heatSourceItem = {
 				data: {
 					...commonFields,
@@ -39,7 +39,7 @@ const saveForm = (fields: HeatSourceData) => {
 				},
 				complete: true,
 			};
-		} else if (fields.typeOfHeatSource === "boiler") {
+		} else if (fields.typeOfHeatSource === HeatSourceType.boiler) {
 			heatSourceItem = {
 				data: {
 					...commonFields,
@@ -50,7 +50,7 @@ const saveForm = (fields: HeatSourceData) => {
 				},
 				complete: true,
 			};
-		} else if (fields.typeOfHeatSource === "heatNetwork") {
+		} else if (fields.typeOfHeatSource === HeatSourceType.heatNetwork) {
 			heatSourceItem = {
 				data: {
 					...commonFields,
@@ -76,7 +76,7 @@ const saveForm = (fields: HeatSourceData) => {
 				},
 				complete: true,
 			};
-		} else if (fields.typeOfHeatSource === "heatBattery") {
+		} else if (fields.typeOfHeatSource === HeatSourceType.heatBattery) {
 			heatSourceItem = {
 				data: {
 					...commonFields,
@@ -88,7 +88,7 @@ const saveForm = (fields: HeatSourceData) => {
 				},
 				complete: true,
 			};
-		} else if (fields.typeOfHeatSource === "solarThermalSystem") {
+		} else if (fields.typeOfHeatSource === HeatSourceType.solarThermalSystem) {
 			heatSourceItem = {
 				data: {
 					...commonFields,
@@ -185,19 +185,19 @@ function updateHeatSource(type: string) {
 			id="typeOfHeatSource" type="govRadios" label="Type of heat source" :options="heatSourceTypes"
 			name="typeOfHeatSource" validation="required" />
 		<HeatPumpSection
-			v-if="model?.typeOfHeatSource === 'heatPump'" :model="model as heatPumpModelType"
+			v-if="model?.typeOfHeatSource === HeatSourceType.heatPump" :model="model as heatPumpModelType"
 			@update-heat-pump-model="updateHeatSource" />
 		<BoilerSection
-			v-if="model?.typeOfHeatSource === 'boiler'" :model="model as boilerModelType"
+			v-if="model?.typeOfHeatSource === HeatSourceType.boiler" :model="model as boilerModelType"
 			@update-boiler-model="updateHeatSource" />
 		<HeatNetworkSection
-			v-if="model?.typeOfHeatSource === 'heatNetwork'" :model="model as heatNetworkModelType"
+			v-if="model?.typeOfHeatSource === HeatSourceType.heatNetwork" :model="model as heatNetworkModelType"
 			@update-heat-network-model="updateHeatSource" />
 		<HeatBatterySection
-			v-if="model?.typeOfHeatSource === 'heatBattery'" :model="model as heatBatteryModelType"
+			v-if="model?.typeOfHeatSource === HeatSourceType.heatBattery" :model="model as heatBatteryModelType"
 			@update-heat-battery-model="updateHeatSource" />
 		<SolarThermalSystemSection
-			v-if="model?.typeOfHeatSource === 'solarThermalSystem'"
+			v-if="model?.typeOfHeatSource === HeatSourceType.solarThermalSystem"
 			:model="model as solarThermalModelType" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">

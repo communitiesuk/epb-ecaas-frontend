@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const { getStoreIndex } = useForm();
 
 defineProps<{
-	model: Extract<HeatSourceData, { "typeOfHeatSource": "solarThermalSystem" }>;
+	model: Extract<HeatSourceData, { "typeOfHeatSource": HeatSourceType.solarThermalSystem}>;
 }>();
 
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
