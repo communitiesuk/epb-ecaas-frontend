@@ -39,7 +39,7 @@ function handleDuplicate(index: number) {
 	const item = data?.[index];
 
 	if (item) {
-		const duplicates = data.filter(f => f && f.data.name.match(duplicateNamePattern(item.data.name)));
+		const duplicates = data.filter(x => x && x.data.name.match(duplicateNamePattern(item.data.name)));
 
 		store.$patch((state) => {
 			const newItem = {
