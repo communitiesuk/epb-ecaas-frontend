@@ -10,7 +10,7 @@ export type DisplayById = {
 	output: DisplayProduct | undefined,
 };
 
-type FullProductById<T extends TechnologyType> = {
+export type FullProductById<T extends TechnologyType> = {
 	name: "fullProductById",
 	input: {
 		id: number,

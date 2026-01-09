@@ -41,7 +41,7 @@ const helpText = props.help ?? "Enter the tilt angle of the external surface. 0Â
 			type="govInputWithSuffix"
 			suffix-text="Â°"
 			:name="name ?? 'pitch'"
-			:validation="`required | number | ${ customPitchRange ? `min:${customPitchRange[0]} | max:${customPitchRange[1]}` : 'min:0 | max:180' }`"
+			:validation="['required | number', customPitchRange ? `min:${customPitchRange[0]} | max:${customPitchRange[1]}` : 'min:0 | max:180'].join(' | ')"
 			:data-field="dataField"
 		/>
 	</template>

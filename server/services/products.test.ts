@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { getProduct, getProducts } from "./products";
+import { getProduct, getProductDetails, getProducts } from "./products";
 import type  { TechnologyType } from "~/pcdb/pcdb.types";
 import type { H3Error } from "h3";
 import { mockClient } from "aws-sdk-client-mock";
@@ -118,6 +118,59 @@ describe("Products service", () => {
 				modelQualifier,
 				technologyType,
 			});
+		});
+	});
+
+	describe("Get product details", async () => {
+		it("Returns bad request error when product ID is invalid", async () => {
+			// Arrange
+			let h3Error: H3Error | undefined;
+
+			// Act
+			try {
+				await getProductDetails(NaN, "air source heat pumps");
+			}
+			catch (error) {
+				h3Error = error as H3Error;
+			}
+
+			// Assert
+			expect(h3Error?.cause).toStrictEqual({
+				statusCode: 400,
+				statusMessage: "Invalid product ID",
+			});
+		});
+
+		it("Returns not found error when product does not exist", async () => {
+			// Arrange
+			ddbMock.on(GetCommand).resolves({ Item: undefined });
+			let h3Error: H3Error | undefined;
+
+			// Act
+			try {
+				await getProductDetails(1, "air source heat pumps");
+			}
+			catch (error) {
+				h3Error = error as H3Error;
+			}
+
+			// Assert
+			expect(h3Error?.cause).toStrictEqual({
+				statusCode: 404,
+				statusMessage: "Product not found",
+			});
+		});
+
+		it("Returns product details when product ID is valid", async () => {
+			// Arrange
+			const product = products.find(p => p.id === "1234");
+			ddbMock.on(GetCommand).resolves({ Item: product });
+
+			// Act
+			const result = await getProductDetails(1234, "air source heat pumps");
+
+			// Assert
+			expect(result).toStrictEqual(product);
 		});
 	});
 });
