@@ -50,7 +50,11 @@ const getProductById = <U extends DisplayById>(query: U["input"]): U["output"] =
 };
 
 const getProductDetailsById = async <T extends TechnologyType, U extends FullProductById<T>>(query: { id: number; }) => {
-	return data.find(p => p.id === query.id.toString()) as U["output"];
+	const product = data.find(p => p.id === query.id.toString()) as Record<string, unknown>;
+
+	delete product?.testData;
+
+	return product as U["output"];
 };
 
 const getProductsByTechnologyType = <U extends DisplayTechnologyProducts>(query: U["input"]): U["output"] => {

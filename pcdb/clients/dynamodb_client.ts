@@ -75,6 +75,8 @@ const getProductDetailsById = async <T extends TechnologyType, U extends FullPro
 
 	const { Item } = result;
 
+	delete Item?.testData;
+
 	return Item as U["output"];
 };
 
