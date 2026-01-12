@@ -2,34 +2,79 @@
 import { isEcaasForm } from '#imports';
 import formStatus from '~/constants/formStatus';
 
-	const title = "Domestic Hot Water";
+const title = "Domestic Hot Water";
 
-	const page = usePage();
-	const store = useEcaasStore();
+const page = usePage();
+const store = useEcaasStore();
 
-	const hwCylinder1: EcaasForm<HotWaterCylinderData> = {
-		data: {
-			name: "Jasper's Cylinder",
-			id: "what",
-			heatSource: "weeeeee",
-			storageCylinderVolume: {
-				amount: 100,
-				unit: "litres",
-			},
-			dailyEnergyLoss: 69,
+type domesticHotWaterType = keyof typeof store.domesticHotWater;
+
+function handleRemove(domesticHotWaterType: domesticHotWaterType, index: number) {
+	
+}
+
+/**
+    hotWaterCylinder:		Water Storage
+	immersionHeater: 		Heat Source
+	solarThermal: 			Heat Source
+	pointOfUse:				Heat Source
+	heatPump: 				Heat Source
+	combiBoiler: 			Heat Source
+	heatBattery: 			Heat Source
+	smartHotWaterTank: 		Water Storage
+	heatInterfaceUnit:	    Property of Heat Network
+
+	mixedShower: 		    Outlet
+	electricShower: 		Outlet
+	bath: 					Outlet
+	otherOutlets: 			Outlet
+
+	primaryPipework: 		Pipework
+
+	wwhrs: 					Property of outlets
+
+	//HEAT GENERATION
+
+	
+ */
+
+
+const hwCylinder1: EcaasForm<HotWaterCylinderData> = {
+	data: {
+		name: "Jasper's Cylinder",
+		id: "what",
+		heatSource: "weeeeee",
+		storageCylinderVolume: {
+			amount: 100,
+			unit: "litres",
 		},
-	};
+		dailyEnergyLoss: 69,
+	},
+};
 
-	store.$patch({
-		domesticHotWater: {
-			waterHeating: {
-				hotWaterCylinder: {
-					complete: true,
-					data: [hwCylinder1],
-				},
+const immersion1: EcaasForm<ImmersionHeaterData> = {
+	data: {
+		name: "Jasper's Immersion Heater",
+		ratedPower: 69,
+		heaterPosition: "top",
+		thermostatPosition: "middle",
+	}
+};
+
+store.$patch({
+	domesticHotWater: {
+		waterHeating: {
+			hotWaterCylinder: {
+				complete: true,
+				data: [hwCylinder1],
 			},
+			immersionHeater: {
+				complete: true,
+				data: [immersion1]
+			}
 		},
-	});
+	},
+});
 </script>
 
 <template>
@@ -42,49 +87,9 @@ import formStatus from '~/constants/formStatus';
 		title="Heat Sources"
 		:form-url="`${page?.url!}/heat-sources`"
 		:items="Object.values(store.domesticHotWater.waterHeating)
-			.map(x=>x.data)
-			.flat()
+			.flatMap(x=>x.data)
+			.filter(x => isEcaasForm(x))
 			.map(x=>({name: x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
-
 		:show-status="true"
 	/>
 </template>
-
-
-		<!-- :items="Object.values(store.domesticHotWater.waterHeating).map(x=>x.data).map(data => {
-				if (!data) {
-					return null;
-				}
-				if (!data[0]) {
-					return null
-				}
-				if (Object.keys(data[0]).includes('data')) {
-					return data.map(item => {
-						(item as {'complete': boolean, 'data': {'name': string}}).data
-					})
-				};
-				return data as {'name': string}[];
-			}).flat().filter(x => x !== null && typeof x !== 'undefined').map(x => ({
-				name: x?.name,
-				status: formStatus.complete
-			}))" -->
-
-<!--
-
-export type WaterHeating = AssertFormKeysArePageIds<{
-
-	hotWaterCylinder: EcaasFormList<HotWaterCylinderData>;
-
-	{
-		complete:
-		data: T
-	}[]
-
-
-	immersionHeater: EcaasForm<ImmersionHeaterData[]>;
-
-	T[];
-
-}>;
-
--->
