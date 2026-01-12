@@ -3094,6 +3094,9 @@
         },
         "RadiatorWithProductReference": {
             "properties": {
+                "wet_emitter_type": {
+                    "const": "radiator"
+                },
                 "product_reference": {
                     "description": "A unique reference to a product held within the HEM database (PCDB)",
                     "title": "Reference to the product in the HEM database",
@@ -3101,6 +3104,7 @@
                 }
             },
             "required": [
+                "wet_emitter_type",
                 "product_reference"
             ]
         },
@@ -3131,6 +3135,9 @@
         },
         "UfhWithProductReference": {
             "properties": {
+                "wet_emitter_type": {
+                    "const": "fancoil"
+                },
                 "product_reference": {
                     "description": "A unique reference to a product held within the HEM database (PCDB)",
                     "title": "Reference to the product in the HEM database",
@@ -3138,6 +3145,7 @@
                 }
             },
             "required": [
+                "wet_emitter_type",
                 "product_reference"
             ]
         },
@@ -3201,6 +3209,22 @@
                     "type": "number"
                 }
             }
+        },
+        "FancoilWithProductReference": {
+            "properties": {
+                "wet_emitter_type": {
+                    "const": "fancoil"
+                },
+                "product_reference": {
+                    "description": "A unique reference to a product held within the HEM database (PCDB)",
+                    "title": "Reference to the product in the HEM database",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "wet_emitter_type",
+                "product_reference"
+            ]
         },
         "EcoDesignControllerNoWeatherCompensator": {
             "type": "object",

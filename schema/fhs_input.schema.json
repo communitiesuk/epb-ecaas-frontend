@@ -2070,27 +2070,6 @@
                                                     "properties": {"wet_emitter_type": {"const": "ufh"}}
                                                 },
                                                 "then": {
-<<<<<<< HEAD
-                                                    "required": [
-                                                        "equivalent_specific_thermal_mass",
-                                                        "system_performance_factor",
-                                                        "emitter_floor_area"
-                                                    ],
-                                                    "properties": {
-                                                        "equivalent_specific_thermal_mass": {
-                                                            "type": "number",
-                                                            "minimum": 0
-                                                        },
-                                                        "system_performance_factor": {
-                                                            "type": "number",
-                                                            "minimum": 0
-                                                        },
-                                                        "emitter_floor_area": {
-                                                            "type": "number",
-                                                            "exclusiveMinimum": 0
-                                                        }
-                                                    }
-=======
                                                     "anyOf": [
                                                         {
                                                             "properties": {
@@ -2110,8 +2089,7 @@
                                                             "required": [
                                                                 "equivalent_specific_thermal_mass",
                                                                 "system_performance_factor",
-                                                                "emitter_floor_area",
-                                                                "frac_convective"
+                                                                "emitter_floor_area"
                                                             ],
                                                             "properties": {
                                                                 "equivalent_specific_thermal_mass": {
@@ -2124,13 +2102,11 @@
                                                                 },
                                                                 "emitter_floor_area": {
                                                                     "type": "number",
-                                                                    "minimum": 0
-                                                                },
-                                                                "frac_convective": {"type": "number"}
+                                                                    "exclusiveMinimum": 0
+                                                                }
                                                             }
                                                         }
                                                     ]
->>>>>>> 6522afcd (extend api schema files to allow product reference for ufh)
                                                 }
                                             },
                                             {
@@ -2138,59 +2114,73 @@
                                                     "properties": {"wet_emitter_type": {"const": "fancoil"}}
                                                 },
                                                 "then": {
-                                                    "required": [
-                                                        "n_units",
-                                                        "fancoil_test_data",
-                                                        "frac_convective"
-                                                    ],
-                                                    "properties": {
-                                                        "n_units": {
-                                                            "type": "integer",
-                                                            "minimum": 1
-                                                        },
-                                                        "fancoil_test_data": {
-                                                            "type": "object",
-                                                            "unevaluatedProperties": false,
+                                                    "anyOf": [
+                                                        {
+                                                            "properties": {
+                                                                "product_reference": {
+                                                                    "description": "A unique reference to a product held within the HEM database (PCDB)",
+                                                                    "title": "Reference to the product in the HEM database",
+                                                                    "type": "string"
+                                                                }
+                                                            },
                                                             "required": [
-                                                                "fan_speed_data",
-                                                                "fan_power_W"
+                                                                "product_reference"
+                                                            ],
+                                                            "title": "FancoilWithProductReference",
+                                                            "type": "object"
+                                                        },
+                                                        {
+                                                            "required": [
+                                                                "n_units",
+                                                                "fancoil_test_data",
+                                                                "frac_convective"
                                                             ],
                                                             "properties": {
-                                                                "fan_speed_data": {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "type": "object",
-                                                                        "unevaluatedProperties": false,
-                                                                        "required": [
-                                                                            "temperature_diff",
-                                                                            "power_output"
-                                                                        ],
-                                                                        "properties": {
-                                                                            "temperature_diff": {
-                                                                                "type": "number",
-                                                                                "exclusiveMinimum": 0
-                                                                            },
-                                                                            "power_output": {
-                                                                                "type": "array",
-                                                                                "items": {
-                                                                                    "type": "number",
-                                                                                    "minimum": 0
+                                                                "n_units": {
+                                                                    "type": "integer",
+                                                                    "minimum": 1
+                                                                },
+                                                                "fancoil_test_data": {
+                                                                    "type": "object",
+                                                                    "unevaluatedProperties": false,
+                                                                    "required": [
+                                                                        "fan_speed_data",
+                                                                        "fan_power_W"
+                                                                    ],
+                                                                    "properties": {
+                                                                        "fan_speed_data": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "object",
+                                                                                "unevaluatedProperties": false,
+                                                                                "required": [
+                                                                                    "temperature_diff",
+                                                                                    "power_output"
+                                                                                ],
+                                                                                "properties": {
+                                                                                    "temperature_diff": {"type": "number"},
+                                                                                    "power_output": {
+                                                                                        "type": "array",
+                                                                                        "items": {
+                                                                                            "type": "number",
+                                                                                            "minimum": 0
+                                                                                        }
+                                                                                    }
                                                                                 }
+                                                                            }
+                                                                        },
+                                                                        "fan_power_W": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "number",
+                                                                                "minimum": 0
                                                                             }
                                                                         }
                                                                     }
-                                                                },
-                                                                "fan_power_W": {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "type": "number",
-                                                                        "exclusiveMinimum": 0
-                                                                    }
                                                                 }
                                                             }
-                                                        },
-                                                        "frac_convective": {"type": "number"}
-                                                    }
+                                                        }
+                                                    ]
                                                 }
                                             }
                                         ]
