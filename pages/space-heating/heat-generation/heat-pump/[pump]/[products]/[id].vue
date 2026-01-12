@@ -19,7 +19,7 @@ if (!(heatPumpType in pcdbTechnologyTypes)) {
 
 const technologyType = pcdbTechnologyTypes[heatPumpType];
 const pageId = `${heatPumpType}Products` as PageId;
-const productType = `${heatPumpTypes[heatPumpType].toLowerCase()} heat pumps`;
+const productType = `${heatPumpTypes[heatPumpType]} heat pumps`;
 
 const index = Number(params.pump);
 
@@ -37,8 +37,11 @@ const tableData: Record<string, string> =
 	"Source type": data?.sourceType ? displayCamelToSentenceCase(data.sourceType) : "-",
 	"Backup control type": data?.backupCtrlType ?? "-",
 	"Standard rating capacity 20c": data?.standardRatingCapacity20C ? `${data.standardRatingCapacity20C} kW` : "-",
+	...(data?.minimumModulationRate35 ? { "Minimum modulation rate": data?.minimumModulationRate35?.toString() } : {}),
+	...(data?.minimumModulationRate ? { "Minimum modulation rate": data?.minimumModulationRate?.toString() } : {}),
 	"Temp return feed max": data?.tempReturnFeedMax?.toString() ?? "-",
 	"Min temp diff flow return for hp to operate": data?.minTempDiffFlowReturnForHpToOperate?.toString() ?? "-",
+	...(data?.powerHeatingWarmAirFan ? { "Power heating warm air fan": data?.powerHeatingWarmAirFan?.toString() } : {}),
 	"Power standby": data?.powerStandby !== undefined ? `${data.powerStandby} kW` : "-",
 	"Power off": data?.powerOff !== undefined ? `${data.powerOff} kW` : "-",
 	"Sink type": data?.sinkType ?? "-",
@@ -48,6 +51,7 @@ const tableData: Record<string, string> =
 	"Temp lower operating limit": data?.tempLowerOperatingLimit?.toString() ?? "-",
 	"Var flow temp control during test": displayBoolean(data?.varFlowTempCtrlDuringTest),
 	"Power source circ pump": data?.powerSourceCircPump?.toString() ?? "-",
+	"Power heating circ pump": data?.powerHeatingCircPump?.toString() ?? "-",
 	"Power crankcase heater": data?.powerCrankcaseHeater !== undefined ? `${data.powerCrankcaseHeater} kW` : "-",
 	"Power max backup": data?.powerMaximumBackup !== undefined ? `${data.powerMaximumBackup} kW` : "-",
 };

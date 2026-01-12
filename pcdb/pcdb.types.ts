@@ -52,6 +52,7 @@ const baseHeatPump = BaseProduct.extend({
 	varFlowTempCtrlDuringTest: z.boolean(),
 	powerHeatingCircPump: z.nullable(z.number()),
 	powerSourceCircPump: z.nullable(z.number()),
+	powerHeatingWarmAirFan: z.nullable(z.number()),
 	powerStandby: z.number(),
 	powerCrankcaseHeater: z.nullable(z.number()),
 	powerOff: z.nullable(z.number()),
@@ -59,15 +60,13 @@ const baseHeatPump = BaseProduct.extend({
 	standardRatingCapacity20C: z.nullable(z.number()),
 	standardRatingCapacity35C: z.nullable(z.number()),
 	standardRatingCapacity55C: z.nullable(z.number()),
+	minimumModulationRate: z.nullable(z.number()),
+	minimumModulationRate35: z.nullable(z.number()),
 	testData: z.array(heatPumpTestDataZod),
 });
 
 export const airSourceHeatPumpZod = baseHeatPump.extend({
 	technologyType: z.literal("AirSourceHeatPump"),
-	minimumModulationRate20: z.nullable(z.number()),
-	minimumModulationRate35: z.nullable(z.number()),
-	minimumModulationRate55: z.nullable(z.number()),
-	powerHeatingWarmAirFan: z.nullable(z.number()),
 });
 
 export const groundSourceHeatPumpZod = baseHeatPump.extend({
@@ -78,10 +77,35 @@ export const waterSourceHeatPumpZod = baseHeatPump.extend({
 	technologyType: z.literal("WaterSourceHeatPump"),
 });
 
+export const boosterHeatPumpZod = baseHeatPump.extend({
+	technologyType: z.literal("BoosterHeatPump"),
+});
+
+export const hotWaterOnlyPumpZod = baseHeatPump.extend({
+	technologyType: z.literal("HotWaterOnlyHeatPump"),
+});
+
+export const exhaustAirMevPumpZod = baseHeatPump.extend({
+	technologyType: z.literal("ExhaustAirMevHeatPump"),
+});
+
+export const exhaustAirMvhrHeatPumpZod = baseHeatPump.extend({
+	technologyType: z.literal("ExhaustAirMvhrHeatPump"),
+});
+
+export const exhaustAirMixedHeatPump = baseHeatPump.extend({
+	technologyType: z.literal("ExhaustAirMixedHeatPump"),
+});
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
 	groundSourceHeatPumpZod,
 	waterSourceHeatPumpZod,
+	boosterHeatPumpZod,
+	hotWaterOnlyPumpZod,
+	exhaustAirMevPumpZod,
+	exhaustAirMvhrHeatPumpZod,
+	exhaustAirMixedHeatPump,
 ]);
 export type Product = z.infer<typeof productSchema>;
 
@@ -94,6 +118,11 @@ export const categoryTechnologies = {
 		"AirSourceHeatPump",
 		"GroundSourceHeatPump",
 		"WaterSourceHeatPump",
+		"BoosterHeatPump",
+		"HotWaterOnlyHeatPump",
+		"ExhaustAirMevHeatPump",
+		"ExhaustAirMvhrHeatPump",
+		"ExhaustAirMixedHeatPump",
 	],
 } as const satisfies Record<string, TechnologyType[]>;
 

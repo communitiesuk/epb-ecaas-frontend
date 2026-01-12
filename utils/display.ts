@@ -278,6 +278,11 @@ export const pcdbTechnologyTypes = {
 	"airSource": "AirSourceHeatPump",
 	"groundSource": "GroundSourceHeatPump",
 	"waterSource": "WaterSourceHeatPump",
+	"booster": "BoosterHeatPump",
+	"hotWaterOnly": "HotWaterOnlyHeatPump",
+	"exhaustAirMev": "ExhaustAirMevHeatPump",
+	"exhaustAirMvhr": "ExhaustAirMvhrHeatPump",
+	"exhaustAirMixed": "ExhaustAirMixedHeatPump",
 } as Record<HeatPumpType, TechnologyType>;
 
 export function displayHeatPumpType( type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {

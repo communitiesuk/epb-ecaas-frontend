@@ -28,6 +28,7 @@
         "powerCrankcaseHeater": 0.018,
         "powerOff": 0.006,
         "powerMaximumBackup": 0.1,
+        "minimumModulationRate": 0.45,
         "testData": [
             {
                 "designFlowTemp": 55,
@@ -120,6 +121,7 @@
         "powerCrankcaseHeater": 0.018,
         "powerOff": 0.006,
         "powerMaximumBackup": 0.1,
+        "minimumModulationRate": 0.45,
         "testData": [
             {
                 "designFlowTemp": 55,
@@ -212,6 +214,7 @@
         "powerCrankcaseHeater": 0.018,
         "powerOff": 0.006,
         "powerMaximumBackup": 0.1,
+        "minimumModulationRate": 0.45,
         "testData": [
             {
                 "designFlowTemp": 55,
