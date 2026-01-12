@@ -156,14 +156,14 @@ autoSaveElementForm<HeatSourceData>({
 
 
 function updateHeatSource(type: string) {
-	watch(() => model.value[`${type}` as keyof HeatSourceData], (newHeatBatteryType, initialHeatBatteryType) => {
-		if (newHeatBatteryType !== initialHeatBatteryType) {
+	watch(() => model.value[`${type}` as keyof HeatSourceData], (newHeatSourceSubtype, initialHeatSourceSubtype) => {
+		if (newHeatSourceSubtype !== initialHeatSourceSubtype) {
 			if ("productReference" in model.value) {
 				model.value.productReference = "";
 			}
-			const heatBatteryType = getHeatSourceDefaultName(model.value);
-			model.value.name = heatBatteryType;
-			store.spaceHeatingNew.heatSource.data[index]!.data.name = heatBatteryType;
+			const defaultName = getHeatSourceDefaultName(model.value);
+			model.value.name = defaultName;
+			store.spaceHeatingNew.heatSource.data[index]!.data.name = defaultName;
 		}
 	},
 	);
