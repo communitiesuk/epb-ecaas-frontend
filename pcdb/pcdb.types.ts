@@ -45,7 +45,7 @@ const baseHeatPump = BaseProduct.extend({
 	sinkType: heatPumpSinkTypeZod,
 	backupCtrlType: heatPumpBackupControlTypeZod,
 	modulatingControl: z.boolean(),
-	timeConstantOnOffOperation: z.nullable(z.int()),
+	timeConstantOnoffOperation: z.nullable(z.int()),
 	tempReturnFeedMax: z.nullable(z.number()),
 	tempLowerOperatingLimit: z.nullable(z.number()),
 	minTempDiffFlowReturnForHpToOperate: z.nullable(z.int()),
@@ -74,9 +74,14 @@ export const groundSourceHeatPumpZod = baseHeatPump.extend({
 	technologyType: z.literal("GroundSourceHeatPump"),
 });
 
+export const waterSourceHeatPumpZod = baseHeatPump.extend({
+	technologyType: z.literal("WaterSourceHeatPump"),
+});
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
 	groundSourceHeatPumpZod,
+	waterSourceHeatPumpZod,
 ]);
 export type Product = z.infer<typeof productSchema>;
 
@@ -88,6 +93,7 @@ export const categoryTechnologies = {
 	heatPump: [
 		"AirSourceHeatPump",
 		"GroundSourceHeatPump",
+		"WaterSourceHeatPump",
 	],
 } as const satisfies Record<string, TechnologyType[]>;
 

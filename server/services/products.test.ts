@@ -29,7 +29,7 @@ describe("Products service", () => {
 			// Assert
 			expect(h3Error?.cause).toStrictEqual({
 				statusCode: 400,
-				statusMessage: "Expected a technology type query parameter.",
+				statusMessage: "Invalid product type",
 			});
 		});
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { PageId } from "~/data/pages/pages";
 import type { ProductForTechnology } from "~/pcdb/clients/client.types";
 
 definePageMeta({ layout: "one-column" });
@@ -7,18 +8,29 @@ const store = useEcaasStore();
 const router = useRouter();
 const { params } = useRoute();
 
+const heatPumpType = kebabToCamelCase(params.products as string) as HeatPumpType;
+
+if (!(heatPumpType in pcdbTechnologyTypes)) {
+	throw createError({
+		statusCode: 404,
+		statusMessage: "Product type not found",
+	});
+}
+
+const technologyType = pcdbTechnologyTypes[heatPumpType];
+const pageId = `${heatPumpType}Products` as PageId;
+const productType = `${heatPumpTypes[heatPumpType].toLowerCase()} heat pumps`;
+
 const index = Number(params.pump);
 
-const { data: { value: data } } = await useFetch<ProductForTechnology<"GroundSourceHeatPump">>(`/api/products/${params.id}/details`, {
+const { data: { value: data } } = await useFetch<ProductForTechnology<typeof technologyType>>(`/api/products/${params.id}/details`, {
 	query: {
-		technologyType: pcdbTechnologyTypes.groundSource,
+		technologyType,
 	},
 });
 
-const backUrl = getUrl("groundSourceProducts")
+const backUrl = getUrl(pageId)
 	.replace(":pump", params.pump as string);
-
-const productType = `${heatPumpTypes.groundSource.toLowerCase()} heat pumps`;
 
 const tableData: Record<string, string> = 
 {
@@ -27,17 +39,17 @@ const tableData: Record<string, string> =
 	"Standard rating capacity 20c": data?.standardRatingCapacity20C ? `${data.standardRatingCapacity20C} kW` : "-",
 	"Temp return feed max": data?.tempReturnFeedMax?.toString() ?? "-",
 	"Min temp diff flow return for hp to operate": data?.minTempDiffFlowReturnForHpToOperate?.toString() ?? "-",
-	"Power standby": data?.powerStandby ? `${data.powerStandby} kW` : "-",
-	"Power off": data?.powerOff ? `${data.powerOff} kW` : "-",
+	"Power standby": data?.powerStandby !== undefined ? `${data.powerStandby} kW` : "-",
+	"Power off": data?.powerOff !== undefined ? `${data.powerOff} kW` : "-",
 	"Sink type": data?.sinkType ?? "-",
 	"Modulating control": displayBoolean(data?.modulatingControl),
 	"Standard rating capacity 35c": data?.standardRatingCapacity35C ? `${data.standardRatingCapacity35C} kW` : "-",
-	"Time constant on/off rate": data?.timeConstantOnOffOperation?.toString() ?? "-",
+	"Time constant on/off rate": data?.timeConstantOnoffOperation?.toString() ?? "-",
 	"Temp lower operating limit": data?.tempLowerOperatingLimit?.toString() ?? "-",
 	"Var flow temp control during test": displayBoolean(data?.varFlowTempCtrlDuringTest),
 	"Power source circ pump": data?.powerSourceCircPump?.toString() ?? "-",
-	"Power crankcase heater": data?.powerCrankcaseHeater ? `${data.powerCrankcaseHeater} kW` : "-",
-	"Power max backup": data?.powerMaximumBackup ? `${data.powerMaximumBackup} kW` : "-",
+	"Power crankcase heater": data?.powerCrankcaseHeater !== undefined ? `${data.powerCrankcaseHeater} kW` : "-",
+	"Power max backup": data?.powerMaximumBackup !== undefined ? `${data.powerMaximumBackup} kW` : "-",
 };
 
 const selectProduct = () => {

@@ -277,6 +277,7 @@ export const heatPumpTypes = {
 export const pcdbTechnologyTypes = {
 	"airSource": "AirSourceHeatPump",
 	"groundSource": "GroundSourceHeatPump",
+	"waterSource": "WaterSourceHeatPump",
 } as Record<HeatPumpType, TechnologyType>;
 
 export function displayHeatPumpType( type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {

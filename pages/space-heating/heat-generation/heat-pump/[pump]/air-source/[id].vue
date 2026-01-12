@@ -34,7 +34,7 @@ const tableData: Record<string, string> =
 	"Sink type": data?.sinkType ?? "-",
 	"Modulating control": displayBoolean(data?.modulatingControl),
 	"Standard rating capacity 35c": data?.standardRatingCapacity35C ? `${data.standardRatingCapacity35C} kW` : "-",
-	"Time constant on/off rate": data?.timeConstantOnOffOperation?.toString() ?? "-",
+	"Time constant on/off rate": data?.timeConstantOnoffOperation?.toString() ?? "-",
 	"Temp lower operating limit": data?.tempLowerOperatingLimit?.toString() ?? "-",
 	"Var flow temp control during test": displayBoolean(data?.varFlowTempCtrlDuringTest),
 	"Power source circ pump": data?.powerSourceCircPump?.toString() ?? "-",
