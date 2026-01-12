@@ -32,18 +32,26 @@ const getBreadcrumbUrl = (page: Page) => {
 const pages = computed(() => {
 	const params = Object.keys(route.params);
 
-	let path = route.path;
+	const path = route.path;
 	let currentPage = pagesData.find(page => page.url === path);
 
 	if (!currentPage && params.length) {
 		const segments = route.path.split("/");
 		segments.splice(segments.length - params.length, params.length);
 
-		params.forEach(p => segments.push(`:${p}`));
+		const pathStart = segments.join("/");
+		const matchingRoutes = pagesData.filter(page => page.url.startsWith(pathStart) && page.url.includes(":"));
 
-		path = segments.join("/");
+		for (const match of matchingRoutes) {
+			let matchUrl = match.url;
 
-		currentPage = pagesData.find(page => page.url === path);
+			params.forEach(p => matchUrl = matchUrl.replace(`:${p}`, route.params[p] as string));
+
+			if (matchUrl === path) {
+				currentPage = match;
+				break;
+			}
+		}
 	}
 
 	return currentPage ? getBreadcrumbs(currentPage.id, []) : [];

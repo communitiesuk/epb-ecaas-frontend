@@ -16,7 +16,7 @@ import { getProducts } from "~/server/services/products";
 import formStatus from "~/constants/formStatus";
 
 
-registerEndpoint("/api/products", async () => getProducts("air source heat pumps"));
+registerEndpoint("/api/products", async () => getProducts("AirSourceHeatPump"));
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {

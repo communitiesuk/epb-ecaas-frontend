@@ -1,6 +1,6 @@
 import type { DisplayProduct, PaginatedResult, Product, TechnologyType } from "../pcdb.types";
 
-type ProductForTechnology<T extends TechnologyType> = Extract<Product, { technologyType: T }>;
+export type ProductForTechnology<T extends TechnologyType> = Extract<Product, { technologyType: T }>;
 
 export type DisplayById = {
 	name: "displayById",
@@ -10,7 +10,7 @@ export type DisplayById = {
 	output: DisplayProduct | undefined,
 };
 
-export type FullProductById<T extends TechnologyType> = {
+type FullProductById<T extends TechnologyType> = {
 	name: "fullProductById",
 	input: {
 		id: number,

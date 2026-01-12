@@ -35,7 +35,7 @@ describe("Products service", () => {
 
 		it("Returns products by technology type", async () => {
 			// Arrange
-			const technologyType: TechnologyType = "air source heat pumps";
+			const technologyType: TechnologyType = "AirSourceHeatPump";
 			const airSourceHeatPumps = products.filter(p => p.technologyType === technologyType);
 
 			ddbMock.on(QueryCommand, {
@@ -128,7 +128,7 @@ describe("Products service", () => {
 
 			// Act
 			try {
-				await getProductDetails(NaN, "air source heat pumps");
+				await getProductDetails(NaN, "AirSourceHeatPump");
 			}
 			catch (error) {
 				h3Error = error as H3Error;
@@ -148,7 +148,7 @@ describe("Products service", () => {
 
 			// Act
 			try {
-				await getProductDetails(1, "air source heat pumps");
+				await getProductDetails(1, "AirSourceHeatPump");
 			}
 			catch (error) {
 				h3Error = error as H3Error;
@@ -167,7 +167,7 @@ describe("Products service", () => {
 			ddbMock.on(GetCommand).resolves({ Item: product });
 
 			// Act
-			const result = await getProductDetails(1234, "air source heat pumps");
+			const result = await getProductDetails(1234, "AirSourceHeatPump");
 
 			// Assert
 			expect(result).toStrictEqual(product);
