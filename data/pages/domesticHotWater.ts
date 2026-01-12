@@ -3,6 +3,13 @@ import type { Page } from "./pages.types";
 
 const domesticHotWaterPages = [
 	{
+		id: "domesticHotWaterNew",
+		title: "Domestic hot water NEW",
+		url: "/domestic-hot-water-new",
+		type: PageType.Section,
+		parentId: "taskList",
+	},
+	{
 		id: "domesticHotWater",
 		title: "Domestic hot water",
 		url: "/domestic-hot-water",

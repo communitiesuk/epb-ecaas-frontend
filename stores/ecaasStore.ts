@@ -21,6 +21,24 @@ export function getInitialState(): EcaasState {
 			naturalVentilation: { data: {} },
 			airPermeability: { data: {} },
 		},
+		domesticHotWaterNew: {
+			// waterHeating: {
+			// },
+			waterStorage: { 
+				hotWaterCylinder: { data: [] },
+				smartHotWaterTank: { data: [] },
+			},
+			hotWaterOutlets: {
+				mixedShower: { data: [] },
+				electricShower: { data: [] },
+				bath: { data: [] },
+				otherOutlets: { data: [] },
+			},
+			pipework: {
+				primaryPipework: { data: [] },
+				secondaryPipework: { data: [] },
+			},
+		},
 		domesticHotWater: {
 			waterHeating: {
 				hotWaterCylinder: { data: [] },

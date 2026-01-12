@@ -1188,6 +1188,177 @@ describe("FHS input mapper", () => {
 			},
 		};
 
+		const domesticHotWaterNew: DomesticHotWaterNew = {
+			waterStorage: {
+				hotWaterCylinder: {
+					...baseForm,
+					data: [{
+						...baseForm,
+						data: {
+							id: "hw cylinder 1 id",
+							name: "hw cylinder 1 name",
+							heatSource: "heat pump 1 id",
+							storageCylinderVolume: 80,
+							dailyEnergyLoss: 10,
+						},
+					}],
+				},
+				smartHotWaterTank: {
+					...baseForm,
+				},
+			},
+			hotWaterOutlets: {
+				mixedShower: {
+					...baseForm,
+					data: [
+						{
+							...baseForm,
+							data: {
+								id: "mixer shower 1 id",
+								name: "mixer shower 1 name",
+								flowRate: 14,
+							},
+						},
+						{
+							...baseForm,
+							data: {
+								id: "mixer shower 2 id",
+								name: "mixer shower 2 name",
+								flowRate: 12,
+							},
+						},
+					],
+				},
+				electricShower: {
+					...baseForm,
+					data: [
+						{
+							...baseForm,
+							data: {
+								id: "electric shower 1 id",
+								name: "electric shower 1 name",
+								ratedPower: 20,
+							},
+						},
+					],
+				},
+				bath: {
+					...baseForm,
+					data: [
+						{
+							...baseForm,
+							data: {
+								name: "small bath name",
+								id: "small bath id",
+								size: 80,
+							},
+						},
+						{
+							...baseForm,
+							data: {
+								name: "medium bath name",
+								id: "medium bath id",
+								size: 180,
+							},
+						},
+						{
+							...baseForm,
+							data: {
+								name: "large bath name",
+								id: "large bath id",
+								size: 400,
+							},
+						},
+					],
+				},
+				otherOutlets: {
+					...baseForm,
+					data: [
+						{
+							...baseForm,
+							data: {
+								id: "kitchen sink id",
+								name: "kitchen sink name",
+								flowRate: 7.4,
+							},
+						},
+						{
+							...baseForm,
+							data: {
+								id: "bathroom basin id",
+								name: "bathroom basin name",
+								flowRate: 6.4,
+							},
+						},
+						{
+							...baseForm,
+							data: {
+								id: "cloakroom basin id",
+								name: "cloakroom basin name",
+								flowRate: 6.4,
+							},
+						},
+					],
+				},
+			},
+			pipework: {
+				primaryPipework: {
+					...baseForm,
+					data: [{
+						...baseForm,
+						data: {
+							name: "pipework 1",
+							internalDiameter: 15,
+							externalDiameter: 22,
+							length: 5,
+							insulationThickness: 13,
+							thermalConductivity: 0.035,
+							surfaceReflectivity: true,
+							pipeContents: "water",
+							hotWaterCylinder: "hw cylinder 1 id",
+							location: "internal",
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							name: "external pipework",
+							internalDiameter: 28,
+							externalDiameter: 28,
+							length: 32,
+							insulationThickness: 13,
+							thermalConductivity: 0.040,
+							surfaceReflectivity: false,
+							pipeContents: "glycol25",
+							hotWaterCylinder: "hw cylinder 1 id",
+							location: "external",
+						},
+					}],
+				},
+				secondaryPipework: {
+					...baseForm,
+					data: [{
+						...baseForm,
+						data: {
+							name: "secondary pipework",
+							length: 5,
+							location: "internal",
+							internalDiameter: 14,
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							name: "external secondary pipework",
+							length: 15,
+							location: "external",
+							internalDiameter: 20,
+						},
+					}],
+				},
+			},
+		};
+
 		const domesticHotWater: DomesticHotWater = {
 			waterHeating: {
 				hotWaterCylinder: {
@@ -1286,6 +1457,7 @@ describe("FHS input mapper", () => {
 		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
+			domesticHotWaterNew,
 			dwellingFabric,
 			infiltrationAndVentilation,
 			spaceHeating,
@@ -2098,6 +2270,177 @@ describe("FHS input mapper", () => {
 			},
 		};
 
+		const domesticHotWaterNew: DomesticHotWaterNew = {
+			waterStorage: {
+				hotWaterCylinder: {
+					...baseForm,
+					data: [{
+						...baseForm,
+						data: {
+							id: "hw cylinder 1 id",
+							name: "hw cylinder 1 name",
+							heatSource: "heat pump 1 id",
+							storageCylinderVolume: 80,
+							dailyEnergyLoss: 10,
+						},
+					}],
+				},
+				smartHotWaterTank: {
+					...baseForm,
+				},
+			},
+			hotWaterOutlets: {
+				mixedShower: {
+					...baseForm,
+					data: [
+						{
+							...baseForm,
+							data: {
+								id: "mixer shower 1 id",
+								name: "mixer shower 1 name",
+								flowRate: 14,
+							},
+						},
+						{
+							...baseForm,
+							data: {
+								id: "mixer shower 2 id",
+								name: "mixer shower 2 name",
+								flowRate: 12,
+							},
+						},
+					],
+				},
+				electricShower: {
+					...baseForm,
+					data: [
+						{
+							...baseForm,
+							data: {
+								id: "electric shower 1 id",
+								name: "electric shower 1 name",
+								ratedPower: 20,
+							},
+						},
+					],
+				},
+				bath: {
+					...baseForm,
+					data: [
+						{
+							...baseForm,
+							data: {
+								name: "small bath name",
+								id: "small bath id",
+								size: 80,
+							},
+						},
+						{
+							...baseForm,
+							data: {
+								name: "medium bath name",
+								id: "medium bath id",
+								size: 180,
+							},
+						},
+						{
+							...baseForm,
+							data: {
+								name: "large bath name",
+								id: "large bath id",
+								size: 400,
+							},
+						},
+					],
+				},
+				otherOutlets: {
+					...baseForm,
+					data: [
+						{
+							...baseForm,
+							data: {
+								id: "kitchen sink id",
+								name: "kitchen sink name",
+								flowRate: 7.4,
+							},
+						},
+						{
+							...baseForm,
+							data: {
+								id: "bathroom basin id",
+								name: "bathroom basin name",
+								flowRate: 6.4,
+							},
+						},
+						{
+							...baseForm,
+							data: {
+								id: "cloakroom basin id",
+								name: "cloakroom basin name",
+								flowRate: 6.4,
+							},
+						},
+					],
+				},
+			},
+			pipework: {
+				primaryPipework: {
+					...baseForm,
+					data: [{
+						...baseForm,
+						data: {
+							name: "pipework 1",
+							internalDiameter: 15,
+							externalDiameter: 22,
+							length: 5,
+							insulationThickness: 13,
+							thermalConductivity: 0.035,
+							surfaceReflectivity: true,
+							pipeContents: "water",
+							hotWaterCylinder: "hw cylinder 1 id",
+							location: "internal",
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							name: "external pipework",
+							internalDiameter: 28,
+							externalDiameter: 28,
+							length: 32,
+							insulationThickness: 13,
+							thermalConductivity: 0.040,
+							surfaceReflectivity: false,
+							pipeContents: "glycol25",
+							hotWaterCylinder: "hw cylinder 1 id",
+							location: "external",
+						},
+					}],
+				},
+				secondaryPipework: {
+					...baseForm,
+					data: [{
+						...baseForm,
+						data: {
+							name: "secondary pipework",
+							length: 5,
+							location: "internal",
+							internalDiameter: 14,
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							name: "external secondary pipework",
+							length: 15,
+							location: "external",
+							internalDiameter: 20,
+						},
+					}],
+				},
+			},
+		};
+
 		const pvAndBatteries: PvAndBatteries = {
 			pvSystems: {
 				...baseForm,
@@ -2143,6 +2486,7 @@ describe("FHS input mapper", () => {
 		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
+			domesticHotWaterNew,
 			dwellingFabric,
 			infiltrationAndVentilation,
 			spaceHeating,

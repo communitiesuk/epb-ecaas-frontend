@@ -29,6 +29,7 @@ const thermalResistanceOfAdjacentUnheatedSpace = z.number().min(0).max(3);
 
 export type EcaasState = AssertEachKeyIsPageId<{
 	dwellingDetails: DwellingDetails;
+	domesticHotWaterNew: DomesticHotWaterNew;
 	domesticHotWater: DomesticHotWater;
 	dwellingFabric: DwellingFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
@@ -546,6 +547,18 @@ export type SpaceCoolingSystemData = z.infer<typeof spaceCoolingSystemData>;
 
 export type SpaceHeatControlSystemData = z.infer<typeof spaceHeatControlSystemData>;
 
+export interface DomesticHotWaterNew {
+	// waterHeating: WaterHeatingNew;
+	waterStorage: WaterStorage;
+	hotWaterOutlets: HotWaterOutlets;
+	pipework: Pipework;
+}
+
+export type WaterStorage = AssertFormKeysArePageIds<{
+	hotWaterCylinder: EcaasFormList<HotWaterCylinderData>;
+	smartHotWaterTank: EcaasFormList<SmartHotWaterTankData>;
+}>;
+
 export interface DomesticHotWater {
 	waterHeating: WaterHeating;
 	hotWaterOutlets: HotWaterOutlets;
@@ -998,6 +1011,24 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingDetails/externalFactors": externalFactorsDataZod,
 	"dwellingDetails/shading": shadingDataZod,
 	"dwellingDetails/appliances": appliancesDataZod,
+
+	"domesticHotWaterNew/waterStorage/hotWaterCylinder": hotWaterCylinderDataZod,
+	"domesticHotWaterNew/waterStorage/smartHotWaterTank": smartHotWaterTankDataZod,
+	// "domesticHotWater/waterHeating/combiBoiler": combiBoilerDataZod,
+	// "domesticHotWater/waterHeating/heatBattery": waterHeatingHeatBatteryDataZod,
+	// "domesticHotWater/waterHeating/heatInterfaceUnit": waterHeatingHeatInterfaceUnitDataZod,
+	// "domesticHotWater/waterHeating/heatPump": heatPumpDataZod,
+	// "domesticHotWater/waterHeating/immersionHeater": immersionHeaterDataZod,
+	// "domesticHotWater/waterHeating/pointOfUse": pointOfUseDataZod,
+	// "domesticHotWater/waterHeating/solarThermal": solarThermalDataZod,
+	"domesticHotWaterNew/hotWaterOutlets/mixedShower": mixedShowerDataZod,
+	"domesticHotWaterNew/hotWaterOutlets/electricShower": electricShowerDataZod,
+	"domesticHotWaterNew/hotWaterOutlets/bath": bathDataZod,
+	"domesticHotWaterNew/hotWaterOutlets/otherOutlets": otherHotWaterOutletDataZod,
+	"domesticHotWaterNew/pipework/primaryPipework": primaryPipeworkDataZod,
+	"domesticHotWaterNew/pipework/secondaryPipework": secondaryPipeworkDataZod,
+	// "domesticHotWater/wwhrs": wwhrsDataZod,
+
 	"domesticHotWater/waterHeating/hotWaterCylinder": hotWaterCylinderDataZod,
 	"domesticHotWater/waterHeating/combiBoiler": combiBoilerDataZod,
 	"domesticHotWater/waterHeating/heatBattery": waterHeatingHeatBatteryDataZod,
