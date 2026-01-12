@@ -2898,6 +2898,9 @@
                                 "$ref": "#/$defs/Ufh"
                             },
                             {
+                                "$ref": "#/$defs/UfhWithProductReference"
+                            },
+                            {
                                 "$ref": "#/$defs/Fancoil"
                             }
                         ]
@@ -3125,6 +3128,18 @@
                     "exclusiveMinimum": 0
                 }
             }
+        },
+        "UfhWithProductReference": {
+            "properties": {
+                "product_reference": {
+                    "description": "A unique reference to a product held within the HEM database (PCDB)",
+                    "title": "Reference to the product in the HEM database",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "product_reference"
+            ]
         },
         "Fancoil": {
             "required": [
