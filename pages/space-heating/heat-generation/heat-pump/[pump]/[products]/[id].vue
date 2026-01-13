@@ -77,11 +77,11 @@ const selectProduct = () => {
 	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ data?.modelName }}</h1>
 	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
 
-	<ProductDetails :data="tableData" />
+	<ProductDetails v-if="tableData" :data="tableData" />
 
 	<div class="govuk-button-group">
 		<GovButton
-			test-id="backToHeatPumpButton"
+			test-id="selectProductButton"
 			@click="selectProduct"
 		>
 			Select {{ productType }}

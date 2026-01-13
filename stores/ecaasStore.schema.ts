@@ -32,8 +32,8 @@ export type EcaasState = AssertEachKeyIsPageId<{
 	domesticHotWater: DomesticHotWater;
 	dwellingFabric: DwellingFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
-	spaceHeating: spaceHeating;
-	spaceHeatingNew: spaceHeatingNew;
+	spaceHeating: SpaceHeating;
+	spaceHeatingNew: SpaceHeatingNew;
 	pvAndBatteries: PvAndBatteries;
 	cooling: Cooling;
 }> & {
@@ -763,10 +763,19 @@ const airPermeabilityDataZod = z.object({
 
 export type AirPermeabilityData = z.infer<typeof airPermeabilityDataZod>;
 
-export type spaceHeating = AssertEachKeyIsPageId<{
+export type SpaceHeating = AssertEachKeyIsPageId<{
 	heatGeneration: HeatGeneration,
 	heatEmitting: HeatEmitting;
 }>;
+
+const heatingControlType = z.enum(["separateTemperatureControl", "separateTimeAndTemperatureControl"]);
+
+const _generalSpaceHeatingDataZod = z.object({
+	heatingControlType,
+	coolingRequired: z.boolean(),
+});
+
+export type GeneralSpaceHeating = z.infer<typeof _generalSpaceHeatingDataZod>;
 
 export type HeatGeneration = AssertFormKeysArePageIds<{
 	heatPump: EcaasFormList<HeatPumpData>;
@@ -864,7 +873,7 @@ const wetDistributionDataZod = z.discriminatedUnion(
 
 export type WetDistributionData = z.infer<typeof wetDistributionDataZod>;
 
-export type spaceHeatingNew = AssertEachKeyIsPageId<{
+export type SpaceHeatingNew = AssertEachKeyIsPageId<{
 	heatSource: EcaasFormList<HeatSourceData>,
 	heatEmitters: EcaasFormList<HeatEmittingData>
 	heatingControls: EcaasFormList<HeatingControlData>
@@ -901,21 +910,21 @@ const heatPumpBase = 	namedWithId.extend({
 		"exhaustAirMixed",
 	]),
 	productReference: z.string().trim().min(1),
-})
+});
 
 const boilerBase = namedWithId.extend({
 	typeOfHeatSource: z.literal(HeatSourceType.boiler),
-	typeOfBoiler: typeOfBoiler,
+	typeOfBoiler,
 	productReference: z.string().trim().min(1),
 	locationOfBoiler: z.enum([AdjacentSpaceType.heatedSpace, AdjacentSpaceType.unheatedSpace]),
-})
+});
 const heatBatteryBase = namedWithId.extend({
 	typeOfHeatSource: z.literal(HeatSourceType.heatBattery),
-	typeOfHeatBattery: typeOfHeatBattery,
+	typeOfHeatBattery,
 	productReference: z.string().trim().min(1),
 	numberOfUnits: z.number(),
 	energySupply: fuelTypeWithElecZod,
-})
+});
 
 const solarThermalSystemBase = 	namedWithId.extend({
 	typeOfHeatSource: z.literal(HeatSourceType.solarThermalSystem),
@@ -932,11 +941,11 @@ const solarThermalSystemBase = 	namedWithId.extend({
 	powerOfCollectorPumpController: z.number(),
 	pitch: z.number().min(0).max(90),
 	orientation,
-})
+});
 
 const heatNetworkBase = namedWithId.extend({
 	typeOfHeatSource: z.literal(HeatSourceType.heatNetwork),
-	typeOfHeatNetwork: typeOfHeatNetwork,
+	typeOfHeatNetwork,
 });
 
 const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
@@ -972,113 +981,111 @@ const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
 	}),
 ]);
 
-	const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
-		heatPumpBase,
-		boilerBase,
-		heatBatteryBase,
-		solarThermalSystemBase,
-		heatNetworkZodData,
+const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
+	heatPumpBase,
+	boilerBase,
+	heatBatteryBase,
+	solarThermalSystemBase,
+	heatNetworkZodData,
 ]);
 
 export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
 
 enum HeatEmitterType {
-  radiator = "radiator",
-  underfloorHeating = "underfloorHeating",
-  fanCoil = "fanCoil",
-  instantElectricHeater = "instantElectricHeater",
-  electricStorageHeater = "electricStorageHeater",
-  warmAirHeater = "warmAirHeater",
+	radiator = "radiator",
+	underfloorHeating = "underfloorHeating",
+	fanCoil = "fanCoil",
+	instantElectricHeater = "instantElectricHeater",
+	electricStorageHeater = "electricStorageHeater",
+	warmAirHeater = "warmAirHeater",
 }
 
 function withVariableFlowRate<
-  T extends z.ZodRawShape & { hasVariableFlowRate?: never }
+	T extends z.ZodRawShape & { hasVariableFlowRate?: never },
 >(base: z.ZodObject<T>) {
-  return z.discriminatedUnion("isVariableFlowRate", [
-    base.extend({
-      hasVariableFlowRate: z.literal(true),
-      minFlowRate: z.number(),
-      maxFlowRate: z.number(),
-    }),
-    base.extend({
-      hasVariableFlowRate: z.literal(false),
-      designFlowRate: z.number(),
-    }),
-  ]);
+	return z.discriminatedUnion("isVariableFlowRate", [
+		base.extend({
+			hasVariableFlowRate: z.literal(true),
+			minFlowRate: z.number(),
+			maxFlowRate: z.number(),
+		}),
+		base.extend({
+			hasVariableFlowRate: z.literal(false),
+			designFlowRate: z.number(),
+		}),
+	]);
 }
 
 const radiatorBase = namedWithId.extend({
-  typeOfHeatEmitter: z.literal(HeatEmitterType.radiator),
-  typeOfRadiator: z.enum(["standard", "towelRadiator"]),
-  productReference: z.string(),
-  heatSource: z.string(),
-  ecoDesignControllerClass: z.string(),
-  designFlowTemp: z.number(),
-  minFlowTemp: z.number(),
-  designTempDiffAcrossEmitters: z.number(),
-  numOfRadiators: z.number(),
+	typeOfHeatEmitter: z.literal(HeatEmitterType.radiator),
+	typeOfRadiator: z.enum(["standard", "towelRadiator"]),
+	productReference: z.string(),
+	heatSource: z.string(),
+	ecoDesignControllerClass: z.string(),
+	designFlowTemp: z.number(),
+	minFlowTemp: z.number(),
+	designTempDiffAcrossEmitters: z.number(),
+	numOfRadiators: z.number(),
 });
 
 const radiatorSchema = withVariableFlowRate(radiatorBase);
 
 const underfloorHeatingBase = namedWithId.extend({
-  typeOfHeatEmitter: z.literal(HeatEmitterType.underfloorHeating),
-  productReference: z.string(),
-  ecoDesignControllerClass: z.string(),
-  designFlowTemp: z.number(),
-  minFlowTemp: z.number(),
-  designTempDiffAcrossEmitters: z.number(),
-  areaOfUnderFloorHeating: z.number(),
+	typeOfHeatEmitter: z.literal(HeatEmitterType.underfloorHeating),
+	productReference: z.string(),
+	ecoDesignControllerClass: z.string(),
+	designFlowTemp: z.number(),
+	minFlowTemp: z.number(),
+	designTempDiffAcrossEmitters: z.number(),
+	areaOfUnderFloorHeating: z.number(),
 });
 
 const underFloorHeatingSchema = withVariableFlowRate(underfloorHeatingBase);
 
 const fanCoilBase = namedWithId.extend({
-  typeOfHeatEmitter: z.literal(HeatEmitterType.fanCoil),
-  productReference: z.string(),
-  heatSource: z.string(),
-  ecoDesignControllerClass: z.string(),
-  designFlowTemp: z.number(),
-  minFlowTemp: z.number(),
-  designTempDiffAcrossEmitters: z.number(),
-	numberOfFanCoils: z.number()
+	typeOfHeatEmitter: z.literal(HeatEmitterType.fanCoil),
+	productReference: z.string(),
+	heatSource: z.string(),
+	ecoDesignControllerClass: z.string(),
+	designFlowTemp: z.number(),
+	minFlowTemp: z.number(),
+	designTempDiffAcrossEmitters: z.number(),
+	numberOfFanCoils: z.number(),
 });
 
-const fanCoilSchema = withVariableFlowRate(fanCoilBase)
+const fanCoilSchema = withVariableFlowRate(fanCoilBase);
 
 const warmAirHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal(HeatEmitterType.warmAirHeater),
-  designTempDiffAcrossEmitters: z.number(),
-  heatSource: z.string(),
-  convectionFraction: z.number(),
-	numOfWarmAirHeaters:z.number(),
+	designTempDiffAcrossEmitters: z.number(),
+	heatSource: z.string(),
+	convectionFraction: z.number(),
+	numOfWarmAirHeaters: z.number(),
 });
 
 const instantElectricHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal(HeatEmitterType.instantElectricHeater),
-  convectionFractionForHeating: z.number(),
+	convectionFractionForHeating: z.number(),
 	ratedPower: z.number(),
-	numOfHeatersWithThisSpec:z.number(),
+	numOfHeatersWithThisSpec: z.number(),
 });
 
 const electricStorageHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal(HeatEmitterType.electricStorageHeater),
-  productReference: z.string(),
-	numberOfStorageHeaters: z.number()
+	productReference: z.string(),
+	numberOfStorageHeaters: z.number(),
 });
 
 const heatEmittingDataZod = z.discriminatedUnion("typeOfHeatEmitter", [
-  radiatorSchema,
-  underFloorHeatingSchema,
+	radiatorSchema,
+	underFloorHeatingSchema,
 	fanCoilSchema,
 	warmAirHeaterSchema,
 	instantElectricHeaterSchema,
-	electricStorageHeaterSchema
+	electricStorageHeaterSchema,
 ]);
 
 export type HeatEmittingData = z.infer<typeof heatEmittingDataZod>;
-
-const heatingControlType = z.enum(["separateTemperatureControl", "separateTimeAndTemperatureControl"]);
 
 const heatingControlsDataZod = named.extend({
 	heatingControlType,

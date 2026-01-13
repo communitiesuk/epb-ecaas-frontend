@@ -1104,14 +1104,7 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const spaceHeating: spaceHeating = {
-			general: {
-				...baseForm,
-				data: {
-					heatingControlType: "separateTemperatureControl",
-					coolingRequired: false,
-				},
-			},
+		const spaceHeating: SpaceHeating = {
 			heatGeneration: {
 				heatPump: {
 					...baseForm,
@@ -1831,14 +1824,7 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const spaceHeating: spaceHeating = {
-			general: {
-				...baseForm,
-				data: {
-					heatingControlType: "separateTemperatureControl",
-					coolingRequired: false,
-				},
-			},
+		const spaceHeating: SpaceHeating = {
 			heatGeneration: {
 				heatPump: {
 					...baseForm,

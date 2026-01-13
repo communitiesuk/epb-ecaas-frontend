@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { hyphenate } from "#imports";
 
-const { name, onSelect } = defineProps<{
+const { name, onSelect = undefined, suggestedValues = [] } = defineProps<{
 	id: string;
 	name: string;
 	label: string;
@@ -42,9 +42,9 @@ const handleSelect = (value: string, e: MouseEvent) => {
 		/>
 		<div v-show="suggestedValues?.length && (value?.length || 0) > 2 && isFocussed" class="search-field-results">
 			<ul>
-				<li v-for="value in suggestedValues?.slice(0, maxSuggestedValues)" :key="hyphenate(value)">
-					<a href="#" class="govuk-body" @click="handleSelect(value, $event)">
-						{{ value }}
+				<li v-for="suggestedValue in suggestedValues?.slice(0, maxSuggestedValues)" :key="hyphenate(suggestedValue)">
+					<a href="#" class="govuk-body" @click="handleSelect(suggestedValue, $event)">
+						{{ suggestedValue }}
 					</a>
 				</li>
 			</ul>

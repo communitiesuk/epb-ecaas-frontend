@@ -21,7 +21,7 @@ const heatPumpSummary: SummarySection = {
 };
 
 const boilers = store.spaceHeating.heatGeneration.boiler.data;
-const boilerSummary: SummarySection = {
+const _boilerSummary: SummarySection = {
 	id: "boiler",
 	label: "Boilers",
 	data: boilers.map((boiler) => {
@@ -33,7 +33,7 @@ const boilerSummary: SummarySection = {
 };
 
 const batteries = store.spaceHeating.heatGeneration.heatBattery.data;
-const heatBatterySummary: SummarySection = {
+const _heatBatterySummary: SummarySection = {
 	id: "heatBattery",
 	label: "Heat batteries",
 	data: batteries.map((battery) => {
@@ -45,7 +45,7 @@ const heatBatterySummary: SummarySection = {
 };
 
 const networks = store.spaceHeating.heatGeneration.heatNetwork.data;
-const heatNetworkSummary: SummarySection = {
+const _heatNetworkSummary: SummarySection = {
 	id: "heatNetwork",
 	label: "Heat networks",
 	data: networks.map((network) => {
@@ -57,7 +57,7 @@ const heatNetworkSummary: SummarySection = {
 };
 
 const units = store.spaceHeating.heatGeneration.heatInterfaceUnit.data;
-const heatInterfaceUnitSummary: SummarySection = {
+const _heatInterfaceUnitSummary: SummarySection = {
 	id: "heatInterfaceUnit",
 	label: "Heat interface units",
 	data: units.map((unit) => {
@@ -139,7 +139,7 @@ const instantElectricHeaterSummary: SummarySection = {
 
 const storageHeaters =
 	store.spaceHeating.heatEmitting.electricStorageHeater.data;
-const electricStorageHeaterSummary: SummarySection = {
+const _electricStorageHeaterSummary: SummarySection = {
 	id: "electricStorageHeater",
 	label: "Electric storage heaters",
 	data: storageHeaters.map((storageHeater) => {
@@ -151,7 +151,7 @@ const electricStorageHeaterSummary: SummarySection = {
 };
 
 const warmAirHeatPumps = store.spaceHeating.heatEmitting.warmAirHeatPump.data;
-const warmAirHeatPumpSummary: SummarySection = {
+const _warmAirHeatPumpSummary: SummarySection = {
 	id: "warmAirHeatPump",
 	label: "Warm air heat pumps",
 	data: warmAirHeatPumps.map((pump) => {

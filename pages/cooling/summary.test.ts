@@ -5,10 +5,10 @@ import { screen, within } from "@testing-library/vue";
 import { kilowatt } from "~/utils/units/power";
 
 
-type expectedData = { [key: string]: string };
+type ExpectedData = { [key: string]: string };
 const verifyDataInSection = async (
 	section: string,
-	expectedSectionData: expectedData,
+	expectedSectionData: ExpectedData,
 ) => {
 	for (const [key, value] of Object.entries(expectedSectionData)) {
 		const lineResult = screen.queryByTestId(
