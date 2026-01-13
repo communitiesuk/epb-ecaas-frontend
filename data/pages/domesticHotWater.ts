@@ -13,8 +13,15 @@ const domesticHotWaterPages = [
 	{
 		id: "waterStorage",
 		title: "Water Storage",
-		url: "/water-storage",
-		type: PageType.Section,
+		url: "/domestic-hot-water-new/water-storage/:water-storage",
+		type: PageType.TaskGroup,
+		parentId: "domesticHotWaterNew",
+	},
+	{
+		id: "waterStorageCreate",
+		title: "Water Storage ",
+		url: "/domestic-hot-water-new/water-storage/create",
+		type: PageType.TaskGroup,
 		parentId: "domesticHotWaterNew",
 	},
 
