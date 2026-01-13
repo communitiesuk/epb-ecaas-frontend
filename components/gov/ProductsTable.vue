@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 
-const props = defineProps<{
+defineProps<{
 	products: DisplayProduct[];
 	totalPages: number;
 	onSelectProduct: (reference: string) => void;

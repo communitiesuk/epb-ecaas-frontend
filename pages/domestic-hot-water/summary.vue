@@ -30,7 +30,7 @@ const hotWaterCylinderSummary: SummarySection = {
 };
 
 const immersionHeaterData = store.domesticHotWater.waterHeating.immersionHeater.data;
-const immersionHeaterSummary: SummarySection = {
+const _immersionHeaterSummary: SummarySection = {
 	id: "immersionHeater",
 	label: "Immersion heaters",
 	data: immersionHeaterData.map(d => {
@@ -45,7 +45,7 @@ const immersionHeaterSummary: SummarySection = {
 };
 
 const solarThermalData = store.domesticHotWater.waterHeating.solarThermal.data;
-const solarThermalSummary: SummarySection = {
+const _solarThermalSummary: SummarySection = {
 	id: "solarThermal",
 	label: "Solar thermal",
 	data: solarThermalData.map(d => {
@@ -57,7 +57,7 @@ const solarThermalSummary: SummarySection = {
 };
 
 const pointOfUseData = store.domesticHotWater.waterHeating.pointOfUse.data;
-const pointOfUseSummary: SummarySection = {
+const _pointOfUseSummary: SummarySection = {
 	id: "pointOfUse",
 	label: "Point of use",
 	data: pointOfUseData.map(d => {
@@ -71,7 +71,7 @@ const pointOfUseSummary: SummarySection = {
 };
 
 const heatPumpData = store.domesticHotWater.waterHeating.heatPump.data;
-const heatPumpSummary: SummarySection = {
+const _heatPumpSummary: SummarySection = {
 	id: "heatPump",
 	label: "Heat pumps",
 	data: heatPumpData.map(d => {
@@ -83,7 +83,7 @@ const heatPumpSummary: SummarySection = {
 };
 
 const combiBoilerData = store.domesticHotWater.waterHeating.combiBoiler.data;
-const combiBoilerSummary: SummarySection = {
+const _combiBoilerSummary: SummarySection = {
 	id: "combiBoiler",
 	label: "Combi boilers",
 	data: combiBoilerData.map(d => {
@@ -95,7 +95,7 @@ const combiBoilerSummary: SummarySection = {
 };
 
 const heatBatteryData = store.domesticHotWater.waterHeating.heatBattery.data;
-const heatBatterySummary: SummarySection = {
+const _heatBatterySummary: SummarySection = {
 	id: "heatBattery",
 	label: "Heat batteries",
 	data: heatBatteryData.map(d => {
@@ -107,7 +107,7 @@ const heatBatterySummary: SummarySection = {
 };
 
 const smartHotWaterTankData = store.domesticHotWater.waterHeating.smartHotWaterTank.data;
-const smartHotWaterTankSummary: SummarySection = {
+const _smartHotWaterTankSummary: SummarySection = {
 	id: "smartHotWaterTank",
 	label: "Smart hot water tanks",
 	data: smartHotWaterTankData.map(d => {
@@ -119,7 +119,7 @@ const smartHotWaterTankSummary: SummarySection = {
 };
 
 const heatInterfaceUnitData = store.domesticHotWater.waterHeating.heatInterfaceUnit.data;
-const heatInterfaceUnitSummary: SummarySection = {
+const _heatInterfaceUnitSummary: SummarySection = {
 	id: "heatInterfaceUnit",
 	label: "Heat interface units",
 	data: heatInterfaceUnitData.map(d => {

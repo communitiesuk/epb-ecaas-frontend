@@ -54,7 +54,7 @@ watch(routeQuery, () => {
 		<!-- Show links to all page numbers if total pages is less than the minimum to truncate  -->
 		<ul v-if="totalPages >= minPageNumbers && totalPages < minPageNumbersToTruncate" class="govuk-pagination__list">
 			<li
-				v-for="pageNumber in totalPages" class="govuk-pagination__item"
+				v-for="pageNumber in totalPages" :key="pageNumber" class="govuk-pagination__item"
 				:class="getPageNumber() === pageNumber ? 'govuk-pagination__item--current' : ''">
 				<NuxtLink class="govuk-link govuk-pagination__link" :href="`?${query}page=${pageNumber}`" :aria-label="`Page ${pageNumber}`">
 					{{ pageNumber }}
@@ -83,6 +83,7 @@ watch(routeQuery, () => {
 									(getPageNumber() + adjacentPageNumbers + 2 === totalPages ? totalPages - 1 : 0)
 								])
 								.includes(pageNumber)"
+					:key="pageNumber"
 					class="govuk-pagination__item"
 					:class="pageNumber === getPageNumber() ? 'govuk-pagination__item--current' : ''"
 				>
