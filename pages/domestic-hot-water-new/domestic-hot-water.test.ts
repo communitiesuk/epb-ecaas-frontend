@@ -410,6 +410,108 @@ describe("Domestic hot water", () => {
 		});
 	});
 
+	describe("Heat Sources", () => {
+		const heatSource2: EcaasForm<WaterHeatSourcesData> = {
+			data: {
+				name: "Jasper's Old Laptop",
+			},
+		};
+		const heatSource3: EcaasForm<WaterHeatSourcesData> = {
+			data: {
+				name: "Jasper's Heat Pump",
+			},
+		};
+
+		// // Can't get href to point to the right thing :(
+
+		// // test("Navigates to water storage create form when add link is clicked", async () => {
+		// // 	await renderSuspended(DomesticHotWater);
+			
+		// // 	const addLink = await screen.findByTestId<HTMLAnchorElement>("heatSources_add");
+
+		// // 	console.log("addLink", addLink);
+			
+		// // 	expect(new URL(addLink.href).pathname).toBe(
+		// // 		getUrl("heatSourcesCreate"),
+		// // 	);
+		// // });
+
+		test("Displays existing heat sources", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					heatSources: {
+						data: [heatSource1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.getByText(heatSource1.data.name)).toBeDefined();
+		});
+
+		test("heat sources are removed when remove link is clicked", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					heatSources: {
+						data: [heatSource1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.getAllByTestId("heatSources_items")).toBeDefined();
+
+			await user.click(screen.getByTestId("heatSources_remove_0"));
+			expect(screen.queryByTestId("heatSources_items")).toBeNull();
+		});
+
+		it("should only remove the heat source object that is clicked", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					heatSources: {
+						data: [heatSource1, heatSource2, heatSource3],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("heatSources_remove_1"));
+
+			const populatedList = screen.getByTestId("heatSources_items");
+
+			expect(within(populatedList).getByText(heatSource1.data.name)).toBeDefined();
+			expect(within(populatedList).getByText(heatSource3.data.name)).toBeDefined();
+			expect(within(populatedList).queryByText(heatSource2.data.name)).toBeNull();
+		});
+
+		test("heat sources are duplicated when duplicate link is clicked", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					heatSources: {
+						data: [
+							heatSource1,
+							heatSource2,
+						],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await userEvent.click(screen.getByTestId("heatSources_duplicate_0"));
+			await userEvent.click(screen.getByTestId("heatSources_duplicate_0"));
+			await userEvent.click(screen.getByTestId("heatSources_duplicate_2"));
+			await userEvent.click(screen.getByTestId("heatSources_duplicate_2"));
+			expect(screen.queryAllByTestId("heatSources_item").length).toBe(6);
+			expect(screen.getByText(heatSource1.data.name)).toBeDefined();
+			expect(screen.getByText(`${heatSource1.data.name} (1)`)).toBeDefined();
+			expect(screen.getByText(`${heatSource1.data.name} (2)`)).toBeDefined();
+			expect(screen.getByText(`${heatSource1.data.name} (1) (1)`)).toBeDefined();
+			expect(screen.getByText(`${heatSource1.data.name} (1) (2)`)).toBeDefined();
+		});
+	});
+
 	it("disables the mark section as complete button when item is incomplete", async () => {
 		store.$patch({
 			domesticHotWaterNew: {

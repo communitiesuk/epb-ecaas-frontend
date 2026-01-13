@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isEcaasForm } from '#imports';
+import { isEcaasForm, type WaterHeatSourcesData } from '#imports';
 import formStatus from '~/constants/formStatus';
 
 const title = "Domestic Hot Water";
@@ -8,7 +8,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type DomesticHotWaterType = keyof typeof store.domesticHotWaterNew;
-type DomesticHotWaterData = EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData>;
+type DomesticHotWaterData = EcaasForm<WaterHeatSourcesData> & EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData>;
 
 function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number) {
 	const data = store.domesticHotWaterNew[domesticHotWaterType]?.data;
@@ -113,6 +113,17 @@ const hasIncompleteEntries = () =>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<CustomList 
+		id="heatSources"
+		title="Heat Sources"
+		:form-url="`${page?.url!}/heat-sources`"
+		:items="store.domesticHotWaterNew.heatSources.data
+			.filter(x => isEcaasForm(x))
+			.map(x=>({name: x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+		:show-status="true"
+		@remove="(index: number) => handleRemove('heatSources', index)"
+		@duplicate="(index: number) => handleDuplicate('heatSources', index)"
+	/>
+	<CustomList 
 		id="waterStorage"
 		title="Water Storage"
 		:form-url="`${page?.url!}/water-storage`"
@@ -147,7 +158,6 @@ const hasIncompleteEntries = () =>
 		@remove="(index: number) => handleRemove('pipework', index)"
 		@duplicate="(index: number) => handleDuplicate('pipework', index)"
 	/>
-
 	<div class="govuk-button-group govuk-!-margin-top-6">
 	<GovButton
 		href="/"
