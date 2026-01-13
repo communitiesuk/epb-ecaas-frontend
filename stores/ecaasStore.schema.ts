@@ -870,12 +870,15 @@ export type spaceHeatingNew = AssertEachKeyIsPageId<{
 	heatingControls: EcaasFormList<HeatingControlData>
 }>;
 
-const baseHeatSource = namedWithId;
-
 const boilerType = z.enum(["combiBoiler", "regularBoiler"]);
 const heatNetworkType = z.enum(["sleevedDistrict", "unsleevedDistrict", "communal"]);
 const heatBatteryType = z.enum(["pcm", "dryCore"]);
 const locationOfCollectorLoopPipingType = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
+
+export type BoilerType = z.infer<typeof boilerType>;
+export type HeatNetworkType = z.infer<typeof heatNetworkType>;
+export type HeatBatteryType = z.infer<typeof heatBatteryType>;
+export type LocationOfCollectorLoopPipingType = z.infer<typeof locationOfCollectorLoopPipingType>;
 
 export enum HeatSourceType {
 	heatPump = "heatPump",
@@ -885,26 +888,72 @@ export enum HeatSourceType {
 	solarThermalSystem = "solarThermalSystem",
 }
 
-const baseHeatNetwork = namedWithId.extend({
+const heatPumpBase = 	namedWithId.extend({
+	typeOfHeatSource: z.literal(HeatSourceType.heatPump),
+	typeOfHeatPump: z.enum([
+		"airSource",
+		"groundSource",
+		"waterSource",
+		"booster",
+		"hotWaterOnly",
+		"exhaustAirMev",
+		"exhaustAirMvhr",
+		"exhaustAirMixed",
+	]),
+	productReference: z.string().trim().min(1),
+})
+
+const boilerBase = namedWithId.extend({
+	typeOfHeatSource: z.literal(HeatSourceType.boiler),
+	typeOfBoiler: boilerType,
+	productReference: z.string().trim().min(1),
+	locationOfBoiler: z.enum([AdjacentSpaceType.heatedSpace, AdjacentSpaceType.unheatedSpace]),
+})
+const heatBatteryBase = namedWithId.extend({
+	typeOfHeatSource: z.literal(HeatSourceType.heatBattery),
+	typeOfHeatBattery: heatBatteryType,
+	productReference: z.string().trim().min(1),
+	numberOfUnits: z.number(),
+	energySupply: fuelTypeWithElecZod,
+})
+
+const solarThermalSystemBase = 	namedWithId.extend({
+	typeOfHeatSource: z.literal(HeatSourceType.solarThermalSystem),
+	locationOfCollectorLoopPiping: locationOfCollectorLoopPipingType,
+	collectorModuleArea: z.number(),
+	numberOfCollectorModules: z.number(),
+	peakCollectorEfficiency: fraction,
+	incidenceAngleModifier: fraction,
+	firstOrderHeatLossCoefficient: z.number(),
+	secondOrderHeatLossCoefficient: z.number(),
+	heatLossCoefficientOfSolarLoopPipe: z.number(),
+	collectorMassFlowRate: z.number(),
+	powerOfCollectorPump: z.number(),
+	powerOfCollectorPumpController: z.number(),
+	pitch: z.number().min(0).max(90),
+	orientation,
+})
+
+const heatNetworkBase = namedWithId.extend({
 	typeOfHeatSource: z.literal(HeatSourceType.heatNetwork),
 	typeOfHeatNetwork: heatNetworkType,
 });
 
 const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
-	baseHeatNetwork.extend({
+	heatNetworkBase.extend({
 		isHeatNetworkInPcdb: z.literal(true),
 		productReference: z.string().trim().min(1),
 		energySupply: fuelTypeWithElecZod,
 		usesHeatInterfaceUnits: z.literal(true),
 		heatInterfaceUnitProductReference: z.string().trim().min(1),
 	}),
-	baseHeatNetwork.extend({
+	heatNetworkBase.extend({
 		isHeatNetworkInPcdb: z.literal(true),
 		productReference: z.string().trim().min(1),
 		energySupply: fuelTypeWithElecZod,
 		usesHeatInterfaceUnits: z.literal(false),
 	}),
-	baseHeatNetwork.extend({
+	heatNetworkBase.extend({
 		isHeatNetworkInPcdb: z.literal(false),
 		emissionsFactor: z.number(),
 		outOfScopeEmissionsFactor: z.number(),
@@ -913,7 +962,7 @@ const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
 		usesHeatInterfaceUnits: z.literal(true),
 		heatInterfaceUnitProductReference: z.string().trim().min(1),
 	}),
-	baseHeatNetwork.extend({
+	heatNetworkBase.extend({
 		isHeatNetworkInPcdb: z.literal(false),
 		emissionsFactor: z.number(),
 		outOfScopeEmissionsFactor: z.number(),
@@ -923,57 +972,13 @@ const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
 	}),
 ]);
 
-const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
-	baseHeatSource.extend({
-		typeOfHeatSource: z.literal(HeatSourceType.heatPump),
-		typeOfHeatPump: z.enum([
-			"airSource",
-			"groundSource",
-			"waterSource",
-			"booster",
-			"hotWaterOnly",
-			"exhaustAirMev",
-			"exhaustAirMvhr",
-			"exhaustAirMixed",
-		]),
-		productReference: z.string().trim().min(1),
-	}),
-	baseHeatSource.extend({
-		typeOfHeatSource: z.literal(HeatSourceType.boiler),
-		typeOfBoiler: boilerType,
-		productReference: z.string().trim().min(1),
-		locationOfBoiler: z.enum([AdjacentSpaceType.heatedSpace, AdjacentSpaceType.unheatedSpace]),
-	}),
-	heatNetworkZodData,
-	baseHeatSource.extend({
-		typeOfHeatSource: z.literal(HeatSourceType.heatBattery),
-		typeOfHeatBattery: heatBatteryType,
-		productReference: z.string().trim().min(1),
-		numberOfUnits: z.number(),
-		energySupply: fuelTypeWithElecZod,
-	}),
-	baseHeatSource.extend({
-		typeOfHeatSource: z.literal(HeatSourceType.solarThermalSystem),
-		locationOfCollectorLoopPiping: locationOfCollectorLoopPipingType,
-		collectorModuleArea: z.number(),
-		numberOfCollectorModules: z.number(),
-		peakCollectorEfficiency: fraction,
-		incidenceAngleModifier: fraction,
-		firstOrderHeatLossCoefficient: z.number(),
-		secondOrderHeatLossCoefficient: z.number(),
-		heatLossCoefficientOfSolarLoopPipe: z.number(),
-		collectorMassFlowRate: z.number(),
-		powerOfCollectorPump: z.number(),
-		powerOfCollectorPumpController: z.number(),
-		pitch: z.number().min(0).max(90),
-		orientation,
-	}),
+	const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
+		heatPumpBase,
+		boilerBase,
+		heatBatteryBase,
+		solarThermalSystemBase,
+		heatNetworkZodData,
 ]);
-
-export type BoilerType = z.infer<typeof boilerType>;
-export type HeatNetworkType = z.infer<typeof heatNetworkType>;
-export type HeatBatteryType = z.infer<typeof heatBatteryType>;
-export type LocationOfCollectorLoopPipingType = z.infer<typeof locationOfCollectorLoopPipingType>;
 
 export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
 
@@ -1028,7 +1033,6 @@ const underfloorHeatingBase = namedWithId.extend({
 
 const underFloorHeatingSchema = withVariableFlowRate(underfloorHeatingBase);
 
-
 const fanCoilBase = namedWithId.extend({
   typeOfHeatEmitter: z.literal(HeatEmitterType.fanCoil),
   productReference: z.string(),
@@ -1063,7 +1067,6 @@ const electricStorageHeaterSchema = namedWithId.extend({
 	numberOfStorageHeaters: z.number()
 });
 
-
 const heatEmittingDataZod = z.discriminatedUnion("typeOfHeatEmitter", [
   radiatorSchema,
   underFloorHeatingSchema,
@@ -1073,7 +1076,7 @@ const heatEmittingDataZod = z.discriminatedUnion("typeOfHeatEmitter", [
 	electricStorageHeaterSchema
 ]);
 
-type HeatEmittingData = z.infer<typeof heatEmittingDataZod>;
+export type HeatEmittingData = z.infer<typeof heatEmittingDataZod>;
 
 const heatingControlType = z.enum(["separateTemperatureControl", "separateTimeAndTemperatureControl"]);
 
@@ -1256,7 +1259,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"spaceHeating/heatEmitting/electricStorageHeater": electricStorageHeaterDataZod,
 	"spaceHeating/heatEmitting/warmAirHeatPump": warmAirHeatPumpDataZod,
 	"spaceHeatingNew/heatSource": heatSourceDataZod,
-	"spaceHeatingNew/heatEmitters": baseHeatEmitting,
+	"spaceHeatingNew/heatEmitters": heatEmittingDataZod,
 	"spaceHeatingNew/heatingControls": heatingControlsDataZod,
 	"cooling/airConditioning": airConditioningDataZod,
 	"pvAndBatteries/pvSystems": pvSystemDataZod,
