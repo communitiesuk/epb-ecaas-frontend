@@ -67,44 +67,6 @@ function handleComplete() {
 const hasIncompleteEntries = () =>
 	Object.values(store.domesticHotWaterNew)
 		.some(section => section.data.some(item => isEcaasForm(item) && !item.complete));
-
-// const hwCylinder1: EcaasForm<HotWaterCylinderData> = {
-// 	data: {
-// 		name: "Jasper's Cylinder",
-// 		id: "what",
-// 		heatSource: "weeeeee",
-// 		storageCylinderVolume: {
-// 			amount: 100,
-// 			unit: "litres",
-// 		},
-// 		dailyEnergyLoss: 69,
-// 		typeOfWaterStorage: "hotWaterCylinder",
-// 	},
-// };
-
-// // const immersion1: EcaasForm<ImmersionHeaterData> = {
-// // 	data: {
-// // 		name: "Jasper's Immersion Heater",
-// // 		ratedPower: 69,
-// // 		heaterPosition: "top",
-// // 		thermostatPosition: "middle",
-// // 	}
-// // };
-
-// store.$patch({
-// 	domesticHotWater: {
-// 		waterHeating: {
-// 			hotWaterCylinder: {
-// 				complete: true,
-// 				data: [hwCylinder1],
-// 			},
-// 			// immersionHeater: {
-// 			// 	complete: true,
-// 			// 	data: [immersion1]
-// 			// }
-// 		},
-// 	},
-// });
 </script>
 
 <template>
@@ -114,7 +76,7 @@ const hasIncompleteEntries = () =>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<CustomList 
 		id="heatSources"
-		title="Heat Sources"
+		title="Heat sources"
 		:form-url="`${page?.url!}/heat-sources`"
 		:items="store.domesticHotWaterNew.heatSources.data
 			.filter(x => isEcaasForm(x))
@@ -125,7 +87,7 @@ const hasIncompleteEntries = () =>
 	/>
 	<CustomList 
 		id="waterStorage"
-		title="Water Storage"
+		title="Water storage"
 		:form-url="`${page?.url!}/water-storage`"
 		:items="store.domesticHotWaterNew.waterStorage.data
 			.filter(x => isEcaasForm(x))
@@ -137,7 +99,7 @@ const hasIncompleteEntries = () =>
 
 	<CustomList 
 		id="hotWaterOutlets"
-		title="Hot Water Outlets"
+		title="Hot water outlets"
 		:form-url="`${page?.url!}/hot-water-outlets`"
 		:items="store.domesticHotWaterNew.hotWaterOutlets.data
 			.filter(x => isEcaasForm(x))
