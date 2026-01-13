@@ -16,7 +16,7 @@ describe("general", () => {
 	});
 
 	it("maps general heating", () => {
-		const generalData: GeneralspaceHeating = {
+		const generalData: GeneralSpaceHeating = {
 			heatingControlType: "separateTemperatureControl",
 			coolingRequired: true,
 		};

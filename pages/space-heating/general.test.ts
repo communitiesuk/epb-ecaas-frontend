@@ -16,7 +16,7 @@ describe("General", () => {
 		store.$reset();
 	});
 
-	const state: EcaasForm<GeneralspaceHeating> = {
+	const state: EcaasForm<GeneralSpaceHeating> = {
 		data: {
 			heatingControlType: "separateTemperatureControl",
 			coolingRequired: true,

@@ -32,7 +32,7 @@ export type EcaasState = AssertEachKeyIsPageId<{
 	domesticHotWater: DomesticHotWater;
 	dwellingFabric: DwellingFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
-	spaceHeating: spaceHeating;
+	spaceHeating: SpaceHeating;
 	pvAndBatteries: PvAndBatteries;
 	cooling: Cooling;
 }> & {
@@ -762,20 +762,20 @@ const airPermeabilityDataZod = z.object({
 
 export type AirPermeabilityData = z.infer<typeof airPermeabilityDataZod>;
 
-export type spaceHeating = AssertEachKeyIsPageId<{
-	general: EcaasForm<GeneralspaceHeating>,
+export type SpaceHeating = AssertEachKeyIsPageId<{
+	general: EcaasForm<GeneralSpaceHeating>,
 	heatGeneration: HeatGeneration,
 	heatEmitting: HeatEmitting;
 }>;
 
 const heatingControlType = z.enum(["separateTemperatureControl", "separateTimeAndTemperatureControl"]);
 
-const generalspaceHeatingDataZod = z.object({
+const generalSpaceHeatingDataZod = z.object({
 	heatingControlType,
 	coolingRequired: z.boolean(),
 });
 
-export type GeneralspaceHeating = z.infer<typeof generalspaceHeatingDataZod>;
+export type GeneralSpaceHeating = z.infer<typeof generalSpaceHeatingDataZod>;
 
 export type HeatGeneration = AssertFormKeysArePageIds<{
 	heatPump: EcaasFormList<HeatPumpData>;
@@ -1036,7 +1036,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"infiltrationAndVentilation/vents": ventDataZod,
 	"infiltrationAndVentilation/naturalVentilation": ventilationDataZod,
 	"infiltrationAndVentilation/airPermeability": airPermeabilityDataZod,
-	"spaceHeating/general": generalspaceHeatingDataZod,
+	"spaceHeating/general": generalSpaceHeatingDataZod,
 	"spaceHeating/heatGeneration/boiler": boilerDataZod,
 	"spaceHeating/heatGeneration/heatBattery": heatBatteryDataZod,
 	"spaceHeating/heatGeneration/heatInterfaceUnit": heatInterfaceUnitDataZod,

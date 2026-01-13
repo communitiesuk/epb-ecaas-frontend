@@ -23,7 +23,7 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-const heatGenerationData = (): Pick<spaceHeating, "heatGeneration"> => {
+const heatGenerationData = (): Pick<SpaceHeating, "heatGeneration"> => {
 	return {
 		heatGeneration: {
 			heatPump: {

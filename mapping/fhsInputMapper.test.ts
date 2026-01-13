@@ -1104,7 +1104,7 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const spaceHeating: spaceHeating = {
+		const spaceHeating: SpaceHeating = {
 			general: {
 				...baseForm,
 				data: {
@@ -1831,7 +1831,7 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const spaceHeating: spaceHeating = {
+		const spaceHeating: SpaceHeating = {
 			general: {
 				...baseForm,
 				data: {

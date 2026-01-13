@@ -14,7 +14,7 @@ const heatingControlOptions = {
 	separateTimeAndTemperatureControl: "Separate time and temperature control",
 };
 
-const saveForm = (fields: GeneralspaceHeating) => {
+const saveForm = (fields: GeneralSpaceHeating) => {
 	store.$patch({
 		spaceHeating: {
 			general: {
