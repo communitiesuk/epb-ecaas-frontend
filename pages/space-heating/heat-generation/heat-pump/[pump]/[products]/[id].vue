@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { displayCamelToSentenceCase } from "#imports";
+import type { PageId } from "~/data/pages/pages";
+import type { ProductForTechnology } from "~/pcdb/clients/client.types";
 
 definePageMeta({ layout: "one-column" });
 
@@ -7,24 +8,57 @@ const store = useEcaasStore();
 const router = useRouter();
 const { params } = useRoute();
 
-const pageId = kebabToCamelCase(params.products as string);
+const heatPumpType = kebabToCamelCase(params.products as string) as HeatPumpType;
+
+if (!(heatPumpType in pcdbTechnologyTypes)) {
+	throw createError({
+		statusCode: 404,
+		statusMessage: "Product type not found",
+	});
+}
+
+const technologyType = pcdbTechnologyTypes[heatPumpType];
+const pageId = `${heatPumpType}Products` as PageId;
+const productType = `${heatPumpTypes[heatPumpType]} heat pumps`;
+
 const index = Number(params.pump);
 
-const { data } = await useFetch(`/api/products/${params.id}/details`, {
+const { data: { value: data } } = await useFetch<ProductForTechnology<typeof technologyType>>(`/api/products/${params.id}/details`, {
 	query: {
-		technologyType: pcdbTechnologyTypes[pageId as keyof typeof pcdbTechnologyTypes],
+		technologyType,
 	},
 });
 
-const backUrl = getUrl("airSourceProducts")
-	.replace(":pump", params.pump as string)
-	.replace(":products", params.products as string);
+const backUrl = getUrl(pageId)
+	.replace(":pump", params.pump as string);
 
-const productType = pcdbTechnologyTypes[pageId as HeatPumpType];
+const tableData: Record<string, string> = 
+{
+	"Source type": data?.sourceType ? displayCamelToSentenceCase(data.sourceType) : "-",
+	"Backup control type": data?.backupCtrlType ?? "-",
+	"Standard rating capacity 20c": data?.standardRatingCapacity20C ? `${data.standardRatingCapacity20C} kW` : "-",
+	...(data?.minimumModulationRate35 ? { "Minimum modulation rate": data?.minimumModulationRate35?.toString() } : {}),
+	...(data?.minimumModulationRate ? { "Minimum modulation rate": data?.minimumModulationRate?.toString() } : {}),
+	"Temp return feed max": data?.tempReturnFeedMax?.toString() ?? "-",
+	"Min temp diff flow return for hp to operate": data?.minTempDiffFlowReturnForHpToOperate?.toString() ?? "-",
+	...(data?.powerHeatingWarmAirFan ? { "Power heating warm air fan": data?.powerHeatingWarmAirFan?.toString() } : {}),
+	"Power standby": data?.powerStandby !== undefined ? `${data.powerStandby} kW` : "-",
+	"Power off": data?.powerOff !== undefined ? `${data.powerOff} kW` : "-",
+	"Sink type": data?.sinkType ?? "-",
+	"Modulating control": displayBoolean(data?.modulatingControl),
+	"Standard rating capacity 35c": data?.standardRatingCapacity35C ? `${data.standardRatingCapacity35C} kW` : "-",
+	"Time constant on/off rate": data?.timeConstantOnoffOperation?.toString() ?? "-",
+	"Temp lower operating limit": data?.tempLowerOperatingLimit?.toString() ?? "-",
+	"Var flow temp control during test": displayBoolean(data?.varFlowTempCtrlDuringTest),
+	"Power source circ pump": data?.powerSourceCircPump?.toString() ?? "-",
+	"Power heating circ pump": data?.powerHeatingCircPump?.toString() ?? "-",
+	"Power crankcase heater": data?.powerCrankcaseHeater !== undefined ? `${data.powerCrankcaseHeater} kW` : "-",
+	"Power max backup": data?.powerMaximumBackup !== undefined ? `${data.powerMaximumBackup} kW` : "-",
+};
 
 const selectProduct = () => {
 	store.$patch((state) => {
-		state.spaceHeating.heatGeneration.heatPump.data[index]!.data.productReference = data.value?.id;
+		state.spaceHeating.heatGeneration.heatPump.data[index]!.data.productReference = data?.id;
 	});
 
 	navigateTo(getUrl("heatPump").replace(":pump", `${index}`));
@@ -43,89 +77,8 @@ const selectProduct = () => {
 	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ data?.modelName }}</h1>
 	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
 
-	<div class="product-table-container">
-		<table class="govuk-table">
-			<tbody class="govuk-table__body">
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Source type</th>
-					<td class="govuk-table__cell">{{ data?.sourceType ? displayCamelToSentenceCase(data.sourceType) : '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Backup control type</th>
-					<td class="govuk-table__cell">{{ data?.backupControlType ?? '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Standard rating capacity 20c</th>
-					<td class="govuk-table__cell">{{ data?.standardRatingCapacity35C ? `${data.standardRatingCapacity35C} kW` : '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Minimum modulation rate</th>
-					<td class="govuk-table__cell">{{ data?.minimumModulationRate35 ?? '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Temp return feed max</th>
-					<td class="govuk-table__cell">{{ data?.tempReturnFeedMax ?? '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Min temp diff flow return for hp to operate</th>
-					<td class="govuk-table__cell">{{ data?.minTempDiffFlowReturnForHpToOperate ?? '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Power heating warm air fan</th>
-					<td class="govuk-table__cell">{{ data?.powerHeatingWarmAirFan ?? '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Power standby</th>
-					<td class="govuk-table__cell">{{ data?.powerStandby ? `${data.powerStandby} kW` : '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Power off</th>
-					<td class="govuk-table__cell">{{ data?.powerOff ? `${data.powerOff} kW` : '-' }}</td>
-				</tr>
-			</tbody>
-		</table>
+	<ProductDetails :data="tableData" />
 
-		<table class="govuk-table">
-			<tbody class="govuk-table__body">
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Sink type</th>
-					<td class="govuk-table__cell">{{ data?.sinkType ?? '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Modulating control</th>
-					<td class="govuk-table__cell">{{ data?.modulatingControl ?? '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Standard rating capacity 35c</th>
-					<td class="govuk-table__cell">{{ data?.standardRatingCapacity35C ? `${data.standardRatingCapacity35C} kW` : '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Time constant on/off rate</th>
-					<td class="govuk-table__cell">{{ data?.timeConstantOnOffOperation ?? '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Temp lower operating limit</th>
-					<td class="govuk-table__cell">{{ data?.tempLowerOperatingLimit ?? '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Var flow temp control during test</th>
-					<td class="govuk-table__cell">{{ data?.varFlowTempCtrlDuringTest ?? '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Power source circ pump</th>
-					<td class="govuk-table__cell">{{ data?.powerSourceCircPump ?? '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Power crankcase heater</th>
-					<td class="govuk-table__cell">{{ data?.powerCrankcaseHeater ? `${data.powerCrankcaseHeater} kW` : '-' }}</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table__header">Power max backup</th>
-					<td class="govuk-table__cell">{{ data?.powerMaximumBackup ? `${data.powerMaximumBackup} kW` : '-' }}</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
 	<div class="govuk-button-group">
 		<GovButton
 			test-id="backToHeatPumpButton"
@@ -143,15 +96,3 @@ const selectProduct = () => {
 		</GovButton>
 	</div>
 </template>
-
-<style lang="scss" scoped>
-	.product-table-container {
-		margin: 25px 0;
-		display: flex;
-		gap: 50px;
-	}
-
-	.govuk-table__header {
-		width: 50%;
-	}
-</style>

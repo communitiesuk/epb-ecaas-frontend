@@ -91,21 +91,21 @@ describe("Products page", () => {
 				brandName: "Test",
 				modelName: "Small Heat Pump",
 				modelQualifier: "HPSMALL",
-				technologyType: "air source heat pumps",
+				technologyType: "AirSourceHeatPump",
 			},
 			{
 				id: "1001",
 				brandName: "Test",
 				modelName: "Medium Heat Pump",
 				modelQualifier: "HPMEDIUM",
-				technologyType: "air source heat pumps",
+				technologyType: "AirSourceHeatPump",
 			},
 			{
 				id: "1002",
 				brandName: "Test",
 				modelName: "Large Heat Pump",
 				modelQualifier: "HPLARGE",
-				technologyType: "air source heat pumps",
+				technologyType: "AirSourceHeatPump",
 			},
 		];
 
