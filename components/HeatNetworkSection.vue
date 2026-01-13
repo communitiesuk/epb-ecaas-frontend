@@ -16,7 +16,7 @@ const heatNetworkTypeOptions = {
 	"sleevedDistrict": "Sleeved district heat network",
 	"unsleevedDistrict": "Unsleeved district heat network",
 	"communal": "Communal heat network",
-} as const satisfies Record<HeatNetworkType, HeatNetworkTypeDisplay>;
+} as const satisfies Record<TypeOfHeatNetwork, HeatNetworkTypeDisplay>;
 
 const emit = defineEmits(["update-heat-network-model"]);
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AdjacentSpaceType, BoilerType, BoilerTypeDisplay, HeatSourceData } from "#imports";
+import type { AdjacentSpaceType, TypeOfBoiler, BoilerTypeDisplay, HeatSourceData } from "#imports";
 import { uniqueName } from "#imports";
 import type { BoilerLocationDisplay } from "~/utils/display";
 const route = useRoute();
@@ -16,7 +16,7 @@ const index = getStoreIndex(heatSourceStoreData);
 const boilerTypeOptions = {
 	"combiBoiler": "Combi boiler",
 	"regularBoiler": "Regular boiler",
-} as const satisfies Record<BoilerType, BoilerTypeDisplay>;
+} as const satisfies Record<TypeOfBoiler, BoilerTypeDisplay>;
 
 const locationOfBoilerOptions = {
 	"heatedSpace": "Heated space",

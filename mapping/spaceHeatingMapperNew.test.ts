@@ -1,4 +1,3 @@
-import { HeatNetworkType } from "./../stores/ecaasStore.schema";
 import {
   mapBoilers,
   mapHeatBatteries,

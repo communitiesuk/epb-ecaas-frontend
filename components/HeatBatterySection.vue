@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { uniqueName } from "#imports";
-import type { HeatBatteryType } from "~/stores/ecaasStore.schema";
+import type { TypeOfHeatBattery  } from "~/stores/ecaasStore.schema";
 import type { HeatBatteryTypeDisplay } from "~/utils/display";
 
 const route = useRoute();
@@ -18,7 +18,7 @@ const index = getStoreIndex(heatSourceStoreData);
 const heatBatteryTypeOptions = {
 	"pcm": "PCM",
 	"dryCore": "Dry core",
-} as const satisfies Record<HeatBatteryType, HeatBatteryTypeDisplay>;
+} as const satisfies Record<TypeOfHeatBattery, HeatBatteryTypeDisplay>;
 
 const emit = defineEmits(["update-heat-battery-model"]);
 

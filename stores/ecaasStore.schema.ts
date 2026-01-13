@@ -870,15 +870,15 @@ export type spaceHeatingNew = AssertEachKeyIsPageId<{
 	heatingControls: EcaasFormList<HeatingControlData>
 }>;
 
-const boilerType = z.enum(["combiBoiler", "regularBoiler"]);
-const heatNetworkType = z.enum(["sleevedDistrict", "unsleevedDistrict", "communal"]);
-const heatBatteryType = z.enum(["pcm", "dryCore"]);
-const locationOfCollectorLoopPipingType = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
+const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
+const typeOfHeatNetwork = z.enum(["sleevedDistrict", "unsleevedDistrict", "communal"]);
+const typeOfHeatBattery = z.enum(["pcm", "dryCore"]);
+const typeOflocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
 
-export type BoilerType = z.infer<typeof boilerType>;
-export type HeatNetworkType = z.infer<typeof heatNetworkType>;
-export type HeatBatteryType = z.infer<typeof heatBatteryType>;
-export type LocationOfCollectorLoopPipingType = z.infer<typeof locationOfCollectorLoopPipingType>;
+export type TypeOfBoiler = z.infer<typeof typeOfBoiler>;
+export type TypeOfHeatNetwork = z.infer<typeof typeOfHeatNetwork>;
+export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;
+export type LocationOfCollectorLoopPipingType = z.infer<typeof typeOflocationOfLoopPiping>;
 
 export enum HeatSourceType {
 	heatPump = "heatPump",
@@ -905,13 +905,13 @@ const heatPumpBase = 	namedWithId.extend({
 
 const boilerBase = namedWithId.extend({
 	typeOfHeatSource: z.literal(HeatSourceType.boiler),
-	typeOfBoiler: boilerType,
+	typeOfBoiler: typeOfBoiler,
 	productReference: z.string().trim().min(1),
 	locationOfBoiler: z.enum([AdjacentSpaceType.heatedSpace, AdjacentSpaceType.unheatedSpace]),
 })
 const heatBatteryBase = namedWithId.extend({
 	typeOfHeatSource: z.literal(HeatSourceType.heatBattery),
-	typeOfHeatBattery: heatBatteryType,
+	typeOfHeatBattery: typeOfHeatBattery,
 	productReference: z.string().trim().min(1),
 	numberOfUnits: z.number(),
 	energySupply: fuelTypeWithElecZod,
@@ -919,7 +919,7 @@ const heatBatteryBase = namedWithId.extend({
 
 const solarThermalSystemBase = 	namedWithId.extend({
 	typeOfHeatSource: z.literal(HeatSourceType.solarThermalSystem),
-	locationOfCollectorLoopPiping: locationOfCollectorLoopPipingType,
+	locationOfCollectorLoopPiping: typeOflocationOfLoopPiping,
 	collectorModuleArea: z.number(),
 	numberOfCollectorModules: z.number(),
 	peakCollectorEfficiency: fraction,
@@ -936,7 +936,7 @@ const solarThermalSystemBase = 	namedWithId.extend({
 
 const heatNetworkBase = namedWithId.extend({
 	typeOfHeatSource: z.literal(HeatSourceType.heatNetwork),
-	typeOfHeatNetwork: heatNetworkType,
+	typeOfHeatNetwork: typeOfHeatNetwork,
 });
 
 const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [

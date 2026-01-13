@@ -39,7 +39,7 @@ export type HeatSourceFormData = {
 	typeOfHeatSource: HeatSourceType;
 	name?: string;
 	typeOfHeatPump?: HeatPumpType;
-	typeOfBoiler?: BoilerType;
-	typeOfHeatNetwork?: HeatNetworkType;
-	typeOfHeatBattery?: HeatBatteryType;
+	typeOfBoiler?: TypeOfBoiler;
+	typeOfHeatNetwork?: TypeOfHeatNetwork;
+	typeOfHeatBattery?: TypeOfHeatBattery;
 };
