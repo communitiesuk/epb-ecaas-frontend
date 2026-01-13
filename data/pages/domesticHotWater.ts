@@ -2,6 +2,7 @@ import { PageType  } from "./pages.types";
 import type { Page } from "./pages.types";
 
 const domesticHotWaterPages = [
+	// NEW HOT WATER START =======================================================================
 	{
 		id: "domesticHotWaterNew",
 		title: "Domestic hot water NEW",
@@ -9,6 +10,15 @@ const domesticHotWaterPages = [
 		type: PageType.Section,
 		parentId: "taskList",
 	},
+	{
+		id: "waterStorage",
+		title: "Water Storage",
+		url: "/water-storage",
+		type: PageType.Section,
+		parentId: "domesticHotWaterNew",
+	},
+
+	// OLD HOT WATER START =======================================================================
 	{
 		id: "domesticHotWater",
 		title: "Domestic hot water",

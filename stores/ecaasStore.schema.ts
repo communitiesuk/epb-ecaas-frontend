@@ -547,17 +547,37 @@ export type SpaceCoolingSystemData = z.infer<typeof spaceCoolingSystemData>;
 
 export type SpaceHeatControlSystemData = z.infer<typeof spaceHeatControlSystemData>;
 
-export interface DomesticHotWaterNew {
-	// waterHeating: WaterHeatingNew;
-	waterStorage: WaterStorage;
-	hotWaterOutlets: HotWaterOutlets;
-	pipework: Pipework;
-}
+// NEW HOT WATER START =======================================================================
 
-export type WaterStorage = AssertFormKeysArePageIds<{
-	hotWaterCylinder: EcaasFormList<HotWaterCylinderData>;
-	smartHotWaterTank: EcaasFormList<SmartHotWaterTankData>;
+export type DomesticHotWaterNew = AssertEachKeyIsPageId<{
+	// waterHeating: WaterHeatingNew;
+	waterStorage: EcaasFormList<WaterStorageData>;
+	// hotWaterOutlets: EcaasFormList<HotWaterOutletsData>;
+	// pipework: EcaasFormList<PipeworkData>;
 }>;
+
+const hotWaterCylinderDataZod = namedWithId.extend({
+	heatSource: z.string(),
+	storageCylinderVolume: z.union([zodUnit("volume"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	dailyEnergyLoss: z.number(),
+});
+
+export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
+
+const smartHotWaterTankDataZod = named;
+
+export type SmartHotWaterTankData = z.infer<typeof smartHotWaterTankDataZod>;
+
+const waterStorageDataZod = z.discriminatedUnion("typeOfWaterStorage", [
+	hotWaterCylinderDataZod,
+	smartHotWaterTankDataZod,
+]);
+
+export type WaterStorageData = z.infer<typeof waterStorageDataZod>;
+
+// NEW HOT WATER END   =======================================================================
+
+// OLD HOT WATER START =======================================================================
 
 export interface DomesticHotWater {
 	waterHeating: WaterHeating;
@@ -577,14 +597,6 @@ export type WaterHeating = AssertFormKeysArePageIds<{
 	smartHotWaterTank: EcaasFormList<SmartHotWaterTankData>;
 	heatInterfaceUnit: EcaasFormList<WaterHeatingHeatInterfaceUnitData>;
 }>;
-
-const hotWaterCylinderDataZod = namedWithId.extend({
-	heatSource: z.string(),
-	storageCylinderVolume: z.union([zodUnit("volume"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-	dailyEnergyLoss: z.number(),
-});
-
-export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
 
 const immersionHeaterPosition = z.enum(["top", "middle", "bottom"]);
 
@@ -620,10 +632,6 @@ export type CombiBoilerData = z.infer<typeof combiBoilerDataZod>;
 const waterHeatingHeatBatteryDataZod = named;
 
 export type WaterHeatingHeatBatteryData = z.infer<typeof waterHeatingHeatBatteryDataZod>;
-
-const smartHotWaterTankDataZod = named;
-
-export type SmartHotWaterTankData = z.infer<typeof smartHotWaterTankDataZod>;
 
 const waterHeatingHeatInterfaceUnitDataZod = named;
 
@@ -698,6 +706,8 @@ const wwhrsDataZod = z.object({
 });
 
 export type WwhrsData = z.infer<typeof wwhrsDataZod>;
+
+// OLD HOT WATER END =======================================================================
 
 export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	mechanicalVentilation: EcaasFormList<MechanicalVentilationData>;
@@ -1012,8 +1022,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingDetails/shading": shadingDataZod,
 	"dwellingDetails/appliances": appliancesDataZod,
 
-	"domesticHotWaterNew/waterStorage/hotWaterCylinder": hotWaterCylinderDataZod,
-	"domesticHotWaterNew/waterStorage/smartHotWaterTank": smartHotWaterTankDataZod,
+	"domesticHotWaterNew/waterStorage": waterStorageDataZod,
 	// "domesticHotWater/waterHeating/combiBoiler": combiBoilerDataZod,
 	// "domesticHotWater/waterHeating/heatBattery": waterHeatingHeatBatteryDataZod,
 	// "domesticHotWater/waterHeating/heatInterfaceUnit": waterHeatingHeatInterfaceUnitDataZod,
@@ -1021,12 +1030,12 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	// "domesticHotWater/waterHeating/immersionHeater": immersionHeaterDataZod,
 	// "domesticHotWater/waterHeating/pointOfUse": pointOfUseDataZod,
 	// "domesticHotWater/waterHeating/solarThermal": solarThermalDataZod,
-	"domesticHotWaterNew/hotWaterOutlets/mixedShower": mixedShowerDataZod,
-	"domesticHotWaterNew/hotWaterOutlets/electricShower": electricShowerDataZod,
-	"domesticHotWaterNew/hotWaterOutlets/bath": bathDataZod,
-	"domesticHotWaterNew/hotWaterOutlets/otherOutlets": otherHotWaterOutletDataZod,
-	"domesticHotWaterNew/pipework/primaryPipework": primaryPipeworkDataZod,
-	"domesticHotWaterNew/pipework/secondaryPipework": secondaryPipeworkDataZod,
+	// "domesticHotWaterNew/hotWaterOutlets/mixedShower": mixedShowerDataZod,
+	// "domesticHotWaterNew/hotWaterOutlets/electricShower": electricShowerDataZod,
+	// "domesticHotWaterNew/hotWaterOutlets/bath": bathDataZod,
+	// "domesticHotWaterNew/hotWaterOutlets/otherOutlets": otherHotWaterOutletDataZod,
+	// "domesticHotWaterNew/pipework/primaryPipework": primaryPipeworkDataZod,
+	// "domesticHotWaterNew/pipework/secondaryPipework": secondaryPipeworkDataZod,
 	// "domesticHotWater/wwhrs": wwhrsDataZod,
 
 	"domesticHotWater/waterHeating/hotWaterCylinder": hotWaterCylinderDataZod,

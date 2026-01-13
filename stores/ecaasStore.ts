@@ -25,19 +25,14 @@ export function getInitialState(): EcaasState {
 			// waterHeating: {
 			// },
 			waterStorage: { 
-				hotWaterCylinder: { data: [] },
-				smartHotWaterTank: { data: [] },
+				data: [],
 			},
-			hotWaterOutlets: {
-				mixedShower: { data: [] },
-				electricShower: { data: [] },
-				bath: { data: [] },
-				otherOutlets: { data: [] },
-			},
-			pipework: {
-				primaryPipework: { data: [] },
-				secondaryPipework: { data: [] },
-			},
+			// hotWaterOutlets: {
+			// 	data: [],
+			// },
+			// pipework: {
+			// 	data: [],
+			// },
 		},
 		domesticHotWater: {
 			waterHeating: {

@@ -1,5 +1,5 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import DomesticHotWater from "@/pages/domestic-hot-water/index.vue";
+import DomesticHotWater from "@/pages/domestic-hot-water-new/index.vue";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 
