@@ -7,6 +7,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type SpaceHeatingType = keyof typeof store.spaceHeatingNew;
+type SpaceHeatingData = EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> & EcaasForm<HeatingControlData>;
 
 const { hotWaterCylinder } = store.domesticHotWater.waterHeating;
 // const { wetDistribution } = store.spaceHeatingNew.heatEmitting;
@@ -33,9 +34,9 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 	}
 };
 
-function handleDuplicate(index: number) {
+function handleDuplicate<T extends SpaceHeatingData>(spaceHeatingType: SpaceHeatingType, index: number) {
 
-	const { data } = store.spaceHeatingNew.heatSource;
+	const { data } = store.spaceHeatingNew[spaceHeatingType];
 	const item = data?.[index];
 
 	if (item) {
@@ -43,12 +44,16 @@ function handleDuplicate(index: number) {
 
 		store.$patch((state) => {
 			const newItem = {
-				data: { ...item.data, name: `${item.data.name} (${duplicates.length})`, id: uuidv4() },
-				complete: item.complete
-			} as EcaasForm<HeatSourceData>
+				complete: item.complete,
+				data: {
+					...item.data,
+					name: `${item.data.name} (${duplicates.length})`,
+					id: uuidv4(),
+				},
+			} as T;
 
-			state.spaceHeatingNew.heatSource.data.push(newItem)
-			state.spaceHeatingNew.heatSource.complete = false;
+			state.spaceHeatingNew[spaceHeatingType].data.push(newItem);
+			state.spaceHeatingNew[spaceHeatingType].complete = false;
 		});
 	}
 }
@@ -57,25 +62,26 @@ function handleComplete() {
 	store.$patch({
 		spaceHeatingNew: {
 			heatSource: { complete: true },
+			heatEmitters: { complete: true },
 			heatingControls: { complete: true },
 		},
 	});
 
 	navigateTo("/space-heating-new");
-};
+}
 
 function checkIsComplete() {
 	const generators = store.spaceHeatingNew;
-	return Object.values(generators).every(generator => generator.complete);
-};
+	return Object.values(generators).every((generator) => generator.complete);
+}
 
 function hasIncompleteEntries() {
 	const spaceHeatingTypes = store.spaceHeatingNew;
 
-	return Object.values(spaceHeatingTypes).some(
-		items => items.data.some(
-			item => isEcaasForm(item) ? !item.complete : false));
-};
+	return Object.values(spaceHeatingTypes).some((items) =>
+		items.data.some((item) => (isEcaasForm(item) ? !item.complete : false)),
+	);
+}
 </script>
 
 <template>
@@ -86,20 +92,59 @@ function hasIncompleteEntries() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<CustomList id="heatSource" title="Heat sources" :form-url="`${page?.url!}/heat-source`" :items="store.spaceHeatingNew.heatSource.data.map(x => ({
-		name: x.data?.name,
-		status: x.complete ? formStatus.complete : formStatus.inProgress
-	}))" :show-status="true" @duplicate="(index: number) => handleDuplicate(index)"
-		@remove="(index: number) => handleRemove('heatSource', index)" />
-	<CustomList id="heatSource" title="Heating controls" :form-url="`${page?.url!}/heating-controls`" :items="store.spaceHeatingNew.heatingControls.data.map(x => ({
-		name: x.data?.name,
-		status: x.complete ? formStatus.complete : formStatus.inProgress
-	}))" :show-status="true" :max-number-of-items=1 @remove="(index: number) => handleRemove('heatingControls', index)" />
+	<CustomList
+		id="heatSource"
+		title="Heat sources"
+		:form-url="`${page?.url!}/heat-source`"
+		:items="
+			store.spaceHeatingNew.heatSource.data.map((x) => ({
+				name: x.data?.name,
+				status: x.complete ? formStatus.complete : formStatus.inProgress,
+			}))
+		"
+		:show-status="true"
+		@duplicate="(index: number) => handleDuplicate('heatSource', index)"
+		@remove="(index: number) => handleRemove('heatSource', index)"
+	/>
+	<CustomList
+		id="heatEmitters"
+		title="Heat emitters"
+		:form-url="`${page?.url!}/heat-emitters`"
+		:items="
+			store.spaceHeatingNew.heatEmitters.data.map((x) => ({
+				name: x.data?.name,
+				status: x.complete ? formStatus.complete : formStatus.inProgress,
+			}))
+		"
+		:show-status="true"
+		@duplicate="(index: number) => handleDuplicate('heatEmitters', index)"
+		@remove="(index: number) => handleRemove('heatEmitters', index)"
+	/>
+	<CustomList
+		id="heatingControl"
+		title="Heating controls"
+		:form-url="`${page?.url!}/heating-controls`"
+		:items="
+			store.spaceHeatingNew.heatingControls.data.map((x) => ({
+				name: x.data?.name,
+				status: x.complete ? formStatus.complete : formStatus.inProgress,
+			}))
+		"
+		:show-status="true"
+		:max-number-of-items="1"
+		@remove="(index: number) => handleRemove('heatingControls', index)"
+	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/" secondary>
-			Return to overivew
-		</GovButton>
-		<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
-		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete" />
+		<GovButton href="/" secondary> Return to overivew </GovButton>
+		<NuxtLink
+			:to="`${page?.url}/summary`"
+			class="govuk-button govuk-button--secondary"
+		>View summary</NuxtLink
+		>
+		<CompleteElement
+			:is-complete="checkIsComplete()"
+			:disabled="hasIncompleteEntries()"
+			@completed="handleComplete"
+		/>
 	</div>
 </template>

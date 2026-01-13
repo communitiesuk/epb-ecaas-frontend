@@ -91,6 +91,7 @@ export function getInitialState(): EcaasState {
 		},
 		spaceHeatingNew: {
 			heatSource: { data: [] },
+			heatEmitters: { data: [] },
 			heatingControls: { data: [] },
 		},
 		cooling: {

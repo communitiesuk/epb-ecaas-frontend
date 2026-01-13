@@ -241,6 +241,85 @@ describe("space heating", () => {
 		});
 	});
 
+	describe("heat emitters", async () => {
+
+		const heatEmitter1 = {
+			data: {
+				name: "Heat emitter 1",
+			},
+			complete: false,
+		};
+		const heatEmitter2 = {
+			data: {
+				name: "Heat emitter 2",
+			},
+			complete: false,
+		};
+		const heatEmitter3 = {
+			data: {
+				name: "Heat emitter 3",
+			},
+			complete: false,
+		};
+
+		afterEach(() => {
+			store.$reset();
+		});
+
+		it("should remove heat emitter when remove link is clicked", async () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatEmitters: {
+						data: [heatEmitter1],
+					},
+				},
+			});
+			await renderSuspended(SpaceHeatingNew);
+			expect(screen.getAllByTestId("heatEmitters_items")).toBeDefined();
+
+			await user.click(screen.getByTestId("heatEmitters_remove_0"));
+			expect(screen.queryByTestId("heatEmitters_items")).toBeNull();
+		});
+
+		it("should only remove the heat emitter that is clicked if there are multiple heat emitters", async () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatEmitters: {
+						data: [heatEmitter1, heatEmitter2, heatEmitter3],
+					},
+				},
+			});
+			await renderSuspended(SpaceHeatingNew);
+			await user.click(screen.getByTestId("heatEmitters_remove_1"));
+
+			expect(screen.getByText("Heat emitter 1")).toBeDefined();
+			expect(screen.getByText("Heat emitter 3")).toBeDefined();
+			expect(screen.queryByText("Heat emitter 2")).toBeNull();
+		});
+
+		it("should duplicate the correct heat emitter when duplicate link is clicked", async () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatEmitters: {
+						data: [heatEmitter1, heatEmitter2],
+					},
+				},
+			});
+			await renderSuspended(SpaceHeatingNew);
+			await userEvent.click(screen.getByTestId("heatEmitters_duplicate_0"));
+			await userEvent.click(screen.getByTestId("heatEmitters_duplicate_0"));
+			await userEvent.click(screen.getByTestId("heatEmitters_duplicate_2"));
+			await userEvent.click(screen.getByTestId("heatEmitters_duplicate_2"));
+
+			expect(screen.queryAllByTestId("heatEmitters_item").length).toBe(6);
+			expect(screen.getByText("Heat emitter 1")).toBeDefined();
+			expect(screen.getByText("Heat emitter 1 (1)")).toBeDefined();
+			expect(screen.getByText("Heat emitter 1 (2)")).toBeDefined();
+			expect(screen.getByText("Heat emitter 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Heat emitter 1 (1) (2)")).toBeDefined();
+		});
+	});
+
 	describe("mark space heating as complete", () => {
 		beforeEach(async () => {
 			await renderSuspended(SpaceHeatingNew);

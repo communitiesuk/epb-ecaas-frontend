@@ -31,6 +31,13 @@ const spaceHeatingNewPages = [
 		parentId: "spaceHeatingNew",
 	},
 	{
+		id: "heatEmitters",
+		title: "Heat emitter",
+		url: "/space-heating-new/heat-source/:heatEmitter",
+		type: PageType.Task,
+		parentId: "spaceHeatingNew",
+	},
+	{
 		id: "heatingControls",
 		title: "Heating controls",
 		url: "/space-heating-new/heating-controls",

@@ -866,6 +866,7 @@ export type WetDistributionData = z.infer<typeof wetDistributionDataZod>;
 
 export type spaceHeatingNew = AssertEachKeyIsPageId<{
 	heatSource: EcaasFormList<HeatSourceData>,
+	heatEmitters: EcaasFormList<HeatEmittingData>
 	heatingControls: EcaasFormList<HeatingControlData>
 }>;
 
@@ -975,6 +976,10 @@ export type HeatBatteryType = z.infer<typeof heatBatteryType>;
 export type LocationOfCollectorLoopPipingType = z.infer<typeof locationOfCollectorLoopPipingType>;
 
 export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
+
+const baseHeatEmitting = namedWithId;
+
+export type HeatEmittingData = z.infer<typeof baseHeatEmitting>;
 
 const heatingControlType = z.enum(["separateTemperatureControl", "separateTimeAndTemperatureControl"]);
 
@@ -1157,6 +1162,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"spaceHeating/heatEmitting/electricStorageHeater": electricStorageHeaterDataZod,
 	"spaceHeating/heatEmitting/warmAirHeatPump": warmAirHeatPumpDataZod,
 	"spaceHeatingNew/heatSource": heatSourceDataZod,
+	"spaceHeatingNew/heatEmitters": baseHeatEmitting,
 	"spaceHeatingNew/heatingControls": heatingControlsDataZod,
 	"cooling/airConditioning": airConditioningDataZod,
 	"pvAndBatteries/pvSystems": pvSystemDataZod,
