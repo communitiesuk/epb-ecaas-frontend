@@ -3,10 +3,10 @@ import { screen, within } from "@testing-library/vue";
 import SpaceHeatingSummary from "./summary.vue";
 import { degrees } from "~/utils/units/angle";
 
-type expectedData = { [key: string]: string };
+type ExpectedData = { [key: string]: string };
 const verifyDataInSection = async (
 	section: string,
-	expectedSectionData: expectedData,
+	expectedSectionData: ExpectedData,
 ) => {
 	for (const [key, value] of Object.entries(expectedSectionData)) {
 		const lineResult = screen.queryByTestId(

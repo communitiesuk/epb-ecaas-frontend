@@ -1,5 +1,5 @@
 import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
-import Products from "./[products].vue"
+import Products from "./[products].vue";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";

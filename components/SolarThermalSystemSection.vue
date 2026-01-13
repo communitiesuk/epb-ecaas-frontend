@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const { getStoreIndex } = useForm();
 
 defineProps<{
-	model: Extract<HeatSourceData, { "typeOfHeatSource": HeatSourceType.solarThermalSystem}>;
+	model: Extract<HeatSourceData, { "typeOfHeatSource": HeatSourceType.solarThermalSystem }>;
 }>();
 
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
@@ -134,6 +134,6 @@ const locationOfCollectorLoopPipingOptions = {
 		validation="required | number | min:0 | max: 90"
 		suffix-text="°"
 		data-field="Zone.BuildingElement.*.pitch"
-		/>
+	/>
 	<FieldsOrientation details-caption="To define the orientation, measure the angle of the panel clockwise from true North, accurate to the nearest degree. If the panel is facing true north then the orientation is 0°. If the panel is facing south then the orientation is 180°." cleared-non-llm />
 </template>

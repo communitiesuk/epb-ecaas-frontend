@@ -191,7 +191,7 @@ const heatingControlsSummary: SummarySection = {
 	id: "heatingControls",
 	label: "Heating controls",
 	data: {
-		"Type of heating control": heatingControls.length ? displayCamelToSentenceCase(heatingControls[0]?.data.heatingControlType!) : emptyValueRendering,
+		"Type of heating control": typeof heatingControls[0] !== "undefined" ? displayCamelToSentenceCase(show(heatingControls[0].data.heatingControlType)) : emptyValueRendering,
 	},
 	editUrl: heatingControlsUrl,
 };
@@ -213,7 +213,7 @@ const heatingControlsSummary: SummarySection = {
 				</template>
 			</SummaryTab>
 		</template>
-		<template v-for="section, i of sections">
+		<template v-for="section, i of sections" :key="i">
 			<SummaryTab :summary="section" :selected="tabProps.currentTab === i">
 				<template #empty>
 					<h2 class="govuk-heading-m">No heat sources added</h2>
