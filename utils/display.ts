@@ -249,15 +249,15 @@ export function displayProduct(product: DisplayProduct): ProductDisplayString {
 }
 
 
-export type colourDisplay = "Light" | "Medium" | "Dark";
+export type ColourDisplay = "Light" | "Medium" | "Dark";
 
 export const colourOptionsMap = {
 	"Light": "Light",
 	"Intermediate": "Medium",
 	"Dark": "Dark",
-} as const satisfies Record<SchemaColour, colourDisplay>;
+} as const satisfies Record<SchemaColour, ColourDisplay>;
 
-export function displayColour(colour: SchemaColour | undefined): colourDisplay | typeof emptyValueRendering {
+export function displayColour(colour: SchemaColour | undefined): ColourDisplay | typeof emptyValueRendering {
 	return colourOptionsMap[colour!] ?? emptyValueRendering;
 }
 

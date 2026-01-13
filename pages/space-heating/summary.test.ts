@@ -8,10 +8,10 @@ import { litrePerMinute } from "~/utils/units/flowRate";
 import { metresSquare } from "~/utils/units/area";
 import { userEvent } from "@testing-library/user-event";
 
-type expectedData = { [key: string]: string };
+type ExpectedData = { [key: string]: string };
 const verifyDataInSection = async (
 	section: string,
-	expectedSectionData: expectedData,
+	expectedSectionData: ExpectedData,
 ) => {
 	for (const [key, value] of Object.entries(expectedSectionData)) {
 		const lineResult = screen.queryByTestId(

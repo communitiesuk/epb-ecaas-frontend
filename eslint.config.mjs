@@ -23,7 +23,15 @@ export default withNuxt(
 			'no-useless-rename': 'error',
 			'no-unused-vars': 'off',
     		'@typescript-eslint/no-unused-vars': ['error'],
-			'@typescript-eslint/no-unnecessary-type-assertion': 'error'
+			'@typescript-eslint/no-unnecessary-type-assertion': 'error',
+			'@typescript-eslint/naming-convention': [
+				'error',
+				{
+					// TypeScript types should be PascalCase
+					'selector': 'typeLike',
+					'format': ['PascalCase']
+				}
+			]
 		}
 	}
 ).append({
