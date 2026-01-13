@@ -24,6 +24,34 @@ const domesticHotWaterPages = [
 		type: PageType.TaskGroup,
 		parentId: "domesticHotWaterNew",
 	},
+	{
+		id: "heatSources",
+		title: "Heat Sources",
+		url: "/domestic-hot-water-new/heat-sources/:heat-sources",
+		type: PageType.TaskGroup,
+		parentId: "domesticHotWaterNew",
+	},
+	{
+		id: "heatSourcesCreate",
+		title: "Heat Sources ",
+		url: "/domestic-hot-water-new/heat-sources/create",
+		type: PageType.TaskGroup,
+		parentId: "domesticHotWaterNew",
+	},
+	{
+		id: "hotWaterOutletsNew",
+		title: "Hot Water Outlets",
+		url: "/domestic-hot-water-new/hot-water-outlets",
+		type: PageType.TaskGroup,
+		parentId: "domesticHotWaterNew",
+	},
+	{
+		id: "pipeworkNew",
+		title: "Pipework",
+		url: "/domestic-hot-water-new/pipework",
+		type: PageType.TaskGroup,
+		parentId: "domesticHotWaterNew",
+	},
 
 	// OLD HOT WATER START =======================================================================
 	{

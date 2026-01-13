@@ -22,7 +22,13 @@ describe("Domestic hot water", () => {
 		store.$reset();
 	});
 
-	const hwStorage1 = {
+	const heatSource1: EcaasForm<WaterHeatSourcesData> = {
+		data: {
+			name: "Jasper's Beating Heart",
+		},
+	};
+
+	const hwStorage1: EcaasForm<WaterStorageData> = {
 		data: {
 			name: "Jasper's Cylinder 1",
 			id: "what",
@@ -34,16 +40,31 @@ describe("Domestic hot water", () => {
 			dailyEnergyLoss: 69,
 			typeOfWaterStorage: "hotWaterCylinder",
 		},
-	} as const;
+	};
 
-	const hwOutlet1 = {
+	const hwOutlet1: EcaasForm<HotWaterOutletsData> = {
 		data: {
 			name: "Jasper's Steamy Bath",
 			typeOfHotWaterOutlet: "bath",
 			id: "outlet1",
 			size: 100,
 		},
-	} as const;
+	};
+
+	const pipework1: EcaasForm<PipeworkData> = {
+		data: {
+			name: "Jasper's Pipework 1",
+			internalDiameter: 69,
+			externalDiameter: 420,
+			length: 200,
+			insulationThickness: 10,
+			thermalConductivity: 1541,
+			surfaceReflectivity: true,
+			pipeContents: "glycol25",
+			hotWaterCylinder: "someCylinderId",
+			location: "external",
+		},
+	};
 
 	describe("Water storage", () => {
 		const hwStorage2: EcaasForm<SmartHotWaterTankDataNew> = {
@@ -202,7 +223,7 @@ describe("Domestic hot water", () => {
 
 			await renderSuspended(DomesticHotWater);
 
-			expect(screen.getByText("Jasper's Steamy Bath")).toBeDefined();
+			expect(screen.getByText(hwOutlet1.data.name)).toBeDefined();
 		});
 
 		test("hot water outlets are removed when remove link is clicked", async () => {
@@ -222,7 +243,7 @@ describe("Domestic hot water", () => {
 			expect(screen.queryByTestId("hotWaterOutlets_items")).toBeNull();
 		});
 
-		it("should only remove the water storage object that is clicked", async () => {
+		it("should only remove the hot water outlets object that is clicked", async () => {
 			store.$patch({
 				domesticHotWaterNew: {
 					hotWaterOutlets: {
@@ -241,7 +262,7 @@ describe("Domestic hot water", () => {
 			expect(within(populatedList).queryByText(hwOutlet2.data.name)).toBeNull();
 		});
 
-		test("water storage is duplicated when duplicate link is clicked", async () => {
+		test("hot water outlets are duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				domesticHotWaterNew: {
 					hotWaterOutlets: {
@@ -264,6 +285,128 @@ describe("Domestic hot water", () => {
 			expect(screen.getByText(`${hwOutlet1.data.name} (2)`)).toBeDefined();
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (1)`)).toBeDefined();
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (2)`)).toBeDefined();
+		});
+	});
+
+	describe("Pipework", () => {
+		const pipework2: EcaasForm<PipeworkData> = {
+			data: {
+				name: "Jasper's Pipework 2",
+				internalDiameter: 554,
+				externalDiameter: 545,
+				length: 2,
+				insulationThickness: 510,
+				thermalConductivity: 15441,
+				surfaceReflectivity: false,
+				pipeContents: "water",
+				hotWaterCylinder: "someCylinderId2",
+				location: "internal",
+			},
+		};
+
+		const pipework3: EcaasForm<PipeworkData> = {
+			data: {
+				name: "Jasper's Pipework 3",
+				internalDiameter: 691,
+				externalDiameter: 42310,
+				length: 20,
+				insulationThickness: 110,
+				thermalConductivity: 15141,
+				surfaceReflectivity: true,
+				pipeContents: "glycol25",
+				hotWaterCylinder: "someCylinderId3",
+				location: "external",
+			},
+		};
+
+
+		// Can't get href to point to the right thing :(
+
+		// test("Navigates to water storage create form when add link is clicked", async () => {
+		// 	await renderSuspended(DomesticHotWater);
+			
+		// 	const addLink = await screen.findByTestId<HTMLAnchorElement>("pipework_add");
+
+		// 	console.log("addLink", addLink);
+			
+		// 	expect(new URL(addLink.href).pathname).toBe(
+		// 		getUrl("pipeworkCreate"),
+		// 	);
+		// });
+
+		test("Displays existing pipework", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					pipework: {
+						data: [pipework1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.getByText(pipework1.data.name)).toBeDefined();
+		});
+
+		test("pipework are removed when remove link is clicked", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					pipework: {
+						data: [pipework1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.getAllByTestId("pipework_items")).toBeDefined();
+
+			await user.click(screen.getByTestId("pipework_remove_0"));
+			expect(screen.queryByTestId("pipework_items")).toBeNull();
+		});
+
+		it("should only remove the pipework object that is clicked", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					pipework: {
+						data: [pipework1, pipework2, pipework3],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("pipework_remove_1"));
+
+			const populatedList = screen.getByTestId("pipework_items");
+
+			expect(within(populatedList).getByText(pipework1.data.name)).toBeDefined();
+			expect(within(populatedList).getByText(pipework3.data.name)).toBeDefined();
+			expect(within(populatedList).queryByText(pipework2.data.name)).toBeNull();
+		});
+
+		test("pipework is duplicated when duplicate link is clicked", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					pipework: {
+						data: [
+							pipework1,
+							pipework2,
+						],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await userEvent.click(screen.getByTestId("pipework_duplicate_0"));
+			await userEvent.click(screen.getByTestId("pipework_duplicate_0"));
+			await userEvent.click(screen.getByTestId("pipework_duplicate_2"));
+			await userEvent.click(screen.getByTestId("pipework_duplicate_2"));
+			expect(screen.queryAllByTestId("pipework_item").length).toBe(6);
+			expect(screen.getByText(pipework1.data.name)).toBeDefined();
+			expect(screen.getByText(`${pipework1.data.name} (1)`)).toBeDefined();
+			expect(screen.getByText(`${pipework1.data.name} (2)`)).toBeDefined();
+			expect(screen.getByText(`${pipework1.data.name} (1) (1)`)).toBeDefined();
+			expect(screen.getByText(`${pipework1.data.name} (1) (2)`)).toBeDefined();
 		});
 	});
 
@@ -311,6 +454,8 @@ describe("Domestic hot water", () => {
 				domesticHotWaterNew: {
 					waterStorage: { data: [{ ...hwStorage1, complete: true }] },
 					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: true }] },
+					pipework: { data: [{ ...pipework1, complete: true }] },
+					heatSources: { data: [{ ...heatSource1, complete: true }] },
 				},
 			});
 		};

@@ -8,7 +8,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type DomesticHotWaterType = keyof typeof store.domesticHotWaterNew;
-type DomesticHotWaterData = EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> //& EcaasForm<PipeworkData>;
+type DomesticHotWaterData = EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData>;
 
 function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number) {
 	const data = store.domesticHotWaterNew[domesticHotWaterType]?.data;
@@ -56,7 +56,8 @@ function handleComplete() {
 		domesticHotWaterNew: {
 			waterStorage: { complete: true },
 			hotWaterOutlets: { complete: true },
-			// pipework: { complete: true },
+			pipework: { complete: true },
+			heatSources: { complete: true },
 		},
 	});
 
@@ -133,6 +134,18 @@ const hasIncompleteEntries = () =>
 		:show-status="true"
 		@remove="(index: number) => handleRemove('hotWaterOutlets', index)"
 		@duplicate="(index: number) => handleDuplicate('hotWaterOutlets', index)"
+	/>
+
+	<CustomList 
+		id="pipework"
+		title="Pipework"
+		:form-url="`${page?.url!}/pipework`"
+		:items="store.domesticHotWaterNew.pipework.data
+			.filter(x => isEcaasForm(x))
+			.map(x=>({name: x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+		:show-status="true"
+		@remove="(index: number) => handleRemove('pipework', index)"
+		@duplicate="(index: number) => handleDuplicate('pipework', index)"
 	/>
 
 	<div class="govuk-button-group govuk-!-margin-top-6">

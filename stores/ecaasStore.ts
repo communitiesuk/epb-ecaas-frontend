@@ -22,17 +22,18 @@ export function getInitialState(): EcaasState {
 			airPermeability: { data: {} },
 		},
 		domesticHotWaterNew: {
-			// waterHeating: {
-			// },
+			heatSources: {
+				data: [],
+			},
 			waterStorage: { 
 				data: [],
 			},
 			hotWaterOutlets: {
 				data: [],
 			},
-			// pipework: {
-			// 	data: [],
-			// },
+			pipework: {
+				data: [],
+			},
 		},
 		domesticHotWater: {
 			waterHeating: {
