@@ -27,9 +27,9 @@ export function getInitialState(): EcaasState {
 			waterStorage: { 
 				data: [],
 			},
-			// hotWaterOutlets: {
-			// 	data: [],
-			// },
+			hotWaterOutlets: {
+				data: [],
+			},
 			// pipework: {
 			// 	data: [],
 			// },

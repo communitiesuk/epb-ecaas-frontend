@@ -23,12 +23,13 @@ describe("Domestic hot water summary", () => {
 	describe("water heating", () => {
 		const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
-		const hotWaterCylinder: HotWaterCylinderData = {
+		const hotWaterCylinder: HotWaterCylinderDataNew = {
 			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
 			name: "Hot water cylinder 1",
 			heatSource: heatPumpId,
 			storageCylinderVolume: 5,
 			dailyEnergyLoss: 1,
+			typeOfWaterStorage: "hotWaterCylinder",
 		};
 
 		const _immersionHeater: ImmersionHeaterData = {
@@ -176,35 +177,39 @@ describe("Domestic hot water summary", () => {
 	});
 
 	describe("hot water outlets", () => {
-		const mixedShower: EcaasForm<MixedShowerData> = {
+		const mixedShower: EcaasForm<MixedShowerDataNew> = {
 			data: {
 				id: "4a93532e-a370-4015-9778-854661bf1627",
 				name: "Mixer shower 1",
 				flowRate: 10,
+				typeOfHotWaterOutlet: "mixedShower",
 			},
 		};
 
-		const electricShower: EcaasForm<ElectricShowerData> = {
+		const electricShower: EcaasForm<ElectricShowerDataNew> = {
 			data: {
 				id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
 				name: "Electric shower 1",
 				ratedPower: 10,
+				typeOfHotWaterOutlet: "electricShower",
 			},
 		};
 
-		const bathData: EcaasForm<BathData> = {
+		const bathData: EcaasForm<BathDataNew> = {
 			data: {
 				id: "d3883380-885b-48fd-9425-9f9fac7587fb",
 				name: "Bath 1",
 				size: 170,
+				typeOfHotWaterOutlet: "bath",
 			},
 		};
 
-		const otherOutletsData: EcaasForm<OtherHotWaterOutletData> = {
+		const otherOutletsData: EcaasForm<OtherHotWaterOutletDataNew> = {
 			data: {
 				id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
 				name: "Basin tap 1",
 				flowRate: 10,
+				typeOfHotWaterOutlet: "otherHotWaterOutlet",
 			},
 		};
 

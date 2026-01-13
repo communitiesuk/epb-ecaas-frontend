@@ -552,28 +552,69 @@ export type SpaceHeatControlSystemData = z.infer<typeof spaceHeatControlSystemDa
 export type DomesticHotWaterNew = AssertEachKeyIsPageId<{
 	// waterHeating: WaterHeatingNew;
 	waterStorage: EcaasFormList<WaterStorageData>;
-	// hotWaterOutlets: EcaasFormList<HotWaterOutletsData>;
+	hotWaterOutlets: EcaasFormList<HotWaterOutletsData>;
 	// pipework: EcaasFormList<PipeworkData>;
 }>;
 
-const hotWaterCylinderDataZod = namedWithId.extend({
+const hotWaterCylinderDataZodNew = namedWithId.extend({
 	heatSource: z.string(),
 	storageCylinderVolume: z.union([zodUnit("volume"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
 	dailyEnergyLoss: z.number(),
+	typeOfWaterStorage: z.literal("hotWaterCylinder"),
 });
 
-export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
+export type HotWaterCylinderDataNew = z.infer<typeof hotWaterCylinderDataZodNew>;
 
-const smartHotWaterTankDataZod = named;
+const smartHotWaterTankDataZodNew = named.extend({
+	typeOfWaterStorage: z.literal("smartHotWaterTank"),
+	// likely needs extending
+});
 
-export type SmartHotWaterTankData = z.infer<typeof smartHotWaterTankDataZod>;
+export type SmartHotWaterTankDataNew = z.infer<typeof smartHotWaterTankDataZodNew>;
 
 const waterStorageDataZod = z.discriminatedUnion("typeOfWaterStorage", [
-	hotWaterCylinderDataZod,
-	smartHotWaterTankDataZod,
+	hotWaterCylinderDataZodNew,
+	smartHotWaterTankDataZodNew,
 ]);
 
 export type WaterStorageData = z.infer<typeof waterStorageDataZod>;
+
+const mixedShowerDataZodNew = namedWithId.extend({
+	typeOfHotWaterOutlet: z.literal("mixedShower"),
+	flowRate: z.number().min(8).max(15),
+});
+
+export type MixedShowerDataNew = z.infer<typeof mixedShowerDataZodNew>;
+
+const electricShowerDataZodNew = namedWithId.extend({
+	typeOfHotWaterOutlet: z.literal("electricShower"),
+	ratedPower: z.number().min(0).max(30),
+});
+
+export type ElectricShowerDataNew = z.infer<typeof electricShowerDataZodNew>;
+
+const bathDataZodNew = namedWithId.extend({
+	typeOfHotWaterOutlet: z.literal("bath"),
+	size: z.number().min(0).max(500),
+});
+
+export type BathDataNew = z.infer<typeof bathDataZodNew>;
+
+const otherHotWaterOutletDataZodNew = namedWithId.extend({
+	typeOfHotWaterOutlet: z.literal("otherHotWaterOutlet"),
+	flowRate: z.number().min(0).max(15),
+});
+
+export type OtherHotWaterOutletDataNew = z.infer<typeof otherHotWaterOutletDataZodNew>;
+
+const hotWaterOutletsDataZod = z.discriminatedUnion("typeOfHotWaterOutlet", [
+	mixedShowerDataZodNew,
+	electricShowerDataZodNew,
+	bathDataZodNew,
+	otherHotWaterOutletDataZodNew,
+]);
+
+export type HotWaterOutletsData = z.infer<typeof hotWaterOutletsDataZod>;
 
 // NEW HOT WATER END   =======================================================================
 
@@ -597,6 +638,18 @@ export type WaterHeating = AssertFormKeysArePageIds<{
 	smartHotWaterTank: EcaasFormList<SmartHotWaterTankData>;
 	heatInterfaceUnit: EcaasFormList<WaterHeatingHeatInterfaceUnitData>;
 }>;
+
+const hotWaterCylinderDataZod = namedWithId.extend({
+	heatSource: z.string(),
+	storageCylinderVolume: z.union([zodUnit("volume"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	dailyEnergyLoss: z.number(),
+});
+
+export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
+
+const smartHotWaterTankDataZod = named;
+
+export type SmartHotWaterTankData= z.infer<typeof smartHotWaterTankDataZod>;
 
 const immersionHeaterPosition = z.enum(["top", "middle", "bottom"]);
 
@@ -637,13 +690,6 @@ const waterHeatingHeatInterfaceUnitDataZod = named;
 
 export type WaterHeatingHeatInterfaceUnitData = z.infer<typeof waterHeatingHeatInterfaceUnitDataZod>;
 
-export type HotWaterOutlets = AssertFormKeysArePageIds<{
-	mixedShower: EcaasFormList<MixedShowerData>;
-	electricShower: EcaasFormList<ElectricShowerData>;
-	bath: EcaasFormList<BathData>;
-	otherOutlets: EcaasFormList<OtherHotWaterOutletData>;
-}>;
-
 const mixedShowerDataZod = namedWithId.extend({
 	flowRate: z.number().min(8).max(15),
 });
@@ -667,6 +713,13 @@ const otherHotWaterOutletDataZod = namedWithId.extend({
 });
 
 export type OtherHotWaterOutletData = z.infer<typeof otherHotWaterOutletDataZod>;
+
+export type HotWaterOutlets = AssertFormKeysArePageIds<{
+	mixedShower: EcaasFormList<MixedShowerData>;
+	electricShower: EcaasFormList<ElectricShowerData>;
+	bath: EcaasFormList<BathData>;
+	otherOutlets: EcaasFormList<OtherHotWaterOutletData>;
+}>;
 
 export type Pipework = AssertFormKeysArePageIds<{
 	primaryPipework: EcaasFormList<PrimaryPipeworkData>;
@@ -1030,10 +1083,8 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	// "domesticHotWater/waterHeating/immersionHeater": immersionHeaterDataZod,
 	// "domesticHotWater/waterHeating/pointOfUse": pointOfUseDataZod,
 	// "domesticHotWater/waterHeating/solarThermal": solarThermalDataZod,
-	// "domesticHotWaterNew/hotWaterOutlets/mixedShower": mixedShowerDataZod,
-	// "domesticHotWaterNew/hotWaterOutlets/electricShower": electricShowerDataZod,
-	// "domesticHotWaterNew/hotWaterOutlets/bath": bathDataZod,
-	// "domesticHotWaterNew/hotWaterOutlets/otherOutlets": otherHotWaterOutletDataZod,
+	"domesticHotWaterNew/hotWaterOutlets": hotWaterOutletsDataZod,
+
 	// "domesticHotWaterNew/pipework/primaryPipework": primaryPipeworkDataZod,
 	// "domesticHotWaterNew/pipework/secondaryPipework": secondaryPipeworkDataZod,
 	// "domesticHotWater/wwhrs": wwhrsDataZod,

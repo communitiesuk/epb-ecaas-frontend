@@ -1192,6 +1192,9 @@ describe("FHS input mapper", () => {
 			waterStorage: {
 				...baseForm,
 			},
+			hotWaterOutlets: {
+				...baseForm,
+			},
 		};
 
 		const domesticHotWater: DomesticHotWater = {
@@ -2107,6 +2110,9 @@ describe("FHS input mapper", () => {
 
 		const domesticHotWaterNew: DomesticHotWaterNew = {
 			waterStorage: {
+				...baseForm,
+			},
+			hotWaterOutlets: {
 				...baseForm,
 			},
 		};
