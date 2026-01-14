@@ -28,7 +28,7 @@ function handleDuplicate<T extends PipeworkData>(pipeworkType: PipeworkType, ind
 
 	if (pipeworkItem) {
 		const duplicates = pipework.filter(d => {
-			if(isEcaasForm(d) && isEcaasForm(pipeworkItem)) {
+			if (isEcaasForm(d) && isEcaasForm(pipeworkItem)) {
 				name = pipeworkItem.data.name;
 				return d.data.name.match(duplicateNamePattern(pipeworkItem.data.name));
 			}

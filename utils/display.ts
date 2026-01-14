@@ -132,7 +132,7 @@ export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): 
 }
 
 export function displayApplianceType(appliances: SchemaApplianceType[] | undefined) {
-	if(appliances === undefined) return emptyValueRendering;
+	if (appliances === undefined) return emptyValueRendering;
 	return appliances.map(appliance => displayApplianceKey(appliance)).join(", ");
 }
 
@@ -185,7 +185,7 @@ export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined
 
 	const result = fuelTypes.map(type => displayFuelType(type)).join(", ");
 	
-	if(!result.includes("Electricity")){
+	if (!result.includes("Electricity")){
 		return result + ", Electricity";
 	}
 	return result;

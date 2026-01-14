@@ -13,7 +13,7 @@ function handleRemove(outletType: HeatGenerationType, index: number) {
 	const outlets = store.spaceHeating.heatGeneration[outletType]?.data;
 
 	let heatPumpId;
-	if(outletType === "heatPump"){
+	if (outletType === "heatPump"){
 		heatPumpId = store.spaceHeating.heatGeneration.heatPump?.data[index]?.data.id;
 	}
 
@@ -25,7 +25,7 @@ function handleRemove(outletType: HeatGenerationType, index: number) {
 			state.spaceHeating.heatGeneration[outletType].complete = false;
 		});
 
-		if(heatPumpId) {
+		if (heatPumpId) {
 			store.removeTaggedAssociations()([ hotWaterCylinder, wetDistribution], heatPumpId, "heatSource");
 		}
 	}

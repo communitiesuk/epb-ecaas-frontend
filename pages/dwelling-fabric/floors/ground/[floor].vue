@@ -53,7 +53,7 @@ const saveForm = (fields: GroundFloorData) => {
 
 		let floorData: GroundFloorData;
 
-		switch(fields.typeOfGroundFloor) {
+		switch (fields.typeOfGroundFloor) {
 			case "Slab_edge_insulation":
 			{				
 				floorData = { 
