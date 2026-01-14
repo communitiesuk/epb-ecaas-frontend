@@ -28,7 +28,7 @@ describe("heatSource", () => {
 		const heatPump1: HeatSourceData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 			name: "Heat pump 1",
-			typeOfHeatSource: HeatSourceType.heatPump,
+			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "airSource",
 			productReference: "HEATPUMP-SMALL",
 		};
@@ -36,7 +36,7 @@ describe("heatSource", () => {
 		const heatPump2: HeatSourceData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 			name: "Heat pump 2",
-			typeOfHeatSource: HeatSourceType.heatPump,
+			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "airSource",
 			productReference: "HEATPUMP-LARGE",
 		};
@@ -94,7 +94,7 @@ describe("heatSource", () => {
 			expect(data[0]?.data).toEqual({
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Air source heat pump",
-				typeOfHeatSource: HeatSourceType.heatPump,
+				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "airSource",
 			});
 		});
@@ -311,19 +311,19 @@ describe("heatSource", () => {
 		const boiler1: HeatSourceData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
 			name: "Boiler 1",
-			typeOfHeatSource: HeatSourceType.boiler,
+			typeOfHeatSource: "boiler",
 			typeOfBoiler: "combiBoiler",
 			productReference: "BOILER_SMALL",
-			locationOfBoiler: AdjacentSpaceType.heatedSpace,
+			locationOfBoiler: "heatedSpace",
 		};
 
 		const boiler2: HeatSourceData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
 			name: "Boiler 2",
-			typeOfHeatSource: HeatSourceType.boiler,
+			typeOfHeatSource: "boiler",
 			typeOfBoiler: "combiBoiler",
 			productReference: "BOILER_MEDIUM",
-			locationOfBoiler: AdjacentSpaceType.heatedSpace,
+			locationOfBoiler: "heatedSpace",
 		};
 
 		test("'BoilerSection' component displays when type of heat source is boiler", async () => {
@@ -367,9 +367,9 @@ describe("heatSource", () => {
 			expect(data[0]?.data).toEqual({
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
 				name: "Combi boiler",
-				typeOfHeatSource: HeatSourceType.boiler,
+				typeOfHeatSource: "boiler",
 				typeOfBoiler: "combiBoiler",
-				locationOfBoiler: AdjacentSpaceType.heatedSpace,
+				locationOfBoiler: "heatedSpace",
 			});
 		});
 
@@ -571,7 +571,7 @@ describe("heatSource", () => {
 		const heatNetwork1: HeatSourceData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 			name: "Heat network 1",
-			typeOfHeatSource: HeatSourceType.heatNetwork,
+			typeOfHeatSource: "heatNetwork",
 			typeOfHeatNetwork: "communal",
 			isHeatNetworkInPcdb: true,
 			productReference: "HEATNETWORK-LARGE",
@@ -582,7 +582,7 @@ describe("heatSource", () => {
 		const heatNetwork2: HeatSourceData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c88",
 			name: "Heat network 2",
-			typeOfHeatSource: HeatSourceType.heatNetwork,
+			typeOfHeatSource: "heatNetwork",
 			typeOfHeatNetwork: "unsleevedDistrict",
 			isHeatNetworkInPcdb: false,
 			emissionsFactor: 1,
@@ -646,7 +646,7 @@ describe("heatSource", () => {
 			expect(data[0]?.data).toEqual({
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Communal heat network",
-				typeOfHeatSource: HeatSourceType.heatNetwork,
+				typeOfHeatSource: "heatNetwork",
 				typeOfHeatNetwork: "communal",
 				isHeatNetworkInPcdb: true,
 				energySupply: "electricity",
@@ -836,7 +836,7 @@ describe("heatSource", () => {
 		const heatBattery1: HeatSourceData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
 			name: "Heat battery 1",
-			typeOfHeatSource: HeatSourceType.heatBattery,
+			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "pcm",
 			productReference: "HEAT_BATTERY_SMALL",
 			numberOfUnits: 1,
@@ -846,7 +846,7 @@ describe("heatSource", () => {
 		const heatBattery2: HeatSourceData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c2222",
 			name: "Heat battery 2",
-			typeOfHeatSource: HeatSourceType.heatBattery,
+			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "dryCore",
 			productReference: "HEAT_BATTERY_MEDIUM",
 			numberOfUnits: 2,
@@ -893,7 +893,7 @@ describe("heatSource", () => {
 			expect(data[0]?.data).toEqual({
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
 				name: "Pcm heat battery",
-				typeOfHeatSource: HeatSourceType.heatBattery,
+				typeOfHeatSource: "heatBattery",
 				typeOfHeatBattery: "pcm",
 				productReference: "",
 				numberOfUnits: 1,
@@ -1116,7 +1116,7 @@ describe("heatSource", () => {
 		const solarThermalSystem1: HeatSourceData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
 			name: "Solar thermal system 1",
-			typeOfHeatSource: HeatSourceType.solarThermalSystem,
+			typeOfHeatSource: "solarThermalSystem",
 			locationOfCollectorLoopPiping: "outside",
 			collectorModuleArea: 1,
 			numberOfCollectorModules: 2,
@@ -1135,7 +1135,7 @@ describe("heatSource", () => {
 		const solarThermalSystem2: HeatSourceData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c4444",
 			name: "Solar thermal system 2",
-			typeOfHeatSource: HeatSourceType.solarThermalSystem,
+			typeOfHeatSource: "solarThermalSystem",
 			locationOfCollectorLoopPiping: "heatedSpace",
 			collectorModuleArea: 2,
 			numberOfCollectorModules: 4,
@@ -1190,7 +1190,7 @@ describe("heatSource", () => {
 			expect(data[0]?.data).toEqual({
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
 				name: "Solar thermal system",
-				typeOfHeatSource: HeatSourceType.solarThermalSystem,
+				typeOfHeatSource: "solarThermalSystem",
 				locationOfCollectorLoopPiping: "outside",
 				collectorModuleArea: 1,
 				numberOfCollectorModules: 2,
@@ -1212,7 +1212,7 @@ describe("heatSource", () => {
 			const heatPump: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Heat pump 1",
-				typeOfHeatSource: HeatSourceType.heatPump,
+				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "airSource",
 				productReference: "HEATPUMP-SMALL",
 			};
@@ -1419,7 +1419,7 @@ describe("heatSource", () => {
 		const heatPump: HeatSourceData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 			name: "Heat pump 1",
-			typeOfHeatSource: HeatSourceType.heatPump,
+			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "airSource",
 			productReference: "HEATPUMP-SMALL",
 		};

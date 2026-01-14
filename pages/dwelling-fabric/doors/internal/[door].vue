@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AdjacentSpaceType, getUrl, uniqueName } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 
 const title = "Internal door";
 const store = useEcaasStore();
@@ -26,7 +26,7 @@ const saveForm = (fields: InternalDoorData) => {
 
 		let door: EcaasForm<InternalDoorData>;
 
-		if (fields.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace) {
+		if (fields.typeOfInternalDoor === "unheatedSpace") {
 			door = {
 				data: {
 					...commonFields,
@@ -36,7 +36,7 @@ const saveForm = (fields: InternalDoorData) => {
 				},
 				complete: true,
 			};
-		} else if (fields.typeOfInternalDoor === AdjacentSpaceType.heatedSpace) {
+		} else if (fields.typeOfInternalDoor === "heatedSpace") {
 			door = {
 				data: {
 					...commonFields,
@@ -74,56 +74,35 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<FormKit
-		v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="internalDoorErrorSummary" />
-		<FormKit
-			id="typeOfInternalDoor" type="govRadios" :options="typeOfInternalDoorOptions" label="Type"
+		<FormKit id="typeOfInternalDoor" type="govRadios" :options="typeOfInternalDoorOptions" label="Type"
 			help="This affects which inputs are necessary." name="typeOfInternalDoor" validation="required" />
 		<template v-if="!!model?.typeOfInternalDoor">
-			<FormKit
-				id="name"
-				type="govInputText"
-				label="Name"
-				help="Provide a name for this element so that it can be identified later"
-				name="name"
-				:validation-rules="{ uniqueName: uniqueName(internalDoorData, { index }) }"
-				validation="required | uniqueName"
+			<FormKit id="name" type="govInputText" label="Name"
+				help="Provide a name for this element so that it can be identified later" name="name"
+				:validation-rules="{ uniqueName: uniqueName(internalDoorData, { index }) }" validation="required | uniqueName"
 				:validation-messages="{
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
-				}"
-			/>
-			<FieldsAssociatedElements
-				v-if="model.typeOfInternalDoor === AdjacentSpaceType.heatedSpace" id="associatedItemId"
+				}" />
+			<FieldsAssociatedElements v-if="model.typeOfInternalDoor === 'heatedSpace'" id="associatedItemId"
 				name="associatedItemId" label="Associated wall or ceiling"
 				help="Select the wall or ceiling that this door is in. It should have the same pitch as the door."
-				:adjacent-space-type="AdjacentSpaceType.heatedSpace" />
-			<FieldsAssociatedElements
-				v-if="model.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace"
-				id="associatedItemId" name="associatedItemId" label="Associated wall or ceiling"
+				:adjacent-space-type="'heatedSpace'" />
+			<FieldsAssociatedElements v-if="model.typeOfInternalDoor === 'unheatedSpace'" id="associatedItemId"
+				name="associatedItemId" label="Associated wall or ceiling"
 				help="Select the wall or ceiling that this door is in. It should have the same pitch as the door."
-				:adjacent-space-type="AdjacentSpaceType.unheatedSpace" />
-			<FormKit
-				id="surfaceArea"
-				type="govInputWithSuffix"
-				label="Net surface area of element"
+				:adjacent-space-type="'unheatedSpace'" />
+			<FormKit id="surfaceArea" type="govInputWithSuffix" label="Net surface area of element"
 				help="Enter the net area of the building element. The area of all windows should be subtracted before entry."
-				name="surfaceArea"
-				validation="required | number | min:0 | max:10000"
-				suffix-text="m²"
-				data-field="Zone.BuildingElement.*.area"
-			/>
-			<FieldsUValue
-				v-if="model.typeOfInternalDoor === 'unheatedSpace'"
-				id="uValue"
-				name="uValue"
-			/>
-			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
-			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+				name="surfaceArea" validation="required | number | min:0 | max:10000" suffix-text="m²"
+				data-field="Zone.BuildingElement.*.area" />
+			<FieldsUValue v-if="model.typeOfInternalDoor === 'unheatedSpace'" id="uValue" name="uValue" />
+			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
+			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
 		</template>
-		<FormKit
-			v-if="model?.typeOfInternalDoor === 'unheatedSpace'" id="thermalResistanceOfAdjacentUnheatedSpace"
+		<FormKit v-if="model?.typeOfInternalDoor === 'unheatedSpace'" id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix" suffix-text="(m²·K)/W" label="Thermal resistance of adjacent unheated space"
 			help="Enter the effective thermal resistance of the unheated space"
 			name="thermalResistanceOfAdjacentUnheatedSpace" validation="required | number | min:0 | max:3"

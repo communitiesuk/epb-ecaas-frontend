@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaL
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { ConciseMassDistributionClass, HeatPumpType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatPumpType } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -139,7 +139,8 @@ export function displayApplianceType(appliances: SchemaApplianceType[] | undefin
 type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;
 
 export function adjacentSpaceTypeOptions<T extends string>(element: T): Record<AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>> {
-	return objectFromEntries(Object.values(AdjacentSpaceType).map(key => [
+	const adjacentSpaceTypes : AdjacentSpaceType[] = ["heatedSpace", "unheatedSpace"];
+	return objectFromEntries(adjacentSpaceTypes.map(key => [
 		key,
 		displayAdjacentSpaceType(key, element)!,
 	] as const satisfies [AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>]));
@@ -298,4 +299,23 @@ export const heatSourceTypes = {
 
 export function displayHeatSourceType(type: HeatSourceType | undefined): HeatSourceTypeDisplay | typeof emptyValueRendering {
 	return heatSourceTypes[type!] ?? emptyValueRendering;
+}
+
+export type HeatEmitterDisplay = "Radiator" | "Underfloor heating" | "Fan coil"| "Warm air heater"|"Instant electric heater"|"Electric storage heater";
+
+export const heatEmitterTypes = {
+	"radiator": "Radiator",
+	"underfloorHeating": "Underfloor heating",
+	"fanCoil": "Fan coil",
+	"warmAirHeater": "Warm air heater",
+	"instantElectricHeater": "Instant electric heater",
+	"electricStorageHeater": "Electric storage heater",
+
+} as const satisfies Record<HeatEmitterType, HeatEmitterDisplay>;
+
+export function displayHeatEmitterType(type: HeatEmitterType | undefined): HeatEmitterDisplay | typeof emptyValueRendering {
+	if(!type){
+		return emptyValueRendering;
+	}
+	return heatEmitterTypes[type];
 }

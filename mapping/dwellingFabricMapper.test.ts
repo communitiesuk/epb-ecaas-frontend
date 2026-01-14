@@ -159,7 +159,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		const internalFloor: InternalFloorData = {
-			typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
+			typeOfInternalFloor: "unheatedSpace",
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
 			arealHeatCapacity: "Very light",
@@ -508,7 +508,7 @@ describe("dwelling fabric mapper", () => {
 		// Arrange
 		const ceiling: CeilingData = {
 			id: "ceiling-id",
-			type: AdjacentSpaceType.unheatedSpace,
+			type: "unheatedSpace",
 			name: "Ceiling 1",
 			surfaceArea: 5,
 			uValue: 1,
@@ -621,7 +621,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		const internalDoor: InternalDoorData = {
-			typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+			typeOfInternalDoor: "unheatedSpace",
 			name: "Internal 1",
 			associatedItemId: internalWall.data.id,
 			surfaceArea: 5,

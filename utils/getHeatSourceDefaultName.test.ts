@@ -4,7 +4,7 @@ describe("getHeatSourceDefaultName", () => {
 	test("returns only the heat source type when there is no heat source product type", async () => {
 		const item: HeatSourceFormData = { 
 			id: "123", 
-			typeOfHeatSource: HeatSourceType.solarThermalSystem, 
+			typeOfHeatSource: "solarThermalSystem", 
 		
 		};
 		const actual = getHeatSourceDefaultName(item);
@@ -15,7 +15,7 @@ describe("getHeatSourceDefaultName", () => {
 	test("returns the heat source product type followed by the heat source type", async () => {
 		const item: HeatSourceFormData = {
 			id: "123",
-			typeOfHeatSource: HeatSourceType.heatBattery,
+			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "dryCore",
 		};
 
@@ -27,7 +27,7 @@ describe("getHeatSourceDefaultName", () => {
 	test.skip("keeps acronyms capitalised", async () => {
 		const item: HeatSourceFormData = {
 			id: "123",
-			typeOfHeatSource: HeatSourceType.heatBattery,
+			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "pcm",
 		};
 
@@ -39,7 +39,7 @@ describe("getHeatSourceDefaultName", () => {
 	test("handles duplication", async () => {
 		const item: HeatSourceFormData = {
 			id: "123",
-			typeOfHeatSource: HeatSourceType.boiler,
+			typeOfHeatSource: "boiler",
 			typeOfBoiler: "combiBoiler",
 		};
 		

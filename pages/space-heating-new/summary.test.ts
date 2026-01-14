@@ -45,10 +45,10 @@ describe("Space heating summary page", () => {
 			const boiler1: HeatSourceData = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
 				name: "Boiler 1",
-				typeOfHeatSource: HeatSourceType.boiler,
+				typeOfHeatSource: "boiler",
 				typeOfBoiler: "combiBoiler",
 				productReference: "BOILER_SMALL",
-				locationOfBoiler: AdjacentSpaceType.heatedSpace,
+				locationOfBoiler: "heatedSpace",
 			};
 
 			const store = useEcaasStore();
@@ -82,7 +82,7 @@ describe("Space heating summary page", () => {
 			const heatPump1: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Heat pump 1",
-				typeOfHeatSource: HeatSourceType.heatPump,
+				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "airSource",
 				productReference: "HEAT_PUMP_SMALL",
 			};
@@ -116,7 +116,7 @@ describe("Space heating summary page", () => {
 			const heatBattery1: HeatSourceData = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
 				name: "Heat battery 1",
-				typeOfHeatSource: HeatSourceType.heatBattery,
+				typeOfHeatSource: "heatBattery",
 				typeOfHeatBattery: "pcm",
 				productReference: "HEAT_BATTERY_SMALL",
 				numberOfUnits: 1,
@@ -154,7 +154,7 @@ describe("Space heating summary page", () => {
 			const heatNetwork1: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Heat network 1",
-				typeOfHeatSource: HeatSourceType.heatNetwork,
+				typeOfHeatSource: "heatNetwork",
 				typeOfHeatNetwork: "communal",
 				isHeatNetworkInPcdb: true,
 				productReference: "HEAT_NETWORK-LARGE",
@@ -194,7 +194,7 @@ describe("Space heating summary page", () => {
 			const solarThermalSystem1: HeatSourceData = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
 				name: "Solar thermal system",
-				typeOfHeatSource: HeatSourceType.solarThermalSystem,
+				typeOfHeatSource: "solarThermalSystem",
 				locationOfCollectorLoopPiping: "outside",
 				collectorModuleArea: 1,
 				numberOfCollectorModules: 2,

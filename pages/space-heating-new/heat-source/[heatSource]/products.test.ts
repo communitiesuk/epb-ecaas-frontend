@@ -54,13 +54,13 @@ describe("Heat source products page", () => {
 	const heatSource1: Partial<HeatSourceData> = {
 		id: "463c94f6-566c-49b2-af27-222222222",
 		name: "Heat source 1",
-		typeOfHeatSource: HeatSourceType.heatPump,
+		typeOfHeatSource: "heatPump",
 		typeOfHeatPump: "airSource",
 	};
 	const heatSource2: Partial<HeatSourceData> = {
 		id: "463c94f6-566c-49b2-af27-111111111",
 		name: "Heat source 2",
-		typeOfHeatSource: HeatSourceType.heatPump,
+		typeOfHeatSource: "heatPump",
 		typeOfHeatPump: "airSource",
 	};
 

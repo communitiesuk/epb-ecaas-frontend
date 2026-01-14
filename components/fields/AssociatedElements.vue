@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { AdjacentSpaceType, getUrl } from "#imports";
+import type { AdjacentSpaceType } from "#imports";
+import { getUrl } from "#imports";
 
 const {
 	adjacentSpaceType,
@@ -23,15 +24,15 @@ const store = useEcaasStore();
 const { dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUnheatedSpace } = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
-const options = adjacentSpaceType === AdjacentSpaceType.heatedSpace ? [
+const options = adjacentSpaceType === "heatedSpace" ? [
 	dwellingSpaceInternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
 	dwellingSpaceCeilings.data
-		.filter(x => x.data.type === AdjacentSpaceType.heatedSpace)
+		.filter(x => x.data.type === "heatedSpace")
 		.map(x => [x.data.id, x.data.name] as [string, string]),
 ] : [
 	dwellingSpaceWallToUnheatedSpace.data.map(x => [x.data.id, x.data.name] as [string, string]),
 	dwellingSpaceCeilings.data
-		.filter(x => x.data.type === AdjacentSpaceType.unheatedSpace)
+		.filter(x => x.data.type === "unheatedSpace")
 		.map(x => [x.data.id, x.data.name] as [string, string]),
 	dwellingSpacePartyWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
 ];
@@ -42,14 +43,8 @@ const flattenedOptions = options.flat().filter(x => x[0] !== undefined);
 <template>
 	<ClientOnly>
 		<FormKit
-			:id="id"
-			type="govRadios"
-			:options="new Map(flattenedOptions)"
-			:label="label"
-			:help="help"
-			:name="name"
-			:validation="validation ?? 'required'"
-			:validation-rules="validationRules"
+			:id="id" type="govRadios" :options="new Map(flattenedOptions)" :label="label" :help="help" :name="name"
+			:validation="validation ?? 'required'" :validation-rules="validationRules"
 			:validation-messages="validationMessages">
 			<div v-if="!flattenedOptions.length">
 				<p class="govuk-error-message">No walls or ceilings added.</p>

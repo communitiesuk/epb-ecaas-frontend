@@ -26,28 +26,28 @@ describe("space heating", () => {
 	const heatSource1: HeatSourceData = {
 		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
 		name: "Heat source 1",
-		typeOfHeatSource: HeatSourceType.boiler,
+		typeOfHeatSource: "boiler",
 		typeOfBoiler: "combiBoiler",
 		productReference: "BOILER_SMALL",
-		locationOfBoiler: AdjacentSpaceType.heatedSpace,
+		locationOfBoiler: "heatedSpace",
 	};
 
 	const heatSource2: HeatSourceData = {
 		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
 		name: "Heat source 2",
-		typeOfHeatSource: HeatSourceType.boiler,
+		typeOfHeatSource: "boiler",
 		typeOfBoiler: "combiBoiler",
 		productReference: "BOILER_MEDIUM",
-		locationOfBoiler: AdjacentSpaceType.heatedSpace,
+		locationOfBoiler: "heatedSpace",
 	};
 
 	const heatSource3: HeatSourceData = {
 		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8c",
 		name: "Heat source 3",
-		typeOfHeatSource: HeatSourceType.boiler,
+		typeOfHeatSource: "boiler",
 		typeOfBoiler: "regularBoiler",
 		productReference: "BOILER_LARGE",
-		locationOfBoiler: AdjacentSpaceType.heatedSpace,
+		locationOfBoiler: "heatedSpace",
 	};
 
 	describe("heat source", () => {
@@ -138,7 +138,7 @@ describe("space heating", () => {
 			const heatPump1: HeatSourceData = {
 				id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
 				name: "Heat source 1",
-				typeOfHeatSource: HeatSourceType.heatPump,
+				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "airSource",
 				productReference: "HEATPUMP_LARGE",
 			};

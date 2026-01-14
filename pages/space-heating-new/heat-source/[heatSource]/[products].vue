@@ -21,16 +21,16 @@ const selectProduct = (reference: string) => {
 
 		if (item) {
 			const data = item.data as HeatSourceData;
-			if (data.typeOfHeatSource === HeatSourceType.heatPump) {
+			if (data.typeOfHeatSource === "heatPump") {
 				data.productReference = reference;
 			};
-			if (data.typeOfHeatSource === HeatSourceType.heatBattery) {
+			if (data.typeOfHeatSource === "heatBattery") {
 				data.productReference = reference;
 			};
-			if (data.typeOfHeatSource === HeatSourceType.boiler) {
+			if (data.typeOfHeatSource === "boiler") {
 				data.productReference = reference;
 			};
-			if (data.typeOfHeatSource === HeatSourceType.heatNetwork && data.isHeatNetworkInPcdb === true) {
+			if (data.typeOfHeatSource === "heatNetwork" && data.isHeatNetworkInPcdb === true) {
 				data.productReference = reference;
 			};
 		}
@@ -41,21 +41,15 @@ const selectProduct = (reference: string) => {
 </script>
 
 <template>
+
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<ProductSearch :products="productData" :model="searchModel" />
-	<GovProductsTable 
-		:products="pagination.getData()"
-		:total-pages="pagination.totalPages"
-		:on-select-product="selectProduct"
-	/>
-	<GovButton
-		secondary
-		:href="`/space-heating-new/heat-source/${index}`"
-		test-id="backToHeatSourceButton"
-	>
+	<GovProductsTable :products="pagination.getData()" :total-pages="pagination.totalPages"
+		:on-select-product="selectProduct" />
+	<GovButton secondary :href="`/space-heating-new/heat-source/${index}`" test-id="backToHeatSourceButton">
 		Back to heat source
 	</GovButton>
 </template>
