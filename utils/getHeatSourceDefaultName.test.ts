@@ -4,8 +4,7 @@ describe("getHeatSourceDefaultName", () => {
 	test("returns only the heat source type when there is no heat source product type", async () => {
 		const item: HeatSourceFormData = { 
 			id: "123", 
-			typeOfHeatSource: "solarThermalSystem", 
-		
+			typeOfHeatSource: "solarThermalSystem",
 		};
 		const actual = getHeatSourceDefaultName(item);
 
@@ -46,5 +45,28 @@ describe("getHeatSourceDefaultName", () => {
 		const actual = getHeatSourceDefaultName(item);
 
 		expect(actual).toBe("Combi boiler");
+	});
+
+	test("just uses display versions of heat network types", () => {
+		const item: HeatSourceFormData = {
+			id: "123",
+			typeOfHeatSource: "heatNetwork",
+			typeOfHeatNetwork: "sleeved DHN",
+		};
+
+		const actual = getHeatSourceDefaultName(item);
+
+		expect(actual).toBe("Sleeved district heat network");
+	});
+
+	test("use fallback display version for heat network when type not selected", () => {
+		const item: HeatSourceFormData = {
+			id: "123",
+			typeOfHeatSource: "heatNetwork",
+		};
+
+		const actual = getHeatSourceDefaultName(item);
+
+		expect(actual).toBe("Heat network");
 	});
 });

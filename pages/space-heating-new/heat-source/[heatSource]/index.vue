@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, type HeatSourceData } from "#imports";
-import { heatSourceTypes } from "../../../../utils/display";
+import { heatSourceTypesWithDisplay } from "../../../../utils/display";
 
 const title = "Heat source";
 const store = useEcaasStore();
@@ -183,7 +183,7 @@ function updateHeatSource(type: string) {
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="heatSourceErrorSummary" />
 		<FormKit
-			id="typeOfHeatSource" type="govRadios" label="Type of heat source" :options="heatSourceTypes"
+			id="typeOfHeatSource" type="govRadios" label="Type of heat source" :options="heatSourceTypesWithDisplay"
 			name="typeOfHeatSource" validation="required" />
 		<HeatPumpSection
 			v-if="model?.typeOfHeatSource === 'heatPump'" :model="model as HeatPumpModelType"

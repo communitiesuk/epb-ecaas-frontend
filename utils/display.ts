@@ -1,6 +1,6 @@
 import { objectFromEntries } from "ts-extras";
 import type { DisplayProduct, TechnologyType } from "~/pcdb/pcdb.types";
-import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaLeaksTestPressure } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaHeatNetworkType, SchemaLeaksTestPressure } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
@@ -288,7 +288,7 @@ export type LocationOfCollectorLoopPipingTypeDisplay = "Outside" | "Heated space
 
 export type HeatSourceTypeDisplay = "Heat pump" | "Boiler" | "Heat network" | "Heat battery" | "Solar thermal system";
 
-export const heatSourceTypes = {
+export const heatSourceTypesWithDisplay = {
 	"heatPump": "Heat pump",
 	"boiler": "Boiler",
 	"heatNetwork": "Heat network",
@@ -297,7 +297,17 @@ export const heatSourceTypes = {
 } as const satisfies Record<HeatSourceType, HeatSourceTypeDisplay>;
 
 export function displayHeatSourceType(type: HeatSourceType | undefined): HeatSourceTypeDisplay | typeof emptyValueRendering {
-	return heatSourceTypes[type!] ?? emptyValueRendering;
+	return heatSourceTypesWithDisplay[type!] ?? emptyValueRendering;
+}
+
+export const heatNetworkTypesWithDisplay = {
+	communal: "Communal heat network",
+	"sleeved DHN": "Sleeved district heat network",
+	"unsleeved DHN": "Unsleeved district heat network",
+} as const satisfies Record<SchemaHeatNetworkType, HeatNetworkTypeDisplay>;
+
+export function displayHeatNetworkType(type: SchemaHeatNetworkType | undefined): HeatNetworkTypeDisplay | typeof emptyValueRendering {
+	return heatNetworkTypesWithDisplay[type!] ?? emptyValueRendering;
 }
 
 export type HeatEmitterDisplay = "Radiator" | "Underfloor heating" | "Fan coil" | "Warm air heater" | "Instant electric heater" | "Electric storage heater";

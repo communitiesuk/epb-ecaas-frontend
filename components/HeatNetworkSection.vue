@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { uniqueName } from "#imports";
+import type { SchemaHeatNetworkType } from "~/schema/aliases";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -13,10 +14,10 @@ const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
 const index = getStoreIndex(heatSourceStoreData);
 
 const heatNetworkTypeOptions = {
-	"sleevedDistrict": "Sleeved district heat network",
-	"unsleevedDistrict": "Unsleeved district heat network",
-	"communal": "Communal heat network",
-} as const satisfies Record<TypeOfHeatNetwork, HeatNetworkTypeDisplay>;
+	"sleeved DHN": "Sleeved district heat network",
+	"unsleeved DHN": "Unsleeved district heat network",
+	communal: "Communal heat network",
+} as const satisfies Record<SchemaHeatNetworkType, HeatNetworkTypeDisplay>;
 
 const emit = defineEmits(["update-heat-network-model"]);
 

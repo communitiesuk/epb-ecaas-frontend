@@ -1,3 +1,6 @@
+import type { SchemaHeatNetworkType } from "~/schema/aliases";
+import { displayHeatNetworkType } from "./display";
+
 export const getHeatSourceDefaultName = (item: HeatSourceFormData): string => {
 	if (!item?.typeOfHeatSource) return "Heat source";
 	const heatSourceType = item?.typeOfHeatSource;
@@ -10,6 +13,10 @@ export const getHeatSourceDefaultName = (item: HeatSourceFormData): string => {
 	if ("typeOfBoiler" in item) {
 		heatSourceSubtype = item.typeOfBoiler;
 	}
+	if (heatSourceType === "heatNetwork") {
+		// for heat network, just use the display form
+		return item.typeOfHeatNetwork ? displayHeatNetworkType(item.typeOfHeatNetwork) : "Heat network";
+	}
 	if ("typeOfHeatNetwork" in item) {
 		heatSourceSubtype = item.typeOfHeatNetwork;
 	}
@@ -17,9 +24,7 @@ export const getHeatSourceDefaultName = (item: HeatSourceFormData): string => {
 		heatSourceSubtype = item.typeOfHeatBattery;
 	}
 
-	return heatSourceSubtype
-		? getDefaultProductName(heatSourceType, heatSourceSubtype)
-		: getDefaultProductName(heatSourceType);
+	return getDefaultProductName(heatSourceType, heatSourceSubtype);
 };
 
 function getDefaultProductName(
@@ -40,6 +45,6 @@ export type HeatSourceFormData = {
 	name?: string;
 	typeOfHeatPump?: HeatPumpType;
 	typeOfBoiler?: TypeOfBoiler;
-	typeOfHeatNetwork?: TypeOfHeatNetwork;
+	typeOfHeatNetwork?: SchemaHeatNetworkType;
 	typeOfHeatBattery?: TypeOfHeatBattery;
 };

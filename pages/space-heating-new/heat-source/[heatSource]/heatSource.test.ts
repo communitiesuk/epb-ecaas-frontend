@@ -553,6 +553,17 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 		};
 
+		const heatNetwork1: HeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+			name: "Heat network 1",
+			typeOfHeatSource: "heatNetwork",
+			typeOfHeatNetwork: "communal",
+			isHeatNetworkInPcdb: true,
+			productReference: "HEATNETWORK-LARGE",
+			energySupply: "electricity",
+			usesHeatInterfaceUnits: false,
+		};
+
 		const patchHeatNetworkDataToStore = async () => {
 			store.$patch({
 				dwellingDetails: {
@@ -568,22 +579,11 @@ describe("heatSource", () => {
 			});
 		};
 
-		const heatNetwork1: HeatSourceData = {
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-			name: "Heat network 1",
-			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "communal",
-			isHeatNetworkInPcdb: true,
-			productReference: "HEATNETWORK-LARGE",
-			energySupply: "electricity",
-			usesHeatInterfaceUnits: false,
-		};
-
 		const heatNetwork2: HeatSourceData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c88",
 			name: "Heat network 2",
 			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "unsleevedDistrict",
+			typeOfHeatNetwork: "unsleeved DHN",
 			isHeatNetworkInPcdb: false,
 			emissionsFactor: 1,
 			outOfScopeEmissionsFactor: 2,
@@ -737,7 +737,7 @@ describe("heatSource", () => {
 					},
 				});
 				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-				await user.click(screen.getByTestId("typeOfHeatNetwork_unsleevedDistrict"));
+				await user.click(screen.getByTestId("typeOfHeatNetwork_unsleeved_DHN"));
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.name).toBe("Unsleeved district heat network");

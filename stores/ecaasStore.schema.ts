@@ -6,7 +6,7 @@ import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/sch
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, colourZod, convectiveTypeZod, ductShapeZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, colourZod, convectiveTypeZod, ductShapeZod, fuelTypeZod, heatNetworkTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 
 const fraction = z.number().min(0).max(1);
 const percentage = z.number().min(0).max(100);
@@ -879,12 +879,10 @@ export type SpaceHeatingNew = AssertEachKeyIsPageId<{
 }>;
 
 const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
-const typeOfHeatNetwork = z.enum(["sleevedDistrict", "unsleevedDistrict", "communal"]);
 const typeOfHeatBattery = z.enum(["pcm", "dryCore"]);
 const typeOflocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
 
 export type TypeOfBoiler = z.infer<typeof typeOfBoiler>;
-export type TypeOfHeatNetwork = z.infer<typeof typeOfHeatNetwork>;
 export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;
 export type LocationOfCollectorLoopPipingType = z.infer<typeof typeOflocationOfLoopPiping>;
 
@@ -944,7 +942,7 @@ const solarThermalSystemBase = namedWithId.extend({
 
 const heatNetworkBase = namedWithId.extend({
 	typeOfHeatSource: z.literal("heatNetwork"),
-	typeOfHeatNetwork,
+	typeOfHeatNetwork: heatNetworkTypeZod,
 });
 
 const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
