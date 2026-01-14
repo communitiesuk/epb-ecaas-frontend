@@ -18,7 +18,7 @@ describe("ceiling", () => {
 	const ceiling: EcaasForm<CeilingData> = {
 		data: {
 			id: "099342c5-07c5-4268-b66b-f85dfc5de58f",
-			type: AdjacentSpaceType.heatedSpace,
+			type: "heatedSpace",
 			name: "Ceiling 1",
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
@@ -31,7 +31,7 @@ describe("ceiling", () => {
 	const ceilingUnheatedSpace: EcaasForm<CeilingData> = {
 		data: {
 			...ceiling.data,
-			type: AdjacentSpaceType.unheatedSpace,
+			type: "unheatedSpace",
 			uValue: 1,
 			thermalResistanceOfAdjacentUnheatedSpace: 0,
 		},
@@ -257,7 +257,7 @@ describe("ceiling", () => {
 			await user.type(screen.getByTestId("thermalResistanceOfAdjacentUnheatedSpace"), "0.7");
 			await user.tab();
 
-			const actualCeiling = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[0]!.data as Partial<Extract<CeilingData, { type: AdjacentSpaceType.unheatedSpace }>>;
+			const actualCeiling = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[0]!.data as Partial<Extract<CeilingData, { type: "unheatedSpace" }>>;
 
 			expect(actualCeiling.name).toBe("Ceiling");
 			expect(actualCeiling.thermalResistanceOfAdjacentUnheatedSpace).toBe(0.7);

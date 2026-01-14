@@ -82,7 +82,7 @@ const internalFloorSummary: SummarySection = {
 	id: "dwellingSpaceInternalFloors",
 	label: "Internal floors",
 	data: internalFloorData?.map(({ data: x }) => {
-		const isInternalFloorToUnheatedSpace = x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace;
+		const isInternalFloorToUnheatedSpace = x.typeOfInternalFloor === "unheatedSpace";
 		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
 
 		return {
@@ -213,7 +213,7 @@ const ceilingSummary: SummarySection = {
 	id: "dwellingSpaceCeilings",
 	label: "Ceilings",
 	data: ceilingData.map(({ data: x }) => {
-		const isCeilingToUnheatedSpace = x.type === AdjacentSpaceType.unheatedSpace;
+		const isCeilingToUnheatedSpace = x.type === "unheatedSpace";
 		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;
 		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
 
@@ -332,7 +332,7 @@ const internalDoorSummary: SummarySection = {
 	data: internalDoorData?.map(({ data: x }) => {
 		const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall, dwellingSpaceCeilings], x.associatedItemId);
 
-		const isInternalDoorToUnheatedSpace = x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace;
+		const isInternalDoorToUnheatedSpace = x.typeOfInternalDoor === "unheatedSpace";
 		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;
 		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
 

@@ -1,6 +1,1 @@
-enum CookieConsent {
-	Accepted = "accepted",
-	Rejected = "rejected",
-};
-
-export default CookieConsent;
+export type CookieConsent = "accepted" | "rejected";

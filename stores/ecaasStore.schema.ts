@@ -128,10 +128,9 @@ export interface FloorsData {
 	dwellingSpaceExposedFloor: EcaasFormList<ExposedFloorData>
 }
 
-export enum AdjacentSpaceType {
-	heatedSpace = "heatedSpace",
-	unheatedSpace = "unheatedSpace",
-}
+export const adjacentSpaceTypes = ["heatedSpace", "unheatedSpace"] as const;
+
+export type AdjacentSpaceType = typeof adjacentSpaceTypes[number];
 
 const baseInternalFloorData = named.extend({
 	surfaceAreaOfElement: z.number(),
@@ -142,11 +141,11 @@ const internalFloorDataZod = z.discriminatedUnion(
 	"typeOfInternalFloor",
 	[
 		baseInternalFloorData.extend({
-			typeOfInternalFloor: z.literal(AdjacentSpaceType.unheatedSpace),
+			typeOfInternalFloor: z.literal("unheatedSpace"),
 			thermalResistanceOfAdjacentUnheatedSpace,
 		}),
 		baseInternalFloorData.extend({
-			typeOfInternalFloor: z.literal(AdjacentSpaceType.heatedSpace),
+			typeOfInternalFloor: z.literal("heatedSpace"),
 		}),
 	],
 );
@@ -299,10 +298,10 @@ const ceilingDataZod = z.discriminatedUnion(
 	"type",
 	[
 		baseCeilingData.extend({
-			type: z.literal(AdjacentSpaceType.heatedSpace),
+			type: z.literal("heatedSpace"),
 		}),
 		baseCeilingData.extend({
-			type: z.literal(AdjacentSpaceType.unheatedSpace),
+			type: z.literal("unheatedSpace"),
 			thermalResistanceOfAdjacentUnheatedSpace,
 			uValue,
 		}),
@@ -387,10 +386,10 @@ const internalDoorDataZod = z.discriminatedUnion(
 	"typeOfInternalDoor",
 	[
 		baseInternalDoorData.extend({
-			typeOfInternalDoor: z.literal(AdjacentSpaceType.heatedSpace),
+			typeOfInternalDoor: z.literal("heatedSpace"),
 		}),
 		baseInternalDoorData.extend({
-			typeOfInternalDoor: z.literal(AdjacentSpaceType.unheatedSpace),
+			typeOfInternalDoor: z.literal("unheatedSpace"),
 			uValue,
 			thermalResistanceOfAdjacentUnheatedSpace,
 		}),

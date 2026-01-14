@@ -1,7 +1,6 @@
 import type { GovTaskListItemProps } from "~/components/gov/TaskList.vue";
 import pagesData from "~/data/pages/pages";
-import { PageType  } from "~/data/pages/pages.types";
-import type { Page } from "~/data/pages/pages.types";
+import type { Page, PageType } from "~/data/pages/pages.types";
 
 /**
  * Creates a list of tasks to be used as props for the GovTaskList component
@@ -13,8 +12,10 @@ export function useTaskList() {
 	const createTaskList = (page: Page) => {
 		const store = useEcaasStore();
 
+		const taskListPageTypes: PageType[] = ["section", "task", "taskGroup"];
+
 		const taskList: Array<GovTaskListItemProps> = pagesData
-			.filter(p => p.parentId === page.id && [PageType.Section, PageType.Task, PageType.TaskGroup].includes(p.type))
+			.filter(p => p.parentId === page.id && taskListPageTypes.includes(p.type))
 			.map(p => {
 				return {
 					id: p.id,

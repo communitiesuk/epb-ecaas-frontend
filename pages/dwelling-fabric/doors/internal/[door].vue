@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AdjacentSpaceType, getUrl, uniqueName } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 
 const title = "Internal door";
 const store = useEcaasStore();
@@ -26,7 +26,7 @@ const saveForm = (fields: InternalDoorData) => {
 
 		let door: EcaasForm<InternalDoorData>;
 
-		if (fields.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace) {
+		if (fields.typeOfInternalDoor === "unheatedSpace") {
 			door = {
 				data: {
 					...commonFields,
@@ -36,7 +36,7 @@ const saveForm = (fields: InternalDoorData) => {
 				},
 				complete: true,
 			};
-		} else if (fields.typeOfInternalDoor === AdjacentSpaceType.heatedSpace) {
+		} else if (fields.typeOfInternalDoor === "heatedSpace") {
 			door = {
 				data: {
 					...commonFields,
@@ -95,15 +95,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				}"
 			/>
 			<FieldsAssociatedElements
-				v-if="model.typeOfInternalDoor === AdjacentSpaceType.heatedSpace" id="associatedItemId"
+				v-if="model.typeOfInternalDoor === 'heatedSpace'" id="associatedItemId"
 				name="associatedItemId" label="Associated wall or ceiling"
 				help="Select the wall or ceiling that this door is in. It should have the same pitch as the door."
-				:adjacent-space-type="AdjacentSpaceType.heatedSpace" />
+				adjacent-space-type="heatedSpace" />
 			<FieldsAssociatedElements
-				v-if="model.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace"
+				v-if="model.typeOfInternalDoor === 'unheatedSpace'"
 				id="associatedItemId" name="associatedItemId" label="Associated wall or ceiling"
 				help="Select the wall or ceiling that this door is in. It should have the same pitch as the door."
-				:adjacent-space-type="AdjacentSpaceType.unheatedSpace" />
+				adjacent-space-type="unheatedSpace" />
 			<FormKit
 				id="surfaceArea"
 				type="govInputWithSuffix"

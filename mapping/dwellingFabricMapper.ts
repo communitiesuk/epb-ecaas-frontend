@@ -233,7 +233,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 
 		let internalFloor: SchemaBuildingElement;
 
-		if (x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace) {
+		if (x.typeOfInternalFloor === "unheatedSpace") {
 			internalFloor = {
 				...commonFields,
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
@@ -391,7 +391,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 
 		let ceiling: SchemaBuildingElement;
 
-		if (x.type === AdjacentSpaceType.unheatedSpace) {
+		if (x.type === "unheatedSpace") {
 			ceiling = {
 				...commonFields,
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
@@ -467,7 +467,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 
 		let internalDoor: SchemaBuildingElement;
 
-		if (x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace) {
+		if (x.typeOfInternalDoor === "unheatedSpace") {
 			internalDoor = {
 				...commonFields,
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",

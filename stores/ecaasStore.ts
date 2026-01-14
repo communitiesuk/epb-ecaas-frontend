@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import formStatus from "~/constants/formStatus";
 import type { GovTagProps } from "~/common.types";
-import { PageType } from "~/data/pages/pages.types";
 import type { Page } from "~/data/pages/pages.types";
 import type { EmptyObject } from "type-fest";
 import pagesData from "~/data/pages/pages";
@@ -120,15 +119,15 @@ export const useEcaasStore = defineStore("ecaas", {
 						return getDuctworkStatus(entry[1]);
 					}
 
-					if (page.type === PageType.Task) {
+					if (page.type === "task") {
 						return getTaskStatus(entry[1]);
 					}
 
-					if (page.type === PageType.TaskGroup) {
+					if (page.type === "taskGroup") {
 						return getSectionStatus(entry[1]);
 					}
 
-					if (page.type === PageType.Section) {
+					if (page.type === "section") {
 						return getSectionStatus(entry[1]);
 					}
 				}
@@ -218,7 +217,7 @@ export function hasCompleteState(state: EcaasState): boolean {
 		(e) => e[0] in getInitialState(),
 	);
 	// go over section pages and check they are all complete
-	const sectionPages = pagesData.filter(page => page.type === PageType.Section);
+	const sectionPages = pagesData.filter(page => page.type === "section");
 
 	return sectionPages.every(page => {
 		const section = Object.fromEntries(stateEntries.filter(e => e[0] === page.id));

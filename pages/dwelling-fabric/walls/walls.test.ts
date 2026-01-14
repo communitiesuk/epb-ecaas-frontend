@@ -346,7 +346,7 @@ describe("walls", () => {
 
 		test("when an internal wall is removed its also removed from any store item that references it", async () => {
 			const doorToHeatedSpace: Partial<InternalDoorData> = {
-				typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+				typeOfInternalDoor: "heatedSpace",
 				name: "Internal door to heated",
 				associatedItemId: internal1.id,
 			};
@@ -496,7 +496,7 @@ describe("walls", () => {
 
 		test("when a wall to unheated space is removed its also removed from any store item that references it", async () => {
 			const doorToUnheatedSpace: Partial<InternalDoorData> = {
-				typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+				typeOfInternalDoor: "unheatedSpace",
 				name: "Internal to unheated",
 				associatedItemId: toUnheatedSpace1.id,
 			};
@@ -640,7 +640,7 @@ describe("walls", () => {
 
 		test("when a party wall is removed its also removed from any store item that references it", async () => {
 			const doorToUnheatedSpace: Partial<InternalDoorData> = {
-				typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+				typeOfInternalDoor: "unheatedSpace",
 				name: "Internal to unheated",
 				associatedItemId: party1.id,
 			};

@@ -1522,7 +1522,7 @@ describe("FHS input mapper", () => {
 							...baseForm,
 							data: {
 								name: "internal floor 1",
-								typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
+								typeOfInternalFloor: "unheatedSpace",
 								surfaceAreaOfElement: 6,
 								arealHeatCapacity: "Very light",
 								massDistributionClass: "IE",
@@ -1533,7 +1533,7 @@ describe("FHS input mapper", () => {
 							...baseForm,
 							data: {
 								name: "internal floor 2",
-								typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
+								typeOfInternalFloor: "heatedSpace",
 								surfaceAreaOfElement: 4,
 								arealHeatCapacity: "Medium",
 								massDistributionClass: "M",
@@ -1643,7 +1643,7 @@ describe("FHS input mapper", () => {
 						data: {
 							id: "26e6be91-d436-4ccf-a106-feddaf625edb",
 							name: "ceiling to heated space",
-							type: AdjacentSpaceType.heatedSpace,
+							type: "heatedSpace",
 							surfaceArea: 16,
 							arealHeatCapacity: "Light",
 							massDistributionClass: "I",
@@ -1655,7 +1655,7 @@ describe("FHS input mapper", () => {
 						data: {
 							id: "1d60a23a-789e-4843-8da4-ab4b90609280",
 							name: "ceiling to unheated space",
-							type: AdjacentSpaceType.unheatedSpace,
+							type: "unheatedSpace",
 							surfaceArea: 20,
 							arealHeatCapacity: "Very light",
 							massDistributionClass: "IE",
@@ -1734,7 +1734,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
-							typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+							typeOfInternalDoor: "heatedSpace",
 							name: "bathroom door",
 							surfaceArea: 1.4,
 							arealHeatCapacity: "Light",
@@ -1745,7 +1745,7 @@ describe("FHS input mapper", () => {
 					{
 						...baseForm,
 						data: {
-							typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+							typeOfInternalDoor: "unheatedSpace",
 							name: "door to garage",
 							surfaceArea: 1.4,
 							arealHeatCapacity: "Very light",
