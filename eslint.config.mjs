@@ -20,6 +20,7 @@ export default withNuxt(
 			'@stylistic/no-whitespace-before-property': 'error',
 			'@stylistic/object-curly-spacing': ["error", "always"],
 			'@stylistic/quotes': ['error', 'double', { avoidEscape: true, allowTemplateLiterals: 'always' }],
+			'@stylistic/space-before-blocks': 'error',
 			'@stylistic/space-infix-ops': 'error',
 			'@stylistic/space-in-parens': 'error',
 			'@stylistic/type-generic-spacing': 'error',

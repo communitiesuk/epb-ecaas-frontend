@@ -55,7 +55,7 @@ function handleComplete() {
 	navigateTo("/dwelling-fabric");
 }
 
-function checkIsComplete(){
+function checkIsComplete() {
 	const floors = store.dwellingFabric.dwellingSpaceFloors;
 	return Object.values(floors).every(floor => floor.complete);
 }

@@ -77,7 +77,7 @@ function handleComplete() {
 	navigateTo("/space-heating");
 }
 
-function checkIsComplete(){
+function checkIsComplete() {
 	const emitters = store.spaceHeating.heatEmitting;
 	return Object.values(emitters).every(emitter => emitter.complete);
 }

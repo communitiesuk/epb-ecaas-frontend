@@ -13,7 +13,7 @@ function handleRemove(outletType: HeatGenerationType, index: number) {
 	const outlets = store.spaceHeating.heatGeneration[outletType]?.data;
 
 	let heatPumpId;
-	if (outletType === "heatPump"){
+	if (outletType === "heatPump") {
 		heatPumpId = store.spaceHeating.heatGeneration.heatPump?.data[index]?.data.id;
 	}
 
@@ -47,7 +47,7 @@ function handleComplete() {
 	navigateTo("/space-heating");
 }
 
-function checkIsComplete(){
+function checkIsComplete() {
 	const generators = store.spaceHeating.heatGeneration;
 	return Object.values(generators).every(generator => generator.complete);
 }

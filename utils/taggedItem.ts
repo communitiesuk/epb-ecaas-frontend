@@ -16,7 +16,7 @@ export const getTopLevelTaggedItem = <T extends Record<string, unknown>>(section
 	const items: AssociatedItemValues[][] = [];
 	const sectionsWithoutNestedTaggedItems = sections.filter(s => s.data !== undefined && s.data.some(x => !("taggedItem" in x.data)));
   
-	for (const section of sectionsWithoutNestedTaggedItems){
+	for (const section of sectionsWithoutNestedTaggedItems) {
 		items.push(extractSectionItems(section));
 	}
 	const taggedItem = items.flat().find((item) => item.id === id);
@@ -25,10 +25,10 @@ export const getTopLevelTaggedItem = <T extends Record<string, unknown>>(section
 
 export const getNestedTaggedItem = <T extends Record<string, unknown>>(sections: EcaasFormList<T>[], id: string | undefined) => {
 	const sectionsWithNestedTaggedItems = sections.filter(s => s.data !== undefined && s.data.some(x => "taggedItem" in x.data));
-	for (const section of sectionsWithNestedTaggedItems){
+	for (const section of sectionsWithNestedTaggedItems) {
 		const taggedItem = section.data.find(x => "id" in x.data && x.data.id === id);
     
-		if (taggedItem){
+		if (taggedItem) {
 			return taggedItem.data;
 		}
 	}
