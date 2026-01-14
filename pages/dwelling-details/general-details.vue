@@ -61,7 +61,7 @@ const areSelectedOptionsValid = (node: FormKitNode) => {
 	if (parent && parent.value) {
 		const formValue = parent.value as GeneralDetailsData;
 		const { fuelType } = formValue;
-		if(fuelType.includes("elecOnly") && (fuelType.includes("mains_gas") || fuelType.includes("LPG_bulk") || fuelType.includes("LPG_bottled")) ){
+		if(fuelType.includes("elecOnly") && (fuelType.includes("mains_gas") || fuelType.includes("LPG_bulk") || fuelType.includes("LPG_bottled"))){
 			return false;
 		}
 	}

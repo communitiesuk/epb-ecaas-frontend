@@ -17,7 +17,7 @@ const appliances = {
 	Dishwasher: "Dishwasher",
 	Clothes_washing: "Washing machine",
 	Clothes_drying: "Tumble dryer",
-} as const satisfies Record<SchemaApplianceType, ApplianceKeyDisplay >;
+} as const satisfies Record<SchemaApplianceType, ApplianceKeyDisplay>;
 
 const saveForm = (fields: AppliancesData) => {
 	store.$patch({

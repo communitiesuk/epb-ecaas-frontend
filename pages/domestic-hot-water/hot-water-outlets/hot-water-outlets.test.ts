@@ -516,7 +516,7 @@ describe("hot water outlets", () => {
     	beforeEach(async () => {
     		await addCompleteOutletsDataToStore();
     		await renderSuspended(HotWaterOutlets);
-    		await user.click( screen.getByTestId("markAsCompleteButton"));
+    		await user.click(screen.getByTestId("markAsCompleteButton"));
     	});
 
     	it("displays the 'Completed' section status indicator", async () => {
@@ -583,7 +583,7 @@ describe("hot water outlets", () => {
     			store.domesticHotWater.hotWaterOutlets,
     		) as HotWaterOutletsType[]) {
 
-    			await renderSuspended( outletForms[hotWaterOutlet], {
+    			await renderSuspended(outletForms[hotWaterOutlet], {
     				route: {
     					params: { hotWaterOutlet: "create" },
     				},
@@ -603,7 +603,7 @@ describe("hot water outlets", () => {
     			store.domesticHotWater.hotWaterOutlets,
     		) as HotWaterOutletsType[]) {
 
-    			await renderSuspended( outletForms[hotWaterOutlet], {
+    			await renderSuspended(outletForms[hotWaterOutlet], {
     				route: {
     					params: { hotWaterOutlet: "0" },
     				},

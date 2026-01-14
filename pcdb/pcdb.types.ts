@@ -134,7 +134,7 @@ export type Category = keyof typeof categoryTechnologies;
 
 export type ProductForCategory<T extends Category> = Extract<Product, { technologyType: (typeof categoryTechnologies)[T][number] }>;
 
-export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier" > & { technologyType: TechnologyType };
+export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier"> & { technologyType: TechnologyType };
 
 export type DisplayProductWithFlowTemp = DisplayProduct & {
 	designFlowTemperature?: number;
