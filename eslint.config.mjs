@@ -11,6 +11,7 @@ export default withNuxt(
 		rules: {
 			'@stylistic/semi': 'error',
 			'@stylistic/arrow-spacing': 'error',
+			'@stylistic/brace-style': 'error',
 			'@stylistic/comma-dangle': ['error', 'always-multiline'],
 			'@stylistic/indent': ['error', 'tab'],
 			'@stylistic/key-spacing': 'error',

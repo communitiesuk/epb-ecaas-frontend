@@ -44,8 +44,7 @@ const isFridgeInChoice = (node: FormKitNode) => {
 		const formValue = parent.value as AppliancesData;
 		const { applianceType } = formValue;
 		return (applianceType && applianceType.includes("Fridge") || applianceType.includes("Fridge-Freezer"));
-	}
-	else {
+	} else {
 		return true;
 	}
 };

@@ -61,7 +61,8 @@ watch(model, async (newData, initialData) => {
 
 				state.pvAndBatteries.diverters.complete = false;
 			});
-		}}
+		}
+	}
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
