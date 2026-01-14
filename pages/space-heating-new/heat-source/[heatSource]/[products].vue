@@ -47,7 +47,8 @@ const selectProduct = (reference: string) => {
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<ProductSearch :products="productData" :model="searchModel" />
-	<GovProductsTable :products="pagination.getData()" :total-pages="pagination.totalPages"
+	<GovProductsTable
+		:products="pagination.getData()" :total-pages="pagination.totalPages"
 		:on-select-product="selectProduct" />
 	<GovButton secondary :href="`/space-heating-new/heat-source/${index}`" test-id="backToHeatSourceButton">
 		Back to heat source

@@ -11,30 +11,30 @@ describe("mapHeatPump", () => {
 	};
 	const store = useEcaasStore();
 
-  const heatPump1: HeatSourceData = {
-    id: "heatPump1Id",
-    name: "Air source heat pump",
-    typeOfHeatSource: "heatPump",
-    typeOfHeatPump: "airSource",
-    productReference: "1234",
-  };
+	const heatPump1: HeatSourceData = {
+		id: "heatPump1Id",
+		name: "Air source heat pump",
+		typeOfHeatSource: "heatPump",
+		typeOfHeatPump: "airSource",
+		productReference: "1234",
+	};
 
-  const heatPump2: HeatSourceData = {
-    id: "heatPump2Id",
-    name: "Booster heat pump",
-    typeOfHeatSource: "heatPump",
-    typeOfHeatPump: "booster",
-    productReference: "5678",
-  };
-  test("maps stored heatpump data to fit schema", () => {
-    store.$patch({
-      spaceHeatingNew: {
-        heatSource: {
-          data: [{ data: heatPump1, complete: true }],
-          complete: true,
-        },
-      },
-    });
+	const heatPump2: HeatSourceData = {
+		id: "heatPump2Id",
+		name: "Booster heat pump",
+		typeOfHeatSource: "heatPump",
+		typeOfHeatPump: "booster",
+		productReference: "5678",
+	};
+	test("maps stored heatpump data to fit schema", () => {
+		store.$patch({
+			spaceHeatingNew: {
+				heatSource: {
+					data: [{ data: heatPump1, complete: true }],
+					complete: true,
+				},
+			},
+		});
 
 		const expectedForSchema = {
 			[heatPump1.name]: {
@@ -86,32 +86,32 @@ describe("mapBoilers", () => {
 	};
 	const store = useEcaasStore();
 
-  const boiler1: HeatSourceData = {
-    id: "boilerId1",
-    name: "Combi boiler",
-    typeOfHeatSource: "boiler",
-    typeOfBoiler: "combiBoiler",
-    productReference: "1234",
-    locationOfBoiler: "heatedSpace",
-  };
+	const boiler1: HeatSourceData = {
+		id: "boilerId1",
+		name: "Combi boiler",
+		typeOfHeatSource: "boiler",
+		typeOfBoiler: "combiBoiler",
+		productReference: "1234",
+		locationOfBoiler: "heatedSpace",
+	};
 
-  const boiler2: HeatSourceData = {
-    id: "boilerId2",
-    name: "Regular boiler",
-    typeOfHeatSource: "boiler",
-    typeOfBoiler: "regularBoiler",
-    productReference: "5678",
-    locationOfBoiler: "unheatedSpace",
-  };
-  test("maps stored boiler data to fit schema", () => {
-    store.$patch({
-      spaceHeatingNew: {
-        heatSource: {
-          data: [{ data: boiler1, complete: true }],
-          complete: true,
-        },
-      },
-    });
+	const boiler2: HeatSourceData = {
+		id: "boilerId2",
+		name: "Regular boiler",
+		typeOfHeatSource: "boiler",
+		typeOfBoiler: "regularBoiler",
+		productReference: "5678",
+		locationOfBoiler: "unheatedSpace",
+	};
+	test("maps stored boiler data to fit schema", () => {
+		store.$patch({
+			spaceHeatingNew: {
+				heatSource: {
+					data: [{ data: boiler1, complete: true }],
+					complete: true,
+				},
+			},
+		});
 
 		const expectedForSchema = {
 			[boiler1.name]: {
@@ -166,25 +166,25 @@ describe("mapHeatBatteries", () => {
 	};
 	const store = useEcaasStore();
 
-  const heatBattery1: HeatSourceData = {
-    id: "heatBatteryId1",
-    name: "Pcm heat battery",
-    typeOfHeatSource: "heatBattery",
-    typeOfHeatBattery: "pcm",
-    productReference: "1234",
-    numberOfUnits: 1,
-    energySupply: "electricity",
-  };
+	const heatBattery1: HeatSourceData = {
+		id: "heatBatteryId1",
+		name: "Pcm heat battery",
+		typeOfHeatSource: "heatBattery",
+		typeOfHeatBattery: "pcm",
+		productReference: "1234",
+		numberOfUnits: 1,
+		energySupply: "electricity",
+	};
 
-  const heatBattery2: HeatSourceData = {
-    id: "heatBatteryId2",
-    name: "Dry core heat battery",
-    typeOfHeatSource: "heatBattery",
-    typeOfHeatBattery: "dryCore",
-    productReference: "5678",
-    numberOfUnits: 2,
-    energySupply: "LPG_bottled",
-  };
+	const heatBattery2: HeatSourceData = {
+		id: "heatBatteryId2",
+		name: "Dry core heat battery",
+		typeOfHeatSource: "heatBattery",
+		typeOfHeatBattery: "dryCore",
+		productReference: "5678",
+		numberOfUnits: 2,
+		energySupply: "LPG_bottled",
+	};
 
 	test("maps stored pcm heat battery data to fit schema", () => {
 		store.$patch({

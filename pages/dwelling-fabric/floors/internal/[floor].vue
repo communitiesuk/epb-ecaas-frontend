@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { AdjacentSpaceType } from "~/stores/ecaasStore.schema";
 import { getUrl, uniqueName } from "#imports";
 
 const title = "Internal floor";
@@ -67,26 +66,31 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+	<FormKit
+		v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="internalFloorErrorSummary" />
-		<FormKit id="typeOfInternalFloor" type="govRadios" :options="typeOfInternalFloorOptions"
+		<FormKit
+			id="typeOfInternalFloor" type="govRadios" :options="typeOfInternalFloorOptions"
 			label="Type of internal floor" help="This affects the additional inputs needed" name="typeOfInternalFloor"
 			validation="required" />
 		<template v-if="!!model?.typeOfInternalFloor">
-			<FormKit id="name" type="govInputText" label="Name"
+			<FormKit
+				id="name" type="govInputText" label="Name"
 				help="Provide a name for this element so that it can be identified later" name="name"
 				:validation-rules="{ uniqueName: uniqueName(internalFloorData, { index }) }" validation="required | uniqueName"
 				:validation-messages="{
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
 				}" />
-			<FormKit id="surfaceAreaOfElement" type="govInputWithSuffix" label="Net surface area of the floor"
+			<FormKit
+				id="surfaceAreaOfElement" type="govInputWithSuffix" label="Net surface area of the floor"
 				name="surfaceAreaOfElement" validation="required | number | min:0 | max:10000" suffix-text="m²"
 				data-field="Zone.BuildingElement.*.area" />
 			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
 		</template>
-		<FormKit v-if="model?.typeOfInternalFloor === " unheatedSpace"" id="thermalResistanceOfAdjacentUnheatedSpace"
+		<FormKit
+			v-if="model?.typeOfInternalFloor === 'unheatedSpace'" id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix" suffix-text="(m²·K)/W" label="Thermal resistance of adjacent unheated space"
 			help="Enter the effective thermal resistance of the unheated space"
 			name="thermalResistanceOfAdjacentUnheatedSpace" validation="required | number | min:0 | max:3"

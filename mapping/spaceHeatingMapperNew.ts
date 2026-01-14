@@ -1,10 +1,10 @@
 import type { ResolvedState } from "./fhsInputMapper";
 
 export function mapHeatPumps(state: ResolvedState) {
-  const heatsources = state.spaceHeatingNew.heatSource;
-  const heatPumps = heatsources.filter(
-    (heatsource) => heatsource.typeOfHeatSource === "heatPump"
-  );
+	const heatsources = state.spaceHeatingNew.heatSource;
+	const heatPumps = heatsources.filter(
+		(heatsource) => heatsource.typeOfHeatSource === "heatPump",
+	);
 
 	return Object.fromEntries(
 		heatPumps.map((heatPump) => {
@@ -17,33 +17,33 @@ export function mapHeatPumps(state: ResolvedState) {
 }
 
 export function mapBoilers(state: ResolvedState) {
-  const heatsources = state.spaceHeatingNew.heatSource;
-  const boilers = heatsources.filter(
-    (heatsource) => heatsource.typeOfHeatSource === "boiler"
-  );
+	const heatsources = state.spaceHeatingNew.heatSource;
+	const boilers = heatsources.filter(
+		(heatsource) => heatsource.typeOfHeatSource === "boiler",
+	);
 
-  return Object.fromEntries(
-    boilers.map((boiler) => {
-      return [
-        boiler.name,
-        {
-          type: "Boiler",
-          product_reference: boiler.productReference,
-          boiler_location:
+	return Object.fromEntries(
+		boilers.map((boiler) => {
+			return [
+				boiler.name,
+				{
+					type: "Boiler",
+					product_reference: boiler.productReference,
+					boiler_location:
             boiler.locationOfBoiler === "heatedSpace"
-              ? "internal"
-              : "external",
-        },
-      ];
-    })
-  );
+            	? "internal"
+            	: "external",
+				},
+			];
+		}),
+	);
 }
 
 export function mapHeatBatteries(state: ResolvedState) {
-  const heatsources = state.spaceHeatingNew.heatSource;
-  const heatBatteries = heatsources.filter(
-    (heatsource) => heatsource.typeOfHeatSource === "heatBattery"
-  );
+	const heatsources = state.spaceHeatingNew.heatSource;
+	const heatBatteries = heatsources.filter(
+		(heatsource) => heatsource.typeOfHeatSource === "heatBattery",
+	);
 
 	return Object.fromEntries(
 		heatBatteries.map((heatBattery) => {

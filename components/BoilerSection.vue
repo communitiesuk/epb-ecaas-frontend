@@ -28,20 +28,24 @@ const emit = defineEmits(["update-boiler-model"]);
 </script>
 
 <template>
-	<FormKit id="typeOfBoiler" type="govRadios" label="Type of boiler" :options="boilerTypeOptions" name="typeOfBoiler"
+	<FormKit
+		id="typeOfBoiler" type="govRadios" label="Type of boiler" :options="boilerTypeOptions" name="typeOfBoiler"
 		validation="required" @click="emit('update-boiler-model', 'typeOfBoiler')" />
 	<template v-if="model.typeOfBoiler">
-		<FormKit id="name" type="govInputText" label="Name"
+		<FormKit
+			id="name" type="govInputText" label="Name"
 			help="Provide a name for this element so that it can be identified later" name="name" :value="model.name"
 			:validation-rules="{ uniqueName: uniqueName(heatSourceStoreData, { index }) }" validation="required | uniqueName"
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}" />
-		<FormKit v-if="model.typeOfBoiler" id="selectBoiler" type="govPcdbProduct" label="Select a boiler"
+		<FormKit
+			v-if="model.typeOfBoiler" id="selectBoiler" type="govPcdbProduct" label="Select a boiler"
 			name="productReference" validation="required" help="Select the boiler model from the PCDB using the button below."
 			:selected-product-reference="model.productReference"
 			:selected-product-type="boilerTypeOptions[model.typeOfBoiler]" :page-url="route.fullPath" :page-index="index" />
-		<FormKit v-if="model.typeOfBoiler" id="locationOfBoiler" type="govRadios" label="Location of boiler"
+		<FormKit
+			v-if="model.typeOfBoiler" id="locationOfBoiler" type="govRadios" label="Location of boiler"
 			:options="locationOfBoilerOptions" name="locationOfBoiler" validation="required" />
 	</template>
 </template>
