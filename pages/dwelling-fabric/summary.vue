@@ -41,7 +41,7 @@ const exposedFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceE
 const groundFloorSummary: SummarySection = {
 	id: "dwellingSpaceGroundFloors",
 	label: "Ground floors",
-	data: groundFloorData.map( ({ data: x }) => {
+	data: groundFloorData.map(({ data: x }) => {
 		const isSlabEdgeInsulation = x.typeOfGroundFloor === "Slab_edge_insulation";
 		const edgeInsulationType = "edgeInsulationType" in x ? (displayCamelToSentenceCase(show(x.edgeInsulationType))) : emptyValueRendering;
 		const edgeInsulationWidth = "edgeInsulationWidth" in x ? dim(x.edgeInsulationWidth) : emptyValueRendering;

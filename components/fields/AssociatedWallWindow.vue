@@ -18,7 +18,7 @@ const { dwellingSpaceWindows, dwellingSpaceWalls } = store.dwellingFabric;
 const options = [
 	dwellingSpaceWindows.data.map(x => [x.data.id, x.data.name] as [string, string]),
 	dwellingSpaceWalls.dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
-].flat().filter(x => x[0] != undefined );
+].flat().filter(x => x[0] != undefined);
 
 </script>
 

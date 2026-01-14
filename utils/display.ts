@@ -285,6 +285,6 @@ export const pcdbTechnologyTypes = {
 	"exhaustAirMixed": "ExhaustAirMixedHeatPump",
 } as Record<HeatPumpType, TechnologyType>;
 
-export function displayHeatPumpType( type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
+export function displayHeatPumpType(type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
 	return heatPumpTypes[type!] ?? emptyValueRendering;
 }

@@ -19,6 +19,8 @@ export default withNuxt(
 			'@stylistic/object-curly-spacing': ["error", "always"],
 			'@stylistic/quotes': ['error', 'double', { avoidEscape: true, allowTemplateLiterals: 'always' }],
 			'@stylistic/space-infix-ops': 'error',
+			'@stylistic/space-in-parens': 'error',
+			'@stylistic/type-generic-spacing': 'error',
 			'vue/html-indent': ['error', 'tab'],
 			'vue/no-multiple-template-root': 'off',
 			'object-shorthand': 'error',
