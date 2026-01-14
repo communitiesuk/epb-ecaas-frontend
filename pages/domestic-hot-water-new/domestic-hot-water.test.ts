@@ -39,6 +39,10 @@ describe("Domestic hot water", () => {
 			},
 			dailyEnergyLoss: 69,
 			typeOfWaterStorage: "hotWaterCylinder",
+			initialTemperature: 60,
+			areaOfHeatExchanger: 2.5,
+			heaterPosition: 0.8,
+			thermostatPosition: 0.5,
 		},
 	};
 
@@ -71,6 +75,10 @@ describe("Domestic hot water", () => {
 			data: {
 				name: "Jasper's Cylinder 2",
 				typeOfWaterStorage: "smartHotWaterTank",
+				heatSource: "weeeeee3",
+				heaterPosition: 0.8,
+				thermostatPosition: 0.5,
+				productReference: "SMART-12345",
 			},
 		};
 
@@ -85,6 +93,10 @@ describe("Domestic hot water", () => {
 				},
 				dailyEnergyLoss: 71,
 				typeOfWaterStorage: "hotWaterCylinder",
+				initialTemperature: 60,
+				areaOfHeatExchanger: 2.5,
+				heaterPosition: 0.8,
+				thermostatPosition: 0.5,
 			},
 		};
 

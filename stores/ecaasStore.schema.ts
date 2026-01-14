@@ -561,17 +561,24 @@ const waterHeatSourcesDataZod = named;
 export type WaterHeatSourcesData = z.infer<typeof waterHeatSourcesDataZod>;
 
 const hotWaterCylinderDataZodNew = namedWithId.extend({
-	heatSource: z.string(),
-	storageCylinderVolume: z.union([zodUnit("volume"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-	dailyEnergyLoss: z.number(),
 	typeOfWaterStorage: z.literal("hotWaterCylinder"),
+	storageCylinderVolume: z.union([zodUnit("volume"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	initialTemperature: z.number(),
+	dailyEnergyLoss: z.number(),
+	heatSource: z.string(),
+	areaOfHeatExchanger: z.number(),
+	heaterPosition: z.number().min(0).max(1),
+	thermostatPosition: z.number().min(0).max(1),
 });
 
 export type HotWaterCylinderDataNew = z.infer<typeof hotWaterCylinderDataZodNew>;
 
 const smartHotWaterTankDataZodNew = named.extend({
 	typeOfWaterStorage: z.literal("smartHotWaterTank"),
-	// likely needs extending
+	productReference: z.string(),
+	heatSource: z.string(),
+	heaterPosition: z.number().min(0).max(1),
+	thermostatPosition: z.number().min(0).max(1),
 });
 
 export type SmartHotWaterTankDataNew = z.infer<typeof smartHotWaterTankDataZodNew>;

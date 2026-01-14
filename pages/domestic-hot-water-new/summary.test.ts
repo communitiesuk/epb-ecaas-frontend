@@ -30,6 +30,10 @@ describe("Domestic hot water summary", () => {
 			storageCylinderVolume: 5,
 			dailyEnergyLoss: 1,
 			typeOfWaterStorage: "hotWaterCylinder",
+			initialTemperature: 60,
+			areaOfHeatExchanger: 2.5,
+			heaterPosition: 0.8,
+			thermostatPosition: 0.5,
 		};
 
 		const _immersionHeater: ImmersionHeaterData = {

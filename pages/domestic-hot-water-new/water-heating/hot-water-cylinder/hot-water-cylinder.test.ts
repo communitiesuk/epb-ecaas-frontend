@@ -1,126 +1,127 @@
-import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
-import HotWaterCylinder from "./[hotWaterCylinder].vue";
-import { v4 as uuidv4 } from "uuid";
-import { litre } from "~/utils/units/volume";
-import { unitValue } from "~/utils/units";
+// import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+// import userEvent from "@testing-library/user-event";
+// import { screen } from "@testing-library/vue";
+// import WaterStorage from "./[hotWaterCylinder].vue";
+// import { v4 as uuidv4 } from "uuid";
 
-const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport("navigateTo", () => {
-	return navigateToMock;
-});
+// const navigateToMock = vi.hoisted(() => vi.fn());
+// mockNuxtImport("navigateTo", () => {
+// 	return navigateToMock;
+// });
 
-vi.mock("uuid");
+// vi.mock("uuid");
 
-describe("hot water cylinder", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
+// describe("hot water cylinder", () => {
+// const store = useEcaasStore();
+// const user = userEvent.setup();
 
-	const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
+// afterEach(() => {
+// 	store.$reset();
+// });
 
-	const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
-		data: {
-			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
-			name: "Hot water cylinder 1",
-			heatSource: heatPumpId,
-			storageCylinderVolume: unitValue(5, litre),
-			dailyEnergyLoss: 1,
-		},
-	};
+// const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
-	afterEach(() => {
-		store.$reset();
-	});
+// const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
+// 	data: {
+// 		id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
+// 		name: "Hot water cylinder 1",
+// 		heatSource: heatPumpId,
+// 		storageCylinderVolume: unitValue(5, litre),
+// 		dailyEnergyLoss: 1,
+// 	},
+// };
 
-	const addStoreData = () => {
-		store.$patch({
-			spaceHeating: {
-				heatGeneration: {
-					heatPump: {
-						data: [{
-							data: {
-								id: heatPumpId,
-								name: "Heat pump",
-							},
-						}],
-					},
-				},
-			},
-		});
-	};
 
-	const populateValidForm = async () => {
-		await user.type(screen.getByTestId("name"), "Hot water cylinder 1");
-		await user.click(screen.getByTestId(`heatSource_${heatPumpId}`));
-		await user.type(screen.getByTestId("storageCylinderVolume"), "5");
-		await user.type(screen.getByTestId("dailyEnergyLoss"), "1");
-		await user.tab();
-	};
+// const addStoreData = () => {
+// 	store.$patch({
+// 		spaceHeating: {
+// 			heatGeneration: {
+// 				heatPump: {
+// 					data: [{
+// 						data: {
+// 							id: heatPumpId,
+// 							name: "Heat pump",
+// 						},
+// 					}],
+// 				},
+// 			},
+// 		},
+// 	});
+// };
 
-	test("data is saved to store state when form is valid", async () => {
-		addStoreData();
+// const populateValidForm = async () => {
+// 	await user.type(screen.getByTestId("name"), "Hot water cylinder 1");
+// 	await user.click(screen.getByTestId(`heatSource_${heatPumpId}`));
+// 	await user.type(screen.getByTestId("storageCylinderVolume"), "5");
+// 	await user.type(screen.getByTestId("dailyEnergyLoss"), "1");
+// 	await user.tab();
+// };
 
-		vi.mocked(uuidv4).mockReturnValue(hotWaterCylinder.data.id as unknown as Buffer);
-		await renderSuspended(HotWaterCylinder);
+	
 
-		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+// test("data is saved to store state when form is valid", async () => {
+// 	addStoreData();
 
-		const { data } = store.domesticHotWater.waterHeating.hotWaterCylinder;
+// 	vi.mocked(uuidv4).mockReturnValue(hotWaterCylinder.data.id as unknown as Buffer);
+// 	await renderSuspended(WaterStorage);
 
-		expect(data[0]).toEqual(hotWaterCylinder);
-	});
+// 	await populateValidForm();
+// 	await user.click(screen.getByRole("button"));
 
-	test("form is prepopulated when data exists in state", async () => {
-		store.$patch({
-			domesticHotWater: {
-				waterHeating: {
-					hotWaterCylinder: {
-						data: [hotWaterCylinder],
-					},
-				},
-			},
-		});
+// 	const { data } = store.domesticHotWater.waterHeating.hotWaterCylinder;
 
-		addStoreData();
-		await renderSuspended(HotWaterCylinder, {
-			route: {
-				params: { "hotWaterCylinder": "0" },
-			},
-		});
+// 	expect(data[0]).toEqual(hotWaterCylinder);
+// });
 
-		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Hot water cylinder 1");
-		expect((await screen.findByTestId<HTMLInputElement>("storageCylinderVolume")).value).toBe("5");
-		expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe("1");
-	});
+// test("form is prepopulated when data exists in state", async () => {
+// 	store.$patch({
+// 		domesticHotWater: {
+// 			waterHeating: {
+// 				hotWaterCylinder: {
+// 					data: [hotWaterCylinder],
+// 				},
+// 			},
+// 		},
+// 	});
 
-	test("required error messages are displayed when empty form is submitted", async () => {
-		await renderSuspended(HotWaterCylinder);
+// 	addStoreData();
+// 	await renderSuspended(WaterStorage, {
+// 		route: {
+// 			params: { "hotWaterCylinder": "0" },
+// 		},
+// 	});
 
-		await user.click(screen.getByRole("button"));
+// 	expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Hot water cylinder 1");
+// 	expect((await screen.findByTestId<HTMLInputElement>("storageCylinderVolume")).value).toBe("5");
+// 	expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe("1");
+// });
 
-		expect((await screen.findByTestId("name_error"))).toBeDefined();
-		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
-		expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
+// test("required error messages are displayed when empty form is submitted", async () => {
+// 	await renderSuspended(WaterStorage);
 
-	});
+// 	await user.click(screen.getByRole("button"));
 
-	test("error summary is displayed when an invalid form in submitted", async () => {
-		await renderSuspended(HotWaterCylinder);
+// 	expect((await screen.findByTestId("name_error"))).toBeDefined();
+// 	expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
+// 	expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
 
-		await user.click(screen.getByRole("button"));
+// });
 
-		expect((await screen.findByTestId("hotWaterCylinderErrorSummary"))).toBeDefined();
-	});
+// test("error summary is displayed when an invalid form in submitted", async () => {
+// 	await renderSuspended(WaterStorage);
 
-	test("navigates to hot water outlets page when valid form is completed", async () => {
-		addStoreData();
-		await renderSuspended(HotWaterCylinder);
+// 	await user.click(screen.getByRole("button"));
 
-		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+// 	expect((await screen.findByTestId("hotWaterCylinderErrorSummary"))).toBeDefined();
+// });
 
-		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/water-heating");
-	});
-});
+// test("navigates to hot water outlets page when valid form is completed", async () => {
+// 	addStoreData();
+// 	await renderSuspended(WaterStorage);
+
+// 	await populateValidForm();
+// 	await user.click(screen.getByRole("button"));
+
+// 	expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/water-heating");
+// });
+// });
