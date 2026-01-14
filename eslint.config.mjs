@@ -22,6 +22,13 @@ export default withNuxt(
 			'object-shorthand': 'error',
 			'no-useless-rename': 'error',
 			'no-unused-vars': 'off',
+			'no-restricted-syntax': [
+				'error',
+				{
+					'selector': 'TSEnumDeclaration > TSEnumMember > Literal',
+					'message': 'Use a string union type instead.'
+				}
+			],
     		'@typescript-eslint/no-unused-vars': ['error'],
 			'@typescript-eslint/no-unnecessary-type-assertion': 'error',
 			'@typescript-eslint/naming-convention': [
