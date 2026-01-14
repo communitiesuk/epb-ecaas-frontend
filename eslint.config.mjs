@@ -14,6 +14,7 @@ export default withNuxt(
 			'@stylistic/comma-dangle': ['error', 'always-multiline'],
 			'@stylistic/indent': ['error', 'tab'],
 			'@stylistic/key-spacing': 'error',
+			'@stylistic/keyword-spacing': 'error',
 			'@stylistic/no-multi-spaces': 'error',
 			'@stylistic/no-whitespace-before-property': 'error',
 			'@stylistic/object-curly-spacing': ["error", "always"],

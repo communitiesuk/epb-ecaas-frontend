@@ -190,7 +190,7 @@ export const energySupplyOptions = {
 export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined) {
 	if (fuelTypes === undefined) return emptyValueRendering;
 	const result = fuelTypes.map(type => energySupplyOptions[type]).join(", ");
-	if(!result.includes("Electricity")) {
+	if (!result.includes("Electricity")) {
 		return result + ", Electricity";
 	}
 	return result;
@@ -323,7 +323,7 @@ export const heatEmitterTypes = {
 } as const satisfies Record<HeatEmitterType, HeatEmitterDisplay>;
 
 export function displayHeatEmitterType(type: HeatEmitterType | undefined): HeatEmitterDisplay | typeof emptyValueRendering {
-	if(!type){
+	if (!type){
 		return emptyValueRendering;
 	}
 	return heatEmitterTypes[type];
