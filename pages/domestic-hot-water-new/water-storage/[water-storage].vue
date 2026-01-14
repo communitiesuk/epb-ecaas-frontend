@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { litre, type Volume } from "~/utils/units/volume";
-import type { HotWaterCylinderData } from "~/stores/ecaasStore.schema";
+import type { HotWaterCylinderData, WaterStorageData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
 
 const title = "Water storage";
@@ -9,16 +9,19 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const waterStorageStoreData = store.domesticHotWaterNew.waterStorage.data;
 const index = getStoreIndex(waterStorageStoreData);
-const waterStorageData = useItemToEdit("water-storage", waterStorageStoreData);
-const model = ref(waterStorageData?.data);
+const waterStorageData = waterStorageStoreData[index] as EcaasForm<WaterStorageData>;
+const model = ref(waterStorageData?.data as WaterStorageData);
 
-if (waterStorageData?.data.typeOfWaterStorage === "hotWaterCylinder") {
+if (waterStorageData !== undefined
+    && waterStorageData.data !== undefined
+    && waterStorageData.data.typeOfWaterStorage === "hotWaterCylinder"
+    && typeof waterStorageData.data.storageCylinderVolume === "number"
+) {
     if (typeof waterStorageData?.data?.storageCylinderVolume === "number") {
         waterStorageData.data.storageCylinderVolume = unitValue(
             waterStorageData.data.storageCylinderVolume,
             litre,
         );
-
     }
 }
 
