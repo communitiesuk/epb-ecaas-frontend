@@ -2,7 +2,7 @@
 import { isEcaasForm, type WaterHeatSourcesData } from '#imports';
 import formStatus from '~/constants/formStatus';
 
-const title = "Domestic Hot Water";
+const title = "Domestic hot water";
 
 const page = usePage();
 const store = useEcaasStore();
