@@ -889,10 +889,10 @@ export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;
 export type LocationOfCollectorLoopPipingType = z.infer<typeof typeOflocationOfLoopPiping>;
 
 export type HeatSourceType =
-	"heatPump"|
-	"boiler"|
-	"heatNetwork"|
-	"heatBattery"|
+	"heatPump" |
+	"boiler" |
+	"heatNetwork" |
+	"heatBattery" |
 	"solarThermalSystem";
 
 
@@ -992,10 +992,10 @@ export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
 
 export type HeatEmitterType = 
    "radiator" |
-   "underfloorHeating"|
-   "fanCoil"|
-    "instantElectricHeater"|
-   "electricStorageHeater"|
+   "underfloorHeating" |
+   "fanCoil" |
+    "instantElectricHeater" |
+   "electricStorageHeater" |
    "warmAirHeater";
 
 

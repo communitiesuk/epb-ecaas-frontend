@@ -185,8 +185,7 @@ export const energySupplyOptions = {
 	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
 	"elecOnly": "Electricity",
 	"electricity": "Electricity",
-} as const satisfies Record<SchemaFuelTypeExtended | "electricity", FuelTypeDisplay >;
-
+} as const satisfies Record<SchemaFuelTypeExtended | "electricity", FuelTypeDisplay>;
 
 export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined) {
 	if (fuelTypes === undefined) return emptyValueRendering;
@@ -197,7 +196,7 @@ export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined
 	return result;
 }
 
-export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" |"LPG (Liquid petroleum gas) - bottled" | "Electricity" | "Mains gas";
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" | "LPG (Liquid petroleum gas) - bottled" | "Electricity" | "Mains gas";
 
 export const ecoDesignControllerOptions = {
 	1: "I: On/Off Room Thermostat",
@@ -301,7 +300,7 @@ export function displayHeatSourceType(type: HeatSourceType | undefined): HeatSou
 	return heatSourceTypes[type!] ?? emptyValueRendering;
 }
 
-export type HeatEmitterDisplay = "Radiator" | "Underfloor heating" | "Fan coil"| "Warm air heater"|"Instant electric heater"|"Electric storage heater";
+export type HeatEmitterDisplay = "Radiator" | "Underfloor heating" | "Fan coil" | "Warm air heater" | "Instant electric heater" | "Electric storage heater";
 
 export const heatEmitterTypes = {
 	"radiator": "Radiator",

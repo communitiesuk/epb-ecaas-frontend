@@ -47,7 +47,7 @@ export function getDuctworkStatus(task: EcaasForm<boolean>): GovTagProps {
 	const form = task;
 	const status = !isFormStarted(form)
 		? formStatus.notStarted
-		:( !checkMvhrHasDuctwork() || !store.infiltrationAndVentilation.ductwork.complete)
+		: ( !checkMvhrHasDuctwork() || !store.infiltrationAndVentilation.ductwork.complete)
 			? formStatus.inProgress
 			: formStatus.complete;
 
