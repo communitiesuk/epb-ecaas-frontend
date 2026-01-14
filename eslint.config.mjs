@@ -18,6 +18,7 @@ export default withNuxt(
 			'@stylistic/no-whitespace-before-property': 'error',
 			'@stylistic/object-curly-spacing': ["error", "always"],
 			'@stylistic/quotes': ['error', 'double', { avoidEscape: true, allowTemplateLiterals: 'always' }],
+			'@stylistic/space-infix-ops': 'error',
 			'vue/html-indent': ['error', 'tab'],
 			'vue/no-multiple-template-root': 'off',
 			'object-shorthand': 'error',

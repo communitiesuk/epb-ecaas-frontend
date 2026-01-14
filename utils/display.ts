@@ -178,7 +178,7 @@ export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressure
 	}
 }
 
-export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" |"LPG (Liquid petroleum gas) - bottled" | "Electricity is the only energy source" | "Mains gas" | "Electricity";
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" | "LPG (Liquid petroleum gas) - bottled" | "Electricity is the only energy source" | "Mains gas" | "Electricity";
 
 export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined) {
 	if (fuelTypes === undefined) return emptyValueRendering;
@@ -261,7 +261,7 @@ export function displayColour(colour: SchemaColour | undefined): ColourDisplay |
 	return colourOptionsMap[colour!] ?? emptyValueRendering;
 }
 
-export type HeatPumpTypeDisplay = "Air source" |"Ground source"| "Water source" | "Booster" | "Hot water only" | "Exhaust air MEV" | "Exhaust air MVHR" | "Exhaust air Mixed";
+export type HeatPumpTypeDisplay = "Air source" | "Ground source" | "Water source" | "Booster" | "Hot water only" | "Exhaust air MEV" | "Exhaust air MVHR" | "Exhaust air Mixed";
 
 export const heatPumpTypes = {
 	"airSource": "Air source",
