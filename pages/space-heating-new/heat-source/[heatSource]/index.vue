@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { getUrl,  type HeatSourceData } from "#imports";
+import { getUrl, type HeatSourceData } from "#imports";
 import { heatSourceTypes } from "../../../../utils/display";
 
 const title = "Heat source";

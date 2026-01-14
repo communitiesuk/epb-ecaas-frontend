@@ -63,7 +63,7 @@ describe("roof", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const  { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		
 		expect(dwellingSpaceRoofs.data[0]).toEqual({ ...roof, complete: true });
 	});

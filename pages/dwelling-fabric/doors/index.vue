@@ -23,7 +23,7 @@ function handleRemove(doorType: DoorType, index: number) {
 } 
 
 function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) {
-	const doors  = store.dwellingFabric.dwellingSpaceDoors[doorType]?.data;
+	const doors = store.dwellingFabric.dwellingSpaceDoors[doorType]?.data;
 	const door = doors?.[index];
 	let name: string;
     

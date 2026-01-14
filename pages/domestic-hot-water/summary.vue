@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { getTabItems, getUrl  } from "#imports";
+import { getTabItems, getUrl } from "#imports";
 
 const title = "Domestic hot water";
 const store = useEcaasStore();

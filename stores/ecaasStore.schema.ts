@@ -896,7 +896,7 @@ export type HeatSourceType =
 	"solarThermalSystem";
 
 
-const heatPumpBase = 	namedWithId.extend({
+const heatPumpBase = namedWithId.extend({
 	typeOfHeatSource: z.literal("heatPump"),
 	typeOfHeatPump: z.enum([
 		"airSource",
@@ -925,7 +925,7 @@ const heatBatteryBase = namedWithId.extend({
 	energySupply: fuelTypeWithElecZod,
 });
 
-const solarThermalSystemBase = 	namedWithId.extend({
+const solarThermalSystemBase = namedWithId.extend({
 	typeOfHeatSource: z.literal("solarThermalSystem"),
 	locationOfCollectorLoopPiping: typeOflocationOfLoopPiping,
 	collectorModuleArea: z.number(),

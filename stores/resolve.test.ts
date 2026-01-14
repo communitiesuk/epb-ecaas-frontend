@@ -1,4 +1,4 @@
-import { _private, resolveState  } from "./resolve";
+import { _private, resolveState } from "./resolve";
 import type { Resolved } from "./resolve";
 
 describe("Resolved Type", () => {

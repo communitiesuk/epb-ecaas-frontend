@@ -37,7 +37,7 @@ describe("getSectionStatus util function" , () => {
 
     
 	it("should return an 'complete' form status given a pvAndBatteriesSection marked as complete", () => {
-		const pvAndBatteriesSection = { pvSystems: { data: [], complete: true  }, electricBattery: { data: [], complete: true } };
+		const pvAndBatteriesSection = { pvSystems: { data: [], complete: true }, electricBattery: { data: [], complete: true } };
 
 		const actual = getSectionStatus(pvAndBatteriesSection);
 

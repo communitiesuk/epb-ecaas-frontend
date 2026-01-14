@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { getProduct, getProductDetails, getProducts } from "./products";
-import type  { TechnologyType } from "~/pcdb/pcdb.types";
+import type { TechnologyType } from "~/pcdb/pcdb.types";
 import type { H3Error } from "h3";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
