@@ -146,8 +146,8 @@ describe("displayDeliveryEnergyUseKey", () => {
 describe("adjacentSpaceTypeOptions", () => {
 	it("generates options correctly", () => {
 		const expectedOptions = {
-			["heatedSpace"]: "Trash compactor to heated space",
-			["unheatedSpace"]: "Trash compactor to unheated space",
+			heatedSpace: "Trash compactor to heated space",
+			unheatedSpace: "Trash compactor to unheated space",
 		};
 		expect(adjacentSpaceTypeOptions("Trash compactor")).toStrictEqual(expectedOptions);
 	});

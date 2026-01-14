@@ -129,10 +129,9 @@ export interface FloorsData {
 	dwellingSpaceExposedFloor: EcaasFormList<ExposedFloorData>
 }
 
-export type AdjacentSpaceType =
-	 "heatedSpace"|
-	"unheatedSpace";
+export const adjacentSpaceTypes = ["heatedSpace", "unheatedSpace"] as const;
 
+export type AdjacentSpaceType = typeof adjacentSpaceTypes[number];
 
 const baseInternalFloorData = named.extend({
 	surfaceAreaOfElement: z.number(),

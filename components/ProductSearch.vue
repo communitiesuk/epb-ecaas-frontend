@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
-import { SearchOption } from "~/composables/productSearch";
+import type { SearchOption } from "~/composables/productSearch";
 
 const { products, model: searchModel } = defineProps<{
 	products: DisplayProduct[];
@@ -9,16 +9,16 @@ const { products, model: searchModel } = defineProps<{
 
 const model = ref<ProductSearchModel>({
 	...searchModel,
-	searchOption: searchModel.searchOption || SearchOption.productId,
+	searchOption: searchModel.searchOption || "productId",
 });
 	
 const brandNames = ref<string[]>([]);
 const modelNames = ref<string[]>([]);
 const modelQualifiers = ref<string[]>([]);
 
-const searchOptions: Record<string, string> = {
-	[SearchOption.productId]: "Product ID",
-	[SearchOption.modelAndBrand]: "Brand and model",
+const searchOptions: Record<SearchOption, string> = {
+	productId: "Product ID",
+	modelAndBrand: "Brand and model",
 };
 
 const setBrandName = (name: string) => model.value = {

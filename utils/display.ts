@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaL
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatPumpType } from "~/stores/ecaasStore.schema";
+import { adjacentSpaceTypes, type AdjacentSpaceType, type ConciseMassDistributionClass, type HeatEmitterType, type HeatPumpType, type HeatSourceType } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -139,10 +139,10 @@ export function displayApplianceType(appliances: SchemaApplianceType[] | undefin
 type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;
 
 export function adjacentSpaceTypeOptions<T extends string>(element: T): Record<AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>> {
-	const adjacentSpaceTypes : AdjacentSpaceType[] = ["heatedSpace", "unheatedSpace"];
-	return objectFromEntries(adjacentSpaceTypes.map(key => [
-		key,
-		displayAdjacentSpaceType(key, element)!,
+
+	return objectFromEntries(adjacentSpaceTypes.map(entry => [
+		entry,
+		displayAdjacentSpaceType(entry, element)!,
 	] as const satisfies [AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>]));
 }
 

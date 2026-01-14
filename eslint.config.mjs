@@ -25,8 +25,8 @@ export default withNuxt(
 			'no-restricted-syntax': [
 				'error',
 				{
-					'selector': 'TSEnumDeclaration > TSEnumMember > Literal',
-					'message': 'Use a string union type instead.'
+					'selector': 'TSEnumDeclaration',
+					'message': 'Use string union type instead.'
 				}
 			],
     		'@typescript-eslint/no-unused-vars': ['error'],

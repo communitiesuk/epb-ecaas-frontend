@@ -1,9 +1,6 @@
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 
-export enum SearchOption {
-	productId = "productId",
-	modelAndBrand = "modelAndBrand",
-};
+export type SearchOption = "productId" | "modelAndBrand";
 
 export interface ProductSearchModel {
 	searchOption?: SearchOption;

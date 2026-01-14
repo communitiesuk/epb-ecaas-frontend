@@ -93,12 +93,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				v-if="model.typeOfInternalDoor === 'heatedSpace'" id="associatedItemId"
 				name="associatedItemId" label="Associated wall or ceiling"
 				help="Select the wall or ceiling that this door is in. It should have the same pitch as the door."
-				:adjacent-space-type="'heatedSpace'" />
+				adjacent-space-type="heatedSpace" />
 			<FieldsAssociatedElements
 				v-if="model.typeOfInternalDoor === 'unheatedSpace'" id="associatedItemId"
 				name="associatedItemId" label="Associated wall or ceiling"
 				help="Select the wall or ceiling that this door is in. It should have the same pitch as the door."
-				:adjacent-space-type="'unheatedSpace'" />
+				adjacent-space-type="unheatedSpace" />
 			<FormKit
 				id="surfaceArea" type="govInputWithSuffix" label="Net surface area of element"
 				help="Enter the net area of the building element. The area of all windows should be subtracted before entry."

@@ -69,7 +69,7 @@ describe("Products page", () => {
 			},
 			query: {
 				productId: "ABC123",
-				searchOption: SearchOption.productId,
+				searchOption: "productId",
 			},
 		};
 
@@ -80,7 +80,7 @@ describe("Products page", () => {
 
 		// Assert
 		expect(searchModel.value.productId).toBe("ABC123");
-		expect(searchModel.value.searchOption).toBe(SearchOption.productId);
+		expect(searchModel.value.searchOption).toBe("productId");
 	});
 
 	it("searchData returns paginated results", () => {

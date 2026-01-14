@@ -90,10 +90,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
 		</template>
 		<FormKit
-			v-if="model?.typeOfInternalFloor === 'unheatedSpace'" id="thermalResistanceOfAdjacentUnheatedSpace"
-			type="govInputWithSuffix" suffix-text="(m²·K)/W" label="Thermal resistance of adjacent unheated space"
+			v-if="model?.typeOfInternalFloor === 'unheatedSpace'"
+			id="thermalResistanceOfAdjacentUnheatedSpace"
+			type="govInputWithSuffix"
+			suffix-text="(m²·K)/W"
+			label="Thermal resistance of adjacent unheated space"
 			help="Enter the effective thermal resistance of the unheated space"
-			name="thermalResistanceOfAdjacentUnheatedSpace" validation="required | number | min:0 | max:3"
+			name="thermalResistanceOfAdjacentUnheatedSpace"
+			validation="required | number | min:0 | max:3"
 			data-field="Zone.BuildingElement.*.thermal_resistance_unconditioned_space">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<p>For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5
