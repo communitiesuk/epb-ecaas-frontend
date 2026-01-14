@@ -49,7 +49,7 @@ describe("internal floor", () => {
 			await populateValidForm();
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
-			const  { dwellingSpaceInternalFloor } = store.dwellingFabric.dwellingSpaceFloors;
+			const { dwellingSpaceInternalFloor } = store.dwellingFabric.dwellingSpaceFloors;
 			
 			expect(dwellingSpaceInternalFloor?.data[0]?.data).toEqual(internalFloor);
 			expect(dwellingSpaceInternalFloor?.data[0]?.complete).toEqual(true);

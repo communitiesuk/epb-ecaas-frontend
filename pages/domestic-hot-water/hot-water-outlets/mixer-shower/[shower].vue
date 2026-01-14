@@ -7,7 +7,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const mixedShowerData = useItemToEdit("shower", store.domesticHotWater.hotWaterOutlets.mixedShower.data);
-const model = ref(mixedShowerData?.data      );
+const model = ref(mixedShowerData?.data );
 const id = mixedShowerData?.data.id || uuidv4();
 
 const saveForm = (fields: MixedShowerData) => {

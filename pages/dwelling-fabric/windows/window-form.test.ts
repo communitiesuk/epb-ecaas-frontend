@@ -59,9 +59,9 @@ const window1: EcaasForm<WindowData> = {
 	complete: true,
 };
 
-const window2: EcaasForm<WindowData>  = {
+const window2: EcaasForm<WindowData> = {
 	data: {
-		...window1.data, 	name: "Window 2", id: "test-id-2" },
+		...window1.data, name: "Window 2", id: "test-id-2" },
 };
 
 describe ("window", () => {

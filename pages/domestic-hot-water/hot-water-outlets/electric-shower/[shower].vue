@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { getUrl, uniqueName  } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 const { autoSaveElementForm, getStoreIndex } = useForm();
  
 const title = "Electric shower";

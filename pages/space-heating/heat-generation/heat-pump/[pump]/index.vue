@@ -12,7 +12,7 @@ const heatPumpStoreData = store.spaceHeating.heatGeneration.heatPump.data;
 const index = getStoreIndex(heatPumpStoreData);
 const heatPumpData = useItemToEdit("pump", heatPumpStoreData);
 const model = ref(heatPumpData?.data);
-const id =  heatPumpData?.data.id ?? uuidv4();
+const id = heatPumpData?.data.id ?? uuidv4();
 
 const isProductSelected = () => {
 	return heatPumpStoreData[index]?.data.productReference ? true : false; 

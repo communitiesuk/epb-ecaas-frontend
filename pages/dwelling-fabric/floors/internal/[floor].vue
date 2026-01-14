@@ -41,7 +41,7 @@ const saveForm = (fields: InternalFloorData) => {
 			throw new Error("Invalid floor type");
 		}
 		
-		dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] =  { data: floor, complete: true };
+		dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] = { data: floor, complete: true };
 		dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
 	});
 	navigateTo("/dwelling-fabric/floors");
