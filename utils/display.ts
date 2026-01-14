@@ -323,7 +323,7 @@ export const heatEmitterTypes = {
 } as const satisfies Record<HeatEmitterType, HeatEmitterDisplay>;
 
 export function displayHeatEmitterType(type: HeatEmitterType | undefined): HeatEmitterDisplay | typeof emptyValueRendering {
-	if (!type){
+	if (!type) {
 		return emptyValueRendering;
 	}
 	return heatEmitterTypes[type];

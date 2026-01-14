@@ -21,8 +21,7 @@ describe("Products service", () => {
 			// Act
 			try {
 				await getProducts("invalid type" as TechnologyType);
-			}
-			catch (error) {
+			} catch (error) {
 				h3Error = error as H3Error;
 			}
 
@@ -69,8 +68,7 @@ describe("Products service", () => {
 			// Act
 			try {
 				await getProduct(NaN);
-			}
-			catch (error) {
+			} catch (error) {
 				h3Error = error as H3Error;
 			}
 
@@ -89,8 +87,7 @@ describe("Products service", () => {
 			// Act
 			try {
 				await getProduct(1);
-			}
-			catch (error) {
+			} catch (error) {
 				h3Error = error as H3Error;
 			}
 
@@ -129,8 +126,7 @@ describe("Products service", () => {
 			// Act
 			try {
 				await getProductDetails(NaN, "AirSourceHeatPump");
-			}
-			catch (error) {
+			} catch (error) {
 				h3Error = error as H3Error;
 			}
 
@@ -149,8 +145,7 @@ describe("Products service", () => {
 			// Act
 			try {
 				await getProductDetails(1, "AirSourceHeatPump");
-			}
-			catch (error) {
+			} catch (error) {
 				h3Error = error as H3Error;
 			}
 

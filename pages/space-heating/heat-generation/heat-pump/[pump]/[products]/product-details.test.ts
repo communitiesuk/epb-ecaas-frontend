@@ -81,8 +81,7 @@ describe("Heat pump details", async () => {
 		// Act
 		try {
 			await renderSuspended(ProductDetails);
-		}
-		catch (error) {
+		} catch (error) {
 			h3Error = error as H3Error;
 		}
 

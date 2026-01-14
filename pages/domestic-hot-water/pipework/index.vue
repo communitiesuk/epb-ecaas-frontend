@@ -65,12 +65,12 @@ function handleComplete() {
 	navigateTo("/domestic-hot-water");
 }
 
-function checkIsComplete(){
+function checkIsComplete() {
 	const pipes = store.domesticHotWater.pipework;
 	return Object.values(pipes).every(pipe => pipe.complete);
 }
 
-function hasIncompleteEntries(){
+function hasIncompleteEntries() {
 
 	const pipeworkTypes = store.domesticHotWater.pipework;
 

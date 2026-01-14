@@ -31,8 +31,7 @@ function handleDuplicate<T extends HeatEmittingData>(emittingType: HeatEmittingT
 			if (isEcaasForm(f) && isEcaasForm(emitter)) {
 				name = emitter.data.name;
 				return f.data.name.match(duplicateNamePattern(emitter.data.name));
-			}
-			else if (!isEcaasForm(f) && !isEcaasForm(emitter)) {
+			} else if (!isEcaasForm(f) && !isEcaasForm(emitter)) {
 				name = emitter.name;
 				return f.name.match(duplicateNamePattern(emitter.name));
 			}
@@ -78,7 +77,7 @@ function handleComplete() {
 	navigateTo("/space-heating");
 }
 
-function checkIsComplete(){
+function checkIsComplete() {
 	const emitters = store.spaceHeating.heatEmitting;
 	return Object.values(emitters).every(emitter => emitter.complete);
 }

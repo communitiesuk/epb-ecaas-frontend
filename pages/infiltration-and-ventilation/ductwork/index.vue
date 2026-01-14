@@ -41,7 +41,7 @@ function handleDuplicate(index: number) {
 }
 
 function handleComplete() {
-	if (checkMvhrHasDuctwork()){
+	if (checkMvhrHasDuctwork()) {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: { complete: true },
@@ -51,8 +51,8 @@ function handleComplete() {
 	}
 		
 }
-function checkIsComplete(){
-	if (!store.infiltrationAndVentilation.ductwork.complete){
+function checkIsComplete() {
+	if (!store.infiltrationAndVentilation.ductwork.complete) {
 		return false;
 	}
 	return checkMvhrHasDuctwork();
