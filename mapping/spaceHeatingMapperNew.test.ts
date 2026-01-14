@@ -5,10 +5,7 @@ import {
 } from "./spaceHeatingMapperNew";
 
 describe("mapHeatPump", () => {
-	const baseForm = {
-		data: [],
-		complete: true as const,
-	};
+
 	const store = useEcaasStore();
 
 	const heatPump1: HeatSourceData = {
@@ -80,10 +77,7 @@ describe("mapHeatPump", () => {
 });
 
 describe("mapBoilers", () => {
-	const baseForm = {
-		data: [],
-		complete: true as const,
-	};
+
 	const store = useEcaasStore();
 
 	const boiler1: HeatSourceData = {
@@ -160,10 +154,7 @@ describe("mapBoilers", () => {
 });
 
 describe("mapHeatBatteries", () => {
-	const baseForm = {
-		data: [],
-		complete: true as const,
-	};
+
 	const store = useEcaasStore();
 
 	const heatBattery1: HeatSourceData = {

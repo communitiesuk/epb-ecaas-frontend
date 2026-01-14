@@ -191,7 +191,7 @@ const heatingControlsSummary: SummarySection = {
 	id: "heatingControls",
 	label: "Heating controls",
 	data: {
-		"Type of heating control": typeof heatingControls[0] !== "undefined" ? displayCamelToSentenceCase(show(heatingControls[0].data.heatingControlType)) : emptyValueRendering,
+		"Type of heating control": heatingControls[0]?.data?.heatingControlType ? displayCamelToSentenceCase(heatingControls[0]?.data.heatingControlType) : emptyValueRendering,
 	},
 	editUrl: heatingControlsUrl,
 };
