@@ -12,12 +12,11 @@ const index = getStoreIndex(heatSourceStoreData);
 const heatSourceData = useItemToEdit("heatSource", heatSourceStoreData);
 const model = ref(heatSourceData?.data as HeatSourceData);
 const id = heatSourceData?.data.id ?? uuidv4();
-
-type HeatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
-type BoilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
-type HeatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
-type HeatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
-type SolarThermalModelType = Extract<HeatSourceData, { typeOfHeatSource: "solarThermalSystem" }>;
+export type HeatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
+export type BoilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
+export type HeatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
+export type HeatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
+export type SolarThermalModelType = Extract<HeatSourceData, { typeOfHeatSource: "solarThermalSystem" }>;
 
 const saveForm = (fields: HeatSourceData) => {
 	store.$patch((state) => {
