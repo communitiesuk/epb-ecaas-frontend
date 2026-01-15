@@ -187,20 +187,7 @@ describe("heatSource", () => {
 		
 		});
 
-		it("navigates to space heating when valid form is completed", async () => {
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await populateValidHeatPumpForm();
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
-		});
-
-		describe("partially saving data", () => {
+		describe("heat pump default name", () => {
 			it("creates a new heat pump with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
@@ -225,77 +212,6 @@ describe("heatSource", () => {
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.name).toBe("Air source heat pump");
-			});
-
-			it("creates new heat pump with default name when type of heat pump is selected", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-				await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
-				await user.tab();
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-				expect(actualHeatSource.data.name).toBe("Air source heat pump");
-			});
-
-			it("saves updated form data to store automatically", async () => {
-				store.$patch({
-					spaceHeatingNew: {
-						heatSource: {
-							data: [{ data: heatPump2 }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatNetwork");
-				expect(actualHeatSource.data.name).toBe("Heat network");
-			});
-
-			it("saves updated form data to correct store object automatically", async () => {
-				store.$patch({
-					spaceHeatingNew: {
-						heatSource: {
-							data: [{ data: heatPump1 }, { data: heatPump2 }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "1" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[1]!;
-				expect(actualHeatSource.data.name).toBe("Solar thermal system");
-				expect(actualHeatSource.data.typeOfHeatSource).toBe("solarThermalSystem");
-			});
-
-			it("navigates to space heating on clicking Save progress", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-				await user.click(screen.getByTestId("saveProgress"));
-
-				expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
 			});
 		});
 	});
@@ -436,20 +352,7 @@ describe("heatSource", () => {
 			expect((await screen.findByTestId("locationOfBoiler_error"))).toBeDefined();
 		});
 
-		test("navigates to space heating when valid form is completed", async () => {
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await populateValidBoilerForm();
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
-		});
-
-		describe("partially saving data", () => {
+		describe("boiler default name", () => {
 			it("creates a new boiler with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
@@ -474,64 +377,6 @@ describe("heatSource", () => {
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.name).toBe("Combi boiler");
-			});
-
-			it("saves updated form data to store automatically", async () => {
-				store.$patch({
-					spaceHeatingNew: {
-						heatSource: {
-							data: [{ data: boiler1 }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-		
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatNetwork");
-				expect(actualHeatSource.data.name).toBe("Heat network");
-			});
-
-			it("saves updated form data to correct store object automatically", async () => {
-				store.$patch({
-					spaceHeatingNew: {
-						heatSource: {
-							data: [{ data: boiler1 }, { data: boiler2 }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "1" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
-
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[1]!;
-				expect(actualHeatSource.data.name).toBe("Solar thermal system");
-				expect(actualHeatSource.data.typeOfHeatSource).toBe("solarThermalSystem");
-			});
-
-			it("navigates to space heating on clicking Save progress", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
-				await user.click(screen.getByTestId("saveProgress"));
-
-				expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
 			});
 		});
 	});
@@ -577,19 +422,6 @@ describe("heatSource", () => {
 					},
 				},
 			});
-		};
-
-		const heatNetwork2: HeatSourceData = {
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c88",
-			name: "Heat network 2",
-			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "unsleeved DHN",
-			isHeatNetworkInPcdb: false,
-			emissionsFactor: 1,
-			outOfScopeEmissionsFactor: 2,
-			primaryEnergyFactor: 3,
-			canEnergyBeExported: true,
-			usesHeatInterfaceUnits: false,
 		};
 
 		test("'HeatNetworkSection' component displays when type of heat source is heat network", async () => {
@@ -703,20 +535,7 @@ describe("heatSource", () => {
 			expect((await screen.findByTestId("isHeatNetworkInPcdb_error"))).toBeDefined();
 		});
 
-		test("navigates to space heating when valid form is completed", async () => {
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await populateValidHeatNetworkForm();
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
-		});
-
-		describe("partially saving data", () => {
+		describe("heat network default name", () => {
 			it("creates a new heat network with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
@@ -742,78 +561,6 @@ describe("heatSource", () => {
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.name).toBe("Unsleeved district heat network");
 			});
-
-			it("creates new heat network with default name when type of heat network is selected", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-				await user.click(screen.getByTestId("typeOfHeatNetwork_communal"));
-				await user.tab();
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-				expect(actualHeatSource.data.name).toBe("Communal heat network");
-			});
-
-			it("saves updated form data to store automatically", async () => {
-				store.$patch({
-					spaceHeatingNew: {
-						heatSource: {
-							data: [{ data: heatNetwork1 }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatPump");
-				expect(actualHeatSource.data.name).toBe("Heat pump");
-			});
-
-			it("saves updated form data to correct store object automatically", async () => {
-				store.$patch({
-					spaceHeatingNew: {
-						heatSource: {
-							data: [{ data: heatNetwork1 }, { data: heatNetwork2 }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "1" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
-				await user.tab();
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[1]!;
-				expect(actualHeatSource.data.name).toBe("Solar thermal system");
-				expect(actualHeatSource.data.typeOfHeatSource).toBe("solarThermalSystem");
-			});
-
-			it("navigates to space heating on clicking Save progress", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-				await user.click(screen.getByTestId("saveProgress"));
-
-				expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
-			});
 		});
 	});
 
@@ -827,7 +574,6 @@ describe("heatSource", () => {
 				},
 			});
 			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
-			// await user.type(screen.getByTestId("name"), "Heat battery 1");
 			await user.click(screen.getByTestId("typeOfHeatBattery_pcm"));
 			await user.type(screen.getByTestId("numberOfUnits"), "1");
 			await user.click(screen.getByTestId("energySupply_mains_gas"));
@@ -991,20 +737,7 @@ describe("heatSource", () => {
 			expect((await screen.findByTestId("energySupply_error"))).toBeDefined();
 		});
 
-		test("navigates to space heating when valid form is completed", async () => {
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await populateValidHeatBatteryForm();
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
-		});
-
-		describe("partially saving data", () => {
+		describe("heat battery default name", () => {
 			it("creates a new heat battery with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
@@ -1031,65 +764,6 @@ describe("heatSource", () => {
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.name).toBe("Pcm heat battery");
-			});
-
-			it("saves updated form data to store automatically", async () => {
-				store.$patch({
-					spaceHeatingNew: {
-						heatSource: {
-							data: [{ data: heatBattery1 }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-	
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatPump");
-				expect(actualHeatSource.data.name).toBe("Heat pump");
-			});
-
-			it("saves updated form data to correct store object automatically", async () => {
-				store.$patch({
-					spaceHeatingNew: {
-						heatSource: {
-							data: [{ data: heatBattery1 }, { data: heatBattery2 }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "1" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
-
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[1]!;
-				expect(actualHeatSource.data.name).toBe("Solar thermal system");
-				expect(actualHeatSource.data.typeOfHeatSource).toBe("solarThermalSystem");
-			});
-
-			it("navigates to space heating on clicking Save progress", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
-				await user.click(screen.getByTestId("saveProgress"));
-
-				expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
 			});
 		});
 	});
@@ -1207,40 +881,6 @@ describe("heatSource", () => {
 			});
 		});
 
-		test("product reference is cleared when heat source type changes", async () => {
-			
-			const heatPump: HeatSourceData = {
-				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-				name: "Heat pump 1",
-				typeOfHeatSource: "heatPump",
-				typeOfHeatPump: "airSource",
-				productReference: "HEATPUMP-SMALL",
-			};
-
-			store.$patch({
-				spaceHeatingNew: {
-					heatSource: {
-						data: [{ data: heatPump }],
-					},
-				},
-			});
-
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
-			
-			const { data } = store.spaceHeatingNew.heatSource;
-			const heatSourceItem = data[0]!.data;
-
-			if ("productReference" in heatSourceItem) {
-				expect(heatSourceItem.productReference).toBeUndefined();
-			}
-		});
-
 		test("form is prepopulated when data exists in state", async () => {
 			store.$patch({
 				spaceHeatingNew: {
@@ -1323,20 +963,7 @@ describe("heatSource", () => {
 			expect((await screen.findByTestId("orientation_error"))).toBeDefined();
 		});
 
-		test("navigates to space heating when valid form is completed", async () => {
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await populateValidSolarThermalSystemForm();
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
-		});
-
-		describe("partially saving data", () => {
+		describe("solar thermal system default name", () => {
 		
 			it("creates new solar thermal system with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
@@ -1350,71 +977,48 @@ describe("heatSource", () => {
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.name).toBe("Solar thermal system");
 			});
+		});
+	});
 
-			it("saves updated form data to store automatically", async () => {
-				store.$patch({
-					spaceHeatingNew: {
-						heatSource: {
-							data: [{ data: solarThermalSystem1 }],
-						},
+	describe("when heat source type is updated", () => {
+
+		test("stored item data is cleared except id, name and type of heat source", async () => {
+			
+			const heatPump: HeatSourceData = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+				name: "Heat pump 1",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "airSource",
+				productReference: "HEATPUMP-SMALL",
+			};
+			
+			store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: heatPump }],
 					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-				await user.click(screen.getByTestId("typeOfHeatPump_booster"));
-				await user.tab();
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatPump");
-				expect(actualHeatSource.data.name).toBe("Booster heat pump");
+				},
 			});
-
-			it("saves updated form data to correct store object automatically", async () => {
-				store.$patch({
-					spaceHeatingNew: {
-						heatSource: {
-							data: [{ data: solarThermalSystem1 }, { data: solarThermalSystem2 }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "1" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-				await user.click(screen.getByTestId("typeOfHeatPump_booster"));
-				await user.tab();
-
-				const actualHeatSource = store.spaceHeatingNew.heatSource.data[1]!;
-				expect(actualHeatSource.data.name).toBe("Booster heat pump");
-				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatPump");
+			
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+				},
 			});
-
-			it("navigates to space heating on clicking Save progress", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
-				await user.click(screen.getByTestId("saveProgress"));
-
-				expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
+			
+			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+			
+			const { data } = store.spaceHeatingNew.heatSource;
+			const heatSourceItem = data[0]!.data;
+			expect(heatSourceItem).toEqual({
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+				name: "Boiler",
+				typeOfHeatSource: "boiler",
 			});
 		});
 	});
 
-	test("product reference is cleared when heat source type changes", async () => {
+	test("product reference is cleared when heat source subtype changes", async () => {
 			
 		const heatPump: HeatSourceData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
@@ -1431,15 +1035,18 @@ describe("heatSource", () => {
 				},
 			},
 		});
+
 		await renderSuspended(HeatSourceForm, {
 			route: {
 				params: { "heatSource": "0" },
 			},
 		});
 
-		await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+		await user.click(screen.getByTestId("typeOfHeatPump_booster"));
+			
 		const { data } = store.spaceHeatingNew.heatSource;
 		const heatSourceItem = data[0]!.data;
+
 		if ("productReference" in heatSourceItem) {
 			expect(heatSourceItem.productReference).toBeUndefined();
 		}
@@ -1469,6 +1076,117 @@ describe("heatSource", () => {
 
 		await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
 		expect(screen.queryByTestId("heatSourceErrorSummary")).toBeNull();
+	});
 
+	it("navigates to space heating on clicking Save progress", async () => {
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+		await user.click(screen.getByTestId("saveProgress"));
+
+		expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
+	});
+
+	it("navigates to space heating when valid form is completed", async () => {
+
+		const heatPump: HeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "Heat pump 1",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "airSource",
+			productReference: "HEATPUMP-SMALL",
+		};
+		store.$patch({
+			spaceHeatingNew: {
+				heatSource: {
+					data: [{ data: heatPump }],
+				},
+			},
+		});
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
+	});
+
+	describe("partially saving data", () => {
+
+		const heatNetwork1: HeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+			name: "Heat network 1",
+			typeOfHeatSource: "heatNetwork",
+			typeOfHeatNetwork: "communal",
+			isHeatNetworkInPcdb: true,
+			productReference: "HEATNETWORK-LARGE",
+			energySupply: "electricity",
+			usesHeatInterfaceUnits: false,
+		};
+
+		const heatNetwork2: HeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c88",
+			name: "Heat network 2",
+			typeOfHeatSource: "heatNetwork",
+			typeOfHeatNetwork: "unsleeved DHN",
+			isHeatNetworkInPcdb: false,
+			emissionsFactor: 1,
+			outOfScopeEmissionsFactor: 2,
+			primaryEnergyFactor: 3,
+			canEnergyBeExported: true,
+			usesHeatInterfaceUnits: false,
+		};
+		
+		it("saves updated form data to store automatically", async () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: heatNetwork1 }],
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+
+			const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
+			expect(actualHeatSource.data.typeOfHeatSource).toBe("heatPump");
+			expect(actualHeatSource.data.name).toBe("Heat pump");
+		});
+
+		it("saves updated form data to correct store object automatically", async () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: heatNetwork1 }, { data: heatNetwork2 }],
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "1" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfHeatSource_solarThermalSystem"));
+			await user.tab();
+
+			const actualHeatSource = store.spaceHeatingNew.heatSource.data[1]!;
+			expect(actualHeatSource.data.name).toBe("Solar thermal system");
+			expect(actualHeatSource.data.typeOfHeatSource).toBe("solarThermalSystem");
+		});
 	});
 });
