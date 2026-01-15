@@ -41,6 +41,7 @@ const ductTypes = ["intake", "supply", "extract", "exhaust"] as const satisfies 
 const fuelTypesWithElecOnly = [
 	"LPG_bulk",
 	"LPG_bottled",
+	"LPG_condition_11F",
 	"mains_gas",
 	"elecOnly",
 	"electricity"

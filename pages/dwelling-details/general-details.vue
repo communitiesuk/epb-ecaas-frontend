@@ -11,6 +11,7 @@ const fuelTypeOptions = {
 	"mains_gas": "Mains gas",
 	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
 	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
+	"LPG_condition_11F": "LPG - 11F",
 } as const satisfies Record<Exclude<SchemaFuelType, "electricity">, FuelTypeDisplay>;
 
 const model = ref({
@@ -32,6 +33,7 @@ const saveForm = (fields: typeof model.value) => {
 					typeOfDwelling: fields.typeOfDwelling,
 					storeysInDwelling: fields.storeysInDwelling,
 					storeyOfFlat: fields.typeOfDwelling === "flat" ? fields.storeyOfFlat : undefined,
+					storeysInBuilding: fields.typeOfDwelling === "flat" ? fields.storeysInBuilding : undefined,
 					buildingLength: fields.buildingLength,
 					buildingWidth: fields.buildingWidth,
 					numOfBedrooms: fields.numOfBedrooms,
@@ -97,10 +99,24 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-rules="{ isInteger }"
 			validation="required | isInteger | min:-50 | max:199"
 			:validation-messages="{
-				isInteger: `Storey of flat must be an integer.`,
+				isInteger: `Storey of flat must be a round number.`,
 			}"
 			help="If the flat is over multiple storeys, enter the storey of the lowest habitable area"
 			data-field="General.storey_of_dwelling"
+		/>
+		<FormKit
+			v-if="model.typeOfDwelling === 'flat'"
+			id="storeysInBuilding"
+			type="govInputInt"
+			label="Number of storeys in building"
+			name="storeysInBuilding"
+			:validation-rules="{ isInteger }"
+			validation="required | isInteger | min:1"
+			:validation-messages="{
+				isInteger: `Storeys in building must be a round number.`,
+			}"
+			help="Enter the number of storeys in the part of the building that the dwelling is in"
+			data-field="General.storeys_in_building"
 		/>
 		<FormKit
 			id="storeysInDwelling"

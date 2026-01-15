@@ -189,9 +189,8 @@ export interface components {
             battery_location: "inside" | "outside";
         };
         HotWaterTankHeatSourceCommon: {
-            name?: string;
             heater_position: number;
-            thermostat_position: number;
+            thermostat_position?: number;
         };
         /** @description A possible heat source for a hot water tank */
         ImmersionHeater: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
@@ -225,6 +224,7 @@ export interface components {
             /** @constant */
             type: "HeatSourceWet";
             EnergySupply: string;
+            name: string;
             temp_flow_limit_upper?: number;
         };
         HeatPump_HWOnlyTestData: {
@@ -249,11 +249,6 @@ export interface components {
                 L?: components["schemas"]["HeatPump_HWOnlyTestData"];
             };
         };
-        /** @description A possible heat source for a hot water tank */
-        Boiler: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
-            /** @constant */
-            type: "Boiler";
-        };
         HotWaterTankCommon: {
             volume: number;
             init_temp?: number;
@@ -268,10 +263,10 @@ export interface components {
                 insulation_thickness_mm: number;
                 surface_reflectivity: boolean;
                 /** @enum {unknown} */
-                pipe_contents: "air" | "water" | "glycol25";
+                pipe_contents: "water" | "glycol25";
             }[];
             HeatSource: {
-                [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"] | components["schemas"]["Boiler"];
+                [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
             };
             /** @description A heat_exchanger_surface_area is required when there is a HeatPump_HWOnly HeatSource */
             heat_exchanger_surface_area?: number;
@@ -418,9 +413,16 @@ export interface components {
         Radiator: {
             /** @constant */
             wet_emitter_type: "radiator";
-            c: number;
             n: number;
-        };
+        } & ({
+            c: number;
+            thermal_mass?: number;
+            length?: number;
+        } | {
+            c_per_m: number;
+            thermal_mass_per_m?: number;
+            length: number;
+        });
         Ufh: {
             /** @constant */
             wet_emitter_type: "ufh";
@@ -506,12 +508,21 @@ export interface components {
         SlabEdgeInsulation: {
             /** @constant */
             floor_type: "Slab_edge_insulation";
-            edge_insulation: {
+            edge_insulation: ({
                 /** @enum {unknown} */
                 type: "horizontal" | "vertical";
-                width: number;
                 edge_thermal_resistance: number;
-            };
+            } | {
+                /** @constant */
+                type?: "horizontal";
+                /** @description Width of horizontal edge insulation (unit: m) */
+                width: number;
+            } | {
+                /** @constant */
+                type?: "vertical";
+                /** @description Depth of vertical edge insulation (unit: m) */
+                depth: number;
+            })[];
         };
         SuspendedFloor: {
             /** @constant */
@@ -552,6 +563,18 @@ export interface components {
          * @enum {string}
          */
         PartyWallCavityType: "solid" | "unfilled_unsealed" | "unfilled_sealed" | "filled_sealed" | "filled_unsealed" | "defined_resistance";
+        WindowShading: ({
+            distance: number;
+        } & ({
+            /** @constant */
+            type: "obstacle";
+            height: number;
+            transparency: number;
+        } | {
+            /** @enum {unknown} */
+            type: "overhang" | "sidefinleft" | "sidefinright" | "reveal";
+            depth: number;
+        }))[];
         /** @enum {string} */
         ApplianceValue: "Not Installed" | "Default";
         /**
@@ -571,18 +594,16 @@ export interface components {
         EnergySupplyElectricity: {
             /** @constant */
             fuel: "electricity";
-            /** @enum {unknown} */
-            priority?: "ElectricBattery" | "diverter";
+            priority?: ("ElectricBattery" | "diverter")[];
             is_export_capable?: boolean;
             diverter?: {
-                StorageTank?: string;
                 HeatSource: string;
             };
             ElectricBattery?: components["schemas"]["ElectricBattery"];
         };
         EnergySupplyOther: {
             /** @enum {unknown} */
-            fuel: "LPG_bulk" | "LPG_bottled";
+            fuel: "LPG_bulk" | "LPG_bottled" | "LPG_condition_11F";
             is_export_capable: boolean;
         };
         /** @description A possible hot water source */
@@ -611,6 +632,14 @@ export interface components {
             EnergySupply: string;
             /** @enum {unknown} */
             ColdWaterSource?: "header tank" | "mains water";
+        };
+        /** @description A possible hot water source */
+        HIU: {
+            /** @constant */
+            type: "HIU";
+            /** @enum {unknown} */
+            ColdWaterSource: "header tank" | "mains water";
+            HeatSourceWet: string;
         };
         /** @description A possible hot water source */
         CombiBoiler: {
@@ -657,22 +686,12 @@ export interface components {
             daily_HW_usage: number;
             /** @enum {unknown} */
             ColdWaterSource?: "header tank" | "mains water";
-            /**
-             * Setpoint Temp
-             * @description Temperature setpoint for the combi boiler hot water output (unit: ˚C)
-             */
-            setpoint_temp: number;
         };
         /** @description A possible hot water source */
         HeatBattery: {
             /** @constant */
             type: "HeatBattery";
             HeatSourceWet: string;
-            /**
-             * Setpoint Temp
-             * @description Temperature setpoint for the heat battery hot water output (unit: ˚C)
-             */
-            setpoint_temp: number;
             /** @enum {unknown} */
             ColdWaterSource?: "header tank" | "mains water";
         };
@@ -698,9 +717,10 @@ export interface components {
             /** @enum {unknown} */
             backup_ctrl_type: "None" | "TopUp" | "Substitute";
             modulating_control: boolean;
-            min_modulation_rate_35: number;
-            min_modulation_rate_55: number;
-            temp_return_feed_max: number;
+            min_modulation_rate_20?: number;
+            min_modulation_rate_35?: number;
+            min_modulation_rate_55?: number;
+            temp_return_feed_max?: number;
             temp_lower_operating_limit: number;
             min_temp_diff_flow_return_for_hp_to_operate: number;
             var_flow_temp_ctrl_during_test: boolean;
@@ -709,11 +729,6 @@ export interface components {
             power_standby: number;
             power_crankcase_heater: number;
             power_off: number;
-            /**
-             * Power Max Backup
-             * @default null
-             */
-            power_max_backup: number | null;
             BufferTank?: {
                 daily_losses: number;
                 pump_fixed_flow_rate: number;
@@ -784,7 +799,8 @@ export interface components {
                 /** @default null */
                 cost_schedule_hybrid?: components["schemas"]["BoilerCostScheduleHybrid"] | null;
             };
-            time_delay_backup: number;
+            power_max_backup?: number;
+            time_delay_backup?: number;
             power_heating_warm_air_fan?: number;
             time_constant_onoff_operation: number;
             /** @description required if HeatNetwork source type, should not be provided otherwise */
@@ -1020,7 +1036,7 @@ export interface components {
             /** @enum {unknown} */
             areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
             mass_distribution_class: components["schemas"]["MassDistributionClass"];
-            /** @description Degrees from north. Recommend choosing 180 in cases of flat elements i.e. where pitch = 0 or 180. NB. must be provided if pitch not 0 or 180, otherwise must not be provided */
+            /** @description Degrees from north. Required for any element with a non-flat (0 or 180) pitch */
             orientation360?: number;
             base_height: number;
             height: number;
@@ -1040,12 +1056,7 @@ export interface components {
             window_part_list: {
                 mid_height_air_flow_path: number;
             }[];
-            shading: {
-                /** @enum {unknown} */
-                type: "overhang" | "sidefinleft" | "sidefinright";
-                depth: number;
-                distance: number;
-            }[];
+            shading: components["schemas"]["WindowShading"];
             treatment?: {
                 /** @enum {unknown} */
                 type: "curtains" | "blinds";
@@ -1054,7 +1065,7 @@ export interface components {
                 delta_r: number;
                 trans_red: number;
             }[];
-            orientation360: number;
+            orientation360?: number;
             base_height: number;
             height: number;
             width: number;
@@ -1210,12 +1221,7 @@ export interface components {
                     height: number;
                     width: number;
                     EnergySupply: string;
-                    shading: {
-                        /** @enum {unknown} */
-                        type: "reveal" | "obstacle" | "overhang" | "sidefinleft" | "sidefinright";
-                        depth: number;
-                        distance: number;
-                    }[];
+                    shading: components["schemas"]["WindowShading"];
                     inverter_peak_power_dc: number;
                     inverter_peak_power_ac: number;
                     inverter_is_inside: boolean;
@@ -1227,7 +1233,7 @@ export interface components {
                 "hw cylinder"?: {
                     /** @enum {unknown} */
                     ColdWaterSource: "header tank" | "mains water";
-                } & (components["schemas"]["StorageTank"] | components["schemas"]["SmartHotWaterTank"] | components["schemas"]["PointOfUse"] | components["schemas"]["CombiBoiler"] | components["schemas"]["HeatBattery"]);
+                } & (components["schemas"]["StorageTank"] | components["schemas"]["SmartHotWaterTank"] | components["schemas"]["PointOfUse"] | components["schemas"]["HIU"] | components["schemas"]["CombiBoiler"] | components["schemas"]["HeatBattery"]);
             };
             HeatSourceWet?: {
                 [key: string]: ({
@@ -1324,6 +1330,8 @@ export interface components {
                 build_type: "flat";
                 /** @description What storey of the main building is the flat on? For multi-story flats, enter the lowest storey the unit occupies */
                 storey_of_dwelling: number;
+                /** @description Number of storeys, within the entire building, that contain dwellings. This should be greater than or equal to storeys_in_dwelling. */
+                storeys_in_building: number;
             } | {
                 /** @constant */
                 build_type: "house";
@@ -1410,11 +1418,9 @@ export interface components {
                 EnergySupplyElectricity: {
                     /** @constant */
                     fuel: "electricity";
-                    /** @enum {unknown} */
-                    priority?: "ElectricBattery" | "diverter";
+                    priority?: ("ElectricBattery" | "diverter")[];
                     is_export_capable?: boolean;
                     diverter?: {
-                        StorageTank?: string;
                         HeatSource: string;
                     };
                     ElectricBattery?: components["schemas"]["ElectricBattery"];
@@ -1442,7 +1448,7 @@ export interface components {
                 };
                 EnergySupplyOther: {
                     /** @enum {unknown} */
-                    fuel: "LPG_bulk" | "LPG_bottled";
+                    fuel: "LPG_bulk" | "LPG_bottled" | "LPG_condition_11F";
                     is_export_capable: boolean;
                 };
                 HotWaterTankCommon: {
@@ -1459,18 +1465,17 @@ export interface components {
                         insulation_thickness_mm: number;
                         surface_reflectivity: boolean;
                         /** @enum {unknown} */
-                        pipe_contents: "air" | "water" | "glycol25";
+                        pipe_contents: "water" | "glycol25";
                     }[];
                     HeatSource: {
-                        [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"] | components["schemas"]["Boiler"];
+                        [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
                     };
                     /** @description A heat_exchanger_surface_area is required when there is a HeatPump_HWOnly HeatSource */
                     heat_exchanger_surface_area?: number;
                 };
                 HotWaterTankHeatSourceCommon: {
-                    name?: string;
                     heater_position: number;
-                    thermostat_position: number;
+                    thermostat_position?: number;
                 };
                 /** @description A possible heat source for a hot water tank */
                 ImmersionHeater: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
@@ -1504,6 +1509,7 @@ export interface components {
                     /** @constant */
                     type: "HeatSourceWet";
                     EnergySupply: string;
+                    name: string;
                     temp_flow_limit_upper?: number;
                 };
                 /** @description A possible heat source for a hot water tank */
@@ -1527,11 +1533,6 @@ export interface components {
                     energy_input_measured: number;
                     power_standby: number;
                     hw_vessel_loss_daily: number;
-                };
-                /** @description A possible heat source for a hot water tank */
-                Boiler: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
-                    /** @constant */
-                    type: "Boiler";
                 };
                 /** @description A possible hot water source */
                 StorageTank: components["schemas"]["HotWaterTankCommon"] & {
@@ -1559,6 +1560,14 @@ export interface components {
                     EnergySupply: string;
                     /** @enum {unknown} */
                     ColdWaterSource?: "header tank" | "mains water";
+                };
+                /** @description A possible hot water source */
+                HIU: {
+                    /** @constant */
+                    type: "HIU";
+                    /** @enum {unknown} */
+                    ColdWaterSource: "header tank" | "mains water";
+                    HeatSourceWet: string;
                 };
                 /** @description A possible hot water source */
                 CombiBoiler: {
@@ -1605,22 +1614,12 @@ export interface components {
                     daily_HW_usage: number;
                     /** @enum {unknown} */
                     ColdWaterSource?: "header tank" | "mains water";
-                    /**
-                     * Setpoint Temp
-                     * @description Temperature setpoint for the combi boiler hot water output (unit: ˚C)
-                     */
-                    setpoint_temp: number;
                 };
                 /** @description A possible hot water source */
                 HeatBattery: {
                     /** @constant */
                     type: "HeatBattery";
                     HeatSourceWet: string;
-                    /**
-                     * Setpoint Temp
-                     * @description Temperature setpoint for the heat battery hot water output (unit: ˚C)
-                     */
-                    setpoint_temp: number;
                     /** @enum {unknown} */
                     ColdWaterSource?: "header tank" | "mains water";
                 };
@@ -1651,9 +1650,10 @@ export interface components {
                     /** @enum {unknown} */
                     backup_ctrl_type: "None" | "TopUp" | "Substitute";
                     modulating_control: boolean;
-                    min_modulation_rate_35: number;
-                    min_modulation_rate_55: number;
-                    temp_return_feed_max: number;
+                    min_modulation_rate_20?: number;
+                    min_modulation_rate_35?: number;
+                    min_modulation_rate_55?: number;
+                    temp_return_feed_max?: number;
                     temp_lower_operating_limit: number;
                     min_temp_diff_flow_return_for_hp_to_operate: number;
                     var_flow_temp_ctrl_during_test: boolean;
@@ -1662,11 +1662,6 @@ export interface components {
                     power_standby: number;
                     power_crankcase_heater: number;
                     power_off: number;
-                    /**
-                     * Power Max Backup
-                     * @default null
-                     */
-                    power_max_backup: number | null;
                     BufferTank?: {
                         daily_losses: number;
                         pump_fixed_flow_rate: number;
@@ -1737,7 +1732,8 @@ export interface components {
                         /** @default null */
                         cost_schedule_hybrid?: components["schemas"]["BoilerCostScheduleHybrid"] | null;
                     };
-                    time_delay_backup: number;
+                    power_max_backup?: number;
+                    time_delay_backup?: number;
                     power_heating_warm_air_fan?: number;
                     time_constant_onoff_operation: number;
                     /** @description required if HeatNetwork source type, should not be provided otherwise */
@@ -1945,9 +1941,16 @@ export interface components {
                 Radiator: {
                     /** @constant */
                     wet_emitter_type: "radiator";
-                    c: number;
                     n: number;
-                };
+                } & ({
+                    c: number;
+                    thermal_mass?: number;
+                    length?: number;
+                } | {
+                    c_per_m: number;
+                    thermal_mass_per_m?: number;
+                    length: number;
+                });
                 Ufh: {
                     /** @constant */
                     wet_emitter_type: "ufh";
@@ -2105,12 +2108,21 @@ export interface components {
                 SlabEdgeInsulation: {
                     /** @constant */
                     floor_type: "Slab_edge_insulation";
-                    edge_insulation: {
+                    edge_insulation: ({
                         /** @enum {unknown} */
                         type: "horizontal" | "vertical";
-                        width: number;
                         edge_thermal_resistance: number;
-                    };
+                    } | {
+                        /** @constant */
+                        type?: "horizontal";
+                        /** @description Width of horizontal edge insulation (unit: m) */
+                        width: number;
+                    } | {
+                        /** @constant */
+                        type?: "vertical";
+                        /** @description Depth of vertical edge insulation (unit: m) */
+                        depth: number;
+                    })[];
                 };
                 SuspendedFloor: {
                     /** @constant */
@@ -2152,7 +2164,7 @@ export interface components {
                     /** @enum {unknown} */
                     areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
                     mass_distribution_class: components["schemas"]["MassDistributionClass"];
-                    /** @description Degrees from north. Recommend choosing 180 in cases of flat elements i.e. where pitch = 0 or 180. NB. must be provided if pitch not 0 or 180, otherwise must not be provided */
+                    /** @description Degrees from north. Required for any element with a non-flat (0 or 180) pitch */
                     orientation360?: number;
                     base_height: number;
                     height: number;
@@ -2219,12 +2231,7 @@ export interface components {
                     window_part_list: {
                         mid_height_air_flow_path: number;
                     }[];
-                    shading: {
-                        /** @enum {unknown} */
-                        type: "overhang" | "sidefinleft" | "sidefinright";
-                        depth: number;
-                        distance: number;
-                    }[];
+                    shading: components["schemas"]["WindowShading"];
                     treatment?: {
                         /** @enum {unknown} */
                         type: "curtains" | "blinds";
@@ -2233,7 +2240,7 @@ export interface components {
                         delta_r: number;
                         trans_red: number;
                     }[];
-                    orientation360: number;
+                    orientation360?: number;
                     base_height: number;
                     height: number;
                     width: number;
@@ -2338,6 +2345,18 @@ export interface components {
                  * @enum {string}
                  */
                 PartyWallLiningType: "wet_plaster" | "dry_lined";
+                WindowShading: ({
+                    distance: number;
+                } & ({
+                    /** @constant */
+                    type: "obstacle";
+                    height: number;
+                    transparency: number;
+                } | {
+                    /** @enum {unknown} */
+                    type: "overhang" | "sidefinleft" | "sidefinright" | "reveal";
+                    depth: number;
+                }))[];
             };
         };
     };
@@ -2373,7 +2392,6 @@ export type SchemaSolarThermalSystem = components['schemas']['SolarThermalSystem
 export type SchemaHeatSourceWet = components['schemas']['HeatSourceWet'];
 export type SchemaHeatPumpHwOnlyTestData = components['schemas']['HeatPump_HWOnlyTestData'];
 export type SchemaHeatPumpHwOnly = components['schemas']['HeatPump_HWOnly'];
-export type SchemaBoiler = components['schemas']['Boiler'];
 export type SchemaHotWaterTankCommon = components['schemas']['HotWaterTankCommon'];
 export type SchemaHeatSourceWetCommon = components['schemas']['HeatSourceWetCommon'];
 export type SchemaScheduleRepeaterEntryForDouble = components['schemas']['ScheduleRepeaterEntryForDouble'];
@@ -2402,6 +2420,7 @@ export type SchemaHeatedBasement = components['schemas']['HeatedBasement'];
 export type SchemaUnheatedBasement = components['schemas']['UnheatedBasement'];
 export type SchemaPartyWallLiningType = components['schemas']['PartyWallLiningType'];
 export type SchemaPartyWallCavityType = components['schemas']['PartyWallCavityType'];
+export type SchemaWindowShading = components['schemas']['WindowShading'];
 export type SchemaApplianceValue = components['schemas']['ApplianceValue'];
 export type SchemaApplianceValueDefault = components['schemas']['ApplianceValueDefault'];
 export type SchemaHeaderTankOrMainsWater = components['schemas']['HeaderTankOrMainsWater'];
@@ -2411,6 +2430,7 @@ export type SchemaEnergySupplyOther = components['schemas']['EnergySupplyOther']
 export type SchemaStorageTank = components['schemas']['StorageTank'];
 export type SchemaSmartHotWaterTank = components['schemas']['SmartHotWaterTank'];
 export type SchemaPointOfUse = components['schemas']['PointOfUse'];
+export type SchemaHiu = components['schemas']['HIU'];
 export type SchemaCombiBoiler = components['schemas']['CombiBoiler'];
 export type SchemaHeatBattery = components['schemas']['HeatBattery'];
 export type SchemaHeatSourceWetHeatPump = components['schemas']['HeatSourceWetHeatPump'];

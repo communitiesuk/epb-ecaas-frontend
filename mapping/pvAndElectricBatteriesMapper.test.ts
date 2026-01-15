@@ -217,7 +217,6 @@ describe("PV and electric batteries mapper", () => {
 		const expectedResult: Pick<SchemaEnergySupplyElectricity, "diverter"> = {
 			diverter: {
 				HeatSource: "HP1",
-				StorageTank: "HWC1",
 			},
 		};
 

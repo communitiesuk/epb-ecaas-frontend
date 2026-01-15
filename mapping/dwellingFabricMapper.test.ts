@@ -232,11 +232,11 @@ describe("dwelling fabric mapper", () => {
 
 		expect(groundFloorElement).toEqual(expectedGroundFloor);
 
-		const expectedEdgeInsulation: SchemaEdgeInsulationHorizontal = {
-			type: "horizontal",
+		const expectedEdgeInsulation: SchemaEdgeInsulationHorizontal[] = [{
+			type: "horizontal" as const,
 			edge_thermal_resistance: groundFloorWithEdgeInsulation.edgeInsulationThermalResistance,
 			width: 0.36,
-		};
+		}];
 
 		expect("edge_insulation" in groundFloorWithEdgeInsulationElement && groundFloorWithEdgeInsulationElement.edge_insulation).toEqual(expectedEdgeInsulation);
 

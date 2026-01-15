@@ -98,17 +98,17 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 
 		switch (edgeInsulationType) {
 			case "horizontal":
-				return {
+				return [{
 					type: "horizontal" as const,
 					width: edgeInsulationWidthInMetres,
 					edge_thermal_resistance: data.edgeInsulationThermalResistance,
-				};
+				}];
 			case "vertical":
-				return {
+				return [{
 					type: "vertical" as const,
-					width: edgeInsulationWidthInMetres,
+					depth: edgeInsulationWidthInMetres,
 					edge_thermal_resistance: data.edgeInsulationThermalResistance,
-				};
+				}];
 			default:
 				edgeInsulationType satisfies never;
 				throw new Error(`Unknown edge insulation type '${edgeInsulationType}' encountered`);

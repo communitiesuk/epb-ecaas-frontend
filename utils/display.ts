@@ -179,10 +179,14 @@ export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressure
 	}
 }
 
+
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" | "LPG (Liquid petroleum gas) - bottled" | "LPG - 11F" | "Electricity is the only energy source" | "Mains gas" | "Electricity";
+
 export const energySupplyOptions = {
 	"mains_gas": "Mains gas",
 	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
 	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
+	"LPG_condition_11F": "LPG - 11F",
 	"elecOnly": "Electricity",
 	"electricity": "Electricity",
 } as const satisfies Record<SchemaFuelTypeExtended | "electricity", FuelTypeDisplay>;
@@ -197,7 +201,25 @@ export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined
 	return result;
 }
 
-export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" | "LPG (Liquid petroleum gas) - bottled" | "Electricity" | "Mains gas";
+export function displayFuelType(fuelType: SchemaFuelTypeExtended): FuelTypeDisplay {
+	switch (fuelType) {
+		case "LPG_bulk":
+			return "LPG (Liquid petroleum gas) - bulk";
+		case "LPG_bottled":
+			return "LPG (Liquid petroleum gas) - bottled";
+		case "LPG_condition_11F":
+			return "LPG - 11F";
+		case "elecOnly":
+			return "Electricity is the only energy source";
+		case "electricity":
+			return "Electricity";
+		case "mains_gas":
+			return "Mains gas";
+		default:
+			fuelType satisfies never;
+			throw new Error(`Missed a fuel type case: ${fuelType}`);
+	}
+}
 
 export const ecoDesignControllerOptions = {
 	1: "I: On/Off Room Thermostat",
