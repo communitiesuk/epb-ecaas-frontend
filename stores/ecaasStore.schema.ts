@@ -573,7 +573,7 @@ const hotWaterCylinderDataZodNew = namedWithId.extend({
 
 export type HotWaterCylinderDataNew = z.infer<typeof hotWaterCylinderDataZodNew>;
 
-const smartHotWaterTankDataZodNew = named.extend({
+const smartHotWaterTankDataZodNew = namedWithId.extend({
 	typeOfWaterStorage: z.literal("smartHotWaterTank"),
 	productReference: z.string(),
 	heatSource: z.string(),

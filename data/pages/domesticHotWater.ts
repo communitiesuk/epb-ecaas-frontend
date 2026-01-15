@@ -13,7 +13,7 @@ const domesticHotWaterPages = [
 	{
 		id: "waterStorage",
 		title: "Water Storage",
-		url: "/domestic-hot-water-new/water-storage/:water-storage",
+		url: "/domestic-hot-water-new/water-storage/:waterstorage",
 		type: PageType.TaskGroup,
 		parentId: "domesticHotWaterNew",
 	},
@@ -21,8 +21,15 @@ const domesticHotWaterPages = [
 		id: "waterStorageCreate",
 		title: "Water Storage ",
 		url: "/domestic-hot-water-new/water-storage/create",
-		type: PageType.TaskGroup,
+		type: PageType.Task,
 		parentId: "domesticHotWaterNew",
+	},
+	{
+		id: "smartHotWaterTankProducts",
+		title: "Select a smart hot water tank",
+		url: "/domestic-hot-water-new/water-storage/:waterstorage/:products",
+		type: PageType.Task,
+		parentId: "waterStorage",
 	},
 	{
 		id: "heatSources",
@@ -35,7 +42,7 @@ const domesticHotWaterPages = [
 		id: "heatSourcesCreate",
 		title: "Heat Sources ",
 		url: "/domestic-hot-water-new/heat-sources/create",
-		type: PageType.TaskGroup,
+		type: PageType.Task,
 		parentId: "domesticHotWaterNew",
 	},
 	{

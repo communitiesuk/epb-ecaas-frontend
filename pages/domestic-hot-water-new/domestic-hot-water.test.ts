@@ -74,6 +74,7 @@ describe("Domestic hot water", () => {
 		const hwStorage2: EcaasForm<SmartHotWaterTankDataNew> = {
 			data: {
 				name: "Jasper's Cylinder 2",
+				id: "what2",
 				typeOfWaterStorage: "smartHotWaterTank",
 				heatSource: "weeeeee3",
 				heaterPosition: 0.8,
@@ -106,8 +107,6 @@ describe("Domestic hot water", () => {
 		// 	await renderSuspended(DomesticHotWater);
 			
 		// 	const addLink = await screen.findByTestId<HTMLAnchorElement>("waterStorage_add");
-
-		// 	console.log("addLink", addLink);
 			
 		// 	expect(new URL(addLink.href).pathname).toBe(
 		// 		getUrl("waterStorageCreate"),
@@ -216,8 +215,6 @@ describe("Domestic hot water", () => {
 		// 	await renderSuspended(DomesticHotWater);
 			
 		// 	const addLink = await screen.findByTestId<HTMLAnchorElement>("hotWaterOutlets_add");
-
-		// 	console.log("addLink", addLink);
 			
 		// 	expect(new URL(addLink.href).pathname).toBe(
 		// 		getUrl("hotWaterOutletsCreate"),
@@ -338,8 +335,6 @@ describe("Domestic hot water", () => {
 		// 	await renderSuspended(DomesticHotWater);
 			
 		// 	const addLink = await screen.findByTestId<HTMLAnchorElement>("pipework_add");
-
-		// 	console.log("addLink", addLink);
 			
 		// 	expect(new URL(addLink.href).pathname).toBe(
 		// 		getUrl("pipeworkCreate"),
@@ -440,8 +435,6 @@ describe("Domestic hot water", () => {
 		// // 	await renderSuspended(DomesticHotWater);
 			
 		// // 	const addLink = await screen.findByTestId<HTMLAnchorElement>("heatSources_add");
-
-		// // 	console.log("addLink", addLink);
 			
 		// // 	expect(new URL(addLink.href).pathname).toBe(
 		// // 		getUrl("heatSourcesCreate"),
