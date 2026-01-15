@@ -82,4 +82,4 @@ export type SchemaEdgeInsulation = SchemaDefs["SlabEdgeInsulation"]["edge_insula
 export type SchemaLightingBulbs = FhsSchema["Zone"][string]["Lighting"]["bulbs"];
 export type SchemaApplianceType = Exclude<keyof FhsSchema["Appliances"], "Kettle" | "Microwave" | "Otherdevices">;
 export type SchemaColdWaterSourceType = components["schemas"]["ColdWaterSource"]["ColdWaterSource"];
-export type SchemaHeatNetworkType = "sleeved DHN" | "unsleeved DHN" | "communal"; // TODO once using 1.0.0a3, replace with reference to generated schema types in api-schema.types.ts
+export type SchemaHeatNetworkType = (Exclude<FhsSchema["HeatSourceWet"], undefined>[string] & { is_heat_network: true })["heat_network_type"];
