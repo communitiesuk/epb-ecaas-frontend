@@ -6,7 +6,7 @@ import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/sch
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, colourZod, convectiveTypeZod, ductShapeZod, fuelTypeZod, heatNetworkTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, colourZod, convectiveTypeZod, ductShapeZod, fuelTypeWithElecOnlyZod, heatNetworkTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 
 const fraction = z.number().min(0).max(1);
 const percentage = z.number().min(0).max(100);
@@ -69,7 +69,7 @@ const baseGeneralDetails = z.object({
 	numOfWCs: z.int(),
 	numOfHabitableRooms: z.int().min(1),
 	numOfRoomsWithTappingPoints: z.int().min(1),
-	fuelType: z.array(fuelTypeZod),
+	fuelType: z.array(fuelTypeWithElecOnlyZod),
 });
 
 const generalDetailsDataZod = z.discriminatedUnion("typeOfDwelling", [
@@ -920,7 +920,7 @@ const heatBatteryBase = namedWithId.extend({
 	typeOfHeatBattery,
 	productReference: z.string().trim().min(1),
 	numberOfUnits: z.number(),
-	energySupply: fuelTypeWithElecZod,
+	energySupply: fuelTypeZod,
 });
 
 const solarThermalSystemBase = namedWithId.extend({
@@ -949,14 +949,14 @@ const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
 	heatNetworkBase.extend({
 		isHeatNetworkInPcdb: z.literal(true),
 		productReference: z.string().trim().min(1),
-		energySupply: fuelTypeWithElecZod,
+		energySupply: fuelTypeZod,
 		usesHeatInterfaceUnits: z.literal(true),
 		heatInterfaceUnitProductReference: z.string().trim().min(1),
 	}),
 	heatNetworkBase.extend({
 		isHeatNetworkInPcdb: z.literal(true),
 		productReference: z.string().trim().min(1),
-		energySupply: fuelTypeWithElecZod,
+		energySupply: fuelTypeZod,
 		usesHeatInterfaceUnits: z.literal(false),
 	}),
 	heatNetworkBase.extend({

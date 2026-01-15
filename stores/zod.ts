@@ -38,13 +38,14 @@ const convectiveTypes = ["Air heating (convectors, fan coils etc.)",
 	"Ceiling heating, radiant ceiling electric heating"] as const satisfies SchemaConvectiveType[];
 const ductShapes = ["circular", "rectangular"] as const satisfies SchemaDuctShape[];
 const ductTypes = ["intake", "supply", "extract", "exhaust"] as const satisfies SchemaDuctType[];
-const fuelTypes = [
+const fuelTypesWithElecOnly = [
 	"LPG_bulk",
 	"LPG_bottled",
 	"mains_gas",
 	"elecOnly",
+	"electricity"
 ] as const satisfies SchemaFuelTypeExtended[];
-const fuelTypesWithElec = [
+const fuelTypes = [
 	"LPG_bulk",
 	"LPG_bottled",
 	"mains_gas",
@@ -95,8 +96,8 @@ export const colourZod = zodForTypeOptions(ensureAllUnion<SchemaColour, (typeof 
 export const convectiveTypeZod = zodForTypeOptions(ensureAllUnion<SchemaConvectiveType, (typeof convectiveTypes)>(convectiveTypes));
 export const ductShapeZod = zodForTypeOptions(ensureAllUnion<SchemaDuctShape, (typeof ductShapes)>(ductShapes));
 export const ductTypeZod = zodForTypeOptions(ensureAllUnion<SchemaDuctType, (typeof ductTypes)>(ductTypes));
-export const fuelTypeZod = zodForTypeOptions(ensureAllUnion<SchemaFuelTypeExtended, (typeof fuelTypes)>(fuelTypes));
-export const fuelTypeWithElecZod = zodForTypeOptions(ensureAllUnion<SchemaFuelType, (typeof fuelTypesWithElec)>(fuelTypesWithElec));
+export const fuelTypeWithElecOnlyZod = zodForTypeOptions(ensureAllUnion<SchemaFuelTypeExtended, (typeof fuelTypesWithElecOnly)>(fuelTypesWithElecOnly));
+export const fuelTypeZod = zodForTypeOptions(ensureAllUnion<SchemaFuelType, (typeof fuelTypes)>(fuelTypes));
 export const heatNetworkTypeZod = zodForTypeOptions(ensureAllUnion<SchemaHeatNetworkType, (typeof heatNetworkTypes)>(heatNetworkTypes));
 export const heatPumpBackupControlTypeZod = zodForTypeOptions(ensureAllUnion<SchemaHeatPumpBackupControlType, (typeof heatPumpBackupControlTypes)>(heatPumpBackupControlTypes));
 export const heatPumpSinkTypeZod = zodForTypeOptions(ensureAllUnion<SchemaHeatPumpSinkType, (typeof heatPumpSinkTypes)>(heatPumpSinkTypes));
