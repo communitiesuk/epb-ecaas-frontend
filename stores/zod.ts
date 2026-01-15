@@ -44,7 +44,7 @@ const fuelTypesWithElecOnly = [
 	"LPG_condition_11F",
 	"mains_gas",
 	"elecOnly",
-	"electricity"
+	"electricity",
 ] as const satisfies SchemaFuelTypeExtended[];
 const fuelTypes = [
 	"LPG_bulk",
