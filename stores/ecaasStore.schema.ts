@@ -72,7 +72,11 @@ const baseGeneralDetails = z.object({
 });
 
 const generalDetailsDataZod = z.discriminatedUnion("typeOfDwelling", [
-	baseGeneralDetails.extend({ typeOfDwelling: z.literal("flat"), storeyOfFlat: z.number().min(-50).max(199) }),
+	baseGeneralDetails.extend({
+		typeOfDwelling: z.literal("flat"),
+		storeyOfFlat: z.int().min(-50).max(199),
+		storeysInBuilding: z.int().min(1),
+	}),
 	baseGeneralDetails.extend({ typeOfDwelling: z.literal("house") }),
 ]);
 

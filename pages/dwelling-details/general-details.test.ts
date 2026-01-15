@@ -27,6 +27,7 @@ const stateWithFlat: GeneralDetailsData = {
 	typeOfDwelling: "flat",
 	storeyOfFlat: 1,
 	storeysInDwelling: 2,
+	storeysInBuilding: 1,
 	buildingLength: 10,
 	buildingWidth: 5,
 	numOfBedrooms: 3,
@@ -150,6 +151,7 @@ describe("General details", () => {
 			await user.click(screen.getByTestId("typeOfDwelling_flat"));
 			await user.type(screen.getByTestId("storeyOfFlat"), "1");
 			await user.type(screen.getByTestId("storeysInDwelling"), "2");
+			await user.type(screen.getByTestId("storeysInBuilding"), "1");
 			await user.type(screen.getByTestId("buildingLength"), "10");
 			await user.type(screen.getByTestId("buildingWidth"), "5");
 			await user.type(screen.getByTestId("numOfBedrooms"), "3");
@@ -184,6 +186,7 @@ describe("General details", () => {
 			expect((await screen.findByTestId("typeOfDwelling_flat")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("storeyOfFlat")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("storeysInDwelling")).value).toBe("2");
+			expect((await screen.findByTestId<HTMLInputElement>("storeysInBuilding")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("buildingLength")).value).toBe("10");
 			expect((await screen.findByTestId<HTMLInputElement>("buildingWidth")).value).toBe("5");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfBedrooms")).value).toBe("3");
@@ -193,7 +196,6 @@ describe("General details", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("numOfHabitableRooms")).value).toBe("4");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfRoomsWithTappingPoints")).value).toBe("2");
 			expect((await screen.findByTestId("fuelType_mains_gas")).hasAttribute("checked")).toBe(true);
-	
 		});
 
 		test("required error messages are displayed when empty form is submitted", async () => {

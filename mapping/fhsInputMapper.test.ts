@@ -399,8 +399,9 @@ const expectedFlatInput: FhsInputSchema = {
 	},
 	General: {
 		build_type: "flat",
-		storeys_in_dwelling: 6,
+		storeys_in_building: 6,
 		storey_of_dwelling: 3,
+		storeys_in_dwelling: 1,
 	},
 	HeatingControlType: "SeparateTempControl",
 	HotWaterDemand: {
@@ -624,11 +625,11 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: "Very light",
 					mass_distribution_class: "E: Mass concentrated at external side",
 					perimeter: 40,
-					edge_insulation: {
+					edge_insulation: [{
 						edge_thermal_resistance: 2.4,
 						type: "horizontal",
 						width: 0.32,
-					},
+					}],
 					psi_wall_floor_junc: 0.4,
 					thickness_walls: 0.05,
 					floor_type: "Slab_edge_insulation",
@@ -1313,8 +1314,9 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: {
 					typeOfDwelling: "flat",
-					storeysInDwelling: 6,
+					storeysInDwelling: 1,
 					storeyOfFlat: 3,
+					storeysInBuilding: 6,
 					numOfBedrooms: 2,
 					numOfBathrooms: 1,
 					numOfHabitableRooms: 4,
