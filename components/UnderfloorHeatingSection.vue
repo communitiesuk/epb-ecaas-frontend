@@ -12,6 +12,7 @@ const props = defineProps<{
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
 const index = getStoreIndex(heatSourceStoreData);
 
+
 </script>
 
 <template>

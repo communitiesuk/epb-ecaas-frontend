@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { v4 as uuidv4 } from "uuid";
 import ElectricStorageHeaterSection from "~/components/ElectricStorageHeaterSection.vue";
 import { heatEmitterTypes } from "../../../../utils/display";
+import { getHeatEmitterDefaultName, type HeatEmitterFormData } from "../../../../utils/getHeatEmitterDefaultName";
 
 export type RadiatorModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "radiator" }>;
 export type UnderfloorHeatingModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "underfloorHeating" }>;
@@ -15,21 +17,66 @@ const store = useEcaasStore();
 
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+
 const heatEmitterStoreData = store.spaceHeatingNew.heatEmitters.data;
 const index = getStoreIndex(heatEmitterStoreData);
 
 const heatEmitterData = useItemToEdit("heatEmitter", heatEmitterStoreData);
 const model = ref(heatEmitterData?.data);
-const saveForm = () => {
+const id = heatEmitterData?.data?.id ?? uuidv4();
 
+const saveForm = () => {
 	store.$patch((state) => {
 		const { heatEmitters } = state.spaceHeatingNew;
-
 		heatEmitters.data[index]!.complete = true;
+		heatEmitters.complete = false;
 	});
 
 };
+
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
+watch(
+	() => model.value,
+	(newData, initialData) => {
+		if (!newData?.typeOfHeatEmitter) return;
+		
+		if (
+			initialData?.typeOfHeatEmitter &&
+			initialData.typeOfHeatEmitter !== newData.typeOfHeatEmitter
+		) {
+			errorMessages.value = [];
+			model.value = { typeOfHeatEmitter: newData.typeOfHeatEmitter, id: initialData.id } as HeatEmittingData;
+			
+		}
+		if (model.value && !model.value.name) {
+			model.value.name = getHeatEmitterDefaultName(model.value as HeatEmitterFormData);
+		}
+	},
+);
+autoSaveElementForm<HeatEmittingData>({
+	model,
+	storeData: store.spaceHeatingNew.heatEmitters,
+	defaultName: "Heat emitter",
+	onPatch: (state, newData, index) => {
+		newData.data.id ??= id;
+		state.spaceHeatingNew.heatEmitters.data[index] = newData;
+		state.spaceHeatingNew.heatEmitters.complete = false;
+	},
+});
+function updateHeatEmitter(type: string) {
+	watch(() => model.value?.[`${type}` as keyof typeof model.value], (newHeatEmitterSubtype, initialHeatEmitterSubtype) => {
+		if (newHeatEmitterSubtype !== initialHeatEmitterSubtype) {
+			const defaultName = getHeatEmitterDefaultName(model.value as HeatEmitterFormData);
+
+			model.value!.name = defaultName;
+			if (store.spaceHeatingNew.heatEmitters.data[index]) {
+				store.spaceHeatingNew.heatEmitters.data[index].data.name = defaultName;
+			}
+		}
+	},
+	);
+}	;
 </script>
 
 <template>
@@ -53,7 +100,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="heatEmitterTypes"
 			name="typeOfHeatEmitter"
 			validation="required" />
-		<RadiatorSection v-if="model?.typeOfHeatEmitter === 'radiator'" :model="model as RadiatorModelType" />
+		<RadiatorSection
+			v-if="model?.typeOfHeatEmitter === 'radiator'"
+			:model="model as RadiatorModelType"
+			:index="index"
+			@update-radiator-model="updateHeatEmitter" />
 		<UnderfloorHeatingSection
 			v-if="model?.typeOfHeatEmitter === 'underfloorHeating'"
 			:model="model as UnderfloorHeatingModelType" />

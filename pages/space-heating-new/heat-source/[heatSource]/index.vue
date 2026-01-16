@@ -132,9 +132,7 @@ watch(
 			initialData.typeOfHeatSource !== newData.typeOfHeatSource
 		) {
 			errorMessages.value = [];
-			const validKeys = ["id", "typeOfHeatSource"];
-			Object.keys(model.value).forEach((key) => validKeys.includes(key) || delete model.value[key as keyof HeatSourceData]);
-			model.value.typeOfHeatSource = newData.typeOfHeatSource;
+			model.value = { typeOfHeatSource: newData.typeOfHeatSource, id: initialData.id } as HeatSourceData;
 		}
 		if (model.value && !model.value.name) {
 			model.value.name = getHeatSourceDefaultName(model.value);

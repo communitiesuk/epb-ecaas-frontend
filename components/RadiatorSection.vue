@@ -3,16 +3,14 @@ import { ecoDesignControllerOptions, isInteger, radiatorTypes } from "#imports";
 import type { RadiatorModelType } from "~/pages/space-heating-new/heat-emitters/[heatEmitter]/index.vue";
 
 const route = useRoute();
-const store = useEcaasStore();
-const { getStoreIndex } = useForm();
+
 
 defineProps<{
-	model: RadiatorModelType
+	model: RadiatorModelType,
+	index: number,
 }>();
 
-const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
-const index = getStoreIndex(heatSourceStoreData);
-
+const emit = defineEmits(["update-radiator-model"]);
 </script>
 
 <template>
@@ -22,7 +20,8 @@ const index = getStoreIndex(heatSourceStoreData);
 		label="Type of radiator"
 		name="typeOfRadiator"
 		:options="radiatorTypes"
-		validation="required" />
+		validation="required"
+		@click="emit('update-radiator-model', 'typeOfRadiator')"/>
 	<template v-if="model.typeOfRadiator">
 		<FormKit
 			id="name"
@@ -33,14 +32,14 @@ const index = getStoreIndex(heatSourceStoreData);
 		<FormKit
 			id="selectRadiator"
 			type="govPcdbProduct"
-			label="Select a heat pump"
-			name="productReference"
+			label="Select a product"
+			name="selectRadiator"
 			validation="required"
 			:help="''"
-			:selected-product-reference="''"
-			:selected-product-type="''"
-			:page-url="''"
-			:page-index="1" />
+			:selected-product-reference="model.productReference"
+			:selected-product-type="radiatorTypes[model.typeOfRadiator]"
+			:page-url="route.fullPath"
+			:page-index="index" />
 		<FieldsHeatGenerators
 			id="heatSource"
 			name="heatSource"
