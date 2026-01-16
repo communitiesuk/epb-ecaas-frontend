@@ -1,5 +1,5 @@
 import { objectFromEntries } from "ts-extras";
-import type { DisplayProduct, TechnologyType } from "~/pcdb/pcdb.types";
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaHeatNetworkType, SchemaLeaksTestPressure, SchemaRadiatorType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
@@ -275,8 +275,6 @@ export function displayColour(colour: SchemaColour | undefined): ColourDisplay |
 	return colourOptionsMap[colour!] ?? emptyValueRendering;
 }
 
-export type HeatPumpTypeDisplay = "Air source" | "Ground source" | "Water source" | "Booster" | "Hot water only" | "Exhaust air MEV" | "Exhaust air MVHR" | "Exhaust air Mixed";
-
 export const heatPumpTypes = {
 	"airSource": "Air source",
 	"groundSource": "Ground source",
@@ -286,20 +284,27 @@ export const heatPumpTypes = {
 	"exhaustAirMev": "Exhaust air MEV",
 	"exhaustAirMvhr": "Exhaust air MVHR",
 	"exhaustAirMixed": "Exhaust air Mixed",
-} as const satisfies Record<HeatPumpType, HeatPumpTypeDisplay>;
+} as const satisfies Record<HeatPumpType, string>;
 
-export const pcdbTechnologyTypes = {
-	"airSource": "AirSourceHeatPump",
-	"groundSource": "GroundSourceHeatPump",
-	"waterSource": "WaterSourceHeatPump",
-	"booster": "BoosterHeatPump",
-	"hotWaterOnly": "HotWaterOnlyHeatPump",
-	"exhaustAirMev": "ExhaustAirMevHeatPump",
-	"exhaustAirMvhr": "ExhaustAirMvhrHeatPump",
-	"exhaustAirMixed": "ExhaustAirMixedHeatPump",
-} as Record<HeatPumpType, TechnologyType>;
+export const heatSourceProductTypeDisplay = {
+	"airSource": "Air source heat pumps",
+	"groundSource": "Ground source heat pumps",
+	"waterSource": "Water source heat pumps",
+	"booster": "Booster heat pumps",
+	"hotWaterOnly": "Hot water only heat pumps",
+	"exhaustAirMev": "Exhaust air MEV heat pumps",
+	"exhaustAirMvhr": "Exhaust air MVHR heat pumps",
+	"exhaustAirMixed": "Exhaust air mixed heat pumps",
+	"combiBoiler": "Combi boilers",
+	"regularBoiler": "Regular boilers",
+	"sleevedDistrict": "Sleeved district heat networks",
+	"unsleevedDistrict": "Unsleeved district heat networks",
+	"communal": "Communal heat networks",
+	"pcm": "PCM heat batteries",
+	"dryCore": "Dry core heat batteries",
+} as const satisfies Record<HeatSourceProductType, string>;
 
-export function displayHeatPumpType(type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
+export function displayHeatPumpType(type: HeatPumpType | undefined): string {
 	return heatPumpTypes[type!] ?? emptyValueRendering;
 }
 

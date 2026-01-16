@@ -176,7 +176,7 @@ const expectedHouseInput: FhsInputSchema = {
 	NumberOfBedrooms: 7,
 	OnSiteGeneration: {},
 	PartGcompliance: true,
-	PartO_active_cooling_required: false,
+	//PartO_active_cooling_required: false,
 	BuildingLength: 10,
 	BuildingWidth: 20,
 	NumberOfBathrooms: 1,
@@ -582,7 +582,7 @@ const expectedFlatInput: FhsInputSchema = {
 		},
 	},
 	PartGcompliance: true,
-	PartO_active_cooling_required: false,
+	//PartO_active_cooling_required: false,
 	NumberOfBathrooms: 1,
 	NumberOfHabitableRooms: 4,
 	NumberOfSanitaryAccommodations: 1,
@@ -1168,6 +1168,18 @@ describe("FHS input mapper", () => {
 			},
 		};
 
+		const spaceHeatingNew: SpaceHeatingNew = {
+			heatSource: {
+				...baseForm,
+			},
+			heatEmitters: {
+				...baseForm,
+			},
+			heatingControls: {
+				...baseForm,
+			},
+		};
+
 		const cooling: Cooling = {
 			airConditioning: {
 				...baseForm,
@@ -1284,6 +1296,7 @@ describe("FHS input mapper", () => {
 			infiltrationAndVentilation,
 			spaceHeating,
 			pvAndBatteries,
+			spaceHeatingNew,
 			cooling,
 		};
 
@@ -1885,6 +1898,18 @@ describe("FHS input mapper", () => {
 			},
 		};
 
+		const spaceHeatingNew: SpaceHeatingNew = {
+			heatSource: {
+				...baseForm,
+			},
+			heatEmitters: {
+				...baseForm,
+			},
+			heatingControls: {
+				...baseForm,
+			},
+		};
+
 		const cooling: Cooling = {
 			airConditioning: {
 				...baseForm,
@@ -2134,6 +2159,7 @@ describe("FHS input mapper", () => {
 			dwellingFabric,
 			infiltrationAndVentilation,
 			spaceHeating,
+			spaceHeatingNew,
 			pvAndBatteries,
 			cooling,
 		};

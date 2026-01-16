@@ -7,6 +7,7 @@ import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
 import { arealHeatCapacityZod, batteryLocationZod, colourZod, convectiveTypeZod, ductShapeZod, fuelTypeWithElecOnlyZod, heatNetworkTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, radiatorTypeZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import type { TechnologyType } from "~/pcdb/pcdb.types";
 
 const fraction = z.number().min(0).max(1);
 const percentage = z.number().min(0).max(100);
@@ -788,21 +789,27 @@ export type HeatGeneration = AssertFormKeysArePageIds<{
 	heatInterfaceUnit: EcaasForm<HeatInterfaceUnitData[]>;
 }>;
 
+const typeOfHeatPump = z.enum([
+	"airSource",
+	"groundSource",
+	"waterSource",
+	"booster",
+	"hotWaterOnly",
+	"exhaustAirMev",
+	"exhaustAirMvhr",
+	"exhaustAirMixed",
+]);
+const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
+const typeOfHeatNetwork = z.enum(["sleevedDistrict", "unsleevedDistrict", "communal"]);
+const typeOfHeatBattery = z.enum(["pcm", "dryCore"]);
+const typeOflocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
+
 const heatPumpDataZod = namedWithId.extend({
 	productReference: z.string().trim().min(1),
-	typeOfHeatPump: z.enum([
-		"airSource",
-		"groundSource",
-		"waterSource",
-		"booster",
-		"hotWaterOnly",
-		"exhaustAirMev",
-		"exhaustAirMvhr",
-		"exhaustAirMixed",
-	]),
+	typeOfHeatPump,
 });
 
-export type HeatPumpType = z.infer<typeof heatPumpDataZod>["typeOfHeatPump"];
+export type HeatPumpType = z.infer<typeof typeOfHeatPump>;
 
 export type HeatPumpData = z.infer<typeof heatPumpDataZod>;
 
@@ -882,10 +889,6 @@ export type SpaceHeatingNew = AssertEachKeyIsPageId<{
 	heatingControls: EcaasFormList<HeatingControlData>
 }>;
 
-const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
-const typeOfHeatBattery = z.enum(["pcm", "dryCore"]);
-const typeOflocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
-
 export type TypeOfBoiler = z.infer<typeof typeOfBoiler>;
 export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;
 export type LocationOfCollectorLoopPipingType = z.infer<typeof typeOflocationOfLoopPiping>;
@@ -897,32 +900,23 @@ export type HeatSourceType =
 	"heatBattery" |
 	"solarThermalSystem";
 
-
-const heatPumpBase = namedWithId.extend({
-	typeOfHeatSource: z.literal("heatPump"),
-	typeOfHeatPump: z.enum([
-		"airSource",
-		"groundSource",
-		"waterSource",
-		"booster",
-		"hotWaterOnly",
-		"exhaustAirMev",
-		"exhaustAirMvhr",
-		"exhaustAirMixed",
-	]),
+const heatSourceProduct = namedWithId.extend({
 	productReference: z.string().trim().min(1),
 });
 
-const boilerBase = namedWithId.extend({
+const heatPumpBase = heatSourceProduct.extend({
+	typeOfHeatSource: z.literal("heatPump"),
+	typeOfHeatPump,
+});
+
+const boilerBase = heatSourceProduct.extend({
 	typeOfHeatSource: z.literal("boiler"),
 	typeOfBoiler,
-	productReference: z.string().trim().min(1),
 	locationOfBoiler: z.enum(["heatedSpace", "unheatedSpace"]),
 });
-const heatBatteryBase = namedWithId.extend({
+const heatBatteryBase = heatSourceProduct.extend({
 	typeOfHeatSource: z.literal("heatBattery"),
 	typeOfHeatBattery,
-	productReference: z.string().trim().min(1),
 	numberOfUnits: z.number(),
 	energySupply: fuelTypeZod,
 });
@@ -990,7 +984,34 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatNetworkZodData,
 ]);
 
+const _typeOfHeatSource = z.enum({
+	...typeOfHeatPump.enum,
+	...typeOfBoiler.enum,
+	...typeOfHeatNetwork.enum,
+	...typeOfHeatBattery.enum,
+});
+
+export type HeatSourceProductType = z.infer<typeof _typeOfHeatSource>;
+export type HeatSourceProduct = z.infer<typeof heatSourceProduct>;
 export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
+
+export const heatSourceProductTypeMap = {
+	"airSource": "AirSourceHeatPump",
+	"groundSource": "GroundSourceHeatPump",
+	"waterSource": "WaterSourceHeatPump",
+	"booster": "BoosterHeatPump",
+	"hotWaterOnly": "HotWaterOnlyHeatPump",
+	"exhaustAirMev": "ExhaustAirMevHeatPump",
+	"exhaustAirMvhr": "ExhaustAirMvhrHeatPump",
+	"exhaustAirMixed": "ExhaustAirMixedHeatPump",
+	"combiBoiler": "CombiBoiler",
+	"regularBoiler": "RegularBoiler",
+	"sleevedDistrict": "HeatNetworks",
+	"unsleevedDistrict": "HeatNetworks",
+	"communal": "HeatNetworks",
+	"pcm": "HeatBatteryPCM",
+	"dryCore": "HeatBatteryDryCore",
+} as const satisfies Record<HeatSourceProductType, TechnologyType | string>;
 
 export type HeatEmitterType = 
    "radiator" |

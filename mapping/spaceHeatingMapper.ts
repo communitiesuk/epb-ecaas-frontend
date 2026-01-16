@@ -5,12 +5,12 @@ import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 
 export function mapspaceHeatingData(state: ResolvedState): Pick<FhsInputSchema, "SpaceHeatSystem"> {
 	return {
-		...mapGeneralData(state),
+		//...mapGeneralData(state),
 		...mapHeatEmittingData(state),
 	};
 }
 
-const heatingControlOptions: Record<string, "SeparateTempControl" | "SeparateTimeAndTempControl"> = {
+/*const heatingControlOptions: Record<string, "SeparateTempControl" | "SeparateTimeAndTempControl"> = {
 	"separateTemperatureControl": "SeparateTempControl",
 	"separateTimeAndTemperatureControl": "SeparateTimeAndTempControl",
 };
@@ -22,7 +22,7 @@ export function mapGeneralData(state: ResolvedState): Pick<FhsInputSchema, "Heat
 		HeatingControlType: heatingControlOptions[heatingControlType]!,
 		PartO_active_cooling_required: coolingRequired,
 	};
-}
+}*/
 
 // TODO need a mapHeatGenerationData function here, though this specifies products in the PCDB, heat pumps initially
 

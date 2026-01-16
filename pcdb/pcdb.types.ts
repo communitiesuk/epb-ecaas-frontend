@@ -65,6 +65,8 @@ const baseHeatPump = BaseProduct.extend({
 	testData: z.array(heatPumpTestDataZod),
 });
 
+export type HeatPumpProduct = z.infer<typeof baseHeatPump>;
+
 export const airSourceHeatPumpZod = baseHeatPump.extend({
 	technologyType: z.literal("AirSourceHeatPump"),
 });
@@ -107,6 +109,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	exhaustAirMvhrHeatPumpZod,
 	exhaustAirMixedHeatPump,
 ]);
+
 export type Product = z.infer<typeof productSchema>;
 
 export const Products = z.array(productSchema);

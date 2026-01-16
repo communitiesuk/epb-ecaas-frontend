@@ -8,7 +8,7 @@ const { pageId, title, index, searchModel, searchData } = useProductsPage("heatS
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
-		technologyType: pcdbTechnologyTypes[pageId as keyof typeof pcdbTechnologyTypes],
+		technologyType: heatSourceProductTypeMap[pageId as HeatSourceProductType],
 	},
 });
 
@@ -21,18 +21,12 @@ const selectProduct = (reference: string) => {
 
 		if (item) {
 			const data = item.data as HeatSourceData;
-			if (data.typeOfHeatSource === "heatPump") {
-				data.productReference = reference;
-			};
-			if (data.typeOfHeatSource === "heatBattery") {
-				data.productReference = reference;
-			};
-			if (data.typeOfHeatSource === "boiler") {
-				data.productReference = reference;
-			};
-			if (data.typeOfHeatSource === "heatNetwork" && data.isHeatNetworkInPcdb === true) {
-				data.productReference = reference;
-			};
+			
+			if (data.typeOfHeatSource === "heatNetwork" && !data.isHeatNetworkInPcdb) {
+				return;
+			}
+
+			(item.data as HeatSourceProduct).productReference = reference;
 		}
 	});
 
