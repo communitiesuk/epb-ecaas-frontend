@@ -75,44 +75,69 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		{{ title }}
 	</h1>
 	<FormKit
-		v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+		v-model="model"
+		type="form"
+		:actions="false"
+		:incomplete-message="false"
+		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="internalDoorErrorSummary" />
 		<FormKit
-			id="typeOfInternalDoor" type="govRadios" :options="typeOfInternalDoorOptions" label="Type"
-			help="This affects which inputs are necessary." name="typeOfInternalDoor" validation="required" />
+			id="typeOfInternalDoor"
+			type="govRadios"
+			:options="typeOfInternalDoorOptions"
+			label="Type"
+			help="This affects which inputs are necessary."
+			name="typeOfInternalDoor"
+			validation="required" />
 		<template v-if="!!model?.typeOfInternalDoor">
 			<FormKit
-				id="name" type="govInputText" label="Name"
-				help="Provide a name for this element so that it can be identified later" name="name"
-				:validation-rules="{ uniqueName: uniqueName(internalDoorData, { index }) }" validation="required | uniqueName"
+				id="name"
+				type="govInputText"
+				label="Name"
+				help="Provide a name for this element so that it can be identified later"
+				name="name"
+				:validation-rules="{ uniqueName: uniqueName(internalDoorData, { index }) }"
+				validation="required | uniqueName"
 				:validation-messages="{
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
 				}" />
 			<FieldsAssociatedElements
-				v-if="model.typeOfInternalDoor === 'heatedSpace'" id="associatedItemId"
-				name="associatedItemId" label="Associated wall or ceiling"
+				v-if="model.typeOfInternalDoor === 'heatedSpace'"
+				id="associatedItemId"
+				name="associatedItemId"
+				label="Associated wall or ceiling"
 				help="Select the wall or ceiling that this door is in. It should have the same pitch as the door."
 				adjacent-space-type="heatedSpace" />
 			<FieldsAssociatedElements
-				v-if="model.typeOfInternalDoor === 'unheatedSpace'" id="associatedItemId"
-				name="associatedItemId" label="Associated wall or ceiling"
+				v-if="model.typeOfInternalDoor === 'unheatedSpace'"
+				id="associatedItemId"
+				name="associatedItemId"
+				label="Associated wall or ceiling"
 				help="Select the wall or ceiling that this door is in. It should have the same pitch as the door."
 				adjacent-space-type="unheatedSpace" />
 			<FormKit
-				id="surfaceArea" type="govInputWithSuffix" label="Net surface area of element"
+				id="surfaceArea"
+				type="govInputWithSuffix"
+				label="Net surface area of element"
 				help="Enter the net area of the building element. The area of all windows should be subtracted before entry."
-				name="surfaceArea" validation="required | number | min:0 | max:10000" suffix-text="m²"
+				name="surfaceArea"
+				validation="required | number | min:0 | max:10000"
+				suffix-text="m²"
 				data-field="Zone.BuildingElement.*.area" />
 			<FieldsUValue v-if="model.typeOfInternalDoor === 'unheatedSpace'" id="uValue" name="uValue" />
 			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
 		</template>
 		<FormKit
-			v-if="model?.typeOfInternalDoor === 'unheatedSpace'" id="thermalResistanceOfAdjacentUnheatedSpace"
-			type="govInputWithSuffix" suffix-text="(m²·K)/W" label="Thermal resistance of adjacent unheated space"
+			v-if="model?.typeOfInternalDoor === 'unheatedSpace'"
+			id="thermalResistanceOfAdjacentUnheatedSpace"
+			type="govInputWithSuffix"
+			suffix-text="(m²·K)/W"
+			label="Thermal resistance of adjacent unheated space"
 			help="Enter the effective thermal resistance of the unheated space"
-			name="thermalResistanceOfAdjacentUnheatedSpace" validation="required | number | min:0 | max:3"
+			name="thermalResistanceOfAdjacentUnheatedSpace"
+			validation="required | number | min:0 | max:3"
 			data-field="Zone.BuildingElement.*.thermal_resistance_unconditioned_space">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">

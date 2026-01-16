@@ -43,8 +43,14 @@ const flattenedOptions = options.flat().filter(x => x[0] !== undefined);
 <template>
 	<ClientOnly>
 		<FormKit
-			:id="id" type="govRadios" :options="new Map(flattenedOptions)" :label="label" :help="help" :name="name"
-			:validation="validation ?? 'required'" :validation-rules="validationRules"
+			:id="id"
+			type="govRadios"
+			:options="new Map(flattenedOptions)"
+			:label="label"
+			:help="help"
+			:name="name"
+			:validation="validation ?? 'required'"
+			:validation-rules="validationRules"
 			:validation-messages="validationMessages">
 			<div v-if="!flattenedOptions.length">
 				<p class="govuk-error-message">No walls or ceilings added.</p>

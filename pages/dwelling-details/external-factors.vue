@@ -52,7 +52,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm" @submit-invalid="handleInvalidSubmit">
+	<FormKit
+		v-model="model"
+		type="form"
+		:actions="false"
+		:incomplete-message="false"
+		@submit="saveForm"
+		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="externalFactorsErrorSummary"/>
 		<FormKit
 			id="altitude"

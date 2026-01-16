@@ -178,23 +178,35 @@ function updateHeatSource(type: string) {
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<FormKit
-		v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+		v-model="model"
+		type="form"
+		:actions="false"
+		:incomplete-message="false"
+		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="heatSourceErrorSummary" />
 		<FormKit
-			id="typeOfHeatSource" type="govRadios" label="Type of heat source" :options="heatSourceTypesWithDisplay"
-			name="typeOfHeatSource" validation="required" />
+			id="typeOfHeatSource"
+			type="govRadios"
+			label="Type of heat source"
+			:options="heatSourceTypesWithDisplay"
+			name="typeOfHeatSource"
+			validation="required" />
 		<HeatPumpSection
-			v-if="model?.typeOfHeatSource === 'heatPump'" :model="model as HeatPumpModelType"
+			v-if="model?.typeOfHeatSource === 'heatPump'"
+			:model="model as HeatPumpModelType"
 			@update-heat-pump-model="updateHeatSource" />
 		<BoilerSection
-			v-if="model?.typeOfHeatSource === 'boiler'" :model="model as BoilerModelType"
+			v-if="model?.typeOfHeatSource === 'boiler'"
+			:model="model as BoilerModelType"
 			@update-boiler-model="updateHeatSource" />
 		<HeatNetworkSection
-			v-if="model?.typeOfHeatSource === 'heatNetwork'" :model="model as HeatNetworkModelType"
+			v-if="model?.typeOfHeatSource === 'heatNetwork'"
+			:model="model as HeatNetworkModelType"
 			@update-heat-network-model="updateHeatSource" />
 		<HeatBatterySection
-			v-if="model?.typeOfHeatSource === 'heatBattery'" :model="model as HeatBatteryModelType"
+			v-if="model?.typeOfHeatSource === 'heatBattery'"
+			:model="model as HeatBatteryModelType"
 			@update-heat-battery-model="updateHeatSource" />
 		<SolarThermalSystemSection
 			v-if="model?.typeOfHeatSource === 'solarThermalSystem'"

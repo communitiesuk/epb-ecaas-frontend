@@ -67,24 +67,40 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<FormKit
-		v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+		v-model="model"
+		type="form"
+		:actions="false"
+		:incomplete-message="false"
+		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="internalFloorErrorSummary" />
 		<FormKit
-			id="typeOfInternalFloor" type="govRadios" :options="typeOfInternalFloorOptions"
-			label="Type of internal floor" help="This affects the additional inputs needed" name="typeOfInternalFloor"
+			id="typeOfInternalFloor"
+			type="govRadios"
+			:options="typeOfInternalFloorOptions"
+			label="Type of internal floor"
+			help="This affects the additional inputs needed"
+			name="typeOfInternalFloor"
 			validation="required" />
 		<template v-if="!!model?.typeOfInternalFloor">
 			<FormKit
-				id="name" type="govInputText" label="Name"
-				help="Provide a name for this element so that it can be identified later" name="name"
-				:validation-rules="{ uniqueName: uniqueName(internalFloorData, { index }) }" validation="required | uniqueName"
+				id="name"
+				type="govInputText"
+				label="Name"
+				help="Provide a name for this element so that it can be identified later"
+				name="name"
+				:validation-rules="{ uniqueName: uniqueName(internalFloorData, { index }) }"
+				validation="required | uniqueName"
 				:validation-messages="{
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
 				}" />
 			<FormKit
-				id="surfaceAreaOfElement" type="govInputWithSuffix" label="Net surface area of the floor"
-				name="surfaceAreaOfElement" validation="required | number | min:0 | max:10000" suffix-text="m²"
+				id="surfaceAreaOfElement"
+				type="govInputWithSuffix"
+				label="Net surface area of the floor"
+				name="surfaceAreaOfElement"
+				validation="required | number | min:0 | max:10000"
+				suffix-text="m²"
 				data-field="Zone.BuildingElement.*.area" />
 			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />

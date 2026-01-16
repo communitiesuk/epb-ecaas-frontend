@@ -26,27 +26,47 @@ const emit = defineEmits(["update-heat-battery-model"]);
 
 <template>
 	<FormKit
-		id="name" type="govInputText" label="Name"
-		help="Provide a name for this element so that it can be identified later" name="name"
-		:validation-rules="{ uniqueName: uniqueName(heatSourceStoreData, { index }) }" validation="required | uniqueName"
+		id="name"
+		type="govInputText"
+		label="Name"
+		help="Provide a name for this element so that it can be identified later"
+		name="name"
+		:validation-rules="{ uniqueName: uniqueName(heatSourceStoreData, { index }) }"
+		validation="required | uniqueName"
 		:validation-messages="{
 			uniqueName: 'An element with this name already exists. Please enter a unique name.'
 		}" />
 	<FormKit
-		id="typeOfHeatBattery" type="govRadios" label="Type of heat battery" :options="heatBatteryTypeOptions"
-		name="typeOfHeatBattery" validation="required" @click="emit('update-heat-battery-model', 'typeOfHeatBattery')" />
+		id="typeOfHeatBattery"
+		type="govRadios"
+		label="Type of heat battery"
+		:options="heatBatteryTypeOptions"
+		name="typeOfHeatBattery"
+		validation="required"
+		@click="emit('update-heat-battery-model', 'typeOfHeatBattery')" />
 	<FormKit
-		id="selectHeatBattery" type="govPcdbProduct" label="Select a heat battery" name="productReference"
-		validation="required" help="Select the heat battery type from the PCDB using the button below."
+		id="selectHeatBattery"
+		type="govPcdbProduct"
+		label="Select a heat battery"
+		name="productReference"
+		validation="required"
+		help="Select the heat battery type from the PCDB using the button below."
 		:selected-product-reference="model.productReference"
-		:selected-product-type="heatBatteryTypeOptions[model.typeOfHeatBattery]" :page-url="route.fullPath"
+		:selected-product-type="heatBatteryTypeOptions[model.typeOfHeatBattery]"
+		:page-url="route.fullPath"
 		:page-index="index" />
 	<FormKit
-		id="numberOfUnits" type="govInputInt" name="numberOfUnits" label="Number of units"
-		validation="required | isInteger | min:1" :validation-messages="{
+		id="numberOfUnits"
+		type="govInputInt"
+		name="numberOfUnits"
+		label="Number of units"
+		validation="required | isInteger | min:1"
+		:validation-messages="{
 			isInteger: `Number of units must be an integer.`,
 		}" />
 	<FieldsEnergySupplies
-		id="energySupply" name="energySupply" label="Energy supply"
+		id="energySupply"
+		name="energySupply"
+		label="Energy supply"
 		help="Select the relevant energy supply that has been added previously" />
 </template>

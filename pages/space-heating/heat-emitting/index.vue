@@ -101,7 +101,8 @@ function hasIncompleteEntries() {
 	<p class="govuk-hint">For now, this service only allows homes to be modelled with the following. In future releases there will be further options.</p>
 
 	<CustomList
-		id="wetDistribution" title="Wet distribution" 
+		id="wetDistribution"
+		title="Wet distribution" 
 		:form-url="`${page?.url!}/wet-distribution`"
 		:items="store.spaceHeating.heatEmitting.wetDistribution.data.filter(x => isEcaasForm(x)).map(x => ({
 			name: x.data?.name,
@@ -112,7 +113,8 @@ function hasIncompleteEntries() {
 		@duplicate="(index: number) => handleDuplicate('wetDistribution', index)" />
 
 	<CustomList
-		id="instantElectricHeater" title="Instant electric heater"
+		id="instantElectricHeater"
+		title="Instant electric heater"
 		:form-url="`${page?.url!}/instant-electric-heater`"
 		:items="store.spaceHeating.heatEmitting.instantElectricHeater.data.filter(x => isEcaasForm(x)).map(x => ({
 			name: x.data?.name,
@@ -124,7 +126,8 @@ function hasIncompleteEntries() {
 
 	<CustomList
 		v-if="false"
-		id="electricStorageHeater" title="Electric storage heater"
+		id="electricStorageHeater"
+		title="Electric storage heater"
 		:form-url="`${page?.url!}/electric-storage-heater`"
 		:items="store.spaceHeating.heatEmitting.electricStorageHeater.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('electricStorageHeater', index)"
@@ -132,7 +135,8 @@ function hasIncompleteEntries() {
 
 	<CustomList
 		v-if="false"
-		id="warmAirHeatPump" title="Warm air heat pump" 
+		id="warmAirHeatPump"
+		title="Warm air heat pump" 
 		:form-url="`${page?.url!}/warm-air-heat-pump`"
 		:items="store.spaceHeating.heatEmitting.warmAirHeatPump.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('warmAirHeatPump', index)"

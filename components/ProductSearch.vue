@@ -70,7 +70,13 @@ watch(model, (currentModel: ProductSearchModel, previousModel: ProductSearchMode
 
 <template>
 	<div class="search-container">
-		<FormKit v-model="model" type="form" method="get" :actions="false" :incomplete-message="false" @submit="handleSubmit">
+		<FormKit
+			v-model="model"
+			type="form"
+			method="get"
+			:actions="false"
+			:incomplete-message="false"
+			@submit="handleSubmit">
 			<FormKit
 				id="searchOption"
 				type="govRadios"

@@ -42,7 +42,8 @@ watch(() => route.fullPath, () => satisfied.value = null);
 					<li class="feedback__option-list-item">
 						<button
 							class="govuk-button feedback__prompt-link js-toggle-form js-page-is-not-useful"
-							aria-controls="page-is-not-useful" aria-expanded="false"
+							aria-controls="page-is-not-useful"
+							aria-expanded="false"
 							data-ga4-event="{
 								&quot;event_name&quot;: &quot;form_submit&quot;,
 								&quot;type&quot;: &quot;feedback&quot;,

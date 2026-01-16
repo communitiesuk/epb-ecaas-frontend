@@ -40,11 +40,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovErrorSummary :error-list="errorMessages" test-id="heatEmitterErrorSummary" />
 	<FormKit
-		v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+		v-model="model"
+		type="form"
+		:actions="false"
+		:incomplete-message="false"
+		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<FormKit
-			id="typeOfHeatEmitter" type="govRadios" label="Type of heat emitter" :options="heatEmitterTypes"
-			name="typeOfHeatEmitter" validation="required" />
+			id="typeOfHeatEmitter"
+			type="govRadios"
+			label="Type of heat emitter"
+			:options="heatEmitterTypes"
+			name="typeOfHeatEmitter"
+			validation="required" />
 		<RadiatorSection v-if="model?.typeOfHeatEmitter === 'radiator'" :model="model as RadiatorModelType" />
 		<UnderfloorHeatingSection
 			v-if="model?.typeOfHeatEmitter === 'underfloorHeating'"

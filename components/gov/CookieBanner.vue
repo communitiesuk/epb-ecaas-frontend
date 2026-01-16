@@ -29,7 +29,12 @@ const handleHide = () => hideCookieMessage.value = "true";
 </script>
 
 <template>
-	<div v-if="!cookieConsent" class="govuk-cookie-banner" data-nosnippet role="region" aria-label="Cookies on {{ serviceName }}">
+	<div
+		v-if="!cookieConsent"
+		class="govuk-cookie-banner"
+		data-nosnippet
+		role="region"
+		aria-label="Cookies on {{ serviceName }}">
 		<div class="govuk-cookie-banner__message govuk-width-container">
 			<div class="govuk-grid-row">
 				<div class="govuk-grid-column-two-thirds">
@@ -56,7 +61,12 @@ const handleHide = () => hideCookieMessage.value = "true";
 		</div>
 	</div>
 
-	<div v-if="cookieConsent && !hideCookieMessage" class="govuk-cookie-banner" data-nosnippet role="region" aria-label="Cookies on {{ serviceName }}">
+	<div
+		v-if="cookieConsent && !hideCookieMessage"
+		class="govuk-cookie-banner"
+		data-nosnippet
+		role="region"
+		aria-label="Cookies on {{ serviceName }}">
 		<div class="govuk-cookie-banner__message govuk-width-container">
 			<div class="govuk-grid-row">
 				<div class="govuk-grid-column-two-thirds">
@@ -67,7 +77,13 @@ const handleHide = () => hideCookieMessage.value = "true";
 				</div>
 			</div>
 			<div class="govuk-button-group">
-				<button value="yes" type="submit" name="cookies[hide]" class="govuk-button" data-module="govuk-button" @click="handleHide">
+				<button
+					value="yes"
+					type="submit"
+					name="cookies[hide]"
+					class="govuk-button"
+					data-module="govuk-button"
+					@click="handleHide">
 					Hide cookie message
 				</button>
 			</div>
