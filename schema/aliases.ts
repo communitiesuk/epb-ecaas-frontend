@@ -1,5 +1,5 @@
 import type { Simplify } from "type-fest";
-import type { components, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaMassDistributionClass, SchemaBuildingElementGround, SchemaBuildingElementOpaque } from "./api-schema.types";
+import type { components, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaMassDistributionClass, SchemaBuildingElementGround, SchemaBuildingElementOpaque, SchemaRadiatorWithProductReference } from "./api-schema.types";
 
 // Some aliases to names in the API schema generated types, sometimes for more graceful backwards compatibility
 // as different names get used in the upstream schemas
@@ -83,3 +83,4 @@ export type SchemaLightingBulbs = FhsSchema["Zone"][string]["Lighting"]["bulbs"]
 export type SchemaApplianceType = Exclude<keyof FhsSchema["Appliances"], "Kettle" | "Microwave" | "Otherdevices">;
 export type SchemaColdWaterSourceType = components["schemas"]["ColdWaterSource"]["ColdWaterSource"];
 export type SchemaHeatNetworkType = (Exclude<FhsSchema["HeatSourceWet"], undefined>[string] & { is_heat_network: true })["heat_network_type"];
+export type SchemaRadiatorType = SchemaRadiatorWithProductReference["radiator_type"];
