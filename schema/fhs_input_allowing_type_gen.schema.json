@@ -2887,10 +2887,6 @@
                     "items": {
                         "type": "object",
                         "unevaluatedProperties": false,
-                        "required": ["frac_convective"],
-                        "properties": {
-                            "frac_convective": {"type": "number"}
-                        },
                         "oneOf": [
                             {
                                 "$ref": "#/$defs/Radiator"
@@ -3041,7 +3037,8 @@
         "Radiator": {
             "required": [
                 "wet_emitter_type",
-                "n"
+                "n",
+                "frac_convective"
             ],
             "properties": {
                 "wet_emitter_type": {
@@ -3143,7 +3140,8 @@
                 "wet_emitter_type",
                 "equivalent_specific_thermal_mass",
                 "system_performance_factor",
-                "emitter_floor_area"
+                "emitter_floor_area",
+                "frac_convective"
             ],
             "properties": {
                 "wet_emitter_type": {
@@ -3160,6 +3158,9 @@
                 "emitter_floor_area": {
                     "type": "number",
                     "exclusiveMinimum": 0
+                },
+                "frac_convective": {
+                    "type": "number"
                 }
             }
         },
