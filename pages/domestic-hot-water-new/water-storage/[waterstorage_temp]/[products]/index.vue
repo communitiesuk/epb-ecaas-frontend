@@ -3,7 +3,6 @@ definePageMeta({ layout: "one-column" });
 
 const store = useEcaasStore();
 const { pageId, title, index, searchModel, searchData } = useProductsPage("waterstorage");
-// potentially should provide the product param in a different case as kebab case goes to all lower case
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
@@ -18,7 +17,7 @@ const selectProduct = (reference: string) => {
 		(state.domesticHotWaterNew.waterStorage.data[index]!.data as SmartHotWaterTankDataNew).productReference = reference;
 	});
 
-	navigateTo(getUrl("smartHotWaterTank").replace(":water-storage", `${index}`));
+	navigateTo(getUrl("waterStorage").replace(":waterstorage", `${index}`));
 };
 </script>
 

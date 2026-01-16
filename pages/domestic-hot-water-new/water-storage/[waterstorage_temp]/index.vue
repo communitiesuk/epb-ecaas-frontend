@@ -138,7 +138,7 @@ const waterStorages = [
 				v-if="model.typeOfWaterStorage === 'smartHotWaterTank'"	
 				id="selectSmartHotWaterTank"
 				type="govPcdbProduct"
-				label="Select a smart hot water tank"
+				label="!! Select a smart hot water tank (!NEEDS UPDATING!)"
 				name="productReference"
 				:validation-rules="{ isProductSelected }"
 				validation="required | isProductSelected"
