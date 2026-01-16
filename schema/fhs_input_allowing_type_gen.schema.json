@@ -3106,6 +3106,29 @@
             "required": [
                 "wet_emitter_type",
                 "product_reference"
+            ],
+            "oneOf": [
+                {
+                    "required": [
+                        "radiator_type",
+                        "length"
+                    ],
+                    "properties": {
+                        "radiator_type": {"const": "radiator"},
+                        "length": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                        }
+                    }
+                },
+                {
+                    "required": [
+                        "radiator_type"
+                    ],
+                    "properties": {
+                        "radiator_type": {"const": "towel"}
+                    }
+                }
             ]
         },
         "Ufh": {

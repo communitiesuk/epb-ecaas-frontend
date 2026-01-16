@@ -2016,7 +2016,30 @@
                                                                 "product_reference"
                                                             ],
                                                             "title": "RadiatorWithProductReference",
-                                                            "type": "object"
+                                                            "type": "object",
+                                                            "oneOf": [
+                                                                {
+                                                                    "required": [
+                                                                        "radiator_type",
+                                                                        "length"
+                                                                    ],
+                                                                    "properties": {
+                                                                        "radiator_type": {"const": "radiator"},
+                                                                        "length": {
+                                                                            "type": "number",
+                                                                            "exclusiveMinimum": 0
+                                                                        }
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "required": [
+                                                                        "radiator_type"
+                                                                    ],
+                                                                    "properties": {
+                                                                        "radiator_type": {"const": "towel"}
+                                                                    }
+                                                                }
+                                                            ]
                                                         },
                                                         {
                                                             "required": ["n"],
