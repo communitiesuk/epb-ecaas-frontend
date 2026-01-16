@@ -3118,7 +3118,7 @@
                         "length"
                     ],
                     "properties": {
-                        "radiator_type": {"const": "radiator"},
+                        "radiator_type": {"const": "standard"},
                         "length": {
                             "type": "number",
                             "exclusiveMinimum": 0
