@@ -5,7 +5,7 @@ const route = useRoute();
 const store = useEcaasStore();
 const { getStoreIndex } = useForm();
 
-const props = defineProps<{
+defineProps<{
 	model: InstantElectricHeaterModelType
 }>();
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
@@ -25,6 +25,6 @@ const index = getStoreIndex(heatSourceStoreData);
 		validation="required | number | min:0 | max:1"/>
 	<FormKit
 		id="numOfHeatersWithThisSpec" name="numOfHeatersWithThisSpec" type="govInputInt"
- 		label="Number of heaters with this spec"
+		label="Number of heaters with this spec"
 		help="Enter the number of heaters with this specification in the dwelling" />
 </template>

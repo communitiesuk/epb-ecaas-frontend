@@ -5,10 +5,10 @@ import { screen } from "@testing-library/vue";
 describe("Heat emitters", () => { 
 	const user = userEvent.setup();
 	describe("Radiator", () => {
-		const store = useEcaasStore()
-		afterEach(()=>{
-			store.$reset()
-		})
+		const store = useEcaasStore();
+		afterEach(() => {
+			store.$reset();
+		});
 		test("Radiator section displays when radiator is selected",async() => {
 			await renderSuspended(HeatEmitterForm, {
 				route: {
@@ -81,22 +81,22 @@ describe("Heat emitters", () => {
 			
 			expect(screen.getByTestId("designFlowRate")).toBeDefined();
 		});
-		test.only("saves valid radiator to store",async()=>{
+		test.only("saves valid radiator to store",async() => {
 			const validRadiator: HeatEmittingData = {
 				id: "1234",
-				typeOfHeatEmitter:"radiator",
-				typeOfRadiator:"standard",
+				typeOfHeatEmitter: "radiator",
+				typeOfRadiator: "standard",
 				name: "Standard radiator",
-				productReference:"5678",
+				productReference: "5678",
 				heatSource: "1",
 				ecoDesignControllerClass: "1",
 				designFlowTemp: 1,
 				minFlowTemp: 1,
 				designTempDiffAcrossEmitters: 1,
 				numOfRadiators: 1,
-				hasVariableFlowRate:false,
-				designFlowRate:1
-			}
+				hasVariableFlowRate: false,
+				designFlowRate: 1,
+			};
 			// const validInstantElecHeater = {
 			// 	id: "1234",
 			// 	name: "IEH",
@@ -106,25 +106,25 @@ describe("Heat emitters", () => {
 			// }
 			store.$patch({
 				spaceHeatingNew: {
-					heatSource:{
-						data:[ { data: { id: "1",} } ]
+					heatSource: {
+						data: [ { data: { id: "1" } } ],
 					},
-					heatEmitters:{
-						data:[ { data : validRadiator, complete:false } ],
-					}
-				}
-			})
+					heatEmitters: {
+						data: [ { data: validRadiator, complete: false } ],
+					},
+				},
+			});
 			await renderSuspended(HeatEmitterForm, {
 				route: {
 					params: { "heatEmitter": "0" },
 				},
-			})
+			});
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 			
-			const radiator = store.spaceHeatingNew.heatEmitters.data[0]
-			expect(radiator?.complete).toBe(true)
-		})
+			const radiator = store.spaceHeatingNew.heatEmitters.data[0];
+			expect(radiator?.complete).toBe(true);
+		});
 	});
 
 	describe("Underfloor heating", () => {

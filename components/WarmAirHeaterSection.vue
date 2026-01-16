@@ -5,7 +5,7 @@ const route = useRoute();
 const store = useEcaasStore();
 const { getStoreIndex } = useForm();
 
-const props = defineProps<{
+defineProps<{
 	model: WarmAirHeaterModelType
 }>();
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
