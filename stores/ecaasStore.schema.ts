@@ -1004,7 +1004,7 @@ export type HeatEmitterType =
 function withVariableFlowRate<
 	T extends z.ZodRawShape & { hasVariableFlowRate?: never },
 >(base: z.ZodObject<T>) {
-	return z.discriminatedUnion("isVariableFlowRate", [
+	return z.discriminatedUnion("hasVariableFlowRate", [
 		base.extend({
 			hasVariableFlowRate: z.literal(true),
 			minFlowRate: z.number(),
@@ -1034,6 +1034,7 @@ const radiatorSchema = withVariableFlowRate(radiatorBase);
 const underfloorHeatingBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("underfloorHeating"),
 	productReference: z.string(),
+	heatSource: z.string(),	
 	ecoDesignControllerClass: z.string(),
 	designFlowTemp: z.number(),
 	minFlowTemp: z.number(),
@@ -1087,7 +1088,7 @@ const heatEmittingDataZod = z.discriminatedUnion("typeOfHeatEmitter", [
 ]);
 
 export type HeatEmittingData = z.infer<typeof heatEmittingDataZod>;
-
+export type TypesOfRadiator = z.infer<typeof radiatorSchema>["typeOfRadiator"];
 const heatingControlsDataZod = named.extend({
 	heatingControlType,
 });

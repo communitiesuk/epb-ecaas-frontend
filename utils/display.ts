@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaH
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import { adjacentSpaceTypes, type AdjacentSpaceType, type ConciseMassDistributionClass, type HeatEmitterType, type HeatPumpType, type HeatSourceType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatPumpType, TypesOfRadiator } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -350,4 +350,19 @@ export function displayHeatEmitterType(type: HeatEmitterType | undefined): HeatE
 		return emptyValueRendering;
 	}
 	return heatEmitterTypes[type];
+}
+
+export type RadiatorDisplay = "Standard" | "Towel radiator";
+
+export const radiatorTypes = {
+	"standard": "Standard",
+	"towelRadiator": "Towel radiator", 
+
+} as const satisfies Record<TypesOfRadiator, RadiatorDisplay>;
+
+export function displayRadiatorType(type: TypesOfRadiator | undefined): RadiatorDisplay | typeof emptyValueRendering {
+	if (!type) {
+		return emptyValueRendering;
+	}
+	return radiatorTypes[type];
 }
