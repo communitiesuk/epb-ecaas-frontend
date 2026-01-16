@@ -1990,12 +1990,14 @@
                                         "type": "object",
                                         "unevaluatedProperties": false,
                                         "required": [
-                                            "wet_emitter_type"
+                                            "wet_emitter_type",
+                                            "frac_convective"
                                         ],
                                         "properties": {
                                             "wet_emitter_type": {
                                                 "enum": ["radiator", "ufh", "fancoil"]
-                                            }
+                                            },
+                                            "frac_convective": {"type": "number"}
                                         },
                                         "allOf": [
                                             {

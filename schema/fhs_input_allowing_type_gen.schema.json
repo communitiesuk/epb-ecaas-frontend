@@ -2887,6 +2887,10 @@
                     "items": {
                         "type": "object",
                         "unevaluatedProperties": false,
+                        "required": ["frac_convective"],
+                        "properties": {
+                            "frac_convective": {"type": "number"}
+                        },
                         "oneOf": [
                             {
                                 "$ref": "#/$defs/Radiator"
