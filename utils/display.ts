@@ -1,10 +1,10 @@
 import { objectFromEntries } from "ts-extras";
 import type { DisplayProduct, TechnologyType } from "~/pcdb/pcdb.types";
-import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaHeatNetworkType, SchemaLeaksTestPressure } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaHeatNetworkType, SchemaLeaksTestPressure, SchemaRadiatorType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatPumpType, TypesOfRadiator } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatPumpType } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -355,12 +355,12 @@ export function displayHeatEmitterType(type: HeatEmitterType | undefined): HeatE
 export type RadiatorDisplay = "Standard" | "Towel radiator";
 
 export const radiatorTypes = {
-	"standard": "Standard",
-	"towelRadiator": "Towel radiator", 
+	standard: "Standard",
+	towel: "Towel radiator", 
 
-} as const satisfies Record<TypesOfRadiator, RadiatorDisplay>;
+} as const satisfies Record<SchemaRadiatorType, RadiatorDisplay>;
 
-export function displayRadiatorType(type: TypesOfRadiator | undefined): RadiatorDisplay | typeof emptyValueRendering {
+export function displayRadiatorType(type: SchemaRadiatorType | undefined): RadiatorDisplay | typeof emptyValueRendering {
 	if (!type) {
 		return emptyValueRendering;
 	}
