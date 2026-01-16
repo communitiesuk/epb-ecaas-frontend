@@ -25,8 +25,14 @@ const options = [
 <template>
 	<ClientOnly>
 		<FormKit
-			:id="id" type="govRadios" :options="new Map(options)" :label="label" :help="help" :name="name"
-			:validation="validation ?? 'required'" :validation-rules="validationRules"
+			:id="id"
+			type="govRadios"
+			:options="new Map(options)"
+			:label="label"
+			:help="help"
+			:name="name"
+			:validation="validation ?? 'required'"
+			:validation-rules="validationRules"
 			:validation-messages="validationMessages">
 			<div v-if="!options.length">
 				<p class="govuk-error-message">No walls, roofs or windows added.</p>

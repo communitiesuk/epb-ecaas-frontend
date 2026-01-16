@@ -66,7 +66,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		{{ title }}
 	</h1>
 	<FormKit
-		v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+		v-model="model"
+		type="form"
+		:actions="false"
+		:incomplete-message="false"
+		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="externalWallErrorSummary" />
 		<FormKit
@@ -132,7 +136,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FieldsElevationalHeight />
 		<FormKit
-			id="surfaceArea" type="govInputWithSuffix" suffix-text="m²" label="Net surface area"
+			id="surfaceArea"
+			type="govInputWithSuffix"
+			suffix-text="m²"
+			label="Net surface area"
 			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"

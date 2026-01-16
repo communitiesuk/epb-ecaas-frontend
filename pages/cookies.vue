@@ -54,7 +54,12 @@ const saveForm = (fields: typeof model.value) => {
 		<li>what you click on</li>
 	</ul>
 	<p class="govuk-body">No personal details are stored with this information, so you can't be identified.</p>
-	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm">
+	<FormKit
+		v-model="model"
+		type="form"
+		:actions="false"
+		:incomplete-message="false"
+		@submit="saveForm">
 		<FormKit
 			id="acceptCookies"
 			type="govRadios"

@@ -9,7 +9,12 @@ const { label, attrs: { "test-id": testId }, classes } = props.context;
 </script>
 
 <template>
-	<button type="submit" :class="`govuk-button ${classes.button}`" data-module="govuk-button" :data-testId="testId" v-bind="props.context.attrs">
+	<button
+		type="submit"
+		:class="`govuk-button ${classes.button}`"
+		data-module="govuk-button"
+		:data-testId="testId"
+		v-bind="props.context.attrs">
 		{{ label }}
 	</button>
 </template>

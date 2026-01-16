@@ -16,7 +16,13 @@ const toggle = () => expanded.value = !expanded.value;
 	<div class="govuk-accordion__section">
 		<div class="govuk-accordion__section-header">
 			<h2 class="govuk-accordion__section-heading">
-				<button type="button" class="govuk-accordion__section-button" :data-testid="id" :aria-controls="`accordion-content-${index}`" :aria-expanded="expanded" @click="toggle">
+				<button
+					type="button"
+					class="govuk-accordion__section-button"
+					:data-testid="id"
+					:aria-controls="`accordion-content-${index}`"
+					:aria-expanded="expanded"
+					@click="toggle">
 					<span :class="`govuk-accordion__section-heading-text govuk-heading-${headingSize ?? 's'}`">
 						<span class="govuk-accordion__section-heading-text-focus" :data-testid="`${id}_heading`">
 							{{ title }}

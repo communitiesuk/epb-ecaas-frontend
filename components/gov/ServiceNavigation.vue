@@ -6,7 +6,8 @@ defineProps<{
 
 <template>
 	<section
-		aria-label="Service information" class="govuk-service-navigation"
+		aria-label="Service information"
+		class="govuk-service-navigation"
 		data-module="govuk-service-navigation">
 		<div class="govuk-width-container">
 			<div class="govuk-service-navigation__container">

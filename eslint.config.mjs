@@ -25,6 +25,17 @@ export default withNuxt(
 			'@stylistic/space-in-parens': 'error',
 			'@stylistic/type-generic-spacing': 'error',
 			'vue/html-indent': ['error', 'tab'],
+			'vue/max-attributes-per-line': [
+				'error',
+				{
+					"singleline": {
+						"max": 4,
+					},
+					"multiline": {
+						"max": 1,
+					}
+				}
+			],
 			'vue/no-multiple-template-root': 'off',
 			'object-shorthand': 'error',
 			'no-useless-rename': 'error',
