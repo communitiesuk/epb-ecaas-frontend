@@ -2906,6 +2906,9 @@
                             },
                             {
                                 "$ref": "#/$defs/Fancoil"
+                            },
+                            {
+                                "$ref": "#/$defs/FancoilWithProductReference"
                             }
                         ]
                     }
