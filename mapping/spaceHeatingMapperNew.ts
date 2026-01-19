@@ -1,4 +1,5 @@
 import type { ResolvedState } from "./fhsInputMapper";
+import { UNKNOWN } from "./spaceHeatingMapperNew.test";
 
 export function mapHeatPumps(state: ResolvedState) {
 	const heatsources = state.spaceHeatingNew.heatSource;
@@ -10,7 +11,7 @@ export function mapHeatPumps(state: ResolvedState) {
 		heatPumps.map((heatPump) => {
 			return [
 				heatPump.name,
-				{ type: "HeatPump", product_reference: heatPump.productReference },
+				{ type: "HeatPump", product_reference: heatPump.productReference, EnergySupply: UNKNOWN },
 			];
 		}),
 	);
@@ -30,9 +31,9 @@ export function mapBoilers(state: ResolvedState) {
 					type: "Boiler",
 					product_reference: boiler.productReference,
 					boiler_location:
-            boiler.locationOfBoiler === "heatedSpace"
-            	? "internal"
-            	: "external",
+						boiler.locationOfBoiler === "heatedSpace"
+							? "internal"
+							: "external",
 				},
 			];
 		}),
@@ -59,4 +60,31 @@ export function mapHeatBatteries(state: ResolvedState) {
 			];
 		}),
 	);
+}
+
+export function mapHeatNetworks(state: ResolvedState) {
+	const heatsources = state.spaceHeatingNew.heatSource;
+	const _heatNetworks = heatsources.filter(
+		(heatsource) => heatsource.typeOfHeatSource === "heatNetwork",
+	);
+
+	return {};
+}
+export function mapSolarThermalSystems(state: ResolvedState) {
+	const heatsources = state.spaceHeatingNew.heatSource;
+	const _solarThermals = heatsources.filter(
+		(heatsource) => heatsource.typeOfHeatSource === "solarThermalSystem",
+	);
+
+	return {};
+}
+
+export function mapSpaceHeating(state: ResolvedState) {
+	return {
+		...mapHeatPumps(state),
+		...mapBoilers(state),
+		...mapHeatNetworks(state),
+		...mapHeatBatteries(state),
+		...mapSolarThermalSystems(state),
+	};
 }
