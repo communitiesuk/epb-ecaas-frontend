@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaH
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatPumpType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatPumpType, HeatSourceProductType } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -361,7 +361,7 @@ export type RadiatorDisplay = "Standard" | "Towel radiator";
 
 export const radiatorTypes = {
 	standard: "Standard",
-	towel: "Towel radiator", 
+	towel: "Towel radiator",
 
 } as const satisfies Record<SchemaRadiatorType, RadiatorDisplay>;
 

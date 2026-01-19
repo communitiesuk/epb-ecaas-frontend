@@ -13,7 +13,7 @@ export default withNuxt(
 			'@stylistic/arrow-spacing': 'error',
 			'@stylistic/brace-style': 'error',
 			'@stylistic/comma-dangle': ['error', 'always-multiline'],
-			'@stylistic/indent': ['error', 'tab', { ignoredNodes: ['TSConditionalType'], SwitchCase: 1 }],
+			'@stylistic/indent': ['error', 'tab', { ignoredNodes: [], SwitchCase: 1 }],
 			'@stylistic/key-spacing': 'error',
 			'@stylistic/keyword-spacing': 'error',
 			'@stylistic/no-multi-spaces': 'error',
