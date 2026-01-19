@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
 import type { ProductForTechnology } from "~/pcdb/clients/client.types";
+import { pcdbTechnologyTypes } from "~/utils/display";
+import { sentenceToLowerCase } from "~/utils/string";
 
 definePageMeta({ layout: "one-column" });
 
@@ -19,7 +21,7 @@ if (!(heatPumpType in pcdbTechnologyTypes)) {
 
 const technologyType = pcdbTechnologyTypes[heatPumpType];
 const pageId = `${heatPumpType}Products` as PageId;
-const productType = `${heatPumpTypes[heatPumpType]} heat pumps`;
+const productType = sentenceToLowerCase(`${heatPumpTypes[heatPumpType]} heat pumps`);
 
 const index = Number(params.pump);
 

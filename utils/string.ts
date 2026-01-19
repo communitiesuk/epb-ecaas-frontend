@@ -3,3 +3,7 @@ export const kebabToCamelCase = (text: string) => {
 		return g[1]!.toUpperCase(); 
 	});
 };
+
+export const sentenceToLowerCase = (text: string) => {
+	return text.replace(/([A-Z](?=[a-z]))/, s => s.toLowerCase());
+};
