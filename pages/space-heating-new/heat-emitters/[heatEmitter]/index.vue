@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import ElectricStorageHeaterSection from "~/components/ElectricStorageHeaterSection.vue";
 import { heatEmitterTypes } from "../../../../utils/display";
 import { getHeatEmitterDefaultName, type HeatEmitterFormData } from "../../../../utils/getHeatEmitterDefaultName";
+import { getUrl } from "#imports";
 
 export type RadiatorModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "radiator" }>;
 export type UnderfloorHeatingModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "underfloorHeating" }>;
@@ -31,7 +32,7 @@ const saveForm = () => {
 		heatEmitters.data[index]!.complete = true;
 		heatEmitters.complete = false;
 	});
-
+	navigateTo("/space-heating-new");
 };
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
@@ -68,10 +69,11 @@ function updateHeatEmitter(type: string) {
 	watch(() => model.value?.[`${type}` as keyof typeof model.value], (newHeatEmitterSubtype, initialHeatEmitterSubtype) => {
 		if (newHeatEmitterSubtype !== initialHeatEmitterSubtype) {
 			const defaultName = getHeatEmitterDefaultName(model.value as HeatEmitterFormData);
-
-			model.value!.name = defaultName;
-			if (store.spaceHeatingNew.heatEmitters.data[index]) {
-				store.spaceHeatingNew.heatEmitters.data[index].data.name = defaultName;
+			if (model.value) {
+				model.value.name = defaultName;
+				if (store.spaceHeatingNew.heatEmitters.data[index]) {
+					store.spaceHeatingNew.heatEmitters.data[index].data.name = defaultName;
+				}
 			}
 		}
 	},
@@ -120,7 +122,7 @@ function updateHeatEmitter(type: string) {
 			:model="model as WarmAirHeaterModelType" />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
-			<!-- <GovButton :href="getUrl('spaceHeatingNew')" secondary test-id="saveProgress">Save progress</GovButton> -->
+			<GovButton :href="getUrl('spaceHeatingNew')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

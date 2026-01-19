@@ -37,7 +37,7 @@ const emit = defineEmits(["update-radiator-model"]);
 			validation="required"
 			:help="''"
 			:selected-product-reference="model.productReference"
-			:selected-product-type="radiatorTypes[model.typeOfRadiator]"
+			:selected-product-type="'radiator'"
 			:page-url="route.fullPath"
 			:page-index="index" />
 		<FieldsHeatGenerators
