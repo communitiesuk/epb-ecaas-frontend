@@ -97,7 +97,7 @@ describe("Heat pump details", async () => {
 		await renderSuspended(ProductDetails);
 
 		// Assert
-		expect(screen.getByTestId("backLink").innerText).toBe("Back to Air source heat pumps");
+		expect(screen.getByTestId("backLink").innerText).toBe("Back to air source heat pumps");
 	});
 
 	test("Store data updates when product is selected", async () => {
