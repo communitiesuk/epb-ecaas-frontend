@@ -5,6 +5,7 @@ import { heatEmitterTypes } from "../../../../utils/display";
 import { getHeatEmitterDefaultName, type HeatEmitterFormData } from "../../../../utils/getHeatEmitterDefaultName";
 import { getUrl } from "#imports";
 
+
 export type RadiatorModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "radiator" }>;
 export type UnderfloorHeatingModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "underfloorHeating" }>;
 export type FanCoilModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "fanCoil" }>;
@@ -29,7 +30,11 @@ const id = heatEmitterData?.data?.id ?? uuidv4();
 const saveForm = () => {
 	store.$patch((state) => {
 		const { heatEmitters } = state.spaceHeatingNew;
-		heatEmitters.data[index]!.complete = true;
+		const emitter = heatEmitters.data[index];
+		if (!emitter) {
+			throw new Error("No heat emitter found to save");
+		}
+		emitter.complete = true;
 		heatEmitters.complete = false;
 	});
 	navigateTo("/space-heating-new");

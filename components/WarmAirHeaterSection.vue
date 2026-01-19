@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import type { WarmAirHeaterModelType } from "~/pages/space-heating-new/heat-emitters/[heatEmitter]/index.vue";
 
-const route = useRoute();
-const store = useEcaasStore();
-const { getStoreIndex } = useForm();
+
+
 
 defineProps<{
 	model: WarmAirHeaterModelType
 }>();
-const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
-const index = getStoreIndex(heatSourceStoreData);
+
 
 </script>
 

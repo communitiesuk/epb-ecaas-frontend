@@ -27,10 +27,10 @@ const index = getStoreIndex(heatSourceStoreData);
 		name="selectElectricStorageHeater"
 		validation="required"
 		:help="''"
-		:selected-product-reference="''"
-		:selected-product-type="''"
-		:page-url="''"
-		:page-index="1" />
+		:selected-product-reference="model.productReference"
+		:selected-product-type="model.typeOfHeatEmitter"
+		:page-url="route.fullPath"
+		:page-index="index" />
 	<FormKit
 		id="numOfStorageHeaters"
 		name="numOfStorageHeaters"

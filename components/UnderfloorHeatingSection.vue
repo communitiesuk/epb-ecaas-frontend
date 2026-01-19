@@ -6,7 +6,7 @@ const route = useRoute();
 const store = useEcaasStore();
 const { getStoreIndex } = useForm();
 
-const props = defineProps<{
+defineProps<{
 	model: UnderfloorHeatingModelType
 }>();
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
@@ -29,10 +29,10 @@ const index = getStoreIndex(heatSourceStoreData);
 		name="productReference"
 		validation="required"
 		:help="''"
-		:selected-product-reference="''"
-		:selected-product-type="''"
-		:page-url="''"
-		:page-index="1" />
+		:selected-product-reference="model.productReference"
+		:selected-product-type="model.typeOfHeatEmitter"
+		:page-url="route.fullPath"
+		:page-index="index" />
 	<FieldsHeatGenerators
 		id="heatSource"
 		name="heatSource"

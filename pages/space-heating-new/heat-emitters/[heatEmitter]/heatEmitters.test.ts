@@ -1,5 +1,5 @@
 import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
-import HeatEmitterForm from "./index.vue";
+import HeatEmitterForm, { type RadiatorModelType } from "./index.vue";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 
@@ -237,6 +237,17 @@ describe("Heat emitters", () => {
 
 			expect(screen.getByTestId("designFlowRate")).toBeDefined();
 		});
+
+		test("the 'Select a product' element navigates user to the products page", async () => {
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfHeatEmitter_underfloorHeating"));
+
+			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/underfloorheating");
+		});
 	});
 
 	describe("Fan coil", () => {
@@ -288,6 +299,17 @@ describe("Heat emitters", () => {
 
 			expect(screen.getByTestId("designFlowRate")).toBeDefined();
 		});
+
+		test("the 'Select a product' element navigates user to the products page", async () => {
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfHeatEmitter_fanCoil"));
+
+			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/fancoil");
+		});
 	});
 
 	describe("Warm air heater", () => {
@@ -333,6 +355,17 @@ describe("Heat emitters", () => {
 			expect(screen.getByTestId("name")).toBeDefined();
 			expect(screen.getByTestId("selectElectricStorageHeater")).toBeDefined();
 			expect(screen.getByTestId("numOfStorageHeaters")).toBeDefined();
+		});
+
+		test("the 'Select a product' element navigates user to the products page", async () => {
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfHeatEmitter_electricStorageHeater"));
+
+			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/electricstorageheater");
 		});
 	});
 
@@ -444,77 +477,161 @@ describe("Heat emitters", () => {
 			expect(screen.getByTestId("numOfRadiators_error")).toBeDefined();
 			expect(screen.getByTestId("hasVariableFlowRate_error")).toBeDefined();
 		});
-	});
-
-	it("navigates to space heating on clicking Save progress", async () => {
-		await renderSuspended(HeatEmitterForm, {
-			route: {
-				params: { "heatEmitter": "create" },
-			},
-		});
-
-		await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
-		await user.click(screen.getByTestId("saveProgress"));
-
-		expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
-	});
-
-	it("navigates to space heating when valid form is completed", async () => {
-		const validInstantElecHeater: HeatEmittingData = {
-			id: "1234",
-			name: "IEH",
-			typeOfHeatEmitter: "instantElectricHeater",
-			ratedPower: 1,
-			convectionFractionForHeating: 1,
-			numOfHeatersWithThisSpec: 1,
-		};
-		store.$patch({
-			spaceHeatingNew: {
-				heatEmitters: {
-					data: [{ data: validInstantElecHeater, complete: false }],
+		test("shows an error when minFlowRate is greater than maxFlowRate", async () => {
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "create" },
 				},
-			},
+			});
+			await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
+			await user.click(screen.getByTestId("typeOfRadiator_standard"));
+			await user.click(screen.getByTestId("hasVariableFlowRate_yes"));
+			await user.type(screen.getByTestId("minFlowRate"), "10");
+			await user.type(screen.getByTestId("maxFlowRate"), "5");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(await screen.findByTestId("heatEmitterErrorSummary")).toBeDefined();
 		});
-		await renderSuspended(HeatEmitterForm, {
-			route: {
-				params: { "heatEmitter": "0" },
-			},
+		it("navigates to space heating on clicking Save progress", async () => {
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
+			await user.click(screen.getByTestId("saveProgress"));
+
+			expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
 		});
 
-		await user.click(screen.getByTestId("saveAndComplete"));
+		it("navigates to space heating when valid form is completed", async () => {
+			const validInstantElecHeater: HeatEmittingData = {
+				id: "1234",
+				name: "IEH",
+				typeOfHeatEmitter: "instantElectricHeater",
+				ratedPower: 1,
+				convectionFractionForHeating: 1,
+				numOfHeatersWithThisSpec: 1,
+			};
+			store.$patch({
+				spaceHeatingNew: {
+					heatEmitters: {
+						data: [{ data: validInstantElecHeater, complete: false }],
+					},
+				},
+			});
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "0" },
+				},
+			});
 
-		expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
-	});
+			await user.click(screen.getByTestId("saveAndComplete"));
 
-	test("error summary is displayed when an invalid form in submitted", async () => {
-		await renderSuspended(HeatEmitterForm, {
-			route: {
-				params: { "heatEmitter": "create" },
-			},
+			expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
 		});
-		await user.click(screen.getByTestId("saveAndComplete"));
 
-		expect(await screen.findByTestId("heatEmitterErrorSummary")).toBeDefined();
-	});
+		test("error summary is displayed when an invalid form in submitted", async () => {
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "create" },
+				},
+			});
+			await user.click(screen.getByTestId("saveAndComplete"));
 
-	test("error summary is removed from display when type of heat emitter is updated", async () => {
-		await renderSuspended(HeatEmitterForm, {
-			route: {
-				params: { "heatEmitter": "create" },
-			},
+			expect(await screen.findByTestId("heatEmitterErrorSummary")).toBeDefined();
 		});
-		await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
-		await user.click(screen.getByTestId("saveAndComplete"));
 
-		expect(screen.queryByTestId("heatEmitterErrorSummary")).not.toBeNull();
+		test("error summary is removed from display when type of heat emitter is updated", async () => {
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 
-		await user.click(screen.getByTestId("typeOfHeatEmitter_underfloorHeating"));
-		expect(screen.queryByTestId("heatEmitterErrorSummary")).toBeNull();
-	});
+			expect(screen.queryByTestId("heatEmitterErrorSummary")).not.toBeNull();
 
-	describe("partially saving data", () => {
-		it("saves updated form data to store automatically", async () => {
-			const validRadiator: HeatEmittingData = {
+			await user.click(screen.getByTestId("typeOfHeatEmitter_underfloorHeating"));
+			expect(screen.queryByTestId("heatEmitterErrorSummary")).toBeNull();
+		});
+
+		describe("partially saving data", () => {
+			it("saves updated form data to store automatically", async () => {
+				const validRadiator: HeatEmittingData = {
+					id: "1234",
+					name: "Radiator 1",
+					typeOfHeatEmitter: "radiator",
+					typeOfRadiator: "standard",
+					productReference: "RAD-SMALL",
+					heatSource: "heat-pump-id",
+					ecoDesignControllerClass: "1",
+					designFlowTemp: 55,
+					minFlowTemp: 45,
+					designTempDiffAcrossEmitters: 10,
+					numOfRadiators: 5,
+					hasVariableFlowRate: false,
+					designFlowRate: 100,
+				};
+
+				store.$patch({
+					spaceHeatingNew: {
+						heatEmitters: {
+							data: [{ data: validRadiator }],
+						},
+					},
+				});
+
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("typeOfHeatEmitter_underfloorHeating"));
+
+				const actualHeatEmitter = store.spaceHeatingNew.heatEmitters.data[0]!;
+				expect(actualHeatEmitter.data.typeOfHeatEmitter).toBe("underfloorHeating");
+				expect(actualHeatEmitter.data.name).toBe("Underfloor heating");
+			});
+			it("creates a new emitter automatically with given name", async () => {
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "create" },
+					},
+				});
+
+				await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
+				await user.click(screen.getByTestId("typeOfRadiator_standard"));
+				await user.clear(screen.getByTestId("name"));
+				await user.type(screen.getByTestId("name"), "New radiator");
+				await user.tab();
+
+				const actualHeatEmitter = store.spaceHeatingNew.heatEmitters.data[0] as { data: RadiatorModelType };
+
+				expect(actualHeatEmitter.data.name).toBe("New radiator");
+			});
+			it("creates a new emitter automatically with default name after other data is entered", async () => {
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "create" },
+					},
+				});
+
+				await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
+				await user.click(screen.getByTestId("typeOfRadiator_standard"));
+				await user.click(screen.getByTestId("hasVariableFlowRate_no"));
+				await user.type(screen.getByTestId("designFlowTemp"), "50");
+				await user.tab();
+
+				const actualHeatEmitter = store.spaceHeatingNew.heatEmitters.data[0] as { data: RadiatorModelType };
+				expect(actualHeatEmitter.data.name).toBe("Standard radiator");
+				expect(actualHeatEmitter.data.designFlowTemp).toBe(50);
+			});
+			const radiator1: HeatEmittingData = {
 				id: "1234",
 				name: "Radiator 1",
 				typeOfHeatEmitter: "radiator",
@@ -530,63 +647,25 @@ describe("Heat emitters", () => {
 				designFlowRate: 100,
 			};
 
-			store.$patch({
-				spaceHeatingNew: {
-					heatEmitters: {
-						data: [{ data: validRadiator }],
+			test("marks section as not complete after editing an existing item", async () => {
+				store.$patch({
+					spaceHeatingNew: {
+						heatEmitters: {
+							data: [{ data: radiator1, complete: true }],
+							complete: true,
+						},
 					},
-				},
+				});
+
+				await renderSuspended(HeatEmitterForm, {
+					route: { params: { "heatEmitter": "0" } },
+				});
+
+				await user.type(screen.getByTestId("name"), " Changed");
+				await user.tab();
+
+				expect(store.spaceHeatingNew.heatEmitters.complete).toBe(false);
 			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatEmitter_underfloorHeating"));
-
-			const actualHeatEmitter = store.spaceHeatingNew.heatEmitters.data[0]!;
-			expect(actualHeatEmitter.data.typeOfHeatEmitter).toBe("underfloorHeating");
-			expect(actualHeatEmitter.data.name).toBe("Underfloor heating");
-		});
-	});
-
-	describe("Section Status", () => {
-		const radiator1: HeatEmittingData = {
-			id: "1234",
-			name: "Radiator 1",
-			typeOfHeatEmitter: "radiator",
-			typeOfRadiator: "standard",
-			productReference: "RAD-SMALL",
-			heatSource: "heat-pump-id",
-			ecoDesignControllerClass: "1",
-			designFlowTemp: 55,
-			minFlowTemp: 45,
-			designTempDiffAcrossEmitters: 10,
-			numOfRadiators: 5,
-			hasVariableFlowRate: false,
-			designFlowRate: 100,
-		};
-
-		test("marks section as not complete after editing an existing item", async () => {
-			store.$patch({
-				spaceHeatingNew: {
-					heatEmitters: {
-						data: [{ data: radiator1, complete: true }],
-						complete: true,
-					},
-				},
-			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: { params: { "heatEmitter": "0" } },
-			});
-
-			await user.type(screen.getByTestId("name"), " Changed");
-			await user.tab();
-
-			expect(store.spaceHeatingNew.heatEmitters.complete).toBe(false);
 		});
 	});
 });
