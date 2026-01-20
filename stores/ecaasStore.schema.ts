@@ -1013,13 +1013,13 @@ export const heatSourceProductTypeMap = {
 	"dryCore": "HeatBatteryDryCore",
 } as const satisfies Record<HeatSourceProductType, TechnologyType | string>;
 
-export type HeatEmitterType = 
-   "radiator" |
-   "underfloorHeating" |
-   "fanCoil" |
-    "instantElectricHeater" |
-   "electricStorageHeater" |
-   "warmAirHeater";
+export type HeatEmitterType =
+	"radiator" |
+	"underfloorHeating" |
+	"fanCoil" |
+	"instantElectricHeater" |
+	"electricStorageHeater" |
+	"warmAirHeater";
 
 
 function withVariableFlowRate<
@@ -1055,12 +1055,12 @@ const radiatorSchema = withVariableFlowRate(radiatorBase);
 const underfloorHeatingBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("underfloorHeating"),
 	productReference: z.string(),
-	heatSource: z.string(),	
+	heatSource: z.string(),
 	ecoDesignControllerClass: z.string(),
 	designFlowTemp: z.number(),
 	minFlowTemp: z.number(),
 	designTempDiffAcrossEmitters: z.number(),
-	areaOfUnderFloorHeating: z.number(),
+	areaOfUnderfloorHeating: z.number(),
 });
 
 const underFloorHeatingSchema = withVariableFlowRate(underfloorHeatingBase);
@@ -1073,7 +1073,7 @@ const fanCoilBase = namedWithId.extend({
 	designFlowTemp: z.number(),
 	minFlowTemp: z.number(),
 	designTempDiffAcrossEmitters: z.number(),
-	numberOfFanCoils: z.number(),
+	numOfFanCoils: z.number(),
 });
 
 const fanCoilSchema = withVariableFlowRate(fanCoilBase);
@@ -1096,7 +1096,7 @@ const instantElectricHeaterSchema = namedWithId.extend({
 const electricStorageHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("electricStorageHeater"),
 	productReference: z.string(),
-	numberOfStorageHeaters: z.number(),
+	numOfStorageHeaters: z.number(),
 });
 
 const heatEmittingDataZod = z.discriminatedUnion("typeOfHeatEmitter", [

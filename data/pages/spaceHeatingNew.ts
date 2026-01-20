@@ -95,7 +95,7 @@ const spaceHeatingNewPages = [
 	{
 		id: "heatEmitters",
 		title: "Heat emitter",
-		url: "/space-heating-new/heat-source/:heatEmitter",
+		url: "/space-heating-new/heat-emitters/:heatEmitter",
 		type: "task",
 		parentId: "spaceHeatingNew",
 	},

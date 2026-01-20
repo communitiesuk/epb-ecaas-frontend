@@ -16,6 +16,10 @@ const verifyDataInSection = async (
 		expect(lineResult!.querySelector("dd")?.textContent).toBe(value);
 	}
 };
+const store = useEcaasStore();
+beforeEach(() => {
+	store.$reset();
+});
 
 describe("Space heating summary page", () => {
 	it("displays the correct title", async () => {
@@ -24,22 +28,20 @@ describe("Space heating summary page", () => {
 	});
 
 	describe("Heat sources section", () => {
-
-    
-		it("displays an empty tab state when no data is present", async () => {
+		it("displays an empty tab state with link to create when no data is present", async () => {
 			await renderSuspended(SpaceHeatingSummary);
-      
+
 			expect(screen.getByText("No heat sources added")).not.toBeNull();
-      
+
 			const addHeatSourceLink: HTMLAnchorElement = screen.getByRole("link", {
 				name: "Add heat source",
 			});
-      
+
 			expect(new URL(addHeatSourceLink.href).pathname).toBe(
 				getUrl("heatSourceCreate"),
 			);
 		});
-    
+
 		it("displays the correct data for the boiler summary", async () => {
 
 			const boiler1: HeatSourceData = {
@@ -76,7 +78,7 @@ describe("Space heating summary page", () => {
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
-    
+
 		it("displays the correct data for the heat pump summary", async () => {
 
 			const heatPump1: HeatSourceData = {
@@ -188,9 +190,9 @@ describe("Space heating summary page", () => {
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
-        
+
 		it("displays the correct data for the solar thermal system summary", async () => {
-      
+
 			const solarThermalSystem1: HeatSourceData = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
 				name: "Solar thermal system",
@@ -237,7 +239,7 @@ describe("Space heating summary page", () => {
 				"Pitch": `60 ${degrees.suffix}`,
 				"Orientation": `60 ${degrees.suffix}`,
 			};
- 
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-solarThermalSystemSummary-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -245,168 +247,10 @@ describe("Space heating summary page", () => {
 			}
 		});
 	});
-	// describe("Electric battery section", () => {
-	// 	const battery: EcaasForm<ElectricBatteryData> = {
-	// 		data: {
-	// 			name: "Acme Model II",
-	// 			capacity: 10,
-	// 			chargeEfficiency: 0.7,
-	// 			location: "inside",
-	// 			gridChargingPossible: false,
-	// 			maximumChargeRate: 6.2,
-	// 			minimumChargeRate: 4.5,
-	// 			maximumDischargeRate: 2.3,
-	// 		},
-	// 	};
-
-	// 	it("displays the battery tab", async () => {
-	// 		await renderSuspended(PVAndElectricBatteriesSummary);
-	// 		expect(screen.getByRole("link", { name: "Electric batteries" })).not.toBeNull();
-	// 	});
-
-	// 	it("displays an empty tab state when no data is present", async () => {
-	// 		await renderSuspended(PVAndElectricBatteriesSummary);
-
-	// 		expect(screen.getByText("No electric batteries added")).not.toBeNull();
-
-	// 		const addPVSystemsLink: HTMLAnchorElement = screen.getByRole("link", {
-	// 			name: "Add electric battery",
-	// 		});
-
-	// 		expect(new URL(addPVSystemsLink.href).pathname).toBe(
-	// 			getUrl("pvAndBatteries"),
-	// 		);
-	// 	});
-
-	// 	it("displays the correct data for the electric battery summary", async () => {
-	// 		const store = useEcaasStore();
-	// 		store.$patch({
-	// 			pvAndBatteries: {
-	// 				electricBattery: {
-	// 					data: [battery],
-	// 				},
-	// 			},
-	// 		});
-
-	// 		await renderSuspended(PVAndElectricBatteriesSummary);
-
-	// 		const expectedResult = {
-	// 			Name: "Acme Model II",
-	// 			Capacity: `10 ${kilowattHour.suffix}`,
-	// 			"Charge efficiency": "0.7",
-	// 			Location: "Inside",
-	// 			"Grid charging possible": "No",
-	// 			"Maximum charge rate": `6.2 ${kilowatt.suffix}`,
-	// 			"Minimum charge rate": `4.5 ${kilowatt.suffix}`,
-	// 			"Maximum discharge rate": `2.3 ${kilowatt.suffix}`,
-	// 		};
-
-	// 		for (const [key, value] of Object.entries(expectedResult)) {
-	// 			const lineResult = (await screen.findByTestId(`summary-electricBattery-${hyphenate(key)}`));
-	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-	// 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-	// 		}
-	// 	});
-	// });
-
-	// describe("Diverters section", () => {
-
-	// 	it("displays the diverter tab", async () => {
-	// 		await renderSuspended(PVAndElectricBatteriesSummary);
-	// 		expect(screen.getByRole("link", { name: "Diverters" })).not.toBeNull();
-	// 	});
-
-	// 	it("displays an empty tab state when no data is present", async () => {
-	// 		await renderSuspended(PVAndElectricBatteriesSummary);
-
-	// 		expect(screen.getByText("No diverters added")).not.toBeNull();
-
-	// 		const addPVSystemsLink: HTMLAnchorElement = screen.getByRole("link", {
-	// 			name: "Add diverter",
-	// 		});
-
-	// 		expect(new URL(addPVSystemsLink.href).pathname).toBe(
-	// 			getUrl("pvAndBatteries"),
-	// 		);
-	// 	});
-
-	// 	it("displays the correct data for the diverters summary", async () => {
-	// 		const store = useEcaasStore();
-
-	// 		const hotWaterCylinderName = "HWC1";
-	// 		const hotWaterCylinderId = "88ea3f45-6f2a-40e2-9117-0541bd8a97f3";
-	// 		const heatPumpName = "HP1";
-	// 		const heatPumpId = "56ddc6ce-7a91-4263-b051-96c7216bb01e";
-
-	// 		const diverter: EcaasForm<PvDiverterData> = {
-	// 			data: {
-	// 				name: "Diverter 1",
-	// 				hotWaterCylinder: hotWaterCylinderId,
-	// 			},
-	// 		};
-
-	// 		store.$patch({
-	// 			spaceHeating: {
-	// 				heatGeneration: {
-	// 					heatPump: {
-	// 						data: [{
-	// 							data: {
-	// 								name: heatPumpName,
-	// 								id: heatPumpId,
-	// 								productReference: "HEATPUMP-SMALL",
-	// 							},
-	// 						}],
-	// 					},
-	// 				},
-	// 			},
-	// 			domesticHotWater: {
-	// 				waterHeating: {
-	// 					hotWaterCylinder: {
-	// 						data: [{
-	// 							data: {
-	// 								name: hotWaterCylinderName,
-	// 								id: hotWaterCylinderId,
-	// 								heatSource: heatPumpId,
-	// 								storageCylinderVolume: {
-	// 									amount: 1,
-	// 									unit: "litres",
-	// 								},
-	// 								dailyEnergyLoss: 1,
-	// 							},
-	// 						}],
-	// 					},
-	// 				},
-	// 			},
-	// 			pvAndBatteries: {
-	// 				diverters: {
-	// 					data: [diverter],
-	// 				},
-	// 			},
-	// 		});
-
-	// 		await renderSuspended(PVAndElectricBatteriesSummary);
-
-	// 		const expectedResult = {
-	// 			"Name": "Diverter 1",
-	// 			"Associated hot water cylinder": hotWaterCylinderName,
-	// 		};
-
-	// 		for (const [key, value] of Object.entries(expectedResult)) {
-	// 			const lineResult = await screen.findByTestId(`summary-diverters-${hyphenate(key)}`);
-	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-	// 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-	// 		}
-	// 	});
-
 	describe("Heating control section", () => {
-		const store = useEcaasStore();
-		beforeEach(() => {
-			store.$reset();
-		});
-
 		const heatingControl: HeatingControlData = {
 			name: "Separate temperature control",
-			heatingControlType: "separateTemperatureControl",		
+			heatingControlType: "separateTemperatureControl",
 		};
 
 		it("displays heating control tab", async () => {
@@ -447,6 +291,219 @@ describe("Space heating summary page", () => {
 			const editLink: HTMLAnchorElement = within(heatingControlSection).getByText("Edit");
 
 			expect(new URL(editLink.href).pathname).toBe("/space-heating-new/heating-controls");
+		});
+	});
+	describe("Heat emitters section", () => {
+		const store = useEcaasStore();
+		beforeEach(() => {
+			store.$reset();
+		});
+
+		const radiator: HeatEmittingData = {
+			id: "1234",
+			name: "Radiator 1",
+			typeOfHeatEmitter: "radiator",
+			typeOfRadiator: "standard",
+			productReference: "RAD-SMALL",
+			heatSource: "heat-pump-id",
+			ecoDesignControllerClass: "1",
+			designFlowTemp: 55,
+			minFlowTemp: 45,
+			designTempDiffAcrossEmitters: 10,
+			numOfRadiators: 5,
+			hasVariableFlowRate: false,
+			designFlowRate: 100,
+		};
+		const fanCoil: HeatEmittingData = {
+			id: "5678",
+			name: "Fan Coil 1",
+			typeOfHeatEmitter: "fanCoil",
+			productReference: "FC-SMALL",
+			heatSource: "boiler-id",
+			designFlowTemp: 50,
+			minFlowTemp: 40,
+			designTempDiffAcrossEmitters: 10,
+			hasVariableFlowRate: true, ecoDesignControllerClass: "2",
+			maxFlowRate: 200,
+			minFlowRate: 50,
+			numOfFanCoils: 3,
+		};
+		const ufh: HeatEmittingData = {
+			id: "91011",
+			name: "Underfloor Heating 1",
+			typeOfHeatEmitter: "underfloorHeating",
+			productReference: "UFH-SMALL",
+			heatSource: "heat-pump-id",
+			designFlowTemp: 35,
+			minFlowTemp: 25,
+			designTempDiffAcrossEmitters: 10,
+			hasVariableFlowRate: true,
+			maxFlowRate: 150,
+			minFlowRate: 30,
+			areaOfUnderfloorHeating: 100,
+			ecoDesignControllerClass: "3",
+		};
+		const warmAirHeater: HeatEmittingData = {
+			id: "121314",
+			name: "Warm Air Heater 1",
+			typeOfHeatEmitter: "warmAirHeater",
+			heatSource: "boiler-id",
+			convectionFraction: 0.8,
+			designTempDiffAcrossEmitters: 15,
+			numOfWarmAirHeaters: 4,
+		};
+		const instantElectricHeater: HeatEmittingData = {
+			id: "151617",
+			name: "Instant Electric Heater 1",
+			typeOfHeatEmitter: "instantElectricHeater",
+			convectionFractionForHeating: 0.9,
+			numOfHeatersWithThisSpec: 6,
+			ratedPower: 2.5,
+		};
+		const electricStorageHeater: HeatEmittingData = {
+			id: "181920",
+			name: "Electric Storage Heater 1",
+			typeOfHeatEmitter: "electricStorageHeater",
+			numOfStorageHeaters: 8,
+			productReference: "ESH-SMALL",
+		};
+		it("displays an empty tab state when no data is present", async () => {
+			await renderSuspended(SpaceHeatingSummary);
+
+			expect(screen.getByText("No heat emitters added")).not.toBeNull();
+
+			const addHeatEmitterLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add heat emitter",
+			});
+
+			expect(new URL(addHeatEmitterLink.href).pathname).toBe(
+				getUrl("heatEmittersCreate"),
+			);
+		});
+
+
+		it.each([
+			["radiatorSummary", radiator],
+			["underfloorHeatingSummary", ufh],
+			["fanCoilSummary", fanCoil],
+			["warmAirHeaterSummary", warmAirHeater],
+			["instantElectricHeaterSummary", instantElectricHeater],
+			["electricStorageHeaterSummary", electricStorageHeater],
+		])("displays %s tab when a radiator has been added", async (testId, heatEmitter) => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatEmitters: {
+						data: [{ data: heatEmitter }],
+					},
+				},
+			});
+			await renderSuspended(SpaceHeatingSummary);
+			expect(screen.getByTestId(testId)).not.toBeNull();
+		});
+		const expectedRadiatorData = {
+			Name: "Radiator 1",
+			"Type of heat emitter": "Radiator",
+			"Type of radiator": "Standard",
+			"Product reference": "RAD-SMALL",
+			"Design flow temperature": "55 °C",
+			"Minimum flow temperature": "45 °C",
+			"Design temperature difference across emitters": "10 °C",
+			"Number of radiators": "5",
+			"Is there a variable flow rate?": "No",
+			"Design flow rate": "100 litres per second",
+			"Eco design controller class": "1",
+		};
+
+		const expectedFanCoilData = {
+			Name: "Fan Coil 1",
+			"Type of heat emitter": "Fan coil",
+			"Product reference": "FC-SMALL",
+			"Design flow temperature": "50 °C",
+			"Minimum flow temperature": "40 °C",
+			"Design temperature difference across emitters": "10 °C",
+			"Is there a variable flow rate?": "Yes",
+			"Maximum flow rate": "200 litres per second",
+			"Minimum flow rate": "50 litres per second",
+			"Number of fan coils": "3",
+			"Eco design controller class": "2",
+		};
+
+		const expectedUfhData = {
+			Name: "Underfloor Heating 1",
+			"Type of heat emitter": "Underfloor heating",
+			"Product reference": "UFH-SMALL",
+			"Design flow temperature": "35 °C",
+			"Minimum flow temperature": "25 °C",
+			"Design temperature difference across emitters": "10 °C",
+			"Is there a variable flow rate?": "Yes",
+			"Maximum flow rate": "150 litres per second",
+			"Minimum flow rate": "30 litres per second",
+			"Area of underfloor heating": "100 m²",
+			"Eco design controller class": "3",
+		};
+
+		const expectedWarmAirHeaterData = {
+			Name: "Warm Air Heater 1",
+			"Type of heat emitter": "Warm air heater",
+			"Design temperature difference across emitters": "15 °C",
+			"Convection fraction": "0.8",
+			"Number of warm air heaters": "4",
+		};
+
+		const expectedInstantElectricHeaterData = {
+			Name: "Instant Electric Heater 1",
+			"Rated power": "2.5 kW",
+			"Convection fraction for heating": "0.9",
+			"Number of heaters with this spec": "6",
+		};
+
+		const expectedElectricStorageHeaterData = {
+			Name: "Electric Storage Heater 1",
+			"Product reference": "ESH-SMALL",
+			"Number of storage heaters": "8",
+		};
+		it.each(
+			[
+				["radiatorSummary", expectedRadiatorData],
+				["fanCoilSummary", expectedFanCoilData],
+				["underfloorHeatingSummary", expectedUfhData],
+				["warmAirHeaterSummary", expectedWarmAirHeaterData],
+				["instantElectricHeaterSummary", expectedInstantElectricHeaterData],
+				["electricStorageHeaterSummary", expectedElectricStorageHeaterData],
+			],
+		)("displays the correct data for all heat emitter types when data has been added", async (
+			sectionId, expectedData,
+		) => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatEmitters: {
+						data: [
+							{ data: radiator },
+							{ data: fanCoil },
+							{ data: ufh },
+							{ data: warmAirHeater },
+							{ data: instantElectricHeater },
+							{ data: electricStorageHeater },
+						],
+					},
+				},
+			});
+			await renderSuspended(SpaceHeatingSummary);
+			await verifyDataInSection(sectionId, expectedData);
+
+		});
+		it("displays an empty tab state with link to create when no data is present", async () => {
+			await renderSuspended(SpaceHeatingSummary);
+
+			expect(screen.getByText("No heat emitters added")).not.toBeNull();
+
+			const addHeatEmitterLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add heat emitter",
+			});
+
+			expect(new URL(addHeatEmitterLink.href).pathname).toBe(
+				getUrl("heatEmittersCreate"),
+			);
 		});
 	});
 });

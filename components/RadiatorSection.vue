@@ -68,7 +68,7 @@ const emit = defineEmits(["update-radiator-model"]);
 			label="Minimum flow temperature "
 			name="minFlowTemp"
 			validation="required | number"
-			suffix-text="l/s" />
+			suffix-text="°C" />
 		<FormKit
 			id="designTempDiffAcrossEmitters"
 			type="govInputWithSuffix"
