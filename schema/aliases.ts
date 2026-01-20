@@ -1,5 +1,5 @@
 import type { Simplify } from "type-fest";
-import type { components, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaMassDistributionClass, SchemaBuildingElementGround, SchemaBuildingElementOpaque, SchemaRadiatorWithProductReference } from "./api-schema.types";
+import type { components, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaMassDistributionClass, SchemaBuildingElementGround, SchemaBuildingElementOpaque, SchemaRadiatorWithProductReference, SchemaUfhWithProductReference, SchemaFancoilWithProductReference } from "./api-schema.types";
 
 // Some aliases to names in the API schema generated types, sometimes for more graceful backwards compatibility
 // as different names get used in the upstream schemas
@@ -24,6 +24,7 @@ type BuildingElementType = SchemaBuildingElement["type"];
 export type BuildingElementOfType<T extends BuildingElementType> = Extract<SchemaBuildingElement, { type: T }>;
 export type BuildingElementGround = BuildingElementOfType<"BuildingElementGround">;
 export type SchemaHeatSourceWetDetails = SchemaHeatSourceWetBoiler | SchemaHeatSourceWetHeatBattery | SchemaHeatSourceWetHeatPump | SchemaHeatSourceWetHiu;
+export type SchemaHeatSourceWetHeatEmitterDetails = SchemaRadiatorWithProductReference | SchemaUfhWithProductReference | SchemaFancoilWithProductReference;
 // utility function to make shading into valid external conditions
 type SchemaExternalConditionsInputFhs = FhsSchema["ExternalConditions"];
 export type SchemaShadingSegment = SchemaExternalConditionsInputFhs["shading_segments"][number];
