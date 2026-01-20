@@ -111,6 +111,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="General.storey_of_dwelling"
 		/>
 		<FormKit
+			id="storeysInDwelling"
+			type="govInputInt"
+			label="Number of storeys in dwelling"
+			name="storeysInDwelling"
+			:validation-rules="{ isInteger }"
+			validation="required | isInteger | min:1 | max:250"
+			:validation-messages="{
+				isInteger: `Number of storeys in dwelling must be an integer.`,
+			}"
+			data-field="General.storeys_in_dwelling"
+		/>
+		<FormKit
 			v-if="model.typeOfDwelling === 'flat'"
 			id="storeysInBuilding"
 			type="govInputInt"
@@ -122,18 +134,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				isInteger: `Storeys in building must be a round number.`,
 			}"
 			help="Enter the number of storeys in the part of the building that the dwelling is in"
-			data-field="General.storeys_in_building"
-		/>
-		<FormKit
-			id="storeysInDwelling"
-			type="govInputInt"
-			label="Number of storeys in building"
-			name="storeysInDwelling"
-			:validation-rules="{ isInteger }"
-			validation="required | isInteger | min:1 | max:250"
-			:validation-messages="{
-				isInteger: `Number of storeys in building must be an integer.`,
-			}"
 			data-field="General.storeys_in_building"
 		/>
 		<FormKit
