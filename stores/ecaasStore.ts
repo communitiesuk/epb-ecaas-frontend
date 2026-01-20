@@ -4,7 +4,7 @@ import type { GovTagProps } from "~/common.types";
 import type { Page } from "~/data/pages/pages.types";
 import type { EmptyObject } from "type-fest";
 import pagesData from "~/data/pages/pages";
-
+type KeysToDeleteCascade = "associatedItemId" | "taggedItem" | "heatSource";
 export function getInitialState(): EcaasState {
 	const store: NulledForms<EcaasState> = {
 		dwellingDetails: {
@@ -160,14 +160,14 @@ export const useEcaasStore = defineStore("ecaas", {
 			return <T extends Record<string, unknown>>(
 				sections: EcaasFormList<T>[],
 				idToRemove: string | undefined,
-				keyToCheck: keyof T = "associatedItemId",
+				keyToCheck: KeysToDeleteCascade = "associatedItemId",
 			) => {
 				for (const section of sections) {
 					section.data.find((item) => {
 						const idOfTaggedItem = (item.data as Partial<T>)[keyToCheck];
 						if (idOfTaggedItem === idToRemove) {
 							this.$patch(() => {
-								(item.data as Partial<T>)[keyToCheck] = undefined;
+								(item.data as Partial<T>)[keyToCheck as keyof typeof item.data] = undefined;
 								item.complete = false;
 								section.complete = false;
 							});

@@ -10,7 +10,7 @@ type SpaceHeatingType = keyof typeof store.spaceHeatingNew;
 type SpaceHeatingData = EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> & EcaasForm<HeatingControlData>;
 
 const { hotWaterCylinder } = store.domesticHotWater.waterHeating;
-// const { wetDistribution } = store.spaceHeatingNew.heatEmitting;
+const { heatEmitters } = store.spaceHeatingNew;
 
 function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 	const items = store.spaceHeatingNew[spaceHeatingType]?.data;
@@ -29,7 +29,7 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 		});
 
 		if (heatSourceId) {
-			store.removeTaggedAssociations()([hotWaterCylinder], heatSourceId, "heatSource");
+			store.removeTaggedAssociations()([hotWaterCylinder, heatEmitters], heatSourceId, "heatSource"); 
 		}
 	}
 };

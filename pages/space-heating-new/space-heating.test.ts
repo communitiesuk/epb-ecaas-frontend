@@ -69,7 +69,7 @@ describe("space heating", () => {
 			await userEvent.click(screen.getByTestId("heatSource_duplicate_0"));
 			await userEvent.click(screen.getByTestId("heatSource_duplicate_2"));
 			await userEvent.click(screen.getByTestId("heatSource_duplicate_2"));
-		
+
 			expect(screen.queryAllByTestId("heatSource_item").length).toBe(6);
 			expect(screen.getByText("Heat source 1")).toBeDefined();
 			expect(screen.getByText("Heat source 1 (1)")).toBeDefined();
@@ -90,7 +90,7 @@ describe("space heating", () => {
 			});
 			await renderSuspended(SpaceHeatingNew);
 			await userEvent.click(screen.getByTestId("heatSource_duplicate_0"));
-	
+
 			const heatSources = store.spaceHeatingNew.heatSource.data;
 			expect(heatSources[1]?.data.id).not.toBe(heatSource1.id);
 		});
@@ -132,7 +132,7 @@ describe("space heating", () => {
 			expect(within(populatedList).queryByText("Heat source 2")).toBeNull();
 		});
 
-		
+
 		it("when a heat source is removed its also removed from store object which references it", async () => {
 			//TODO - test when heat source is removed - its removed from wet distribution 
 			const heatPump1: HeatSourceData = {
@@ -151,23 +151,22 @@ describe("space heating", () => {
 				name: "Hot water cylinder 1",
 			};
 
-			// const wetDistribution: WetDistributionData = {
-			// 	name: "Wet distribution 1",
-			// 	heatSource: heatPump1.id,
-			// 	thermalMass: 2,
-			// 	designTempDiffAcrossEmitters: 0.4,
-			// 	designFlowTemp: 32,
-			// 	designFlowRate: 5,
-			// 	typeOfSpaceHeater: "radiator",
-			// 	exponent: 1.3,
-			// 	constant: 0.08,
-			// 	convectionFractionWet: 0.2,
-			// 	ecoDesignControllerClass: "1",
-			// 	minimumFlowTemp: 20,
-			// 	minOutdoorTemp: 0,
-			// 	maxOutdoorTemp: 15,
-			// 	numberOfRadiators: 1,
-			// };
+			const radiator: HeatEmittingData = {
+				name: "Radiator 1",
+				typeOfHeatEmitter: "radiator",
+				typeOfRadiator: "standard",
+				heatSource: heatPump1.id,
+				productReference: "RADIATOR_STANDARD",
+				designFlowTemp: 45,
+				designTempDiffAcrossEmitters: 10,
+				ecoDesignControllerClass: "3",
+				hasVariableFlowRate: true,
+				maxFlowRate: 200,
+				minFlowRate: 50,
+				id: "radiator-1",
+				minFlowTemp: 25,
+				numOfRadiators: 5,
+			};
 
 			store.$patch({
 				spaceHeatingNew: {
@@ -176,13 +175,9 @@ describe("space heating", () => {
 							{ data: heatPump1 },
 						],
 					},
-					// heatEmitting: {
-					// 	wetDistribution: {
-					// 		data: [
-					// 			{ data: wetDistribution },
-					// 		],
-					// 	},
-					// },
+					heatEmitters: {
+						data: [{ data: radiator }],
+					},
 				},
 				domesticHotWater: {
 					waterHeating: {
@@ -199,8 +194,9 @@ describe("space heating", () => {
 			const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data;
 			expect(hotWaterCylinderData[0]?.data.heatSource).toBeUndefined();
 
-			// const wetDistributionData = store.spaceHeating.heatEmitting.wetDistribution.data[0]?.data;
-			// expect(wetDistributionData?.heatSource).toBeUndefined();
+			const heatEmittersData = store.spaceHeatingNew.heatEmitters.data;
+			const radiatorInStore = heatEmittersData[0]?.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "radiator" }>;
+			expect(radiatorInStore.heatSource).toBeUndefined();
 		});
 
 		it("displays an in-progress indicator when an entry is not marked as complete", async () => {
@@ -381,10 +377,10 @@ describe("space heating", () => {
 					},
 				},
 			});
-			
+
 			await renderSuspended(SpaceHeatingNew);
 			await user.click(await screen.findByTestId("markAsCompleteButton"));
-			
+
 			expect(store.spaceHeatingNew.heatSource?.complete).toBe(true);
 
 			await user.click(await screen.findByTestId("heatSource_remove_0"));
@@ -392,7 +388,7 @@ describe("space heating", () => {
 			expect(store.spaceHeatingNew.heatSource?.complete).toBe(false);
 			expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
 		});
-		
+
 		it("marks heat sources section as not complete after saving an existing heat source", async () => {
 			store.$patch({
 				spaceHeatingNew: {
