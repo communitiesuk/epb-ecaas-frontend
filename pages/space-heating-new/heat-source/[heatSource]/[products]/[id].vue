@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
-import { heatPumpTypes, heatSourceProductTypeDisplay } from "~/utils/display";
+import { boilerTypes, heatPumpTypes, heatSourceProductTypeDisplay } from "~/utils/display";
 
 definePageMeta({ layout: "one-column" });
 
@@ -59,6 +59,7 @@ const selectProduct = () => {
 	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
 
 	<ProductDetailsHeatPump v-if="!!data && heatSourceType in heatPumpTypes" :product="data!" />
+	<ProductDetailsBoiler  v-if="!!data && heatSourceType in boilerTypes" :product="data!"/>
 
 	<div class="govuk-button-group">
 		<GovButton

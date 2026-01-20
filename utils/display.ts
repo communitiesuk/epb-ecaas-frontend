@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaH
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatPumpType, HeatSourceProductType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatPumpType, HeatSourceProductType, TypeOfBoiler } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -285,6 +285,11 @@ export const heatPumpTypes = {
 	"exhaustAirMvhr": "Exhaust air MVHR",
 	"exhaustAirMixed": "Exhaust air Mixed",
 } as const satisfies Record<HeatPumpType, string>;
+
+export const boilerTypes = {
+	"combiBoiler": "Combi boiler",
+	"regularBoiler": "Regular boiler",
+} as const satisfies Record<TypeOfBoiler, BoilerTypeDisplay>;
 
 export const heatSourceProductTypeDisplay = {
 	"airSource": "Air source heat pumps",

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { AdjacentSpaceType, TypeOfBoiler, BoilerTypeDisplay, HeatSourceData } from "#imports";
+import type { AdjacentSpaceType, HeatSourceData } from "#imports";
 import { uniqueName } from "#imports";
-import type { BoilerLocationDisplay } from "~/utils/display";
+import { boilerTypes, type BoilerLocationDisplay } from "~/utils/display";
 const route = useRoute();
 const store = useEcaasStore();
 const { getStoreIndex } = useForm();
@@ -12,11 +12,6 @@ defineProps<{
 
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
 const index = getStoreIndex(heatSourceStoreData);
-
-const boilerTypeOptions = {
-	"combiBoiler": "Combi boiler",
-	"regularBoiler": "Regular boiler",
-} as const satisfies Record<TypeOfBoiler, BoilerTypeDisplay>;
 
 const locationOfBoilerOptions = {
 	"heatedSpace": "Heated space",
@@ -32,7 +27,7 @@ const emit = defineEmits(["update-boiler-model"]);
 		id="typeOfBoiler"
 		type="govRadios"
 		label="Type of boiler"
-		:options="boilerTypeOptions"
+		:options="boilerTypes"
 		name="typeOfBoiler"
 		validation="required"
 		@click="emit('update-boiler-model', 'typeOfBoiler')" />
@@ -58,7 +53,7 @@ const emit = defineEmits(["update-boiler-model"]);
 			validation="required"
 			help="Select the boiler model from the PCDB using the button below."
 			:selected-product-reference="model.productReference"
-			:selected-product-type="boilerTypeOptions[model.typeOfBoiler]"
+			:selected-product-type="boilerTypes[model.typeOfBoiler]"
 			:page-url="route.fullPath"
 			:page-index="index" />
 		<FormKit

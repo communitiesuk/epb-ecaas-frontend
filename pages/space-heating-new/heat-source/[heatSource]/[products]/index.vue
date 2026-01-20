@@ -35,12 +35,11 @@ const selectProduct = (reference: string) => {
 </script>
 
 <template>
-
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<ProductSearch :products="productData" :model="searchModel" />
+	<ProductSearch v-if="!!productData" :products="productData" :model="searchModel" />
 	<GovProductsTable
 		:products="pagination.getData()"
 		:total-pages="pagination.totalPages"

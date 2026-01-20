@@ -39,7 +39,7 @@ export const heatPumpTestDataZod = z.object({
 	degradationCoeff: z.number(),
 });
 
-const baseHeatPump = BaseProduct.extend({
+const heatPumpBase = BaseProduct.extend({
 	energySupply: z.string(), // need a better type for this
 	sourceType: heatPumpSourceTypeZod,
 	sinkType: heatPumpSinkTypeZod,
@@ -65,39 +65,78 @@ const baseHeatPump = BaseProduct.extend({
 	testData: z.array(heatPumpTestDataZod),
 });
 
-export type HeatPumpProduct = z.infer<typeof baseHeatPump>;
+export type HeatPumpProduct = z.infer<typeof heatPumpBase>;
 
-export const airSourceHeatPumpZod = baseHeatPump.extend({
+export const airSourceHeatPumpZod = heatPumpBase.extend({
 	technologyType: z.literal("AirSourceHeatPump"),
 });
 
-export const groundSourceHeatPumpZod = baseHeatPump.extend({
+export const groundSourceHeatPumpZod = heatPumpBase.extend({
 	technologyType: z.literal("GroundSourceHeatPump"),
 });
 
-export const waterSourceHeatPumpZod = baseHeatPump.extend({
+export const waterSourceHeatPumpZod = heatPumpBase.extend({
 	technologyType: z.literal("WaterSourceHeatPump"),
 });
 
-export const boosterHeatPumpZod = baseHeatPump.extend({
+export const boosterHeatPumpZod = heatPumpBase.extend({
 	technologyType: z.literal("BoosterHeatPump"),
 });
 
-export const hotWaterOnlyPumpZod = baseHeatPump.extend({
+export const hotWaterOnlyPumpZod = heatPumpBase.extend({
 	technologyType: z.literal("HotWaterOnlyHeatPump"),
 });
 
-export const exhaustAirMevPumpZod = baseHeatPump.extend({
+export const exhaustAirMevPumpZod = heatPumpBase.extend({
 	technologyType: z.literal("ExhaustAirMevHeatPump"),
 });
 
-export const exhaustAirMvhrHeatPumpZod = baseHeatPump.extend({
+export const exhaustAirMvhrHeatPumpZod = heatPumpBase.extend({
 	technologyType: z.literal("ExhaustAirMvhrHeatPump"),
 });
 
-export const exhaustAirMixedHeatPump = baseHeatPump.extend({
+export const exhaustAirMixedHeatPump = heatPumpBase.extend({
 	technologyType: z.literal("ExhaustAirMixedHeatPump"),
 });
+
+export const boilerBase = BaseProduct.extend({
+	flueType: z.enum(["open", "room-sealed"]),
+	electricityCircPump: z.nullable(z.number()),
+	ignition: z.enum(["yes", "no", "unknown"]),
+	fanAssistance: z.enum(["fan", "no fan"]),
+	condensing: z.enum(["condensing", "Non-condensing"]),
+	modulationLoad: z.nullable(z.number()),
+	efficiencyFullLoad: z.nullable(z.number()),
+	mountingPosition: z.nullable(z.string()),
+	electricityPartLoad: z.nullable(z.number()),
+	electricityFullLoad: z.nullable(z.number()),
+	ratedPower: z.nullable(z.number()),
+	electricityStandby: z.nullable(z.number()),
+	boilerLocation: z.nullable(z.string()),
+	efficiencyPartLoad: z.nullable(z.number()),
+	erpSpaceEfficiencyClass: z.nullable(z.string()),
+	erPSpaceEfficiencyPerc: z.nullable(z.number()),
+	powerBottomRange: z.nullable(z.number()),
+	burnerControl: z.nullable(z.string()),
+});
+
+export const combiBoilerZod = boilerBase.extend({
+	technologyType: z.literal("CombiBoiler"),
+	volumePrimary: z.nullable(z.number()),
+	volumeSecondary: z.nullable(z.number()),
+});
+
+export const regularBoilerZod = boilerBase.extend({
+	technologyType: z.literal("RegularBoiler"),
+	heatLossStandby: z.nullable(z.number()),
+});
+
+const _boilerProductSchema = z.discriminatedUnion("technologyType", [
+	combiBoilerZod,
+	regularBoilerZod,
+]);
+
+export type BoilerProduct = z.infer<typeof _boilerProductSchema>;
 
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
@@ -108,6 +147,8 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	exhaustAirMevPumpZod,
 	exhaustAirMvhrHeatPumpZod,
 	exhaustAirMixedHeatPump,
+	combiBoilerZod,
+	regularBoilerZod,
 ]);
 
 export type Product = z.infer<typeof productSchema>;
@@ -126,6 +167,10 @@ export const categoryTechnologies = {
 		"ExhaustAirMevHeatPump",
 		"ExhaustAirMvhrHeatPump",
 		"ExhaustAirMixedHeatPump",
+	],
+	boiler: [
+		"CombiBoiler",
+		"RegularBoiler",
 	],
 } as const satisfies Record<string, TechnologyType[]>;
 

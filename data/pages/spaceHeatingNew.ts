@@ -79,6 +79,20 @@ const spaceHeatingNewPages = [
 		parentId: "heatSource",
 	},
 	{
+		id: "combiBoilerProducts",
+		title: "Select a combi boiler",
+		url: "/space-heating-new/heat-source/:heatSource/combi-boiler",
+		type: "task",
+		parentId: "heatSource",
+	},
+	{
+		id: "regularBoilerProducts",
+		title: "Select a regular boiler",
+		url: "/space-heating-new/heat-source/:heatSource/regular-boiler",
+		type: "task",
+		parentId: "heatSource",
+	},
+	{
 		id: "heatEmitters",
 		title: "Heat emitter",
 		url: "/space-heating-new/heat-source/:heatEmitter",

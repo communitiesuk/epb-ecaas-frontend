@@ -275,8 +275,9 @@ describe("mapHeatPump", () => {
 		});
 	});
 
-	describe("mapHeatNetworks", () => { });
-	describe("mapSolarThermalSystems", () => { });
+	//describe("mapHeatNetworks", () => { });
+	//describe("mapSolarThermalSystems", () => { });
+	
 	// describe("with heat network in PCDB", () => {
 	//   const heatNetwork1: HeatSourceData = {
 	//     typeOfHeatSource: "heatNetwork",
