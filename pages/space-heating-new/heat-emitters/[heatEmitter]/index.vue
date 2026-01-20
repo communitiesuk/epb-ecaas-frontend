@@ -55,9 +55,16 @@ watch(
 			model.value = { typeOfHeatEmitter: newData.typeOfHeatEmitter, id: initialData.id } as HeatEmittingData;
 			
 		}
+
+		const { heatSource } = store.spaceHeatingNew;
+		if (heatSource.data.length === 1 && model.value) {
+			if ("heatSource" in model.value && heatSource.data[0]?.data.id) {
+				model.value.heatSource = heatSource.data[0].data.id;
+			}
+		}
 		if (model.value && !model.value.name) {
 			model.value.name = getHeatEmitterDefaultName(model.value as HeatEmitterFormData);
-		}
+		}	
 	},
 );
 autoSaveElementForm<HeatEmittingData>({

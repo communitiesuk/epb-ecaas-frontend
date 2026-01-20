@@ -298,6 +298,7 @@ describe("Space heating - emitters", () => {
 			designTempDiffAcrossEmitters: 10,
 			hasVariableFlowRate: false,
 			designFlowRate: 100,
+			length: 1000,
 		};
 
 		test("maps stored radiator data to fit schema", () => {
@@ -315,7 +316,7 @@ describe("Space heating - emitters", () => {
 					wet_emitter_type: "radiator",
 					product_reference: radiator1.productReference,
 					radiator_type: "standard",
-					length: 0,
+					length: 1000,
 				},
 			};
 			const resolvedState = resolveState(store.$state);

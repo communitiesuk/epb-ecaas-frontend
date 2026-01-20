@@ -1050,7 +1050,21 @@ const radiatorBase = namedWithId.extend({
 	numOfRadiators: z.number(),
 });
 
-const radiatorSchema = withVariableFlowRate(radiatorBase);
+const standardRadiator = radiatorBase.extend({
+	typeOfRadiator: z.literal("standard"),
+	length: z.number(),
+});
+const towelRadiator = radiatorBase.extend({
+	typeOfRadiator: z.literal("towel"),
+});
+
+const standardRadiatorSchema = withVariableFlowRate(standardRadiator);
+const towelRadiatorSchema = withVariableFlowRate(towelRadiator);
+
+const radiatorSchema = z.discriminatedUnion("typeOfRadiator", [
+	standardRadiatorSchema,
+	towelRadiatorSchema,
+]);
 
 const underfloorHeatingBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("underfloorHeating"),

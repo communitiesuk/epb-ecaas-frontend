@@ -44,10 +44,15 @@ describe("Heat emitters", () => {
 			expect(screen.queryByTestId("designTempDiffAcrossEmitters")).toBeNull();
 			expect(screen.queryByTestId("hasVariableFlowRate")).toBeNull();
 			expect(screen.queryByTestId("numOfRadiators")).toBeNull();
+			expect(screen.queryByTestId("length")).toBeNull();
+
+			await user.click(screen.getByTestId("typeOfRadiator_towel"));
+			expect(screen.queryByTestId("length")).toBeNull();
 
 			await user.click(screen.getByTestId("typeOfRadiator_standard"));
 
 			expect(screen.getByTestId("name")).toBeDefined();
+			expect(screen.getByTestId("length")).toBeDefined();
 			expect(screen.getByTestId("selectRadiator")).toBeDefined();
 			expect(screen.getByTestId("heatSource")).toBeDefined();
 			expect(screen.getByTestId("ecoDesignControllerClass")).toBeDefined();
@@ -116,6 +121,7 @@ describe("Heat emitters", () => {
 			numOfRadiators: 5,
 			hasVariableFlowRate: false,
 			designFlowRate: 100,
+			length: 1200,
 		};
 
 		test("form is prepopulated when data exists in state", async () => {
@@ -451,7 +457,7 @@ describe("Heat emitters", () => {
 			store.$patch({
 				spaceHeatingNew: {
 					heatSource: {
-						data: [{ data: { id: "1" } }],
+						data: [{ data: { id: "1" } }, { data: { id: "2" } }],
 					},
 					heatEmitters: {
 						data: [{ data: incompleteRadiator, complete: false }],
@@ -575,6 +581,7 @@ describe("Heat emitters", () => {
 					numOfRadiators: 5,
 					hasVariableFlowRate: false,
 					designFlowRate: 100,
+					length: 1200,
 				};
 
 				store.$patch({
@@ -645,6 +652,7 @@ describe("Heat emitters", () => {
 				numOfRadiators: 5,
 				hasVariableFlowRate: false,
 				designFlowRate: 100,
+				length: 1200,
 			};
 
 			test("marks section as not complete after editing an existing item", async () => {
@@ -666,6 +674,30 @@ describe("Heat emitters", () => {
 
 				expect(store.spaceHeatingNew.heatEmitters.complete).toBe(false);
 			});
+		});
+	});
+	describe("Autoselect first heat source", () => {
+		test("first heat source is autoselected when only one heat source exists", async () => {
+			const store = useEcaasStore();
+			store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [
+							{ data: { id: "hs1", name: "Heat source 1" } },
+						],
+					},
+				},
+			});
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
+			await user.click(screen.getByTestId("typeOfRadiator_standard"));
+			await user.tab();
+			const heatSourceSelect = screen.getByTestId<HTMLSelectElement>("heatSource_hs1");
+			expect(heatSourceSelect.hasAttribute("checked")).toBe(true);
 		});
 	});
 });

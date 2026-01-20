@@ -104,7 +104,6 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaRadiato
 	const radiators = heatEmitters.filter(
 		(emitter): emitter is Extract<HeatEmittingData, { typeOfHeatEmitter: "radiator" }> => emitter.typeOfHeatEmitter === "radiator",
 	);
-
 	return Object.fromEntries(
 		radiators.map((radiator) => {
 			return [
@@ -114,7 +113,7 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaRadiato
 					product_reference: radiator.productReference,
 					radiator_type: "standard",
 					// Placeholder as length is required by schema for standard type
-					length: 0,
+					length: "length" in radiator ? radiator.length : 0,
 				},
 			];
 		}),

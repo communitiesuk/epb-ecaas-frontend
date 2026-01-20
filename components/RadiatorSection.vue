@@ -35,7 +35,7 @@ const emit = defineEmits(["update-radiator-model"]);
 			label="Select a product"
 			name="selectRadiator"
 			validation="required"
-			:help="''"
+			help="Select a radiator type from the PCDB using the button below."
 			:selected-product-reference="model.productReference"
 			:selected-product-type="model.typeOfHeatEmitter"
 			:page-url="route.fullPath"
@@ -107,6 +107,14 @@ const emit = defineEmits(["update-radiator-model"]);
 			name="designFlowRate"
 			validation="required | number"
 			suffix-text="l/s" />
+		<FormKit
+			v-if="model.typeOfRadiator === 'standard'"
+			id="length"
+			type="govInputWithSuffix"
+			label="Length"
+			name="length"
+			validation="required | number"
+			suffix-text="mm" />
 		<FormKit
 			id="numOfRadiators"
 			name="numOfRadiators"
