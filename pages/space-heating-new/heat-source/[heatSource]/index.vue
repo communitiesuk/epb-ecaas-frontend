@@ -193,22 +193,27 @@ function updateHeatSource(type: string) {
 		<HeatPumpSection
 			v-if="model?.typeOfHeatSource === 'heatPump'"
 			:model="model as HeatPumpModelType"
+			:index="index"
 			@update-heat-pump-model="updateHeatSource" />
 		<BoilerSection
 			v-if="model?.typeOfHeatSource === 'boiler'"
 			:model="model as BoilerModelType"
+			:index="index"
 			@update-boiler-model="updateHeatSource" />
 		<HeatNetworkSection
 			v-if="model?.typeOfHeatSource === 'heatNetwork'"
 			:model="model as HeatNetworkModelType"
+			:index="index"
 			@update-heat-network-model="updateHeatSource" />
 		<HeatBatterySection
 			v-if="model?.typeOfHeatSource === 'heatBattery'"
 			:model="model as HeatBatteryModelType"
+			:index="index"
 			@update-heat-battery-model="updateHeatSource" />
 		<SolarThermalSystemSection
 			v-if="model?.typeOfHeatSource === 'solarThermalSystem'"
-			:model="model as SolarThermalModelType" />
+			:model="model as SolarThermalModelType" 
+			:index="index" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

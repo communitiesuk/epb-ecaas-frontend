@@ -3,14 +3,11 @@ import { ecoDesignControllerOptions } from "#imports";
 import type { UnderfloorHeatingModelType } from "~/pages/space-heating-new/heat-emitters/[heatEmitter]/index.vue";
 
 const route = useRoute();
-const store = useEcaasStore();
-const { getStoreIndex } = useForm();
 
 defineProps<{
 	model: UnderfloorHeatingModelType
+	index: number;
 }>();
-const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
-const index = getStoreIndex(heatSourceStoreData);
 
 
 </script>

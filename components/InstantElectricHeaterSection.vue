@@ -5,8 +5,6 @@ defineProps<{
 	model: InstantElectricHeaterModelType
 }>();
 
-
-
 </script>
 
 <template>

@@ -121,14 +121,19 @@ function updateHeatEmitter(type: string) {
 			@update-radiator-model="updateHeatEmitter" />
 		<UnderfloorHeatingSection
 			v-if="model?.typeOfHeatEmitter === 'underfloorHeating'"
-			:model="model as UnderfloorHeatingModelType" />
-		<FanCoilSection v-if="model?.typeOfHeatEmitter === 'fanCoil'" :model="model as FanCoilModelType" />
+			:model="model as UnderfloorHeatingModelType"
+			:index="index" />
+		<FanCoilSection
+			v-if="model?.typeOfHeatEmitter === 'fanCoil'" 
+			:model="model as FanCoilModelType"
+			:index="index" />
 		<InstantElectricHeaterSection
 			v-if="model?.typeOfHeatEmitter === 'instantElectricHeater'"
 			:model="model as InstantElectricHeaterModelType" />
 		<ElectricStorageHeaterSection
 			v-if="model?.typeOfHeatEmitter === 'electricStorageHeater'"
-			:model="model as ElectricStorageHeaterModelType" />
+			:model="model as ElectricStorageHeaterModelType" 
+			:index="index"/>
 		<WarmAirHeaterSection
 			v-if="model?.typeOfHeatEmitter === 'warmAirHeater'"
 			:model="model as WarmAirHeaterModelType" />

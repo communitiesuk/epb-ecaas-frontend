@@ -3,14 +3,13 @@ import { type HeatSourceData, uniqueName } from "#imports";
 import { heatPumpTypes } from "../utils/display";
 const route = useRoute();
 const store = useEcaasStore();
-const { getStoreIndex } = useForm();
 
 defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatPump" }>;
+	index: number;
 }>();
 
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
-const index = getStoreIndex(heatSourceStoreData);
 const emit = defineEmits(["update-heat-pump-model"]);
 
 </script>

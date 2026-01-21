@@ -2,8 +2,6 @@
 import type { WarmAirHeaterModelType } from "~/pages/space-heating-new/heat-emitters/[heatEmitter]/index.vue";
 
 
-
-
 defineProps<{
 	model: WarmAirHeaterModelType
 }>();

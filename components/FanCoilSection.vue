@@ -3,14 +3,12 @@ import { ecoDesignControllerOptions } from "#imports";
 import type { FanCoilModelType } from "~/pages/space-heating-new/heat-emitters/[heatEmitter]/index.vue";
 
 const route = useRoute();
-const store = useEcaasStore();
-const { getStoreIndex } = useForm();
 
 defineProps<{
 	model: FanCoilModelType
+	index: number;
 }>();
-const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
-const index = getStoreIndex(heatSourceStoreData);
+
 
 </script>
 

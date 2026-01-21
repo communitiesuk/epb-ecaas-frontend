@@ -4,14 +4,13 @@ import { uniqueName } from "#imports";
 import { boilerTypes, type BoilerLocationDisplay } from "~/utils/display";
 const route = useRoute();
 const store = useEcaasStore();
-const { getStoreIndex } = useForm();
 
 defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "boiler" }>;
+	index: number;
 }>();
 
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
-const index = getStoreIndex(heatSourceStoreData);
 
 const locationOfBoilerOptions = {
 	"heatedSpace": "Heated space",

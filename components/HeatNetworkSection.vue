@@ -4,14 +4,13 @@ import type { SchemaHeatNetworkType } from "~/schema/aliases";
 
 const route = useRoute();
 const store = useEcaasStore();
-const { getStoreIndex } = useForm();
 
 defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatNetwork" }>;
+	index: number;
 }>();
 
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
-const index = getStoreIndex(heatSourceStoreData);
 
 const heatNetworkTypeOptions = {
 	"sleeved DHN": "Sleeved district heat network",

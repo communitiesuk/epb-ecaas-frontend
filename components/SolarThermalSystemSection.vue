@@ -3,15 +3,13 @@ import type { HeatSourceData } from "#imports";
 import { isInteger, uniqueName } from "#imports";
 
 const store = useEcaasStore();
-const { getStoreIndex } = useForm();
 
 defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "solarThermalSystem" }>;
+	index: number;
 }>();
 
 const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
-const index = getStoreIndex(heatSourceStoreData);
-
 
 const locationOfCollectorLoopPipingOptions = {
 	"outside": "Outside",
