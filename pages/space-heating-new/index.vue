@@ -71,8 +71,8 @@ function handleComplete() {
 }
 
 function checkIsComplete() {
-	const generators = store.spaceHeatingNew;
-	return Object.values(generators).every((generator) => generator.complete);
+	const sections = store.spaceHeatingNew;
+	return Object.values(sections).every((section) => section.complete);
 }
 
 function hasIncompleteEntries() {
