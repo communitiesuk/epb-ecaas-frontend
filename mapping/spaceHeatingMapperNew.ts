@@ -1,6 +1,7 @@
 import type { ResolvedState } from "./fhsInputMapper";
 import type { HeatEmittingData } from "../stores/ecaasStore.schema";
 import type {
+	SchemaElecStorageHeaterWithProductReference,
 	SchemaFancoilWithProductReference,
 	SchemaHeatSourceWetBoiler,
 	SchemaHeatSourceWetHeatBattery,
@@ -174,11 +175,8 @@ export function mapFanCoils(state: ResolvedState): Record<string, SchemaFancoilW
 		}),
 	);
 }
-type ElectricStorageHeaterWithProductReferenceTemp = {
-	wet_emitter_type: "electricStorageHeater";
-	product_reference: string;
-};
-export function mapElectricStorageHeaters(state: ResolvedState): Record<string, ElectricStorageHeaterWithProductReferenceTemp> {
+
+export function mapElectricStorageHeaters(state: ResolvedState): Record<string, SchemaElecStorageHeaterWithProductReference> {
 	const { heatEmitters } = state.spaceHeatingNew as {
 		heatEmitters?: HeatEmittingData[];
 	};
@@ -195,8 +193,9 @@ export function mapElectricStorageHeaters(state: ResolvedState): Record<string, 
 			return [
 				emitter.name,
 				{
-					wet_emitter_type: "electricStorageHeater",
+					type: "ElecStorageHeater",
 					product_reference: emitter.productReference,
+					n_units: emitter.numOfStorageHeaters,
 				},
 			];
 		}),
@@ -274,7 +273,7 @@ export function mapSpaceHeating(state: ResolvedState): Record<string, SchemaHeat
 	};
 }
 // NOTE: this output type needs looking at and aliasing in schema/aliases.ts
-export function mapHeatEmitters(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatEmitterDetails | SchemaInstantElecHeater | SchemaWarmAir | ElectricStorageHeaterWithProductReferenceTemp> {
+export function mapHeatEmitters(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatEmitterDetails | SchemaInstantElecHeater | SchemaWarmAir | SchemaElecStorageHeaterWithProductReference> {
 	return {
 		...mapRadiators(state),
 		...mapUnderfloorHeating(state),

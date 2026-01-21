@@ -7,6 +7,8 @@ import {
 	mapFanCoils,
 	mapElectricStorageHeaters,
 	mapWarmAirHeater,
+	mapInstantElectricHeaters,
+	mapHeatEmitters,
 } from "./spaceHeatingMapperNew";
 import type { SchemaHeatSourceWetHeatPump } from "../schema/api-schema.types";
 
@@ -279,39 +281,109 @@ describe("Space heating - heat sources", () => {
 
 
 describe("Space heating - emitters", () => {
+	const heatPump: Partial<HeatSourceData> = {
+		typeOfHeatPump: "airSource",
+		id: "hp1",
+		name: "Heat Pump 1",
+	};
+	const ufh: HeatEmittingData = {
+		id: "ufh1",
+		name: "UFH System",
+		typeOfHeatEmitter: "underfloorHeating",
+		productReference: "UFH-123",
+		areaOfUnderfloorHeating: 50,
+		heatSource: heatPump.id!,
+		ecoDesignControllerClass: "1",
+		designFlowTemp: 40,
+		minFlowTemp: 30,
+		designTempDiffAcrossEmitters: 5,
+		hasVariableFlowRate: false,
+		designFlowRate: 200,
+	};
+	const warmAirHeater: HeatEmittingData = {
+		id: "wah1",
+		name: "Warm Air Heater 1",
+		typeOfHeatEmitter: "warmAirHeater",
+		convectionFraction: 0.8,
+		numOfWarmAirHeaters: 2,
+		designTempDiffAcrossEmitters: 15,
+		heatSource: heatPump.id!,
+	};
+	const standardRadiator: HeatEmittingData = {
+		id: "rad1",
+		name: "Standard Radiator",
+		typeOfHeatEmitter: "radiator",
+		typeOfRadiator: "standard",
+		productReference: "RAD-123",
+		numOfRadiators: 5,
+		heatSource: heatPump.id!,
+		ecoDesignControllerClass: "1",
+		designFlowTemp: 55,
+		minFlowTemp: 45,
+		designTempDiffAcrossEmitters: 10,
+		hasVariableFlowRate: false,
+		designFlowRate: 100,
+		length: 1000,
+	};
+	const towelRadiator: HeatEmittingData = {
+		id: "rad2",
+		name: "Towel Radiator",
+		typeOfHeatEmitter: "radiator",
+		typeOfRadiator: "towel",
+		productReference: "RAD-456",
+		numOfRadiators: 2,
+		heatSource: heatPump.id!,
+		ecoDesignControllerClass: "1",
+		designFlowTemp: 60,
+		minFlowTemp: 50,
+		designTempDiffAcrossEmitters: 12,
+		hasVariableFlowRate: false,
+		designFlowRate: 80,
+	};
+	const fanCoil: HeatEmittingData = {
+		id: "fc1",
+		name: "Fan Coil 1",
+		typeOfHeatEmitter: "fanCoil",
+		productReference: "FC-123",
+		numOfFanCoils: 3,
+		heatSource: heatPump.id!,
+		ecoDesignControllerClass: "1",
+		designFlowTemp: 45,
+		minFlowTemp: 35,
+		designTempDiffAcrossEmitters: 7,
+		hasVariableFlowRate: false,
+		designFlowRate: 150,
+	};
+	const instantElectricHeater: HeatEmittingData = {
+		id: "ieh1",
+		name: "Instant Electric Heater 1",
+		typeOfHeatEmitter: "instantElectricHeater",
+		convectionFractionForHeating: 0.7,
+		numOfHeatersWithThisSpec: 3,
+		ratedPower: 2000,
+	};
+	const electricStorageHeater: HeatEmittingData = {
+		id: "ieh1",
+		name: "Instant Electric Heater 1",
+		typeOfHeatEmitter: "electricStorageHeater",
+		productReference: "IEH-123",
+		numOfStorageHeaters: 4,
+	};
 	describe("mapRadiators", () => {
 		const store = useEcaasStore();
-		const radiator1: HeatEmittingData = {
-			id: "rad1",
-			name: "Standard Radiator",
-			typeOfHeatEmitter: "radiator",
-			typeOfRadiator: "standard",
-			productReference: "RAD-123",
-			numOfRadiators: 5,
-			heatSource: "hp1",
-			ecoDesignControllerClass: "1",
-			designFlowTemp: 55,
-			minFlowTemp: 45,
-			designTempDiffAcrossEmitters: 10,
-			hasVariableFlowRate: false,
-			designFlowRate: 100,
-			length: 1000,
-		};
-
 		test("maps stored standard radiator data to fit schema", () => {
 			store.$patch({
 				spaceHeatingNew: {
 					heatEmitters: {
-						data: [{ data: radiator1, complete: true }],
+						data: [{ data: standardRadiator, complete: true }],
 						complete: true,
 					},
 				},
 			});
-
 			const expectedForSchema = {
-				[radiator1.name]: {
+				[standardRadiator.name]: {
 					wet_emitter_type: "radiator",
-					product_reference: radiator1.productReference,
+					product_reference: standardRadiator.productReference,
 					radiator_type: "standard",
 					length: 1000,
 				},
@@ -321,21 +393,6 @@ describe("Space heating - emitters", () => {
 			expect(actual).toEqual(expectedForSchema);
 		});
 		test("maps stored towel radiator data to fit schema", () => {
-			const towelRadiator: HeatEmittingData = {
-				id: "rad2",
-				name: "Towel Radiator",
-				typeOfHeatEmitter: "radiator",
-				typeOfRadiator: "towel",
-				productReference: "RAD-456",
-				numOfRadiators: 2,
-				heatSource: "hp2",
-				ecoDesignControllerClass: "1",
-				designFlowTemp: 60,
-				minFlowTemp: 50,
-				designTempDiffAcrossEmitters: 12,
-				hasVariableFlowRate: false,
-				designFlowRate: 80,
-			};
 			store.$patch({
 				spaceHeatingNew: {
 					heatEmitters: {
@@ -355,38 +412,53 @@ describe("Space heating - emitters", () => {
 			const actual = mapRadiators(resolvedState);
 			expect(actual).toEqual(expectedForSchema);
 		});
+		test("handles multiple radiators", () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatEmitters: {
+						data: [
+							{ data: standardRadiator, complete: true },
+							{ data: towelRadiator, complete: true },
+						],
+						complete: true,
+					},
+				},
+			});
+			const expectedForSchema = {
+				[standardRadiator.name]: {
+					wet_emitter_type: "radiator",
+					product_reference: standardRadiator.productReference,
+					radiator_type: "standard",
+					length: 1000,
+				},
+				[towelRadiator.name]: {
+					wet_emitter_type: "radiator",
+					product_reference: towelRadiator.productReference,
+					radiator_type: "towel",
+				},
+			};
+			const resolvedState = resolveState(store.$state);
+			const actual = mapRadiators(resolvedState);
+			expect(actual).toEqual(expectedForSchema);
+		});
 	});
 
 	describe("mapUnderfloorHeating", () => {
 		const store = useEcaasStore();
-		const ufh1: HeatEmittingData = {
-			id: "ufh1",
-			name: "UFH System",
-			typeOfHeatEmitter: "underfloorHeating",
-			productReference: "UFH-123",
-			areaOfUnderfloorHeating: 50,
-			heatSource: "hp1",
-			ecoDesignControllerClass: "1",
-			designFlowTemp: 40,
-			minFlowTemp: 30,
-			designTempDiffAcrossEmitters: 5,
-			hasVariableFlowRate: false,
-			designFlowRate: 200,
-		};
 		test("maps stored ufh data", () => {
 			store.$patch({
 				spaceHeatingNew: {
 					heatEmitters: {
-						data: [{ data: ufh1, complete: true }],
+						data: [{ data: ufh, complete: true }],
 						complete: true,
 					},
 				},
 			});
 
 			const expectedForSchema = {
-				[ufh1.name]: {
+				[ufh.name]: {
 					wet_emitter_type: "fancoil",
-					product_reference: ufh1.productReference,
+					product_reference: ufh.productReference,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -397,35 +469,21 @@ describe("Space heating - emitters", () => {
 
 	describe("mapFanCoils", () => {
 		const store = useEcaasStore();
-		const fanCoil1: HeatEmittingData = {
-			id: "fc1",
-			name: "Fan Coil 1",
-			typeOfHeatEmitter: "fanCoil",
-			productReference: "FC-123",
-			numOfFanCoils: 3,
-			heatSource: "hp1",
-			ecoDesignControllerClass: "1",
-			designFlowTemp: 45,
-			minFlowTemp: 35,
-			designTempDiffAcrossEmitters: 7,
-			hasVariableFlowRate: false,
-			designFlowRate: 150,
-		};
 
 		test("maps stored fan coil data", () => {
 			store.$patch({
 				spaceHeatingNew: {
 					heatEmitters: {
-						data: [{ data: fanCoil1, complete: true }],
+						data: [{ data: fanCoil, complete: true }],
 						complete: true,
 					},
 				},
 			});
 
 			const expectedForSchema = {
-				[fanCoil1.name]: {
+				[fanCoil.name]: {
 					wet_emitter_type: "fancoil",
-					product_reference: fanCoil1.productReference,
+					product_reference: fanCoil.productReference,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -434,20 +492,42 @@ describe("Space heating - emitters", () => {
 		});
 	});
 	describe("instantElectricHeaters", () => {
+		const store = useEcaasStore();
+		beforeEach(() => {
+			store.$reset();
+		});
 
+		test("maps stored instant electric heater data", () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatEmitters: {
+						data: [{ data: instantElectricHeater, complete: true }],
+						complete: true,
+					},
+				},
+			});
+
+			const expectedForSchema = {
+				[instantElectricHeater.name]: {
+					type: "InstantElecHeater",
+					rated_power: instantElectricHeater.ratedPower,
+					// placeholders
+					convective_type: "Air heating (convectors, fan coils etc.)",
+					EnergySupply: "",
+
+				},
+			};
+			const resolvedState = resolveState(store.$state);
+			const actual = mapInstantElectricHeaters(resolvedState);
+			expect(actual).toEqual(expectedForSchema);
+		});
 	});
 	describe("electricStorageHeaters", () => {
 		const store = useEcaasStore();
 		beforeEach(() => {
 			store.$reset();
 		});
-		const electricStorageHeater: HeatEmittingData = {
-			id: "ieh1",
-			name: "Instant Electric Heater 1",
-			typeOfHeatEmitter: "electricStorageHeater",
-			productReference: "IEH-123",
-			numOfStorageHeaters: 4,
-		};
+
 		test("maps stored electric storage heater data", () => {
 			store.$patch({
 				spaceHeatingNew: {
@@ -460,8 +540,9 @@ describe("Space heating - emitters", () => {
 
 			const expectedForSchema = {
 				[electricStorageHeater.name]: {
-					wet_emitter_type: "electricStorageHeater",
+					type: "ElecStorageHeater",
 					product_reference: electricStorageHeater.productReference,
+					n_units: electricStorageHeater.numOfStorageHeaters,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -474,25 +555,12 @@ describe("Space heating - emitters", () => {
 		beforeEach(() => {
 			store.$reset();
 		});
-		const heatPump1: Partial<HeatSourceData> = {
-			typeOfHeatPump: "airSource",
-			id: "hp1",
-			name: "Heat Pump 1",
-		};
-		const warmAirHeater: HeatEmittingData = {
-			id: "wah1",
-			name: "Warm Air Heater 1",
-			typeOfHeatEmitter: "warmAirHeater",
-			convectionFraction: 0.8,
-			numOfWarmAirHeaters: 2,
-			designTempDiffAcrossEmitters: 15,
-			heatSource: "hp1",
-		};
+
 		test("maps stored warm air heater data", () => {
 			store.$patch({
 				spaceHeatingNew: {
 					heatSource: {
-						data: [{ data: heatPump1 as HeatSourceData, complete: true }],
+						data: [{ data: heatPump as HeatSourceData, complete: true }],
 						complete: true,
 					},
 					heatEmitters: {
@@ -516,7 +584,64 @@ describe("Space heating - emitters", () => {
 
 			const actual = mapWarmAirHeater(resolvedState);
 			expect(actual).toEqual(expectedForSchema);
+		});
+	});
 
+
+
+	describe("mapEmitters", () => {
+		const store = useEcaasStore();
+		beforeEach(() => {
+			store.$reset();
+		});
+		test("combines all emitter mappings", () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: heatPump as HeatSourceData, complete: true }],
+						complete: true,
+					},
+					heatEmitters: {
+						data: [
+							{ data: standardRadiator, complete: true },
+							{ data: ufh, complete: true },
+							{ data: warmAirHeater, complete: true },
+							{ data: electricStorageHeater, complete: true },
+						],
+						complete: true,
+					},
+				},
+			});
+
+			const expectedForSchema = {
+				[standardRadiator.name]: {
+					wet_emitter_type: "radiator",
+					product_reference: standardRadiator.productReference,
+					radiator_type: "standard",
+					length: 1000,
+				},
+				[ufh.name]: {
+					wet_emitter_type: "fancoil",
+					product_reference: ufh.productReference,
+				},
+				[warmAirHeater.name]: {
+					type: "WarmAir",
+					temp_diff_emit_dsgn: warmAirHeater.designTempDiffAcrossEmitters,
+					frac_convective: warmAirHeater.convectionFraction,
+					HeatSource: {
+						name: "Heat Pump 1",
+					},
+				},
+				[electricStorageHeater.name]: {
+					type: "ElecStorageHeater",
+					product_reference: electricStorageHeater.productReference,
+					n_units: electricStorageHeater.numOfStorageHeaters,
+				},
+			};
+			const resolvedState = resolveState(store.$state);
+
+			const actual = mapHeatEmitters(resolvedState);
+			expect(actual).toEqual(expectedForSchema);
 		});
 	});
 });
