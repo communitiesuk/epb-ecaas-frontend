@@ -56,10 +56,11 @@ watch(
 			
 		}
 
-		const { heatSource } = store.spaceHeatingNew;
-		if (heatSource.data.length === 1 && model.value) {
-			if ("heatSource" in model.value && heatSource.data[0]?.data.id) {
-				model.value.heatSource = heatSource.data[0].data.id;
+		const heatSources = store.spaceHeatingNew.heatSource.data;
+		if (heatSources.length === 1 && model.value) {
+			const heatSourceId = heatSources[0]?.data.id;
+			if ("heatSource" in model.value && heatSourceId) {
+				model.value.heatSource = heatSourceId;
 			}
 		}
 		if (model.value && !model.value.name) {
