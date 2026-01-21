@@ -5,12 +5,10 @@ import {
 	mapRadiators,
 	mapUnderfloorHeating,
 	mapFanCoils,
+	mapElectricStorageHeaters,
+	mapWarmAirHeater,
 } from "./spaceHeatingMapperNew";
 import type { SchemaHeatSourceWetHeatPump } from "../schema/api-schema.types";
-
-
-export const UNKNOWN = "UNKNOWN";
-// THIS MAPPING IS NOT COMPLETED WAITING ON SCHEMA DECISIONS
 
 describe("Space heating - heat sources", () => {
 	describe("mapHeatPumps", () => {
@@ -43,7 +41,7 @@ describe("Space heating - heat sources", () => {
 				const expectedHeatPump: SchemaHeatSourceWetHeatPump = {
 					type: "HeatPump",
 					product_reference: heatPumpWithProductReference1.productReference,
-					EnergySupply: UNKNOWN,
+					EnergySupply: "",
 				};
 				const expectedForSchema = {
 					[heatPumpWithProductReference1.name]: expectedHeatPump,
@@ -58,12 +56,12 @@ describe("Space heating - heat sources", () => {
 				const expectedHeatPump1: SchemaHeatSourceWetHeatPump = {
 					type: "HeatPump",
 					product_reference: heatPumpWithProductReference1.productReference,
-					EnergySupply: UNKNOWN,
+					EnergySupply: "",
 				};
 				const expectedHeatPump2: SchemaHeatSourceWetHeatPump = {
 					type: "HeatPump",
 					product_reference: heatPumpWithProductReference2.productReference,
-					EnergySupply: UNKNOWN,
+					EnergySupply: "",
 				};
 				store.$patch({
 					spaceHeatingNew: {
@@ -272,7 +270,6 @@ describe("Space heating - heat sources", () => {
 			};
 
 			const resolvedState = resolveState(store.$state);
-
 			const actual = mapHeatBatteries(resolvedState);
 			expect(actual).toEqual(expectedForSchema);
 		});
@@ -301,7 +298,7 @@ describe("Space heating - emitters", () => {
 			length: 1000,
 		};
 
-		test("maps stored radiator data to fit schema", () => {
+		test("maps stored standard radiator data to fit schema", () => {
 			store.$patch({
 				spaceHeatingNew: {
 					heatEmitters: {
@@ -317,6 +314,41 @@ describe("Space heating - emitters", () => {
 					product_reference: radiator1.productReference,
 					radiator_type: "standard",
 					length: 1000,
+				},
+			};
+			const resolvedState = resolveState(store.$state);
+			const actual = mapRadiators(resolvedState);
+			expect(actual).toEqual(expectedForSchema);
+		});
+		test("maps stored towel radiator data to fit schema", () => {
+			const towelRadiator: HeatEmittingData = {
+				id: "rad2",
+				name: "Towel Radiator",
+				typeOfHeatEmitter: "radiator",
+				typeOfRadiator: "towel",
+				productReference: "RAD-456",
+				numOfRadiators: 2,
+				heatSource: "hp2",
+				ecoDesignControllerClass: "1",
+				designFlowTemp: 60,
+				minFlowTemp: 50,
+				designTempDiffAcrossEmitters: 12,
+				hasVariableFlowRate: false,
+				designFlowRate: 80,
+			};
+			store.$patch({
+				spaceHeatingNew: {
+					heatEmitters: {
+						data: [{ data: towelRadiator, complete: true }],
+						complete: true,
+					},
+				},
+			});
+			const expectedForSchema = {
+				[towelRadiator.name]: {
+					wet_emitter_type: "radiator",
+					product_reference: towelRadiator.productReference,
+					radiator_type: "towel",
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -400,6 +432,91 @@ describe("Space heating - emitters", () => {
 			const actual = mapFanCoils(resolvedState);
 			expect(actual).toEqual(expectedForSchema);
 		});
+	});
+	describe("instantElectricHeaters", () => {
 
+	});
+	describe("electricStorageHeaters", () => {
+		const store = useEcaasStore();
+		beforeEach(() => {
+			store.$reset();
+		});
+		const electricStorageHeater: HeatEmittingData = {
+			id: "ieh1",
+			name: "Instant Electric Heater 1",
+			typeOfHeatEmitter: "electricStorageHeater",
+			productReference: "IEH-123",
+			numOfStorageHeaters: 4,
+		};
+		test("maps stored electric storage heater data", () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatEmitters: {
+						data: [{ data: electricStorageHeater, complete: true }],
+						complete: true,
+					},
+				},
+			});
+
+			const expectedForSchema = {
+				[electricStorageHeater.name]: {
+					wet_emitter_type: "electricStorageHeater",
+					product_reference: electricStorageHeater.productReference,
+				},
+			};
+			const resolvedState = resolveState(store.$state);
+			const actual = mapElectricStorageHeaters(resolvedState);
+			expect(actual).toEqual(expectedForSchema);
+		});
+	});
+	describe("warmAirHeater", () => {
+		const store = useEcaasStore();
+		beforeEach(() => {
+			store.$reset();
+		});
+		const heatPump1: Partial<HeatSourceData> = {
+			typeOfHeatPump: "airSource",
+			id: "hp1",
+			name: "Heat Pump 1",
+		};
+		const warmAirHeater: HeatEmittingData = {
+			id: "wah1",
+			name: "Warm Air Heater 1",
+			typeOfHeatEmitter: "warmAirHeater",
+			convectionFraction: 0.8,
+			numOfWarmAirHeaters: 2,
+			designTempDiffAcrossEmitters: 15,
+			heatSource: "hp1",
+		};
+		test("maps stored warm air heater data", () => {
+			store.$patch({
+				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: heatPump1 as HeatSourceData, complete: true }],
+						complete: true,
+					},
+					heatEmitters: {
+						data: [{ data: warmAirHeater, complete: true }],
+						complete: true,
+					},
+				},
+			});
+
+			const expectedForSchema = {
+				[warmAirHeater.name]: {
+					type: "WarmAir",
+					temp_diff_emit_dsgn: warmAirHeater.designTempDiffAcrossEmitters,
+					frac_convective: warmAirHeater.convectionFraction,
+					HeatSource: {
+						name: "Heat Pump 1",
+					},
+				},
+			};
+			const resolvedState = resolveState(store.$state);
+
+			const actual = mapWarmAirHeater(resolvedState);
+			expect(actual).toEqual(expectedForSchema);
+
+		});
 	});
 });

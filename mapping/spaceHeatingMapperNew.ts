@@ -1,13 +1,14 @@
 import type { ResolvedState } from "./fhsInputMapper";
-import { UNKNOWN } from "./spaceHeatingMapperNew.test";
 import type { HeatEmittingData } from "../stores/ecaasStore.schema";
 import type {
 	SchemaFancoilWithProductReference,
 	SchemaHeatSourceWetBoiler,
 	SchemaHeatSourceWetHeatBattery,
 	SchemaHeatSourceWetHeatPump,
+	SchemaInstantElecHeater,
 	SchemaRadiatorWithProductReference,
 	SchemaUfhWithProductReference,
+	SchemaWarmAir,
 } from "../schema/api-schema.types";
 import type { SchemaHeatSourceWetDetails, SchemaHeatSourceWetHeatEmitterDetails } from "~/schema/aliases";
 
@@ -24,7 +25,7 @@ export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSou
 				{
 					type: "HeatPump",
 					product_reference: heatPump.productReference,
-					EnergySupply: UNKNOWN,
+					EnergySupply: "",
 				},
 			];
 		}),
@@ -106,15 +107,19 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaRadiato
 	);
 	return Object.fromEntries(
 		radiators.map((radiator) => {
+			const data: SchemaRadiatorWithProductReference = radiator.typeOfRadiator === "standard" ? {
+				wet_emitter_type: "radiator",
+				product_reference: radiator.productReference,
+				radiator_type: "standard",
+				length: radiator.length,
+			} : {
+				wet_emitter_type: "radiator",
+				product_reference: radiator.productReference,
+				radiator_type: "towel",
+			};
 			return [
 				radiator.name,
-				{
-					wet_emitter_type: "radiator",
-					product_reference: radiator.productReference,
-					radiator_type: "standard",
-					// Placeholder as length is required by schema for standard type
-					length: "length" in radiator ? radiator.length : 0,
-				},
+				data,
 			];
 		}),
 	);
@@ -169,6 +174,95 @@ export function mapFanCoils(state: ResolvedState): Record<string, SchemaFancoilW
 		}),
 	);
 }
+type ElectricStorageHeaterWithProductReferenceTemp = {
+	wet_emitter_type: "electricStorageHeater";
+	product_reference: string;
+};
+export function mapElectricStorageHeaters(state: ResolvedState): Record<string, ElectricStorageHeaterWithProductReferenceTemp> {
+	const { heatEmitters } = state.spaceHeatingNew as {
+		heatEmitters?: HeatEmittingData[];
+	};
+
+	if (!heatEmitters) {
+
+		return {};
+	}
+	const electricStorageHeaters = heatEmitters?.filter(
+		(emitter): emitter is Extract<HeatEmittingData, { typeOfHeatEmitter: "electricStorageHeater" }> => emitter.typeOfHeatEmitter === "electricStorageHeater",
+	);
+	return Object.fromEntries(
+		electricStorageHeaters.map((emitter) => {
+			return [
+				emitter.name,
+				{
+					wet_emitter_type: "electricStorageHeater",
+					product_reference: emitter.productReference,
+				},
+			];
+		}),
+	);
+}
+export function mapWarmAirHeater(state: ResolvedState): Record<string, SchemaWarmAir> {
+	const { heatEmitters } = state.spaceHeatingNew as {
+		heatEmitters?: HeatEmittingData[];
+	};
+
+	if (!heatEmitters) {
+		return {};
+	}
+	const warmAirHeaters = heatEmitters?.filter(
+		(emitter): emitter is Extract<HeatEmittingData, { typeOfHeatEmitter: "warmAirHeater" }> => emitter.typeOfHeatEmitter === "warmAirHeater",
+	);
+	const heatSources = state.spaceHeatingNew.heatSource;
+
+
+	return Object.fromEntries(
+		warmAirHeaters.map((emitter) => {
+			const heatSourceName = heatSources.find(
+				(heatsource) => heatsource.id === emitter.heatSource,
+			)?.name ?? "";
+			return [
+				emitter.name,
+				{
+					type: "WarmAir",
+					temp_diff_emit_dsgn: emitter.designTempDiffAcrossEmitters,
+					frac_convective: emitter.convectionFraction,
+					HeatSource: {
+						name: heatSourceName,
+					},
+				},
+			];
+		}),
+	);
+}
+
+export function mapInstantElectricHeaters(state: ResolvedState): Record<string, SchemaInstantElecHeater> {
+	const { heatEmitters } = state.spaceHeatingNew as {
+		heatEmitters?: HeatEmittingData[];
+	};
+
+	if (!heatEmitters) {
+		return {};
+	}
+	const instantElecHeaters = heatEmitters?.filter(
+		(emitter): emitter is Extract<HeatEmittingData, { typeOfHeatEmitter: "instantElectricHeater" }> => emitter.typeOfHeatEmitter === "instantElectricHeater",
+	);
+
+	return Object.fromEntries(
+		instantElecHeaters.map((emitter) => {
+			return [
+				emitter.name,
+				{
+					type: "InstantElecHeater",
+					rated_power: emitter.ratedPower,
+					// placeholders
+					convective_type: "Air heating (convectors, fan coils etc.)",
+					EnergySupply: "",
+				} as SchemaInstantElecHeater,
+			];
+		}),
+	);
+}
 
 export function mapSpaceHeating(state: ResolvedState): Record<string, SchemaHeatSourceWetDetails> {
 	return {
@@ -179,11 +273,14 @@ export function mapSpaceHeating(state: ResolvedState): Record<string, SchemaHeat
 		...mapSolarThermalSystems(state),
 	};
 }
-
-export function mapHeatEmitters(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatEmitterDetails> {
+// NOTE: this output type needs looking at and aliasing in schema/aliases.ts
+export function mapHeatEmitters(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatEmitterDetails | SchemaInstantElecHeater | SchemaWarmAir | ElectricStorageHeaterWithProductReferenceTemp> {
 	return {
 		...mapRadiators(state),
 		...mapUnderfloorHeating(state),
 		...mapFanCoils(state),
+		...mapElectricStorageHeaters(state),
+		...mapWarmAirHeater(state),
+		...mapInstantElectricHeaters(state),
 	};
 }
