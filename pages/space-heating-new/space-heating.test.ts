@@ -154,7 +154,7 @@ describe("space heating", () => {
 			const radiator: HeatEmittingData = {
 				name: "Radiator 1",
 				typeOfHeatEmitter: "radiator",
-				typeOfRadiator: "standard",
+				typeOfRadiator: "towel",
 				heatSource: heatPump1.id,
 				productReference: "RADIATOR_STANDARD",
 				designFlowTemp: 45,

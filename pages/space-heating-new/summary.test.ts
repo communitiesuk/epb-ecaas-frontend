@@ -313,6 +313,7 @@ describe("Space heating summary page", () => {
 			numOfRadiators: 5,
 			hasVariableFlowRate: false,
 			designFlowRate: 100,
+			length: 1,
 		};
 		const fanCoil: HeatEmittingData = {
 			id: "5678",
