@@ -937,6 +937,16 @@ export interface components {
             /** @constant */
             air_flow_type: "damper-only";
         });
+        ElecStorageHeaterWithProductReference: {
+            /** @constant */
+            type: "ElecStorageHeater";
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
+            n_units: number;
+        };
         InstantElecHeater: {
             /** @constant */
             type: "InstantElecHeater";
@@ -1343,7 +1353,7 @@ export interface components {
                 };
             };
             SpaceHeatSystem: {
-                [key: string]: components["schemas"]["ElecStorageHeater"] | components["schemas"]["InstantElecHeater"] | components["schemas"]["WetDistribution"] | components["schemas"]["WarmAir"];
+                [key: string]: components["schemas"]["ElecStorageHeater"] | components["schemas"]["ElecStorageHeaterWithProductReference"] | components["schemas"]["InstantElecHeater"] | components["schemas"]["WetDistribution"] | components["schemas"]["WarmAir"];
             };
             SpaceCoolSystem?: {
                 [key: string]: {
@@ -1927,6 +1937,16 @@ export interface components {
                     /** @constant */
                     air_flow_type: "damper-only";
                 });
+                ElecStorageHeaterWithProductReference: {
+                    /** @constant */
+                    type: "ElecStorageHeater";
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                    n_units: number;
+                };
                 InstantElecHeater: {
                     /** @constant */
                     type: "InstantElecHeater";
@@ -2513,6 +2533,7 @@ export type SchemaHeatSourceWetHiu = components['schemas']['HeatSourceWetHIU'];
 export type SchemaMixerShower = components['schemas']['MixerShower'];
 export type SchemaInstantElecShower = components['schemas']['InstantElecShower'];
 export type SchemaElecStorageHeater = components['schemas']['ElecStorageHeater'];
+export type SchemaElecStorageHeaterWithProductReference = components['schemas']['ElecStorageHeaterWithProductReference'];
 export type SchemaInstantElecHeater = components['schemas']['InstantElecHeater'];
 export type SchemaWetDistribution = components['schemas']['WetDistribution'];
 export type SchemaWarmAir = components['schemas']['WarmAir'];

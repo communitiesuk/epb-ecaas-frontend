@@ -2302,99 +2302,102 @@
 							}
 						},
 						"then": {
-							"required": [
-								"pwr_in",
-								"rated_power_instant",
-								"storage_capacity",
-								"air_flow_type",
-								"frac_convective",
-								"n_units",
-								"EnergySupply",
-								"Zone",
-								"dry_core_min_output",
-								"dry_core_max_output",
-								"state_of_charge_init"
-							],
-							"properties": {
-								"pwr_in": {
-									"type": "number",
-									"minimum": 0.1,
-									"maximum": 70
-								},
-								"rated_power_instant": {
-									"type": "number",
-									"minimum": 0.1,
-									"maximum": 70
-								},
-								"storage_capacity": {
-									"type": "number",
-									"minimum": 0
-								},
-								"air_flow_type": {
-									"enum": [
-										"fan-assisted",
-										"damper-only"
-									]
-								},
-								"frac_convective": {
-									"type": "number",
-									"minimum": 0
-								},
-								"n_units": {
-									"type": "integer",
-									"minimum": 0,
-									"maximum": 100
-								},
-								"EnergySupply": {
-									"type": "string"
-								},
-								"Zone": {
-									"type": "string"
-								},
-								"dry_core_min_output": {
-									"type": "array",
-									"items": {
-										"type": "array",
-										"items": {
-											"type": "number"
-										}
-									}
-								},
-								"dry_core_max_output": {
-									"type": "array",
-									"items": {
-										"type": "array",
-										"items": {
-											"type": "number"
-										}
-									}
-								},
-								"state_of_charge_init": {
-									"description": "State of charge at initialisation of dry core heat storage (ratio)",
-									"maximum": 1.0,
-									"minimum": 0.0,
-									"title": "State Of Charge Init",
-									"type": "number"
-								}
-							},
-							"if": {
-								"properties": {
-									"air_flow_type": {
-										"const": "fan-assisted"
-									}
-								}
-							},
-							"then": {
-								"required": [
-									"fan_pwr"
-								],
-								"properties": {
-									"fan_pwr": {
-										"type": "number",
-										"minimum": 0
-									}
-								}
-							}
+							"oneOf": [
+                                {
+                                    "required": [
+                                        "product_reference",
+                                        "n_units"
+                                    ],
+                                    "properties": {
+                                        "product_reference": {
+                                            "description": "A unique reference to a product held within the HEM database (PCDB)",
+                                            "title": "Reference to the product in the HEM database",
+                                            "type": "string"
+                                        },
+                                        "n_units": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 100
+                                        }
+                                    }
+                                },
+                                {
+                                    "required": [
+                                        "pwr_in",
+                                        "rated_power_instant",
+                                        "storage_capacity",
+                                        "air_flow_type",
+                                        "frac_convective",
+                                        "n_units",
+                                        "EnergySupply",
+                                        "Zone",
+                                        "dry_core_min_output",
+                                        "dry_core_max_output",
+                                        "state_of_charge_init"
+                                    ],
+                                    "properties": {
+                                        "pwr_in": {
+                                            "type": "number",
+                                            "minimum": 0.1,
+                                            "maximum": 70
+                                        },
+                                        "rated_power_instant": {
+                                            "type": "number",
+                                            "minimum": 0.1,
+                                            "maximum": 70
+                                        },
+                                        "storage_capacity": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "air_flow_type": {"enum": ["fan-assisted", "damper-only"]},
+                                        "frac_convective": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "n_units": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 100
+                                        },
+                                        "EnergySupply": {"type": "string"},
+                                        "Zone": {"type": "string"},
+                                        "dry_core_min_output": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "array",
+                                                "items": {"type": "number"}
+                                            }
+                                        },
+                                        "dry_core_max_output": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "array",
+                                                "items": {"type": "number"}
+                                            }
+                                        },
+                                        "state_of_charge_init": {
+                                            "description": "State of charge at initialisation of dry core heat storage (ratio)",
+                                            "maximum": 1.0,
+                                            "minimum": 0.0,
+                                            "title": "State Of Charge Init",
+                                            "type": "number"
+                                        }
+                                    },
+                                    "if": {
+                                        "properties": {"air_flow_type": {"const": "fan-assisted"}}
+                                    },
+                                    "then": {
+                                        "required": ["fan_pwr"],
+                                        "properties": {
+                                            "fan_pwr": {
+                                                "type": "number",
+                                                "minimum": 0
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
 						}
 					},
 					{
