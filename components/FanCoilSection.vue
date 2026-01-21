@@ -25,7 +25,7 @@ defineProps<{
 		label="Select product"
 		name="productReference"
 		validation="required"
-		:help="''"
+		help="Select a fan coil type from the PCDB using the button below."
 		:selected-product-reference="model.productReference"
 		:selected-product-type="model.typeOfHeatEmitter"
 		:page-url="route.fullPath"
