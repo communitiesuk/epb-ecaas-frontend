@@ -8,9 +8,10 @@ import {
 	mapElectricStorageHeaters,
 	mapWarmAirHeater,
 	mapInstantElectricHeaters,
-	mapHeatEmitters,
+	mapSpaceHeatSystem,
 } from "./spaceHeatingMapperNew";
 import type { SchemaHeatSourceWetHeatPump } from "../schema/api-schema.types";
+import { defaultElectricityEnergySupplyName, defaultZoneName, maxOutdoorTemp, minOutdoorTemp } from "./common";
 
 describe("Space heating - heat sources", () => {
 	describe("mapHeatPumps", () => {
@@ -315,7 +316,7 @@ describe("Space heating - emitters", () => {
 		typeOfHeatEmitter: "radiator",
 		typeOfRadiator: "standard",
 		productReference: "RAD-123",
-		numOfRadiators: 5,
+		numOfRadiators: 2,
 		heatSource: heatPump.id!,
 		ecoDesignControllerClass: "1",
 		designFlowTemp: 55,
@@ -374,6 +375,10 @@ describe("Space heating - emitters", () => {
 		test("maps stored standard radiator data to fit schema", () => {
 			store.$patch({
 				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: heatPump as HeatSourceData, complete: true }],
+						complete: true,
+					},
 					heatEmitters: {
 						data: [{ data: standardRadiator, complete: true }],
 						complete: true,
@@ -382,16 +387,43 @@ describe("Space heating - emitters", () => {
 			});
 			const expectedForSchema = {
 				[standardRadiator.name]: {
-					wet_emitter_type: "radiator",
-					product_reference: standardRadiator.productReference,
-					radiator_type: "standard",
-					length: 1000,
+					type: "WetDistribution",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					emitters: [
+						{
+							product_reference: standardRadiator.productReference,
+							wet_emitter_type: "radiator",
+							radiator_type: "standard",
+							length: 1000,
+						},
+						{
+							product_reference: standardRadiator.productReference,
+							wet_emitter_type: "radiator",
+							radiator_type: "standard",
+							length: 1000,
+						},
+					],
+					design_flow_rate: standardRadiator.designFlowRate,
+					variable_flow: standardRadiator.hasVariableFlowRate,
+					design_flow_temp: standardRadiator.designFlowTemp,
+					temp_diff_emit_dsgn: standardRadiator.designTempDiffAcrossEmitters,
+					HeatSource: {
+						name: heatPump.name,
+					},
+					ecodesign_controller: {
+						ecodesign_control_class: +standardRadiator.ecoDesignControllerClass,
+						max_outdoor_temp: maxOutdoorTemp,
+						min_outdoor_temp: minOutdoorTemp,
+						min_flow_temp: standardRadiator.minFlowTemp,
+					},
+					Zone: defaultZoneName,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
 			const actual = mapRadiators(resolvedState);
 			expect(actual).toEqual(expectedForSchema);
 		});
+
 		test("maps stored towel radiator data to fit schema", () => {
 			store.$patch({
 				spaceHeatingNew: {
@@ -399,22 +431,55 @@ describe("Space heating - emitters", () => {
 						data: [{ data: towelRadiator, complete: true }],
 						complete: true,
 					},
+					heatSource: {
+						data: [{ data: heatPump as HeatSourceData, complete: true }],
+						complete: true,
+					},
 				},
 			});
 			const expectedForSchema = {
 				[towelRadiator.name]: {
-					wet_emitter_type: "radiator",
-					product_reference: towelRadiator.productReference,
-					radiator_type: "towel",
+					type: "WetDistribution",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					emitters: [
+						{
+							product_reference: towelRadiator.productReference,
+							wet_emitter_type: "radiator",
+							radiator_type: "towel",
+						},
+						{
+							product_reference: towelRadiator.productReference,
+							wet_emitter_type: "radiator",
+							radiator_type: "towel",
+						},
+					],
+					design_flow_rate: towelRadiator.designFlowRate,
+					variable_flow: towelRadiator.hasVariableFlowRate,
+					design_flow_temp: towelRadiator.designFlowTemp,
+					temp_diff_emit_dsgn: towelRadiator.designTempDiffAcrossEmitters,
+					HeatSource: {
+						name: heatPump.name,
+					},
+					ecodesign_controller: {
+						ecodesign_control_class: +towelRadiator.ecoDesignControllerClass,
+						max_outdoor_temp: maxOutdoorTemp,
+						min_outdoor_temp: minOutdoorTemp,
+						min_flow_temp: towelRadiator.minFlowTemp,
+					},
+					Zone: defaultZoneName,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
 			const actual = mapRadiators(resolvedState);
 			expect(actual).toEqual(expectedForSchema);
 		});
-		test("handles multiple radiators", () => {
+		test("handles combination of radiators", () => {
 			store.$patch({
 				spaceHeatingNew: {
+					heatSource: {
+						data: [{ data: heatPump as HeatSourceData, complete: true }],
+						complete: true,
+					},
 					heatEmitters: {
 						data: [
 							{ data: standardRadiator, complete: true },
@@ -426,16 +491,67 @@ describe("Space heating - emitters", () => {
 			});
 			const expectedForSchema = {
 				[standardRadiator.name]: {
-					wet_emitter_type: "radiator",
-					product_reference: standardRadiator.productReference,
-					radiator_type: "standard",
-					length: 1000,
+					type: "WetDistribution",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					emitters: [
+						{
+							product_reference: standardRadiator.productReference,
+							wet_emitter_type: "radiator",
+							radiator_type: "standard",
+							length: 1000,
+						},
+						{
+							product_reference: standardRadiator.productReference,
+							wet_emitter_type: "radiator",
+							radiator_type: "standard",
+							length: 1000,
+						},
+					],
+					design_flow_rate: standardRadiator.designFlowRate,
+					variable_flow: standardRadiator.hasVariableFlowRate,
+					design_flow_temp: standardRadiator.designFlowTemp,
+					temp_diff_emit_dsgn: standardRadiator.designTempDiffAcrossEmitters,
+					HeatSource: {
+						name: heatPump.name,
+					},
+					ecodesign_controller: {
+						ecodesign_control_class: +standardRadiator.ecoDesignControllerClass,
+						max_outdoor_temp: maxOutdoorTemp,
+						min_outdoor_temp: minOutdoorTemp,
+						min_flow_temp: standardRadiator.minFlowTemp,
+					},
+					Zone: defaultZoneName,
+				}, [towelRadiator.name]: {
+					type: "WetDistribution",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					emitters: [
+						{
+							product_reference: towelRadiator.productReference,
+							wet_emitter_type: "radiator",
+							radiator_type: "towel",
+						},
+						{
+							product_reference: towelRadiator.productReference,
+							wet_emitter_type: "radiator",
+							radiator_type: "towel",
+						},
+					],
+					design_flow_rate: towelRadiator.designFlowRate,
+					variable_flow: towelRadiator.hasVariableFlowRate,
+					design_flow_temp: towelRadiator.designFlowTemp,
+					temp_diff_emit_dsgn: towelRadiator.designTempDiffAcrossEmitters,
+					HeatSource: {
+						name: heatPump.name,
+					},
+					ecodesign_controller: {
+						ecodesign_control_class: +towelRadiator.ecoDesignControllerClass,
+						max_outdoor_temp: maxOutdoorTemp,
+						min_outdoor_temp: minOutdoorTemp,
+						min_flow_temp: towelRadiator.minFlowTemp,
+					},
+					Zone: defaultZoneName,
 				},
-				[towelRadiator.name]: {
-					wet_emitter_type: "radiator",
-					product_reference: towelRadiator.productReference,
-					radiator_type: "towel",
-				},
+
 			};
 			const resolvedState = resolveState(store.$state);
 			const actual = mapRadiators(resolvedState);
@@ -452,13 +568,38 @@ describe("Space heating - emitters", () => {
 						data: [{ data: ufh, complete: true }],
 						complete: true,
 					},
+					heatSource: {
+						data: [{ data: heatPump as HeatSourceData, complete: true }],
+						complete: true,
+					},
 				},
 			});
 
 			const expectedForSchema = {
 				[ufh.name]: {
-					wet_emitter_type: "fancoil",
-					product_reference: ufh.productReference,
+					type: "WetDistribution",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					emitters: [
+						{
+							product_reference: ufh.productReference,
+							wet_emitter_type: "ufh",
+						},
+
+					],
+					design_flow_rate: ufh.designFlowRate,
+					variable_flow: ufh.hasVariableFlowRate,
+					design_flow_temp: ufh.designFlowTemp,
+					temp_diff_emit_dsgn: ufh.designTempDiffAcrossEmitters,
+					HeatSource: {
+						name: heatPump.name,
+					},
+					ecodesign_controller: {
+						ecodesign_control_class: +ufh.ecoDesignControllerClass,
+						max_outdoor_temp: maxOutdoorTemp,
+						min_outdoor_temp: minOutdoorTemp,
+						min_flow_temp: ufh.minFlowTemp,
+					},
+					Zone: defaultZoneName,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -477,13 +618,45 @@ describe("Space heating - emitters", () => {
 						data: [{ data: fanCoil, complete: true }],
 						complete: true,
 					},
+					heatSource: {
+						data: [{ data: heatPump as HeatSourceData, complete: true }],
+						complete: true,
+					},
 				},
 			});
 
 			const expectedForSchema = {
 				[fanCoil.name]: {
-					wet_emitter_type: "fancoil",
-					product_reference: fanCoil.productReference,
+					type: "WetDistribution",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					emitters: [
+						{
+							product_reference: fanCoil.productReference,
+							wet_emitter_type: "fancoil",
+						},
+						{
+							product_reference: fanCoil.productReference,
+							wet_emitter_type: "fancoil",
+						},
+						{
+							product_reference: fanCoil.productReference,
+							wet_emitter_type: "fancoil",
+						},
+					],
+					design_flow_rate: fanCoil.designFlowRate,
+					variable_flow: fanCoil.hasVariableFlowRate,
+					design_flow_temp: fanCoil.designFlowTemp,
+					temp_diff_emit_dsgn: fanCoil.designTempDiffAcrossEmitters,
+					HeatSource: {
+						name: heatPump.name,
+					},
+					ecodesign_controller: {
+						ecodesign_control_class: +fanCoil.ecoDesignControllerClass,
+						max_outdoor_temp: maxOutdoorTemp,
+						min_outdoor_temp: minOutdoorTemp,
+						min_flow_temp: fanCoil.minFlowTemp,
+					},
+					Zone: defaultZoneName,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -513,7 +686,7 @@ describe("Space heating - emitters", () => {
 					rated_power: instantElectricHeater.ratedPower,
 					// placeholders
 					convective_type: "Air heating (convectors, fan coils etc.)",
-					EnergySupply: "",
+					EnergySupply: defaultElectricityEnergySupplyName,
 
 				},
 			};
@@ -589,7 +762,7 @@ describe("Space heating - emitters", () => {
 
 
 
-	describe("mapEmitters", () => {
+	describe("mapSpaceHeatSystem", () => {
 		const store = useEcaasStore();
 		beforeEach(() => {
 			store.$reset();
@@ -615,14 +788,61 @@ describe("Space heating - emitters", () => {
 
 			const expectedForSchema = {
 				[standardRadiator.name]: {
-					wet_emitter_type: "radiator",
-					product_reference: standardRadiator.productReference,
-					radiator_type: "standard",
-					length: 1000,
+					type: "WetDistribution",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					emitters: [
+						{
+							product_reference: standardRadiator.productReference,
+							wet_emitter_type: "radiator",
+							radiator_type: "standard",
+							length: 1000,
+						},
+						{
+							product_reference: standardRadiator.productReference,
+							wet_emitter_type: "radiator",
+							radiator_type: "standard",
+							length: 1000,
+						},
+					],
+					design_flow_rate: standardRadiator.designFlowRate,
+					variable_flow: standardRadiator.hasVariableFlowRate,
+					design_flow_temp: standardRadiator.designFlowTemp,
+					temp_diff_emit_dsgn: standardRadiator.designTempDiffAcrossEmitters,
+					HeatSource: {
+						name: heatPump.name,
+					},
+					ecodesign_controller: {
+						ecodesign_control_class: +standardRadiator.ecoDesignControllerClass,
+						max_outdoor_temp: maxOutdoorTemp,
+						min_outdoor_temp: minOutdoorTemp,
+						min_flow_temp: standardRadiator.minFlowTemp,
+					},
+					Zone: defaultZoneName,
 				},
 				[ufh.name]: {
-					wet_emitter_type: "fancoil",
-					product_reference: ufh.productReference,
+					type: "WetDistribution",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					emitters: [
+						{
+							product_reference: ufh.productReference,
+							wet_emitter_type: "ufh",
+						},
+
+					],
+					design_flow_rate: ufh.designFlowRate,
+					variable_flow: ufh.hasVariableFlowRate,
+					design_flow_temp: ufh.designFlowTemp,
+					temp_diff_emit_dsgn: ufh.designTempDiffAcrossEmitters,
+					HeatSource: {
+						name: heatPump.name,
+					},
+					ecodesign_controller: {
+						ecodesign_control_class: +ufh.ecoDesignControllerClass,
+						max_outdoor_temp: maxOutdoorTemp,
+						min_outdoor_temp: minOutdoorTemp,
+						min_flow_temp: ufh.minFlowTemp,
+					},
+					Zone: defaultZoneName,
 				},
 				[warmAirHeater.name]: {
 					type: "WarmAir",
@@ -640,7 +860,7 @@ describe("Space heating - emitters", () => {
 			};
 			const resolvedState = resolveState(store.$state);
 
-			const actual = mapHeatEmitters(resolvedState);
+			const actual = mapSpaceHeatSystem(resolvedState);
 			expect(actual).toEqual(expectedForSchema);
 		});
 	});

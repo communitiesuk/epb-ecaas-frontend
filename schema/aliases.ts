@@ -12,6 +12,7 @@ export type WwhrsType = Exclude<FhsSchema["WWHRS"], undefined>[string]["type"];
 export type VentType = SchemaMechanicalVentilation["vent_type"];
 type OnSiteGeneration = Exclude<FhsSchema["OnSiteGeneration"], undefined>;
 export type OnSiteGenerationVentilationStrategy = OnSiteGeneration[string]["ventilation_strategy"];
+export type SchemaSpaceHeatSystem = Exclude<FhsSchema["SpaceHeatSystem"], undefined>;
 export type SchemaSpaceHeatSystemDetails = Exclude<FhsSchema["SpaceHeatSystem"], undefined>[string];
 export type SchemaSpaceCoolSystemDetails = Exclude<FhsSchema["SpaceCoolSystem"], undefined>[string];
 export type SchemaZoneInput = FhsSchema["Zone"][string];

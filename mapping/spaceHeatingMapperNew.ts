@@ -10,8 +10,11 @@ import type {
 	SchemaRadiatorWithProductReference,
 	SchemaUfhWithProductReference,
 	SchemaWarmAir,
+	SchemaWetDistribution,
+	SchemaEcoDesignControllerNoWeatherCompensator,
 } from "../schema/api-schema.types";
-import type { SchemaHeatSourceWetDetails, SchemaHeatSourceWetHeatEmitterDetails } from "~/schema/aliases";
+import type { SchemaHeatSourceWetDetails, SchemaSpaceHeatSystem } from "~/schema/aliases";
+import { defaultConvectiveType, defaultElectricityEnergySupplyName, defaultZoneName, maxOutdoorTemp, minOutdoorTemp } from "./common";
 
 export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatPump> {
 	const heatsources = state.spaceHeatingNew.heatSource;
@@ -96,7 +99,7 @@ export function mapSolarThermalSystems(state: ResolvedState): Record<string, Sch
 	return {};
 }
 
-export function mapRadiators(state: ResolvedState): Record<string, SchemaRadiatorWithProductReference> {
+export function mapRadiators(state: ResolvedState): Record<string, SchemaWetDistribution> {
 	const { heatEmitters } = state.spaceHeatingNew as {
 		heatEmitters?: HeatEmittingData[];
 	};
@@ -108,7 +111,7 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaRadiato
 	);
 	return Object.fromEntries(
 		radiators.map((radiator) => {
-			const data: SchemaRadiatorWithProductReference = radiator.typeOfRadiator === "standard" ? {
+			const emitter: SchemaRadiatorWithProductReference = radiator.typeOfRadiator === "standard" ? {
 				wet_emitter_type: "radiator",
 				product_reference: radiator.productReference,
 				radiator_type: "standard",
@@ -118,6 +121,24 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaRadiato
 				product_reference: radiator.productReference,
 				radiator_type: "towel",
 			};
+			const common = {
+				emitters: Array(radiator.numOfRadiators).fill(emitter),
+				EnergySupply: defaultElectricityEnergySupplyName,
+				temp_diff_emit_dsgn: radiator.designTempDiffAcrossEmitters,
+				Zone: defaultZoneName,
+				type: "WetDistribution" as const,
+				design_flow_temp: radiator.designFlowTemp,
+				HeatSource: { name: getHeatSourceNameForEmitter(state, radiator) },
+				ecodesign_controller: {
+					ecodesign_control_class: parseInt(radiator.ecoDesignControllerClass),
+					min_flow_temp: radiator.minFlowTemp,
+					min_outdoor_temp: minOutdoorTemp,
+					max_outdoor_temp: maxOutdoorTemp,
+				} as SchemaEcoDesignControllerNoWeatherCompensator,
+			};
+			const data: SchemaWetDistribution = radiator.hasVariableFlowRate
+				? { ...common, variable_flow: true, min_flow_rate: radiator.minFlowRate, max_flow_rate: radiator.maxFlowRate }
+				: { ...common, variable_flow: false, design_flow_rate: radiator.designFlowRate };
 			return [
 				radiator.name,
 				data,
@@ -126,7 +147,7 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaRadiato
 	);
 }
 
-export function mapUnderfloorHeating(state: ResolvedState): Record<string, SchemaUfhWithProductReference> {
+export function mapUnderfloorHeating(state: ResolvedState): Record<string, SchemaWetDistribution> {
 	const { heatEmitters } = state.spaceHeatingNew as {
 		heatEmitters?: HeatEmittingData[];
 	};
@@ -139,19 +160,39 @@ export function mapUnderfloorHeating(state: ResolvedState): Record<string, Schem
 	);
 
 	return Object.fromEntries(
-		ufh.map((emitter) => {
+		ufh.map((heating) => {
+			const emitter: SchemaUfhWithProductReference = {
+				product_reference: heating.productReference,
+				wet_emitter_type: "ufh" as unknown as "fancoil",
+				// needs fixing in api-schema.types.ts
+			};
+			const common = {
+				emitters: [emitter],
+				EnergySupply: defaultElectricityEnergySupplyName,
+				temp_diff_emit_dsgn: heating.designTempDiffAcrossEmitters,
+				Zone: defaultZoneName,
+				type: "WetDistribution" as const,
+				design_flow_temp: heating.designFlowTemp,
+				HeatSource: { name: getHeatSourceNameForEmitter(state, heating) },
+				ecodesign_controller: {
+					ecodesign_control_class: parseInt(heating.ecoDesignControllerClass),
+					min_flow_temp: heating.minFlowTemp,
+					min_outdoor_temp: minOutdoorTemp,
+					max_outdoor_temp: maxOutdoorTemp,
+				} as SchemaEcoDesignControllerNoWeatherCompensator,
+			};
+			const data: SchemaWetDistribution = heating.hasVariableFlowRate
+				? { ...common, variable_flow: true, min_flow_rate: heating.minFlowRate, max_flow_rate: heating.maxFlowRate }
+				: { ...common, variable_flow: false, design_flow_rate: heating.designFlowRate };
 			return [
-				emitter.name,
-				{
-					wet_emitter_type: "fancoil",
-					product_reference: emitter.productReference,
-				},
+				heating.name,
+				data,
 			];
 		}),
 	);
 }
 
-export function mapFanCoils(state: ResolvedState): Record<string, SchemaFancoilWithProductReference> {
+export function mapFanCoils(state: ResolvedState): Record<string, SchemaWetDistribution> {
 	const { heatEmitters } = state.spaceHeatingNew as {
 		heatEmitters?: HeatEmittingData[];
 	};
@@ -164,13 +205,32 @@ export function mapFanCoils(state: ResolvedState): Record<string, SchemaFancoilW
 	);
 
 	return Object.fromEntries(
-		fancoils.map((emitter) => {
+		fancoils.map((fancoil) => {
+			const emitter: SchemaFancoilWithProductReference = {
+				product_reference: fancoil.productReference,
+				wet_emitter_type: "fancoil",
+			};
+			const common = {
+				emitters: Array(fancoil.numOfFanCoils).fill(emitter),
+				EnergySupply: defaultElectricityEnergySupplyName,
+				temp_diff_emit_dsgn: fancoil.designTempDiffAcrossEmitters,
+				Zone: defaultZoneName,
+				type: "WetDistribution" as const,
+				design_flow_temp: fancoil.designFlowTemp,
+				HeatSource: { name: getHeatSourceNameForEmitter(state, fancoil) },
+				ecodesign_controller: {
+					ecodesign_control_class: parseInt(fancoil.ecoDesignControllerClass),
+					min_flow_temp: fancoil.minFlowTemp,
+					min_outdoor_temp: minOutdoorTemp,
+					max_outdoor_temp: maxOutdoorTemp,
+				} as SchemaEcoDesignControllerNoWeatherCompensator,
+			};
+			const data: SchemaWetDistribution = fancoil.hasVariableFlowRate
+				? { ...common, variable_flow: true, min_flow_rate: fancoil.minFlowRate, max_flow_rate: fancoil.maxFlowRate }
+				: { ...common, variable_flow: false, design_flow_rate: fancoil.designFlowRate };
 			return [
-				emitter.name,
-				{
-					wet_emitter_type: "fancoil",
-					product_reference: emitter.productReference,
-				},
+				fancoil.name,
+				data,
 			];
 		}),
 	);
@@ -212,14 +272,10 @@ export function mapWarmAirHeater(state: ResolvedState): Record<string, SchemaWar
 	const warmAirHeaters = heatEmitters?.filter(
 		(emitter): emitter is Extract<HeatEmittingData, { typeOfHeatEmitter: "warmAirHeater" }> => emitter.typeOfHeatEmitter === "warmAirHeater",
 	);
-	const heatSources = state.spaceHeatingNew.heatSource;
 
 
 	return Object.fromEntries(
 		warmAirHeaters.map((emitter) => {
-			const heatSourceName = heatSources.find(
-				(heatsource) => heatsource.id === emitter.heatSource,
-			)?.name ?? "";
 			return [
 				emitter.name,
 				{
@@ -227,12 +283,25 @@ export function mapWarmAirHeater(state: ResolvedState): Record<string, SchemaWar
 					temp_diff_emit_dsgn: emitter.designTempDiffAcrossEmitters,
 					frac_convective: emitter.convectionFraction,
 					HeatSource: {
-						name: heatSourceName,
+						name: getHeatSourceNameForEmitter(state, emitter),
 					},
 				},
 			];
 		}),
 	);
+}
+
+function getHeatSourceNameForEmitter(state: ResolvedState, emitter: HeatEmittingData): string {
+	const heatSources = state.spaceHeatingNew.heatSource;
+	const heatSourceName = heatSources.find(
+		(heatsource) => {
+			if ("heatSource" in emitter) {
+				return heatsource.id === emitter.heatSource;
+			}
+			return false;
+		},
+	)?.name ?? "";
+	return heatSourceName;
 }
 
 export function mapInstantElectricHeaters(state: ResolvedState): Record<string, SchemaInstantElecHeater> {
@@ -254,9 +323,8 @@ export function mapInstantElectricHeaters(state: ResolvedState): Record<string, 
 				{
 					type: "InstantElecHeater",
 					rated_power: emitter.ratedPower,
-					// placeholders
-					convective_type: "Air heating (convectors, fan coils etc.)",
-					EnergySupply: "",
+					convective_type: defaultConvectiveType,
+					EnergySupply: defaultElectricityEnergySupplyName,
 				} as SchemaInstantElecHeater,
 			];
 		}),
@@ -272,14 +340,22 @@ export function mapSpaceHeating(state: ResolvedState): Record<string, SchemaHeat
 		...mapSolarThermalSystems(state),
 	};
 }
-// NOTE: this output type needs looking at and aliasing in schema/aliases.ts
-export function mapHeatEmitters(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatEmitterDetails | SchemaInstantElecHeater | SchemaWarmAir | SchemaElecStorageHeaterWithProductReference> {
+
+
+export function mapWetDistributions(state: ResolvedState): Record<string, SchemaWetDistribution> {
 	return {
 		...mapRadiators(state),
 		...mapUnderfloorHeating(state),
 		...mapFanCoils(state),
+	};
+}
+
+export function mapSpaceHeatSystem(state: ResolvedState): SchemaSpaceHeatSystem {
+	return {
+		...mapWetDistributions(state),
 		...mapElectricStorageHeaters(state),
 		...mapWarmAirHeater(state),
 		...mapInstantElectricHeaters(state),
 	};
 }
+
