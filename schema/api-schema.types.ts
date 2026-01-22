@@ -414,6 +414,7 @@ export interface components {
             /** @constant */
             wet_emitter_type: "radiator";
             n: number;
+            frac_convective: number;
         } & ({
             c: number;
             thermal_mass?: number;
@@ -423,12 +424,38 @@ export interface components {
             thermal_mass_per_m?: number;
             length: number;
         });
+        RadiatorWithProductReference: {
+            /** @constant */
+            wet_emitter_type: "radiator";
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
+        } & ({
+            /** @constant */
+            radiator_type: "standard";
+            length: number;
+        } | {
+            /** @constant */
+            radiator_type: "towel";
+        });
         Ufh: {
             /** @constant */
             wet_emitter_type: "ufh";
             equivalent_specific_thermal_mass: number;
             system_performance_factor: number;
             emitter_floor_area: number;
+            frac_convective: number;
+        };
+        UfhWithProductReference: {
+            /** @constant */
+            wet_emitter_type: "ufh";
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
         };
         Fancoil: {
             /** @constant */
@@ -441,6 +468,16 @@ export interface components {
                 }[];
                 fan_power_W: number[];
             };
+            frac_convective: number;
+        };
+        FancoilWithProductReference: {
+            /** @constant */
+            wet_emitter_type: "fancoil";
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
         };
         EcoDesignControllerNoWeatherCompensator: {
             /** @enum {unknown} */
@@ -900,6 +937,16 @@ export interface components {
             /** @constant */
             air_flow_type: "damper-only";
         });
+        ElecStorageHeaterWithProductReference: {
+            /** @constant */
+            type: "ElecStorageHeater";
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
+            n_units: number;
+        };
         InstantElecHeater: {
             /** @constant */
             type: "InstantElecHeater";
@@ -912,9 +959,7 @@ export interface components {
             /** @constant */
             type: "WetDistribution";
             EnergySupply?: string;
-            emitters: ({
-                frac_convective: number;
-            } & (components["schemas"]["Radiator"] | components["schemas"]["Ufh"] | components["schemas"]["Fancoil"]))[];
+            emitters: (components["schemas"]["Radiator"] | components["schemas"]["RadiatorWithProductReference"] | components["schemas"]["Ufh"] | components["schemas"]["UfhWithProductReference"] | components["schemas"]["Fancoil"] | components["schemas"]["FancoilWithProductReference"])[];
             temp_diff_emit_dsgn: number;
             bypass_fraction_recirculated?: number;
             HeatSource: {
@@ -1308,7 +1353,7 @@ export interface components {
                 };
             };
             SpaceHeatSystem: {
-                [key: string]: components["schemas"]["ElecStorageHeater"] | components["schemas"]["InstantElecHeater"] | components["schemas"]["WetDistribution"] | components["schemas"]["WarmAir"];
+                [key: string]: components["schemas"]["ElecStorageHeater"] | components["schemas"]["ElecStorageHeaterWithProductReference"] | components["schemas"]["InstantElecHeater"] | components["schemas"]["WetDistribution"] | components["schemas"]["WarmAir"];
             };
             SpaceCoolSystem?: {
                 [key: string]: {
@@ -1892,6 +1937,16 @@ export interface components {
                     /** @constant */
                     air_flow_type: "damper-only";
                 });
+                ElecStorageHeaterWithProductReference: {
+                    /** @constant */
+                    type: "ElecStorageHeater";
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                    n_units: number;
+                };
                 InstantElecHeater: {
                     /** @constant */
                     type: "InstantElecHeater";
@@ -1904,9 +1959,7 @@ export interface components {
                     /** @constant */
                     type: "WetDistribution";
                     EnergySupply?: string;
-                    emitters: ({
-                        frac_convective: number;
-                    } & (components["schemas"]["Radiator"] | components["schemas"]["Ufh"] | components["schemas"]["Fancoil"]))[];
+                    emitters: (components["schemas"]["Radiator"] | components["schemas"]["RadiatorWithProductReference"] | components["schemas"]["Ufh"] | components["schemas"]["UfhWithProductReference"] | components["schemas"]["Fancoil"] | components["schemas"]["FancoilWithProductReference"])[];
                     temp_diff_emit_dsgn: number;
                     bypass_fraction_recirculated?: number;
                     HeatSource: {
@@ -1942,6 +1995,7 @@ export interface components {
                     /** @constant */
                     wet_emitter_type: "radiator";
                     n: number;
+                    frac_convective: number;
                 } & ({
                     c: number;
                     thermal_mass?: number;
@@ -1951,12 +2005,38 @@ export interface components {
                     thermal_mass_per_m?: number;
                     length: number;
                 });
+                RadiatorWithProductReference: {
+                    /** @constant */
+                    wet_emitter_type: "radiator";
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                } & ({
+                    /** @constant */
+                    radiator_type: "standard";
+                    length: number;
+                } | {
+                    /** @constant */
+                    radiator_type: "towel";
+                });
                 Ufh: {
                     /** @constant */
                     wet_emitter_type: "ufh";
                     equivalent_specific_thermal_mass: number;
                     system_performance_factor: number;
                     emitter_floor_area: number;
+                    frac_convective: number;
+                };
+                UfhWithProductReference: {
+                    /** @constant */
+                    wet_emitter_type: "ufh";
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
                 };
                 Fancoil: {
                     /** @constant */
@@ -1969,6 +2049,16 @@ export interface components {
                         }[];
                         fan_power_W: number[];
                     };
+                    frac_convective: number;
+                };
+                FancoilWithProductReference: {
+                    /** @constant */
+                    wet_emitter_type: "fancoil";
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
                 };
                 EcoDesignControllerNoWeatherCompensator: {
                     /** @enum {unknown} */
@@ -2404,8 +2494,11 @@ export type SchemaPcmBattery = components['schemas']['PCMBattery'];
 export type SchemaDryCoreBattery = components['schemas']['DryCoreBattery'];
 export type SchemaColdWaterSource = components['schemas']['ColdWaterSource'];
 export type SchemaRadiator = components['schemas']['Radiator'];
+export type SchemaRadiatorWithProductReference = components['schemas']['RadiatorWithProductReference'];
 export type SchemaUfh = components['schemas']['Ufh'];
+export type SchemaUfhWithProductReference = components['schemas']['UfhWithProductReference'];
 export type SchemaFancoil = components['schemas']['Fancoil'];
+export type SchemaFancoilWithProductReference = components['schemas']['FancoilWithProductReference'];
 export type SchemaEcoDesignControllerNoWeatherCompensator = components['schemas']['EcoDesignControllerNoWeatherCompensator'];
 export type SchemaEcoDesignControllerWeatherCompensator = components['schemas']['EcoDesignControllerWeatherCompensator'];
 export type SchemaMechVentCommon = components['schemas']['MechVentCommon'];
@@ -2440,6 +2533,7 @@ export type SchemaHeatSourceWetHiu = components['schemas']['HeatSourceWetHIU'];
 export type SchemaMixerShower = components['schemas']['MixerShower'];
 export type SchemaInstantElecShower = components['schemas']['InstantElecShower'];
 export type SchemaElecStorageHeater = components['schemas']['ElecStorageHeater'];
+export type SchemaElecStorageHeaterWithProductReference = components['schemas']['ElecStorageHeaterWithProductReference'];
 export type SchemaInstantElecHeater = components['schemas']['InstantElecHeater'];
 export type SchemaWetDistribution = components['schemas']['WetDistribution'];
 export type SchemaWarmAir = components['schemas']['WarmAir'];

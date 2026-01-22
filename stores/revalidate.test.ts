@@ -128,75 +128,43 @@ const twoWallsOneMissingFieldOneInvalidValue = immutable.set(twoWallsOneMissingF
 
 const twoHeatPumps: Pick<EcaasState, "spaceHeating"> = {
 	"spaceHeating": {
-		"general": {
-			"data": {
-				"heatingControlType": "separateTemperatureControl",
-				"coolingRequired": false,
-			},
+		"heatSource": {
+			"data": [
+				{
+					"data": {
+						"id": "1049a8a3-e520-4058-8f18-fdfbf2dde19a",
+						"name": "Heat pump 1",
+						"productReference": "HEATPUMP-SMALL",
+						"typeOfHeatSource": "heatPump",
+						"typeOfHeatPump": "airSource",
+					},
+					"complete": true,
+				},
+				{
+					"data": {
+						"id": "2fa843a1-b774-42f8-b3ca-1f5f5a8a576a",
+						"name": "Heat pump 2",
+						"productReference": "HEATPUMP-LARGE",
+						"typeOfHeatSource": "heatPump",
+						"typeOfHeatPump": "airSource",
+					},
+					"complete": true,
+				},
+			],
 			"complete": true,
 		},
-		"heatGeneration": {
-			"heatPump": {
-				"data": [
-					{
-						"data": {
-							"id": "1049a8a3-e520-4058-8f18-fdfbf2dde19a",
-							"name": "Heat pump 1",
-							"productReference": "HEATPUMP-SMALL",
-							"typeOfHeatPump": "airSource",
-						},
-						"complete": true,
-					},
-					{
-						"data": {
-							"id": "2fa843a1-b774-42f8-b3ca-1f5f5a8a576a",
-							"name": "Heat pump 2",
-							"productReference": "HEATPUMP-LARGE",
-							"typeOfHeatPump": "airSource",
-						},
-						"complete": true,
-					},
-				],
-				"complete": true,
-			},
-			"boiler": {
-				"data": [],
-				"complete": true,
-			},
-			"heatBattery": {
-				"data": [],
-				"complete": true,
-			},
-			"heatNetwork": {
-				"data": [],
-				"complete": true,
-			},
-			"heatInterfaceUnit": {
-				"data": [],
-				"complete": true,
-			},
+		heatEmitters: {
+			data: [],
+			complete: true,
 		},
-		// "energySupply": {
-		// 	"data": {} as EnergySupplyData,
-		// },
-		"heatEmitting": {
-			"wetDistribution": {
-				"data": [],
-			},
-			"instantElectricHeater": {
-				"data": [],
-			},
-			"electricStorageHeater": {
-				"data": [],
-			},
-			"warmAirHeatPump": {
-				"data": [],
-			},
+		heatingControls: {
+			data: [],
+			complete: true,
 		},
 	},
 };
 
-const twoHeatPumpsOneWithMissingFields = immutable.del(twoHeatPumps, "spaceHeating.heatGeneration.heatPump.data.1.data.productReference");
+const twoHeatPumpsOneWithMissingFields = immutable.del(twoHeatPumps, "spaceHeating.heatSource.data.1.data.productReference");
 
 const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> | undefined, number][] = [
 	[
@@ -272,7 +240,7 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 		"case where there are two heat pumps but one has missing field: individual heat pump and whole section should be marked invalid",
 		twoHeatPumpsOneWithMissingFields,
 		true,
-		immutable.set(immutable.set(twoHeatPumpsOneWithMissingFields, "spaceHeating.heatGeneration.heatPump.data.1.complete", false), "spaceHeating.heatGeneration.heatPump.complete", false),
+		immutable.set(immutable.set(twoHeatPumpsOneWithMissingFields, "spaceHeating.heatSource.data.1.complete", false), "spaceHeating.heatSource.complete", false),
 		1,
 	],
 	[

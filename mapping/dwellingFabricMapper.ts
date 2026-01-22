@@ -41,10 +41,15 @@ export function mapZoneParametersData(
 	state: ResolvedState,
 ): Pick<FhsInputSchema, "HeatingControlType" | "Zone"> {
 	const { dwellingSpaceZoneParameters } = state.dwellingFabric;
-
+	const wetDistributionSystems = state.spaceHeating.heatEmitters?.filter(he => {
+		return he.typeOfHeatEmitter === "radiator"
+			|| he.typeOfHeatEmitter === "underfloorHeating"
+			|| he.typeOfHeatEmitter === "fanCoil";
+	});
+	const instantElectricHeaters = state.spaceHeating.heatEmitters.filter(he => he.typeOfHeatEmitter === "instantElectricHeater");
 	const spaceHeatingSystemNames = [
-		state.spaceHeating.heatEmitting.wetDistribution.map(x => x.name),
-		state.spaceHeating.heatEmitting.instantElectricHeater.map(x => x.name),
+		wetDistributionSystems.map(x => x.name),
+		instantElectricHeaters.map(x => x.name),
 	].flat();
 
 	return {

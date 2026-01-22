@@ -136,7 +136,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<ClientOnly>
 			<template v-if="model.waterHeaterType?.includes('hotWaterCylinder')">
-				<FieldsHeatGenerators
+				<FieldsHeatSources
 					id="heatSource"
 					name="heatSource"
 					label="Heat source"

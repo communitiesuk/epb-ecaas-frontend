@@ -170,19 +170,18 @@ describe("PV and electric batteries mapper", () => {
 
 		store.$patch({
 			spaceHeating: {
-				heatGeneration: {
-					heatPump: {
-						data: [{
-							data: {
-								name: "HP1",
-								id: heatPumpId,
-								productReference: "HEATPUMP-SMALL",
-							},
-							complete: true,
-						}],
+				heatSource: {
+					data: [{
+						data: {
+							name: "HP1",
+							id: heatPumpId,
+							productReference: "HEATPUMP-SMALL",
+						},
 						complete: true,
-					},
+					}],
+					complete: true,
 				},
+
 			},
 			domesticHotWater: {
 				waterHeating: {

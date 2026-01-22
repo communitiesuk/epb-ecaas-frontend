@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from "@formkit/core";
 import { showErrorState, getErrorMessage } from "#imports";
-import hyphenate from "~/utils/hyphenate";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 
 const props = defineProps<{
@@ -25,37 +24,43 @@ function appendItemIndexToUrl(url: string, index: number) {
 	return url.replace(lastUrlSegment, `/${index}`);
 }
 
-const productsPageUrl = appendItemIndexToUrl(pageUrl, index) + "/" + hyphenate(selectedProductType);
+const productsPageUrl = ref(appendItemIndexToUrl(pageUrl, index) + "/" + camelToKebabCase(selectedProductType ?? ""));
 let productData: DisplayProduct | undefined | null;
 
 if (selectedProductReference) {
 	const { data } = await useFetch(`/api/products/${selectedProductReference}`);
 	productData = data.value;
 }
+
+watch(props.context, ({ attrs: { "selected-product-type": newProductType } }) => {
+	productsPageUrl.value = appendItemIndexToUrl(pageUrl, index) + "/" + camelToKebabCase(newProductType ?? "");
+});
 </script>
 
 <template>
-	<div :data-testid="id" :class="`govuk-form-group ${showErrorState(props.context) ? 'govuk-form-group--error' : ''}`">
-		<label class="govuk-label govuk-label--m">
-			{{ label }}
-		</label>
-		<div v-if="help" :id="`${id}_hint`" class="govuk-hint">{{ help }}</div>
-		<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
-			<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
-		</p>
-		<GovButton v-show="!productData" data-testId="chooseAProductButton" :href="productsPageUrl">
-			Choose a product
-		</GovButton>
-		<div v-if="productData">
-			<ul class="govuk-list">
-				<li>Product reference: <span class="bold">{{ selectedProductReference }}</span></li>
-				<li>Brand: <span class="bold">{{ productData?.brandName }}</span></li>
-				<li>Model: <span class="bold">{{ productData?.modelName }}</span></li>
-				<li>Model Qualifier: <span class="bold">{{ productData?.modelQualifier ?? '-' }}</span></li>
-			</ul>
-			<GovButton secondary data-testId="selectAProductButton" :href="productsPageUrl">
-				Select a different product
+	<div class="govuk-form-group">
+		<div :data-testid="id" :class="`govuk-form-group ${showErrorState(props.context) ? 'govuk-form-group--error' : ''}`">
+			<label class="govuk-label govuk-label--m">
+				{{ label }}
+			</label>
+			<div v-if="help" :id="`${id}_hint`" class="govuk-hint">{{ help }}</div>
+			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
+				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
+			</p>
+			<GovButton v-show="!productData" class="govuk-button__margin-bottom" data-testId="chooseAProductButton" :href="productsPageUrl">
+				Choose a product
 			</GovButton>
+			<div v-if="productData">
+				<ul class="govuk-list">
+					<li>Product reference: <span class="bold">{{ selectedProductReference }}</span></li>
+					<li>Brand: <span class="bold">{{ productData?.brandName }}</span></li>
+					<li>Model: <span class="bold">{{ productData?.modelName }}</span></li>
+					<li>Model Qualifier: <span class="bold">{{ productData?.modelQualifier ?? '-' }}</span></li>
+				</ul>
+				<GovButton secondary data-testId="selectAProductButton" :href="productsPageUrl">
+					Select a different product
+				</GovButton>
+			</div>
 		</div>
 	</div>
 </template>
@@ -64,7 +69,9 @@ if (selectedProductReference) {
 govuk-list {
 	line-height: 1.2;
 }
-
+.govuk-button__margin-bottom {
+	margin-bottom: 0px;
+}
 .bold {
 	font-weight: bold;
 }

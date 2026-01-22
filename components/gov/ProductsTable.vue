@@ -35,9 +35,9 @@ const route = useRoute();
 					<td class="govuk-table__cell">{{ product.modelName }}</td>
 					<td class="govuk-table__cell">{{ product.modelQualifier ?? '-' }}</td>
 					<td class="govuk-table__cell" style="white-space:nowrap;">
-						<a :href="`${route.path}/${product.id}`" class="govuk-link govuk-!-margin-right-3">
+						<NuxtLink :href="`${route.path}/${product.id}`" class="govuk-link govuk-!-margin-right-3">
 							More details
-						</a>
+						</NuxtLink>
 						<GovButton
 							type="button"
 							secondary

@@ -184,17 +184,16 @@ describe("PV and electric batteries summary page", () => {
 
 			store.$patch({
 				spaceHeating: {
-					heatGeneration: {
-						heatPump: {
-							data: [{
-								data: {
-									name: heatPumpName,
-									id: heatPumpId,
-									productReference: "HEATPUMP-SMALL",
-								},
-							}],
-						},
+					heatSource: {
+						data: [{
+							data: {
+								name: heatPumpName,
+								id: heatPumpId,
+								productReference: "HEATPUMP-SMALL",
+							},
+						}],
 					},
+
 				},
 				domesticHotWater: {
 					waterHeating: {

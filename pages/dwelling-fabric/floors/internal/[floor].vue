@@ -30,7 +30,7 @@ const saveForm = (fields: InternalFloorData) => {
 				...commonFields,
 				typeOfInternalFloor: fields.typeOfInternalFloor,
 				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
-			
+
 			};
 		} else if (fields.typeOfInternalFloor === "heatedSpace") {
 			floor = {
@@ -40,7 +40,7 @@ const saveForm = (fields: InternalFloorData) => {
 		} else {
 			throw new Error("Invalid floor type");
 		}
-		
+
 		dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] = { data: floor, complete: true };
 		dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
 	});
@@ -61,6 +61,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
+
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
@@ -71,9 +72,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		:actions="false"
 		:incomplete-message="false"
 		@submit="saveForm"
-		@submit-invalid="handleInvalidSubmit"
-	>
-		<GovErrorSummary :error-list="errorMessages" test-id="internalFloorErrorSummary"/>
+		@submit-invalid="handleInvalidSubmit">
+		<GovErrorSummary :error-list="errorMessages" test-id="internalFloorErrorSummary" />
 		<FormKit
 			id="typeOfInternalFloor"
 			type="govRadios"
@@ -81,8 +81,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Type of internal floor"
 			help="This affects the additional inputs needed"
 			name="typeOfInternalFloor"
-			validation="required"
-		/>
+			validation="required" />
 		<template v-if="!!model?.typeOfInternalFloor">
 			<FormKit
 				id="name"
@@ -94,8 +93,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | uniqueName"
 				:validation-messages="{
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
-				}"
-			/>
+				}" />
 			<FormKit
 				id="surfaceAreaOfElement"
 				type="govInputWithSuffix"
@@ -103,10 +101,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				name="surfaceAreaOfElement"
 				validation="required | number | min:0 | max:10000"
 				suffix-text="m²"
-				data-field="Zone.BuildingElement.*.area"
-			/>
-			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
-			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+				data-field="Zone.BuildingElement.*.area" />
+			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
+			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
 		</template>
 		<FormKit
 			v-if="model?.typeOfInternalFloor === 'unheatedSpace'"
@@ -117,12 +114,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the effective thermal resistance of the unheated space"
 			name="thermalResistanceOfAdjacentUnheatedSpace"
 			validation="required | number | min:0 | max:3"
-			data-field="Zone.BuildingElement.*.thermal_resistance_unconditioned_space"
-		>
+			data-field="Zone.BuildingElement.*.thermal_resistance_unconditioned_space">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<p>For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m²·K)/W for when the facing wall is not exposed.</p>
+				<p>For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5
+					(m²·K)/W
+					for when the facing wall is not exposed.</p>
 				<p class="govuk-body">
-					<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">					
+					<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
 						Guidance on thermal resistance of unheated spaces (opens in another window)
 					</a>
 				</p>

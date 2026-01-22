@@ -12,7 +12,7 @@ const fuelTypeOptions = {
 	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
 	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
 	"LPG_condition_11F": "LPG - 11F",
-} as const satisfies Record<SchemaFuelType, FuelTypeDisplay>;
+} as const satisfies Record<Exclude<SchemaFuelType, "electricity">, FuelTypeDisplay>;
 
 const model = ref({
 	...store.dwellingDetails.generalSpecifications.data,
@@ -236,7 +236,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="fuelType"
-			type="govCheckboxesDivided"
+			type="govCheckboxesWithExclusive"
 			name="fuelType"
 			label="Energy sources"
 			help="Electricity is assumed to be present in the dwellings. Select the other energy sources that will be present in the dwelling, if any."

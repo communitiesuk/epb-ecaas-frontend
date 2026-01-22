@@ -6,7 +6,7 @@ export function useProductsPage(indexParam: string) {
 	const routeQuery = computed(() => route.query);
 	const pageId = kebabToCamelCase(route.params.products as string);
 
-	if (!(pageId in pcdbTechnologyTypes)) {
+	if (!(pageId in heatSourceProductTypeMap)) {
 		throw createError({
 			statusCode: 400,
 			statusMessage: "Invalid product type selected",

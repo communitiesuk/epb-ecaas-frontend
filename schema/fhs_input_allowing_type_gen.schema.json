@@ -251,10 +251,22 @@
             },
             "not": {
                 "allOf": [
-                    {"properties": {"Fridge": {"const": "Not Installed"}}},
-                    {"properties": {"Fridge-Freezer": {"const": "Not Installed"}}}
+                    {
+                        "properties": {
+                            "Fridge": {
+                                "const": "Not Installed"
+                            }
+                        }
+                    },
+                    {
+                        "properties": {
+                            "Fridge-Freezer": {
+                                "const": "Not Installed"
+                            }
+                        }
+                    }
                 ]
-             }
+            }
         },
         "ColdWaterSource": {
             "type": "object",
@@ -372,7 +384,9 @@
                     "EnergySupply": {
                         "type": "string"
                     },
-                    "shading": {"$ref": "#/$defs/WindowShading"},
+                    "shading": {
+                        "$ref": "#/$defs/WindowShading"
+                    },
                     "inverter_peak_power_dc": {
                         "type": "number",
                         "exclusiveMinimum": 0
@@ -400,7 +414,10 @@
                 "hw cylinder": {
                     "type": "object",
                     "unevaluatedProperties": false,
-                    "required": ["type", "ColdWaterSource"],
+                    "required": [
+                        "type",
+                        "ColdWaterSource"
+                    ],
                     "properties": {
                         "ColdWaterSource": {
                             "enum": [
@@ -437,7 +454,11 @@
             "additionalProperties": {
                 "type": "object",
                 "unevaluatedProperties": false,
-                "required": ["type", "EnergySupply", "is_heat_network"],
+                "required": [
+                    "type",
+                    "EnergySupply",
+                    "is_heat_network"
+                ],
                 "allOf": [
                     {
                         "oneOf": [
@@ -447,17 +468,27 @@
                                         "const": true
                                     },
                                     "heat_network_type": {
-                                        "enum": ["sleeved DHN", "unsleeved DHN", "communal"],
+                                        "enum": [
+                                            "sleeved DHN",
+                                            "unsleeved DHN",
+                                            "communal"
+                                        ],
                                         "description": "What type of heat network is present?"
                                     },
                                     "EnergySupply": {
                                         "oneOf": [
-                                            {"type": "string"},
+                                            {
+                                                "type": "string"
+                                            },
                                             {
                                                 "type": "object",
                                                 "properties": {
-                                                    "name": {"type": "string"},
-                                                    "is_export_capable": {"type": "boolean"},
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "is_export_capable": {
+                                                        "type": "boolean"
+                                                    },
                                                     "factor": {
                                                         "type": "object",
                                                         "unevaluatedProperties": false,
@@ -467,9 +498,15 @@
                                                             "Primary Energy Factor kWh/kWh delivered"
                                                         ],
                                                         "properties": {
-                                                            "Emissions Factor kgCO2e/kWh": {"type": "number"},
-                                                            "Emissions Factor kgCO2e/kWh including out-of-scope emissions": {"type": "number"},
-                                                            "Primary Energy Factor kWh/kWh delivered": {"type": "number"}
+                                                            "Emissions Factor kgCO2e/kWh": {
+                                                                "type": "number"
+                                                            },
+                                                            "Emissions Factor kgCO2e/kWh including out-of-scope emissions": {
+                                                                "type": "number"
+                                                            },
+                                                            "Primary Energy Factor kWh/kWh delivered": {
+                                                                "type": "number"
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -477,14 +514,18 @@
                                         ]
                                     }
                                 },
-                                "required": ["heat_network_type"]
+                                "required": [
+                                    "heat_network_type"
+                                ]
                             },
                             {
                                 "properties": {
                                     "is_heat_network": {
                                         "const": false
                                     },
-                                    "EnergySupply": {"type": "string"}
+                                    "EnergySupply": {
+                                        "type": "string"
+                                    }
                                 }
                             }
                         ]
@@ -686,6 +727,9 @@
                 "oneOf": [
                     {
                         "$ref": "#/$defs/ElecStorageHeater"
+                    },
+                    {
+                        "$ref": "#/$defs/ElecStorageHeaterWithProductReference"
                     },
                     {
                         "$ref": "#/$defs/InstantElecHeater"
@@ -1103,7 +1147,9 @@
     },
     "if": {
         "properties": {
-            "PartO_active_cooling_required": { "const": true }
+            "PartO_active_cooling_required": {
+                "const": true
+            }
         }
     },
     "then": {
@@ -1111,7 +1157,9 @@
             "Zone": {
                 "type": "object",
                 "additionalProperties": {
-                    "required": ["SpaceCoolSystem"]
+                    "required": [
+                        "SpaceCoolSystem"
+                    ]
                 }
             }
         }
@@ -1326,7 +1374,9 @@
                         "LPG_condition_11F"
                     ]
                 },
-                "is_export_capable": {"type": "boolean"}
+                "is_export_capable": {
+                    "type": "boolean"
+                }
             }
         },
         "HotWaterTankCommon": {
@@ -1596,7 +1646,9 @@
                         "EnergySupply": {
                             "type": "string"
                         },
-                        "name": {"type": "string"},
+                        "name": {
+                            "type": "string"
+                        },
                         "temp_flow_limit_upper": {
                             "type": "number",
                             "exclusiveMinimum": 0
@@ -1810,7 +1862,9 @@
                         "mains water"
                     ]
                 },
-                "HeatSourceWet": {"type": "string"}
+                "HeatSourceWet": {
+                    "type": "string"
+                }
             }
         },
         "CombiBoiler": {
@@ -1858,11 +1912,11 @@
                 "rejected_factor_3": {
                     "anyOf": [
                         {
-                        "minimum": 0,
-                        "type": "number"
+                            "minimum": 0,
+                            "type": "number"
                         },
                         {
-                        "type": "null"
+                            "type": "null"
                         }
                     ],
                     "default": null,
@@ -1882,7 +1936,7 @@
                     "default": null,
                     "description": "Storage loss factor 1 for combi boiler efficiency calculations (unit: kWh/day)",
                     "title": "Storage Loss Factor 1"
-                    },
+                },
                 "storage_loss_factor_2": {
                     "anyOf": [
                         {
@@ -2191,10 +2245,10 @@
                                         "cost_schedule_hybrid": {
                                             "anyOf": [
                                                 {
-                                                "$ref": "#/$defs/BoilerCostScheduleHybrid"
+                                                    "$ref": "#/$defs/BoilerCostScheduleHybrid"
                                                 },
                                                 {
-                                                "type": "null"
+                                                    "type": "null"
                                                 }
                                             ],
                                             "default": null
@@ -2239,14 +2293,24 @@
                                 "EnergySupply_heat_network": {
                                     "description": "required if HeatNetwork source type, should not be provided otherwise",
                                     "oneOf": [
-                                        {"type": "string"},
+                                        {
+                                            "type": "string"
+                                        },
                                         {
                                             "type": "object",
                                             "unevaluatedProperties": false,
-                                            "required": ["name", "factor", "is_export_capable"],
+                                            "required": [
+                                                "name",
+                                                "factor",
+                                                "is_export_capable"
+                                            ],
                                             "properties": {
-                                                "name": {"type": "string"},
-                                                "is_export_capable": {"type": "boolean"},
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "is_export_capable": {
+                                                    "type": "boolean"
+                                                },
                                                 "factor": {
                                                     "type": "object",
                                                     "unevaluatedProperties": false,
@@ -2256,9 +2320,15 @@
                                                         "Primary Energy Factor kWh/kWh delivered"
                                                     ],
                                                     "properties": {
-                                                        "Emissions Factor kgCO2e/kWh": {"type": "number"},
-                                                        "Emissions Factor kgCO2e/kWh including out-of-scope emissions": {"type": "number"},
-                                                        "Primary Energy Factor kWh/kWh delivered": {"type": "number"}
+                                                        "Emissions Factor kgCO2e/kWh": {
+                                                            "type": "number"
+                                                        },
+                                                        "Emissions Factor kgCO2e/kWh including out-of-scope emissions": {
+                                                            "type": "number"
+                                                        },
+                                                        "Primary Energy Factor kWh/kWh delivered": {
+                                                            "type": "number"
+                                                        }
                                                     }
                                                 }
                                             }
@@ -2367,7 +2437,9 @@
                         "type": {
                             "const": "Boiler"
                         },
-                        "EnergySupply_aux": {"type": "string"},
+                        "EnergySupply_aux": {
+                            "type": "string"
+                        },
                         "rated_power": {
                             "type": "number",
                             "exclusiveMinimum": 0
@@ -2835,6 +2907,28 @@
                 }
             ]
         },
+        "ElecStorageHeaterWithProductReference": {
+            "required": [
+                "type",
+                "product_reference",
+                "n_units"
+            ],
+            "properties": {
+                "type": {
+                    "const": "ElecStorageHeater"
+                },
+                "product_reference": {
+                    "description": "A unique reference to a product held within the HEM database (PCDB)",
+                    "title": "Reference to the product in the HEM database",
+                    "type": "string"
+                },
+                "n_units": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                }
+            }
+        },
         "InstantElecHeater": {
             "required": [
                 "type",
@@ -2887,23 +2981,24 @@
                     "items": {
                         "type": "object",
                         "unevaluatedProperties": false,
-                        "required": [
-                            "frac_convective"
-                        ],
-                        "properties": {
-                            "frac_convective": {
-                                "type": "number"
-                            }
-                        },
                         "oneOf": [
                             {
                                 "$ref": "#/$defs/Radiator"
                             },
                             {
+                                "$ref": "#/$defs/RadiatorWithProductReference"
+                            },
+                            {
                                 "$ref": "#/$defs/Ufh"
                             },
                             {
+                                "$ref": "#/$defs/UfhWithProductReference"
+                            },
+                            {
                                 "$ref": "#/$defs/Fancoil"
+                            },
+                            {
+                                "$ref": "#/$defs/FancoilWithProductReference"
                             }
                         ]
                     }
@@ -3036,7 +3131,8 @@
         "Radiator": {
             "required": [
                 "wet_emitter_type",
-                "n"
+                "n",
+                "frac_convective"
             ],
             "properties": {
                 "wet_emitter_type": {
@@ -3046,6 +3142,9 @@
                     "type": "number",
                     "exclusiveMinimum": 0,
                     "maximum": 2
+                },
+                "frac_convective": {
+                    "type": "number"
                 }
             },
             "oneOf": [
@@ -3091,12 +3190,56 @@
                 }
             ]
         },
+        "RadiatorWithProductReference": {
+            "properties": {
+                "wet_emitter_type": {
+                    "const": "radiator"
+                },
+                "product_reference": {
+                    "description": "A unique reference to a product held within the HEM database (PCDB)",
+                    "title": "Reference to the product in the HEM database",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "wet_emitter_type",
+                "product_reference"
+            ],
+            "oneOf": [
+                {
+                    "required": [
+                        "radiator_type",
+                        "length"
+                    ],
+                    "properties": {
+                        "radiator_type": {
+                            "const": "standard"
+                        },
+                        "length": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                        }
+                    }
+                },
+                {
+                    "required": [
+                        "radiator_type"
+                    ],
+                    "properties": {
+                        "radiator_type": {
+                            "const": "towel"
+                        }
+                    }
+                }
+            ]
+        },
         "Ufh": {
             "required": [
                 "wet_emitter_type",
                 "equivalent_specific_thermal_mass",
                 "system_performance_factor",
-                "emitter_floor_area"
+                "emitter_floor_area",
+                "frac_convective"
             ],
             "properties": {
                 "wet_emitter_type": {
@@ -3113,14 +3256,34 @@
                 "emitter_floor_area": {
                     "type": "number",
                     "exclusiveMinimum": 0
+                },
+                "frac_convective": {
+                    "type": "number"
                 }
             }
+        },
+        "UfhWithProductReference": {
+            "properties": {
+                "wet_emitter_type": {
+                    "const": "ufh"
+                },
+                "product_reference": {
+                    "description": "A unique reference to a product held within the HEM database (PCDB)",
+                    "title": "Reference to the product in the HEM database",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "wet_emitter_type",
+                "product_reference"
+            ]
         },
         "Fancoil": {
             "required": [
                 "wet_emitter_type",
                 "n_units",
-                "fancoil_test_data"
+                "fancoil_test_data",
+                "frac_convective"
             ],
             "properties": {
                 "wet_emitter_type": {
@@ -3170,8 +3333,27 @@
                             }
                         }
                     }
+                },
+                "frac_convective": {
+                    "type": "number"
                 }
             }
+        },
+        "FancoilWithProductReference": {
+            "properties": {
+                "wet_emitter_type": {
+                    "const": "fancoil"
+                },
+                "product_reference": {
+                    "description": "A unique reference to a product held within the HEM database (PCDB)",
+                    "title": "Reference to the product in the HEM database",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "wet_emitter_type",
+                "product_reference"
+            ]
         },
         "EcoDesignControllerNoWeatherCompensator": {
             "type": "object",
@@ -3761,25 +3943,33 @@
                         "anyOf": [
                             {
                                 "properties": {
-                                    "type": {"const": "horizontal"},
+                                    "type": {
+                                        "const": "horizontal"
+                                    },
                                     "width": {
                                         "type": "number",
                                         "description": "Width of horizontal edge insulation (unit: m)",
                                         "exclusiveMinimum": 0
                                     }
                                 },
-                                "required": ["width"]
+                                "required": [
+                                    "width"
+                                ]
                             },
                             {
                                 "properties": {
-                                    "type": {"const": "vertical"},
+                                    "type": {
+                                        "const": "vertical"
+                                    },
                                     "depth": {
                                         "type": "number",
                                         "description": "Depth of vertical edge insulation (unit: m)",
                                         "exclusiveMinimum": 0
                                     }
                                 },
-                                "required": ["depth"]
+                                "required": [
+                                    "depth"
+                                ]
                             }
                         ]
                     }
@@ -3984,7 +4174,10 @@
                         }
                     },
                     "then": {
-                        "required": ["is_unheated_pitched_roof", "colour"]
+                        "required": [
+                            "is_unheated_pitched_roof",
+                            "colour"
+                        ]
                     }
                 },
                 {
@@ -3998,20 +4191,38 @@
                         }
                     },
                     "then": {
-                        "required": ["is_external_door", "orientation360", "colour"]
+                        "required": [
+                            "is_external_door",
+                            "orientation360",
+                            "colour"
+                        ]
                     }
                 },
                 {
                     "if": {
                         "not": {
                             "anyOf": [
-                                {"properties": {"pitch": {"const": 0}}},
-                                {"properties": {"pitch": {"const": 180}}}
+                                {
+                                    "properties": {
+                                        "pitch": {
+                                            "const": 0
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "pitch": {
+                                            "const": 180
+                                        }
+                                    }
+                                }
                             ]
                         }
                     },
                     "then": {
-                        "required": ["orientation360"],
+                        "required": [
+                            "orientation360"
+                        ],
                         "properties": {
                             "orientation360": {
                                 "type": "integer",
@@ -4044,7 +4255,13 @@
                     "type": "number"
                 },
                 "areal_heat_capacity": {
-                    "enum": ["Very light", "Light", "Medium", "Heavy", "Very heavy"]
+                    "enum": [
+                        "Very light",
+                        "Light",
+                        "Medium",
+                        "Heavy",
+                        "Very heavy"
+                    ]
                 },
                 "mass_distribution_class": {
                     "$ref": "#/$defs/MassDistributionClass"
@@ -4483,9 +4700,15 @@
                 },
                 "oneOf": [
                     {
-                        "required": ["type", "height", "transparency"],
+                        "required": [
+                            "type",
+                            "height",
+                            "transparency"
+                        ],
                         "properties": {
-                            "type": {"const": "obstacle"},
+                            "type": {
+                                "const": "obstacle"
+                            },
                             "height": {
                                 "type": "number",
                                 "exclusiveMinimum": 0
@@ -4498,9 +4721,19 @@
                         }
                     },
                     {
-                        "required": ["type", "depth"],
+                        "required": [
+                            "type",
+                            "depth"
+                        ],
                         "properties": {
-                            "type": {"enum": ["overhang", "sidefinleft", "sidefinright", "reveal"]},
+                            "type": {
+                                "enum": [
+                                    "overhang",
+                                    "sidefinleft",
+                                    "sidefinright",
+                                    "reveal"
+                                ]
+                            },
                             "depth": {
                                 "type": "number",
                                 "exclusiveMinimum": 0
