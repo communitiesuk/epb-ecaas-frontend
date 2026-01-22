@@ -4,7 +4,6 @@ import type { SchemaHeatSourceWetHeatPumpWithProductReference } from "~/schema/a
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
 import { mapInfiltrationVentilationData } from "./infiltrationVentilationMapper";
-import { mapspaceHeatingData } from "./spaceHeatingMapper";
 import { mapLivingSpaceFabricData as mapDwellingFabricData } from "./dwellingFabricMapper";
 import { mapPvAndElectricBatteriesData } from "./pvAndElectricBatteriesMapper";
 import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
@@ -12,6 +11,7 @@ import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from 
 import { objectFromEntries } from "ts-extras";
 import type { Simplify, SimplifyDeep } from "type-fest";
 import { mapCoolingData } from "./coolingMapper";
+import { mapSpaceHeatSystem } from "./spaceHeatingMapperNew";
 
 export type ResolvedState = SimplifyDeep<Resolved<EcaasState>>;
 
@@ -21,13 +21,14 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const dwellingFabricData = mapDwellingFabricData(state);
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
 	const coolingData = mapCoolingData(state);
+	const spaceHeatingSystemData = mapSpaceHeatSystem(state);
 
 	const [pvData, electricBatteries, diverter] = mapPvAndElectricBatteriesData(state);
-	const heatingCooling = mapspaceHeatingData(state);
+
 	const fuelType = dwellingDetailsData.EnergySupply;
 
 	const spaceHeatingData = {
-		...heatingCooling,
+		...spaceHeatingSystemData,
 		...coolingData,
 		EnergySupply: {
 			[defaultElectricityEnergySupplyName]: {

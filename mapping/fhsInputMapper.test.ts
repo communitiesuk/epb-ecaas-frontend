@@ -195,38 +195,37 @@ const expectedHouseInput: FhsInputSchema = {
 		// },
 	},
 	SpaceHeatSystem: {
-		"some-wet-distribution": {
-			type: "WetDistribution",
-			HeatSource: {
-				name: "some-heat-pump-name",
-				temp_flow_limit_upper: 65,
+		"UFH System": {
+			"EnergySupply": "mains elec",
+			"HeatSource": {
+				"name": "Heat Pump 1",
 			},
-			Zone: defaultZoneName,
-			design_flow_temp: 22,
-			design_flow_rate: 4,
-			ecodesign_controller: {
-				ecodesign_control_class: 8,
-				max_outdoor_temp: 34,
-				min_flow_temp: 21,
-				min_outdoor_temp: 20,
+			"Zone": "dwellingspace",
+			"design_flow_rate": 200,
+			"design_flow_temp": 40,
+			"ecodesign_controller": {
+				"ecodesign_control_class": 1,
+				"max_outdoor_temp": 15,
+				"min_flow_temp": 30,
+				"min_outdoor_temp": 0,
 			},
-			emitters: [
+			"emitters": [
 				{
-					c: 0.08,
-					frac_convective: 4,
-					n: 1.3,
-					wet_emitter_type: "radiator",
-				},
-				{
-					c: 0.08,
-					frac_convective: 4,
-					n: 1.3,
-					wet_emitter_type: "radiator",
+					"product_reference": "UFH-123",
+					"wet_emitter_type": "ufh",
 				},
 			],
-			temp_diff_emit_dsgn: 31,
-			thermal_mass: 0.14,
-			variable_flow: false,
+			"temp_diff_emit_dsgn": 5,
+			"type": "WetDistribution",
+			"variable_flow": false,
+		},
+		"Warm Air Heater 1": {
+			"HeatSource": {
+				"name": "Heat Pump 1",
+			},
+			"frac_convective": 0.8,
+			"temp_diff_emit_dsgn": 15,
+			"type": "WarmAir",
 		},
 	},
 	GroundFloorArea: 40,
@@ -591,17 +590,37 @@ const expectedFlatInput: FhsInputSchema = {
 	NumberOfWetRooms: 0,
 	SpaceCoolSystem: {},
 	SpaceHeatSystem: {
-		"instant elec heater 1": {
-			rated_power: 10,
-			type: "InstantElecHeater",
-			EnergySupply: "mains elec",
-			convective_type: "Air heating (convectors, fan coils etc.)",
+		"UFH System": {
+			"EnergySupply": "mains elec",
+			"HeatSource": {
+				"name": "Heat Pump 1",
+			},
+			"Zone": "dwellingspace",
+			"design_flow_rate": 200,
+			"design_flow_temp": 40,
+			"ecodesign_controller": {
+				"ecodesign_control_class": 1,
+				"max_outdoor_temp": 15,
+				"min_flow_temp": 30,
+				"min_outdoor_temp": 0,
+			},
+			"emitters": [
+				{
+					"product_reference": "UFH-123",
+					"wet_emitter_type": "ufh",
+				},
+			],
+			"temp_diff_emit_dsgn": 5,
+			"type": "WetDistribution",
+			"variable_flow": false,
 		},
-		"instant elec heater 2": {
-			rated_power: 13,
-			type: "InstantElecHeater",
-			EnergySupply: "mains elec",
-			convective_type: "Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves",
+		"Warm Air Heater 1": {
+			"HeatSource": {
+				"name": "Heat Pump 1",
+			},
+			"frac_convective": 0.8,
+			"temp_diff_emit_dsgn": 15,
+			"type": "WarmAir",
 		},
 	},
 	GroundFloorArea: 38,
@@ -1171,12 +1190,61 @@ describe("FHS input mapper", () => {
 		const spaceHeatingNew: SpaceHeatingNew = {
 			heatSource: {
 				...baseForm,
+				complete: true,
+				data: [{
+					data: {
+						id: "heat pump 1 id",
+						name: "Heat Pump 1",
+						typeOfHeatSource: "heatPump",
+						typeOfHeatPump: "airSource",
+						productReference: "HP-456",
+					},
+					complete: true,
+				}],
 			},
 			heatEmitters: {
 				...baseForm,
+				data: [{
+					data: {
+						id: "ufh1",
+						name: "UFH System",
+						typeOfHeatEmitter: "underfloorHeating",
+						productReference: "UFH-123",
+						areaOfUnderfloorHeating: 50,
+						heatSource: "heat pump 1 id",
+						ecoDesignControllerClass: "1",
+						designFlowTemp: 40,
+						minFlowTemp: 30,
+						designTempDiffAcrossEmitters: 5,
+						hasVariableFlowRate: false,
+						designFlowRate: 200,
+					},
+					complete: true,
+				},
+				{
+					data: {
+						id: "wah1",
+						name: "Warm Air Heater 1",
+						typeOfHeatEmitter: "warmAirHeater",
+						convectionFraction: 0.8,
+						numOfWarmAirHeaters: 2,
+						designTempDiffAcrossEmitters: 15,
+						heatSource: "heat pump 1 id",
+					},
+					complete: true,
+				},
+				],
+
 			},
 			heatingControls: {
 				...baseForm,
+				data: [{
+					data: {
+						name: "Heating Controls 1",
+						heatingControlType: "separateTemperatureControl",
+					}, complete: true,
+				}],
+				complete: true,
 			},
 		};
 
@@ -1901,12 +1969,61 @@ describe("FHS input mapper", () => {
 		const spaceHeatingNew: SpaceHeatingNew = {
 			heatSource: {
 				...baseForm,
+				complete: true,
+				data: [{
+					data: {
+						id: "heat pump 1 id",
+						name: "Heat Pump 1",
+						typeOfHeatSource: "heatPump",
+						typeOfHeatPump: "airSource",
+						productReference: "HP-456",
+					},
+					complete: true,
+				}],
 			},
 			heatEmitters: {
 				...baseForm,
+				data: [{
+					data: {
+						id: "ufh1",
+						name: "UFH System",
+						typeOfHeatEmitter: "underfloorHeating",
+						productReference: "UFH-123",
+						areaOfUnderfloorHeating: 50,
+						heatSource: "heat pump 1 id",
+						ecoDesignControllerClass: "1",
+						designFlowTemp: 40,
+						minFlowTemp: 30,
+						designTempDiffAcrossEmitters: 5,
+						hasVariableFlowRate: false,
+						designFlowRate: 200,
+					},
+					complete: true,
+				},
+				{
+					data: {
+						id: "wah1",
+						name: "Warm Air Heater 1",
+						typeOfHeatEmitter: "warmAirHeater",
+						convectionFraction: 0.8,
+						numOfWarmAirHeaters: 2,
+						designTempDiffAcrossEmitters: 15,
+						heatSource: "heat pump 1 id",
+					},
+					complete: true,
+				},
+				],
+
 			},
 			heatingControls: {
 				...baseForm,
+				data: [{
+					data: {
+						name: "Heating Controls 1",
+						heatingControlType: "separateTemperatureControl",
+					}, complete: true,
+				}],
+				complete: true,
 			},
 		};
 

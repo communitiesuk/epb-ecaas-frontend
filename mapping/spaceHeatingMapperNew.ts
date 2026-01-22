@@ -164,6 +164,7 @@ export function mapUnderfloorHeating(state: ResolvedState): Record<string, Schem
 			const emitter: SchemaUfhWithProductReference = {
 				product_reference: heating.productReference,
 				wet_emitter_type: "ufh",
+
 			};
 			const common = {
 				emitters: [emitter],
@@ -349,12 +350,14 @@ export function mapWetDistributions(state: ResolvedState): Record<string, Schema
 	};
 }
 
-export function mapSpaceHeatSystem(state: ResolvedState): SchemaSpaceHeatSystem {
+export function mapSpaceHeatSystem(state: ResolvedState): { SpaceHeatSystem: SchemaSpaceHeatSystem } {
 	return {
-		...mapWetDistributions(state),
-		...mapElectricStorageHeaters(state),
-		...mapWarmAirHeater(state),
-		...mapInstantElectricHeaters(state),
+		SpaceHeatSystem: {
+			...mapWetDistributions(state),
+			...mapElectricStorageHeaters(state),
+			...mapWarmAirHeater(state),
+			...mapInstantElectricHeaters(state),
+		},
 	};
 }
 

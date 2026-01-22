@@ -600,6 +600,7 @@ describe("Space heating - emitters", () => {
 						min_flow_temp: ufh.minFlowTemp,
 					},
 					Zone: defaultZoneName,
+
 				},
 			};
 			const resolvedState = resolveState(store.$state);
