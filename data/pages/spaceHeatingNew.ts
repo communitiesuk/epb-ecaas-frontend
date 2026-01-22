@@ -100,6 +100,13 @@ const spaceHeatingNewPages = [
 		parentId: "heatSource",
 	},
 	{
+		id: "heatBatteryDryCoreProducts",
+		title: "Select a dry core heat battery",
+		url: "/space-heating-new/heat-source/:heatSource/heat-battery-dry-core",
+		type: "task",
+		parentId: "heatSource",
+	},
+	{
 		id: "heatEmitters",
 		title: "Heat emitter",
 		url: "/space-heating-new/heat-emitters/:heatEmitter",

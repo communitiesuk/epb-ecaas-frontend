@@ -13,9 +13,13 @@ export function camelToKebabCase(value: string): string {
 };
 
 export const pluralize = (noun: string, suffix: string = "s") => (plural: boolean) => {
-	if (suffix === "ies") {
-		return `${noun.slice(0, noun.length - 2)}${suffix}`;
+	if (!plural) {
+		return noun;
 	}
 
-	return plural ? `${noun}${suffix}` : noun;
+	if (suffix === "ies") {
+		return `${noun.slice(0, noun.length - 1)}${suffix}`;
+	}
+
+	return `${noun}${suffix}`;
 };
