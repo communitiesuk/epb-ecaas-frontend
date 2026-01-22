@@ -138,7 +138,7 @@ describe("Space heating summary page", () => {
 			const expectedResult = {
 				Name: "Heat battery 1",
 				"Type of heat source": "Heat battery",
-				"Type of heat battery": "Pcm",
+				"Type of heat battery": "Heat battery pcm",
 				"Product reference": "HEAT_BATTERY_SMALL",
 				"Number of units": "1",
 				"Energy supply": "Electricity",
@@ -177,7 +177,7 @@ describe("Space heating summary page", () => {
 			const expectedResult = {
 				Name: "Heat network 1",
 				"Type of heat source": "Heat network",
-				"Type of heat network": "Communal",
+				"Type of heat network": "Communal heat network",
 				"Is the heat network in the PCDB": "Yes",
 				"Heat network product reference": "HEAT_NETWORK-LARGE",
 				"Energy supply": "Electricity",
