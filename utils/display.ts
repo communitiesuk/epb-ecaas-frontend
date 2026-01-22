@@ -1,6 +1,6 @@
 import { objectFromEntries } from "ts-extras";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
-import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaHeatNetworkType, SchemaLeaksTestPressure, SchemaRadiatorType } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaLeaksTestPressure, SchemaRadiatorType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
@@ -291,23 +291,36 @@ export const boilerTypes = {
 	"regularBoiler": "Regular boiler",
 } as const satisfies Record<TypeOfBoiler, BoilerTypeDisplay>;
 
-export const heatSourceProductTypeDisplay = {
-	"airSource": "Air source heat pumps",
-	"groundSource": "Ground source heat pumps",
-	"waterSource": "Water source heat pumps",
-	"booster": "Booster heat pumps",
-	"hotWaterOnly": "Hot water only heat pumps",
-	"exhaustAirMev": "Exhaust air MEV heat pumps",
-	"exhaustAirMvhr": "Exhaust air MVHR heat pumps",
-	"exhaustAirMixed": "Exhaust air mixed heat pumps",
-	"combiBoiler": "Combi boilers",
-	"regularBoiler": "Regular boilers",
-	"sleevedDistrict": "Sleeved district heat networks",
-	"unsleevedDistrict": "Unsleeved district heat networks",
-	"communal": "Communal heat networks",
-	"pcm": "PCM heat batteries",
-	"dryCore": "Dry core heat batteries",
-} as const satisfies Record<HeatSourceProductType, string>;
+export const heatBatteryTypes = {
+	"heatBatteryPcm": "PCM",
+	"heatBatteryDryCore": "Dry core",
+} as const satisfies Record<TypeOfHeatBattery, HeatBatteryTypeDisplay>;
+
+export const heatNetworkTypes = {
+	"sleevedDistrictHeatNetwork": "Sleeved district heat network",
+	"unsleevedDistrictHeatNetwork": "Unsleeved district heat network",
+	"communalHeatNetwork": "Communal heat network",
+} as const satisfies Record<TypeOfHeatNetwork, HeatNetworkTypeDisplay>;
+
+export const heatSourceProductTypesDisplay = {
+	"airSource": pluralize("Air source heat pump"),
+	"groundSource": pluralize("Ground source heat pump"),
+	"waterSource": pluralize("Water source heat pump"),
+	"booster": pluralize("Booster heat pump"),
+	"hotWaterOnly": pluralize("Hot water only heat pump"),
+	"exhaustAirMev": pluralize("Exhaust air MEV heat pump"),
+	"exhaustAirMvhr": pluralize("Exhaust air MVHR heat pump"),
+	"exhaustAirMixed": pluralize("Exhaust air mixed heat pump"),
+	"combiBoiler": pluralize("Combi boiler"),
+	"regularBoiler": pluralize("Regular boiler"),
+	"sleevedDistrictHeatNetwork": pluralize("Sleeved district heat network"),
+	"unsleevedDistrictHeatNetwork": pluralize("Unsleeved district heat network"),
+	"communalHeatNetwork": pluralize("Communal heat network"),
+	"heatBatteryPcm": pluralize("PCM heat battery", "ies"),
+	"heatBatteryDryCore": pluralize("Dry core heat battery", "ies"),
+} as const satisfies Record<HeatSourceProductType, (plural: boolean) => string>;
+
+heatSourceProductTypesDisplay["airSource"](true);
 
 export function displayHeatPumpType(type: HeatPumpType | undefined): string {
 	return heatPumpTypes[type!] ?? emptyValueRendering;
@@ -331,16 +344,6 @@ export const heatSourceTypesWithDisplay = {
 
 export function displayHeatSourceType(type: HeatSourceType | undefined): HeatSourceTypeDisplay | typeof emptyValueRendering {
 	return heatSourceTypesWithDisplay[type!] ?? emptyValueRendering;
-}
-
-export const heatNetworkTypesWithDisplay = {
-	communal: "Communal heat network",
-	"sleeved DHN": "Sleeved district heat network",
-	"unsleeved DHN": "Unsleeved district heat network",
-} as const satisfies Record<SchemaHeatNetworkType, HeatNetworkTypeDisplay>;
-
-export function displayHeatNetworkType(type: SchemaHeatNetworkType | undefined): HeatNetworkTypeDisplay | typeof emptyValueRendering {
-	return heatNetworkTypesWithDisplay[type!] ?? emptyValueRendering;
 }
 
 export type HeatEmitterDisplay = "Radiator" | "Underfloor heating" | "Fan coil" | "Warm air heater" | "Instant electric heater" | "Electric storage heater";

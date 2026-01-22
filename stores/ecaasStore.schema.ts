@@ -6,7 +6,7 @@ import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/sch
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, colourZod, ductShapeZod, fuelTypeWithElecOnlyZod, heatNetworkTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, radiatorTypeZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, colourZod, ductShapeZod, fuelTypeWithElecOnlyZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, radiatorTypeZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
 
 const fraction = z.number().min(0).max(1);
@@ -796,8 +796,8 @@ const typeOfHeatPump = z.enum([
 	"exhaustAirMixed",
 ]);
 const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
-const typeOfHeatNetwork = z.enum(["sleevedDistrict", "unsleevedDistrict", "communal"]);
-const typeOfHeatBattery = z.enum(["pcm", "dryCore"]);
+const typeOfHeatNetwork = z.enum(["sleevedDistrictHeatNetwork", "unsleevedDistrictHeatNetwork", "communalHeatNetwork"]);
+const typeOfHeatBattery = z.enum(["heatBatteryPcm", "heatBatteryDryCore"]);
 const typeOflocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
 
 const heatPumpDataZod = namedWithId.extend({
@@ -887,6 +887,7 @@ export type SpaceHeatingNew = AssertEachKeyIsPageId<{
 
 export type TypeOfBoiler = z.infer<typeof typeOfBoiler>;
 export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;
+export type TypeOfHeatNetwork = z.infer<typeof typeOfHeatNetwork>;
 export type LocationOfCollectorLoopPipingType = z.infer<typeof typeOflocationOfLoopPiping>;
 
 export type HeatSourceType =
@@ -936,7 +937,7 @@ const solarThermalSystemBase = namedWithId.extend({
 
 const heatNetworkBase = namedWithId.extend({
 	typeOfHeatSource: z.literal("heatNetwork"),
-	typeOfHeatNetwork: heatNetworkTypeZod,
+	typeOfHeatNetwork,
 });
 
 const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
@@ -987,6 +988,8 @@ const _typeOfHeatSource = z.enum({
 	...typeOfHeatBattery.enum,
 });
 
+export const typeOfHeatSource = _typeOfHeatSource.enum;
+
 export type HeatSourceProductType = z.infer<typeof _typeOfHeatSource>;
 export type HeatSourceProduct = z.infer<typeof heatSourceProduct>;
 export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
@@ -1002,11 +1005,11 @@ export const heatSourceProductTypeMap = {
 	"exhaustAirMixed": "ExhaustAirMixedHeatPump",
 	"combiBoiler": "CombiBoiler",
 	"regularBoiler": "RegularBoiler",
-	"sleevedDistrict": "HeatNetworks",
-	"unsleevedDistrict": "HeatNetworks",
-	"communal": "HeatNetworks",
-	"pcm": "HeatBatteryPCM",
-	"dryCore": "HeatBatteryDryCore",
+	"sleevedDistrictHeatNetwork": "HeatNetworks",
+	"unsleevedDistrictHeatNetwork": "HeatNetworks",
+	"communalHeatNetwork": "HeatNetworks",
+	"heatBatteryPcm": "HeatBatteryPCM",
+	"heatBatteryDryCore": "HeatBatteryDryCore",
 } as const satisfies Record<HeatSourceProductType, TechnologyType | string>;
 
 export type HeatEmitterType =

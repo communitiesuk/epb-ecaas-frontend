@@ -1,42 +1,33 @@
-import type { SchemaHeatNetworkType } from "~/schema/aliases";
-import { displayHeatNetworkType } from "./display";
 
 export const getHeatSourceDefaultName = (item: HeatSourceFormData): string => {
 	if (!item?.typeOfHeatSource) return "Heat source";
 	const heatSourceType = item?.typeOfHeatSource;
 	
-	let heatSourceSubtype;
+	let productSubType: string | undefined;
 
 	if ("typeOfHeatPump" in item) {
-		heatSourceSubtype = item.typeOfHeatPump;
-	}
-	if ("typeOfBoiler" in item) {
-		heatSourceSubtype = item.typeOfBoiler;
-	}
-	if (heatSourceType === "heatNetwork") {
-		// for heat network, just use the display form
-		return item.typeOfHeatNetwork ? displayHeatNetworkType(item.typeOfHeatNetwork) : "Heat network";
-	}
-	if ("typeOfHeatNetwork" in item) {
-		heatSourceSubtype = item.typeOfHeatNetwork;
-	}
-	if ("typeOfHeatBattery" in item) {
-		heatSourceSubtype = item.typeOfHeatBattery;
+		productSubType = heatPumpTypes[item.typeOfHeatPump!];
 	}
 
-	return getDefaultProductName(heatSourceType, heatSourceSubtype);
+	if ("typeOfBoiler" in item) {
+		return boilerTypes[item.typeOfBoiler!];
+	}
+
+	if (heatSourceType === "heatNetwork") {
+		return item.typeOfHeatNetwork ? heatNetworkTypes[item.typeOfHeatNetwork] : "Heat network";
+	}
+
+	if ("typeOfHeatBattery" in item) {
+		productSubType = heatBatteryTypes[item.typeOfHeatBattery!];
+	}
+
+	return getDefaultProductName(heatSourceType, productSubType);
 };
 
-function getDefaultProductName(
-	productType: HeatSourceType,
-	productSubtype = "",
-) {
-	const productTypeFormatted =
-    productType[0]?.toUpperCase() + productType.slice(1);
+function getDefaultProductName(heatSourceType: HeatSourceType, productSubType: string | undefined) {
+	const formattedProductType = displayCamelToSentenceCase(heatSourceType);
 
-	return !productSubtype.match(productTypeFormatted)
-		? displayCamelToSentenceCase(productSubtype + productTypeFormatted)
-		: displayCamelToSentenceCase(productSubtype);
+	return productSubType ? `${productSubType} ${formattedProductType.toLowerCase()}` : formattedProductType;
 }
 
 export type HeatSourceFormData = {
@@ -45,6 +36,6 @@ export type HeatSourceFormData = {
 	name?: string;
 	typeOfHeatPump?: HeatPumpType;
 	typeOfBoiler?: TypeOfBoiler;
-	typeOfHeatNetwork?: SchemaHeatNetworkType;
+	typeOfHeatNetwork?: TypeOfHeatNetwork;
 	typeOfHeatBattery?: TypeOfHeatBattery;
 };

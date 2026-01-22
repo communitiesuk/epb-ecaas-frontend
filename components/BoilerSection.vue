@@ -52,7 +52,7 @@ const emit = defineEmits(["update-boiler-model"]);
 			validation="required"
 			help="Select the boiler model from the PCDB using the button below."
 			:selected-product-reference="model.productReference"
-			:selected-product-type="boilerTypes[model.typeOfBoiler]"
+			:selected-product-type="model.typeOfBoiler"
 			:page-url="route.fullPath"
 			:page-index="index" />
 		<FormKit

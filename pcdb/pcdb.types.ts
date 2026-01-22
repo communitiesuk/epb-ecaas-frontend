@@ -138,6 +138,40 @@ const _boilerProductSchema = z.discriminatedUnion("technologyType", [
 
 export type BoilerProduct = z.infer<typeof _boilerProductSchema>;
 
+export const heatBatteryPcmZod = BaseProduct.extend({
+	technologyType: z.literal("HeatBatteryPCM"),
+	maxTemperature: z.nullable(z.number()),
+	electricityCircPump: z.nullable(z.number()),
+	phaseTransitionTemperatureLower: z.nullable(z.number()),
+	phaseTransitionTemperatureUpper: z.nullable(z.number()),
+	ratedChargePower: z.nullable(z.number()),
+	maxRatedLosses: z.nullable(z.number()),
+	flowRateLPerMin: z.nullable(z.number()),
+	heatStorageZoneMaterialKjPerKDuringPhaseTransition: z.nullable(z.number()),
+	electricityStandby: z.nullable(z.number()),
+	inletDiameterMm: z.nullable(z.number()),
+	heatStorageZoneMaterialKjPerKBelowPhaseTransition: z.nullable(z.number()),
+	serviceProvision: z.nullable(z.string()),
+	heatStorageZoneMaterialKjPerKAbovePhaseTransition: z.nullable(z.number()),
+	velocityInHexTubeAt1LPerMinMPerS: z.nullable(z.number()),
+	simultaneousChargingAndDischarging: z.nullable(z.number()),
+});
+
+export type HeatBatteryPcmProduct = z.infer<typeof heatBatteryPcmZod>;
+
+export const heatBatteryDryCoreZod = BaseProduct.extend({
+	technologyType: z.literal("HeatBatteryDryCore"),
+	heatStorageCapacity: z.nullable(z.number()),
+	electricityCircPump: z.nullable(z.number()),
+	fanPwr: z.nullable(z.number()),
+	setpointTempWater: z.nullable(z.number()),
+	ratedPowerInstant: z.nullable(z.number()),
+	electricityStandby: z.nullable(z.number()),
+	pwrIn: z.nullable(z.number()),
+});
+
+export type HeatBatteryDryCoreProduct = z.infer<typeof heatBatteryDryCoreZod>;
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
 	groundSourceHeatPumpZod,
@@ -149,6 +183,8 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	exhaustAirMixedHeatPump,
 	combiBoilerZod,
 	regularBoilerZod,
+	heatBatteryPcmZod,
+	heatBatteryDryCoreZod,
 ]);
 
 export type Product = z.infer<typeof productSchema>;
@@ -171,6 +207,10 @@ export const categoryTechnologies = {
 	boiler: [
 		"CombiBoiler",
 		"RegularBoiler",
+	],
+	heatBattery: [
+		"HeatBatteryPCM",
+		"HeatBatteryDryCore",
 	],
 } as const satisfies Record<string, TechnologyType[]>;
 

@@ -252,7 +252,7 @@ describe("Heat emitters", () => {
 			});
 			await user.click(screen.getByTestId("typeOfHeatEmitter_underfloorHeating"));
 
-			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/underfloorheating");
+			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/underfloor-heating");
 		});
 	});
 
@@ -314,7 +314,7 @@ describe("Heat emitters", () => {
 			});
 			await user.click(screen.getByTestId("typeOfHeatEmitter_fanCoil"));
 
-			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/fancoil");
+			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/fan-coil");
 		});
 	});
 
@@ -371,7 +371,7 @@ describe("Heat emitters", () => {
 			});
 			await user.click(screen.getByTestId("typeOfHeatEmitter_electricStorageHeater"));
 
-			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/electricstorageheater");
+			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/electric-storage-heater");
 		});
 	});
 
