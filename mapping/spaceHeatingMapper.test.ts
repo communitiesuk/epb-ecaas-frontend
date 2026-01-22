@@ -12,6 +12,7 @@ import {
 } from "./spaceHeatingMapper";
 import type { SchemaHeatSourceWetHeatPump } from "../schema/api-schema.types";
 import { defaultElectricityEnergySupplyName, defaultZoneName, maxOutdoorTemp, minOutdoorTemp } from "./common";
+import type { HeatEmittingData } from "~/stores/ecaasStore.schema";
 
 describe("Space heating - heat sources", () => {
 	describe("mapHeatPumps", () => {
