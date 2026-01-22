@@ -76,7 +76,8 @@ describe("heatSource", () => {
 			});
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
 			await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
-			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/air-source");
+
+			expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/air-source");
 		});
 
 		test("heat pump data is saved to store state when form is valid", async () => {
@@ -391,7 +392,7 @@ describe("heatSource", () => {
 				},
 			});
 			await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-			await user.click(screen.getByTestId("typeOfHeatNetwork_communal"));
+			await user.click(screen.getByTestId("typeOfHeatNetwork_communalHeatNetwork"));
 			await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
 			await user.click(screen.getByTestId("energySupply_electricity"));
 			await user.click(screen.getByTestId("usesHeatInterfaceUnits_no"));
@@ -402,7 +403,7 @@ describe("heatSource", () => {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 			name: "Heat network 1",
 			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "communal",
+			typeOfHeatNetwork: "communalHeatNetwork",
 			isHeatNetworkInPcdb: true,
 			productReference: "HEATNETWORK-LARGE",
 			energySupply: "electricity",
@@ -432,9 +433,8 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-			expect(screen.getByTestId("name")).toBeDefined();
+
 			expect(screen.getByTestId("typeOfHeatNetwork")).toBeDefined();
-			expect(screen.queryByTestId("isHeatNetworkInPcdb")).toBeDefined();
 		});
 
 		test("select heat network section only displays when 'Yes' is selected for 'Is the heat network in the PCDB?'", async () => {
@@ -445,9 +445,10 @@ describe("heatSource", () => {
 			});
 			expect(screen.queryByTestId("selectHeatNetwork")).toBeNull();
 
-
 			await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
+			await user.click(screen.getByTestId("typeOfHeatNetwork_sleevedDistrictHeatNetwork"));
 			await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
+
 			expect(screen.queryByTestId("selectHeatNetwork")).not.toBeNull();
 		});
 
@@ -458,7 +459,7 @@ describe("heatSource", () => {
 				},
 			});
 			await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-			await user.click(screen.getByTestId("typeOfHeatNetwork_communal"));
+			await user.click(screen.getByTestId("typeOfHeatNetwork_communalHeatNetwork"));
 			await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
 			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/communal-heat-network");
 		});
@@ -479,7 +480,7 @@ describe("heatSource", () => {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Communal heat network",
 				typeOfHeatSource: "heatNetwork",
-				typeOfHeatNetwork: "communal",
+				typeOfHeatNetwork: "communalHeatNetwork",
 				isHeatNetworkInPcdb: true,
 				energySupply: "electricity",
 				usesHeatInterfaceUnits: false,
@@ -497,7 +498,7 @@ describe("heatSource", () => {
 
 			expect((await screen.findByTestId("typeOfHeatSource_heatNetwork")).hasAttribute("checked"));
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat network 1");
-			expect((await screen.findByTestId("typeOfHeatNetwork_communal")).hasAttribute("checked"));
+			expect((await screen.findByTestId("typeOfHeatNetwork_communalHeatNetwork")).hasAttribute("checked"));
 			expect((await screen.findByTestId("isHeatNetworkInPcdb_yes")).hasAttribute("checked"));
 			expect((await screen.findByTestId("energySupply_electricity")).hasAttribute("checked"));
 			expect((await screen.findByTestId("usesHeatInterfaceUnits_no")).hasAttribute("checked"));
@@ -532,6 +533,19 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("typeOfHeatNetwork_error"))).toBeDefined();
+		});
+
+		test("required error messages are displayed when type of heat network is submitted", async () => {
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
+			await user.click(screen.getByTestId("typeOfHeatNetwork_sleevedDistrictHeatNetwork"));
+			await user.click(screen.getByTestId("saveAndComplete"));
+
 			expect((await screen.findByTestId("isHeatNetworkInPcdb_error"))).toBeDefined();
 		});
 
@@ -556,7 +570,7 @@ describe("heatSource", () => {
 					},
 				});
 				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-				await user.click(screen.getByTestId("typeOfHeatNetwork_unsleeved_DHN"));
+				await user.click(screen.getByTestId("typeOfHeatNetwork_unsleevedDistrictHeatNetwork"));
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
 				expect(actualHeatSource.data.name).toBe("Unsleeved district heat network");
@@ -574,7 +588,7 @@ describe("heatSource", () => {
 				},
 			});
 			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
-			await user.click(screen.getByTestId("typeOfHeatBattery_pcm"));
+			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
 			await user.type(screen.getByTestId("numberOfUnits"), "1");
 			await user.click(screen.getByTestId("energySupply_mains_gas"));
 		};
@@ -583,7 +597,7 @@ describe("heatSource", () => {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
 			name: "Heat battery 1",
 			typeOfHeatSource: "heatBattery",
-			typeOfHeatBattery: "pcm",
+			typeOfHeatBattery: "heatBatteryPcm",
 			productReference: "HEAT_BATTERY_SMALL",
 			numberOfUnits: 1,
 			energySupply: "electricity",
@@ -593,7 +607,7 @@ describe("heatSource", () => {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c2222",
 			name: "Heat battery 2",
 			typeOfHeatSource: "heatBattery",
-			typeOfHeatBattery: "dryCore",
+			typeOfHeatBattery: "heatBatteryDryCore",
 			productReference: "HEAT_BATTERY_MEDIUM",
 			numberOfUnits: 2,
 			energySupply: "LPG_bulk",
@@ -607,6 +621,8 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
+			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
+
 			expect(screen.getByTestId("name")).toBeDefined();
 			expect(screen.getByTestId("typeOfHeatBattery")).toBeDefined();
 			expect(screen.queryByTestId("selectHeatBattery")).toBeDefined();
@@ -620,8 +636,11 @@ describe("heatSource", () => {
 					params: { "heatSource": "create" },
 				},
 			});
+
 			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
-			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/");
+			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
+
+			expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/heat-battery-pcm");
 		});
 
 		test("heat battery data is saved to store state when form is valid", async () => {
@@ -638,9 +657,9 @@ describe("heatSource", () => {
 			const { data } = store.spaceHeatingNew.heatSource;
 			expect(data[0]?.data).toEqual({
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
-				name: "Pcm heat battery",
+				name: "PCM heat battery",
 				typeOfHeatSource: "heatBattery",
-				typeOfHeatBattery: "pcm",
+				typeOfHeatBattery: "heatBatteryPcm",
 				productReference: "",
 				numberOfUnits: 1,
 				energySupply: "mains_gas",
@@ -669,7 +688,7 @@ describe("heatSource", () => {
 
 			expect((await screen.findByTestId("typeOfHeatSource_heatBattery")).hasAttribute("checked"));
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat battery 1");
-			expect((await screen.findByTestId("typeOfHeatBattery_pcm")).hasAttribute("checked"));
+			expect((await screen.findByTestId("typeOfHeatBattery_heatBatteryPcm")).hasAttribute("checked"));
 			expect((await screen.findByTestId<HTMLInputElement>("numberOfUnits")).value).toBe("1");
 			expect((await screen.findByTestId("energySupply_mains_gas")).hasAttribute("checked"));
 		});
@@ -716,6 +735,8 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
+			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
+
 			expect(screen.getByTestId("energySupply_mains_gas")).toBeDefined();
 			expect(screen.getByTestId("energySupply_LPG_bulk")).toBeDefined();
 			expect(screen.getByTestId("energySupply_electricity")).toBeDefined();
@@ -732,10 +753,24 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("typeOfHeatBattery_error"))).toBeDefined();
+		});
+
+		test("required error messages are displayed when type of heat battery is submitted", async () => {
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
+			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
+			await user.click(screen.getByTestId("saveAndComplete"));
+
 			expect((await screen.findByTestId("selectHeatBattery_error"))).toBeDefined();
 			expect((await screen.findByTestId("numberOfUnits_error"))).toBeDefined();
 			expect((await screen.findByTestId("energySupply_error"))).toBeDefined();
 		});
+
 
 		describe("heat battery default name", () => {
 			it("creates a new heat battery with default name", async () => {
@@ -759,11 +794,11 @@ describe("heatSource", () => {
 					},
 				});
 				await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
-				await user.click(screen.getByTestId("typeOfHeatBattery_pcm"));
+				await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
 				await user.tab();
 
 				const actualHeatSource = store.spaceHeatingNew.heatSource.data[0]!;
-				expect(actualHeatSource.data.name).toBe("Pcm heat battery");
+				expect(actualHeatSource.data.name).toBe("PCM heat battery");
 			});
 		});
 	});
@@ -1124,7 +1159,7 @@ describe("heatSource", () => {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 			name: "Heat network 1",
 			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "communal",
+			typeOfHeatNetwork: "communalHeatNetwork",
 			isHeatNetworkInPcdb: true,
 			productReference: "HEATNETWORK-LARGE",
 			energySupply: "electricity",
@@ -1135,7 +1170,7 @@ describe("heatSource", () => {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c88",
 			name: "Heat network 2",
 			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "unsleeved DHN",
+			typeOfHeatNetwork: "unsleevedDistrictHeatNetwork",
 			isHeatNetworkInPcdb: false,
 			emissionsFactor: 1,
 			outOfScopeEmissionsFactor: 2,

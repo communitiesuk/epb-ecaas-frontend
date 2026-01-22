@@ -172,7 +172,7 @@ describe("Space heating - heat sources", () => {
 			id: "heatBatteryId1",
 			name: "Pcm heat battery",
 			typeOfHeatSource: "heatBattery",
-			typeOfHeatBattery: "pcm",
+			typeOfHeatBattery: "heatBatteryPcm",
 			productReference: "1234",
 			numberOfUnits: 1,
 			energySupply: "electricity",
@@ -182,7 +182,7 @@ describe("Space heating - heat sources", () => {
 			id: "heatBatteryId2",
 			name: "Dry core heat battery",
 			typeOfHeatSource: "heatBattery",
-			typeOfHeatBattery: "dryCore",
+			typeOfHeatBattery: "heatBatteryDryCore",
 			productReference: "5678",
 			numberOfUnits: 2,
 			energySupply: "LPG_bottled",
@@ -457,7 +457,7 @@ describe("Space heating - emitters", () => {
 
 			const expectedForSchema = {
 				[ufh.name]: {
-					wet_emitter_type: "fancoil",
+					wet_emitter_type: "ufh",
 					product_reference: ufh.productReference,
 				},
 			};
@@ -621,7 +621,7 @@ describe("Space heating - emitters", () => {
 					length: 1000,
 				},
 				[ufh.name]: {
-					wet_emitter_type: "fancoil",
+					wet_emitter_type: "ufh",
 					product_reference: ufh.productReference,
 				},
 				[warmAirHeater.name]: {

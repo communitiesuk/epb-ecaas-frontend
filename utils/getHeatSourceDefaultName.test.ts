@@ -15,7 +15,7 @@ describe("getHeatSourceDefaultName", () => {
 		const item: HeatSourceFormData = {
 			id: "123",
 			typeOfHeatSource: "heatBattery",
-			typeOfHeatBattery: "dryCore",
+			typeOfHeatBattery: "heatBatteryDryCore",
 		};
 
 		const actual = getHeatSourceDefaultName(item);
@@ -27,7 +27,7 @@ describe("getHeatSourceDefaultName", () => {
 		const item: HeatSourceFormData = {
 			id: "123",
 			typeOfHeatSource: "heatBattery",
-			typeOfHeatBattery: "pcm",
+			typeOfHeatBattery: "heatBatteryPcm",
 		};
 
 		const actual = getHeatSourceDefaultName(item);
@@ -51,7 +51,7 @@ describe("getHeatSourceDefaultName", () => {
 		const item: HeatSourceFormData = {
 			id: "123",
 			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "sleeved DHN",
+			typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
 		};
 
 		const actual = getHeatSourceDefaultName(item);

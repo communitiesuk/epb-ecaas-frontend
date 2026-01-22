@@ -93,6 +93,13 @@ const spaceHeatingNewPages = [
 		parentId: "heatSource",
 	},
 	{
+		id: "heatBatteryPcmProducts",
+		title: "Select a PCM heat battery",
+		url: "/space-heating-new/heat-source/:heatSource/heat-battery-pcm",
+		type: "task",
+		parentId: "heatSource",
+	},
+	{
 		id: "heatEmitters",
 		title: "Heat emitter",
 		url: "/space-heating-new/heat-emitters/:heatEmitter",

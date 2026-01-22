@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
-import { boilerTypes, heatPumpTypes, heatSourceProductTypeDisplay } from "~/utils/display";
+import { typeOfHeatSource } from "~/stores/ecaasStore.schema";
+import { boilerTypes, heatPumpTypes, heatSourceProductTypesDisplay } from "~/utils/display";
+import { sentenceToLowerCase } from "~/utils/string";
 
 definePageMeta({ layout: "one-column" });
 
@@ -19,7 +21,7 @@ if (!(heatSourceType in heatSourceProductTypeMap)) {
 
 const technologyType = heatSourceProductTypeMap[heatSourceType as HeatSourceProductType];
 const pageId = `${heatSourceType}Products` as PageId;
-const productType = heatSourceProductTypeDisplay[heatSourceType as HeatSourceProductType];
+const productType = heatSourceProductTypesDisplay[heatSourceType as HeatSourceProductType];
 
 const index = Number(params.heatSource);
 
@@ -52,21 +54,22 @@ const selectProduct = () => {
 	</Head>
 
 	<NuxtLink :href="backUrl" class="govuk-back-link govuk-!-margin-top-0 govuk-!-margin-bottom-5" data-testid="backLink" @click="router.back()">
-		{{ productType ? `Back to ${productType}` : 'Back' }}
+		{{ productType ? `Back to ${sentenceToLowerCase(productType(true))}` : 'Back' }}
 	</NuxtLink>
 
 	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ data?.modelName }}</h1>
 	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
 
 	<ProductDetailsHeatPump v-if="!!data && heatSourceType in heatPumpTypes" :product="data!" />
-	<ProductDetailsBoiler  v-if="!!data && heatSourceType in boilerTypes" :product="data!"/>
+	<ProductDetailsBoiler v-if="!!data && heatSourceType in boilerTypes" :product="data!"/>
+	<ProductDetailsHeatBatteryPCM v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryPcm" :product="data!" />
 
 	<div class="govuk-button-group">
 		<GovButton
 			test-id="selectProductButton"
 			@click="selectProduct"
 		>
-			Select {{ productType }}
+			Select {{ productType && sentenceToLowerCase(productType(false)) }}
 		</GovButton>
 		<GovButton
 			secondary
@@ -74,7 +77,7 @@ const selectProduct = () => {
 			test-id="backToHeatPumpButton"
 			@click="router.back()"
 		>
-			Back to {{ productType }}
+			Back to {{ productType && sentenceToLowerCase(productType(true)) }}
 		</GovButton>
 	</div>
 </template>

@@ -68,10 +68,10 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 				heatBattery.name,
 				{
 					type: "HeatBattery",
-					battery_type: heatBattery.typeOfHeatBattery === "pcm" ? "pcm" : "dry_core",
+					battery_type: heatBattery.typeOfHeatBattery === "heatBatteryPcm" ? "pcm" : "dry_core",
 					number_of_units: heatBattery.numberOfUnits,
 					product_reference: heatBattery.productReference,
-					...(heatBattery.typeOfHeatBattery === "dryCore" && { EnergySupply: { "type": heatBattery.energySupply } }),
+					...(heatBattery.typeOfHeatBattery === "heatBatteryDryCore" && { EnergySupply: { "type": heatBattery.energySupply } }),
 				},
 			];
 		}),
@@ -143,7 +143,7 @@ export function mapUnderfloorHeating(state: ResolvedState): Record<string, Schem
 			return [
 				emitter.name,
 				{
-					wet_emitter_type: "fancoil",
+					wet_emitter_type: "ufh",
 					product_reference: emitter.productReference,
 				},
 			];

@@ -216,7 +216,7 @@ function updateHeatSource(type: string) {
 			:index="index" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
-			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('spaceHeatingNew')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>

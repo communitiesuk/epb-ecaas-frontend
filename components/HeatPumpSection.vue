@@ -40,56 +40,56 @@ const emit = defineEmits(["update-heat-pump-model"]);
 		v-if="model?.typeOfHeatPump && model.typeOfHeatPump === 'airSource'"
 		help="Select the air source heat pump type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
-		:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
+		:selected-product-type="model.typeOfHeatPump"
 		:page-url="route.fullPath"
 		:page-index="index" />
 	<FieldsSelectPcdbProduct
 		v-else-if="model?.typeOfHeatPump && model.typeOfHeatPump === 'groundSource'"
 		help="Select the ground source heat pump type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
-		:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
+		:selected-product-type="model.typeOfHeatPump"
 		:page-url="route.fullPath"
 		:page-index="index" />
 	<FieldsSelectPcdbProduct
 		v-else-if="model?.typeOfHeatPump && model.typeOfHeatPump === 'waterSource'"
 		help="Select the water source heat pump type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
-		:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
+		:selected-product-type="model.typeOfHeatPump"
 		:page-url="route.fullPath"
 		:page-index="index" />
 	<FieldsSelectPcdbProduct
 		v-else-if="model?.typeOfHeatPump && model.typeOfHeatPump === 'booster'"
 		help="Select the booster heat pump type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
-		:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
+		:selected-product-type="model.typeOfHeatPump"
 		:page-url="route.fullPath"
 		:page-index="index" />
 	<FieldsSelectPcdbProduct
 		v-else-if="model?.typeOfHeatPump && model.typeOfHeatPump === 'hotWaterOnly'"
 		help="Select the hot water only heat pump type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
-		:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
+		:selected-product-type="model.typeOfHeatPump"
 		:page-url="route.fullPath"
 		:page-index="index" />
 	<FieldsSelectPcdbProduct
 		v-else-if="model?.typeOfHeatPump && model.typeOfHeatPump === 'exhaustAirMev'"
 		help="Select the exhaust air MEV heat pump type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
-		:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
+		:selected-product-type="model.typeOfHeatPump"
 		:page-url="route.fullPath"
 		:page-index="index" />
 	<FieldsSelectPcdbProduct
 		v-else-if="model?.typeOfHeatPump && model.typeOfHeatPump === 'exhaustAirMvhr'"
 		help="Select the exhaust air MVHR heat pump type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
-		:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
+		:selected-product-type="model.typeOfHeatPump"
 		:page-url="route.fullPath"
 		:page-index="index" />
 	<FieldsSelectPcdbProduct
 		v-else-if="model?.typeOfHeatPump && model.typeOfHeatPump === 'exhaustAirMixed'"
 		help="Select the exhaust air mixed heat pump type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
-		:selected-product-type="heatPumpTypes[model.typeOfHeatPump]"
+		:selected-product-type="model.typeOfHeatPump"
 		:page-url="route.fullPath"
 		:page-index="index" />
 </template>

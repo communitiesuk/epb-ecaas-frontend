@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from "@formkit/core";
 import { showErrorState, getErrorMessage } from "#imports";
-import hyphenate from "~/utils/hyphenate";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 
 const props = defineProps<{
@@ -25,13 +24,17 @@ function appendItemIndexToUrl(url: string, index: number) {
 	return url.replace(lastUrlSegment, `/${index}`);
 }
 
-const productsPageUrl = appendItemIndexToUrl(pageUrl, index) + "/" + hyphenate(selectedProductType);
+const productsPageUrl = ref(appendItemIndexToUrl(pageUrl, index) + "/" + camelToKebabCase(selectedProductType ?? ""));
 let productData: DisplayProduct | undefined | null;
 
 if (selectedProductReference) {
 	const { data } = await useFetch(`/api/products/${selectedProductReference}`);
 	productData = data.value;
 }
+
+watch(props.context, ({ attrs: { "selected-product-type": newProductType } }) => {
+	productsPageUrl.value = appendItemIndexToUrl(pageUrl, index) + "/" + camelToKebabCase(newProductType ?? "");
+});
 </script>
 
 <template>
