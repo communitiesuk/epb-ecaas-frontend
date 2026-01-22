@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ecoDesignControllerOptions } from "#imports";
-import type { FanCoilModelType } from "~/pages/space-heating-new/heat-emitters/[heatEmitter]/index.vue";
+import type { FanCoilModelType } from "~/pages/space-heating/heat-emitters/[heatEmitter]/index.vue";
 
 const route = useRoute();
 
@@ -30,7 +30,7 @@ defineProps<{
 		:selected-product-type="model.typeOfHeatEmitter"
 		:page-url="route.fullPath"
 		:page-index="index" />
-	<FieldsHeatGenerators
+	<FieldsHeatSources
 		id="heatSource"
 		name="heatSource"
 		label="Heat source"

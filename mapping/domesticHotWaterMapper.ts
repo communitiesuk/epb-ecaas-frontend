@@ -79,8 +79,8 @@ function mapOthersData(state: ResolvedState) {
 
 export function mapHotWaterSourcesData(state: ResolvedState) {
 	return state.domesticHotWater.waterHeating.hotWaterCylinder.map((x): SchemaHotWaterSourceDetails => {
-		const referencedHeatPump = state.spaceHeating.heatGeneration.heatPump.find(heat_pump => heat_pump.id === x.heatSource);
-		const heatPumpName = referencedHeatPump ? referencedHeatPump.name : "Heat pump";
+		const referencedHeatPump = state.spaceHeating.heatSource?.find(source => source.id === x.heatSource);
+		const heatPumpName = referencedHeatPump ? referencedHeatPump.name : "heat pump";
 		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.filter(pipework => pipework.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
 			return {
 				location: x.location,
@@ -89,6 +89,9 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 				length: x.length,
 				insulation_thermal_conductivity: x.thermalConductivity,
 				insulation_thickness_mm: x.insulationThickness,
+
+
+
 				surface_reflectivity: x.surfaceReflectivity,
 				pipe_contents: x.pipeContents,
 			};

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WarmAirHeaterModelType } from "~/pages/space-heating-new/heat-emitters/[heatEmitter]/index.vue";
+import type { WarmAirHeaterModelType } from "~/pages/space-heating/heat-emitters/[heatEmitter]/index.vue";
 
 
 defineProps<{
@@ -31,7 +31,7 @@ defineProps<{
 		name="convectionFraction"
 		validation="required"
 		help="Enter the proportion of heat the heater emits through convection"/>	
-	<FieldsHeatGenerators
+	<FieldsHeatSources
 		id="heatSource"
 		name="heatSource"
 		label="Heat source"

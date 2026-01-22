@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ecoDesignControllerOptions, isInteger, radiatorTypes } from "#imports";
-import type { RadiatorModelType } from "~/pages/space-heating-new/heat-emitters/[heatEmitter]/index.vue";
+import type { RadiatorModelType } from "~/pages/space-heating/heat-emitters/[heatEmitter]/index.vue";
 
 const route = useRoute();
 
@@ -40,7 +40,7 @@ const emit = defineEmits(["update-radiator-model"]);
 			:selected-product-type="model.typeOfHeatEmitter"
 			:page-url="route.fullPath"
 			:page-index="index" />
-		<FieldsHeatGenerators
+		<FieldsHeatSources
 			id="heatSource"
 			name="heatSource"
 			label="Heat source"

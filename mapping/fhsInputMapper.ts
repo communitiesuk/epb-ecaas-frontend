@@ -11,7 +11,7 @@ import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from 
 import { objectFromEntries } from "ts-extras";
 import type { Simplify, SimplifyDeep } from "type-fest";
 import { mapCoolingData } from "./coolingMapper";
-import { mapSpaceHeatSystem } from "./spaceHeatingMapperNew";
+import { mapSpaceHeatSystem } from "./spaceHeatingMapper";
 
 export type ResolvedState = SimplifyDeep<Resolved<EcaasState>>;
 
@@ -56,7 +56,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	// Below uses default values until heat pump is set up to come from PCDB
 	const { HotWaterSource } = domesticHotWaterData;
 	const heatPumpName: string = Object.keys((HotWaterSource!["hw cylinder"] as SchemaStorageTank).HeatSource)[0]!;
-	const heatPumps = state.spaceHeating.heatGeneration.heatPump;
+	const heatPumps = state.spaceHeating.heatSource.filter(hs => hs.typeOfHeatSource === "heatPump");
 
 	// use the picked heat pump if one is picked, otherwise fall back to the default
 	// TODO: correct this at point other heat sources are being added

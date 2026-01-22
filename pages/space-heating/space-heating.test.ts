@@ -4,7 +4,7 @@ import {
 } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
-import SpaceHeatingNew from "./index.vue";
+import SpaceHeating from "./index.vue";
 import formStatus from "~/constants/formStatus";
 import HeatSourceForm from "./heat-source/[heatSource]/index.vue";
 import { litre } from "~/utils/units/volume";
@@ -54,7 +54,7 @@ describe("space heating", () => {
 
 		it("heat source is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatSource: {
 						data: [
 							{ data: heatSource1 },
@@ -64,7 +64,7 @@ describe("space heating", () => {
 					},
 				},
 			});
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 			await userEvent.click(screen.getByTestId("heatSource_duplicate_0"));
 			await userEvent.click(screen.getByTestId("heatSource_duplicate_0"));
 			await userEvent.click(screen.getByTestId("heatSource_duplicate_2"));
@@ -80,7 +80,7 @@ describe("space heating", () => {
 
 		it("duplicated heat source has a unique id", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatSource: {
 						data: [
 							{ data: heatSource1 },
@@ -88,23 +88,23 @@ describe("space heating", () => {
 					},
 				},
 			});
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 			await userEvent.click(screen.getByTestId("heatSource_duplicate_0"));
 
-			const heatSources = store.spaceHeatingNew.heatSource.data;
+			const heatSources = store.spaceHeating.heatSource.data;
 			expect(heatSources[1]?.data.id).not.toBe(heatSource1.id);
 		});
 
 		it("removes an item when remove link is clicked", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatSource: {
 						data: [{ data: heatSource1 }],
 					},
 				},
 			});
 
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 
 			expect(screen.getAllByTestId("heatSource_items")).toBeDefined();
 			await user.click(await screen.findByTestId("heatSource_remove_0"));
@@ -113,7 +113,7 @@ describe("space heating", () => {
 
 		it("only removes the heat source that is clicked when multiple exist", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatSource: {
 						data: [
 							{ data: heatSource1 },
@@ -123,7 +123,7 @@ describe("space heating", () => {
 					},
 				},
 			});
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 			await user.click(await screen.findByTestId("heatSource_remove_1"));
 
 			const populatedList = screen.getByTestId("heatSource_items");
@@ -169,7 +169,7 @@ describe("space heating", () => {
 			};
 
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatSource: {
 						data: [
 							{ data: heatPump1 },
@@ -188,20 +188,20 @@ describe("space heating", () => {
 				},
 			});
 
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 			await user.click(await screen.findByTestId("heatSource_remove_0"));
 
 			const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data;
 			expect(hotWaterCylinderData[0]?.data.heatSource).toBeUndefined();
 
-			const heatEmittersData = store.spaceHeatingNew.heatEmitters.data;
+			const heatEmittersData = store.spaceHeating.heatEmitters.data;
 			const radiatorInStore = heatEmittersData[0]?.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "radiator" }>;
 			expect(radiatorInStore.heatSource).toBeUndefined();
 		});
 
 		it("displays an in-progress indicator when an entry is not marked as complete", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatSource: {
 						data: [
 							{
@@ -212,14 +212,14 @@ describe("space heating", () => {
 				},
 			});
 
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 
 			expect(screen.getByTestId("heatSource_status_0").textContent).toBe(formStatus.inProgress.text);
 		});
 
 		it("displays a complete indicator when an entry is marked as complete", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatSource: {
 						data: [
 							{
@@ -231,7 +231,7 @@ describe("space heating", () => {
 				},
 			});
 
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 
 			expect(screen.getByTestId("heatSource_status_0").textContent).toBe(formStatus.complete.text);
 		});
@@ -264,13 +264,13 @@ describe("space heating", () => {
 
 		it("should remove heat emitter when remove link is clicked", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatEmitters: {
 						data: [heatEmitter1],
 					},
 				},
 			});
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 			expect(screen.getAllByTestId("heatEmitters_items")).toBeDefined();
 
 			await user.click(screen.getByTestId("heatEmitters_remove_0"));
@@ -279,13 +279,13 @@ describe("space heating", () => {
 
 		it("should only remove the heat emitter that is clicked if there are multiple heat emitters", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatEmitters: {
 						data: [heatEmitter1, heatEmitter2, heatEmitter3],
 					},
 				},
 			});
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 			await user.click(screen.getByTestId("heatEmitters_remove_1"));
 
 			expect(screen.getByText("Heat emitter 1")).toBeDefined();
@@ -295,13 +295,13 @@ describe("space heating", () => {
 
 		it("should duplicate the correct heat emitter when duplicate link is clicked", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatEmitters: {
 						data: [heatEmitter1, heatEmitter2],
 					},
 				},
 			});
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 			await userEvent.click(screen.getByTestId("heatEmitters_duplicate_0"));
 			await userEvent.click(screen.getByTestId("heatEmitters_duplicate_0"));
 			await userEvent.click(screen.getByTestId("heatEmitters_duplicate_2"));
@@ -318,7 +318,7 @@ describe("space heating", () => {
 
 	describe("mark space heating as complete", () => {
 		beforeEach(async () => {
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 		});
 
 		it("shows the 'mark as complete' button initially", async () => {
@@ -332,14 +332,14 @@ describe("space heating", () => {
 
 			expect(screen.getByTestId("markAsCompleteButton")?.style.display).toBe("none");
 			expect(screen.getByTestId("completeSectionCompleted")?.style.display).not.toBe("none");
-			expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
+			expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
 		});
 
 		it("marks space heating section as complete after 'mark as complete' button is clicked", async () => {
 			await user.click(await screen.findByTestId("markAsCompleteButton"));
 
-			type SpaceHeatingType = keyof typeof store.spaceHeatingNew;
-			const spaceHeating = store.spaceHeatingNew;
+			type SpaceHeatingType = keyof typeof store.spaceHeating;
+			const spaceHeating = store.spaceHeating;
 			for (const key in spaceHeating) {
 				expect(spaceHeating[key as SpaceHeatingType]?.complete).toBe(true);
 			};
@@ -347,7 +347,7 @@ describe("space heating", () => {
 
 		it("disables the mark section as complete button when data is incomplete", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatSource: {
 						data: [
 							{
@@ -359,7 +359,7 @@ describe("space heating", () => {
 				},
 			});
 
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 
 			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
 			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
@@ -369,7 +369,7 @@ describe("space heating", () => {
 	describe("mark space heating as not complete", async () => {
 		it("marks section as not complete if a heat source is removed after marking complete", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatSource: {
 						data: [
 							{ ...heatSource1, complete: false },
@@ -378,20 +378,20 @@ describe("space heating", () => {
 				},
 			});
 
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 			await user.click(await screen.findByTestId("markAsCompleteButton"));
 
-			expect(store.spaceHeatingNew.heatSource?.complete).toBe(true);
+			expect(store.spaceHeating.heatSource?.complete).toBe(true);
 
 			await user.click(await screen.findByTestId("heatSource_remove_0"));
 
-			expect(store.spaceHeatingNew.heatSource?.complete).toBe(false);
+			expect(store.spaceHeating.heatSource?.complete).toBe(false);
 			expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
 		});
 
 		it("marks heat sources section as not complete after saving an existing heat source", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatSource: {
 						data: [{ data: heatSource1, complete: true }],
 					},
@@ -399,9 +399,9 @@ describe("space heating", () => {
 			});
 
 
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 			await user.click(await screen.findByTestId("markAsCompleteButton"));
-			expect(store.spaceHeatingNew.heatSource?.complete).toBe(true);
+			expect(store.spaceHeating.heatSource?.complete).toBe(true);
 
 			await renderSuspended(HeatSourceForm, {
 				route: {
@@ -410,9 +410,9 @@ describe("space heating", () => {
 			});
 
 			await user.click(await screen.findByTestId("saveAndComplete"));
-			expect(store.spaceHeatingNew.heatSource?.complete).toBe(false);
+			expect(store.spaceHeating.heatSource?.complete).toBe(false);
 
-			await renderSuspended(SpaceHeatingNew);
+			await renderSuspended(SpaceHeating);
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 		});
 	});

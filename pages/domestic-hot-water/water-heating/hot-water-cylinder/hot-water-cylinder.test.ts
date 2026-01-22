@@ -35,7 +35,7 @@ describe("hot water cylinder", () => {
 
 	const addStoreData = () => {
 		store.$patch({
-			spaceHeatingNew: {
+			spaceHeating: {
 				heatSource: {
 					data: [{
 						data: {

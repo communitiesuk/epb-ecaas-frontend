@@ -7,7 +7,7 @@ const title = "Heat source";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
+const heatSourceStoreData = store.spaceHeating.heatSource.data;
 const index = getStoreIndex(heatSourceStoreData);
 const heatSourceData = useItemToEdit("heatSource", heatSourceStoreData);
 const model = ref(heatSourceData?.data as HeatSourceData);
@@ -20,7 +20,7 @@ export type SolarThermalModelType = Extract<HeatSourceData, { typeOfHeatSource: 
 
 const saveForm = (fields: HeatSourceData) => {
 	store.$patch((state) => {
-		const { heatSource } = state.spaceHeatingNew;
+		const { heatSource } = state.spaceHeating;
 
 		const commonFields = {
 			id,
@@ -117,7 +117,7 @@ const saveForm = (fields: HeatSourceData) => {
 		heatSource.complete = false;
 	});
 
-	navigateTo("/space-heating-new");
+	navigateTo("/space-heating");
 };
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
@@ -143,12 +143,12 @@ watch(
 
 autoSaveElementForm<HeatSourceData>({
 	model,
-	storeData: store.spaceHeatingNew.heatSource,
+	storeData: store.spaceHeating.heatSource,
 	defaultName: "Heat source",
 	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
-		state.spaceHeatingNew.heatSource.data[index] = newData;
-		state.spaceHeatingNew.heatSource.complete = false;
+		state.spaceHeating.heatSource.data[index] = newData;
+		state.spaceHeating.heatSource.complete = false;
 	},
 });
 
@@ -161,7 +161,7 @@ function updateHeatSource(type: string) {
 			}
 			const defaultName = getHeatSourceDefaultName(model.value);
 			model.value.name = defaultName;
-			store.spaceHeatingNew.heatSource.data[index]!.data.name = defaultName;
+			store.spaceHeating.heatSource.data[index]!.data.name = defaultName;
 		}
 	},
 	);
@@ -217,7 +217,7 @@ function updateHeatSource(type: string) {
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
-			<GovButton :href="getUrl('spaceHeatingNew')" secondary test-id="saveProgress">Save progress</GovButton>
+			<GovButton :href="getUrl('spaceHeating')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

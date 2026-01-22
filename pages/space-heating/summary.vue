@@ -1,225 +1,410 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { getTabItems, getUrl } from "#imports";
+import { getTabItems, getUrl, type HeatEmittingData } from "#imports";
+import type { SchemaFuelType } from "~/schema/aliases";
+
+
 const store = useEcaasStore();
 const title = "Space heating summary";
 
-const heatGenerationUrl = "/space-heating/heat-generation";
-const heatPumps = store.spaceHeating.heatGeneration.heatPump.data;
+const spaceHeatingUrl = "/space-heating";
+
+const heatSources = store.spaceHeating.heatSource.data;
+const boilers = heatSources.filter(x => x.data.typeOfHeatSource === "boiler");
+const heatPumps = heatSources.filter(x => x.data.typeOfHeatSource === "heatPump");
+const heatNetworks = heatSources.filter(x => x.data.typeOfHeatSource === "heatNetwork");
+const heatBatteries = heatSources.filter(x => x.data.typeOfHeatSource === "heatBattery");
+const solarThermalSystem = heatSources.filter(x => x.data.typeOfHeatSource === "solarThermalSystem");
+
+const heatEmitters = store.spaceHeating.heatEmitters.data;
+
+const radiators = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "radiator");
+const underfloorHeating = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "underfloorHeating");
+const fanCoils = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "fanCoil");
+const warmAirHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "warmAirHeater");
+const instantElectricHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "instantElectricHeater");
+const electricStorageHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "electricStorageHeater");
+
+
+const heatSourcesSummary: SummarySection = {
+	id: "heatSourceSummary",
+	label: "Heat sources",
+	data: [],
+	editUrl: spaceHeatingUrl,
+};
+const heatEmitterSummary: SummarySection = {
+	id: "heatEmitterSummary",
+	label: "Heat emitters",
+	data: [],
+	editUrl: spaceHeatingUrl,
+};
+const boilerSummary: SummarySection = {
+	id: "boilerSummary",
+	label: "Boilers",
+	data:
+		boilers.map(({ data: heatSource }) => {
+
+			const summary = {
+				Name: show(heatSource.name),
+				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
+				"Type of boiler": "typeOfBoiler" in heatSource && heatSource.typeOfBoiler ? displayCamelToSentenceCase(heatSource.typeOfBoiler) : emptyValueRendering,
+				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+				"Location of boiler": "locationOfBoiler" in heatSource && heatSource.locationOfBoiler ? displayCamelToSentenceCase(heatSource.locationOfBoiler) : emptyValueRendering,
+			};
+			return summary;
+		}) || [],
+	editUrl: spaceHeatingUrl,
+};
+
 const heatPumpSummary: SummarySection = {
-	id: "heatPump",
+	id: "heatPumpSummary",
 	label: "Heat pumps",
 	data:
-		heatPumps.map((pump) => {
-			return {
-				Name: show(pump.data.name),
-				"Type of heat pump": displayHeatPumpType(pump.data.typeOfHeatPump),
-				Product: show(pump.data.productReference),
+		heatPumps.map(({ data: heatSource }) => {
+
+			const summary = {
+				Name: show(heatSource.name),
+				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
+				"Type of heat pump": "typeOfHeatPump" in heatSource && heatSource.typeOfHeatPump ? displayCamelToSentenceCase(heatSource.typeOfHeatPump) : emptyValueRendering,
+				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 			};
+			return summary;
 		}) || [],
-	editUrl: heatGenerationUrl,
+	editUrl: spaceHeatingUrl,
 };
 
-const boilers = store.spaceHeating.heatGeneration.boiler.data;
-const _boilerSummary: SummarySection = {
-	id: "boiler",
-	label: "Boilers",
-	data: boilers.map((boiler) => {
-		return {
-			Name: show(boiler.name),
-		};
-	}) || [],
-	editUrl: heatGenerationUrl,
-};
-
-const batteries = store.spaceHeating.heatGeneration.heatBattery.data;
-const _heatBatterySummary: SummarySection = {
-	id: "heatBattery",
-	label: "Heat batteries",
-	data: batteries.map((battery) => {
-		return {
-			Name: show(battery.name),
-		};
-	}) || [],
-	editUrl: heatGenerationUrl,
-};
-
-const networks = store.spaceHeating.heatGeneration.heatNetwork.data;
-const _heatNetworkSummary: SummarySection = {
-	id: "heatNetwork",
+const heatNetworkSummary: SummarySection = {
+	id: "heatNetworkSummary",
 	label: "Heat networks",
-	data: networks.map((network) => {
-		return {
-			Name: show(network.name),
-		};
-	}) || [],
-	editUrl: heatGenerationUrl,
+	data:
+		heatNetworks.map((x) => {
+
+			const heatSource = x.data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
+			const summary = {
+				Name: show(heatSource.name),
+				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
+				"Type of heat network": "typeOfHeatNetwork" in heatSource && heatSource.typeOfHeatNetwork ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
+				"Is the heat network in the PCDB": "isHeatNetworkInPcdb" in heatSource ? displayBoolean(heatSource.isHeatNetworkInPcdb) : emptyValueRendering,
+				...(heatSource.isHeatNetworkInPcdb === true && {
+					"Heat network product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+					"Energy supply": "energySupply" in heatSource ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+				}),
+				...(heatSource.isHeatNetworkInPcdb === false && {
+					"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply as SchemaFuelType] : emptyValueRendering,
+					"Emissions factor including out of scope emissions": "emissionsFactor" in heatSource ? heatSource.emissionsFactor : emptyValueRendering,
+					"Primary energy factor": "primaryEnergyFactor" in heatSource ? heatSource.primaryEnergyFactor : emptyValueRendering,
+					"Can energy from the heat network be exported": "canEnergyBeExported" in heatSource ? heatSource.canEnergyBeExported : emptyValueRendering,
+				}),
+				...(heatSource.isHeatNetworkInPcdb !== undefined && {
+					"Will the heat network use heat interface units": "usesHeatInterfaceUnits" in heatSource ? displayBoolean(heatSource.usesHeatInterfaceUnits) : emptyValueRendering,
+				}),
+				...(heatSource.usesHeatInterfaceUnits === true && {
+					"Heat interface unit product reference": "heatInterfaceUnitProductReference" in heatSource ? heatSource.heatInterfaceUnitProductReference : emptyValueRendering,
+				}),
+			};
+			return summary;
+		}) || [],
+	editUrl: spaceHeatingUrl,
 };
 
-const units = store.spaceHeating.heatGeneration.heatInterfaceUnit.data;
-const _heatInterfaceUnitSummary: SummarySection = {
-	id: "heatInterfaceUnit",
-	label: "Heat interface units",
-	data: units.map((unit) => {
-		return {
-			Name: show(unit.name),
-		};
-	}) || [],
-	editUrl: heatGenerationUrl,
+const heatBatterySummary: SummarySection = {
+	id: "heatBatterySummary",
+	label: "Heat batteries",
+	data:
+		heatBatteries.map(({ data: heatSource }) => {
+
+			const summary = {
+				Name: show(heatSource.name),
+				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
+				"Type of heat battery": "typeOfHeatBattery" in heatSource && heatSource.typeOfHeatBattery ? displayCamelToSentenceCase(heatSource.typeOfHeatBattery) : emptyValueRendering,
+				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+				"Number of units": "numberOfUnits" in heatSource ? heatSource.numberOfUnits : emptyValueRendering,
+				"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+			};
+			return summary;
+		}) || [],
+	editUrl: spaceHeatingUrl,
 };
 
-const heatGenerationSummary: SummarySection[] = [
-	heatPumpSummary,
-	// boilerSummary,
-	// heatBatterySummary,
-	// heatNetworkSummary,
-	// heatInterfaceUnitSummary,
-];
+const solarThermalSystemSummary: SummarySection = {
+	id: "solarThermalSystemSummary",
+	label: "Solar thermal system",
+	data:
+		solarThermalSystem.map(({ data: heatSource }) => {
 
-const { heatPump } =
-	store.spaceHeating.heatGeneration;
-const heatGenerationData = [
-	heatPump.data,
-	// boiler.data,
-	// heatBattery.data,
-	// heatNetwork.data,
-	// heatInterfaceUnit.data,
-]
-	.flat()
-	.map((x) => ({ id: x.data.id, name: x.data.name }));
+			const summary = {
+				Name: show(heatSource.name),
+				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
 
-const heatEmittingUrl = "/space-heating/heat-emitting";
+				"Location of collector loop piping":
+					"locationOfCollectorLoopPiping" in heatSource
+						&& heatSource.locationOfCollectorLoopPiping ? displayCamelToSentenceCase(heatSource.locationOfCollectorLoopPiping)
+						: emptyValueRendering,
 
-const wetDistributions = store.spaceHeating.heatEmitting.wetDistribution.data;
-const wetDistributionSummary: SummarySection = {
-	id: "wetDistribution",
-	label: "Wet distribution",
-	data: wetDistributions.map(({ data: wetDistribution }) => {
-		const hasRadiators = wetDistribution.typeOfSpaceHeater === "radiator";
-		const numberOfRadiators = "numberOfRadiators" in wetDistribution ? show(wetDistribution.numberOfRadiators) : emptyValueRendering;
-		const wetDistributionData: Record<string, string | number | undefined> = {
-			Name: show(wetDistribution.name),
-			"Heat source": show(heatGenerationData.find(
-				(x) => x.id === wetDistribution.heatSource,
-			)?.name),
-			"Thermal mass": dim(wetDistribution.thermalMass, "kilowatt hour per kelvin"),
-			"Design temperature difference across the emitters":
-				dim(wetDistribution.designTempDiffAcrossEmitters, "celsius"),
-			"Design flow temperature": dim(wetDistribution.designFlowTemp, "celsius"),
-			"Design flow rate": dim(wetDistribution.designFlowRate, "litres per minute"),
-			"Type of space heater": "typeOfSpaceHeater" in wetDistribution
-				? hasRadiators ? "Radiators" : "Underfloor heating"
-				: emptyValueRendering,
-			...(hasRadiators ? { "Number of radiators": `${numberOfRadiators}` } : {}),
-			"Convection fraction": show(wetDistribution.convectionFractionWet),
-			"Emitter floor area": "emitterFloorArea" in wetDistribution ? dim(wetDistribution.emitterFloorArea, "metres square") : undefined,
-			"Eco design controller class": displayEcoDesignController(wetDistribution.ecoDesignControllerClass as EcoDesignControllerValue),
-			"Minimum flow temperature": dim(wetDistribution.minimumFlowTemp, "celsius"),
-		};
-		return wetDistributionData;
-	}) || [],
+				"Collector module area":
+					"collectorModuleArea" in heatSource ? heatSource.collectorModuleArea : emptyValueRendering,
 
-	editUrl: heatEmittingUrl,
+				"Number of collector modules":
+					"numberOfCollectorModules" in heatSource ? heatSource.numberOfCollectorModules : emptyValueRendering,
+
+				"Peak collector efficiency":
+					"peakCollectorEfficiency" in heatSource ? heatSource.peakCollectorEfficiency : emptyValueRendering,
+
+				"Incidence angle modifier":
+					"incidenceAngleModifier" in heatSource ? heatSource.incidenceAngleModifier : emptyValueRendering,
+
+				"First order heat loss coefficient":
+					"firstOrderHeatLossCoefficient" in heatSource ? heatSource.firstOrderHeatLossCoefficient : emptyValueRendering,
+
+				"Second order heat loss coefficient":
+					"secondOrderHeatLossCoefficient" in heatSource ? heatSource.secondOrderHeatLossCoefficient : emptyValueRendering,
+
+				"Heat loss coefficient of solar loop piping":
+					"heatLossCoefficientOfSolarLoopPipe" in heatSource
+						? heatSource.heatLossCoefficientOfSolarLoopPipe
+						: emptyValueRendering,
+
+				"Collector mass flow rate":
+					"collectorMassFlowRate" in heatSource ? heatSource.collectorMassFlowRate : emptyValueRendering,
+
+				"Power of collector pump":
+					"powerOfCollectorPump" in heatSource ? heatSource.powerOfCollectorPump : emptyValueRendering,
+
+				"Power of collector pump controller":
+					"powerOfCollectorPumpController" in heatSource
+						? heatSource.powerOfCollectorPumpController
+						: emptyValueRendering,
+
+				"Pitch":
+					"pitch" in heatSource ? dim(heatSource.pitch, "degrees") : emptyValueRendering,
+
+				"Orientation":
+					"orientation" in heatSource ? dim(heatSource.orientation, "degrees") : emptyValueRendering,
+			};
+
+			return summary;
+		}) || [],
+	editUrl: spaceHeatingUrl,
 };
 
-const instantHeaters =
-	store.spaceHeating.heatEmitting.instantElectricHeater.data;
+const radiatorSummary: SummarySection = {
+	id: "radiatorSummary",
+	label: "Radiators",
+	data: radiators.map((x) => {
+		const radiator = x.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "radiator" }>;
+		const heatGenerationData = store.spaceHeating.heatSource.data;
+		const heatSource = heatGenerationData.find(hs => hs.data.id === radiator.heatSource);
+		return { 
+			Name: show(radiator.name),
+			"Type of heat emitter": "typeOfHeatEmitter" in radiator && radiator.typeOfHeatEmitter ? displayCamelToSentenceCase(radiator.typeOfHeatEmitter) : emptyValueRendering,
+			"Type of radiator": "typeOfRadiator" in radiator && radiator.typeOfRadiator ? displayCamelToSentenceCase(radiator.typeOfRadiator) : emptyValueRendering,
+			"Product reference": "productReference" in radiator ? radiator.productReference : emptyValueRendering,
+			"Heat source": heatSource ? heatSource.data.name : emptyValueRendering,
+			"Eco design controller class": "ecoDesignControllerClass" in radiator && radiator.ecoDesignControllerClass ? displayCamelToSentenceCase(radiator.ecoDesignControllerClass) : emptyValueRendering,
+			"Design flow temperature": "designFlowTemp" in radiator ? dim(radiator.designFlowTemp, "celsius") : emptyValueRendering,
+			"Minimum flow temperature": "minFlowTemp" in radiator ? dim(radiator.minFlowTemp, "celsius") : emptyValueRendering,
+			"Design temperature difference across emitters": "designTempDiffAcrossEmitters" in radiator ? dim(radiator.designTempDiffAcrossEmitters, "celsius") : emptyValueRendering,
+			"Is there a variable flow rate?": "hasVariableFlowRate" in radiator ? displayBoolean(radiator.hasVariableFlowRate) : emptyValueRendering,
+			"Maximum flow rate": "maxFlowRate" in radiator ? dim(radiator.maxFlowRate, "litres per second") : emptyValueRendering,
+			"Minimum flow rate": "minFlowRate" in radiator ? dim(radiator.minFlowRate, "litres per second") : emptyValueRendering,
+			"Design flow rate": "designFlowRate" in radiator ? dim(radiator.designFlowRate, "litres per second") : emptyValueRendering,
+			"Number of radiators": "numOfRadiators" in radiator ? radiator.numOfRadiators : emptyValueRendering,
+		};
+	}),
+	editUrl: spaceHeatingUrl,
+};
+
+const ufhSummary: SummarySection = {
+	id: "underfloorHeatingSummary",
+	label: "Underfloor heating",
+	data: underfloorHeating.map((x) => {
+		const ufh = x.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "underfloorHeating" }>;
+		const heatGenerationData = store.spaceHeating.heatSource.data;
+		const heatSource = heatGenerationData.find(hs => hs.data.id === ufh.heatSource);
+		
+		return { 
+			Name: show(ufh.name),
+			"Type of heat emitter": "typeOfHeatEmitter" in ufh && ufh.typeOfHeatEmitter ? displayCamelToSentenceCase(ufh.typeOfHeatEmitter) : emptyValueRendering,
+			"Product reference": "productReference" in ufh ? ufh.productReference : emptyValueRendering,
+			"Heat source": heatSource ? heatSource.data.name : emptyValueRendering,
+			"Eco design controller class": "ecoDesignControllerClass" in ufh && ufh.ecoDesignControllerClass ? displayCamelToSentenceCase(ufh.ecoDesignControllerClass) : emptyValueRendering,
+			"Design flow temperature": "designFlowTemp" in ufh ? dim(ufh.designFlowTemp, "celsius") : emptyValueRendering,
+			"Minimum flow temperature": "minFlowTemp" in ufh ? dim(ufh.minFlowTemp, "celsius") : emptyValueRendering,
+			"Design temperature difference across emitters": "designTempDiffAcrossEmitters" in ufh ? dim(ufh.designTempDiffAcrossEmitters, "celsius") : emptyValueRendering,
+			"Is there a variable flow rate?": "hasVariableFlowRate" in ufh ? displayBoolean(ufh.hasVariableFlowRate) : emptyValueRendering,
+			"Maximum flow rate": "maxFlowRate" in ufh ? dim(ufh.maxFlowRate, "litres per second") : emptyValueRendering,
+			"Minimum flow rate": "minFlowRate" in ufh ? dim(ufh.minFlowRate, "litres per second") : emptyValueRendering,
+			"Design flow rate": "designFlowRate" in ufh ? dim(ufh.designFlowRate, "litres per second") : emptyValueRendering,
+			"Area of underfloor heating": ufh.areaOfUnderfloorHeating ? dim(ufh.areaOfUnderfloorHeating, "metres square") : emptyValueRendering,
+		};
+	}),
+	editUrl: "/space-heating/heat-emitters",
+};
+const fanCoilSummary: SummarySection = {
+	id: "fanCoilSummary",
+	label: "Fan coils",
+	data: fanCoils.map((x) => {
+		const fanCoil = x.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "fanCoil" }>;
+		const heatGenerationData = store.spaceHeating.heatSource.data;
+		const heatSource = heatGenerationData.find(hs => hs.data.id === fanCoil.heatSource);
+		
+		return { 
+			Name: show(fanCoil.name),
+			"Type of heat emitter": "typeOfHeatEmitter" in fanCoil && fanCoil.typeOfHeatEmitter ? displayCamelToSentenceCase(fanCoil.typeOfHeatEmitter) : emptyValueRendering,
+			"Product reference": "productReference" in fanCoil ? fanCoil.productReference : emptyValueRendering,
+			"Heat source": heatSource ? heatSource.data.name : emptyValueRendering,
+			"Eco design controller class": "ecoDesignControllerClass" in fanCoil && fanCoil.ecoDesignControllerClass ? displayCamelToSentenceCase(fanCoil.ecoDesignControllerClass) : emptyValueRendering,
+			"Design flow temperature": "designFlowTemp" in fanCoil ? dim(fanCoil.designFlowTemp, "celsius") : emptyValueRendering,
+			"Minimum flow temperature": "minFlowTemp" in fanCoil ? dim(fanCoil.minFlowTemp, "celsius") : emptyValueRendering,
+			"Design temperature difference across emitters": "designTempDiffAcrossEmitters" in fanCoil ? dim(fanCoil.designTempDiffAcrossEmitters, "celsius") : emptyValueRendering,
+			"Is there a variable flow rate?": "hasVariableFlowRate" in fanCoil ? displayBoolean(fanCoil.hasVariableFlowRate) : emptyValueRendering,
+			"Maximum flow rate": "maxFlowRate" in fanCoil ? dim(fanCoil.maxFlowRate, "litres per second") : emptyValueRendering,
+			"Minimum flow rate": "minFlowRate" in fanCoil ? dim(fanCoil.minFlowRate, "litres per second") : emptyValueRendering,
+			"Design flow rate": "designFlowRate" in fanCoil ? dim(fanCoil.designFlowRate, "litres per second") : emptyValueRendering,
+			"Number of fan coils": "numOfFanCoils" in fanCoil ? fanCoil.numOfFanCoils : emptyValueRendering,
+		};
+	}),
+	editUrl: spaceHeatingUrl,
+};
+const warmAirHeaterSummary: SummarySection = {
+	id: "warmAirHeaterSummary",
+	label: "Warm air heaters",	
+	data: warmAirHeaters.map((x) => {
+		const warmAirHeater = x.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "warmAirHeater" }>;
+		const heatGenerationData = store.spaceHeating.heatSource.data;
+		const heatSource = heatGenerationData.find(hs => hs.data.id === warmAirHeater.heatSource);
+		
+		return { 
+			Name: show(warmAirHeater.name),
+			"Type of heat emitter": "typeOfHeatEmitter" in warmAirHeater && warmAirHeater.typeOfHeatEmitter ? displayCamelToSentenceCase(warmAirHeater.typeOfHeatEmitter) : emptyValueRendering,
+			"Design temperature difference across emitters": "designTempDiffAcrossEmitters" in warmAirHeater ? dim(warmAirHeater.designTempDiffAcrossEmitters, "celsius") : emptyValueRendering,
+			"Convection fraction": "convectionFraction" in warmAirHeater ? warmAirHeater.convectionFraction : emptyValueRendering,
+			"Heat source": heatSource ? heatSource.data.name : emptyValueRendering,
+			"Number of warm air heaters": "numOfWarmAirHeaters" in warmAirHeater ? warmAirHeater.numOfWarmAirHeaters : emptyValueRendering,
+		};
+	}),
+	editUrl: spaceHeatingUrl,
+};
 const instantElectricHeaterSummary: SummarySection = {
-	id: "instantElectricHeater",
+	id: "instantElectricHeaterSummary",
 	label: "Instant electric heaters",
-	data: instantHeaters.map((instantHeater) => {
-		return {
-			Name: show(instantHeater.data.name),
-			"Rated power": dim(instantHeater.data.ratedPower, "kilowatt"),
-			"Convective type": show(instantHeater.data.convectiveType),
+	data: instantElectricHeaters.map((x) => {
+		const instantElectricHeater = x.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "instantElectricHeater" }>;
+		return { 
+			Name: show(instantElectricHeater.name),
+			"Type of heat emitter": "typeOfHeatEmitter" in instantElectricHeater && instantElectricHeater.typeOfHeatEmitter ? displayCamelToSentenceCase(instantElectricHeater.typeOfHeatEmitter) : emptyValueRendering,
+			"Rated power": "ratedPower" in instantElectricHeater ? dim(instantElectricHeater.ratedPower, "kilowatt") : emptyValueRendering,
+			"Convection fraction for heating": "convectionFractionForHeating" in instantElectricHeater ? instantElectricHeater.convectionFractionForHeating : emptyValueRendering,
+			"Number of heaters with this spec": "numOfHeatersWithThisSpec" in instantElectricHeater ? instantElectricHeater.numOfHeatersWithThisSpec : emptyValueRendering,
 		};
-	}) || [],
-	editUrl: heatEmittingUrl,
+	}),
+	editUrl: spaceHeatingUrl,
 };
-
-const storageHeaters =
-	store.spaceHeating.heatEmitting.electricStorageHeater.data;
-const _electricStorageHeaterSummary: SummarySection = {
-	id: "electricStorageHeater",
+const electricStorageHeaterSummary: SummarySection = {
+	id: "electricStorageHeaterSummary",
 	label: "Electric storage heaters",
-	data: storageHeaters.map((storageHeater) => {
-		return {
-			Name: show(storageHeater.name),
+	data: electricStorageHeaters.map((x) => {
+		const electricStorageHeater = x.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "electricStorageHeater" }>;
+		return { 
+			Name: show(electricStorageHeater.name),
+			"Type of heat emitter": "typeOfHeatEmitter" in electricStorageHeater && electricStorageHeater.typeOfHeatEmitter ? displayCamelToSentenceCase(electricStorageHeater.typeOfHeatEmitter) : emptyValueRendering,
+			"Product reference": "productReference" in electricStorageHeater ? electricStorageHeater.productReference : emptyValueRendering,
+			"Number of storage heaters": "numOfStorageHeaters" in electricStorageHeater ? electricStorageHeater.numOfStorageHeaters : emptyValueRendering,
 		};
-	}) || [],
-	editUrl: heatEmittingUrl,
+	}),
+	editUrl: spaceHeatingUrl,
 };
 
-const warmAirHeatPumps = store.spaceHeating.heatEmitting.warmAirHeatPump.data;
-const _warmAirHeatPumpSummary: SummarySection = {
-	id: "warmAirHeatPump",
-	label: "Warm air heat pumps",
-	data: warmAirHeatPumps.map((pump) => {
-		return {
-			Name: show(pump.name),
-		};
-	}) || [],
-	editUrl: heatEmittingUrl,
-};
+function getNonEmptySections(summarySections: SummarySection[]) {
+	return summarySections.filter(x => Array.isArray(x.data) && x.data.length > 0);
+}
 
-const heatEmittingSummary: SummarySection[] = [
-	wetDistributionSummary,
-	instantElectricHeaterSummary,
-	// electricStorageHeaterSummary,
-	// warmAirHeatPumpSummary,
+const heatSourceSections: SummarySection[] = [
+	boilerSummary,
+	heatPumpSummary,
+	heatNetworkSummary,
+	heatBatterySummary,
+	solarThermalSystemSummary,
 ];
+const populatedHeatSourceSections = getNonEmptySections(heatSourceSections);
+
+const heatEmitterSections: SummarySection[] = [
+	radiatorSummary,
+	ufhSummary,
+	fanCoilSummary,
+	warmAirHeaterSummary,
+	instantElectricHeaterSummary,
+	electricStorageHeaterSummary,
+];
+const populatedHeatEmitterSections = getNonEmptySections(heatEmitterSections);
 
 
+const heatingControlsUrl = "/space-heating/heating-controls";
+const heatingControls = store.spaceHeating.heatingControls.data;
+
+const heatingControlsSummary: SummarySection = {
+	id: "heatingControls",
+	label: "Heating controls",
+	data: {
+		"Type of heating control": heatingControls[0]?.data?.heatingControlType ? displayCamelToSentenceCase(heatingControls[0]?.data.heatingControlType) : emptyValueRendering,
+	},
+	editUrl: heatingControlsUrl,
+};
 
 </script>
 <template>
+
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovTabs v-slot="tabProps" :items="getTabItems(heatGenerationSummary)">
-		<SummaryTab :summary="heatPumpSummary" :selected="tabProps.currentTab === 0">
-			<template #empty>
-				<h2 class="govuk-heading-m">No heat pumps added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('heatPumpCreate')"> 
-					Add heat pump
-				</NuxtLink>
-			</template>
-		</SummaryTab>
+	<GovTabs v-slot="tabProps" :items="populatedHeatSourceSections">
+		<template v-if="populatedHeatSourceSections.length === 0">
+			<SummaryTab :summary="heatSourcesSummary" :selected="tabProps.currentTab === 0">
+				<template #empty>
+					<h2 class="govuk-heading-m">No heat sources added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('heatSourceCreate')">
+						Add heat source
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
+		<template v-for="section, i of populatedHeatSourceSections" :key="i">
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i">
+				<template #empty>
+					<h2 class="govuk-heading-m">No heat sources added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('heatSourceCreate')">
+						Add heat source
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
 	</GovTabs>
-	<GovTabs v-slot="tabProps" :items="getTabItems(heatEmittingSummary)">
-		<SummaryTab :summary="wetDistributionSummary" :selected="tabProps.currentItem?.id === 'wetDistribution'">
-			<template #empty>
-				<h2 class="govuk-heading-m">No wet distribution added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('wetDistributionCreate')">
-					Add wet distribution
-				</NuxtLink>
-			</template>
-		</SummaryTab>
-		<SummaryTab :summary="instantElectricHeaterSummary" :selected="tabProps.currentItem?.id === 'instantElectricHeater'">
-			<template #empty>
-				<h2 class="govuk-heading-m">No instant electric heaters added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('instantElectricHeaterCreate')">
-					Add instant electric heater
-				</NuxtLink>
-			</template>
-		</SummaryTab>
-		<!-- <SummaryTab :summary="electricStorageHeaterSummary" :selected="tabProps.currentItem?.id === 'electricStorageHeater'">
-			<template #empty>
-				<h2 class="govuk-heading-m">No electric storage heaters added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('heatEmitting')">
-					Add electric storage heater
-				</NuxtLink>
-			</template>
-		</SummaryTab>
-		<SummaryTab :summary="warmAirHeatPumpSummary" :selected="tabProps.currentItem?.id === 'warmAirHeatPump'">
-			<template #empty>
-				<h2 class="govuk-heading-m">No warm air heat pumps added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('heatEmitting')">
-					Add warm air heat pump
-				</NuxtLink>
-			</template>
-		</SummaryTab> -->
+	<GovTabs v-slot="tabProps" :items="populatedHeatEmitterSections">
+		<template v-if="populatedHeatEmitterSections.length === 0">
+			<SummaryTab :summary="heatEmitterSummary" :selected="tabProps.currentTab === 0">
+				<template #empty>
+					<h2 class="govuk-heading-m">No heat emitters added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('heatEmittersCreate')">
+						Add heat emitter
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
+		<template v-for="section, i of populatedHeatEmitterSections" :key="i">
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i">
+				<template #empty>
+					<h2 class="govuk-heading-m">No heat emitters added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('heatEmittersCreate')">
+						Add heat emitter
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
+	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([heatingControlsSummary])">
+		<SummaryTab :summary="heatingControlsSummary" :selected="tabProps.currentTab === 0" />
 	</GovTabs>
 	<GovButton href="/">Return to overview</GovButton>
 </template>

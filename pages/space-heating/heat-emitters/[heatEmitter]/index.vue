@@ -20,7 +20,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 
-const heatEmitterStoreData = store.spaceHeatingNew.heatEmitters.data;
+const heatEmitterStoreData = store.spaceHeating.heatEmitters.data;
 const index = getStoreIndex(heatEmitterStoreData);
 
 const heatEmitterData = useItemToEdit("heatEmitter", heatEmitterStoreData);
@@ -29,7 +29,7 @@ const id = heatEmitterData?.data?.id ?? uuidv4();
 
 const saveForm = () => {
 	store.$patch((state) => {
-		const { heatEmitters } = state.spaceHeatingNew;
+		const { heatEmitters } = state.spaceHeating;
 		const emitter = heatEmitters.data[index];
 		if (!emitter) {
 			throw new Error("No heat emitter found to save");
@@ -37,7 +37,7 @@ const saveForm = () => {
 		emitter.complete = true;
 		heatEmitters.complete = false;
 	});
-	navigateTo("/space-heating-new");
+	navigateTo("/space-heating");
 };
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
@@ -56,7 +56,7 @@ watch(
 			
 		}
 
-		const heatSources = store.spaceHeatingNew.heatSource.data;
+		const heatSources = store.spaceHeating.heatSource.data;
 		if (heatSources.length === 1 && model.value) {
 			const heatSourceId = heatSources[0]?.data.id;
 			if ("heatSource" in model.value && heatSourceId) {
@@ -70,12 +70,12 @@ watch(
 );
 autoSaveElementForm<HeatEmittingData>({
 	model,
-	storeData: store.spaceHeatingNew.heatEmitters,
+	storeData: store.spaceHeating.heatEmitters,
 	defaultName: "Heat emitter",
 	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
-		state.spaceHeatingNew.heatEmitters.data[index] = newData;
-		state.spaceHeatingNew.heatEmitters.complete = false;
+		state.spaceHeating.heatEmitters.data[index] = newData;
+		state.spaceHeating.heatEmitters.complete = false;
 	},
 });
 function updateHeatEmitter(type: string) {
@@ -84,8 +84,8 @@ function updateHeatEmitter(type: string) {
 			const defaultName = getHeatEmitterDefaultName(model.value as HeatEmitterFormData);
 			if (model.value) {
 				model.value.name = defaultName;
-				if (store.spaceHeatingNew.heatEmitters.data[index]) {
-					store.spaceHeatingNew.heatEmitters.data[index].data.name = defaultName;
+				if (store.spaceHeating.heatEmitters.data[index]) {
+					store.spaceHeating.heatEmitters.data[index].data.name = defaultName;
 				}
 			}
 		}
@@ -140,7 +140,7 @@ function updateHeatEmitter(type: string) {
 			:model="model as WarmAirHeaterModelType" />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
-			<GovButton :href="getUrl('spaceHeatingNew')" secondary test-id="saveProgress">Save progress</GovButton>
+			<GovButton :href="getUrl('spaceHeating')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

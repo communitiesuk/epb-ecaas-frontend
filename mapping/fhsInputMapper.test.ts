@@ -125,8 +125,8 @@ const expectedHouseInput: FhsInputSchema = {
 		"hw cylinder": {
 			ColdWaterSource: "mains water",
 			HeatSource: {
-				["some-heat-pump-name"]: {
-					name: "some-heat-pump-name",
+				["Heat pump 1"]: {
+					name: "Heat pump 1",
 					EnergySupply: "mains elec",
 					heater_position: 0.1,
 					type: "HeatSourceWet",
@@ -198,7 +198,7 @@ const expectedHouseInput: FhsInputSchema = {
 		"UFH System": {
 			"EnergySupply": "mains elec",
 			"HeatSource": {
-				"name": "Heat Pump 1",
+				"name": "Heat pump 1",
 			},
 			"Zone": "dwellingspace",
 			"design_flow_rate": 200,
@@ -221,7 +221,7 @@ const expectedHouseInput: FhsInputSchema = {
 		},
 		"Warm Air Heater 1": {
 			"HeatSource": {
-				"name": "Heat Pump 1",
+				"name": "Heat pump 1",
 			},
 			"frac_convective": 0.8,
 			"temp_diff_emit_dsgn": 15,
@@ -230,10 +230,10 @@ const expectedHouseInput: FhsInputSchema = {
 	},
 	GroundFloorArea: 40,
 	HeatSourceWet: {
-		"some-heat-pump-name": {
+		"Heat pump 1": {
 			EnergySupply: defaultElectricityEnergySupplyName,
 			type: "HeatPump",
-			product_reference: "HEATPUMP-LARGE",
+			product_reference: "HP-456",
 			is_heat_network: false,
 		},
 	},
@@ -276,7 +276,7 @@ const expectedHouseInput: FhsInputSchema = {
 					efficacy: 120,
 				}],
 			},
-			SpaceHeatSystem: ["some-wet-distribution"],
+			SpaceHeatSystem: ["UFH System"],
 			ThermalBridging: {},
 			volume: 300,
 			livingroom_area: 50,
@@ -455,8 +455,8 @@ const expectedFlatInput: FhsInputSchema = {
 		"hw cylinder": {
 			ColdWaterSource: "mains water",
 			HeatSource: {
-				["heat pump 1 name"]: {
-					name: "heat pump 1 name",
+				["heat pump"]: {
+					name: "heat pump",
 					EnergySupply: "mains elec",
 					heater_position: 0.1,
 					type: "HeatSourceWet",
@@ -593,7 +593,7 @@ const expectedFlatInput: FhsInputSchema = {
 		"UFH System": {
 			"EnergySupply": "mains elec",
 			"HeatSource": {
-				"name": "Heat Pump 1",
+				"name": "Heat pump 1",
 			},
 			"Zone": "dwellingspace",
 			"design_flow_rate": 200,
@@ -616,7 +616,7 @@ const expectedFlatInput: FhsInputSchema = {
 		},
 		"Warm Air Heater 1": {
 			"HeatSource": {
-				"name": "Heat Pump 1",
+				"name": "Heat pump 1",
 			},
 			"frac_convective": 0.8,
 			"temp_diff_emit_dsgn": 15,
@@ -625,10 +625,10 @@ const expectedFlatInput: FhsInputSchema = {
 	},
 	GroundFloorArea: 38,
 	HeatSourceWet: {
-		"heat pump 1 name": {
+		"Heat pump 1": {
 			EnergySupply: defaultElectricityEnergySupplyName,
 			type: "HeatPump",
-			product_reference: "HEATPUMP-SMALL",
+			product_reference: "HP-456",
 			is_heat_network: false,
 		},
 	},
@@ -859,7 +859,7 @@ const expectedFlatInput: FhsInputSchema = {
 						}],
 				},
 			},
-			SpaceHeatSystem: ["instant elec heater 1", "instant elec heater 2"],
+			SpaceHeatSystem: ["UFH System"],
 			ThermalBridging: {
 				"linear thermal bridge (bridge)": {
 					junction_type: "E3",
@@ -1125,76 +1125,13 @@ describe("FHS input mapper", () => {
 		};
 
 		const spaceHeating: SpaceHeating = {
-			heatGeneration: {
-				heatPump: {
-					...baseForm,
-					data: [{
-						...baseForm,
-						data: {
-							id: "some-heat-pump-id",
-							name: "some-heat-pump-name",
-							productReference: "HEATPUMP-LARGE",
-							typeOfHeatPump: "airSource",
-						},
-					}],
-				},
-				boiler: {
-					...baseForm,
-				},
-				heatBattery: {
-					...baseForm,
-				},
-				heatInterfaceUnit: {
-					...baseForm,
-				},
-				heatNetwork: {
-					...baseForm,
-				},
-			},
-			heatEmitting: {
-				wetDistribution: {
-					...baseForm,
-					data: [{
-						...baseForm,
-						data: {
-							name: "some-wet-distribution",
-							heatSource: "some-heat-pump-id",
-							thermalMass: 0.14,
-							designTempDiffAcrossEmitters: 31,
-							designFlowTemp: 22,
-							designFlowRate: 4,
-							ecoDesignControllerClass: "8",
-							minimumFlowTemp: 21,
-							minOutdoorTemp: 20,
-							maxOutdoorTemp: 34,
-							convectionFractionWet: 4,
-							typeOfSpaceHeater: "radiator",
-							numberOfRadiators: 2,
-							exponent: 1.3,
-							constant: 0.08,
-						},
-					}],
-				},
-				instantElectricHeater: {
-					...baseForm,
-				},
-				electricStorageHeater: {
-					...baseForm,
-				},
-				warmAirHeatPump: {
-					...baseForm,
-				},
-			},
-		};
-
-		const spaceHeatingNew: SpaceHeatingNew = {
 			heatSource: {
 				...baseForm,
 				complete: true,
 				data: [{
 					data: {
-						id: "heat pump 1 id",
-						name: "Heat Pump 1",
+						id: "HP-1",
+						name: "Heat pump 1",
 						typeOfHeatSource: "heatPump",
 						typeOfHeatPump: "airSource",
 						productReference: "HP-456",
@@ -1211,7 +1148,7 @@ describe("FHS input mapper", () => {
 						typeOfHeatEmitter: "underfloorHeating",
 						productReference: "UFH-123",
 						areaOfUnderfloorHeating: 50,
-						heatSource: "heat pump 1 id",
+						heatSource: "HP-1",
 						ecoDesignControllerClass: "1",
 						designFlowTemp: 40,
 						minFlowTemp: 30,
@@ -1229,7 +1166,7 @@ describe("FHS input mapper", () => {
 						convectionFraction: 0.8,
 						numOfWarmAirHeaters: 2,
 						designTempDiffAcrossEmitters: 15,
-						heatSource: "heat pump 1 id",
+						heatSource: "HP-1",
 					},
 					complete: true,
 				},
@@ -1271,7 +1208,7 @@ describe("FHS input mapper", () => {
 						data: {
 							id: "some-hot-water-cyclinder",
 							name: "hw cylinder",
-							heatSource: "some-heat-pump-id",
+							heatSource: "HP-1",
 							storageCylinderVolume: 200,
 							dailyEnergyLoss: 34,
 						},
@@ -1364,7 +1301,6 @@ describe("FHS input mapper", () => {
 			infiltrationAndVentilation,
 			spaceHeating,
 			pvAndBatteries,
-			spaceHeatingNew,
 			cooling,
 		};
 
@@ -1908,72 +1844,13 @@ describe("FHS input mapper", () => {
 		};
 
 		const spaceHeating: SpaceHeating = {
-			heatGeneration: {
-				heatPump: {
-					...baseForm,
-					data: [{
-						...baseForm,
-						data: {
-							id: "heat pump 1 id",
-							name: "heat pump 1 name",
-							productReference: "HEATPUMP-SMALL",
-							typeOfHeatPump: "airSource",
-						},
-					}],
-				},
-				boiler: {
-					...baseForm,
-				},
-				heatBattery: {
-					...baseForm,
-				},
-				heatInterfaceUnit: {
-					...baseForm,
-				},
-				heatNetwork: {
-					...baseForm,
-				},
-			},
-			heatEmitting: {
-				wetDistribution: {
-					...baseForm,
-				},
-				instantElectricHeater: {
-					...baseForm,
-					data: [{
-						...baseForm,
-						data: {
-							name: "instant elec heater 1",
-							ratedPower: 10,
-							convectiveType: "Air heating (convectors, fan coils etc.)",
-						},
-					},
-					{
-						...baseForm,
-						data: {
-							name: "instant elec heater 2",
-							ratedPower: 13,
-							convectiveType: "Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves",
-						},
-					}],
-				},
-				electricStorageHeater: {
-					...baseForm,
-				},
-				warmAirHeatPump: {
-					...baseForm,
-				},
-			},
-		};
-
-		const spaceHeatingNew: SpaceHeatingNew = {
 			heatSource: {
 				...baseForm,
 				complete: true,
 				data: [{
 					data: {
-						id: "heat pump 1 id",
-						name: "Heat Pump 1",
+						id: "HP-1",
+						name: "Heat pump 1",
 						typeOfHeatSource: "heatPump",
 						typeOfHeatPump: "airSource",
 						productReference: "HP-456",
@@ -1990,7 +1867,7 @@ describe("FHS input mapper", () => {
 						typeOfHeatEmitter: "underfloorHeating",
 						productReference: "UFH-123",
 						areaOfUnderfloorHeating: 50,
-						heatSource: "heat pump 1 id",
+						heatSource: "HP-1",
 						ecoDesignControllerClass: "1",
 						designFlowTemp: 40,
 						minFlowTemp: 30,
@@ -2008,7 +1885,7 @@ describe("FHS input mapper", () => {
 						convectionFraction: 0.8,
 						numOfWarmAirHeaters: 2,
 						designTempDiffAcrossEmitters: 15,
-						heatSource: "heat pump 1 id",
+						heatSource: "HP-1",
 					},
 					complete: true,
 				},
@@ -2276,7 +2153,6 @@ describe("FHS input mapper", () => {
 			dwellingFabric,
 			infiltrationAndVentilation,
 			spaceHeating,
-			spaceHeatingNew,
 			pvAndBatteries,
 			cooling,
 		};

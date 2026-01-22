@@ -35,15 +35,15 @@ describe("Heating controls", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data } = store.spaceHeatingNew.heatingControls;
+		const { data } = store.spaceHeating.heatingControls;
 
 		expect(data[0]?.data).toEqual(heatingControl);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
-			spaceHeatingNew: {
-				heatingControls: { 
+			spaceHeating: {
+				heatingControls: {
 					data: [{ data: heatingControl }],
 				},
 			},
@@ -54,7 +54,7 @@ describe("Heating controls", () => {
 				params: { "heatingControl": "0" },
 			},
 		});
-		
+
 		expect((await screen.findByTestId("heatingControlType_separateTemperatureControl")).hasAttribute("checked")).toBe(true);
 	});
 
@@ -85,7 +85,7 @@ describe("Heating controls", () => {
 	describe("partially saving data", () => {
 		test("updated form data is automatically saved to store ", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatingControls: { data: [{ data: heatingControl }] },
 				},
 			});
@@ -98,8 +98,8 @@ describe("Heating controls", () => {
 			await user.click(screen.getByTestId("heatingControlType_separateTimeAndTemperatureControl"));
 			await user.tab();
 
-			expect(store.spaceHeatingNew.heatingControls.data[0]?.data.name).toBe("Separate time and temperature control");
-			expect(store.spaceHeatingNew.heatingControls.data[0]?.data.heatingControlType).toBe("separateTimeAndTemperatureControl");
+			expect(store.spaceHeating.heatingControls.data[0]?.data.name).toBe("Separate time and temperature control");
+			expect(store.spaceHeating.heatingControls.data[0]?.data.heatingControlType).toBe("separateTimeAndTemperatureControl");
 		});
 	});
 });

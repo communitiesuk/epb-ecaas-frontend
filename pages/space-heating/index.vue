@@ -2,30 +2,30 @@
 import formStatus from "~/constants/formStatus";
 import { v4 as uuidv4 } from "uuid";
 
-const title = "Space heating NEW";
+const title = "Space heating";
 const page = usePage();
 const store = useEcaasStore();
 
-type SpaceHeatingType = keyof typeof store.spaceHeatingNew;
+type SpaceHeatingType = keyof typeof store.spaceHeating;
 type SpaceHeatingData = EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> & EcaasForm<HeatingControlData>;
 
 const { hotWaterCylinder } = store.domesticHotWater.waterHeating;
-const { heatEmitters } = store.spaceHeatingNew;
+const { heatEmitters } = store.spaceHeating;
 
 function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
-	const items = store.spaceHeatingNew[spaceHeatingType]?.data;
+	const items = store.spaceHeating[spaceHeatingType]?.data;
 
 	let heatSourceId;
 
 	if (items[index]?.data && "typeOfHeatSource" in items[index].data) {
-		heatSourceId = store.spaceHeatingNew.heatSource.data[index]?.data.id;
+		heatSourceId = store.spaceHeating.heatSource.data[index]?.data.id;
 	}
 	if (items) {
 		items.splice(index, 1);
 
 		store.$patch((state) => {
-			state.spaceHeatingNew[spaceHeatingType].data = items.length ? items : [];
-			state.spaceHeatingNew[spaceHeatingType].complete = false;
+			state.spaceHeating[spaceHeatingType].data = items.length ? items : [];
+			state.spaceHeating[spaceHeatingType].complete = false;
 		});
 
 		if (heatSourceId) {
@@ -36,7 +36,7 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 
 function handleDuplicate<T extends SpaceHeatingData>(spaceHeatingType: SpaceHeatingType, index: number) {
 
-	const { data } = store.spaceHeatingNew[spaceHeatingType];
+	const { data } = store.spaceHeating[spaceHeatingType];
 	const item = data?.[index];
 
 	if (item) {
@@ -52,31 +52,31 @@ function handleDuplicate<T extends SpaceHeatingData>(spaceHeatingType: SpaceHeat
 				},
 			} as T;
 
-			state.spaceHeatingNew[spaceHeatingType].data.push(newItem);
-			state.spaceHeatingNew[spaceHeatingType].complete = false;
+			state.spaceHeating[spaceHeatingType].data.push(newItem);
+			state.spaceHeating[spaceHeatingType].complete = false;
 		});
 	}
 }
 
 function handleComplete() {
 	store.$patch({
-		spaceHeatingNew: {
+		spaceHeating: {
 			heatSource: { complete: true },
 			heatEmitters: { complete: true },
 			heatingControls: { complete: true },
 		},
 	});
 
-	navigateTo("/space-heating-new");
+	navigateTo("/space-heating");
 }
 
 function checkIsComplete() {
-	const sections = store.spaceHeatingNew;
+	const sections = store.spaceHeating;
 	return Object.values(sections).every((section) => section.complete);
 }
 
 function hasIncompleteEntries() {
-	const spaceHeatingTypes = store.spaceHeatingNew;
+	const spaceHeatingTypes = store.spaceHeating;
 
 	return Object.values(spaceHeatingTypes).some((items) =>
 		items.data.some((item) => (isEcaasForm(item) ? !item.complete : false)),
@@ -97,7 +97,7 @@ function hasIncompleteEntries() {
 		title="Heat sources"
 		:form-url="`${page?.url!}/heat-source`"
 		:items="
-			store.spaceHeatingNew.heatSource.data.map((x) => ({
+			store.spaceHeating.heatSource.data.map((x) => ({
 				name: x.data?.name,
 				status: x.complete ? formStatus.complete : formStatus.inProgress,
 			}))
@@ -111,7 +111,7 @@ function hasIncompleteEntries() {
 		title="Heat emitters"
 		:form-url="`${page?.url!}/heat-emitters`"
 		:items="
-			store.spaceHeatingNew.heatEmitters.data.map((x) => ({
+			store.spaceHeating.heatEmitters.data.map((x) => ({
 				name: x.data?.name,
 				status: x.complete ? formStatus.complete : formStatus.inProgress,
 			}))
@@ -125,7 +125,7 @@ function hasIncompleteEntries() {
 		title="Heating controls"
 		:form-url="`${page?.url!}/heating-controls`"
 		:items="
-			store.spaceHeatingNew.heatingControls.data.map((x) => ({
+			store.spaceHeating.heatingControls.data.map((x) => ({
 				name: x.data?.name,
 				status: x.complete ? formStatus.complete : formStatus.inProgress,
 			}))

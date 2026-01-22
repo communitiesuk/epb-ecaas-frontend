@@ -74,21 +74,6 @@ export function getInitialState(): EcaasState {
 			dwellingSpaceLighting: { data: {} },
 		},
 		spaceHeating: {
-			heatGeneration: {
-				heatPump: { data: [] },
-				boiler: { data: [] },
-				heatBattery: { data: [] },
-				heatNetwork: { data: [] },
-				heatInterfaceUnit: { data: [] },
-			},
-			heatEmitting: {
-				wetDistribution: { data: [] },
-				instantElectricHeater: { data: [] },
-				electricStorageHeater: { data: [] },
-				warmAirHeatPump: { data: [] },
-			},
-		},
-		spaceHeatingNew: {
 			heatSource: { data: [] },
 			heatEmitters: { data: [] },
 			heatingControls: { data: [] },

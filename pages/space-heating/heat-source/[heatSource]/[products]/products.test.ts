@@ -66,7 +66,7 @@ describe("Heat source products page", () => {
 
 	beforeEach(async () => {
 		store.$patch({
-			spaceHeatingNew: {
+			spaceHeating: {
 				heatSource: {
 					data: [{ data: heatSource2 }, { data: heatSource1 }],
 				},
@@ -102,11 +102,11 @@ describe("Heat source products page", () => {
 			path: "/1/air-source",
 		});
 		await renderSuspended(Products);
-	
+
 		await user.click(screen.getByTestId("selectProductButton_1"));
 
 		expect(
-			store.spaceHeatingNew.heatSource.data[1]!.data,
+			store.spaceHeating.heatSource.data[1]!.data,
 		).toEqual(expect.objectContaining({ productReference: MOCKED_HEAT_PUMPS.data[1]?.id }));
 	});
 
@@ -122,7 +122,7 @@ describe("Heat source products page", () => {
 		const backButton = screen.getByTestId("backToHeatSourceButton");
 
 		expect(backButton.getAttribute("href")).toBe(
-			"/space-heating-new/heat-source/1",
+			"/space-heating/heat-source/1",
 		);
 	});
 });

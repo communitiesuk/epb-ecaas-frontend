@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ElectricStorageHeaterModelType } from "~/pages/space-heating-new/heat-emitters/[heatEmitter]/index.vue";
+import type { ElectricStorageHeaterModelType } from "~/pages/space-heating/heat-emitters/[heatEmitter]/index.vue";
 
 const route = useRoute();
 

@@ -10,12 +10,12 @@ const heatingControlOptions = {
 	separateTimeAndTemperatureControl: "Separate time and temperature control",
 };
 
-const heatingControlData = store.spaceHeatingNew.heatingControls.data[0];
+const heatingControlData = store.spaceHeating.heatingControls.data[0];
 const model = ref(heatingControlData?.data as HeatingControlData);
 
 const saveForm = (fields: HeatingControlData) => {
 	store.$patch((state) => {
-		const { heatingControls } = state.spaceHeatingNew;
+		const { heatingControls } = state.spaceHeating;
 
 		const heatingControlsItem: EcaasForm<HeatingControlData> = {
 			data: {
@@ -29,7 +29,7 @@ const saveForm = (fields: HeatingControlData) => {
 		heatingControls.complete = false;
 	});
 
-	navigateTo("/space-heating-new");
+	navigateTo("/space-heating");
 };
 
 watch(model, async (newData, initialData) => {
@@ -39,14 +39,14 @@ watch(model, async (newData, initialData) => {
 	};
 
 	store.$patch(state => {
-		state.spaceHeatingNew.heatingControls.data[0] = {
+		state.spaceHeating.heatingControls.data[0] = {
 			data: {
 				...newData,
 				name: displayCamelToSentenceCase(newData.heatingControlType),
 			},
 		};
 
-		state.spaceHeatingNew.heatingControls.complete = false;
+		state.spaceHeating.heatingControls.complete = false;
 	});
 });
 
@@ -77,7 +77,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
-			<GovButton :href="getUrl('spaceHeatingNew')" secondary>Save progress</GovButton>
+			<GovButton :href="getUrl('spaceHeating')" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

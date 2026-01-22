@@ -17,17 +17,17 @@ const heatPumpId = "56ddc6ce-7a91-4263-b051-96c7216bb01e";
 const addHeatPumpAndHotWaterCylinder = () => {
 	store.$patch({
 		spaceHeating: {
-			heatGeneration: {
-				heatPump: {
-					data: [{
-						data: {
-							name: "HP1",
-							id: heatPumpId,
-							productReference: "HEATPUMP-SMALL",
-						},
-					}],
-				},
+
+			heatSource: {
+				data: [{
+					data: {
+						name: "HP1",
+						id: heatPumpId,
+						productReference: "HEATPUMP-SMALL",
+					},
+				}],
 			},
+
 		},
 		domesticHotWater: {
 			waterHeating: {

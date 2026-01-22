@@ -9,7 +9,7 @@ defineProps<{
 	index: number;
 }>();
 
-const heatSourceStoreData = store.spaceHeatingNew.heatSource.data;
+const heatSourceStoreData = store.spaceHeating.heatSource.data;
 const emit = defineEmits(["update-heat-pump-model"]);
 
 </script>

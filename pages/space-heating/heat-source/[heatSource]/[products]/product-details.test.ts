@@ -35,7 +35,7 @@ describe("Heat pump details", async () => {
 
 	beforeEach(() => {
 		store.$patch({
-			spaceHeatingNew: {
+			spaceHeating: {
 				heatSource: {
 					data: [{ data: smallHeatPump }],
 				},
@@ -103,7 +103,7 @@ describe("Heat pump details", async () => {
 		await renderSuspended(ProductDetails);
 		await user.click(screen.getByTestId("selectProductButton"));
 
-		const heatSource = store.spaceHeatingNew.heatSource.data[0]?.data as HeatSourceProduct;
+		const heatSource = store.spaceHeating.heatSource.data[0]?.data as HeatSourceProduct;
 
 		// Assert
 		expect(heatSource.productReference).toBe("1000");
@@ -115,6 +115,6 @@ describe("Heat pump details", async () => {
 		await user.click(screen.getByTestId("selectProductButton"));
 
 		// Assert
-		expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating-new/heat-source/0");
+		expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-source/0");
 	});
 });

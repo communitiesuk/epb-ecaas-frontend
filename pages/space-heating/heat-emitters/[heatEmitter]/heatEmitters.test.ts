@@ -126,7 +126,7 @@ describe("Heat emitters", () => {
 
 		test("form is prepopulated when data exists in state", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatEmitters: {
 						data: [{ data: radiator1, complete: true }],
 					},
@@ -146,7 +146,7 @@ describe("Heat emitters", () => {
 
 		test("radiator is updated when data with id exists in store", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatEmitters: {
 						data: [{ data: radiator1, complete: true }],
 					},
@@ -164,7 +164,7 @@ describe("Heat emitters", () => {
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			const { data } = store.spaceHeatingNew.heatEmitters;
+			const { data } = store.spaceHeating.heatEmitters;
 
 			expect(data[0]!.data.id).toBe(radiator1.id);
 			expect(data[0]!.data.name).toBe("Updated radiator");
@@ -172,7 +172,7 @@ describe("Heat emitters", () => {
 
 		test("product reference is cleared when heat emitter type changes", async () => {
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatEmitters: {
 						data: [{ data: radiator1, complete: true }],
 					},
@@ -186,7 +186,7 @@ describe("Heat emitters", () => {
 
 			await user.click(screen.getByTestId("typeOfHeatEmitter_underfloorHeating"));
 			// Wait for change to propagate
-			const { data } = store.spaceHeatingNew.heatEmitters;
+			const { data } = store.spaceHeating.heatEmitters;
 			const emitterItem = data[0]!.data;
 			if ("productReference" in emitterItem) {
 				expect(emitterItem.productReference).toBeUndefined();
@@ -397,7 +397,7 @@ describe("Heat emitters", () => {
 			});
 
 			await user.click(screen.getByTestId(`typeOfHeatEmitter_${type}`));
-			const actualHeatEmitter = store.spaceHeatingNew.heatEmitters.data[0]!;
+			const actualHeatEmitter = store.spaceHeating.heatEmitters.data[0]!;
 			expect(actualHeatEmitter.data.name).toBe(expectedName);
 		});
 
@@ -414,7 +414,7 @@ describe("Heat emitters", () => {
 			await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
 			await user.click(screen.getByTestId(`typeOfRadiator_${type}`));
 
-			const actualHeatEmitter = store.spaceHeatingNew.heatEmitters.data[0]!;
+			const actualHeatEmitter = store.spaceHeating.heatEmitters.data[0]!;
 			expect(actualHeatEmitter.data.name).toBe(expectedName);
 		});
 	});
@@ -430,7 +430,7 @@ describe("Heat emitters", () => {
 				numOfHeatersWithThisSpec: 1,
 			};
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatEmitters: {
 						data: [{ data: validInstantElecHeater, complete: false }],
 					},
@@ -444,7 +444,7 @@ describe("Heat emitters", () => {
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			const radiator = store.spaceHeatingNew.heatEmitters.data[0];
+			const radiator = store.spaceHeating.heatEmitters.data[0];
 			expect(radiator?.complete).toBe(true);
 		});
 		test("doesn't save an valid radiator to store", async () => {
@@ -455,7 +455,7 @@ describe("Heat emitters", () => {
 				name: "Standard radiator",
 			};
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatSource: {
 						data: [{ data: { id: "1" } }, { data: { id: "2" } }],
 					},
@@ -472,7 +472,7 @@ describe("Heat emitters", () => {
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			const radiator = store.spaceHeatingNew.heatEmitters.data[0];
+			const radiator = store.spaceHeating.heatEmitters.data[0];
 			expect(radiator?.complete).toBe(false);
 			expect(screen.getByTestId("selectRadiator_error")).toBeDefined();
 			expect(screen.getByTestId("heatSource_error")).toBeDefined();
@@ -509,7 +509,7 @@ describe("Heat emitters", () => {
 			await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
 			await user.click(screen.getByTestId("saveProgress"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
+			expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
 		});
 
 		it("navigates to space heating when valid form is completed", async () => {
@@ -522,7 +522,7 @@ describe("Heat emitters", () => {
 				numOfHeatersWithThisSpec: 1,
 			};
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatEmitters: {
 						data: [{ data: validInstantElecHeater, complete: false }],
 					},
@@ -536,7 +536,7 @@ describe("Heat emitters", () => {
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/space-heating-new");
+			expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
 		});
 
 		test("error summary is displayed when an invalid form in submitted", async () => {
@@ -585,7 +585,7 @@ describe("Heat emitters", () => {
 				};
 
 				store.$patch({
-					spaceHeatingNew: {
+					spaceHeating: {
 						heatEmitters: {
 							data: [{ data: validRadiator }],
 						},
@@ -600,7 +600,7 @@ describe("Heat emitters", () => {
 
 				await user.click(screen.getByTestId("typeOfHeatEmitter_underfloorHeating"));
 
-				const actualHeatEmitter = store.spaceHeatingNew.heatEmitters.data[0]!;
+				const actualHeatEmitter = store.spaceHeating.heatEmitters.data[0]!;
 				expect(actualHeatEmitter.data.typeOfHeatEmitter).toBe("underfloorHeating");
 				expect(actualHeatEmitter.data.name).toBe("Underfloor heating");
 			});
@@ -617,7 +617,7 @@ describe("Heat emitters", () => {
 				await user.type(screen.getByTestId("name"), "New radiator");
 				await user.tab();
 
-				const actualHeatEmitter = store.spaceHeatingNew.heatEmitters.data[0] as { data: RadiatorModelType };
+				const actualHeatEmitter = store.spaceHeating.heatEmitters.data[0] as { data: RadiatorModelType };
 
 				expect(actualHeatEmitter.data.name).toBe("New radiator");
 			});
@@ -634,7 +634,7 @@ describe("Heat emitters", () => {
 				await user.type(screen.getByTestId("designFlowTemp"), "50");
 				await user.tab();
 
-				const actualHeatEmitter = store.spaceHeatingNew.heatEmitters.data[0] as { data: RadiatorModelType };
+				const actualHeatEmitter = store.spaceHeating.heatEmitters.data[0] as { data: RadiatorModelType };
 				expect(actualHeatEmitter.data.name).toBe("Standard radiator");
 				expect(actualHeatEmitter.data.designFlowTemp).toBe(50);
 			});
@@ -657,7 +657,7 @@ describe("Heat emitters", () => {
 
 			test("marks section as not complete after editing an existing item", async () => {
 				store.$patch({
-					spaceHeatingNew: {
+					spaceHeating: {
 						heatEmitters: {
 							data: [{ data: radiator1, complete: true }],
 							complete: true,
@@ -672,7 +672,7 @@ describe("Heat emitters", () => {
 				await user.type(screen.getByTestId("name"), " Changed");
 				await user.tab();
 
-				expect(store.spaceHeatingNew.heatEmitters.complete).toBe(false);
+				expect(store.spaceHeating.heatEmitters.complete).toBe(false);
 			});
 		});
 	});
@@ -680,7 +680,7 @@ describe("Heat emitters", () => {
 		test("first heat source is autoselected when only one heat source exists", async () => {
 			const store = useEcaasStore();
 			store.$patch({
-				spaceHeatingNew: {
+				spaceHeating: {
 					heatSource: {
 						data: [
 							{ data: { id: "hs1", name: "Heat source 1" } },

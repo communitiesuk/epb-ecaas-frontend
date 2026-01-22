@@ -14,9 +14,9 @@ defineProps<{
 
 const store = useEcaasStore();
 
-const { heatSource } = store.spaceHeatingNew;
+const { heatSource } = store.spaceHeating;
 
-const heatGenerators = [
+const heatSources = [
 	heatSource.data.map(x => x ? [x.data.id, x.data.name] as [string, string] : undefined),
 ].flat().filter(x => typeof x !== "undefined");
 </script>
@@ -26,7 +26,7 @@ const heatGenerators = [
 		<FormKit
 			:id="id"
 			type="govRadios"
-			:options="new Map(heatGenerators)"
+			:options="new Map(heatSources)"
 			:label="label"
 			:help="help"
 			:name="name"
@@ -34,11 +34,11 @@ const heatGenerators = [
 			:validation-rules="validationRules"
 			:validation-messages="validationMessages"
 			:data-field="dataField">
-			<div v-if="!heatGenerators.length"
+			<div v-if="!heatSources.length"
 			>
-				<p class="govuk-error-message">No heat generators added.</p>
-				<NuxtLink :to="getUrl('heatGeneration')" class="govuk-link gov-radios-add-link">
-					Click here to add a heat generator
+				<p class="govuk-error-message">No heat sources added.</p>
+				<NuxtLink :to="getUrl('heatSource')" class="govuk-link gov-radios-add-link">
+					Click here to add a heat source
 				</NuxtLink>
 			</div>
 		</FormKit>

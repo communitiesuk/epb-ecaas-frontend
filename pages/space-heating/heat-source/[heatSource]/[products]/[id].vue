@@ -34,7 +34,7 @@ const backUrl = getUrl(pageId)
 
 const selectProduct = () => {
 	store.$patch((state) => {
-		const item = state.spaceHeatingNew.heatSource.data[index];
+		const item = state.spaceHeating.heatSource.data[index];
 
 		if (item && data) {
 			const product = item.data as HeatSourceProduct;
