@@ -450,7 +450,7 @@ export interface components {
         };
         UfhWithProductReference: {
             /** @constant */
-            wet_emitter_type: "fancoil";
+            wet_emitter_type: "ufh";
             /**
              * Reference to the product in the HEM database
              * @description A unique reference to a product held within the HEM database (PCDB)
@@ -2031,7 +2031,7 @@ export interface components {
                 };
                 UfhWithProductReference: {
                     /** @constant */
-                    wet_emitter_type: "fancoil";
+                    wet_emitter_type: "ufh";
                     /**
                      * Reference to the product in the HEM database
                      * @description A unique reference to a product held within the HEM database (PCDB)
