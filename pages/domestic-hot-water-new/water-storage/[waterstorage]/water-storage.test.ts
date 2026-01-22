@@ -106,16 +106,16 @@ describe("water storage", () => {
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("heatSource_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
-		expect((await screen.findByTestId("thermostatPosition_error"))).toBeDefined();
-
+		
 		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 		await user.click(screen.getByTestId("saveAndComplete"));
-
+		
 		//hot water cylinder specific
 		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
 		expect((await screen.findByTestId("initialTemperature_error"))).toBeDefined();
 		expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
 		expect((await screen.findByTestId("areaOfHeatExchanger_error"))).toBeDefined();
+		expect((await screen.findByTestId("thermostatPosition_error"))).toBeDefined();
 
 		await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
 		await user.click(screen.getByTestId("saveAndComplete"));

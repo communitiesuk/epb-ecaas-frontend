@@ -36,7 +36,6 @@ const saveForm = (fields: WaterStorageData) => {
 			id,
 			heatSource: fields.heatSource,	
 			heaterPosition: fields.heaterPosition,
-			thermostatPosition: fields.thermostatPosition,
 		};
 
 		let waterStorageItem: EcaasForm<WaterStorageData>;
@@ -50,6 +49,7 @@ const saveForm = (fields: WaterStorageData) => {
 					initialTemperature: fields.initialTemperature,
 					dailyEnergyLoss: fields.dailyEnergyLoss,
 					areaOfHeatExchanger: fields.areaOfHeatExchanger,
+					thermostatPosition: fields.thermostatPosition,
 				},
 				complete: true,
 			};
@@ -211,6 +211,7 @@ const waterStorages = [
 			help="Enter a number between 0 and 1. 0 is at the bottom and 1 is at the top."
 		/>
         <FormKit
+			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
             id="thermostatPosition"
             type="govInputFloat"
             label="Thermostat position in the cylinder"
