@@ -163,8 +163,7 @@ export function mapUnderfloorHeating(state: ResolvedState): Record<string, Schem
 		ufh.map((heating) => {
 			const emitter: SchemaUfhWithProductReference = {
 				product_reference: heating.productReference,
-				wet_emitter_type: "ufh" as unknown as "fancoil",
-				// needs fixing in api-schema.types.ts
+				wet_emitter_type: "ufh",
 			};
 			const common = {
 				emitters: [emitter],
