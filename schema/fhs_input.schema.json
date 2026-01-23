@@ -2463,8 +2463,7 @@
 										"type": "object",
 										"unevaluatedProperties": false,
 										"required": [
-											"wet_emitter_type",
-											"frac_convective"
+											"wet_emitter_type"
 										],
 										"properties": {
 											"wet_emitter_type": {
@@ -2473,9 +2472,6 @@
 													"ufh",
 													"fancoil"
 												]
-											},
-											"frac_convective": {
-												"type": "number"
 											}
 										},
 										"allOf": [
@@ -2532,7 +2528,8 @@
 														},
 														{
 															"required": [
-																"n"
+																"n",
+																"frac_convective"
 															],
 															"properties": {
 																"length": {
@@ -2543,6 +2540,9 @@
 																	"type": "number",
 																	"exclusiveMinimum": 0,
 																	"maximum": 2
+																},
+																"frac_convective": {
+																	"type": "number"
 																}
 															},
 															"if": {
@@ -2613,7 +2613,8 @@
 															"required": [
 																"equivalent_specific_thermal_mass",
 																"system_performance_factor",
-																"emitter_floor_area"
+																"emitter_floor_area",
+																"frac_convective"
 															],
 															"properties": {
 																"equivalent_specific_thermal_mass": {
@@ -2627,6 +2628,9 @@
 																"emitter_floor_area": {
 																	"type": "number",
 																	"exclusiveMinimum": 0
+																},
+																"frac_convective": {
+																	"type": "number"
 																}
 															}
 														}
@@ -2707,6 +2711,9 @@
 																			}
 																		}
 																	}
+																},
+																"frac_convective": {
+																	"type": "number"
 																}
 															}
 														}
