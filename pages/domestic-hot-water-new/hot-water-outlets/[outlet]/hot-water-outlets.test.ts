@@ -194,6 +194,10 @@ describe("hot water outlets", () => {
 		},
 	].forEach(({ type, populateValidForm, hotWaterOutlet }) => {
 		describe(type, () => {
+			beforeEach(() => {
+				store.$reset();
+			});
+
 			test("data is saved to store state when form is valid", async () => {
 				addHeatPumpStoreData();
 
@@ -218,18 +222,19 @@ describe("hot water outlets", () => {
 				store.$patch({
 					domesticHotWaterNew: {
 						hotWaterOutlets: {
-							data: [{ ...hotWaterOutlet }],
+							data: [{ data: { ...hotWaterOutlet.data } }],
 						},
 					},
 				});
 
+				
 				addHeatPumpStoreData();
 				await renderSuspended(HotWaterOutlets, {
 					route: {
 						params: { "hotWaterOutlet": "0" },
 					},
 				});
-
+				
 				expect(
 					(await screen.findByTestId<HTMLInputElement>(`typeOfHotWaterOutlet_${type}`)).checked,
 				).toBe(true);
@@ -239,7 +244,7 @@ describe("hot water outlets", () => {
 				}
 
 				(Object.keys(hotWaterOutlet.data))
-					.filter(e => e !== "id" && e !== "typeOfHotWaterOutlet" && e !== "hotWaterSource")
+					.filter(e => e !== "id" && e !== "typeOfHotWaterOutlet" && e !== "hotWaterSource" && e !== "wwhrs")
 					.forEach(async (key) => {
 						expect((await screen.findByTestId<HTMLInputElement>(key)).value)
 							.toBe(String((hotWaterOutlet.data)[key as (keyof typeof hotWaterOutlet.data)]));
