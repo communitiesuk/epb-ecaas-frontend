@@ -165,7 +165,7 @@ const hotWaterOutlets = [
             :options="new Map(store.domesticHotWaterNew.heatSources.data.map((e, index) => {return [index.toString(), e.data.name]}))"
         />
         <FormKit
-            v-if="model.typeOfHotWaterOutlet === 'mixedShower'"	
+            v-if="model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	
             id="flowRate"
             type="govInputWithSuffix"
             label="Flow rate"
@@ -191,15 +191,6 @@ const hotWaterOutlets = [
             suffix-text="litres"
             validation="required|number|min:0|max:500"
             data-field="HotWaterDemand.Bath.*.size"
-        />
-        <FormKit
-            v-if="model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	
-            id="flowRateOther"
-            type="govInputWithSuffix"
-            label="Flow rate"
-            name="flowRateOther"
-            suffix-text="litres per second"
-            validation="required|number|min:0|max:15"
         />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

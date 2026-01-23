@@ -27,6 +27,34 @@ describe("hot water outlets", () => {
 			wwhrs: false,
 		},
 	};
+
+	const electricShower: EcaasForm<ElectricShowerDataNew> = {
+		data: {
+			name: "Electric shower 1",
+			id: "c84528bb-f805-4f1e-95d3-2bd1717deca2",
+			typeOfHotWaterOutlet: "electricShower",
+			ratedPower: 5,
+			wwhrs: false,
+		},
+	};
+
+	const bath: EcaasForm<BathDataNew> = {
+		data: {
+			name: "Bath 1",
+			id: "c84528bb-f805-4f1e-95d3-2bd1717deca3",
+			typeOfHotWaterOutlet: "bath",
+			size: 150,
+		},
+	};
+
+	const otherHotWaterOutlet: EcaasForm<OtherHotWaterOutletDataNew> = {
+		data: {
+			name: "Other hot water outlet 1",
+			id: "c84528bb-f805-4f1e-95d3-2bd1717deca4",
+			typeOfHotWaterOutlet: "otherHotWaterOutlet",
+			flowRate: 8,
+		},
+	};
 	
 	afterEach(() => {
 		store.$reset();
@@ -55,20 +83,31 @@ describe("hot water outlets", () => {
 		await user.type(screen.getByTestId("name"), "Mixer shower 1");
 		await user.click(screen.getByTestId("hotWaterSource_0"));
 		await user.type(screen.getByTestId("flowRate"), "10");
+		//WWHRS
 		await user.tab();
 	};
 	
-	// const populateValidFormSHWT = async () => {
-	// 	await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
-	// 	await user.type(screen.getByTestId("name"), "Smart hot water tank 1");
-	// 	await user.click(screen.getByTestId("chooseAProductButton"));
-	// 	// await user.click(screen.getByTestId("selectProductButton_0"));
-	// 	// Can't do this :( idk why)
-	// 	await user.click(screen.getByTestId(`heatSource_${heatPumpId}`));
-	// 	await user.type(screen.getByTestId("heaterPosition"), "0.8");
-	// 	await user.type(screen.getByTestId("thermostatPosition"), "0.5");
-	// 	await user.tab();
-	// };
+	const populateValidFormES = async () => {
+		await user.click(screen.getByTestId("typeOfHotWaterOutlet_electricShower"));
+		await user.type(screen.getByTestId("name"), "Electric shower 1");
+		await user.type(screen.getByTestId("ratedPower"), "5");
+		//WWHRS
+		await user.tab();
+	};
+    
+	const populateValidFormBath = async () => {
+		await user.click(screen.getByTestId("typeOfHotWaterOutlet_bath"));
+		await user.type(screen.getByTestId("name"), "Bath 1");
+		await user.type(screen.getByTestId("size"), "150");
+		await user.tab();
+	};
+	
+	const populateValidFormOHWO = async () => {
+		await user.click(screen.getByTestId("typeOfHotWaterOutlet_otherHotWaterOutlet"));
+		await user.type(screen.getByTestId("name"), "Other hot water outlet 1");
+		await user.type(screen.getByTestId("flowRate"), "8");
+		await user.tab();
+	};
 	
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(HotWaterOutlets, {
@@ -114,7 +153,7 @@ describe("hot water outlets", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
         
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
-		expect((await screen.findByTestId("flowRateOther_error"))).toBeDefined();
+		expect((await screen.findByTestId("flowRate_error"))).toBeDefined();
 	});
 
 	//awaiting pcdb merge
@@ -138,21 +177,21 @@ describe("hot water outlets", () => {
 			populateValidForm: populateValidFormMS,
 			hotWaterOutlet: mixerShower,
 		},
-		// { 
-		// 	type: "electricShower",
-		// 	populateValidForm: populateValidFormES,
-		// 	hotWaterOutlet: electricShower,
-		// },
-		// { 
-		// 	type: "bath",
-		// 	populateValidForm: populateValidFormBath,
-		// 	hotWaterOutlet: bath,
-		// },
-		// { 
-		// 	type: "otherHotWaterOutlet",
-		// 	populateValidForm: populateValidFormOHWO,
-		// 	hotWaterOutlet: otherHotWaterOutlet,
-		// },
+		{ 
+			type: "electricShower",
+			populateValidForm: populateValidFormES,
+			hotWaterOutlet: electricShower,
+		},
+		{ 
+			type: "bath",
+			populateValidForm: populateValidFormBath,
+			hotWaterOutlet: bath,
+		},
+		{ 
+			type: "otherHotWaterOutlet",
+			populateValidForm: populateValidFormOHWO,
+			hotWaterOutlet: otherHotWaterOutlet,
+		},
 	].forEach(({ type, populateValidForm, hotWaterOutlet }) => {
 		describe(type, () => {
 			test("data is saved to store state when form is valid", async () => {
