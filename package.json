@@ -65,7 +65,7 @@
     "constructs": "^10.4.2",
     "esbuild": "^0.25.0",
     "eslint": "^9.34.0",
-    "govuk-frontend": "^5.10.2",
+    "govuk-frontend": "^5.14.0",
     "happy-dom": "^20.0.10",
     "object-path-immutable": "4.1.2",
     "openapi-typescript": "^7.6.1",

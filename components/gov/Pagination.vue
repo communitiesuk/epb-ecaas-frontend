@@ -75,7 +75,7 @@ watch(routeQuery, () => {
 					1
 				</NuxtLink>
 			</li>
-			<li v-if="getPageNumber() - adjacentPageNumbers > 3" class="govuk-pagination__item govuk-pagination__item--ellipses">
+			<li v-if="getPageNumber() - adjacentPageNumbers > 3" class="govuk-pagination__item govuk-pagination__item--ellipsis">
 				&ctdot;
 			</li>
 			<template v-for="pageNumber in totalPages">
@@ -98,7 +98,7 @@ watch(routeQuery, () => {
 					</NuxtLink>
 				</li>
 			</template>
-			<li v-if="getPageNumber() + adjacentPageNumbers < (totalPages - 2)" class="govuk-pagination__item govuk-pagination__item--ellipses">
+			<li v-if="getPageNumber() + adjacentPageNumbers < (totalPages - 2)" class="govuk-pagination__item govuk-pagination__item--ellipsis">
 				&ctdot;
 			</li>
 			<li class="govuk-pagination__item" :class="getPageNumber() === totalPages ? 'govuk-pagination__item--current' : ''">
