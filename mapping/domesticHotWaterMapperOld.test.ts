@@ -68,14 +68,12 @@ describe("domestic hot water mapper", () => {
 				},
 			},
 			spaceHeating: {
-				heatGeneration: {
-					heatPump: {
-						data: [{
-							data: { name: heatPumpName, id: heatPumpName },
-							complete: true,
-						}],
+				heatSource: {
+					data: [{
+						data: { name: heatPumpName, id: heatPumpName },
 						complete: true,
-					},
+					}],
+					complete: true,
 				},
 			},
 		});
@@ -179,14 +177,12 @@ describe("domestic hot water mapper", () => {
 				},
 			},
 			spaceHeating: {
-				heatGeneration: {
-					heatPump: {
-						data: [{
-							data: { name: heatPumpName, id: heatPumpId },
-							complete: true,
-						}],
+				heatSource: {
+					data: [{
+						data: { name: heatPumpName, id: heatPumpId },
 						complete: true,
-					},
+					}],
+					complete: true,
 				},
 			},
 		});

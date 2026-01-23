@@ -3,6 +3,7 @@ import { litre, type Volume } from "~/utils/units/volume";
 import type { WaterStorageData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
 import { v4 as uuidv4 } from "uuid";
+import { FieldsHeatSources } from "#components";
 
 const title = "Water storage";
 const store = useEcaasStore();
@@ -143,7 +144,7 @@ const waterStorages = [
 			validation="required | isProductSelected"
 			help="Select the smart hot water tank from the PCDB using the button below."
 			:selected-product-reference="(waterStorageData?.data as SmartHotWaterTankDataNew)?.productReference"
-			selected-product-type="Air source"
+			selected-product-type="airSource"
 			:page-url="route.fullPath"
 			:page-index="index"
 		/>
@@ -186,7 +187,7 @@ const waterStorages = [
 			suffix-text="kWh"
 			data-field="HotWaterSource['hw cylinder'].daily_losses"
 		/>
-		<FieldsHeatGenerators
+		<FieldsHeatSources
 			id="heatSource"
 			name="heatSource"
 			label="Heat source"

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { getTabItems, getUrl  } from "#imports";
+import { getTabItems, getUrl } from "#imports";
 
 const title = "Domestic hot water";
 const store = useEcaasStore();
 
-const { heatPump } = store.spaceHeating.heatGeneration;
+const heatPumps = store.spaceHeating.heatSource.data.filter(x => x.data?.typeOfHeatSource === "heatPump");
 const heatGenerationData = [
-	heatPump.data,
+	heatPumps,
 	// boiler.data,
 	// heatBattery.data,
 	// heatNetwork.data,
@@ -29,106 +29,106 @@ const hotWaterCylinderSummary: SummarySection = {
 	editUrl: getUrl("waterHeating"),
 };
 
-const immersionHeaterData = store.domesticHotWater.waterHeating.immersionHeater.data;
-const immersionHeaterSummary: SummarySection = {
-	id: "immersionHeater",
-	label: "Immersion heaters",
-	data: immersionHeaterData.map(d => {
-		return {
-			"Name": show(d.data.name),
-			"Rated power": dim(d.data.ratedPower, "kilowatt"),
-			"Heater position": displayHeaterPosition(d.data.heaterPosition),
-			"Thermostat position": displayHeaterPosition(d.data.thermostatPosition),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
+// const immersionHeaterData = store.domesticHotWater.waterHeating.immersionHeater.data;
+// const immersionHeaterSummary: SummarySection = {
+// 	id: "immersionHeater",
+// 	label: "Immersion heaters",
+// 	data: immersionHeaterData.map(d => {
+// 		return {
+// 			"Name": show(d.data.name),
+// 			"Rated power": dim(d.data.ratedPower, "kilowatt"),
+// 			"Heater position": displayHeaterPosition(d.data.heaterPosition),
+// 			"Thermostat position": displayHeaterPosition(d.data.thermostatPosition),
+// 		};
+// 	}),
+// 	editUrl: getUrl("waterHeating"),
+// };
 
-const solarThermalData = store.domesticHotWater.waterHeating.solarThermal.data;
-const solarThermalSummary: SummarySection = {
-	id: "solarThermal",
-	label: "Solar thermal",
-	data: solarThermalData.map(d => {
-		return {
-			"Name": show(d.data.name),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
+// const solarThermalData = store.domesticHotWater.waterHeating.solarThermal.data;
+// const solarThermalSummary: SummarySection = {
+// 	id: "solarThermal",
+// 	label: "Solar thermal",
+// 	data: solarThermalData.map(d => {
+// 		return {
+// 			"Name": show(d.data.name),
+// 		};
+// 	}),
+// 	editUrl: getUrl("waterHeating"),
+// };
 
-const pointOfUseData = store.domesticHotWater.waterHeating.pointOfUse.data;
-const pointOfUseSummary: SummarySection = {
-	id: "pointOfUse",
-	label: "Point of use",
-	data: pointOfUseData.map(d => {
-		return {
-			"Name": show(d.data.name),
-			"Setpoint temperature": dim(d.data.setpointTemperature, "celsius"),
-			"Heater efficiency": show(d.data.heaterEfficiency),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
+// const pointOfUseData = store.domesticHotWater.waterHeating.pointOfUse.data;
+// const pointOfUseSummary: SummarySection = {
+// 	id: "pointOfUse",
+// 	label: "Point of use",
+// 	data: pointOfUseData.map(d => {
+// 		return {
+// 			"Name": show(d.data.name),
+// 			"Setpoint temperature": dim(d.data.setpointTemperature, "celsius"),
+// 			"Heater efficiency": show(d.data.heaterEfficiency),
+// 		};
+// 	}),
+// 	editUrl: getUrl("waterHeating"),
+// };
 
-const heatPumpData = store.domesticHotWater.waterHeating.heatPump.data;
-const heatPumpSummary: SummarySection = {
-	id: "heatPump",
-	label: "Heat pumps",
-	data: heatPumpData.map(d => {
-		return {
-			"Name": show(d.data.name),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
+// const heatPumpData = store.domesticHotWater.waterHeating.heatPump.data;
+// const heatPumpSummary: SummarySection = {
+// 	id: "heatPump",
+// 	label: "Heat pumps",
+// 	data: heatPumpData.map(d => {
+// 		return {
+// 			"Name": show(d.data.name),
+// 		};
+// 	}),
+// 	editUrl: getUrl("waterHeating"),
+// };
 
-const combiBoilerData = store.domesticHotWater.waterHeating.combiBoiler.data;
-const combiBoilerSummary: SummarySection = {
-	id: "combiBoiler",
-	label: "Combi boilers",
-	data: combiBoilerData.map(d => {
-		return {
-			"Name": show(d.data.name),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
+// const combiBoilerData = store.domesticHotWater.waterHeating.combiBoiler.data;
+// const combiBoilerSummary: SummarySection = {
+// 	id: "combiBoiler",
+// 	label: "Combi boilers",
+// 	data: combiBoilerData.map(d => {
+// 		return {
+// 			"Name": show(d.data.name),
+// 		};
+// 	}),
+// 	editUrl: getUrl("waterHeating"),
+// };
 
-const heatBatteryData = store.domesticHotWater.waterHeating.heatBattery.data;
-const heatBatterySummary: SummarySection = {
-	id: "heatBattery",
-	label: "Heat batteries",
-	data: heatBatteryData.map(d => {
-		return {
-			"Name": show(d.data.name),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
+// const heatBatteryData = store.domesticHotWater.waterHeating.heatBattery.data;
+// const heatBatterySummary: SummarySection = {
+// 	id: "heatBattery",
+// 	label: "Heat batteries",
+// 	data: heatBatteryData.map(d => {
+// 		return {
+// 			"Name": show(d.data.name),
+// 		};
+// 	}),
+// 	editUrl: getUrl("waterHeating"),
+// };
 
-const smartHotWaterTankData = store.domesticHotWater.waterHeating.smartHotWaterTank.data;
-const smartHotWaterTankSummary: SummarySection = {
-	id: "smartHotWaterTank",
-	label: "Smart hot water tanks",
-	data: smartHotWaterTankData.map(d => {
-		return {
-			"Name": show(d.data.name),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
+// const smartHotWaterTankData = store.domesticHotWater.waterHeating.smartHotWaterTank.data;
+// const smartHotWaterTankSummary: SummarySection = {
+// 	id: "smartHotWaterTank",
+// 	label: "Smart hot water tanks",
+// 	data: smartHotWaterTankData.map(d => {
+// 		return {
+// 			"Name": show(d.data.name),
+// 		};
+// 	}),
+// 	editUrl: getUrl("waterHeating"),
+// };
 
-const heatInterfaceUnitData = store.domesticHotWater.waterHeating.heatInterfaceUnit.data;
-const heatInterfaceUnitSummary: SummarySection = {
-	id: "heatInterfaceUnit",
-	label: "Heat interface units",
-	data: heatInterfaceUnitData.map(d => {
-		return {
-			"Name": show(d.data.name),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
+// const heatInterfaceUnitData = store.domesticHotWater.waterHeating.heatInterfaceUnit.data;
+// const heatInterfaceUnitSummary: SummarySection = {
+// 	id: "heatInterfaceUnit",
+// 	label: "Heat interface units",
+// 	data: heatInterfaceUnitData.map(d => {
+// 		return {
+// 			"Name": show(d.data.name),
+// 		};
+// 	}),
+// 	editUrl: getUrl("waterHeating"),
+// };
 
 const waterHeatingSummarySections: SummarySection[] = [
 	hotWaterCylinderSummary,
