@@ -1,6 +1,72 @@
 import type { Page } from "./pages.types";
 
 const domesticHotWaterPages = [
+	// NEW HOT WATER START =======================================================================
+	{
+		id: "domesticHotWaterNew",
+		title: "Domestic hot water NEW",
+		url: "/domestic-hot-water-new",
+		type: "section",
+		parentId: "taskList",
+	},
+	{
+		id: "waterStorage",
+		title: "Water Storage",
+		url: "/domestic-hot-water-new/water-storage/:waterstorage",
+		type: "taskGroup",
+		parentId: "domesticHotWaterNew",
+	},
+	{
+		id: "waterStorageCreate",
+		title: "Water Storage ",
+		url: "/domestic-hot-water-new/water-storage/create",
+		type: "task",
+		parentId: "domesticHotWaterNew",
+	},
+	{
+		id: "smartHotWaterTankProducts",
+		title: "Select a smart hot water tank",
+		url: "/domestic-hot-water-new/water-storage/:waterstorage/:products",
+		type: "task",
+		parentId: "waterStorage",
+	},
+	{
+		id: "heatSources",
+		title: "Heat Sources",
+		url: "/domestic-hot-water-new/heat-sources/:heatsources",
+		type: "taskGroup",
+		parentId: "domesticHotWaterNew",
+	},
+	{
+		id: "heatSourcesCreate",
+		title: "Heat Sources ",
+		url: "/domestic-hot-water-new/heat-sources/create",
+		type: "task",
+		parentId: "domesticHotWaterNew",
+	},
+	{
+		id: "hotWaterOutletsNewCreate",
+		title: "Hot Water Outlets",
+		url: "/domestic-hot-water-new/hot-water-outlets/create",
+		type: "taskGroup",
+		parentId: "domesticHotWaterNew",
+	},
+	{
+		id: "hotWaterOutletsNew",
+		title: "Hot Water Outlets",
+		url: "/domestic-hot-water-new/hot-water-outlets/:outlet",
+		type: "taskGroup",
+		parentId: "domesticHotWaterNew",
+	},
+	{
+		id: "pipeworkNew",
+		title: "Pipework",
+		url: "/domestic-hot-water-new/pipework",
+		type: "taskGroup",
+		parentId: "domesticHotWaterNew",
+	},
+
+	// OLD HOT WATER START =======================================================================
 	{
 		id: "domesticHotWater",
 		title: "Domestic hot water",

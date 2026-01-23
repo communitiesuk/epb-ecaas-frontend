@@ -1199,6 +1199,21 @@ describe("FHS input mapper", () => {
 			},
 		};
 
+		const domesticHotWaterNew: DomesticHotWaterNew = {
+			heatSources: {
+				...baseForm,
+			},
+			waterStorage: {
+				...baseForm,
+			},
+			hotWaterOutlets: {
+				...baseForm,
+			},
+			pipework: {
+				...baseForm,
+			},
+		};
+
 		const domesticHotWater: DomesticHotWater = {
 			waterHeating: {
 				hotWaterCylinder: {
@@ -1297,6 +1312,7 @@ describe("FHS input mapper", () => {
 		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
+			domesticHotWaterNew,
 			dwellingFabric,
 			infiltrationAndVentilation,
 			spaceHeating,
@@ -2105,6 +2121,21 @@ describe("FHS input mapper", () => {
 			},
 		};
 
+		const domesticHotWaterNew: DomesticHotWaterNew = {
+			heatSources: {
+				...baseForm,
+			},
+			waterStorage: {
+				...baseForm,
+			},
+			hotWaterOutlets: {
+				...baseForm,
+			},
+			pipework: {
+				...baseForm,
+			},
+		};
+
 		const pvAndBatteries: PvAndBatteries = {
 			pvSystems: {
 				...baseForm,
@@ -2150,6 +2181,7 @@ describe("FHS input mapper", () => {
 		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
+			domesticHotWaterNew,
 			dwellingFabric,
 			infiltrationAndVentilation,
 			spaceHeating,

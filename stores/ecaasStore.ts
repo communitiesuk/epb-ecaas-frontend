@@ -20,6 +20,20 @@ export function getInitialState(): EcaasState {
 			naturalVentilation: { data: {} },
 			airPermeability: { data: {} },
 		},
+		domesticHotWaterNew: {
+			heatSources: {
+				data: [],
+			},
+			waterStorage: { 
+				data: [],
+			},
+			hotWaterOutlets: {
+				data: [],
+			},
+			pipework: {
+				data: [],
+			},
+		},
 		domesticHotWater: {
 			waterHeating: {
 				hotWaterCylinder: { data: [] },
