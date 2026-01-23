@@ -13,18 +13,18 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const waterStorageStoreData = store.domesticHotWaterNew.waterStorage.data;
 const index = getStoreIndex(waterStorageStoreData);
 const waterStorageData = waterStorageStoreData[index] as EcaasForm<WaterStorageData>;
-const model = ref(waterStorageData?.data as WaterStorageData);
-const id =  waterStorageData?.data.id ?? uuidv4();
+const model = ref(waterStorageData?.data);
+const id = waterStorageData?.data.id ?? uuidv4();
 
 if (waterStorageData?.data?.typeOfWaterStorage === "hotWaterCylinder"
     && typeof waterStorageData.data.storageCylinderVolume === "number"
 ) {
-    if (typeof waterStorageData?.data?.storageCylinderVolume === "number") {
-        waterStorageData.data.storageCylinderVolume = unitValue(
-            waterStorageData.data.storageCylinderVolume,
-            litre,
-        );
-    }
+	if (typeof waterStorageData?.data?.storageCylinderVolume === "number") {
+		waterStorageData.data.storageCylinderVolume = unitValue(
+			waterStorageData.data.storageCylinderVolume,
+			litre,
+		);
+	}
 }
 
 const saveForm = (fields: WaterStorageData) => {
@@ -97,9 +97,9 @@ const isProductSelected = () => {
 };
 
 const waterStorages = [
-    ["hotWaterCylinder", "Hot water cylinder"],
-    ["smartHotWaterTank", "Smart hot water cylinder"],
-] as [string, string][]
+	["hotWaterCylinder", "Hot water cylinder"],
+	["smartHotWaterTank", "Smart hot water cylinder"],
+] as [string, string][];
 
 </script>
 
@@ -116,15 +116,14 @@ const waterStorages = [
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="waterStorageErrorSummary"/>
-        <FormKit
+		<FormKit
 			id="typeOfWaterStorage"
 			name="typeOfWaterStorage"
 			type="govRadios"
 			:options="new Map(waterStorages)"
 			label="Type of water storage"
 			validation="required"
-		>
-		</FormKit>
+		/>
 		<FormKit
 			id="name"
 			type="govInputText"
@@ -134,21 +133,21 @@ const waterStorages = [
 			validation="required"
 		/>
 		<!-- <ClientOnly> -->
-			<FormKit
-				v-if="model.typeOfWaterStorage === 'smartHotWaterTank'"	
-				id="selectSmartHotWaterTank"
-				type="govPcdbProduct"
-				label="!! Select a smart hot water tank (!NEEDS UPDATING!)"
-				name="productReference"
-				:validation-rules="{ isProductSelected }"
-				validation="required | isProductSelected"
-				help="Select the smart hot water tank from the PCDB using the button below."
-				:selected-product-reference="(waterStorageData?.data as SmartHotWaterTankDataNew)?.productReference"
-				selected-product-type="Air source"
-				:page-url="route.fullPath"
-				:page-index="index"
-			/>
-			<!-- should be `selected-product-type="smart hot water tank"` or 
+		<FormKit
+			v-if="model.typeOfWaterStorage === 'smartHotWaterTank'"	
+			id="selectSmartHotWaterTank"
+			type="govPcdbProduct"
+			label="!! Select a smart hot water tank (!NEEDS UPDATING!)"
+			name="productReference"
+			:validation-rules="{ isProductSelected }"
+			validation="required | isProductSelected"
+			help="Select the smart hot water tank from the PCDB using the button below."
+			:selected-product-reference="(waterStorageData?.data as SmartHotWaterTankDataNew)?.productReference"
+			selected-product-type="Air source"
+			:page-url="route.fullPath"
+			:page-index="index"
+		/>
+		<!-- should be `selected-product-type="smart hot water tank"` or 
 			 whatever it will be in the pcdb! Currently using Air source just to check
 			 that it's working. -->
 		<!-- </ClientOnly> -->
@@ -187,22 +186,22 @@ const waterStorages = [
 			suffix-text="kWh"
 			data-field="HotWaterSource['hw cylinder'].daily_losses"
 		/>
-        <FieldsHeatGenerators
+		<FieldsHeatGenerators
 			id="heatSource"
 			name="heatSource"
 			label="Heat source"
 			help="Select the relevant heat source that has been added previously"
 		/>
-        <FormKit
+		<FormKit
 			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
 			id="areaOfHeatExchanger"
 			type="govInputWithSuffix"
 			label="Area of heat exchanger installed"
-		    suffix-text="m²"
+			suffix-text="m²"
 			name="areaOfHeatExchanger"
 			validation="required | number"
 		/>
-        <FormKit
+		<FormKit
 			id="heaterPosition"
 			type="govInputFloat"
 			label="Heater position in the cylinder"
@@ -210,15 +209,15 @@ const waterStorages = [
 			validation="required | number | min:0 | max:1"
 			help="Enter a number between 0 and 1. 0 is at the bottom and 1 is at the top."
 		/>
-        <FormKit
+		<FormKit
 			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
-            id="thermostatPosition"
-            type="govInputFloat"
-            label="Thermostat position in the cylinder"
-            name="thermostatPosition"
-            validation="required | number | min:0 | max:1"
-            help="Enter a number between 0 and 1. 0 is at the bottom and 1 is at the top."
-         />
+			id="thermostatPosition"
+			type="govInputFloat"
+			label="Thermostat position in the cylinder"
+			name="thermostatPosition"
+			validation="required | number | min:0 | max:1"
+			help="Enter a number between 0 and 1. 0 is at the bottom and 1 is at the top."
+		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('domesticHotWaterNew')" secondary>Save progress</GovButton>

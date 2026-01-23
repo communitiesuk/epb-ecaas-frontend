@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const title = "Hot water outlets";
 const store = useEcaasStore();
-const route = useRoute();
+// const route = useRoute();
 
 // // remove this------------
 // store.$patch({
@@ -30,8 +30,8 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const hotWaterOutletsStoreData = store.domesticHotWaterNew.hotWaterOutlets.data;
 const index = getStoreIndex(hotWaterOutletsStoreData);
 const hotWaterOutletData = hotWaterOutletsStoreData[index] as EcaasForm<HotWaterOutletsData>;
-const model = ref(hotWaterOutletData?.data as HotWaterOutletsData);
-const id =  hotWaterOutletData?.data.id ?? uuidv4();
+const model = ref(hotWaterOutletData?.data);
+const id = hotWaterOutletData?.data.id ?? uuidv4();
 
 const saveForm = (fields: HotWaterOutletsData) => {
 	store.$patch((state) => {
@@ -50,9 +50,9 @@ const saveForm = (fields: HotWaterOutletsData) => {
 				data: {
 					...commonFields,
 					typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-                    wwhrs: false,//fields.wwhrs,
-                    flowRate: fields.flowRate,
-                    hotWaterSource: heatSources.data[parseInt(fields.hotWaterSource)]?.data.id ?? fields.hotWaterSource,
+					wwhrs: false,//fields.wwhrs,
+					flowRate: fields.flowRate,
+					hotWaterSource: heatSources.data[parseInt(fields.hotWaterSource)]?.data.id ?? fields.hotWaterSource,
 				},
 				complete: true,
 			};
@@ -61,30 +61,30 @@ const saveForm = (fields: HotWaterOutletsData) => {
 				data: {
 					...commonFields,
 					typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-                    ratedPower: fields.ratedPower,
-                    wwhrs: false,//fields.wwhrs,
+					ratedPower: fields.ratedPower,
+					wwhrs: false,//fields.wwhrs,
 				},
 				complete: true,
 			};
 		} else if (fields.typeOfHotWaterOutlet === "bath") {
-            hotWaterOutletItem = {
+			hotWaterOutletItem = {
 				data: {
 					...commonFields,
 					typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-                    size: fields.size,
+					size: fields.size,
 				},
 				complete: true,
 			};
-        } else if (fields.typeOfHotWaterOutlet === "otherHotWaterOutlet") {
-            hotWaterOutletItem = {
+		} else if (fields.typeOfHotWaterOutlet === "otherHotWaterOutlet") {
+			hotWaterOutletItem = {
 				data: {
 					...commonFields,
 					typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-                    flowRate: fields.flowRate,
+					flowRate: fields.flowRate,
 				},
 				complete: true,
 			};
-        } else {
+		} else {
 			throw new Error("Invalid hot water outlet type");
 		}
 
@@ -115,11 +115,11 @@ autoSaveElementForm<WaterStorageData>({
 // };
 
 const hotWaterOutlets = [
-    ["mixedShower", "Mixer shower"],
-    ["electricShower", "Electric shower"],
-    ["bath", "Bath"],
-    ["otherHotWaterOutlet", "Other (basin tap, kitchen sink, etc.)"],
-] as [string, string][]
+	["mixedShower", "Mixer shower"],
+	["electricShower", "Electric shower"],
+	["bath", "Bath"],
+	["otherHotWaterOutlet", "Other (basin tap, kitchen sink, etc.)"],
+] as [string, string][];
 
 </script>
 
@@ -136,17 +136,16 @@ const hotWaterOutlets = [
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="hotWaterOutletErrorSummary"/>
-        <FormKit
+		<FormKit
 			id="typeOfHotWaterOutlet"
 			name="typeOfHotWaterOutlet"
 			type="govRadios"
 			:options="new Map(hotWaterOutlets)"
 			label="Type of hot water outlet"
 			validation="required"
-		>
-		</FormKit>
+		/>
 		<FormKit
-            v-if="model.typeOfHotWaterOutlet"
+			v-if="model.typeOfHotWaterOutlet"
 			id="name"
 			type="govInputText"
 			label="Name"
@@ -154,44 +153,44 @@ const hotWaterOutlets = [
 			name="name"
 			validation="required"
 		/>
-        <FormKit
-            v-if="model.typeOfHotWaterOutlet === 'mixedShower'"	
-            id="hotWaterSource"
-            name="hotWaterSource"
-            type="govRadios"
-            label="Hot water source"
-            help="Select the relevant hot water source that has been added previously"
-            validation="required"
-            :options="new Map(store.domesticHotWaterNew.heatSources.data.map((e, index) => {return [index.toString(), e.data.name]}))"
-        />
-        <FormKit
-            v-if="model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	
-            id="flowRate"
-            type="govInputWithSuffix"
-            label="Flow rate"
-            name="flowRate"
-            suffix-text="litres per second"
-            validation="required|number|min:8|max:15"
-        />
-        <FormKit
-            v-if="model.typeOfHotWaterOutlet === 'electricShower'"	
-            id="ratedPower"
-            type="govInputWithSuffix"
-            label="Rated power"
-            name="ratedPower"
-            suffix-text="kW"
-            validation="required|number|min:0|max:30"
-        />
-        <FormKit
-            v-if="model.typeOfHotWaterOutlet === 'bath'"	
-            id="size"
-            type="govInputWithSuffix"
-            label="Size"
-            name="size"
-            suffix-text="litres"
-            validation="required|number|min:0|max:500"
-            data-field="HotWaterDemand.Bath.*.size"
-        />
+		<FormKit
+			v-if="model.typeOfHotWaterOutlet === 'mixedShower'"	
+			id="hotWaterSource"
+			name="hotWaterSource"
+			type="govRadios"
+			label="Hot water source"
+			help="Select the relevant hot water source that has been added previously"
+			validation="required"
+			:options="new Map(store.domesticHotWaterNew.heatSources.data.map((e, index) => {return [index.toString(), e.data.name]}))"
+		/>
+		<FormKit
+			v-if="model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	
+			id="flowRate"
+			type="govInputWithSuffix"
+			label="Flow rate"
+			name="flowRate"
+			suffix-text="litres per second"
+			validation="required|number|min:8|max:15"
+		/>
+		<FormKit
+			v-if="model.typeOfHotWaterOutlet === 'electricShower'"	
+			id="ratedPower"
+			type="govInputWithSuffix"
+			label="Rated power"
+			name="ratedPower"
+			suffix-text="kW"
+			validation="required|number|min:0|max:30"
+		/>
+		<FormKit
+			v-if="model.typeOfHotWaterOutlet === 'bath'"	
+			id="size"
+			type="govInputWithSuffix"
+			label="Size"
+			name="size"
+			suffix-text="litres"
+			validation="required|number|min:0|max:500"
+			data-field="HotWaterDemand.Bath.*.size"
+		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('domesticHotWaterNew')" secondary>Save progress</GovButton>

@@ -680,7 +680,7 @@ export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
 
 const smartHotWaterTankDataZod = named;
 
-export type SmartHotWaterTankData= z.infer<typeof smartHotWaterTankDataZod>;
+export type SmartHotWaterTankData = z.infer<typeof smartHotWaterTankDataZod>;
 
 const immersionHeaterPosition = z.enum(["top", "middle", "bottom"]);
 
