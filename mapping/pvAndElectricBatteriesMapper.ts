@@ -72,7 +72,6 @@ export function mapPvDiverterData(state: ResolvedState): Pick<SchemaEnergySupply
 	return {
 		diverter: {
 			"HeatSource": heatSource.name,
-			"StorageTank": hotWaterCylinder.name,
 		},
 	};
 }

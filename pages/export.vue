@@ -50,13 +50,24 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<p class="govuk-!-margin-bottom-0">{{ dayjs(exportDate).format('DD/MM/YYYY HH:mm') }}</p>
 		</GovPanel>
 		<div class="govuk-button-group govuk-!-margin-top-7">
-			<NuxtLink v-if="!downloadTriggered" v-show="false" id="download" :href="downloadUrl" :download="`${model.fileName}.json`" />
+			<NuxtLink
+				v-if="!downloadTriggered"
+				v-show="false"
+				id="download"
+				:href="downloadUrl"
+				:download="`${model.fileName}.json`" />
 			<GovButton secondary href="/">Return to overview</GovButton>
 		</div>
 	</template>
 	<template v-else>
 		<p class="govuk-body">To save a completed, or partially completed calculation, you must export it and save it locally. You can import the data file to continue working on it.</p>
-		<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm" @submit-invalid="handleInvalidSubmit">
+		<FormKit
+			v-model="model"
+			type="form"
+			:actions="false"
+			:incomplete-message="false"
+			@submit="saveForm"
+			@submit-invalid="handleInvalidSubmit">
 			<GovErrorSummary :error-list="errorMessages" test-id="exportErrorSummary"/>
 			<FormKit
 				id="fileName"

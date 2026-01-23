@@ -98,17 +98,17 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 
 		switch (edgeInsulationType) {
 			case "horizontal":
-				return {
+				return [{
 					type: "horizontal" as const,
 					width: edgeInsulationWidthInMetres,
 					edge_thermal_resistance: data.edgeInsulationThermalResistance,
-				};
+				}];
 			case "vertical":
-				return {
+				return [{
 					type: "vertical" as const,
-					width: edgeInsulationWidthInMetres,
+					depth: edgeInsulationWidthInMetres,
 					edge_thermal_resistance: data.edgeInsulationThermalResistance,
-				};
+				}];
 			default:
 				edgeInsulationType satisfies never;
 				throw new Error(`Unknown edge insulation type '${edgeInsulationType}' encountered`);
@@ -233,7 +233,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 
 		let internalFloor: SchemaBuildingElement;
 
-		if (x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace) {
+		if (x.typeOfInternalFloor === "unheatedSpace") {
 			internalFloor = {
 				...commonFields,
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
@@ -391,7 +391,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 
 		let ceiling: SchemaBuildingElement;
 
-		if (x.type === AdjacentSpaceType.unheatedSpace) {
+		if (x.type === "unheatedSpace") {
 			ceiling = {
 				...commonFields,
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
@@ -467,7 +467,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 
 		let internalDoor: SchemaBuildingElement;
 
-		if (x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace) {
+		if (x.typeOfInternalDoor === "unheatedSpace") {
 			internalDoor = {
 				...commonFields,
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",

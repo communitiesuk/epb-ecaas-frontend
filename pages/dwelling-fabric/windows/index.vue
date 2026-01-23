@@ -88,16 +88,23 @@ function hasIncompleteEntries() {
 		{{ title }}
 	</h1>
 	<CustomList
-		id="windows" title="Window" :form-url="page?.url!" :items="store.dwellingFabric.dwellingSpaceWindows.data.map(x => ({
+		id="windows"
+		title="Window"
+		:form-url="page?.url!"
+		:items="store.dwellingFabric.dwellingSpaceWindows.data.map(x => ({
 			name: x.data.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))" :show-status="true" @remove="handleRemove" @duplicate="handleDuplicate" />
+		}))"
+		:show-status="true"
+		@remove="handleRemove"
+		@duplicate="handleDuplicate" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-fabric" secondary>
 			Return to dwelling fabric
 		</GovButton>
 		<CompleteElement
 			:is-complete="store.dwellingFabric.dwellingSpaceWindows.complete ?? false"
-			:disabled="hasIncompleteEntries()" @completed="handleComplete" />
+			:disabled="hasIncompleteEntries()"
+			@completed="handleComplete" />
 	</div>
 </template>

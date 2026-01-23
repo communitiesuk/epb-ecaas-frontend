@@ -20,8 +20,8 @@ if (floorData?.data && "edgeInsulationWidth" in floorData.data && typeof floorDa
 const model = ref(floorData?.data);
 
 // Removed heated and unheated basement options for summer
-type reducedGroundFloorOptions = "Slab_no_edge_insulation" | "Slab_edge_insulation" | "Suspended_floor";
-const typeOfGroundFloorOptions: Record<reducedGroundFloorOptions, SnakeToSentenceCase<reducedGroundFloorOptions>> = {
+type ReducedGroundFloorOptions = "Slab_no_edge_insulation" | "Slab_edge_insulation" | "Suspended_floor";
+const typeOfGroundFloorOptions: Record<ReducedGroundFloorOptions, SnakeToSentenceCase<ReducedGroundFloorOptions>> = {
 	Slab_no_edge_insulation: "Slab no edge insulation",
 	Slab_edge_insulation: "Slab edge insulation",
 	Suspended_floor: "Suspended floor",
@@ -53,7 +53,7 @@ const saveForm = (fields: GroundFloorData) => {
 
 		let floorData: GroundFloorData;
 
-		switch(fields.typeOfGroundFloor) {
+		switch (fields.typeOfGroundFloor) {
 			case "Slab_edge_insulation":
 			{				
 				floorData = { 

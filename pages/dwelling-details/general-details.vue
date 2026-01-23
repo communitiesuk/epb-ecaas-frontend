@@ -10,9 +10,9 @@ const { autoSaveForm } = useForm();
 const fuelTypeOptions = {
 	"mains_gas": "Mains gas",
 	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
-	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled"
+	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
+	"LPG_condition_11F": "LPG - 11F",
 } as const satisfies Record<SchemaFuelType, FuelTypeDisplay>;
-
 
 const model = ref({
 	...store.dwellingDetails.generalSpecifications.data,
@@ -33,6 +33,7 @@ const saveForm = (fields: typeof model.value) => {
 					typeOfDwelling: fields.typeOfDwelling,
 					storeysInDwelling: fields.storeysInDwelling,
 					storeyOfFlat: fields.typeOfDwelling === "flat" ? fields.storeyOfFlat : undefined,
+					storeysInBuilding: fields.typeOfDwelling === "flat" ? fields.storeysInBuilding : undefined,
 					buildingLength: fields.buildingLength,
 					buildingWidth: fields.buildingWidth,
 					numOfBedrooms: fields.numOfBedrooms,
@@ -62,7 +63,7 @@ const areSelectedOptionsValid = (node: FormKitNode) => {
 	if (parent && parent.value) {
 		const formValue = parent.value as GeneralDetailsData;
 		const { fuelType } = formValue;
-		if(fuelType.includes("elecOnly") && (fuelType.includes("mains_gas") || fuelType.includes("LPG_bulk") || fuelType.includes("LPG_bottled")) ){
+		if (fuelType.includes("elecOnly") && (fuelType.includes("mains_gas") || fuelType.includes("LPG_bulk") || fuelType.includes("LPG_bottled"))) {
 			return false;
 		}
 	}
@@ -77,7 +78,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm" @submit-invalid="handleInvalidSubmit">
+	<FormKit
+		v-model="model"
+		type="form"
+		:actions="false"
+		:incomplete-message="false"
+		@submit="saveForm"
+		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="generalDetailsErrorSummary"/>
 		<FormKit
 			id="typeOfDwelling"
@@ -98,7 +105,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-rules="{ isInteger }"
 			validation="required | isInteger | min:-50 | max:199"
 			:validation-messages="{
-				isInteger: `Storey of flat must be an integer.`,
+				isInteger: `Storey of flat must be a round number.`,
 			}"
 			help="If the flat is over multiple storeys, enter the storey of the lowest habitable area"
 			data-field="General.storey_of_dwelling"
@@ -106,13 +113,27 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="storeysInDwelling"
 			type="govInputInt"
-			label="Number of storeys in building"
+			label="Number of storeys in dwelling"
 			name="storeysInDwelling"
 			:validation-rules="{ isInteger }"
 			validation="required | isInteger | min:1 | max:250"
 			:validation-messages="{
-				isInteger: `Number of storeys in building must be an integer.`,
+				isInteger: `Number of storeys in dwelling must be an integer.`,
 			}"
+			data-field="General.storeys_in_dwelling"
+		/>
+		<FormKit
+			v-if="model.typeOfDwelling === 'flat'"
+			id="storeysInBuilding"
+			type="govInputInt"
+			label="Number of storeys in building"
+			name="storeysInBuilding"
+			:validation-rules="{ isInteger }"
+			validation="required | isInteger | min:1"
+			:validation-messages="{
+				isInteger: `Storeys in building must be a round number.`,
+			}"
+			help="Enter the number of storeys in the part of the building that the dwelling is in"
 			data-field="General.storeys_in_building"
 		/>
 		<FormKit

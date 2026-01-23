@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaL
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { ConciseMassDistributionClass, HeatPumpType } from "~/stores/ecaasStore.schema";
+import { adjacentSpaceTypes, type ConciseMassDistributionClass, type HeatPumpType } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -132,16 +132,16 @@ export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): 
 }
 
 export function displayApplianceType(appliances: SchemaApplianceType[] | undefined) {
-	if(appliances === undefined) return emptyValueRendering;
+	if (appliances === undefined) return emptyValueRendering;
 	return appliances.map(appliance => displayApplianceKey(appliance)).join(", ");
 }
 
 type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;
 
 export function adjacentSpaceTypeOptions<T extends string>(element: T): Record<AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>> {
-	return objectFromEntries(Object.values(AdjacentSpaceType).map(key => [
-		key,
-		displayAdjacentSpaceType(key, element)!,
+	return objectFromEntries(adjacentSpaceTypes.map(entry => [
+		entry,
+		displayAdjacentSpaceType(entry, element)!,
 	] as const satisfies [AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>]));
 }
 
@@ -178,14 +178,14 @@ export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressure
 	}
 }
 
-export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" |"LPG (Liquid petroleum gas) - bottled" | "Electricity is the only energy source" | "Mains gas" | "Electricity";
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" | "LPG (Liquid petroleum gas) - bottled" | "LPG - 11F" | "Electricity is the only energy source" | "Mains gas" | "Electricity";
 
 export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined) {
 	if (fuelTypes === undefined) return emptyValueRendering;
 
 	const result = fuelTypes.map(type => displayFuelType(type)).join(", ");
 	
-	if(!result.includes("Electricity")){
+	if (!result.includes("Electricity")) {
 		return result + ", Electricity";
 	}
 	return result;
@@ -197,6 +197,8 @@ export function displayFuelType(fuelType: SchemaFuelTypeExtended): FuelTypeDispl
 			return "LPG (Liquid petroleum gas) - bulk";
 		case "LPG_bottled":
 			return "LPG (Liquid petroleum gas) - bottled";
+		case "LPG_condition_11F":
+			return "LPG - 11F";
 		case "elecOnly":
 			return "Electricity";
 		case "mains_gas":
@@ -249,19 +251,19 @@ export function displayProduct(product: DisplayProduct): ProductDisplayString {
 }
 
 
-export type colourDisplay = "Light" | "Medium" | "Dark";
+export type ColourDisplay = "Light" | "Medium" | "Dark";
 
 export const colourOptionsMap = {
 	"Light": "Light",
 	"Intermediate": "Medium",
 	"Dark": "Dark",
-} as const satisfies Record<SchemaColour, colourDisplay>;
+} as const satisfies Record<SchemaColour, ColourDisplay>;
 
-export function displayColour(colour: SchemaColour | undefined): colourDisplay | typeof emptyValueRendering {
+export function displayColour(colour: SchemaColour | undefined): ColourDisplay | typeof emptyValueRendering {
 	return colourOptionsMap[colour!] ?? emptyValueRendering;
 }
 
-export type HeatPumpTypeDisplay = "Air source" |"Ground source"| "Water source" | "Booster" | "Hot water only" | "Exhaust air MEV" | "Exhaust air MVHR" | "Exhaust air Mixed";
+export type HeatPumpTypeDisplay = "Air source" | "Ground source" | "Water source" | "Booster" | "Hot water only" | "Exhaust air MEV" | "Exhaust air MVHR" | "Exhaust air Mixed";
 
 export const heatPumpTypes = {
 	"airSource": "Air source",
@@ -275,9 +277,16 @@ export const heatPumpTypes = {
 } as const satisfies Record<HeatPumpType, HeatPumpTypeDisplay>;
 
 export const pcdbTechnologyTypes = {
-	"airSource": "air source heat pumps",
+	"airSource": "AirSourceHeatPump",
+	"groundSource": "GroundSourceHeatPump",
+	"waterSource": "WaterSourceHeatPump",
+	"booster": "BoosterHeatPump",
+	"hotWaterOnly": "HotWaterOnlyHeatPump",
+	"exhaustAirMev": "ExhaustAirMevHeatPump",
+	"exhaustAirMvhr": "ExhaustAirMvhrHeatPump",
+	"exhaustAirMixed": "ExhaustAirMixedHeatPump",
 } as Record<HeatPumpType, TechnologyType>;
 
-export function displayHeatPumpType( type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
+export function displayHeatPumpType(type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
 	return heatPumpTypes[type!] ?? emptyValueRendering;
 }

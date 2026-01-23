@@ -54,7 +54,7 @@ describe("floors", () => {
 	};
 
 	const internal1: InternalFloorData = {
-		typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
+		typeOfInternalFloor: "heatedSpace",
 		name: "Internal floor 1",
 		surfaceAreaOfElement: 5,
 		arealHeatCapacity: "Very light",
@@ -62,7 +62,7 @@ describe("floors", () => {
 	};
 
 	const internal2: InternalFloorData = {
-		typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
+		typeOfInternalFloor: "heatedSpace",
 		name: "Internal floor 2",
 		surfaceAreaOfElement: 5,
 		arealHeatCapacity: "Very light",
@@ -70,7 +70,7 @@ describe("floors", () => {
 	};
 
 	const internal3: InternalFloorData = {
-		typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
+		typeOfInternalFloor: "heatedSpace",
 		name: "Internal floor 3",
 		surfaceAreaOfElement: 5,
 		arealHeatCapacity: "Very light",

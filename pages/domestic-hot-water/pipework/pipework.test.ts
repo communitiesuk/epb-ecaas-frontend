@@ -227,7 +227,7 @@ describe("Pipeworks", () => {
     	beforeEach(async () => {
     		await addCompletePipeworkDataToStore();
     		await renderSuspended(Pipework);
-    		await user.click( screen.getByTestId("markAsCompleteButton"));
+    		await user.click(screen.getByTestId("markAsCompleteButton"));
     	});
 
     	it("displays the 'Completed' section status indicator", async () => {

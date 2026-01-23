@@ -1,16 +1,13 @@
 describe("SnakeToSentenceCase", () => {
+	type SnakeCase = "snake_case_example" | "another_example";
+
 	it("should convert snake_case to Sentence Case", () => {
-		enum SnakeCase {
-			SNAKE_CASE_EXAMPLE = "snake_case_example",
-			ANOTHER_EXAMPLE = "another_example",
-		}
 		type Result = SnakeToSentenceCase<SnakeCase>;
 
 		const _result: Result = "Snake case example"; // This should be valid
 	});
 
 	it("should not allow invalid conversions", () => {
-		type SnakeCase = "snake_case_example" | "another_example";
 		type Result = SnakeToSentenceCase<SnakeCase>;
 
 		// @ts-expect-error this should be invalid

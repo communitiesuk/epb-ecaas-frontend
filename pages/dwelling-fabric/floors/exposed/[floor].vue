@@ -28,7 +28,7 @@ const saveForm = (fields: ExposedFloorData) => {
 			massDistributionClass: fields.massDistributionClass,
 		};
 		
-		dwellingSpaceExposedFloor.data[index] =  { data: floor, complete: true };
+		dwellingSpaceExposedFloor.data[index] = { data: floor, complete: true };
 		dwellingSpaceExposedFloor.complete = false;
 	}); 
 	navigateTo("/dwelling-fabric/floors");

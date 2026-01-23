@@ -13,7 +13,7 @@ describe("internal floor", () => {
 	const user = userEvent.setup();
 
 	const internalFloor: InternalFloorData = {
-		typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
+		typeOfInternalFloor: "heatedSpace",
 		name: "Internal 1",
 		surfaceAreaOfElement: 5,
 		arealHeatCapacity: "Very light",
@@ -22,7 +22,7 @@ describe("internal floor", () => {
 
 	const internalFloorWithUnheatedSpace: InternalFloorData = {
 		...internalFloor,
-		typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
+		typeOfInternalFloor: "unheatedSpace",
 		thermalResistanceOfAdjacentUnheatedSpace: 0,
 	};
 
@@ -49,7 +49,7 @@ describe("internal floor", () => {
 			await populateValidForm();
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
-			const  { dwellingSpaceInternalFloor } = store.dwellingFabric.dwellingSpaceFloors;
+			const { dwellingSpaceInternalFloor } = store.dwellingFabric.dwellingSpaceFloors;
 			
 			expect(dwellingSpaceInternalFloor?.data[0]?.data).toEqual(internalFloor);
 			expect(dwellingSpaceInternalFloor?.data[0]?.complete).toEqual(true);
@@ -253,7 +253,7 @@ describe("internal floor", () => {
 	
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor;
 			expect(data[0]!.data.name).toBe("Internal 1");
-			expect(data[0]!.data.typeOfInternalFloor).toBe(AdjacentSpaceType.unheatedSpace);
+			expect(data[0]!.data.typeOfInternalFloor).toBe("unheatedSpace");
 	
 			await user.clear(screen.getByTestId("name"));
 			await user.type(screen.getByTestId("name"), "Main internal floor");
@@ -261,7 +261,7 @@ describe("internal floor", () => {
 			await user.tab();
 	
 			expect(data[0]!.data.name).toBe("Main internal floor");
-			expect(data[0]!.data.typeOfInternalFloor).toBe(AdjacentSpaceType.heatedSpace);
+			expect(data[0]!.data.typeOfInternalFloor).toBe("heatedSpace");
 		});
 
 		test("internal floor and internal floor section are set as 'not complete' after user edits an internal floor", async () => {

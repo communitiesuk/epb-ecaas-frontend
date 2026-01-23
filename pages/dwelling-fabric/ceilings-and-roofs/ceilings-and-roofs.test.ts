@@ -25,7 +25,7 @@ describe("ceilings and roofs", () => {
 		data: {
 			id: "bf19cff9-225b-4e38-80d7-a3e1adf5da3f",
 			name: "Ceiling 1",
-			type: AdjacentSpaceType.heatedSpace,
+			type: "heatedSpace",
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
@@ -129,7 +129,7 @@ describe("ceilings and roofs", () => {
 		it("when a ceiling is removed it's also removed from any store item that references it", async () => {
 			const doorToHeatedSpace: EcaasForm<InternalDoorData> = {
 				data: {
-					typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+					typeOfInternalDoor: "heatedSpace",
 					name: "Internal 1",
 					associatedItemId: ceiling1.data.id,
 					surfaceArea: 5,
@@ -142,7 +142,7 @@ describe("ceilings and roofs", () => {
 				data: {
 					...doorToHeatedSpace.data,
 					associatedItemId: ceiling2.data.id,
-					typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+					typeOfInternalDoor: "unheatedSpace",
 					uValue: 0.1,
 					thermalResistanceOfAdjacentUnheatedSpace: 0,
 				},

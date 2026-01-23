@@ -6,7 +6,7 @@ export const checkMvhrHasDuctwork = () => {
 	const ductworkArray = store.infiltrationAndVentilation.ductwork.data.map(x => x.data.mvhrUnit);
 	const uniqueDuctworkArray = [...new Set(ductworkArray)];
 
-	for(let i = 0; i < uniqueDuctworkArray.length; i++){
+	for (let i = 0; i < uniqueDuctworkArray.length; i++) {
 		mvhrArray = mvhrArray.filter(x => x.data.id !== uniqueDuctworkArray[i]);
 	}
 

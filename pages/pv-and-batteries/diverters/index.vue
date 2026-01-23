@@ -41,7 +41,7 @@ watch(model, async (newData, initialData) => {
 			Object.values(newData).some(x => x !== undefined);
 
 	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
-		if (initialData[key]  !== newData[key]) {
+		if (initialData[key] !== newData[key]) {
 			store.$patch(state => {
 				if (!storeData && isFirstEdit) {
 					state.pvAndBatteries.diverters.data = [{
@@ -61,7 +61,8 @@ watch(model, async (newData, initialData) => {
 
 				state.pvAndBatteries.diverters.complete = false;
 			});
-		}}
+		}
+	}
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

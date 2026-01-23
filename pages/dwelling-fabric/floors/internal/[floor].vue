@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { AdjacentSpaceType } from "~/stores/ecaasStore.schema";
 import { getUrl, uniqueName } from "#imports";
 
 const title = "Internal floor";
@@ -42,7 +41,7 @@ const saveForm = (fields: InternalFloorData) => {
 			throw new Error("Invalid floor type");
 		}
 		
-		dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] =  { data: floor, complete: true };
+		dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] = { data: floor, complete: true };
 		dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
 	});
 	navigateTo("/dwelling-fabric/floors");
@@ -110,7 +109,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		</template>
 		<FormKit
-			v-if="model?.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace"
+			v-if="model?.typeOfInternalFloor === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"

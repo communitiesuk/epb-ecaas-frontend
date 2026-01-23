@@ -22,7 +22,7 @@ function handleRemove(floorType: FloorType, index: number) {
 } 
 
 function handleDuplicate<T extends FloorData>(floorType: FloorType, index: number) {
-	const floors  = store.dwellingFabric.dwellingSpaceFloors[floorType]?.data;
+	const floors = store.dwellingFabric.dwellingSpaceFloors[floorType]?.data;
 	const floorToDuplicate = floors?.[index];
     
 	if (floorToDuplicate) {
@@ -55,7 +55,7 @@ function handleComplete() {
 	navigateTo("/dwelling-fabric");
 }
 
-function checkIsComplete(){
+function checkIsComplete() {
 	const floors = store.dwellingFabric.dwellingSpaceFloors;
 	return Object.values(floors).every(floor => floor.complete);
 }

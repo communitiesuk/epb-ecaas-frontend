@@ -36,7 +36,7 @@ describe("internal door", () => {
   
 	const internalDoor: EcaasForm<InternalDoorData> = {
 		data: {
-			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+			typeOfInternalDoor: "heatedSpace",
 			name: "Internal 1",
 			associatedItemId: internalWall.id,
 			surfaceArea: 5,
@@ -49,7 +49,7 @@ describe("internal door", () => {
 		data: {
 			...internalDoor.data,
 			associatedItemId: wallToUnheatedSpace.id,
-			typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+			typeOfInternalDoor: "unheatedSpace",
 			uValue: 0.1,
 			thermalResistanceOfAdjacentUnheatedSpace: 0,
 		},

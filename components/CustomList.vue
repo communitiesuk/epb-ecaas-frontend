@@ -56,7 +56,9 @@ function routeForEditItem(index: number) {
 				<ul class="govuk-summary-card__actions">
 					<li class="govuk-summary-card__action">
 						<NuxtLink
-							v-if="canAddMoreItems()" class="govuk-link" :data-testid="`${id}_add`"
+							v-if="canAddMoreItems()"
+							class="govuk-link"
+							:data-testid="`${id}_add`"
 							:href=routeForAddItem()>{{ items && items.length > 0 ? "Add more" : "Add" }}</NuxtLink>
 					</li>
 				</ul>
@@ -64,7 +66,9 @@ function routeForEditItem(index: number) {
 			<div v-if="items && items.length" class="govuk-summary-card__content" :data-testid="`${id}_items`">
 				<dl class="govuk-summary-list">
 					<div
-						v-for="(item, index) in items" :key="index" class="govuk-summary-list__row"
+						v-for="(item, index) in items"
+						:key="index"
+						class="govuk-summary-list__row"
 						:data-testid="`${id}_item`">
 						<dt class="govuk-summary-list__key">
 							{{ typeof item === 'string' ? item : item.name }}
@@ -83,12 +87,16 @@ function routeForEditItem(index: number) {
 									v-if="onDuplicate && canAddMoreItems()"
 									class="govuk-summary-list__actions-list-item">
 									<a
-										href="#" class="govuk-link" :data-testid="`${id}_duplicate_${index}`"
+										href="#"
+										class="govuk-link"
+										:data-testid="`${id}_duplicate_${index}`"
 										@click="handleDuplicate(index, $event)">Duplicate</a>
 								</li>
 								<li class="govuk-summary-list__actions-list-item">
 									<a
-										href="#" class="govuk-link" :data-testid="`${id}_remove_${index}`"
+										href="#"
+										class="govuk-link"
+										:data-testid="`${id}_remove_${index}`"
 										@click="handleRemove(index, $event)">Remove</a>
 								</li>
 							</ul>

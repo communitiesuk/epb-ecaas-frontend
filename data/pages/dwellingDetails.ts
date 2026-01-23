@@ -1,4 +1,3 @@
-import { PageType  } from "./pages.types";
 import type { Page } from "./pages.types";
 
 const dwellingDetailsPages = [
@@ -6,63 +5,63 @@ const dwellingDetailsPages = [
 		id: "dwellingDetails",
 		title: "Dwelling details",
 		url: "/dwelling-details",
-		type: PageType.Section,
+		type: "section",
 		parentId: "taskList",
 	},
 	{
 		id: "generalSpecifications",
 		title: "General details",
 		url: "/dwelling-details/general-details",
-		type: PageType.Task,
+		type: "task",
 		parentId: "dwellingDetails",
 	},
 	{
 		id: "externalFactors",
 		title: "External factors",
 		url: "/dwelling-details/external-factors",
-		type: PageType.Task,
+		type: "task",
 		parentId: "dwellingDetails",
 	},
 	{
 		id: "shading",
 		title: "Shading",
 		url: "/dwelling-details/shading",
-		type: PageType.Task,
+		type: "task",
 		parentId: "dwellingDetails",
 	},
 	{
 		id: "calculatingDistantShading",
 		title: "Calculating distant shading",
 		url: "/dwelling-details/shading/calculating-distant-shading",
-		type: PageType.Content,
+		type: "content",
 		parentId: "shading",
 	},
 	{
 		id: "shadingCreate",
 		title: "Create",
 		url: "/dwelling-details/shading/create",
-		type: PageType.Task,
+		type: "task",
 		parentId: "shading",
 	},
 	{
 		id: "shadingEdit",
 		title: "Edit",
 		url: "/dwelling-details/shading/:shading",
-		type: PageType.Task,
+		type: "task",
 		parentId: "shading",
 	},
 	{
 		id: "appliances",
 		title: "Appliances",
 		url: "/dwelling-details/appliances",
-		type: PageType.Task,
+		type: "task",
 		parentId: "dwellingDetails",
 	},
 	{
 		id: "dwellingDetailsSummary",
 		title: "Summary",
 		url: "/dwelling-details/summary",
-		type: PageType.Summary,
+		type: "summary",
 		parentId: "dwellingDetails",
 	},
 ] as const satisfies Array<Page>;

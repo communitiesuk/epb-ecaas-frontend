@@ -54,7 +54,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<VentsInfo />
 	<FormKit
-		v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+		v-model="model"
+		type="form"
+		:actions="false"
+		:incomplete-message="false"
+		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="ventErrorSummary"/>
 		<FormKit
@@ -81,7 +85,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<FieldsAssociatedWallWindow
-			id="associatedItemId" name="associatedItemId"
+			id="associatedItemId"
+			name="associatedItemId"
 			label="Associated wall or window"
 			help="Select the wall or window that this vent is in. It should have the same orientation and pitch as the vent." />
 		<FormKit
@@ -89,7 +94,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			label="Effective ventilation area"
 			help="Enter the actual area through which air can flow, accounting for obstructions like grilles or mesh"
-			name="effectiveVentilationArea" validation="required | number | min:1 | max:999999" suffix-text="cm²"
+			name="effectiveVentilationArea"
+			validation="required | number | min:1 | max:999999"
+			suffix-text="cm²"
 			data-field="InfiltrationVentilation.Vents.area_cm2">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table">
@@ -123,9 +130,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<FormKit
-			id="midHeightOfZone" type="govInputWithSuffix" label="Mid height of zone"
+			id="midHeightOfZone"
+			type="govInputWithSuffix"
+			label="Mid height of zone"
 			help="Enter the mid height of the zone that the vent serves. Typically between 1.2m and 1.8m."
-			name="midHeightOfZone" validation="required | number | min:1 | max:60" suffix-text="m"
+			name="midHeightOfZone"
+			validation="required | number | min:1 | max:60"
+			suffix-text="m"
 			data-field="InfiltrationVentilation.Vents.mid_height_air_flow_path" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">

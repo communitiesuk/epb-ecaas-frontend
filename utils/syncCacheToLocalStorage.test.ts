@@ -1,10 +1,10 @@
 describe("syncCacheToLocalStorage", () => {
 	const mockResponse = { test: "value" };
-	interface cacheData {
+	interface CacheData {
 		[key: string]: string;
 	}
 
-	function mockFetchResponse(mockResponse: cacheData | undefined) {
+	function mockFetchResponse(mockResponse: CacheData | undefined) {
 		return (global.$fetch = vi.fn(() =>
 			Promise.resolve(mockResponse),
 		) as unknown as typeof global.$fetch);

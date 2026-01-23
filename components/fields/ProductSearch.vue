@@ -1,29 +1,29 @@
 <script setup lang="ts">
-	import { hyphenate } from '#imports';
+import { hyphenate } from "#imports";
 
-	const { name, onSelect } = defineProps<{
-		id: string;
-		name: string;
-		label: string;
-		placeholder: string;
-		value: string | undefined;
-		suggestedValues?: string[];
-		onSelect?: (value: string) => void;
-	}>();
+const { name, onSelect = undefined, suggestedValues = [] } = defineProps<{
+	id: string;
+	name: string;
+	label: string;
+	placeholder: string;
+	value: string | undefined;
+	suggestedValues?: string[];
+	onSelect?: (value: string) => void;
+}>();
 
-	const isFocussed = ref(false);
-	const maxSuggestedValues = 5;
+const isFocussed = ref(false);
+const maxSuggestedValues = 5;
 
-	const handleBlur = () => {
-		setTimeout(() => isFocussed.value = false, 200);
-	};
+const handleBlur = () => {
+	setTimeout(() => isFocussed.value = false, 200);
+};
 
-	const handleFocus = () => isFocussed.value = true;
+const handleFocus = () => isFocussed.value = true;
 
-	const handleSelect = (value: string, e: MouseEvent) => {
-		e.preventDefault();
-		onSelect?.(value);
-	};
+const handleSelect = (value: string, e: MouseEvent) => {
+	e.preventDefault();
+	onSelect?.(value);
+};
 </script>
 
 <template>
@@ -32,8 +32,8 @@
 			{{ label }}
 		</label>
 		<FormKit
-			type="text"
 			:id="id"
+			type="text"
 			:name="name"
 			:classes="{ input: 'govuk-input govuk-input--width-20' }"
 			:placeholder="placeholder"
@@ -42,9 +42,9 @@
 		/>
 		<div v-show="suggestedValues?.length && (value?.length || 0) > 2 && isFocussed" class="search-field-results">
 			<ul>
-				<li v-for="value in suggestedValues?.slice(0, maxSuggestedValues)" :key="hyphenate(value)">
-					<a href="#" class="govuk-body" @click="handleSelect(value, $event)">
-						{{ value }}
+				<li v-for="suggestedValue in suggestedValues?.slice(0, maxSuggestedValues)" :key="hyphenate(suggestedValue)">
+					<a href="#" class="govuk-body" @click="handleSelect(suggestedValue, $event)">
+						{{ suggestedValue }}
 					</a>
 				</li>
 			</ul>

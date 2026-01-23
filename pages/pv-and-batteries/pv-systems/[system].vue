@@ -324,12 +324,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						<th scope="row" class="govuk-!-text-align-left">Above</th>
 						<td>
 							<FormKit
-								id="aboveDepth" type="govInputWithSuffix" suffix-text="m" name="aboveDepth"
+								id="aboveDepth"
+								type="govInputWithSuffix"
+								suffix-text="m"
+								name="aboveDepth"
 								validation="number0" />
 						</td>
 						<td>
 							<FormKit
-								id="aboveDistance" type="govInputWithSuffix" suffix-text="m" name="aboveDistance"
+								id="aboveDistance"
+								type="govInputWithSuffix"
+								suffix-text="m"
+								name="aboveDistance"
 								validation="number0" />
 						</td>
 					</tr>
@@ -337,12 +343,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						<th scope="row" class="govuk-!-text-align-left">Left</th>
 						<td>
 							<FormKit
-								id="leftDepth" type="govInputWithSuffix" suffix-text="m" name="leftDepth"
+								id="leftDepth"
+								type="govInputWithSuffix"
+								suffix-text="m"
+								name="leftDepth"
 								validation="number0" />
 						</td>
 						<td>
 							<FormKit
-								id="leftDistance" type="govInputWithSuffix" suffix-text="m" name="leftDistance"
+								id="leftDistance"
+								type="govInputWithSuffix"
+								suffix-text="m"
+								name="leftDistance"
 								validation="number0" />
 						</td>
 					</tr>
@@ -350,12 +362,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						<th scope="row" class="govuk-!-text-align-left">Right</th>
 						<td>
 							<FormKit
-								id="rightDepth" type="govInputWithSuffix" suffix-text="m" name="rightDepth"
+								id="rightDepth"
+								type="govInputWithSuffix"
+								suffix-text="m"
+								name="rightDepth"
 								validation="number0" />
 						</td>
 						<td>
 							<FormKit
-								id="rightDistance" type="govInputWithSuffix" suffix-text="m" name="rightDistance"
+								id="rightDistance"
+								type="govInputWithSuffix"
+								suffix-text="m"
+								name="rightDistance"
 								validation="number0" />
 						</td>
 					</tr>

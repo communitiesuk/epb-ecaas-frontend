@@ -6,8 +6,8 @@ const { pageId, title, index, searchModel, searchData } = useProductsPage("pump"
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
-		technologyType: pcdbTechnologyTypes[pageId as keyof typeof pcdbTechnologyTypes]
-	}
+		technologyType: pcdbTechnologyTypes[pageId as keyof typeof pcdbTechnologyTypes],
+	},
 });
 
 const { productData, pagination } = searchData(value?.data ?? []);
@@ -30,7 +30,7 @@ const selectProduct = (reference: string) => {
 	<GovProductsTable 
 		:products="pagination.getData()"
 		:total-pages="pagination.totalPages"
-		:onSelectProduct="selectProduct"
+		:on-select-product="selectProduct"
 	/>
 	<GovButton
 		secondary

@@ -399,8 +399,9 @@ const expectedFlatInput: FhsInputSchema = {
 	},
 	General: {
 		build_type: "flat",
-		storeys_in_dwelling: 6,
+		storeys_in_building: 6,
 		storey_of_dwelling: 3,
+		storeys_in_dwelling: 1,
 	},
 	HeatingControlType: "SeparateTempControl",
 	HotWaterDemand: {
@@ -624,11 +625,11 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: "Very light",
 					mass_distribution_class: "E: Mass concentrated at external side",
 					perimeter: 40,
-					edge_insulation: {
+					edge_insulation: [{
 						edge_thermal_resistance: 2.4,
 						type: "horizontal",
 						width: 0.32,
-					},
+					}],
 					psi_wall_floor_junc: 0.4,
 					thickness_walls: 0.05,
 					floor_type: "Slab_edge_insulation",
@@ -1104,7 +1105,7 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const spaceHeating: spaceHeating = {
+		const spaceHeating: SpaceHeating = {
 			general: {
 				...baseForm,
 				data: {
@@ -1329,8 +1330,9 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: {
 					typeOfDwelling: "flat",
-					storeysInDwelling: 6,
+					storeysInDwelling: 1,
 					storeyOfFlat: 3,
+					storeysInBuilding: 6,
 					numOfBedrooms: 2,
 					numOfBathrooms: 1,
 					numOfHabitableRooms: 4,
@@ -1538,7 +1540,7 @@ describe("FHS input mapper", () => {
 							...baseForm,
 							data: {
 								name: "internal floor 1",
-								typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
+								typeOfInternalFloor: "unheatedSpace",
 								surfaceAreaOfElement: 6,
 								arealHeatCapacity: "Very light",
 								massDistributionClass: "IE",
@@ -1549,7 +1551,7 @@ describe("FHS input mapper", () => {
 							...baseForm,
 							data: {
 								name: "internal floor 2",
-								typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
+								typeOfInternalFloor: "heatedSpace",
 								surfaceAreaOfElement: 4,
 								arealHeatCapacity: "Medium",
 								massDistributionClass: "M",
@@ -1659,7 +1661,7 @@ describe("FHS input mapper", () => {
 						data: {
 							id: "26e6be91-d436-4ccf-a106-feddaf625edb",
 							name: "ceiling to heated space",
-							type: AdjacentSpaceType.heatedSpace,
+							type: "heatedSpace",
 							surfaceArea: 16,
 							arealHeatCapacity: "Light",
 							massDistributionClass: "I",
@@ -1671,7 +1673,7 @@ describe("FHS input mapper", () => {
 						data: {
 							id: "1d60a23a-789e-4843-8da4-ab4b90609280",
 							name: "ceiling to unheated space",
-							type: AdjacentSpaceType.unheatedSpace,
+							type: "unheatedSpace",
 							surfaceArea: 20,
 							arealHeatCapacity: "Very light",
 							massDistributionClass: "IE",
@@ -1750,7 +1752,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
-							typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+							typeOfInternalDoor: "heatedSpace",
 							name: "bathroom door",
 							surfaceArea: 1.4,
 							arealHeatCapacity: "Light",
@@ -1761,7 +1763,7 @@ describe("FHS input mapper", () => {
 					{
 						...baseForm,
 						data: {
-							typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+							typeOfInternalDoor: "unheatedSpace",
 							name: "door to garage",
 							surfaceArea: 1.4,
 							arealHeatCapacity: "Very light",
@@ -1847,7 +1849,7 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const spaceHeating: spaceHeating = {
+		const spaceHeating: SpaceHeating = {
 			general: {
 				...baseForm,
 				data: {

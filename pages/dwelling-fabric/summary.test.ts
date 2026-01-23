@@ -63,7 +63,7 @@ const floorsData: FloorsData = {
 	dwellingSpaceInternalFloor: {
 		data: [{
 			data: {
-				typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
+				typeOfInternalFloor: "heatedSpace",
 				name: "Internal 1",
 				surfaceAreaOfElement: 5,
 				arealHeatCapacity: "Very light",
@@ -161,7 +161,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 	dwellingSpaceCeilings: {
 		data: [{
 			data: {
-				type: AdjacentSpaceType.heatedSpace,
+				type: "heatedSpace",
 				name: "Ceiling 1",
 				surfaceArea: 5,
 				arealHeatCapacity: "Very light",
@@ -246,7 +246,7 @@ const doorsData: DoorsData = {
 	dwellingSpaceInternalDoor: {
 		data: [{
 			data: {
-				typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+				typeOfInternalDoor: "heatedSpace",
 				name: "Internal 1",
 				associatedItemId: internalWallId,
 				surfaceArea: 5,

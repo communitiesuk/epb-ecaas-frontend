@@ -1,4 +1,3 @@
-import { PageType } from "./pages.types";
 import type { Page } from "./pages.types";
 import domesticHotWaterPages from "./domesticHotWater";
 import dwellingDetailsPages from "./dwellingDetails";
@@ -13,7 +12,7 @@ const pagesData = [
 		id: "taskList",
 		title: "Overview",
 		url: "/",
-		type: PageType.Root,
+		type: "root",
 	},
 	...dwellingDetailsPages,
 	...dwellingFabricPages,
@@ -27,7 +26,7 @@ const pagesData = [
 		id: "outputs",
 		title: "Outputs",
 		url: "/outputs",
-		type: PageType.Outputs,
+		type: "outputs",
 		parentId: "taskList",
 	},
 ] as const satisfies Array<Page>;

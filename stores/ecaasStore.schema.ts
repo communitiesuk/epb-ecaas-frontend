@@ -33,7 +33,7 @@ export type EcaasState = AssertEachKeyIsPageId<{
 	domesticHotWater: DomesticHotWater;
 	dwellingFabric: DwellingFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
-	spaceHeating: spaceHeating;
+	spaceHeating: SpaceHeating;
 	pvAndBatteries: PvAndBatteries;
 	cooling: Cooling;
 }> & {
@@ -73,7 +73,11 @@ const baseGeneralDetails = z.object({
 });
 
 const generalDetailsDataZod = z.discriminatedUnion("typeOfDwelling", [
-	baseGeneralDetails.extend({ typeOfDwelling: z.literal("flat"), storeyOfFlat: z.number().min(-50).max(199) }),
+	baseGeneralDetails.extend({
+		typeOfDwelling: z.literal("flat"),
+		storeyOfFlat: z.int().min(-50).max(199),
+		storeysInBuilding: z.int().min(1),
+	}),
 	baseGeneralDetails.extend({ typeOfDwelling: z.literal("house") }),
 ]);
 
@@ -129,10 +133,9 @@ export interface FloorsData {
 	dwellingSpaceExposedFloor: EcaasFormList<ExposedFloorData>
 }
 
-export enum AdjacentSpaceType {
-	heatedSpace = "heatedSpace",
-	unheatedSpace = "unheatedSpace",
-}
+export const adjacentSpaceTypes = ["heatedSpace", "unheatedSpace"] as const;
+
+export type AdjacentSpaceType = typeof adjacentSpaceTypes[number];
 
 const baseInternalFloorData = named.extend({
 	surfaceAreaOfElement: z.number(),
@@ -143,11 +146,11 @@ const internalFloorDataZod = z.discriminatedUnion(
 	"typeOfInternalFloor",
 	[
 		baseInternalFloorData.extend({
-			typeOfInternalFloor: z.literal(AdjacentSpaceType.unheatedSpace),
+			typeOfInternalFloor: z.literal("unheatedSpace"),
 			thermalResistanceOfAdjacentUnheatedSpace,
 		}),
 		baseInternalFloorData.extend({
-			typeOfInternalFloor: z.literal(AdjacentSpaceType.heatedSpace),
+			typeOfInternalFloor: z.literal("heatedSpace"),
 		}),
 	],
 );
@@ -300,10 +303,10 @@ const ceilingDataZod = z.discriminatedUnion(
 	"type",
 	[
 		baseCeilingData.extend({
-			type: z.literal(AdjacentSpaceType.heatedSpace),
+			type: z.literal("heatedSpace"),
 		}),
 		baseCeilingData.extend({
-			type: z.literal(AdjacentSpaceType.unheatedSpace),
+			type: z.literal("unheatedSpace"),
 			thermalResistanceOfAdjacentUnheatedSpace,
 			uValue,
 		}),
@@ -388,10 +391,10 @@ const internalDoorDataZod = z.discriminatedUnion(
 	"typeOfInternalDoor",
 	[
 		baseInternalDoorData.extend({
-			typeOfInternalDoor: z.literal(AdjacentSpaceType.heatedSpace),
+			typeOfInternalDoor: z.literal("heatedSpace"),
 		}),
 		baseInternalDoorData.extend({
-			typeOfInternalDoor: z.literal(AdjacentSpaceType.unheatedSpace),
+			typeOfInternalDoor: z.literal("unheatedSpace"),
 			uValue,
 			thermalResistanceOfAdjacentUnheatedSpace,
 		}),
@@ -866,20 +869,20 @@ const airPermeabilityDataZod = z.object({
 
 export type AirPermeabilityData = z.infer<typeof airPermeabilityDataZod>;
 
-export type spaceHeating = AssertEachKeyIsPageId<{
-	general: EcaasForm<GeneralspaceHeating>,
+export type SpaceHeating = AssertEachKeyIsPageId<{
+	general: EcaasForm<GeneralSpaceHeating>,
 	heatGeneration: HeatGeneration,
 	heatEmitting: HeatEmitting;
 }>;
 
 const heatingControlType = z.enum(["separateTemperatureControl", "separateTimeAndTemperatureControl"]);
 
-const generalspaceHeatingDataZod = z.object({
+const generalSpaceHeatingDataZod = z.object({
 	heatingControlType,
 	coolingRequired: z.boolean(),
 });
 
-export type GeneralspaceHeating = z.infer<typeof generalspaceHeatingDataZod>;
+export type GeneralSpaceHeating = z.infer<typeof generalSpaceHeatingDataZod>;
 
 export type HeatGeneration = AssertFormKeysArePageIds<{
 	heatPump: EcaasFormList<HeatPumpData>;
@@ -1146,7 +1149,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"infiltrationAndVentilation/vents": ventDataZod,
 	"infiltrationAndVentilation/naturalVentilation": ventilationDataZod,
 	"infiltrationAndVentilation/airPermeability": airPermeabilityDataZod,
-	"spaceHeating/general": generalspaceHeatingDataZod,
+	"spaceHeating/general": generalSpaceHeatingDataZod,
 	"spaceHeating/heatGeneration/boiler": boilerDataZod,
 	"spaceHeating/heatGeneration/heatBattery": heatBatteryDataZod,
 	"spaceHeating/heatGeneration/heatInterfaceUnit": heatInterfaceUnitDataZod,

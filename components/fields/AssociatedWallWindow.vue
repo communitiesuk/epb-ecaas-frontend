@@ -18,15 +18,21 @@ const { dwellingSpaceWindows, dwellingSpaceWalls } = store.dwellingFabric;
 const options = [
 	dwellingSpaceWindows.data.map(x => [x.data.id, x.data.name] as [string, string]),
 	dwellingSpaceWalls.dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
-].flat().filter(x => x[0] != undefined );
+].flat().filter(x => x[0] != undefined);
 
 </script>
 
 <template>
 	<ClientOnly>
 		<FormKit
-			:id="id" type="govRadios" :options="new Map(options)" :label="label" :help="help" :name="name"
-			:validation="validation ?? 'required'" :validation-rules="validationRules"
+			:id="id"
+			type="govRadios"
+			:options="new Map(options)"
+			:label="label"
+			:help="help"
+			:name="name"
+			:validation="validation ?? 'required'"
+			:validation-rules="validationRules"
 			:validation-messages="validationMessages">
 			<div v-if="!options.length">
 				<p class="govuk-error-message">No walls, roofs or windows added.</p>

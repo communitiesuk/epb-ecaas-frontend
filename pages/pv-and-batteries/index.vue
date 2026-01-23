@@ -24,7 +24,7 @@ function handleRemove(pvAndBatteryType: PvAndBatteryType, index: number) {
 } 
 
 function handleDuplicate<T extends PvAndBatteryData>(pvAndBatteryType: PvAndBatteryType, index: number) {
-	const data  = store.pvAndBatteries[pvAndBatteryType]?.data;
+	const data = store.pvAndBatteries[pvAndBatteryType]?.data;
 	const item = data?.[index];
 	let name: string;
     

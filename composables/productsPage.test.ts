@@ -69,7 +69,7 @@ describe("Products page", () => {
 			},
 			query: {
 				productId: "ABC123",
-				searchOption: SearchOption.productId,
+				searchOption: "productId",
 			},
 		};
 
@@ -80,7 +80,7 @@ describe("Products page", () => {
 
 		// Assert
 		expect(searchModel.value.productId).toBe("ABC123");
-		expect(searchModel.value.searchOption).toBe(SearchOption.productId);
+		expect(searchModel.value.searchOption).toBe("productId");
 	});
 
 	it("searchData returns paginated results", () => {
@@ -91,21 +91,21 @@ describe("Products page", () => {
 				brandName: "Test",
 				modelName: "Small Heat Pump",
 				modelQualifier: "HPSMALL",
-				technologyType: "air source heat pumps",
+				technologyType: "AirSourceHeatPump",
 			},
 			{
 				id: "1001",
 				brandName: "Test",
 				modelName: "Medium Heat Pump",
 				modelQualifier: "HPMEDIUM",
-				technologyType: "air source heat pumps",
+				technologyType: "AirSourceHeatPump",
 			},
 			{
 				id: "1002",
 				brandName: "Test",
 				modelName: "Large Heat Pump",
 				modelQualifier: "HPLARGE",
-				technologyType: "air source heat pumps",
+				technologyType: "AirSourceHeatPump",
 			},
 		];
 

@@ -43,7 +43,7 @@ const ensureValidTechnologyType = (technologyType: TechnologyType) => {
 	if (!technologyType || !arrayIncludes(technologyTypes, technologyType as string)) {
 		throw createError({
 			statusCode: 400,
-			statusMessage: "Expected a technology type query parameter.",
+			statusMessage: "Invalid product type",
 		});
 	}
 };

@@ -98,16 +98,26 @@ const hasIncompleteEntries = () =>
 		element. Where you have a multiple storey dwelling, internal floors should be inputted as floors or ceilings. You do
 		not need to enter both.</p>
 	<CustomList
-		id="ceilings" title="Ceilings" :form-url="`${page?.url!}/ceilings`" :items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data.filter(x => isEcaasForm(x)).map(x => ({
+		id="ceilings"
+		title="Ceilings"
+		:form-url="`${page?.url!}/ceilings`"
+		:items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data.filter(x => isEcaasForm(x)).map(x => ({
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceCeilings', index)"
+		}))"
+		:show-status="true"
+		@remove="(index: number) => handleRemove('dwellingSpaceCeilings', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceCeilings', index)" />
 	<CustomList
-		id="roofs" title="Roofs" :form-url="`${page?.url!}/roofs`" :items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.filter(x => isEcaasForm(x)).map(x => ({
+		id="roofs"
+		title="Roofs"
+		:form-url="`${page?.url!}/roofs`"
+		:items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.filter(x => isEcaasForm(x)).map(x => ({
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceRoofs', index)"
+		}))"
+		:show-status="true"
+		@remove="(index: number) => handleRemove('dwellingSpaceRoofs', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceRoofs', index)" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-fabric" secondary>
@@ -115,6 +125,7 @@ const hasIncompleteEntries = () =>
 		</GovButton>
 		<CompleteElement
 			:is-complete="Object.values(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs).every(section => section.complete)"
-			:disabled="hasIncompleteEntries()" @completed="handleComplete" />
+			:disabled="hasIncompleteEntries()"
+			@completed="handleComplete" />
 	</div>
 </template>

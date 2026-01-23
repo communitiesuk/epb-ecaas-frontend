@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { getProduct, getProductDetails, getProducts } from "./products";
-import type  { TechnologyType } from "~/pcdb/pcdb.types";
+import type { TechnologyType } from "~/pcdb/pcdb.types";
 import type { H3Error } from "h3";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
@@ -21,21 +21,20 @@ describe("Products service", () => {
 			// Act
 			try {
 				await getProducts("invalid type" as TechnologyType);
-			}
-			catch (error) {
+			} catch (error) {
 				h3Error = error as H3Error;
 			}
 
 			// Assert
 			expect(h3Error?.cause).toStrictEqual({
 				statusCode: 400,
-				statusMessage: "Expected a technology type query parameter.",
+				statusMessage: "Invalid product type",
 			});
 		});
 
 		it("Returns products by technology type", async () => {
 			// Arrange
-			const technologyType: TechnologyType = "air source heat pumps";
+			const technologyType: TechnologyType = "AirSourceHeatPump";
 			const airSourceHeatPumps = products.filter(p => p.technologyType === technologyType);
 
 			ddbMock.on(QueryCommand, {
@@ -69,8 +68,7 @@ describe("Products service", () => {
 			// Act
 			try {
 				await getProduct(NaN);
-			}
-			catch (error) {
+			} catch (error) {
 				h3Error = error as H3Error;
 			}
 
@@ -89,8 +87,7 @@ describe("Products service", () => {
 			// Act
 			try {
 				await getProduct(1);
-			}
-			catch (error) {
+			} catch (error) {
 				h3Error = error as H3Error;
 			}
 
@@ -128,9 +125,8 @@ describe("Products service", () => {
 
 			// Act
 			try {
-				await getProductDetails(NaN, "air source heat pumps");
-			}
-			catch (error) {
+				await getProductDetails(NaN, "AirSourceHeatPump");
+			} catch (error) {
 				h3Error = error as H3Error;
 			}
 
@@ -148,9 +144,8 @@ describe("Products service", () => {
 
 			// Act
 			try {
-				await getProductDetails(1, "air source heat pumps");
-			}
-			catch (error) {
+				await getProductDetails(1, "AirSourceHeatPump");
+			} catch (error) {
 				h3Error = error as H3Error;
 			}
 
@@ -167,7 +162,7 @@ describe("Products service", () => {
 			ddbMock.on(GetCommand).resolves({ Item: product });
 
 			// Act
-			const result = await getProductDetails(1234, "air source heat pumps");
+			const result = await getProductDetails(1234, "AirSourceHeatPump");
 
 			// Assert
 			expect(result).toStrictEqual(product);

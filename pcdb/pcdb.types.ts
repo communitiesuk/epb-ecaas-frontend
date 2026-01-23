@@ -28,47 +28,84 @@ const BaseProduct = z.object({
 	modelQualifier: z.optional(z.nullable(z.string())),
 });
 
-export const airSourceHeatPumpTestDataZod = z.object({
-	designFlowTemperature: z.int(),
-	testCondition: z.enum(["A", "B", "C", "D", "E", "F"]), // there is a possible 'E' value here, which diverges from SchemaTestLetter
-	testConditionTemperature: z.int(),
-	inletTemperature: z.number(),
-	outletTemperature: z.number(),
-	heatingCapacity: z.number(),
-	coefficientOfPerformance: z.number(),
-	degradationCoefficient: z.number(),
+export const heatPumpTestDataZod = z.object({
+	designFlowTemp: z.int(),
+	testLetter: z.enum(["A", "B", "C", "D", "E", "F"]), // there is a possible 'E' value here, which diverges from SchemaTestLetter
+	tempTest: z.int(),
+	tempSource: z.number(),
+	tempOutlet: z.number(),
+	capacity: z.number(),
+	cop: z.number(),
+	degradationCoeff: z.number(),
 });
 
-export const airSourceHeatPumpZod = BaseProduct.extend({
-	technologyType: z.literal("air source heat pumps"),
-	fuel: z.string(), // need a better type for this
+const baseHeatPump = BaseProduct.extend({
+	energySupply: z.string(), // need a better type for this
 	sourceType: heatPumpSourceTypeZod,
 	sinkType: heatPumpSinkTypeZod,
-	backupControlType: heatPumpBackupControlTypeZod,
+	backupCtrlType: heatPumpBackupControlTypeZod,
 	modulatingControl: z.boolean(),
-	standardRatingCapacity20C: z.nullable(z.number()),
-	standardRatingCapacity35C: z.nullable(z.number()),
-	standardRatingCapacity55C: z.nullable(z.number()),
-	minimumModulationRate20: z.nullable(z.number()),
-	minimumModulationRate35: z.nullable(z.number()),
-	minimumModulationRate55: z.nullable(z.number()),
-	timeConstantOnOffOperation: z.nullable(z.int()),
+	timeConstantOnoffOperation: z.nullable(z.int()),
 	tempReturnFeedMax: z.nullable(z.number()),
 	tempLowerOperatingLimit: z.nullable(z.number()),
 	minTempDiffFlowReturnForHpToOperate: z.nullable(z.int()),
 	varFlowTempCtrlDuringTest: z.boolean(),
 	powerHeatingCircPump: z.nullable(z.number()),
-	powerHeatingWarmAirFan: z.nullable(z.number()),
 	powerSourceCircPump: z.nullable(z.number()),
+	powerHeatingWarmAirFan: z.nullable(z.number()),
 	powerStandby: z.number(),
 	powerCrankcaseHeater: z.nullable(z.number()),
 	powerOff: z.nullable(z.number()),
 	powerMaximumBackup: z.nullable(z.number()),
-	testData: z.array(airSourceHeatPumpTestDataZod),
+	standardRatingCapacity20C: z.nullable(z.number()),
+	standardRatingCapacity35C: z.nullable(z.number()),
+	standardRatingCapacity55C: z.nullable(z.number()),
+	minimumModulationRate: z.nullable(z.number()),
+	minimumModulationRate35: z.nullable(z.number()),
+	testData: z.array(heatPumpTestDataZod),
+});
+
+export const airSourceHeatPumpZod = baseHeatPump.extend({
+	technologyType: z.literal("AirSourceHeatPump"),
+});
+
+export const groundSourceHeatPumpZod = baseHeatPump.extend({
+	technologyType: z.literal("GroundSourceHeatPump"),
+});
+
+export const waterSourceHeatPumpZod = baseHeatPump.extend({
+	technologyType: z.literal("WaterSourceHeatPump"),
+});
+
+export const boosterHeatPumpZod = baseHeatPump.extend({
+	technologyType: z.literal("BoosterHeatPump"),
+});
+
+export const hotWaterOnlyPumpZod = baseHeatPump.extend({
+	technologyType: z.literal("HotWaterOnlyHeatPump"),
+});
+
+export const exhaustAirMevPumpZod = baseHeatPump.extend({
+	technologyType: z.literal("ExhaustAirMevHeatPump"),
+});
+
+export const exhaustAirMvhrHeatPumpZod = baseHeatPump.extend({
+	technologyType: z.literal("ExhaustAirMvhrHeatPump"),
+});
+
+export const exhaustAirMixedHeatPump = baseHeatPump.extend({
+	technologyType: z.literal("ExhaustAirMixedHeatPump"),
 });
 
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
+	groundSourceHeatPumpZod,
+	waterSourceHeatPumpZod,
+	boosterHeatPumpZod,
+	hotWaterOnlyPumpZod,
+	exhaustAirMevPumpZod,
+	exhaustAirMvhrHeatPumpZod,
+	exhaustAirMixedHeatPump,
 ]);
 export type Product = z.infer<typeof productSchema>;
 
@@ -78,7 +115,14 @@ export type TechnologyType = Product["technologyType"];
 
 export const categoryTechnologies = {
 	heatPump: [
-		"air source heat pumps",
+		"AirSourceHeatPump",
+		"GroundSourceHeatPump",
+		"WaterSourceHeatPump",
+		"BoosterHeatPump",
+		"HotWaterOnlyHeatPump",
+		"ExhaustAirMevHeatPump",
+		"ExhaustAirMvhrHeatPump",
+		"ExhaustAirMixedHeatPump",
 	],
 } as const satisfies Record<string, TechnologyType[]>;
 
@@ -90,7 +134,7 @@ export type Category = keyof typeof categoryTechnologies;
 
 export type ProductForCategory<T extends Category> = Extract<Product, { technologyType: (typeof categoryTechnologies)[T][number] }>;
 
-export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier" > & { technologyType: TechnologyType };
+export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier"> & { technologyType: TechnologyType };
 
 export type DisplayProductWithFlowTemp = DisplayProduct & {
 	designFlowTemperature?: number;

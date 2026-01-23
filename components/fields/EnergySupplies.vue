@@ -17,7 +17,7 @@ const store = useEcaasStore();
 const { fuelType } = store.dwellingDetails.generalSpecifications.data; 
 
 const energySupplies = fuelType !== undefined ? [
-	fuelType.map( x => {
+	fuelType.map(x => {
 		return x ? [x, sentenceCase(x)] as [string, string] : undefined;
 	}),
 ].flat().filter(x => typeof x !== "undefined") : [];
