@@ -1,10 +1,10 @@
 import { objectFromEntries } from "ts-extras";
-import type { DisplayProduct, TechnologyType } from "~/pcdb/pcdb.types";
-import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaLeaksTestPressure } from "~/schema/aliases";
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaLeaksTestPressure, SchemaRadiatorType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import { adjacentSpaceTypes, type ConciseMassDistributionClass, type HeatPumpType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatPumpType, HeatSourceProductType, TypeOfBoiler } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -139,6 +139,7 @@ export function displayApplianceType(appliances: SchemaApplianceType[] | undefin
 type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;
 
 export function adjacentSpaceTypeOptions<T extends string>(element: T): Record<AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>> {
+
 	return objectFromEntries(adjacentSpaceTypes.map(entry => [
 		entry,
 		displayAdjacentSpaceType(entry, element)!,
@@ -178,13 +179,22 @@ export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressure
 	}
 }
 
+
 export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" | "LPG (Liquid petroleum gas) - bottled" | "LPG - 11F" | "Electricity is the only energy source" | "Mains gas" | "Electricity";
+
+export const energySupplyOptions = {
+	"mains_gas": "Mains gas",
+	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
+	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
+	"LPG_condition_11F": "LPG - 11F",
+	"elecOnly": "Electricity",
+	"electricity": "Electricity",
+} as const satisfies Record<SchemaFuelTypeExtended | "electricity", FuelTypeDisplay>;
 
 export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined) {
 	if (fuelTypes === undefined) return emptyValueRendering;
+	const result = fuelTypes.map(type => energySupplyOptions[type]).join(", ");
 
-	const result = fuelTypes.map(type => displayFuelType(type)).join(", ");
-	
 	if (!result.includes("Electricity")) {
 		return result + ", Electricity";
 	}
@@ -200,6 +210,8 @@ export function displayFuelType(fuelType: SchemaFuelTypeExtended): FuelTypeDispl
 		case "LPG_condition_11F":
 			return "LPG - 11F";
 		case "elecOnly":
+			return "Electricity is the only energy source";
+		case "electricity":
 			return "Electricity";
 		case "mains_gas":
 			return "Mains gas";
@@ -263,8 +275,6 @@ export function displayColour(colour: SchemaColour | undefined): ColourDisplay |
 	return colourOptionsMap[colour!] ?? emptyValueRendering;
 }
 
-export type HeatPumpTypeDisplay = "Air source" | "Ground source" | "Water source" | "Booster" | "Hot water only" | "Exhaust air MEV" | "Exhaust air MVHR" | "Exhaust air Mixed";
-
 export const heatPumpTypes = {
 	"airSource": "Air source",
 	"groundSource": "Ground source",
@@ -274,19 +284,98 @@ export const heatPumpTypes = {
 	"exhaustAirMev": "Exhaust air MEV",
 	"exhaustAirMvhr": "Exhaust air MVHR",
 	"exhaustAirMixed": "Exhaust air Mixed",
-} as const satisfies Record<HeatPumpType, HeatPumpTypeDisplay>;
+} as const satisfies Record<HeatPumpType, string>;
 
-export const pcdbTechnologyTypes = {
-	"airSource": "AirSourceHeatPump",
-	"groundSource": "GroundSourceHeatPump",
-	"waterSource": "WaterSourceHeatPump",
-	"booster": "BoosterHeatPump",
-	"hotWaterOnly": "HotWaterOnlyHeatPump",
-	"exhaustAirMev": "ExhaustAirMevHeatPump",
-	"exhaustAirMvhr": "ExhaustAirMvhrHeatPump",
-	"exhaustAirMixed": "ExhaustAirMixedHeatPump",
-} as Record<HeatPumpType, TechnologyType>;
+export const boilerTypes = {
+	"combiBoiler": "Combi boiler",
+	"regularBoiler": "Regular boiler",
+} as const satisfies Record<TypeOfBoiler, BoilerTypeDisplay>;
 
-export function displayHeatPumpType(type: HeatPumpType | undefined): HeatPumpTypeDisplay | typeof emptyValueRendering {
+export const heatBatteryTypes = {
+	"heatBatteryPcm": "PCM",
+	"heatBatteryDryCore": "Dry core",
+} as const satisfies Record<TypeOfHeatBattery, HeatBatteryTypeDisplay>;
+
+export const heatNetworkTypes = {
+	"sleevedDistrictHeatNetwork": "Sleeved district heat network",
+	"unsleevedDistrictHeatNetwork": "Unsleeved district heat network",
+	"communalHeatNetwork": "Communal heat network",
+} as const satisfies Record<TypeOfHeatNetwork, HeatNetworkTypeDisplay>;
+
+export const heatSourceProductTypesDisplay = {
+	"airSource": pluralize("Air source heat pump"),
+	"groundSource": pluralize("Ground source heat pump"),
+	"waterSource": pluralize("Water source heat pump"),
+	"booster": pluralize("Booster heat pump"),
+	"hotWaterOnly": pluralize("Hot water only heat pump"),
+	"exhaustAirMev": pluralize("Exhaust air MEV heat pump"),
+	"exhaustAirMvhr": pluralize("Exhaust air MVHR heat pump"),
+	"exhaustAirMixed": pluralize("Exhaust air mixed heat pump"),
+	"combiBoiler": pluralize("Combi boiler"),
+	"regularBoiler": pluralize("Regular boiler"),
+	"sleevedDistrictHeatNetwork": pluralize("Sleeved district heat network"),
+	"unsleevedDistrictHeatNetwork": pluralize("Unsleeved district heat network"),
+	"communalHeatNetwork": pluralize("Communal heat network"),
+	"heatBatteryPcm": pluralize("PCM heat battery", "ies"),
+	"heatBatteryDryCore": pluralize("Dry core heat battery", "ies"),
+} as const satisfies Record<HeatSourceProductType, (plural: boolean) => string>;
+
+heatSourceProductTypesDisplay["airSource"](true);
+
+export function displayHeatPumpType(type: HeatPumpType | undefined): string {
 	return heatPumpTypes[type!] ?? emptyValueRendering;
+}
+
+export type BoilerTypeDisplay = "Combi boiler" | "Regular boiler";
+export type BoilerLocationDisplay = "Heated space" | "Unheated space";
+export type HeatNetworkTypeDisplay = "Sleeved district heat network" | "Unsleeved district heat network" | "Communal heat network";
+export type HeatBatteryTypeDisplay = "PCM" | "Dry core";
+export type LocationOfCollectorLoopPipingTypeDisplay = "Outside" | "Heated space" | "Unheated space";
+
+export type HeatSourceTypeDisplay = "Heat pump" | "Boiler" | "Heat network" | "Heat battery" | "Solar thermal system";
+
+export const heatSourceTypesWithDisplay = {
+	"heatPump": "Heat pump",
+	"boiler": "Boiler",
+	"heatNetwork": "Heat network",
+	"heatBattery": "Heat battery",
+	"solarThermalSystem": "Solar thermal system",
+} as const satisfies Record<HeatSourceType, HeatSourceTypeDisplay>;
+
+export function displayHeatSourceType(type: HeatSourceType | undefined): HeatSourceTypeDisplay | typeof emptyValueRendering {
+	return heatSourceTypesWithDisplay[type!] ?? emptyValueRendering;
+}
+
+export type HeatEmitterDisplay = "Radiator" | "Underfloor heating" | "Fan coil" | "Warm air heater" | "Instant electric heater" | "Electric storage heater";
+
+export const heatEmitterTypes = {
+	"radiator": "Radiator",
+	"underfloorHeating": "Underfloor heating",
+	"fanCoil": "Fan coil",
+	"warmAirHeater": "Warm air heater",
+	"instantElectricHeater": "Instant electric heater",
+	"electricStorageHeater": "Electric storage heater",
+
+} as const satisfies Record<HeatEmitterType, HeatEmitterDisplay>;
+
+export function displayHeatEmitterType(type: HeatEmitterType | undefined): HeatEmitterDisplay | typeof emptyValueRendering {
+	if (!type) {
+		return emptyValueRendering;
+	}
+	return heatEmitterTypes[type];
+}
+
+export type RadiatorDisplay = "Standard" | "Towel radiator";
+
+export const radiatorTypes = {
+	standard: "Standard",
+	towel: "Towel radiator",
+
+} as const satisfies Record<SchemaRadiatorType, RadiatorDisplay>;
+
+export function displayRadiatorType(type: SchemaRadiatorType | undefined): RadiatorDisplay | typeof emptyValueRendering {
+	if (!type) {
+		return emptyValueRendering;
+	}
+	return radiatorTypes[type];
 }

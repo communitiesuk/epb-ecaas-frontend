@@ -1,5 +1,5 @@
 import type { Simplify } from "type-fest";
-import type { components, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaMassDistributionClass, SchemaBuildingElementGround, SchemaBuildingElementOpaque } from "./api-schema.types";
+import type { components, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaMassDistributionClass, SchemaBuildingElementGround, SchemaBuildingElementOpaque, SchemaRadiatorWithProductReference, SchemaUfhWithProductReference, SchemaFancoilWithProductReference } from "./api-schema.types";
 
 // Some aliases to names in the API schema generated types, sometimes for more graceful backwards compatibility
 // as different names get used in the upstream schemas
@@ -12,6 +12,7 @@ export type WwhrsType = Exclude<FhsSchema["WWHRS"], undefined>[string]["type"];
 export type VentType = SchemaMechanicalVentilation["vent_type"];
 type OnSiteGeneration = Exclude<FhsSchema["OnSiteGeneration"], undefined>;
 export type OnSiteGenerationVentilationStrategy = OnSiteGeneration[string]["ventilation_strategy"];
+export type SchemaSpaceHeatSystem = Exclude<FhsSchema["SpaceHeatSystem"], undefined>;
 export type SchemaSpaceHeatSystemDetails = Exclude<FhsSchema["SpaceHeatSystem"], undefined>[string];
 export type SchemaSpaceCoolSystemDetails = Exclude<FhsSchema["SpaceCoolSystem"], undefined>[string];
 export type SchemaZoneInput = FhsSchema["Zone"][string];
@@ -24,6 +25,7 @@ type BuildingElementType = SchemaBuildingElement["type"];
 export type BuildingElementOfType<T extends BuildingElementType> = Extract<SchemaBuildingElement, { type: T }>;
 export type BuildingElementGround = BuildingElementOfType<"BuildingElementGround">;
 export type SchemaHeatSourceWetDetails = SchemaHeatSourceWetBoiler | SchemaHeatSourceWetHeatBattery | SchemaHeatSourceWetHeatPump | SchemaHeatSourceWetHiu;
+export type SchemaHeatSourceWetHeatEmitterDetails = SchemaRadiatorWithProductReference | SchemaUfhWithProductReference | SchemaFancoilWithProductReference;
 // utility function to make shading into valid external conditions
 type SchemaExternalConditionsInputFhs = FhsSchema["ExternalConditions"];
 export type SchemaShadingSegment = SchemaExternalConditionsInputFhs["shading_segments"][number];
@@ -56,7 +58,7 @@ export type SchemaWaterPipeworkLocation = Exclude<SchemaWaterPipework["location"
 export type SchemaWaterPipeContentsType = Exclude<SchemaWaterPipework["pipe_contents"], undefined | "air">;
 export type SchemaWindowShadingObject = SchemaDefs["BuildingElementTransparent"]["shading"][number];
 export type SchemaMechVentType = VentType;
-export type SchemaFuelType = Exclude<FhsSchema["EnergySupply"][string]["fuel"], "gas" | "custom" | "wood" | "gas" | "oil" | "coal" | "electricity">;
+export type SchemaFuelType = Exclude<FhsSchema["EnergySupply"][string]["fuel"], "gas" | "custom" | "wood" | "gas" | "oil" | "coal">;
 export type SchemaFuelTypeExtended = SchemaFuelType | "elecOnly";
 export type SchemaPhotovoltaicVentilationStrategy = OnSiteGenerationVentilationStrategy;
 type HeatPump = SchemaDefs["HeatSourceWetHeatPump"];
@@ -67,7 +69,7 @@ export type SchemaHeatPumpSinkType = HeatPumpFull["sink_type"];
 export type SchemaHeatPumpSourceType = HeatPumpFull["source_type"];
 export type SchemaWindowPart = SchemaDefs["BuildingElementTransparent"]["window_part_list"][number];
 export type SchemaLighting = FhsSchema["Zone"][string]["Lighting"];
-export type SchemaThermalBridgingLinearFhs = SchemaDefs["ThermalBridgeLinear"]; 
+export type SchemaThermalBridgingLinearFhs = SchemaDefs["ThermalBridgeLinear"];
 export type SchemaThermalBridgingPoint = SchemaDefs["ThermalBridgePoint"];
 export type SchemaEdgeInsulationHorizontal = Simplify<SchemaDefs["SlabEdgeInsulation"]["edge_insulation"][number]> & { type: "horizontal" };
 export type SchemaMechanicalVentilationDuctwork = SchemaDefs["MechVentMVHR"]["ductwork"][number];
@@ -82,3 +84,5 @@ export type SchemaEdgeInsulation = SchemaDefs["SlabEdgeInsulation"]["edge_insula
 export type SchemaLightingBulbs = FhsSchema["Zone"][string]["Lighting"]["bulbs"];
 export type SchemaApplianceType = Exclude<keyof FhsSchema["Appliances"], "Kettle" | "Microwave" | "Otherdevices">;
 export type SchemaColdWaterSourceType = components["schemas"]["ColdWaterSource"]["ColdWaterSource"];
+export type SchemaHeatNetworkType = (Exclude<FhsSchema["HeatSourceWet"], undefined>[string] & { is_heat_network: true })["heat_network_type"];
+export type SchemaRadiatorType = SchemaRadiatorWithProductReference["radiator_type"];

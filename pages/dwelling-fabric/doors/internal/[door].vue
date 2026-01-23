@@ -101,8 +101,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | uniqueName"
 				:validation-messages="{
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
-				}"
-			/>
+				}" />
 			<FieldsAssociatedElements
 				v-if="model.typeOfInternalDoor === 'heatedSpace'"
 				id="associatedItemId"
@@ -125,15 +124,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				name="surfaceArea"
 				validation="required | number | min:0 | max:10000"
 				suffix-text="m²"
-				data-field="Zone.BuildingElement.*.area"
-			/>
-			<FieldsUValue
-				v-if="model.typeOfInternalDoor === 'unheatedSpace'"
-				id="uValue"
-				name="uValue"
-			/>
-			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
-			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+				data-field="Zone.BuildingElement.*.area" />
+			<FieldsUValue v-if="model.typeOfInternalDoor === 'unheatedSpace'" id="uValue" name="uValue" />
+			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
+			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
 		</template>
 		<FormKit
 			v-if="model?.typeOfInternalDoor === 'unheatedSpace'"

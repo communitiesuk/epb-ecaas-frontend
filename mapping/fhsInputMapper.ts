@@ -4,7 +4,6 @@ import type { SchemaHeatSourceWetHeatPumpWithProductReference } from "~/schema/a
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
 import { mapInfiltrationVentilationData } from "./infiltrationVentilationMapper";
-import { mapspaceHeatingData } from "./spaceHeatingMapper";
 import { mapLivingSpaceFabricData as mapDwellingFabricData } from "./dwellingFabricMapper";
 import { mapPvAndElectricBatteriesData } from "./pvAndElectricBatteriesMapper";
 import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
@@ -12,6 +11,7 @@ import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from 
 import { objectFromEntries } from "ts-extras";
 import type { Simplify, SimplifyDeep } from "type-fest";
 import { mapCoolingData } from "./coolingMapper";
+import { mapSpaceHeatSystem } from "./spaceHeatingMapper";
 
 export type ResolvedState = SimplifyDeep<Resolved<EcaasState>>;
 
@@ -21,13 +21,14 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const dwellingFabricData = mapDwellingFabricData(state);
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
 	const coolingData = mapCoolingData(state);
+	const spaceHeatingSystemData = mapSpaceHeatSystem(state);
 
 	const [pvData, electricBatteries, diverter] = mapPvAndElectricBatteriesData(state);
-	const heatingCooling = mapspaceHeatingData(state);
+
 	const fuelType = dwellingDetailsData.EnergySupply;
 
 	const spaceHeatingData = {
-		...heatingCooling,
+		...spaceHeatingSystemData,
 		...coolingData,
 		EnergySupply: {
 			[defaultElectricityEnergySupplyName]: {
@@ -55,7 +56,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	// Below uses default values until heat pump is set up to come from PCDB
 	const { HotWaterSource } = domesticHotWaterData;
 	const heatPumpName: string = Object.keys((HotWaterSource!["hw cylinder"] as SchemaStorageTank).HeatSource)[0]!;
-	const heatPumps = state.spaceHeating.heatGeneration.heatPump;
+	const heatPumps = state.spaceHeating.heatSource.filter(hs => hs.typeOfHeatSource === "heatPump");
 
 	// use the picked heat pump if one is picked, otherwise fall back to the default
 	// TODO: correct this at point other heat sources are being added

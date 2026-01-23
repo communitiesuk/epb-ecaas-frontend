@@ -41,24 +41,16 @@ describe("dwelling fabric mapper", () => {
 
 		store.$patch({
 			spaceHeating: {
-				heatEmitting: {
-					wetDistribution: {
-						...baseForm,
-						data: [{
-							...baseForm,
-							data: { name: "radiator 1" },
-						}],
+				heatEmitters: {
+					data: [{
+						data: { name: "radiator 1", typeOfHeatEmitter: "radiator" }, complete: true,
 					},
-					instantElectricHeater: {
-						...baseForm,
-						data: [{
-							...baseForm,
-							data: {
-								name: "ieh 1",
-							},
-						}],
+					{
+						data: { name: "ieh 1", typeOfHeatEmitter: "instantElectricHeater" }, complete: true,
 					},
+					], complete: true,
 				},
+
 			},
 			dwellingFabric: {
 				dwellingSpaceZoneParameters: {
@@ -587,7 +579,7 @@ describe("dwelling fabric mapper", () => {
 
 	it("maps door input state to FHS input request", () => {
 		// Arrange
-		
+
 		const externalWall: EcaasForm<ExternalWallData> = {
 			...baseForm,
 			data: {
@@ -606,7 +598,7 @@ describe("dwelling fabric mapper", () => {
 				massDistributionClass: "I",
 			},
 		};
-		
+
 		const internalWall: EcaasForm<InternalWallData> = {
 			...baseForm,
 			data: {
@@ -661,7 +653,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		const doorSuffix = " (door)";
-		 
+
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWalls: {
@@ -691,15 +683,15 @@ describe("dwelling fabric mapper", () => {
 		const externalUnglazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalUnglazedDoor.name + doorSuffix]! as BuildingElementOpaque;
 
 		const expectedInternalDoor: BuildingElementAdjacentUnconditionedSpaceSimple =
-      {
-      	type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-      	pitch: extractPitch(internalWall.data),
-      	area: internalDoor.surfaceArea,
-      	u_value: internalDoor.uValue,
-      	areal_heat_capacity: internalDoor.arealHeatCapacity,
-      	mass_distribution_class: fullMassDistributionClass(internalDoor.massDistributionClass),
-      	thermal_resistance_unconditioned_space: internalDoor.thermalResistanceOfAdjacentUnheatedSpace,
-      };
+		{
+			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+			pitch: extractPitch(internalWall.data),
+			area: internalDoor.surfaceArea,
+			u_value: internalDoor.uValue,
+			areal_heat_capacity: internalDoor.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(internalDoor.massDistributionClass),
+			thermal_resistance_unconditioned_space: internalDoor.thermalResistanceOfAdjacentUnheatedSpace,
+		};
 
 		expect(internalDoorElement).toEqual(expectedInternalDoor);
 

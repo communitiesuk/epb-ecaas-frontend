@@ -69,7 +69,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			name="name"
 			validation="required"
 		/>
-		<FieldsHeatGenerators
+		<FieldsHeatSources
 			id="heatSource"
 			name="heatSource"
 			label="Heat source"

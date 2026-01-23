@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
+import { energySupplyOptions, getUrl } from "#imports";
 
 defineProps<{
 	id: string;
@@ -16,11 +16,21 @@ const store = useEcaasStore();
 
 const { fuelType } = store.dwellingDetails.generalSpecifications.data; 
 
-const energySupplies = fuelType !== undefined ? [
-	fuelType.map(x => {
-		return x ? [x, sentenceCase(x)] as [string, string] : undefined;
-	}),
-].flat().filter(x => typeof x !== "undefined") : [];
+const energySupplies = fuelType !== undefined ?
+	[...new Set([...fuelType, "elecOnly" as keyof typeof energySupplyOptions])].map(x => {
+
+		if (x === "elecOnly") {
+			return ["electricity", energySupplyOptions[x]] as [string, string];
+		}
+		return [x, energySupplyOptions[x]] as [string, string];
+	
+	}).filter(x => typeof x !== "undefined") : [];
+
+function getDefaultEnergySupply(supplies: [string, string][]) {
+	if (supplies.length === 1) {
+		return supplies[0]![0];
+	}
+}
 
 </script>
 
@@ -33,6 +43,7 @@ const energySupplies = fuelType !== undefined ? [
 			:label="label"
 			:help="help"
 			:name="name"
+			:value="getDefaultEnergySupply(energySupplies)"
 			:validation="validation ?? 'required'"
 			:validation-rules="validationRules"
 			:validation-messages="validationMessages"

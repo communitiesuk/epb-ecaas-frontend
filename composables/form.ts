@@ -130,7 +130,7 @@ export function useForm() {
 	 * @returns Name
 	 */
 export const getName = <T extends object>(updatedItem: T, defaultName: string): string => {
-
+	
 	if ("name" in updatedItem && typeof updatedItem.name === "string") {
 		return updatedItem.name.trim() || defaultName;
 	}

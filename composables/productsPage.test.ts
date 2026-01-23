@@ -41,7 +41,7 @@ describe("Products page", () => {
 		const { pageId } = useProductsPage("pump");
 
 		// Assert
-		expect(pageId).toBeOneOf(Object.keys(pcdbTechnologyTypes));
+		expect(pageId).toBeOneOf(Object.keys(heatSourceProductTypeMap));
 	});
 
 	it("Returns page title when page ID is valid", () => {
