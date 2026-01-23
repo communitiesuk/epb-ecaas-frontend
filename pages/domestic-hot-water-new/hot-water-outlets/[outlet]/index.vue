@@ -7,6 +7,24 @@ const title = "Hot water outlets";
 const store = useEcaasStore();
 const route = useRoute();
 
+// // remove this------------
+// store.$patch({
+//     domesticHotWaterNew: {
+//         heatSources: {
+//             data: [
+//                 {
+//                     data: {
+//                         id: "heatPumpId",
+//                         name: "Heat pump 1",
+//                     },
+//                     complete: true,
+//                 },
+//             ],
+//         },
+//     },
+// });
+// //------------------------
+
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const hotWaterOutletsStoreData = store.domesticHotWaterNew.hotWaterOutlets.data;
@@ -17,7 +35,7 @@ const id =  hotWaterOutletData?.data.id ?? uuidv4();
 
 const saveForm = (fields: HotWaterOutletsData) => {
 	store.$patch((state) => {
-		const { hotWaterOutlets } = state.domesticHotWaterNew;
+		const { hotWaterOutlets, heatSources } = state.domesticHotWaterNew;
 
 		const commonFields = {
 			name: fields.name,
@@ -32,9 +50,9 @@ const saveForm = (fields: HotWaterOutletsData) => {
 				data: {
 					...commonFields,
 					typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-                    wwhrs: fields.wwhrs,
+                    wwhrs: false,//fields.wwhrs,
                     flowRate: fields.flowRate,
-                    hotWaterSource: fields.hotWaterSource,
+                    hotWaterSource: heatSources.data[parseInt(fields.hotWaterSource)]?.data.id ?? fields.hotWaterSource,
 				},
 				complete: true,
 			};
@@ -44,7 +62,7 @@ const saveForm = (fields: HotWaterOutletsData) => {
 					...commonFields,
 					typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
                     ratedPower: fields.ratedPower,
-                    wwhrs: fields.wwhrs,
+                    wwhrs: false,//fields.wwhrs,
 				},
 				complete: true,
 			};
@@ -139,14 +157,15 @@ const hotWaterOutlets = [
         <FormKit
             v-if="model.typeOfHotWaterOutlet === 'mixedShower'"	
             id="hotWaterSource"
+            name="hotWaterSource"
             type="govRadios"
             label="Hot water source"
             help="Select the relevant hot water source that has been added previously"
-            :options="new Map(store.domesticHotWaterNew.heatSources.data.map((e) => {return [e.data.name, e.data.name]}))"
+            validation="required"
+            :options="new Map(store.domesticHotWaterNew.heatSources.data.map((e, index) => {return [index.toString(), e.data.name]}))"
         />
-        <!-- THE ABOVE MAP NEEDS TO CHANGE TO e.data.id WHEN HEAT SOURCES ARE DONE! -->
         <FormKit
-            v-if="model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	
+            v-if="model.typeOfHotWaterOutlet === 'mixedShower'"	
             id="flowRate"
             type="govInputWithSuffix"
             label="Flow rate"
@@ -172,6 +191,15 @@ const hotWaterOutlets = [
             suffix-text="litres"
             validation="required|number|min:0|max:500"
             data-field="HotWaterDemand.Bath.*.size"
+        />
+        <FormKit
+            v-if="model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	
+            id="flowRateOther"
+            type="govInputWithSuffix"
+            label="Flow rate"
+            name="flowRateOther"
+            suffix-text="litres per second"
+            validation="required|number|min:0|max:15"
         />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

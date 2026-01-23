@@ -556,7 +556,7 @@ export type DomesticHotWaterNew = AssertEachKeyIsPageId<{
 	pipework: EcaasFormList<PipeworkData>;
 }>;
 
-const waterHeatSourcesDataZod = named;
+const waterHeatSourcesDataZod = namedWithId;
 
 export type WaterHeatSourcesData = z.infer<typeof waterHeatSourcesDataZod>;
 

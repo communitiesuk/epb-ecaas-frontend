@@ -25,6 +25,7 @@ describe("Domestic hot water", () => {
 	const heatSource1: EcaasForm<WaterHeatSourcesData> = {
 		data: {
 			name: "Jasper's Beating Heart",
+			id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
 		},
 	};
 
@@ -422,11 +423,13 @@ describe("Domestic hot water", () => {
 		const heatSource2: EcaasForm<WaterHeatSourcesData> = {
 			data: {
 				name: "Jasper's Old Laptop",
+				id: "1fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
 			},
 		};
 		const heatSource3: EcaasForm<WaterHeatSourcesData> = {
 			data: {
 				name: "Jasper's Heat Pump",
+				id: "2fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
 			},
 		};
 
