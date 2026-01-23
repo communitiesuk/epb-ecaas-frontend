@@ -93,6 +93,20 @@ export const spaceHeatingPages = [
 		parentId: "heatSource",
 	},
 	{
+		id: "heatBatteryPcmProducts",
+		title: "Select a PCM heat battery",
+		url: "/space-heating/heat-source/:heatSource/heat-battery-pcm",
+		type: "task",
+		parentId: "heatSource",
+	},
+	{
+		id: "heatBatteryDryCoreProducts",
+		title: "Select a dry core heat battery",
+		url: "/space-heating/heat-source/:heatSource/heat-battery-dry-core",
+		type: "task",
+		parentId: "heatSource",
+	},
+	{
 		id: "heatEmitters",
 		title: "Heat emitter",
 		url: "/space-heating/heat-emitters/:heatEmitter",
