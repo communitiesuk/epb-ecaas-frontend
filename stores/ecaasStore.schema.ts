@@ -592,6 +592,8 @@ export type WaterStorageData = z.infer<typeof waterStorageDataZod>;
 const mixedShowerDataZodNew = namedWithId.extend({
 	typeOfHotWaterOutlet: z.literal("mixedShower"),
 	flowRate: z.number().min(8).max(15),
+	hotWaterSource: z.uuidv4(),
+	wwhrs: z.boolean(),
 });
 
 export type MixedShowerDataNew = z.infer<typeof mixedShowerDataZodNew>;
@@ -599,6 +601,7 @@ export type MixedShowerDataNew = z.infer<typeof mixedShowerDataZodNew>;
 const electricShowerDataZodNew = namedWithId.extend({
 	typeOfHotWaterOutlet: z.literal("electricShower"),
 	ratedPower: z.number().min(0).max(30),
+	wwhrs: z.boolean(),
 });
 
 export type ElectricShowerDataNew = z.infer<typeof electricShowerDataZodNew>;

@@ -187,6 +187,8 @@ describe("Domestic hot water summary", () => {
 				name: "Mixer shower 1",
 				flowRate: 10,
 				typeOfHotWaterOutlet: "mixedShower",
+				hotWaterSource: "4eaf-48c1-4d3b-9f56-6d02b8f5c2bb",
+				wwhrs: false,
 			},
 		};
 
@@ -196,6 +198,7 @@ describe("Domestic hot water summary", () => {
 				name: "Electric shower 1",
 				ratedPower: 10,
 				typeOfHotWaterOutlet: "electricShower",
+				wwhrs: false,
 			},
 		};
 

@@ -78,7 +78,6 @@ describe("Domestic hot water", () => {
 				typeOfWaterStorage: "smartHotWaterTank",
 				heatSource: "weeeeee3",
 				heaterPosition: 0.8,
-				thermostatPosition: 0.5,
 				productReference: "SMART-12345",
 			},
 		};
@@ -196,6 +195,8 @@ describe("Domestic hot water", () => {
 				typeOfHotWaterOutlet: "mixedShower",
 				id: "outlet2",
 				flowRate: 100,
+				hotWaterSource: "4eaf-48c1-4d3b-9f56-6d02b8f5c2bb",
+				wwhrs: false,
 			},
 		};
 

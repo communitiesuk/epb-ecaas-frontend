@@ -34,7 +34,7 @@ const domesticHotWaterPages = [
 	{
 		id: "heatSources",
 		title: "Heat Sources",
-		url: "/domestic-hot-water-new/heat-sources/:heat-sources",
+		url: "/domestic-hot-water-new/heat-sources/:heatsources",
 		type: PageType.TaskGroup,
 		parentId: "domesticHotWaterNew",
 	},
@@ -46,9 +46,16 @@ const domesticHotWaterPages = [
 		parentId: "domesticHotWaterNew",
 	},
 	{
+		id: "hotWaterOutletsNewCreate",
+		title: "Hot Water Outlets",
+		url: "/domestic-hot-water-new/hot-water-outlets/create",
+		type: PageType.TaskGroup,
+		parentId: "domesticHotWaterNew",
+	},
+	{
 		id: "hotWaterOutletsNew",
 		title: "Hot Water Outlets",
-		url: "/domestic-hot-water-new/hot-water-outlets",
+		url: "/domestic-hot-water-new/hot-water-outlets/:outlet",
 		type: PageType.TaskGroup,
 		parentId: "domesticHotWaterNew",
 	},
