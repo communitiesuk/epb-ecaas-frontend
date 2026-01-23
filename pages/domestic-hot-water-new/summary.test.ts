@@ -66,6 +66,7 @@ describe("Domestic hot water summary", () => {
 							data: {
 								id: heatPumpId,
 								name: "Heat pump",
+								typeOfHeatSource: "heatPump",
 							},
 						}],
 					},

@@ -81,7 +81,7 @@ describe("hot water outlets", () => {
 	const populateValidFormMS = async () => {
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
 		await user.type(screen.getByTestId("name"), "Mixer shower 1");
-		await user.click(screen.getByTestId("hotWaterSource_0"));
+		await user.click(screen.getByTestId("hotWaterSource_" + heatPumpId));
 		await user.type(screen.getByTestId("flowRate"), "10");
 		//WWHRS
 		await user.tab();
@@ -231,11 +231,15 @@ describe("hot water outlets", () => {
 				});
 
 				expect(
-					(await screen.findByTestId<HTMLInputElement>(`typeOfHotWaterOutlet_${type}`)).value,
-				).toBe(type);
+					(await screen.findByTestId<HTMLInputElement>(`typeOfHotWaterOutlet_${type}`)).checked,
+				).toBe(true);
+
+				if (type === "mixedShower") {
+					expect((await screen.findByTestId<HTMLInputElement>(`hotWaterSource_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
+				}
 
 				(Object.keys(hotWaterOutlet.data))
-					.filter(e => e !== "id")
+					.filter(e => e !== "id" && e !== "typeOfHotWaterOutlet" && e !== "hotWaterSource")
 					.forEach(async (key) => {
 						expect((await screen.findByTestId<HTMLInputElement>(key)).value)
 							.toBe(String((hotWaterOutlet.data)[key as (keyof typeof hotWaterOutlet.data)]));

@@ -74,7 +74,7 @@ function checkIsComplete() {
 	return Object.values(outlets).every(outlet => outlet.complete);
 }
 
-function hasIncompleteEntries(){
+function hasIncompleteEntries() {
 
 	const outletsTypes = store.domesticHotWater.hotWaterOutlets;
 

@@ -9,19 +9,19 @@ const store = useEcaasStore();
 
 // // remove this------------
 // store.$patch({
-//     domesticHotWaterNew: {
-//         heatSources: {
-//             data: [
-//                 {
-//                     data: {
-//                         id: "heatPumpId",
-//                         name: "Heat pump 1",
-//                     },
-//                     complete: true,
-//                 },
-//             ],
-//         },
-//     },
+// 	domesticHotWaterNew: {
+// 		heatSources: {
+// 			data: [
+// 				{
+// 					data: {
+// 						id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+// 						name: "Heat pump 1",
+// 					},
+// 					complete: true,
+// 				},
+// 			],
+// 		},
+// 	},
 // });
 // //------------------------
 
@@ -35,7 +35,7 @@ const id = hotWaterOutletData?.data.id ?? uuidv4();
 
 const saveForm = (fields: HotWaterOutletsData) => {
 	store.$patch((state) => {
-		const { hotWaterOutlets, heatSources } = state.domesticHotWaterNew;
+		const { hotWaterOutlets } = state.domesticHotWaterNew;
 
 		const commonFields = {
 			name: fields.name,
@@ -52,7 +52,7 @@ const saveForm = (fields: HotWaterOutletsData) => {
 					typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
 					wwhrs: false,//fields.wwhrs,
 					flowRate: fields.flowRate,
-					hotWaterSource: heatSources.data[parseInt(fields.hotWaterSource)]?.data.id ?? fields.hotWaterSource,
+					hotWaterSource: fields.hotWaterSource,
 				},
 				complete: true,
 			};
@@ -161,7 +161,7 @@ const hotWaterOutlets = [
 			label="Hot water source"
 			help="Select the relevant hot water source that has been added previously"
 			validation="required"
-			:options="new Map(store.domesticHotWaterNew.heatSources.data.map((e, index) => {return [index.toString(), e.data.name]}))"
+			:options="new Map(store.domesticHotWaterNew.heatSources.data.map((e, index) => {return [e.data.id ?? index.toString(), e.data.name]}))"
 		/>
 		<FormKit
 			v-if="model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	

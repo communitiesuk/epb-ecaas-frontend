@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { isEcaasForm, type WaterHeatSourcesData } from '#imports';
-import formStatus from '~/constants/formStatus';
+import { isEcaasForm, type WaterHeatSourcesData } from "#imports";
+import formStatus from "~/constants/formStatus";
 
 const title = "Domestic hot water";
 
@@ -24,7 +24,7 @@ function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number)
 } 
 
 function handleDuplicate<T extends DomesticHotWaterData>(domesticHotWaterType: DomesticHotWaterType, index: number) {
-	const data  = store.domesticHotWaterNew[domesticHotWaterType]?.data;
+	const data = store.domesticHotWaterNew[domesticHotWaterType]?.data;
 	const item = data?.[index];
 	let name: string;
     
@@ -121,16 +121,16 @@ const hasIncompleteEntries = () =>
 		@duplicate="(index: number) => handleDuplicate('pipework', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-	<GovButton
-		href="/"
-		secondary
-	>
-		Return to overview
-	</GovButton>
-	<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
-	<CompleteElement
-		:is-complete="Object.values(store.domesticHotWaterNew).every(section => section.complete)"
-		:disabled="hasIncompleteEntries()"
-		@completed="handleComplete"/>
+		<GovButton
+			href="/"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
+		<CompleteElement
+			:is-complete="Object.values(store.domesticHotWaterNew).every(section => section.complete)"
+			:disabled="hasIncompleteEntries()"
+			@completed="handleComplete"/>
 	</div>
 </template>

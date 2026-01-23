@@ -28,7 +28,7 @@ function handleDuplicate<T extends PipeworkData>(pipeworkType: PipeworkType, ind
 
 	if (pipeworkItem) {
 		const duplicates = pipework.filter(d => {
-			if(isEcaasForm(d) && isEcaasForm(pipeworkItem)) {
+			if (isEcaasForm(d) && isEcaasForm(pipeworkItem)) {
 				name = pipeworkItem.data.name;
 				return d.data.name.match(duplicateNamePattern(pipeworkItem.data.name));
 			}
@@ -65,12 +65,12 @@ function handleComplete() {
 	navigateTo("/domestic-hot-water");
 }
 
-function checkIsComplete(){
+function checkIsComplete() {
 	const pipes = store.domesticHotWater.pipework;
 	return Object.values(pipes).every(pipe => pipe.complete);
 }
 
-function hasIncompleteEntries(){
+function hasIncompleteEntries() {
 
 	const pipeworkTypes = store.domesticHotWater.pipework;
 
