@@ -6,7 +6,6 @@ import { metre, millimetre } from "~/utils/units/length";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
 import { litrePerHour, litrePerMinute } from "~/utils/units/flowRate";
 import { kilowatt, kilowattHour } from "~/utils/units/power";
-import { unitValue } from "~/utils/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -330,9 +329,8 @@ describe("Domestic hot water summary", () => {
 	});
 
 	describe("pipework", () => {
-		const hotWaterCylinderId = "c84528bb-f805-4f1e-95d3-2bd17384fdbe";
 
-		const primaryPipework: EcaasForm<Partial<PrimaryPipeworkData>> = {
+		const pipework: EcaasForm<Partial<PipeworkData>> = {
 			data: {
 				name: "Pipework Kitchen Sink Primary",
 				internalDiameter: 10,
@@ -342,45 +340,22 @@ describe("Domestic hot water summary", () => {
 				thermalConductivity: 1,
 				surfaceReflectivity: true,
 				pipeContents: "water",
-				hotWaterCylinder: hotWaterCylinderId,
-				location: "internal",
-			},
-		};
-
-		const secondaryPipework: EcaasForm<Partial<SecondaryPipeworkData>> = {
-			data: {
-				name: "Pipework Kitchen Sink Secondary",
-				length: 3,
-				location: "internal",
-				internalDiameter: 9,
+				location: "heatedSpace",
 			},
 		};
 
 		it("should contain the correct tabs for pipework details", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "Primary pipework" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Secondary pipework" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Pipework" })).not.toBeNull();
+
 		});
 
-		it("should display the correct data for the primary pipework section", async () => {
+		it("should display the correct data for the pipework section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					pipework: {
-						primaryPipework: {
-							data: [primaryPipework],
-						},
-					},
-					waterHeating: {
-						hotWaterCylinder: {
-							data: [{
-								data: {
-									id: hotWaterCylinderId,
-									name: "Hot water cylinder 1",
-									storageCylinderVolume: unitValue(100, litre),
-								},
-							}],
-						},
+						data: [pipework],
 					},
 				},
 			});
@@ -389,47 +364,19 @@ describe("Domestic hot water summary", () => {
 
 			const expectedResult = {
 				"Name": "Pipework Kitchen Sink Primary",
+				"Location": "Heated space",
+				"Pipe contents": "Water",
 				"Internal diameter": `10 ${millimetre.suffix}`,
 				"External diameter": `10 ${millimetre.suffix}`,
 				"Length": `3 ${metre.suffix}`,
 				"Insulation thickness": `5 ${millimetre.suffix}`,
 				"Thermal conductivity": `1 ${wattsPerMeterKelvin.suffix}`,
 				"Surface reflectivity": "Reflective",
-				"Pipe contents": "Water",
-				"Hot water cylinder": "Hot water cylinder 1",
-				"Location": "Internal",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-primaryPipework-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-pipework-${hyphenate(key)}`));
 
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
-
-		it("should display the correct data for the secondary pipework section", async () => {
-			store.$patch({
-				domesticHotWater: {
-					pipework: {
-						secondaryPipework: {
-							data: [secondaryPipework],
-						},
-					},
-				},
-			});
-
-			await renderSuspended(Summary);
-
-			const expectedResult = {
-				"Name": "Pipework Kitchen Sink Secondary",
-				"Length": `3 ${metre.suffix}`,
-				"Location": "Internal",
-				"Internal diameter": `9 ${millimetre.suffix}`,
-			};
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-secondaryPipework-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}

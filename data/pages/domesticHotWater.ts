@@ -71,6 +71,13 @@ const domesticHotWaterPages = [
 		url: "/domestic-hot-water-new/pipework/:pipework",
 		type: "task",
 		parentId: "domesticHotWaterNew",
+	},	
+	{
+		id: "domesticHotWaterNewSummary",
+		title: "Summary",
+		url: "/domestic-hot-water-new/summary",
+		type: "summary",
+		parentId: "domesticHotWaterNew",
 	},
 
 	// OLD HOT WATER START =======================================================================

@@ -201,45 +201,28 @@ const hotWaterOutletsSummarySections: SummarySection[] = [
 	otherOutletsSummary,
 ];
 
-const primaryPipeworkData = store.domesticHotWater.pipework.primaryPipework.data;
-const primaryPipeworkSummary: SummarySection = {
-	id: "primaryPipework",
-	label: "Primary pipework",
-	data: primaryPipeworkData.map(d => {
+const pipeworkData = store.domesticHotWaterNew.pipework.data;
+const pipeworkSummary: SummarySection = {
+	id: "pipework",
+	label: "Pipework",
+	data: pipeworkData.map(d => {
 		return {
 			"Name": show(d.data.name),
+			"Location": displayCamelToSentenceCase(show(d.data.location)),
+			"Pipe contents": displayCamelToSentenceCase(show(d.data.pipeContents)),
 			"Internal diameter": dim(d.data.internalDiameter, "millimetres"),
 			"External diameter": dim(d.data.externalDiameter, "millimetres"),
 			"Length": dim(d.data.length, "metres"),
 			"Insulation thickness": dim(d.data.insulationThickness, "millimetres"),
 			"Thermal conductivity": dim(d.data.thermalConductivity, "watts per metre kelvin") ,
 			"Surface reflectivity": displayReflectivity(d.data.surfaceReflectivity),
-			"Pipe contents": displayCamelToSentenceCase(show(d.data.pipeContents)),
-			"Hot water cylinder": show(hotWaterCylinderData.find(x => x && x.data.id === d.data.hotWaterCylinder)?.data.name),
-			"Location": displayCamelToSentenceCase(show(d.data.location)),
 		};
 	}) || [],
-	editUrl: getUrl("pipework"),
-};
-
-const secondaryPipeworkData = store.domesticHotWater.pipework.secondaryPipework.data;
-const secondaryPipeworkSummary: SummarySection = {
-	id: "secondaryPipework",
-	label: "Secondary pipework",
-	data: secondaryPipeworkData.map(d => {
-		return {
-			"Name": show(d.data.name),
-			"Internal diameter": dim(d.data.internalDiameter, "millimetres"),
-			"Length": dim(d.data.length, "metres"),
-			"Location": displayCamelToSentenceCase(show(d.data.location)),
-		};
-	}) || [],
-	editUrl: getUrl("pipework"),
+	editUrl: getUrl("domesticHotWaterNew"),
 };
 
 const pipeworkSummarySections: SummarySection[] = [
-	primaryPipeworkSummary,
-	secondaryPipeworkSummary,
+	pipeworkSummary,
 ];
 
 </script>
@@ -310,18 +293,10 @@ const pipeworkSummarySections: SummarySection[] = [
 		</SummaryTab>
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems(pipeworkSummarySections)">
-		<SummaryTab :summary="primaryPipeworkSummary" :selected="tabProps.currentTab === 0" :edit-url="getUrl('pipework')!">
+		<SummaryTab :summary="pipeworkSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No pipework added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('primaryPipeworkCreate')">
-					Add pipework
-				</NuxtLink>
-			</template>
-		</SummaryTab>
-		<SummaryTab :summary="secondaryPipeworkSummary" :selected="tabProps.currentTab === 1" :edit-url="getUrl('pipework')!">
-			<template #empty>
-				<h2 class="govuk-heading-m">No pipework added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('secondaryPipeworkCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('pipeworkNewCreate')">
 					Add pipework
 				</NuxtLink>
 			</template>
