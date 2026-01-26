@@ -642,7 +642,7 @@ const pipeworkDataZod = z.object({
 	thermalConductivity: z.number(),
 	surfaceReflectivity: z.boolean(),
 	pipeContents: waterPipeContentsTypeZod,
-	location: waterPipeworkLocationZod,
+	location: z.enum(["heatedSpace", "unheatedSpace"]),
 });
 
 export type PipeworkData = z.infer<typeof pipeworkDataZod>;

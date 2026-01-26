@@ -66,7 +66,7 @@ describe("Domestic hot water", () => {
 			thermalConductivity: 1541,
 			surfaceReflectivity: true,
 			pipeContents: "glycol25",
-			location: "external",
+			location: "unheatedSpace",
 		},
 	};
 
@@ -309,7 +309,7 @@ describe("Domestic hot water", () => {
 				thermalConductivity: 15441,
 				surfaceReflectivity: false,
 				pipeContents: "water",
-				location: "internal",
+				location: "heatedSpace",
 			},
 		};
 
@@ -323,7 +323,7 @@ describe("Domestic hot water", () => {
 				thermalConductivity: 15141,
 				surfaceReflectivity: true,
 				pipeContents: "glycol25",
-				location: "external",
+				location: "unheatedSpace",
 			},
 		};
 

@@ -19,7 +19,7 @@ const pipework1: EcaasForm<PipeworkData> = {
 		thermalConductivity: 1,
 		surfaceReflectivity: true,
 		pipeContents: "water",
-		location: "internal",
+		location: "heatedSpace",
 	},
 };
 
@@ -33,7 +33,7 @@ const pipework2: EcaasForm<PipeworkData> = {
 		thermalConductivity: 1,
 		surfaceReflectivity: true,
 		pipeContents: "water",
-		location: "internal",
+		location: "heatedSpace",
 	},
 };
 
@@ -54,7 +54,7 @@ const populateValidForm = async () => {
 	await user.type(screen.getByTestId("thermalConductivity"), "1");
 	await user.click(screen.getByTestId("surfaceReflectivity_yes"));
 	await user.click(screen.getByTestId("pipeContents_water"));
-	await user.click(screen.getByTestId("location_internal"));
+	await user.click(screen.getByTestId("location_heatedSpace"));
 };
 
 describe("Pipework form", () => {
@@ -102,7 +102,7 @@ describe("Pipework form", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("thermalConductivity")).value).toBe("1");
 		expect((await screen.findByTestId("surfaceReflectivity_yes")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("pipeContents_water")).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId("location_internal")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId("location_heatedSpace")).hasAttribute("checked")).toBe(true);
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -140,9 +140,8 @@ describe("Pipework form", () => {
 				params: { pipework: "create" },
 			},
 		});
-		await populateValidForm();
-		await user.click(screen.getByTestId("saveProgress"));
-		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water-new");
+		const saveProgressButton = screen.getByTestId<HTMLAnchorElement>("saveProgress");
+		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water-new");
 	});
 });
 
@@ -175,7 +174,7 @@ describe("partially saving data", () => {
 		await user.tab();
 		const pipeworkItem = store.domesticHotWaterNew.pipework.data[0];
 
-		expect(pipeworkItem?.data.name).toBe("Primary pipework");
+		expect(pipeworkItem?.data.name).toBe("Pipework");
 		expect(pipeworkItem?.data.internalDiameter).toBe(10);
 	});
 
@@ -194,7 +193,7 @@ describe("partially saving data", () => {
 
 		const pipeworkItem = store.domesticHotWaterNew.pipework.data[0];
 	
-		expect(pipeworkItem?.data.name).toBe("Primary pipework");
+		expect(pipeworkItem?.data.name).toBe("Pipework");
 	});
 
 	test("default name is used if name added is whitespace", async () => {
@@ -208,7 +207,7 @@ describe("partially saving data", () => {
 		await user.type(screen.getByTestId("name"), " ");
 		await user.click(screen.getByTestId("saveProgress"));
 
-		expect(store.domesticHotWaterNew.pipework.data[0]!.data.name).toBe("Primary pipework");
+		expect(store.domesticHotWaterNew.pipework.data[0]!.data.name).toBe("Pipework");
 	});
 
 	test("creates a new pipework automatically when a user adds only the name value", async () => {

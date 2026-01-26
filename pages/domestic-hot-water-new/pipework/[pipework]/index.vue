@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
-import type { SchemaWaterPipeContentsType, SchemaWaterPipeworkLocation } from "~/schema/aliases";
+import type { SchemaWaterPipeContentsType } from "~/schema/aliases";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const title = "Primary pipework for hot water";
@@ -15,9 +15,9 @@ const pipeContentsOptions: Record<Exclude<SchemaWaterPipeContentsType, "air">, s
 	glycol25: "Glycol 25",
 };
 
-const locationOptions: Record<SchemaWaterPipeworkLocation, "Heated space" | "Unheated space"> = {
-	internal: "Heated space",
-	external: "Unheated space",
+const locationOptions = {
+	heatedSpace: "Heated space",
+	unheatedSpace: "Unheated space",
 };
 
 const saveForm = (fields: PipeworkData) => {
@@ -48,7 +48,7 @@ const saveForm = (fields: PipeworkData) => {
 autoSaveElementForm<PipeworkData>({
 	model,
 	storeData: store.domesticHotWaterNew.pipework,
-	defaultName: "Primary pipework",
+	defaultName: "Pipework",
 	onPatch: (state, newData, index) => {
 		state.domesticHotWaterNew.pipework.data[index] = newData;
 		state.domesticHotWaterNew.pipework.complete = false;
@@ -190,7 +190,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
-			<GovButton :href="getUrl('pipework')" test-id="saveProgress" secondary>Save progress</GovButton>
+			<GovButton :href="getUrl('domesticHotWaterNew')" test-id="saveProgress" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>
