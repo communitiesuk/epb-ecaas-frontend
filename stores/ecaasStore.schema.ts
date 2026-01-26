@@ -642,7 +642,6 @@ const pipeworkDataZod = z.object({
 	thermalConductivity: z.number(),
 	surfaceReflectivity: z.boolean(),
 	pipeContents: waterPipeContentsTypeZod,
-	hotWaterCylinder: z.string(),
 	location: waterPipeworkLocationZod,
 });
 
