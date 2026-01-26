@@ -8,7 +8,7 @@ const route = useRoute();
 const routeQuery = computed(() => route.query);
 const getPageNumber = () => parseInt(routeQuery.value?.page as string) || 1;
 
-const minPageNumbers = 3;
+const minPageNumbers = 2;
 const minPageNumbersToTruncate = 6;
 const adjacentPageNumbers = Math.floor(range / 2);
 
