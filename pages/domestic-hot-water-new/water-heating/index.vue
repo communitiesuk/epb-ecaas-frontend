@@ -9,7 +9,7 @@ const title = "Water heating";
 const store = useEcaasStore();
 const { autoSaveForm } = useForm();
 
-const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0];
+const hotWaterCylinderData = store.domesticHotWaterNew.waterHeating.hotWaterCylinder.data[0];
 
 if (typeof hotWaterCylinderData?.data?.storageCylinderVolume === "number") {
 	hotWaterCylinderData.data.storageCylinderVolume = unitValue(
@@ -31,16 +31,16 @@ const model: Ref<Partial<HotWaterCylinderData> & { waterHeaterType: WaterHeaterT
 
 // update to autoSaveElementForm if we decide users can add more than 1 hot water cylinder 
 autoSaveForm(model, (state, newData) => {
-	state.domesticHotWater.waterHeating.hotWaterCylinder.data[0] = {
+	state.domesticHotWaterNew.waterHeating.hotWaterCylinder.data[0] = {
 		data: { ...newData.data,	name: newData.data.name?.trim() || "Hot water cylinder", 
 			id: hotWaterCylinderData?.data.id ?? uuidv4() },
 	} ;
-	state.domesticHotWater.waterHeating.hotWaterCylinder.complete = false;
+	state.domesticHotWaterNew.waterHeating.hotWaterCylinder.complete = false;
 });
 
 const saveForm = (fields: typeof model.value) => {
 	store.$patch({
-		domesticHotWater: {
+		domesticHotWaterNew: {
 			waterHeating: {
 				hotWaterCylinder: {
 					data: [{

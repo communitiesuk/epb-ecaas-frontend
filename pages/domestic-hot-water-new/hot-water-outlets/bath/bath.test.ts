@@ -50,16 +50,16 @@ describe("bath", () => {
 		});
 
 		await populateValidForm();
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
-		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
+		const { data } = store.domesticHotWaterNew.hotWaterOutlets.bath;
 
 		expect(data[0]?.data).toEqual(bath.data);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				hotWaterOutlets: {
 					bath: {
 						data: [bath],
@@ -81,7 +81,7 @@ describe("bath", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(Bath);
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("size_error"))).toBeDefined();
@@ -89,7 +89,7 @@ describe("bath", () => {
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(Bath);
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("bathErrorSummary"))).toBeDefined();
 	});
@@ -106,7 +106,7 @@ describe("bath", () => {
 		await user.type(screen.getByTestId("size"), "170");
 		await user.tab();
 
-		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
+		const { data } = store.domesticHotWaterNew.hotWaterOutlets.bath;
 		expect(data[0]!.data.name).toBe("Bath 1");
 		expect(data[0]!.data.size).toBe(170);
 	});
@@ -120,7 +120,7 @@ describe("bath", () => {
 
 		await user.type(screen.getByTestId("size"), "170");
 		await user.tab();
-		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
+		const { data } = store.domesticHotWaterNew.hotWaterOutlets.bath;
 
 		expect(data[0]!.data.name).toBe("Bath");
 		expect(data[0]!.data.size).toBe(170);
@@ -133,15 +133,15 @@ describe("bath", () => {
 				params: { bath: "create" },
 			},
 		});
-	
+
 		await user.type(screen.getByTestId("size"), "150"); // set another value on form in order to count as a partial we want to keep
 		await user.type(screen.getByTestId("name"), "Bath 1");
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
 		await user.click(screen.getByTestId("saveProgress"));
-		
-		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
-	
+
+		const { data } = store.domesticHotWaterNew.hotWaterOutlets.bath;
+
 		expect(data[0]!.data.name).toBe("Bath");
 	});
 
@@ -156,8 +156,8 @@ describe("bath", () => {
 		await user.type(screen.getByTestId("name"), " ");
 		await user.click(screen.getByTestId("saveProgress"));
 
-		
-		expect(store.domesticHotWater.hotWaterOutlets.bath.data[0]!.data.name).toBe("Bath");
+
+		expect(store.domesticHotWaterNew.hotWaterOutlets.bath.data[0]!.data.name).toBe("Bath");
 
 		await renderSuspended(Bath, {
 			route: {
@@ -168,8 +168,8 @@ describe("bath", () => {
 		await user.clear(screen.getByTestId("name"));
 		await user.type(screen.getByTestId("name"), " ");
 		await user.tab();
-		
-		expect(store.domesticHotWater.hotWaterOutlets.bath.data[0]!.data.name).toBe("Bath");
+
+		expect(store.domesticHotWaterNew.hotWaterOutlets.bath.data[0]!.data.name).toBe("Bath");
 	});
 
 	test("save progress button navigates user to the hot water outlets overview page", async () => {
@@ -195,41 +195,41 @@ describe("bath", () => {
 		await user.type(screen.getByTestId("name"), "Bath 1");
 
 		await user.tab();
-		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
+		const { data } = store.domesticHotWaterNew.hotWaterOutlets.bath;
 
 		expect(data[0]!.data.name).toBe("Bath 1");
 		expect(data[0]!.data.size).toBeUndefined();
 	});
 
 	test("updated form data is automatically saved to the correct store object when there are multiple bath items added", async () => {
-	
+
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
 
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				hotWaterOutlets: {
 					bath: {
 						data: [bath, bath2],
 					},
 				},
 			},
-		});    
+		});
 		await renderSuspended(Bath, {
 			route: {
 				params: { bath: "1" },
 			},
 		});
 
-					
+
 		await user.clear(screen.getByTestId("name"));
 		await user.clear(screen.getByTestId("size"));
-		
+
 		await user.type(screen.getByTestId("name"), "Updated bath 2");
 		await user.type(screen.getByTestId("size"), "1");
 		await user.tab();
-		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
+		const { data } = store.domesticHotWaterNew.hotWaterOutlets.bath;
 
 		expect(data[1]?.data.name).toBe("Updated bath 2");
 		expect(data[1]?.data.size).toBe(1);
@@ -238,9 +238,9 @@ describe("bath", () => {
 
 	test("navigates to hot water outlets page when valid form is completed", async () => {
 		await renderSuspended(Bath);
-	
+
 		await populateValidForm();
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets");
 	});
@@ -261,7 +261,7 @@ describe("Partially saving data", () => {
 		await user.type(screen.getByTestId("size"), "170");
 		await user.tab();
 
-		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
+		const { data } = store.domesticHotWaterNew.hotWaterOutlets.bath;
 		expect(data[0]!.data.name).toBe("Bath 1");
 		expect(data[0]!.data.size).toBe(170);
 	});
@@ -275,7 +275,7 @@ describe("Partially saving data", () => {
 
 		await user.type(screen.getByTestId("size"), "170");
 		await user.tab();
-		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
+		const { data } = store.domesticHotWaterNew.hotWaterOutlets.bath;
 
 		expect(data[0]!.data.name).toBe("Bath");
 		expect(data[0]!.data.size).toBe(170);
@@ -292,8 +292,8 @@ describe("Partially saving data", () => {
 		await user.type(screen.getByTestId("name"), " ");
 		await user.click(screen.getByTestId("saveProgress"));
 
-		
-		expect(store.domesticHotWater.hotWaterOutlets.bath.data[0]!.data.name).toBe("Bath");
+
+		expect(store.domesticHotWaterNew.hotWaterOutlets.bath.data[0]!.data.name).toBe("Bath");
 
 		await renderSuspended(Bath, {
 			route: {
@@ -304,8 +304,8 @@ describe("Partially saving data", () => {
 		await user.clear(screen.getByTestId("name"));
 		await user.type(screen.getByTestId("name"), " ");
 		await user.tab();
-		
-		expect(store.domesticHotWater.hotWaterOutlets.bath.data[0]!.data.name).toBe("Bath");
+
+		expect(store.domesticHotWaterNew.hotWaterOutlets.bath.data[0]!.data.name).toBe("Bath");
 	});
 	test("creates a new bath automatically when a user adds only the name value", async () => {
 		await renderSuspended(Bath, {
@@ -317,41 +317,41 @@ describe("Partially saving data", () => {
 		await user.type(screen.getByTestId("name"), "Bath 1");
 
 		await user.tab();
-		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
+		const { data } = store.domesticHotWaterNew.hotWaterOutlets.bath;
 
 		expect(data[0]!.data.name).toBe("Bath 1");
 		expect(data[0]!.data.size).toBeUndefined();
 	});
 
 	test("updated form data is automatically saved to the correct store object when there are multiple bath items added", async () => {
-	
+
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
 
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				hotWaterOutlets: {
 					bath: {
 						data: [bath, bath2],
 					},
 				},
 			},
-		});    
+		});
 		await renderSuspended(Bath, {
 			route: {
 				params: { bath: "1" },
 			},
 		});
 
-					
+
 		await user.clear(screen.getByTestId("name"));
 		await user.clear(screen.getByTestId("size"));
-		
+
 		await user.type(screen.getByTestId("name"), "Updated bath 2");
 		await user.type(screen.getByTestId("size"), "1");
 		await user.tab();
-		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
+		const { data } = store.domesticHotWaterNew.hotWaterOutlets.bath;
 
 		expect(data[1]?.data.name).toBe("Updated bath 2");
 		expect(data[1]?.data.size).toBe(1);
@@ -360,11 +360,11 @@ describe("Partially saving data", () => {
 
 	test("navigates to hot water outlets page when valid form is completed", async () => {
 		await renderSuspended(Bath);
-	
+
 		await populateValidForm();
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets");
-	});  
+	});
 });
 

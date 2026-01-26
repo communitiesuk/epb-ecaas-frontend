@@ -25,7 +25,7 @@ describe("wwhrs form", () => {
 
 	const addStoreData = () => {
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				hotWaterOutlets: {
 					mixedShower: {
 						data: [{
@@ -36,7 +36,8 @@ describe("wwhrs form", () => {
 						}],
 					},
 				},
-			} },
+			}
+		},
 		);
 	};
 
@@ -60,18 +61,19 @@ describe("wwhrs form", () => {
 		await populateValidForm();
 		await user.click(screen.getByRole("button"));
 
-		const { data } = store.domesticHotWater.wwhrs;
+		const { data } = store.domesticHotWaterNew.wwhrs;
 
 		expect(data[0]).toEqual(state);
 	});
 
 	test("form is prepopulated correctly when data exists in state", async () => {
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				wwhrs: {
 					data: [state],
 				},
-			} },
+			}
+		},
 		);
 
 		addStoreData();

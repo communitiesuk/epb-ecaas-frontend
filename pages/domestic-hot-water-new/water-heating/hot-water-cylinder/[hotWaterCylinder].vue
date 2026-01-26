@@ -7,7 +7,7 @@ import { unitValue } from "~/utils/units";
 const title = "Hot water cylinder";
 const store = useEcaasStore();
 
-const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]; // remove [0] index is there are multiple hot water cylinders which can be added
+const hotWaterCylinderData = store.domesticHotWaterNew.waterHeating.hotWaterCylinder.data[0]; // remove [0] index is there are multiple hot water cylinders which can be added
 
 if (typeof hotWaterCylinderData?.data?.storageCylinderVolume === "number") {
 	hotWaterCylinderData.data.storageCylinderVolume = unitValue(
@@ -20,7 +20,7 @@ const model = ref(hotWaterCylinderData?.data);
 
 const saveForm = (fields: HotWaterCylinderData) => {
 	store.$patch({
-		domesticHotWater: {
+		domesticHotWaterNew: {
 			waterHeating: {
 				hotWaterCylinder: {
 					data: [{

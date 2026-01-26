@@ -9,7 +9,7 @@ const store = useEcaasStore();
 type SpaceHeatingType = keyof typeof store.spaceHeating;
 type SpaceHeatingData = EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> & EcaasForm<HeatingControlData>;
 
-const { hotWaterCylinder } = store.domesticHotWater.waterHeating;
+const { hotWaterCylinder } = store.domesticHotWaterNew.waterHeating;
 const { heatEmitters } = store.spaceHeating;
 
 function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {

@@ -29,7 +29,7 @@ const addHeatPumpAndHotWaterCylinder = () => {
 			},
 
 		},
-		domesticHotWater: {
+		domesticHotWaterNew: {
 			waterHeating: {
 				hotWaterCylinder: {
 					data: [{

@@ -24,7 +24,7 @@ export function getInitialState(): EcaasState {
 			heatSources: {
 				data: [],
 			},
-			waterStorage: { 
+			waterStorage: {
 				data: [],
 			},
 			hotWaterOutlets: {
@@ -34,7 +34,7 @@ export function getInitialState(): EcaasState {
 				data: [],
 			},
 		},
-		domesticHotWater: {
+		domesticHotWaterNew: {
 			waterHeating: {
 				hotWaterCylinder: { data: [] },
 				immersionHeater: { data: [] },

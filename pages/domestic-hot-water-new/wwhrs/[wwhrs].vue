@@ -6,10 +6,10 @@ const title = "Waste water heat recovery system";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const wwhrsData = useItemToEdit("wwhrs", store.domesticHotWater.wwhrs.data);
+const wwhrsData = useItemToEdit("wwhrs", store.domesticHotWaterNew.wwhrs.data);
 const model: Ref<WwhrsData> = ref(wwhrsData!);
 
-const { bath, electricShower, mixedShower, otherOutlets } = store.domesticHotWater.hotWaterOutlets;
+const { bath, electricShower, mixedShower, otherOutlets } = store.domesticHotWaterNew.hotWaterOutlets;
 
 const hotWaterOutlets = [
 	bath.data.map(x => [x.data.id, x.data.name] as [string, string]),
@@ -20,7 +20,7 @@ const hotWaterOutlets = [
 
 const saveForm = (fields: WwhrsData) => {
 	store.$patch((state) => {
-		const { wwhrs } = state.domesticHotWater;
+		const { wwhrs } = state.domesticHotWaterNew;
 
 		const item: WwhrsData = {
 			name: fields.name,
@@ -32,7 +32,7 @@ const saveForm = (fields: WwhrsData) => {
 
 		saveToList(item, wwhrs);
 	});
-	store.domesticHotWater.wwhrs.complete = false;
+	store.domesticHotWaterNew.wwhrs.complete = false;
 	navigateTo("/domestic-hot-water/wwhrs");
 };
 

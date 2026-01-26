@@ -3,12 +3,12 @@ const title = "Point of use";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const pointOfUseData = useItemToEdit("pointOfUse", store.domesticHotWater.waterHeating.pointOfUse.data);
+const pointOfUseData = useItemToEdit("pointOfUse", store.domesticHotWaterNew.waterHeating.pointOfUse.data);
 const model = ref(pointOfUseData?.data);
 
 const saveForm = (fields: PointOfUseData) => {
 	store.$patch((state) => {
-		const { pointOfUse } = state.domesticHotWater.waterHeating;
+		const { pointOfUse } = state.domesticHotWaterNew.waterHeating;
 
 		const pointOfUseItem: PointOfUseData = {
 			name: fields.name,

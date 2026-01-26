@@ -183,7 +183,7 @@ describe("PV and electric batteries mapper", () => {
 				},
 
 			},
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				waterHeating: {
 					hotWaterCylinder: {
 						data: [{

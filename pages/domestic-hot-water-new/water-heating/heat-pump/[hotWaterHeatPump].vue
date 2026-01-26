@@ -5,12 +5,12 @@ const title = "Heat pump (hot water only)";
 const store = useEcaasStore();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
-const heatPumpData = useItemToEdit("hotWaterHeatPump", store.domesticHotWater.waterHeating.heatPump.data);
+const heatPumpData = useItemToEdit("hotWaterHeatPump", store.domesticHotWaterNew.waterHeating.heatPump.data);
 const model: Ref<HotWaterHeatPumpData | undefined> = ref(heatPumpData?.data);
 
 const saveForm = (fields: HotWaterHeatPumpData) => {
 	store.$patch((state) => {
-		const { heatPump } = state.domesticHotWater.waterHeating;
+		const { heatPump } = state.domesticHotWaterNew.waterHeating;
 		const index = getStoreIndex(heatPump.data);
 
 		const heatPumpItem: HotWaterHeatPumpData = {
@@ -30,11 +30,11 @@ const saveForm = (fields: HotWaterHeatPumpData) => {
 
 autoSaveElementForm({
 	model,
-	storeData: store.domesticHotWater.waterHeating.heatPump,
+	storeData: store.domesticHotWaterNew.waterHeating.heatPump,
 	defaultName: "Heat pump",
 	onPatch: (state, newData, index) => {
-		state.domesticHotWater.waterHeating.heatPump.data[index] = newData;
-		state.domesticHotWater.waterHeating.heatPump.complete = false;
+		state.domesticHotWaterNew.waterHeating.heatPump.data[index] = newData;
+		state.domesticHotWaterNew.waterHeating.heatPump.complete = false;
 	},
 });
 

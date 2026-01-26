@@ -51,7 +51,7 @@ describe("Domestic hot water summary", () => {
 
 		const addHotWaterCylinderData = () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					waterHeating: {
 						hotWaterCylinder: {
 							data: [{
@@ -230,7 +230,7 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the mixer shower section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					hotWaterOutlets: {
 						mixedShower: {
 							data: [mixedShower],
@@ -255,7 +255,7 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the electric shower section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					hotWaterOutlets: {
 						electricShower: {
 							data: [electricShower],
@@ -280,7 +280,7 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the bath section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					hotWaterOutlets: {
 						bath: {
 							data: [bathData],
@@ -305,7 +305,7 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the other outlets section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					hotWaterOutlets: {
 						otherOutlets: {
 							data: [otherOutletsData],
@@ -365,7 +365,7 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the primary pipework section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					pipework: {
 						primaryPipework: {
 							data: [primaryPipework],
@@ -410,7 +410,7 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the secondary pipework section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					pipework: {
 						secondaryPipework: {
 							data: [secondaryPipework],

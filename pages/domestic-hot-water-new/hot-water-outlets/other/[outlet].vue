@@ -6,13 +6,13 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const title = "Other outlets";
 const store = useEcaasStore();
 
-const otherOutletsData = useItemToEdit("outlet", store.domesticHotWater.hotWaterOutlets.otherOutlets.data);
+const otherOutletsData = useItemToEdit("outlet", store.domesticHotWaterNew.hotWaterOutlets.otherOutlets.data);
 const model = ref(otherOutletsData?.data);
 const id = otherOutletsData?.data.id || uuidv4();
 
 const saveForm = (fields: OtherHotWaterOutletData) => {
 	store.$patch((state) => {
-		const { otherOutlets } = state.domesticHotWater.hotWaterOutlets;
+		const { otherOutlets } = state.domesticHotWaterNew.hotWaterOutlets;
 
 		const index = getStoreIndex(otherOutlets.data);
 
@@ -32,12 +32,12 @@ const saveForm = (fields: OtherHotWaterOutletData) => {
 
 autoSaveElementForm<OtherHotWaterOutletData>({
 	model,
-	storeData: store.domesticHotWater.hotWaterOutlets.otherOutlets,
+	storeData: store.domesticHotWaterNew.hotWaterOutlets.otherOutlets,
 	defaultName: "Other outlet",
 	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
-		state.domesticHotWater.hotWaterOutlets.otherOutlets.data[index] = newData;
-		state.domesticHotWater.hotWaterOutlets.otherOutlets.complete = false;
+		state.domesticHotWaterNew.hotWaterOutlets.otherOutlets.data[index] = newData;
+		state.domesticHotWaterNew.hotWaterOutlets.otherOutlets.complete = false;
 	} });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
@@ -62,7 +62,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this outlet so that it can be identified later"
 			name="name"
-			:validation-rules="{ uniqueName: uniqueName(store.domesticHotWater.hotWaterOutlets.otherOutlets.data, { id }) }"
+			:validation-rules="{ uniqueName: uniqueName(store.domesticHotWaterNew.hotWaterOutlets.otherOutlets.data, { id }) }"
 			validation="required | uniqueName"
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'

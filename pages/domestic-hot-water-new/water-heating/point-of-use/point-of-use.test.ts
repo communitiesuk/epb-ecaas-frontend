@@ -40,14 +40,14 @@ describe("point of use", () => {
 		await populateValidForm();
 		await user.click(screen.getByRole("button"));
 
-		const { data } = store.domesticHotWater.waterHeating.pointOfUse;
+		const { data } = store.domesticHotWaterNew.waterHeating.pointOfUse;
 
 		expect(data[0]).toEqual(pointOfUseForm);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				waterHeating: {
 					pointOfUse: {
 						data: [pointOfUseForm],

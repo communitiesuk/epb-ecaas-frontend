@@ -179,7 +179,7 @@ describe("space heating", () => {
 						data: [{ data: radiator }],
 					},
 				},
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					waterHeating: {
 						hotWaterCylinder: {
 							data: [{ data: cylinder }],
@@ -191,7 +191,7 @@ describe("space heating", () => {
 			await renderSuspended(SpaceHeating);
 			await user.click(await screen.findByTestId("heatSource_remove_0"));
 
-			const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data;
+			const hotWaterCylinderData = store.domesticHotWaterNew.waterHeating.hotWaterCylinder.data;
 			expect(hotWaterCylinderData[0]?.data.heatSource).toBeUndefined();
 
 			const heatEmittersData = store.spaceHeating.heatEmitters.data;

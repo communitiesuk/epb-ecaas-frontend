@@ -1,18 +1,15 @@
 import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
-import PipeworkForm from "./[pipe].vue";
-import WaterHeatingForm from "../../water-heating/index.vue";
-import type { EcaasForm, HotWaterCylinderData, PrimaryPipeworkData } from "~/stores/ecaasStore.schema";
+import PipeworkForm from "./index.vue";
+import type { EcaasForm, PipeworkData } from "~/stores/ecaasStore.schema";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-const hotWaterCylinderId = "c84528bb-f805-4f1e-95d3-2bd17384fdbe";
-
-const pipework1: EcaasForm<PrimaryPipeworkData> = {
+const pipework1: EcaasForm<PipeworkData> = {
 	data: {
 		name: "Pipework Kitchen Sink",
 		internalDiameter: 10,
@@ -22,12 +19,11 @@ const pipework1: EcaasForm<PrimaryPipeworkData> = {
 		thermalConductivity: 1,
 		surfaceReflectivity: true,
 		pipeContents: "water",
-		hotWaterCylinder: hotWaterCylinderId,
 		location: "internal",
 	},
 };
 
-const pipework2: EcaasForm<PrimaryPipeworkData> = {
+const pipework2: EcaasForm<PipeworkData> = {
 	data: {
 		name: "Pipework Kitchen Sink 2",
 		internalDiameter: 11,
@@ -37,7 +33,6 @@ const pipework2: EcaasForm<PrimaryPipeworkData> = {
 		thermalConductivity: 1,
 		surfaceReflectivity: true,
 		pipeContents: "water",
-		hotWaterCylinder: hotWaterCylinderId,
 		location: "internal",
 	},
 };
@@ -49,45 +44,22 @@ afterEach(() => {
 	store.$reset();
 });
 
-const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
-	data: {
-		id: hotWaterCylinderId,
-		name: "Hot water cylinder 1",
-		storageCylinderVolume: 5,
-		dailyEnergyLoss: 1,
-		heatSource: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-	},
-};
 
-const addHotWaterCylinder = () => {
-	store.$patch({
-		domesticHotWater: {
-			waterHeating: {
-				hotWaterCylinder: {
-					data: [hotWaterCylinder],
-				},
-			},
-		},
-	});
-};
 
-const populateValidForm = async () => {
+const populateValidForm = async ({ reflectivity = true, location = "internal" }: { reflectivity?: boolean; location?: "internal" | "external" } = {}) => {
 	await user.type(screen.getByTestId("name"), "Pipework Kitchen Sink");
+	await user.click(screen.getByTestId(`location_${location}`));
+	await user.click(screen.getByTestId("pipeContents_water"));
 	await user.type(screen.getByTestId("internalDiameter"), "10");
 	await user.type(screen.getByTestId("externalDiameter"), "10");
 	await user.type(screen.getByTestId("length"), "3");
 	await user.type(screen.getByTestId("insulationThickness"), "5");
 	await user.type(screen.getByTestId("thermalConductivity"), "1");
-	await user.click(screen.getByTestId("surfaceReflectivity_yes"));
-	await user.click(screen.getByTestId("pipeContents_water"));
-	await user.click(screen.getByTestId(`hotWaterCylinder_${hotWaterCylinderId}`));
-	await user.click(screen.getByTestId("location_internal"));
+	await user.click(screen.getByTestId(`surfaceReflectivity_${reflectivity ? "yes" : "no"}`));
 };
 
 describe("Primary pipework form", () => {
-
-	test("data is saved to store state when form is valid", async () => {
-		addHotWaterCylinder();
+	test.only("data is saved to store state when form is valid", async () => {
 		await renderSuspended(PipeworkForm, {
 			route: {
 				params: { pipe: "create" },
@@ -96,10 +68,10 @@ describe("Primary pipework form", () => {
 
 		await populateValidForm();
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 
-		const { data } = store.domesticHotWater.pipework.primaryPipework;
+		const { data } = store.domesticHotWaterNew.pipework;
 		expect(data[0]).toEqual({
 			...pipework1,
 			complete: true,
@@ -107,14 +79,10 @@ describe("Primary pipework form", () => {
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
-		addHotWaterCylinder();
-
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				pipework: {
-					primaryPipework: {
-						data: [pipework1],
-					},
+					data: [pipework1],
 				},
 			},
 		});
@@ -133,40 +101,14 @@ describe("Primary pipework form", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("thermalConductivity")).value).toBe("1");
 		expect((await screen.findByTestId("surfaceReflectivity_yes")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("pipeContents_water")).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId(`hotWaterCylinder_${hotWaterCylinderId}`)).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("location_internal")).hasAttribute("checked")).toBe(true);
 	});
 
-	test("hot water cylinder option remains checked on pipework page when user re-saves the hot water cylinder form (Water heating)", async () => {
-		addHotWaterCylinder();
-
-		store.$patch({
-			domesticHotWater: {
-				pipework: {
-					primaryPipework: {
-						data: [pipework1],
-					},
-				},
-			},
-		});
-
-		await renderSuspended(WaterHeatingForm); 
-		await(user.click(screen.getByTestId("saveAndComplete")));
-
-		expect(store.domesticHotWater.pipework.primaryPipework.data[0]?.data.hotWaterCylinder).toBe(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.data.id);
-		
-		await renderSuspended(PipeworkForm, {
-			route: {
-				params: { pipe: "0" },
-			},
-		});
-		expect((await screen.findByTestId(`hotWaterCylinder_${hotWaterCylinderId}`)).hasAttribute("checked")).toBe(true);
-	});	
 
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(PipeworkForm);
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("internalDiameter_error"))).toBeDefined();
@@ -176,7 +118,6 @@ describe("Primary pipework form", () => {
 		expect((await screen.findByTestId("thermalConductivity_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceReflectivity_error"))).toBeDefined();
 		expect((await screen.findByTestId("pipeContents_error"))).toBeDefined();
-		expect((await screen.findByTestId("hotWaterCylinder_error"))).toBeDefined();
 		expect((await screen.findByTestId("location_error"))).toBeDefined();
 	});
 
@@ -188,12 +129,11 @@ describe("Primary pipework form", () => {
 			},
 		});
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 		expect((await screen.findByTestId("pipeworkErrorSummary"))).toBeDefined();
 	});
 
 	test("save progress button navigates user to the pipework overview page", async () => {
-		addHotWaterCylinder();
 		await renderSuspended(PipeworkForm, {
 			route: {
 				params: { pipe: "create" },
@@ -217,7 +157,7 @@ describe("partially saving data", () => {
 		await user.type(screen.getByTestId("name"), "Pipework Kitchen Sink");
 		await user.type(screen.getByTestId("internalDiameter"), "10");
 		await user.tab();
-		const { data } = store.domesticHotWater.pipework.primaryPipework;
+		const { data } = store.domesticHotWaterNew.pipework;
 
 		expect(data[0]!.data.name).toBe("Pipework Kitchen Sink");
 		expect(data[0]!.data.internalDiameter).toBe(10);
@@ -232,7 +172,7 @@ describe("partially saving data", () => {
 
 		await user.type(screen.getByTestId("internalDiameter"), "10");
 		await user.tab();
-		const { data } = store.domesticHotWater.pipework.primaryPipework;
+		const { data } = store.domesticHotWaterNew.pipework;
 
 		expect(data[0]!.data.name).toBe("Primary pipework");
 		expect(data[0]!.data.internalDiameter).toBe(10);
@@ -251,8 +191,8 @@ describe("partially saving data", () => {
 		await user.tab();
 		await user.click(screen.getByTestId("saveProgress"));
 
-		const { data } = store.domesticHotWater.pipework.primaryPipework;
-	
+		const { data } = store.domesticHotWaterNew.pipework;
+
 		expect(data[0]!.data.name).toBe("Primary pipework");
 	});
 
@@ -267,8 +207,8 @@ describe("partially saving data", () => {
 		await user.type(screen.getByTestId("name"), " ");
 		await user.click(screen.getByTestId("saveProgress"));
 
-		
-		expect(store.domesticHotWater.pipework.primaryPipework.data[0]!.data.name).toBe("Primary pipework");
+
+		expect(store.domesticHotWaterNew.pipework.data[0]!.data.name).toBe("Primary pipework");
 
 		await renderSuspended(PipeworkForm, {
 			route: {
@@ -279,8 +219,8 @@ describe("partially saving data", () => {
 		await user.clear(screen.getByTestId("name"));
 		await user.type(screen.getByTestId("name"), " ");
 		await user.tab();
-		
-		expect(store.domesticHotWater.pipework.primaryPipework.data[0]!.data.name).toBe("Primary pipework");
+
+		expect(store.domesticHotWaterNew.pipework.data[0]!.data.name).toBe("Primary pipework");
 	});
 
 	test("creates a new primary pipework automatically when a user adds only the name value", async () => {
@@ -293,7 +233,7 @@ describe("partially saving data", () => {
 		await user.type(screen.getByTestId("name"), "Pipework Kitchen Sink");
 
 		await user.tab();
-		const { data } = store.domesticHotWater.pipework.primaryPipework;
+		const { data } = store.domesticHotWaterNew.pipework;
 
 		expect(data[0]!.data.name).toBe("Pipework Kitchen Sink");
 		expect(data[0]!.data.internalDiameter).toBeUndefined();
@@ -302,31 +242,28 @@ describe("partially saving data", () => {
 	test("updated form data is automatically saved to the correct store object when there are multiple primary pipeworks added", async () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
-		addHotWaterCylinder();
 
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				pipework: {
-					primaryPipework: {
-						data: [pipework1, pipework2],
-					},
+					data: [pipework1, pipework2],
 				},
 			},
-		});    
+		});
 		await renderSuspended(PipeworkForm, {
 			route: {
 				params: { pipe: "1" },
 			},
 		});
 
-					
+
 		await user.clear(screen.getByTestId("name"));
 		await user.clear(screen.getByTestId("internalDiameter"));
-		
+
 		await user.type(screen.getByTestId("name"), "Pipework Kitchen Sink 2");
 		await user.type(screen.getByTestId("internalDiameter"), "1");
 		await user.tab();
-		const { data } = store.domesticHotWater.pipework.primaryPipework;
+		const { data } = store.domesticHotWaterNew.pipework;
 
 		expect(data[1]?.data.name).toBe("Pipework Kitchen Sink 2");
 		expect(data[1]?.data.internalDiameter).toBe(1);

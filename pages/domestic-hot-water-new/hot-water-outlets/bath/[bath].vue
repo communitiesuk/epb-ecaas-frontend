@@ -7,14 +7,14 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const title = "Bath";
 const store = useEcaasStore();
 
-const bathData = useItemToEdit("bath", store.domesticHotWater.hotWaterOutlets.bath.data);
+const bathData = useItemToEdit("bath", store.domesticHotWaterNew.hotWaterOutlets.bath.data);
 const model = ref(bathData?.data);
 const id = bathData?.data.id ?? uuidv4();
 
 const saveForm = (fields: BathData) => {
 
 	store.$patch((state) => {
-		const { bath } = state.domesticHotWater.hotWaterOutlets;
+		const { bath } = state.domesticHotWaterNew.hotWaterOutlets;
 	
 		const index = getStoreIndex(bath.data);
 		bath.data[index] = {
@@ -34,12 +34,12 @@ const saveForm = (fields: BathData) => {
 
 autoSaveElementForm<BathData>({
 	model,
-	storeData: store.domesticHotWater.hotWaterOutlets.bath,
+	storeData: store.domesticHotWaterNew.hotWaterOutlets.bath,
 	defaultName: "Bath",
 	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
-		state.domesticHotWater.hotWaterOutlets.bath.data[index] = newData;
-		state.domesticHotWater.hotWaterOutlets.bath.complete = false;
+		state.domesticHotWaterNew.hotWaterOutlets.bath.data[index] = newData;
+		state.domesticHotWaterNew.hotWaterOutlets.bath.complete = false;
 	} });
 
 
@@ -65,7 +65,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this bath so that it can be identified later"
 			name="name"
-			:validation-rules="{ uniqueName: uniqueName(store.domesticHotWater.hotWaterOutlets.bath.data, { id }) }"
+			:validation-rules="{ uniqueName: uniqueName(store.domesticHotWaterNew.hotWaterOutlets.bath.data, { id }) }"
 			validation="required | uniqueName"
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'

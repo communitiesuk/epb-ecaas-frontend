@@ -5,20 +5,20 @@ const store = useEcaasStore();
 
 
 function handleRemove(index: number) {
-	const { data } = store.domesticHotWater.wwhrs;
+	const { data } = store.domesticHotWaterNew.wwhrs;
 
 	if (data) {
 		data.splice(index, 1);
 
 		store.$patch((state) => {
-			state.domesticHotWater.wwhrs.data = data.length ? data : [];
-			state.domesticHotWater.wwhrs.complete = false;
+			state.domesticHotWaterNew.wwhrs.data = data.length ? data : [];
+			state.domesticHotWaterNew.wwhrs.complete = false;
 		});
 	}
 }
 
 function handleDuplicate(index: number) {
-	const { data } = store.domesticHotWater.wwhrs;
+	const { data } = store.domesticHotWaterNew.wwhrs;
 	const item = data?.[index];
     
 	if (item) {
@@ -30,14 +30,14 @@ function handleDuplicate(index: number) {
 				name: `${item.name} (${duplicates.length})`,
 			};
 
-			state.domesticHotWater.wwhrs.data.push(newItem);
+			state.domesticHotWaterNew.wwhrs.data.push(newItem);
 		});
-		store.domesticHotWater.wwhrs.complete = false;
+		store.domesticHotWaterNew.wwhrs.complete = false;
 	}
 }
 function handleComplete() {
 	store.$patch({
-		domesticHotWater: {
+		domesticHotWaterNew: {
 			wwhrs: { complete: true },
 		},
 	});
@@ -58,7 +58,7 @@ function handleComplete() {
 		id="wwhrs"
 		title="WWHRS"
 		:form-url="page?.url!"
-		:items="store.domesticHotWater.wwhrs.data.map(x => x.name)"
+		:items="store.domesticHotWaterNew.wwhrs.data.map(x => x.name)"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
@@ -66,6 +66,6 @@ function handleComplete() {
 		<GovButton href="/domestic-hot-water" secondary>
 			Return to domestic hot water
 		</GovButton>
-		<CompleteElement :is-complete="store.domesticHotWater.wwhrs?.complete ?? false" @completed="handleComplete"/>
+		<CompleteElement :is-complete="store.domesticHotWaterNew.wwhrs?.complete ?? false" @completed="handleComplete"/>
 	</div>
 </template>

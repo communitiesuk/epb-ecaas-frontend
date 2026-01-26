@@ -7,25 +7,25 @@ const title = "Hot water outlets";
 const page = usePage();
 const store = useEcaasStore();
 
-type HotWaterOutletType = keyof typeof store.domesticHotWater.hotWaterOutlets;
+type HotWaterOutletType = keyof typeof store.domesticHotWaterNew.hotWaterOutlets;
 type HotWaterOutletData = EcaasForm<MixedShowerData> & EcaasForm<ElectricShowerData> & EcaasForm<BathData> & EcaasForm<OtherHotWaterOutletData>;
 
 
 function handleRemove(outletType: HotWaterOutletType, index: number) {
-	const outlets = store.domesticHotWater.hotWaterOutlets[outletType]?.data;
+	const outlets = store.domesticHotWaterNew.hotWaterOutlets[outletType]?.data;
 
 	if (outlets) {
 		outlets.splice(index, 1);
 
 		store.$patch((state) => {
-			state.domesticHotWater.hotWaterOutlets[outletType].data = outlets.length ? outlets : [];
-			state.domesticHotWater.hotWaterOutlets[outletType].complete = false;
+			state.domesticHotWaterNew.hotWaterOutlets[outletType].data = outlets.length ? outlets : [];
+			state.domesticHotWaterNew.hotWaterOutlets[outletType].complete = false;
 		});
 	}
 } 
 
 function handleDuplicate<T extends HotWaterOutletData>(outletType: HotWaterOutletType, index: number) {
-	const outlets = store.domesticHotWater.hotWaterOutlets[outletType]?.data;
+	const outlets = store.domesticHotWaterNew.hotWaterOutlets[outletType]?.data;
 	const outlet = outlets?.[index];
 	let name: string;
 
@@ -48,15 +48,15 @@ function handleDuplicate<T extends HotWaterOutletData>(outletType: HotWaterOutle
 				},
 			} as T;
 
-			state.domesticHotWater.hotWaterOutlets[outletType].data.push(newItem);
-			state.domesticHotWater.hotWaterOutlets[outletType].complete = false;
+			state.domesticHotWaterNew.hotWaterOutlets[outletType].data.push(newItem);
+			state.domesticHotWaterNew.hotWaterOutlets[outletType].complete = false;
 		});
 	}
 }
 
 function handleComplete() {
 	store.$patch({
-		domesticHotWater: {
+		domesticHotWaterNew: {
 			hotWaterOutlets: {
 				mixedShower: { complete: true },
 				electricShower: { complete: true },
@@ -70,13 +70,13 @@ function handleComplete() {
 
 
 function checkIsComplete() {
-	const outlets = store.domesticHotWater.hotWaterOutlets;
+	const outlets = store.domesticHotWaterNew.hotWaterOutlets;
 	return Object.values(outlets).every(outlet => outlet.complete);
 }
 
 function hasIncompleteEntries() {
 
-	const outletsTypes = store.domesticHotWater.hotWaterOutlets;
+	const outletsTypes = store.domesticHotWaterNew.hotWaterOutlets;
 
 	return Object.values(outletsTypes).some(
 		outlets => outlets.data.some(
@@ -96,7 +96,7 @@ function hasIncompleteEntries() {
 		id="mixedShower"
 		title="Mixer shower"
 		:form-url="`${page?.url!}/mixer-shower`"
-		:items="store.domesticHotWater.hotWaterOutlets.mixedShower.data.map(x => ({
+		:items="store.domesticHotWaterNew.hotWaterOutlets.mixedShower.data.map(x => ({
 			name: x.data.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress}))"
 		:show-status="true"
@@ -107,7 +107,7 @@ function hasIncompleteEntries() {
 		id="electricShower"
 		title="Instant electric shower"
 		:form-url="`${page?.url!}/electric-shower`"
-		:items="store.domesticHotWater.hotWaterOutlets.electricShower.data.map(x => ({
+		:items="store.domesticHotWaterNew.hotWaterOutlets.electricShower.data.map(x => ({
 			name: x.data.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress}))"
 		:show-status="true"
@@ -118,7 +118,7 @@ function hasIncompleteEntries() {
 		id="bath"
 		title="Bath"
 		:form-url="`${page?.url!}/bath`"
-		:items="store.domesticHotWater.hotWaterOutlets.bath.data.map(x => ({
+		:items="store.domesticHotWaterNew.hotWaterOutlets.bath.data.map(x => ({
 			name: x.data.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress}))"
 		:show-status="true"
@@ -130,7 +130,7 @@ function hasIncompleteEntries() {
 		title="Other"
 		hint="(basin tap, kitchen sink etc)"
 		:form-url="`${page?.url!}/other`"
-		:items="store.domesticHotWater.hotWaterOutlets.otherOutlets.data.map(x => ({
+		:items="store.domesticHotWaterNew.hotWaterOutlets.otherOutlets.data.map(x => ({
 			name: x.data.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress}))"
 		:show-status="true"

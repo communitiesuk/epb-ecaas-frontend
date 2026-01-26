@@ -37,7 +37,7 @@ describe("wwhrs", () => {
 
 	test("wwhrs is removed when remove link is clicked", async () => {
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				wwhrs: {
 					data: [wwhrs1],
 				},
@@ -55,7 +55,7 @@ describe("wwhrs", () => {
 
 	it("should only remove the wwhrs thats is clicked", async () => {
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				wwhrs: {
 					data: [wwhrs1, wwhrs2, wwhrs3],
 				},
@@ -74,7 +74,7 @@ describe("wwhrs", () => {
 
 	test("wwhrs is duplicated when duplicate link is clicked", async () => {
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				wwhrs: {
 					data: [wwhrs1, wwhrs2],
 				},
@@ -100,7 +100,7 @@ describe("wwhrs", () => {
 
 		await user.click(screen.getByTestId("markAsCompleteButton"));
 
-		expect(store.domesticHotWater.wwhrs.complete).toBe(true);
+		expect(store.domesticHotWaterNew.wwhrs.complete).toBe(true);
 		const completedStatusElement = screen.queryByTestId(
 			"completeSectionCompleted",
 		);
@@ -114,7 +114,7 @@ describe("wwhrs", () => {
 
 	it("marks wwhrs as not complete when complete button is clicked then user removes a wwhr item", async () => {
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				wwhrs: {
 					data: [wwhrs1, wwhrs2],
 				},
@@ -124,15 +124,15 @@ describe("wwhrs", () => {
 		await renderSuspended(Wwhrs);
 
 		await user.click(screen.getByTestId("markAsCompleteButton"));
-		expect(store.domesticHotWater.wwhrs.complete).toBe(true);
+		expect(store.domesticHotWaterNew.wwhrs.complete).toBe(true);
 
 		await user.click(screen.getByTestId("wwhrs_remove_0"));
-		expect(store.domesticHotWater.wwhrs.complete).toBe(false);
+		expect(store.domesticHotWaterNew.wwhrs.complete).toBe(false);
 	});
 
 	it("marks wwhrs as not complete when complete button is clicked then user duplicates a wwhr item", async () => {
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				wwhrs: {
 					data: [wwhrs1],
 				},
@@ -142,15 +142,15 @@ describe("wwhrs", () => {
 		await renderSuspended(Wwhrs);
 
 		await user.click(screen.getByTestId("markAsCompleteButton"));
-		expect(store.domesticHotWater.wwhrs.complete).toBe(true);
+		expect(store.domesticHotWaterNew.wwhrs.complete).toBe(true);
 
 		await user.click(screen.getByTestId("wwhrs_duplicate_0"));
-		expect(store.domesticHotWater.wwhrs.complete).toBe(false);
+		expect(store.domesticHotWaterNew.wwhrs.complete).toBe(false);
 	});
 
 	it("wwhrs as not complete when user saves a new or edited form after marking section as complete", async () => {
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				wwhrs: {
 					data: [wwhrs1],
 				},
@@ -167,7 +167,7 @@ describe("wwhrs", () => {
 		});
 
 		await user.click(screen.getByRole("button"));
-		expect(store.domesticHotWater.wwhrs.complete).toBe(false);
+		expect(store.domesticHotWaterNew.wwhrs.complete).toBe(false);
 
 	});
 

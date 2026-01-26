@@ -195,7 +195,7 @@ describe("PV and electric batteries summary page", () => {
 					},
 
 				},
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					waterHeating: {
 						hotWaterCylinder: {
 							data: [{

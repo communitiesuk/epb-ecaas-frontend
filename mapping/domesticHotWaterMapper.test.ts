@@ -31,7 +31,7 @@ describe("domestic hot water mapper", () => {
 		};
 
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				waterHeating: {
 					hotWaterCylinder: {
 						data: [hotWaterCylinder],
@@ -149,7 +149,7 @@ describe("domestic hot water mapper", () => {
 		};
 
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				pipework,
 				waterHeating: {
 					hotWaterCylinder: {
@@ -279,7 +279,7 @@ describe("domestic hot water mapper", () => {
 		};
 
 		store.$patch({
-			domesticHotWater: {
+			domesticHotWaterNew: {
 				hotWaterOutlets: {
 					mixedShower: {
 						data: [mixedShower],

@@ -1311,7 +1311,7 @@ describe("FHS input mapper", () => {
 
 		store.$state = {
 			dwellingDetails,
-			domesticHotWater,
+			domesticHotWaterNew: domesticHotWater,
 			domesticHotWaterNew,
 			dwellingFabric,
 			infiltrationAndVentilation,
@@ -2180,7 +2180,7 @@ describe("FHS input mapper", () => {
 
 		store.$state = {
 			dwellingDetails,
-			domesticHotWater,
+			domesticHotWaterNew: domesticHotWater,
 			domesticHotWaterNew,
 			dwellingFabric,
 			infiltrationAndVentilation,

@@ -3,12 +3,12 @@ const title = "Combi boiler";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const combiBoilerData = useItemToEdit("combiBoiler", store.domesticHotWater.waterHeating.combiBoiler.data);
+const combiBoilerData = useItemToEdit("combiBoiler", store.domesticHotWaterNew.waterHeating.combiBoiler.data);
 const model: Ref<CombiBoilerData> = ref(combiBoilerData!.data);
 
 const saveForm = (fields: CombiBoilerData) => {
 	store.$patch((state) => {
-		const { combiBoiler } = state.domesticHotWater.waterHeating;
+		const { combiBoiler } = state.domesticHotWaterNew.waterHeating;
 
 		const combiBoilerItem: CombiBoilerData = {
 			name: fields.name,

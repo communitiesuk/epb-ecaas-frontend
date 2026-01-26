@@ -31,7 +31,7 @@ const thermalResistanceOfAdjacentUnheatedSpace = z.number().min(0).max(3);
 export type EcaasState = AssertEachKeyIsPageId<{
 	dwellingDetails: DwellingDetails;
 	domesticHotWaterNew: DomesticHotWaterNew;
-	domesticHotWater: DomesticHotWater;
+	domesticHotWaterNew: DomesticHotWater;
 	dwellingFabric: DwellingFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
 	spaceHeating: SpaceHeating;
@@ -642,7 +642,6 @@ const pipeworkDataZod = z.object({
 	thermalConductivity: z.number(),
 	surfaceReflectivity: z.boolean(),
 	pipeContents: waterPipeContentsTypeZod,
-	hotWaterCylinder: z.string(),
 	location: waterPipeworkLocationZod,
 });
 
@@ -768,7 +767,6 @@ const primaryPipeworkDataZod = z.object({
 	thermalConductivity: z.number(),
 	surfaceReflectivity: z.boolean(),
 	pipeContents: waterPipeContentsTypeZod,
-	hotWaterCylinder: z.string(),
 	location: waterPipeworkLocationZod,
 });
 
@@ -1340,17 +1338,17 @@ type IsEcaasForm<T> = T extends EcaasForm<unknown> ? true : false;
 
 type Join<K, P> = K extends string | number
 	? P extends string | number
-		? `${K}/${P}`
-		: never
+	? `${K}/${P}`
+	: never
 	: never;
 
 type EcaasFormPaths<T> = {
 	[K in keyof T]:
 	IsEcaasForm<T[K]> extends true
-		? K
-		: T[K] extends object
-			? Join<K, EcaasFormPaths<T[K]>>
-			: never
+	? K
+	: T[K] extends object
+	? Join<K, EcaasFormPaths<T[K]>>
+	: never
 }[keyof T];
 
 export type EcaasFormPath = Exclude<EcaasFormPaths<EcaasState>, undefined>;
@@ -1362,12 +1360,10 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingDetails/externalFactors": externalFactorsDataZod,
 	"dwellingDetails/shading": shadingDataZod,
 	"dwellingDetails/appliances": appliancesDataZod,
-
 	"domesticHotWaterNew/waterStorage": waterStorageDataZod,
 	"domesticHotWaterNew/heatSources": waterHeatSourcesDataZod,
 	"domesticHotWaterNew/hotWaterOutlets": hotWaterOutletsDataZod,
 	"domesticHotWaterNew/pipework": pipeworkDataZod,
-
 	"domesticHotWater/waterHeating/hotWaterCylinder": hotWaterCylinderDataZod,
 	"domesticHotWater/waterHeating/combiBoiler": combiBoilerDataZod,
 	"domesticHotWater/waterHeating/heatBattery": waterHeatingHeatBatteryDataZod,

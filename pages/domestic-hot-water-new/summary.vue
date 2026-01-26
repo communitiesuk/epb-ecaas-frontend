@@ -14,7 +14,7 @@ const heatGenerationData = [
 	// heatInterfaceUnit.data
 ].flat().filter(x => !!x.data).map(x => ({ id: x.data.id, name: x.data.name }));
 
-const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data;
+const hotWaterCylinderData = store.domesticHotWaterNew.waterHeating.hotWaterCylinder.data;
 const hotWaterCylinderSummary: SummarySection = {
 	id: "hotWaterCylinder",
 	label: "Hot water cylinders",
@@ -142,7 +142,7 @@ const waterHeatingSummarySections: SummarySection[] = [
 	// heatInterfaceUnitSummary,
 ];
 
-const mixedShowerData = store.domesticHotWater.hotWaterOutlets.mixedShower.data;
+const mixedShowerData = store.domesticHotWaterNew.hotWaterOutlets.mixedShower.data;
 const mixedShowerSummary: SummarySection = {
 	id: "mixedShower",
 	label: "Mixer showers",
@@ -155,7 +155,7 @@ const mixedShowerSummary: SummarySection = {
 	editUrl: getUrl("hotWaterOutlets"),
 };
 
-const electricShowerData = store.domesticHotWater.hotWaterOutlets.electricShower.data;
+const electricShowerData = store.domesticHotWaterNew.hotWaterOutlets.electricShower.data;
 const electricShowerSummary: SummarySection = {
 	id: "electricShower",
 	label: "Electric showers",
@@ -168,7 +168,7 @@ const electricShowerSummary: SummarySection = {
 	editUrl: getUrl("hotWaterOutlets"),
 };
 
-const bathData = store.domesticHotWater.hotWaterOutlets.bath.data;
+const bathData = store.domesticHotWaterNew.hotWaterOutlets.bath.data;
 const bathSummary: SummarySection = {
 	id: "bath",
 	label: "Baths",
@@ -181,7 +181,7 @@ const bathSummary: SummarySection = {
 	editUrl: getUrl("hotWaterOutlets"),
 };
 
-const otherOutletsData = store.domesticHotWater.hotWaterOutlets.otherOutlets.data;
+const otherOutletsData = store.domesticHotWaterNew.hotWaterOutlets.otherOutlets.data;
 const otherOutletsSummary: SummarySection = {
 	id: "otherOutlets",
 	label: "Other",
@@ -201,7 +201,7 @@ const hotWaterOutletsSummarySections: SummarySection[] = [
 	otherOutletsSummary,
 ];
 
-const primaryPipeworkData = store.domesticHotWater.pipework.primaryPipework.data;
+const primaryPipeworkData = store.domesticHotWaterNew.pipework.primaryPipework.data;
 const primaryPipeworkSummary: SummarySection = {
 	id: "primaryPipework",
 	label: "Primary pipework",
@@ -222,7 +222,7 @@ const primaryPipeworkSummary: SummarySection = {
 	editUrl: getUrl("pipework"),
 };
 
-const secondaryPipeworkData = store.domesticHotWater.pipework.secondaryPipework.data;
+const secondaryPipeworkData = store.domesticHotWaterNew.pipework.secondaryPipework.data;
 const secondaryPipeworkSummary: SummarySection = {
 	id: "secondaryPipework",
 	label: "Secondary pipework",

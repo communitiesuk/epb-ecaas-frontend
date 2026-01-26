@@ -3,12 +3,12 @@ const title = "Smart hot water tank";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const smartHotWaterTankData = useItemToEdit("smartHotWaterTank", store.domesticHotWater.waterHeating.smartHotWaterTank.data);
+const smartHotWaterTankData = useItemToEdit("smartHotWaterTank", store.domesticHotWaterNew.waterHeating.smartHotWaterTank.data);
 const model = ref(smartHotWaterTankData?.data);
 
 const saveForm = (fields: SmartHotWaterTankData) => {
 	store.$patch((state) => {
-		const { smartHotWaterTank } = state.domesticHotWater.waterHeating;
+		const { smartHotWaterTank } = state.domesticHotWaterNew.waterHeating;
 
 		const smartHotWaterTankItem: SmartHotWaterTankData = {
 			name: fields.name,

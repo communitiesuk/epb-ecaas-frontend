@@ -65,7 +65,7 @@ export function mapPvDiverterData(state: ResolvedState): Pick<SchemaEnergySupply
 		return {};
 	}
 
-	const hotWaterCylinder = state.domesticHotWater.waterHeating.hotWaterCylinder.filter(x => x.id === diverter?.hotWaterCylinder)[0]!;
+	const hotWaterCylinder = state.domesticHotWaterNew.waterHeating.hotWaterCylinder.filter(x => x.id === diverter?.hotWaterCylinder)[0]!;
 	const heatSource = state.spaceHeating.heatSource.find(x => x.id === hotWaterCylinder.heatSource)!;
 
 

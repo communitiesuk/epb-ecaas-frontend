@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
-import type { SnakeToSentenceCase } from "#imports";
+import type { PipeworkData, SnakeToSentenceCase } from "#imports";
 import type { SchemaWaterPipeContentsType, SchemaWaterPipeworkLocation } from "~/schema/aliases";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const title = "Primary pipework";
 const store = useEcaasStore();
 
-const index = getStoreIndex(store.domesticHotWater.pipework.primaryPipework.data);
-const pipeworkData = useItemToEdit("pipe", store.domesticHotWater.pipework.primaryPipework.data);
+const index = getStoreIndex(store.domesticHotWaterNew.pipework.data);
+const pipeworkData = useItemToEdit("pipe", store.domesticHotWaterNew.pipework.data);
 const model = ref(pipeworkData?.data);
-
 const pipeContentsOptions: Record<Exclude<SchemaWaterPipeContentsType, "air">, string> = {
 	water: "Water",
 	glycol25: "Glycol 25",
@@ -21,11 +20,11 @@ const locationOptions: Record<SchemaWaterPipeworkLocation, SnakeToSentenceCase<S
 	external: "External",
 };
 
-const saveForm = (fields: PrimaryPipeworkData) => {
+const saveForm = (fields: PipeworkData) => {
 	store.$patch((state) => {
-		const { primaryPipework } = state.domesticHotWater.pipework;
+		const { pipework } = state.domesticHotWaterNew;
 
-		primaryPipework.data[index] = {
+		pipework.data[index] = {
 			data: {
 				name: fields.name,
 				internalDiameter: fields.internalDiameter,
@@ -35,25 +34,24 @@ const saveForm = (fields: PrimaryPipeworkData) => {
 				thermalConductivity: fields.thermalConductivity,
 				surfaceReflectivity: fields.surfaceReflectivity,
 				pipeContents: fields.pipeContents,
-				hotWaterCylinder: fields.hotWaterCylinder,
 				location: fields.location,
 			},
 			complete: true,
 		};
-		primaryPipework.complete = false;
+		pipework.complete = false;
 	});
 
 	navigateTo("/domestic-hot-water/pipework");
 };
 
 
-autoSaveElementForm<PrimaryPipeworkData>({
+autoSaveElementForm<PipeworkData>({
 	model,
-	storeData: store.domesticHotWater.pipework.primaryPipework,
+	storeData: store.domesticHotWaterNew.pipework,
 	defaultName: "Primary pipework",
 	onPatch: (state, newData, index) => {
-		state.domesticHotWater.pipework.primaryPipework.data[index] = newData;
-		state.domesticHotWater.pipework.primaryPipework.complete = false;
+		state.domesticHotWaterNew.pipework.data[index] = newData;
+		state.domesticHotWaterNew.pipework.complete = false;
 	} });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
@@ -79,7 +77,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			:validation-rules="{ uniqueName: uniqueName(store.domesticHotWater.pipework.primaryPipework.data, { index }) }"
+			:validation-rules="{ uniqueName: uniqueName(store.domesticHotWaterNew.pipework.data, { index }) }"
 			validation="required:trim | length:1,50 | uniqueName"
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
@@ -181,25 +179,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 			data-field="HotWaterSource['hw cylinder'].pipework.*.pipe_contents"
 		/>
-		<ClientOnly>
-			<FormKit
-				id="hotWaterCylinder"
-				type="govRadios"
-				:options="new Map(store.domesticHotWater.waterHeating.hotWaterCylinder.data
-					.filter(x => x.data.id !== undefined)
-					.map(x => [x.data.id as string, x.data.name]))"		
-				label="Hot water cylinder"
-				help="Select a hot water cylinder that this pipework is connected to"
-				name="hotWaterCylinder"
-				validation="required">
-				<div v-if="!store.domesticHotWater.waterHeating.hotWaterCylinder.data.length">
-					<p class="govuk-error-message">No hot water cylinder added.</p>
-					<NuxtLink :to="getUrl('waterHeating')" class="govuk-link gov-radios-add-link">
-						Click here to add a hot water cylinder
-					</NuxtLink>
-				</div>
-			</FormKit>
-		</ClientOnly>
 		<FormKit
 			id="location"
 			type="govRadios"
