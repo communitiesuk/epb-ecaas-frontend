@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
-import { productTypeMap, typeOfHeatSource } from "~/stores/ecaasStore.schema";
-import { boilerTypes, heatPumpTypes, heatSourceProductTypesDisplay } from "~/utils/display";
+import { productTypeMap, typeOfWaterStorage, type WaterStorageProductType } from "~/stores/ecaasStore.schema";
 import { sentenceToLowerCase } from "~/utils/string";
 
 definePageMeta({ layout: "one-column" });
@@ -10,18 +9,18 @@ const store = useEcaasStore();
 const router = useRouter();
 const { params } = useRoute();
 
-const heatSourceType = kebabToCamelCase(params.products as string);
+const waterStorageType = kebabToCamelCase(params.products as string);
 
-if (!(heatSourceType in productTypeMap)) {
+if (!(waterStorageType in productTypeMap)) {
 	throw createError({
 		statusCode: 404,
 		statusMessage: "Product type not found",
 	});
 }
 
-const technologyType = productTypeMap[heatSourceType as HeatSourceProductType];
-const pageId = `${heatSourceType}Products` as PageId;
-const productType = heatSourceProductTypesDisplay[heatSourceType as HeatSourceProductType];
+const technologyType = productTypeMap[waterStorageType as WaterStorageProductType];
+const pageId = `${waterStorageType}Products` as PageId;
+const productType = waterStorageProductTypeDisplay[waterStorageType as WaterStorageProductType];
 
 const index = Number(params.heatSource);
 
@@ -36,10 +35,10 @@ const backUrl = getUrl(pageId)
 
 const selectProduct = () => {
 	store.$patch((state) => {
-		const item = state.spaceHeating.heatSource.data[index];
+		const item = state.domesticHotWaterNew.waterStorage.data[index];
 
 		if (item && data) {
-			const product = item.data as HeatSourceProduct;
+			const product = item.data as SmartHotWaterTankDataNew;
 			product.productReference = data.id;
 		}
 	});
@@ -60,10 +59,7 @@ const selectProduct = () => {
 	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ data?.modelName }}</h1>
 	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
 
-	<ProductDetailsHeatPump v-if="!!data && heatSourceType in heatPumpTypes" :product="data!" />
-	<ProductDetailsBoiler v-if="!!data && heatSourceType in boilerTypes" :product="data!"/>
-	<ProductDetailsHeatBatteryPCM v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryPcm" :product="data!" />
-	<ProductDetailsHeatBatteryDryCore v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryDryCore" :product="data!" />
+	<ProductDetailsSmartHotWaterTank v-if="!!data && waterStorageType === typeOfWaterStorage.smartHotWaterTank" :product="data!" />
 
 	<div class="govuk-button-group">
 		<GovButton

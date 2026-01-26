@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { page } from "~/data/pages/pages";
+import { productTypeMap } from "~/stores/ecaasStore.schema";
 
 definePageMeta({ layout: false });
 
@@ -8,7 +9,7 @@ const { pageId, title, index, searchModel, searchData } = useProductsPage("heatS
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
-		technologyType: heatSourceProductTypeMap[pageId as HeatSourceProductType],
+		technologyType: productTypeMap[pageId as HeatSourceProductType],
 	},
 });
 

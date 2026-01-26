@@ -1,12 +1,14 @@
 <script setup lang="ts">
+import { productTypeMap, type WaterStorageProductType } from "#imports";
+
 definePageMeta({ layout: "one-column" });
 
 const store = useEcaasStore();
-const { title, index, searchModel, searchData } = useProductsPage("waterstorage");
+const { pageId, title, index, searchModel, searchData } = useProductsPage("waterstorage");
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
-		// technologyType: pcdbTechnologyTypes[pageId as keyof typeof pcdbTechnologyTypes]
+		technologyType: productTypeMap[pageId as WaterStorageProductType],
 	},
 });
 
@@ -27,7 +29,7 @@ const selectProduct = (reference: string) => {
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<ProductSearch :products="productData" :model="searchModel" />
-	<GovProductsTable 
+	<GovProductsTable
 		:products="pagination.getData() ?? ['none']"
 		:total-pages="pagination.totalPages"
 		:on-select-product="selectProduct"

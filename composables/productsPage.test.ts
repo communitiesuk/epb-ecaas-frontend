@@ -1,6 +1,7 @@
 import { mockNuxtImport } from "@nuxt/test-utils/runtime";
 import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import { productTypeMap } from "~/stores/ecaasStore.schema";
 
 describe("Products page", () => {
 	const mockRoute = vi.hoisted(() => vi.fn());
@@ -41,7 +42,7 @@ describe("Products page", () => {
 		const { pageId } = useProductsPage("pump");
 
 		// Assert
-		expect(pageId).toBeOneOf(Object.keys(heatSourceProductTypeMap));
+		expect(pageId).toBeOneOf(Object.keys(productTypeMap));
 	});
 
 	it("Returns page title when page ID is valid", () => {

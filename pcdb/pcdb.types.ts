@@ -172,6 +172,20 @@ export const heatBatteryDryCoreZod = BaseProduct.extend({
 
 export type HeatBatteryDryCoreProduct = z.infer<typeof heatBatteryDryCoreZod>;
 
+export const smartHotWaterTankZod = BaseProduct.extend({
+	technologyType: z.literal("SmartHotWaterTank"),
+	volume: z.nullable(z.number()),
+	dailyLosses: z.nullable(z.number()),
+	pumpPower: z.nullable(z.number()),
+	maxFlowRatePumpLPerMin: z.nullable(z.number()),
+	heatExchangerSurfaceArea: z.nullable(z.number()),
+	heaterPosition: z.nullable(z.number()),
+	usableTemp: z.nullable(z.number()),
+	heatSource: z.nullable(z.string()),
+});
+
+export type SmartHotWaterTankProduct = z.infer<typeof smartHotWaterTankZod>;
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
 	groundSourceHeatPumpZod,
@@ -185,6 +199,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	regularBoilerZod,
 	heatBatteryPcmZod,
 	heatBatteryDryCoreZod,
+	smartHotWaterTankZod,
 ]);
 
 export type Product = z.infer<typeof productSchema>;
@@ -211,6 +226,9 @@ export const categoryTechnologies = {
 	heatBattery: [
 		"HeatBatteryPCM",
 		"HeatBatteryDryCore",
+	],
+	waterStorage: [
+		"SmartHotWaterTank",
 	],
 } as const satisfies Record<string, TechnologyType[]>;
 

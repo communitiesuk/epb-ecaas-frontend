@@ -143,8 +143,8 @@ const waterStorages = [
 			:validation-rules="{ isProductSelected }"
 			validation="required | isProductSelected"
 			help="Select the smart hot water tank from the PCDB using the button below."
-			:selected-product-reference="(waterStorageData?.data as SmartHotWaterTankDataNew)?.productReference"
-			selected-product-type="airSource"
+			:selected-product-reference="model.productReference"
+			:selected-product-type="model.typeOfWaterStorage"
 			:page-url="route.fullPath"
 			:page-index="index"
 		/>

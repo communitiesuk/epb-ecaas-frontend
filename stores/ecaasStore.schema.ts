@@ -1097,7 +1097,13 @@ export type HeatSourceProductType = z.infer<typeof _typeOfHeatSource>;
 export type HeatSourceProduct = z.infer<typeof heatSourceProduct>;
 export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
 
-export const heatSourceProductTypeMap = {
+const _typeOfWaterStorage = z.enum(["smartHotWaterTank"]);
+
+export const typeOfWaterStorage = _typeOfWaterStorage.enum;
+
+export type WaterStorageProductType = z.infer<typeof _typeOfWaterStorage>;
+
+export const productTypeMap = {
 	"airSource": "AirSourceHeatPump",
 	"groundSource": "GroundSourceHeatPump",
 	"waterSource": "WaterSourceHeatPump",
@@ -1113,7 +1119,8 @@ export const heatSourceProductTypeMap = {
 	"communalHeatNetwork": "HeatNetworks",
 	"heatBatteryPcm": "HeatBatteryPCM",
 	"heatBatteryDryCore": "HeatBatteryDryCore",
-} as const satisfies Record<HeatSourceProductType, TechnologyType | string>;
+	"smartHotWaterTank": "SmartHotWaterTank",
+} as const satisfies Record<HeatSourceProductType | WaterStorageProductType, TechnologyType | string>;
 
 export type HeatEmitterType =
 	"radiator" |

@@ -1,12 +1,13 @@
 import type { PageId } from "~/data/pages/pages";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import { productTypeMap } from "~/stores/ecaasStore.schema";
 
 export function useProductsPage(indexParam: string) {
 	const route = useRoute();
 	const routeQuery = computed(() => route.query);
 	const pageId = kebabToCamelCase(route.params.products as string);
 
-	if (!(pageId in heatSourceProductTypeMap)) {
+	if (!(pageId in productTypeMap)) {
 		throw createError({
 			statusCode: 400,
 			statusMessage: "Invalid product type selected",

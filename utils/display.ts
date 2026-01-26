@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaL
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatPumpType, HeatSourceProductType, TypeOfBoiler } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatPumpType, HeatSourceProductType, TypeOfBoiler, WaterStorageProductType } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -320,8 +320,6 @@ export const heatSourceProductTypesDisplay = {
 	"heatBatteryDryCore": pluralize("Dry core heat battery", "ies"),
 } as const satisfies Record<HeatSourceProductType, (plural: boolean) => string>;
 
-heatSourceProductTypesDisplay["airSource"](true);
-
 export function displayHeatPumpType(type: HeatPumpType | undefined): string {
 	return heatPumpTypes[type!] ?? emptyValueRendering;
 }
@@ -379,3 +377,7 @@ export function displayRadiatorType(type: SchemaRadiatorType | undefined): Radia
 	}
 	return radiatorTypes[type];
 }
+
+export const waterStorageProductTypeDisplay = {
+	"smartHotWaterTank": pluralize("Smart hot water tank"),
+} as const satisfies Record<WaterStorageProductType, (plural: boolean) => string>;

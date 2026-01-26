@@ -133,7 +133,7 @@ describe("water storage", () => {
 		
 		const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
 		expect(chooseProductButton).toBeDefined();
-		expect(chooseProductButton.pathname).toContain("/domestic-hot-water-new/water-storage/0/air-source");
+		expect(chooseProductButton.pathname).toContain("/domestic-hot-water-new/water-storage/0/smart-hot-water-tank");
 	});
 
 	describe("Hot Water Cylinder", () => {

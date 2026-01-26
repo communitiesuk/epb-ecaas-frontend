@@ -22,6 +22,7 @@ defineProps<{ data: Record<string, string>; }>();
 
 	.govuk-table__header {
 		width: 50%;
+		overflow: auto;
 	}
 
 	.govuk-table__body {
