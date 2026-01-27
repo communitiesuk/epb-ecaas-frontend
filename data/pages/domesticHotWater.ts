@@ -33,7 +33,7 @@ const domesticHotWaterPages = [
 	{
 		id: "heatSources",
 		title: "Heat Sources",
-		url: "/domestic-hot-water-new/heat-sources/:heatsources",
+		url: "/domestic-hot-water-new/heat-sources/:heatSources",
 		type: "taskGroup",
 		parentId: "domesticHotWaterNew",
 	},
