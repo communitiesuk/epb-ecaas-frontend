@@ -11,7 +11,7 @@ defineProps<{
 
 const heatSourceStoreData = store.spaceHeating.heatSource.data;
 const emit = defineEmits(["update-heat-pump-model"]);
-
+console.log("HELLO");
 </script>
 
 <template>
@@ -24,7 +24,7 @@ const emit = defineEmits(["update-heat-pump-model"]);
 		validation="required"
 		@click="emit('update-heat-pump-model', 'typeOfHeatPump')" />
 	<FormKit
-		v-if="model.typeOfHeatPump"
+		v-if="model?.typeOfHeatPump"
 		id="name"
 		:value="model.name"
 		type="govInputText"

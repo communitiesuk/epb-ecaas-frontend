@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { getUrl, type HeatSourceData } from "#imports";
+import { getUrl, type DomesticHotWaterHeatSourceData, type HeatSourceData } from "#imports";
 import { heatSourceTypesWithDisplay } from "../../../../utils/display";
 
 const title = "Heat source";
 const store = useEcaasStore();
-const { autoSaveElementForm, getStoreIndex } = useForm();
+const { getStoreIndex } = useForm();
 
-const heatSourceStoreData = store.spaceHeating.heatSource.data;
-const index = getStoreIndex(heatSourceStoreData);
-const heatSourceData = useItemToEdit("heatSource", heatSourceStoreData);
-const model = ref(heatSourceData?.data as HeatSourceData);
-const id = heatSourceData?.data.id ?? uuidv4();
+const hotWaterHeatSourceStoreData = store.domesticHotWaterNew.heatSources.data;
+const index = getStoreIndex(hotWaterHeatSourceStoreData);
+const hotWaterHeatSourceData = useItemToEdit("heatSource", hotWaterHeatSourceStoreData);
+const model = ref(hotWaterHeatSourceData?.data as DomesticHotWaterHeatSourceData);
+const id = hotWaterHeatSourceData?.data.id ?? uuidv4();
+
 export type HeatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
 export type BoilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
 export type HeatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
@@ -122,49 +123,64 @@ const saveForm = (fields: HeatSourceData) => {
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
+// watch(
+// 	() => model.value,
+// 	(newData, initialData) => {
+// 		if (!newData?.typeOfHeatSource) return;
+
+// 		if (
+// 			initialData?.typeOfHeatSource &&
+// 			initialData.typeOfHeatSource !== newData.typeOfHeatSource
+// 		) {
+// 			errorMessages.value = [];
+// 			model.value = { typeOfHeatSource: newData.typeOfHeatSource, id: initialData.id } as HeatSourceData;
+// 		}
+// 		if (model.value && !model.value.name) {
+// 			model.value.name = getHeatSourceDefaultName(model.value);
+// 		}
+// 	},
+// );
 watch(
 	() => model.value,
-	(newData, initialData) => {
-		if (!newData?.typeOfHeatSource) return;
-
-		if (
-			initialData?.typeOfHeatSource &&
-			initialData.typeOfHeatSource !== newData.typeOfHeatSource
-		) {
-			errorMessages.value = [];
-			model.value = { typeOfHeatSource: newData.typeOfHeatSource, id: initialData.id } as HeatSourceData;
-		}
-		if (model.value && !model.value.name) {
-			model.value.name = getHeatSourceDefaultName(model.value);
+	(newData, _initialData) => {
+		// undefined -> "newHeatSource"
+		// undefined -> someId
+		// "newHeatSource" -> someId
+		// someId -> "newHeatSource"
+		if (newData.heatSourceId === "newHeatSource") {
+			model.value.isExistingHeatSource = false;
+		} else if (newData.heatSourceId !== undefined) {
+			model.value.isExistingHeatSource = true;
 		}
 	},
 );
 
 
-autoSaveElementForm<HeatSourceData>({
-	model,
-	storeData: store.spaceHeating.heatSource,
-	defaultName: "Heat source",
-	onPatch: (state, newData, index) => {
-		newData.data.id ??= id;
-		state.spaceHeating.heatSource.data[index] = newData;
-		state.spaceHeating.heatSource.complete = false;
-	},
-});
+// autoSaveElementForm<DomesticHotWaterHeatSourceData>({
+// 	model,
+// 	storeData: store.spaceHeating.heatSource,
+// 	defaultName: "Heat source",
+// 	onPatch: (state, newData, index) => {
+// 		newData.data.id ??= id;
+// 		state.spaceHeating.heatSource.data[index] = newData;
+// 		state.spaceHeating.heatSource.complete = false;
+// 	},
+// });
 
 
 function updateHeatSource(type: string) {
-	watch(() => model.value[`${type}` as keyof HeatSourceData], (newHeatSourceSubtype, initialHeatSourceSubtype) => {
-		if (newHeatSourceSubtype !== initialHeatSourceSubtype) {
-			if ("productReference" in model.value) {
-				model.value.productReference = "";
-			}
-			const defaultName = getHeatSourceDefaultName(model.value);
-			model.value.name = defaultName;
-			store.spaceHeating.heatSource.data[index]!.data.name = defaultName;
-		}
-	},
-	);
+	console.log(type);
+	// watch(() => model.value[`${type}` as keyof HeatSourceData], (newHeatSourceSubtype, initialHeatSourceSubtype) => {
+	// 	if (newHeatSourceSubtype !== initialHeatSourceSubtype) {
+	// 		if ("productReference" in model.value) {
+	// 			model.value.productReference = "";
+	// 		}
+	// 		const defaultName = getHeatSourceDefaultName(model.value);
+	// 		model.value.name = defaultName;
+	// 		store.spaceHeating.heatSource.data[index]!.data.name = defaultName;
+	// 	}
+	// },
+	// );
 }
 
 const coldWaterSourceOptions = 
@@ -197,47 +213,55 @@ const coldWaterSourceOptions =
 			name="coldWaterSource"
 			validation="required" />
 		<FormKit
-			id="heatSource"
+			id="heatSourceId"
 			type="govRadios"
 			label="Use a previously added heat source"
 			:help="'To view and edit these options go to Space heating'"
 			:options="new Map(store.spaceHeating.heatSource.data
 				.filter(x => x.data.id !== undefined)
 				.map(x => [x.data.id as string, x.data.name]))
-				.set('addNewHeatSource', 'Add a new water heating source')"
-			name="heatSource"
+				.set('newHeatSource', 'Add a new water heating source')"
+			name="heatSourceId"
 			validation="required" />
 		<FormKit
-			
+			v-if="model.isExistingHeatSource === false"
 			id="typeOfHeatSource"
 			type="govRadios"
 			label="Type of heat source"
 			:options="heatSourceTypesWithDisplay"
 			name="typeOfHeatSource"
 			validation="required" />
+		{{ model.isExistingHeatSource }}
+		{{ model.newHeatSourceData?.typeOfHeatSource  }}
+		
 		<HeatPumpSection
-			v-if="model?.typeOfHeatSource === 'heatPump'"
-			:model="model as HeatPumpModelType"
+			v-if="model.isExistingHeatSource === false
+				&& model.newHeatSourceData?.typeOfHeatSource === 'heatPump'"
+			:model="model.newHeatSourceData as HeatPumpModelType"
 			:index="index"
 			@update-heat-pump-model="updateHeatSource" />
 		<BoilerSection
-			v-if="model?.typeOfHeatSource === 'boiler'"
-			:model="model as BoilerModelType"
+			v-if="model.isExistingHeatSource === false
+				&& model.newHeatSourceData?.typeOfHeatSource === 'boiler'"
+			:model="model.newHeatSourceData as BoilerModelType"
 			:index="index"
 			@update-boiler-model="updateHeatSource" />
 		<HeatNetworkSection
-			v-if="model?.typeOfHeatSource === 'heatNetwork'"
-			:model="model as HeatNetworkModelType"
+			v-if="model.isExistingHeatSource === false
+				&& model.newHeatSourceData?.typeOfHeatSource === 'heatNetwork'"
+			:model="model.newHeatSourceData as HeatNetworkModelType"
 			:index="index"
 			@update-heat-network-model="updateHeatSource" />
 		<HeatBatterySection
-			v-if="model?.typeOfHeatSource === 'heatBattery'"
-			:model="model as HeatBatteryModelType"
+			v-if="model.isExistingHeatSource === false
+				&& model.newHeatSourceData?.typeOfHeatSource === 'heatBattery'"
+			:model="model.newHeatSourceData as HeatBatteryModelType"
 			:index="index"
 			@update-heat-battery-model="updateHeatSource" />
 		<SolarThermalSystemSection
-			v-if="model?.typeOfHeatSource === 'solarThermalSystem'"
-			:model="model as SolarThermalModelType" 
+			v-if="model.isExistingHeatSource === false
+				&& model.newHeatSourceData?.typeOfHeatSource === 'solarThermalSystem'"
+			:model="model.newHeatSourceData as SolarThermalModelType" 
 			:index="index" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
