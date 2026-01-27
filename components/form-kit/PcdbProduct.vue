@@ -24,16 +24,20 @@ function appendItemIndexToUrl(url: string, index: number) {
 	return url.replace(lastUrlSegment, `/${index}`);
 }
 
-const productsPageUrl = ref(appendItemIndexToUrl(pageUrl, index) + "/" + camelToKebabCase(selectedProductType ?? ""));
-let productData: DisplayProduct | undefined | null;
+const selectedProduct = ref<string | undefined>(selectedProductReference);
 
-if (selectedProductReference) {
+const productsPageUrl = ref(appendItemIndexToUrl(pageUrl, index) + "/" + camelToKebabCase(selectedProductType ?? ""));
+const productData = ref<DisplayProduct | undefined | null>();
+
+if (selectedProduct.value) {
 	const { data } = await useFetch(`/api/products/${selectedProductReference}`);
-	productData = data.value;
+	productData.value = data.value;
 }
 
 watch(props.context, ({ attrs: { "selected-product-type": newProductType } }) => {
 	productsPageUrl.value = appendItemIndexToUrl(pageUrl, index) + "/" + camelToKebabCase(newProductType ?? "");
+	selectedProduct.value = undefined;
+	productData.value = undefined;
 });
 </script>
 
@@ -52,7 +56,7 @@ watch(props.context, ({ attrs: { "selected-product-type": newProductType } }) =>
 			</GovButton>
 			<div v-if="productData">
 				<ul class="govuk-list">
-					<li>Product reference: <span class="bold">{{ selectedProductReference }}</span></li>
+					<li>Product reference: <span class="bold">{{ selectedProduct }}</span></li>
 					<li>Brand: <span class="bold">{{ productData?.brandName }}</span></li>
 					<li>Model: <span class="bold">{{ productData?.modelName }}</span></li>
 					<li>Model Qualifier: <span class="bold">{{ productData?.modelQualifier ?? '-' }}</span></li>
