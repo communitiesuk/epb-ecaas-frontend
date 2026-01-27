@@ -27,6 +27,7 @@ const saveForm = (fields: PipeworkData) => {
 		pipework.data[index] = {
 			data: {
 				name: fields.name,
+				waterStorage: fields.waterStorage,
 				internalDiameter: fields.internalDiameter,
 				externalDiameter: fields.externalDiameter,
 				length: fields.length,
@@ -84,6 +85,26 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}" />
+		<ClientOnly>
+			<FormKit
+				id="waterStorage"
+				type="govRadios"
+				:options="new Map(store.domesticHotWaterNew.waterStorage.data
+					.filter(x => x.data.id !== undefined)
+					.map(x => [x.data.id as string, x.data.name]))"		
+				label="Hot water cylinder"
+				help="Select a hot water cylinder that this pipework is connected to"
+				name="waterStorage"
+				validation="required">
+				<div
+					v-if="!store.domesticHotWaterNew.waterStorage.data.length">
+					<p class="govuk-error-message">No hot water cylinder added.</p>
+					<NuxtLink :to="getUrl('waterHeating')" class="govuk-link gov-radios-add-link">
+						Click here to add a hot water cylinder
+					</NuxtLink>
+				</div>
+			</FormKit>
+		</ClientOnly>
 		<FormKit
 			id="location"
 			type="govRadios"

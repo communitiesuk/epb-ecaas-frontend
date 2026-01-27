@@ -6,7 +6,7 @@ import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/sch
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, colourZod, ductShapeZod, fuelTypeWithElecOnlyZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, radiatorTypeZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, colourZod, ductShapeZod, fuelTypeWithElecOnlyZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, radiatorTypeZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
 
 const fraction = z.number().min(0).max(1);
@@ -641,6 +641,7 @@ const pipeworkDataZod = z.object({
 	insulationThickness: z.number(),
 	thermalConductivity: z.number(),
 	surfaceReflectivity: z.boolean(),
+	waterStorage: z.string(),
 	pipeContents: waterPipeContentsTypeZod,
 	location: z.enum(["heatedSpace", "unheatedSpace"]),
 });
@@ -908,8 +909,6 @@ const heatPumpDataZod = namedWithId.extend({
 	typeOfHeatPump,
 });
 
-export type HeatPumpType = z.infer<typeof typeOfHeatPump>;
-
 export type HeatPumpData = z.infer<typeof heatPumpDataZod>;
 
 const _boilerDataZod = namedWithId;
@@ -979,15 +978,16 @@ export type HeatInterfaceUnitData = z.infer<typeof _heatInterfaceUnitDataZod>;
 // 		}),
 // 	],
 // );
-
+							
 //export type WetDistributionData = z.infer<typeof wetDistributionDataZod>;
-
+							
 export type SpaceHeatingNew = AssertEachKeyIsPageId<{
 	heatSource: EcaasFormList<HeatSourceData>,
 	heatEmitters: EcaasFormList<HeatEmittingData>
 	heatingControls: EcaasFormList<HeatingControlData>
 }>;
-
+							
+export type HeatPumpType = z.infer<typeof typeOfHeatPump>;
 export type TypeOfBoiler = z.infer<typeof typeOfBoiler>;
 export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;
 export type TypeOfHeatNetwork = z.infer<typeof typeOfHeatNetwork>;
