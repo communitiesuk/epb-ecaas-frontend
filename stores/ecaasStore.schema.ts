@@ -1213,7 +1213,7 @@ const instantElectricHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("instantElectricHeater"),
 	convectionFractionForHeating: z.number(),
 	ratedPower: z.number(),
-	numOfHeatersWithThisSpec: z.number(),
+	numOfHeaters: z.number(),
 });
 
 const electricStorageHeaterSchema = namedWithId.extend({

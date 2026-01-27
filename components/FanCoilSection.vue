@@ -58,6 +58,7 @@ defineProps<{
 		label="Minimum flow temperature "
 		name="minFlowTemp"
 		validation="required | number"
+		help="Minimum flow temperature when using weather compensation"
 		suffix-text="°C" />
 	<FormKit
 		id="designTempDiffAcrossEmitters"
@@ -101,7 +102,8 @@ defineProps<{
 		id="numOfFanCoils"
 		name="numOfFanCoils"
 		type="govInputWithSuffix"
-		label="Number  of fan coils"
-		suffix-text="m²"
+		label="Number of fan coils"
+		help="Enter the number of fan coil systems with this specification in the dwelling"
+		
 		validation="required" />
 </template>

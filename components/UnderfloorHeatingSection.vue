@@ -58,6 +58,7 @@ defineProps<{
 		label="Minimum flow temperature "
 		name="minFlowTemp"
 		validation="required | number"
+		help="Minimum flow temperature when using weather compensation"
 		suffix-text="°C" />
 	<FormKit
 		id="designTempDiffAcrossEmitters"
