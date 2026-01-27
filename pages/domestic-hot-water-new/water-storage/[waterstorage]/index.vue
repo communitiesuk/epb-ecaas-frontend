@@ -133,7 +133,6 @@ const waterStorages = [
 			name="name"
 			validation="required"
 		/>
-		<!-- <ClientOnly> -->
 		<FormKit
 			v-if="model.typeOfWaterStorage === 'smartHotWaterTank'"	
 			id="selectSmartHotWaterTank"
@@ -148,10 +147,6 @@ const waterStorages = [
 			:page-url="route.fullPath"
 			:page-index="index"
 		/>
-		<!-- should be `selected-product-type="smart hot water tank"` or 
-			 whatever it will be in the pcdb! Currently using Air source just to check
-			 that it's working. -->
-		<!-- </ClientOnly> -->
 		<FormKit
 			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
 			id="storageCylinderVolume"
