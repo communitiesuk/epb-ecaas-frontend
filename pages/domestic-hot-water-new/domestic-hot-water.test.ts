@@ -59,6 +59,7 @@ describe("Domestic hot water", () => {
 	const pipework1: EcaasForm<PipeworkData> = {
 		data: {
 			name: "Jasper's Pipework 1",
+			waterStorage: "what",
 			internalDiameter: 69,
 			externalDiameter: 420,
 			length: 200,
@@ -302,6 +303,7 @@ describe("Domestic hot water", () => {
 		const pipework2: EcaasForm<PipeworkData> = {
 			data: {
 				name: "Jasper's Pipework 2",
+				waterStorage: "what",
 				internalDiameter: 554,
 				externalDiameter: 545,
 				length: 2,
@@ -316,6 +318,7 @@ describe("Domestic hot water", () => {
 		const pipework3: EcaasForm<PipeworkData> = {
 			data: {
 				name: "Jasper's Pipework 3",
+				waterStorage: "what",
 				internalDiameter: 691,
 				externalDiameter: 42310,
 				length: 20,
