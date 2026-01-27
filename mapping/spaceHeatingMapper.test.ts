@@ -361,7 +361,7 @@ describe("Space heating - emitters", () => {
 		name: "Instant Electric Heater 1",
 		typeOfHeatEmitter: "instantElectricHeater",
 		convectionFractionForHeating: 0.7,
-		numOfHeatersWithThisSpec: 3,
+		numOfHeaters: 3,
 		ratedPower: 2000,
 	};
 	const electricStorageHeater: HeatEmittingData = {

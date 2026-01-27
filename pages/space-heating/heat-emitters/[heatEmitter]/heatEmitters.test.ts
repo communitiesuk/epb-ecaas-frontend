@@ -346,7 +346,7 @@ describe("Heat emitters", () => {
 			expect(screen.getByTestId("name")).toBeDefined();
 			expect(screen.getByTestId("convectionFractionForHeating")).toBeDefined();
 			expect(screen.getByTestId("ratedPower")).toBeDefined();
-			expect(screen.getByTestId("numOfHeatersWithThisSpec")).toBeDefined();
+			expect(screen.getByTestId("numOfHeaters")).toBeDefined();
 		});
 
 	});
@@ -427,7 +427,7 @@ describe("Heat emitters", () => {
 				typeOfHeatEmitter: "instantElectricHeater",
 				ratedPower: 1,
 				convectionFractionForHeating: 1,
-				numOfHeatersWithThisSpec: 1,
+				numOfHeaters: 1,
 			};
 			store.$patch({
 				spaceHeating: {
@@ -519,7 +519,7 @@ describe("Heat emitters", () => {
 				typeOfHeatEmitter: "instantElectricHeater",
 				ratedPower: 1,
 				convectionFractionForHeating: 1,
-				numOfHeatersWithThisSpec: 1,
+				numOfHeaters: 1,
 			};
 			store.$patch({
 				spaceHeating: {

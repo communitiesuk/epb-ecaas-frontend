@@ -296,7 +296,7 @@ const instantElectricHeaterSummary: SummarySection = {
 			"Type of heat emitter": "typeOfHeatEmitter" in instantElectricHeater && instantElectricHeater.typeOfHeatEmitter ? displayCamelToSentenceCase(instantElectricHeater.typeOfHeatEmitter) : emptyValueRendering,
 			"Rated power": "ratedPower" in instantElectricHeater ? dim(instantElectricHeater.ratedPower, "kilowatt") : emptyValueRendering,
 			"Convection fraction for heating": "convectionFractionForHeating" in instantElectricHeater ? instantElectricHeater.convectionFractionForHeating : emptyValueRendering,
-			"Number of heaters with this spec": "numOfHeatersWithThisSpec" in instantElectricHeater ? instantElectricHeater.numOfHeatersWithThisSpec : emptyValueRendering,
+			"Number of heaters": "numOfHeaters" in instantElectricHeater ? instantElectricHeater.numOfHeaters : emptyValueRendering,
 		};
 	}),
 	editUrl: spaceHeatingUrl,

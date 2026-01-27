@@ -29,9 +29,9 @@ defineProps<{
 		help="Specify the portion of heat transfered through convection (0 to 1), where 1 means all heat is convective"
 		validation="required | number | min:0 | max:1"/>
 	<FormKit
-		id="numOfHeatersWithThisSpec"
-		name="numOfHeatersWithThisSpec"
+		id="numOfHeaters"
+		name="numOfHeaters"
 		type="govInputInt"
-		label="Number of heaters with this spec"
+		label="Number of instant electric heaters"
 		help="Enter the number of heaters with this specification in the dwelling" />
 </template>
