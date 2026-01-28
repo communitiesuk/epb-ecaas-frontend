@@ -20,12 +20,10 @@ const id = waterStorageData?.data.id ?? uuidv4();
 if (waterStorageData?.data?.typeOfWaterStorage === "hotWaterCylinder"
     && typeof waterStorageData.data.storageCylinderVolume === "number"
 ) {
-	if (typeof waterStorageData?.data?.storageCylinderVolume === "number") {
-		waterStorageData.data.storageCylinderVolume = unitValue(
-			waterStorageData.data.storageCylinderVolume,
-			litre,
-		);
-	}
+	waterStorageData.data.storageCylinderVolume = unitValue(
+		waterStorageData.data.storageCylinderVolume,
+		litre,
+	);
 }
 
 const saveForm = (fields: WaterStorageData) => {
