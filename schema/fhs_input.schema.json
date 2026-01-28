@@ -490,29 +490,49 @@
 								}
 							},
 							"then": {
-								"properties": {
-									"EnergySupply_pump": {
-										"type": "string"
+								"oneOf": [
+									{
+										"properties": {
+											"product_reference": {
+												"description": "A unique reference to a product held within the HEM database (PCDB)",
+												"title": "Reference to the product in the HEM database",
+												"type": "string"
+											},
+											"EnergySupply_pump": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"product_reference",
+											"EnergySupply_pump"
+										]
 									},
-									"max_flow_rate_pump_l_per_min": {
-										"type": "number",
-										"exclusiveMinimum": 0
-									},
-									"power_pump_kW": {
-										"type": "number",
-										"exclusiveMinimum": 0
-									},
-									"temp_usable": {
-										"type": "number",
-										"minimum": 0,
-										"maximum": 100
+									{
+										"properties": {
+											"EnergySupply_pump": {
+												"type": "string"
+											},
+											"max_flow_rate_pump_l_per_min": {
+												"type": "number",
+												"exclusiveMinimum": 0
+											},
+											"power_pump_kW": {
+												"type": "number",
+												"exclusiveMinimum": 0
+											},
+											"temp_usable": {
+												"type": "number",
+												"minimum": 0,
+												"maximum": 100
+											}
+										},
+										"required": [
+											"EnergySupply_pump",
+											"max_flow_rate_pump_l_per_min",
+											"power_pump_kW",
+											"temp_usable"
+										]
 									}
-								},
-								"required": [
-									"EnergySupply_pump",
-									"max_flow_rate_pump_l_per_min",
-									"power_pump_kW",
-									"temp_usable"
 								]
 							}
 						},
@@ -2189,89 +2209,112 @@
 			"additionalProperties": {
 				"type": "object",
 				"unevaluatedProperties": false,
-				"required": [
-					"type",
-					"ColdWaterSource",
-					"flow_rates",
-					"system_a_efficiencies"
-				],
-				"properties": {
-					"type": {
-						"type": "string",
-						"const": "WWHRS_Instantaneous"
-					},
-					"ColdWaterSource": {
-						"enum": [
-							"header tank",
-							"mains water"
+				"oneOf": [
+					{
+						"properties": {
+							"product_reference": {
+								"description": "A unique reference to a product held within the HEM database (PCDB)",
+								"title": "Reference to the product in the HEM database",
+								"type": "string"
+							},
+							"ColdWaterSource": {
+								"enum": [
+									"header tank",
+									"mains water"
+								]
+							}
+						},
+						"required": [
+							"product_reference",
+							"ColdWaterSource"
 						]
 					},
-					"flow_rates": {
-						"type": "array",
-						"items": {
-							"type": "number",
-							"minimum": 0.1,
-							"maximum": 500
+					{
+						"required": [
+							"type",
+							"ColdWaterSource",
+							"flow_rates",
+							"system_a_efficiencies"
+						],
+						"properties": {
+							"type": {
+								"type": "string",
+								"const": "WWHRS_Instantaneous"
+							},
+							"ColdWaterSource": {
+								"enum": [
+									"header tank",
+									"mains water"
+								]
+							},
+							"flow_rates": {
+								"type": "array",
+								"items": {
+									"type": "number",
+									"minimum": 0.1,
+									"maximum": 500
+								}
+							},
+							"system_a_efficiencies": {
+								"type": "array",
+								"items": {
+									"exclusiveMinimum": 0,
+									"maximum": 100,
+									"type": "number"
+								},
+								"description": "Measured efficiencies for System A at the test flow rates"
+							},
+							"system_a_utilisation_factor": {
+								"type": "number",
+								"maximum": 1,
+								"exclusiveMinimum": 0,
+								"description": "Utilisation factor for System A"
+							},
+							"system_b_efficiencies": {
+								"type": "array",
+								"items": {
+									"exclusiveMinimum": 0,
+									"maximum": 100,
+									"type": "number"
+								},
+								"description": "Measured efficiencies for System B (optional, uses system_b_efficiency_factor if not provided)"
+							},
+							"system_b_efficiency_factor": {
+								"type": "number",
+								"maximum": 1,
+								"exclusiveMinimum": 0,
+								"description": "Reduction factor for System B efficiency (default 0.81)"
+							},
+							"system_b_utilisation_factor": {
+								"type": "number",
+								"maximum": 1,
+								"exclusiveMinimum": 0,
+								"description": "Utilisation factor for System B (optional, defaults to system_a_utilisation_factor)"
+							},
+							"system_c_efficiencies": {
+								"type": "array",
+								"items": {
+									"exclusiveMinimum": 0,
+									"maximum": 100,
+									"type": "number"
+								},
+								"description": "Measured efficiencies for System C (optional, uses system_c_efficiency_factor if not provided)"
+							},
+							"system_c_efficiency_factor": {
+								"type": "number",
+								"maximum": 1,
+								"exclusiveMinimum": 0,
+								"description": "Reduction factor for System C efficiency (default 0.87)"
+							},
+							"system_c_utilisation_factor": {
+								"type": "number",
+								"maximum": 1,
+								"exclusiveMinimum": 0,
+								"description": "Utilisation factor for System C (optional, defaults to system_a_utilisation_factor)"
+							}
 						}
-					},
-					"system_a_efficiencies": {
-						"type": "array",
-						"items": {
-							"exclusiveMinimum": 0,
-							"maximum": 100,
-							"type": "number"
-						},
-						"description": "Measured efficiencies for System A at the test flow rates"
-					},
-					"system_a_utilisation_factor": {
-						"type": "number",
-						"maximum": 1,
-						"exclusiveMinimum": 0,
-						"description": "Utilisation factor for System A"
-					},
-					"system_b_efficiencies": {
-						"type": "array",
-						"items": {
-							"exclusiveMinimum": 0,
-							"maximum": 100,
-							"type": "number"
-						},
-						"description": "Measured efficiencies for System B (optional, uses system_b_efficiency_factor if not provided)"
-					},
-					"system_b_efficiency_factor": {
-						"type": "number",
-						"maximum": 1,
-						"exclusiveMinimum": 0,
-						"description": "Reduction factor for System B efficiency (default 0.81)"
-					},
-					"system_b_utilisation_factor": {
-						"type": "number",
-						"maximum": 1,
-						"exclusiveMinimum": 0,
-						"description": "Utilisation factor for System B (optional, defaults to system_a_utilisation_factor)"
-					},
-					"system_c_efficiencies": {
-						"type": "array",
-						"items": {
-							"exclusiveMinimum": 0,
-							"maximum": 100,
-							"type": "number"
-						},
-						"description": "Measured efficiencies for System C (optional, uses system_c_efficiency_factor if not provided)"
-					},
-					"system_c_efficiency_factor": {
-						"type": "number",
-						"maximum": 1,
-						"exclusiveMinimum": 0,
-						"description": "Reduction factor for System C efficiency (default 0.87)"
-					},
-					"system_c_utilisation_factor": {
-						"type": "number",
-						"maximum": 1,
-						"exclusiveMinimum": 0,
-						"description": "Utilisation factor for System C (optional, defaults to system_a_utilisation_factor)"
 					}
-				}
+				]
 			}
 		},
 		"SpaceHeatSystem": {
