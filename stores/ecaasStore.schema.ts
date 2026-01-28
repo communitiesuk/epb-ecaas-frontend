@@ -1000,21 +1000,23 @@ export type HeatSourceType =
 	"heatBattery" |
 	"solarThermalSystem";
 
-const heatSourceProduct = namedWithId.extend({
+const pcdbProduct = namedWithId.extend({
 	productReference: z.string().trim().min(1),
 });
 
-const heatPumpBase = heatSourceProduct.extend({
+export type PcdbProduct = z.infer<typeof pcdbProduct>;
+
+const heatPumpBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatPump"),
 	typeOfHeatPump,
 });
 
-const boilerBase = heatSourceProduct.extend({
+const boilerBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("boiler"),
 	typeOfBoiler,
 	locationOfBoiler: z.enum(["heatedSpace", "unheatedSpace"]),
 });
-const heatBatteryBase = heatSourceProduct.extend({
+const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatBattery"),
 	typeOfHeatBattery,
 	numberOfUnits: z.number(),
@@ -1094,7 +1096,6 @@ const _typeOfHeatSource = z.enum({
 export const typeOfHeatSource = _typeOfHeatSource.enum;
 
 export type HeatSourceProductType = z.infer<typeof _typeOfHeatSource>;
-export type HeatSourceProduct = z.infer<typeof heatSourceProduct>;
 export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
 
 const _typeOfWaterStorage = z.enum(["smartHotWaterTank"]);
@@ -1119,8 +1120,9 @@ export const productTypeMap = {
 	"communalHeatNetwork": "HeatNetworks",
 	"heatBatteryPcm": "HeatBatteryPCM",
 	"heatBatteryDryCore": "HeatBatteryDryCore",
+	"fanCoil": "FanCoils",
 	"smartHotWaterTank": "SmartHotWaterTank",
-} as const satisfies Record<HeatSourceProductType | WaterStorageProductType, TechnologyType | string>;
+} as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType, TechnologyType | string>;
 
 export type HeatEmitterType =
 	"radiator" |
@@ -1231,7 +1233,13 @@ const heatEmittingDataZod = z.discriminatedUnion("typeOfHeatEmitter", [
 	electricStorageHeaterSchema,
 ]);
 
+const _typeOfHeatEmitter = z.enum(["fanCoil"]);
+
+export const typeOfHeatEmitter = _typeOfHeatEmitter.enum;
+
+export type HeatEmittingProductType = z.infer<typeof _typeOfHeatEmitter>;
 export type HeatEmittingData = z.infer<typeof heatEmittingDataZod>;
+
 const heatingControlsDataZod = named.extend({
 	heatingControlType,
 });
