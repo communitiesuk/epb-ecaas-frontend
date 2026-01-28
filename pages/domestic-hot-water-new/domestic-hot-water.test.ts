@@ -22,12 +22,19 @@ describe("Domestic hot water", () => {
 		store.$reset();
 	});
 
-	const heatSource1: EcaasForm<WaterHeatSourcesData> = {
+	const heatSource1 = {
 		data: {
 			name: "Jasper's Beating Heart",
 			id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
+			coldWaterSource: "mainsWater",
+			isExistingHeatSource: false,
+			typeOfHeatSource: "boiler",
+			typeOfBoiler: "combiBoiler",
+			productReference: "BOILER-12345",
+			locationOfBoiler: "heatedSpace",
+			heatSourceId: "NEW_HEAT_SOURCE",
 		},
-	};
+	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
 	const hwStorage1: EcaasForm<WaterStorageData> = {
 		data: {
@@ -420,18 +427,42 @@ describe("Domestic hot water", () => {
 	});
 
 	describe("Heat Sources", () => {
-		const heatSource2: EcaasForm<WaterHeatSourcesData> = {
+		//TODO test heat sources referring to space heating heat sources
+		const heatSource2 = {
 			data: {
 				name: "Jasper's Old Laptop",
-				id: "1fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
+				id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bc",
+				coldWaterSource: "headerTank",
+				isExistingHeatSource: false,
+				typeOfHeatSource: "heatNetwork",
+				typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+				productReference: "HEAT-12345",
+				heatSourceId: "NEW_HEAT_SOURCE",
+				isHeatNetworkInPcdb: true,
+				energySupply: "LPG_condition_11F",
+				usesHeatInterfaceUnits: true,
+				heatInterfaceUnitProductReference: "HIU-12345",
 			},
-		};
-		const heatSource3: EcaasForm<WaterHeatSourcesData> = {
+		} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+		const heatSource3SpaceHeating = {
 			data: {
 				name: "Jasper's Heat Pump",
-				id: "2fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
+				id: "123e4567-e89b-12d3-a456-426614174000",
+				typeOfHeatSource: "heatPump",
+				productReference: "HEATPUMP-12345",
+				typeOfHeatPump: "airSource",
 			},
-		};
+		} as const satisfies EcaasForm<HeatSourceData>;
+
+		const heatSource3HotWater = {
+			data: {
+				id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bd",
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: true,
+				heatSourceId: "123e4567-e89b-12d3-a456-426614174000",
+			},
+		} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
 		// // Can't get href to point to the right thing :(
 
@@ -478,9 +509,14 @@ describe("Domestic hot water", () => {
 
 		it("should only remove the heat source object that is clicked", async () => {
 			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [heatSource3SpaceHeating],
+					},
+				},
 				domesticHotWaterNew: {
 					heatSources: {
-						data: [heatSource1, heatSource2, heatSource3],
+						data: [heatSource1, heatSource2, heatSource3HotWater],
 					},
 				},
 			});
@@ -491,7 +527,7 @@ describe("Domestic hot water", () => {
 			const populatedList = screen.getByTestId("heatSources_items");
 
 			expect(within(populatedList).getByText(heatSource1.data.name)).toBeDefined();
-			expect(within(populatedList).getByText(heatSource3.data.name)).toBeDefined();
+			expect(within(populatedList).getByText(heatSource3SpaceHeating.data.name)).toBeDefined();
 			expect(within(populatedList).queryByText(heatSource2.data.name)).toBeNull();
 		});
 

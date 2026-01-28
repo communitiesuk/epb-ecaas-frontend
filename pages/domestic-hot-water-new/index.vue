@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isEcaasForm, type WaterHeatSourcesData } from "#imports";
+import { isEcaasForm, type DomesticHotWaterHeatSourceData } from "#imports";
 import formStatus from "~/constants/formStatus";
 
 const title = "Domestic hot water";
@@ -8,8 +8,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type DomesticHotWaterType = keyof typeof store.domesticHotWaterNew;
-type DomesticHotWaterData = EcaasForm<WaterHeatSourcesData> & EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData>;
-
+type DomesticHotWaterData = EcaasForm<DomesticHotWaterHeatSourceData> & EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData>;
 function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number) {
 	const data = store.domesticHotWaterNew[domesticHotWaterType]?.data;
 
@@ -31,8 +30,15 @@ function handleDuplicate<T extends DomesticHotWaterData>(domesticHotWaterType: D
 	if (item) {
 		const duplicates = data.filter(f => {
 			if (isEcaasForm(f) && isEcaasForm(item)) {
-				name = item.data.name;
-				return f.data.name.match(duplicateNamePattern(item.data.name));
+				if (domesticHotWaterType === "heatSources" && (item.data as DomesticHotWaterHeatSourceData).isExistingHeatSource) {
+					// I have no idea what to do here
+					// Either prevent duplication of existing heat sources
+					// Or allow it and create a new entry in space heating too?
+					// Or create a new heat source in domestic hot water?
+					return false;
+				}
+				name = (item.data as unknown as { name: string }).name;
+				return (f.data as unknown as { name: string }).name.match(duplicateNamePattern(name));
 			}
 			return false;
 		});
@@ -67,6 +73,12 @@ function handleComplete() {
 const hasIncompleteEntries = () =>
 	Object.values(store.domesticHotWaterNew)
 		.some(section => section.data.some(item => isEcaasForm(item) && !item.complete));
+
+function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
+	const heatSource = store.spaceHeating.heatSource.data
+		.find((x) => x.data.id === heatSourceId);
+	return heatSource ? heatSource.data.name : undefined;
+}
 </script>
 
 <template>
@@ -80,7 +92,7 @@ const hasIncompleteEntries = () =>
 		:form-url="`${page?.url!}/heat-sources`"
 		:items="store.domesticHotWaterNew.heatSources.data
 			.filter(x => isEcaasForm(x))
-			.map(x=>({name: x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+			.map(x=>({name: x.data.isExistingHeatSource ? getNameFromSpaceHeatingHeatSource(x.data.heatSourceId)! : x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
 		:show-status="true"
 		@remove="(index: number) => handleRemove('heatSources', index)"
 		@duplicate="(index: number) => handleDuplicate('heatSources', index)"

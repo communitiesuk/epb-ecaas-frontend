@@ -1,4 +1,3 @@
-import { ColourDisplay } from "./../utils/display";
 import { standardPitchOption } from "./../utils/pitchOptions";
 import type { TaggedUnion } from "type-fest";
 import type { PageId } from "~/data/pages/pages";
@@ -947,38 +946,46 @@ const heatNetworkBase = namedWithId.extend({
 	typeOfHeatNetwork,
 });
 
-const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
-	heatNetworkBase.extend({
-		isHeatNetworkInPcdb: z.literal(true),
-		productReference: z.string().trim().min(1),
-		energySupply: fuelTypeZod,
-		usesHeatInterfaceUnits: z.literal(true),
-		heatInterfaceUnitProductReference: z.string().trim().min(1),
-	}),
-	heatNetworkBase.extend({
-		isHeatNetworkInPcdb: z.literal(true),
-		productReference: z.string().trim().min(1),
-		energySupply: fuelTypeZod,
-		usesHeatInterfaceUnits: z.literal(false),
-	}),
-	heatNetworkBase.extend({
-		isHeatNetworkInPcdb: z.literal(false),
-		emissionsFactor: z.number(),
-		outOfScopeEmissionsFactor: z.number(),
-		primaryEnergyFactor: z.number(),
-		canEnergyBeExported: z.boolean(),
-		usesHeatInterfaceUnits: z.literal(true),
-		heatInterfaceUnitProductReference: z.string().trim().min(1),
-	}),
-	heatNetworkBase.extend({
-		isHeatNetworkInPcdb: z.literal(false),
-		emissionsFactor: z.number(),
-		outOfScopeEmissionsFactor: z.number(),
-		primaryEnergyFactor: z.number(),
-		canEnergyBeExported: z.boolean(),
-		usesHeatInterfaceUnits: z.literal(false),
-	}),
-]);
+const heatNetworkBaseShape = heatNetworkBase.shape;
+
+function heatNetworkZodDataFromBase<
+	T extends typeof heatNetworkBaseShape | typeof heatNetworkHotWaterSourceBaseShape,
+>(baseShape: T) {
+	return z.discriminatedUnion("isHeatNetworkInPcdb", [
+		z.object({
+			isHeatNetworkInPcdb: z.literal(true),
+			productReference: z.string().trim().min(1),
+			energySupply: fuelTypeZod,
+			usesHeatInterfaceUnits: z.literal(true),
+			heatInterfaceUnitProductReference: z.string().trim().min(1),
+		}).extend(baseShape),
+		z.object({
+			isHeatNetworkInPcdb: z.literal(true),
+			productReference: z.string().trim().min(1),
+			energySupply: fuelTypeZod,
+			usesHeatInterfaceUnits: z.literal(false),
+		}).extend(baseShape),
+		z.object({
+			isHeatNetworkInPcdb: z.literal(false),
+			emissionsFactor: z.number(),
+			outOfScopeEmissionsFactor: z.number(),
+			primaryEnergyFactor: z.number(),
+			canEnergyBeExported: z.boolean(),
+			usesHeatInterfaceUnits: z.literal(true),
+			heatInterfaceUnitProductReference: z.string().trim().min(1),
+		}).extend(baseShape),
+		z.object({
+			isHeatNetworkInPcdb: z.literal(false),
+			emissionsFactor: z.number(),
+			outOfScopeEmissionsFactor: z.number(),
+			primaryEnergyFactor: z.number(),
+			canEnergyBeExported: z.boolean(),
+			usesHeatInterfaceUnits: z.literal(false),
+		}).extend(baseShape),
+	]);
+}
+
+const heatNetworkZodData = heatNetworkZodDataFromBase(heatNetworkBaseShape);
 
 const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpBase,
@@ -1151,42 +1158,36 @@ export type DomesticHotWaterNew = AssertEachKeyIsPageId<{
 	pipework: EcaasFormList<PipeworkData>;
 }>;
 
+const hotWaterHeatSourceExtension = {
+	heatSourceId: z.literal("NEW_HEAT_SOURCE"),
+	coldWaterSource: z.enum(["mainsWater", "headerTank"]),
+	isExistingHeatSource: z.literal(false),
+};
+
+const heatPumpHotWaterSourceBase = heatPumpBase.extend(hotWaterHeatSourceExtension);
+const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceExtension);
+const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceExtension);
+const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
+const heatNetworkHotWaterSourceBase = heatNetworkBase.extend(hotWaterHeatSourceExtension);
+const heatNetworkHotWaterSourceBaseShape = heatNetworkHotWaterSourceBase.shape;
+
 const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
-	heatPumpBase.extend({
-		heatSourceId: z.literal("NEW_HEAT_SOURCE"),
-		coldWaterSource: z.enum(["mainsWater", "headerTank"]),
-		isExistingHeatSource: z.literal(false),
-	}),
-	boilerBase.extend({
-		heatSourceId: z.literal("NEW_HEAT_SOURCE"),
-		coldWaterSource: z.enum(["mainsWater", "headerTank"]),
-		isExistingHeatSource: z.literal(false),
-	}),
-	heatBatteryBase.extend({
-		heatSourceId: z.literal("NEW_HEAT_SOURCE"),
-		coldWaterSource: z.enum(["mainsWater", "headerTank"]),
-		isExistingHeatSource: z.literal(false),
-	}),
-	solarThermalSystemBase.extend({
-		heatSourceId: z.literal("NEW_HEAT_SOURCE"),
-		coldWaterSource: z.enum(["mainsWater", "headerTank"]),
-		isExistingHeatSource: z.literal(false),
-	}),
-	heatNetworkZodData.extend({
-		heatSourceId: z.literal("NEW_HEAT_SOURCE"),
-		coldWaterSource: z.enum(["mainsWater", "headerTank"]),
-		isExistingHeatSource: z.literal(false),
-	}),//heat netwrork is silly
+	heatPumpHotWaterSourceBase,
+	boilerHotWaterSourceBase,
+	heatBatteryHotWaterSourceBase,
+	solarThermalHotWaterSourceBase,
+	heatNetworkZodDataFromBase(heatNetworkHotWaterSourceBaseShape),
 ]);
 
 const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource", 
-	[z.object({
-		id: z.uuidv4().readonly(),
-		heatSourceId: z.string(),
-		coldWaterSource: z.enum(["mainsWater", "headerTank"]),
-		isExistingHeatSource: z.literal(true),
-	}),
-	newHotWaterHeatSourceDataZod,
+	[
+		z.object({
+			id: z.uuidv4().readonly(),
+			heatSourceId: z.string(),
+			coldWaterSource: z.enum(["mainsWater", "headerTank"]),
+			isExistingHeatSource: z.literal(true),
+		}),
+		newHotWaterHeatSourceDataZod,
 	],
 );
 

@@ -230,38 +230,35 @@ const coldWaterSourceOptions =
 			label="Type of heat source"
 			:options="heatSourceTypesWithDisplay"
 			name="typeOfHeatSource"
-			validation="required" />
-		{{ model.isExistingHeatSource }}
-		{{ model.newHeatSourceData?.typeOfHeatSource  }}
-		
+			validation="required" />		
 		<HeatPumpSection
 			v-if="model.isExistingHeatSource === false
-				&& model.newHeatSourceData?.typeOfHeatSource === 'heatPump'"
-			:model="model.newHeatSourceData as HeatPumpModelType"
+				&& model.typeOfHeatSource === 'heatPump'"
+			:model="model as HeatPumpModelType"
 			:index="index"
 			@update-heat-pump-model="updateHeatSource" />
 		<BoilerSection
 			v-if="model.isExistingHeatSource === false
-				&& model.newHeatSourceData?.typeOfHeatSource === 'boiler'"
-			:model="model.newHeatSourceData as BoilerModelType"
+				&& model.typeOfHeatSource === 'boiler'"
+			:model="model as BoilerModelType"
 			:index="index"
 			@update-boiler-model="updateHeatSource" />
 		<HeatNetworkSection
 			v-if="model.isExistingHeatSource === false
-				&& model.newHeatSourceData?.typeOfHeatSource === 'heatNetwork'"
-			:model="model.newHeatSourceData as HeatNetworkModelType"
+				&& model.typeOfHeatSource === 'heatNetwork'"
+			:model="model as HeatNetworkModelType"
 			:index="index"
 			@update-heat-network-model="updateHeatSource" />
 		<HeatBatterySection
 			v-if="model.isExistingHeatSource === false
-				&& model.newHeatSourceData?.typeOfHeatSource === 'heatBattery'"
-			:model="model.newHeatSourceData as HeatBatteryModelType"
+				&& model.typeOfHeatSource === 'heatBattery'"
+			:model="model as HeatBatteryModelType"
 			:index="index"
 			@update-heat-battery-model="updateHeatSource" />
 		<SolarThermalSystemSection
 			v-if="model.isExistingHeatSource === false
-				&& model.newHeatSourceData?.typeOfHeatSource === 'solarThermalSystem'"
-			:model="model.newHeatSourceData as SolarThermalModelType" 
+				&& model.typeOfHeatSource === 'solarThermalSystem'"
+			:model="model as SolarThermalModelType" 
 			:index="index" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">

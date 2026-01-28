@@ -121,6 +121,27 @@ const hotWaterOutlets = [
 	["otherHotWaterOutlet", "Other (basin tap, kitchen sink, etc.)"],
 ] as [string, string][];
 
+const hotWaterSourceOptions = new Map(
+	store.domesticHotWaterNew.heatSources.data
+		.map((e) => {
+			const existingHeatSourceName = getNameFromSpaceHeatingHeatSource(e.data.heatSourceId);
+			return [
+				e.data.id,
+				e.data.isExistingHeatSource 
+					? existingHeatSourceName !== undefined
+						? existingHeatSourceName
+						: "Invalid existing heat source" // should not happen if space heating heat sources delete the hot water reference ones when removed but yknow I could be wrong
+					: e.data.name,
+			];
+		}),
+);
+
+function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
+	const heatSource = store.spaceHeating.heatSource.data
+		.find((x) => x.data.id === heatSourceId);
+	return heatSource ? heatSource.data.name : undefined;
+}
+
 </script>
 
 <template>
@@ -161,7 +182,7 @@ const hotWaterOutlets = [
 			label="Hot water source"
 			help="Select the relevant hot water source that has been added previously"
 			validation="required"
-			:options="new Map(store.domesticHotWaterNew.heatSources.data.map((e, index) => {return [e.data.id ?? index.toString(), e.data.name]}))"
+			:options="hotWaterSourceOptions"
 		/>
 		<FormKit
 			v-if="model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	
