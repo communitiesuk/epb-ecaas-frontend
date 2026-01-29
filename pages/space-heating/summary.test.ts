@@ -480,7 +480,7 @@ describe("Space heating summary page", () => {
 			"Product reference": "ESH-SMALL",
 			"Number of storage heaters": "8",
 		};
-		it.only.each(
+		it.each(
 			[
 				["radiatorSummary", expectedRadiatorData],
 				["fanCoilSummary", expectedFanCoilData],

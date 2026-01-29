@@ -105,9 +105,9 @@ describe("Domestic hot water", () => {
 
 		// test("Navigates to water storage create form when add link is clicked", async () => {
 		// 	await renderSuspended(DomesticHotWater);
-			
+
 		// 	const addLink = await screen.findByTestId<HTMLAnchorElement>("waterStorage_add");
-			
+
 		// 	expect(new URL(addLink.href).pathname).toBe(
 		// 		getUrl("waterStorageCreate"),
 		// 	);
@@ -215,9 +215,9 @@ describe("Domestic hot water", () => {
 
 		// test("Navigates to water storage create form when add link is clicked", async () => {
 		// 	await renderSuspended(DomesticHotWater);
-			
+
 		// 	const addLink = await screen.findByTestId<HTMLAnchorElement>("hotWaterOutlets_add");
-			
+
 		// 	expect(new URL(addLink.href).pathname).toBe(
 		// 		getUrl("hotWaterOutletsCreate"),
 		// 	);
@@ -335,9 +335,9 @@ describe("Domestic hot water", () => {
 
 		// test("Navigates to water storage create form when add link is clicked", async () => {
 		// 	await renderSuspended(DomesticHotWater);
-			
+
 		// 	const addLink = await screen.findByTestId<HTMLAnchorElement>("pipework_add");
-			
+
 		// 	expect(new URL(addLink.href).pathname).toBe(
 		// 		getUrl("pipeworkCreate"),
 		// 	);
@@ -437,9 +437,9 @@ describe("Domestic hot water", () => {
 
 		// // test("Navigates to water storage create form when add link is clicked", async () => {
 		// // 	await renderSuspended(DomesticHotWater);
-			
+
 		// // 	const addLink = await screen.findByTestId<HTMLAnchorElement>("heatSources_add");
-			
+
 		// // 	expect(new URL(addLink.href).pathname).toBe(
 		// // 		getUrl("heatSourcesCreate"),
 		// // 	);
@@ -526,23 +526,23 @@ describe("Domestic hot water", () => {
 			domesticHotWaterNew: {
 				waterStorage: {
 					data: [
-						{ 
-							data: 
-							{ name: "Test Water Storage", typeOfWaterStorage: "hotWaterCylinder" },
+						{
+							data:
+								{ name: "Test Water Storage", typeOfWaterStorage: "hotWaterCylinder" },
 							complete: false,
 						},
 					],
 				},
 			},
 		});
-	
+
 		await renderSuspended(DomesticHotWater);
 		const markAsCompleteButton = screen.getByRole("button", {
 			name: "Mark section as complete",
 		});
 		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 	});
-	
+
 	test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
 		store.$patch({
 			domesticHotWaterNew: {
@@ -551,15 +551,15 @@ describe("Domestic hot water", () => {
 				},
 			},
 		});
-	
+
 		await renderSuspended(DomesticHotWater);
-	
+
 		expect(screen.getByTestId("waterStorage_status_0").textContent).toBe(
 			formStatus.inProgress.text,
 		);
 	});
 	describe("mark section as complete", () => {
-	
+
 		const addCompleteHotWaterToStore = async () => {
 			store.$patch({
 				domesticHotWaterNew: {
@@ -570,18 +570,18 @@ describe("Domestic hot water", () => {
 				},
 			});
 		};
-	
+
 		beforeEach(async () => {
 			await renderSuspended(DomesticHotWater);
 		});
-	
+
 		// const hotWaterForms = {
 		// 	waterStorage: WaterStorageForm,
 		// 	hotWaterOutlets: HotWaterOutletsForm,
 		// };
-	
+
 		// type SectionKey = keyof typeof store.domesticHotWaterNew;
-	
+
 		it("disables the Mark section as complete button when a section is incomplete", async () => {
 			store.$patch({
 				domesticHotWaterNew: {
@@ -589,74 +589,74 @@ describe("Domestic hot water", () => {
 					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: false }] },
 				},
 			});
-	
+
 			await renderSuspended(DomesticHotWater);
 			expect(
 				screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
 			).toBeTruthy();
 		});
-	
+
 		it("enables the Mark section as complete button when all sections are complete", async () => {
 			await addCompleteHotWaterToStore();
 			await renderSuspended(DomesticHotWater);
-	
+
 			expect(
 				screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
 			).toBeFalsy();
 		});
-	
+
 		it("displays a 'Completed' status indicator when section is marked as complete", async () => {
 			await addCompleteHotWaterToStore();
 			await renderSuspended(DomesticHotWater);
 			await user.click(screen.getByTestId("markAsCompleteButton"));
-	
+
 			const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
 			expect(completedStatusElement?.style.display).not.toBe("none");
 		});
-	
+
 		describe("after section has been marked as complete", () => {
 			beforeEach(async () => {
 				await addCompleteHotWaterToStore();
 				await renderSuspended(DomesticHotWater);
 				await user.click(screen.getByTestId("markAsCompleteButton"));
 			});
-	
+
 			it("displays the 'Completed' section status indicator", async () => {
 				const completed = screen.queryByTestId("completeSectionCompleted");
 				expect(completed?.style.display).not.toBe("none");
 			});
-	
+
 			it("navigates to the home page", async () => {
 				expect(navigateToMock).toHaveBeenCalledWith("/");
 			});
-	
+
 			it("marks each domestic hot water section as complete", () => {
 				const { waterStorage, hotWaterOutlets } = store.domesticHotWaterNew;
 				expect(waterStorage?.complete).toBe(true);
 				expect(hotWaterOutlets?.complete).toBe(true);
 			});
-	
+
 			it("marks section as not complete if an item is removed", async () => {
 				await user.click(screen.getByTestId("waterStorage_remove_0"));
 				await user.click(screen.getByTestId("hotWaterOutlets_remove_0"));
-	
+
 				const { waterStorage, hotWaterOutlets } = store.domesticHotWaterNew;
 				expect(waterStorage?.complete).toBe(false);
 				expect(hotWaterOutlets?.complete).toBe(false);
 			});
-	
+
 			it("marks section as not complete if an item is duplicated", async () => {
 				await user.click(screen.getByTestId("waterStorage_duplicate_0"));
 				await user.click(screen.getByTestId("hotWaterOutlets_duplicate_0"));
-	
+
 				const { waterStorage, hotWaterOutlets } = store.domesticHotWaterNew;
 				expect(waterStorage?.complete).toBe(false);
 				expect(hotWaterOutlets?.complete).toBe(false);
 			});
-	
-			it.skip("marks section as not complete after adding a new item", async () => {
+
+			it.todo("marks section as not complete after adding a new item", async () => {
 				// for (const section of Object.keys(store.domesticHotWaterNew) as SectionKey[]) {
-	
+
 				// 	if (section === "waterStorage") {
 				// 		await renderSuspended(pvAndBatteryForms[section], {
 				// 			route: {
@@ -666,18 +666,18 @@ describe("Domestic hot water", () => {
 				// 	} else {
 				// 		await renderSuspended(pvAndBatteryForms[section]);
 				// 	}
-	
+
 				// 	await user.type(screen.getByTestId("name"), "New item");
 				// 	await user.tab();
 				// 	await user.click(screen.getByTestId("saveAndComplete"));
-	
+
 				// 	expect(store.domesticHotWaterNew[section]?.complete).toBe(false);
 				// }
 			});
-	
-			it.skip("marks section as not complete after editing an existing item", async () => {
-			// 		for (const section of Object.keys(store.domesticHotWaterNew) as SectionKey[]) {
-	
+
+			it.todo("marks section as not complete after editing an existing item", async () => {
+				// 		for (const section of Object.keys(store.domesticHotWaterNew) as SectionKey[]) {
+
 				// 			if (section === "waterStorage") {
 				// 				await renderSuspended(pvAndBatteryForms[section], {
 				// 					route: { params: { "system": "0" } },
@@ -685,13 +685,13 @@ describe("Domestic hot water", () => {
 				// 			} else {
 				// 				await renderSuspended(pvAndBatteryForms[section]);
 				// 			}
-	
+
 				// 			await user.clear(screen.getByTestId("name"));
 				// 			await user.type(screen.getByTestId("name"), "Updated item");
 				// 			await user.tab();
-	
-			// 			expect(store.domesticHotWaterNew[section]?.complete).toBe(false);
-			// 		}
+
+				// 			expect(store.domesticHotWaterNew[section]?.complete).toBe(false);
+				// 		}
 			});
 		});
 	});

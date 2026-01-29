@@ -4,7 +4,7 @@ import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 
 describe.skip("Heat Source Page", () => {
-  
+
 	const user = userEvent.setup();
 
 	test("should display the base form when no data has been added ", async () => {
@@ -17,7 +17,7 @@ describe.skip("Heat Source Page", () => {
 		expect(screen.getByTestId("heatSource")).toBeDefined();
 	});
 
-	test.only("should not display heat source form when add new heat source option is selected", async () => {
+	test("should not display heat source form when add new heat source option is selected", async () => {
 		await renderSuspended(HeatSourceForm, {
 			route: {
 				params: { "heatSource": "create" },
