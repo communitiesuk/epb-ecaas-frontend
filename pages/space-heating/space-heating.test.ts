@@ -159,12 +159,11 @@ describe("space heating", () => {
 				productReference: "RADIATOR_STANDARD",
 				designFlowTemp: 45,
 				designTempDiffAcrossEmitters: 10,
-				ecoDesignControllerClass: "3",
+				ecoDesignControllerClass: "4",
 				hasVariableFlowRate: true,
 				maxFlowRate: 200,
 				minFlowRate: 50,
 				id: "radiator-1",
-				minFlowTemp: 25,
 				numOfRadiators: 5,
 			};
 

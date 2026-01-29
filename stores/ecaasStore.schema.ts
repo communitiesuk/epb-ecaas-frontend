@@ -6,7 +6,7 @@ import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/sch
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, colourZod, ductShapeZod, fuelTypeWithElecOnlyZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, radiatorTypeZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, colourZod, ductShapeZod, fuelTypeWithElecOnlyZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
 
 const fraction = z.number().min(0).max(1);
@@ -1151,31 +1151,113 @@ function withVariableFlowRate<
 
 const radiatorBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("radiator"),
-	typeOfRadiator: radiatorTypeZod,
 	productReference: z.string(),
 	heatSource: z.string(),
-	ecoDesignControllerClass: z.string(),
 	designFlowTemp: z.number(),
-	minFlowTemp: z.number(),
 	designTempDiffAcrossEmitters: z.number(),
 	numOfRadiators: z.number(),
 });
 
-const standardRadiator = radiatorBase.extend({
-	typeOfRadiator: z.literal("standard"),
-	length: z.number(),
-});
-const towelRadiator = radiatorBase.extend({
-	typeOfRadiator: z.literal("towel"),
-});
+export type EcoControlClassesWithExtraOptions = "2" | "3" | "6" | "7";
 
-const standardRadiatorSchema = withVariableFlowRate(standardRadiator);
-const towelRadiatorSchema = withVariableFlowRate(towelRadiator);
+// the monstrosity begins - I apologise (Jasper)
 
-const radiatorSchema = z.discriminatedUnion("typeOfRadiator", [
-	standardRadiatorSchema,
-	towelRadiatorSchema,
+function makeStandardRadiator<
+	T extends z.ZodRawShape & { typeOfRadiator?: never },
+>(base: z.ZodObject<T>) {
+	return base.extend({
+		typeOfRadiator: z.literal("standard"),
+		length: z.number(),
+	});
+} 
+
+function makeTowelRadiator<
+	T extends z.ZodRawShape & { typeOfRadiator?: never },
+>(base: z.ZodObject<T>) {
+	return base.extend({
+		typeOfRadiator: z.literal("towel"),
+	});
+}
+
+function makeEco2367Radiator<
+	T extends z.ZodRawShape & { ecoDesignControllerClass?: never },
+>(base: z.ZodObject<T>) {
+	return base.extend({
+		ecoDesignControllerClass: z.enum(["2", "3", "6", "7"]),
+		minFlowTemp: z.number(),
+		minOutdoorTemp: z.number(),
+		maxOutdoorTemp: z.number(),
+	});
+}
+
+function makeEco1458Radiator<
+	T extends z.ZodRawShape & { ecoDesignControllerClass?: never },
+>(base: z.ZodObject<T>) {
+	return base.extend({
+		ecoDesignControllerClass: z.enum(["1", "4", "5", "8"]),
+	});
+} 
+
+function makeVariableFlowRateRadiator<
+	T extends z.ZodRawShape & { hasVariableFlowRate?: never },
+>(base: z.ZodObject<T>) {
+	return base.extend({
+		hasVariableFlowRate: z.literal(true),
+		minFlowRate: z.number(),
+		maxFlowRate: z.number(),
+	});
+}
+
+function makeFixedFlowRateRadiator<
+	T extends z.ZodRawShape & { hasVariableFlowRate?: never },
+>(base: z.ZodObject<T>) {
+	return base.extend({
+		hasVariableFlowRate: z.literal(false),
+		designFlowRate: z.number(),
+	});
+}
+
+const standardRadiator = makeStandardRadiator(radiatorBase);
+const towelRadiator = makeTowelRadiator(radiatorBase);
+
+const standardRadiatorEco2367 = makeEco2367Radiator(standardRadiator);
+const towelRadiatorEco2367 = makeEco2367Radiator(towelRadiator);
+const standardRadiatorEco1458 = makeEco1458Radiator(standardRadiator);
+const towelRadiatorEco1458 = makeEco1458Radiator(towelRadiator);
+
+const variableStandardRadiatorEco2367 = makeVariableFlowRateRadiator(standardRadiatorEco2367);
+const variableTowelRadiatorEco2367 = makeVariableFlowRateRadiator(towelRadiatorEco2367);
+const variableStandardRadiatorEco1458 = makeVariableFlowRateRadiator(standardRadiatorEco1458);
+const variableTowelRadiatorEco1458 = makeVariableFlowRateRadiator(towelRadiatorEco1458);
+const fixedStandardRadiatorEco2367 = makeFixedFlowRateRadiator(standardRadiatorEco2367);
+const fixedTowelRadiatorEco2367 = makeFixedFlowRateRadiator(towelRadiatorEco2367);
+const fixedStandardRadiatorEco1458 = makeFixedFlowRateRadiator(standardRadiatorEco1458);
+const fixedTowelRadiatorEco1458 = makeFixedFlowRateRadiator(towelRadiatorEco1458);
+
+const radiatorSchema = z.discriminatedUnion("hasVariableFlowRate", [
+	z.discriminatedUnion("ecoDesignControllerClass", [
+		z.discriminatedUnion("typeOfRadiator", [
+			variableStandardRadiatorEco2367,
+			variableTowelRadiatorEco2367,
+		]),
+		z.discriminatedUnion("typeOfRadiator", [
+			variableStandardRadiatorEco1458,
+			variableTowelRadiatorEco1458,
+		]),
+	]),
+	z.discriminatedUnion("ecoDesignControllerClass", [
+		z.discriminatedUnion("typeOfRadiator", [
+			fixedStandardRadiatorEco2367,
+			fixedTowelRadiatorEco2367,
+		]),
+		z.discriminatedUnion("typeOfRadiator", [
+			fixedStandardRadiatorEco1458,
+			fixedTowelRadiatorEco1458,
+		]),
+	]),
 ]);
+
+// the monstrosity ends - I apologise again (Jasper)
 
 const underfloorHeatingBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("underfloorHeating"),

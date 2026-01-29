@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ecoDesignControllerOptions, isInteger, radiatorTypes } from "#imports";
 import type { RadiatorModelType } from "~/pages/space-heating/heat-emitters/[heatEmitter]/index.vue";
+import type { EcoControlClassesWithExtraOptions } from "~/stores/ecaasStore.schema";
 
 const route = useRoute();
-
+const ecoClasses: EcoControlClassesWithExtraOptions[] = ["2", "3", "6", "7"];
 
 defineProps<{
 	model: RadiatorModelType,
@@ -55,14 +56,25 @@ const emit = defineEmits(["update-radiator-model"]);
 			:options="ecoDesignControllerOptions"
 			data-field="SpaceHeatSystem.*.ecodesign_controller" />
 		<FormKit
-			id="designFlowTemp"
+			v-if="ecoClasses.includes(model.ecoDesignControllerClass as EcoControlClassesWithExtraOptions)"
+			id="minOutdoorTemp"
 			type="govInputWithSuffix"
-			label="Design flow temperature"
-			name="designFlowTemp"
+			label="Minimum outdoor temperature"
+			name="minOutdoorTemp"
 			validation="required | number"
 			suffix-text="°C"
-			help="Enter the temperature at which water is delivered to the heating system during the coldest expected conditions. Typically between 35 and 55 °C." />
+			help="This is the coldest outdoor temperature expected for the dwelling. This is typically the temperature at which the design flow temperature operates." />
 		<FormKit
+			v-if="ecoClasses.includes(model.ecoDesignControllerClass as EcoControlClassesWithExtraOptions)"
+			id="maxOutdoorTemp"
+			type="govInputWithSuffix"
+			label="Maximum outdoor temperature"
+			name="maxOutdoorTemp"
+			validation="required | number"
+			suffix-text="°C"
+			help="This is the warmest outdoor temperature expected where the heating system is still active" />
+		<FormKit
+			v-if="ecoClasses.includes(model.ecoDesignControllerClass as EcoControlClassesWithExtraOptions)"
 			id="minFlowTemp"
 			type="govInputWithSuffix"
 			label="Minimum flow temperature "
@@ -70,6 +82,14 @@ const emit = defineEmits(["update-radiator-model"]);
 			help="Minimum flow temperature when using weather compensation"
 			validation="required | number"
 			suffix-text="°C" />
+		<FormKit
+			id="designFlowTemp"
+			type="govInputWithSuffix"
+			label="Design flow temperature"
+			name="designFlowTemp"
+			validation="required | number"
+			suffix-text="°C"
+			help="Enter the temperature at which water is delivered to the heating system during the coldest expected conditions. Typically between 35 and 55 °C." />
 		<FormKit
 			id="designTempDiffAcrossEmitters"
 			type="govInputWithSuffix"

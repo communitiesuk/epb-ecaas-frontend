@@ -130,9 +130,9 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaWetDist
 				design_flow_temp: radiator.designFlowTemp,
 				HeatSource: { name: getHeatSourceNameForEmitter(state, radiator) },
 				ecodesign_controller: {
-					ecodesign_control_class: parseInt(radiator.ecoDesignControllerClass),
-					min_flow_temp: radiator.minFlowTemp,
-					min_outdoor_temp: minOutdoorTemp,
+					ecodesign_control_class: parseInt(radiator.ecoDesignControllerClass), //TODO eco class 2,3,6,7 require min flow temp, min/max outdoor temp 
+					// min_flow_temp: radiator.minFlowTemp,
+					min_outdoor_temp: minOutdoorTemp, 
 					max_outdoor_temp: maxOutdoorTemp,
 				} as SchemaEcoDesignControllerNoWeatherCompensator,
 			};

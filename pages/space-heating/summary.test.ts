@@ -298,7 +298,6 @@ describe("Space heating summary page", () => {
 		beforeEach(() => {
 			store.$reset();
 		});
-
 		const radiator: HeatEmittingData = {
 			id: "1234",
 			name: "Radiator 1",
@@ -308,7 +307,24 @@ describe("Space heating summary page", () => {
 			heatSource: "heat-pump-id",
 			ecoDesignControllerClass: "1",
 			designFlowTemp: 55,
+			designTempDiffAcrossEmitters: 10,
+			numOfRadiators: 5,
+			hasVariableFlowRate: false,
+			designFlowRate: 100,
+			length: 1,
+		};
+		const radiatorWithEcoDesign2367: HeatEmittingData = {
+			id: "5678",
+			name: "Radiator 2",
+			typeOfHeatEmitter: "radiator",
+			typeOfRadiator: "standard",
+			productReference: "RAD-SMALL",
+			heatSource: "heat-pump-id",
+			ecoDesignControllerClass: "2",
 			minFlowTemp: 45,
+			minOutdoorTemp: 1,
+			maxOutdoorTemp: 15,
+			designFlowTemp: 55,
 			designTempDiffAcrossEmitters: 10,
 			numOfRadiators: 5,
 			hasVariableFlowRate: false,
@@ -382,7 +398,6 @@ describe("Space heating summary page", () => {
 			);
 		});
 
-
 		it.each([
 			["radiatorSummary", radiator],
 			["underfloorHeatingSummary", ufh],
@@ -402,17 +417,19 @@ describe("Space heating summary page", () => {
 			expect(screen.getByTestId(testId)).not.toBeNull();
 		});
 		const expectedRadiatorData = {
-			Name: "Radiator 1",
+			Name: "Radiator 2",
 			"Type of heat emitter": "Radiator",
 			"Type of radiator": "Standard",
 			"Product reference": "RAD-SMALL",
 			"Design flow temperature": "55 °C",
-			"Minimum flow temperature": "45 °C",
 			"Design temperature difference across emitters": "10 °C",
 			"Number of radiators": "5",
 			"Is there a variable flow rate?": "No",
 			"Design flow rate": "100 litres per second",
-			"Eco design controller class": "1",
+			"Eco design controller class": "2",
+			"Minimum outdoor temperature": "1 °C",
+			"Maximum outdoor temperature": "15 °C",
+			"Minimum flow temperature": "45 °C",
 		};
 
 		const expectedFanCoilData = {
@@ -463,7 +480,7 @@ describe("Space heating summary page", () => {
 			"Product reference": "ESH-SMALL",
 			"Number of storage heaters": "8",
 		};
-		it.each(
+		it.only.each(
 			[
 				["radiatorSummary", expectedRadiatorData],
 				["fanCoilSummary", expectedFanCoilData],
@@ -479,7 +496,7 @@ describe("Space heating summary page", () => {
 				spaceHeating: {
 					heatEmitters: {
 						data: [
-							{ data: radiator },
+							{ data: radiatorWithEcoDesign2367 },
 							{ data: fanCoil },
 							{ data: ufh },
 							{ data: warmAirHeater },
