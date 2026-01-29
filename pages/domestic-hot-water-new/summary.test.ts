@@ -229,11 +229,12 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the mixer shower section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					hotWaterOutlets: {
-						mixedShower: {
-							data: [mixedShower],
-						},
+						data: [mixedShower],
+					},
+					heatSources: {
+						data: [{ data: { id: mixedShower.data.hotWaterSource, name: "Heat pump" } }],
 					},
 				},
 			});
@@ -242,7 +243,45 @@ describe("Domestic hot water summary", () => {
 
 			const expectedResult = {
 				"Name": "Mixer shower 1",
+				"Type of hot water outlet": "Mixed shower",
+				"Hot water source": "Heat pump",
 				"Flow rate": `10 ${litrePerHour.suffix}`,
+				"WWHRS installed": "No",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-mixedShower-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+
+		it("displays '-' for missing values in a partial mixer shower", async () => {
+			const partialMixed = {
+				data: {
+					id: "partial-id-0001",
+					name: "Partial mixer",
+					typeOfHotWaterOutlet: "mixedShower",
+					// intentionally leave out flowRate, hotWaterSource, wwhrs
+				} as Partial<MixedShowerDataNew>,
+			};
+
+			store.$patch({
+				domesticHotWaterNew: {
+					hotWaterOutlets: {
+						data: [partialMixed],
+					},
+				},
+			});
+
+			await renderSuspended(Summary);
+
+			const expectedResult = {
+				"Name": "Partial mixer",
+				"Type of hot water outlet": "Mixed shower",
+				"Hot water source": "-",
+				"Flow rate": "-",
+				"WWHRS installed": "-",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -254,11 +293,9 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the electric shower section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					hotWaterOutlets: {
-						electricShower: {
-							data: [electricShower],
-						},
+						data: [electricShower],
 					},
 				},
 			});
@@ -267,7 +304,9 @@ describe("Domestic hot water summary", () => {
 
 			const expectedResult = {
 				"Name": "Electric shower 1",
+				"Type of hot water outlet": "Electric shower",
 				"Rated power": `10 ${kilowatt.suffix}`,
+				"WWHRS installed": "No",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -279,11 +318,9 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the bath section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					hotWaterOutlets: {
-						bath: {
-							data: [bathData],
-						},
+						data: [bathData],
 					},
 				},
 			});
@@ -292,6 +329,7 @@ describe("Domestic hot water summary", () => {
 
 			const expectedResult = {
 				"Name": "Bath 1",
+				"Type of hot water outlet": "Bath",
 				"Size": `170 ${litre.suffix}`,
 			};
 
@@ -304,11 +342,9 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the other outlets section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					hotWaterOutlets: {
-						otherOutlets: {
-							data: [otherOutletsData],
-						},
+						data: [otherOutletsData],
 					},
 				},
 			});
@@ -317,6 +353,7 @@ describe("Domestic hot water summary", () => {
 
 			const expectedResult = {
 				"Name": "Basin tap 1",
+				"Type of hot water outlet": "Other hot water outlet",
 				"Flow rate": `10 ${litrePerMinute.suffix}`,
 			};
 

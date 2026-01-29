@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { getTabItems, getUrl } from "#imports";
+import { getTabItems, getUrl, type MixedShowerDataNew } from "#imports";
 
 const title = "Domestic hot water";
 const store = useEcaasStore();
@@ -142,53 +142,64 @@ const waterHeatingSummarySections: SummarySection[] = [
 	// heatInterfaceUnitSummary,
 ];
 
-const mixedShowerData = store.domesticHotWater.hotWaterOutlets.mixedShower.data;
+const hotWaterOutletsAll = store.domesticHotWaterNew.hotWaterOutlets.data;
+const hotWaterSources = store.domesticHotWaterNew.heatSources.data;
+
+const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerDataNew>[];
 const mixedShowerSummary: SummarySection = {
 	id: "mixedShower",
 	label: "Mixer showers",
-	data: mixedShowerData.map(d => { 
+	data: mixedShowerData.map((d) => {
+		const heatSourceName = hotWaterSources.find(h => h.data.id === d.data.hotWaterSource)?.data.name;
 		return {
 			"Name": show(d.data.name),
-			"Flow rate": dim(d.data.flowRate, "litres per hour"),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Hot water source": heatSourceName ? heatSourceName : emptyValueRendering,
+			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per hour") : emptyValueRendering,
+			"WWHRS installed": "wwhrs" in d.data ? displayBoolean(d.data.wwhrs) : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("hotWaterOutlets"),
 };
 
-const electricShowerData = store.domesticHotWater.hotWaterOutlets.electricShower.data;
+const electricShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "electricShower") as EcaasForm<ElectricShowerDataNew>[];
 const electricShowerSummary: SummarySection = {
 	id: "electricShower",
 	label: "Electric showers",
 	data: electricShowerData.map(d => {   
 		return {
 			"Name": show(d.data.name),
-			"Rated power": dim(d.data.ratedPower, "kilowatt"),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Rated power": "ratedPower" in d.data ? dim(d.data.ratedPower, "kilowatt") : emptyValueRendering,
+			"WWHRS installed": "wwhrs" in d.data ? displayBoolean(d.data.wwhrs) : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("hotWaterOutlets"),
 };
 
-const bathData = store.domesticHotWater.hotWaterOutlets.bath.data;
+const bathData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "bath") as EcaasForm<BathDataNew>[];
 const bathSummary: SummarySection = {
 	id: "bath",
 	label: "Baths",
 	data: bathData.map(d => {
 		return {
 			"Name": show(d.data.name),
-			"Size": dim(d.data.size, "litres"),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Size": "size" in d.data ? dim(d.data.size, "litres") : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("hotWaterOutlets"),
 };
 
-const otherOutletsData = store.domesticHotWater.hotWaterOutlets.otherOutlets.data;
+const otherOutletsData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "otherHotWaterOutlet") as EcaasForm<OtherHotWaterOutletDataNew>[];
 const otherOutletsSummary: SummarySection = {
 	id: "otherOutlets",
 	label: "Other",
 	data: otherOutletsData.map(d => {
 		return {
 			"Name": show(d.data.name),
-			"Flow rate": dim(d.data.flowRate, "litres per minute"),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per minute") : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("hotWaterOutlets"),

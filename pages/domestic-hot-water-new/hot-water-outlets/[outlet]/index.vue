@@ -1,29 +1,11 @@
 <script setup lang="ts">
-import type { HotWaterOutletsData, WaterStorageData } from "~/stores/ecaasStore.schema";
+import type { HotWaterOutletsData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
 import { v4 as uuidv4 } from "uuid";
 
 const title = "Hot water outlets";
 const store = useEcaasStore();
-// const route = useRoute();
 
-// // remove this------------
-// store.$patch({
-// 	domesticHotWaterNew: {
-// 		heatSources: {
-// 			data: [
-// 				{
-// 					data: {
-// 						id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-// 						name: "Heat pump 1",
-// 					},
-// 					complete: true,
-// 				},
-// 			],
-// 		},
-// 	},
-// });
-// //------------------------
 
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
@@ -96,13 +78,13 @@ const saveForm = (fields: HotWaterOutletsData) => {
 			
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
-autoSaveElementForm<WaterStorageData>({
+autoSaveElementForm<HotWaterOutletsData>({
 	model,
-	storeData: store.domesticHotWaterNew.waterStorage,
+	storeData: store.domesticHotWaterNew.hotWaterOutlets,
 	defaultName: "Water storage",
 	onPatch: (state, newData, index) => {
-		state.domesticHotWaterNew.waterStorage.data[index] = newData;
-		state.domesticHotWaterNew.waterStorage.complete = false;
+		state.domesticHotWaterNew.hotWaterOutlets.data[index] = newData;
+		state.domesticHotWaterNew.hotWaterOutlets.complete = false;
 	},
 });
 
