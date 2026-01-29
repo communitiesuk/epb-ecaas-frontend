@@ -114,6 +114,13 @@ export const spaceHeatingPages = [
 		parentId: "spaceHeating",
 	},
 	{
+		id: "fanCoilProducts",
+		title: "Select a fan coil",
+		url: "/space-heating/heat-emitters/:heatEmitter/fan-coil",
+		type: "task",
+		parentId: "heatEmitters",
+	},
+	{
 		id: "heatEmittersCreate",
 		title: "Heat emitter",
 		url: "/space-heating/heat-emitters/create",

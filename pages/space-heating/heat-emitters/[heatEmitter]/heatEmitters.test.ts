@@ -57,11 +57,40 @@ describe("Heat emitters", () => {
 			expect(screen.getByTestId("heatSource")).toBeDefined();
 			expect(screen.getByTestId("ecoDesignControllerClass")).toBeDefined();
 			expect(screen.getByTestId("designFlowTemp")).toBeDefined();
-			expect(screen.getByTestId("minFlowTemp")).toBeDefined();
 			expect(screen.getByTestId("designTempDiffAcrossEmitters")).toBeDefined();
 			expect(screen.getByTestId("hasVariableFlowRate")).toBeDefined();
 			expect(screen.getByTestId("numOfRadiators")).toBeDefined();
 		});
+
+		test.each([
+			["1", false],
+			["2", true],
+			["3", true],
+			["4", false],
+			["5", false],
+			["6", true],
+			["7", true],
+			["8", false],
+		])("When Eco design controller class is %s, min flow temp & min/max outdoor temp displayed is %b", async (num, expectToBeDisplayed) => {
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
+			await user.click(screen.getByTestId("typeOfRadiator_standard"));
+
+			expect(screen.queryByTestId("minFlowTemp")).toBeNull();
+
+			const selectBox = screen.getByRole("combobox");
+			await user.selectOptions(selectBox, num);
+			if (expectToBeDisplayed) {			
+				expect(screen.getByTestId("minFlowTemp")).toBeDefined();
+			} else {
+				expect(screen.queryByTestId("minFlowTemp")).toBeNull();
+			}
+		});
+
 		test("Min/Max flow rate options shows when variable flow rate is yes", async () => {
 			await renderSuspended(HeatEmitterForm, {
 				route: {
@@ -116,7 +145,6 @@ describe("Heat emitters", () => {
 			heatSource: "heat-pump-id",
 			ecoDesignControllerClass: "1",
 			designFlowTemp: 55,
-			minFlowTemp: 45,
 			designTempDiffAcrossEmitters: 10,
 			numOfRadiators: 5,
 			hasVariableFlowRate: false,
@@ -478,7 +506,6 @@ describe("Heat emitters", () => {
 			expect(screen.getByTestId("heatSource_error")).toBeDefined();
 			expect(screen.getByTestId("ecoDesignControllerClass_error")).toBeDefined();
 			expect(screen.getByTestId("designFlowTemp_error")).toBeDefined();
-			expect(screen.getByTestId("minFlowTemp_error")).toBeDefined();
 			expect(screen.getByTestId("designTempDiffAcrossEmitters_error")).toBeDefined();
 			expect(screen.getByTestId("numOfRadiators_error")).toBeDefined();
 			expect(screen.getByTestId("hasVariableFlowRate_error")).toBeDefined();
@@ -574,9 +601,11 @@ describe("Heat emitters", () => {
 					typeOfRadiator: "standard",
 					productReference: "RAD-SMALL",
 					heatSource: "heat-pump-id",
-					ecoDesignControllerClass: "1",
+					ecoDesignControllerClass: "2",
 					designFlowTemp: 55,
 					minFlowTemp: 45,
+					maxOutdoorTemp: 33,
+					minOutdoorTemp: 2,
 					designTempDiffAcrossEmitters: 10,
 					numOfRadiators: 5,
 					hasVariableFlowRate: false,
@@ -647,7 +676,6 @@ describe("Heat emitters", () => {
 				heatSource: "heat-pump-id",
 				ecoDesignControllerClass: "1",
 				designFlowTemp: 55,
-				minFlowTemp: 45,
 				designTempDiffAcrossEmitters: 10,
 				numOfRadiators: 5,
 				hasVariableFlowRate: false,

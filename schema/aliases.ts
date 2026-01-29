@@ -8,7 +8,6 @@ type FhsSchema = components["schemas"]["fhs_input.schema"];
 type SchemaDefs = FhsSchema["$defs"];
 export type SchemaInfiltrationVentilation = FhsSchema["InfiltrationVentilation"];
 export type SchemaMechanicalVentilation = Exclude<SchemaInfiltrationVentilation["MechanicalVentilation"], undefined>[string];
-export type WwhrsType = Exclude<FhsSchema["WWHRS"], undefined>[string]["type"];
 export type VentType = SchemaMechanicalVentilation["vent_type"];
 type OnSiteGeneration = Exclude<FhsSchema["OnSiteGeneration"], undefined>;
 export type OnSiteGenerationVentilationStrategy = OnSiteGeneration[string]["ventilation_strategy"];

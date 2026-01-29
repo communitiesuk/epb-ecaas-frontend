@@ -103,7 +103,7 @@ describe("Heat pump details", async () => {
 		await renderSuspended(ProductDetails);
 		await user.click(screen.getByTestId("selectProductButton"));
 
-		const heatSource = store.spaceHeating.heatSource.data[0]?.data as HeatSourceProduct;
+		const heatSource = store.spaceHeating.heatSource.data[0]?.data as PcdbProduct;
 
 		// Assert
 		expect(heatSource.productReference).toBe("1000");

@@ -186,6 +186,15 @@ export const smartHotWaterTankZod = BaseProduct.extend({
 
 export type SmartHotWaterTankProduct = z.infer<typeof smartHotWaterTankZod>;
 
+export const fancoilZod = BaseProduct.extend({
+	technologyType: z.literal("FanCoils"),
+	numberOfFanSpeeds: z.nullable(z.number()),
+	numberOfTestPointDeltaT: z.nullable(z.number()),
+	fracConvective: z.nullable(z.number()),
+});
+
+export type FanCoilProduct = z.infer<typeof fancoilZod>;
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
 	groundSourceHeatPumpZod,
@@ -200,6 +209,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	heatBatteryPcmZod,
 	heatBatteryDryCoreZod,
 	smartHotWaterTankZod,
+	fancoilZod,
 ]);
 
 export type Product = z.infer<typeof productSchema>;
@@ -230,6 +240,7 @@ export const categoryTechnologies = {
 	waterStorage: [
 		"SmartHotWaterTank",
 	],
+	fanCoil: ["FanCoils"],
 } as const satisfies Record<string, TechnologyType[]>;
 
 export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMap(x => categoryTechnologies[x]);

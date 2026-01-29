@@ -20,12 +20,10 @@ const id = waterStorageData?.data.id ?? uuidv4();
 if (waterStorageData?.data?.typeOfWaterStorage === "hotWaterCylinder"
     && typeof waterStorageData.data.storageCylinderVolume === "number"
 ) {
-	if (typeof waterStorageData?.data?.storageCylinderVolume === "number") {
-		waterStorageData.data.storageCylinderVolume = unitValue(
-			waterStorageData.data.storageCylinderVolume,
-			litre,
-		);
-	}
+	waterStorageData.data.storageCylinderVolume = unitValue(
+		waterStorageData.data.storageCylinderVolume,
+		litre,
+	);
 }
 
 const saveForm = (fields: WaterStorageData) => {
@@ -133,12 +131,11 @@ const waterStorages = [
 			name="name"
 			validation="required"
 		/>
-		<!-- <ClientOnly> -->
 		<FormKit
 			v-if="model.typeOfWaterStorage === 'smartHotWaterTank'"	
 			id="selectSmartHotWaterTank"
 			type="govPcdbProduct"
-			label="!! Select a smart hot water tank (!NEEDS UPDATING!)"
+			label="Select a smart hot water tank"
 			name="productReference"
 			:validation-rules="{ isProductSelected }"
 			validation="required | isProductSelected"
@@ -148,10 +145,6 @@ const waterStorages = [
 			:page-url="route.fullPath"
 			:page-index="index"
 		/>
-		<!-- should be `selected-product-type="smart hot water tank"` or 
-			 whatever it will be in the pcdb! Currently using Air source just to check
-			 that it's working. -->
-		<!-- </ClientOnly> -->
 		<FormKit
 			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
 			id="storageCylinderVolume"

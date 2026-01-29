@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
-import { productTypeMap, typeOfHeatSource, type PcdbProduct } from "~/stores/ecaasStore.schema";
-import { boilerTypes, heatPumpTypes, heatSourceProductTypesDisplay } from "~/utils/display";
+import { productTypeMap, typeOfHeatEmitter, type HeatEmittingProductType, type PcdbProduct } from "~/stores/ecaasStore.schema";
+import { heatEmittingProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
 
 definePageMeta({ layout: "one-column" });
@@ -10,20 +10,20 @@ const store = useEcaasStore();
 const router = useRouter();
 const { params } = useRoute();
 
-const heatSourceType = kebabToCamelCase(params.products as string);
+const heatEmittingType = kebabToCamelCase(params.products as string);
 
-if (!(heatSourceType in productTypeMap)) {
+if (!(heatEmittingType in productTypeMap)) {
 	throw createError({
 		statusCode: 404,
 		statusMessage: "Product type not found",
 	});
 }
 
-const technologyType = productTypeMap[heatSourceType as HeatSourceProductType];
-const pageId = `${heatSourceType}Products` as PageId;
-const productType = heatSourceProductTypesDisplay[heatSourceType as HeatSourceProductType];
+const technologyType = productTypeMap[heatEmittingType as HeatEmittingProductType];
+const pageId = `${heatEmittingType}Products` as PageId;
+const productType = heatEmittingProductTypesDisplay[heatEmittingType as HeatEmittingProductType];
 
-const index = Number(params.heatSource);
+const index = Number(params.heatEmitter);
 
 const { data: { value: data } } = await useFetch(`/api/products/${params.id}/details`, {
 	query: {
@@ -32,11 +32,11 @@ const { data: { value: data } } = await useFetch(`/api/products/${params.id}/det
 });
 
 const backUrl = getUrl(pageId)
-	.replace(":heatSource", params.heatSource as string);
+	.replace(":heatEmitter", params.heatEmitter as string);
 
 const selectProduct = () => {
 	store.$patch((state) => {
-		const item = state.spaceHeating.heatSource.data[index];
+		const item = state.spaceHeating.heatEmitters.data[index];
 
 		if (item && data) {
 			const product = item.data as PcdbProduct;
@@ -44,7 +44,7 @@ const selectProduct = () => {
 		}
 	});
 
-	navigateTo(getUrl("heatSource").replace(":heatSource", `${index}`));
+	navigateTo(getUrl("heatEmitters").replace(":heatEmitter", `${index}`));
 };
 </script>
 
@@ -60,10 +60,7 @@ const selectProduct = () => {
 	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ data?.modelName }}</h1>
 	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
 
-	<ProductDetailsHeatPump v-if="!!data && heatSourceType in heatPumpTypes" :product="data!" />
-	<ProductDetailsBoiler v-if="!!data && heatSourceType in boilerTypes" :product="data!"/>
-	<ProductDetailsHeatBatteryPCM v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryPcm" :product="data!" />
-	<ProductDetailsHeatBatteryDryCore v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryDryCore" :product="data!" />
+	<ProductDetailsFanCoil v-if="!!data && heatEmittingType === typeOfHeatEmitter.fanCoil" :product="data!" />
 
 	<div class="govuk-button-group">
 		<GovButton

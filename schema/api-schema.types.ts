@@ -655,12 +655,19 @@ export interface components {
             /** @constant */
             type: "SmartHotWaterTank";
             EnergySupply_pump: string;
+            /** @enum {unknown} */
+            ColdWaterSource?: "header tank" | "mains water";
+        } & ({
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
+        } | {
             max_flow_rate_pump_l_per_min: number;
             power_pump_kW: number;
             temp_usable: number;
-            /** @enum {unknown} */
-            ColdWaterSource?: "header tank" | "mains water";
-        };
+        });
         /** @description A possible hot water source */
         PointOfUse: {
             /** @constant */
@@ -1329,6 +1336,14 @@ export interface components {
             Events: Record<string, never>;
             WWHRS?: {
                 [key: string]: {
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                    /** @enum {unknown} */
+                    ColdWaterSource: "header tank" | "mains water";
+                } | {
                     /** @constant */
                     type: "WWHRS_Instantaneous";
                     /** @enum {unknown} */
@@ -1591,12 +1606,19 @@ export interface components {
                     /** @constant */
                     type: "SmartHotWaterTank";
                     EnergySupply_pump: string;
+                    /** @enum {unknown} */
+                    ColdWaterSource?: "header tank" | "mains water";
+                } & ({
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                } | {
                     max_flow_rate_pump_l_per_min: number;
                     power_pump_kW: number;
                     temp_usable: number;
-                    /** @enum {unknown} */
-                    ColdWaterSource?: "header tank" | "mains water";
-                };
+                });
                 /** @description A possible hot water source */
                 PointOfUse: {
                     /** @constant */

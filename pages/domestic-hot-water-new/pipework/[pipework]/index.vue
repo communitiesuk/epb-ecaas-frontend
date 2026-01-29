@@ -99,7 +99,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<div
 					v-if="!store.domesticHotWaterNew.waterStorage.data.length">
 					<p class="govuk-error-message">No hot water cylinder added.</p>
-					<NuxtLink :to="getUrl('waterHeating')" class="govuk-link gov-radios-add-link">
+					<NuxtLink :to="getUrl('waterStorageCreate')" class="govuk-link gov-radios-add-link">
 						Click here to add a hot water cylinder
 					</NuxtLink>
 				</div>

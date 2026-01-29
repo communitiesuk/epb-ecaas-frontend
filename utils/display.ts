@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaL
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatPumpType, HeatSourceProductType, TypeOfBoiler, WaterStorageProductType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, TypeOfBoiler, WaterStorageProductType } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -381,3 +381,7 @@ export function displayRadiatorType(type: SchemaRadiatorType | undefined): Radia
 export const waterStorageProductTypeDisplay = {
 	"smartHotWaterTank": pluralize("Smart hot water tank"),
 } as const satisfies Record<WaterStorageProductType, (plural: boolean) => string>;
+
+export const heatEmittingProductTypesDisplay = {
+	"fanCoil": pluralize("Fan coil"),
+} as const satisfies Record<HeatEmittingProductType, (plural: boolean) => string>;
