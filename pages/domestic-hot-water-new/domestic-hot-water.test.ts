@@ -3,6 +3,7 @@ import DomesticHotWater from "@/pages/domestic-hot-water-new/index.vue";
 import { screen, within } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import formStatus from "~/constants/formStatus";
+import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 
 const baseCompleteForm = {
 	data: [],

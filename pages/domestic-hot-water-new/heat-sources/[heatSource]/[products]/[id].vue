@@ -1,6 +1,7 @@
 <script setup lang="ts">
+//TODO convert from space heating to domestic hot water
 import type { PageId } from "~/data/pages/pages";
-import { productTypeMap, typeOfHeatSource } from "~/stores/ecaasStore.schema";
+import { productTypeMap, typeOfHeatSource, type PcdbProduct } from "~/stores/ecaasStore.schema";
 import { boilerTypes, heatPumpTypes, heatSourceProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
 
@@ -39,7 +40,7 @@ const selectProduct = () => {
 		const item = state.spaceHeating.heatSource.data[index];
 
 		if (item && data) {
-			const product = item.data as HeatSourceProduct;
+			const product = item.data as PcdbProduct;
 			product.productReference = data.id;
 		}
 	});

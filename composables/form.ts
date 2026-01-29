@@ -59,13 +59,6 @@ export function useForm() {
 		});
 	};
 
-	interface AutoSaveElementFormOptions<T extends { name: string }> {
-		model: Ref<PartialExceptName<T> | undefined>;
-		storeData: EcaasFormList<T>;
-		defaultName: string;
-		onPatch: (state: EcaasState, newData: EcaasForm<T>, index: number) => void;
-	}
-
 	/**
 	 * Watches for changes on an element form model, creating or updating the store accordingly
 	 * @param options
@@ -111,18 +104,25 @@ export function useForm() {
 		});
 	};
 
-	/**
+	return { saveToList, getStoreIndex, autoSaveForm, autoSaveElementForm };
+}
+
+/**
 	 * Checks if there are any properties which have changed, between two objects
 	 * @param newData 
 	 * @param initialData 
 	 * @returns Boolean
 	 */
-	const hasChangedFields = <T extends object>(newData: T, initialData: T) => {
-		const initialDataKeys = Object.keys(initialData) as (keyof typeof initialData)[];
-		return initialDataKeys.some(x => initialData[x] !== newData[x]);
-	};
+export const hasChangedFields = <T extends object>(newData: T, initialData: T) => {
+	const initialDataKeys = Object.keys(initialData) as (keyof typeof initialData)[];
+	return initialDataKeys.some(x => initialData[x] !== newData[x]);
+};
 
-	return { saveToList, getStoreIndex, autoSaveForm, autoSaveElementForm };
+export interface AutoSaveElementFormOptions<T extends { name: string }> {
+	model: Ref<PartialExceptName<T> | undefined>;
+	storeData: EcaasFormList<T>;
+	defaultName: string;
+	onPatch: (state: EcaasState, newData: EcaasForm<T>, index: number) => void;
 }
 
 /**

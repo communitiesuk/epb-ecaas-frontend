@@ -6,6 +6,7 @@ import { heatSourceTypesWithDisplay } from "../../../../utils/display";
 const title = "Heat source";
 const store = useEcaasStore();
 const { getStoreIndex } = useForm();
+const route = useRoute();
 
 const hotWaterHeatSourceStoreData = store.domesticHotWaterNew.heatSources.data;
 const index = getStoreIndex(hotWaterHeatSourceStoreData);
@@ -123,23 +124,33 @@ const saveForm = (fields: HeatSourceData) => {
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
-// watch(
-// 	() => model.value,
-// 	(newData, initialData) => {
-// 		if (!newData?.typeOfHeatSource) return;
+watch(
+	() => model.value,
+	(newData, initialData) => {
+		if (newData?.isExistingHeatSource !== false) return;
 
-// 		if (
-// 			initialData?.typeOfHeatSource &&
-// 			initialData.typeOfHeatSource !== newData.typeOfHeatSource
-// 		) {
-// 			errorMessages.value = [];
-// 			model.value = { typeOfHeatSource: newData.typeOfHeatSource, id: initialData.id } as HeatSourceData;
-// 		}
-// 		if (model.value && !model.value.name) {
-// 			model.value.name = getHeatSourceDefaultName(model.value);
-// 		}
-// 	},
-// );
+		if (!newData?.typeOfHeatSource) return;
+
+		if (initialData?.isExistingHeatSource !== false) return;
+
+		if (
+			initialData.typeOfHeatSource &&
+			initialData.typeOfHeatSource !== newData.typeOfHeatSource
+		) {
+			errorMessages.value = [];
+			model.value = { 
+				coldWaterSource: initialData.coldWaterSource,
+				isExistingHeatSource: false,
+				typeOfHeatSource: newData.typeOfHeatSource,
+				id: initialData.id,
+			} as DomesticHotWaterHeatSourceData;
+		}
+		if (model.value.isExistingHeatSource === false && model.value && !model.value.name) {
+			model.value.name = getHeatSourceDefaultName(model.value);
+		}
+	},
+);
+
 watch(
 	() => model.value,
 	(newData, _initialData) => {
@@ -147,7 +158,7 @@ watch(
 		// undefined -> someId
 		// "newHeatSource" -> someId
 		// someId -> "newHeatSource"
-		if (newData.heatSourceId === "newHeatSource") {
+		if (newData.heatSourceId === "NEW_HEAT_SOURCE") {
 			model.value.isExistingHeatSource = false;
 		} else if (newData.heatSourceId !== undefined) {
 			model.value.isExistingHeatSource = true;
@@ -155,17 +166,69 @@ watch(
 	},
 );
 
+export interface AutoSaveElementFormOptionsNoName<T> {
+	model: Ref<Partial<T> | undefined>;
+	storeData: EcaasFormList<T>;
+	onPatch: (state: EcaasState, newData: EcaasForm<T>, index: number) => void;
+}
 
-// autoSaveElementForm<DomesticHotWaterHeatSourceData>({
-// 	model,
-// 	storeData: store.spaceHeating.heatSource,
-// 	defaultName: "Heat source",
-// 	onPatch: (state, newData, index) => {
-// 		newData.data.id ??= id;
-// 		state.spaceHeating.heatSource.data[index] = newData;
-// 		state.spaceHeating.heatSource.complete = false;
-// 	},
-// });
+const autoSaveElementFormNoName = <T extends DomesticHotWaterHeatSourceData>({
+	model,
+	storeData,
+	onPatch,
+}: AutoSaveElementFormOptionsNoName<T>) => {
+	watch(model, async (newData: Partial<T> | undefined, initialData: Partial<T> | undefined) => {
+		const routeParam = route.params[Object.keys(route.params)[0]!];
+		if (initialData === undefined || newData === undefined || routeParam === undefined) {
+			return;
+		}
+
+		if (newData.isExistingHeatSource === undefined) {
+			return;
+		}
+
+		if (newData.isExistingHeatSource === false 
+			&& (newData as { typeOfHeatSource?: string }).typeOfHeatSource === undefined) {
+			return;
+		}
+		
+		if (!hasChangedFields(newData, initialData)) {
+			return;
+		}
+			
+		const index = getStoreIndex(storeData.data as EcaasForm<T>[]);
+		if (routeParam === "create") {
+			// we're about to save, so set the route parameter to the new index
+			// we only expect this to trigger on the first change 
+			// (after that, routeParam is no longer "create")
+			route.params[Object.keys(route.params)[0]!] = index.toString();
+
+			// change the url to reflect this
+			const editItemPath = route.fullPath.replace("create", index.toString());
+			history.replaceState({}, "", editItemPath);
+		}
+
+		store.$patch((state) => {
+			const dataToPatch: Partial<T> = { ...newData };
+
+			const elementData: EcaasForm<T> = {
+				data: dataToPatch as T,
+			};
+
+			onPatch(state, elementData, index);
+		});
+	});
+};
+
+autoSaveElementFormNoName<DomesticHotWaterHeatSourceData>({
+	model,
+	storeData: store.domesticHotWaterNew.heatSources,
+	onPatch: (state, newData, index) => {
+		newData.data.id ??= id;
+		state.domesticHotWaterNew.heatSources.data[index] = newData;
+		state.domesticHotWaterNew.heatSources.complete = false;
+	},
+});
 
 
 function updateHeatSource(type: string) {
@@ -220,7 +283,7 @@ const coldWaterSourceOptions =
 			:options="new Map(store.spaceHeating.heatSource.data
 				.filter(x => x.data.id !== undefined)
 				.map(x => [x.data.id as string, x.data.name]))
-				.set('newHeatSource', 'Add a new water heating source')"
+				.set('NEW_HEAT_SOURCE', 'Add a new water heating source')"
 			name="heatSourceId"
 			validation="required" />
 		<FormKit

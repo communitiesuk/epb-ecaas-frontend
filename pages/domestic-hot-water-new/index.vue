@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { isEcaasForm, type DomesticHotWaterHeatSourceData } from "#imports";
+import { isEcaasForm } from "#imports";
 import formStatus from "~/constants/formStatus";
+import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 
 const title = "Domestic hot water";
 

@@ -1,3 +1,5 @@
+//TODO convert from space heating to domestic hot water
+
 import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
 import Products from "./index.vue";
 import { screen } from "@testing-library/vue";
