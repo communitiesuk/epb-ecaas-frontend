@@ -159,7 +159,7 @@ const mixedShowerSummary: SummarySection = {
 			"WWHRS installed": "wwhrs" in d.data ? displayBoolean(d.data.wwhrs) : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("hotWaterOutlets"),
+	editUrl: getUrl("domesticHotWaterNew"),
 };
 
 const electricShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "electricShower") as EcaasForm<ElectricShowerDataNew>[];
@@ -174,7 +174,7 @@ const electricShowerSummary: SummarySection = {
 			"WWHRS installed": "wwhrs" in d.data ? displayBoolean(d.data.wwhrs) : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("hotWaterOutlets"),
+	editUrl: getUrl("domesticHotWaterNew"),
 };
 
 const bathData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "bath") as EcaasForm<BathDataNew>[];
@@ -188,7 +188,7 @@ const bathSummary: SummarySection = {
 			"Size": "size" in d.data ? dim(d.data.size, "litres") : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("hotWaterOutlets"),
+	editUrl: getUrl("domesticHotWaterNew"),
 };
 
 const otherOutletsData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "otherHotWaterOutlet") as EcaasForm<OtherHotWaterOutletDataNew>[];
@@ -202,7 +202,7 @@ const otherOutletsSummary: SummarySection = {
 			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per minute") : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("hotWaterOutlets"),
+	editUrl: getUrl("domesticHotWaterNew"),
 };
 
 const hotWaterOutletsSummarySections: SummarySection[] = [
@@ -273,7 +273,7 @@ const pipeworkSummarySections: SummarySection[] = [
 		<SummaryTab :summary="mixedShowerSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No mixer shower added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('mixedShowerCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsNewCreate')">
 					Add mixer shower
 				</NuxtLink>
 			</template>
@@ -281,7 +281,7 @@ const pipeworkSummarySections: SummarySection[] = [
 		<SummaryTab :summary="electricShowerSummary" :selected="tabProps.currentTab === 1">
 			<template #empty>
 				<h2 class="govuk-heading-m">No electric shower added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('electricShowerCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsNewCreate')">
 					Add electric shower
 				</NuxtLink>
 			</template>
@@ -289,7 +289,7 @@ const pipeworkSummarySections: SummarySection[] = [
 		<SummaryTab :summary="bathSummary" :selected="tabProps.currentTab === 2">
 			<template #empty>
 				<h2 class="govuk-heading-m">No bath added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('bathCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsNewCreate')">
 					Add bath
 				</NuxtLink>
 			</template>
@@ -297,7 +297,7 @@ const pipeworkSummarySections: SummarySection[] = [
 		<SummaryTab :summary="otherOutletsSummary" :selected="tabProps.currentTab === 3">
 			<template #empty>
 				<h2 class="govuk-heading-m">No outlet added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('otherOutletsCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsNewCreate')">
 					Add outlet
 				</NuxtLink>
 			</template>
