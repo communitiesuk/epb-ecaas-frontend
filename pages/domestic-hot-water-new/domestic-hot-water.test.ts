@@ -79,6 +79,7 @@ describe("Domestic hot water", () => {
 				typeOfWaterStorage: "smartHotWaterTank",
 				heatSource: "weeeeee3",
 				heaterPosition: 0.8,
+				thermostatPosition: 0.5,
 				productReference: "SMART-12345",
 			},
 		};
