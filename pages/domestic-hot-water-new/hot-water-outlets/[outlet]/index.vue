@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { HotWaterOutletsData } from "~/stores/ecaasStore.schema";
-import { getUrl } from "~/utils/page";
+import { getUrl, hotWaterOutletTypes, wwhrsTypes } from "#imports";
 import { v4 as uuidv4 } from "uuid";
+import { getHotWaterOutletDefaultName } from "~/utils/getHotWaterOutletDefaultName";
 
 const title = "Hot water outlets";
 const store = useEcaasStore();
-
+const route = useRoute();
 
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
@@ -28,26 +29,55 @@ const saveForm = (fields: HotWaterOutletsData) => {
 		let hotWaterOutletItem: EcaasForm<HotWaterOutletsData>;
 
 		if (fields.typeOfHotWaterOutlet === "mixedShower") {
-			hotWaterOutletItem = {
-				data: {
-					...commonFields,
-					typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-					wwhrs: false,//fields.wwhrs,
-					flowRate: fields.flowRate,
-					hotWaterSource: fields.hotWaterSource,
-				},
-				complete: true,
-			};
+			if (fields.wwhrs) {
+				hotWaterOutletItem = {
+					data: {
+						...commonFields,
+						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
+						flowRate: fields.flowRate,
+						hotWaterSource: fields.hotWaterSource,
+						wwhrs: true,
+						wwhrsType: fields.wwhrsType,
+						wwhrsProductReference: fields.wwhrsProductReference,
+					},
+					complete: true,
+				};
+			} else {
+				hotWaterOutletItem = {
+					data: {
+						...commonFields,
+						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
+						flowRate: fields.flowRate,
+						hotWaterSource: fields.hotWaterSource,
+						wwhrs: false,
+					},
+					complete: true,
+				};
+			}
 		} else if (fields.typeOfHotWaterOutlet === "electricShower") {
-			hotWaterOutletItem = {
-				data: {
-					...commonFields,
-					typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-					ratedPower: fields.ratedPower,
-					wwhrs: false,//fields.wwhrs,
-				},
-				complete: true,
-			};
+			if (fields.wwhrs) {
+				hotWaterOutletItem = {
+					data: {
+						...commonFields,
+						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
+						ratedPower: fields.ratedPower,
+						wwhrs: true,
+						wwhrsType: fields.wwhrsType,
+						wwhrsProductReference: fields.wwhrsProductReference,
+					},
+					complete: true,
+				};
+			} else {
+				hotWaterOutletItem = {
+					data: {
+						...commonFields,
+						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
+						ratedPower: fields.ratedPower,
+						wwhrs: false,
+					},
+					complete: true,
+				};
+			}
 		} else if (fields.typeOfHotWaterOutlet === "bath") {
 			hotWaterOutletItem = {
 				data: {
@@ -78,6 +108,35 @@ const saveForm = (fields: HotWaterOutletsData) => {
 			
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
+watch(
+	() => model.value?.typeOfHotWaterOutlet,
+	(newType, oldType) => {
+		if (newType && oldType !== newType) {
+			errorMessages.value = [];
+			const preservedId = model.value?.id;
+			const defaultName = getHotWaterOutletDefaultName(newType);
+			model.value = { 
+				typeOfHotWaterOutlet: newType, 
+				id: preservedId,
+				...(defaultName && { name: defaultName }),
+			} as HotWaterOutletsData;
+		}
+	},
+);
+
+watch(
+	() => [model.value?.typeOfHotWaterOutlet, store.domesticHotWaterNew.heatSources.data.length] as const,
+	() => {
+		const heatSources = store.domesticHotWaterNew.heatSources.data;
+		if (heatSources.length === 1 && model.value && model.value.typeOfHotWaterOutlet === "mixedShower") {
+			const heatSourceId = heatSources[0]?.data.id;
+			if ("hotWaterSource" in model.value && heatSourceId) {
+				model.value.hotWaterSource = heatSourceId;
+			}
+		}
+	},
+);
+
 autoSaveElementForm<HotWaterOutletsData>({
 	model,
 	storeData: store.domesticHotWaterNew.hotWaterOutlets,
@@ -88,21 +147,6 @@ autoSaveElementForm<HotWaterOutletsData>({
 	},
 });
 
-// const isProductSelected = () => {
-// 	if (hotWaterOutletData.data.typeOfHotWaterOutlet !== "mixedShower" 
-//         && hotWaterOutletData.data.typeOfHotWaterOutlet !== "electricShower") {
-// 		return false;
-// 	}
-// 	// return hotWaterOutletData?.data.wwhrs.productReference ? true : false;
-// };
-
-const hotWaterOutlets = [
-	["mixedShower", "Mixer shower"],
-	["electricShower", "Electric shower"],
-	["bath", "Bath"],
-	["otherHotWaterOutlet", "Other (basin tap, kitchen sink, etc.)"],
-] as [string, string][];
-
 </script>
 
 <template>
@@ -110,19 +154,20 @@ const hotWaterOutlets = [
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<GovErrorSummary :error-list="errorMessages" test-id="hotWaterOutletErrorSummary"/>
 	<FormKit
 		v-model="model"
 		type="form"
+		validation-visibility="submit"
 		:actions="false"
 		:incomplete-message="false"
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
-		<GovErrorSummary :error-list="errorMessages" test-id="hotWaterOutletErrorSummary"/>
 		<FormKit
 			id="typeOfHotWaterOutlet"
 			name="typeOfHotWaterOutlet"
 			type="govRadios"
-			:options="new Map(hotWaterOutlets)"
+			:options="hotWaterOutletTypes"
 			label="Type of hot water outlet"
 			validation="required"
 		/>
@@ -173,9 +218,36 @@ const hotWaterOutlets = [
 			validation="required|number|min:0|max:500"
 			data-field="HotWaterDemand.Bath.*.size"
 		/>
+		<FormKit
+			v-if="model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'electricShower'"
+			id="wwhrs"
+			name="wwhrs"
+			type="govBoolean"
+			label="Is there a WWHRS installed?"
+		/>
+		<FormKit
+			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'electricShower') && model.wwhrs === true"
+			id="wwhrsType"
+			name="wwhrsType"
+			type="govRadios"
+			:options="wwhrsTypes"
+			label="WWHRS system type"
+			validation="required"
+		/>
+		<FormKit
+			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'electricShower') && model.wwhrs === true && model.wwhrsType"
+			id="selectWwhrsProduct"
+			type="govPcdbProduct"
+			label="Select a WWHRS product"
+			name="wwhrsProductReference"
+			:selected-product-reference="model.wwhrsProductReference"
+			:selected-product-type="model.typeOfHotWaterOutlet"
+			:page-url="route.path || route.fullPath || getUrl('domesticHotWaterNew') + '/hot-water-outlets'"
+			:page-index="index"
+		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
-			<GovButton :href="getUrl('domesticHotWaterNew')" secondary>Save progress</GovButton>
+			<GovButton :href="getUrl('domesticHotWaterNew')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

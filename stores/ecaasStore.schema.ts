@@ -593,20 +593,39 @@ const waterStorageDataZod = z.discriminatedUnion("typeOfWaterStorage", [
 
 export type WaterStorageData = z.infer<typeof waterStorageDataZod>;
 
-const mixedShowerDataZodNew = namedWithId.extend({
+const wwhrsTypeZod = z.enum(["instantaneousSystemA", "instantaneousSystemB", "instantaneousSystemC"]);
+export type WwhrsType = z.infer<typeof wwhrsTypeZod>;
+
+const mixedShowerBaseZod = namedWithId.extend({
 	typeOfHotWaterOutlet: z.literal("mixedShower"),
 	flowRate: z.number().min(8).max(15),
 	hotWaterSource: z.uuidv4(),
-	wwhrs: z.boolean(),
 });
+
+const mixedShowerDataZodNew = z.discriminatedUnion("wwhrs", [
+	mixedShowerBaseZod.extend({ wwhrs: z.literal(false) }),
+	mixedShowerBaseZod.extend({
+		wwhrs: z.literal(true),
+		wwhrsType: wwhrsTypeZod,
+		wwhrsProductReference: z.string().optional(),
+	}),
+]);
 
 export type MixedShowerDataNew = z.infer<typeof mixedShowerDataZodNew>;
 
-const electricShowerDataZodNew = namedWithId.extend({
+const electricShowerBaseZod = namedWithId.extend({
 	typeOfHotWaterOutlet: z.literal("electricShower"),
 	ratedPower: z.number().min(0).max(30),
-	wwhrs: z.boolean(),
 });
+
+const electricShowerDataZodNew = z.discriminatedUnion("wwhrs", [
+	electricShowerBaseZod.extend({ wwhrs: z.literal(false) }),
+	electricShowerBaseZod.extend({
+		wwhrs: z.literal(true),
+		wwhrsType: wwhrsTypeZod,
+		wwhrsProductReference: z.string().optional(),
+	}),
+]);
 
 export type ElectricShowerDataNew = z.infer<typeof electricShowerDataZodNew>;
 
@@ -632,6 +651,12 @@ const hotWaterOutletsDataZod = z.discriminatedUnion("typeOfHotWaterOutlet", [
 ]);
 
 export type HotWaterOutletsData = z.infer<typeof hotWaterOutletsDataZod>;
+
+export type HotWaterOutletType =
+	"mixedShower" |
+	"electricShower" |
+	"bath" |
+	"otherHotWaterOutlet";
 
 const pipeworkDataZod = z.object({
 	name: z.string().trim().min(1),
@@ -978,15 +1003,15 @@ export type HeatInterfaceUnitData = z.infer<typeof _heatInterfaceUnitDataZod>;
 // 		}),
 // 	],
 // );
-							
+
 //export type WetDistributionData = z.infer<typeof wetDistributionDataZod>;
-							
+
 export type SpaceHeatingNew = AssertEachKeyIsPageId<{
 	heatSource: EcaasFormList<HeatSourceData>,
 	heatEmitters: EcaasFormList<HeatEmittingData>
 	heatingControls: EcaasFormList<HeatingControlData>
 }>;
-							
+
 export type HeatPumpType = z.infer<typeof typeOfHeatPump>;
 export type TypeOfBoiler = z.infer<typeof typeOfBoiler>;
 export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;
@@ -1170,7 +1195,7 @@ function makeStandardRadiator<
 		typeOfRadiator: z.literal("standard"),
 		length: z.number(),
 	});
-} 
+}
 
 function makeTowelRadiator<
 	T extends z.ZodRawShape & { typeOfRadiator?: never },
@@ -1197,7 +1222,7 @@ function makeEco1458Item<
 	return base.extend({
 		ecoDesignControllerClass: z.enum(["1", "4", "5", "8"]),
 	});
-} 
+}
 
 function makeVariableFlowRateItem<
 	T extends z.ZodRawShape & { hasVariableFlowRate?: never },

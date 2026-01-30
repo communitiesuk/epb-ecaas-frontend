@@ -55,11 +55,11 @@ describe("hot water outlets", () => {
 			flowRate: 8,
 		},
 	};
-	
+
 	afterEach(() => {
 		store.$reset();
 	});
-	
+
 	const addHeatPumpStoreData = () => {
 		store.$patch({
 			domesticHotWaterNew: {
@@ -77,38 +77,42 @@ describe("hot water outlets", () => {
 			},
 		});
 	};
-	
+
 	const populateValidFormMS = async () => {
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
-		await user.type(screen.getByTestId("name"), "Mixer shower 1");
+		const nameInput = screen.getByTestId<HTMLInputElement>("name");
+		await user.clear(nameInput);
+		await user.type(nameInput, "Mixer shower 1");
 		await user.click(screen.getByTestId("hotWaterSource_" + heatPumpId));
 		await user.type(screen.getByTestId("flowRate"), "10");
-		//WWHRS
 		await user.tab();
 	};
-	
+
 	const populateValidFormES = async () => {
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_electricShower"));
-		await user.type(screen.getByTestId("name"), "Electric shower 1");
+		const nameInput = screen.getByTestId<HTMLInputElement>("name");
+		await user.clear(nameInput);
+		await user.type(nameInput, "Electric shower 1");
 		await user.type(screen.getByTestId("ratedPower"), "5");
-		//WWHRS
 		await user.tab();
 	};
-    
+
 	const populateValidFormBath = async () => {
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_bath"));
-		await user.type(screen.getByTestId("name"), "Bath 1");
+		const nameInput = screen.getByTestId<HTMLInputElement>("name");
+		await user.clear(nameInput);
+		await user.type(nameInput, "Bath 1");
 		await user.type(screen.getByTestId("size"), "150");
 		await user.tab();
 	};
-	
+
 	const populateValidFormOHWO = async () => {
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_otherHotWaterOutlet"));
 		await user.type(screen.getByTestId("name"), "Other hot water outlet 1");
 		await user.type(screen.getByTestId("flowRate"), "8");
 		await user.tab();
 	};
-	
+
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(HotWaterOutlets, {
 			route: {
@@ -116,45 +120,45 @@ describe("hot water outlets", () => {
 			},
 		});
 
-		//shared properties
-        
+
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("typeOfHotWaterOutlet_error"))).toBeDefined();
-        
-		//mixer shower specific
+
+
 
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
+		await clearName(user);
 		await user.click(screen.getByTestId("saveAndComplete"));
-        
+
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("hotWaterSource_error"))).toBeDefined();
 		expect((await screen.findByTestId("flowRate_error"))).toBeDefined();
-        
-		//electric shower specific
-        
+
+
+
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_electricShower"));
 		await user.click(screen.getByTestId("saveAndComplete"));
-        
-		expect((await screen.findByTestId("name_error"))).toBeDefined();
+		await clearName(user);
+		await user.click(screen.getByTestId("saveAndComplete"));
 		expect((await screen.findByTestId("ratedPower_error"))).toBeDefined();
-        
-		//bath specific
-        
+		expect((await screen.findByTestId("name_error"))).toBeDefined();
+
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_bath"));
 		await user.click(screen.getByTestId("saveAndComplete"));
-        
-		expect((await screen.findByTestId("name_error"))).toBeDefined();
+		await clearName(user);
+		await user.click(screen.getByTestId("saveAndComplete"));
+
 		expect((await screen.findByTestId("size_error"))).toBeDefined();
-        
-		//other hot water outlet specific
-        
+
+
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_otherHotWaterOutlet"));
 		await user.click(screen.getByTestId("saveAndComplete"));
-        
+
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("flowRate_error"))).toBeDefined();
 	});
+
 
 	//awaiting pcdb merge
 	// test("navigate to pcdb product select page for wwhrs when choose a product button is clicked", async () => {
@@ -165,29 +169,133 @@ describe("hot water outlets", () => {
 	// 	});
 
 	// 	await user.click(screen.getByTestId("typeOfHotWaterOutlet_electricShower"));
-		
+
 	// 	const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
 	// 	expect(chooseProductButton).toBeDefined();
 	// 	expect(chooseProductButton.pathname).toContain("/domestic-hot-water-new/water-storage/0/air-source");
 	// });
 
+	it("navigates to domestic hot water on clicking Save progress", async () => {
+		await renderSuspended(HotWaterOutlets, {
+			route: {
+				params: { "hotWaterOutlet": "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
+		const saveProgressButton = screen.getByTestId<HTMLAnchorElement>("saveProgress");
+
+		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water-new");
+	});
+
+	test("hot water outlet is updated when data with id exists in store", async () => {
+		store.$patch({
+			domesticHotWaterNew: {
+				hotWaterOutlets: {
+					data: [{ data: { ...mixerShower.data }, complete: true }],
+				},
+			},
+		});
+
+		await renderSuspended(HotWaterOutlets, {
+			route: {
+				params: { "hotWaterOutlet": "0" },
+			},
+		});
+
+		await user.clear(screen.getByTestId("name"));
+		await user.type(screen.getByTestId("name"), "Updated mixer");
+		await user.tab();
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const { data } = store.domesticHotWaterNew.hotWaterOutlets;
+
+		expect(data[0]!.data.id).toBe(mixerShower.data.id);
+		expect(data[0]!.data.name).toBe("Updated mixer");
+	});
+
+	test("error summary is removed from display when type of hot water outlet is updated", async () => {
+		await renderSuspended(HotWaterOutlets, {
+			route: {
+				params: { "hotWaterOutlet": "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+		expect(await screen.findByTestId("hotWaterOutletErrorSummary")).toBeDefined();
+
+		await user.click(screen.getByTestId("typeOfHotWaterOutlet_electricShower"));
+		expect(screen.queryByTestId("hotWaterOutletErrorSummary")).toBeNull();
+	});
+
+	test("displays list of heat sources when mixer shower is selected from domestic hot water sources", async () => {
+		addHeatPumpStoreData();
+		await renderSuspended(HotWaterOutlets, {
+			route: {
+				params: { "hotWaterOutlet": "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
+
+		expect(screen.getByTestId("hotWaterSource_" + heatPumpId)).toBeDefined();
+	});
+
+	test("first heat source is autoselected when only one heat source exists", async () => {
+		addHeatPumpStoreData();
+		await renderSuspended(HotWaterOutlets, {
+			route: {
+				params: { "hotWaterOutlet": "create" },
+			},
+		});
+		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
+		await user.tab();
+
+		const heatSourceSelect = screen.getByTestId<HTMLInputElement>("hotWaterSource_" + heatPumpId);
+		expect(heatSourceSelect.hasAttribute("checked")).toBe(true);
+	});
+
+
+	test("navigate to water storage product selection for wwhrs when choose a product button is clicked", async () => {
+		await renderSuspended(HotWaterOutlets, {
+			route: {
+				params: { "hotWaterOutlet": "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfHotWaterOutlet_electricShower"));
+
+		// toggle WWHRS option if present
+		const wwhrsYes = screen.queryByTestId("wwhrs_yes");
+		if (wwhrsYes) {
+			await user.click(wwhrsYes);
+		}
+
+		// select WWHRS type
+		await user.click(screen.getByTestId("wwhrsType_instantaneousSystemA"));
+
+		const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
+		expect(chooseProductButton).toBeDefined();
+		expect(chooseProductButton.pathname).toBe("/0/electric-shower");
+	});
+
 	[
-		{ 
+		{
 			type: "mixedShower",
 			populateValidForm: populateValidFormMS,
 			hotWaterOutlet: mixerShower,
 		},
-		{ 
+		{
 			type: "electricShower",
 			populateValidForm: populateValidFormES,
 			hotWaterOutlet: electricShower,
 		},
-		{ 
+		{
 			type: "bath",
 			populateValidForm: populateValidFormBath,
 			hotWaterOutlet: bath,
 		},
-		{ 
+		{
 			type: "otherHotWaterOutlet",
 			populateValidForm: populateValidFormOHWO,
 			hotWaterOutlet: otherHotWaterOutlet,
@@ -209,11 +317,11 @@ describe("hot water outlets", () => {
 				});
 
 				await populateValidForm();
-		
+
 				await user.click(screen.getByTestId("saveAndComplete"));
 
 				const { data } = store.domesticHotWaterNew.hotWaterOutlets;
-		
+
 				expect(data[0]?.data).toEqual(hotWaterOutlet.data);
 				expect(data[0]?.complete).toEqual(true);
 			});
@@ -227,14 +335,14 @@ describe("hot water outlets", () => {
 					},
 				});
 
-				
+
 				addHeatPumpStoreData();
 				await renderSuspended(HotWaterOutlets, {
 					route: {
 						params: { "hotWaterOutlet": "0" },
 					},
 				});
-				
+
 				expect(
 					(await screen.findByTestId<HTMLInputElement>(`typeOfHotWaterOutlet_${type}`)).checked,
 				).toBe(true);
@@ -272,3 +380,11 @@ describe("hot water outlets", () => {
 		});
 	});
 });
+
+async function clearName(user: ReturnType<typeof userEvent.setup>) {
+	const nameInput = screen.queryByTestId<HTMLInputElement>("name");
+	if (nameInput) {
+		await user.clear(nameInput);
+	}
+	return nameInput;
+}
