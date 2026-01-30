@@ -37,7 +37,7 @@ const selectProduct = (reference: string) => {
 	<GovProductsTable
 		:products="pagination.getData()"
 		:total-pages="pagination.totalPages"
-		:on-select-product="selectProduct" />
+		:on-select-product="p => selectProduct(p.id)" />
 	<GovButton secondary :href="`/space-heating/heat-emitting/${index}`" test-id="backToHeatEmittersButton">
 		Back to heat emitters
 	</GovButton>

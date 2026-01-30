@@ -96,6 +96,8 @@ const getProductsByTechnologyType = async <U extends DisplayTechnologyProducts>(
 			modelName: x.modelName as string,
 			modelQualifier: x.modelQualifier as string,
 			technologyType: x.technologyType as TechnologyType,
+			backupCtrlType: x.backupCtrlType as string,
+			powerMaxBackup: x.powerMaxBackup as number,
 		};
 
 		return product;

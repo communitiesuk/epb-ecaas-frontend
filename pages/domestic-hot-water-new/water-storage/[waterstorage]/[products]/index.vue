@@ -32,7 +32,7 @@ const selectProduct = (reference: string) => {
 	<GovProductsTable
 		:products="pagination.getData() ?? ['none']"
 		:total-pages="pagination.totalPages"
-		:on-select-product="selectProduct"
+		:on-select-product="p => selectProduct(p.id)"
 	/>
 	<GovButton
 		secondary

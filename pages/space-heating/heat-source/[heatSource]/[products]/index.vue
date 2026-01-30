@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { page } from "~/data/pages/pages";
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import { productTypeMap, type PcdbProduct } from "~/stores/ecaasStore.schema";
 
 definePageMeta({ layout: false });
@@ -15,7 +16,7 @@ const { data: { value } } = await useFetch("/api/products", {
 
 const { productData, pagination } = searchData(value?.data ?? []);
 
-const selectProduct = (reference: string) => {
+const selectProduct = (product: DisplayProduct) => {
 	store.$patch((state) => {
 
 		const item = state.spaceHeating.heatSource.data[index];
@@ -27,7 +28,12 @@ const selectProduct = (reference: string) => {
 				return;
 			}
 
-			(item.data as PcdbProduct).productReference = reference;
+			if (data.typeOfHeatSource === "heatPump") {
+				data.backupCtrlType = product.backupCtrlType;
+				data.powerMaxBackup = product.powerMaxBackup;
+			}
+
+			(item.data as PcdbProduct).productReference = product.id.toString();
 		}
 	});
 

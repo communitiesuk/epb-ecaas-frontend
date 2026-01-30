@@ -4,7 +4,7 @@ import { heatPumpTypes } from "../utils/display";
 const route = useRoute();
 const store = useEcaasStore();
 
-defineProps<{
+const { model } = defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatPump" }>;
 	index: number;
 }>();
@@ -12,6 +12,7 @@ defineProps<{
 const heatSourceStoreData = store.spaceHeating.heatSource.data;
 const emit = defineEmits(["update-heat-pump-model"]);
 
+const requireBoiler = model.productReference && (model.backupCtrlType === "TopUp" || model.backupCtrlType === "Substitute") && !model.powerMaxBackup;
 </script>
 
 <template>
@@ -92,4 +93,5 @@ const emit = defineEmits(["update-heat-pump-model"]);
 		:selected-product-type="model.typeOfHeatPump"
 		:page-url="route.fullPath"
 		:page-index="index" />
+	<p v-if="requireBoiler">Boiler required</p>
 </template>

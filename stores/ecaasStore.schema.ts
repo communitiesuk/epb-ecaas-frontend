@@ -1010,6 +1010,8 @@ export type PcdbProduct = z.infer<typeof pcdbProduct>;
 const heatPumpBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatPump"),
 	typeOfHeatPump,
+	backupCtrlType: z.optional(z.string()),
+	powerMaxBackup: z.optional(z.number()),
 });
 
 const boilerBase = pcdbProduct.extend({
