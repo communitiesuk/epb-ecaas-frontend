@@ -49,7 +49,6 @@ describe("Domestic hot water summary", () => {
 			productReference: "SMART-HOT-WATER-CYLINDER",
 			heatSource: heatPumpId,
 			heaterPosition: 0.3,
-			thermostatPosition: 0.4,
 		};
 
 		const addHotWaterCylinderData = () => {
@@ -174,7 +173,6 @@ describe("Domestic hot water summary", () => {
 				"Product reference": "SMART-HOT-WATER-CYLINDER",
 				"Heat source": "Heat pump",
 				"Heater position in the cylinder": "0.3",
-				"Thermostat position in the cylinder": "0.4",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {

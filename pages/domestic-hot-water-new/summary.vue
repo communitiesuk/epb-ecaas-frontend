@@ -45,7 +45,6 @@ const smartHotWaterCylinderSummary: SummarySection = {
 			"Product reference": "productReference" in data ? show(data.productReference) : emptyValueRendering,
 			"Heat source": show(heatSources.find(x => x.data.id === data.heatSource)?.data.name),
 			"Heater position in the cylinder": "heaterPosition" in data ? show(data.heaterPosition) : emptyValueRendering,
-			"Thermostat position in the cylinder": "thermostatPosition" in data ? show(data.thermostatPosition) : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("domesticHotWaterNew"),
