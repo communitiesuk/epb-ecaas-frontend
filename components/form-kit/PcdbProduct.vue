@@ -19,6 +19,11 @@ const {
 	},
 } = props.context;
 
+async function fetchProduct(reference: string) {
+	const { data } = await useFetch(`/api/products/${reference}`);
+	productData.value = data.value;
+}
+
 function appendItemIndexToUrl(url: string, index: number) {
 	const lastUrlSegment = new RegExp("/[^/]*$");
 	return url.replace(lastUrlSegment, `/${index}`);
@@ -30,13 +35,21 @@ const productsPageUrl = ref(appendItemIndexToUrl(pageUrl, index) + "/" + camelTo
 const productData = ref<DisplayProduct | undefined | null>();
 
 if (selectedProduct.value) {
-	const { data } = await useFetch(`/api/products/${selectedProductReference}`);
-	productData.value = data.value;
+	await fetchProduct(selectedProductReference);
 }
 
-watch(props.context, ({ attrs: { "selected-product-type": newProductType } }) => {
+watch(props.context, async ({ attrs: {
+	"selected-product-reference": newProductReference,
+	"selected-product-type": newProductType,
+} }) => {
 	productsPageUrl.value = appendItemIndexToUrl(pageUrl, index) + "/" + camelToKebabCase(newProductType ?? "");
-	selectedProduct.value = undefined;
+	selectedProduct.value = newProductReference;
+
+	if (newProductReference) {
+		await fetchProduct(newProductReference);
+		return;
+	}
+
 	productData.value = undefined;
 });
 </script>
