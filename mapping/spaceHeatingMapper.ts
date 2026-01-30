@@ -176,7 +176,7 @@ export function mapUnderfloorHeating(state: ResolvedState): Record<string, Schem
 				HeatSource: { name: getHeatSourceNameForEmitter(state, heating) },
 				ecodesign_controller: {
 					ecodesign_control_class: parseInt(heating.ecoDesignControllerClass),
-					min_flow_temp: heating.minFlowTemp,
+					// min_flow_temp: heating.minFlowTemp,
 					min_outdoor_temp: minOutdoorTemp,
 					max_outdoor_temp: maxOutdoorTemp,
 				} as SchemaEcoDesignControllerNoWeatherCompensator,
@@ -220,7 +220,7 @@ export function mapFanCoils(state: ResolvedState): Record<string, SchemaWetDistr
 				HeatSource: { name: getHeatSourceNameForEmitter(state, fancoil) },
 				ecodesign_controller: {
 					ecodesign_control_class: parseInt(fancoil.ecoDesignControllerClass),
-					min_flow_temp: fancoil.minFlowTemp,
+					// min_flow_temp: fancoil.minFlowTemp,
 					min_outdoor_temp: minOutdoorTemp,
 					max_outdoor_temp: maxOutdoorTemp,
 				} as SchemaEcoDesignControllerNoWeatherCompensator,

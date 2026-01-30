@@ -1159,6 +1159,7 @@ const radiatorBase = namedWithId.extend({
 });
 
 export type EcoControlClassesWithExtraOptions = "2" | "3" | "6" | "7";
+export const ecoClasses: EcoControlClassesWithExtraOptions[] = ["2", "3", "6", "7"];
 
 // the monstrosity begins - I apologise (Jasper)
 
@@ -1179,7 +1180,7 @@ function makeTowelRadiator<
 	});
 }
 
-function makeEco2367Radiator<
+function makeEco2367Item<
 	T extends z.ZodRawShape & { ecoDesignControllerClass?: never },
 >(base: z.ZodObject<T>) {
 	return base.extend({
@@ -1190,7 +1191,7 @@ function makeEco2367Radiator<
 	});
 }
 
-function makeEco1458Radiator<
+function makeEco1458Item<
 	T extends z.ZodRawShape & { ecoDesignControllerClass?: never },
 >(base: z.ZodObject<T>) {
 	return base.extend({
@@ -1198,7 +1199,7 @@ function makeEco1458Radiator<
 	});
 } 
 
-function makeVariableFlowRateRadiator<
+function makeVariableFlowRateItem<
 	T extends z.ZodRawShape & { hasVariableFlowRate?: never },
 >(base: z.ZodObject<T>) {
 	return base.extend({
@@ -1208,7 +1209,7 @@ function makeVariableFlowRateRadiator<
 	});
 }
 
-function makeFixedFlowRateRadiator<
+function makeFixedFlowRateItem<
 	T extends z.ZodRawShape & { hasVariableFlowRate?: never },
 >(base: z.ZodObject<T>) {
 	return base.extend({
@@ -1220,19 +1221,19 @@ function makeFixedFlowRateRadiator<
 const standardRadiator = makeStandardRadiator(radiatorBase);
 const towelRadiator = makeTowelRadiator(radiatorBase);
 
-const standardRadiatorEco2367 = makeEco2367Radiator(standardRadiator);
-const towelRadiatorEco2367 = makeEco2367Radiator(towelRadiator);
-const standardRadiatorEco1458 = makeEco1458Radiator(standardRadiator);
-const towelRadiatorEco1458 = makeEco1458Radiator(towelRadiator);
+const standardRadiatorEco2367 = makeEco2367Item(standardRadiator);
+const towelRadiatorEco2367 = makeEco2367Item(towelRadiator);
+const standardRadiatorEco1458 = makeEco1458Item(standardRadiator);
+const towelRadiatorEco1458 = makeEco1458Item(towelRadiator);
 
-const variableStandardRadiatorEco2367 = makeVariableFlowRateRadiator(standardRadiatorEco2367);
-const variableTowelRadiatorEco2367 = makeVariableFlowRateRadiator(towelRadiatorEco2367);
-const variableStandardRadiatorEco1458 = makeVariableFlowRateRadiator(standardRadiatorEco1458);
-const variableTowelRadiatorEco1458 = makeVariableFlowRateRadiator(towelRadiatorEco1458);
-const fixedStandardRadiatorEco2367 = makeFixedFlowRateRadiator(standardRadiatorEco2367);
-const fixedTowelRadiatorEco2367 = makeFixedFlowRateRadiator(towelRadiatorEco2367);
-const fixedStandardRadiatorEco1458 = makeFixedFlowRateRadiator(standardRadiatorEco1458);
-const fixedTowelRadiatorEco1458 = makeFixedFlowRateRadiator(towelRadiatorEco1458);
+const variableStandardRadiatorEco2367 = makeVariableFlowRateItem(standardRadiatorEco2367);
+const variableTowelRadiatorEco2367 = makeVariableFlowRateItem(towelRadiatorEco2367);
+const variableStandardRadiatorEco1458 = makeVariableFlowRateItem(standardRadiatorEco1458);
+const variableTowelRadiatorEco1458 = makeVariableFlowRateItem(towelRadiatorEco1458);
+const fixedStandardRadiatorEco2367 = makeFixedFlowRateItem(standardRadiatorEco2367);
+const fixedTowelRadiatorEco2367 = makeFixedFlowRateItem(towelRadiatorEco2367);
+const fixedStandardRadiatorEco1458 = makeFixedFlowRateItem(standardRadiatorEco1458);
+const fixedTowelRadiatorEco1458 = makeFixedFlowRateItem(towelRadiatorEco1458);
 
 const radiatorSchema = z.discriminatedUnion("hasVariableFlowRate", [
 	z.discriminatedUnion("ecoDesignControllerClass", [
@@ -1263,28 +1264,59 @@ const underfloorHeatingBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("underfloorHeating"),
 	productReference: z.string(),
 	heatSource: z.string(),
-	ecoDesignControllerClass: z.string(),
 	designFlowTemp: z.number(),
-	minFlowTemp: z.number(),
 	designTempDiffAcrossEmitters: z.number(),
 	areaOfUnderfloorHeating: z.number(),
 });
+const eco2367UnderfloorHeating =
+	makeEco2367Item(underfloorHeatingBase);
 
-const underFloorHeatingSchema = withVariableFlowRate(underfloorHeatingBase);
+const eco1458UnderfloorHeating =
+	makeEco1458Item(underfloorHeatingBase);
+
+
+const variableEco2367UnderfloorHeating = withVariableFlowRate(eco2367UnderfloorHeating);
+const variableEco1458UnderfloorHeating = withVariableFlowRate(eco1458UnderfloorHeating);
+
+export const underFloorHeatingSchema = z.discriminatedUnion("hasVariableFlowRate", [
+	z.discriminatedUnion(
+		"ecoDesignControllerClass",
+		[
+			variableEco2367UnderfloorHeating,
+		]),
+	z.discriminatedUnion(
+		"ecoDesignControllerClass",
+		[variableEco1458UnderfloorHeating ]),
+]);
 
 const fanCoilBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("fanCoil"),
 	productReference: z.string(),
 	heatSource: z.string(),
-	ecoDesignControllerClass: z.string(),
 	designFlowTemp: z.number(),
-	minFlowTemp: z.number(),
 	designTempDiffAcrossEmitters: z.number(),
 	numOfFanCoils: z.number(),
 });
 
-const fanCoilSchema = withVariableFlowRate(fanCoilBase);
+const eco2367FanCoil = makeEco2367Item(fanCoilBase);
+const eco1458FanCoil = makeEco1458Item(fanCoilBase);
 
+const variableEco2367FanCoil = withVariableFlowRate(eco2367FanCoil);
+const variableEco1458FanCoil = withVariableFlowRate(eco1458FanCoil);
+
+export const fanCoilSchema = z.discriminatedUnion(
+	"hasVariableFlowRate",
+	[
+		z.discriminatedUnion(
+			"ecoDesignControllerClass",
+			[variableEco2367FanCoil],
+		),
+		z.discriminatedUnion(
+			"ecoDesignControllerClass",
+			[variableEco1458FanCoil],
+		),
+	],
+);
 const warmAirHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("warmAirHeater"),
 	designTempDiffAcrossEmitters: z.number(),

@@ -206,7 +206,6 @@ const expectedHouseInput: FhsInputSchema = {
 			"ecodesign_controller": {
 				"ecodesign_control_class": 1,
 				"max_outdoor_temp": 15,
-				"min_flow_temp": 30,
 				"min_outdoor_temp": 0,
 			},
 			"emitters": [
@@ -601,7 +600,6 @@ const expectedFlatInput: FhsInputSchema = {
 			"ecodesign_controller": {
 				"ecodesign_control_class": 1,
 				"max_outdoor_temp": 15,
-				"min_flow_temp": 30,
 				"min_outdoor_temp": 0,
 			},
 			"emitters": [
@@ -1151,7 +1149,6 @@ describe("FHS input mapper", () => {
 						heatSource: "HP-1",
 						ecoDesignControllerClass: "1",
 						designFlowTemp: 40,
-						minFlowTemp: 30,
 						designTempDiffAcrossEmitters: 5,
 						hasVariableFlowRate: false,
 						designFlowRate: 200,
@@ -1886,7 +1883,6 @@ describe("FHS input mapper", () => {
 						heatSource: "HP-1",
 						ecoDesignControllerClass: "1",
 						designFlowTemp: 40,
-						minFlowTemp: 30,
 						designTempDiffAcrossEmitters: 5,
 						hasVariableFlowRate: false,
 						designFlowRate: 200,
