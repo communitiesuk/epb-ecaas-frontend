@@ -25,7 +25,7 @@ const tableData: Record<string, string> =
 	"Power source circ pump": data?.powerSourceCircPump?.toString() ?? "-",
 	"Power heating circ pump": data?.powerHeatingCircPump?.toString() ?? "-",
 	"Power crankcase heater": data?.powerCrankcaseHeater !== undefined ? `${data.powerCrankcaseHeater} kW` : "-",
-	"Power max backup": data?.powerMaximumBackup !== undefined ? `${data.powerMaximumBackup} kW` : "-",
+	"Power max backup": data?.powerMaxBackup !== undefined ? `${data.powerMaxBackup} kW` : "-",
 };
 </script>
 
