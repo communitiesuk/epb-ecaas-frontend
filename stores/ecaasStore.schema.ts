@@ -582,6 +582,7 @@ const smartHotWaterTankDataZodNew = namedWithId.extend({
 	productReference: z.string(),
 	heatSource: z.string(),
 	heaterPosition: z.number().min(0).max(1),
+	thermostatPosition: z.number().min(0).max(1),
 });
 
 export type SmartHotWaterTankDataNew = z.infer<typeof smartHotWaterTankDataZodNew>;

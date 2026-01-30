@@ -2,144 +2,58 @@
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl, type MixedShowerDataNew } from "#imports";
 
-const title = "Domestic hot water";
+const title = "Domestic hot water summary";
 const store = useEcaasStore();
 
-const heatPumps = store.spaceHeating.heatSource.data.filter(x => x.data?.typeOfHeatSource === "heatPump");
-const heatGenerationData = [
-	heatPumps,
-	// boiler.data,
-	// heatBattery.data,
-	// heatNetwork.data,
-	// heatInterfaceUnit.data
-].flat().filter(x => !!x.data).map(x => ({ id: x.data.id, name: x.data.name }));
+const heatSources = store.spaceHeating.heatSource.data;
+const waterStorage = store.domesticHotWaterNew.waterStorage.data;
+const hotWaterCylinders = waterStorage.filter(x => x.data.typeOfWaterStorage === "hotWaterCylinder");
 
-const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data;
+const emptyWaterStorageSummary: SummarySection = {
+	id: "waterStorageSummary",
+	label: "Water storage",
+	data: [],
+	editUrl: getUrl("waterStorageCreate"),
+};
+	
 const hotWaterCylinderSummary: SummarySection = {
 	id: "hotWaterCylinder",
 	label: "Hot water cylinders",
-	data: hotWaterCylinderData.map(d => {
+	data: hotWaterCylinders.map(({ data }) => {
 		return {
-			"Name": show(d.data.name),
-			"Heat source": show(heatGenerationData.find(x => x.id === d.data.heatSource)?.name),
-			"Storage cylinder volume": dim(d.data.storageCylinderVolume, "litres"),
-			"Daily energy loss": dim(d.data.dailyEnergyLoss, "kilowatt-hour"),
+			"Name": show(data.name),
+			"Storage cylinder volume": "storageCylinderVolume" in data ? dim(data.storageCylinderVolume, "litres") : emptyValueRendering,
+			"Initial temperature": "initialTemperature" in data ? dim(data.initialTemperature, "celsius") : emptyValueRendering,
+			"Daily energy loss": "dailyEnergyLoss" in data ? dim(data.dailyEnergyLoss, "kilowatt-hour") : emptyValueRendering,
+			"Heat source": show(heatSources.find(x => x.data.id === data.heatSource)?.data.name),
+			"Area of heat exchanger installed": "areaOfHeatExchanger" in data ? dim(data.areaOfHeatExchanger, "metres square") : emptyValueRendering,
+			"Heater position in the cylinder": "heaterPosition" in data ? show(data.heaterPosition) : emptyValueRendering,
+			"Thermostat position in the cylinder": "thermostatPosition" in data ? show(data.thermostatPosition) : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("waterHeating"),
+	editUrl: getUrl("domesticHotWaterNew"),
 };
 
-// const immersionHeaterData = store.domesticHotWater.waterHeating.immersionHeater.data;
-// const immersionHeaterSummary: SummarySection = {
-// 	id: "immersionHeater",
-// 	label: "Immersion heaters",
-// 	data: immersionHeaterData.map(d => {
-// 		return {
-// 			"Name": show(d.data.name),
-// 			"Rated power": dim(d.data.ratedPower, "kilowatt"),
-// 			"Heater position": displayHeaterPosition(d.data.heaterPosition),
-// 			"Thermostat position": displayHeaterPosition(d.data.thermostatPosition),
-// 		};
-// 	}),
-// 	editUrl: getUrl("waterHeating"),
-// };
+const smartHotWaterCylinders = waterStorage.filter(x => x.data.typeOfWaterStorage === "smartHotWaterTank");
 
-// const solarThermalData = store.domesticHotWater.waterHeating.solarThermal.data;
-// const solarThermalSummary: SummarySection = {
-// 	id: "solarThermal",
-// 	label: "Solar thermal",
-// 	data: solarThermalData.map(d => {
-// 		return {
-// 			"Name": show(d.data.name),
-// 		};
-// 	}),
-// 	editUrl: getUrl("waterHeating"),
-// };
+const smartHotWaterCylinderSummary: SummarySection = {
+	id: "smartHotWaterCylinder",
+	label: "Smart hot water cylinders",
+	data: smartHotWaterCylinders.map(({ data }) => {
+		return {
+			"Name": show(data.name),
+			"Product reference": "productReference" in data ? show(data.productReference) : emptyValueRendering,
+			"Heat source": show(heatSources.find(x => x.data.id === data.heatSource)?.data.name),
+			"Heater position in the cylinder": "heaterPosition" in data ? show(data.heaterPosition) : emptyValueRendering,
+			"Thermostat position in the cylinder": "thermostatPosition" in data ? show(data.thermostatPosition) : emptyValueRendering,
+		};
+	}),
+	editUrl: getUrl("domesticHotWaterNew"),
+};
 
-// const pointOfUseData = store.domesticHotWater.waterHeating.pointOfUse.data;
-// const pointOfUseSummary: SummarySection = {
-// 	id: "pointOfUse",
-// 	label: "Point of use",
-// 	data: pointOfUseData.map(d => {
-// 		return {
-// 			"Name": show(d.data.name),
-// 			"Setpoint temperature": dim(d.data.setpointTemperature, "celsius"),
-// 			"Heater efficiency": show(d.data.heaterEfficiency),
-// 		};
-// 	}),
-// 	editUrl: getUrl("waterHeating"),
-// };
-
-// const heatPumpData = store.domesticHotWater.waterHeating.heatPump.data;
-// const heatPumpSummary: SummarySection = {
-// 	id: "heatPump",
-// 	label: "Heat pumps",
-// 	data: heatPumpData.map(d => {
-// 		return {
-// 			"Name": show(d.data.name),
-// 		};
-// 	}),
-// 	editUrl: getUrl("waterHeating"),
-// };
-
-// const combiBoilerData = store.domesticHotWater.waterHeating.combiBoiler.data;
-// const combiBoilerSummary: SummarySection = {
-// 	id: "combiBoiler",
-// 	label: "Combi boilers",
-// 	data: combiBoilerData.map(d => {
-// 		return {
-// 			"Name": show(d.data.name),
-// 		};
-// 	}),
-// 	editUrl: getUrl("waterHeating"),
-// };
-
-// const heatBatteryData = store.domesticHotWater.waterHeating.heatBattery.data;
-// const heatBatterySummary: SummarySection = {
-// 	id: "heatBattery",
-// 	label: "Heat batteries",
-// 	data: heatBatteryData.map(d => {
-// 		return {
-// 			"Name": show(d.data.name),
-// 		};
-// 	}),
-// 	editUrl: getUrl("waterHeating"),
-// };
-
-// const smartHotWaterTankData = store.domesticHotWater.waterHeating.smartHotWaterTank.data;
-// const smartHotWaterTankSummary: SummarySection = {
-// 	id: "smartHotWaterTank",
-// 	label: "Smart hot water tanks",
-// 	data: smartHotWaterTankData.map(d => {
-// 		return {
-// 			"Name": show(d.data.name),
-// 		};
-// 	}),
-// 	editUrl: getUrl("waterHeating"),
-// };
-
-// const heatInterfaceUnitData = store.domesticHotWater.waterHeating.heatInterfaceUnit.data;
-// const heatInterfaceUnitSummary: SummarySection = {
-// 	id: "heatInterfaceUnit",
-// 	label: "Heat interface units",
-// 	data: heatInterfaceUnitData.map(d => {
-// 		return {
-// 			"Name": show(d.data.name),
-// 		};
-// 	}),
-// 	editUrl: getUrl("waterHeating"),
-// };
-
-const waterHeatingSummarySections: SummarySection[] = [
+const waterStorageSummarySections: SummarySection[] = [
 	hotWaterCylinderSummary,
-	// immersionHeaterSummary,
-	// solarThermalSummary,
-	// pointOfUseSummary,
-	// heatPumpSummary,
-	// combiBoilerSummary,
-	// heatBatterySummary,
-	// smartHotWaterTankSummary,
-	// heatInterfaceUnitSummary,
+	smartHotWaterCylinderSummary,
 ];
 
 const hotWaterOutletsAll = store.domesticHotWaterNew.hotWaterOutlets.data;
@@ -236,6 +150,12 @@ const pipeworkSummarySections: SummarySection[] = [
 	pipeworkSummary,
 ];
 
+function getNonEmptySections(summarySections: SummarySection[]) {
+	return summarySections.filter(x => Array.isArray(x.data) && x.data.length > 0);
+}
+
+const populatedWaterStorageSections = getNonEmptySections(waterStorageSummarySections);
+
 </script>
 
 <template>
@@ -243,32 +163,22 @@ const pipeworkSummarySections: SummarySection[] = [
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<!-- <GovTabs v-slot="tabProps" :items="getTabItems(waterHeatingSummarySections)">
-		<TabPanel id="waterHeating" :selected="!tabProps.currentItem">
-			<h2 class="govuk-heading-m">No water heating added</h2>
-			<NuxtLink class="govuk-link" :to="getUrl('waterHeating')">
-				Add water heating
-			</NuxtLink>
-		</TabPanel>
-		<SummaryTab :summary="immersionHeaterSummary" :selected="tabProps.currentItem?.id === 'immersionHeater'" />
-		<SummaryTab :summary="solarThermalSummary" :selected="tabProps.currentItem?.id === 'solarThermal'" />
-		<SummaryTab :summary="pointOfUseSummary" :selected="tabProps.currentItem?.id === 'pointOfUse'" />
-		<SummaryTab :summary="heatPumpSummary" :selected="tabProps.currentItem?.id === 'heatPump'" />
-		<SummaryTab :summary="combiBoilerSummary" :selected="tabProps.currentItem?.id === 'combiBoiler'" />
-		<SummaryTab :summary="heatBatterySummary" :selected="tabProps.currentItem?.id === 'heatBattery'" />
-		<SummaryTab :summary="smartHotWaterTankSummary" :selected="tabProps.currentItem?.id === 'smartHotWaterTank'" />
-		<SummaryTab :summary="heatInterfaceUnitSummary" :selected="tabProps.currentItem?.id === 'heatInterfaceUnit'" />
-	</GovTabs> -->
-	<GovTabs v-slot="tabProps" :items="getTabItems(waterHeatingSummarySections)">
-		<SummaryTab :summary="hotWaterCylinderSummary" :selected="tabProps.currentItem?.id === 'hotWaterCylinder'">
-			<template #empty>
-				<h2 class="govuk-heading-m">No hot water cylinders added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('waterHeating')"> 
-					Add hot water cylinder
-				</NuxtLink>
-			</template>
-		</SummaryTab>
+	<GovTabs v-slot="tabProps" :items="getTabItems(populatedWaterStorageSections)">
+		<template v-if="populatedWaterStorageSections.length === 0">
+			<SummaryTab :summary="emptyWaterStorageSummary" :selected="tabProps.currentTab === 0">
+				<template #empty>
+					<h2 class="govuk-heading-m">No water storage added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('waterStorage')">
+						Add water storage
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
+		<template v-for="section, i of populatedWaterStorageSections" :key="i">
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i"/>
+		</template>
 	</GovTabs>
+
 	<GovTabs v-slot="tabProps" :items="getTabItems(hotWaterOutletsSummarySections)">
 		<SummaryTab :summary="mixedShowerSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>

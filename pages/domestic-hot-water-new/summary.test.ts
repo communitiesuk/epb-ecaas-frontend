@@ -6,6 +6,8 @@ import { metre, millimetre } from "~/utils/units/length";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
 import { litrePerHour, litrePerMinute } from "~/utils/units/flowRate";
 import { kilowatt, kilowattHour } from "~/utils/units/power";
+import { metresSquare } from "~/utils/units/area";
+import { degrees } from "~/utils/units/angle";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -19,44 +21,42 @@ describe("Domestic hot water summary", () => {
 		store.$reset();
 	});
 
-	describe("water heating", () => {
+	it("displays the correct title", async () => {
+		await renderSuspended(Summary);
+		expect(screen.getByRole("heading", { name: "Domestic hot water summary" }));
+	});
+
+	describe("water storage", () => {
 		const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
 		const hotWaterCylinder: HotWaterCylinderDataNew = {
 			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
-			name: "Hot water cylinder 1",
-			heatSource: heatPumpId,
-			storageCylinderVolume: 5,
-			dailyEnergyLoss: 1,
 			typeOfWaterStorage: "hotWaterCylinder",
+			name: "Hot water cylinder",
+			storageCylinderVolume: 5,
 			initialTemperature: 60,
+			dailyEnergyLoss: 1,
+			heatSource: heatPumpId,
 			areaOfHeatExchanger: 2.5,
 			heaterPosition: 0.8,
 			thermostatPosition: 0.5,
 		};
 
-		const _immersionHeater: ImmersionHeaterData = {
-			name: "Immersion heater",
-			ratedPower: 10,
-			heaterPosition: "top",
-			thermostatPosition: "top",
-		};
-
-		const _pointOfUse: PointOfUseData = {
-			name: "Point of use",
-			setpointTemperature: 25,
-			heaterEfficiency: 0.5,
+		const smartHotWaterCylinder: SmartHotWaterTankDataNew = {
+			id: "c84528bb-f805-4f1e-95d3-2bd17384abcd",
+			typeOfWaterStorage: "smartHotWaterTank",
+			name: "Smart hot water cylinder",	
+			productReference: "SMART-HOT-WATER-CYLINDER",
+			heatSource: heatPumpId,
+			heaterPosition: 0.3,
+			thermostatPosition: 0.4,
 		};
 
 		const addHotWaterCylinderData = () => {
 			store.$patch({
-				domesticHotWater: {
-					waterHeating: {
-						hotWaterCylinder: {
-							data: [{
-								data: hotWaterCylinder,
-							}],
-						},
+				domesticHotWaterNew: {
+					waterStorage: {
+						data: [{ data: hotWaterCylinder }],
 					},
 				},
 				spaceHeating: {
@@ -73,38 +73,79 @@ describe("Domestic hot water summary", () => {
 			});
 		};
 
-		it("should contain the correct tabs for water heating section", async () => {
+		const addSmartHotWaterCylinderData = () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					waterStorage: {
+						data: [{ data: smartHotWaterCylinder }],
+					},
+				},
+				spaceHeating: {
+					heatSource: {
+						data: [{
+							data: {
+								id: heatPumpId,
+								name: "Heat pump",
+								typeOfHeatSource: "heatPump",
+							},
+						}],
+					},
+				},
+			});
+		};
+
+		it("displays an empty tab state with link to create when no data exists", async () => {
+			await renderSuspended(Summary);
+
+			expect(screen.getByText("No water storage added")).not.toBeNull();
+
+			const addWaterStorageLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add water storage",
+			});
+
+			expect(new URL(addWaterStorageLink.href).pathname).toBe(
+				getUrl("waterStorage"),
+			);
+		});
+
+		it("should contain the correct tabs when data exists", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					waterStorage: {
+						data: [{ data: hotWaterCylinder }, { data: smartHotWaterCylinder }],
+					},
+				},
+				spaceHeating: {
+					heatSource: {
+						data: [{
+							data: {
+								id: heatPumpId,
+								name: "Heat pump",
+								typeOfHeatSource: "heatPump",
+							},
+						}],
+					},
+				},
+			});
 			await renderSuspended(Summary);
 
 			expect(screen.queryByRole("link", { name: "Hot water cylinders" })).not.toBeNull();
-			expect(screen.queryByRole("link", { name: "Immersion heaters" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Solar thermal" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Point of use" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Heat pumps" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Combi boilers" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Heat batteries" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Smart hot water tanks" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Heat interface units" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Smart hot water cylinders" })).not.toBeNull();
 		});
 
-		it("displays 'No hot water cylinders added' and link to create hot water cylinder when no data exists", async () => {
-			await renderSuspended(Summary);
-
-			const addWaterHeatingLink = screen.queryByRole("link", { name: "Add hot water cylinder" }) as HTMLAnchorElement;
-
-			expect(screen.queryByText("No water heating added")).toBeDefined();
-			expect(new URL(addWaterHeatingLink.href).pathname).toBe(getUrl("waterHeating"));
-		});
-
-		it("should display the correct data for the hot water cylinder section", async () => {
+		it("should display the correct data for the hot water cylinder section when data exists", async () => {
 			addHotWaterCylinderData();
 			await renderSuspended(Summary);
 
 			const expectedResult = {
-				"Name": "Hot water cylinder 1",
-				"Heat source": "Heat pump",
+				"Name": "Hot water cylinder",
 				"Storage cylinder volume": `5 ${litre.suffix}`,
+				"Initial temperature": `60 ${degrees.suffix}C`,
 				"Daily energy loss": `1 ${kilowattHour.suffix}`,
+				"Heat source": "Heat pump",
+				"Area of heat exchanger installed": `2.5 ${metresSquare.suffix}`,
+				"Heater position in the cylinder": "0.8",
+				"Thermostat position in the cylinder": "0.5",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -114,68 +155,44 @@ describe("Domestic hot water summary", () => {
 			}
 		});
 
-		it("displays an edit link that navigates to the water heating page when clicked", async () => {
+		it("should display an edit link within hot water cylinder when data exists", async () => {
 			addHotWaterCylinderData();
 			await renderSuspended(Summary);
 			const hotWaterCylinderSection = screen.getByTestId("hotWaterCylinder");
 			const editLink: HTMLAnchorElement = within(hotWaterCylinderSection).getByText("Edit");
 
 			expect(editLink).not.toBeNull();
-			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water/water-heating");
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water-new");
 		});
 
-		// it("should display the correct data for the immersion heater section", async () => {
-		// 	store.$patch({
-		// 		domesticHotWater: {
-		// 			waterHeating: {
-		// 				immersionHeater: {
-		// 					data: [immersionHeater],
-		// 				},
-		// 			},
-		// 		},
-		// 	});
+		it("should display the correct data for the smart hot water cylinder section when data exists", async () => {
+			addSmartHotWaterCylinderData();
+			await renderSuspended(Summary);
 
-		// 	await renderSuspended(Summary);
+			const expectedResult = {
+				"Name": "Smart hot water cylinder",
+				"Product reference": "SMART-HOT-WATER-CYLINDER",
+				"Heat source": "Heat pump",
+				"Heater position in the cylinder": "0.3",
+				"Thermostat position in the cylinder": "0.4",
+			};
 
-		// 	const expectedResult = {
-		// 		"Name": "Immersion heater",
-		// 		"Rated power": `10 ${kilowatt.suffix}`,
-		// 		"Heater position": "Top (1)",
-		// 		"Thermostat position": "Top (1)",
-		// 	};
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-smartHotWaterCylinder-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
 
-		// 	for (const [key, value] of Object.entries(expectedResult)) {
-		// 		const lineResult = (await screen.findByTestId(`summary-immersionHeater-${hyphenate(key)}`));
-		// 		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-		// 		expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-		// 	}
-		// });
+		it("should display an edit link within smart hot water cylinder when data exists", async () => {
+			addSmartHotWaterCylinderData();
+			await renderSuspended(Summary);
+			const smartHotWaterCylinderSection = screen.getByTestId("smartHotWaterCylinder");
+			const editLink: HTMLAnchorElement = within(smartHotWaterCylinderSection).getByText("Edit");
 
-		// it("should display the correct data for the point of use section", async () => {
-		// 	store.$patch({
-		// 		domesticHotWater: {
-		// 			waterHeating: {
-		// 				pointOfUse: {
-		// 					data: [pointOfUse],
-		// 				},
-		// 			},
-		// 		},
-		// 	});
-
-		// 	await renderSuspended(Summary);
-
-		// 	const expectedResult = {
-		// 		"Name": "Point of use",
-		// 		"Setpoint temperature": `25 ${celsius.suffix}`,
-		// 		"Heater efficiency": "0.5",
-		// 	};
-
-		// 	for (const [key, value] of Object.entries(expectedResult)) {
-		// 		const lineResult = (await screen.findByTestId(`summary-pointOfUse-${hyphenate(key)}`));
-		// 		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-		// 		expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-		// 	}
-		// });
+			expect(editLink).not.toBeNull();
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water-new");
+		});
 	});
 
 	describe("hot water outlets", () => {
