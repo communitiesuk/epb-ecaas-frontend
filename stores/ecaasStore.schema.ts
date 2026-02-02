@@ -1262,7 +1262,7 @@ const baseImmersionHeater = namedWithId.extend({
 const basePointOfUse = namedWithId.extend({
 	typeOfHeatSource: z.literal("pointOfUse"),
 	energySupply: fuelTypeZod,
-	heatEfficiency: z.number(),
+	heaterEfficiency: z.number(),
 });
 export type DHWHeatSourceType = HeatSourceType | "immersionHeater" | "pointOfUse";
 

@@ -514,7 +514,7 @@ describe("Heat pump section", () => {
 			expect((immersionHeater! as { name: string }).name).toBe("Updated immersion heater");
 		});
 
-		test("required error messages are displayed when empty form is submitted", async () => {
+		test("required error messages are displayed when invalid form is submitted", async () => {
 			await renderSuspended(HeatSourceForm, {
 				route: {
 					params: { "heatSource": "create" },
@@ -526,6 +526,156 @@ describe("Heat pump section", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			expect(await screen.findByTestId("power_error")).toBeDefined();		
+		});
+	});
+
+	describe("point of use", () => {
+		beforeEach(() => {
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { fuelType: ["electricity"] },
+					},
+				},
+			});
+		});
+
+		const populateValidPOUForm = async () => {
+			await user.click(screen.getByTestId("coldWaterSource_headerTank"));
+			await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+			await user.click(screen.getByTestId("typeOfHeatSource_pointOfUse"));
+			await user.click(screen.getByTestId("energySupply_electricity"));
+			await user.type(screen.getByTestId("heaterEfficiency"), "1");
+
+			await user.tab();
+		};
+	
+		const pointOfUse1: DomesticHotWaterHeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c111111",
+			name: "Point of use",
+			typeOfHeatSource: "pointOfUse",
+			energySupply: "electricity",
+			heaterEfficiency: 0,
+			coldWaterSource: "headerTank",
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+	
+		};
+	
+		const pointOfUse2: DomesticHotWaterHeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c222222",
+			name: "Point of use 2",
+			typeOfHeatSource: "pointOfUse",
+			energySupply: "mains_gas",
+			heaterEfficiency: 8,
+			coldWaterSource: "headerTank",
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+		};
+
+		test("'PointOfUseSection' component displays when type of heat source is Point of use", async () => {
+			
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+			
+			await user.click(screen.getByTestId("coldWaterSource_headerTank"));
+			await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+			await user.click(screen.getByTestId("typeOfHeatSource_pointOfUse"));
+
+			expect(screen.getByTestId("name")).toBeDefined();
+			expect(screen.getByTestId("energySupply")).toBeDefined();
+			expect(screen.getByTestId("heaterEfficiency")).toBeDefined();
+		});
+	
+		test("Point of use data is saved to store state when form is valid", async () => {
+			vi.mocked(uuidv4).mockReturnValue(pointOfUse1.id as unknown as Buffer);
+			
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+			await populateValidPOUForm();
+			await user.click(screen.getByTestId("saveAndComplete"));
+	
+	
+			const pointOfUse = store.domesticHotWaterNew.heatSources.data[0]?.data;
+			expect(pointOfUse).toEqual({
+				id: "463c94f6-566c-49b2-af27-57e5c111111",
+				name: "Point of use",
+				typeOfHeatSource: "pointOfUse",
+				energySupply: "electricity",
+				heaterEfficiency: 1,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				coldWaterSource: "headerTank",
+				isExistingHeatSource: false,
+			});
+		});
+	
+		test("form is prepopulated when data exists in state", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					heatSources: {
+						data: [{ data: pointOfUse1 }],
+					},
+				},
+			});
+	
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+				},
+			});
+	
+			expect((await screen.findByTestId("typeOfHeatSource_pointOfUse")).hasAttribute("checked"));
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Point of use");
+			expect((await screen.findByTestId("energySupply_electricity")).hasAttribute("checked"));
+			expect((await screen.findByTestId<HTMLInputElement>("heaterEfficiency")).value).toBe("0");
+		});
+	
+		test("point of use is updated when data with id exists in store", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					heatSources: {
+						data: [{ data: pointOfUse1 }, { data: pointOfUse2 }],
+					},
+				},
+			});
+	
+	
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "1" },
+				},
+			});
+	
+			await user.clear(screen.getByTestId("name"));
+			await user.type(screen.getByTestId("name"), "Updated point of use");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+	
+			const pointOfUse = store.domesticHotWaterNew.heatSources.data[1]?.data;
+	
+			expect(pointOfUse!.id).toBe(pointOfUse2.id);
+			expect((pointOfUse! as { name: string }).name).toBe("Updated point of use");
+		});
+
+		test("required error messages are displayed when invalid form is submitted", async () => {
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+			await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+			await user.click(screen.getByTestId("typeOfHeatSource_pointOfUse"));
+			await user.click(screen.getByTestId("saveAndComplete"));
+	
+			expect(await screen.findByTestId("energySupply_error")).toBeDefined();	
+			expect(await screen.findByTestId("heaterEfficiency_error")).toBeDefined();		
+
 		});
 	});
 });
