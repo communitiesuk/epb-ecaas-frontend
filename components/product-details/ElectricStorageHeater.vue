@@ -21,5 +21,5 @@ const tableData: Record<string, string> =
 </script>
 
 <template>
-	<ProductDetails :data="tableData" />
+	<ProductDetails id="electricStorageHeater" :data="tableData" />
 </template>

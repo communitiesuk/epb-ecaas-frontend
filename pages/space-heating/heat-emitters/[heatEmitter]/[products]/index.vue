@@ -17,7 +17,7 @@ const { productData, pagination } = searchData(value?.data ?? []);
 
 const selectProduct = (reference: string) => {
 	store.$patch((state) => {
-		const item = state.spaceHeating.heatSource.data[index];
+		const item = state.spaceHeating.heatEmitters.data[index];
 
 		if (item) {
 			(item.data as PcdbProduct).productReference = reference;
@@ -38,7 +38,7 @@ const selectProduct = (reference: string) => {
 		:products="pagination.getData()"
 		:total-pages="pagination.totalPages"
 		:on-select-product="selectProduct" />
-	<GovButton secondary :href="`/space-heating/heat-emitting/${index}`" test-id="backToHeatEmittersButton">
+	<GovButton secondary :href="`/space-heating/heat-emitters/${index}`" test-id="backToHeatEmittersButton">
 		Back to heat emitters
 	</GovButton>
 </template>

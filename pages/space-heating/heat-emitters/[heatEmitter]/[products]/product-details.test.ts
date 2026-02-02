@@ -6,18 +6,17 @@ import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 
 describe("Heat pump details", async () => {
-	const smallHeatPump: Partial<HeatPumpData> = {
-		name: "Heat pump 2",
-		productReference: "HEATPUMP-SMALL",
-		typeOfHeatPump: "airSource",
+	const fanCoil: Partial<HeatEmittingData> = {
+		name: "Fan coil 1",
+		productReference: "1000",
+		typeOfHeatEmitter: "fanCoil",
 	};
 
-	const heatPumpProduct: Partial<Product> = {
+	const product: Partial<Product> = {
 		id: "1000",
 		brandName: "Test",
-		modelName: "Small Heat Pump",
-		modelQualifier: "HPSMALL",
-		technologyType: "AirSourceHeatPump",
+		modelName: "Fan coil",
+		technologyType: "FanCoils",
 	};
 
 	const store = useEcaasStore();
@@ -36,23 +35,23 @@ describe("Heat pump details", async () => {
 	beforeEach(() => {
 		store.$patch({
 			spaceHeating: {
-				heatSource: {
-					data: [{ data: smallHeatPump }],
+				heatEmitters: {
+					data: [{ data: fanCoil }],
 				},
 			},
 		});
 
 		mockRoute.mockReturnValue({
 			params: {
-				heatSource: "0",
-				products: "air-source",
+				heatEmitter: "0",
+				products: "fan-coil",
 				id: "1000",
 			},
-			path: "/0/air-source/1000",
+			path: "/0/fan-coil/1000",
 		});
 
 		mockFetch.mockReturnValue({
-			data: ref(heatPumpProduct),
+			data: ref(product),
 		});
 	});
 
@@ -69,11 +68,11 @@ describe("Heat pump details", async () => {
 
 		mockRoute.mockReturnValue({
 			params: {
-				heatSource: "0",
-				products: "air-source-invalid",
+				heatEmitter: "0",
+				products: "fan-coil-invalid",
 				id: "1234",
 			},
-			path: "/0/air-source-invalid/1234",
+			path: "/0/fan-coil-invalid/1234",
 		});
 
 		// Act
@@ -95,7 +94,7 @@ describe("Heat pump details", async () => {
 		await renderSuspended(ProductDetails);
 
 		// Assert
-		expect(screen.getByTestId("backLink").innerText).toBe("Back to air source heat pumps");
+		expect(screen.getByTestId("backLink").innerText).toBe("Back to fan coils");
 	});
 
 	test("Store data updates when product is selected", async () => {
@@ -103,18 +102,52 @@ describe("Heat pump details", async () => {
 		await renderSuspended(ProductDetails);
 		await user.click(screen.getByTestId("selectProductButton"));
 
-		const heatSource = store.spaceHeating.heatSource.data[0]?.data as PcdbProduct;
+		const heatSource = store.spaceHeating.heatEmitters.data[0]?.data as PcdbProduct;
 
 		// Assert
 		expect(heatSource.productReference).toBe("1000");
 	});
 
-	test("Navigates to heat pump page when product is selected", async () => {
+	test("Navigates to heat emitter page when product is selected", async () => {
 		// Act
 		await renderSuspended(ProductDetails);
 		await user.click(screen.getByTestId("selectProductButton"));
 
 		// Assert
-		expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-source/0");
+		expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-emitters/0");
+	});
+
+	test("Displays fan coil details when product is a fan coil", async () => {
+		// Act
+		await renderSuspended(ProductDetails);
+		
+		// Assert
+		expect((await screen.findByTestId("fanCoil"))).toBeDefined();
+	});
+
+	test("Displays electric storage heater details when product is an electric storage heater", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatEmitter: "0",
+				products: "electric-storage-heater",
+				id: "1000",
+			},
+			path: "/0/electric-storage-heater/1000",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				...product,
+				modelName: "Electric storage heater",
+				technologyType: "StorageHeader",
+			}),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		
+		// Assert
+		expect((await screen.findByTestId("electricStorageHeater"))).toBeDefined();
 	});
 });
