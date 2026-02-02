@@ -377,14 +377,7 @@ const heatingControlsSummary: SummarySection = {
 			</SummaryTab>
 		</template>
 		<template v-for="section, i of populatedHeatSourceSections" :key="i">
-			<SummaryTab :summary="section" :selected="tabProps.currentTab === i">
-				<template #empty>
-					<h2 class="govuk-heading-m">No heat sources added</h2>
-					<NuxtLink class="govuk-link" :to="getUrl('heatSourceCreate')">
-						Add heat source
-					</NuxtLink>
-				</template>
-			</SummaryTab>
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i" />
 		</template>
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="populatedHeatEmitterSections">
@@ -399,14 +392,7 @@ const heatingControlsSummary: SummarySection = {
 			</SummaryTab>
 		</template>
 		<template v-for="section, i of populatedHeatEmitterSections" :key="i">
-			<SummaryTab :summary="section" :selected="tabProps.currentTab === i">
-				<template #empty>
-					<h2 class="govuk-heading-m">No heat emitters added</h2>
-					<NuxtLink class="govuk-link" :to="getUrl('heatEmittersCreate')">
-						Add heat emitter
-					</NuxtLink>
-				</template>
-			</SummaryTab>
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i" />
 		</template>
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems([heatingControlsSummary])">
