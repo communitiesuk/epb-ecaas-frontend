@@ -379,6 +379,56 @@ describe("hot water outlets", () => {
 			});
 		});
 	});
+
+	describe("complete status", () => {
+		test("marks the hotWaterOutlets section complete status as false when saving a form", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					hotWaterOutlets: {
+						data: [{ data: { ...mixerShower.data }, complete: true }],
+						complete: true,
+					},
+				},
+			});
+
+			addHeatPumpStoreData();
+			await renderSuspended(HotWaterOutlets, {
+				route: {
+					params: { "hotWaterOutlet": "0" },
+				},
+			});
+
+			expect(store.domesticHotWaterNew.hotWaterOutlets.complete).toBe(true);
+
+			await user.clear(screen.getByTestId("name"));
+			await user.type(screen.getByTestId("name"), "Modified name");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(store.domesticHotWaterNew.hotWaterOutlets.complete).toBe(false);
+		});
+
+		test("marks hotWaterOutlets section as not complete after editing an existing item", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					hotWaterOutlets: {
+						data: [{ data: { ...mixerShower.data }, complete: true }],
+						complete: true,
+					},
+				},
+			});
+
+			addHeatPumpStoreData();
+			await renderSuspended(HotWaterOutlets, {
+				route: { params: { "hotWaterOutlet": "0" } },
+			});
+
+			await user.type(screen.getByTestId("name"), " Changed");
+			await user.tab();
+
+			expect(store.domesticHotWaterNew.hotWaterOutlets.complete).toBe(false);
+		});
+	});
 });
 
 async function clearName(user: ReturnType<typeof userEvent.setup>) {

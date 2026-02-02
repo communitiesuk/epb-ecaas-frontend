@@ -3,6 +3,7 @@ import DomesticHotWater from "@/pages/domestic-hot-water-new/index.vue";
 import { screen, within } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import formStatus from "~/constants/formStatus";
+import HotWaterOutlets from "./hot-water-outlets/[outlet]/index.vue";
 
 const baseCompleteForm = {
 	data: [],
@@ -654,44 +655,35 @@ describe("Domestic hot water", () => {
 				expect(hotWaterOutlets?.complete).toBe(false);
 			});
 
-			it.todo("marks section as not complete after adding a new item", async () => {
-				// for (const section of Object.keys(store.domesticHotWaterNew) as SectionKey[]) {
+			it("marks hot water outlets section as not complete after editing an existing outlet", async () => {
+				store.$patch({
+					domesticHotWaterNew: {
+						hotWaterOutlets: {
+							data: [{ data: hwOutlet1.data, complete: true }],
+						},
+						heatSources: {
+							data: [{ data: heatSource1.data, complete: true }],
+						},
+					},
+				});
 
-				// 	if (section === "waterStorage") {
-				// 		await renderSuspended(pvAndBatteryForms[section], {
-				// 			route: {
-				// 				path: "/pv-and-batteries/pv-systems/create",
-				// 			},
-				// 		});
-				// 	} else {
-				// 		await renderSuspended(pvAndBatteryForms[section]);
-				// 	}
+				await renderSuspended(DomesticHotWater);
+				await user.click(await screen.findByTestId("markAsCompleteButton"));
+				expect(store.domesticHotWaterNew.hotWaterOutlets?.complete).toBe(true);
 
-				// 	await user.type(screen.getByTestId("name"), "New item");
-				// 	await user.tab();
-				// 	await user.click(screen.getByTestId("saveAndComplete"));
+				await renderSuspended(HotWaterOutlets, {
+					route: {
+						params: { "outlet": "0" },
+					},
+				});
 
-				// 	expect(store.domesticHotWaterNew[section]?.complete).toBe(false);
-				// }
-			});
+				await user.click(screen.getByTestId("typeOfHotWaterOutlet_bath"));
 
-			it.todo("marks section as not complete after editing an existing item", async () => {
-				// 		for (const section of Object.keys(store.domesticHotWaterNew) as SectionKey[]) {
+				await user.click(await screen.findByTestId("saveAndComplete"));
+				expect(store.domesticHotWaterNew.hotWaterOutlets?.complete).toBe(false);
 
-				// 			if (section === "waterStorage") {
-				// 				await renderSuspended(pvAndBatteryForms[section], {
-				// 					route: { params: { "system": "0" } },
-				// 				});
-				// 			} else {
-				// 				await renderSuspended(pvAndBatteryForms[section]);
-				// 			}
-
-				// 			await user.clear(screen.getByTestId("name"));
-				// 			await user.type(screen.getByTestId("name"), "Updated item");
-				// 			await user.tab();
-
-				// 			expect(store.domesticHotWaterNew[section]?.complete).toBe(false);
-				// 		}
+				await renderSuspended(DomesticHotWater);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			});
 		});
 	});

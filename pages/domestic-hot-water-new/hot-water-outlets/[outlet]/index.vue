@@ -223,7 +223,7 @@ autoSaveElementForm<HotWaterOutletsData>({
 			id="wwhrs"
 			name="wwhrs"
 			type="govBoolean"
-			label="Is there a WWHRS installed?"
+			label="Is there a waste water heat recovery system for this shower?"
 		/>
 		<FormKit
 			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'electricShower') && model.wwhrs === true"
@@ -231,18 +231,19 @@ autoSaveElementForm<HotWaterOutletsData>({
 			name="wwhrsType"
 			type="govRadios"
 			:options="wwhrsTypes"
-			label="WWHRS system type"
+			label="Type of waste water heat recovery system"
 			validation="required"
 		/>
 		<FormKit
-			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'electricShower') && model.wwhrs === true && model.wwhrsType"
+			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'electricShower') && model.wwhrs === true"
 			id="selectWwhrsProduct"
 			type="govPcdbProduct"
-			label="Select a WWHRS product"
+			label="Select a product"
 			name="wwhrsProductReference"
+			help="Select the WWHRS type from the PCDB using the button below."
 			:selected-product-reference="model.wwhrsProductReference"
 			:selected-product-type="model.typeOfHotWaterOutlet"
-			:page-url="route.path || route.fullPath || getUrl('domesticHotWaterNew') + '/hot-water-outlets'"
+			:page-url="route.fullPath"
 			:page-index="index"
 		/>
 		<div class="govuk-button-group">
