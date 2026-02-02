@@ -26,13 +26,13 @@ const instantElectricHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter
 const electricStorageHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "electricStorageHeater");
 
 
-const heatSourcesSummary: SummarySection = {
+const emptyHeatSourcesSummary: SummarySection = {
 	id: "heatSourceSummary",
 	label: "Heat sources",
 	data: [],
 	editUrl: spaceHeatingUrl,
 };
-const heatEmitterSummary: SummarySection = {
+const emptyHeatEmitterSummary: SummarySection = {
 	id: "heatEmitterSummary",
 	label: "Heat emitters",
 	data: [],
@@ -365,9 +365,9 @@ const heatingControlsSummary: SummarySection = {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovTabs v-slot="tabProps" :items="populatedHeatSourceSections">
+	<GovTabs v-slot="tabProps" :items="populatedHeatSourceSections.length === 0? [emptyHeatSourcesSummary] : populatedHeatSourceSections">
 		<template v-if="populatedHeatSourceSections.length === 0">
-			<SummaryTab :summary="heatSourcesSummary" :selected="tabProps.currentTab === 0">
+			<SummaryTab :summary="emptyHeatSourcesSummary" :selected="tabProps.currentTab === 0">
 				<template #empty>
 					<h2 class="govuk-heading-m">No heat sources added</h2>
 					<NuxtLink class="govuk-link" :to="getUrl('heatSourceCreate')">
@@ -380,9 +380,9 @@ const heatingControlsSummary: SummarySection = {
 			<SummaryTab :summary="section" :selected="tabProps.currentTab === i" />
 		</template>
 	</GovTabs>
-	<GovTabs v-slot="tabProps" :items="populatedHeatEmitterSections">
+	<GovTabs v-slot="tabProps" :items="populatedHeatEmitterSections.length === 0 ? [emptyHeatEmitterSummary] : populatedHeatEmitterSections">
 		<template v-if="populatedHeatEmitterSections.length === 0">
-			<SummaryTab :summary="heatEmitterSummary" :selected="tabProps.currentTab === 0">
+			<SummaryTab :summary="emptyHeatEmitterSummary" :selected="tabProps.currentTab === 0">
 				<template #empty>
 					<h2 class="govuk-heading-m">No heat emitters added</h2>
 					<NuxtLink class="govuk-link" :to="getUrl('heatEmittersCreate')">

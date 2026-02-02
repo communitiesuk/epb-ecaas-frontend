@@ -162,7 +162,7 @@ const populatedWaterStorageSections = getNonEmptySections(waterStorageSummarySec
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovTabs v-slot="tabProps" :items="getTabItems(populatedWaterStorageSections)">
+	<GovTabs v-slot="tabProps" :items="populatedWaterStorageSections.length === 0 ? [emptyWaterStorageSummary] : getTabItems(populatedWaterStorageSections)">
 		<template v-if="populatedWaterStorageSections.length === 0">
 			<SummaryTab :summary="emptyWaterStorageSummary" :selected="tabProps.currentTab === 0">
 				<template #empty>
