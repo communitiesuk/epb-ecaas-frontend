@@ -147,12 +147,10 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 			return val;
 		} else if (ws.typeOfWaterStorage === "smartHotWaterTank") {
 			const val: SchemaSmartHotWaterTank & { ColdWaterSource: SchemaColdWaterSourceType } = {
-				// daily_losses: ws.dailyEnergyLoss,
 				type: "SmartHotWaterTank",
 				product_reference: ws.productReference,
 				EnergySupply_pump: defaultElectricityEnergySupplyName,
-				// volume: storageCylinderVolumeInLitres,
-				// ColdWaterSource: "mains water", // Needs changing to reference `referencedHeatSource` once hot water source branch is merged
+				ColdWaterSource: "mains water", // Needs changing to reference `referencedHeatSource` once hot water source branch is merged
 				HeatSource: {
 					// Adding these values as default until heat pump is set up to come from PCDB
 					[heatSourceName]: {
@@ -160,11 +158,9 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 						EnergySupply: defaultElectricityEnergySupplyName,
 						heater_position: ws.heaterPosition,
 						type: "HeatSourceWet",
-						temp_flow_limit_upper: 65,
 					},
 				},
-				// ...(pipeworkEntries.length !== 0 ? { primary_pipework: pipeworkEntries } : {}),
-				// init_temp: ws.initialTemperature,
+				...(pipeworkEntries.length !== 0 ? { primary_pipework: pipeworkEntries } : {}),
 			};
 			return val;
 		} else throw new Error("invalid water storage type");

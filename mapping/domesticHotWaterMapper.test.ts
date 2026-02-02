@@ -72,6 +72,60 @@ describe("domestic hot water mapper", () => {
 			// Assert
 			expect(result).toEqual(expectedResult);
 		});
+
+		it("maps smart hot water tank input state to FHS input request", () => {
+			// Arrange
+			const heatPumpName = "Heat source";
+		
+			const smartHotWaterTank: EcaasForm<WaterStorageData> = {
+				...baseForm,
+				data: {
+					id: "smart hot water tank",
+					typeOfWaterStorage: "smartHotWaterTank",
+					name: "smart hot water tank",
+					heatSource: heatPumpName,
+					heaterPosition: 0.3,
+					productReference: "SWT-12345",
+				},
+			};
+		
+			store.$patch({
+				domesticHotWaterNew: {
+					waterStorage: {
+						data: [smartHotWaterTank],
+						complete: true,
+					},
+					heatSources: {
+						data: [{ data: { name: heatPumpName } }],
+						complete: true,
+					},
+					pipework: {
+						data: [],
+						complete: true,
+					},
+				},
+			});
+		
+			// Acts
+			const result = mapHotWaterSourcesData(resolveState(store.$state))[0]!;
+			const expectedResult: Partial<FhsInputSchema["HotWaterSource"]["hw cylinder"]> = {
+				ColdWaterSource: "mains water",
+				product_reference: "SWT-12345",
+				EnergySupply_pump: "mains elec",
+				HeatSource: {
+					[heatPumpName]: {
+						EnergySupply: "mains elec",
+						heater_position: 0.3,
+						type: "HeatSourceWet",
+						name: heatPumpName,
+					},
+				},
+				type: "SmartHotWaterTank",
+			};
+		
+			// Assert
+			expect(result).toEqual(expectedResult);
+		});
 	});
 
 	describe("outlets", () => {
