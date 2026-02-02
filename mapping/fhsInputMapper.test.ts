@@ -454,8 +454,8 @@ const expectedFlatInput: FhsInputSchema = {
 		"hw cylinder": {
 			ColdWaterSource: "mains water",
 			HeatSource: {
-				["heat pump"]: {
-					name: "heat pump",
+				["Heat pump"]: {
+					name: "Heat pump",
 					EnergySupply: "mains elec",
 					heater_position: 0.1,
 					type: "HeatSourceWet",
