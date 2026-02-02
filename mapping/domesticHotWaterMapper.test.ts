@@ -1,6 +1,7 @@
-import type { BathDataNew } from "~/stores/ecaasStore.schema";
-import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
+import type { BathDataNew, EcaasForm } from "~/stores/ecaasStore.schema";
+import { mapDomesticHotWaterData, mapHotWaterSourcesData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
+import { litre } from "../utils/units/volume";
 
 const baseForm = {
 	data: [],
@@ -8,6 +9,71 @@ const baseForm = {
 };
 
 describe("domestic hot water mapper", () => {
+	const store = useEcaasStore();
+
+	describe("water storage", () => {
+		it("maps hot water cylinder input state to FHS input request", () => {
+			// Arrange
+			const heatPumpName = "Heat source";
+		
+			const hotWaterCylinder: EcaasForm<WaterStorageData> = {
+				...baseForm,
+				data: {
+					id: "hot water cylinder",
+					typeOfWaterStorage: "hotWaterCylinder",
+					name: "hot water cylinder",
+					storageCylinderVolume: unitValue(90, litre),
+					initialTemperature: 65,
+					dailyEnergyLoss: 5,
+					heatSource: heatPumpName,
+					areaOfHeatExchanger: 2,
+					heaterPosition: 0.3,
+					thermostatPosition: 0.5,
+				},
+			};
+		
+			store.$patch({
+				domesticHotWaterNew: {
+					waterStorage: {
+						data: [hotWaterCylinder],
+						complete: true,
+					},
+					heatSources: {
+						data: [{ data: { name: heatPumpName } }],
+						complete: true,
+					},
+					pipework: {
+						data: [],
+						complete: true,
+					},
+				},
+			});
+		
+			// Acts
+			const result = mapHotWaterSourcesData(resolveState(store.$state))[0]!;
+			const expectedResult: Partial<FhsInputSchema["HotWaterSource"]["hw cylinder"]> = {
+				ColdWaterSource: "mains water",
+				HeatSource: {
+					[heatPumpName]: {
+						EnergySupply: "mains elec",
+						heater_position: 0.3,
+						type: "HeatSourceWet",
+						name: heatPumpName,
+						temp_flow_limit_upper: 65,
+						thermostat_position: 0.5,
+					},
+				},
+				daily_losses: 5,
+				volume: 90,
+				type: "StorageTank",
+				init_temp: 65,
+			};
+		
+			// Assert
+			expect(result).toEqual(expectedResult);
+		});
+	});
+
 	describe("outlets", () => {
 		const store = useEcaasStore();
 
@@ -140,6 +206,7 @@ describe("domestic hot water mapper", () => {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
 						heatSources: { data: [], complete: true },
+						waterStorage: { data: [], complete: true },
 					},
 				});
 
@@ -175,6 +242,7 @@ describe("domestic hot water mapper", () => {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
 						heatSources: { data: [], complete: true },
+						waterStorage: { data: [], complete: true },
 					},
 				});
 
@@ -210,6 +278,7 @@ describe("domestic hot water mapper", () => {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
 						heatSources: { data: [], complete: true },
+						waterStorage: { data: [], complete: true },
 					},
 				});
 
@@ -245,6 +314,7 @@ describe("domestic hot water mapper", () => {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
 						heatSources: { data: [], complete: true },
+						waterStorage: { data: [], complete: true },
 					},
 				});
 
@@ -269,6 +339,7 @@ describe("domestic hot water mapper", () => {
 						hotWaterOutlets: { data: [], complete: true },
 						pipework: { data: [], complete: true },
 						heatSources: { data: [], complete: true },
+						waterStorage: { data: [], complete: true },
 					},
 				});
 
@@ -325,6 +396,7 @@ describe("domestic hot water mapper", () => {
 						},
 						pipework: { data: [], complete: true },
 						heatSources: { data: [], complete: true },
+						waterStorage: { data: [], complete: true },
 					},
 				});
 

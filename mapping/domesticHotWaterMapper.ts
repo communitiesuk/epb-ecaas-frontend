@@ -1,19 +1,24 @@
-import type { SchemaBathDetails, SchemaOtherWaterUseDetails } from "~/schema/aliases";
-import type { SchemaInstantElecShower, SchemaMixerShower } from "~/schema/api-schema.types";
+import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaWaterPipework } from "~/schema/aliases";
+import type { SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank, SchemaStorageTank } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
+import { asLitres } from "~/utils/units/volume";
 
 
 export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputSchema> {
 	const showers = mapShowersData(state);
 	const baths = mapBathsData(state);
 	const others = mapOthersData(state);
+	const hotWaterSources = mapHotWaterSourcesData(state);
 
 	return {
 		HotWaterDemand: {
 			Shower: showers,
 			Bath: baths,
 			Other: others,
+		},
+		HotWaterSource: {
+			"hw cylinder": hotWaterSources[0]!, // FHS input schema currently only allows for one hot water cylinder while the frontend allows users to add multiple
 		},
 	};
 }
@@ -84,4 +89,85 @@ function mapOthersData(state: ResolvedState) {
 	});
 
 	return Object.fromEntries(otherEntries);
+}
+
+export function mapHotWaterSourcesData(state: ResolvedState) {
+	return state.domesticHotWaterNew.waterStorage.map((ws): SchemaHotWaterSourceDetails => {
+
+		const referencedHeatSource = state.domesticHotWaterNew.heatSources
+			.find(heatSource => heatSource.id === ws.heatSource);
+		const heatSourceName = referencedHeatSource
+			? referencedHeatSource.name
+			: "Heat source";
+
+		const pipeworkEntries = state.domesticHotWaterNew.pipework.map((x): SchemaWaterPipework => {
+			if (x.location !== "heatedSpace" && x.location !== "unheatedSpace") {
+				throw new Error("invalid location property on pipework");
+			}
+			return {
+				location: x.location === "heatedSpace" ? "internal" : "external",
+				internal_diameter_mm: x.internalDiameter,
+				external_diameter_mm: x.externalDiameter,
+				length: x.length,
+				insulation_thermal_conductivity: x.thermalConductivity,
+				insulation_thickness_mm: x.insulationThickness,
+				surface_reflectivity: x.surfaceReflectivity,
+				pipe_contents: x.pipeContents,
+			};
+		});
+
+		if (ws.typeOfWaterStorage === "hotWaterCylinder") {
+			let storageCylinderVolumeInLitres: number;
+
+			if (typeof ws.storageCylinderVolume === "number") {
+				storageCylinderVolumeInLitres = ws.storageCylinderVolume;
+			} else {
+				storageCylinderVolumeInLitres = asLitres(ws.storageCylinderVolume);
+			}
+			
+			const val: SchemaStorageTank & { ColdWaterSource: SchemaColdWaterSourceType } = {
+				daily_losses: ws.dailyEnergyLoss,
+				type: "StorageTank",
+				volume: storageCylinderVolumeInLitres,
+				ColdWaterSource: "mains water", // Needs changing to reference `referencedHeatSource` once hot water source branch is merged
+				HeatSource: {
+					// Adding these values as default until heat pump is set up to come from PCDB
+					[heatSourceName]: {
+						name: heatSourceName,
+						EnergySupply: defaultElectricityEnergySupplyName,
+						heater_position: ws.heaterPosition,
+						type: "HeatSourceWet",
+						thermostat_position: ws.thermostatPosition,
+						temp_flow_limit_upper: 65,
+					},
+				},
+				...(pipeworkEntries.length !== 0 ? { primary_pipework: pipeworkEntries } : {}),
+				init_temp: ws.initialTemperature,
+			};
+			return val;
+		} else if (ws.typeOfWaterStorage === "smartHotWaterTank") {
+			const val: SchemaSmartHotWaterTank & { ColdWaterSource: SchemaColdWaterSourceType } = {
+				// daily_losses: ws.dailyEnergyLoss,
+				type: "SmartHotWaterTank",
+				product_reference: ws.productReference,
+				EnergySupply_pump: defaultElectricityEnergySupplyName,
+				// volume: storageCylinderVolumeInLitres,
+				// ColdWaterSource: "mains water", // Needs changing to reference `referencedHeatSource` once hot water source branch is merged
+				HeatSource: {
+					// Adding these values as default until heat pump is set up to come from PCDB
+					[heatSourceName]: {
+						name: heatSourceName,
+						EnergySupply: defaultElectricityEnergySupplyName,
+						heater_position: ws.heaterPosition,
+						type: "HeatSourceWet",
+						temp_flow_limit_upper: 65,
+					},
+				},
+				// ...(pipeworkEntries.length !== 0 ? { primary_pipework: pipeworkEntries } : {}),
+				// init_temp: ws.initialTemperature,
+			};
+			return val;
+		} else throw new Error("invalid water storage type");
+
+	});
 }
