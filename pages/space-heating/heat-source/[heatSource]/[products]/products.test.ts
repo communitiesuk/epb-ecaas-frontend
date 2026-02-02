@@ -81,7 +81,7 @@ describe("Heat source products page", () => {
 	test("title dependant on the type of heat pump", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				pump: "0",
+				heatSource: "0",
 				products: "air-source",
 			},
 			path: "/0/air-source",
