@@ -24,7 +24,7 @@ export const getHeatSourceDefaultName = (item: HeatSourceFormData): string => {
 	return getDefaultProductName(heatSourceType, productSubType);
 };
 
-function getDefaultProductName(heatSourceType: HeatSourceType, productSubType: string | undefined) {
+function getDefaultProductName(heatSourceType: HeatSourceType | DHWHeatSourceType, productSubType: string | undefined) {
 	const formattedProductType = displayCamelToSentenceCase(heatSourceType);
 
 	return productSubType ? `${productSubType} ${formattedProductType.toLowerCase()}` : formattedProductType;
@@ -32,7 +32,7 @@ function getDefaultProductName(heatSourceType: HeatSourceType, productSubType: s
 
 export type HeatSourceFormData = {
 	id: string;
-	typeOfHeatSource: HeatSourceType;
+	typeOfHeatSource: HeatSourceType | DHWHeatSourceType;
 	name?: string;
 	typeOfHeatPump?: HeatPumpType;
 	typeOfBoiler?: TypeOfBoiler;

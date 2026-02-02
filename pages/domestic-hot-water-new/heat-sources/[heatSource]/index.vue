@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { getUrl, type DomesticHotWaterHeatSourceData, type HeatSourceData } from "#imports";
-import { heatSourceTypesWithDisplay } from "../../../../utils/display";
+import { getUrl, type DomesticHotWaterHeatSourceData } from "#imports";
+import { DHWHeatSourceTypesWithDisplay } from "../../../../utils/display";
 
 const title = "Heat source";
 const store = useEcaasStore();
@@ -14,11 +14,14 @@ const hotWaterHeatSourceData = useItemToEdit("heatSource", hotWaterHeatSourceSto
 const model = ref(hotWaterHeatSourceData?.data as DomesticHotWaterHeatSourceData);
 const id = hotWaterHeatSourceData?.data.id ?? uuidv4();
 
-export type HeatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
-export type BoilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
-export type HeatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
-export type HeatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
-export type SolarThermalModelType = Extract<HeatSourceData, { typeOfHeatSource: "solarThermalSystem" }>;
+export type HeatPumpModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "heatPump" }>;
+export type BoilerModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "boiler" }>;
+export type HeatNetworkModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
+export type HeatBatteryModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "heatBattery" }>;
+export type SolarThermalModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "solarThermalSystem" }>;
+export type ImmersionHeaterModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "immersionHeater" }>;
+
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 const saveForm = () => {
 	store.$patch((state) => {
@@ -29,46 +32,25 @@ const saveForm = () => {
 	navigateTo("/domestic-hot-water-new");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 watch(
 	() => model.value,
 	(newData, initialData) => {
-		if (newData?.isExistingHeatSource !== false) return;
-
-		if (!newData?.typeOfHeatSource) return;
-
-		if (initialData?.isExistingHeatSource !== false) return;
+		if (!newData.heatSourceId) return;
 
 		if (
-			initialData.typeOfHeatSource &&
-			initialData.typeOfHeatSource !== newData.typeOfHeatSource
+			initialData.heatSourceId !== newData.heatSourceId
 		) {
 			errorMessages.value = [];
 			model.value = { 
 				coldWaterSource: initialData.coldWaterSource,
-				isExistingHeatSource: false,
-				typeOfHeatSource: newData.typeOfHeatSource,
+				isExistingHeatSource: newData.heatSourceId === "NEW_HEAT_SOURCE" ? false : true,
+				heatSourceId: newData.heatSourceId,
 				id: initialData.id,
 			} as DomesticHotWaterHeatSourceData;
 		}
-		if (model.value.isExistingHeatSource === false && model.value && !model.value.name) {
+		if (model.value.isExistingHeatSource === false && model.value.typeOfHeatSource && model.value && !model.value.name) {
 			model.value.name = getHeatSourceDefaultName(model.value);
-		}
-	},
-);
-
-watch(
-	() => model.value,
-	(newData, _initialData) => {
-		// undefined -> "newHeatSource"
-		// undefined -> someId
-		// "newHeatSource" -> someId
-		// someId -> "newHeatSource"
-		if (newData.heatSourceId === "NEW_HEAT_SOURCE") {
-			model.value.isExistingHeatSource = false;
-		} else if (newData.heatSourceId !== undefined) {
-			model.value.isExistingHeatSource = true;
 		}
 	},
 );
@@ -139,13 +121,11 @@ autoSaveElementFormNoName<DomesticHotWaterHeatSourceData>({
 
 
 function updateHeatSource(type: string) {
-	console.log(type);
+
 	watch(() => model.value[`${type}` as keyof DomesticHotWaterHeatSourceData],
 		(newHeatSourceSubtype, initialHeatSourceSubtype) => {
-			if (model.value.isExistingHeatSource !== false) {
-				throw new Error("Cannot update heat source subtype for existing heat sources");
-			}
-			if (newHeatSourceSubtype !== initialHeatSourceSubtype) {
+
+			if (model.value.isExistingHeatSource === false && newHeatSourceSubtype !== initialHeatSourceSubtype) {
 				if ("productReference" in model.value) {
 					model.value.productReference = "";
 				}
@@ -202,7 +182,7 @@ const coldWaterSourceOptions =
 			id="typeOfHeatSource"
 			type="govRadios"
 			label="Type of heat source"
-			:options="heatSourceTypesWithDisplay"
+			:options="DHWHeatSourceTypesWithDisplay"
 			name="typeOfHeatSource"
 			validation="required" />		
 		<HeatPumpSection
@@ -233,6 +213,11 @@ const coldWaterSourceOptions =
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'solarThermalSystem'"
 			:model="model as SolarThermalModelType" 
+			:index="index" />
+		<ImmersionHeaterSection
+			v-if="model.isExistingHeatSource === false
+				&& model.typeOfHeatSource === 'immersionHeater'"
+			:model="model as ImmersionHeaterModelType" 
 			:index="index" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">

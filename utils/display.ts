@@ -344,6 +344,18 @@ export function displayHeatSourceType(type: HeatSourceType | undefined): HeatSou
 	return heatSourceTypesWithDisplay[type!] ?? emptyValueRendering;
 }
 
+export type DHWHeatSourceTypeDisplay = HeatSourceTypeDisplay | "Immersion heater" | "Point of use";
+
+export const DHWHeatSourceTypesWithDisplay = {
+	...heatSourceTypesWithDisplay,
+	"immersionHeater": "Immersion heater",
+	"pointOfUse": "Point of use",
+} as const satisfies Record<DHWHeatSourceType, DHWHeatSourceTypeDisplay>;
+
+export function displayDHWHeatSourceType(type: DHWHeatSourceType | undefined): DHWHeatSourceTypeDisplay | typeof emptyValueRendering {
+	return DHWHeatSourceTypesWithDisplay[type!] ?? emptyValueRendering;
+}
+
 export type HeatEmitterDisplay = "Radiator" | "Underfloor heating" | "Fan coil" | "Warm air heater" | "Instant electric heater" | "Electric storage heater";
 
 export const heatEmitterTypes = {

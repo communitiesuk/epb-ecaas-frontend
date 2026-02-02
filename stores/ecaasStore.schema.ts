@@ -1254,12 +1254,28 @@ const hotWaterHeatSourceExtension = {
 	isExistingHeatSource: z.literal(false),
 };
 
+const baseImmersionHeater = namedWithId.extend({
+	typeOfHeatSource: z.literal("immersionHeater"),
+	power: z.number(),
+});
+
+const basePointOfUse = namedWithId.extend({
+	typeOfHeatSource: z.literal("pointOfUse"),
+	energySupply: fuelTypeZod,
+	heatEfficiency: z.number(),
+});
+export type DHWHeatSourceType = HeatSourceType | "immersionHeater" | "pointOfUse";
+
+
 const heatPumpHotWaterSourceBase = heatPumpBase.extend(hotWaterHeatSourceExtension);
 const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceExtension);
 const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceExtension);
 const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
 const heatNetworkHotWaterSourceBase = heatNetworkBase.extend(hotWaterHeatSourceExtension);
 const heatNetworkHotWaterSourceBaseShape = heatNetworkHotWaterSourceBase.shape;
+const immersionHeaterHotWaterSourceBase = baseImmersionHeater.extend(hotWaterHeatSourceExtension);
+const pointOfUseHotWaterSourceBase = basePointOfUse.extend(hotWaterHeatSourceExtension);
+
 
 const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpHotWaterSourceBase,
@@ -1267,6 +1283,8 @@ const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatBatteryHotWaterSourceBase,
 	solarThermalHotWaterSourceBase,
 	heatNetworkZodDataFromBase(heatNetworkHotWaterSourceBaseShape),
+	immersionHeaterHotWaterSourceBase,
+	pointOfUseHotWaterSourceBase,
 ]);
 
 const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource", 
