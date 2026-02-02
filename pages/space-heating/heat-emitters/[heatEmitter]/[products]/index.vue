@@ -24,7 +24,7 @@ const selectProduct = (reference: string) => {
 		}
 	});
 
-	navigateTo(page("heatSource").url.replace(":heatSource", `${index}`));
+	navigateTo(page("heatEmitters").url.replace(":heatEmitter", `${index}`));
 };
 </script>
 

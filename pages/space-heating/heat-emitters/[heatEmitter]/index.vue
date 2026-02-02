@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import ElectricStorageHeaterSection from "~/components/ElectricStorageHeaterSection.vue";
 import { heatEmitterTypes } from "../../../../utils/display";
 import { getHeatEmitterDefaultName, type HeatEmitterFormData } from "../../../../utils/getHeatEmitterDefaultName";
-import { getUrl } from "#imports";
+import { getUrl, typeOfHeatEmitter } from "#imports";
 
 
 export type RadiatorModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "radiator" }>;
@@ -117,27 +117,27 @@ function updateHeatEmitter(type: string) {
 			validation="required" />
 		<RadiatorSection
 			v-if="model?.typeOfHeatEmitter === 'radiator'"
-			:model="model as RadiatorModelType"
+			:model="(model as RadiatorModelType)"
 			:index="index"
 			@update-radiator-model="updateHeatEmitter" />
 		<UnderfloorHeatingSection
 			v-if="model?.typeOfHeatEmitter === 'underfloorHeating'"
-			:model="model as UnderfloorHeatingModelType"
+			:model="(model as UnderfloorHeatingModelType)"
 			:index="index" />
 		<FanCoilSection
-			v-if="model?.typeOfHeatEmitter === 'fanCoil'" 
-			:model="model as FanCoilModelType"
+			v-if="model?.typeOfHeatEmitter === typeOfHeatEmitter.fanCoil" 
+			:model="(model as FanCoilModelType)"
 			:index="index" />
 		<InstantElectricHeaterSection
 			v-if="model?.typeOfHeatEmitter === 'instantElectricHeater'"
-			:model="model as InstantElectricHeaterModelType" />
+			:model="(model as InstantElectricHeaterModelType)" />
 		<ElectricStorageHeaterSection
-			v-if="model?.typeOfHeatEmitter === 'electricStorageHeater'"
-			:model="model as ElectricStorageHeaterModelType" 
+			v-if="model?.typeOfHeatEmitter === typeOfHeatEmitter.electricStorageHeater"
+			:model="(model as ElectricStorageHeaterModelType)" 
 			:index="index"/>
 		<WarmAirHeaterSection
 			v-if="model?.typeOfHeatEmitter === 'warmAirHeater'"
-			:model="model as WarmAirHeaterModelType" />
+			:model="(model as WarmAirHeaterModelType)" />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('spaceHeating')" secondary test-id="saveProgress">Save progress</GovButton>

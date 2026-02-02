@@ -1146,6 +1146,7 @@ export const productTypeMap = {
 	"heatBatteryPcm": "HeatBatteryPCM",
 	"heatBatteryDryCore": "HeatBatteryDryCore",
 	"fanCoil": "FanCoils",
+	"electricStorageHeater": "StorageHeater",
 	"smartHotWaterTank": "SmartHotWaterTank",
 } as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType, TechnologyType | string>;
 
@@ -1157,6 +1158,9 @@ export type HeatEmitterType =
 	"electricStorageHeater" |
 	"warmAirHeater";
 
+const _typeOfHeatEmitter = z.enum(["fanCoil", "electricStorageHeater"]);
+
+export const typeOfHeatEmitter = _typeOfHeatEmitter.enum;
 
 function withVariableFlowRate<
 	T extends z.ZodRawShape & { hasVariableFlowRate?: never },
@@ -1315,7 +1319,7 @@ export const underFloorHeatingSchema = z.discriminatedUnion("hasVariableFlowRate
 ]);
 
 const fanCoilBase = namedWithId.extend({
-	typeOfHeatEmitter: z.literal("fanCoil"),
+	typeOfHeatEmitter: z.literal(typeOfHeatEmitter.fanCoil),
 	productReference: z.string(),
 	heatSource: z.string(),
 	designFlowTemp: z.number(),
@@ -1358,7 +1362,7 @@ const instantElectricHeaterSchema = namedWithId.extend({
 });
 
 const electricStorageHeaterSchema = namedWithId.extend({
-	typeOfHeatEmitter: z.literal("electricStorageHeater"),
+	typeOfHeatEmitter: z.literal(typeOfHeatEmitter.electricStorageHeater),
 	productReference: z.string(),
 	numOfStorageHeaters: z.number(),
 });
@@ -1371,10 +1375,6 @@ const heatEmittingDataZod = z.discriminatedUnion("typeOfHeatEmitter", [
 	instantElectricHeaterSchema,
 	electricStorageHeaterSchema,
 ]);
-
-const _typeOfHeatEmitter = z.enum(["fanCoil"]);
-
-export const typeOfHeatEmitter = _typeOfHeatEmitter.enum;
 
 export type HeatEmittingProductType = z.infer<typeof _typeOfHeatEmitter>;
 export type HeatEmittingData = z.infer<typeof heatEmittingDataZod>;

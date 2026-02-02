@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaL
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -384,6 +384,7 @@ export const waterStorageProductTypeDisplay = {
 
 export const heatEmittingProductTypesDisplay = {
 	"fanCoil": pluralize("Fan coil"),
+	"electricStorageHeater": pluralize("Electric storage heater"),
 } as const satisfies Record<HeatEmittingProductType, (plural: boolean) => string>;
 
 export type HotWaterOutletDisplay = "Mixer shower" | "Electric shower" | "Bath" | "Other (basin tap, kitchen sink, etc.)";
