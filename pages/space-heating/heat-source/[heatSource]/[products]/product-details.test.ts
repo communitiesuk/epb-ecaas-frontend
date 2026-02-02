@@ -12,7 +12,7 @@ describe("Heat pump details", async () => {
 		typeOfHeatPump: "airSource",
 	};
 
-	const heatPumpProduct: Partial<Product> = {
+	const product: Partial<Product> = {
 		id: "1000",
 		brandName: "Test",
 		modelName: "Small Heat Pump",
@@ -52,7 +52,7 @@ describe("Heat pump details", async () => {
 		});
 
 		mockFetch.mockReturnValue({
-			data: ref(heatPumpProduct),
+			data: ref(product),
 		});
 	});
 
@@ -116,5 +116,91 @@ describe("Heat pump details", async () => {
 
 		// Assert
 		expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-source/0");
+	});
+
+	test("Displays heat pump details when product is a heat pump", async () => {
+		// Act
+		await renderSuspended(ProductDetails);
+		
+		// Assert
+		expect((await screen.findByTestId("heatPump"))).toBeDefined();
+	});
+
+	test("Displays boiler details when product is a boiler", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "combi-boiler",
+				id: "1000",
+			},
+			path: "/0/combi-boiler/1000",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				...product,
+				modelName: "Combi boiler",
+				technologyType: "CombiBoiler",
+			}),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		
+		// Assert
+		expect((await screen.findByTestId("boiler"))).toBeDefined();
+	});
+
+	test("Displays PCM heat battery details when product is a PCM heat battery", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-battery-pcm",
+				id: "1000",
+			},
+			path: "/0/heat-battery-pcm/1000",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				...product,
+				modelName: "PCM Heat battery",
+				technologyType: "HeatBatteryPCM",
+			}),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		
+		// Assert
+		expect((await screen.findByTestId("heatBatteryPcm"))).toBeDefined();
+	});
+
+	test("Displays dry core heat battery details when product is a dry core heat battery", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-battery-dry-core",
+				id: "1000",
+			},
+			path: "/0/heat-battery-dry-core/1000",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				...product,
+				modelName: "Dry core Heat battery",
+				technologyType: "HeatBatteryDryCore",
+			}),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		
+		// Assert
+		expect((await screen.findByTestId("heatBatteryDryCore"))).toBeDefined();
 	});
 });
