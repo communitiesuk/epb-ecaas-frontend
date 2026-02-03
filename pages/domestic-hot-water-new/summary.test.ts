@@ -1,16 +1,31 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Summary from "./summary.vue";
-import { screen, within } from "@testing-library/vue";
+import { screen } from "@testing-library/vue";
 import { litre } from "~/utils/units/volume";
 import { metre, millimetre } from "~/utils/units/length";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
 import { litrePerHour, litrePerMinute } from "~/utils/units/flowRate";
-import { kilowatt, kilowattHour } from "~/utils/units/power";
+import { kilowatt } from "~/utils/units/power";
+import { degrees } from "~/utils/units/angle";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
+
+type ExpectedData = { [key: string]: string };
+const verifyDataInSection = async (
+	section: string,
+	expectedSectionData: ExpectedData,
+) => {
+	for (const [key, value] of Object.entries(expectedSectionData)) {
+		const lineResult = screen.queryByTestId(
+			`summary-${section}-${hyphenate(key)}`,
+		);
+		expect(lineResult!.querySelector("dt")?.textContent).toBe(key);
+		expect(lineResult!.querySelector("dd")?.textContent).toBe(value);
+	}
+};
 
 describe("Domestic hot water summary", () => {
 	const store = useEcaasStore();
@@ -221,6 +236,258 @@ describe("Domestic hot water summary", () => {
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
+		});
+	});
+	describe("heat sources", () => {
+		// const existingHeatPumpSpaceHeating1: HeatSourceData = {
+		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+		// 	name: "Heat pump 1",
+		// 	typeOfHeatSource: "heatPump",
+		// 	typeOfHeatPump: "airSource",
+		// 	productReference: "HEATPUMP-LARGE",
+		// };
+		// const existingHeatPumpSpaceHeating2: HeatSourceData = {
+		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c31",
+		// 	name: "Heat pump 2",
+		// 	typeOfHeatSource: "heatPump",
+		// 	typeOfHeatPump: "airSource",
+		// 	productReference: "HEATPUMP-LARGE",
+		// };
+
+		// const dhwWithExistingHeatPump: DomesticHotWaterHeatSourceData = {
+		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c62",
+		// 	coldWaterSource: "headerTank",
+		// 	isExistingHeatSource: true,
+		// 	heatSourceId: existingHeatPumpSpaceHeating1.id,
+		// };
+
+		const dhwWithNewHeatPump: DomesticHotWaterHeatSourceData = {
+			coldWaterSource: "mainsWater",
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "Heat pump 1",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "airSource",
+			productReference: "HEAT_PUMP_SMALL",
+		};
+		
+		const dhwWithNewBoiler: DomesticHotWaterHeatSourceData = {
+			coldWaterSource: "mainsWater",
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "1b73e247-57c5-26b8-1tbd-83tdk333333",
+			name: "Boiler 1",
+			typeOfHeatSource: "boiler",
+			typeOfBoiler: "combiBoiler",
+			productReference: "BOILER_SMALL",
+			locationOfBoiler: "heatedSpace",
+		};
+
+		const dhwWithNewHeatBattery: DomesticHotWaterHeatSourceData = {
+			coldWaterSource: "mainsWater",
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
+			name: "Heat battery 1",
+			typeOfHeatSource: "heatBattery",
+			typeOfHeatBattery: "heatBatteryPcm",
+			productReference: "HEAT_BATTERY_SMALL",
+			numberOfUnits: 1,
+			energySupply: "electricity",
+		};
+
+		const dhwWithNewHeatNetwork: DomesticHotWaterHeatSourceData = {
+			coldWaterSource: "mainsWater",
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+			name: "Heat network 1",
+			typeOfHeatSource: "heatNetwork",
+			typeOfHeatNetwork: "communalHeatNetwork",
+			isHeatNetworkInPcdb: true,
+			productReference: "HEAT_NETWORK-LARGE",
+			energySupply: "electricity",
+			usesHeatInterfaceUnits: false,
+		};
+
+		const dhwWithNewSolarThermalSystem: DomesticHotWaterHeatSourceData = {
+			coldWaterSource: "mainsWater",
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
+			name: "Solar thermal system",
+			typeOfHeatSource: "solarThermalSystem",
+			locationOfCollectorLoopPiping: "outside",
+			collectorModuleArea: 1,
+			numberOfCollectorModules: 2,
+			peakCollectorEfficiency: 0,
+			incidenceAngleModifier: 1,
+			firstOrderHeatLossCoefficient: 1,
+			secondOrderHeatLossCoefficient: 10,
+			heatLossCoefficientOfSolarLoopPipe: 100,
+			collectorMassFlowRate: 2,
+			powerOfCollectorPump: 30,
+			powerOfCollectorPumpController: 30,
+			pitch: 60,
+			orientation: 60,
+		};
+		const dhwImmersionHeater: DomesticHotWaterHeatSourceData = {
+			coldWaterSource: "mainsWater",
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c888888",
+			name: "Immersion heater",
+			typeOfHeatSource: "immersionHeater",
+			power: 4,
+		};
+
+		const dhwPointOfUse: DomesticHotWaterHeatSourceData = {
+			coldWaterSource: "mainsWater",
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c9999999",
+			name: "Point of use",
+			typeOfHeatSource: "pointOfUse",
+			energySupply: "electricity",
+			heaterEfficiency: 1,
+		};
+		beforeEach(() => {
+			store.$patch({
+				domesticHotWaterNew: {
+					heatSources: {
+						data: [
+							{ data: dhwWithNewHeatPump },
+							{ data: dhwWithNewBoiler },
+							{ data: dhwWithNewHeatBattery },
+							{ data: dhwWithNewHeatNetwork },
+							{ data: dhwWithNewSolarThermalSystem },
+							{ data: dhwImmersionHeater },
+							{ data: dhwPointOfUse },
+
+						],
+					},
+				},
+			});
+		});
+
+		it("displays an empty tab state with link to create when no data is present", async () => {
+			store.$reset();
+			await renderSuspended(Summary);
+		
+			expect(screen.getByText("No heat sources added")).not.toBeNull();
+		
+			const addHeatSourceLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add heat source",
+			});
+		
+			expect(new URL(addHeatSourceLink.href).pathname).toBe(
+				getUrl("heatSourcesCreate"),
+			);
+		});
+		
+		it("should contain the correct tabs for heat sources", async () => {
+			await renderSuspended(Summary);
+
+			expect(screen.getByRole("link", { name: "Heat pumps" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Boilers" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Heat networks" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Heat batteries" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Solar thermal systems" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Immersion heaters" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Point of use" })).not.toBeNull();
+		});
+
+		const expectedHeatPump = {
+			"Cold water source": "Mains water",
+			Name: "Heat pump 1",
+			"Type of heat source": "Heat pump",
+			"Type of heat pump": "Air source",
+			"Product reference": "HEAT_PUMP_SMALL",
+		};
+
+		const expectedBoiler = {
+			"Cold water source": "Mains water",
+			Name: "Boiler 1",
+			"Type of heat source": "Boiler",
+			"Type of boiler": "Combi boiler",
+			"Product reference": "BOILER_SMALL",
+			"Location of boiler": "Heated space",
+		};
+		const expectedHeatBattery = {
+			"Cold water source": "Mains water",
+			Name: "Heat battery 1",
+			"Type of heat source": "Heat battery",
+			"Type of heat battery": "Heat battery pcm",
+			"Product reference": "HEAT_BATTERY_SMALL",
+			"Number of units": "1",
+			"Energy supply": "Electricity",
+		};
+		const expectedHeatNetwork = {
+			"Cold water source": "Mains water",
+			Name: "Heat network 1",
+			"Type of heat source": "Heat network",
+			"Type of heat network": "Communal heat network",
+			"Is the heat network in the PCDB": "Yes",
+			"Heat network product reference": "HEAT_NETWORK-LARGE",
+			"Energy supply": "Electricity",
+			"Will the heat network use heat interface units": "No",
+		};
+		const expectedSolarThermalSystem = {
+			"Cold water source": "Mains water",
+			Name: "Solar thermal system",
+			"Type of heat source": "Solar thermal system",
+			"Location of collector loop piping": "Outside",
+			"Collector module area": "1",
+			"Number of collector modules": "2",
+			"Peak collector efficiency": "0",
+			"Incidence angle modifier": "1",
+			"First order heat loss coefficient": "1",
+			"Second order heat loss coefficient": "10",
+			"Heat loss coefficient of solar loop piping": "100",
+			"Collector mass flow rate": "2",
+			"Power of collector pump": "30",
+			"Power of collector pump controller": "30",
+			"Pitch": `60 ${degrees.suffix}`,
+			"Orientation": `60 ${degrees.suffix}`,
+		};
+		const expectedImmersionHeater = {
+			"Cold water source": "Mains water",
+			Name: "Immersion heater",
+			"Type of heat source": "Immersion heater",
+			"Power": `4 ${kilowatt.suffix}`,
+		};	
+		const expectedPointOfUse = {
+			"Cold water source": "Mains water",
+			Name: "Point of use",
+			"Type of heat source": "Point of use",
+			"Energy supply": "Electricity",
+			"Heater efficiency": "1",
+		};
+
+		it.each(
+			[
+				["heatPumpSummary", expectedHeatPump],
+				["boilerSummary", expectedBoiler],
+				["heatBatterySummary", expectedHeatBattery],
+				["heatNetworkSummary", expectedHeatNetwork],
+				["solarThermalSystemSummary", expectedSolarThermalSystem],
+				["immersionHeaterSummary", expectedImmersionHeater],
+				["pointOfUseSummary", expectedPointOfUse],
+ 
+			],
+		)("for the %s it displays the correct stored data", async (sectionId, expectedData) => {
+			
+			await renderSuspended(Summary);
+			await verifyDataInSection(sectionId, expectedData);
+		});
+		it("displays an edit link that navigates to the domestic hot water form page when clicked", async () => {
+
+			await renderSuspended(Summary);
+		
+			const heatSourcesSection = screen.getByRole("link", { name: "Edit" });
+	
+			expect(heatSourcesSection.getAttribute("href")).toBe("/domestic-hot-water-new");
 		});
 	});
 });
