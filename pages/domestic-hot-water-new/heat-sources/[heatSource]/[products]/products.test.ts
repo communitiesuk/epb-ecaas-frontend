@@ -1,5 +1,3 @@
-//TODO convert from space heating to domestic hot water
-
 import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
 import Products from "./index.vue";
 import { screen } from "@testing-library/vue";
@@ -53,24 +51,24 @@ describe("Heat source products page", () => {
 		});
 	});
 
-	const heatSource1: Partial<HeatSourceData> = {
+	const heatSource1: Partial<DomesticHotWaterHeatSourceData> = {
 		id: "463c94f6-566c-49b2-af27-222222222",
 		name: "Heat source 1",
 		typeOfHeatSource: "heatPump",
 		typeOfHeatPump: "airSource",
 	};
-	const heatSource2: Partial<HeatSourceData> = {
+	const heatSource2: Partial<DomesticHotWaterHeatSourceData> = {
 		id: "463c94f6-566c-49b2-af27-111111111",
 		name: "Heat source 2",
 		typeOfHeatSource: "heatPump",
 		typeOfHeatPump: "airSource",
 	};
 
-	beforeEach(async () => {
+	beforeEach(() => {
 		store.$patch({
-			spaceHeating: {
-				heatSource: {
-					data: [{ data: heatSource2 }, { data: heatSource1 }],
+			domesticHotWaterNew: {
+				heatSources: {
+					data: [{ data: heatSource1 }, { data: heatSource2 }],
 				},
 			},
 		});
@@ -108,7 +106,7 @@ describe("Heat source products page", () => {
 		await user.click(screen.getByTestId("selectProductButton_1"));
 
 		expect(
-			store.spaceHeating.heatSource.data[1]!.data,
+			store.domesticHotWaterNew.heatSources.data[1]!.data,
 		).toEqual(expect.objectContaining({ productReference: MOCKED_HEAT_PUMPS.data[1]?.id }));
 	});
 
@@ -124,7 +122,7 @@ describe("Heat source products page", () => {
 		const backButton = screen.getByTestId("backToHeatSourceButton");
 
 		expect(backButton.getAttribute("href")).toBe(
-			"/space-heating/heat-source/1",
+			"/domestic-hot-water-new/heat-sources/1",
 		);
 	});
 });
