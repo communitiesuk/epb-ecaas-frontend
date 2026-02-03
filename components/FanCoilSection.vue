@@ -120,7 +120,7 @@ defineProps<{
 	<FormKit
 		id="numOfFanCoils"
 		name="numOfFanCoils"
-		type="govInputWithSuffix"
+		type="govInputInt"
 		label="Number of fan coils"
 		help="Enter the number of fan coil systems with this specification in the dwelling"
 		
