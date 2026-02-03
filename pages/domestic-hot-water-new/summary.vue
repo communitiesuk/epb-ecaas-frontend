@@ -68,8 +68,10 @@ const mixedShowerSummary: SummarySection = {
 			"Name": show(d.data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
 			"Hot water source": heatSourceName ? heatSourceName : emptyValueRendering,
-			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per hour") : emptyValueRendering,
+			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per second") : emptyValueRendering,
 			"WWHRS installed": "wwhrs" in d.data ? displayBoolean(d.data.wwhrs) : emptyValueRendering,
+			"WWHRS type": "wwhrsType" in d.data && d.data.wwhrsType ? displayCamelToSentenceCase(String(d.data.wwhrsType)) : emptyValueRendering,
+			"WWHRS product": "wwhrsProductReference" in d.data ? show(d.data.wwhrsProductReference) : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("domesticHotWaterNew"),
@@ -79,12 +81,14 @@ const electricShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWater
 const electricShowerSummary: SummarySection = {
 	id: "electricShower",
 	label: "Electric showers",
-	data: electricShowerData.map(d => {   
+	data: electricShowerData.map(d => {
 		return {
 			"Name": show(d.data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
 			"Rated power": "ratedPower" in d.data ? dim(d.data.ratedPower, "kilowatt") : emptyValueRendering,
 			"WWHRS installed": "wwhrs" in d.data ? displayBoolean(d.data.wwhrs) : emptyValueRendering,
+			"WWHRS type": "wwhrsType" in d.data && d.data.wwhrsType ? displayCamelToSentenceCase(String(d.data.wwhrsType)) : emptyValueRendering,
+			"WWHRS product": "wwhrsProductReference" in d.data ? show(d.data.wwhrsProductReference) : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("domesticHotWaterNew"),
@@ -112,7 +116,7 @@ const otherOutletsSummary: SummarySection = {
 		return {
 			"Name": show(d.data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
-			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per minute") : emptyValueRendering,
+			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per second") : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("domesticHotWaterNew"),
@@ -124,6 +128,8 @@ const hotWaterOutletsSummarySections: SummarySection[] = [
 	bathSummary,
 	otherOutletsSummary,
 ];
+
+
 
 const pipeworkData = store.domesticHotWaterNew.pipework.data;
 const pipeworkSummary: SummarySection = {

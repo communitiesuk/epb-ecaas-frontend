@@ -4,7 +4,8 @@ import { screen, within } from "@testing-library/vue";
 import { litre } from "~/utils/units/volume";
 import { metre, millimetre } from "~/utils/units/length";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
-import { litrePerHour, litrePerMinute } from "~/utils/units/flowRate";
+import { litrePerSecond } from "~/utils/units/flowRate";
+import { displayCamelToSentenceCase } from "~/utils/display";
 import { kilowatt, kilowattHour } from "~/utils/units/power";
 import { metresSquare } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
@@ -14,12 +15,12 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-describe("Domestic hot water summary", () => {
-	const store = useEcaasStore();
+const store = useEcaasStore();
 
-	afterEach(() => {
-		store.$reset();
-	});
+afterEach(() => {
+	store.$reset();
+});
+describe("Domestic hot water summary", () => {
 
 	it("displays the correct title", async () => {
 		await renderSuspended(Summary);
@@ -45,7 +46,7 @@ describe("Domestic hot water summary", () => {
 		const smartHotWaterCylinder: SmartHotWaterTankDataNew = {
 			id: "c84528bb-f805-4f1e-95d3-2bd17384abcd",
 			typeOfWaterStorage: "smartHotWaterTank",
-			name: "Smart hot water cylinder",	
+			name: "Smart hot water cylinder",
 			productReference: "SMART-HOT-WATER-CYLINDER",
 			heatSource: heatPumpId,
 			heaterPosition: 0.3,
@@ -260,8 +261,10 @@ describe("Domestic hot water summary", () => {
 				"Name": "Mixer shower 1",
 				"Type of hot water outlet": "Mixed shower",
 				"Hot water source": "Heat pump",
-				"Flow rate": `10 ${litrePerHour.suffix}`,
+				"Flow rate": `10 ${litrePerSecond.suffix}`,
 				"WWHRS installed": "No",
+				"WWHRS type": "-",
+				"WWHRS product": "-",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -297,6 +300,8 @@ describe("Domestic hot water summary", () => {
 				"Hot water source": "-",
 				"Flow rate": "-",
 				"WWHRS installed": "-",
+				"WWHRS type": "-",
+				"WWHRS product": "-",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -369,7 +374,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Basin tap 1",
 				"Type of hot water outlet": "Other hot water outlet",
-				"Flow rate": `10 ${litrePerMinute.suffix}`,
+				"Flow rate": `10 ${litrePerSecond.suffix}`,
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -378,60 +383,134 @@ describe("Domestic hot water summary", () => {
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
-	});
 
-	describe("pipework", () => {
+		test("displays WWHRS type and product when present for mixer showers", async () => {
+			const mixerWithWwhrs: EcaasForm<MixedShowerDataNew> = {
+				data: {
+					id: "mixer-wwhrs-1",
+					name: "Mixer with WWHRS",
+					flowRate: 15,
+					typeOfHotWaterOutlet: "mixedShower",
+					hotWaterSource: "heat-1",
+					wwhrs: true,
+					wwhrsType: "instantaneousSystemA",
+					wwhrsProductReference: "WWHRS-PR-1",
+				},
+			};
 
-		const pipework: EcaasForm<Partial<PipeworkData>> = {
-			data: {
-				name: "Pipework Kitchen Sink Primary",
-				internalDiameter: 10,
-				externalDiameter: 10,
-				length: 3,
-				insulationThickness: 5,
-				thermalConductivity: 1,
-				surfaceReflectivity: true,
-				pipeContents: "water",
-				location: "heatedSpace",
-			},
-		};
-
-		it("should contain the correct tabs for pipework details", async () => {
-			await renderSuspended(Summary);
-
-			expect(screen.getByRole("link", { name: "Pipework" })).not.toBeNull();
-
-		});
-
-		it("should display the correct data for the pipework section", async () => {
 			store.$patch({
 				domesticHotWaterNew: {
-					pipework: {
-						data: [pipework],
-					},
+					hotWaterOutlets: { data: [mixerWithWwhrs] },
+					heatSources: { data: [{ data: { id: "heat-1", name: "Heat pump" } }] },
 				},
 			});
 
 			await renderSuspended(Summary);
 
 			const expectedResult = {
-				"Name": "Pipework Kitchen Sink Primary",
-				"Location": "Heated space",
-				"Pipe contents": "Water",
-				"Internal diameter": `10 ${millimetre.suffix}`,
-				"External diameter": `10 ${millimetre.suffix}`,
-				"Length": `3 ${metre.suffix}`,
-				"Insulation thickness": `5 ${millimetre.suffix}`,
-				"Thermal conductivity": `1 ${wattsPerMeterKelvin.suffix}`,
-				"Surface reflectivity": "Reflective",
+				"Name": "Mixer with WWHRS",
+				"Type of hot water outlet": "Mixed shower",
+				"Hot water source": "Heat pump",
+				"Flow rate": `15 ${litrePerSecond.suffix}`,
+				"WWHRS installed": "Yes",
+				"WWHRS type": displayCamelToSentenceCase("instantaneousSystemA"),
+				"WWHRS product": "WWHRS-PR-1",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-pipework-${hyphenate(key)}`));
-
+				const lineResult = (await screen.findByTestId(`summary-mixedShower-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
+
+		test("displays WWHRS type and product when present for electric showers", async () => {
+			const electricWithWwhrs: EcaasForm<ElectricShowerDataNew> = {
+				data: {
+					id: "electric-wwhrs-1",
+					name: "Electric with WWHRS",
+					ratedPower: 8,
+					typeOfHotWaterOutlet: "electricShower",
+					wwhrs: true,
+					wwhrsType: "instantaneousSystemA",
+					wwhrsProductReference: "WWHRS-PR-2",
+				},
+			};
+
+			store.$patch({
+				domesticHotWaterNew: { hotWaterOutlets: { data: [electricWithWwhrs] } },
+			});
+
+			await renderSuspended(Summary);
+
+			const expectedResult = {
+				"Name": "Electric with WWHRS",
+				"Type of hot water outlet": "Electric shower",
+				"Rated power": `8 ${kilowatt.suffix}`,
+				"WWHRS installed": "Yes",
+				"WWHRS type": displayCamelToSentenceCase("instantaneousSystemA"),
+				"WWHRS product": "WWHRS-PR-2",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-electricShower-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+	});
+});
+
+describe("pipework", () => {
+	const pipework: EcaasForm<Partial<PipeworkData>> = {
+		data: {
+			name: "Pipework Kitchen Sink Primary",
+			internalDiameter: 10,
+			externalDiameter: 10,
+			length: 3,
+			insulationThickness: 5,
+			thermalConductivity: 1,
+			surfaceReflectivity: true,
+			pipeContents: "water",
+			location: "heatedSpace",
+		},
+	};
+
+	it("should contain the correct tabs for pipework details", async () => {
+		await renderSuspended(Summary);
+
+		expect(screen.getByRole("link", { name: "Pipework" })).not.toBeNull();
+
+	});
+
+	it("should display the correct data for the pipework section", async () => {
+		store.$patch({
+			domesticHotWaterNew: {
+				pipework: {
+					data: [pipework],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "Pipework Kitchen Sink Primary",
+			"Location": "Heated space",
+			"Pipe contents": "Water",
+			"Internal diameter": `10 ${millimetre.suffix}`,
+			"External diameter": `10 ${millimetre.suffix}`,
+			"Length": `3 ${metre.suffix}`,
+			"Insulation thickness": `5 ${millimetre.suffix}`,
+			"Thermal conductivity": `1 ${wattsPerMeterKelvin.suffix}`,
+			"Surface reflectivity": "Reflective",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-pipework-${hyphenate(key)}`));
+
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
 	});
 });
