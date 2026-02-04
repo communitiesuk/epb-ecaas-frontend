@@ -124,6 +124,7 @@ const waterStorages = [
 			validation="required"
 		/>
 		<FormKit
+			v-if="model.typeOfWaterStorage !== undefined"
 			id="name"
 			type="govInputText"
 			label="Name"
@@ -181,6 +182,7 @@ const waterStorages = [
 			data-field="HotWaterSource['hw cylinder'].daily_losses"
 		/>
 		<FieldsHeatSources
+			v-if="model.typeOfWaterStorage !== undefined"
 			id="heatSource"
 			name="heatSource"
 			label="Heat source"
@@ -196,6 +198,7 @@ const waterStorages = [
 			validation="required | number"
 		/>
 		<FormKit
+			v-if="model.typeOfWaterStorage !== undefined"
 			id="heaterPosition"
 			type="govInputFloat"
 			label="Heater position in the cylinder"

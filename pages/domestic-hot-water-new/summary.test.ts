@@ -1,12 +1,13 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Summary from "./summary.vue";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import { litre } from "~/utils/units/volume";
-import { metre, millimetre } from "~/utils/units/length";
-import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
-import { litrePerHour, litrePerMinute } from "~/utils/units/flowRate";
-import { kilowatt } from "~/utils/units/power";
+import { litrePerSecond } from "~/utils/units/flowRate";
+import { displayCamelToSentenceCase } from "~/utils/display";
+import { kilowatt, kilowattHour } from "~/utils/units/power";
+import { metresSquare } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
+import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -32,6 +33,178 @@ describe("Domestic hot water summary", () => {
 
 	afterEach(() => {
 		store.$reset();
+	});
+
+	it("displays the correct title", async () => {
+		await renderSuspended(Summary);
+		expect(screen.getByRole("heading", { name: "Domestic hot water summary" }));
+	});
+
+	describe("water storage", () => {
+		const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
+
+		const hotWaterCylinder: HotWaterCylinderDataNew = {
+			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
+			typeOfWaterStorage: "hotWaterCylinder",
+			name: "Hot water cylinder",
+			storageCylinderVolume: 5,
+			initialTemperature: 60,
+			dailyEnergyLoss: 1,
+			heatSource: heatPumpId,
+			areaOfHeatExchanger: 2.5,
+			heaterPosition: 0.8,
+			thermostatPosition: 0.5,
+		};
+
+		const smartHotWaterCylinder: SmartHotWaterTankDataNew = {
+			id: "c84528bb-f805-4f1e-95d3-2bd17384abcd",
+			typeOfWaterStorage: "smartHotWaterTank",
+			name: "Smart hot water cylinder",
+			productReference: "SMART-HOT-WATER-CYLINDER",
+			heatSource: heatPumpId,
+			heaterPosition: 0.3,
+		};
+
+		const addHotWaterCylinderData = () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					waterStorage: {
+						data: [{ data: hotWaterCylinder }],
+					},
+				},
+				spaceHeating: {
+					heatSource: {
+						data: [{
+							data: {
+								id: heatPumpId,
+								name: "Heat pump",
+								typeOfHeatSource: "heatPump",
+							},
+						}],
+					},
+				},
+			});
+		};
+
+		const addSmartHotWaterCylinderData = () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					waterStorage: {
+						data: [{ data: smartHotWaterCylinder }],
+					},
+				},
+				spaceHeating: {
+					heatSource: {
+						data: [{
+							data: {
+								id: heatPumpId,
+								name: "Heat pump",
+								typeOfHeatSource: "heatPump",
+							},
+						}],
+					},
+				},
+			});
+		};
+
+		it("displays an empty tab state with link to create when no data exists", async () => {
+			await renderSuspended(Summary);
+
+			expect(screen.getByText("No water storage added")).not.toBeNull();
+
+			const addWaterStorageLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add water storage",
+			});
+
+			expect(new URL(addWaterStorageLink.href).pathname).toBe(
+				getUrl("waterStorage"),
+			);
+		});
+
+		it("should contain the correct tabs when data exists", async () => {
+			store.$patch({
+				domesticHotWaterNew: {
+					waterStorage: {
+						data: [{ data: hotWaterCylinder }, { data: smartHotWaterCylinder }],
+					},
+				},
+				spaceHeating: {
+					heatSource: {
+						data: [{
+							data: {
+								id: heatPumpId,
+								name: "Heat pump",
+								typeOfHeatSource: "heatPump",
+							},
+						}],
+					},
+				},
+			});
+			await renderSuspended(Summary);
+
+			expect(screen.queryByRole("link", { name: "Hot water cylinders" })).not.toBeNull();
+			expect(screen.queryByRole("link", { name: "Smart hot water cylinders" })).not.toBeNull();
+		});
+
+		it("should display the correct data for the hot water cylinder section when data exists", async () => {
+			addHotWaterCylinderData();
+			await renderSuspended(Summary);
+
+			const expectedResult = {
+				"Name": "Hot water cylinder",
+				"Storage cylinder volume": `5 ${litre.suffix}`,
+				"Initial temperature": `60 ${degrees.suffix}C`,
+				"Daily energy loss": `1 ${kilowattHour.suffix}`,
+				"Heat source": "Heat pump",
+				"Area of heat exchanger installed": `2.5 ${metresSquare.suffix}`,
+				"Heater position in the cylinder": "0.8",
+				"Thermostat position in the cylinder": "0.5",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-hotWaterCylinder-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+
+		it("should display an edit link within hot water cylinder when data exists", async () => {
+			addHotWaterCylinderData();
+			await renderSuspended(Summary);
+			const hotWaterCylinderSection = screen.getByTestId("hotWaterCylinder");
+			const editLink: HTMLAnchorElement = within(hotWaterCylinderSection).getByText("Edit");
+
+			expect(editLink).not.toBeNull();
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water-new");
+		});
+
+		it("should display the correct data for the smart hot water cylinder section when data exists", async () => {
+			addSmartHotWaterCylinderData();
+			await renderSuspended(Summary);
+
+			const expectedResult = {
+				"Name": "Smart hot water cylinder",
+				"Product reference": "SMART-HOT-WATER-CYLINDER",
+				"Heat source": "Heat pump",
+				"Heater position in the cylinder": "0.3",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-smartHotWaterCylinder-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+
+		it("should display an edit link within smart hot water cylinder when data exists", async () => {
+			addSmartHotWaterCylinderData();
+			await renderSuspended(Summary);
+			const smartHotWaterCylinderSection = screen.getByTestId("smartHotWaterCylinder");
+			const editLink: HTMLAnchorElement = within(smartHotWaterCylinderSection).getByText("Edit");
+
+			expect(editLink).not.toBeNull();
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water-new");
+		});
 	});
 
 	describe("hot water outlets", () => {
@@ -85,11 +258,12 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the mixer shower section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					hotWaterOutlets: {
-						mixedShower: {
-							data: [mixedShower],
-						},
+						data: [mixedShower],
+					},
+					heatSources: {
+						data: [{ data: { id: mixedShower.data.hotWaterSource, name: "Heat pump" } }],
 					},
 				},
 			});
@@ -98,7 +272,49 @@ describe("Domestic hot water summary", () => {
 
 			const expectedResult = {
 				"Name": "Mixer shower 1",
-				"Flow rate": `10 ${litrePerHour.suffix}`,
+				"Type of hot water outlet": "Mixed shower",
+				"Hot water source": "Heat pump",
+				"Flow rate": `10 ${litrePerSecond.suffix}`,
+				"WWHRS installed": "No",
+				"WWHRS type": "-",
+				"WWHRS product": "-",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-mixedShower-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+
+		it("displays '-' for missing values in a partial mixer shower", async () => {
+			const partialMixed = {
+				data: {
+					id: "partial-id-0001",
+					name: "Partial mixer",
+					typeOfHotWaterOutlet: "mixedShower",
+					// intentionally leave out flowRate, hotWaterSource, wwhrs
+				} as Partial<MixedShowerDataNew>,
+			};
+
+			store.$patch({
+				domesticHotWaterNew: {
+					hotWaterOutlets: {
+						data: [partialMixed],
+					},
+				},
+			});
+
+			await renderSuspended(Summary);
+
+			const expectedResult = {
+				"Name": "Partial mixer",
+				"Type of hot water outlet": "Mixed shower",
+				"Hot water source": "-",
+				"Flow rate": "-",
+				"WWHRS installed": "-",
+				"WWHRS type": "-",
+				"WWHRS product": "-",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -110,11 +326,9 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the electric shower section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					hotWaterOutlets: {
-						electricShower: {
-							data: [electricShower],
-						},
+						data: [electricShower],
 					},
 				},
 			});
@@ -123,7 +337,9 @@ describe("Domestic hot water summary", () => {
 
 			const expectedResult = {
 				"Name": "Electric shower 1",
+				"Type of hot water outlet": "Electric shower",
 				"Rated power": `10 ${kilowatt.suffix}`,
+				"WWHRS installed": "No",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -135,11 +351,9 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the bath section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					hotWaterOutlets: {
-						bath: {
-							data: [bathData],
-						},
+						data: [bathData],
 					},
 				},
 			});
@@ -148,6 +362,7 @@ describe("Domestic hot water summary", () => {
 
 			const expectedResult = {
 				"Name": "Bath 1",
+				"Type of hot water outlet": "Bath",
 				"Size": `170 ${litre.suffix}`,
 			};
 
@@ -160,11 +375,9 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the other outlets section", async () => {
 			store.$patch({
-				domesticHotWater: {
+				domesticHotWaterNew: {
 					hotWaterOutlets: {
-						otherOutlets: {
-							data: [otherOutletsData],
-						},
+						data: [otherOutletsData],
 					},
 				},
 			});
@@ -173,7 +386,8 @@ describe("Domestic hot water summary", () => {
 
 			const expectedResult = {
 				"Name": "Basin tap 1",
-				"Flow rate": `10 ${litrePerMinute.suffix}`,
+				"Type of hot water outlet": "Other hot water outlet",
+				"Flow rate": `10 ${litrePerSecond.suffix}`,
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -182,62 +396,83 @@ describe("Domestic hot water summary", () => {
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
-	});
 
-	describe("pipework", () => {
+		test("displays WWHRS type and product when present for mixer showers", async () => {
+			const mixerWithWwhrs: EcaasForm<MixedShowerDataNew> = {
+				data: {
+					id: "mixer-wwhrs-1",
+					name: "Mixer with WWHRS",
+					flowRate: 15,
+					typeOfHotWaterOutlet: "mixedShower",
+					hotWaterSource: "heat-1",
+					wwhrs: true,
+					wwhrsType: "instantaneousSystemA",
+					wwhrsProductReference: "WWHRS-PR-1",
+				},
+			};
 
-		const pipework: EcaasForm<Partial<PipeworkData>> = {
-			data: {
-				name: "Pipework Kitchen Sink Primary",
-				internalDiameter: 10,
-				externalDiameter: 10,
-				length: 3,
-				insulationThickness: 5,
-				thermalConductivity: 1,
-				surfaceReflectivity: true,
-				pipeContents: "water",
-				location: "heatedSpace",
-			},
-		};
-
-		it("should contain the correct tabs for pipework details", async () => {
-			await renderSuspended(Summary);
-
-			expect(screen.getByRole("link", { name: "Pipework" })).not.toBeNull();
-
-		});
-
-		it("should display the correct data for the pipework section", async () => {
 			store.$patch({
 				domesticHotWaterNew: {
-					pipework: {
-						data: [pipework],
-					},
+					hotWaterOutlets: { data: [mixerWithWwhrs] },
+					heatSources: { data: [{ data: { id: "heat-1", name: "Heat pump" } }] },
 				},
 			});
 
 			await renderSuspended(Summary);
 
 			const expectedResult = {
-				"Name": "Pipework Kitchen Sink Primary",
-				"Location": "Heated space",
-				"Pipe contents": "Water",
-				"Internal diameter": `10 ${millimetre.suffix}`,
-				"External diameter": `10 ${millimetre.suffix}`,
-				"Length": `3 ${metre.suffix}`,
-				"Insulation thickness": `5 ${millimetre.suffix}`,
-				"Thermal conductivity": `1 ${wattsPerMeterKelvin.suffix}`,
-				"Surface reflectivity": "Reflective",
+				"Name": "Mixer with WWHRS",
+				"Type of hot water outlet": "Mixed shower",
+				"Hot water source": "Heat pump",
+				"Flow rate": `15 ${litrePerSecond.suffix}`,
+				"WWHRS installed": "Yes",
+				"WWHRS type": displayCamelToSentenceCase("instantaneousSystemA"),
+				"WWHRS product": "WWHRS-PR-1",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-pipework-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-mixedShower-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
 
+		test("displays WWHRS type and product when present for electric showers", async () => {
+			const electricWithWwhrs: EcaasForm<ElectricShowerDataNew> = {
+				data: {
+					id: "electric-wwhrs-1",
+					name: "Electric with WWHRS",
+					ratedPower: 8,
+					typeOfHotWaterOutlet: "electricShower",
+					wwhrs: true,
+					wwhrsType: "instantaneousSystemA",
+					wwhrsProductReference: "WWHRS-PR-2",
+				},
+			};
+
+			store.$patch({
+				domesticHotWaterNew: { hotWaterOutlets: { data: [electricWithWwhrs] } },
+			});
+
+			await renderSuspended(Summary);
+
+			const expectedResult = {
+				"Name": "Electric with WWHRS",
+				"Type of hot water outlet": "Electric shower",
+				"Rated power": `8 ${kilowatt.suffix}`,
+				"WWHRS installed": "Yes",
+				"WWHRS type": displayCamelToSentenceCase("instantaneousSystemA"),
+				"WWHRS product": "WWHRS-PR-2",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-electricShower-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 	});
+	
 	describe("heat sources", () => {
 		// const existingHeatPumpSpaceHeating1: HeatSourceData = {
 		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c30",

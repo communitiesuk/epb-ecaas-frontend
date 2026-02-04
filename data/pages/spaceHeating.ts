@@ -121,6 +121,13 @@ export const spaceHeatingPages = [
 		parentId: "heatEmitters",
 	},
 	{
+		id: "electricStorageHeaterProducts",
+		title: "Select an electric storage heater",
+		url: "/space-heating/heat-emitters/:heatEmitter/electric-storage-heater",
+		type: "task",
+		parentId: "heatEmitters",
+	},
+	{
 		id: "heatEmittersCreate",
 		title: "Heat emitter",
 		url: "/space-heating/heat-emitters/create",

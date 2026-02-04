@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { getTabItems, getUrl, type DomesticHotWaterHeatSourceData } from "#imports";
+import { getTabItems, getUrl } from "#imports";
 import type { SchemaFuelType } from "~/schema/aliases";
+import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
+import { displayDHWHeatSourceType } from "~/utils/display";
 
-const title = "Domestic hot water";
+const title = "Domestic hot water summary";
 const store = useEcaasStore();
 
 const domesticHotWaterUrl = "/domestic-hot-water-new";
@@ -237,61 +239,124 @@ const heatSourceSections: SummarySection[] = [
 	solarThermalSystemSummary,
 	immersionHeaterSummary,
 	pointOfUseSummary,
+];
 
+const waterStorage = store.domesticHotWaterNew.waterStorage.data;
+const hotWaterCylinders = waterStorage.filter(x => x.data.typeOfWaterStorage === "hotWaterCylinder");
+
+const emptyWaterStorageSummary: SummarySection = {
+	id: "waterStorageSummary",
+	label: "Water storage",
+	data: [],
+	editUrl: getUrl("waterStorageCreate"),
+};
+	
+const hotWaterCylinderSummary: SummarySection = {
+	id: "hotWaterCylinder",
+	label: "Hot water cylinders",
+	data: hotWaterCylinders.map(({ data }) => {
+		return {
+			"Name": show(data.name),
+			"Storage cylinder volume": "storageCylinderVolume" in data ? dim(data.storageCylinderVolume, "litres") : emptyValueRendering,
+			"Initial temperature": "initialTemperature" in data ? dim(data.initialTemperature, "celsius") : emptyValueRendering,
+			"Daily energy loss": "dailyEnergyLoss" in data ? dim(data.dailyEnergyLoss, "kilowatt-hour") : emptyValueRendering,
+			"Heat source": show(heatSources.find(x => x.data.id === data.heatSource)?.data.name),
+			"Area of heat exchanger installed": "areaOfHeatExchanger" in data ? dim(data.areaOfHeatExchanger, "metres square") : emptyValueRendering,
+			"Heater position in the cylinder": "heaterPosition" in data ? show(data.heaterPosition) : emptyValueRendering,
+			"Thermostat position in the cylinder": "thermostatPosition" in data ? show(data.thermostatPosition) : emptyValueRendering,
+		};
+	}),
+	editUrl: getUrl("domesticHotWaterNew"),
+};
+
+const smartHotWaterCylinders = waterStorage.filter(x => x.data.typeOfWaterStorage === "smartHotWaterTank");
+
+const smartHotWaterCylinderSummary: SummarySection = {
+	id: "smartHotWaterCylinder",
+	label: "Smart hot water cylinders",
+	data: smartHotWaterCylinders.map(({ data }) => {
+		return {
+			"Name": show(data.name),
+			"Product reference": "productReference" in data ? show(data.productReference) : emptyValueRendering,
+			"Heat source": show(heatSources.find(x => x.data.id === data.heatSource)?.data.name),
+			"Heater position in the cylinder": "heaterPosition" in data ? show(data.heaterPosition) : emptyValueRendering,
+		};
+	}),
+	editUrl: getUrl("domesticHotWaterNew"),
+};
+
+const waterStorageSummarySections: SummarySection[] = [
+	hotWaterCylinderSummary,
+	smartHotWaterCylinderSummary,
 ];
 const populatedHeatSourceSections = getNonEmptySections(heatSourceSections);
 
 
-const mixedShowerData = store.domesticHotWater.hotWaterOutlets.mixedShower.data;
+const hotWaterOutletsAll = store.domesticHotWaterNew.hotWaterOutlets.data;
+const hotWaterSources = store.domesticHotWaterNew.heatSources.data;
+
+const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerDataNew>[];
 const mixedShowerSummary: SummarySection = {
 	id: "mixedShower",
 	label: "Mixer showers",
-	data: mixedShowerData.map(d => { 
+	data: mixedShowerData.map((d) => {
+		const heatSourceName = hotWaterSources.find(h => h.data.id === d.data.hotWaterSource)?.data.name;
 		return {
 			"Name": show(d.data.name),
-			"Flow rate": dim(d.data.flowRate, "litres per hour"),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Hot water source": heatSourceName ? heatSourceName : emptyValueRendering,
+			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per second") : emptyValueRendering,
+			"WWHRS installed": "wwhrs" in d.data ? displayBoolean(d.data.wwhrs) : emptyValueRendering,
+			"WWHRS type": "wwhrsType" in d.data && d.data.wwhrsType ? displayCamelToSentenceCase(String(d.data.wwhrsType)) : emptyValueRendering,
+			"WWHRS product": "wwhrsProductReference" in d.data ? show(d.data.wwhrsProductReference) : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("hotWaterOutlets"),
+	editUrl: getUrl("domesticHotWaterNew"),
 };
 
-const electricShowerData = store.domesticHotWater.hotWaterOutlets.electricShower.data;
+const electricShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "electricShower") as EcaasForm<ElectricShowerDataNew>[];
 const electricShowerSummary: SummarySection = {
 	id: "electricShower",
 	label: "Electric showers",
-	data: electricShowerData.map(d => {   
+	data: electricShowerData.map(d => {
 		return {
 			"Name": show(d.data.name),
-			"Rated power": dim(d.data.ratedPower, "kilowatt"),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Rated power": "ratedPower" in d.data ? dim(d.data.ratedPower, "kilowatt") : emptyValueRendering,
+			"WWHRS installed": "wwhrs" in d.data ? displayBoolean(d.data.wwhrs) : emptyValueRendering,
+			"WWHRS type": "wwhrsType" in d.data && d.data.wwhrsType ? displayCamelToSentenceCase(String(d.data.wwhrsType)) : emptyValueRendering,
+			"WWHRS product": "wwhrsProductReference" in d.data ? show(d.data.wwhrsProductReference) : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("hotWaterOutlets"),
+	editUrl: getUrl("domesticHotWaterNew"),
 };
 
-const bathData = store.domesticHotWater.hotWaterOutlets.bath.data;
+const bathData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "bath") as EcaasForm<BathDataNew>[];
 const bathSummary: SummarySection = {
 	id: "bath",
 	label: "Baths",
 	data: bathData.map(d => {
 		return {
 			"Name": show(d.data.name),
-			"Size": dim(d.data.size, "litres"),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Size": "size" in d.data ? dim(d.data.size, "litres") : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("hotWaterOutlets"),
+	editUrl: getUrl("domesticHotWaterNew"),
 };
 
-const otherOutletsData = store.domesticHotWater.hotWaterOutlets.otherOutlets.data;
+const otherOutletsData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "otherHotWaterOutlet") as EcaasForm<OtherHotWaterOutletDataNew>[];
 const otherOutletsSummary: SummarySection = {
 	id: "otherOutlets",
 	label: "Other",
 	data: otherOutletsData.map(d => {
 		return {
 			"Name": show(d.data.name),
-			"Flow rate": dim(d.data.flowRate, "litres per minute"),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per second") : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("hotWaterOutlets"),
+	editUrl: getUrl("domesticHotWaterNew"),
 };
 
 const hotWaterOutletsSummarySections: SummarySection[] = [
@@ -300,6 +365,8 @@ const hotWaterOutletsSummarySections: SummarySection[] = [
 	bathSummary,
 	otherOutletsSummary,
 ];
+
+
 
 const pipeworkData = store.domesticHotWaterNew.pipework.data;
 const pipeworkSummary: SummarySection = {
@@ -324,6 +391,8 @@ const pipeworkSummary: SummarySection = {
 const pipeworkSummarySections: SummarySection[] = [
 	pipeworkSummary,
 ];
+
+const populatedWaterStorageSections = getNonEmptySections(waterStorageSummarySections);
 
 </script>
 
@@ -354,11 +423,27 @@ const pipeworkSummarySections: SummarySection[] = [
 			</SummaryTab>
 		</template>
 	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="populatedWaterStorageSections.length === 0 ? [emptyWaterStorageSummary] : getTabItems(populatedWaterStorageSections)">
+		<template v-if="populatedWaterStorageSections.length === 0">
+			<SummaryTab :summary="emptyWaterStorageSummary" :selected="tabProps.currentTab === 0">
+				<template #empty>
+					<h2 class="govuk-heading-m">No water storage added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('waterStorage')">
+						Add water storage
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
+		<template v-for="section, i of populatedWaterStorageSections" :key="i">
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i"/>
+		</template>
+	</GovTabs>
+
 	<GovTabs v-slot="tabProps" :items="getTabItems(hotWaterOutletsSummarySections)">
 		<SummaryTab :summary="mixedShowerSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No mixer shower added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('mixedShowerCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsNewCreate')">
 					Add mixer shower
 				</NuxtLink>
 			</template>
@@ -366,7 +451,7 @@ const pipeworkSummarySections: SummarySection[] = [
 		<SummaryTab :summary="electricShowerSummary" :selected="tabProps.currentTab === 1">
 			<template #empty>
 				<h2 class="govuk-heading-m">No electric shower added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('electricShowerCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsNewCreate')">
 					Add electric shower
 				</NuxtLink>
 			</template>
@@ -374,7 +459,7 @@ const pipeworkSummarySections: SummarySection[] = [
 		<SummaryTab :summary="bathSummary" :selected="tabProps.currentTab === 2">
 			<template #empty>
 				<h2 class="govuk-heading-m">No bath added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('bathCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsNewCreate')">
 					Add bath
 				</NuxtLink>
 			</template>
@@ -382,7 +467,7 @@ const pipeworkSummarySections: SummarySection[] = [
 		<SummaryTab :summary="otherOutletsSummary" :selected="tabProps.currentTab === 3">
 			<template #empty>
 				<h2 class="govuk-heading-m">No outlet added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('otherOutletsCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsNewCreate')">
 					Add outlet
 				</NuxtLink>
 			</template>

@@ -1,13 +1,9 @@
-import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatSourceForm from "./index.vue";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import { v4 as uuidv4 } from "uuid";
-
-const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport("navigateTo", () => {
-	return navigateToMock;
-});
+import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 
 vi.mock("uuid");
 

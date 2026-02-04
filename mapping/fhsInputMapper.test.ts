@@ -205,9 +205,6 @@ const expectedHouseInput: FhsInputSchema = {
 			"design_flow_temp": 40,
 			"ecodesign_controller": {
 				"ecodesign_control_class": 1,
-				"max_outdoor_temp": 15,
-				"min_flow_temp": 30,
-				"min_outdoor_temp": 0,
 			},
 			"emitters": [
 				{
@@ -455,8 +452,8 @@ const expectedFlatInput: FhsInputSchema = {
 		"hw cylinder": {
 			ColdWaterSource: "mains water",
 			HeatSource: {
-				["heat pump"]: {
-					name: "heat pump",
+				["Heat pump"]: {
+					name: "Heat pump",
 					EnergySupply: "mains elec",
 					heater_position: 0.1,
 					type: "HeatSourceWet",
@@ -600,9 +597,6 @@ const expectedFlatInput: FhsInputSchema = {
 			"design_flow_temp": 40,
 			"ecodesign_controller": {
 				"ecodesign_control_class": 1,
-				"max_outdoor_temp": 15,
-				"min_flow_temp": 30,
-				"min_outdoor_temp": 0,
 			},
 			"emitters": [
 				{
@@ -1151,7 +1145,6 @@ describe("FHS input mapper", () => {
 						heatSource: "HP-1",
 						ecoDesignControllerClass: "1",
 						designFlowTemp: 40,
-						minFlowTemp: 30,
 						designTempDiffAcrossEmitters: 5,
 						hasVariableFlowRate: false,
 						designFlowRate: 200,
@@ -1886,7 +1879,6 @@ describe("FHS input mapper", () => {
 						heatSource: "HP-1",
 						ecoDesignControllerClass: "1",
 						designFlowTemp: 40,
-						minFlowTemp: 30,
 						designTempDiffAcrossEmitters: 5,
 						hasVariableFlowRate: false,
 						designFlowRate: 200,

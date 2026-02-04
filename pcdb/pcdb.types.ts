@@ -56,7 +56,7 @@ const heatPumpBase = BaseProduct.extend({
 	powerStandby: z.number(),
 	powerCrankcaseHeater: z.nullable(z.number()),
 	powerOff: z.nullable(z.number()),
-	powerMaximumBackup: z.nullable(z.number()),
+	powerMaxBackup: z.nullable(z.number()),
 	standardRatingCapacity20C: z.nullable(z.number()),
 	standardRatingCapacity35C: z.nullable(z.number()),
 	standardRatingCapacity55C: z.nullable(z.number()),
@@ -195,6 +195,23 @@ export const fancoilZod = BaseProduct.extend({
 
 export type FanCoilProduct = z.infer<typeof fancoilZod>;
 
+export const electricStorageHeaterZod = BaseProduct.extend({
+	technologyType: z.literal("StorageHeater"),
+	backupPower: z.nullable(z.number()),
+	storageCapacity: z.nullable(z.number()),
+	ratedPower: z.nullable(z.number()),
+	airFlowType: z.nullable(z.number()),
+	convectiveFraction: z.nullable(z.number()),
+	heatRetention: z.nullable(z.number()),
+	ratedFanPower: z.nullable(z.number()),
+	pwrIn: z.nullable(z.number()),
+	outputPower: z.nullable(z.number()),
+	highHeatRetention: z.nullable(z.number()),
+	controlType: z.nullable(z.string()),
+});
+
+export type ElectricStorageHeaterProduct = z.infer<typeof electricStorageHeaterZod>;
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
 	groundSourceHeatPumpZod,
@@ -210,6 +227,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	heatBatteryDryCoreZod,
 	smartHotWaterTankZod,
 	fancoilZod,
+	electricStorageHeaterZod,
 ]);
 
 export type Product = z.infer<typeof productSchema>;
@@ -218,7 +236,7 @@ export const Products = z.array(productSchema);
 
 export type TechnologyType = Product["technologyType"];
 
-export const categoryTechnologies = {
+const categoryTechnologies = {
 	heatPump: [
 		"AirSourceHeatPump",
 		"GroundSourceHeatPump",
@@ -237,19 +255,14 @@ export const categoryTechnologies = {
 		"HeatBatteryPCM",
 		"HeatBatteryDryCore",
 	],
-	waterStorage: [
-		"SmartHotWaterTank",
+	waterStorage: ["SmartHotWaterTank"],
+	heatEmitting: [
+		"FanCoils",
+		"StorageHeater",
 	],
-	fanCoil: ["FanCoils"],
 } as const satisfies Record<string, TechnologyType[]>;
 
 export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMap(x => categoryTechnologies[x]);
-
-export const knownCategories = objectKeys(categoryTechnologies);
-
-export type Category = keyof typeof categoryTechnologies;
-
-export type ProductForCategory<T extends Category> = Extract<Product, { technologyType: (typeof categoryTechnologies)[T][number] }>;
 
 export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier"> & { technologyType: TechnologyType };
 

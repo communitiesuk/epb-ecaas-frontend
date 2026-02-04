@@ -101,25 +101,28 @@ describe("water storage", () => {
 
 		//shared properties
 		expect((await screen.findByTestId("typeOfWaterStorage_error"))).toBeDefined();
-		expect((await screen.findByTestId("name_error"))).toBeDefined();
-		expect((await screen.findByTestId("heatSource_error"))).toBeDefined();
-		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
 		
 		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 		await user.click(screen.getByTestId("saveAndComplete"));
 		
 		//hot water cylinder specific
+		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
 		expect((await screen.findByTestId("initialTemperature_error"))).toBeDefined();
 		expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
+		expect((await screen.findByTestId("heatSource_error"))).toBeDefined();
 		expect((await screen.findByTestId("areaOfHeatExchanger_error"))).toBeDefined();
+		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
 		expect((await screen.findByTestId("thermostatPosition_error"))).toBeDefined();
 
 		await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		//smart hot water tank specific
+		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("selectSmartHotWaterTank_error"))).toBeDefined();
+		expect((await screen.findByTestId("heatSource_error"))).toBeDefined();
+		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
 	});
 
 	test("navigate to pcdb product select page for smart hot water tank when choose a product button is clicked", async () => {

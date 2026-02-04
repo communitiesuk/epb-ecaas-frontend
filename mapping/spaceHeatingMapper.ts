@@ -12,9 +12,10 @@ import type {
 	SchemaWarmAir,
 	SchemaWetDistribution,
 	SchemaEcoDesignControllerNoWeatherCompensator,
+	SchemaEcoDesignControllerWeatherCompensator,
 } from "../schema/api-schema.types";
 import type { SchemaHeatSourceWetDetails, SchemaSpaceHeatSystem } from "~/schema/aliases";
-import { defaultConvectiveType, defaultElectricityEnergySupplyName, defaultZoneName, maxOutdoorTemp, minOutdoorTemp } from "./common";
+import { defaultConvectiveType, defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 
 export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatPump> {
 	const heatsources = state.spaceHeating.heatSource;
@@ -121,6 +122,7 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaWetDist
 				product_reference: radiator.productReference,
 				radiator_type: "towel",
 			};
+			const ecoDesignController = mapEcoDesignController(radiator);
 			const common = {
 				emitters: Array(radiator.numOfRadiators).fill(emitter),
 				EnergySupply: defaultElectricityEnergySupplyName,
@@ -129,13 +131,9 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaWetDist
 				type: "WetDistribution" as const,
 				design_flow_temp: radiator.designFlowTemp,
 				HeatSource: { name: getHeatSourceNameForEmitter(state, radiator) },
-				ecodesign_controller: {
-					ecodesign_control_class: parseInt(radiator.ecoDesignControllerClass), //TODO eco class 2,3,6,7 require min flow temp, min/max outdoor temp 
-					// min_flow_temp: radiator.minFlowTemp,
-					min_outdoor_temp: minOutdoorTemp, 
-					max_outdoor_temp: maxOutdoorTemp,
-				} as SchemaEcoDesignControllerNoWeatherCompensator,
+				ecodesign_controller: ecoDesignController,
 			};
+
 			const data: SchemaWetDistribution = radiator.hasVariableFlowRate
 				? { ...common, variable_flow: true, min_flow_rate: radiator.minFlowRate, max_flow_rate: radiator.maxFlowRate }
 				: { ...common, variable_flow: false, design_flow_rate: radiator.designFlowRate };
@@ -145,6 +143,26 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaWetDist
 			];
 		}),
 	);
+}
+
+function mapEcoDesignController<T extends { ecoDesignControllerClass: string, minOutdoorTemp?: number, maxOutdoorTemp?: number, minFlowTemp?: number }>(emitter: T) {
+	let ecoDesignController: SchemaEcoDesignControllerNoWeatherCompensator | SchemaEcoDesignControllerWeatherCompensator;
+	const ecoDesignControllerClass = parseInt(emitter.ecoDesignControllerClass);
+	if ([2, 3, 6, 7].includes(ecoDesignControllerClass)) {
+		ecoDesignController = {
+			ecodesign_control_class: ecoDesignControllerClass,
+			min_outdoor_temp: "maxOutdoorTemp" in emitter ? emitter.minOutdoorTemp : undefined,
+			max_outdoor_temp: "minOutdoorTemp" in emitter ? emitter.maxOutdoorTemp : undefined,
+			min_flow_temp: "minFlowTemp" in emitter ? emitter.minFlowTemp : undefined,
+		} as SchemaEcoDesignControllerWeatherCompensator;
+	} else if ([1, 4, 5, 8].includes(ecoDesignControllerClass)) {
+		ecoDesignController = {
+			ecodesign_control_class: ecoDesignControllerClass,
+		} as SchemaEcoDesignControllerNoWeatherCompensator;
+	} else {
+		throw Error(`Invalid eco design controller class for radiator: ${emitter.ecoDesignControllerClass}`);
+	}
+	return ecoDesignController;
 }
 
 export function mapUnderfloorHeating(state: ResolvedState): Record<string, SchemaWetDistribution> {
@@ -166,6 +184,7 @@ export function mapUnderfloorHeating(state: ResolvedState): Record<string, Schem
 				wet_emitter_type: "ufh",
 
 			};
+			const ecoDesignController = mapEcoDesignController(heating);
 			const common = {
 				emitters: [emitter],
 				EnergySupply: defaultElectricityEnergySupplyName,
@@ -174,13 +193,9 @@ export function mapUnderfloorHeating(state: ResolvedState): Record<string, Schem
 				type: "WetDistribution" as const,
 				design_flow_temp: heating.designFlowTemp,
 				HeatSource: { name: getHeatSourceNameForEmitter(state, heating) },
-				ecodesign_controller: {
-					ecodesign_control_class: parseInt(heating.ecoDesignControllerClass),
-					min_flow_temp: heating.minFlowTemp,
-					min_outdoor_temp: minOutdoorTemp,
-					max_outdoor_temp: maxOutdoorTemp,
-				} as SchemaEcoDesignControllerNoWeatherCompensator,
+				ecodesign_controller: ecoDesignController,
 			};
+
 			const data: SchemaWetDistribution = heating.hasVariableFlowRate
 				? { ...common, variable_flow: true, min_flow_rate: heating.minFlowRate, max_flow_rate: heating.maxFlowRate }
 				: { ...common, variable_flow: false, design_flow_rate: heating.designFlowRate };
@@ -210,6 +225,7 @@ export function mapFanCoils(state: ResolvedState): Record<string, SchemaWetDistr
 				product_reference: fancoil.productReference,
 				wet_emitter_type: "fancoil",
 			};
+			const ecoDesignController = mapEcoDesignController(fancoil);
 			const common = {
 				emitters: Array(fancoil.numOfFanCoils).fill(emitter),
 				EnergySupply: defaultElectricityEnergySupplyName,
@@ -218,12 +234,7 @@ export function mapFanCoils(state: ResolvedState): Record<string, SchemaWetDistr
 				type: "WetDistribution" as const,
 				design_flow_temp: fancoil.designFlowTemp,
 				HeatSource: { name: getHeatSourceNameForEmitter(state, fancoil) },
-				ecodesign_controller: {
-					ecodesign_control_class: parseInt(fancoil.ecoDesignControllerClass),
-					min_flow_temp: fancoil.minFlowTemp,
-					min_outdoor_temp: minOutdoorTemp,
-					max_outdoor_temp: maxOutdoorTemp,
-				} as SchemaEcoDesignControllerNoWeatherCompensator,
+				ecodesign_controller: ecoDesignController,
 			};
 			const data: SchemaWetDistribution = fancoil.hasVariableFlowRate
 				? { ...common, variable_flow: true, min_flow_rate: fancoil.minFlowRate, max_flow_rate: fancoil.maxFlowRate }

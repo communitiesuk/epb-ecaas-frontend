@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ecoDesignControllerOptions, isInteger, radiatorTypes } from "#imports";
+import { ecoClasses, ecoDesignControllerOptions, isInteger, radiatorTypes } from "#imports";
 import type { RadiatorModelType } from "~/pages/space-heating/heat-emitters/[heatEmitter]/index.vue";
 import type { EcoControlClassesWithExtraOptions } from "~/stores/ecaasStore.schema";
 
 const route = useRoute();
-const ecoClasses: EcoControlClassesWithExtraOptions[] = ["2", "3", "6", "7"];
 
 defineProps<{
 	model: RadiatorModelType,

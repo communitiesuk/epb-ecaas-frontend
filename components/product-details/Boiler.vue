@@ -35,5 +35,5 @@ const tableData: Record<string, string> =
 </script>
 
 <template>
-	<ProductDetails :data="tableData" />
+	<ProductDetails id="boiler" :data="tableData" />
 </template>

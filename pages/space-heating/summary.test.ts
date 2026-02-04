@@ -342,13 +342,29 @@ describe("Space heating summary page", () => {
 			productReference: "FC-SMALL",
 			heatSource: "boiler-id",
 			designFlowTemp: 50,
-			minFlowTemp: 40,
 			designTempDiffAcrossEmitters: 10,
-			hasVariableFlowRate: true, ecoDesignControllerClass: "2",
+			hasVariableFlowRate: true, ecoDesignControllerClass: "1",
 			maxFlowRate: 200,
 			minFlowRate: 50,
 			numOfFanCoils: 3,
 		};
+		const fanCoilWithEcoDesign2367: HeatEmittingData = {
+			id: "5678",
+			name: "Fan Coil 1",
+			typeOfHeatEmitter: "fanCoil",
+			productReference: "FC-SMALL",
+			heatSource: "boiler-id",
+			designFlowTemp: 50,
+			designTempDiffAcrossEmitters: 10,
+			hasVariableFlowRate: true, ecoDesignControllerClass: "2",
+			minFlowTemp: 45,
+			minOutdoorTemp: 1,
+			maxOutdoorTemp: 15,
+			maxFlowRate: 200,
+			minFlowRate: 50,
+			numOfFanCoils: 3,
+		};
+
 		const ufh: HeatEmittingData = {
 			id: "91011",
 			name: "Underfloor Heating 1",
@@ -356,14 +372,31 @@ describe("Space heating summary page", () => {
 			productReference: "UFH-SMALL",
 			heatSource: "heat-pump-id",
 			designFlowTemp: 35,
-			minFlowTemp: 25,
+			designTempDiffAcrossEmitters: 10,
+			hasVariableFlowRate: true,
+			maxFlowRate: 150,
+			minFlowRate: 30,
+			areaOfUnderfloorHeating: 100,
+			ecoDesignControllerClass: "1",
+		};
+		const ufhWithEcoDesign2367: HeatEmittingData = {
+			id: "91011",
+			name: "Underfloor Heating 1",
+			typeOfHeatEmitter: "underfloorHeating",
+			productReference: "UFH-SMALL",
+			heatSource: "heat-pump-id",
+			designFlowTemp: 35,
 			designTempDiffAcrossEmitters: 10,
 			hasVariableFlowRate: true,
 			maxFlowRate: 150,
 			minFlowRate: 30,
 			areaOfUnderfloorHeating: 100,
 			ecoDesignControllerClass: "3",
+			minFlowTemp: 25,
+			minOutdoorTemp: 0,
+			maxOutdoorTemp: 20,
 		};
+		
 		const warmAirHeater: HeatEmittingData = {
 			id: "121314",
 			name: "Warm Air Heater 1",
@@ -396,7 +429,7 @@ describe("Space heating summary page", () => {
 			["warmAirHeaterSummary", warmAirHeater],
 			["instantElectricHeaterSummary", instantElectricHeater],
 			["electricStorageHeaterSummary", electricStorageHeater],
-		])("displays %s tab when a emitter has been added", async (testId, heatEmitter) => {
+		])("displays %s tab when a %s has been added", async (testId, heatEmitter) => {
 			store.$patch({
 				spaceHeating: {
 					heatEmitters: {
@@ -429,13 +462,15 @@ describe("Space heating summary page", () => {
 			"Type of heat emitter": "Fan coil",
 			"Product reference": "FC-SMALL",
 			"Design flow temperature": "50 °C",
-			"Minimum flow temperature": "40 °C",
 			"Design temperature difference across emitters": "10 °C",
 			"Is there a variable flow rate?": "Yes",
 			"Maximum flow rate": "200 litres per second",
 			"Minimum flow rate": "50 litres per second",
 			"Number of fan coils": "3",
 			"Eco design controller class": "2",
+			"Minimum outdoor temperature": "1 °C",
+			"Maximum outdoor temperature": "15 °C",
+			"Minimum flow temperature": "45 °C",
 		};
 
 		const expectedUfhData = {
@@ -443,13 +478,15 @@ describe("Space heating summary page", () => {
 			"Type of heat emitter": "Underfloor heating",
 			"Product reference": "UFH-SMALL",
 			"Design flow temperature": "35 °C",
-			"Minimum flow temperature": "25 °C",
 			"Design temperature difference across emitters": "10 °C",
 			"Is there a variable flow rate?": "Yes",
 			"Maximum flow rate": "150 litres per second",
 			"Minimum flow rate": "30 litres per second",
 			"Area of underfloor heating": "100 m²",
 			"Eco design controller class": "3",
+			"Minimum outdoor temperature": "0 °C",
+			"Maximum outdoor temperature": "20 °C",
+			"Minimum flow temperature": "25 °C",
 		};
 
 		const expectedWarmAirHeaterData = {
@@ -489,8 +526,8 @@ describe("Space heating summary page", () => {
 					heatEmitters: {
 						data: [
 							{ data: radiatorWithEcoDesign2367 },
-							{ data: fanCoil },
-							{ data: ufh },
+							{ data: fanCoilWithEcoDesign2367 },
+							{ data: ufhWithEcoDesign2367 },
 							{ data: warmAirHeater },
 							{ data: instantElectricHeater },
 							{ data: electricStorageHeater },

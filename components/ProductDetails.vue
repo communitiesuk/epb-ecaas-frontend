@@ -1,9 +1,12 @@
 <script setup lang="ts">
-defineProps<{ data: Record<string, string>; }>();
+defineProps<{
+	id?: string;
+	data: Record<string, string>;
+}>();
 </script>
 
 <template>
-	<div class="product-table-container">
+	<div class="product-table-container" :data-testid="id">
 		<div class="govuk-table">
 			<div class="govuk-table__body">
 				<div v-for="prop in Object.keys(data)" :key="prop" class="govuk-table__row">

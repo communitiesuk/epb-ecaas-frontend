@@ -26,13 +26,13 @@ const instantElectricHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter
 const electricStorageHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "electricStorageHeater");
 
 
-const heatSourcesSummary: SummarySection = {
+const emptyHeatSourcesSummary: SummarySection = {
 	id: "heatSourceSummary",
 	label: "Heat sources",
 	data: [],
 	editUrl: spaceHeatingUrl,
 };
-const heatEmitterSummary: SummarySection = {
+const emptyHeatEmitterSummary: SummarySection = {
 	id: "heatEmitterSummary",
 	label: "Heat emitters",
 	data: [],
@@ -231,8 +231,10 @@ const ufhSummary: SummarySection = {
 			"Product reference": "productReference" in ufh ? ufh.productReference : emptyValueRendering,
 			"Heat source": heatSource ? heatSource.data.name : emptyValueRendering,
 			"Eco design controller class": "ecoDesignControllerClass" in ufh && ufh.ecoDesignControllerClass ? displayCamelToSentenceCase(ufh.ecoDesignControllerClass) : emptyValueRendering,
-			"Design flow temperature": "designFlowTemp" in ufh ? dim(ufh.designFlowTemp, "celsius") : emptyValueRendering,
+			"Minimum outdoor temperature": "minOutdoorTemp" in ufh ? dim(ufh.minOutdoorTemp, "celsius") : emptyValueRendering,
+			"Maximum outdoor temperature": "maxOutdoorTemp" in ufh ? dim(ufh.maxOutdoorTemp, "celsius") : emptyValueRendering,
 			"Minimum flow temperature": "minFlowTemp" in ufh ? dim(ufh.minFlowTemp, "celsius") : emptyValueRendering,
+			"Design flow temperature": "designFlowTemp" in ufh ? dim(ufh.designFlowTemp, "celsius") : emptyValueRendering,
 			"Design temperature difference across emitters": "designTempDiffAcrossEmitters" in ufh ? dim(ufh.designTempDiffAcrossEmitters, "celsius") : emptyValueRendering,
 			"Is there a variable flow rate?": "hasVariableFlowRate" in ufh ? displayBoolean(ufh.hasVariableFlowRate) : emptyValueRendering,
 			"Maximum flow rate": "maxFlowRate" in ufh ? dim(ufh.maxFlowRate, "litres per second") : emptyValueRendering,
@@ -257,8 +259,10 @@ const fanCoilSummary: SummarySection = {
 			"Product reference": "productReference" in fanCoil ? fanCoil.productReference : emptyValueRendering,
 			"Heat source": heatSource ? heatSource.data.name : emptyValueRendering,
 			"Eco design controller class": "ecoDesignControllerClass" in fanCoil && fanCoil.ecoDesignControllerClass ? displayCamelToSentenceCase(fanCoil.ecoDesignControllerClass) : emptyValueRendering,
-			"Design flow temperature": "designFlowTemp" in fanCoil ? dim(fanCoil.designFlowTemp, "celsius") : emptyValueRendering,
+			"Minimum outdoor temperature": "minOutdoorTemp" in fanCoil ? dim(fanCoil.minOutdoorTemp, "celsius") : emptyValueRendering,
+			"Maximum outdoor temperature": "maxOutdoorTemp" in fanCoil ? dim(fanCoil.maxOutdoorTemp, "celsius") : emptyValueRendering,
 			"Minimum flow temperature": "minFlowTemp" in fanCoil ? dim(fanCoil.minFlowTemp, "celsius") : emptyValueRendering,
+			"Design flow temperature": "designFlowTemp" in fanCoil ? dim(fanCoil.designFlowTemp, "celsius") : emptyValueRendering,
 			"Design temperature difference across emitters": "designTempDiffAcrossEmitters" in fanCoil ? dim(fanCoil.designTempDiffAcrossEmitters, "celsius") : emptyValueRendering,
 			"Is there a variable flow rate?": "hasVariableFlowRate" in fanCoil ? displayBoolean(fanCoil.hasVariableFlowRate) : emptyValueRendering,
 			"Maximum flow rate": "maxFlowRate" in fanCoil ? dim(fanCoil.maxFlowRate, "litres per second") : emptyValueRendering,
@@ -361,9 +365,9 @@ const heatingControlsSummary: SummarySection = {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovTabs v-slot="tabProps" :items="populatedHeatSourceSections">
+	<GovTabs v-slot="tabProps" :items="populatedHeatSourceSections.length === 0? [emptyHeatSourcesSummary] : populatedHeatSourceSections">
 		<template v-if="populatedHeatSourceSections.length === 0">
-			<SummaryTab :summary="heatSourcesSummary" :selected="tabProps.currentTab === 0">
+			<SummaryTab :summary="emptyHeatSourcesSummary" :selected="tabProps.currentTab === 0">
 				<template #empty>
 					<h2 class="govuk-heading-m">No heat sources added</h2>
 					<NuxtLink class="govuk-link" :to="getUrl('heatSourceCreate')">
@@ -373,19 +377,12 @@ const heatingControlsSummary: SummarySection = {
 			</SummaryTab>
 		</template>
 		<template v-for="section, i of populatedHeatSourceSections" :key="i">
-			<SummaryTab :summary="section" :selected="tabProps.currentTab === i">
-				<template #empty>
-					<h2 class="govuk-heading-m">No heat sources added</h2>
-					<NuxtLink class="govuk-link" :to="getUrl('heatSourceCreate')">
-						Add heat source
-					</NuxtLink>
-				</template>
-			</SummaryTab>
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i" />
 		</template>
 	</GovTabs>
-	<GovTabs v-slot="tabProps" :items="populatedHeatEmitterSections">
+	<GovTabs v-slot="tabProps" :items="populatedHeatEmitterSections.length === 0 ? [emptyHeatEmitterSummary] : populatedHeatEmitterSections">
 		<template v-if="populatedHeatEmitterSections.length === 0">
-			<SummaryTab :summary="heatEmitterSummary" :selected="tabProps.currentTab === 0">
+			<SummaryTab :summary="emptyHeatEmitterSummary" :selected="tabProps.currentTab === 0">
 				<template #empty>
 					<h2 class="govuk-heading-m">No heat emitters added</h2>
 					<NuxtLink class="govuk-link" :to="getUrl('heatEmittersCreate')">
@@ -395,14 +392,7 @@ const heatingControlsSummary: SummarySection = {
 			</SummaryTab>
 		</template>
 		<template v-for="section, i of populatedHeatEmitterSections" :key="i">
-			<SummaryTab :summary="section" :selected="tabProps.currentTab === i">
-				<template #empty>
-					<h2 class="govuk-heading-m">No heat emitters added</h2>
-					<NuxtLink class="govuk-link" :to="getUrl('heatEmittersCreate')">
-						Add heat emitter
-					</NuxtLink>
-				</template>
-			</SummaryTab>
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i" />
 		</template>
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems([heatingControlsSummary])">
