@@ -205,8 +205,6 @@ const expectedHouseInput: FhsInputSchema = {
 			"design_flow_temp": 40,
 			"ecodesign_controller": {
 				"ecodesign_control_class": 1,
-				"max_outdoor_temp": 15,
-				"min_outdoor_temp": 0,
 			},
 			"emitters": [
 				{
@@ -599,8 +597,6 @@ const expectedFlatInput: FhsInputSchema = {
 			"design_flow_temp": 40,
 			"ecodesign_controller": {
 				"ecodesign_control_class": 1,
-				"max_outdoor_temp": 15,
-				"min_outdoor_temp": 0,
 			},
 			"emitters": [
 				{
