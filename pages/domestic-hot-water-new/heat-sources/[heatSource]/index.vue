@@ -228,7 +228,7 @@ const coldWaterSourceOptions =
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
-			<GovButton :href="getUrl('spaceHeating')" secondary test-id="saveProgress">Save progress</GovButton>
+			<GovButton :href="getUrl('domesticHotWaterNew')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

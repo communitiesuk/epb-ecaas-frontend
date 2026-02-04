@@ -111,6 +111,7 @@ describe("Heat Source Page", () => {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 		});
 	});
+
 	test("only display the heat source base form when user clicks existing heat source after initially adding a new one", async () => {
 		store.$patch({
 			spaceHeating: {
@@ -129,6 +130,13 @@ describe("Heat Source Page", () => {
 		expect(screen.getByTestId("typeOfHeatSource")).toBeDefined();
 		await user.click(screen.getByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`));
 		expect(screen.queryByTestId("typeOfHeatSource")).toBeNull();
+	});
+	
+	test("save progress button navigates user to the domestic hot wate overview page", async () => {
+		await renderSuspended(HeatSourceForm);
+		const saveProgressButton = screen.getByTestId("saveProgress");
+
+		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water-new");
 	});
 });
 
