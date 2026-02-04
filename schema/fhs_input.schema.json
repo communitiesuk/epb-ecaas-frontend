@@ -500,6 +500,17 @@
 											},
 											"EnergySupply_pump": {
 												"type": "string"
+											},
+											"init_temp": {
+												"type": "number",
+												"minimum": 1,
+												"maximum": 100
+											},
+											"primary_pipework": {
+												"type": "array",
+												"items": {
+													"$ref": "#/$defs/PrimaryPipework"
+												}
 											}
 										},
 										"required": [
@@ -558,19 +569,28 @@
 						},
 						{
 							"if": {
-								"oneOf": [
+								"allOf": [
 									{
-										"properties": {
-											"type": {
-												"const": "StorageTank"
+										"oneOf": [
+											{
+												"properties": {
+													"type": {
+														"const": "StorageTank"
+													}
+												}
+											},
+											{
+												"properties": {
+													"type": {
+														"const": "SmartHotWaterTank"
+													}
+												}
 											}
-										}
+										]
 									},
 									{
-										"properties": {
-											"type": {
-												"const": "SmartHotWaterTank"
-											}
+										"not": {
+											"required": ["product_reference"]
 										}
 									}
 								]
@@ -600,321 +620,11 @@
 									"primary_pipework": {
 										"type": "array",
 										"items": {
-											"type": "object",
-											"unevaluatedProperties": false,
-											"required": [
-												"location",
-												"internal_diameter_mm",
-												"external_diameter_mm",
-												"length",
-												"insulation_thermal_conductivity",
-												"insulation_thickness_mm",
-												"surface_reflectivity",
-												"pipe_contents"
-											],
-											"properties": {
-												"location": {
-													"enum": [
-														"internal",
-														"external"
-													]
-												},
-												"internal_diameter_mm": {
-													"type": "number",
-													"minimum": 5,
-													"maximum": 50
-												},
-												"external_diameter_mm": {
-													"type": "number",
-													"minimum": 5,
-													"maximum": 50
-												},
-												"length": {
-													"type": "number",
-													"minimum": 0.05
-												},
-												"insulation_thermal_conductivity": {
-													"type": "number",
-													"exclusiveMinimum": 0
-												},
-												"insulation_thickness_mm": {
-													"type": "number",
-													"minimum": 0
-												},
-												"surface_reflectivity": {
-													"type": "boolean"
-												},
-												"pipe_contents": {
-													"enum": [
-														"water",
-														"glycol25"
-													]
-												}
-											}
+											"$ref": "#/$defs/PrimaryPipework"
 										}
 									},
 									"HeatSource": {
-										"type": "object",
-										"additionalProperties": {
-											"type": "object",
-											"unevaluatedProperties": false,
-											"required": [
-												"type",
-												"heater_position"
-											],
-											"properties": {
-												"type": {
-													"enum": [
-														"ImmersionHeater",
-														"SolarThermalSystem",
-														"HeatSourceWet",
-														"HeatPump_HWOnly"
-													]
-												},
-												"heater_position": {
-													"type": "number",
-													"minimum": 0,
-													"maximum": 1
-												},
-												"thermostat_position": {
-													"type": "number",
-													"minimum": 0,
-													"maximum": 1
-												}
-											},
-											"allOf": [
-												{
-													"if": {
-														"properties": {
-															"type": {
-																"const": "HeatPump_HWOnly"
-															}
-														}
-													},
-													"then": {
-														"required": [
-															"EnergySupply",
-															"power_max",
-															"tank_volume_declared",
-															"heat_exchanger_surface_area_declared",
-															"daily_losses_declared",
-															"in_use_factor_mismatch",
-															"test_data"
-														],
-														"properties": {
-															"EnergySupply": {
-																"type": "string"
-															},
-															"power_max": {
-																"type": "number",
-																"exclusiveMinimum": 0
-															},
-															"tank_volume_declared": {
-																"type": "number",
-																"exclusiveMinimum": 0
-															},
-															"heat_exchanger_surface_area_declared": {
-																"type": "number",
-																"exclusiveMinimum": 0
-															},
-															"daily_losses_declared": {
-																"type": "number",
-																"exclusiveMinimum": 0
-															},
-															"in_use_factor_mismatch": {
-																"type": "number",
-																"exclusiveMinimum": 0
-															},
-															"test_data": {
-																"type": "object",
-																"unevaluatedProperties": false,
-																"patternProperties": {
-																	"M|L": {
-																		"type": "object",
-																		"unevaluatedProperties": false,
-																		"required": [
-																			"cop_dhw",
-																			"hw_tapping_prof_daily_total",
-																			"energy_input_measured",
-																			"power_standby",
-																			"hw_vessel_loss_daily"
-																		],
-																		"properties": {
-																			"cop_dhw": {
-																				"type": "number",
-																				"exclusiveMinimum": 0
-																			},
-																			"hw_tapping_prof_daily_total": {
-																				"type": "number",
-																				"exclusiveMinimum": 0
-																			},
-																			"energy_input_measured": {
-																				"type": "number",
-																				"exclusiveMinimum": 0
-																			},
-																			"power_standby": {
-																				"type": "number",
-																				"exclusiveMinimum": 0
-																			},
-																			"hw_vessel_loss_daily": {
-																				"type": "number",
-																				"exclusiveMinimum": 0
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												},
-												{
-													"if": {
-														"properties": {
-															"type": {
-																"const": "HeatSourceWet"
-															}
-														}
-													},
-													"then": {
-														"required": [
-															"EnergySupply",
-															"name"
-														],
-														"properties": {
-															"EnergySupply": {
-																"type": "string"
-															},
-															"name": {
-																"type": "string"
-															},
-															"temp_flow_limit_upper": {
-																"type": "number",
-																"exclusiveMinimum": 0
-															}
-														}
-													}
-												},
-												{
-													"if": {
-														"properties": {
-															"type": {
-																"const": "ImmersionHeater"
-															}
-														}
-													},
-													"then": {
-														"required": [
-															"power",
-															"EnergySupply"
-														],
-														"properties": {
-															"power": {
-																"type": "number",
-																"minimum": 1,
-																"maximum": 10
-															},
-															"EnergySupply": {
-																"type": "string"
-															}
-														}
-													}
-												},
-												{
-													"if": {
-														"properties": {
-															"type": {
-																"const": "SolarThermalSystem"
-															}
-														}
-													},
-													"then": {
-														"required": [
-															"sol_loc",
-															"area_module",
-															"modules",
-															"peak_collector_efficiency",
-															"incidence_angle_modifier",
-															"first_order_hlc",
-															"second_order_hlc",
-															"collector_mass_flow_rate",
-															"power_pump",
-															"power_pump_control",
-															"EnergySupply",
-															"tilt",
-															"orientation360",
-															"solar_loop_piping_hlc"
-														],
-														"properties": {
-															"sol_loc": {
-																"enum": [
-																	"OUT",
-																	"NHS",
-																	"HS"
-																]
-															},
-															"area_module": {
-																"type": "number",
-																"exclusiveMinimum": 0
-															},
-															"modules": {
-																"type": "integer",
-																"minimum": 1
-															},
-															"peak_collector_efficiency": {
-																"type": "number",
-																"minimum": 0.1,
-																"maximum": 1
-															},
-															"incidence_angle_modifier": {
-																"type": "number",
-																"exclusiveMinimum": 0,
-																"maximum": 1
-															},
-															"first_order_hlc": {
-																"type": "number",
-																"exclusiveMinimum": 0,
-																"maximum": 100
-															},
-															"second_order_hlc": {
-																"type": "number",
-																"minimum": 0,
-																"maximum": 10
-															},
-															"collector_mass_flow_rate": {
-																"type": "number",
-																"exclusiveMinimum": 0
-															},
-															"power_pump": {
-																"type": "number",
-																"minimum": 0,
-																"maximum": 2
-															},
-															"power_pump_control": {
-																"type": "number",
-																"minimum": 0
-															},
-															"EnergySupply": {
-																"type": "string"
-															},
-															"tilt": {
-																"type": "number",
-																"minimum": 0,
-																"maximum": 90
-															},
-															"orientation360": {
-																"type": "number",
-																"minimum": 0,
-																"maximum": 360
-															},
-															"solar_loop_piping_hlc": {
-																"type": "number",
-																"exclusiveMinimum": 0
-															}
-														}
-													}
-												}
-											]
-										}
+										"$ref": "#/$defs/HeatSource"
 									}
 								},
 								"if": {
@@ -4859,6 +4569,322 @@
 							"exclusiveMinimum": 0
 						}
 					}
+				}
+			}
+		},
+		"HeatSource": {
+			"type": "object",
+			"additionalProperties": {
+				"type": "object",
+				"unevaluatedProperties": false,
+				"required": [
+					"type",
+					"heater_position"
+				],
+				"properties": {
+					"type": {
+						"enum": [
+							"ImmersionHeater",
+							"SolarThermalSystem",
+							"HeatSourceWet",
+							"HeatPump_HWOnly"
+						]
+					},
+					"heater_position": {
+						"type": "number",
+						"minimum": 0,
+						"maximum": 1
+					},
+					"thermostat_position": {
+						"type": "number",
+						"minimum": 0,
+						"maximum": 1
+					}
+				},
+				"allOf": [
+					{
+						"if": {
+							"properties": {
+								"type": {
+									"const": "HeatPump_HWOnly"
+								}
+							}
+						},
+						"then": {
+							"required": [
+								"EnergySupply",
+								"power_max",
+								"tank_volume_declared",
+								"heat_exchanger_surface_area_declared",
+								"daily_losses_declared",
+								"in_use_factor_mismatch",
+								"test_data"
+							],
+							"properties": {
+								"EnergySupply": {
+									"type": "string"
+								},
+								"power_max": {
+									"type": "number",
+									"exclusiveMinimum": 0
+								},
+								"tank_volume_declared": {
+									"type": "number",
+									"exclusiveMinimum": 0
+								},
+								"heat_exchanger_surface_area_declared": {
+									"type": "number",
+									"exclusiveMinimum": 0
+								},
+								"daily_losses_declared": {
+									"type": "number",
+									"exclusiveMinimum": 0
+								},
+								"in_use_factor_mismatch": {
+									"type": "number",
+									"exclusiveMinimum": 0
+								},
+								"test_data": {
+									"type": "object",
+									"unevaluatedProperties": false,
+									"patternProperties": {
+										"M|L": {
+											"type": "object",
+											"unevaluatedProperties": false,
+											"required": [
+												"cop_dhw",
+												"hw_tapping_prof_daily_total",
+												"energy_input_measured",
+												"power_standby",
+												"hw_vessel_loss_daily"
+											],
+											"properties": {
+												"cop_dhw": {
+													"type": "number",
+													"exclusiveMinimum": 0
+												},
+												"hw_tapping_prof_daily_total": {
+													"type": "number",
+													"exclusiveMinimum": 0
+												},
+												"energy_input_measured": {
+													"type": "number",
+													"exclusiveMinimum": 0
+												},
+												"power_standby": {
+													"type": "number",
+													"exclusiveMinimum": 0
+												},
+												"hw_vessel_loss_daily": {
+													"type": "number",
+													"exclusiveMinimum": 0
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					{
+						"if": {
+							"properties": {
+								"type": {
+									"const": "HeatSourceWet"
+								}
+							}
+						},
+						"then": {
+							"required": [
+								"EnergySupply",
+								"name"
+							],
+							"properties": {
+								"EnergySupply": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"temp_flow_limit_upper": {
+									"type": "number",
+									"exclusiveMinimum": 0
+								}
+							}
+						}
+					},
+					{
+						"if": {
+							"properties": {
+								"type": {
+									"const": "ImmersionHeater"
+								}
+							}
+						},
+						"then": {
+							"required": [
+								"power",
+								"EnergySupply"
+							],
+							"properties": {
+								"power": {
+									"type": "number",
+									"minimum": 1,
+									"maximum": 10
+								},
+								"EnergySupply": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					{
+						"if": {
+							"properties": {
+								"type": {
+									"const": "SolarThermalSystem"
+								}
+							}
+						},
+						"then": {
+							"required": [
+								"sol_loc",
+								"area_module",
+								"modules",
+								"peak_collector_efficiency",
+								"incidence_angle_modifier",
+								"first_order_hlc",
+								"second_order_hlc",
+								"collector_mass_flow_rate",
+								"power_pump",
+								"power_pump_control",
+								"EnergySupply",
+								"tilt",
+								"orientation360",
+								"solar_loop_piping_hlc"
+							],
+							"properties": {
+								"sol_loc": {
+									"enum": [
+										"OUT",
+										"NHS",
+										"HS"
+									]
+								},
+								"area_module": {
+									"type": "number",
+									"exclusiveMinimum": 0
+								},
+								"modules": {
+									"type": "integer",
+									"minimum": 1
+								},
+								"peak_collector_efficiency": {
+									"type": "number",
+									"minimum": 0.1,
+									"maximum": 1
+								},
+								"incidence_angle_modifier": {
+									"type": "number",
+									"exclusiveMinimum": 0,
+									"maximum": 1
+								},
+								"first_order_hlc": {
+									"type": "number",
+									"exclusiveMinimum": 0,
+									"maximum": 100
+								},
+								"second_order_hlc": {
+									"type": "number",
+									"minimum": 0,
+									"maximum": 10
+								},
+								"collector_mass_flow_rate": {
+									"type": "number",
+									"exclusiveMinimum": 0
+								},
+								"power_pump": {
+									"type": "number",
+									"minimum": 0,
+									"maximum": 2
+								},
+								"power_pump_control": {
+									"type": "number",
+									"minimum": 0
+								},
+								"EnergySupply": {
+									"type": "string"
+								},
+								"tilt": {
+									"type": "number",
+									"minimum": 0,
+									"maximum": 90
+								},
+								"orientation360": {
+									"type": "number",
+									"minimum": 0,
+									"maximum": 360
+								},
+								"solar_loop_piping_hlc": {
+									"type": "number",
+									"exclusiveMinimum": 0
+								}
+							}
+						}
+					}
+				]
+			}
+		},
+		"PrimaryPipework": {
+			"type": "object",
+			"unevaluatedProperties": false,
+			"required": [
+				"location",
+				"internal_diameter_mm",
+				"external_diameter_mm",
+				"length",
+				"insulation_thermal_conductivity",
+				"insulation_thickness_mm",
+				"surface_reflectivity",
+				"pipe_contents"
+			],
+			"properties": {
+				"location": {
+					"enum": [
+						"internal",
+						"external"
+					]
+				},
+				"internal_diameter_mm": {
+					"type": "number",
+					"minimum": 5,
+					"maximum": 50
+				},
+				"external_diameter_mm": {
+					"type": "number",
+					"minimum": 5,
+					"maximum": 50
+				},
+				"length": {
+					"type": "number",
+					"minimum": 0.05
+				},
+				"insulation_thermal_conductivity": {
+					"type": "number",
+					"exclusiveMinimum": 0
+				},
+				"insulation_thickness_mm": {
+					"type": "number",
+					"minimum": 0
+				},
+				"surface_reflectivity": {
+					"type": "boolean"
+				},
+				"pipe_contents": {
+					"enum": [
+						"water",
+						"glycol25"
+					]
 				}
 			}
 		}
