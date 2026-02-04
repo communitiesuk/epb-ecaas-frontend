@@ -8,8 +8,7 @@ defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "solarThermalSystem" }>;
 	index: number;
 }>();
-
-const heatSourceStoreData = store.spaceHeating.heatSource.data;
+const heatSources = getCombinedHeatSources(store);
 
 const locationOfCollectorLoopPipingOptions = {
 	"outside": "Outside",
@@ -26,7 +25,7 @@ const locationOfCollectorLoopPipingOptions = {
 		label="Name"
 		help="Provide a name for this element so that it can be identified later"
 		name="name"
-		:validation-rules="{ uniqueName: uniqueName(heatSourceStoreData, { index }) }"
+		:validation-rules="{ uniqueName: uniqueName(heatSources, { id: model.id }) }"
 		validation="required | uniqueName"
 		:validation-messages="{
 			uniqueName: 'An element with this name already exists. Please enter a unique name.'

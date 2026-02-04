@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { type HeatSourceData, uniqueName } from "#imports";
+import { type DomesticHotWaterHeatSourceData, type HeatSourceData, uniqueName } from "#imports";
 import { heatPumpTypes } from "../utils/display";
 const route = useRoute();
 const store = useEcaasStore();
 
 defineProps<{
-	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatPump" }>;
+	model: Extract<HeatSourceData | DomesticHotWaterHeatSourceData, { "typeOfHeatSource": "heatPump" }>;
 	index: number;
 }>();
 
-const heatSourceStoreData = store.spaceHeating.heatSource.data;
-const emit = defineEmits(["update-heat-pump-model"]);
 
+const heatSources = getCombinedHeatSources(store);
+
+const emit = defineEmits(["update-heat-pump-model"]);
+console.log({ heatSources });
 </script>
 
 <template>
@@ -31,7 +33,7 @@ const emit = defineEmits(["update-heat-pump-model"]);
 		label="Name"
 		help="Provide a name for this element so that it can be identified later"
 		name="name"
-		:validation-rules="{ uniqueName: uniqueName(heatSourceStoreData, { index }) }"
+		:validation-rules="{ uniqueName: uniqueName(heatSources, { id: model.id }) }"
 		validation="required | uniqueName"
 		:validation-messages="{
 			uniqueName: 'An element with this name already exists. Please enter a unique name.'
