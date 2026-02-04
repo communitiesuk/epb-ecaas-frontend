@@ -1,5 +1,3 @@
-//TODO convert from space heating to domestic hot water
-
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import type { Product } from "~/pcdb/pcdb.types";
 import ProductDetails from "./[id].vue";
@@ -8,7 +6,7 @@ import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 
 describe("Heat pump details", async () => {
-	const smallHeatPump: Partial<HeatPumpData> = {
+	const smallHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
 		name: "Heat pump 2",
 		productReference: "HEATPUMP-SMALL",
 		typeOfHeatPump: "airSource",
@@ -37,8 +35,8 @@ describe("Heat pump details", async () => {
 
 	beforeEach(() => {
 		store.$patch({
-			spaceHeating: {
-				heatSource: {
+			domesticHotWaterNew: {
+				heatSources: {
 					data: [{ data: smallHeatPump }],
 				},
 			},
@@ -105,7 +103,7 @@ describe("Heat pump details", async () => {
 		await renderSuspended(ProductDetails);
 		await user.click(screen.getByTestId("selectProductButton"));
 
-		const heatSource = store.spaceHeating.heatSource.data[0]?.data as PcdbProduct;
+		const heatSource = store.domesticHotWaterNew.heatSources.data[0]?.data as PcdbProduct;
 
 		// Assert
 		expect(heatSource.productReference).toBe("1000");
@@ -117,6 +115,6 @@ describe("Heat pump details", async () => {
 		await user.click(screen.getByTestId("selectProductButton"));
 
 		// Assert
-		expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-source/0");
+		expect(mockNavigateTo).toHaveBeenCalledWith("/domestic-hot-water-new/heat-sources/0");
 	});
 });

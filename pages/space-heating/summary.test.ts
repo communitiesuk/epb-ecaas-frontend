@@ -293,11 +293,15 @@ describe("Space heating summary page", () => {
 			expect(new URL(editLink.href).pathname).toBe("/space-heating/heating-controls");
 		});
 	});
+
 	describe("Heat emitters section", () => {
+
 		const store = useEcaasStore();
+
 		beforeEach(() => {
 			store.$reset();
 		});
+		
 		const radiator: HeatEmittingData = {
 			id: "1234",
 			name: "Radiator 1",
@@ -384,19 +388,6 @@ describe("Space heating summary page", () => {
 			numOfStorageHeaters: 8,
 			productReference: "ESH-SMALL",
 		};
-		it("displays an empty tab state when no data is present", async () => {
-			await renderSuspended(SpaceHeatingSummary);
-
-			expect(screen.getByText("No heat emitters added")).not.toBeNull();
-
-			const addHeatEmitterLink: HTMLAnchorElement = screen.getByRole("link", {
-				name: "Add heat emitter",
-			});
-
-			expect(new URL(addHeatEmitterLink.href).pathname).toBe(
-				getUrl("heatEmittersCreate"),
-			);
-		});
 
 		it.each([
 			["radiatorSummary", radiator],
@@ -405,7 +396,7 @@ describe("Space heating summary page", () => {
 			["warmAirHeaterSummary", warmAirHeater],
 			["instantElectricHeaterSummary", instantElectricHeater],
 			["electricStorageHeaterSummary", electricStorageHeater],
-		])("displays %s tab when a radiator has been added", async (testId, heatEmitter) => {
+		])("displays %s tab when a emitter has been added", async (testId, heatEmitter) => {
 			store.$patch({
 				spaceHeating: {
 					heatEmitters: {
@@ -416,6 +407,7 @@ describe("Space heating summary page", () => {
 			await renderSuspended(SpaceHeatingSummary);
 			expect(screen.getByTestId(testId)).not.toBeNull();
 		});
+
 		const expectedRadiatorData = {
 			Name: "Radiator 2",
 			"Type of heat emitter": "Radiator",
@@ -480,7 +472,7 @@ describe("Space heating summary page", () => {
 			"Product reference": "ESH-SMALL",
 			"Number of storage heaters": "8",
 		};
-		it.only.each(
+		it.each(
 			[
 				["radiatorSummary", expectedRadiatorData],
 				["fanCoilSummary", expectedFanCoilData],

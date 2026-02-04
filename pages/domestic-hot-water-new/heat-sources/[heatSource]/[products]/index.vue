@@ -1,5 +1,4 @@
 <script setup lang="ts">
-//TODO convert from space heating to domestic hot water
 import { page } from "~/data/pages/pages";
 import { productTypeMap } from "~/stores/ecaasStore.schema";
 
@@ -19,7 +18,7 @@ const { productData, pagination } = searchData(value?.data ?? []);
 const selectProduct = (reference: string) => {
 	store.$patch((state) => {
 
-		const item = state.spaceHeating.heatSource.data[index];
+		const item = state.domesticHotWaterNew.heatSources.data[index];
 
 		if (item) {
 			const data = item.data as HeatSourceData;
@@ -32,7 +31,7 @@ const selectProduct = (reference: string) => {
 		}
 	});
 
-	navigateTo(page("heatSource").url.replace(":heatSource", `${index}`));
+	navigateTo(page("heatSources").url.replace(":heatSource", `${index}`));
 };
 </script>
 
@@ -46,7 +45,7 @@ const selectProduct = (reference: string) => {
 		:products="pagination.getData()"
 		:total-pages="pagination.totalPages"
 		:on-select-product="selectProduct" />
-	<GovButton secondary :href="`/space-heating/heat-source/${index}`" test-id="backToHeatSourceButton">
+	<GovButton secondary :href="`/domestic-hot-water-new/heat-sources/${index}`" test-id="backToHeatSourceButton">
 		Back to heat source
 	</GovButton>
 </template>

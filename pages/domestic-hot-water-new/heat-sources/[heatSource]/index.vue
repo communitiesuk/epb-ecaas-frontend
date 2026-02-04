@@ -20,6 +20,7 @@ export type HeatNetworkModelType = Extract<DomesticHotWaterHeatSourceData, { typ
 export type HeatBatteryModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "heatBattery" }>;
 export type SolarThermalModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "solarThermalSystem" }>;
 export type ImmersionHeaterModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "immersionHeater" }>;
+export type PointOfUseModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "pointOfUse" }>;
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
@@ -219,10 +220,15 @@ const coldWaterSourceOptions =
 				&& model.typeOfHeatSource === 'immersionHeater'"
 			:model="model as ImmersionHeaterModelType" 
 			:index="index" />
+		<PointOfUseSection
+			v-if="model.isExistingHeatSource === false
+				&& model.typeOfHeatSource === 'pointOfUse'"
+			:model="model as PointOfUseModelType" 
+			:index="index" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
-			<GovButton :href="getUrl('spaceHeating')" secondary test-id="saveProgress">Save progress</GovButton>
+			<GovButton :href="getUrl('domesticHotWaterNew')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

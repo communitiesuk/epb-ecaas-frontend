@@ -11,7 +11,7 @@ defineProps<{
 
 const heatSourceStoreData = store.spaceHeating.heatSource.data;
 const emit = defineEmits(["update-heat-pump-model"]);
-console.log("HELLO");
+
 </script>
 
 <template>
