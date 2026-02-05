@@ -109,7 +109,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Perimeter"
-			help="Enter the perimeter of the floor"
+			help="Enter the length of the exposed perimeter of the floor"
 			name="perimeter"
 			validation="required | number | min:0 | max:1000"
 		/>
@@ -118,7 +118,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="W/(m·K)"
 			label="Psi of wall junction"
-			help="Enter the linear thermal transmittance of the wall-floor junction"
+			help="This is the linear thermal transmittance of the junction between the floor and the walls"
 			name="psiOfWallJunction"
 			validation="required | number | min:0 | max:2"
 		/>
@@ -127,7 +127,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="mm"
 			label="Thickness of walls"
-			help="Enter the thickness of the basement walls"
+			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 30mm to 80mm."
 			name="thicknessOfWalls"
 			validation="required | number"
 		/>
