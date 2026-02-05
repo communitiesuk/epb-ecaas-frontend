@@ -83,6 +83,7 @@ autoSaveElementForm<WaterStorageData>({
 	storeData: store.domesticHotWaterNew.waterStorage,
 	defaultName: "Water storage",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= id;
 		state.domesticHotWaterNew.waterStorage.data[index] = newData;
 		state.domesticHotWaterNew.waterStorage.complete = false;
 	},

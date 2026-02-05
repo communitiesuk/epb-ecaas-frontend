@@ -142,6 +142,7 @@ autoSaveElementForm<HotWaterOutletsData>({
 	storeData: store.domesticHotWaterNew.hotWaterOutlets,
 	defaultName: "Water storage",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= id;
 		state.domesticHotWaterNew.hotWaterOutlets.data[index] = newData;
 		state.domesticHotWaterNew.hotWaterOutlets.complete = false;
 	},
