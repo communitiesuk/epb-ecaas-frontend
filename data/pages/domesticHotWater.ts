@@ -155,7 +155,7 @@ const domesticHotWaterPages = [
 		url: "/domestic-hot-water-new/pipework/:pipework",
 		type: "task",
 		parentId: "domesticHotWaterNew",
-	},	
+	},
 	{
 		id: "domesticHotWaterNewSummary",
 		title: "Summary",

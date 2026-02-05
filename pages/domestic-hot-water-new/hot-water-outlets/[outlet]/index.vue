@@ -218,7 +218,16 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 			help="Select the relevant hot water source that has been added previously"
 			validation="required"
 			:options="hotWaterSourceOptions"
-		/>
+		>			
+			<div v-if="!hotWaterSourceOptions.size"
+			>
+				<p class="govuk-error-message">No heat sources added.</p>
+				<NuxtLink :to="getUrl('heatSourcesCreate')" class="govuk-link gov-radios-add-link">
+					Click here to add a heat source
+				</NuxtLink>
+			</div>
+		</FormKit>
+	
 		<FormKit
 			v-if="model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	
 			id="flowRate"

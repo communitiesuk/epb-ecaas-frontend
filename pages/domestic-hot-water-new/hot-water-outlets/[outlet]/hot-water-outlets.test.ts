@@ -255,7 +255,19 @@ describe("hot water outlets", () => {
 		expect(heatSourceSelect.hasAttribute("checked")).toBe(true);
 	});
 
+	test("shows link to add heat source when mixer shower is selected and no heat sources exist", async () => {
+		await renderSuspended(HotWaterOutlets, {
+			route: {
+				params: { "hotWaterOutlet": "create" },
+			},
+		});
+		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
 
+		expect(screen.getByText("No heat sources added.")).toBeDefined();
+		const link = screen.getByRole("link");
+		expect(link).toBeDefined();
+		expect(link.getAttribute("href")).toBe(getUrl("heatSourcesCreate"));
+	});
 	test("navigate to water storage product selection for wwhrs when choose a product button is clicked", async () => {
 		await renderSuspended(HotWaterOutlets, {
 			route: {
