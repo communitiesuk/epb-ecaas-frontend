@@ -116,10 +116,32 @@ const exposedFloorSummary: SummarySection = {
 	editUrl: getUrl("dwellingSpaceFloors"),
 };
 
+const heatedBasementData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement?.data;
+const heatedBasementSummary: SummarySection = {
+	id: "dwellingSpaceFloorOfHeatedBasement",
+	label: "Floors of a heated basement",
+	data: heatedBasementData?.map(({ data: x }) => {
+		return {
+			"Name": show(x.name),
+			"Net surface area of this element": dim(x.surfaceArea, "metres square"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"Areal heat capacity": show(x.arealHeatCapacity),
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Depth of basement floor below ground": dim(x.depthOfBasementFloor, "metres"),
+			"Perimeter": dim(x.perimeter, "metres"),
+			"Psi of wall junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
+			"Thickness of walls": dim(x.thicknessOfWalls, "millimetres"),
+		};
+	}) || [],
+	editUrl: getUrl("dwellingSpaceFloors"),
+};
+
 const floorSummarySections: SummarySection[] = [
 	groundFloorSummary,
 	internalFloorSummary,
 	exposedFloorSummary,
+	heatedBasementSummary,
 ];
 
 const externalWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data;
@@ -486,6 +508,15 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<h2 class="govuk-heading-m">No exposed floors added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceExposedFloorCreate')">
 					Add exposed floors
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+
+		<SummaryTab :summary="heatedBasementSummary" :selected="tabProps.currentTab === 3">
+			<template #empty>
+				<h2 class="govuk-heading-m">No heated basement floors added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceFloorOfHeatedBasementCreate')">
+					Add floors of a heated basement
 				</NuxtLink>
 			</template>
 		</SummaryTab>

@@ -1,6 +1,7 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Summary from "./summary.vue";
 import { screen } from "@testing-library/vue";
+import userEvent from "@testing-library/user-event";
 import type {
 	CeilingsAndRoofsData,
 	DoorsData,
@@ -22,6 +23,7 @@ import { degrees } from "~/utils/units/angle";
 import { metresSquare } from "~/utils/units/area";
 import { cubicMetre } from "~/utils/units/volume";
 import { unitValue } from "~/utils/units";
+const user = userEvent.setup();
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -86,8 +88,37 @@ const floorsData: FloorsData = {
 			},
 		}],
 	},
+	dwellingSpaceFloorOfHeatedBasement: {
+		data: [{
+			data: {
+				name: "Floor of heated basement 1",
+				surfaceArea: 45,
+				uValue: 0.25,
+				thermalResistance: 4,
+				arealHeatCapacity: "Medium",
+				massDistributionClass: "I",
+				depthOfBasementFloor: 2.5,
+				perimeter: 30,
+				psiOfWallJunction: 0.08,
+				thicknessOfWalls: 0.3,
+			},
+		}],
+	},
 	dwellingSpaceFloorAboveUnheatedBasement: {
-		data: [],
+		data: [{
+			data: {
+				name: "Floor above unheated basement 1",
+				surfaceArea: 45,
+				uValue: 0.25,
+				thermalResistance: 4,
+				arealHeatCapacity: "Medium",
+				massDistributionClass: "I",
+				depthOfBasementFloor: 2.5,
+				perimeter: 30,
+				psiOfWallJunction: 0.08,
+				thicknessOfWalls: 0.3,
+			},
+		}],
 	},
 };
 
@@ -311,13 +342,13 @@ const thermalBridgingData: ThermalBridgingData = {
 		],
 	},
 };
+const store = useEcaasStore();
 
+afterEach(() => {
+	store.$reset();
+});
 describe("Dwelling space fabric summary", () => {
-	const store = useEcaasStore();
 
-	afterEach(() => {
-		store.$reset();
-	});
 
 	describe("Dwelling space zone parameters", () => {
 		it("should contain the correct tabs for dwelling space zone parameters", async () => {
@@ -391,524 +422,575 @@ describe("Dwelling space fabric summary", () => {
 			expect(screen.getByRole("link", { name: "Ground floors" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Internal floors" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Exposed floors" })).not.toBeNull();
-		});
-
-		it("should display the correct data for the ground floor section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceFloors: {
-						dwellingSpaceGroundFloor: floorsData.dwellingSpaceGroundFloor,
-					},
-				},
-			});
-
-			await renderSuspended(Summary);
-
-			const expectedResult = {
-				"Name": "Ground 1",
-				"Net surface area of this element": `5 ${metresSquare.suffix}`,
-				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Thermal resistance": `1 ${squareMeterKelvinPerWatt.suffix}`,
-				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal",
-				"Perimeter": `0 ${metre.suffix}`,
-				"Psi of wall junction": `0 ${wattsPerMeterKelvin.suffix}`,
-				"Thickness of walls at the edge of the floor": `0.3 ${millimetre.suffix}`,
-				"Type of ground floor": "Slab no edge insulation",
-			};
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceGroundFloors-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
-
-		it("should display the correct data for the internal floor section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceFloors: {
-						dwellingSpaceInternalFloor: floorsData.dwellingSpaceInternalFloor,
-					},
-				},
-			});
-
-			await renderSuspended(Summary);
-
-			const expectedResult = {
-				"Type of internal floor": "Internal floor to heated space",
-				"Name": "Internal 1",
-				"Net surface area of element": `5 ${metresSquare.suffix}`,
-				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal",
-			};
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceInternalFloors-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
-
-		it("should display the correct data for the exposed floor section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceFloors: {
-						dwellingSpaceExposedFloor: floorsData.dwellingSpaceExposedFloor,
-					},
-				},
-			});
-
-			await renderSuspended(Summary);
-
-			const expectedResult = {
-				"Name": "Exposed Floor 1",
-				"Length": `0.5 ${metre.suffix}`,
-				"Width": `20 ${metre.suffix}`,
-				"Elevational height of building element at its base": `20 ${metre.suffix}`,
-				"Net surface area": `10 ${metresSquare.suffix}`,
-				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal",
-			};
-
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceExposedFloors-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
+			expect(screen.getByRole("link", { name: "Floors of a heated basement" })).not.toBeNull();
 		});
 	});
 
-	describe("Dwelling space walls", () => {
-		it("should contain the correct tabs for dwelling space walls", async () => {
-			await renderSuspended(Summary);
-
-			expect(screen.getByRole("link", { name: "External walls" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Internal walls" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Walls to unheated spaces" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Party walls" })).not.toBeNull();
-		});
-
-		it("should display the correct data for the external wall section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWalls: {
-						dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
-					},
+	it("should display the correct data for the heated basement section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceFloorOfHeatedBasement: floorsData.dwellingSpaceFloorOfHeatedBasement,
 				},
-			});
-
-			await renderSuspended(Summary);
-
-			const expectedResult = {
-				"Name": "External wall 1",
-				"Pitch": `90 ${degrees.suffix}`,
-				"Orientation": `0 ${degrees.suffix}`,
-				"Height": `0.5 ${metre.suffix}`,
-				"Length": `20 ${metre.suffix}`,
-				"Elevational height of building element at its base": `20 ${metre.suffix}`,
-				"Net surface area": `10 ${metresSquare.suffix}`,
-				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal",
-			};
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceExternalWalls-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
+			},
 		});
 
-		it("should display the correct data for the internal wall section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWalls: {
-						dwellingSpaceInternalWall: wallsData.dwellingSpaceInternalWall,
-					},
-				},
-			});
+		await renderSuspended(Summary);
 
-			await renderSuspended(Summary);
+		const expectedResult = {
+			"Name": "Floor of heated basement 1",
+			"Net surface area of this element": `45 ${metresSquare.suffix}`,
+			"U-value": `0.25 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Thermal resistance": `4 ${squareMeterKelvinPerWatt.suffix}`,
+			"Areal heat capacity": "Medium",
+			"Mass distribution class": "Internal",
+			"Depth of basement floor below ground": `2.5 ${metre.suffix}`,
+			"Perimeter": `30 ${metre.suffix}`,
+			"Psi of wall junction": `0.08 ${wattsPerMeterKelvin.suffix}`,
+			"Thickness of walls": `0.3 ${millimetre.suffix}`,
+		};
 
-			const expectedResult = {
-				"Name": "Internal 1",
-				"Net surface area of element": `5 ${metresSquare.suffix}`,
-				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal",
-				"Pitch": `10 ${degrees.suffix}`,
-			};
-
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceInternalWalls-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
-
-		it("should display the correct data for the wall to unheated space section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWalls: {
-						dwellingSpaceWallToUnheatedSpace: wallsData.dwellingSpaceWallToUnheatedSpace,
-					},
-				},
-			});
-
-			await renderSuspended(Summary);
-
-			const expectedResult = {
-				"Name": "Wall to unheated space 1",
-				"Net surface area of element": `500 ${metresSquare.suffix}`,
-				"U-value": `10 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Areal heat capacity": "Very light",
-				"Mass distribution class": "External",
-				"Pitch": `90 ${degrees.suffix}`,
-				"Thermal resistance of adjacent unheated space": `1 ${squareMeterKelvinPerWatt.suffix}`,
-			};
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceUnheatedSpaceWalls-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
-
-		it("should display the correct data for the party wall section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWalls: {
-						dwellingSpacePartyWall: wallsData.dwellingSpacePartyWall,
-					},
-				},
-			});
-
-			await renderSuspended(Summary);
-
-			const expectedResult = {
-				"Name": "Party wall 1",
-				"Pitch": `90 ${degrees.suffix}`,
-				"Net surface area": `10 ${metresSquare.suffix}`,
-				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal",
-			};
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpacePartyWalls-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceFloorOfHeatedBasement-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
 	});
 
-	describe("dwelling space ceilings and roofs", () => {
-		it("should contain the correct tabs for dwelling space walls", async () => {
-			await renderSuspended(Summary);
-
-			expect(screen.getByRole("link", { name: "Ceilings" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Roofs" })).not.toBeNull();
-		});
-
-		it("should display the correct data for the ceilings section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceCeilings: ceilingsAndRoofsData.dwellingSpaceCeilings,
-					},
+	it("should render '-' for missing values in heated basement section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceFloorOfHeatedBasement: { data: [{ data: { name: "Empty basement" } }] },
 				},
-			});
-
-			await renderSuspended(Summary);
-
-			const expectedResult = {
-				"Type of ceiling": "Ceiling to heated space",
-				"Name": "Ceiling 1",
-				"Net surface area": `5 ${metresSquare.suffix}`,
-				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal",
-				"Pitch": `180 ${degrees.suffix}`,
-			};
-
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceCeilings-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
+			},
 		});
 
-		it("should display the correct data for the roof section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceRoofs: ceilingsAndRoofsData.dwellingSpaceRoofs,
-					},
-				},
-			});
+		await renderSuspended(Summary);
 
-			await renderSuspended(Summary);
-			const expectedFlatRoof = {
-				"Name": "Flat roof",
-				"Type of roof": "Flat",
-				"Pitch": `180 ${degrees.suffix}`,
-				"Length": `1 ${metre.suffix}`,
-				"Width": `1 ${metre.suffix}`,
-				"Elevational height of building element at its base": `2 ${metre.suffix}`,
-				"Net surface area": `1 ${metresSquare.suffix}`,
-				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal",
-			};
+		const tab = await screen.findByRole("link", { name: "Floors of a heated basement" });
+		await user.click(tab);
 
-			for (const [key, value] of Object.entries(expectedFlatRoof)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceRoofs-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-
-			const expectedPitchedRoof = {
-				"Name": "Pitched roof",
-				"Type of roof": "Pitched insulated at roof",
-				"Pitch": `180 ${degrees.suffix}`,
-				"Orientation": `30 ${degrees.suffix}`,
-				"Length": `1 ${metre.suffix}`,
-				"Width": `1 ${metre.suffix}`,
-				"Elevational height of building element at its base": `2 ${metre.suffix}`,
-				"Net surface area": `1 ${metresSquare.suffix}`,
-				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal",
-			};
-
-			for (const [key, value] of Object.entries(expectedPitchedRoof)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceRoofs-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.lastElementChild?.textContent).toBe(value);
-			}
-		});
+		const lineResult = (await screen.findByTestId(`summary-dwellingSpaceFloorOfHeatedBasement-${hyphenate("U-value")}`));
+		expect(lineResult.querySelector("dd")?.textContent).toBe("-");
 	});
 
-	describe("dwelling space doors", () => {
-		it("should contain the correct tabs for dwelling space doors", async () => {
-			await renderSuspended(Summary);
-
-			expect(screen.getByRole("link", { name: "External unglazed doors" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "External glazed doors" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Internal doors" })).not.toBeNull();
-		});
-
-		it("should display the correct data for the external unglazed doors section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWalls: {
-						dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
-					},
-					dwellingSpaceDoors: {
-						dwellingSpaceExternalUnglazedDoor:
-              doorsData.dwellingSpaceExternalUnglazedDoor,
-					},
+	it("should display the correct data for the ground floor section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceGroundFloor: floorsData.dwellingSpaceGroundFloor,
 				},
-			});
-
-			await renderSuspended(Summary);
-
-			const expectedResult = {
-				"Name": "External unglazed door 1",
-				"Pitch": `90 ${degrees.suffix}`,
-				"Orientation": `0 ${degrees.suffix}`,
-				"Height": `0.5 ${metre.suffix}`,
-				"Width": `20 ${metre.suffix}`,
-				"Elevational height of building element at its base": `20 ${metre.suffix}`,
-				"Net surface area": `10 ${metresSquare.suffix}`,
-				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal",
-			};
-
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceUnglazedDoors-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
+			},
 		});
 
-		it("should display the correct data for the external glazed doors section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWalls: {
-						dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
-					},
-					dwellingSpaceDoors: {
-						dwellingSpaceExternalGlazedDoor:
-              doorsData.dwellingSpaceExternalGlazedDoor,
-					},
-				},
-			});
+		await renderSuspended(Summary);
 
-			await renderSuspended(Summary);
+		const expectedResult = {
+			"Name": "Ground 1",
+			"Net surface area of this element": `5 ${metresSquare.suffix}`,
+			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Thermal resistance": `1 ${squareMeterKelvinPerWatt.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+			"Perimeter": `0 ${metre.suffix}`,
+			"Psi of wall junction": `0 ${wattsPerMeterKelvin.suffix}`,
+			"Thickness of walls at the edge of the floor": `0.3 ${millimetre.suffix}`,
+			"Type of ground floor": "Slab no edge insulation",
+		};
 
-			const expectedResult = {
-				"Name": "External glazed door 1",
-				"Orientation": `0 ${degrees.suffix}`,
-				"Height": `1 ${metre.suffix}`,
-				"Width": `1 ${metre.suffix}`,
-				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Pitch": `90 ${degrees.suffix}`,
-				"Transmittance of solar energy": "0.1",
-				"Elevational height of building element at its base": `1 ${metre.suffix}`,
-				"Mid height": `1 ${metre.suffix}`,
-			};
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceGlazedDoors-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
-
-		it("should display the correct data for the internal doors section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWalls: {
-						dwellingSpaceInternalWall: wallsData.dwellingSpaceInternalWall,
-					},
-					dwellingSpaceDoors: {
-						dwellingSpaceInternalDoor: doorsData.dwellingSpaceInternalDoor,
-					},
-				},
-			});
-			
-			await renderSuspended(Summary);
-
-			const expectedResult = {
-				"Type": "Internal door to heated space",
-				"Name": "Internal 1",
-				"Net surface area of element": `5 ${metresSquare.suffix}`,
-				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal",
-				"Pitch": `10 ${degrees.suffix}`,
-			};
-
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceInternalDoors-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceGroundFloors-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
 	});
 
-	describe("dwelling space windows", () => {
-		it("should contain the correct tabs for dwelling space windows", async () => {
-			await renderSuspended(Summary);
-
-			expect(screen.getByRole("link", { name: "Windows" })).not.toBeNull();
-		});
-
-		it("should display the correct data for the windows section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWindows: {
-						data: [windowData],
-						complete: true,
-					},
-					dwellingSpaceWalls: {
-						dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
-					},
+	it("should display the correct data for the internal floor section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceInternalFloor: floorsData.dwellingSpaceInternalFloor,
 				},
-			});
-
-			await renderSuspended(Summary);
-			const expectedResult = {
-				"Name": "Window 1",
-				"Orientation": `0 ${degrees.suffix}`,
-				"Height": `1 ${metre.suffix}`,
-				"Width": `1 ${metre.suffix}`,
-				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Pitch": `90 ${degrees.suffix}`,
-				"Security risk": "Yes",
-				"Transmittance of solar energy": "0.1",
-				"Elevational height of building element at its base": `1 ${metre.suffix}`,
-				"Mid height": `1 ${metre.suffix}`,
-				"Number of openable parts": "0",
-				"Overhang depth": `100 ${millimetre.suffix}`,
-				"Overhang distance from glass": `100 ${millimetre.suffix}`,
-				"Side fin right depth": `100 ${millimetre.suffix}`,
-				"Side fin right distance from glass": `100 ${millimetre.suffix}`,
-				"Side fin left depth": `100 ${millimetre.suffix}`,
-				"Side fin left distance from glass": `100 ${millimetre.suffix}`,
-				"Type": "Blinds",
-				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Solar transmittance reduction": "0.1",
-			};
-
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWindows-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
+			},
 		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Type of internal floor": "Internal floor to heated space",
+			"Name": "Internal 1",
+			"Net surface area of element": `5 ${metresSquare.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceInternalFloors-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
 	});
 
-	describe("dwelling space thermal bridges", () => {
-		it("should contain the correct tabs for dwelling space thermal bridges", async () => {
-			await renderSuspended(Summary);
-
-			expect(screen.getByRole("link", { name: "Linear thermal bridges" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Point thermal bridges" })).not.toBeNull();
-		});
-
-		it("should display the correct data for the linear thermal bridges section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceThermalBridging: {
-						dwellingSpaceLinearThermalBridges: thermalBridgingData.dwellingSpaceLinearThermalBridges,
-					},
+	it("should display the correct data for the exposed floor section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceExposedFloor: floorsData.dwellingSpaceExposedFloor,
 				},
-			});
-
-			await renderSuspended(Summary);
-			const expectedResult = {
-				"Type of thermal bridge": "E1",
-				"Linear thermal transmittance": `1 ${wattsPerMeterKelvin.suffix}`,
-				"Length of thermal bridge": `2 ${metre.suffix}`,
-			};
-
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceLinearThermalBridging-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
+			},
 		});
 
-		it("should display the correct data for the point thermal bridges section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceThermalBridging: {
-						dwellingSpacePointThermalBridges: thermalBridgingData.dwellingSpacePointThermalBridges,
-					},
-				},
-			});
+		await renderSuspended(Summary);
 
-			await renderSuspended(Summary);
+		const expectedResult = {
+			"Name": "Exposed Floor 1",
+			"Length": `0.5 ${metre.suffix}`,
+			"Width": `20 ${metre.suffix}`,
+			"Elevational height of building element at its base": `20 ${metre.suffix}`,
+			"Net surface area": `10 ${metresSquare.suffix}`,
+			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+		};
 
-			const expectedResult = {
-				"Name": "Point 1",
-				"Heat transfer coefficient": `1 ${wattsPerKelvin.suffix}`,
-			};
 
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-dwellingSpacePointThermalBridging-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceExposedFloors-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
 	});
 });
+
+describe("Dwelling space walls", () => {
+	it("should contain the correct tabs for dwelling space walls", async () => {
+		await renderSuspended(Summary);
+
+		expect(screen.getByRole("link", { name: "External walls" })).not.toBeNull();
+		expect(screen.getByRole("link", { name: "Internal walls" })).not.toBeNull();
+		expect(screen.getByRole("link", { name: "Walls to unheated spaces" })).not.toBeNull();
+		expect(screen.getByRole("link", { name: "Party walls" })).not.toBeNull();
+	});
+
+	it("should display the correct data for the external wall section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "External wall 1",
+			"Pitch": `90 ${degrees.suffix}`,
+			"Orientation": `0 ${degrees.suffix}`,
+			"Height": `0.5 ${metre.suffix}`,
+			"Length": `20 ${metre.suffix}`,
+			"Elevational height of building element at its base": `20 ${metre.suffix}`,
+			"Net surface area": `10 ${metresSquare.suffix}`,
+			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceExternalWalls-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the internal wall section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceInternalWall: wallsData.dwellingSpaceInternalWall,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "Internal 1",
+			"Net surface area of element": `5 ${metresSquare.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+			"Pitch": `10 ${degrees.suffix}`,
+		};
+
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceInternalWalls-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the wall to unheated space section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceWallToUnheatedSpace: wallsData.dwellingSpaceWallToUnheatedSpace,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "Wall to unheated space 1",
+			"Net surface area of element": `500 ${metresSquare.suffix}`,
+			"U-value": `10 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "External",
+			"Pitch": `90 ${degrees.suffix}`,
+			"Thermal resistance of adjacent unheated space": `1 ${squareMeterKelvinPerWatt.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceUnheatedSpaceWalls-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the party wall section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpacePartyWall: wallsData.dwellingSpacePartyWall,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "Party wall 1",
+			"Pitch": `90 ${degrees.suffix}`,
+			"Net surface area": `10 ${metresSquare.suffix}`,
+			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpacePartyWalls-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+});
+
+describe("dwelling space ceilings and roofs", () => {
+	it("should contain the correct tabs for dwelling space walls", async () => {
+		await renderSuspended(Summary);
+
+		expect(screen.getByRole("link", { name: "Ceilings" })).not.toBeNull();
+		expect(screen.getByRole("link", { name: "Roofs" })).not.toBeNull();
+	});
+
+	it("should display the correct data for the ceilings section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceCeilings: ceilingsAndRoofsData.dwellingSpaceCeilings,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Type of ceiling": "Ceiling to heated space",
+			"Name": "Ceiling 1",
+			"Net surface area": `5 ${metresSquare.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+			"Pitch": `180 ${degrees.suffix}`,
+		};
+
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceCeilings-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the roof section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceRoofs: ceilingsAndRoofsData.dwellingSpaceRoofs,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+		const expectedFlatRoof = {
+			"Name": "Flat roof",
+			"Type of roof": "Flat",
+			"Pitch": `180 ${degrees.suffix}`,
+			"Length": `1 ${metre.suffix}`,
+			"Width": `1 ${metre.suffix}`,
+			"Elevational height of building element at its base": `2 ${metre.suffix}`,
+			"Net surface area": `1 ${metresSquare.suffix}`,
+			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+		};
+
+		for (const [key, value] of Object.entries(expectedFlatRoof)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceRoofs-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+
+		const expectedPitchedRoof = {
+			"Name": "Pitched roof",
+			"Type of roof": "Pitched insulated at roof",
+			"Pitch": `180 ${degrees.suffix}`,
+			"Orientation": `30 ${degrees.suffix}`,
+			"Length": `1 ${metre.suffix}`,
+			"Width": `1 ${metre.suffix}`,
+			"Elevational height of building element at its base": `2 ${metre.suffix}`,
+			"Net surface area": `1 ${metresSquare.suffix}`,
+			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+		};
+
+		for (const [key, value] of Object.entries(expectedPitchedRoof)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceRoofs-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.lastElementChild?.textContent).toBe(value);
+		}
+	});
+});
+
+describe("dwelling space doors", () => {
+	it("should contain the correct tabs for dwelling space doors", async () => {
+		await renderSuspended(Summary);
+
+		expect(screen.getByRole("link", { name: "External unglazed doors" })).not.toBeNull();
+		expect(screen.getByRole("link", { name: "External glazed doors" })).not.toBeNull();
+		expect(screen.getByRole("link", { name: "Internal doors" })).not.toBeNull();
+	});
+
+	it("should display the correct data for the external unglazed doors section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+				},
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalUnglazedDoor:
+						doorsData.dwellingSpaceExternalUnglazedDoor,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "External unglazed door 1",
+			"Pitch": `90 ${degrees.suffix}`,
+			"Orientation": `0 ${degrees.suffix}`,
+			"Height": `0.5 ${metre.suffix}`,
+			"Width": `20 ${metre.suffix}`,
+			"Elevational height of building element at its base": `20 ${metre.suffix}`,
+			"Net surface area": `10 ${metresSquare.suffix}`,
+			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+		};
+
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceUnglazedDoors-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the external glazed doors section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+				},
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalGlazedDoor:
+						doorsData.dwellingSpaceExternalGlazedDoor,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "External glazed door 1",
+			"Orientation": `0 ${degrees.suffix}`,
+			"Height": `1 ${metre.suffix}`,
+			"Width": `1 ${metre.suffix}`,
+			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Pitch": `90 ${degrees.suffix}`,
+			"Transmittance of solar energy": "0.1",
+			"Elevational height of building element at its base": `1 ${metre.suffix}`,
+			"Mid height": `1 ${metre.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceGlazedDoors-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the internal doors section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceInternalWall: wallsData.dwellingSpaceInternalWall,
+				},
+				dwellingSpaceDoors: {
+					dwellingSpaceInternalDoor: doorsData.dwellingSpaceInternalDoor,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Type": "Internal door to heated space",
+			"Name": "Internal 1",
+			"Net surface area of element": `5 ${metresSquare.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+			"Pitch": `10 ${degrees.suffix}`,
+		};
+
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceInternalDoors-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+});
+
+describe("dwelling space windows", () => {
+	it("should contain the correct tabs for dwelling space windows", async () => {
+		await renderSuspended(Summary);
+
+		expect(screen.getByRole("link", { name: "Windows" })).not.toBeNull();
+	});
+
+	it("should display the correct data for the windows section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [windowData],
+					complete: true,
+				},
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+		const expectedResult = {
+			"Name": "Window 1",
+			"Orientation": `0 ${degrees.suffix}`,
+			"Height": `1 ${metre.suffix}`,
+			"Width": `1 ${metre.suffix}`,
+			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Pitch": `90 ${degrees.suffix}`,
+			"Security risk": "Yes",
+			"Transmittance of solar energy": "0.1",
+			"Elevational height of building element at its base": `1 ${metre.suffix}`,
+			"Mid height": `1 ${metre.suffix}`,
+			"Number of openable parts": "0",
+			"Overhang depth": `100 ${millimetre.suffix}`,
+			"Overhang distance from glass": `100 ${millimetre.suffix}`,
+			"Side fin right depth": `100 ${millimetre.suffix}`,
+			"Side fin right distance from glass": `100 ${millimetre.suffix}`,
+			"Side fin left depth": `100 ${millimetre.suffix}`,
+			"Side fin left distance from glass": `100 ${millimetre.suffix}`,
+			"Type": "Blinds",
+			"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Solar transmittance reduction": "0.1",
+		};
+
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWindows-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+});
+
+describe("dwelling space thermal bridges", () => {
+	it("should contain the correct tabs for dwelling space thermal bridges", async () => {
+		await renderSuspended(Summary);
+
+		expect(screen.getByRole("link", { name: "Linear thermal bridges" })).not.toBeNull();
+		expect(screen.getByRole("link", { name: "Point thermal bridges" })).not.toBeNull();
+	});
+
+	it("should display the correct data for the linear thermal bridges section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceThermalBridging: {
+					dwellingSpaceLinearThermalBridges: thermalBridgingData.dwellingSpaceLinearThermalBridges,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+		const expectedResult = {
+			"Type of thermal bridge": "E1",
+			"Linear thermal transmittance": `1 ${wattsPerMeterKelvin.suffix}`,
+			"Length of thermal bridge": `2 ${metre.suffix}`,
+		};
+
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceLinearThermalBridging-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the point thermal bridges section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceThermalBridging: {
+					dwellingSpacePointThermalBridges: thermalBridgingData.dwellingSpacePointThermalBridges,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "Point 1",
+			"Heat transfer coefficient": `1 ${wattsPerKelvin.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpacePointThermalBridging-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+});
+
