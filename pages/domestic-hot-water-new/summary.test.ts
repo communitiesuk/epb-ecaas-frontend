@@ -548,7 +548,7 @@ describe("Domestic hot water summary", () => {
 			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
 			heatSourceId: "NEW_HEAT_SOURCE",
-			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c77777",
 			name: "Solar thermal system",
 			typeOfHeatSource: "solarThermalSystem",
 			locationOfCollectorLoopPiping: "outside",
@@ -565,6 +565,7 @@ describe("Domestic hot water summary", () => {
 			pitch: 60,
 			orientation: 60,
 		};
+
 		const dhwImmersionHeater: DomesticHotWaterHeatSourceData = {
 			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
@@ -585,6 +586,7 @@ describe("Domestic hot water summary", () => {
 			energySupply: "electricity",
 			heaterEfficiency: 1,
 		};
+
 		beforeEach(() => {
 			store.$patch({
 				domesticHotWaterNew: {
@@ -597,12 +599,12 @@ describe("Domestic hot water summary", () => {
 							{ data: dhwWithNewSolarThermalSystem },
 							{ data: dhwImmersionHeater },
 							{ data: dhwPointOfUse },
-
 						],
 					},
 				},
 			});
 		});
+
 
 		it("displays an empty tab state with link to create when no data is present", async () => {
 			store.$reset();
@@ -620,6 +622,7 @@ describe("Domestic hot water summary", () => {
 		});
 		
 		it("should contain the correct tabs for heat sources", async () => {
+			
 			await renderSuspended(Summary);
 
 			expect(screen.getByRole("link", { name: "Heat pumps" })).not.toBeNull();

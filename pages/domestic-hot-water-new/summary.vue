@@ -19,8 +19,8 @@ const solarThermalSystem = heatSources.filter(({ data: x }) => x.isExistingHeatS
 const immersionHeaters = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "immersionHeater");
 const pointOfUse = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "pointOfUse");
 
-const heatSourcesSummary: SummarySection = {
-	id: "heatSourceSummary",
+const emptyHeatSourcesSummary: SummarySection = {
+	id: "emptyHeatSourcesSummary",
 	label: "Heat sources",
 	data: [],
 	editUrl: domesticHotWaterUrl,
@@ -423,9 +423,9 @@ const populatedWaterStorageSections = getNonEmptySections(waterStorageSummarySec
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovTabs v-slot="tabProps" :items="populatedHeatSourceSections">
+	<GovTabs v-slot="tabProps" :items="populatedHeatSourceSections.length === 0 ? [emptyHeatSourcesSummary] : getTabItems(populatedHeatSourceSections)">
 		<template v-if="populatedHeatSourceSections.length === 0">
-			<SummaryTab :summary="heatSourcesSummary" :selected="tabProps.currentTab === 0">
+			<SummaryTab :summary="emptyHeatSourcesSummary" :selected="tabProps.currentTab === 0">
 				<template #empty>
 					<h2 class="govuk-heading-m">No heat sources added</h2>
 					<NuxtLink class="govuk-link" :to="getUrl('heatSourcesCreate')">
@@ -435,14 +435,7 @@ const populatedWaterStorageSections = getNonEmptySections(waterStorageSummarySec
 			</SummaryTab>
 		</template>
 		<template v-for="section, i of populatedHeatSourceSections" :key="i">
-			<SummaryTab :summary="section" :selected="tabProps.currentTab === i">
-				<template #empty>
-					<h2 class="govuk-heading-m">No heat sources added</h2>
-					<NuxtLink class="govuk-link" :to="getUrl('heatSourcesCreate')">
-						Add heat source
-					</NuxtLink>
-				</template>
-			</SummaryTab>
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i"/>
 		</template>
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="populatedWaterStorageSections.length === 0 ? [emptyWaterStorageSummary] : getTabItems(populatedWaterStorageSections)">
