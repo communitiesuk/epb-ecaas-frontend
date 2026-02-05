@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import HotWaterOutlets from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
 
@@ -264,7 +264,9 @@ describe("hot water outlets", () => {
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
 
 		expect(screen.getByText("No heat sources added.")).toBeDefined();
-		const link = screen.getByRole("link");
+		const heatSourceSection = screen.getByTestId("noHeatSource");
+		expect(heatSourceSection).toBeDefined();
+		const link = within(heatSourceSection).getByRole("link");
 		expect(link).toBeDefined();
 		expect(link.getAttribute("href")).toBe(getUrl("heatSourcesCreate"));
 	});

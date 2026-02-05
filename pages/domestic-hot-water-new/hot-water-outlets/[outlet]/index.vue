@@ -219,7 +219,9 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 			validation="required"
 			:options="hotWaterSourceOptions"
 		>			
-			<div v-if="!hotWaterSourceOptions.size"
+			<div
+				v-if="!hotWaterSourceOptions.size"
+				data-testid="noHeatSource"
 			>
 				<p class="govuk-error-message">No heat sources added.</p>
 				<NuxtLink :to="getUrl('heatSourcesCreate')" class="govuk-link gov-radios-add-link">
