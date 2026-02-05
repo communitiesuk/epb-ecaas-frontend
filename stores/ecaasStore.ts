@@ -24,7 +24,7 @@ export function getInitialState(): EcaasState {
 			heatSources: {
 				data: [],
 			},
-			waterStorage: { 
+			waterStorage: {
 				data: [],
 			},
 			hotWaterOutlets: {
@@ -64,6 +64,7 @@ export function getInitialState(): EcaasState {
 				dwellingSpaceInternalFloor: { data: [] },
 				dwellingSpaceExposedFloor: { data: [] },
 				dwellingSpaceFloorAboveUnheatedBasement: { data: [] },
+				dwellingSpaceFloorOfHeatedBasement: { data: [] },
 			},
 			dwellingSpaceWalls: {
 				dwellingSpaceExternalWall: { data: [] },

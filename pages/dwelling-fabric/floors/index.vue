@@ -49,6 +49,7 @@ function handleComplete() {
 				dwellingSpaceGroundFloor: { complete: true },
 				dwellingSpaceInternalFloor: { complete: true },
 				dwellingSpaceFloorAboveUnheatedBasement: { complete: true },
+				dwellingSpaceFloorOfHeatedBasement: { complete: true },
 			},
 		},
 	});
@@ -125,6 +126,18 @@ function hasIncompleteEntries() {
 		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceFloorAboveUnheatedBasement', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceFloorAboveUnheatedBasement', index)"
+	/>
+	<CustomList
+		id="floorOfHeatedBasement"
+		title="Floors of a heated basement"
+		:form-url="`${page.url}/heated-basement`"
+		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
+		@remove="(index: number) => handleRemove('dwellingSpaceFloorOfHeatedBasement', index)"
+		@duplicate="(index: number) => handleDuplicate('dwellingSpaceFloorOfHeatedBasement', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton

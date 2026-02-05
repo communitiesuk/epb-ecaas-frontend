@@ -133,6 +133,7 @@ export interface FloorsData {
 	dwellingSpaceInternalFloor: EcaasFormList<InternalFloorData>,
 	dwellingSpaceExposedFloor: EcaasFormList<ExposedFloorData>,
 	dwellingSpaceFloorAboveUnheatedBasement: EcaasFormList<FloorAboveUnheatedBasementData>
+	dwellingSpaceFloorOfHeatedBasement: EcaasFormList<FloorOfHeatedBasementData>
 }
 
 export const adjacentSpaceTypes = ["heatedSpace", "unheatedSpace"] as const;
@@ -239,6 +240,21 @@ const floorAboveUnheatedBasementDataZod = named.extend({
 });
 
 export type FloorAboveUnheatedBasementData = z.infer<typeof floorAboveUnheatedBasementDataZod>;
+
+const floorOfHeatedBasementDataZod = named.extend({
+	surfaceArea: z.number().min(1),
+	uValue,
+	thermalResistance: z.number().min(0.00001).max(50),
+	arealHeatCapacity: arealHeatCapacityZod,
+	massDistributionClass,
+	depthOfBasementFloor: z.number(),
+	perimeter: z.number().min(0).max(1000),
+	psiOfWallJunction: z.number().min(0).max(2),
+	thicknessOfWalls: z.number(),
+});
+
+export type FloorOfHeatedBasementData = z.infer<typeof floorOfHeatedBasementDataZod>;
+
 
 export type WallsData = AssertFormKeysArePageIds<{
 	dwellingSpaceExternalWall: EcaasForm<EcaasForm<ExternalWallData>[]>;
@@ -1217,7 +1233,7 @@ export const underFloorHeatingSchema = z.discriminatedUnion("hasVariableFlowRate
 		]),
 	z.discriminatedUnion(
 		"ecoDesignControllerClass",
-		[variableEco1458UnderfloorHeating ]),
+		[variableEco1458UnderfloorHeating]),
 ]);
 
 const fanCoilBase = namedWithId.extend({
@@ -1335,7 +1351,7 @@ const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	pointOfUseHotWaterSourceBase,
 ]);
 
-const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource", 
+const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource",
 	[
 		z.object({
 			id: z.uuidv4().readonly(),
@@ -1617,6 +1633,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceGroundFloor": groundFloorDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceInternalFloor": internalFloorDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceFloorAboveUnheatedBasement": floorAboveUnheatedBasementDataZod,
+	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceFloorOfHeatedBasement": floorOfHeatedBasementDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceExternalWall": externalWallDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceInternalWall": internalWallDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceWallToUnheatedSpace": wallsToUnheatedSpaceDataZod,
