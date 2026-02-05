@@ -1,6 +1,10 @@
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 
+const productSortOption = ["id", "brandName", "modelName", "modelQualifier"] as const;
+
 export type SearchOption = "productId" | "modelAndBrand";
+export type ProductSortOption = typeof productSortOption[number];
+export type ProductOrderOption = "asc" | "desc";
 
 export interface ProductSearchModel {
 	searchOption?: SearchOption;
@@ -8,6 +12,8 @@ export interface ProductSearchModel {
 	brandName?: string;
 	modelName?: string;
 	modelQualifier?: string;
+	sort?: ProductSortOption;
+	order?: ProductOrderOption;
 }
 
 export function useProductSearch(products: DisplayProduct[], model: ProductSearchModel): DisplayProduct[] {
@@ -15,6 +21,7 @@ export function useProductSearch(products: DisplayProduct[], model: ProductSearc
 	const brandNameLower = model.brandName?.trim().toLowerCase();
 	const modelNameLower = model.modelName?.trim().toLowerCase();
 	const modelQualifierLower = model.modelQualifier?.trim().toLowerCase();
+	const order: ProductOrderOption = model.order ?? "asc";
 
 	let searchResults = [...products];
 
@@ -35,6 +42,37 @@ export function useProductSearch(products: DisplayProduct[], model: ProductSearc
 	if (modelQualifierLower?.length) {
 		searchResults = searchResults
 			.filter(p => p.modelQualifier?.trim().toLowerCase().startsWith(modelQualifierLower));
+	}
+
+	if (model.sort && productSortOption.includes(model.sort)) {
+		searchResults = searchResults.sort((productA: DisplayProduct, productB: DisplayProduct) => {
+			const aValue = productA[model.sort!];
+			const bValue = productB[model.sort!];
+			
+			if (aValue && bValue) {
+				const [a, b] = [aValue, bValue].map(v => typeof v === "string" ? v.toLowerCase() : v);
+
+				if (a! < b!) {
+					return order === "asc" ? -1 : 1;
+				}
+
+				if (a! > b!) {
+					return order === "asc" ? 1 : -1;
+				}
+
+				return 0;
+			}
+
+			if (aValue) {
+				return order === "asc" ? -1 : 1;
+			}
+
+			if (bValue) {
+				return order === "asc" ? 1 : -1;
+			}
+
+			return 0;
+		});
 	}
 
 	return searchResults;

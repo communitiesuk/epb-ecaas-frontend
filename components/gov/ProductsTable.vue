@@ -12,14 +12,21 @@ const route = useRoute();
 
 <template>
 	<div class="govuk-form-group">
-
 		<table class="govuk-table govuk-!-margin-top-4">
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row">
-					<th scope="col" class="govuk-table__header">Product ID</th>
-					<th scope="col" class="govuk-table__header">Brand</th>
-					<th scope="col" class="govuk-table__header">Model</th>
-					<th scope="col" class="govuk-table__header">Model qualifier</th>
+					<th scope="col" class="govuk-table__header govuk-table__header--id">
+						<ColumnSort label="Product ID" field="id" />
+					</th>
+					<th scope="col" class="govuk-table__header">
+						<ColumnSort label="Brand" field="brandName" />
+					</th>
+					<th scope="col" class="govuk-table__header">
+						<ColumnSort label="Model" field="modelName" />
+					</th>
+					<th scope="col" class="govuk-table__header govuk-table__header--model-qualifier">
+						<ColumnSort label="Model qualifier" field="modelQualifier" />
+					</th>
 					<th class="govuk-table__header">&nbsp;</th>
 				</tr>
 			</thead>
@@ -56,7 +63,11 @@ const route = useRoute();
 </template>
 
 <style scoped lang="scss">
-.govuk-table__header {
-	color:  #1d70b8
+.govuk-table__header--id {
+	width: 120px;
+}
+
+.govuk-table__header--model-qualifier {
+	width: 145px;
 }
 </style>

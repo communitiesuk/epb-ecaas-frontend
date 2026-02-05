@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
-import type { SearchOption } from "~/composables/productSearch";
+import type { ProductSearchModel, SearchOption } from "~/composables/productSearch";
 
 const { products, model: searchModel } = defineProps<{
 	products: DisplayProduct[];
 	model: ProductSearchModel;
 }>();
 
-const model = ref<ProductSearchModel>({
-	...searchModel,
-	searchOption: searchModel.searchOption || "productId",
-});
+const getModel = (currentSearch: ProductSearchModel): ProductSearchModel => {
+	return {
+		...currentSearch,
+		searchOption: searchModel.searchOption || "productId",
+	};
+};
+
+const model = ref<ProductSearchModel>(getModel(searchModel));
 	
 const brandNames = ref<string[]>([]);
 const modelNames = ref<string[]>([]);
@@ -66,6 +70,10 @@ watch(model, (currentModel: ProductSearchModel, previousModel: ProductSearchMode
 		return;
 	}
 });
+
+watch(() => searchModel, (currentSearch: ProductSearchModel, _previousSearch: ProductSearchModel) => {
+	model.value = getModel(currentSearch);
+});
 </script>
 
 <template>
@@ -77,6 +85,8 @@ watch(model, (currentModel: ProductSearchModel, previousModel: ProductSearchMode
 			:actions="false"
 			:incomplete-message="false"
 			@submit="handleSubmit">
+			<FormKit name="sort" type="hidden" />
+			<FormKit name="order" type="hidden" />
 			<FormKit
 				id="searchOption"
 				type="govRadios"

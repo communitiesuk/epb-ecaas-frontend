@@ -1,6 +1,7 @@
 import type { PageId } from "~/data/pages/pages";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import { productTypeMap } from "~/stores/ecaasStore.schema";
+import type { ProductOrderOption, ProductSortOption } from "./productSearch";
 
 export function useProductsPage(indexParam: string) {
 	const route = useRoute();
@@ -23,6 +24,8 @@ export function useProductsPage(indexParam: string) {
 		const modelName = (routeQuery.value?.modelName as string | undefined)?.trim();
 		const modelQualifier = (routeQuery.value?.modelQualifier as string | undefined)?.trim();
 		const searchOption = routeQuery.value?.searchOption as SearchOption | undefined;
+		const sort = routeQuery.value?.sort as ProductSortOption | undefined;
+		const order = routeQuery.value?.order as ProductOrderOption | undefined;
 
 		return {
 			searchOption,
@@ -30,6 +33,8 @@ export function useProductsPage(indexParam: string) {
 			brandName,
 			modelName,
 			modelQualifier,
+			sort,
+			order,
 		};
 	};
 
