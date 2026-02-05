@@ -6,7 +6,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type FloorType = keyof typeof store.dwellingFabric.dwellingSpaceFloors;
-type FloorData = EcaasForm<GroundFloorData> & EcaasForm<InternalFloorData> & EcaasForm<ExposedFloorData>;
+type FloorData = EcaasForm<GroundFloorData> & EcaasForm<InternalFloorData> & EcaasForm<ExposedFloorData> & EcaasForm<FloorAboveUnheatedBasementData>;
 
 function handleRemove(floorType: FloorType, index: number) {
 	const floors = store.dwellingFabric.dwellingSpaceFloors[floorType]?.data;
@@ -48,6 +48,7 @@ function handleComplete() {
 				dwellingSpaceExposedFloor: { complete: true },
 				dwellingSpaceGroundFloor: { complete: true },
 				dwellingSpaceInternalFloor: { complete: true },
+				dwellingSpaceFloorAboveUnheatedBasement: { complete: true },
 			},
 		},
 	});
@@ -112,7 +113,18 @@ function hasIncompleteEntries() {
 		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceExposedFloor', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceExposedFloor', index)"
-
+	/>
+	<CustomList
+		id="aboveUnheatedBasement"
+		title="Floors above an unheated basement"
+		:form-url="`${page?.url!}/above-unheated-basement`"
+		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
+		@remove="(index: number) => handleRemove('dwellingSpaceFloorAboveUnheatedBasement', index)"
+		@duplicate="(index: number) => handleDuplicate('dwellingSpaceFloorAboveUnheatedBasement', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton

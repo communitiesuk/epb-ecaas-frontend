@@ -131,7 +131,8 @@ export interface DwellingFabric {
 export interface FloorsData {
 	dwellingSpaceGroundFloor: EcaasFormList<GroundFloorData>,
 	dwellingSpaceInternalFloor: EcaasFormList<InternalFloorData>,
-	dwellingSpaceExposedFloor: EcaasFormList<ExposedFloorData>
+	dwellingSpaceExposedFloor: EcaasFormList<ExposedFloorData>,
+	dwellingSpaceFloorAboveUnheatedBasement: EcaasFormList<FloorAboveUnheatedBasementData>
 }
 
 export const adjacentSpaceTypes = ["heatedSpace", "unheatedSpace"] as const;
@@ -220,6 +221,24 @@ const groundFloorDataZod = z.discriminatedUnion(
 );
 
 export type GroundFloorData = z.infer<typeof groundFloorDataZod>;
+
+const floorAboveUnheatedBasementDataZod = named.extend({
+	surfaceArea: z.number().min(1),
+	uValue,
+	thermalResistance: z.number().min(0.00001).max(50),
+	arealHeatCapacity: arealHeatCapacityZod,
+	massDistributionClass,
+	perimeter: z.number().min(0).max(1000),
+	psiOfWallJunction: z.number().min(0).max(2),
+	thicknessOfWalls: z.number(),
+	depthOfBasementFloor: z.number(),
+	heightOfBasementWalls: z.number(),
+	thermalResistanceOfBasementWalls: z.number().min(0.00001).max(50),
+	thermalTransmittanceOfBasementWalls: z.number(),
+	thermalTransmittanceOfFoundations: z.number(),
+});
+
+export type FloorAboveUnheatedBasementData = z.infer<typeof floorAboveUnheatedBasementDataZod>;
 
 export type WallsData = AssertFormKeysArePageIds<{
 	dwellingSpaceExternalWall: EcaasForm<EcaasForm<ExternalWallData>[]>;
@@ -1598,6 +1617,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceExposedFloor": exposedFloorDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceGroundFloor": groundFloorDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceInternalFloor": internalFloorDataZod,
+	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceFloorAboveUnheatedBasement": floorAboveUnheatedBasementDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceExternalWall": externalWallDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceInternalWall": internalWallDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceWallToUnheatedSpace": wallsToUnheatedSpaceDataZod,

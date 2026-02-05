@@ -72,6 +72,20 @@ const dwellingFabricPages = [
 		parentId: "dwellingSpaceFloors",
 	},
 	{
+		id: "dwellingSpaceFloorAboveUnheatedBasement",
+		title: "Floors above an unheated basement",
+		url: "/dwelling-fabric/floors/above-unheated-basement/:floor",
+		type: "task",
+		parentId: "dwellingSpaceFloors",
+	},
+	{
+		id: "dwellingSpaceFloorAboveUnheatedBasementCreate",
+		title: "Floors above an unheated basement",
+		url: "/dwelling-fabric/floors/above-unheated-basement/create",
+		type: "task",
+		parentId: "dwellingSpaceFloors",
+	},
+	{
 		id: "dwellingSpaceWalls",
 		title: "Walls",
 		url: "/dwelling-fabric/walls",
