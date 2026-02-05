@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { NuxtLink } from "#components";
 import { getUrl, uniqueName } from "#imports";
 const title = "Floor of heated basement";
 const store = useEcaasStore();
@@ -127,14 +128,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="mm"
 			label="Thickness of walls"
-			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 30mm to 80mm."
 			name="thicknessOfWalls"
 			validation="required | number"
-		/>
-		<GovLLMWarning />
-		<div class="govuk-button-group">
-			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
-			<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>
+		><div class="govuk-hint">
+			<p>Enter the width or physical depth of the ground floor <NuxtLink :to="getUrl('dwellingSpaceWalls')">walls</NuxtLink> that are in contact with or directly relevant to the ground floor. Typically between 30mm to 80mm.</p>
+		</div>
+		</FormKit>
+		<div class="govuk-button-group govuk-!-margin-top-6">
+			<GovLLMWarning />
+			<div class="govuk-button-group">
+				<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+				<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>
+			</div>
 		</div>
 	</FormKit>
 </template>
