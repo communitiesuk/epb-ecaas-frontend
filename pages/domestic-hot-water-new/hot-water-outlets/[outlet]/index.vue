@@ -156,25 +156,15 @@ autoSaveElementForm<HotWaterOutletsData>({
 // };
 
 const hotWaterSourceOptions = new Map(
-	store.domesticHotWaterNew.heatSources.data
-		.map((e) => {
-			const existingHeatSourceName = getNameFromSpaceHeatingHeatSource(e.data.heatSourceId);
-			return [
-				e.data.id,
-				e.data.isExistingHeatSource 
-					? existingHeatSourceName !== undefined
-						? existingHeatSourceName
-						: "Invalid existing heat source" // should not happen if space heating heat sources delete the hot water reference ones when removed but yknow I could be wrong
-					: e.data.name,
-			];
-		}),
+	store.domesticHotWaterNew.heatSources.data.map((e) => [
+		e.data.id,
+		e.data.isExistingHeatSource
+			? store.spaceHeating.heatSource.data
+				.find((x) => x.data.id === e.data.heatSourceId)?.data.name
+                ?? "Invalid existing heat source"
+			: e.data.name,
+	]),
 );
-
-function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
-	const heatSource = store.spaceHeating.heatSource.data
-		.find((x) => x.data.id === heatSourceId);
-	return heatSource ? heatSource.data.name : undefined;
-}
 
 </script>
 

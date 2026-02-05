@@ -250,20 +250,41 @@ const emptyWaterStorageSummary: SummarySection = {
 	data: [],
 	editUrl: getUrl("waterStorageCreate"),
 };
+
+function getHWHeatSourceName(hwHeatSourceId: string | undefined) {
+	if (!hwHeatSourceId) {
+		return emptyValueRendering;
+	}
+
+	const hwHeatSourceData = store.domesticHotWaterNew.heatSources.data
+		.find(x => x.data.id === hwHeatSourceId)?.data;
+
+	if (!hwHeatSourceData) {
+		return "Invalid heat source";
+	}
+
+	if (hwHeatSourceData.isExistingHeatSource) {
+		return store.spaceHeating.heatSource.data
+			.find((x) => x.data.id === hwHeatSourceData.heatSourceId)?.data.name
+					?? "Invalid space heating heat source";
+	} else {
+		return hwHeatSourceData.name ?? "Invalid hot water heat source name";
+	}
+}
 	
 const hotWaterCylinderSummary: SummarySection = {
 	id: "hotWaterCylinder",
 	label: "Hot water cylinders",
-	data: hotWaterCylinders.map(({ data }) => {
+	data: hotWaterCylinders.map(({ data: hwCylData }) => {
 		return {
-			"Name": show(data.name),
-			"Storage cylinder volume": "storageCylinderVolume" in data ? dim(data.storageCylinderVolume, "litres") : emptyValueRendering,
-			"Initial temperature": "initialTemperature" in data ? dim(data.initialTemperature, "celsius") : emptyValueRendering,
-			"Daily energy loss": "dailyEnergyLoss" in data ? dim(data.dailyEnergyLoss, "kilowatt-hour") : emptyValueRendering,
-			"Heat source": show(heatSources.find(x => x.data.id === data.heatSource)?.data.name),
-			"Area of heat exchanger installed": "areaOfHeatExchanger" in data ? dim(data.areaOfHeatExchanger, "metres square") : emptyValueRendering,
-			"Heater position in the cylinder": "heaterPosition" in data ? show(data.heaterPosition) : emptyValueRendering,
-			"Thermostat position in the cylinder": "thermostatPosition" in data ? show(data.thermostatPosition) : emptyValueRendering,
+			"Name": show(hwCylData.name),
+			"Storage cylinder volume": "storageCylinderVolume" in hwCylData ? dim(hwCylData.storageCylinderVolume, "litres") : emptyValueRendering,
+			"Initial temperature": "initialTemperature" in hwCylData ? dim(hwCylData.initialTemperature, "celsius") : emptyValueRendering,
+			"Daily energy loss": "dailyEnergyLoss" in hwCylData ? dim(hwCylData.dailyEnergyLoss, "kilowatt-hour") : emptyValueRendering,
+			"Heat source": show(getHWHeatSourceName(hwCylData.heatSource)),
+			"Area of heat exchanger installed": "areaOfHeatExchanger" in hwCylData ? dim(hwCylData.areaOfHeatExchanger, "metres square") : emptyValueRendering,
+			"Heater position in the cylinder": "heaterPosition" in hwCylData ? show(hwCylData.heaterPosition) : emptyValueRendering,
+			"Thermostat position in the cylinder": "thermostatPosition" in hwCylData ? show(hwCylData.thermostatPosition) : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("domesticHotWaterNew"),
@@ -274,12 +295,13 @@ const smartHotWaterCylinders = waterStorage.filter(x => x.data.typeOfWaterStorag
 const smartHotWaterCylinderSummary: SummarySection = {
 	id: "smartHotWaterCylinder",
 	label: "Smart hot water cylinders",
-	data: smartHotWaterCylinders.map(({ data }) => {
+	data: smartHotWaterCylinders.map(({ data: smartHWCylData }) => {
+
 		return {
-			"Name": show(data.name),
-			"Product reference": "productReference" in data ? show(data.productReference) : emptyValueRendering,
-			"Heat source": show(heatSources.find(x => x.data.id === data.heatSource)?.data.name),
-			"Heater position in the cylinder": "heaterPosition" in data ? show(data.heaterPosition) : emptyValueRendering,
+			"Name": show(smartHWCylData.name),
+			"Product reference": "productReference" in smartHWCylData ? show(smartHWCylData.productReference) : emptyValueRendering,
+			"Heat source": show(getHWHeatSourceName(smartHWCylData.heatSource)),
+			"Heater position in the cylinder": "heaterPosition" in smartHWCylData ? show(smartHWCylData.heaterPosition) : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("domesticHotWaterNew"),
@@ -293,22 +315,22 @@ const populatedHeatSourceSections = getNonEmptySections(heatSourceSections);
 
 
 const hotWaterOutletsAll = store.domesticHotWaterNew.hotWaterOutlets.data;
-const hotWaterSources = store.domesticHotWaterNew.heatSources.data;
 
 const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerDataNew>[];
 const mixedShowerSummary: SummarySection = {
 	id: "mixedShower",
 	label: "Mixer showers",
-	data: mixedShowerData.map((d) => {
-		const heatSourceName = hotWaterSources.find(h => h.data.id === d.data.hotWaterSource)?.data.name;
+	data: mixedShowerData.map(({ data }) => {
+		
+		const heatSourceName = getHWHeatSourceName("hotWaterSource" in data ? data.hotWaterSource : undefined);
 		return {
-			"Name": show(d.data.name),
-			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Name": show(data.name),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in data && data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(data.typeOfHotWaterOutlet) : emptyValueRendering,
 			"Hot water source": heatSourceName ? heatSourceName : emptyValueRendering,
-			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per second") : emptyValueRendering,
-			"WWHRS installed": "wwhrs" in d.data ? displayBoolean(d.data.wwhrs) : emptyValueRendering,
-			"WWHRS type": "wwhrsType" in d.data && d.data.wwhrsType ? displayCamelToSentenceCase(String(d.data.wwhrsType)) : emptyValueRendering,
-			"WWHRS product": "wwhrsProductReference" in d.data ? show(d.data.wwhrsProductReference) : emptyValueRendering,
+			"Flow rate": "flowRate" in data ? dim(data.flowRate, "litres per second") : emptyValueRendering,
+			"WWHRS installed": "wwhrs" in data ? displayBoolean(data.wwhrs) : emptyValueRendering,
+			"WWHRS type": "wwhrsType" in data && data.wwhrsType ? displayCamelToSentenceCase(String(data.wwhrsType)) : emptyValueRendering,
+			"WWHRS product": "wwhrsProductReference" in data ? show(data.wwhrsProductReference) : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("domesticHotWaterNew"),
@@ -318,14 +340,14 @@ const electricShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWater
 const electricShowerSummary: SummarySection = {
 	id: "electricShower",
 	label: "Electric showers",
-	data: electricShowerData.map(d => {
+	data: electricShowerData.map(({ data }) => {
 		return {
-			"Name": show(d.data.name),
-			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
-			"Rated power": "ratedPower" in d.data ? dim(d.data.ratedPower, "kilowatt") : emptyValueRendering,
-			"WWHRS installed": "wwhrs" in d.data ? displayBoolean(d.data.wwhrs) : emptyValueRendering,
-			"WWHRS type": "wwhrsType" in d.data && d.data.wwhrsType ? displayCamelToSentenceCase(String(d.data.wwhrsType)) : emptyValueRendering,
-			"WWHRS product": "wwhrsProductReference" in d.data ? show(d.data.wwhrsProductReference) : emptyValueRendering,
+			"Name": show(data.name),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in data && data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Rated power": "ratedPower" in data ? dim(data.ratedPower, "kilowatt") : emptyValueRendering,
+			"WWHRS installed": "wwhrs" in data ? displayBoolean(data.wwhrs) : emptyValueRendering,
+			"WWHRS type": "wwhrsType" in data && data.wwhrsType ? displayCamelToSentenceCase(String(data.wwhrsType)) : emptyValueRendering,
+			"WWHRS product": "wwhrsProductReference" in data ? show(data.wwhrsProductReference) : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("domesticHotWaterNew"),

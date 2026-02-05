@@ -71,11 +71,10 @@ describe("Domestic hot water summary", () => {
 					waterStorage: {
 						data: [{ data: hotWaterCylinder }],
 					},
-				},
-				spaceHeating: {
-					heatSource: {
+					heatSources: {
 						data: [{
 							data: {
+								isExistingHeatSource: false,
 								id: heatPumpId,
 								name: "Heat pump",
 								typeOfHeatSource: "heatPump",
@@ -92,14 +91,13 @@ describe("Domestic hot water summary", () => {
 					waterStorage: {
 						data: [{ data: smartHotWaterCylinder }],
 					},
-				},
-				spaceHeating: {
-					heatSource: {
+					heatSources: {
 						data: [{
 							data: {
 								id: heatPumpId,
 								name: "Heat pump",
 								typeOfHeatSource: "heatPump",
+								isExistingHeatSource: false,
 							},
 						}],
 					},
