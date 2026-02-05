@@ -171,13 +171,21 @@ const coldWaterSourceOptions =
 			id="heatSourceId"
 			type="govRadios"
 			label="Use a previously added heat source"
-			:help="'To view and edit these options go to Space heating'"
 			:options="new Map(store.spaceHeating.heatSource.data
 				.filter(x => x.data.id !== undefined)
 				.map(x => [x.data.id as string, x.data.name]))
 				.set('NEW_HEAT_SOURCE', 'Add a new water heating source')"
 			name="heatSourceId"
-			validation="required" />
+			validation="required">
+			<div class="govuk-hint">
+				<p>
+					To view and edit these options go to
+					<NuxtLink :to="getUrl('spaceHeating')">
+						Space heating
+					</NuxtLink>
+				</p>
+			</div>
+		</FormKit>
 		<FormKit
 			v-if="model.isExistingHeatSource === false"
 			id="typeOfHeatSource"
