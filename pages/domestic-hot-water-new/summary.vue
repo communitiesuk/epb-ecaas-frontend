@@ -322,7 +322,7 @@ const mixedShowerSummary: SummarySection = {
 	label: "Mixer showers",
 	data: mixedShowerData.map(({ data }) => {
 		
-		const heatSourceName = getHWHeatSourceName("hotWaterSource" in data ? data.hotWaterSource : undefined);
+		const heatSourceName = getHWHeatSourceName("heatSource" in data ? data.heatSource : undefined);
 		return {
 			"Name": show(data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in data && data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(data.typeOfHotWaterOutlet) : emptyValueRendering,

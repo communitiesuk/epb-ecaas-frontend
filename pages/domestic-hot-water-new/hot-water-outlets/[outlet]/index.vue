@@ -35,7 +35,7 @@ const saveForm = (fields: HotWaterOutletsData) => {
 						...commonFields,
 						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
 						flowRate: fields.flowRate,
-						hotWaterSource: fields.hotWaterSource,
+						heatSource: fields.heatSource,
 						wwhrs: true,
 						wwhrsType: fields.wwhrsType,
 						wwhrsProductReference: fields.wwhrsProductReference,
@@ -48,7 +48,7 @@ const saveForm = (fields: HotWaterOutletsData) => {
 						...commonFields,
 						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
 						flowRate: fields.flowRate,
-						hotWaterSource: fields.hotWaterSource,
+						heatSource: fields.heatSource,
 						wwhrs: false,
 					},
 					complete: true,
@@ -130,8 +130,8 @@ watch(
 		const heatSources = store.domesticHotWaterNew.heatSources.data;
 		if (heatSources.length === 1 && model.value && model.value.typeOfHotWaterOutlet === "mixedShower") {
 			const heatSourceId = heatSources[0]?.data.id;
-			if ("hotWaterSource" in model.value && heatSourceId) {
-				model.value.hotWaterSource = heatSourceId;
+			if ("heatSource" in model.value && heatSourceId) {
+				model.value.heatSource = heatSourceId;
 			}
 		}
 	},
@@ -155,7 +155,7 @@ autoSaveElementForm<HotWaterOutletsData>({
 // 	// return hotWaterOutletData?.data.wwhrs.productReference ? true : false;
 // };
 
-const hotWaterSourceOptions = new Map(
+const heatSourceOptions = new Map(
 	store.domesticHotWaterNew.heatSources.data.map((e) => [
 		e.data.id,
 		e.data.isExistingHeatSource
@@ -201,16 +201,16 @@ const hotWaterSourceOptions = new Map(
 		/>
 		<FormKit
 			v-if="model.typeOfHotWaterOutlet === 'mixedShower'"	
-			id="hotWaterSource"
-			name="hotWaterSource"
+			id="heatSource"
+			name="heatSource"
 			type="govRadios"
 			label="Hot water source"
 			help="Select the relevant hot water source that has been added previously"
 			validation="required"
-			:options="hotWaterSourceOptions"
+			:options="heatSourceOptions"
 		>			
 			<div
-				v-if="!hotWaterSourceOptions.size"
+				v-if="!heatSourceOptions.size"
 				data-testid="noHeatSource"
 			>
 				<p class="govuk-error-message">No heat sources added.</p>

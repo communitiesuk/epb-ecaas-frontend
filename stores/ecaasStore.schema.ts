@@ -1385,7 +1385,7 @@ export type WwhrsType = z.infer<typeof wwhrsTypeZod>;
 const mixedShowerBaseZod = namedWithId.extend({
 	typeOfHotWaterOutlet: z.literal("mixedShower"),
 	flowRate: z.number().min(8).max(15),
-	hotWaterSource: z.uuidv4(),
+	heatSource: z.uuidv4(),
 });
 
 const mixedShowerDataZodNew = z.discriminatedUnion("wwhrs", [

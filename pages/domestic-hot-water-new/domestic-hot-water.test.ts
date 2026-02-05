@@ -205,7 +205,7 @@ describe("Domestic hot water", () => {
 				typeOfHotWaterOutlet: "mixedShower",
 				id: "outlet2",
 				flowRate: 100,
-				hotWaterSource: "4eaf-48c1-4d3b-9f56-6d02b8f5c2bb",
+				heatSource: "4eaf-48c1-4d3b-9f56-6d02b8f5c2bb",
 				wwhrs: false,
 			},
 		};
