@@ -2,6 +2,7 @@
 import type { AdjacentSpaceType, HeatSourceData } from "#imports";
 import { uniqueName } from "#imports";
 import { boilerTypes, type BoilerLocationDisplay } from "~/utils/display";
+import { getCombinedHeatSources } from "~/utils/getCombinedHeatSources";
 const route = useRoute();
 const store = useEcaasStore();
 

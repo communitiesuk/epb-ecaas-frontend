@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { heatNetworkTypes, uniqueName } from "#imports";
+import { getCombinedHeatSources } from "~/utils/getCombinedHeatSources";
 
 const route = useRoute();
 const store = useEcaasStore();

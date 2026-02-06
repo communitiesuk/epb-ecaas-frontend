@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { heatBatteryTypes, uniqueName } from "#imports";
+import { getCombinedHeatSources } from "~/utils/getCombinedHeatSources";
 
 const route = useRoute();
 const store = useEcaasStore();

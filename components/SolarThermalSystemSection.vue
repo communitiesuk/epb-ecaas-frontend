@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { HeatSourceData } from "#imports";
 import { isInteger, uniqueName } from "#imports";
+import { getCombinedHeatSources } from "~/utils/getCombinedHeatSources";
 
 const store = useEcaasStore();
 

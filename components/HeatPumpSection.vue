@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { type DomesticHotWaterHeatSourceData, type HeatSourceData, uniqueName } from "#imports";
+import { getCombinedHeatSources } from "~/utils/getCombinedHeatSources";
 import { heatPumpTypes } from "../utils/display";
 const route = useRoute();
 const store = useEcaasStore();
