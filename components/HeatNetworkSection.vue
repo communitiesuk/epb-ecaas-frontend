@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { heatNetworkTypes, uniqueName } from "#imports";
+import { heatNetworkTypes, typeOfHeatSource, uniqueName } from "#imports";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -109,8 +109,8 @@ const emit = defineEmits(["update-heat-network-model"]);
 			name="heatInterfaceUnitProductReference"
 			validation="required"
 			help="Select the heat interface unit type from the PCDB using the button below."
-			:selected-product-reference="model.typeOfHeatNetwork"
-			:selected-product-type="model.typeOfHeatNetwork"
+			:selected-product-reference="model.heatInterfaceUnitProductReference"
+			:selected-product-type="typeOfHeatSource.heatInterfaceUnit"
 			:page-url="route.fullPath"
 			:page-index="index" />
 	</template>

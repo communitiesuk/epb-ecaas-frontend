@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
-import { productTypeMap, typeOfHeatSource, type PcdbProduct } from "~/stores/ecaasStore.schema";
+import { productTypeMap, typeOfHeatSource, type HeatSourceData, type PcdbProduct } from "~/stores/ecaasStore.schema";
 import { boilerTypes, heatPumpTypes, heatSourceProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
 
@@ -19,9 +19,11 @@ if (!(heatSourceType in productTypeMap)) {
 	});
 }
 
-const technologyType = productTypeMap[heatSourceType as HeatSourceProductType];
+const heatSourceProductType = heatSourceType as HeatSourceProductType;
+
+const technologyType = productTypeMap[heatSourceProductType];
 const pageId = `${heatSourceType}Products` as PageId;
-const productType = heatSourceProductTypesDisplay[heatSourceType as HeatSourceProductType];
+const productType = heatSourceProductTypesDisplay[heatSourceProductType];
 
 const index = Number(params.heatSource);
 
@@ -39,6 +41,16 @@ const selectProduct = () => {
 		const item = state.spaceHeating.heatSource.data[index];
 
 		if (item && data) {
+			const heatSourceData = item.data as HeatSourceData;
+
+			if (heatSourceData.typeOfHeatSource === "heatNetwork" &&
+				heatSourceData.usesHeatInterfaceUnits &&
+				heatSourceProductType === "heatInterfaceUnit"
+			) {
+				heatSourceData.heatInterfaceUnitProductReference = data.id;
+				return;
+			}
+
 			const product = item.data as PcdbProduct;
 			product.productReference = data.id;
 		}
@@ -64,6 +76,7 @@ const selectProduct = () => {
 	<ProductDetailsBoiler v-if="!!data && heatSourceType in boilerTypes" :product="data!"/>
 	<ProductDetailsHeatBatteryPCM v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryPcm" :product="data!" />
 	<ProductDetailsHeatBatteryDryCore v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryDryCore" :product="data!" />
+	<ProductDetailsHeatInterfaceUnit v-if="!!data && heatSourceType === typeOfHeatSource.heatInterfaceUnit" :product="data!" />
 
 	<div class="govuk-button-group">
 		<GovButton

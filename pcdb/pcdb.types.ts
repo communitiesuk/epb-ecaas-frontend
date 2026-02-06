@@ -212,6 +212,19 @@ export const electricStorageHeaterZod = BaseProduct.extend({
 
 export type ElectricStorageHeaterProduct = z.infer<typeof electricStorageHeaterZod>;
 
+export const heatInterfaceUnitZod = BaseProduct.extend({
+	technologyType: z.literal("HeatInterfaceUnit"),
+	powerCircPump: z.nullable(z.number()),
+	maxPowerWater70: z.nullable(z.number()),
+	vwart70: z.nullable(z.number()),
+	maxPowerWater55: z.nullable(z.number()),
+	hiuDailyLoss: z.nullable(z.number()),
+	vwart55: z.nullable(z.number()),
+	powerAux: z.nullable(z.number()),
+});
+
+export type HeatInterfaceUnitProduct = z.infer<typeof heatInterfaceUnitZod>;
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
 	groundSourceHeatPumpZod,
@@ -228,6 +241,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	smartHotWaterTankZod,
 	fancoilZod,
 	electricStorageHeaterZod,
+	heatInterfaceUnitZod,
 ]);
 
 export type Product = z.infer<typeof productSchema>;
@@ -255,6 +269,7 @@ const categoryTechnologies = {
 		"HeatBatteryPCM",
 		"HeatBatteryDryCore",
 	],
+	heatInterfaceUnit: ["HeatInterfaceUnit"],
 	waterStorage: ["SmartHotWaterTank"],
 	heatEmitting: [
 		"FanCoils",

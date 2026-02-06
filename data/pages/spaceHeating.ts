@@ -107,6 +107,13 @@ export const spaceHeatingPages = [
 		parentId: "heatSource",
 	},
 	{
+		id: "heatInterfaceUnitProducts",
+		title: "Select a heat interface unit",
+		url: "/space-heating/heat-source/:heatSource/heat-interface-unit",
+		type: "task",
+		parentId: "heatSource",
+	},
+	{
 		id: "heatEmitters",
 		title: "Heat emitter",
 		url: "/space-heating/heat-emitters/:heatEmitter",

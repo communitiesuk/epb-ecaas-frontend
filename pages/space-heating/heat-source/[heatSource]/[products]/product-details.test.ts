@@ -12,12 +12,27 @@ describe("Heat pump details", async () => {
 		typeOfHeatPump: "airSource",
 	};
 
+	const heatNetwork: Partial<HeatSourceData> = {
+		id: "463c94f6-566c-49b2-af27-333333333",
+		name: "Heat network 1",
+		typeOfHeatSource: "heatNetwork",
+		typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+		usesHeatInterfaceUnits: true,
+	};
+
 	const product: Partial<Product> = {
 		id: "1000",
 		brandName: "Test",
 		modelName: "Small Heat Pump",
 		modelQualifier: "HPSMALL",
 		technologyType: "AirSourceHeatPump",
+	};
+
+	const heatInterfaceUnitProduct: Partial<Product> = {
+		id: "1000",
+		brandName: "HEM Default",
+		modelName: "Heat Interface Unit",
+		technologyType: "HeatInterfaceUnit",
 	};
 
 	const store = useEcaasStore();
@@ -37,7 +52,10 @@ describe("Heat pump details", async () => {
 		store.$patch({
 			spaceHeating: {
 				heatSource: {
-					data: [{ data: smallHeatPump }],
+					data: [
+						{ data: smallHeatPump },
+						{ data: heatNetwork },
+					],
 				},
 			},
 		});
@@ -107,6 +125,31 @@ describe("Heat pump details", async () => {
 
 		// Assert
 		expect(heatSource.productReference).toBe("1000");
+	});
+
+	test("Store data updates when heat interface product is selected", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "1",
+				products: "heat-interface-unit",
+				id: "1000",
+			},
+			path: "/1/heat-interface-unit/1000",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(heatInterfaceUnitProduct),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		await user.click(screen.getByTestId("selectProductButton"));
+
+		const heatSource = store.spaceHeating.heatSource.data[1]?.data as HeatSourceData;
+
+		// Assert
+		expect(heatSource).toEqual(expect.objectContaining({ heatInterfaceUnitProductReference: heatInterfaceUnitProduct.id }));
 	});
 
 	test("Navigates to heat pump page when product is selected", async () => {

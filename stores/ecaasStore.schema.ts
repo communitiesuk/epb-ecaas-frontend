@@ -1035,6 +1035,7 @@ const _typeOfHeatSource = z.enum({
 	...typeOfBoiler.enum,
 	...typeOfHeatNetwork.enum,
 	...typeOfHeatBattery.enum,
+	...z.enum(["heatInterfaceUnit"]).enum,
 });
 
 export const typeOfHeatSource = _typeOfHeatSource.enum;
@@ -1067,6 +1068,7 @@ export const productTypeMap = {
 	"fanCoil": "FanCoils",
 	"electricStorageHeater": "StorageHeater",
 	"smartHotWaterTank": "SmartHotWaterTank",
+	"heatInterfaceUnit": "HeatInterfaceUnit",
 } as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType, TechnologyType | string>;
 
 export type HeatEmitterType =

@@ -6,10 +6,11 @@ definePageMeta({ layout: false });
 
 const store = useEcaasStore();
 const { pageId, title, index, searchModel, searchData } = useProductsPage("heatSource");
+const heatSourceProductType = pageId as HeatSourceProductType;
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
-		technologyType: productTypeMap[pageId as HeatSourceProductType],
+		technologyType: productTypeMap[heatSourceProductType],
 	},
 });
 
@@ -22,6 +23,14 @@ const selectProduct = (reference: string) => {
 
 		if (item) {
 			const data = item.data as HeatSourceData;
+
+			if (data.typeOfHeatSource === "heatNetwork" &&
+				data.usesHeatInterfaceUnits &&
+				heatSourceProductType === "heatInterfaceUnit"
+			) {
+				data.heatInterfaceUnitProductReference = reference;
+				return;
+			}
 			
 			if (data.typeOfHeatSource === "heatNetwork" && !data.isHeatNetworkInPcdb) {
 				return;

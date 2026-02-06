@@ -320,6 +320,7 @@ export const heatSourceProductTypesDisplay = {
 	"communalHeatNetwork": pluralize("Communal heat network"),
 	"heatBatteryPcm": pluralize("PCM heat battery", "ies"),
 	"heatBatteryDryCore": pluralize("Dry core heat battery", "ies"),
+	"heatInterfaceUnit": pluralize("Heat interface unit"),
 } as const satisfies Record<HeatSourceProductType, (plural: boolean) => string>;
 
 export function displayHeatPumpType(type: HeatPumpType | undefined): string {

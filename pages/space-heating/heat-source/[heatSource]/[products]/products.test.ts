@@ -45,6 +45,7 @@ describe("Heat source products page", () => {
 			},
 		],
 	};
+
 	beforeEach(() => {
 		mockFetch.mockReturnValue({
 			data: ref(MOCKED_HEAT_PUMPS),
@@ -57,6 +58,7 @@ describe("Heat source products page", () => {
 		typeOfHeatSource: "heatPump",
 		typeOfHeatPump: "airSource",
 	};
+
 	const heatSource2: Partial<HeatSourceData> = {
 		id: "463c94f6-566c-49b2-af27-111111111",
 		name: "Heat source 2",
@@ -64,11 +66,23 @@ describe("Heat source products page", () => {
 		typeOfHeatPump: "airSource",
 	};
 
+	const heatNetwork1: Partial<HeatSourceData> = {
+		id: "463c94f6-566c-49b2-af27-333333333",
+		name: "Heat network 1",
+		typeOfHeatSource: "heatNetwork",
+		typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+		usesHeatInterfaceUnits: true,
+	};
+
 	beforeEach(async () => {
 		store.$patch({
 			spaceHeating: {
 				heatSource: {
-					data: [{ data: heatSource2 }, { data: heatSource1 }],
+					data: [
+						{ data: heatSource2 },
+						{ data: heatSource1 },
+						{ data: heatNetwork1 },
+					],
 				},
 			},
 		});
@@ -86,6 +100,7 @@ describe("Heat source products page", () => {
 			},
 			path: "/0/air-source",
 		});
+		
 		await renderSuspended(Products);
 
 		expect(
@@ -110,6 +125,39 @@ describe("Heat source products page", () => {
 		).toEqual(expect.objectContaining({ productReference: MOCKED_HEAT_PUMPS.data[1]?.id }));
 	});
 
+	test("when a user selects a heat interface unit product its product reference gets stored", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "2",
+				products: "heat-interface-unit",
+			},
+			path: "/1/heat-interface-unit",
+		});
+
+		const mockedHeatInterfaceUnits: PaginatedResult<DisplayProduct> = {
+			data: [
+				{
+					id: "1000",
+					brandName: "HEM Default",
+					modelName: "Heat Interface Unit",
+					technologyType: "HeatInterfaceUnit",
+				},
+			],
+		};
+
+		mockFetch.mockReturnValue({
+			data: ref(mockedHeatInterfaceUnits),
+		});
+
+		await renderSuspended(Products);
+
+		await user.click(screen.getByTestId("selectProductButton_0"));
+
+		expect(
+			store.spaceHeating.heatSource.data[2]!.data,
+		).toEqual(expect.objectContaining({ heatInterfaceUnitProductReference: mockedHeatInterfaceUnits.data[0]?.id }));
+	});
+
 	test("'Back to heat source' navigates user to the heat source at the correct index", async () => {
 		mockRoute.mockReturnValue({
 			params: {
@@ -118,6 +166,7 @@ describe("Heat source products page", () => {
 			},
 			path: "/1/air-source",
 		});
+
 		await renderSuspended(Products);
 		const backButton = screen.getByTestId("backToHeatSourceButton");
 
