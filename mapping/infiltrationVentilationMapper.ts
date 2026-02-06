@@ -49,7 +49,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 		const commonFields = {
 			design_outdoor_air_flow_rate: airFlowRateInCubicMetresPerHour,
 			sup_air_flw_ctrl: "ODA",
-			sup_air_temp_ctrl: "CONST",
+			sup_air_temp_ctrl: "NO_CTRL",
 			EnergySupply: defaultElectricityEnergySupplyName,
 		} as const satisfies SchemaMechVentCommon;
 

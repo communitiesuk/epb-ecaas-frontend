@@ -72,6 +72,10 @@
                 "SeparateTimeAndTempControl"
             ]
         },
+        "KitchenExtractorHoodExternal": {
+            "type": "boolean",
+            "description": "Does the kitchen have a cooker extractor hood which extracts to the outside of the building?"
+        },
         "ExternalConditions": {
             "type": "object",
             "unevaluatedProperties": false,
@@ -79,85 +83,10 @@
                 "shading_segments"
             ],
             "properties": {
-                "air_temperatures": {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    }
-                },
-                "wind_speeds": {
-                    "type": "array",
-                    "items": {
-                        "type": "number",
-                        "minimum": 0
-                    }
-                },
-                "wind_directions": {
-                    "type": "array",
-                    "items": {
-                        "type": "number",
-                        "minimum": 0,
-                        "maximum": 360
-                    }
-                },
-                "diffuse_horizontal_radiation": {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    }
-                },
-                "direct_beam_radiation": {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    }
-                },
-                "solar_reflectivity_of_ground": {
-                    "type": "array",
-                    "items": {
-                        "type": "number",
-                        "minimum": 0,
-                        "maximum": 1
-                    }
-                },
-                "latitude": {
-                    "type": "number",
-                    "minimum": -90,
-                    "maximum": 90
-                },
-                "longitude": {
-                    "type": "number",
-                    "minimum": -180,
-                    "maximum": 180
-                },
-                "timezone": {
-                    "type": "number"
-                },
-                "start_day": {
-                    "type": "number"
-                },
-                "end_day": {
-                    "type": "number"
-                },
-                "time_series_step": {
-                    "type": "number"
-                },
-                "january_first": {
-                    "type": "number"
-                },
-                "daylight_savings": {
-                    "type": "string"
-                },
-                "leap_day_included": {
-                    "type": "boolean"
-                },
-                "direct_beam_conversion_needed": {
-                    "type": "boolean"
-                },
                 "shading_segments": {
                     "type": "array",
-                    "minLength": 8,
-                    "maxLength": 36,
+                    "minItems": 8,
+                    "maxItems": 36,
                     "items": {
                         "type": "object",
                         "unevaluatedProperties": false,
@@ -298,6 +227,29 @@
                 }
             ]
         },
+        "PreHeatedWaterSource": {
+            "type": "object",
+            "unevaluatedProperties": false,
+            "properties": {
+                "preheated tank": {
+                    "$ref": "#/$defs/StorageTank",
+                    "properties": {
+                        "ColdWaterSource": {
+                            "type": "string",
+                            "reference_to": [
+                                "$.cold_water_source",
+                                "$.wwhrs"
+                            ]
+                        }
+                    },
+                    "required": ["ColdWaterSource"],
+                    "not": {
+                        "properties": {"ColdWaterSource": {"const": "preheated tank"}}
+                    }
+                }
+            },
+            "required": ["preheated tank"]
+        },
         "EnergySupply": {
             "type": "object",
             "additionalProperties": {
@@ -415,20 +367,22 @@
                     "type": "object",
                     "unevaluatedProperties": false,
                     "required": [
-                        "type",
-                        "ColdWaterSource"
+                        "type"
                     ],
-                    "properties": {
-                        "ColdWaterSource": {
-                            "enum": [
-                                "header tank",
-                                "mains water"
-                            ]
-                        }
-                    },
                     "oneOf": [
                         {
-                            "$ref": "#/$defs/StorageTank"
+                            "allOf": [
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": { "const": "StorageTank" }
+                                    },
+                                    "required": ["type"]
+                                },
+                                {
+                                    "$ref": "#/$defs/StorageTank"
+                                }
+                            ]
                         },
                         {
                             "$ref": "#/$defs/SmartHotWaterTank"
@@ -658,8 +612,7 @@
                         "required": [
                             "type",
                             "ColdWaterSource",
-                            "flow_rates",
-                            "system_a_efficiencies"
+                            "flow_rates"
                         ],
                         "properties": {
                             "type": {
@@ -737,7 +690,12 @@
                                 "exclusiveMinimum": 0,
                                 "description": "Utilisation factor for System C (optional, defaults to system_a_utilisation_factor)"
                             }
-                        }
+                        },
+                        "anyOf": [
+                            {"required": ["system_a_efficiencies"]},
+                            {"required": ["system_b_efficiencies"]},
+                            {"required": ["system_c_efficiencies"]}
+                        ]
                     }
                 ]
             }
@@ -1198,6 +1156,7 @@
         "NumberOfSanitaryAccommodations",
         "NumberOfHabitableRooms",
         "HeatingControlType",
+        "KitchenExtractorHoodExternal",
         "ExternalConditions",
         "Appliances",
         "ColdWaterSource",
@@ -1399,112 +1358,6 @@
                 },
                 "is_export_capable": {
                     "type": "boolean"
-                }
-            }
-        },
-        "HotWaterTankCommon": {
-            "required": [
-                "volume",
-                "daily_losses",
-                "HeatSource"
-            ],
-            "properties": {
-                "volume": {
-                    "type": "number",
-                    "minimum": 1,
-                    "maximum": 1000
-                },
-                "init_temp": {
-                    "type": "number",
-                    "minimum": 1,
-                    "maximum": 100
-                },
-                "daily_losses": {
-                    "type": "number",
-                    "minimum": 0.001,
-                    "maximum": 200
-                },
-                "primary_pipework": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "unevaluatedProperties": false,
-                        "required": [
-                            "location",
-                            "internal_diameter_mm",
-                            "external_diameter_mm",
-                            "length",
-                            "insulation_thermal_conductivity",
-                            "insulation_thickness_mm",
-                            "surface_reflectivity",
-                            "pipe_contents"
-                        ],
-                        "properties": {
-                            "location": {
-                                "enum": [
-                                    "internal",
-                                    "external"
-                                ]
-                            },
-                            "internal_diameter_mm": {
-                                "type": "number",
-                                "minimum": 5,
-                                "maximum": 50
-                            },
-                            "external_diameter_mm": {
-                                "type": "number",
-                                "minimum": 5,
-                                "maximum": 50
-                            },
-                            "length": {
-                                "type": "number",
-                                "minimum": 0.05
-                            },
-                            "insulation_thermal_conductivity": {
-                                "type": "number",
-                                "exclusiveMinimum": 0
-                            },
-                            "insulation_thickness_mm": {
-                                "type": "number",
-                                "minimum": 0
-                            },
-                            "surface_reflectivity": {
-                                "type": "boolean"
-                            },
-                            "pipe_contents": {
-                                "enum": [
-                                    "water",
-                                    "glycol25"
-                                ]
-                            }
-                        }
-                    }
-                },
-                "HeatSource": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "object",
-                        "unevaluatedProperties": false,
-                        "oneOf": [
-                            {
-                                "$ref": "#/$defs/ImmersionHeater"
-                            },
-                            {
-                                "$ref": "#/$defs/SolarThermalSystem"
-                            },
-                            {
-                                "$ref": "#/$defs/HeatSourceWet"
-                            },
-                            {
-                                "$ref": "#/$defs/HeatPump_HWOnly"
-                            }
-                        ]
-                    }
-                },
-                "heat_exchanger_surface_area": {
-                    "type": "number",
-                    "exclusiveMinimum": 0,
-                    "description": "A heat_exchanger_surface_area is required when there is a HeatPump_HWOnly HeatSource"
                 }
             }
         },
@@ -1774,28 +1627,117 @@
             }
         },
         "StorageTank": {
-            "description": "A possible hot water source",
-            "allOf": [
-                {
-                    "$ref": "#/$defs/HotWaterTankCommon"
-                },
-                {
-                    "required": [
-                        "type"
-                    ],
-                    "properties": {
-                        "type": {
-                            "const": "StorageTank"
-                        },
-                        "ColdWaterSource": {
-                            "enum": [
-                                "header tank",
-                                "mains water"
-                            ]
-                        }
+            "$ref": "#/$defs/Tank",
+            "properties": {
+                "HeatSource": {
+                    "additionalProperties": {
+                        "required": ["thermostat_position"]
                     }
                 }
-            ]
+            }
+        },
+        "Tank": {
+            "required": [
+                "ColdWaterSource",
+                "volume",
+                "daily_losses",
+                "HeatSource"
+            ],
+            "properties": {
+                "ColdWaterSource": {
+                    "type": "string",
+                    "reference_to": [
+                        "$.cold_water_source",
+                        "$.pre_heated_water_source",
+                        "$.wwhrs"
+                    ]
+                },
+                "volume": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 1000
+                },
+                "init_temp": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 100
+                },
+                "daily_losses": {
+                    "type": "number",
+                    "minimum": 0.001,
+                    "maximum": 200
+                },
+                "primary_pipework": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "unevaluatedProperties": false,
+                        "required": [
+                            "location",
+                            "internal_diameter_mm",
+                            "external_diameter_mm",
+                            "length",
+                            "insulation_thermal_conductivity",
+                            "insulation_thickness_mm",
+                            "surface_reflectivity",
+                            "pipe_contents"
+                        ],
+                        "properties": {
+                            "location": {"enum": ["internal", "external"]},
+                            "internal_diameter_mm": {
+                                "type": "number",
+                                "minimum": 5,
+                                "maximum": 50
+                            },
+                            "external_diameter_mm": {
+                                "type": "number",
+                                "minimum": 5,
+                                "maximum": 50
+                            },
+                            "length": {
+                                "type": "number",
+                                "minimum": 0.05
+                            },
+                            "insulation_thermal_conductivity": {
+                                "type": "number",
+                                "exclusiveMinimum": 0
+                            },
+                            "insulation_thickness_mm": {
+                                "type": "number",
+                                "minimum": 0
+                            },
+                            "surface_reflectivity": {"type": "boolean"},
+                            "pipe_contents": {"enum": ["water", "glycol25"]}
+                        }
+                    }
+                },
+                "HeatSource": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "object",
+                        "unevaluatedProperties": false,
+                        "oneOf": [
+                            {
+                                "$ref": "#/$defs/ImmersionHeater"
+                            },
+                            {
+                                "$ref": "#/$defs/SolarThermalSystem"
+                            },
+                            {
+                                "$ref": "#/$defs/HeatSourceWet"
+                            },
+                            {
+                                "$ref": "#/$defs/HeatPump_HWOnly"
+                            }
+                        ]
+                    }
+                },
+                "heat_exchanger_surface_area": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "description": "Required if HeatSource type is HeatPump_HWOnly"
+                }
+            }
         },
         "SmartHotWaterTank": {
             "description": "A possible hot water source",
@@ -1918,32 +1860,28 @@
                             }
                         },
                         {
-                            "allOf": [
-                                {
-                                    "required": [
-                                        "max_flow_rate_pump_l_per_min",
-                                        "power_pump_kW",
-                                        "temp_usable"
-                                    ],
-                                    "properties": {
-                                        "max_flow_rate_pump_l_per_min": {
-                                            "type": "number",
-                                            "exclusiveMinimum": 0
-                                        },
-                                        "power_pump_kW": {
-                                            "type": "number",
-                                            "exclusiveMinimum": 0
-                                        },
-                                        "temp_usable": {
-                                            "type": "number",
-                                            "minimum": 0,
-                                            "maximum": 100
-                                        }
-                                    }
+                            "$ref": "#/$defs/Tank",
+                            "properties": {
+                                "EnergySupply_pump": {"type": "string"},
+                                "max_flow_rate_pump_l_per_min": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 0
                                 },
-                                {
-                                    "$ref": "#/$defs/HotWaterTankCommon"
+                                "power_pump_kW": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 0
+                                },
+                                "temp_usable": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 100
                                 }
+                            },
+                            "required": [
+                                "EnergySupply_pump",
+                                "max_flow_rate_pump_l_per_min",
+                                "power_pump_kW",
+                                "temp_usable"
                             ]
                         }
                     ]
@@ -1954,6 +1892,7 @@
             "description": "A possible hot water source",
             "required": [
                 "type",
+                "ColdWaterSource",
                 "efficiency",
                 "EnergySupply"
             ],
@@ -2003,6 +1942,7 @@
             "description": "A possible hot water source",
             "required": [
                 "type",
+                "ColdWaterSource",
                 "HeatSourceWet",
                 "daily_HW_usage",
                 "separate_DHW_tests",
@@ -2012,6 +1952,7 @@
                 "type": {
                     "const": "CombiBoiler"
                 },
+                "ColdWaterSource": {"enum": ["header tank", "mains water"]},
                 "HeatSourceWet": {
                     "description": "References a key (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1') in $.HeatSourceWet",
                     "reference_to": "$.heat_source_wet",
@@ -2088,12 +2029,6 @@
                     "type": "number",
                     "exclusiveMinimum": 0,
                     "title": "Daily Hw Usage"
-                },
-                "ColdWaterSource": {
-                    "enum": [
-                        "header tank",
-                        "mains water"
-                    ]
                 }
             }
         },
@@ -2260,7 +2195,7 @@
                                 },
                                 "power_standby": {
                                     "type": "number",
-                                    "exclusiveMinimum": 0
+                                    "minimum": 0
                                 },
                                 "power_crankcase_heater": {
                                     "type": "number",
@@ -2405,10 +2340,6 @@
                                 "power_max_backup": {
                                     "type": "number",
                                     "exclusiveMinimum": 0
-                                },
-                                "time_delay_backup": {
-                                    "type": "number",
-                                    "minimum": 0
                                 },
                                 "power_heating_warm_air_fan": {
                                     "type": "number",
@@ -2614,7 +2545,7 @@
                         },
                         "electricity_standby": {
                             "type": "number",
-                            "exclusiveMinimum": 0,
+                            "minimum": 0,
                             "maximum": 0.1
                         }
                     }
@@ -2659,8 +2590,7 @@
                 "inlet_diameter_m",
                 "A",
                 "B",
-                "flow_rate_l_per_min",
-                "temp_init"
+                "flow_rate_l_per_min"
             ],
             "properties": {
                 "type": {
@@ -2734,12 +2664,6 @@
                 "flow_rate_l_per_min": {
                     "type": "number",
                     "exclusiveMinimum": 0
-                },
-                "temp_init": {
-                    "description": "Initial temperature of the PCM heat battery at the start of simulation (unit: \u02daC)",
-                    "minimum": -273.15,
-                    "title": "Temp Init",
-                    "type": "number"
                 }
             }
         },
@@ -2949,8 +2873,7 @@
                 "EnergySupply",
                 "Zone",
                 "dry_core_min_output",
-                "dry_core_max_output",
-                "state_of_charge_init"
+                "dry_core_max_output"
             ],
             "properties": {
                 "type": {
@@ -3002,13 +2925,6 @@
                             "type": "number"
                         }
                     }
-                },
-                "state_of_charge_init": {
-                    "description": "State of charge at initialisation of dry core heat storage (ratio)",
-                    "maximum": 1.0,
-                    "minimum": 0.0,
-                    "title": "State Of Charge Init",
-                    "type": "number"
                 }
             },
             "oneOf": [
@@ -3564,16 +3480,12 @@
             "properties": {
                 "sup_air_flw_ctrl": {
                     "enum": [
-                        "ODA",
-                        "LOAD"
+                        "ODA"
                     ]
                 },
                 "sup_air_temp_ctrl": {
                     "enum": [
-                        "NO_CTRL",
-                        "CONST",
-                        "ODA_COMP",
-                        "LOAD_COMP"
+                        "NO_CTRL"
                     ]
                 },
                 "design_zone_cooling_covered_by_mech_vent": {
@@ -3587,7 +3499,8 @@
                 },
                 "design_outdoor_air_flow_rate": {
                     "type": "number",
-                    "exclusiveMinimum": 0
+                    "exclusiveMinimum": 0,
+                    "description": "Design outdoor air flow rate (m3/hr)"
                 },
                 "SFP_in_use_factor": {
                     "minimum": 1,
@@ -4569,7 +4482,7 @@
                             },
                             "delta_r": {
                                 "type": "number",
-                                "minimum": 0,
+                                "exclusiveMinimum": 0,
                                 "maximum": 100
                             },
                             "trans_red": {

@@ -72,7 +72,7 @@ describe("infiltration ventilation mapper", () => {
 		expect(firstMechVent?.vent_type).toBe("MVHR");
 		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(108);
 		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA"); 
-		expect(firstMechVent?.sup_air_temp_ctrl).toBe("CONST");
+		expect(firstMechVent?.sup_air_temp_ctrl).toBe("NO_CTRL");
 		expect(firstMechVent?.mvhr_location).toBe("inside");
 		expect(firstMechVent?.mvhr_eff).toBe(1);
 		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
@@ -212,7 +212,7 @@ describe("infiltration ventilation mapper", () => {
 		expect(firstMechVent?.vent_type).toBe("Intermittent MEV");
 		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(144);
 		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA"); 
-		expect(firstMechVent?.sup_air_temp_ctrl).toBe("CONST");
+		expect(firstMechVent?.sup_air_temp_ctrl).toBe("NO_CTRL");
 		expect(firstMechVent?.ductwork).toBeUndefined();
 	});
 

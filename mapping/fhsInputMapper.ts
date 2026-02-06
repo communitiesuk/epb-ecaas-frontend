@@ -1,6 +1,6 @@
 import type { StripDefs } from "./mapping.types";
-import type { SchemaFhsInputSchema, SchemaStorageTank } from "~/schema/api-schema.types";
-import type { SchemaHeatSourceWetHeatPumpWithProductReference } from "~/schema/aliases";
+import type { SchemaFhsInputSchema } from "~/schema/api-schema.types";
+import type { SchemaHeatSourceWetHeatPumpWithProductReference, SchemaStorageTank } from "~/schema/aliases";
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
 import { mapInfiltrationVentilationData } from "./infiltrationVentilationMapper";
@@ -77,6 +77,10 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		})),
 	};
 
+	const kitchenExtractorHoodExternal: Pick<FhsInputSchema, "KitchenExtractorHoodExternal"> = {
+		KitchenExtractorHoodExternal: false, // field to collect within appliance details
+	};
+
 	const fhsInput = merge.all([
 		defaultAppliances,
 		dwellingDetailsData,
@@ -88,6 +92,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		pvData,
 		defaultColdWaterSource,
 		events,
+		kitchenExtractorHoodExternal,
 	]) as FhsInputSchema;
 
 	console.log(fhsInput);

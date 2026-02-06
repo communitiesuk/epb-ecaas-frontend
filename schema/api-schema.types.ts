@@ -192,6 +192,13 @@ export interface components {
             heater_position: number;
             thermostat_position?: number;
         };
+        HeatPump_HWOnlyTestData: {
+            cop_dhw: number;
+            hw_tapping_prof_daily_total: number;
+            energy_input_measured: number;
+            power_standby: number;
+            hw_vessel_loss_daily: number;
+        };
         /** @description A possible heat source for a hot water tank */
         ImmersionHeater: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
             /** @constant */
@@ -227,13 +234,6 @@ export interface components {
             name: string;
             temp_flow_limit_upper?: number;
         };
-        HeatPump_HWOnlyTestData: {
-            cop_dhw: number;
-            hw_tapping_prof_daily_total: number;
-            energy_input_measured: number;
-            power_standby: number;
-            hw_vessel_loss_daily: number;
-        };
         /** @description A possible heat source for a hot water tank */
         HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
             /** @constant */
@@ -249,7 +249,8 @@ export interface components {
                 L?: components["schemas"]["HeatPump_HWOnlyTestData"];
             };
         };
-        HotWaterTankCommon: {
+        Tank: {
+            ColdWaterSource: string;
             volume: number;
             init_temp?: number;
             daily_losses: number;
@@ -268,7 +269,7 @@ export interface components {
             HeatSource: {
                 [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
             };
-            /** @description A heat_exchanger_surface_area is required when there is a HeatPump_HWOnly HeatSource */
+            /** @description Required if HeatSource type is HeatPump_HWOnly */
             heat_exchanger_surface_area?: number;
         };
         HeatSourceWetCommon: {
@@ -373,11 +374,6 @@ export interface components {
             inlet_diameter_m: number;
             max_temperature: number;
             flow_rate_l_per_min: number;
-            /**
-             * Temp Init
-             * @description Initial temperature of the PCM heat battery at the start of simulation (unit: ˚C)
-             */
-            temp_init: number;
         };
         DryCoreBattery: {
             /** @constant */
@@ -495,12 +491,13 @@ export interface components {
         };
         MechVentCommon: {
             /** @enum {unknown} */
-            sup_air_flw_ctrl: "ODA" | "LOAD";
+            sup_air_flw_ctrl: "ODA";
             /** @enum {unknown} */
-            sup_air_temp_ctrl: "NO_CTRL" | "CONST" | "ODA_COMP" | "LOAD_COMP";
+            sup_air_temp_ctrl: "NO_CTRL";
             design_zone_cooling_covered_by_mech_vent?: number;
             design_zone_heating_covered_by_mech_vent?: number;
             EnergySupply: string;
+            /** @description Design outdoor air flow rate (m3/hr) */
             design_outdoor_air_flow_rate: number;
             /**
              * Sfp In Use Factor
@@ -644,13 +641,6 @@ export interface components {
             is_export_capable: boolean;
         };
         /** @description A possible hot water source */
-        StorageTank: components["schemas"]["HotWaterTankCommon"] & {
-            /** @constant */
-            type: "StorageTank";
-            /** @enum {unknown} */
-            ColdWaterSource?: "header tank" | "mains water";
-        };
-        /** @description A possible hot water source */
         SmartHotWaterTank: {
             /** @constant */
             type: "SmartHotWaterTank";
@@ -679,11 +669,7 @@ export interface components {
             HeatSource: {
                 [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
             };
-        } | ({
-            max_flow_rate_pump_l_per_min: number;
-            power_pump_kW: number;
-            temp_usable: number;
-        } & components["schemas"]["HotWaterTankCommon"]));
+        } | components["schemas"]["Tank"]);
         /** @description A possible hot water source */
         PointOfUse: {
             /** @constant */
@@ -691,7 +677,7 @@ export interface components {
             efficiency: number;
             EnergySupply: string;
             /** @enum {unknown} */
-            ColdWaterSource?: "header tank" | "mains water";
+            ColdWaterSource: "header tank" | "mains water";
         };
         /** @description A possible hot water source */
         HIU: {
@@ -705,6 +691,8 @@ export interface components {
         CombiBoiler: {
             /** @constant */
             type: "CombiBoiler";
+            /** @enum {unknown} */
+            ColdWaterSource: "header tank" | "mains water";
             /**
              * Heatsourcewet
              * @description References a key (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1') in $.HeatSourceWet
@@ -744,8 +732,6 @@ export interface components {
              * @description Daily hot water usage for the combi boiler system (unit: litre/day)
              */
             daily_HW_usage: number;
-            /** @enum {unknown} */
-            ColdWaterSource?: "header tank" | "mains water";
         };
         /** @description A possible hot water source */
         HeatBattery: {
@@ -860,7 +846,6 @@ export interface components {
                 cost_schedule_hybrid?: components["schemas"]["BoilerCostScheduleHybrid"] | null;
             };
             power_max_backup?: number;
-            time_delay_backup?: number;
             power_heating_warm_air_fan?: number;
             time_constant_onoff_operation: number;
             /** @description required if HeatNetwork source type, should not be provided otherwise */
@@ -947,11 +932,6 @@ export interface components {
             Zone: string;
             dry_core_min_output: number[][];
             dry_core_max_output: number[][];
-            /**
-             * State Of Charge Init
-             * @description State of charge at initialisation of dry core heat storage (ratio)
-             */
-            state_of_charge_init: number;
         } & ({
             /** @constant */
             air_flow_type: "fan-assisted";
@@ -1225,23 +1205,9 @@ export interface components {
             NumberOfHabitableRooms: number;
             /** @enum {unknown} */
             HeatingControlType: "SeparateTempControl" | "SeparateTimeAndTempControl";
+            /** @description Does the kitchen have a cooker extractor hood which extracts to the outside of the building? */
+            KitchenExtractorHoodExternal: boolean;
             ExternalConditions: {
-                air_temperatures?: number[];
-                wind_speeds?: number[];
-                wind_directions?: number[];
-                diffuse_horizontal_radiation?: number[];
-                direct_beam_radiation?: number[];
-                solar_reflectivity_of_ground?: number[];
-                latitude?: number;
-                longitude?: number;
-                timezone?: number;
-                start_day?: number;
-                end_day?: number;
-                time_series_step?: number;
-                january_first?: number;
-                daylight_savings?: string;
-                leap_day_included?: boolean;
-                direct_beam_conversion_needed?: boolean;
                 shading_segments: {
                     start360: number;
                     end360: number;
@@ -1273,6 +1239,9 @@ export interface components {
                 /** @description Potentially incomplete - mains water properties were inferred from example input files */
                 "mains water": components["schemas"]["HeaderTankOrMainsWater"];
             };
+            PreHeatedWaterSource?: {
+                "preheated tank": components["schemas"]["Tank"];
+            };
             EnergySupply: {
                 [key: string]: components["schemas"]["EnergySupplyGas"] | components["schemas"]["EnergySupplyElectricity"] | components["schemas"]["EnergySupplyOther"];
             };
@@ -1298,10 +1267,10 @@ export interface components {
                 };
             };
             HotWaterSource: {
-                "hw cylinder"?: {
-                    /** @enum {unknown} */
-                    ColdWaterSource: "header tank" | "mains water";
-                } & (components["schemas"]["StorageTank"] | components["schemas"]["SmartHotWaterTank"] | components["schemas"]["PointOfUse"] | components["schemas"]["HIU"] | components["schemas"]["CombiBoiler"] | components["schemas"]["HeatBattery"]);
+                "hw cylinder"?: ({
+                    /** @constant */
+                    type: "StorageTank";
+                } & components["schemas"]["Tank"]) | components["schemas"]["SmartHotWaterTank"] | components["schemas"]["PointOfUse"] | components["schemas"]["HIU"] | components["schemas"]["CombiBoiler"] | components["schemas"]["HeatBattery"];
             };
             HeatSourceWet?: {
                 [key: string]: ({
@@ -1359,14 +1328,14 @@ export interface components {
                     product_reference: string;
                     /** @enum {unknown} */
                     ColdWaterSource: "header tank" | "mains water";
-                } | {
+                } | ({
                     /** @constant */
                     type: "WWHRS_Instantaneous";
                     /** @enum {unknown} */
                     ColdWaterSource: "header tank" | "mains water";
                     flow_rates: number[];
                     /** @description Measured efficiencies for System A at the test flow rates */
-                    system_a_efficiencies: number[];
+                    system_a_efficiencies?: number[];
                     /** @description Utilisation factor for System A */
                     system_a_utilisation_factor?: number;
                     /** @description Measured efficiencies for System B (optional, uses system_b_efficiency_factor if not provided) */
@@ -1381,7 +1350,7 @@ export interface components {
                     system_c_efficiency_factor?: number;
                     /** @description Utilisation factor for System C (optional, defaults to system_a_utilisation_factor) */
                     system_c_utilisation_factor?: number;
-                };
+                } | unknown | unknown | unknown);
             };
             SpaceHeatSystem: {
                 [key: string]: components["schemas"]["ElecStorageHeater"] | components["schemas"]["ElecStorageHeaterWithProductReference"] | components["schemas"]["InstantElecHeater"] | components["schemas"]["WetDistribution"] | components["schemas"]["WarmAir"];
@@ -1527,28 +1496,6 @@ export interface components {
                     fuel: "LPG_bulk" | "LPG_bottled" | "LPG_condition_11F";
                     is_export_capable: boolean;
                 };
-                HotWaterTankCommon: {
-                    volume: number;
-                    init_temp?: number;
-                    daily_losses: number;
-                    primary_pipework?: {
-                        /** @enum {unknown} */
-                        location: "internal" | "external";
-                        internal_diameter_mm: number;
-                        external_diameter_mm: number;
-                        length: number;
-                        insulation_thermal_conductivity: number;
-                        insulation_thickness_mm: number;
-                        surface_reflectivity: boolean;
-                        /** @enum {unknown} */
-                        pipe_contents: "water" | "glycol25";
-                    }[];
-                    HeatSource: {
-                        [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
-                    };
-                    /** @description A heat_exchanger_surface_area is required when there is a HeatPump_HWOnly HeatSource */
-                    heat_exchanger_surface_area?: number;
-                };
                 HotWaterTankHeatSourceCommon: {
                     heater_position: number;
                     thermostat_position?: number;
@@ -1610,12 +1557,29 @@ export interface components {
                     power_standby: number;
                     hw_vessel_loss_daily: number;
                 };
-                /** @description A possible hot water source */
-                StorageTank: components["schemas"]["HotWaterTankCommon"] & {
-                    /** @constant */
-                    type: "StorageTank";
-                    /** @enum {unknown} */
-                    ColdWaterSource?: "header tank" | "mains water";
+                StorageTank: components["schemas"]["Tank"];
+                Tank: {
+                    ColdWaterSource: string;
+                    volume: number;
+                    init_temp?: number;
+                    daily_losses: number;
+                    primary_pipework?: {
+                        /** @enum {unknown} */
+                        location: "internal" | "external";
+                        internal_diameter_mm: number;
+                        external_diameter_mm: number;
+                        length: number;
+                        insulation_thermal_conductivity: number;
+                        insulation_thickness_mm: number;
+                        surface_reflectivity: boolean;
+                        /** @enum {unknown} */
+                        pipe_contents: "water" | "glycol25";
+                    }[];
+                    HeatSource: {
+                        [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
+                    };
+                    /** @description Required if HeatSource type is HeatPump_HWOnly */
+                    heat_exchanger_surface_area?: number;
                 };
                 /** @description A possible hot water source */
                 SmartHotWaterTank: {
@@ -1646,11 +1610,7 @@ export interface components {
                     HeatSource: {
                         [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
                     };
-                } | ({
-                    max_flow_rate_pump_l_per_min: number;
-                    power_pump_kW: number;
-                    temp_usable: number;
-                } & components["schemas"]["HotWaterTankCommon"]));
+                } | components["schemas"]["Tank"]);
                 /** @description A possible hot water source */
                 PointOfUse: {
                     /** @constant */
@@ -1658,7 +1618,7 @@ export interface components {
                     efficiency: number;
                     EnergySupply: string;
                     /** @enum {unknown} */
-                    ColdWaterSource?: "header tank" | "mains water";
+                    ColdWaterSource: "header tank" | "mains water";
                 };
                 /** @description A possible hot water source */
                 HIU: {
@@ -1672,6 +1632,8 @@ export interface components {
                 CombiBoiler: {
                     /** @constant */
                     type: "CombiBoiler";
+                    /** @enum {unknown} */
+                    ColdWaterSource: "header tank" | "mains water";
                     /**
                      * Heatsourcewet
                      * @description References a key (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1') in $.HeatSourceWet
@@ -1711,8 +1673,6 @@ export interface components {
                      * @description Daily hot water usage for the combi boiler system (unit: litre/day)
                      */
                     daily_HW_usage: number;
-                    /** @enum {unknown} */
-                    ColdWaterSource?: "header tank" | "mains water";
                 };
                 /** @description A possible hot water source */
                 HeatBattery: {
@@ -1832,7 +1792,6 @@ export interface components {
                         cost_schedule_hybrid?: components["schemas"]["BoilerCostScheduleHybrid"] | null;
                     };
                     power_max_backup?: number;
-                    time_delay_backup?: number;
                     power_heating_warm_air_fan?: number;
                     time_constant_onoff_operation: number;
                     /** @description required if HeatNetwork source type, should not be provided otherwise */
@@ -1906,11 +1865,6 @@ export interface components {
                     inlet_diameter_m: number;
                     max_temperature: number;
                     flow_rate_l_per_min: number;
-                    /**
-                     * Temp Init
-                     * @description Initial temperature of the PCM heat battery at the start of simulation (unit: ˚C)
-                     */
-                    temp_init: number;
                 };
                 DryCoreBattery: {
                     /** @constant */
@@ -1978,11 +1932,6 @@ export interface components {
                     Zone: string;
                     dry_core_min_output: number[][];
                     dry_core_max_output: number[][];
-                    /**
-                     * State Of Charge Init
-                     * @description State of charge at initialisation of dry core heat storage (ratio)
-                     */
-                    state_of_charge_init: number;
                 } & ({
                     /** @constant */
                     air_flow_type: "fan-assisted";
@@ -2130,12 +2079,13 @@ export interface components {
                 };
                 MechVentCommon: {
                     /** @enum {unknown} */
-                    sup_air_flw_ctrl: "ODA" | "LOAD";
+                    sup_air_flw_ctrl: "ODA";
                     /** @enum {unknown} */
-                    sup_air_temp_ctrl: "NO_CTRL" | "CONST" | "ODA_COMP" | "LOAD_COMP";
+                    sup_air_temp_ctrl: "NO_CTRL";
                     design_zone_cooling_covered_by_mech_vent?: number;
                     design_zone_heating_covered_by_mech_vent?: number;
                     EnergySupply: string;
+                    /** @description Design outdoor air flow rate (m3/hr) */
                     design_outdoor_air_flow_rate: number;
                     /**
                      * Sfp In Use Factor
@@ -2531,12 +2481,12 @@ export type SchemaJsonApiOnePointOneMeta = components['schemas']['JsonApiOnePoin
 export type SchemaVersions = components['schemas']['Versions'];
 export type SchemaElectricBattery = components['schemas']['ElectricBattery'];
 export type SchemaHotWaterTankHeatSourceCommon = components['schemas']['HotWaterTankHeatSourceCommon'];
+export type SchemaHeatPumpHwOnlyTestData = components['schemas']['HeatPump_HWOnlyTestData'];
 export type SchemaImmersionHeater = components['schemas']['ImmersionHeater'];
 export type SchemaSolarThermalSystem = components['schemas']['SolarThermalSystem'];
 export type SchemaHeatSourceWet = components['schemas']['HeatSourceWet'];
-export type SchemaHeatPumpHwOnlyTestData = components['schemas']['HeatPump_HWOnlyTestData'];
 export type SchemaHeatPumpHwOnly = components['schemas']['HeatPump_HWOnly'];
-export type SchemaHotWaterTankCommon = components['schemas']['HotWaterTankCommon'];
+export type SchemaTank = components['schemas']['Tank'];
 export type SchemaHeatSourceWetCommon = components['schemas']['HeatSourceWetCommon'];
 export type SchemaScheduleRepeaterEntryForDouble = components['schemas']['ScheduleRepeaterEntryForDouble'];
 export type SchemaScheduleRepeaterValueForDouble = components['schemas']['ScheduleRepeaterValueForDouble'];
@@ -2574,7 +2524,6 @@ export type SchemaHeaderTankOrMainsWater = components['schemas']['HeaderTankOrMa
 export type SchemaEnergySupplyGas = components['schemas']['EnergySupplyGas'];
 export type SchemaEnergySupplyElectricity = components['schemas']['EnergySupplyElectricity'];
 export type SchemaEnergySupplyOther = components['schemas']['EnergySupplyOther'];
-export type SchemaStorageTank = components['schemas']['StorageTank'];
 export type SchemaSmartHotWaterTank = components['schemas']['SmartHotWaterTank'];
 export type SchemaPointOfUse = components['schemas']['PointOfUse'];
 export type SchemaHiu = components['schemas']['HIU'];
