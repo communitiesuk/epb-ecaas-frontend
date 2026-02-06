@@ -163,7 +163,9 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 				type: "SmartHotWaterTank",
 				product_reference: ws.productReference,
 				EnergySupply_pump: defaultElectricityEnergySupplyName,
-				ColdWaterSource: coldWaterSource,
+				ColdWaterSource: "mains water", // Needs changing to reference `referencedHeatSource` once hot water source branch is merged
+				volume: 0, // temporarily added until schema corrected to exclude as coming from PCDB
+				daily_losses: 0, // temporarily added until schema corrected to exclude as coming from PCDB
 				HeatSource: {
 					[heatSourceName]: {
 						name: heatSourceName,
