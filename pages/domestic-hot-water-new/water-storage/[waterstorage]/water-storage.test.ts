@@ -27,7 +27,7 @@ describe("water storage", () => {
 			storageCylinderVolume: unitValue(5, litre),
 			initialTemperature: 60,
 			dailyEnergyLoss: 1,
-			heatSource: heatPumpId,
+			heatSourceId: heatPumpId,
 			areaOfHeatExchanger: 1000,
 			heaterPosition: 0.8,
 			thermostatPosition: 0.5,
@@ -50,17 +50,24 @@ describe("water storage", () => {
 		store.$reset();
 	});
 	
+	const heatPump = {
+		data: {
+			id: heatPumpId,
+			name: "Heat pump",
+			isExistingHeatSource: false,
+			coldWaterSource: "headerTank",
+			heatSourceId: "NEW_HEAT_SOURCE",
+			productReference: "1234",
+			typeOfHeatPump: "airSource",
+			typeOfHeatSource: "heatPump",
+		},
+	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+	
+
 	const addHeatPumpStoreData = () => {
 		store.$patch({
-			spaceHeating: {
-				heatSource: {
-					data: [{
-						data: {
-							id: heatPumpId,
-							name: "Heat pump",
-						},
-					}],
-				},
+			domesticHotWaterNew: {
+				heatSources: { data: [heatPump] },
 			},
 		});
 	};
@@ -71,7 +78,7 @@ describe("water storage", () => {
 		await user.type(screen.getByTestId("storageCylinderVolume"), "5");
 		await user.type(screen.getByTestId("initialTemperature"), "60");
 		await user.type(screen.getByTestId("dailyEnergyLoss"), "1");
-		await user.click(screen.getByTestId(`heatSource_${heatPumpId}`));
+		await user.click(screen.getByTestId(`heatSourceId_${heatPumpId}`));
 		await user.type(screen.getByTestId("areaOfHeatExchanger"), "1000");
 		await user.type(screen.getByTestId("heaterPosition"), "0.8");
 		await user.type(screen.getByTestId("thermostatPosition"), "0.5");
@@ -110,7 +117,7 @@ describe("water storage", () => {
 		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
 		expect((await screen.findByTestId("initialTemperature_error"))).toBeDefined();
 		expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
-		expect((await screen.findByTestId("heatSource_error"))).toBeDefined();
+		expect((await screen.findByTestId("heatSourceId_error"))).toBeDefined();
 		expect((await screen.findByTestId("areaOfHeatExchanger_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
 		expect((await screen.findByTestId("thermostatPosition_error"))).toBeDefined();
@@ -121,7 +128,7 @@ describe("water storage", () => {
 		//smart hot water tank specific
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("selectSmartHotWaterTank_error"))).toBeDefined();
-		expect((await screen.findByTestId("heatSource_error"))).toBeDefined();
+		expect((await screen.findByTestId("heatSourceId_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
 	});
 
@@ -189,7 +196,7 @@ describe("water storage", () => {
 			}
 			expect((await screen.findByTestId<HTMLInputElement>("initialTemperature")).value).toBe(hotWaterCylinder.data.initialTemperature.toString());
 			expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe(hotWaterCylinder.data.dailyEnergyLoss.toString());
-			expect((await screen.findByTestId<HTMLInputElement>(`heatSource_${hotWaterCylinder.data.heatSource}`)).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>(`heatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("areaOfHeatExchanger")).value).toBe(hotWaterCylinder.data.areaOfHeatExchanger.toString());
 			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value).toBe(hotWaterCylinder.data.heaterPosition.toString());
 			expect((await screen.findByTestId<HTMLInputElement>("thermostatPosition")).value).toBe(hotWaterCylinder.data.thermostatPosition.toString());

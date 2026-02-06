@@ -3,7 +3,6 @@ import { litre, type Volume } from "~/utils/units/volume";
 import type { WaterStorageData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
 import { v4 as uuidv4 } from "uuid";
-import { FieldsHeatSources } from "#components";
 
 const title = "Water storage";
 const store = useEcaasStore();
@@ -33,7 +32,7 @@ const saveForm = (fields: WaterStorageData) => {
 		const commonFields = {
 			name: fields.name,
 			id,
-			heatSource: fields.heatSource,	
+			heatSourceId: fields.heatSourceId,	
 			heaterPosition: fields.heaterPosition,
 		};
 
@@ -100,6 +99,17 @@ const waterStorages = [
 	["hotWaterCylinder", "Hot water cylinder"],
 	["smartHotWaterTank", "Smart hot water cylinder"],
 ] as [string, string][];
+
+const heatSourceOptions = new Map(
+	store.domesticHotWaterNew.heatSources.data.map((e) => [
+		e.data.id,
+		e.data.isExistingHeatSource
+			? store.spaceHeating.heatSource.data
+				.find((x) => x.data.id === e.data.heatSourceId)?.data.name
+                ?? "Invalid existing heat source"
+			: e.data.name,
+	]),
+);
 
 </script>
 
@@ -182,13 +192,26 @@ const waterStorages = [
 			suffix-text="kWh"
 			data-field="HotWaterSource['hw cylinder'].daily_losses"
 		/>
-		<FieldsHeatSources
+		<FormKit
 			v-if="model.typeOfWaterStorage !== undefined"
-			id="heatSource"
-			name="heatSource"
-			label="Heat source"
-			help="Select the relevant heat source that has been added previously"
-		/>
+			id="heatSourceId"
+			name="heatSourceId"
+			type="govRadios"
+			label="Hot water source"
+			help="Select the relevant hot water source that has been added previously"
+			validation="required"
+			:options="heatSourceOptions"
+		>			
+			<div
+				v-if="!heatSourceOptions.size"
+				data-testid="noHeatSource"
+			>
+				<p class="govuk-error-message">No heat sources added.</p>
+				<NuxtLink :to="getUrl('heatSourcesCreate')" class="govuk-link gov-radios-add-link">
+					Click here to add a heat source
+				</NuxtLink>
+			</div>
+		</FormKit>
 		<FormKit
 			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
 			id="areaOfHeatExchanger"

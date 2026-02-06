@@ -95,10 +95,23 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 	return state.domesticHotWaterNew.waterStorage.map((ws): SchemaHotWaterSourceDetails => {
 
 		const referencedHeatSource = state.domesticHotWaterNew.heatSources
-			.find(heatSource => heatSource.id === ws.heatSource);
+			.find(heatSource => heatSource.id === ws.heatSourceId);
+
+		if (!referencedHeatSource) {
+			throw new Error("referenced heat source for water storage not found");
+		}
+
 		const heatSourceName = referencedHeatSource
-			? referencedHeatSource.name
+			? referencedHeatSource.isExistingHeatSource
+				? state.spaceHeating.heatSource
+					.find(hs => hs.id === referencedHeatSource.id)?.name ?? "Heat source"
+				: referencedHeatSource.name
 			: "Heat source";
+
+		const coldWaterSource: SchemaColdWaterSourceType = ({
+			mainsWater: "mains water",
+			headerTank: "header tank",
+		} as const)[referencedHeatSource.coldWaterSource];
 
 		const pipeworkEntries = state.domesticHotWaterNew.pipework.map((x): SchemaWaterPipework => {
 			if (x.location !== "heatedSpace" && x.location !== "unheatedSpace") {
@@ -129,9 +142,8 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 				daily_losses: ws.dailyEnergyLoss,
 				type: "StorageTank",
 				volume: storageCylinderVolumeInLitres,
-				ColdWaterSource: "mains water", // Needs changing to reference `referencedHeatSource` once hot water source branch is merged
+				ColdWaterSource: coldWaterSource,
 				HeatSource: {
-					// Adding these values as default until heat pump is set up to come from PCDB
 					[heatSourceName]: {
 						name: heatSourceName,
 						EnergySupply: defaultElectricityEnergySupplyName,
@@ -146,13 +158,13 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 			};
 			return val;
 		} else if (ws.typeOfWaterStorage === "smartHotWaterTank") {
+			//error here is because the FHS schema json file needs to be updated to support product reference types on smart hot water tanks
 			const val: SchemaSmartHotWaterTank & { ColdWaterSource: SchemaColdWaterSourceType } = {
 				type: "SmartHotWaterTank",
 				product_reference: ws.productReference,
 				EnergySupply_pump: defaultElectricityEnergySupplyName,
-				ColdWaterSource: "mains water", // Needs changing to reference `referencedHeatSource` once hot water source branch is merged
+				ColdWaterSource: coldWaterSource,
 				HeatSource: {
-					// Adding these values as default until heat pump is set up to come from PCDB
 					[heatSourceName]: {
 						name: heatSourceName,
 						EnergySupply: defaultElectricityEnergySupplyName,

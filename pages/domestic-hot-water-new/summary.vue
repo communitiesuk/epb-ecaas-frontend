@@ -281,7 +281,7 @@ const hotWaterCylinderSummary: SummarySection = {
 			"Storage cylinder volume": "storageCylinderVolume" in hwCylData ? dim(hwCylData.storageCylinderVolume, "litres") : emptyValueRendering,
 			"Initial temperature": "initialTemperature" in hwCylData ? dim(hwCylData.initialTemperature, "celsius") : emptyValueRendering,
 			"Daily energy loss": "dailyEnergyLoss" in hwCylData ? dim(hwCylData.dailyEnergyLoss, "kilowatt-hour") : emptyValueRendering,
-			"Heat source": show(getHWHeatSourceName(hwCylData.heatSource)),
+			"Heat source": show(getHWHeatSourceName(hwCylData.heatSourceId)),
 			"Area of heat exchanger installed": "areaOfHeatExchanger" in hwCylData ? dim(hwCylData.areaOfHeatExchanger, "metres square") : emptyValueRendering,
 			"Heater position in the cylinder": "heaterPosition" in hwCylData ? show(hwCylData.heaterPosition) : emptyValueRendering,
 			"Thermostat position in the cylinder": "thermostatPosition" in hwCylData ? show(hwCylData.thermostatPosition) : emptyValueRendering,
@@ -300,7 +300,7 @@ const smartHotWaterCylinderSummary: SummarySection = {
 		return {
 			"Name": show(smartHWCylData.name),
 			"Product reference": "productReference" in smartHWCylData ? show(smartHWCylData.productReference) : emptyValueRendering,
-			"Heat source": show(getHWHeatSourceName(smartHWCylData.heatSource)),
+			"Heat source": show(getHWHeatSourceName(smartHWCylData.heatSourceId)),
 			"Heater position in the cylinder": "heaterPosition" in smartHWCylData ? show(smartHWCylData.heaterPosition) : emptyValueRendering,
 		};
 	}),
