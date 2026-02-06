@@ -97,7 +97,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 		const referencedHeatSource = state.domesticHotWaterNew.heatSources
 			.find(heatSource => heatSource.id === ws.heatSource);
 		const heatSourceName = referencedHeatSource
-			? referencedHeatSource.name
+			? ("name" in referencedHeatSource ? referencedHeatSource.name : "Heat source")
 			: "Heat source";
 
 		const pipeworkEntries = state.domesticHotWaterNew.pipework.map((x): SchemaWaterPipework => {
@@ -151,6 +151,8 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 				product_reference: ws.productReference,
 				EnergySupply_pump: defaultElectricityEnergySupplyName,
 				ColdWaterSource: "mains water", // Needs changing to reference `referencedHeatSource` once hot water source branch is merged
+				volume: 0, // temporarily added until schema corrected to exclude as coming from PCDB
+				daily_losses: 0, // temporarily added until schema corrected to exclude as coming from PCDB
 				HeatSource: {
 					// Adding these values as default until heat pump is set up to come from PCDB
 					[heatSourceName]: {

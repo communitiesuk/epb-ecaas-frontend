@@ -21,7 +21,6 @@ const expectedHouseInput: FhsInputSchema = {
 		"Fridge": "Default",
 		"Fridge-Freezer": "Default",
 		"Hobs": "Default",
-		"Oven": "Not Installed",
 	},
 	ColdWaterSource: {
 		"mains water": {
@@ -1051,6 +1050,9 @@ describe("FHS input mapper", () => {
 				dwellingSpaceExposedFloor: {
 					...baseForm,
 				},
+				dwellingSpaceFloorAboveUnheatedBasement: {
+					...baseForm,
+				},
 			},
 			dwellingSpaceWalls: {
 				dwellingSpaceExternalWall: {
@@ -1579,6 +1581,9 @@ describe("FHS input mapper", () => {
 							uValue: 0.1,
 						},
 					}],
+				},
+				dwellingSpaceFloorAboveUnheatedBasement: {
+					...baseForm,
 				},
 			},
 			dwellingSpaceWalls: {

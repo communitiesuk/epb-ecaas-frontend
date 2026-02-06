@@ -86,6 +86,9 @@ const floorsData: FloorsData = {
 			},
 		}],
 	},
+	dwellingSpaceFloorAboveUnheatedBasement: {
+		data: [],
+	},
 };
 
 const externalWallId = "47689878-2f16-414f-92c1-64b5cee844f6";
