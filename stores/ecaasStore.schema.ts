@@ -103,12 +103,13 @@ const externalFactorsDataZod = z.object({
 
 export type ExternalFactorsData = z.infer<typeof externalFactorsDataZod>;
 
+export const kitchenExtractorHoodExternalKey = "KitchenExtractorHoodExternal";
 
 const appliancesDataZod = z.object({
-	applianceType: z.array(applianceTypeZod),
+	applianceType: z.array(z.union([applianceTypeZod, z.literal(kitchenExtractorHoodExternalKey)])),
 });
 export type AppliancesData = z.infer<typeof appliancesDataZod>;
-
+export type ApplianceKey = AppliancesData["applianceType"][number];
 
 export type DwellingDetails = AssertFormKeysArePageIds<{
 	generalSpecifications: EcaasForm<GeneralDetailsData>;

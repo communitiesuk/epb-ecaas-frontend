@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaL
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -86,9 +86,9 @@ export function displayCamelToSentenceCase(value: string): string {
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1);
 }
 
-export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge-freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hob";
+export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge-freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hob" | "Cooker hood extracting from the kitchen to outside";
 
-export function displayApplianceKey(value: SchemaApplianceType): ApplianceKeyDisplay {
+export function displayApplianceKey(value: ApplianceKey): ApplianceKeyDisplay {
 	switch (value) {
 		case "Fridge":
 			return "Fridge";
@@ -106,6 +106,8 @@ export function displayApplianceKey(value: SchemaApplianceType): ApplianceKeyDis
 			return "Tumble dryer";
 		case "Hobs":
 			return "Hob";
+		case "KitchenExtractorHoodExternal":
+			return "Cooker hood extracting from the kitchen to outside";
 		default:
 			value satisfies never;
 			throw new Error(`Missed a appliance key case: ${value}`);
@@ -131,7 +133,7 @@ export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): 
 	return (isApplianceKey(key)) ? displayApplianceKey(key) : key;
 }
 
-export function displayApplianceType(appliances: SchemaApplianceType[] | undefined) {
+export function displayApplianceType(appliances: ApplianceKey[] | undefined) {
 	if (appliances === undefined) return emptyValueRendering;
 	return appliances.map(appliance => displayApplianceKey(appliance)).join(", ");
 }

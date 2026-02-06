@@ -28,6 +28,7 @@ export function zodLiteralFromUnionType<T, U extends UnionToTuple<T>[number] & s
 // We need to be able to validate at runtime that a value is a member of such a union, which means declaring real values
 // containing the members. The following both declares these values and also typechecks that no values are missing or incorrect.
 
+const applianceTypes = ["Oven", "Hobs", "Fridge-Freezer", "Dishwasher", "Clothes_washing", "Clothes_drying", "Fridge", "Freezer"] as const satisfies SchemaApplianceType[];
 const arealHeatCapacities = ["Very light", "Light", "Medium", "Heavy", "Very heavy"] as const satisfies SchemaArealHeatCapacity[];
 const batteryLocations = ["inside", "outside"] as const satisfies SchemaBatteryLocation[];
 const colours = ["Light", "Intermediate", "Dark"] as const satisfies SchemaColour[];
@@ -94,8 +95,8 @@ const waterPipeworkLocations = ["internal", "external"] as const satisfies Schem
 const windowTreatmentControls = ["auto_motorised", "manual"] as const satisfies SchemaWindowTreatmentControl[];
 const windowTreatmentTypes = ["blinds", "curtains"] as const satisfies SchemaWindowTreatmentType[];
 const windShieldLocations = ["Sheltered", "Average", "Exposed"] as const satisfies SchemaWindShieldLocation[];
-const applianceTypes = ["Oven", "Hobs", "Fridge-Freezer", "Dishwasher", "Clothes_washing", "Clothes_drying", "Fridge", "Freezer"] as const satisfies SchemaApplianceType[];
 
+export const applianceTypeZod = zodForTypeOptions(ensureAllUnion<SchemaApplianceType, (typeof applianceTypes)>(applianceTypes));
 export const arealHeatCapacityZod = zodForTypeOptions(ensureAllUnion<SchemaArealHeatCapacity, (typeof arealHeatCapacities)>(arealHeatCapacities));
 export const batteryLocationZod = zodForTypeOptions(ensureAllUnion<SchemaBatteryLocation, (typeof batteryLocations)>(batteryLocations));
 export const colourZod = zodForTypeOptions(ensureAllUnion<SchemaColour, (typeof colours)>(colours));
@@ -125,4 +126,3 @@ export const waterPipeworkLocationZod = zodForTypeOptions(ensureAllUnion<SchemaW
 export const windowTreatmentControlZod = zodForTypeOptions(ensureAllUnion<SchemaWindowTreatmentControl, (typeof windowTreatmentControls)>(windowTreatmentControls));
 export const windowTreatmentTypeZod = zodForTypeOptions(ensureAllUnion<SchemaWindowTreatmentType, (typeof windowTreatmentTypes)>(windowTreatmentTypes));
 export const windShieldLocationZod = zodForTypeOptions(ensureAllUnion<SchemaWindShieldLocation, (typeof windShieldLocations)>(windShieldLocations));
-export const applianceTypeZod = zodForTypeOptions(ensureAllUnion<SchemaApplianceType, (typeof applianceTypes)>(applianceTypes));

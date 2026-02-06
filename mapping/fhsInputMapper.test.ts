@@ -559,7 +559,7 @@ const expectedFlatInput: FhsInputSchema = {
 		terrain_class: "OpenField",
 		ventilation_zone_base_height: 1,
 	},
-	KitchenExtractorHoodExternal: false,
+	KitchenExtractorHoodExternal: true,
 	NumberOfBedrooms: 2,
 	OnSiteGeneration: {
 		"pv system 1": {
@@ -1392,7 +1392,7 @@ describe("FHS input mapper", () => {
 			appliances: {
 				...baseForm,
 				data: {
-					applianceType: ["Clothes_drying", "Fridge-Freezer"],
+					applianceType: ["Clothes_drying", "Fridge-Freezer", "KitchenExtractorHoodExternal"],
 				},
 			},
 		};

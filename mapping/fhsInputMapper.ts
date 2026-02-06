@@ -77,10 +77,6 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		})),
 	};
 
-	const kitchenExtractorHoodExternal: Pick<FhsInputSchema, "KitchenExtractorHoodExternal"> = {
-		KitchenExtractorHoodExternal: false, // field to collect within appliance details
-	};
-
 	const fhsInput = merge.all([
 		defaultAppliances,
 		dwellingDetailsData,
@@ -92,7 +88,6 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		pvData,
 		defaultColdWaterSource,
 		events,
-		kitchenExtractorHoodExternal,
 	]) as FhsInputSchema;
 
 	console.log(fhsInput);
