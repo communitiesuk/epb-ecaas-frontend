@@ -651,7 +651,7 @@ export interface components {
             ColdWaterSource?: "header tank" | "mains water";
         };
         /** @description A possible hot water source */
-        SmartHotWaterTank: components["schemas"]["HotWaterTankCommon"] & {
+        SmartHotWaterTank: {
             /** @constant */
             type: "SmartHotWaterTank";
             EnergySupply_pump: string;
@@ -663,11 +663,27 @@ export interface components {
              * @description A unique reference to a product held within the HEM database (PCDB)
              */
             product_reference: string;
-        } | {
+            init_temp?: number;
+            primary_pipework?: {
+                /** @enum {unknown} */
+                location: "internal" | "external";
+                internal_diameter_mm: number;
+                external_diameter_mm: number;
+                length: number;
+                insulation_thermal_conductivity: number;
+                insulation_thickness_mm: number;
+                surface_reflectivity: boolean;
+                /** @enum {unknown} */
+                pipe_contents: "water" | "glycol25";
+            }[];
+            HeatSource: {
+                [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
+            };
+        } | ({
             max_flow_rate_pump_l_per_min: number;
             power_pump_kW: number;
             temp_usable: number;
-        });
+        } & components["schemas"]["HotWaterTankCommon"]));
         /** @description A possible hot water source */
         PointOfUse: {
             /** @constant */
@@ -1602,7 +1618,7 @@ export interface components {
                     ColdWaterSource?: "header tank" | "mains water";
                 };
                 /** @description A possible hot water source */
-                SmartHotWaterTank: components["schemas"]["HotWaterTankCommon"] & {
+                SmartHotWaterTank: {
                     /** @constant */
                     type: "SmartHotWaterTank";
                     EnergySupply_pump: string;
@@ -1614,11 +1630,27 @@ export interface components {
                      * @description A unique reference to a product held within the HEM database (PCDB)
                      */
                     product_reference: string;
-                } | {
+                    init_temp?: number;
+                    primary_pipework?: {
+                        /** @enum {unknown} */
+                        location: "internal" | "external";
+                        internal_diameter_mm: number;
+                        external_diameter_mm: number;
+                        length: number;
+                        insulation_thermal_conductivity: number;
+                        insulation_thickness_mm: number;
+                        surface_reflectivity: boolean;
+                        /** @enum {unknown} */
+                        pipe_contents: "water" | "glycol25";
+                    }[];
+                    HeatSource: {
+                        [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
+                    };
+                } | ({
                     max_flow_rate_pump_l_per_min: number;
                     power_pump_kW: number;
                     temp_usable: number;
-                });
+                } & components["schemas"]["HotWaterTankCommon"]));
                 /** @description A possible hot water source */
                 PointOfUse: {
                     /** @constant */

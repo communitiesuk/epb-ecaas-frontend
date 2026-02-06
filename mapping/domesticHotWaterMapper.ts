@@ -164,8 +164,6 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 				product_reference: ws.productReference,
 				EnergySupply_pump: defaultElectricityEnergySupplyName,
 				ColdWaterSource: coldWaterSource,
-				volume: 0, // temporarily added until schema corrected to exclude as coming from PCDB
-				daily_losses: 0, // temporarily added until schema corrected to exclude as coming from PCDB
 				HeatSource: {
 					[heatSourceName]: {
 						name: heatSourceName,

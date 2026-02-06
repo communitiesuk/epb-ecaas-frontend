@@ -134,8 +134,6 @@ describe("domestic hot water mapper", () => {
 					},
 				},
 				type: "SmartHotWaterTank",
-				volume: 0, // temporarily added until schema corrected to exclude as coming from PCDB
-				daily_losses: 0, // temporarily added until schema corrected to exclude as coming from PCDB
 			};
 		
 			// Assert

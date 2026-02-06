@@ -1801,9 +1801,6 @@
             "description": "A possible hot water source",
             "allOf": [
                 {
-                    "$ref": "#/$defs/HotWaterTankCommon"
-                },
-                {
                     "required": [
                         "type",
                         "EnergySupply_pump"
@@ -1827,38 +1824,127 @@
                     "oneOf": [
                         {
                             "required": [
-                                "product_reference"
+                                "product_reference",
+                                "HeatSource"
                             ],
                             "properties": {
                                 "product_reference": {
                                     "description": "A unique reference to a product held within the HEM database (PCDB)",
                                     "title": "Reference to the product in the HEM database",
                                     "type": "string"
+                                },
+                                "init_temp": {
+                                    "type": "number",
+                                    "minimum": 1,
+                                    "maximum": 100
+                                },
+                                "primary_pipework": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "unevaluatedProperties": false,
+                                        "required": [
+                                            "location",
+                                            "internal_diameter_mm",
+                                            "external_diameter_mm",
+                                            "length",
+                                            "insulation_thermal_conductivity",
+                                            "insulation_thickness_mm",
+                                            "surface_reflectivity",
+                                            "pipe_contents"
+                                        ],
+                                        "properties": {
+                                            "location": {
+                                                "enum": [
+                                                    "internal",
+                                                    "external"
+                                                ]
+                                            },
+                                            "internal_diameter_mm": {
+                                                "type": "number",
+                                                "minimum": 5,
+                                                "maximum": 50
+                                            },
+                                            "external_diameter_mm": {
+                                                "type": "number",
+                                                "minimum": 5,
+                                                "maximum": 50
+                                            },
+                                            "length": {
+                                                "type": "number",
+                                                "minimum": 0.05
+                                            },
+                                            "insulation_thermal_conductivity": {
+                                                "type": "number",
+                                                "exclusiveMinimum": 0
+                                            },
+                                            "insulation_thickness_mm": {
+                                                "type": "number",
+                                                "minimum": 0
+                                            },
+                                            "surface_reflectivity": {
+                                                "type": "boolean"
+                                            },
+                                            "pipe_contents": {
+                                                "enum": [
+                                                    "water",
+                                                    "glycol25"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                "HeatSource": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "object",
+                                        "unevaluatedProperties": false,
+                                        "oneOf": [
+                                            {
+                                                "$ref": "#/$defs/ImmersionHeater"
+                                            },
+                                            {
+                                                "$ref": "#/$defs/SolarThermalSystem"
+                                            },
+                                            {
+                                                "$ref": "#/$defs/HeatSourceWet"
+                                            },
+                                            {
+                                                "$ref": "#/$defs/HeatPump_HWOnly"
+                                            }
+                                        ]
+                                    }
                                 }
                             }
                         },
                         {
-                            "required": [
-                                "EnergySupply_pump",
-                                "max_flow_rate_pump_l_per_min",
-                                "power_pump_kW",
-                                "temp_usable"
-                            ],
-                            "properties": {
-                                "max_flow_rate_pump_l_per_min": {
-                                    "type": "number",
-                                    "exclusiveMinimum": 0
+                            "allOf": [
+                                {
+                                    "required": [
+                                        "max_flow_rate_pump_l_per_min",
+                                        "power_pump_kW",
+                                        "temp_usable"
+                                    ],
+                                    "properties": {
+                                        "max_flow_rate_pump_l_per_min": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                        },
+                                        "power_pump_kW": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                        },
+                                        "temp_usable": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 100
+                                        }
+                                    }
                                 },
-                                "power_pump_kW": {
-                                    "type": "number",
-                                    "exclusiveMinimum": 0
-                                },
-                                "temp_usable": {
-                                    "type": "number",
-                                    "minimum": 0,
-                                    "maximum": 100
+                                {
+                                    "$ref": "#/$defs/HotWaterTankCommon"
                                 }
-                            }
+                            ]
                         }
                     ]
                 }
