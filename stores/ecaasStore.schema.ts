@@ -242,7 +242,7 @@ const floorAboveUnheatedBasementDataZod = named.extend({
 
 export type FloorAboveUnheatedBasementData = z.infer<typeof floorAboveUnheatedBasementDataZod>;
 
-const floorOfHeatedBasementDataZod = named.extend({
+const floorOfHeatedBasementDataZod = namedWithId.extend({
 	surfaceArea: z.number().min(1),
 	uValue,
 	thermalResistance: z.number().min(0.00001).max(50),
@@ -262,6 +262,7 @@ export type WallsData = AssertFormKeysArePageIds<{
 	dwellingSpaceInternalWall: EcaasForm<EcaasForm<InternalWallData>[]>;
 	dwellingSpaceWallToUnheatedSpace: EcaasForm<EcaasForm<WallsToUnheatedSpaceData>[]>;
 	dwellingSpacePartyWall: EcaasForm<EcaasForm<PartyWallData>[]>;
+	dwellingSpaceWallOfHeatedBasement: EcaasForm<EcaasForm<WallOfHeatedBasementData>[]>;
 }>;
 
 type Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
@@ -323,6 +324,17 @@ const partyWallDataZod = namedWithId.extend({
 });
 
 export type PartyWallData = z.infer<typeof partyWallDataZod>;
+
+const wallOfHeatedBasementDataZod = namedWithId.extend({
+	netSurfaceArea: z.number().min(0.01).max(10000),
+	uValue,
+	thermalResistance: z.number().min(0.00001).max(50),
+	arealHeatCapacity: arealHeatCapacityZod,
+	massDistributionClass,
+	associatedBasementFloorId: z.uuidv4(),
+});
+
+export type WallOfHeatedBasementData = z.infer<typeof wallOfHeatedBasementDataZod>;
 
 export type CeilingsAndRoofsData = AssertFormKeysArePageIds<{
 	dwellingSpaceCeilings: EcaasFormList<CeilingData>;
@@ -1643,6 +1655,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceInternalWall": internalWallDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceWallToUnheatedSpace": wallsToUnheatedSpaceDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpacePartyWall": partyWallDataZod,
+	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceWallOfHeatedBasement": wallOfHeatedBasementDataZod,
 	"dwellingFabric/dwellingSpaceCeilingsAndRoofs/dwellingSpaceCeilings": ceilingDataZod,
 	"dwellingFabric/dwellingSpaceCeilingsAndRoofs/dwellingSpaceRoofs": roofDataZod,
 	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceExternalGlazedDoor": externalGlazedDoorDataZod,

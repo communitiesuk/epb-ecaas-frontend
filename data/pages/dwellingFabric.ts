@@ -163,6 +163,20 @@ const dwellingFabricPages = [
 		parentId: "dwellingSpaceWalls",
 	},
 	{
+		id: "dwellingSpaceWallOfHeatedBasement",
+		title: "Wall of heated basement",
+		url: "/dwelling-fabric/walls/wall-of-heated-basement/:wall",
+		type: "task",
+		parentId: "dwellingSpaceWalls",
+	},
+	{
+		id: "dwellingSpaceWallOfHeatedBasementCreate",
+		title: "Wall of heated basement",
+		url: "/dwelling-fabric/walls/wall-of-heated-basement/create",
+		type: "task",
+		parentId: "dwellingSpaceWalls",
+	},
+	{
 		id: "dwellingSpaceCeilingsAndRoofs",
 		title: "Ceilings and roofs",
 		url: "/dwelling-fabric/ceilings-and-roofs",

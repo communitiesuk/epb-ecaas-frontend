@@ -71,6 +71,7 @@ export function getInitialState(): EcaasState {
 				dwellingSpaceInternalWall: { data: [] },
 				dwellingSpaceWallToUnheatedSpace: { data: [] },
 				dwellingSpacePartyWall: { data: [] },
+				dwellingSpaceWallOfHeatedBasement: { data: [] },
 			},
 			dwellingSpaceCeilingsAndRoofs: {
 				dwellingSpaceCeilings: { data: [] },
