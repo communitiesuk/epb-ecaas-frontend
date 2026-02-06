@@ -109,6 +109,7 @@ describe("Ecaas Store", () => {
 					dwellingSpaceExposedFloor: { complete: true },
 					dwellingSpaceInternalFloor: { complete: true },
 					dwellingSpaceGroundFloor: { complete: true },
+					dwellingSpaceFloorAboveUnheatedBasement: { complete: true },
 				},
 				dwellingSpaceWalls: {
 					dwellingSpaceExternalWall: { complete: true },
@@ -191,6 +192,9 @@ describe("Ecaas Store", () => {
 						complete: true,
 					},
 					dwellingSpaceInternalFloor: {
+						complete: true,
+					},
+					dwellingSpaceFloorAboveUnheatedBasement: {
 						complete: true,
 					},
 				},

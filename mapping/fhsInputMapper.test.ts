@@ -21,6 +21,7 @@ const expectedHouseInput: FhsInputSchema = {
 		"Fridge": "Default",
 		"Fridge-Freezer": "Default",
 		"Hobs": "Default",
+		"Oven": "Not Installed",
 	},
 	ColdWaterSource: {
 		"mains water": {
