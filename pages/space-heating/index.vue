@@ -9,9 +9,9 @@ const store = useEcaasStore();
 type SpaceHeatingType = keyof typeof store.spaceHeating;
 type SpaceHeatingData = EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> & EcaasForm<HeatingControlData>;
 
-const { hotWaterCylinder } = store.domesticHotWater.waterHeating;
-const { heatEmitters } = store.spaceHeating;
+const { heatSources: dhwHeatSources, waterStorage, hotWaterOutlets } = store.domesticHotWaterNew;
 
+const { heatEmitters } = store.spaceHeating;
 function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 	const items = store.spaceHeating[spaceHeatingType]?.data;
 
@@ -29,7 +29,25 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 		});
 
 		if (heatSourceId) {
-			store.removeTaggedAssociations()([hotWaterCylinder, heatEmitters], heatSourceId, "heatSource"); 
+			store.removeTaggedAssociations()([heatEmitters], heatSourceId, "heatSource"); 
+			
+
+			const dhwHeatSourceIdToRemove = dhwHeatSources.data
+				.filter(({ data: x }) => x.heatSourceId === heatSourceId)
+				.map(x => x.data.id)[0]; 
+
+			//remove dhw heat sources that reference deleted space heating heat source
+			const dhwHeatSourcesToKeep = dhwHeatSources.data.filter(({ data: x }) => x.heatSourceId !== heatSourceId); 
+			store.$patch(state => {
+				state.domesticHotWaterNew.heatSources.data = dhwHeatSourcesToKeep;
+				if (dhwHeatSourcesToKeep.length === 0) {
+					state.domesticHotWaterNew.heatSources.complete = false;
+				}
+			});
+
+			//remove reference to deleted dhw heat source
+			store.removeTaggedAssociations()([waterStorage, hotWaterOutlets], dhwHeatSourceIdToRemove, "dhwHeatSourceId"); 
+
 		}
 	}
 };

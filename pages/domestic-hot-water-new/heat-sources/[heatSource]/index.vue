@@ -121,6 +121,7 @@ autoSaveElementFormNoName<DomesticHotWaterHeatSourceData>({
 });
 
 
+
 function updateHeatSource(type: string) {
 
 	watch(() => model.value[`${type}` as keyof DomesticHotWaterHeatSourceData],

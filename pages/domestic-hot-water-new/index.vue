@@ -7,19 +7,27 @@ const title = "Domestic hot water";
 
 const page = usePage();
 const store = useEcaasStore();
+const { waterStorage, hotWaterOutlets } = store.domesticHotWaterNew; 
 
 type DomesticHotWaterType = keyof typeof store.domesticHotWaterNew;
 type DomesticHotWaterData = EcaasForm<DomesticHotWaterHeatSourceData> & EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData>;
 function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number) {
-	const data = store.domesticHotWaterNew[domesticHotWaterType]?.data;
+	const items = store.domesticHotWaterNew[domesticHotWaterType]?.data;
+	let heatSourceId;
 
-	if (data) {
-		data.splice(index, 1);
+	if (items[index]?.data && "typeOfHeatSource" in items[index].data) {
+		heatSourceId = store.domesticHotWaterNew.heatSources.data[index]?.data.id;
+	}
+	if (items) {
+		items.splice(index, 1);
 
 		store.$patch((state) => {
-			state.domesticHotWaterNew[domesticHotWaterType].data = data.length ? data : [];
+			state.domesticHotWaterNew[domesticHotWaterType].data = items.length ? items : [];
 			state.domesticHotWaterNew[domesticHotWaterType].complete = false;
 		});
+		if (heatSourceId) {
+			store.removeTaggedAssociations()([waterStorage, hotWaterOutlets], heatSourceId, "dhwHeatSourceId"); 
+		}
 	}
 } 
 

@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import formStatus from "~/constants/formStatus";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import HotWaterOutlets from "./hot-water-outlets/[outlet]/index.vue";
+import { litre } from "~/utils/units/volume";
 
 const baseCompleteForm = {
 	data: [],
@@ -429,7 +430,7 @@ describe("Domestic hot water", () => {
 	});
 
 	describe("Heat Sources", () => {
-		//TODO test heat sources referring to space heating heat sources
+		
 		const heatSource2 = {
 			data: {
 				name: "Jasper's Old Laptop",
@@ -531,6 +532,64 @@ describe("Domestic hot water", () => {
 			expect(within(populatedList).getByText(heatSource1.data.name)).toBeDefined();
 			expect(within(populatedList).getByText(heatSource3SpaceHeating.data.name)).toBeDefined();
 			expect(within(populatedList).queryByText(heatSource2.data.name)).toBeNull();
+		});
+
+		it("when a DHW heat source is removed its id should be removed from all store items which reference it ", async () => {
+
+			const cylinder1: WaterStorageData = {
+				name: "Hot water cylinder 1",
+				id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
+				typeOfWaterStorage: "hotWaterCylinder",
+				storageCylinderVolume: unitValue(5, litre),
+				initialTemperature: 60,
+				dailyEnergyLoss: 1,
+				dhwHeatSourceId: heatSource1.data.id,
+				areaOfHeatExchanger: 1000,
+				heaterPosition: 0.8,
+				thermostatPosition: 0.5,
+			};
+
+			const cylinder2: WaterStorageData = {
+				name: "Smart Hot Water Tank 2",
+				id: "c84528bb-f805-4f1e-95d3-2bd1717deca2",
+				typeOfWaterStorage: "smartHotWaterTank",
+				dhwHeatSourceId: heatSource2.data.id,
+				heaterPosition: 0.8,
+				productReference: "SMRT-12345",
+			};
+
+			const mixerShower: MixedShowerDataNew = {
+				name: "Mixer shower 1",
+				id: "c84528bb-f805-4f1e-95d3-2bd1717deca3",
+				typeOfHotWaterOutlet: "mixedShower",
+				flowRate: 10,
+				dhwHeatSourceId: heatSource2.data.id,
+				wwhrs: false,
+
+			};
+
+			store.$patch({
+				domesticHotWaterNew: {
+					waterStorage: {
+						data: [{ data: cylinder1 }, { data: cylinder2 }],
+					},
+					hotWaterOutlets: {
+						data: [{ data: mixerShower }],
+					},
+					heatSources: {
+						data: [heatSource1, heatSource2],
+					},
+				},
+			});
+		
+			await renderSuspended(DomesticHotWater);
+			await user.click(await screen.findByTestId("heatSources_remove_1"));
+			const { waterStorage, hotWaterOutlets } = store.domesticHotWaterNew;
+	
+			expect(waterStorage.data[0]?.data.dhwHeatSourceId).toBe(heatSource1.data.id);		
+			expect(waterStorage.data[1]?.data.dhwHeatSourceId).toBeUndefined();	
+			const mixedShower = hotWaterOutlets.data[0]?.data as MixedShowerDataNew;  
+			expect(mixedShower.dhwHeatSourceId).toBeUndefined();
 		});
 
 		test("heat sources are duplicated when duplicate link is clicked", async () => {

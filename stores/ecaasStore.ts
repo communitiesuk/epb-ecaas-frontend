@@ -4,7 +4,7 @@ import type { GovTagProps } from "~/common.types";
 import type { Page } from "~/data/pages/pages.types";
 import type { EmptyObject } from "type-fest";
 import pagesData from "~/data/pages/pages";
-type KeysToDeleteCascade = "associatedItemId" | "taggedItem" | "heatSource";
+type KeysToDeleteCascade = "associatedItemId" | "taggedItem" | "heatSource" | "dhwHeatSourceId";
 export function getInitialState(): EcaasState {
 	const store: NulledForms<EcaasState> = {
 		dwellingDetails: {
