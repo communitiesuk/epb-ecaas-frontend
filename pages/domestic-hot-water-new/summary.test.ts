@@ -212,7 +212,7 @@ describe("Domestic hot water summary", () => {
 				name: "Mixer shower 1",
 				flowRate: 10,
 				typeOfHotWaterOutlet: "mixedShower",
-				heatSource: "4eaf-48c1-4d3b-9f56-6d02b8f5c2bb",
+				dhwHeatSourceId: "4eaf-48c1-4d3b-9f56-6d02b8f5c2bb",
 				wwhrs: false,
 			},
 		};
@@ -261,7 +261,7 @@ describe("Domestic hot water summary", () => {
 						data: [mixedShower],
 					},
 					heatSources: {
-						data: [{ data: { id: mixedShower.data.heatSource, name: "Heat pump" } }],
+						data: [{ data: { id: mixedShower.data.dhwHeatSourceId, name: "Heat pump" } }],
 					},
 				},
 			});
@@ -402,7 +402,7 @@ describe("Domestic hot water summary", () => {
 					name: "Mixer with WWHRS",
 					flowRate: 15,
 					typeOfHotWaterOutlet: "mixedShower",
-					heatSource: "heat-1",
+					dhwHeatSourceId: "heat-1",
 					wwhrs: true,
 					wwhrsType: "instantaneousSystemA",
 					wwhrsProductReference: "WWHRS-PR-1",

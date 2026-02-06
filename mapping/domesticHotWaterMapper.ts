@@ -35,7 +35,7 @@ function mapShowersData(state: ResolvedState) {
 			type: "MixerShower",
 			ColdWaterSource: "mains water",
 			flowrate: x.flowRate,
-			HotWaterSource: x.heatSource,
+			HotWaterSource: x.dhwHeatSourceId,
 		};
 		if (x.wwhrs) {
 			val.WWHRS = x.wwhrsProductReference;

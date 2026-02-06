@@ -23,7 +23,7 @@ describe("hot water outlets", () => {
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
 			typeOfHotWaterOutlet: "mixedShower",
 			flowRate: 10,
-			heatSource: heatPumpId,
+			dhwHeatSourceId: heatPumpId,
 			wwhrs: false,
 		},
 	};
@@ -69,6 +69,7 @@ describe("hot water outlets", () => {
 							data: {
 								id: heatPumpId,
 								name: "Heat pump 1",
+								isExistingHeatSource: false,
 							},
 							complete: true,
 						},
@@ -83,7 +84,7 @@ describe("hot water outlets", () => {
 		const nameInput = screen.getByTestId<HTMLInputElement>("name");
 		await user.clear(nameInput);
 		await user.type(nameInput, "Mixer shower 1");
-		await user.click(screen.getByTestId("heatSource_" + heatPumpId));
+		await user.click(screen.getByTestId("dhwHeatSourceId_" + heatPumpId));
 		await user.type(screen.getByTestId("flowRate"), "10");
 		await user.tab();
 	};
@@ -132,7 +133,7 @@ describe("hot water outlets", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
-		expect((await screen.findByTestId("heatSource_error"))).toBeDefined();
+		expect((await screen.findByTestId("dhwHeatSourceId_error"))).toBeDefined();
 		expect((await screen.findByTestId("flowRate_error"))).toBeDefined();
 
 
@@ -238,7 +239,7 @@ describe("hot water outlets", () => {
 
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
 
-		expect(screen.getByTestId("heatSource_" + heatPumpId)).toBeDefined();
+		expect(screen.getByTestId("dhwHeatSourceId_" + heatPumpId)).toBeDefined();
 	});
 
 	test("first heat source is autoselected when only one heat source exists", async () => {
@@ -251,7 +252,7 @@ describe("hot water outlets", () => {
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
 		await user.tab();
 
-		const heatSourceSelect = screen.getByTestId<HTMLInputElement>("heatSource_" + heatPumpId);
+		const heatSourceSelect = screen.getByTestId<HTMLInputElement>("dhwHeatSourceId_" + heatPumpId);
 		expect(heatSourceSelect.hasAttribute("checked")).toBe(true);
 	});
 
@@ -362,11 +363,11 @@ describe("hot water outlets", () => {
 				).toBe(true);
 
 				if (type === "mixedShower") {
-					expect((await screen.findByTestId<HTMLInputElement>(`heatSource_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
+					expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
 				}
 
 				(Object.keys(hotWaterOutlet.data))
-					.filter(e => e !== "id" && e !== "typeOfHotWaterOutlet" && e !== "heatSource" && e !== "wwhrs")
+					.filter(e => e !== "id" && e !== "typeOfHotWaterOutlet" && e !== "dhwHeatSourceId" && e !== "wwhrs")
 					.forEach(async (key) => {
 						expect((await screen.findByTestId<HTMLInputElement>(key)).value)
 							.toBe(String((hotWaterOutlet.data)[key as (keyof typeof hotWaterOutlet.data)]));

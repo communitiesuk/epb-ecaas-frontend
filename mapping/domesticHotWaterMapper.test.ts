@@ -156,7 +156,7 @@ describe("domestic hot water mapper", () => {
 					id: "shower1",
 					name: "shower1",
 					flowRate: 3,
-					heatSource: heatSourceId,
+					dhwHeatSourceId: heatSourceId,
 					typeOfHotWaterOutlet: "mixedShower",
 					wwhrs: false,
 				},
@@ -257,7 +257,7 @@ describe("domestic hot water mapper", () => {
 						wwhrs: true,
 						wwhrsType: "instantaneousSystemA",
 						wwhrsProductReference: "WW-A-123",
-						heatSource: "heatPump1",
+						dhwHeatSourceId: "heatPump1",
 						typeOfHotWaterOutlet: "mixedShower",
 					},
 				};
@@ -293,7 +293,7 @@ describe("domestic hot water mapper", () => {
 						wwhrs: true,
 						wwhrsType: "instantaneousSystemB",
 						wwhrsProductReference: "WW-B-456",
-						heatSource: "cylinder1",
+						dhwHeatSourceId: "cylinder1",
 						typeOfHotWaterOutlet: "mixedShower",
 					},
 				};
@@ -329,7 +329,7 @@ describe("domestic hot water mapper", () => {
 						wwhrs: true,
 						wwhrsType: "instantaneousSystemC",
 						wwhrsProductReference: "WW-C-789",
-						heatSource: "boiler1",
+						dhwHeatSourceId: "boiler1",
 						typeOfHotWaterOutlet: "mixedShower",
 					},
 				};
@@ -365,7 +365,7 @@ describe("domestic hot water mapper", () => {
 						name: "shower-no-wwhrs",
 						flowRate: 7,
 						wwhrs: false,
-						heatSource: "cylinder2",
+						dhwHeatSourceId: "cylinder2",
 						typeOfHotWaterOutlet: "mixedShower",
 					},
 				};
@@ -421,7 +421,7 @@ describe("domestic hot water mapper", () => {
 						wwhrs: true,
 						wwhrsType: "instantaneousSystemA",
 						wwhrsProductReference: "WW123",
-						heatSource: "source1",
+						dhwHeatSourceId: "source1",
 						typeOfHotWaterOutlet: "mixedShower",
 					},
 				};
@@ -433,7 +433,7 @@ describe("domestic hot water mapper", () => {
 						name: "shower2",
 						flowRate: 6,
 						wwhrs: false,
-						heatSource: "source2",
+						dhwHeatSourceId: "source2",
 						typeOfHotWaterOutlet: "mixedShower",
 					},
 				};

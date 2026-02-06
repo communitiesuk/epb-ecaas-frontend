@@ -35,7 +35,7 @@ const saveForm = (fields: HotWaterOutletsData) => {
 						...commonFields,
 						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
 						flowRate: fields.flowRate,
-						heatSource: fields.heatSource,
+						dhwHeatSourceId: fields.dhwHeatSourceId,
 						wwhrs: true,
 						wwhrsType: fields.wwhrsType,
 						wwhrsProductReference: fields.wwhrsProductReference,
@@ -48,7 +48,7 @@ const saveForm = (fields: HotWaterOutletsData) => {
 						...commonFields,
 						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
 						flowRate: fields.flowRate,
-						heatSource: fields.heatSource,
+						dhwHeatSourceId: fields.dhwHeatSourceId,
 						wwhrs: false,
 					},
 					complete: true,
@@ -130,8 +130,8 @@ watch(
 		const heatSources = store.domesticHotWaterNew.heatSources.data;
 		if (heatSources.length === 1 && model.value && model.value.typeOfHotWaterOutlet === "mixedShower") {
 			const heatSourceId = heatSources[0]?.data.id;
-			if ("heatSource" in model.value && heatSourceId) {
-				model.value.heatSource = heatSourceId;
+			if ("dhwHeatSourceId" in model.value && heatSourceId) {
+				model.value.dhwHeatSourceId = heatSourceId;
 			}
 		}
 	},
@@ -202,8 +202,8 @@ const heatSourceOptions = new Map(
 		/>
 		<FormKit
 			v-if="model.typeOfHotWaterOutlet === 'mixedShower'"	
-			id="heatSource"
-			name="heatSource"
+			id="dhwHeatSourceId"
+			name="dhwHeatSourceId"
 			type="govRadios"
 			label="Hot water source"
 			help="Select the relevant hot water source that has been added previously"
