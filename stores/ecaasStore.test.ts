@@ -110,6 +110,7 @@ describe("Ecaas Store", () => {
 					dwellingSpaceInternalFloor: { complete: true },
 					dwellingSpaceGroundFloor: { complete: true },
 					dwellingSpaceFloorAboveUnheatedBasement: { complete: true },
+					dwellingSpaceFloorOfHeatedBasement: { complete: true },
 				},
 				dwellingSpaceWalls: {
 					dwellingSpaceExternalWall: { complete: true },
@@ -195,6 +196,9 @@ describe("Ecaas Store", () => {
 						complete: true,
 					},
 					dwellingSpaceFloorAboveUnheatedBasement: {
+						complete: true,
+					},
+					dwellingSpaceFloorOfHeatedBasement: {
 						complete: true,
 					},
 				},
@@ -458,7 +462,7 @@ describe("hasCompleteState function", () => {
 			});
 
 			const topLevelTaggedWalls =
-        store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+				store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
 			const idOfTaggedWall = vent1.associatedItemId;
 			const actual = store.getTaggedItem([topLevelTaggedWalls], idOfTaggedWall);
 
@@ -490,7 +494,7 @@ describe("hasCompleteState function", () => {
 			});
 
 			const topLevelTaggedWalls =
-        store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+				store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
 			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows;
 			const idOfTaggedWall = vent2.associatedItemId;
 
@@ -526,7 +530,7 @@ describe("hasCompleteState function", () => {
 			});
 
 			const topLevelTaggedWalls =
-        store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+				store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
 			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows;
 			const idOfTaggedWall = vent1.associatedItemId;
 			const actual = store.getTaggedItem(
@@ -562,7 +566,7 @@ describe("hasCompleteState function", () => {
 			});
 
 			const topLevelTaggedWalls =
-        store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+				store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
 			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows;
 			const idOfTaggedWall = vent1.associatedItemId;
 
