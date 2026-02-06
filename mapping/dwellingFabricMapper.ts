@@ -87,7 +87,7 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zon
 }
 
 export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "GroundFloorArea" | "Zone"> {
-	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor } = state.dwellingFabric.dwellingSpaceFloors;
+	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor, dwellingSpaceFloorOfHeatedBasement } = state.dwellingFabric.dwellingSpaceFloors;
 	const floorSuffix = "floor";
 
 	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: "Slab_edge_insulation" }>): SchemaEdgeInsulation {
@@ -274,6 +274,28 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 			},
 		};
 	}) || [];
+	const floorOfHeatedBasementData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceFloorOfHeatedBasement?.map(x => {
+		const nameWithSuffix = suffixName(x.name, floorSuffix);
+
+		return {
+			[nameWithSuffix]: {
+				type: "BuildingElementGround",
+				area: x.surfaceArea,
+				total_area: x.surfaceArea,
+				u_value: x.uValue,
+				thermal_resistance_floor_construction: x.thermalResistance,
+				areal_heat_capacity: x.arealHeatCapacity,
+				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
+				depth_basement_floor: x.depthOfBasementFloor,
+				perimeter: x.perimeter,
+				psi_wall_floor_junc: x.psiOfWallJunction,
+				thickness_walls: x.thicknessOfWalls / 1000,
+				floor_type: "Heated_basement",
+				thermal_resistance_construction: x.thermalResistance,
+				thermal_resist_walls_base: 1, // THIS IS A PLACEHOLDER
+			},
+		};
+	}) || [];
 
 	return {
 		GroundFloorArea: dwellingSpaceGroundFloor.reduce((sum, floor) => sum + floor.surfaceArea, 0),
@@ -284,6 +306,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					...groundFloorData,
 					...internalFloorData,
 					...exposedFloorData,
+					...floorOfHeatedBasementData,
 				),
 			} as Partial<SchemaZoneInput>,
 		},

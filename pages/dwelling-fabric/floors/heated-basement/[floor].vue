@@ -100,8 +100,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="depthOfBasementFloor"
 			type="govInputWithSuffix"
 			suffix-text="m"
-			label="Depth of basement floor below ground"
-			help="Enter the depth of the basement floor below ground level"
+			label="Depth of basement floor"
+			help="Enter how far the basement floor is below  the outside ground level"
 			name="depthOfBasementFloor"
 			validation="required | number"
 		/>
@@ -110,7 +110,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Perimeter"
-			help="Enter the length of the exposed perimeter of the floor"
+			help="Enter the length of the exposed perimeter of the floor. This should not include the length of the perimeter that is adjacent to another heated space."
 			name="perimeter"
 			validation="required | number | min:0 | max:1000"
 		/>
@@ -118,8 +118,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="psiOfWallJunction"
 			type="govInputWithSuffix"
 			suffix-text="W/(m·K)"
-			label="Psi of wall junction"
-			help="This is the linear thermal transmittance of the junction between the floor and the walls"
+			label="Psi value of E22 junction"
+			help="This is the linear thermal transmittance of the junction between the floor and the walls, if there are multiple values enter an average weighted by length"
 			name="psiOfWallJunction"
 			validation="required | number | min:0 | max:2"
 		/>
@@ -131,7 +131,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="thicknessOfWalls"
 			validation="required | number"
 		><div class="govuk-hint">
-			<p>Enter the width or physical depth of the ground floor <NuxtLink :to="getUrl('dwellingSpaceWalls')">walls</NuxtLink> that are in contact with or directly relevant to the ground floor. Typically between 30mm to 80mm.</p>
+			<p>Enter the width or physical depth of the ground floor <NuxtLink :to="getUrl('dwellingSpaceWalls')">walls</NuxtLink> that are in contact with or directly relevant to the ground floor. Typically between 30mm to 80mm. If this varies, enter a weighted average</p>
 		</div>
 		</FormKit>
 		<div class="govuk-button-group govuk-!-margin-top-6">

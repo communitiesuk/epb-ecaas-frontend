@@ -171,7 +171,18 @@ describe("dwelling fabric mapper", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 		};
-
+		const floorAboveHeatedBasement: FloorOfHeatedBasementData = {
+			name: "Floor above heated basement 1",
+			surfaceArea: 5,
+			uValue: 1,
+			thermalResistance: 1,
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+			depthOfBasementFloor: 1,
+			perimeter: 10,
+			psiOfWallJunction: 1,
+			thicknessOfWalls: 30,
+		};
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceFloors: {
@@ -187,6 +198,7 @@ describe("dwelling fabric mapper", () => {
 					},
 					dwellingSpaceInternalFloor: { ...baseForm, data: [{ ...baseForm, data: internalFloor }] },
 					dwellingSpaceExposedFloor: { ...baseForm, data: [{ ...baseForm, data: exposedFloor }] },
+					dwellingSpaceFloorOfHeatedBasement: { ...baseForm, data: [{ ...baseForm, data: floorAboveHeatedBasement }] },
 				},
 			},
 		});
@@ -205,6 +217,7 @@ describe("dwelling fabric mapper", () => {
 		const groundFloorWithUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithUnheatedBasement.name + floorSuffix]! as BuildingElementGround;
 		const internalFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalFloor.name + floorSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
 		const exposedFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[exposedFloor.name + floorSuffix] as BuildingElementOpaque;
+		const floorAboveHeatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveHeatedBasement.name + floorSuffix] as BuildingElementGround;
 
 		expect(fhsInputData.GroundFloorArea).toBe(groundFloorsTotalArea);
 
@@ -294,6 +307,26 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		expect(exposedFloorElement).toEqual(expectedExposedFloor);
+
+		const expectedFloorOfHeatedBasement: BuildingElementGround = {
+			type: "BuildingElementGround",
+			total_area: floorAboveHeatedBasement.surfaceArea,
+			mass_distribution_class: fullMassDistributionClass(floorAboveHeatedBasement.massDistributionClass),
+			areal_heat_capacity: floorAboveHeatedBasement.arealHeatCapacity,
+			depth_basement_floor: floorAboveHeatedBasement.depthOfBasementFloor,
+			perimeter: floorAboveHeatedBasement.perimeter,
+			psi_wall_floor_junc: floorAboveHeatedBasement.psiOfWallJunction,
+			thickness_walls: floorAboveHeatedBasement.thicknessOfWalls / 1000,
+			floor_type: "Heated_basement",
+			area: floorAboveHeatedBasement.surfaceArea,
+			thermal_resistance_construction: floorAboveHeatedBasement.thermalResistance,
+			thermal_resistance_floor_construction: floorAboveHeatedBasement.thermalResistance,
+			u_value: floorAboveHeatedBasement.uValue,
+			thermal_resist_walls_base: 1, // THIS IS A PLACEHOLDER
+		};
+
+		expect(floorAboveHeatedBasementElement).toEqual(expectedFloorOfHeatedBasement);
+
 	});
 
 	it("maps wall input state to FHS input request", () => {
