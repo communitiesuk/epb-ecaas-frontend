@@ -50,7 +50,7 @@ describe("Domestic hot water summary", () => {
 			storageCylinderVolume: 5,
 			initialTemperature: 60,
 			dailyEnergyLoss: 1,
-			heatSourceId: heatPumpId,
+			dhwHeatSourceId: heatPumpId,
 			areaOfHeatExchanger: 2.5,
 			heaterPosition: 0.8,
 			thermostatPosition: 0.5,
@@ -61,7 +61,7 @@ describe("Domestic hot water summary", () => {
 			typeOfWaterStorage: "smartHotWaterTank",
 			name: "Smart hot water cylinder",
 			productReference: "SMART-HOT-WATER-CYLINDER",
-			heatSourceId: heatPumpId,
+			dhwHeatSourceId: heatPumpId,
 			heaterPosition: 0.3,
 		};
 

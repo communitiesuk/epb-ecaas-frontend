@@ -32,7 +32,7 @@ const saveForm = (fields: WaterStorageData) => {
 		const commonFields = {
 			name: fields.name,
 			id,
-			heatSourceId: fields.heatSourceId,	
+			dhwHeatSourceId: fields.dhwHeatSourceId,	
 			heaterPosition: fields.heaterPosition,
 		};
 
@@ -194,8 +194,8 @@ const heatSourceOptions = new Map(
 		/>
 		<FormKit
 			v-if="model.typeOfWaterStorage !== undefined"
-			id="heatSourceId"
-			name="heatSourceId"
+			id="dhwHeatSourceId"
+			name="dhwHeatSourceId"
 			type="govRadios"
 			label="Hot water source"
 			help="Select the relevant hot water source that has been added previously"

@@ -95,7 +95,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 	return state.domesticHotWaterNew.waterStorage.map((ws): SchemaHotWaterSourceDetails => {
 
 		const referencedHeatSource = state.domesticHotWaterNew.heatSources
-			.find(heatSource => heatSource.id === ws.heatSourceId);
+			.find(heatSource => heatSource.id === ws.dhwHeatSourceId);
 
 		if (!referencedHeatSource) {
 			throw new Error("referenced heat source for water storage not found");

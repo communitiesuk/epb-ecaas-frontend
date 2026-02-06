@@ -42,7 +42,7 @@ describe("Domestic hot water", () => {
 		data: {
 			name: "Jasper's Cylinder 1",
 			id: "what",
-			heatSourceId: "weeeeee",
+			dhwHeatSourceId: "weeeeee",
 			storageCylinderVolume: {
 				amount: 100,
 				unit: "litres",
@@ -86,7 +86,7 @@ describe("Domestic hot water", () => {
 				name: "Jasper's Cylinder 2",
 				id: "what2",
 				typeOfWaterStorage: "smartHotWaterTank",
-				heatSourceId: "weeeeee3",
+				dhwHeatSourceId: "weeeeee3",
 				heaterPosition: 0.8,
 				productReference: "SMART-12345",
 			},
@@ -96,7 +96,7 @@ describe("Domestic hot water", () => {
 			data: {
 				name: "Jasper's Cylinder 3",
 				id: "what3",
-				heatSourceId: "weeeeee3",
+				dhwHeatSourceId: "weeeeee3",
 				storageCylinderVolume: {
 					amount: 102,
 					unit: "litres",
