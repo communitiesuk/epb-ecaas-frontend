@@ -166,6 +166,7 @@ export default defineNuxtConfig({
 			xFrameOptions: false,
 			xXSSProtection: false,
 		},
+		rateLimiter: false,
 	},
 
 	sentry: {
