@@ -1093,6 +1093,9 @@ describe("FHS input mapper", () => {
 				dwellingSpaceWallToUnheatedSpace: {
 					...baseForm,
 				},
+				dwellingSpaceWallOfHeatedBasement: {
+					...baseForm,
+				},
 			},
 			dwellingSpaceCeilingsAndRoofs: {
 				dwellingSpaceCeilings: {
@@ -1669,6 +1672,9 @@ describe("FHS input mapper", () => {
 							thermalResistanceOfAdjacentUnheatedSpace: 2.5,
 						},
 					}],
+				},
+				dwellingSpaceWallOfHeatedBasement: {
+					...baseForm,
 				},
 			},
 			dwellingSpaceCeilingsAndRoofs: {

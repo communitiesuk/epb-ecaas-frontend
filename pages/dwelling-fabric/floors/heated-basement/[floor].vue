@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { NuxtLink } from "#components";
 import { getUrl, uniqueName } from "#imports";
+import { v4 as uuidv4 } from "uuid";
 const title = "Floor of heated basement";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
@@ -15,6 +16,7 @@ const saveForm = (fields: FloorOfHeatedBasementData) => {
 		const { dwellingSpaceFloorOfHeatedBasement } = state.dwellingFabric.dwellingSpaceFloors;
 
 		const floor: FloorOfHeatedBasementData = {
+			id: floorData?.data.id ?? uuidv4(),
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
 			uValue: fields.uValue,

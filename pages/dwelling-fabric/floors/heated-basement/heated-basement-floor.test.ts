@@ -2,17 +2,19 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
 import HeatedBasementFloor from "./[floor].vue";
+import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
-
+vi.mock("uuid");
 describe("floor of heated basement", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const heatedBasementFloor: FloorOfHeatedBasementData = {
+		id: "test-floor-id-123",
 		name: "Heated Basement Floor 1",
 		surfaceArea: 45.0,
 		uValue: 0.25,
@@ -33,6 +35,7 @@ describe("floor of heated basement", () => {
 
 	const populateValidForm = async (overrides: FloorOverrides = {}) => {
 		const defaults: FloorOfHeatedBasementData = {
+			id: "test-floor-id-123",
 			name: "Test Floor",
 			surfaceArea: 45,
 			uValue: 0.25,
@@ -59,6 +62,8 @@ describe("floor of heated basement", () => {
 	};
 
 	test("data is saved to store state and marked as complete when form is valid", async () => {
+
+		vi.mocked(uuidv4).mockReturnValue(heatedBasementFloor.id as unknown as Buffer);
 		await renderSuspended(HeatedBasementFloor, {
 			route: {
 				params: { floor: "create" },

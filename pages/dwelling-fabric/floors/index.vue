@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
-
+import { v4 as uuidv4 } from "uuid";
 const title = "Floor elements";
 const page = usePage();
 const store = useEcaasStore();
 
 type FloorType = keyof typeof store.dwellingFabric.dwellingSpaceFloors;
-type FloorData = EcaasForm<GroundFloorData> & EcaasForm<InternalFloorData> & EcaasForm<ExposedFloorData> & EcaasForm<FloorAboveUnheatedBasementData>;
 
 function handleRemove(floorType: FloorType, index: number) {
 	const floors = store.dwellingFabric.dwellingSpaceFloors[floorType]?.data;
@@ -21,24 +20,38 @@ function handleRemove(floorType: FloorType, index: number) {
 	}
 } 
 
-function handleDuplicate<T extends FloorData>(floorType: FloorType, index: number) {
-	const floors = store.dwellingFabric.dwellingSpaceFloors[floorType]?.data;
+function handleDuplicate(floorType: FloorType, index: number) {
+	const floorCollection = store.dwellingFabric.dwellingSpaceFloors[floorType];
+	const floors = floorCollection?.data;
 	const floorToDuplicate = floors?.[index];
     
-	if (floorToDuplicate) {
-		const numberOfFloorsWithSameName = floors.filter(f => f.data.name.match(duplicateNamePattern(floorToDuplicate.data.name))).length;
+	if (!floorToDuplicate || !floors) return;
 
-		store.$patch((state) => {			
-			state.dwellingFabric.dwellingSpaceFloors[floorType].data.push({
-				complete: floorToDuplicate.complete,
-				data: {
-					...floorToDuplicate.data,
-					name: `${floorToDuplicate.data.name} (${numberOfFloorsWithSameName})`,
-				},
-			} as T);
-			state.dwellingFabric.dwellingSpaceFloors[floorType].complete = false;
-		});
+	const numberOfFloorsWithSameName = floors.filter(f => 
+		f.data.name.match(duplicateNamePattern(floorToDuplicate.data.name)),
+	).length;
+
+	const newFloorData = {
+		...floorToDuplicate.data,
+		name: `${floorToDuplicate.data.name} (${numberOfFloorsWithSameName})`,
+	};
+
+	// Add ID for heated basement floors
+	if (floorType === "dwellingSpaceFloorOfHeatedBasement") {
+		(newFloorData as { id?: string }).id = uuidv4();
 	}
+
+	const newFloor = {
+		...floorToDuplicate,
+		data: newFloorData,
+		complete: false,
+	};
+	
+	store.$patch((state) => {
+		const targetFloors = state.dwellingFabric.dwellingSpaceFloors[floorType].data as Array<typeof floorToDuplicate>;
+		targetFloors.push(newFloor as typeof floorToDuplicate);
+		state.dwellingFabric.dwellingSpaceFloors[floorType].complete = false;
+	});
 }
 
 function handleComplete() {
