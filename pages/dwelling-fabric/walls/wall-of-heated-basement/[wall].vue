@@ -46,7 +46,7 @@ autoSaveElementForm<WallOfHeatedBasementData>({
 	},
 });
 
-// Auto-select basement floor if only one exists
+
 watch(
 	() => [model.value, store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement.data.length] as const,
 	() => {

@@ -172,6 +172,7 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 		};
 		const floorAboveHeatedBasement: FloorOfHeatedBasementData = {
+			id: "974e8749-f465-4f43-a38a-3d0b97060a64",
 			name: "Floor above heated basement 1",
 			surfaceArea: 5,
 			uValue: 1,
@@ -182,6 +183,16 @@ describe("dwelling fabric mapper", () => {
 			perimeter: 10,
 			psiOfWallJunction: 1,
 			thicknessOfWalls: 30,
+		};
+		const wallOfHeatedBasement: WallOfHeatedBasementData = {
+			id: "heated-basement-wall-id",
+			name: "Wall of heated basement 1",
+			uValue: 1,
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+			associatedBasementFloorId: "974e8749-f465-4f43-a38a-3d0b97060a64",
+			netSurfaceArea: 500,
+			thermalResistance: 1.5,
 		};
 		store.$patch({
 			dwellingFabric: {
@@ -199,6 +210,10 @@ describe("dwelling fabric mapper", () => {
 					dwellingSpaceInternalFloor: { ...baseForm, data: [{ ...baseForm, data: internalFloor }] },
 					dwellingSpaceExposedFloor: { ...baseForm, data: [{ ...baseForm, data: exposedFloor }] },
 					dwellingSpaceFloorOfHeatedBasement: { ...baseForm, data: [{ ...baseForm, data: floorAboveHeatedBasement }] },
+				},
+				dwellingSpaceWalls: {
+					dwellingSpaceWallOfHeatedBasement: { ...baseForm, data: [{ ...baseForm, data: wallOfHeatedBasement }] },
+
 				},
 			},
 		});
@@ -322,7 +337,7 @@ describe("dwelling fabric mapper", () => {
 			thermal_resistance_construction: floorAboveHeatedBasement.thermalResistance,
 			thermal_resistance_floor_construction: floorAboveHeatedBasement.thermalResistance,
 			u_value: floorAboveHeatedBasement.uValue,
-			thermal_resist_walls_base: 1, // THIS IS A PLACEHOLDER
+			thermal_resist_walls_base: wallOfHeatedBasement.thermalResistance,
 		};
 
 		expect(floorAboveHeatedBasementElement).toEqual(expectedFloorOfHeatedBasement);
@@ -424,7 +439,35 @@ describe("dwelling fabric mapper", () => {
 				thermalResistanceOfAdjacentUnheatedSpace: 1,
 			},
 		};
-
+		const wallOfHeatedBasement: EcaasForm<WallOfHeatedBasementData> = {
+			...baseForm,
+			data: {
+				id: "heated-basement-wall-id",
+				name: "Wall of heated basement 1",
+				uValue: 10,
+				arealHeatCapacity: "Very light",
+				massDistributionClass: "E",
+				associatedBasementFloorId: "974e8749-f465-4f43-a38a-3d0b97060a64",
+				netSurfaceArea: 500,
+				thermalResistance: 1,
+			},
+		};
+		const floorOfHeatedBasement: EcaasForm<FloorOfHeatedBasementData> = {
+			...baseForm,
+			data: {
+				id: "974e8749-f465-4f43-a38a-3d0b97060a64",
+				name: "Floor above heated basement 1",
+				surfaceArea: 5,
+				uValue: 1,
+				thermalResistance: 1,
+				arealHeatCapacity: "Very light",
+				massDistributionClass: "I",
+				depthOfBasementFloor: 1,
+				perimeter: 10,
+				psiOfWallJunction: 1,
+				thicknessOfWalls: 30,
+			},
+		};
 		const wallSuffix = " (wall)";
 
 		store.$patch({
@@ -434,6 +477,11 @@ describe("dwelling fabric mapper", () => {
 					dwellingSpaceInternalWall: { ...baseForm, data: [internalWall] },
 					dwellingSpacePartyWall: { ...baseForm, data: [partyWallWithLiningType, partyWallWithThermalResistanceCavity, partyWallWithoutExtraAttributes] },
 					dwellingSpaceWallToUnheatedSpace: { ...baseForm, data: [wallToUnheatedSpace] },
+					dwellingSpaceWallOfHeatedBasement: { ...baseForm, data: [wallOfHeatedBasement] },
+
+				},
+				dwellingSpaceFloors: {
+					dwellingSpaceFloorOfHeatedBasement: { ...baseForm, data: [floorOfHeatedBasement] },
 				},
 			},
 		});
@@ -527,6 +575,25 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		expect(wallToUnheatedSpaceElement).toEqual(expectedWallToUnheatedSpace);
+
+		const expectedWallOfHeatedBasement: BuildingElementGround = {
+			type: "BuildingElementGround",
+			floor_type: "Heated_basement",
+			area: wallOfHeatedBasement.data.netSurfaceArea,
+			total_area: wallOfHeatedBasement.data.netSurfaceArea,
+			u_value: wallOfHeatedBasement.data.uValue,
+			thermal_resistance_construction: wallOfHeatedBasement.data.thermalResistance,
+			mass_distribution_class: fullMassDistributionClass(wallOfHeatedBasement.data.massDistributionClass),
+			areal_heat_capacity: wallOfHeatedBasement.data.arealHeatCapacity,
+			thermal_resist_walls_base: wallOfHeatedBasement.data.thermalResistance,
+			thermal_resistance_floor_construction: floorOfHeatedBasement.data.thermalResistance,
+			psi_wall_floor_junc: floorOfHeatedBasement.data.psiOfWallJunction,
+			depth_basement_floor: floorOfHeatedBasement.data.depthOfBasementFloor,
+			perimeter: floorOfHeatedBasement.data.perimeter,
+			thickness_walls: floorOfHeatedBasement.data.thicknessOfWalls / 1000,
+		};
+
+		expect(fhsInputData.Zone[defaultZoneName]!.BuildingElement[wallOfHeatedBasement.data.name + wallSuffix]).toEqual(expectedWallOfHeatedBasement);
 	});
 
 	it("maps ceiling and roof input state to FHS input request", () => {
@@ -935,5 +1002,85 @@ describe("dwelling fabric mapper", () => {
 
 		expect(linearThermalBridgeElement).toEqual(expectedLinearThermalBridge);
 		expect(pointThermalBridgeElement.heat_transfer_coeff).toBe(pointThermalBridge.heatTransferCoefficient);
+	});
+
+	it("throws error when wall of heated basement has no associated floor", () => {
+		// Arrange
+		const wallOfHeatedBasement: EcaasForm<WallOfHeatedBasementData> = {
+			...baseForm,
+			data: {
+				id: "heated-basement-wall-id",
+				name: "Wall of heated basement 1",
+				netSurfaceArea: 50,
+				uValue: 0.3,
+				thermalResistance: 0.6,
+				arealHeatCapacity: "Medium",
+				massDistributionClass: "M",
+				associatedBasementFloorId: "non-existent-floor-id",
+			},
+		};
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceWallOfHeatedBasement: {
+						...baseForm,
+						data: [wallOfHeatedBasement],
+					},
+				},
+				dwellingSpaceFloors: {
+					dwellingSpaceFloorOfHeatedBasement: {
+						...baseForm,
+						data: [],
+					},
+				},
+			},
+		});
+
+		// Act & Assert
+		expect(() => mapWallData(resolveState(store.$state))).toThrow("Wall of heated basement 'Wall of heated basement 1' references floor ID 'non-existent-floor-id' which does not exist");
+	});
+
+	it("throws error when floor of heated basement has no associated wall", () => {
+		// Arrange
+		const floorOfHeatedBasement: EcaasForm<FloorOfHeatedBasementData> = {
+			...baseForm,
+			data: {
+				id: "heated-basement-floor-id",
+				name: "Floor of heated basement 1",
+				surfaceArea: 45,
+				uValue: 0.25,
+				thermalResistance: 4,
+				arealHeatCapacity: "Medium",
+				massDistributionClass: "I",
+				depthOfBasementFloor: 2.5,
+				perimeter: 30,
+				psiOfWallJunction: 0.08,
+				thicknessOfWalls: 300,
+			},
+		};
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceGroundFloor: { ...baseForm, data: [] },
+					dwellingSpaceInternalFloor: { ...baseForm, data: [] },
+					dwellingSpaceExposedFloor: { ...baseForm, data: [] },
+					dwellingSpaceFloorOfHeatedBasement: {
+						...baseForm,
+						data: [floorOfHeatedBasement],
+					},
+				},
+				dwellingSpaceWalls: {
+					dwellingSpaceWallOfHeatedBasement: {
+						...baseForm,
+						data: [],
+					},
+				},
+			},
+		});
+
+		// Act & Assert
+		expect(() => mapFloorData(resolveState(store.$state))).toThrow("No wall of heated basement found associated with floor of heated basement with id heated-basement-floor-id");
 	});
 });

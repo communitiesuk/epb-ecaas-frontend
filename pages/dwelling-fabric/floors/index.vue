@@ -36,7 +36,6 @@ function handleDuplicate(floorType: FloorType, index: number) {
 		name: `${floorToDuplicate.data.name} (${numberOfFloorsWithSameName})`,
 	};
 
-	// Add ID for heated basement floors
 	if (floorType === "dwellingSpaceFloorOfHeatedBasement") {
 		(newFloorData as { id?: string }).id = uuidv4();
 	}

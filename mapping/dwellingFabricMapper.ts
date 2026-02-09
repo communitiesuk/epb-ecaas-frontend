@@ -275,8 +275,14 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 		};
 	}) || [];
 	const floorOfHeatedBasementData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceFloorOfHeatedBasement?.map(x => {
+		if (!x.id) {
+			throw new Error(`Floor of heated basement '${x.name}' must have an ID`);
+		}
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
-
+		const wallOfHeatedBasement = state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallOfHeatedBasement?.find(wall => wall.associatedBasementFloorId === x.id);
+		if (!wallOfHeatedBasement) {
+			throw new Error(`No wall of heated basement found associated with floor of heated basement with id ${x.id}`);
+		}
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementGround",
@@ -292,7 +298,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				thickness_walls: x.thicknessOfWalls / 1000,
 				floor_type: "Heated_basement",
 				thermal_resistance_construction: x.thermalResistance,
-				thermal_resist_walls_base: 1, // THIS IS A PLACEHOLDER
+				thermal_resist_walls_base: wallOfHeatedBasement?.thermalResistance,
 			},
 		};
 	}) || [];
@@ -314,7 +320,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 }
 
 export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
-	const { dwellingSpaceExternalWall, dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUnheatedSpace } = state.dwellingFabric.dwellingSpaceWalls;
+	const { dwellingSpaceExternalWall, dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUnheatedSpace, dwellingSpaceWallOfHeatedBasement } = state.dwellingFabric.dwellingSpaceWalls;
 	const wallSuffix = "wall";
 
 	const externalWallData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalWall?.map(x => {
@@ -388,6 +394,32 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		};
 	}) || [];
 
+	const wallOfHeatedBasementData: { [key: string]: BuildingElementGround }[] = dwellingSpaceWallOfHeatedBasement?.map(wall => {
+		const nameWithSuffix = suffixName(wall.name, wallSuffix);
+		const floorOfHeatedBasement = state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement?.find(floor => floor.id === wall.associatedBasementFloorId);
+		if (!floorOfHeatedBasement) {
+			throw new Error(`Wall of heated basement '${wall.name}' references floor ID '${wall.associatedBasementFloorId}' which does not exist`);
+		};
+		return {
+			[nameWithSuffix]: {
+				type: "BuildingElementGround",
+				floor_type: "Heated_basement",
+				area: wall.netSurfaceArea,
+				total_area: wall.netSurfaceArea,
+				u_value: wall.uValue,
+				thermal_resistance_construction: wall.thermalResistance,
+				areal_heat_capacity: wall.arealHeatCapacity,
+				mass_distribution_class: fullMassDistributionClass(wall.massDistributionClass),
+				thermal_resist_walls_base: wall.thermalResistance,
+				thermal_resistance_floor_construction: wall.thermalResistance,
+				depth_basement_floor: floorOfHeatedBasement.depthOfBasementFloor,
+				perimeter: floorOfHeatedBasement.perimeter,
+				psi_wall_floor_junc: floorOfHeatedBasement.psiOfWallJunction,
+				thickness_walls: floorOfHeatedBasement.thicknessOfWalls / 1000,
+			},
+		};
+	}) || [];
+
 	return {
 		Zone: {
 			[defaultZoneName]: {
@@ -397,6 +429,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 					...internalWallData,
 					...partyWallData,
 					...wallToUnheatedSpaceData,
+					...wallOfHeatedBasementData,
 				),
 			} as Partial<SchemaZoneInput>,
 		},
