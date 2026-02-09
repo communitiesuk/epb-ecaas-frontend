@@ -9,6 +9,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const floorOfHeatedBasementData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement?.data;
 const index = getStoreIndex(floorOfHeatedBasementData);
 const floorData = useItemToEdit("floor", floorOfHeatedBasementData);
+const floorId = floorData?.data.id ?? uuidv4();
 const model = ref(floorData?.data);
 
 const saveForm = (fields: FloorOfHeatedBasementData) => {	
@@ -16,7 +17,7 @@ const saveForm = (fields: FloorOfHeatedBasementData) => {
 		const { dwellingSpaceFloorOfHeatedBasement } = state.dwellingFabric.dwellingSpaceFloors;
 
 		const floor: FloorOfHeatedBasementData = {
-			id: floorData?.data.id ?? uuidv4(),
+		id: floorId,
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
 			uValue: fields.uValue,
@@ -40,6 +41,8 @@ autoSaveElementForm<FloorOfHeatedBasementData>({
 	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement,
 	defaultName: "Floor of heated basement",
 	onPatch: (state, newData, index) => {
+		// Ensure autosave assigns an id so other elements can reference this floor
+		newData.data.id ??= floorId;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement.complete = false;
 	},

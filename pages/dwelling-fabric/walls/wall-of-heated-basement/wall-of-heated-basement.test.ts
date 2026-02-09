@@ -16,6 +16,10 @@ describe("wall of heated basement", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
+	beforeEach(() => {
+		store.$reset();
+	});
+
 	const basementFloorId = "test-floor-id-123";
 
 	const wallOfHeatedBasement: WallOfHeatedBasementData = {
@@ -191,6 +195,26 @@ describe("wall of heated basement", () => {
 		expect(screen.getByText("Click here to add a basement floor")).toBeDefined();
 	});
 
+	test("options appear when basement floors are added", async () => {
+		// add a basement floor before mount
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceFloorOfHeatedBasement: {
+						data: [{ data: { id: basementFloorId, name: "Basement Floor 1" } }],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(WallOfHeatedBasement, {
+			route: { params: { wall: "create" } },
+		});
+
+		// option should be present immediately
+		expect(await screen.findByTestId(`associatedBasementFloorId_${basementFloorId}`)).toBeDefined();
+	});
+
 
 
 	test("save and complete navigates to walls index page", async () => {
@@ -255,6 +279,7 @@ describe("wall of heated basement", () => {
 		expect(data[0]?.data.name).toBe("Wall of Heated Basement 2");
 		expect(data[0]?.data.netSurfaceArea).toBe(75);
 	});
+
 
 	test("partial form data is saved automatically with default name to store", async () => {
 		store.$patch({

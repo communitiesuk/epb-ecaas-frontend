@@ -59,13 +59,14 @@ watch(
 		}
 	},
 );
+const { dwellingSpaceFloorOfHeatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
+const basementFloorOptions = 
+	new Map(
+		dwellingSpaceFloorOfHeatedBasement.data
+			.filter((e) => e?.data?.id != null)
+			.map((e) => [e.data.id!, e.data.name]),
+	);
 
-const basementFloorOptions = new Map(
-	store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement.data.map((e) => [
-		e.data.id!,
-		e.data.name,
-	]),
-);
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -100,6 +101,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="associatedBasementFloorId"
+			:key="basementFloorOptions.size"
 			name="associatedBasementFloorId"
 			type="govRadios"
 			label="Associated basement floor"

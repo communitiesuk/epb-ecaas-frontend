@@ -143,6 +143,25 @@ describe("floor of heated basement", () => {
 		expect((await screen.findByTestId("thicknessOfWalls_error"))).toBeDefined();
 	});
 
+	test("autosave assigns an id when creating a new floor", async () => {
+		vi.mocked(uuidv4).mockReturnValue("autosave-floor-id" as unknown as Buffer);
+
+		await renderSuspended(HeatedBasementFloor, {
+			route: {
+				params: { floor: "create" },
+			},
+		});
+
+		// change a field to trigger autosave
+		await user.type(screen.getByTestId("surfaceArea"), "12");
+		await user.tab();
+
+		await waitFor(() => {
+			const { dwellingSpaceFloorOfHeatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
+			expect(dwellingSpaceFloorOfHeatedBasement?.data[0]?.data.id).toBe("autosave-floor-id");
+		});
+	});
+
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(HeatedBasementFloor, {
 			route: {
