@@ -17,7 +17,7 @@ const saveForm = (fields: FloorOfHeatedBasementData) => {
 		const { dwellingSpaceFloorOfHeatedBasement } = state.dwellingFabric.dwellingSpaceFloors;
 
 		const floor: FloorOfHeatedBasementData = {
-		id: floorId,
+			id: floorId,
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
 			uValue: fields.uValue,
