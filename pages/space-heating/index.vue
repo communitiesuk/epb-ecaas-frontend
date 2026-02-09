@@ -153,7 +153,7 @@ function hasIncompleteEntries() {
 		@remove="(index: number) => handleRemove('heatingControls', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/" secondary> Return to overivew </GovButton>
+		<GovButton href="/" secondary> Return to overview </GovButton>
 		<NuxtLink
 			:to="`${page?.url}/summary`"
 			class="govuk-button govuk-button--secondary"
