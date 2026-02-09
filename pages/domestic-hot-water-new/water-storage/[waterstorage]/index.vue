@@ -3,6 +3,7 @@ import { litre, type Volume } from "~/utils/units/volume";
 import type { WaterStorageData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
 import { v4 as uuidv4 } from "uuid";
+import { waterStorageTypes } from "#imports";
 
 const title = "Water storage";
 const store = useEcaasStore();
@@ -95,10 +96,21 @@ const isProductSelected = () => {
 	return waterStorageData?.data.productReference ? true : false;
 };
 
-const waterStorages = [
-	["hotWaterCylinder", "Hot water cylinder"],
-	["smartHotWaterTank", "Smart hot water cylinder"],
-] as [string, string][];
+watch(
+	() => model.value?.typeOfWaterStorage,
+	(newType, oldType) => {
+		if (newType && oldType !== newType) {
+			errorMessages.value = [];
+			const preservedId = model.value?.id;
+			const defaultName = waterStorageTypes[newType];
+			model.value = { 
+				typeOfWaterStorage: newType, 
+				id: preservedId,
+				...(defaultName && { name: defaultName }),
+			} as WaterStorageData;
+		}
+	},
+);
 
 const heatSourceOptions = new Map(
 	store.domesticHotWaterNew.heatSources.data.map((e) => [
@@ -130,7 +142,7 @@ const heatSourceOptions = new Map(
 			id="typeOfWaterStorage"
 			name="typeOfWaterStorage"
 			type="govRadios"
-			:options="new Map(waterStorages)"
+			:options="waterStorageTypes"
 			label="Type of water storage"
 			validation="required"
 		/>

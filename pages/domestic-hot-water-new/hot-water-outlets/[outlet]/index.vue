@@ -140,7 +140,7 @@ watch(
 autoSaveElementForm<HotWaterOutletsData>({
 	model,
 	storeData: store.domesticHotWaterNew.hotWaterOutlets,
-	defaultName: "Water storage",
+	defaultName: "Hot Water Outlet",
 	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
 		state.domesticHotWaterNew.hotWaterOutlets.data[index] = newData;

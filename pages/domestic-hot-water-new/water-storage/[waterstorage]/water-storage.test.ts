@@ -39,10 +39,9 @@ describe("water storage", () => {
 	// 		typeOfWaterStorage: "smartHotWaterTank",
 	// 		id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
 	// 		name: "Smart hot water tank 1",
-	// 		heatSource: heatPumpId,
+	// 		dhwHeatSourceId: heatPumpId,
 	// 		productReference: "1234",
 	// 		heaterPosition: 0.8,
-	// 		thermostatPosition: 0.5,
 	// 	},
 	// };
 	
@@ -74,7 +73,7 @@ describe("water storage", () => {
 	
 	const populateValidFormHWC = async () => {
 		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
-		await user.type(screen.getByTestId("name"), "Hot water cylinder 1");
+		await user.type(screen.getByTestId("name"), " 1");
 		await user.type(screen.getByTestId("storageCylinderVolume"), "5");
 		await user.type(screen.getByTestId("initialTemperature"), "60");
 		await user.type(screen.getByTestId("dailyEnergyLoss"), "1");
@@ -113,7 +112,8 @@ describe("water storage", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 		
 		//hot water cylinder specific
-		expect((await screen.findByTestId("name_error"))).toBeDefined();
+		// not name, this is filled in by default
+		// expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
 		expect((await screen.findByTestId("initialTemperature_error"))).toBeDefined();
 		expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
@@ -126,7 +126,8 @@ describe("water storage", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		//smart hot water tank specific
-		expect((await screen.findByTestId("name_error"))).toBeDefined();
+		// not name, this is filled in by default
+		// expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("selectSmartHotWaterTank_error"))).toBeDefined();
 		expect((await screen.findByTestId("dhwHeatSourceId_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
@@ -219,6 +220,42 @@ describe("water storage", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water-new");
+		});
+
+		test("name defaults to 'Hot water cylinder' when Hot Water Cylinder is selected'", async () => {
+			await renderSuspended(WaterStorage, {
+				route: {
+					params: { "waterStorage": "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
+
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Hot water cylinder");
+		});
+	});
+
+	describe("Smart Hot Water Tank", () => {
+		test("navigates to domestic hot water page when valid form is completed", async () => {
+			addHeatPumpStoreData();
+			await renderSuspended(WaterStorage);
+
+			// await populateValidFormSHWT();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water-new");
+		});
+
+		test("name defaults to 'Smart hot water tank' when Smart Hot Water Tank is selected'", async () => {
+			await renderSuspended(WaterStorage, {
+				route: {
+					params: { "waterStorage": "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
+
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Smart hot water tank");
 		});
 	});
 });

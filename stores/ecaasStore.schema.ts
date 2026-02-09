@@ -1390,6 +1390,8 @@ const smartHotWaterTankDataZodNew = namedWithId.extend({
 
 export type SmartHotWaterTankDataNew = z.infer<typeof smartHotWaterTankDataZodNew>;
 
+export type WaterStorageType = "hotWaterCylinder" | "smartHotWaterTank";
+
 const waterStorageDataZod = z.discriminatedUnion("typeOfWaterStorage", [
 	hotWaterCylinderDataZodNew,
 	smartHotWaterTankDataZodNew,

@@ -198,41 +198,41 @@ const coldWaterSourceOptions =
 		<HeatPumpSection
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'heatPump'"
-			:model="model as HeatPumpModelType"
+			:model="(model as HeatPumpModelType)"
 			:index="index"
 			@update-heat-pump-model="updateHeatSource" />
 		<BoilerSection
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'boiler'"
-			:model="model as BoilerModelType"
+			:model="(model as BoilerModelType)"
 			:index="index"
 			@update-boiler-model="updateHeatSource" />
 		<HeatNetworkSection
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'heatNetwork'"
-			:model="model as HeatNetworkModelType"
+			:model="(model as HeatNetworkModelType)"
 			:index="index"
 			@update-heat-network-model="updateHeatSource" />
 		<HeatBatterySection
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'heatBattery'"
-			:model="model as HeatBatteryModelType"
+			:model="(model as HeatBatteryModelType)"
 			:index="index"
 			@update-heat-battery-model="updateHeatSource" />
 		<SolarThermalSystemSection
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'solarThermalSystem'"
-			:model="model as SolarThermalModelType" 
+			:model="(model as SolarThermalModelType)" 
 			:index="index" />
 		<ImmersionHeaterSection
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'immersionHeater'"
-			:model="model as ImmersionHeaterModelType" 
+			:model="(model as ImmersionHeaterModelType)" 
 			:index="index" />
 		<PointOfUseSection
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'pointOfUse'"
-			:model="model as PointOfUseModelType" 
+			:model="(model as PointOfUseModelType)" 
 			:index="index" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
