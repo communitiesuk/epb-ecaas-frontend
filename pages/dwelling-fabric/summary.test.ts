@@ -91,6 +91,7 @@ const floorsData: FloorsData = {
 	dwellingSpaceFloorOfHeatedBasement: {
 		data: [{
 			data: {
+				id: "heated-basement-floor-id",
 				name: "Floor of heated basement 1",
 				surfaceArea: 45,
 				uValue: 0.25,
@@ -186,6 +187,20 @@ const wallsData: WallsData = {
 				massDistributionClass: "I",
 				partyWallCavityType: "unfilled_sealed",
 				partyWallLiningType: "wet_plaster",
+			},
+		}],
+	},
+	dwellingSpaceWallOfHeatedBasement: {
+		data: [{
+			data: {
+				id: "heated-basement-wall-id",
+				name: "Wall of heated basement 1",
+				netSurfaceArea: 60,
+				uValue: 0.35,
+				thermalResistance: 2.86,
+				arealHeatCapacity: "Medium",
+				massDistributionClass: "E",
+				associatedBasementFloorId: "heated-basement-floor-id",
 			},
 		}],
 	},
@@ -571,6 +586,7 @@ describe("Dwelling space walls", () => {
 		expect(screen.getByRole("link", { name: "Internal walls" })).not.toBeNull();
 		expect(screen.getByRole("link", { name: "Walls to unheated spaces" })).not.toBeNull();
 		expect(screen.getByRole("link", { name: "Party walls" })).not.toBeNull();
+		expect(screen.getByRole("link", { name: "Walls of a heated basement" })).not.toBeNull();
 	});
 
 	it("should display the correct data for the external wall section", async () => {
@@ -684,6 +700,209 @@ describe("Dwelling space walls", () => {
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 		}
+	});
+
+	it("should display the correct data for the wall of heated basement section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceWallOfHeatedBasement: wallsData.dwellingSpaceWallOfHeatedBasement,
+				},
+				dwellingSpaceFloors: {
+					dwellingSpaceFloorOfHeatedBasement: floorsData.dwellingSpaceFloorOfHeatedBasement,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "Wall of heated basement 1",
+			"Net surface area": `60 ${metresSquare.suffix}`,
+			"U-value": `0.35 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Thermal resistance": `2.86 ${squareMeterKelvinPerWatt.suffix}`,
+			"Areal heat capacity": "Medium",
+			"Mass distribution class": "External",
+			"Associated floor": "Floor of heated basement 1",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWallOfHeatedBasement-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display '-' for associated floor when floor does not exist", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceWallOfHeatedBasement: {
+						data: [{
+							data: {
+								id: "wall-id",
+								name: "Wall without floor",
+								netSurfaceArea: 60,
+								uValue: 0.35,
+								thermalResistance: 2.86,
+								arealHeatCapacity: "Medium",
+								massDistributionClass: "E",
+								associatedBasementFloorId: "non-existent-floor-id",
+							},
+						}],
+					},
+				},
+				dwellingSpaceFloors: {
+					dwellingSpaceFloorOfHeatedBasement: { data: [] },
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWallOfHeatedBasement-${hyphenate("Associated floor")}`));
+		expect(lineResult.querySelector("dd")?.textContent).toBe("-");
+	});
+
+	it("displays 'No walls of heated basement added' when no walls of heated basement are provided", async () => {
+		await renderSuspended(Summary);
+
+		expect(screen.getByText("No walls of heated basement added")).not.toBeNull();
+	});
+
+	it("navigates to create page when 'Add walls of heated basement' link is clicked", async () => {
+		await renderSuspended(Summary);
+
+		const wallsTab = screen.getByRole("link", { name: "External walls" });
+		await user.click(wallsTab);
+
+		const heatedBasementTab = screen.getByRole("link", { name: "Walls of a heated basement" });
+		await user.click(heatedBasementTab);
+
+		const addLink: HTMLAnchorElement = screen.getByRole("link", {
+			name: "Add walls of heated basement",
+		});
+
+		expect(new URL(addLink.href).pathname).toBe(
+			getUrl("dwellingSpaceWallOfHeatedBasementCreate"),
+		);
+	});
+
+	it("should display data for multiple walls of heated basement", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceWallOfHeatedBasement: {
+						data: [
+							{
+								data: {
+									id: "wall-1",
+									name: "Wall of heated basement 1",
+									netSurfaceArea: 60,
+									uValue: 0.35,
+									thermalResistance: 2.86,
+									arealHeatCapacity: "Medium",
+									massDistributionClass: "E",
+									associatedBasementFloorId: "heated-basement-floor-id",
+								},
+							},
+							{
+								data: {
+									id: "wall-2",
+									name: "Wall of heated basement 2",
+									netSurfaceArea: 50,
+									uValue: 0.4,
+									thermalResistance: 2.5,
+									arealHeatCapacity: "Light",
+									massDistributionClass: "I",
+									associatedBasementFloorId: "heated-basement-floor-id",
+								},
+							},
+						],
+					},
+				},
+				dwellingSpaceFloors: {
+					dwellingSpaceFloorOfHeatedBasement: floorsData.dwellingSpaceFloorOfHeatedBasement,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const wallsTab2 = screen.getByRole("link", { name: "External walls" });
+		await user.click(wallsTab2);
+		const heatedBasementTab2 = screen.getByRole("link", { name: "Walls of a heated basement" });
+		await user.click(heatedBasementTab2);
+
+		const nameRow = await screen.findByTestId(`summary-dwellingSpaceWallOfHeatedBasement-${hyphenate("Name")}`);
+		const nameDds = nameRow.querySelectorAll("dd");
+		expect(nameDds[0]?.textContent?.trim()).toBe("Wall of heated basement 1");
+		expect(nameDds[1]?.textContent?.trim()).toBe("Wall of heated basement 2");
+
+		const areaRow = await screen.findByTestId(`summary-dwellingSpaceWallOfHeatedBasement-${hyphenate("Net surface area")}`);
+		const areaDds = areaRow.querySelectorAll("dd");
+		expect(areaDds[0]?.textContent?.trim()).toBe(`60 ${metresSquare.suffix}`);
+		expect(areaDds[1]?.textContent?.trim()).toBe(`50 ${metresSquare.suffix}`);
+	});
+
+	it("should have section edit link that navigates to the walls edit page", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceWallOfHeatedBasement: {
+						data: [
+							{
+								data: {
+									id: "wall-1",
+									name: "Wall of heated basement 1",
+									netSurfaceArea: 60,
+									uValue: 0.35,
+									thermalResistance: 2.86,
+									arealHeatCapacity: "Medium",
+									massDistributionClass: "E",
+									associatedBasementFloorId: "heated-basement-floor-id",
+								},
+							},
+						],
+					},
+				},
+				dwellingSpaceFloors: {
+					dwellingSpaceFloorOfHeatedBasement: floorsData.dwellingSpaceFloorOfHeatedBasement,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const wallsTab3 = screen.getByRole("link", { name: "External walls" });
+		await user.click(wallsTab3);
+		const heatedBasementTab3 = screen.getByRole("link", { name: "Walls of a heated basement" });
+		await user.click(heatedBasementTab3);
+
+		const panel = screen.getByTestId("dwellingSpaceWallOfHeatedBasement");
+		const editLink = panel.querySelector("a.govuk-link") as HTMLAnchorElement;
+		expect(new URL(editLink.href).pathname).toBe(getUrl("dwellingSpaceWalls"));
+	});
+
+	it("should show walls of heated basement tab content when tab is selected", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceWallOfHeatedBasement: wallsData.dwellingSpaceWallOfHeatedBasement,
+				},
+				dwellingSpaceFloors: {
+					dwellingSpaceFloorOfHeatedBasement: floorsData.dwellingSpaceFloorOfHeatedBasement,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const wallsOfHeatedBasementTab = screen.getByRole("link", { name: "Walls of a heated basement" });
+		await user.click(wallsOfHeatedBasementTab);
+
+		const wallNameResult = await screen.findByTestId(`summary-dwellingSpaceWallOfHeatedBasement-${hyphenate("Name")}`);
+		expect(wallNameResult.querySelector("dd")?.textContent).toBe("Wall of heated basement 1");
 	});
 });
 

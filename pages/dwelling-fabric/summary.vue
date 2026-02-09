@@ -148,6 +148,7 @@ const externalWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceEx
 const internalWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data;
 const wallToUnheatedSpaceData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data;
 const partyWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data;
+const wallOfHeatedBasementData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallOfHeatedBasement?.data;
 
 const externalWallSummary: SummarySection = {
 	id: "dwellingSpaceExternalWalls",
@@ -221,11 +222,32 @@ const partyWallSummary: SummarySection = {
 	editUrl: getUrl("dwellingSpaceWalls"),
 };
 
+const wallOfHeatedBasementSummary: SummarySection = {
+	id: "dwellingSpaceWallOfHeatedBasement",
+	label: "Walls of a heated basement",
+	data: wallOfHeatedBasementData?.map(({ data: x }) => {
+		const associatedFloor = heatedBasementData?.find(({ data: floor }) => floor.id === x.associatedBasementFloorId);
+		const associatedFloorName = associatedFloor?.data?.name ?? emptyValueRendering;
+		
+		return {
+			"Name": show(x.name),
+			"Net surface area": dim(x.netSurfaceArea, "metres square"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"Areal heat capacity": show(x.arealHeatCapacity),
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Associated floor": associatedFloorName,
+		};
+	}) || [],
+	editUrl: getUrl("dwellingSpaceWalls"),
+};
+
 const wallSummarySections: SummarySection[] = [
 	externalWallSummary,
 	internalWallSummary,
 	wallToUnheatedSpaceSummary,
 	partyWallSummary,
+	wallOfHeatedBasementSummary,
 ];
 
 const ceilingData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data;
@@ -555,6 +577,15 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<h2 class="govuk-heading-m">No party walls added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpacePartyWallCreate')">
 					Add party walls
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+
+		<SummaryTab :summary="wallOfHeatedBasementSummary" :selected="tabProps.currentTab === 4">
+			<template #empty>
+				<h2 class="govuk-heading-m">No walls of heated basement added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceWallOfHeatedBasementCreate')">
+					Add walls of heated basement
 				</NuxtLink>
 			</template>
 		</SummaryTab>
