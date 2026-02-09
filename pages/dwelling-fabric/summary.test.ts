@@ -114,10 +114,14 @@ const floorsData: FloorsData = {
 				thermalResistance: 4,
 				arealHeatCapacity: "Medium",
 				massDistributionClass: "I",
-				depthOfBasementFloor: 2.5,
 				perimeter: 30,
 				psiOfWallJunction: 0.08,
 				thicknessOfWalls: 0.3,
+				depthOfBasementFloor: 0.5,
+				heightOfBasementWalls: 1,
+				thermalResistanceOfBasementWalls: 0.5,
+				thermalTransmittanceOfBasementWalls: 1,
+				thermalTransmittanceOfFoundations: 1.5,
 			},
 		}],
 	},
@@ -437,6 +441,7 @@ describe("Dwelling space fabric summary", () => {
 			expect(screen.getByRole("link", { name: "Ground floors" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Internal floors" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Exposed floors" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Floors above an unheated basement" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Floors of a heated basement" })).not.toBeNull();
 		});
 	});
@@ -572,6 +577,42 @@ describe("Dwelling space fabric summary", () => {
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceExposedFloors-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the floors above an unheated basement section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceFloorAboveUnheatedBasement: floorsData.dwellingSpaceFloorAboveUnheatedBasement,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "Floor above unheated basement 1",
+			"Net surface area": `45 ${metresSquare.suffix}`,
+			"U-value": `0.25 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Thermal resistance": `4 ${squareMeterKelvinPerWatt.suffix}`,
+			"Areal heat capacity": "Medium",
+			"Mass distribution class": "Internal",
+			"Perimeter": `30 ${metre.suffix}`,
+			"PSI value of E6 junction": `0.08 ${wattsPerMeterKelvin.suffix}`,
+			"Thickness of walls at the edge of the floor": `0.3 ${millimetre.suffix}`,
+			"Depth of the basement floor": `0.5 ${metre.suffix}`,
+			"Height of the basement walls": `1 ${metre.suffix}`,
+			"Thermal resistance of basement walls": `0.5 ${squareMeterKelvinPerWatt.suffix}`,
+			"Thermal transmittance of the basement walls": `1 ${squareMeterKelvinPerWatt.suffix}`,
+			"Thermal transmittance of the foundations": `1.5 ${wattsPerSquareMeterKelvin.suffix}`,
+		};
+
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceFloorOfHeatedBasement-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 		}

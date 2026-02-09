@@ -37,6 +37,7 @@ const lightingSummary: SummarySection = {
 const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
 const internalFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data;
 const exposedFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data;
+const floorAboveUnheatedBasementData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement?.data;
 
 const groundFloorSummary: SummarySection = {
 	id: "dwellingSpaceGroundFloors",
@@ -116,6 +117,30 @@ const exposedFloorSummary: SummarySection = {
 	editUrl: getUrl("dwellingSpaceFloors"),
 };
 
+const floorAboveUnheatedBasementSummary: SummarySection = {
+	id: "dwellingSpaceFloorOfHeatedBasement",
+	label: "Floors above an unheated basement",
+	data: floorAboveUnheatedBasementData?.map(({ data: x }) => {
+		return {
+			"Name": show(x.name),
+			"Net surface area": dim(x.surfaceArea, "metres square"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"Areal heat capacity": show(x.arealHeatCapacity),
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Perimeter": dim(x.perimeter, "metres"),
+			"PSI value of E6 junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
+			"Thickness of walls at the edge of the floor": dim(x.thicknessOfWalls, "millimetres"),
+			"Depth of the basement floor": dim(x.depthOfBasementFloor, "metres"),
+			"Height of the basement walls": dim(x.heightOfBasementWalls, "metres"),
+			"Thermal resistance of basement walls": dim(x.thermalResistanceOfBasementWalls, "square metre kelvin per watt"),
+			"Thermal transmittance of the basement walls": dim(x.thermalTransmittanceOfBasementWalls, "square metre kelvin per watt"),
+			"Thermal transmittance of the foundations": dim(x.thermalTransmittanceOfFoundations, "watts per square metre kelvin"),
+		};
+	}) || [],
+	editUrl: getUrl("dwellingSpaceFloors"),
+};
+
 const heatedBasementData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement?.data;
 const heatedBasementSummary: SummarySection = {
 	id: "dwellingSpaceFloorOfHeatedBasement",
@@ -141,6 +166,7 @@ const floorSummarySections: SummarySection[] = [
 	groundFloorSummary,
 	internalFloorSummary,
 	exposedFloorSummary,
+	floorAboveUnheatedBasementSummary,
 	heatedBasementSummary,
 ];
 
@@ -534,7 +560,16 @@ const thermalBridgeSummarySections: SummarySection[] = [
 			</template>
 		</SummaryTab>
 
-		<SummaryTab :summary="heatedBasementSummary" :selected="tabProps.currentTab === 3">
+		<SummaryTab :summary="floorAboveUnheatedBasementSummary" :selected="tabProps.currentTab === 3">
+			<template #empty>
+				<h2 class="govuk-heading-m">No floor above unheated basement added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceFloorAboveUnheatedBasementCreate')">
+					Add floor above unheated basement
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+
+		<SummaryTab :summary="heatedBasementSummary" :selected="tabProps.currentTab === 4">
 			<template #empty>
 				<h2 class="govuk-heading-m">No heated basement floors added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceFloorOfHeatedBasementCreate')">
