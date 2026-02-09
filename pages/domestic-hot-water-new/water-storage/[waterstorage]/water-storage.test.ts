@@ -34,21 +34,21 @@ describe("water storage", () => {
 		},
 	};
 
-	// const smartHotWaterTank: EcaasForm<SmartHotWaterTankDataNew> = {
-	// 	data: {
-	// 		typeOfWaterStorage: "smartHotWaterTank",
-	// 		id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
-	// 		name: "Smart hot water tank 1",
-	// 		dhwHeatSourceId: heatPumpId,
-	// 		productReference: "1234",
-	// 		heaterPosition: 0.8,
-	// 	},
-	// };
-	
+	const smartHotWaterTank: EcaasForm<SmartHotWaterTankDataNew> = {
+		data: {
+			typeOfWaterStorage: "smartHotWaterTank",
+			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
+			name: "Smart hot water tank 1",
+			dhwHeatSourceId: heatPumpId,
+			productReference: "42",
+			heaterPosition: 0.8,
+		},
+	};
+
 	afterEach(() => {
 		store.$reset();
 	});
-	
+
 	const heatPump = {
 		data: {
 			id: heatPumpId,
@@ -61,7 +61,7 @@ describe("water storage", () => {
 			typeOfHeatSource: "heatPump",
 		},
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
-	
+
 
 	const addHeatPumpStoreData = () => {
 		store.$patch({
@@ -70,7 +70,7 @@ describe("water storage", () => {
 			},
 		});
 	};
-	
+
 	const populateValidFormHWC = async () => {
 		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 		await user.type(screen.getByTestId("name"), " 1");
@@ -83,19 +83,17 @@ describe("water storage", () => {
 		await user.type(screen.getByTestId("thermostatPosition"), "0.5");
 		await user.tab();
 	};
-	
-	// const populateValidFormSHWT = async () => {
-	// 	await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
-	// 	await user.type(screen.getByTestId("name"), "Smart hot water tank 1");
-	// 	await user.click(screen.getByTestId("chooseAProductButton"));
-	// 	// await user.click(screen.getByTestId("selectProductButton_0"));
-	// 	// Can't do this :( idk why)
-	// 	await user.click(screen.getByTestId(`heatSource_${heatPumpId}`));
-	// 	await user.type(screen.getByTestId("heaterPosition"), "0.8");
-	// 	await user.type(screen.getByTestId("thermostatPosition"), "0.5");
-	// 	await user.tab();
-	// };
-	
+
+	const populateValidFormSHWT = async () => {
+		await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
+		await user.type(screen.getByTestId("name"), " 1");
+		await user.click(screen.getByTestId("chooseAProductButton"));
+		// Have to simulate product selection by directly setting the product reference in the store - the other page won't load in a unit test
+		await user.click(screen.getByTestId(`dhwHeatSourceId_${heatPumpId}`));
+		await user.type(screen.getByTestId("heaterPosition"), "0.8");
+		await user.tab();
+	};
+
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(WaterStorage, {
 			route: {
@@ -107,10 +105,10 @@ describe("water storage", () => {
 
 		//shared properties
 		expect((await screen.findByTestId("typeOfWaterStorage_error"))).toBeDefined();
-		
+
 		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 		await user.click(screen.getByTestId("saveAndComplete"));
-		
+
 		//hot water cylinder specific
 		// not name, this is filled in by default
 		// expect((await screen.findByTestId("name_error"))).toBeDefined();
@@ -133,18 +131,12 @@ describe("water storage", () => {
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
 	});
 
-	test("navigate to pcdb product select page for smart hot water tank when choose a product button is clicked", async () => {
-		await renderSuspended(WaterStorage, {
-			route: {
-				path: "/domestic-hot-water-new/water-storage/create",
-			},
-		});
+	test("error summary is displayed when an invalid form in submitted", async () => {
+		await renderSuspended(WaterStorage);
 
-		await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
-		
-		const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
-		expect(chooseProductButton).toBeDefined();
-		expect(chooseProductButton.pathname).toContain("/domestic-hot-water-new/water-storage/0/smart-hot-water-tank");
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect((await screen.findByTestId("waterStorageErrorSummary"))).toBeDefined();
 	});
 
 	describe("Hot Water Cylinder", () => {
@@ -159,11 +151,11 @@ describe("water storage", () => {
 			});
 
 			await populateValidFormHWC();
-		
+
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const { data } = store.domesticHotWaterNew.waterStorage;
-		
+
 			expect(data[0]?.data).toEqual(hotWaterCylinder.data);
 			expect(data[0]?.complete).toEqual(true);
 		});
@@ -185,8 +177,8 @@ describe("water storage", () => {
 			});
 
 			expect(
-				(await screen.findByTestId<HTMLInputElement>(`typeOfWaterStorage_hotWaterCylinder`)).value,
-			).toBe("hotWaterCylinder");
+				(await screen.findByTestId<HTMLInputElement>(`typeOfWaterStorage_hotWaterCylinder`)).checked,
+			).toBe(true);
 
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe(hotWaterCylinder.data.name);
 			if (typeof hotWaterCylinder.data.storageCylinderVolume === "object") {
@@ -201,15 +193,6 @@ describe("water storage", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("areaOfHeatExchanger")).value).toBe(hotWaterCylinder.data.areaOfHeatExchanger.toString());
 			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value).toBe(hotWaterCylinder.data.heaterPosition.toString());
 			expect((await screen.findByTestId<HTMLInputElement>("thermostatPosition")).value).toBe(hotWaterCylinder.data.thermostatPosition.toString());
-		});
-
-
-		test("error summary is displayed when an invalid form in submitted", async () => {
-			await renderSuspended(WaterStorage);
-
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect((await screen.findByTestId("waterStorageErrorSummary"))).toBeDefined();
 		});
 
 		test("navigates to domestic hot water page when valid form is completed", async () => {
@@ -231,16 +214,105 @@ describe("water storage", () => {
 
 			await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 
-			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Hot water cylinder");
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value)
+				.toBe("Hot water cylinder");
 		});
 	});
 
 	describe("Smart Hot Water Tank", () => {
+		test("navigate to pcdb product select page when choose a product button is clicked", async () => {
+			await renderSuspended(WaterStorage, {
+				route: {
+					path: "/domestic-hot-water-new/water-storage/create",
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
+
+			const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
+			expect(chooseProductButton).toBeDefined();
+			expect(chooseProductButton.pathname).toContain("/domestic-hot-water-new/water-storage/0/smart-hot-water-tank");
+		});
+	
+		test("data is saved to store state when form is valid", async () => {
+			addHeatPumpStoreData();
+
+			vi.mocked(uuidv4).mockReturnValue(smartHotWaterTank.data.id as unknown as Buffer);
+			await renderSuspended(WaterStorage, {
+				route: {
+					params: { "waterStorage": "create" },
+				},
+			});
+
+			await populateValidFormSHWT();
+			store.$patch(state => {
+				(state.domesticHotWaterNew.waterStorage.data[0]!.data as SmartHotWaterTankDataNew)
+					.productReference = "42";
+			});
+
+			await renderSuspended(WaterStorage, {
+				route: {
+					params: { "waterStorage": "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const { data } = store.domesticHotWaterNew.waterStorage;
+
+			expect(data[0]?.data).toEqual(smartHotWaterTank.data);
+			expect(data[0]?.complete).toEqual(true);
+		});
+
+		test("form is prepopulated when data exists in state", async () => {
+			const mockFetch = vi.hoisted(() => vi.fn(() => (
+				{
+					data: ref({
+						brandName: "Test",
+						modelName: "Large Smart Hot Water Tank",
+						modelQualifier: "SHWTLARGE",
+					}),
+				}
+			)));
+
+			mockNuxtImport("useFetch", () => mockFetch);
+
+			store.$patch({
+				domesticHotWaterNew: {
+					waterStorage: {
+						data: [{ ...smartHotWaterTank }],
+					},
+				},
+			});
+
+			addHeatPumpStoreData();
+			await renderSuspended(WaterStorage, {
+				route: {
+					params: { "waterStorage": "0" },
+				},
+			});
+
+			expect(
+				(await screen.findByTestId<HTMLInputElement>(`typeOfWaterStorage_smartHotWaterTank`))
+					.checked,
+			).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value)
+				.toBe(smartHotWaterTank.data.name);
+
+			expect((await screen.findByTestId("productData_productReference")).textContent)
+				.toBe(smartHotWaterTank.data.productReference);
+
+			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`))
+				.hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value)
+				.toBe(smartHotWaterTank.data.heaterPosition.toString());
+		});
+
 		test("navigates to domestic hot water page when valid form is completed", async () => {
 			addHeatPumpStoreData();
 			await renderSuspended(WaterStorage);
 
-			// await populateValidFormSHWT();
+			await populateValidFormSHWT();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water-new");

@@ -24,7 +24,7 @@ const domesticHotWaterPages = [
 		parentId: "domesticHotWaterNew",
 	},
 	{
-		id: "smartHotWaterTankProductsDHW",
+		id: "smartHotWaterTankProducts",
 		title: "Select a smart hot water tank",
 		url: "/domestic-hot-water-new/water-storage/:waterstorage/smart-hot-water-tank",
 		type: "task",

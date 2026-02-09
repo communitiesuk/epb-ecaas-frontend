@@ -69,7 +69,7 @@ watch(props.context, async ({ attrs: {
 			</GovButton>
 			<div v-if="productData">
 				<ul class="govuk-list">
-					<li>Product reference: <span class="bold">{{ selectedProduct }}</span></li>
+					<li>Product reference: <span data-testid="productData_productReference" class="bold">{{ selectedProduct }}</span></li>
 					<li>Brand: <span class="bold">{{ productData?.brandName }}</span></li>
 					<li>Model: <span class="bold">{{ productData?.modelName }}</span></li>
 					<li>Model Qualifier: <span class="bold">{{ productData?.modelQualifier ?? '-' }}</span></li>

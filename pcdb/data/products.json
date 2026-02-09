@@ -277,5 +277,12 @@
                 "degradationCoeff": 1
             }
         ]
+    },
+    {
+        "id": "42",
+        "technologyType": "SmartHotWaterTank",
+        "brandName": "Test",
+        "modelName": "Large Smart Hot Water Tank",
+        "modelQualifier": "SHWTLARGE"
     }
 ]
