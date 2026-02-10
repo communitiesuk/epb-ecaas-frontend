@@ -74,7 +74,7 @@ describe("infiltration ventilation mapper", () => {
 		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA"); 
 		expect(firstMechVent?.sup_air_temp_ctrl).toBe("NO_CTRL");
 		expect(firstMechVent?.mvhr_location).toBe("inside");
-		expect(firstMechVent?.mvhr_eff).toBe(1);
+		expect("mvhr_eff" in firstMechVent && firstMechVent?.mvhr_eff).toBe(1);
 		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.ductwork).toBeDefined();
