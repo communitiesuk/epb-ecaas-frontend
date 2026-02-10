@@ -55,8 +55,8 @@ function handleDuplicate<T extends DomesticHotWaterData>(domesticHotWaterType: D
 					// Or create a new heat source in domestic hot water?
 					return false;
 				}
-				name = (item.data as unknown as { name: string }).name;
-				return (f.data as unknown as { name: string }).name.match(duplicateNamePattern(name));
+				name = (item.data as { name: string }).name;
+				return (f.data as { name: string }).name.match(duplicateNamePattern(name));
 			}
 			return false;
 		});
@@ -110,10 +110,11 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 		:form-url="`${page?.url!}/heat-sources`"
 		:items="store.domesticHotWater.heatSources.data
 			.filter(x => isEcaasForm(x))
-			.map(x=>({name: x.data.isExistingHeatSource ? getNameFromSpaceHeatingHeatSource(x.data.heatSourceId)! : x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+			.map(x=>({name: x.data.isExistingHeatSource ? getNameFromSpaceHeatingHeatSource(x.data.heatSourceId)! : x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress, preventDuplication: x.data.heatSourceId !== 'NEW_HEAT_SOURCE'}))"
 		:show-status="true"
+		:can-duplicate="false"
 		@remove="(index: number) => handleRemove('heatSources', index)"
-		@duplicate="(index: number) => handleDuplicate('heatSources', index)"
+		@duplicate="(index: number) =>  handleDuplicate('heatSources', index)"
 	/>
 	<CustomList 
 		id="waterStorage"

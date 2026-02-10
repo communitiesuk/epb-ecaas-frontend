@@ -4,6 +4,7 @@ import type { GovTagProps } from "~/common.types";
 interface CustomListItem {
 	name: string;
 	status?: GovTagProps;
+	preventDuplication?: boolean
 }
 
 const props = defineProps<{
@@ -84,7 +85,7 @@ function routeForEditItem(index: number) {
 									<NuxtLink class="govuk-link" :href=routeForEditItem(index)>Edit</NuxtLink>
 								</li>
 								<li
-									v-if="onDuplicate && canAddMoreItems()"
+									v-if="onDuplicate && canAddMoreItems() && (typeof item === 'string' || !item.preventDuplication)"
 									class="govuk-summary-list__actions-list-item">
 									<a
 										href="#"

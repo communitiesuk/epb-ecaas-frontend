@@ -666,6 +666,49 @@ describe("Domestic hot water", () => {
 			expect(screen.getByText(`${heatSource1.data.name} (1) (1)`)).toBeDefined();
 			expect(screen.getByText(`${heatSource1.data.name} (1) (2)`)).toBeDefined();
 		});
+
+		test("duplicate link is not displayed for heat sources which use existing space heating heat sources", async () => {
+			const heatPumpSpaceHeating: EcaasForm<HeatSourceData> = {
+				data: 
+				{ id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+					name: "Heat pump 1",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "airSource",
+					productReference: "HEATPUMP-LARGE",
+				},
+			};
+
+			const heatSourceFromSpaceHeating: EcaasForm<DomesticHotWaterHeatSourceData> = {
+				data: {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c62",
+					coldWaterSource: "headerTank",
+					isExistingHeatSource: true,
+					heatSourceId: heatPumpSpaceHeating.data.id,
+				},
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [heatPumpSpaceHeating, 					
+						],
+					},
+				},
+				domesticHotWater: {
+					heatSources: {
+						data: [
+							heatSource1,
+							heatSourceFromSpaceHeating,
+						],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			expect(screen.getByTestId("heatSources_duplicate_0")).toBeDefined();		
+			expect(screen.queryByTestId("heatSources_duplicate_1")).toBeNull();
+
+		});
 	});
 
 	it("disables the mark section as complete button when item is incomplete", async () => {
