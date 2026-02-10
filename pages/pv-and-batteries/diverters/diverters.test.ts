@@ -13,11 +13,11 @@ const user = userEvent.setup();
 
 const hotWaterCylinderId = "88ea3f45-6f2a-40e2-9117-0541bd8a97f3";
 const heatPumpId = "56ddc6ce-7a91-4263-b051-96c7216bb01e";
+const dhwHeatPumpId = "56ddc6ce-7a91-4263-b051-96c7216bb123";
 
 const addHeatPumpAndHotWaterCylinder = () => {
 	store.$patch({
 		spaceHeating: {
-
 			heatSource: {
 				data: [{
 					data: {
@@ -30,23 +30,33 @@ const addHeatPumpAndHotWaterCylinder = () => {
 
 		},
 		domesticHotWater: {
-			waterHeating: {
-				hotWaterCylinder: {
-					data: [{
-						data: {
-							name: "HWC1",
-							id: hotWaterCylinderId,
-							heatSource: heatPumpId,
-							storageCylinderVolume: {
-								amount: 1,
-								unit: "litres",
-							},
-							dailyEnergyLoss: 1,
+			heatSources: {
+				data: [{
+					data: {
+						id: dhwHeatPumpId,
+						isExistingHeatSource: true,
+						heatSourceId: heatPumpId,
+						coldWaterSource: "mainsWater",
+					},
+				}],
+			},
+			waterStorage: {
+				data: [{
+					data: {
+						name: "HWC1",
+						id: hotWaterCylinderId,
+						dhwHeatSourceId: dhwHeatPumpId,
+						storageCylinderVolume: {
+							amount: 1,
+							unit: "litres",
 						},
-					}],
-				},
+						dailyEnergyLoss: 1,
+
+					},
+				}],
 			},
 		},
+		
 	});
 };
 
@@ -127,7 +137,7 @@ describe("Diverters", () => {
 		const link = screen.getByRole("link", { name: "Click here to add a hot water cylinder" });
 
 		expect(link).toBeDefined();
-		expect(link.getAttribute("href")).toBe("/domestic-hot-water/water-heating");
+		expect(link.getAttribute("href")).toBe("/domestic-hot-water-new/water-storage/create");
 	});
 
 	it("preselects hot water cylinder if there is only one added to store", async () => {

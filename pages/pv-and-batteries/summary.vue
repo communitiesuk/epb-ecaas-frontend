@@ -53,7 +53,7 @@ const diverterSummary: SummarySection = {
 	data: diverters.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
-			"Associated hot water cylinder": show(store.domesticHotWater.waterHeating.hotWaterCylinder.data.find(y => y && y.data.id === x.hotWaterCylinder)?.data.name),
+			"Associated hot water cylinder": show(store.domesticHotWater.waterStorage.data.find(y => y && y.data.id === x.hotWaterCylinder)?.data.name),
 		};
 	}),
 	editUrl: "/pv-and-batteries",
