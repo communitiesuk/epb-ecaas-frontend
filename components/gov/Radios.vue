@@ -62,6 +62,7 @@ const idWithKey = (key: string) => `${id}_${key.replaceAll(/ /g, "_")}`;
 						:checked="mounted ? currentValue == key : false"
 						:data-testid="idWithKey(key)"
 						:aria-describedby="typeof options.get(key) === 'object' ? `${idWithKey(key)}_hint` : ''"
+						:disabled="typeof options.get(key) === 'object' ? (options.get(key) as RadioOption).disabled : false"
 						v-bind="attrs"
 						@change="handleInput"
 					>

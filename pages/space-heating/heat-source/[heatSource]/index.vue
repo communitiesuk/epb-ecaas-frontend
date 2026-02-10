@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, type HeatSourceData } from "#imports";
-import { heatSourceTypesWithDisplay } from "../../../../utils/display";
+import type { RadioOption } from "~/components/form-kit/Radios.vue";
 
 const title = "Heat source";
 const store = useEcaasStore();
@@ -17,6 +17,17 @@ export type BoilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boile
 export type HeatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
 export type HeatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
 export type SolarThermalModelType = Extract<HeatSourceData, { typeOfHeatSource: "solarThermalSystem" }>;
+
+const heatSourceOptions = {
+	"heatPump": "Heat pump",
+	"boiler": "Boiler",
+	"heatNetwork": {
+		label: "Heat network",
+		disabled: true,
+	},
+	"heatBattery": "Heat battery",
+	"solarThermalSystem": "Solar thermal system",
+} as const satisfies Record<HeatSourceType, string | RadioOption>;
 
 const saveForm = (fields: HeatSourceData) => {
 	store.$patch((state) => {
@@ -187,7 +198,7 @@ function updateHeatSource(type: string) {
 			id="typeOfHeatSource"
 			type="govRadios"
 			label="Type of heat source"
-			:options="heatSourceTypesWithDisplay"
+			:options="heatSourceOptions"
 			name="typeOfHeatSource"
 			validation="required" />
 		<HeatPumpSection
