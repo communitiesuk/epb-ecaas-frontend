@@ -122,7 +122,7 @@ describe("Heat source products page", () => {
 		const backButton = screen.getByTestId("backToHeatSourceButton");
 
 		expect(backButton.getAttribute("href")).toBe(
-			"/domestic-hot-water-new/heat-sources/1",
+			"/domestic-hot-water/heat-sources/1",
 		);
 	});
 });

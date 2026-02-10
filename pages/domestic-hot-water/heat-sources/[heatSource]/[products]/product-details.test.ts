@@ -115,6 +115,6 @@ describe("Heat pump details", async () => {
 		await user.click(screen.getByTestId("selectProductButton"));
 
 		// Assert
-		expect(mockNavigateTo).toHaveBeenCalledWith("/domestic-hot-water-new/heat-sources/0");
+		expect(mockNavigateTo).toHaveBeenCalledWith("/domestic-hot-water/heat-sources/0");
 	});
 });

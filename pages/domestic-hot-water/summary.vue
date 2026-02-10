@@ -8,7 +8,7 @@ import { displayDHWHeatSourceType } from "~/utils/display";
 const title = "Domestic hot water summary";
 const store = useEcaasStore();
 
-const domesticHotWaterUrl = "/domestic-hot-water-new";
+const domesticHotWaterUrl = getUrl("domesticHotWater");
 
 const heatSources = store.domesticHotWater.heatSources.data;
 const boilers = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "boiler");

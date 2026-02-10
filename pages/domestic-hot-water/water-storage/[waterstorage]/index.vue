@@ -68,7 +68,7 @@ const saveForm = (fields: WaterStorageData) => {
 		waterStorage.data[index] = waterStorageItem;
 		waterStorage.complete = false;
 	});
-	navigateTo("/domestic-hot-water-new");
+	navigateTo(getUrl("domesticHotWater"));
 };
 			
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

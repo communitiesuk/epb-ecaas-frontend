@@ -173,7 +173,7 @@ describe("Domestic hot water summary", () => {
 			const editLink: HTMLAnchorElement = within(hotWaterCylinderSection).getByText("Edit");
 
 			expect(editLink).not.toBeNull();
-			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water-new");
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water");
 		});
 
 		it("should display the correct data for the smart hot water cylinder section when data exists", async () => {
@@ -201,7 +201,7 @@ describe("Domestic hot water summary", () => {
 			const editLink: HTMLAnchorElement = within(smartHotWaterCylinderSection).getByText("Edit");
 
 			expect(editLink).not.toBeNull();
-			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water-new");
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water");
 		});
 	});
 
@@ -723,7 +723,7 @@ describe("Domestic hot water summary", () => {
 		
 			const heatSourcesSection = screen.getByRole("link", { name: "Edit" });
 	
-			expect(heatSourcesSection.getAttribute("href")).toBe("/domestic-hot-water-new");
+			expect(heatSourcesSection.getAttribute("href")).toBe("/domestic-hot-water");
 		});
 	});
 });

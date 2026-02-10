@@ -36,7 +36,7 @@ const selectProduct = (reference: string) => {
 	/>
 	<GovButton
 		secondary
-		:href="`/domestic-hot-water-new/water-storage/${index}`"
+		:href="`/domestic-hot-water/water-storage/${index}`"
 		test-id="backToWaterStorageButton"
 	>
 		Back to water storage

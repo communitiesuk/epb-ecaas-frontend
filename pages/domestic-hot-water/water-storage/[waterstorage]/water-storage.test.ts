@@ -202,7 +202,7 @@ describe("water storage", () => {
 			await populateValidFormHWC();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water-new");
+			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
 		});
 
 		test("name defaults to 'Hot water cylinder' when Hot Water Cylinder is selected'", async () => {
@@ -223,7 +223,7 @@ describe("water storage", () => {
 		test("navigate to pcdb product select page when choose a product button is clicked", async () => {
 			await renderSuspended(WaterStorage, {
 				route: {
-					path: "/domestic-hot-water-new/water-storage/create",
+					path: "/domestic-hot-water/water-storage/create",
 				},
 			});
 
@@ -231,7 +231,7 @@ describe("water storage", () => {
 
 			const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
 			expect(chooseProductButton).toBeDefined();
-			expect(chooseProductButton.pathname).toContain("/domestic-hot-water-new/water-storage/0/smart-hot-water-tank");
+			expect(chooseProductButton.pathname).toContain("/domestic-hot-water/water-storage/0/smart-hot-water-tank");
 		});
 	
 		test("data is saved to store state when form is valid", async () => {
@@ -315,7 +315,7 @@ describe("water storage", () => {
 			await populateValidFormSHWT();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water-new");
+			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
 		});
 
 		test("name defaults to 'Smart hot water tank' when Smart Hot Water Tank is selected'", async () => {

@@ -103,7 +103,7 @@ const saveForm = (fields: HotWaterOutletsData) => {
 		hotWaterOutlets.data[index] = hotWaterOutletItem;
 		hotWaterOutlets.complete = false;
 	});
-	navigateTo("/domestic-hot-water-new");
+	navigateTo(getUrl("domesticHotWater"));
 };
 			
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

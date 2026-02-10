@@ -42,7 +42,7 @@ const saveForm = (fields: PipeworkData) => {
 		pipework.complete = false;
 	});
 
-	navigateTo("/domestic-hot-water-new");
+	navigateTo(getUrl("domesticHotWater"));
 };
 
 

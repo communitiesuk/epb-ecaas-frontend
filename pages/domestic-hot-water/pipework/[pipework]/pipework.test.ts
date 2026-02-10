@@ -180,7 +180,7 @@ describe("Pipework form", () => {
 			},
 		});
 		const saveProgressButton = screen.getByTestId<HTMLAnchorElement>("saveProgress");
-		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water-new");
+		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water");
 	});
 });
 

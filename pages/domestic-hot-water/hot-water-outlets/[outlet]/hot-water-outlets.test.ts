@@ -165,7 +165,7 @@ describe("hot water outlets", () => {
 	// test("navigate to pcdb product select page for wwhrs when choose a product button is clicked", async () => {
 	// 	await renderSuspended(HotWaterOutlets, {
 	// 		route: {
-	// 			path: "/domestic-hot-water-new/hot-water-outlets/create",
+	// 			path: "/domestic-hot-water/hot-water-outlets/create",
 	// 		},
 	// 	});
 
@@ -173,7 +173,7 @@ describe("hot water outlets", () => {
 
 	// 	const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
 	// 	expect(chooseProductButton).toBeDefined();
-	// 	expect(chooseProductButton.pathname).toContain("/domestic-hot-water-new/water-storage/0/air-source");
+	// 	expect(chooseProductButton.pathname).toContain("/domestic-hot-water/water-storage/0/air-source");
 	// });
 
 	it("navigates to domestic hot water on clicking Save progress", async () => {
@@ -186,7 +186,7 @@ describe("hot water outlets", () => {
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
 		const saveProgressButton = screen.getByTestId<HTMLAnchorElement>("saveProgress");
 
-		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water-new");
+		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water");
 	});
 
 	test("hot water outlet is updated when data with id exists in store", async () => {
@@ -390,7 +390,7 @@ describe("hot water outlets", () => {
 				await populateValidForm();
 				await user.click(screen.getByTestId("saveAndComplete"));
 
-				expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water-new");
+				expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
 			});
 		});
 	});

@@ -30,7 +30,7 @@ const saveForm = () => {
 		state.domesticHotWater.heatSources.complete = false;
 	});
 
-	navigateTo("/domestic-hot-water-new");
+	navigateTo(getUrl("domesticHotWater"));
 };
 
 

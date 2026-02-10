@@ -132,7 +132,7 @@ describe("Heat Source Page", () => {
 		await renderSuspended(HeatSourceForm);
 		const saveProgressButton = screen.getByTestId("saveProgress");
 
-		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water-new");
+		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water");
 	});
 });
 
