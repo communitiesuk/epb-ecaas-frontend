@@ -1,4 +1,4 @@
-import type { BathDataNew, EcaasForm } from "~/stores/ecaasStore.schema";
+import type { BathDataNew, DomesticHotWaterHeatSourceData, EcaasForm } from "~/stores/ecaasStore.schema";
 import { mapDomesticHotWaterData, mapHotWaterSourcesData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { litre } from "../utils/units/volume";
@@ -48,7 +48,7 @@ describe("domestic hot water mapper", () => {
 			};
 		
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: {
 						data: [hotWaterCylinder],
 						complete: true,
@@ -103,7 +103,7 @@ describe("domestic hot water mapper", () => {
 			};
 		
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: {
 						data: [smartHotWaterTank],
 						complete: true,
@@ -195,7 +195,11 @@ describe("domestic hot water mapper", () => {
 			};
 
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
+					waterStorage: {
+						data: [],
+						complete: true,
+					},
 					hotWaterOutlets: { data: [mixedShower, electricShower, bath, other], complete: true },
 					pipework: {
 						data: [],
@@ -262,11 +266,21 @@ describe("domestic hot water mapper", () => {
 					},
 				};
 
+				const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
+					...baseForm,
+					data: {
+						id: "heatPump1",
+						isExistingHeatSource: true,
+						heatSourceId: "heatPump1",
+						coldWaterSource: "mainsWater",
+					},
+				};
+
 				store.$patch({
-					domesticHotWaterNew: {
+					domesticHotWater: {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
-						heatSources: { data: [], complete: true },
+						heatSources: { data: [hwSource1], complete: true },
 						waterStorage: { data: [], complete: true },
 					},
 				});
@@ -297,12 +311,21 @@ describe("domestic hot water mapper", () => {
 						typeOfHotWaterOutlet: "mixedShower",
 					},
 				};
+				const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
+					...baseForm,
+					data: {
+						id: "cylinder1",
+						isExistingHeatSource: true,
+						heatSourceId: "cylinder1",
+						coldWaterSource: "mainsWater",
+					},
+				};
 
 				store.$patch({
-					domesticHotWaterNew: {
+					domesticHotWater: {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
-						heatSources: { data: [], complete: true },
+						heatSources: { data: [hwSource1], complete: true },
 						waterStorage: { data: [], complete: true },
 					},
 				});
@@ -334,11 +357,21 @@ describe("domestic hot water mapper", () => {
 					},
 				};
 
+				const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
+					...baseForm,
+					data: {
+						id: "boiler1",
+						isExistingHeatSource: true,
+						heatSourceId: "boiler1",
+						coldWaterSource: "mainsWater",
+					},
+				};
+
 				store.$patch({
-					domesticHotWaterNew: {
+					domesticHotWater: {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
-						heatSources: { data: [], complete: true },
+						heatSources: { data: [hwSource1], complete: true },
 						waterStorage: { data: [], complete: true },
 					},
 				});
@@ -370,11 +403,21 @@ describe("domestic hot water mapper", () => {
 					},
 				};
 
+				const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
+					...baseForm,
+					data: {
+						id: "cylinder2",
+						isExistingHeatSource: true,
+						heatSourceId: "cylinder2",
+						coldWaterSource: "mainsWater",
+					},
+				};
+
 				store.$patch({
-					domesticHotWaterNew: {
+					domesticHotWater: {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
-						heatSources: { data: [], complete: true },
+						heatSources: { data: [hwSource1], complete: true },
 						waterStorage: { data: [], complete: true },
 					},
 				});
@@ -396,7 +439,7 @@ describe("domestic hot water mapper", () => {
 		describe("edge cases", () => {
 			it("handles empty outlet arrays", () => {
 				store.$patch({
-					domesticHotWaterNew: {
+					domesticHotWater: {
 						hotWaterOutlets: { data: [], complete: true },
 						pipework: { data: [], complete: true },
 						heatSources: { data: [], complete: true },
@@ -421,7 +464,7 @@ describe("domestic hot water mapper", () => {
 						wwhrs: true,
 						wwhrsType: "instantaneousSystemA",
 						wwhrsProductReference: "WW123",
-						dhwHeatSourceId: "source1",
+						dhwHeatSourceId: "dhwsource1",
 						typeOfHotWaterOutlet: "mixedShower",
 					},
 				};
@@ -449,14 +492,38 @@ describe("domestic hot water mapper", () => {
 					},
 				};
 
+				const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
+					...baseForm,
+					data: {
+						id: "dhwsource1",
+						isExistingHeatSource: true,
+						heatSourceId: "source1",
+						coldWaterSource: "mainsWater",
+					},
+				};
+
+				const hwSource2: EcaasForm<DomesticHotWaterHeatSourceData> = {
+					...baseForm,
+					data: {
+						id: "source2",
+						isExistingHeatSource: false,
+						heatSourceId: "NEW_HEAT_SOURCE",
+						coldWaterSource: "mainsWater",
+						typeOfHeatSource: "heatPump",
+						name: "source2",
+						productReference: "HP-67890",
+						typeOfHeatPump: "groundSource",
+					},
+				};
+
 				store.$patch({
-					domesticHotWaterNew: {
+					domesticHotWater: {
 						hotWaterOutlets: {
 							data: [mixedShowerWithWwhrs, mixedShowerNoWwhrs, electricShower],
 							complete: true,
 						},
 						pipework: { data: [], complete: true },
-						heatSources: { data: [], complete: true },
+						heatSources: { data: [hwSource1, hwSource2], complete: true },
 						waterStorage: { data: [], complete: true },
 					},
 				});

@@ -24,18 +24,21 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 }
 
 function mapShowersData(state: ResolvedState) {
-	const mixedShowerEntries = state.domesticHotWaterNew.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "mixedShower").map((x): [string, SchemaMixerShower] => {
+	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "mixedShower").map((x): [string, SchemaMixerShower] => {
 		const key = x.name;
 		const WWHRS_configuration = {
 			instantaneousSystemA: "A",
 			instantaneousSystemB: "B",
 			instantaneousSystemC: "C",
 		} as const;
+		const dhwHotWaterSource = state.domesticHotWater.heatSources.find(hs => hs.id === x.dhwHeatSourceId);
 		const val: SchemaMixerShower = {
 			type: "MixerShower",
 			ColdWaterSource: "mains water",
 			flowrate: x.flowRate,
-			HotWaterSource: x.dhwHeatSourceId,
+			HotWaterSource: dhwHotWaterSource?.isExistingHeatSource
+				? dhwHotWaterSource?.heatSourceId
+				: dhwHotWaterSource?.id,
 		};
 		if (x.wwhrs) {
 			val.WWHRS = x.wwhrsProductReference;
@@ -47,7 +50,7 @@ function mapShowersData(state: ResolvedState) {
 		return [key, val];
 	});
 
-	const electricShowerEntries = state.domesticHotWaterNew.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "electricShower").map((x): [string, SchemaInstantElecShower] => {
+	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "electricShower").map((x): [string, SchemaInstantElecShower] => {
 		const key = x.name;
 		const val: SchemaInstantElecShower = {
 			type: "InstantElecShower",
@@ -64,7 +67,7 @@ function mapShowersData(state: ResolvedState) {
 }
 
 function mapBathsData(state: ResolvedState) {
-	const bathEntries = state.domesticHotWaterNew.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "bath").map((x): [string, SchemaBathDetails] => {
+	const bathEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "bath").map((x): [string, SchemaBathDetails] => {
 		const key = x.name;
 		const val: SchemaBathDetails = {
 			ColdWaterSource: "mains water",
@@ -78,7 +81,7 @@ function mapBathsData(state: ResolvedState) {
 }
 
 function mapOthersData(state: ResolvedState) {
-	const otherEntries = state.domesticHotWaterNew.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "otherHotWaterOutlet").map((x): [string, SchemaOtherWaterUseDetails] => {
+	const otherEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "otherHotWaterOutlet").map((x): [string, SchemaOtherWaterUseDetails] => {
 		const key = x.name;
 		const val: SchemaOtherWaterUseDetails = {
 			ColdWaterSource: "mains water",
@@ -92,28 +95,26 @@ function mapOthersData(state: ResolvedState) {
 }
 
 export function mapHotWaterSourcesData(state: ResolvedState) {
-	return state.domesticHotWaterNew.waterStorage.map((ws): SchemaHotWaterSourceDetails => {
+	return state.domesticHotWater.waterStorage.map((ws): SchemaHotWaterSourceDetails => {
 
-		const referencedHeatSource = state.domesticHotWaterNew.heatSources
+		const referencedHeatSource = state.domesticHotWater.heatSources
 			.find(heatSource => heatSource.id === ws.dhwHeatSourceId);
 
 		if (!referencedHeatSource) {
 			throw new Error("referenced heat source for water storage not found");
 		}
 
-		const heatSourceName = referencedHeatSource
-			? referencedHeatSource.isExistingHeatSource
-				? state.spaceHeating.heatSource
-					.find(hs => hs.id === referencedHeatSource.id)?.name ?? "Heat source"
-				: referencedHeatSource.name
-			: "Heat source";
+		const heatSourceName = referencedHeatSource.isExistingHeatSource
+			? state.spaceHeating.heatSource
+				.find(hs => hs.id === referencedHeatSource.heatSourceId)?.name ?? "Heat source"
+			: referencedHeatSource.name;
 
 		const coldWaterSource: SchemaColdWaterSourceType = ({
 			mainsWater: "mains water",
 			headerTank: "header tank",
 		} as const)[referencedHeatSource.coldWaterSource];
 
-		const pipeworkEntries = state.domesticHotWaterNew.pipework.map((x): SchemaWaterPipework => {
+		const pipeworkEntries = state.domesticHotWater.pipework.map((x): SchemaWaterPipework => {
 			if (x.location !== "heatedSpace" && x.location !== "unheatedSpace") {
 				throw new Error("invalid location property on pipework");
 			}
