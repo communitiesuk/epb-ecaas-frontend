@@ -18,7 +18,7 @@ const route = useRoute();
 					<th scope="col" class="govuk-table__header govuk-table__header--id">
 						<ColumnSort label="Product ID" field="id" />
 					</th>
-					<th scope="col" class="govuk-table__header">
+					<th scope="col" class="govuk-table__header govuk-table__header--brand">
 						<ColumnSort label="Brand" field="brandName" />
 					</th>
 					<th scope="col" class="govuk-table__header">
@@ -41,18 +41,21 @@ const route = useRoute();
 					<td class="govuk-table__cell">{{ product.brandName }}</td>
 					<td class="govuk-table__cell">{{ product.modelName }}</td>
 					<td class="govuk-table__cell">{{ product.modelQualifier ?? '-' }}</td>
-					<td class="govuk-table__cell" style="white-space:nowrap;">
+					<td class="govuk-table__cell govuk-table__cell--select">
+						<div>
+							<GovButton
+								type="button"
+								secondary
+								classes="govuk-!-margin-bottom-2"
+								:test-id="`selectProductButton_${index}`"
+								@click="() => onSelectProduct(product.id.toString())"
+							>
+								Select
+							</GovButton>
+						</div>
 						<NuxtLink :href="`${route.path}/${product.id}`" class="govuk-link govuk-!-margin-right-3">
 							More details
 						</NuxtLink>
-						<GovButton
-							type="button"
-							secondary
-							:test-id="`selectProductButton_${index}`"
-							@click="() => onSelectProduct(product.id.toString())"
-						>
-							Select
-						</GovButton>
 					</td>
 				</tr>
 			</tbody>
@@ -67,7 +70,15 @@ const route = useRoute();
 	width: 120px;
 }
 
+.govuk-table__header--brand {
+	width: 150px;
+}
+
 .govuk-table__header--model-qualifier {
 	width: 145px;
+}
+
+.govuk-table__cell--select {
+	width: 120px;
 }
 </style>
