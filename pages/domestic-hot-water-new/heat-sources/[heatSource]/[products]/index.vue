@@ -18,7 +18,7 @@ const { productData, pagination } = searchData(value?.data ?? []);
 const selectProduct = (reference: string) => {
 	store.$patch((state) => {
 
-		const item = state.domesticHotWaterNew.heatSources.data[index];
+		const item = state.domesticHotWater.heatSources.data[index];
 
 		if (item) {
 			const data = item.data as HeatSourceData;

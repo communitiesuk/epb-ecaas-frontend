@@ -62,7 +62,7 @@ describe("hot water outlets", () => {
 
 	const addHeatPumpStoreData = () => {
 		store.$patch({
-			domesticHotWaterNew: {
+			domesticHotWater: {
 				heatSources: {
 					data: [
 						{
@@ -191,7 +191,7 @@ describe("hot water outlets", () => {
 
 	test("hot water outlet is updated when data with id exists in store", async () => {
 		store.$patch({
-			domesticHotWaterNew: {
+			domesticHotWater: {
 				hotWaterOutlets: {
 					data: [{ data: { ...mixerShower.data }, complete: true }],
 				},
@@ -209,7 +209,7 @@ describe("hot water outlets", () => {
 		await user.tab();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data } = store.domesticHotWaterNew.hotWaterOutlets;
+		const { data } = store.domesticHotWater.hotWaterOutlets;
 
 		expect(data[0]!.data.id).toBe(mixerShower.data.id);
 		expect(data[0]!.data.name).toBe("Updated mixer");
@@ -335,7 +335,7 @@ describe("hot water outlets", () => {
 
 				await user.click(screen.getByTestId("saveAndComplete"));
 
-				const { data } = store.domesticHotWaterNew.hotWaterOutlets;
+				const { data } = store.domesticHotWater.hotWaterOutlets;
 
 				expect(data[0]?.data).toEqual(hotWaterOutlet.data);
 				expect(data[0]?.complete).toEqual(true);
@@ -343,7 +343,7 @@ describe("hot water outlets", () => {
 
 			test("form is prepopulated when data exists in state", async () => {
 				store.$patch({
-					domesticHotWaterNew: {
+					domesticHotWater: {
 						hotWaterOutlets: {
 							data: [{ data: { ...hotWaterOutlet.data } }],
 						},
@@ -398,7 +398,7 @@ describe("hot water outlets", () => {
 	describe("complete status", () => {
 		test("marks the hotWaterOutlets section complete status as false when saving a form", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					hotWaterOutlets: {
 						data: [{ data: { ...mixerShower.data }, complete: true }],
 						complete: true,
@@ -413,19 +413,19 @@ describe("hot water outlets", () => {
 				},
 			});
 
-			expect(store.domesticHotWaterNew.hotWaterOutlets.complete).toBe(true);
+			expect(store.domesticHotWater.hotWaterOutlets.complete).toBe(true);
 
 			await user.clear(screen.getByTestId("name"));
 			await user.type(screen.getByTestId("name"), "Modified name");
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect(store.domesticHotWaterNew.hotWaterOutlets.complete).toBe(false);
+			expect(store.domesticHotWater.hotWaterOutlets.complete).toBe(false);
 		});
 
 		test("marks hotWaterOutlets section as not complete after editing an existing item", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					hotWaterOutlets: {
 						data: [{ data: { ...mixerShower.data }, complete: true }],
 						complete: true,
@@ -441,7 +441,7 @@ describe("hot water outlets", () => {
 			await user.type(screen.getByTestId("name"), " Changed");
 			await user.tab();
 
-			expect(store.domesticHotWaterNew.hotWaterOutlets.complete).toBe(false);
+			expect(store.domesticHotWater.hotWaterOutlets.complete).toBe(false);
 		});
 	});
 });

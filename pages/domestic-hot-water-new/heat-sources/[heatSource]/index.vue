@@ -8,7 +8,7 @@ const store = useEcaasStore();
 const { getStoreIndex } = useForm();
 const route = useRoute();
 
-const hotWaterHeatSourceStoreData = store.domesticHotWaterNew.heatSources.data;
+const hotWaterHeatSourceStoreData = store.domesticHotWater.heatSources.data;
 const index = getStoreIndex(hotWaterHeatSourceStoreData);
 const hotWaterHeatSourceData = useItemToEdit("heatSource", hotWaterHeatSourceStoreData);
 const model = ref(hotWaterHeatSourceData?.data as DomesticHotWaterHeatSourceData);
@@ -26,8 +26,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 const saveForm = () => {
 	store.$patch((state) => {
-		state.domesticHotWaterNew.heatSources.data[index]!.complete = true;
-		state.domesticHotWaterNew.heatSources.complete = false;
+		state.domesticHotWater.heatSources.data[index]!.complete = true;
+		state.domesticHotWater.heatSources.complete = false;
 	});
 
 	navigateTo("/domestic-hot-water-new");
@@ -112,11 +112,11 @@ const autoSaveElementFormNoName = <T extends DomesticHotWaterHeatSourceData>({
 
 autoSaveElementFormNoName<DomesticHotWaterHeatSourceData>({
 	model,
-	storeData: store.domesticHotWaterNew.heatSources,
+	storeData: store.domesticHotWater.heatSources,
 	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
-		state.domesticHotWaterNew.heatSources.data[index] = newData;
-		state.domesticHotWaterNew.heatSources.complete = false;
+		state.domesticHotWater.heatSources.data[index] = newData;
+		state.domesticHotWater.heatSources.complete = false;
 	},
 });
 
@@ -133,7 +133,7 @@ function updateHeatSource(type: string) {
 				}
 				const defaultName = getHeatSourceDefaultName(model.value);
 				model.value.name = defaultName;
-				(store.domesticHotWaterNew.heatSources.data[index]!.data as { name: string }).name = defaultName;
+				(store.domesticHotWater.heatSources.data[index]!.data as { name: string }).name = defaultName;
 			}
 		},
 	);
@@ -237,7 +237,7 @@ const coldWaterSourceOptions =
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
-			<GovButton :href="getUrl('domesticHotWaterNew')" secondary test-id="saveProgress">Save progress</GovButton>
+			<GovButton :href="getUrl('domesticHotWater')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

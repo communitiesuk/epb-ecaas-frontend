@@ -9,7 +9,7 @@ const store = useEcaasStore();
 type SpaceHeatingType = keyof typeof store.spaceHeating;
 type SpaceHeatingData = EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> & EcaasForm<HeatingControlData>;
 
-const { heatSources: dhwHeatSources, waterStorage, hotWaterOutlets } = store.domesticHotWaterNew;
+const { heatSources: dhwHeatSources, waterStorage, hotWaterOutlets } = store.domesticHotWater;
 
 const { heatEmitters } = store.spaceHeating;
 function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
@@ -39,9 +39,9 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 			//remove dhw heat sources that reference deleted space heating heat source
 			const dhwHeatSourcesToKeep = dhwHeatSources.data.filter(({ data: x }) => x.heatSourceId !== heatSourceId); 
 			store.$patch(state => {
-				state.domesticHotWaterNew.heatSources.data = dhwHeatSourcesToKeep;
+				state.domesticHotWater.heatSources.data = dhwHeatSourcesToKeep;
 				if (dhwHeatSourcesToKeep.length === 0) {
-					state.domesticHotWaterNew.heatSources.complete = false;
+					state.domesticHotWater.heatSources.complete = false;
 				}
 			});
 

@@ -83,7 +83,7 @@ describe("Pipework form", () => {
 
 	test("data is saved to store state when form is valid", async () => {
 		store.$patch({
-			domesticHotWaterNew: {
+			domesticHotWater: {
 				waterStorage: {
 					data: [
 						{ ...hotWaterCylinder },
@@ -103,7 +103,7 @@ describe("Pipework form", () => {
 		await(user.click(screen.getByTestId("saveAndComplete")));
 
 
-		const pipeworkItem = store.domesticHotWaterNew.pipework.data[0];
+		const pipeworkItem = store.domesticHotWater.pipework.data[0];
 		expect(pipeworkItem).toEqual({
 			...pipework1,
 			complete: true,
@@ -113,7 +113,7 @@ describe("Pipework form", () => {
 	test("form is prepopulated when data exists in state", async () => {
 
 		store.$patch({
-			domesticHotWaterNew: {
+			domesticHotWater: {
 				waterStorage: {
 					data: [
 						{ ...hotWaterCylinder },
@@ -196,7 +196,7 @@ describe("partially saving data", () => {
 		await user.type(screen.getByTestId("name"), "Pipework Kitchen Sink");
 		await user.type(screen.getByTestId("internalDiameter"), "10");
 		await user.tab();
-		const pipeworkItem = store.domesticHotWaterNew.pipework.data[0];
+		const pipeworkItem = store.domesticHotWater.pipework.data[0];
 
 		expect(pipeworkItem?.data.name).toBe("Pipework Kitchen Sink");
 		expect(pipeworkItem?.data.internalDiameter).toBe(10);
@@ -211,7 +211,7 @@ describe("partially saving data", () => {
 
 		await user.type(screen.getByTestId("internalDiameter"), "10");
 		await user.tab();
-		const pipeworkItem = store.domesticHotWaterNew.pipework.data[0];
+		const pipeworkItem = store.domesticHotWater.pipework.data[0];
 
 		expect(pipeworkItem?.data.name).toBe("Pipework");
 		expect(pipeworkItem?.data.internalDiameter).toBe(10);
@@ -230,7 +230,7 @@ describe("partially saving data", () => {
 		await user.tab();
 		await user.click(screen.getByTestId("saveProgress"));
 
-		const pipeworkItem = store.domesticHotWaterNew.pipework.data[0];
+		const pipeworkItem = store.domesticHotWater.pipework.data[0];
 	
 		expect(pipeworkItem?.data.name).toBe("Pipework");
 	});
@@ -246,7 +246,7 @@ describe("partially saving data", () => {
 		await user.type(screen.getByTestId("name"), " ");
 		await user.click(screen.getByTestId("saveProgress"));
 
-		expect(store.domesticHotWaterNew.pipework.data[0]!.data.name).toBe("Pipework");
+		expect(store.domesticHotWater.pipework.data[0]!.data.name).toBe("Pipework");
 	});
 
 	test("creates a new pipework automatically when a user adds only the name value", async () => {
@@ -259,7 +259,7 @@ describe("partially saving data", () => {
 		await user.type(screen.getByTestId("name"), "Pipework Kitchen Sink");
 
 		await user.tab();
-		const pipeworkItem = store.domesticHotWaterNew.pipework.data[0];
+		const pipeworkItem = store.domesticHotWater.pipework.data[0];
 		expect(pipeworkItem!.data.name).toBe("Pipework Kitchen Sink");
 		expect(pipeworkItem!.data.internalDiameter).toBeUndefined();
 
@@ -270,7 +270,7 @@ describe("partially saving data", () => {
 		const user = userEvent.setup();
 
 		store.$patch({
-			domesticHotWaterNew: {
+			domesticHotWater: {
 				pipework: {
 					data: [pipework1, pipework2],
 				},
@@ -288,7 +288,7 @@ describe("partially saving data", () => {
 		await user.type(screen.getByTestId("name"), "Pipework Kitchen Sink 2");
 		await user.type(screen.getByTestId("internalDiameter"), "1");
 		await user.tab();
-		const { data } = store.domesticHotWaterNew.pipework;
+		const { data } = store.domesticHotWater.pipework;
 
 		expect(data[1]?.data.name).toBe("Pipework Kitchen Sink 2");
 		expect(data[0]?.data.name).toBe("Pipework Kitchen Sink");

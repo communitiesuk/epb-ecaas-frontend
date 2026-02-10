@@ -6,8 +6,8 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const title = "Primary pipework for hot water";
 const store = useEcaasStore();
 
-const index = getStoreIndex(store.domesticHotWaterNew.pipework.data);
-const pipeworkData = useItemToEdit("pipework", store.domesticHotWaterNew.pipework.data);
+const index = getStoreIndex(store.domesticHotWater.pipework.data);
+const pipeworkData = useItemToEdit("pipework", store.domesticHotWater.pipework.data);
 const model = ref(pipeworkData?.data);
 
 const pipeContentsOptions: Record<Exclude<SchemaWaterPipeContentsType, "air">, string> = {
@@ -22,7 +22,7 @@ const locationOptions = {
 
 const saveForm = (fields: PipeworkData) => {
 	store.$patch((state) => {
-		const { pipework } = state.domesticHotWaterNew;
+		const { pipework } = state.domesticHotWater;
 
 		pipework.data[index] = {
 			data: {
@@ -48,11 +48,11 @@ const saveForm = (fields: PipeworkData) => {
 
 autoSaveElementForm<PipeworkData>({
 	model,
-	storeData: store.domesticHotWaterNew.pipework,
+	storeData: store.domesticHotWater.pipework,
 	defaultName: "Pipework",
 	onPatch: (state, newData, index) => {
-		state.domesticHotWaterNew.pipework.data[index] = newData;
-		state.domesticHotWaterNew.pipework.complete = false;
+		state.domesticHotWater.pipework.data[index] = newData;
+		state.domesticHotWater.pipework.complete = false;
 	},
 });
 
@@ -80,7 +80,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			:validation-rules="{ uniqueName: uniqueName(store.domesticHotWaterNew.pipework.data, { index }) }"
+			:validation-rules="{ uniqueName: uniqueName(store.domesticHotWater.pipework.data, { index }) }"
 			validation="required:trim | length:1,50 | uniqueName"
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
@@ -89,7 +89,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FormKit
 				id="waterStorage"
 				type="govRadios"
-				:options="new Map(store.domesticHotWaterNew.waterStorage.data
+				:options="new Map(store.domesticHotWater.waterStorage.data
 					.filter(x => x.data.id !== undefined)
 					.map(x => [x.data.id as string, x.data.name]))"		
 				label="Hot water cylinder"
@@ -97,7 +97,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				name="waterStorage"
 				validation="required">
 				<div
-					v-if="!store.domesticHotWaterNew.waterStorage.data.length">
+					v-if="!store.domesticHotWater.waterStorage.data.length">
 					<p class="govuk-error-message">No hot water cylinder added.</p>
 					<NuxtLink :to="getUrl('waterStorageCreate')" class="govuk-link gov-radios-add-link">
 						Click here to add a hot water cylinder
@@ -211,7 +211,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
-			<GovButton :href="getUrl('domesticHotWaterNew')" test-id="saveProgress" secondary>Save progress</GovButton>
+			<GovButton :href="getUrl('domesticHotWater')" test-id="saveProgress" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

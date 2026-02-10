@@ -203,7 +203,7 @@ describe("space heating", () => {
 							],
 						},
 					},
-					domesticHotWaterNew: {
+					domesticHotWater: {
 						heatSources: {
 							data: [{ data: dhwWithExistingHeatSource }],
 						},
@@ -212,7 +212,7 @@ describe("space heating", () => {
 				await renderSuspended(SpaceHeating);
 
 				await user.click(await screen.findByTestId("heatSource_remove_0"));
-				const { heatSources } = store.domesticHotWaterNew;
+				const { heatSources } = store.domesticHotWater;
 
 				expect(heatSources.data.length).toBe(0);
 			});
@@ -289,7 +289,7 @@ describe("space heating", () => {
 							],
 						},
 					},
-					domesticHotWaterNew: {
+					domesticHotWater: {
 						heatSources: {
 							data: [
 								{ data: dhwWithExistingHeatSource1 },
@@ -312,7 +312,7 @@ describe("space heating", () => {
 				await renderSuspended(SpaceHeating);
 
 				await user.click(await screen.findByTestId("heatSource_remove_0"));
-				const { heatSources, hotWaterOutlets, waterStorage } = store.domesticHotWaterNew;
+				const { heatSources, hotWaterOutlets, waterStorage } = store.domesticHotWater;
 
 				expect(heatSources.data.length).toBe(1);
 				expect((hotWaterOutlets.data[0]!.data as MixedShowerDataNew).dhwHeatSourceId).toBe(undefined);

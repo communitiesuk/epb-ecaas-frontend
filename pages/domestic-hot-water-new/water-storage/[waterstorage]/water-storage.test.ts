@@ -65,7 +65,7 @@ describe("water storage", () => {
 
 	const addHeatPumpStoreData = () => {
 		store.$patch({
-			domesticHotWaterNew: {
+			domesticHotWater: {
 				heatSources: { data: [heatPump] },
 			},
 		});
@@ -154,7 +154,7 @@ describe("water storage", () => {
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			const { data } = store.domesticHotWaterNew.waterStorage;
+			const { data } = store.domesticHotWater.waterStorage;
 
 			expect(data[0]?.data).toEqual(hotWaterCylinder.data);
 			expect(data[0]?.complete).toEqual(true);
@@ -162,7 +162,7 @@ describe("water storage", () => {
 
 		test("form is prepopulated when data exists in state", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: {
 						data: [{ ...hotWaterCylinder }],
 					},
@@ -246,7 +246,7 @@ describe("water storage", () => {
 
 			await populateValidFormSHWT();
 			store.$patch(state => {
-				(state.domesticHotWaterNew.waterStorage.data[0]!.data as SmartHotWaterTankDataNew)
+				(state.domesticHotWater.waterStorage.data[0]!.data as SmartHotWaterTankDataNew)
 					.productReference = "42";
 			});
 
@@ -258,7 +258,7 @@ describe("water storage", () => {
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			const { data } = store.domesticHotWaterNew.waterStorage;
+			const { data } = store.domesticHotWater.waterStorage;
 
 			expect(data[0]?.data).toEqual(smartHotWaterTank.data);
 			expect(data[0]?.complete).toEqual(true);
@@ -278,7 +278,7 @@ describe("water storage", () => {
 			mockNuxtImport("useFetch", () => mockFetch);
 
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: {
 						data: [{ ...smartHotWaterTank }],
 					},

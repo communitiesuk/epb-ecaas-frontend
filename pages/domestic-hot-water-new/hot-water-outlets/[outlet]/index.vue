@@ -10,7 +10,7 @@ const route = useRoute();
 
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const hotWaterOutletsStoreData = store.domesticHotWaterNew.hotWaterOutlets.data;
+const hotWaterOutletsStoreData = store.domesticHotWater.hotWaterOutlets.data;
 const index = getStoreIndex(hotWaterOutletsStoreData);
 const hotWaterOutletData = hotWaterOutletsStoreData[index] as EcaasForm<HotWaterOutletsData>;
 const model = ref(hotWaterOutletData?.data);
@@ -18,7 +18,7 @@ const id = hotWaterOutletData?.data.id ?? uuidv4();
 
 const saveForm = (fields: HotWaterOutletsData) => {
 	store.$patch((state) => {
-		const { hotWaterOutlets } = state.domesticHotWaterNew;
+		const { hotWaterOutlets } = state.domesticHotWater;
 
 		const commonFields = {
 			name: fields.name,
@@ -125,9 +125,9 @@ watch(
 );
 
 watch(
-	() => [model.value?.typeOfHotWaterOutlet, store.domesticHotWaterNew.heatSources.data.length] as const,
+	() => [model.value?.typeOfHotWaterOutlet, store.domesticHotWater.heatSources.data.length] as const,
 	() => {
-		const heatSources = store.domesticHotWaterNew.heatSources.data;
+		const heatSources = store.domesticHotWater.heatSources.data;
 		if (heatSources.length === 1 && model.value && model.value.typeOfHotWaterOutlet === "mixedShower") {
 			const heatSourceId = heatSources[0]?.data.id;
 			if ("dhwHeatSourceId" in model.value && heatSourceId) {
@@ -139,12 +139,12 @@ watch(
 
 autoSaveElementForm<HotWaterOutletsData>({
 	model,
-	storeData: store.domesticHotWaterNew.hotWaterOutlets,
+	storeData: store.domesticHotWater.hotWaterOutlets,
 	defaultName: "Hot Water Outlet",
 	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
-		state.domesticHotWaterNew.hotWaterOutlets.data[index] = newData;
-		state.domesticHotWaterNew.hotWaterOutlets.complete = false;
+		state.domesticHotWater.hotWaterOutlets.data[index] = newData;
+		state.domesticHotWater.hotWaterOutlets.complete = false;
 	},
 });
 
@@ -157,7 +157,7 @@ autoSaveElementForm<HotWaterOutletsData>({
 // };
 
 const heatSourceOptions = new Map(
-	store.domesticHotWaterNew.heatSources.data.map((e) => [
+	store.domesticHotWater.heatSources.data.map((e) => [
 		e.data.id,
 		e.data.isExistingHeatSource
 			? store.spaceHeating.heatSource.data
@@ -279,7 +279,7 @@ const heatSourceOptions = new Map(
 		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
-			<GovButton :href="getUrl('domesticHotWaterNew')" secondary test-id="saveProgress">Save progress</GovButton>
+			<GovButton :href="getUrl('domesticHotWater')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

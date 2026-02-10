@@ -67,7 +67,7 @@ describe("Domestic hot water summary", () => {
 
 		const addHotWaterCylinderData = () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: {
 						data: [{ data: hotWaterCylinder }],
 					},
@@ -87,7 +87,7 @@ describe("Domestic hot water summary", () => {
 
 		const addSmartHotWaterCylinderData = () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: {
 						data: [{ data: smartHotWaterCylinder }],
 					},
@@ -121,7 +121,7 @@ describe("Domestic hot water summary", () => {
 
 		it("should contain the correct tabs when data exists", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: {
 						data: [{ data: hotWaterCylinder }, { data: smartHotWaterCylinder }],
 					},
@@ -256,7 +256,7 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the mixer shower section", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					hotWaterOutlets: {
 						data: [mixedShower],
 					},
@@ -296,7 +296,7 @@ describe("Domestic hot water summary", () => {
 			};
 
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					hotWaterOutlets: {
 						data: [partialMixed],
 					},
@@ -324,7 +324,7 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the electric shower section", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					hotWaterOutlets: {
 						data: [electricShower],
 					},
@@ -349,7 +349,7 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the bath section", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					hotWaterOutlets: {
 						data: [bathData],
 					},
@@ -373,7 +373,7 @@ describe("Domestic hot water summary", () => {
 
 		it("should display the correct data for the other outlets section", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					hotWaterOutlets: {
 						data: [otherOutletsData],
 					},
@@ -410,7 +410,7 @@ describe("Domestic hot water summary", () => {
 			};
 
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					hotWaterOutlets: { data: [mixerWithWwhrs] },
 					heatSources: { data: [{ data: { id: "heat-1", name: "Heat pump" } }] },
 				},
@@ -449,7 +449,7 @@ describe("Domestic hot water summary", () => {
 			};
 
 			store.$patch({
-				domesticHotWaterNew: { hotWaterOutlets: { data: [electricWithWwhrs] } },
+				domesticHotWater: { hotWaterOutlets: { data: [electricWithWwhrs] } },
 			});
 
 			await renderSuspended(Summary);
@@ -589,7 +589,7 @@ describe("Domestic hot water summary", () => {
 
 		beforeEach(() => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [
 							{ data: dhwWithNewHeatPump },

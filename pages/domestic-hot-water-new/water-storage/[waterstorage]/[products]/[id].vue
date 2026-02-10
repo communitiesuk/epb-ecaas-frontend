@@ -35,7 +35,7 @@ const backUrl = getUrl(pageId)
 
 const selectProduct = () => {
 	store.$patch((state) => {
-		const item = state.domesticHotWaterNew.waterStorage.data[index];
+		const item = state.domesticHotWater.waterStorage.data[index];
 
 		if (item && data) {
 			const product = item.data as SmartHotWaterTankDataNew;

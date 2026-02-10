@@ -66,7 +66,7 @@ describe("Heat source products page", () => {
 
 	beforeEach(() => {
 		store.$patch({
-			domesticHotWaterNew: {
+			domesticHotWater: {
 				heatSources: {
 					data: [{ data: heatSource1 }, { data: heatSource2 }],
 				},
@@ -106,7 +106,7 @@ describe("Heat source products page", () => {
 		await user.click(screen.getByTestId("selectProductButton_1"));
 
 		expect(
-			store.domesticHotWaterNew.heatSources.data[1]!.data,
+			store.domesticHotWater.heatSources.data[1]!.data,
 		).toEqual(expect.objectContaining({ productReference: MOCKED_HEAT_PUMPS.data[1]?.id }));
 	});
 

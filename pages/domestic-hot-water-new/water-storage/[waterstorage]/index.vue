@@ -11,7 +11,7 @@ const route = useRoute();
 
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const waterStorageStoreData = store.domesticHotWaterNew.waterStorage.data;
+const waterStorageStoreData = store.domesticHotWater.waterStorage.data;
 const index = getStoreIndex(waterStorageStoreData);
 const waterStorageData = waterStorageStoreData[index] as EcaasForm<WaterStorageData>;
 const model = ref(waterStorageData?.data);
@@ -28,7 +28,7 @@ if (waterStorageData?.data?.typeOfWaterStorage === "hotWaterCylinder"
 
 const saveForm = (fields: WaterStorageData) => {
 	store.$patch((state) => {
-		const { waterStorage } = state.domesticHotWaterNew;
+		const { waterStorage } = state.domesticHotWater;
 
 		const commonFields = {
 			name: fields.name,
@@ -80,12 +80,12 @@ const withinMinAndMaxVolume = (node: FormKitNode, min: number, max: number) => {
 
 autoSaveElementForm<WaterStorageData>({
 	model,
-	storeData: store.domesticHotWaterNew.waterStorage,
+	storeData: store.domesticHotWater.waterStorage,
 	defaultName: "Water storage",
 	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
-		state.domesticHotWaterNew.waterStorage.data[index] = newData;
-		state.domesticHotWaterNew.waterStorage.complete = false;
+		state.domesticHotWater.waterStorage.data[index] = newData;
+		state.domesticHotWater.waterStorage.complete = false;
 	},
 });
 
@@ -113,7 +113,7 @@ watch(
 );
 
 const heatSourceOptions = new Map(
-	store.domesticHotWaterNew.heatSources.data.map((e) => [
+	store.domesticHotWater.heatSources.data.map((e) => [
 		e.data.id,
 		e.data.isExistingHeatSource
 			? store.spaceHeating.heatSource.data
@@ -253,7 +253,7 @@ const heatSourceOptions = new Map(
 		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
-			<GovButton :href="getUrl('domesticHotWaterNew')" secondary>Save progress</GovButton>
+			<GovButton :href="getUrl('domesticHotWater')" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

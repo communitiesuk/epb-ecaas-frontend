@@ -35,7 +35,7 @@ describe("Heat pump details", async () => {
 
 	beforeEach(() => {
 		store.$patch({
-			domesticHotWaterNew: {
+			domesticHotWater: {
 				heatSources: {
 					data: [{ data: smallHeatPump }],
 				},
@@ -103,7 +103,7 @@ describe("Heat pump details", async () => {
 		await renderSuspended(ProductDetails);
 		await user.click(screen.getByTestId("selectProductButton"));
 
-		const heatSource = store.domesticHotWaterNew.heatSources.data[0]?.data as PcdbProduct;
+		const heatSource = store.domesticHotWater.heatSources.data[0]?.data as PcdbProduct;
 
 		// Assert
 		expect(heatSource.productReference).toBe("1000");

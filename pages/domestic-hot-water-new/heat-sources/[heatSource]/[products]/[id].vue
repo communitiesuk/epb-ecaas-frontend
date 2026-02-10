@@ -36,7 +36,7 @@ const backUrl = getUrl(pageId)
 
 const selectProduct = () => {
 	store.$patch((state) => {
-		const item = state.domesticHotWaterNew.heatSources.data[index];
+		const item = state.domesticHotWater.heatSources.data[index];
 
 		if (item && data) {
 			const product = item.data as PcdbProduct;

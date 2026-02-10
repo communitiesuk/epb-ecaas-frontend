@@ -7,28 +7,28 @@ const title = "Domestic hot water";
 
 const page = usePage();
 const store = useEcaasStore();
-const { waterStorage, hotWaterOutlets, pipework } = store.domesticHotWaterNew; 
+const { waterStorage, hotWaterOutlets, pipework } = store.domesticHotWater; 
 
-type DomesticHotWaterType = keyof typeof store.domesticHotWaterNew;
+type DomesticHotWaterType = keyof typeof store.domesticHotWater;
 type DomesticHotWaterData = EcaasForm<DomesticHotWaterHeatSourceData> & EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData>;
 function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number) {
-	const items = store.domesticHotWaterNew[domesticHotWaterType]?.data;
+	const items = store.domesticHotWater[domesticHotWaterType]?.data;
 	
 	if (items) {
 		let heatSourceId: string | undefined;
 		if (items[index]?.data && "typeOfHeatSource" in items[index].data) {
-			heatSourceId = store.domesticHotWaterNew.heatSources.data[index]?.data.id;
+			heatSourceId = store.domesticHotWater.heatSources.data[index]?.data.id;
 		}
 
 		let waterStorageId: string | undefined;
 		if (items[index]?.data && "typeOfWaterStorage" in items[index].data) {
-			waterStorageId = store.domesticHotWaterNew.waterStorage.data[index]?.data.id;
+			waterStorageId = store.domesticHotWater.waterStorage.data[index]?.data.id;
 		}
 
 		items.splice(index, 1);
 		store.$patch((state) => {
-			state.domesticHotWaterNew[domesticHotWaterType].data = items.length ? items : [];
-			state.domesticHotWaterNew[domesticHotWaterType].complete = false;
+			state.domesticHotWater[domesticHotWaterType].data = items.length ? items : [];
+			state.domesticHotWater[domesticHotWaterType].complete = false;
 		});
 
 		if (heatSourceId) {
@@ -41,7 +41,7 @@ function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number)
 } 
 
 function handleDuplicate<T extends DomesticHotWaterData>(domesticHotWaterType: DomesticHotWaterType, index: number) {
-	const data = store.domesticHotWaterNew[domesticHotWaterType]?.data;
+	const data = store.domesticHotWater[domesticHotWaterType]?.data;
 	const item = data?.[index];
 	let name: string;
     
@@ -70,14 +70,14 @@ function handleDuplicate<T extends DomesticHotWaterData>(domesticHotWaterType: D
 				},
 			} as T;
 
-			state.domesticHotWaterNew[domesticHotWaterType].data.push(newItem);
-			state.domesticHotWaterNew[domesticHotWaterType].complete = false;
+			state.domesticHotWater[domesticHotWaterType].data.push(newItem);
+			state.domesticHotWater[domesticHotWaterType].complete = false;
 		});
 	}
 }
 function handleComplete() {
 	store.$patch({
-		domesticHotWaterNew: {
+		domesticHotWater: {
 			waterStorage: { complete: true },
 			hotWaterOutlets: { complete: true },
 			pipework: { complete: true },
@@ -89,7 +89,7 @@ function handleComplete() {
 }
 
 const hasIncompleteEntries = () =>
-	Object.values(store.domesticHotWaterNew)
+	Object.values(store.domesticHotWater)
 		.some(section => section.data.some(item => isEcaasForm(item) && !item.complete));
 
 function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
@@ -108,7 +108,7 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 		id="heatSources"
 		title="Heat sources"
 		:form-url="`${page?.url!}/heat-sources`"
-		:items="store.domesticHotWaterNew.heatSources.data
+		:items="store.domesticHotWater.heatSources.data
 			.filter(x => isEcaasForm(x))
 			.map(x=>({name: x.data.isExistingHeatSource ? getNameFromSpaceHeatingHeatSource(x.data.heatSourceId)! : x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
 		:show-status="true"
@@ -119,7 +119,7 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 		id="waterStorage"
 		title="Water storage"
 		:form-url="`${page?.url!}/water-storage`"
-		:items="store.domesticHotWaterNew.waterStorage.data
+		:items="store.domesticHotWater.waterStorage.data
 			.filter(x => isEcaasForm(x))
 			.map(x=>({name: x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
 		:show-status="true"
@@ -131,7 +131,7 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 		id="hotWaterOutlets"
 		title="Hot water outlets"
 		:form-url="`${page?.url!}/hot-water-outlets`"
-		:items="store.domesticHotWaterNew.hotWaterOutlets.data
+		:items="store.domesticHotWater.hotWaterOutlets.data
 			.filter(x => isEcaasForm(x))
 			.map(x=>({name: x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
 		:show-status="true"
@@ -143,7 +143,7 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 		id="pipework"
 		title="Pipework"
 		:form-url="`${page?.url!}/pipework`"
-		:items="store.domesticHotWaterNew.pipework.data
+		:items="store.domesticHotWater.pipework.data
 			.filter(x => isEcaasForm(x))
 			.map(x=>({name: x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
 		:show-status="true"
@@ -159,7 +159,7 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 		</GovButton>
 		<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
 		<CompleteElement
-			:is-complete="Object.values(store.domesticHotWaterNew).every(section => section.complete)"
+			:is-complete="Object.values(store.domesticHotWater).every(section => section.complete)"
 			:disabled="hasIncompleteEntries()"
 			@completed="handleComplete"/>
 	</div>

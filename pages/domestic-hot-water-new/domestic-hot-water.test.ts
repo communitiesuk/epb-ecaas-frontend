@@ -125,7 +125,7 @@ describe("Domestic hot water", () => {
 
 		test("Displays existing water storage", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: {
 						...baseCompleteForm,
 						data: [hwStorage1],
@@ -140,7 +140,7 @@ describe("Domestic hot water", () => {
 
 		test("water storage is removed when remove link is clicked", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: {
 						...baseCompleteForm,
 						data: [hwStorage1],
@@ -158,7 +158,7 @@ describe("Domestic hot water", () => {
 
 		it("should only remove the water storage object that is clicked", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: {
 						...baseCompleteForm,
 						data: [hwStorage1, hwStorage2, hwStorage3],
@@ -178,7 +178,7 @@ describe("Domestic hot water", () => {
 
 		test("water storage is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: {
 						data: [hwStorage1, hwStorage2],
 					},
@@ -230,7 +230,7 @@ describe("Domestic hot water", () => {
 			};
 
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: {
 						data: [hwStorage1, hwStorage2],
 					},
@@ -242,7 +242,7 @@ describe("Domestic hot water", () => {
 		
 			await renderSuspended(DomesticHotWater);
 			await user.click(await screen.findByTestId("waterStorage_remove_1"));
-			const { pipework } = store.domesticHotWaterNew;
+			const { pipework } = store.domesticHotWater;
 	
 			expect(pipework.data[0]?.data.waterStorage).toBe(hwStorage1.data.id);		
 			expect(pipework.data[1]?.data.waterStorage).toBeUndefined();
@@ -285,7 +285,7 @@ describe("Domestic hot water", () => {
 
 		test("Displays existing hot water outlets", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					hotWaterOutlets: {
 						data: [hwOutlet1],
 					},
@@ -299,7 +299,7 @@ describe("Domestic hot water", () => {
 
 		test("hot water outlets are removed when remove link is clicked", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					hotWaterOutlets: {
 						data: [hwOutlet1],
 					},
@@ -316,7 +316,7 @@ describe("Domestic hot water", () => {
 
 		it("should only remove the hot water outlets object that is clicked", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					hotWaterOutlets: {
 						data: [hwOutlet1, hwOutlet2, hwOutlet3],
 					},
@@ -335,7 +335,7 @@ describe("Domestic hot water", () => {
 
 		test("hot water outlets are duplicated when duplicate link is clicked", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					hotWaterOutlets: {
 						data: [
 							hwOutlet1,
@@ -405,7 +405,7 @@ describe("Domestic hot water", () => {
 
 		test("Displays existing pipework", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					pipework: {
 						data: [pipework1],
 					},
@@ -419,7 +419,7 @@ describe("Domestic hot water", () => {
 
 		test("pipework are removed when remove link is clicked", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					pipework: {
 						data: [pipework1],
 					},
@@ -436,7 +436,7 @@ describe("Domestic hot water", () => {
 
 		it("should only remove the pipework object that is clicked", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					pipework: {
 						data: [pipework1, pipework2, pipework3],
 					},
@@ -455,7 +455,7 @@ describe("Domestic hot water", () => {
 
 		test("pipework is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					pipework: {
 						data: [
 							pipework1,
@@ -531,7 +531,7 @@ describe("Domestic hot water", () => {
 
 		test("Displays existing heat sources", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [heatSource1],
 					},
@@ -545,7 +545,7 @@ describe("Domestic hot water", () => {
 
 		test("heat sources are removed when remove link is clicked", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [heatSource1],
 					},
@@ -567,7 +567,7 @@ describe("Domestic hot water", () => {
 						data: [heatSource3SpaceHeating],
 					},
 				},
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [heatSource1, heatSource2, heatSource3HotWater],
 					},
@@ -619,7 +619,7 @@ describe("Domestic hot water", () => {
 			};
 
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: {
 						data: [{ data: cylinder1 }, { data: cylinder2 }],
 					},
@@ -634,7 +634,7 @@ describe("Domestic hot water", () => {
 		
 			await renderSuspended(DomesticHotWater);
 			await user.click(await screen.findByTestId("heatSources_remove_1"));
-			const { waterStorage, hotWaterOutlets } = store.domesticHotWaterNew;
+			const { waterStorage, hotWaterOutlets } = store.domesticHotWater;
 	
 			expect(waterStorage.data[0]?.data.dhwHeatSourceId).toBe(heatSource1.data.id);		
 			expect(waterStorage.data[1]?.data.dhwHeatSourceId).toBeUndefined();	
@@ -644,7 +644,7 @@ describe("Domestic hot water", () => {
 
 		test("heat sources are duplicated when duplicate link is clicked", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [
 							heatSource1,
@@ -670,7 +670,7 @@ describe("Domestic hot water", () => {
 
 	it("disables the mark section as complete button when item is incomplete", async () => {
 		store.$patch({
-			domesticHotWaterNew: {
+			domesticHotWater: {
 				waterStorage: {
 					data: [
 						{
@@ -692,7 +692,7 @@ describe("Domestic hot water", () => {
 
 	test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
 		store.$patch({
-			domesticHotWaterNew: {
+			domesticHotWater: {
 				waterStorage: {
 					data: [hwStorage1],
 				},
@@ -709,7 +709,7 @@ describe("Domestic hot water", () => {
 
 		const addCompleteHotWaterToStore = async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: { data: [{ ...hwStorage1, complete: true }] },
 					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: true }] },
 					pipework: { data: [{ ...pipework1, complete: true }] },
@@ -731,7 +731,7 @@ describe("Domestic hot water", () => {
 
 		it("disables the Mark section as complete button when a section is incomplete", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					waterStorage: { data: [{ ...hwStorage1, complete: false }] },
 					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: false }] },
 				},
@@ -778,7 +778,7 @@ describe("Domestic hot water", () => {
 			});
 
 			it("marks each domestic hot water section as complete", () => {
-				const { waterStorage, hotWaterOutlets } = store.domesticHotWaterNew;
+				const { waterStorage, hotWaterOutlets } = store.domesticHotWater;
 				expect(waterStorage?.complete).toBe(true);
 				expect(hotWaterOutlets?.complete).toBe(true);
 			});
@@ -787,7 +787,7 @@ describe("Domestic hot water", () => {
 				await user.click(screen.getByTestId("waterStorage_remove_0"));
 				await user.click(screen.getByTestId("hotWaterOutlets_remove_0"));
 
-				const { waterStorage, hotWaterOutlets } = store.domesticHotWaterNew;
+				const { waterStorage, hotWaterOutlets } = store.domesticHotWater;
 				expect(waterStorage?.complete).toBe(false);
 				expect(hotWaterOutlets?.complete).toBe(false);
 			});
@@ -796,14 +796,14 @@ describe("Domestic hot water", () => {
 				await user.click(screen.getByTestId("waterStorage_duplicate_0"));
 				await user.click(screen.getByTestId("hotWaterOutlets_duplicate_0"));
 
-				const { waterStorage, hotWaterOutlets } = store.domesticHotWaterNew;
+				const { waterStorage, hotWaterOutlets } = store.domesticHotWater;
 				expect(waterStorage?.complete).toBe(false);
 				expect(hotWaterOutlets?.complete).toBe(false);
 			});
 
 			it("marks hot water outlets section as not complete after editing an existing outlet", async () => {
 				store.$patch({
-					domesticHotWaterNew: {
+					domesticHotWater: {
 						hotWaterOutlets: {
 							data: [{ data: hwOutlet1.data, complete: true }],
 						},
@@ -815,7 +815,7 @@ describe("Domestic hot water", () => {
 
 				await renderSuspended(DomesticHotWater);
 				await user.click(await screen.findByTestId("markAsCompleteButton"));
-				expect(store.domesticHotWaterNew.hotWaterOutlets?.complete).toBe(true);
+				expect(store.domesticHotWater.hotWaterOutlets?.complete).toBe(true);
 
 				await renderSuspended(HotWaterOutlets, {
 					route: {
@@ -826,7 +826,7 @@ describe("Domestic hot water", () => {
 				await user.click(screen.getByTestId("typeOfHotWaterOutlet_bath"));
 
 				await user.click(await screen.findByTestId("saveAndComplete"));
-				expect(store.domesticHotWaterNew.hotWaterOutlets?.complete).toBe(false);
+				expect(store.domesticHotWater.hotWaterOutlets?.complete).toBe(false);
 
 				await renderSuspended(DomesticHotWater);
 				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();

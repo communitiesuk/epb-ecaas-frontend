@@ -9,7 +9,7 @@ defineProps<{
 	index: number;
 }>();
 
-const heatSourceStoreData = store.domesticHotWaterNew.heatSources.data;
+const heatSourceStoreData = store.domesticHotWater.heatSources.data;
 
 </script>
 

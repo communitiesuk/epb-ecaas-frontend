@@ -10,7 +10,7 @@ const store = useEcaasStore();
 
 const domesticHotWaterUrl = "/domestic-hot-water-new";
 
-const heatSources = store.domesticHotWaterNew.heatSources.data;
+const heatSources = store.domesticHotWater.heatSources.data;
 const boilers = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "boiler");
 const heatPumps = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "heatPump");
 const heatNetworks = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "heatNetwork");
@@ -241,7 +241,7 @@ const heatSourceSections: SummarySection[] = [
 	pointOfUseSummary,
 ];
 
-const waterStorage = store.domesticHotWaterNew.waterStorage.data;
+const waterStorage = store.domesticHotWater.waterStorage.data;
 const hotWaterCylinders = waterStorage.filter(x => x.data.typeOfWaterStorage === "hotWaterCylinder");
 
 const emptyWaterStorageSummary: SummarySection = {
@@ -256,7 +256,7 @@ function getHWHeatSourceName(hwHeatSourceId: string | undefined) {
 		return emptyValueRendering;
 	}
 
-	const hwHeatSourceData = store.domesticHotWaterNew.heatSources.data
+	const hwHeatSourceData = store.domesticHotWater.heatSources.data
 		.find(x => x.data.id === hwHeatSourceId)?.data;
 
 	if (!hwHeatSourceData) {
@@ -287,7 +287,7 @@ const hotWaterCylinderSummary: SummarySection = {
 			"Thermostat position in the cylinder": "thermostatPosition" in hwCylData ? show(hwCylData.thermostatPosition) : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("domesticHotWaterNew"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
 const smartHotWaterCylinders = waterStorage.filter(x => x.data.typeOfWaterStorage === "smartHotWaterTank");
@@ -304,7 +304,7 @@ const smartHotWaterCylinderSummary: SummarySection = {
 			"Heater position in the cylinder": "heaterPosition" in smartHWCylData ? show(smartHWCylData.heaterPosition) : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("domesticHotWaterNew"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
 const waterStorageSummarySections: SummarySection[] = [
@@ -314,7 +314,7 @@ const waterStorageSummarySections: SummarySection[] = [
 const populatedHeatSourceSections = getNonEmptySections(heatSourceSections);
 
 
-const hotWaterOutletsAll = store.domesticHotWaterNew.hotWaterOutlets.data;
+const hotWaterOutletsAll = store.domesticHotWater.hotWaterOutlets.data;
 
 const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerDataNew>[];
 const mixedShowerSummary: SummarySection = {
@@ -333,7 +333,7 @@ const mixedShowerSummary: SummarySection = {
 			"WWHRS product": "wwhrsProductReference" in data ? show(data.wwhrsProductReference) : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("domesticHotWaterNew"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
 const electricShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "electricShower") as EcaasForm<ElectricShowerDataNew>[];
@@ -350,7 +350,7 @@ const electricShowerSummary: SummarySection = {
 			"WWHRS product": "wwhrsProductReference" in data ? show(data.wwhrsProductReference) : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("domesticHotWaterNew"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
 const bathData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "bath") as EcaasForm<BathDataNew>[];
@@ -364,7 +364,7 @@ const bathSummary: SummarySection = {
 			"Size": "size" in d.data ? dim(d.data.size, "litres") : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("domesticHotWaterNew"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
 const otherOutletsData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "otherHotWaterOutlet") as EcaasForm<OtherHotWaterOutletDataNew>[];
@@ -378,7 +378,7 @@ const otherOutletsSummary: SummarySection = {
 			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per second") : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("domesticHotWaterNew"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
 const hotWaterOutletsSummarySections: SummarySection[] = [
@@ -390,7 +390,7 @@ const hotWaterOutletsSummarySections: SummarySection[] = [
 
 
 
-const pipeworkData = store.domesticHotWaterNew.pipework.data;
+const pipeworkData = store.domesticHotWater.pipework.data;
 const pipeworkSummary: SummarySection = {
 	id: "pipework",
 	label: "Pipework",
@@ -407,7 +407,7 @@ const pipeworkSummary: SummarySection = {
 			"Surface reflectivity": displayReflectivity(d.data.surfaceReflectivity),
 		};
 	}) || [],
-	editUrl: getUrl("domesticHotWaterNew"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
 const pipeworkSummarySections: SummarySection[] = [
@@ -458,7 +458,7 @@ const populatedWaterStorageSections = getNonEmptySections(waterStorageSummarySec
 		<SummaryTab :summary="mixedShowerSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No mixer shower added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsNewCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsCreate')">
 					Add mixer shower
 				</NuxtLink>
 			</template>
@@ -466,7 +466,7 @@ const populatedWaterStorageSections = getNonEmptySections(waterStorageSummarySec
 		<SummaryTab :summary="electricShowerSummary" :selected="tabProps.currentTab === 1">
 			<template #empty>
 				<h2 class="govuk-heading-m">No electric shower added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsNewCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsCreate')">
 					Add electric shower
 				</NuxtLink>
 			</template>
@@ -474,7 +474,7 @@ const populatedWaterStorageSections = getNonEmptySections(waterStorageSummarySec
 		<SummaryTab :summary="bathSummary" :selected="tabProps.currentTab === 2">
 			<template #empty>
 				<h2 class="govuk-heading-m">No bath added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsNewCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsCreate')">
 					Add bath
 				</NuxtLink>
 			</template>
@@ -482,7 +482,7 @@ const populatedWaterStorageSections = getNonEmptySections(waterStorageSummarySec
 		<SummaryTab :summary="otherOutletsSummary" :selected="tabProps.currentTab === 3">
 			<template #empty>
 				<h2 class="govuk-heading-m">No outlet added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsNewCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsCreate')">
 					Add outlet
 				</NuxtLink>
 			</template>
@@ -492,7 +492,7 @@ const populatedWaterStorageSections = getNonEmptySections(waterStorageSummarySec
 		<SummaryTab :summary="pipeworkSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No pipework added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('pipeworkNewCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('pipeworkCreate')">
 					Add pipework
 				</NuxtLink>
 			</template>

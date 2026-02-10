@@ -20,43 +20,11 @@ export function getInitialState(): EcaasState {
 			naturalVentilation: { data: {} },
 			airPermeability: { data: {} },
 		},
-		domesticHotWaterNew: {
-			heatSources: {
-				data: [],
-			},
-			waterStorage: {
-				data: [],
-			},
-			hotWaterOutlets: {
-				data: [],
-			},
-			pipework: {
-				data: [],
-			},
-		},
 		domesticHotWater: {
-			waterHeating: {
-				hotWaterCylinder: { data: [] },
-				immersionHeater: { data: [] },
-				solarThermal: { data: [] },
-				pointOfUse: { data: [] },
-				heatPump: { data: [] },
-				combiBoiler: { data: [] },
-				heatBattery: { data: [] },
-				smartHotWaterTank: { data: [] },
-				heatInterfaceUnit: { data: [] },
-			},
-			hotWaterOutlets: {
-				mixedShower: { data: [] },
-				electricShower: { data: [] },
-				bath: { data: [] },
-				otherOutlets: { data: [] },
-			},
-			pipework: {
-				primaryPipework: { data: [] },
-				secondaryPipework: { data: [] },
-			},
-			wwhrs: { data: [] },
+			heatSources: { data: [] },
+			waterStorage: {	data: [] },
+			hotWaterOutlets: { data: [] },
+			pipework: {	data: [] },
 		},
 		dwellingFabric: {
 			dwellingSpaceFloors: {

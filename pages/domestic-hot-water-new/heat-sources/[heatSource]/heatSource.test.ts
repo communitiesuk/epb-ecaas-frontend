@@ -85,7 +85,7 @@ describe("Heat Source Page", () => {
 					data: [{ data: existingHeatPumpSpaceHeating1 }, { data: existingHeatPumpSpaceHeating2 }],
 				},
 			},
-			domesticHotWaterNew: {
+			domesticHotWater: {
 				heatSources: {
 					data: [{ data: dhwWithNewHeatPump }],
 				},
@@ -100,7 +100,7 @@ describe("Heat Source Page", () => {
 
 		await user.click(screen.getByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`));
 		
-		expect(store.domesticHotWaterNew.heatSources.data[0]?.data).toEqual({
+		expect(store.domesticHotWater.heatSources.data[0]?.data).toEqual({
 			coldWaterSource: "mainsWater",
 			isExistingHeatSource: true,
 			heatSourceId: existingHeatPumpSpaceHeating1.id,
@@ -159,7 +159,7 @@ describe("Heat pump section", () => {
 			await user.click(screen.getByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect(store.domesticHotWaterNew.heatSources.data[0]?.data).toEqual({
+			expect(store.domesticHotWater.heatSources.data[0]?.data).toEqual({
 				coldWaterSource: "headerTank",
 				isExistingHeatSource: true,
 				heatSourceId: existingHeatPumpSpaceHeating1.id,
@@ -174,7 +174,7 @@ describe("Heat pump section", () => {
 						data: [{ data: existingHeatPumpSpaceHeating1 }, { data: existingHeatPumpSpaceHeating2 }],
 					},
 				},
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [{ data: dhwWithExistingHeatPump }],
 					},
@@ -198,7 +198,7 @@ describe("Heat pump section", () => {
 						data: [{ data: existingHeatPumpSpaceHeating1 }],
 					},
 				},
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [{ data: dhwWithExistingHeatPump }],
 					},
@@ -270,7 +270,7 @@ describe("Heat pump section", () => {
 			await populateValidHeatPumpForm();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			const heatPump = store.domesticHotWaterNew.heatSources.data[0];
+			const heatPump = store.domesticHotWater.heatSources.data[0];
 			expect(heatPump?.data).toEqual({
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Air source heat pump",
@@ -284,7 +284,7 @@ describe("Heat pump section", () => {
 
 		test("form is prepopulated when data exists in state", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [{ data: dhwWithNewHeatPump }],
 					},
@@ -304,7 +304,7 @@ describe("Heat pump section", () => {
 
 		test("heat pump is updated when data with id exists in store", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [{ data: dhwWithNewHeatPump }],
 					},
@@ -322,7 +322,7 @@ describe("Heat pump section", () => {
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			const { data } = store.domesticHotWaterNew.heatSources;
+			const { data } = store.domesticHotWater.heatSources;
 
 			expect(data[0]!.data.id).toBe(dhwWithNewHeatPump.id);
 			expect((data[0]!.data as { name: string }).name).toBe("Updated heat pump");
@@ -330,7 +330,7 @@ describe("Heat pump section", () => {
 
 		test("product reference is cleared when heat pump type changes", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [{ data: dhwWithNewHeatPump }],
 					},
@@ -343,7 +343,7 @@ describe("Heat pump section", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatPump_booster"));
-			const { data } = store.domesticHotWaterNew.heatSources;
+			const { data } = store.domesticHotWater.heatSources;
 			const heatSourceItem = data[0]!.data;
 			if ("productReference" in heatSourceItem) {
 				expect(heatSourceItem.productReference).toBeUndefined();
@@ -361,7 +361,7 @@ describe("Heat pump section", () => {
 				await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
 				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
 
-				const actualHeatSource = store.domesticHotWaterNew.heatSources.data[0]!;
+				const actualHeatSource = store.domesticHotWater.heatSources.data[0]!;
 				expect((actualHeatSource.data as { name: string }).name).toBe("Heat pump");
 			});
 
@@ -376,7 +376,7 @@ describe("Heat pump section", () => {
 				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
 				await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
 
-				const actualHeatSource = store.domesticHotWaterNew.heatSources.data[0]!;
+				const actualHeatSource = store.domesticHotWater.heatSources.data[0]!;
 				expect((actualHeatSource.data as { name: string }).name).toBe("Air source heat pump");
 
 				await user.click(screen.getByTestId("typeOfHeatPump_booster"));
@@ -459,7 +459,7 @@ describe("Heat pump section", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
 	
-			const immersionHeater = store.domesticHotWaterNew.heatSources.data[0]?.data;
+			const immersionHeater = store.domesticHotWater.heatSources.data[0]?.data;
 			expect(immersionHeater).toEqual({
 				id: "463c94f6-566c-49b2-af27-57e5c111111",
 				name: "Immersion heater",
@@ -473,7 +473,7 @@ describe("Heat pump section", () => {
 	
 		test("form is prepopulated when data exists in state", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [{ data: immersionHeater1 }],
 					},
@@ -493,7 +493,7 @@ describe("Heat pump section", () => {
 	
 		test("immersion heater is updated when data with id exists in store", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [{ data: immersionHeater1 }, { data: immersionHeater2 }],
 					},
@@ -512,7 +512,7 @@ describe("Heat pump section", () => {
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
-			const immersionHeater = store.domesticHotWaterNew.heatSources.data[0]?.data;
+			const immersionHeater = store.domesticHotWater.heatSources.data[0]?.data;
 	
 			expect(immersionHeater!.id).toBe(immersionHeater1.id);
 			expect((immersionHeater! as { name: string }).name).toBe("Updated immersion heater");
@@ -606,7 +606,7 @@ describe("Heat pump section", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
 	
-			const pointOfUse = store.domesticHotWaterNew.heatSources.data[0]?.data;
+			const pointOfUse = store.domesticHotWater.heatSources.data[0]?.data;
 			expect(pointOfUse).toEqual({
 				id: "463c94f6-566c-49b2-af27-57e5c111111",
 				name: "Point of use",
@@ -621,7 +621,7 @@ describe("Heat pump section", () => {
 	
 		test("form is prepopulated when data exists in state", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [{ data: pointOfUse1 }],
 					},
@@ -642,7 +642,7 @@ describe("Heat pump section", () => {
 	
 		test("point of use is updated when data with id exists in store", async () => {
 			store.$patch({
-				domesticHotWaterNew: {
+				domesticHotWater: {
 					heatSources: {
 						data: [{ data: pointOfUse1 }, { data: pointOfUse2 }],
 					},
@@ -661,7 +661,7 @@ describe("Heat pump section", () => {
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
-			const pointOfUse = store.domesticHotWaterNew.heatSources.data[1]?.data;
+			const pointOfUse = store.domesticHotWater.heatSources.data[1]?.data;
 	
 			expect(pointOfUse!.id).toBe(pointOfUse2.id);
 			expect((pointOfUse! as { name: string }).name).toBe("Updated point of use");
