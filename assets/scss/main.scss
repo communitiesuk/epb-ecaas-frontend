@@ -1,6 +1,5 @@
 @use "../../node_modules/govuk-frontend/dist/govuk/index" with (
-    $govuk-assets-path: "/static/assets/",
-    $govuk-new-organisation-colours: true
+    $govuk-assets-path: "/static/assets/"
 );
 
 img {

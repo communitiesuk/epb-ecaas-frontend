@@ -9,9 +9,9 @@ onErrorCaptured(() => store.revalidate());
 
 <template>
 	<GovCookieBanner />
-	<GovHeader classes="govuk-header--full-width-border" />
-	<GovServiceNavigation service-name="(Testing) Check Part L building compliance" />
-	<div class="govuk-width-container">
+	<header class="govuk-template__header">
+		<GovHeader classes="govuk-header--full-width-border" />
+		<GovServiceNavigation service-name="(Testing) Check Part L building compliance" />
 		<GovPhaseBanner v-if="env === 'ecaas-intg'" tag="Integration" classes="govuk-tag--green">
 			{{ testSiteMessage }}
 		</GovPhaseBanner>
@@ -21,6 +21,8 @@ onErrorCaptured(() => store.revalidate());
 		<GovPhaseBanner v-else tag="Beta">
 			This is a new service. Help us to improve it and <NuxtLink href="/feedback" class="govuk-link">give your feedback</NuxtLink>.
 		</GovPhaseBanner>
+	</header>
+	<div class="govuk-width-container">
 
 		<main class="govuk-main-wrapper govuk-!-padding-top-6">
 			<div class="govuk-grid-row">
@@ -36,5 +38,7 @@ onErrorCaptured(() => store.revalidate());
 		</main>
 		<GovFeedback />
 	</div>
-	<GovFooter />
+	<footer class="govuk-template__footer">
+		<GovFooter />
+	</footer>
 </template>

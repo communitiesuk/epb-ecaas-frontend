@@ -56,8 +56,6 @@ const handleSelect = (value: string, e: MouseEvent) => {
 </template>
 
 <style lang="scss">
-	@use "sass:map";
-
 	.search-field {
 		flex: 1;
 		position: relative;
@@ -73,7 +71,8 @@ const handleSelect = (value: string, e: MouseEvent) => {
 		width: 100%;
 		padding: 10px;
 		box-sizing: border-box;
-		border: 1px solid map.get($govuk-colours, "mid-grey");
+		// use suggested replacement colour for removed mid-grey for GOV.UK Frontend 6.0
+		border: 1px solid #cecece;
 
 		ul {
 			margin: 0;
@@ -84,7 +83,8 @@ const handleSelect = (value: string, e: MouseEvent) => {
 		li {
 			padding-bottom: 15px;
 			margin-bottom: 15px;
-			border-bottom: 1px solid map.get($govuk-colours, "mid-grey");
+			// use suggested replacement colour for removed mid-grey for GOV.UK Frontend 6.0
+			border-bottom: 1px solid #cecece;
 
 			&:last-child {
 				margin-bottom: 5px;

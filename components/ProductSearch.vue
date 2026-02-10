@@ -146,10 +146,9 @@ watch(() => searchModel, (currentSearch: ProductSearchModel, _previousSearch: Pr
 </template>
 
 <style lang="scss">
-	@use "sass:map";
-
 	.search-container {
-		background-color: map.get($govuk-colours, "light-grey");
+		// suggested colour to replace removed light-grey in GOV.UK Frontend 6.0
+		background-color: #f3f3f3;
 		padding: 20px;
 	}
 

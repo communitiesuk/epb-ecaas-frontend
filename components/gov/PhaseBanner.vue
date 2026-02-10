@@ -6,7 +6,7 @@ defineProps<{
 </script>
 
 <template>
-	<div class="govuk-phase-banner">
+	<div class="govuk-phase-banner govuk-width-container">
 		<p class="govuk-phase-banner__content">
 			<strong :class="`govuk-tag govuk-phase-banner__content__tag ${classes}`">
 				{{ tag }}

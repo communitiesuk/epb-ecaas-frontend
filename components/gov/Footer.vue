@@ -1,5 +1,5 @@
 <template>
-	<footer class="govuk-footer">
+	<div class="govuk-footer">
 		<div class="govuk-width-container">
 			<gov-logo classes="govuk-footer__crown" :use-logotype="false" />
 			<div class="govuk-footer__meta">
@@ -33,5 +33,5 @@
 				</div>
 			</div>
 		</div>
-	</footer>
+	</div>
 </template>
