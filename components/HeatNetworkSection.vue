@@ -9,7 +9,7 @@ defineProps<{
 	index: number;
 }>();
 
-const heatSourceStoreData = store.spaceHeating.heatSource.data;
+const heatSources = getCombinedHeatSources(store);
 
 const emit = defineEmits(["update-heat-network-model"]);
 
@@ -31,10 +31,10 @@ const emit = defineEmits(["update-heat-network-model"]);
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			:validation-rules="{ uniqueName: uniqueName(heatSourceStoreData, { index }) }"
+			:validation-rules="{ uniqueName: uniqueName(heatSources, { id: model.id }) }"
 			validation="required | uniqueName"
 			:validation-messages="{
-				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+				uniqueName: 'An element with this name in domestic hot water or space heating already exists. Please enter a unique name.'
 			}" />
 		<FormKit
 			id="isHeatNetworkInPcdb"

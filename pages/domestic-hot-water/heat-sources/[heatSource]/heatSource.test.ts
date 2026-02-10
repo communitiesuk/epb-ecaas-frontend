@@ -164,6 +164,96 @@ describe("Heat Source Page", () => {
 
 		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water");
 	});
+
+	describe("unique name", () => {
+    
+		const heatPump: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			heatSourceId: "NEW_HEAT_SOURCE",
+			name: "Heat source 1",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "airSource",
+		};
+		const boiler: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "1b73e247-57c5-26b8-1tbd-83tdk333333",
+			name: "Heat source 1",
+			typeOfHeatSource: "boiler",
+			typeOfBoiler: "combiBoiler",
+		};
+
+		const heatBattery: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
+			name: "Heat source 1",
+			typeOfHeatSource: "heatBattery",
+			typeOfHeatBattery: "heatBatteryPcm",
+		};
+
+		const heatNetwork: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+			name: "Heat source 1",
+			typeOfHeatSource: "heatNetwork",
+			typeOfHeatNetwork: "communalHeatNetwork",
+		};
+
+		const solarThermalSystem: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
+			name: "Heat source 1",
+			typeOfHeatSource: "solarThermalSystem",
+		};
+
+		const immersionHeater: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c888888",
+			name: "Heat source 1",  
+			typeOfHeatSource: "immersionHeater",
+		};
+
+		const pointOfUse: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c9999999",
+			name: "Heat source 1",
+			typeOfHeatSource: "pointOfUse",
+		};
+    
+		it.each([["heat pump", heatPump], ["boiler", boiler], ["heat battery", heatBattery], ["heat network", heatNetwork], ["solar thermal system", solarThermalSystem],["immersion heater", immersionHeater], ["point of use", pointOfUse]])(
+			"check DHW heat sources %s and space heating heat sources to ensure name is unique", async (_name, heatSource) => {
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: {
+								id: "HS-1",
+								name: "Heat source 1",
+							} }],
+						},
+					},
+					domesticHotWater: {
+						heatSources: { data: [{ data: heatSource }] },
+					} });
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+    
+				await user.click(screen.getByTestId("saveAndComplete"));
+				const nameError = await screen.findByTestId("name_error");
+				expect(nameError.innerText).toContain("An element with this name in domestic hot water or space heating already exists. Please enter a unique name.");
+			});
+	});
+
 });
 
 describe("Heat pump section", () => {
