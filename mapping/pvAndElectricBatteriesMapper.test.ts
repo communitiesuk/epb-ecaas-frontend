@@ -159,6 +159,7 @@ describe("PV and electric batteries mapper", () => {
 	it("maps diverters to the correct for for FHS input", () => {
 		const hotWaterCylinderId = "88ea3f45-6f2a-40e2-9117-0541bd8a97f3";
 		const heatPumpId = "56ddc6ce-7a91-4263-b051-96c7216bb01e";
+		const dhwHeatPumpId = "56ddc6ce-7a91-4263-b051-96c7216b1234";
 
 		const diverter1: EcaasForm<PvDiverterData> = {
 			data: {
@@ -184,23 +185,36 @@ describe("PV and electric batteries mapper", () => {
 
 			},
 			domesticHotWater: {
-				waterHeating: {
-					hotWaterCylinder: {
-						data: [{
-							data: {
-								name: "HWC1",
-								id: hotWaterCylinderId,
-								heatSource: heatPumpId,
-								storageCylinderVolume: {
-									amount: 1,
-									unit: "litres",
-								},
-								dailyEnergyLoss: 1,
-							},
-							complete: true,
-						}],
+				heatSources: {
+					data: [{
+						data: {
+							id: dhwHeatPumpId,
+							isExistingHeatSource: true,
+							heatSourceId: heatPumpId,
+							coldWaterSource: "mainsWater",
+						},
 						complete: true,
-					},
+					}],
+					complete: true,
+				},
+				waterStorage: {
+					data: [{
+						data: {
+							name: "HWC1",
+							id: hotWaterCylinderId,
+							dhwHeatSourceId: dhwHeatPumpId,
+							storageCylinderVolume: {
+								amount: 1,
+								unit: "litres",
+							},
+							dailyEnergyLoss: 1,
+							typeOfWaterStorage: "hotWaterCylinder",
+							areaOfHeatExchanger: 1,
+							initialTemperature: 20,
+						},
+						complete: true,
+					}],
+					complete: true,
 				},
 			},
 			pvAndBatteries: {
