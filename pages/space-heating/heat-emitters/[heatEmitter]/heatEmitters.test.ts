@@ -556,9 +556,6 @@ describe("Heat emitters", () => {
 			};
 			store.$patch({
 				spaceHeating: {
-					heatSource: {
-						data: [{ data: { id: "1" } }, { data: { id: "2" } }],
-					},
 					heatEmitters: {
 						data: [{ data: incompleteRadiator, complete: false }],
 					},

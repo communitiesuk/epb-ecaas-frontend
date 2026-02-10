@@ -128,6 +128,36 @@ describe("Heat Source Page", () => {
 		expect(screen.queryByTestId("typeOfHeatSource")).toBeNull();
 	});
 	
+	test("once an existing heat source has been selected, it appears greyed out and cannot be selected", async () => { 
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [{ data: existingHeatPumpSpaceHeating1 }],
+				},
+			},
+			domesticHotWaterNew: {
+				heatSources: {
+					data: [{ data: dhwWithExistingHeatPump }],
+				},
+			},
+		});
+	
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "create" },
+			},
+		});
+		expect(screen.getByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`).hasAttribute("disabled")).toBeTruthy();
+	});
+
+	test("save progress button navigates user to the domestic hot wate overview page", async () => {
+		await renderSuspended(HeatSourceForm);
+		const saveProgressButton = screen.getByTestId("saveProgress");
+
+		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water-new");
+	});
+
+
 	test("save progress button navigates user to the domestic hot wate overview page", async () => {
 		await renderSuspended(HeatSourceForm);
 		const saveProgressButton = screen.getByTestId("saveProgress");

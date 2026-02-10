@@ -5,6 +5,7 @@ import { showErrorState, getErrorMessage } from "#imports";
 export type RadioOption = {
 	label: string;
 	hint?: string;
+	disabled?: boolean;
 };
 
 const props = defineProps<{

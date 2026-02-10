@@ -513,7 +513,7 @@ describe("Domestic hot water", () => {
 				id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bd",
 				coldWaterSource: "mainsWater",
 				isExistingHeatSource: true,
-				heatSourceId: "123e4567-e89b-12d3-a456-426614174000",
+				heatSourceId: heatSource3SpaceHeating.data.id,
 			},
 		} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 

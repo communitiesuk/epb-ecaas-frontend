@@ -144,8 +144,30 @@ const coldWaterSourceOptions =
 		headerTank: "Header tank",
 		mainsWater: "Mains water",
 	} as const;
-</script>
 
+
+const usedHeatSourceIds = store.domesticHotWaterNew.heatSources.data
+	.map(x => x.data?.heatSourceId)
+	.filter(id => id && id !== "NEW_HEAT_SOURCE");
+
+const currentHeatSourceId = store.domesticHotWaterNew.heatSources.data[index]?.data.heatSourceId;
+const radioOptions = new Map();
+
+store.spaceHeating.heatSource.data
+	.filter(x => x.data.id !== undefined)
+	.forEach(x => {
+		const id = x.data.id as string;
+		const isUsed = usedHeatSourceIds.includes(id);
+		const isEditingThisOne = id === currentHeatSourceId;
+
+		radioOptions.set(id, {
+			label: x.data.name,
+			disabled: isUsed && !isEditingThisOne, 
+		});
+	});
+
+radioOptions.set("NEW_HEAT_SOURCE", "Add a new water heating source");
+</script>
 
 <template>
 
@@ -167,17 +189,16 @@ const coldWaterSourceOptions =
 			label="Cold water source"
 			:options="coldWaterSourceOptions"
 			name="coldWaterSource"
-			validation="required" />
-		<FormKit
+			validation="required"
+		/>
+		<FormKit 
 			id="heatSourceId"
 			type="govRadios"
 			label="Use a previously added heat source"
-			:options="new Map(store.spaceHeating.heatSource.data
-				.filter(x => x.data.id !== undefined)
-				.map(x => [x.data.id as string, x.data.name]))
-				.set('NEW_HEAT_SOURCE', 'Add a new water heating source')"
+			:options="new Map(radioOptions)"
 			name="heatSourceId"
-			validation="required">
+			validation="required"
+		>
 			<div class="govuk-hint">
 				<p>
 					To view and edit these options go to
