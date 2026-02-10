@@ -135,7 +135,7 @@ describe("Heat Source Page", () => {
 					data: [{ data: existingHeatPumpSpaceHeating1 }],
 				},
 			},
-			domesticHotWaterNew: {
+			domesticHotWater: {
 				heatSources: {
 					data: [{ data: dhwWithExistingHeatPump }],
 				},
@@ -154,7 +154,7 @@ describe("Heat Source Page", () => {
 		await renderSuspended(HeatSourceForm);
 		const saveProgressButton = screen.getByTestId("saveProgress");
 
-		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water-new");
+		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water");
 	});
 
 

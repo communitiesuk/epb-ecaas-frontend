@@ -146,11 +146,11 @@ const coldWaterSourceOptions =
 	} as const;
 
 
-const usedHeatSourceIds = store.domesticHotWaterNew.heatSources.data
+const usedHeatSourceIds = store.domesticHotWater.heatSources.data
 	.map(x => x.data?.heatSourceId)
 	.filter(id => id && id !== "NEW_HEAT_SOURCE");
 
-const currentHeatSourceId = store.domesticHotWaterNew.heatSources.data[index]?.data.heatSourceId;
+const currentHeatSourceId = store.domesticHotWater.heatSources.data[index]?.data.heatSourceId;
 const radioOptions = new Map();
 
 store.spaceHeating.heatSource.data
