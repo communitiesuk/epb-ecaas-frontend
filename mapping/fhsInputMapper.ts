@@ -6,7 +6,7 @@ import merge from "deepmerge";
 import { mapInfiltrationVentilationData } from "./infiltrationVentilationMapper";
 import { mapLivingSpaceFabricData as mapDwellingFabricData } from "./dwellingFabricMapper";
 import { mapPvAndElectricBatteriesData } from "./pvAndElectricBatteriesMapper";
-import { mapDomesticHotWaterData } from "./domesticHotWaterMapperOld";
+import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from "~/mapping/common";
 import { objectFromEntries } from "ts-extras";
 import type { Simplify, SimplifyDeep } from "type-fest";
