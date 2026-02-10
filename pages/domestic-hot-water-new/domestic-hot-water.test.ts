@@ -197,6 +197,56 @@ describe("Domestic hot water", () => {
 			expect(screen.getByText(`${hwStorage1.data.name} (1) (1)`)).toBeDefined();
 			expect(screen.getByText(`${hwStorage1.data.name} (1) (2)`)).toBeDefined();
 		});
+
+		it("when a water storage object is removed its id should be removed from all store items which reference it ", async () => {
+			const pipework2: EcaasForm<PipeworkData> = {
+				data: {
+					name: "Jasper's Pipework 2",
+					waterStorage: hwStorage1.data.id,
+					internalDiameter: 70,
+					externalDiameter: 421,
+					length: 200,
+					insulationThickness: 10,
+					thermalConductivity: 1541,
+					surfaceReflectivity: false,
+					pipeContents: "glycol25",
+					location: "unheatedSpace",
+				},
+			};
+
+			const pipework3: EcaasForm<PipeworkData> = {
+				data: {
+					name: "Jasper's Pipework 3",
+					waterStorage: hwStorage2.data.id,
+					internalDiameter: 6.9,
+					externalDiameter: 42,
+					length: 20,
+					insulationThickness: 1,
+					thermalConductivity: 15,
+					surfaceReflectivity: true,
+					pipeContents: "water",
+					location: "heatedSpace",
+				},
+			};
+
+			store.$patch({
+				domesticHotWaterNew: {
+					waterStorage: {
+						data: [hwStorage1, hwStorage2],
+					},
+					pipework: {
+						data: [pipework2, pipework3],
+					},
+				},
+			});
+		
+			await renderSuspended(DomesticHotWater);
+			await user.click(await screen.findByTestId("waterStorage_remove_1"));
+			const { pipework } = store.domesticHotWaterNew;
+	
+			expect(pipework.data[0]?.data.waterStorage).toBe(hwStorage1.data.id);		
+			expect(pipework.data[1]?.data.waterStorage).toBeUndefined();
+		});
 	});
 
 	describe("Hot water outlets", () => {
