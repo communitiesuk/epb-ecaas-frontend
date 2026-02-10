@@ -242,13 +242,21 @@
                             ]
                         }
                     },
-                    "required": ["ColdWaterSource"],
+                    "required": [
+                        "ColdWaterSource"
+                    ],
                     "not": {
-                        "properties": {"ColdWaterSource": {"const": "preheated tank"}}
+                        "properties": {
+                            "ColdWaterSource": {
+                                "const": "preheated tank"
+                            }
+                        }
                     }
                 }
             },
-            "required": ["preheated tank"]
+            "required": [
+                "preheated tank"
+            ]
         },
         "EnergySupply": {
             "type": "object",
@@ -375,9 +383,13 @@
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "type": { "const": "StorageTank" }
+                                        "type": {
+                                            "const": "StorageTank"
+                                        }
                                     },
-                                    "required": ["type"]
+                                    "required": [
+                                        "type"
+                                    ]
                                 },
                                 {
                                     "$ref": "#/$defs/StorageTank"
@@ -590,25 +602,25 @@
                 "unevaluatedProperties": false,
                 "oneOf": [
                     {
-						"properties": {
-							"product_reference": {
-								"description": "A unique reference to a product held within the HEM database (PCDB)",
-								"title": "Reference to the product in the HEM database",
-								"type": "string"
-							},
-							"ColdWaterSource": {
-								"enum": [
-									"header tank",
-									"mains water"
-								]
-							}
-						},
-						"required": [
-							"product_reference",
-							"ColdWaterSource"
-						]
-					},
-					{
+                        "properties": {
+                            "product_reference": {
+                                "description": "A unique reference to a product held within the HEM database (PCDB)",
+                                "title": "Reference to the product in the HEM database",
+                                "type": "string"
+                            },
+                            "ColdWaterSource": {
+                                "enum": [
+                                    "header tank",
+                                    "mains water"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "product_reference",
+                            "ColdWaterSource"
+                        ]
+                    },
+                    {
                         "required": [
                             "type",
                             "ColdWaterSource",
@@ -692,9 +704,21 @@
                             }
                         },
                         "anyOf": [
-                            {"required": ["system_a_efficiencies"]},
-                            {"required": ["system_b_efficiencies"]},
-                            {"required": ["system_c_efficiencies"]}
+                            {
+                                "required": [
+                                    "system_a_efficiencies"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "system_b_efficiencies"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "system_c_efficiencies"
+                                ]
+                            }
                         ]
                     }
                 ]
@@ -936,20 +960,441 @@
                 "MechanicalVentilation": {
                     "type": "object",
                     "additionalProperties": {
-                        "type": "object",
-                        "unevaluatedProperties": false,
                         "oneOf": [
                             {
-                                "$ref": "#/$defs/MechVentMVHR"
-                            },
+								"type": "object",
+								"required": [
+									"sup_air_flw_ctrl",
+									"sup_air_temp_ctrl",
+									"product_reference",
+									"EnergySupply",
+									"installed_under_approved_scheme"
+								],
+								"properties": {
+									"sup_air_flw_ctrl": {
+										"enum": [
+											"ODA"
+										]
+									},
+									"sup_air_temp_ctrl": {
+										"enum": [
+											"NO_CTRL"
+										]
+									},
+									"design_zone_cooling_covered_by_mech_vent": {
+										"type": "number"
+									},
+									"design_zone_heating_covered_by_mech_vent": {
+										"type": "number"
+									},
+									"product_reference": {
+										"description": "A unique reference to a product held within the HEM database (PCDB)",
+										"title": "Reference to the product in the HEM database",
+										"type": "string"
+									},
+									"EnergySupply": {
+										"type": "string"
+									},
+									"design_outdoor_air_flow_rate": {
+										"type": "number",
+										"exclusiveMinimum": 0,
+										"description": "Design outdoor air flow rate (m3/hr)"
+									},
+									"installed_under_approved_scheme": {
+										"type": "boolean",
+										"description": "Whether or not this system was installed under an approved installation scheme"
+									}
+								},
+								"oneOf": [
+									{
+										"required": [
+											"vent_type",
+											"mvhr_location",
+											"ductwork",
+											"position_intake",
+											"position_exhaust",
+											"measured_fan_power",
+											"measured_air_flow_rate"
+										],
+										"properties": {
+											"vent_type": {
+												"const": "MVHR"
+											},
+											"mvhr_location": {
+												"enum": [
+													"inside",
+													"outside"
+												]
+											},
+											"ductwork": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"unevaluatedProperties": false,
+													"required": [
+														"cross_section_shape",
+														"internal_diameter_mm",
+														"external_diameter_mm",
+														"length",
+														"insulation_thermal_conductivity",
+														"insulation_thickness_mm",
+														"reflective",
+														"duct_type"
+													],
+													"properties": {
+														"cross_section_shape": {
+															"enum": [
+																"circular",
+																"rectangular"
+															]
+														},
+														"internal_diameter_mm": {
+															"type": "number",
+															"minimum": 0,
+															"maximum": 1000
+														},
+														"external_diameter_mm": {
+															"type": "number",
+															"minimum": 0,
+															"maximum": 1000
+														},
+														"length": {
+															"type": "number",
+															"minimum": 0
+														},
+														"insulation_thermal_conductivity": {
+															"type": "number",
+															"minimum": 0
+														},
+														"insulation_thickness_mm": {
+															"type": "number",
+															"minimum": 0,
+															"maximum": 100
+														},
+														"reflective": {
+															"type": "boolean"
+														},
+														"duct_type": {
+															"enum": [
+																"supply",
+																"extract",
+																"intake",
+																"exhaust"
+															]
+														}
+													}
+												}
+											},
+											"position_intake": {
+												"type": "object",
+												"properties": {
+													"mid_height_air_flow_path": {
+														"type": "number",
+														"minimum": 1,
+														"maximum": 60,
+														"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+													},
+													"orientation360": {
+														"type": "number",
+														"minimum": 0,
+														"maximum": 360,
+														"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+													},
+													"pitch": {
+														"type": "number",
+														"minimum": 0,
+														"maximum": 180,
+														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+													}
+												}
+											},
+											"position_exhaust": {
+												"type": "object",
+												"properties": {
+													"mid_height_air_flow_path": {
+														"type": "number",
+														"minimum": 1,
+														"maximum": 60,
+														"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+													},
+													"orientation360": {
+														"type": "number",
+														"minimum": 0,
+														"maximum": 360,
+														"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+													},
+													"pitch": {
+														"type": "number",
+														"minimum": 0,
+														"maximum": 180,
+														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+													}
+												}
+											},
+											"measured_fan_power": {
+												"type": "number"
+											},
+											"measured_air_flow_rate": {
+												"type": "number"
+											}
+										}
+									},
+									{
+										"required": [
+											"vent_type",
+											"installation_type",
+											"installation_location"
+										],
+										"properties": {
+											"vent_type": {
+												"type": "string",
+												"const": "Decentralised continuous MEV"
+											},
+											"installation_type": {
+												"type": "string",
+												"enum": [
+													"in_ceiling",
+													"in_duct",
+													"through_wall"
+												]
+											},
+											"installation_location": {
+												"type": "string",
+												"enum": [
+													"kitchen",
+													"other_wet_room"
+												],
+												"description": "Whether the system is installed in a kitchen or in another wet room that is not a kitchen"
+											}
+										},
+										"oneOf": [
+											{
+												"required": [
+													"vent_type",
+													"mid_height_air_flow_path",
+													"orientation360",
+													"pitch"
+												],
+												"properties": {
+													"mid_height_air_flow_path": {
+														"type": "number",
+														"minimum": 1,
+														"maximum": 60,
+														"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+													},
+													"orientation360": {
+														"type": "number",
+														"minimum": 0,
+														"maximum": 360,
+														"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+													},
+													"pitch": {
+														"type": "number",
+														"minimum": 0,
+														"maximum": 180,
+														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+													}
+												}
+											},
+											{
+												"required": [
+													"position_exhaust"
+												],
+												"properties": {
+													"position_exhaust": {
+														"type": "object",
+														"properties": {
+															"mid_height_air_flow_path": {
+																"type": "number",
+																"minimum": 1,
+																"maximum": 60,
+																"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+															},
+															"orientation360": {
+																"type": "number",
+																"minimum": 0,
+																"maximum": 360,
+																"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+															},
+															"pitch": {
+																"type": "number",
+																"minimum": 0,
+																"maximum": 180,
+																"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+															}
+														}
+													}
+												}
+											}
+										]
+									},
+									{
+										"required": [
+											"vent_type",
+											"measured_fan_power",
+											"measured_air_flow_rate"
+										],
+										"properties": {
+											"vent_type": {
+												"const": "Centralised continuous MEV"
+											},
+											"measured_fan_power": {
+												"type": "number"
+											},
+											"measured_air_flow_rate": {
+												"type": "number"
+											}
+										},
+										"oneOf": [
+											{
+												"required": [
+													"mid_height_air_flow_path",
+													"orientation360",
+													"pitch"
+												],
+												"properties": {
+													"mid_height_air_flow_path": {
+														"type": "number",
+														"minimum": 1,
+														"maximum": 60,
+														"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+													},
+													"orientation360": {
+														"type": "number",
+														"minimum": 0,
+														"maximum": 360,
+														"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+													},
+													"pitch": {
+														"type": "number",
+														"minimum": 0,
+														"maximum": 180,
+														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+													}
+												}
+											},
+											{
+												"required": [
+													"position_exhaust"
+												],
+												"properties": {
+													"position_exhaust": {
+														"type": "object",
+														"properties": {
+															"mid_height_air_flow_path": {
+																"type": "number",
+																"minimum": 1,
+																"maximum": 60,
+																"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+															},
+															"orientation360": {
+																"type": "number",
+																"minimum": 0,
+																"maximum": 360,
+																"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+															},
+															"pitch": {
+																"type": "number",
+																"minimum": 0,
+																"maximum": 180,
+																"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+															}
+														}
+													}
+												}
+											}
+										]
+									},
+									{
+										"required": [
+											"vent_type"
+										],
+										"properties": {
+											"vent_type": {
+												"type": "string",
+												"const": "Intermittent MEV"
+											}
+										},
+										"oneOf": [
+											{
+												"required": [
+													"vent_type",
+													"mid_height_air_flow_path",
+													"orientation360",
+													"pitch"
+												],
+												"properties": {
+													"mid_height_air_flow_path": {
+														"type": "number",
+														"minimum": 1,
+														"maximum": 60,
+														"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+													},
+													"orientation360": {
+														"type": "number",
+														"minimum": 0,
+														"maximum": 360,
+														"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+													},
+													"pitch": {
+														"type": "number",
+														"minimum": 0,
+														"maximum": 180,
+														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+													}
+												}
+											},
+											{
+												"required": [
+													"position_exhaust"
+												],
+												"properties": {
+													"position_exhaust": {
+														"type": "object",
+														"properties": {
+															"mid_height_air_flow_path": {
+																"type": "number",
+																"minimum": 1,
+																"maximum": 60,
+																"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+															},
+															"orientation360": {
+																"type": "number",
+																"minimum": 0,
+																"maximum": 360,
+																"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+															},
+															"pitch": {
+																"type": "number",
+																"minimum": 0,
+																"maximum": 180,
+																"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+															}
+														}
+													}
+												}
+											}
+										]
+									}
+								]
+							},
                             {
-                                "$ref": "#/$defs/MechVentDecentralisedContinuousMEV"
-                            },
-                            {
-                                "$ref": "#/$defs/MechVentIntermittentMEV"
-                            },
-                            {
-                                "$ref": "#/$defs/MechVentCentralisedContinuousMEV"
+                                "type": "object",
+                                "unevaluatedProperties": false,
+                                "oneOf": [
+                                    {
+                                        "$ref": "#/$defs/MechVentMVHR"
+                                    },
+                                    {
+                                        "$ref": "#/$defs/MechVentDecentralisedContinuousMEV"
+                                    },
+                                    {
+                                        "$ref": "#/$defs/MechVentIntermittentMEV"
+                                    },
+                                    {
+                                        "$ref": "#/$defs/MechVentCentralisedContinuousMEV"
+                                    }
+                                ]
                             }
                         ]
                     }
@@ -1631,7 +2076,9 @@
             "properties": {
                 "HeatSource": {
                     "additionalProperties": {
-                        "required": ["thermostat_position"]
+                        "required": [
+                            "thermostat_position"
+                        ]
                     }
                 }
             }
@@ -1683,7 +2130,12 @@
                             "pipe_contents"
                         ],
                         "properties": {
-                            "location": {"enum": ["internal", "external"]},
+                            "location": {
+                                "enum": [
+                                    "internal",
+                                    "external"
+                                ]
+                            },
                             "internal_diameter_mm": {
                                 "type": "number",
                                 "minimum": 5,
@@ -1706,8 +2158,15 @@
                                 "type": "number",
                                 "minimum": 0
                             },
-                            "surface_reflectivity": {"type": "boolean"},
-                            "pipe_contents": {"enum": ["water", "glycol25"]}
+                            "surface_reflectivity": {
+                                "type": "boolean"
+                            },
+                            "pipe_contents": {
+                                "enum": [
+                                    "water",
+                                    "glycol25"
+                                ]
+                            }
                         }
                     }
                 },
@@ -1862,7 +2321,9 @@
                         {
                             "$ref": "#/$defs/Tank",
                             "properties": {
-                                "EnergySupply_pump": {"type": "string"},
+                                "EnergySupply_pump": {
+                                    "type": "string"
+                                },
                                 "max_flow_rate_pump_l_per_min": {
                                     "type": "number",
                                     "exclusiveMinimum": 0
@@ -1952,7 +2413,12 @@
                 "type": {
                     "const": "CombiBoiler"
                 },
-                "ColdWaterSource": {"enum": ["header tank", "mains water"]},
+                "ColdWaterSource": {
+                    "enum": [
+                        "header tank",
+                        "mains water"
+                    ]
+                },
                 "HeatSourceWet": {
                     "description": "References a key (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1') in $.HeatSourceWet",
                     "reference_to": "$.heat_source_wet",

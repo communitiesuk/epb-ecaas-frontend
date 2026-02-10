@@ -86,3 +86,5 @@ export type SchemaColdWaterSourceType = components["schemas"]["ColdWaterSource"]
 export type SchemaHeatNetworkType = (Exclude<FhsSchema["HeatSourceWet"], undefined>[string] & { is_heat_network: true })["heat_network_type"];
 export type SchemaRadiatorType = SchemaRadiatorWithProductReference["radiator_type"];
 export type SchemaStorageTank = Extract<SchemaHotWaterSourceDetails, { type: "StorageTank" }>;
+export type SchemaMechanicalVentilationInstallationType = Extract<SchemaMechanicalVentilation, { vent_type: "Decentralised continuous MEV", product_reference: string }>["installation_type"];
+export type SchemaMechanicalVentilationInstallationLocation = Extract<SchemaMechanicalVentilation, { vent_type: "Decentralised continuous MEV", product_reference: string }>["installation_location"];

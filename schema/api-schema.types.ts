@@ -1407,7 +1407,125 @@ export interface components {
                     env_area: number;
                 };
                 MechanicalVentilation?: {
-                    [key: string]: components["schemas"]["MechVentMVHR"] | components["schemas"]["MechVentDecentralisedContinuousMEV"] | components["schemas"]["MechVentIntermittentMEV"] | components["schemas"]["MechVentCentralisedContinuousMEV"];
+                    [key: string]: ({
+                        /** @enum {unknown} */
+                        sup_air_flw_ctrl: "ODA";
+                        /** @enum {unknown} */
+                        sup_air_temp_ctrl: "NO_CTRL";
+                        design_zone_cooling_covered_by_mech_vent?: number;
+                        design_zone_heating_covered_by_mech_vent?: number;
+                        /**
+                         * Reference to the product in the HEM database
+                         * @description A unique reference to a product held within the HEM database (PCDB)
+                         */
+                        product_reference: string;
+                        EnergySupply: string;
+                        /** @description Design outdoor air flow rate (m3/hr) */
+                        design_outdoor_air_flow_rate?: number;
+                        /** @description Whether or not this system was installed under an approved installation scheme */
+                        installed_under_approved_scheme: boolean;
+                    } & ({
+                        /** @constant */
+                        vent_type: "MVHR";
+                        /** @enum {unknown} */
+                        mvhr_location: "inside" | "outside";
+                        ductwork: {
+                            /** @enum {unknown} */
+                            cross_section_shape: "circular" | "rectangular";
+                            internal_diameter_mm: number;
+                            external_diameter_mm: number;
+                            length: number;
+                            insulation_thermal_conductivity: number;
+                            insulation_thickness_mm: number;
+                            reflective: boolean;
+                            /** @enum {unknown} */
+                            duct_type: "supply" | "extract" | "intake" | "exhaust";
+                        }[];
+                        position_intake: {
+                            /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+                            mid_height_air_flow_path?: number;
+                            /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+                            orientation360?: number;
+                            /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+                            pitch?: number;
+                        };
+                        position_exhaust: {
+                            /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+                            mid_height_air_flow_path?: number;
+                            /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+                            orientation360?: number;
+                            /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+                            pitch?: number;
+                        };
+                        measured_fan_power: number;
+                        measured_air_flow_rate: number;
+                    } | ({
+                        /** @constant */
+                        vent_type: "Decentralised continuous MEV";
+                        /** @enum {string} */
+                        installation_type: "in_ceiling" | "in_duct" | "through_wall";
+                        /**
+                         * @description Whether the system is installed in a kitchen or in another wet room that is not a kitchen
+                         * @enum {string}
+                         */
+                        installation_location: "kitchen" | "other_wet_room";
+                    } & ({
+                        /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+                        mid_height_air_flow_path: number;
+                        /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+                        orientation360: number;
+                        /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+                        pitch: number;
+                    } | {
+                        position_exhaust: {
+                            /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+                            mid_height_air_flow_path?: number;
+                            /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+                            orientation360?: number;
+                            /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+                            pitch?: number;
+                        };
+                    })) | ({
+                        /** @constant */
+                        vent_type: "Centralised continuous MEV";
+                        measured_fan_power: number;
+                        measured_air_flow_rate: number;
+                    } & ({
+                        /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+                        mid_height_air_flow_path: number;
+                        /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+                        orientation360: number;
+                        /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+                        pitch: number;
+                    } | {
+                        position_exhaust: {
+                            /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+                            mid_height_air_flow_path?: number;
+                            /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+                            orientation360?: number;
+                            /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+                            pitch?: number;
+                        };
+                    })) | ({
+                        /** @constant */
+                        vent_type: "Intermittent MEV";
+                    } & ({
+                        /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+                        mid_height_air_flow_path: number;
+                        /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+                        orientation360: number;
+                        /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+                        pitch: number;
+                    } | {
+                        position_exhaust: {
+                            /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+                            mid_height_air_flow_path?: number;
+                            /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+                            orientation360?: number;
+                            /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+                            pitch?: number;
+                        };
+                    })))) | (components["schemas"]["MechVentMVHR"] | components["schemas"]["MechVentDecentralisedContinuousMEV"] | components["schemas"]["MechVentIntermittentMEV"] | components["schemas"]["MechVentCentralisedContinuousMEV"]);
                 };
             };
             Zone: {
