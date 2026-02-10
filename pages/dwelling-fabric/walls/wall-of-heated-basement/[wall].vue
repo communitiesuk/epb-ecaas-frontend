@@ -100,12 +100,33 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<FormKit
+			id="netSurfaceArea"
+			type="govInputWithSuffix"
+			suffix-text="m²"
+			label="Net surface area"
+			help="Enter the net surface area of the entire element"
+			name="netSurfaceArea"
+			validation="required | number | min:0.01 | max:10000"
+		/>
+		<FieldsUValue id="uValue" name="uValue" />
+		<FormKit
+			id="thermalResistance"
+			type="govInputWithSuffix"
+			suffix-text="(m²·K)/W"
+			label="Thermal resistance"
+			help="Enter the thermal resistance of all layers in the floor construction"
+			name="thermalResistance"
+			validation="required | number | min:0.00001 | max:50"
+		/>
+		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
+		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
+		<FormKit
 			id="associatedBasementFloorId"
 			:key="basementFloorOptions.size"
 			name="associatedBasementFloorId"
 			type="govRadios"
 			label="Associated basement floor"
-			help="Select the relevant basement floor that has been added previously"
+			help="Select the basement floor this wall connects to"
 			validation="required"
 			:options="basementFloorOptions"
 		>
@@ -119,27 +140,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</NuxtLink>
 			</div>
 		</FormKit>
-		<FormKit
-			id="netSurfaceArea"
-			type="govInputWithSuffix"
-			suffix-text="m²"
-			label="Net surface area"
-			help="Enter the net surface area of the wall"
-			name="netSurfaceArea"
-			validation="required | number | min:0.01 | max:10000"
-		/>
-		<FieldsUValue id="uValue" name="uValue" />
-		<FormKit
-			id="thermalResistance"
-			type="govInputWithSuffix"
-			suffix-text="(m²·K)/W"
-			label="Thermal resistance"
-			help="Enter the thermal resistance of the wall"
-			name="thermalResistance"
-			validation="required | number | min:0.00001 | max:50"
-		/>
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
 		<div class="govuk-button-group govuk-!-margin-top-6">
 			<GovLLMWarning />
 			<div class="govuk-button-group">
