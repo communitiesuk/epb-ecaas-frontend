@@ -87,7 +87,7 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zon
 }
 
 export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "GroundFloorArea" | "Zone"> {
-	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor, dwellingSpaceFloorOfHeatedBasement } = state.dwellingFabric.dwellingSpaceFloors;
+	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor, dwellingSpaceFloorAboveUnheatedBasement, dwellingSpaceFloorOfHeatedBasement } = state.dwellingFabric.dwellingSpaceFloors;
 	const floorSuffix = "floor";
 
 	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: "Slab_edge_insulation" }>): SchemaEdgeInsulation {
@@ -274,6 +274,32 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 			},
 		};
 	}) || [];
+
+	const floorAboveUnheatedBasementData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceFloorAboveUnheatedBasement?.map(x => {
+		const nameWithSuffix = suffixName(x.name, floorSuffix);
+		return {
+			[nameWithSuffix]: {
+				type: "BuildingElementGround",
+				thermal_resistance_construction: x.thermalResistance,
+				u_value: x.uValue,
+				total_area: x.surfaceArea,
+				floor_type: "Unheated_basement",
+				thickness_walls: x.thicknessOfWalls / 1000,
+				perimeter: x.perimeter,
+				psi_wall_floor_junc: x.psiOfWallJunction,
+				thermal_resistance_floor_construction: x.thermalResistance,
+				areal_heat_capacity: x.arealHeatCapacity,
+				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
+				area: x.surfaceArea,
+				depth_basement_floor: x.depthOfBasementFloor,
+				thermal_resist_walls_base: x.thermalResistanceOfBasementWalls,
+				thermal_transm_envi_base: x.thermalTransmittanceOfFoundations,
+				thermal_transm_walls: x.thermalTransmittanceOfBasementWalls,
+				height_basement_walls: x.heightOfBasementWalls,
+			},
+		};
+	}) || [];
+
 	const floorOfHeatedBasementData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceFloorOfHeatedBasement?.map(x => {
 		if (!x.id) {
 			throw new Error(`Floor of heated basement '${x.name}' must have an ID`);
@@ -312,6 +338,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					...groundFloorData,
 					...internalFloorData,
 					...exposedFloorData,
+					...floorAboveUnheatedBasementData,
 					...floorOfHeatedBasementData,
 				),
 			} as Partial<SchemaZoneInput>,

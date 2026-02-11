@@ -171,6 +171,22 @@ describe("dwelling fabric mapper", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 		};
+		const floorAboveUnheatedBasement: FloorAboveUnheatedBasementData = {
+			name: "Floor above unheated basement 1",
+			surfaceArea: 3,
+			uValue: 1,
+			thermalResistance: 2,
+			arealHeatCapacity: "Light",
+			massDistributionClass: "E",
+			perimeter: 5,
+			psiOfWallJunction: 1.2,
+			thicknessOfWalls: 20,
+			depthOfBasementFloor: 1,
+			heightOfBasementWalls: 0.9,
+			thermalResistanceOfBasementWalls: 0.6,
+			thermalTransmittanceOfBasementWalls: 0.7,
+			thermalTransmittanceOfFoundations: 0.8, 
+		};
 		const floorAboveHeatedBasement: FloorOfHeatedBasementData = {
 			id: "974e8749-f465-4f43-a38a-3d0b97060a64",
 			name: "Floor above heated basement 1",
@@ -209,6 +225,7 @@ describe("dwelling fabric mapper", () => {
 					},
 					dwellingSpaceInternalFloor: { ...baseForm, data: [{ ...baseForm, data: internalFloor }] },
 					dwellingSpaceExposedFloor: { ...baseForm, data: [{ ...baseForm, data: exposedFloor }] },
+					dwellingSpaceFloorAboveUnheatedBasement: { ...baseForm, data: [{ ...baseForm, data: floorAboveUnheatedBasement }] },
 					dwellingSpaceFloorOfHeatedBasement: { ...baseForm, data: [{ ...baseForm, data: floorAboveHeatedBasement }] },
 				},
 				dwellingSpaceWalls: {
@@ -232,6 +249,7 @@ describe("dwelling fabric mapper", () => {
 		const groundFloorWithUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithUnheatedBasement.name + floorSuffix]! as BuildingElementGround;
 		const internalFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalFloor.name + floorSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
 		const exposedFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[exposedFloor.name + floorSuffix] as BuildingElementOpaque;
+		const floorAboveUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveUnheatedBasement.name + floorSuffix] as BuildingElementGround;
 		const floorAboveHeatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveHeatedBasement.name + floorSuffix] as BuildingElementGround;
 
 		expect(fhsInputData.GroundFloorArea).toBe(groundFloorsTotalArea);
@@ -323,6 +341,28 @@ describe("dwelling fabric mapper", () => {
 
 		expect(exposedFloorElement).toEqual(expectedExposedFloor);
 
+		const expectedFloorAboveUnheatedBasement: BuildingElementGround = {
+			type: "BuildingElementGround",
+			thermal_resistance_construction: floorAboveUnheatedBasement.thermalResistance,
+			u_value: floorAboveUnheatedBasement.uValue,
+			total_area: floorAboveUnheatedBasement.surfaceArea,
+			floor_type: "Unheated_basement",
+			thickness_walls: floorAboveUnheatedBasement.thicknessOfWalls / 1000,
+			perimeter: floorAboveUnheatedBasement.perimeter,
+			psi_wall_floor_junc: floorAboveUnheatedBasement.psiOfWallJunction,
+			thermal_resistance_floor_construction: floorAboveUnheatedBasement.thermalResistance,
+			areal_heat_capacity: floorAboveUnheatedBasement.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(floorAboveUnheatedBasement.massDistributionClass),
+			area: floorAboveUnheatedBasement.surfaceArea,
+			depth_basement_floor: floorAboveUnheatedBasement.depthOfBasementFloor,
+			thermal_resist_walls_base: floorAboveUnheatedBasement.thermalResistanceOfBasementWalls,
+			thermal_transm_envi_base: floorAboveUnheatedBasement.thermalTransmittanceOfFoundations,
+			thermal_transm_walls: floorAboveUnheatedBasement.thermalTransmittanceOfBasementWalls,
+			height_basement_walls: floorAboveUnheatedBasement.heightOfBasementWalls,
+		};
+
+		expect(floorAboveUnheatedBasementElement).toEqual(expectedFloorAboveUnheatedBasement);
+		
 		const expectedFloorOfHeatedBasement: BuildingElementGround = {
 			type: "BuildingElementGround",
 			total_area: floorAboveHeatedBasement.surfaceArea,
