@@ -31,12 +31,10 @@ mockNuxtImport("navigateTo", () => {
 });
 
 const zoneParametersData: DwellingSpaceZoneParametersData = {
-	volume: 10,
-	livingRoomArea: 15,
-	restOfDwellingArea: 20,
-	// spaceHeatingSystemForThisZone: 'elec heater',
-	// spaceCoolingSystemForThisZone: [],
-	// spaceHeatControlSystemForThisZone: []
+	volume: 250,
+	livingZoneArea: 40,
+	groundFloorArea: 50,
+	restOfDwellingArea: 60,
 };
 
 const lightingData: DwellingSpaceLightingData = {
@@ -388,12 +386,11 @@ describe("Dwelling space fabric summary", () => {
 			await renderSuspended(Summary);
 
 			const expectedResult = {
-				"Volume": `10 ${cubicMetre.suffix}`,
-				"Living zone floor area": dim(15, "metres square"),
-				"Rest of dwelling floor area": dim(20, "metres square"),
-				// "Heat emitting system for this zone": "Elec heater",
+				"Volume": `250 ${cubicMetre.suffix}`,
+				"Living zone floor area": dim(40, "metres square"),
+				"Ground floor area": dim(50, "metres square"),
+				"Rest of dwelling floor area": dim(60, "metres square"),
 			};
-
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceZoneParameters-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);

@@ -32,11 +32,9 @@ describe("dwelling fabric mapper", () => {
 		// Arrange
 		const state: DwellingSpaceZoneParametersData = {
 			volume: 10,
-			livingRoomArea: 5,
+			livingZoneArea: 5,
+			groundFloorArea: 8,
 			restOfDwellingArea: 0,
-			// spaceHeatingSystemForThisZone: 'main 1',
-			spaceCoolingSystemForThisZone: [],
-			spaceHeatControlSystemForThisZone: [],
 		};
 
 		store.$patch({
@@ -65,6 +63,8 @@ describe("dwelling fabric mapper", () => {
 
 		// Assert
 		expect(fhsInputData.Zone[defaultZoneName]?.volume).toBe(state.volume);
+		expect(fhsInputData.Zone[defaultZoneName]?.livingroom_area).toBe(state.livingZoneArea);
+		expect(fhsInputData.Zone[defaultZoneName]?.restofdwelling_area).toBe(state.restOfDwellingArea);
 		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatSystem).toEqual(["radiator 1", "ieh 1"]);
 	});
 

@@ -59,7 +59,7 @@ export function mapZoneParametersData(
 				...(spaceHeatingSystemNames.length ? { SpaceHeatSystem: spaceHeatingSystemNames } : {}),
 				// SpaceCoolSystem: dwellingSpaceZoneParameters.spaceCoolingSystemForThisZone?.map(x => x.name),
 				volume: dwellingSpaceZoneParameters.volume,
-				livingroom_area: dwellingSpaceZoneParameters.livingRoomArea,
+				livingroom_area: dwellingSpaceZoneParameters.livingZoneArea,
 				restofdwelling_area: dwellingSpaceZoneParameters.restOfDwellingArea,
 			} as Partial<SchemaZoneInput>,
 		},

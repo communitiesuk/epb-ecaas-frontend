@@ -1014,7 +1014,8 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: {
 					volume: 300,
-					livingRoomArea: 50,
+					livingZoneArea: 50,
+					groundFloorArea: 40,
 					restOfDwellingArea: 30,
 					// spaceHeatingSystemForThisZone: "some-wet-distribution",
 					// spaceCoolingSystemForThisZone: [{
@@ -1457,7 +1458,8 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: {
 					volume: 550,
-					livingRoomArea: 80,
+					livingZoneArea: 80,
+					groundFloorArea: 60,
 					restOfDwellingArea: 20,
 					// spaceHeatingSystemForThisZone: "instant elec heater 1",
 					// spaceCoolingSystemForThisZone: [],

@@ -567,16 +567,14 @@ const pointThermalBridgeDataZod = named.extend({
 
 export type PointThermalBridgeData = z.infer<typeof pointThermalBridgeDataZod>;
 
-const spaceCoolingSystemData = named;
-const spaceHeatControlSystemData = named;
+const _spaceCoolingSystemData = named;
+const _spaceHeatControlSystemData = named;
 
 const dwellingSpaceZoneParameterDataZod = z.object({
-	volume: z.number().min(0),
-	livingRoomArea: z.number().min(0).max(10000),
+	livingZoneArea: z.number().min(0).max(10000),
 	restOfDwellingArea: z.number().min(0).max(10000),
-	spaceHeatingSystemForThisZone: z.optional(z.string()),
-	spaceCoolingSystemForThisZone: z.optional(z.array(spaceCoolingSystemData)),
-	spaceHeatControlSystemForThisZone: z.optional(z.array(spaceHeatControlSystemData)),
+	groundFloorArea: z.number().min(0).max(10000),
+	volume: z.number().min(0),
 });
 
 export type DwellingSpaceZoneParametersData = z.infer<typeof dwellingSpaceZoneParameterDataZod>;
@@ -593,9 +591,9 @@ const _spaceHeatingSystemDataZod = named;
 
 export type SpaceHeatingSystemData = z.infer<typeof _spaceHeatingSystemDataZod>;
 
-export type SpaceCoolingSystemData = z.infer<typeof spaceCoolingSystemData>;
+export type SpaceCoolingSystemData = z.infer<typeof _spaceCoolingSystemData>;
 
-export type SpaceHeatControlSystemData = z.infer<typeof spaceHeatControlSystemData>;
+export type SpaceHeatControlSystemData = z.infer<typeof _spaceHeatControlSystemData>;
 
 export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	mechanicalVentilation: EcaasFormList<MechanicalVentilationData>;
