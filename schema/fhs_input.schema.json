@@ -3468,11 +3468,7 @@
 												"SFP"
 											],
 											"properties": {
-												"SFP": {
-													"type": "number",
-													"exclusiveMinimum": 0,
-													"description": "Specific fan power, assumed inclusive of any in use factors unless SFP_in_use_factor also provided (unit: W/l/s)"
-												}
+												"SFP": {"$ref": "#/$defs/SFP"}
 											}
 										}
 									},
@@ -3496,17 +3492,23 @@
 											]
 										},
 										"then": {
-											"required": [
-												"measured_fan_power",
-												"measured_air_flow_rate"
+											"oneOf": [
+												{
+													"required": ["measured_fan_power", "measured_air_flow_rate"],
+													"not": {"required": ["SFP"]}
+												},
+												{
+													"required": ["SFP"],
+													"not": {"anyOf": [
+														{"required": ["measured_fan_power"]},
+														{"required": ["measured_air_flow_rate"]}
+													]}
+												}
 											],
 											"properties": {
-												"measured_fan_power": {
-													"type": "number"
-												},
-												"measured_air_flow_rate": {
-													"type": "number"
-												}
+												"measured_fan_power": {"type": "number"},
+												"measured_air_flow_rate": {"type": "number"},
+												"SFP": {"$ref": "#/$defs/SFP"}
 											}
 										}
 									}
@@ -4704,6 +4706,11 @@
 			"title": "BoilerCostScheduleHybrid",
 			"type": "object"
 		},
+		"SFP": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Specific fan power, assumed inclusive of any in use factors unless SFP_in_use_factor also provided (unit: W/l/s)"
+        },
 		"ScheduleForDouble": {
 			"additionalProperties": {
 				"items": {

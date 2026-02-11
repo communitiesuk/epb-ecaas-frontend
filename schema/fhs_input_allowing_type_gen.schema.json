@@ -1130,14 +1130,32 @@
 														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
 													}
 												}
-											},
-											"measured_fan_power": {
-												"type": "number"
-											},
-											"measured_air_flow_rate": {
-												"type": "number"
 											}
-										}
+										},
+                                        "oneOf": [
+                                            {
+                                                "required": ["measured_fan_power", "measured_air_flow_rate"],
+                                                "not": {"required": ["SFP"]},
+                                                "properties": {
+                                                    "measured_fan_power": {
+                                                        "type": "number"
+                                                    },
+                                                    "measured_air_flow_rate": {
+                                                        "type": "number"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "required": ["SFP"],
+                                                "not": {"anyOf": [
+                                                    {"required": ["measured_fan_power"]},
+                                                    {"required": ["measured_air_flow_rate"]}
+                                                ]},
+                                                "properties": {
+                                                    "SFP": {"$ref": "#/$defs/SFP"}
+                                                }
+                                            }
+                                        ]
 									},
 									{
 										"required": [
@@ -1229,81 +1247,105 @@
 										]
 									},
 									{
-										"required": [
-											"vent_type",
-											"measured_fan_power",
-											"measured_air_flow_rate"
-										],
-										"properties": {
-											"vent_type": {
-												"const": "Centralised continuous MEV"
-											},
-											"measured_fan_power": {
-												"type": "number"
-											},
-											"measured_air_flow_rate": {
-												"type": "number"
-											}
-										},
-										"oneOf": [
-											{
-												"required": [
-													"mid_height_air_flow_path",
-													"orientation360",
-													"pitch"
-												],
-												"properties": {
-													"mid_height_air_flow_path": {
-														"type": "number",
-														"minimum": 1,
-														"maximum": 60,
-														"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
-													},
-													"orientation360": {
-														"type": "number",
-														"minimum": 0,
-														"maximum": 360,
-														"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
-													},
-													"pitch": {
-														"type": "number",
-														"minimum": 0,
-														"maximum": 180,
-														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
-													}
-												}
-											},
-											{
-												"required": [
-													"position_exhaust"
-												],
-												"properties": {
-													"position_exhaust": {
-														"type": "object",
-														"properties": {
-															"mid_height_air_flow_path": {
-																"type": "number",
-																"minimum": 1,
-																"maximum": 60,
-																"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
-															},
-															"orientation360": {
-																"type": "number",
-																"minimum": 0,
-																"maximum": 360,
-																"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
-															},
-															"pitch": {
-																"type": "number",
-																"minimum": 0,
-																"maximum": 180,
-																"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
-															}
-														}
-													}
-												}
-											}
-										]
+                                        "allOf": [
+                                            {
+                                                "oneOf": [
+                                                    {
+                                                        "required": ["measured_fan_power", "measured_air_flow_rate"],
+                                                        "not": {"required": ["SFP"]},
+                                                        "properties": {
+                                                            "measured_fan_power": {
+                                                                "type": "number"
+                                                            },
+                                                            "measured_air_flow_rate": {
+                                                                "type": "number"
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "required": ["SFP"],
+                                                        "not": {"anyOf": [
+                                                            {"required": ["measured_fan_power"]},
+                                                            {"required": ["measured_air_flow_rate"]}
+                                                        ]},
+                                                        "properties": {
+                                                            "SFP": {"$ref": "#/$defs/SFP"}
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "required": [
+                                                    "vent_type"
+                                                ],
+                                                "properties": {
+                                                    "vent_type": {
+                                                        "const": "Centralised continuous MEV"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "oneOf": [
+                                                    {
+                                                        "required": [
+                                                            "mid_height_air_flow_path",
+                                                            "orientation360",
+                                                            "pitch"
+                                                        ],
+                                                        "properties": {
+                                                            "mid_height_air_flow_path": {
+                                                                "type": "number",
+                                                                "minimum": 1,
+                                                                "maximum": 60,
+                                                                "description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+                                                            },
+                                                            "orientation360": {
+                                                                "type": "number",
+                                                                "minimum": 0,
+                                                                "maximum": 360,
+                                                                "description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+                                                            },
+                                                            "pitch": {
+                                                                "type": "number",
+                                                                "minimum": 0,
+                                                                "maximum": 180,
+                                                                "description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "required": [
+                                                            "position_exhaust"
+                                                        ],
+                                                        "properties": {
+                                                            "position_exhaust": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "mid_height_air_flow_path": {
+                                                                        "type": "number",
+                                                                        "minimum": 1,
+                                                                        "maximum": 60,
+                                                                        "description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+                                                                    },
+                                                                    "orientation360": {
+                                                                        "type": "number",
+                                                                        "minimum": 0,
+                                                                        "maximum": 360,
+                                                                        "description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+                                                                    },
+                                                                    "pitch": {
+                                                                        "type": "number",
+                                                                        "minimum": 0,
+                                                                        "maximum": 180,
+                                                                        "description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
 									},
 									{
 										"required": [
@@ -5128,6 +5170,11 @@
             ],
             "title": "BoilerCostScheduleHybrid",
             "type": "object"
+        },
+		"SFP": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Specific fan power, assumed inclusive of any in use factors unless SFP_in_use_factor also provided (unit: W/l/s)"
         },
         "ScheduleForDouble": {
             "additionalProperties": {
