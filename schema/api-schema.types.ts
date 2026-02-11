@@ -901,10 +901,20 @@ export interface components {
         HeatSourceWetHIU: components["schemas"]["HeatSourceWetCommon"] & {
             /** @constant */
             type: "HIU";
+        } & ({
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
+            building_level_distribution_losses: number;
+            /** @description The flow temperature expected to be set - typically either 55°C or 70°C */
+            design_flow_temp: number;
+        } | {
             HIU_daily_loss: number;
             power_max: number;
             building_level_distribution_losses: number;
-        };
+        });
         MixerShower: components["schemas"]["ColdWaterSource"] & {
             /** @constant */
             type: "MixerShower";
@@ -2015,10 +2025,20 @@ export interface components {
                 HeatSourceWetHIU: components["schemas"]["HeatSourceWetCommon"] & {
                     /** @constant */
                     type: "HIU";
+                } & ({
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                    building_level_distribution_losses: number;
+                    /** @description The flow temperature expected to be set - typically either 55°C or 70°C */
+                    design_flow_temp: number;
+                } | {
                     HIU_daily_loss: number;
                     power_max: number;
                     building_level_distribution_losses: number;
-                };
+                });
                 ColdWaterSource: {
                     /** @enum {unknown} */
                     ColdWaterSource: "header tank" | "mains water";

@@ -3225,29 +3225,59 @@
                     "$ref": "#/$defs/HeatSourceWetCommon"
                 },
                 {
-                    "required": [
-                        "type",
-                        "HIU_daily_loss",
-                        "power_max",
-                        "building_level_distribution_losses"
-                    ],
+                    "required": ["type"],
                     "properties": {
                         "type": {
                             "const": "HIU"
-                        },
-                        "HIU_daily_loss": {
-                            "type": "number",
-                            "exclusiveMinimum": 0
-                        },
-                        "power_max": {
-                            "type": "number",
-                            "exclusiveMinimum": 0
-                        },
-                        "building_level_distribution_losses": {
-                            "type": "number",
-                            "minimum": 0
                         }
                     }
+                },
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "product_reference",
+                                "building_level_distribution_losses",
+                                "design_flow_temp"
+                            ],
+                            "properties": {
+                                "product_reference": {
+                                    "description": "A unique reference to a product held within the HEM database (PCDB)",
+                                    "title": "Reference to the product in the HEM database",
+                                    "type": "string"
+                                },
+                                "building_level_distribution_losses": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "design_flow_temp": {
+                                    "type": "number",
+                                    "description": "The flow temperature expected to be set - typically either 55°C or 70°C"
+                                }
+                            }
+                        },
+                        {
+                            "required": [
+                                "HIU_daily_loss",
+                                "power_max",
+                                "building_level_distribution_losses"
+                            ],
+                            "properties": {
+                                "HIU_daily_loss": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 0
+                                },
+                                "power_max": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 0
+                                },
+                                "building_level_distribution_losses": {
+                                    "type": "number",
+                                    "minimum": 0
+                                }
+                            }
+                        }
+                    ]
                 }
             ]
         },
