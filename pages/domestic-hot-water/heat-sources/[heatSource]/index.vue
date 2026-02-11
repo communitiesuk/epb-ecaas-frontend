@@ -160,10 +160,17 @@ store.spaceHeating.heatSource.data
 		const isUsed = usedHeatSourceIds.includes(id);
 		const isEditingThisOne = id === currentHeatSourceId;
 
-		radioOptions.set(id, {
-			label: x.data.name,
-			disabled: isUsed && !isEditingThisOne, 
-		});
+		radioOptions.set(
+			id, 
+			isUsed && !isEditingThisOne 
+				? {
+					label: x.data.name + " (already used for water heating)",
+					disabled: true, 
+				} : {
+					label: x.data.name,
+					disabled: false,
+				},
+		);
 	});
 
 radioOptions.set("NEW_HEAT_SOURCE", "Add a new water heating source");

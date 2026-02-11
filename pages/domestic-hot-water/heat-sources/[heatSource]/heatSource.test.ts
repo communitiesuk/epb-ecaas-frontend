@@ -147,7 +147,10 @@ describe("Heat Source Page", () => {
 				params: { "heatSource": "create" },
 			},
 		});
-		expect(screen.getByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`).hasAttribute("disabled")).toBeTruthy();
+		expect(screen.getByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`)
+			.hasAttribute("disabled")).toBeTruthy();
+		expect(screen.getByText(`${existingHeatPumpSpaceHeating1.name} (already used for water heating)`).textContent)
+			.toBeDefined();
 	});
 
 	test("save progress button navigates user to the domestic hot wate overview page", async () => {
