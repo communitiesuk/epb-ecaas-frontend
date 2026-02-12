@@ -1286,68 +1286,82 @@
 							}
 						},
 						"then": {
-							"required": [
-								"EnergySupply_aux",
-								"rated_power",
-								"efficiency_full_load",
-								"efficiency_part_load",
-								"boiler_location",
-								"modulation_load",
-								"electricity_circ_pump",
-								"electricity_part_load",
-								"electricity_full_load",
-								"electricity_standby"
-							],
-							"properties": {
-								"EnergySupply_aux": {
-									"type": "string"
+							"oneOf": [
+								{
+									"required": ["product_reference"],
+									"properties": {
+										"product_reference": {
+											"description": "A unique reference to a product held within the HEM database (PCDB)",
+											"title": "Reference to the product in the HEM database",
+											"type": "string"
+										}
+									}
 								},
-								"rated_power": {
-									"type": "number",
-									"exclusiveMinimum": 0
-								},
-								"efficiency_full_load": {
-									"type": "number",
-									"minimum": 0.1,
-									"maximum": 1
-								},
-								"efficiency_part_load": {
-									"type": "number",
-									"minimum": 0.1,
-									"maximum": 1.12
-								},
-								"boiler_location": {
-									"enum": [
-										"internal",
-										"external"
-									]
-								},
-								"modulation_load": {
-									"type": "number",
-									"minimum": 0.1,
-									"maximum": 1
-								},
-								"electricity_circ_pump": {
-									"type": "number",
-									"minimum": 0.001,
-									"maximum": 1
-								},
-								"electricity_part_load": {
-									"type": "number",
-									"minimum": 0.001,
-									"maximum": 1
-								},
-								"electricity_full_load": {
-									"type": "number",
-									"minimum": 0.001,
-									"maximum": 1
-								},
-								"electricity_standby": {
-									"type": "number",
-									"minimum": 0,
-									"maximum": 0.1
+								{
+									"required": [
+										"EnergySupply_aux",
+										"rated_power",
+										"efficiency_full_load",
+										"efficiency_part_load",
+										"boiler_location",
+										"modulation_load",
+										"electricity_circ_pump",
+										"electricity_part_load",
+										"electricity_full_load",
+										"electricity_standby"
+									],
+									"properties": {
+										"EnergySupply_aux": {
+											"type": "string"
+										},
+										"rated_power": {
+											"type": "number",
+											"exclusiveMinimum": 0
+										},
+										"efficiency_full_load": {
+											"type": "number",
+											"minimum": 0.1,
+											"maximum": 1
+										},
+										"efficiency_part_load": {
+											"type": "number",
+											"minimum": 0.1,
+											"maximum": 1.12
+										},
+										"boiler_location": {
+											"enum": [
+												"internal",
+												"external"
+											]
+										},
+										"modulation_load": {
+											"type": "number",
+											"minimum": 0.1,
+											"maximum": 1
+										},
+										"electricity_circ_pump": {
+											"type": "number",
+											"minimum": 0.001,
+											"maximum": 1
+										},
+										"electricity_part_load": {
+											"type": "number",
+											"minimum": 0.001,
+											"maximum": 1
+										},
+										"electricity_full_load": {
+											"type": "number",
+											"minimum": 0.001,
+											"maximum": 1
+										},
+										"electricity_standby": {
+											"type": "number",
+											"minimum": 0,
+											"maximum": 0.1
+										}
+									}
 								}
-							}
+							]
 						}
 					},
 					{

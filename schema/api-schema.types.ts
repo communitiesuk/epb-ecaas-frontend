@@ -883,6 +883,13 @@ export interface components {
         HeatSourceWetBoiler: components["schemas"]["HeatSourceWetCommon"] & {
             /** @constant */
             type: "Boiler";
+        } & ({
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
+        } | {
             EnergySupply_aux: string;
             rated_power: number;
             efficiency_full_load: number;
@@ -894,7 +901,7 @@ export interface components {
             electricity_part_load: number;
             electricity_full_load: number;
             electricity_standby: number;
-        };
+        });
         /** @description A possible wet heat source */
         HeatSourceWetHeatBattery: components["schemas"]["HeatSourceWetCommon"] & (components["schemas"]["PCMBattery"] | components["schemas"]["DryCoreBattery"]);
         /** @description A possible wet heat source */
@@ -1965,6 +1972,13 @@ export interface components {
                 HeatSourceWetBoiler: components["schemas"]["HeatSourceWetCommon"] & {
                     /** @constant */
                     type: "Boiler";
+                } & ({
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                } | {
                     EnergySupply_aux: string;
                     rated_power: number;
                     efficiency_full_load: number;
@@ -1976,7 +1990,7 @@ export interface components {
                     electricity_part_load: number;
                     electricity_full_load: number;
                     electricity_standby: number;
-                };
+                });
                 /** @description A possible wet heat source */
                 HeatSourceWetHeatBattery: components["schemas"]["HeatSourceWetCommon"] & (components["schemas"]["PCMBattery"] | components["schemas"]["DryCoreBattery"]);
                 PCMBattery: {
