@@ -51,6 +51,13 @@ const infiltrationAndVentilationPages = [
 		parentId: "mechanicalVentilationEdit",
 	},
 	{
+		id: "decentralisedContinuousMevProducts",
+		title: "Select a decentralised continuous MEV",
+		url: "/infiltration-and-ventilation/mechanical-ventilation/:mechanical/decentralised-continuous-mev",
+		type: "task",
+		parentId: "mechanicalVentilationEdit",
+	},
+	{
 		id: "ductwork",
 		title: "MVHR ductwork",
 		url: "/infiltration-and-ventilation/ductwork",

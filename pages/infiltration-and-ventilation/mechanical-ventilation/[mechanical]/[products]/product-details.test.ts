@@ -149,6 +149,6 @@ describe("Mechanical ventilation details", async () => {
 		await renderSuspended(ProductDetails);
 		
 		// Assert
-		expect((await screen.findByTestId("centralisedContinuousMev"))).toBeDefined();
+		expect((await screen.findByTestId("continuousMev"))).toBeDefined();
 	});
 });

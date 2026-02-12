@@ -162,6 +162,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:page-index="index"
 		/>
 		<FormKit
+			v-if="model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV'"
+			id="selectDecentralisedContinuousMev"
+			type="govPcdbProduct"
+			label="Select a decentralised continuous MEV"
+			name="productReference"
+			validation="required"
+			help="Select the decenralised continuous MEV model from the PCDB using the button below."
+			:selected-product-reference="model?.productReference"
+			:selected-product-type="typeOfMechanicalVentilation.decentralisedContinuousMev"
+			:page-url="route.fullPath"
+			:page-index="index"
+		/>
+		<FormKit
 			id="airFlowRate"
 			name="airFlowRate"
 			label="Air flow rate"

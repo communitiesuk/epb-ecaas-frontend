@@ -240,6 +240,19 @@ export const centralisedContinuousMevZod = BaseProduct.extend({
 
 export type CentralisedContinuousMevProduct = z.infer<typeof centralisedContinuousMevZod>;
 
+export const decentralisedContinuousMevZod = BaseProduct.extend({
+	technologyType: z.literal("DecentralisedMev"),
+});
+
+export type DecentralisedMevProduct = z.infer<typeof decentralisedContinuousMevZod>;
+
+const _mevProductSchema = z.discriminatedUnion("technologyType", [
+	centralisedContinuousMevZod,
+	decentralisedContinuousMevZod,
+]);
+
+export type MevProduct = z.infer<typeof _mevProductSchema>;
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
 	groundSourceHeatPumpZod,
@@ -259,6 +272,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	heatInterfaceUnitZod,
 	centralisedMvhrZod,
 	centralisedContinuousMevZod,
+	decentralisedContinuousMevZod,
 ]);
 
 export type Product = z.infer<typeof productSchema>;
