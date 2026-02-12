@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { MVHRLocation, VentType } from "~/schema/aliases";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
-import { getUrl, typeOfMechanicalVentilation, uniqueName } from "#imports";
+import { getUrl, typeOfMechanicalVentilation, uniqueName, type MechanicalVentilationData } from "#imports";
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
@@ -83,6 +83,17 @@ autoSaveElementForm<MechanicalVentilationData>({
 	},
 });
 
+function updateMechanicalVentilation(type: keyof MechanicalVentilationData) {
+	watch(() => model.value?.[type], (newMechanicalVentilationType, initialNechanicalVentilationType) => {
+		if (model.value &&
+			newMechanicalVentilationType !==
+			initialNechanicalVentilationType && "productReference" in model.value
+		) {
+			model.value.productReference = "";
+		}
+	});
+}
+
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
@@ -122,8 +133,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfMechanicalVentilationOptions"
 			validation="required"
 			data-field="InfiltrationVentilation.MechanicalVentilation.vent_type"
+			@click="() => updateMechanicalVentilation('typeOfMechanicalVentilationOptions')"
 		/>
 		<FormKit
+			v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR'"
 			id="selectMvhr"
 			type="govPcdbProduct"
 			label="Select an MVHR"
@@ -132,6 +145,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Select the MVHR model from the PCDB using the button below."
 			:selected-product-reference="model?.productReference"
 			:selected-product-type="typeOfMechanicalVentilation.mvhr"
+			:page-url="route.fullPath"
+			:page-index="index"
+		/>
+		<FormKit
+			v-if="model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV'"
+			id="selectCentralisedContinuousMev"
+			type="govPcdbProduct"
+			label="Select a centralised continuous MEV"
+			name="productReference"
+			validation="required"
+			help="Select the cenralised continuous MEV model from the PCDB using the button below."
+			:selected-product-reference="model?.productReference"
+			:selected-product-type="typeOfMechanicalVentilation.centralisedContinuousMev"
 			:page-url="route.fullPath"
 			:page-index="index"
 		/>

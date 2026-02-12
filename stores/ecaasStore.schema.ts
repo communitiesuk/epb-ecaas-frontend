@@ -707,7 +707,7 @@ const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
 const typeOfHeatNetwork = z.enum(["sleevedDistrictHeatNetwork", "unsleevedDistrictHeatNetwork", "communalHeatNetwork"]);
 const typeOfHeatBattery = z.enum(["heatBatteryPcm", "heatBatteryDryCore"]);
 const typeOflocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
-const _typeOfMechanicalVentilation = z.enum(["mvhr"]);
+const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedContinuousMev"]);
 
 const _heatPumpDataZod = namedWithId.extend({
 	productReference: z.string().trim().min(1),
@@ -939,6 +939,7 @@ export const productTypeMap = {
 	"smartHotWaterTank": "SmartHotWaterTank",
 	"heatInterfaceUnit": "HeatInterfaceUnit",
 	"mvhr": "CentralisedMvhr",
+	"centralisedContinuousMev": "CentralisedMev",
 } as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType, TechnologyType | string>;
 
 export type HeatEmitterType =

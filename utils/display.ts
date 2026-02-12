@@ -380,6 +380,7 @@ export function displayHeatEmitterType(type: HeatEmitterType | undefined): HeatE
 
 export const mechanicalVentilationProductTypesDisplay = {
 	"mvhr": pluralize("MVHR"),
+	"centralisedContinuousMev": pluralize("Centralised continuous MEV"),
 } as const satisfies Record<MechanicalVentilationProductType, (plural: boolean) => string>;
 
 export type RadiatorDisplay = "Standard" | "Towel radiator";

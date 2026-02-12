@@ -233,6 +233,13 @@ export const centralisedMvhrZod = BaseProduct.extend({
 
 export type CentralisedMvhrProduct = z.infer<typeof centralisedMvhrZod>;
 
+export const centralisedContinuousMevZod = BaseProduct.extend({
+	technologyType: z.literal("CentralisedMev"),
+	integralOnly: z.nullable(z.number()),
+});
+
+export type CentralisedContinuousMevProduct = z.infer<typeof centralisedContinuousMevZod>;
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
 	groundSourceHeatPumpZod,
@@ -251,6 +258,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	electricStorageHeaterZod,
 	heatInterfaceUnitZod,
 	centralisedMvhrZod,
+	centralisedContinuousMevZod,
 ]);
 
 export type Product = z.infer<typeof productSchema>;
@@ -284,7 +292,7 @@ const categoryTechnologies = {
 		"FanCoils",
 		"StorageHeater",
 	],
-	mechanicalVentilation: ["CentralisedMvhr"],
+	mechanicalVentilation: ["CentralisedMvhr", "CentralisedMev"],
 } as const satisfies Record<string, TechnologyType[]>;
 
 export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMap(x => categoryTechnologies[x]);
