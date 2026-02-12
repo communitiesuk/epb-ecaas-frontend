@@ -306,7 +306,7 @@ const categoryTechnologies = {
 		"FanCoils",
 		"StorageHeater",
 	],
-	mechanicalVentilation: ["CentralisedMvhr", "CentralisedMev"],
+	mechanicalVentilation: ["CentralisedMvhr", "CentralisedMev", "DecentralisedMev"],
 } as const satisfies Record<string, TechnologyType[]>;
 
 export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMap(x => categoryTechnologies[x]);
