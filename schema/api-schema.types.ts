@@ -691,6 +691,25 @@ export interface components {
         CombiBoiler: {
             /** @constant */
             type: "CombiBoiler";
+        } & ({
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
+            /** @enum {unknown} */
+            ColdWaterSource: "header tank" | "mains water";
+            /**
+             * Heatsourcewet
+             * @description References a key (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1') in $.HeatSourceWet
+             */
+            HeatSourceWet: string;
+            /**
+             * Daily Hw Usage
+             * @description Daily hot water usage for the combi boiler system (unit: litre/day)
+             */
+            daily_HW_usage: number;
+        } | {
             /** @enum {unknown} */
             ColdWaterSource: "header tank" | "mains water";
             /**
@@ -732,7 +751,7 @@ export interface components {
              * @description Daily hot water usage for the combi boiler system (unit: litre/day)
              */
             daily_HW_usage: number;
-        };
+        });
         /** @description A possible hot water source */
         HeatBattery: {
             /** @constant */
@@ -1775,6 +1794,25 @@ export interface components {
                 CombiBoiler: {
                     /** @constant */
                     type: "CombiBoiler";
+                } & ({
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                    /** @enum {unknown} */
+                    ColdWaterSource: "header tank" | "mains water";
+                    /**
+                     * Heatsourcewet
+                     * @description References a key (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1') in $.HeatSourceWet
+                     */
+                    HeatSourceWet: string;
+                    /**
+                     * Daily Hw Usage
+                     * @description Daily hot water usage for the combi boiler system (unit: litre/day)
+                     */
+                    daily_HW_usage: number;
+                } | {
                     /** @enum {unknown} */
                     ColdWaterSource: "header tank" | "mains water";
                     /**
@@ -1816,7 +1854,7 @@ export interface components {
                      * @description Daily hot water usage for the combi boiler system (unit: litre/day)
                      */
                     daily_HW_usage: number;
-                };
+                });
                 /** @description A possible hot water source */
                 HeatBattery: {
                     /** @constant */

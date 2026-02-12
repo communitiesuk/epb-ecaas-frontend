@@ -506,127 +506,164 @@
 								}
 							},
 							"then": {
-								"required": [
-									"ColdWaterSource",
-									"HeatSourceWet",
-									"daily_HW_usage",
-									"separate_DHW_tests",
-									"rejected_energy_1"
-								],
-								"properties": {
-									"ColdWaterSource": {
-										"enum": [
-											"header tank",
-											"mains water"
-										]
-									},
-									"HeatSourceWet": {
-										"description": "References a key (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1') in $.HeatSourceWet",
-										"reference_to": "$.heat_source_wet",
-										"title": "Heatsourcewet",
-										"type": "string"
-									},
-									"daily_HW_usage": {
-										"description": "Daily hot water usage for the combi boiler system (unit: litre/day)",
-										"exclusiveMinimum": 0,
-										"title": "Daily Hw Usage",
-										"type": "number"
-									},
-									"rejected_energy_1": {
-										"anyOf": [
-											{
-												"minimum": 0,
-												"type": "number"
+								"oneOf": [
+									{
+										"required": [
+											"product_reference",
+											"ColdWaterSource",
+											"HeatSourceWet",
+											"daily_HW_usage"
+										],
+										"properties": {
+											"product_reference": {
+												"description": "A unique reference to a product held within the HEM database (PCDB)",
+												"title": "Reference to the product in the HEM database",
+												"type": "string"
 											},
-											{
-												"type": "null"
-											}
-										],
-										"default": null,
-										"description": "Rejected energy factor 1 for combi boiler efficiency calculations (unit: kWh)",
-										"title": "Rejected Energy 1"
-									},
-									"rejected_factor_3": {
-										"anyOf": [
-											{
-												"minimum": 0,
-												"type": "number"
+											"ColdWaterSource": {
+												"enum": [
+													"header tank",
+													"mains water"
+												]
 											},
-											{
-												"type": "null"
-											}
-										],
-										"default": null,
-										"description": "Rejected energy factor 3 for combi boiler efficiency calculations (dimensionless)",
-										"title": "Rejected Factor 3"
-									},
-									"separate_DHW_tests": {
-										"enum": [
-											"M&L",
-											"M&S",
-											"M_only",
-											"No_additional_tests"
-										],
-										"description": "Type of separate domestic hot water test performed on the combi boiler (M&L, M&S, M_only, or No_additional_tests)"
-									},
-									"storage_loss_factor_1": {
-										"anyOf": [
-											{
-												"minimum": 0,
-												"type": "number"
+											"HeatSourceWet": {
+												"description": "References a key (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1') in $.HeatSourceWet",
+												"reference_to": "$.heat_source_wet",
+												"title": "Heatsourcewet",
+												"type": "string"
 											},
-											{
-												"type": "null"
-											}
-										],
-										"default": null,
-										"description": "Storage loss factor 1 for combi boiler efficiency calculations (unit: kWh/day)",
-										"title": "Storage Loss Factor 1"
-									},
-									"storage_loss_factor_2": {
-										"anyOf": [
-											{
-												"minimum": 0,
+											"daily_HW_usage": {
+												"description": "Daily hot water usage for the combi boiler system (unit: litre/day)",
+												"exclusiveMinimum": 0,
+												"title": "Daily Hw Usage",
 												"type": "number"
-											},
-											{
-												"type": "null"
-											}
-										],
-										"default": null,
-										"description": "Storage loss factor 2 for combi boiler efficiency calculations (dimensionless)",
-										"title": "Storage Loss Factor 2"
-									}
-								},
-								"if": {
-									"anyOf": [
-										{
-											"properties": {
-												"separate_DHW_tests": {
-													"const": "M&L"
-												}
-											}
-										},
-										{
-											"properties": {
-												"separate_DHW_tests": {
-													"const": "M&S"
-												}
 											}
 										}
-									]
-								},
-								"then": {
-									"required": [
-										"storage_loss_factor_2",
-										"rejected_factor_3"
-									]
-								},
-								"else": {
-									"required": [
-										"storage_loss_factor_1"
-									]
-								}
+									},
+									{
+										"required": [
+											"ColdWaterSource",
+											"HeatSourceWet",
+											"daily_HW_usage",
+											"separate_DHW_tests",
+											"rejected_energy_1"
+										],
+										"properties": {
+											"ColdWaterSource": {
+												"enum": [
+													"header tank",
+													"mains water"
+												]
+											},
+											"HeatSourceWet": {
+												"description": "References a key (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1') in $.HeatSourceWet",
+												"reference_to": "$.heat_source_wet",
+												"title": "Heatsourcewet",
+												"type": "string"
+											},
+											"daily_HW_usage": {
+												"description": "Daily hot water usage for the combi boiler system (unit: litre/day)",
+												"exclusiveMinimum": 0,
+												"title": "Daily Hw Usage",
+												"type": "number"
+											},
+											"rejected_energy_1": {
+												"anyOf": [
+													{
+														"minimum": 0,
+														"type": "number"
+													},
+													{
+														"type": "null"
+													}
+												],
+												"default": null,
+												"description": "Rejected energy factor 1 for combi boiler efficiency calculations (unit: kWh)",
+												"title": "Rejected Energy 1"
+											},
+											"rejected_factor_3": {
+												"anyOf": [
+													{
+														"minimum": 0,
+														"type": "number"
+													},
+													{
+														"type": "null"
+													}
+												],
+												"default": null,
+												"description": "Rejected energy factor 3 for combi boiler efficiency calculations (dimensionless)",
+												"title": "Rejected Factor 3"
+											},
+											"separate_DHW_tests": {
+												"enum": [
+													"M&L",
+													"M&S",
+													"M_only",
+													"No_additional_tests"
+												],
+												"description": "Type of separate domestic hot water test performed on the combi boiler (M&L, M&S, M_only, or No_additional_tests)"
+											},
+											"storage_loss_factor_1": {
+												"anyOf": [
+													{
+														"minimum": 0,
+														"type": "number"
+													},
+													{
+														"type": "null"
+													}
+												],
+												"default": null,
+												"description": "Storage loss factor 1 for combi boiler efficiency calculations (unit: kWh/day)",
+												"title": "Storage Loss Factor 1"
+											},
+											"storage_loss_factor_2": {
+												"anyOf": [
+													{
+														"minimum": 0,
+														"type": "number"
+													},
+													{
+														"type": "null"
+													}
+												],
+												"default": null,
+												"description": "Storage loss factor 2 for combi boiler efficiency calculations (dimensionless)",
+												"title": "Storage Loss Factor 2"
+											}
+										},
+										"if": {
+											"anyOf": [
+												{
+													"properties": {
+														"separate_DHW_tests": {
+															"const": "M&L"
+														}
+													}
+												},
+												{
+													"properties": {
+														"separate_DHW_tests": {
+															"const": "M&S"
+														}
+													}
+												}
+											]
+										},
+										"then": {
+											"required": [
+												"storage_loss_factor_2",
+												"rejected_factor_3"
+											]
+										},
+										"else": {
+											"required": [
+												"storage_loss_factor_1"
+											]
+										}
+									}
+								]
 							}
 						},
 						{
