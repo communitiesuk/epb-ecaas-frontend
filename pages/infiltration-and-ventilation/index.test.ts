@@ -18,6 +18,7 @@ describe("the ventilation task page", async () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
+		productReference: "1000",
 	};
 
 	afterEach(() => {

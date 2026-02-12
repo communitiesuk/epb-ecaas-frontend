@@ -37,6 +37,13 @@ const infiltrationAndVentilationPages = [
 		parentId: "mechanicalVentilation",
 	},
 	{
+		id: "mvhrProducts",
+		title: "Select an MVHR",
+		url: "/infiltration-and-ventilation/mechanical-ventilation/:mechanical/mvhr",
+		type: "task",
+		parentId: "mechanicalVentilationEdit",
+	},
+	{
 		id: "ductwork",
 		title: "MVHR ductwork",
 		url: "/infiltration-and-ventilation/ductwork",

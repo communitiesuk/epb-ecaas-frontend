@@ -3,13 +3,15 @@ import { v4 as uuidv4 } from "uuid";
 import type { MVHRLocation, VentType } from "~/schema/aliases";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
-import { getUrl, uniqueName } from "#imports";
+import { getUrl, typeOfMechanicalVentilation, uniqueName } from "#imports";
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
+const route = useRoute();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
 const mechanicalVentilationStoreData = store.infiltrationAndVentilation.mechanicalVentilation.data;
+const index = getStoreIndex(mechanicalVentilationStoreData);
 const mechanicalVentilation = useItemToEdit("mechanical", mechanicalVentilationStoreData);
 const id = mechanicalVentilation?.data.id ?? uuidv4();
 
@@ -35,12 +37,12 @@ const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation
 const saveForm = (fields: MechanicalVentilationData) => {
 	store.$patch((state) => {
 		const { mechanicalVentilation } = state.infiltrationAndVentilation;
-		const index = getStoreIndex(mechanicalVentilation.data);
 
 		const commonFields = {
 			id,
 			name: fields.name,
 			airFlowRate: fields.airFlowRate,
+			productReference: fields.productReference,
 		};
 
 		let mechanicalVentilationItem: MechanicalVentilationData;
@@ -120,6 +122,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfMechanicalVentilationOptions"
 			validation="required"
 			data-field="InfiltrationVentilation.MechanicalVentilation.vent_type"
+		/>
+		<FormKit
+			id="selectMvhr"
+			type="govPcdbProduct"
+			label="Select an MVHR"
+			name="productReference"
+			validation="required"
+			help="Select the MVHR model from the PCDB using the button below."
+			:selected-product-reference="model?.productReference"
+			:selected-product-type="typeOfMechanicalVentilation.mvhr"
+			:page-url="route.fullPath"
+			:page-index="index"
 		/>
 		<FormKit
 			id="airFlowRate"

@@ -595,6 +595,10 @@ export type SpaceCoolingSystemData = z.infer<typeof _spaceCoolingSystemData>;
 
 export type SpaceHeatControlSystemData = z.infer<typeof _spaceHeatControlSystemData>;
 
+const pcdbProduct = namedWithId.extend({
+	productReference: z.string().trim().min(1),
+});
+
 export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	mechanicalVentilation: EcaasFormList<MechanicalVentilationData>;
 	ductwork: EcaasFormList<DuctworkData>;
@@ -603,7 +607,7 @@ export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	airPermeability: EcaasForm<AirPermeabilityData>;
 }>;
 
-const baseMechanicalVentilationData = namedWithId.extend({
+const baseMechanicalVentilationData = pcdbProduct.extend({
 	airFlowRate: z.union([zodUnit("flow rate"), z.number()]),
 });
 
@@ -703,6 +707,7 @@ const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
 const typeOfHeatNetwork = z.enum(["sleevedDistrictHeatNetwork", "unsleevedDistrictHeatNetwork", "communalHeatNetwork"]);
 const typeOfHeatBattery = z.enum(["heatBatteryPcm", "heatBatteryDryCore"]);
 const typeOflocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
+const _typeOfMechanicalVentilation = z.enum(["mvhr"]);
 
 const _heatPumpDataZod = namedWithId.extend({
 	productReference: z.string().trim().min(1),
@@ -799,10 +804,6 @@ export type HeatSourceType =
 	"heatNetwork" |
 	"heatBattery" |
 	"solarThermalSystem";
-
-const pcdbProduct = namedWithId.extend({
-	productReference: z.string().trim().min(1),
-});
 
 export type PcdbProduct = z.infer<typeof pcdbProduct>;
 
@@ -913,6 +914,10 @@ export const typeOfWaterStorage = _typeOfWaterStorage.enum;
 
 export type WaterStorageProductType = z.infer<typeof _typeOfWaterStorage>;
 
+export const typeOfMechanicalVentilation = _typeOfMechanicalVentilation.enum;
+
+export type MechanicalVentilationProductType = z.infer<typeof _typeOfMechanicalVentilation>;
+
 export const productTypeMap = {
 	"airSource": "AirSourceHeatPump",
 	"groundSource": "GroundSourceHeatPump",
@@ -933,7 +938,8 @@ export const productTypeMap = {
 	"electricStorageHeater": "StorageHeater",
 	"smartHotWaterTank": "SmartHotWaterTank",
 	"heatInterfaceUnit": "HeatInterfaceUnit",
-} as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType, TechnologyType | string>;
+	"mvhr": "CentralisedMvhr",
+} as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType, TechnologyType | string>;
 
 export type HeatEmitterType =
 	"radiator" |

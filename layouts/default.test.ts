@@ -12,6 +12,7 @@ describe("nav bar with ductwork", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.2,
+		productReference: "1000",
 	};
 
 	it("should not show the mvhr ductwork link when no mechanical ventilations of type mvhr have been added", async () => {

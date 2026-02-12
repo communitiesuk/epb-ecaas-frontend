@@ -19,6 +19,7 @@ describe("infiltration ventilation mapper", () => {
 			airFlowRate: unitValue(30, litrePerSecond),
 			mvhrLocation: "inside",
 			mvhrEfficiency: 1,
+			productReference: "1000",
 		},
 	}];
 
@@ -190,6 +191,7 @@ describe("infiltration ventilation mapper", () => {
 				name: "bathroom exhaust fan",
 				typeOfMechanicalVentilationOptions: "Intermittent MEV",
 				airFlowRate: unitValue(40, litrePerSecond),
+				productReference: "1000",
 			},
 		}];
 

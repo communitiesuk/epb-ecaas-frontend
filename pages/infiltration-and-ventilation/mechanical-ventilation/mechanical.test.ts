@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import MechanicalVentilationOverview from "./index.vue";
-import MechanicalVentilationForm from "./[mechanical].vue";
+import MechanicalVentilationForm from "./[mechanical]/index.vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import InfiltrationAndVentilationTaskPage from "../index.vue";
 
@@ -21,6 +21,7 @@ describe("mechanical ventilation overview", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
+		productReference: "1000",
 	};
 
 	const mechanicalVentilation2: MechanicalVentilationData = {
@@ -28,6 +29,7 @@ describe("mechanical ventilation overview", () => {
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: "Decentralised continuous MEV",
 		airFlowRate: 14,
+		productReference: "1000",
 	};
 
 	const mechanicalVentilation3: MechanicalVentilationData = {
@@ -35,6 +37,7 @@ describe("mechanical ventilation overview", () => {
 		name: "Mechanical name 3",
 		typeOfMechanicalVentilationOptions: "Intermittent MEV",
 		airFlowRate: 14,
+		productReference: "1000",
 	};
 
 	const mechanicalVentilation4: MechanicalVentilationData = {
@@ -44,6 +47,7 @@ describe("mechanical ventilation overview", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
+		productReference: "1000",
 	};
 
 	// linked to mechanicalVentilation1

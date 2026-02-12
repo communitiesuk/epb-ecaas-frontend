@@ -970,6 +970,7 @@ describe("FHS input mapper", () => {
 						name: "kitchen exhaust fan",
 						typeOfMechanicalVentilationOptions: "Intermittent MEV",
 						airFlowRate: 55,
+						productReference: "1000",
 					},
 				}],
 			},
@@ -1379,6 +1380,7 @@ describe("FHS input mapper", () => {
 						airFlowRate: 17,
 						mvhrLocation: "inside" as const,
 						mvhrEfficiency: 1,
+						productReference: "1000",
 					},
 				},
 				{
@@ -1390,6 +1392,7 @@ describe("FHS input mapper", () => {
 						airFlowRate: 3,
 						mvhrLocation: "outside" as const,
 						mvhrEfficiency: 0,
+						productReference: "1000",
 					},
 				},
 				{
@@ -1399,6 +1402,7 @@ describe("FHS input mapper", () => {
 						name: "centralised MEV name",
 						typeOfMechanicalVentilationOptions: "Centralised continuous MEV",
 						airFlowRate: 8,
+						productReference: "1000",
 					},
 				}],
 			},

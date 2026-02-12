@@ -5,7 +5,7 @@ export const kebabToCamelCase = (text: string) => {
 };
 
 export const sentenceToLowerCase = (text: string) => {
-	return text.replace(/([A-Z](?=[a-z]))/, s => s.toLowerCase());
+	return text.replace(/(^[A-Z](?=[a-z]))/, s => s.toLowerCase());
 };
 
 export function camelToKebabCase(value: string): string {

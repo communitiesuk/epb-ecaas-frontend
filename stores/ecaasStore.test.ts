@@ -219,6 +219,7 @@ describe("Ecaas Store", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.2,
+		productReference: "1000",
 	};
 	const mechanicalVentilation2: MechanicalVentilationData = {
 		id: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
@@ -227,6 +228,7 @@ describe("Ecaas Store", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
+		productReference: "1000",
 	};
 	const ductwork1: DuctworkData = {
 		name: "Ductwork 1",

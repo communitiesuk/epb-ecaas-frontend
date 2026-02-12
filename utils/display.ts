@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaL
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -377,6 +377,10 @@ export function displayHeatEmitterType(type: HeatEmitterType | undefined): HeatE
 	}
 	return heatEmitterTypes[type];
 }
+
+export const mechanicalVentilationProductTypesDisplay = {
+	"mvhr": pluralize("MVHR"),
+} as const satisfies Record<MechanicalVentilationProductType, (plural: boolean) => string>;
 
 export type RadiatorDisplay = "Standard" | "Towel radiator";
 

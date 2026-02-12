@@ -1,5 +1,5 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import MechanicalVentilationForm from "./[mechanical].vue";
+import MechanicalVentilationForm from "./[mechanical]/index.vue";
 import { userEvent } from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import { v4 as uuidv4 } from "uuid";
@@ -13,7 +13,7 @@ describe("mechanical ventilation form", () => {
 	const navigateToMock = vi.hoisted(() => vi.fn());
 	vi.mock("uuid");
 
-	const mechanicalVentilation1: MechanicalVentilationData = {
+	const mechanicalVentilation1: Partial<MechanicalVentilationData> = {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: "MVHR",
@@ -22,7 +22,7 @@ describe("mechanical ventilation form", () => {
 		mvhrEfficiency: 0.2,
 	};
 
-	const mechanicalVentilation2: MechanicalVentilationData = {
+	const mechanicalVentilation2: Partial<MechanicalVentilationData> = {
 		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: "Intermittent MEV",
@@ -55,12 +55,8 @@ describe("mechanical ventilation form", () => {
 		await user.type(screen.getByTestId("mvhrEfficiency"), "0.2");
 		await user.tab();
 
-		await user.click(screen.getByTestId("saveAndComplete"));
 		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
 		expect(data[0]?.data).toEqual(mechanicalVentilation1);
-		expect(navigateToMock).toHaveBeenCalledWith(
-			"/infiltration-and-ventilation/mechanical-ventilation",
-		);
 	});
 
 	test("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions is not mvhr", async () => {
@@ -76,16 +72,13 @@ describe("mechanical ventilation form", () => {
 		await user.click(
 			screen.getByTestId("typeOfMechanicalVentilationOptions_Intermittent_MEV"),
 		);
-		await user.type(screen.getByTestId("airFlowRate"), "14");
 
-		await user.click(screen.getByTestId("saveAndComplete"));
+		await user.type(screen.getByTestId("airFlowRate"), "14");
+		await user.tab();
 
 		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
 
 		expect(data[0]?.data).toEqual(mechanicalVentilation2);
-		expect(navigateToMock).toHaveBeenCalledWith(
-			"/infiltration-and-ventilation/mechanical-ventilation",
-		);
 	});
 
 	test("data is saved to correct object in store state when form is valid", async () => {

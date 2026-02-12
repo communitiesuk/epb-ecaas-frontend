@@ -18,6 +18,7 @@ const mechanicalVentilationData: MechanicalVentilationData = {
 	airFlowRate: 12,
 	mvhrLocation: "inside",
 	mvhrEfficiency: 0.2,
+	productReference: "1000",
 };
 
 const ductworkData: DuctworkData = {

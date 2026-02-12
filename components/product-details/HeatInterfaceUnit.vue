@@ -17,5 +17,5 @@ const tableData: Record<string, string> =
 </script>
 
 <template>
-	<ProductDetails id="fanCoil" :data="tableData" />
+	<ProductDetails id="heatInterfaceUnit" :data="tableData" />
 </template>
