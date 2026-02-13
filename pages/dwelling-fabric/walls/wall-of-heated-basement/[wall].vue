@@ -117,7 +117,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the thermal resistance of all layers in the floor construction"
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50"
-		/>
+
+		><GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<p>For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m²·K)/W for when the facing wall is not exposed.</p>
+			<p class="govuk-body">
+				<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
+					Guidance on thermal resistance of unheated spaces (opens in another window)
+				</a>
+			</p>
+		</GovDetails>
+		</FormKit>
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
 		<FormKit
@@ -148,4 +157,4 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</div>
 		</div>
 	</FormKit>
-</template>
+	</formkit></template>
