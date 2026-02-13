@@ -1,4 +1,4 @@
-import type { BathDataNew, DomesticHotWaterHeatSourceData, EcaasForm } from "~/stores/ecaasStore.schema";
+import type { BathData, DomesticHotWaterHeatSourceData, EcaasForm } from "~/stores/ecaasStore.schema";
 import { mapDomesticHotWaterData, mapHotWaterSourcesData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { litre } from "../utils/units/volume";
@@ -150,7 +150,7 @@ describe("domestic hot water mapper", () => {
 
 		it("maps hot water outlets input state to FHS input request", () => {
 			// Arrange
-			const mixedShower: EcaasForm<MixedShowerDataNew> = {
+			const mixedShower: EcaasForm<MixedShowerData> = {
 				...baseForm,
 				data: {
 					id: "shower1",
@@ -162,7 +162,7 @@ describe("domestic hot water mapper", () => {
 				},
 			};
 
-			const electricShower: EcaasForm<ElectricShowerDataNew> = {
+			const electricShower: EcaasForm<ElectricShowerData> = {
 				...baseForm,
 				data: {
 					id: "shower2",
@@ -173,7 +173,7 @@ describe("domestic hot water mapper", () => {
 				},
 			};
 
-			const bath: EcaasForm<BathDataNew> = {
+			const bath: EcaasForm<BathData> = {
 				...baseForm,
 				data: {
 					id: "bath1",
@@ -184,7 +184,7 @@ describe("domestic hot water mapper", () => {
 				},
 			};
 
-			const other: EcaasForm<OtherHotWaterOutletDataNew> = {
+			const other: EcaasForm<OtherHotWaterOutletData> = {
 				...baseForm,
 				data: {
 					id: "other1",
@@ -252,7 +252,7 @@ describe("domestic hot water mapper", () => {
 
 		describe("mixed showers with WWHRS", () => {
 			it("maps WWHRS configuration type A", () => {
-				const mixedShower: EcaasForm<MixedShowerDataNew> = {
+				const mixedShower: EcaasForm<MixedShowerData> = {
 					...baseForm,
 					data: {
 						id: "shower-wwhrs-a",
@@ -298,7 +298,7 @@ describe("domestic hot water mapper", () => {
 			});
 
 			it("maps WWHRS configuration type B", () => {
-				const mixedShower: EcaasForm<MixedShowerDataNew> = {
+				const mixedShower: EcaasForm<MixedShowerData> = {
 					...baseForm,
 					data: {
 						id: "shower-wwhrs-b",
@@ -343,7 +343,7 @@ describe("domestic hot water mapper", () => {
 			});
 
 			it("maps WWHRS configuration type C", () => {
-				const mixedShower: EcaasForm<MixedShowerDataNew> = {
+				const mixedShower: EcaasForm<MixedShowerData> = {
 					...baseForm,
 					data: {
 						id: "shower-wwhrs-c",
@@ -391,7 +391,7 @@ describe("domestic hot water mapper", () => {
 
 		describe("mixed showers without WWHRS", () => {
 			it("maps mixed shower with hotWaterSource but no WWHRS", () => {
-				const mixedShower: EcaasForm<MixedShowerDataNew> = {
+				const mixedShower: EcaasForm<MixedShowerData> = {
 					...baseForm,
 					data: {
 						id: "shower-no-wwhrs",
@@ -455,7 +455,7 @@ describe("domestic hot water mapper", () => {
 			});
 
 			it("handles multiple outlets with varied configurations", () => {
-				const mixedShowerWithWwhrs: EcaasForm<MixedShowerDataNew> = {
+				const mixedShowerWithWwhrs: EcaasForm<MixedShowerData> = {
 					...baseForm,
 					data: {
 						id: "shower1",
@@ -469,7 +469,7 @@ describe("domestic hot water mapper", () => {
 					},
 				};
 
-				const mixedShowerNoWwhrs: EcaasForm<MixedShowerDataNew> = {
+				const mixedShowerNoWwhrs: EcaasForm<MixedShowerData> = {
 					...baseForm,
 					data: {
 						id: "shower2",
@@ -481,7 +481,7 @@ describe("domestic hot water mapper", () => {
 					},
 				};
 
-				const electricShower: EcaasForm<ElectricShowerDataNew> = {
+				const electricShower: EcaasForm<ElectricShowerData> = {
 					...baseForm,
 					data: {
 						id: "elec1",

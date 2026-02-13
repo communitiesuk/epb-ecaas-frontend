@@ -43,7 +43,7 @@ describe("Domestic hot water summary", () => {
 	describe("water storage", () => {
 		const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
-		const hotWaterCylinder: HotWaterCylinderDataNew = {
+		const hotWaterCylinder: HotWaterCylinderData = {
 			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
 			typeOfWaterStorage: "hotWaterCylinder",
 			name: "Hot water cylinder",
@@ -56,7 +56,7 @@ describe("Domestic hot water summary", () => {
 			thermostatPosition: 0.5,
 		};
 
-		const smartHotWaterCylinder: SmartHotWaterTankDataNew = {
+		const smartHotWaterCylinder: SmartHotWaterTankData = {
 			id: "c84528bb-f805-4f1e-95d3-2bd17384abcd",
 			typeOfWaterStorage: "smartHotWaterTank",
 			name: "Smart hot water cylinder",
@@ -206,7 +206,7 @@ describe("Domestic hot water summary", () => {
 	});
 
 	describe("hot water outlets", () => {
-		const mixedShower: EcaasForm<MixedShowerDataNew> = {
+		const mixedShower: EcaasForm<MixedShowerData> = {
 			data: {
 				id: "4a93532e-a370-4015-9778-854661bf1627",
 				name: "Mixer shower 1",
@@ -217,7 +217,7 @@ describe("Domestic hot water summary", () => {
 			},
 		};
 
-		const electricShower: EcaasForm<ElectricShowerDataNew> = {
+		const electricShower: EcaasForm<ElectricShowerData> = {
 			data: {
 				id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
 				name: "Electric shower 1",
@@ -227,7 +227,7 @@ describe("Domestic hot water summary", () => {
 			},
 		};
 
-		const bathData: EcaasForm<BathDataNew> = {
+		const bathData: EcaasForm<BathData> = {
 			data: {
 				id: "d3883380-885b-48fd-9425-9f9fac7587fb",
 				name: "Bath 1",
@@ -236,7 +236,7 @@ describe("Domestic hot water summary", () => {
 			},
 		};
 
-		const otherOutletsData: EcaasForm<OtherHotWaterOutletDataNew> = {
+		const otherOutletsData: EcaasForm<OtherHotWaterOutletData> = {
 			data: {
 				id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
 				name: "Basin tap 1",
@@ -351,7 +351,7 @@ describe("Domestic hot water summary", () => {
 					name: "Partial mixer",
 					typeOfHotWaterOutlet: "mixedShower",
 					// intentionally leave out flowRate, hotWaterSource, wwhrs
-				} as Partial<MixedShowerDataNew>,
+				} as Partial<MixedShowerData>,
 			};
 
 			store.$patch({
@@ -455,7 +455,7 @@ describe("Domestic hot water summary", () => {
 		});
 
 		test("displays WWHRS type and product when present for mixer showers", async () => {
-			const mixerWithWwhrs: EcaasForm<MixedShowerDataNew> = {
+			const mixerWithWwhrs: EcaasForm<MixedShowerData> = {
 				data: {
 					id: "mixer-wwhrs-1",
 					name: "Mixer with WWHRS",
@@ -495,7 +495,7 @@ describe("Domestic hot water summary", () => {
 		});
 
 		test("displays WWHRS type and product when present for electric showers", async () => {
-			const electricWithWwhrs: EcaasForm<ElectricShowerDataNew> = {
+			const electricWithWwhrs: EcaasForm<ElectricShowerData> = {
 				data: {
 					id: "electric-wwhrs-1",
 					name: "Electric with WWHRS",

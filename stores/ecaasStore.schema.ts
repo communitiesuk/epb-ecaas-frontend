@@ -1241,7 +1241,7 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 
 export type DomesticHotWaterHeatSourceData = z.infer<typeof domesticHotWaterHeatSourceZod>;
 
-const hotWaterCylinderDataZodNew = namedWithId.extend({
+const hotWaterCylinderDataZod = namedWithId.extend({
 	typeOfWaterStorage: z.literal("hotWaterCylinder"),
 	storageCylinderVolume: z.union([zodUnit("volume"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
 	initialTemperature: z.number(),
@@ -1252,22 +1252,22 @@ const hotWaterCylinderDataZodNew = namedWithId.extend({
 	thermostatPosition: z.number().min(0).max(1),
 });
 
-export type HotWaterCylinderDataNew = z.infer<typeof hotWaterCylinderDataZodNew>;
+export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
 
-const smartHotWaterTankDataZodNew = namedWithId.extend({
+const smartHotWaterTankDataZod = namedWithId.extend({
 	typeOfWaterStorage: z.literal("smartHotWaterTank"),
 	productReference: z.string(),
 	dhwHeatSourceId: z.string(),
 	heaterPosition: z.number().min(0).max(1),
 });
 
-export type SmartHotWaterTankDataNew = z.infer<typeof smartHotWaterTankDataZodNew>;
+export type SmartHotWaterTankData = z.infer<typeof smartHotWaterTankDataZod>;
 
 export type WaterStorageType = "hotWaterCylinder" | "smartHotWaterTank";
 
 const waterStorageDataZod = z.discriminatedUnion("typeOfWaterStorage", [
-	hotWaterCylinderDataZodNew,
-	smartHotWaterTankDataZodNew,
+	hotWaterCylinderDataZod,
+	smartHotWaterTankDataZod,
 ]);
 
 export type WaterStorageData = z.infer<typeof waterStorageDataZod>;
@@ -1281,7 +1281,7 @@ const mixedShowerBaseZod = namedWithId.extend({
 	dhwHeatSourceId: z.uuidv4(),
 });
 
-const mixedShowerDataZodNew = z.discriminatedUnion("wwhrs", [
+const mixedShowerDataZod = z.discriminatedUnion("wwhrs", [
 	mixedShowerBaseZod.extend({ wwhrs: z.literal(false) }),
 	mixedShowerBaseZod.extend({
 		wwhrs: z.literal(true),
@@ -1290,14 +1290,14 @@ const mixedShowerDataZodNew = z.discriminatedUnion("wwhrs", [
 	}),
 ]);
 
-export type MixedShowerDataNew = z.infer<typeof mixedShowerDataZodNew>;
+export type MixedShowerData = z.infer<typeof mixedShowerDataZod>;
 
 const electricShowerBaseZod = namedWithId.extend({
 	typeOfHotWaterOutlet: z.literal("electricShower"),
 	ratedPower: z.number().min(0).max(30),
 });
 
-const electricShowerDataZodNew = z.discriminatedUnion("wwhrs", [
+const electricShowerDataZod = z.discriminatedUnion("wwhrs", [
 	electricShowerBaseZod.extend({ wwhrs: z.literal(false) }),
 	electricShowerBaseZod.extend({
 		wwhrs: z.literal(true),
@@ -1306,27 +1306,27 @@ const electricShowerDataZodNew = z.discriminatedUnion("wwhrs", [
 	}),
 ]);
 
-export type ElectricShowerDataNew = z.infer<typeof electricShowerDataZodNew>;
+export type ElectricShowerData = z.infer<typeof electricShowerDataZod>;
 
-const bathDataZodNew = namedWithId.extend({
+const bathDataZod = namedWithId.extend({
 	typeOfHotWaterOutlet: z.literal("bath"),
 	size: z.number().min(0).max(500),
 });
 
-export type BathDataNew = z.infer<typeof bathDataZodNew>;
+export type BathData = z.infer<typeof bathDataZod>;
 
-const otherHotWaterOutletDataZodNew = namedWithId.extend({
+const otherHotWaterOutletDataZod = namedWithId.extend({
 	typeOfHotWaterOutlet: z.literal("otherHotWaterOutlet"),
 	flowRate: z.number().min(0).max(15),
 });
 
-export type OtherHotWaterOutletDataNew = z.infer<typeof otherHotWaterOutletDataZodNew>;
+export type OtherHotWaterOutletData = z.infer<typeof otherHotWaterOutletDataZod>;
 
 const hotWaterOutletsDataZod = z.discriminatedUnion("typeOfHotWaterOutlet", [
-	mixedShowerDataZodNew,
-	electricShowerDataZodNew,
-	bathDataZodNew,
-	otherHotWaterOutletDataZodNew,
+	mixedShowerDataZod,
+	electricShowerDataZod,
+	bathDataZod,
+	otherHotWaterOutletDataZod,
 ]);
 
 export type HotWaterOutletsData = z.infer<typeof hotWaterOutletsDataZod>;

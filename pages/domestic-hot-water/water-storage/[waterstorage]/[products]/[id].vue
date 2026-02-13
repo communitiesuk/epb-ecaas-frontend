@@ -38,7 +38,7 @@ const selectProduct = () => {
 		const item = state.domesticHotWater.waterStorage.data[index];
 
 		if (item && data) {
-			const product = item.data as SmartHotWaterTankDataNew;
+			const product = item.data as SmartHotWaterTankData;
 			product.productReference = data.id;
 		}
 	});

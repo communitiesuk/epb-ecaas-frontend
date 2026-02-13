@@ -19,7 +19,7 @@ describe("water storage", () => {
 
 	const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
-	const hotWaterCylinder: EcaasForm<HotWaterCylinderDataNew> = {
+	const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
 		data: {
 			name: "Hot water cylinder 1",
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
@@ -34,7 +34,7 @@ describe("water storage", () => {
 		},
 	};
 
-	const smartHotWaterTank: EcaasForm<SmartHotWaterTankDataNew> = {
+	const smartHotWaterTank: EcaasForm<SmartHotWaterTankData> = {
 		data: {
 			typeOfWaterStorage: "smartHotWaterTank",
 			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
@@ -246,7 +246,7 @@ describe("water storage", () => {
 
 			await populateValidFormSHWT();
 			store.$patch(state => {
-				(state.domesticHotWater.waterStorage.data[0]!.data as SmartHotWaterTankDataNew)
+				(state.domesticHotWater.waterStorage.data[0]!.data as SmartHotWaterTankData)
 					.productReference = "42";
 			});
 

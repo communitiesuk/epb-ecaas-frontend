@@ -271,7 +271,7 @@ describe("space heating", () => {
 					productReference: "SMRT-12345",
 				};
 
-				const mixerShower: MixedShowerDataNew = {
+				const mixerShower: MixedShowerData = {
 					name: "Mixer shower 1",
 					id: "c84528bb-f805-4f1e-95d3-2bd1717deca3",
 					typeOfHotWaterOutlet: "mixedShower",
@@ -315,7 +315,7 @@ describe("space heating", () => {
 				const { heatSources, hotWaterOutlets, waterStorage } = store.domesticHotWater;
 
 				expect(heatSources.data.length).toBe(1);
-				expect((hotWaterOutlets.data[0]!.data as MixedShowerDataNew).dhwHeatSourceId).toBe(undefined);
+				expect((hotWaterOutlets.data[0]!.data as MixedShowerData).dhwHeatSourceId).toBe(undefined);
 				expect(waterStorage.data[0]!.data.dhwHeatSourceId).toBe(dhwWithExistingHeatSource2.id);
 				expect(waterStorage.data[1]!.data.dhwHeatSourceId).toBe(undefined);
 

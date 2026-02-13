@@ -411,7 +411,7 @@ const populatedHeatSourceSections = getNonEmptySections(heatSourceSections);
 
 const hotWaterOutletsAll = store.domesticHotWater.hotWaterOutlets.data;
 
-const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerDataNew>[];
+const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerData>[];
 const mixedShowerSummary: SummarySection = {
 	id: "mixedShower",
 	label: "Mixer showers",
@@ -431,7 +431,7 @@ const mixedShowerSummary: SummarySection = {
 	editUrl: getUrl("domesticHotWater"),
 };
 
-const electricShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "electricShower") as EcaasForm<ElectricShowerDataNew>[];
+const electricShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "electricShower") as EcaasForm<ElectricShowerData>[];
 const electricShowerSummary: SummarySection = {
 	id: "electricShower",
 	label: "Electric showers",
@@ -448,7 +448,7 @@ const electricShowerSummary: SummarySection = {
 	editUrl: getUrl("domesticHotWater"),
 };
 
-const bathData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "bath") as EcaasForm<BathDataNew>[];
+const bathData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "bath") as EcaasForm<BathData>[];
 const bathSummary: SummarySection = {
 	id: "bath",
 	label: "Baths",
@@ -462,7 +462,7 @@ const bathSummary: SummarySection = {
 	editUrl: getUrl("domesticHotWater"),
 };
 
-const otherOutletsData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "otherHotWaterOutlet") as EcaasForm<OtherHotWaterOutletDataNew>[];
+const otherOutletsData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "otherHotWaterOutlet") as EcaasForm<OtherHotWaterOutletData>[];
 const otherOutletsSummary: SummarySection = {
 	id: "otherOutlets",
 	label: "Other",

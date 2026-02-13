@@ -82,7 +82,7 @@ describe("Domestic hot water", () => {
 	};
 
 	describe("Water storage", () => {
-		const hwStorage2: EcaasForm<SmartHotWaterTankDataNew> = {
+		const hwStorage2: EcaasForm<SmartHotWaterTankData> = {
 			data: {
 				name: "Jasper's Cylinder 2",
 				id: "what2",
@@ -93,7 +93,7 @@ describe("Domestic hot water", () => {
 			},
 		};
 
-		const hwStorage3: EcaasForm<HotWaterCylinderDataNew> = {
+		const hwStorage3: EcaasForm<HotWaterCylinderData> = {
 			data: {
 				name: "Jasper's Cylinder 3",
 				id: "what3",
@@ -608,7 +608,7 @@ describe("Domestic hot water", () => {
 				productReference: "SMRT-12345",
 			};
 
-			const mixerShower: MixedShowerDataNew = {
+			const mixerShower: MixedShowerData = {
 				name: "Mixer shower 1",
 				id: "c84528bb-f805-4f1e-95d3-2bd1717deca3",
 				typeOfHotWaterOutlet: "mixedShower",
@@ -638,7 +638,7 @@ describe("Domestic hot water", () => {
 	
 			expect(waterStorage.data[0]?.data.dhwHeatSourceId).toBe(heatSource1.data.id);		
 			expect(waterStorage.data[1]?.data.dhwHeatSourceId).toBeUndefined();	
-			const mixedShower = hotWaterOutlets.data[0]?.data as MixedShowerDataNew;  
+			const mixedShower = hotWaterOutlets.data[0]?.data as MixedShowerData;  
 			expect(mixedShower.dhwHeatSourceId).toBeUndefined();
 		});
 
@@ -770,7 +770,7 @@ describe("Domestic hot water", () => {
 		// 	hotWaterOutlets: HotWaterOutletsForm,
 		// };
 
-		// type SectionKey = keyof typeof store.domesticHotWaterNew;
+		// type SectionKey = keyof typeof store.domesticHotWater;
 
 		it("disables the Mark section as complete button when a section is incomplete", async () => {
 			store.$patch({

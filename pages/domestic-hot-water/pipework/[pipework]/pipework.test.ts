@@ -13,7 +13,7 @@ mockNuxtImport("navigateTo", () => {
 const hotWaterCylinderId = "4ea2b8f5-5f4c-4d3a-9f0b-123456789abc";
 const smartHotWaterTankId = "4ea2b8f5-5f4c-4d3a-9f0b-123456789abc";
 
-const hotWaterCylinder: EcaasForm<HotWaterCylinderDataNew> = {
+const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
 	data: {
 		name: "Hot water cylinder 1",
 		id: hotWaterCylinderId,

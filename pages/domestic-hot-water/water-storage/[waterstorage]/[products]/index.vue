@@ -16,7 +16,7 @@ const { productData, pagination } = searchData(value?.data ?? []);
 
 const selectProduct = (reference: string) => {
 	store.$patch((state) => {
-		(state.domesticHotWater.waterStorage.data[index]!.data as SmartHotWaterTankDataNew).productReference = reference;
+		(state.domesticHotWater.waterStorage.data[index]!.data as SmartHotWaterTankData).productReference = reference;
 	});
 
 	navigateTo(getUrl("waterStorage").replace(":waterstorage", `${index}`));

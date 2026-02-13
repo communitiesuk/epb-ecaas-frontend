@@ -17,7 +17,7 @@ describe("hot water outlets", () => {
 
 	const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
-	const mixerShower: EcaasForm<MixedShowerDataNew> = {
+	const mixerShower: EcaasForm<MixedShowerData> = {
 		data: {
 			name: "Mixer shower 1",
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
@@ -28,7 +28,7 @@ describe("hot water outlets", () => {
 		},
 	};
 
-	const electricShower: EcaasForm<ElectricShowerDataNew> = {
+	const electricShower: EcaasForm<ElectricShowerData> = {
 		data: {
 			name: "Electric shower 1",
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca2",
@@ -38,7 +38,7 @@ describe("hot water outlets", () => {
 		},
 	};
 
-	const bath: EcaasForm<BathDataNew> = {
+	const bath: EcaasForm<BathData> = {
 		data: {
 			name: "Bath 1",
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca3",
@@ -47,7 +47,7 @@ describe("hot water outlets", () => {
 		},
 	};
 
-	const otherHotWaterOutlet: EcaasForm<OtherHotWaterOutletDataNew> = {
+	const otherHotWaterOutlet: EcaasForm<OtherHotWaterOutletData> = {
 		data: {
 			name: "Other hot water outlet 1",
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca4",
