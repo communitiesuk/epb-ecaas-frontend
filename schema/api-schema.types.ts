@@ -692,11 +692,6 @@ export interface components {
             /** @constant */
             type: "CombiBoiler";
         } & ({
-            /**
-             * Reference to the product in the HEM database
-             * @description A unique reference to a product held within the HEM database (PCDB)
-             */
-            product_reference: string;
             /** @enum {unknown} */
             ColdWaterSource: "header tank" | "mains water";
             /**
@@ -1795,11 +1790,6 @@ export interface components {
                     /** @constant */
                     type: "CombiBoiler";
                 } & ({
-                    /**
-                     * Reference to the product in the HEM database
-                     * @description A unique reference to a product held within the HEM database (PCDB)
-                     */
-                    product_reference: string;
                     /** @enum {unknown} */
                     ColdWaterSource: "header tank" | "mains water";
                     /**
