@@ -98,7 +98,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the thermal resistance of the floor"
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50"
-		/>
+		><GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<p>For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m²·K)/W for when the facing wall is not exposed.</p>
+			<p class="govuk-body">
+				<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
+					Guidance on thermal resistance of unheated spaces (opens in another window)
+				</a>
+			</p>
+		</GovDetails>
+		</FormKit>
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
@@ -118,7 +126,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the length of the exposed perimeter of the floor. This should not include the length of the perimeter that is adjacent to another heated space."
 			name="perimeter"
 			validation="required | number | min:0 | max:1000"
-		/>
+		><GovDetails summary-text="Help with this input">
+			<p class="govuk-hint">The exposed perimeter of the floor is where heat loss may occur, usually at the base of the external walls where they meet the ground floor.</p>
+		</GovDetails>
+		</FormKit>
 		<FormKit
 			id="psiOfWallJunction"
 			type="govInputWithSuffix"
