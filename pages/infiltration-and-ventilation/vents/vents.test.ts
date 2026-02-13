@@ -16,7 +16,6 @@ describe("vents", () => {
 	});
 	const vent1: VentData = {
 		name: "Vent 1",
-		typeOfVent: "trickle",
 		associatedItemId: "0b77e247-53c5-42b8-9dbd-83cbfc8c3f4f",
 		effectiveVentilationArea: 10,
 		openingRatio: 1,

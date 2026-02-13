@@ -650,7 +650,6 @@ export type DuctworkData = z.infer<typeof ductworkDataZod>;
 const ventDataZod = z.object({
 	name: z.string().trim().min(1),
 	associatedItemId: z.guid(),
-	typeOfVent: z.enum(["trickle", "airBrick"]),
 	effectiveVentilationArea: z.number().min(1).max(999999),
 	openingRatio: z.number(),
 	midHeightOfZone: z.number().min(1).max(60),

@@ -26,7 +26,6 @@ describe("getResolvedTaggedItem", () => {
 
 	const vent1: VentData = {
 		name: "Vent 1",
-		typeOfVent: "trickle",
 		associatedItemId: externalWall1.id,
 		effectiveVentilationArea: 10,
 		openingRatio: 1,

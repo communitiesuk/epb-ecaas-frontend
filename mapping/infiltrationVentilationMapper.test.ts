@@ -59,10 +59,10 @@ describe("infiltration ventilation mapper", () => {
 				},
 			},
 		});
-    
+
 		// Act
 		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
-    
+
 		// Assert
 		expect(fhsInputData.InfiltrationVentilation).toBeDefined();
 		expect(fhsInputData.InfiltrationVentilation?.MechanicalVentilation).toBeDefined();
@@ -72,7 +72,7 @@ describe("infiltration ventilation mapper", () => {
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
 		expect(firstMechVent?.vent_type).toBe("MVHR");
 		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(108);
-		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA"); 
+		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA");
 		expect(firstMechVent?.sup_air_temp_ctrl).toBe("NO_CTRL");
 		expect(firstMechVent?.mvhr_location).toBe("inside");
 		expect("mvhr_eff" in firstMechVent && firstMechVent?.mvhr_eff).toBe(1);
@@ -84,7 +84,7 @@ describe("infiltration ventilation mapper", () => {
 
 	it("maps ductwork input state to FHS input request", () => {
 		// Arrange
-		
+
 		const ductwork: EcaasForm<DuctworkData>[] = [{
 			...baseForm,
 			data: {
@@ -127,7 +127,7 @@ describe("infiltration ventilation mapper", () => {
 				},
 			},
 		});
-    
+
 		// Act
 		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
 
@@ -170,7 +170,7 @@ describe("infiltration ventilation mapper", () => {
 				},
 			},
 		});
-    
+
 		// Act
 		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
 
@@ -200,20 +200,20 @@ describe("infiltration ventilation mapper", () => {
 				mechanicalVentilation: {
 					...baseForm,
 					data: mechVent,
-				},				
+				},
 			},
 		});
 
 		// Act
 		const fhsInputData = mapMechanicalVentilationData(resolveState(store.$state));
-    
+
 		// Assert
 		const firstMechVent = fhsInputData["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;;
 		expect(firstMechVent).toBeDefined();
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
 		expect(firstMechVent?.vent_type).toBe("Intermittent MEV");
 		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(144);
-		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA"); 
+		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA");
 		expect(firstMechVent?.sup_air_temp_ctrl).toBe("NO_CTRL");
 		expect(firstMechVent?.ductwork).toBeUndefined();
 	});
@@ -277,7 +277,6 @@ describe("infiltration ventilation mapper", () => {
 				...baseForm,
 				data: {
 					name: ventName,
-					typeOfVent: "airBrick",
 					associatedItemId: window.id,
 					effectiveVentilationArea: 100,
 					openingRatio: 0.6,
@@ -381,7 +380,6 @@ describe("infiltration ventilation mapper", () => {
 				...baseForm,
 				data: {
 					name: ventName,
-					typeOfVent: "airBrick",
 					associatedItemId: window.id,
 					effectiveVentilationArea: 100,
 					openingRatio: 0.6,

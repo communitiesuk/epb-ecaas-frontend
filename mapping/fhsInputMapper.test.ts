@@ -983,7 +983,6 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: {
 						name: "only vent",
-						typeOfVent: "airBrick",
 						associatedItemId: externalWallId,
 						effectiveVentilationArea: 75,
 						openingRatio: 0.2,
@@ -1430,7 +1429,6 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: {
 						name: "only vent",
-						typeOfVent: "airBrick",
 						associatedItemId: externalWallId,
 						effectiveVentilationArea: 75,
 						openingRatio: 0.2,

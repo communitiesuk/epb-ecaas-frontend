@@ -57,7 +57,7 @@ describe("windows", () => {
 		},
 		complete: true,
 	};
-	
+
 	const window3: EcaasForm<WindowData> = {
 		data: {
 			...window1.data,
@@ -65,13 +65,13 @@ describe("windows", () => {
 		},
 		complete: true,
 	};
-	
+
 	beforeEach(async () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
 					data: [window1, window2],
-				}, 
+				},
 			},
 		});
 		await renderSuspended(Windows);
@@ -119,7 +119,6 @@ describe("windows", () => {
 		const vent1: EcaasForm<VentData> = {
 			data: {
 				name: "Vent 1",
-				typeOfVent: "trickle",
 				associatedItemId: window2.data.id,
 				effectiveVentilationArea: 10,
 				openingRatio: 1,
@@ -236,7 +235,7 @@ describe("windows", () => {
 			expect(completedStatusElement?.style.display).not.toBe("none");
 		});
 
-	
+
 		describe("after section has been marked as complete", () => {
 
 			beforeEach(async () => {

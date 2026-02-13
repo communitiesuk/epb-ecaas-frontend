@@ -63,7 +63,6 @@ const ventSummary: SummarySection = {
 
 		return {
 			"Name": x.name,
-			"Type of vent": displayCamelToSentenceCase(show(x.typeOfVent)),
 			"Effective ventilation area": dim(x.effectiveVentilationArea, "centimetres square"),
 			"Mid height of zone": dim(x.midHeightOfZone, "metres"),
 			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,

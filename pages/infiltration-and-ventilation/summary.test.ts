@@ -51,7 +51,6 @@ const externalWall: ExternalWallData = {
 };
 const ventData: VentData = {
 	name: "Vent 1",
-	typeOfVent: "trickle",
 	associatedItemId: externalWall.id,
 	effectiveVentilationArea: 10,
 	openingRatio: 1,
@@ -199,7 +198,6 @@ describe("Infiltration and ventilation summary", () => {
 
 		const expectedResult = {
 			Name: "Vent 1",
-			"Type of vent": "Trickle",
 			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
 			"Mid height of zone": `1 ${metre.suffix}`,
 			Orientation: `0 ${degrees.suffix}`,
@@ -232,7 +230,6 @@ describe("Infiltration and ventilation summary", () => {
 
 		const ventData: Partial<VentData> = {
 			name: "Vent 1",
-			typeOfVent: "trickle",
 			associatedItemId: window1.id,
 		};
 
@@ -258,7 +255,6 @@ describe("Infiltration and ventilation summary", () => {
 
 		const expectedResult = {
 			Name: "Vent 1",
-			"Type of vent": "Trickle",
 			Orientation: `77 ${degrees.suffix}`,
 			Pitch: `66 ${degrees.suffix}`,
 		};
