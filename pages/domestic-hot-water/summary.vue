@@ -4,6 +4,7 @@ import { getTabItems, getUrl } from "#imports";
 import type { SchemaFuelType } from "~/schema/aliases";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import { displayDHWHeatSourceType } from "~/utils/display";
+import type { PageId } from "~/data/pages/pages";
 
 const title = "Domestic hot water summary";
 const store = useEcaasStore();
@@ -11,6 +12,7 @@ const store = useEcaasStore();
 const domesticHotWaterUrl = getUrl("domesticHotWater");
 
 const heatSources = store.domesticHotWater.heatSources.data;
+const dhwHeatSourcesFromSpaceHeating = heatSources.filter(({ data: x }) => x.isExistingHeatSource === true);
 const boilers = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "boiler");
 const heatPumps = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "heatPump");
 const heatNetworks = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "heatNetwork");
@@ -18,6 +20,76 @@ const heatBatteries = heatSources.filter(({ data: x }) => x.isExistingHeatSource
 const solarThermalSystem = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "solarThermalSystem");
 const immersionHeaters = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "immersionHeater");
 const pointOfUse = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "pointOfUse");
+
+type SummaryHeatSource = {
+	data: {
+		name: string,
+		heatSourceType: HeatSourceType,
+		isExistingHeatSource: boolean
+		coldWaterSource: "mainsWater" | "headerTank"
+	}
+};
+
+const boilerSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...boilers];
+const heatPumpSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...heatPumps];
+const heatNetworkSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...heatNetworks];
+const heatBatterySummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...heatBatteries];
+const solarThermalSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...solarThermalSystem];
+
+
+function createItemFromExistingHeatSources(heatSource: EcaasForm<DomesticHotWaterHeatSourceData>) {
+
+	const item = store.spaceHeating.heatSource.data.find(x => x.data.id === heatSource.data.heatSourceId);
+	if (item) {
+		return {
+			data: {
+				name: item.data.name,
+				heatSourceType: item.data.typeOfHeatSource!,
+				isExistingHeatSource: true,
+				coldWaterSource: heatSource.data.coldWaterSource ?? undefined,
+			},
+		};
+	}
+}
+
+function addHeatSourceToCorrectSummaryList(heatSources: EcaasForm<DomesticHotWaterHeatSourceData>[]) {
+	for (const heatSource of heatSources) {
+		const item = createItemFromExistingHeatSources(heatSource);
+		
+		if (item) {
+
+			if (item.data.heatSourceType === "boiler") {
+				boilerSummaries.push(item);
+			}
+			if (item?.data.heatSourceType === "heatPump") {
+				heatPumpSummaries.push(item);
+			}	
+			if (item?.data.heatSourceType === "heatNetwork") {
+				heatNetworkSummaries.push(item);
+			}	
+			if (item?.data.heatSourceType === "heatBattery") {
+				heatBatterySummaries.push(item);
+			}	
+			if (item?.data.heatSourceType === "solarThermalSystem") {
+				solarThermalSummaries.push(item);
+			}	
+		}
+	}
+}
+
+addHeatSourceToCorrectSummaryList(dhwHeatSourcesFromSpaceHeating);
+
+export type SummaryWithLink = {
+	text: "Yes" | "No",
+	link: PageId,
+	linkText: string
+};
+
+const heatSourceListItemWithLink: SummaryWithLink = {
+	text: "Yes",
+	link: "spaceHeatingSummary",
+	linkText: "View details in space heating summary",
+};
 
 const emptyHeatSourcesSummary: SummarySection = {
 	id: "emptyHeatSourcesSummary",
@@ -30,16 +102,20 @@ const boilerSummary: SummarySection = {
 	id: "boilerSummary",
 	label: "Boilers",
 	data:
-		boilers.map((x) => {
-			const heatSource = x.data as Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "boiler" }>;
-
+		boilerSummaries.map(({ data: heatSource }) => {
 			const summary = {
 				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
-				"Cold water source": "coldWaterSource" in heatSource ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
-				"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
-				"Type of boiler": "typeOfBoiler" in heatSource && heatSource.typeOfBoiler ? displayCamelToSentenceCase(heatSource.typeOfBoiler) : emptyValueRendering,
-				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-				"Location of boiler": "locationOfBoiler" in heatSource && heatSource.locationOfBoiler ? displayCamelToSentenceCase(heatSource.locationOfBoiler) : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				...(heatSource.isExistingHeatSource === true && {
+					"Used for space heating": heatSourceListItemWithLink,
+				}),
+				...(heatSource.isExistingHeatSource === false && {
+					"Used for space heating": "No",
+					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+					"Type of boiler": "typeOfBoiler" in heatSource && heatSource.typeOfBoiler ? displayCamelToSentenceCase(heatSource.typeOfBoiler) : emptyValueRendering,
+					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+					"Location of boiler": "locationOfBoiler" in heatSource && heatSource.locationOfBoiler ? displayCamelToSentenceCase(heatSource.locationOfBoiler) : emptyValueRendering,
+				}),
 			};
 			return summary;
 		}) || [],
@@ -50,15 +126,19 @@ const heatPumpSummary: SummarySection = {
 	id: "heatPumpSummary",
 	label: "Heat pumps",
 	data:
-		heatPumps.map((x) => {
-			const heatSource = x.data as Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "heatPump" }>;
-
+		heatPumpSummaries.map(({ data: heatSource }) => {
+			
 			const summary = {
 				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
-				"Cold water source": "coldWaterSource" in heatSource ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
-				"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
-				"Type of heat pump": "typeOfHeatPump" in heatSource && heatSource.typeOfHeatPump ? displayCamelToSentenceCase(heatSource.typeOfHeatPump) : emptyValueRendering,
-				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				...(heatSource.isExistingHeatSource === true && {
+					"Used for space heating": heatSourceListItemWithLink,
+				}),
+				...(heatSource.isExistingHeatSource === false && {
+					"Used for space heating": "No","Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+					"Type of heat pump": "typeOfHeatPump" in heatSource && heatSource.typeOfHeatPump ? displayCamelToSentenceCase(heatSource.typeOfHeatPump) : emptyValueRendering,
+					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+				}),
 			};
 			return summary;
 		}) || [],
@@ -69,31 +149,36 @@ const heatNetworkSummary: SummarySection = {
 	id: "heatNetworkSummary",
 	label: "Heat networks",
 	data:
-		heatNetworks.map((x) => {
+		heatNetworkSummaries.map(({ data: heatSource }) => {
 
-			const heatSource = x.data as Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
 			const summary = {
 				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
-				"Cold water source": "coldWaterSource" in heatSource ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
-				"Type of heat source": displayDHWHeatSourceType(heatSource.typeOfHeatSource) ?? emptyValueRendering,
-				"Type of heat network": heatSource.typeOfHeatNetwork ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
-				"Is the heat network in the PCDB": "isHeatNetworkInPcdb" in heatSource ? displayBoolean(heatSource.isHeatNetworkInPcdb) : emptyValueRendering,
-				...(heatSource.isHeatNetworkInPcdb === true && {
-					"Heat network product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-					"Energy supply": "energySupply" in heatSource ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
-					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				...(heatSource.isExistingHeatSource === true && {
+					"Used for space heating": heatSourceListItemWithLink,
 				}),
-				...(heatSource.isHeatNetworkInPcdb === false && {
-					"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply as SchemaFuelType] : emptyValueRendering,
-					"Emissions factor including out of scope emissions": "emissionsFactor" in heatSource ? heatSource.emissionsFactor : emptyValueRendering,
-					"Primary energy factor": "primaryEnergyFactor" in heatSource ? heatSource.primaryEnergyFactor : emptyValueRendering,
-					"Can energy from the heat network be exported": "canEnergyBeExported" in heatSource ? heatSource.canEnergyBeExported : emptyValueRendering,
-				}),
-				...(heatSource.isHeatNetworkInPcdb !== undefined && {
-					"Will the heat network use heat interface units": "usesHeatInterfaceUnits" in heatSource ? displayBoolean(heatSource.usesHeatInterfaceUnits) : emptyValueRendering,
-				}),
-				...(heatSource.usesHeatInterfaceUnits === true && {
-					"Heat interface unit product reference": "heatInterfaceUnitProductReference" in heatSource ? heatSource.heatInterfaceUnitProductReference : emptyValueRendering,
+				...(heatSource.isExistingHeatSource === false && {
+					"Used for space heating": "No",
+					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+					"Type of heat network": "typeOfHeatNetwork" in heatSource ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
+					"Is the heat network in the PCDB": "isHeatNetworkInPcdb" in heatSource ? displayBoolean(heatSource.isHeatNetworkInPcdb) : emptyValueRendering,
+					...("isHeatNetworkInPcdb" in heatSource && heatSource.isHeatNetworkInPcdb === true && {
+						"Heat network product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+						"Energy supply": "energySupply" in heatSource ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+						"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+					}),
+					...("isHeatNetworkInPcdb" in heatSource && heatSource.isHeatNetworkInPcdb === false && {
+						"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply as SchemaFuelType] : emptyValueRendering,
+						"Emissions factor including out of scope emissions": "emissionsFactor" in heatSource ? heatSource.emissionsFactor : emptyValueRendering,
+						"Primary energy factor": "primaryEnergyFactor" in heatSource ? heatSource.primaryEnergyFactor : emptyValueRendering,
+						"Can energy from the heat network be exported": "canEnergyBeExported" in heatSource ? heatSource.canEnergyBeExported : emptyValueRendering,
+					}),
+					...("isHeatNetworkInPcdb" in heatSource && heatSource.isHeatNetworkInPcdb !== undefined && {
+						"Will the heat network use heat interface units": "usesHeatInterfaceUnits" in heatSource ? displayBoolean(heatSource.usesHeatInterfaceUnits) : emptyValueRendering,
+					}),
+					...("usesHeatInterfaceUnits" in heatSource && heatSource.usesHeatInterfaceUnits === true && {
+						"Heat interface unit product reference": "heatInterfaceUnitProductReference" in heatSource ? heatSource.heatInterfaceUnitProductReference : emptyValueRendering,
+					}),
 				}),
 			};
 			return summary;
@@ -105,17 +190,21 @@ const heatBatterySummary: SummarySection = {
 	id: "heatBatterySummary",
 	label: "Heat batteries",
 	data:
-		heatBatteries.map((x) => {
-			const heatSource = x.data as Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "heatBattery" }>;
-
+		heatBatterySummaries.map(({ data: heatSource }) => {
 			const summary = {
-				Name: show(heatSource.name) ?? emptyValueRendering,
-				"Cold water source": "coldWaterSource" in heatSource ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
-				"Type of heat source": displayDHWHeatSourceType(heatSource.typeOfHeatSource) ?? emptyValueRendering,
-				"Type of heat battery": "typeOfHeatBattery" in heatSource && heatSource.typeOfHeatBattery ? displayCamelToSentenceCase(heatSource.typeOfHeatBattery) : emptyValueRendering,
-				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-				"Number of units": "numberOfUnits" in heatSource ? heatSource.numberOfUnits : emptyValueRendering,
-				"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				...(heatSource.isExistingHeatSource === true && {
+					"Used for space heating": heatSourceListItemWithLink,
+				}),
+				...(heatSource.isExistingHeatSource === false && {
+					"Used for space heating": "No",
+					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+					"Type of heat battery": "typeOfHeatBattery" in heatSource && heatSource.typeOfHeatBattery ? displayCamelToSentenceCase(heatSource.typeOfHeatBattery) : emptyValueRendering,
+					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+					"Number of units": "numberOfUnits" in heatSource ? heatSource.numberOfUnits : emptyValueRendering,
+					"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+				}),
 			};
 			return summary;
 		}) || [],
@@ -126,56 +215,62 @@ const solarThermalSystemSummary: SummarySection = {
 	id: "solarThermalSystemSummary",
 	label: "Solar thermal systems",
 	data:
-		solarThermalSystem.map(({ data: heatSource }) => {
+		solarThermalSummaries.map(({ data: heatSource }) => {
 
 			const summary = {
 				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
-				"Cold water source": "coldWaterSource" in heatSource ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
-				"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
-				"Location of collector loop piping":
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				...(heatSource.isExistingHeatSource === true && {
+					"Used for space heating": heatSourceListItemWithLink,
+				}),
+				...(heatSource.isExistingHeatSource === false && {
+					"Used for space heating": "No",
+					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+					"Location of collector loop piping":
 					"locationOfCollectorLoopPiping" in heatSource
 						&& heatSource.locationOfCollectorLoopPiping ? displayCamelToSentenceCase(heatSource.locationOfCollectorLoopPiping)
 						: emptyValueRendering,
 
-				"Collector module area":
+					"Collector module area":
 					"collectorModuleArea" in heatSource ? heatSource.collectorModuleArea : emptyValueRendering,
 
-				"Number of collector modules":
+					"Number of collector modules":
 					"numberOfCollectorModules" in heatSource ? heatSource.numberOfCollectorModules : emptyValueRendering,
 
-				"Peak collector efficiency":
+					"Peak collector efficiency":
 					"peakCollectorEfficiency" in heatSource ? heatSource.peakCollectorEfficiency : emptyValueRendering,
 
-				"Incidence angle modifier":
+					"Incidence angle modifier":
 					"incidenceAngleModifier" in heatSource ? heatSource.incidenceAngleModifier : emptyValueRendering,
 
-				"First order heat loss coefficient":
+					"First order heat loss coefficient":
 					"firstOrderHeatLossCoefficient" in heatSource ? heatSource.firstOrderHeatLossCoefficient : emptyValueRendering,
 
-				"Second order heat loss coefficient":
+					"Second order heat loss coefficient":
 					"secondOrderHeatLossCoefficient" in heatSource ? heatSource.secondOrderHeatLossCoefficient : emptyValueRendering,
 
-				"Heat loss coefficient of solar loop piping":
+					"Heat loss coefficient of solar loop piping":
 					"heatLossCoefficientOfSolarLoopPipe" in heatSource
 						? heatSource.heatLossCoefficientOfSolarLoopPipe
 						: emptyValueRendering,
 
-				"Collector mass flow rate":
+					"Collector mass flow rate":
 					"collectorMassFlowRate" in heatSource ? heatSource.collectorMassFlowRate : emptyValueRendering,
 
-				"Power of collector pump":
+					"Power of collector pump":
 					"powerOfCollectorPump" in heatSource ? heatSource.powerOfCollectorPump : emptyValueRendering,
 
-				"Power of collector pump controller":
+					"Power of collector pump controller":
 					"powerOfCollectorPumpController" in heatSource
 						? heatSource.powerOfCollectorPumpController
 						: emptyValueRendering,
 
-				"Pitch":
+					"Pitch":
 					"pitch" in heatSource ? dim(heatSource.pitch, "degrees") : emptyValueRendering,
 
-				"Orientation":
+					"Orientation":
 					"orientation" in heatSource ? dim(heatSource.orientation, "degrees") : emptyValueRendering,
+				}),
 			};
 
 			return summary;
@@ -193,7 +288,7 @@ const immersionHeaterSummary: SummarySection = {
 
 			const summary = {
 				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
-				"Cold water source": "coldWaterSource" in heatSource ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
 				"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
 				"Power": "power" in heatSource && dim(heatSource.power, "kilowatt"),
 			};
@@ -212,7 +307,7 @@ const pointOfUseSummary: SummarySection = {
 
 			const summary = {
 				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
-				"Cold water source": "coldWaterSource" in heatSource ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
 				"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
 				"Energy supply": "energySupply" in heatSource ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
 				"Heater efficiency": "heaterEfficiency" in heatSource ? heatSource.heaterEfficiency : emptyValueRendering,
