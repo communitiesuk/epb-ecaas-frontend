@@ -352,6 +352,18 @@ export interface components {
              */
             cost_schedule_time_series_step: number;
         };
+        HeatBatteryWithProductReference: {
+            /** @constant */
+            type: "HeatBattery";
+            /** @enum {string} */
+            battery_type: "pcm" | "dry_core";
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
+            number_of_units: number;
+        };
         PCMBattery: {
             /** @constant */
             type: "HeatBattery";
@@ -917,7 +929,7 @@ export interface components {
             electricity_standby: number;
         });
         /** @description A possible wet heat source */
-        HeatSourceWetHeatBattery: components["schemas"]["HeatSourceWetCommon"] & (components["schemas"]["PCMBattery"] | components["schemas"]["DryCoreBattery"]);
+        HeatSourceWetHeatBattery: components["schemas"]["HeatSourceWetCommon"] & (components["schemas"]["HeatBatteryWithProductReference"] | components["schemas"]["PCMBattery"] | components["schemas"]["DryCoreBattery"]);
         /** @description A possible wet heat source */
         HeatSourceWetHIU: components["schemas"]["HeatSourceWetCommon"] & {
             /** @constant */
@@ -2020,7 +2032,19 @@ export interface components {
                     electricity_standby: number;
                 });
                 /** @description A possible wet heat source */
-                HeatSourceWetHeatBattery: components["schemas"]["HeatSourceWetCommon"] & (components["schemas"]["PCMBattery"] | components["schemas"]["DryCoreBattery"]);
+                HeatSourceWetHeatBattery: components["schemas"]["HeatSourceWetCommon"] & (components["schemas"]["HeatBatteryWithProductReference"] | components["schemas"]["PCMBattery"] | components["schemas"]["DryCoreBattery"]);
+                HeatBatteryWithProductReference: {
+                    /** @constant */
+                    type: "HeatBattery";
+                    /** @enum {string} */
+                    battery_type: "pcm" | "dry_core";
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                    number_of_units: number;
+                };
                 PCMBattery: {
                     /** @constant */
                     type: "HeatBattery";
@@ -2684,6 +2708,7 @@ export type SchemaScheduleRepeaterForDouble = components['schemas']['ScheduleRep
 export type SchemaScheduleEntryForDouble = components['schemas']['ScheduleEntryForDouble'];
 export type SchemaScheduleForDouble = components['schemas']['ScheduleForDouble'];
 export type SchemaBoilerCostScheduleHybrid = components['schemas']['BoilerCostScheduleHybrid'];
+export type SchemaHeatBatteryWithProductReference = components['schemas']['HeatBatteryWithProductReference'];
 export type SchemaPcmBattery = components['schemas']['PCMBattery'];
 export type SchemaDryCoreBattery = components['schemas']['DryCoreBattery'];
 export type SchemaColdWaterSource = components['schemas']['ColdWaterSource'];
