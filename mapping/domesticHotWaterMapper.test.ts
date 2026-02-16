@@ -2,6 +2,7 @@ import type { BathData, DomesticHotWaterHeatSourceData, EcaasForm } from "~/stor
 import { mapDomesticHotWaterData, mapHotWaterSourcesData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { litre } from "../utils/units/volume";
+import type { SchemaMixerShower } from "~/schema/api-schema.types";
 
 const baseForm = {
 	data: [],
@@ -222,6 +223,7 @@ describe("domestic hot water mapper", () => {
 						"shower1": {
 							type: "MixerShower",
 							flowrate: 3,
+							allow_low_flowrate: false,
 							ColdWaterSource: "mains water",
 							HotWaterSource: heatSourceId,
 						},
@@ -287,14 +289,17 @@ describe("domestic hot water mapper", () => {
 
 				const result = mapDomesticHotWaterData(resolveState(store.$state));
 
-				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-a"]).toEqual({
+				const expectedShower: SchemaMixerShower = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 8,
+					allow_low_flowrate: false,
 					HotWaterSource: "heatPump1",
 					WWHRS: "WW-A-123",
 					WWHRS_configuration: "A",
-				});
+				};
+
+				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-a"]).toEqual(expectedShower);
 			});
 
 			it("maps WWHRS configuration type B", () => {
@@ -332,14 +337,16 @@ describe("domestic hot water mapper", () => {
 
 				const result = mapDomesticHotWaterData(resolveState(store.$state));
 
-				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-b"]).toEqual({
+				const expectedShowerWwhrsB = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 9,
+					allow_low_flowrate: false,
 					HotWaterSource: "cylinder1",
 					WWHRS: "WW-B-456",
 					WWHRS_configuration: "B",
-				});
+				} as const satisfies SchemaMixerShower;
+				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-b"]).toEqual(expectedShowerWwhrsB);
 			});
 
 			it("maps WWHRS configuration type C", () => {
@@ -378,14 +385,16 @@ describe("domestic hot water mapper", () => {
 
 				const result = mapDomesticHotWaterData(resolveState(store.$state));
 
-				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-c"]).toEqual({
+				const expectedShowerWwhrsC = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 10,
+					allow_low_flowrate: false,
 					HotWaterSource: "boiler1",
 					WWHRS: "WW-C-789",
 					WWHRS_configuration: "C",
-				});
+				} as const satisfies SchemaMixerShower;
+				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-c"]).toEqual(expectedShowerWwhrsC);
 			});
 		});
 
@@ -425,12 +434,14 @@ describe("domestic hot water mapper", () => {
 				const result = mapDomesticHotWaterData(resolveState(store.$state));
 
 				const shower = result.HotWaterDemand?.Shower?.["shower-no-wwhrs"];
-				expect(shower).toEqual({
+				const expectedShowerNoWwhrs = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 7,
+					allow_low_flowrate: false,
 					HotWaterSource: "cylinder2",
-				});
+				} as const satisfies SchemaMixerShower;
+				expect(shower).toEqual(expectedShowerNoWwhrs);
 				expect(shower).not.toHaveProperty("WWHRS");
 				expect(shower).not.toHaveProperty("WWHRS_configuration");
 			});
@@ -530,21 +541,25 @@ describe("domestic hot water mapper", () => {
 
 				const result = mapDomesticHotWaterData(resolveState(store.$state));
 
-				expect(result.HotWaterDemand?.Shower?.["shower1"]).toEqual({
+				const expectedShower1 = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 8,
+					allow_low_flowrate: false,
 					HotWaterSource: "source1",
 					WWHRS: "WW123",
 					WWHRS_configuration: "A",
-				});
+				} as const satisfies SchemaMixerShower;
+				expect(result.HotWaterDemand?.Shower?.["shower1"]).toEqual(expectedShower1);
 
-				expect(result.HotWaterDemand?.Shower?.["shower2"]).toEqual({
+				const expectedShower2 = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 6,
+					allow_low_flowrate: false,
 					HotWaterSource: "source2",
-				});
+				} as const satisfies SchemaMixerShower;
+				expect(result.HotWaterDemand?.Shower?.["shower2"]).toEqual(expectedShower2);
 
 				expect(result.HotWaterDemand?.Shower?.["elec1"]).toEqual({
 					type: "InstantElecShower",

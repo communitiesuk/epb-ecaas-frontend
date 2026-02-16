@@ -948,15 +948,22 @@ export interface components {
             power_max: number;
             building_level_distribution_losses: number;
         });
-        MixerShower: components["schemas"]["ColdWaterSource"] & {
+        MixerShower: components["schemas"]["ColdWaterSource"] & ({
             /** @constant */
             type: "MixerShower";
-            flowrate: number;
             HotWaterSource?: string;
             WWHRS?: string;
             /** @enum {unknown} */
             WWHRS_configuration?: "A" | "B" | "C";
-        };
+        } & ({
+            /** @constant */
+            allow_low_flowrate: true;
+            flowrate: number;
+        } | {
+            /** @constant */
+            allow_low_flowrate: false;
+            flowrate: number;
+        }));
         InstantElecShower: components["schemas"]["ColdWaterSource"] & {
             /** @constant */
             type: "InstantElecShower";
@@ -1237,6 +1244,7 @@ export interface components {
             BuildingWidth: number;
             GroundFloorArea?: number;
             NumberOfBedrooms: number;
+            /** @description A wet room is any room used for domestic activities (such as cooking, clothes washing and bathing) that produce significant amounts of airborne moisture, e.g. a kitchen, utility room or bathroom. For the purposes of Part F of the Building Regulations, sanitary accommodation is also regarded as a wet room. */
             NumberOfWetRooms?: number;
             /** @description A tapped room is any room with a tapping point (e.g. sink, bath, or shower) */
             NumberOfTappedRooms: number;
@@ -2117,15 +2125,22 @@ export interface components {
                     /** @enum {unknown} */
                     ColdWaterSource: "header tank" | "mains water";
                 };
-                MixerShower: components["schemas"]["ColdWaterSource"] & {
+                MixerShower: components["schemas"]["ColdWaterSource"] & ({
                     /** @constant */
                     type: "MixerShower";
-                    flowrate: number;
                     HotWaterSource?: string;
                     WWHRS?: string;
                     /** @enum {unknown} */
                     WWHRS_configuration?: "A" | "B" | "C";
-                };
+                } & ({
+                    /** @constant */
+                    allow_low_flowrate: true;
+                    flowrate: number;
+                } | {
+                    /** @constant */
+                    allow_low_flowrate: false;
+                    flowrate: number;
+                }));
                 InstantElecShower: components["schemas"]["ColdWaterSource"] & {
                     /** @constant */
                     type: "InstantElecShower";

@@ -36,6 +36,7 @@ function mapShowersData(state: ResolvedState) {
 			type: "MixerShower",
 			ColdWaterSource: "mains water",
 			flowrate: x.flowRate,
+			allow_low_flowrate: false, // would be true for air-powered showers
 			HotWaterSource: dhwHotWaterSource?.isExistingHeatSource
 				? dhwHotWaterSource?.heatSourceId
 				: dhwHotWaterSource?.id,

@@ -39,7 +39,8 @@
 		},
 		"NumberOfWetRooms": {
 			"type": "integer",
-			"minimum": 0
+			"minimum": 0,
+			"description": "A wet room is any room used for domestic activities (such as cooking, clothes washing and bathing) that produce significant amounts of airborne moisture, e.g. a kitchen, utility room or bathroom. For the purposes of Part F of the Building Regulations, sanitary accommodation is also regarded as a wet room."
 		},
 		"NumberOfTappedRooms": {
 			"type": "integer",
@@ -1744,7 +1745,8 @@
 						},
 						"then": {
 							"required": [
-								"flowrate"
+								"flowrate",
+								"allow_low_flowrate"
 							],
 							"properties": {
 								"flowrate": {
@@ -1752,6 +1754,7 @@
 									"minimum": 8,
 									"maximum": 15
 								},
+								"allow_low_flowrate": {"type": "boolean"},
 								"HotWaterSource": {
 									"type": "string"
 								},
@@ -1765,7 +1768,37 @@
 										"C"
 									]
 								}
-							}
+							},
+                            "allOf": [
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "allow_low_flowrate": {"const": true}
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "flowrate": {
+                                                "exclusiveMinimum": 0
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "allow_low_flowrate": {"const": false}
+                                        }
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "flowrate": {
+                                                "minimum": 8
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
 						},
 						"else": {
 							"required": [

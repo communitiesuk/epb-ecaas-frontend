@@ -111,6 +111,7 @@ const expectedHouseInput: FhsInputSchema = {
 				ColdWaterSource: "mains water",
 				HotWaterSource: "HP-1",
 				flowrate: 14,
+				allow_low_flowrate: false,
 				type: "MixerShower",
 			},
 		},
@@ -408,12 +409,14 @@ const expectedFlatInput: FhsInputSchema = {
 				ColdWaterSource: "mains water",
 				HotWaterSource: "HP-1",
 				flowrate: 14,
+				allow_low_flowrate: false,
 				type: "MixerShower",
 			},
 			"mixer shower 2 name": {
 				ColdWaterSource: "mains water",
 				HotWaterSource: "HP-1",
 				flowrate: 12,
+				allow_low_flowrate: false,
 				type: "MixerShower",
 			},
 			"electric shower 1 name": {
