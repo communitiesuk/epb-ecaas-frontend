@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
-import { productTypeMap, typeOfHeatSource, type PcdbProduct } from "~/stores/ecaasStore.schema";
+import { productTypeMap, typeOfHeatSource, type HeatSourceData, type PcdbProduct } from "~/stores/ecaasStore.schema";
 import { boilerTypes, heatPumpTypes, heatSourceProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
 
@@ -37,6 +37,16 @@ const backUrl = getUrl(pageId)
 const selectProduct = () => {
 	store.$patch((state) => {
 		const item = state.domesticHotWater.heatSources.data[index];
+		const heatSourceData = item?.data as HeatSourceData;
+
+		if (heatSourceData.typeOfHeatSource === "boiler" && (data?.technologyType === "CombiBoiler" || data?.technologyType === "RegularBoiler")) {
+			if (data.boilerLocation === "internal") {
+				heatSourceData.locationOfBoiler = "heatedSpace";
+				heatSourceData.locationFromPcdb = true;
+			} else {
+				heatSourceData.locationFromPcdb = false;
+			}
+		}
 
 		if (item && data) {
 			const product = item.data as PcdbProduct;

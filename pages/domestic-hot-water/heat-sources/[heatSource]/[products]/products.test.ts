@@ -45,6 +45,7 @@ describe("Heat source products page", () => {
 			},
 		],
 	};
+
 	beforeEach(() => {
 		mockFetch.mockReturnValue({
 			data: ref(MOCKED_HEAT_PUMPS),
@@ -64,11 +65,22 @@ describe("Heat source products page", () => {
 		typeOfHeatPump: "airSource",
 	};
 
+	const combiBoiler1: Partial<HeatSourceData> = {
+		id: "463c94f6-566c-49b2-af27-444444444",
+		name: "Heat network 1",
+		typeOfHeatSource: "boiler",
+		typeOfBoiler: "combiBoiler",
+	};
+
 	beforeEach(() => {
 		store.$patch({
 			domesticHotWater: {
 				heatSources: {
-					data: [{ data: heatSource1 }, { data: heatSource2 }],
+					data: [
+						{ data: heatSource1 },
+						{ data: heatSource2 },
+						{ data: combiBoiler1 },
+					],
 				},
 			},
 		});
@@ -108,6 +120,40 @@ describe("Heat source products page", () => {
 		expect(
 			store.domesticHotWater.heatSources.data[1]!.data,
 		).toEqual(expect.objectContaining({ productReference: MOCKED_HEAT_PUMPS.data[1]?.id }));
+	});
+
+	test("Boiler location is stored as 'heatedSpace' when boiler location is 'internal'", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "2",
+				products: "combi-boiler",
+			},
+			path: "/2/combi-boiler",
+		});
+
+		const mockedCombiBoilers: PaginatedResult<DisplayProduct> = {
+			data: [
+				{
+					id: "1000",
+					brandName: "HEM Default",
+					modelName: "Combi Boiler",
+					technologyType: "CombiBoiler",
+					boilerLocation: "internal",
+				},
+			],
+		};
+
+		mockFetch.mockReturnValue({
+			data: ref(mockedCombiBoilers),
+		});
+
+		await renderSuspended(Products);
+
+		await user.click(screen.getByTestId("selectProductButton_0"));
+
+		expect(
+			store.domesticHotWater.heatSources.data[2]!.data,
+		).toEqual(expect.objectContaining({ locationOfBoiler: "heatedSpace" }));
 	});
 
 	test("'Back to heat source' navigates user to the heat source at the correct index", async () => {

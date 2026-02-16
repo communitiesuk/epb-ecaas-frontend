@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { page } from "~/data/pages/pages";
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import { productTypeMap } from "~/stores/ecaasStore.schema";
 
 definePageMeta({ layout: false });
@@ -15,7 +16,7 @@ const { data: { value } } = await useFetch("/api/products", {
 
 const { productData, pagination } = searchData(value?.data ?? []);
 
-const selectProduct = (reference: string) => {
+const selectProduct = (product: DisplayProduct) => {
 	store.$patch((state) => {
 
 		const item = state.domesticHotWater.heatSources.data[index];
@@ -27,7 +28,16 @@ const selectProduct = (reference: string) => {
 				return;
 			}
 
-			(item.data as PcdbProduct).productReference = reference;
+			if (data.typeOfHeatSource === "boiler") {
+				if (product.boilerLocation === "internal") {
+					data.locationOfBoiler = "heatedSpace";
+					data.locationFromPcdb = true;
+				} else {
+					data.locationFromPcdb = false;
+				}
+			}
+
+			(item.data as PcdbProduct).productReference = product.id;
 		}
 	});
 
@@ -44,7 +54,7 @@ const selectProduct = (reference: string) => {
 	<GovProductsTable
 		:products="pagination.getData()"
 		:total-pages="pagination.totalPages"
-		:on-select-product="p => selectProduct(p.id)" />
+		:on-select-product="selectProduct" />
 	<GovButton secondary :href="`/domestic-hot-water/heat-sources/${index}`" test-id="backToHeatSourceButton">
 		Back to heat source
 	</GovButton>
