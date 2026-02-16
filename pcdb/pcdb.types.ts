@@ -311,7 +311,10 @@ const categoryTechnologies = {
 
 export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMap(x => categoryTechnologies[x]);
 
-export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier"> & { technologyType: TechnologyType };
+export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier"> & {
+	technologyType: TechnologyType;
+	boilerLocation?: string;
+};
 
 export type DisplayProductWithFlowTemp = DisplayProduct & {
 	designFlowTemperature?: number;

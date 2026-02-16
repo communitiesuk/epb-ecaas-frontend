@@ -96,6 +96,7 @@ const getProductsByTechnologyType = async <U extends DisplayTechnologyProducts>(
 			modelName: x.modelName as string,
 			modelQualifier: x.modelQualifier as string,
 			technologyType: x.technologyType as TechnologyType,
+			...(x.boilerLocation ? { boilerLocation: x.boilerLocation } : {}),
 		};
 
 		return product;

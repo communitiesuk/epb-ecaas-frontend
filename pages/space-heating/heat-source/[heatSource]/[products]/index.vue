@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { page } from "~/data/pages/pages";
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import { productTypeMap, type PcdbProduct } from "~/stores/ecaasStore.schema";
 
 definePageMeta({ layout: false });
@@ -16,7 +17,7 @@ const { data: { value } } = await useFetch("/api/products", {
 
 const { productData, pagination } = searchData(value?.data ?? []);
 
-const selectProduct = (reference: string) => {
+const selectProduct = (product: DisplayProduct) => {
 	store.$patch((state) => {
 
 		const item = state.spaceHeating.heatSource.data[index];
@@ -28,15 +29,24 @@ const selectProduct = (reference: string) => {
 				data.usesHeatInterfaceUnits &&
 				heatSourceProductType === "heatInterfaceUnit"
 			) {
-				data.heatInterfaceUnitProductReference = reference;
+				data.heatInterfaceUnitProductReference = product.id;
 				return;
 			}
 			
 			if (data.typeOfHeatSource === "heatNetwork" && !data.isHeatNetworkInPcdb) {
 				return;
 			}
+			
+			if (data.typeOfHeatSource === "boiler") {
+				if (product.boilerLocation === "internal") {
+					data.locationOfBoiler = "heatedSpace";
+					data.locationFromPcdb = true;
+				} else {
+					data.locationFromPcdb = false;
+				}
+			}
 
-			(item.data as PcdbProduct).productReference = reference;
+			(item.data as PcdbProduct).productReference = product.id;
 		}
 	});
 

@@ -43,6 +43,7 @@ const getProductById = <U extends DisplayById>(query: U["input"]): U["output"] =
 		modelName: product.modelName,
 		modelQualifier: product.modelQualifier,
 		technologyType: product.technologyType as TechnologyType,
+		...("boilerLocation" in product ? { boilerLocation: product.boilerLocation as string } : {}),
 	};
 
 	return displayProduct;

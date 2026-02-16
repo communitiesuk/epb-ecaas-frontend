@@ -20,6 +20,13 @@ describe("Heat pump details", async () => {
 		usesHeatInterfaceUnits: true,
 	};
 
+	const combiBoiler: Partial<HeatSourceData> = {
+		id: "463c94f6-566c-49b2-af27-444444444",
+		name: "Combi boiler 1",
+		typeOfHeatSource: "boiler",
+		typeOfBoiler: "combiBoiler",
+	};
+
 	const product: Partial<Product> = {
 		id: "1000",
 		brandName: "Test",
@@ -33,6 +40,14 @@ describe("Heat pump details", async () => {
 		brandName: "HEM Default",
 		modelName: "Heat Interface Unit",
 		technologyType: "HeatInterfaceUnit",
+	};
+
+	const combiBoilerProduct: Partial<Product> = {
+		id: "1000",
+		brandName: "HEM Default",
+		modelName: "Combi Boiler",
+		technologyType: "CombiBoiler",
+		boilerLocation: "internal",
 	};
 
 	const store = useEcaasStore();
@@ -55,6 +70,7 @@ describe("Heat pump details", async () => {
 					data: [
 						{ data: smallHeatPump },
 						{ data: heatNetwork },
+						{ data: combiBoiler },
 					],
 				},
 			},
@@ -150,6 +166,31 @@ describe("Heat pump details", async () => {
 
 		// Assert
 		expect(heatSource).toEqual(expect.objectContaining({ heatInterfaceUnitProductReference: heatInterfaceUnitProduct.id }));
+	});
+
+	test("Boiler location is stored as 'heatedSpace' when boiler location is 'internal'", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "2",
+				products: "combi-boiler",
+				id: "1000",
+			},
+			path: "/2/combi-boiler/1000",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(combiBoilerProduct),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		await user.click(screen.getByTestId("selectProductButton"));
+
+		const heatSource = store.spaceHeating.heatSource.data[2]?.data as HeatSourceData;
+
+		// Assert
+		expect(heatSource).toEqual(expect.objectContaining({ locationOfBoiler: "heatedSpace" }));
 	});
 
 	test("Navigates to heat pump page when product is selected", async () => {

@@ -815,6 +815,7 @@ const boilerBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("boiler"),
 	typeOfBoiler,
 	locationOfBoiler: z.enum(["heatedSpace", "unheatedSpace"]),
+	locationFromPcdb: z.optional(z.boolean()),
 });
 const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatBattery"),

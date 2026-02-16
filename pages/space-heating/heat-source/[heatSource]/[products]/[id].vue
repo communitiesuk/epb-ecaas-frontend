@@ -51,6 +51,15 @@ const selectProduct = () => {
 				return;
 			}
 
+			if (heatSourceData.typeOfHeatSource === "boiler" && (data.technologyType === "CombiBoiler" || data.technologyType === "RegularBoiler")) {
+				if (data.boilerLocation === "internal") {
+					heatSourceData.locationOfBoiler = "heatedSpace";
+					heatSourceData.locationFromPcdb = true;
+				} else {
+					heatSourceData.locationFromPcdb = false;
+				}
+			}
+
 			const product = item.data as PcdbProduct;
 			product.productReference = data.id;
 		}

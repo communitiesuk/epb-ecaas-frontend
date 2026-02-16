@@ -39,7 +39,7 @@ const selectProduct = (reference: string) => {
 	<GovProductsTable
 		:products="pagination.getData()"
 		:total-pages="pagination.totalPages"
-		:on-select-product="selectProduct" />
+		:on-select-product="p => selectProduct(p.id)" />
 	<GovButton secondary :href="`/infiltration-and-ventilation/mechanical-ventilation/${index}`" test-id="backToMechanicalVentilationButton">
 		Back to mechanical ventilation
 	</GovButton>

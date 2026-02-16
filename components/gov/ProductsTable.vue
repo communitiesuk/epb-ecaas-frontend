@@ -4,7 +4,7 @@ import type { DisplayProduct } from "~/pcdb/pcdb.types";
 defineProps<{
 	products: DisplayProduct[];
 	totalPages: number;
-	onSelectProduct: (reference: string) => void;
+	onSelectProduct: (product: DisplayProduct) => void;
 }>();
 
 const route = useRoute();
@@ -48,7 +48,7 @@ const route = useRoute();
 								secondary
 								classes="govuk-!-margin-bottom-2"
 								:test-id="`selectProductButton_${index}`"
-								@click="() => onSelectProduct(product.id.toString())"
+								@click="() => onSelectProduct(product)"
 							>
 								Select
 							</GovButton>

@@ -44,7 +44,7 @@ const selectProduct = (reference: string) => {
 	<GovProductsTable
 		:products="pagination.getData()"
 		:total-pages="pagination.totalPages"
-		:on-select-product="selectProduct" />
+		:on-select-product="p => selectProduct(p.id)" />
 	<GovButton secondary :href="`/domestic-hot-water/heat-sources/${index}`" test-id="backToHeatSourceButton">
 		Back to heat source
 	</GovButton>

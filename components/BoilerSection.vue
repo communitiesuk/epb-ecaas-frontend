@@ -56,7 +56,7 @@ const emit = defineEmits(["update-boiler-model"]);
 			:page-url="route.fullPath"
 			:page-index="index" />
 		<FormKit
-			v-if="model.typeOfBoiler"
+			v-if="model.typeOfBoiler && !model.locationFromPcdb"
 			id="locationOfBoiler"
 			type="govRadios"
 			label="Location of boiler"
