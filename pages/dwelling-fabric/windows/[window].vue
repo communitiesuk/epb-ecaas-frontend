@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { WindowData } from "#imports";
 import { millimetre } from "~/utils/units/length";
-import type { SchemaWindowTreatmentControl, SchemaWindowTreatmentType } from "~/schema/aliases";
+import type { SchemaWindowTreatmentType } from "~/schema/aliases";
 import { unitValue } from "~/utils/units";
 import { getUrl, uniqueName } from "#imports";
 import { v4 as uuidv4 } from "uuid";
@@ -42,13 +42,24 @@ if (window && "sideFinLeftDistance" in window) {
 
 const model = ref(window?.data);
 
+const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
+// Build tagging options with "none of the above"
+const tagOptions = [
+	...dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
+	...dwellingSpaceRoofs.data.map(x => [x.data.id, x.data.name] as [string, string]),
+	["none", "None of the above"] as [string, string],
+].filter(x => x[0] !== undefined);
+
+// Initialize taggedItem to "none" if undefined
+if (model.value && model.value.taggedItem === undefined) {
+	model.value.taggedItem = "none" as unknown as string;
+}
+
 const windowTreatmentTypeOptions: Record<SchemaWindowTreatmentType, SnakeToSentenceCase<SchemaWindowTreatmentType>> = {
 	curtains: "Curtains",
 	blinds: "Blinds",
-};
-const curtainsControlObjectOptions: Record<Exclude<SchemaWindowTreatmentControl, "manual_motorised" | "combined_light_blind_HVAC">, string> = {
-	auto_motorised: "Auto motorised",
-	manual: "Manual",
 };
 
 const shadingValidation = (siblingField: string) => {
@@ -63,7 +74,9 @@ const saveForm = (fields: WindowData) => {
 		const commonFields: Partial<WindowData> = {
 			id: windowId || uuidv4(),
 			name: fields.name,
-			taggedItem: fields.taggedItem,
+			taggedItem: fields.taggedItem === "none" ? undefined : fields.taggedItem,
+			pitch: fields.taggedItem === "none" ? fields.pitch : undefined,
+			orientation: fields.taggedItem === "none" ? fields.orientation : undefined,
 			height: fields.height,
 			width: fields.width,
 			uValue: fields.uValue,
@@ -107,42 +120,38 @@ const saveForm = (fields: WindowData) => {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
 					maximumOpenableArea: fields.maximumOpenableArea,
-					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
-				};
+				} as Extract<WindowData, { numberOpenableParts: "1" }>;
 				break;
 			case "2":
 				commonFieldsIncludingOpenableParts = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
 					maximumOpenableArea: fields.maximumOpenableArea,
-					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
 					midHeightOpenablePart2: fields.midHeightOpenablePart2,
-				};
+				} as Extract<WindowData, { numberOpenableParts: "2" }>;
 				break;
 			case "3":
 				commonFieldsIncludingOpenableParts = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
 					maximumOpenableArea: fields.maximumOpenableArea,
-					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
 					midHeightOpenablePart2: fields.midHeightOpenablePart2,
 					midHeightOpenablePart3: fields.midHeightOpenablePart3,
-				};
+				} as Extract<WindowData, { numberOpenableParts: "3" }>	;
 				break;
 			case "4":
 				commonFieldsIncludingOpenableParts = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
 					maximumOpenableArea: fields.maximumOpenableArea,
-					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
 					midHeightOpenablePart2: fields.midHeightOpenablePart2,
 					midHeightOpenablePart3: fields.midHeightOpenablePart3,
 					midHeightOpenablePart4: fields.midHeightOpenablePart4,
-				};
+				} as Extract<WindowData, { numberOpenableParts: "4" }>;
 				break;
 			default:
 				commonFieldsIncludingOpenableParts = { ...commonFields } as WindowData;
@@ -158,7 +167,6 @@ const saveForm = (fields: WindowData) => {
 				treatmentType: fields.treatmentType,
 				thermalResistivityIncrease: fields.thermalResistivityIncrease,
 				solarTransmittanceReduction: fields.solarTransmittanceReduction,
-				...(fields.treatmentType === "curtains" ? { curtainsControlObject: fields.curtainsControlObject } : {}),
 			} as WindowData;
 		
 		} else {
@@ -220,12 +228,41 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
 		/>
-		<FieldsAssociatedWallRoof
-			id="taggedItem"
-			name="taggedItem"
-			label="Associated wall or roof"
-			help="Select the wall or roof that this window is in. It should have the same orientation and pitch as the window."
-		/>
+		<ClientOnly>
+			<FormKit
+				id="taggedItem"
+				type="govRadios"
+				:options="new Map(tagOptions)"
+				label="Associated wall or roof"
+				help="Select the wall or roof that this window is in. It should have the same orientation and pitch as the window. Select 'None of the above' to enter pitch and orientation manually."
+				name="taggedItem"
+				validation="required">
+				<div v-if="!tagOptions.length">
+					<p class="govuk-error-message">No walls or roofs added.</p>
+					<div class="gov-radios-add-links">
+						<NuxtLink :to="getUrl('dwellingSpaceWalls')" class="govuk-link gov-radios-add-link">
+							Click here to add walls
+						</NuxtLink>
+						<NuxtLink :to="getUrl('dwellingSpaceCeilingsAndRoofs')" class="govuk-link gov-radios-add-link">
+							Click here to add roofs
+						</NuxtLink>
+					</div>
+				</div>
+			</FormKit>
+		</ClientOnly>
+		<template v-if="model && model.taggedItem === 'none'">
+			<FieldsPitch
+				id="pitch"
+				name="pitch"
+				data-field="Zone.BuildingElement.*.pitch"
+			/>
+			<FieldsOrientation
+				v-if="model.pitch !== 0 && model.pitch !== 180"
+				id="orientation"
+				name="orientation"
+				data-field="Zone.BuildingElement.*.orientation360"
+			/>
+		</template>
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"
@@ -301,7 +338,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="securityRisk"
 			type="govBoolean"
 			label="Is having this window open a security risk?"
-			help="For example, would you be able to leave the window open at night?"
+			help="For example, if you are able to leave the window open at night it would not be a security risk"
 			validation="required"
 			data-field="Zone.BuildingElement.*.security_risk"
 		/>
@@ -319,16 +356,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="numberOpenableParts"
 			validation="required"
 		/>
+
 		<template v-if="!!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
-			<FormKit
-				id="heightOpenableArea"
-				type="govInputWithSuffix"
-				suffix-text="m"
-				label="Height of the openable area"
-				help="Enter the vertical measurement of the section of the window that can be opened"
-				name="heightOpenableArea"
-				validation="required | number | min:0 | max:100"
-			/>
 			<FormKit
 				id="maximumOpenableArea"
 				type="govInputWithSuffix"
@@ -336,8 +365,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Maximum openable area"
 				help="Enter the total area of the gap created when the window is fully open"
 				name="maximumOpenableArea"
-				validation="required | number | min:0 | max:100"
+				validation="required | number | min:0.01 | max:10000"
 			/>
+		</template>
+
+		<template v-if="!!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
 			<FormKit
 				id="midHeightOpenablePart1"
 				type="govInputWithSuffix"
@@ -494,16 +526,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required"
 			/>
 			<FormKit
-				v-if="model && 'treatmentType' in model && model.treatmentType === 'curtains'"
-				id="curtainsControlObject"
-				type="govRadios"
-				:options="curtainsControlObjectOptions"
-				label="Curtains control object reference"
-				help="Reference to an OnOffTimeControl object that determines when curtains should open"
-				name="curtainsControlObject"
-				validation="required"
-			/>
-			<FormKit
 				id="thermalResistivityIncrease"
 				type="govInputWithSuffix"
 				suffix-text="W/(m²·K)"
@@ -543,5 +565,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	}
 	.shading-header-row th {
 		padding-bottom: 20px;
+	}
+	.gov-radios-add-links {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
 	}
 </style>

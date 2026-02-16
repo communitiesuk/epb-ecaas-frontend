@@ -61,10 +61,11 @@ const window1: EcaasForm<WindowData> = {
 
 const window2: EcaasForm<WindowData> = {
 	data: {
-		...window1.data, name: "Window 2", id: "test-id-2" },
+		...window1.data, name: "Window 2", id: "test-id-2",
+	},
 };
 
-describe ("window", () => {
+describe("window", () => {
 	beforeEach(() => {
 		store.$patch({
 			dwellingFabric: {
@@ -93,7 +94,7 @@ describe ("window", () => {
 		await user.type(screen.getByTestId("name"), "Window 1");
 		await user.click(screen.getByTestId(`taggedItem_${externalWall.id}`));
 		await user.type(screen.getByTestId("height"), "1");
-		await user.type(screen.getByTestId("width"), "1"); 
+		await user.type(screen.getByTestId("width"), "1");
 		await user.type(screen.getByTestId("uValue"), "1");
 		await user.click(screen.getByTestId("securityRisk_no"));
 		await user.type(screen.getByTestId("solarTransmittance"), "0.1");
@@ -114,10 +115,10 @@ describe ("window", () => {
 		await user.type(screen.getByTestId("solarTransmittanceReduction"), "0.1");
 		await user.tab();
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		const { data } = store.dwellingFabric.dwellingSpaceWindows;
-		
+
 		expect(data[0]).toEqual(window1);
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/windows");
 	});
@@ -157,11 +158,11 @@ describe ("window", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("thermalResistivityIncrease")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("solarTransmittanceReduction")).value).toBe("0.1");
 	});
-		
+
 	test("only required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(Window);
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("taggedItem_error"))).toBeDefined();
@@ -187,20 +188,19 @@ describe ("window", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(Window);
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("windowErrorSummary"))).toBeDefined();
 	});
 
 	test("requires further data when four openable parts option is selected", async () => {
 		await renderSuspended(Window);
-    
+
 		await user.click(screen.getByTestId("numberOpenableParts_4"));
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
 		expect((await screen.findByTestId("maximumOpenableArea_error"))).toBeDefined();
-		expect((await screen.findByTestId("heightOpenableArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
 		expect((await screen.findByTestId("midHeightOpenablePart2_error"))).toBeDefined();
 		expect((await screen.findByTestId("midHeightOpenablePart3_error"))).toBeDefined();
@@ -209,25 +209,17 @@ describe ("window", () => {
 
 	test("does not require the mid height of more parts than have been selected", async () => {
 		await renderSuspended(Window);
-    
+
 		await user.click(screen.getByTestId("numberOpenableParts_1"));
-		await(user.click(screen.getByTestId("saveAndComplete")));
-    
+		await (user.click(screen.getByTestId("saveAndComplete")));
+
 		expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
 		expect((screen.queryByTestId("midHeightOpenablePart2_error"))).toBeNull();
 		expect((screen.queryByTestId("midHeightOpenablePart3_error"))).toBeNull();
 		expect((screen.queryByTestId("midHeightOpenablePart4_error"))).toBeNull();
 	});
 
-	test("displays curtainsControlObject when the curtains option is selected", async () => {
-		await renderSuspended(Window);
-    
-		await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
-		await user.click(screen.getByTestId("treatmentType_curtains"));
-		await user.tab();
-    
-		expect((screen.getByTestId("curtainsControlObject_auto_motorised"))).toBeDefined();
-	});
+
 
 	test("displays guidance link to window shading guidance page", async () => {
 		await renderSuspended(Window);
@@ -239,10 +231,10 @@ describe ("window", () => {
 
 	test("save progress button navigates user to the windows overview page", async () => {
 		await renderSuspended(Window);
-		
+
 		await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
 		await user.click(screen.getByTestId("saveProgress"));
-					
+
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/windows");
 	});
 });
@@ -314,7 +306,7 @@ describe("Partially saving data", () => {
 
 		await user.type(screen.getByTestId("name"), " ");
 		await user.tab();
-		
+
 		expect(store.dwellingFabric.dwellingSpaceWindows.data[0]!.data.name).toBe("Window");
 
 		await renderSuspended(Window, {
@@ -326,7 +318,7 @@ describe("Partially saving data", () => {
 		await user.clear(screen.getByTestId("name"));
 		await user.type(screen.getByTestId("name"), " ");
 		await user.tab();
-		
+
 		expect(store.dwellingFabric.dwellingSpaceWindows.data[0]!.data.name).toBe("Window");
 	});
 
@@ -357,16 +349,16 @@ describe("Partially saving data", () => {
 				},
 			},
 		});
-  
+
 		await renderSuspended(Window, {
 			route: {
 				params: { window: "1" },
 			},
 		});
-		
+
 		await user.clear(screen.getByTestId("name"));
 		await user.clear(screen.getByTestId("height"));
-		
+
 		await user.type(screen.getByTestId("name"), "Updated Window 2");
 		await user.type(screen.getByTestId("height"), "2");
 		await user.tab();
