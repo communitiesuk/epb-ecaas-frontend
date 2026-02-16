@@ -42,20 +42,18 @@ const route = useRoute();
 					<td class="govuk-table__cell">{{ product.modelName }}</td>
 					<td class="govuk-table__cell">{{ product.modelQualifier ?? '-' }}</td>
 					<td class="govuk-table__cell govuk-table__cell--select">
-						<div>
-							<GovButton
-								type="button"
-								secondary
-								classes="govuk-!-margin-bottom-2"
-								:test-id="`selectProductButton_${index}`"
-								@click="() => onSelectProduct(product)"
-							>
-								Select
-							</GovButton>
-						</div>
 						<NuxtLink :href="`${route.path}/${product.id}`" class="govuk-link govuk-!-margin-right-3">
 							More details
 						</NuxtLink>
+						<GovButton
+							type="button"
+							secondary
+							classes="govuk-!-margin-bottom-0"
+							:test-id="`selectProductButton_${index}`"
+							@click="() => onSelectProduct(product)"
+						>
+							Select
+						</GovButton>
 					</td>
 				</tr>
 			</tbody>
@@ -79,6 +77,8 @@ const route = useRoute();
 }
 
 .govuk-table__cell--select {
-	width: 120px;
+	white-space: nowrap;
+	text-align: right;
+	width: 200px;
 }
 </style>
