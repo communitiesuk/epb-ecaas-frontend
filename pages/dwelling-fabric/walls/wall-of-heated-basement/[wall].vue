@@ -114,7 +114,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal resistance"
-			help="Enter the thermal resistance of all layers in the floor construction"
+			help="Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. "
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50"
 
