@@ -185,7 +185,7 @@ describe("dwelling fabric mapper", () => {
 			heightOfBasementWalls: 0.9,
 			thermalResistanceOfBasementWalls: 0.6,
 			thermalTransmittanceOfBasementWalls: 0.7,
-			thermalTransmittanceOfFoundations: 0.8, 
+			thermalTransmittanceOfFoundations: 0.8,
 		};
 		const floorAboveHeatedBasement: FloorOfHeatedBasementData = {
 			id: "974e8749-f465-4f43-a38a-3d0b97060a64",
@@ -362,7 +362,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		expect(floorAboveUnheatedBasementElement).toEqual(expectedFloorAboveUnheatedBasement);
-		
+
 		const expectedFloorOfHeatedBasement: BuildingElementGround = {
 			type: "BuildingElementGround",
 			total_area: floorAboveHeatedBasement.surfaceArea,
@@ -859,7 +859,7 @@ describe("dwelling fabric mapper", () => {
 
 		const expectedUnglazedDoor: BuildingElementOpaque = {
 			type: "BuildingElementOpaque",
-			pitch: externalWall.data.pitch!,
+			pitch: extractPitch(externalWall.data),
 			orientation360: externalWall.data.orientation,
 			height: externalUnglazedDoor.height,
 			width: externalUnglazedDoor.width,
@@ -921,7 +921,6 @@ describe("dwelling fabric mapper", () => {
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
-			heightOpenableArea: 1,
 			securityRisk: false,
 		};
 
@@ -968,7 +967,6 @@ describe("dwelling fabric mapper", () => {
 			frame_area_fraction: 1 - window.openingToFrameRatio,
 			security_risk: false,
 			max_window_open_area: window.maximumOpenableArea,
-			free_area_height: window.heightOpenableArea,
 			window_part_list: [
 				{
 					mid_height_air_flow_path: window.midHeightOpenablePart1,

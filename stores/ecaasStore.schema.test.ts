@@ -27,8 +27,6 @@ describe("windowData Zod schema", () => {
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.8,
 			maximumOpenableArea: 1,
-			heightOpenableArea: 1,
-			curtainsControlObject: "auto_motorised",
 		};
 		expect(
 			() => {
@@ -41,12 +39,12 @@ describe("windowData Zod schema", () => {
 		const windowFormData = {
 			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 			name: "bedroom window",
+			pitch: 90,
 			orientation: 90,
 			height: 2,
 			width: 2,
 			uValue: 0.1,
-			pitchOption: "90",
-			pitch: 90,
+			securityRisk: true,
 			solarTransmittance: 0.2,
 			elevationalHeight: 1,
 			midHeight: 2,
@@ -64,8 +62,6 @@ describe("windowData Zod schema", () => {
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.8,
 			maximumOpenableArea: 1,
-			heightOpenableArea: 1,
-			curtainsControlObject: "auto_motorised",
 		};
 		expect(
 			() => {
@@ -78,13 +74,13 @@ describe("windowData Zod schema", () => {
 		const windowFormData = {
 			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 			name: "bedroom window",
+			pitch: 90,
 			orientation: 90,
 			surfaceArea: 4,
 			height: 2,
 			width: 2,
 			uValue: 0.1,
-			pitchOption: "90",
-			pitch: 90,
+			securityRisk: true,
 			solarTransmittance: 0.2,
 			elevationalHeight: 1,
 			midHeight: 2,
@@ -101,8 +97,6 @@ describe("windowData Zod schema", () => {
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.8,
 			maximumOpenableArea: 1,
-			heightOpenableArea: 1,
-			curtainsControlObject: "auto_motorised",
 		};
 		expect(
 			() => {

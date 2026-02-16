@@ -290,7 +290,6 @@ const doorsData: DoorsData = {
 				openingToFrameRatio: 0.2,
 				maximumOpenableArea: 1,
 				midHeightOpenablePart1: 1,
-				heightOpenableArea: 1,
 			},
 		}],
 	},

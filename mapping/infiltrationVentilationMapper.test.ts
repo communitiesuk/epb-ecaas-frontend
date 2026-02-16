@@ -268,7 +268,6 @@ describe("infiltration ventilation mapper", () => {
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
-			heightOpenableArea: 1,
 			securityRisk: false,
 		};
 
@@ -371,7 +370,6 @@ describe("infiltration ventilation mapper", () => {
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
-			heightOpenableArea: 1,
 			securityRisk: false,
 		};
 

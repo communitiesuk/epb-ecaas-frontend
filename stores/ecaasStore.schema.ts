@@ -6,7 +6,7 @@ import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/sch
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, colourZod, ductShapeZod, fuelTypeWithElecOnlyZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, colourZod, ductShapeZod, fuelTypeWithElecOnlyZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
 
 const fraction = z.number().min(0).max(1);
@@ -403,16 +403,6 @@ const externalUnglazedDoorDataZod = named.extend({
 
 export type ExternalUnglazedDoorData = z.infer<typeof externalUnglazedDoorDataZod>;
 
-const commonOpenablePartsFields = {
-	maximumOpenableArea: z.number().min(0.01).max(10000),
-	heightOpenableArea: z.number().min(0.001).max(50),
-};
-
-const onePartFields = { ...commonOpenablePartsFields, midHeightOpenablePart1: z.number().min(0).max(100) };
-const twoPartFields = { ...onePartFields, midHeightOpenablePart2: z.number().min(0).max(100) };
-const threePartFields = { ...twoPartFields, midHeightOpenablePart3: z.number().min(0).max(100) };
-const fourPartFields = { ...threePartFields, midHeightOpenablePart4: z.number().min(0).max(100) };
-
 const externalGlazedDoorDataZod = named.extend({
 	associatedItemId: z.guid(),
 	height: z.number().min(0.001).max(50),
@@ -423,7 +413,9 @@ const externalGlazedDoorDataZod = named.extend({
 	elevationalHeight: z.number().min(0).max(500),
 	midHeight: z.number().min(0).max(100),
 	openingToFrameRatio: fraction,
-	...onePartFields,
+	maximumOpenableArea: z.number().min(0.01).max(10000),
+	heightOpenableArea: z.number().min(0.001).max(50),
+	midHeightOpenablePart1: z.number().min(0).max(100),
 });
 
 export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorDataZod>;
@@ -451,7 +443,9 @@ const internalDoorDataZod = z.discriminatedUnion(
 export type InternalDoorData = z.infer<typeof internalDoorDataZod>;
 
 const baseWindowData = namedWithId.extend({
-	taggedItem: z.guid(),
+	taggedItem: z.guid().optional(),
+	pitch: z.number().min(0).max(180).optional(),
+	orientation: z.number().min(0).lt(360).optional(),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	uValue,
@@ -469,19 +463,29 @@ const baseWindowPlusOpenableParts = z.discriminatedUnion(
 		}),
 		baseWindowData.extend({
 			numberOpenableParts: z.literal("1"),
-			...onePartFields,
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
 		}),
 		baseWindowData.extend({
 			numberOpenableParts: z.literal("2"),
-			...twoPartFields,
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+			midHeightOpenablePart2: z.number().min(0).max(100),
 		}),
 		baseWindowData.extend({
 			numberOpenableParts: z.literal("3"),
-			...threePartFields,
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+			midHeightOpenablePart2: z.number().min(0).max(100),
+			midHeightOpenablePart3: z.number().min(0).max(100),
 		}),
 		baseWindowData.extend({
 			numberOpenableParts: z.literal("4"),
-			...fourPartFields,
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+			midHeightOpenablePart2: z.number().min(0).max(100),
+			midHeightOpenablePart3: z.number().min(0).max(100),
+			midHeightOpenablePart4: z.number().min(0).max(100),
 		}),
 	],
 );
@@ -523,7 +527,6 @@ const curtainsOrBlindsFields = z.union([
 	z.object({
 		curtainsOrBlinds: z.literal(true),
 		treatmentType: windowTreatmentTypeZod,
-		curtainsControlObject: z.optional(windowTreatmentControlZod),
 		thermalResistivityIncrease: z.number().min(0).max(100),
 		solarTransmittanceReduction: fraction,
 	}),

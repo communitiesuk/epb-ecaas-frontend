@@ -433,10 +433,19 @@ const windowSummary: SummarySection = {
 	data: windowData.map(({ data: x }) => {
 
 		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.taggedItem);
+		let pitch = emptyValueRendering;
+		let orientation = emptyValueRendering;
+
+		if (taggedItem) {
+			pitch = taggedItem.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering;
+			orientation = taggedItem.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering;
+		} else {
+			pitch = x.pitch !== undefined ? dim(x.pitch, "degrees") : emptyValueRendering;
+			orientation = x.orientation !== undefined ? dim(x.orientation, "degrees") : emptyValueRendering;
+		}
 
 		const numberOfOpenableParts = parseInt(x.numberOpenableParts ?? "0");
 
-		const heightOpenableArea = "heightOpenableArea" in x ? dim(x.heightOpenableArea, "metres") : emptyValueRendering;
 		const maximumOpenableArea = "maximumOpenableArea" in x ? dim(x.maximumOpenableArea, "metres square") : emptyValueRendering;
 		const midHeightOpenablePart1 = "midHeightOpenablePart1" in x ? dim(x.midHeightOpenablePart1, "metres") : emptyValueRendering;
 		const midHeightOpenablePart2 = "midHeightOpenablePart2" in x ? dim(x.midHeightOpenablePart2, "metres") : emptyValueRendering;
@@ -444,14 +453,13 @@ const windowSummary: SummarySection = {
 		const midHeightOpenablePart4 = "midHeightOpenablePart4" in x ? dim(x.midHeightOpenablePart4, "metres") : emptyValueRendering;
 
 		const treatmentType = "treatmentType" in x ? displayCamelToSentenceCase(show(x.treatmentType)) : emptyValueRendering;
-		const curtainsControlObject = "curtainsControlObject" in x ? displaySnakeToSentenceCase(x.curtainsControlObject!) : emptyValueRendering;
 		const thermalResistivityIncrease = "thermalResistivityIncrease" in x ? dim(x.thermalResistivityIncrease, "watts per square metre kelvin") : emptyValueRendering;
 		const solarTransmittanceReduction = "solarTransmittanceReduction" in x ? show(x.solarTransmittanceReduction) : emptyValueRendering;
 
 		return {
 			"Name": show(x.name),
-			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
-			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,
+			"Pitch": pitch,
+			"Orientation": orientation,
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
@@ -461,7 +469,6 @@ const windowSummary: SummarySection = {
 			"Opening to frame ratio": show(x.openingToFrameRatio),
 			"Security risk": displayBoolean(x.securityRisk),
 			"Number of openable parts": show(x.numberOpenableParts),
-			"Height of the openable area": numberOfOpenableParts >= 1 ? heightOpenableArea : undefined,
 			"Maximum openable area": numberOfOpenableParts >= 1 ? maximumOpenableArea : undefined,
 			"Mid height of the air flow path for openable part 1": numberOfOpenableParts >= 1 ? midHeightOpenablePart1 : undefined,
 			"Mid height of the air flow path for openable part 2": numberOfOpenableParts >= 2 ? midHeightOpenablePart2 : undefined,
@@ -474,7 +481,6 @@ const windowSummary: SummarySection = {
 			"Side fin left depth": dim(x.sideFinLeftDepth),
 			"Side fin left distance from glass": dim(x.sideFinLeftDistance),
 			"Type": x.curtainsOrBlinds ? treatmentType : undefined,
-			"Curtains control object reference": "treatmentType" in x && x.treatmentType === "curtains" ? curtainsControlObject : undefined,
 			"Thermal resistivity increase": x.curtainsOrBlinds ? thermalResistivityIncrease : undefined,
 			"Solar transmittance reduction": x.curtainsOrBlinds ? solarTransmittanceReduction : undefined,
 		};

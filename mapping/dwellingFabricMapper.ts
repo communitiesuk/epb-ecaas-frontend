@@ -716,16 +716,28 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			depth: inMetres(x.sideFinRightDepth),
 			distance: inMetres(x.sideFinRightDistance),
 		}] : [];
-		const associatedElement = getResolvedTaggedItem(
-			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-			x.taggedItem,
-		)!;
+
+
+		let pitch: number;
+		let orientation: number;
+
+		if (!x.taggedItem) {
+			pitch = extractPitch(x);
+			orientation = x.orientation!;
+		} else {
+			const associatedElement = getResolvedTaggedItem(
+				[dwellingSpaceExternalWall, dwellingSpaceRoofs],
+				x.taggedItem,
+			)!;
+			pitch = extractPitch(associatedElement);
+			orientation = associatedElement.orientation!;
+		}
 
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementTransparent",
-				pitch: extractPitch(associatedElement),
-				orientation360: associatedElement.orientation!,
+				pitch,
+				orientation360: orientation,
 				height: x.height,
 				width: x.width,
 				base_height: x.elevationalHeight,
@@ -735,7 +747,6 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				security_risk: x.securityRisk,
 				frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
 				max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
-				free_area_height: x.numberOpenableParts === "0" ? 0 : x.heightOpenableArea,
 				window_part_list: mapWindowPartList(x),
 				shading: [...overhang, ...sideFinLeft, ...sideFinRight],
 			},
