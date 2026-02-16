@@ -483,6 +483,15 @@ const hotWaterOutletsSummarySections: SummarySection[] = [
 	otherOutletsSummary,
 ];
 
+const emptyHotWaterOutletsSummary: SummarySection = {
+	id: "emptyHotWaterOutletsSummary",
+	label: "Hot water outlets",
+	data: [],
+	editUrl: getUrl("hotWaterOutletsCreate"),
+};
+
+const populatedHotWaterOutletsSections = getNonEmptySections(hotWaterOutletsSummarySections);
+
 
 
 const pipeworkData = store.domesticHotWater.pipework.data;
@@ -549,39 +558,27 @@ const populatedWaterStorageSections = getNonEmptySections(waterStorageSummarySec
 		</template>
 	</GovTabs>
 
-	<GovTabs v-slot="tabProps" :items="getTabItems(hotWaterOutletsSummarySections)">
-		<SummaryTab :summary="mixedShowerSummary" :selected="tabProps.currentTab === 0">
-			<template #empty>
-				<h2 class="govuk-heading-m">No mixer shower added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsCreate')">
-					Add mixer shower
-				</NuxtLink>
-			</template>
-		</SummaryTab>
-		<SummaryTab :summary="electricShowerSummary" :selected="tabProps.currentTab === 1">
-			<template #empty>
-				<h2 class="govuk-heading-m">No electric shower added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsCreate')">
-					Add electric shower
-				</NuxtLink>
-			</template>
-		</SummaryTab>
-		<SummaryTab :summary="bathSummary" :selected="tabProps.currentTab === 2">
-			<template #empty>
-				<h2 class="govuk-heading-m">No bath added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsCreate')">
-					Add bath
-				</NuxtLink>
-			</template>
-		</SummaryTab>
-		<SummaryTab :summary="otherOutletsSummary" :selected="tabProps.currentTab === 3">
-			<template #empty>
-				<h2 class="govuk-heading-m">No outlet added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsCreate')">
-					Add outlet
-				</NuxtLink>
-			</template>
-		</SummaryTab>
+	<GovTabs v-slot="tabProps" :items="populatedHotWaterOutletsSections.length === 0 ? [emptyHotWaterOutletsSummary] : getTabItems(populatedHotWaterOutletsSections)">
+		<template v-if="populatedHotWaterOutletsSections.length === 0">
+			<SummaryTab :summary="emptyHotWaterOutletsSummary" :selected="tabProps.currentTab === 0">
+				<template #empty>
+					<h2 class="govuk-heading-m">No hot water outlets added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsCreate')">
+						Add hot water outlet
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
+		<template v-for="section, i of populatedHotWaterOutletsSections" :key="i">
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i">
+				<template #empty>
+					<h2 class="govuk-heading-m">No {{ section.label.toLowerCase() }} added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsCreate')">
+						Add {{ section.label.toLowerCase() }}
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems(pipeworkSummarySections)">
 		<SummaryTab :summary="pipeworkSummary" :selected="tabProps.currentTab === 0">

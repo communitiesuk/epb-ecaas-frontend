@@ -245,13 +245,72 @@ describe("Domestic hot water summary", () => {
 			},
 		};
 
-		it("should contain the correct tabs for hot water outlets", async () => {
+		it("should not display tabs for outlet types with 0 entries", async () => {
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [mixedShower], // Only mixer shower has data
+					},
+					heatSources: {
+						data: [{ data: { id: mixedShower.data.dhwHeatSourceId, name: "Heat pump" } }],
+					},
+				},
+			});
+
 			await renderSuspended(Summary);
 
+			// Should show tab for mixer showers (has data)
+			expect(screen.getByRole("link", { name: "Mixer showers" })).not.toBeNull();
+			
+			// Should NOT show tabs for types with no data
+			expect(screen.queryByRole("link", { name: "Electric showers" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Baths" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Other" })).toBeNull();
+		});
+
+		it("should show 'Hot water outlets' tab with add link when no outlets exist", async () => {
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [], // No outlets
+					},
+				},
+			});
+
+			await renderSuspended(Summary);
+
+			expect(screen.getByText("No hot water outlets added")).not.toBeNull();
+
+			const addOutletLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add hot water outlet",
+			});
+
+			expect(new URL(addOutletLink.href).pathname).toBe(
+				getUrl("hotWaterOutletsCreate"),
+			);
+		});
+
+		it("should show multiple tabs when multiple outlet types have data", async () => {
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [mixedShower, electricShower, bathData],
+					},
+					heatSources: {
+						data: [{ data: { id: mixedShower.data.dhwHeatSourceId, name: "Heat pump" } }],
+					},
+				},
+			});
+
+			await renderSuspended(Summary);
+
+			// Should show tabs for all types with data
 			expect(screen.getByRole("link", { name: "Mixer showers" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Electric showers" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Baths" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Other" })).not.toBeNull();
+			
+			// Should NOT show tab for type without data
+			expect(screen.queryByRole("link", { name: "Other" })).toBeNull();
 		});
 
 		it("should display the correct data for the mixer shower section", async () => {
