@@ -620,13 +620,14 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				height: x.height,
 				width: x.width,
 				base_height: x.elevationalHeight,
-				area: x.surfaceArea,
 				colour: x.colour,
-				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				is_external_door: true,
 				is_unheated_pitched_roof: false, // this may need to be limited to opaque elements with a pitch <= 60
+				///
+				area: x.height * x.width, //maybe remove
+				u_value: 1, //maybe remove
 			},
 		};
 	});

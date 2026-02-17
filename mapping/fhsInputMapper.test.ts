@@ -1721,8 +1721,6 @@ describe("FHS input mapper", () => {
 							height: 2.6,
 							width: 1.2,
 							elevationalHeight: 1,
-							surfaceArea: 20,
-							uValue: 1,
 							arealHeatCapacity: "Light",
 							massDistributionClass: "I",
 							colour: "Intermediate",

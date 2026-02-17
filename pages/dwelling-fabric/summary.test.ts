@@ -268,8 +268,6 @@ const doorsData: DoorsData = {
 				height: 0.5,
 				width: 20,
 				elevationalHeight: 20,
-				surfaceArea: 10,
-				uValue: 1,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				colour: "Intermediate",

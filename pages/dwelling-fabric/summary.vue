@@ -357,8 +357,6 @@ const unglazedDoorSummary: SummarySection = {
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
-			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),

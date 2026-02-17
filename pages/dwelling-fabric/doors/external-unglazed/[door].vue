@@ -23,8 +23,6 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 				height: fields.height,
 				width: fields.width,
 				elevationalHeight: fields.elevationalHeight,
-				surfaceArea: fields.surfaceArea,
-				uValue: fields.uValue,
 				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
 				colour: fields.colour,
@@ -104,17 +102,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.width"
 		/>
 		<FieldsElevationalHeight />
-		<FormKit
-			id="surfaceArea"
-			type="govInputWithSuffix"
-			suffix-text="m²"
-			label="Net surface area of element"
-			help="Enter the net area of the building element. The area of all windows should be subtracted before entry."
-			name="surfaceArea"
-			validation="required | number | min:0.01 | max:10000"
-			data-field="Zone.BuildingElement.*.area"
-		/>
-		<FieldsUValue id="uValue" name="uValue" />
 		<FormKit
 			id="colour"
 			type="govRadios"

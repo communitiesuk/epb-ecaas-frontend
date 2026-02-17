@@ -5,6 +5,7 @@ import type {
 	DwellingSpaceLightingData,
 	DwellingSpaceZoneParametersData,
 	EcaasForm,
+	ExternalUnglazedDoorData,
 	PartyWallData,
 } from "~/stores/ecaasStore.schema";
 import { centimetre, millimetre } from "../utils/units/length";
@@ -785,8 +786,6 @@ describe("dwelling fabric mapper", () => {
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
-			surfaceArea: 10,
-			uValue: 1,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			colour: "Intermediate",
@@ -857,15 +856,13 @@ describe("dwelling fabric mapper", () => {
 
 		expect(externalGlazedDoorElement).toEqual(expectedExternalGlazedDoor);
 
-		const expectedUnglazedDoor: BuildingElementOpaque = {
+		const expectedUnglazedDoor = { // was BuildingElementOpaque - maybe rejig these types
 			type: "BuildingElementOpaque",
 			pitch: extractPitch(externalWall.data),
 			orientation360: externalWall.data.orientation,
 			height: externalUnglazedDoor.height,
 			width: externalUnglazedDoor.width,
 			base_height: externalUnglazedDoor.elevationalHeight,
-			area: externalUnglazedDoor.surfaceArea,
-			u_value: externalUnglazedDoor.uValue,
 			areal_heat_capacity: externalUnglazedDoor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(externalUnglazedDoor.massDistributionClass),
 			is_external_door: true,
