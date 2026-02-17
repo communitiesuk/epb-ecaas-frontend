@@ -2,7 +2,7 @@
 import type { OnSiteGenerationVentilationStrategy, SchemaInverterType } from "~/schema/aliases";
 import { getUrl, uniqueName } from "#imports";
 
-const title = "PV (photovoltaic) system";
+const title = "PV (photovoltaic) array";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 

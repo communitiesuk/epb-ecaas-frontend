@@ -77,9 +77,9 @@ const hasIncompleteEntries = () =>
 		{{ title }}
 	</h1>
 	<CustomList
-		id="pvSystems"
-		title="PV Systems"
-		:form-url="`${page?.url!}/pv-systems`"
+		id="pvArrays"
+		title="PV arrays"
+		:form-url="`${page?.url!}/pv-arrays`"
 		:items="store.pvAndBatteries.pvSystems.data.filter(x => isEcaasForm(x)).map(x => ({
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress

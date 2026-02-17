@@ -8,7 +8,7 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-describe("PV system", () => {
+describe("PV array", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
@@ -37,7 +37,7 @@ describe("PV system", () => {
 		// await user.type(screen.getByTestId('rightDistance'), '10');
 	};
 
-	const pvSystem: EcaasForm<PvSystemData> = {
+	const pvArray: EcaasForm<PvSystemData> = {
 		data: {
 			name: "PV 1",
 			peakPower: 4,
@@ -60,14 +60,14 @@ describe("PV system", () => {
 		},
 	};
 
-	const pvSystem2: EcaasForm<PvSystemData> = {
-		data: { ...pvSystem.data, name: "PV 2" },
+	const pvArray2: EcaasForm<PvSystemData> = {
+		data: { ...pvArray.data, name: "PV 2" },
 	};
 
 	it("should have a heading", async () => {
 		await renderSuspended(PVScreen);
 		expect(
-			screen.getByRole("heading", { name: "PV (photovoltaic) system" }),
+			screen.getByRole("heading", { name: "PV (photovoltaic) array" }),
 		).toBeDefined();
 	});
 
@@ -122,8 +122,8 @@ describe("PV system", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data } = store.pvAndBatteries.pvSystems;
-		
-		expect(data[0]).toEqual({ ...pvSystem, complete: true });
+
+		expect(data[0]).toEqual({ ...pvArray, complete: true });
 	});
 
 	it("navigates to pv and batteries page when valid form is completed", async () => {
@@ -179,7 +179,7 @@ describe("PV system", () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystems: {
-						data: [pvSystem, pvSystem2],
+						data: [pvArray, pvArray2],
 					},
 				},
 			});
@@ -208,7 +208,7 @@ describe("PV system", () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystems: {
-						data: [{ ...pvSystem, complete: true }],
+						data: [{ ...pvArray, complete: true }],
 						complete: true,
 					},
 				},

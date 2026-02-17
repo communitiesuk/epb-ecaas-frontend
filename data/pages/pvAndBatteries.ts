@@ -11,14 +11,14 @@ const pvAndBatteriesPages = [
 	{
 		id: "pvSystems",
 		title: "PV System",
-		url: "/pv-and-batteries/pv-systems/create",
+		url: "/pv-and-batteries/pv-arrays/create",
 		type: "task",
 		parentId: "pvAndBatteries",
 	},
 	{
 		id: "pvSystemEdit",
 		title: "PV System",
-		url: "/pv-and-batteries/pv-systems/:system",
+		url: "/pv-and-batteries/pv-arrays/:system",
 		type: "task",
 		parentId: "pvAndBatteries",
 	},
