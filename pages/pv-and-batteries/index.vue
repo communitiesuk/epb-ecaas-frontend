@@ -3,7 +3,7 @@ import type { EcaasForm } from "~/stores/ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 import { isEcaasForm } from "#imports";
 
-const title = "PV (photovoltaic) systems and electric batteries";
+const title = "PV Systems and electric batteries";
 const page = usePage();
 const store = useEcaasStore();
 
