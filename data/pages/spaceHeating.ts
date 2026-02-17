@@ -135,6 +135,13 @@ export const spaceHeatingPages = [
 		parentId: "heatEmitters",
 	},
 	{
+		id: "instantElectricHeaterProducts",
+		title: "Select an instant electric heater",
+		url: "/space-heating/heat-emitters/:heatEmitter/instant-electric-heater",
+		type: "task",
+		parentId: "heatEmitters",
+	},
+	{
 		id: "heatEmittersCreate",
 		title: "Heat emitter",
 		url: "/space-heating/heat-emitters/create",

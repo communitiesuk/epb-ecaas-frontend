@@ -62,6 +62,7 @@ const selectProduct = () => {
 
 	<ProductDetailsFanCoil v-if="!!data && heatEmittingType === typeOfHeatEmitter.fanCoil" :product="data!" />
 	<ProductDetailsElectricStorageHeater v-if="!!data && heatEmittingType === typeOfHeatEmitter.electricStorageHeater" :product="data!" />
+	<ProductDetailsInstantElectricHeater v-if="!!data && heatEmittingType === typeOfHeatEmitter.instantElectricHeater" :product="data!" />
 
 	<div class="govuk-button-group">
 		<GovButton

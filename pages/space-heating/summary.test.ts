@@ -413,6 +413,7 @@ describe("Space heating summary page", () => {
 			convectionFractionForHeating: 0.9,
 			numOfHeaters: 6,
 			ratedPower: 2.5,
+			productReference: "IEH-SMALL",
 		};
 		const electricStorageHeater: HeatEmittingData = {
 			id: "181920",

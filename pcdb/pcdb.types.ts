@@ -253,6 +253,15 @@ const _mevProductSchema = z.discriminatedUnion("technologyType", [
 
 export type MevProduct = z.infer<typeof _mevProductSchema>;
 
+const instantElectricHeaterZod = BaseProduct.extend({
+	technologyType: z.literal("DirectElectricHeaters"),
+	c: z.nullable(z.number()),
+	thermalMass: z.nullable(z.number()),
+	n: z.nullable(z.number()),
+});
+
+export type InstantElectricHeaterProduct = z.infer<typeof instantElectricHeaterZod>;
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
 	groundSourceHeatPumpZod,
@@ -273,6 +282,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	centralisedMvhrZod,
 	centralisedContinuousMevZod,
 	decentralisedContinuousMevZod,
+	instantElectricHeaterZod,
 ]);
 
 export type Product = z.infer<typeof productSchema>;
@@ -305,6 +315,7 @@ const categoryTechnologies = {
 	heatEmitting: [
 		"FanCoils",
 		"StorageHeater",
+		"DirectElectricHeaters",
 	],
 	mechanicalVentilation: ["CentralisedMvhr", "CentralisedMev", "DecentralisedMev"],
 } as const satisfies Record<string, TechnologyType[]>;

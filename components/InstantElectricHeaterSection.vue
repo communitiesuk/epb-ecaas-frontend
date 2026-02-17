@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { InstantElectricHeaterModelType } from "~/pages/space-heating/heat-emitters/[heatEmitter]/index.vue";
+const route = useRoute();
 
 defineProps<{
-	model: InstantElectricHeaterModelType
+	model: InstantElectricHeaterModelType;
+	index: number;
 }>();
 
 </script>
@@ -14,6 +16,17 @@ defineProps<{
 		label="Name"
 		name="name"
 		validation="required" />
+	<FormKit
+		id="selectInstantElectricHeater"
+		type="govPcdbProduct"
+		label="Select an instant electric heater"
+		name="productReference"
+		validation="required"
+		help="Select the instant electric heater from the PCDB using the button below."
+		:selected-product-reference="model.productReference"
+		:selected-product-type="model.typeOfHeatEmitter"
+		:page-url="route.fullPath"
+		:page-index="index" />
 	<FormKit
 		id="ratedPower"
 		type="govInputWithSuffix"

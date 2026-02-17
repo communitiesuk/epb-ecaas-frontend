@@ -130,7 +130,8 @@ function updateHeatEmitter(type: string) {
 			:index="index" />
 		<InstantElectricHeaterSection
 			v-if="model?.typeOfHeatEmitter === 'instantElectricHeater'"
-			:model="(model as InstantElectricHeaterModelType)" />
+			:model="(model as InstantElectricHeaterModelType)"
+			:index="index" />
 		<ElectricStorageHeaterSection
 			v-if="model?.typeOfHeatEmitter === typeOfHeatEmitter.electricStorageHeater"
 			:model="(model as ElectricStorageHeaterModelType)" 

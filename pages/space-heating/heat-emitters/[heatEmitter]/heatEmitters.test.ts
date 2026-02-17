@@ -528,6 +528,7 @@ describe("Heat emitters", () => {
 				ratedPower: 1,
 				convectionFractionForHeating: 1,
 				numOfHeaters: 1,
+				productReference: "IEH-SMALL",
 			};
 			store.$patch({
 				spaceHeating: {
@@ -616,6 +617,7 @@ describe("Heat emitters", () => {
 				ratedPower: 1,
 				convectionFractionForHeating: 1,
 				numOfHeaters: 1,
+				productReference: "IEH-SMALL",
 			};
 			store.$patch({
 				spaceHeating: {

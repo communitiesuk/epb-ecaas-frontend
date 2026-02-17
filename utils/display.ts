@@ -406,6 +406,7 @@ export const waterStorageProductTypeDisplay = {
 export const heatEmittingProductTypesDisplay = {
 	"fanCoil": pluralize("Fan coil"),
 	"electricStorageHeater": pluralize("Electric storage heater"),
+	"instantElectricHeater": pluralize("Instant electric heater"),
 } as const satisfies Record<HeatEmittingProductType, (plural: boolean) => string>;
 
 export const waterStorageTypes = {

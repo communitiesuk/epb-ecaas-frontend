@@ -150,4 +150,30 @@ describe("Heat pump details", async () => {
 		// Assert
 		expect((await screen.findByTestId("electricStorageHeater"))).toBeDefined();
 	});
+
+	test("Displays instant electric heater details when product is an instant electric heater", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatEmitter: "0",
+				products: "instant-electric-heater",
+				id: "1000",
+			},
+			path: "/0/instant-electric-heater/1000",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				...product,
+				modelName: "Instant electric heater",
+				technologyType: "DirectElectricHeaters",
+			}),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		
+		// Assert
+		expect((await screen.findByTestId("instantElectricHeater"))).toBeDefined();
+	});
 });

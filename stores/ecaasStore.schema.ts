@@ -944,6 +944,7 @@ export const productTypeMap = {
 	"mvhr": "CentralisedMvhr",
 	"centralisedContinuousMev": "CentralisedMev",
 	"decentralisedContinuousMev": "DecentralisedMev",
+	"instantElectricHeater": "DirectElectricHeaters",
 } as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType, TechnologyType | string>;
 
 export type HeatEmitterType =
@@ -954,7 +955,7 @@ export type HeatEmitterType =
 	"electricStorageHeater" |
 	"warmAirHeater";
 
-const _typeOfHeatEmitter = z.enum(["fanCoil", "electricStorageHeater"]);
+const _typeOfHeatEmitter = z.enum(["fanCoil", "electricStorageHeater", "instantElectricHeater"]);
 
 export const typeOfHeatEmitter = _typeOfHeatEmitter.enum;
 
@@ -1152,6 +1153,7 @@ const warmAirHeaterSchema = namedWithId.extend({
 
 const instantElectricHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("instantElectricHeater"),
+	productReference: z.string(),
 	convectionFractionForHeating: z.number(),
 	ratedPower: z.number(),
 	numOfHeaters: z.number(),
