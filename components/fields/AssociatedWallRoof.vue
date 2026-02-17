@@ -25,16 +25,17 @@ const options = [
 <template>
 	<ClientOnly>
 		<FormKit
+			v-if="!options.length"
 			:id="id"
 			type="govRadios"
-			:options="new Map(options)"
+			:options="new Map(options.concat([['none', 'Not attached to a wall or roof']]))"
 			:label="label"
 			:help="help"
 			:name="name"
 			:validation="validation ?? 'required'"
 			:validation-rules="validationRules"
 			:validation-messages="validationMessages">
-			<div v-if="!options.length">
+			<div>
 				<p class="govuk-error-message">No walls or roofs added.</p>
 				<div class="gov-radios-add-links">
 					<NuxtLink :to="getUrl('dwellingSpaceWalls')" class="govuk-link gov-radios-add-link">
@@ -46,6 +47,17 @@ const options = [
 				</div>
 			</div>
 		</FormKit>
+		<FormKit
+			v-if="options.length"
+			:id="id"
+			type="govRadios"
+			:options="new Map(options.concat([['none', 'None of the above']]))"
+			:label="label"
+			:help="help"
+			:name="name"
+			:validation="validation ?? 'required'"
+			:validation-rules="validationRules"
+			:validation-messages="validationMessages"/>
 	</ClientOnly>
 </template>
 

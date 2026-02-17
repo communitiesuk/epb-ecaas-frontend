@@ -66,176 +66,214 @@ const window2: EcaasForm<WindowData> = {
 };
 
 describe("window", () => {
-	beforeEach(() => {
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceWalls: {
-					dwellingSpaceExternalWall: {
-						data: [{ data: externalWall, complete: true }],
+	describe("without existing external wall or roof", () => {
+		test("links to add walls and roofs are displayed", async () => {
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "create" },
+				},
+			});
+	
+			expect(screen.getByText("No walls or roofs added.")).toBeDefined();
+			expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add walls" }).href)
+				.toContain("/dwelling-fabric/walls");
+			expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add roofs" }).href)
+				.toContain("/dwelling-fabric/ceilings-and-roofs");
+		});
+	
+		test("Associated wall/roof question has none of the above option", async () => {
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "create" },
+				},
+			});
+	
+			expect(screen.getByTestId("associatedItemId_none")).toBeDefined();
+		});
+	});
+		
+	describe("with existing external wall", () => {
+		beforeEach(() => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: externalWall, complete: true }],
+						},
 					},
 				},
-			},
-		});
-	});
-
-	afterEach(() => {
-		store.$reset();
-	});
-
-	test("data is saved to store state when form is valid", async () => {
-		vi.mocked(uuidv4).mockReturnValue(window1.data.id as unknown as Buffer);
-
-		await renderSuspended(Window, {
-			route: {
-				params: { window: "create" },
-			},
+			});
 		});
 
-		await user.type(screen.getByTestId("name"), "Window 1");
-		await user.click(screen.getByTestId(`taggedItem_${externalWall.id}`));
-		await user.type(screen.getByTestId("height"), "1");
-		await user.type(screen.getByTestId("width"), "1");
-		await user.type(screen.getByTestId("uValue"), "1");
-		await user.click(screen.getByTestId("securityRisk_no"));
-		await user.type(screen.getByTestId("solarTransmittance"), "0.1");
-		await user.type(screen.getByTestId("elevationalHeight"), "1");
-		await user.type(screen.getByTestId("midHeight"), "1");
-		await user.type(screen.getByTestId("openingToFrameRatio"), "0.8");
-		await user.click(screen.getByTestId("securityRisk_yes"));
-		await user.click(screen.getByTestId("numberOpenableParts_0"));
-		await user.type(screen.getByTestId("overhangDepth"), "60");
-		await user.type(screen.getByTestId("overhangDistance"), "60");
-		await user.type(screen.getByTestId("sideFinRightDepth"), "60");
-		await user.type(screen.getByTestId("sideFinRightDistance"), "60");
-		await user.type(screen.getByTestId("sideFinLeftDepth"), "60");
-		await user.type(screen.getByTestId("sideFinLeftDistance"), "60");
-		await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
-		await user.click(screen.getByTestId("treatmentType_blinds"));
-		await user.type(screen.getByTestId("thermalResistivityIncrease"), "1");
-		await user.type(screen.getByTestId("solarTransmittanceReduction"), "0.1");
-		await user.tab();
-
-		await (user.click(screen.getByTestId("saveAndComplete")));
-
-		const { data } = store.dwellingFabric.dwellingSpaceWindows;
-
-		expect(data[0]).toEqual(window1);
-		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/windows");
-	});
-
-	test("form is prepopulated when data exists in state", async () => {
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceWindows: {
-					data: [window1],
+		afterEach(() => {
+			store.$reset();
+		});
+		test("Associated wall/roof question has none of the above option", async () => {
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "create" },
 				},
-			},
+			});
+	
+			expect(screen.getByTestId("associatedItemId_none")).toBeDefined();
 		});
 
-		await renderSuspended(Window, {
-			route: {
-				params: { window: "0" },
-			},
+		test("data is saved to store state when form is valid", async () => {
+			vi.mocked(uuidv4).mockReturnValue(window1.data.id as unknown as Buffer);
+
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "create" },
+				},
+			});
+
+			await user.type(screen.getByTestId("name"), "Window 1");
+			await user.click(screen.getByTestId(`taggedItem_${externalWall.id}`));
+			await user.type(screen.getByTestId("height"), "1");
+			await user.type(screen.getByTestId("width"), "1");
+			await user.type(screen.getByTestId("uValue"), "1");
+			await user.click(screen.getByTestId("securityRisk_no"));
+			await user.type(screen.getByTestId("solarTransmittance"), "0.1");
+			await user.type(screen.getByTestId("elevationalHeight"), "1");
+			await user.type(screen.getByTestId("midHeight"), "1");
+			await user.type(screen.getByTestId("openingToFrameRatio"), "0.8");
+			await user.click(screen.getByTestId("securityRisk_yes"));
+			await user.click(screen.getByTestId("numberOpenableParts_0"));
+			await user.type(screen.getByTestId("overhangDepth"), "60");
+			await user.type(screen.getByTestId("overhangDistance"), "60");
+			await user.type(screen.getByTestId("sideFinRightDepth"), "60");
+			await user.type(screen.getByTestId("sideFinRightDistance"), "60");
+			await user.type(screen.getByTestId("sideFinLeftDepth"), "60");
+			await user.type(screen.getByTestId("sideFinLeftDistance"), "60");
+			await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
+			await user.click(screen.getByTestId("treatmentType_blinds"));
+			await user.type(screen.getByTestId("thermalResistivityIncrease"), "1");
+			await user.type(screen.getByTestId("solarTransmittanceReduction"), "0.1");
+			await user.tab();
+
+			await (user.click(screen.getByTestId("saveAndComplete")));
+
+			const { data } = store.dwellingFabric.dwellingSpaceWindows;
+
+			expect(data[0]).toEqual(window1);
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/windows");
 		});
 
-		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Window 1");
-		expect((await screen.findByTestId(`taggedItem_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("1");
-		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
-		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
-		expect((await screen.findByTestId("securityRisk_yes")).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
-		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("1");
-		expect((await screen.findByTestId<HTMLInputElement>("midHeight")).value).toBe("1");
-		expect((await screen.findByTestId("numberOpenableParts_0")).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>("overhangDepth")).value).toBe("60");
-		expect((await screen.findByTestId<HTMLInputElement>("overhangDistance")).value).toBe("60");
-		expect((await screen.findByTestId<HTMLInputElement>("sideFinRightDepth")).value).toBe("60");
-		expect((await screen.findByTestId<HTMLInputElement>("sideFinRightDistance")).value).toBe("60");
-		expect((await screen.findByTestId<HTMLInputElement>("sideFinLeftDepth")).value).toBe("60");
-		expect((await screen.findByTestId<HTMLInputElement>("sideFinLeftDistance")).value).toBe("60");
-		expect((await screen.findByTestId("treatmentType_blinds")).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>("thermalResistivityIncrease")).value).toBe("1");
-		expect((await screen.findByTestId<HTMLInputElement>("solarTransmittanceReduction")).value).toBe("0.1");
-	});
+		test("form is prepopulated when data exists in state", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWindows: {
+						data: [window1],
+					},
+				},
+			});
 
-	test("only required error messages are displayed when empty form is submitted", async () => {
-		await renderSuspended(Window);
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "0" },
+				},
+			});
 
-		await (user.click(screen.getByTestId("saveAndComplete")));
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Window 1");
+			expect((await screen.findByTestId(`taggedItem_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
+			expect((await screen.findByTestId("securityRisk_yes")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
+			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("midHeight")).value).toBe("1");
+			expect((await screen.findByTestId("numberOpenableParts_0")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("overhangDepth")).value).toBe("60");
+			expect((await screen.findByTestId<HTMLInputElement>("overhangDistance")).value).toBe("60");
+			expect((await screen.findByTestId<HTMLInputElement>("sideFinRightDepth")).value).toBe("60");
+			expect((await screen.findByTestId<HTMLInputElement>("sideFinRightDistance")).value).toBe("60");
+			expect((await screen.findByTestId<HTMLInputElement>("sideFinLeftDepth")).value).toBe("60");
+			expect((await screen.findByTestId<HTMLInputElement>("sideFinLeftDistance")).value).toBe("60");
+			expect((await screen.findByTestId("treatmentType_blinds")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("thermalResistivityIncrease")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittanceReduction")).value).toBe("0.1");
+		});
 
-		expect((await screen.findByTestId("name_error"))).toBeDefined();
-		expect((await screen.findByTestId("taggedItem_error"))).toBeDefined();
-		expect((await screen.findByTestId("height_error"))).toBeDefined();
-		expect((await screen.findByTestId("width_error"))).toBeDefined();
-		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
-		expect((await screen.findByTestId("securityRisk_error"))).toBeDefined();
-		expect((await screen.findByTestId("solarTransmittance_error"))).toBeDefined();
-		expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
-		expect((await screen.findByTestId("midHeight_error"))).toBeDefined();
-		expect((await screen.findByTestId("numberOpenableParts_error"))).toBeDefined();
-		expect((screen.queryByTestId("treatmentType_error"))).toBeNull();
-		expect((screen.queryByTestId("thermalResistivityIncrease_error"))).toBeNull();
-		expect((screen.queryByTestId("solarTransmittanceReduction_error"))).toBeNull();
-		expect((screen.queryByTestId("overhangDepth_error"))).toBeNull();
-		expect((screen.queryByTestId("overhangDistance_error"))).toBeNull();
-		expect((screen.queryByTestId("sideFinRightDepth_error"))).toBeNull();
-		expect((screen.queryByTestId("sideFinRightDistance_error"))).toBeNull();
-		expect((screen.queryByTestId("sideFinLeftDepth_error"))).toBeNull();
-		expect((screen.queryByTestId("sideFinLeftDistance_error"))).toBeNull();
-	});
+		test("only required error messages are displayed when empty form is submitted", async () => {
+			await renderSuspended(Window);
 
-	test("error summary is displayed when an invalid form in submitted", async () => {
-		await renderSuspended(Window);
+			await (user.click(screen.getByTestId("saveAndComplete")));
 
-		await (user.click(screen.getByTestId("saveAndComplete")));
+			expect((await screen.findByTestId("name_error"))).toBeDefined();
+			expect((await screen.findByTestId("taggedItem_error"))).toBeDefined();
+			expect((await screen.findByTestId("height_error"))).toBeDefined();
+			expect((await screen.findByTestId("width_error"))).toBeDefined();
+			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
+			expect((await screen.findByTestId("securityRisk_error"))).toBeDefined();
+			expect((await screen.findByTestId("solarTransmittance_error"))).toBeDefined();
+			expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeight_error"))).toBeDefined();
+			expect((await screen.findByTestId("numberOpenableParts_error"))).toBeDefined();
+			expect((screen.queryByTestId("treatmentType_error"))).toBeNull();
+			expect((screen.queryByTestId("thermalResistivityIncrease_error"))).toBeNull();
+			expect((screen.queryByTestId("solarTransmittanceReduction_error"))).toBeNull();
+			expect((screen.queryByTestId("overhangDepth_error"))).toBeNull();
+			expect((screen.queryByTestId("overhangDistance_error"))).toBeNull();
+			expect((screen.queryByTestId("sideFinRightDepth_error"))).toBeNull();
+			expect((screen.queryByTestId("sideFinRightDistance_error"))).toBeNull();
+			expect((screen.queryByTestId("sideFinLeftDepth_error"))).toBeNull();
+			expect((screen.queryByTestId("sideFinLeftDistance_error"))).toBeNull();
+		});
 
-		expect((await screen.findByTestId("windowErrorSummary"))).toBeDefined();
-	});
+		test("error summary is displayed when an invalid form in submitted", async () => {
+			await renderSuspended(Window);
 
-	test("requires further data when four openable parts option is selected", async () => {
-		await renderSuspended(Window);
+			await (user.click(screen.getByTestId("saveAndComplete")));
 
-		await user.click(screen.getByTestId("numberOpenableParts_4"));
-		await (user.click(screen.getByTestId("saveAndComplete")));
+			expect((await screen.findByTestId("windowErrorSummary"))).toBeDefined();
+		});
 
-		expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
-		expect((await screen.findByTestId("maximumOpenableArea_error"))).toBeDefined();
-		expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
-		expect((await screen.findByTestId("midHeightOpenablePart2_error"))).toBeDefined();
-		expect((await screen.findByTestId("midHeightOpenablePart3_error"))).toBeDefined();
-		expect((await screen.findByTestId("midHeightOpenablePart4_error"))).toBeDefined();
-	});
+		test("requires further data when four openable parts option is selected", async () => {
+			await renderSuspended(Window);
 
-	test("does not require the mid height of more parts than have been selected", async () => {
-		await renderSuspended(Window);
+			await user.click(screen.getByTestId("numberOpenableParts_4"));
+			await (user.click(screen.getByTestId("saveAndComplete")));
 
-		await user.click(screen.getByTestId("numberOpenableParts_1"));
-		await (user.click(screen.getByTestId("saveAndComplete")));
+			expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenablePart2_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenablePart3_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenablePart4_error"))).toBeDefined();
+		});
 
-		expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
-		expect((screen.queryByTestId("midHeightOpenablePart2_error"))).toBeNull();
-		expect((screen.queryByTestId("midHeightOpenablePart3_error"))).toBeNull();
-		expect((screen.queryByTestId("midHeightOpenablePart4_error"))).toBeNull();
-	});
+		test("does not require the mid height of more parts than have been selected", async () => {
+			await renderSuspended(Window);
+
+			await user.click(screen.getByTestId("numberOpenableParts_1"));
+			await (user.click(screen.getByTestId("saveAndComplete")));
+
+			expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
+			expect((screen.queryByTestId("midHeightOpenablePart2_error"))).toBeNull();
+			expect((screen.queryByTestId("midHeightOpenablePart3_error"))).toBeNull();
+			expect((screen.queryByTestId("midHeightOpenablePart4_error"))).toBeNull();
+		});
 
 
 
-	test("displays guidance link to window shading guidance page", async () => {
-		await renderSuspended(Window);
+		test("displays guidance link to window shading guidance page", async () => {
+			await renderSuspended(Window);
 
-		const guidance = screen.getByRole("link", { name: "Guidance on window shading (opens in another window)" });
-		expect(guidance).toBeDefined();
-		expect(guidance.getAttribute("href")).toBe("/guidance/window-shading-guidance");
-	});
+			const guidance = screen.getByRole("link", { name: "Guidance on window shading (opens in another window)" });
+			expect(guidance).toBeDefined();
+			expect(guidance.getAttribute("href")).toBe("/guidance/window-shading-guidance");
+		});
 
-	test("save progress button navigates user to the windows overview page", async () => {
-		await renderSuspended(Window);
+		test("save progress button navigates user to the windows overview page", async () => {
+			await renderSuspended(Window);
 
-		await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
-		await user.click(screen.getByTestId("saveProgress"));
+			await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
+			await user.click(screen.getByTestId("saveProgress"));
 
-		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/windows");
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/windows");
+		
+		});
 	});
 
 	test("hides associate wall or roof question and shows pitch when no walls or roofs exist", async () => {
