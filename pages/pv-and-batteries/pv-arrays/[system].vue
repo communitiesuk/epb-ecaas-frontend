@@ -6,10 +6,10 @@ const title = "PV (photovoltaic) array";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const pvSystemsStoreData = store.pvAndBatteries.pvSystems.data;
+const pvSystemsStoreData = store.pvAndBatteries.pvArrays.data;
 const index = getStoreIndex(pvSystemsStoreData);
-const pvSystemData = useItemToEdit("system", pvSystemsStoreData);
-const model = ref(pvSystemData?.data);
+const PvArrayData = useItemToEdit("system", pvSystemsStoreData);
+const model = ref(PvArrayData?.data);
 
 const shadingSectionDisabled = true;
 
@@ -25,11 +25,11 @@ const inverterTypeOptions: Record<SchemaInverterType, string> = {
 	string_inverter: "String",
 };
 
-const saveForm = (fields: PvSystemData) => {
+const saveForm = (fields: PvArrayData) => {
 	store.$patch((state) => {
-		const { pvSystems } = state.pvAndBatteries;
+		const { pvArrays } = state.pvAndBatteries;
 
-		pvSystems.data[index] = {
+		pvArrays.data[index] = {
 			data: {
 				name: fields.name,
 				peakPower: fields.peakPower,
@@ -52,19 +52,19 @@ const saveForm = (fields: PvSystemData) => {
 			},
 			complete: true,
 		};
-		pvSystems.complete = false;
+		pvArrays.complete = false;
 	});
 
 	navigateTo("/pv-and-batteries");
 };
 
-autoSaveElementForm<PvSystemData>({
+autoSaveElementForm<PvArrayData>({
 	model,
-	storeData: store.pvAndBatteries.pvSystems,
+	storeData: store.pvAndBatteries.pvArrays,
 	defaultName: "PV system",
 	onPatch: (state, newData, index) => {
-		state.pvAndBatteries.pvSystems.data[index] = newData;
-		state.pvAndBatteries.pvSystems.complete = false;
+		state.pvAndBatteries.pvArrays.data[index] = newData;
+		state.pvAndBatteries.pvArrays.complete = false;
 	},
 });
 

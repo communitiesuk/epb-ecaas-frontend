@@ -5,11 +5,11 @@ import { getTabItems, getUrl } from "#imports";
 const title = "PV and electric batteries summary";
 const store = useEcaasStore();
 
-const pvSystems = store.pvAndBatteries.pvSystems.data;
+const pvArrays = store.pvAndBatteries.pvArrays.data;
 const pvSummary: SummarySection = {
-	id: "pvSystems",
+	id:  "pvArrays",
 	label: "PV systems",
-	data: pvSystems.map(({ data: x }) => {
+	data: pvArrays.map(({ data: x }) => {
 		return {
 			"Name": x.name,
 			"Peak power": dim(x.peakPower, "kilowatt peak"),

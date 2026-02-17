@@ -9,7 +9,7 @@ const pvAndBatteriesPages = [
 		parentId: "taskList",
 	},
 	{
-		id: "pvSystems",
+		id: "pvArrays",
 		title: "PV System",
 		url: "/pv-and-batteries/pv-arrays/create",
 		type: "task",

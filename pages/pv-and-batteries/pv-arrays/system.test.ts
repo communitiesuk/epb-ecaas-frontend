@@ -37,7 +37,7 @@ describe("PV array", () => {
 		// await user.type(screen.getByTestId('rightDistance'), '10');
 	};
 
-	const pvArray: EcaasForm<PvSystemData> = {
+	const pvArray: EcaasForm<PvArrayData> = {
 		data: {
 			name: "PV 1",
 			peakPower: 4,
@@ -60,7 +60,7 @@ describe("PV array", () => {
 		},
 	};
 
-	const pvArray2: EcaasForm<PvSystemData> = {
+	const pvArray2: EcaasForm<PvArrayData> = {
 		data: { ...pvArray.data, name: "PV 2" },
 	};
 
@@ -121,7 +121,7 @@ describe("PV array", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data } = store.pvAndBatteries.pvSystems;
+		const { data } = store.pvAndBatteries.pvArrays;
 
 		expect(data[0]).toEqual({ ...pvArray, complete: true });
 	});
@@ -152,7 +152,7 @@ describe("PV array", () => {
 			await user.type(screen.getByTestId("name"), "New pv system");
 			await user.tab();
 
-			const actualPvSystem = store.pvAndBatteries.pvSystems.data[0]!;
+			const actualPvSystem = store.pvAndBatteries.pvArrays.data[0]!;
 			expect(actualPvSystem.data.name).toBe("New pv system");
 			expect(actualPvSystem.data.peakPower).toBeUndefined();
 			expect(actualPvSystem.data.inverterType).toBeUndefined();
@@ -168,7 +168,7 @@ describe("PV array", () => {
 			await user.type(screen.getByTestId("elevationalHeight"), "7");
 			await user.tab();
 
-			const actualPvSystem = store.pvAndBatteries.pvSystems.data[0]!;
+			const actualPvSystem = store.pvAndBatteries.pvArrays.data[0]!;
 			expect(actualPvSystem.data.name).toBe("PV system");
 			expect(actualPvSystem.data.peakPower).toBeUndefined();
 			expect(actualPvSystem.data.inverterType).toBeUndefined();
@@ -178,7 +178,7 @@ describe("PV array", () => {
 		it("saves updated form data to correct store object automatically", async () => {
 			store.$patch({
 				pvAndBatteries: {
-					pvSystems: {
+					pvArrays: {
 						data: [pvArray, pvArray2],
 					},
 				},
@@ -199,7 +199,7 @@ describe("PV array", () => {
 			await user.type(screen.getByTestId("peakPower"), "22");
 			await user.tab();
 
-			const actualPvSystem = store.pvAndBatteries.pvSystems.data[1]!;
+			const actualPvSystem = store.pvAndBatteries.pvArrays.data[1]!;
 			expect(actualPvSystem.data.name).toBe("Updated PV 2");
 			expect(actualPvSystem.data.peakPower).toBe(22);
 		});
@@ -207,7 +207,7 @@ describe("PV array", () => {
 		test("pv system and pv systems section are set as 'not complete' after user edits an item", async () => {
 			store.$patch({
 				pvAndBatteries: {
-					pvSystems: {
+					pvArrays: {
 						data: [{ ...pvArray, complete: true }],
 						complete: true,
 					},
@@ -223,10 +223,10 @@ describe("PV array", () => {
 			await user.type(screen.getByTestId("name"), "PV system");
 			await user.tab();
 
-			const pvSystems = store.pvAndBatteries.pvSystems;
+			const pvArrays = store.pvAndBatteries.pvArrays;
 
-			expect(pvSystems.data[0]!.complete).not.toBe(true);
-			expect(pvSystems.complete).not.toBe(true);
+			expect(pvArrays.data[0]!.complete).not.toBe(true);
+			expect(pvArrays.complete).not.toBe(true);
 		});
 	});
 });

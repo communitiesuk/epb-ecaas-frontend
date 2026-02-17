@@ -8,7 +8,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type PvAndBatteryType = keyof typeof store.pvAndBatteries;
-type PvAndBatteryData = EcaasForm<PvSystemData> & EcaasForm<ElectricBatteryData> & EcaasForm<PvDiverterData>;
+type PvAndBatteryData = EcaasForm<PvArrayData> & EcaasForm<ElectricBatteryData> & EcaasForm<PvDiverterData>;
 
 function handleRemove(pvAndBatteryType: PvAndBatteryType, index: number) {
 	const data = store.pvAndBatteries[pvAndBatteryType]?.data;
@@ -54,7 +54,7 @@ function handleDuplicate<T extends PvAndBatteryData>(pvAndBatteryType: PvAndBatt
 function handleComplete() {
 	store.$patch({
 		pvAndBatteries: {
-			pvSystems: { complete: true },
+			pvArrays: { complete: true },
 			electricBattery: { complete: true },
 			diverters: { complete: true },
 		},
@@ -80,13 +80,13 @@ const hasIncompleteEntries = () =>
 		id="pvArrays"
 		title="PV arrays"
 		:form-url="`${page?.url!}/pv-arrays`"
-		:items="store.pvAndBatteries.pvSystems.data.filter(x => isEcaasForm(x)).map(x => ({
+		:items="store.pvAndBatteries.pvArrays.data.filter(x => isEcaasForm(x)).map(x => ({
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))"
 		:show-status="true"
-		@remove="(index: number) => handleRemove('pvSystems', index)"
-		@duplicate="(index: number) => handleDuplicate('pvSystems', index)"
+		@remove="(index: number) => handleRemove('pvArrays', index)"
+		@duplicate="(index: number) => handleDuplicate('pvArrays', index)"
 	/>
 	<CustomList
 		id="electricBattery"

@@ -13,7 +13,7 @@ describe("PV and electric batteries summary page", () => {
 
 	describe("PV systems section", () => {
 
-		const pvSystem: EcaasForm<PvSystemData> = {
+		const pvSystem: EcaasForm<PvArrayData> = {
 			data: {
 				name: "PV Roof",
 				peakPower: 3.5,
@@ -53,7 +53,7 @@ describe("PV and electric batteries summary page", () => {
 			const store = useEcaasStore();
 			store.$patch({
 				pvAndBatteries: {
-					pvSystems: {
+					pvArrays: {
 						data: [pvSystem],
 					},
 				},
@@ -77,7 +77,7 @@ describe("PV and electric batteries summary page", () => {
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-pvSystems-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-pvArrays-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}

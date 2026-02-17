@@ -16,7 +16,7 @@ describe("PV and electric batteries mapper", () => {
 
 	it("maps PV systems to the FHS input", () => {
 		// Arrange
-		const pvSystem1: EcaasForm<PvSystemData> = {
+		const pvSystem1: EcaasForm<PvArrayData> = {
 			data: {
 				name: "Roof",
 				peakPower: 50,
@@ -34,7 +34,7 @@ describe("PV and electric batteries mapper", () => {
 			complete: true,
 		};
 
-		const pvSystem2: EcaasForm<PvSystemData> = {
+		const pvSystem2: EcaasForm<PvArrayData> = {
 			data: {
 				name: "Garden",
 				peakPower: 100,
@@ -54,7 +54,7 @@ describe("PV and electric batteries mapper", () => {
 
 		store.$patch({
 			pvAndBatteries: {
-				pvSystems: {
+				pvArrays: {
 					...baseForm,
 					data: [pvSystem1, pvSystem2],
 				},

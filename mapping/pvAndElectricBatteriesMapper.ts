@@ -15,7 +15,7 @@ export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsIn
 
 export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, "OnSiteGeneration"> {
 	return {
-		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvSystems.map((system) => {
+		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvArrays.map((system) => {
 			const { name, elevationalHeight, lengthOfPV, widthOfPV, inverterIsInside, inverterPeakPowerAC, inverterPeakPowerDC, inverterType, orientation, peakPower, pitch, ventilationStrategy } = system;
 
 			return [
@@ -69,7 +69,7 @@ export function mapPvDiverterData(state: ResolvedState): Pick<SchemaEnergySupply
 		.filter(x => x.id === diverter?.hotWaterCylinder)[0]!;
 	const dhwHeatSource = state.domesticHotWater.heatSources
 		.find(x => x.id === hotWaterCylinder.dhwHeatSourceId)!;
-	
+
 	const heatSourceName = dhwHeatSource.isExistingHeatSource
 		? state.spaceHeating.heatSource.find(x => x.id === dhwHeatSource.heatSourceId)!.name
 		: dhwHeatSource.name;

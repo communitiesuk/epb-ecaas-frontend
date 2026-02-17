@@ -1361,12 +1361,12 @@ export type PipeworkData = z.infer<typeof pipeworkDataZod>;
 // NEW HOT WATER END   =======================================================================
 
 export type PvAndBatteries = AssertFormKeysArePageIds<{
-	pvSystems: EcaasFormList<PvSystemData>;
+	pvArrays: EcaasFormList<PvArrayData>;
 	electricBattery: EcaasFormList<ElectricBatteryData>;
 	diverters: EcaasFormList<PvDiverterData>;
 }>;
 
-const pvSystemDataZod = z.object({
+const pvArrayDataZod = z.object({
 	name: z.string().trim().min(1),
 	peakPower: z.number().min(0.001).max(100),
 	ventilationStrategy: photovoltaicVentilationStrategyZod,
@@ -1387,7 +1387,7 @@ const pvSystemDataZod = z.object({
 	rightDistance: z.optional(z.number()),
 });
 
-export type PvSystemData = z.infer<typeof pvSystemDataZod>;
+export type PvArrayData = z.infer<typeof pvArrayDataZod>;
 
 const electricBatteryDataZod = z.object({
 	name: z.string().trim().min(1),
@@ -1525,7 +1525,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"spaceHeating/heatEmitters": heatEmittingDataZod,
 	"spaceHeating/heatingControls": heatingControlsDataZod,
 	"cooling/airConditioning": airConditioningDataZod,
-	"pvAndBatteries/pvSystems": pvSystemDataZod,
+	"pvAndBatteries/pvArrays": pvArrayDataZod,
 	"pvAndBatteries/electricBattery": electricBatteryDataZod,
 	"pvAndBatteries/diverters": pvDiverterDataZod,
 };
