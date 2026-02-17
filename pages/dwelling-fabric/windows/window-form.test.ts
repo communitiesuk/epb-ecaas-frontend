@@ -237,134 +237,269 @@ describe("window", () => {
 
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/windows");
 	});
-});
 
-describe("Partially saving data", () => {
-	afterEach(() => {
-		store.$reset();
-	});
-
-	test("form data is automatically saved to store", async () => {
-		await renderSuspended(Window, {
-			route: {
-				params: { window: "create" },
-			},
-		});
-
-		await user.type(screen.getByTestId("name"), "Window 1");
-		await user.tab();
-
-		const { data } = store.dwellingFabric.dwellingSpaceWindows;
-
-		expect(data[0]!.data.name).toBe("Window 1");
-	});
-
-	test("partial form data automatically saved to store with default name if no name has been added", async () => {
-		await renderSuspended(Window, {
-			route: {
-				params: { window: "create" },
-			},
-		});
-		await user.type(screen.getByTestId("height"), "3");
-		await user.tab();
-
-		const { data } = store.dwellingFabric.dwellingSpaceWindows;
-
-		expect(data[0]!.data.name).toBe("Window");
-	});
-
-	test("default name is used if name is added then deleted", async () => {
+	test("hides associate wall or roof question and shows pitch when no walls or roofs exist", async () => {
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceWindows: {
-					data: [window1],
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [],
+					},
+				},
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceRoofs: {
+						data: [],
+					},
 				},
 			},
 		});
 
 		await renderSuspended(Window, {
 			route: {
-				params: { window: "0" },
-			},
-		});
-
-		await user.type(screen.getByTestId("name"), "Window 1");
-		await user.clear(screen.getByTestId("name"));
-		await user.tab();
-
-		const { data } = store.dwellingFabric.dwellingSpaceWindows;
-
-		expect(data[0]!.data.name).toBe("Window");
-	});
-
-	test("default name is used if name added is whitespace", async () => {
-		await renderSuspended(Window, {
-			route: {
 				params: { window: "create" },
 			},
 		});
 
-		await user.type(screen.getByTestId("name"), " ");
+		expect(screen.queryByTestId("taggedItem")).toBeNull();
+
+		expect(screen.getByTestId("pitch")).toBeDefined();
+
+		await user.type(screen.getByTestId("pitch"), "90");
 		await user.tab();
 
-		expect(store.dwellingFabric.dwellingSpaceWindows.data[0]!.data.name).toBe("Window");
-
-		await renderSuspended(Window, {
-			route: {
-				params: { window: "0" },
-			},
-		});
-
-		await user.clear(screen.getByTestId("name"));
-		await user.type(screen.getByTestId("name"), " ");
-		await user.tab();
-
-		expect(store.dwellingFabric.dwellingSpaceWindows.data[0]!.data.name).toBe("Window");
 	});
-
-	test("creates a new window automatically when a user adds only the name value", async () => {
-		await renderSuspended(Window, {
-			route: {
-				params: { window: "create" },
-			},
-		});
-
-		await user.type(screen.getByTestId("name"), "window 1");
-		await user.tab();
-
-		const { data } = store.dwellingFabric.dwellingSpaceWindows;
-
-		expect(data[0]!.data.name).toBe("window 1");
-		expect(data[0]!.data.height).toBeUndefined();
-	});
-
-	test("updated form data is automatically saved to the correct store object when there are multiple windows added", async () => {
-		const store = useEcaasStore();
-		const user = userEvent.setup();
-
+	it("shows orientation when pitch is not 0 or 180", async () => {
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceWindows: {
-					data: [window1, window2],
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [],
+					},
+				},
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceRoofs: {
+						data: [],
+					},
 				},
 			},
 		});
 
 		await renderSuspended(Window, {
 			route: {
-				params: { window: "1" },
+				params: { window: "create" },
+			},
+		});
+		expect(screen.queryByTestId("orientation")).toBeNull();
+		await user.type(screen.getByTestId("pitch"), "90");
+		await user.tab();
+		expect(screen.getByTestId("orientation")).toBeDefined();
+	});
+
+	test("requires pitch and orientation when no walls or roofs exist", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [],
+					},
+				},
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceRoofs: {
+						data: [],
+					},
+				},
 			},
 		});
 
-		await user.clear(screen.getByTestId("name"));
-		await user.clear(screen.getByTestId("height"));
+		await renderSuspended(Window, {
+			route: {
+				params: { window: "create" },
+			},
+		});
 
-		await user.type(screen.getByTestId("name"), "Updated Window 2");
-		await user.type(screen.getByTestId("height"), "2");
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(await screen.findByTestId("pitch_error")).toBeDefined();
+
+		expect(screen.queryByTestId("orientation_error")).toBeNull();
+
+
+		await user.type(screen.getByTestId("name"), "Window 1");
+		await user.type(screen.getByTestId("pitch"), "90");
 		await user.tab();
-		const { data } = store.dwellingFabric.dwellingSpaceWindows;
 
-		expect(data[1]?.data.name).toBe("Updated Window 2");
-		expect(data[1]?.data.height).toBe(2);
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(await screen.findByTestId("orientation_error")).toBeDefined();
+
+		await user.clear(screen.getByTestId("pitch"));
+		await user.type(screen.getByTestId("pitch"), "0");
+		await user.tab();
+
+		expect(screen.queryByTestId("orientation")).toBeNull();
+		await user.click(screen.getByTestId("saveAndComplete"));
+		expect(screen.queryByTestId("orientation_error")).toBeNull();
+
+		await user.clear(screen.getByTestId("pitch"));
+		await user.type(screen.getByTestId("pitch"), "180");
+		await user.tab();
+
+
+		expect(screen.queryByTestId("orientation")).toBeNull();
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+		expect(screen.queryByTestId("orientation_error")).toBeNull();
+	});
+
+	test("does not require pitch and orientation when walls or roofs exist and are selected", async () => {
+		await renderSuspended(Window, {
+			route: {
+				params: { window: "create" },
+			},
+		});
+
+
+		expect(screen.queryByTestId("pitch")).toBeNull();
+		expect(screen.queryByTestId("orientation")).toBeNull();
+
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(screen.queryByTestId("pitch_error")).toBeNull();
+		expect(screen.queryByTestId("orientation_error")).toBeNull();
+
+
+		expect(await screen.findByTestId("taggedItem_error")).toBeDefined();
+	});
+
+	describe("Partially saving data", () => {
+		afterEach(() => {
+			store.$reset();
+		});
+
+		test("form data is automatically saved to store", async () => {
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "create" },
+				},
+			});
+
+			await user.type(screen.getByTestId("name"), "Window 1");
+			await user.tab();
+
+			const { data } = store.dwellingFabric.dwellingSpaceWindows;
+
+			expect(data[0]!.data.name).toBe("Window 1");
+		});
+
+		test("partial form data automatically saved to store with default name if no name has been added", async () => {
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "create" },
+				},
+			});
+			await user.type(screen.getByTestId("height"), "3");
+			await user.tab();
+
+			const { data } = store.dwellingFabric.dwellingSpaceWindows;
+
+			expect(data[0]!.data.name).toBe("Window");
+		});
+
+		test("default name is used if name is added then deleted", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWindows: {
+						data: [window1],
+					},
+				},
+			});
+
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "0" },
+				},
+			});
+
+			await user.type(screen.getByTestId("name"), "Window 1");
+			await user.clear(screen.getByTestId("name"));
+			await user.tab();
+
+			const { data } = store.dwellingFabric.dwellingSpaceWindows;
+
+			expect(data[0]!.data.name).toBe("Window");
+		});
+
+		test("default name is used if name added is whitespace", async () => {
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "create" },
+				},
+			});
+
+			await user.type(screen.getByTestId("name"), " ");
+			await user.tab();
+
+			expect(store.dwellingFabric.dwellingSpaceWindows.data[0]!.data.name).toBe("Window");
+
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "0" },
+				},
+			});
+
+			await user.clear(screen.getByTestId("name"));
+			await user.type(screen.getByTestId("name"), " ");
+			await user.tab();
+
+			expect(store.dwellingFabric.dwellingSpaceWindows.data[0]!.data.name).toBe("Window");
+		});
+
+		test("creates a new window automatically when a user adds only the name value", async () => {
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "create" },
+				},
+			});
+
+			await user.type(screen.getByTestId("name"), "window 1");
+			await user.tab();
+
+			const { data } = store.dwellingFabric.dwellingSpaceWindows;
+
+			expect(data[0]!.data.name).toBe("window 1");
+			expect(data[0]!.data.height).toBeUndefined();
+		});
+
+		test("updated form data is automatically saved to the correct store object when there are multiple windows added", async () => {
+			const store = useEcaasStore();
+			const user = userEvent.setup();
+
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWindows: {
+						data: [window1, window2],
+					},
+				},
+			});
+
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "1" },
+				},
+			});
+
+			await user.clear(screen.getByTestId("name"));
+			await user.clear(screen.getByTestId("height"));
+
+			await user.type(screen.getByTestId("name"), "Updated Window 2");
+			await user.type(screen.getByTestId("height"), "2");
+			await user.tab();
+			const { data } = store.dwellingFabric.dwellingSpaceWindows;
+
+			expect(data[1]?.data.name).toBe("Updated Window 2");
+			expect(data[1]?.data.height).toBe(2);
+		});
 	});
 });

@@ -71,12 +71,15 @@ const saveForm = (fields: WindowData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceWindows } = state.dwellingFabric;
 
+		// When there are no walls or roofs, or when "none" is selected, save pitch and orientation
+		const shouldSavePitchOrientation = tagOptions.length === 1 || fields.taggedItem === "none";
+
 		const commonFields: Partial<WindowData> = {
 			id: windowId || uuidv4(),
 			name: fields.name,
-			taggedItem: fields.taggedItem === "none" ? undefined : fields.taggedItem,
-			pitch: fields.taggedItem === "none" ? fields.pitch : undefined,
-			orientation: fields.taggedItem === "none" ? fields.orientation : undefined,
+			taggedItem: shouldSavePitchOrientation ? undefined : fields.taggedItem,
+			pitch: shouldSavePitchOrientation ? fields.pitch : undefined,
+			orientation: shouldSavePitchOrientation ? fields.orientation : undefined,
 			height: fields.height,
 			width: fields.width,
 			uValue: fields.uValue,
@@ -230,34 +233,23 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<ClientOnly>
 			<FormKit
+				v-if="tagOptions.length > 1"
 				id="taggedItem"
 				type="govRadios"
 				:options="new Map(tagOptions)"
 				label="Associated wall or roof"
 				help="Select the wall or roof that this window is in. It should have the same orientation and pitch as the window. Select 'None of the above' to enter pitch and orientation manually."
 				name="taggedItem"
-				validation="required">
-				<div v-if="!tagOptions.length">
-					<p class="govuk-error-message">No walls or roofs added.</p>
-					<div class="gov-radios-add-links">
-						<NuxtLink :to="getUrl('dwellingSpaceWalls')" class="govuk-link gov-radios-add-link">
-							Click here to add walls
-						</NuxtLink>
-						<NuxtLink :to="getUrl('dwellingSpaceCeilingsAndRoofs')" class="govuk-link gov-radios-add-link">
-							Click here to add roofs
-						</NuxtLink>
-					</div>
-				</div>
-			</FormKit>
+				validation="required"/>
 		</ClientOnly>
-		<template v-if="model && model.taggedItem === 'none'">
+		<template v-if="model && (model.taggedItem === 'none' || tagOptions.length === 1)">
 			<FieldsPitch
 				id="pitch"
 				name="pitch"
 				data-field="Zone.BuildingElement.*.pitch"
 			/>
 			<FieldsOrientation
-				v-if="model.pitch !== 0 && model.pitch !== 180"
+				v-if="model.pitch != null && model.pitch !== 0 && model.pitch !== 180"
 				id="orientation"
 				name="orientation"
 				data-field="Zone.BuildingElement.*.orientation360"
