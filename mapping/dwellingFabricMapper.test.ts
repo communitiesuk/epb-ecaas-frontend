@@ -993,6 +993,141 @@ describe("dwelling fabric mapper", () => {
 		expect(windowElement).toEqual(expectedWindow);
 	});
 
+	it("maps windows with pitch and orientation when no wall or roof is tagged", () => {
+		const window: WindowData = {
+			id: "test-id-1",
+			name: "Window 1",
+			pitch: 90,
+			orientation: 180,
+			height: 1,
+			width: 1,
+			uValue: 1,
+			solarTransmittance: 0.1,
+			elevationalHeight: 1,
+			midHeight: 1,
+			numberOpenableParts: "0",
+			openingToFrameRatio: 0.3,
+			securityRisk: false,
+			curtainsOrBlinds: false,
+		};
+
+		const windowSuffix = " (window)";
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [
+						{
+							data: window,
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+		});
+
+		const fhsInputData = mapWindowData(resolveState(store.$state));
+
+		const windowElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[
+			window.name + windowSuffix
+		]! as BuildingElementTransparent;
+
+		expect(windowElement.pitch).toBe(window.pitch);
+		expect(windowElement.orientation360).toBe(window.orientation);
+		expect(windowElement.type).toBe("BuildingElementTransparent");
+		expect(windowElement.height).toBe(window.height);
+		expect(windowElement.width).toBe(window.width);
+	});
+
+	it("maps windows with pitch 0 and no orientation when no wall or roof is tagged", () => {
+		const window: WindowData = {
+			id: "test-id-2",
+			name: "Window 2",
+			pitch: 0,
+			height: 1,
+			width: 1,
+			uValue: 1,
+			solarTransmittance: 0.1,
+			elevationalHeight: 1,
+			midHeight: 1,
+			numberOpenableParts: "0",
+			openingToFrameRatio: 0.3,
+			securityRisk: false,
+			curtainsOrBlinds: false,
+		};
+
+		const windowSuffix = " (window)";
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [
+						{
+							data: window,
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+		});
+
+		const fhsInputData = mapWindowData(resolveState(store.$state));
+
+		const windowElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[
+			window.name + windowSuffix
+		]! as BuildingElementTransparent;
+
+		expect(windowElement.pitch).toBe(0);
+		expect(windowElement.orientation360).toBeUndefined();
+		expect(windowElement.type).toBe("BuildingElementTransparent");
+	});
+
+	it("maps windows with pitch 180 and no orientation when no wall or roof is tagged", () => {
+		const window: WindowData = {
+			id: "test-id-3",
+			name: "Window 3",
+			pitch: 180,
+			height: 1,
+			width: 1,
+			uValue: 1,
+			solarTransmittance: 0.1,
+			elevationalHeight: 1,
+			midHeight: 1,
+			numberOpenableParts: "0",
+			openingToFrameRatio: 0.3,
+			securityRisk: false,
+			curtainsOrBlinds: false,
+		};
+
+		const windowSuffix = " (window)";
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [
+						{
+							data: window,
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+		});
+
+		const fhsInputData = mapWindowData(resolveState(store.$state));
+
+		const windowElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[
+			window.name + windowSuffix
+		]! as BuildingElementTransparent;
+
+		expect(windowElement.pitch).toBe(180);
+		expect(windowElement.orientation360).toBeUndefined();
+		expect(windowElement.type).toBe("BuildingElementTransparent");
+	});
+
 	it("maps thermal bridging input state to FHS input request", () => {
 		// Arrange
 		const linearThermalBridge: LinearThermalBridgeData = {

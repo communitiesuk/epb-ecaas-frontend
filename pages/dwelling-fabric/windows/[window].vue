@@ -52,9 +52,9 @@ const tagOptions = [
 	["none", "None of the above"] as [string, string],
 ].filter(x => x[0] !== undefined);
 
-// Initialize taggedItem to "none" if undefined
+
 if (model.value && model.value.taggedItem === undefined) {
-	model.value.taggedItem = "none" as unknown as string;
+	model.value.taggedItem = "none";
 }
 
 const windowTreatmentTypeOptions: Record<SchemaWindowTreatmentType, SnakeToSentenceCase<SchemaWindowTreatmentType>> = {
@@ -70,8 +70,6 @@ const shadingValidation = (siblingField: string) => {
 const saveForm = (fields: WindowData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceWindows } = state.dwellingFabric;
-
-		// When there are no walls or roofs, or when "none" is selected, save pitch and orientation
 		const shouldSavePitchOrientation = tagOptions.length === 1 || fields.taggedItem === "none";
 
 		const commonFields: Partial<WindowData> = {
