@@ -856,7 +856,8 @@ describe("dwelling fabric mapper", () => {
 
 		expect(externalGlazedDoorElement).toEqual(expectedExternalGlazedDoor);
 
-		const expectedUnglazedDoor = { // was BuildingElementOpaque - maybe rejig these types
+		const expectedUnglazedDoor: BuildingElementOpaque = {
+			area: externalUnglazedDoor.height * externalUnglazedDoor.width,
 			type: "BuildingElementOpaque",
 			pitch: extractPitch(externalWall.data),
 			orientation360: externalWall.data.orientation,
@@ -868,6 +869,7 @@ describe("dwelling fabric mapper", () => {
 			is_external_door: true,
 			is_unheated_pitched_roof: false,
 			colour: "Intermediate",
+			u_value: 1,
 		};
 
 		expect(externalUnglazedDoorElement).toEqual(expectedUnglazedDoor);

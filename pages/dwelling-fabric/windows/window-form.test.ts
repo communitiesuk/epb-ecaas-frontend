@@ -67,28 +67,92 @@ const window2: EcaasForm<WindowData> = {
 
 describe("window", () => {
 	describe("without existing external wall or roof", () => {
-		test("links to add walls and roofs are displayed", async () => {
+		test("links to add walls and roofs are not displayed", async () => {
 			await renderSuspended(Window, {
 				route: {
 					params: { window: "create" },
 				},
 			});
 	
-			expect(screen.getByText("No walls or roofs added.")).toBeDefined();
-			expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add walls" }).href)
-				.toContain("/dwelling-fabric/walls");
-			expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add roofs" }).href)
-				.toContain("/dwelling-fabric/ceilings-and-roofs");
+			expect(screen.queryByText("No walls or roofs added.")).toBeNull();
+			// expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add walls" }).href)
+			// 	.toContain("/dwelling-fabric/walls");
+			// expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add roofs" }).href)
+			// 	.toContain("/dwelling-fabric/ceilings-and-roofs");
 		});
 	
-		test("Associated wall/roof question has none of the above option", async () => {
+		test("should not render associated ID element", async () => {
 			await renderSuspended(Window, {
 				route: {
 					params: { window: "create" },
 				},
 			});
 	
-			expect(screen.getByTestId("associatedItemId_none")).toBeDefined();
+			expect(screen.queryByTestId("taggedItem")).toBeNull();
+		});
+
+		test("shows pitch element", async () => {
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "create" },
+				},
+			});
+
+			expect(screen.getByTestId("pitch")).toBeDefined();
+		});
+
+		it("shows orientation when pitch is not 0 or 180", async () => {
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "create" },
+				},
+			});
+			expect(screen.queryByTestId("orientation")).toBeNull();
+			await user.type(screen.getByTestId("pitch"), "90");
+			await user.tab();
+			expect(screen.getByTestId("orientation")).toBeDefined();
+		});
+
+		test("requires pitch and orientation", async () => {
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "create" },
+				},
+			});
+
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(await screen.findByTestId("pitch_error")).toBeDefined();
+
+			expect(screen.queryByTestId("orientation_error")).toBeNull();
+
+
+			await user.type(screen.getByTestId("name"), "Window 1");
+			await user.type(screen.getByTestId("pitch"), "90");
+			await user.tab();
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(await screen.findByTestId("orientation_error")).toBeDefined();
+
+			await user.clear(screen.getByTestId("pitch"));
+			await user.type(screen.getByTestId("pitch"), "0");
+			await user.tab();
+
+			expect(screen.queryByTestId("orientation")).toBeNull();
+			await user.click(screen.getByTestId("saveAndComplete"));
+			expect(screen.queryByTestId("orientation_error")).toBeNull();
+
+			await user.clear(screen.getByTestId("pitch"));
+			await user.type(screen.getByTestId("pitch"), "180");
+			await user.tab();
+
+
+			expect(screen.queryByTestId("orientation")).toBeNull();
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+			expect(screen.queryByTestId("orientation_error")).toBeNull();
 		});
 	});
 		
@@ -108,6 +172,27 @@ describe("window", () => {
 		afterEach(() => {
 			store.$reset();
 		});
+
+		test("does not require pitch and orientation when existing wall is selected", async () => {
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "create" },
+				},
+			});
+
+
+			expect(screen.queryByTestId("pitch")).toBeNull();
+			expect(screen.queryByTestId("orientation")).toBeNull();
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(screen.queryByTestId("pitch_error")).toBeNull();
+			expect(screen.queryByTestId("orientation_error")).toBeNull();
+
+
+			expect(await screen.findByTestId("taggedItem_error")).toBeDefined();
+		});
+
 		test("Associated wall/roof question has none of the above option", async () => {
 			await renderSuspended(Window, {
 				route: {
@@ -115,7 +200,79 @@ describe("window", () => {
 				},
 			});
 	
-			expect(screen.getByTestId("associatedItemId_none")).toBeDefined();
+			expect(screen.getByTestId("taggedItem_none")).toBeDefined();
+		});
+
+		describe("when none of the above is selected for associated item ID", () => {
+			test("shows pitch element", async () => {
+				await renderSuspended(Window, {
+					route: {
+						params: { window: "create" },
+					},
+				});
+
+				await user.click(screen.getByTestId("taggedItem_none"));
+
+				expect(screen.getByTestId("pitch")).toBeDefined();
+			});
+
+			it("shows orientation when pitch is not 0 or 180", async () => {
+				await renderSuspended(Window, {
+					route: {
+						params: { window: "create" },
+					},
+				});
+
+				await user.click(screen.getByTestId("taggedItem_none"));
+
+				expect(screen.queryByTestId("orientation")).toBeNull();
+				await user.type(screen.getByTestId("pitch"), "90");
+				await user.tab();
+				expect(screen.getByTestId("orientation")).toBeDefined();
+			});
+
+			test("requires pitch and orientation", async () => {
+				await renderSuspended(Window, {
+					route: {
+						params: { window: "create" },
+					},
+				});
+
+				await user.click(screen.getByTestId("taggedItem_none"));
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				expect(await screen.findByTestId("pitch_error")).toBeDefined();
+
+				expect(screen.queryByTestId("orientation_error")).toBeNull();
+
+
+				await user.type(screen.getByTestId("name"), "Window 1");
+				await user.type(screen.getByTestId("pitch"), "90");
+				await user.tab();
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				expect(await screen.findByTestId("orientation_error")).toBeDefined();
+
+				await user.clear(screen.getByTestId("pitch"));
+				await user.type(screen.getByTestId("pitch"), "0");
+				await user.tab();
+
+				expect(screen.queryByTestId("orientation")).toBeNull();
+				await user.click(screen.getByTestId("saveAndComplete"));
+				expect(screen.queryByTestId("orientation_error")).toBeNull();
+
+				await user.clear(screen.getByTestId("pitch"));
+				await user.type(screen.getByTestId("pitch"), "180");
+				await user.tab();
+
+
+				expect(screen.queryByTestId("orientation")).toBeNull();
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+				expect(screen.queryByTestId("orientation_error")).toBeNull();
+			});
 		});
 
 		test("data is saved to store state when form is valid", async () => {
@@ -255,8 +412,6 @@ describe("window", () => {
 			expect((screen.queryByTestId("midHeightOpenablePart4_error"))).toBeNull();
 		});
 
-
-
 		test("displays guidance link to window shading guidance page", async () => {
 			await renderSuspended(Window);
 
@@ -272,143 +427,7 @@ describe("window", () => {
 			await user.click(screen.getByTestId("saveProgress"));
 
 			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/windows");
-		
 		});
-	});
-
-	test("hides associate wall or roof question and shows pitch when no walls or roofs exist", async () => {
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceWalls: {
-					dwellingSpaceExternalWall: {
-						data: [],
-					},
-				},
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [],
-					},
-				},
-			},
-		});
-
-		await renderSuspended(Window, {
-			route: {
-				params: { window: "create" },
-			},
-		});
-
-		expect(screen.queryByTestId("taggedItem")).toBeNull();
-
-		expect(screen.getByTestId("pitch")).toBeDefined();
-
-		await user.type(screen.getByTestId("pitch"), "90");
-		await user.tab();
-
-	});
-	it("shows orientation when pitch is not 0 or 180", async () => {
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceWalls: {
-					dwellingSpaceExternalWall: {
-						data: [],
-					},
-				},
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [],
-					},
-				},
-			},
-		});
-
-		await renderSuspended(Window, {
-			route: {
-				params: { window: "create" },
-			},
-		});
-		expect(screen.queryByTestId("orientation")).toBeNull();
-		await user.type(screen.getByTestId("pitch"), "90");
-		await user.tab();
-		expect(screen.getByTestId("orientation")).toBeDefined();
-	});
-
-	test("requires pitch and orientation when no walls or roofs exist", async () => {
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceWalls: {
-					dwellingSpaceExternalWall: {
-						data: [],
-					},
-				},
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [],
-					},
-				},
-			},
-		});
-
-		await renderSuspended(Window, {
-			route: {
-				params: { window: "create" },
-			},
-		});
-
-
-		await user.click(screen.getByTestId("saveAndComplete"));
-
-		expect(await screen.findByTestId("pitch_error")).toBeDefined();
-
-		expect(screen.queryByTestId("orientation_error")).toBeNull();
-
-
-		await user.type(screen.getByTestId("name"), "Window 1");
-		await user.type(screen.getByTestId("pitch"), "90");
-		await user.tab();
-
-		await user.click(screen.getByTestId("saveAndComplete"));
-
-		expect(await screen.findByTestId("orientation_error")).toBeDefined();
-
-		await user.clear(screen.getByTestId("pitch"));
-		await user.type(screen.getByTestId("pitch"), "0");
-		await user.tab();
-
-		expect(screen.queryByTestId("orientation")).toBeNull();
-		await user.click(screen.getByTestId("saveAndComplete"));
-		expect(screen.queryByTestId("orientation_error")).toBeNull();
-
-		await user.clear(screen.getByTestId("pitch"));
-		await user.type(screen.getByTestId("pitch"), "180");
-		await user.tab();
-
-
-		expect(screen.queryByTestId("orientation")).toBeNull();
-
-		await user.click(screen.getByTestId("saveAndComplete"));
-		expect(screen.queryByTestId("orientation_error")).toBeNull();
-	});
-
-	test("does not require pitch and orientation when walls or roofs exist and are selected", async () => {
-		await renderSuspended(Window, {
-			route: {
-				params: { window: "create" },
-			},
-		});
-
-
-		expect(screen.queryByTestId("pitch")).toBeNull();
-		expect(screen.queryByTestId("orientation")).toBeNull();
-
-
-		await user.click(screen.getByTestId("saveAndComplete"));
-
-		expect(screen.queryByTestId("pitch_error")).toBeNull();
-		expect(screen.queryByTestId("orientation_error")).toBeNull();
-
-
-		expect(await screen.findByTestId("taggedItem_error")).toBeDefined();
 	});
 
 	describe("Partially saving data", () => {

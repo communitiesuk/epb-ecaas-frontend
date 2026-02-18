@@ -229,17 +229,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
 		/>
-		<ClientOnly>
-			<FormKit
-				v-if="tagOptions.length > 1"
-				id="taggedItem"
-				type="govRadios"
-				:options="new Map(tagOptions)"
-				label="Associated wall or roof"
-				help="Select the wall or roof that this window is in. It should have the same orientation and pitch as the window. Select 'None of the above' to enter pitch and orientation manually."
-				name="taggedItem"
-				validation="required"/>
-		</ClientOnly>
+		<FieldsAssociatedWallRoof
+			id="taggedItem"
+			name="taggedItem"
+			label="Associated wall or roof"
+			help="Select the wall or roof that this door is in. It should have the same orientation and pitch as the door."
+		/>
 		<template v-if="model && (model.taggedItem === 'none' || tagOptions.length === 1)">
 			<FieldsPitch
 				id="pitch"

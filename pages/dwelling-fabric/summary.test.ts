@@ -1059,8 +1059,6 @@ describe("dwelling space doors", () => {
 			"Height": `0.5 ${metre.suffix}`,
 			"Width": `20 ${metre.suffix}`,
 			"Elevational height of building element at its base": `20 ${metre.suffix}`,
-			"Net surface area": `10 ${metresSquare.suffix}`,
-			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",
 		};

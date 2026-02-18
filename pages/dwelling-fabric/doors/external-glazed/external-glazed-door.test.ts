@@ -49,35 +49,32 @@ describe("external glazed door", () => {
 	};
 
 	describe("without existing external wall or roof", () => {
-		test("links to add walls and roofs are displayed", async () => {
+		test("links to add walls and roofs are not displayed", async () => {
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { externalGlazed: "create" },
 				},
 			});
 	
-			expect(screen.getByText("No walls or roofs added.")).toBeDefined();
-			expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add walls" }).href)
-				.toContain("/dwelling-fabric/walls");
-			expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add roofs" }).href)
-				.toContain("/dwelling-fabric/ceilings-and-roofs");
+			expect(screen.queryByText("No walls or roofs added.")).toBeNull();
+			// expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add walls" }).href)
+			// 	.toContain("/dwelling-fabric/walls");
+			// expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add roofs" }).href)
+			// 	.toContain("/dwelling-fabric/ceilings-and-roofs");
 		});
 	
-		test("Associated wall/roof question has none of the above option", async () => {
+		test("Should not render assiciated ID element", async () => {
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { externalGlazed: "create" },
 				},
 			});
 	
-			expect(screen.getByTestId("associatedItemId_none")).toBeDefined();
+			expect(screen.queryByTestId("associatedItemId")).toBeNull();
 		});
 	});
 
 	describe("with existing external wall", () => {
-
-	
-	
 		beforeEach(() => {
 			store.$patch({
 				dwellingFabric: {

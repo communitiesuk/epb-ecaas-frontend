@@ -742,7 +742,7 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 0.01,
 				},
 				"front door (door)": {
-					area: 20,
+					area: 3.12,
 					areal_heat_capacity: "Light",
 					base_height: 1,
 					colour: "Intermediate",

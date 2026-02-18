@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
 
 defineProps<{
 	id: string;
@@ -24,29 +23,6 @@ const options = [
 
 <template>
 	<ClientOnly>
-		<FormKit
-			v-if="!options.length"
-			:id="id"
-			type="govRadios"
-			:options="new Map(options.concat([['none', 'Not attached to a wall or roof']]))"
-			:label="label"
-			:help="help"
-			:name="name"
-			:validation="validation ?? 'required'"
-			:validation-rules="validationRules"
-			:validation-messages="validationMessages">
-			<div>
-				<p class="govuk-error-message">No walls or roofs added.</p>
-				<div class="gov-radios-add-links">
-					<NuxtLink :to="getUrl('dwellingSpaceWalls')" class="govuk-link gov-radios-add-link">
-						Click here to add walls
-					</NuxtLink>
-					<NuxtLink :to="getUrl('dwellingSpaceCeilingsAndRoofs')" class="govuk-link gov-radios-add-link">
-						Click here to add roofs
-					</NuxtLink>
-				</div>
-			</div>
-		</FormKit>
 		<FormKit
 			v-if="options.length"
 			:id="id"
