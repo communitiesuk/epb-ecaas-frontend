@@ -32,6 +32,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				maximumOpenableArea: fields.maximumOpenableArea,
 				heightOpenableArea: fields.height,
 				midHeightOpenablePart1: fields.midHeight,
+				thermalResistance: fields.thermalResistance,
 			},
 			complete: true,
 		};
@@ -148,6 +149,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 			data-field="Zone.BuildingElement.*.security_risk"
 		/>
+		<FormKit
+			id="thermalResistance"
+			type="govInputWithSuffix"
+			suffix-text="(m²·K)/W"
+			label="Thermal resistance"
+			help="Enter the thermal resistance of all layers in the door construction"
+			name="thermalResistance"
+			validation="required | number | min:0.00001 | max:50"
+		><GovDetails summary-text="Help with this input">
+			<p>Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer.
+			</p>
+		</GovDetails>
+		</FormKit>
 		<FormKit
 			id="solarTransmittance"
 			type="govInputFloat"

@@ -1745,6 +1745,7 @@ describe("FHS input mapper", () => {
 							maximumOpenableArea: 3,
 							heightOpenableArea: 2,
 							securityRisk: false,
+							thermalResistance: 12,
 						},
 					}],
 				},

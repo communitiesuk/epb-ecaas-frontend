@@ -41,6 +41,7 @@ describe("external glazed door", () => {
 		heightOpenableArea: 14,
 		maximumOpenableArea: 13,
 		midHeightOpenablePart1: 11,
+		thermalResistance: 16,
 	} as const satisfies ExternalGlazedDoorData;
 
 	const state: EcaasForm<ExternalGlazedDoorData> = {
@@ -268,6 +269,7 @@ describe("external glazed door", () => {
 			await user.type(screen.getByTestId("height"), "14");
 			await user.type(screen.getByTestId("width"), "48");
 			await user.type(screen.getByTestId("maximumOpenableArea"), "13");
+			await user.type(screen.getByTestId("thermalResistance"), "16");
 			await user.click(screen.getByTestId("securityRisk_no"));
 			await user.type(screen.getByTestId("solarTransmittance"), "0.1");
 			await user.type(screen.getByTestId("elevationalHeight"), "14");
@@ -313,6 +315,7 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId(`associatedItemId_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("14");
 			expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("48");
+			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("16");
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("14");
 			expect((await screen.findByTestId<HTMLInputElement>("midHeight")).value).toBe("11");
@@ -327,6 +330,7 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
 			expect((await screen.findByTestId("height_error"))).toBeDefined();
 			expect((await screen.findByTestId("width_error"))).toBeDefined();
+			expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
 			expect((await screen.findByTestId("solarTransmittance_error"))).toBeDefined();
 			expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
 			expect((await screen.findByTestId("midHeight_error"))).toBeDefined();

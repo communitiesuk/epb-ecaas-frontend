@@ -410,6 +410,7 @@ const externalGlazedDoorDataZod = named.extend({
 	orientation: z.number().min(0).lt(360).optional(),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
+	thermalResistance: z.number().min(0.00001).max(50),
 	securityRisk: z.boolean(),
 	solarTransmittance: z.number().min(0.01).max(1),
 	elevationalHeight: z.number().min(0).max(500),

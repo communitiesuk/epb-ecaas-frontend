@@ -777,6 +777,7 @@ describe("dwelling fabric mapper", () => {
 			midHeightOpenablePart1: 1,
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
+			thermalResistance: 7,
 		};
 
 		const externalUnglazedDoor: ExternalUnglazedDoorData = {
@@ -851,7 +852,7 @@ describe("dwelling fabric mapper", () => {
 			],
 			shading: [],
 			security_risk: false,
-			thermal_resistance_construction: 10, //temp
+			thermal_resistance_construction: externalGlazedDoor.thermalResistance,
 		};
 
 		expect(externalGlazedDoorElement).toEqual(expectedExternalGlazedDoor);
