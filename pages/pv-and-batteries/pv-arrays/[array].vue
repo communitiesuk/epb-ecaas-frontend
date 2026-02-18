@@ -283,23 +283,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 
 		<FormKit
-			id="canExportToGrid"
-			type="govBoolean"
-			label="Can the electricity be exported to the grid?"
-			name="canExportToGrid"
-			validation="required"
-		/>
-
-		<FormKit
-			id="electricityPriority"
-			type="govRadios"
-			:options="electricityPriorityOptions"
-			label="What is the priority for generated electricity?"
-			name="electricityPriority"
-			validation="required"
-		/>
-
-		<FormKit
 			id="inverterType"
 			type="govRadios"
 			:options="inverterTypeOptions"
@@ -331,6 +314,22 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</table>
 			</GovDetails>
 		</FormKit>
+		<FormKit
+			id="canExportToGrid"
+			type="govBoolean"
+			label="Can the electricity be exported to the grid?"
+			name="canExportToGrid"
+			validation="required"
+		/>
+
+		<FormKit
+			id="electricityPriority"
+			type="govRadios"
+			:options="electricityPriorityOptions"
+			label="What is the priority for generated electricity?"
+			name="electricityPriority"
+			validation="required"
+		/>
 		<template v-if="!shadingSectionDisabled">
 			<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 			<h2 class="govuk-heading-l">PV shading</h2>
