@@ -75,8 +75,9 @@ describe("PV and electric batteries summary page", () => {
 				"Inverter peak power DC": `3.5 ${kilowatt.suffix}`,
 				"Location of inverter": "Unheated space",
 				"Inverter type": "Optimised inverter",
+				"Can the electricity be exported to the grid": "No",
+				"Priority for generated electricity": "Diverter",
 			};
-
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-pvArrays-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
