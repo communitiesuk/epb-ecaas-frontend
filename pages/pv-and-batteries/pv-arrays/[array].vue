@@ -25,6 +25,17 @@ const inverterTypeOptions: Record<SchemaInverterType, string> = {
 	string_inverter: "String",
 };
 
+const inverterLocationOptions: Record<string, string> = {
+	heated_space: "Heated space",
+	unheated_space: "Unheated space",
+};
+
+const electricityPriorityOptions: Record<string, string> = {
+	diverter: "Diverter",
+	electricBattery: "Electric battery",
+};
+
+
 const saveForm = (fields: PvArrayData) => {
 	store.$patch((state) => {
 		const { pvArrays } = state.pvAndBatteries;
@@ -41,7 +52,9 @@ const saveForm = (fields: PvArrayData) => {
 				widthOfPV: fields.widthOfPV,
 				inverterPeakPowerAC: fields.inverterPeakPowerAC,
 				inverterPeakPowerDC: fields.inverterPeakPowerDC,
-				inverterIsInside: fields.inverterIsInside,
+				locationOfInverter: fields.locationOfInverter,
+				canExportToGrid: fields.canExportToGrid,
+				electricityPriority: fields.electricityPriority,
 				inverterType: fields.inverterType,
 				aboveDepth: fields.aboveDepth,
 				aboveDistance: fields.aboveDistance,
@@ -261,15 +274,31 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="kW"
 		/>
 		<FormKit
-			id="inverterIsInside"
-			type="govBoolean"
-			true-label="Inside"
-			false-label="Outside"
+			id="locationOfInverter"
+			type="govRadios"
+			:options="inverterLocationOptions"
 			label="Location of inverter"
-			help="Is the inverter inside or outside the thermal envelope of the dwelling?"
-			name="inverterIsInside"
+			name="locationOfInverter"
 			validation="required"
 		/>
+
+		<FormKit
+			id="canExportToGrid"
+			type="govBoolean"
+			label="Can the electricity be exported to the grid?"
+			name="canExportToGrid"
+			validation="required"
+		/>
+
+		<FormKit
+			id="electricityPriority"
+			type="govRadios"
+			:options="electricityPriorityOptions"
+			label="What is the priority for generated electricity?"
+			name="electricityPriority"
+			validation="required"
+		/>
+
 		<FormKit
 			id="inverterType"
 			type="govRadios"

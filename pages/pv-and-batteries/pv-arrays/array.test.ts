@@ -27,7 +27,9 @@ describe("PV array", () => {
 		await user.type(screen.getByTestId("widthOfPV"), "20");
 		await user.type(screen.getByTestId("inverterPeakPowerAC"), "4");
 		await user.type(screen.getByTestId("inverterPeakPowerDC"), "5");
-		await user.click(screen.getByTestId("inverterIsInside_yes"));
+		await user.click(screen.getByTestId("locationOfInverter_heated_space"));
+		await user.click(screen.getByTestId("canExportToGrid_yes"));
+		await user.click(screen.getByTestId("electricityPriority_electricBattery"));
 		await user.click(screen.getByTestId("inverterType_optimised_inverter"));
 		// await user.type(screen.getByTestId('aboveDepth'), '20');
 		// await user.type(screen.getByTestId('aboveDistance'), '4');
@@ -49,7 +51,9 @@ describe("PV array", () => {
 			widthOfPV: 20,
 			inverterPeakPowerAC: 4,
 			inverterPeakPowerDC: 5,
-			inverterIsInside: true,
+			locationOfInverter: "heated_space",
+			canExportToGrid: true,
+			electricityPriority: "electricBattery",
 			inverterType: "optimised_inverter",
 			// aboveDepth: 20,
 			// aboveDistance: 4,
@@ -84,6 +88,14 @@ describe("PV array", () => {
 		expect(screen.getByText("Inverter peak power AC")).toBeDefined();
 		expect(screen.getByText("Inverter peak power DC")).toBeDefined();
 		expect(screen.getByText("Location of inverter")).toBeDefined();
+		expect(screen.getByLabelText("Heated space")).toBeDefined();
+		expect(screen.getByLabelText("Unheated space")).toBeDefined();
+		expect(screen.getByText("Can the electricity be exported to the grid?")).toBeDefined();
+		expect(screen.getByLabelText("Yes")).toBeDefined();
+		expect(screen.getByLabelText("No")).toBeDefined();
+		expect(screen.getByText("What is the priority for generated electricity?")).toBeDefined();
+		expect(screen.getByLabelText("Diverter")).toBeDefined();
+		expect(screen.getByLabelText("Electric battery")).toBeDefined();
 		expect(screen.getByText("Inverter type", { selector: "legend" })).toBeDefined();
 		expect(screen.queryByText("PV shading")).toBeNull();
 	});
@@ -106,7 +118,9 @@ describe("PV array", () => {
 		expect((await screen.findByTestId("widthOfPV_error"))).toBeDefined();
 		expect((await screen.findByTestId("inverterPeakPowerAC_error"))).toBeDefined();
 		expect((await screen.findByTestId("inverterPeakPowerDC_error"))).toBeDefined();
-		expect((await screen.findByTestId("inverterIsInside_error"))).toBeDefined();
+		expect((await screen.findByTestId("locationOfInverter_error"))).toBeDefined();
+		expect((await screen.findByTestId("canExportToGrid_error"))).toBeDefined();
+		expect((await screen.findByTestId("electricityPriority_error"))).toBeDefined();
 		expect((await screen.findByTestId("inverterType_error"))).toBeDefined();
 
 		expect((await screen.findByTestId("photovoltaicErrorSummary"))).toBeDefined();

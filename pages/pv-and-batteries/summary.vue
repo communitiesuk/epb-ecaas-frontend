@@ -21,7 +21,7 @@ const pvSummary: SummarySection = {
 			"Width of PV": dim(x.widthOfPV, "metres"),
 			"Inverter peak power AC": dim(x.inverterPeakPowerAC, "kilowatt"),
 			"Inverter peak power DC": dim(x.inverterPeakPowerDC, "kilowatt"),
-			"Inverter is inside": displayBoolean(x.inverterIsInside),
+			"Location of inverter": displaySnakeToSentenceCase(show(x.locationOfInverter)),
 			"Inverter type": displaySnakeToSentenceCase(show(x.inverterType)),
 		};
 	}),

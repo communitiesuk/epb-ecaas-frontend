@@ -25,11 +25,12 @@ describe("PV and electric batteries summary page", () => {
 				widthOfPV: 1,
 				inverterPeakPowerDC: 3.5,
 				inverterPeakPowerAC: 2.4,
-				inverterIsInside: false,
+				locationOfInverter: "unheated_space",
+				canExportToGrid: false,
+				electricityPriority: "diverter",
 				inverterType: "optimised_inverter",
 			},
 		};
-
 		it("displays the pv arrays tab", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
 			expect(screen.getByRole("link", { name: "PV arrays" })).not.toBeNull();
@@ -72,7 +73,7 @@ describe("PV and electric batteries summary page", () => {
 				"Width of PV": `1 ${metre.suffix}`,
 				"Inverter peak power AC": `2.4 ${kilowatt.suffix}`,
 				"Inverter peak power DC": `3.5 ${kilowatt.suffix}`,
-				"Inverter is inside": "No",
+				"Location of inverter": "Unheated space",
 				"Inverter type": "Optimised inverter",
 			};
 
