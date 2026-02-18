@@ -16,16 +16,20 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 
+		const shouldSavePitchOrientation = tagOptions.length === 0 || fields.associatedItemId === "none";
+
 		dwellingSpaceExternalUnglazedDoor.data[index] = {
 			data: {
 				name: fields.name,
-				associatedItemId: fields.associatedItemId,
 				height: fields.height,
 				width: fields.width,
 				elevationalHeight: fields.elevationalHeight,
 				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
 				colour: fields.colour,
+				associatedItemId: shouldSavePitchOrientation ? undefined : fields.associatedItemId,
+				pitch: shouldSavePitchOrientation ? fields.pitch : undefined,
+				orientation: shouldSavePitchOrientation ? fields.orientation : undefined,
 			},
 			complete: true,
 		};
@@ -33,6 +37,15 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 	});
 	navigateTo("/dwelling-fabric/doors");
 };
+
+
+const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
+const tagOptions = [
+	...dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
+	...dwellingSpaceRoofs.data.map(x => [x.data.id, x.data.name] as [string, string]),
+].filter(x => x[0] !== undefined);
 
 autoSaveElementForm<ExternalUnglazedDoorData>({
 	model,
@@ -81,6 +94,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Associated wall or roof"
 			help="Select the wall or roof that this door is in. It should have the same orientation and pitch as the door."
 		/>
+		<template v-if="model && (model.associatedItemId === 'none' || tagOptions.length === 0)">
+			<FieldsPitch
+				id="pitch"
+				name="pitch"
+				data-field="Zone.BuildingElement.*.pitch"
+			/>
+			<FieldsOrientation
+				v-if="model.pitch != null && model.pitch !== 0 && model.pitch !== 180"
+				id="orientation"
+				name="orientation"
+				data-field="Zone.BuildingElement.*.orientation360"
+			/>
+		</template>
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"
