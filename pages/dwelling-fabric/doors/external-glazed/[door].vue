@@ -24,7 +24,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				orientation: shouldSavePitchOrientation ? fields.orientation : undefined,
 				height: fields.height,
 				width: fields.width,
-				uValue: fields.uValue,
 				securityRisk: fields.securityRisk,
 				solarTransmittance: fields.solarTransmittance,
 				elevationalHeight: fields.elevationalHeight,
@@ -149,7 +148,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 			data-field="Zone.BuildingElement.*.security_risk"
 		/>
-		<FieldsUValue id="uValue" name="uValue" />
 		<FormKit
 			id="solarTransmittance"
 			type="govInputFloat"

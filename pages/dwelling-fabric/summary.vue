@@ -378,7 +378,6 @@ const glazedDoorSummary: SummarySection = {
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
-			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Transmittance of solar energy": dim(x.solarTransmittance),
 			"Mid height": dim(x.midHeight, "metres"),
 			"Opening to frame ratio": dim(x.openingToFrameRatio),

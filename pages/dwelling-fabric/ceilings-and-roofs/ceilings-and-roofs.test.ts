@@ -314,7 +314,6 @@ describe("ceilings and roofs", () => {
 					associatedItemId: roof1.data.id,
 					height: 1,
 					width: 1,
-					uValue: 1,
 					solarTransmittance: 0.1,
 					elevationalHeight: 1,
 					midHeight: 1,

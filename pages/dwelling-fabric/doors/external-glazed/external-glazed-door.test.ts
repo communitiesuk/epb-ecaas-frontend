@@ -33,7 +33,6 @@ describe("external glazed door", () => {
 		associatedItemId: externalWall.id,
 		height: 14,
 		width: 48,
-		uValue: 0.45,
 		securityRisk: false,
 		solarTransmittance: 0.1,
 		elevationalHeight: 14,
@@ -269,7 +268,6 @@ describe("external glazed door", () => {
 			await user.type(screen.getByTestId("height"), "14");
 			await user.type(screen.getByTestId("width"), "48");
 			await user.type(screen.getByTestId("maximumOpenableArea"), "13");
-			await user.type(screen.getByTestId("uValue"), "0.45");
 			await user.click(screen.getByTestId("securityRisk_no"));
 			await user.type(screen.getByTestId("solarTransmittance"), "0.1");
 			await user.type(screen.getByTestId("elevationalHeight"), "14");
@@ -315,7 +313,6 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId(`associatedItemId_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("14");
 			expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("48");
-			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.45");
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("14");
 			expect((await screen.findByTestId<HTMLInputElement>("midHeight")).value).toBe("11");
@@ -330,7 +327,6 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
 			expect((await screen.findByTestId("height_error"))).toBeDefined();
 			expect((await screen.findByTestId("width_error"))).toBeDefined();
-			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 			expect((await screen.findByTestId("solarTransmittance_error"))).toBeDefined();
 			expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
 			expect((await screen.findByTestId("midHeight_error"))).toBeDefined();

@@ -769,7 +769,7 @@ const expectedFlatInput: FhsInputSchema = {
 					security_risk: false,
 					shading: [],
 					type: "BuildingElementTransparent",
-					u_value: 0.8,
+					thermal_resistance_construction: 12,
 					width: 1,
 					window_part_list: [{
 						mid_height_air_flow_path: 3,
@@ -1736,7 +1736,6 @@ describe("FHS input mapper", () => {
 							name: "external glazed door",
 							height: 3,
 							width: 1,
-							uValue: 0.8,
 							associatedItemId: externalWallId,
 							solarTransmittance: 0.5,
 							elevationalHeight: 0.2,

@@ -769,7 +769,6 @@ describe("dwelling fabric mapper", () => {
 			associatedItemId: externalWall.data.id,
 			height: 1,
 			width: 1,
-			uValue: 1,
 			securityRisk: false,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
@@ -844,7 +843,6 @@ describe("dwelling fabric mapper", () => {
 			mid_height: externalGlazedDoor.midHeight,
 			base_height: externalGlazedDoor.elevationalHeight,
 			g_value: externalGlazedDoor.solarTransmittance,
-			u_value: externalGlazedDoor.uValue,
 			frame_area_fraction: 1 - externalGlazedDoor.openingToFrameRatio,
 			max_window_open_area: externalGlazedDoor.maximumOpenableArea,
 			free_area_height: externalGlazedDoor.heightOpenableArea,
@@ -853,6 +851,7 @@ describe("dwelling fabric mapper", () => {
 			],
 			shading: [],
 			security_risk: false,
+			thermal_resistance_construction: 10, //temp
 		};
 
 		expect(externalGlazedDoorElement).toEqual(expectedExternalGlazedDoor);
