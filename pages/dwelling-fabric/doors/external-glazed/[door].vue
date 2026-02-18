@@ -14,10 +14,14 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceExternalGlazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 
+		const shouldSavePitchOrientation = tagOptions.length === 0 || fields.associatedItemId === "none";
+
 		dwellingSpaceExternalGlazedDoor.data[index] = {
 			data: {
 				name: fields.name,
-				associatedItemId: fields.associatedItemId,
+				associatedItemId: shouldSavePitchOrientation ? undefined : fields.associatedItemId,
+				pitch: shouldSavePitchOrientation ? fields.pitch : undefined,
+				orientation: shouldSavePitchOrientation ? fields.orientation : undefined,
 				height: fields.height,
 				width: fields.width,
 				uValue: fields.uValue,
@@ -36,6 +40,14 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 	});
 	navigateTo("/dwelling-fabric/doors");
 };
+
+const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
+const tagOptions = [
+	...dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
+	...dwellingSpaceRoofs.data.map(x => [x.data.id, x.data.name] as [string, string]),
+].filter(x => x[0] !== undefined);
 
 autoSaveElementForm<ExternalGlazedDoorData>({
 	model,
@@ -84,6 +96,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Associated wall or roof"
 			help="Select the wall or roof that this door is in. It should have the same orientation and pitch as the door."
 		/>
+		<template v-if="model && (model.associatedItemId === 'none' || tagOptions.length === 0)">
+			<FieldsPitch
+				id="pitch"
+				name="pitch"
+				data-field="Zone.BuildingElement.*.pitch"
+			/>
+			<FieldsOrientation
+				v-if="model.pitch != null && model.pitch !== 0 && model.pitch !== 180"
+				id="orientation"
+				name="orientation"
+				data-field="Zone.BuildingElement.*.orientation360"
+			/>
+		</template>
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"

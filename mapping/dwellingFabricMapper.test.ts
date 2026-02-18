@@ -870,7 +870,7 @@ describe("dwelling fabric mapper", () => {
 			is_external_door: true,
 			is_unheated_pitched_roof: false,
 			colour: "Intermediate",
-			thermal_resistance_construction: 16,
+			thermal_resistance_construction: externalUnglazedDoor.thermalResistance,
 		};
 
 		expect(externalUnglazedDoorElement).toEqual(expectedUnglazedDoor);

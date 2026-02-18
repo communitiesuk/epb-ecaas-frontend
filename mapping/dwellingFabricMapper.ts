@@ -574,16 +574,16 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	});
 
 	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalGlazedDoor.map((x) => {
-		const associatedWallRoof = getResolvedTaggedItem(
+		const associatedWallRoof = x.associatedItemId && x.associatedItemId !== "none" ? getResolvedTaggedItem(
 			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
 			x.associatedItemId,
-		)!;
+		)! : undefined;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
 		const glazedDoor = {
 			type: "BuildingElementTransparent",
-			pitch: extractPitch(associatedWallRoof),
-			orientation360: associatedWallRoof.orientation!,
+			pitch: extractPitch(associatedWallRoof ?? x),
+			orientation360: (associatedWallRoof ?? x).orientation!,
 			height: x.height,
 			mid_height: x.midHeight,
 			width: x.width,
@@ -608,7 +608,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalUnglazedDoor.map((x) => {
 		const associatedWallRoof = x.associatedItemId && x.associatedItemId !== "none" ? getResolvedTaggedItem(
 			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-			x.associatedItemId, // TODO handle case where no associated item ID - get pitch and oreintation from the door itself
+			x.associatedItemId,
 		)! : undefined;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 

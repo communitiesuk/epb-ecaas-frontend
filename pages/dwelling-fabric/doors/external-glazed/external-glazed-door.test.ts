@@ -72,6 +72,70 @@ describe("external glazed door", () => {
 	
 			expect(screen.queryByTestId("associatedItemId")).toBeNull();
 		});
+
+		test("shows pitch element", async () => {
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { externalGlazed: "create" },
+				},
+			});
+				
+			expect(screen.getByTestId("pitch")).toBeDefined();
+		});
+				
+		it("shows orientation when pitch is not 0 or 180", async () => {
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { externalGlazed: "create" },
+				},
+			});
+			expect(screen.queryByTestId("orientation")).toBeNull();
+			await user.type(screen.getByTestId("pitch"), "90");
+			await user.tab();
+			expect(screen.getByTestId("orientation")).toBeDefined();
+		});
+				
+		test("requires pitch and orientation", async () => {
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { externalGlazed: "create" },
+				},
+			});
+				
+				
+			await user.click(screen.getByTestId("saveAndComplete"));
+				
+			expect(await screen.findByTestId("pitch_error")).toBeDefined();
+				
+			expect(screen.queryByTestId("orientation_error")).toBeNull();
+				
+				
+			await user.type(screen.getByTestId("name"), "Window 1");
+			await user.type(screen.getByTestId("pitch"), "90");
+			await user.tab();
+				
+			await user.click(screen.getByTestId("saveAndComplete"));
+				
+			expect(await screen.findByTestId("orientation_error")).toBeDefined();
+				
+			await user.clear(screen.getByTestId("pitch"));
+			await user.type(screen.getByTestId("pitch"), "0");
+			await user.tab();
+				
+			expect(screen.queryByTestId("orientation")).toBeNull();
+			await user.click(screen.getByTestId("saveAndComplete"));
+			expect(screen.queryByTestId("orientation_error")).toBeNull();
+				
+			await user.clear(screen.getByTestId("pitch"));
+			await user.type(screen.getByTestId("pitch"), "180");
+			await user.tab();
+				
+				
+			expect(screen.queryByTestId("orientation")).toBeNull();
+				
+			await user.click(screen.getByTestId("saveAndComplete"));
+			expect(screen.queryByTestId("orientation_error")).toBeNull();
+		});
 	});
 
 	describe("with existing external wall", () => {
@@ -99,6 +163,98 @@ describe("external glazed door", () => {
 			});
 		
 			expect(screen.getByTestId("associatedItemId_none")).toBeDefined();
+		});
+
+		test("does not require pitch and orientation when existing wall is selected", async () => {
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { externalGlazed: "create" },
+				},
+			});
+				
+				
+			expect(screen.queryByTestId("pitch")).toBeNull();
+			expect(screen.queryByTestId("orientation")).toBeNull();
+				
+			await user.click(screen.getByTestId("saveAndComplete"));
+				
+			expect(screen.queryByTestId("pitch_error")).toBeNull();
+			expect(screen.queryByTestId("orientation_error")).toBeNull();
+				
+				
+			expect(await screen.findByTestId("associatedItemId_error")).toBeDefined();
+		});
+
+		describe("when none of the above is selected for associated item ID", () => {
+			test("shows pitch element", async () => {
+				await renderSuspended(ExternalGlazedDoor, {
+					route: {
+						params: { externalGlazed: "create" },
+					},
+				});
+				
+				await user.click(screen.getByTestId("associatedItemId_none"));
+				
+				expect(screen.getByTestId("pitch")).toBeDefined();
+			});
+				
+			it("shows orientation when pitch is not 0 or 180", async () => {
+				await renderSuspended(ExternalGlazedDoor, {
+					route: {
+						params: { externalGlazed: "create" },
+					},
+				});
+				
+				await user.click(screen.getByTestId("associatedItemId_none"));
+				
+				expect(screen.queryByTestId("orientation")).toBeNull();
+				await user.type(screen.getByTestId("pitch"), "90");
+				await user.tab();
+				expect(screen.getByTestId("orientation")).toBeDefined();
+			});
+				
+			test("requires pitch and orientation", async () => {
+				await renderSuspended(ExternalGlazedDoor, {
+					route: {
+						params: { externalGlazed: "create" },
+					},
+				});
+				
+				await user.click(screen.getByTestId("associatedItemId_none"));
+				
+				await user.click(screen.getByTestId("saveAndComplete"));
+				
+				expect(await screen.findByTestId("pitch_error")).toBeDefined();
+				
+				expect(screen.queryByTestId("orientation_error")).toBeNull();
+				
+				
+				await user.type(screen.getByTestId("name"), "Window 1");
+				await user.type(screen.getByTestId("pitch"), "90");
+				await user.tab();
+				
+				await user.click(screen.getByTestId("saveAndComplete"));
+				
+				expect(await screen.findByTestId("orientation_error")).toBeDefined();
+				
+				await user.clear(screen.getByTestId("pitch"));
+				await user.type(screen.getByTestId("pitch"), "0");
+				await user.tab();
+				
+				expect(screen.queryByTestId("orientation")).toBeNull();
+				await user.click(screen.getByTestId("saveAndComplete"));
+				expect(screen.queryByTestId("orientation_error")).toBeNull();
+				
+				await user.clear(screen.getByTestId("pitch"));
+				await user.type(screen.getByTestId("pitch"), "180");
+				await user.tab();
+				
+				
+				expect(screen.queryByTestId("orientation")).toBeNull();
+				
+				await user.click(screen.getByTestId("saveAndComplete"));
+				expect(screen.queryByTestId("orientation_error")).toBeNull();
+			});
 		});
 
 		test("data is saved to store state when form is valid", async () => {
