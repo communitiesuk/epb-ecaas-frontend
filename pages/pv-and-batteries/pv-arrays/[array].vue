@@ -2,13 +2,13 @@
 import type { OnSiteGenerationVentilationStrategy, SchemaInverterType } from "~/schema/aliases";
 import { getUrl, uniqueName } from "#imports";
 
-const title = "PV (photovoltaic) array";
+const title = "PV array";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const pvSystemsStoreData = store.pvAndBatteries.pvArrays.data;
-const index = getStoreIndex(pvSystemsStoreData);
-const PvArrayData = useItemToEdit("system", pvSystemsStoreData);
+const pvArraysStoreData = store.pvAndBatteries.pvArrays.data;
+const index = getStoreIndex(pvArraysStoreData);
+const PvArrayData = useItemToEdit("array", pvArraysStoreData);
 const model = ref(PvArrayData?.data);
 
 const shadingSectionDisabled = true;
@@ -61,7 +61,7 @@ const saveForm = (fields: PvArrayData) => {
 autoSaveElementForm<PvArrayData>({
 	model,
 	storeData: store.pvAndBatteries.pvArrays,
-	defaultName: "PV system",
+	defaultName: "PV array",
 	onPatch: (state, newData, index) => {
 		state.pvAndBatteries.pvArrays.data[index] = newData;
 		state.pvAndBatteries.pvArrays.complete = false;
@@ -94,7 +94,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name so this PV array can be identified later"
 			name="name"
-			:validation-rules="{ uniqueName: uniqueName(pvSystemsStoreData, { index }) }"
+			:validation-rules="{ uniqueName: uniqueName(pvArraysStoreData, { index }) }"
 			validation="required | uniqueName"
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'

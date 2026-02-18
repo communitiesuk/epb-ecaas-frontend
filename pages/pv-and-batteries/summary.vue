@@ -7,8 +7,8 @@ const store = useEcaasStore();
 
 const pvArrays = store.pvAndBatteries.pvArrays.data;
 const pvSummary: SummarySection = {
-	id:  "pvArrays",
-	label: "PV systems",
+	id: "pvArrays",
+	label: "PV arrays",
 	data: pvArrays.map(({ data: x }) => {
 		return {
 			"Name": x.name,
@@ -68,9 +68,9 @@ const diverterSummary: SummarySection = {
 	<GovTabs v-slot="tabProps" :items="getTabItems([pvSummary])">
 		<SummaryTab :summary="pvSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
-				<h2 class="govuk-heading-m">No PV systems added</h2>
+				<h2 class="govuk-heading-m">No PV arrays added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
-					Add PV systems
+					Add PV arrays
 				</NuxtLink>
 			</template>
 		</SummaryTab>

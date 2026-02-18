@@ -13,7 +13,7 @@ describe("PV and electric batteries summary page", () => {
 
 	describe("PV systems section", () => {
 
-		const pvSystem: EcaasForm<PvArrayData> = {
+		const pvArray: EcaasForm<PvArrayData> = {
 			data: {
 				name: "PV Roof",
 				peakPower: 3.5,
@@ -30,21 +30,21 @@ describe("PV and electric batteries summary page", () => {
 			},
 		};
 
-		it("displays the pv systems tab", async () => {
+		it("displays the pv arrays tab", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
-			expect(screen.getByRole("link", { name: "PV systems" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "PV arrays" })).not.toBeNull();
 		});
 
 		it("displays an empty tab state when no data is present", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
 
-			expect(screen.getByText("No PV systems added")).not.toBeNull();
+			expect(screen.getByText("No PV arrays added")).not.toBeNull();
 
-			const addPVSystemsLink: HTMLAnchorElement = screen.getByRole("link", {
-				name: "Add PV systems",
+			const addPVArraysLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add PV arrays",
 			});
 
-			expect(new URL(addPVSystemsLink.href).pathname).toBe(
+			expect(new URL(addPVArraysLink.href).pathname).toBe(
 				getUrl("pvAndBatteries"),
 			);
 		});
@@ -54,7 +54,7 @@ describe("PV and electric batteries summary page", () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvArrays: {
-						data: [pvSystem],
+						data: [pvArray],
 					},
 				},
 			});

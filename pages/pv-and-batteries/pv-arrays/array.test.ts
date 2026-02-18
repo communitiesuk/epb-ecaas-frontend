@@ -1,5 +1,5 @@
 import { screen } from "@testing-library/vue";
-import PVScreen from "./[system].vue";
+import PVScreen from "./[array].vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 
@@ -67,7 +67,7 @@ describe("PV array", () => {
 	it("should have a heading", async () => {
 		await renderSuspended(PVScreen);
 		expect(
-			screen.getByRole("heading", { name: "PV (photovoltaic) array" }),
+			screen.getByRole("heading", { name: "PV array" }),
 		).toBeDefined();
 	});
 
@@ -91,7 +91,7 @@ describe("PV array", () => {
 	it("should error when user submits an empty form", async () => {
 		await renderSuspended(PVScreen, {
 			route: {
-				params: { system: "create" },
+				params: { array: "create" },
 			},
 		});
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -115,7 +115,7 @@ describe("PV array", () => {
 	it("data is saved to store when form is valid", async () => {
 		await renderSuspended(PVScreen, {
 			route: {
-				params: { system: "create" },
+				params: { array: "create" },
 			},
 		});
 		await populateValidForm();
@@ -145,7 +145,7 @@ describe("PV array", () => {
 		it("creates a new pv system automatically with given name", async () => {
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { system: "create" },
+					params: { array: "create" },
 				},
 			});
 
@@ -161,18 +161,18 @@ describe("PV array", () => {
 		it("creates a new pv system automatically with default name after other data is entered", async () => {
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { system: "create" },
+					params: { array: "create" },
 				},
 			});
 
 			await user.type(screen.getByTestId("elevationalHeight"), "7");
 			await user.tab();
 
-			const actualPvSystem = store.pvAndBatteries.pvArrays.data[0]!;
-			expect(actualPvSystem.data.name).toBe("PV system");
-			expect(actualPvSystem.data.peakPower).toBeUndefined();
-			expect(actualPvSystem.data.inverterType).toBeUndefined();
-			expect(actualPvSystem.data.elevationalHeight).toBe(7);
+			const actualPvArray = store.pvAndBatteries.pvArrays.data[0]!;
+			expect(actualPvArray.data.name).toBe("PV array");
+			expect(actualPvArray.data.peakPower).toBeUndefined();
+			expect(actualPvArray.data.inverterType).toBeUndefined();
+			expect(actualPvArray.data.elevationalHeight).toBe(7);
 		});
 
 		it("saves updated form data to correct store object automatically", async () => {
@@ -186,7 +186,7 @@ describe("PV array", () => {
 
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { system: "1" },
+					params: { array: "1" },
 				},
 			});
 
@@ -216,7 +216,7 @@ describe("PV array", () => {
 
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { system: "0" },
+					params: { array: "0" },
 				},
 			});
 

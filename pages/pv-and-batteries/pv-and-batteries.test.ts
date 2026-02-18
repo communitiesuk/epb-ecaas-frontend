@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import PvAndBatteries from "./index.vue";
-import PvSystemForm from "./pv-arrays/[system].vue";
+import PvSystemForm from "./pv-arrays/[array].vue";
 import ElectricBatteryForm from "./electric-battery/index.vue";
 import DivertersForm from "./diverters/index.vue";
 import { screen } from "@testing-library/vue";
