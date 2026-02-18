@@ -23,7 +23,7 @@ describe("getHeatSourceDefaultName", () => {
 		expect(actual).toBe("Dry core heat battery");
 	});
 
-	test.skip("keeps acronyms capitalised", async () => {
+	test("keeps acronyms capitalised", async () => {
 		const item: HeatSourceFormData = {
 			id: "123",
 			typeOfHeatSource: "heatBattery",
