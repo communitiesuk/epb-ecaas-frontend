@@ -304,6 +304,7 @@ describe("ceilings and roofs", () => {
 					colour: "Intermediate",
 					arealHeatCapacity: "Very light",
 					massDistributionClass: "I",
+					thermalResistance: 48,
 				},
 			};
 

@@ -753,7 +753,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 45,
 					type: "BuildingElementOpaque",
 					is_unheated_pitched_roof: false,
-					u_value: 1,
+					thermal_resistance_construction: 12,
 					width: 1.2,
 				},
 				"external glazed door (door)": {
@@ -1724,6 +1724,7 @@ describe("FHS input mapper", () => {
 							arealHeatCapacity: "Light",
 							massDistributionClass: "I",
 							colour: "Intermediate",
+							thermalResistance: 12,
 						},
 					}],
 				},

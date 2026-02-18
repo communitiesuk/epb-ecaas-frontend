@@ -30,6 +30,7 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 				associatedItemId: shouldSavePitchOrientation ? undefined : fields.associatedItemId,
 				pitch: shouldSavePitchOrientation ? fields.pitch : undefined,
 				orientation: shouldSavePitchOrientation ? fields.orientation : undefined,
+				thermalResistance: fields.thermalResistance,
 			},
 			complete: true,
 		};
@@ -128,6 +129,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.width"
 		/>
 		<FieldsElevationalHeight />
+		<FormKit
+			id="thermalResistance"
+			type="govInputWithSuffix"
+			suffix-text="(m²·K)/W"
+			label="Thermal resistance"
+			help="Enter the thermal resistance of all layers in the door construction"
+			name="thermalResistance"
+			validation="required | number | min:0.00001 | max:50"
+		><GovDetails summary-text="Help with this input">
+			<p>Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer.
+			</p>
+		</GovDetails>
+		</FormKit>
 		<FormKit
 			id="colour"
 			type="govRadios"

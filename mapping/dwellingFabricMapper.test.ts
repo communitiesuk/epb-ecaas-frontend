@@ -789,6 +789,7 @@ describe("dwelling fabric mapper", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			colour: "Intermediate",
+			thermalResistance: 16,
 		};
 
 		const doorSuffix = " (door)";
@@ -869,7 +870,7 @@ describe("dwelling fabric mapper", () => {
 			is_external_door: true,
 			is_unheated_pitched_roof: false,
 			colour: "Intermediate",
-			u_value: 1,
+			thermal_resistance_construction: 16,
 		};
 
 		expect(externalUnglazedDoorElement).toEqual(expectedUnglazedDoor);

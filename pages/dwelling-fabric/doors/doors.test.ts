@@ -57,6 +57,7 @@ describe("doors", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			colour: "Dark",
+			thermalResistance: 16,
 		},
 	};
 
@@ -70,6 +71,7 @@ describe("doors", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			colour: "Light",
+			thermalResistance: 28,
 		},
 	};
 
@@ -83,6 +85,7 @@ describe("doors", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			colour: "Intermediate",
+			thermalResistance: 23,
 		},
 	};
 

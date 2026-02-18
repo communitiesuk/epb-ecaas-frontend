@@ -606,17 +606,17 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	});
 
 	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalUnglazedDoor.map((x) => {
-		const associatedWallRoof = getResolvedTaggedItem(
+		const associatedWallRoof = x.associatedItemId && x.associatedItemId !== "none" ? getResolvedTaggedItem(
 			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-			x.associatedItemId,
-		)!;
+			x.associatedItemId, // TODO handle case where no associated item ID - get pitch and oreintation from the door itself
+		)! : undefined;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementOpaque",
-				pitch: extractPitch(associatedWallRoof),
-				orientation360: associatedWallRoof.orientation!,
+				pitch: extractPitch(associatedWallRoof ?? x),
+				orientation360: (associatedWallRoof ?? x).orientation!,
 				height: x.height,
 				width: x.width,
 				base_height: x.elevationalHeight,
@@ -625,9 +625,8 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				is_external_door: true,
 				is_unheated_pitched_roof: false, // this may need to be limited to opaque elements with a pitch <= 60
-				///
-				area: x.height * x.width, //maybe remove
-				u_value: 1, //maybe remove
+				area: x.height * x.width, // this may be removed from the FHS schema shortly (though you could have e.g. arch shaped doors with a different area?)
+				thermal_resistance_construction: x.thermalResistance,
 			},
 		};
 	});

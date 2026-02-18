@@ -399,6 +399,7 @@ const externalUnglazedDoorDataZod = named.extend({
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	colour: colourZod,
+	thermalResistance: z.number().min(0.00001).max(50),
 });
 
 export type ExternalUnglazedDoorData = z.infer<typeof externalUnglazedDoorDataZod>;
