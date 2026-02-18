@@ -317,6 +317,13 @@ const expectedFlatInput: FhsInputSchema = {
 				maximum_discharge_rate_one_way_trip: 20,
 			},
 		},
+		["pv system 1"]: {
+			"fuel": "electricity",
+			"is_export_capable": true,
+			"priority": [
+				"diverter",
+			],
+		},
 	},
 	Events: {},
 	ExternalConditions: {
@@ -2082,8 +2089,11 @@ describe("FHS input mapper", () => {
 						widthOfPV: 0.5,
 						inverterPeakPowerAC: 3,
 						inverterPeakPowerDC: 3.8,
-						inverterIsInside: true,
+						locationOfInverter: "heated_space",
 						inverterType: "optimised_inverter",
+						canExportToGrid: true,
+						electricityPriority: "diverter",
+
 					},
 				}],
 			},

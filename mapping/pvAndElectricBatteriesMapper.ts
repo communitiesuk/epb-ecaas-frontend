@@ -5,18 +5,24 @@ import type { SchemaElectricBattery, SchemaEnergySupplyElectricity } from "~/sch
 import type { SchemaWindowShadingObject } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName } from "./common";
 
-export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsInputSchema, "OnSiteGeneration">, { "ElectricBattery": SchemaElectricBattery } | EmptyObject, Pick<SchemaEnergySupplyElectricity, "diverter"> | EmptyObject] {
+export function mapPvAndElectricBatteriesData(state: ResolvedState): [
+	Pick<FhsInputSchema, "OnSiteGeneration">,
+	{ "ElectricBattery": SchemaElectricBattery } | EmptyObject,
+	Pick<SchemaEnergySupplyElectricity, "diverter"> | EmptyObject,
+	{ "ElectricBattery": SchemaElectricBattery } | { "diverter": SchemaEnergySupplyElectricity } | EmptyObject,
+] {
 	return [
-		mapPvSystemData(state),
+		mapPvArrayData(state),
 		mapElectricBatteryData(state),
 		mapPvDiverterData(state),
+		mapPvArrayEnergySupplyData(state),
 	];
 }
 
-export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, "OnSiteGeneration"> {
+export function mapPvArrayData(state: ResolvedState): Pick<FhsInputSchema, "OnSiteGeneration"> {
 	return {
 		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvArrays.map((system) => {
-			const { name, elevationalHeight, lengthOfPV, widthOfPV, inverterIsInside, inverterPeakPowerAC, inverterPeakPowerDC, inverterType, orientation, peakPower, pitch, ventilationStrategy } = system;
+			const { name, elevationalHeight, lengthOfPV, widthOfPV, locationOfInverter, inverterPeakPowerAC, inverterPeakPowerDC, inverterType, orientation, peakPower, pitch, ventilationStrategy } = system;
 
 			return [
 				name,
@@ -25,7 +31,7 @@ export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, "OnS
 					base_height: elevationalHeight,
 					height: lengthOfPV,
 					width: widthOfPV,
-					inverter_is_inside: inverterIsInside,
+					inverter_is_inside: locationOfInverter === "heated_space",
 					inverter_peak_power_ac: inverterPeakPowerAC,
 					inverter_peak_power_dc: inverterPeakPowerDC,
 					inverter_type: inverterType,
@@ -40,6 +46,24 @@ export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, "OnS
 		})),
 	};
 }
+export function mapPvArrayEnergySupplyData(state: ResolvedState): { [key: string]: SchemaEnergySupplyElectricity } | EmptyObject {
+	const pvArrays = state.pvAndBatteries.pvArrays;
+	if (pvArrays.length === 0) {
+		return {};
+	}
+	const EnergySupply: { [key: string]: SchemaEnergySupplyElectricity } = {};
+	pvArrays.forEach((system) => {
+		if (system.electricityPriority === "diverter") {
+			EnergySupply[system.name] = { priority: ["diverter"], is_export_capable: system.canExportToGrid, fuel: "electricity" };
+		};
+		if (system.electricityPriority === "electricBattery") {
+			EnergySupply[system.name] = { priority: ["ElectricBattery"], is_export_capable: system.canExportToGrid, fuel: "electricity" };
+		};
+	});
+	return EnergySupply;
+}
+
+
 
 export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery": SchemaElectricBattery } | EmptyObject {
 	const electricBattery = state.pvAndBatteries.electricBattery[0];

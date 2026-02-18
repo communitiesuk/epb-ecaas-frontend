@@ -1,6 +1,6 @@
 import type { SchemaElectricBattery, SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
-import { mapElectricBatteryData, mapPvDiverterData, mapPvSystemData } from "./pvAndElectricBatteriesMapper";
+import { mapElectricBatteryData, mapPvDiverterData, mapPvArrayData, mapPvArrayEnergySupplyData } from "./pvAndElectricBatteriesMapper";
 
 const baseForm = {
 	data: [],
@@ -28,7 +28,9 @@ describe("PV and electric batteries mapper", () => {
 				widthOfPV: 4,
 				inverterPeakPowerAC: 48,
 				inverterPeakPowerDC: 60,
-				inverterIsInside: false,
+				locationOfInverter: "unheated_space",
+				canExportToGrid: false,
+				electricityPriority: "diverter",
 				inverterType: "string_inverter",
 			},
 			complete: true,
@@ -46,7 +48,9 @@ describe("PV and electric batteries mapper", () => {
 				widthOfPV: 15,
 				inverterPeakPowerAC: 96,
 				inverterPeakPowerDC: 120,
-				inverterIsInside: false,
+				locationOfInverter: "unheated_space",
+				canExportToGrid: true,
+				electricityPriority: "electricBattery",
 				inverterType: "optimised_inverter",
 			},
 			complete: true,
@@ -62,7 +66,7 @@ describe("PV and electric batteries mapper", () => {
 		});
 
 		// Act
-		const result = mapPvSystemData(resolveState(store.$state));
+		const result = mapPvArrayData(resolveState(store.$state));
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, "OnSiteGeneration"> = {
@@ -234,5 +238,77 @@ describe("PV and electric batteries mapper", () => {
 		};
 
 		expect(result).toEqual(expectedResult);
+	});
+
+	it("exposes energy-supply flags from pv arrays (is_export_capable + priority)", () => {
+		store.$patch({
+			pvAndBatteries: {
+				pvArrays: {
+					data: [{
+						data: {
+							name: "Roof",
+							peakPower: 1,
+							pitch: 20,
+							orientation: 10,
+							ventilationStrategy: "unventilated",
+							elevationalHeight: 1,
+							lengthOfPV: 1,
+							widthOfPV: 1,
+							inverterPeakPowerAC: 1,
+							inverterPeakPowerDC: 1,
+							locationOfInverter: "heated_space",
+							canExportToGrid: true,
+							electricityPriority: "electricBattery",
+							inverterType: "string_inverter",
+						},
+						complete: true,
+					}],
+					complete: true,
+				},
+				electricBattery: {
+					data: [],
+					complete: true,
+				},
+				diverters: {
+					data: [],
+					complete: true,
+				},
+			},
+		});
+
+		const energySupply = mapPvArrayEnergySupplyData(resolveState(store.$state));
+		expect(energySupply).toEqual({ "Roof": { fuel: "electricity", is_export_capable: true, priority: ["ElectricBattery"] } });
+	});
+
+	it("mapPvSystemEnergySupply returns keyed energy-supply object", () => {
+		store.$patch({
+			pvAndBatteries: {
+				pvArrays: {
+					data: [{
+						data: {
+							name: "Roof",
+							peakPower: 1,
+							pitch: 20,
+							orientation: 10,
+							ventilationStrategy: "unventilated",
+							elevationalHeight: 1,
+							lengthOfPV: 1,
+							widthOfPV: 1,
+							inverterPeakPowerAC: 1,
+							inverterPeakPowerDC: 1,
+							locationOfInverter: "heated_space",
+							canExportToGrid: true,
+							electricityPriority: "electricBattery",
+							inverterType: "string_inverter",
+						},
+						complete: true,
+					}],
+					complete: true,
+				},
+			},
+		});
+
+		const energySupply = mapPvArrayEnergySupplyData(resolveState(store.$state));
+		expect(energySupply).toEqual({ "Roof": { fuel: "electricity", is_export_capable: true, priority: ["ElectricBattery"] } });
 	});
 });
