@@ -350,16 +350,29 @@ const unglazedDoorSummary: SummarySection = {
 	data: unglazedDoorData.map(({ data: x }) => {
 		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedItemId);
 
+		let pitch = emptyValueRendering;
+		let orientation = emptyValueRendering;
+
+		if (taggedItem) {
+			pitch = taggedItem.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering;
+			orientation = taggedItem.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering;
+		} else {
+			pitch = x.pitch !== undefined ? dim(x.pitch, "degrees") : emptyValueRendering;
+			orientation = x.orientation !== undefined ? dim(x.orientation, "degrees") : emptyValueRendering;
+		}
+
 		return {
 			"Name": show(x.name),
-			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
-			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,
+			"Pitch": pitch,
+			"Orientation": orientation,
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceDoors"),
@@ -371,12 +384,24 @@ const glazedDoorSummary: SummarySection = {
 	data: glazedDoorData.map(({ data: x }) => {
 		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedItemId);
 
+		let pitch = emptyValueRendering;
+		let orientation = emptyValueRendering;
+
+		if (taggedItem) {
+			pitch = taggedItem.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering;
+			orientation = taggedItem.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering;
+		} else {
+			pitch = x.pitch !== undefined ? dim(x.pitch, "degrees") : emptyValueRendering;
+			orientation = x.orientation !== undefined ? dim(x.orientation, "degrees") : emptyValueRendering;
+		}
+
 		return {
 			"Name": show(x.name),
-			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
-			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,
+			"Pitch": pitch,
+			"Orientation": orientation,
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Transmittance of solar energy": dim(x.solarTransmittance),
 			"Mid height": dim(x.midHeight, "metres"),
