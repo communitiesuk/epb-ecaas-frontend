@@ -24,14 +24,14 @@ const dwellingFabricPages = [
 	},
 	{
 		id: "dwellingSpaceLightingCreate",
-		title: "Lighting",
+		title: "Bulbs",
 		url: "/dwelling-fabric/lighting/bulb/create",
 		type: "task",
 		parentId: "dwellingSpaceLighting",
 	},
 	{
 		id: "dwellingSpaceLightingEdit",
-		title: "Lighting",
+		title: "Bulbs",
 		url: "/dwelling-fabric/lighting/bulb/:bulb",
 		type: "task",
 		parentId: "dwellingSpaceLighting",
