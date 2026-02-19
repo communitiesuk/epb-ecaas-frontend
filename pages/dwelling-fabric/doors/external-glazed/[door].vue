@@ -49,6 +49,10 @@ const tagOptions = [
 	...dwellingSpaceRoofs.data.map(x => [x.data.id, x.data.name] as [string, string]),
 ].filter(x => x[0] !== undefined);
 
+if (model.value && model.value.associatedItemId === undefined) {
+	model.value.associatedItemId = "none";
+}
+
 autoSaveElementForm<ExternalGlazedDoorData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor,

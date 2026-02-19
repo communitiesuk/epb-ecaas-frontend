@@ -39,7 +39,6 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 	navigateTo("/dwelling-fabric/doors");
 };
 
-
 const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
@@ -47,6 +46,10 @@ const tagOptions = [
 	...dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
 	...dwellingSpaceRoofs.data.map(x => [x.data.id, x.data.name] as [string, string]),
 ].filter(x => x[0] !== undefined);
+
+if (model.value && model.value.associatedItemId === undefined) {
+	model.value.associatedItemId = "none";
+}
 
 autoSaveElementForm<ExternalUnglazedDoorData>({
 	model,

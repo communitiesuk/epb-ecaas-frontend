@@ -352,6 +352,56 @@ describe("window", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittanceReduction")).value).toBe("0.1");
 		});
 
+		test("form is prepopulated with none of the above associated wall, as well as pitch and orientation when there is no tagged item", async () => {
+			const windowNoTag: EcaasForm<WindowData> = {
+				data: {
+					id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
+					name: "Window 1",
+					pitch: 72,
+					orientation: 24,
+					height: 1,
+					width: 1,
+					uValue: 1,
+					securityRisk: true,
+					solarTransmittance: 0.1,
+					elevationalHeight: 1,
+					midHeight: 1,
+					openingToFrameRatio: 0.8,
+					numberOpenableParts: "0",
+					overhangDepth: unitValue(60, millimetre),
+					overhangDistance: unitValue(60, millimetre),
+					sideFinRightDepth: unitValue(60, millimetre),
+					sideFinRightDistance: unitValue(60, millimetre),
+					sideFinLeftDepth: unitValue(60, millimetre),
+					sideFinLeftDistance: unitValue(60, millimetre),
+					curtainsOrBlinds: true,
+					treatmentType: "blinds",
+					thermalResistivityIncrease: 1,
+					solarTransmittanceReduction: 0.1,
+				},
+				complete: true,
+			};
+
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWindows: {
+						data: [windowNoTag],
+					},
+				},
+			});
+
+			await renderSuspended(Window, {
+				route: {
+					params: { window: "0" },
+				},
+			});
+
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Window 1");
+			expect((await screen.findByTestId(`taggedItem_none`)).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("pitch")).value).toBe("72");
+			expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("24");
+		});
+
 		test("only required error messages are displayed when empty form is submitted", async () => {
 			await renderSuspended(Window);
 

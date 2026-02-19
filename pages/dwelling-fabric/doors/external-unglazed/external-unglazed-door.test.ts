@@ -313,6 +313,42 @@ describe("external unglazed door", () => {
 			expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 		});
+
+		test("form is prepopulated with none of the above associated wall, as well as pitch and orientation when there is no tagged item", async () => {
+			const doorNoTag = {
+				name: "External unglazed door 1",
+				pitch: 72,
+				orientation: 24,
+				height: 0.5,
+				width: 20,
+				elevationalHeight: 20,
+				colour: "Intermediate",
+				arealHeatCapacity: "Very light",
+				massDistributionClass: "I",
+				thermalResistance: 24,
+			} as const satisfies ExternalUnglazedDoorData;
+				
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalUnglazedDoor: {
+							data: [{ data: doorNoTag }],
+						},
+					},
+				},
+			});
+				
+			await renderSuspended(ExternalUnglazedDoor, {
+				route: {
+					params: { door: "0" },
+				},
+			});
+				
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External unglazed door 1");
+			expect((await screen.findByTestId(`associatedItemId_none`)).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("pitch")).value).toBe("72");
+			expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("24");
+		});
 		
 		test("required error messages are displayed when empty form is submitted", async () => {
 			await renderSuspended(ExternalUnglazedDoor);

@@ -320,6 +320,46 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("14");
 			expect((await screen.findByTestId<HTMLInputElement>("midHeight")).value).toBe("11");
 		});
+
+		test("form is prepopulated with none of the above associated wall, as well as pitch and orientation when there is no tagged item", async () => {
+			const doorNoTag = {
+				name: "External glazed door 1",
+				pitch: 72,
+				orientation: 24,
+				height: 14,
+				width: 48,
+				securityRisk: false,
+				solarTransmittance: 0.1,
+				elevationalHeight: 14,
+				midHeight: 11,
+				openingToFrameRatio: 0.2,
+				heightOpenableArea: 14,
+				maximumOpenableArea: 13,
+				midHeightOpenablePart1: 11,
+				thermalResistance: 16,
+			} as const satisfies ExternalGlazedDoorData;
+		
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: doorNoTag }],
+						},
+					},
+				},
+			});
+		
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { door: "0" },
+				},
+			});
+		
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External glazed door 1");
+			expect((await screen.findByTestId(`associatedItemId_none`)).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("pitch")).value).toBe("72");
+			expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("24");
+		});
 		
 		test("only required error messages are displayed when empty form is submitted", async () => {
 			await renderSuspended(ExternalGlazedDoor);
