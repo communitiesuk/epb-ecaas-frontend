@@ -71,16 +71,23 @@ describe("dwelling fabric mapper", () => {
 
 	it("maps lighting input state to FHS input request", () => {
 		// Arrange
-		const state: DwellingSpaceLightingData = {
+		const bulb1: DwellingSpaceLightingData = {
+			name: "Bulb 1",
 			numberOfBulbs: 5,
 			power: 5,
 			efficacy: 120,
+		};
+		const bulb2: DwellingSpaceLightingData = {
+			name: "Bulb 2",
+			numberOfBulbs: 3,
+			power: 7,
+			efficacy: 110,
 		};
 
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceLighting: {
-					data: state,
+					data: [{ data: bulb1, complete: true }, { data: bulb2, complete: true }],
 					complete: true,
 				},
 			},
@@ -94,9 +101,19 @@ describe("dwelling fabric mapper", () => {
 		bulbs = bulbs as NonNullable<typeof bulbs>;
 
 		// Assert
-		expect(bulbs[0]!.count).toBe(state.numberOfBulbs);
+		expect(bulbs).toEqual([
+			{
+				count: bulb1.numberOfBulbs,
+				power: bulb1.power,
+				efficacy: bulb1.efficacy,
+			},
+			{
+				count: bulb2.numberOfBulbs,
+				power: bulb2.power,
+				efficacy: bulb2.efficacy,
+			},
+		]);
 	});
-
 	it("maps floor input state to FHS input request", () => {
 		// Arrange
 		const groundFloor: GroundFloorData = {

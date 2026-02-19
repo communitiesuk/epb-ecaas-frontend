@@ -25,11 +25,14 @@ const lightingData = store.dwellingFabric.dwellingSpaceLighting.data;
 const lightingSummary: SummarySection = {
 	id: "dwellingSpaceLighting",
 	label: "Lighting",
-	data: {
-		"Number of bulbs": show(lightingData.numberOfBulbs),
-		"Power": show(lightingData.power),
-		"Efficacy": show(lightingData.efficacy),
-	},
+	data: lightingData.map(({ data: x }) => {
+		return {
+			"Name": show(x.name),
+			"Number of bulbs": show(x.numberOfBulbs),
+			"Power": show(x.power),
+			"Efficacy": show(x.efficacy),
+		};
+	}),
 	editUrl: getUrl("dwellingSpaceLighting"),
 };
 
@@ -556,7 +559,14 @@ const thermalBridgeSummarySections: SummarySection[] = [
 	</GovTabs>
 
 	<GovTabs v-slot="tabProps" :items="getTabItems([lightingSummary])">
-		<SummaryTab :summary="lightingSummary" :selected="tabProps.currentTab === 0" />
+		<SummaryTab :summary="lightingSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No bulbs added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceLightingCreate')">
+					Add bulb
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 	</GovTabs>
 
 	<GovTabs v-slot="tabProps" :items="getTabItems(floorSummarySections)">

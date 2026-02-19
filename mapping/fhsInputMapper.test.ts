@@ -1035,11 +1035,15 @@ describe("FHS input mapper", () => {
 			},
 			dwellingSpaceLighting: {
 				...baseForm,
-				data: {
-					numberOfBulbs: 6,
-					power: 5,
-					efficacy: 120,
-				},
+				data: [{
+					...baseForm,
+					data: {
+						name: "Bulb 1",
+						numberOfBulbs: 6,
+						power: 5,
+						efficacy: 120,
+					},
+				}],
 			},
 			dwellingSpaceFloors: {
 				dwellingSpaceGroundFloor: {
@@ -1479,11 +1483,15 @@ describe("FHS input mapper", () => {
 			},
 			dwellingSpaceLighting: {
 				...baseForm,
-				data: {
-					numberOfBulbs: 5,
-					power: 5,
-					efficacy: 120,
-				},
+				data: [{
+					...baseForm,
+					data: {
+						name: "Bulb 1",
+						numberOfBulbs: 5,
+						power: 5,
+						efficacy: 120,
+					},
+				}],
 			},
 			dwellingSpaceFloors: {
 				dwellingSpaceGroundFloor: {

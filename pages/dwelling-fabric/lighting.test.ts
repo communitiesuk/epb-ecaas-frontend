@@ -1,7 +1,8 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen } from "@testing-library/vue";
-import Lighting from "./lighting.vue";
+import Lighting from "./lighting/index.vue";
 import userEvent from "@testing-library/user-event";
+import formStatus from "~/constants/formStatus";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -9,6 +10,7 @@ mockNuxtImport("navigateTo", () => {
 });
 
 const state: DwellingSpaceLightingData = {
+	name: "Bulb 1",
 	numberOfBulbs: 9,
 	power: 5,
 	efficacy: 120,
@@ -23,76 +25,127 @@ beforeEach(() => {
 
 describe("lighting", () => {
 
-	test("data is saved to store state when form is valid", async () => {
-		await renderSuspended(Lighting);
-
-		await user.type(screen.getByTestId("numberOfBulbs"), "9");
-		await user.type(screen.getByTestId("power"), "5");
-		await user.type(screen.getByTestId("efficacy"), "120");
-		await user.tab();
-		await(user.click(screen.getByTestId("saveAndComplete")));
-
-
-		const { data, complete } = store.dwellingFabric.dwellingSpaceLighting;
-
-		expect(data).toEqual(state);
-		expect(complete).toBe(true);
-		expect(navigateToMock).toBeCalledWith("/dwelling-fabric");
-	});
-
-	test("form is prepopulated when data exists in state", async () => {
+	test("bulb can be removed from lighting list", async () => {
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceLighting: { data: state },
+				dwellingSpaceLighting: {
+					data: [{ data: state, complete: true }],
+				},
 			},
 		});
 
 		await renderSuspended(Lighting);
 
-		expect((await screen.findByTestId<HTMLInputElement>("numberOfBulbs")).value).toBe("9");
-		expect((await screen.findByTestId<HTMLInputElement>("power")).value).toBe("5");
-		expect((await screen.findByTestId<HTMLInputElement>("efficacy")).value).toBe("120");
-	});
-			
-	test("required error messages are displayed when empty form is submitted", async () => {
-		await renderSuspended(Lighting);
-
-		await(user.click(screen.getByTestId("saveAndComplete")));
-
-		expect((await screen.findByTestId("numberOfBulbs_error"))).toBeDefined();
-		expect((await screen.findByTestId("power_error"))).toBeDefined();
-		expect((await screen.findByTestId("efficacy_error"))).toBeDefined();
+		expect(screen.getByTestId("lighting_items")).toBeDefined();
+		await user.click(screen.getByTestId("lighting_remove_0"));
+		expect(screen.queryByTestId("lighting_items")).toBeNull();
 	});
 
-	test("error summary is displayed when an invalid form in submitted", async () => {
+	test("bulb can be duplicated from lighting list", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceLighting: {
+					data: [{ data: state, complete: true }],
+				},
+			},
+		});
+
 		await renderSuspended(Lighting);
+		await user.click(screen.getByTestId("lighting_duplicate_0"));
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
-
-		expect((await screen.findByTestId("lightingErrorSummary"))).toBeDefined();
+		expect(screen.getByText("Bulb 1")).toBeDefined();
+		expect(screen.getByText("Bulb 1 (1)")).toBeDefined();
 	});
 
-	test("save progress button navigates user to the dwelling fabric overview page", async () => {
+	test("lighting section can be marked complete", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceLighting: {
+					data: [{ data: state, complete: true }],
+				},
+			},
+		});
+
 		await renderSuspended(Lighting);
-	
-		await user.type(screen.getByTestId("numberOfBulbs"), "10");
-		await user.click(screen.getByTestId("saveProgress"));
-				
-		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+
+		expect(store.dwellingFabric.dwellingSpaceLighting.complete).toBe(true);
+		expect(navigateToMock).toBeCalledWith("/dwelling-fabric");
 	});
-});
 
+	test("status tag shows in-progress when bulb is incomplete", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceLighting: {
+					data: [{ data: state, complete: false }],
+				},
+			},
+		});
 
-describe("Partially saving data", () => {
-	
-	test("form data is automatically saved to store", async () => {
 		await renderSuspended(Lighting);
 
-		await user.type(screen.getByTestId("numberOfBulbs"), "9");
-		await user.tab();
+		expect(screen.getByTestId("lighting_status_0").textContent).toBe(formStatus.inProgress.text);
+	});
 
-		expect(
-			store.dwellingFabric.dwellingSpaceLighting.data.numberOfBulbs,
-		).toBe(9);
+	test("status tag shows complete when bulb is complete", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceLighting: {
+					data: [{ data: state, complete: true }],
+				},
+			},
+		});
+
+		await renderSuspended(Lighting);
+
+		expect(screen.getByTestId("lighting_status_0").textContent).toBe(formStatus.complete.text);
+	});
+
+	test("mark as complete button is disabled when there are incomplete bulbs", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceLighting: {
+					data: [{ data: state, complete: false }],
+				},
+			},
+		});
+
+		await renderSuspended(Lighting);
+
+		expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
+	});
+
+	test("mark as complete button is enabled when all bulbs are complete", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceLighting: {
+					data: [{ data: state, complete: true }],
+				},
+			},
+		});
+
+		await renderSuspended(Lighting);
+
+		expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeFalsy();
+	});
+
+	test("only selected bulb is removed from lighting list", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceLighting: {
+					data: [
+						{ data: state, complete: true },
+						{ data: { ...state, name: "Bulb 2" }, complete: true },
+					],
+				},
+			},
+		});
+
+		await renderSuspended(Lighting);
+		await user.click(screen.getByTestId("lighting_remove_0"));
+
+		expect(screen.queryByText("Bulb 1")).toBeNull();
+		expect(screen.getByText("Bulb 2")).toBeDefined();
+		expect(store.dwellingFabric.dwellingSpaceLighting.data).toHaveLength(1);
 	});
 });

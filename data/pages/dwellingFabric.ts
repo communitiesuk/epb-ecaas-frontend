@@ -23,6 +23,20 @@ const dwellingFabricPages = [
 		parentId: "dwellingFabric",
 	},
 	{
+		id: "dwellingSpaceLightingCreate",
+		title: "Lighting",
+		url: "/dwelling-fabric/lighting/bulb/create",
+		type: "task",
+		parentId: "dwellingSpaceLighting",
+	},
+	{
+		id: "dwellingSpaceLightingEdit",
+		title: "Lighting",
+		url: "/dwelling-fabric/lighting/bulb/:bulb",
+		type: "task",
+		parentId: "dwellingSpaceLighting",
+	},
+	{
 		id: "dwellingSpaceFloors",
 		title: "Floors",
 		url: "/dwelling-fabric/floors",

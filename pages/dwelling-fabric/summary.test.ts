@@ -37,7 +37,8 @@ const zoneParametersData: DwellingSpaceZoneParametersData = {
 	restOfDwellingArea: 60,
 };
 
-const lightingData: DwellingSpaceLightingData = {
+const bulbData: DwellingSpaceLightingData = {
+	name: "Bulb 1",
 	numberOfBulbs: 8,
 	power: 5,
 	efficacy: 120,
@@ -408,7 +409,7 @@ describe("Dwelling space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceLighting: {
-						data: lightingData,
+						data: [{ data: bulbData }],
 					},
 				},
 			});
@@ -416,6 +417,7 @@ describe("Dwelling space fabric summary", () => {
 			await renderSuspended(Summary);
 
 			const expectedResult = {
+				"Name": "Bulb 1",
 				"Number of bulbs": "8",
 				"Power": "5",
 				"Efficacy": "120",
@@ -426,6 +428,31 @@ describe("Dwelling space fabric summary", () => {
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
+		});
+
+		it("should display multiple bulbs in the lighting section", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceLighting: {
+						data: [
+							{ data: bulbData },
+							{ data: { name: "Bulb 2", numberOfBulbs: 3, power: 7, efficacy: 110 } },
+						],
+					},
+				},
+			});
+
+			await renderSuspended(Summary);
+
+			const nameRow = await screen.findByTestId(`summary-dwellingSpaceLighting-name`);
+			const nameDds = nameRow.querySelectorAll("dd");
+			expect(nameDds[0]?.textContent?.trim()).toBe("Bulb 1");
+			expect(nameDds[1]?.textContent?.trim()).toBe("Bulb 2");
+
+			const countRow = await screen.findByTestId(`summary-dwellingSpaceLighting-number-of-bulbs`);
+			const countDds = countRow.querySelectorAll("dd");
+			expect(countDds[0]?.textContent?.trim()).toBe("8");
+			expect(countDds[1]?.textContent?.trim()).toBe("3");
 		});
 	});
 

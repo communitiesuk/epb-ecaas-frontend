@@ -67,14 +67,14 @@ export function mapZoneParametersData(
 }
 
 export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
-	const { dwellingSpaceLighting: { numberOfBulbs, power, efficacy } } = state.dwellingFabric;
+	const { dwellingSpaceLighting } = state.dwellingFabric;
 
 	const lightingData: SchemaLighting = {
-		bulbs: [{
+		bulbs: dwellingSpaceLighting.map(({ numberOfBulbs, power, efficacy }) => ({
 			count: numberOfBulbs,
 			power,
 			efficacy,
-		}],
+		})),
 	};
 
 	return {

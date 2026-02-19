@@ -56,7 +56,7 @@ export function getInitialState(): EcaasState {
 				dwellingSpacePointThermalBridges: { data: [] },
 			},
 			dwellingSpaceZoneParameters: { data: {} },
-			dwellingSpaceLighting: { data: {} },
+			dwellingSpaceLighting: { data: [] },
 		},
 		spaceHeating: {
 			heatSource: { data: [] },

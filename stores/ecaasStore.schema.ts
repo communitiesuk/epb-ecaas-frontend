@@ -124,7 +124,7 @@ export interface DwellingFabric {
 	dwellingSpaceDoors: DoorsData;
 	dwellingSpaceWindows: EcaasFormList<WindowData>;
 	dwellingSpaceThermalBridging: ThermalBridgingData;
-	dwellingSpaceLighting: EcaasForm<DwellingSpaceLightingData>;
+	dwellingSpaceLighting: EcaasFormList<DwellingSpaceLightingData>;
 }
 
 export interface FloorsData {
@@ -585,7 +585,7 @@ const dwellingSpaceZoneParameterDataZod = z.object({
 
 export type DwellingSpaceZoneParametersData = z.infer<typeof dwellingSpaceZoneParameterDataZod>;
 
-const dwellingSpaceLightingDataZod = z.object({
+const dwellingSpaceLightingDataZod = named.extend({
 	numberOfBulbs: z.int().min(0),
 	power: z.int().min(0),
 	efficacy: z.int().min(0),
