@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getUrl, uniqueName } from "#imports";
+import { getUrl, standardPitchOptions, uniqueName } from "#imports";
 
 const title = "External glazed door";
 const store = useEcaasStore();
@@ -102,12 +102,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<template v-if="model && (model.associatedItemId === 'none' || tagOptions.length === 0)">
 			<FieldsPitch
-				id="pitch"
-				name="pitch"
+				:pitch-option="model?.pitchOption"
+				:options='standardPitchOptions()'
 				data-field="Zone.BuildingElement.*.pitch"
+				:suppress-standard-guidance="true"
 			/>
 			<FieldsOrientation
-				v-if="model.pitch != null && model.pitch !== 0 && model.pitch !== 180"
+				v-if="model.pitchOption === '90' || (model.pitch != null && model.pitch !== 0 && model.pitch !== 180)"
 				id="orientation"
 				name="orientation"
 				data-field="Zone.BuildingElement.*.orientation360"
@@ -139,7 +140,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Maximum openable area of door"
-			help="TODO - provide an area of the door for now, though we may be able to calculate this from width and height"
+			help="Enter the total area of the gap created when the door is fully open"
 			name="maximumOpenableArea"
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.max_window_open_area"
@@ -149,7 +150,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="securityRisk"
 			type="govBoolean"
 			label="Is having this door open a security risk?"
-			help="For example, would you be able to leave the door open at night?"
+			help="For example, if you are able to leave the door open at night it would not be a security risk"
 			validation="required"
 			data-field="Zone.BuildingElement.*.security_risk"
 		/>

@@ -80,7 +80,7 @@ describe("external glazed door", () => {
 				},
 			});
 				
-			expect(screen.getByTestId("pitch")).toBeDefined();
+			expect(screen.getByTestId("pitchOption")).toBeDefined();
 		});
 				
 		it("shows orientation when pitch is not 0 or 180", async () => {
@@ -90,7 +90,7 @@ describe("external glazed door", () => {
 				},
 			});
 			expect(screen.queryByTestId("orientation")).toBeNull();
-			await user.type(screen.getByTestId("pitch"), "90");
+			await user.click(screen.getByTestId("pitchOption_90"));
 			await user.tab();
 			expect(screen.getByTestId("orientation")).toBeDefined();
 		});
@@ -105,20 +105,20 @@ describe("external glazed door", () => {
 				
 			await user.click(screen.getByTestId("saveAndComplete"));
 				
-			expect(await screen.findByTestId("pitch_error")).toBeDefined();
+			expect(await screen.findByTestId("pitchOption_error")).toBeDefined();
 				
 			expect(screen.queryByTestId("orientation_error")).toBeNull();
 				
 				
 			await user.type(screen.getByTestId("name"), "Window 1");
-			await user.type(screen.getByTestId("pitch"), "90");
+			await user.click(screen.getByTestId("pitchOption_90"));
 			await user.tab();
 				
 			await user.click(screen.getByTestId("saveAndComplete"));
 				
 			expect(await screen.findByTestId("orientation_error")).toBeDefined();
 				
-			await user.clear(screen.getByTestId("pitch"));
+			await user.click(screen.getByTestId("pitchOption_custom"));
 			await user.type(screen.getByTestId("pitch"), "0");
 			await user.tab();
 				
@@ -195,7 +195,7 @@ describe("external glazed door", () => {
 				
 				await user.click(screen.getByTestId("associatedItemId_none"));
 				
-				expect(screen.getByTestId("pitch")).toBeDefined();
+				expect(screen.getByTestId("pitchOption")).toBeDefined();
 			});
 				
 			it("shows orientation when pitch is not 0 or 180", async () => {
@@ -208,7 +208,7 @@ describe("external glazed door", () => {
 				await user.click(screen.getByTestId("associatedItemId_none"));
 				
 				expect(screen.queryByTestId("orientation")).toBeNull();
-				await user.type(screen.getByTestId("pitch"), "90");
+				await user.click(screen.getByTestId("pitchOption_90"));
 				await user.tab();
 				expect(screen.getByTestId("orientation")).toBeDefined();
 			});
@@ -224,20 +224,21 @@ describe("external glazed door", () => {
 				
 				await user.click(screen.getByTestId("saveAndComplete"));
 				
-				expect(await screen.findByTestId("pitch_error")).toBeDefined();
+				expect(await screen.findByTestId("pitchOption_error")).toBeDefined();
 				
 				expect(screen.queryByTestId("orientation_error")).toBeNull();
 				
 				
 				await user.type(screen.getByTestId("name"), "Window 1");
-				await user.type(screen.getByTestId("pitch"), "90");
+
+				await user.click(screen.getByTestId("pitchOption_90"));
 				await user.tab();
 				
 				await user.click(screen.getByTestId("saveAndComplete"));
 				
 				expect(await screen.findByTestId("orientation_error")).toBeDefined();
 				
-				await user.clear(screen.getByTestId("pitch"));
+				await user.click(screen.getByTestId("pitchOption_custom"));
 				await user.type(screen.getByTestId("pitch"), "0");
 				await user.tab();
 				
@@ -324,6 +325,7 @@ describe("external glazed door", () => {
 		test("form is prepopulated with none of the above associated wall, as well as pitch and orientation when there is no tagged item", async () => {
 			const doorNoTag = {
 				name: "External glazed door 1",
+				pitchOption: "custom",
 				pitch: 72,
 				orientation: 24,
 				height: 14,
