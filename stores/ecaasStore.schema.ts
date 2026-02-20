@@ -1418,15 +1418,36 @@ const pvArrayDataZod = z.object({
 	inverterType: inverterTypeZod,
 	canExportToGrid: z.boolean(),
 	electricityPriority: z.enum(["diverter", "electricBattery"]),
-	aboveDepth: z.optional(z.number()),
-	aboveDistance: z.optional(z.number()),
-	leftDepth: z.optional(z.number()),
-	leftDistance: z.optional(z.number()),
-	rightDepth: z.optional(z.number()),
-	rightDistance: z.optional(z.number()),
+	hasShading: z.boolean(),
 });
+const obsticalShadingDataZod = named.extend({
+	typeOfShading: z.literal("obstical"),
+	height: z.number(),
+	distance: z.number(),
+	transparancey: z.number(),
+});
+const otherShadingDataZod = named.extend({
+	typeOfShading: z.enum(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"]),
+	distance: z.number(),
+	depth: z.number(),
+});
+const pvArrayShadingDataZod = z.discriminatedUnion("hasShading", [
+	pvArrayDataZod.extend({
+		hasShading: z.literal(false),
+	}),
+	pvArrayDataZod.extend({
+		hasShading: z.literal(true),
+		shading: z.array(z.discriminatedUnion("typeOfShading", [
+			obsticalShadingDataZod,
+			otherShadingDataZod,
+		])),
+	}),
+]);
 
-export type PvArrayData = z.infer<typeof pvArrayDataZod>;
+
+export type PvArrayData = z.infer<typeof pvArrayShadingDataZod>;
+
+export type PvShadingData = z.infer<typeof obsticalShadingDataZod | typeof otherShadingDataZod>;
 
 const electricBatteryDataZod = z.object({
 	name: z.string().trim().min(1),
@@ -1564,7 +1585,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"spaceHeating/heatEmitters": heatEmittingDataZod,
 	"spaceHeating/heatingControls": heatingControlsDataZod,
 	"cooling/airConditioning": airConditioningDataZod,
-	"pvAndBatteries/pvArrays": pvArrayDataZod,
+	"pvAndBatteries/pvArrays": pvArrayShadingDataZod,
 	"pvAndBatteries/electricBattery": electricBatteryDataZod,
 	"pvAndBatteries/diverters": pvDiverterDataZod,
 };

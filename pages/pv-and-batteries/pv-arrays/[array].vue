@@ -11,7 +11,6 @@ const index = getStoreIndex(pvArraysStoreData);
 const PvArrayData = useItemToEdit("array", pvArraysStoreData);
 const model = ref(PvArrayData?.data);
 
-const shadingSectionDisabled = true;
 
 const ventilationStrategyOptions: Record<OnSiteGenerationVentilationStrategy, string> = {
 	unventilated: "Unventilated",
@@ -35,34 +34,17 @@ const electricityPriorityOptions: Record<string, string> = {
 	electricBattery: "Electric battery",
 };
 
+const shading = model?.value && "shading" in model.value ? model.value.shading : [];
 
 const saveForm = (fields: PvArrayData) => {
 	store.$patch((state) => {
 		const { pvArrays } = state.pvAndBatteries;
+		const existingShading = (pvArrays.data[index]?.data as Record<string, unknown>)?.shading;
 
 		pvArrays.data[index] = {
-			data: {
-				name: fields.name,
-				peakPower: fields.peakPower,
-				ventilationStrategy: fields.ventilationStrategy,
-				pitch: fields.pitch,
-				orientation: fields.orientation,
-				elevationalHeight: fields.elevationalHeight,
-				lengthOfPV: fields.lengthOfPV,
-				widthOfPV: fields.widthOfPV,
-				inverterPeakPowerAC: fields.inverterPeakPowerAC,
-				inverterPeakPowerDC: fields.inverterPeakPowerDC,
-				locationOfInverter: fields.locationOfInverter,
-				canExportToGrid: fields.canExportToGrid,
-				electricityPriority: fields.electricityPriority,
-				inverterType: fields.inverterType,
-				aboveDepth: fields.aboveDepth,
-				aboveDistance: fields.aboveDistance,
-				leftDepth: fields.leftDepth,
-				leftDistance: fields.leftDistance,
-				rightDepth: fields.rightDepth,
-				rightDistance: fields.rightDistance,
-			},
+			data: fields.hasShading
+				? { ...fields, hasShading: true, shading: existingShading ?? [] } as PvArrayData
+				: { ...fields, hasShading: false } as PvArrayData,
 			complete: true,
 		};
 		pvArrays.complete = false;
@@ -76,7 +58,11 @@ autoSaveElementForm<PvArrayData>({
 	storeData: store.pvAndBatteries.pvArrays,
 	defaultName: "PV array",
 	onPatch: (state, newData, index) => {
+		const existingShading = (state.pvAndBatteries.pvArrays.data[index]?.data as Record<string, unknown> | undefined)?.shading;
 		state.pvAndBatteries.pvArrays.data[index] = newData;
+		if (existingShading !== undefined) {
+			(state.pvAndBatteries.pvArrays.data[index].data as Record<string, unknown>).shading = existingShading;
+		}
 		state.pvAndBatteries.pvArrays.complete = false;
 	},
 });
@@ -330,84 +316,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="electricityPriority"
 			validation="required"
 		/>
-		<template v-if="!shadingSectionDisabled">
-			<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-			<h2 class="govuk-heading-l">PV shading</h2>
-			<table class="govuk-table">
-				<thead class="govuk-table__head">
-					<tr class="govuk-table__row">
-						<td colspan="3" class="govuk-!-text-align-left">This refers to objects on the roof which might cause shading to the PV.</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<td colspan="3" class="govuk-!-text-align-left govuk-!-font-weight-bold govuk-!-padding-bottom-5" >This is not distant shading objects such as trees or buildings</td>
-					</tr>		
-					<tr class="govuk-table__row">
-						<th scope="col" class="govuk-!-text-align-left">Shading direction</th>
-						<th scope="col" class="govuk-!-text-align-left">Depth</th>
-						<th scope="col" class="govuk-!-text-align-left">Distance</th>
-					</tr>
-				</thead>
-				<tbody class="govuk-table__body">
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-!-text-align-left">Above</th>
-						<td>
-							<FormKit
-								id="aboveDepth"
-								type="govInputWithSuffix"
-								suffix-text="m"
-								name="aboveDepth"
-								validation="number0" />
-						</td>
-						<td>
-							<FormKit
-								id="aboveDistance"
-								type="govInputWithSuffix"
-								suffix-text="m"
-								name="aboveDistance"
-								validation="number0" />
-						</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-!-text-align-left">Left</th>
-						<td>
-							<FormKit
-								id="leftDepth"
-								type="govInputWithSuffix"
-								suffix-text="m"
-								name="leftDepth"
-								validation="number0" />
-						</td>
-						<td>
-							<FormKit
-								id="leftDistance"
-								type="govInputWithSuffix"
-								suffix-text="m"
-								name="leftDistance"
-								validation="number0" />
-						</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-!-text-align-left">Right</th>
-						<td>
-							<FormKit
-								id="rightDepth"
-								type="govInputWithSuffix"
-								suffix-text="m"
-								name="rightDepth"
-								validation="number0" />
-						</td>
-						<td>
-							<FormKit
-								id="rightDistance"
-								type="govInputWithSuffix"
-								suffix-text="m"
-								name="rightDistance"
-								validation="number0" />
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</template>
+		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+		<FormKit
+			id="hasShading"
+			type="govBoolean"
+			label="Does the PV array have shading on it for part of the day?"
+			name="hasShading"
+			validation="required"
+		/>
+		<PvShadingSection
+			v-if="model?.hasShading"
+			:index="index"
+			:model="shading"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

@@ -32,6 +32,7 @@ describe("PV and electric batteries mapper", () => {
 				canExportToGrid: false,
 				electricityPriority: "diverter",
 				inverterType: "string_inverter",
+				hasShading: false,
 			},
 			complete: true,
 		};
@@ -52,6 +53,7 @@ describe("PV and electric batteries mapper", () => {
 				canExportToGrid: true,
 				electricityPriority: "electricBattery",
 				inverterType: "optimised_inverter",
+				hasShading: false,
 			},
 			complete: true,
 		};

@@ -29,6 +29,7 @@ describe("PV and electric batteries summary page", () => {
 				canExportToGrid: false,
 				electricityPriority: "diverter",
 				inverterType: "optimised_inverter",
+				hasShading: false,
 			},
 		};
 		it("displays the pv arrays tab", async () => {

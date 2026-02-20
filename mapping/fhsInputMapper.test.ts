@@ -2106,7 +2106,7 @@ describe("FHS input mapper", () => {
 						inverterType: "optimised_inverter",
 						canExportToGrid: true,
 						electricityPriority: "diverter",
-
+						hasShading: false,
 					},
 				}],
 			},

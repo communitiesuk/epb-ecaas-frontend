@@ -42,12 +42,8 @@ describe("pv systems and electric battery", () => {
 			canExportToGrid: false,
 			electricityPriority: "diverter",
 			inverterType: "string_inverter",
-			// aboveDepth: 20,
-			// aboveDistance: 4,
-			// leftDepth: 10,
-			// leftDistance: 7,
-			// rightDepth: 2,
-			// rightDistance: 10
+			hasShading: false,
+
 		},
 	};
 
