@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getUrl, uniqueName } from "#imports";
+import { getUrl, standardPitchOptions, uniqueName } from "#imports";
 
 const title = "External unglazed door";
 const store = useEcaasStore();
@@ -100,12 +100,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<template v-if="model && (model.associatedItemId === 'none' || tagOptions.length === 0)">
 			<FieldsPitch
-				id="pitch"
-				name="pitch"
+				:pitch-option="model?.pitchOption"
+				:options='standardPitchOptions()'
 				data-field="Zone.BuildingElement.*.pitch"
+				:suppress-standard-guidance="true"
 			/>
 			<FieldsOrientation
-				v-if="model.pitch != null && model.pitch !== 0 && model.pitch !== 180"
+				v-if="(model.pitchOption === '90' || model.pitch != null && model.pitch !== 0 && model.pitch !== 180)"
 				id="orientation"
 				name="orientation"
 				data-field="Zone.BuildingElement.*.orientation360"
