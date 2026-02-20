@@ -84,6 +84,7 @@ watch(() => searchModel, (currentSearch: ProductSearchModel, _previousSearch: Pr
 			method="get"
 			:actions="false"
 			:incomplete-message="false"
+			data-testid="productSearch"
 			@submit="handleSubmit">
 			<FormKit name="sort" type="hidden" />
 			<FormKit name="order" type="hidden" />

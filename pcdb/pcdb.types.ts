@@ -262,6 +262,25 @@ const instantElectricHeaterZod = BaseProduct.extend({
 
 export type InstantElectricHeaterProduct = z.infer<typeof instantElectricHeaterZod>;
 
+const heatNetworkZod = BaseProduct.extend({
+	technologyType: z.literal("HeatNetworks"),
+	percentageOfHeat1: z.nullable(z.number()),
+	percentageOfHeat2: z.nullable(z.number()),
+	percentageOfHeat3: z.nullable(z.number()),
+	year: z.nullable(z.number()),
+	communityHeatNetworkVersionNumber: z.nullable(z.number()),
+	heatSource2: z.nullable(z.string()),
+	numberOfSubheatNetworks: z.nullable(z.number()),
+	fifthGearHeatNetwork: z.nullable(z.number()),
+	heatSource1: z.nullable(z.string()),
+	validityEndDate: z.nullable(z.string()),
+	communityHeatNetworkName: z.nullable(z.string()),
+	postcodeOfThePrimaryEnergyCentre: z.nullable(z.string()),
+	descriptionOfNetwork: z.nullable(z.string()),
+});
+
+export type HeatNetworkProduct = z.infer<typeof heatNetworkZod>;
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
 	groundSourceHeatPumpZod,
@@ -283,6 +302,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	centralisedContinuousMevZod,
 	decentralisedContinuousMevZod,
 	instantElectricHeaterZod,
+	heatNetworkZod,
 ]);
 
 export type Product = z.infer<typeof productSchema>;
@@ -310,6 +330,7 @@ const categoryTechnologies = {
 		"HeatBatteryPCM",
 		"HeatBatteryDryCore",
 	],
+	heatNetworks: ["HeatNetworks"],
 	heatInterfaceUnit: ["HeatInterfaceUnit"],
 	waterStorage: ["SmartHotWaterTank"],
 	heatEmitting: [
@@ -325,6 +346,7 @@ export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMa
 export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier"> & {
 	technologyType: TechnologyType;
 	boilerLocation?: string;
+	communityHeatNetworkName?: string;
 };
 
 export type DisplayProductWithFlowTemp = DisplayProduct & {

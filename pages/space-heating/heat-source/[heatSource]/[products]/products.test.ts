@@ -216,4 +216,34 @@ describe("Heat source products page", () => {
 			"/space-heating/heat-source/1",
 		);
 	});
+
+	test("standard PCDB search and product table is displayed when selecting a product other than heat networks", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "air-source",
+			},
+			path: "/0/air-source",
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.getByTestId("productSearch")).toBeDefined();
+		expect(screen.getByTestId("productsTable")).toBeDefined();
+	});
+
+	test("heat network PCDB search and product table is displayed when selecting a heat network product", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-network",
+			},
+			path: "/0/heat-network",
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.getByTestId("heatNetworkProductSearch")).toBeDefined();
+		expect(screen.getByTestId("heatNetworkProductsTable")).toBeDefined();
+	});
 });

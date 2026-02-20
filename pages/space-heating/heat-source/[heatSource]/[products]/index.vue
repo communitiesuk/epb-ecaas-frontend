@@ -6,7 +6,9 @@ import { productTypeMap, type PcdbProduct } from "~/stores/ecaasStore.schema";
 definePageMeta({ layout: false });
 
 const store = useEcaasStore();
-const { pageId, title, index, searchModel, searchData } = useProductsPage("heatSource");
+const route = useRoute();
+const pageId = kebabToCamelCase(route.params.products as string);
+
 const heatSourceProductType = pageId as HeatSourceProductType;
 
 const { data: { value } } = await useFetch("/api/products", {
@@ -14,6 +16,9 @@ const { data: { value } } = await useFetch("/api/products", {
 		technologyType: productTypeMap[heatSourceProductType],
 	},
 });
+
+const { title, index, searchModel, searchData } = heatSourceProductType === "heatNetwork" ?
+	useHeatNetworkProductsPage("heatSource") : useProductsPage("heatSource");
 
 const { productData, pagination } = searchData(value?.data ?? []);
 
@@ -59,11 +64,23 @@ const selectProduct = (product: DisplayProduct) => {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<ProductSearch v-if="!!productData" :products="productData" :model="searchModel" />
-	<GovProductsTable
-		:products="pagination.getData()"
-		:total-pages="pagination.totalPages"
-		:on-select-product="selectProduct" />
+	<template v-if="heatSourceProductType === 'heatNetwork'">
+		<HeatNetworkProductSearch v-if="!!productData" :products="productData" :model="(searchModel as HeatNetworkProductSearchModel)" />
+		<HeatNetworkProductsTable
+			v-if="heatSourceProductType === 'heatNetwork'"
+			:products="pagination.getData()"
+			:total-pages="pagination.totalPages"
+			:on-select-product="selectProduct"
+		/>
+	</template>
+	<template v-else>
+		<ProductSearch v-if="!!productData" :products="productData" :model="(searchModel as ProductSearchModel)" />
+		<GovProductsTable
+			:products="pagination.getData()"
+			:total-pages="pagination.totalPages"
+			:on-select-product="selectProduct"
+		/>
+	</template>
 	<GovButton secondary :href="`/space-heating/heat-source/${index}`" test-id="backToHeatSourceButton">
 		Back to heat source
 	</GovButton>

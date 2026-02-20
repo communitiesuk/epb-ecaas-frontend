@@ -86,6 +86,7 @@ const selectProduct = () => {
 	<ProductDetailsHeatBatteryPCM v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryPcm" :product="data!" />
 	<ProductDetailsHeatBatteryDryCore v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryDryCore" :product="data!" />
 	<ProductDetailsHeatInterfaceUnit v-if="!!data && heatSourceType === typeOfHeatSource.heatInterfaceUnit" :product="data!" />
+	<ProductDetailsHeatNetworks v-if="!!data && heatSourceType === typeOfHeatSource.heatNetwork" :product="data!" />
 
 	<div class="govuk-button-group">
 		<GovButton

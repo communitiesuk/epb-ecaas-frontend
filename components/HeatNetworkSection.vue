@@ -50,8 +50,8 @@ const emit = defineEmits(["update-heat-network-model"]);
 			name="productReference"
 			validation="required"
 			help="Select the heat network type from the PCDB using the button below."
-			:selected-product-reference="model.typeOfHeatNetwork"
-			:selected-product-type="model.typeOfHeatNetwork"
+			:selected-product-reference="model.productReference"
+			:selected-product-type="typeOfHeatSource.heatNetwork"
 			:page-url="route.fullPath"
 			:page-index="index" />
 		<FieldsEnergySupplies

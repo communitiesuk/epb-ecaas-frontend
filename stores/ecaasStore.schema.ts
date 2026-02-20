@@ -940,7 +940,7 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 const _typeOfHeatSource = z.enum({
 	...typeOfHeatPump.enum,
 	...typeOfBoiler.enum,
-	...typeOfHeatNetwork.enum,
+	...z.enum(["heatNetwork"]).enum,
 	...typeOfHeatBattery.enum,
 	...z.enum(["heatInterfaceUnit"]).enum,
 });
@@ -971,9 +971,7 @@ export const productTypeMap = {
 	"exhaustAirMixed": "ExhaustAirMixedHeatPump",
 	"combiBoiler": "CombiBoiler",
 	"regularBoiler": "RegularBoiler",
-	"sleevedDistrictHeatNetwork": "HeatNetworks",
-	"unsleevedDistrictHeatNetwork": "HeatNetworks",
-	"communalHeatNetwork": "HeatNetworks",
+	"heatNetwork": "HeatNetworks",
 	"heatBatteryPcm": "HeatBatteryPCM",
 	"heatBatteryDryCore": "HeatBatteryDryCore",
 	"fanCoil": "FanCoils",

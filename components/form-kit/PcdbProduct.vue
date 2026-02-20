@@ -68,12 +68,20 @@ watch(props.context, async ({ attrs: {
 				Choose a product
 			</GovButton>
 			<div v-if="productData">
-				<ul class="govuk-list">
-					<li>Product reference: <span data-testid="productData_productReference" class="bold">{{ selectedProduct }}</span></li>
-					<li>Brand: <span class="bold">{{ productData?.brandName }}</span></li>
-					<li>Model: <span class="bold">{{ productData?.modelName }}</span></li>
-					<li>Model Qualifier: <span class="bold">{{ productData?.modelQualifier ?? '-' }}</span></li>
-				</ul>
+				<template v-if="!!productData.communityHeatNetworkName">
+					<ul class="govuk-list" data-testId="pcdbHeatNetworkProductData">
+						<li>Product reference: <span data-testid="productData_productReference" class="bold">{{ selectedProduct }}</span></li>
+						<li>Heat network name: <span class="bold">{{ productData.communityHeatNetworkName }}</span></li>
+					</ul>
+				</template>
+				<template v-else>
+					<ul class="govuk-list" data-testId="pcdbProductData">
+						<li>Product reference: <span data-testid="productData_productReference" class="bold">{{ selectedProduct }}</span></li>
+						<li>Brand: <span class="bold">{{ productData.brandName }}</span></li>
+						<li>Model: <span class="bold">{{ productData.modelName }}</span></li>
+						<li>Model Qualifier: <span class="bold">{{ productData.modelQualifier ?? '-' }}</span></li>
+					</ul>
+				</template>
 				<GovButton secondary data-testId="selectAProductButton" :href="productsPageUrl" class="govuk-button__margin-bottom">
 					Select a different product
 				</GovButton>

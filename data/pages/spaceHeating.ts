@@ -114,6 +114,13 @@ export const spaceHeatingPages = [
 		parentId: "heatSource",
 	},
 	{
+		id: "heatNetworkProducts",
+		title: "Select a heat network",
+		url: "/space-heating/heat-source/:heatSource/heat-network",
+		type: "task",
+		parentId: "heatSource",
+	},
+	{
 		id: "heatEmitters",
 		title: "Heat emitter",
 		url: "/space-heating/heat-emitters/:heatEmitter",

@@ -45,35 +45,39 @@ export function useProductSearch(products: DisplayProduct[], model: ProductSearc
 	}
 
 	if (model.sort && productSortOption.includes(model.sort)) {
-		searchResults = searchResults.sort((productA: DisplayProduct, productB: DisplayProduct) => {
-			const aValue = productA[model.sort!];
-			const bValue = productB[model.sort!];
-			
-			if (aValue && bValue) {
-				const [a, b] = [aValue, bValue].map(v => typeof v === "string" ? v.toLowerCase() : v);
+		searchResults = sortProducts(searchResults, model.sort, order);
+	}
 
-				if (a! < b!) {
-					return order === "asc" ? -1 : 1;
-				}
+	return searchResults;
+}
 
-				if (a! > b!) {
-					return order === "asc" ? 1 : -1;
-				}
+export function sortProducts(searchResults: DisplayProduct[], sort: keyof Partial<DisplayProduct>, order: ProductOrderOption) {
+	return searchResults.sort((productA: DisplayProduct, productB: DisplayProduct) => {
+		const aValue = productA[sort];
+		const bValue = productB[sort];
+		
+		if (aValue && bValue) {
+			const [a, b] = [aValue, bValue].map(v => typeof v === "string" ? v.toLowerCase() : v);
 
-				return 0;
-			}
-
-			if (aValue) {
+			if (a! < b!) {
 				return order === "asc" ? -1 : 1;
 			}
 
-			if (bValue) {
+			if (a! > b!) {
 				return order === "asc" ? 1 : -1;
 			}
 
 			return 0;
-		});
-	}
+		}
 
-	return searchResults;
+		if (aValue) {
+			return order === "asc" ? -1 : 1;
+		}
+
+		if (bValue) {
+			return order === "asc" ? 1 : -1;
+		}
+
+		return 0;
+	});
 }

@@ -35,21 +35,6 @@ describe("Heat pump details", async () => {
 		technologyType: "AirSourceHeatPump",
 	};
 
-	const heatInterfaceUnitProduct: Partial<Product> = {
-		id: "1000",
-		brandName: "HEM Default",
-		modelName: "Heat Interface Unit",
-		technologyType: "HeatInterfaceUnit",
-	};
-
-	const combiBoilerProduct: Partial<Product> = {
-		id: "1000",
-		brandName: "HEM Default",
-		modelName: "Combi Boiler",
-		technologyType: "CombiBoiler",
-		boilerLocation: "internal",
-	};
-
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
@@ -155,7 +140,11 @@ describe("Heat pump details", async () => {
 		});
 
 		mockFetch.mockReturnValue({
-			data: ref(heatInterfaceUnitProduct),
+			data: ref({
+				...product,
+				modelName: "Heat interface unit",
+				technologyType: "HeatInterfaceUnit",
+			}),
 		});
 
 		// Act
@@ -165,7 +154,7 @@ describe("Heat pump details", async () => {
 		const heatSource = store.spaceHeating.heatSource.data[1]?.data as HeatSourceData;
 
 		// Assert
-		expect(heatSource).toEqual(expect.objectContaining({ heatInterfaceUnitProductReference: heatInterfaceUnitProduct.id }));
+		expect(heatSource).toEqual(expect.objectContaining({ heatInterfaceUnitProductReference: product.id }));
 	});
 
 	test("Boiler location is stored as 'heatedSpace' when boiler location is 'internal'", async () => {
@@ -180,7 +169,12 @@ describe("Heat pump details", async () => {
 		});
 
 		mockFetch.mockReturnValue({
-			data: ref(combiBoilerProduct),
+			data: ref({
+				...product,
+				modelName: "Combi boiler",
+				technologyType: "CombiBoiler",
+				boilerLocation: "internal",
+			}),
 		});
 
 		// Act
@@ -286,5 +280,31 @@ describe("Heat pump details", async () => {
 		
 		// Assert
 		expect((await screen.findByTestId("heatBatteryDryCore"))).toBeDefined();
+	});
+
+	test("Displays heat network details when product is a heat network", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "1",
+				products: "heat-network",
+				id: "1000",
+			},
+			path: "/1/heat-network/1000",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				...product,
+				modelName: "Heat network",
+				technologyType: "HeatNetworks",
+			}),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		
+		// Assert
+		expect((await screen.findByTestId("heatNetwork"))).toBeDefined();
 	});
 });
