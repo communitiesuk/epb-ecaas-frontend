@@ -22,7 +22,7 @@ const technologyType = productTypeMap[waterStorageType as WaterStorageProductTyp
 const pageId = `${waterStorageType}Products` as PageId;
 const productType = waterStorageProductTypeDisplay[waterStorageType as WaterStorageProductType];
 
-const index = Number(params.heatSource);
+const index = Number(params.waterstorage);
 
 const { data: { value: data } } = await useFetch(`/api/products/${params.id}/details`, {
 	query: {
@@ -31,7 +31,7 @@ const { data: { value: data } } = await useFetch(`/api/products/${params.id}/det
 });
 
 const backUrl = getUrl(pageId)
-	.replace(":heatSource", params.heatSource as string);
+	.replace(":waterstorage", params.waterstorage as string);
 
 const selectProduct = () => {
 	store.$patch((state) => {
@@ -43,7 +43,7 @@ const selectProduct = () => {
 		}
 	});
 
-	navigateTo(getUrl("heatSource").replace(":heatSource", `${index}`));
+	navigateTo(getUrl("waterStorage").replace(":waterstorage", `${index}`));
 };
 </script>
 
@@ -71,7 +71,7 @@ const selectProduct = () => {
 		<GovButton
 			secondary
 			:href="backUrl"
-			test-id="backToHeatPumpButton"
+			test-id="backToWaterStorageButton"
 			@click="router.back()"
 		>
 			Back to {{ productType && sentenceToLowerCase(productType(true)) }}

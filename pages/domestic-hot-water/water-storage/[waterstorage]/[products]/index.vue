@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { productTypeMap, type WaterStorageProductType } from "#imports";
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
 
 definePageMeta({ layout: "one-column" });
 
@@ -14,9 +15,9 @@ const { data: { value } } = await useFetch("/api/products", {
 
 const { productData, pagination } = searchData(value?.data ?? []);
 
-const selectProduct = (reference: string) => {
+const selectProduct = (product: DisplayProduct) => {
 	store.$patch((state) => {
-		(state.domesticHotWater.waterStorage.data[index]!.data as SmartHotWaterTankData).productReference = reference;
+		(state.domesticHotWater.waterStorage.data[index]!.data as SmartHotWaterTankData).productReference = product.id;
 	});
 
 	navigateTo(getUrl("waterStorage").replace(":waterstorage", `${index}`));
@@ -32,7 +33,7 @@ const selectProduct = (reference: string) => {
 	<GovProductsTable
 		:products="pagination.getData() ?? ['none']"
 		:total-pages="pagination.totalPages"
-		:on-select-product="p => selectProduct(p.id)"
+		:on-select-product="selectProduct"
 	/>
 	<GovButton
 		secondary

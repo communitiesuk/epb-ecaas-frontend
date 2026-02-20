@@ -103,11 +103,15 @@ watch(
 			errorMessages.value = [];
 			const preservedId = model.value?.id;
 			const defaultName = waterStorageTypes[newType];
-			model.value = { 
+			const newValue = { 
 				typeOfWaterStorage: newType, 
 				id: preservedId,
 				...(defaultName && { name: defaultName }),
 			} as WaterStorageData;
+			if (heatSourceOptions.size === 1) {
+				newValue.dhwHeatSourceId = heatSourceOptions.keys().next().value!;
+			}
+			model.value = newValue;
 		}
 	},
 );

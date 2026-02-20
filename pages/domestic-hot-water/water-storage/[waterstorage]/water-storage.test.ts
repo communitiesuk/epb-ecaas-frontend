@@ -217,6 +217,20 @@ describe("water storage", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value)
 				.toBe("Hot water cylinder");
 		});
+
+		test("if only one dhw heat source present, it is autoselected", async () => {
+			addHeatPumpStoreData();
+
+			await renderSuspended(WaterStorage, {
+				route: {
+					params: { "waterStorage": "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
+
+			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
+		});
 	});
 
 	describe("Smart Hot Water Tank", () => {
@@ -328,6 +342,20 @@ describe("water storage", () => {
 			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
 
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Smart hot water tank");
+		});
+
+		test("if only one dhw heat source present, it is autoselected", async () => {
+			addHeatPumpStoreData();
+
+			await renderSuspended(WaterStorage, {
+				route: {
+					params: { "waterStorage": "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
+
+			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
 		});
 	});
 });

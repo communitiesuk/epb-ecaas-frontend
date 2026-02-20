@@ -74,7 +74,7 @@ watch(props.context, async ({ attrs: {
 					<li>Model: <span class="bold">{{ productData?.modelName }}</span></li>
 					<li>Model Qualifier: <span class="bold">{{ productData?.modelQualifier ?? '-' }}</span></li>
 				</ul>
-				<GovButton secondary data-testId="selectAProductButton" :href="productsPageUrl">
+				<GovButton secondary data-testId="selectAProductButton" :href="productsPageUrl" class="govuk-button__margin-bottom">
 					Select a different product
 				</GovButton>
 			</div>
