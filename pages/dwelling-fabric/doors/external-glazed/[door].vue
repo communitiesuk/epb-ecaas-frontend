@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getUrl, standardPitchOptions, uniqueName } from "#imports";
+import { getUrl, standardPitchOptions, uniqueName, type ExternalGlazedDoorData } from "#imports";
 
 const title = "External glazed door";
 const store = useEcaasStore();
@@ -16,23 +16,80 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 
 		const shouldSavePitchOrientation = tagOptions.length === 0 || fields.associatedItemId === "none";
 
+		const commonFields = { 
+			name: fields.name,
+			associatedItemId: shouldSavePitchOrientation ? undefined : fields.associatedItemId,
+			pitch: shouldSavePitchOrientation ? fields.pitch : undefined,
+			orientation: shouldSavePitchOrientation ? fields.orientation : undefined,
+			height: fields.height,
+			width: fields.width,
+			securityRisk: fields.securityRisk,
+			solarTransmittance: fields.solarTransmittance,
+			elevationalHeight: fields.elevationalHeight,
+			midHeight: fields.midHeight,
+			openingToFrameRatio: fields.openingToFrameRatio,
+			maximumOpenableArea: fields.maximumOpenableArea,
+			heightOpenableArea: fields.height,
+			thermalResistance: fields.thermalResistance, 
+		};
+
+		const numberParts = fields.numberOpenableParts;
+
+		let openablePartsFields;
+
+		switch (numberParts) {
+			case "0":
+				openablePartsFields = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+				} as Extract<ExternalGlazedDoorData, { numberOpenableParts: "0" }>;
+				break;
+			case "1":
+				openablePartsFields = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+					midHeightOpenablePart1: fields.midHeightOpenablePart1,
+				} as Extract<ExternalGlazedDoorData, { numberOpenableParts: "1" }>;
+				break;
+			case "2":
+				openablePartsFields = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+					midHeightOpenablePart1: fields.midHeightOpenablePart1,
+					midHeightOpenablePart2: fields.midHeightOpenablePart2,
+				} as Extract<ExternalGlazedDoorData, { numberOpenableParts: "2" }>;
+				break;
+			case "3":
+				openablePartsFields = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+					midHeightOpenablePart1: fields.midHeightOpenablePart1,
+					midHeightOpenablePart2: fields.midHeightOpenablePart2,
+					midHeightOpenablePart3: fields.midHeightOpenablePart3,
+				} as Extract<ExternalGlazedDoorData, { numberOpenableParts: "3" }>;
+				break;
+			case "4":
+				openablePartsFields = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+					midHeightOpenablePart1: fields.midHeightOpenablePart1,
+					midHeightOpenablePart2: fields.midHeightOpenablePart2,
+					midHeightOpenablePart3: fields.midHeightOpenablePart3,
+					midHeightOpenablePart4: fields.midHeightOpenablePart4,
+				} as Extract<ExternalGlazedDoorData, { numberOpenableParts: "4" }>;
+				break;
+			default:
+				openablePartsFields = {
+					...commonFields,
+					numberOpenableParts: "0",
+				} as Extract<ExternalGlazedDoorData, { numberOpenableParts: "0" }>;
+				break;
+		}
+
 		dwellingSpaceExternalGlazedDoor.data[index] = {
 			data: {
-				name: fields.name,
-				associatedItemId: shouldSavePitchOrientation ? undefined : fields.associatedItemId,
-				pitch: shouldSavePitchOrientation ? fields.pitch : undefined,
-				orientation: shouldSavePitchOrientation ? fields.orientation : undefined,
-				height: fields.height,
-				width: fields.width,
-				securityRisk: fields.securityRisk,
-				solarTransmittance: fields.solarTransmittance,
-				elevationalHeight: fields.elevationalHeight,
-				midHeight: fields.midHeight,
-				openingToFrameRatio: fields.openingToFrameRatio,
-				maximumOpenableArea: fields.maximumOpenableArea,
-				heightOpenableArea: fields.height,
-				midHeightOpenablePart1: fields.midHeight,
-				thermalResistance: fields.thermalResistance,
+				...commonFields,
+				...openablePartsFields,
 			},
 			complete: true,
 		};
@@ -136,25 +193,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FieldsElevationalHeight />
 		<FormKit
-			id="maximumOpenableArea"
-			type="govInputWithSuffix"
-			suffix-text="m²"
-			label="Maximum openable area of door"
-			help="Enter the total area of the gap created when the door is fully open"
-			name="maximumOpenableArea"
-			validation="required | number | min:0.01 | max:10000"
-			data-field="Zone.BuildingElement.*.max_window_open_area"
-		/>
-		<FormKit
-			id="securityRisk"
-			name="securityRisk"
-			type="govBoolean"
-			label="Is having this door open a security risk?"
-			help="For example, if you are able to leave the door open at night it would not be a security risk"
-			validation="required"
-			data-field="Zone.BuildingElement.*.security_risk"
-		/>
-		<FormKit
 			id="thermalResistance"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
@@ -167,25 +205,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</p>
 		</GovDetails>
 		</FormKit>
-		<FormKit
-			id="solarTransmittance"
-			type="govInputFloat"
-			label="Transmittance of solar energy "
-			help="Enter the total solar energy transmittance or G value, or the transparent part of the window. It should be a decimal between 0 and 1."
-			name="solarTransmittance"
-			validation="required | number | min:0.01 | max:1"
-			data-field="Zone.BuildingElement.*.g_value"
-		/>
-		<FormKit
-			id="midHeight"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Mid height"
-			help="Enter the height from the ground to the midpoint of the window"
-			name="midHeight"
-			validation="required | number | min:0 | max:100"
-			data-field="Zone.BuildingElement.*.mid_height"
-		/>
 		<FormKit
 			id="openingToFrameRatio"
 			type="govInputFloat"
@@ -216,6 +235,104 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</table>
 			</GovDetails>
 		</FormKit>
+		<FormKit
+			id="solarTransmittance"
+			type="govInputFloat"
+			label="Transmittance of solar energy "
+			help="Enter the total solar energy transmittance or G value, or the transparent part of the window. It should be a decimal between 0 and 1."
+			name="solarTransmittance"
+			validation="required | number | min:0.01 | max:1"
+			data-field="Zone.BuildingElement.*.g_value"
+		/>
+		<FormKit
+			id="midHeight"
+			type="govInputWithSuffix"
+			suffix-text="m"
+			label="Mid height"
+			help="Enter the height from the ground to the midpoint of the window"
+			name="midHeight"
+			validation="required | number | min:0 | max:100"
+			data-field="Zone.BuildingElement.*.mid_height"
+		/>
+		<FormKit
+			id="numberOpenableParts"
+			type="govRadios"
+			:options="{
+				1: '1',
+				2: '2',
+				3: '3',
+				4: '4',
+				0: 'None',
+			}"
+			label="Number of additional openable parts"
+			name="numberOpenableParts"
+			validation="required"
+		/>
+		<FormKit
+			id="securityRisk"
+			name="securityRisk"
+			type="govBoolean"
+			label="Is having this door open a security risk?"
+			help="For example, if you are able to leave the door open at night it would not be a security risk"
+			validation="required"
+			data-field="Zone.BuildingElement.*.security_risk"
+		/>
+		<FormKit
+			id="maximumOpenableArea"
+			type="govInputWithSuffix"
+			suffix-text="m²"
+			label="Maximum openable area of door"
+			help="Enter the total area of the gap created when the door is fully open"
+			name="maximumOpenableArea"
+			validation="required | number | min:0.01 | max:10000"
+			data-field="Zone.BuildingElement.*.max_window_open_area"
+		/>
+		<template v-if="!!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
+			<FormKit
+				id="midHeightOpenablePart1"
+				type="govInputWithSuffix"
+				suffix-text="m"
+				label="Mid height of the air flow path for openable part 1 "
+				help="Enter the height from the ground to the midpoint of the openable section of the window"
+				name="midHeightOpenablePart1"
+				validation="required | number | min:0 | max:100"
+			/>
+			<template v-if="model.numberOpenableParts !== '1'">
+				<FormKit
+					id="midHeightOpenablePart2"
+					type="govInputWithSuffix"
+					suffix-text="m"
+					label="Mid height of the air flow path for openable part 2 "
+					help="Enter the height from the ground to the midpoint of the openable section of the window"
+					name="midHeightOpenablePart2"
+					validation="required | number | min:0 | max:100"
+				/>
+				<template v-if="model.numberOpenableParts !== '2'">
+					<FormKit
+						id="midHeightOpenablePart3"
+						type="govInputWithSuffix"
+						suffix-text="m"
+						label="Mid height of the air flow path for openable part 3 "
+						help="Enter the height from the ground to the midpoint of the openable section of the window"
+						name="midHeightOpenablePart3"
+						validation="required | number | min:0 | max:100"
+					/>
+					<template v-if="model.numberOpenableParts !== '3'">
+						<FormKit
+							id="midHeightOpenablePart4"
+							type="govInputWithSuffix"
+							suffix-text="m"
+							label="Mid height of the air flow path for openable part 4 "
+							help="Enter the height from the ground to the midpoint of the openable section of the window"
+							name="midHeightOpenablePart4"
+							validation="required | number | min:0 | max:100"
+						/>
+					</template>
+				</template>
+			</template>
+		</template>
+		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+		
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

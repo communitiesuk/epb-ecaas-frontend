@@ -323,6 +323,7 @@ describe("ceilings and roofs", () => {
 					maximumOpenableArea: 1,
 					securityRisk: false,
 					thermalResistance: 42,
+					numberOpenableParts: "1",
 				},
 			};
 			store.$patch({

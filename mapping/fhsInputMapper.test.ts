@@ -771,9 +771,14 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "BuildingElementTransparent",
 					thermal_resistance_construction: 12,
 					width: 1,
-					window_part_list: [{
-						mid_height_air_flow_path: 3,
-					}],
+					window_part_list: [
+						{
+							mid_height_air_flow_path: 1.5,
+						},
+						{ 
+							mid_height_air_flow_path: 3, 
+						},
+					],
 				},
 				"wall to garage (wall)": {
 					area: 20,
@@ -1754,6 +1759,7 @@ describe("FHS input mapper", () => {
 							heightOpenableArea: 2,
 							securityRisk: false,
 							thermalResistance: 12,
+							numberOpenableParts: "1",
 						},
 					}],
 				},

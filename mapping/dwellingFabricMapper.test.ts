@@ -795,6 +795,7 @@ describe("dwelling fabric mapper", () => {
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
 			thermalResistance: 7,
+			numberOpenableParts: "1",
 		};
 
 		const externalUnglazedDoor: ExternalUnglazedDoorData = {
@@ -865,6 +866,7 @@ describe("dwelling fabric mapper", () => {
 			max_window_open_area: externalGlazedDoor.maximumOpenableArea,
 			free_area_height: externalGlazedDoor.heightOpenableArea,
 			window_part_list: [
+				{ mid_height_air_flow_path: externalGlazedDoor.midHeight },
 				{ mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
 			],
 			shading: [],

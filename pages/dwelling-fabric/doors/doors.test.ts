@@ -100,10 +100,10 @@ describe("doors", () => {
 			elevationalHeight: 1,
 			midHeight: 1,
 			openingToFrameRatio: 0.2,
-			midHeightOpenablePart1: 2,
 			heightOpenableArea: 1,
 			maximumOpenableArea: 1,
 			thermalResistance: 37,
+			numberOpenableParts: "0",
 		},
 	};
 
@@ -122,6 +122,7 @@ describe("doors", () => {
 			heightOpenableArea: 1,
 			maximumOpenableArea: 1,
 			thermalResistance: 25,
+			numberOpenableParts: "1",
 		},
 	};
 
@@ -137,9 +138,11 @@ describe("doors", () => {
 			midHeight: 1,
 			openingToFrameRatio: 0.2,
 			midHeightOpenablePart1: 2,
+			midHeightOpenablePart2: 1.2,
 			heightOpenableArea: 1,
 			maximumOpenableArea: 1,
 			thermalResistance: 41,
+			numberOpenableParts: "2",
 		},
 	};
 

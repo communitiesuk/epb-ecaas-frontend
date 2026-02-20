@@ -590,7 +590,8 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			base_height: x.elevationalHeight,
 			g_value: x.solarTransmittance,
 			window_part_list: [
-				{ mid_height_air_flow_path: x.midHeightOpenablePart1 },
+				{ mid_height_air_flow_path: x.midHeight },
+				...mapWindowPartList(x),
 			],
 			frame_area_fraction: calculateFrameToOpeningRatio(x.openingToFrameRatio),
 			max_window_open_area: x.maximumOpenableArea,
@@ -645,45 +646,46 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	} as Pick<FhsInputSchema, "Zone">;
 }
 
+function mapWindowPartList(data: WindowData | ExternalGlazedDoorData): SchemaWindowPart[] {
+	if (data.numberOpenableParts === "1") {
+		return [
+			{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+		];
+	}
+
+	if (data.numberOpenableParts === "2") {
+		return [
+			{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+			{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
+		];
+	}
+
+	if (data.numberOpenableParts === "3") {
+		return [
+			{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+			{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
+			{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
+		];
+	}
+
+	if (data.numberOpenableParts === "4") {
+		return [
+			{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+			{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
+			{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
+			{ mid_height_air_flow_path: data.midHeightOpenablePart4 },
+		];
+	}
+
+	return [];
+}
+
 export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceWindows } = state.dwellingFabric;
 	const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
 	const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	const windowSuffix = "window";
 
-	function mapWindowPartList(data: WindowData): SchemaWindowPart[] {
-		if (data.numberOpenableParts === "1") {
-			return [
-				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-			];
-		}
-
-		if (data.numberOpenableParts === "2") {
-			return [
-				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
-			];
-		}
-
-		if (data.numberOpenableParts === "3") {
-			return [
-				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
-			];
-		}
-
-		if (data.numberOpenableParts === "4") {
-			return [
-				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart4 },
-			];
-		}
-
-		return [];
-	}
 
 	const windowData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceWindows.map(x => {
 		const nameWithSuffix = suffixName(x.name, windowSuffix);

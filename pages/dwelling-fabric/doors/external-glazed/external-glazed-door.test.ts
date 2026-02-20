@@ -42,6 +42,7 @@ describe("external glazed door", () => {
 		maximumOpenableArea: 13,
 		midHeightOpenablePart1: 11,
 		thermalResistance: 16,
+		numberOpenableParts: "1",
 	} as const satisfies ExternalGlazedDoorData;
 
 	const state: EcaasForm<ExternalGlazedDoorData> = {
@@ -275,6 +276,8 @@ describe("external glazed door", () => {
 			await user.type(screen.getByTestId("solarTransmittance"), "0.1");
 			await user.type(screen.getByTestId("elevationalHeight"), "14");
 			await user.type(screen.getByTestId("midHeight"), "11");
+			await user.click(screen.getByTestId("numberOpenableParts_1"));
+			await user.type(screen.getByTestId("midHeightOpenablePart1"), "11");
 			await user.type(screen.getByTestId("openingToFrameRatio"), "0.2");
 			await user.tab();
 
@@ -316,10 +319,17 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId(`associatedItemId_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("14");
 			expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("48");
-			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("16");
-			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("14");
+			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("16");
+			expect((await screen.findByTestId<HTMLInputElement>("openingToFrameRatio")).value).toBe("0.2");
+			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 			expect((await screen.findByTestId<HTMLInputElement>("midHeight")).value).toBe("11");
+			expect((await screen.findByTestId("numberOpenableParts_1")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("securityRisk_no")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("maximumOpenableArea")).value).toBe("13");
+			expect((await screen.findByTestId<HTMLInputElement>("midHeightOpenablePart1")).value).toBe("11");
+			//window shading
+			//curtains and blinds
 		});
 
 		test("form is prepopulated with none of the above associated wall, as well as pitch and orientation when there is no tagged item", async () => {
@@ -339,6 +349,7 @@ describe("external glazed door", () => {
 				maximumOpenableArea: 13,
 				midHeightOpenablePart1: 11,
 				thermalResistance: 16,
+				numberOpenableParts: "1",
 			} as const satisfies ExternalGlazedDoorData;
 		
 			store.$patch({
@@ -361,6 +372,40 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId(`associatedItemId_none`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("pitch")).value).toBe("72");
 			expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("24");
+		});
+
+		test("requires further data when four openable parts option is selected", async () => {
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+		
+			await user.click(screen.getByTestId("numberOpenableParts_4"));
+			await (user.click(screen.getByTestId("saveAndComplete")));
+		
+			expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenablePart2_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenablePart3_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenablePart4_error"))).toBeDefined();
+		});
+		
+		test("does not require the mid height of more parts than have been selected", async () => {
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+		
+			await user.click(screen.getByTestId("numberOpenableParts_1"));
+			await (user.click(screen.getByTestId("saveAndComplete")));
+		
+			expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
+			expect((screen.queryByTestId("midHeightOpenablePart2_error"))).toBeNull();
+			expect((screen.queryByTestId("midHeightOpenablePart3_error"))).toBeNull();
+			expect((screen.queryByTestId("midHeightOpenablePart4_error"))).toBeNull();
 		});
 		
 		test("only required error messages are displayed when empty form is submitted", async () => {

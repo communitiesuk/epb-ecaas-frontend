@@ -405,7 +405,7 @@ const externalUnglazedDoorDataZod = named.extend({
 
 export type ExternalUnglazedDoorData = z.infer<typeof externalUnglazedDoorDataZod>;
 
-const externalGlazedDoorDataZod = named.extend({
+const baseExternalGlazedDoorDataZod = named.extend({
 	associatedItemId: z.guid().optional(),
 	pitchOption: standardPitchOption.optional(),
 	pitch: z.number().min(0).max(180).optional(),
@@ -420,8 +420,42 @@ const externalGlazedDoorDataZod = named.extend({
 	openingToFrameRatio: fraction,
 	maximumOpenableArea: z.number().min(0.01).max(10000),
 	heightOpenableArea: z.number().min(0.001).max(50),
-	midHeightOpenablePart1: z.number().min(0).max(100),
 });
+
+const externalGlazedDoorDataZod = z.discriminatedUnion(
+	"numberOpenableParts",
+	[
+		baseExternalGlazedDoorDataZod.extend({
+			numberOpenableParts: z.literal("0"),
+		}),
+		baseExternalGlazedDoorDataZod.extend({
+			numberOpenableParts: z.literal("1"),
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+		}),
+		baseExternalGlazedDoorDataZod.extend({
+			numberOpenableParts: z.literal("2"),
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+			midHeightOpenablePart2: z.number().min(0).max(100),
+		}),
+		baseExternalGlazedDoorDataZod.extend({
+			numberOpenableParts: z.literal("3"),
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+			midHeightOpenablePart2: z.number().min(0).max(100),
+			midHeightOpenablePart3: z.number().min(0).max(100),
+		}),
+		baseExternalGlazedDoorDataZod.extend({
+			numberOpenableParts: z.literal("4"),
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+			midHeightOpenablePart2: z.number().min(0).max(100),
+			midHeightOpenablePart3: z.number().min(0).max(100),
+			midHeightOpenablePart4: z.number().min(0).max(100),
+		}),
+	],
+);
 
 export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorDataZod>;
 
