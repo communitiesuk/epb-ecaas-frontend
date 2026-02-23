@@ -5,8 +5,7 @@ const productSortOption = ["id", "communityHeatNetworkName"] as const;
 export type HeatNetworkSearchOption = "productId" | "networkName";
 export type HeatNetworkProductSortOption = typeof productSortOption[number];
 
-export interface HeatNetworkProductSearchModel {
-	searchOption?: HeatNetworkSearchOption;
+export interface HeatNetworkProductSearchModel extends ProductSearchModelBase {
 	productId?: string;
 	networkName?: string;
 	sort?: HeatNetworkProductSortOption;

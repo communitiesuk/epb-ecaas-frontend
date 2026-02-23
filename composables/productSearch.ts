@@ -6,8 +6,11 @@ export type SearchOption = "productId" | "modelAndBrand";
 export type ProductSortOption = typeof productSortOption[number];
 export type ProductOrderOption = "asc" | "desc";
 
-export interface ProductSearchModel {
-	searchOption?: SearchOption;
+export interface ProductSearchModelBase {
+	searchOption?: SearchOption | HeatNetworkSearchOption;
+}
+
+export interface ProductSearchModel extends ProductSearchModelBase {
 	productId?: string;
 	brandName?: string;
 	modelName?: string;
@@ -81,3 +84,17 @@ export function sortProducts(searchResults: DisplayProduct[], sort: keyof Partia
 		return 0;
 	});
 }
+
+export const getModel = <T extends ProductSearchModelBase>(currentSearch: T): T => {
+	return {
+		...currentSearch,
+		searchOption: currentSearch.searchOption || "productId",
+	};
+};
+
+export const handleSubmit = <T extends object>(fields: T) => {
+	const query = Object.entries(fields).filter(e => !!e[1]);
+	const params = new URLSearchParams(query);
+
+	navigateTo(`?${params}`);
+};

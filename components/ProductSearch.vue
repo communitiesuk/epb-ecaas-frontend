@@ -1,21 +1,13 @@
 <script setup lang="ts">
+import { handleSubmit } from "~/composables/productSearch";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
-import type { ProductSearchModel, SearchOption } from "~/composables/productSearch";
 
 const { products, model: searchModel } = defineProps<{
 	products: DisplayProduct[];
 	model: ProductSearchModel;
 }>();
 
-const getModel = (currentSearch: ProductSearchModel): ProductSearchModel => {
-	return {
-		...currentSearch,
-		searchOption: searchModel.searchOption || "productId",
-	};
-};
-
 const model = ref<ProductSearchModel>(getModel(searchModel));
-	
 const brandNames = ref<string[]>([]);
 const modelNames = ref<string[]>([]);
 const modelQualifiers = ref<string[]>([]);
@@ -38,13 +30,6 @@ const setModelName = (name: string) => model.value = {
 const setModelQualifier = (qualifier: string) => model.value = {
 	...model.value,
 	modelQualifier: qualifier,
-};
-
-const handleSubmit = (fields: typeof model.value) => {
-	const query = Object.entries(fields).filter(e => !!e[1]);
-	const params = new URLSearchParams(query);
-
-	navigateTo(`?${params}`);
 };
 
 const filterProducts = (currentModel: ProductSearchModel): DisplayProduct[] => {
@@ -71,7 +56,7 @@ watch(model, (currentModel: ProductSearchModel, previousModel: ProductSearchMode
 	}
 });
 
-watch(() => searchModel, (currentSearch: ProductSearchModel, _previousSearch: ProductSearchModel) => {
+watch(() => searchModel, (currentSearch: ProductSearchModel) => {
 	model.value = getModel(currentSearch);
 });
 </script>
@@ -85,20 +70,9 @@ watch(() => searchModel, (currentSearch: ProductSearchModel, _previousSearch: Pr
 			:actions="false"
 			:incomplete-message="false"
 			data-testid="productSearch"
-			@submit="handleSubmit">
-			<FormKit name="sort" type="hidden" />
-			<FormKit name="order" type="hidden" />
-			<FormKit
-				id="searchOption"
-				type="govRadios"
-				name="searchOption"
-				label="Search by"
-				:options="searchOptions"
-				:class-names="{
-					radios: 'search-options'
-				}"
-			/>
-			<div class="search-fields">
+			@submit="handleSubmit"
+		>
+			<ProductSearchFields :search-options="searchOptions">
 				<template v-if="model.searchOption === 'productId'">
 					<FieldsProductSearch
 						id="productId"
@@ -137,44 +111,7 @@ watch(() => searchModel, (currentSearch: ProductSearchModel, _previousSearch: Pr
 						@select="setModelQualifier"
 					/>
 				</template>
-				
-				<div>
-					<FormKit type="govButton" label="Search" :ignore="true" :classes="{ button: 'search-btn' }" />
-				</div>
-			</div>
+			</ProductSearchFields>
 		</FormKit>
 	</div>
 </template>
-
-<style lang="scss">
-	.search-container {
-		// suggested colour to replace removed light-grey in GOV.UK Frontend 6.0
-		background-color: #f3f3f3;
-		padding: 20px;
-	}
-
-	.search-fields {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		gap: 25px;
-	}
-
-	.search-btn {
-		margin: 30px 0 2px;
-	}
-
-	.search-options {
-		display: flex;
-		flex-direction: row;
-		gap: 25px;
-
-		.govuk-radios__label {
-			max-width: unset;
-
-			&::before {
-				background-color: white;
-			}
-		}
-	}
-</style>
