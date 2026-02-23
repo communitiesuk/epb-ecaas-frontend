@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { sentenceToLowerCase } from "#imports";
 import type { PvShadingData } from "~/stores/ecaasStore.schema";
 
 const props = defineProps<{
@@ -26,7 +27,6 @@ const typeOptions: Record<string, string> = {
 	overhang: "Overhang",
 	frame_or_reveal: "Frame or reveal",
 };
-
 
 const buildShadingElement = (): PvShadingData | null => {
 	const { typeOfShading, name } = formModel.value;
@@ -175,7 +175,7 @@ const removeShading = (i: number) => {
 						id="height"
 						v-model="formModel.height"
 						type="govInputWithSuffix"
-						label="Height"
+						label="Height of obstacle"
 						suffix-text="m"
 						validation="required | number | min:0"
 					/>
@@ -183,7 +183,7 @@ const removeShading = (i: number) => {
 						id="distance"
 						v-model="formModel.distance"
 						type="govInputWithSuffix"
-						label="Distance"
+						label="Distance from edge of PV"
 						suffix-text="m"
 						validation="required | number | min:0"
 					/>
@@ -191,17 +191,19 @@ const removeShading = (i: number) => {
 						id="transparency"
 						v-model="formModel.transparency"
 						type="govInputWithSuffix"
-						label="Transparency"
+						label="Transparency of obstacle"
+						help="100% is transparent. 0% is opaque."
 						suffix-text="%"
-						validation="required | number | min:0 | max:1"
+						validation="required | number | min:0 | max:100"
 					/>
 				</template>
 				<template v-else-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin' || formModel.typeOfShading === 'overhang' || formModel.typeOfShading === 'frame_or_reveal'">
 					<FormKit
 						id="depth"
+						:key="`depth-${formModel.typeOfShading}`"
 						v-model="formModel.depth"
 						type="govInputWithSuffix"
-						label="Depth"
+						:label="'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading] as string)"
 						suffix-text="m"
 						validation="required | number | min:0"
 					/>
@@ -209,7 +211,7 @@ const removeShading = (i: number) => {
 						id="distance"
 						v-model="formModel.distance"
 						type="govInputWithSuffix"
-						label="Distance"
+						label="Distance from edge of PV"
 						suffix-text="m"
 						validation="required | number | min:0"
 					/>
@@ -270,7 +272,7 @@ const removeShading = (i: number) => {
 							id="height"
 							v-model="formModel.height"
 							type="govInputWithSuffix"
-							label="Height"
+							label="Height of obstacle"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
@@ -278,7 +280,7 @@ const removeShading = (i: number) => {
 							id="distance"
 							v-model="formModel.distance"
 							type="govInputWithSuffix"
-							label="Distance"
+							label="Distance from edge of PV"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
@@ -286,17 +288,19 @@ const removeShading = (i: number) => {
 							id="transparency"
 							v-model="formModel.transparency"
 							type="govInputWithSuffix"
-							label="Transparency"
+							label="Transparency of obstacle"
+							help="100% is transparent. 0% is opaque."
 							suffix-text="%"
-							validation="required | number | min:0 | max:1"
+							validation="required | number | min:0 | max:100"
 						/>
 					</template>
 					<template v-else-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin' || formModel.typeOfShading === 'overhang' || formModel.typeOfShading === 'frame_or_reveal'">
 						<FormKit
 							id="depth"
+							:key="`depth-${formModel.typeOfShading}`"
 							v-model="formModel.depth"
 							type="govInputWithSuffix"
-							label="Depth"
+							:label="'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading] as string)"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
@@ -304,7 +308,7 @@ const removeShading = (i: number) => {
 							id="distance"
 							v-model="formModel.distance"
 							type="govInputWithSuffix"
-							label="Distance"
+							label="Distance from edge of PV"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>

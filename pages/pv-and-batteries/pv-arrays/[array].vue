@@ -317,6 +317,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+		<h2 class="govuk-heading-m">PV array shading</h2>
+		<p class="govuk-body">
+			<a href="/guidance/pv-shading" target="_blank" class="govuk-link">Guidance on shading (opens in another window)</a>
+		</p>
 		<FormKit
 			id="hasShading"
 			type="govBoolean"
