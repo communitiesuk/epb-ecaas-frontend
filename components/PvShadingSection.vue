@@ -143,7 +143,7 @@ const removeShading = (i: number) => {
 					</template>
 					<template v-else>
 						<div class="govuk-summary-list__row">
-							<dt class="govuk-summary-list__key">Depth</dt>
+							<dt class="govuk-summary-list__key">Depth of {{ sentenceToLowerCase(typeOptions[item.typeOfShading] as string) }}</dt>
 							<dd class="govuk-summary-list__value">{{ item.depth }} m</dd>
 						</div>
 						<div class="govuk-summary-list__row">
