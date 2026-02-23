@@ -21,9 +21,8 @@ export function mapPvAndElectricBatteriesData(state: ResolvedState): [
 
 export function mapPvArrayData(state: ResolvedState): Pick<FhsInputSchema, "OnSiteGeneration"> {
 	return {
-		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvArrays.map((system) => {
-			const { name, elevationalHeight, lengthOfPV, widthOfPV, locationOfInverter, inverterPeakPowerAC, inverterPeakPowerDC, inverterType, orientation, peakPower, pitch, ventilationStrategy } = system;
-
+		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvArrays.map((array) => {
+			const { name, elevationalHeight, lengthOfPV, widthOfPV, locationOfInverter, inverterPeakPowerAC, inverterPeakPowerDC, inverterType, orientation, peakPower, pitch, ventilationStrategy } = array;
 			return [
 				name,
 				{
@@ -38,7 +37,7 @@ export function mapPvArrayData(state: ResolvedState): Pick<FhsInputSchema, "OnSi
 					orientation360: orientation,
 					peak_power: peakPower,
 					pitch,
-					shading: [] as SchemaWindowShadingObject[], // not included yet
+					shading: array.hasShading ? maPvArrayShadingData(array.shading) : [],
 					type: "PhotovoltaicSystem",
 					ventilation_strategy: ventilationStrategy,
 				},
@@ -63,7 +62,54 @@ export function mapPvArrayEnergySupplyData(state: ResolvedState): { [key: string
 	return EnergySupply;
 }
 
+export function maPvArrayShadingData(shading: PvShadingData[]): SchemaWindowShadingObject[] {
+	return shading.map((shadingItem) => {
+		const { typeOfShading } = shadingItem;
+		switch (typeOfShading) {
+			case "frame_or_reveal": {
+				return {
+					type: "reveal",
+					distance: shadingItem.distance,
+					depth: shadingItem.depth,
+				};
+			}
+			case "obstacle": {
+				return {
+					type: "obstacle",
+					distance: shadingItem.distance,
+					height: shadingItem.height,
+					transparency: shadingItem.transparency,
+				};
+			}
+			case "overhang": {
+				return {
+					type: "overhang",
+					distance: shadingItem.distance,
+					depth: shadingItem.depth,
+				};
+			}
+			case "left_side_fin": {
+				return {
+					type: "sidefinleft",
+					distance: shadingItem.distance,
+					depth: shadingItem.depth,
+				};
+			}
+			case "right_side_fin": {
+				return {
+					type: "sidefinright",
+					distance: shadingItem.distance,
+					depth: shadingItem.depth,
+				};
+			}
+			default: {
+				throw new Error(`Unknown shading type: ${typeOfShading}`);
+			}
+		}
 
+	});
+
+}
 
 export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery": SchemaElectricBattery } | EmptyObject {
 	const electricBattery = state.pvAndBatteries.electricBattery[0];

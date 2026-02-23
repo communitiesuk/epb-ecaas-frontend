@@ -255,10 +255,10 @@ describe("PV shading section", () => {
 	const saveFirstShadingObject = async (name = "Chimney") => {
 		await user.click(screen.getByTestId("hasShading_yes"));
 		await user.type(screen.getByTestId(`shadingName`), name);
-		await user.click(screen.getByTestId("typeOfShading_obstical"));
+		await user.click(screen.getByTestId("typeOfShading_obstacle"));
 		await user.type(screen.getByTestId("height"), "3");
 		await user.type(screen.getByTestId("distance"), "2");
-		await user.type(screen.getByTestId("transparancey"), "0.5");
+		await user.type(screen.getByTestId("transparency"), "0.5");
 		await user.tab();
 		await user.click(screen.getByTestId("saveShadingObject"));
 	};
@@ -278,10 +278,10 @@ describe("PV shading section", () => {
 			shading: [
 				{
 					name: "Chimney",
-					typeOfShading: "obstical",
+					typeOfShading: "obstacle",
 					height: 3,
 					distance: 2,
-					transparancey: 0.5,
+					transparency: 0.5,
 				},
 			],
 		},
@@ -295,10 +295,10 @@ describe("PV shading section", () => {
 			shading: [
 				{
 					name: "Chimney",
-					typeOfShading: "obstical",
+					typeOfShading: "obstacle",
 					height: 3,
 					distance: 2,
-					transparancey: 0.5,
+					transparency: 0.5,
 				},
 				{
 					name: "Left fin",
@@ -346,10 +346,10 @@ describe("PV shading section", () => {
 		});
 
 		it("shows height, distance and transparency when obstacle type is selected", async () => {
-			await user.click(screen.getByTestId("typeOfShading_obstical"));
+			await user.click(screen.getByTestId("typeOfShading_obstacle"));
 			expect(screen.getByTestId("height")).toBeDefined();
 			expect(screen.getByTestId("distance")).toBeDefined();
-			expect(screen.getByTestId("transparancey")).toBeDefined();
+			expect(screen.getByTestId("transparency")).toBeDefined();
 			expect(screen.queryByTestId("depth")).toBeNull();
 		});
 
@@ -360,7 +360,7 @@ describe("PV shading section", () => {
 				expect(screen.getByTestId("depth")).toBeDefined();
 				expect(screen.getByTestId("distance")).toBeDefined();
 				expect(screen.queryByTestId("height")).toBeNull();
-				expect(screen.queryByTestId("transparancey")).toBeNull();
+				expect(screen.queryByTestId("transparency")).toBeNull();
 			},
 		);
 
@@ -412,10 +412,10 @@ describe("PV shading section", () => {
 			});
 			await populateValidForm({ hasShading: true });
 			await user.type(screen.getByTestId("shadingName"), "Chimney");
-			await user.click(screen.getByTestId("typeOfShading_obstical"));
+			await user.click(screen.getByTestId("typeOfShading_obstacle"));
 			await user.type(screen.getByTestId("height"), "3");
 			await user.type(screen.getByTestId("distance"), "2");
-			await user.type(screen.getByTestId("transparancey"), "0.5");
+			await user.type(screen.getByTestId("transparency"), "0.5");
 			await user.tab();
 			await user.click(screen.getByTestId("saveShadingObject"));
 
@@ -425,10 +425,10 @@ describe("PV shading section", () => {
 			expect(shading).toHaveLength(1);
 			expect(shading[0]).toMatchObject({
 				name: "Chimney",
-				typeOfShading: "obstical",
+				typeOfShading: "obstacle",
 				height: 3,
 				distance: 2,
-				transparancey: 0.5,
+				transparency: 0.5,
 			});
 		});
 
@@ -451,13 +451,13 @@ describe("PV shading section", () => {
 			});
 			await populateValidForm({ hasShading: true });
 
-			await user.click(screen.getByTestId("typeOfShading_obstical"));
+			await user.click(screen.getByTestId("typeOfShading_obstacle"));
 
 			await user.click(screen.getByTestId("saveShadingObject"));
 			expect(screen.getByTestId("shadingName_error")).toBeDefined();
 			expect(screen.getByTestId("height_error")).toBeDefined();
 			expect(screen.getByTestId("distance_error")).toBeDefined();
-			expect(screen.getByTestId("transparancey_error")).toBeDefined();
+			expect(screen.getByTestId("transparency_error")).toBeDefined();
 		});
 	});
 
@@ -517,10 +517,10 @@ describe("PV shading section", () => {
 			});
 			await user.click(screen.getByTestId("shading_edit_0"));
 			expect((screen.getByTestId<HTMLInputElement>("shadingName")).value).toBe("Chimney");
-			expect((screen.getByTestId<HTMLInputElement>("typeOfShading_obstical")).checked).toBe(true);
+			expect((screen.getByTestId<HTMLInputElement>("typeOfShading_obstacle")).checked).toBe(true);
 			expect((screen.getByTestId<HTMLInputElement>("height")).value).toBe("3");
 			expect((screen.getByTestId<HTMLInputElement>("distance")).value).toBe("2");
-			expect((screen.getByTestId<HTMLInputElement>("transparancey")).value).toBe("0.5");
+			expect((screen.getByTestId<HTMLInputElement>("transparency")).value).toBe("0.5");
 		});
 
 		it("updates the summary card when the edited item is saved", async () => {

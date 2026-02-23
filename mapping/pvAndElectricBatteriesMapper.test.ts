@@ -1,11 +1,13 @@
 import type { SchemaElectricBattery, SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { mapElectricBatteryData, mapPvDiverterData, mapPvArrayData, mapPvArrayEnergySupplyData } from "./pvAndElectricBatteriesMapper";
+import type { SchemaWindowShadingObject } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
 	complete: true,
 };
+
 
 describe("PV and electric batteries mapper", () => {
 	const store = useEcaasStore();
@@ -14,9 +16,9 @@ describe("PV and electric batteries mapper", () => {
 		store.$reset();
 	});
 
-	it("maps PV systems to the FHS input", () => {
+	it("maps PV arrays to the FHS input", () => {
 		// Arrange
-		const pvSystem1: EcaasForm<PvArrayData> = {
+		const pvArray1: EcaasForm<PvArrayData> = {
 			data: {
 				name: "Roof",
 				peakPower: 50,
@@ -37,7 +39,7 @@ describe("PV and electric batteries mapper", () => {
 			complete: true,
 		};
 
-		const pvSystem2: EcaasForm<PvArrayData> = {
+		const pvArray2: EcaasForm<PvArrayData> = {
 			data: {
 				name: "Garden",
 				peakPower: 100,
@@ -62,7 +64,7 @@ describe("PV and electric batteries mapper", () => {
 			pvAndBatteries: {
 				pvArrays: {
 					...baseForm,
-					data: [pvSystem1, pvSystem2],
+					data: [pvArray1, pvArray2],
 				},
 			},
 		});
@@ -313,4 +315,78 @@ describe("PV and electric batteries mapper", () => {
 		const energySupply = mapPvArrayEnergySupplyData(resolveState(store.$state));
 		expect(energySupply).toEqual({ "Roof": { fuel: "electricity", is_export_capable: true, priority: ["ElectricBattery"] } });
 	});
+	it("maps pv array shading data to the correct form for FHS input", () => {
+		const pvArrayWithShading: EcaasForm<PvArrayData> = {
+			data: {
+				name: "Shaded array",
+				peakPower: 100,
+				pitch: 45,
+				orientation: 180,
+				ventilationStrategy: "rear_surface_free",
+				elevationalHeight: 2,
+				lengthOfPV: 3,
+				widthOfPV: 15,
+				inverterPeakPowerAC: 96,
+				inverterPeakPowerDC: 120,
+				locationOfInverter: "unheated_space",
+				canExportToGrid: true,
+				electricityPriority: "electricBattery",
+				inverterType: "optimised_inverter",
+				hasShading: true,
+				shading: [{
+					name: "Tree",
+					typeOfShading: "obstacle",
+					height: 5,
+					distance: 2,
+					transparency: 0.5,
+				},
+				{
+					name: "Building",
+					typeOfShading: "obstacle",
+					height: 10,
+					distance: 5,
+					transparency: 0,
+				},
+				{
+					name: "reveal",
+					typeOfShading: "frame_or_reveal",
+					depth: 1,
+					distance: 1,
+				},
+				],
+			},
+			complete: true,
+		};
+		store.$patch({
+			pvAndBatteries: {
+				pvArrays: {
+					data: [pvArrayWithShading],
+					complete: true,
+				},
+			},
+		});
+
+		const result = mapPvArrayData(resolveState(store.$state));
+		const expectedResult: SchemaWindowShadingObject[] = [
+			{
+				type: "obstacle",
+				height: 5,
+				distance: 2,
+				transparency: 0.5,
+			},
+			{
+				type: "obstacle",
+				height: 10,
+				distance: 5,
+				transparency: 0,
+			},
+			{
+				type: "reveal",
+				depth: 1,
+				distance: 1,
+			},
+		];
+		expect(result?.OnSiteGeneration?.["Shaded array"]?.shading).toEqual(expectedResult);
+	});
 });
+

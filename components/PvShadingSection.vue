@@ -20,7 +20,7 @@ const formModel = ref<ShadingFormModel>({});
 const isEditing = computed(() => editIndex.value !== null);
 
 const typeOptions: Record<string, string> = {
-	obstical: "Obstacle",
+	obstacle: "Obstacle",
 	left_side_fin: "Left side fin",
 	right_side_fin: "Right side fin",
 	overhang: "Overhang",
@@ -33,17 +33,17 @@ const buildShadingElement = (): PvShadingData | null => {
 	if (!typeOfShading || !name) {
 		return null;
 	}
-	if (typeOfShading === "obstical") {
-		const { height, distance, transparancey } = formModel.value as Extract<PvShadingData, { typeOfShading: "obstical" }>;
+	if (typeOfShading === "obstacle") {
+		const { height, distance, transparency } = formModel.value as Extract<PvShadingData, { typeOfShading: "obstacle" }>;
 		return {
 			name,
-			typeOfShading: "obstical",
+			typeOfShading: "obstacle",
 			height: Number(height),
 			distance: Number(distance),
-			transparancey: Number(transparancey),
+			transparency: Number(transparency),
 		};
 	}
-	const { depth, distance } = formModel.value as Extract<PvShadingData, { typeOfShading: Exclude<PvShadingData, { typeOfShading: "obstical" }> }>;
+	const { depth, distance } = formModel.value as Extract<PvShadingData, { typeOfShading: Exclude<PvShadingData, { typeOfShading: "obstacle" }> }>;
 	return {
 		name,
 		typeOfShading,
@@ -127,7 +127,7 @@ const removeShading = (i: number) => {
 						<dt class="govuk-summary-list__key">Type of shading</dt>
 						<dd class="govuk-summary-list__value">{{ typeOptions[item.typeOfShading] }}</dd>
 					</div>
-					<template v-if="item.typeOfShading === 'obstical'">
+					<template v-if="item.typeOfShading === 'obstacle'">
 						<div class="govuk-summary-list__row">
 							<dt class="govuk-summary-list__key">Height</dt>
 							<dd class="govuk-summary-list__value">{{ item.height }} m</dd>
@@ -138,7 +138,7 @@ const removeShading = (i: number) => {
 						</div>
 						<div class="govuk-summary-list__row">
 							<dt class="govuk-summary-list__key">Transparency</dt>
-							<dd class="govuk-summary-list__value">{{ item.transparancey }}</dd>
+							<dd class="govuk-summary-list__value">{{ item.transparency }}</dd>
 						</div>
 					</template>
 					<template v-else>
@@ -170,7 +170,7 @@ const removeShading = (i: number) => {
 					:options="typeOptions"
 					validation="required"
 				/>
-				<template v-if="formModel.typeOfShading === 'obstical'">
+				<template v-if="formModel.typeOfShading === 'obstacle'">
 					<FormKit
 						id="height"
 						v-model="formModel.height"
@@ -188,8 +188,8 @@ const removeShading = (i: number) => {
 						validation="required | number | min:0"
 					/>
 					<FormKit
-						id="transparancey"
-						v-model="formModel.transparancey"
+						id="transparency"
+						v-model="formModel.transparency"
 						type="govInputWithSuffix"
 						label="Transparency"
 						suffix-text="%"
@@ -265,7 +265,7 @@ const removeShading = (i: number) => {
 						:options="typeOptions"
 						validation="required"
 					/>
-					<template v-if="formModel.typeOfShading === 'obstical'">
+					<template v-if="formModel.typeOfShading === 'obstacle'">
 						<FormKit
 							id="height"
 							v-model="formModel.height"
@@ -283,8 +283,8 @@ const removeShading = (i: number) => {
 							validation="required | number | min:0"
 						/>
 						<FormKit
-							id="transparancey"
-							v-model="formModel.transparancey"
+							id="transparency"
+							v-model="formModel.transparency"
 							type="govInputWithSuffix"
 							label="Transparency"
 							suffix-text="%"

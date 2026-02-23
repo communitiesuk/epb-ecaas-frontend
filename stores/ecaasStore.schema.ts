@@ -1420,11 +1420,11 @@ const pvArrayDataZod = z.object({
 	electricityPriority: z.enum(["diverter", "electricBattery"]),
 	hasShading: z.boolean(),
 });
-const obsticalShadingDataZod = named.extend({
-	typeOfShading: z.literal("obstical"),
+const obstacleShadingDataZod = named.extend({
+	typeOfShading: z.literal("obstacle"),
 	height: z.number(),
 	distance: z.number(),
-	transparancey: z.number(),
+	transparency: z.number(),
 });
 const otherShadingDataZod = named.extend({
 	typeOfShading: z.enum(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"]),
@@ -1438,7 +1438,7 @@ const pvArrayShadingDataZod = z.discriminatedUnion("hasShading", [
 	pvArrayDataZod.extend({
 		hasShading: z.literal(true),
 		shading: z.array(z.discriminatedUnion("typeOfShading", [
-			obsticalShadingDataZod,
+			obstacleShadingDataZod,
 			otherShadingDataZod,
 		])),
 	}),
@@ -1447,7 +1447,7 @@ const pvArrayShadingDataZod = z.discriminatedUnion("hasShading", [
 
 export type PvArrayData = z.infer<typeof pvArrayShadingDataZod>;
 
-export type PvShadingData = z.infer<typeof obsticalShadingDataZod | typeof otherShadingDataZod>;
+export type PvShadingData = z.infer<typeof obstacleShadingDataZod | typeof otherShadingDataZod>;
 
 const electricBatteryDataZod = z.object({
 	name: z.string().trim().min(1),

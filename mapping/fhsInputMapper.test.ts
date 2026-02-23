@@ -7,6 +7,7 @@ import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/c
 import { centimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
 
+
 const baseForm = {
 	data: [],
 	complete: true as const,
@@ -589,7 +590,12 @@ const expectedFlatInput: FhsInputSchema = {
 			inverter_is_inside: true,
 			inverter_type: "optimised_inverter",
 			type: "PhotovoltaicSystem",
-			shading: [],
+			shading: [{
+				distance: 2,
+				height: 5,
+				type: "obstacle",
+				transparency: 0,
+			}],
 		},
 	},
 	PartGcompliance: true,
@@ -775,8 +781,8 @@ const expectedFlatInput: FhsInputSchema = {
 						{
 							mid_height_air_flow_path: 1.5,
 						},
-						{ 
-							mid_height_air_flow_path: 3, 
+						{
+							mid_height_air_flow_path: 3,
 						},
 					],
 				},
@@ -2106,7 +2112,14 @@ describe("FHS input mapper", () => {
 						inverterType: "optimised_inverter",
 						canExportToGrid: true,
 						electricityPriority: "diverter",
-						hasShading: false,
+						hasShading: true,
+						shading: [{
+							name: "Chimney",
+							typeOfShading: "obstacle" as const,
+							height: 5,
+							distance: 2,
+							transparency: 0,
+						}],
 					},
 				}],
 			},
