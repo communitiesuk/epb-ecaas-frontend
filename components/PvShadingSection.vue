@@ -100,24 +100,24 @@ const removeShading = (i: number) => {
 				<h2 class="govuk-summary-card__title">{{ item.name }}</h2>
 				<ul v-if="editIndex !== i" class="govuk-summary-card__actions">
 					<li class="govuk-summary-card__action">
-						<button
-							type="button"
-							class="govuk-link"
+						<a
+							href="#"
+							class="govuk-link govuk-body-s"
 							:data-testid="`shading_edit_${i}`"
-							@click="editIndex = i; formModel = { ...shadingItems[i] }"
+							@click.prevent="editIndex = i; formModel = { ...shadingItems[i] }"
 						>
 							Edit
-						</button>
+						</a>
 					</li>
 					<li class="govuk-summary-card__action">
-						<button
-							type="button"
-							class="govuk-link"
+						<a
+							href="#"
+							class="govuk-link govuk-body-s"
 							:data-testid="`shading_remove_${i}`"
-							@click="removeShading(i)"
+							@click.prevent="removeShading(i)"
 						>
 							Remove
-						</button>
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -223,14 +223,14 @@ const removeShading = (i: number) => {
 					>
 						Save shading object
 					</button>
-					<button
-						type="button"
-						class="govuk-link"
+					<a
+						href="#"
+						class="govuk-link govuk-body-s"
 						data-testid="cancelShadingObject"
-						@click="isAddAnother = false; editIndex = null; formModel = {}"
+						@click.prevent="isAddAnother = false; editIndex = null; formModel = {}"
 					>
 						Cancel
-					</button>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -317,18 +317,19 @@ const removeShading = (i: number) => {
 						>
 							Save shading object
 						</button>
-						<button
+						<a
 							v-if="isAddAnother"
-							type="button"
-							class="govuk-link"
+							href="#"
+							class="govuk-link govuk-body-s"
 							data-testid="cancelShadingObject"
-							@click="() => { isAddAnother = false; editIndex = null; formModel = {} }"
+							@click.prevent="() => { isAddAnother = false; editIndex = null; formModel = {} }"
 						>
 							Cancel
-						</button>
+						</a>
 					</div>
 				</FormKit>
 			</div>
 		</div>
 	</div>
 </template>
+

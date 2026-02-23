@@ -251,6 +251,25 @@ describe("PV shading section", () => {
 		inverterType: "optimised_inverter" as const,
 	};
 
+	// helper that adds a shading object so we can work with it below
+	const saveFirstShadingObject = async (name = "Chimney") => {
+		await user.click(screen.getByTestId("hasShading_yes"));
+		await user.type(screen.getByTestId(`shadingName`), name);
+		await user.click(screen.getByTestId("typeOfShading_obstical"));
+		await user.type(screen.getByTestId("height"), "3");
+		await user.type(screen.getByTestId("distance"), "2");
+		await user.type(screen.getByTestId("transparancey"), "0.5");
+		await user.tab();
+		await user.click(screen.getByTestId("saveShadingObject"));
+	};
+
+	it("initial add form has no cancel button", async () => {
+		await renderSuspended(PVScreen);
+		await user.click(screen.getByTestId("hasShading_yes"));
+		expect(screen.getByTestId("shading-add-form")).toBeDefined();
+		expect(screen.queryByTestId("cancelShadingObject")).toBeNull();
+	});
+
 	const pvArrayWithShading: EcaasForm<PvArrayData> = {
 		complete: true,
 		data: {
@@ -289,17 +308,6 @@ describe("PV shading section", () => {
 				},
 			],
 		},
-	};
-
-	const saveFirstShadingObject = async (name = "Chimney") => {
-		await user.click(screen.getByTestId("hasShading_yes"));
-		await user.type(screen.getByTestId(`shadingName`), name);
-		await user.click(screen.getByTestId("typeOfShading_obstical"));
-		await user.type(screen.getByTestId("height"), "3");
-		await user.type(screen.getByTestId("distance"), "2");
-		await user.type(screen.getByTestId("transparancey"), "0.5");
-		await user.tab();
-		await user.click(screen.getByTestId("saveShadingObject"));
 	};
 
 	it("should not render by default", async () => {
@@ -443,7 +451,6 @@ describe("PV shading section", () => {
 			});
 			await populateValidForm({ hasShading: true });
 
-			// provide a shading name and choose a type so the conditional inputs are rendered
 			await user.click(screen.getByTestId("typeOfShading_obstical"));
 
 			await user.click(screen.getByTestId("saveShadingObject"));
