@@ -1431,23 +1431,24 @@ const otherShadingDataZod = named.extend({
 	distance: z.number(),
 	depth: z.number(),
 });
+const shadingObjectDataZod = z.discriminatedUnion("typeOfShading", [
+	obstacleShadingDataZod,
+	otherShadingDataZod,
+]);
 const pvArrayShadingDataZod = z.discriminatedUnion("hasShading", [
 	pvArrayDataZod.extend({
 		hasShading: z.literal(false),
 	}),
 	pvArrayDataZod.extend({
 		hasShading: z.literal(true),
-		shading: z.array(z.discriminatedUnion("typeOfShading", [
-			obstacleShadingDataZod,
-			otherShadingDataZod,
-		])),
+		shading: z.array(shadingObjectDataZod),
 	}),
 ]);
 
 
 export type PvArrayData = z.infer<typeof pvArrayShadingDataZod>;
 
-export type PvShadingData = z.infer<typeof obstacleShadingDataZod | typeof otherShadingDataZod>;
+export type PvShadingData = z.infer<typeof shadingObjectDataZod>;
 
 const electricBatteryDataZod = z.object({
 	name: z.string().trim().min(1),
