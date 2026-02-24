@@ -43,6 +43,10 @@ describe("external glazed door", () => {
 		midHeightOpenablePart1: 11,
 		thermalResistance: 16,
 		numberOpenableParts: "1",
+		curtainsOrBlinds: true,
+		treatmentType: "blinds",
+		thermalResistivityIncrease: 1,
+		solarTransmittanceReduction: 0.1,
 	} as const satisfies ExternalGlazedDoorData;
 
 	const state: EcaasForm<ExternalGlazedDoorData> = {
@@ -279,6 +283,10 @@ describe("external glazed door", () => {
 			await user.click(screen.getByTestId("numberOpenableParts_1"));
 			await user.type(screen.getByTestId("midHeightOpenablePart1"), "11");
 			await user.type(screen.getByTestId("openingToFrameRatio"), "0.2");
+			await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
+			await user.click(screen.getByTestId("treatmentType_blinds"));
+			await user.type(screen.getByTestId("thermalResistivityIncrease"), "1");
+			await user.type(screen.getByTestId("solarTransmittanceReduction"), "0.1");
 			await user.tab();
 
 			await user.click(screen.getByTestId("saveAndComplete"));
@@ -329,7 +337,9 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("maximumOpenableArea")).value).toBe("13");
 			expect((await screen.findByTestId<HTMLInputElement>("midHeightOpenablePart1")).value).toBe("11");
 			//window shading
-			//curtains and blinds
+			expect((await screen.findByTestId("treatmentType_blinds")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("thermalResistivityIncrease")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittanceReduction")).value).toBe("0.1");
 		});
 
 		test("form is prepopulated with none of the above associated wall, as well as pitch and orientation when there is no tagged item", async () => {
@@ -350,6 +360,10 @@ describe("external glazed door", () => {
 				midHeightOpenablePart1: 11,
 				thermalResistance: 16,
 				numberOpenableParts: "1",
+				curtainsOrBlinds: true,
+				treatmentType: "blinds",
+				thermalResistivityIncrease: 1,
+				solarTransmittanceReduction: 0.1,
 			} as const satisfies ExternalGlazedDoorData;
 		
 			store.$patch({

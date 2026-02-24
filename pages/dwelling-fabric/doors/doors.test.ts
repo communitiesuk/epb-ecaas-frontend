@@ -104,6 +104,8 @@ describe("doors", () => {
 			maximumOpenableArea: 1,
 			thermalResistance: 37,
 			numberOpenableParts: "0",
+			curtainsOrBlinds: false,
+
 		},
 	};
 
@@ -123,6 +125,7 @@ describe("doors", () => {
 			maximumOpenableArea: 1,
 			thermalResistance: 25,
 			numberOpenableParts: "1",
+			curtainsOrBlinds: false,
 		},
 	};
 
@@ -143,6 +146,7 @@ describe("doors", () => {
 			maximumOpenableArea: 1,
 			thermalResistance: 41,
 			numberOpenableParts: "2",
+			curtainsOrBlinds: false,
 		},
 	};
 

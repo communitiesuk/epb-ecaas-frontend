@@ -422,7 +422,7 @@ const baseExternalGlazedDoorDataZod = named.extend({
 	heightOpenableArea: z.number().min(0.001).max(50),
 });
 
-const externalGlazedDoorDataZod = z.discriminatedUnion(
+const externalGlazedDoorDataWithOpenablePartsZod = z.discriminatedUnion(
 	"numberOpenableParts",
 	[
 		baseExternalGlazedDoorDataZod.extend({
@@ -457,7 +457,21 @@ const externalGlazedDoorDataZod = z.discriminatedUnion(
 	],
 );
 
-export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorDataZod>;
+const curtainsOrBlindsFields = z.union([
+	z.object({
+		curtainsOrBlinds: z.literal(true),
+		treatmentType: windowTreatmentTypeZod,
+		thermalResistivityIncrease: z.number().min(0).max(100),
+		solarTransmittanceReduction: fraction,
+	}),
+	z.object({
+		curtainsOrBlinds: z.literal(false),
+	}),
+]);
+
+const externalGlazedDoorData = z.intersection(externalGlazedDoorDataWithOpenablePartsZod, curtainsOrBlindsFields);
+
+export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorData>;
 
 const baseInternalDoorData = named.extend({
 	associatedItemId: z.guid(),
@@ -562,17 +576,6 @@ const sideFinLeftFields = z.union([
 	}),
 ]);
 
-const curtainsOrBlindsFields = z.union([
-	z.object({
-		curtainsOrBlinds: z.literal(true),
-		treatmentType: windowTreatmentTypeZod,
-		thermalResistivityIncrease: z.number().min(0).max(100),
-		solarTransmittanceReduction: fraction,
-	}),
-	z.object({
-		curtainsOrBlinds: z.literal(false),
-	}),
-]);
 
 export const windowDataZod = z.intersection(
 	baseWindowPlusOpenableParts,
@@ -1576,7 +1579,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceWallOfHeatedBasement": wallOfHeatedBasementDataZod,
 	"dwellingFabric/dwellingSpaceCeilingsAndRoofs/dwellingSpaceCeilings": ceilingDataZod,
 	"dwellingFabric/dwellingSpaceCeilingsAndRoofs/dwellingSpaceRoofs": roofDataZod,
-	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceExternalGlazedDoor": externalGlazedDoorDataZod,
+	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceExternalGlazedDoor": externalGlazedDoorData,
 	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceExternalUnglazedDoor": externalUnglazedDoorDataZod,
 	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceInternalDoor": internalDoorDataZod,
 	"dwellingFabric/dwellingSpaceWindows": windowDataZod,

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getUrl, standardPitchOptions, uniqueName, type ExternalGlazedDoorData } from "#imports";
+import type { SchemaWindowTreatmentType } from "~/schema/aliases";
 
 const title = "External glazed door";
 const store = useEcaasStore();
@@ -31,6 +32,15 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			maximumOpenableArea: fields.maximumOpenableArea,
 			heightOpenableArea: fields.height,
 			thermalResistance: fields.thermalResistance, 
+			...(fields.curtainsOrBlinds ? {
+				curtainsOrBlinds: true,
+				treatmentType: fields.treatmentType,
+				thermalResistivityIncrease: fields.thermalResistivityIncrease,
+				solarTransmittanceReduction: fields.solarTransmittanceReduction,
+			} : {
+				curtainsOrBlinds: false,
+			}),
+
 		};
 
 		const numberParts = fields.numberOpenableParts;
@@ -86,6 +96,8 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				break;
 		}
 
+
+
 		dwellingSpaceExternalGlazedDoor.data[index] = {
 			data: {
 				...commonFields,
@@ -121,6 +133,11 @@ autoSaveElementForm<ExternalGlazedDoorData>({
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
+const windowTreatmentTypeOptions: Record<SchemaWindowTreatmentType, SnakeToSentenceCase<SchemaWindowTreatmentType>> = {
+	curtains: "Curtains",
+	blinds: "Blinds",
+};
 </script>
 
 <template>
@@ -332,6 +349,43 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</template>
 		</template>
 		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+		<h2 class="govuk-heading-l">Curtains and blinds</h2>
+		<FormKit
+			id="curtainsOrBlinds"
+			type="govBoolean"
+			label="Does this window have any curtains or blinds?"
+			name="curtainsOrBlinds"
+			validation="required"
+		/>
+		<template v-if="model && model.curtainsOrBlinds">
+			<FormKit
+				id="treatmentType"
+				type="govRadios"
+				:options="windowTreatmentTypeOptions"
+				label="Type"
+				help="This determines the behaviour. Curtains are scheduled and blinds respond to sunlight."
+				name="treatmentType"
+				validation="required"
+			/>
+			<FormKit
+				id="thermalResistivityIncrease"
+				type="govInputWithSuffix"
+				suffix-text="W/(m²·K)"
+				label="Thermal resistivity increase"
+				help="Enter the additional thermal resistivity applied to window when the curtain or blind is closed"
+				name="thermalResistivityIncrease"
+				validation="required | number | min:0 | max:100"
+			/>
+			<FormKit
+				id="solarTransmittanceReduction"
+				type="govInputFloat"
+				label="Solar transmittance reduction"
+				help="Enter the proportion of solar energy allowed through the window which is allowed into the zone when curtain or blind is closed. This should be a decimal between 0 and 1."
+				name="solarTransmittanceReduction"
+				validation="required | number | min:0 | max:1"
+			/>
+		</template>
 		
 		<GovLLMWarning />
 		<div class="govuk-button-group">

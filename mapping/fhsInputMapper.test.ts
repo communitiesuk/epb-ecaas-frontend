@@ -1795,6 +1795,7 @@ describe("FHS input mapper", () => {
 							securityRisk: false,
 							thermalResistance: 12,
 							numberOpenableParts: "1",
+							curtainsOrBlinds: false,
 						},
 					}],
 				},

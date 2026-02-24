@@ -796,6 +796,7 @@ describe("dwelling fabric mapper", () => {
 			heightOpenableArea: 1,
 			thermalResistance: 7,
 			numberOpenableParts: "1",
+			curtainsOrBlinds: false,
 		};
 
 		const externalUnglazedDoor: ExternalUnglazedDoorData = {
