@@ -669,6 +669,12 @@ const mechanicalVentilationDataZod = z.discriminatedUnion(
 			typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "MVHR">("MVHR"),
 			mvhrLocation: mvhrLocationZod,
 			mvhrEfficiency: fraction,
+			midHeightOfAirFlowPathForIntake: z.number(),
+			orientationOfIntake: orientation,
+			pitchOfIntake: z.number().min(0).max(180),
+			midHeightOfAirFlowPathForExhaust: z.number(),
+			orientationOfExhaust: orientation,
+			pitchOfExhaust: z.number().min(0).max(180),
 		}),
 	],
 );

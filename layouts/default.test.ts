@@ -13,6 +13,12 @@ describe("nav bar with ductwork", () => {
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.2,
 		productReference: "1000",
+		midHeightOfAirFlowPathForExhaust: 1.5,
+		orientationOfExhaust: 90,
+		pitchOfExhaust: 10,
+		midHeightOfAirFlowPathForIntake: 1.5,
+		orientationOfIntake: 80,
+		pitchOfIntake: 10,
 	};
 
 	it("should not show the mvhr ductwork link when no mechanical ventilations of type mvhr have been added", async () => {

@@ -4,6 +4,8 @@ import type { MVHRLocation, VentType } from "~/schema/aliases";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
 import { getUrl, typeOfMechanicalVentilation, uniqueName, type MechanicalVentilationData } from "#imports";
+import Orientation from "~/components/fields/Orientation.vue";
+import Pitch from "~/components/fields/Pitch.vue";
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
@@ -53,6 +55,12 @@ const saveForm = (fields: MechanicalVentilationData) => {
 				typeOfMechanicalVentilationOptions: "MVHR",
 				mvhrLocation: fields.mvhrLocation,
 				mvhrEfficiency: fields.mvhrEfficiency,
+				midHeightOfAirFlowPathForIntake: fields.midHeightOfAirFlowPathForIntake,
+				orientationOfIntake: fields.orientationOfIntake,
+				pitchOfIntake: fields.pitchOfIntake,
+				midHeightOfAirFlowPathForExhaust: fields.midHeightOfAirFlowPathForExhaust,
+				orientationOfExhaust: fields.orientationOfExhaust,
+				pitchOfExhaust: fields.pitchOfExhaust,
 			};
 		} else {
 			mechanicalVentilationItem = {
@@ -241,6 +249,52 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					<p>The MVHR efficiency is how much heat the system recovers from outgoing air. A typical range is 0.85 to 0.95 for high performance systems.</p>
 				</GovDetails>
 			</FormKit>
+			<FormKit
+				id="midHeightOfAirFlowPathForIntake"
+				type="govInputFloat"
+				label="Mid-height of air flow path for intake (m)"
+				help="Enter the mid-height of the path through which the air flows in the intake, measured from ground level to the mid point of the intake."
+				name="midHeightOfAirFlowPathForIntake"
+				validation="required | min:0"
+				data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_intake"
+			/>
+			<Orientation
+				id="orientationOfIntake"
+				name="orientationOfIntake"
+				label="Orientation of intake"
+				help="Enter the orientation of the vent which takes in the air"
+				data-field="InfiltrationVentilation.MechanicalVentilation.orientation_of_intake"
+			/>
+			<Pitch
+				id="pitchOfIntake"
+				name="pitchOfIntake"
+				label="Pitch of intake (°)"
+				help="Enter the pitch of the vent which takes in the air. 0° meant the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
+				data-field="InfiltrationVentilation.MechanicalVentilation.pitch_of_intake"
+			/>
+			<FormKit
+				id="midHeightOfAirFlowPathForExhaust"
+				type="govInputFloat"
+				label="Mid-height of air flow path for exhaust (m)"
+				help="Enter the mid-height of the path through which the air flows in the exhaust, measured from ground level to the mid point of the exhaust."
+				name="midHeightOfAirFlowPathForExhaust"
+				validation="required | min:0"
+				data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_exhaust"
+			/>
+			<Orientation
+				id="orientationOfExhaust"
+				name="orientationOfExhaust"
+				label="Orientation of exhaust"
+				help="Enter the orientation of the exhaust vent"
+				data-field="InfiltrationVentilation.MechanicalVentilation.orientation_of_exhaust"
+			/>
+			<Pitch
+				id="pitchOfExhaust"
+				name="pitchOfExhaust"
+				label="Pitch of exhaust (°)"
+				help="Enter the pitch of the exhaust vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
+				data-field="InfiltrationVentilation.MechanicalVentilation.pitch_of_exhaust"
+			/>
 		</template>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
