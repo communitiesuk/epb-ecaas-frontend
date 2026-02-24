@@ -252,7 +252,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FormKit
 				id="midHeightOfAirFlowPathForIntake"
 				type="govInputFloat"
-				label="Mid-height of air flow path for intake (m)"
+				label="Mid-height of air flow path for intake"
 				help="Enter the mid-height of the path through which the air flows in the intake, measured from ground level to the mid point of the intake."
 				name="midHeightOfAirFlowPathForIntake"
 				validation="required | min:0"
@@ -268,14 +268,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<Pitch
 				id="pitchOfIntake"
 				name="pitchOfIntake"
-				label="Pitch of intake (°)"
+				label="Pitch of intake"
 				help="Enter the pitch of the vent which takes in the air. 0° meant the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
 				data-field="InfiltrationVentilation.MechanicalVentilation.pitch_of_intake"
 			/>
 			<FormKit
 				id="midHeightOfAirFlowPathForExhaust"
 				type="govInputFloat"
-				label="Mid-height of air flow path for exhaust (m)"
+				label="Mid-height of air flow path for exhaust"
 				help="Enter the mid-height of the path through which the air flows in the exhaust, measured from ground level to the mid point of the exhaust."
 				name="midHeightOfAirFlowPathForExhaust"
 				validation="required | min:0"
@@ -291,7 +291,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<Pitch
 				id="pitchOfExhaust"
 				name="pitchOfExhaust"
-				label="Pitch of exhaust (°)"
+				label="Pitch of exhaust"
 				help="Enter the pitch of the exhaust vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
 				data-field="InfiltrationVentilation.MechanicalVentilation.pitch_of_exhaust"
 			/>
