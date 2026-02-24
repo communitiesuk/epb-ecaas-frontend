@@ -328,7 +328,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="hasShading"
 			validation="required"
 		/>
-		<PvShadingSection
+		<ShadingSection
 			v-if="model?.hasShading"
 			:index="index"
 			:model="shading"
