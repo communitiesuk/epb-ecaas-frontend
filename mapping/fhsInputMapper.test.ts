@@ -530,8 +530,17 @@ const expectedFlatInput: FhsInputSchema = {
 					length: 4,
 					reflective: true,
 				}],
-				position_exhaust: {},
-				position_intake: {},
+				position_exhaust: {
+					mid_height_air_flow_path: 1.5,
+					orientation360: 90,
+					pitch: 10,
+
+				},
+				position_intake: {
+					mid_height_air_flow_path: 1.5,
+					orientation360: 80,
+					pitch: 10,
+				},
 			},
 			"mvhr vent 2 name": {
 				EnergySupply: "mains elec",
@@ -544,8 +553,16 @@ const expectedFlatInput: FhsInputSchema = {
 				mvhr_eff: 0,
 				mvhr_location: "outside",
 				ductwork: [],
-				position_exhaust: {},
-				position_intake: {},
+				position_exhaust: {
+					mid_height_air_flow_path: 1.5,
+					orientation360: 90,
+					pitch: 10,
+				},
+				position_intake: {
+					mid_height_air_flow_path: 1.5,
+					orientation360: 80,
+					pitch: 10,
+				},
 			},
 			"centralised MEV name": {
 				EnergySupply: "mains elec",
@@ -1404,6 +1421,12 @@ describe("FHS input mapper", () => {
 						mvhrLocation: "inside" as const,
 						mvhrEfficiency: 1,
 						productReference: "1000",
+						midHeightOfAirFlowPathForExhaust: 1.5,
+						orientationOfExhaust: 90,
+						pitchOfExhaust: 10,
+						midHeightOfAirFlowPathForIntake: 1.5,
+						orientationOfIntake: 80,
+						pitchOfIntake: 10,
 					},
 				},
 				{
@@ -1416,6 +1439,12 @@ describe("FHS input mapper", () => {
 						mvhrLocation: "outside" as const,
 						mvhrEfficiency: 0,
 						productReference: "1000",
+						midHeightOfAirFlowPathForExhaust: 1.5,
+						orientationOfExhaust: 90,
+						pitchOfExhaust: 10,
+						midHeightOfAirFlowPathForIntake: 1.5,
+						orientationOfIntake: 80,
+						pitchOfIntake: 10,
 					},
 				},
 				{

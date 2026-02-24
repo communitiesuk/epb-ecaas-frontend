@@ -20,6 +20,12 @@ describe("infiltration ventilation mapper", () => {
 			mvhrLocation: "inside",
 			mvhrEfficiency: 1,
 			productReference: "1000",
+			midHeightOfAirFlowPathForExhaust: 1.5,
+			orientationOfExhaust: 90,
+			pitchOfExhaust: 10,
+			midHeightOfAirFlowPathForIntake: 1.5,
+			orientationOfIntake: 80,
+			pitchOfIntake: 10,
 		},
 	}];
 
@@ -79,6 +85,16 @@ describe("infiltration ventilation mapper", () => {
 		expect("measured_air_flow_rate" in firstMechVent && firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
 		expect("measured_fan_power" in firstMechVent && firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.ductwork).toBeDefined();
+		expect(firstMechVent.position_exhaust).toEqual({
+			mid_height_air_flow_path: 1.5,
+			orientation360: 90,
+			pitch: 10,
+		});
+		expect(firstMechVent.position_intake).toEqual({
+			mid_height_air_flow_path: 1.5,
+			orientation360: 80,
+			pitch: 10,
+		});
 	});
 
 
