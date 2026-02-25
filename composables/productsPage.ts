@@ -20,8 +20,8 @@ export function useProductsPage(indexParam: string) {
 
 	const getSearchModelFromQuery = (): ProductSearchModel => {
 		const searchOption = routeQuery.value?.searchOption as SearchOption | undefined;
-		const productId = (routeQuery.value?.productId as string | undefined)?.trim();
-		const searchTerm = (routeQuery.value?.searchTerm as string | undefined)?.trim();
+		const productId = (routeQuery.value?.productId as string | undefined);
+		const searchTerm = (routeQuery.value?.searchTerm as string | undefined);
 		const sort = routeQuery.value?.sort as ProductSortOption | undefined;
 		const order = routeQuery.value?.order as ProductOrderOption | undefined;
 
