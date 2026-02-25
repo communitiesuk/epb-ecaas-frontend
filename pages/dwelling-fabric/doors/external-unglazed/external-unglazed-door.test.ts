@@ -360,6 +360,7 @@ describe("external unglazed door", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("name_error"))).toBeDefined();
+			expect((await screen.findByTestId("isTheFrontDoor_error"))).toBeDefined();
 			expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
 			expect((await screen.findByTestId("height_error"))).toBeDefined();
 			expect((await screen.findByTestId("width_error"))).toBeDefined();
@@ -369,6 +370,38 @@ describe("external unglazed door", () => {
 			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 
+		});
+		test("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
+			const door: Partial<ExternalUnglazedDoorData> = {
+				name: "External unglazed door 1",
+				isTheFrontDoor: true,
+			};
+				
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalUnglazedDoor: {
+							data: [{ data: door }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(ExternalUnglazedDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+		
+			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
+			await user.tab();
+			await (user.click(screen.getByTestId("saveAndComplete")));
+		
+			const error = screen.findByTestId("isTheFrontDoor_error");
+			expect(error).toBeDefined();
+			expect(
+				(await error).innerText.includes("Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead."),
+			).toBe(true);
 		});
 
 		test("error summary is displayed when an invalid form in submitted", async () => {

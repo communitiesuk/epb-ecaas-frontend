@@ -133,12 +133,23 @@ autoSaveElementForm<ExternalGlazedDoorData>({
 	},
 });
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
-
 const windowTreatmentTypeOptions: Record<SchemaWindowTreatmentType, SnakeToSentenceCase<SchemaWindowTreatmentType>> = {
 	curtains: "Curtains",
 	blinds: "Blinds",
 };
+
+function canBeFrontDoor(node: FormKitNode) {
+	if (node.value === true) {
+		const glazedDoorsExcludingCurrent = externalGlazedDoorData.toSpliced(index, 1);
+		const { dwellingSpaceExternalUnglazedDoor, dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+		const doors = [...glazedDoorsExcludingCurrent, dwellingSpaceExternalUnglazedDoor.data, dwellingSpaceInternalDoor.data].flat();
+		for (const door of doors) {
+			return !door.data.isTheFrontDoor;			
+		}
+	} return true;
+}
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
 </script>
 
 <template>
@@ -174,7 +185,12 @@ const windowTreatmentTypeOptions: Record<SchemaWindowTreatmentType, SnakeToSente
 			type="govBoolean"
 			label="Is this the front door?"
 			name="isTheFrontDoor"
-			validation="required" />
+			:validation-rules="{ canBeFrontDoor }"
+			validation="required | canBeFrontDoor" 
+			:validation-messages="{
+				canBeFrontDoor: 'Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead.'
+			}"
+		/>
 
 		<FieldsAssociatedWallRoof
 			id="associatedItemId"

@@ -203,6 +203,38 @@ describe("internal door", () => {
 
 		expect((await screen.findByTestId("typeOfInternalDoor_error"))).toBeDefined();
 	});
+	test("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
+		const frontDoor: Partial<ExternalGlazedDoorData> = {
+			name: "Front door",
+			isTheFrontDoor: true,
+		};
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalGlazedDoor: {
+						data: [{ data: frontDoor }],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(InternalDoor, {
+			route: {
+				params: { door: "create" },
+			},
+		});
+	
+		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+		await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
+		await user.tab();
+		await (user.click(screen.getByTestId("saveAndComplete")));
+			
+		const error = screen.findByTestId("isTheFrontDoor_error");
+		expect(error).toBeDefined();
+		expect(
+			(await error).innerText.includes("Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead."),
+		).toBe(true);
+	});
 
 	it("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(InternalDoor);

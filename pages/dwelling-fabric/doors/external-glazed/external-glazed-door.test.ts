@@ -431,6 +431,7 @@ describe("external glazed door", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("name_error"))).toBeDefined();
+			expect((await screen.findByTestId("isTheFrontDoor_error"))).toBeDefined();
 			expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
 			expect((await screen.findByTestId("height_error"))).toBeDefined();
 			expect((await screen.findByTestId("width_error"))).toBeDefined();
@@ -446,6 +447,38 @@ describe("external glazed door", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("externalGlazedDoorErrorSummary"))).toBeDefined();
+		});
+
+		test("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
+			const frontDoor: Partial<ExternalGlazedDoorData> = {
+				name: "Front door",
+				isTheFrontDoor: true,
+			};
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: frontDoor }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { externalGlazed: "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
+			await user.tab();
+			await (user.click(screen.getByTestId("saveAndComplete")));
+
+			const error = screen.findByTestId("isTheFrontDoor_error");
+			expect(error).toBeDefined();
+			expect(
+				(await error).innerText.includes("Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead."),
+			).toBe(true);
 		});
 
 		describe("partially saving data", () => {
