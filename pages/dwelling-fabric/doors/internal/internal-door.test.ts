@@ -38,7 +38,7 @@ describe("internal door", () => {
 		data: {
 			typeOfInternalDoor: "heatedSpace",
 			name: "Internal 1",
-			isTheFrontDoor: false,
+			isTheFrontDoor: undefined,
 			associatedItemId: internalWall.id,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
@@ -53,6 +53,7 @@ describe("internal door", () => {
 			typeOfInternalDoor: "unheatedSpace",
 			uValue: 0.1,
 			thermalResistanceOfAdjacentUnheatedSpace: 0,
+			isTheFrontDoor: undefined,
 		},
 	};
 
@@ -77,7 +78,6 @@ describe("internal door", () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Internal 1");
-		await user.click(screen.getByTestId(`isTheFrontDoor_no`));
 		await user.type(screen.getByTestId("surfaceArea"), "5");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
@@ -87,7 +87,7 @@ describe("internal door", () => {
 		it("data is saved to store state when form is valid", async () => {
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { internalDoor: "create" },
+					params: { door: "create" },
 				},
 			});
 	
@@ -145,7 +145,7 @@ describe("internal door", () => {
 		it("data is saved to store state when form is valid", async () => {
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { internalDoor: "create" },
+					params: { door: "create" },
 				},
 			});
 	
@@ -203,38 +203,6 @@ describe("internal door", () => {
 
 		expect((await screen.findByTestId("typeOfInternalDoor_error"))).toBeDefined();
 	});
-	test("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
-		const frontDoor: Partial<ExternalGlazedDoorData> = {
-			name: "Front door",
-			isTheFrontDoor: true,
-		};
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceDoors: {
-					dwellingSpaceExternalGlazedDoor: {
-						data: [{ data: frontDoor }],
-					},
-				},
-			},
-		});
-
-		await renderSuspended(InternalDoor, {
-			route: {
-				params: { door: "create" },
-			},
-		});
-	
-		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
-		await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
-		await user.tab();
-		await (user.click(screen.getByTestId("saveAndComplete")));
-			
-		const error = screen.findByTestId("isTheFrontDoor_error");
-		expect(error).toBeDefined();
-		expect(
-			(await error).innerText.includes("Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead."),
-		).toBe(true);
-	});
 
 	it("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(InternalDoor);
@@ -265,14 +233,100 @@ describe("internal door", () => {
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/doors");
 	});
 
-	describe("partially saving data", () => {
-		it("creates a new door automatically with given name", async () => {
+	describe("Handing internal door as a front door", () => {
+		const stateWithFlat: Partial<GeneralDetailsData> = {
+			typeOfDwelling: "flat",
+		};
+	
+		const stateWithHouse: Partial<GeneralDetailsData> = {
+			typeOfDwelling: "house",
+		};
+	
+		it("displays the 'Is this the front door?' element if the type of dwelling is a flat", async() => {
+	
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: stateWithFlat,
+					},
+				},
+			});
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { internalDoor: "create" },
+					params: { door: "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+			expect(screen.getByTestId("isTheFrontDoor")).toBeDefined();
+		});
+
+		it("does not display the 'Is this the front door?' element if the type of dwelling is a house", async() => {
+	
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: stateWithHouse,
+					},
+				},
+			});
+			await renderSuspended(InternalDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
+		});
+	
+		it("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
+			const frontDoor: Partial<ExternalGlazedDoorData> = {
+				name: "Front door",
+				isTheFrontDoor: true,
+			};
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: stateWithFlat,
+					},
+				},
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: frontDoor }],
+						},
+					},
 				},
 			});
 
+			await renderSuspended(InternalDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+	
+			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
+			await user.tab();
+			await (user.click(screen.getByTestId("saveAndComplete")));
+			
+			const error = screen.findByTestId("isTheFrontDoor_error");
+			expect(error).toBeDefined();
+			expect(
+				(await error).innerText.includes("Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead."),
+			).toBe(true);
+		});
+	});
+
+	describe("partially saving data", () => {
+		beforeEach(() => {
+			store.$reset();
+		});
+		it("creates a new door automatically with given name", async () => {
+			await renderSuspended(InternalDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
 			await user.click(screen.getByTestId("typeOfInternalDoor_unheatedSpace"));
 			await user.type(screen.getByTestId("name"), "New door");
 			await user.tab();
@@ -286,10 +340,9 @@ describe("internal door", () => {
 		it("creates a new door automatically with default name after other data is entered", async () => {
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { internalDoor: "create" },
+					params: { door: "create" },
 				},
 			});
-
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 			await user.type(screen.getByTestId("surfaceArea"), "7");
 			await user.tab();
@@ -313,7 +366,7 @@ describe("internal door", () => {
 
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { internalDoor: "1" },
+					params: { door: "1" },
 				},
 			});
 
@@ -344,7 +397,7 @@ describe("internal door", () => {
 
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { internalDoor: "0" },
+					params: { door: "0" },
 				},
 			});
 

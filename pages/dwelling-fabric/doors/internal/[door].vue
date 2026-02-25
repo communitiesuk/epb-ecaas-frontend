@@ -114,17 +114,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				:validation-messages="{
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
 				}" />
-			<FormKit
-				id="isTheFrontDoor"
-				type="govBoolean"
-				label="Is this the front door?"
-				name="isTheFrontDoor"
-				:validation-rules="{ canBeFrontDoor }"
-				validation="required | canBeFrontDoor" 
-				:validation-messages="{
-					canBeFrontDoor: 'Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead.'
-				}"
-			/>
 			<FieldsAssociatedElements
 				v-if="model.typeOfInternalDoor === 'heatedSpace'"
 				id="associatedItemId"
@@ -175,6 +164,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</p>
 			</GovDetails>
 		</FormKit>
+		<FormKit
+			v-if="model?.typeOfInternalDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat'"
+			id="isTheFrontDoor"
+			type="govBoolean"
+			label="Is this the front door?"
+			name="isTheFrontDoor"
+			:validation-rules="{ canBeFrontDoor }"
+			validation="required | canBeFrontDoor" 
+			:validation-messages="{
+				canBeFrontDoor: 'Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead.'
+			}"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
