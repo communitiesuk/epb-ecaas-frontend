@@ -599,6 +599,12 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			free_area_height: x.heightOpenableArea,
 			shading: [],
 			thermal_resistance_construction: x.thermalResistance,
+			treatment: x.curtainsOrBlinds ? [{
+				type: x.treatmentType,
+				controls: "manual",
+				trans_red: x.solarTransmittanceReduction,
+				delta_r: x.thermalResistivityIncrease,
+			}] : undefined,
 		} as const satisfies SchemaBuildingElement;
 
 		return {
