@@ -228,7 +228,6 @@ describe("Heat source products page", () => {
 
 		await renderSuspended(Products);
 
-		expect(screen.getByTestId("productSearch")).toBeDefined();
 		expect(screen.getByTestId("productsTable")).toBeDefined();
 	});
 
@@ -243,7 +242,6 @@ describe("Heat source products page", () => {
 
 		await renderSuspended(Products);
 
-		expect(screen.getByTestId("heatNetworkProductSearch")).toBeDefined();
 		expect(screen.getByTestId("heatNetworkProductsTable")).toBeDefined();
 	});
 });

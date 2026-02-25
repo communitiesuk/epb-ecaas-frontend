@@ -19,20 +19,16 @@ export function useProductsPage(indexParam: string) {
 	const index = Number(route.params[indexParam]);
 
 	const getSearchModelFromQuery = (): ProductSearchModel => {
-		const productId = (routeQuery.value?.productId as string | undefined)?.trim();
-		const brandName = (routeQuery.value?.brandName as string | undefined)?.trim();
-		const modelName = (routeQuery.value?.modelName as string | undefined)?.trim();
-		const modelQualifier = (routeQuery.value?.modelQualifier as string | undefined)?.trim();
 		const searchOption = routeQuery.value?.searchOption as SearchOption | undefined;
+		const productId = (routeQuery.value?.productId as string | undefined)?.trim();
+		const searchTerm = (routeQuery.value?.searchTerm as string | undefined)?.trim();
 		const sort = routeQuery.value?.sort as ProductSortOption | undefined;
 		const order = routeQuery.value?.order as ProductOrderOption | undefined;
 
 		return {
 			searchOption,
 			productId,
-			brandName,
-			modelName,
-			modelQualifier,
+			searchTerm,
 			sort,
 			order,
 		};
@@ -53,13 +49,16 @@ export function useProductsPage(indexParam: string) {
 			searchModel.value = getSearchModelFromQuery();
 		});
 
-		watch(searchModel, () => {
-			productResults.value = useProductSearch(productData, searchModel.value);
+		watch(searchModel, (currentSearch, previousSearch) => {
+			if (currentSearch.searchOption !== previousSearch.searchOption) {
+				return;
+			}
+
+			productResults.value = useProductSearch(productData, currentSearch);
 			pagination.value = usePagination(productResults.value, pageSize);
 		});
 
 		return {
-			productData,
 			pagination,
 		};
 	};

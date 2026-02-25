@@ -33,39 +33,39 @@ describe("Product search", () => {
 		expect(results.length).toBe(productData.length);
 	});
 
-	it("Returns products by ID when ID search parameter is present", () => {
+	it("Returns products by ID when ID is used as search parameter", () => {
 		// Act
-		const results = useProductSearch(productData, { productId: "1000" });
+		const results = useProductSearch(productData, {
+			searchOption: "productId",
+			productId: "1000",
+		});
 
 		// Assert
 		expect(results.length).toBe(1);
 		expect(results[0]?.id).toBe("1000");
 	});
 
-	it("Returns products by brand name when brand search parameter is present", () => {
+	it("Returns products by brand name when brand is used as search parameter", () => {
 		// Act
-		const results = useProductSearch(productData, { brandName: "Test 1" });
+		const results = useProductSearch(productData, { searchTerm: "Test 1" });
 
 		// Assert
-		expect(results.length).toBe(1);
-		expect(results.every(r => r.brandName === "Test 1")).toBeTruthy();
+		expect(results[0]?.brandName).toBe("Test 1");
 	});
 
-	it("Returns products by model name when model search parameter is present", () => {
+	it("Returns products by model name when model is used as search parameter", () => {
 		// Act
-		const results = useProductSearch(productData, { modelName: "Small Heat Pump" });
+		const results = useProductSearch(productData, { searchTerm: "Small Heat Pump" });
 
 		// Assert
-		expect(results.length).toBe(1);
 		expect(results[0]?.modelName).toBe("Small Heat Pump");
 	});
 
-	it("Returns products by model qualifier when qualifier search parameter is present", () => {
+	it("Returns products by model qualifier when qualifier is used as search parameter", () => {
 		// Act
-		const results = useProductSearch(productData, { modelQualifier: "HPSMALL" });
+		const results = useProductSearch(productData, { searchTerm: "HPSMALL" });
 
 		// Assert
-		expect(results.length).toBe(1);
 		expect(results[0]?.modelQualifier).toBe("HPSMALL");
 	});
 

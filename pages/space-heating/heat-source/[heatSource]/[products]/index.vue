@@ -17,10 +17,9 @@ const { data: { value } } = await useFetch("/api/products", {
 	},
 });
 
-const { title, index, searchModel, searchData } = heatSourceProductType === "heatNetwork" ?
-	useHeatNetworkProductsPage("heatSource") : useProductsPage("heatSource");
+const { title, index, searchModel, searchData } = useProductsPage("heatSource");
 
-const { productData, pagination } = searchData(value?.data ?? []);
+const { pagination } = searchData(value?.data ?? []);
 
 const selectProduct = (product: DisplayProduct) => {
 	store.$patch((state) => {
@@ -65,7 +64,13 @@ const selectProduct = (product: DisplayProduct) => {
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<template v-if="heatSourceProductType === 'heatNetwork'">
-		<HeatNetworkProductSearch v-if="!!productData" :products="productData" :model="(searchModel as HeatNetworkProductSearchModel)" />
+		<ProductSearch
+			:model="searchModel"
+			:search-options="{
+				productId: 'Product ID',
+				networkName: 'Network name'
+			}"
+		/>
 		<HeatNetworkProductsTable
 			v-if="heatSourceProductType === 'heatNetwork'"
 			:products="pagination.getData()"
@@ -74,7 +79,7 @@ const selectProduct = (product: DisplayProduct) => {
 		/>
 	</template>
 	<template v-else>
-		<ProductSearch v-if="!!productData" :products="productData" :model="(searchModel as ProductSearchModel)" />
+		<ProductSearch :model="searchModel" />
 		<GovProductsTable
 			:products="pagination.getData()"
 			:total-pages="pagination.totalPages"

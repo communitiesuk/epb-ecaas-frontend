@@ -1,50 +1,48 @@
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import Fuse from "fuse.js";
 
-const productSortOption = ["id", "brandName", "modelName", "modelQualifier"] as const;
+const productSortOption = ["id", "brandName", "modelName", "modelQualifier", "communityHeatNetworkName"] as const;
 
-export type SearchOption = "productId" | "modelAndBrand";
+export type SearchOption = "productId" | "modelAndBrand" | "networkName";
 export type ProductSortOption = typeof productSortOption[number];
 export type ProductOrderOption = "asc" | "desc";
 
-export interface ProductSearchModelBase {
-	searchOption?: SearchOption | HeatNetworkSearchOption;
-}
-
-export interface ProductSearchModel extends ProductSearchModelBase {
+export interface ProductSearchModel {
+	searchOption?: SearchOption;
 	productId?: string;
-	brandName?: string;
-	modelName?: string;
-	modelQualifier?: string;
+	searchTerm?: string;
 	sort?: ProductSortOption;
 	order?: ProductOrderOption;
 }
 
 export function useProductSearch(products: DisplayProduct[], model: ProductSearchModel): DisplayProduct[] {
-	const productIdLower = model.productId?.trim().toLowerCase();
-	const brandNameLower = model.brandName?.trim().toLowerCase();
-	const modelNameLower = model.modelName?.trim().toLowerCase();
-	const modelQualifierLower = model.modelQualifier?.trim().toLowerCase();
+	const productId = model.productId?.trim();
+	const searchTerm = model.searchTerm?.trim();
 	const order: ProductOrderOption = model.order ?? "asc";
 
 	let searchResults = [...products];
 
-	if (productIdLower?.length) {
-		searchResults = searchResults.filter(p => p.id == productIdLower);
-	}
+	let fuse: Fuse<DisplayProduct>;
 
-	if (brandNameLower?.length) {
-		searchResults = searchResults
-			.filter(p => p.brandName.trim().toLowerCase().startsWith(brandNameLower));
-	}
+	if (productId?.length) {
+		fuse = new Fuse(products, {
+			threshold: 0,
+			keys: ["id"],
+		});
 
-	if (modelNameLower?.length) {
-		searchResults = searchResults
-			.filter(p => p.modelName.trim().toLowerCase().startsWith(modelNameLower));
-	}
+		searchResults = fuse.search(productId).map(r => r.item);
 
-	if (modelQualifierLower?.length) {
-		searchResults = searchResults
-			.filter(p => p.modelQualifier?.trim().toLowerCase().startsWith(modelQualifierLower));
+	} else if (searchTerm?.length) {
+		fuse = new Fuse(products, {
+			threshold: 0.2,
+			keys: [
+				"brandName",
+				"modelName",
+				"modelQualifier",
+				"communityHeatNetworkName",
+			],
+		});
+		searchResults = fuse.search(searchTerm).map(r => r.item);
 	}
 
 	if (model.sort && productSortOption.includes(model.sort)) {
@@ -84,17 +82,3 @@ export function sortProducts(searchResults: DisplayProduct[], sort: keyof Partia
 		return 0;
 	});
 }
-
-export const getModel = <T extends ProductSearchModelBase>(currentSearch: T): T => {
-	return {
-		...currentSearch,
-		searchOption: currentSearch.searchOption || "productId",
-	};
-};
-
-export const handleSubmit = <T extends object>(fields: T) => {
-	const query = Object.entries(fields).filter(e => !!e[1]);
-	const params = new URLSearchParams(query);
-
-	navigateTo(`?${params}`);
-};

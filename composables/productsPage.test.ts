@@ -69,8 +69,7 @@ describe("Products page", () => {
 				products: "air-source",
 			},
 			query: {
-				productId: "ABC123",
-				searchOption: "productId",
+				searchTerm: "ABC123",
 			},
 		};
 
@@ -80,8 +79,7 @@ describe("Products page", () => {
 		const { searchModel } = useProductsPage("pump");
 
 		// Assert
-		expect(searchModel.value.productId).toBe("ABC123");
-		expect(searchModel.value.searchOption).toBe("productId");
+		expect(searchModel.value.searchTerm).toBe("ABC123");
 	});
 
 	it("searchData returns paginated results", () => {

@@ -13,7 +13,7 @@ const { data: { value } } = await useFetch("/api/products", {
 	},
 });
 
-const { productData, pagination } = searchData(value?.data ?? []);
+const { pagination } = searchData(value?.data ?? []);
 
 const selectProduct = (product: DisplayProduct) => {
 	store.$patch((state) => {
@@ -29,7 +29,7 @@ const selectProduct = (product: DisplayProduct) => {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<ProductSearch :products="productData" :model="searchModel" />
+	<ProductSearch :model="searchModel" />
 	<GovProductsTable
 		:products="pagination.getData() ?? ['none']"
 		:total-pages="pagination.totalPages"
