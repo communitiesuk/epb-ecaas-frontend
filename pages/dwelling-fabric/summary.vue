@@ -29,8 +29,8 @@ const lightingSummary: SummarySection = {
 		return {
 			"Name": show(x.name),
 			"Number of bulbs": show(x.numberOfBulbs),
-			"Power": show(x.power),
-			"Efficacy": show(x.efficacy),
+			"Power": dim(x.power, "watt"),
+			"Efficacy": dim(x.efficacy, "lumen per watt"),
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceLighting"),

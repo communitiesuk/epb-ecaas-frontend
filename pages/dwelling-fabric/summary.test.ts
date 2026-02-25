@@ -419,8 +419,8 @@ describe("Dwelling space fabric summary", () => {
 			const expectedResult = {
 				"Name": "Bulb 1",
 				"Number of bulbs": "8",
-				"Power": "5",
-				"Efficacy": "120",
+				"Power": "5 W",
+				"Efficacy": "120 lm/W",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -1111,7 +1111,7 @@ describe("dwelling space doors", () => {
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
-		
+
 		it("should display the correct data for the external unglazed doors section", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -1120,7 +1120,7 @@ describe("dwelling space doors", () => {
 					},
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalUnglazedDoor:
-						doorsData.dwellingSpaceExternalUnglazedDoor,
+							doorsData.dwellingSpaceExternalUnglazedDoor,
 					},
 				},
 			});
@@ -1169,7 +1169,7 @@ describe("dwelling space doors", () => {
 									midHeightOpenablePart1: 1,
 									thermalResistance: 26,
 								},
-							}], 
+							}],
 						},
 					},
 				},
@@ -1195,7 +1195,7 @@ describe("dwelling space doors", () => {
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
-	
+
 		it("should display the correct data for an item with a tagged wall ", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -1204,7 +1204,7 @@ describe("dwelling space doors", () => {
 					},
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor:
-						doorsData.dwellingSpaceExternalGlazedDoor,
+							doorsData.dwellingSpaceExternalGlazedDoor,
 					},
 				},
 			});

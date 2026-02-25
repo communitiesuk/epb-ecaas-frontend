@@ -8,3 +8,5 @@ export const kilowattHour = asUnit("kilowatt-hour");
 export const kilowatt = asUnit("kilowatt");
 
 export const kilowattPeak = asUnit("kilowatt peak");
+
+export const watt = asUnit("watt");
