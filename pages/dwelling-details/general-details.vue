@@ -42,6 +42,7 @@ const saveForm = (fields: typeof model.value) => {
 					numOfWCs: fields.numOfWCs,
 					numOfHabitableRooms: fields.numOfHabitableRooms,
 					numOfRoomsWithTappingPoints: fields.numOfRoomsWithTappingPoints,
+					numOfWetRooms: fields.numOfWetRooms,
 					fuelType: fields.fuelType,
 				},
 				complete: true,
@@ -257,6 +258,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 			help="This could be a room with any tapping point. For example a sink, bath or shower."
 			data-field="NumberOfTappedRooms"
+		/>
+		<FormKit
+			id="numOfWetRooms"
+			type="govInputInt"
+			label="Total number of wet rooms"
+			name="numOfWetRooms"
+			:validation-rules="{ isInteger }"
+			validation="required | isInteger"
+			:validation-messages="{
+				isInteger: `Number of wet rooms must be an integer.`,
+			}"
+			help="A room used for domestic activities that produce significant amounts of airborne moisture. For example a kitchen, utility room, bathroom or WC."
 		/>
 		<FormKit
 			id="fuelType"

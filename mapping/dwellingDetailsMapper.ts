@@ -55,7 +55,7 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 		NumberOfSanitaryAccommodations: generalDetails.numOfWCs,
 		NumberOfHabitableRooms: generalDetails.numOfHabitableRooms,
 		NumberOfTappedRooms: generalDetails.numOfRoomsWithTappingPoints,
-		NumberOfWetRooms: 0, // fhs needs this field set at 0.36
+		NumberOfWetRooms: generalDetails.numOfWetRooms,
 		PartGcompliance: true,
 	};
 }

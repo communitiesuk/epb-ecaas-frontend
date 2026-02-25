@@ -27,6 +27,7 @@ const generalDetailsSummary: SummarySection = {
 		"Number of WCs": show(generalDetailsData.numOfWCs),
 		"Number of habitable rooms": show(generalDetailsData.numOfHabitableRooms),
 		"Total number of rooms with tapping points": show(generalDetailsData.numOfRoomsWithTappingPoints),
+		"Total number of wet rooms": show(generalDetailsData.numOfWetRooms),
 		"Energy sources": displayFuelTypes(generalDetailsData.fuelType),
 	},
 	editUrl: getUrl("generalSpecifications"),

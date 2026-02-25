@@ -188,7 +188,7 @@ const expectedHouseInput: FhsInputSchema = {
 	NumberOfSanitaryAccommodations: 1,
 	NumberOfTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
-	NumberOfWetRooms: 0,
+	NumberOfWetRooms: 1,
 	SpaceCoolSystem: {
 		// "some-aircon-unit-name": {
 		// 	type: "AirConditioning",
@@ -622,7 +622,7 @@ const expectedFlatInput: FhsInputSchema = {
 	NumberOfSanitaryAccommodations: 1,
 	NumberOfTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
-	NumberOfWetRooms: 0,
+	NumberOfWetRooms: 2,
 	SpaceCoolSystem: {},
 	SpaceHeatSystem: {
 		"UFH System": {
@@ -959,6 +959,7 @@ describe("FHS input mapper", () => {
 					numOfBathrooms: 1,
 					numOfHabitableRooms: 4,
 					numOfRoomsWithTappingPoints: 2,
+					numOfWetRooms: 1,
 					numOfUtilityRooms: 1,
 					numOfWCs: 1,
 					buildingLength: 10,
@@ -1359,6 +1360,7 @@ describe("FHS input mapper", () => {
 					numOfBathrooms: 1,
 					numOfHabitableRooms: 4,
 					numOfRoomsWithTappingPoints: 2,
+					numOfWetRooms: 2,
 					numOfUtilityRooms: 1,
 					numOfWCs: 1,
 					buildingLength: 10,

@@ -21,6 +21,7 @@ const state: GeneralDetailsData = {
 	numOfWCs: 1,
 	numOfHabitableRooms: 4,
 	numOfRoomsWithTappingPoints: 2,
+	numOfWetRooms: 3,
 	fuelType: ["elecOnly"],
 };
 
@@ -37,6 +38,7 @@ const stateWithFlat: GeneralDetailsData = {
 	numOfWCs: 1,
 	numOfHabitableRooms: 4,
 	numOfRoomsWithTappingPoints: 2,
+	numOfWetRooms: 4,
 	fuelType: ["mains_gas"],
 };
 
@@ -63,6 +65,7 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("numOfWCs"), "1");
 			await user.type(screen.getByTestId("numOfHabitableRooms"), "4");
 			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
+			await user.type(screen.getByTestId("numOfWetRooms"), "3");
 			await user.click(screen.getByTestId("fuelType_elecOnly"));
 	
 			await user.tab();
@@ -161,6 +164,7 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("numOfWCs"), "1");
 			await user.type(screen.getByTestId("numOfHabitableRooms"), "4");
 			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
+			await user.type(screen.getByTestId("numOfWetRooms"), "4");
 			await user.click(screen.getByTestId("fuelType_mains_gas"));
 
 			await user.tab();

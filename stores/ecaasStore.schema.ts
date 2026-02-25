@@ -68,6 +68,7 @@ const baseGeneralDetails = z.object({
 	numOfWCs: z.int(),
 	numOfHabitableRooms: z.int().min(1),
 	numOfRoomsWithTappingPoints: z.int().min(1),
+	numOfWetRooms: z.int().min(1),
 	fuelType: z.array(fuelTypeWithElecOnlyZod),
 });
 

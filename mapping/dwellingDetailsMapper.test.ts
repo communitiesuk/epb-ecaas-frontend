@@ -24,6 +24,7 @@ describe("dwelling details mapper", () => {
 		numOfWCs: 1,
 		numOfHabitableRooms: 3,
 		numOfRoomsWithTappingPoints: 2,
+		numOfWetRooms: 3,
 		fuelType: ["mains_gas"],
 	};
 
@@ -54,6 +55,7 @@ describe("dwelling details mapper", () => {
 		expect(fhsInputData.NumberOfSanitaryAccommodations).toBe(state.numOfWCs);
 		expect(fhsInputData.NumberOfHabitableRooms).toBe(state.numOfHabitableRooms);
 		expect(fhsInputData.NumberOfTappedRooms).toBe(state.numOfRoomsWithTappingPoints);
+		expect(fhsInputData.NumberOfWetRooms).toBe(state.numOfWetRooms);
 		expect(fhsInputData.PartGcompliance).toBe(true);
 	});
 
@@ -104,6 +106,7 @@ describe("dwelling details mapper", () => {
 				numOfWCs: 1,
 				numOfHabitableRooms: 3,
 				numOfRoomsWithTappingPoints: 2,
+				numOfWetRooms: 4,
 				fuelType: ["elecOnly"],
 			};
 	
@@ -147,6 +150,7 @@ describe("dwelling details mapper", () => {
 				numOfWCs: 1,
 				numOfHabitableRooms: 3,
 				numOfRoomsWithTappingPoints: 2,
+				numOfWetRooms: 5,
 				fuelType: ["mains_gas", "LPG_bulk"],
 			};
 	

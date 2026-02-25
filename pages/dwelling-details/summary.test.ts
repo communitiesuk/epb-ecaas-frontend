@@ -27,6 +27,7 @@ const state: DwellingDetailSummary = {
 		numOfWCs: 1,
 		numOfHabitableRooms: 4,
 		numOfRoomsWithTappingPoints: 2,
+		numOfWetRooms: 3,
 		fuelType: ["mains_gas", "LPG_bulk"],
 	},
 	shading: [{
