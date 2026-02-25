@@ -21,7 +21,6 @@ describe("party wall", () => {
 		pitchOption: "90",
 		pitch: 90,
 		surfaceArea: 10,
-		uValue: 1,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		partyWallCavityType: "solid",
@@ -43,7 +42,6 @@ describe("party wall", () => {
 		await user.type(screen.getByTestId("name"), "Party wall 1");
 		await user.click(screen.getByTestId("pitchOption_90"));
 		await user.type(screen.getByTestId("surfaceArea"), "10");
-		await user.type(screen.getByTestId("uValue"), "1");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.click(screen.getByTestId("partyWallCavityType_solid"));
@@ -51,7 +49,7 @@ describe("party wall", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data = [] } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall || {};
-		
+
 		expect(data[0]?.data).toEqual(state);
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/walls");
 	});
@@ -76,11 +74,10 @@ describe("party wall", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Party wall 1");
 		expect((await screen.findByTestId<HTMLInputElement>("pitchOption_90")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("10");
-		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
 		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 	});
-		
+
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(PartyWall);
 
@@ -89,7 +86,6 @@ describe("party wall", () => {
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
-		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 
@@ -105,10 +101,10 @@ describe("party wall", () => {
 
 	test("requires pitch when custom pitch option is selected", async () => {
 		await renderSuspended(PartyWall);
-    
+
 		await user.click(screen.getByTestId("pitchOption_custom"));
 		await user.click(screen.getByTestId("saveAndComplete"));
-    
+
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
@@ -130,7 +126,7 @@ describe("party wall", () => {
 				params: { wall: "0" },
 			},
 		});
-	
+
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
 		await user.clear(screen.getByTestId("surfaceArea"));
@@ -144,14 +140,14 @@ describe("party wall", () => {
 		expect(data[0]?.data.name).toBe("Party wall 2");
 		expect(data[0]?.data.surfaceArea).toBe(15);
 	});
-	
+
 	test("partial form data is saved automatically with default name to store", async () => {
 		await renderSuspended(PartyWall, {
 			route: {
 				params: { wall: "create" },
 			},
 		});
-		
+
 		await user.type(screen.getByTestId("surfaceArea"), "10");
 		await user.tab();
 
