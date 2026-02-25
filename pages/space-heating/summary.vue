@@ -87,7 +87,7 @@ const heatNetworkSummary: SummarySection = {
 				"Is the heat network in the PCDB": "isHeatNetworkInPcdb" in heatSource ? displayBoolean(heatSource.isHeatNetworkInPcdb) : emptyValueRendering,
 				...(heatSource.isHeatNetworkInPcdb === true && {
 					"Heat network product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-					"Energy supply": "energySupply" in heatSource ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+					"Energy supply": "energySupply" in heatSource && heatSource.energySupply !== undefined ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
 					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 				}),
 				...(heatSource.isHeatNetworkInPcdb === false && {

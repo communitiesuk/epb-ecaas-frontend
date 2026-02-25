@@ -164,7 +164,7 @@ const heatNetworkSummary: SummarySection = {
 					"Is the heat network in the PCDB": "isHeatNetworkInPcdb" in heatSource ? displayBoolean(heatSource.isHeatNetworkInPcdb) : emptyValueRendering,
 					...("isHeatNetworkInPcdb" in heatSource && heatSource.isHeatNetworkInPcdb === true && {
 						"Heat network product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-						"Energy supply": "energySupply" in heatSource ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+						"Energy supply": "energySupply" in heatSource && heatSource.energySupply !== undefined ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
 						"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 					}),
 					...("isHeatNetworkInPcdb" in heatSource && heatSource.isHeatNetworkInPcdb === false && {
@@ -309,7 +309,7 @@ const pointOfUseSummary: SummarySection = {
 				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
 				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
 				"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
-				"Energy supply": "energySupply" in heatSource ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+				"Energy supply": "energySupply" in heatSource && heatSource.energySupply !== undefined ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
 				"Heater efficiency": "heaterEfficiency" in heatSource ? heatSource.heaterEfficiency : emptyValueRendering,
 
 			};

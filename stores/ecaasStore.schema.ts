@@ -869,7 +869,7 @@ const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatBattery"),
 	typeOfHeatBattery,
 	numberOfUnits: z.number(),
-	energySupply: fuelTypeZod,
+	energySupply: fuelTypeZod.optional(),
 });
 
 const solarThermalSystemBase = namedWithId.extend({
@@ -903,14 +903,14 @@ function heatNetworkZodDataFromBase<
 		z.object({
 			isHeatNetworkInPcdb: z.literal(true),
 			productReference: z.string().trim().min(1),
-			energySupply: fuelTypeZod,
+			energySupply: fuelTypeZod.optional(),
 			usesHeatInterfaceUnits: z.literal(true),
 			heatInterfaceUnitProductReference: z.string().trim().min(1),
 		}).extend(baseShape),
 		z.object({
 			isHeatNetworkInPcdb: z.literal(true),
 			productReference: z.string().trim().min(1),
-			energySupply: fuelTypeZod,
+			energySupply: fuelTypeZod.optional(),
 			usesHeatInterfaceUnits: z.literal(false),
 		}).extend(baseShape),
 		z.object({
@@ -1250,7 +1250,7 @@ export type ImmersionHeaterPosition = "top" | "middle" | "bottom";
 
 const basePointOfUse = namedWithId.extend({
 	typeOfHeatSource: z.literal("pointOfUse"),
-	energySupply: fuelTypeZod,
+	energySupply: fuelTypeZod.optional(),
 	heaterEfficiency: z.number(),
 });
 export type DHWHeatSourceType = HeatSourceType | "immersionHeater" | "pointOfUse";
