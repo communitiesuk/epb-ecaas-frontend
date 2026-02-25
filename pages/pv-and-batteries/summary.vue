@@ -1,9 +1,28 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
+import type { PvShadingData } from "~/stores/ecaasStore.schema";
 import { getTabItems, getUrl } from "#imports";
 
 const title = "PV and electric batteries summary";
 const store = useEcaasStore();
+
+function formatShadingRowsForSummary(shading: PvShadingData[]): Record<string, string> {
+	const rows: Record<string, string> = {};
+	shading.forEach((shadingEntry, i) => {
+		const n = i + 1;
+		const typeOfShading = displaySnakeToSentenceCase(shadingEntry.typeOfShading);
+		rows[`Name of shading ${n}`] = shadingEntry.name;
+		rows[`Type of shading ${n}`] = typeOfShading;
+		rows[`Distance of shading ${n} from edge of PV`] = dim(shadingEntry.distance, "metres");
+		if (shadingEntry.typeOfShading === "obstacle") {
+			rows[`Height of shading ${n}`] = dim(shadingEntry.height, "metres");
+			rows[`Transparency of shading ${n}`] = show(shadingEntry.transparency);
+		} else {
+			rows[`Depth of shading ${n}`] = dim(shadingEntry.depth, "metres");
+		}
+	});
+	return rows;
+}
 
 const pvArrays = store.pvAndBatteries.pvArrays.data;
 const pvSummary: SummarySection = {
@@ -22,9 +41,12 @@ const pvSummary: SummarySection = {
 			"Inverter peak power AC": dim(x.inverterPeakPowerAC, "kilowatt"),
 			"Inverter peak power DC": dim(x.inverterPeakPowerDC, "kilowatt"),
 			"Location of inverter": displaySnakeToSentenceCase(show(x.locationOfInverter)),
-			"Inverter type": displaySnakeToSentenceCase(show(x.inverterType)), 
+			"Inverter type": displaySnakeToSentenceCase(show(x.inverterType)),
 			"Can the electricity be exported to the grid": displayBoolean(x.canExportToGrid),
-			"Priority for generated electricity": displayCamelToSentenceCase(show(x.electricityPriority)) };
+			"Priority for generated electricity": displayCamelToSentenceCase(show(x.electricityPriority)), 
+			"Does anything shade the PV array?": displayBoolean(x.hasShading),
+			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvArrayData, { hasShading: true }>).shading) } : {}),
+		};
 	}),
 	editUrl: "/pv-and-batteries",
 };
