@@ -20,6 +20,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 		const commonFields = { 
 			name: fields.name,
 			associatedItemId: shouldSavePitchOrientation ? undefined : fields.associatedItemId,
+			isTheFrontDoor: fields.isTheFrontDoor,
 			pitch: shouldSavePitchOrientation ? fields.pitch : undefined,
 			orientation: shouldSavePitchOrientation ? fields.orientation : undefined,
 			height: fields.height,
@@ -168,6 +169,13 @@ const windowTreatmentTypeOptions: Record<SchemaWindowTreatmentType, SnakeToSente
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
 		/>
+		<FormKit
+			id="isTheFrontDoor"
+			type="govBoolean"
+			label="Is this the front door?"
+			name="isTheFrontDoor"
+			validation="required" />
+
 		<FieldsAssociatedWallRoof
 			id="associatedItemId"
 			name="associatedItemId"

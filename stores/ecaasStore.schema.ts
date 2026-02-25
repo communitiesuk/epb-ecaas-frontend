@@ -390,6 +390,7 @@ export type DoorsData = AssertFormKeysArePageIds<{
 }>;
 
 const externalUnglazedDoorDataZod = named.extend({
+	isTheFrontDoor: z.boolean(),
 	associatedItemId: z.guid().optional(),
 	pitchOption: standardPitchOption.optional(),
 	pitch: z.number().min(0).max(180).optional(),
@@ -406,6 +407,7 @@ const externalUnglazedDoorDataZod = named.extend({
 export type ExternalUnglazedDoorData = z.infer<typeof externalUnglazedDoorDataZod>;
 
 const baseExternalGlazedDoorDataZod = named.extend({
+	isTheFrontDoor: z.boolean(),
 	associatedItemId: z.guid().optional(),
 	pitchOption: standardPitchOption.optional(),
 	pitch: z.number().min(0).max(180).optional(),
@@ -474,6 +476,7 @@ const externalGlazedDoorData = z.intersection(externalGlazedDoorDataWithOpenable
 export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorData>;
 
 const baseInternalDoorData = named.extend({
+	isTheFrontDoor: z.boolean(),
 	associatedItemId: z.guid(),
 	surfaceArea: z.number().min(0).max(10000),
 	arealHeatCapacity: arealHeatCapacityZod,

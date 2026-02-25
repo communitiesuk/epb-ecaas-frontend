@@ -31,6 +31,7 @@ describe("external unglazed door", () => {
 	const state: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "External unglazed door 1",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
@@ -259,6 +260,7 @@ describe("external unglazed door", () => {
 			});
 
 			await user.type(screen.getByTestId("name"), "External unglazed door 1");
+			await user.click(screen.getByTestId(`isTheFrontDoor_no`));
 			await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
 			await user.type(screen.getByTestId("height"), "0.5");
 			await user.type(screen.getByTestId("width"), "20"); 
@@ -317,6 +319,7 @@ describe("external unglazed door", () => {
 		test("form is prepopulated with none of the above associated wall, as well as pitch and orientation when there is no tagged item", async () => {
 			const doorNoTag = {
 				name: "External unglazed door 1",
+				isTheFrontDoor: false,
 				pitchOption: "custom",
 				pitch: 72,
 				orientation: 24,

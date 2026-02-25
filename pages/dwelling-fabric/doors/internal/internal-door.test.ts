@@ -38,6 +38,7 @@ describe("internal door", () => {
 		data: {
 			typeOfInternalDoor: "heatedSpace",
 			name: "Internal 1",
+			isTheFrontDoor: false,
 			associatedItemId: internalWall.id,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
@@ -76,6 +77,7 @@ describe("internal door", () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Internal 1");
+		await user.click(screen.getByTestId(`isTheFrontDoor_no`));
 		await user.type(screen.getByTestId("surfaceArea"), "5");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));

@@ -773,6 +773,7 @@ describe("dwelling fabric mapper", () => {
 		const internalDoor: InternalDoorData = {
 			typeOfInternalDoor: "unheatedSpace",
 			name: "Internal 1",
+			isTheFrontDoor: false,
 			associatedItemId: internalWall.data.id,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
@@ -783,6 +784,7 @@ describe("dwelling fabric mapper", () => {
 
 		const externalGlazedDoor: ExternalGlazedDoorData = {
 			name: "External glazed door 1",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.data.id,
 			height: 1,
 			width: 1,
@@ -801,6 +803,7 @@ describe("dwelling fabric mapper", () => {
 
 		const externalUnglazedDoor: ExternalUnglazedDoorData = {
 			name: "External unglazed door 1",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.data.id,
 			height: 0.5,
 			width: 20,

@@ -50,6 +50,7 @@ describe("doors", () => {
 	const externalUnglazed1: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 1 name",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
@@ -64,6 +65,7 @@ describe("doors", () => {
 	const externalUnglazed2: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 2 name",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
@@ -78,6 +80,7 @@ describe("doors", () => {
 	const externalUnglazed3: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 3 name",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
@@ -92,6 +95,7 @@ describe("doors", () => {
 	const externalGlazed1: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed1 name",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
 			height: 1,
 			width: 1,
@@ -112,6 +116,7 @@ describe("doors", () => {
 	const externalGlazed2: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed2 name",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
 			height: 1,
 			width: 1,
@@ -132,6 +137,7 @@ describe("doors", () => {
 	const externalGlazed3: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed3 name",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
 			height: 1,
 			width: 1,
@@ -154,6 +160,7 @@ describe("doors", () => {
 		data: {
 			typeOfInternalDoor: "heatedSpace",
 			name: "Internal 1",
+			isTheFrontDoor: false,
 			associatedItemId: internalWall.id,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
@@ -165,6 +172,7 @@ describe("doors", () => {
 		data: {
 			typeOfInternalDoor: "heatedSpace",
 			name: "Internal 2",
+			isTheFrontDoor: false,
 			associatedItemId: internalWall.id,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
@@ -176,6 +184,7 @@ describe("doors", () => {
 		data: {
 			typeOfInternalDoor: "heatedSpace",
 			name: "Internal 3",
+			isTheFrontDoor: false,
 			associatedItemId: internalWall.id,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",

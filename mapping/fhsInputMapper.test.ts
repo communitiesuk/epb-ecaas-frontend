@@ -1766,6 +1766,7 @@ describe("FHS input mapper", () => {
 						data: {
 							name: "front door",
 							associatedItemId: externalWallId,
+							isTheFrontDoor: false,
 							height: 2.6,
 							width: 1.2,
 							elevationalHeight: 1,
@@ -1784,6 +1785,7 @@ describe("FHS input mapper", () => {
 							name: "external glazed door",
 							height: 3,
 							width: 1,
+							isTheFrontDoor: false,
 							associatedItemId: externalWallId,
 							solarTransmittance: 0.5,
 							elevationalHeight: 0.2,
@@ -1806,6 +1808,7 @@ describe("FHS input mapper", () => {
 						data: {
 							typeOfInternalDoor: "heatedSpace",
 							name: "bathroom door",
+							isTheFrontDoor: false,
 							surfaceArea: 1.4,
 							arealHeatCapacity: "Light",
 							massDistributionClass: "IE",
@@ -1817,6 +1820,7 @@ describe("FHS input mapper", () => {
 						data: {
 							typeOfInternalDoor: "unheatedSpace",
 							name: "door to garage",
+							isTheFrontDoor: false,
 							surfaceArea: 1.4,
 							arealHeatCapacity: "Very light",
 							massDistributionClass: "IE",

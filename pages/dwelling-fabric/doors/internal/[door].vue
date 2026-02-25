@@ -17,6 +17,7 @@ const saveForm = (fields: InternalDoorData) => {
 		const { dwellingSpaceInternalDoor } = state.dwellingFabric.dwellingSpaceDoors;
 
 		const commonFields = {
+			isTheFrontDoor: fields.isTheFrontDoor,
 			associatedItemId: fields.associatedItemId,
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
@@ -102,6 +103,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				:validation-messages="{
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
 				}" />
+			<FormKit
+				id="isTheFrontDoor"
+				type="govBoolean"
+				label="Is this the front door?"
+				name="isTheFrontDoor"
+				validation="required" />
+
 			<FieldsAssociatedElements
 				v-if="model.typeOfInternalDoor === 'heatedSpace'"
 				id="associatedItemId"

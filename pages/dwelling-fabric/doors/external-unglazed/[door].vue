@@ -21,6 +21,7 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 		dwellingSpaceExternalUnglazedDoor.data[index] = {
 			data: {
 				name: fields.name,
+				isTheFrontDoor: fields.isTheFrontDoor,
 				height: fields.height,
 				width: fields.width,
 				elevationalHeight: fields.elevationalHeight,
@@ -92,6 +93,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
 		/>
+		<FormKit
+			id="isTheFrontDoor"
+			type="govBoolean"
+			label="Is this the front door?"
+			name="isTheFrontDoor"
+			validation="required" />
+
 		<FieldsAssociatedWallRoof
 			id="associatedItemId"
 			name="associatedItemId"

@@ -30,6 +30,7 @@ describe("external glazed door", () => {
 	
 	const doorForState = {
 		name: "External glazed door 1",
+		isTheFrontDoor: false,
 		associatedItemId: externalWall.id,
 		height: 14,
 		width: 48,
@@ -272,6 +273,7 @@ describe("external glazed door", () => {
 
 			await user.type(screen.getByTestId("name"), "External glazed door 1");
 			await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
+			await user.click(screen.getByTestId(`isTheFrontDoor_no`));
 			await user.type(screen.getByTestId("height"), "14");
 			await user.type(screen.getByTestId("width"), "48");
 			await user.type(screen.getByTestId("maximumOpenableArea"), "13");
@@ -345,6 +347,7 @@ describe("external glazed door", () => {
 		test("form is prepopulated with none of the above associated wall, as well as pitch and orientation when there is no tagged item", async () => {
 			const doorNoTag = {
 				name: "External glazed door 1",
+				isTheFrontDoor: false,
 				pitchOption: "custom",
 				pitch: 72,
 				orientation: 24,

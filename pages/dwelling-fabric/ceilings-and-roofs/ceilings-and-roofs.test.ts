@@ -129,6 +129,7 @@ describe("ceilings and roofs", () => {
 		it("when a ceiling is removed it's also removed from any store item that references it", async () => {
 			const doorToHeatedSpace: EcaasForm<InternalDoorData> = {
 				data: {
+					isTheFrontDoor: false,
 					typeOfInternalDoor: "heatedSpace",
 					name: "Internal 1",
 					associatedItemId: ceiling1.data.id,
@@ -296,6 +297,7 @@ describe("ceilings and roofs", () => {
 			};
 			const externalUnglazed: EcaasForm<ExternalUnglazedDoorData> = {
 				data: {
+					isTheFrontDoor: false,
 					name: "external unglazed name",
 					associatedItemId: roof1.data.id,
 					height: 0.5,
@@ -310,6 +312,7 @@ describe("ceilings and roofs", () => {
 
 			const externalGlazed: EcaasForm<ExternalGlazedDoorData> = {
 				data: {
+					isTheFrontDoor: false,
 					name: "external glazed name",
 					associatedItemId: roof1.data.id,
 					height: 1,
