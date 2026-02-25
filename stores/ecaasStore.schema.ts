@@ -278,10 +278,10 @@ const externalWallDataZod = namedWithId.extend({
 	length: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),
 	surfaceArea: z.number().min(0.01).max(10000),
-	uValue,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	colour: colourZod,
+	thermalResistance: z.number().min(0.00001).max(50),
 });
 
 export type ExternalWallData = z.infer<typeof externalWallDataZod>;
@@ -292,13 +292,14 @@ const internalWallDataZod = namedWithId.extend({
 	massDistributionClass,
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
+	thermalResistance: z.number().min(0.00001).max(50),
 });
 
 export type InternalWallData = z.infer<typeof internalWallDataZod>;
 
 const wallsToUnheatedSpaceDataZod = namedWithId.extend({
 	surfaceAreaOfElement: z.number().min(0).max(10000),
-	uValue,
+	thermalResistance: z.number().min(0.00001).max(50),
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	pitchOption: standardPitchOption,
@@ -314,7 +315,6 @@ const partyWallDataZod = namedWithId.extend({
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(60).max(120)),
 	surfaceArea: z.number().min(0.01).max(10000),
-	uValue,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	partyWallCavityType: partyWallCavityTypeZod,

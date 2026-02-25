@@ -23,6 +23,7 @@ describe("internal wall", () => {
 		massDistributionClass: "I",
 		pitchOption: "90",
 		pitch: 90,
+		thermalResistance: 0.5,
 	};
 
 	afterEach(() => {
@@ -35,8 +36,9 @@ describe("internal wall", () => {
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.click(screen.getByTestId("pitchOption_90"));
+		await user.type(screen.getByTestId("thermalResistance"), "0.5");
 	};
-	
+
 	test("data is saved to store state when form is valid", async () => {
 		vi.mocked(uuidv4).mockReturnValue(internalWall.id as unknown as Buffer);
 
@@ -50,7 +52,7 @@ describe("internal wall", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceInternalWall } = store.dwellingFabric.dwellingSpaceWalls;
-		
+
 		expect(dwellingSpaceInternalWall?.data[0]?.data).toEqual(internalWall);
 	});
 
@@ -76,6 +78,7 @@ describe("internal wall", () => {
 		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("pitchOption_90")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("0.5");
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -92,6 +95,7 @@ describe("internal wall", () => {
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 		expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
+		expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
@@ -133,8 +137,9 @@ describe("internal wall", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceInternalWall } = store.dwellingFabric.dwellingSpaceWalls;
-		
+
 		expect(dwellingSpaceInternalWall?.data[0]?.data.pitch).toEqual(100);
+		expect(dwellingSpaceInternalWall?.data[0]?.data.thermalResistance).toEqual(0.5);
 	});
 
 	it("navigates to walls page when valid form is completed", async () => {
@@ -143,7 +148,7 @@ describe("internal wall", () => {
 				params: { wall: "create" },
 			},
 		});
-	
+
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -168,13 +173,14 @@ describe("internal wall", () => {
 				params: { wall: "0" },
 			},
 		});
-	
+
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
 		await user.clear(screen.getByTestId("surfaceAreaOfElement"));
 
 		await user.type(screen.getByTestId("name"), "Internal wall 2");
 		await user.type(screen.getByTestId("surfaceAreaOfElement"), "10");
+		await user.type(screen.getByTestId("thermalResistance"), "0.5");
 		await user.tab();
 
 		const { data } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall;
@@ -182,14 +188,14 @@ describe("internal wall", () => {
 		expect(data[0]?.data.name).toBe("Internal wall 2");
 		expect(data[0]?.data.surfaceAreaOfElement).toBe(10);
 	});
-	
+
 	test("partial form data is saved automatically with default name to store", async () => {
 		await renderSuspended(InternalWall, {
 			route: {
 				params: { wall: "create" },
 			},
 		});
-		
+
 		await user.type(screen.getByTestId("surfaceAreaOfElement"), "10");
 		await user.tab();
 
