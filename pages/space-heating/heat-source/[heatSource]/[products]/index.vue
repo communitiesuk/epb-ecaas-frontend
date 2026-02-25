@@ -67,10 +67,19 @@ const selectProduct = (product: DisplayProduct) => {
 		<ProductSearch
 			:model="searchModel"
 			:search-options="{
+				networkName: 'Network name',
 				productId: 'Product ID',
-				networkName: 'Network name'
 			}"
-		/>
+		>
+			<FieldsProductSearch
+				v-if="searchModel.searchOption !== 'productId'"
+				id="searchTerm"
+				name="searchTerm"
+				label="Search network name"
+				placeholder="Enter network name"
+				:value="searchModel.searchTerm"
+			/>
+		</ProductSearch>
 		<HeatNetworkProductsTable
 			v-if="heatSourceProductType === 'heatNetwork'"
 			:products="pagination.getData()"

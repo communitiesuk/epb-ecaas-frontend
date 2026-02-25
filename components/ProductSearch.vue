@@ -1,16 +1,18 @@
 <script setup lang="ts">
 const { model: searchModel, searchOptions = {
-	productId: "Product ID",
 	modelAndBrand: "Brand and model",
+	productId: "Product ID",
 } } = defineProps<{
 	model: ProductSearchModel;
 	searchOptions?: Partial<Record<SearchOption, string>>;
 }>();
 
 const getModel = (currentSearch: ProductSearchModel): ProductSearchModel => {
+	const defaultSearchOption = Object.keys(searchOptions)[0] as SearchOption;
+
 	return {
 		...currentSearch,
-		searchOption: currentSearch.searchOption || "productId",
+		searchOption: currentSearch.searchOption || defaultSearchOption,
 	};
 };
 
@@ -63,18 +65,24 @@ watch(() => searchModel, (currentSearch: ProductSearchModel) => {
 					v-if="model.searchOption === 'productId'"
 					id="productId"
 					name="productId"
-					label="Product ID"
+					label="Search product ID"
 					placeholder="Enter product ID"
 					:value="model.productId"
 				/>
-				<FieldsProductSearch
-					v-if="model.searchOption !== 'productId'"
-					id="searchTerm"
-					name="searchTerm"
-					label="Search term"
-					placeholder="Enter search term"
-					:value="model.searchTerm"
-				/>
+				<template v-if="Object.keys($slots).length">
+					<slot />
+				</template>
+				<template v-else>
+					<FieldsProductSearch
+						v-if="model.searchOption !== 'productId'"
+						id="searchTerm"
+						name="searchTerm"
+						label="Search brand or model"
+						placeholder="Enter brand or model"
+						:value="model.searchTerm"
+					/>
+				</template>
+				
 			</div>
 		</FormKit>
 	</div>
