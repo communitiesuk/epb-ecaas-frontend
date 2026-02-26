@@ -22,12 +22,12 @@ describe("external glazed door", () => {
 		height: 0.5,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		uValue: 1,
+		thermalResistance: 1,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
-	
+
 	const doorForState = {
 		name: "External glazed door 1",
 		isTheFrontDoor: false,
@@ -61,21 +61,21 @@ describe("external glazed door", () => {
 					params: { externalGlazed: "create" },
 				},
 			});
-	
+
 			expect(screen.queryByText("No walls or roofs added.")).toBeNull();
 			// expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add walls" }).href)
 			// 	.toContain("/dwelling-fabric/walls");
 			// expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add roofs" }).href)
 			// 	.toContain("/dwelling-fabric/ceilings-and-roofs");
 		});
-	
+
 		test("Should not render assiciated ID element", async () => {
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { externalGlazed: "create" },
 				},
 			});
-	
+
 			expect(screen.queryByTestId("associatedItemId")).toBeNull();
 		});
 
@@ -85,10 +85,10 @@ describe("external glazed door", () => {
 					params: { externalGlazed: "create" },
 				},
 			});
-				
+
 			expect(screen.getByTestId("pitchOption")).toBeDefined();
 		});
-				
+
 		it("shows orientation when pitch is not 0 or 180", async () => {
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
@@ -100,45 +100,45 @@ describe("external glazed door", () => {
 			await user.tab();
 			expect(screen.getByTestId("orientation")).toBeDefined();
 		});
-				
+
 		test("requires pitch and orientation", async () => {
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { externalGlazed: "create" },
 				},
 			});
-				
-				
+
+
 			await user.click(screen.getByTestId("saveAndComplete"));
-				
+
 			expect(await screen.findByTestId("pitchOption_error")).toBeDefined();
-				
+
 			expect(screen.queryByTestId("orientation_error")).toBeNull();
-				
-				
+
+
 			await user.type(screen.getByTestId("name"), "Window 1");
 			await user.click(screen.getByTestId("pitchOption_90"));
 			await user.tab();
-				
+
 			await user.click(screen.getByTestId("saveAndComplete"));
-				
+
 			expect(await screen.findByTestId("orientation_error")).toBeDefined();
-				
+
 			await user.click(screen.getByTestId("pitchOption_custom"));
 			await user.type(screen.getByTestId("pitch"), "0");
 			await user.tab();
-				
+
 			expect(screen.queryByTestId("orientation")).toBeNull();
 			await user.click(screen.getByTestId("saveAndComplete"));
 			expect(screen.queryByTestId("orientation_error")).toBeNull();
-				
+
 			await user.clear(screen.getByTestId("pitch"));
 			await user.type(screen.getByTestId("pitch"), "180");
 			await user.tab();
-				
-				
+
+
 			expect(screen.queryByTestId("orientation")).toBeNull();
-				
+
 			await user.click(screen.getByTestId("saveAndComplete"));
 			expect(screen.queryByTestId("orientation_error")).toBeNull();
 		});
@@ -167,7 +167,7 @@ describe("external glazed door", () => {
 					params: { externalGlazed: "create" },
 				},
 			});
-		
+
 			expect(screen.getByTestId("associatedItemId_none")).toBeDefined();
 		});
 
@@ -177,17 +177,17 @@ describe("external glazed door", () => {
 					params: { externalGlazed: "create" },
 				},
 			});
-				
-				
+
+
 			expect(screen.queryByTestId("pitch")).toBeNull();
 			expect(screen.queryByTestId("orientation")).toBeNull();
-				
+
 			await user.click(screen.getByTestId("saveAndComplete"));
-				
+
 			expect(screen.queryByTestId("pitch_error")).toBeNull();
 			expect(screen.queryByTestId("orientation_error")).toBeNull();
-				
-				
+
+
 			expect(await screen.findByTestId("associatedItemId_error")).toBeDefined();
 		});
 
@@ -198,67 +198,67 @@ describe("external glazed door", () => {
 						params: { externalGlazed: "create" },
 					},
 				});
-				
+
 				await user.click(screen.getByTestId("associatedItemId_none"));
-				
+
 				expect(screen.getByTestId("pitchOption")).toBeDefined();
 			});
-				
+
 			it("shows orientation when pitch is not 0 or 180", async () => {
 				await renderSuspended(ExternalGlazedDoor, {
 					route: {
 						params: { externalGlazed: "create" },
 					},
 				});
-				
+
 				await user.click(screen.getByTestId("associatedItemId_none"));
-				
+
 				expect(screen.queryByTestId("orientation")).toBeNull();
 				await user.click(screen.getByTestId("pitchOption_90"));
 				await user.tab();
 				expect(screen.getByTestId("orientation")).toBeDefined();
 			});
-				
+
 			test("requires pitch and orientation", async () => {
 				await renderSuspended(ExternalGlazedDoor, {
 					route: {
 						params: { externalGlazed: "create" },
 					},
 				});
-				
+
 				await user.click(screen.getByTestId("associatedItemId_none"));
-				
+
 				await user.click(screen.getByTestId("saveAndComplete"));
-				
+
 				expect(await screen.findByTestId("pitchOption_error")).toBeDefined();
-				
+
 				expect(screen.queryByTestId("orientation_error")).toBeNull();
-				
-				
+
+
 				await user.type(screen.getByTestId("name"), "Window 1");
 
 				await user.click(screen.getByTestId("pitchOption_90"));
 				await user.tab();
-				
+
 				await user.click(screen.getByTestId("saveAndComplete"));
-				
+
 				expect(await screen.findByTestId("orientation_error")).toBeDefined();
-				
+
 				await user.click(screen.getByTestId("pitchOption_custom"));
 				await user.type(screen.getByTestId("pitch"), "0");
 				await user.tab();
-				
+
 				expect(screen.queryByTestId("orientation")).toBeNull();
 				await user.click(screen.getByTestId("saveAndComplete"));
 				expect(screen.queryByTestId("orientation_error")).toBeNull();
-				
+
 				await user.clear(screen.getByTestId("pitch"));
 				await user.type(screen.getByTestId("pitch"), "180");
 				await user.tab();
-				
-				
+
+
 				expect(screen.queryByTestId("orientation")).toBeNull();
-				
+
 				await user.click(screen.getByTestId("saveAndComplete"));
 				expect(screen.queryByTestId("orientation_error")).toBeNull();
 			});
@@ -294,7 +294,7 @@ describe("external glazed door", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const { data = [] } = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor || {};
-	
+
 			expect(data[0]).toEqual({ ...state, complete: true });
 			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/doors");
 		});
@@ -368,7 +368,7 @@ describe("external glazed door", () => {
 				thermalResistivityIncrease: 1,
 				solarTransmittanceReduction: 0.1,
 			} as const satisfies ExternalGlazedDoorData;
-		
+
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -378,13 +378,13 @@ describe("external glazed door", () => {
 					},
 				},
 			});
-		
+
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { door: "0" },
 				},
 			});
-		
+
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External glazed door 1");
 			expect((await screen.findByTestId(`associatedItemId_none`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("pitch")).value).toBe("72");
@@ -397,10 +397,10 @@ describe("external glazed door", () => {
 					params: { door: "create" },
 				},
 			});
-		
+
 			await user.click(screen.getByTestId("numberOpenableParts_4"));
 			await (user.click(screen.getByTestId("saveAndComplete")));
-		
+
 			expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
 			expect((await screen.findByTestId("maximumOpenableArea_error"))).toBeDefined();
 			expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
@@ -408,23 +408,23 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId("midHeightOpenablePart3_error"))).toBeDefined();
 			expect((await screen.findByTestId("midHeightOpenablePart4_error"))).toBeDefined();
 		});
-		
+
 		test("does not require the mid height of more parts than have been selected", async () => {
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { door: "create" },
 				},
 			});
-		
+
 			await user.click(screen.getByTestId("numberOpenableParts_1"));
 			await (user.click(screen.getByTestId("saveAndComplete")));
-		
+
 			expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
 			expect((screen.queryByTestId("midHeightOpenablePart2_error"))).toBeNull();
 			expect((screen.queryByTestId("midHeightOpenablePart3_error"))).toBeNull();
 			expect((screen.queryByTestId("midHeightOpenablePart4_error"))).toBeNull();
 		});
-		
+
 		test("only required error messages are displayed when empty form is submitted", async () => {
 			await renderSuspended(ExternalGlazedDoor);
 

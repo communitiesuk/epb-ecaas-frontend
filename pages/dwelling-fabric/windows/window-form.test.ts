@@ -25,7 +25,7 @@ const externalWall: ExternalWallData = {
 	height: 0.5,
 	elevationalHeight: 20,
 	surfaceArea: 10,
-	uValue: 1,
+	thermalResistance: 1,
 	colour: "Intermediate",
 	arealHeatCapacity: "Very light",
 	massDistributionClass: "I",
@@ -73,21 +73,21 @@ describe("window", () => {
 					params: { window: "create" },
 				},
 			});
-	
+
 			expect(screen.queryByText("No walls or roofs added.")).toBeNull();
 			// expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add walls" }).href)
 			// 	.toContain("/dwelling-fabric/walls");
 			// expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add roofs" }).href)
 			// 	.toContain("/dwelling-fabric/ceilings-and-roofs");
 		});
-	
+
 		test("should not render associated ID element", async () => {
 			await renderSuspended(Window, {
 				route: {
 					params: { window: "create" },
 				},
 			});
-	
+
 			expect(screen.queryByTestId("taggedItem")).toBeNull();
 		});
 
@@ -155,7 +155,7 @@ describe("window", () => {
 			expect(screen.queryByTestId("orientation_error")).toBeNull();
 		});
 	});
-		
+
 	describe("with existing external wall", () => {
 		beforeEach(() => {
 			store.$patch({
@@ -199,7 +199,7 @@ describe("window", () => {
 					params: { window: "create" },
 				},
 			});
-	
+
 			expect(screen.getByTestId("taggedItem_none")).toBeDefined();
 		});
 

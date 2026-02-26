@@ -19,7 +19,7 @@ describe("wall to unheated space", () => {
 		id: "55a95c36-bf0a-40d3-a31d-9e4f86798428",
 		name: "Wall to unheated space 1",
 		surfaceAreaOfElement: 500,
-		uValue: 10,
+		thermalResistance: 10,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "E",
 		pitchOption: "90",
@@ -29,11 +29,11 @@ describe("wall to unheated space", () => {
 
 	afterEach(() => {
 		store.$reset();
-	});	
+	});
 
 	test("data is saved to store state when form is valid", async () => {
 		vi.mocked(uuidv4).mockReturnValue(state.id as unknown as Buffer);
-		
+
 		await renderSuspended(WallToUnheatedSpace, {
 			route: {
 				params: { wall: "create" },
@@ -42,7 +42,7 @@ describe("wall to unheated space", () => {
 
 		await user.type(screen.getByTestId("name"), "Wall to unheated space 1");
 		await user.type(screen.getByTestId("surfaceAreaOfElement"), "500");
-		await user.type(screen.getByTestId("uValue"), "10");
+		await user.type(screen.getByTestId("thermalResistance"), "10");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_E"));
 		await user.click(screen.getByTestId("pitchOption_90"));
@@ -75,12 +75,12 @@ describe("wall to unheated space", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Wall to unheated space 1");
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceAreaOfElement")).value).toBe("500");
-		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("10");
+		expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("10");
 		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_E")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("pitchOption_90")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("thermalResistanceOfAdjacentUnheatedSpace")).value).toBe("1");
-	
+
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -89,12 +89,12 @@ describe("wall to unheated space", () => {
 				params: { wall: "create" },
 			},
 		});
-	
+
 		await user.click(screen.getByTestId("saveAndComplete"));
-	
+
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceAreaOfElement_error"))).toBeDefined();
-		expect((await screen.findByTestId("uValue_error"))).toBeDefined();			
+		expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 		expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
@@ -107,9 +107,9 @@ describe("wall to unheated space", () => {
 				params: { wall: "create" },
 			},
 		});
-		
+
 		await user.click(screen.getByTestId("saveAndComplete"));
-		
+
 		expect((await screen.findByTestId("wallToUnheatedSpaceErrorSummary"))).toBeDefined();
 	});
 
@@ -120,10 +120,10 @@ describe("wall to unheated space", () => {
 				params: { wall: "create" },
 			},
 		});
-				
+
 		await user.click(screen.getByTestId("pitchOption_custom"));
 		await user.click(screen.getByTestId("saveAndComplete"));
-				
+
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
@@ -145,7 +145,7 @@ describe("wall to unheated space", () => {
 				params: { wall: "0" },
 			},
 		});
-	
+
 		await user.clear(screen.getByTestId("name"));
 		await user.clear(screen.getByTestId("surfaceAreaOfElement"));
 
@@ -158,14 +158,14 @@ describe("wall to unheated space", () => {
 		expect(data[0]?.data.name).toBe("Wall to unheated space 2");
 		expect(data[0]?.data.surfaceAreaOfElement).toBe(10);
 	});
-	
+
 	test("partial form data is saved automatically with default name to store", async () => {
 		await renderSuspended(WallToUnheatedSpace, {
 			route: {
 				params: { wall: "create" },
 			},
 		});
-		
+
 		await user.type(screen.getByTestId("surfaceAreaOfElement"), "10");
 		await user.tab();
 

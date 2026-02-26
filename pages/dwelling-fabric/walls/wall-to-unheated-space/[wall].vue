@@ -23,7 +23,7 @@ const saveForm = (fields: WallsToUnheatedSpaceData) => {
 				id: currentId || uuidv4(),
 				name: fields.name,
 				surfaceAreaOfElement: fields.surfaceAreaOfElement,
-				uValue: fields.uValue,
+				thermalResistance: fields.thermalResistance,
 				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
 				pitchOption: fields.pitchOption,
@@ -97,7 +97,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="surfaceAreaOfElement"
 			validation="required | number | min:0 | max:10000"
 		/>
-		<FieldsUValue id="uValue" name="uValue" />
+		<FieldsThermalResistance/>
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit

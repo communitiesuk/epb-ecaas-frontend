@@ -20,20 +20,21 @@ describe("internal door", () => {
 		arealHeatCapacity: "Very light",
 		pitchOption: "90",
 		pitch: 90,
+		thermalResistance: 0.1,
 	};
 
 	const wallToUnheatedSpace: WallsToUnheatedSpaceData = {
 		id: "55a95c36-bf0a-40d3-a31d-9e4f86798428",
 		name: "Wall to unheated space 1",
 		surfaceAreaOfElement: 500,
-		uValue: 10,
+		thermalResistance: 10,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		pitchOption: "90",
 		pitch: 90,
 		thermalResistanceOfAdjacentUnheatedSpace: 1,
 	};
-  
+
 	const internalDoor: EcaasForm<InternalDoorData> = {
 		data: {
 			typeOfInternalDoor: "heatedSpace",
@@ -82,7 +83,7 @@ describe("internal door", () => {
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 	};
-	
+
 	describe("when type of internal door is heated space", () => {
 		it("data is saved to store state when form is valid", async () => {
 			await renderSuspended(InternalDoor, {
@@ -90,7 +91,7 @@ describe("internal door", () => {
 					params: { door: "create" },
 				},
 			});
-	
+
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 			await populateValidForm();
 			await user.click(
@@ -102,7 +103,7 @@ describe("internal door", () => {
 
 			expect(data[0]).toEqual({ ...internalDoor, complete: true });
 		});
-	
+
 		it("form is prepopulated when data exists in state", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -113,13 +114,13 @@ describe("internal door", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(InternalDoor, {
 				route: {
 					params: { door: "0" },
 				},
 			});
-	
+
 			expect((await screen.findByTestId("typeOfInternalDoor_heatedSpace")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Internal 1");
 			expect((await screen.findByTestId(`associatedItemId_${internalWall.id}`)).hasAttribute("checked")).toBe(true);
@@ -129,7 +130,7 @@ describe("internal door", () => {
 
 		it("requires additional fields when heated space is selected", async () => {
 			await renderSuspended(InternalDoor);
-	
+
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -140,7 +141,7 @@ describe("internal door", () => {
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 		});
 	});
-	
+
 	describe("when type of internal door is unheated space", () => {
 		it("data is saved to store state when form is valid", async () => {
 			await renderSuspended(InternalDoor, {
@@ -148,7 +149,7 @@ describe("internal door", () => {
 					params: { door: "create" },
 				},
 			});
-	
+
 			await user.click(screen.getByTestId("typeOfInternalDoor_unheatedSpace"));
 			await populateValidForm();
 			await user.click(
@@ -160,10 +161,10 @@ describe("internal door", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const { data } = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor;
-			
+
 			expect(data[0]).toEqual({ ...internalDoorWithUnheatedSpace, complete: true });
 		});
-	
+
 		it("form is prepopulated when data exists in state", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -174,20 +175,20 @@ describe("internal door", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(InternalDoor, {
 				route: {
 					params: { door: "0" },
 				},
 			});
-	
+
 			expect((await screen.findByTestId("typeOfInternalDoor_unheatedSpace")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("thermalResistanceOfAdjacentUnheatedSpace")).value).toBe("0");
 		});
 
 		it("requires additional fields when heated space is selected", async () => {
 			await renderSuspended(InternalDoor);
-	
+
 			await user.click(screen.getByTestId("typeOfInternalDoor_unheatedSpace"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -214,7 +215,7 @@ describe("internal door", () => {
 
 	it("navigates to doors page when valid form is completed", async () => {
 		await renderSuspended(InternalDoor);
-	
+
 		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 		await populateValidForm();
 		await user.click(screen.getByTestId(`associatedItemId_${internalWall.id}`));
@@ -237,13 +238,13 @@ describe("internal door", () => {
 		const stateWithFlat: Partial<GeneralDetailsData> = {
 			typeOfDwelling: "flat",
 		};
-	
+
 		const stateWithHouse: Partial<GeneralDetailsData> = {
 			typeOfDwelling: "house",
 		};
-	
-		it("displays the 'Is this the front door?' element if the type of dwelling is a flat", async() => {
-	
+
+		it("displays the 'Is this the front door?' element if the type of dwelling is a flat", async () => {
+
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -260,8 +261,8 @@ describe("internal door", () => {
 			expect(screen.getByTestId("isTheFrontDoor")).toBeDefined();
 		});
 
-		it("does not display the 'Is this the front door?' element if the type of dwelling is a house", async() => {
-	
+		it("does not display the 'Is this the front door?' element if the type of dwelling is a house", async () => {
+
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -277,7 +278,7 @@ describe("internal door", () => {
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
-	
+
 		it("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
 			const frontDoor: Partial<ExternalGlazedDoorData> = {
 				name: "Front door",
@@ -303,12 +304,12 @@ describe("internal door", () => {
 					params: { door: "create" },
 				},
 			});
-	
+
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
 			await user.tab();
 			await (user.click(screen.getByTestId("saveAndComplete")));
-			
+
 			const error = screen.findByTestId("isTheFrontDoor_error");
 			expect(error).toBeDefined();
 			expect(

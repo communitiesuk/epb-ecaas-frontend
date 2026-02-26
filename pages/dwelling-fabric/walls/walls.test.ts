@@ -33,7 +33,7 @@ describe("walls", () => {
 		length: 20,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		uValue: 1,
+		thermalResistance: 1,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
@@ -59,6 +59,7 @@ describe("walls", () => {
 		massDistributionClass: "I",
 		pitchOption: "custom",
 		pitch: 3,
+		thermalResistance: 1,
 	};
 
 	const internal2: InternalWallData = {
@@ -75,7 +76,7 @@ describe("walls", () => {
 		id: "7da5aa7a-f24a-40f7-a5a3-97ea4d6f31d7",
 		name: "Wall to heated space 1",
 		surfaceAreaOfElement: 500,
-		uValue: 10,
+		thermalResistance: 10,
 		arealHeatCapacity: "Medium",
 		massDistributionClass: "E",
 		pitchOption: "90",

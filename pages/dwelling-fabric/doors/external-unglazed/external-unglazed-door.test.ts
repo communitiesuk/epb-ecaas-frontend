@@ -22,7 +22,7 @@ describe("external unglazed door", () => {
 		height: 0.5,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		uValue: 1,
+		thermalResistance: 1,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
@@ -78,10 +78,10 @@ describe("external unglazed door", () => {
 					params: { externalUnglazed: "create" },
 				},
 			});
-		
+
 			expect(screen.getByTestId("pitchOption")).toBeDefined();
 		});
-		
+
 		it("shows orientation when pitch is not 0 or 180", async () => {
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
@@ -93,45 +93,45 @@ describe("external unglazed door", () => {
 			await user.tab();
 			expect(screen.getByTestId("orientation")).toBeDefined();
 		});
-		
+
 		test("requires pitch and orientation", async () => {
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
 					params: { externalUnglazed: "create" },
 				},
 			});
-		
-		
+
+
 			await user.click(screen.getByTestId("saveAndComplete"));
-		
+
 			expect(await screen.findByTestId("pitchOption_error")).toBeDefined();
-		
+
 			expect(screen.queryByTestId("orientation_error")).toBeNull();
-		
-		
+
+
 			await user.type(screen.getByTestId("name"), "Window 1");
 			await user.click(screen.getByTestId("pitchOption_90"));
 			await user.tab();
-		
+
 			await user.click(screen.getByTestId("saveAndComplete"));
-		
+
 			expect(await screen.findByTestId("orientation_error")).toBeDefined();
-		
+
 			await user.click(screen.getByTestId("pitchOption_custom"));
 			await user.type(screen.getByTestId("pitch"), "0");
 			await user.tab();
-		
+
 			expect(screen.queryByTestId("orientation")).toBeNull();
 			await user.click(screen.getByTestId("saveAndComplete"));
 			expect(screen.queryByTestId("orientation_error")).toBeNull();
-		
+
 			await user.clear(screen.getByTestId("pitch"));
 			await user.type(screen.getByTestId("pitch"), "180");
 			await user.tab();
-		
-		
+
+
 			expect(screen.queryByTestId("orientation")).toBeNull();
-		
+
 			await user.click(screen.getByTestId("saveAndComplete"));
 			expect(screen.queryByTestId("orientation_error")).toBeNull();
 		});
@@ -166,20 +166,20 @@ describe("external unglazed door", () => {
 					params: { externalUnglazed: "create" },
 				},
 			});
-		
-		
+
+
 			expect(screen.queryByTestId("pitch")).toBeNull();
 			expect(screen.queryByTestId("orientation")).toBeNull();
-		
+
 			await user.click(screen.getByTestId("saveAndComplete"));
-		
+
 			expect(screen.queryByTestId("pitch_error")).toBeNull();
 			expect(screen.queryByTestId("orientation_error")).toBeNull();
-		
-		
+
+
 			expect(await screen.findByTestId("associatedItemId_error")).toBeDefined();
 		});
-		
+
 		describe("when none of the above is selected for associated item ID", () => {
 			test("shows pitch element", async () => {
 				await renderSuspended(ExternalUnglazedDoor, {
@@ -187,66 +187,66 @@ describe("external unglazed door", () => {
 						params: { externalUnglazed: "create" },
 					},
 				});
-		
+
 				await user.click(screen.getByTestId("associatedItemId_none"));
-		
+
 				expect(screen.getByTestId("pitchOption")).toBeDefined();
 			});
-		
+
 			it("shows orientation when pitch is not 0 or 180", async () => {
 				await renderSuspended(ExternalUnglazedDoor, {
 					route: {
 						params: { externalUnglazed: "create" },
 					},
 				});
-		
+
 				await user.click(screen.getByTestId("associatedItemId_none"));
-		
+
 				expect(screen.queryByTestId("orientation")).toBeNull();
 				await user.click(screen.getByTestId("pitchOption_90"));
 				await user.tab();
 				expect(screen.getByTestId("orientation")).toBeDefined();
 			});
-		
+
 			test("requires pitch and orientation", async () => {
 				await renderSuspended(ExternalUnglazedDoor, {
 					route: {
 						params: { externalUnglazed: "create" },
 					},
 				});
-		
+
 				await user.click(screen.getByTestId("associatedItemId_none"));
-		
+
 				await user.click(screen.getByTestId("saveAndComplete"));
-		
+
 				expect(await screen.findByTestId("pitchOption_error")).toBeDefined();
-		
+
 				expect(screen.queryByTestId("orientation_error")).toBeNull();
-		
-		
+
+
 				await user.type(screen.getByTestId("name"), "Window 1");
 				await user.click(screen.getByTestId("pitchOption_90"));
 				await user.tab();
-		
+
 				await user.click(screen.getByTestId("saveAndComplete"));
-		
+
 				expect(await screen.findByTestId("orientation_error")).toBeDefined();
-		
+
 				await user.click(screen.getByTestId("pitchOption_custom"));
 				await user.type(screen.getByTestId("pitch"), "0");
 				await user.tab();
-		
+
 				expect(screen.queryByTestId("orientation")).toBeNull();
 				await user.click(screen.getByTestId("saveAndComplete"));
 				expect(screen.queryByTestId("orientation_error")).toBeNull();
-		
+
 				await user.clear(screen.getByTestId("pitch"));
 				await user.type(screen.getByTestId("pitch"), "180");
 				await user.tab();
-		
-		
+
+
 				expect(screen.queryByTestId("orientation")).toBeNull();
-		
+
 				await user.click(screen.getByTestId("saveAndComplete"));
 				expect(screen.queryByTestId("orientation_error")).toBeNull();
 			});
@@ -263,7 +263,7 @@ describe("external unglazed door", () => {
 			await user.click(screen.getByTestId(`isTheFrontDoor_no`));
 			await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
 			await user.type(screen.getByTestId("height"), "0.5");
-			await user.type(screen.getByTestId("width"), "20"); 
+			await user.type(screen.getByTestId("width"), "20");
 			await user.type(screen.getByTestId("elevationalHeight"), "20");
 			await user.type(screen.getByTestId("thermalResistance"), "24");
 			await user.click(screen.getByTestId("colour_Intermediate"));
@@ -273,7 +273,7 @@ describe("external unglazed door", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const { data = [] } = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor || {};
-		
+
 			expect(data[0]).toEqual({ ...state, complete: true });
 			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/doors");
 		});
@@ -331,7 +331,7 @@ describe("external unglazed door", () => {
 				massDistributionClass: "I",
 				thermalResistance: 24,
 			} as const satisfies ExternalUnglazedDoorData;
-				
+
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -341,19 +341,19 @@ describe("external unglazed door", () => {
 					},
 				},
 			});
-				
+
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
 					params: { door: "0" },
 				},
 			});
-				
+
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External unglazed door 1");
 			expect((await screen.findByTestId(`associatedItemId_none`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("pitch")).value).toBe("72");
 			expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("24");
 		});
-		
+
 		test("required error messages are displayed when empty form is submitted", async () => {
 			await renderSuspended(ExternalUnglazedDoor);
 
@@ -376,7 +376,7 @@ describe("external unglazed door", () => {
 				name: "External unglazed door 1",
 				isTheFrontDoor: true,
 			};
-				
+
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -392,11 +392,11 @@ describe("external unglazed door", () => {
 					params: { door: "create" },
 				},
 			});
-		
+
 			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
 			await user.tab();
 			await (user.click(screen.getByTestId("saveAndComplete")));
-		
+
 			const error = screen.findByTestId("isTheFrontDoor_error");
 			expect(error).toBeDefined();
 			expect(

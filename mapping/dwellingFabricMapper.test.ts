@@ -416,10 +416,10 @@ describe("dwelling fabric mapper", () => {
 				height: 0.5,
 				elevationalHeight: 20,
 				surfaceArea: 10,
-				uValue: 1,
 				colour: "Light",
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
+				thermalResistance: 1,
 			},
 		};
 
@@ -433,6 +433,7 @@ describe("dwelling fabric mapper", () => {
 				massDistributionClass: "I",
 				pitchOption: "90",
 				pitch: 90,
+				thermalResistance: 1,
 			},
 		};
 
@@ -489,7 +490,7 @@ describe("dwelling fabric mapper", () => {
 				id: "unheated-id",
 				name: "Wall to unheated space 1",
 				surfaceAreaOfElement: 500,
-				uValue: 10,
+				thermalResistance: 1,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "E",
 				pitchOption: "90",
@@ -563,12 +564,12 @@ describe("dwelling fabric mapper", () => {
 			width: externalWall.data.length,
 			base_height: externalWall.data.elevationalHeight,
 			area: externalWall.data.surfaceArea,
-			u_value: externalWall.data.uValue,
 			colour: externalWall.data.colour,
 			areal_heat_capacity: externalWall.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(externalWall.data.massDistributionClass),
 			is_external_door: false,
 			is_unheated_pitched_roof: false,
+			thermal_resistance_construction: externalWall.data.thermalResistance,
 		};
 
 		expect(externalWallElement).toEqual(expectedExternalWall);
@@ -577,7 +578,7 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementAdjacentConditionedSpace",
 			pitch: internalWall.data.pitch!,
 			area: internalWall.data.surfaceAreaOfElement,
-			u_value: 0.01,
+			thermal_resistance_construction: internalWall.data.thermalResistance,
 			areal_heat_capacity: internalWall.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(internalWall.data.massDistributionClass),
 		};
@@ -601,11 +602,11 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementPartyWall",
 			pitch: partyWallWithThermalResistanceCavity.data.pitch!,
 			area: partyWallWithThermalResistanceCavity.data.surfaceArea,
-			u_value: partyWallWithThermalResistanceCavity.data.uValue,
 			areal_heat_capacity: partyWallWithThermalResistanceCavity.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(partyWallWithThermalResistanceCavity.data.massDistributionClass),
 			party_wall_cavity_type: "defined_resistance",
 			thermal_resistance_cavity: 24,
+			u_value: partyWallWithThermalResistanceCavity.data.uValue,
 		};
 
 		expect(partyWallWithThermalResistanceCavityElement).toEqual(expectPartyWallWithThermalResistanceCavity);
@@ -626,10 +627,10 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 			pitch: wallToUnheatedSpace.data.pitch!,
 			area: wallToUnheatedSpace.data.surfaceAreaOfElement,
-			u_value: wallToUnheatedSpace.data.uValue,
 			areal_heat_capacity: wallToUnheatedSpace.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(wallToUnheatedSpace.data.massDistributionClass),
 			thermal_resistance_unconditioned_space: wallToUnheatedSpace.data.thermalResistanceOfAdjacentUnheatedSpace,
+			thermal_resistance_construction: wallToUnheatedSpace.data.thermalResistance,
 		};
 
 		expect(wallToUnheatedSpaceElement).toEqual(expectedWallToUnheatedSpace);
@@ -750,10 +751,10 @@ describe("dwelling fabric mapper", () => {
 				height: 0.5,
 				elevationalHeight: 20,
 				surfaceArea: 10,
-				uValue: 1,
 				colour: "Light",
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
+				thermalResistance: 0.3,
 			},
 		};
 
@@ -767,6 +768,7 @@ describe("dwelling fabric mapper", () => {
 				massDistributionClass: "I",
 				pitchOption: "90",
 				pitch: 90,
+				thermalResistance: 1,
 			},
 		};
 
@@ -922,10 +924,10 @@ describe("dwelling fabric mapper", () => {
 				height: 0.5,
 				elevationalHeight: 20,
 				surfaceArea: 10,
-				uValue: 1,
 				colour: "Intermediate",
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
+				thermalResistance: 0.3,
 			},
 		};
 

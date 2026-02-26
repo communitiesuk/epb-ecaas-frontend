@@ -46,6 +46,7 @@ const saveForm = (fields: PartyWallData) => {
 				partyWallCavityType: fields.partyWallCavityType,
 				partyWallLiningType: fields.partyWallLiningType,
 				thermalResistanceCavity: fields.thermalResistanceCavity,
+				uValue: fields.uValue,
 			},
 			complete: true,
 		};
@@ -100,6 +101,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
 		/>
+		<FieldsUValue id="uValue" name="uValue" />
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
