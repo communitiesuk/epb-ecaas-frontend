@@ -26,6 +26,7 @@ const saveForm = (fields: WallOfHeatedBasementData) => {
 			thermalResistance: fields.thermalResistance,
 			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
+			perimeter: fields.perimeter,
 			associatedBasementFloorId: fields.associatedBasementFloorId,
 		};
 
@@ -125,6 +126,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</FormKit>
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
+		<FormKit
+			id="perimeter"
+			type="govInputWithSuffix"
+			suffix-text="m"
+			label="Perimeter"
+			help="Enter the length of the perimeter of the basement wall. This should not include any part of the perimeter that is adjacent to another heated space."
+			name="perimeter"
+			validation="required | number | min:0 | max:1000"
+		/>
 		<FormKit
 			id="associatedBasementFloorId"
 			:key="basementFloorOptions.size"

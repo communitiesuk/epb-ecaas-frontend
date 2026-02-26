@@ -16,16 +16,16 @@ const index = getStoreIndex(partyWallData);
 const model: Ref<PartyWallData | undefined> = ref(wallData?.data);
 
 const partyWallCavityTypeOptions = {
+	unfilled_unsealed: "Unfilled and unsealed",
+	unfilled_sealed: "Unfilled and sealed",
+	filled_unsealed: "Filled and unsealed",
 	defined_resistance: "Defined resistance",
-	filled_sealed: "Filled sealed",
-	filled_unsealed: "Filled unsealed",
+	filled_sealed: "Filled and sealed",
 	solid: "Solid",
-	unfilled_sealed: "Unfilled sealed",
-	unfilled_unsealed: "Unfilled unsealed",
-} as const satisfies Record<SchemaPartyWallCavityType, SnakeToSentenceCase<SchemaPartyWallCavityType>>;
+} as const satisfies Record<SchemaPartyWallCavityType, string>;
 const partyWallLiningTypeOptions = {
-	dry_lined: "Dry lined",
 	wet_plaster: "Wet plaster",
+	dry_lined: "Dry lined",
 } as const satisfies Record<SchemaPartyWallLiningType, SnakeToSentenceCase<SchemaPartyWallLiningType>>;
 
 const saveForm = (fields: PartyWallData) => {
@@ -126,8 +126,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="partyWallCavityType"
 			name="partyWallCavityType"
 			type="govRadios"
-			label="Cavity type"
-			help="Type of party wall cavity construction affecting heat loss through air movement"
+			label="Type of party wall cavity construction"
+			help="Select the type of party wall cavity construction. This affects heat loss through air movement."
 			:options="partyWallCavityTypeOptions"
 			validation="required"
 			data-field="Zone.BuildingElement.*.party_wall_cavity_type"
@@ -137,7 +137,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="partyWallLiningType"
 			name="partyWallLiningType"
 			type="govRadios"
-			label="Lining type"
+			label="Type of party wall lining"
+			help="Select the type of party wall lining"
 			:options="partyWallLiningTypeOptions"
 			validation="required"
 			data-field="Zone.BuildingElement.*.party_wall_lining_type"
@@ -148,8 +149,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="thermalResistanceCavity"
 			type="govInputWithUnit"
 			unit="square metre kelvin per watt"
-			label="Thermal resistance of cavity"
-			help="Effective thermal resistance of the party wall cavity"
+			label="Thermal resistance of the party wall cavity"
 			:validation="`required | ${ zodTypeAsFormKitValidation(thermalResistanceCavityZod) }`"
 		/>
 		<GovLLMWarning />

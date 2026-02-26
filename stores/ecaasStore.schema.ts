@@ -331,6 +331,7 @@ const wallOfHeatedBasementDataZod = namedWithId.extend({
 	thermalResistance: z.number().min(0.00001).max(50),
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
+	perimeter: z.number().min(0).max(1000),
 	associatedBasementFloorId: z.uuidv4(),
 });
 

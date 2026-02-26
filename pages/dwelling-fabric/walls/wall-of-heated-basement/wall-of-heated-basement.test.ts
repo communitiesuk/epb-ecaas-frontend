@@ -30,6 +30,7 @@ describe("wall of heated basement", () => {
 		thermalResistance: 0.6,
 		arealHeatCapacity: "Medium",
 		massDistributionClass: "M",
+		perimeter: 30,
 		associatedBasementFloorId: basementFloorId,
 	};
 
@@ -48,6 +49,7 @@ describe("wall of heated basement", () => {
 			thermalResistance: 0.6,
 			arealHeatCapacity: "Medium",
 			massDistributionClass: "M",
+			perimeter: 30,
 			associatedBasementFloorId: basementFloorId,
 		};
 
@@ -59,6 +61,7 @@ describe("wall of heated basement", () => {
 		await user.type(screen.getByTestId("thermalResistance"), String(values.thermalResistance));
 		await user.click(screen.getByTestId(`arealHeatCapacity_${values.arealHeatCapacity}`));
 		await user.click(screen.getByTestId(`massDistributionClass_${values.massDistributionClass}`));
+		await user.type(screen.getByTestId("perimeter"), String(values.perimeter));
 	};
 
 	test("data is saved to store state and marked as complete when form is valid", async () => {
@@ -87,6 +90,7 @@ describe("wall of heated basement", () => {
 		await user.type(screen.getByTestId("thermalResistance"), "0.6");
 		await user.click(screen.getByTestId("arealHeatCapacity_Medium"));
 		await user.click(screen.getByTestId("massDistributionClass_M"));
+		await user.type(screen.getByTestId("perimeter"), "30");
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -130,6 +134,7 @@ describe("wall of heated basement", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("0.6");
 		expect((await screen.findByTestId("arealHeatCapacity_Medium")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_M")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId<HTMLInputElement>("perimeter")).value).toBe("30");
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -147,6 +152,7 @@ describe("wall of heated basement", () => {
 		expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
+		expect((await screen.findByTestId("perimeter_error"))).toBeDefined();
 	});
 
 	test("error summary is displayed when an invalid form is submitted", async () => {

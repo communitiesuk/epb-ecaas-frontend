@@ -125,6 +125,7 @@ describe("walls", () => {
 		thermalResistance: 0.6,
 		arealHeatCapacity: "Medium",
 		massDistributionClass: "M",
+		perimeter: 30,
 		associatedBasementFloorId: "test-floor-id-123",
 	};
 

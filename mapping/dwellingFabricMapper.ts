@@ -441,7 +441,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				thermal_resist_walls_base: wall.thermalResistance,
 				thermal_resistance_floor_construction: wall.thermalResistance,
 				depth_basement_floor: floorOfHeatedBasement.depthOfBasementFloor,
-				perimeter: floorOfHeatedBasement.perimeter,
+				perimeter: wall.perimeter,
 				psi_wall_floor_junc: floorOfHeatedBasement.psiOfWallJunction,
 				thickness_walls: floorOfHeatedBasement.thicknessOfWalls / 1000,
 			},

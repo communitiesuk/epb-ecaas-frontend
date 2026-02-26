@@ -227,6 +227,7 @@ describe("dwelling fabric mapper", () => {
 			associatedBasementFloorId: "974e8749-f465-4f43-a38a-3d0b97060a64",
 			netSurfaceArea: 500,
 			thermalResistance: 1.5,
+			perimeter: 120,
 		};
 		store.$patch({
 			dwellingFabric: {
@@ -509,6 +510,7 @@ describe("dwelling fabric mapper", () => {
 				associatedBasementFloorId: "974e8749-f465-4f43-a38a-3d0b97060a64",
 				netSurfaceArea: 500,
 				thermalResistance: 1,
+				perimeter: 120,
 			},
 		};
 		const floorOfHeatedBasement: EcaasForm<FloorOfHeatedBasementData> = {
@@ -648,7 +650,7 @@ describe("dwelling fabric mapper", () => {
 			thermal_resistance_floor_construction: floorOfHeatedBasement.data.thermalResistance,
 			psi_wall_floor_junc: floorOfHeatedBasement.data.psiOfWallJunction,
 			depth_basement_floor: floorOfHeatedBasement.data.depthOfBasementFloor,
-			perimeter: floorOfHeatedBasement.data.perimeter,
+			perimeter: wallOfHeatedBasement.data.perimeter,
 			thickness_walls: floorOfHeatedBasement.data.thicknessOfWalls / 1000,
 		};
 
@@ -1224,6 +1226,7 @@ describe("dwelling fabric mapper", () => {
 				arealHeatCapacity: "Medium",
 				massDistributionClass: "M",
 				associatedBasementFloorId: "non-existent-floor-id",
+				perimeter: 30,
 			},
 		};
 

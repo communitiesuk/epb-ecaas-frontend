@@ -204,6 +204,7 @@ const wallsData: WallsData = {
 				thermalResistance: 2.86,
 				arealHeatCapacity: "Medium",
 				massDistributionClass: "E",
+				perimeter: 32,
 				associatedBasementFloorId: "heated-basement-floor-id",
 			},
 		}],
