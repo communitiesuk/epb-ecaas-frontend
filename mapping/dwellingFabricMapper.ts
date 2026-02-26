@@ -264,7 +264,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				width: x.width,
 				base_height: x.elevationalHeight,
 				area: x.surfaceArea,
-				u_value: x.uValue,
+				thermal_resistance_construction: x.thermalResistance,
 				colour: x.colour,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),

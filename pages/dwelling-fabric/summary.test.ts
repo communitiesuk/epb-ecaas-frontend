@@ -81,7 +81,7 @@ const floorsData: FloorsData = {
 				width: 20,
 				elevationalHeight: 20,
 				surfaceArea: 10,
-				uValue: 1,
+				thermalResistance: 1,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 			},
@@ -593,7 +593,7 @@ describe("Dwelling space fabric summary", () => {
 			"Width": `20 ${metre.suffix}`,
 			"Elevational height of building element at its base": `20 ${metre.suffix}`,
 			"Net surface area": `10 ${metresSquare.suffix}`,
-			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Thermal resistance": `1 ${squareMeterKelvinPerWatt.suffix}`,
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",
 		};

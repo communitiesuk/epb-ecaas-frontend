@@ -110,7 +110,7 @@ const exposedFloorSummary: SummarySection = {
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"U-value": dim(x.uValue, "watts per square metre kelvin"),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
 			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
