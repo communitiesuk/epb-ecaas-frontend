@@ -23,7 +23,7 @@ export type SchemaBuildingElement = FhsSchema["Zone"][string]["BuildingElement"]
 type BuildingElementType = SchemaBuildingElement["type"];
 export type BuildingElementOfType<T extends BuildingElementType> = Extract<SchemaBuildingElement, { type: T }>;
 export type BuildingElementGroundForSchema = BuildingElementOfType<"BuildingElementGround">;
-export type SchemaBuildingElementPartyWall = BuildingElementOfType<"BuildingElementPartyWall">;
+export type BuildingElementPartyWallForSchema = BuildingElementOfType<"BuildingElementPartyWall">;
 export type SchemaHeatSourceWetDetails = SchemaHeatSourceWetBoiler | SchemaHeatSourceWetHeatBattery | SchemaHeatSourceWetHeatPump | SchemaHeatSourceWetHiu;
 export type SchemaHeatSourceWetHeatEmitterDetails = SchemaRadiatorWithProductReference | SchemaUfhWithProductReference | SchemaFancoilWithProductReference;
 // utility function to make shading into valid external conditions
