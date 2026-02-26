@@ -480,27 +480,38 @@ const externalGlazedDoorData = z.intersection(externalGlazedDoorDataWithOpenable
 export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorData>;
 
 const baseInternalDoorData = named.extend({
-	isTheFrontDoor: z.boolean().optional(),
 	associatedItemId: z.guid(),
 	surfaceArea: z.number().min(0).max(10000),
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 });
-const internalDoorDataZod = z.discriminatedUnion(
-	"typeOfInternalDoor",
-	[
-		baseInternalDoorData.extend({
-			typeOfInternalDoor: z.literal("heatedSpace"),
-		}),
-		baseInternalDoorData.extend({
-			typeOfInternalDoor: z.literal("unheatedSpace"),
-			uValue,
-			thermalResistanceOfAdjacentUnheatedSpace,
-		}),
-	],
-);
+const internalDoorDataZod = z.discriminatedUnion("typeOfInternalDoor", [
+	z.object({
+		typeOfInternalDoor: z.literal("heatedSpace"),
+		isTheFrontDoor: z.literal(true).optional(),
+		orientation: z.number().min(0).lt(360),
+	}),
+	z.object({
+		typeOfInternalDoor: z.literal("heatedSpace"),
+		isTheFrontDoor: z.literal(false).optional(),
+	}),
+	z.object({
+		typeOfInternalDoor: z.literal("unheatedSpace"),
+		isTheFrontDoor: z.literal(true).optional(),
+		orientation: z.number().min(0).lt(360),
+		uValue,
+		thermalResistanceOfAdjacentUnheatedSpace,
+	}),
+	z.object({
+		typeOfInternalDoor: z.literal("unheatedSpace"),
+		isTheFrontDoor: z.literal(false).optional(),
+		uValue,
+		thermalResistanceOfAdjacentUnheatedSpace,
+	}),
+]);
+const _internalDoorDataWithBaseZod = baseInternalDoorData.and(internalDoorDataZod);
 
-export type InternalDoorData = z.infer<typeof internalDoorDataZod>;
+export type InternalDoorData = z.infer<typeof _internalDoorDataWithBaseZod>;
 
 
 const baseWindowData = namedWithId.extend({

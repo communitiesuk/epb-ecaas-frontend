@@ -39,7 +39,6 @@ describe("internal door", () => {
 		data: {
 			typeOfInternalDoor: "heatedSpace",
 			name: "Internal 1",
-			isTheFrontDoor: undefined,
 			associatedItemId: internalWall.id,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
@@ -54,7 +53,6 @@ describe("internal door", () => {
 			typeOfInternalDoor: "unheatedSpace",
 			uValue: 0.1,
 			thermalResistanceOfAdjacentUnheatedSpace: 0,
-			isTheFrontDoor: undefined,
 		},
 	};
 
@@ -214,8 +212,12 @@ describe("internal door", () => {
 	});
 
 	it("navigates to doors page when valid form is completed", async () => {
-		await renderSuspended(InternalDoor);
-
+		await renderSuspended(InternalDoor, {
+			route: {
+				params: { door: "create" },
+			},
+		});
+	
 		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 		await populateValidForm();
 		await user.click(screen.getByTestId(`associatedItemId_${internalWall.id}`));
@@ -225,8 +227,11 @@ describe("internal door", () => {
 	});
 
 	it("navigates to doors page when save progress button is clicked", async () => {
-		await renderSuspended(InternalDoor);
-
+		await renderSuspended(InternalDoor, {
+			route: {
+				params: { door: "create" },
+			},
+		});
 		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 		await user.type(screen.getByTestId("name"), "Test door");
 		await user.click(screen.getByTestId("saveProgress"));
@@ -235,6 +240,11 @@ describe("internal door", () => {
 	});
 
 	describe("Handing internal door as a front door", () => {
+
+		beforeEach(() => {
+			store.$reset();
+		});
+
 		const stateWithFlat: Partial<GeneralDetailsData> = {
 			typeOfDwelling: "flat",
 		};
@@ -277,6 +287,25 @@ describe("internal door", () => {
 			});
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
+		});
+
+		it("if a user marks the door as the front door it asks for orientation", async() => {
+	
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: stateWithFlat,
+					},
+				},
+			});
+			await renderSuspended(InternalDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
+			expect(screen.getByTestId("orientation")).toBeDefined();
 		});
 
 		it("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
