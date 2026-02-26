@@ -169,6 +169,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</GovDetails>
 		</FormKit>
 		<FormKit
+			v-if="!(model?.pitch && model.pitch > 120)"
 			id="colour"
 			type="govRadios"
 			label="Colour of external surface"
