@@ -55,13 +55,17 @@ describe("external glazed door", () => {
 	};
 
 	describe("without existing external wall or roof", () => {
-		test("links to add walls and roofs are not displayed", async () => {
+
+		beforeEach(async () => {
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { externalGlazed: "create" },
 				},
 			});
+		});
 
+		test("links to add walls and roofs are not displayed", async () => {
+	
 			expect(screen.queryByText("No walls or roofs added.")).toBeNull();
 			// expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add walls" }).href)
 			// 	.toContain("/dwelling-fabric/walls");
@@ -70,45 +74,25 @@ describe("external glazed door", () => {
 		});
 
 		test("Should not render assiciated ID element", async () => {
-			await renderSuspended(ExternalGlazedDoor, {
-				route: {
-					params: { externalGlazed: "create" },
-				},
-			});
 
 			expect(screen.queryByTestId("associatedItemId")).toBeNull();
 		});
 
 		test("shows pitch element", async () => {
-			await renderSuspended(ExternalGlazedDoor, {
-				route: {
-					params: { externalGlazed: "create" },
-				},
-			});
 
 			expect(screen.getByTestId("pitchOption")).toBeDefined();
 		});
 
 		it("shows orientation when pitch is not 0 or 180", async () => {
-			await renderSuspended(ExternalGlazedDoor, {
-				route: {
-					params: { externalGlazed: "create" },
-				},
-			});
+
 			expect(screen.queryByTestId("orientation")).toBeNull();
 			await user.click(screen.getByTestId("pitchOption_90"));
 			await user.tab();
 			expect(screen.getByTestId("orientation")).toBeDefined();
 		});
-
-		test("requires pitch and orientation", async () => {
-			await renderSuspended(ExternalGlazedDoor, {
-				route: {
-					params: { externalGlazed: "create" },
-				},
-			});
-
-
+				
+		test("requires pitch and orientation", async () => {		
+				
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(await screen.findByTestId("pitchOption_error")).toBeDefined();
@@ -145,7 +129,7 @@ describe("external glazed door", () => {
 	});
 
 	describe("with existing external wall", () => {
-		beforeEach(() => {
+		beforeEach(async() => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -157,6 +141,7 @@ describe("external glazed door", () => {
 			});
 		});
 
+		
 		afterEach(() => {
 			store.$reset();
 		});
@@ -449,38 +434,6 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId("externalGlazedDoorErrorSummary"))).toBeDefined();
 		});
 
-		test("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
-			const frontDoor: Partial<ExternalGlazedDoorData> = {
-				name: "Front door",
-				isTheFrontDoor: true,
-			};
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceDoors: {
-						dwellingSpaceExternalGlazedDoor: {
-							data: [{ data: frontDoor }],
-						},
-					},
-				},
-			});
-
-			await renderSuspended(ExternalGlazedDoor, {
-				route: {
-					params: { externalGlazed: "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
-			await user.tab();
-			await (user.click(screen.getByTestId("saveAndComplete")));
-
-			const error = screen.findByTestId("isTheFrontDoor_error");
-			expect(error).toBeDefined();
-			expect(
-				(await error).innerText.includes("Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead."),
-			).toBe(true);
-		});
-
 		describe("partially saving data", () => {
 			it("creates a new door automatically with given name", async () => {
 				await renderSuspended(ExternalGlazedDoor, {
@@ -569,6 +522,57 @@ describe("external glazed door", () => {
 				expect(externalGlazedDoors.data[0]!.complete).not.toBe(true);
 				expect(externalGlazedDoors.complete).not.toBe(true);
 			});
+		});
+	});
+	
+	describe("Handing external glazed door as a front door", () => {
+	
+		beforeEach(() => {
+			store.$reset();
+		});
+	
+		test("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
+			const frontDoor: Partial<ExternalGlazedDoorData> = {
+				name: "Front door",
+				isTheFrontDoor: true,
+			};
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: frontDoor }],
+						},
+					},
+				},
+			});
+	
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { externalGlazed: "create" },
+				},
+			});
+	
+			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
+			await user.tab();
+			await (user.click(screen.getByTestId("saveAndComplete")));
+	
+			const error = screen.findByTestId("isTheFrontDoor_error");
+			expect(error).toBeDefined();
+			expect(
+				(await error).innerText.includes("Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead."),
+			).toBe(true);
+		});
+	
+		
+		test("displays the 'Is this the front door?' element if there are associated items (wall/roof) but ", async() => {
+	
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { externalGlazed: "create" },
+				},
+			});
+	
+			expect(screen.getByTestId("isTheFrontDoor")).toBeDefined();
 		});
 	});
 });
