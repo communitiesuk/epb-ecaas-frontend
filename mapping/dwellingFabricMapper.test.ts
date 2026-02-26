@@ -1,4 +1,4 @@
-import type { BuildingElementGround, BuildingElementOfType, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaEdgeInsulationHorizontal } from "~/schema/aliases";
+import type { BuildingElementGroundForSchema, BuildingElementOfType, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaEdgeInsulationHorizontal } from "~/schema/aliases";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type {
@@ -260,19 +260,19 @@ describe("dwelling fabric mapper", () => {
 		const fhsInputData = mapFloorData(resolveState(store.$state));
 
 		// Assert
-		const groundFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloor.name + floorSuffix]! as BuildingElementGround;
-		const groundFloorWithEdgeInsulationElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithEdgeInsulation.name + floorSuffix]! as BuildingElementGround;
-		const groundFloorWithSuspendedFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithSuspendedFloor.name + floorSuffix]! as BuildingElementGround;
-		const groundFloorWithHeatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithHeatedBasement.name + floorSuffix]! as BuildingElementGround;
-		const groundFloorWithUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithUnheatedBasement.name + floorSuffix]! as BuildingElementGround;
+		const groundFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloor.name + floorSuffix]! as BuildingElementGroundForSchema;
+		const groundFloorWithEdgeInsulationElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithEdgeInsulation.name + floorSuffix]! as BuildingElementGroundForSchema;
+		const groundFloorWithSuspendedFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithSuspendedFloor.name + floorSuffix]! as BuildingElementGroundForSchema;
+		const groundFloorWithHeatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithHeatedBasement.name + floorSuffix]! as BuildingElementGroundForSchema;
+		const groundFloorWithUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithUnheatedBasement.name + floorSuffix]! as BuildingElementGroundForSchema;
 		const internalFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalFloor.name + floorSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
 		const exposedFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[exposedFloor.name + floorSuffix] as BuildingElementOpaque;
-		const floorAboveUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveUnheatedBasement.name + floorSuffix] as BuildingElementGround;
-		const floorAboveHeatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveHeatedBasement.name + floorSuffix] as BuildingElementGround;
+		const floorAboveUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveUnheatedBasement.name + floorSuffix] as BuildingElementGroundForSchema;
+		const floorAboveHeatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveHeatedBasement.name + floorSuffix] as BuildingElementGroundForSchema;
 
 		expect(fhsInputData.GroundFloorArea).toBe(groundFloorsTotalArea);
 
-		const expectedGroundFloor: BuildingElementGround = {
+		const expectedGroundFloor: BuildingElementGroundForSchema = {
 			type: "BuildingElementGround",
 			area: groundFloor.surfaceArea,
 			total_area: groundFloor.surfaceArea,
@@ -296,7 +296,7 @@ describe("dwelling fabric mapper", () => {
 
 		expect("edge_insulation" in groundFloorWithEdgeInsulationElement && groundFloorWithEdgeInsulationElement.edge_insulation).toEqual(expectedEdgeInsulation);
 
-		const expectedGroundFloorSuspendedFloor: BuildingElementGround = {
+		const expectedGroundFloorSuspendedFloor: BuildingElementGroundForSchema = {
 			...expectedGroundFloor,
 			floor_type: groundFloorWithSuspendedFloor.typeOfGroundFloor,
 			height_upper_surface: groundFloorWithSuspendedFloor.heightOfFloorUpperSurface / 1000,
@@ -309,7 +309,7 @@ describe("dwelling fabric mapper", () => {
 
 		expect(groundFloorWithSuspendedFloorElement).toEqual(expectedGroundFloorSuspendedFloor);
 
-		const expectedGroundFloorWithHeatedBasement: BuildingElementGround = {
+		const expectedGroundFloorWithHeatedBasement: BuildingElementGroundForSchema = {
 			...expectedGroundFloor,
 			floor_type: groundFloorWithHeatedBasement.typeOfGroundFloor,
 			depth_basement_floor: groundFloorWithHeatedBasement.depthOfBasementFloorBelowGround,
@@ -318,7 +318,7 @@ describe("dwelling fabric mapper", () => {
 
 		expect(groundFloorWithHeatedBasementElement).toEqual(expectedGroundFloorWithHeatedBasement);
 
-		const expectedGroundFloorWithUnheatedBasement: BuildingElementGround = {
+		const expectedGroundFloorWithUnheatedBasement: BuildingElementGroundForSchema = {
 			...expectedGroundFloor,
 			floor_type: groundFloorWithUnheatedBasement.typeOfGroundFloor,
 			thermal_transm_envi_base: groundFloorWithUnheatedBasement.thermalTransmittanceOfFloorAboveBasement,
@@ -359,7 +359,7 @@ describe("dwelling fabric mapper", () => {
 
 		expect(exposedFloorElement).toEqual(expectedExposedFloor);
 
-		const expectedFloorAboveUnheatedBasement: BuildingElementGround = {
+		const expectedFloorAboveUnheatedBasement: BuildingElementGroundForSchema = {
 			type: "BuildingElementGround",
 			thermal_resistance_construction: floorAboveUnheatedBasement.thermalResistance,
 			u_value: floorAboveUnheatedBasement.uValue,
@@ -381,7 +381,7 @@ describe("dwelling fabric mapper", () => {
 
 		expect(floorAboveUnheatedBasementElement).toEqual(expectedFloorAboveUnheatedBasement);
 
-		const expectedFloorOfHeatedBasement: BuildingElementGround = {
+		const expectedFloorOfHeatedBasement: BuildingElementGroundForSchema = {
 			type: "BuildingElementGround",
 			total_area: floorAboveHeatedBasement.surfaceArea,
 			mass_distribution_class: fullMassDistributionClass(floorAboveHeatedBasement.massDistributionClass),
@@ -634,7 +634,7 @@ describe("dwelling fabric mapper", () => {
 
 		expect(wallToUnheatedSpaceElement).toEqual(expectedWallToUnheatedSpace);
 
-		const expectedWallOfHeatedBasement: BuildingElementGround = {
+		const expectedWallOfHeatedBasement: BuildingElementGroundForSchema = {
 			type: "BuildingElementGround",
 			floor_type: "Heated_basement",
 			area: wallOfHeatedBasement.data.netSurfaceArea,

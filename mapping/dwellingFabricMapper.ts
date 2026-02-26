@@ -1,4 +1,4 @@
-import type { BuildingElementGround, SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaEdgeInsulation } from "~/schema/aliases";
+import type { BuildingElementGroundForSchema, SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaEdgeInsulation } from "~/schema/aliases";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from "deepmerge";
 import { defaultZoneName } from "./common";
@@ -120,10 +120,10 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 		}
 	}
 
-	const groundFloorData: { [key: string]: BuildingElementGround }[] = dwellingSpaceGroundFloor.map(x => {
+	const groundFloorData: { [key: string]: BuildingElementGroundForSchema }[] = dwellingSpaceGroundFloor.map(x => {
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
 
-		let groundFloor: BuildingElementGround;
+		let groundFloor: BuildingElementGroundForSchema;
 
 		switch (x.typeOfGroundFloor) {
 			case "Slab_edge_insulation": {
@@ -421,7 +421,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		};
 	}) || [];
 
-	const wallOfHeatedBasementData: { [key: string]: BuildingElementGround }[] = dwellingSpaceWallOfHeatedBasement?.map(wall => {
+	const wallOfHeatedBasementData: { [key: string]: BuildingElementGroundForSchema }[] = dwellingSpaceWallOfHeatedBasement?.map(wall => {
 		const nameWithSuffix = suffixName(wall.name, wallSuffix);
 		const floorOfHeatedBasement = state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement?.find(floor => floor.id === wall.associatedBasementFloorId);
 		if (!floorOfHeatedBasement) {
