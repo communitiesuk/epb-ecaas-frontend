@@ -1614,25 +1614,6 @@
             "maxProperties": 1
         }
     },
-    "if": {
-        "properties": {
-            "PartO_active_cooling_required": {
-                "const": true
-            }
-        }
-    },
-    "then": {
-        "properties": {
-            "Zone": {
-                "type": "object",
-                "additionalProperties": {
-                    "required": [
-                        "SpaceCoolSystem"
-                    ]
-                }
-            }
-        }
-    },
     "required": [
         "PartGcompliance",
         "BuildingLength",
@@ -4860,78 +4841,7 @@
                     "minimum": 0.01,
                     "maximum": 10000
                 }
-            },
-            "allOf": [
-                {
-                    "if": {
-                        "properties": {
-                            "pitch": {
-                                "type": "number",
-                                "maximum": 60
-                            }
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "is_unheated_pitched_roof",
-                            "colour"
-                        ]
-                    }
-                },
-                {
-                    "if": {
-                        "properties": {
-                            "pitch": {
-                                "type": "number",
-                                "minimum": 60,
-                                "maximum": 120
-                            }
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "is_external_door",
-                            "orientation360",
-                            "colour"
-                        ]
-                    }
-                },
-                {
-                    "if": {
-                        "not": {
-                            "anyOf": [
-                                {
-                                    "properties": {
-                                        "pitch": {
-                                            "const": 0
-                                        }
-                                    }
-                                },
-                                {
-                                    "properties": {
-                                        "pitch": {
-                                            "const": 180
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "orientation360"
-                        ],
-                        "properties": {
-                            "orientation360": {
-                                "type": "integer",
-                                "minimum": 0,
-                                "maximum": 360,
-                                "description": "Degrees from north. Recommend choosing 180 in cases of flat elements i.e. where pitch = 0 or 180"
-                            }
-                        }
-                    }
-                }
-            ]
+            }
         },
         "BuildingElementPartyWall": {
             "required": [

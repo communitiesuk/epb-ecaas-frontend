@@ -1142,7 +1142,7 @@ export interface components {
             height: number;
             width: number;
             area: number;
-        } & (unknown & unknown & unknown);
+        };
         BuildingElementTransparent: {
             /** @constant */
             type: "BuildingElementTransparent";
@@ -2491,7 +2491,7 @@ export interface components {
                     height: number;
                     width: number;
                     area: number;
-                } & (unknown & unknown & unknown);
+                };
                 BuildingElementPartyWall: {
                     /** @constant */
                     type: "BuildingElementPartyWall";
