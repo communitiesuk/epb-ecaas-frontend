@@ -26,6 +26,7 @@ const orientation = z.number().min(0).lt(360);
 const massDistributionClass = massDistributionClassZod;
 const uValue = z.number().min(0.01).max(10);
 const thermalResistanceOfAdjacentUnheatedSpace = z.number().min(0).max(3);
+const thermalResistance = z.number().min(0.00001).max(50);
 
 export type EcaasState = AssertEachKeyIsPageId<{
 	dwellingDetails: DwellingDetails;
@@ -166,7 +167,7 @@ export const exposedFloorDataZod = named.extend({
 	width: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),
 	surfaceArea: z.number().min(0.01).max(10000),
-	thermalResistance: z.number().min(0.00001).max(50),
+	thermalResistance,
 	colour: colourZod,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
@@ -177,7 +178,7 @@ export type ExposedFloorData = z.infer<typeof exposedFloorDataZod>;
 const baseGroundFloorData = named.extend({
 	surfaceArea: z.number().min(1),
 	uValue,
-	thermalResistance: z.number().min(0.00001).max(50),
+	thermalResistance,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	perimeter: z.number().min(0).max(1000),
@@ -226,7 +227,7 @@ export type GroundFloorData = z.infer<typeof groundFloorDataZod>;
 const floorAboveUnheatedBasementDataZod = named.extend({
 	surfaceArea: z.number().min(1),
 	uValue,
-	thermalResistance: z.number().min(0.00001).max(50),
+	thermalResistance,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	perimeter: z.number().min(0).max(1000),
@@ -244,7 +245,7 @@ export type FloorAboveUnheatedBasementData = z.infer<typeof floorAboveUnheatedBa
 const floorOfHeatedBasementDataZod = namedWithId.extend({
 	surfaceArea: z.number().min(1),
 	uValue,
-	thermalResistance: z.number().min(0.00001).max(50),
+	thermalResistance,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	depthOfBasementFloor: z.number(),
@@ -281,7 +282,7 @@ const externalWallDataZod = namedWithId.extend({
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	colour: colourZod,
-	thermalResistance: z.number().min(0.00001).max(50),
+	thermalResistance,
 });
 
 export type ExternalWallData = z.infer<typeof externalWallDataZod>;
@@ -292,14 +293,14 @@ const internalWallDataZod = namedWithId.extend({
 	massDistributionClass,
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
-	thermalResistance: z.number().min(0.00001).max(50),
+	thermalResistance,
 });
 
 export type InternalWallData = z.infer<typeof internalWallDataZod>;
 
 const wallsToUnheatedSpaceDataZod = namedWithId.extend({
 	surfaceAreaOfElement: z.number().min(0).max(10000),
-	thermalResistance: z.number().min(0.00001).max(50),
+	thermalResistance,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	pitchOption: standardPitchOption,
@@ -328,7 +329,7 @@ export type PartyWallData = z.infer<typeof partyWallDataZod>;
 const wallOfHeatedBasementDataZod = namedWithId.extend({
 	netSurfaceArea: z.number().min(0.01).max(10000),
 	uValue,
-	thermalResistance: z.number().min(0.00001).max(50),
+	thermalResistance,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	perimeter: z.number().min(0).max(1000),
@@ -404,7 +405,7 @@ const externalUnglazedDoorDataZod = named.extend({
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	colour: colourZod,
-	thermalResistance: z.number().min(0.00001).max(50),
+	thermalResistance,
 });
 
 export type ExternalUnglazedDoorData = z.infer<typeof externalUnglazedDoorDataZod>;
@@ -417,7 +418,7 @@ const baseExternalGlazedDoorDataZod = named.extend({
 	orientation: z.number().min(0).lt(360).optional(),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
-	thermalResistance: z.number().min(0.00001).max(50),
+	thermalResistance,
 	securityRisk: z.boolean(),
 	solarTransmittance: z.number().min(0.01).max(1),
 	elevationalHeight: z.number().min(0).max(500),
@@ -501,13 +502,14 @@ const internalDoorDataZod = z.discriminatedUnion(
 
 export type InternalDoorData = z.infer<typeof internalDoorDataZod>;
 
+
 const baseWindowData = namedWithId.extend({
 	taggedItem: z.guid().optional(),
 	pitch: z.number().min(0).max(180).optional(),
 	orientation: z.number().min(0).lt(360).optional(),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
-	uValue,
+	thermalResistance,
 	securityRisk: z.boolean(),
 	solarTransmittance: z.number().min(0.01).max(1),
 	elevationalHeight: z.number().min(0).max(500),

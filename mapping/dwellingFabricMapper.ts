@@ -750,7 +750,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				height: x.height,
 				width: x.width,
 				base_height: x.elevationalHeight,
-				u_value: x.uValue,
+				thermal_resistance_construction: x.thermalResistance,
 				g_value: x.solarTransmittance,
 				mid_height: x.midHeight,
 				security_risk: x.securityRisk,

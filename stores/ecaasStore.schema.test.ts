@@ -8,7 +8,7 @@ describe("windowData Zod schema", () => {
 			taggedItem: "c9ec4b19-5ed9-4d13-8d88-1f284294ac43",
 			height: 2,
 			width: 2,
-			uValue: 0.1,
+			thermalResistance: 0.1,
 			securityRisk: true,
 			solarTransmittance: 0.2,
 			elevationalHeight: 1,

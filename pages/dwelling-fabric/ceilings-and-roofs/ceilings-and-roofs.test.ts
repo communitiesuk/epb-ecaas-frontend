@@ -167,7 +167,7 @@ describe("ceilings and roofs", () => {
 			await user.click(await screen.findByTestId("ceilings_remove_0"));
 
 			const doors =
-        store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data;
+				store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data;
 			expect(doors[0]?.data.associatedItemId).toBeUndefined();
 			expect(doors[1]?.data.associatedItemId).toBe(ceiling2.data.id);
 		});
@@ -196,7 +196,7 @@ describe("ceilings and roofs", () => {
 			expect(screen.getByText("Ceiling 1 (1) (1)")).toBeDefined();
 			expect(screen.getByText("Ceiling 1 (1) (2)")).toBeDefined();
 		});
-    
+
 		test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -284,7 +284,7 @@ describe("ceilings and roofs", () => {
 					taggedItem: roof1.data.id,
 					height: 1,
 					width: 1,
-					uValue: 1,
+					thermalResistance: 1,
 					solarTransmittance: 0.1,
 					elevationalHeight: 1,
 					midHeight: 1,
@@ -360,15 +360,15 @@ describe("ceilings and roofs", () => {
 			const window = store.dwellingFabric.dwellingSpaceWindows.data[0]?.data;
 			expect(window?.taggedItem).toBeUndefined();
 			const glazedDoor =
-        store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor
-        	.data[0]?.data;
+				store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor
+					.data[0]?.data;
 			expect(glazedDoor?.associatedItemId).toBeUndefined();
 			const unglazedDoor =
-        store.dwellingFabric.dwellingSpaceDoors
-        	.dwellingSpaceExternalUnglazedDoor.data[0]?.data;
+				store.dwellingFabric.dwellingSpaceDoors
+					.dwellingSpaceExternalUnglazedDoor.data[0]?.data;
 			expect(unglazedDoor?.associatedItemId).toBeUndefined();
 		});
-    
+
 		test("roof is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -474,26 +474,26 @@ describe("ceilings and roofs", () => {
 			).toBeFalsy();
 		});
 
-	
+
 		describe("after section has been marked as complete", () => {
 			beforeEach(async () => {
 				await addCompleteCeilingsAndDoorsDataToStore();
 				await renderSuspended(CeilingsAndRoofs);
 				await user.click(screen.getByTestId("markAsCompleteButton"));
 			});
-	
+
 			it("displays the 'Completed' section status indicator", async () => {
 				const completed = screen.queryByTestId("completeSectionCompleted");
 				expect(completed?.style.display).not.toBe("none");
 			});
-	
+
 			it("navigates to the dwelling fabric page", async () => {
 				expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
 			});
 
 			it("marks each ceiling and roofs section as complete when button is clicked", async () => {
 				const {
-					dwellingSpaceCeilings,      
+					dwellingSpaceCeilings,
 					dwellingSpaceRoofs,
 				} = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
@@ -507,7 +507,7 @@ describe("ceilings and roofs", () => {
 				await user.click(screen.getByTestId("roofs_remove_0"));
 
 				const {
-					dwellingSpaceCeilings,      
+					dwellingSpaceCeilings,
 					dwellingSpaceRoofs,
 				} = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
@@ -516,24 +516,24 @@ describe("ceilings and roofs", () => {
 			});
 
 			it("marks corresponding ceiling and roofs section as not complete if an item is duplicated", async () => {
-		
+
 				await user.click(screen.getByTestId("ceilings_duplicate_0"));
 				await user.click(screen.getByTestId("roofs_duplicate_0"));
 
 				const {
-					dwellingSpaceCeilings,      
+					dwellingSpaceCeilings,
 					dwellingSpaceRoofs,
 				} = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 				expect(dwellingSpaceCeilings?.complete).toBe(false);
 				expect(dwellingSpaceRoofs?.complete).toBe(false);
-      
+
 			});
 
 			it("marks section as not complete after adding a new ceiling", async () => {
-    		
+
 				await user.click(screen.getByTestId("markAsCompleteButton"));
-  
+
 				await renderSuspended(CeilingForm, {
 					route: { params: { "ceiling": "create" } },
 				});
@@ -552,7 +552,7 @@ describe("ceilings and roofs", () => {
 			it("marks section as not complete after adding a new roof", async () => {
 
 				await user.click(screen.getByTestId("markAsCompleteButton"));
-  
+
 				await renderSuspended(RoofForm, {
 					route: { params: { "roof": "create" } },
 				});
@@ -574,7 +574,7 @@ describe("ceilings and roofs", () => {
 				await renderSuspended(CeilingForm, {
 					route: { params: { "ceiling": "0" } },
 				});
-				
+
 				await user.clear(screen.getByTestId("name"));
 				await user.type(screen.getByTestId("name"), "Updated ceiling item");
 				await user.tab();

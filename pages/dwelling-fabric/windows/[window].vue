@@ -80,7 +80,7 @@ const saveForm = (fields: WindowData) => {
 			orientation: shouldSavePitchOrientation ? fields.orientation : undefined,
 			height: fields.height,
 			width: fields.width,
-			uValue: fields.uValue,
+			thermalResistance: fields.thermalResistance,
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
@@ -268,10 +268,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.width" />
 		<FieldsElevationalHeight />
 
-		<FieldsUValue
-			id="uValue"
-			name="uValue"
-		/>
+		<FieldsThermalResistance />
 		<FormKit
 			id="solarTransmittance"
 			type="govInputFloat"

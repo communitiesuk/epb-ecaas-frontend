@@ -38,7 +38,7 @@ describe("windows", () => {
 			taggedItem: externalWall.id,
 			height: 1,
 			width: 1,
-			uValue: 1,
+			thermalResistance: 1,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
