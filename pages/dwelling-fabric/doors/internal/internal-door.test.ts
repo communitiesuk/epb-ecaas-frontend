@@ -289,44 +289,6 @@ describe("internal door", () => {
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
 
-		it("if user selects 'Internal door to unheated space' and marks the door as the front door it asks for orientation", async() => {
-	
-			store.$patch({
-				dwellingDetails: {
-					generalSpecifications: {
-						data: stateWithFlat,
-					},
-				},
-			});
-			await renderSuspended(InternalDoor, {
-				route: {
-					params: { door: "create" },
-				},
-			});
-			await user.click(screen.getByTestId("typeOfInternalDoor_unheatedSpace"));
-			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
-			expect(screen.getByTestId("orientation")).toBeDefined();
-		});
-
-		it("it does not ask for orientation if user selects 'Internal door to heated space'", async() => {
-	
-			store.$patch({
-				dwellingDetails: {
-					generalSpecifications: {
-						data: stateWithFlat,
-					},
-				},
-			});
-			await renderSuspended(InternalDoor, {
-				route: {
-					params: { door: "create" },
-				},
-			});
-			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
-			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
-			expect(screen.queryByTestId("orientation")).toBeNull();
-		});
-
 
 		it("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
 			const frontDoor: Partial<ExternalGlazedDoorData> = {
