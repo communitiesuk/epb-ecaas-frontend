@@ -275,6 +275,8 @@ const doorsData: DoorsData = {
 				massDistributionClass: "I",
 				colour: "Intermediate",
 				thermalResistance: 13,
+				isTheFrontDoor: true,
+
 			},
 		}],
 	},
@@ -304,6 +306,8 @@ const doorsData: DoorsData = {
 				surfaceArea: 5,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
+				isTheFrontDoor: true,
+				orientation: 45,
 			},
 		}],
 	},
@@ -1104,6 +1108,7 @@ describe("dwelling space doors", () => {
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 				"Thermal resistance": `13 ${squareMeterKelvinPerWatt.suffix}`,
+				"Is this the front door?": "-",
 			};
 
 
@@ -1114,7 +1119,7 @@ describe("dwelling space doors", () => {
 			}
 		});
 
-		it("should display the correct data for the external unglazed doors section", async () => {
+		it("should display the correct data when external door has tagged item", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -1131,16 +1136,16 @@ describe("dwelling space doors", () => {
 
 			const expectedResult = {
 				"Name": "External unglazed door 1",
-				"Pitch": `90 ${degrees.suffix}`,
-				"Orientation": `0 ${degrees.suffix}`,
+				"Pitch": `${wallsData.dwellingSpaceExternalWall.data[0]?.data.pitch} ${degrees.suffix}`,
+				"Orientation": `${wallsData.dwellingSpaceExternalWall.data[0]?.data.orientation} ${degrees.suffix}`,
 				"Height": `0.5 ${metre.suffix}`,
 				"Width": `20 ${metre.suffix}`,
 				"Elevational height of building element at its base": `20 ${metre.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 				"Thermal resistance": `13 ${squareMeterKelvinPerWatt.suffix}`,
+				"Is this the front door?": "Yes",
 			};
-
 
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceUnglazedDoors-${hyphenate(key)}`));
@@ -1170,6 +1175,7 @@ describe("dwelling space doors", () => {
 									maximumOpenableArea: 1,
 									midHeightOpenablePart1: 1,
 									thermalResistance: 26,
+									isTheFrontDoor: true,
 								},
 							}],
 						},
@@ -1189,6 +1195,7 @@ describe("dwelling space doors", () => {
 				"Elevational height of building element at its base": `1 ${metre.suffix}`,
 				"Mid height": `1 ${metre.suffix}`,
 				"Thermal resistance": `26 ${squareMeterKelvinPerWatt.suffix}`,
+				"Is this the front door?": "Yes",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -1223,6 +1230,7 @@ describe("dwelling space doors", () => {
 				"Elevational height of building element at its base": `1 ${metre.suffix}`,
 				"Mid height": `1 ${metre.suffix}`,
 				"Thermal resistance": `26 ${squareMeterKelvinPerWatt.suffix}`,
+				"Is this the front door?": "-",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -1256,6 +1264,44 @@ describe("dwelling space doors", () => {
 			"Pitch": `10 ${degrees.suffix}`,
 		};
 
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceInternalDoors-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("when internal door can be the front door", async () => {
+		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					data: 
+					{ 
+						typeOfDwelling: "flat" },
+				},
+			},dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceInternalWall: wallsData.dwellingSpaceInternalWall,
+				},
+				dwellingSpaceDoors: {
+					dwellingSpaceInternalDoor: doorsData.dwellingSpaceInternalDoor,
+				},
+			},
+		});	
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Type": "Internal door to heated space",
+			"Name": "Internal 1",
+			"Pitch": `10 ${degrees.suffix}`,
+			"Net surface area of element": `5 ${metresSquare.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+			"Is this the front door?": "Yes",
+			"Orientation": "45",
+		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceInternalDoors-${hyphenate(key)}`));

@@ -375,7 +375,7 @@ const unglazedDoorSummary: SummarySection = {
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
-
+			"Is this the front door?": displayBoolean(x.isTheFrontDoor), 
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceDoors"),
@@ -409,6 +409,7 @@ const glazedDoorSummary: SummarySection = {
 			"Transmittance of solar energy": dim(x.solarTransmittance),
 			"Mid height": dim(x.midHeight, "metres"),
 			"Opening to frame ratio": dim(x.openingToFrameRatio),
+			"Is this the front door?": displayBoolean(x.isTheFrontDoor), 
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceDoors"),
@@ -439,6 +440,8 @@ const internalDoorSummary: SummarySection = {
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isInternalDoorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
+			"Is this the front door?": displayBoolean(x.isTheFrontDoor), 
+			"Orientation": "orientation" in x ? x.orientation : emptyValueRendering,
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceDoors"),
