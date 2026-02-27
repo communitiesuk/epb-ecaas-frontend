@@ -133,7 +133,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.party_wall_cavity_type"
 		/>
 		<FormKit
-			v-if="['filled_unsealed', 'filled_sealed', 'unfilled_sealed', 'unfilled_unsealed'].includes(model?.partyWallCavityType!)"
+			v-if="['filled_sealed', 'unfilled_sealed', 'unfilled_unsealed'].includes(model?.partyWallCavityType!)"
 			id="partyWallLiningType"
 			name="partyWallLiningType"
 			type="govRadios"
