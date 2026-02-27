@@ -562,17 +562,44 @@ describe("external glazed door", () => {
 				(await error).innerText.includes("Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead."),
 			).toBe(true);
 		});
-	
 		
-		test("displays the 'Is this the front door?' element if there are associated items (wall/roof) but ", async() => {
+		test("does not display the 'Is this the front door?' element if an associated item is a flat roof (has no orientation)", async() => {
+  
+			const roof: EcaasForm<RoofData> = {
+				data: {
+					id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
+					name: "Roof 1",
+					typeOfRoof: "flat",
+					pitchOption: "0",
+					pitch: 0,
+					length: 1,
+					width: 1,
+					elevationalHeightOfElement: 2,
+					surfaceArea: 1,
+					uValue: 1,
+					colour: "Dark",
+					arealHeatCapacity: "Very light",
+					massDistributionClass: "I",
+				},
+			};
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceRoofs: {
+							data: [roof],
+						},
+					},
+				},
+			});
 	
+
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { externalGlazed: "create" },
 				},
 			});
-	
-			expect(screen.getByTestId("isTheFrontDoor")).toBeDefined();
+			await user.click(screen.getByTestId(`associatedItemId_${roof.data.id}`));
+			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
 	});
 });

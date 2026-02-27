@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getUrl, standardPitchOptions, uniqueName } from "#imports";
+import { isFlatRoofItem } from "../../../../utils/isFlatRoofItem";
 
 const title = "External unglazed door";
 const store = useEcaasStore();
@@ -103,17 +104,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
 		/>
-		<FormKit
-			id="isTheFrontDoor"
-			type="govBoolean"
-			label="Is this the front door?"
-			name="isTheFrontDoor"
-			:validation-rules="{ canBeFrontDoor }"
-			validation="required | canBeFrontDoor" 
-			:validation-messages="{
-				canBeFrontDoor: 'Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead.'
-			}"
-		/>
 		<FieldsAssociatedWallRoof
 			id="associatedItemId"
 			name="associatedItemId"
@@ -180,6 +170,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<FormKit
+			v-if="!model?.associatedItemId || model.associatedItemId === 'none' || !isFlatRoofItem(model.associatedItemId)"
+			id="isTheFrontDoor"
+			type="govBoolean"
+			label="Is this the front door?"
+			name="isTheFrontDoor"
+			:validation-rules="{ canBeFrontDoor }"
+			validation="required | canBeFrontDoor" 
+			:validation-messages="{
+				canBeFrontDoor: 'Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead.'
+			}"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

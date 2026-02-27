@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getUrl, standardPitchOptions, uniqueName, type ExternalGlazedDoorData } from "#imports";
+import { isFlatRoofItem } from "../../../../utils/isFlatRoofItem";
 import type { SchemaWindowTreatmentType } from "~/schema/aliases";
 
 const title = "External glazed door";
@@ -180,18 +181,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
 		/>
-		<FormKit
-			id="isTheFrontDoor"
-			type="govBoolean"
-			label="Is this the front door?"
-			name="isTheFrontDoor"
-			:validation-rules="{ canBeFrontDoor }"
-			validation="required | canBeFrontDoor" 
-			:validation-messages="{
-				canBeFrontDoor: 'Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead.'
-			}"
-		/>
-
 		<FieldsAssociatedWallRoof
 			id="associatedItemId"
 			name="associatedItemId"
@@ -372,6 +361,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</template>
 			</template>
 		</template>
+		<FormKit
+			v-if="!model?.associatedItemId || model.associatedItemId === 'none' || !isFlatRoofItem(model.associatedItemId)"
+			id="isTheFrontDoor"
+			type="govBoolean"
+			label="Is this the front door?"
+			name="isTheFrontDoor"
+			:validation-rules="{ canBeFrontDoor }"
+			validation="required | canBeFrontDoor" 
+			:validation-messages="{
+				canBeFrontDoor: 'Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead.'
+			}"
+		/>
 		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
 		<h2 class="govuk-heading-l">Curtains and blinds</h2>

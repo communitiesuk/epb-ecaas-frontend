@@ -51,7 +51,7 @@ describe("external unglazed door", () => {
 		test("links to add walls and roofs are not displayed", async () => {
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
-					params: { externalUnglazed: "create" },
+					params: { door: "create" },
 				},
 			});
 
@@ -65,7 +65,7 @@ describe("external unglazed door", () => {
 		test("Should not render associated ID element", async () => {
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
-					params: { externalUnglazed: "create" },
+					params: { door: "create" },
 				},
 			});
 
@@ -75,7 +75,7 @@ describe("external unglazed door", () => {
 		test("shows pitch element", async () => {
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
-					params: { externalUnglazed: "create" },
+					params: { door: "create" },
 				},
 			});
 
@@ -85,7 +85,7 @@ describe("external unglazed door", () => {
 		it("shows orientation when pitch is not 0 or 180", async () => {
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
-					params: { externalUnglazed: "create" },
+					params: { door: "create" },
 				},
 			});
 			expect(screen.queryByTestId("orientation")).toBeNull();
@@ -97,7 +97,7 @@ describe("external unglazed door", () => {
 		test("requires pitch and orientation", async () => {
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
-					params: { externalUnglazed: "create" },
+					params: { door: "create" },
 				},
 			});
 
@@ -153,7 +153,7 @@ describe("external unglazed door", () => {
 		test("Associated wall/roof question has none of the above option", async () => {
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
-					params: { externalUnglazed: "create" },
+					params: { door: "create" },
 				},
 			});
 
@@ -163,7 +163,7 @@ describe("external unglazed door", () => {
 		test("does not require pitch and orientation when existing wall is selected", async () => {
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
-					params: { externalUnglazed: "create" },
+					params: { door: "create" },
 				},
 			});
 
@@ -184,7 +184,7 @@ describe("external unglazed door", () => {
 			test("shows pitch element", async () => {
 				await renderSuspended(ExternalUnglazedDoor, {
 					route: {
-						params: { externalUnglazed: "create" },
+						params: { door: "create" },
 					},
 				});
 
@@ -196,7 +196,7 @@ describe("external unglazed door", () => {
 			it("shows orientation when pitch is not 0 or 180", async () => {
 				await renderSuspended(ExternalUnglazedDoor, {
 					route: {
-						params: { externalUnglazed: "create" },
+						params: { door: "create" },
 					},
 				});
 
@@ -211,7 +211,7 @@ describe("external unglazed door", () => {
 			test("requires pitch and orientation", async () => {
 				await renderSuspended(ExternalUnglazedDoor, {
 					route: {
-						params: { externalUnglazed: "create" },
+						params: { door: "create" },
 					},
 				});
 
@@ -255,7 +255,7 @@ describe("external unglazed door", () => {
 		test("data is saved to store state when form is valid", async () => {
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
-					params: { externalUnglazed: "create" },
+					params: { door: "create" },
 				},
 			});
 
@@ -371,38 +371,6 @@ describe("external unglazed door", () => {
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 
 		});
-		test("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
-			const door: Partial<ExternalUnglazedDoorData> = {
-				name: "External unglazed door 1",
-				isTheFrontDoor: true,
-			};
-
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceDoors: {
-						dwellingSpaceExternalUnglazedDoor: {
-							data: [{ data: door }],
-						},
-					},
-				},
-			});
-
-			await renderSuspended(ExternalUnglazedDoor, {
-				route: {
-					params: { door: "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
-			await user.tab();
-			await (user.click(screen.getByTestId("saveAndComplete")));
-
-			const error = screen.findByTestId("isTheFrontDoor_error");
-			expect(error).toBeDefined();
-			expect(
-				(await error).innerText.includes("Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead."),
-			).toBe(true);
-		});
 
 		test("error summary is displayed when an invalid form in submitted", async () => {
 			await renderSuspended(ExternalUnglazedDoor);
@@ -416,7 +384,7 @@ describe("external unglazed door", () => {
 			it("creates a new door automatically with given name", async () => {
 				await renderSuspended(ExternalUnglazedDoor, {
 					route: {
-						params: { externalUnglazed: "create" },
+						params: { door: "create" },
 					},
 				});
 
@@ -432,7 +400,7 @@ describe("external unglazed door", () => {
 			it("creates a new door automatically with default name after other data is entered", async () => {
 				await renderSuspended(ExternalUnglazedDoor, {
 					route: {
-						params: { externalUnglazed: "create" },
+						params: { door: "create" },
 					},
 				});
 
@@ -459,7 +427,7 @@ describe("external unglazed door", () => {
 
 				await renderSuspended(ExternalUnglazedDoor, {
 					route: {
-						params: { externalUnglazed: "1" },
+						params: { door: "1" },
 					},
 				});
 
@@ -489,7 +457,7 @@ describe("external unglazed door", () => {
 
 				await renderSuspended(ExternalUnglazedDoor, {
 					route: {
-						params: { externalUnglazed: "0" },
+						params: { door: "0" },
 					},
 				});
 
@@ -501,6 +469,80 @@ describe("external unglazed door", () => {
 				expect(externalUnglazedDoors.data[0]!.complete).not.toBe(true);
 				expect(externalUnglazedDoors.complete).not.toBe(true);
 			});
+		});
+	});
+	describe("Handing external unglazed door as a front door", () => {
+		
+		test("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
+			const door: Partial<ExternalUnglazedDoorData> = {
+				name: "External unglazed door 1",
+				isTheFrontDoor: true,
+			};
+				
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalUnglazedDoor: {
+							data: [{ data: door }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(ExternalUnglazedDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
+			await user.tab();
+			await (user.click(screen.getByTestId("saveAndComplete")));
+		
+			const error = screen.findByTestId("isTheFrontDoor_error");
+			expect(error).toBeDefined();
+			expect(
+				(await error).innerText.includes("Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead."),
+			).toBe(true);
+		});
+
+		test("does not display the 'Is this the front door?' element if an associated item is a flat roof (has no orientation)", async() => {
+		
+			const roof: EcaasForm<RoofData> = {
+				data: {
+					id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
+					name: "Roof 1",
+					typeOfRoof: "flat",
+					pitchOption: "0",
+					pitch: 0,
+					length: 1,
+					width: 1,
+					elevationalHeightOfElement: 2,
+					surfaceArea: 1,
+					uValue: 1,
+					colour: "Dark",
+					arealHeatCapacity: "Very light",
+					massDistributionClass: "I",
+				},
+			};
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceRoofs: {
+							data: [roof],
+						},
+					},
+				},
+			});
+		
+	
+			await renderSuspended(ExternalUnglazedDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+			await user.click(screen.getByTestId(`associatedItemId_${roof.data.id}`));
+			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
 	});
 });
