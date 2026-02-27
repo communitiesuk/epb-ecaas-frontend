@@ -88,6 +88,7 @@ describe("Domestic hot water", () => {
 				id: "what2",
 				typeOfWaterStorage: "smartHotWaterTank",
 				dhwHeatSourceId: "weeeeee3",
+				energySupply: "electricity",
 				heaterPosition: 0.8,
 				productReference: "SMART-12345",
 			},
@@ -604,6 +605,7 @@ describe("Domestic hot water", () => {
 				id: "c84528bb-f805-4f1e-95d3-2bd1717deca2",
 				typeOfWaterStorage: "smartHotWaterTank",
 				dhwHeatSourceId: heatSource2.data.id,
+				energySupply: "electricity",
 				heaterPosition: 0.8,
 				productReference: "SMRT-12345",
 			};

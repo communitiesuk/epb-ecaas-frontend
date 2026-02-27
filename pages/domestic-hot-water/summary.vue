@@ -2,7 +2,7 @@
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl } from "#imports";
 import type { SchemaFuelType } from "~/schema/aliases";
-import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, SmartHotWaterTankData } from "~/stores/ecaasStore.schema";
 import { displayDHWHeatSourceType } from "~/utils/display";
 import type { PageId } from "~/data/pages/pages";
 
@@ -396,6 +396,7 @@ const smartHotWaterCylinderSummary: SummarySection = {
 			"Name": show(smartHWCylData.name),
 			"Product reference": "productReference" in smartHWCylData ? show(smartHWCylData.productReference) : emptyValueRendering,
 			"Heat source": show(getHWHeatSourceName(smartHWCylData.dhwHeatSourceId)),
+			"Energy source": show((smartHWCylData as SmartHotWaterTankData).energySupply),
 			"Heater position in the cylinder": "heaterPosition" in smartHWCylData ? show(smartHWCylData.heaterPosition) : emptyValueRendering,
 		};
 	}),

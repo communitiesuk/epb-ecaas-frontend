@@ -1329,6 +1329,7 @@ const smartHotWaterTankDataZod = namedWithId.extend({
 	typeOfWaterStorage: z.literal("smartHotWaterTank"),
 	productReference: z.string(),
 	dhwHeatSourceId: z.string(),
+	energySupply: fuelTypeZod,
 	heaterPosition: z.number().min(0).max(1),
 });
 

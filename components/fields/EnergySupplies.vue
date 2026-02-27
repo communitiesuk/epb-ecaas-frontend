@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { energySupplyOptions, getUrl } from "#imports";
+import { getUrl } from "#imports";
+import { useEnergySupplies } from "~/composables/energySupplies";
 
 defineProps<{
 	id: string;
@@ -12,26 +13,13 @@ defineProps<{
 	dataField?: string;
 }>();
 
-const store = useEcaasStore();
-
-const { fuelType } = store.dwellingDetails.generalSpecifications.data; 
-
-const energySupplies = fuelType !== undefined ?
-	[...new Set([...fuelType, "elecOnly" as keyof typeof energySupplyOptions])].map(x => {
-
-		if (x === "elecOnly") {
-			return ["electricity", energySupplyOptions[x]] as [string, string];
-		}
-		return [x, energySupplyOptions[x]] as [string, string];
-	
-	}).filter(x => typeof x !== "undefined") : [];
+const energySupplies = useEnergySupplies();
 
 function getDefaultEnergySupply(supplies: [string, string][]) {
 	if (supplies.length === 1) {
 		return supplies[0]![0];
 	}
 }
-
 </script>
 
 <template>

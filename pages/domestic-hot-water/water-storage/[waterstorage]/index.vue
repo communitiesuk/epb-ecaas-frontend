@@ -4,12 +4,14 @@ import type { WaterStorageData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
 import { v4 as uuidv4 } from "uuid";
 import { waterStorageTypes } from "#imports";
+import { useEnergySupplies } from "~/composables/energySupplies";
 
 const title = "Water storage";
 const store = useEcaasStore();
 const route = useRoute();
 
 const { autoSaveElementForm, getStoreIndex } = useForm();
+const energySupplies = useEnergySupplies();
 
 const waterStorageStoreData = store.domesticHotWater.waterStorage.data;
 const index = getStoreIndex(waterStorageStoreData);
@@ -58,6 +60,7 @@ const saveForm = (fields: WaterStorageData) => {
 					...commonFields,
 					typeOfWaterStorage: fields.typeOfWaterStorage,
 					productReference: fields.productReference,
+					energySupply: fields.energySupply,
 				},
 				complete: true,
 			};
@@ -103,14 +106,21 @@ watch(
 			errorMessages.value = [];
 			const preservedId = model.value?.id;
 			const defaultName = waterStorageTypes[newType];
+
 			const newValue = { 
 				typeOfWaterStorage: newType, 
 				id: preservedId,
 				...(defaultName && { name: defaultName }),
 			} as WaterStorageData;
+
 			if (heatSourceOptions.size === 1) {
 				newValue.dhwHeatSourceId = heatSourceOptions.keys().next().value!;
 			}
+
+			if (newValue.typeOfWaterStorage === "smartHotWaterTank" && energySupplies.length === 1) {
+				newValue.energySupply = energySupplies[0]![0];
+			}
+
 			model.value = newValue;
 		}
 	},
@@ -126,7 +136,6 @@ const heatSourceOptions = new Map(
 			: e.data.name,
 	]),
 );
-
 </script>
 
 <template>
@@ -213,8 +222,8 @@ const heatSourceOptions = new Map(
 			id="dhwHeatSourceId"
 			name="dhwHeatSourceId"
 			type="govRadios"
-			label="Hot water source"
-			help="Select the relevant hot water source that has been added previously"
+			label="Heat source"
+			help="Select the relevant heat source that has been added previously"
 			validation="required"
 			:options="heatSourceOptions"
 		>			
@@ -228,6 +237,13 @@ const heatSourceOptions = new Map(
 				</NuxtLink>
 			</div>
 		</FormKit>
+		<FieldsEnergySupplies
+			v-if="model.typeOfWaterStorage === 'smartHotWaterTank'"
+			id="energySupply"
+			name="energySupply"
+			label="Energy supply"
+			help="Select the relevant energy supply that has been added previously"
+		/>
 		<FormKit
 			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
 			id="areaOfHeatExchanger"
@@ -256,7 +272,7 @@ const heatSourceOptions = new Map(
 			help="Enter a number between 0 and 1. 0 is at the bottom and 1 is at the top."
 		/>
 		<div class="govuk-button-group">
-			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('domesticHotWater')" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>

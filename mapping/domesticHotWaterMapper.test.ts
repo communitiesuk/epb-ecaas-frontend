@@ -98,6 +98,7 @@ describe("domestic hot water mapper", () => {
 					typeOfWaterStorage: "smartHotWaterTank",
 					name: "smart hot water tank",
 					dhwHeatSourceId: heatSourceId,
+					energySupply: "electricity",
 					heaterPosition: 0.3,
 					productReference: "SWT-12345",
 				},
@@ -128,7 +129,7 @@ describe("domestic hot water mapper", () => {
 				EnergySupply_pump: "mains elec",
 				HeatSource: {
 					[heatPump.data.name]: {
-						EnergySupply: "mains elec",
+						EnergySupply: "electricity",
 						heater_position: 0.3,
 						type: "HeatSourceWet",
 						name: heatPump.data.name,

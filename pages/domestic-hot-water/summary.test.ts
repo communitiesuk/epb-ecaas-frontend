@@ -62,6 +62,7 @@ describe("Domestic hot water summary", () => {
 			name: "Smart hot water cylinder",
 			productReference: "SMART-HOT-WATER-CYLINDER",
 			dhwHeatSourceId: heatPumpId,
+			energySupply: "electricity",
 			heaterPosition: 0.3,
 		};
 
@@ -184,6 +185,7 @@ describe("Domestic hot water summary", () => {
 				"Name": "Smart hot water cylinder",
 				"Product reference": "SMART-HOT-WATER-CYLINDER",
 				"Heat source": "Heat pump",
+				"Energy source": "electricity",
 				"Heater position in the cylinder": "0.3",
 			};
 
