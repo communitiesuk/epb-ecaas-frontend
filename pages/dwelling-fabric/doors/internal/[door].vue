@@ -148,7 +148,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<FieldsOrientation
-			v-if="model?.isTheFrontDoor"
+			v-if="model?.typeOfInternalDoor === 'unheatedSpace' && model?.isTheFrontDoor"
 			id="orientation"
 			name="orientation"
 			data-field="Zone.BuildingElement.*.orientation360"
