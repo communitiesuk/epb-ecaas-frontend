@@ -27,7 +27,13 @@ const typeOptions: Record<string, string> = {
 	overhang: "Overhang",
 	frame_or_reveal: "Frame or reveal",
 };
-
+const typeOptionsSummary = {
+	obstacle: "Obstacle",
+	left_side_fin: "Left side fin",
+	right_side_fin: "Right side fin",
+	overhang: "Overhang",
+	frame_or_reveal: "Frame / reveal",
+};
 const buildShadingElement = (): PvShadingData | null => {
 	const { typeOfShading, name } = formModel.value;
 	if (!typeOfShading || !name) {
@@ -97,7 +103,8 @@ const removeShading = (i: number) => {
 			class="govuk-summary-card"
 		>
 			<div class="govuk-summary-card__title-wrapper">
-				<h2 class="govuk-summary-card__title">{{ item.name }}</h2>
+				<h2 v-if="!isEditing" class="govuk-summary-card__title">{{ item.name }}</h2>
+				<h2 v-else class="govuk-summary-card__title">Edit shading</h2>
 				<ul v-if="editIndex !== i" class="govuk-summary-card__actions">
 					<li class="govuk-summary-card__action">
 						<a
@@ -125,7 +132,7 @@ const removeShading = (i: number) => {
 				<dl class="govuk-summary-list">
 					<div class="govuk-summary-list__row">
 						<dt class="govuk-summary-list__key">Type of shading</dt>
-						<dd class="govuk-summary-list__value">{{ typeOptions[item.typeOfShading] }}</dd>
+						<dd class="govuk-summary-list__value">{{ typeOptionsSummary[item.typeOfShading] }}</dd>
 					</div>
 					<template v-if="item.typeOfShading === 'obstacle'">
 						<div class="govuk-summary-list__row">
@@ -138,7 +145,7 @@ const removeShading = (i: number) => {
 						</div>
 						<div class="govuk-summary-list__row">
 							<dt class="govuk-summary-list__key">Transparency</dt>
-							<dd class="govuk-summary-list__value">{{ item.transparency }}</dd>
+							<dd class="govuk-summary-list__value">{{ item.transparency }}%</dd>
 						</div>
 					</template>
 					<template v-else>
@@ -147,19 +154,18 @@ const removeShading = (i: number) => {
 							<dd class="govuk-summary-list__value">{{ item.depth }} m</dd>
 						</div>
 						<div class="govuk-summary-list__row">
-							<dt class="govuk-summary-list__key">Distance</dt>
+							<dt class="govuk-summary-list__key">Distance from edge of PV</dt>
 							<dd class="govuk-summary-list__value">{{ item.distance }} m</dd>
 						</div>
 					</template>
 				</dl>
 			</div>
 			<div v-else class="govuk-summary-card__content" data-testid="shading-add-form">
-				<h2 class="govuk-heading-m">Edit shading</h2>
 				<FormKit
 					id="shadingName"
 					v-model="formModel.name"
 					type="govInputText"
-					label="Name"
+					label="Name of shading"
 					validation="required"
 				/>
 				<FormKit
@@ -192,7 +198,7 @@ const removeShading = (i: number) => {
 						v-model="formModel.transparency"
 						type="govInputWithSuffix"
 						label="Transparency of obstacle"
-						help="100% is transparent. 0% is opaque."
+						help="100% is completely transparent. 0% is opaque."
 						suffix-text="%"
 						validation="required | number | min:0 | max:100"
 					/>
@@ -248,7 +254,7 @@ const removeShading = (i: number) => {
 
 		<div v-if="showAddForm && !isEditing" class="govuk-summary-card">
 			<div class="govuk-summary-card__title-wrapper">
-				<h2 class="govuk-summary-card__title">{{ isAddAnother ? 'Add another shading object' : 'Add shading object' }}</h2>
+				<h2 class="govuk-summary-card__title">Add shading</h2>
 			</div>
 			<div class="govuk-summary-card__content" data-testid="shading-add-form">
 				<FormKit type="form" :actions="false" @submit="saveShading">
@@ -256,7 +262,7 @@ const removeShading = (i: number) => {
 						id="shadingName"
 						v-model="formModel.name"
 						type="govInputText"
-						label="Name"
+						label="Name of shading"
 						validation="required"
 					/>
 					<FormKit

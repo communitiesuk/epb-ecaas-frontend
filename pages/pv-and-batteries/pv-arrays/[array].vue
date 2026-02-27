@@ -324,7 +324,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="hasShading"
 			type="govBoolean"
-			label="Does the PV array have shading on it for part of the day?"
+			label="Does anything shade the PV array?"
 			name="hasShading"
 			validation="required"
 		/>
