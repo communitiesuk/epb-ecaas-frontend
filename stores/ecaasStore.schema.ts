@@ -6,11 +6,10 @@ import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/sch
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, colourZod, ductShapeZod, fuelTypeWithElecOnlyZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, colourZod, ductShapeZod, fuelTypeWithElecOnlyZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
 
 const fraction = z.number().min(0).max(1);
-const percentage = z.number().min(0).max(100);
 const named = z.object({
 	name: z.string().trim().min(1),
 });
@@ -27,10 +26,10 @@ const orientation = z.number().min(0).lt(360);
 const massDistributionClass = massDistributionClassZod;
 const uValue = z.number().min(0.01).max(10);
 const thermalResistanceOfAdjacentUnheatedSpace = z.number().min(0).max(3);
+const thermalResistance = z.number().min(0.00001).max(50);
 
 export type EcaasState = AssertEachKeyIsPageId<{
 	dwellingDetails: DwellingDetails;
-	domesticHotWaterNew: DomesticHotWaterNew;
 	domesticHotWater: DomesticHotWater;
 	dwellingFabric: DwellingFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
@@ -70,6 +69,7 @@ const baseGeneralDetails = z.object({
 	numOfWCs: z.int(),
 	numOfHabitableRooms: z.int().min(1),
 	numOfRoomsWithTappingPoints: z.int().min(1),
+	numOfWetRooms: z.int().min(1),
 	fuelType: z.array(fuelTypeWithElecOnlyZod),
 });
 
@@ -103,12 +103,13 @@ const externalFactorsDataZod = z.object({
 
 export type ExternalFactorsData = z.infer<typeof externalFactorsDataZod>;
 
+export const kitchenExtractorHoodExternalKey = "KitchenExtractorHoodExternal";
 
 const appliancesDataZod = z.object({
-	applianceType: z.array(applianceTypeZod),
+	applianceType: z.array(z.union([applianceTypeZod, z.literal(kitchenExtractorHoodExternalKey)])),
 });
 export type AppliancesData = z.infer<typeof appliancesDataZod>;
-
+export type ApplianceKey = AppliancesData["applianceType"][number];
 
 export type DwellingDetails = AssertFormKeysArePageIds<{
 	generalSpecifications: EcaasForm<GeneralDetailsData>;
@@ -125,13 +126,15 @@ export interface DwellingFabric {
 	dwellingSpaceDoors: DoorsData;
 	dwellingSpaceWindows: EcaasFormList<WindowData>;
 	dwellingSpaceThermalBridging: ThermalBridgingData;
-	dwellingSpaceLighting: EcaasForm<DwellingSpaceLightingData>;
+	dwellingSpaceLighting: EcaasFormList<DwellingSpaceLightingData>;
 }
 
 export interface FloorsData {
 	dwellingSpaceGroundFloor: EcaasFormList<GroundFloorData>,
 	dwellingSpaceInternalFloor: EcaasFormList<InternalFloorData>,
-	dwellingSpaceExposedFloor: EcaasFormList<ExposedFloorData>
+	dwellingSpaceExposedFloor: EcaasFormList<ExposedFloorData>,
+	dwellingSpaceFloorAboveUnheatedBasement: EcaasFormList<FloorAboveUnheatedBasementData>
+	dwellingSpaceFloorOfHeatedBasement: EcaasFormList<FloorOfHeatedBasementData>
 }
 
 export const adjacentSpaceTypes = ["heatedSpace", "unheatedSpace"] as const;
@@ -164,7 +167,7 @@ export const exposedFloorDataZod = named.extend({
 	width: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),
 	surfaceArea: z.number().min(0.01).max(10000),
-	uValue,
+	thermalResistance,
 	colour: colourZod,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
@@ -175,7 +178,7 @@ export type ExposedFloorData = z.infer<typeof exposedFloorDataZod>;
 const baseGroundFloorData = named.extend({
 	surfaceArea: z.number().min(1),
 	uValue,
-	thermalResistance: z.number().min(0.00001).max(50),
+	thermalResistance,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	perimeter: z.number().min(0).max(1000),
@@ -221,11 +224,45 @@ const groundFloorDataZod = z.discriminatedUnion(
 
 export type GroundFloorData = z.infer<typeof groundFloorDataZod>;
 
+const floorAboveUnheatedBasementDataZod = named.extend({
+	surfaceArea: z.number().min(1),
+	uValue,
+	thermalResistance,
+	arealHeatCapacity: arealHeatCapacityZod,
+	massDistributionClass,
+	perimeter: z.number().min(0).max(1000),
+	psiOfWallJunction: z.number().min(0).max(2),
+	thicknessOfWalls: z.number(),
+	depthOfBasementFloor: z.number(),
+	heightOfBasementWalls: z.number(),
+	thermalResistanceOfBasementWalls: z.number().min(0.00001).max(50),
+	thermalTransmittanceOfBasementWalls: z.number(),
+	thermalTransmittanceOfFoundations: z.number(),
+});
+
+export type FloorAboveUnheatedBasementData = z.infer<typeof floorAboveUnheatedBasementDataZod>;
+
+const floorOfHeatedBasementDataZod = namedWithId.extend({
+	surfaceArea: z.number().min(1),
+	uValue,
+	thermalResistance,
+	arealHeatCapacity: arealHeatCapacityZod,
+	massDistributionClass,
+	depthOfBasementFloor: z.number(),
+	perimeter: z.number().min(0).max(1000),
+	psiOfWallJunction: z.number().min(0).max(2),
+	thicknessOfWalls: z.number(),
+});
+
+export type FloorOfHeatedBasementData = z.infer<typeof floorOfHeatedBasementDataZod>;
+
+
 export type WallsData = AssertFormKeysArePageIds<{
 	dwellingSpaceExternalWall: EcaasForm<EcaasForm<ExternalWallData>[]>;
 	dwellingSpaceInternalWall: EcaasForm<EcaasForm<InternalWallData>[]>;
 	dwellingSpaceWallToUnheatedSpace: EcaasForm<EcaasForm<WallsToUnheatedSpaceData>[]>;
 	dwellingSpacePartyWall: EcaasForm<EcaasForm<PartyWallData>[]>;
+	dwellingSpaceWallOfHeatedBasement: EcaasForm<EcaasForm<WallOfHeatedBasementData>[]>;
 }>;
 
 type Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
@@ -242,10 +279,10 @@ const externalWallDataZod = namedWithId.extend({
 	length: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),
 	surfaceArea: z.number().min(0.01).max(10000),
-	uValue,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	colour: colourZod,
+	thermalResistance,
 });
 
 export type ExternalWallData = z.infer<typeof externalWallDataZod>;
@@ -256,13 +293,14 @@ const internalWallDataZod = namedWithId.extend({
 	massDistributionClass,
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
+	thermalResistance,
 });
 
 export type InternalWallData = z.infer<typeof internalWallDataZod>;
 
 const wallsToUnheatedSpaceDataZod = namedWithId.extend({
 	surfaceAreaOfElement: z.number().min(0).max(10000),
-	uValue,
+	thermalResistance,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	pitchOption: standardPitchOption,
@@ -278,8 +316,8 @@ const partyWallDataZod = namedWithId.extend({
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(60).max(120)),
 	surfaceArea: z.number().min(0.01).max(10000),
-	uValue,
 	arealHeatCapacity: arealHeatCapacityZod,
+	uValue,
 	massDistributionClass,
 	partyWallCavityType: partyWallCavityTypeZod,
 	partyWallLiningType: z.optional(partyWallLiningTypeZod),
@@ -287,6 +325,18 @@ const partyWallDataZod = namedWithId.extend({
 });
 
 export type PartyWallData = z.infer<typeof partyWallDataZod>;
+
+const wallOfHeatedBasementDataZod = namedWithId.extend({
+	netSurfaceArea: z.number().min(0.01).max(10000),
+	uValue,
+	thermalResistance,
+	arealHeatCapacity: arealHeatCapacityZod,
+	massDistributionClass,
+	perimeter: z.number().min(0).max(1000),
+	associatedBasementFloorId: z.uuidv4(),
+});
+
+export type WallOfHeatedBasementData = z.infer<typeof wallOfHeatedBasementDataZod>;
 
 export type CeilingsAndRoofsData = AssertFormKeysArePageIds<{
 	dwellingSpaceCeilings: EcaasFormList<CeilingData>;
@@ -344,43 +394,90 @@ export type DoorsData = AssertFormKeysArePageIds<{
 }>;
 
 const externalUnglazedDoorDataZod = named.extend({
-	associatedItemId: z.guid(),
+	isTheFrontDoor: z.boolean().optional(),
+	associatedItemId: z.guid().optional(),
+	pitchOption: standardPitchOption.optional(),
+	pitch: z.number().min(0).max(180).optional(),
+	orientation: z.number().min(0).lt(360).optional(),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),
-	surfaceArea: z.number().min(0.01).max(10000),
-	uValue,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	colour: colourZod,
+	thermalResistance,
 });
 
 export type ExternalUnglazedDoorData = z.infer<typeof externalUnglazedDoorDataZod>;
 
-const commonOpenablePartsFields = {
-	maximumOpenableArea: z.number().min(0.01).max(10000),
-	heightOpenableArea: z.number().min(0.001).max(50),
-};
-
-const onePartFields = { ...commonOpenablePartsFields, midHeightOpenablePart1: z.number().min(0).max(100) };
-const twoPartFields = { ...onePartFields, midHeightOpenablePart2: z.number().min(0).max(100) };
-const threePartFields = { ...twoPartFields, midHeightOpenablePart3: z.number().min(0).max(100) };
-const fourPartFields = { ...threePartFields, midHeightOpenablePart4: z.number().min(0).max(100) };
-
-const externalGlazedDoorDataZod = named.extend({
-	associatedItemId: z.guid(),
+const baseExternalGlazedDoorDataZod = named.extend({
+	isTheFrontDoor: z.boolean().optional(),
+	associatedItemId: z.guid().optional(),
+	pitchOption: standardPitchOption.optional(),
+	pitch: z.number().min(0).max(180).optional(),
+	orientation: z.number().min(0).lt(360).optional(),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
-	uValue,
+	thermalResistance,
 	securityRisk: z.boolean(),
 	solarTransmittance: z.number().min(0.01).max(1),
 	elevationalHeight: z.number().min(0).max(500),
 	midHeight: z.number().min(0).max(100),
 	openingToFrameRatio: fraction,
-	...onePartFields,
+	maximumOpenableArea: z.number().min(0.01).max(10000),
+	heightOpenableArea: z.number().min(0.001).max(50),
 });
 
-export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorDataZod>;
+const externalGlazedDoorDataWithOpenablePartsZod = z.discriminatedUnion(
+	"numberOpenableParts",
+	[
+		baseExternalGlazedDoorDataZod.extend({
+			numberOpenableParts: z.literal("0"),
+		}),
+		baseExternalGlazedDoorDataZod.extend({
+			numberOpenableParts: z.literal("1"),
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+		}),
+		baseExternalGlazedDoorDataZod.extend({
+			numberOpenableParts: z.literal("2"),
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+			midHeightOpenablePart2: z.number().min(0).max(100),
+		}),
+		baseExternalGlazedDoorDataZod.extend({
+			numberOpenableParts: z.literal("3"),
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+			midHeightOpenablePart2: z.number().min(0).max(100),
+			midHeightOpenablePart3: z.number().min(0).max(100),
+		}),
+		baseExternalGlazedDoorDataZod.extend({
+			numberOpenableParts: z.literal("4"),
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+			midHeightOpenablePart2: z.number().min(0).max(100),
+			midHeightOpenablePart3: z.number().min(0).max(100),
+			midHeightOpenablePart4: z.number().min(0).max(100),
+		}),
+	],
+);
+
+const curtainsOrBlindsFields = z.union([
+	z.object({
+		curtainsOrBlinds: z.literal(true),
+		treatmentType: windowTreatmentTypeZod,
+		thermalResistivityIncrease: z.number().min(0).max(100),
+		solarTransmittanceReduction: fraction,
+	}),
+	z.object({
+		curtainsOrBlinds: z.literal(false),
+	}),
+]);
+
+const externalGlazedDoorData = z.intersection(externalGlazedDoorDataWithOpenablePartsZod, curtainsOrBlindsFields);
+
+export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorData>;
 
 const baseInternalDoorData = named.extend({
 	associatedItemId: z.guid(),
@@ -388,27 +485,42 @@ const baseInternalDoorData = named.extend({
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 });
-const internalDoorDataZod = z.discriminatedUnion(
-	"typeOfInternalDoor",
-	[
-		baseInternalDoorData.extend({
-			typeOfInternalDoor: z.literal("heatedSpace"),
-		}),
-		baseInternalDoorData.extend({
-			typeOfInternalDoor: z.literal("unheatedSpace"),
-			uValue,
-			thermalResistanceOfAdjacentUnheatedSpace,
-		}),
-	],
-);
+const internalDoorDataZod = z.discriminatedUnion("typeOfInternalDoor", [
+	z.object({
+		typeOfInternalDoor: z.literal("heatedSpace"),
+		isTheFrontDoor: z.literal(true).optional(),
+		orientation: z.number().min(0).lt(360),
+	}),
+	z.object({
+		typeOfInternalDoor: z.literal("heatedSpace"),
+		isTheFrontDoor: z.literal(false).optional(),
+	}),
+	z.object({
+		typeOfInternalDoor: z.literal("unheatedSpace"),
+		isTheFrontDoor: z.literal(true).optional(),
+		orientation: z.number().min(0).lt(360),
+		uValue,
+		thermalResistanceOfAdjacentUnheatedSpace,
+	}),
+	z.object({
+		typeOfInternalDoor: z.literal("unheatedSpace"),
+		isTheFrontDoor: z.literal(false).optional(),
+		uValue,
+		thermalResistanceOfAdjacentUnheatedSpace,
+	}),
+]);
+const _internalDoorDataWithBaseZod = baseInternalDoorData.and(internalDoorDataZod);
 
-export type InternalDoorData = z.infer<typeof internalDoorDataZod>;
+export type InternalDoorData = z.infer<typeof _internalDoorDataWithBaseZod>;
+
 
 const baseWindowData = namedWithId.extend({
-	taggedItem: z.guid(),
+	taggedItem: z.guid().optional(),
+	pitch: z.number().min(0).max(180).optional(),
+	orientation: z.number().min(0).lt(360).optional(),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
-	uValue,
+	thermalResistance,
 	securityRisk: z.boolean(),
 	solarTransmittance: z.number().min(0.01).max(1),
 	elevationalHeight: z.number().min(0).max(500),
@@ -423,19 +535,29 @@ const baseWindowPlusOpenableParts = z.discriminatedUnion(
 		}),
 		baseWindowData.extend({
 			numberOpenableParts: z.literal("1"),
-			...onePartFields,
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
 		}),
 		baseWindowData.extend({
 			numberOpenableParts: z.literal("2"),
-			...twoPartFields,
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+			midHeightOpenablePart2: z.number().min(0).max(100),
 		}),
 		baseWindowData.extend({
 			numberOpenableParts: z.literal("3"),
-			...threePartFields,
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+			midHeightOpenablePart2: z.number().min(0).max(100),
+			midHeightOpenablePart3: z.number().min(0).max(100),
 		}),
 		baseWindowData.extend({
 			numberOpenableParts: z.literal("4"),
-			...fourPartFields,
+			maximumOpenableArea: z.number().min(0.01).max(10000),
+			midHeightOpenablePart1: z.number().min(0).max(100),
+			midHeightOpenablePart2: z.number().min(0).max(100),
+			midHeightOpenablePart3: z.number().min(0).max(100),
+			midHeightOpenablePart4: z.number().min(0).max(100),
 		}),
 	],
 );
@@ -473,18 +595,6 @@ const sideFinLeftFields = z.union([
 	}),
 ]);
 
-const curtainsOrBlindsFields = z.union([
-	z.object({
-		curtainsOrBlinds: z.literal(true),
-		treatmentType: windowTreatmentTypeZod,
-		curtainsControlObject: z.optional(windowTreatmentControlZod),
-		thermalResistivityIncrease: z.number().min(0).max(100),
-		solarTransmittanceReduction: fraction,
-	}),
-	z.object({
-		curtainsOrBlinds: z.literal(false),
-	}),
-]);
 
 export const windowDataZod = z.intersection(
 	baseWindowPlusOpenableParts,
@@ -521,21 +631,19 @@ const pointThermalBridgeDataZod = named.extend({
 
 export type PointThermalBridgeData = z.infer<typeof pointThermalBridgeDataZod>;
 
-const spaceCoolingSystemData = named;
-const spaceHeatControlSystemData = named;
+const _spaceCoolingSystemData = named;
+const _spaceHeatControlSystemData = named;
 
 const dwellingSpaceZoneParameterDataZod = z.object({
-	volume: z.number().min(0),
-	livingRoomArea: z.number().min(0).max(10000),
+	livingZoneArea: z.number().min(0).max(10000),
 	restOfDwellingArea: z.number().min(0).max(10000),
-	spaceHeatingSystemForThisZone: z.optional(z.string()),
-	spaceCoolingSystemForThisZone: z.optional(z.array(spaceCoolingSystemData)),
-	spaceHeatControlSystemForThisZone: z.optional(z.array(spaceHeatControlSystemData)),
+	groundFloorArea: z.number().min(0).max(10000),
+	volume: z.number().min(0),
 });
 
 export type DwellingSpaceZoneParametersData = z.infer<typeof dwellingSpaceZoneParameterDataZod>;
 
-const dwellingSpaceLightingDataZod = z.object({
+const dwellingSpaceLightingDataZod = named.extend({
 	numberOfBulbs: z.int().min(0),
 	power: z.int().min(0),
 	efficacy: z.int().min(0),
@@ -547,254 +655,13 @@ const _spaceHeatingSystemDataZod = named;
 
 export type SpaceHeatingSystemData = z.infer<typeof _spaceHeatingSystemDataZod>;
 
-export type SpaceCoolingSystemData = z.infer<typeof spaceCoolingSystemData>;
+export type SpaceCoolingSystemData = z.infer<typeof _spaceCoolingSystemData>;
 
-export type SpaceHeatControlSystemData = z.infer<typeof spaceHeatControlSystemData>;
+export type SpaceHeatControlSystemData = z.infer<typeof _spaceHeatControlSystemData>;
 
-// NEW HOT WATER START =======================================================================
-
-export type DomesticHotWaterNew = AssertEachKeyIsPageId<{
-	heatSources: EcaasFormList<WaterHeatSourcesData>;
-	waterStorage: EcaasFormList<WaterStorageData>;
-	hotWaterOutlets: EcaasFormList<HotWaterOutletsData>;
-	pipework: EcaasFormList<PipeworkData>;
-}>;
-
-const waterHeatSourcesDataZod = namedWithId;
-
-export type WaterHeatSourcesData = z.infer<typeof waterHeatSourcesDataZod>;
-
-const hotWaterCylinderDataZodNew = namedWithId.extend({
-	typeOfWaterStorage: z.literal("hotWaterCylinder"),
-	storageCylinderVolume: z.union([zodUnit("volume"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-	initialTemperature: z.number(),
-	dailyEnergyLoss: z.number(),
-	heatSource: z.string(),
-	areaOfHeatExchanger: z.number(),
-	heaterPosition: z.number().min(0).max(1),
-	thermostatPosition: z.number().min(0).max(1),
+const pcdbProduct = namedWithId.extend({
+	productReference: z.string().trim().min(1),
 });
-
-export type HotWaterCylinderDataNew = z.infer<typeof hotWaterCylinderDataZodNew>;
-
-const smartHotWaterTankDataZodNew = namedWithId.extend({
-	typeOfWaterStorage: z.literal("smartHotWaterTank"),
-	productReference: z.string(),
-	heatSource: z.string(),
-	heaterPosition: z.number().min(0).max(1),
-	thermostatPosition: z.number().min(0).max(1),
-});
-
-export type SmartHotWaterTankDataNew = z.infer<typeof smartHotWaterTankDataZodNew>;
-
-const waterStorageDataZod = z.discriminatedUnion("typeOfWaterStorage", [
-	hotWaterCylinderDataZodNew,
-	smartHotWaterTankDataZodNew,
-]);
-
-export type WaterStorageData = z.infer<typeof waterStorageDataZod>;
-
-const mixedShowerDataZodNew = namedWithId.extend({
-	typeOfHotWaterOutlet: z.literal("mixedShower"),
-	flowRate: z.number().min(8).max(15),
-	hotWaterSource: z.uuidv4(),
-	wwhrs: z.boolean(),
-});
-
-export type MixedShowerDataNew = z.infer<typeof mixedShowerDataZodNew>;
-
-const electricShowerDataZodNew = namedWithId.extend({
-	typeOfHotWaterOutlet: z.literal("electricShower"),
-	ratedPower: z.number().min(0).max(30),
-	wwhrs: z.boolean(),
-});
-
-export type ElectricShowerDataNew = z.infer<typeof electricShowerDataZodNew>;
-
-const bathDataZodNew = namedWithId.extend({
-	typeOfHotWaterOutlet: z.literal("bath"),
-	size: z.number().min(0).max(500),
-});
-
-export type BathDataNew = z.infer<typeof bathDataZodNew>;
-
-const otherHotWaterOutletDataZodNew = namedWithId.extend({
-	typeOfHotWaterOutlet: z.literal("otherHotWaterOutlet"),
-	flowRate: z.number().min(0).max(15),
-});
-
-export type OtherHotWaterOutletDataNew = z.infer<typeof otherHotWaterOutletDataZodNew>;
-
-const hotWaterOutletsDataZod = z.discriminatedUnion("typeOfHotWaterOutlet", [
-	mixedShowerDataZodNew,
-	electricShowerDataZodNew,
-	bathDataZodNew,
-	otherHotWaterOutletDataZodNew,
-]);
-
-export type HotWaterOutletsData = z.infer<typeof hotWaterOutletsDataZod>;
-
-const pipeworkDataZod = z.object({
-	name: z.string().trim().min(1),
-	internalDiameter: z.number(),
-	externalDiameter: z.number(),
-	length: z.number().min(0).max(200),
-	insulationThickness: z.number(),
-	thermalConductivity: z.number(),
-	surfaceReflectivity: z.boolean(),
-	waterStorage: z.string(),
-	pipeContents: waterPipeContentsTypeZod,
-	location: z.enum(["heatedSpace", "unheatedSpace"]),
-});
-
-export type PipeworkData = z.infer<typeof pipeworkDataZod>;
-
-// NEW HOT WATER END   =======================================================================
-
-// OLD HOT WATER START =======================================================================
-
-export interface DomesticHotWater {
-	waterHeating: WaterHeating;
-	hotWaterOutlets: HotWaterOutlets;
-	pipework: Pipework;
-	wwhrs: EcaasForm<WwhrsData[]>
-
-}
-
-export type WaterHeating = AssertFormKeysArePageIds<{
-	hotWaterCylinder: EcaasFormList<HotWaterCylinderData>;
-	immersionHeater: EcaasFormList<ImmersionHeaterData>;
-	solarThermal: EcaasFormList<SolarThermalData>;
-	pointOfUse: EcaasFormList<PointOfUseData>;
-	heatPump: EcaasFormList<HotWaterHeatPumpData>;
-	combiBoiler: EcaasFormList<CombiBoilerData>;
-	heatBattery: EcaasFormList<WaterHeatingHeatBatteryData>;
-	smartHotWaterTank: EcaasFormList<SmartHotWaterTankData>;
-	heatInterfaceUnit: EcaasFormList<WaterHeatingHeatInterfaceUnitData>;
-}>;
-
-const hotWaterCylinderDataZod = namedWithId.extend({
-	heatSource: z.string(),
-	storageCylinderVolume: z.union([zodUnit("volume"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-	dailyEnergyLoss: z.number(),
-});
-
-export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
-
-const smartHotWaterTankDataZod = named;
-
-export type SmartHotWaterTankData = z.infer<typeof smartHotWaterTankDataZod>;
-
-const immersionHeaterPosition = z.enum(["top", "middle", "bottom"]);
-
-export type ImmersionHeaterPosition = z.infer<typeof immersionHeaterPosition>;
-
-const immersionHeaterDataZod = named.extend({
-	ratedPower: z.number(),
-	heaterPosition: immersionHeaterPosition,
-	thermostatPosition: immersionHeaterPosition,
-});
-
-export type ImmersionHeaterData = z.infer<typeof immersionHeaterDataZod>;
-
-const solarThermalDataZod = named;
-
-export type SolarThermalData = z.infer<typeof solarThermalDataZod>;
-
-const pointOfUseDataZod = named.extend({
-	setpointTemperature: z.number(),
-	heaterEfficiency: fraction,
-});
-
-export type PointOfUseData = z.infer<typeof pointOfUseDataZod>;
-
-const _hotWaterHeatPumpDataZod = named;
-
-export type HotWaterHeatPumpData = z.infer<typeof _hotWaterHeatPumpDataZod>;
-
-const combiBoilerDataZod = named;
-
-export type CombiBoilerData = z.infer<typeof combiBoilerDataZod>;
-
-const waterHeatingHeatBatteryDataZod = named;
-
-export type WaterHeatingHeatBatteryData = z.infer<typeof waterHeatingHeatBatteryDataZod>;
-
-const waterHeatingHeatInterfaceUnitDataZod = named;
-
-export type WaterHeatingHeatInterfaceUnitData = z.infer<typeof waterHeatingHeatInterfaceUnitDataZod>;
-
-const mixedShowerDataZod = namedWithId.extend({
-	flowRate: z.number().min(8).max(15),
-});
-
-export type MixedShowerData = z.infer<typeof mixedShowerDataZod>;
-
-const electricShowerDataZod = namedWithId.extend({
-	ratedPower: z.number().min(0).max(30),
-});
-
-export type ElectricShowerData = z.infer<typeof electricShowerDataZod>;
-
-const bathDataZod = namedWithId.extend({
-	size: z.number().min(0).max(500),
-});
-
-export type BathData = z.infer<typeof bathDataZod>;
-
-const otherHotWaterOutletDataZod = namedWithId.extend({
-	flowRate: z.number().min(0).max(15),
-});
-
-export type OtherHotWaterOutletData = z.infer<typeof otherHotWaterOutletDataZod>;
-
-export type HotWaterOutlets = AssertFormKeysArePageIds<{
-	mixedShower: EcaasFormList<MixedShowerData>;
-	electricShower: EcaasFormList<ElectricShowerData>;
-	bath: EcaasFormList<BathData>;
-	otherOutlets: EcaasFormList<OtherHotWaterOutletData>;
-}>;
-
-export type Pipework = AssertFormKeysArePageIds<{
-	primaryPipework: EcaasFormList<PrimaryPipeworkData>;
-	secondaryPipework: EcaasFormList<SecondaryPipeworkData>;
-}>;
-
-const primaryPipeworkDataZod = z.object({
-	name: z.string().trim().min(1),
-	internalDiameter: z.number(),
-	externalDiameter: z.number(),
-	length: z.number().min(0).max(200),
-	insulationThickness: z.number(),
-	thermalConductivity: z.number(),
-	surfaceReflectivity: z.boolean(),
-	pipeContents: waterPipeContentsTypeZod,
-	hotWaterCylinder: z.string(),
-	location: waterPipeworkLocationZod,
-});
-
-export type PrimaryPipeworkData = z.infer<typeof primaryPipeworkDataZod>;
-
-const secondaryPipeworkDataZod = z.object({
-	name: z.string().trim().min(1),
-	length: z.number().min(0).max(200),
-	location: waterPipeworkLocationZod,
-	internalDiameter: z.number().min(1).max(50),
-});
-
-export type SecondaryPipeworkData = z.infer<typeof secondaryPipeworkDataZod>;
-
-const wwhrsDataZod = z.object({
-	name: z.string().trim().min(1),
-	outlet: z.string(),
-	flowRate: z.number().min(0.1).max(500),
-	efficiency: percentage,
-	proportionOfUse: fraction,
-});
-
-export type WwhrsData = z.infer<typeof wwhrsDataZod>;
-
-// OLD HOT WATER END =======================================================================
 
 export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	mechanicalVentilation: EcaasFormList<MechanicalVentilationData>;
@@ -804,7 +671,7 @@ export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	airPermeability: EcaasForm<AirPermeabilityData>;
 }>;
 
-const baseMechanicalVentilationData = namedWithId.extend({
+const baseMechanicalVentilationData = pcdbProduct.extend({
 	airFlowRate: z.union([zodUnit("flow rate"), z.number()]),
 });
 
@@ -824,6 +691,12 @@ const mechanicalVentilationDataZod = z.discriminatedUnion(
 			typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "MVHR">("MVHR"),
 			mvhrLocation: mvhrLocationZod,
 			mvhrEfficiency: fraction,
+			midHeightOfAirFlowPathForIntake: z.number(),
+			orientationOfIntake: orientation,
+			pitchOfIntake: z.number().min(0).max(180),
+			midHeightOfAirFlowPathForExhaust: z.number(),
+			orientationOfExhaust: orientation,
+			pitchOfExhaust: z.number().min(0).max(180),
 		}),
 	],
 );
@@ -847,7 +720,6 @@ export type DuctworkData = z.infer<typeof ductworkDataZod>;
 const ventDataZod = z.object({
 	name: z.string().trim().min(1),
 	associatedItemId: z.guid(),
-	typeOfVent: z.enum(["trickle", "airBrick"]),
 	effectiveVentilationArea: z.number().min(1).max(999999),
 	openingRatio: z.number(),
 	midHeightOfZone: z.number().min(1).max(60),
@@ -904,13 +776,14 @@ const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
 const typeOfHeatNetwork = z.enum(["sleevedDistrictHeatNetwork", "unsleevedDistrictHeatNetwork", "communalHeatNetwork"]);
 const typeOfHeatBattery = z.enum(["heatBatteryPcm", "heatBatteryDryCore"]);
 const typeOflocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
+const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedContinuousMev", "decentralisedContinuousMev"]);
 
-const heatPumpDataZod = namedWithId.extend({
+const _heatPumpDataZod = namedWithId.extend({
 	productReference: z.string().trim().min(1),
 	typeOfHeatPump,
 });
 
-export type HeatPumpData = z.infer<typeof heatPumpDataZod>;
+export type HeatPumpData = z.infer<typeof _heatPumpDataZod>;
 
 const _boilerDataZod = namedWithId;
 
@@ -979,15 +852,15 @@ export type HeatInterfaceUnitData = z.infer<typeof _heatInterfaceUnitDataZod>;
 // 		}),
 // 	],
 // );
-							
+
 //export type WetDistributionData = z.infer<typeof wetDistributionDataZod>;
-							
+
 export type SpaceHeatingNew = AssertEachKeyIsPageId<{
 	heatSource: EcaasFormList<HeatSourceData>,
 	heatEmitters: EcaasFormList<HeatEmittingData>
 	heatingControls: EcaasFormList<HeatingControlData>
 }>;
-							
+
 export type HeatPumpType = z.infer<typeof typeOfHeatPump>;
 export type TypeOfBoiler = z.infer<typeof typeOfBoiler>;
 export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;
@@ -1000,10 +873,6 @@ export type HeatSourceType =
 	"heatNetwork" |
 	"heatBattery" |
 	"solarThermalSystem";
-
-const pcdbProduct = namedWithId.extend({
-	productReference: z.string().trim().min(1),
-});
 
 export type PcdbProduct = z.infer<typeof pcdbProduct>;
 
@@ -1018,12 +887,13 @@ const boilerBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("boiler"),
 	typeOfBoiler,
 	locationOfBoiler: z.enum(["heatedSpace", "unheatedSpace"]),
+	locationFromPcdb: z.optional(z.boolean()),
 });
 const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatBattery"),
 	typeOfHeatBattery,
 	numberOfUnits: z.number(),
-	energySupply: fuelTypeZod,
+	energySupply: fuelTypeZod.optional(),
 });
 
 const solarThermalSystemBase = namedWithId.extend({
@@ -1048,38 +918,46 @@ const heatNetworkBase = namedWithId.extend({
 	typeOfHeatNetwork,
 });
 
-const heatNetworkZodData = z.discriminatedUnion("isHeatNetworkInPcdb", [
-	heatNetworkBase.extend({
-		isHeatNetworkInPcdb: z.literal(true),
-		productReference: z.string().trim().min(1),
-		energySupply: fuelTypeZod,
-		usesHeatInterfaceUnits: z.literal(true),
-		heatInterfaceUnitProductReference: z.string().trim().min(1),
-	}),
-	heatNetworkBase.extend({
-		isHeatNetworkInPcdb: z.literal(true),
-		productReference: z.string().trim().min(1),
-		energySupply: fuelTypeZod,
-		usesHeatInterfaceUnits: z.literal(false),
-	}),
-	heatNetworkBase.extend({
-		isHeatNetworkInPcdb: z.literal(false),
-		emissionsFactor: z.number(),
-		outOfScopeEmissionsFactor: z.number(),
-		primaryEnergyFactor: z.number(),
-		canEnergyBeExported: z.boolean(),
-		usesHeatInterfaceUnits: z.literal(true),
-		heatInterfaceUnitProductReference: z.string().trim().min(1),
-	}),
-	heatNetworkBase.extend({
-		isHeatNetworkInPcdb: z.literal(false),
-		emissionsFactor: z.number(),
-		outOfScopeEmissionsFactor: z.number(),
-		primaryEnergyFactor: z.number(),
-		canEnergyBeExported: z.boolean(),
-		usesHeatInterfaceUnits: z.literal(false),
-	}),
-]);
+const heatNetworkBaseShape = heatNetworkBase.shape;
+
+function heatNetworkZodDataFromBase<
+	T extends typeof heatNetworkBaseShape | typeof heatNetworkHotWaterSourceBaseShape,
+>(baseShape: T) {
+	return z.discriminatedUnion("isHeatNetworkInPcdb", [
+		z.object({
+			isHeatNetworkInPcdb: z.literal(true),
+			productReference: z.string().trim().min(1),
+			energySupply: fuelTypeZod.optional(),
+			usesHeatInterfaceUnits: z.literal(true),
+			heatInterfaceUnitProductReference: z.string().trim().min(1),
+		}).extend(baseShape),
+		z.object({
+			isHeatNetworkInPcdb: z.literal(true),
+			productReference: z.string().trim().min(1),
+			energySupply: fuelTypeZod.optional(),
+			usesHeatInterfaceUnits: z.literal(false),
+		}).extend(baseShape),
+		z.object({
+			isHeatNetworkInPcdb: z.literal(false),
+			emissionsFactor: z.number(),
+			outOfScopeEmissionsFactor: z.number(),
+			primaryEnergyFactor: z.number(),
+			canEnergyBeExported: z.boolean(),
+			usesHeatInterfaceUnits: z.literal(true),
+			heatInterfaceUnitProductReference: z.string().trim().min(1),
+		}).extend(baseShape),
+		z.object({
+			isHeatNetworkInPcdb: z.literal(false),
+			emissionsFactor: z.number(),
+			outOfScopeEmissionsFactor: z.number(),
+			primaryEnergyFactor: z.number(),
+			canEnergyBeExported: z.boolean(),
+			usesHeatInterfaceUnits: z.literal(false),
+		}).extend(baseShape),
+	]);
+}
+
+const heatNetworkZodData = heatNetworkZodDataFromBase(heatNetworkBaseShape);
 
 const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpBase,
@@ -1092,8 +970,9 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 const _typeOfHeatSource = z.enum({
 	...typeOfHeatPump.enum,
 	...typeOfBoiler.enum,
-	...typeOfHeatNetwork.enum,
+	...z.enum(["heatNetwork"]).enum,
 	...typeOfHeatBattery.enum,
+	...z.enum(["heatInterfaceUnit"]).enum,
 });
 
 export const typeOfHeatSource = _typeOfHeatSource.enum;
@@ -1107,6 +986,10 @@ export const typeOfWaterStorage = _typeOfWaterStorage.enum;
 
 export type WaterStorageProductType = z.infer<typeof _typeOfWaterStorage>;
 
+export const typeOfMechanicalVentilation = _typeOfMechanicalVentilation.enum;
+
+export type MechanicalVentilationProductType = z.infer<typeof _typeOfMechanicalVentilation>;
+
 export const productTypeMap = {
 	"airSource": "AirSourceHeatPump",
 	"groundSource": "GroundSourceHeatPump",
@@ -1118,14 +1001,18 @@ export const productTypeMap = {
 	"exhaustAirMixed": "ExhaustAirMixedHeatPump",
 	"combiBoiler": "CombiBoiler",
 	"regularBoiler": "RegularBoiler",
-	"sleevedDistrictHeatNetwork": "HeatNetworks",
-	"unsleevedDistrictHeatNetwork": "HeatNetworks",
-	"communalHeatNetwork": "HeatNetworks",
+	"heatNetwork": "HeatNetworks",
 	"heatBatteryPcm": "HeatBatteryPCM",
 	"heatBatteryDryCore": "HeatBatteryDryCore",
 	"fanCoil": "FanCoils",
+	"electricStorageHeater": "StorageHeater",
 	"smartHotWaterTank": "SmartHotWaterTank",
-} as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType, TechnologyType | string>;
+	"heatInterfaceUnit": "HeatInterfaceUnit",
+	"mvhr": "CentralisedMvhr",
+	"centralisedContinuousMev": "CentralisedMev",
+	"decentralisedContinuousMev": "DecentralisedMev",
+	"instantElectricHeater": "DirectElectricHeaters",
+} as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType, TechnologyType | string>;
 
 export type HeatEmitterType =
 	"radiator" |
@@ -1135,6 +1022,9 @@ export type HeatEmitterType =
 	"electricStorageHeater" |
 	"warmAirHeater";
 
+const _typeOfHeatEmitter = z.enum(["fanCoil", "electricStorageHeater", "instantElectricHeater"]);
+
+export const typeOfHeatEmitter = _typeOfHeatEmitter.enum;
 
 function withVariableFlowRate<
 	T extends z.ZodRawShape & { hasVariableFlowRate?: never },
@@ -1173,7 +1063,7 @@ function makeStandardRadiator<
 		typeOfRadiator: z.literal("standard"),
 		length: z.number(),
 	});
-} 
+}
 
 function makeTowelRadiator<
 	T extends z.ZodRawShape & { typeOfRadiator?: never },
@@ -1200,7 +1090,7 @@ function makeEco1458Item<
 	return base.extend({
 		ecoDesignControllerClass: z.enum(["1", "4", "5", "8"]),
 	});
-} 
+}
 
 function makeVariableFlowRateItem<
 	T extends z.ZodRawShape & { hasVariableFlowRate?: never },
@@ -1289,11 +1179,11 @@ export const underFloorHeatingSchema = z.discriminatedUnion("hasVariableFlowRate
 		]),
 	z.discriminatedUnion(
 		"ecoDesignControllerClass",
-		[variableEco1458UnderfloorHeating ]),
+		[variableEco1458UnderfloorHeating]),
 ]);
 
 const fanCoilBase = namedWithId.extend({
-	typeOfHeatEmitter: z.literal("fanCoil"),
+	typeOfHeatEmitter: z.literal(typeOfHeatEmitter.fanCoil),
 	productReference: z.string(),
 	heatSource: z.string(),
 	designFlowTemp: z.number(),
@@ -1330,13 +1220,14 @@ const warmAirHeaterSchema = namedWithId.extend({
 
 const instantElectricHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("instantElectricHeater"),
+	productReference: z.string(),
 	convectionFractionForHeating: z.number(),
 	ratedPower: z.number(),
 	numOfHeaters: z.number(),
 });
 
 const electricStorageHeaterSchema = namedWithId.extend({
-	typeOfHeatEmitter: z.literal("electricStorageHeater"),
+	typeOfHeatEmitter: z.literal(typeOfHeatEmitter.electricStorageHeater),
 	productReference: z.string(),
 	numOfStorageHeaters: z.number(),
 });
@@ -1350,10 +1241,6 @@ const heatEmittingDataZod = z.discriminatedUnion("typeOfHeatEmitter", [
 	electricStorageHeaterSchema,
 ]);
 
-const _typeOfHeatEmitter = z.enum(["fanCoil"]);
-
-export const typeOfHeatEmitter = _typeOfHeatEmitter.enum;
-
 export type HeatEmittingProductType = z.infer<typeof _typeOfHeatEmitter>;
 export type HeatEmittingData = z.infer<typeof heatEmittingDataZod>;
 
@@ -1363,13 +1250,191 @@ const heatingControlsDataZod = named.extend({
 
 export type HeatingControlData = z.infer<typeof heatingControlsDataZod>;
 
+// NEW HOT WATER START =======================================================================
+
+export type DomesticHotWater = AssertEachKeyIsPageId<{
+	heatSources: EcaasFormList<DomesticHotWaterHeatSourceData>;
+	waterStorage: EcaasFormList<WaterStorageData>;
+	hotWaterOutlets: EcaasFormList<HotWaterOutletsData>;
+	pipework: EcaasFormList<PipeworkData>;
+}>;
+
+const hotWaterHeatSourceExtension = {
+	heatSourceId: z.literal("NEW_HEAT_SOURCE"),
+	coldWaterSource: z.enum(["mainsWater", "headerTank"]),
+	isExistingHeatSource: z.literal(false),
+};
+
+const baseImmersionHeater = namedWithId.extend({
+	typeOfHeatSource: z.literal("immersionHeater"),
+	power: z.number(),
+});
+
+export type ImmersionHeaterPosition = "top" | "middle" | "bottom";
+
+const basePointOfUse = namedWithId.extend({
+	typeOfHeatSource: z.literal("pointOfUse"),
+	energySupply: fuelTypeZod.optional(),
+	heaterEfficiency: z.number(),
+});
+export type DHWHeatSourceType = HeatSourceType | "immersionHeater" | "pointOfUse";
+
+
+const heatPumpHotWaterSourceBase = heatPumpBase.extend(hotWaterHeatSourceExtension);
+const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceExtension);
+const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceExtension);
+const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
+const heatNetworkHotWaterSourceBase = heatNetworkBase.extend(hotWaterHeatSourceExtension);
+const heatNetworkHotWaterSourceBaseShape = heatNetworkHotWaterSourceBase.shape;
+const immersionHeaterHotWaterSourceBase = baseImmersionHeater.extend(hotWaterHeatSourceExtension);
+const pointOfUseHotWaterSourceBase = basePointOfUse.extend(hotWaterHeatSourceExtension);
+
+
+const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
+	heatPumpHotWaterSourceBase,
+	boilerHotWaterSourceBase,
+	heatBatteryHotWaterSourceBase,
+	solarThermalHotWaterSourceBase,
+	heatNetworkZodDataFromBase(heatNetworkHotWaterSourceBaseShape),
+	immersionHeaterHotWaterSourceBase,
+	pointOfUseHotWaterSourceBase,
+]);
+
+const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource",
+	[
+		z.object({
+			id: z.uuidv4().readonly(),
+			heatSourceId: z.string(),
+			coldWaterSource: z.enum(["mainsWater", "headerTank"]),
+			isExistingHeatSource: z.literal(true),
+		}),
+		newHotWaterHeatSourceDataZod,
+	],
+);
+
+export type DomesticHotWaterHeatSourceData = z.infer<typeof domesticHotWaterHeatSourceZod>;
+
+const hotWaterCylinderDataZod = namedWithId.extend({
+	typeOfWaterStorage: z.literal("hotWaterCylinder"),
+	storageCylinderVolume: z.union([zodUnit("volume"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	initialTemperature: z.number(),
+	dailyEnergyLoss: z.number(),
+	dhwHeatSourceId: z.string(),
+	areaOfHeatExchanger: z.number(),
+	heaterPosition: z.number().min(0).max(1),
+	thermostatPosition: z.number().min(0).max(1),
+});
+
+export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
+
+const smartHotWaterTankDataZod = namedWithId.extend({
+	typeOfWaterStorage: z.literal("smartHotWaterTank"),
+	productReference: z.string(),
+	dhwHeatSourceId: z.string(),
+	energySupply: fuelTypeZod,
+	heaterPosition: z.number().min(0).max(1),
+});
+
+export type SmartHotWaterTankData = z.infer<typeof smartHotWaterTankDataZod>;
+
+export type WaterStorageType = "hotWaterCylinder" | "smartHotWaterTank";
+
+const waterStorageDataZod = z.discriminatedUnion("typeOfWaterStorage", [
+	hotWaterCylinderDataZod,
+	smartHotWaterTankDataZod,
+]);
+
+export type WaterStorageData = z.infer<typeof waterStorageDataZod>;
+
+const wwhrsTypeZod = z.enum(["instantaneousSystemA", "instantaneousSystemB", "instantaneousSystemC"]);
+export type WwhrsType = z.infer<typeof wwhrsTypeZod>;
+
+const mixedShowerBaseZod = namedWithId.extend({
+	typeOfHotWaterOutlet: z.literal("mixedShower"),
+	flowRate: z.number().min(8).max(15),
+	dhwHeatSourceId: z.uuidv4(),
+});
+
+const mixedShowerDataZod = z.discriminatedUnion("wwhrs", [
+	mixedShowerBaseZod.extend({ wwhrs: z.literal(false) }),
+	mixedShowerBaseZod.extend({
+		wwhrs: z.literal(true),
+		wwhrsType: wwhrsTypeZod,
+		wwhrsProductReference: z.string().optional(),
+	}),
+]);
+
+export type MixedShowerData = z.infer<typeof mixedShowerDataZod>;
+
+const electricShowerBaseZod = namedWithId.extend({
+	typeOfHotWaterOutlet: z.literal("electricShower"),
+	ratedPower: z.number().min(0).max(30),
+});
+
+const electricShowerDataZod = z.discriminatedUnion("wwhrs", [
+	electricShowerBaseZod.extend({ wwhrs: z.literal(false) }),
+	electricShowerBaseZod.extend({
+		wwhrs: z.literal(true),
+		wwhrsType: wwhrsTypeZod,
+		wwhrsProductReference: z.string().optional(),
+	}),
+]);
+
+export type ElectricShowerData = z.infer<typeof electricShowerDataZod>;
+
+const bathDataZod = namedWithId.extend({
+	typeOfHotWaterOutlet: z.literal("bath"),
+	size: z.number().min(0).max(500),
+});
+
+export type BathData = z.infer<typeof bathDataZod>;
+
+const otherHotWaterOutletDataZod = namedWithId.extend({
+	typeOfHotWaterOutlet: z.literal("otherHotWaterOutlet"),
+	flowRate: z.number().min(0).max(15),
+});
+
+export type OtherHotWaterOutletData = z.infer<typeof otherHotWaterOutletDataZod>;
+
+const hotWaterOutletsDataZod = z.discriminatedUnion("typeOfHotWaterOutlet", [
+	mixedShowerDataZod,
+	electricShowerDataZod,
+	bathDataZod,
+	otherHotWaterOutletDataZod,
+]);
+
+export type HotWaterOutletsData = z.infer<typeof hotWaterOutletsDataZod>;
+
+export type HotWaterOutletType =
+	"mixedShower" |
+	"electricShower" |
+	"bath" |
+	"otherHotWaterOutlet";
+
+const pipeworkDataZod = z.object({
+	name: z.string().trim().min(1),
+	internalDiameter: z.number(),
+	externalDiameter: z.number(),
+	length: z.number().min(0).max(200),
+	insulationThickness: z.number(),
+	thermalConductivity: z.number(),
+	surfaceReflectivity: z.boolean(),
+	waterStorage: z.string(),
+	pipeContents: waterPipeContentsTypeZod,
+	location: z.enum(["heatedSpace", "unheatedSpace"]),
+});
+
+export type PipeworkData = z.infer<typeof pipeworkDataZod>;
+
+// NEW HOT WATER END   =======================================================================
+
 export type PvAndBatteries = AssertFormKeysArePageIds<{
-	pvSystems: EcaasFormList<PvSystemData>;
+	pvArrays: EcaasFormList<PvArrayData>;
 	electricBattery: EcaasFormList<ElectricBatteryData>;
 	diverters: EcaasFormList<PvDiverterData>;
 }>;
 
-const pvSystemDataZod = z.object({
+const pvArrayDataZod = z.object({
 	name: z.string().trim().min(1),
 	peakPower: z.number().min(0.001).max(100),
 	ventilationStrategy: photovoltaicVentilationStrategyZod,
@@ -1380,17 +1445,41 @@ const pvSystemDataZod = z.object({
 	widthOfPV: z.number().min(0).max(100),
 	inverterPeakPowerAC: z.number(),
 	inverterPeakPowerDC: z.number(),
-	inverterIsInside: z.boolean(),
+	locationOfInverter: z.enum(["heated_space", "unheated_space"]),
 	inverterType: inverterTypeZod,
-	aboveDepth: z.optional(z.number()),
-	aboveDistance: z.optional(z.number()),
-	leftDepth: z.optional(z.number()),
-	leftDistance: z.optional(z.number()),
-	rightDepth: z.optional(z.number()),
-	rightDistance: z.optional(z.number()),
+	canExportToGrid: z.boolean(),
+	electricityPriority: z.enum(["diverter", "electricBattery"]),
+	hasShading: z.boolean(),
 });
+const obstacleShadingDataZod = named.extend({
+	typeOfShading: z.literal("obstacle"),
+	height: z.number(),
+	distance: z.number(),
+	transparency: z.number(),
+});
+const otherShadingDataZod = named.extend({
+	typeOfShading: z.enum(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"]),
+	distance: z.number(),
+	depth: z.number(),
+});
+const shadingObjectDataZod = z.discriminatedUnion("typeOfShading", [
+	obstacleShadingDataZod,
+	otherShadingDataZod,
+]);
+const pvArrayShadingDataZod = z.discriminatedUnion("hasShading", [
+	pvArrayDataZod.extend({
+		hasShading: z.literal(false),
+	}),
+	pvArrayDataZod.extend({
+		hasShading: z.literal(true),
+		shading: z.array(shadingObjectDataZod),
+	}),
+]);
 
-export type PvSystemData = z.infer<typeof pvSystemDataZod>;
+
+export type PvArrayData = z.infer<typeof pvArrayShadingDataZod>;
+
+export type PvShadingData = z.infer<typeof shadingObjectDataZod>;
 
 const electricBatteryDataZod = z.object({
 	name: z.string().trim().min(1),
@@ -1494,38 +1583,25 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingDetails/shading": shadingDataZod,
 	"dwellingDetails/appliances": appliancesDataZod,
 
-	"domesticHotWaterNew/waterStorage": waterStorageDataZod,
-	"domesticHotWaterNew/heatSources": waterHeatSourcesDataZod,
-	"domesticHotWaterNew/hotWaterOutlets": hotWaterOutletsDataZod,
-	"domesticHotWaterNew/pipework": pipeworkDataZod,
+	"domesticHotWater/waterStorage": waterStorageDataZod,
+	"domesticHotWater/heatSources": domesticHotWaterHeatSourceZod,
+	"domesticHotWater/hotWaterOutlets": hotWaterOutletsDataZod,
+	"domesticHotWater/pipework": pipeworkDataZod,
 
-	"domesticHotWater/waterHeating/hotWaterCylinder": hotWaterCylinderDataZod,
-	"domesticHotWater/waterHeating/combiBoiler": combiBoilerDataZod,
-	"domesticHotWater/waterHeating/heatBattery": waterHeatingHeatBatteryDataZod,
-	"domesticHotWater/waterHeating/heatInterfaceUnit": waterHeatingHeatInterfaceUnitDataZod,
-	"domesticHotWater/waterHeating/heatPump": heatPumpDataZod,
-	"domesticHotWater/waterHeating/immersionHeater": immersionHeaterDataZod,
-	"domesticHotWater/waterHeating/pointOfUse": pointOfUseDataZod,
-	"domesticHotWater/waterHeating/smartHotWaterTank": smartHotWaterTankDataZod,
-	"domesticHotWater/waterHeating/solarThermal": solarThermalDataZod,
-	"domesticHotWater/hotWaterOutlets/mixedShower": mixedShowerDataZod,
-	"domesticHotWater/hotWaterOutlets/electricShower": electricShowerDataZod,
-	"domesticHotWater/hotWaterOutlets/bath": bathDataZod,
-	"domesticHotWater/hotWaterOutlets/otherOutlets": otherHotWaterOutletDataZod,
-	"domesticHotWater/pipework/primaryPipework": primaryPipeworkDataZod,
-	"domesticHotWater/pipework/secondaryPipework": secondaryPipeworkDataZod,
-	"domesticHotWater/wwhrs": wwhrsDataZod,
 	"dwellingFabric/dwellingSpaceZoneParameters": dwellingSpaceZoneParameterDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceExposedFloor": exposedFloorDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceGroundFloor": groundFloorDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceInternalFloor": internalFloorDataZod,
+	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceFloorAboveUnheatedBasement": floorAboveUnheatedBasementDataZod,
+	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceFloorOfHeatedBasement": floorOfHeatedBasementDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceExternalWall": externalWallDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceInternalWall": internalWallDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceWallToUnheatedSpace": wallsToUnheatedSpaceDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpacePartyWall": partyWallDataZod,
+	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceWallOfHeatedBasement": wallOfHeatedBasementDataZod,
 	"dwellingFabric/dwellingSpaceCeilingsAndRoofs/dwellingSpaceCeilings": ceilingDataZod,
 	"dwellingFabric/dwellingSpaceCeilingsAndRoofs/dwellingSpaceRoofs": roofDataZod,
-	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceExternalGlazedDoor": externalGlazedDoorDataZod,
+	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceExternalGlazedDoor": externalGlazedDoorData,
 	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceExternalUnglazedDoor": externalUnglazedDoorDataZod,
 	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceInternalDoor": internalDoorDataZod,
 	"dwellingFabric/dwellingSpaceWindows": windowDataZod,
@@ -1541,7 +1617,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"spaceHeating/heatEmitters": heatEmittingDataZod,
 	"spaceHeating/heatingControls": heatingControlsDataZod,
 	"cooling/airConditioning": airConditioningDataZod,
-	"pvAndBatteries/pvSystems": pvSystemDataZod,
+	"pvAndBatteries/pvArrays": pvArrayShadingDataZod,
 	"pvAndBatteries/electricBattery": electricBatteryDataZod,
 	"pvAndBatteries/diverters": pvDiverterDataZod,
 };

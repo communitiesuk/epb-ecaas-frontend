@@ -13,18 +13,18 @@ const { data: { value } } = await useFetch("/api/products", {
 	},
 });
 
-const { productData, pagination } = searchData(value?.data ?? []);
+const { pagination } = searchData(value?.data ?? []);
 
 const selectProduct = (reference: string) => {
 	store.$patch((state) => {
-		const item = state.spaceHeating.heatSource.data[index];
+		const item = state.spaceHeating.heatEmitters.data[index];
 
 		if (item) {
 			(item.data as PcdbProduct).productReference = reference;
 		}
 	});
 
-	navigateTo(page("heatSource").url.replace(":heatSource", `${index}`));
+	navigateTo(page("heatEmitters").url.replace(":heatEmitter", `${index}`));
 };
 </script>
 
@@ -33,7 +33,7 @@ const selectProduct = (reference: string) => {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<ProductSearch v-if="!!productData" :products="productData" :model="searchModel" />
+	<ProductSearch :model="searchModel" />
 	<GovProductsTable
 		:products="pagination.getData()"
 		:total-pages="pagination.totalPages"

@@ -55,7 +55,7 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 		NumberOfSanitaryAccommodations: generalDetails.numOfWCs,
 		NumberOfHabitableRooms: generalDetails.numOfHabitableRooms,
 		NumberOfTappedRooms: generalDetails.numOfRoomsWithTappingPoints,
-		NumberOfWetRooms: 0, // fhs needs this field set at 0.36
+		NumberOfWetRooms: generalDetails.numOfWetRooms,
 		PartGcompliance: true,
 	};
 }
@@ -146,8 +146,11 @@ export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema
 
 export function mapAppliancesData(
 	state: ResolvedState,
-): Pick<FhsInputSchema, "Appliances"> {
-	function getAppliances() {
+): Pick<FhsInputSchema, "Appliances" | "KitchenExtractorHoodExternal"> {
+	function getAppliancesAndKitchenExtractorHood(): [Record<
+		SchemaApplianceType,
+      "Default" | "Not Installed"
+	>, boolean] {
 		const chosenAppliances = state.dwellingDetails.appliances.applianceType; 
 		const appliancesMap = {} as Record<
 			SchemaApplianceType,
@@ -161,10 +164,16 @@ export function mapAppliancesData(
 				appliancesMap[appliance] = "Not Installed";
 			}
 		}
-		return appliancesMap;
+
+		const hasKitchenExtractorHood = chosenAppliances.includes(kitchenExtractorHoodExternalKey);
+
+		return [appliancesMap, hasKitchenExtractorHood];
 	}
 
+	const [appliances, kitchenExtractorHoodExternal] = getAppliancesAndKitchenExtractorHood();
+
 	return {
-		Appliances: getAppliances(),
+		Appliances: appliances,
+		KitchenExtractorHoodExternal: kitchenExtractorHoodExternal,
 	};
 }

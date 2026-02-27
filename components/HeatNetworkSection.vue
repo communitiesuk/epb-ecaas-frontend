@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { heatNetworkTypes, uniqueName } from "#imports";
+import { heatNetworkTypes, typeOfHeatSource, uniqueName } from "#imports";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -9,7 +9,7 @@ defineProps<{
 	index: number;
 }>();
 
-const heatSourceStoreData = store.spaceHeating.heatSource.data;
+const heatSources = getCombinedHeatSources(store);
 
 const emit = defineEmits(["update-heat-network-model"]);
 
@@ -31,10 +31,10 @@ const emit = defineEmits(["update-heat-network-model"]);
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			:validation-rules="{ uniqueName: uniqueName(heatSourceStoreData, { index }) }"
+			:validation-rules="{ uniqueName: uniqueName(heatSources, { id: model.id }) }"
 			validation="required | uniqueName"
 			:validation-messages="{
-				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+				uniqueName: 'An element with this name in domestic hot water or space heating already exists. Please enter a unique name.'
 			}" />
 		<FormKit
 			id="isHeatNetworkInPcdb"
@@ -50,8 +50,8 @@ const emit = defineEmits(["update-heat-network-model"]);
 			name="productReference"
 			validation="required"
 			help="Select the heat network type from the PCDB using the button below."
-			:selected-product-reference="model.typeOfHeatNetwork"
-			:selected-product-type="model.typeOfHeatNetwork"
+			:selected-product-reference="model.productReference"
+			:selected-product-type="typeOfHeatSource.heatNetwork"
 			:page-url="route.fullPath"
 			:page-index="index" />
 		<FieldsEnergySupplies
@@ -109,8 +109,8 @@ const emit = defineEmits(["update-heat-network-model"]);
 			name="heatInterfaceUnitProductReference"
 			validation="required"
 			help="Select the heat interface unit type from the PCDB using the button below."
-			:selected-product-reference="model.typeOfHeatNetwork"
-			:selected-product-type="model.typeOfHeatNetwork"
+			:selected-product-reference="model.heatInterfaceUnitProductReference"
+			:selected-product-type="typeOfHeatSource.heatInterfaceUnit"
 			:page-url="route.fullPath"
 			:page-index="index" />
 	</template>

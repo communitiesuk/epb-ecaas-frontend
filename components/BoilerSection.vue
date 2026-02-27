@@ -10,7 +10,7 @@ defineProps<{
 	index: number;
 }>();
 
-const heatSourceStoreData = store.spaceHeating.heatSource.data;
+const heatSources = getCombinedHeatSources(store);
 
 const locationOfBoilerOptions = {
 	"heatedSpace": "Heated space",
@@ -38,10 +38,10 @@ const emit = defineEmits(["update-boiler-model"]);
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			:value="model.name"
-			:validation-rules="{ uniqueName: uniqueName(heatSourceStoreData, { index }) }"
+			:validation-rules="{ uniqueName: uniqueName(heatSources, { id: model.id }) }"
 			validation="required | uniqueName"
 			:validation-messages="{
-				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+				uniqueName: 'An element with this name in domestic hot water or space heating already exists. Please enter a unique name.'
 			}" />
 		<FormKit
 			v-if="model.typeOfBoiler"
@@ -56,7 +56,7 @@ const emit = defineEmits(["update-boiler-model"]);
 			:page-url="route.fullPath"
 			:page-index="index" />
 		<FormKit
-			v-if="model.typeOfBoiler"
+			v-if="model.typeOfBoiler && !model.locationFromPcdb"
 			id="locationOfBoiler"
 			type="govRadios"
 			label="Location of boiler"

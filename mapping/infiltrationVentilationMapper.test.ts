@@ -19,6 +19,13 @@ describe("infiltration ventilation mapper", () => {
 			airFlowRate: unitValue(30, litrePerSecond),
 			mvhrLocation: "inside",
 			mvhrEfficiency: 1,
+			productReference: "1000",
+			midHeightOfAirFlowPathForExhaust: 1.5,
+			orientationOfExhaust: 90,
+			pitchOfExhaust: 10,
+			midHeightOfAirFlowPathForIntake: 1.5,
+			orientationOfIntake: 80,
+			pitchOfIntake: 10,
 		},
 	}];
 
@@ -58,10 +65,10 @@ describe("infiltration ventilation mapper", () => {
 				},
 			},
 		});
-    
+
 		// Act
 		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
-    
+
 		// Assert
 		expect(fhsInputData.InfiltrationVentilation).toBeDefined();
 		expect(fhsInputData.InfiltrationVentilation?.MechanicalVentilation).toBeDefined();
@@ -71,19 +78,29 @@ describe("infiltration ventilation mapper", () => {
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
 		expect(firstMechVent?.vent_type).toBe("MVHR");
 		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(108);
-		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA"); 
-		expect(firstMechVent?.sup_air_temp_ctrl).toBe("CONST");
+		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA");
+		expect(firstMechVent?.sup_air_temp_ctrl).toBe("NO_CTRL");
 		expect(firstMechVent?.mvhr_location).toBe("inside");
-		expect(firstMechVent?.mvhr_eff).toBe(1);
-		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
-		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
+		expect("mvhr_eff" in firstMechVent && firstMechVent?.mvhr_eff).toBe(1);
+		expect("measured_air_flow_rate" in firstMechVent && firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
+		expect("measured_fan_power" in firstMechVent && firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.ductwork).toBeDefined();
+		expect(firstMechVent.position_exhaust).toEqual({
+			mid_height_air_flow_path: 1.5,
+			orientation360: 90,
+			pitch: 10,
+		});
+		expect(firstMechVent.position_intake).toEqual({
+			mid_height_air_flow_path: 1.5,
+			orientation360: 80,
+			pitch: 10,
+		});
 	});
 
 
 	it("maps ductwork input state to FHS input request", () => {
 		// Arrange
-		
+
 		const ductwork: EcaasForm<DuctworkData>[] = [{
 			...baseForm,
 			data: {
@@ -126,7 +143,7 @@ describe("infiltration ventilation mapper", () => {
 				},
 			},
 		});
-    
+
 		// Act
 		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
 
@@ -169,7 +186,7 @@ describe("infiltration ventilation mapper", () => {
 				},
 			},
 		});
-    
+
 		// Act
 		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
 
@@ -190,6 +207,7 @@ describe("infiltration ventilation mapper", () => {
 				name: "bathroom exhaust fan",
 				typeOfMechanicalVentilationOptions: "Intermittent MEV",
 				airFlowRate: unitValue(40, litrePerSecond),
+				productReference: "1000",
 			},
 		}];
 
@@ -198,21 +216,21 @@ describe("infiltration ventilation mapper", () => {
 				mechanicalVentilation: {
 					...baseForm,
 					data: mechVent,
-				},				
+				},
 			},
 		});
 
 		// Act
 		const fhsInputData = mapMechanicalVentilationData(resolveState(store.$state));
-    
+
 		// Assert
 		const firstMechVent = fhsInputData["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;;
 		expect(firstMechVent).toBeDefined();
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
 		expect(firstMechVent?.vent_type).toBe("Intermittent MEV");
 		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(144);
-		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA"); 
-		expect(firstMechVent?.sup_air_temp_ctrl).toBe("CONST");
+		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA");
+		expect(firstMechVent?.sup_air_temp_ctrl).toBe("NO_CTRL");
 		expect(firstMechVent?.ductwork).toBeUndefined();
 	});
 
@@ -234,7 +252,7 @@ describe("infiltration ventilation mapper", () => {
 					height: 0.5,
 					elevationalHeight: 20,
 					surfaceArea: 10,
-					uValue: 1,
+					thermalResistance: 1,
 					colour: "Intermediate",
 					arealHeatCapacity: "Very light",
 					massDistributionClass: "I",
@@ -248,7 +266,7 @@ describe("infiltration ventilation mapper", () => {
 			taggedItem: externalWallId,
 			height: 1,
 			width: 1,
-			uValue: 1,
+			thermalResistance: 1,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
@@ -266,7 +284,6 @@ describe("infiltration ventilation mapper", () => {
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
-			heightOpenableArea: 1,
 			securityRisk: false,
 		};
 
@@ -275,7 +292,6 @@ describe("infiltration ventilation mapper", () => {
 				...baseForm,
 				data: {
 					name: ventName,
-					typeOfVent: "airBrick",
 					associatedItemId: window.id,
 					effectiveVentilationArea: 100,
 					openingRatio: 0.6,
@@ -338,7 +354,7 @@ describe("infiltration ventilation mapper", () => {
 					height: 0.5,
 					elevationalHeight: 20,
 					surfaceArea: 10,
-					uValue: 1,
+					thermalResistance: 1,
 					colour: "Intermediate",
 					arealHeatCapacity: "Very light",
 					massDistributionClass: "I",
@@ -352,7 +368,7 @@ describe("infiltration ventilation mapper", () => {
 			taggedItem: externalWallId,
 			height: 1,
 			width: 1,
-			uValue: 1,
+			thermalResistance: 1,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
@@ -370,7 +386,6 @@ describe("infiltration ventilation mapper", () => {
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
-			heightOpenableArea: 1,
 			securityRisk: false,
 		};
 
@@ -379,7 +394,6 @@ describe("infiltration ventilation mapper", () => {
 				...baseForm,
 				data: {
 					name: ventName,
-					typeOfVent: "airBrick",
 					associatedItemId: window.id,
 					effectiveVentilationArea: 100,
 					openingRatio: 0.6,

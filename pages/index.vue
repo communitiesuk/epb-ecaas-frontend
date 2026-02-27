@@ -76,7 +76,8 @@ store.revalidate();
 @use "sass:map";
 
 .last-export {
-	color: map.get($govuk-colours, "dark-grey")
+	// use suggested replacement colour for removed dark-grey for GOV.UK Frontend 6.0
+	color: #484949;
 }
 .govuk-error-summary {
   overflow-wrap: break-word;

@@ -3,11 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import HeatSourceForm from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
-
-const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport("navigateTo", () => {
-	return navigateToMock;
-});
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
 
 vi.mock("uuid");
 
@@ -15,11 +11,32 @@ describe("heatSource", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
+	const { mockFetch, navigateToMock } = vi.hoisted(() => ({
+		navigateToMock: vi.fn(),
+		mockFetch: vi.fn(),
+	}));
+
+	mockNuxtImport("navigateTo", () => navigateToMock);
+	mockNuxtImport("useFetch", () => mockFetch);
+
 	afterEach(() => {
 		store.$reset();
+		mockFetch.mockReset();
 	});
 
 	describe("heat pump", () => {
+		const heatPumpProduct: Partial<DisplayProduct> = {
+			id: "1000",
+			brandName: "Brand",
+			technologyType: "AirSourceHeatPump",
+		};
+
+		beforeEach(() => {
+			mockFetch.mockReturnValue({
+				data: ref(heatPumpProduct),
+			});
+		});
+
 		const populateValidHeatPumpForm = async () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
 			await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
@@ -218,11 +235,23 @@ describe("heatSource", () => {
 	});
 
 	describe("boiler", () => {
+		const boilerProduct: Partial<DisplayProduct> = {
+			id: "1000",
+			brandName: "Brand",
+			technologyType: "CombiBoiler",
+			boilerLocation: "internal",
+		};
+
+		beforeEach(() => {
+			mockFetch.mockReturnValue({
+				data: ref(boilerProduct),
+			});
+		});
+
 		const populateValidBoilerForm = async () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
 			await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));
 			await user.click(screen.getByTestId("locationOfBoiler_heatedSpace"));
-
 		};
 
 		const boiler1: HeatSourceData = {
@@ -383,6 +412,18 @@ describe("heatSource", () => {
 	});
 
 	describe("heat network", () => {
+		const heatNetworkProduct: Partial<DisplayProduct> = {
+			id: "1000",
+			technologyType: "HeatNetworks",
+			communityHeatNetworkName: "Heat network",
+		};
+
+		beforeEach(() => {
+			mockFetch.mockReturnValue({
+				data: ref(heatNetworkProduct),
+			});
+		});
+
 		const populateValidHeatNetworkForm = async () => {
 			store.$patch({
 				dwellingDetails: {
@@ -461,7 +502,7 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
 			await user.click(screen.getByTestId("typeOfHeatNetwork_communalHeatNetwork"));
 			await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
-			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/communal-heat-network");
+			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/heat-network");
 		});
 
 		test("heat network data is saved to store state when form is valid", async () => {
@@ -549,6 +590,18 @@ describe("heatSource", () => {
 			expect((await screen.findByTestId("isHeatNetworkInPcdb_error"))).toBeDefined();
 		});
 
+		test("heat network product data is displayed when heat network product is selected", async () => {
+			patchHeatNetworkDataToStore();
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+				},
+			});
+
+			expect(screen.getByTestId("pcdbHeatNetworkProductData")).toBeDefined();
+		});
+
 		describe("heat network default name", () => {
 			it("creates a new heat network with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
@@ -579,6 +632,19 @@ describe("heatSource", () => {
 	});
 
 	describe("heat battery", () => {
+		const heatBatteryProduct: Partial<DisplayProduct> = {
+			id: "1000",
+			brandName: "Brand",
+			modelName: "Model",
+			technologyType: "HeatBatteryPCM",
+		};
+
+		beforeEach(() => {
+			mockFetch.mockReturnValue({
+				data: ref(heatBatteryProduct),
+			});
+		});
+
 		const populateValidHeatBatteryForm = async () => {
 			store.$patch({
 				dwellingDetails: {
@@ -1016,6 +1082,17 @@ describe("heatSource", () => {
 	});
 
 	describe("when heat source type is updated", () => {
+		const heatPumpProduct: Partial<DisplayProduct> = {
+			id: "1000",
+			brandName: "Brand",
+			technologyType: "AirSourceHeatPump",
+		};
+
+		beforeEach(() => {
+			mockFetch.mockReturnValue({
+				data: ref(heatPumpProduct),
+			});
+		});
 
 		test("stored item data is cleared except id, name and type of heat source", async () => {
 
@@ -1053,38 +1130,55 @@ describe("heatSource", () => {
 		});
 	});
 
-	test("product reference is cleared when heat source subtype changes", async () => {
+	describe("pcdb product", () => {
+		beforeEach(async () => {
+			const heatPumpProduct: Partial<DisplayProduct> = {
+				id: "1000",
+				brandName: "Brand",
+				technologyType: "AirSourceHeatPump",
+			};
 
-		const heatPump: HeatSourceData = {
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-			name: "Heat pump 1",
-			typeOfHeatSource: "heatPump",
-			typeOfHeatPump: "airSource",
-			productReference: "HEATPUMP-SMALL",
-		};
+			mockFetch.mockReturnValue({
+				data: ref(heatPumpProduct),
+			});
 
-		store.$patch({
-			spaceHeating: {
-				heatSource: {
-					data: [{ data: heatPump }],
+			const heatPump: HeatSourceData = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+				name: "Heat pump 1",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "airSource",
+				productReference: "HEATPUMP-SMALL",
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: heatPump }],
+					},
 				},
-			},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+				},
+			});
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
+		test("product reference is cleared when heat source subtype changes", async () => {
+			await user.click(screen.getByTestId("typeOfHeatPump_booster"));
+
+			const { data } = store.spaceHeating.heatSource;
+			const heatSourceItem = data[0]!.data;
+
+			if ("productReference" in heatSourceItem) {
+				expect(heatSourceItem.productReference).toBeUndefined();
+			}
 		});
 
-		await user.click(screen.getByTestId("typeOfHeatPump_booster"));
-
-		const { data } = store.spaceHeating.heatSource;
-		const heatSourceItem = data[0]!.data;
-
-		if ("productReference" in heatSourceItem) {
-			expect(heatSourceItem.productReference).toBeUndefined();
-		}
+		test("product data is displayed when a PCDB product is selected which is not a heat network", async () => {
+			expect(screen.getByTestId("pcdbProductData")).toBeDefined();
+		});
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
@@ -1121,12 +1215,20 @@ describe("heatSource", () => {
 		});
 
 		await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-		await user.click(screen.getByTestId("saveProgress"));
 
-		expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
+		expect(screen.getByTestId("saveProgress").getAttribute("href")).toBe("/space-heating");
 	});
 
 	it("navigates to space heating when valid form is completed", async () => {
+		const heatPumpProduct: Partial<DisplayProduct> = {
+			id: "1000",
+			brandName: "Brand",
+			technologyType: "AirSourceHeatPump",
+		};
+
+		mockFetch.mockReturnValue({
+			data: ref(heatPumpProduct),
+		});
 
 		const heatPump: HeatSourceData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
@@ -1135,6 +1237,7 @@ describe("heatSource", () => {
 			typeOfHeatPump: "airSource",
 			productReference: "HEATPUMP-SMALL",
 		};
+
 		store.$patch({
 			spaceHeating: {
 				heatSource: {
@@ -1142,6 +1245,7 @@ describe("heatSource", () => {
 				},
 			},
 		});
+
 		await renderSuspended(HeatSourceForm, {
 			route: {
 				params: { "heatSource": "0" },
@@ -1154,6 +1258,17 @@ describe("heatSource", () => {
 	});
 
 	describe("partially saving data", () => {
+		const heatPumpProduct: Partial<DisplayProduct> = {
+			id: "1000",
+			brandName: "Brand",
+			technologyType: "AirSourceHeatPump",
+		};
+
+		beforeEach(() => {
+			mockFetch.mockReturnValue({
+				data: ref(heatPumpProduct),
+			});
+		});
 
 		const heatNetwork1: HeatSourceData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",

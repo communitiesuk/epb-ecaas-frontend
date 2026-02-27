@@ -194,7 +194,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Perimeter"
-			help="Enter the length of the exposed perimeter of the floor"
+			help="Enter the length of the exposed perimeter of the floor."
 			name="perimeter"
 			validation="required | number | min:0 | max:1000"
 			data-field="Zone.BuildingElement.*.perimeter">

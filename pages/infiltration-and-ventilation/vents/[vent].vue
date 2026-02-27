@@ -18,7 +18,6 @@ const saveForm = (fields: VentData & Record<string, string>) => {
 		vents.data[index] = {
 			data: {
 				name: fields.name,
-				typeOfVent: fields.typeOfVent,
 				associatedItemId: fields.associatedItemId,
 				effectiveVentilationArea: fields.effectiveVentilationArea,
 				openingRatio: 1,
@@ -72,17 +71,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
-		/>
-		<FormKit
-			id="typeOfVent"
-			type="govRadios"
-			:options="{
-				trickle: 'Trickle',
-				airBrick: 'Air brick'
-			}"
-			label="Type of vent"
-			name="typeOfVent"
-			validation="required"
 		/>
 		<FieldsAssociatedWallWindow
 			id="associatedItemId"

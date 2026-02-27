@@ -9,9 +9,10 @@ const { vents } = store.infiltrationAndVentilation;
 const { dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
 const { dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
 const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+const { dwellingSpaceFloorOfHeatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
 
 type WallType = keyof typeof store.dwellingFabric.dwellingSpaceWalls;
-type WallData = EcaasForm<ExternalWallData> & EcaasForm<InternalWallData> & EcaasForm<WallsToUnheatedSpaceData> & EcaasForm<PartyWallData>;
+type WallData = EcaasForm<ExternalWallData> & EcaasForm<InternalWallData> & EcaasForm<WallsToUnheatedSpaceData> & EcaasForm<PartyWallData> & EcaasForm<WallOfHeatedBasementData>;
 
 
 const { dwellingSpaceWindows } = store.dwellingFabric;
@@ -23,6 +24,7 @@ function handleRemove(wallType: WallType, index: number) {
 	const internalWallId = wallType === "dwellingSpaceInternalWall" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.data[index]?.data.id;
 	const unheatedSpaceWallId = wallType === "dwellingSpaceWallToUnheatedSpace" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data[index]?.data.id;
 	const partyWallId = wallType === "dwellingSpacePartyWall" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.data[index]?.data.id;
+	const wallOfHeatedBasementId = wallType === "dwellingSpaceWallOfHeatedBasement" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallOfHeatedBasement.data[index]?.data.id;
 
 	if (walls) {
 		walls.splice(index, 1);
@@ -44,6 +46,9 @@ function handleRemove(wallType: WallType, index: number) {
 		}
 		if (partyWallId) {
 			store.removeTaggedAssociations()([dwellingSpaceInternalDoor], partyWallId);
+		}
+		if (wallOfHeatedBasementId) {
+			store.removeTaggedAssociations()([dwellingSpaceFloorOfHeatedBasement], wallOfHeatedBasementId);
 		}
 	}
 }
@@ -79,6 +84,7 @@ function handleComplete() {
 				dwellingSpaceInternalWall: { complete: true },
 				dwellingSpacePartyWall: { complete: true },
 				dwellingSpaceWallToUnheatedSpace: { complete: true },
+				dwellingSpaceWallOfHeatedBasement: { complete: true },
 			},
 		},
 	});
@@ -151,6 +157,17 @@ function hasIncompleteEntries() {
 		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpacePartyWall', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpacePartyWall', index)" />
+	<CustomList
+		id="wallOfHeatedBasement"
+		title="Wall of heated basement"
+		:form-url="`${page?.url!}/wall-of-heated-basement`"
+		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallOfHeatedBasement?.data.map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
+		@remove="(index: number) => handleRemove('dwellingSpaceWallOfHeatedBasement', index)"
+		@duplicate="(index: number) => handleDuplicate('dwellingSpaceWallOfHeatedBasement', index)" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-fabric" secondary>
 			Return to dwelling fabric

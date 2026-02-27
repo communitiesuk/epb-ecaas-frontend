@@ -67,7 +67,7 @@ function isOpen(index: number) {
 
 	.govuk-accordion__section-heading-text {
 		margin: 0;
-		color: map.get($govuk-colours, "blue")
+		color: govuk-colour("blue");
 	}
 
 	.govuk-accordion__section-toggle {

@@ -1,6 +1,6 @@
 import type { StripDefs } from "./mapping.types";
-import type { SchemaFhsInputSchema, SchemaStorageTank } from "~/schema/api-schema.types";
-import type { SchemaHeatSourceWetHeatPumpWithProductReference } from "~/schema/aliases";
+import type { SchemaFhsInputSchema } from "~/schema/api-schema.types";
+import type { SchemaHeatSourceWetHeatPumpWithProductReference, SchemaStorageTank } from "~/schema/aliases";
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
 import { mapInfiltrationVentilationData } from "./infiltrationVentilationMapper";
@@ -23,7 +23,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const coolingData = mapCoolingData(state);
 	const spaceHeatingSystemData = mapSpaceHeatSystem(state);
 
-	const [pvData, electricBatteries, diverter] = mapPvAndElectricBatteriesData(state);
+	const [pvData, electricBatteries, diverter, pvArrayEnergySupply] = mapPvAndElectricBatteriesData(state);
 
 	const fuelType = dwellingDetailsData.EnergySupply;
 
@@ -36,6 +36,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 				...electricBatteries,
 				...diverter,
 			},
+			...pvArrayEnergySupply,
 		},
 	};
 

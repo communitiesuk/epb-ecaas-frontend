@@ -9,6 +9,13 @@ describe("checkMvhrHasDuctwork", () => {
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.2,
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
+		productReference: "1000",
+		midHeightOfAirFlowPathForExhaust: 1.5,
+		orientationOfExhaust: 90,
+		pitchOfExhaust: 10,
+		midHeightOfAirFlowPathForIntake: 1.5,
+		orientationOfIntake: 80,
+		pitchOfIntake: 10,
 	};
 	const mechanicalVentilationData2: MechanicalVentilationData = {
 		name: "Mechanical name 2",
@@ -17,6 +24,13 @@ describe("checkMvhrHasDuctwork", () => {
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.2,
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506h",
+		productReference: "1000",
+		midHeightOfAirFlowPathForExhaust: 1.5,
+		orientationOfExhaust: 90,
+		pitchOfExhaust: 10,
+		midHeightOfAirFlowPathForIntake: 1.5,
+		orientationOfIntake: 80,
+		pitchOfIntake: 10,
 	};
 
 	const mechanicalVentilationData3: MechanicalVentilationData = {
@@ -24,6 +38,7 @@ describe("checkMvhrHasDuctwork", () => {
 		name: "Mechanical name 3",
 		typeOfMechanicalVentilationOptions: "Decentralised continuous MEV",
 		airFlowRate: 14,
+		productReference: "1000",
 	};
 
 	const ductworkData1: DuctworkData = {

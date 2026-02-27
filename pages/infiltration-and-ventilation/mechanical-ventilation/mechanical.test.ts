@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import MechanicalVentilationOverview from "./index.vue";
-import MechanicalVentilationForm from "./[mechanical].vue";
+import MechanicalVentilationForm from "./[mechanical]/index.vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import InfiltrationAndVentilationTaskPage from "../index.vue";
 
@@ -21,6 +21,13 @@ describe("mechanical ventilation overview", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
+		productReference: "1000",
+		midHeightOfAirFlowPathForExhaust: 1.5,
+		orientationOfExhaust: 80,
+		pitchOfExhaust: 20,
+		midHeightOfAirFlowPathForIntake: 1.5,
+		orientationOfIntake: 80,
+		pitchOfIntake: 20,
 	};
 
 	const mechanicalVentilation2: MechanicalVentilationData = {
@@ -28,6 +35,7 @@ describe("mechanical ventilation overview", () => {
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: "Decentralised continuous MEV",
 		airFlowRate: 14,
+		productReference: "1000",
 	};
 
 	const mechanicalVentilation3: MechanicalVentilationData = {
@@ -35,6 +43,7 @@ describe("mechanical ventilation overview", () => {
 		name: "Mechanical name 3",
 		typeOfMechanicalVentilationOptions: "Intermittent MEV",
 		airFlowRate: 14,
+		productReference: "1000",
 	};
 
 	const mechanicalVentilation4: MechanicalVentilationData = {
@@ -44,6 +53,13 @@ describe("mechanical ventilation overview", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
+		productReference: "1000",
+		midHeightOfAirFlowPathForExhaust: 1.5,
+		orientationOfExhaust: 80,
+		pitchOfExhaust: 20,
+		midHeightOfAirFlowPathForIntake: 1.5,
+		orientationOfIntake: 80,
+		pitchOfIntake: 20,
 	};
 
 	// linked to mechanicalVentilation1
@@ -229,7 +245,7 @@ describe("mechanical ventilation overview", () => {
 
 	it("should only display warning message when mechanical ventilations of type mvhr have been added", async () => {
 		const warningMessage =
-      "Note if you remove a MVHR this will also remove any associated ductwork";
+			"Note if you remove a MVHR this will also remove any associated ductwork";
 		await renderSuspended(MechanicalVentilationOverview);
 
 		expect(screen.queryByText(warningMessage)).toBeNull();
@@ -326,7 +342,7 @@ describe("mechanical ventilation overview", () => {
 			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 	});
-	
+
 	it("marks mechanical ventilation as not complete when user saves a new or edited form after marking section as complete", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -357,7 +373,7 @@ describe("mechanical ventilation overview", () => {
 			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 	});
-	
+
 	it("should navigate to the infiltration and ventilation overview page when return to overview is clicked", async () => {
 		await renderSuspended(MechanicalVentilationOverview);
 
@@ -456,7 +472,7 @@ describe("mechanical ventilation overview", () => {
 				await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
 
 				const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;
-				expect(complete).toBe(false); 
+				expect(complete).toBe(false);
 			});
 
 			it("marks mechanical ventilation as not complete if an item is duplicated", async () => {
@@ -464,7 +480,7 @@ describe("mechanical ventilation overview", () => {
 				await user.click(screen.getByTestId("mechanicalVentilation_duplicate_0"));
 
 				const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;
-				expect(complete).toBe(false); 
+				expect(complete).toBe(false);
 			});
 
 			it("mechanical ventilation is not complete after user adds a new ventilation", async () => {
@@ -473,7 +489,7 @@ describe("mechanical ventilation overview", () => {
 				});
 				await user.type(screen.getByTestId("name"), "New vent");
 				await user.tab();
-		
+
 				expect(store.infiltrationAndVentilation.mechanicalVentilation.complete).toBe(false);
 			});
 
@@ -484,7 +500,7 @@ describe("mechanical ventilation overview", () => {
 				await user.clear(screen.getByTestId("name"));
 				await user.type(screen.getByTestId("name"), "Updated vent");
 				await user.tab();
-		
+
 				expect(store.infiltrationAndVentilation.mechanicalVentilation.complete).toBe(false);
 			});
 		});

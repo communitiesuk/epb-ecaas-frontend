@@ -277,5 +277,20 @@
                 "degradationCoeff": 1
             }
         ]
+    },
+    {
+        "id": "42",
+        "technologyType": "SmartHotWaterTank",
+        "brandName": "Test",
+        "modelName": "Large Smart Hot Water Tank",
+        "modelQualifier": "SHWTLARGE",
+	    "volume": 78,
+	    "dailyLosses": 2.33,
+	    "pumpPower": null,
+	    "maxFlowRatePumpLPerMin": null,
+	    "heatExchangerSurfaceArea": null,
+	    "heaterPosition": null,
+	    "usableTemp": null,
+	    "heatSource": null
     }
 ]

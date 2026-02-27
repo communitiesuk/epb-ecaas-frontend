@@ -132,70 +132,195 @@ describe("space heating", () => {
 			expect(within(populatedList).queryByText("Heat source 2")).toBeNull();
 		});
 
+		describe("when a heat source is removed", () => {
+			it("references to the deleted heat source are removed from heat emitters", async () => {
+				const heatPump1: HeatSourceData = {
+					id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+					name: "Heat source 1",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "airSource",
+					productReference: "HEATPUMP_LARGE",
+				};
+			
+				const radiator: HeatEmittingData = {
+					name: "Radiator 1",
+					typeOfHeatEmitter: "radiator",
+					typeOfRadiator: "towel",
+					heatSource: heatPump1.id,
+					productReference: "RADIATOR_STANDARD",
+					designFlowTemp: 45,
+					designTempDiffAcrossEmitters: 10,
+					ecoDesignControllerClass: "4",
+					hasVariableFlowRate: true,
+					maxFlowRate: 200,
+					minFlowRate: 50,
+					id: "radiator-1",
+					numOfRadiators: 5,
+				};
 
-		it("when a heat source is removed its also removed from store object which references it", async () => {
-			//TODO - test when heat source is removed - its removed from wet distribution 
-			const heatPump1: HeatSourceData = {
-				id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
-				name: "Heat source 1",
-				typeOfHeatSource: "heatPump",
-				typeOfHeatPump: "airSource",
-				productReference: "HEATPUMP_LARGE",
-			};
-
-			const cylinder: HotWaterCylinderData = {
-				id: "Any Id",
-				heatSource: heatPump1.id,
-				storageCylinderVolume: unitValue(150, litre),
-				dailyEnergyLoss: 73,
-				name: "Hot water cylinder 1",
-			};
-
-			const radiator: HeatEmittingData = {
-				name: "Radiator 1",
-				typeOfHeatEmitter: "radiator",
-				typeOfRadiator: "towel",
-				heatSource: heatPump1.id,
-				productReference: "RADIATOR_STANDARD",
-				designFlowTemp: 45,
-				designTempDiffAcrossEmitters: 10,
-				ecoDesignControllerClass: "4",
-				hasVariableFlowRate: true,
-				maxFlowRate: 200,
-				minFlowRate: 50,
-				id: "radiator-1",
-				numOfRadiators: 5,
-			};
-
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [
-							{ data: heatPump1 },
-						],
-					},
-					heatEmitters: {
-						data: [{ data: radiator }],
-					},
-				},
-				domesticHotWater: {
-					waterHeating: {
-						hotWaterCylinder: {
-							data: [{ data: cylinder }],
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: heatPump1 },
+							],
+						},
+						heatEmitters: {
+							data: [{ data: radiator }],
 						},
 					},
-				},
+				});
+			
+				await renderSuspended(SpaceHeating);
+				await user.click(await screen.findByTestId("heatSource_remove_0"));
+
+				const emitterItem = store.spaceHeating.heatEmitters.data[0]?.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "radiator" }>;
+				expect(emitterItem.heatSource).toBe(undefined);
 			});
 
-			await renderSuspended(SpaceHeating);
-			await user.click(await screen.findByTestId("heatSource_remove_0"));
+			it("domestic hot water heat sources that reference the deleted heat source are removed entirely", async () => {
+			
+				const heatPump1: HeatSourceData = {
+					id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+					name: "Heat source 1",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "airSource",
+					productReference: "HEATPUMP_LARGE",
+				};
 
-			const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data;
-			expect(hotWaterCylinderData[0]?.data.heatSource).toBeUndefined();
+				const dhwWithExistingHeatSource: DomesticHotWaterHeatSourceData = {
+					coldWaterSource: "headerTank",
+					isExistingHeatSource: true,
+					heatSourceId: heatPump1.id,
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
+				};
 
-			const heatEmittersData = store.spaceHeating.heatEmitters.data;
-			const radiatorInStore = heatEmittersData[0]?.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "radiator" }>;
-			expect(radiatorInStore.heatSource).toBeUndefined();
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: heatPump1 },
+							],
+						},
+					},
+					domesticHotWater: {
+						heatSources: {
+							data: [{ data: dhwWithExistingHeatSource }],
+						},
+					},
+				});
+				await renderSuspended(SpaceHeating);
+
+				await user.click(await screen.findByTestId("heatSource_remove_0"));
+				const { heatSources } = store.domesticHotWater;
+
+				expect(heatSources.data.length).toBe(0);
+			});
+
+			it("references to the domestic hot water heat sources that reference the deleted heat source are themselves removed", async () => {
+			
+				const heatPump1: HeatSourceData = {
+					id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+					name: "Heat source 1",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "airSource",
+					productReference: "HEATPUMP_LARGE",
+				};
+
+				const dhwWithExistingHeatSource1: DomesticHotWaterHeatSourceData = {
+					coldWaterSource: "headerTank",
+					isExistingHeatSource: true,
+					heatSourceId: heatPump1.id,
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
+				};
+
+				const heatPump2: HeatSourceData = {
+					id: "0b77e247-53c5-42b8-9dbd-83cbfc822222",
+					name: "Heat source 2",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "airSource",
+					productReference: "HEATPUMP_LARGE",
+				};
+
+				const dhwWithExistingHeatSource2: DomesticHotWaterHeatSourceData = {
+					coldWaterSource: "mainsWater",
+					isExistingHeatSource: true,
+					heatSourceId: heatPump2.id,
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c2222",
+				};
+
+				const cylinder1: WaterStorageData = {
+					name: "Hot water cylinder 1",
+					id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
+					typeOfWaterStorage: "hotWaterCylinder",
+					storageCylinderVolume: unitValue(5, litre),
+					initialTemperature: 60,
+					dailyEnergyLoss: 1,
+					dhwHeatSourceId: dhwWithExistingHeatSource2.id,
+					areaOfHeatExchanger: 1000,
+					heaterPosition: 0.8,
+					thermostatPosition: 0.5,
+				};
+
+				const cylinder2: WaterStorageData = {
+					name: "Smart Hot Water Tank 2",
+					id: "c84528bb-f805-4f1e-95d3-2bd1717deca2",
+					typeOfWaterStorage: "smartHotWaterTank",
+					dhwHeatSourceId: dhwWithExistingHeatSource1.id,
+					energySupply: "electricity",
+					heaterPosition: 0.8,
+					productReference: "SMRT-12345",
+				};
+
+				const mixerShower: MixedShowerData = {
+					name: "Mixer shower 1",
+					id: "c84528bb-f805-4f1e-95d3-2bd1717deca3",
+					typeOfHotWaterOutlet: "mixedShower",
+					flowRate: 10,
+					dhwHeatSourceId: dhwWithExistingHeatSource1.id,
+					wwhrs: false,
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: heatPump1 },
+								{ data: heatPump2 },
+							],
+						},
+					},
+					domesticHotWater: {
+						heatSources: {
+							data: [
+								{ data: dhwWithExistingHeatSource1 },
+								{ data: dhwWithExistingHeatSource2 },
+							],
+						},
+						hotWaterOutlets: {
+							data: [
+								{ data: mixerShower },
+							],
+						},
+						waterStorage: {
+							data: [
+								{ data: cylinder1 },
+								{ data: cylinder2 },
+							],
+						},
+					},
+				});
+				await renderSuspended(SpaceHeating);
+
+				await user.click(await screen.findByTestId("heatSource_remove_0"));
+				const { heatSources, hotWaterOutlets, waterStorage } = store.domesticHotWater;
+
+				expect(heatSources.data.length).toBe(1);
+				expect((hotWaterOutlets.data[0]!.data as MixedShowerData).dhwHeatSourceId).toBe(undefined);
+				expect(waterStorage.data[0]!.data.dhwHeatSourceId).toBe(dhwWithExistingHeatSource2.id);
+				expect(waterStorage.data[1]!.data.dhwHeatSourceId).toBe(undefined);
+
+			});
 		});
 
 		it("displays an in-progress indicator when an entry is not marked as complete", async () => {

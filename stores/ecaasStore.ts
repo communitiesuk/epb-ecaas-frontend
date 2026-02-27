@@ -4,7 +4,7 @@ import type { GovTagProps } from "~/common.types";
 import type { Page } from "~/data/pages/pages.types";
 import type { EmptyObject } from "type-fest";
 import pagesData from "~/data/pages/pages";
-type KeysToDeleteCascade = "associatedItemId" | "taggedItem" | "heatSource";
+type KeysToDeleteCascade = "associatedItemId" | "taggedItem" | "heatSource" | "dhwHeatSourceId" | "waterStorage";
 export function getInitialState(): EcaasState {
 	const store: NulledForms<EcaasState> = {
 		dwellingDetails: {
@@ -20,55 +20,26 @@ export function getInitialState(): EcaasState {
 			naturalVentilation: { data: {} },
 			airPermeability: { data: {} },
 		},
-		domesticHotWaterNew: {
-			heatSources: {
-				data: [],
-			},
-			waterStorage: { 
-				data: [],
-			},
-			hotWaterOutlets: {
-				data: [],
-			},
-			pipework: {
-				data: [],
-			},
-		},
 		domesticHotWater: {
-			waterHeating: {
-				hotWaterCylinder: { data: [] },
-				immersionHeater: { data: [] },
-				solarThermal: { data: [] },
-				pointOfUse: { data: [] },
-				heatPump: { data: [] },
-				combiBoiler: { data: [] },
-				heatBattery: { data: [] },
-				smartHotWaterTank: { data: [] },
-				heatInterfaceUnit: { data: [] },
-			},
-			hotWaterOutlets: {
-				mixedShower: { data: [] },
-				electricShower: { data: [] },
-				bath: { data: [] },
-				otherOutlets: { data: [] },
-			},
-			pipework: {
-				primaryPipework: { data: [] },
-				secondaryPipework: { data: [] },
-			},
-			wwhrs: { data: [] },
+			heatSources: { data: [] },
+			waterStorage: { data: [] },
+			hotWaterOutlets: { data: [] },
+			pipework: { data: [] },
 		},
 		dwellingFabric: {
 			dwellingSpaceFloors: {
 				dwellingSpaceGroundFloor: { data: [] },
 				dwellingSpaceInternalFloor: { data: [] },
 				dwellingSpaceExposedFloor: { data: [] },
+				dwellingSpaceFloorAboveUnheatedBasement: { data: [] },
+				dwellingSpaceFloorOfHeatedBasement: { data: [] },
 			},
 			dwellingSpaceWalls: {
 				dwellingSpaceExternalWall: { data: [] },
 				dwellingSpaceInternalWall: { data: [] },
 				dwellingSpaceWallToUnheatedSpace: { data: [] },
 				dwellingSpacePartyWall: { data: [] },
+				dwellingSpaceWallOfHeatedBasement: { data: [] },
 			},
 			dwellingSpaceCeilingsAndRoofs: {
 				dwellingSpaceCeilings: { data: [] },
@@ -85,7 +56,7 @@ export function getInitialState(): EcaasState {
 				dwellingSpacePointThermalBridges: { data: [] },
 			},
 			dwellingSpaceZoneParameters: { data: {} },
-			dwellingSpaceLighting: { data: {} },
+			dwellingSpaceLighting: { data: [] },
 		},
 		spaceHeating: {
 			heatSource: { data: [] },
@@ -96,7 +67,7 @@ export function getInitialState(): EcaasState {
 			airConditioning: { data: [] },
 		},
 		pvAndBatteries: {
-			pvSystems: { data: [] },
+			pvArrays: { data: [] },
 			electricBattery: { data: [] },
 			diverters: { data: [] },
 		},

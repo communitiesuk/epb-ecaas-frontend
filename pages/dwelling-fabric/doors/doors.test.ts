@@ -31,7 +31,7 @@ describe("doors", () => {
 		height: 0.5,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		uValue: 1,
+		thermalResistance: 1,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
@@ -45,78 +45,82 @@ describe("doors", () => {
 		massDistributionClass: "I",
 		pitchOption: "90",
 		pitch: 90,
+		thermalResistance: 1,
 	};
 
 	const externalUnglazed1: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 1 name",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
-			surfaceArea: 10,
-			uValue: 1,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			colour: "Dark",
+			thermalResistance: 16,
 		},
 	};
 
 	const externalUnglazed2: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 2 name",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
-			surfaceArea: 10,
-			uValue: 1,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			colour: "Light",
+			thermalResistance: 28,
 		},
 	};
 
 	const externalUnglazed3: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 3 name",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
-			surfaceArea: 10,
-			uValue: 1,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			colour: "Intermediate",
+			thermalResistance: 23,
 		},
 	};
 
 	const externalGlazed1: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed1 name",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
 			height: 1,
 			width: 1,
-			uValue: 1,
 			securityRisk: false,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
 			openingToFrameRatio: 0.2,
-			midHeightOpenablePart1: 2,
 			heightOpenableArea: 1,
 			maximumOpenableArea: 1,
+			thermalResistance: 37,
+			numberOpenableParts: "0",
+			curtainsOrBlinds: false,
+
 		},
 	};
 
 	const externalGlazed2: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed2 name",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
 			height: 1,
 			width: 1,
-			uValue: 1,
 			securityRisk: false,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
@@ -125,24 +129,31 @@ describe("doors", () => {
 			midHeightOpenablePart1: 2,
 			heightOpenableArea: 1,
 			maximumOpenableArea: 1,
+			thermalResistance: 25,
+			numberOpenableParts: "1",
+			curtainsOrBlinds: false,
 		},
 	};
 
 	const externalGlazed3: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed3 name",
+			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
 			height: 1,
 			width: 1,
-			uValue: 1,
 			securityRisk: false,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
 			openingToFrameRatio: 0.2,
 			midHeightOpenablePart1: 2,
+			midHeightOpenablePart2: 1.2,
 			heightOpenableArea: 1,
 			maximumOpenableArea: 1,
+			thermalResistance: 41,
+			numberOpenableParts: "2",
+			curtainsOrBlinds: false,
 		},
 	};
 
@@ -150,6 +161,7 @@ describe("doors", () => {
 		data: {
 			typeOfInternalDoor: "heatedSpace",
 			name: "Internal 1",
+			isTheFrontDoor: false,
 			associatedItemId: internalWall.id,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
@@ -161,6 +173,7 @@ describe("doors", () => {
 		data: {
 			typeOfInternalDoor: "heatedSpace",
 			name: "Internal 2",
+			isTheFrontDoor: false,
 			associatedItemId: internalWall.id,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
@@ -172,6 +185,7 @@ describe("doors", () => {
 		data: {
 			typeOfInternalDoor: "heatedSpace",
 			name: "Internal 3",
+			isTheFrontDoor: false,
 			associatedItemId: internalWall.id,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
@@ -430,195 +444,195 @@ describe("doors", () => {
 			dwellingSpaceInternalDoor: internalDoorForm,
 		};
 
-  		type DoorType = keyof typeof store.dwellingFabric.dwellingSpaceDoors;
+		type DoorType = keyof typeof store.dwellingFabric.dwellingSpaceDoors;
 
-  		it("disables the Mark section as complete button when a door is incomplete", async () => {
-  			store.$patch({
-  				dwellingFabric: {
-  					dwellingSpaceDoors: {
-  						dwellingSpaceExternalGlazedDoor: {
-  							data: [{ ...externalGlazed1, complete: false }],
-  						},
-  						dwellingSpaceExternalUnglazedDoor: {
-  							data: [{ ...externalGlazed1, complete: false }],
-  						},
-  						dwellingSpaceInternalDoor: {
-  							data: [{ ...internal1, complete: false }],
-  						},
-  					},
-  				},
-  			});
+		it("disables the Mark section as complete button when a door is incomplete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ ...externalGlazed1, complete: false }],
+						},
+						dwellingSpaceExternalUnglazedDoor: {
+							data: [{ ...externalGlazed1, complete: false }],
+						},
+						dwellingSpaceInternalDoor: {
+							data: [{ ...internal1, complete: false }],
+						},
+					},
+				},
+			});
 
-  			await renderSuspended(Doors);
-  			expect(
-  				screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
-  			).toBeTruthy();
-  		});
+			await renderSuspended(Doors);
+			expect(
+				screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
+			).toBeTruthy();
+		});
 
-  		it("enables the Mark section as complete button when all doors are complete", async () => {
-  			await addCompleteDoorsDataToStore();
+		it("enables the Mark section as complete button when all doors are complete", async () => {
+			await addCompleteDoorsDataToStore();
 
-  			await renderSuspended(Doors);
-  			expect(
-  				screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
-  			).toBeFalsy();
-  		});
+			await renderSuspended(Doors);
+			expect(
+				screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
+			).toBeFalsy();
+		});
 
-  		it("displays a 'Completed' status indicator when section is marked as complete", async () => {
-  			await renderSuspended(Doors);
-  			await user.click(screen.getByTestId("markAsCompleteButton"));
-  			const completedStatusElement = screen.queryByTestId(
-  				"completeSectionCompleted",
-  			);
-  			expect(completedStatusElement?.style.display).not.toBe("none");
-  		});
+		it("displays a 'Completed' status indicator when section is marked as complete", async () => {
+			await renderSuspended(Doors);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+			const completedStatusElement = screen.queryByTestId(
+				"completeSectionCompleted",
+			);
+			expect(completedStatusElement?.style.display).not.toBe("none");
+		});
 
-  		describe("after section has been marked as complete", () => {
-  			beforeEach(async () => {
-  				await addCompleteDoorsDataToStore();
-  				await renderSuspended(Doors);
-  				await user.click(screen.getByTestId("markAsCompleteButton"));
-  			});
+		describe("after section has been marked as complete", () => {
+			beforeEach(async () => {
+				await addCompleteDoorsDataToStore();
+				await renderSuspended(Doors);
+				await user.click(screen.getByTestId("markAsCompleteButton"));
+			});
 
-  			it("displays the 'Completed' section status indicator", async () => {
-  				const completed = screen.queryByTestId("completeSectionCompleted");
-  				expect(completed?.style.display).not.toBe("none");
-  			});
+			it("displays the 'Completed' section status indicator", async () => {
+				const completed = screen.queryByTestId("completeSectionCompleted");
+				expect(completed?.style.display).not.toBe("none");
+			});
 
-  			it("navigates to the dwelling fabric page", async () => {
-  				expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
-  			});
+			it("navigates to the dwelling fabric page", async () => {
+				expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
+			});
 
-  			it("marks each doors section as complete when button is clicked", async () => {
-  				const {
-  					dwellingSpaceExternalGlazedDoor,
-  					dwellingSpaceExternalUnglazedDoor,
-  					dwellingSpaceInternalDoor,
-  				} = store.dwellingFabric.dwellingSpaceDoors;
+			it("marks each doors section as complete when button is clicked", async () => {
+				const {
+					dwellingSpaceExternalGlazedDoor,
+					dwellingSpaceExternalUnglazedDoor,
+					dwellingSpaceInternalDoor,
+				} = store.dwellingFabric.dwellingSpaceDoors;
 
-  				expect(dwellingSpaceExternalGlazedDoor?.complete).toBe(true);
-  				expect(dwellingSpaceExternalUnglazedDoor?.complete).toBe(true);
-  				expect(dwellingSpaceInternalDoor?.complete).toBe(true);
-  			});
+				expect(dwellingSpaceExternalGlazedDoor?.complete).toBe(true);
+				expect(dwellingSpaceExternalUnglazedDoor?.complete).toBe(true);
+				expect(dwellingSpaceInternalDoor?.complete).toBe(true);
+			});
 
-  			it("marks section as not complete if a door is removed after marking complete", async () => {
+			it("marks section as not complete if a door is removed after marking complete", async () => {
 
-  				await user.click(screen.getByTestId("externalUnglazed_remove_0"));
-  				await user.click(screen.getByTestId("externalGlazed_remove_0"));
-  				await user.click(screen.getByTestId("internal_remove_0"));
-  				const {
-  					dwellingSpaceExternalGlazedDoor,
-  					dwellingSpaceExternalUnglazedDoor,
-  					dwellingSpaceInternalDoor,
-  				} = store.dwellingFabric.dwellingSpaceDoors;
+				await user.click(screen.getByTestId("externalUnglazed_remove_0"));
+				await user.click(screen.getByTestId("externalGlazed_remove_0"));
+				await user.click(screen.getByTestId("internal_remove_0"));
+				const {
+					dwellingSpaceExternalGlazedDoor,
+					dwellingSpaceExternalUnglazedDoor,
+					dwellingSpaceInternalDoor,
+				} = store.dwellingFabric.dwellingSpaceDoors;
 
-  				expect(dwellingSpaceExternalUnglazedDoor?.complete).toBe(false);
-  				expect(dwellingSpaceExternalGlazedDoor?.complete).toBe(false);
-  				expect(dwellingSpaceInternalDoor?.complete).toBe(false);
-  			});
+				expect(dwellingSpaceExternalUnglazedDoor?.complete).toBe(false);
+				expect(dwellingSpaceExternalGlazedDoor?.complete).toBe(false);
+				expect(dwellingSpaceInternalDoor?.complete).toBe(false);
+			});
 
-  			it("marks section as not complete if a door is duplicated after marking complete", async () => {
-  				await user.click(screen.getByTestId("externalUnglazed_duplicate_0"));
-  				await user.click(screen.getByTestId("externalGlazed_duplicate_0"));
-  				await user.click(screen.getByTestId("internal_duplicate_0"));
-				
-  				const {
-  					dwellingSpaceExternalGlazedDoor,
-  					dwellingSpaceExternalUnglazedDoor,
-  					dwellingSpaceInternalDoor,
-  				} = store.dwellingFabric.dwellingSpaceDoors;
+			it("marks section as not complete if a door is duplicated after marking complete", async () => {
+				await user.click(screen.getByTestId("externalUnglazed_duplicate_0"));
+				await user.click(screen.getByTestId("externalGlazed_duplicate_0"));
+				await user.click(screen.getByTestId("internal_duplicate_0"));
 
-  				expect(dwellingSpaceExternalUnglazedDoor?.complete).toBe(false);
-  				expect(dwellingSpaceExternalGlazedDoor?.complete).toBe(false);
-  				expect(dwellingSpaceInternalDoor?.complete).toBe(false);
-			
-  			});
+				const {
+					dwellingSpaceExternalGlazedDoor,
+					dwellingSpaceExternalUnglazedDoor,
+					dwellingSpaceInternalDoor,
+				} = store.dwellingFabric.dwellingSpaceDoors;
 
-  			it("marks section as not complete after adding a new door item", async () => {
-  				for (const door of Object.keys(
-  					store.dwellingFabric.dwellingSpaceDoors,
-  				) as DoorType[]) {
-  					await renderSuspended(doorForms[door], {
-  						route: {
-  							params: { door: "create" },
-  						},
-  					});
+				expect(dwellingSpaceExternalUnglazedDoor?.complete).toBe(false);
+				expect(dwellingSpaceExternalGlazedDoor?.complete).toBe(false);
+				expect(dwellingSpaceInternalDoor?.complete).toBe(false);
 
-  					if (door === "dwellingSpaceInternalDoor") {
-  						await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
-  					}
+			});
 
-  					await user.type(screen.getByTestId("name"), "New door");
-  					await user.tab();
-  					await user.click(screen.getByTestId("saveAndComplete"));
+			it("marks section as not complete after adding a new door item", async () => {
+				for (const door of Object.keys(
+					store.dwellingFabric.dwellingSpaceDoors,
+				) as DoorType[]) {
+					await renderSuspended(doorForms[door], {
+						route: {
+							params: { door: "create" },
+						},
+					});
 
-  					expect(store.dwellingFabric.dwellingSpaceDoors[door]?.complete).toBe(
-  						false,
-  					);
-  				}
-  			});
+					if (door === "dwellingSpaceInternalDoor") {
+						await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+					}
 
-  			it("marks section as not complete after editing a door item", async () => {
-  				for (const door of Object.keys(
-  					store.dwellingFabric.dwellingSpaceDoors,
-  				) as DoorType[]) {
-  					await renderSuspended(doorForms[door], {
-  						route: {
-  							params: { door: "0" },
-  						},
-  					});
+					await user.type(screen.getByTestId("name"), "New door");
+					await user.tab();
+					await user.click(screen.getByTestId("saveAndComplete"));
 
-  					await user.clear(screen.getByTestId("name"));
-  					await user.type(screen.getByTestId("name"), "Updated door");
-  					await user.tab();
+					expect(store.dwellingFabric.dwellingSpaceDoors[door]?.complete).toBe(
+						false,
+					);
+				}
+			});
 
-  					expect(
-  						store.dwellingFabric.dwellingSpaceDoors[door]?.complete,
-  					).toBe(false);
-  					await renderSuspended(Doors);
-  					expect(
-  						screen.getByRole("button", { name: "Mark section as complete" }),
-  					).not.toBeNull();
-  				}
-  			});
+			it("marks section as not complete after editing a door item", async () => {
+				for (const door of Object.keys(
+					store.dwellingFabric.dwellingSpaceDoors,
+				) as DoorType[]) {
+					await renderSuspended(doorForms[door], {
+						route: {
+							params: { door: "0" },
+						},
+					});
 
-  			// skipped test as appears behaviour of button here is in flux
-  			it.skip("disables the mark section as complete button when item is incomplete", async () => {
-  				store.$patch({
-  					dwellingFabric: {
-  						dwellingSpaceDoors: {
-  							dwellingSpaceExternalGlazedDoor: {
-  								data: [{ data: { height: 2 }, complete: false }],
-  							},
-  						},
-  					},
-  				});
+					await user.clear(screen.getByTestId("name"));
+					await user.type(screen.getByTestId("name"), "Updated door");
+					await user.tab();
 
-  				await renderSuspended(Doors);
-  				const markAsCompleteButton = screen.getByRole("button", {
-  					name: "Mark section as complete",
-  				});
-  				expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
-  			});
+					expect(
+						store.dwellingFabric.dwellingSpaceDoors[door]?.complete,
+					).toBe(false);
+					await renderSuspended(Doors);
+					expect(
+						screen.getByRole("button", { name: "Mark section as complete" }),
+					).not.toBeNull();
+				}
+			});
 
-  			test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
-  				store.$patch({
-  					dwellingFabric: {
-  						dwellingSpaceDoors: {
-  							dwellingSpaceExternalGlazedDoor: {
-  								data: [externalGlazed1],
-  								complete: false,
-  							},
-  						},
-  					},
-  				});
+			// skipped test as appears behaviour of button here is in flux
+			it.skip("disables the mark section as complete button when item is incomplete", async () => {
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceDoors: {
+							dwellingSpaceExternalGlazedDoor: {
+								data: [{ data: { height: 2 }, complete: false }],
+							},
+						},
+					},
+				});
 
-  				await renderSuspended(Doors);
+				await renderSuspended(Doors);
+				const markAsCompleteButton = screen.getByRole("button", {
+					name: "Mark section as complete",
+				});
+				expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
+			});
 
-  				expect(screen.getByTestId("externalGlazed_status_0").textContent).toBe(
-  					formStatus.inProgress.text,
-  				);
-  			});
-  		});
+			test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceDoors: {
+							dwellingSpaceExternalGlazedDoor: {
+								data: [externalGlazed1],
+								complete: false,
+							},
+						},
+					},
+				});
+
+				await renderSuspended(Doors);
+
+				expect(screen.getByTestId("externalGlazed_status_0").textContent).toBe(
+					formStatus.inProgress.text,
+				);
+			});
+		});
 	});
 });

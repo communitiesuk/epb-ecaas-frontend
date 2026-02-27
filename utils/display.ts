@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaL
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ConciseMassDistributionClass, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, TypeOfBoiler, WaterStorageProductType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -86,9 +86,9 @@ export function displayCamelToSentenceCase(value: string): string {
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1);
 }
 
-export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge-freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hob";
+export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge-freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hob" | "Cooker hood extracting from the kitchen to outside";
 
-export function displayApplianceKey(value: SchemaApplianceType): ApplianceKeyDisplay {
+export function displayApplianceKey(value: ApplianceKey): ApplianceKeyDisplay {
 	switch (value) {
 		case "Fridge":
 			return "Fridge";
@@ -106,6 +106,8 @@ export function displayApplianceKey(value: SchemaApplianceType): ApplianceKeyDis
 			return "Tumble dryer";
 		case "Hobs":
 			return "Hob";
+		case "KitchenExtractorHoodExternal":
+			return "Cooker hood extracting from the kitchen to outside";
 		default:
 			value satisfies never;
 			throw new Error(`Missed a appliance key case: ${value}`);
@@ -131,7 +133,7 @@ export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): 
 	return (isApplianceKey(key)) ? displayApplianceKey(key) : key;
 }
 
-export function displayApplianceType(appliances: SchemaApplianceType[] | undefined) {
+export function displayApplianceType(appliances: ApplianceKey[] | undefined) {
 	if (appliances === undefined) return emptyValueRendering;
 	return appliances.map(appliance => displayApplianceKey(appliance)).join(", ");
 }
@@ -313,11 +315,10 @@ export const heatSourceProductTypesDisplay = {
 	"exhaustAirMixed": pluralize("Exhaust air mixed heat pump"),
 	"combiBoiler": pluralize("Combi boiler"),
 	"regularBoiler": pluralize("Regular boiler"),
-	"sleevedDistrictHeatNetwork": pluralize("Sleeved district heat network"),
-	"unsleevedDistrictHeatNetwork": pluralize("Unsleeved district heat network"),
-	"communalHeatNetwork": pluralize("Communal heat network"),
+	"heatNetwork": pluralize("Heat network"),
 	"heatBatteryPcm": pluralize("PCM heat battery", "ies"),
 	"heatBatteryDryCore": pluralize("Dry core heat battery", "ies"),
+	"heatInterfaceUnit": pluralize("Heat interface unit"),
 } as const satisfies Record<HeatSourceProductType, (plural: boolean) => string>;
 
 export function displayHeatPumpType(type: HeatPumpType | undefined): string {
@@ -333,8 +334,8 @@ export type LocationOfCollectorLoopPipingTypeDisplay = "Outside" | "Heated space
 export type HeatSourceTypeDisplay = "Heat pump" | "Boiler" | "Heat network" | "Heat battery" | "Solar thermal system";
 
 export const heatSourceTypesWithDisplay = {
-	"heatPump": "Heat pump",
 	"boiler": "Boiler",
+	"heatPump": "Heat pump",
 	"heatNetwork": "Heat network",
 	"heatBattery": "Heat battery",
 	"solarThermalSystem": "Solar thermal system",
@@ -342,6 +343,18 @@ export const heatSourceTypesWithDisplay = {
 
 export function displayHeatSourceType(type: HeatSourceType | undefined): HeatSourceTypeDisplay | typeof emptyValueRendering {
 	return heatSourceTypesWithDisplay[type!] ?? emptyValueRendering;
+}
+
+export type DHWHeatSourceTypeDisplay = HeatSourceTypeDisplay | "Immersion heater" | "Point of use";
+
+export const DHWHeatSourceTypesWithDisplay = {
+	...heatSourceTypesWithDisplay,
+	"immersionHeater": "Immersion heater",
+	"pointOfUse": "Point of use",
+} as const satisfies Record<DHWHeatSourceType, DHWHeatSourceTypeDisplay>;
+
+export function displayDHWHeatSourceType(type: DHWHeatSourceType | undefined): DHWHeatSourceTypeDisplay | typeof emptyValueRendering {
+	return DHWHeatSourceTypesWithDisplay[type!] ?? emptyValueRendering;
 }
 
 export type HeatEmitterDisplay = "Radiator" | "Underfloor heating" | "Fan coil" | "Warm air heater" | "Instant electric heater" | "Electric storage heater";
@@ -362,6 +375,12 @@ export function displayHeatEmitterType(type: HeatEmitterType | undefined): HeatE
 	}
 	return heatEmitterTypes[type];
 }
+
+export const mechanicalVentilationProductTypesDisplay = {
+	"mvhr": pluralize("MVHR"),
+	"centralisedContinuousMev": pluralize("Centralised continuous MEV"),
+	"decentralisedContinuousMev": pluralize("Decentralised continuous MEV"),
+} as const satisfies Record<MechanicalVentilationProductType, (plural: boolean) => string>;
 
 export type RadiatorDisplay = "Standard" | "Towel radiator";
 
@@ -384,4 +403,33 @@ export const waterStorageProductTypeDisplay = {
 
 export const heatEmittingProductTypesDisplay = {
 	"fanCoil": pluralize("Fan coil"),
+	"electricStorageHeater": pluralize("Electric storage heater"),
+	"instantElectricHeater": pluralize("Instant electric heater"),
 } as const satisfies Record<HeatEmittingProductType, (plural: boolean) => string>;
+
+export const waterStorageTypes = {
+	"hotWaterCylinder": "Hot water cylinder",
+	"smartHotWaterTank": "Smart hot water tank",
+} as const satisfies Record<WaterStorageType, string>;
+
+export type HotWaterOutletDisplay = "Mixer shower" | "Electric shower" | "Bath" | "Other (basin tap, kitchen sink, etc.)";
+
+export const hotWaterOutletTypes = {
+	"mixedShower": "Mixer shower",
+	"electricShower": "Electric shower",
+	"bath": "Bath",
+	"otherHotWaterOutlet": "Other (basin tap, kitchen sink, etc.)",
+} as const satisfies Record<HotWaterOutletType, HotWaterOutletDisplay>;
+
+export function displayHotWaterOutletType(type: HotWaterOutletType | undefined): HotWaterOutletDisplay | typeof emptyValueRendering {
+	if (!type) {
+		return emptyValueRendering;
+	}
+	return hotWaterOutletTypes[type];
+}
+export const wwhrsTypes = {
+	"instantaneousSystemA": "WWHRS instantaneous system A",
+	"instantaneousSystemB": "WWHRS instantaneous system B",
+	"instantaneousSystemC": "WWHRS instantaneous system C",
+} as const satisfies Record<WwhrsType, string>;
+

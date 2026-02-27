@@ -7,6 +7,7 @@ import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/c
 import { centimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
 
+
 const baseForm = {
 	data: [],
 	complete: true as const,
@@ -109,7 +110,9 @@ const expectedHouseInput: FhsInputSchema = {
 		Shower: {
 			"some-mixer-shower-name": {
 				ColdWaterSource: "mains water",
+				HotWaterSource: "HP-1",
 				flowrate: 14,
+				allow_low_flowrate: false,
 				type: "MixerShower",
 			},
 		},
@@ -152,7 +155,7 @@ const expectedHouseInput: FhsInputSchema = {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 55,
 				sup_air_flw_ctrl: "ODA",
-				sup_air_temp_ctrl: "CONST",
+				sup_air_temp_ctrl: "NO_CTRL",
 				vent_type: "Intermittent MEV",
 				SFP: 1.5,
 				position_exhaust: {},
@@ -173,6 +176,7 @@ const expectedHouseInput: FhsInputSchema = {
 		terrain_class: "Suburban",
 		ventilation_zone_base_height: 3,
 	},
+	KitchenExtractorHoodExternal: false,
 	NumberOfBedrooms: 7,
 	OnSiteGeneration: {},
 	PartGcompliance: true,
@@ -184,7 +188,7 @@ const expectedHouseInput: FhsInputSchema = {
 	NumberOfSanitaryAccommodations: 1,
 	NumberOfTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
-	NumberOfWetRooms: 0,
+	NumberOfWetRooms: 1,
 	SpaceCoolSystem: {
 		// "some-aircon-unit-name": {
 		// 	type: "AirConditioning",
@@ -205,8 +209,6 @@ const expectedHouseInput: FhsInputSchema = {
 			"design_flow_temp": 40,
 			"ecodesign_controller": {
 				"ecodesign_control_class": 1,
-				"max_outdoor_temp": 15,
-				"min_outdoor_temp": 0,
 			},
 			"emitters": [
 				{
@@ -248,7 +250,7 @@ const expectedHouseInput: FhsInputSchema = {
 					is_external_door: false,
 					mass_distribution_class: "D: Mass equally distributed",
 					orientation360: 30,
-					u_value: 1,
+					thermal_resistance_construction: 1,
 					width: 3,
 					pitch: 90,
 					colour: "Intermediate",
@@ -315,6 +317,13 @@ const expectedFlatInput: FhsInputSchema = {
 				minimum_charge_rate_one_way_trip: 80,
 				maximum_discharge_rate_one_way_trip: 20,
 			},
+		},
+		["pv system 1"]: {
+			"fuel": "electricity",
+			"is_export_capable": true,
+			"priority": [
+				"diverter",
+			],
 		},
 	},
 	Events: {},
@@ -406,12 +415,16 @@ const expectedFlatInput: FhsInputSchema = {
 		Shower: {
 			"mixer shower 1 name": {
 				ColdWaterSource: "mains water",
+				HotWaterSource: "HP-1",
 				flowrate: 14,
+				allow_low_flowrate: false,
 				type: "MixerShower",
 			},
 			"mixer shower 2 name": {
 				ColdWaterSource: "mains water",
+				HotWaterSource: "HP-1",
 				flowrate: 12,
+				allow_low_flowrate: false,
 				type: "MixerShower",
 			},
 			"electric shower 1 name": {
@@ -454,8 +467,8 @@ const expectedFlatInput: FhsInputSchema = {
 		"hw cylinder": {
 			ColdWaterSource: "mains water",
 			HeatSource: {
-				["heat pump"]: {
-					name: "heat pump",
+				["Heat pump 1"]: {
+					name: "Heat pump 1",
 					EnergySupply: "mains elec",
 					heater_position: 0.1,
 					type: "HeatSourceWet",
@@ -501,7 +514,7 @@ const expectedFlatInput: FhsInputSchema = {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 17,
 				sup_air_flw_ctrl: "ODA",
-				sup_air_temp_ctrl: "CONST",
+				sup_air_temp_ctrl: "NO_CTRL",
 				vent_type: "MVHR",
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
@@ -517,28 +530,45 @@ const expectedFlatInput: FhsInputSchema = {
 					length: 4,
 					reflective: true,
 				}],
-				position_exhaust: {},
-				position_intake: {},
+				position_exhaust: {
+					mid_height_air_flow_path: 1.5,
+					orientation360: 90,
+					pitch: 10,
+
+				},
+				position_intake: {
+					mid_height_air_flow_path: 1.5,
+					orientation360: 80,
+					pitch: 10,
+				},
 			},
 			"mvhr vent 2 name": {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 3,
 				sup_air_flw_ctrl: "ODA",
-				sup_air_temp_ctrl: "CONST",
+				sup_air_temp_ctrl: "NO_CTRL",
 				vent_type: "MVHR",
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
 				mvhr_eff: 0,
 				mvhr_location: "outside",
 				ductwork: [],
-				position_exhaust: {},
-				position_intake: {},
+				position_exhaust: {
+					mid_height_air_flow_path: 1.5,
+					orientation360: 90,
+					pitch: 10,
+				},
+				position_intake: {
+					mid_height_air_flow_path: 1.5,
+					orientation360: 80,
+					pitch: 10,
+				},
 			},
 			"centralised MEV name": {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 8,
 				sup_air_flw_ctrl: "ODA",
-				sup_air_temp_ctrl: "CONST",
+				sup_air_temp_ctrl: "NO_CTRL",
 				vent_type: "Centralised continuous MEV",
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
@@ -560,6 +590,7 @@ const expectedFlatInput: FhsInputSchema = {
 		terrain_class: "OpenField",
 		ventilation_zone_base_height: 1,
 	},
+	KitchenExtractorHoodExternal: true,
 	NumberOfBedrooms: 2,
 	OnSiteGeneration: {
 		"pv system 1": {
@@ -576,7 +607,12 @@ const expectedFlatInput: FhsInputSchema = {
 			inverter_is_inside: true,
 			inverter_type: "optimised_inverter",
 			type: "PhotovoltaicSystem",
-			shading: [],
+			shading: [{
+				distance: 2,
+				height: 5,
+				type: "obstacle",
+				transparency: 0,
+			}],
 		},
 	},
 	PartGcompliance: true,
@@ -586,7 +622,7 @@ const expectedFlatInput: FhsInputSchema = {
 	NumberOfSanitaryAccommodations: 1,
 	NumberOfTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
-	NumberOfWetRooms: 0,
+	NumberOfWetRooms: 2,
 	SpaceCoolSystem: {},
 	SpaceHeatSystem: {
 		"UFH System": {
@@ -599,8 +635,6 @@ const expectedFlatInput: FhsInputSchema = {
 			"design_flow_temp": 40,
 			"ecodesign_controller": {
 				"ecodesign_control_class": 1,
-				"max_outdoor_temp": 15,
-				"min_outdoor_temp": 0,
 			},
 			"emitters": [
 				{
@@ -691,7 +725,7 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: "Medium",
 					mass_distribution_class: "D: Mass equally distributed",
 					pitch: 180,
-					u_value: 0.1,
+					thermal_resistance_construction: 0.1,
 					type: "BuildingElementOpaque",
 					is_external_door: false,
 					colour: "Dark",
@@ -716,11 +750,11 @@ const expectedFlatInput: FhsInputSchema = {
 					is_external_door: false,
 					mass_distribution_class: "D: Mass equally distributed",
 					orientation360: 30,
-					u_value: 1,
 					width: 3,
 					pitch: 45,
 					is_unheated_pitched_roof: false,
 					colour: "Light",
+					thermal_resistance_construction: 1,
 				},
 				"internal wall 1 (wall)": {
 					area: 15,
@@ -728,10 +762,10 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: "I: Mass concentrated at internal side",
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
-					u_value: 0.01,
+					thermal_resistance_construction: 1,
 				},
 				"front door (door)": {
-					area: 20,
+					area: 3.12,
 					areal_heat_capacity: "Light",
 					base_height: 1,
 					colour: "Intermediate",
@@ -742,7 +776,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 45,
 					type: "BuildingElementOpaque",
 					is_unheated_pitched_roof: false,
-					u_value: 1,
+					thermal_resistance_construction: 12,
 					width: 1.2,
 				},
 				"external glazed door (door)": {
@@ -758,11 +792,16 @@ const expectedFlatInput: FhsInputSchema = {
 					security_risk: false,
 					shading: [],
 					type: "BuildingElementTransparent",
-					u_value: 0.8,
+					thermal_resistance_construction: 12,
 					width: 1,
-					window_part_list: [{
-						mid_height_air_flow_path: 3,
-					}],
+					window_part_list: [
+						{
+							mid_height_air_flow_path: 1.5,
+						},
+						{
+							mid_height_air_flow_path: 3,
+						},
+					],
 				},
 				"wall to garage (wall)": {
 					area: 20,
@@ -771,7 +810,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 90,
 					thermal_resistance_unconditioned_space: 2.5,
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-					u_value: 1,
+					thermal_resistance_construction: 1,
 				},
 				"ceiling to heated space (ceiling)": {
 					type: "BuildingElementAdjacentConditionedSpace",
@@ -829,13 +868,12 @@ const expectedFlatInput: FhsInputSchema = {
 					height: 2,
 					width: 2,
 					base_height: 1,
-					u_value: 0.1,
+					thermal_resistance_construction: 0.1,
 					g_value: 0.2,
 					security_risk: true,
 					mid_height: 2,
 					frame_area_fraction: 0.2, // inverse openingToFrameRatio (1 - 0.8) 
 					max_window_open_area: 1,
-					free_area_height: 1,
 					window_part_list: [{
 						mid_height_air_flow_path: 1,
 					}],
@@ -921,6 +959,7 @@ describe("FHS input mapper", () => {
 					numOfBathrooms: 1,
 					numOfHabitableRooms: 4,
 					numOfRoomsWithTappingPoints: 2,
+					numOfWetRooms: 1,
 					numOfUtilityRooms: 1,
 					numOfWCs: 1,
 					buildingLength: 10,
@@ -969,6 +1008,7 @@ describe("FHS input mapper", () => {
 						name: "kitchen exhaust fan",
 						typeOfMechanicalVentilationOptions: "Intermittent MEV",
 						airFlowRate: 55,
+						productReference: "1000",
 					},
 				}],
 			},
@@ -981,7 +1021,6 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: {
 						name: "only vent",
-						typeOfVent: "airBrick",
 						associatedItemId: externalWallId,
 						effectiveVentilationArea: 75,
 						openingRatio: 0.2,
@@ -1013,7 +1052,8 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: {
 					volume: 300,
-					livingRoomArea: 50,
+					livingZoneArea: 50,
+					groundFloorArea: 40,
 					restOfDwellingArea: 30,
 					// spaceHeatingSystemForThisZone: "some-wet-distribution",
 					// spaceCoolingSystemForThisZone: [{
@@ -1024,11 +1064,15 @@ describe("FHS input mapper", () => {
 			},
 			dwellingSpaceLighting: {
 				...baseForm,
-				data: {
-					numberOfBulbs: 6,
-					power: 5,
-					efficacy: 120,
-				},
+				data: [{
+					...baseForm,
+					data: {
+						name: "Bulb 1",
+						numberOfBulbs: 6,
+						power: 5,
+						efficacy: 120,
+					},
+				}],
 			},
 			dwellingSpaceFloors: {
 				dwellingSpaceGroundFloor: {
@@ -1055,6 +1099,12 @@ describe("FHS input mapper", () => {
 				dwellingSpaceExposedFloor: {
 					...baseForm,
 				},
+				dwellingSpaceFloorAboveUnheatedBasement: {
+					...baseForm,
+				},
+				dwellingSpaceFloorOfHeatedBasement: {
+					...baseForm,
+				},
 			},
 			dwellingSpaceWalls: {
 				dwellingSpaceExternalWall: {
@@ -1072,7 +1122,7 @@ describe("FHS input mapper", () => {
 								length: 3,
 								elevationalHeight: 1,
 								surfaceArea: 20,
-								uValue: 1,
+								thermalResistance: 1,
 								colour: "Intermediate",
 								arealHeatCapacity: "Very light",
 								massDistributionClass: "D",
@@ -1087,6 +1137,9 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 				dwellingSpaceWallToUnheatedSpace: {
+					...baseForm,
+				},
+				dwellingSpaceWallOfHeatedBasement: {
 					...baseForm,
 				},
 			},
@@ -1196,106 +1249,70 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const domesticHotWaterNew: DomesticHotWaterNew = {
+		const domesticHotWater: DomesticHotWater = {
 			heatSources: {
 				...baseForm,
+				data: [{
+					...baseForm,
+					data: {
+						id: "dhwHP-1",
+						heatSourceId: "HP-1",
+						isExistingHeatSource: true,
+						coldWaterSource: "mainsWater",
+					},
+				},
+				],
 			},
 			waterStorage: {
 				...baseForm,
+				data: [{
+					...baseForm,
+					data: {
+						id: "some-hot-water-cyclinder",
+						name: "hw cylinder",
+						dhwHeatSourceId: "dhwHP-1",
+						storageCylinderVolume: 200,
+						dailyEnergyLoss: 34,
+						typeOfWaterStorage: "hotWaterCylinder",
+						initialTemperature: 20,
+						areaOfHeatExchanger: 2.5,
+						heaterPosition: 0.1,
+						thermostatPosition: 0.33,
+					},
+				}],
 			},
 			hotWaterOutlets: {
 				...baseForm,
-			},
-			pipework: {
-				...baseForm,
-			},
-		};
-
-		const domesticHotWater: DomesticHotWater = {
-			waterHeating: {
-				hotWaterCylinder: {
-					...baseForm,
-					data: [{
-						...baseForm,
-						data: {
-							id: "some-hot-water-cyclinder",
-							name: "hw cylinder",
-							heatSource: "HP-1",
-							storageCylinderVolume: 200,
-							dailyEnergyLoss: 34,
-						},
-					}],
-				},
-				immersionHeater: {
-					...baseForm,
-				},
-				solarThermal: {
-					...baseForm,
-				},
-				pointOfUse: {
-					...baseForm,
-				},
-				heatPump: {
-					...baseForm,
-				},
-				combiBoiler: {
-					...baseForm,
-				},
-				heatBattery: {
-					...baseForm,
-				},
-				smartHotWaterTank: {
-					...baseForm,
-				},
-				heatInterfaceUnit: {
-					...baseForm,
-				},
-			},
-			hotWaterOutlets: {
-				mixedShower: {
-					...baseForm,
-					data: [{
+				data: [
+					{
 						...baseForm,
 						data: {
 							id: "some-mixer-shower-id",
 							name: "some-mixer-shower-name",
 							flowRate: 14,
+							typeOfHotWaterOutlet: "mixedShower",
+							dhwHeatSourceId: "dhwHP-1",
+							wwhrs: false as const,
 						},
-					}],
-				},
-				electricShower: {
-					...baseForm,
-				},
-				bath: {
-					...baseForm,
-				},
-				otherOutlets: {
-					...baseForm,
-					data: [{
+					},
+					{
 						...baseForm,
 						data: {
-							id: "other",
+							id: "some-mixer-shower-id",
 							name: "other",
 							flowRate: 8,
+							typeOfHotWaterOutlet: "otherHotWaterOutlet",
 						},
-					}],
-				},
+					},
+				],
 			},
 			pipework: {
-				primaryPipework: {
-					...baseForm,
-				},
-				secondaryPipework: {
-					...baseForm,
-				},
-			},
-			wwhrs: {
 				...baseForm,
 			},
 		};
 
 		const pvAndBatteries: PvAndBatteries = {
-			pvSystems: {
+			pvArrays: {
 				...baseForm,
 			},
 			electricBattery: {
@@ -1309,7 +1326,6 @@ describe("FHS input mapper", () => {
 		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
-			domesticHotWaterNew,
 			dwellingFabric,
 			infiltrationAndVentilation,
 			spaceHeating,
@@ -1344,6 +1360,7 @@ describe("FHS input mapper", () => {
 					numOfBathrooms: 1,
 					numOfHabitableRooms: 4,
 					numOfRoomsWithTappingPoints: 2,
+					numOfWetRooms: 2,
 					numOfUtilityRooms: 1,
 					numOfWCs: 1,
 					buildingLength: 10,
@@ -1388,7 +1405,7 @@ describe("FHS input mapper", () => {
 			appliances: {
 				...baseForm,
 				data: {
-					applianceType: ["Clothes_drying", "Fridge-Freezer"],
+					applianceType: ["Clothes_drying", "Fridge-Freezer", "KitchenExtractorHoodExternal"],
 				},
 			},
 		};
@@ -1405,6 +1422,13 @@ describe("FHS input mapper", () => {
 						airFlowRate: 17,
 						mvhrLocation: "inside" as const,
 						mvhrEfficiency: 1,
+						productReference: "1000",
+						midHeightOfAirFlowPathForExhaust: 1.5,
+						orientationOfExhaust: 90,
+						pitchOfExhaust: 10,
+						midHeightOfAirFlowPathForIntake: 1.5,
+						orientationOfIntake: 80,
+						pitchOfIntake: 10,
 					},
 				},
 				{
@@ -1416,6 +1440,13 @@ describe("FHS input mapper", () => {
 						airFlowRate: 3,
 						mvhrLocation: "outside" as const,
 						mvhrEfficiency: 0,
+						productReference: "1000",
+						midHeightOfAirFlowPathForExhaust: 1.5,
+						orientationOfExhaust: 90,
+						pitchOfExhaust: 10,
+						midHeightOfAirFlowPathForIntake: 1.5,
+						orientationOfIntake: 80,
+						pitchOfIntake: 10,
 					},
 				},
 				{
@@ -1425,6 +1456,7 @@ describe("FHS input mapper", () => {
 						name: "centralised MEV name",
 						typeOfMechanicalVentilationOptions: "Centralised continuous MEV",
 						airFlowRate: 8,
+						productReference: "1000",
 					},
 				}],
 			},
@@ -1452,7 +1484,6 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: {
 						name: "only vent",
-						typeOfVent: "airBrick",
 						associatedItemId: externalWallId,
 						effectiveVentilationArea: 75,
 						openingRatio: 0.2,
@@ -1484,7 +1515,8 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: {
 					volume: 550,
-					livingRoomArea: 80,
+					livingZoneArea: 80,
+					groundFloorArea: 60,
 					restOfDwellingArea: 20,
 					// spaceHeatingSystemForThisZone: "instant elec heater 1",
 					// spaceCoolingSystemForThisZone: [],
@@ -1493,11 +1525,15 @@ describe("FHS input mapper", () => {
 			},
 			dwellingSpaceLighting: {
 				...baseForm,
-				data: {
-					numberOfBulbs: 5,
-					power: 5,
-					efficacy: 120,
-				},
+				data: [{
+					...baseForm,
+					data: {
+						name: "Bulb 1",
+						numberOfBulbs: 5,
+						power: 5,
+						efficacy: 120,
+					},
+				}],
 			},
 			dwellingSpaceFloors: {
 				dwellingSpaceGroundFloor: {
@@ -1580,9 +1616,16 @@ describe("FHS input mapper", () => {
 							massDistributionClass: "D",
 							pitch: 180,
 							colour: "Dark",
-							uValue: 0.1,
+							thermalResistance: 0.1,
 						},
 					}],
+				},
+				dwellingSpaceFloorAboveUnheatedBasement: {
+					...baseForm,
+				},
+				dwellingSpaceFloorOfHeatedBasement: {
+					...baseForm,
+					data: [],
 				},
 			},
 			dwellingSpaceWalls: {
@@ -1619,7 +1662,7 @@ describe("FHS input mapper", () => {
 								length: 3,
 								elevationalHeight: 1,
 								surfaceArea: 20,
-								uValue: 1,
+								thermalResistance: 1,
 								colour: "Light",
 								arealHeatCapacity: "Light",
 								massDistributionClass: "D",
@@ -1639,6 +1682,7 @@ describe("FHS input mapper", () => {
 							surfaceAreaOfElement: 15,
 							arealHeatCapacity: "Very light",
 							massDistributionClass: "I",
+							thermalResistance: 1,
 						},
 					}],
 				},
@@ -1652,12 +1696,15 @@ describe("FHS input mapper", () => {
 							pitchOption: "custom",
 							pitch: 90,
 							surfaceAreaOfElement: 20,
-							uValue: 1,
+							thermalResistance: 1,
 							arealHeatCapacity: "Very light",
 							massDistributionClass: "D",
 							thermalResistanceOfAdjacentUnheatedSpace: 2.5,
 						},
 					}],
+				},
+				dwellingSpaceWallOfHeatedBasement: {
+					...baseForm,
 				},
 			},
 			dwellingSpaceCeilingsAndRoofs: {
@@ -1722,14 +1769,14 @@ describe("FHS input mapper", () => {
 						data: {
 							name: "front door",
 							associatedItemId: externalWallId,
+							isTheFrontDoor: false,
 							height: 2.6,
 							width: 1.2,
 							elevationalHeight: 1,
-							surfaceArea: 20,
-							uValue: 1,
 							arealHeatCapacity: "Light",
 							massDistributionClass: "I",
 							colour: "Intermediate",
+							thermalResistance: 12,
 						},
 					}],
 				},
@@ -1741,7 +1788,7 @@ describe("FHS input mapper", () => {
 							name: "external glazed door",
 							height: 3,
 							width: 1,
-							uValue: 0.8,
+							isTheFrontDoor: false,
 							associatedItemId: externalWallId,
 							solarTransmittance: 0.5,
 							elevationalHeight: 0.2,
@@ -1751,6 +1798,9 @@ describe("FHS input mapper", () => {
 							maximumOpenableArea: 3,
 							heightOpenableArea: 2,
 							securityRisk: false,
+							thermalResistance: 12,
+							numberOpenableParts: "1",
+							curtainsOrBlinds: false,
 						},
 					}],
 				},
@@ -1761,6 +1811,7 @@ describe("FHS input mapper", () => {
 						data: {
 							typeOfInternalDoor: "heatedSpace",
 							name: "bathroom door",
+							isTheFrontDoor: false,
 							surfaceArea: 1.4,
 							arealHeatCapacity: "Light",
 							massDistributionClass: "IE",
@@ -1772,6 +1823,7 @@ describe("FHS input mapper", () => {
 						data: {
 							typeOfInternalDoor: "unheatedSpace",
 							name: "door to garage",
+							isTheFrontDoor: false,
 							surfaceArea: 1.4,
 							arealHeatCapacity: "Very light",
 							massDistributionClass: "IE",
@@ -1792,7 +1844,7 @@ describe("FHS input mapper", () => {
 						taggedItem: externalWallId,
 						height: 2,
 						width: 2,
-						uValue: 0.1,
+						thermalResistance: 0.1,
 						securityRisk: true,
 						solarTransmittance: 0.2,
 						elevationalHeight: 1,
@@ -1811,8 +1863,6 @@ describe("FHS input mapper", () => {
 						midHeightOpenablePart1: 1,
 						openingToFrameRatio: 0.8,
 						maximumOpenableArea: 1,
-						heightOpenableArea: 1,
-						curtainsControlObject: "auto_motorised" as const,
 					},
 				}],
 			},
@@ -1923,217 +1973,164 @@ describe("FHS input mapper", () => {
 		};
 
 		const domesticHotWater: DomesticHotWater = {
-			waterHeating: {
-				hotWaterCylinder: {
-					...baseForm,
-					data: [{
-						...baseForm,
-						data: {
-							id: "hw cylinder 1 id",
-							name: "hw cylinder 1 name",
-							heatSource: "heat pump 1 id",
-							storageCylinderVolume: 80,
-							dailyEnergyLoss: 10,
-						},
-					}],
-				},
-				immersionHeater: {
-					...baseForm,
-				},
-				solarThermal: {
-					...baseForm,
-				},
-				pointOfUse: {
-					...baseForm,
-				},
-				heatPump: {
-					...baseForm,
-				},
-				combiBoiler: {
-					...baseForm,
-				},
-				heatBattery: {
-					...baseForm,
-				},
-				smartHotWaterTank: {
-					...baseForm,
-				},
-				heatInterfaceUnit: {
-					...baseForm,
-				},
-			},
-			hotWaterOutlets: {
-				mixedShower: {
-					...baseForm,
-					data: [
-						{
-							...baseForm,
-							data: {
-								id: "mixer shower 1 id",
-								name: "mixer shower 1 name",
-								flowRate: 14,
-							},
-						},
-						{
-							...baseForm,
-							data: {
-								id: "mixer shower 2 id",
-								name: "mixer shower 2 name",
-								flowRate: 12,
-							},
-						},
-					],
-				},
-				electricShower: {
-					...baseForm,
-					data: [
-						{
-							...baseForm,
-							data: {
-								id: "electric shower 1 id",
-								name: "electric shower 1 name",
-								ratedPower: 20,
-							},
-						},
-					],
-				},
-				bath: {
-					...baseForm,
-					data: [
-						{
-							...baseForm,
-							data: {
-								name: "small bath name",
-								id: "small bath id",
-								size: 80,
-							},
-						},
-						{
-							...baseForm,
-							data: {
-								name: "medium bath name",
-								id: "medium bath id",
-								size: 180,
-							},
-						},
-						{
-							...baseForm,
-							data: {
-								name: "large bath name",
-								id: "large bath id",
-								size: 400,
-							},
-						},
-					],
-				},
-				otherOutlets: {
-					...baseForm,
-					data: [
-						{
-							...baseForm,
-							data: {
-								id: "kitchen sink id",
-								name: "kitchen sink name",
-								flowRate: 7.4,
-							},
-						},
-						{
-							...baseForm,
-							data: {
-								id: "bathroom basin id",
-								name: "bathroom basin name",
-								flowRate: 6.4,
-							},
-						},
-						{
-							...baseForm,
-							data: {
-								id: "cloakroom basin id",
-								name: "cloakroom basin name",
-								flowRate: 6.4,
-							},
-						},
-					],
-				},
-			},
-			pipework: {
-				primaryPipework: {
-					...baseForm,
-					data: [{
-						...baseForm,
-						data: {
-							name: "pipework 1",
-							internalDiameter: 15,
-							externalDiameter: 22,
-							length: 5,
-							insulationThickness: 13,
-							thermalConductivity: 0.035,
-							surfaceReflectivity: true,
-							pipeContents: "water",
-							hotWaterCylinder: "hw cylinder 1 id",
-							location: "internal",
-						},
-					},
-					{
-						...baseForm,
-						data: {
-							name: "external pipework",
-							internalDiameter: 28,
-							externalDiameter: 28,
-							length: 32,
-							insulationThickness: 13,
-							thermalConductivity: 0.040,
-							surfaceReflectivity: false,
-							pipeContents: "glycol25",
-							hotWaterCylinder: "hw cylinder 1 id",
-							location: "external",
-						},
-					}],
-				},
-				secondaryPipework: {
-					...baseForm,
-					data: [{
-						...baseForm,
-						data: {
-							name: "secondary pipework",
-							length: 5,
-							location: "internal",
-							internalDiameter: 14,
-						},
-					},
-					{
-						...baseForm,
-						data: {
-							name: "external secondary pipework",
-							length: 15,
-							location: "external",
-							internalDiameter: 20,
-						},
-					}],
-				},
-			},
-			wwhrs: {
-				...baseForm,
-			},
-		};
-
-		const domesticHotWaterNew: DomesticHotWaterNew = {
 			heatSources: {
 				...baseForm,
+				data: [{
+					...baseForm,
+					data: {
+						id: "dhwHP-1",
+						isExistingHeatSource: true,
+						heatSourceId: "HP-1",
+						coldWaterSource: "mainsWater",
+					},
+				}],
 			},
 			waterStorage: {
 				...baseForm,
+				data: [{
+					...baseForm,
+					data: {
+						id: "hw cylinder 1 id",
+						name: "hw cylinder 1 name",
+						dhwHeatSourceId: "dhwHP-1",
+						storageCylinderVolume: 80,
+						dailyEnergyLoss: 10,
+						typeOfWaterStorage: "hotWaterCylinder",
+						initialTemperature: 20,
+						areaOfHeatExchanger: 2.5,
+						heaterPosition: 0.1,
+						thermostatPosition: 0.33,
+					},
+				}],
 			},
 			hotWaterOutlets: {
 				...baseForm,
+				data: [
+					{
+						...baseForm,
+						data: {
+							id: "mixer shower 1 id",
+							name: "mixer shower 1 name",
+							flowRate: 14,
+							typeOfHotWaterOutlet: "mixedShower",
+							dhwHeatSourceId: "dhwHP-1",
+							wwhrs: false as const,
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							id: "mixer shower 2 id",
+							name: "mixer shower 2 name",
+							flowRate: 12,
+							typeOfHotWaterOutlet: "mixedShower",
+							dhwHeatSourceId: "dhwHP-1",
+							wwhrs: false as const,
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							id: "electric shower 1 id",
+							name: "electric shower 1 name",
+							ratedPower: 20,
+							typeOfHotWaterOutlet: "electricShower",
+							wwhrs: false as const,
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							name: "small bath name",
+							id: "small bath id",
+							size: 80,
+							typeOfHotWaterOutlet: "bath",
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							name: "medium bath name",
+							id: "medium bath id",
+							size: 180,
+							typeOfHotWaterOutlet: "bath",
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							name: "large bath name",
+							id: "large bath id",
+							size: 400,
+							typeOfHotWaterOutlet: "bath",
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							id: "kitchen sink id",
+							name: "kitchen sink name",
+							flowRate: 7.4,
+							typeOfHotWaterOutlet: "otherHotWaterOutlet",
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							id: "bathroom basin id",
+							name: "bathroom basin name",
+							flowRate: 6.4,
+							typeOfHotWaterOutlet: "otherHotWaterOutlet",
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							id: "cloakroom basin id",
+							name: "cloakroom basin name",
+							flowRate: 6.4,
+							typeOfHotWaterOutlet: "otherHotWaterOutlet",
+						},
+					},
+				],
 			},
 			pipework: {
 				...baseForm,
+				data: [{
+					...baseForm,
+					data: {
+						name: "pipework 1",
+						internalDiameter: 15,
+						externalDiameter: 22,
+						length: 5,
+						insulationThickness: 13,
+						thermalConductivity: 0.035,
+						surfaceReflectivity: true,
+						pipeContents: "water",
+						waterStorage: "hw cylinder 1 id",
+						location: "heatedSpace",
+					},
+				},
+				{
+					...baseForm,
+					data: {
+						name: "external pipework",
+						internalDiameter: 28,
+						externalDiameter: 28,
+						length: 32,
+						insulationThickness: 13,
+						thermalConductivity: 0.040,
+						surfaceReflectivity: false,
+						pipeContents: "glycol25",
+						waterStorage: "hw cylinder 1 id",
+						location: "unheatedSpace",
+					},
+				}],
 			},
 		};
 
 		const pvAndBatteries: PvAndBatteries = {
-			pvSystems: {
+			pvArrays: {
 				...baseForm,
 				data: [{
 					...baseForm,
@@ -2148,8 +2145,18 @@ describe("FHS input mapper", () => {
 						widthOfPV: 0.5,
 						inverterPeakPowerAC: 3,
 						inverterPeakPowerDC: 3.8,
-						inverterIsInside: true,
+						locationOfInverter: "heated_space",
 						inverterType: "optimised_inverter",
+						canExportToGrid: true,
+						electricityPriority: "diverter",
+						hasShading: true,
+						shading: [{
+							name: "Chimney",
+							typeOfShading: "obstacle" as const,
+							height: 5,
+							distance: 2,
+							transparency: 0,
+						}],
 					},
 				}],
 			},
@@ -2177,7 +2184,6 @@ describe("FHS input mapper", () => {
 		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
-			domesticHotWaterNew,
 			dwellingFabric,
 			infiltrationAndVentilation,
 			spaceHeating,

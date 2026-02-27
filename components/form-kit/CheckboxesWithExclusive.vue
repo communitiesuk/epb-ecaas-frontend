@@ -24,9 +24,9 @@ const handleChange = (value: string) => {
 	const index = optionsSelected.value.indexOf(value);
 
 	if (index >= 0) {
-		optionsSelected.value.splice(index, 1);
+		optionsSelected.value = optionsSelected.value.toSpliced(index, 1);
 	} else {
-		optionsSelected.value.push(value);
+		optionsSelected.value = optionsSelected.value.concat([value]);
 	}
 
 	props.context.node.input(optionsSelected.value.length > 0 ? optionsSelected.value : undefined);

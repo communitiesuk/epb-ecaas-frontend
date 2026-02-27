@@ -78,6 +78,5 @@ export const defaultHeatSourceWetDetails = {
 			temp_test: -7,
 		},
 	],
-	time_delay_backup: 2,
 	var_flow_temp_ctrl_during_test: true,
 } as const satisfies SchemaHeatSourceWetDetails;

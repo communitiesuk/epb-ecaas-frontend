@@ -13,10 +13,9 @@ const zoneParametersSummary: SummarySection = {
 	label: "Zone parameters",
 	data: {
 		"Volume": dim(zoneParametersData.volume, "cubic metres"),
-		"Living zone floor area": dim(zoneParametersData.livingRoomArea, "metres square"),
+		"Living zone floor area": dim(zoneParametersData.livingZoneArea, "metres square"),
+		"Ground floor area": dim(zoneParametersData.groundFloorArea, "metres square"),
 		"Rest of dwelling floor area": dim(zoneParametersData.restOfDwellingArea, "metres square"),
-		// "Heat emitting system for this zone": zoneParametersData.spaceHeatingSystemForThisZone,
-		// "Heating control type": zoneParametersData.heatingControlType
 	},
 	editUrl: getUrl("dwellingSpaceZoneParameters"),
 };
@@ -26,17 +25,21 @@ const lightingData = store.dwellingFabric.dwellingSpaceLighting.data;
 const lightingSummary: SummarySection = {
 	id: "dwellingSpaceLighting",
 	label: "Lighting",
-	data: {
-		"Number of bulbs": show(lightingData.numberOfBulbs),
-		"Power": show(lightingData.power),
-		"Efficacy": show(lightingData.efficacy),
-	},
+	data: lightingData.map(({ data: x }) => {
+		return {
+			"Name": show(x.name),
+			"Number of bulbs": show(x.numberOfBulbs),
+			"Power": dim(x.power, "watt"),
+			"Efficacy": dim(x.efficacy, "lumen per watt"),
+		};
+	}),
 	editUrl: getUrl("dwellingSpaceLighting"),
 };
 
 const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
 const internalFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data;
 const exposedFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data;
+const floorAboveUnheatedBasementData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement?.data;
 
 const groundFloorSummary: SummarySection = {
 	id: "dwellingSpaceGroundFloors",
@@ -107,10 +110,55 @@ const exposedFloorSummary: SummarySection = {
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"U-value": dim(x.uValue, "watts per square metre kelvin"),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
 			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+		};
+	}) || [],
+	editUrl: getUrl("dwellingSpaceFloors"),
+};
+
+const floorAboveUnheatedBasementSummary: SummarySection = {
+	id: "dwellingSpaceFloorOfHeatedBasement",
+	label: "Floors above an unheated basement",
+	data: floorAboveUnheatedBasementData?.map(({ data: x }) => {
+		return {
+			"Name": show(x.name),
+			"Net surface area": dim(x.surfaceArea, "metres square"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"Areal heat capacity": show(x.arealHeatCapacity),
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Perimeter": dim(x.perimeter, "metres"),
+			"PSI value of E6 junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
+			"Thickness of walls at the edge of the floor": dim(x.thicknessOfWalls, "millimetres"),
+			"Depth of the basement floor": dim(x.depthOfBasementFloor, "metres"),
+			"Height of the basement walls": dim(x.heightOfBasementWalls, "metres"),
+			"Thermal resistance of basement walls": dim(x.thermalResistanceOfBasementWalls, "square metre kelvin per watt"),
+			"Thermal transmittance of the basement walls": dim(x.thermalTransmittanceOfBasementWalls, "square metre kelvin per watt"),
+			"Thermal transmittance of the foundations": dim(x.thermalTransmittanceOfFoundations, "watts per square metre kelvin"),
+		};
+	}) || [],
+	editUrl: getUrl("dwellingSpaceFloors"),
+};
+
+const heatedBasementData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement?.data;
+const heatedBasementSummary: SummarySection = {
+	id: "dwellingSpaceFloorOfHeatedBasement",
+	label: "Floors of a heated basement",
+	data: heatedBasementData?.map(({ data: x }) => {
+		return {
+			"Name": show(x.name),
+			"Net surface area of this element": dim(x.surfaceArea, "metres square"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"Areal heat capacity": show(x.arealHeatCapacity),
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Depth of basement floor below ground": dim(x.depthOfBasementFloor, "metres"),
+			"Perimeter": dim(x.perimeter, "metres"),
+			"Psi of wall junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
+			"Thickness of walls": dim(x.thicknessOfWalls, "millimetres"),
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceFloors"),
@@ -120,12 +168,15 @@ const floorSummarySections: SummarySection[] = [
 	groundFloorSummary,
 	internalFloorSummary,
 	exposedFloorSummary,
+	floorAboveUnheatedBasementSummary,
+	heatedBasementSummary,
 ];
 
 const externalWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data;
 const internalWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data;
 const wallToUnheatedSpaceData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data;
 const partyWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data;
+const wallOfHeatedBasementData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallOfHeatedBasement?.data;
 
 const externalWallSummary: SummarySection = {
 	id: "dwellingSpaceExternalWalls",
@@ -139,7 +190,7 @@ const externalWallSummary: SummarySection = {
 			"Length": dim(x.length, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"U-value": dim(x.uValue, "watts per square metre kelvin"),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
 			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
@@ -171,7 +222,7 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
-			"U-value": dim(x.uValue, "watts per square metre kelvin"),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt"),
@@ -199,11 +250,33 @@ const partyWallSummary: SummarySection = {
 	editUrl: getUrl("dwellingSpaceWalls"),
 };
 
+const wallOfHeatedBasementSummary: SummarySection = {
+	id: "dwellingSpaceWallOfHeatedBasement",
+	label: "Walls of a heated basement",
+	data: wallOfHeatedBasementData?.map(({ data: x }) => {
+		const associatedFloor = heatedBasementData?.find(({ data: floor }) => floor.id === x.associatedBasementFloorId);
+		const associatedFloorName = associatedFloor?.data?.name ?? emptyValueRendering;
+		
+		return {
+			"Name": show(x.name),
+			"Net surface area": dim(x.netSurfaceArea, "metres square"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"Areal heat capacity": show(x.arealHeatCapacity),
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Perimeter": dim(x.perimeter, "metres"),
+			"Associated floor": associatedFloorName,
+		};
+	}) || [],
+	editUrl: getUrl("dwellingSpaceWalls"),
+};
+
 const wallSummarySections: SummarySection[] = [
 	externalWallSummary,
 	internalWallSummary,
 	wallToUnheatedSpaceSummary,
 	partyWallSummary,
+	wallOfHeatedBasementSummary,
 ];
 
 const ceilingData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data;
@@ -281,18 +354,29 @@ const unglazedDoorSummary: SummarySection = {
 	data: unglazedDoorData.map(({ data: x }) => {
 		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedItemId);
 
+		let pitch = emptyValueRendering;
+		let orientation = emptyValueRendering;
+
+		if (taggedItem) {
+			pitch = taggedItem.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering;
+			orientation = taggedItem.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering;
+		} else {
+			pitch = x.pitch !== undefined ? dim(x.pitch, "degrees") : emptyValueRendering;
+			orientation = x.orientation !== undefined ? dim(x.orientation, "degrees") : emptyValueRendering;
+		}
+
 		return {
 			"Name": show(x.name),
-			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
-			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,
+			"Pitch": pitch,
+			"Orientation": orientation,
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
-			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"Is this the front door?": displayBoolean(x.isTheFrontDoor), 
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceDoors"),
@@ -304,17 +388,29 @@ const glazedDoorSummary: SummarySection = {
 	data: glazedDoorData.map(({ data: x }) => {
 		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedItemId);
 
+		let pitch = emptyValueRendering;
+		let orientation = emptyValueRendering;
+
+		if (taggedItem) {
+			pitch = taggedItem.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering;
+			orientation = taggedItem.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering;
+		} else {
+			pitch = x.pitch !== undefined ? dim(x.pitch, "degrees") : emptyValueRendering;
+			orientation = x.orientation !== undefined ? dim(x.orientation, "degrees") : emptyValueRendering;
+		}
+
 		return {
 			"Name": show(x.name),
-			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
-			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,
+			"Pitch": pitch,
+			"Orientation": orientation,
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
-			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Transmittance of solar energy": dim(x.solarTransmittance),
 			"Mid height": dim(x.midHeight, "metres"),
 			"Opening to frame ratio": dim(x.openingToFrameRatio),
+			"Is this the front door?": displayBoolean(x.isTheFrontDoor), 
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceDoors"),
@@ -345,6 +441,8 @@ const internalDoorSummary: SummarySection = {
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isInternalDoorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
+			"Is this the front door?": displayBoolean(x.isTheFrontDoor), 
+			"Orientation": "orientation" in x ? x.orientation : emptyValueRendering,
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceDoors"),
@@ -364,10 +462,19 @@ const windowSummary: SummarySection = {
 	data: windowData.map(({ data: x }) => {
 
 		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.taggedItem);
+		let pitch = emptyValueRendering;
+		let orientation = emptyValueRendering;
+
+		if (taggedItem) {
+			pitch = taggedItem.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering;
+			orientation = taggedItem.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering;
+		} else {
+			pitch = x.pitch !== undefined ? dim(x.pitch, "degrees") : emptyValueRendering;
+			orientation = x.orientation !== undefined ? dim(x.orientation, "degrees") : emptyValueRendering;
+		}
 
 		const numberOfOpenableParts = parseInt(x.numberOpenableParts ?? "0");
 
-		const heightOpenableArea = "heightOpenableArea" in x ? dim(x.heightOpenableArea, "metres") : emptyValueRendering;
 		const maximumOpenableArea = "maximumOpenableArea" in x ? dim(x.maximumOpenableArea, "metres square") : emptyValueRendering;
 		const midHeightOpenablePart1 = "midHeightOpenablePart1" in x ? dim(x.midHeightOpenablePart1, "metres") : emptyValueRendering;
 		const midHeightOpenablePart2 = "midHeightOpenablePart2" in x ? dim(x.midHeightOpenablePart2, "metres") : emptyValueRendering;
@@ -375,24 +482,22 @@ const windowSummary: SummarySection = {
 		const midHeightOpenablePart4 = "midHeightOpenablePart4" in x ? dim(x.midHeightOpenablePart4, "metres") : emptyValueRendering;
 
 		const treatmentType = "treatmentType" in x ? displayCamelToSentenceCase(show(x.treatmentType)) : emptyValueRendering;
-		const curtainsControlObject = "curtainsControlObject" in x ? displaySnakeToSentenceCase(x.curtainsControlObject!) : emptyValueRendering;
 		const thermalResistivityIncrease = "thermalResistivityIncrease" in x ? dim(x.thermalResistivityIncrease, "watts per square metre kelvin") : emptyValueRendering;
 		const solarTransmittanceReduction = "solarTransmittanceReduction" in x ? show(x.solarTransmittanceReduction) : emptyValueRendering;
 
 		return {
 			"Name": show(x.name),
-			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
-			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,
+			"Pitch": pitch,
+			"Orientation": orientation,
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
-			"U-value": dim(x.uValue, "watts per square metre kelvin"),
+			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
 			"Transmittance of solar energy": show(x.solarTransmittance),
 			"Mid height": dim(x.midHeight, "metres"),
 			"Opening to frame ratio": show(x.openingToFrameRatio),
 			"Security risk": displayBoolean(x.securityRisk),
 			"Number of openable parts": show(x.numberOpenableParts),
-			"Height of the openable area": numberOfOpenableParts >= 1 ? heightOpenableArea : undefined,
 			"Maximum openable area": numberOfOpenableParts >= 1 ? maximumOpenableArea : undefined,
 			"Mid height of the air flow path for openable part 1": numberOfOpenableParts >= 1 ? midHeightOpenablePart1 : undefined,
 			"Mid height of the air flow path for openable part 2": numberOfOpenableParts >= 2 ? midHeightOpenablePart2 : undefined,
@@ -405,7 +510,6 @@ const windowSummary: SummarySection = {
 			"Side fin left depth": dim(x.sideFinLeftDepth),
 			"Side fin left distance from glass": dim(x.sideFinLeftDistance),
 			"Type": x.curtainsOrBlinds ? treatmentType : undefined,
-			"Curtains control object reference": "treatmentType" in x && x.treatmentType === "curtains" ? curtainsControlObject : undefined,
 			"Thermal resistivity increase": x.curtainsOrBlinds ? thermalResistivityIncrease : undefined,
 			"Solar transmittance reduction": x.curtainsOrBlinds ? solarTransmittanceReduction : undefined,
 		};
@@ -459,7 +563,14 @@ const thermalBridgeSummarySections: SummarySection[] = [
 	</GovTabs>
 
 	<GovTabs v-slot="tabProps" :items="getTabItems([lightingSummary])">
-		<SummaryTab :summary="lightingSummary" :selected="tabProps.currentTab === 0" />
+		<SummaryTab :summary="lightingSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No bulbs added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceLightingCreate')">
+					Add bulb
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 	</GovTabs>
 
 	<GovTabs v-slot="tabProps" :items="getTabItems(floorSummarySections)">
@@ -486,6 +597,24 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<h2 class="govuk-heading-m">No exposed floors added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceExposedFloorCreate')">
 					Add exposed floors
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+
+		<SummaryTab :summary="floorAboveUnheatedBasementSummary" :selected="tabProps.currentTab === 3">
+			<template #empty>
+				<h2 class="govuk-heading-m">No floor above unheated basement added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceFloorAboveUnheatedBasementCreate')">
+					Add floor above unheated basement
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+
+		<SummaryTab :summary="heatedBasementSummary" :selected="tabProps.currentTab === 4">
+			<template #empty>
+				<h2 class="govuk-heading-m">No heated basement floors added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceFloorOfHeatedBasementCreate')">
+					Add floors of a heated basement
 				</NuxtLink>
 			</template>
 		</SummaryTab>
@@ -524,6 +653,15 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<h2 class="govuk-heading-m">No party walls added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpacePartyWallCreate')">
 					Add party walls
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+
+		<SummaryTab :summary="wallOfHeatedBasementSummary" :selected="tabProps.currentTab === 4">
+			<template #empty>
+				<h2 class="govuk-heading-m">No walls of heated basement added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceWallOfHeatedBasementCreate')">
+					Add walls of heated basement
 				</NuxtLink>
 			</template>
 		</SummaryTab>

@@ -7,8 +7,9 @@ const store = useEcaasStore();
 const divertersData = store.pvAndBatteries.diverters.data[0];
 const model = ref(divertersData?.data);
 
-const hotWaterCylinderOptions: [HotWaterCylinderData["id"], HotWaterCylinderData["name"]][] = store.domesticHotWater.waterHeating.hotWaterCylinder.data
-	.filter(x => x.data.id !== undefined).map(x => [x.data.id as string, x.data.name]);
+const hotWaterCylinderOptions: [WaterStorageData["id"], WaterStorageData["name"]][]
+	= store.domesticHotWater.waterStorage.data
+		.filter(x => x.data.id !== undefined).map(x => [x.data.id as string, x.data.name]);
 
 const saveForm = (fields: PvDiverterData) => {
 	store.$patch((state) => {
@@ -102,9 +103,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required"
 				:value="hotWaterCylinderOptions.length === 1 && hotWaterCylinderOptions[0]![0]" 
 			>
-				<div v-if="!store.domesticHotWater.waterHeating.hotWaterCylinder.data.length">
+				<div v-if="!store.domesticHotWater.waterStorage.data.length">
 					<p class="govuk-error-message">No hot water cylinder added.</p>
-					<NuxtLink :to="getUrl('waterHeating')" class="govuk-link gov-radios-add-link">
+					<NuxtLink :to="getUrl('waterStorageCreate')" class="govuk-link gov-radios-add-link">
 						Click here to add a hot water cylinder
 					</NuxtLink>
 				</div>

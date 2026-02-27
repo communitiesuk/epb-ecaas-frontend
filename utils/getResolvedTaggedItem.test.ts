@@ -9,7 +9,7 @@ describe("getResolvedTaggedItem", () => {
 		height: 0.5,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		uValue: 1,
+		thermalResistance: 1,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
@@ -26,7 +26,6 @@ describe("getResolvedTaggedItem", () => {
 
 	const vent1: VentData = {
 		name: "Vent 1",
-		typeOfVent: "trickle",
 		associatedItemId: externalWall1.id,
 		effectiveVentilationArea: 10,
 		openingRatio: 1,
@@ -45,7 +44,7 @@ describe("getResolvedTaggedItem", () => {
 		taggedItem: externalWall1.id,
 		height: 1,
 		width: 1,
-		uValue: 1,
+		thermalResistance: 1,
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,

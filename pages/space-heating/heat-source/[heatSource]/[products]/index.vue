@@ -6,15 +6,20 @@ import { productTypeMap, type PcdbProduct } from "~/stores/ecaasStore.schema";
 definePageMeta({ layout: false });
 
 const store = useEcaasStore();
-const { pageId, title, index, searchModel, searchData } = useProductsPage("heatSource");
+const route = useRoute();
+const pageId = kebabToCamelCase(route.params.products as string);
+
+const heatSourceProductType = pageId as HeatSourceProductType;
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
-		technologyType: productTypeMap[pageId as HeatSourceProductType],
+		technologyType: productTypeMap[heatSourceProductType],
 	},
 });
 
-const { productData, pagination } = searchData(value?.data ?? []);
+const { title, index, searchModel, searchData } = useProductsPage("heatSource");
+
+const { pagination } = searchData(value?.data ?? []);
 
 const selectProduct = (product: DisplayProduct) => {
 	store.$patch((state) => {
@@ -23,9 +28,26 @@ const selectProduct = (product: DisplayProduct) => {
 
 		if (item) {
 			const data = item.data as HeatSourceData;
+
+			if (data.typeOfHeatSource === "heatNetwork" &&
+				data.usesHeatInterfaceUnits &&
+				heatSourceProductType === "heatInterfaceUnit"
+			) {
+				data.heatInterfaceUnitProductReference = product.id;
+				return;
+			}
 			
 			if (data.typeOfHeatSource === "heatNetwork" && !data.isHeatNetworkInPcdb) {
 				return;
+			}
+			
+			if (data.typeOfHeatSource === "boiler") {
+				if (product.boilerLocation === "internal") {
+					data.locationOfBoiler = "heatedSpace";
+					data.locationFromPcdb = true;
+				} else {
+					data.locationFromPcdb = false;
+				}
 			}
 
 			if (data.typeOfHeatSource === "heatPump") {
@@ -33,7 +55,7 @@ const selectProduct = (product: DisplayProduct) => {
 				data.powerMaxBackup = product.powerMaxBackup;
 			}
 
-			(item.data as PcdbProduct).productReference = product.id.toString();
+			(item.data as PcdbProduct).productReference = product.id;
 		}
 	});
 
@@ -46,11 +68,38 @@ const selectProduct = (product: DisplayProduct) => {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<ProductSearch v-if="!!productData" :products="productData" :model="searchModel" />
-	<GovProductsTable
-		:products="pagination.getData()"
-		:total-pages="pagination.totalPages"
-		:on-select-product="selectProduct" />
+	<template v-if="heatSourceProductType === 'heatNetwork'">
+		<ProductSearch
+			:model="searchModel"
+			:search-options="{
+				networkName: 'Network name',
+				productId: 'Product ID',
+			}"
+		>
+			<FieldsProductSearch
+				v-if="searchModel.searchOption !== 'productId'"
+				id="searchTerm"
+				name="searchTerm"
+				label="Search network name"
+				placeholder="Enter network name"
+				:value="searchModel.searchTerm"
+			/>
+		</ProductSearch>
+		<HeatNetworkProductsTable
+			v-if="heatSourceProductType === 'heatNetwork'"
+			:products="pagination.getData()"
+			:total-pages="pagination.totalPages"
+			:on-select-product="selectProduct"
+		/>
+	</template>
+	<template v-else>
+		<ProductSearch :model="searchModel" />
+		<GovProductsTable
+			:products="pagination.getData()"
+			:total-pages="pagination.totalPages"
+			:on-select-product="selectProduct"
+		/>
+	</template>
 	<GovButton secondary :href="`/space-heating/heat-source/${index}`" test-id="backToHeatSourceButton">
 		Back to heat source
 	</GovButton>

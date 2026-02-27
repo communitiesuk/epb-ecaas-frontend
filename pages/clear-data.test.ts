@@ -24,10 +24,10 @@ describe("clear data page", () => {
 
 		const state: DwellingSpaceZoneParametersData = {
 			volume: 10,
-			livingRoomArea: 15,
-			restOfDwellingArea: 20,
-			spaceCoolingSystemForThisZone: [],
-			spaceHeatControlSystemForThisZone: [],
+			livingZoneArea: 15,
+			groundFloorArea: 12,
+			restOfDwellingArea: 8,
+
 		};
 
 		store.$patch({
@@ -49,7 +49,7 @@ describe("clear data page", () => {
 
 	it("navigates to task list when back link is clicked", async () => {
 		const user = userEvent.setup();
-		
+
 		await renderSuspended(ClearData);
 
 		await user.click(screen.getByTestId("backLink"));
@@ -59,7 +59,7 @@ describe("clear data page", () => {
 
 	it("navigates to task list when go back to task list link is clicked", async () => {
 		const user = userEvent.setup();
-		
+
 		await renderSuspended(ClearData);
 
 		await user.click(screen.getByTestId("taskListLink"));

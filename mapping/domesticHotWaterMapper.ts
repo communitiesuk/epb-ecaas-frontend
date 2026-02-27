@@ -1,8 +1,9 @@
-import type { SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower, SchemaWaterPipework, SchemaColdWaterSourceType } from "~/schema/aliases";
-import type { SchemaStorageTank } from "~/schema/api-schema.types";
+import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaWaterPipework, SchemaStorageTank } from "~/schema/aliases";
+import type { SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
-import { asLitres } from "../utils/units/volume";
+import { asLitres } from "~/utils/units/volume";
+
 
 export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputSchema> {
 	const showers = mapShowersData(state);
@@ -23,25 +24,42 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 }
 
 function mapShowersData(state: ResolvedState) {
-	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.mixedShower.map((x): [string, SchemaShower] => {
+	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "mixedShower").map((x): [string, SchemaMixerShower] => {
 		const key = x.name;
-		const val: SchemaShower = {
+		const WWHRS_configuration = {
+			instantaneousSystemA: "A",
+			instantaneousSystemB: "B",
+			instantaneousSystemC: "C",
+		} as const;
+		const dhwHotWaterSource = state.domesticHotWater.heatSources.find(hs => hs.id === x.dhwHeatSourceId);
+		const val: SchemaMixerShower = {
 			type: "MixerShower",
 			ColdWaterSource: "mains water",
 			flowrate: x.flowRate,
+			allow_low_flowrate: false, // would be true for air-powered showers
+			HotWaterSource: dhwHotWaterSource?.isExistingHeatSource
+				? dhwHotWaterSource?.heatSourceId
+				: dhwHotWaterSource?.id,
 		};
+		if (x.wwhrs) {
+			val.WWHRS = x.wwhrsProductReference;
+			val.WWHRS_configuration = WWHRS_configuration[x.wwhrsType];
+		}
+
+
 
 		return [key, val];
 	});
 
-	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.electricShower.map((x): [string, SchemaShower] => {
+	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "electricShower").map((x): [string, SchemaInstantElecShower] => {
 		const key = x.name;
-		const val: SchemaShower = {
+		const val: SchemaInstantElecShower = {
 			type: "InstantElecShower",
 			ColdWaterSource: "mains water",
 			rated_power: x.ratedPower,
 			EnergySupply: defaultElectricityEnergySupplyName,
 		};
+
 
 		return [key, val];
 	});
@@ -50,7 +68,7 @@ function mapShowersData(state: ResolvedState) {
 }
 
 function mapBathsData(state: ResolvedState) {
-	const bathEntries = state.domesticHotWater.hotWaterOutlets.bath.map((x): [string, SchemaBathDetails] => {
+	const bathEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "bath").map((x): [string, SchemaBathDetails] => {
 		const key = x.name;
 		const val: SchemaBathDetails = {
 			ColdWaterSource: "mains water",
@@ -64,7 +82,7 @@ function mapBathsData(state: ResolvedState) {
 }
 
 function mapOthersData(state: ResolvedState) {
-	const otherEntries = state.domesticHotWater.hotWaterOutlets.otherOutlets.map((x): [string, SchemaOtherWaterUseDetails] => {
+	const otherEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "otherHotWaterOutlet").map((x): [string, SchemaOtherWaterUseDetails] => {
 		const key = x.name;
 		const val: SchemaOtherWaterUseDetails = {
 			ColdWaterSource: "mains water",
@@ -78,53 +96,88 @@ function mapOthersData(state: ResolvedState) {
 }
 
 export function mapHotWaterSourcesData(state: ResolvedState) {
-	return state.domesticHotWater.waterHeating.hotWaterCylinder.map((x): SchemaHotWaterSourceDetails => {
-		const referencedHeatPump = state.spaceHeating.heatSource?.find(source => source.id === x.heatSource);
-		const heatPumpName = referencedHeatPump ? referencedHeatPump.name : "heat pump";
-		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.filter(pipework => pipework.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
+	return state.domesticHotWater.waterStorage.map((ws): SchemaHotWaterSourceDetails => {
+
+		const referencedHeatSource = state.domesticHotWater.heatSources
+			.find(heatSource => heatSource.id === ws.dhwHeatSourceId);
+
+		if (!referencedHeatSource) {
+			throw new Error("referenced heat source for water storage not found");
+		}
+
+		const heatSourceName = referencedHeatSource.isExistingHeatSource
+			? state.spaceHeating.heatSource
+				.find(hs => hs.id === referencedHeatSource.heatSourceId)?.name ?? "Heat source"
+			: referencedHeatSource.name;
+
+		const coldWaterSource: SchemaColdWaterSourceType = ({
+			mainsWater: "mains water",
+			headerTank: "header tank",
+		} as const)[referencedHeatSource.coldWaterSource];
+
+		const pipeworkEntries = state.domesticHotWater.pipework.map((x): SchemaWaterPipework => {
+			if (x.location !== "heatedSpace" && x.location !== "unheatedSpace") {
+				throw new Error("invalid location property on pipework");
+			}
 			return {
-				location: x.location,
+				location: x.location === "heatedSpace" ? "internal" : "external",
 				internal_diameter_mm: x.internalDiameter,
 				external_diameter_mm: x.externalDiameter,
 				length: x.length,
 				insulation_thermal_conductivity: x.thermalConductivity,
 				insulation_thickness_mm: x.insulationThickness,
-
-
-
 				surface_reflectivity: x.surfaceReflectivity,
 				pipe_contents: x.pipeContents,
 			};
 		});
 
-		let storageCylinderVolumeInLitres: number;
+		if (ws.typeOfWaterStorage === "hotWaterCylinder") {
+			let storageCylinderVolumeInLitres: number;
 
-		if (typeof x.storageCylinderVolume === "number") {
-			storageCylinderVolumeInLitres = x.storageCylinderVolume;
-		} else {
-			storageCylinderVolumeInLitres = asLitres(x.storageCylinderVolume);
-		}
-
-		const val: SchemaStorageTank & { ColdWaterSource: SchemaColdWaterSourceType } = {
-			daily_losses: x.dailyEnergyLoss,
-			type: "StorageTank",
-			volume: storageCylinderVolumeInLitres,
-			ColdWaterSource: "mains water" as SchemaColdWaterSourceType, // a cold water source is de facto required here
-			HeatSource: {
-				// Adding these values as default until heat pump is set up to come from PCDB
-				[heatPumpName]: {
-					name: heatPumpName,
-					EnergySupply: defaultElectricityEnergySupplyName,
-					heater_position: 0.1,
-					type: "HeatSourceWet",
-					thermostat_position: 0.33,
-					temp_flow_limit_upper: 65,
+			if (typeof ws.storageCylinderVolume === "number") {
+				storageCylinderVolumeInLitres = ws.storageCylinderVolume;
+			} else {
+				storageCylinderVolumeInLitres = asLitres(ws.storageCylinderVolume);
+			}
+			
+			const val: SchemaStorageTank & { ColdWaterSource: SchemaColdWaterSourceType } = {
+				daily_losses: ws.dailyEnergyLoss,
+				type: "StorageTank",
+				volume: storageCylinderVolumeInLitres,
+				ColdWaterSource: coldWaterSource,
+				HeatSource: {
+					[heatSourceName]: {
+						name: heatSourceName,
+						EnergySupply: defaultElectricityEnergySupplyName,
+						heater_position: ws.heaterPosition,
+						type: "HeatSourceWet",
+						thermostat_position: ws.thermostatPosition,
+						temp_flow_limit_upper: 65,
+					},
 				},
-			},
-			...(primaryPipeworkEntries.length !== 0 ? { primary_pipework: primaryPipeworkEntries } : {}),
-			init_temp: 20.0, // TODO this is an initial guess; decide on number, if one needs to be passed
-		};
+				...(pipeworkEntries.length !== 0 ? { primary_pipework: pipeworkEntries } : {}),
+				init_temp: ws.initialTemperature,
+			};
+			return val;
+		} else if (ws.typeOfWaterStorage === "smartHotWaterTank") {
+			//error here is because the FHS schema json file needs to be updated to support product reference types on smart hot water tanks
+			const val: SchemaSmartHotWaterTank & { ColdWaterSource: SchemaColdWaterSourceType } = {
+				type: "SmartHotWaterTank",
+				product_reference: ws.productReference,
+				EnergySupply_pump: defaultElectricityEnergySupplyName,
+				ColdWaterSource: coldWaterSource,
+				HeatSource: {
+					[heatSourceName]: {
+						name: heatSourceName,
+						EnergySupply: ws.energySupply,
+						heater_position: ws.heaterPosition,
+						type: "HeatSourceWet",
+					},
+				},
+				...(pipeworkEntries.length !== 0 ? { primary_pipework: pipeworkEntries } : {}),
+			};
+			return val;
+		} else throw new Error("invalid water storage type");
 
-		return val;
 	});
 }

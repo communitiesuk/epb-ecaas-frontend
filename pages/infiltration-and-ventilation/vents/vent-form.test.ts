@@ -27,7 +27,7 @@ describe("vent", () => {
 		height: 0.5,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		uValue: 1,
+		thermalResistance: 1,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
@@ -35,7 +35,6 @@ describe("vent", () => {
 
 	const state: VentData = {
 		name: "Vent 1",
-		typeOfVent: "trickle",
 		associatedItemId: externalWall.id,
 		effectiveVentilationArea: 10,
 		openingRatio: 1,
@@ -56,7 +55,6 @@ describe("vent", () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Vent 1");
-		await user.click(screen.getByTestId("typeOfVent_trickle"));
 		await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
 		await user.type(screen.getByTestId("effectiveVentilationArea"), "10");
 		await user.type(screen.getByTestId("midHeightOfZone"), "1");
@@ -98,11 +96,6 @@ describe("vent", () => {
 		);
 		expect(
 			(
-				await screen.findByTestId<HTMLInputElement>("typeOfVent_trickle")
-			).hasAttribute("checked"),
-		).toBe(true);
-		expect(
-			(
 				await screen.findByTestId<HTMLInputElement>(
 					`associatedItemId_${externalWall.id}`,
 				)
@@ -123,7 +116,6 @@ describe("vent", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(await screen.findByTestId("name_error")).toBeDefined();
-		expect(await screen.findByTestId("typeOfVent_error")).toBeDefined();
 		expect(await screen.findByTestId("associatedItemId_error")).toBeDefined();
 		expect(
 			await screen.findByTestId("effectiveVentilationArea_error"),
@@ -161,13 +153,11 @@ describe("vent", () => {
 		await user.clear(screen.getByTestId("name"));
 
 		await user.type(screen.getByTestId("name"), "Vent 2");
-		await user.click(screen.getByTestId("typeOfVent_airBrick"));
 		await user.tab();
 
 		const { data } = store.infiltrationAndVentilation.vents;
 
 		expect(data[0]?.data.name).toBe("Vent 2");
-		expect(data[0]?.data.typeOfVent).toBe("airBrick");
 	});
 
 	test("partial form data is saved automatically with default name to store when adding new heater", async () => {
@@ -177,7 +167,7 @@ describe("vent", () => {
 			},
 		});
 
-		await user.click(screen.getByTestId("typeOfVent_airBrick"));
+		await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
 		await user.tab();
 
 		const { data } = store.infiltrationAndVentilation.vents;
@@ -205,7 +195,7 @@ describe("vent", () => {
 		expect(new URL(addWallsLink.href).pathname).toBe(
 			getUrl("dwellingSpaceWalls"),
 		);
-    
+
 		expect(new URL(addWindowsLink.href).pathname).toBe(
 			getUrl("dwellingSpaceWindows"),
 		);

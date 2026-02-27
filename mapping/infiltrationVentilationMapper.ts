@@ -36,7 +36,7 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 }
 
 export function mapMechanicalVentilationData(state: ResolvedState) {
-	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map((x):[string, SchemaMechanicalVentilation] => {
+	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map((x): [string, SchemaMechanicalVentilation] => {
 		let airFlowRateInCubicMetresPerHour: number;
 
 		if (typeof x.airFlowRate === "number") {
@@ -44,12 +44,12 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 		} else {
 			airFlowRateInCubicMetresPerHour = asCubicMetresPerHour(x.airFlowRate);
 		}
-		
+
 		const key = x.name;
 		const commonFields = {
 			design_outdoor_air_flow_rate: airFlowRateInCubicMetresPerHour,
 			sup_air_flw_ctrl: "ODA",
-			sup_air_temp_ctrl: "CONST",
+			sup_air_temp_ctrl: "NO_CTRL",
 			EnergySupply: defaultElectricityEnergySupplyName,
 		} as const satisfies SchemaMechVentCommon;
 
@@ -64,11 +64,19 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					...commonFields,
 					mvhr_location: x.mvhrLocation,
 					mvhr_eff: x.mvhrEfficiency,
-					position_exhaust: {},
 					ductwork: [],
-					position_intake: {},
 					measured_air_flow_rate: 37,
 					measured_fan_power: 12.26,
+					position_exhaust: {
+						mid_height_air_flow_path: x.midHeightOfAirFlowPathForExhaust,
+						orientation360: x.orientationOfExhaust,
+						pitch: x.pitchOfExhaust,
+					},
+					position_intake: {
+						mid_height_air_flow_path: x.midHeightOfAirFlowPathForIntake,
+						orientation360: x.orientationOfIntake,
+						pitch: x.pitchOfIntake,
+					},
 				};
 				break;
 			case "Centralised continuous MEV":

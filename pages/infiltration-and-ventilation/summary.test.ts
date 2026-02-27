@@ -18,6 +18,13 @@ const mechanicalVentilationData: MechanicalVentilationData = {
 	airFlowRate: 12,
 	mvhrLocation: "inside",
 	mvhrEfficiency: 0.2,
+	productReference: "1000",
+	midHeightOfAirFlowPathForExhaust: 1.5,
+	orientationOfExhaust: 90,
+	pitchOfExhaust: 10,
+	midHeightOfAirFlowPathForIntake: 1.5,
+	orientationOfIntake: 80,
+	pitchOfIntake: 10,
 };
 
 const ductworkData: DuctworkData = {
@@ -43,14 +50,13 @@ const externalWall: ExternalWallData = {
 	height: 0.5,
 	elevationalHeight: 20,
 	surfaceArea: 10,
-	uValue: 1,
+	thermalResistance: 1,
 	colour: "Intermediate",
 	arealHeatCapacity: "Very light",
 	massDistributionClass: "I",
 };
 const ventData: VentData = {
 	name: "Vent 1",
-	typeOfVent: "trickle",
 	associatedItemId: externalWall.id,
 	effectiveVentilationArea: 10,
 	openingRatio: 1,
@@ -198,7 +204,6 @@ describe("Infiltration and ventilation summary", () => {
 
 		const expectedResult = {
 			Name: "Vent 1",
-			"Type of vent": "Trickle",
 			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
 			"Mid height of zone": `1 ${metre.suffix}`,
 			Orientation: `0 ${degrees.suffix}`,
@@ -231,7 +236,6 @@ describe("Infiltration and ventilation summary", () => {
 
 		const ventData: Partial<VentData> = {
 			name: "Vent 1",
-			typeOfVent: "trickle",
 			associatedItemId: window1.id,
 		};
 
@@ -257,7 +261,6 @@ describe("Infiltration and ventilation summary", () => {
 
 		const expectedResult = {
 			Name: "Vent 1",
-			"Type of vent": "Trickle",
 			Orientation: `77 ${degrees.suffix}`,
 			Pitch: `66 ${degrees.suffix}`,
 		};

@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { getUrl } from "#imports";
 import formatData from "~/utils/format-data";
 import hyphenate from "~/utils/hyphenate";
+import type { SummaryWithLink } from "~/pages/domestic-hot-water/summary.vue";
 
 export type SummaryData = {
-	[key: string]: string | number | boolean | string[] | undefined;
+	[key: string]: string | number | boolean | string[] | SummaryWithLink | undefined;
 };
 
 const props = defineProps<{ data: SummaryData | SummaryData[]; id: string; }>();
@@ -49,7 +51,19 @@ const overflow = Array.isArray(props.data) && props.data.length > 3;
 											</li>
 										</ul>
 									</template>
-									<template v-if="!Array.isArray(entryProp)">
+									<template v-if="!Array.isArray(entryProp) && typeof entryProp === 'object' && 'link' in entryProp">
+										<div class="summary-link-block">
+											<div >{{ entryProp.text }}</div>
+											<NuxtLink
+												:to="getUrl(entryProp.link)"
+												class="govuk-link"
+											>
+												{{ entryProp.linkText }}
+											</NuxtLink>
+										</div>
+									</template>
+
+									<template v-else>
 										{{ entryProp }}
 									</template>
 								</dd>
@@ -81,4 +95,24 @@ const overflow = Array.isArray(props.data) && props.data.length > 3;
 		margin: 0;
 		list-style-type: none;
 	}
+	.summary-link-block {
+  display: block;  
+  max-width: 100%;
+}
+
+.summary-link-block div {
+  margin-bottom: 4px;
+}
+
+.govuk-link {
+  display: inline-block; 
+  white-space: normal;   
+  word-break: break-word; 
+  overflow-wrap: break-word;
+}
+
+.govuk-summary-list-overflow .govuk-summary-list__value {
+  min-width: 150px;
+  max-width: 150px;
+}
 </style>

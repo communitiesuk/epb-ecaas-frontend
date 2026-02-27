@@ -11,15 +11,22 @@ const route = useRoute();
 </script>
 
 <template>
-	<div class="govuk-form-group">
-
+	<div class="govuk-form-group" data-testid="productsTable">
 		<table class="govuk-table govuk-!-margin-top-4">
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row">
-					<th scope="col" class="govuk-table__header">Product ID</th>
-					<th scope="col" class="govuk-table__header">Brand</th>
-					<th scope="col" class="govuk-table__header">Model</th>
-					<th scope="col" class="govuk-table__header">Model qualifier</th>
+					<th scope="col" class="govuk-table__header govuk-table__header--id">
+						<ColumnSort label="Product ID" field="id" />
+					</th>
+					<th scope="col" class="govuk-table__header govuk-table__header--brand">
+						<ColumnSort label="Brand" field="brandName" />
+					</th>
+					<th scope="col" class="govuk-table__header">
+						<ColumnSort label="Model" field="modelName" />
+					</th>
+					<th scope="col" class="govuk-table__header govuk-table__header--model-qualifier">
+						<ColumnSort label="Model qualifier" field="modelQualifier" />
+					</th>
 					<th class="govuk-table__header">&nbsp;</th>
 				</tr>
 			</thead>
@@ -34,13 +41,14 @@ const route = useRoute();
 					<td class="govuk-table__cell">{{ product.brandName }}</td>
 					<td class="govuk-table__cell">{{ product.modelName }}</td>
 					<td class="govuk-table__cell">{{ product.modelQualifier ?? '-' }}</td>
-					<td class="govuk-table__cell" style="white-space:nowrap;">
+					<td class="govuk-table__cell govuk-table__cell--select">
 						<NuxtLink :href="`${route.path}/${product.id}`" class="govuk-link govuk-!-margin-right-3">
 							More details
 						</NuxtLink>
 						<GovButton
 							type="button"
 							secondary
+							classes="govuk-!-margin-bottom-0"
 							:test-id="`selectProductButton_${index}`"
 							@click="() => onSelectProduct(product)"
 						>
@@ -56,7 +64,21 @@ const route = useRoute();
 </template>
 
 <style scoped lang="scss">
-.govuk-table__header {
-	color:  #1d70b8
+.govuk-table__header--id {
+	width: 120px;
+}
+
+.govuk-table__header--brand {
+	width: 150px;
+}
+
+.govuk-table__header--model-qualifier {
+	width: 145px;
+}
+
+.govuk-table__cell--select {
+	white-space: nowrap;
+	text-align: right;
+	width: 200px;
 }
 </style>

@@ -195,6 +195,92 @@ export const fancoilZod = BaseProduct.extend({
 
 export type FanCoilProduct = z.infer<typeof fancoilZod>;
 
+export const electricStorageHeaterZod = BaseProduct.extend({
+	technologyType: z.literal("StorageHeater"),
+	backupPower: z.nullable(z.number()),
+	storageCapacity: z.nullable(z.number()),
+	ratedPower: z.nullable(z.number()),
+	airFlowType: z.nullable(z.number()),
+	convectiveFraction: z.nullable(z.number()),
+	heatRetention: z.nullable(z.number()),
+	ratedFanPower: z.nullable(z.number()),
+	pwrIn: z.nullable(z.number()),
+	outputPower: z.nullable(z.number()),
+	highHeatRetention: z.nullable(z.number()),
+	controlType: z.nullable(z.string()),
+});
+
+export type ElectricStorageHeaterProduct = z.infer<typeof electricStorageHeaterZod>;
+
+export const heatInterfaceUnitZod = BaseProduct.extend({
+	technologyType: z.literal("HeatInterfaceUnit"),
+	powerCircPump: z.nullable(z.number()),
+	maxPowerWater70: z.nullable(z.number()),
+	vwart70: z.nullable(z.number()),
+	maxPowerWater55: z.nullable(z.number()),
+	hiuDailyLoss: z.nullable(z.number()),
+	vwart55: z.nullable(z.number()),
+	powerAux: z.nullable(z.number()),
+});
+
+export type HeatInterfaceUnitProduct = z.infer<typeof heatInterfaceUnitZod>;
+
+export const centralisedMvhrZod = BaseProduct.extend({
+	technologyType: z.literal("CentralisedMvhr"),
+	summerBypass: z.nullable(z.number()),
+	integralOnly: z.nullable(z.number()),
+});
+
+export type CentralisedMvhrProduct = z.infer<typeof centralisedMvhrZod>;
+
+export const centralisedContinuousMevZod = BaseProduct.extend({
+	technologyType: z.literal("CentralisedMev"),
+	integralOnly: z.nullable(z.number()),
+});
+
+export type CentralisedContinuousMevProduct = z.infer<typeof centralisedContinuousMevZod>;
+
+export const decentralisedContinuousMevZod = BaseProduct.extend({
+	technologyType: z.literal("DecentralisedMev"),
+});
+
+export type DecentralisedMevProduct = z.infer<typeof decentralisedContinuousMevZod>;
+
+const _mevProductSchema = z.discriminatedUnion("technologyType", [
+	centralisedContinuousMevZod,
+	decentralisedContinuousMevZod,
+]);
+
+export type MevProduct = z.infer<typeof _mevProductSchema>;
+
+const instantElectricHeaterZod = BaseProduct.extend({
+	technologyType: z.literal("DirectElectricHeaters"),
+	c: z.nullable(z.number()),
+	thermalMass: z.nullable(z.number()),
+	n: z.nullable(z.number()),
+});
+
+export type InstantElectricHeaterProduct = z.infer<typeof instantElectricHeaterZod>;
+
+const heatNetworkZod = BaseProduct.extend({
+	technologyType: z.literal("HeatNetworks"),
+	percentageOfHeat1: z.nullable(z.number()),
+	percentageOfHeat2: z.nullable(z.number()),
+	percentageOfHeat3: z.nullable(z.number()),
+	year: z.nullable(z.number()),
+	communityHeatNetworkVersionNumber: z.nullable(z.number()),
+	heatSource2: z.nullable(z.string()),
+	numberOfSubheatNetworks: z.nullable(z.number()),
+	fifthGearHeatNetwork: z.nullable(z.number()),
+	heatSource1: z.nullable(z.string()),
+	validityEndDate: z.nullable(z.string()),
+	communityHeatNetworkName: z.nullable(z.string()),
+	postcodeOfThePrimaryEnergyCentre: z.nullable(z.string()),
+	descriptionOfNetwork: z.nullable(z.string()),
+});
+
+export type HeatNetworkProduct = z.infer<typeof heatNetworkZod>;
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	airSourceHeatPumpZod,
 	groundSourceHeatPumpZod,
@@ -210,6 +296,13 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	heatBatteryDryCoreZod,
 	smartHotWaterTankZod,
 	fancoilZod,
+	electricStorageHeaterZod,
+	heatInterfaceUnitZod,
+	centralisedMvhrZod,
+	centralisedContinuousMevZod,
+	decentralisedContinuousMevZod,
+	instantElectricHeaterZod,
+	heatNetworkZod,
 ]);
 
 export type Product = z.infer<typeof productSchema>;
@@ -237,18 +330,25 @@ const categoryTechnologies = {
 		"HeatBatteryPCM",
 		"HeatBatteryDryCore",
 	],
+	heatNetworks: ["HeatNetworks"],
+	heatInterfaceUnit: ["HeatInterfaceUnit"],
 	waterStorage: ["SmartHotWaterTank"],
 	heatEmitting: [
 		"FanCoils",
+		"StorageHeater",
+		"DirectElectricHeaters",
 	],
+	mechanicalVentilation: ["CentralisedMvhr", "CentralisedMev", "DecentralisedMev"],
 } as const satisfies Record<string, TechnologyType[]>;
 
 export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMap(x => categoryTechnologies[x]);
 
 export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier"> & {
-	technologyType: TechnologyType,
-	backupCtrlType?: string,
-	powerMaxBackup?: number
+	technologyType: TechnologyType;
+	boilerLocation?: string;
+	communityHeatNetworkName?: string;
+	backupCtrlType?: string;
+	powerMaxBackup?: number;
 };
 
 export type DisplayProductWithFlowTemp = DisplayProduct & {

@@ -1,9 +1,9 @@
 type EcaasSectionWithTagging =
-  | WindowData
-  | ExternalWallData
-  | InternalWallData
-  | RoofData
-  | CeilingData;
+	| WindowData
+	| ExternalWallData
+	| InternalWallData
+	| RoofData
+	| CeilingData;
 
 export const getResolvedTaggedItem = (
 	sections: EcaasSectionWithTagging[][],
@@ -13,7 +13,7 @@ export const getResolvedTaggedItem = (
 	if (topLevelTaggedItem) return topLevelTaggedItem;
 
 	const nestedTaggedItem = getResolvedNestedTaggedItem(sections, id);
-	if (nestedTaggedItem && "taggedItem" in nestedTaggedItem) {
+	if (nestedTaggedItem && "taggedItem" in nestedTaggedItem && nestedTaggedItem.taggedItem) {
 		return getResolvedTaggedItem(sections, nestedTaggedItem.taggedItem);
 	}
 };

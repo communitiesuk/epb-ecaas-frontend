@@ -109,12 +109,15 @@ describe("Ecaas Store", () => {
 					dwellingSpaceExposedFloor: { complete: true },
 					dwellingSpaceInternalFloor: { complete: true },
 					dwellingSpaceGroundFloor: { complete: true },
+					dwellingSpaceFloorAboveUnheatedBasement: { complete: true },
+					dwellingSpaceFloorOfHeatedBasement: { complete: true },
 				},
 				dwellingSpaceWalls: {
 					dwellingSpaceExternalWall: { complete: true },
 					dwellingSpaceInternalWall: { complete: true },
 					dwellingSpaceWallToUnheatedSpace: { complete: true },
 					dwellingSpacePartyWall: { complete: true },
+					dwellingSpaceWallOfHeatedBasement: { complete: true },
 				},
 				dwellingSpaceCeilingsAndRoofs: {
 					dwellingSpaceCeilings: { complete: true },
@@ -193,6 +196,12 @@ describe("Ecaas Store", () => {
 					dwellingSpaceInternalFloor: {
 						complete: true,
 					},
+					dwellingSpaceFloorAboveUnheatedBasement: {
+						complete: true,
+					},
+					dwellingSpaceFloorOfHeatedBasement: {
+						complete: true,
+					},
 				},
 			},
 		});
@@ -210,6 +219,13 @@ describe("Ecaas Store", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.2,
+		productReference: "1000",
+		midHeightOfAirFlowPathForExhaust: 1.5,
+		orientationOfExhaust: 90,
+		pitchOfExhaust: 10,
+		midHeightOfAirFlowPathForIntake: 1.5,
+		orientationOfIntake: 80,
+		pitchOfIntake: 10,
 	};
 	const mechanicalVentilation2: MechanicalVentilationData = {
 		id: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
@@ -218,6 +234,13 @@ describe("Ecaas Store", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
+		productReference: "1000",
+		midHeightOfAirFlowPathForExhaust: 1.5,
+		orientationOfExhaust: 90,
+		pitchOfExhaust: 10,
+		midHeightOfAirFlowPathForIntake: 1.5,
+		orientationOfIntake: 80,
+		pitchOfIntake: 10,
 	};
 	const ductwork1: DuctworkData = {
 		name: "Ductwork 1",
@@ -390,7 +413,7 @@ describe("hasCompleteState function", () => {
 
 	it("returns false when given state with pv battery section complete only", async () => {
 		const pvAndBatteriesSection = {
-			pvSystems: { data: [], complete: true },
+			pvArrays: { data: [], complete: true },
 			electricBattery: { data: [], complete: true },
 		};
 		store.$patch({ pvAndBatteries: pvAndBatteriesSection });
@@ -454,7 +477,7 @@ describe("hasCompleteState function", () => {
 			});
 
 			const topLevelTaggedWalls =
-        store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+				store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
 			const idOfTaggedWall = vent1.associatedItemId;
 			const actual = store.getTaggedItem([topLevelTaggedWalls], idOfTaggedWall);
 
@@ -486,7 +509,7 @@ describe("hasCompleteState function", () => {
 			});
 
 			const topLevelTaggedWalls =
-        store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+				store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
 			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows;
 			const idOfTaggedWall = vent2.associatedItemId;
 
@@ -522,7 +545,7 @@ describe("hasCompleteState function", () => {
 			});
 
 			const topLevelTaggedWalls =
-        store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+				store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
 			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows;
 			const idOfTaggedWall = vent1.associatedItemId;
 			const actual = store.getTaggedItem(
@@ -558,7 +581,7 @@ describe("hasCompleteState function", () => {
 			});
 
 			const topLevelTaggedWalls =
-        store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+				store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
 			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows;
 			const idOfTaggedWall = vent1.associatedItemId;
 

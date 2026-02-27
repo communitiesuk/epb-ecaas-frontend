@@ -61,6 +61,7 @@ const getProductById = async <U extends DisplayById>(query: U["input"]): Promise
 		modelName: Item.modelName as string,
 		modelQualifier: Item.modelQualifier as string,
 		technologyType: Item.technologyType as TechnologyType,
+		...(Item.communityHeatNetworkName ? { communityHeatNetworkName: Item.communityHeatNetworkName as string } : null),
 	};
 
 	return product;
@@ -96,8 +97,10 @@ const getProductsByTechnologyType = async <U extends DisplayTechnologyProducts>(
 			modelName: x.modelName as string,
 			modelQualifier: x.modelQualifier as string,
 			technologyType: x.technologyType as TechnologyType,
-			backupCtrlType: x.backupCtrlType as string,
-			powerMaxBackup: x.powerMaxBackup as number,
+			...(x.backupCtrlType ? { backupCtrlType: x.backupCtrlType as string } : {}),
+			...(x.powerMaxBackup ? { powerMaxBackup: x.powerMaxBackup as number } : {}),
+			...(x.boilerLocation ? { boilerLocation: x.boilerLocation } : {}),
+			...(x.communityHeatNetworkName ? { communityHeatNetworkName: x.communityHeatNetworkName } : null),
 		};
 
 		return product;

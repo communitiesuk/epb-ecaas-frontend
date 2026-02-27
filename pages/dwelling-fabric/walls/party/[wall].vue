@@ -16,16 +16,16 @@ const index = getStoreIndex(partyWallData);
 const model: Ref<PartyWallData | undefined> = ref(wallData?.data);
 
 const partyWallCavityTypeOptions = {
+	unfilled_unsealed: "Unfilled and unsealed",
+	unfilled_sealed: "Unfilled and sealed",
+	filled_sealed: "Filled and sealed",
+	filled_unsealed: "Filled and unsealed",
 	defined_resistance: "Defined resistance",
-	filled_sealed: "Filled sealed",
-	filled_unsealed: "Filled unsealed",
 	solid: "Solid",
-	unfilled_sealed: "Unfilled sealed",
-	unfilled_unsealed: "Unfilled unsealed",
-} as const satisfies Record<SchemaPartyWallCavityType, SnakeToSentenceCase<SchemaPartyWallCavityType>>;
+} as const satisfies Record<SchemaPartyWallCavityType, string>;
 const partyWallLiningTypeOptions = {
-	dry_lined: "Dry lined",
 	wet_plaster: "Wet plaster",
+	dry_lined: "Dry lined",
 } as const satisfies Record<SchemaPartyWallLiningType, SnakeToSentenceCase<SchemaPartyWallLiningType>>;
 
 const saveForm = (fields: PartyWallData) => {
@@ -41,12 +41,12 @@ const saveForm = (fields: PartyWallData) => {
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 				surfaceArea: fields.surfaceArea,
-				uValue: fields.uValue,
 				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
 				partyWallCavityType: fields.partyWallCavityType,
 				partyWallLiningType: fields.partyWallLiningType,
 				thermalResistanceCavity: fields.thermalResistanceCavity,
+				uValue: fields.uValue,
 			},
 			complete: true,
 		};
@@ -101,6 +101,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
 		/>
+		<FieldsUValue id="uValue" name="uValue" />
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
@@ -119,39 +120,25 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FormKit
-			id="uValue"
-			type="govInputWithSuffix"
-			suffix-text="W/(m²·K)"
-			label="U-value"
-			help="This is the steady thermal transmittance of the materials that make up the building element"
-			name="uValue"
-			validation="required | number | min:0.01 | max:10"
-			data-field="Zone.BuildingElement.*.u_value">
-			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">
-					For the U-value of party walls, put the actual U-value of the materials of the wall. This helps determine the behaviour of the wall releasing heat back into the room.
-				</p>
-			</GovDetails>
-		</FormKit>
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
 			id="partyWallCavityType"
 			name="partyWallCavityType"
 			type="govRadios"
-			label="Cavity type"
-			help="Type of party wall cavity construction affecting heat loss through air movement"
+			label="Type of party wall cavity construction"
+			help="Select the type of party wall cavity construction. This affects heat loss through air movement."
 			:options="partyWallCavityTypeOptions"
 			validation="required"
 			data-field="Zone.BuildingElement.*.party_wall_cavity_type"
 		/>
 		<FormKit
-			v-if="['filled_unsealed', 'unfilled_sealed', 'unfilled_unsealed'].includes(model?.partyWallCavityType!)"
+			v-if="['filled_sealed', 'unfilled_sealed', 'unfilled_unsealed'].includes(model?.partyWallCavityType!)"
 			id="partyWallLiningType"
 			name="partyWallLiningType"
 			type="govRadios"
-			label="Lining type"
+			label="Type of party wall lining"
+			help="Select the type of party wall lining"
 			:options="partyWallLiningTypeOptions"
 			validation="required"
 			data-field="Zone.BuildingElement.*.party_wall_lining_type"
@@ -162,8 +149,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="thermalResistanceCavity"
 			type="govInputWithUnit"
 			unit="square metre kelvin per watt"
-			label="Thermal resistance of cavity"
-			help="Effective thermal resistance of the party wall cavity"
+			label="Thermal resistance of the party wall cavity"
 			:validation="`required | ${ zodTypeAsFormKitValidation(thermalResistanceCavityZod) }`"
 		/>
 		<GovLLMWarning />

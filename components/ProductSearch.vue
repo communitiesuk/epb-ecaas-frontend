@@ -1,70 +1,40 @@
 <script setup lang="ts">
-import type { DisplayProduct } from "~/pcdb/pcdb.types";
-import type { SearchOption } from "~/composables/productSearch";
-
-const { products, model: searchModel } = defineProps<{
-	products: DisplayProduct[];
+const { model: searchModel, searchOptions = {
+	modelAndBrand: "Brand and model",
+	productId: "Product ID",
+} } = defineProps<{
 	model: ProductSearchModel;
+	searchOptions?: Partial<Record<SearchOption, string>>;
 }>();
 
-const model = ref<ProductSearchModel>({
-	...searchModel,
-	searchOption: searchModel.searchOption || "productId",
-});
-	
-const brandNames = ref<string[]>([]);
-const modelNames = ref<string[]>([]);
-const modelQualifiers = ref<string[]>([]);
+const getModel = (currentSearch: ProductSearchModel): ProductSearchModel => {
+	const defaultSearchOption = Object.keys(searchOptions)[0] as SearchOption;
 
-const searchOptions: Record<SearchOption, string> = {
-	productId: "Product ID",
-	modelAndBrand: "Brand and model",
+	return {
+		...currentSearch,
+		searchOption: currentSearch.searchOption || defaultSearchOption,
+	};
 };
 
-const setBrandName = (name: string) => model.value = {
-	...model.value,
-	brandName: name,
-};
+const model = ref<ProductSearchModel>(getModel(searchModel));
 
-const setModelName = (name: string) => model.value = {
-	...model.value,
-	modelName: name,
-};
-
-const setModelQualifier = (qualifier: string) => model.value = {
-	...model.value,
-	modelQualifier: qualifier,
-};
-
-const handleSubmit = (fields: typeof model.value) => {
+const handleSubmit = (fields: typeof searchModel) => {
 	const query = Object.entries(fields).filter(e => !!e[1]);
 	const params = new URLSearchParams(query);
 
 	navigateTo(`?${params}`);
 };
 
-const filterProducts = (currentModel: ProductSearchModel): DisplayProduct[] => {
-	return useProductSearch(products, currentModel);
-};
-
 watch(model, (currentModel: ProductSearchModel, previousModel: ProductSearchModel) => {
-	if (currentModel.brandName !== previousModel.brandName && (currentModel.brandName?.length || 0) > 2) {
-		const filtered = filterProducts(currentModel);
-		brandNames.value = Array.from(new Set(filtered.map(p => p.brandName)));
-		return;
+	if (currentModel.productId !== previousModel.productId ||
+		currentModel.searchTerm !== previousModel.searchTerm ||
+		currentModel.searchOption !== previousModel.searchOption) {
+		handleSubmit(model.value);
 	}
+});
 
-	if (currentModel.modelName !== previousModel.modelName && (currentModel.modelName?.length || 0) > 2) {
-		const filtered = filterProducts(currentModel);
-		modelNames.value = Array.from(new Set(filtered.map(p => p.modelName)));
-		return;
-	}
-
-	if (currentModel.modelQualifier !== previousModel.modelQualifier && (currentModel.modelQualifier?.length || 0) > 2) {
-		const filtered = filterProducts(currentModel);
-		modelQualifiers.value = Array.from(new Set(filtered.map(p => p.modelQualifier!)));
-		return;
-	}
+watch(() => searchModel, (currentSearch: ProductSearchModel) => {
+	model.value = currentSearch;
 });
 </script>
 
@@ -76,7 +46,10 @@ watch(model, (currentModel: ProductSearchModel, previousModel: ProductSearchMode
 			method="get"
 			:actions="false"
 			:incomplete-message="false"
-			@submit="handleSubmit">
+			@submit="handleSubmit"
+		>
+			<FormKit name="sort" type="hidden" />
+			<FormKit name="order" type="hidden" />
 			<FormKit
 				id="searchOption"
 				type="govRadios"
@@ -88,70 +61,38 @@ watch(model, (currentModel: ProductSearchModel, previousModel: ProductSearchMode
 				}"
 			/>
 			<div class="search-fields">
-				<template v-if="model.searchOption === 'productId'">
-					<FieldsProductSearch
-						id="productId"
-						name="productId"
-						label="Product ID"
-						placeholder="Enter product ID"
-						:value="model.productId"
-					/>
+				<FieldsProductSearch
+					v-if="model.searchOption === 'productId'"
+					id="productId"
+					name="productId"
+					label="Search product ID"
+					placeholder="Enter product ID"
+					:value="model.productId"
+				/>
+				<template v-if="Object.keys($slots).length">
+					<slot />
 				</template>
 				<template v-else>
 					<FieldsProductSearch
-						id="brandName"
-						name="brandName"
-						label="Brand name"
-						placeholder="Enter brand"
-						:suggested-values="brandNames"
-						:value="model.brandName"
-						@select="setBrandName"
-					/>
-					<FieldsProductSearch
-						id="modelName"
-						name="modelName"
-						label="Model name"
-						placeholder="Enter model"
-						:suggested-values="modelNames"
-						:value="model.modelName"
-						@select="setModelName"
-					/>
-					<FieldsProductSearch
-						id="modelQualifier"
-						name="modelQualifier"
-						label="Model qualifier"
-						placeholder="Enter qualifier"
-						:suggested-values="modelQualifiers"
-						:value="model.modelQualifier"
-						@select="setModelQualifier"
+						v-if="model.searchOption !== 'productId'"
+						id="searchTerm"
+						name="searchTerm"
+						label="Search brand or model"
+						placeholder="Enter brand or model"
+						:value="model.searchTerm"
 					/>
 				</template>
 				
-				<div>
-					<FormKit type="govButton" label="Search" :ignore="true" :classes="{ button: 'search-btn' }" />
-				</div>
 			</div>
 		</FormKit>
 	</div>
 </template>
 
 <style lang="scss">
-	@use "sass:map";
-
 	.search-container {
-		background-color: map.get($govuk-colours, "light-grey");
+		// suggested colour to replace removed light-grey in GOV.UK Frontend 6.0
+		background-color: #f3f3f3;
 		padding: 20px;
-	}
-
-	.search-fields {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		gap: 25px;
-	}
-
-	.search-btn {
-		margin: 30px 0 2px;
 	}
 
 	.search-options {
@@ -166,5 +107,12 @@ watch(model, (currentModel: ProductSearchModel, previousModel: ProductSearchMode
 				background-color: white;
 			}
 		}
+	}
+
+	.search-fields {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		gap: 25px;
 	}
 </style>

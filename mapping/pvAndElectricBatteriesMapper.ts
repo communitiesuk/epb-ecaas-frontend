@@ -5,19 +5,24 @@ import type { SchemaElectricBattery, SchemaEnergySupplyElectricity } from "~/sch
 import type { SchemaWindowShadingObject } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName } from "./common";
 
-export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsInputSchema, "OnSiteGeneration">, { "ElectricBattery": SchemaElectricBattery } | EmptyObject, Pick<SchemaEnergySupplyElectricity, "diverter"> | EmptyObject] {
+export function mapPvAndElectricBatteriesData(state: ResolvedState): [
+	Pick<FhsInputSchema, "OnSiteGeneration">,
+	{ "ElectricBattery": SchemaElectricBattery } | EmptyObject,
+	Pick<SchemaEnergySupplyElectricity, "diverter"> | EmptyObject,
+	{ "ElectricBattery": SchemaElectricBattery } | { "diverter": SchemaEnergySupplyElectricity } | EmptyObject,
+] {
 	return [
-		mapPvSystemData(state),
+		mapPvArrayData(state),
 		mapElectricBatteryData(state),
 		mapPvDiverterData(state),
+		mapPvArrayEnergySupplyData(state),
 	];
 }
 
-export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, "OnSiteGeneration"> {
+export function mapPvArrayData(state: ResolvedState): Pick<FhsInputSchema, "OnSiteGeneration"> {
 	return {
-		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvSystems.map((system) => {
-			const { name, elevationalHeight, lengthOfPV, widthOfPV, inverterIsInside, inverterPeakPowerAC, inverterPeakPowerDC, inverterType, orientation, peakPower, pitch, ventilationStrategy } = system;
-
+		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvArrays.map((array) => {
+			const { name, elevationalHeight, lengthOfPV, widthOfPV, locationOfInverter, inverterPeakPowerAC, inverterPeakPowerDC, inverterType, orientation, peakPower, pitch, ventilationStrategy } = array;
 			return [
 				name,
 				{
@@ -25,20 +30,85 @@ export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, "OnS
 					base_height: elevationalHeight,
 					height: lengthOfPV,
 					width: widthOfPV,
-					inverter_is_inside: inverterIsInside,
+					inverter_is_inside: locationOfInverter === "heated_space",
 					inverter_peak_power_ac: inverterPeakPowerAC,
 					inverter_peak_power_dc: inverterPeakPowerDC,
 					inverter_type: inverterType,
 					orientation360: orientation,
 					peak_power: peakPower,
 					pitch,
-					shading: [] as SchemaWindowShadingObject[], // not included yet
+					shading: array.hasShading ? maPvArrayShadingData(array.shading) : [],
 					type: "PhotovoltaicSystem",
 					ventilation_strategy: ventilationStrategy,
 				},
 			] as const;
 		})),
 	};
+}
+export function mapPvArrayEnergySupplyData(state: ResolvedState): { [key: string]: SchemaEnergySupplyElectricity } | EmptyObject {
+	const pvArrays = state.pvAndBatteries.pvArrays;
+	if (pvArrays.length === 0) {
+		return {};
+	}
+	const EnergySupply: { [key: string]: SchemaEnergySupplyElectricity } = {};
+	pvArrays.forEach((system) => {
+		if (system.electricityPriority === "diverter") {
+			EnergySupply[system.name] = { priority: ["diverter"], is_export_capable: system.canExportToGrid, fuel: "electricity" };
+		};
+		if (system.electricityPriority === "electricBattery") {
+			EnergySupply[system.name] = { priority: ["ElectricBattery"], is_export_capable: system.canExportToGrid, fuel: "electricity" };
+		};
+	});
+	return EnergySupply;
+}
+
+export function maPvArrayShadingData(shading: PvShadingData[]): SchemaWindowShadingObject[] {
+	return shading.map((shadingItem) => {
+		const { typeOfShading } = shadingItem;
+		switch (typeOfShading) {
+			case "frame_or_reveal": {
+				return {
+					type: "reveal",
+					distance: shadingItem.distance,
+					depth: shadingItem.depth,
+				};
+			}
+			case "obstacle": {
+				return {
+					type: "obstacle",
+					distance: shadingItem.distance,
+					height: shadingItem.height,
+					transparency: shadingItem.transparency,
+				};
+			}
+			case "overhang": {
+				return {
+					type: "overhang",
+					distance: shadingItem.distance,
+					depth: shadingItem.depth,
+				};
+			}
+			case "left_side_fin": {
+				return {
+					type: "sidefinleft",
+					distance: shadingItem.distance,
+					depth: shadingItem.depth,
+				};
+			}
+			case "right_side_fin": {
+				return {
+					type: "sidefinright",
+					distance: shadingItem.distance,
+					depth: shadingItem.depth,
+				};
+			}
+			default: {
+				throw new Error(`Unknown shading type: ${typeOfShading}`);
+			}
+		}
+
+	});
+
 }
 
 export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery": SchemaElectricBattery } | EmptyObject {
@@ -65,13 +135,19 @@ export function mapPvDiverterData(state: ResolvedState): Pick<SchemaEnergySupply
 		return {};
 	}
 
-	const hotWaterCylinder = state.domesticHotWater.waterHeating.hotWaterCylinder.filter(x => x.id === diverter?.hotWaterCylinder)[0]!;
-	const heatSource = state.spaceHeating.heatSource.find(x => x.id === hotWaterCylinder.heatSource)!;
+	const hotWaterCylinder = state.domesticHotWater.waterStorage
+		.filter(x => x.id === diverter?.hotWaterCylinder)[0]!;
+	const dhwHeatSource = state.domesticHotWater.heatSources
+		.find(x => x.id === hotWaterCylinder.dhwHeatSourceId)!;
+
+	const heatSourceName = dhwHeatSource.isExistingHeatSource
+		? state.spaceHeating.heatSource.find(x => x.id === dhwHeatSource.heatSourceId)!.name
+		: dhwHeatSource.name;
 
 
 	return {
 		diverter: {
-			"HeatSource": heatSource.name,
+			"HeatSource": heatSourceName,
 		},
 	};
 }

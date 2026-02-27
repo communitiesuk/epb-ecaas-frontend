@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
+import type { SchemaBuildType, SchemaFuelType, SchemaFuelTypeExtended } from "~/schema/aliases";
 import { isInteger } from "~/utils/validation";
-import { getUrl, type GeneralDetailsData } from "#imports";
+import { getUrl, type DomesticHotWaterHeatSourceData, type GeneralDetailsData, type HeatSourceData } from "#imports";
 
 
 const title = "General details";
@@ -42,6 +42,7 @@ const saveForm = (fields: typeof model.value) => {
 					numOfWCs: fields.numOfWCs,
 					numOfHabitableRooms: fields.numOfHabitableRooms,
 					numOfRoomsWithTappingPoints: fields.numOfRoomsWithTappingPoints,
+					numOfWetRooms: fields.numOfWetRooms,
 					fuelType: fields.fuelType,
 				},
 				complete: true,
@@ -51,6 +52,30 @@ const saveForm = (fields: typeof model.value) => {
 
 	navigateTo("/dwelling-details");
 };
+
+function removeRefsToFuelType(heatSources: EcaasForm<Extract<HeatSourceData, { "typeOfHeatSource": "heatNetwork" | "heatBattery" }> | DomesticHotWaterHeatSourceData>[], removedFuelType: SchemaFuelTypeExtended) {
+	for (const item of heatSources) {
+		if ("energySupply" in item.data)
+			if (item.data.energySupply === removedFuelType) {
+				item.data.energySupply = undefined;
+				item.complete = false;
+			}
+	}
+}
+
+watch(() => model.value.fuelType, (newFuelTypes, oldFuelTypes) => {
+	if (newFuelTypes === oldFuelTypes || oldFuelTypes === undefined) return;
+	if (newFuelTypes.length > oldFuelTypes.length) return;
+
+	const removedFuel = oldFuelTypes.find(fuel => !newFuelTypes.includes(fuel));
+	const spaceHeatingHeatSources = store.spaceHeating.heatSource.data.filter(({ data: x }) => x.typeOfHeatSource === "heatNetwork" || x.typeOfHeatSource === "heatBattery") as EcaasForm<Extract<HeatSourceData, { "typeOfHeatSource": "heatNetwork" | "heatBattery" }>>[];
+	const DHWHeatSources = store.domesticHotWater.heatSources.data.filter(({ data: x }) => x.isExistingHeatSource === false && (x.typeOfHeatSource === "heatNetwork" || x.typeOfHeatSource === "heatBattery" || x.typeOfHeatSource === "pointOfUse"));
+	if (removedFuel) {
+		removeRefsToFuelType(spaceHeatingHeatSources, removedFuel);
+		removeRefsToFuelType(DHWHeatSources, removedFuel);
+	}
+});
+
 
 autoSaveForm<GeneralDetailsData>(model, (state, newData) => {
 	state.dwellingDetails.generalSpecifications = newData;
@@ -63,7 +88,7 @@ const areSelectedOptionsValid = (node: FormKitNode) => {
 	if (parent && parent.value) {
 		const formValue = parent.value as GeneralDetailsData;
 		const { fuelType } = formValue;
-		if (fuelType.includes("elecOnly") && (fuelType.includes("mains_gas") || fuelType.includes("LPG_bulk") || fuelType.includes("LPG_bottled"))) {
+		if (fuelType.includes("elecOnly") && (fuelType.includes("mains_gas") || fuelType.includes("LPG_bulk") || fuelType.includes("LPG_bottled")) || fuelType.includes("LPG_condition_11F")) {
 			return false;
 		}
 	}
@@ -233,6 +258,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 			help="This could be a room with any tapping point. For example a sink, bath or shower."
 			data-field="NumberOfTappedRooms"
+		/>
+		<FormKit
+			id="numOfWetRooms"
+			type="govInputInt"
+			label="Total number of wet rooms"
+			name="numOfWetRooms"
+			:validation-rules="{ isInteger }"
+			validation="required | isInteger"
+			:validation-messages="{
+				isInteger: `Number of wet rooms must be an integer.`,
+			}"
+			help="A room used for domestic activities that produce significant amounts of airborne moisture. For example a kitchen, utility room, bathroom or WC."
 		/>
 		<FormKit
 			id="fuelType"

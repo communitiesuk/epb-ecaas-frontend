@@ -153,6 +153,18 @@ export const units = [
 		"multiplier": 1,
 		"dimension": "energy per unit temperature",
 	},
+	{
+		"name": "watt",
+		"suffix": "W",
+		"multiplier": 1,
+		"dimension": "power",
+	},
+	{
+		"name": "lumen per watt",
+		"suffix": "lm/W",
+		"multiplier": 1,
+		"dimension": "efficacy",
+	},
 ] as const;
 
 export function asUnit<T extends UnitName>(name: T): UnitForName<T> {

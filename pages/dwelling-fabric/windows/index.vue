@@ -87,6 +87,9 @@ function hasIncompleteEntries() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<div class="info">
+		<p class="govuk-hint">Only add external windows</p>
+	</div>
 	<CustomList
 		id="windows"
 		title="Window"
@@ -108,3 +111,10 @@ function hasIncompleteEntries() {
 			@completed="handleComplete" />
 	</div>
 </template>
+
+<style>
+.info {
+  margin-bottom: 20px;
+}
+
+</style>

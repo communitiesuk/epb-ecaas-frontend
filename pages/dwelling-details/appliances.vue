@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { SchemaApplianceType } from "~/schema/aliases";
 import { getUrl, type AppliancesData } from "#imports";
+import type { ApplianceKey } from "~/stores/ecaasStore.schema";
 
 const title = "Appliances";
 const store = useEcaasStore();
@@ -17,7 +17,8 @@ const appliances = {
 	Dishwasher: "Dishwasher",
 	Clothes_washing: "Washing machine",
 	Clothes_drying: "Tumble dryer",
-} as const satisfies Record<SchemaApplianceType, ApplianceKeyDisplay>;
+	KitchenExtractorHoodExternal: "Cooker hood extracting from the kitchen to outside",
+} as const satisfies Record<ApplianceKey, ApplianceKeyDisplay>;
 
 const saveForm = (fields: AppliancesData) => {
 	store.$patch({

@@ -60,12 +60,17 @@ const idWithKey = (key: string) => `${id}_${key.replaceAll(/ /g, "_")}`;
 						:name="name"
 						:value="key"
 						:checked="mounted ? currentValue == key : false"
+						:disabled="typeof options.get(key) === 'object' ? (options.get(key) as RadioOption).disabled : false"
 						:data-testid="idWithKey(key)"
 						:aria-describedby="typeof options.get(key) === 'object' ? `${idWithKey(key)}_hint` : ''"
 						v-bind="attrs"
 						@change="handleInput"
 					>
-					<label class="govuk-label govuk-radios__label" :for="idWithKey(key)">
+					<label 
+						class="govuk-label govuk-radios__label" 
+						:for="idWithKey(key)"
+						:class="{ 'govuk-label--disabled': (options.get(key) as RadioOption).disabled }"
+					>
 						{{ typeof options.get(key) === 'object' ? (options.get(key) as RadioOption).label : options.get(key) }}
 					</label>
 					<div v-if="(typeof options.get(key) === 'object')" :id="`${idWithKey(key)}_hint`" class="govuk-hint govuk-radios__hint">

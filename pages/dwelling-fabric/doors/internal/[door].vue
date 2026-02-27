@@ -12,43 +12,15 @@ const model = ref(doorData?.data);
 
 const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
 
-const saveForm = (fields: InternalDoorData) => {
+const saveForm = () => {
 	store.$patch((state) => {
 		const { dwellingSpaceInternalDoor } = state.dwellingFabric.dwellingSpaceDoors;
-
-		const commonFields = {
-			associatedItemId: fields.associatedItemId,
-			name: fields.name,
-			surfaceArea: fields.surfaceArea,
-			arealHeatCapacity: fields.arealHeatCapacity,
-			massDistributionClass: fields.massDistributionClass,
-		};
-
-		let door: EcaasForm<InternalDoorData>;
-
-		if (fields.typeOfInternalDoor === "unheatedSpace") {
-			door = {
-				data: {
-					...commonFields,
-					typeOfInternalDoor: fields.typeOfInternalDoor,
-					uValue: fields.uValue,
-					thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
-				},
-				complete: true,
-			};
-		} else if (fields.typeOfInternalDoor === "heatedSpace") {
-			door = {
-				data: {
-					...commonFields,
-					typeOfInternalDoor: fields.typeOfInternalDoor,
-				},
-				complete: true,
-			};
-		} else {
-			throw new Error("Invalid type of door");
+		const internalDoor = dwellingSpaceInternalDoor.data[index];
+		if (!internalDoor) {
+			throw new Error("No internal door found to save");
 		}
-		dwellingSpaceInternalDoor.data[index] = door;
-		store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
+		internalDoor.complete = true;
+		dwellingSpaceInternalDoor.complete = false;
 	});
 	navigateTo("/dwelling-fabric/doors");
 };
@@ -62,6 +34,17 @@ autoSaveElementForm<InternalDoorData>({
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
 	},
 });
+
+function canBeFrontDoor(node: FormKitNode) {
+	if (node.value === true) {
+		const internalDoorsExcludingCurrent = internalDoorData.toSpliced(index, 1);
+		const { dwellingSpaceExternalUnglazedDoor, dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+		const doors = [...internalDoorsExcludingCurrent, dwellingSpaceExternalUnglazedDoor.data, dwellingSpaceInternalDoor.data].flat();
+		for (const door of doors) {
+			return !door.data.isTheFrontDoor;			
+		}
+	} return true;
+}
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -152,6 +135,24 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</p>
 			</GovDetails>
 		</FormKit>
+		<FormKit
+			v-if="model?.typeOfInternalDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat'"
+			id="isTheFrontDoor"
+			type="govBoolean"
+			label="Is this the front door?"
+			name="isTheFrontDoor"
+			:validation-rules="{ canBeFrontDoor }"
+			validation="required | canBeFrontDoor" 
+			:validation-messages="{
+				canBeFrontDoor: 'Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead.'
+			}"
+		/>
+		<FieldsOrientation
+			v-if="model?.isTheFrontDoor"
+			id="orientation"
+			name="orientation"
+			data-field="Zone.BuildingElement.*.orientation360"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

@@ -1,4 +1,4 @@
-import type { BuildingElementGround, SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaEdgeInsulation } from "~/schema/aliases";
+import type { SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaEdgeInsulation, BuildingElementGroundForSchema } from "~/schema/aliases";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from "deepmerge";
 import { defaultZoneName } from "./common";
@@ -59,7 +59,7 @@ export function mapZoneParametersData(
 				...(spaceHeatingSystemNames.length ? { SpaceHeatSystem: spaceHeatingSystemNames } : {}),
 				// SpaceCoolSystem: dwellingSpaceZoneParameters.spaceCoolingSystemForThisZone?.map(x => x.name),
 				volume: dwellingSpaceZoneParameters.volume,
-				livingroom_area: dwellingSpaceZoneParameters.livingRoomArea,
+				livingroom_area: dwellingSpaceZoneParameters.livingZoneArea,
 				restofdwelling_area: dwellingSpaceZoneParameters.restOfDwellingArea,
 			} as Partial<SchemaZoneInput>,
 		},
@@ -67,14 +67,14 @@ export function mapZoneParametersData(
 }
 
 export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
-	const { dwellingSpaceLighting: { numberOfBulbs, power, efficacy } } = state.dwellingFabric;
+	const { dwellingSpaceLighting } = state.dwellingFabric;
 
 	const lightingData: SchemaLighting = {
-		bulbs: [{
+		bulbs: dwellingSpaceLighting.map(({ numberOfBulbs, power, efficacy }) => ({
 			count: numberOfBulbs,
 			power,
 			efficacy,
-		}],
+		})),
 	};
 
 	return {
@@ -87,7 +87,7 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zon
 }
 
 export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "GroundFloorArea" | "Zone"> {
-	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor } = state.dwellingFabric.dwellingSpaceFloors;
+	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor, dwellingSpaceFloorAboveUnheatedBasement, dwellingSpaceFloorOfHeatedBasement } = state.dwellingFabric.dwellingSpaceFloors;
 	const floorSuffix = "floor";
 
 	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: "Slab_edge_insulation" }>): SchemaEdgeInsulation {
@@ -120,10 +120,10 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 		}
 	}
 
-	const groundFloorData: { [key: string]: BuildingElementGround }[] = dwellingSpaceGroundFloor.map(x => {
+	const groundFloorData: { [key: string]: BuildingElementGroundForSchema }[] = dwellingSpaceGroundFloor.map(x => {
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
 
-		let groundFloor: BuildingElementGround;
+		let groundFloor: BuildingElementGroundForSchema;
 
 		switch (x.typeOfGroundFloor) {
 			case "Slab_edge_insulation": {
@@ -264,13 +264,67 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				width: x.width,
 				base_height: x.elevationalHeight,
 				area: x.surfaceArea,
-				u_value: x.uValue,
+				thermal_resistance_construction: x.thermalResistance,
 				colour: x.colour,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				pitch: x.pitch,
 				is_external_door: false,
 				is_unheated_pitched_roof: false, // this may need to be limited to opaque elements with pitch <= 60
+			},
+		};
+	}) || [];
+
+	const floorAboveUnheatedBasementData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceFloorAboveUnheatedBasement?.map(x => {
+		const nameWithSuffix = suffixName(x.name, floorSuffix);
+		return {
+			[nameWithSuffix]: {
+				type: "BuildingElementGround",
+				thermal_resistance_construction: x.thermalResistance,
+				u_value: x.uValue,
+				total_area: x.surfaceArea,
+				floor_type: "Unheated_basement",
+				thickness_walls: x.thicknessOfWalls / 1000,
+				perimeter: x.perimeter,
+				psi_wall_floor_junc: x.psiOfWallJunction,
+				thermal_resistance_floor_construction: x.thermalResistance,
+				areal_heat_capacity: x.arealHeatCapacity,
+				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
+				area: x.surfaceArea,
+				depth_basement_floor: x.depthOfBasementFloor,
+				thermal_resist_walls_base: x.thermalResistanceOfBasementWalls,
+				thermal_transm_envi_base: x.thermalTransmittanceOfFoundations,
+				thermal_transm_walls: x.thermalTransmittanceOfBasementWalls,
+				height_basement_walls: x.heightOfBasementWalls,
+			},
+		};
+	}) || [];
+
+	const floorOfHeatedBasementData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceFloorOfHeatedBasement?.map(x => {
+		if (!x.id) {
+			throw new Error(`Floor of heated basement '${x.name}' must have an ID`);
+		}
+		const nameWithSuffix = suffixName(x.name, floorSuffix);
+		const wallOfHeatedBasement = state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallOfHeatedBasement?.find(wall => wall.associatedBasementFloorId === x.id);
+		if (!wallOfHeatedBasement) {
+			throw new Error(`No wall of heated basement found associated with floor of heated basement with id ${x.id}`);
+		}
+		return {
+			[nameWithSuffix]: {
+				type: "BuildingElementGround",
+				area: x.surfaceArea,
+				total_area: x.surfaceArea,
+				u_value: x.uValue,
+				thermal_resistance_floor_construction: x.thermalResistance,
+				areal_heat_capacity: x.arealHeatCapacity,
+				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
+				depth_basement_floor: x.depthOfBasementFloor,
+				perimeter: x.perimeter,
+				psi_wall_floor_junc: x.psiOfWallJunction,
+				thickness_walls: x.thicknessOfWalls / 1000,
+				floor_type: "Heated_basement",
+				thermal_resistance_construction: x.thermalResistance,
+				thermal_resist_walls_base: wallOfHeatedBasement?.thermalResistance,
 			},
 		};
 	}) || [];
@@ -284,6 +338,8 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					...groundFloorData,
 					...internalFloorData,
 					...exposedFloorData,
+					...floorAboveUnheatedBasementData,
+					...floorOfHeatedBasementData,
 				),
 			} as Partial<SchemaZoneInput>,
 		},
@@ -291,7 +347,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 }
 
 export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
-	const { dwellingSpaceExternalWall, dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUnheatedSpace } = state.dwellingFabric.dwellingSpaceWalls;
+	const { dwellingSpaceExternalWall, dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUnheatedSpace, dwellingSpaceWallOfHeatedBasement } = state.dwellingFabric.dwellingSpaceWalls;
 	const wallSuffix = "wall";
 
 	const externalWallData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalWall?.map(x => {
@@ -307,7 +363,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				base_height: x.elevationalHeight,
 				area: x.surfaceArea,
 				colour: x.colour,
-				u_value: x.uValue,
+				thermal_resistance_construction: x.thermalResistance,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				is_external_door: false,
@@ -324,7 +380,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				type: "BuildingElementAdjacentConditionedSpace",
 				pitch: extractPitch(x),
 				area: x.surfaceAreaOfElement,
-				u_value: defaultUValue,
+				thermal_resistance_construction: x.thermalResistance,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 			},
@@ -340,6 +396,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				pitch: extractPitch(x),
 				area: x.surfaceArea,
 				u_value: x.uValue,
+				thermal_resistance_cavity: x.thermalResistanceCavity,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				party_wall_cavity_type: x.partyWallCavityType,
@@ -357,10 +414,36 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 				pitch: extractPitch(x),
 				area: x.surfaceAreaOfElement,
-				u_value: x.uValue,
+				thermal_resistance_construction: x.thermalResistance,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
+			},
+		};
+	}) || [];
+
+	const wallOfHeatedBasementData: { [key: string]: BuildingElementGroundForSchema }[] = dwellingSpaceWallOfHeatedBasement?.map(wall => {
+		const nameWithSuffix = suffixName(wall.name, wallSuffix);
+		const floorOfHeatedBasement = state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement?.find(floor => floor.id === wall.associatedBasementFloorId);
+		if (!floorOfHeatedBasement) {
+			throw new Error(`Wall of heated basement '${wall.name}' references floor ID '${wall.associatedBasementFloorId}' which does not exist`);
+		};
+		return {
+			[nameWithSuffix]: {
+				type: "BuildingElementGround",
+				floor_type: "Heated_basement",
+				area: wall.netSurfaceArea,
+				total_area: wall.netSurfaceArea,
+				u_value: wall.uValue,
+				thermal_resistance_construction: wall.thermalResistance,
+				areal_heat_capacity: wall.arealHeatCapacity,
+				mass_distribution_class: fullMassDistributionClass(wall.massDistributionClass),
+				thermal_resist_walls_base: wall.thermalResistance,
+				thermal_resistance_floor_construction: wall.thermalResistance,
+				depth_basement_floor: floorOfHeatedBasement.depthOfBasementFloor,
+				perimeter: wall.perimeter,
+				psi_wall_floor_junc: floorOfHeatedBasement.psiOfWallJunction,
+				thickness_walls: floorOfHeatedBasement.thicknessOfWalls / 1000,
 			},
 		};
 	}) || [];
@@ -374,6 +457,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 					...internalWallData,
 					...partyWallData,
 					...wallToUnheatedSpaceData,
+					...wallOfHeatedBasementData,
 				),
 			} as Partial<SchemaZoneInput>,
 		},
@@ -491,30 +575,37 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	});
 
 	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalGlazedDoor.map((x) => {
-		const associatedWallRoof = getResolvedTaggedItem(
+		const associatedWallRoof = x.associatedItemId && x.associatedItemId !== "none" ? getResolvedTaggedItem(
 			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
 			x.associatedItemId,
-		)!;
+		)! : undefined;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
 		const glazedDoor = {
 			type: "BuildingElementTransparent",
-			pitch: extractPitch(associatedWallRoof),
-			orientation360: associatedWallRoof.orientation!,
+			pitch: extractPitch(associatedWallRoof ?? x),
+			orientation360: (associatedWallRoof ?? x).orientation!,
 			height: x.height,
 			mid_height: x.midHeight,
 			width: x.width,
 			base_height: x.elevationalHeight,
 			g_value: x.solarTransmittance,
-			u_value: x.uValue,
 			window_part_list: [
-				{ mid_height_air_flow_path: x.midHeightOpenablePart1 },
+				{ mid_height_air_flow_path: x.midHeight },
+				...mapWindowPartList(x),
 			],
 			frame_area_fraction: calculateFrameToOpeningRatio(x.openingToFrameRatio),
 			max_window_open_area: x.maximumOpenableArea,
 			security_risk: x.securityRisk,
 			free_area_height: x.heightOpenableArea,
 			shading: [],
+			thermal_resistance_construction: x.thermalResistance,
+			treatment: x.curtainsOrBlinds ? [{
+				type: x.treatmentType,
+				controls: "manual",
+				trans_red: x.solarTransmittanceReduction,
+				delta_r: x.thermalResistivityIncrease,
+			}] : undefined,
 		} as const satisfies SchemaBuildingElement;
 
 		return {
@@ -523,27 +614,27 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	});
 
 	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalUnglazedDoor.map((x) => {
-		const associatedWallRoof = getResolvedTaggedItem(
+		const associatedWallRoof = x.associatedItemId && x.associatedItemId !== "none" ? getResolvedTaggedItem(
 			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
 			x.associatedItemId,
-		)!;
+		)! : undefined;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementOpaque",
-				pitch: extractPitch(associatedWallRoof),
-				orientation360: associatedWallRoof.orientation!,
+				pitch: extractPitch(associatedWallRoof ?? x),
+				orientation360: (associatedWallRoof ?? x).orientation!,
 				height: x.height,
 				width: x.width,
 				base_height: x.elevationalHeight,
-				area: x.surfaceArea,
 				colour: x.colour,
-				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				is_external_door: true,
 				is_unheated_pitched_roof: false, // this may need to be limited to opaque elements with a pitch <= 60
+				area: x.height * x.width, // this may be removed from the FHS schema shortly (though you could have e.g. arch shaped doors with a different area?)
+				thermal_resistance_construction: x.thermalResistance,
 			},
 		};
 	});
@@ -562,45 +653,46 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	} as Pick<FhsInputSchema, "Zone">;
 }
 
+function mapWindowPartList(data: WindowData | ExternalGlazedDoorData): SchemaWindowPart[] {
+	if (data.numberOpenableParts === "1") {
+		return [
+			{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+		];
+	}
+
+	if (data.numberOpenableParts === "2") {
+		return [
+			{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+			{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
+		];
+	}
+
+	if (data.numberOpenableParts === "3") {
+		return [
+			{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+			{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
+			{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
+		];
+	}
+
+	if (data.numberOpenableParts === "4") {
+		return [
+			{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+			{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
+			{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
+			{ mid_height_air_flow_path: data.midHeightOpenablePart4 },
+		];
+	}
+
+	return [];
+}
+
 export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceWindows } = state.dwellingFabric;
 	const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
 	const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	const windowSuffix = "window";
 
-	function mapWindowPartList(data: WindowData): SchemaWindowPart[] {
-		if (data.numberOpenableParts === "1") {
-			return [
-				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-			];
-		}
-
-		if (data.numberOpenableParts === "2") {
-			return [
-				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
-			];
-		}
-
-		if (data.numberOpenableParts === "3") {
-			return [
-				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
-			];
-		}
-
-		if (data.numberOpenableParts === "4") {
-			return [
-				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart4 },
-			];
-		}
-
-		return [];
-	}
 
 	const windowData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceWindows.map(x => {
 		const nameWithSuffix = suffixName(x.name, windowSuffix);
@@ -633,26 +725,37 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			depth: inMetres(x.sideFinRightDepth),
 			distance: inMetres(x.sideFinRightDistance),
 		}] : [];
-		const associatedElement = getResolvedTaggedItem(
-			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-			x.taggedItem,
-		)!;
+
+
+		let pitch: number;
+		let orientation: number;
+
+		if (!x.taggedItem) {
+			pitch = extractPitch(x);
+			orientation = x.orientation!;
+		} else {
+			const associatedElement = getResolvedTaggedItem(
+				[dwellingSpaceExternalWall, dwellingSpaceRoofs],
+				x.taggedItem,
+			)!;
+			pitch = extractPitch(associatedElement);
+			orientation = associatedElement.orientation!;
+		}
 
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementTransparent",
-				pitch: extractPitch(associatedElement),
-				orientation360: associatedElement.orientation!,
+				pitch,
+				orientation360: orientation,
 				height: x.height,
 				width: x.width,
 				base_height: x.elevationalHeight,
-				u_value: x.uValue,
+				thermal_resistance_construction: x.thermalResistance,
 				g_value: x.solarTransmittance,
 				mid_height: x.midHeight,
 				security_risk: x.securityRisk,
 				frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
 				max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
-				free_area_height: x.numberOpenableParts === "0" ? 0 : x.heightOpenableArea,
 				window_part_list: mapWindowPartList(x),
 				shading: [...overhang, ...sideFinLeft, ...sideFinRight],
 			},

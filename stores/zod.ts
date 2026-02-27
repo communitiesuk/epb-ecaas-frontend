@@ -2,7 +2,7 @@
 
 import type { UnionToTuple } from "type-fest";
 import * as z from "zod";
-import type { SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour, SchemaConvectiveType, SchemaApplianceType, SchemaFuelTypeExtended, SchemaFuelType, SchemaHeatNetworkType, SchemaRadiatorType } from "~/schema/aliases";
+import type { SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour, SchemaConvectiveType, SchemaApplianceType, SchemaFuelTypeExtended, SchemaFuelType, SchemaHeatNetworkType, SchemaRadiatorType, SchemaMechanicalVentilationInstallationType, SchemaMechanicalVentilationInstallationLocation } from "~/schema/aliases";
 import type { ConciseMassDistributionClass } from "./ecaasStore.schema";
 import type { SchemaPartyWallCavityType, SchemaPartyWallLiningType } from "~/schema/api-schema.types";
 
@@ -28,6 +28,7 @@ export function zodLiteralFromUnionType<T, U extends UnionToTuple<T>[number] & s
 // We need to be able to validate at runtime that a value is a member of such a union, which means declaring real values
 // containing the members. The following both declares these values and also typechecks that no values are missing or incorrect.
 
+const applianceTypes = ["Oven", "Hobs", "Fridge-Freezer", "Dishwasher", "Clothes_washing", "Clothes_drying", "Fridge", "Freezer"] as const satisfies SchemaApplianceType[];
 const arealHeatCapacities = ["Very light", "Light", "Medium", "Heavy", "Very heavy"] as const satisfies SchemaArealHeatCapacity[];
 const batteryLocations = ["inside", "outside"] as const satisfies SchemaBatteryLocation[];
 const colours = ["Light", "Intermediate", "Dark"] as const satisfies SchemaColour[];
@@ -71,6 +72,15 @@ const heatPumpSourceTypes = [
 	"HeatNetwork"] as const satisfies SchemaHeatPumpSourceType[];
 const inverterTypes = ["optimised_inverter", "string_inverter"] as const satisfies SchemaInverterType[];
 const massDistributionClasses = ["D", "E", "I", "IE", "M"] as const satisfies ConciseMassDistributionClass[];
+const mechVentInstallationLocations = [
+	"kitchen",
+	"other_wet_room",
+] as const satisfies SchemaMechanicalVentilationInstallationLocation[];
+const mechVentInstallationTypes = [
+	"in_ceiling",
+	"in_duct",
+	"through_wall",
+] as const satisfies SchemaMechanicalVentilationInstallationType[];
 const mhvrLocations = ["inside", "outside"] as const satisfies MVHRLocation[];
 const partyWallCavityTypes = ["defined_resistance", "filled_sealed", "filled_unsealed", "solid", "unfilled_sealed", "unfilled_unsealed"] as const satisfies SchemaPartyWallCavityType[];
 const partyWallLiningTypes = ["dry_lined", "wet_plaster"] as const satisfies SchemaPartyWallLiningType[];
@@ -94,8 +104,8 @@ const waterPipeworkLocations = ["internal", "external"] as const satisfies Schem
 const windowTreatmentControls = ["auto_motorised", "manual"] as const satisfies SchemaWindowTreatmentControl[];
 const windowTreatmentTypes = ["blinds", "curtains"] as const satisfies SchemaWindowTreatmentType[];
 const windShieldLocations = ["Sheltered", "Average", "Exposed"] as const satisfies SchemaWindShieldLocation[];
-const applianceTypes = ["Oven", "Hobs", "Fridge-Freezer", "Dishwasher", "Clothes_washing", "Clothes_drying", "Fridge", "Freezer"] as const satisfies SchemaApplianceType[];
 
+export const applianceTypeZod = zodForTypeOptions(ensureAllUnion<SchemaApplianceType, (typeof applianceTypes)>(applianceTypes));
 export const arealHeatCapacityZod = zodForTypeOptions(ensureAllUnion<SchemaArealHeatCapacity, (typeof arealHeatCapacities)>(arealHeatCapacities));
 export const batteryLocationZod = zodForTypeOptions(ensureAllUnion<SchemaBatteryLocation, (typeof batteryLocations)>(batteryLocations));
 export const colourZod = zodForTypeOptions(ensureAllUnion<SchemaColour, (typeof colours)>(colours));
@@ -110,6 +120,8 @@ export const heatPumpSinkTypeZod = zodForTypeOptions(ensureAllUnion<SchemaHeatPu
 export const heatPumpSourceTypeZod = zodForTypeOptions(ensureAllUnion<SchemaHeatPumpSourceType, (typeof heatPumpSourceTypes)>(heatPumpSourceTypes));
 export const inverterTypeZod = zodForTypeOptions(ensureAllUnion<SchemaInverterType, (typeof inverterTypes)>(inverterTypes));
 export const massDistributionClassZod = zodForTypeOptions(ensureAllUnion<ConciseMassDistributionClass, (typeof massDistributionClasses)>(massDistributionClasses));
+export const mechVentInstallationLocationZod = zodForTypeOptions(ensureAllUnion<SchemaMechanicalVentilationInstallationLocation, (typeof mechVentInstallationLocations)>(mechVentInstallationLocations));
+export const mechVentInstallationTypeZod = zodForTypeOptions(ensureAllUnion<SchemaMechanicalVentilationInstallationType, (typeof mechVentInstallationTypes)>(mechVentInstallationTypes));
 export const mvhrLocationZod = zodForTypeOptions(ensureAllUnion<MVHRLocation, (typeof mhvrLocations)>(mhvrLocations));
 export const partyWallCavityTypeZod = zodForTypeOptions(ensureAllUnion<SchemaPartyWallCavityType, (typeof partyWallCavityTypes)>(partyWallCavityTypes));
 export const partyWallLiningTypeZod = zodForTypeOptions(ensureAllUnion<SchemaPartyWallLiningType, (typeof partyWallLiningTypes)>(partyWallLiningTypes));
@@ -125,4 +137,3 @@ export const waterPipeworkLocationZod = zodForTypeOptions(ensureAllUnion<SchemaW
 export const windowTreatmentControlZod = zodForTypeOptions(ensureAllUnion<SchemaWindowTreatmentControl, (typeof windowTreatmentControls)>(windowTreatmentControls));
 export const windowTreatmentTypeZod = zodForTypeOptions(ensureAllUnion<SchemaWindowTreatmentType, (typeof windowTreatmentTypes)>(windowTreatmentTypes));
 export const windShieldLocationZod = zodForTypeOptions(ensureAllUnion<SchemaWindShieldLocation, (typeof windShieldLocations)>(windShieldLocations));
-export const applianceTypeZod = zodForTypeOptions(ensureAllUnion<SchemaApplianceType, (typeof applianceTypes)>(applianceTypes));

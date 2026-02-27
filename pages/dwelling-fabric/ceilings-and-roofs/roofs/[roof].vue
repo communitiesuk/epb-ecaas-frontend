@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, zeroPitchOptions, uniqueName } from "#imports";
+import type { RadioOption } from "~/components/form-kit/Radios.vue";
 
 const title = "Roof";
 const store = useEcaasStore();
@@ -11,8 +12,11 @@ const roofData = useItemToEdit("roof", store.dwellingFabric.dwellingSpaceCeiling
 const roofId = roofData?.data.id ?? uuidv4();
 const model = ref(roofData?.data);
 
-const roofTypeOptions: Record<Exclude<RoofType, "unheatedPitched">, string> = {
-	flat: "Flat roof",
+const roofTypeOptions: Record<Exclude<RoofType, "unheatedPitched">, string | RadioOption> = {
+	flat: {
+		label: "Flat roof",
+		hint: "This assumes the pitch is 0°",
+	},
 	pitchedInsulatedAtRoof: "Pitched roof insulated at roof or rafter",
 	pitchedInsulatedAtCeiling: "Pitched roof insulated at ceiling or joist",
 };

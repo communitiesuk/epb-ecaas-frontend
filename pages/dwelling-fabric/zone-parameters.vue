@@ -27,13 +27,10 @@ const saveForm = (fields: typeof model.value) => {
 		dwellingFabric: {
 			dwellingSpaceZoneParameters: {
 				data: {
-					volume: fields.volume,
-					livingRoomArea: fields.livingRoomArea,
+					livingZoneArea: fields.livingZoneArea,
 					restOfDwellingArea: fields.restOfDwellingArea,
-					spaceHeatingSystemForThisZone: fields.spaceHeatingSystemForThisZone,
-					// heatingControlType: fields.heatingControlType,
-					// spaceCoolingSystemForThisZone: fields.spaceCoolingSystemForThisZone,
-					// spaceHeatControlSystemForThisZone: fields.spaceHeatControlSystemForThisZone,
+					groundFloorArea: fields.groundFloorArea,
+					volume: fields.volume,
 				},
 				complete: true,
 			},
@@ -67,30 +64,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			test-id="zoneParametersErrorSummary"
 		/>
 		<h1 class="govuk-heading-l">Zone parameters</h1>
-		<p class="govuk-hint">For this release the information required about zones has been simplified. Please be aware that input relating to zones may change in future releases as the calculation model is refined.</p>
-		<!--		<p class="govuk-body">-->
-		<!--			<a href="/guidance/zone-parameters" target="_blank" class="govuk-link">-->
-		<!--				Zone parameters guidance (opens in another window)-->
-		<!--			</a>-->
-		<!--		</p>-->
 		<FormKit
-			id="volume"
-			type="govInputWithSuffix"
-			suffix-text="m³"
-			label="Volume"
-			name="volume"
-			help="Enter the volume of the whole dwelling"
-			validation="required | number | min:0 | max:50000"
-			data-field="Zone.volume"
-		/>
-		<FormKit
-			id="livingRoomArea"
+			id="livingZoneArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Floor area of the living zone"
-			name="livingRoomArea"
+			name="livingZoneArea"
 			validation="required | number | min:0 | max:10000"
-			data-field="Zone.livingroom_area"
+			data-field="Zone.livingzone_area"
 		/>
 		<FormKit
 			id="restOfDwellingArea"
@@ -101,54 +82,26 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0 | max:10000"
 			data-field="Zone.restofdwelling_area"
 		/>
-		<!-- <FormKit
-			id="heatingControlType"
-			type="govRadios"
-			:options="heatingControlTypeOptions"
-			label="Heating control type"
-			name="heatingControlType"
-			validation="required"
-			help="Determines whether living-room and rest-of-dwelling have differing set-points/heating schedules"
-		/> -->
-
-		<!--		<FormKit-->
-		<!--			id="spaceHeatingSystemForThisZone"-->
-		<!--			type="govRadios"-->
-		<!--			label=" Heat emitting system for this zone"-->
-		<!--			name="spaceHeatingSystemForThisZone"-->
-		<!--			help="Select a heat emitting system that has already been added to the calculation. You can only add one heat emitting system for each zone."-->
-		<!--			:options="new Map(spaceHeatingSystemOptions)"-->
-		<!--			:link="getUrl('spaceHeating')"-->
-		<!--			validation="required">-->
-		<!--			<div v-if="!spaceHeatingSystemOptions.length">-->
-		<!--				<p class="govuk-error-message">No heat emitting systems added.</p>-->
-		<!--			</div>-->
-		<!--		</FormKit>-->
-
-		<!--		<p class="govuk-!-margin-bottom-5">-->
-		<!--			<NuxtLink :to="getUrl('heatEmitting')" class="govuk-link gov-radios-add-link">-->
-		<!--				{{spaceHeatingSystemOptions.length ? "Edit heat emitting systems" : "Add heat emitting system"}}-->
-		<!--			</NuxtLink>-->
-		<!--		</p>-->
-
-		<!-- <FormKit
-			id="spaceCoolingSystem"
-			type="govStoredList"
-			label="Cooling for this zone"
-			name="spaceCoolingSystem"
-			help="Select a space cooling system that has already been added to the calculation"
-			:options="[]"
-			:link="getUrl('cooling')"
-		/> -->
-		<!-- <FormKit
-			id="spaceHeatControlSystem"
-			type="govStoredList"
-			label="Space heat control system for this zone"
-			name="spaceHeatControlSystem"
-			help="Select a space heat control system that has already been added to the calculation"
-			:options="[]"
-			link="/"
-		/> -->
+		<FormKit
+			id="groundFloorArea"
+			type="govInputWithSuffix"
+			suffix-text="m²"
+			label="Floor area of ground floor"
+			help="Enter the total footprint of the ground floor, or largest floor of the dwelling if it's a flat"
+			name="groundFloorArea"
+			validation="required | number | min:0 | max:10000"
+			data-field="Zone.groundfloor_area"
+		/>
+		<FormKit
+			id="volume"
+			type="govInputWithSuffix"
+			suffix-text="m³"
+			label="Volume"
+			name="volume"
+			help="Enter the volume of the whole dwelling"
+			validation="required | number | min:0 | max:50000"
+			data-field="Zone.volume"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

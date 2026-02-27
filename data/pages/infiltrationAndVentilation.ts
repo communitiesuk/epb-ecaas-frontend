@@ -37,6 +37,27 @@ const infiltrationAndVentilationPages = [
 		parentId: "mechanicalVentilation",
 	},
 	{
+		id: "mvhrProducts",
+		title: "Select an MVHR",
+		url: "/infiltration-and-ventilation/mechanical-ventilation/:mechanical/mvhr",
+		type: "task",
+		parentId: "mechanicalVentilationEdit",
+	},
+	{
+		id: "centralisedContinuousMevProducts",
+		title: "Select a centralised continuous MEV",
+		url: "/infiltration-and-ventilation/mechanical-ventilation/:mechanical/centralised-continuous-mev",
+		type: "task",
+		parentId: "mechanicalVentilationEdit",
+	},
+	{
+		id: "decentralisedContinuousMevProducts",
+		title: "Select a decentralised continuous MEV",
+		url: "/infiltration-and-ventilation/mechanical-ventilation/:mechanical/decentralised-continuous-mev",
+		type: "task",
+		parentId: "mechanicalVentilationEdit",
+	},
+	{
 		id: "ductwork",
 		title: "MVHR ductwork",
 		url: "/infiltration-and-ventilation/ductwork",

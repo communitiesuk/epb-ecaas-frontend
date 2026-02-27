@@ -25,7 +25,7 @@ describe("windows", () => {
 		height: 0.5,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		uValue: 1,
+		thermalResistance: 1,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
@@ -38,7 +38,7 @@ describe("windows", () => {
 			taggedItem: externalWall.id,
 			height: 1,
 			width: 1,
-			uValue: 1,
+			thermalResistance: 1,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
@@ -57,7 +57,7 @@ describe("windows", () => {
 		},
 		complete: true,
 	};
-	
+
 	const window3: EcaasForm<WindowData> = {
 		data: {
 			...window1.data,
@@ -65,13 +65,13 @@ describe("windows", () => {
 		},
 		complete: true,
 	};
-	
+
 	beforeEach(async () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
 					data: [window1, window2],
-				}, 
+				},
 			},
 		});
 		await renderSuspended(Windows);
@@ -119,7 +119,6 @@ describe("windows", () => {
 		const vent1: EcaasForm<VentData> = {
 			data: {
 				name: "Vent 1",
-				typeOfVent: "trickle",
 				associatedItemId: window2.data.id,
 				effectiveVentilationArea: 10,
 				openingRatio: 1,
@@ -236,7 +235,7 @@ describe("windows", () => {
 			expect(completedStatusElement?.style.display).not.toBe("none");
 		});
 
-	
+
 		describe("after section has been marked as complete", () => {
 
 			beforeEach(async () => {
