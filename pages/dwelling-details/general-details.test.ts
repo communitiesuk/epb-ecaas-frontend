@@ -214,6 +214,7 @@ describe("General details", () => {
 			expect((await screen.findByTestId("storeyOfFlat_error"))).toBeDefined();
 		});
 	});
+
 	test.each(["mains_gas", "LPG_bulk", "LPG_bottled", "LPG_condition_11F"])(
 		"shows an error when form is saved and fuel type includes '%s' along with 'Electricity is the only energy source'",
 		async (fuelType) => {
@@ -229,6 +230,7 @@ describe("General details", () => {
 			).toBe(true);
 		},
 	);
+
 	it("if fuel type is updated, it is removed from all objects which reference it", async () => {
 
 		const heatNetworkSpaceHeating: Partial<HeatSourceData> = {
@@ -314,8 +316,43 @@ describe("General details", () => {
 		expect(DHWItems[1]?.complete).toBe(false);
 		expect((DHWItems[2]?.data as { energySupply: SchemaFuelTypeExtended }).energySupply).toBeUndefined();
 		expect(DHWItems[2]?.complete).toBe(false);
-
 	});
-	
+	it("when type of dwelling is updated from flat to house, updates store so any internal door is not a front door", async () => {
+		const internalDoor: EcaasForm<Partial<InternalDoorData>> = {
+			data: {
+				typeOfInternalDoor: "heatedSpace",
+				name: "Internal 1",
+				associatedItemId: "wall-id",
+				isTheFrontDoor: true,
+				orientation: 20,
+			},
+		};
+		
+		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					data: stateWithFlat,
+				},
+			},
+			dwellingFabric: {
+				dwellingSpaceDoors: {
+					dwellingSpaceInternalDoor: {
+						data: [internalDoor],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(GeneralDetails);
+		await user.click(screen.getByTestId("typeOfDwelling_house"));
+		expect(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[0]?.data).toEqual(
+			{
+				typeOfInternalDoor: "heatedSpace",
+				name: "Internal 1",
+				associatedItemId: "wall-id",
+				isTheFrontDoor: undefined, 
+				orientation: undefined,
+			});
+	});
 });
 

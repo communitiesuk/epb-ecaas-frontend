@@ -76,6 +76,20 @@ watch(() => model.value.fuelType, (newFuelTypes, oldFuelTypes) => {
 	}
 });
 
+watch(() => model.value.typeOfDwelling, (newType, oldType) => {
+	if (newType === oldType || oldType === undefined) return;
+	if (oldType === "flat" && newType === "house") {
+		const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+		for (const door of dwellingSpaceInternalDoor.data) {
+			if ("isTheFrontDoor" in door.data) {
+				door.data.isTheFrontDoor = undefined;
+			}
+			if ("orientation" in door.data) {
+				door.data.orientation = undefined;
+			}
+		}
+	}
+});
 
 autoSaveForm<GeneralDetailsData>(model, (state, newData) => {
 	state.dwellingDetails.generalSpecifications = newData;

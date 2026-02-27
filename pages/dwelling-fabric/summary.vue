@@ -421,7 +421,6 @@ const { dwellingSpaceWallToUnheatedSpace } = store.dwellingFabric.dwellingSpaceW
 const { dwellingSpacePartyWall } = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
-
 const internalDoorSummary: SummarySection = {
 	id: "dwellingSpaceInternalDoors",
 	label: "Internal doors",
@@ -441,8 +440,8 @@ const internalDoorSummary: SummarySection = {
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isInternalDoorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
-			"Is this the front door?": displayBoolean(x.isTheFrontDoor), 
-			"Orientation": "orientation" in x ? x.orientation : emptyValueRendering,
+			"Is this the front door?": x.isTheFrontDoor ? "Yes" : "No", 
+			"Orientation": "orientation" in x && x.orientation !== undefined ? x.orientation : emptyValueRendering,
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceDoors"),
