@@ -792,6 +792,7 @@ describe("Dwelling space walls", () => {
 			"Thermal resistance": `2.86 ${squareMeterKelvinPerWatt.suffix}`,
 			"Areal heat capacity": "Medium",
 			"Mass distribution class": "External",
+			"Perimeter": `32 ${metre.suffix}`,
 			"Associated floor": "Floor of heated basement 1",
 		};
 

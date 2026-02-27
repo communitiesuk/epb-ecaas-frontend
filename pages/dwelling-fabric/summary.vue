@@ -264,6 +264,7 @@ const wallOfHeatedBasementSummary: SummarySection = {
 			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Perimeter": dim(x.perimeter, "metres"),
 			"Associated floor": associatedFloorName,
 		};
 	}) || [],
