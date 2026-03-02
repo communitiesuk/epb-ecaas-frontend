@@ -1598,6 +1598,7 @@ describe("FHS input mapper", () => {
 								surfaceAreaOfElement: 4,
 								arealHeatCapacity: "Medium",
 								massDistributionClass: "M",
+								thermalResistance: 0.5,
 							},
 						},
 					],

@@ -60,6 +60,7 @@ describe("floors", () => {
 		surfaceAreaOfElement: 5,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
+		thermalResistance: 1,
 	};
 
 	const internal2: InternalFloorData = {
@@ -68,6 +69,7 @@ describe("floors", () => {
 		surfaceAreaOfElement: 5,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
+		thermalResistance: 1,
 	};
 
 	const internal3: InternalFloorData = {
@@ -76,6 +78,7 @@ describe("floors", () => {
 		surfaceAreaOfElement: 5,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
+		thermalResistance: 1,
 	};
 
 	const exposed1: ExposedFloorData = {

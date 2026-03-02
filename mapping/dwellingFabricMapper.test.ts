@@ -168,13 +168,22 @@ describe("dwelling fabric mapper", () => {
 			thermalResistanceOfBasementWalls: 2.5,
 		};
 
-		const internalFloor: InternalFloorData = {
+		const internalFloorUnheatedSpace: InternalFloorData = {
 			typeOfInternalFloor: "unheatedSpace",
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			thermalResistanceOfAdjacentUnheatedSpace: 1,
+		};
+
+		const internalFloorHeatedSpace: InternalFloorData = {
+			typeOfInternalFloor: "heatedSpace",
+			name: "Internal 2",
+			surfaceAreaOfElement: 5,
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+			thermalResistance: 1,
 		};
 
 		const exposedFloor: ExposedFloorData = {
@@ -242,7 +251,7 @@ describe("dwelling fabric mapper", () => {
 							{ ...baseForm, data: groundFloorWithUnheatedBasement },
 						],
 					},
-					dwellingSpaceInternalFloor: { ...baseForm, data: [{ ...baseForm, data: internalFloor }] },
+					dwellingSpaceInternalFloor: { ...baseForm, data: [{ ...baseForm, data: internalFloorUnheatedSpace }, { ...baseForm, data: internalFloorHeatedSpace }] },
 					dwellingSpaceExposedFloor: { ...baseForm, data: [{ ...baseForm, data: exposedFloor }] },
 					dwellingSpaceFloorAboveUnheatedBasement: { ...baseForm, data: [{ ...baseForm, data: floorAboveUnheatedBasement }] },
 					dwellingSpaceFloorOfHeatedBasement: { ...baseForm, data: [{ ...baseForm, data: floorAboveHeatedBasement }] },
@@ -266,7 +275,8 @@ describe("dwelling fabric mapper", () => {
 		const groundFloorWithSuspendedFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithSuspendedFloor.name + floorSuffix]! as BuildingElementGroundForSchema;
 		const groundFloorWithHeatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithHeatedBasement.name + floorSuffix]! as BuildingElementGroundForSchema;
 		const groundFloorWithUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithUnheatedBasement.name + floorSuffix]! as BuildingElementGroundForSchema;
-		const internalFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalFloor.name + floorSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const internalFloorUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalFloorUnheatedSpace.name + floorSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const internalFloorHeatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalFloorHeatedSpace.name + floorSuffix] as BuildingElementAdjacentConditionedSpace;
 		const exposedFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[exposedFloor.name + floorSuffix] as BuildingElementOpaque;
 		const floorAboveUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveUnheatedBasement.name + floorSuffix] as BuildingElementGroundForSchema;
 		const floorAboveHeatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveHeatedBasement.name + floorSuffix] as BuildingElementGroundForSchema;
@@ -331,17 +341,26 @@ describe("dwelling fabric mapper", () => {
 
 		expect(groundFloorWithUnheatedBasementElement).toEqual(expectedGroundFloorWithUnheatedBasement);
 
-		const expectedInternalFloor: BuildingElementAdjacentUnconditionedSpaceSimple = {
+		const expectedInternalFloorUnheatedSpace: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-			area: internalFloor.surfaceAreaOfElement,
+			area: internalFloorUnheatedSpace.surfaceAreaOfElement,
 			pitch: 180,
 			u_value: 0.01,
-			areal_heat_capacity: internalFloor.arealHeatCapacity,
-			mass_distribution_class: fullMassDistributionClass(internalFloor.massDistributionClass),
-			thermal_resistance_unconditioned_space: internalFloor.thermalResistanceOfAdjacentUnheatedSpace,
+			areal_heat_capacity: internalFloorUnheatedSpace.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(internalFloorUnheatedSpace.massDistributionClass),
+			thermal_resistance_unconditioned_space: internalFloorUnheatedSpace.thermalResistanceOfAdjacentUnheatedSpace,
+		};
+		const expectedInternalFloorHeatedSpace: BuildingElementAdjacentConditionedSpace = {
+			type: "BuildingElementAdjacentConditionedSpace",
+			area: internalFloorHeatedSpace.surfaceAreaOfElement,
+			pitch: 180,
+			thermal_resistance_construction: internalFloorHeatedSpace.thermalResistance,
+			areal_heat_capacity: internalFloorHeatedSpace.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(internalFloorHeatedSpace.massDistributionClass),
 		};
 
-		expect(internalFloorElement).toEqual(expectedInternalFloor);
+		expect(internalFloorUnheatedSpaceElement).toEqual(expectedInternalFloorUnheatedSpace);
+		expect(internalFloorHeatedSpaceElement).toEqual(expectedInternalFloorHeatedSpace);
 
 		const expectedExposedFloor: BuildingElementOpaque = {
 			type: "BuildingElementOpaque",

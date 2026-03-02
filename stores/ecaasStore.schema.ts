@@ -155,6 +155,7 @@ const internalFloorDataZod = z.discriminatedUnion(
 		}),
 		baseInternalFloorData.extend({
 			typeOfInternalFloor: z.literal("heatedSpace"),
+			thermalResistance,
 		}),
 	],
 );

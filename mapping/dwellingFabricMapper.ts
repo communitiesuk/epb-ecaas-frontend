@@ -232,7 +232,6 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 			pitch: 180,
-			u_value: defaultUValue,
 		};
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
 
@@ -243,11 +242,13 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				...commonFields,
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
+				u_value: defaultUValue,
 			};
 		} else {
 			internalFloor = {
 				...commonFields,
 				type: "BuildingElementAdjacentConditionedSpace",
+				thermal_resistance_construction: x.thermalResistance,
 			};
 		}
 

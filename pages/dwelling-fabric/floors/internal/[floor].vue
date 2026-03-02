@@ -35,6 +35,7 @@ const saveForm = (fields: InternalFloorData) => {
 		} else if (fields.typeOfInternalFloor === "heatedSpace") {
 			floor = {
 				...commonFields,
+				thermalResistance: fields.thermalResistance,
 				typeOfInternalFloor: fields.typeOfInternalFloor,
 			};
 		} else {
@@ -126,6 +127,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</p>
 			</GovDetails>
 		</FormKit>
+		<FieldsThermalResistance v-if="model?.typeOfInternalFloor === 'heatedSpace'" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
