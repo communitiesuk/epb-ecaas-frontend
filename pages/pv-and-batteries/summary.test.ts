@@ -130,7 +130,7 @@ describe("PV and electric batteries summary page", () => {
 				"Type of shading 1": "Obstacle",
 				"Distance of shading 1 from edge of PV": `1 ${metre.suffix}`,
 				"Height of shading 1": `11 ${metre.suffix}`,
-				"Transparency of shading 1": "11",
+				"Transparency of shading 1": "11 %",
 			};
 			const shading2Expected = {
 				"Name of shading 2": "Test 2",

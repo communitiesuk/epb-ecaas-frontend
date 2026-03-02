@@ -16,7 +16,7 @@ function formatShadingRowsForSummary(shading: PvShadingData[]): Record<string, s
 		rows[`Distance of shading ${n} from edge of PV`] = dim(shadingEntry.distance, "metres");
 		if (shadingEntry.typeOfShading === "obstacle") {
 			rows[`Height of shading ${n}`] = dim(shadingEntry.height, "metres");
-			rows[`Transparency of shading ${n}`] = show(shadingEntry.transparency);
+			rows[`Transparency of shading ${n}`] = show(shadingEntry.transparency + " %");
 		} else {
 			rows[`Depth of shading ${n}`] = dim(shadingEntry.depth, "metres");
 		}

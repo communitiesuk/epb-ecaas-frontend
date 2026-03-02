@@ -34,6 +34,24 @@ const typeOptionsSummary = {
 	overhang: "Overhang",
 	frame_or_reveal: "Frame / reveal",
 };
+const { handleInvalidSubmit } = useErrorSummary();
+
+const shadingSummaryData = (item: PvShadingData) => {
+	if (item.typeOfShading === "obstacle") {
+		return {
+			"Type of shading": typeOptionsSummary[item.typeOfShading],
+			"Height": `${item.height}m`,
+			"Distance": `${item.distance}m`,
+			"Transparency": `${item.transparency}%`,
+		};
+	}
+	return {
+		"Type of shading": typeOptionsSummary[item.typeOfShading],
+		[`Depth of ${sentenceToLowerCase(typeOptions[item.typeOfShading] as string)}`]: `${item.depth}m`,
+		"Distance from edge of PV": `${item.distance}m`,
+	};
+};
+
 const buildShadingElement = (): PvShadingData | null => {
 	const { typeOfShading, name } = formModel.value;
 	if (!typeOfShading || !name) {
@@ -96,6 +114,7 @@ const removeShading = (i: number) => {
 
 <template>
 	<div data-testid="pv-shading-section">
+		<h2 v-if="shadingItems.length" class="govuk-heading-m">Objects that shade the PV array</h2>
 		<div
 			v-for="(item, i) in shadingItems"
 			:key="i"
@@ -127,119 +146,111 @@ const removeShading = (i: number) => {
 						</a>
 					</li>
 				</ul>
+				<ul v-else class="govuk-summary-card__actions">
+					<li class="govuk-summary-card__action">
+						<a
+							href="#"
+							class="govuk-link govuk-body-s"
+							:data-testid="`shading_cancel_${i}`"
+							@click.prevent="editIndex = null; formModel = {}"
+						>
+							Cancel
+						</a>
+					</li>
+				</ul>
 			</div>
-			<div v-if="editIndex !== i" class="govuk-summary-card__content">
-				<dl class="govuk-summary-list">
-					<div class="govuk-summary-list__row">
-						<dt class="govuk-summary-list__key">Type of shading</dt>
-						<dd class="govuk-summary-list__value">{{ typeOptionsSummary[item.typeOfShading] }}</dd>
-					</div>
-					<template v-if="item.typeOfShading === 'obstacle'">
-						<div class="govuk-summary-list__row">
-							<dt class="govuk-summary-list__key">Height</dt>
-							<dd class="govuk-summary-list__value">{{ item.height }} m</dd>
-						</div>
-						<div class="govuk-summary-list__row">
-							<dt class="govuk-summary-list__key">Distance</dt>
-							<dd class="govuk-summary-list__value">{{ item.distance }} m</dd>
-						</div>
-						<div class="govuk-summary-list__row">
-							<dt class="govuk-summary-list__key">Transparency</dt>
-							<dd class="govuk-summary-list__value">{{ item.transparency }}%</dd>
-						</div>
-					</template>
-					<template v-else>
-						<div class="govuk-summary-list__row">
-							<dt class="govuk-summary-list__key">Depth of {{ sentenceToLowerCase(typeOptions[item.typeOfShading] as string) }}</dt>
-							<dd class="govuk-summary-list__value">{{ item.depth }} m</dd>
-						</div>
-						<div class="govuk-summary-list__row">
-							<dt class="govuk-summary-list__key">Distance from edge of PV</dt>
-							<dd class="govuk-summary-list__value">{{ item.distance }} m</dd>
-						</div>
-					</template>
-				</dl>
+			<div v-if="editIndex !== i" class="govuk-summary-card__content shading-summary">
+				<SummaryList :id="`shading-${i}`" :data="shadingSummaryData(item)" />
 			</div>
 			<div v-else class="govuk-summary-card__content" data-testid="shading-add-form">
-				<FormKit
-					id="shadingName"
-					v-model="formModel.name"
-					type="govInputText"
-					label="Name of shading"
-					validation="required"
-				/>
-				<FormKit
-					id="typeOfShading"
-					v-model="formModel.typeOfShading"
-					type="govRadios"
-					label="Type of shading"
-					:options="typeOptions"
-					validation="required"
-				/>
-				<template v-if="formModel.typeOfShading === 'obstacle'">
+				<FormKit 
+					type="form" 
+					:actions="false" 
+					:incomplete-message="false"
+					@submit="saveShading"
+					@invalid="handleInvalidSubmit"
+				>
 					<FormKit
-						id="height"
-						v-model="formModel.height"
-						type="govInputWithSuffix"
-						label="Height of obstacle"
-						suffix-text="m"
-						validation="required | number | min:0"
+						id="shadingName"
+						v-model="formModel.name"
+						type="govInputText"
+						label="Name of shading"
+						validation="required"
 					/>
 					<FormKit
-						id="distance"
-						v-model="formModel.distance"
-						type="govInputWithSuffix"
-						label="Distance from edge of PV"
-						suffix-text="m"
-						validation="required | number | min:0"
+						id="typeOfShading"
+						v-model="formModel.typeOfShading"
+						type="govRadios"
+						label="Type of shading"
+						:options="typeOptions"
+						validation="required"
 					/>
-					<FormKit
-						id="transparency"
-						v-model="formModel.transparency"
-						type="govInputWithSuffix"
-						label="Transparency of obstacle"
-						help="100% is completely transparent. 0% is opaque."
-						suffix-text="%"
-						validation="required | number | min:0 | max:100"
-					/>
-				</template>
-				<template v-else-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin' || formModel.typeOfShading === 'overhang' || formModel.typeOfShading === 'frame_or_reveal'">
-					<FormKit
-						id="depth"
-						:key="`depth-${formModel.typeOfShading}`"
-						v-model="formModel.depth"
-						type="govInputWithSuffix"
-						:label="'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading] as string)"
-						suffix-text="m"
-						validation="required | number | min:0"
-					/>
-					<FormKit
-						id="distance"
-						v-model="formModel.distance"
-						type="govInputWithSuffix"
-						label="Distance from edge of PV"
-						suffix-text="m"
-						validation="required | number | min:0"
-					/>
-				</template>
-				<div class="govuk-button-group">
-					<button
-						type="button"
-						class="govuk-button"
-						data-testid="saveShadingObject"
-						@click="saveShading"
-					>
-						Save shading object
-					</button>
-					<a
-						href="#"
-						class="govuk-link govuk-body-s"
-						data-testid="cancelShadingObject"
-						@click.prevent="isAddAnother = false; editIndex = null; formModel = {}"
-					>
-						Cancel
-					</a>
-				</div>
+					<template v-if="formModel.typeOfShading === 'obstacle'">
+						<FormKit
+							id="height"
+							v-model="formModel.height"
+							type="govInputWithSuffix"
+							label="Height of obstacle"
+							suffix-text="m"
+							validation="required | number | min:0"
+						/>
+						<FormKit
+							id="distance"
+							v-model="formModel.distance"
+							type="govInputWithSuffix"
+							label="Distance from edge of PV"
+							suffix-text="m"
+							validation="required | number | min:0"
+						/>
+						<FormKit
+							id="transparency"
+							v-model="formModel.transparency"
+							type="govInputWithSuffix"
+							label="Transparency of obstacle"
+							help="100% is completely transparent. 0% is opaque."
+							suffix-text="%"
+							validation="required | number | min:0 | max:100"
+						/>
+					</template>
+					<template v-else-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin' || formModel.typeOfShading === 'overhang' || formModel.typeOfShading === 'frame_or_reveal'">
+						<FormKit
+							id="depth"
+							:key="`depth-${formModel.typeOfShading}`"
+							v-model="formModel.depth"
+							type="govInputWithSuffix"
+							:label="'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading] as string)"
+							suffix-text="m"
+							validation="required | number | min:0"
+						/>
+						<FormKit
+							id="distance"
+							v-model="formModel.distance"
+							type="govInputWithSuffix"
+							label="Distance from edge of PV"
+							suffix-text="m"
+							validation="required | number | min:0"
+						/>
+					</template>
+					<div class="govuk-button-group">
+						<button
+							type="button"
+							class="govuk-button"
+							data-testid="saveShadingObject"
+							@click="saveShading"
+						>
+							Save shading object
+						</button>
+						<a
+							href="#"
+							class="govuk-link govuk-body-s"
+							data-testid="cancelShadingObject"
+							@click.prevent="isAddAnother = false; editIndex = null; formModel = {}"
+						>
+							Cancel
+						</a>
+					
+					</div>
+				</FormKit>
 			</div>
 		</div>
 
@@ -255,9 +266,27 @@ const removeShading = (i: number) => {
 		<div v-if="showAddForm && !isEditing" class="govuk-summary-card">
 			<div class="govuk-summary-card__title-wrapper">
 				<h2 class="govuk-summary-card__title">Add shading</h2>
+				<ul v-if="isAddAnother" class="govuk-summary-card__actions">
+					<li class="govuk-summary-card__action">
+						<a
+							href="#"
+							class="govuk-link govuk-body-s"
+							data-testid="cancelShadingObject"
+							@click.prevent="() => { isAddAnother = false; editIndex = null; formModel = {} }"
+						>
+							Cancel
+						</a>
+					</li>
+				</ul>
 			</div>
 			<div class="govuk-summary-card__content" data-testid="shading-add-form">
-				<FormKit type="form" :actions="false" @submit="saveShading">
+				<FormKit 
+					type="form" 
+					:actions="false" 
+					:incomplete-message="false"
+					@submit="saveShading"
+					@invalid="handleInvalidSubmit"
+				>
 					<FormKit
 						id="shadingName"
 						v-model="formModel.name"
@@ -327,19 +356,17 @@ const removeShading = (i: number) => {
 						>
 							Save shading object
 						</button>
-						<a
-							v-if="isAddAnother"
-							href="#"
-							class="govuk-link govuk-body-s"
-							data-testid="cancelShadingObject"
-							@click.prevent="() => { isAddAnother = false; editIndex = null; formModel = {} }"
-						>
-							Cancel
-						</a>
 					</div>
 				</FormKit>
 			</div>
 		</div>
 	</div>
 </template>
+
+<style scoped>
+.shading-summary :deep(.govuk-summary-list__key),
+.shading-summary :deep(.govuk-summary-list__value) {
+    font-size: 1rem;
+}
+</style>
 
