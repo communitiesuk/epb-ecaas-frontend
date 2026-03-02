@@ -544,5 +544,24 @@ describe("external unglazed door", () => {
 			await user.click(screen.getByTestId(`associatedItemId_${roof.data.id}`));
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
+		
+		test("does not display the 'Is this the front door?' element if pitch is 0 or 180 because orientation is not asked for", async() => {
+	
+			await renderSuspended(ExternalUnglazedDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("pitchOption_custom"));
+			await user.type(screen.getByTestId("pitch"), "0");
+			await user.tab();
+			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
+
+			await user.clear(screen.getByTestId("pitch"));
+			await user.type(screen.getByTestId("pitch"), "180");
+			await user.tab();
+			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
+		});
 	});
 });

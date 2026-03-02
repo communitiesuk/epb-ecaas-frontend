@@ -73,6 +73,7 @@ function canBeFrontDoor(node: FormKitNode) {
 	} return true;
 }
 
+const pitchOptionsWithoutOrientation = [0, 180];
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
@@ -171,7 +172,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
-			v-if="!model?.associatedItemId || model.associatedItemId === 'none' || !isFlatRoofItem(model.associatedItemId)"
+			v-if="(!model?.associatedItemId || model.associatedItemId === 'none' || !isFlatRoofItem(model.associatedItemId)) && !pitchOptionsWithoutOrientation.includes(model?.pitch!)"
 			id="isTheFrontDoor"
 			type="govBoolean"
 			label="Is this the front door?"
