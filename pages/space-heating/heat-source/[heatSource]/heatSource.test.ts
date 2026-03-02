@@ -24,6 +24,15 @@ describe("heatSource", () => {
 		mockFetch.mockReset();
 	});
 
+	const boiler1: HeatSourceData = {
+		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+		name: "Boiler 1",
+		typeOfHeatSource: "boiler",
+		typeOfBoiler: "combiBoiler",
+		productReference: "BOILER_SMALL",
+		locationOfBoiler: "heatedSpace",
+	};
+
 	describe("heat pump", () => {
 		const heatPumpProduct: Partial<DisplayProduct> = {
 			id: "1000",
@@ -232,6 +241,83 @@ describe("heatSource", () => {
 				expect(actualHeatSource.data.name).toBe("Air source heat pump");
 			});
 		});
+
+		describe("back up boiler", () => {
+			test("section is displayed when a heat pump with a backup boiler is selected from the PCDB", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: { ...heatPump1, backupCtrlType: "TopUp" } }],
+						},
+					},
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				expect(screen.queryByRole("link", { name: "Click here to add a boiler" })).toBeDefined();
+			});
+
+			test("section is not displayed when a heat pump without a backup boiler is selected from the PCDB", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: { ...heatPump1, backupCtrlType: "None" } }],
+						},
+					},
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				expect(screen.queryByRole("link", { name: "Click here to add a boiler" })).toBeNull();
+			});
+
+			it("displays a link to add a boiler when no boilers exist", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: { ...heatPump1, "backupCtrlType": "TopUp" } }],
+						},
+					},
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				const addBoilerLink: HTMLAnchorElement = screen.getByRole("link", {
+					name: "Click here to add a boiler",
+				});
+				expect(addBoilerLink).toBeDefined();
+			});
+
+			it("displays list of existing boilers when boilers exist in store", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: boiler1 }, { data: { ...heatPump1, "backupCtrlType": "TopUp" } }],
+						},
+					},
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "1" },
+					},
+				});
+
+				expect(screen.getByTestId(`backupBoiler_${boiler1.id}`)).toBeDefined();
+			});
+		});
 	});
 
 	describe("boiler", () => {
@@ -252,15 +338,6 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
 			await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));
 			await user.click(screen.getByTestId("locationOfBoiler_heatedSpace"));
-		};
-
-		const boiler1: HeatSourceData = {
-			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
-			name: "Boiler 1",
-			typeOfHeatSource: "boiler",
-			typeOfBoiler: "combiBoiler",
-			productReference: "BOILER_SMALL",
-			locationOfBoiler: "heatedSpace",
 		};
 
 		const boiler2: HeatSourceData = {

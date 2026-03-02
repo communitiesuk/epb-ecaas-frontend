@@ -12,7 +12,7 @@ const { model } = defineProps<{
 const heatSources = getCombinedHeatSources(store);
 const emit = defineEmits(["update-heat-pump-model"]);
 
-const requireBoiler = model.productReference && (model.backupCtrlType === "TopUp" || model.backupCtrlType === "Substitute") && !model.powerMaxBackup;
+const requireBoiler = model.productReference && model.backupCtrlType === "TopUp" && !model.powerMaxBackup;
 </script>
 
 <template>
@@ -93,5 +93,11 @@ const requireBoiler = model.productReference && (model.backupCtrlType === "TopUp
 		:selected-product-type="model.typeOfHeatPump"
 		:page-url="route.fullPath"
 		:page-index="index" />
-	<p v-if="requireBoiler">Boiler required</p>
+	<FieldsBackupBoiler
+		v-if="requireBoiler"
+		id="backupBoiler"
+		name="backupBoiler"
+		label="Back up boiler"
+		help="Select the boiler that has been added previously which will be used as the backup for the heat pump"
+	/>
 </template>

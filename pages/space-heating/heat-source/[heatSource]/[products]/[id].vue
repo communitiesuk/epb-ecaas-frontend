@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
+import type { HeatPumpProduct } from "~/pcdb/pcdb.types";
 import { productTypeMap, typeOfHeatSource, type HeatSourceData, type PcdbProduct } from "~/stores/ecaasStore.schema";
 import { boilerTypes, heatPumpTypes, heatSourceProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
@@ -58,6 +59,12 @@ const selectProduct = () => {
 				} else {
 					heatSourceData.locationFromPcdb = false;
 				}
+			}
+
+			if (heatSourceData.typeOfHeatSource === "heatPump") {
+				const heatPumpProduct = data as HeatPumpProduct;
+				heatSourceData.backupCtrlType = heatPumpProduct.backupCtrlType;
+				heatSourceData.powerMaxBackup = heatPumpProduct.powerMaxBackup ?? undefined;
 			}
 
 			const product = item.data as PcdbProduct;
