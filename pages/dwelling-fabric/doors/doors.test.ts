@@ -166,6 +166,7 @@ describe("doors", () => {
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
+			thermalResistance: 1,
 		},
 	};
 
@@ -178,6 +179,7 @@ describe("doors", () => {
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
+			thermalResistance: 1,
 		},
 	};
 
@@ -190,6 +192,7 @@ describe("doors", () => {
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
+			thermalResistance: 1,
 		},
 	};
 

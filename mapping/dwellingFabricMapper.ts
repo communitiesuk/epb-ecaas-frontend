@@ -567,7 +567,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			internalDoor = {
 				...commonFields,
 				type: "BuildingElementAdjacentConditionedSpace",
-				u_value: defaultUValue, // TODO: double check this is correct behaviour
+				thermal_resistance_construction: x.thermalResistance,
 			};
 		};
 

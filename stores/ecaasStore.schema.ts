@@ -491,10 +491,12 @@ const internalDoorDataZod = z.discriminatedUnion("typeOfInternalDoor", [
 		typeOfInternalDoor: z.literal("heatedSpace"),
 		isTheFrontDoor: z.literal(true).optional(),
 		orientation: z.number().min(0).lt(360).optional(),
+		thermalResistance,
 	}),
 	z.object({
 		typeOfInternalDoor: z.literal("heatedSpace"),
 		isTheFrontDoor: z.literal(false).optional(),
+		thermalResistance,
 	}),
 	z.object({
 		typeOfInternalDoor: z.literal("unheatedSpace"),

@@ -774,7 +774,7 @@ describe("dwelling fabric mapper", () => {
 			},
 		};
 
-		const internalDoor: InternalDoorData = {
+		const internalDoorUnheatedSpace: InternalDoorData = {
 			typeOfInternalDoor: "unheatedSpace",
 			name: "Internal 1",
 			isTheFrontDoor: false,
@@ -786,6 +786,16 @@ describe("dwelling fabric mapper", () => {
 			thermalResistanceOfAdjacentUnheatedSpace: 1,
 		};
 
+		const internalDoorHeatedSpace: InternalDoorData = {
+			typeOfInternalDoor: "heatedSpace",
+			name: "Internal 2",
+			isTheFrontDoor: false,
+			associatedItemId: internalWall.data.id,
+			surfaceArea: 5,
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+			thermalResistance: 1,
+		};
 		const externalGlazedDoor: ExternalGlazedDoorData = {
 			name: "External glazed door 1",
 			isTheFrontDoor: false,
@@ -836,7 +846,7 @@ describe("dwelling fabric mapper", () => {
 					},
 				},
 				dwellingSpaceDoors: {
-					dwellingSpaceInternalDoor: { ...baseForm, data: [{ ...baseForm, data: internalDoor }] },
+					dwellingSpaceInternalDoor: { ...baseForm, data: [{ ...baseForm, data: internalDoorUnheatedSpace }, { ...baseForm, data: internalDoorHeatedSpace }] },
 					dwellingSpaceExternalGlazedDoor: { ...baseForm, data: [{ ...baseForm, data: externalGlazedDoor }] },
 					dwellingSpaceExternalUnglazedDoor: { ...baseForm, data: [{ ...baseForm, data: externalUnglazedDoor }] },
 				},
@@ -847,22 +857,35 @@ describe("dwelling fabric mapper", () => {
 		const fhsInputData = mapDoorData(resolveState(store.$state));
 
 		// Assert
-		const internalDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalDoor.name + doorSuffix]! as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const internalDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalDoorUnheatedSpace.name + doorSuffix]! as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const internalDoorHeatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalDoorHeatedSpace.name + doorSuffix]! as BuildingElementAdjacentUnconditionedSpaceSimple;
 		const externalGlazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalGlazedDoor.name + doorSuffix]! as BuildingElementTransparent;
 		const externalUnglazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalUnglazedDoor.name + doorSuffix]! as BuildingElementOpaque;
 
-		const expectedInternalDoor: BuildingElementAdjacentUnconditionedSpaceSimple =
+		const expectedInternalDoorUnheatedSpace: BuildingElementAdjacentUnconditionedSpaceSimple =
 		{
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 			pitch: extractPitch(internalWall.data),
-			area: internalDoor.surfaceArea,
-			u_value: internalDoor.uValue,
-			areal_heat_capacity: internalDoor.arealHeatCapacity,
-			mass_distribution_class: fullMassDistributionClass(internalDoor.massDistributionClass),
-			thermal_resistance_unconditioned_space: internalDoor.thermalResistanceOfAdjacentUnheatedSpace,
+			area: internalDoorUnheatedSpace.surfaceArea,
+			u_value: internalDoorUnheatedSpace.uValue,
+			areal_heat_capacity: internalDoorUnheatedSpace.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(internalDoorUnheatedSpace.massDistributionClass),
+			thermal_resistance_unconditioned_space: internalDoorUnheatedSpace.thermalResistanceOfAdjacentUnheatedSpace,
 		};
 
-		expect(internalDoorElement).toEqual(expectedInternalDoor);
+		expect(internalDoorElement).toEqual(expectedInternalDoorUnheatedSpace);
+
+		const expectedInternalDoorHeatedSpace: BuildingElementAdjacentConditionedSpace =
+		{
+			type: "BuildingElementAdjacentConditionedSpace",
+			pitch: extractPitch(internalWall.data),
+			area: internalDoorHeatedSpace.surfaceArea,
+			thermal_resistance_construction: internalDoorHeatedSpace.thermalResistance,
+			areal_heat_capacity: internalDoorHeatedSpace.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(internalDoorHeatedSpace.massDistributionClass),
+		};
+
+		expect(internalDoorHeatedSpaceElement).toEqual(expectedInternalDoorHeatedSpace);
 
 		const expectedExternalGlazedDoor: BuildingElementTransparent = {
 			type: "BuildingElementTransparent",

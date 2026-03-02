@@ -137,6 +137,7 @@ describe("ceilings and roofs", () => {
 					surfaceArea: 5,
 					arealHeatCapacity: "Very light",
 					massDistributionClass: "I",
+					thermalResistance: 0.5,
 				},
 			};
 

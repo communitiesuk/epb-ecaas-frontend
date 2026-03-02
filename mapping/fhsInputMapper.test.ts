@@ -850,7 +850,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: "IE: Mass divided over internal and external side",
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
-					u_value: 0.01,
+					thermal_resistance_construction: 1,
 				},
 				"door to garage (door)": {
 					area: 1.4,
@@ -1817,6 +1817,7 @@ describe("FHS input mapper", () => {
 							arealHeatCapacity: "Light",
 							massDistributionClass: "IE",
 							associatedItemId: internalWallId,
+							thermalResistance: 1,
 						},
 					},
 					{

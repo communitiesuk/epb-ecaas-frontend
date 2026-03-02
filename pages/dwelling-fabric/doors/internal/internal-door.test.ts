@@ -43,12 +43,15 @@ describe("internal door", () => {
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
+			thermalResistance: 0.1,
 		},
 	};
-
 	const internalDoorWithUnheatedSpace: EcaasForm<InternalDoorData> = {
 		data: {
-			...internalDoor.data,
+			name: "Internal 2",
+			surfaceArea: 5,
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
 			associatedItemId: wallToUnheatedSpace.id,
 			typeOfInternalDoor: "unheatedSpace",
 			uValue: 0.1,
@@ -75,8 +78,8 @@ describe("internal door", () => {
 		store.$reset();
 	});
 
-	const populateValidForm = async () => {
-		await user.type(screen.getByTestId("name"), "Internal 1");
+	const populateValidForm = async ({ name }: { name?: string } = {}) => {
+		await user.type(screen.getByTestId("name"), name ?? "Internal 1");
 		await user.type(screen.getByTestId("surfaceArea"), "5");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
@@ -92,6 +95,7 @@ describe("internal door", () => {
 
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 			await populateValidForm();
+			await user.type(screen.getByTestId("thermalResistance"), "0.1");
 			await user.click(
 				screen.getByTestId(`associatedItemId_${internalWall.id}`),
 			);
@@ -124,6 +128,7 @@ describe("internal door", () => {
 			expect((await screen.findByTestId(`associatedItemId_${internalWall.id}`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("5");
 			expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("0.1");
 		});
 
 		it("requires additional fields when heated space is selected", async () => {
@@ -137,6 +142,7 @@ describe("internal door", () => {
 			expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
+			expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
 		});
 	});
 
@@ -149,7 +155,7 @@ describe("internal door", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfInternalDoor_unheatedSpace"));
-			await populateValidForm();
+			await populateValidForm({ name: "Internal 2" });
 			await user.click(
 				screen.getByTestId(`associatedItemId_${wallToUnheatedSpace.id}`),
 			);
@@ -217,7 +223,7 @@ describe("internal door", () => {
 				params: { door: "create" },
 			},
 		});
-	
+
 		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 		await populateValidForm();
 		await user.click(screen.getByTestId(`associatedItemId_${internalWall.id}`));
