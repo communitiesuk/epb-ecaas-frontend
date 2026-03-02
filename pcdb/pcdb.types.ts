@@ -56,7 +56,7 @@ const heatPumpBase = BaseProduct.extend({
 	powerStandby: z.number(),
 	powerCrankcaseHeater: z.nullable(z.number()),
 	powerOff: z.nullable(z.number()),
-	powerMaxBackup: z.nullable(z.number()),
+	powerMaxBackup: z.optional(z.number()),
 	standardRatingCapacity20C: z.nullable(z.number()),
 	standardRatingCapacity35C: z.nullable(z.number()),
 	standardRatingCapacity55C: z.nullable(z.number()),
@@ -347,6 +347,8 @@ export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName
 	technologyType: TechnologyType;
 	boilerLocation?: string;
 	communityHeatNetworkName?: string;
+	backupCtrlType?: string;
+	powerMaxBackup?: number;
 };
 
 export type DisplayProductWithFlowTemp = DisplayProduct & {

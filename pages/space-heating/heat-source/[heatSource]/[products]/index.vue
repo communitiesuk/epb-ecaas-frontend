@@ -50,6 +50,11 @@ const selectProduct = (product: DisplayProduct) => {
 				}
 			}
 
+			if (data.typeOfHeatSource === "heatPump") {
+				data.backupCtrlType = product.backupCtrlType;
+				data.powerMaxBackup = product.powerMaxBackup;
+			}
+
 			(item.data as PcdbProduct).productReference = product.id;
 		}
 	});

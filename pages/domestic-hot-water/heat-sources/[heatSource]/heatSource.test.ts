@@ -527,6 +527,113 @@ describe("Heat pump section", () => {
 			expect(await screen.findByTestId("selectHeatPump_error")).toBeDefined();
 		});
 	});
+
+	describe("backup boiler", () => {
+		const heatPump1: HeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "Heat pump 1",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "airSource",
+			productReference: "HEATPUMP-SMALL",
+		};
+
+		const spaceHeatingBoiler: HeatSourceData = {
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+			name: "Boiler 1",
+			typeOfHeatSource: "boiler",
+			typeOfBoiler: "combiBoiler",
+			productReference: "BOILER_SMALL",
+			locationOfBoiler: "heatedSpace",
+		};
+
+		const dhwBoiler: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "1b73e247-57c5-26b8-1tbd-83tdk333333",
+			name: "Heat source 1",
+			typeOfHeatSource: "boiler",
+			typeOfBoiler: "combiBoiler",
+		};
+
+		test("boilers created in space heating with no reference in DHW are not displayed", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: spaceHeatingBoiler } ],
+					},
+				},
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: { ...heatPump1, isExistingHeatSource: false, "backupCtrlType": "TopUp" } }, { data: dhwBoiler } ],
+					},
+				},
+				
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+				},
+			});
+
+			expect(screen.queryByTestId(`backupBoiler_${spaceHeatingBoiler.id}`)).toBeNull();
+			expect(screen.getByTestId(`backupBoiler_${dhwBoiler.id}`)).toBeDefined();
+		});
+
+		test("boilers created in space heating and referenced in DHW are displayed", async () => {
+			const referencedBoiler: Partial<DomesticHotWaterHeatSourceData> = {
+				isExistingHeatSource: true,
+				heatSourceId: spaceHeatingBoiler.id,
+				id: "1b73e247-57c5-26b8-1tbd-83tdk333333",
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: spaceHeatingBoiler } ],
+					},
+				},
+				domesticHotWater: {
+					heatSources: {
+						data: [ { data: referencedBoiler }, { data: { ...heatPump1, isExistingHeatSource: false, "backupCtrlType": "TopUp" } } ],
+					},
+				},
+				
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "1" },
+				},
+			});
+
+			expect(screen.getByTestId(`backupBoiler_${spaceHeatingBoiler.id}`)).toBeDefined();
+		});
+
+		test("displays a link to add a boiler when no boilers exist", async () => {
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: { ...heatPump1, isExistingHeatSource: false, "backupCtrlType": "TopUp" } }],
+					},
+				},
+			});
+		
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+				},
+			});
+		
+			const addBoilerLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Click here to add a boiler",
+			});
+			
+			expect(addBoilerLink).toBeDefined();
+			expect(addBoilerLink.getAttribute("href")).toBe("/domestic-hot-water/heat-sources/create");
+		});
+	});
+
 	describe("immersion heater", () => {
 			
 		const populateValidImmersionHeaterForm = async () => {

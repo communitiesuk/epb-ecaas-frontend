@@ -97,6 +97,8 @@ const getProductsByTechnologyType = async <U extends DisplayTechnologyProducts>(
 			modelName: x.modelName as string,
 			modelQualifier: x.modelQualifier as string,
 			technologyType: x.technologyType as TechnologyType,
+			...(x.backupCtrlType ? { backupCtrlType: x.backupCtrlType as string } : {}),
+			...(x.powerMaxBackup ? { powerMaxBackup: x.powerMaxBackup as number } : {}),
 			...(x.boilerLocation ? { boilerLocation: x.boilerLocation } : {}),
 			...(x.communityHeatNetworkName ? { communityHeatNetworkName: x.communityHeatNetworkName } : null),
 		};
