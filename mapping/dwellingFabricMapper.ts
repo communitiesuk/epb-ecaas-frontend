@@ -491,7 +491,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 			ceiling = {
 				...commonFields,
 				type: "BuildingElementAdjacentConditionedSpace",
-				u_value: defaultUValue,
+				thermal_resistance_construction: x.thermalResistance,
 			};
 		};
 

@@ -31,6 +31,7 @@ describe("ceilings and roofs", () => {
 			massDistributionClass: "I",
 			pitchOption: "custom",
 			pitch: 180,
+			thermalResistance: 0.5,
 		},
 	};
 

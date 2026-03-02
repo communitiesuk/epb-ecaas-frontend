@@ -2,6 +2,7 @@
 import type { CeilingData } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, zeroPitchOptions, uniqueName } from "#imports";
+import ThermalResistance from "~/components/fields/ThermalResistance.vue";
 
 const title = "Ceiling";
 const store = useEcaasStore();
@@ -47,6 +48,7 @@ const saveForm = (fields: CeilingData) => {
 				data: {
 					...commonFields,
 					type: fields.type,
+					thermalResistance: fields.thermalResistance,
 				},
 				complete: true,
 			};
@@ -161,6 +163,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</p>
 			</GovDetails>
 		</FormKit>
+		<ThermalResistance v-if="model?.type==='heatedSpace'"/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

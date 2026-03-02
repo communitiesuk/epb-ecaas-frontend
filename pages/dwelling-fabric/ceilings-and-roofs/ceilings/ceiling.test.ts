@@ -15,10 +15,13 @@ describe("ceiling", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const ceiling: EcaasForm<CeilingData> = {
+
+	const ceilingUnheatedSpace: EcaasForm<CeilingData> = {
 		data: {
-			id: "099342c5-07c5-4268-b66b-f85dfc5de58f",
-			type: "heatedSpace",
+			id: "199342c5-07c5-4268-b66b-f85dfc5de58f",
+			type: "unheatedSpace",
+			uValue: 1,
+			thermalResistanceOfAdjacentUnheatedSpace: 0,
 			name: "Ceiling 1",
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
@@ -27,13 +30,17 @@ describe("ceiling", () => {
 			pitch: 0,
 		},
 	};
-
-	const ceilingUnheatedSpace: EcaasForm<CeilingData> = {
+	const ceilingHeatedSpace: EcaasForm<CeilingData> = {
 		data: {
-			...ceiling.data,
-			type: "unheatedSpace",
-			uValue: 1,
-			thermalResistanceOfAdjacentUnheatedSpace: 0,
+			id: "099342c5-07c5-4268-b66b-f85dfc5de58f",
+			type: "heatedSpace",
+			name: "Ceiling 2",
+			surfaceArea: 5,
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+			pitchOption: "0",
+			pitch: 0,
+			thermalResistance: 0.5,
 		},
 	};
 
@@ -41,66 +48,73 @@ describe("ceiling", () => {
 		store.$reset();
 	});
 
-	const populateValidForm = async () => {
-		await user.type(screen.getByTestId("name"), "Ceiling 1");
+	const populateValidForm = async (overides: { name?: string, typeOfSpace?: "heatedSpace" | "unheatedSpace" } = {}) => {
+		await user.type(screen.getByTestId("name"), overides.name || "Ceiling 2");
 		await user.type(screen.getByTestId("surfaceArea"), "5");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.click(screen.getByTestId("pitchOption_0"));
+		if (overides.typeOfSpace === "unheatedSpace") {
+			await user.type(screen.getByTestId("uValue"), "1");
+		} else {
+			await user.type(screen.getByTestId("thermalResistance"), "0.5");
+		}
+		await user.tab();
 	};
 
 	const populateValidFormUnheated = async () => {
-		await populateValidForm();
-		await user.type(screen.getByTestId("uValue"), "1");
+		await populateValidForm({ name: "Ceiling 1", typeOfSpace: "unheatedSpace" });
 	};
-	
+
 	describe("when type of ceiling is heated space", () => {
 		it("data is saved to store state when form is valid", async () => {
-			vi.mocked(uuidv4).mockReturnValue(ceiling.data.id as unknown as Buffer);
+			vi.mocked(uuidv4).mockReturnValue(ceilingHeatedSpace.data.id as unknown as Buffer);
 
 			await renderSuspended(Ceiling, {
 				route: {
 					params: { ceiling: "create" },
 				},
 			});
-	
+
 			await user.click(screen.getByTestId("type_heatedSpace"));
 			await populateValidForm();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-			
-			expect(dwellingSpaceCeilings.data[0]).toEqual({ ...ceiling, complete: true });
+
+			expect(dwellingSpaceCeilings.data[0]).toEqual({ ...ceilingHeatedSpace, complete: true });
 		});
-	
+
 		it("form is prepopulated when data exists in state", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data: [ceiling],
+							data: [ceilingHeatedSpace],
 						},
 					},
 				},
 			});
-	
+
 			await renderSuspended(Ceiling, {
 				route: {
 					params: { ceiling: "0" },
 				},
 			});
-	
+
 			expect((await screen.findByTestId("type_heatedSpace")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Ceiling 1");
+			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("0.5");
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Ceiling 2");
 			expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("5");
 			expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("pitchOption_0")).hasAttribute("checked")).toBe(true);
+
 		});
 
 		it("requires additional fields when heated space is selected", async () => {
 			await renderSuspended(Ceiling);
-	
+
 			await user.click(screen.getByTestId("type_heatedSpace"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -109,17 +123,19 @@ describe("ceiling", () => {
 			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 			expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
+			expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
 		});
 	});
-	
+
 	describe("when type of ceiling is unheated space", () => {
 		it("data is saved to store state when form is valid", async () => {
+			vi.mocked(uuidv4).mockReturnValue(ceilingUnheatedSpace.data.id as unknown as Buffer);
 			await renderSuspended(Ceiling, {
 				route: {
 					params: { ceiling: "create" },
 				},
 			});
-	
+
 			await user.click(screen.getByTestId("type_unheatedSpace"));
 			await populateValidFormUnheated();
 			await user.type(screen.getByTestId("thermalResistanceOfAdjacentUnheatedSpace"), "0");
@@ -127,10 +143,10 @@ describe("ceiling", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-			
+
 			expect(dwellingSpaceCeilings?.data[0]).toEqual({ ...ceilingUnheatedSpace, complete: true });
 		});
-	
+
 		it("form is prepopulated when data exists in state", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -141,7 +157,7 @@ describe("ceiling", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Ceiling, {
 				route: {
 					params: { ceiling: "0" },
@@ -154,7 +170,7 @@ describe("ceiling", () => {
 
 		it("requires additional fields when heated space is selected", async () => {
 			await renderSuspended(Ceiling);
-	
+
 			await user.click(screen.getByTestId("type_unheatedSpace"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -199,17 +215,18 @@ describe("ceiling", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("pitchOption_custom"));
 		await user.type(screen.getByTestId("pitch"), "90");
+
 		await user.tab();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-		
+
 		expect(dwellingSpaceCeilings.data[0]!.data.pitch).toEqual(90);
 	});
 
 	it("navigates to ceilings and roofs page when valid form is completed", async () => {
 		await renderSuspended(Ceiling);
-	
+
 		await user.click(screen.getByTestId("type_heatedSpace"));
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -270,7 +287,7 @@ describe("ceiling", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data: [ceiling, ceilingUnheatedSpace],
+							data: [ceilingHeatedSpace, ceilingUnheatedSpace],
 						},
 					},
 				},
@@ -299,7 +316,7 @@ describe("ceiling", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data: [{ ...ceiling, complete: true }],
+							data: [{ ...ceilingHeatedSpace, complete: true }],
 							complete: true,
 						},
 					},

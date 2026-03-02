@@ -818,7 +818,7 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: "Light",
 					mass_distribution_class: "I: Mass concentrated at internal side",
 					pitch: 0,
-					u_value: 0.01,
+					thermal_resistance_construction: 1,
 				},
 				"ceiling to unheated space (ceiling)": {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
@@ -1720,6 +1720,7 @@ describe("FHS input mapper", () => {
 							arealHeatCapacity: "Light",
 							massDistributionClass: "I",
 							pitchOption: "0",
+							thermalResistance: 1,
 						},
 					},
 					{

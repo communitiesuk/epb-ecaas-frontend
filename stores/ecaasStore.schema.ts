@@ -355,6 +355,7 @@ const ceilingDataZod = z.discriminatedUnion(
 	[
 		baseCeilingData.extend({
 			type: z.literal("heatedSpace"),
+			thermalResistance,
 		}),
 		baseCeilingData.extend({
 			type: z.literal("unheatedSpace"),
