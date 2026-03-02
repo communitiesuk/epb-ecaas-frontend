@@ -712,7 +712,7 @@ const expectedFlatInput: FhsInputSchema = {
 				"internal floor 2 (floor)": {
 					type: "BuildingElementAdjacentConditionedSpace",
 					area: 4,
-					u_value: 0.01,
+					thermal_resistance_construction: 0.5,
 					areal_heat_capacity: "Medium",
 					mass_distribution_class: "M: Mass concentrated inside",
 					pitch: 180,
