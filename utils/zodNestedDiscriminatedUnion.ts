@@ -40,29 +40,20 @@ export function nestedDiscriminatedUnion<C extends z.ZodObject, U extends [DiscU
 	) as unknown as NDUNFromUnions<C, U>;;
 }
 
-// abandon hope all ye who enter
 export type NDUNFromUnions<
 	Common extends z.ZodObject,
 	Unions extends readonly [DiscUnionParams, ...DiscUnionParams[]],
 > =
   	Unions extends [infer _First, ...infer Rest]
-  		? Rest extends [DiscUnionParams, ...DiscUnionParams[]]
-  			? z.ZodDiscriminatedUnion<
-  				{ 
-  					[K in keyof Unions[0]["variants"]]:
-  					K extends number
+  		? z.ZodDiscriminatedUnion<
+  			{ 
+  				[K in keyof Unions[0]["variants"]]:
+  				K extends number
+  					? Rest extends [DiscUnionParams, ...DiscUnionParams[]]
   						? NDUNFromUnions<Common & Unions[0]["variants"][K], Rest>
-  						: Unions[0]["variants"][K]
-  				},
-  				Unions[0]["discriminator"]
-  			>
-  			: z.ZodDiscriminatedUnion<
-  				{ 
-  					[K in keyof Unions[0]["variants"]]:
-  					K extends number
-  						? Unions[0]["variants"][K] & Common
-  						: Unions[0]["variants"][K]
-  				},
-  				Unions[0]["discriminator"]
-  			>
+  						: Unions[0]["variants"][K] & Common
+  					: Unions[0]["variants"][K]
+  			},
+  			Unions[0]["discriminator"]
+  		>
   		: never;
