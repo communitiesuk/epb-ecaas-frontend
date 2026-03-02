@@ -174,6 +174,30 @@ store.spaceHeating.heatSource.data
 	});
 
 radioOptions.set("NEW_HEAT_SOURCE", "Add a new water heating source");
+
+
+const domesticHotWaterBoilers = hotWaterHeatSourceStoreData
+	.filter(x => !x.data.isExistingHeatSource && x.data.typeOfHeatSource === "boiler")
+	.map(x => {
+		const dhwBoiler = (x.data as BoilerModelType);
+		return [dhwBoiler.id, dhwBoiler.name] as [string, string];
+	});
+
+const spaceHeatingBoilers = hotWaterHeatSourceStoreData
+	.filter(x => x.data.isExistingHeatSource)
+	.map(x => {
+		const heatSource = store.spaceHeating.heatSource.data.find(hs => hs.data.id === x.data.heatSourceId);
+		
+		if (heatSource?.data.typeOfHeatSource === "boiler") {
+			return [heatSource.data.id, heatSource.data.name] as [string, string];
+		}
+
+		return null;
+	})
+	.filter(x => x !== null);
+
+const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
+
 </script>
 
 <template>
@@ -228,6 +252,8 @@ radioOptions.set("NEW_HEAT_SOURCE", "Add a new water heating source");
 				&& model.typeOfHeatSource === 'heatPump'"
 			:model="(model as HeatPumpModelType)"
 			:index="index"
+			:boilers="allBoilers"
+			add-boiler-page-id="heatSourcesCreate"
 			@update-heat-pump-model="updateHeatSource" />
 		<BoilerSection
 			v-if="model.isExistingHeatSource === false

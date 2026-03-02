@@ -298,6 +298,7 @@ describe("heatSource", () => {
 					name: "Click here to add a boiler",
 				});
 				expect(addBoilerLink).toBeDefined();
+				expect(addBoilerLink.getAttribute("href")).toBe("/space-heating/heat-source/create");
 			});
 
 			it("displays list of existing boilers when boilers exist in store", async () => {
@@ -317,6 +318,38 @@ describe("heatSource", () => {
 
 				expect(screen.getByTestId(`backupBoiler_${boiler1.id}`)).toBeDefined();
 			});
+
+			test("boilers created in DHW are not displayed in heat pumps in space heating", async () => {
+				const dhwBoiler: Partial<DomesticHotWaterHeatSourceData> = {
+					isExistingHeatSource: false,
+					heatSourceId: "NEW_HEAT_SOURCE",
+					id: "1b73e247-57c5-26b8-1tbd-83tdk333333",
+					name: "Heat source 1",
+					typeOfHeatSource: "boiler",
+					typeOfBoiler: "combiBoiler",
+				};
+				store.$patch({
+					domesticHotWater: {
+						heatSources: {
+							data: [{ data: dhwBoiler }],
+						},
+					},
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: boiler1 }, { data: { ...heatPump1, "backupCtrlType": "TopUp" } }],
+						},
+					},
+				});
+				
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "1" },
+					},
+				});
+
+				expect(screen.getByTestId(`backupBoiler_${boiler1.id}`)).toBeDefined();
+				expect(screen.queryByTestId(`backupBoiler_${dhwBoiler.id}`)).toBeNull();
+			});
 		});
 	});
 
@@ -326,7 +359,7 @@ describe("heatSource", () => {
 			brandName: "Brand",
 			technologyType: "CombiBoiler",
 			boilerLocation: "internal",
-		};
+		}; 
 
 		beforeEach(() => {
 			mockFetch.mockReturnValue({

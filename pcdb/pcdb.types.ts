@@ -56,7 +56,7 @@ const heatPumpBase = BaseProduct.extend({
 	powerStandby: z.number(),
 	powerCrankcaseHeater: z.nullable(z.number()),
 	powerOff: z.nullable(z.number()),
-	powerMaxBackup: z.nullable(z.number()),
+	powerMaxBackup: z.optional(z.number()),
 	standardRatingCapacity20C: z.nullable(z.number()),
 	standardRatingCapacity35C: z.nullable(z.number()),
 	standardRatingCapacity55C: z.nullable(z.number()),

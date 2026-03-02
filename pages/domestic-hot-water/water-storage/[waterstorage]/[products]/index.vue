@@ -33,7 +33,7 @@ const selectProduct = (product: DisplayProduct) => {
 	<GovProductsTable
 		:products="pagination.getData() ?? ['none']"
 		:total-pages="pagination.totalPages"
-		:on-select-product="p => selectProduct(p.id)"
+		:on-select-product="selectProduct"
 	/>
 	<GovButton
 		secondary
