@@ -1,7 +1,7 @@
 import * as z from "zod";
 import { nestedDiscriminatedUnion, type NDUNFromUnions } from "./zodNestedDiscriminatedUnion";
 
-describe.only("nested discriminated union", () => {
+describe("nested discriminated union", () => {
 	const commonFieldsSchema = z.object({
 		name: z.string(),
 		value: z.number(),

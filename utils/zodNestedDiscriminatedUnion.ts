@@ -1,6 +1,9 @@
 import * as z from "zod";
 
-type DiscUnionParams = { discriminator: string, variants: [z.ZodObject, ...z.ZodObject[]] };
+type DiscUnionParams = {
+	discriminator: string,
+	variants: [z.ZodObject, ...z.ZodObject[]]
+};
 
 function mapTuple<T extends object[], U>(
 	tuple: T,
@@ -9,7 +12,10 @@ function mapTuple<T extends object[], U>(
 	return tuple.map(fn) as { [K in keyof T]: U };
 }
 
-export function nestedDiscriminatedUnion<C extends z.ZodObject, U extends [DiscUnionParams, ...DiscUnionParams[]]>(
+export function nestedDiscriminatedUnion<
+	C extends z.ZodObject, 
+	U extends [DiscUnionParams, ...DiscUnionParams[]],
+>(
 	commonFields: C,
 	...unions: U
 ): NDUNFromUnions<C, U> {
@@ -26,7 +32,7 @@ export function nestedDiscriminatedUnion<C extends z.ZodObject, U extends [DiscU
 		return z.discriminatedUnion(
 			unions[0].discriminator,
 			variants,
-		) as unknown as NDUNFromUnions<C, U>;;
+		) as unknown as NDUNFromUnions<C, U>;
 	} 
 
 	const variants = mapTuple(
@@ -37,7 +43,7 @@ export function nestedDiscriminatedUnion<C extends z.ZodObject, U extends [DiscU
 	return z.discriminatedUnion(
 		unions[0].discriminator,
 		variants,
-	) as unknown as NDUNFromUnions<C, U>;;
+	) as unknown as NDUNFromUnions<C, U>;
 }
 
 export type NDUNFromUnions<
