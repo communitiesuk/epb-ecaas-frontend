@@ -283,7 +283,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				isInteger: `Number of wet rooms must be an integer.`,
 			}"
-			help="A room used for domestic activities that produce significant amounts of airborne moisture. For example a kitchen, utility room, bathroom or WC."
+			help="This could be any room used for domestic activities that produce significant amounts of airborne moisture. For example a kitchen, utility room, bathroom or WC."
 		/>
 		<FormKit
 			id="fuelType"
