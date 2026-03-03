@@ -313,7 +313,8 @@ const roofSummary: SummarySection = {
 
 		const pitch = dim(x.pitch, "degrees");
 		const orientation = x.orientation !== undefined ? dim(x.orientation, "degrees") : emptyValueRendering;
-		const uValue = dim(x.uValue, "watts per square metre kelvin");
+		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering; 
+		const thermalResistance = "thermalResistance" in x ? dim(x.thermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 		const arealHeatCapacity = show(x.arealHeatCapacity);
 		const massDistributionClass = displayMassDistributionClass(x.massDistributionClass);
 
@@ -327,6 +328,7 @@ const roofSummary: SummarySection = {
 			"Elevational height of building element at its base": dim(x.elevationalHeightOfElement, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
 			"U-value": isTypeOfRoofSelected ? uValue : undefined,
+			"Thermal resistance": isTypeOfRoofSelected ? thermalResistance : undefined,
 			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": isTypeOfRoofSelected ? arealHeatCapacity : undefined,
 			"Mass distribution class": isTypeOfRoofSelected ? massDistributionClass : undefined,

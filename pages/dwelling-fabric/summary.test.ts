@@ -252,7 +252,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 				width: 1,
 				elevationalHeightOfElement: 2,
 				surfaceArea: 1,
-				uValue: 1,
+				thermalResistance: 1,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 			},
@@ -1031,6 +1031,7 @@ describe("dwelling space ceilings and roofs", () => {
 			"Elevational height of building element at its base": `2 ${metre.suffix}`,
 			"Net surface area": `1 ${metresSquare.suffix}`,
 			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Thermal resistance": `-`,
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",
 		};
@@ -1050,7 +1051,8 @@ describe("dwelling space ceilings and roofs", () => {
 			"Width": `1 ${metre.suffix}`,
 			"Elevational height of building element at its base": `2 ${metre.suffix}`,
 			"Net surface area": `1 ${metresSquare.suffix}`,
-			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"U-value": `-`,
+			"Thermal resistance": `1 ${squareMeterKelvinPerWatt.suffix}`,
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",
 		};
@@ -1277,11 +1279,12 @@ describe("dwelling space doors", () => {
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
-					data: 
-					{ 
-						typeOfDwelling: "flat" },
+					data:
+					{
+						typeOfDwelling: "flat",
+					},
 				},
-			},dwellingFabric: {
+			}, dwellingFabric: {
 				dwellingSpaceWalls: {
 					dwellingSpaceInternalWall: wallsData.dwellingSpaceInternalWall,
 				},
@@ -1289,7 +1292,7 @@ describe("dwelling space doors", () => {
 					dwellingSpaceInternalDoor: doorsData.dwellingSpaceInternalDoor,
 				},
 			},
-		});	
+		});
 
 		await renderSuspended(Summary);
 
