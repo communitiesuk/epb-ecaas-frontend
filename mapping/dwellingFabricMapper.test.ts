@@ -707,6 +707,38 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 		};
 
+		const roofPitchedInsulatedAtCeiling: RoofData = {
+			id: "roof-pitched-insulated-at-joist-id",
+			name: "Roof 2",
+			typeOfRoof: "pitchedInsulatedAtCeiling",
+			pitch: 30,
+			pitchOption: "custom",
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			thermalResistance: 1,
+			colour: "Dark",
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+		};
+
+		const roofPitchedInsulatedAtRoof: RoofData = {
+			id: "roof-pitched-insulated-at-roof-id",
+			name: "Roof 3",
+			typeOfRoof: "pitchedInsulatedAtRoof",
+			pitch: 30,
+			pitchOption: "custom",
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			thermalResistance: 1,
+			colour: "Dark",
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+		};
+
 		const ceilingSuffix = " (ceiling)";
 		const roofSuffix = " (roof)";
 
@@ -714,17 +746,18 @@ describe("dwelling fabric mapper", () => {
 			dwellingFabric: {
 				dwellingSpaceCeilingsAndRoofs: {
 					dwellingSpaceCeilings: { ...baseForm, data: [{ ...baseForm, data: ceiling }] },
-					dwellingSpaceRoofs: { ...baseForm, data: [{ ...baseForm, data: roof }] },
+					dwellingSpaceRoofs: { ...baseForm, data: [{ ...baseForm, data: roof }, { ...baseForm, data: roofPitchedInsulatedAtCeiling }, { ...baseForm, data: roofPitchedInsulatedAtRoof }] },
 				},
 			},
 		});
 
 		// Act
 		const fhsInputData = mapCeilingAndRoofData(resolveState(store.$state));
-
 		// Assert
 		const ceilingElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[ceiling.name + ceilingSuffix]! as BuildingElementAdjacentUnconditionedSpaceSimple;
 		const roofElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roof.name + roofSuffix]! as BuildingElementOpaque;
+		const roofPitchedInsulatedAtCeilingElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofPitchedInsulatedAtCeiling.name + roofSuffix] as BuildingElementOpaque;
+		const roofPitchedInsulatedAtRoofElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofPitchedInsulatedAtRoof.name + roofSuffix] as BuildingElementOpaque;
 
 		const expectedCeiling: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
@@ -755,6 +788,42 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		expect(roofElement).toEqual(expectedRoof);
+
+		const expectedRoofPitchedInsulatedAtCeiling: BuildingElementOpaque = {
+			type: "BuildingElementOpaque",
+			pitch: roofPitchedInsulatedAtCeiling.pitch,
+			orientation360: 0,
+			height: roofPitchedInsulatedAtCeiling.length,
+			width: roofPitchedInsulatedAtCeiling.width,
+			base_height: roofPitchedInsulatedAtCeiling.elevationalHeightOfElement,
+			area: roofPitchedInsulatedAtCeiling.surfaceArea,
+			thermal_resistance_construction: roofPitchedInsulatedAtCeiling.thermalResistance,
+			colour: roofPitchedInsulatedAtCeiling.colour,
+			areal_heat_capacity: roofPitchedInsulatedAtCeiling.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(roofPitchedInsulatedAtCeiling.massDistributionClass),
+			is_external_door: false,
+			is_unheated_pitched_roof: true,
+		};
+
+		expect(roofPitchedInsulatedAtCeilingElement).toEqual(expectedRoofPitchedInsulatedAtCeiling);
+
+		const expectedRoofPitchedInsulatedAtRoof: BuildingElementOpaque = {
+			type: "BuildingElementOpaque",
+			pitch: roofPitchedInsulatedAtRoof.pitch,
+			orientation360: 0,
+			height: roofPitchedInsulatedAtRoof.length,
+			width: roofPitchedInsulatedAtRoof.width,
+			base_height: roofPitchedInsulatedAtRoof.elevationalHeightOfElement,
+			area: roofPitchedInsulatedAtRoof.surfaceArea,
+			thermal_resistance_construction: roofPitchedInsulatedAtRoof.thermalResistance,
+			colour: roofPitchedInsulatedAtRoof.colour,
+			areal_heat_capacity: roofPitchedInsulatedAtRoof.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(roofPitchedInsulatedAtRoof.massDistributionClass),
+			is_external_door: false,
+			is_unheated_pitched_roof: false,
+		};
+
+		expect(roofPitchedInsulatedAtRoofElement).toEqual(expectedRoofPitchedInsulatedAtRoof);
 	});
 
 	it("maps door input state to FHS input request", () => {

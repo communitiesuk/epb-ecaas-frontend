@@ -501,7 +501,10 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 
 	const roofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceRoofs.map((x) => {
 		const nameWithSuffix = suffixName(x.name, roofSuffix);
-
+		const uValueOrThermalResistance: { thermal_resistance_construction: number } | { u_value: number } =
+			"thermalResistance" in x
+				? { thermal_resistance_construction: x.thermalResistance }
+				: { u_value: x.uValue };
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementOpaque",
@@ -511,7 +514,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 				width: x.width,
 				base_height: x.elevationalHeightOfElement,
 				area: x.surfaceArea,
-				u_value: x.uValue,
+				...uValueOrThermalResistance,
 				colour: x.colour,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
