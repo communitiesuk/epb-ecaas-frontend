@@ -79,4 +79,10 @@ describe("Homepage", () => {
 		expect(errorSummary).toBeDefined();
 		expect(errorText).toContain("Error ID: testId");
 	});
+
+	it("displays 'Change orientation' button which navigates to the achange orientation page", async () => {
+		await renderSuspended(Index);
+		const changeOrientationButton = screen.getByRole("button", { name: "Change orientation" });
+		expect(changeOrientationButton.getAttribute("href")).toBe("/change-orientation");
+	});
 });

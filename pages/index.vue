@@ -65,6 +65,7 @@ store.revalidate();
 			<GovButton secondary href="/export">Export</GovButton>
 			<GovButton secondary href="/import">Import</GovButton>
 			<GovButton secondary href="/clear-data">Clear data</GovButton>
+			<GovButton secondary href="/change-orientation">Change orientation</GovButton>
 		</div>
 	</div>
 	<div v-show="showLoadingIndicator">
