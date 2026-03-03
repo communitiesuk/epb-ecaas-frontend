@@ -396,7 +396,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				type: "BuildingElementPartyWall",
 				pitch: extractPitch(x),
 				area: x.surfaceArea,
-				u_value: x.uValue,
+				thermal_resistance_construction: x.thermalResistance,
 				thermal_resistance_cavity: x.thermalResistanceCavity,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),

@@ -318,7 +318,7 @@ const partyWallDataZod = namedWithId.extend({
 	pitch: z.optional(z.number().min(60).max(120)),
 	surfaceArea: z.number().min(0.01).max(10000),
 	arealHeatCapacity: arealHeatCapacityZod,
-	uValue,
+	thermalResistance,
 	massDistributionClass,
 	partyWallCavityType: partyWallCavityTypeZod,
 	partyWallLiningType: z.optional(partyWallLiningTypeZod),

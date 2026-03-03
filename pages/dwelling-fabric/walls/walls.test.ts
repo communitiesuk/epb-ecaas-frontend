@@ -100,7 +100,7 @@ describe("walls", () => {
 		pitchOption: "90",
 		pitch: 90,
 		surfaceArea: 10,
-		uValue: 0.01,
+		thermalResistance: 1,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		partyWallCavityType: "defined_resistance",
