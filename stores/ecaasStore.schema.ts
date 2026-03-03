@@ -430,31 +430,31 @@ const baseExternalGlazedDoorDataZod = named.extend({
 	heightOpenableArea: z.number().min(0.001).max(50),
 });
 
-const externalGlazedDoorDataWithOpenablePartsZod = z.discriminatedUnion(
-	"numberOpenableParts",
-	[
-		baseExternalGlazedDoorDataZod.extend({
+const openablePartsFields = {
+	discriminator: "numberOpenableParts",
+	variants: [
+		z.object({
 			numberOpenableParts: z.literal("0"),
 		}),
-		baseExternalGlazedDoorDataZod.extend({
+		z.object({
 			numberOpenableParts: z.literal("1"),
 			maximumOpenableArea: z.number().min(0.01).max(10000),
 			midHeightOpenablePart1: z.number().min(0).max(100),
 		}),
-		baseExternalGlazedDoorDataZod.extend({
+		z.object({
 			numberOpenableParts: z.literal("2"),
 			maximumOpenableArea: z.number().min(0.01).max(10000),
 			midHeightOpenablePart1: z.number().min(0).max(100),
 			midHeightOpenablePart2: z.number().min(0).max(100),
 		}),
-		baseExternalGlazedDoorDataZod.extend({
+		z.object({
 			numberOpenableParts: z.literal("3"),
 			maximumOpenableArea: z.number().min(0.01).max(10000),
 			midHeightOpenablePart1: z.number().min(0).max(100),
 			midHeightOpenablePart2: z.number().min(0).max(100),
 			midHeightOpenablePart3: z.number().min(0).max(100),
 		}),
-		baseExternalGlazedDoorDataZod.extend({
+		z.object({
 			numberOpenableParts: z.literal("4"),
 			maximumOpenableArea: z.number().min(0.01).max(10000),
 			midHeightOpenablePart1: z.number().min(0).max(100),
@@ -462,22 +462,62 @@ const externalGlazedDoorDataWithOpenablePartsZod = z.discriminatedUnion(
 			midHeightOpenablePart3: z.number().min(0).max(100),
 			midHeightOpenablePart4: z.number().min(0).max(100),
 		}),
-	],
-);
+	] satisfies Tuple,
+};
 
-const curtainsOrBlindsFields = z.union([
-	z.object({
-		curtainsOrBlinds: z.literal(true),
-		treatmentType: windowTreatmentTypeZod,
-		thermalResistivityIncrease: z.number().min(0).max(100),
-		solarTransmittanceReduction: fraction,
-	}),
-	z.object({
-		curtainsOrBlinds: z.literal(false),
-	}),
+const curtainsOrBlindsFields = {
+	discriminator: "curtainsOrBlinds",
+	variants: [
+		z.object({
+			curtainsOrBlinds: z.literal(true),
+			treatmentType: windowTreatmentTypeZod,
+			thermalResistivityIncrease: z.number().min(0).max(100),
+			solarTransmittanceReduction: fraction,
+		}),
+		z.object({
+			curtainsOrBlinds: z.literal(false),
+		}),
+	] satisfies Tuple,
+};
+
+const obstacleShadingDataZod = named.extend({
+	typeOfShading: z.literal("obstacle"),
+	height: z.number(),
+	distance: z.number(),
+	transparency: z.number(),
+});
+
+const otherShadingDataZod = named.extend({
+	typeOfShading: z.enum(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"]),
+	distance: z.number(),
+	depth: z.number(),
+});
+
+const shadingObjectDataZod = z.discriminatedUnion("typeOfShading", [
+	obstacleShadingDataZod,
+	otherShadingDataZod,
 ]);
 
-const externalGlazedDoorData = z.intersection(externalGlazedDoorDataWithOpenablePartsZod, curtainsOrBlindsFields);
+const shadingDataFields = {
+	discriminator: "hasShading", 
+	variants: [
+		z.object({
+			hasShading: z.literal(false),
+		}),
+		z.object({
+			hasShading: z.literal(true),
+			shading: z.array(shadingObjectDataZod),
+		}),
+	] satisfies Tuple,
+};
+
+const externalGlazedDoorData = nestedDiscriminatedUnion(
+	baseExternalGlazedDoorDataZod,
+	openablePartsFields,
+	curtainsOrBlindsFields,
+	shadingDataFields,
+);
+
 
 export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorData>;
 
@@ -487,36 +527,42 @@ const baseInternalDoorData = named.extend({
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 });
-const internalDoorDataZod = z.discriminatedUnion("typeOfInternalDoor", [
-	z.object({
-		typeOfInternalDoor: z.literal("heatedSpace"),
-		isTheFrontDoor: z.literal(true).optional(),
-		orientation: z.number().min(0).lt(360).optional(),
-		thermalResistance,
-	}),
-	z.object({
-		typeOfInternalDoor: z.literal("heatedSpace"),
-		isTheFrontDoor: z.literal(false).optional(),
-		thermalResistance,
-	}),
-	z.object({
-		typeOfInternalDoor: z.literal("unheatedSpace"),
-		isTheFrontDoor: z.literal(true).optional(),
-		orientation: z.number().min(0).lt(360).optional(),
-		uValue,
-		thermalResistanceOfAdjacentUnheatedSpace,
-	}),
-	z.object({
-		typeOfInternalDoor: z.literal("unheatedSpace"),
-		isTheFrontDoor: z.literal(false).optional(),
-		uValue,
-		thermalResistanceOfAdjacentUnheatedSpace,
-	}),
-]);
-const _internalDoorDataWithBaseZod = baseInternalDoorData.and(internalDoorDataZod);
 
-export type InternalDoorData = z.infer<typeof _internalDoorDataWithBaseZod>;
+const typeOfInternalDoorFields = {
+	discriminator: "typeOfInternalDoor",
+	variants: [
+		z.object({
+			typeOfInternalDoor: z.literal("heatedSpace"),
+			thermalResistance,
+		}),
+		z.object({
+			typeOfInternalDoor: z.literal("unheatedSpace"),
+			uValue,
+			thermalResistanceOfAdjacentUnheatedSpace,
+		}),
+	] satisfies Tuple,
+};
 
+const isTheFrontDoorFields = {
+	discriminator: "isTheFrontDoor",
+	variants: [
+		z.object({
+			isTheFrontDoor: z.literal(false).optional(),
+		}),
+		z.object({
+			isTheFrontDoor: z.literal(true).optional(),
+			orientation: z.number().min(0).lt(360).optional(),
+		}),
+	] satisfies Tuple,
+};
+
+const internalDoorDataZod = nestedDiscriminatedUnion(
+	baseInternalDoorData,
+	typeOfInternalDoorFields,
+	isTheFrontDoorFields,
+);
+
+export type InternalDoorData = z.infer<typeof internalDoorDataZod>;
 
 const baseWindowData = namedWithId.extend({
 	taggedItem: z.guid().optional(),
@@ -531,40 +577,6 @@ const baseWindowData = namedWithId.extend({
 	midHeight: z.number().min(0).max(100),
 	openingToFrameRatio: fraction,
 });
-const baseWindowPlusOpenableParts = z.discriminatedUnion(
-	"numberOpenableParts",
-	[
-		baseWindowData.extend({
-			numberOpenableParts: z.literal("0"),
-		}),
-		baseWindowData.extend({
-			numberOpenableParts: z.literal("1"),
-			maximumOpenableArea: z.number().min(0.01).max(10000),
-			midHeightOpenablePart1: z.number().min(0).max(100),
-		}),
-		baseWindowData.extend({
-			numberOpenableParts: z.literal("2"),
-			maximumOpenableArea: z.number().min(0.01).max(10000),
-			midHeightOpenablePart1: z.number().min(0).max(100),
-			midHeightOpenablePart2: z.number().min(0).max(100),
-		}),
-		baseWindowData.extend({
-			numberOpenableParts: z.literal("3"),
-			maximumOpenableArea: z.number().min(0.01).max(10000),
-			midHeightOpenablePart1: z.number().min(0).max(100),
-			midHeightOpenablePart2: z.number().min(0).max(100),
-			midHeightOpenablePart3: z.number().min(0).max(100),
-		}),
-		baseWindowData.extend({
-			numberOpenableParts: z.literal("4"),
-			maximumOpenableArea: z.number().min(0.01).max(10000),
-			midHeightOpenablePart1: z.number().min(0).max(100),
-			midHeightOpenablePart2: z.number().min(0).max(100),
-			midHeightOpenablePart3: z.number().min(0).max(100),
-			midHeightOpenablePart4: z.number().min(0).max(100),
-		}),
-	],
-);
 
 const overhangFields = z.union([
 	z.object({
@@ -601,15 +613,17 @@ const sideFinLeftFields = z.union([
 
 
 export const windowDataZod = z.intersection(
-	baseWindowPlusOpenableParts,
+	nestedDiscriminatedUnion(
+		baseWindowData,
+		openablePartsFields,
+		curtainsOrBlindsFields,
+	),
+	// this shading bit will be replaced shortly
 	z.intersection(
 		overhangFields,
 		z.intersection(
 			sideFinRightFields,
-			z.intersection(
-				sideFinLeftFields,
-				curtainsOrBlindsFields,
-			),
+			sideFinLeftFields,
 		),
 	),
 );
@@ -921,47 +935,45 @@ const heatNetworkBase = namedWithId.extend({
 	typeOfHeatSource: z.literal("heatNetwork"),
 	typeOfHeatNetwork,
 });
-
-const heatNetworkBaseShape = heatNetworkBase.shape;
-
-function heatNetworkZodDataFromBase<
-	T extends typeof heatNetworkBaseShape | typeof heatNetworkHotWaterSourceBaseShape,
->(baseShape: T) {
-	return z.discriminatedUnion("isHeatNetworkInPcdb", [
+		
+const isHeatNetworkInPcdbFields = {
+	discriminator: "isHeatNetworkInPcdb",
+	variants: 
+	[
 		z.object({
 			isHeatNetworkInPcdb: z.literal(true),
 			productReference: z.string().trim().min(1),
 			energySupply: fuelTypeZod.optional(),
-			usesHeatInterfaceUnits: z.literal(true),
-			heatInterfaceUnitProductReference: z.string().trim().min(1),
-		}).extend(baseShape),
-		z.object({
-			isHeatNetworkInPcdb: z.literal(true),
-			productReference: z.string().trim().min(1),
-			energySupply: fuelTypeZod.optional(),
-			usesHeatInterfaceUnits: z.literal(false),
-		}).extend(baseShape),
+		}),
 		z.object({
 			isHeatNetworkInPcdb: z.literal(false),
 			emissionsFactor: z.number(),
 			outOfScopeEmissionsFactor: z.number(),
 			primaryEnergyFactor: z.number(),
 			canEnergyBeExported: z.boolean(),
+		}),
+	] satisfies Tuple,
+};
+
+const usesHeatInterfaceUnitsFields = {
+	discriminator: "usesHeatInterfaceUnits",
+	variants: 
+	[
+		z.object({
 			usesHeatInterfaceUnits: z.literal(true),
 			heatInterfaceUnitProductReference: z.string().trim().min(1),
-		}).extend(baseShape),
+		}),
 		z.object({
-			isHeatNetworkInPcdb: z.literal(false),
-			emissionsFactor: z.number(),
-			outOfScopeEmissionsFactor: z.number(),
-			primaryEnergyFactor: z.number(),
-			canEnergyBeExported: z.boolean(),
 			usesHeatInterfaceUnits: z.literal(false),
-		}).extend(baseShape),
-	]);
-}
+		}),
+	] satisfies Tuple,
+};
 
-const heatNetworkZodData = heatNetworkZodDataFromBase(heatNetworkBaseShape);
+const heatNetworkZodData = nestedDiscriminatedUnion(
+	heatNetworkBase,
+	isHeatNetworkInPcdbFields,
+	usesHeatInterfaceUnitsFields,
+);
 
 const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpBase,
@@ -1030,22 +1042,6 @@ const _typeOfHeatEmitter = z.enum(["fanCoil", "electricStorageHeater", "instantE
 
 export const typeOfHeatEmitter = _typeOfHeatEmitter.enum;
 
-function withVariableFlowRate<
-	T extends z.ZodRawShape & { hasVariableFlowRate?: never },
->(base: z.ZodObject<T>) {
-	return z.discriminatedUnion("hasVariableFlowRate", [
-		base.extend({
-			hasVariableFlowRate: z.literal(true),
-			minFlowRate: z.number(),
-			maxFlowRate: z.number(),
-		}),
-		base.extend({
-			hasVariableFlowRate: z.literal(false),
-			designFlowRate: z.number(),
-		}),
-	]);
-}
-
 const radiatorBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("radiator"),
 	productReference: z.string(),
@@ -1058,104 +1054,57 @@ const radiatorBase = namedWithId.extend({
 export type EcoControlClassesWithExtraOptions = "2" | "3" | "6" | "7";
 export const ecoClasses: EcoControlClassesWithExtraOptions[] = ["2", "3", "6", "7"];
 
-// the monstrosity begins - I apologise (Jasper)
+type Tuple = [unknown, ...unknown[]];
 
-function makeStandardRadiator<
-	T extends z.ZodRawShape & { typeOfRadiator?: never },
->(base: z.ZodObject<T>) {
-	return base.extend({
-		typeOfRadiator: z.literal("standard"),
-		length: z.number(),
-	});
-}
+const typeOfRadiatorFields = {
+	discriminator: "typeOfRadiator",
+	variants: [
+		z.object({
+			typeOfRadiator: z.literal("standard"),
+			length: z.number(),
+		}),
+		z.object({
+			typeOfRadiator: z.literal("towel"),
+		}),
+	] satisfies Tuple,
+};
 
-function makeTowelRadiator<
-	T extends z.ZodRawShape & { typeOfRadiator?: never },
->(base: z.ZodObject<T>) {
-	return base.extend({
-		typeOfRadiator: z.literal("towel"),
-	});
-}
+const ecoDesignControllerClassFields = {
+	discriminator: "ecoDesignControllerClass",
+	variants: [
+		z.object({
+			ecoDesignControllerClass: z.enum(["2", "3", "6", "7"]),
+			minFlowTemp: z.number(),
+			minOutdoorTemp: z.number(),
+			maxOutdoorTemp: z.number(),
+		}),
+		z.object({
+			ecoDesignControllerClass: z.enum(["1", "4", "5", "8"]),
+		}),
+	] satisfies Tuple,
+};
 
-function makeEco2367Item<
-	T extends z.ZodRawShape & { ecoDesignControllerClass?: never },
->(base: z.ZodObject<T>) {
-	return base.extend({
-		ecoDesignControllerClass: z.enum(["2", "3", "6", "7"]),
-		minFlowTemp: z.number(),
-		minOutdoorTemp: z.number(),
-		maxOutdoorTemp: z.number(),
-	});
-}
+const variableFlowRateFields = {
+	discriminator: "hasVariableFlowRate",
+	variants: [
+		z.object({
+			hasVariableFlowRate: z.literal(true),
+			minFlowRate: z.number(),
+			maxFlowRate: z.number(),
+		}),
+		z.object({
+			hasVariableFlowRate: z.literal(false),
+			designFlowRate: z.number(),
+		}),
+	] satisfies Tuple,
+};
 
-function makeEco1458Item<
-	T extends z.ZodRawShape & { ecoDesignControllerClass?: never },
->(base: z.ZodObject<T>) {
-	return base.extend({
-		ecoDesignControllerClass: z.enum(["1", "4", "5", "8"]),
-	});
-}
-
-function makeVariableFlowRateItem<
-	T extends z.ZodRawShape & { hasVariableFlowRate?: never },
->(base: z.ZodObject<T>) {
-	return base.extend({
-		hasVariableFlowRate: z.literal(true),
-		minFlowRate: z.number(),
-		maxFlowRate: z.number(),
-	});
-}
-
-function makeFixedFlowRateItem<
-	T extends z.ZodRawShape & { hasVariableFlowRate?: never },
->(base: z.ZodObject<T>) {
-	return base.extend({
-		hasVariableFlowRate: z.literal(false),
-		designFlowRate: z.number(),
-	});
-}
-
-const standardRadiator = makeStandardRadiator(radiatorBase);
-const towelRadiator = makeTowelRadiator(radiatorBase);
-
-const standardRadiatorEco2367 = makeEco2367Item(standardRadiator);
-const towelRadiatorEco2367 = makeEco2367Item(towelRadiator);
-const standardRadiatorEco1458 = makeEco1458Item(standardRadiator);
-const towelRadiatorEco1458 = makeEco1458Item(towelRadiator);
-
-const variableStandardRadiatorEco2367 = makeVariableFlowRateItem(standardRadiatorEco2367);
-const variableTowelRadiatorEco2367 = makeVariableFlowRateItem(towelRadiatorEco2367);
-const variableStandardRadiatorEco1458 = makeVariableFlowRateItem(standardRadiatorEco1458);
-const variableTowelRadiatorEco1458 = makeVariableFlowRateItem(towelRadiatorEco1458);
-const fixedStandardRadiatorEco2367 = makeFixedFlowRateItem(standardRadiatorEco2367);
-const fixedTowelRadiatorEco2367 = makeFixedFlowRateItem(towelRadiatorEco2367);
-const fixedStandardRadiatorEco1458 = makeFixedFlowRateItem(standardRadiatorEco1458);
-const fixedTowelRadiatorEco1458 = makeFixedFlowRateItem(towelRadiatorEco1458);
-
-const radiatorSchema = z.discriminatedUnion("hasVariableFlowRate", [
-	z.discriminatedUnion("ecoDesignControllerClass", [
-		z.discriminatedUnion("typeOfRadiator", [
-			variableStandardRadiatorEco2367,
-			variableTowelRadiatorEco2367,
-		]),
-		z.discriminatedUnion("typeOfRadiator", [
-			variableStandardRadiatorEco1458,
-			variableTowelRadiatorEco1458,
-		]),
-	]),
-	z.discriminatedUnion("ecoDesignControllerClass", [
-		z.discriminatedUnion("typeOfRadiator", [
-			fixedStandardRadiatorEco2367,
-			fixedTowelRadiatorEco2367,
-		]),
-		z.discriminatedUnion("typeOfRadiator", [
-			fixedStandardRadiatorEco1458,
-			fixedTowelRadiatorEco1458,
-		]),
-	]),
-]);
-
-// the monstrosity ends - I apologise again (Jasper)
+const radiatorSchema = nestedDiscriminatedUnion(
+	radiatorBase,
+	typeOfRadiatorFields,
+	ecoDesignControllerClassFields,
+	variableFlowRateFields,
+);
 
 const underfloorHeatingBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("underfloorHeating"),
@@ -1165,26 +1114,12 @@ const underfloorHeatingBase = namedWithId.extend({
 	designTempDiffAcrossEmitters: z.number(),
 	areaOfUnderfloorHeating: z.number(),
 });
-const eco2367UnderfloorHeating =
-	makeEco2367Item(underfloorHeatingBase);
 
-const eco1458UnderfloorHeating =
-	makeEco1458Item(underfloorHeatingBase);
-
-
-const variableEco2367UnderfloorHeating = withVariableFlowRate(eco2367UnderfloorHeating);
-const variableEco1458UnderfloorHeating = withVariableFlowRate(eco1458UnderfloorHeating);
-
-export const underFloorHeatingSchema = z.discriminatedUnion("hasVariableFlowRate", [
-	z.discriminatedUnion(
-		"ecoDesignControllerClass",
-		[
-			variableEco2367UnderfloorHeating,
-		]),
-	z.discriminatedUnion(
-		"ecoDesignControllerClass",
-		[variableEco1458UnderfloorHeating]),
-]);
+export const underFloorHeatingSchema = nestedDiscriminatedUnion(
+	underfloorHeatingBase,
+	variableFlowRateFields,
+	ecoDesignControllerClassFields,
+);
 
 const fanCoilBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal(typeOfHeatEmitter.fanCoil),
@@ -1195,25 +1130,12 @@ const fanCoilBase = namedWithId.extend({
 	numOfFanCoils: z.number(),
 });
 
-const eco2367FanCoil = makeEco2367Item(fanCoilBase);
-const eco1458FanCoil = makeEco1458Item(fanCoilBase);
-
-const variableEco2367FanCoil = withVariableFlowRate(eco2367FanCoil);
-const variableEco1458FanCoil = withVariableFlowRate(eco1458FanCoil);
-
-export const fanCoilSchema = z.discriminatedUnion(
-	"hasVariableFlowRate",
-	[
-		z.discriminatedUnion(
-			"ecoDesignControllerClass",
-			[variableEco2367FanCoil],
-		),
-		z.discriminatedUnion(
-			"ecoDesignControllerClass",
-			[variableEco1458FanCoil],
-		),
-	],
+export const fanCoilSchema = nestedDiscriminatedUnion(
+	fanCoilBase,
+	variableFlowRateFields,
+	ecoDesignControllerClassFields,
 );
+
 const warmAirHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("warmAirHeater"),
 	designTempDiffAcrossEmitters: z.number(),
@@ -1289,17 +1211,21 @@ const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceExtension);
 const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceExtension);
 const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
 const heatNetworkHotWaterSourceBase = heatNetworkBase.extend(hotWaterHeatSourceExtension);
-const heatNetworkHotWaterSourceBaseShape = heatNetworkHotWaterSourceBase.shape;
 const immersionHeaterHotWaterSourceBase = baseImmersionHeater.extend(hotWaterHeatSourceExtension);
 const pointOfUseHotWaterSourceBase = basePointOfUse.extend(hotWaterHeatSourceExtension);
 
+const heatNetworkHotWaterSource = nestedDiscriminatedUnion(
+	heatNetworkHotWaterSourceBase,
+	isHeatNetworkInPcdbFields,
+	usesHeatInterfaceUnitsFields,
+);
 
 const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpHotWaterSourceBase,
 	boilerHotWaterSourceBase,
 	heatBatteryHotWaterSourceBase,
 	solarThermalHotWaterSourceBase,
-	heatNetworkZodDataFromBase(heatNetworkHotWaterSourceBaseShape),
+	heatNetworkHotWaterSource,
 	immersionHeaterHotWaterSourceBase,
 	pointOfUseHotWaterSourceBase,
 ]);
@@ -1455,21 +1381,7 @@ const pvArrayDataZod = z.object({
 	electricityPriority: z.enum(["diverter", "electricBattery"]),
 	hasShading: z.boolean(),
 });
-const obstacleShadingDataZod = named.extend({
-	typeOfShading: z.literal("obstacle"),
-	height: z.number(),
-	distance: z.number(),
-	transparency: z.number(),
-});
-const otherShadingDataZod = named.extend({
-	typeOfShading: z.enum(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"]),
-	distance: z.number(),
-	depth: z.number(),
-});
-const shadingObjectDataZod = z.discriminatedUnion("typeOfShading", [
-	obstacleShadingDataZod,
-	otherShadingDataZod,
-]);
+
 const pvArrayShadingDataZod = z.discriminatedUnion("hasShading", [
 	pvArrayDataZod.extend({
 		hasShading: z.literal(false),

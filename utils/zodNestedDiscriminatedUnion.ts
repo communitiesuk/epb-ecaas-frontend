@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export type DiscUnionParams = {
+type DiscUnionParams = {
 	discriminator: string,
 	variants: [z.ZodObject, ...z.ZodObject[]]
 };
@@ -16,7 +16,7 @@ function mapTuple<T extends object[], U>(
 }
 
 /** 
- * @param commonFields A ZodObject with any fields which are identical throughout the union. Discriminator properties should not be included here.
+ * @param commonFields A ZodObject with any fields which have identical types throughout the union. Discriminator properties should not be included here.
  * @param unions A non-empty array containing `DiscUnionParams` objects
  * @returns A Zod schema which will validate a flat object structure with any
  * permutation of the discriminated unions provided.

@@ -835,6 +835,7 @@ describe("dwelling fabric mapper", () => {
 			treatmentType: "curtains",
 			thermalResistivityIncrease: 20,
 			solarTransmittanceReduction: 0.4,
+			hasShading: false,
 		};
 
 		const externalUnglazedDoor: ExternalUnglazedDoorData = {

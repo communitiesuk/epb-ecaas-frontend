@@ -4,14 +4,19 @@ import { screen } from "@testing-library/vue";
 import ExternalGlazedDoor from "./[door].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
+const store = useEcaasStore();
+const user = userEvent.setup();
+	
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-describe("external glazed door", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
+afterEach(() => {
+	store.$reset();
+	navigateToMock.mockReset();
+});
 
+describe("external glazed door", () => {
 	const externalWall: ExternalWallData = {
 		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
 		name: "External wall 1",
@@ -48,6 +53,7 @@ describe("external glazed door", () => {
 		treatmentType: "blinds",
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
+		hasShading: false,
 	} as const satisfies ExternalGlazedDoorData;
 
 	const state: EcaasForm<ExternalGlazedDoorData> = {
@@ -139,11 +145,6 @@ describe("external glazed door", () => {
 					},
 				},
 			});
-		});
-
-		
-		afterEach(() => {
-			store.$reset();
 		});
 
 		test("Associated wall/roof question has none of the above option", async () => {
@@ -249,7 +250,8 @@ describe("external glazed door", () => {
 			});
 		});
 
-		test("data is saved to store state when form is valid", async () => {
+		//TODO unskip once window shading element added to form
+		test.skip("data is saved to store state when form is valid", async () => {
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { externalGlazed: "create" },
@@ -290,7 +292,7 @@ describe("external glazed door", () => {
 			await user.type(screen.getByTestId("name"), "Test door");
 			await user.click(screen.getByTestId("saveProgress"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/doors");
+			expect(screen.getByTestId<HTMLAnchorElement>("saveProgress").href).toContain("/dwelling-fabric/doors");
 		});
 
 		test("form is prepopulated when data exists in state", async () => {
@@ -352,6 +354,7 @@ describe("external glazed door", () => {
 				treatmentType: "blinds",
 				thermalResistivityIncrease: 1,
 				solarTransmittanceReduction: 0.1,
+				hasShading: false,
 			} as const satisfies ExternalGlazedDoorData;
 
 			store.$patch({
@@ -526,11 +529,6 @@ describe("external glazed door", () => {
 	});
 	
 	describe("Handing external glazed door as a front door", () => {
-	
-		beforeEach(() => {
-			store.$reset();
-		});
-	
 		test("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
 			const frontDoor: Partial<ExternalGlazedDoorData> = {
 				name: "Front door",

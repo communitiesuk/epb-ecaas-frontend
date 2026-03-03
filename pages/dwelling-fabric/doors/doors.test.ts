@@ -110,6 +110,7 @@ describe("doors", () => {
 			thermalResistance: 37,
 			numberOpenableParts: "0",
 			curtainsOrBlinds: false,
+			hasShading: false,
 
 		},
 	};
@@ -132,6 +133,7 @@ describe("doors", () => {
 			thermalResistance: 25,
 			numberOpenableParts: "1",
 			curtainsOrBlinds: false,
+			hasShading: false,
 		},
 	};
 
@@ -154,6 +156,7 @@ describe("doors", () => {
 			thermalResistance: 41,
 			numberOpenableParts: "2",
 			curtainsOrBlinds: false,
+			hasShading: false,	
 		},
 	};
 
