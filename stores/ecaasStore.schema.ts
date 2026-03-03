@@ -388,11 +388,11 @@ const roofDataBaseZod = namedWithId.extend({
 
 const roofDataZod = z.discriminatedUnion("typeOfRoof", [
 	roofDataBaseZod.extend({
-		typeOfRoof: z.enum(["flat", "unheatedPitched"]),
+		typeOfRoof: z.enum(["unheatedPitched"]),
 		uValue,
 	}),
 	roofDataBaseZod.extend({
-		typeOfRoof: z.enum(["pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling"]),
+		typeOfRoof: z.enum(["pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling", "flat"]),
 		thermalResistance,
 	})]);
 
@@ -508,7 +508,7 @@ const shadingObjectDataZod = z.discriminatedUnion("typeOfShading", [
 ]);
 
 const shadingDataFields = {
-	discriminator: "hasShading", 
+	discriminator: "hasShading",
 	variants: [
 		z.object({
 			hasShading: z.literal(false),
@@ -944,38 +944,38 @@ const heatNetworkBase = namedWithId.extend({
 	typeOfHeatSource: z.literal("heatNetwork"),
 	typeOfHeatNetwork,
 });
-		
+
 const isHeatNetworkInPcdbFields = {
 	discriminator: "isHeatNetworkInPcdb",
-	variants: 
-	[
-		z.object({
-			isHeatNetworkInPcdb: z.literal(true),
-			productReference: z.string().trim().min(1),
-			energySupply: fuelTypeZod.optional(),
-		}),
-		z.object({
-			isHeatNetworkInPcdb: z.literal(false),
-			emissionsFactor: z.number(),
-			outOfScopeEmissionsFactor: z.number(),
-			primaryEnergyFactor: z.number(),
-			canEnergyBeExported: z.boolean(),
-		}),
-	] satisfies Tuple,
+	variants:
+		[
+			z.object({
+				isHeatNetworkInPcdb: z.literal(true),
+				productReference: z.string().trim().min(1),
+				energySupply: fuelTypeZod.optional(),
+			}),
+			z.object({
+				isHeatNetworkInPcdb: z.literal(false),
+				emissionsFactor: z.number(),
+				outOfScopeEmissionsFactor: z.number(),
+				primaryEnergyFactor: z.number(),
+				canEnergyBeExported: z.boolean(),
+			}),
+		] satisfies Tuple,
 };
 
 const usesHeatInterfaceUnitsFields = {
 	discriminator: "usesHeatInterfaceUnits",
-	variants: 
-	[
-		z.object({
-			usesHeatInterfaceUnits: z.literal(true),
-			heatInterfaceUnitProductReference: z.string().trim().min(1),
-		}),
-		z.object({
-			usesHeatInterfaceUnits: z.literal(false),
-		}),
-	] satisfies Tuple,
+	variants:
+		[
+			z.object({
+				usesHeatInterfaceUnits: z.literal(true),
+				heatInterfaceUnitProductReference: z.string().trim().min(1),
+			}),
+			z.object({
+				usesHeatInterfaceUnits: z.literal(false),
+			}),
+		] satisfies Tuple,
 };
 
 const heatNetworkZodData = nestedDiscriminatedUnion(

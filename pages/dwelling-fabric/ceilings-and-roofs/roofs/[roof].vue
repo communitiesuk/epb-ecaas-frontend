@@ -27,9 +27,35 @@ const saveForm = (fields: RoofData) => {
 		const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		const index = getStoreIndex(dwellingSpaceRoofs.data);
 		const currentId = roofData?.data.id;
-		const variantFields = fields.typeOfRoof === "pitchedInsulatedAtRoof" || fields.typeOfRoof === "pitchedInsulatedAtCeiling"
-			? { typeOfRoof: fields.typeOfRoof, thermalResistance: fields.thermalResistance }
-			: fields.typeOfRoof === "flat" || fields.typeOfRoof === "unheatedPitched" ? { typeOfRoof: fields.typeOfRoof, uValue: fields.uValue } : undefined as never;
+		let variantFields: 
+		| {
+			typeOfRoof: "pitchedInsulatedAtRoof" | "pitchedInsulatedAtCeiling" | "flat";
+			thermalResistance: number;
+		} | {
+			typeOfRoof: "unheatedPitched";
+			uValue: number;
+		};;
+
+		switch (fields.typeOfRoof) {
+			case "pitchedInsulatedAtRoof":
+			case "pitchedInsulatedAtCeiling":
+			case "flat":
+				variantFields = {
+					typeOfRoof: fields.typeOfRoof,
+					thermalResistance: fields.thermalResistance,
+				};
+				break;
+
+			case "unheatedPitched":
+				variantFields = {
+					typeOfRoof: fields.typeOfRoof,
+					uValue: fields.uValue,
+				};
+				break;
+
+			default:
+				variantFields = undefined as never;
+		}
 
 		dwellingSpaceRoofs.data[index] = {
 			data: {
@@ -176,14 +202,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 
 		<template v-if="model?.typeOfRoof === 'flat' || model?.typeOfRoof === 'pitchedInsulatedAtRoof'">
-			<FieldsUValue
-				v-if="model.typeOfRoof==='flat'"
-				label="U-value of roof"
-				help="This is the steady thermal transmittance of the roof and ceiling"
-			/>
-			<FieldsThermalResistance
-				v-if="model.typeOfRoof==='pitchedInsulatedAtRoof'"
-			/>
+			
+			<FieldsThermalResistance/>
 			<FieldsArealHeatCapacity
 				id="arealHeatCapacity"
 				name="arealHeatCapacity"

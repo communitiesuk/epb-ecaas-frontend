@@ -6,7 +6,7 @@ import ExternalGlazedDoor from "./[door].vue";
 const navigateToMock = vi.hoisted(() => vi.fn());
 const store = useEcaasStore();
 const user = userEvent.setup();
-	
+
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
@@ -71,7 +71,7 @@ describe("external glazed door", () => {
 		});
 
 		test("links to add walls and roofs are not displayed", async () => {
-	
+
 			expect(screen.queryByText("No walls or roofs added.")).toBeNull();
 			// expect(screen.getByRole<HTMLAnchorElement>("link", { name: "Click here to add walls" }).href)
 			// 	.toContain("/dwelling-fabric/walls");
@@ -96,9 +96,9 @@ describe("external glazed door", () => {
 			await user.tab();
 			expect(screen.getByTestId("orientation")).toBeDefined();
 		});
-				
-		test("requires pitch and orientation", async () => {		
-				
+
+		test("requires pitch and orientation", async () => {
+
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(await screen.findByTestId("pitchOption_error")).toBeDefined();
@@ -135,7 +135,7 @@ describe("external glazed door", () => {
 	});
 
 	describe("with existing external wall", () => {
-		beforeEach(async() => {
+		beforeEach(async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -527,7 +527,7 @@ describe("external glazed door", () => {
 			});
 		});
 	});
-	
+
 	describe("Handing external glazed door as a front door", () => {
 		test("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
 			const frontDoor: Partial<ExternalGlazedDoorData> = {
@@ -543,26 +543,26 @@ describe("external glazed door", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { externalGlazed: "create" },
 				},
 			});
-	
+
 			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
 			await user.tab();
 			await (user.click(screen.getByTestId("saveAndComplete")));
-	
+
 			const error = screen.findByTestId("isTheFrontDoor_error");
 			expect(error).toBeDefined();
 			expect(
 				(await error).innerText.includes("Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead."),
 			).toBe(true);
 		});
-		
-		test("does not display the 'Is this the front door?' element if an associated item is a flat roof (has no orientation)", async() => {
-  
+
+		test("does not display the 'Is this the front door?' element if an associated item is a flat roof (has no orientation)", async () => {
+
 			const roof: EcaasForm<RoofData> = {
 				data: {
 					id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
@@ -574,7 +574,7 @@ describe("external glazed door", () => {
 					width: 1,
 					elevationalHeightOfElement: 2,
 					surfaceArea: 1,
-					uValue: 1,
+					thermalResistance: 1,
 					colour: "Dark",
 					arealHeatCapacity: "Very light",
 					massDistributionClass: "I",
@@ -589,7 +589,7 @@ describe("external glazed door", () => {
 					},
 				},
 			});
-	
+
 
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {

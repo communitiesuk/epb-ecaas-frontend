@@ -472,13 +472,13 @@ describe("external unglazed door", () => {
 		});
 	});
 	describe("Handing external unglazed door as a front door", () => {
-		
+
 		test("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
 			const door: Partial<ExternalUnglazedDoorData> = {
 				name: "External unglazed door 1",
 				isTheFrontDoor: true,
 			};
-				
+
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -498,7 +498,7 @@ describe("external unglazed door", () => {
 			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
 			await user.tab();
 			await (user.click(screen.getByTestId("saveAndComplete")));
-		
+
 			const error = screen.findByTestId("isTheFrontDoor_error");
 			expect(error).toBeDefined();
 			expect(
@@ -506,8 +506,8 @@ describe("external unglazed door", () => {
 			).toBe(true);
 		});
 
-		test("does not display the 'Is this the front door?' element if an associated item is a flat roof (has no orientation)", async() => {
-		
+		test("does not display the 'Is this the front door?' element if an associated item is a flat roof (has no orientation)", async () => {
+
 			const roof: EcaasForm<RoofData> = {
 				data: {
 					id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
@@ -519,7 +519,7 @@ describe("external unglazed door", () => {
 					width: 1,
 					elevationalHeightOfElement: 2,
 					surfaceArea: 1,
-					uValue: 1,
+					thermalResistance: 1,
 					colour: "Dark",
 					arealHeatCapacity: "Very light",
 					massDistributionClass: "I",
@@ -534,8 +534,8 @@ describe("external unglazed door", () => {
 					},
 				},
 			});
-		
-	
+
+
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
 					params: { door: "create" },
@@ -544,9 +544,9 @@ describe("external unglazed door", () => {
 			await user.click(screen.getByTestId(`associatedItemId_${roof.data.id}`));
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
-		
-		test("does not display the 'Is this the front door?' element if pitch is 0 or 180 because orientation is not asked for", async() => {
-	
+
+		test("does not display the 'Is this the front door?' element if pitch is 0 or 180 because orientation is not asked for", async () => {
+
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
 					params: { door: "create" },

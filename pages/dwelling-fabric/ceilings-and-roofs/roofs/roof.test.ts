@@ -26,7 +26,7 @@ describe("roof", () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			uValue: 1,
+			thermalResistance: 1,
 			colour: "Light",
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
@@ -62,7 +62,7 @@ describe("roof", () => {
 		await user.type(screen.getByTestId("width"), "1");
 		await user.type(screen.getByTestId("elevationalHeightOfElement"), "2");
 		await user.type(screen.getByTestId("surfaceArea"), "1");
-		await user.type(screen.getByTestId("uValue"), "1");
+		await user.type(screen.getByTestId("thermalResistance"), "1");
 		await user.click(screen.getByTestId("colour_Light"));
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
@@ -109,7 +109,7 @@ describe("roof", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeightOfElement")).value).toBe("2");
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("1");
-		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
+		expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("1");
 		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 	});

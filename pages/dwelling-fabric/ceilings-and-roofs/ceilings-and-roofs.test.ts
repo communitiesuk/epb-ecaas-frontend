@@ -62,7 +62,7 @@ describe("ceilings and roofs", () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			uValue: 1,
+			thermalResistance: 1,
 			colour: "Dark",
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
