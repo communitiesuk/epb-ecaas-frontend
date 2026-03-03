@@ -2,7 +2,7 @@ import GeneralDetails from "./general-details.vue";
 import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
-import type { GeneralDetailsData, HeatSourceData } from "~/stores/ecaasStore.schema";
+import type { GeneralDetailsData, HeatSourceData, SmartHotWaterTankData } from "~/stores/ecaasStore.schema";
 import type { SchemaFuelTypeExtended } from "~/schema/aliases";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -277,7 +277,14 @@ describe("General details", () => {
 			energySupply: "mains_gas",
 			isExistingHeatSource: false,
 			heatSourceId: "NEW_HEAT_SOURCE",
+		};
 
+		const smartHotWaterTank: Partial<SmartHotWaterTankData> = {
+			id: "55d318aa-f2c9-473f-9063-20457386a71b",
+			name: "Smart hot water tank",
+			typeOfWaterStorage: "smartHotWaterTank",
+			dhwHeatSourceId: "DHW_HEAT_SOURCE",
+			energySupply: "mains_gas",
 		};
 
 		const state: Partial<GeneralDetailsData> = {
@@ -300,6 +307,9 @@ describe("General details", () => {
 				heatSources: {
 					data: [{ data: heatNetworkDHW }, { data: heatBatteryDHW }, { data: pointOfUse }],
 				},
+				waterStorage: {
+					data: [{ data: smartHotWaterTank }],
+				},
 			},
 		});
 		await renderSuspended(GeneralDetails);
@@ -316,6 +326,9 @@ describe("General details", () => {
 		expect(DHWItems[1]?.complete).toBe(false);
 		expect((DHWItems[2]?.data as { energySupply: SchemaFuelTypeExtended }).energySupply).toBeUndefined();
 		expect(DHWItems[2]?.complete).toBe(false);
+
+		const waterStorage = store.domesticHotWater.waterStorage.data;
+		expect((waterStorage[0]?.data as { energySupply: SchemaFuelTypeExtended }).energySupply).toBeUndefined();
 	});
 	it("when type of dwelling is updated from flat to house, updates store so any internal door is not a front door", async () => {
 		const internalDoor: EcaasForm<Partial<InternalDoorData>> = {
