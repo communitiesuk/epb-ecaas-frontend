@@ -12,6 +12,8 @@ const index = getStoreIndex(externalGlazedDoorData);
 const doorData = useItemToEdit("door", externalGlazedDoorData);
 const model = ref(doorData?.data);
 
+const shading = model?.value && "shading" in model.value ? model.value.shading : [];
+
 const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceExternalGlazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
@@ -98,13 +100,19 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				break;
 		}
 
-
+		const existingShading = (dwellingSpaceExternalGlazedDoor.data[index]?.data as Record<string, unknown>)?.shading;
 
 		dwellingSpaceExternalGlazedDoor.data[index] = {
 			data: {
 				...commonFields,
 				...openablePartsFields,
-			},
+				...(fields.hasShading ? {
+					hasShading: true,
+					shading: existingShading ?? [],
+				} : {
+					hasShading: false, 
+				}),
+			} as ExternalGlazedDoorData,
 			complete: true,
 		};
 		dwellingSpaceExternalGlazedDoor.complete = false;
@@ -129,7 +137,11 @@ autoSaveElementForm<ExternalGlazedDoorData>({
 	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor,
 	defaultName: "External glazed door",
 	onPatch: (state, newData, index) => {
+		const existingShading = (state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index]?.data as Record<string, unknown> | undefined)?.shading;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index] = newData;
+		if (existingShading !== undefined) {
+			(state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index].data as Record<string, unknown>).shading = existingShading;
+		}
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.complete = false;
 	},
 });
@@ -411,7 +423,20 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | number | min:0 | max:1"
 			/>
 		</template>
-		
+		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+		<h2 class="govuk-heading-l">PV array shading</h2>
+		<FormKit
+			id="hasShading"
+			type="govBoolean"
+			label="Does anything shade the PV array?"
+			name="hasShading"
+			validation="required"
+		/>
+		<ShadingSection
+			v-if="model?.hasShading"
+			:index="index"
+			:model="shading"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
