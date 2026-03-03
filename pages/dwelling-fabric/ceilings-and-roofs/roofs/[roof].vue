@@ -27,12 +27,15 @@ const saveForm = (fields: RoofData) => {
 		const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		const index = getStoreIndex(dwellingSpaceRoofs.data);
 		const currentId = roofData?.data.id;
+		const variantFields = fields.typeOfRoof === "pitchedInsulatedAtRoof" || fields.typeOfRoof === "pitchedInsulatedAtCeiling"
+			? { typeOfRoof: fields.typeOfRoof, thermalResistance: fields.thermalResistance }
+			: fields.typeOfRoof === "flat" || fields.typeOfRoof === "unheatedPitched" ? { typeOfRoof: fields.typeOfRoof, uValue: fields.uValue } : undefined as never;
 
 		dwellingSpaceRoofs.data[index] = {
 			data: {
 				id: currentId || uuidv4(),
 				name: fields.name,
-				typeOfRoof: fields.typeOfRoof,
+				...variantFields,
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "0" ? 0 : fields.pitch,
 				orientation: fields.orientation,
@@ -40,7 +43,6 @@ const saveForm = (fields: RoofData) => {
 				width: fields.width,
 				elevationalHeightOfElement: fields.elevationalHeightOfElement,
 				surfaceArea: fields.surfaceArea,
-				uValue: fields.uValue,
 				colour: fields.colour,
 				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
@@ -108,8 +110,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			v-if="model?.typeOfRoof === 'flat'"
 			label="Pitch of roof"
 			help="Enter the tilt angle of the external surface of the roof. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
-			:pitch-option="model?.pitchOption"
 			:options="zeroPitchOptions()"
+			:pitch-option="model?.pitchOption"
 			data-field="Zone.BuildingElement.*.pitch"
 		/>
 
@@ -175,8 +177,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 		<template v-if="model?.typeOfRoof === 'flat' || model?.typeOfRoof === 'pitchedInsulatedAtRoof'">
 			<FieldsUValue
+				v-if="model.typeOfRoof==='flat'"
 				label="U-value of roof"
 				help="This is the steady thermal transmittance of the roof and ceiling"
+			/>
+			<FieldsThermalResistance
+				v-if="model.typeOfRoof==='pitchedInsulatedAtRoof'"
 			/>
 			<FieldsArealHeatCapacity
 				id="arealHeatCapacity"
@@ -187,10 +193,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</template>
 
 		<template v-if="model?.typeOfRoof === 'pitchedInsulatedAtCeiling'">
-			<FieldsUValue
-				label="U-value of roof"
-				help="This is the steady thermal transmittance of the entire roof, including the unheated loft space"
-			/>
+			<FieldsThermalResistance/>
 			<FieldsArealHeatCapacity
 				id="arealHeatCapacity"
 				name="arealHeatCapacity"

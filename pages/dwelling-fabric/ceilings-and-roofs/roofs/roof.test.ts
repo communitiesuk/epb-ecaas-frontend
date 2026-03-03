@@ -32,6 +32,23 @@ describe("roof", () => {
 			massDistributionClass: "I",
 		},
 	};
+	const pitchedRoof: EcaasForm<RoofData> = {
+		data: {
+			id: "ec8e8ec6-0fcb-43dc-81e0-9e2e9afb9e20",
+			name: "Roof 1",
+			typeOfRoof: "pitchedInsulatedAtRoof",
+			pitch: 30,
+			orientation: 90,
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			thermalResistance: 1,
+			colour: "Light",
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+		},
+	};
 
 	afterEach(() => {
 		store.$reset();
@@ -64,7 +81,7 @@ describe("roof", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-		
+
 		expect(dwellingSpaceRoofs.data[0]).toEqual({ ...roof, complete: true });
 	});
 
@@ -95,6 +112,30 @@ describe("roof", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
 		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
+	});
+
+	test("form is prepopulted with pitched roof data when data exists in state", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceRoofs: {
+						data: [pitchedRoof],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(Roof, {
+			route: {
+				params: { roof: "0" },
+			},
+		});
+
+		expect((await screen.findByTestId("typeOfRoof_pitchedInsulatedAtRoof")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId<HTMLInputElement>("pitch")).value).toBe("30");
+		expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("90");
+		expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("1");
+		expect(screen.queryByTestId("uValue")).toBeNull();
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -150,7 +191,7 @@ describe("roof", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-		
+
 		expect(dwellingSpaceRoofs.data[0]!.data.pitch).toEqual(90);
 	});
 
@@ -161,7 +202,7 @@ describe("roof", () => {
 
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 		expect((await screen.findByTestId("orientation_error"))).toBeDefined();
-		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
+		expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 	});
@@ -177,18 +218,19 @@ describe("roof", () => {
 		await user.click(screen.getByTestId("typeOfRoof_pitchedInsulatedAtRoof"));
 		await user.type(screen.getByTestId("pitch"), "90");
 		await user.type(screen.getByTestId("orientation"), "90");
+		await user.type(screen.getByTestId("thermalResistance"), "1");
 		await user.tab();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-		
+
 		expect(dwellingSpaceRoofs.data[0]!.data.pitch).toEqual(90);
 		expect(dwellingSpaceRoofs.data[0]!.data.orientation).toEqual(90);
 	});
 
 	it("navigates to ceilings and roofs page when valid form is completed", async () => {
 		await renderSuspended(Roof);
-	
+
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
