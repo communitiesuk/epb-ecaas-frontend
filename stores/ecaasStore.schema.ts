@@ -507,6 +507,8 @@ const shadingObjectDataZod = z.discriminatedUnion("typeOfShading", [
 	otherShadingDataZod,
 ]);
 
+export type ShadingObjectData = z.infer<typeof shadingObjectDataZod>;
+
 const shadingDataFields = {
 	discriminator: "hasShading",
 	variants: [
@@ -526,7 +528,6 @@ const externalGlazedDoorData = nestedDiscriminatedUnion(
 	curtainsOrBlindsFields,
 	shadingDataFields,
 );
-
 
 export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorData>;
 
@@ -1403,8 +1404,6 @@ const pvArrayShadingDataZod = z.discriminatedUnion("hasShading", [
 
 
 export type PvArrayData = z.infer<typeof pvArrayShadingDataZod>;
-
-export type PvShadingData = z.infer<typeof shadingObjectDataZod>;
 
 const electricBatteryDataZod = z.object({
 	name: z.string().trim().min(1),

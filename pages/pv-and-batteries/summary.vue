@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import type { PvShadingData } from "~/stores/ecaasStore.schema";
+import type { ShadingObjectData } from "~/stores/ecaasStore.schema";
 import { getTabItems, getUrl } from "#imports";
 
 const title = "PV and electric batteries summary";
 const store = useEcaasStore();
 
-function formatShadingRowsForSummary(shading: PvShadingData[]): Record<string, string> {
+function formatShadingRowsForSummary(shading: ShadingObjectData[]): Record<string, string> {
 	const rows: Record<string, string> = {};
 	shading.forEach((shadingEntry, i) => {
 		const n = i + 1;

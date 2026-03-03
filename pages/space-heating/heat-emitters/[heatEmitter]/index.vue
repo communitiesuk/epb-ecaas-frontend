@@ -68,6 +68,7 @@ watch(
 		}	
 	},
 );
+
 autoSaveElementForm<HeatEmittingData>({
 	model,
 	storeData: store.spaceHeating.heatEmitters,
@@ -78,20 +79,22 @@ autoSaveElementForm<HeatEmittingData>({
 		state.spaceHeating.heatEmitters.complete = false;
 	},
 });
+
 function updateHeatEmitter(type: string) {
-	watch(() => model.value?.[`${type}` as keyof typeof model.value], (newHeatEmitterSubtype, initialHeatEmitterSubtype) => {
-		if (newHeatEmitterSubtype !== initialHeatEmitterSubtype) {
+	watch(
+		() => model.value?.[`${type}` as keyof typeof model.value],
+		(newHeatEmitterSubtype, initialHeatEmitterSubtype) => {
+			if (newHeatEmitterSubtype === initialHeatEmitterSubtype
+				|| !model.value
+				|| !store.spaceHeating.heatEmitters.data[index]
+			) return;
+
 			const defaultName = getHeatEmitterDefaultName(model.value as HeatEmitterFormData);
-			if (model.value) {
-				model.value.name = defaultName;
-				if (store.spaceHeating.heatEmitters.data[index]) {
-					store.spaceHeating.heatEmitters.data[index].data.name = defaultName;
-				}
-			}
-		}
-	},
+			model.value.name = defaultName;
+			store.spaceHeating.heatEmitters.data[index].data.name = defaultName;
+		},
 	);
-}	;
+};
 </script>
 
 <template>

@@ -62,7 +62,7 @@ export function mapPvArrayEnergySupplyData(state: ResolvedState): { [key: string
 	return EnergySupply;
 }
 
-export function maPvArrayShadingData(shading: PvShadingData[]): SchemaWindowShadingObject[] {
+export function maPvArrayShadingData(shading: ShadingObjectData[]): SchemaWindowShadingObject[] {
 	return shading.map((shadingItem) => {
 		const { typeOfShading } = shadingItem;
 		switch (typeOfShading) {

@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { sentenceToLowerCase } from "#imports";
-import type { PvShadingData } from "~/stores/ecaasStore.schema";
+import type { ShadingObjectData } from "~/stores/ecaasStore.schema";
 
 const props = defineProps<{
 	index: number;
-	model: PvShadingData[];
+	model: ShadingObjectData[];
 }>();
 
 const store = useEcaasStore();
 
-type ShadingFormModel = Partial<PvShadingData> & { typeOfShading?: string };
+type ShadingFormModel = Partial<ShadingObjectData> & { typeOfShading?: string };
 
-const shadingItems = ref<PvShadingData[]>([...props.model]);
+const shadingItems = ref<ShadingObjectData[]>([...props.model]);
 
 const showAddForm = computed(() => shadingItems.value.length === 0 || isAddAnother.value);
 const isAddAnother = ref(false);
@@ -36,7 +36,7 @@ const typeOptionsSummary = {
 };
 const { handleInvalidSubmit } = useErrorSummary();
 
-const shadingSummaryData = (item: PvShadingData) => {
+const shadingSummaryData = (item: ShadingObjectData) => {
 	if (item.typeOfShading === "obstacle") {
 		return {
 			"Type of shading": typeOptionsSummary[item.typeOfShading],
@@ -52,13 +52,13 @@ const shadingSummaryData = (item: PvShadingData) => {
 	};
 };
 
-const buildShadingElement = (): PvShadingData | null => {
+const buildShadingElement = (): ShadingObjectData | null => {
 	const { typeOfShading, name } = formModel.value;
 	if (!typeOfShading || !name) {
 		return null;
 	}
 	if (typeOfShading === "obstacle") {
-		const { height, distance, transparency } = formModel.value as Extract<PvShadingData, { typeOfShading: "obstacle" }>;
+		const { height, distance, transparency } = formModel.value as Extract<ShadingObjectData, { typeOfShading: "obstacle" }>;
 		return {
 			name,
 			typeOfShading: "obstacle",
@@ -67,7 +67,7 @@ const buildShadingElement = (): PvShadingData | null => {
 			transparency: Number(transparency),
 		};
 	}
-	const { depth, distance } = formModel.value as Extract<PvShadingData, { typeOfShading: Exclude<PvShadingData, { typeOfShading: "obstacle" }> }>;
+	const { depth, distance } = formModel.value as Extract<ShadingObjectData, { typeOfShading: Exclude<ShadingObjectData, { typeOfShading: "obstacle" }> }>;
 	return {
 		name,
 		typeOfShading,
@@ -76,7 +76,7 @@ const buildShadingElement = (): PvShadingData | null => {
 	};
 };
 
-const writeToStore = (items: PvShadingData[]) => {
+const writeToStore = (items: ShadingObjectData[]) => {
 	store.$patch((state) => {
 		const pvArray = state.pvAndBatteries.pvArrays.data[props.index];
 		if (!pvArray) return;
