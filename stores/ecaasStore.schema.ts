@@ -604,14 +604,14 @@ export type ThermalBridgingData = AssertFormKeysArePageIds<{
 
 const linearThermalBridgeDataZod = named.extend({
 	typeOfThermalBridge: thermalBridgeJunctionTypeZod,
-	linearThermalTransmittance: z.number().min(0).max(2),
+	linearThermalTransmittance: z.number(),
 	length: z.number().min(0).max(10000),
 });
 
 export type LinearThermalBridgeData = z.infer<typeof linearThermalBridgeDataZod>;
 
 const pointThermalBridgeDataZod = named.extend({
-	heatTransferCoefficient: z.number(),
+	heatTransferCoefficient: z.number().min(0).max(2),
 });
 
 export type PointThermalBridgeData = z.infer<typeof pointThermalBridgeDataZod>;

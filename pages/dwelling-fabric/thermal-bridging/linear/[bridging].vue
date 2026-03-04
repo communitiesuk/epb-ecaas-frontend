@@ -160,7 +160,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Linear thermal transmittance"
 				help="Enter the linear thermal transmittance of the thermal bridge"
 				name="linearThermalTransmittance"
-				validation="required | number | min:0 | max:2"
+				validation="required | number"
 				suffix-text="W/(m·K)"
 				data-field="Zone.ThermalBridging.*.linear_thermal_transmittance"
 			/>
