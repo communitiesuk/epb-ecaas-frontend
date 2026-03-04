@@ -106,6 +106,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
 		</template>
+		<FieldsThermalResistance  />
 		<FormKit
 			v-if="model?.typeOfInternalFloor === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
@@ -127,7 +128,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</p>
 			</GovDetails>
 		</FormKit>
-		<FieldsThermalResistance  />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
