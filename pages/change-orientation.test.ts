@@ -30,22 +30,13 @@ describe("Change orientation", () => {
 		store.$reset();
 	});
 
-	it("When no door has been marked as the front door", async () => {
-
-		await renderSuspended(ChangeOrientation);
-
-		expect(screen.getByTestId("frontDoorName").innerText).toBe("");
-		expect(screen.getByTestId("currentOrientation").innerText).toBe("");
-
-	});
-
 	it("Displays the current front door's name and orientation", async () => {
 
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceDoors: {
 					dwellingSpaceExternalGlazedDoor: {
-						data: [{ data: doorNoTag }],
+						data: [{ data: doorNoTag, complete: true } ],
 					},
 				},
 			},
@@ -63,7 +54,7 @@ describe("Change orientation", () => {
 			dwellingFabric: {
 				dwellingSpaceDoors: {
 					dwellingSpaceExternalGlazedDoor: {
-						data: [{ data: doorWithTag }],
+						data: [{ data: doorWithTag, complete: true }],
 					},
 				},
 				dwellingSpaceWalls: {
@@ -98,7 +89,7 @@ describe("Change orientation", () => {
 			dwellingFabric: {
 				dwellingSpaceDoors: {
 					dwellingSpaceExternalGlazedDoor: {
-						data: [{ data: doorWithTag }],
+						data: [{ data: doorWithTag, complete: true }],
 					},
 				},
 				dwellingSpaceWalls: {
@@ -114,11 +105,52 @@ describe("Change orientation", () => {
 		expect(screen.getByTestId("frontDoorName").innerText).toBe(doorWithTag.name);
 		expect(screen.getByTestId("currentOrientation").innerText).toBe(String(doorWithTag.orientation));
 	});
-	
-	it("Cannot set new orientation if their is not a current orientation", () => {
+
+	it("Displays error message when there is no front door marked as complete", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalGlazedDoor: {
+						data: [{ data: doorNoTag }, { data: doorWithTag }],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(ChangeOrientation);
+		expect(screen.getByTestId("noFrontDoor_error")).toBeDefined();
 	});
 
-	it("Error message appears when orientaion is invalid", async () => {
+	it("Displays error message when there is a completed front door but it has no orientation from it's tagged item", async () => {
+		const externalWall: Partial<ExternalWallData> = {
+			id: "ex-1",
+			name: "External wall",
+		};
+
+		const doorWithTag: Partial<ExternalUnglazedDoorData> = {
+			name: "External unglazed door",
+			isTheFrontDoor: true,
+			associatedItemId: externalWall.id,
+		};
+		
+		
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalGlazedDoor: {
+						data: [{ data: doorWithTag, complete: true }],
+					},
+				},	
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall }],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(ChangeOrientation);
+		expect(screen.getByTestId("frontDoorWithoutOrientation_error")).toBeDefined();
 	});
 
 	// windows *
@@ -141,13 +173,14 @@ describe("Change orientation", () => {
 			frontDoor = {
 				name: "Front door",
 				isTheFrontDoor: true,
-				orientation: 100,	
+				orientation: 100,	        
 			}; 
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: {
-							data: [{ data: frontDoor }],
+							data: [{ data: frontDoor, complete: true }],
+							
 						},
 					},	
 				},
@@ -204,7 +237,7 @@ describe("Change orientation", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: {
-							data: [{ data: frontDoor }, { data: glazedDoor }],
+							data: [{ data: frontDoor, complete: true }, { data: glazedDoor }],
 						},
 						dwellingSpaceExternalUnglazedDoor: {
 							data: [{ data: unglazedDoor }],
@@ -296,5 +329,15 @@ describe("Change orientation", () => {
 
 			expect(store.dwellingFabric.dwellingSpaceWindows.data[0]?.data.orientation).toBe(281);
 		});
+	});
+	it("'Return to overview' button navigates user to the homepage", async () => {
+		await renderSuspended(ChangeOrientation);
+		const returnToOverviewButton = screen.getByRole("button", {
+			name: "Return to overview",
+		});
+		expect(returnToOverviewButton.getAttribute("href")).toBe(
+			"/",
+		);
+
 	});
 });

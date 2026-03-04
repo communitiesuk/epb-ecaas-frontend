@@ -6,13 +6,19 @@ const title = "Change orientation of dwelling";
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 const store = useEcaasStore();
 
-const saveForm = () => {
-	
-	// navigateTo(getUrl(""));
-};
+
 const { dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor, dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
-const doors = [ dwellingSpaceExternalGlazedDoor.data, dwellingSpaceExternalUnglazedDoor.data, dwellingSpaceInternalDoor.data ].flat();
-const frontDoor = doors.find(door => door.data.isTheFrontDoor);
+const doors = computed(() => [
+	dwellingSpaceExternalGlazedDoor.data,
+	dwellingSpaceExternalUnglazedDoor.data,
+	dwellingSpaceInternalDoor.data,
+].flat());
+
+const frontDoor = computed(() =>
+	doors.value.find(
+		door => door.data.isTheFrontDoor === true && door.complete === true,
+	),
+);
 const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 const pvs = store.pvAndBatteries.pvArrays.data;
@@ -20,21 +26,22 @@ const externalWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExter
 const roofs = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data;
 const windows = store.dwellingFabric.dwellingSpaceWindows.data;
 
-const itemTaggedToDoor = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], frontDoor?.data.associatedItemId);
-
 const orientationOfFrontDoor = computed(() => {
-	if (!frontDoor) return;
-	return "orientation" in frontDoor.data ? frontDoor.data.orientation : itemTaggedToDoor?.orientation;
-
+	if (!frontDoor.value) return;
+	if ("orientation" in frontDoor.value.data && frontDoor.value.data.orientation) {
+		return frontDoor.value.data.orientation; 
+	} else {
+		const itemTaggedToDoor = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], frontDoor.value?.data.associatedItemId);
+		return itemTaggedToDoor?.orientation;
+	}
 });
 
-type ChangeOrientationModel = {
+export type ChangeOrientationModel = {
 	name?: string,
-	orientation?: number, 
 	newOrientation?: number
 };
 const model = ref<ChangeOrientationModel>({
-	name: frontDoor?.data.name,
+	name: frontDoor.value?.data.name,
 	newOrientation: undefined,
 });
 
@@ -43,7 +50,7 @@ function getDiffInOrientation() {
 	return model.value.newOrientation - orientationOfFrontDoor.value; 
 }
 
-const items = [...doors, pvs, externalWalls, roofs, windows].flat();
+const items = [...doors.value, pvs, externalWalls, roofs, windows].flat();
 
 const changeOrientationOfItems = () => {
 	const difference = getDiffInOrientation();
@@ -56,6 +63,7 @@ const changeOrientationOfItems = () => {
 		}
 	}
 };
+
 </script>
 
 <template>
@@ -68,21 +76,46 @@ const changeOrientationOfItems = () => {
 		type="form"
 		:actions="false"
 		:incomplete-message="false"
-		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="heatSourceErrorSummary" />
 		<GovInset>Doing this will update the orientation of all component parts in the calculation, including fabric, vents and PV systems.</GovInset>
 		<div>
-			<legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+			<label class="govuk-label govuk-label--m">
 				Current orientation of the front door
-			</legend>
-			<div id="'current-orientation-hint'" class="govuk-hint">
-				The door below has been marked as the front door. To change this go to <NuxtLink :to="getUrl('dwellingSpaceDoors')">
+			</label>
+			<div id="current-orientation-hint" class="govuk-hint">
+				The door below has been marked as the front door. To change this go to
+				<NuxtLink :to="getUrl('dwellingSpaceDoors')">
 					doors
 				</NuxtLink>
 			</div>
-			<ul class="govuk-list">
-				<li>Door: <span data-testid="frontDoorName" class="bold">{{ model?.name }}</span></li>
+			<div v-if="!model.name && !orientationOfFrontDoor" class="govuk-error-message" :data-testid="`noFrontDoor_error`">
+				<span class="govuk-visually-hidden">Error:</span>No door has been marked as the front door, or the 'door' form has not been marked as complete. To change this go to <NuxtLink :to="getUrl('dwellingSpaceDoors')">
+					doors
+				</NuxtLink>
+			</div>
+			<div
+				v-else-if="model.name && !orientationOfFrontDoor"
+				class="govuk-error-message"
+				:data-testid="`frontDoorWithoutOrientation_error`"
+			>
+				<span class="govuk-visually-hidden">Error:</span>
+				The selected door does not have an orientation. This may be because the
+				wall or roof it is associated with is missing the orientation, or is not
+				marked as complete.
+				<br><br>
+				To change this go to
+				<NuxtLink :to="getUrl('dwellingFabric')">
+					dwelling fabric.
+				</NuxtLink>
+				<br><br>
+				<ul class="govuk-list">
+					<li>Door: <span data-testid="frontDoorName" class="bold">{{ model.name }}</span></li>
+					<li>Orientation: <span data-testid="currentOrientation" class="bold">-</span></li>
+				</ul>
+			</div>
+			<ul v-if="model.name && orientationOfFrontDoor" class="govuk-list">
+				<li>Door: <span data-testid="frontDoorName" class="bold">{{ model.name }}</span></li>
 				<li>Orientation: <span data-testid="currentOrientation" class="bold">{{ orientationOfFrontDoor }}</span></li>
 			</ul>
 		</div>
@@ -96,6 +129,9 @@ const changeOrientationOfItems = () => {
 			suffix-text="°"
 		/>
 		<GovButton test-id="changeOrientationButton" @click="changeOrientationOfItems" >Change orientation</GovButton>
+		<GovButton href="/" secondary>
+			Return to overview
+		</GovButton>
 	</formkit>
 </template>
 
