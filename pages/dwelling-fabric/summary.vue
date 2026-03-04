@@ -384,6 +384,24 @@ const unglazedDoorSummary: SummarySection = {
 	editUrl: getUrl("dwellingSpaceDoors"),
 };
 
+function formatShadingRowsForSummary(shading: ShadingObjectData[]): Record<string, string> {
+	const rows: Record<string, string> = {};
+	shading.forEach((shadingEntry, i) => {
+		const n = i + 1;
+		const typeOfShading = displaySnakeToSentenceCase(shadingEntry.typeOfShading);
+		rows[`Name of shading ${n}`] = shadingEntry.name;
+		rows[`Type of shading ${n}`] = typeOfShading;
+		rows[`Distance of shading ${n} from glass`] = dim(shadingEntry.distance, "metres");
+		if (shadingEntry.typeOfShading === "obstacle") {
+			rows[`Height of shading ${n}`] = dim(shadingEntry.height, "metres");
+			rows[`Transparency of shading ${n}`] = show(shadingEntry.transparency + " %");
+		} else {
+			rows[`Depth of shading ${n}`] = dim(shadingEntry.depth, "metres");
+		}
+	});
+	return rows;
+}
+
 const glazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceGlazedDoors",
 	label: "External glazed doors",
@@ -401,6 +419,11 @@ const glazedDoorSummary: SummarySection = {
 			orientation = x.orientation !== undefined ? dim(x.orientation, "degrees") : emptyValueRendering;
 		}
 
+		const treatmentType = "treatmentType" in x ? displayCamelToSentenceCase(show(x.treatmentType)) : emptyValueRendering;
+		const thermalResistivityIncrease = "thermalResistivityIncrease" in x ? dim(x.thermalResistivityIncrease, "watts per square metre kelvin") : emptyValueRendering;
+		const solarTransmittanceReduction = "solarTransmittanceReduction" in x ? show(x.solarTransmittanceReduction) : emptyValueRendering;
+
+
 		return {
 			"Name": show(x.name),
 			"Pitch": pitch,
@@ -412,7 +435,12 @@ const glazedDoorSummary: SummarySection = {
 			"Transmittance of solar energy": dim(x.solarTransmittance),
 			"Mid height": dim(x.midHeight, "metres"),
 			"Opening to frame ratio": dim(x.openingToFrameRatio),
-			"Is this the front door?": displayBoolean(x.isTheFrontDoor), 
+			"Is this the front door?": displayBoolean(x.isTheFrontDoor),
+			"Curtains or blinds": x.curtainsOrBlinds ? treatmentType : undefined,
+			"Thermal resistivity increase": x.curtainsOrBlinds ? thermalResistivityIncrease : undefined,
+			"Solar transmittance reduction": x.curtainsOrBlinds ? solarTransmittanceReduction : undefined,
+			"Does anything shade the window?": displayBoolean(x.hasShading),
+			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvArrayData, { hasShading: true }>).shading) } : {}),
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceDoors"),

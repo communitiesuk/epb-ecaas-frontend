@@ -11,6 +11,7 @@ import type {
 	WallsData,
 	WindowData,
 	DwellingSpaceLightingData,
+	ExternalGlazedDoorData,
 } from "~/stores/ecaasStore.schema";
 import { metre, millimetre } from "~/utils/units/length";
 import {
@@ -261,6 +262,28 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 	},
 };
 
+const externalGlazedDoorData = {
+	name: "External glazed door 1",
+	associatedItemId: externalWallId,
+	height: 1,
+	width: 1,
+	solarTransmittance: 0.1,
+	elevationalHeight: 1,
+	midHeight: 1,
+	openingToFrameRatio: 0.2,
+	numberOpenableParts: "1",
+	maximumOpenableArea: 1,
+	midHeightOpenablePart1: 1,
+	thermalResistance: 26,
+	securityRisk: false,
+	heightOpenableArea: 2,
+	curtainsOrBlinds: true,
+	treatmentType: "blinds",
+	thermalResistivityIncrease: 1,
+	solarTransmittanceReduction: 0.1,
+	hasShading: false,
+} satisfies ExternalGlazedDoorData;
+
 const doorsData: DoorsData = {
 	dwellingSpaceExternalUnglazedDoor: {
 		data: [{
@@ -282,19 +305,7 @@ const doorsData: DoorsData = {
 	},
 	dwellingSpaceExternalGlazedDoor: {
 		data: [{
-			data: {
-				name: "External glazed door 1",
-				associatedItemId: externalWallId,
-				height: 1,
-				width: 1,
-				solarTransmittance: 0.1,
-				elevationalHeight: 1,
-				midHeight: 1,
-				openingToFrameRatio: 0.2,
-				maximumOpenableArea: 1,
-				midHeightOpenablePart1: 1,
-				thermalResistance: 26,
-			},
+			data: externalGlazedDoorData,
 		}],
 	},
 	dwellingSpaceInternalDoor: {
@@ -1174,6 +1185,13 @@ describe("dwelling space doors", () => {
 									midHeightOpenablePart1: 1,
 									thermalResistance: 26,
 									isTheFrontDoor: true,
+									securityRisk: false,
+									heightOpenableArea: 2,
+									curtainsOrBlinds: true,
+									treatmentType: "blinds",
+									thermalResistivityIncrease: 1,
+									solarTransmittanceReduction: 0.1,
+									hasShading: false,
 								},
 							}],
 						},
@@ -1194,6 +1212,9 @@ describe("dwelling space doors", () => {
 				"Mid height": `1 ${metre.suffix}`,
 				"Thermal resistance": `26 ${squareMeterKelvinPerWatt.suffix}`,
 				"Is this the front door?": "Yes",
+				"Curtains or blinds": "Blinds",
+				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+				"Solar transmittance reduction": "0.1",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -1229,6 +1250,9 @@ describe("dwelling space doors", () => {
 				"Mid height": `1 ${metre.suffix}`,
 				"Thermal resistance": `26 ${squareMeterKelvinPerWatt.suffix}`,
 				"Is this the front door?": "-",
+				"Curtains or blinds": "Blinds",
+				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+				"Solar transmittance reduction": "0.1",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -1236,6 +1260,96 @@ describe("dwelling space doors", () => {
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
+		});
+
+		it("displays the correct data when shading is added", async () => {
+			const store = useEcaasStore();
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{
+								data: {
+									...externalGlazedDoorData,
+									hasShading: true, 
+									shading: [
+										{ name: "Test 1", typeOfShading: "obstacle", distance: 1, height: 11, transparency: 11 },
+										{ name: "Test 2", typeOfShading: "left_side_fin", distance: 2, depth: 22 },
+										{ name: "Test 3", typeOfShading: "right_side_fin", distance: 3, depth: 33 },
+										{ name: "Test 4", typeOfShading: "overhang", distance: 4, depth: 44 },
+										{ name: "Test 5", typeOfShading: "frame_or_reveal", distance: 5, depth: 55 },
+									] satisfies ShadingObjectData[],
+								} satisfies ExternalGlazedDoorData,
+							}],
+						},
+					},
+				},
+			});
+			const baseExpected = {
+				"Name": "External glazed door 1",
+				"Orientation": `0 ${degrees.suffix}`,
+				"Height": `1 ${metre.suffix}`,
+				"Width": `1 ${metre.suffix}`,
+				"Pitch": `90 ${degrees.suffix}`,
+				"Transmittance of solar energy": "0.1",
+				"Elevational height of building element at its base": `1 ${metre.suffix}`,
+				"Mid height": `1 ${metre.suffix}`,
+				"Thermal resistance": `26 ${squareMeterKelvinPerWatt.suffix}`,
+				"Is this the front door?": "-",
+				"Curtains or blinds": "Blinds",
+				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+				"Solar transmittance reduction": "0.1",
+			};
+			const shading1Expected = {
+				"Name of shading 1": "Test 1",
+				"Type of shading 1": "Obstacle",
+				"Distance of shading 1 from glass": `1 ${metre.suffix}`,
+				"Height of shading 1": `11 ${metre.suffix}`,
+				"Transparency of shading 1": "11 %",
+			};
+			const shading2Expected = {
+				"Name of shading 2": "Test 2",
+				"Type of shading 2": "Left side fin",
+				"Distance of shading 2 from glass": `2 ${metre.suffix}`,
+				"Depth of shading 2": `22 ${metre.suffix}`,
+			};
+			const shading3Expected = {
+				"Name of shading 3": "Test 3",
+				"Type of shading 3": "Right side fin",
+				"Distance of shading 3 from glass": `3 ${metre.suffix}`,
+				"Depth of shading 3": `33 ${metre.suffix}`,
+			};
+			const shading4Expected = {
+				"Name of shading 4": "Test 4",
+				"Type of shading 4": "Overhang",
+				"Distance of shading 4 from glass": `4 ${metre.suffix}`,
+				"Depth of shading 4": `44 ${metre.suffix}`,
+			};
+			const shading5Expected = {
+				"Name of shading 5": "Test 5",
+				"Type of shading 5": "Frame or reveal",
+				"Distance of shading 5 from glass": `5 ${metre.suffix}`,
+				"Depth of shading 5": `55 ${metre.suffix}`,
+			};
+			await renderSuspended(Summary);
+		
+			for (const [key, value] of Object.entries({
+				...baseExpected,
+				...shading1Expected,
+				...shading2Expected,
+				...shading3Expected,
+				...shading4Expected,
+				...shading5Expected,
+			})) {
+				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceGlazedDoors-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		
+		
 		});
 	});
 
