@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OnSiteGenerationVentilationStrategy, SchemaInverterType } from "~/schema/aliases";
-import { getUrl, uniqueName } from "#imports";
+import { getUrl, uniqueName, type ShadingObjectData } from "#imports";
 
 const title = "PV array";
 const store = useEcaasStore();
@@ -68,6 +68,14 @@ autoSaveElementForm<PvArrayData>({
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
+const writeShadingToStore = (items: ShadingObjectData[]) => {
+	store.$patch((state) => {
+		const pvArray = state.pvAndBatteries.pvArrays.data[index];
+		if (!pvArray) return;
+		(pvArray.data as Record<string, unknown>).shading = items;
+	});
+};
 </script>
 
 <template>
@@ -332,6 +340,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			v-if="model?.hasShading"
 			:index="index"
 			:model="shading"
+			shading-section-type="PV"
+			:write-shading-to-store="writeShadingToStore"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

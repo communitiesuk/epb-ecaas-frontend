@@ -256,9 +256,9 @@ describe("PV shading section", () => {
 		await user.click(screen.getByTestId("hasShading_yes"));
 		await user.type(screen.getByTestId(`shadingName`), name);
 		await user.click(screen.getByTestId("typeOfShading_obstacle"));
-		await user.type(screen.getByTestId("height"), "3");
-		await user.type(screen.getByTestId("distance"), "2");
-		await user.type(screen.getByTestId("transparency"), "0.5");
+		await user.type(screen.getByTestId("shadingHeight"), "3");
+		await user.type(screen.getByTestId("shadingDistance"), "2");
+		await user.type(screen.getByTestId("shadingTransparency"), "0.5");
 		await user.tab();
 		await user.click(screen.getByTestId("saveShadingObject"));
 	};
@@ -312,13 +312,13 @@ describe("PV shading section", () => {
 
 	it("should not render by default", async () => {
 		await renderSuspended(PVScreen);
-		expect(screen.queryByTestId("pv-shading-section")).toBeNull();
+		expect(screen.queryByTestId("shading-section")).toBeNull();
 	});
 
 	it("should render when user selects that the array has shading", async () => {
 		await renderSuspended(PVScreen);
 		await user.click(screen.getByTestId("hasShading_yes"));
-		expect(screen.getByTestId("pv-shading-section")).toBeDefined();
+		expect(screen.getByTestId("shading-section")).toBeDefined();
 	});
 
 	it("errors on outer submit if shading is yes but no object added", async () => {
@@ -336,7 +336,7 @@ describe("PV shading section", () => {
 		await renderSuspended(PVScreen);
 		await user.click(screen.getByTestId("hasShading_yes"));
 		await user.click(screen.getByTestId("hasShading_no"));
-		expect(screen.queryByTestId("pv-shading-section")).toBeNull();
+		expect(screen.queryByTestId("shading-section")).toBeNull();
 	});
 
 	describe("type-conditional fields", () => {
@@ -347,26 +347,26 @@ describe("PV shading section", () => {
 
 		it("shows height, distance and transparency when obstacle type is selected", async () => {
 			await user.click(screen.getByTestId("typeOfShading_obstacle"));
-			expect(screen.getByTestId("height")).toBeDefined();
-			expect(screen.getByTestId("distance")).toBeDefined();
-			expect(screen.getByTestId("transparency")).toBeDefined();
-			expect(screen.queryByTestId("depth")).toBeNull();
+			expect(screen.getByTestId("shadingHeight")).toBeDefined();
+			expect(screen.getByTestId("shadingDistance")).toBeDefined();
+			expect(screen.getByTestId("shadingTransparency")).toBeDefined();
+			expect(screen.queryByTestId("shadingDepth")).toBeNull();
 		});
 
 		it.each(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"])(
 			"shows depth and distance fields for %s type",
 			async (type) => {
 				await user.click(screen.getByTestId(`typeOfShading_${type}`));
-				expect(screen.getByTestId("depth")).toBeDefined();
-				expect(screen.getByTestId("distance")).toBeDefined();
-				expect(screen.queryByTestId("height")).toBeNull();
-				expect(screen.queryByTestId("transparency")).toBeNull();
+				expect(screen.getByTestId("shadingDepth")).toBeDefined();
+				expect(screen.getByTestId("shadingDistance")).toBeDefined();
+				expect(screen.queryByTestId("shadingHeight")).toBeNull();
+				expect(screen.queryByTestId("shadingTransparency")).toBeNull();
 			},
 		);
 
 		it("hides conditional fields when no type is selected", async () => {
-			expect(screen.queryByTestId("height")).toBeNull();
-			expect(screen.queryByTestId("depth")).toBeNull();
+			expect(screen.queryByTestId("shadingHeight")).toBeNull();
+			expect(screen.queryByTestId("shadingDepth")).toBeNull();
 		});
 	});
 
@@ -384,8 +384,8 @@ describe("PV shading section", () => {
 			await user.click(screen.getByTestId("hasShading_yes"));
 			await user.type(screen.getByTestId("shadingName"), "Left fin");
 			await user.click(screen.getByTestId("typeOfShading_left_side_fin"));
-			await user.type(screen.getByTestId("depth"), "1");
-			await user.type(screen.getByTestId("distance"), "0.5");
+			await user.type(screen.getByTestId("shadingDepth"), "1");
+			await user.type(screen.getByTestId("shadingDistance"), "0.5");
 			await user.tab();
 			await user.click(screen.getByTestId("saveShadingObject"));
 			expect(screen.queryByTestId("shading-add-form")).toBeNull();
@@ -413,9 +413,9 @@ describe("PV shading section", () => {
 			await populateValidForm({ hasShading: true });
 			await user.type(screen.getByTestId("shadingName"), "Chimney");
 			await user.click(screen.getByTestId("typeOfShading_obstacle"));
-			await user.type(screen.getByTestId("height"), "3");
-			await user.type(screen.getByTestId("distance"), "2");
-			await user.type(screen.getByTestId("transparency"), "0.5");
+			await user.type(screen.getByTestId("shadingHeight"), "3");
+			await user.type(screen.getByTestId("shadingDistance"), "2");
+			await user.type(screen.getByTestId("shadingTransparency"), "0.5");
 			await user.tab();
 			await user.click(screen.getByTestId("saveShadingObject"));
 
@@ -455,9 +455,9 @@ describe("PV shading section", () => {
 
 			await user.click(screen.getByTestId("saveShadingObject"));
 			expect(screen.getByTestId("shadingName_error")).toBeDefined();
-			expect(screen.getByTestId("height_error")).toBeDefined();
-			expect(screen.getByTestId("distance_error")).toBeDefined();
-			expect(screen.getByTestId("transparency_error")).toBeDefined();
+			expect(screen.getByTestId("shadingHeight_error")).toBeDefined();
+			expect(screen.getByTestId("shadingDistance_error")).toBeDefined();
+			expect(screen.getByTestId("shadingTransparency_error")).toBeDefined();
 		});
 	});
 
@@ -485,8 +485,8 @@ describe("PV shading section", () => {
 			await user.click(screen.getByTestId("addAnotherShadingObject"));
 			await user.type(screen.getByTestId("shadingName"), "Left fin");
 			await user.click(screen.getByTestId("typeOfShading_left_side_fin"));
-			await user.type(screen.getByTestId("depth"), "1");
-			await user.type(screen.getByTestId("distance"), "0.5");
+			await user.type(screen.getByTestId("shadingDepth"), "1");
+			await user.type(screen.getByTestId("shadingDistance"), "0.5");
 			await user.tab();
 			await user.click(screen.getByTestId("saveShadingObject"));
 			expect(screen.getByTestId("shading_summary_0")).toBeDefined();
@@ -518,9 +518,9 @@ describe("PV shading section", () => {
 			await user.click(screen.getByTestId("shading_edit_0"));
 			expect((screen.getByTestId<HTMLInputElement>("shadingName")).value).toBe("Chimney");
 			expect((screen.getByTestId<HTMLInputElement>("typeOfShading_obstacle")).checked).toBe(true);
-			expect((screen.getByTestId<HTMLInputElement>("height")).value).toBe("3");
-			expect((screen.getByTestId<HTMLInputElement>("distance")).value).toBe("2");
-			expect((screen.getByTestId<HTMLInputElement>("transparency")).value).toBe("0.5");
+			expect((screen.getByTestId<HTMLInputElement>("shadingHeight")).value).toBe("3");
+			expect((screen.getByTestId<HTMLInputElement>("shadingDistance")).value).toBe("2");
+			expect((screen.getByTestId<HTMLInputElement>("shadingTransparency")).value).toBe("0.5");
 		});
 
 		it("updates the summary card when the edited item is saved", async () => {

@@ -4,10 +4,10 @@ import type { ShadingObjectData } from "~/stores/ecaasStore.schema";
 
 const props = defineProps<{
 	index: number;
+	shadingSectionType: "PV" | "window";
 	model: ShadingObjectData[];
+	writeShadingToStore: (items: ShadingObjectData[]) => void;
 }>();
-
-const store = useEcaasStore();
 
 type ShadingFormModel = Partial<ShadingObjectData> & { typeOfShading?: string };
 
@@ -20,36 +20,82 @@ const formModel = ref<ShadingFormModel>({});
 
 const isEditing = computed(() => editIndex.value !== null);
 
-const typeOptions: Record<string, string> = {
-	obstacle: "Obstacle",
-	left_side_fin: "Left side fin",
-	right_side_fin: "Right side fin",
-	overhang: "Overhang",
-	frame_or_reveal: "Frame or reveal",
-};
-const typeOptionsSummary = {
-	obstacle: "Obstacle",
-	left_side_fin: "Left side fin",
-	right_side_fin: "Right side fin",
-	overhang: "Overhang",
-	frame_or_reveal: "Frame / reveal",
-};
+const typeOptionsMap = {
+	"PV": {
+		obstacle: "Obstacle",
+		left_side_fin: "Left side fin",
+		right_side_fin: "Right side fin",
+		overhang: "Overhang",
+		frame_or_reveal: "Frame or reveal",
+	} ,
+	"window": {
+		frame_or_reveal: "Reveal",
+		left_side_fin: "Left side fin",
+		right_side_fin: "Right side fin",
+		overhang: "Overhang",
+		obstacle: "Obstacle",
+	},
+} as const;
+const typeOptions = typeOptionsMap[props.shadingSectionType];
+
+const typeOptionsSummaryMap = {
+	"PV": {
+		obstacle: "Obstacle",
+		left_side_fin: "Left side fin",
+		right_side_fin: "Right side fin",
+		overhang: "Overhang",
+		frame_or_reveal: "Frame / reveal",
+	},
+	"window": {
+		obstacle: "Obstacle",
+		left_side_fin: "Left side fin",
+		right_side_fin: "Right side fin",
+		overhang: "Overhang",
+		frame_or_reveal: "Reveal",
+	},
+} as const;
+const typeOptionsSummary = typeOptionsSummaryMap[props.shadingSectionType];
+
 const { handleInvalidSubmit } = useErrorSummary();
 
 const shadingSummaryData = (item: ShadingObjectData) => {
-	if (item.typeOfShading === "obstacle") {
-		return {
-			"Type of shading": typeOptionsSummary[item.typeOfShading],
-			"Height": `${item.height}m`,
-			"Distance": `${item.distance}m`,
-			"Transparency": `${item.transparency}%`,
-		};
+	switch (props.shadingSectionType) {
+		case "window":
+			if (item.typeOfShading === "obstacle") {
+				return {
+					"Type of shading": typeOptionsSummary[item.typeOfShading],
+					"Height": `${item.height}m`,
+					"Distance from glass": `${item.distance}m`,
+					"Transparency": `${item.transparency}%`,
+				};
+			}
+			if (item.typeOfShading === "frame_or_reveal") {
+				return {
+					"Type of shading": typeOptionsSummary[item.typeOfShading],
+					[`Depth of ${sentenceToLowerCase(typeOptions[item.typeOfShading])}`]: `${item.depth}m`,
+					"Distance from glass to start of reveal": `${item.distance}m`,
+				};
+			}
+			return {
+				"Type of shading": typeOptionsSummary[item.typeOfShading],
+				[`Depth of ${sentenceToLowerCase(typeOptions[item.typeOfShading])}`]: `${item.depth}m`,
+				"Distance from glass": `${item.distance}m`,
+			};
+		case "PV":
+			if (item.typeOfShading === "obstacle") {
+				return {
+					"Type of shading": typeOptionsSummary[item.typeOfShading],
+					"Height": `${item.height}m`,
+					"Distance from edge of PV": `${item.distance}m`,
+					"Transparency": `${item.transparency}%`,
+				};
+			}
+			return {
+				"Type of shading": typeOptionsSummary[item.typeOfShading],
+				[`Depth of ${sentenceToLowerCase(typeOptions[item.typeOfShading])}`]: `${item.depth}m`,
+				"Distance from edge of PV": `${item.distance}m`,
+			};
 	}
-	return {
-		"Type of shading": typeOptionsSummary[item.typeOfShading],
-		[`Depth of ${sentenceToLowerCase(typeOptions[item.typeOfShading] as string)}`]: `${item.depth}m`,
-		"Distance from edge of PV": `${item.distance}m`,
-	};
 };
 
 const buildShadingElement = (): ShadingObjectData | null => {
@@ -77,11 +123,7 @@ const buildShadingElement = (): ShadingObjectData | null => {
 };
 
 const writeToStore = (items: ShadingObjectData[]) => {
-	store.$patch((state) => {
-		const pvArray = state.pvAndBatteries.pvArrays.data[props.index];
-		if (!pvArray) return;
-		(pvArray.data as Record<string, unknown>).shading = items;
-	});
+	props.writeShadingToStore(items);
 };
 
 const saveShading = async () => {
@@ -113,8 +155,8 @@ const removeShading = (i: number) => {
 </script>
 
 <template>
-	<div data-testid="pv-shading-section">
-		<h2 v-if="shadingItems.length" class="govuk-heading-m">Objects that shade the PV array</h2>
+	<div data-testid="shading-section">
+		<h2 v-if="shadingItems.length" class="govuk-heading-m">Objects that shade the {{props.shadingSectionType === 'window' ? 'window' : "PV array"}}</h2>
 		<div
 			v-for="(item, i) in shadingItems"
 			:key="i"
@@ -187,23 +229,31 @@ const removeShading = (i: number) => {
 					/>
 					<template v-if="formModel.typeOfShading === 'obstacle'">
 						<FormKit
-							id="height"
+							id="shadingHeight"
 							v-model="formModel.height"
 							type="govInputWithSuffix"
 							label="Height of obstacle"
+							:help="props.shadingSectionType === 'window'
+								? 'Height should be measured from the bottom to the top of the obstacle.'
+								: undefined"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
 						<FormKit
-							id="distance"
+							id="shadingDistance"
 							v-model="formModel.distance"
 							type="govInputWithSuffix"
-							label="Distance from edge of PV"
+							:label="props.shadingSectionType === 'window'
+								? 'Distance from glass'
+								: 'Distance from edge of PV'"
+							:help="props.shadingSectionType === 'window'
+								? 'Enter the shortest perpendicular distance from the face of the glass to the obstacle'
+								: undefined"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
 						<FormKit
-							id="transparency"
+							id="shadingTransparency"
 							v-model="formModel.transparency"
 							type="govInputWithSuffix"
 							label="Transparency of obstacle"
@@ -212,9 +262,9 @@ const removeShading = (i: number) => {
 							validation="required | number | min:0 | max:100"
 						/>
 					</template>
-					<template v-else-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin' || formModel.typeOfShading === 'overhang' || formModel.typeOfShading === 'frame_or_reveal'">
+					<template v-else-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin' || formModel.typeOfShading === 'overhang'">
 						<FormKit
-							id="depth"
+							id="shadingDepth"
 							:key="`depth-${formModel.typeOfShading}`"
 							v-model="formModel.depth"
 							type="govInputWithSuffix"
@@ -223,10 +273,36 @@ const removeShading = (i: number) => {
 							validation="required | number | min:0"
 						/>
 						<FormKit
-							id="distance"
+							id="shadingDistance"
 							v-model="formModel.distance"
 							type="govInputWithSuffix"
-							label="Distance from edge of PV"
+							:label="props.shadingSectionType === 'window'
+								? 'Distance from glass'
+								: 'Distance from edge of PV'"
+							suffix-text="m"
+							validation="required | number | min:0"
+						/>
+					</template>
+					<template v-else-if="formModel.typeOfShading === 'frame_or_reveal'">
+						<FormKit
+							id="shadingDepth"
+							:key="`depth-${formModel.typeOfShading}`"
+							v-model="formModel.depth"
+							type="govInputWithSuffix"
+							:label="'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading] as string)"
+							suffix-text="m"
+							validation="required | number | min:0"
+						/>
+						<FormKit
+							id="shadingDistance"
+							v-model="formModel.distance"
+							type="govInputWithSuffix"
+							:label="props.shadingSectionType === 'window'
+								? 'Distance from glass to start of reveal'
+								: 'Distance from edge of PV'"
+							:help="props.shadingSectionType === 'window'
+								? 'This is usually the thickness of the frame'
+								: undefined"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
@@ -304,23 +380,31 @@ const removeShading = (i: number) => {
 					/>
 					<template v-if="formModel.typeOfShading === 'obstacle'">
 						<FormKit
-							id="height"
+							id="shadingHeight"
 							v-model="formModel.height"
 							type="govInputWithSuffix"
 							label="Height of obstacle"
+							:help="props.shadingSectionType === 'window'
+								? 'Height should be measured from the bottom to the top of the obstacle.'
+								: undefined"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
 						<FormKit
-							id="distance"
+							id="shadingDistance"
 							v-model="formModel.distance"
 							type="govInputWithSuffix"
-							label="Distance from edge of PV"
+							:label="props.shadingSectionType === 'window'
+								? 'Distance from glass'
+								: 'Distance from edge of PV'"
+							:help="props.shadingSectionType === 'window'
+								? 'Enter the shortest perpendicular distance from the face of the glass to the obstacle'
+								: undefined"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
 						<FormKit
-							id="transparency"
+							id="shadingTransparency"
 							v-model="formModel.transparency"
 							type="govInputWithSuffix"
 							label="Transparency of obstacle"
@@ -329,9 +413,9 @@ const removeShading = (i: number) => {
 							validation="required | number | min:0 | max:100"
 						/>
 					</template>
-					<template v-else-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin' || formModel.typeOfShading === 'overhang' || formModel.typeOfShading === 'frame_or_reveal'">
+					<template v-else-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin' || formModel.typeOfShading === 'overhang'">
 						<FormKit
-							id="depth"
+							id="shadingDepth"
 							:key="`depth-${formModel.typeOfShading}`"
 							v-model="formModel.depth"
 							type="govInputWithSuffix"
@@ -340,10 +424,36 @@ const removeShading = (i: number) => {
 							validation="required | number | min:0"
 						/>
 						<FormKit
-							id="distance"
+							id="shadingDistance"
 							v-model="formModel.distance"
 							type="govInputWithSuffix"
-							label="Distance from edge of PV"
+							:label="props.shadingSectionType === 'window'
+								? 'Distance from glass'
+								: 'Distance from edge of PV'"
+							suffix-text="m"
+							validation="required | number | min:0"
+						/>
+					</template>
+					<template v-else-if="formModel.typeOfShading === 'frame_or_reveal'">
+						<FormKit
+							id="shadingDepth"
+							:key="`depth-${formModel.typeOfShading}`"
+							v-model="formModel.depth"
+							type="govInputWithSuffix"
+							:label="'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading] as string)"
+							suffix-text="m"
+							validation="required | number | min:0"
+						/>
+						<FormKit
+							id="shadingDistance"
+							v-model="formModel.distance"
+							type="govInputWithSuffix"
+							:label="props.shadingSectionType === 'window'
+								? 'Distance from glass to start of reveal'
+								: 'Distance from edge of PV'"
+							:help="props.shadingSectionType === 'window'
+								? 'This is usually the thickness of the frame'
+								: undefined"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
