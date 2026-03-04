@@ -20,8 +20,8 @@ const partyWallCavityTypeOptions = {
 	unfilled_sealed: "Unfilled and sealed",
 	filled_sealed: "Filled and sealed",
 	filled_unsealed: "Filled and unsealed",
-	defined_resistance: "Defined resistance",
 	solid: "Solid",
+	defined_resistance: "Defined resistance",
 } as const satisfies Record<SchemaPartyWallCavityType, string>;
 const partyWallLiningTypeOptions = {
 	wet_plaster: "Wet plaster",
@@ -133,7 +133,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.party_wall_cavity_type"
 		/>
 		<FormKit
-			v-if="['filled_sealed', 'unfilled_sealed', 'unfilled_unsealed'].includes(model?.partyWallCavityType!)"
+			v-if="['filled_unsealed', 'unfilled_sealed', 'unfilled_unsealed'].includes(model?.partyWallCavityType!)"
 			id="partyWallLiningType"
 			name="partyWallLiningType"
 			type="govRadios"
