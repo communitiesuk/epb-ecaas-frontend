@@ -536,6 +536,15 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 	} as Pick<FhsInputSchema, "Zone">;
 }
 
+const shadingTypeMap = {
+	"obstacle": "obstacle",
+	"left_side_fin": "sidefinleft",
+	"right_side_fin": "sidefinright",
+	"overhang": "overhang",
+	"frame_or_reveal": "reveal",
+} as const;
+
+
 export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 	const doorSuffix = "door";
@@ -601,7 +610,18 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			max_window_open_area: x.maximumOpenableArea,
 			security_risk: x.securityRisk,
 			free_area_height: x.heightOpenableArea,
-			shading: [],
+			shading: x.hasShading ? x.shading.map(obj => {
+				return obj.typeOfShading === "obstacle" ? {
+					type: shadingTypeMap[obj.typeOfShading],
+					transparency: obj.transparency / 100,
+					distance: obj.distance,
+					height: obj.height,
+				} : {
+					type: shadingTypeMap[obj.typeOfShading],
+					depth: obj.depth,
+					distance: obj.distance,
+				};
+			}) : [],
 			thermal_resistance_construction: x.thermalResistance,
 			treatment: x.curtainsOrBlinds ? [{
 				type: x.treatmentType,

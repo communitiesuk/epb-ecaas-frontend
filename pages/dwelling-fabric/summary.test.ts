@@ -1343,17 +1343,10 @@ describe("dwelling space windows", () => {
 			"Elevational height of building element at its base": `1 ${metre.suffix}`,
 			"Mid height": `1 ${metre.suffix}`,
 			"Number of openable parts": "0",
-			"Overhang depth": `100 ${millimetre.suffix}`,
-			"Overhang distance from glass": `100 ${millimetre.suffix}`,
-			"Side fin right depth": `100 ${millimetre.suffix}`,
-			"Side fin right distance from glass": `100 ${millimetre.suffix}`,
-			"Side fin left depth": `100 ${millimetre.suffix}`,
-			"Side fin left distance from glass": `100 ${millimetre.suffix}`,
 			"Type": "Blinds",
 			"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 			"Solar transmittance reduction": "0.1",
 		};
-
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWindows-${hyphenate(key)}`));

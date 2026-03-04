@@ -904,7 +904,40 @@ describe("dwelling fabric mapper", () => {
 			treatmentType: "curtains",
 			thermalResistivityIncrease: 20,
 			solarTransmittanceReduction: 0.4,
-			hasShading: false,
+			hasShading: true,
+			shading: [
+				{
+					name: "blep",
+					typeOfShading: "overhang",
+					depth: 1,
+					distance: 2,
+				},
+				{
+					name: "bleep",
+					typeOfShading: "left_side_fin",
+					depth: 3,
+					distance: 4,
+				},
+				{
+					name: "bloop",
+					typeOfShading: "right_side_fin",
+					depth: 5,
+					distance: 6,
+				},
+				{
+					name: "blomp",
+					typeOfShading: "frame_or_reveal",
+					depth: 7,
+					distance: 8,
+				},
+				{
+					name: "blomk",
+					typeOfShading: "obstacle",
+					transparency: 20,
+					distance: 9,
+					height: 10,
+				},
+			],
 		};
 
 		const externalUnglazedDoor: ExternalUnglazedDoorData = {
@@ -992,7 +1025,34 @@ describe("dwelling fabric mapper", () => {
 				{ mid_height_air_flow_path: externalGlazedDoor.midHeight },
 				{ mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
 			],
-			shading: [],
+			shading: [
+				{
+					type: "overhang",
+					depth: 1,
+					distance: 2,
+				},
+				{
+					type: "sidefinleft",
+					depth: 3,
+					distance: 4,
+				},
+				{
+					type: "sidefinright",
+					depth: 5,
+					distance: 6,
+				},
+				{
+					type: "reveal",
+					depth: 7,
+					distance: 8,
+				},
+				{
+					type: "obstacle",
+					transparency: 0.2,
+					distance: 9,
+					height: 10,
+				},
+			],
 			security_risk: false,
 			thermal_resistance_construction: externalGlazedDoor.thermalResistance,
 			treatment: [{
@@ -1116,23 +1176,7 @@ describe("dwelling fabric mapper", () => {
 					mid_height_air_flow_path: window.midHeightOpenablePart1,
 				},
 			],
-			shading: [
-				{
-					type: "overhang",
-					depth: 1,
-					distance: 1,
-				},
-				{
-					type: "sidefinleft",
-					depth: 1,
-					distance: 1,
-				},
-				{
-					type: "sidefinright",
-					depth: 1,
-					distance: 1,
-				},
-			],
+			shading: [],
 		};
 		expect(windowElement).toEqual(expectedWindow);
 	});

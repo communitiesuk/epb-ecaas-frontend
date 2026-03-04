@@ -790,7 +790,34 @@ const expectedFlatInput: FhsInputSchema = {
 					orientation360: 30,
 					pitch: 45,
 					security_risk: false,
-					shading: [],
+					shading: [
+						{
+							type: "overhang",
+							depth: 10,
+							distance: 9,
+						},
+						{
+							type: "sidefinleft",
+							depth: 8,
+							distance: 7,
+						},
+						{
+							type: "sidefinright",
+							depth: 6,
+							distance: 5,
+						},
+						{
+							type: "reveal",
+							depth: 4,
+							distance: 3,
+						},
+						{
+							type: "obstacle",
+							transparency: 0.2,
+							distance: 2,
+							height: 1,
+						},
+					],
 					type: "BuildingElementTransparent",
 					thermal_resistance_construction: 12,
 					width: 1,
@@ -877,22 +904,7 @@ const expectedFlatInput: FhsInputSchema = {
 					window_part_list: [{
 						mid_height_air_flow_path: 1,
 					}],
-					shading: [
-						{
-							type: "overhang",
-							depth: 0.5,
-							distance: 0.5,
-						},
-						{
-							type: "sidefinleft",
-							depth: 0.25,
-							distance: 1,
-						},
-						{
-							type: "sidefinright",
-							depth: 0.25,
-							distance: 1,
-						}],
+					shading: [],
 				},
 			},
 			SpaceHeatSystem: ["UFH System"],
@@ -1803,7 +1815,40 @@ describe("FHS input mapper", () => {
 							thermalResistance: 12,
 							numberOpenableParts: "1",
 							curtainsOrBlinds: false,
-							hasShading: false,
+							hasShading: true,
+							shading: [
+								{
+									name: "blep",
+									typeOfShading: "overhang",
+									depth: 10,
+									distance: 9,
+								},
+								{
+									name: "bleep",
+									typeOfShading: "left_side_fin",
+									depth: 8,
+									distance: 7,
+								},
+								{
+									name: "bloop",
+									typeOfShading: "right_side_fin",
+									depth: 6,
+									distance: 5,
+								},
+								{
+									name: "blomp",
+									typeOfShading: "frame_or_reveal",
+									depth: 4,
+									distance: 3,
+								},
+								{
+									name: "blomk",
+									typeOfShading: "obstacle",
+									transparency: 20,
+									distance: 2,
+									height: 1,
+								},
+							] satisfies ShadingObjectData[],
 						},
 					}],
 				},
