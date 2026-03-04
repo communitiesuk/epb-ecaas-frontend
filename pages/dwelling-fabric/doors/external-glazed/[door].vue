@@ -163,6 +163,13 @@ function canBeFrontDoor(node: FormKitNode) {
 }
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
+const writeShadingToStore = (items: ShadingObjectData[]) => {
+	store.$patch((state) => {
+		const door = state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index];
+		if (!door) return;
+		(door.data as Record<string, unknown>).shading = items;
+	});
+};
 </script>
 
 <template>
@@ -424,11 +431,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			/>
 		</template>
 		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-		<h2 class="govuk-heading-l">PV array shading</h2>
+		<h2 class="govuk-heading-l">Window shading</h2>
 		<FormKit
 			id="hasShading"
 			type="govBoolean"
-			label="Does anything shade the PV array?"
+			label="Does anything shade the window?"
 			name="hasShading"
 			validation="required"
 		/>
@@ -436,6 +443,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			v-if="model?.hasShading"
 			:index="index"
 			:model="shading"
+			shading-section-type="window"
+			:write-shading-to-store="writeShadingToStore"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
