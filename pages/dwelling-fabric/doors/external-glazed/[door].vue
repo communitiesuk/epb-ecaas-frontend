@@ -393,6 +393,22 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			}"
 		/>
 		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+		<h2 class="govuk-heading-l">Window shading</h2>
+		<FormKit
+			id="hasShading"
+			type="govBoolean"
+			label="Does anything shade the window?"
+			name="hasShading"
+			validation="required"
+		/>
+		<ShadingSection
+			v-if="model?.hasShading"
+			:index="index"
+			:model="shading"
+			shading-section-type="window"
+			:write-shading-to-store="writeShadingToStore"
+		/>
+		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
 		<h2 class="govuk-heading-l">Curtains and blinds</h2>
 		<FormKit
@@ -430,22 +446,6 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				validation="required | number | min:0 | max:1"
 			/>
 		</template>
-		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-		<h2 class="govuk-heading-l">Window shading</h2>
-		<FormKit
-			id="hasShading"
-			type="govBoolean"
-			label="Does anything shade the window?"
-			name="hasShading"
-			validation="required"
-		/>
-		<ShadingSection
-			v-if="model?.hasShading"
-			:index="index"
-			:model="shading"
-			shading-section-type="window"
-			:write-shading-to-store="writeShadingToStore"
-		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
