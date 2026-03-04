@@ -104,7 +104,7 @@ const buildShadingElement = (): ShadingObjectData | null => {
 		return null;
 	}
 	if (typeOfShading === "obstacle") {
-		const { height, distance, transparency } = formModel.value as Extract<ShadingObjectData, { typeOfShading: "obstacle" }>;
+		const { height, distance, transparency } = formModel.value;
 		return {
 			name,
 			typeOfShading: "obstacle",
@@ -113,7 +113,7 @@ const buildShadingElement = (): ShadingObjectData | null => {
 			transparency: Number(transparency),
 		};
 	}
-	const { depth, distance } = formModel.value as Extract<ShadingObjectData, { typeOfShading: Exclude<ShadingObjectData, { typeOfShading: "obstacle" }> }>;
+	const { depth, distance } = formModel.value as { depth: number; distance: number };
 	return {
 		name,
 		typeOfShading,
@@ -310,7 +310,7 @@ const removeShading = (i: number) => {
 					<div class="govuk-button-group">
 						<button
 							type="button"
-							class="govuk-button"
+							class="govuk-button govuk-button--secondary"
 							data-testid="saveShadingObject"
 							@click="saveShading"
 						>

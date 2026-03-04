@@ -131,30 +131,39 @@ describe("PV and electric batteries summary page", () => {
 				"Distance of shading 1 from edge of PV": `1 ${metre.suffix}`,
 				"Height of shading 1": `11 ${metre.suffix}`,
 				"Transparency of shading 1": "11 %",
+				"Depth of shading 1": "-",
 			};
 			const shading2Expected = {
 				"Name of shading 2": "Test 2",
 				"Type of shading 2": "Left side fin",
 				"Distance of shading 2 from edge of PV": `2 ${metre.suffix}`,
 				"Depth of shading 2": `22 ${metre.suffix}`,
+				"Height of shading 2": "-",
+				"Transparency of shading 2": "-",
 			};
 			const shading3Expected = {
 				"Name of shading 3": "Test 3",
 				"Type of shading 3": "Right side fin",
 				"Distance of shading 3 from edge of PV": `3 ${metre.suffix}`,
 				"Depth of shading 3": `33 ${metre.suffix}`,
+				"Height of shading 3": "-",
+				"Transparency of shading 3": "-",
 			};
 			const shading4Expected = {
 				"Name of shading 4": "Test 4",
 				"Type of shading 4": "Overhang",
 				"Distance of shading 4 from edge of PV": `4 ${metre.suffix}`,
 				"Depth of shading 4": `44 ${metre.suffix}`,
+				"Height of shading 4": "-",
+				"Transparency of shading 4": "-",
 			};
 			const shading5Expected = {
 				"Name of shading 5": "Test 5",
 				"Type of shading 5": "Frame or reveal",
 				"Distance of shading 5 from edge of PV": `5 ${metre.suffix}`,
 				"Depth of shading 5": `55 ${metre.suffix}`,
+				"Height of shading 5": "-",
+				"Transparency of shading 5": "-",
 			};
 			await renderSuspended(PVAndElectricBatteriesSummary);
 
@@ -170,8 +179,49 @@ describe("PV and electric batteries summary page", () => {
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
-
-
+		});
+		it("displays transparency for obstacle when non-obstacle shading is added first", async () => {
+			const store = useEcaasStore();
+			store.$patch({
+				pvAndBatteries: {
+					pvArrays: {
+						data: [{
+							data: {
+								...pvArray.data,
+								hasShading: true,
+								shading: [
+									{ name: "Test 1", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
+								],
+							},
+						},
+						{
+							data: {
+								...pvArray.data,
+								hasShading: true,
+								shading: [
+									{ name: "Test 2", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 22 },
+								],
+							},
+						},
+						],
+					},
+				},
+			});
+			await renderSuspended(PVAndElectricBatteriesSummary);
+			const transparencyExpected = {
+				"Name of shading 1": "Test 2",
+				"Type of shading 1": "Obstacle",
+				"Distance of shading 1 from edge of PV": `2 ${metre.suffix}`,
+				"Height of shading 1": `22 ${metre.suffix}`,
+				"Transparency of shading 1": "22 %",
+				"Depth of shading 1": "-",
+			};
+			for (const [key, value] of Object.entries(transparencyExpected)) {
+				const lineResult = (await screen.findByTestId(`summary-pvArrays-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				const ddCells = lineResult.querySelectorAll("dd");
+				expect(ddCells[1]?.textContent).toBe(value);
+			}
 		});
 	});
 	describe("Electric battery section", () => {
