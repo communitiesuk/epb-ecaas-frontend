@@ -348,6 +348,29 @@ describe("doors", () => {
 			expect(screen.getByText("externalGlazed1 name (1) (1)")).toBeDefined();
 			expect(screen.getByText("externalGlazed1 name (1) (2)")).toBeDefined();
 		});
+
+		test("if a completed front door is duplicated, the staus of the duplicate door is set to in progress", async () => {
+			const frontDoor: Partial<ExternalGlazedDoorData> = {
+				name: "Front door",
+				isTheFrontDoor: true,
+				orientation: 24,	
+			}; 
+	
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: frontDoor, complete: true }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Doors);
+			await userEvent.click(screen.getByTestId("externalGlazed_duplicate_0"));
+			expect(screen.getByTestId("externalGlazed_status_0").innerText).toBe("Complete");
+			expect(screen.getByTestId("externalGlazed_status_1").innerText).toBe("In progress");
+		});
 	});
 
 	describe("internal door", () => {
