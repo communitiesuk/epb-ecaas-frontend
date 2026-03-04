@@ -152,8 +152,8 @@ autoSaveElementForm<WindowData>({
 	defaultName: "Window",
 	onPatch: (state, newData, index) => {
 		newData.data.id ??= windowId;
-		state.dwellingFabric.dwellingSpaceWindows.data[index] = newData;
 		const existingShading = (state.dwellingFabric.dwellingSpaceWindows.data[index]?.data as Record<string, unknown> | undefined)?.shading;
+		state.dwellingFabric.dwellingSpaceWindows.data[index] = newData;
 		if (existingShading !== undefined) {
 			(state.dwellingFabric.dwellingSpaceWindows.data[index].data as Record<string, unknown>).shading = existingShading;
 		}

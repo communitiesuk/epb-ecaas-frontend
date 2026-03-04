@@ -7,7 +7,7 @@ const title = "External glazed door";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const externalGlazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor?.data;
+const externalGlazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data;
 const index = getStoreIndex(externalGlazedDoorData);
 const doorData = useItemToEdit("door", externalGlazedDoorData);
 const model = ref(doorData?.data);
@@ -137,8 +137,8 @@ autoSaveElementForm<ExternalGlazedDoorData>({
 	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor,
 	defaultName: "External glazed door",
 	onPatch: (state, newData, index) => {
-		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index] = newData;
 		const existingShading = (state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index]?.data as Record<string, unknown> | undefined)?.shading;
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index] = newData;
 		if (existingShading !== undefined) {
 			(state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index].data as Record<string, unknown>).shading = existingShading;
 		}

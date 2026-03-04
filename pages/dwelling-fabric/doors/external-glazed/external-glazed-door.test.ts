@@ -762,7 +762,7 @@ describe("external glazed door", () => {
 								data: [
 									{
 										data: {
-											name: "PV 1",
+											...doorForState,
 											hasShading: true,
 											shading: [],
 										}, 

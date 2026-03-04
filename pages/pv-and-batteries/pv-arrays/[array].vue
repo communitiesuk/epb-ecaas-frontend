@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OnSiteGenerationVentilationStrategy, SchemaInverterType } from "~/schema/aliases";
-import { getUrl, uniqueName, type ShadingObjectData } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 
 const title = "PV array";
 const store = useEcaasStore();

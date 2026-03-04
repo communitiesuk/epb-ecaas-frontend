@@ -592,7 +592,7 @@ describe("window", () => {
 		});
 	});
 
-	describe.skip("shading section", () => {
+	describe("shading section", () => {
 		// helper that adds a shading object so we can work with it below
 		const saveFirstShadingObject = async (name = "Chimney") => {
 			await user.click(screen.getByTestId("hasShading_yes"));
@@ -763,7 +763,7 @@ describe("window", () => {
 					},
 				});
 				await renderSuspended(Window, {
-					route: { params: { door: "0" } },
+					route: { params: { window: "0" } },
 				});
 				await populateValidForm({ hasShading: true });
 				await user.type(screen.getByTestId("shadingName"), "Chimney");
@@ -774,7 +774,7 @@ describe("window", () => {
 				await user.tab();
 				await user.click(screen.getByTestId("saveShadingObject"));
 		
-				const door = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[0]!;
+				const door = store.dwellingFabric.dwellingSpaceWindows.data[0]!;
 				expect(door.data.hasShading).toBe(true);
 				const { shading } = door.data as Extract<WindowData, { hasShading: true }>;
 				expect(shading).toHaveLength(1);
@@ -790,15 +790,13 @@ describe("window", () => {
 			it("displays existing shading items when opening a pre-populated array", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
-							dwellingSpaceExternalGlazedDoor: {
-								data: [egdWithShading],
-							},
+						dwellingSpaceWindows: {
+							data: [egdWithShading],
 						},
 					},
 				});
 				await renderSuspended(Window, {
-					route: { params: { door: "0" } },
+					route: { params: { window: "0" } },
 				});
 				expect(screen.getByTestId("shading_summary_0")).toBeDefined();
 				expect(screen.getByText("Chimney")).toBeDefined();
@@ -806,10 +804,8 @@ describe("window", () => {
 			it("shows errors when fields are invalid in edit form", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
-							dwellingSpaceExternalGlazedDoor: {
-								data: [egdWithShading],
-							},
+						dwellingSpaceWindows: {
+							data: [egdWithShading],
 						},
 						dwellingSpaceWalls: {
 							dwellingSpaceExternalWall: {
@@ -819,7 +815,7 @@ describe("window", () => {
 					},
 				});
 				await renderSuspended(Window, {
-					route: { params: { door: "create" } },
+					route: { params: { window: "create" } },
 				});
 				await populateValidForm({ hasShading: true });
 		
@@ -871,15 +867,13 @@ describe("window", () => {
 			it("opens an edit form with 'Edit shading' title when edit is clicked", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
-							dwellingSpaceExternalGlazedDoor: {
-								data: [egdWithShading],
-							},
+						dwellingSpaceWindows: {
+							data: [egdWithShading],
 						},
 					},
 				});
 				await renderSuspended(Window, {
-					route: { params: { door: "0" } },
+					route: { params: { window: "0" } },
 				});
 				await user.click(screen.getByTestId("shading_edit_0"));
 				expect(screen.getByText("Edit shading")).toBeDefined();
@@ -889,15 +883,13 @@ describe("window", () => {
 			it("prepopulates the edit form with the existing shading data", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
-							dwellingSpaceExternalGlazedDoor: {
-								data: [egdWithShading],
-							},
+						dwellingSpaceWindows: {
+							data: [egdWithShading],
 						},
 					},
 				});
 				await renderSuspended(Window, {
-					route: { params: { door: "0" } },
+					route: { params: { window: "0" } },
 				});
 				await user.click(screen.getByTestId("shading_edit_0"));
 				expect((screen.getByTestId<HTMLInputElement>("shadingName")).value).toBe("Chimney");
@@ -910,15 +902,13 @@ describe("window", () => {
 			it("updates the summary card when the edited item is saved", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
-							dwellingSpaceExternalGlazedDoor: {
-								data: [egdWithShading],
-							},
+						dwellingSpaceWindows: {
+							data: [egdWithShading],
 						},
 					},
 				});
 				await renderSuspended(Window, {
-					route: { params: { door: "0" } },
+					route: { params: { window: "0" } },
 				});
 				await user.click(screen.getByTestId("shading_edit_0"));
 				await user.clear(screen.getByTestId("shadingName"));
@@ -934,15 +924,13 @@ describe("window", () => {
 			it("removes the item and opens a new empty add form when it is the only item", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
-							dwellingSpaceExternalGlazedDoor: {
-								data: [egdWithShading],
-							},
+						dwellingSpaceWindows: {
+							data: [egdWithShading],
 						},
 					},
 				});
 				await renderSuspended(Window, {
-					route: { params: { door: "0" } },
+					route: { params: { window: "0" } },
 				});
 				await user.click(screen.getByTestId("shading_remove_0"));
 				expect(screen.queryByTestId("shading_summary_0")).toBeNull();
@@ -953,15 +941,13 @@ describe("window", () => {
 			it("removes only the targeted item when other items exist", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
-							dwellingSpaceExternalGlazedDoor: {
-								data: [egdWithTwoShadingItems],
-							},
+						dwellingSpaceWindows: {
+							data: [egdWithTwoShadingItems],
 						},
 					},
 				});
 				await renderSuspended(Window, {
-					route: { params: { door: "0" } },
+					route: { params: { window: "0" } },
 				});
 				await user.click(screen.getByTestId("shading_remove_0"));
 				expect(screen.queryByTestId("shading-add-form")).toBeNull();
