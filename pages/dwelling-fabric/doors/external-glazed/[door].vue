@@ -137,8 +137,8 @@ autoSaveElementForm<ExternalGlazedDoorData>({
 	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor,
 	defaultName: "External glazed door",
 	onPatch: (state, newData, index) => {
-		const existingShading = (state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index]?.data as Record<string, unknown> | undefined)?.shading;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index] = newData;
+		const existingShading = (state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index]?.data as Record<string, unknown> | undefined)?.shading;
 		if (existingShading !== undefined) {
 			(state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index].data as Record<string, unknown>).shading = existingShading;
 		}

@@ -52,6 +52,7 @@ describe("getResolvedTaggedItem", () => {
 		openingToFrameRatio: 0.2,
 		curtainsOrBlinds: false,
 		securityRisk: false,
+		hasShading: false,
 	};
 
 	const walls = [externalWall1, externalWall2];

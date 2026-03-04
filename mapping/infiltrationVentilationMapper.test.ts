@@ -2,7 +2,6 @@ import { mapAirPermeabilityData, mapInfiltrationVentilationData, mapMechanicalVe
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
 import type { SchemaMechanicalVentilation } from "~/schema/aliases";
-import { millimetre } from "~/utils/units/length";
 
 const baseForm = {
 	data: [],
@@ -271,12 +270,6 @@ describe("infiltration ventilation mapper", () => {
 			elevationalHeight: 1,
 			midHeight: 1,
 			numberOpenableParts: "1",
-			overhangDepth: unitValue(1000, millimetre),
-			overhangDistance: unitValue(1000, millimetre),
-			sideFinRightDepth: unitValue(1000, millimetre),
-			sideFinRightDistance: unitValue(1000, millimetre),
-			sideFinLeftDepth: unitValue(1000, millimetre),
-			sideFinLeftDistance: unitValue(1000, millimetre),
 			curtainsOrBlinds: true,
 			treatmentType: "blinds",
 			thermalResistivityIncrease: 1,
@@ -285,6 +278,7 @@ describe("infiltration ventilation mapper", () => {
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
 			securityRisk: false,
+			hasShading: false,
 		};
 
 		const ventData: EcaasForm<VentData>[] = [
@@ -373,12 +367,6 @@ describe("infiltration ventilation mapper", () => {
 			elevationalHeight: 1,
 			midHeight: 1,
 			numberOpenableParts: "1",
-			overhangDepth: unitValue(1000, millimetre),
-			overhangDistance: unitValue(1000, millimetre),
-			sideFinRightDepth: unitValue(1000, millimetre),
-			sideFinRightDistance: unitValue(1000, millimetre),
-			sideFinLeftDepth: unitValue(1000, millimetre),
-			sideFinLeftDistance: unitValue(1000, millimetre),
 			curtainsOrBlinds: true,
 			treatmentType: "blinds",
 			thermalResistivityIncrease: 1,
@@ -387,6 +375,7 @@ describe("infiltration ventilation mapper", () => {
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
 			securityRisk: false,
+			hasShading: false,
 		};
 
 		const ventData: EcaasForm<VentData>[] = [

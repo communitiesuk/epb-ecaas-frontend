@@ -2,7 +2,6 @@ import type { SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaTher
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from "deepmerge";
 import { defaultZoneName } from "./common";
-import type { Length } from "../utils/units/length";
 import { asMetres } from "../utils/units/length";
 
 function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
@@ -701,35 +700,6 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 	const windowData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceWindows.map(x => {
 		const nameWithSuffix = suffixName(x.name, windowSuffix);
 
-		function inMetres(length: Length | number): number {
-			if (typeof length === "number") {
-				return length;
-			} else {
-				return asMetres(length);
-			}
-		}
-
-		const hasOverhang = "overhangDepth" in x && "overhangDistance" in x && x.overhangDepth && x.overhangDistance;
-		const overhang = hasOverhang ? [{
-			type: "overhang" as const,
-			depth: inMetres(x.overhangDepth),
-			distance: inMetres(x.overhangDistance),
-		}] : [];
-
-		const hasSideFinLeft = "sideFinLeftDepth" in x && "sideFinLeftDistance" in x && x.sideFinLeftDepth && x.sideFinLeftDistance;
-		const sideFinLeft = hasSideFinLeft ? [{
-			type: "sidefinleft" as const,
-			depth: inMetres(x.sideFinLeftDepth),
-			distance: inMetres(x.sideFinLeftDistance),
-		}] : [];
-
-		const hasSideFinRight = "sideFinRightDepth" in x && "sideFinRightDistance" in x && x.sideFinRightDepth && x.sideFinRightDistance;
-		const sideFinRight = hasSideFinRight ? [{
-			type: "sidefinright" as const,
-			depth: inMetres(x.sideFinRightDepth),
-			distance: inMetres(x.sideFinRightDistance),
-		}] : [];
-
 
 		let pitch: number;
 		let orientation: number;
@@ -761,7 +731,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
 				max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
 				window_part_list: mapWindowPartList(x),
-				shading: [...overhang, ...sideFinLeft, ...sideFinRight],
+				shading: [],
 			},
 		};
 	});

@@ -8,7 +8,7 @@ import type {
 	ExternalUnglazedDoorData,
 	PartyWallData,
 } from "~/stores/ecaasStore.schema";
-import { centimetre, millimetre } from "../utils/units/length";
+import { centimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
 
 type BuildingElementOpaque = BuildingElementOfType<"BuildingElementOpaque">;
@@ -1056,12 +1056,6 @@ describe("dwelling fabric mapper", () => {
 			elevationalHeight: 1,
 			midHeight: 1,
 			numberOpenableParts: "1",
-			overhangDepth: unitValue(1000, millimetre),
-			overhangDistance: unitValue(1000, millimetre),
-			sideFinRightDepth: unitValue(1000, millimetre),
-			sideFinRightDistance: unitValue(1000, millimetre),
-			sideFinLeftDepth: unitValue(1000, millimetre),
-			sideFinLeftDistance: unitValue(1000, millimetre),
 			curtainsOrBlinds: true,
 			treatmentType: "blinds",
 			thermalResistivityIncrease: 1,
@@ -1070,6 +1064,7 @@ describe("dwelling fabric mapper", () => {
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
 			securityRisk: false,
+			hasShading: false,
 		};
 
 		const windowSuffix = " (window)";
@@ -1158,6 +1153,7 @@ describe("dwelling fabric mapper", () => {
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
 			curtainsOrBlinds: false,
+			hasShading: false,
 		};
 
 		const windowSuffix = " (window)";
@@ -1204,6 +1200,7 @@ describe("dwelling fabric mapper", () => {
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
 			curtainsOrBlinds: false,
+			hasShading: false,
 		};
 
 		const windowSuffix = " (window)";
@@ -1248,6 +1245,7 @@ describe("dwelling fabric mapper", () => {
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
 			curtainsOrBlinds: false,
+			hasShading: false,
 		};
 
 		const windowSuffix = " (window)";

@@ -22,7 +22,7 @@ import {
 import { degrees } from "~/utils/units/angle";
 import { metresSquare } from "~/utils/units/area";
 import { cubicMetre } from "~/utils/units/volume";
-import { unitValue } from "~/utils/units";
+
 const user = userEvent.setup();
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -327,16 +327,11 @@ const windowData: EcaasForm<WindowData> = {
 		midHeight: 1,
 		openingToFrameRatio: 0.2,
 		numberOpenableParts: "0",
-		overhangDepth: unitValue(100, millimetre),
-		overhangDistance: unitValue(100, millimetre),
-		sideFinRightDepth: unitValue(100, millimetre),
-		sideFinRightDistance: unitValue(100, millimetre),
-		sideFinLeftDepth: unitValue(100, millimetre),
-		sideFinLeftDistance: unitValue(100, millimetre),
 		curtainsOrBlinds: true,
 		treatmentType: "blinds",
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
+		hasShading: false,
 	},
 };
 

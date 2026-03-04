@@ -588,54 +588,11 @@ const baseWindowData = namedWithId.extend({
 	openingToFrameRatio: fraction,
 });
 
-const overhangFields = z.union([
-	z.object({
-		overhangDepth: z.union([zodUnit("length"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-		overhangDistance: z.union([zodUnit("length"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-	}),
-	z.object({
-		overhangDepth: z.optional(z.undefined()),
-		overhangDistance: z.optional(z.undefined()),
-	}),
-]);
-
-const sideFinRightFields = z.union([
-	z.object({
-		sideFinRightDepth: z.union([zodUnit("length"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-		sideFinRightDistance: z.union([zodUnit("length"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-	}),
-	z.object({
-		sideFinRightDepth: z.optional(z.undefined()),
-		sideFinRightDistance: z.optional(z.undefined()),
-	}),
-]);
-
-const sideFinLeftFields = z.union([
-	z.object({
-		sideFinLeftDepth: z.union([zodUnit("length"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-		sideFinLeftDistance: z.union([zodUnit("length"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-	}),
-	z.object({
-		sideFinLeftDepth: z.optional(z.undefined()),
-		sideFinLeftDistance: z.optional(z.undefined()),
-	}),
-]);
-
-
-export const windowDataZod = z.intersection(
-	nestedDiscriminatedUnion(
-		baseWindowData,
-		openablePartsFields,
-		curtainsOrBlindsFields,
-	),
-	// this shading bit will be replaced shortly
-	z.intersection(
-		overhangFields,
-		z.intersection(
-			sideFinRightFields,
-			sideFinLeftFields,
-		),
-	),
+export const windowDataZod = nestedDiscriminatedUnion(
+	baseWindowData,
+	openablePartsFields,
+	curtainsOrBlindsFields,
+	shadingDataFields,
 );
 
 export type WindowData = z.infer<typeof windowDataZod>;

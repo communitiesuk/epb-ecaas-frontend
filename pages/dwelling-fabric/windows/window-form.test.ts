@@ -2,8 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import Window from "./[window].vue";
-import { millimetre } from "~/utils/units/length";
-import { unitValue } from "~/utils/units";
 import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -14,6 +12,11 @@ vi.mock("uuid");
 
 const store = useEcaasStore();
 const user = userEvent.setup();
+
+afterEach(() => {
+	store.$reset();
+	navigateToMock.mockReset();
+});
 
 const externalWall: ExternalWallData = {
 	id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
@@ -45,18 +48,33 @@ const window1: EcaasForm<WindowData> = {
 		midHeight: 1,
 		openingToFrameRatio: 0.8,
 		numberOpenableParts: "0",
-		overhangDepth: unitValue(60, millimetre),
-		overhangDistance: unitValue(60, millimetre),
-		sideFinRightDepth: unitValue(60, millimetre),
-		sideFinRightDistance: unitValue(60, millimetre),
-		sideFinLeftDepth: unitValue(60, millimetre),
-		sideFinLeftDistance: unitValue(60, millimetre),
 		curtainsOrBlinds: true,
 		treatmentType: "blinds",
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
+		hasShading: false,
 	},
 	complete: true,
+};
+
+const populateValidForm = async ({ hasShading = false } = {}) => {
+	await user.type(screen.getByTestId("name"), "Window 1");
+	await user.click(screen.getByTestId(`taggedItem_${externalWall.id}`));
+	await user.type(screen.getByTestId("height"), "1");
+	await user.type(screen.getByTestId("width"), "1");
+	await user.type(screen.getByTestId("thermalResistance"), "1");
+	await user.click(screen.getByTestId("securityRisk_no"));
+	await user.type(screen.getByTestId("solarTransmittance"), "0.1");
+	await user.type(screen.getByTestId("elevationalHeight"), "1");
+	await user.type(screen.getByTestId("midHeight"), "1");
+	await user.type(screen.getByTestId("openingToFrameRatio"), "0.8");
+	await user.click(screen.getByTestId("securityRisk_yes"));
+	await user.click(screen.getByTestId("numberOpenableParts_0"));
+	await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
+	await user.click(screen.getByTestId("treatmentType_blinds"));
+	await user.type(screen.getByTestId("thermalResistivityIncrease"), "1");
+	await user.type(screen.getByTestId("solarTransmittanceReduction"), "0.1");
+	await user.click(screen.getByTestId(`hasShading_${hasShading ? "yes" : "no"}`));
 };
 
 const window2: EcaasForm<WindowData> = {
@@ -167,10 +185,6 @@ describe("window", () => {
 					},
 				},
 			});
-		});
-
-		afterEach(() => {
-			store.$reset();
 		});
 
 		test("does not require pitch and orientation when existing wall is selected", async () => {
@@ -284,28 +298,7 @@ describe("window", () => {
 				},
 			});
 
-			await user.type(screen.getByTestId("name"), "Window 1");
-			await user.click(screen.getByTestId(`taggedItem_${externalWall.id}`));
-			await user.type(screen.getByTestId("height"), "1");
-			await user.type(screen.getByTestId("width"), "1");
-			await user.type(screen.getByTestId("thermalResistance"), "1");
-			await user.click(screen.getByTestId("securityRisk_no"));
-			await user.type(screen.getByTestId("solarTransmittance"), "0.1");
-			await user.type(screen.getByTestId("elevationalHeight"), "1");
-			await user.type(screen.getByTestId("midHeight"), "1");
-			await user.type(screen.getByTestId("openingToFrameRatio"), "0.8");
-			await user.click(screen.getByTestId("securityRisk_yes"));
-			await user.click(screen.getByTestId("numberOpenableParts_0"));
-			await user.type(screen.getByTestId("overhangDepth"), "60");
-			await user.type(screen.getByTestId("overhangDistance"), "60");
-			await user.type(screen.getByTestId("sideFinRightDepth"), "60");
-			await user.type(screen.getByTestId("sideFinRightDistance"), "60");
-			await user.type(screen.getByTestId("sideFinLeftDepth"), "60");
-			await user.type(screen.getByTestId("sideFinLeftDistance"), "60");
-			await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
-			await user.click(screen.getByTestId("treatmentType_blinds"));
-			await user.type(screen.getByTestId("thermalResistivityIncrease"), "1");
-			await user.type(screen.getByTestId("solarTransmittanceReduction"), "0.1");
+			await populateValidForm();
 			await user.tab();
 
 			await (user.click(screen.getByTestId("saveAndComplete")));
@@ -341,12 +334,6 @@ describe("window", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("midHeight")).value).toBe("1");
 			expect((await screen.findByTestId("numberOpenableParts_0")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("overhangDepth")).value).toBe("60");
-			expect((await screen.findByTestId<HTMLInputElement>("overhangDistance")).value).toBe("60");
-			expect((await screen.findByTestId<HTMLInputElement>("sideFinRightDepth")).value).toBe("60");
-			expect((await screen.findByTestId<HTMLInputElement>("sideFinRightDistance")).value).toBe("60");
-			expect((await screen.findByTestId<HTMLInputElement>("sideFinLeftDepth")).value).toBe("60");
-			expect((await screen.findByTestId<HTMLInputElement>("sideFinLeftDistance")).value).toBe("60");
 			expect((await screen.findByTestId("treatmentType_blinds")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("thermalResistivityIncrease")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittanceReduction")).value).toBe("0.1");
@@ -368,16 +355,11 @@ describe("window", () => {
 					midHeight: 1,
 					openingToFrameRatio: 0.8,
 					numberOpenableParts: "0",
-					overhangDepth: unitValue(60, millimetre),
-					overhangDistance: unitValue(60, millimetre),
-					sideFinRightDepth: unitValue(60, millimetre),
-					sideFinRightDistance: unitValue(60, millimetre),
-					sideFinLeftDepth: unitValue(60, millimetre),
-					sideFinLeftDistance: unitValue(60, millimetre),
 					curtainsOrBlinds: true,
 					treatmentType: "blinds",
 					thermalResistivityIncrease: 1,
 					solarTransmittanceReduction: 0.1,
+					hasShading: false,
 				},
 				complete: true,
 			};
@@ -476,7 +458,7 @@ describe("window", () => {
 			await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
 			await user.click(screen.getByTestId("saveProgress"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/windows");
+			expect(screen.getByTestId<HTMLAnchorElement>("saveProgress").href).toContain("/dwelling-fabric/windows");
 		});
 	});
 
@@ -608,5 +590,386 @@ describe("window", () => {
 			expect(data[1]?.data.name).toBe("Updated Window 2");
 			expect(data[1]?.data.height).toBe(2);
 		});
+	});
+
+	describe.skip("shading section", () => {
+		// helper that adds a shading object so we can work with it below
+		const saveFirstShadingObject = async (name = "Chimney") => {
+			await user.click(screen.getByTestId("hasShading_yes"));
+			await user.type(screen.getByTestId(`shadingName`), name);
+			await user.click(screen.getByTestId("typeOfShading_obstacle"));
+			await user.type(screen.getByTestId("shadingHeight"), "3");
+			await user.type(screen.getByTestId("shadingDistance"), "2");
+			await user.type(screen.getByTestId("shadingTransparency"), "0.5");
+			await user.tab();
+			await user.click(screen.getByTestId("saveShadingObject"));
+		};
+		
+		it("initial add form has no cancel button", async () => {
+			await renderSuspended(Window);
+			await user.click(screen.getByTestId("hasShading_yes"));
+			expect(screen.getByTestId("shading-add-form")).toBeDefined();
+			expect(screen.queryByTestId("cancelShadingObject")).toBeNull();
+		});
+		
+		const egdWithShading: EcaasForm<WindowData> = {
+			complete: true,
+			data: {
+				...window1.data,
+				hasShading: true,
+				shading: [
+					{
+						name: "Chimney",
+						typeOfShading: "obstacle",
+						height: 3,
+						distance: 2,
+						transparency: 0.5,
+					},
+				],
+			},
+		};
+		
+		const egdWithTwoShadingItems: EcaasForm<WindowData> = {
+			complete: true,
+			data: {
+				...window1.data,
+				hasShading: true,
+				shading: [
+					{
+						name: "Chimney",
+						typeOfShading: "obstacle",
+						height: 3,
+						distance: 2,
+						transparency: 0.5,
+					},
+					{
+						name: "Left fin",
+						typeOfShading: "left_side_fin",
+						depth: 1,
+						distance: 0.5,
+					},
+				],
+			},
+		};
+		
+		it("should not render by default", async () => {
+			await renderSuspended(Window);
+			expect(screen.queryByTestId("shading-section")).toBeNull();
+		});
+		
+		it("should render when user selects that the array has shading", async () => {
+			await renderSuspended(Window);
+			await user.click(screen.getByTestId("hasShading_yes"));
+			expect(screen.getByTestId("shading-section")).toBeDefined();
+		});
+		
+		it("errors on outer submit if shading is yes but no object added", async () => {
+			await renderSuspended(Window, {
+				route: { params: { array: "create" } },
+			});
+			await user.click(screen.getByTestId("hasShading_yes"));
+			await user.click(screen.getByTestId("saveAndComplete"));
+			expect(screen.getByTestId("shadingName_error")).toBeDefined();
+		
+			expect(screen.queryByTestId("cancelShadingObject")).toBeNull();
+		});
+		
+		it("hides the shading section when hasShading is changed back to no", async () => {
+			await renderSuspended(Window);
+			await user.click(screen.getByTestId("hasShading_yes"));
+			await user.click(screen.getByTestId("hasShading_no"));
+			expect(screen.queryByTestId("shading-section")).toBeNull();
+		});
+		
+		describe("type-conditional fields", () => {
+			beforeEach(async () => {
+				await renderSuspended(Window);
+				await user.click(screen.getByTestId("hasShading_yes"));
+			});
+		
+			it("shows height, distance and transparency when obstacle type is selected", async () => {
+				await user.click(screen.getByTestId("typeOfShading_obstacle"));
+				expect(screen.getByTestId("shadingHeight")).toBeDefined();
+				expect(screen.getByTestId("shadingDistance")).toBeDefined();
+				expect(screen.getByTestId("shadingTransparency")).toBeDefined();
+				expect(screen.queryByTestId("shadingDepth")).toBeNull();
+			});
+		
+			it.each(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"])(
+				"shows depth and distance fields for %s type",
+				async (type) => {
+					await user.click(screen.getByTestId(`typeOfShading_${type}`));
+					expect(screen.getByTestId("shadingDepth")).toBeDefined();
+					expect(screen.getByTestId("shadingDistance")).toBeDefined();
+					expect(screen.queryByTestId("shadingHeight")).toBeNull();
+					expect(screen.queryByTestId("shadingTransparency")).toBeNull();
+				},
+			);
+		
+			it("hides conditional fields when no type is selected", async () => {
+				expect(screen.queryByTestId("shadingHeight")).toBeNull();
+				expect(screen.queryByTestId("shadingDepth")).toBeNull();
+			});
+		});
+		
+		describe("saving a shading object", () => {
+			it("collapses the add form into a summary card with the name as title after saving an obstacle", async () => {
+				await renderSuspended(Window);
+				await saveFirstShadingObject("Chimney");
+				expect(screen.queryByTestId("shading-add-form")).toBeNull();
+				expect(screen.getByTestId("shading_summary_0")).toBeDefined();
+				expect(screen.getByText("Chimney")).toBeDefined();
+			});
+		
+			it("collapses the add form into a summary card after saving a fin/overhang/frame type", async () => {
+				await renderSuspended(Window);
+				await user.click(screen.getByTestId("hasShading_yes"));
+				await user.type(screen.getByTestId("shadingName"), "Left fin");
+				await user.click(screen.getByTestId("typeOfShading_left_side_fin"));
+				await user.type(screen.getByTestId("shadingDepth"), "1");
+				await user.type(screen.getByTestId("shadingDistance"), "0.5");
+				await user.tab();
+				await user.click(screen.getByTestId("saveShadingObject"));
+				expect(screen.queryByTestId("shading-add-form")).toBeNull();
+				expect(screen.getByTestId("shading_summary_0")).toBeDefined();
+				expect(screen.getByText("Left fin")).toBeDefined();
+			});
+		
+			it("shows an 'Add another shading object' button after the first item is saved", async () => {
+				await renderSuspended(Window);
+				await saveFirstShadingObject();
+				expect(screen.getByTestId("addAnotherShadingObject")).toBeDefined();
+			});
+		
+			it("saves the shading object to the store", async () => {
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceWindows: {
+							data: [
+								{
+									data: {
+										name: "Window 1",
+										hasShading: true,
+										shading: [],
+									}, 
+								},
+							],
+						},
+						dwellingSpaceWalls: {
+							dwellingSpaceExternalWall: {
+								data: [{ data: externalWall, complete: true }],
+							},
+						},
+					},
+				});
+				await renderSuspended(Window, {
+					route: { params: { door: "0" } },
+				});
+				await populateValidForm({ hasShading: true });
+				await user.type(screen.getByTestId("shadingName"), "Chimney");
+				await user.click(screen.getByTestId("typeOfShading_obstacle"));
+				await user.type(screen.getByTestId("shadingHeight"), "3");
+				await user.type(screen.getByTestId("shadingDistance"), "2");
+				await user.type(screen.getByTestId("shadingTransparency"), "0.5");
+				await user.tab();
+				await user.click(screen.getByTestId("saveShadingObject"));
+		
+				const door = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[0]!;
+				expect(door.data.hasShading).toBe(true);
+				const { shading } = door.data as Extract<WindowData, { hasShading: true }>;
+				expect(shading).toHaveLength(1);
+				expect(shading[0]).toMatchObject({
+					name: "Chimney",
+					typeOfShading: "obstacle",
+					height: 3,
+					distance: 2,
+					transparency: 0.5,
+				});
+			});
+		
+			it("displays existing shading items when opening a pre-populated array", async () => {
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceDoors: { 
+							dwellingSpaceExternalGlazedDoor: {
+								data: [egdWithShading],
+							},
+						},
+					},
+				});
+				await renderSuspended(Window, {
+					route: { params: { door: "0" } },
+				});
+				expect(screen.getByTestId("shading_summary_0")).toBeDefined();
+				expect(screen.getByText("Chimney")).toBeDefined();
+			});
+			it("shows errors when fields are invalid in edit form", async () => {
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceDoors: { 
+							dwellingSpaceExternalGlazedDoor: {
+								data: [egdWithShading],
+							},
+						},
+						dwellingSpaceWalls: {
+							dwellingSpaceExternalWall: {
+								data: [{ data: externalWall, complete: true }],
+							},
+						},
+					},
+				});
+				await renderSuspended(Window, {
+					route: { params: { door: "create" } },
+				});
+				await populateValidForm({ hasShading: true });
+		
+				await user.click(screen.getByTestId("typeOfShading_obstacle"));
+		
+				await user.click(screen.getByTestId("saveShadingObject"));
+				expect(screen.getByTestId("shadingName_error")).toBeDefined();
+				expect(screen.getByTestId("shadingHeight_error")).toBeDefined();
+				expect(screen.getByTestId("shadingDistance_error")).toBeDefined();
+				expect(screen.getByTestId("shadingTransparency_error")).toBeDefined();
+			});
+		});
+		
+		describe("add another shading object", () => {
+			it("opens a new add form with a cancel button when 'Add another' is clicked", async () => {
+				await renderSuspended(Window);
+				await saveFirstShadingObject();
+				await user.click(screen.getByTestId("addAnotherShadingObject"));
+				expect(screen.getByTestId("shading-add-form")).toBeDefined();
+				expect(screen.getByTestId("cancelShadingObject")).toBeDefined();
+			});
+		
+			it("closes the new add form without removing saved items when cancel is clicked", async () => {
+				await renderSuspended(Window);
+				await saveFirstShadingObject("Chimney");
+				await user.click(screen.getByTestId("addAnotherShadingObject"));
+				await user.click(screen.getByTestId("cancelShadingObject"));
+				expect(screen.queryByTestId("shading-add-form")).toBeNull();
+				expect(screen.getByTestId("shading_summary_0")).toBeDefined();
+			});
+		
+			it("saves a second shading object after clicking add another", async () => {
+				await renderSuspended(Window);
+				await saveFirstShadingObject("Chimney");
+				await user.click(screen.getByTestId("addAnotherShadingObject"));
+				await user.type(screen.getByTestId("shadingName"), "Left fin");
+				await user.click(screen.getByTestId("typeOfShading_left_side_fin"));
+				await user.type(screen.getByTestId("shadingDepth"), "1");
+				await user.type(screen.getByTestId("shadingDistance"), "0.5");
+				await user.tab();
+				await user.click(screen.getByTestId("saveShadingObject"));
+				expect(screen.getByTestId("shading_summary_0")).toBeDefined();
+				expect(screen.getByTestId("shading_summary_1")).toBeDefined();
+				expect(screen.queryByTestId("shading-add-form")).toBeNull();
+			});
+		});
+		
+		describe("editing a shading object", () => {
+			it("opens an edit form with 'Edit shading' title when edit is clicked", async () => {
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceDoors: { 
+							dwellingSpaceExternalGlazedDoor: {
+								data: [egdWithShading],
+							},
+						},
+					},
+				});
+				await renderSuspended(Window, {
+					route: { params: { door: "0" } },
+				});
+				await user.click(screen.getByTestId("shading_edit_0"));
+				expect(screen.getByText("Edit shading")).toBeDefined();
+				expect(screen.getByTestId("shading-add-form")).toBeDefined();
+			});
+		
+			it("prepopulates the edit form with the existing shading data", async () => {
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceDoors: { 
+							dwellingSpaceExternalGlazedDoor: {
+								data: [egdWithShading],
+							},
+						},
+					},
+				});
+				await renderSuspended(Window, {
+					route: { params: { door: "0" } },
+				});
+				await user.click(screen.getByTestId("shading_edit_0"));
+				expect((screen.getByTestId<HTMLInputElement>("shadingName")).value).toBe("Chimney");
+				expect((screen.getByTestId<HTMLInputElement>("typeOfShading_obstacle")).checked).toBe(true);
+				expect((screen.getByTestId<HTMLInputElement>("shadingHeight")).value).toBe("3");
+				expect((screen.getByTestId<HTMLInputElement>("shadingDistance")).value).toBe("2");
+				expect((screen.getByTestId<HTMLInputElement>("shadingTransparency")).value).toBe("0.5");
+			});
+		
+			it("updates the summary card when the edited item is saved", async () => {
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceDoors: { 
+							dwellingSpaceExternalGlazedDoor: {
+								data: [egdWithShading],
+							},
+						},
+					},
+				});
+				await renderSuspended(Window, {
+					route: { params: { door: "0" } },
+				});
+				await user.click(screen.getByTestId("shading_edit_0"));
+				await user.clear(screen.getByTestId("shadingName"));
+				await user.type(screen.getByTestId("shadingName"), "Big Chimney");
+				await user.click(screen.getByTestId("saveShadingObject"));
+				expect(screen.queryByTestId("shading-add-form")).toBeNull();
+				expect(screen.getByTestId("shading_summary_0")).toBeDefined();
+				expect(screen.getByText("Chimney")).toBeDefined();
+			});
+		});
+		
+		describe("removing a shading object", () => {
+			it("removes the item and opens a new empty add form when it is the only item", async () => {
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceDoors: { 
+							dwellingSpaceExternalGlazedDoor: {
+								data: [egdWithShading],
+							},
+						},
+					},
+				});
+				await renderSuspended(Window, {
+					route: { params: { door: "0" } },
+				});
+				await user.click(screen.getByTestId("shading_remove_0"));
+				expect(screen.queryByTestId("shading_summary_0")).toBeNull();
+				expect(screen.getByTestId("shading-add-form")).toBeDefined();
+				expect(screen.queryByTestId("cancelShadingObject")).toBeNull();
+			});
+		
+			it("removes only the targeted item when other items exist", async () => {
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceDoors: { 
+							dwellingSpaceExternalGlazedDoor: {
+								data: [egdWithTwoShadingItems],
+							},
+						},
+					},
+				});
+				await renderSuspended(Window, {
+					route: { params: { door: "0" } },
+				});
+				await user.click(screen.getByTestId("shading_remove_0"));
+				expect(screen.queryByTestId("shading-add-form")).toBeNull();
+				expect(screen.getByTestId("shading_summary_0")).toBeDefined();
+				expect(screen.getByText("Left fin")).toBeDefined();
+				expect(screen.queryByText("Chimney")).toBeNull();
+			});
+		});
+		
 	});
 });
