@@ -507,7 +507,7 @@ export type ThermalBridgingData = AssertFormKeysArePageIds<{
 
 const linearThermalBridgeDataZod = named.extend({
 	typeOfThermalBridge: z.string(),
-	linearThermalTransmittance: z.number().min(0).max(2),
+	linearThermalTransmittance: z.number(),
 	length: z.number().min(0).max(10000),
 });
 
