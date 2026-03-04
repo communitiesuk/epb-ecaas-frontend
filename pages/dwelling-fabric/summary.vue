@@ -535,6 +535,8 @@ const windowSummary: SummarySection = {
 			"Type": x.curtainsOrBlinds ? treatmentType : undefined,
 			"Thermal resistivity increase": x.curtainsOrBlinds ? thermalResistivityIncrease : undefined,
 			"Solar transmittance reduction": x.curtainsOrBlinds ? solarTransmittanceReduction : undefined,
+			"Does anything shade the window?": displayBoolean(x.hasShading),
+			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvArrayData, { hasShading: true }>).shading) } : {}),
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceWindows"),

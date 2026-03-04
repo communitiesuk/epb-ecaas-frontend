@@ -346,6 +346,20 @@ const windowData: EcaasForm<WindowData> = {
 	},
 };
 
+const windowDataWithShading: EcaasForm<WindowData> = {
+	data: {
+		...windowData.data,
+		hasShading: true, 
+		shading: [
+			{ name: "Test 1", typeOfShading: "obstacle", distance: 1, height: 11, transparency: 11 },
+			{ name: "Test 2", typeOfShading: "left_side_fin", distance: 2, depth: 22 },
+			{ name: "Test 3", typeOfShading: "right_side_fin", distance: 3, depth: 33 },
+			{ name: "Test 4", typeOfShading: "overhang", distance: 4, depth: 44 },
+			{ name: "Test 5", typeOfShading: "frame_or_reveal", distance: 5, depth: 55 },
+		],
+	},
+};
+
 const thermalBridgingData: ThermalBridgingData = {
 	dwellingSpaceLinearThermalBridges: {
 		data: [
@@ -374,6 +388,7 @@ const store = useEcaasStore();
 
 afterEach(() => {
 	store.$reset();
+	navigateToMock.mockClear();
 });
 describe("Dwelling space fabric summary", () => {
 
@@ -1435,7 +1450,7 @@ describe("dwelling space windows", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
-					data: [windowData],
+					data: [windowDataWithShading],
 					complete: true,
 				},
 				dwellingSpaceWalls: {
@@ -1445,7 +1460,7 @@ describe("dwelling space windows", () => {
 		});
 
 		await renderSuspended(Summary);
-		const expectedResult = {
+		const baseExpected = {
 			"Name": "Window 1",
 			"Orientation": `0 ${degrees.suffix}`,
 			"Height": `1 ${metre.suffix}`,
@@ -1462,7 +1477,46 @@ describe("dwelling space windows", () => {
 			"Solar transmittance reduction": "0.1",
 		};
 
-		for (const [key, value] of Object.entries(expectedResult)) {
+		const shading1Expected = {
+			"Name of shading 1": "Test 1",
+			"Type of shading 1": "Obstacle",
+			"Distance of shading 1 from glass": `1 ${metre.suffix}`,
+			"Height of shading 1": `11 ${metre.suffix}`,
+			"Transparency of shading 1": "11 %",
+		};
+		const shading2Expected = {
+			"Name of shading 2": "Test 2",
+			"Type of shading 2": "Left side fin",
+			"Distance of shading 2 from glass": `2 ${metre.suffix}`,
+			"Depth of shading 2": `22 ${metre.suffix}`,
+		};
+		const shading3Expected = {
+			"Name of shading 3": "Test 3",
+			"Type of shading 3": "Right side fin",
+			"Distance of shading 3 from glass": `3 ${metre.suffix}`,
+			"Depth of shading 3": `33 ${metre.suffix}`,
+		};
+		const shading4Expected = {
+			"Name of shading 4": "Test 4",
+			"Type of shading 4": "Overhang",
+			"Distance of shading 4 from glass": `4 ${metre.suffix}`,
+			"Depth of shading 4": `44 ${metre.suffix}`,
+		};
+		const shading5Expected = {
+			"Name of shading 5": "Test 5",
+			"Type of shading 5": "Frame or reveal",
+			"Distance of shading 5 from glass": `5 ${metre.suffix}`,
+			"Depth of shading 5": `55 ${metre.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries({
+			...baseExpected,
+			...shading1Expected,
+			...shading2Expected,
+			...shading3Expected,
+			...shading4Expected,
+			...shading5Expected,
+		})) {
 			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWindows-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
