@@ -69,6 +69,14 @@ describe("Product search", () => {
 		expect(results[0]?.modelQualifier).toBe("HPSMALL");
 	});
 
+	it("Returns products when multiple fields are used as a search parameter", () => {
+		// Act
+		const results = useProductSearch(productData, { searchTerm: "Test 1 Small Heat Pump" });
+
+		// Assert
+		expect(results[0]?.id).toBe("1000");
+	});
+
 	it("Returns products sorted by ID in ascending order when sort parameter is present", () => {
 		// Act
 		const results = useProductSearch(productData, { sort: "id" });

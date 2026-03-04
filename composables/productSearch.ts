@@ -1,5 +1,5 @@
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
-import Fuse from "fuse.js";
+import Fuse, { type Expression } from "fuse.js";
 
 const productSortOption = ["id", "brandName", "modelName", "modelQualifier", "communityHeatNetworkName"] as const;
 
@@ -42,7 +42,19 @@ export function useProductSearch(products: DisplayProduct[], model: ProductSearc
 				"communityHeatNetworkName",
 			],
 		});
-		searchResults = fuse.search(searchTerm).map(r => r.item);
+		
+		searchResults = fuse.search({
+			$and: searchTerm.split(" ").map((searchValue: string) => {
+				return {
+					$or: [
+						{ brandName: searchValue },
+						{ modelName: searchValue },
+						{ modelQualifier: searchValue },
+						{ communityHeatNetworkName: searchValue },
+					],
+				};
+			}) as Expression[],
+		}).map(r => r.item);
 	}
 
 	if (model.sort && productSortOption.includes(model.sort)) {
