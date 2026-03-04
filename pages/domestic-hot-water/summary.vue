@@ -396,7 +396,7 @@ const smartHotWaterCylinderSummary: SummarySection = {
 			"Name": show(smartHWCylData.name),
 			"Product reference": "productReference" in smartHWCylData ? show(smartHWCylData.productReference) : emptyValueRendering,
 			"Heat source": show(getHWHeatSourceName(smartHWCylData.dhwHeatSourceId)),
-			"Energy source": show((smartHWCylData as SmartHotWaterTankData).energySupply),
+			"Energy source": energySupplyOptions[(smartHWCylData as SmartHotWaterTankData).energySupply],
 			"Heater position in the cylinder": "heaterPosition" in smartHWCylData ? show(smartHWCylData.heaterPosition) : emptyValueRendering,
 		};
 	}),
