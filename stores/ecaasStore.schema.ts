@@ -145,6 +145,7 @@ const baseInternalFloorData = named.extend({
 	surfaceAreaOfElement: z.number(),
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
+	thermalResistance,
 });
 const internalFloorDataZod = z.discriminatedUnion(
 	"typeOfInternalFloor",
@@ -155,7 +156,6 @@ const internalFloorDataZod = z.discriminatedUnion(
 		}),
 		baseInternalFloorData.extend({
 			typeOfInternalFloor: z.literal("heatedSpace"),
-			thermalResistance,
 		}),
 	],
 );

@@ -707,7 +707,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: "IE: Mass divided over internal and external side",
 					thermal_resistance_unconditioned_space: 1,
 					pitch: 180,
-					u_value: 0.01,
+					thermal_resistance_construction: 0.5,
 				},
 				"internal floor 2 (floor)": {
 					type: "BuildingElementAdjacentConditionedSpace",
@@ -1627,6 +1627,7 @@ describe("FHS input mapper", () => {
 								arealHeatCapacity: "Very light",
 								massDistributionClass: "IE",
 								thermalResistanceOfAdjacentUnheatedSpace: 1,
+								thermalResistance: 0.5,
 							},
 						},
 						{

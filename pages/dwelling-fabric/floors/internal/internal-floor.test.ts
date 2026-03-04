@@ -17,11 +17,11 @@ describe("internal floor", () => {
 		surfaceAreaOfElement: 5,
 		arealHeatCapacity: "Very light" as const,
 		massDistributionClass: "I" as const,
+		thermalResistance: 1,
 	};
 	const internalFloorHeatedSpace: InternalFloorData = {
 		...baseInternalFloorData,
 		typeOfInternalFloor: "heatedSpace",
-		thermalResistance: 1,
 	};
 
 	const internalFloorWithUnheatedSpace: InternalFloorData = {
@@ -39,6 +39,8 @@ describe("internal floor", () => {
 		await user.type(screen.getByTestId("surfaceAreaOfElement"), "5");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
+		await user.type(screen.getByTestId("thermalResistance"), "1");
+		await user.tab();
 	};
 
 	describe("when type of internal floor is heated space", () => {
@@ -51,7 +53,6 @@ describe("internal floor", () => {
 
 			await user.click(screen.getByTestId("typeOfInternalFloor_heatedSpace"));
 			await populateValidForm();
-			await user.type(screen.getByTestId("thermalResistance"), "1");
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
