@@ -164,8 +164,8 @@ const removeShading = (i: number) => {
 			class="govuk-summary-card"
 		>
 			<div class="govuk-summary-card__title-wrapper">
-				<h2 v-if="!isEditing" class="govuk-summary-card__title">{{ item.name }}</h2>
-				<h2 v-else class="govuk-summary-card__title">Edit shading</h2>
+				<h2 v-if="isEditing && editIndex === i" class="govuk-summary-card__title">Edit shading</h2>
+				<h2 v-else class="govuk-summary-card__title">{{ item.name }}</h2>
 				<ul v-if="editIndex !== i" class="govuk-summary-card__actions">
 					<li class="govuk-summary-card__action">
 						<a
