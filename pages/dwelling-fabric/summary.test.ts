@@ -1363,8 +1363,52 @@ describe("dwelling space doors", () => {
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
-		
-		
+		});
+
+		it("displays transparency for obstacle when non-obstacle shading is added first", async () => {
+			const store = useEcaasStore();
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{
+								data: {
+									...doorsData.dwellingSpaceExternalGlazedDoor.data,
+									hasShading: true,
+									shading: [
+										{ name: "Test 1", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
+									],
+								},
+							},
+							{
+								data: {
+									...doorsData.dwellingSpaceExternalGlazedDoor.data,
+									hasShading: true,
+									shading: [
+										{ name: "Test 2", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 22 },
+									],
+								},
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Summary);
+			const transparencyExpected = {
+				"Name of shading 1": "Test 2",
+				"Type of shading 1": "Obstacle",
+				"Distance of shading 1 from glass": `2 ${metre.suffix}`,
+				"Height of shading 1": `22 ${metre.suffix}`,
+				"Transparency of shading 1": "22 %",
+				"Depth of shading 1": "-",
+			};
+			for (const [key, value] of Object.entries(transparencyExpected)) {
+				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceGlazedDoors-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				const ddCells = lineResult.querySelectorAll("dd");
+				expect(ddCells[1]?.textContent).toBe(value);
+			}
 		});
 	});
 
@@ -1520,6 +1564,50 @@ describe("dwelling space windows", () => {
 			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWindows-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("displays transparency for obstacle when non-obstacle shading is added first", async () => {
+		const store = useEcaasStore();
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [{
+						data: {
+							...doorsData.dwellingSpaceExternalGlazedDoor.data,
+							hasShading: true,
+							shading: [
+								{ name: "Test 1", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
+							],
+						},
+					},
+					{
+						data: {
+							...doorsData.dwellingSpaceExternalGlazedDoor.data,
+							hasShading: true,
+							shading: [
+								{ name: "Test 2", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 22 },
+							],
+						},
+					}],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+		const transparencyExpected = {
+			"Name of shading 1": "Test 2",
+			"Type of shading 1": "Obstacle",
+			"Distance of shading 1 from glass": `2 ${metre.suffix}`,
+			"Height of shading 1": `22 ${metre.suffix}`,
+			"Transparency of shading 1": "22 %",
+			"Depth of shading 1": "-",
+		};
+		for (const [key, value] of Object.entries(transparencyExpected)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWindows-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			const ddCells = lineResult.querySelectorAll("dd");
+			expect(ddCells[1]?.textContent).toBe(value);
 		}
 	});
 });

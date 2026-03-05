@@ -395,7 +395,10 @@ function formatShadingRowsForSummary(shading: ShadingObjectData[]): Record<strin
 		if (shadingEntry.typeOfShading === "obstacle") {
 			rows[`Height of shading ${n}`] = dim(shadingEntry.height, "metres");
 			rows[`Transparency of shading ${n}`] = show(shadingEntry.transparency + " %");
+			rows[`Depth of shading ${n}`] = emptyValueRendering;
 		} else {
+			rows[`Height of shading ${n}`] = emptyValueRendering;
+			rows[`Transparency of shading ${n}`] = emptyValueRendering;
 			rows[`Depth of shading ${n}`] = dim(shadingEntry.depth, "metres");
 		}
 	});
