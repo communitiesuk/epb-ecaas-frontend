@@ -161,53 +161,70 @@ describe("Change orientation", () => {
 		expect(screen.getByTestId("currentOrientation").innerText).toBe("0");
 	});
 	
-	it("Displays error message when there is no front door marked as complete", async () => {
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceDoors: {
-					dwellingSpaceExternalGlazedDoor: {
-						data: [{ data: doorNoTag }, { data: doorWithTag }],
+	describe("When there is no valid front door", () => {
+		
+		it("Disables the 'Change orientation' button", async () => {
+		
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: doorNoTag, complete: false }],
+						},
+					},	
+				},
+			});
+
+			await renderSuspended(ChangeOrientation);
+			expect(screen.getByTestId("changeOrientationButton").hasAttribute("disabled")).toBe(true);
+		});	
+
+		it("Displays error message when there is no front door marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: doorNoTag }, { data: doorWithTag }],
+						},
 					},
 				},
-			},
+			});
+
+			await renderSuspended(ChangeOrientation);
+			expect(screen.getByTestId("noFrontDoor_error")).toBeDefined();
 		});
 
-		await renderSuspended(ChangeOrientation);
-		expect(screen.getByTestId("noFrontDoor_error")).toBeDefined();
-	});
+		it("Displays error message when there is a completed front door but it has no orientation from it's tagged item", async () => {
+			const externalWall: Partial<ExternalWallData> = {
+				id: "ex-1",
+				name: "External wall",
+			};
 
-	it("Displays error message when there is a completed front door but it has no orientation from it's tagged item", async () => {
-		const externalWall: Partial<ExternalWallData> = {
-			id: "ex-1",
-			name: "External wall",
-		};
-
-		const doorWithTag: Partial<ExternalUnglazedDoorData> = {
-			name: "External unglazed door",
-			isTheFrontDoor: true,
-			associatedItemId: externalWall.id,
-		};
+			const doorWithTag: Partial<ExternalUnglazedDoorData> = {
+				name: "External unglazed door",
+				isTheFrontDoor: true,
+				associatedItemId: externalWall.id,
+			};
 		
-		
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceDoors: {
-					dwellingSpaceExternalGlazedDoor: {
-						data: [{ data: doorWithTag, complete: true }],
-					},
-				},	
-				dwellingSpaceWalls: {
-					dwellingSpaceExternalWall: {
-						data: [{ data: externalWall }],
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: doorWithTag, complete: true }],
+						},
+					},	
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: externalWall }],
+						},
 					},
 				},
-			},
+			});
+
+			await renderSuspended(ChangeOrientation);
+			expect(screen.getByTestId("frontDoorWithoutOrientation_error")).toBeDefined();
+			expect(screen.getByTestId("changeOrientationButton").hasAttribute("disabled")).toBe(true);
 		});
-
-		await renderSuspended(ChangeOrientation);
-		expect(screen.getByTestId("frontDoorWithoutOrientation_error")).toBeDefined();
-	});
-
 
 	describe("updates orientation items for: ", () => {
 		

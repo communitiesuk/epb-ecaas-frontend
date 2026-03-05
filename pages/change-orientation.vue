@@ -132,7 +132,7 @@ const changeOrientationOfItems = () => {
 			suffix-text="°"
 		/>
 		<div class="govuk-!-margin-top-1 govuk-button-group">
-			<GovButton  href="/" test-id="changeOrientationButton" @click="changeOrientationOfItems">Change orientation</GovButton>
+			<GovButton  href="/" test-id="changeOrientationButton" :disabled="model.name && orientationOfFrontDoor !== undefined ? false : true" @click="changeOrientationOfItems">Change orientation</GovButton>
 			<GovButton href="/" secondary>
 				Return to overview
 			</GovButton>
