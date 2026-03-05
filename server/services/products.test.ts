@@ -39,7 +39,7 @@ describe("Products service", () => {
 
 			ddbMock.on(QueryCommand, {
 				TableName: "products",
-				IndexName: "by-brand",
+				IndexName: "by-technology-type",
 				KeyConditionExpression: "technologyType = :technologyType",
 				ExpressionAttributeValues: { ":technologyType": technologyType },
 			}).resolves({

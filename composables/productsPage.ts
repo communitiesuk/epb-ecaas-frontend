@@ -22,7 +22,7 @@ export function useProductsPage(indexParam: string) {
 		const searchOption = routeQuery.value?.searchOption as SearchOption | undefined;
 		const productId = (routeQuery.value?.productId as string | undefined);
 		const searchTerm = (routeQuery.value?.searchTerm as string | undefined);
-		const sort = routeQuery.value?.sort as ProductSortOption | undefined;
+		const sort: ProductSortOption = routeQuery.value?.sort as ProductSortOption ?? "brandName";
 		const order = routeQuery.value?.order as ProductOrderOption | undefined;
 
 		return {

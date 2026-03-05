@@ -83,7 +83,7 @@ const getProductDetailsById = async (query: { id: number; }) => {
 const getProductsByTechnologyType = async <U extends DisplayTechnologyProducts>(query: U["input"]): Promise<U["output"]> => {
 	const result = await docClient.send(new QueryCommand({
 		TableName: "products",
-		IndexName: "by-brand",
+		IndexName: "by-technology-type",
 		KeyConditionExpression: "technologyType = :technologyType",
 		ExpressionAttributeValues: { ":technologyType": query.technologyType },
 		Limit: query.pageSize,
