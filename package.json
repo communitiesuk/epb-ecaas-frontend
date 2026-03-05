@@ -74,7 +74,7 @@
     "sass": "^1.81.0",
     "ts-extras": "^0.14.0",
     "tsx": "^4.19.2",
-    "type-fest": "^4.41.0",
+    "type-fest": "^5.4.4",
     "typescript": "^5.9.0",
     "vitest": "^3.0.9",
     "vue-tsc": "^2.2.10",
