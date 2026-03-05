@@ -24,6 +24,22 @@ describe("Change orientation", () => {
 		isTheFrontDoor: true,
 		associatedItemId: externalWall.id,
 	};
+	const wallWithOrientationZero: Partial<ExternalWallData> = {
+		id: "ex-2",
+		name: "External wall",
+		orientation: 0,
+	};
+	const doorWithOrientationZero: Partial<ExternalGlazedDoorData> = {
+		name: "External glazed door",
+		isTheFrontDoor: true,
+		orientation: 0,	
+	}; 
+	const doorWithTag2: Partial<ExternalGlazedDoorData> = {
+		name: "External glazed door",
+		isTheFrontDoor: true,
+		associatedItemId: wallWithOrientationZero.id,
+	};
+
 	const store = useEcaasStore();
 
 	afterEach(() => {
@@ -106,6 +122,45 @@ describe("Change orientation", () => {
 		expect(screen.getByTestId("currentOrientation").innerText).toBe(String(doorWithTag.orientation));
 	});
 
+	it("Treats '0' as a valid orientation for a front door", async () => {
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalGlazedDoor: {
+						data: [{ data: doorWithOrientationZero, complete: true } ],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(ChangeOrientation);
+		
+		expect(screen.getByTestId("currentOrientation").innerText).toBe("0");
+	});
+
+	it("Treats '0' as a valid orientation from a tagged item", async () => {
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalGlazedDoor: {
+						data: [{ data: doorWithTag2, complete: true } ],
+					},
+				},
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: wallWithOrientationZero }],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(ChangeOrientation);
+		
+		expect(screen.getByTestId("currentOrientation").innerText).toBe("0");
+	});
+	
 	it("Displays error message when there is no front door marked as complete", async () => {
 		store.$patch({
 			dwellingFabric: {
@@ -153,14 +208,8 @@ describe("Change orientation", () => {
 		expect(screen.getByTestId("frontDoorWithoutOrientation_error")).toBeDefined();
 	});
 
-	// windows *
-	// doors *
-	// walls * exernal
-	// roofs *
-	// PV arrays *
-	// PV shading TODO
 
-	describe("updates orienation items for: ", () => {
+	describe("updates orientation items for: ", () => {
 		
 		const updateOrientation = async (newOrientation: string) => {
 			await user.type(screen.getByTestId("newOrientation"), newOrientation);

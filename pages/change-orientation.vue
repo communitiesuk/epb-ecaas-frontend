@@ -28,7 +28,7 @@ const windows = store.dwellingFabric.dwellingSpaceWindows.data;
 
 const orientationOfFrontDoor = computed(() => {
 	if (!frontDoor.value) return;
-	if ("orientation" in frontDoor.value.data && frontDoor.value.data.orientation) {
+	if ("orientation" in frontDoor.value.data && frontDoor.value.data.orientation !== undefined) {
 		return frontDoor.value.data.orientation; 
 	} else {
 		const itemTaggedToDoor = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], frontDoor.value?.data.associatedItemId);
@@ -89,13 +89,13 @@ const changeOrientationOfItems = () => {
 					doors
 				</NuxtLink>
 			</div>
-			<div v-if="!model.name && !orientationOfFrontDoor" class="govuk-error-message" :data-testid="`noFrontDoor_error`">
+			<div v-if="!model.name && orientationOfFrontDoor === undefined" class="govuk-error-message" :data-testid="`noFrontDoor_error`">
 				<span class="govuk-visually-hidden">Error:</span>No door has been marked as the front door, or the 'door' form has not been marked as complete. To change this go to <NuxtLink :to="getUrl('dwellingSpaceDoors')">
 					doors
 				</NuxtLink>
 			</div>
 			<div
-				v-else-if="model.name && !orientationOfFrontDoor"
+				v-else-if="model.name && orientationOfFrontDoor === undefined"
 				class="govuk-error-message"
 				:data-testid="`frontDoorWithoutOrientation_error`"
 			>
@@ -114,7 +114,7 @@ const changeOrientationOfItems = () => {
 					<li>Orientation: <span data-testid="currentOrientation" class="bold">-</span></li>
 				</ul>
 			</div>
-			<ul v-if="model.name && orientationOfFrontDoor" class="govuk-list">
+			<ul v-if="model.name && orientationOfFrontDoor !== undefined" class="govuk-list">
 				<li>Door: <span data-testid="frontDoorName" class="bold">{{ model.name }}</span></li>
 				<li>Orientation: <span data-testid="currentOrientation" class="bold">{{ orientationOfFrontDoor }}</span></li>
 			</ul>
