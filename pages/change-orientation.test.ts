@@ -226,184 +226,185 @@ describe("Change orientation", () => {
 			expect(screen.getByTestId("changeOrientationButton").hasAttribute("disabled")).toBe(true);
 		});
 
-	describe("updates orientation items for: ", () => {
+		describe("updates orientation items for: ", () => {
 		
-		const updateOrientation = async (newOrientation: string) => {
-			await user.type(screen.getByTestId("newOrientation"), newOrientation);
-			await user.tab();
-			await user.click(screen.getByTestId("changeOrientationButton"));
-		};
+			const updateOrientation = async (newOrientation: string) => {
+				await user.type(screen.getByTestId("newOrientation"), newOrientation);
+				await user.tab();
+				await user.click(screen.getByTestId("changeOrientationButton"));
+			};
 		
-		let frontDoor: Partial<ExternalGlazedDoorData>; 
-		beforeEach(() => {
-			frontDoor = {
-				name: "Front door",
-				isTheFrontDoor: true,
-				orientation: 100,	        
-			}; 
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceDoors: {
-						dwellingSpaceExternalGlazedDoor: {
-							data: [{ data: frontDoor, complete: true }],
+			let frontDoor: Partial<ExternalGlazedDoorData>; 
+			beforeEach(() => {
+				frontDoor = {
+					name: "Front door",
+					isTheFrontDoor: true,
+					orientation: 100,	        
+				}; 
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceDoors: {
+							dwellingSpaceExternalGlazedDoor: {
+								data: [{ data: frontDoor, complete: true }],
 							
-						},
-					},	
-				},
-			});
-		});
-		
-		it("PV arrays", async () => {
-		
-			const pvArray: Partial<PvArrayData> = {
-				name: "PV 1",
-				orientation: 20,
-			};
-
-			const pvArray2: Partial<PvArrayData> = {
-				name: "PV 2",
-				orientation: 340,
-			};
-
-			store.$patch({
-				pvAndBatteries: {
-					pvArrays: {
-						data: [{ data: pvArray }, { data: pvArray2 }],
+							},
+						},	
 					},
-				},
+				});
 			});
-
-			await renderSuspended(ChangeOrientation);
-			await updateOrientation("130");
 		
-			const { pvArrays } = store.pvAndBatteries;
-			expect(pvArrays.data[0]?.data.orientation).toBe(50);
-			expect(pvArrays.data[1]?.data.orientation).toBe(10);
-		});
+			it("PV arrays", async () => {
+		
+				const pvArray: Partial<PvArrayData> = {
+					name: "PV 1",
+					orientation: 20,
+				};
 
-		it("doors", async () => {
+				const pvArray2: Partial<PvArrayData> = {
+					name: "PV 2",
+					orientation: 340,
+				};
 
-			const glazedDoor: Partial<ExternalGlazedDoorData> = {
-				name: "GD 2",
-				pitch: 10,
-				orientation: 5,
-			};
-
-			const unglazedDoor: Partial<ExternalUnglazedDoorData> = {
-				name: "UGD 1",
-				orientation: 350,
-			};
-
-			const internalDoor: Partial<InternalDoorData> = {
-				name: "ID 1",
-				orientation: 300,
-			};
-
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceDoors: {
-						dwellingSpaceExternalGlazedDoor: {
-							data: [{ data: frontDoor, complete: true }, { data: glazedDoor }],
-						},
-						dwellingSpaceExternalUnglazedDoor: {
-							data: [{ data: unglazedDoor }],
-						}, 
-						dwellingSpaceInternalDoor: {
-							data: [{ data: internalDoor }],
+				store.$patch({
+					pvAndBatteries: {
+						pvArrays: {
+							data: [{ data: pvArray }, { data: pvArray2 }],
 						},
 					},
-				},
+				});
+
+				await renderSuspended(ChangeOrientation);
+				await updateOrientation("130");
+		
+				const { pvArrays } = store.pvAndBatteries;
+				expect(pvArrays.data[0]?.data.orientation).toBe(50);
+				expect(pvArrays.data[1]?.data.orientation).toBe(10);
 			});
 
-			await renderSuspended(ChangeOrientation);
-			await updateOrientation("130");
+			it("doors", async () => {
 
-			const { dwellingSpaceInternalDoor, dwellingSpaceExternalUnglazedDoor, dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
-			expect(dwellingSpaceExternalGlazedDoor.data[0]?.data.orientation).toBe(130);
-			expect(dwellingSpaceExternalGlazedDoor.data[1]?.data.orientation).toBe(35);
-			expect(dwellingSpaceExternalUnglazedDoor.data[0]?.data.orientation).toBe(20);
-			expect((dwellingSpaceInternalDoor.data[0]?.data as { orientation: number }).orientation).toBe(330);
-		});
+				const glazedDoor: Partial<ExternalGlazedDoorData> = {
+					name: "GD 2",
+					pitch: 10,
+					orientation: 5,
+				};
 
-		it("walls", async () => {
+				const unglazedDoor: Partial<ExternalUnglazedDoorData> = {
+					name: "UGD 1",
+					orientation: 350,
+				};
 
-			const externalWall: Partial<ExternalWallData> = {
-				id: "8bb5eda9-3c31-44d0-801b-f130a63b9f6a",
-				name: "External wall",
-				pitch: 1,
-				orientation: 0,
-			};
+				const internalDoor: Partial<InternalDoorData> = {
+					name: "ID 1",
+					orientation: 300,
+				};
+
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceDoors: {
+							dwellingSpaceExternalGlazedDoor: {
+								data: [{ data: frontDoor, complete: true }, { data: glazedDoor }],
+							},
+							dwellingSpaceExternalUnglazedDoor: {
+								data: [{ data: unglazedDoor }],
+							}, 
+							dwellingSpaceInternalDoor: {
+								data: [{ data: internalDoor }],
+							},
+						},
+					},
+				});
+
+				await renderSuspended(ChangeOrientation);
+				await updateOrientation("130");
+
+				const { dwellingSpaceInternalDoor, dwellingSpaceExternalUnglazedDoor, dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
+				expect(dwellingSpaceExternalGlazedDoor.data[0]?.data.orientation).toBe(130);
+				expect(dwellingSpaceExternalGlazedDoor.data[1]?.data.orientation).toBe(35);
+				expect(dwellingSpaceExternalUnglazedDoor.data[0]?.data.orientation).toBe(20);
+				expect((dwellingSpaceInternalDoor.data[0]?.data as { orientation: number }).orientation).toBe(330);
+			});
+
+			it("walls", async () => {
+
+				const externalWall: Partial<ExternalWallData> = {
+					id: "8bb5eda9-3c31-44d0-801b-f130a63b9f6a",
+					name: "External wall",
+					pitch: 1,
+					orientation: 0,
+				};
 			
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWalls: {
-						dwellingSpaceExternalWall: {
-							data: [
-								{ data: externalWall },
-							],
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceWalls: {
+							dwellingSpaceExternalWall: {
+								data: [
+									{ data: externalWall },
+								],
+							},
 						},
 					},
-				},
+				});
+
+				await renderSuspended(ChangeOrientation);
+				await updateOrientation("20");
+
+				expect(store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data[0]?.data.orientation).toBe(280);
 			});
 
-			await renderSuspended(ChangeOrientation);
-			await updateOrientation("20");
-
-			expect(store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data[0]?.data.orientation).toBe(280);
-		});
-
-		it("roofs", async () => {
+			it("roofs", async () => {
 	
-			const roof: Partial<RoofData> = {
-				name: "Roof",
-				orientation: 360,
-			};
+				const roof: Partial<RoofData> = {
+					name: "Roof",
+					orientation: 360,
+				};
 			
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceRoofs: {
-							data: [{ data: roof }],
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceCeilingsAndRoofs: {
+							dwellingSpaceRoofs: {
+								data: [{ data: roof }],
+							},
 						},
 					},
-				},
+				});
+
+				await renderSuspended(ChangeOrientation);
+				await updateOrientation("10");
+
+				expect(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[0]?.data.orientation).toBe(270);
 			});
 
-			await renderSuspended(ChangeOrientation);
-			await updateOrientation("10");
+			it("windows", async () => {
 
-			expect(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[0]?.data.orientation).toBe(270);
-		});
-
-		it("windows", async () => {
-
-			const window: Partial<WindowData> = {
-				name: "window",
-				orientation: 11,
-			};
+				const window: Partial<WindowData> = {
+					name: "window",
+					orientation: 11,
+				};
 			
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWindows: {
-						data: [{ data: window }],
+				store.$patch({
+					dwellingFabric: {
+						dwellingSpaceWindows: {
+							data: [{ data: window }],
+						},
 					},
-				},
+				});
+
+				await renderSuspended(ChangeOrientation);
+				await updateOrientation("10");
+
+				expect(store.dwellingFabric.dwellingSpaceWindows.data[0]?.data.orientation).toBe(281);
 			});
+		});
 
+		it("'Return to overview' button navigates user to the homepage", async () => {
 			await renderSuspended(ChangeOrientation);
-			await updateOrientation("10");
-
-			expect(store.dwellingFabric.dwellingSpaceWindows.data[0]?.data.orientation).toBe(281);
+			const returnToOverviewButton = screen.getByRole("button", {
+				name: "Return to overview",
+			});
+			expect(returnToOverviewButton.getAttribute("href")).toBe(
+				"/",
+			);
 		});
-	});
-	it("'Return to overview' button navigates user to the homepage", async () => {
-		await renderSuspended(ChangeOrientation);
-		const returnToOverviewButton = screen.getByRole("button", {
-			name: "Return to overview",
-		});
-		expect(returnToOverviewButton.getAttribute("href")).toBe(
-			"/",
-		);
-
 	});
 });
