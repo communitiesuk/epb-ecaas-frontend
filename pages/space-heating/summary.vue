@@ -3,6 +3,10 @@ import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl, type HeatEmittingData } from "#imports";
 import type { SchemaFuelType } from "~/schema/aliases";
 
+async function fetchProduct(reference: string) {
+	const { data } = await useFetch(`/api/products/${reference}`);
+	return data.value;
+}
 
 const store = useEcaasStore();
 const title = "Space heating summary";
@@ -25,6 +29,20 @@ const warmAirHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "wa
 const instantElectricHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "instantElectricHeater");
 const electricStorageHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "electricStorageHeater");
 
+async function getProductModelNames(spaceHeatingElements: typeof heatSources | typeof heatEmitters): Promise<Record<string, string>> {
+	const modelNames: Record<string, string> = {};
+	await Promise.all(spaceHeatingElements.map(async (element) => {
+		if ("productReference" in element.data && element.data.productReference) {
+			const productData = await fetchProduct(element.data.productReference);
+			if (productData && productData.modelName) {	
+				modelNames[element.data.productReference] = productData.modelName;
+			}
+		}
+	}));
+	return modelNames;
+}
+const heatSourceModelNames = await getProductModelNames(heatSources);
+const heatEmitterModelNames = await getProductModelNames(heatEmitters);
 
 const emptyHeatSourcesSummary: SummarySection = {
 	id: "heatSourceSummary",
@@ -49,6 +67,7 @@ const boilerSummary: SummarySection = {
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
 				"Type of boiler": "typeOfBoiler" in heatSource && heatSource.typeOfBoiler ? displayCamelToSentenceCase(heatSource.typeOfBoiler) : emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
 				"Location of boiler": "locationOfBoiler" in heatSource && heatSource.locationOfBoiler ? displayCamelToSentenceCase(heatSource.locationOfBoiler) : emptyValueRendering,
 			};
 			return summary;
@@ -67,6 +86,7 @@ const heatPumpSummary: SummarySection = {
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
 				"Type of heat pump": "typeOfHeatPump" in heatSource && heatSource.typeOfHeatPump ? displayCamelToSentenceCase(heatSource.typeOfHeatPump) : emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
 			};
 			return summary;
 		}) || [],
@@ -89,6 +109,7 @@ const heatNetworkSummary: SummarySection = {
 					"Heat network product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 					"Energy supply": "energySupply" in heatSource && heatSource.energySupply !== undefined ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
 					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+					"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
 				}),
 				...(heatSource.isHeatNetworkInPcdb === false && {
 					"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply as SchemaFuelType] : emptyValueRendering,
@@ -119,6 +140,7 @@ const heatBatterySummary: SummarySection = {
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
 				"Type of heat battery": "typeOfHeatBattery" in heatSource && heatSource.typeOfHeatBattery ? displayCamelToSentenceCase(heatSource.typeOfHeatBattery) : emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
 				"Number of units": "numberOfUnits" in heatSource ? heatSource.numberOfUnits : emptyValueRendering,
 				"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
 			};
@@ -200,6 +222,7 @@ const radiatorSummary: SummarySection = {
 			"Type of heat emitter": "typeOfHeatEmitter" in radiator && radiator.typeOfHeatEmitter ? displayCamelToSentenceCase(radiator.typeOfHeatEmitter) : emptyValueRendering,
 			"Type of radiator": "typeOfRadiator" in radiator && radiator.typeOfRadiator ? displayCamelToSentenceCase(radiator.typeOfRadiator) : emptyValueRendering,
 			"Product reference": "productReference" in radiator ? radiator.productReference : emptyValueRendering,
+			"Product name": "productReference" in radiator && radiator.productReference ? heatEmitterModelNames[radiator.productReference] : emptyValueRendering,
 			"Heat source": heatSource ? heatSource.data.name : emptyValueRendering,
 			"Eco design controller class": "ecoDesignControllerClass" in radiator && radiator.ecoDesignControllerClass ? displayCamelToSentenceCase(radiator.ecoDesignControllerClass) : emptyValueRendering,
 			"Minimum outdoor temperature": "minOutdoorTemp" in radiator ? dim(radiator.minOutdoorTemp, "celsius") : emptyValueRendering,
@@ -229,6 +252,7 @@ const ufhSummary: SummarySection = {
 			Name: show(ufh.name),
 			"Type of heat emitter": "typeOfHeatEmitter" in ufh && ufh.typeOfHeatEmitter ? displayCamelToSentenceCase(ufh.typeOfHeatEmitter) : emptyValueRendering,
 			"Product reference": "productReference" in ufh ? ufh.productReference : emptyValueRendering,
+			"Product name": "productReference" in ufh && ufh.productReference ? heatEmitterModelNames[ufh.productReference] : emptyValueRendering,
 			"Heat source": heatSource ? heatSource.data.name : emptyValueRendering,
 			"Eco design controller class": "ecoDesignControllerClass" in ufh && ufh.ecoDesignControllerClass ? displayCamelToSentenceCase(ufh.ecoDesignControllerClass) : emptyValueRendering,
 			"Minimum outdoor temperature": "minOutdoorTemp" in ufh ? dim(ufh.minOutdoorTemp, "celsius") : emptyValueRendering,
@@ -257,6 +281,7 @@ const fanCoilSummary: SummarySection = {
 			Name: show(fanCoil.name),
 			"Type of heat emitter": "typeOfHeatEmitter" in fanCoil && fanCoil.typeOfHeatEmitter ? displayCamelToSentenceCase(fanCoil.typeOfHeatEmitter) : emptyValueRendering,
 			"Product reference": "productReference" in fanCoil ? fanCoil.productReference : emptyValueRendering,
+			"Product name": "productReference" in fanCoil && fanCoil.productReference ? heatEmitterModelNames[fanCoil.productReference] : emptyValueRendering,
 			"Heat source": heatSource ? heatSource.data.name : emptyValueRendering,
 			"Eco design controller class": "ecoDesignControllerClass" in fanCoil && fanCoil.ecoDesignControllerClass ? displayCamelToSentenceCase(fanCoil.ecoDesignControllerClass) : emptyValueRendering,
 			"Minimum outdoor temperature": "minOutdoorTemp" in fanCoil ? dim(fanCoil.minOutdoorTemp, "celsius") : emptyValueRendering,
@@ -300,6 +325,8 @@ const instantElectricHeaterSummary: SummarySection = {
 		return { 
 			Name: show(instantElectricHeater.name),
 			"Type of heat emitter": "typeOfHeatEmitter" in instantElectricHeater && instantElectricHeater.typeOfHeatEmitter ? displayCamelToSentenceCase(instantElectricHeater.typeOfHeatEmitter) : emptyValueRendering,
+			"Product reference": "productReference" in instantElectricHeater ? instantElectricHeater.productReference : emptyValueRendering,
+			"Product name": "productReference" in instantElectricHeater && instantElectricHeater.productReference ? heatEmitterModelNames[instantElectricHeater.productReference] : emptyValueRendering,
 			"Rated power": "ratedPower" in instantElectricHeater ? dim(instantElectricHeater.ratedPower, "kilowatt") : emptyValueRendering,
 			"Convection fraction for heating": "convectionFractionForHeating" in instantElectricHeater ? instantElectricHeater.convectionFractionForHeating : emptyValueRendering,
 			"Number of heaters": "numOfHeaters" in instantElectricHeater ? instantElectricHeater.numOfHeaters : emptyValueRendering,
@@ -316,6 +343,7 @@ const electricStorageHeaterSummary: SummarySection = {
 			Name: show(electricStorageHeater.name),
 			"Type of heat emitter": "typeOfHeatEmitter" in electricStorageHeater && electricStorageHeater.typeOfHeatEmitter ? displayCamelToSentenceCase(electricStorageHeater.typeOfHeatEmitter) : emptyValueRendering,
 			"Product reference": "productReference" in electricStorageHeater ? electricStorageHeater.productReference : emptyValueRendering,
+			"Product name": "productReference" in electricStorageHeater && electricStorageHeater.productReference ? heatEmitterModelNames[electricStorageHeater.productReference] : emptyValueRendering,
 			"Number of storage heaters": "numOfStorageHeaters" in electricStorageHeater ? electricStorageHeater.numOfStorageHeaters : emptyValueRendering,
 		};
 	}),

@@ -1,4 +1,4 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen, within } from "@testing-library/vue";
 import SpaceHeatingSummary from "./summary.vue";
 import { degrees } from "~/utils/units/angle";
@@ -16,10 +16,19 @@ const verifyDataInSection = async (
 		expect(lineResult!.querySelector("dd")?.textContent).toBe(value);
 	}
 };
+const { mockFetch } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+}));
+
+mockNuxtImport("useFetch", () => mockFetch);
+
 const store = useEcaasStore();
 beforeEach(() => {
 	store.$reset();
+	mockFetch.mockReset();
+	mockFetch.mockReturnValue({ data: ref({ modelName: "Mock product" }) });
 });
+
 
 describe("Space heating summary page", () => {
 	it("displays the correct title", async () => {
@@ -80,7 +89,7 @@ describe("Space heating summary page", () => {
 		});
 
 		it("displays the correct data for the heat pump summary", async () => {
-
+			mockFetch.mockReturnValueOnce({ data: ref({ modelName: "Mock product" }) });
 			const heatPump1: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Heat pump 1",
@@ -104,6 +113,7 @@ describe("Space heating summary page", () => {
 				"Type of heat source": "Heat pump",
 				"Type of heat pump": "Air source",
 				"Product reference": "HEAT_PUMP_SMALL",
+				"Product name": "Mock product",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -140,6 +150,7 @@ describe("Space heating summary page", () => {
 				"Type of heat source": "Heat battery",
 				"Type of heat battery": "Heat battery pcm",
 				"Product reference": "HEAT_BATTERY_SMALL",
+				"Product name": "Mock product",
 				"Number of units": "1",
 				"Energy supply": "Electricity",
 			};
@@ -181,6 +192,7 @@ describe("Space heating summary page", () => {
 				"Is the heat network in the PCDB": "Yes",
 				"Heat network product reference": "HEAT_NETWORK-LARGE",
 				"Energy supply": "Electricity",
+				"Product name": "Mock product",
 				"Will the heat network use heat interface units": "No",
 			};
 
@@ -301,7 +313,7 @@ describe("Space heating summary page", () => {
 		beforeEach(() => {
 			store.$reset();
 		});
-		
+
 		const radiator: HeatEmittingData = {
 			id: "1234",
 			name: "Radiator 1",
@@ -396,7 +408,7 @@ describe("Space heating summary page", () => {
 			minOutdoorTemp: 0,
 			maxOutdoorTemp: 20,
 		};
-		
+
 		const warmAirHeater: HeatEmittingData = {
 			id: "121314",
 			name: "Warm Air Heater 1",
@@ -447,6 +459,7 @@ describe("Space heating summary page", () => {
 			"Type of heat emitter": "Radiator",
 			"Type of radiator": "Standard",
 			"Product reference": "RAD-SMALL",
+			"Product name": "Mock product",
 			"Design flow temperature": "55 °C",
 			"Design temperature difference across emitters": "10 °C",
 			"Number of radiators": "5",
@@ -462,6 +475,7 @@ describe("Space heating summary page", () => {
 			Name: "Fan Coil 1",
 			"Type of heat emitter": "Fan coil",
 			"Product reference": "FC-SMALL",
+			"Product name": "Mock product",
 			"Design flow temperature": "50 °C",
 			"Design temperature difference across emitters": "10 °C",
 			"Is there a variable flow rate?": "Yes",
@@ -478,6 +492,7 @@ describe("Space heating summary page", () => {
 			Name: "Underfloor Heating 1",
 			"Type of heat emitter": "Underfloor heating",
 			"Product reference": "UFH-SMALL",
+			"Product name": "Mock product",
 			"Design flow temperature": "35 °C",
 			"Design temperature difference across emitters": "10 °C",
 			"Is there a variable flow rate?": "Yes",
@@ -500,6 +515,8 @@ describe("Space heating summary page", () => {
 
 		const expectedInstantElectricHeaterData = {
 			Name: "Instant Electric Heater 1",
+			"Product reference": "IEH-SMALL",
+			"Product name": "Mock product",
 			"Rated power": "2.5 kW",
 			"Convection fraction for heating": "0.9",
 			"Number of heaters": "6",
@@ -508,6 +525,7 @@ describe("Space heating summary page", () => {
 		const expectedElectricStorageHeaterData = {
 			Name: "Electric Storage Heater 1",
 			"Product reference": "ESH-SMALL",
+			"Product name": "Mock product",
 			"Number of storage heaters": "8",
 		};
 		it.each(
