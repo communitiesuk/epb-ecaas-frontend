@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
+import { getUrl, useBanner } from "#imports";
 import { getUpdatedOrientation } from "~/utils/changeOrientation";
+
 
 const title = "Change orientation of dwelling";
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const banner = useBanner();
 const store = useEcaasStore();
 
 
@@ -61,6 +63,7 @@ const changeOrientationOfItems = () => {
 			}
 			
 		}
+		banner.value = { type: "change-orientation-complete", difference, orientation: model.value.newOrientation! };
 	}
 };
 
@@ -128,10 +131,12 @@ const changeOrientationOfItems = () => {
 			validation="number | min:0 | max:360" 
 			suffix-text="°"
 		/>
-		<GovButton test-id="changeOrientationButton" @click="changeOrientationOfItems" >Change orientation</GovButton>
-		<GovButton href="/" secondary>
-			Return to overview
-		</GovButton>
+		<div class="govuk-!-margin-top-1 govuk-button-group">
+			<GovButton  href="/" test-id="changeOrientationButton" @click="changeOrientationOfItems">Change orientation</GovButton>
+			<GovButton href="/" secondary>
+				Return to overview
+			</GovButton>
+		</div>
 	</formkit>
 </template>
 
