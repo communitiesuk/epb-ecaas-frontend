@@ -24,16 +24,19 @@ describe("Change orientation", () => {
 		isTheFrontDoor: true,
 		associatedItemId: externalWall.id,
 	};
+
 	const wallWithOrientationZero: Partial<ExternalWallData> = {
 		id: "ex-2",
 		name: "External wall",
 		orientation: 0,
 	};
+
 	const doorWithOrientationZero: Partial<ExternalGlazedDoorData> = {
 		name: "External glazed door",
 		isTheFrontDoor: true,
 		orientation: 0,	
 	}; 
+	
 	const doorWithTag2: Partial<ExternalGlazedDoorData> = {
 		name: "External glazed door",
 		isTheFrontDoor: true,
@@ -395,6 +398,48 @@ describe("Change orientation", () => {
 
 				expect(store.dwellingFabric.dwellingSpaceWindows.data[0]?.data.orientation).toBe(281);
 			});
+		});
+
+		it("updates distant shading start/end angle when 'Change orientation of shading' checkbox is checked", async () => {
+		
+			const shading1: Partial<ShadingData> = {
+				name: "Cherry Tree",
+				startAngle: 10,
+				endAngle: 20,
+			};
+
+			const shading2: Partial<ShadingData> = {
+				name: "Apple Tree",
+				startAngle: 350,
+				endAngle: 355,
+			};
+
+			store.$patch({
+				dwellingDetails: {
+					shading: {
+						data: [ { data: shading1 }, { data: shading2 } ],
+					},
+				},
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: doorWithOrientationZero, complete: true }],
+							
+						},
+					},	
+				},
+			});
+
+			await renderSuspended(ChangeOrientation);
+			await user.type(screen.getByTestId("newOrientation"), "20");
+			await user.tab();
+			await user.click(screen.getByTestId("updateDistantShading_updateShading"));
+			await user.click(screen.getByTestId("changeOrientationButton"));
+			const shading = store.dwellingDetails.shading.data;
+			expect(shading[0]?.data.startAngle).toBe(30);
+			expect(shading[0]?.data.endAngle).toBe(40);
+			expect(shading[1]?.data.startAngle).toBe(10);
+			expect(shading[1]?.data.endAngle).toBe(15);
 		});
 
 		it("'Return to overview' button navigates user to the homepage", async () => {
