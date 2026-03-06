@@ -864,6 +864,7 @@ const heatPumpBase = pcdbProduct.extend({
 	typeOfHeatPump,
 	backupCtrlType: z.optional(z.string()),
 	powerMaxBackup: z.optional(z.number()),
+	backupBoiler: z.optional(z.string().trim().min(1)),
 });
 
 const boilerBase = pcdbProduct.extend({

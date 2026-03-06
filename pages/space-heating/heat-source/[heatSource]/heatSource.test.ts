@@ -243,11 +243,14 @@ describe("heatSource", () => {
 		});
 
 		describe("back up boiler", () => {
-			test("section is displayed when a heat pump with a backup boiler is selected from the PCDB", async () => {
+			beforeEach(async () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
-							data: [{ data: { ...heatPump1, backupCtrlType: "TopUp" } }],
+							data: [
+								{ data: { ...heatPump1, backupCtrlType: "TopUp" } },
+								{ data: boiler1 },
+							],
 						},
 					},
 				});
@@ -255,6 +258,16 @@ describe("heatSource", () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "0" },
+					},
+				});
+			});
+
+			test("section is displayed when a heat pump with a backup boiler is selected from the PCDB", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: { ...heatPump1, backupCtrlType: "TopUp" } }],
+						},
 					},
 				});
 
@@ -283,7 +296,7 @@ describe("heatSource", () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
-							data: [{ data: { ...heatPump1, "backupCtrlType": "TopUp" } }],
+							data: [{ data: { ...heatPump1, backupCtrlType: "TopUp" } }],
 						},
 					},
 				});
@@ -297,26 +310,28 @@ describe("heatSource", () => {
 				const addBoilerLink: HTMLAnchorElement = screen.getByRole("link", {
 					name: "Click here to add a boiler",
 				});
+
 				expect(addBoilerLink).toBeDefined();
 				expect(addBoilerLink.getAttribute("href")).toBe("/space-heating/heat-source/create");
 			});
 
 			it("displays list of existing boilers when boilers exist in store", async () => {
-				store.$patch({
-					spaceHeating: {
-						heatSource: {
-							data: [{ data: boiler1 }, { data: { ...heatPump1, "backupCtrlType": "TopUp" } }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "1" },
-					},
-				});
-
 				expect(screen.getByTestId(`backupBoiler_${boiler1.id}`)).toBeDefined();
+			});
+
+			it("saves backup boiler to heat pump when selected", async () => {
+				await user.click(screen.getByTestId(`backupBoiler_${boiler1.id}`));
+
+				const storedHeatPump = store.spaceHeating.heatSource.data[0]?.data as HeatSourceData;
+				const backupBoiler = storedHeatPump?.typeOfHeatSource === "heatPump" ? storedHeatPump.backupBoiler : null;
+
+				expect(backupBoiler).toBe(boiler1.id);
+			});
+
+			it("displays required error message when required backup boiler is not selected", async () => {
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				expect(await screen.findByTestId("backupBoiler_error")).toBeDefined();
 			});
 
 			test("boilers created in DHW are not displayed in heat pumps in space heating", async () => {
@@ -328,22 +343,18 @@ describe("heatSource", () => {
 					typeOfHeatSource: "boiler",
 					typeOfBoiler: "combiBoiler",
 				};
+
 				store.$patch({
 					domesticHotWater: {
 						heatSources: {
 							data: [{ data: dhwBoiler }],
 						},
 					},
-					spaceHeating: {
-						heatSource: {
-							data: [{ data: boiler1 }, { data: { ...heatPump1, "backupCtrlType": "TopUp" } }],
-						},
-					},
 				});
 				
 				await renderSuspended(HeatSourceForm, {
 					route: {
-						params: { "heatSource": "1" },
+						params: { "heatSource": "0" },
 					},
 				});
 

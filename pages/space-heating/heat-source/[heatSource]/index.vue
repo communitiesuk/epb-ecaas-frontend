@@ -36,6 +36,7 @@ const saveForm = (fields: HeatSourceData) => {
 					typeOfHeatSource: fields.typeOfHeatSource,
 					typeOfHeatPump: fields.typeOfHeatPump,
 					productReference: fields.productReference,
+					backupBoiler: fields.backupBoiler,
 				},
 				complete: true,
 			};
