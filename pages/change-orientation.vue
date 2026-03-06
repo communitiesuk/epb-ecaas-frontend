@@ -35,7 +35,6 @@ const frontDoorOrientation = computed(() => {
 	}
 });
 
-
 const model = ref({
 	newOrientation: undefined,
 	updateDistantShading: [],
@@ -53,6 +52,7 @@ function updateOrientations(items: EcaasForm<{ orientation?: number }>[], differ
 		}
 	}
 }
+
 function updateShadingAngles(shadingItems: EcaasFormList<ShadingData>, difference: number) {
 	for (const item of shadingItems.data) {
 		if ("startAngle" in item.data && item.data.startAngle !== undefined) {
@@ -65,9 +65,8 @@ function updateShadingAngles(shadingItems: EcaasFormList<ShadingData>, differenc
 }
 
 const changeOrientationOfItems = () => {
-	
 	const difference = getDiffInOrientation();
-	if (difference) {
+	if (difference !== undefined) {
 		const items = [roofs.data, ...doors.value, pvs.data, externalWalls.data, windows.data].flat() as EcaasForm<{ orientation?: number }>[];
 		updateOrientations(items, difference);
 		
@@ -82,7 +81,6 @@ const changeOrientationOfItems = () => {
 const hasNewOrientaton = ref(false);
 
 watch(() => model.value.newOrientation, (newVal) => {
-	
 	if (newVal === undefined) return;
 	hasNewOrientaton.value = true;
 });
@@ -91,6 +89,7 @@ function handleSubmit() {
 	changeOrientationOfItems();
 	navigateTo("/");
 }
+
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
