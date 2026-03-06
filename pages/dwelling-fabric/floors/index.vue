@@ -156,7 +156,7 @@ function hasIncompleteEntries() {
 			href="/dwelling-fabric"
 			secondary
 		>
-			Return to dwelling space
+			Return to dwelling fabric
 		</GovButton>
 		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 

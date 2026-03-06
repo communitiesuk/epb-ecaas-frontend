@@ -121,7 +121,7 @@ const hasIncompleteEntries = () =>
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceRoofs', index)" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-fabric" secondary>
-			Return to dwelling space
+			Return to dwelling fabric
 		</GovButton>
 		<CompleteElement
 			:is-complete="Object.values(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs).every(section => section.complete)"
