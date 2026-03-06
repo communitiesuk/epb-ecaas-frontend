@@ -894,7 +894,6 @@ describe("dwelling fabric mapper", () => {
 			securityRisk: false,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
-			midHeight: 1,
 			openingToFrameRatio: 0.3,
 			midHeightOpenablePart1: 1,
 			maximumOpenableArea: 1,
@@ -1009,6 +1008,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		expect(internalDoorHeatedSpaceElement).toEqual(expectedInternalDoorHeatedSpace);
+		const midHeight = externalGlazedDoor.elevationalHeight + externalGlazedDoor.height / 2;
 
 		const expectedExternalGlazedDoor: BuildingElementTransparent = {
 			type: "BuildingElementTransparent",
@@ -1016,14 +1016,14 @@ describe("dwelling fabric mapper", () => {
 			orientation360: externalWall.data.orientation,
 			height: externalGlazedDoor.height,
 			width: externalGlazedDoor.width,
-			mid_height: externalGlazedDoor.midHeight,
+			mid_height: midHeight,
 			base_height: externalGlazedDoor.elevationalHeight,
 			g_value: externalGlazedDoor.solarTransmittance,
 			frame_area_fraction: 1 - externalGlazedDoor.openingToFrameRatio,
 			max_window_open_area: externalGlazedDoor.maximumOpenableArea,
 			free_area_height: externalGlazedDoor.heightOpenableArea,
 			window_part_list: [
-				{ mid_height_air_flow_path: externalGlazedDoor.midHeight },
+				{ mid_height_air_flow_path: midHeight },
 				{ mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
 			],
 			shading: [
@@ -1115,7 +1115,6 @@ describe("dwelling fabric mapper", () => {
 			thermalResistance: 1,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
-			midHeight: 1,
 			numberOpenableParts: "1",
 			curtainsOrBlinds: true,
 			treatmentType: "blinds",
@@ -1200,7 +1199,7 @@ describe("dwelling fabric mapper", () => {
 			base_height: window.elevationalHeight,
 			thermal_resistance_construction: window.thermalResistance,
 			g_value: window.solarTransmittance,
-			mid_height: window.midHeight,
+			mid_height: window.elevationalHeight + window.height / 2,
 			frame_area_fraction: 1 - window.openingToFrameRatio,
 			security_risk: false,
 
@@ -1253,7 +1252,6 @@ describe("dwelling fabric mapper", () => {
 			thermalResistance: 1,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
-			midHeight: 1,
 			numberOpenableParts: "0",
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
@@ -1300,7 +1298,6 @@ describe("dwelling fabric mapper", () => {
 			thermalResistance: 1,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
-			midHeight: 1,
 			numberOpenableParts: "0",
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
@@ -1345,7 +1342,6 @@ describe("dwelling fabric mapper", () => {
 			thermalResistance: 1,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
-			midHeight: 1,
 			numberOpenableParts: "0",
 			openingToFrameRatio: 0.3,
 			securityRisk: false,

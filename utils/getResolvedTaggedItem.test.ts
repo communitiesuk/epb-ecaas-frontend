@@ -47,7 +47,6 @@ describe("getResolvedTaggedItem", () => {
 		thermalResistance: 1,
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
-		midHeight: 1,
 		numberOpenableParts: "0",
 		openingToFrameRatio: 0.2,
 		curtainsOrBlinds: false,

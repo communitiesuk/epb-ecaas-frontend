@@ -51,7 +51,6 @@ const saveForm = (fields: WindowData) => {
 			thermalResistance: fields.thermalResistance,
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
-			midHeight: fields.midHeight,
 			securityRisk: fields.securityRisk,
 			openingToFrameRatio: fields.openingToFrameRatio,
 		};
@@ -249,15 +248,6 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			name="solarTransmittance"
 			validation="required | number | min:0.01 | max:1"
 			data-field="Zone.BuildingElement.*.g_value" />
-		<FormKit
-			id="midHeight"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Mid height"
-			help="Enter the height from the ground to the midpoint of the window"
-			name="midHeight"
-			validation="required | number | min:0 | max:100"
-			data-field="Zone.BuildingElement.*.mid_height" />
 		<FormKit
 			id="openingToFrameRatio" 
 			type="govInputFloat"

@@ -786,7 +786,7 @@ const expectedFlatInput: FhsInputSchema = {
 					g_value: 0.5,
 					height: 3,
 					max_window_open_area: 3,
-					mid_height: 1.5,
+					mid_height: 1.7,
 					orientation360: 30,
 					pitch: 45,
 					security_risk: false,
@@ -823,7 +823,7 @@ const expectedFlatInput: FhsInputSchema = {
 					width: 1,
 					window_part_list: [
 						{
-							mid_height_air_flow_path: 1.5,
+							mid_height_air_flow_path: 1.7,
 						},
 						{
 							mid_height_air_flow_path: 3,
@@ -1834,7 +1834,6 @@ describe("FHS input mapper", () => {
 							associatedItemId: externalWallId,
 							solarTransmittance: 0.5,
 							elevationalHeight: 0.2,
-							midHeight: 1.5,
 							openingToFrameRatio: 0.7,
 							midHeightOpenablePart1: 3,
 							maximumOpenableArea: 3,
@@ -1925,7 +1924,6 @@ describe("FHS input mapper", () => {
 						securityRisk: true,
 						solarTransmittance: 0.2,
 						elevationalHeight: 1,
-						midHeight: 2,
 						numberOpenableParts: "1",
 						curtainsOrBlinds: true,
 						treatmentType: "curtains" as const,

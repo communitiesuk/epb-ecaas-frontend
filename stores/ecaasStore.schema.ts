@@ -433,7 +433,6 @@ const baseExternalGlazedDoorDataZod = named.extend({
 	securityRisk: z.boolean(),
 	solarTransmittance: z.number().min(0.01).max(1),
 	elevationalHeight: z.number().min(0).max(500),
-	midHeight: z.number().min(0).max(100),
 	openingToFrameRatio: fraction,
 	maximumOpenableArea: z.number().min(0.01).max(10000),
 	heightOpenableArea: z.number().min(0.001).max(50),
@@ -584,7 +583,6 @@ const baseWindowData = namedWithId.extend({
 	securityRisk: z.boolean(),
 	solarTransmittance: z.number().min(0.01).max(1),
 	elevationalHeight: z.number().min(0).max(500),
-	midHeight: z.number().min(0).max(100),
 	openingToFrameRatio: fraction,
 });
 

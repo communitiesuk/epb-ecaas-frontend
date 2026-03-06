@@ -41,7 +41,6 @@ const doorForState = {
 	securityRisk: false,
 	solarTransmittance: 0.1,
 	elevationalHeight: 14,
-	midHeight: 11,
 	openingToFrameRatio: 0.2,
 	heightOpenableArea: 14,
 	maximumOpenableArea: 13,
@@ -66,7 +65,6 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.click(screen.getByTestId("securityRisk_no"));
 	await user.type(screen.getByTestId("solarTransmittance"), "0.1");
 	await user.type(screen.getByTestId("elevationalHeight"), "14");
-	await user.type(screen.getByTestId("midHeight"), "11");
 	await user.click(screen.getByTestId("numberOpenableParts_1"));
 	await user.type(screen.getByTestId("midHeightOpenablePart1"), "11");
 	await user.type(screen.getByTestId("openingToFrameRatio"), "0.2");
@@ -324,12 +322,11 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("16");
 			expect((await screen.findByTestId<HTMLInputElement>("openingToFrameRatio")).value).toBe("0.2");
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
-			expect((await screen.findByTestId<HTMLInputElement>("midHeight")).value).toBe("11");
 			expect((await screen.findByTestId("numberOpenableParts_1")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("securityRisk_no")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("maximumOpenableArea")).value).toBe("13");
 			expect((await screen.findByTestId<HTMLInputElement>("midHeightOpenablePart1")).value).toBe("11");
-			//window shading
+			expect((await screen.findByTestId("hasShading")).hasAttribute("checked")).toBe(false);
 			expect((await screen.findByTestId("treatmentType_blinds")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("thermalResistivityIncrease")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittanceReduction")).value).toBe("0.1");
@@ -347,7 +344,6 @@ describe("external glazed door", () => {
 				securityRisk: false,
 				solarTransmittance: 0.1,
 				elevationalHeight: 14,
-				midHeight: 11,
 				openingToFrameRatio: 0.2,
 				heightOpenableArea: 14,
 				maximumOpenableArea: 13,
@@ -430,7 +426,12 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
 			expect((await screen.findByTestId("solarTransmittance_error"))).toBeDefined();
 			expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeight_error"))).toBeDefined();
+			expect((await screen.findByTestId("securityRisk_error"))).toBeDefined();
+			expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_error"))).toBeDefined();
+			expect((await screen.findByTestId("numberOpenableParts_error"))).toBeDefined();
+			expect((await screen.findByTestId("curtainsOrBlinds_error"))).toBeDefined();
+			expect((await screen.findByTestId("hasShading_error"))).toBeDefined();
 		});
 
 		test("error summary is displayed when an invalid form in submitted", async () => {

@@ -605,18 +605,19 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			x.associatedItemId,
 		)! : undefined;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
+		const midHeight = (x.height / 2) + x.elevationalHeight;
 
 		const glazedDoor = {
 			type: "BuildingElementTransparent",
 			pitch: extractPitch(associatedWallRoof ?? x),
 			orientation360: (associatedWallRoof ?? x).orientation!,
 			height: x.height,
-			mid_height: x.midHeight,
+			mid_height: midHeight,
 			width: x.width,
 			base_height: x.elevationalHeight,
 			g_value: x.solarTransmittance,
 			window_part_list: [
-				{ mid_height_air_flow_path: x.midHeight },
+				{ mid_height_air_flow_path: midHeight },
 				...mapWindowPartList(x),
 			],
 			frame_area_fraction: calculateFrameToOpeningRatio(x.openingToFrameRatio),
@@ -738,6 +739,8 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			orientation = associatedElement.orientation!;
 		}
 
+		const midHeight = (x.height / 2) + x.elevationalHeight;
+
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementTransparent",
@@ -748,7 +751,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				base_height: x.elevationalHeight,
 				thermal_resistance_construction: x.thermalResistance,
 				g_value: x.solarTransmittance,
-				mid_height: x.midHeight,
+				mid_height: midHeight,
 				security_risk: x.securityRisk,
 				frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
 				max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,

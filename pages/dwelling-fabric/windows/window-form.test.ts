@@ -45,7 +45,6 @@ const window1: EcaasForm<WindowData> = {
 		securityRisk: true,
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
-		midHeight: 1,
 		openingToFrameRatio: 0.8,
 		numberOpenableParts: "0",
 		curtainsOrBlinds: true,
@@ -66,7 +65,6 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.click(screen.getByTestId("securityRisk_no"));
 	await user.type(screen.getByTestId("solarTransmittance"), "0.1");
 	await user.type(screen.getByTestId("elevationalHeight"), "1");
-	await user.type(screen.getByTestId("midHeight"), "1");
 	await user.type(screen.getByTestId("openingToFrameRatio"), "0.8");
 	await user.click(screen.getByTestId("securityRisk_yes"));
 	await user.click(screen.getByTestId("numberOpenableParts_0"));
@@ -332,7 +330,6 @@ describe("window", () => {
 			expect((await screen.findByTestId("securityRisk_yes")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("1");
-			expect((await screen.findByTestId<HTMLInputElement>("midHeight")).value).toBe("1");
 			expect((await screen.findByTestId("numberOpenableParts_0")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("treatmentType_blinds")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("thermalResistivityIncrease")).value).toBe("1");
@@ -352,7 +349,6 @@ describe("window", () => {
 					securityRisk: true,
 					solarTransmittance: 0.1,
 					elevationalHeight: 1,
-					midHeight: 1,
 					openingToFrameRatio: 0.8,
 					numberOpenableParts: "0",
 					curtainsOrBlinds: true,
@@ -397,7 +393,6 @@ describe("window", () => {
 			expect((await screen.findByTestId("securityRisk_error"))).toBeDefined();
 			expect((await screen.findByTestId("solarTransmittance_error"))).toBeDefined();
 			expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeight_error"))).toBeDefined();
 			expect((await screen.findByTestId("numberOpenableParts_error"))).toBeDefined();
 			expect((screen.queryByTestId("treatmentType_error"))).toBeNull();
 			expect((screen.queryByTestId("thermalResistivityIncrease_error"))).toBeNull();
