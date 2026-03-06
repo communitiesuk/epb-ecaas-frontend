@@ -188,16 +188,38 @@ const baseGroundFloorData = named.extend({
 	psiOfWallJunction: z.number().min(0).max(2),
 	thicknessOfWalls: z.number(),
 });
-const groundFloorDataZod = z.discriminatedUnion(
-	"typeOfGroundFloor",
+const slabEdgeInsulationBase = baseGroundFloorData.extend({
+	typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_edge_insulation">("Slab_edge_insulation"),
+});
+
+const horizontalEdgeInsulation = z.object({
+	edgeInsulationType: z.tuple([z.literal("horizontal")]),
+	// TODO constraints have not been put on zodUnit yet!
+	horizontalEdgeInsulationWidth: z.union([zodUnit("length"), z.number().min(0).max(10000)]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	horizontalEdgeInsulationThermalResistance: z.number(),
+});
+
+const verticalEdgeInsulation = z.object({
+	edgeInsulationType: z.tuple([z.literal("vertical")]),
+	// TODO constraints have not been put on zodUnit yet!
+	verticalEdgeInsulationDepth: z.union([zodUnit("length"), z.number().min(0).max(10000)]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	verticalEdgeInsulationThermalResistance: z.number(),
+});
+
+const horizontalAndVerticalEdgeInsulation = z.object({
+	edgeInsulationType: z.union([z.tuple([z.literal("horizontal"), z.literal("vertical")]), z.tuple([z.literal("vertical"), z.literal("horizontal")])]),
+	// TODO constraints have not been put on zodUnit yet!
+	horizontalEdgeInsulationWidth: z.union([zodUnit("length"), z.number().min(0).max(10000)]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	horizontalEdgeInsulationThermalResistance: z.number(),
+	verticalEdgeInsulationDepth: z.union([zodUnit("length"), z.number().min(0).max(10000)]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	verticalEdgeInsulationThermalResistance: z.number(),
+});
+
+const groundFloorDataZod = z.union(
 	[
-		baseGroundFloorData.extend({
-			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_edge_insulation">("Slab_edge_insulation"),
-			edgeInsulationType: z.enum(["horizontal", "vertical"]),
-			// TODO constraints have not been put on zodUnit yet!
-			edgeInsulationWidth: z.union([zodUnit("length"), z.number().min(0).max(10000)]), // number will be deprecated, preserved for backwards compatibility with old input data files
-			edgeInsulationThermalResistance: z.number(),
-		}),
+		slabEdgeInsulationBase.extend(horizontalEdgeInsulation.shape),
+		slabEdgeInsulationBase.extend(verticalEdgeInsulation.shape),
+		slabEdgeInsulationBase.extend(horizontalAndVerticalEdgeInsulation.shape),
 		baseGroundFloorData.extend({
 			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_no_edge_insulation">("Slab_no_edge_insulation"),
 		}),

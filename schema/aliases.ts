@@ -72,6 +72,7 @@ export type SchemaLighting = FhsSchema["Zone"][string]["Lighting"];
 export type SchemaThermalBridgingLinearFhs = SchemaDefs["ThermalBridgeLinear"];
 export type SchemaThermalBridgingPoint = SchemaDefs["ThermalBridgePoint"];
 export type SchemaEdgeInsulationHorizontal = Simplify<SchemaDefs["SlabEdgeInsulation"]["edge_insulation"][number]> & { type: "horizontal" };
+export type SchemaEdgeInsulationVertical = Simplify<SchemaDefs["SlabEdgeInsulation"]["edge_insulation"][number]> & { type: "vertical" };
 export type SchemaMechanicalVentilationDuctwork = SchemaDefs["MechVentMVHR"]["ductwork"][number];
 export type SchemaVent = FhsSchema["InfiltrationVentilation"]["Vents"][string];
 export type SchemaVentilationLeaks = FhsSchema["InfiltrationVentilation"]["Leaks"];

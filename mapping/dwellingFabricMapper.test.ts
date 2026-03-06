@@ -1,4 +1,4 @@
-import type { BuildingElementGroundForSchema, BuildingElementOfType, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaEdgeInsulationHorizontal } from "~/schema/aliases";
+import type { BuildingElementGroundForSchema, BuildingElementOfType, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaEdgeInsulationHorizontal, SchemaEdgeInsulationVertical } from "~/schema/aliases";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type {
@@ -8,8 +8,7 @@ import type {
 	ExternalUnglazedDoorData,
 	PartyWallData,
 } from "~/stores/ecaasStore.schema";
-import { centimetre } from "../utils/units/length";
-import { unitValue } from "~/utils/units";
+import { asMetres, centimetre, type Length } from "~/utils/units/length";
 
 type BuildingElementOpaque = BuildingElementOfType<"BuildingElementOpaque">;
 type BuildingElementAdjacentConditionedSpace = BuildingElementOfType<"BuildingElementAdjacentConditionedSpace">;
@@ -129,13 +128,33 @@ describe("dwelling fabric mapper", () => {
 			typeOfGroundFloor: "Slab_no_edge_insulation",
 		};
 
-		const groundFloorWithEdgeInsulation: GroundFloorData = {
+		const groundFloorWithHorizontalEdgeInsulation: GroundFloorData = {
 			...groundFloor,
 			name: "Ground 2",
 			typeOfGroundFloor: "Slab_edge_insulation",
-			edgeInsulationType: "horizontal",
-			edgeInsulationWidth: unitValue(36, centimetre),
-			edgeInsulationThermalResistance: 0,
+			edgeInsulationType: ["horizontal"],
+			horizontalEdgeInsulationThermalResistance: 36,
+			horizontalEdgeInsulationWidth: unitValue(6, centimetre),
+		};
+
+		const groundFloorWithVerticalEdgeInsulation: GroundFloorData = {
+			...groundFloor,
+			name: "Ground 6",
+			typeOfGroundFloor: "Slab_edge_insulation",
+			edgeInsulationType: ["vertical"],
+			verticalEdgeInsulationThermalResistance: 36,
+			verticalEdgeInsulationDepth: unitValue(6, centimetre),
+		};
+
+		const groundFloorWithHorizontalAndVerticalEdgeInsulation: GroundFloorData = {
+			...groundFloor,
+			name: "Ground 7",
+			typeOfGroundFloor: "Slab_edge_insulation",
+			edgeInsulationType: ["horizontal", "vertical"],
+			horizontalEdgeInsulationThermalResistance: 36,
+			horizontalEdgeInsulationWidth: unitValue(6, centimetre),
+			verticalEdgeInsulationThermalResistance: 36,
+			verticalEdgeInsulationDepth: unitValue(6, centimetre),
 		};
 
 		const groundFloorWithSuspendedFloor: GroundFloorData = {
@@ -246,7 +265,9 @@ describe("dwelling fabric mapper", () => {
 						...baseForm,
 						data: [
 							{ ...baseForm, data: groundFloor },
-							{ ...baseForm, data: groundFloorWithEdgeInsulation },
+							{ ...baseForm, data: groundFloorWithHorizontalEdgeInsulation },
+							{ ...baseForm, data: groundFloorWithVerticalEdgeInsulation },
+							{ ...baseForm, data: groundFloorWithHorizontalAndVerticalEdgeInsulation },
 							{ ...baseForm, data: groundFloorWithSuspendedFloor },
 							{ ...baseForm, data: groundFloorWithHeatedBasement },
 							{ ...baseForm, data: groundFloorWithUnheatedBasement },
@@ -272,7 +293,9 @@ describe("dwelling fabric mapper", () => {
 
 		// Assert
 		const groundFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloor.name + floorSuffix]! as BuildingElementGroundForSchema;
-		const groundFloorWithEdgeInsulationElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithEdgeInsulation.name + floorSuffix]! as BuildingElementGroundForSchema;
+		const groundFloorWithHorizontalEdgeInsulationElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithHorizontalEdgeInsulation.name + floorSuffix]! as BuildingElementGroundForSchema;
+		const groundFloorWithVerticalEdgeInsulationElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithVerticalEdgeInsulation.name + floorSuffix]! as BuildingElementGroundForSchema;
+		const groundFloorWithHorizontalAndVerticalEdgeInsulationElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithHorizontalAndVerticalEdgeInsulation.name + floorSuffix]! as BuildingElementGroundForSchema;
 		const groundFloorWithSuspendedFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithSuspendedFloor.name + floorSuffix]! as BuildingElementGroundForSchema;
 		const groundFloorWithHeatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithHeatedBasement.name + floorSuffix]! as BuildingElementGroundForSchema;
 		const groundFloorWithUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithUnheatedBasement.name + floorSuffix]! as BuildingElementGroundForSchema;
@@ -300,13 +323,36 @@ describe("dwelling fabric mapper", () => {
 
 		expect(groundFloorElement).toEqual(expectedGroundFloor);
 
-		const expectedEdgeInsulation: SchemaEdgeInsulationHorizontal[] = [{
+		const expectedHorizonalEdgeInsulation: SchemaEdgeInsulationHorizontal[] = [{
 			type: "horizontal" as const,
-			edge_thermal_resistance: groundFloorWithEdgeInsulation.edgeInsulationThermalResistance,
-			width: 0.36,
+			edge_thermal_resistance: groundFloorWithHorizontalEdgeInsulation.horizontalEdgeInsulationThermalResistance,
+			width: asMetres(groundFloorWithHorizontalEdgeInsulation.horizontalEdgeInsulationWidth as Length),
 		}];
 
-		expect("edge_insulation" in groundFloorWithEdgeInsulationElement && groundFloorWithEdgeInsulationElement.edge_insulation).toEqual(expectedEdgeInsulation);
+		expect("edge_insulation" in groundFloorWithHorizontalEdgeInsulationElement && groundFloorWithHorizontalEdgeInsulationElement.edge_insulation).toEqual(expectedHorizonalEdgeInsulation);
+
+		const expectedVerticalEdgeInsulation: SchemaEdgeInsulationVertical[] = [{
+			type: "vertical" as const,
+			edge_thermal_resistance: groundFloorWithVerticalEdgeInsulation.verticalEdgeInsulationThermalResistance,
+			depth: asMetres(groundFloorWithVerticalEdgeInsulation.verticalEdgeInsulationDepth as Length),
+		}];
+
+		expect("edge_insulation" in groundFloorWithVerticalEdgeInsulationElement && groundFloorWithVerticalEdgeInsulationElement.edge_insulation).toEqual(expectedVerticalEdgeInsulation);
+
+		const expectedHorizontalAndVerticalEdgeInsulation: (SchemaEdgeInsulationHorizontal | SchemaEdgeInsulationVertical)[] = [
+			{
+				type: "horizontal" as const,
+				edge_thermal_resistance: groundFloorWithHorizontalAndVerticalEdgeInsulation.horizontalEdgeInsulationThermalResistance,
+				width: asMetres(groundFloorWithHorizontalAndVerticalEdgeInsulation.horizontalEdgeInsulationWidth as Length),
+			},
+			{
+				type: "vertical" as const,
+				edge_thermal_resistance: groundFloorWithHorizontalAndVerticalEdgeInsulation.verticalEdgeInsulationThermalResistance,
+				depth: asMetres(groundFloorWithHorizontalAndVerticalEdgeInsulation.verticalEdgeInsulationDepth as Length),
+			},
+		];
+
+		expect("edge_insulation" in groundFloorWithHorizontalAndVerticalEdgeInsulationElement && groundFloorWithHorizontalAndVerticalEdgeInsulationElement.edge_insulation).toEqual(expectedHorizontalAndVerticalEdgeInsulation);
 
 		const expectedGroundFloorSuspendedFloor: BuildingElementGroundForSchema = {
 			...expectedGroundFloor,

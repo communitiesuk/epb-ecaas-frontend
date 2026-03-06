@@ -90,34 +90,33 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 	const floorSuffix = "floor";
 
 	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: "Slab_edge_insulation" }>): SchemaEdgeInsulation {
-		let edgeInsulationWidthInMetres: number;
+		const insulation: SchemaEdgeInsulation = [];
 
-		if (typeof data.edgeInsulationWidth === "number") {
-			edgeInsulationWidthInMetres = data.edgeInsulationWidth;
-		} else {
-			edgeInsulationWidthInMetres = asMetres(data.edgeInsulationWidth);
+		if ("horizontalEdgeInsulationWidth" in data) {
+			const width = typeof data.horizontalEdgeInsulationWidth === "number"
+				? data.horizontalEdgeInsulationWidth
+				: asMetres(data.horizontalEdgeInsulationWidth);
+			insulation.push({
+				type: "horizontal",
+				width,
+				edge_thermal_resistance: data.horizontalEdgeInsulationThermalResistance,
+			});
 		}
 
-		const { edgeInsulationType } = data;
-
-		switch (edgeInsulationType) {
-			case "horizontal":
-				return [{
-					type: "horizontal" as const,
-					width: edgeInsulationWidthInMetres,
-					edge_thermal_resistance: data.edgeInsulationThermalResistance,
-				}];
-			case "vertical":
-				return [{
-					type: "vertical" as const,
-					depth: edgeInsulationWidthInMetres,
-					edge_thermal_resistance: data.edgeInsulationThermalResistance,
-				}];
-			default:
-				edgeInsulationType satisfies never;
-				throw new Error(`Unknown edge insulation type '${edgeInsulationType}' encountered`);
+		if ("verticalEdgeInsulationDepth" in data) {
+			const depth = typeof data.verticalEdgeInsulationDepth === "number"
+				? data.verticalEdgeInsulationDepth
+				: asMetres(data.verticalEdgeInsulationDepth);
+			insulation.push({
+				type: "vertical",
+				depth,
+				edge_thermal_resistance: data.verticalEdgeInsulationThermalResistance,
+			});
 		}
+
+		return insulation;
 	}
+
 
 	const groundFloorData: { [key: string]: BuildingElementGroundForSchema }[] = dwellingSpaceGroundFloor.map(x => {
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
