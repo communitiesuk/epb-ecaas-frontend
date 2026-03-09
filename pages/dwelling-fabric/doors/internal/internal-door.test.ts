@@ -296,16 +296,21 @@ describe("internal door", () => {
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
 
-		test("does not display the 'Is this the front door?' element if pitch of tagged item 0 or 180", async () => {
+		const internalWallPitch0: Partial<InternalWallData> = {
+			id: "e36223a9-420f-422f-ad3f-ccfcec1455c7",
+			name: "Internal 1",
+			pitchOption: "custom",
+			pitch: 0,
+		};
+		const internalWallPitch180: Partial<InternalWallData> = {
+			id: "e36223a9-420f-422f-ad3f-ccfcec1455c7",
+			name: "Internal 1",
+			pitchOption: "custom",
+			pitch: 180,
+		};
+
+		it.each([[0, internalWallPitch0], [180, internalWallPitch180]])("does not display the 'Is this the front door?' element if pitch of tagged item is %s", async (pitch, internalWall) => {
 			
-
-			const internalWall: Partial<InternalWallData> = {
-				id: "e36223a9-420f-422f-ad3f-ccfcec1455c7",
-				name: "Internal 1",
-				pitchOption: "custom",
-				pitch: 0,
-			};
-
 			const internalDoor: Partial<InternalDoorData> = {
 				typeOfInternalDoor: "heatedSpace",
 				name: "Internal 1",
@@ -339,7 +344,6 @@ describe("internal door", () => {
 			});
 				
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
-				
 		});
 
 		it("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {

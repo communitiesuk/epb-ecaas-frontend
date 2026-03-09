@@ -545,6 +545,51 @@ describe("external unglazed door", () => {
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
 
+		const externalWallPitch0: Partial<ExternalWallData> = {
+			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+			name: "External wall",
+			pitchOption: "custom",
+			pitch: 0,
+		};
+									
+		const externalWallPitch180: Partial<ExternalWallData> = {
+			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+			name: "External wall",
+			pitchOption: "custom",
+			pitch: 180,
+		};
+		
+		it.each([[0, externalWallPitch0], [180, externalWallPitch180]])("does not display the 'Is this the front door?' element if pitch of tagged item is %s", async (pitch, externalWall) => {
+					
+			const door: Partial<ExternalUnglazedDoorData> = {
+				name: "External glazed door 1",
+				associatedItemId: externalWall.id,
+			};
+		
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: externalWall }],
+						},
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalUnglazedDoor: {
+							data: [{ data: door }],
+						},
+					}, 
+				},
+			});
+		
+			await renderSuspended(ExternalUnglazedDoor, {
+				route: {
+					params: { door: "0" },
+				},
+			});
+						
+			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
+		});
+
 		test("does not display the 'Is this the front door?' element if pitch is 0 or 180 because orientation is not asked for", async () => {
 
 			await renderSuspended(ExternalUnglazedDoor, {

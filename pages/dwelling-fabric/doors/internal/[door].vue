@@ -50,17 +50,14 @@ function canBeFrontDoor(node: FormKitNode) {
 	} return true;
 }
 
-let tagHasValidPitch: boolean; 
+const tagHasValidPitch = computed(() => {
+	const taggedItem = store.getTaggedItem(
+		[dwellingSpaceInternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall, dwellingSpaceCeilings],
+		model.value?.associatedItemId,
+	);
 
-watch(() => model.value?.associatedItemId, (newId) => {
-
-	const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall, dwellingSpaceCeilings], newId);
-	if (!taggedItem?.pitch || taggedItem?.pitch === 0 || taggedItem?.pitch === 180) {
-		tagHasValidPitch = false;
-	};
-	tagHasValidPitch = true;
+	return taggedItem?.pitch !== 0 && taggedItem?.pitch !== 180;
 });
-
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 

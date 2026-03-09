@@ -539,6 +539,7 @@ describe("external glazed door", () => {
 				name: "Front door",
 				isTheFrontDoor: true,
 			};
+			
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -595,13 +596,77 @@ describe("external glazed door", () => {
 				},
 			});
 
-
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { externalGlazed: "create" },
 				},
 			});
 			await user.click(screen.getByTestId(`associatedItemId_${roof.data.id}`));
+			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
+		});
+
+		
+		const externalWallPitch0: Partial<ExternalWallData> = {
+			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+			name: "External wall",
+			pitchOption: "custom",
+			pitch: 0,
+		};
+							
+		const externalWallPitch180: Partial<ExternalWallData> = {
+			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+			name: "External wall",
+			pitchOption: "custom",
+			pitch: 180,
+		};
+
+		it.each([[0, externalWallPitch0], [180, externalWallPitch180]])("does not display the 'Is this the front door?' element if pitch of tagged item is %s", async (pitch, externalWall) => {
+			
+			const door: Partial<ExternalGlazedDoorData> = {
+				name: "External glazed door 1",
+				associatedItemId: externalWall.id,
+			};
+
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: externalWall }],
+						},
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: door }],
+						},
+					}, 
+				},
+			});
+
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { door: "0" },
+				},
+			});
+				
+			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
+		});
+
+		test("does not display the 'Is this the front door?' element if pitch is 0 or 180 because orientation is not asked for", async () => {
+		
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+		
+			await user.click(screen.getByTestId("pitchOption_custom"));
+			await user.type(screen.getByTestId("pitch"), "0");
+			await user.tab();
+			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
+		
+			await user.clear(screen.getByTestId("pitch"));
+			await user.type(screen.getByTestId("pitch"), "180");
+			await user.tab();
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
 	});

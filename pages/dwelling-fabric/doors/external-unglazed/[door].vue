@@ -73,7 +73,16 @@ function canBeFrontDoor(node: FormKitNode) {
 	} return true;
 }
 
-const pitchOptionsWithoutOrientation = [0, 180];
+
+const tagHasValidPitch = computed(() => {
+	const taggedItem = store.getTaggedItem(
+		[dwellingSpaceExternalWall, dwellingSpaceRoofs],
+		model.value?.associatedItemId,
+	);
+
+	return taggedItem?.pitch !== 0 && taggedItem?.pitch !== 180;
+});
+
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
@@ -172,7 +181,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
-			v-if="(!model?.associatedItemId || model.associatedItemId === 'none' || !isFlatRoofItem(model.associatedItemId)) && !pitchOptionsWithoutOrientation.includes(model?.pitch!)"
+			v-if="tagHasValidPitch &&
+				(!isFlatRoofItem(model?.associatedItemId!) ||
+					!model?.associatedItemId ||
+					model.associatedItemId === 'none') && (model?.pitch !== 0 && model?.pitch !== 180)"
 			id="isTheFrontDoor"
 			type="govBoolean"
 			label="Is this the front door?"

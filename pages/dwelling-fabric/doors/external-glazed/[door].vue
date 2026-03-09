@@ -11,6 +11,8 @@ const externalGlazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingS
 const index = getStoreIndex(externalGlazedDoorData);
 const doorData = useItemToEdit("door", externalGlazedDoorData);
 const model = ref(doorData?.data);
+const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 const shading = model?.value && "shading" in model.value ? model.value.shading : [];
 
@@ -119,9 +121,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 	navigateTo("/dwelling-fabric/doors");
 };
 
-const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-
 const tagOptions = [
 	...dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
 	...dwellingSpaceRoofs.data.map(x => [x.data.id, x.data.name] as [string, string]),
@@ -169,6 +168,17 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 		(door.data as Record<string, unknown>).shading = items;
 	});
 };
+
+const tagHasValidPitch = computed(() => {
+	const taggedItem = store.getTaggedItem(
+		[dwellingSpaceExternalWall, dwellingSpaceRoofs],
+		model.value?.associatedItemId,
+	);
+
+	return taggedItem?.pitch !== 0 && taggedItem?.pitch !== 180;
+});
+
+
 </script>
 
 <template>
@@ -370,7 +380,10 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			</template>
 		</template>
 		<FormKit
-			v-if="!model?.associatedItemId || model.associatedItemId === 'none' || !isFlatRoofItem(model.associatedItemId)"
+			v-if="tagHasValidPitch &&
+				(!isFlatRoofItem(model?.associatedItemId!) ||
+					!model?.associatedItemId ||
+					model.associatedItemId === 'none') && (model?.pitch !== 0 && model?.pitch !== 180)"
 			id="isTheFrontDoor"
 			type="govBoolean"
 			label="Is this the front door?"
