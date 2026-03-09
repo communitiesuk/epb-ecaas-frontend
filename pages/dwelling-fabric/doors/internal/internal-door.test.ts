@@ -245,7 +245,7 @@ describe("internal door", () => {
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/doors");
 	});
 
-	describe("Handing internal door as a front door", () => {
+	describe("Handling internal door as a front door", () => {
 
 		beforeEach(() => {
 			store.$reset();
@@ -267,6 +267,7 @@ describe("internal door", () => {
 						data: stateWithFlat,
 					},
 				},
+				
 			});
 			await renderSuspended(InternalDoor, {
 				route: {
@@ -295,12 +296,67 @@ describe("internal door", () => {
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
 
+		test("does not display the 'Is this the front door?' element if pitch of tagged item 0 or 180", async () => {
+			
+
+			const internalWall: Partial<InternalWallData> = {
+				id: "e36223a9-420f-422f-ad3f-ccfcec1455c7",
+				name: "Internal 1",
+				pitchOption: "custom",
+				pitch: 0,
+			};
+
+			const internalDoor: Partial<InternalDoorData> = {
+				typeOfInternalDoor: "heatedSpace",
+				name: "Internal 1",
+				associatedItemId: internalWall.id,
+			};
+
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: stateWithFlat,
+					},
+				},
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceInternalWall: {
+							data: [{ data: internalWall }],
+						},
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceInternalDoor: {
+							data: [{ data: internalDoor }],
+						},
+					}, 
+				},
+			});
+
+			await renderSuspended(InternalDoor, {
+				route: {
+					params: { door: "0" },
+				},
+			});
+				
+			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
+				
+		});
 
 		it("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
+			
+			const internalWall: Partial<InternalWallData> = {
+				id: "06cce939-0899-42cc-aa46-0d47c11a6ede",
+				name: "Internal 1",
+				pitchOption: "90",
+				pitch: 90,
+			};
+
 			const frontDoor: Partial<ExternalGlazedDoorData> = {
 				name: "Front door",
 				isTheFrontDoor: true,
+				associatedItemId: internalWall.id,
 			};
+
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -310,7 +366,12 @@ describe("internal door", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: {
-							data: [{ data: frontDoor }],
+							data: [{ data: frontDoor, complete: true }],
+						},
+					},
+					dwellingSpaceWalls: {
+						dwellingSpaceInternalWall: {
+							data: [{ data: internalWall }],
 						},
 					},
 				},
@@ -323,6 +384,9 @@ describe("internal door", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+			await user.click(
+				screen.getByTestId(`associatedItemId_${internalWall.id}`),
+			);
 			await user.click(screen.getByTestId(`isTheFrontDoor_yes`));
 			await user.tab();
 			await (user.click(screen.getByTestId("saveAndComplete")));

@@ -9,6 +9,10 @@ const internalDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceIn
 const index = getStoreIndex(internalDoorData);
 const doorData = useItemToEdit("door", internalDoorData);
 const model = ref(doorData?.data);
+const { dwellingSpaceInternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceWallToUnheatedSpace } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpacePartyWall } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
 
@@ -45,6 +49,17 @@ function canBeFrontDoor(node: FormKitNode) {
 		}
 	} return true;
 }
+
+let tagHasValidPitch: boolean; 
+
+watch(() => model.value?.associatedItemId, (newId) => {
+
+	const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall, dwellingSpaceCeilings], newId);
+	if (!taggedItem?.pitch || taggedItem?.pitch === 0 || taggedItem?.pitch === 180) {
+		tagHasValidPitch = false;
+	};
+	tagHasValidPitch = true;
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -137,7 +152,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<FormKit
-			v-if="model?.typeOfInternalDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat'"
+			v-if="model?.typeOfInternalDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat' && (tagHasValidPitch || !model?.associatedItemId)"
 			id="isTheFrontDoor"
 			type="govBoolean"
 			label="Is this the front door?"
@@ -149,7 +164,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<FieldsOrientation
-			v-if="model?.isTheFrontDoor"
+			v-if="model?.isTheFrontDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat' && model.isTheFrontDoor"
 			id="orientation"
 			name="orientation"
 			data-field="Zone.BuildingElement.*.orientation360"
