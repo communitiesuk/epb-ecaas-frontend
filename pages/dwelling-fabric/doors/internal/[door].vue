@@ -49,10 +49,16 @@ function canBeFrontDoor(node: FormKitNode) {
 		}
 	} return true;
 }
+const taggedWithCeiling = computed(() => {
+	return store.getTaggedItem(
+		[dwellingSpaceCeilings],
+		model.value?.associatedItemId,
+	) ? true : false;
+});
 
 const tagHasValidPitch = computed(() => {
 	const taggedItem = store.getTaggedItem(
-		[dwellingSpaceInternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall, dwellingSpaceCeilings],
+		[dwellingSpaceInternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall],
 		model.value?.associatedItemId,
 	);
 
@@ -149,7 +155,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<FormKit
-			v-if="model?.typeOfInternalDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat' && (tagHasValidPitch || !model?.associatedItemId)"
+			v-if="model?.typeOfInternalDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat' && (taggedWithCeiling === false && tagHasValidPitch || !model?.associatedItemId)"
 			id="isTheFrontDoor"
 			type="govBoolean"
 			label="Is this the front door?"

@@ -296,6 +296,49 @@ describe("internal door", () => {
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
 
+		it("does not display the 'Is this the front door?' element if tagged item is a ceiling", async () => {
+
+			const ceiling: Partial<CeilingData> = {
+				id: "199342c5-07c5-4268-b66b-f85dfc5de58f",
+				type: "heatedSpace",
+				name: "Ceiling 1",
+			};
+
+			const internalDoor: Partial<InternalDoorData> = {
+				typeOfInternalDoor: "heatedSpace",
+				name: "Internal 1",
+				associatedItemId: ceiling.id,
+			};
+
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: stateWithFlat,
+					},
+				},
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceCeilings: {
+							data: [{ data: ceiling }],
+						},
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceInternalDoor: {
+							data: [{ data: internalDoor }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(InternalDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+
+			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
+		});
+		
 		const internalWallPitch0: Partial<InternalWallData> = {
 			id: "e36223a9-420f-422f-ad3f-ccfcec1455c7",
 			name: "Internal 1",
