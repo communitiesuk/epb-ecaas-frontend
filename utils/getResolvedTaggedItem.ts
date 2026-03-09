@@ -38,7 +38,7 @@ export const getResolvedTopLevelTaggedItem = (
 ): AssociatedItemValues | undefined => {
 	const items: AssociatedItemValues[][] = [];
 	const sectionsWithoutNestedTaggedItems = sections?.filter(
-		(s) => s !== undefined && s.some((x) => !("taggedItem" in x)),
+		(s) => s !== undefined && s.some((x) => !("taggedItem" in x) || x.taggedItem === "none"),
 	);
 
 	for (const section of sectionsWithoutNestedTaggedItems) {

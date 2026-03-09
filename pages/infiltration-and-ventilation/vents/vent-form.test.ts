@@ -175,8 +175,16 @@ describe("vent", () => {
 		expect(data[0]?.data.name).toBe("Vent");
 	});
 
-	test("displays a link to the windows and walls page", async () => {
-		store.$reset();
+	test("renders pitch and orientation questions when no associated items added", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [],
+					},
+				},
+			},
+		});
 
 		await renderSuspended(Vent, {
 			route: {
@@ -184,20 +192,45 @@ describe("vent", () => {
 			},
 		});
 
-		const addWallsLink: HTMLAnchorElement = screen.getByRole("link", {
-			name: "Click here to add walls",
+		expect(screen.getByTestId("pitch")).toBeDefined();
+		expect(screen.getByTestId("orientation")).toBeDefined();
+	});
+
+	test("renders pitch and orientation questions when selected associated item is 'None of the above'", async () => {
+		await renderSuspended(Vent, {
+			route: {
+				params: { vent: "create" },
+			},
 		});
 
-		const addWindowsLink: HTMLAnchorElement = screen.getByRole("link", {
-			name: "Click here to add windows",
+		await user.click(screen.getByTestId("associatedItemId_na"));
+
+		expect(screen.getByTestId("pitch")).toBeDefined();
+		expect(screen.getByTestId("orientation")).toBeDefined();
+	});
+
+	test("does not render pitch and orientation questions when no associated item is selected", async () => {
+		await renderSuspended(Vent, {
+			route: {
+				params: { vent: "create" },
+			},
 		});
 
-		expect(new URL(addWallsLink.href).pathname).toBe(
-			getUrl("dwellingSpaceWalls"),
-		);
+		expect(screen.queryByTestId("pitch")).toBeNull();
+		expect(screen.queryByTestId("orientation")).toBeNull();
+	});
 
-		expect(new URL(addWindowsLink.href).pathname).toBe(
-			getUrl("dwellingSpaceWindows"),
-		);
+	test("does not render pitch and orientation questions when associated item is selected", async () => {
+		await renderSuspended(Vent, {
+			route: {
+				params: { vent: "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
+		await user.tab();
+
+		expect(screen.queryByTestId("pitch")).toBeNull();
+		expect(screen.queryByTestId("orientation")).toBeNull();
 	});
 });

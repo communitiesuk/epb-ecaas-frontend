@@ -36,11 +36,3 @@ const options = [
 			:validation-messages="validationMessages"/>
 	</ClientOnly>
 </template>
-
-<style scoped lang="scss">
-.gov-radios-add-links {
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-}
-</style>

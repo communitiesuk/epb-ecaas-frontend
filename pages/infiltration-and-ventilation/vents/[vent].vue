@@ -22,6 +22,8 @@ const saveForm = (fields: VentData & Record<string, string>) => {
 				effectiveVentilationArea: fields.effectiveVentilationArea,
 				openingRatio: 1,
 				midHeightOfZone: fields.midHeightOfZone,
+				pitch: fields.pitch,
+				orientation: fields.orientation,
 			},
 			complete: true,
 		};
@@ -37,10 +39,26 @@ autoSaveElementForm<VentData>({
 	storeData: store.infiltrationAndVentilation.vents,
 	defaultName: "Vent",
 	onPatch: (state, newData, index) => {
-		state.infiltrationAndVentilation.vents.data[index] = newData;
+		state.infiltrationAndVentilation.vents.data[index] = {
+			...newData,
+			data: {
+				...newData.data,
+				associatedItemId: newData.data.associatedItemId ?? "na",
+			},
+		};
 		state.infiltrationAndVentilation.vents.complete = false;
 	},
 });
+
+const { dwellingSpaceWindows, dwellingSpaceWalls } = store.dwellingFabric;
+
+const associatedWallWindowOptions = [
+	dwellingSpaceWindows.data.map(x => [x.data.id, x.data.name] as [string, string]),
+	dwellingSpaceWalls.dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
+]
+	.flat()
+	.filter(x => x[0] != undefined)
+	.concat([["na", "None of the above"]]);
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -72,11 +90,20 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
 		/>
-		<FieldsAssociatedWallWindow
+		<FormKit
+			v-if="associatedWallWindowOptions.length > 1"
 			id="associatedItemId"
-			name="associatedItemId"
+			type="govRadios"
+			:options="new Map(associatedWallWindowOptions)"
 			label="Associated wall or window"
-			help="Select the wall or window that this vent is in. It should have the same orientation and pitch as the vent." />
+			help="Select the wall or window that this vent is in. It should have the same orientation and pitch as the vent."
+			name="associatedItemId"
+			validation="required"
+		/>
+		<template v-if="associatedWallWindowOptions.length === 1 || model?.associatedItemId === 'na'">
+			<FieldsPitch label="Pitch of vent" />
+			<FieldsOrientation />
+		</template>
 		<FormKit
 			id="effectiveVentilationArea"
 			type="govInputWithSuffix"

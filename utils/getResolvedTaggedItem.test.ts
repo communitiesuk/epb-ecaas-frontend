@@ -58,7 +58,7 @@ describe("getResolvedTaggedItem", () => {
 	const windows = [window];
 
 	test("returns the correct values for a directly tagged top-level item", () => {
-		const idOfTaggedWall = vent1.associatedItemId;
+		const idOfTaggedWall = vent1.associatedItemId!;
 		const actual = getResolvedTaggedItem([walls], idOfTaggedWall);
 
 		const expected = {
@@ -70,7 +70,7 @@ describe("getResolvedTaggedItem", () => {
 	});
 
 	test("returns the correct values for a directly tagged top-level item even when multiple tagged and nested items exist", () => {
-		const idOfTaggedWall = vent2.associatedItemId;
+		const idOfTaggedWall = vent2.associatedItemId!;
 
 		const actual = getResolvedTaggedItem([walls, windows], idOfTaggedWall);
 		const expected = {
@@ -81,8 +81,26 @@ describe("getResolvedTaggedItem", () => {
 		expect(actual).toEqual(expected);
 	});
 
+	test("returns the correct values for a directly tagged top-level item when nested tagged item is set to 'none'", () => {
+		const untaggedWindow: WindowData = {
+			...window,
+			taggedItem: "none",
+			pitch: 45,
+			orientation: 180,
+		};
+
+		const actual = getResolvedTaggedItem([[untaggedWindow]], untaggedWindow.id);
+
+		const expected = {
+			id: untaggedWindow.id,
+			orientation: untaggedWindow.orientation,
+			pitch: untaggedWindow.pitch,
+		};
+		expect(actual).toEqual(expected);
+	});
+
 	test("resolves a nested item that references a top-level tagged item", () => {
-		const idOfTaggedWall = vent1.associatedItemId;
+		const idOfTaggedWall = vent1.associatedItemId!;
 		const actual = getResolvedTaggedItem([walls, windows], idOfTaggedWall);
 
 		const expected = {

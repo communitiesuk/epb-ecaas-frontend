@@ -219,6 +219,41 @@ describe("Infiltration and ventilation summary", () => {
 		}
 	});
 
+	it("should display the correct data for the vents section when no associated wall is selected", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					data: [{
+						data: {
+							...ventData,
+							associatedItemId: undefined,
+							pitch: 90,
+							orientation: 0,
+						},
+					}],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			Name: "Vent 1",
+			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
+			"Mid height of zone": `1 ${metre.suffix}`,
+			Orientation: `0 ${degrees.suffix}`,
+			Pitch: `90 ${degrees.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = await screen.findByTestId(
+				`summary-vents-${hyphenate(key)}`,
+			);
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
 	it("displays the correct data for the vents section when tagged with an item which is tagged with another item", async () => {
 		const externalWall: Partial<ExternalWallData> = {
 			id: "0b77e247-53c5-42b8-9dbd-83cbfc8ccccc",

@@ -14,7 +14,7 @@ export const extractSectionItems = <T extends Record<string, unknown>>(
 
 export const getTopLevelTaggedItem = <T extends Record<string, unknown>>(sections: EcaasFormList<T>[], id: string | undefined) :AssociatedItemValues | undefined => {
 	const items: AssociatedItemValues[][] = [];
-	const sectionsWithoutNestedTaggedItems = sections.filter(s => s.data !== undefined && s.data.some(x => !("taggedItem" in x.data)));
+	const sectionsWithoutNestedTaggedItems = sections.filter(s => s.data !== undefined && s.data.some(x => !("taggedItem" in x.data) || x.data.taggedItem === "none"));
   
 	for (const section of sectionsWithoutNestedTaggedItems) {
 		items.push(extractSectionItems(section));

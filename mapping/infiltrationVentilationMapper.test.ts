@@ -329,65 +329,24 @@ describe("infiltration ventilation mapper", () => {
 		expect(vent?.pitch).toBe(45);
 	});
 
-	it("maps vents to FHS input request", async () => {
+	it("maps vents to FHS input request when associated item is not selected", () => {
 		const ventName = "Acme";
 
 		// Arrange
-		const externalWallId = "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421";
-		const externalWall: EcaasForm<ExternalWallData>[] = [
-			{
-				...baseForm,
-				data: {
-					id: externalWallId,
-					name: "External wall 1",
-					pitchOption: "custom",
-					pitch: 45,
-					orientation: 180,
-					length: 20,
-					height: 0.5,
-					elevationalHeight: 20,
-					surfaceArea: 10,
-					thermalResistance: 1,
-					colour: "Intermediate",
-					arealHeatCapacity: "Very light",
-					massDistributionClass: "I",
-				},
-			},
-		];
-
-		const window: WindowData = {
-			id: "test-id-1",
-			name: "Window 1",
-			taggedItem: externalWallId,
-			height: 1,
-			width: 1,
-			thermalResistance: 1,
-			solarTransmittance: 0.1,
-			elevationalHeight: 1,
-			numberOpenableParts: "1",
-			curtainsOrBlinds: true,
-			treatmentType: "blinds",
-			thermalResistivityIncrease: 1,
-			solarTransmittanceReduction: 0.1,
-			midHeightOpenablePart1: 1,
-			openingToFrameRatio: 0.3,
-			maximumOpenableArea: 1,
-			securityRisk: false,
-			hasShading: false,
-		};
-
 		const ventData: EcaasForm<VentData>[] = [
 			{
 				...baseForm,
 				data: {
 					name: ventName,
-					associatedItemId: window.id,
 					effectiveVentilationArea: 100,
 					openingRatio: 0.6,
 					midHeightOfZone: 1.5,
+					pitch: 45,
+					orientation: 180,
 				},
 			},
 		];
+
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
@@ -396,12 +355,56 @@ describe("infiltration ventilation mapper", () => {
 				},
 			},
 			dwellingFabric: {
-				dwellingSpaceWalls: {
-					dwellingSpaceExternalWall: {
-						...baseForm,
-						data: externalWall,
-					},
+				dwellingSpaceWindows: {
+					data: [
+						{
+							data: window,
+							complete: true,
+						},
+					],
+					complete: true,
 				},
+			},
+		});
+
+		// Act
+		const fhsInputData = mapVentsData(resolveState(store.$state));
+
+		// Assert
+		const vent = fhsInputData[ventName];
+		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.mid_height_air_flow_path).toBe(1.5);
+		expect(vent?.orientation360).toBe(180);
+		expect(vent?.pitch).toBe(45);
+	});
+
+	it("maps vents to FHS input request when associated item is 'None of the above'", async () => {
+		const ventName = "Acme";
+
+		// Arrange
+		const ventData: EcaasForm<VentData>[] = [
+			{
+				...baseForm,
+				data: {
+					name: ventName,
+					associatedItemId: "na",
+					effectiveVentilationArea: 100,
+					openingRatio: 0.6,
+					midHeightOfZone: 1.5,
+					pitch: 45,
+					orientation: 180,
+				},
+			},
+		];
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					...baseForm,
+					data: ventData,
+				},
+			},
+			dwellingFabric: {
 				dwellingSpaceWindows: {
 					data: [
 						{
