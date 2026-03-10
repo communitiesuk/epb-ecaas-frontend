@@ -52,6 +52,22 @@ autoSaveElementForm({
 	},
 });
 
+watch(() => model.value?.pitch, (newPitch, initialPitch) => {
+	if (initialPitch === undefined) return; 
+
+	if ([0, 180].includes(newPitch!)) {
+		const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+		for (const door of dwellingSpaceInternalDoor.data) {
+			if (door.data.associatedItemId === wallToUnheatedSpaceData[index]?.data.id)
+				door.complete = false;
+			door.data.isTheFrontDoor = undefined;
+			if ("orientation" in door.data) {
+				door.data.orientation = undefined;
+			}
+		}
+	}
+});
+
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 

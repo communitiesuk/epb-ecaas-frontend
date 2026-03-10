@@ -127,6 +127,54 @@ describe("wall to unheated space", () => {
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
+	it.each(["0", "180"])("if an internal wall is tagged to a front door and its pitch is updated to %s the door is updated to a regular door that is not complete", async (pitch) => {
+									
+		const unheatedSpaceWall: Partial<WallsToUnheatedSpaceData> = {
+			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+			name: "wall",
+			pitchOption: "custom",
+			pitch: 10,
+		};
+		
+		const internalDoor: Partial<InternalDoorData> = {
+			name: "Internal 1",
+			associatedItemId: unheatedSpaceWall.id,
+			isTheFrontDoor: true,
+			orientation: 30,
+		};
+		
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceWallToUnheatedSpace: {
+						data: [{ data: unheatedSpaceWall }],
+					},
+				},
+				dwellingSpaceDoors: {
+					dwellingSpaceInternalDoor: {
+						data: [{ data: internalDoor, complete: true }],
+					},
+				}, 
+			},
+		});
+						
+		await renderSuspended(WallToUnheatedSpace, {
+			route: {
+				params: { wall: "0" },
+			},
+		});
+										
+		await user.click(screen.getByTestId("pitchOption_custom"));
+		await user.clear(screen.getByTestId("pitch"));
+		await user.type(screen.getByTestId("pitch"), pitch);
+		await user.tab();
+		const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+			
+		expect(dwellingSpaceInternalDoor.data[0]?.complete).toBeFalsy();
+		expect(dwellingSpaceInternalDoor.data[0]?.data.isTheFrontDoor).toBeUndefined();
+		expect((dwellingSpaceInternalDoor.data[0]?.data as { orientation: number }).orientation).toBeUndefined();
+	});
+
 	test("updated form data is automatically saved to store", async () => {
 		store.$patch({
 			dwellingFabric: {

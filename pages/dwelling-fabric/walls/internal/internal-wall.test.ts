@@ -142,6 +142,54 @@ describe("internal wall", () => {
 		expect(dwellingSpaceInternalWall?.data[0]?.data.thermalResistance).toEqual(0.5);
 	});
 
+	it.each(["0", "180"])("if an internal wall is tagged to a front door and its pitch is updated to %s the door is updated to a regular door that is not complete", async (pitch) => {
+							
+		const internalWall: Partial<InternalWallData> = {
+			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+			name: "Internal 1",
+			pitchOption: "custom",
+			pitch: 10,
+		};
+
+		const internalDoor: Partial<InternalDoorData> = {
+			name: "Internal 1",
+			associatedItemId: internalWall.id,
+			isTheFrontDoor: true,
+			orientation: 30,
+		};
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceInternalWall: {
+						data: [{ data: internalWall }],
+					},
+				},
+				dwellingSpaceDoors: {
+					dwellingSpaceInternalDoor: {
+						data: [{ data: internalDoor, complete: true }],
+					},
+				}, 
+			},
+		});
+				
+		await renderSuspended(InternalWall, {
+			route: {
+				params: { wall: "0" },
+			},
+		});
+								
+		await user.click(screen.getByTestId("pitchOption_custom"));
+		await user.clear(screen.getByTestId("pitch"));
+		await user.type(screen.getByTestId("pitch"), pitch);
+		await user.tab();
+		const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+	
+		expect(dwellingSpaceInternalDoor.data[0]?.complete).toBeFalsy();
+		expect(dwellingSpaceInternalDoor.data[0]?.data.isTheFrontDoor).toBeUndefined();
+		expect((dwellingSpaceInternalDoor.data[0]?.data as { orientation: number }).orientation).toBeUndefined();
+	});
+		
 	it("navigates to walls page when valid form is completed", async () => {
 		await renderSuspended(InternalWall, {
 			route: {
