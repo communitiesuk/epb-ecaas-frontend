@@ -75,14 +75,7 @@ watch(() => model.value?.pitch, (newPitch, initialPitch) => {
 
 	if ([0, 180].includes(newPitch!)) {
 		const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
-		for (const door of dwellingSpaceInternalDoor.data) {
-			if (door.data.associatedItemId === partyWallData[index]?.data.id)
-				door.complete = false;
-			door.data.isTheFrontDoor = undefined;
-			if ("orientation" in door.data) {
-				door.data.orientation = undefined;
-			}
-		}
+		convertFrontDoorToRegularDoor(dwellingSpaceInternalDoor.data as EcaasForm<InternalDoorData>[], partyWallData, index);
 	}
 });
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

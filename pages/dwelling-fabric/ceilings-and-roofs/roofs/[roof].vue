@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { getUrl, zeroPitchOptions, uniqueName } from "#imports";
+import { getUrl, zeroPitchOptions, uniqueName, type RoofData } from "#imports";
 import type { RadioOption } from "~/components/form-kit/Radios.vue";
 
 const title = "Roof";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
-
-const index = getStoreIndex(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data);
-const roofData = useItemToEdit("roof", store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data);
+const roofs = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data;
+const index = getStoreIndex(roofs);
+const roofData = useItemToEdit("roof", roofs);
 const roofId = roofData?.data.id ?? uuidv4();
 const model = ref(roofData?.data);
 
@@ -99,11 +99,7 @@ watch(model, (newData, initialData) => {
 		if ([0, 180].includes(newData.pitch!)) {
 			const { dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
 			const doors = [dwellingSpaceExternalGlazedDoor.data, dwellingSpaceExternalUnglazedDoor.data].flat();
-			for (const door of doors) {
-				if (door.data.associatedItemId === roofData?.data.id)
-					door.complete = false;
-				door.data.isTheFrontDoor = undefined;
-			}
+			convertFrontDoorToRegularDoor(doors as EcaasForm<ExternalGlazedDoorData | ExternalUnglazedDoorData>[], roofs as EcaasForm<RoofData>[], index);
 		}
 	}
 });

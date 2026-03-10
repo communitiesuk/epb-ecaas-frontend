@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { standardPitchOptions, getUrl, uniqueName } from "#imports";
+import { standardPitchOptions, getUrl, uniqueName, type InternalDoorData, type EcaasForm } from "#imports";
 
 const title = "Wall to unheated space";
 const store = useEcaasStore();
@@ -57,14 +57,7 @@ watch(() => model.value?.pitch, (newPitch, initialPitch) => {
 
 	if ([0, 180].includes(newPitch!)) {
 		const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
-		for (const door of dwellingSpaceInternalDoor.data) {
-			if (door.data.associatedItemId === wallToUnheatedSpaceData[index]?.data.id)
-				door.complete = false;
-			door.data.isTheFrontDoor = undefined;
-			if ("orientation" in door.data) {
-				door.data.orientation = undefined;
-			}
-		}
+		convertFrontDoorToRegularDoor(dwellingSpaceInternalDoor.data as EcaasForm<InternalDoorData>[], wallToUnheatedSpaceData, index);
 	}
 });
 
