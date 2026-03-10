@@ -92,6 +92,22 @@ autoSaveElementForm<RoofData>({
 	},
 });
 
+watch(model, (newData, initialData) => {
+	if (initialData === undefined || initialData === newData) return; 
+	if (newData) {
+		if (newData?.typeOfRoof === "flat") return; 
+		if ([0, 180].includes(newData.pitch!)) {
+			const { dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
+			const doors = [dwellingSpaceExternalGlazedDoor.data, dwellingSpaceExternalUnglazedDoor.data].flat();
+			for (const door of doors) {
+				if (door.data.associatedItemId === roofData?.data.id)
+					door.complete = false;
+				door.data.isTheFrontDoor = undefined;
+			}
+		}
+	}
+});
+
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 

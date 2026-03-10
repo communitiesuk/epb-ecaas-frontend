@@ -228,6 +228,64 @@ describe("roof", () => {
 		expect(dwellingSpaceRoofs.data[0]!.data.orientation).toEqual(90);
 	});
 
+
+	it.each(["0", "180"])("if a roof is tagged to a front door and its pitch is updated to %s the door is updated to a regular door that is not complete", async (pitch) => {
+	
+		const roof: Partial<RoofData> = {
+			id: "ec8e8ec6-0fcb-43dc-81e0-9e2e9afb9e20",
+			name: "Roof 1",
+			typeOfRoof: "pitchedInsulatedAtCeiling",
+			pitch: 30,
+		};
+	
+		const unglazedDoor: Partial<ExternalUnglazedDoorData> = {
+			name: "External unglazed door 1",
+			associatedItemId: roof.id,
+			isTheFrontDoor: true,
+		};
+	
+		const glazedDoor: Partial<ExternalGlazedDoorData> = {
+			name: "External glazed door 1",
+			associatedItemId: roof.id,
+			isTheFrontDoor: true,
+		};
+	
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceRoofs: {
+						data: [{ data: roof }],
+					},
+				},
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalUnglazedDoor: {
+						data: [{ data: unglazedDoor, complete: true }],
+					},
+					dwellingSpaceExternalGlazedDoor: {
+						data: [{ data: glazedDoor, complete: true }],
+					},
+				}, 
+			},
+		});
+				
+		await renderSuspended(Roof, {
+			route: {
+				params: { roof: "0" },
+			},
+		});
+								
+		await user.clear(screen.getByTestId("pitch"));
+		await user.type(screen.getByTestId("pitch"), pitch);
+		await user.tab();
+		const { dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
+	
+		expect(dwellingSpaceExternalGlazedDoor.data[0]?.complete).toBeFalsy();
+		expect(dwellingSpaceExternalGlazedDoor.data[0]?.data.isTheFrontDoor).toBeUndefined();
+	
+		expect(dwellingSpaceExternalUnglazedDoor.data[0]?.complete).toBeFalsy();
+		expect(dwellingSpaceExternalUnglazedDoor.data[0]?.data.isTheFrontDoor).toBeUndefined();
+	});
+
 	it("navigates to ceilings and roofs page when valid form is completed", async () => {
 		await renderSuspended(Roof);
 

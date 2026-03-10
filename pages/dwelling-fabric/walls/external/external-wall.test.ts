@@ -130,6 +130,65 @@ describe("external wall", () => {
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
+
+	it.each(["0", "180"])("if an external wall is tagged to a front door and its pitch is updated to %s the door is updated to a regular door that is not complete", async (pitch) => {
+						
+		const externalWall: Partial<ExternalWallData> = {
+			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+			name: "External wall 1",
+			pitchOption: "custom",
+			pitch: 10,
+		};
+
+		const unglazedDoor: Partial<ExternalUnglazedDoorData> = {
+			name: "External unglazed door 1",
+			associatedItemId: externalWall.id,
+			isTheFrontDoor: true,
+		};
+
+		const glazedDoor: Partial<ExternalGlazedDoorData> = {
+			name: "External glazed door 1",
+			associatedItemId: externalWall.id,
+			isTheFrontDoor: true,
+		};
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall }],
+					},
+				},
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalUnglazedDoor: {
+						data: [{ data: unglazedDoor, complete: true }],
+					},
+					dwellingSpaceExternalGlazedDoor: {
+						data: [{ data: glazedDoor, complete: true }],
+					},
+				}, 
+			},
+		});
+			
+		await renderSuspended(ExternalWall, {
+			route: {
+				params: { wall: "0" },
+			},
+		});
+							
+		await user.click(screen.getByTestId("pitchOption_custom"));
+		await user.clear(screen.getByTestId("pitch"));
+		await user.type(screen.getByTestId("pitch"), pitch);
+		await user.tab();
+		const { dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
+
+		expect(dwellingSpaceExternalGlazedDoor.data[0]?.complete).toBeFalsy();
+		expect(dwellingSpaceExternalGlazedDoor.data[0]?.data.isTheFrontDoor).toBeUndefined();
+
+		expect(dwellingSpaceExternalUnglazedDoor.data[0]?.complete).toBeFalsy();
+		expect(dwellingSpaceExternalUnglazedDoor.data[0]?.data.isTheFrontDoor).toBeUndefined();
+	});
+	
 	test("updated form data is automatically saved to store", async () => {
 		store.$patch({
 			dwellingFabric: {

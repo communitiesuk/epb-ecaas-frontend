@@ -55,6 +55,20 @@ autoSaveElementForm({
 	},
 });
 
+watch(() => model.value?.pitch, (newPitch, initialPitch) => {
+	if (initialPitch === undefined) return; 
+
+	if ([0, 180].includes(newPitch!)) {
+		const { dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
+		const doors = [dwellingSpaceExternalGlazedDoor.data, dwellingSpaceExternalUnglazedDoor.data].flat();
+		for (const door of doors) {
+			if (door.data.associatedItemId === externalWallData[index]?.data.id)
+				door.complete = false;
+			door.data.isTheFrontDoor = undefined;
+		}
+	}
+});
+
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
