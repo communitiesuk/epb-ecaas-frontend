@@ -1595,9 +1595,9 @@ describe("FHS input mapper", () => {
 								psiOfWallJunction: 0.4,
 								thicknessOfWalls: 50,
 								typeOfGroundFloor: "Slab_edge_insulation" as const,
-								edgeInsulationType: "horizontal" as const,
-								edgeInsulationWidth: unitValue(32, centimetre),
-								edgeInsulationThermalResistance: 2.4,
+								edgeInsulationType: ["horizontal"] as ["horizontal"],
+								horizontalEdgeInsulationWidth: unitValue(32, centimetre),
+								horizontalEdgeInsulationThermalResistance: 2.4,
 							},
 						},
 						{

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { centimetre, millimetre, type Length } from "~/utils/units/length";
 import type { SchemaWindShieldLocation } from "~/schema/aliases";
-import { unitValue } from "~/utils/units";
-import { getUrl, type GroundFloorData, uniqueName } from "#imports";
+import { getUrl, type GroundFloorData, uniqueName, unitValue } from "#imports";
 
 const title = "Ground floor";
 const store = useEcaasStore();
@@ -12,12 +11,24 @@ const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGr
 const index = getStoreIndex(groundFloorData);
 const floorData = useItemToEdit("floor", groundFloorData);
 
-// prepopulate edge insulation width when using old input format
-if (floorData?.data && "edgeInsulationWidth" in floorData.data && typeof floorData.data.edgeInsulationWidth === "number") {
-	floorData.data.edgeInsulationWidth = unitValue(floorData.data.edgeInsulationWidth, centimetre);
-};
+// prepopulate edge insulation width/depth when using old input format (raw number stored in centimetres)
+if (floorData?.data) {
+	const data = floorData.data as Record<string, unknown>;
+	if ("horizontalEdgeInsulationWidth" in data && typeof data.horizontalEdgeInsulationWidth === "number") {
+		data.horizontalEdgeInsulationWidth = unitValue(data.horizontalEdgeInsulationWidth, centimetre);
+	}
+	if ("verticalEdgeInsulationDepth" in data && typeof data.verticalEdgeInsulationDepth === "number") {
+		data.verticalEdgeInsulationDepth = unitValue(data.verticalEdgeInsulationDepth, centimetre);
+	}
+}
 
 const model = ref(floorData?.data);
+
+const includesInsulationType = (type: string) => {
+	return (model.value as { edgeInsulationType?: string[] } | undefined)?.edgeInsulationType?.includes(type) ?? false;
+};
+
+
 
 // Removed heated and unheated basement options for summer
 type ReducedGroundFloorOptions = "Slab_no_edge_insulation" | "Slab_edge_insulation" | "Suspended_floor";
@@ -55,14 +66,34 @@ const saveForm = (fields: GroundFloorData) => {
 
 		switch (fields.typeOfGroundFloor) {
 			case "Slab_edge_insulation":
-			{				
-				floorData = { 
-					...commonFields,
-					typeOfGroundFloor: fields.typeOfGroundFloor,
-					edgeInsulationType: fields.edgeInsulationType,
-					edgeInsulationWidth: fields.edgeInsulationWidth,
-					edgeInsulationThermalResistance: fields.edgeInsulationThermalResistance,
-				};
+			{
+				if ("horizontalEdgeInsulationWidth" in fields && "verticalEdgeInsulationDepth" in fields) {
+					floorData = {
+						...commonFields,
+						typeOfGroundFloor: "Slab_edge_insulation",
+						edgeInsulationType: ["horizontal", "vertical"],
+						horizontalEdgeInsulationWidth: fields.horizontalEdgeInsulationWidth,
+						horizontalEdgeInsulationThermalResistance: fields.horizontalEdgeInsulationThermalResistance,
+						verticalEdgeInsulationDepth: fields.verticalEdgeInsulationDepth,
+						verticalEdgeInsulationThermalResistance: fields.verticalEdgeInsulationThermalResistance,
+					};
+				} else if ("horizontalEdgeInsulationWidth" in fields) {
+					floorData = {
+						...commonFields,
+						typeOfGroundFloor: "Slab_edge_insulation",
+						edgeInsulationType: ["horizontal"],
+						horizontalEdgeInsulationWidth: fields.horizontalEdgeInsulationWidth,
+						horizontalEdgeInsulationThermalResistance: fields.horizontalEdgeInsulationThermalResistance,
+					};
+				} else {
+					floorData = {
+						...commonFields,
+						typeOfGroundFloor: "Slab_edge_insulation",
+						edgeInsulationType: ["vertical"],
+						verticalEdgeInsulationDepth: fields.verticalEdgeInsulationDepth,
+						verticalEdgeInsulationThermalResistance: fields.verticalEdgeInsulationThermalResistance,
+					};
+				}
 				break;
 			}
 			case "Slab_no_edge_insulation":
@@ -239,7 +270,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 		<template v-if="model?.typeOfGroundFloor === 'Slab_edge_insulation'">
 			<FormKit
 				id="edgeInsulationType"
-				type="govRadios"
+				type="govCheckboxes"
 				:options="{
 					horizontal: 'Horizontal',
 					vertical: 'Vertical',
@@ -277,53 +308,56 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 					</table>
 				</GovDetails>
 			</Formkit>
-			<FormKit
-				id="edgeInsulationWidth"
-				name="edgeInsulationWidth"
-				label="Edge insulation height or width"
-				help="This is the coverage distance of edge insulation rather than the thickness of the insulation"
-				type="govInputWithUnit"
-				:unit="millimetre"
-				:validation-rules="{ withinMinAndMax }"
-				validation="required | withinMinAndMax:0,10000"
-				:validation-messages="{
-					withinMinAndMax: `Edge insulation width must be at least 0 and no more than 100,000 ${millimetre.name}.`,
-				}"
-				data-field="Zone.BuildingElement.*.edge_insulation.*.width"
-			>
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-					<table class="govuk-table">
-						<thead class="ovuk-table__head">
-							<tr class="govuk-table__row">
-								<th scope="col" class="govuk-table__header table-header-medium-width">Edge insulation type</th>
-								<th scope="col" class="govuk-table__header">Description</th>
-								<th scope="col" class="govuk-table__header">Typical width</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">Vertical</td>
-								<td class="govuk-table__cell">This is the height of the vertical edge insulation strips used around the perimeter of the floor.</td>
-								<td class="govuk-table__cell">100 - 150mm</td>
-							</tr>
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">Horizontal</td>
-								<td class="govuk-table__cell">This is the width or extension of the insulation from the edge of the slab.</td>
-								<td class="govuk-table__cell">600 - 1,200mm</td>
-							</tr>
-						</tbody>
-					</table>
-				</GovDetails>
-			</FormKit>
-			<FormKit
-				id="edgeInsulationThermalResistance"
-				type="govInputWithSuffix"
-				suffix-text="(m²·K)/W"
-				label="Edge insulation thermal resistance "
-				name="edgeInsulationThermalResistance"
-				validation="required"
-				data-field="Zone.BuildingElement.*.edge_insulation.*.edge_thermal_resistance"
-			/>
+			<template v-if="includesInsulationType('horizontal')">
+				<FormKit
+					id="horizontalEdgeInsulationWidth"
+					name="horizontalEdgeInsulationWidth"
+					label="Width of horizontal edge insulation"
+					help="This is the coverage distance of horizontal edge insulation rather than the thickness of the insulation"
+					type="govInputWithUnit"
+					:unit="millimetre"
+					:validation-rules="{ withinMinAndMax }"
+					validation="required | withinMinAndMax:0,10000"
+					:validation-messages="{
+						withinMinAndMax: `Horizontal edge insulation width must be at least 0 and no more than 10,000 ${millimetre.name}.`,
+					}"
+					data-field="Zone.BuildingElement.*.edge_insulation.*.width"
+				/>
+				<FormKit
+					id="horizontalEdgeInsulationThermalResistance"
+					type="govInputWithSuffix"
+					suffix-text="(m²·K)/W"
+					label="Thermal resistance of horizontal edge insulation"
+					name="horizontalEdgeInsulationThermalResistance"
+					validation="required"
+					data-field="Zone.BuildingElement.*.edge_insulation.*.edge_thermal_resistance"
+				/>
+			</template>
+			<template v-if="includesInsulationType('vertical')">
+				<FormKit
+					id="verticalEdgeInsulationDepth"
+					name="verticalEdgeInsulationDepth"
+					label="Depth of vertical edge insulation"
+					help="This is the coverage distance of vertical edge insulation rather than the thickness of the insulation"
+					type="govInputWithUnit"
+					:unit="millimetre"
+					:validation-rules="{ withinMinAndMax }"
+					validation="required | withinMinAndMax:0,10000"
+					:validation-messages="{
+						withinMinAndMax: `Vertical edge insulation depth must be at least 0 and no more than 10,000 ${millimetre.name}.`,
+					}"
+					data-field="Zone.BuildingElement.*.edge_insulation.*.depth"
+				/>
+				<FormKit
+					id="verticalEdgeInsulationThermalResistance"
+					type="govInputWithSuffix"
+					suffix-text="(m²·K)/W"
+					label="Thermal resistance of vertical edge insulation"
+					name="verticalEdgeInsulationThermalResistance"
+					validation="required"
+					data-field="Zone.BuildingElement.*.edge_insulation.*.edge_thermal_resistance"
+				/>
+			</template>
 		</template>
 
 		<template v-if="model?.typeOfGroundFloor === 'Suspended_floor'">
