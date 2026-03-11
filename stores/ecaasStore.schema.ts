@@ -71,6 +71,8 @@ const baseGeneralDetails = z.object({
 	numOfRoomsWithTappingPoints: z.int().min(1),
 	numOfWetRooms: z.int().min(1),
 	fuelType: z.array(fuelTypeWithElecOnlyZod),
+	isPartGCompliant: z.boolean(),
+	partOActiveCoolingRequired: z.boolean(),
 });
 
 const generalDetailsDataZod = z.discriminatedUnion("typeOfDwelling", [

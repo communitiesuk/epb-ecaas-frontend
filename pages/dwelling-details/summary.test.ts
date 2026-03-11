@@ -29,6 +29,8 @@ const state: DwellingDetailSummary = {
 		numOfRoomsWithTappingPoints: 2,
 		numOfWetRooms: 3,
 		fuelType: ["mains_gas", "LPG_bulk"],
+		isPartGCompliant: true,
+		partOActiveCoolingRequired: false,
 	},
 	shading: [{
 		name: "Shading 1",

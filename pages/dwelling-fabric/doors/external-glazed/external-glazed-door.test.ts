@@ -674,7 +674,7 @@ describe("external glazed door", () => {
 		test("displays banner when banner type is set to 'update-front-door", async () => {
 			
 			vi.mock("~/composables/banner", () => ({
-				useBanner: () => ref({ type: "update-front-door"}),
+				useBanner: () => ref({ type: "update-front-door" }),
 			}));
 			
 			await renderSuspended(ExternalGlazedDoor, {

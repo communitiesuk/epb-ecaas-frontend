@@ -18,6 +18,8 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 				"buildingLength": 7,
 				"buildingWidth": 7,
 				"fuelType": [],
+				"isPartGCompliant": true,
+				"partOActiveCoolingRequired": false,
 			},
 			"complete": true,
 		},

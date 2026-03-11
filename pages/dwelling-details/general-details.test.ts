@@ -23,6 +23,8 @@ const state: GeneralDetailsData = {
 	numOfRoomsWithTappingPoints: 2,
 	numOfWetRooms: 3,
 	fuelType: ["elecOnly"],
+	isPartGCompliant: true,
+	partOActiveCoolingRequired: false,
 };
 
 const stateWithFlat: GeneralDetailsData = {
@@ -40,6 +42,8 @@ const stateWithFlat: GeneralDetailsData = {
 	numOfRoomsWithTappingPoints: 2,
 	numOfWetRooms: 4,
 	fuelType: ["mains_gas"],
+	isPartGCompliant: true,
+	partOActiveCoolingRequired: false,
 };
 
 describe("General details", () => {
@@ -67,6 +71,8 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
 			await user.type(screen.getByTestId("numOfWetRooms"), "3");
 			await user.click(screen.getByTestId("fuelType_elecOnly"));
+			await user.click(screen.getByTestId("isPartGCompliant_yes"));
+			await user.click(screen.getByTestId("partOActiveCoolingRequired_no"));
 	
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
@@ -111,6 +117,8 @@ describe("General details", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("numOfHabitableRooms")).value).toBe("4");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfRoomsWithTappingPoints")).value).toBe("2");
 			expect((await screen.findByTestId("fuelType_elecOnly")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("isPartGCompliant_yes")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("partOActiveCoolingRequired_no")).hasAttribute("checked")).toBe(true);
 		});
 			
 		test("required error messages are displayed when empty form is submitted", async () => {
@@ -130,6 +138,8 @@ describe("General details", () => {
 			expect((await screen.findByTestId("numOfWCs_error"))).toBeDefined();
 			expect((await screen.findByTestId("numOfHabitableRooms_error"))).toBeDefined();
 			expect((await screen.findByTestId("fuelType_error"))).toBeDefined();
+			expect((await screen.findByTestId("isPartGCompliant_error"))).toBeDefined();
+			expect((await screen.findByTestId("partOActiveCoolingRequired"))).toBeDefined();
 
 			expect(screen.queryByTestId("storeyOfFlat_error")).toBe(null);
 		});
@@ -166,6 +176,8 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
 			await user.type(screen.getByTestId("numOfWetRooms"), "4");
 			await user.click(screen.getByTestId("fuelType_mains_gas"));
+			await user.click(screen.getByTestId("isPartGCompliant_yes"));
+			await user.click(screen.getByTestId("partOActiveCoolingRequired_no"));
 
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
@@ -201,6 +213,8 @@ describe("General details", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("numOfHabitableRooms")).value).toBe("4");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfRoomsWithTappingPoints")).value).toBe("2");
 			expect((await screen.findByTestId("fuelType_mains_gas")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("isPartGCompliant_yes")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("partOActiveCoolingRequired_no")).hasAttribute("checked")).toBe(true);
 		});
 
 		test("required error messages are displayed when empty form is submitted", async () => {

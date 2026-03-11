@@ -29,7 +29,8 @@ export type GeneralFieldsFromDwelling = "General" |
 	"NumberOfHabitableRooms" |
 	"NumberOfTappedRooms" |
 	"NumberOfWetRooms" |
-	"PartGcompliance";  
+	"PartGcompliance" |
+	"PartO_active_cooling_required";  
 
 export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema, GeneralFieldsFromDwelling> {
 	const { generalSpecifications: generalDetails } = state.dwellingDetails;
@@ -56,7 +57,8 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 		NumberOfHabitableRooms: generalDetails.numOfHabitableRooms,
 		NumberOfTappedRooms: generalDetails.numOfRoomsWithTappingPoints,
 		NumberOfWetRooms: generalDetails.numOfWetRooms,
-		PartGcompliance: true,
+		PartGcompliance: generalDetails.isPartGCompliant,
+		PartO_active_cooling_required: generalDetails.partOActiveCoolingRequired,
 	};
 }
 

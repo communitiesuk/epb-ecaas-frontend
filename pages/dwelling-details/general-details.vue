@@ -23,7 +23,6 @@ const typeOfDwellingOptions: Record<SchemaBuildType, SnakeToSentenceCase<SchemaB
 	flat: "Flat",
 };
 
-
 const saveForm = (fields: typeof model.value) => {
 
 	store.$patch({
@@ -186,8 +185,48 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="buildingLength"
 			validation="required | number"
 			help="Enter the maximum horizontal distance across the building footprint"
-			data-field="BuildingLength"
-		/>
+			data-field="BuildingLength">
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr>
+							<th scope="col" class="govuk-table__header">
+								Shape of dwelling
+							</th>
+							<th scope="col" class="govuk-table__header">
+								Measuring length
+							</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header">
+								Compact shaped dwelling (with no branching sections)
+							</th>
+							<td class="govuk-table__cell">
+								The length is equal to the length of the smallest rectangle wholly containing the dwelling footprint.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header">
+								Rectangular dwelling
+							</th>
+							<td class="govuk-table__cell">
+								The length is the distance between the two shortest walls, parallel to the longest wall.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header">
+								L-shaped or other branching dwelling
+							</th>
+							<td class="govuk-table__cell">
+								The length starts and ends in the centre of the shortest wall and follows the L-shape of the dwellings. The length of other branching shapes should be measured in the same way, following the general shape of the building.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="buildingWidth"
 			type="govInputWithSuffix"
@@ -196,8 +235,48 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="buildingWidth"
 			validation="required | number"
 			help="Enter the maximum horizontal distance perpendicular to the building length"
-			data-field="BuildingWidth"
-		/>
+			data-field="BuildingWidth">
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr>
+							<th scope="col" class="govuk-table__header">
+								Shape of dwelling
+							</th>
+							<th scope="col" class="govuk-table__header">
+								Measuring width
+							</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header">
+								Compact shaped dwelling (with no branching sections)
+							</th>
+							<td class="govuk-table__cell">
+								The width is equal to the width of the smallest rectangle wholly containing the dwelling footprint.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header">
+								Rectangular dwelling
+							</th>
+							<td class="govuk-table__cell">
+								The width is the maximum horizontal distance perpendicular to the building length.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header">
+								L-shaped or other branching dwelling
+							</th>
+							<td class="govuk-table__cell">
+								The width of each branch is measured as the shorted distance between two walls. The building width is the longest of these branch widths.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="numOfBedrooms"
 			type="govInputInt"
@@ -208,7 +287,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				isInteger: `Number of bedrooms must be an integer.`,
 			}"
-			help="This affects the dwelling's predicted occupancy"
+			help="Enter the number of rooms in the dwelling excluding the primary living area and any wet rooms or utility rooms"
 			data-field="NumberOfBedrooms"
 		/>
 		<FormKit
@@ -221,7 +300,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				isInteger: `Number of utility rooms must be an integer.`,
 			}"
-			help="A utility room is any that contains a sink or other feature or equipment that may reasonably be expected to produce significant quantities of water vapour"
+			help="Enter the number of wet rooms that are not kitchens, bathrooms, or WCs"
 			data-field="NumberOfUtilityRooms"
 		/>
 		<FormKit
@@ -234,7 +313,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				isInteger: `Number of bathrooms must be an integer.`,
 			}"
-			help="A bathroom is any room that contains a bath or shower"
+			help="Enter the number of rooms containing a bath or shower"
 			data-field="NumberOfBathrooms"
 		/>
 		<FormKit
@@ -247,7 +326,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				isInteger: `Number of WCs must be an integer.`,
 			}"
-			help="A WC is any space containing one or more flush toilets or urinals but not a bath or shower"
+			help="Enter the number of rooms containing one or more flush toilets or urinals but not a bath or shower"
 			data-field="NumberOfSanitaryAccommodations"
 		/>
 		<FormKit
@@ -260,7 +339,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				isInteger: `Number of habitable rooms must be an integer.`,
 			}"
-			help="A habitable room is any that is not used solely as a kitchen, bathroom, utility room, cellar or WC"
+			help="Enter the number of rooms that are not used solely as a kitchen, bathroom, utility room, cellar or WC"
 			data-field="NumberOfHabitableRooms"
 		/>
 		<FormKit
@@ -273,7 +352,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				isInteger: `Number of rooms with tapping points must be an integer.`,
 			}"
-			help="This could be a room with any tapping point. For example a sink, bath or shower."
+			help="Enter the total number of rooms with at least one hot water tapping point that is fed from the hot water distribution system. This excludes electric showers and point of use water heaters."
 			data-field="NumberOfTappedRooms"
 		/>
 		<FormKit
@@ -286,7 +365,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				isInteger: `Number of wet rooms must be an integer.`,
 			}"
-			help="This could be any room used for domestic activities that produce significant amounts of airborne moisture. For example a kitchen, utility room, bathroom or WC."
+			help="Enter the total number of rooms used for domestic activities that produce significant amounts of airborne moisture. For example a kitchen, utility room, bathroom or WC."
 		/>
 		<FormKit
 			id="fuelType"
@@ -300,6 +379,22 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{areSelectedOptionsValid: 'Select Mains gas, LPG (Liquid petroleum gas) or select Electricity is the only energy source'}"
 			data-field="EnergySupply.*.fuel"
 			:exclusive-options="{'elecOnly': 'Electricity is the only energy source'}"
+		/>
+		<FormKit
+			id="isPartGCompliant"
+			type="govBoolean"
+			label="Is the dwelling Part G compliant?"
+			name="isPartGCompliant"
+			validation="required"
+			data-field="PartGcompliance"
+		/>
+		<FormKit
+			id="partOActiveCoolingRequired"
+			type="govBoolean"
+			label="Is active cooling required to make the dwelling Part O compliant?"
+			name="partOActiveCoolingRequired"
+			validation="required"
+			data-field="PartO_active_cooling_required"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

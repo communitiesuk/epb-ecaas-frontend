@@ -26,6 +26,8 @@ describe("dwelling details mapper", () => {
 		numOfRoomsWithTappingPoints: 2,
 		numOfWetRooms: 3,
 		fuelType: ["mains_gas"],
+		isPartGCompliant: false,
+		partOActiveCoolingRequired: true,
 	};
 
 	it("maps general details input state to FHS input request", () => {
@@ -56,7 +58,8 @@ describe("dwelling details mapper", () => {
 		expect(fhsInputData.NumberOfHabitableRooms).toBe(state.numOfHabitableRooms);
 		expect(fhsInputData.NumberOfTappedRooms).toBe(state.numOfRoomsWithTappingPoints);
 		expect(fhsInputData.NumberOfWetRooms).toBe(state.numOfWetRooms);
-		expect(fhsInputData.PartGcompliance).toBe(true);
+		expect(fhsInputData.PartGcompliance).toBe(state.isPartGCompliant);
+		expect(fhsInputData.PartO_active_cooling_required).toBe(state.partOActiveCoolingRequired);
 	});
 
 	describe("maps fueltype from general details input state to FHS input request", () => {
@@ -108,6 +111,8 @@ describe("dwelling details mapper", () => {
 				numOfRoomsWithTappingPoints: 2,
 				numOfWetRooms: 4,
 				fuelType: ["elecOnly"],
+				isPartGCompliant: false,
+				partOActiveCoolingRequired: true,
 			};
 	
 			store.$patch({
@@ -152,6 +157,8 @@ describe("dwelling details mapper", () => {
 				numOfRoomsWithTappingPoints: 2,
 				numOfWetRooms: 5,
 				fuelType: ["mains_gas", "LPG_bulk"],
+				isPartGCompliant: false,
+				partOActiveCoolingRequired: true,
 			};
 	
 			store.$patch({
