@@ -275,9 +275,9 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 					horizontal: 'Horizontal',
 					vertical: 'Vertical',
 				}"
-				label="Edge insulation type"
+				label="Types of edge insulation"
 				name="edgeInsulationType"
-				help="Select the type of edge insulation"
+				help="Select all the types of edge insulation that apply to this floor"
 				validation="required"
 				data-field="Zone.BuildingElement.*.edge_insulation.*.type">
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
