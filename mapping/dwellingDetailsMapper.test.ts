@@ -110,7 +110,7 @@ describe("dwelling details mapper", () => {
 				numOfHabitableRooms: 3,
 				numOfRoomsWithTappingPoints: 2,
 				numOfWetRooms: 4,
-				fuelType: ["elecOnly"],
+				fuelType: ["electricity"],
 				isPartGCompliant: false,
 				partOActiveCoolingRequired: true,
 			};

@@ -65,7 +65,10 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 export function mapEnergySupplyFuelTypeData(
 	state: ResolvedState,
 ): Pick<FhsInputSchema, "EnergySupply"> {
-	const fuelType = state.dwellingDetails.generalSpecifications.fuelType.filter(x => x !== "elecOnly"); //electricity is always required as a fueltype - so its hardcoded into the EngergySupply object - therefore we filter out elecOnly (used to represent electricity only at form level) so its not added twice
+	const fuelType = state.dwellingDetails.generalSpecifications.fuelType
+		.filter(x => x !== "electricity");
+		// electricity is always required as a fueltype - so its hardcoded into the
+		// EnergySupply object - therefore we filter out electricity so its not added twice
 
 	return {
 		EnergySupply: {

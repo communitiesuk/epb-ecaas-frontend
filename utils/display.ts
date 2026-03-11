@@ -1,6 +1,6 @@
 import { objectFromEntries } from "ts-extras";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
-import type { SchemaApplianceType, SchemaColour, SchemaFuelTypeExtended, SchemaLeaksTestPressure, SchemaRadiatorType } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaColour, SchemaFuelType, SchemaLeaksTestPressure, SchemaRadiatorType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
@@ -182,18 +182,17 @@ export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressure
 }
 
 
-export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" | "LPG (Liquid petroleum gas) - bottled" | "LPG - 11F" | "Electricity is the only energy source" | "Mains gas" | "Electricity";
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" | "LPG (Liquid petroleum gas) - bottled" | "LPG - 11F" | "Mains gas" | "Electricity";
 
 export const energySupplyOptions = {
 	"mains_gas": "Mains gas",
 	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
 	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
 	"LPG_condition_11F": "LPG - 11F",
-	"elecOnly": "Electricity",
 	"electricity": "Electricity",
-} as const satisfies Record<SchemaFuelTypeExtended | "electricity", FuelTypeDisplay>;
+} as const satisfies Record<SchemaFuelType, FuelTypeDisplay>;
 
-export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined) {
+export function displayFuelTypes(fuelTypes: SchemaFuelType[] | undefined) {
 	if (fuelTypes === undefined) return emptyValueRendering;
 	const result = fuelTypes.map(type => energySupplyOptions[type]).join(", ");
 
@@ -203,7 +202,7 @@ export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined
 	return result;
 }
 
-export function displayFuelType(fuelType: SchemaFuelTypeExtended): FuelTypeDisplay {
+export function displayFuelType(fuelType: SchemaFuelType): FuelTypeDisplay {
 	switch (fuelType) {
 		case "LPG_bulk":
 			return "LPG (Liquid petroleum gas) - bulk";
@@ -211,8 +210,6 @@ export function displayFuelType(fuelType: SchemaFuelTypeExtended): FuelTypeDispl
 			return "LPG (Liquid petroleum gas) - bottled";
 		case "LPG_condition_11F":
 			return "LPG - 11F";
-		case "elecOnly":
-			return "Electricity is the only energy source";
 		case "electricity":
 			return "Electricity";
 		case "mains_gas":

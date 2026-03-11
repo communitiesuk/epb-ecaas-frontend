@@ -549,7 +549,7 @@ describe("heatSource", () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
-						data: { fuelType: ["elecOnly"] },
+						data: { fuelType: ["electricity"] },
 					},
 				},
 			});
@@ -576,7 +576,7 @@ describe("heatSource", () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
-						data: { fuelType: ["elecOnly"] },
+						data: { fuelType: ["electricity"] },
 					},
 				},
 				spaceHeating: {
@@ -907,14 +907,6 @@ describe("heatSource", () => {
 		});
 
 		test("electricity is always displayed as a energy supply option", async () => {
-			store.$patch({
-				dwellingDetails: {
-					generalSpecifications: {
-						data: { fuelType: ["mains_gas", "LPG_bulk"] },
-					},
-				},
-			});
-
 			await renderSuspended(HeatSourceForm, {
 				route: {
 					params: { "heatSource": "create" },
@@ -923,9 +915,7 @@ describe("heatSource", () => {
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
 			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
-
-			expect(screen.getByTestId("energySupply_mains_gas")).toBeDefined();
-			expect(screen.getByTestId("energySupply_LPG_bulk")).toBeDefined();
+			
 			expect(screen.getByTestId("energySupply_electricity")).toBeDefined();
 		});
 
@@ -943,6 +933,14 @@ describe("heatSource", () => {
 		});
 
 		test("required error messages are displayed when type of heat battery is submitted", async () => {
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { fuelType: ["LPG_bottled", "LPG_bulk", "electricity"] },
+					},
+				},
+			});
+			
 			await renderSuspended(HeatSourceForm, {
 				route: {
 					params: { "heatSource": "create" },

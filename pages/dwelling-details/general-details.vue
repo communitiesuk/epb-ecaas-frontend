@@ -1,22 +1,32 @@
 <script setup lang="ts">
-import type { SchemaBuildType, SchemaFuelType, SchemaFuelTypeExtended } from "~/schema/aliases";
+import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
 import { isInteger } from "~/utils/validation";
-import { getUrl, type DomesticHotWaterHeatSourceData, type EcaasForm, type GeneralDetailsData, type HeatSourceData } from "#imports";
+import { getUrl, type DomesticHotWaterHeatSourceData, type EcaasForm, type FuelTypeDisplay, type GeneralDetailsData, type HeatSourceData } from "#imports";
+import type { CheckboxOption } from "~/components/form-kit/Checkboxes.vue";
 
 
 const title = "General details";
 const store = useEcaasStore();
 const { autoSaveForm } = useForm();
 const fuelTypeOptions = {
+	"electricity": {
+		label: "Electricity",
+		disabled: true,
+		checked: true,
+	},
 	"mains_gas": "Mains gas",
 	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
 	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
 	"LPG_condition_11F": "LPG - 11F",
-} as const satisfies Record<Exclude<SchemaFuelType, "electricity">, FuelTypeDisplay>;
+} as const satisfies Record<SchemaFuelType, FuelTypeDisplay | CheckboxOption>;
 
 const model = ref({
 	...store.dwellingDetails.generalSpecifications.data,
 });
+
+if (!model.value.fuelType) {
+	model.value.fuelType = ["electricity"];
+}
 
 const typeOfDwellingOptions: Record<SchemaBuildType, SnakeToSentenceCase<SchemaBuildType>> = {
 	house: "House",
@@ -52,7 +62,15 @@ const saveForm = (fields: typeof model.value) => {
 	navigateTo("/dwelling-details");
 };
 
-function removeRefsToFuelType(heatSources: EcaasForm<Extract<HeatSourceData, { "typeOfHeatSource": "heatNetwork" | "heatBattery" }> | DomesticHotWaterHeatSourceData | SmartHotWaterTankData>[], removedFuelType: SchemaFuelTypeExtended) {
+function removeRefsToFuelType(
+	heatSources: EcaasForm<
+		Extract<
+			HeatSourceData,
+			{ "typeOfHeatSource": "heatNetwork" | "heatBattery" }
+		> | DomesticHotWaterHeatSourceData | SmartHotWaterTankData
+	>[],
+	removedFuelType: SchemaFuelType,
+) {
 	for (const item of heatSources) {
 		if ("energySupply" in item.data)
 			if (item.data.energySupply === removedFuelType) {
@@ -96,20 +114,6 @@ watch(() => model.value.typeOfDwelling, (newType, oldType) => {
 autoSaveForm<GeneralDetailsData>(model, (state, newData) => {
 	state.dwellingDetails.generalSpecifications = newData;
 });
-
-const areSelectedOptionsValid = (node: FormKitNode) => {
-	
-	const parent = node.at("$parent");
-
-	if (parent && parent.value) {
-		const formValue = parent.value as GeneralDetailsData;
-		const { fuelType } = formValue;
-		if (fuelType.includes("elecOnly") && (fuelType.includes("mains_gas") || fuelType.includes("LPG_bulk") || fuelType.includes("LPG_bottled")) || fuelType.includes("LPG_condition_11F")) {
-			return false;
-		}
-	}
-	return true;
-};
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -369,16 +373,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="fuelType"
-			type="govCheckboxesWithExclusive"
+			type="govCheckboxes"
 			name="fuelType"
 			label="Energy sources"
 			help="Electricity is assumed to be present in the dwellings. Select the other energy sources that will be present in the dwelling, if any."
 			:options="fuelTypeOptions"
-			:validation-rules="{ areSelectedOptionsValid }"
-			validation="required | areSelectedOptionsValid"
-			:validation-messages="{areSelectedOptionsValid: 'Select Mains gas, LPG (Liquid petroleum gas) or select Electricity is the only energy source'}"
+			validation="required"
 			data-field="EnergySupply.*.fuel"
-			:exclusive-options="{'elecOnly': 'Electricity is the only energy source'}"
 		/>
 		<FormKit
 			id="isPartGCompliant"

@@ -59,7 +59,6 @@ export type SchemaWaterPipeContentsType = Exclude<SchemaWaterPipework["pipe_cont
 export type SchemaWindowShadingObject = SchemaDefs["BuildingElementTransparent"]["shading"][number];
 export type SchemaMechVentType = VentType;
 export type SchemaFuelType = Exclude<FhsSchema["EnergySupply"][string]["fuel"], "gas" | "custom" | "wood" | "gas" | "oil" | "coal">;
-export type SchemaFuelTypeExtended = SchemaFuelType | "elecOnly";
 export type SchemaPhotovoltaicVentilationStrategy = OnSiteGenerationVentilationStrategy;
 type HeatPump = SchemaDefs["HeatSourceWetHeatPump"];
 export type SchemaHeatSourceWetHeatPumpWithProductReference = Extract<HeatPump, { product_reference: string }> & { is_heat_network: false };

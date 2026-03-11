@@ -10,7 +10,7 @@ import FormKitInputFloat from "./components/form-kit/InputFloat.vue";
 import FormKitInputInt from "./components/form-kit/InputInt.vue";
 import FormKitInputWithSuffix from "./components/form-kit/InputWithSuffix.vue";
 import FormKitInputWithUnit from "./components/form-kit/InputWithUnit.vue";
-import FormKitCheckboxes from "./components/form-kit/Checkboxes.vue";
+import FormKitCheckboxes, { type CheckboxOption } from "./components/form-kit/Checkboxes.vue";
 import FormKitCheckboxesWithExclusive from "./components/form-kit/CheckboxesWithExclusive.vue";
 import FormKitInputText from "./components/form-kit/InputText.vue";
 import FormKitInputTextWithSuffix from "./components/form-kit/InputTextWithSuffix.vue";
@@ -51,7 +51,7 @@ declare module "@formkit/inputs" {
 		};
 		govCheckboxes: {
 			type: "govCheckboxes";
-			options: FormKitOptionsProp;
+			options: Record<string, string | CheckboxOption> | Map<string, string>;
 			help?: string;
 		};
 		govCheckboxesWithExclusive: {

@@ -3,7 +3,7 @@ import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import type { GeneralDetailsData, HeatSourceData, SmartHotWaterTankData } from "~/stores/ecaasStore.schema";
-import type { SchemaFuelTypeExtended } from "~/schema/aliases";
+import type { SchemaFuelType } from "~/schema/aliases";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -22,7 +22,7 @@ const state: GeneralDetailsData = {
 	numOfHabitableRooms: 4,
 	numOfRoomsWithTappingPoints: 2,
 	numOfWetRooms: 3,
-	fuelType: ["elecOnly"],
+	fuelType: ["electricity"],
 	isPartGCompliant: true,
 	partOActiveCoolingRequired: false,
 };
@@ -41,7 +41,7 @@ const stateWithFlat: GeneralDetailsData = {
 	numOfHabitableRooms: 4,
 	numOfRoomsWithTappingPoints: 2,
 	numOfWetRooms: 4,
-	fuelType: ["mains_gas"],
+	fuelType: ["electricity", "mains_gas"],
 	isPartGCompliant: true,
 	partOActiveCoolingRequired: false,
 };
@@ -55,7 +55,6 @@ describe("General details", () => {
 	});
 
 	describe("When the dwelling type is a house", () => {
-
 		test("data is saved to store state when form is valid", async () => {
 			await renderSuspended(GeneralDetails);
 	
@@ -70,7 +69,6 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("numOfHabitableRooms"), "4");
 			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
 			await user.type(screen.getByTestId("numOfWetRooms"), "3");
-			await user.click(screen.getByTestId("fuelType_elecOnly"));
 			await user.click(screen.getByTestId("isPartGCompliant_yes"));
 			await user.click(screen.getByTestId("partOActiveCoolingRequired_no"));
 	
@@ -116,7 +114,6 @@ describe("General details", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("numOfWCs")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfHabitableRooms")).value).toBe("4");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfRoomsWithTappingPoints")).value).toBe("2");
-			expect((await screen.findByTestId("fuelType_elecOnly")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("isPartGCompliant_yes")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("partOActiveCoolingRequired_no")).hasAttribute("checked")).toBe(true);
 		});
@@ -137,7 +134,6 @@ describe("General details", () => {
 			expect((await screen.findByTestId("numOfBathrooms_error"))).toBeDefined();
 			expect((await screen.findByTestId("numOfWCs_error"))).toBeDefined();
 			expect((await screen.findByTestId("numOfHabitableRooms_error"))).toBeDefined();
-			expect((await screen.findByTestId("fuelType_error"))).toBeDefined();
 			expect((await screen.findByTestId("isPartGCompliant_error"))).toBeDefined();
 			expect((await screen.findByTestId("partOActiveCoolingRequired"))).toBeDefined();
 
@@ -229,24 +225,7 @@ describe("General details", () => {
 		});
 	});
 
-	test.each(["mains_gas", "LPG_bulk", "LPG_bottled", "LPG_condition_11F"])(
-		"shows an error when form is saved and fuel type includes '%s' along with 'Electricity is the only energy source'",
-		async (fuelType) => {
-			await renderSuspended(GeneralDetails);
-			await user.click(screen.getByTestId("fuelType_elecOnly"));
-			await user.click(screen.getByTestId(`fuelType_${fuelType}`));
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			const errorSummary = await screen.findByTestId("generalDetailsErrorSummary");
-
-			expect(
-				errorSummary.textContent.includes("Select Mains gas, LPG (Liquid petroleum gas) or select Electricity is the only energy source"),
-			).toBe(true);
-		},
-	);
-
 	it("if fuel type is updated, it is removed from all objects which reference it", async () => {
-
 		const heatNetworkSpaceHeating: Partial<HeatSourceData> = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 			name: "Heat network 1",
@@ -303,7 +282,7 @@ describe("General details", () => {
 
 		const state: Partial<GeneralDetailsData> = {
 			typeOfDwelling: "house",
-			fuelType: ["mains_gas", "elecOnly", "LPG_bulk"],
+			fuelType: ["mains_gas", "electricity", "LPG_bulk"],
 		};
 
 		store.$patch({
@@ -329,21 +308,22 @@ describe("General details", () => {
 		await renderSuspended(GeneralDetails);
 		await user.click(await screen.findByTestId("fuelType_mains_gas"));
 		const spaceHeatNetwork = store.spaceHeating.heatSource.data[0];
-		expect((spaceHeatNetwork?.data as { energySupply: SchemaFuelTypeExtended }).energySupply).toBeUndefined();
+		expect((spaceHeatNetwork?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
 		expect(spaceHeatNetwork?.complete).toBe(false);
 
 
 		const DHWItems = store.domesticHotWater.heatSources.data;
-		expect((DHWItems[0]?.data as { energySupply: SchemaFuelTypeExtended }).energySupply).toBeUndefined();
+		expect((DHWItems[0]?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
 		expect(DHWItems[0]?.complete).toBe(false);
-		expect((DHWItems[1]?.data as { energySupply: SchemaFuelTypeExtended }).energySupply).toBeUndefined();
+		expect((DHWItems[1]?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
 		expect(DHWItems[1]?.complete).toBe(false);
-		expect((DHWItems[2]?.data as { energySupply: SchemaFuelTypeExtended }).energySupply).toBeUndefined();
+		expect((DHWItems[2]?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
 		expect(DHWItems[2]?.complete).toBe(false);
 
 		const waterStorage = store.domesticHotWater.waterStorage.data;
-		expect((waterStorage[0]?.data as { energySupply: SchemaFuelTypeExtended }).energySupply).toBeUndefined();
+		expect((waterStorage[0]?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
 	});
+
 	it("when type of dwelling is updated from flat to house, updates store so any internal door is not a front door", async () => {
 		const internalDoor: EcaasForm<Partial<InternalDoorData>> = {
 			data: {
