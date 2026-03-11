@@ -739,8 +739,7 @@ export type VentData = z.infer<typeof ventDataZod>;
 const ventilationDataZod = z.object({
 	ventilationZoneHeight: z.number().min(1).max(20),
 	dwellingEnvelopeArea: z.number().min(5).max(72000),
-	dwellingElevationalLevelAtBase: z.number().min(-150).max(750),
-	crossVentilationPossible: z.boolean(),
+	baseHeightOfVentilationZone: z.number().min(-150).max(750),
 	maxRequiredAirChangeRate: z.number(),
 });
 

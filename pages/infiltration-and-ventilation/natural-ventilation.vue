@@ -16,8 +16,7 @@ const saveForm = (fields: VentilationData) => {
 				data: {
 					ventilationZoneHeight: fields.ventilationZoneHeight,
 					dwellingEnvelopeArea: fields.dwellingEnvelopeArea,
-					dwellingElevationalLevelAtBase: fields.dwellingElevationalLevelAtBase,
-					crossVentilationPossible: fields.crossVentilationPossible,
+					baseHeightOfVentilationZone: fields.baseHeightOfVentilationZone,
 					maxRequiredAirChangeRate: 2,
 				},
 				complete: true,
@@ -53,7 +52,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="ventilationZoneHeight"
 			type="govInputWithSuffix"
 			label="Ventilation zone height"
-			help="This is measured from the lowest finished floor level in the dwelling to the highest of part of the dwelling that is ventilated"
+			help="This is measured from the lowest finished floor level in the dwelling to the top of the thermal envelope or highest ceiling in the dwelling"
 			name="ventilationZoneHeight"
 			validation="required | number | min:1 | max:20"
 			suffix-text="m"
@@ -63,38 +62,20 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="dwellingEnvelopeArea"
 			type="govInputWithSuffix"
 			label="Dwelling envelope area"
-			help="This is the total surface area that separates the heated or cooled inside from the outside"
+			help="This is the total internal surface area of all elements that separate the dwelling's heated interior from the external environment or other dwellings and unheated spaces"
 			name="dwellingEnvelopeArea"
 			validation="required | number | min:5 | max:72000"
 			suffix-text="m²"
 			data-field="InfiltrationVentilation.Leaks.env_area"
-		><GovDetails summary-text="Help with this input">	
-			<p class="govuk-hint">
-				It includes walls, roofs, floors exposed to the ground or unheated spaces, windows and external doors.
-			</p>
-		</GovDetails>
-		</FormKit>
+		/>
+		
 		<FieldsElevationalHeight
-			field="dwellingElevationalLevelAtBase"
-			label="Elevational height of dwelling at its base"
-			help="Enter elevational height of the dwelling above ground datum level"
+			field="baseHeightOfVentilationZone"
+			label="Base height of ventilation zone"
+			help="Enter the height at which the dwelling sits off or below the ground"
 			:minmax="{ min: -150, max: 750 }"
 			data-field="InfiltrationVentilation.ventilation_zone_base_height"
 		/>
-		<FormKit
-			id="crossVentilationPossible"
-			type="govBoolean"
-			label="Is cross ventilation possible?"
-			name="crossVentilationPossible"
-			validation="required"
-			data-field="InfiltrationVentilation.cross_vent_possible"
-		>
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>	
-				<p class="govuk-hint">
-					This input indicates whether cross ventilation is present in the building. To determine this, check if there are openings (for example, windows, vents, or doors) on opposite sides of the space that can allow air to flow through the building. If these openings are aligned or positioned in such a way that air can pass through, then cross ventilation is present. If not, it may be absent.
-				</p>
-			</GovDetails>
-		</FormKit>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

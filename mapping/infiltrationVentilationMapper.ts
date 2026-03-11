@@ -7,7 +7,7 @@ import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation, Schema
 import type { SchemaMechVentCommon } from "~/schema/api-schema.types";
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
-	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase } = mapVentilationData(state);
+	const { dwellingHeight, dwellingEnvelopeArea, baseHeightOfVentilationZone } = mapVentilationData(state);
 	const mechanicalVentilation = mapMechanicalVentilationData(state);
 
 	const infiltrationVentilation: Omit<SchemaInfiltrationVentilation, InfiltrationFieldsFromDwelling> = {
@@ -16,7 +16,7 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 			env_area: dwellingEnvelopeArea,
 			...mapAirPermeabilityData(state),
 		},
-		ventilation_zone_base_height: dwellingElevationalLevelAtBase,
+		ventilation_zone_base_height: baseHeightOfVentilationZone,
 		ach_max_static_calcs: 2, // suggested default
 		MechanicalVentilation: objectFromEntries(objectEntries(mechanicalVentilation).map(([name, mechanicalVentData]) => {
 			return [
@@ -161,14 +161,13 @@ export function mapVentsData(state: ResolvedState) {
 	return objectFromEntries(entries);
 }
 
-export function mapVentilationData(state: ResolvedState): { dwellingElevationalLevelAtBase: number; dwellingHeight: number; dwellingEnvelopeArea: number; crossVentilationPossible: boolean; } {
-	const { dwellingElevationalLevelAtBase, ventilationZoneHeight: dwellingHeight, dwellingEnvelopeArea, crossVentilationPossible } = state.infiltrationAndVentilation.naturalVentilation;
+export function mapVentilationData(state: ResolvedState): { baseHeightOfVentilationZone: number; dwellingHeight: number; dwellingEnvelopeArea: number; } {
+	const { baseHeightOfVentilationZone, ventilationZoneHeight: dwellingHeight, dwellingEnvelopeArea } = state.infiltrationAndVentilation.naturalVentilation;
 
 	return {
-		dwellingElevationalLevelAtBase,
+		baseHeightOfVentilationZone,
 		dwellingHeight,
 		dwellingEnvelopeArea,
-		crossVentilationPossible,
 	};
 }
 

@@ -47,8 +47,7 @@ describe("infiltration ventilation mapper", () => {
 					data: {
 						ventilationZoneHeight: 20,
 						dwellingEnvelopeArea: 20,
-						dwellingElevationalLevelAtBase: 0,
-						crossVentilationPossible: false,
+						baseHeightOfVentilationZone: 0,
 						maxRequiredAirChangeRate: 5,
 					},
 				},
@@ -434,8 +433,7 @@ describe("infiltration ventilation mapper", () => {
 		const ventilationData: VentilationData = {
 			ventilationZoneHeight: 10,
 			dwellingEnvelopeArea: 200,
-			dwellingElevationalLevelAtBase: 4,
-			crossVentilationPossible: true,
+			baseHeightOfVentilationZone: 4,
 			maxRequiredAirChangeRate: 1.5,
 		};
 
@@ -453,8 +451,7 @@ describe("infiltration ventilation mapper", () => {
 		const expectedVentilationData = {
 			dwellingHeight: 10,
 			dwellingEnvelopeArea: 200,
-			dwellingElevationalLevelAtBase: 4,
-			crossVentilationPossible: true,
+			baseHeightOfVentilationZone: 4,
 		};
 		expect(fhsInputData).toEqual(expectedVentilationData);
 	});

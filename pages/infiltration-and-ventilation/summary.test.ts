@@ -64,8 +64,7 @@ const ventData: VentData = {
 };
 
 const ventilationData: VentilationData = {
-	dwellingElevationalLevelAtBase: 1,
-	crossVentilationPossible: true,
+	baseHeightOfVentilationZone: 1,
 	maxRequiredAirChangeRate: 1,
 	ventilationZoneHeight: 1,
 	dwellingEnvelopeArea: 1,
@@ -323,8 +322,7 @@ describe("Infiltration and ventilation summary", () => {
 		const expectedResult = {
 			"Ventilation zone height": `1 ${metre.suffix}`,
 			"Dwelling envelope area": `1 ${metresSquare.suffix}`,
-			"Elevational height of dwelling at its base": `1 ${metre.suffix}`,
-			"Cross ventilation possible": "Yes",
+			"Base height of ventilation zone": `1 ${metre.suffix}`,
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

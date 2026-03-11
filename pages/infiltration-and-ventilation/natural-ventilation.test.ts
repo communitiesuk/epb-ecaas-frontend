@@ -20,16 +20,14 @@ describe("Ventilation", () => {
 	const state: VentilationData = {
 		ventilationZoneHeight: 1,
 		dwellingEnvelopeArea: 5,
-		dwellingElevationalLevelAtBase: 1,
-		crossVentilationPossible: true,
+		baseHeightOfVentilationZone: 1,
 		maxRequiredAirChangeRate: 2,
 	};
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("ventilationZoneHeight"), "1");
 		await user.type(screen.getByTestId("dwellingEnvelopeArea"), "5");
-		await user.type(screen.getByTestId("dwellingElevationalLevelAtBase"), "1");
-		await user.click(screen.getByTestId("crossVentilationPossible_yes"));
+		await user.type(screen.getByTestId("baseHeightOfVentilationZone"), "1");
 		await user.tab();
 	};
 
@@ -40,7 +38,7 @@ describe("Ventilation", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data } = store.infiltrationAndVentilation.naturalVentilation;
-		
+
 		expect(data).toEqual(state);
 	});
 
@@ -52,7 +50,7 @@ describe("Ventilation", () => {
 		await user.tab();
 
 		const { data, complete } = store.infiltrationAndVentilation.naturalVentilation;
-		
+
 		expect(data.ventilationZoneHeight).toBe(1);
 		expect(data.dwellingEnvelopeArea).toBe(5);
 		expect(complete).toBe(false);
@@ -71,10 +69,9 @@ describe("Ventilation", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("ventilationZoneHeight")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("dwellingEnvelopeArea")).value).toBe("5");
-		expect((await screen.findByTestId<HTMLInputElement>("dwellingElevationalLevelAtBase")).value).toBe("1");
-		expect((await screen.findByTestId("crossVentilationPossible_yes")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId<HTMLInputElement>("baseHeightOfVentilationZone")).value).toBe("1");
 	});
-		
+
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(Ventilation);
 
@@ -82,8 +79,7 @@ describe("Ventilation", () => {
 
 		expect((await screen.findByTestId("ventilationZoneHeight_error"))).toBeDefined();
 		expect((await screen.findByTestId("dwellingEnvelopeArea_error"))).toBeDefined();
-		expect((await screen.findByTestId("dwellingElevationalLevelAtBase_error"))).toBeDefined();
-		expect((await screen.findByTestId("crossVentilationPossible_error"))).toBeDefined();
+		expect((await screen.findByTestId("baseHeightOfVentilationZone_error"))).toBeDefined();
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
@@ -96,12 +92,12 @@ describe("Ventilation", () => {
 
 	test("navigates to infiltration and ventilation page when valid form is completed", async () => {
 		await renderSuspended(Ventilation);
-	
+
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { complete } = store.infiltrationAndVentilation.naturalVentilation;
-		
+
 		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith("/infiltration-and-ventilation");
 	});

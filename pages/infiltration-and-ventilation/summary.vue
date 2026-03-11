@@ -82,8 +82,7 @@ const ventilationSummary: SummarySection = {
 	data: {
 		"Ventilation zone height": dim(ventilationData.ventilationZoneHeight, "metres"),
 		"Dwelling envelope area": dim(ventilationData.dwellingEnvelopeArea, "metres square"),
-		"Elevational height of dwelling at its base": dim(ventilationData.dwellingElevationalLevelAtBase, "metres"),
-		"Cross ventilation possible": displayBoolean(ventilationData.crossVentilationPossible),
+		"Base height of ventilation zone": dim(ventilationData.baseHeightOfVentilationZone, "metres"),
 	},
 	editUrl: getUrl("naturalVentilation"),
 };
