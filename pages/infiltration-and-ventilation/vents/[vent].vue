@@ -102,13 +102,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<template v-if="associatedWallWindowOptions.length === 1 || model?.associatedItemId === 'na'">
 			<FieldsPitch label="Pitch of vent" />
-			<FieldsOrientation />
+			<FieldsOrientation help="Enter the orientation of the external surface of the vent"/>
 		</template>
 		<FormKit
 			id="effectiveVentilationArea"
 			type="govInputWithSuffix"
 			label="Effective ventilation area"
-			help="Enter the actual area through which air can flow, accounting for obstructions like grilles or mesh"
+			help="Use the method outlined in BS EN 13141-1 to measure the equivalent area of background ventilator openings. This is the same as in Part F."
 			name="effectiveVentilationArea"
 			validation="required | number | min:1 | max:999999"
 			suffix-text="cm²"
@@ -147,8 +147,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="midHeightOfZone"
 			type="govInputWithSuffix"
-			label="Mid height of zone"
-			help="Enter the mid height of the zone that the vent serves. Typically between 1.2m and 1.8m."
+			label="Mid height of air flow path"
+			help="Enter the height from the ventilation zone base to the midpoint of the vent's air flow path"
 			name="midHeightOfZone"
 			validation="required | number | min:1 | max:60"
 			suffix-text="m"
