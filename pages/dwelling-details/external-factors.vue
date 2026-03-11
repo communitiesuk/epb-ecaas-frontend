@@ -202,9 +202,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Noise nuisance"
 			name="noiseNuisance"
 			validation="required"
-			help="Is there environmental noise from the surrounding area, which can influence whether occupants keep windows closed?"
-			data-field="InfiltrationVentilation.noise_nuisance"
-		/>
+			help="Is there environmental noise from the surrounding area, which can influence whether occupants keep windows closed at night?"
+			data-field="InfiltrationVentilation.noise_nuisance">
+			<GovDetails summary-text="Help with this input">
+				<p>Answer yes if external noise was identified as an issue for Part O compliance. For example, where the local planning authority considered external noise to be an issue at the planning stage.</p>
+			</GovDetails>
+		</FormKit>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
