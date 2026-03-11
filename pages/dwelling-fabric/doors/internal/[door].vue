@@ -42,8 +42,8 @@ autoSaveElementForm<InternalDoorData>({
 function canBeFrontDoor(node: FormKitNode) {
 	if (node.value === true) {
 		const internalDoorsExcludingCurrent = internalDoorData.toSpliced(index, 1);
-		const { dwellingSpaceExternalUnglazedDoor, dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
-		const doors = [...internalDoorsExcludingCurrent, dwellingSpaceExternalUnglazedDoor.data, dwellingSpaceInternalDoor.data].flat();
+		const { dwellingSpaceExternalUnglazedDoor, dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
+		const doors = [...internalDoorsExcludingCurrent, dwellingSpaceExternalUnglazedDoor.data, dwellingSpaceExternalGlazedDoor.data].flat();
 		for (const door of doors) {
 			return !door.data.isTheFrontDoor;			
 		}
