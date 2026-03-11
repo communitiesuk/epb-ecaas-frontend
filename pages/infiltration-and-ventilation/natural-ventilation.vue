@@ -72,7 +72,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsElevationalHeight
 			field="baseHeightOfVentilationZone"
 			label="Base height of ventilation zone"
-			help="Enter the height at which the dwelling sits off or below the ground"
+			help="Enter the height at which the dwelling sits off or below ground. This should be measured from the ground datum level to the lowest finished floor of the dwelling."
 			:minmax="{ min: -150, max: 750 }"
 			data-field="InfiltrationVentilation.ventilation_zone_base_height"
 		/>
