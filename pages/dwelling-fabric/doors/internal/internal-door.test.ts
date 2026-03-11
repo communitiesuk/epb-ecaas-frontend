@@ -448,7 +448,7 @@ describe("internal door", () => {
 		test("displays banner when banner is set to 'update-front-door", async () => {
 			
 			vi.mock("~/composables/banner", () => ({
-				useBanner: () => ref({ type: "update-front-door"}),
+				useBanner: () => ref({ type: "update-front-door" }),
 			}));
 			
 			await renderSuspended(InternalDoor, {
