@@ -87,7 +87,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="startAngle"
 			type="govInputWithSuffix"
 			label="Shading start angle"
-			help="This is the absolute start angle from compass north of the segment"
+			help="Taken from the centre point of the dwelling and measuring clockwise from due North, this is the angle where the obstacle begins"
 			name="startAngle"
 			validation="required | number | min:0 | max:360"
 			suffix-text="°"
@@ -97,7 +97,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="endAngle"
 			type="govInputWithSuffix"
 			label="Shading end angle"
-			help="This is the absolute end angle from compass north of the segment clockwise from the start angle. The end angle must be greater than the start angle."
+			help="Taken from the centre point of the dwelling and measuring clockwise from due North, this is the angle where the obstacle ends"
 			name="endAngle"
 			validation="required | number | min:0 | max:360"
 			suffix-text="°"
@@ -114,8 +114,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="ExternalConditions.shading_segments.*.shading.*.type">
 			<GovDetails summary-text="Help with this input">
 				<ul class="govuk-list govuk-list--bullet">
-					<li>An obstacle (for example, a tree or building) ends at a certain height above ground level.</li>
-					<li>An overhang (for example, a roof or balcony) starts at a certain height above ground level.</li>
+					<li>An obstacle (for example, a tree or building) ends at a certain height above ground level</li>
+					<li>An overhang (for example, a roof or balcony) starts at a certain height above ground level. These are rare as it indicates that light is blocked above a certain height but not below it. It will only occur if, for example, there is an overpass or bridge close to the dwelling which blocks a substantial section of the sky.</li>
 				</ul>
 				<img src="/img/overhang-and-obstacle.png" alt="Overhang and obstacle">
 			</GovDetails>
