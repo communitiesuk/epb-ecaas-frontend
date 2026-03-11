@@ -63,7 +63,7 @@ const doImport = (_event: Event) => {
 		clearLastExportDate();
 
 		// set banner, and navigate to root
-		banner.value = revalidationCausedUpdate ? "import-caused-update" : "import-complete";
+		banner.value = revalidationCausedUpdate ? { type: "import-caused-update" } : { type: "import-complete" };
 
 		navigateTo("/");
 	};
