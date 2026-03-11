@@ -444,6 +444,21 @@ describe("internal door", () => {
 				(await error).innerText.includes("Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead."),
 			).toBe(true);
 		});
+
+		test("displays banner when banner is set to 'update-front-door", async () => {
+			
+			vi.mock("~/composables/banner", () => ({
+				useBanner: () => ref({ type: "update-front-door"}),
+			}));
+			
+			await renderSuspended(InternalDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+		
+			expect(screen.getByTestId("doorBanner")).not.toBeNull();
+		});
 	});
 
 	describe("partially saving data", () => {

@@ -534,6 +534,7 @@ describe("external glazed door", () => {
 	});
 
 	describe("Handing external glazed door as a front door", () => {
+		
 		test("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
 			const frontDoor: Partial<ExternalGlazedDoorData> = {
 				name: "Front door",
@@ -668,6 +669,21 @@ describe("external glazed door", () => {
 			await user.type(screen.getByTestId("pitch"), "180");
 			await user.tab();
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
+		});
+
+		test("displays banner when banner type is set to 'update-front-door", async () => {
+			
+			vi.mock("~/composables/banner", () => ({
+				useBanner: () => ref({ type: "update-front-door"}),
+			}));
+			
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+		
+			expect(screen.getByTestId("doorBanner")).not.toBeNull();
 		});
 	});
 

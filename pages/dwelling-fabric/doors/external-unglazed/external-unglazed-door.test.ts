@@ -608,5 +608,20 @@ describe("external unglazed door", () => {
 			await user.tab();
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
+
+		test("displays banner when banner is set to 'update-front-door", async () => {
+			
+			vi.mock("~/composables/banner", () => ({
+				useBanner: () => ref({ type: "update-front-door" }),
+			}));
+			
+			await renderSuspended(ExternalUnglazedDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+		
+			expect(screen.getByTestId("doorBanner")).not.toBeNull();
+		});
 	});
 });

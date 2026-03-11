@@ -82,6 +82,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		:incomplete-message="false"
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
+		<NotificationsDoorBanner/>
 		<GovErrorSummary :error-list="errorMessages" test-id="internalDoorErrorSummary" />
 		<FormKit
 			id="typeOfInternalDoor"

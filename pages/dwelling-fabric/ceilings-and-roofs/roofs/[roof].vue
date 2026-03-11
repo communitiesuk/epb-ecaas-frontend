@@ -99,7 +99,9 @@ watch(model, (newData, initialData) => {
 		if ([0, 180].includes(newData.pitch!)) {
 			const { dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
 			const doors = [dwellingSpaceExternalGlazedDoor.data, dwellingSpaceExternalUnglazedDoor.data].flat();
+			
 			convertFrontDoorToRegularDoor(doors as EcaasForm<ExternalGlazedDoorData | ExternalUnglazedDoorData>[], roofs as EcaasForm<RoofData>[], index);
+			useBanner().value = { type: "update-front-door" };
 		}
 	}
 });

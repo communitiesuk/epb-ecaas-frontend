@@ -196,6 +196,7 @@ const tagHasValidPitch = computed(() => {
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit"
 	>
+		<NotificationsDoorBanner/>
 		<GovErrorSummary :error-list="errorMessages" test-id="externalGlazedDoorErrorSummary"/>
 		<FormKit
 			id="name"

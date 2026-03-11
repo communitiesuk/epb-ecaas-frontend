@@ -57,7 +57,9 @@ watch(() => model.value?.pitch, (newPitch, initialPitch) => {
 
 	if ([0, 180].includes(newPitch!)) {
 		const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+		
 		convertFrontDoorToRegularDoor(dwellingSpaceInternalDoor.data as EcaasForm<InternalDoorData>[], wallToUnheatedSpaceData, index);
+		useBanner().value = { type: "update-front-door" };
 	}
 });
 

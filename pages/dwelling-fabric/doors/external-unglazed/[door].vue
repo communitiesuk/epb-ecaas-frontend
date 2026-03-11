@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { NotificationsDoorBanner } from "#components";
 import { getUrl, standardPitchOptions, uniqueName } from "#imports";
 import { isFlatRoofItem } from "../../../../utils/isFlatRoofItem";
 
@@ -101,6 +102,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit"
 	>
+		<NotificationsDoorBanner/>
 		<GovErrorSummary :error-list="errorMessages" test-id="externalUnglazedDoorErrorSummary"/>
 		<FormKit
 			id="name"
