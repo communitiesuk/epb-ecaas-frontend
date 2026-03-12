@@ -45,12 +45,10 @@ const groundFloorSummary: SummarySection = {
 	id: "dwellingSpaceGroundFloors",
 	label: "Ground floors",
 	data: groundFloorData.map(({ data: x }) => {
-		const isSlabEdgeInsulation = x.typeOfGroundFloor === "Slab_edge_insulation";
-		const horizontalEdgeInsulationWidth = "horizontalEdgeInsulationWidth" in x ? dim(x.horizontalEdgeInsulationWidth) : emptyValueRendering;
+		const horizontalEdgeInsulationWidth = "horizontalEdgeInsulationWidth" in x ? dim(x.horizontalEdgeInsulationWidth,"metres") : emptyValueRendering;
 		const horizontalEdgeInsulationThermalResistance = "horizontalEdgeInsulationThermalResistance" in x ? dim(x.horizontalEdgeInsulationThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
-		const verticalEdgeInsulationDepth = "verticalEdgeInsulationDepth" in x ? dim(x.verticalEdgeInsulationDepth, "millimetres") : emptyValueRendering;
+		const verticalEdgeInsulationDepth = "verticalEdgeInsulationDepth" in x ? dim(x.verticalEdgeInsulationDepth, "metres") : emptyValueRendering;
 		const verticalEdgeInsulationThermalResistance = "verticalEdgeInsulationThermalResistance" in x ? dim(x.verticalEdgeInsulationThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
-		const isSuspendedFloor = x.typeOfGroundFloor === "Suspended_floor";
 		const heightOfFloorUpperSurface = "heightOfFloorUpperSurface" in x ? dim(x.heightOfFloorUpperSurface, "millimetres") : emptyValueRendering;
 		const underfloorSpaceThermalResistance = "underfloorSpaceThermalResistance" in x ? dim(x.underfloorSpaceThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 		const thermalTransmittanceOfWallsAboveGround = "thermalTransmittanceOfWallsAboveGround" in x ? dim(x.thermalTransmittanceOfWallsAboveGround, "watts per square metre kelvin") : emptyValueRendering;
@@ -68,15 +66,15 @@ const groundFloorSummary: SummarySection = {
 			"Psi of wall junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
 			"Thickness of walls at the edge of the floor": dim(x.thicknessOfWalls, "millimetres"),
 			"Type of ground floor": displaySnakeToSentenceCase(show(x.typeOfGroundFloor)),
-			"Horizontal edge insulation width": isSlabEdgeInsulation ? horizontalEdgeInsulationWidth : undefined,
-			"Horizontal edge insulation thermal resistance": isSlabEdgeInsulation ? horizontalEdgeInsulationThermalResistance : undefined,
-			"Vertical edge insulation depth": isSlabEdgeInsulation ? verticalEdgeInsulationDepth : undefined,
-			"Vertical edge insulation thermal resistance": isSlabEdgeInsulation ? verticalEdgeInsulationThermalResistance : undefined,			
-			"Height of the floor upper surface": isSuspendedFloor ? heightOfFloorUpperSurface : undefined,
-			"Thermal resistance of insulation on base of underfloor space": isSuspendedFloor ? underfloorSpaceThermalResistance : undefined,
-			"Thermal transmittance of walls above ground": isSuspendedFloor ? thermalTransmittanceOfWallsAboveGround : undefined,
-			"Area of ventilation openings per perimeter": isSuspendedFloor ? ventilationOpeningsArea : undefined,
-			"Wind shielding factor": isSuspendedFloor ? windShieldingFactor : undefined,
+			"Horizontal edge insulation width": horizontalEdgeInsulationWidth,
+			"Horizontal edge insulation thermal resistance": horizontalEdgeInsulationThermalResistance,
+			"Vertical edge insulation depth": verticalEdgeInsulationDepth,
+			"Vertical edge insulation thermal resistance": verticalEdgeInsulationThermalResistance,			
+			"Height of the floor upper surface": heightOfFloorUpperSurface ,	
+			"Thermal resistance of insulation on base of underfloor space": underfloorSpaceThermalResistance,
+			"Thermal transmittance of walls above ground": thermalTransmittanceOfWallsAboveGround,
+			"Area of ventilation openings per perimeter": ventilationOpeningsArea,
+			"Wind shielding factor": windShieldingFactor,
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceFloors"),

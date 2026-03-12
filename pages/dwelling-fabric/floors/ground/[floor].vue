@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { centimetre, millimetre, type Length } from "~/utils/units/length";
+import { centimetre, metre, type Length } from "~/utils/units/length";
 import type { SchemaWindShieldLocation } from "~/schema/aliases";
 import { getUrl, type GroundFloorData, uniqueName, unitValue } from "#imports";
 
@@ -161,11 +161,10 @@ autoSaveElementForm<GroundFloorData>({
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
-const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
+const greaterThanZero = (node: FormKitNode) => {
 	const value = node.value as Length;
-	return value.amount >= min && value.amount <= max;
+	return value.amount > 0;
 };
-
 </script>
 
 <template>
@@ -315,11 +314,11 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 					label="Width of horizontal edge insulation"
 					help="This is the coverage distance of horizontal edge insulation rather than the thickness of the insulation"
 					type="govInputWithUnit"
-					:unit="millimetre"
-					:validation-rules="{ withinMinAndMax }"
-					validation="required | withinMinAndMax:0,10000"
+					:unit="metre"
+					:validation-rules="{ exclusiveRangeFromMin: greaterThanZero }"
+					validation="required | exclusiveRangeFromMin:0"
 					:validation-messages="{
-						withinMinAndMax: `Horizontal edge insulation width must be at least 0 and no more than 10,000 ${millimetre.name}.`,
+						exclusiveRangeFromMin: `Horizontal edge insulation width must be greater than 0 ${metre.name}.`,
 					}"
 					data-field="Zone.BuildingElement.*.edge_insulation.*.width"
 				/>
@@ -340,11 +339,11 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 					label="Depth of vertical edge insulation"
 					help="This is the coverage distance of vertical edge insulation rather than the thickness of the insulation"
 					type="govInputWithUnit"
-					:unit="millimetre"
-					:validation-rules="{ withinMinAndMax }"
-					validation="required | withinMinAndMax:0,10000"
+					:unit="metre"
+					:validation-rules="{ exclusiveRangeFromMin: greaterThanZero }"
+					validation="required | exclusiveRangeFromMin:0"
 					:validation-messages="{
-						withinMinAndMax: `Vertical edge insulation depth must be at least 0 and no more than 10,000 ${millimetre.name}.`,
+						exclusiveRangeFromMin: `Vertical edge insulation depth must be greater than 0 ${metre.name}.`,
 					}"
 					data-field="Zone.BuildingElement.*.edge_insulation.*.depth"
 				/>

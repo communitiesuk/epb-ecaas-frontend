@@ -31,6 +31,11 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+async function assertValueInSummaryColumn(label: string, value: string, columnIndex = 0) {
+	const lineResult = (await screen.findByTestId(`summary-dwellingSpaceGroundFloors-${hyphenate(label)}`));
+	expect(lineResult.querySelectorAll("dd")[columnIndex]?.textContent).toBe(value);
+}
+
 const zoneParametersData: DwellingSpaceZoneParametersData = {
 	volume: 250,
 	livingZoneArea: 40,
@@ -59,6 +64,26 @@ const floorsData: FloorsData = {
 				psiOfWallJunction: 0,
 				thicknessOfWalls: 0.3,
 				typeOfGroundFloor: "Slab_no_edge_insulation",
+			},
+		},
+		{
+			data: {
+				name: "Ground 2 with slab edge insulation",
+				surfaceArea: 5,
+				uValue: 0.5,
+				thermalResistance: 2,
+				arealHeatCapacity: "Very light",
+				massDistributionClass: "I",
+				perimeter: 0,
+				psiOfWallJunction: 0,
+				thicknessOfWalls: 0.3,
+				typeOfGroundFloor: "Slab_edge_insulation",
+				horizontalEdgeInsulationWidth: 0.5,
+				horizontalEdgeInsulationThermalResistance: 2,
+				verticalEdgeInsulationDepth: 0.3,
+				verticalEdgeInsulationThermalResistance: 2,
+
+
 			},
 		}],
 	},
@@ -347,7 +372,7 @@ const windowData: EcaasForm<WindowData> = {
 const windowDataWithShading: EcaasForm<WindowData> = {
 	data: {
 		...windowData.data,
-		hasShading: true, 
+		hasShading: true,
 		shading: [
 			{ name: "Test 1", typeOfShading: "obstacle", distance: 1, height: 11, transparency: 11 },
 			{ name: "Test 2", typeOfShading: "left_side_fin", distance: 2, depth: 22 },
@@ -564,12 +589,33 @@ describe("Dwelling space fabric summary", () => {
 			"Psi of wall junction": `0 ${wattsPerMeterKelvin.suffix}`,
 			"Thickness of walls at the edge of the floor": `0.3 ${millimetre.suffix}`,
 			"Type of ground floor": "Slab no edge insulation",
+			"Horizontal edge insulation width": `-`,
+			"Horizontal edge insulation thermal resistance": `-`,
+			"Vertical edge insulation depth": `-`,
+			"Vertical edge insulation thermal resistance": `-`,
 		};
 
+		const expectedResultWithEdgeInsulation = {
+			"Name": "Ground 2 with slab edge insulation",
+			"Net surface area of this element": `5 ${metresSquare.suffix}`,
+			"U-value": `0.5 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Thermal resistance": `2 ${squareMeterKelvinPerWatt.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+			"Perimeter": `0 ${metre.suffix}`,
+			"Psi of wall junction": `0 ${wattsPerMeterKelvin.suffix}`,
+			"Thickness of walls at the edge of the floor": `0.3 ${millimetre.suffix}`,
+			"Type of ground floor": "Slab edge insulation",
+			"Horizontal edge insulation width": `0.5 ${metre.suffix}`,
+			"Horizontal edge insulation thermal resistance": `2 ${squareMeterKelvinPerWatt.suffix}`,
+			"Vertical edge insulation depth": `0.3 ${metre.suffix}`,
+			"Vertical edge insulation thermal resistance": `2 ${squareMeterKelvinPerWatt.suffix}`,
+		};
 		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceGroundFloors-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			await assertValueInSummaryColumn(key, value);
+		}
+		for (const [key, value] of Object.entries(expectedResultWithEdgeInsulation)) {
+			await assertValueInSummaryColumn(key, value, 1);
 		}
 	});
 
@@ -1284,7 +1330,7 @@ describe("dwelling space doors", () => {
 							data: [{
 								data: {
 									...externalGlazedDoorData,
-									hasShading: true, 
+									hasShading: true,
 									shading: [
 										{ name: "Test 1", typeOfShading: "obstacle", distance: 1, height: 11, transparency: 11 },
 										{ name: "Test 2", typeOfShading: "left_side_fin", distance: 2, depth: 22 },
@@ -1344,7 +1390,7 @@ describe("dwelling space doors", () => {
 				"Depth of shading 5": `55 ${metre.suffix}`,
 			};
 			await renderSuspended(Summary);
-		
+
 			for (const [key, value] of Object.entries({
 				...baseExpected,
 				...shading1Expected,

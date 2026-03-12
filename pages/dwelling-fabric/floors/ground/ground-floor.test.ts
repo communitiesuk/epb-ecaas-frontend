@@ -2,7 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import GroundFloor from "./[floor].vue";
-import { millimetre } from "~/utils/units/length";
+import { metre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -31,7 +31,7 @@ describe("ground floor", () => {
 		...groundFloor,
 		typeOfGroundFloor: "Slab_edge_insulation",
 		edgeInsulationType: ["horizontal"] as ["horizontal"],
-		horizontalEdgeInsulationWidth: unitValue(0, millimetre),
+		horizontalEdgeInsulationWidth: unitValue(1, metre),
 		horizontalEdgeInsulationThermalResistance: 0,
 	};
 
@@ -39,7 +39,7 @@ describe("ground floor", () => {
 		...groundFloor,
 		typeOfGroundFloor: "Slab_edge_insulation",
 		edgeInsulationType: ["vertical"] as ["vertical"],
-		verticalEdgeInsulationDepth: unitValue(0, millimetre),
+		verticalEdgeInsulationDepth: unitValue(1, metre),
 		verticalEdgeInsulationThermalResistance: 0,
 	};
 
@@ -47,9 +47,9 @@ describe("ground floor", () => {
 		...groundFloor,
 		typeOfGroundFloor: "Slab_edge_insulation",
 		edgeInsulationType: ["horizontal", "vertical"] as ["horizontal", "vertical"],
-		horizontalEdgeInsulationWidth: unitValue(0, millimetre),
+		horizontalEdgeInsulationWidth: unitValue(1, metre),
 		horizontalEdgeInsulationThermalResistance: 0,
-		verticalEdgeInsulationDepth: unitValue(0, millimetre),
+		verticalEdgeInsulationDepth: unitValue(1, metre),
 		verticalEdgeInsulationThermalResistance: 0,
 	};
 
@@ -170,7 +170,7 @@ describe("ground floor", () => {
 			await populateValidForm();
 			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_edge_insulation"));
 			await user.click(screen.getByTestId("edgeInsulationType_horizontal"));
-			await user.type(screen.getByTestId("horizontalEdgeInsulationWidth"), "0");
+			await user.type(screen.getByTestId("horizontalEdgeInsulationWidth"), "1");
 			await user.type(screen.getByTestId("horizontalEdgeInsulationThermalResistance"), "0");
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
@@ -200,7 +200,7 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId("typeOfGroundFloor_Slab_edge_insulation")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("edgeInsulationType_horizontal")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("edgeInsulationType_vertical")).hasAttribute("checked")).toBe(false);
-			expect((await screen.findByTestId<HTMLInputElement>("horizontalEdgeInsulationWidth")).value).toBe("0");
+			expect((await screen.findByTestId<HTMLInputElement>("horizontalEdgeInsulationWidth")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("horizontalEdgeInsulationThermalResistance")).value).toBe("0");
 		});
 
@@ -224,7 +224,7 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId("typeOfGroundFloor_Slab_edge_insulation")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("edgeInsulationType_horizontal")).hasAttribute("checked")).toBe(false);
 			expect((await screen.findByTestId("edgeInsulationType_vertical")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("verticalEdgeInsulationDepth")).value).toBe("0");
+			expect((await screen.findByTestId<HTMLInputElement>("verticalEdgeInsulationDepth")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("verticalEdgeInsulationThermalResistance")).value).toBe("0");
 		});
 
@@ -248,9 +248,9 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId("typeOfGroundFloor_Slab_edge_insulation")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("edgeInsulationType_horizontal")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("edgeInsulationType_vertical")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("horizontalEdgeInsulationWidth")).value).toBe("0");
+			expect((await screen.findByTestId<HTMLInputElement>("horizontalEdgeInsulationWidth")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("horizontalEdgeInsulationThermalResistance")).value).toBe("0");
-			expect((await screen.findByTestId<HTMLInputElement>("verticalEdgeInsulationDepth")).value).toBe("0");
+			expect((await screen.findByTestId<HTMLInputElement>("verticalEdgeInsulationDepth")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("verticalEdgeInsulationThermalResistance")).value).toBe("0");
 		});
 
@@ -284,6 +284,36 @@ describe("ground floor", () => {
 			expect(screen.queryByTestId("horizontalEdgeInsulationThermalResistance")).toBeNull();
 			expect(screen.queryByTestId("verticalEdgeInsulationDepth")).toBeDefined();
 			expect(screen.queryByTestId("verticalEdgeInsulationThermalResistance")).toBeDefined();
+		});
+
+		test("error is shown when horizontal edge insulation width is 0", async () => {
+			await renderSuspended(GroundFloor, {
+				route: { params: { floor: "create" } },
+			});
+
+			await populateValidForm();
+			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_edge_insulation"));
+			await user.click(screen.getByTestId("edgeInsulationType_horizontal"));
+			await user.type(screen.getByTestId("horizontalEdgeInsulationWidth"), "0");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(await screen.findByTestId("horizontalEdgeInsulationWidth_error")).toBeDefined();
+		});
+
+		test("error is shown when vertical edge insulation depth is 0", async () => {
+			await renderSuspended(GroundFloor, {
+				route: { params: { floor: "create" } },
+			});
+
+			await populateValidForm();
+			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_edge_insulation"));
+			await user.click(screen.getByTestId("edgeInsulationType_vertical"));
+			await user.type(screen.getByTestId("verticalEdgeInsulationDepth"), "0");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(await screen.findByTestId("verticalEdgeInsulationDepth_error")).toBeDefined();
 		});
 	});
 
