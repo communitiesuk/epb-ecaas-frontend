@@ -1,0 +1,40 @@
+<script setup lang="ts">
+import type { NuxtError } from "#app";
+
+defineProps<{ error: NuxtError }>();
+
+const runtimeConfig = useRuntimeConfig();
+const env = runtimeConfig.public.environment;
+const testSiteMessage = "This is a test site.";
+</script>
+
+<template>
+	<GovCookieBanner />
+	<header class="govuk-template__header">
+		<GovHeader classes="govuk-header--full-width-border" />
+		<GovServiceNavigation service-name="(Testing) Check Part L building compliance" />
+		<GovPhaseBanner v-if="env === 'ecaas-intg'" tag="Integration" classes="govuk-tag--green">
+			{{ testSiteMessage }}
+		</GovPhaseBanner>
+		<GovPhaseBanner v-else-if="env === 'ecaas-stag'" tag="Staging" classes="govuk-tag--green">
+			{{ testSiteMessage }}
+		</GovPhaseBanner>
+		<GovPhaseBanner v-else tag="Beta">
+			This is a new service. Help us to improve it and <NuxtLink href="/feedback" class="govuk-link">give your feedback</NuxtLink>.
+		</GovPhaseBanner>
+	</header>
+	<div class="govuk-width-container">
+		<main class="govuk-main-wrapper govuk-!-padding-top-6">
+			<div class="govuk-grid-row">
+				<div class="govuk-grid-column-full">
+					<NotFound v-if="error.status === 404" />
+					<ServiceError v-else />
+				</div>
+			</div>
+		</main>
+		<GovFeedback />
+	</div>
+	<footer class="govuk-template__footer">
+		<GovFooter />
+	</footer>
+</template>

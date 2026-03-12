@@ -8,7 +8,7 @@ export function usePage() {
 	const route = useRoute();
 	const page = pagesData.find(p => p.url === route.path);
 	if (!page) {
-		throw new Error(`Page could not be resolved for route path '${ route.path }'`);
+		throw createError({ statusCode: 404, statusMessage: `Page not found: ${route.path}` });
 	}
 	return page;
 }
