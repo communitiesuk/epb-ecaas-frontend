@@ -53,7 +53,6 @@ function handleComplete() {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<VentsInfo />
 	<CustomList
 		id="vents"
 		title="Vents"
