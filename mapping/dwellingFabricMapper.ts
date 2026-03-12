@@ -752,6 +752,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				g_value: x.solarTransmittance,
 				mid_height: midHeight,
 				security_risk: x.securityRisk,
+				free_area_height: 0,
 				frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
 				max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
 				window_part_list: mapWindowPartList(x),

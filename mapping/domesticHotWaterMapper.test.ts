@@ -71,7 +71,6 @@ describe("domestic hot water mapper", () => {
 				ColdWaterSource: "mains water",
 				HeatSource: {
 					[heatPump.data.name]: {
-						EnergySupply: "mains elec",
 						heater_position: 0.3,
 						type: "HeatSourceWet",
 						name: heatPump.data.name,
@@ -129,7 +128,6 @@ describe("domestic hot water mapper", () => {
 				EnergySupply_pump: "mains elec",
 				HeatSource: {
 					[heatPump.data.name]: {
-						EnergySupply: "electricity",
 						heater_position: 0.3,
 						type: "HeatSourceWet",
 						name: heatPump.data.name,

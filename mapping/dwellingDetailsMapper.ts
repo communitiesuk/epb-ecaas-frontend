@@ -27,7 +27,7 @@ export type GeneralFieldsFromDwelling = "General" |
 	"NumberOfBathrooms" |
 	"NumberOfSanitaryAccommodations" |
 	"NumberOfHabitableRooms" |
-	"NumberOfTappedRooms" |
+	"NumberOfHotTappedRooms" |
 	"NumberOfWetRooms" |
 	"PartGcompliance" |
 	"PartO_active_cooling_required";  
@@ -55,7 +55,7 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 		NumberOfBathrooms: generalDetails.numOfBathrooms,
 		NumberOfSanitaryAccommodations: generalDetails.numOfWCs,
 		NumberOfHabitableRooms: generalDetails.numOfHabitableRooms,
-		NumberOfTappedRooms: generalDetails.numOfRoomsWithTappingPoints,
+		NumberOfHotTappedRooms: generalDetails.numOfRoomsWithTappingPoints,
 		NumberOfWetRooms: generalDetails.numOfWetRooms,
 		PartGcompliance: generalDetails.isPartGCompliant,
 		PartO_active_cooling_required: generalDetails.partOActiveCoolingRequired,

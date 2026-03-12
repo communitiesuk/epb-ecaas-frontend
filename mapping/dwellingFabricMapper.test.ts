@@ -1248,7 +1248,7 @@ describe("dwelling fabric mapper", () => {
 			mid_height: window.elevationalHeight + window.height / 2,
 			frame_area_fraction: 1 - window.openingToFrameRatio,
 			security_risk: false,
-
+			free_area_height: 0,
 			max_window_open_area: window.maximumOpenableArea,
 			window_part_list: [
 				{

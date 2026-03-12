@@ -42,11 +42,11 @@
 			"minimum": 0,
 			"description": "A wet room is any room used for domestic activities (such as cooking, clothes washing and bathing) that produce significant amounts of airborne moisture, e.g. a kitchen, utility room or bathroom. For the purposes of Part F of the Building Regulations, sanitary accommodation is also regarded as a wet room."
 		},
-		"NumberOfTappedRooms": {
-			"type": "integer",
-			"minimum": 2,
-			"description": "A tapped room is any room with a tapping point (e.g. sink, bath, or shower)"
-		},
+		"NumberOfHotTappedRooms": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "A tapped room is any room with a hot water tapping point (e.g sink, bath or shower) with hot water from the central system, not including instantaneous hot water that's fed from the cold water pipework, for example a room with just an electric shower and/or electric water heater over the sink."
+        },
 		"NumberOfUtilityRooms": {
 			"type": "integer",
 			"minimum": 0,
@@ -511,8 +511,7 @@
 									{
 										"required": [
 											"ColdWaterSource",
-											"HeatSourceWet",
-											"daily_HW_usage"
+											"HeatSourceWet"
 										],
 										"properties": {
 											"ColdWaterSource": {
@@ -526,12 +525,6 @@
 												"reference_to": "$.heat_source_wet",
 												"title": "Heatsourcewet",
 												"type": "string"
-											},
-											"daily_HW_usage": {
-												"description": "Daily hot water usage for the combi boiler system (unit: litre/day)",
-												"exclusiveMinimum": 0,
-												"title": "Daily Hw Usage",
-												"type": "number"
 											}
 										}
 									},
@@ -539,7 +532,6 @@
 										"required": [
 											"ColdWaterSource",
 											"HeatSourceWet",
-											"daily_HW_usage",
 											"separate_DHW_tests",
 											"rejected_energy_1"
 										],
@@ -555,12 +547,6 @@
 												"reference_to": "$.heat_source_wet",
 												"title": "Heatsourcewet",
 												"type": "string"
-											},
-											"daily_HW_usage": {
-												"description": "Daily hot water usage for the combi boiler system (unit: litre/day)",
-												"exclusiveMinimum": 0,
-												"title": "Daily Hw Usage",
-												"type": "number"
 											},
 											"rejected_energy_1": {
 												"anyOf": [
@@ -1029,13 +1015,13 @@
 															},
 															"electricity_full_load": {
 																"description": "Electrical power consumption at full load (unit: kW)",
-																"exclusiveMinimum": 0,
+																"minimum": 0,
 																"title": "Electricity Full Load",
 																"type": "number"
 															},
 															"electricity_part_load": {
 																"description": "Electrical power consumption at part load (unit: kW)",
-																"exclusiveMinimum": 0,
+																"minimum": 0,
 																"title": "Electricity Part Load",
 																"type": "number"
 															},
@@ -1378,12 +1364,12 @@
 										},
 										"electricity_part_load": {
 											"type": "number",
-											"minimum": 0.001,
+											"minimum": 0,
 											"maximum": 1
 										},
 										"electricity_full_load": {
 											"type": "number",
-											"minimum": 0.001,
+											"minimum": 0,
 											"maximum": 1
 										},
 										"electricity_standby": {
@@ -2902,23 +2888,11 @@
 							{
 								"type": "object",
 								"required": [
-									"sup_air_flw_ctrl",
-									"sup_air_temp_ctrl",
 									"product_reference",
 									"EnergySupply",
 									"installed_under_approved_scheme"
 								],
 								"properties": {
-									"sup_air_flw_ctrl": {
-										"enum": [
-											"ODA"
-										]
-									},
-									"sup_air_temp_ctrl": {
-										"enum": [
-											"NO_CTRL"
-										]
-									},
 									"design_zone_cooling_covered_by_mech_vent": {
 										"type": "number"
 									},
@@ -3319,23 +3293,11 @@
 							{
 								"type": "object",
 								"required": [
-									"sup_air_flw_ctrl",
-									"sup_air_temp_ctrl",
 									"vent_type",
 									"EnergySupply",
 									"design_outdoor_air_flow_rate"
 								],
 								"properties": {
-									"sup_air_flw_ctrl": {
-										"enum": [
-											"ODA"
-										]
-									},
-									"sup_air_temp_ctrl": {
-										"enum": [
-											"NO_CTRL"
-										]
-									},
 									"design_zone_cooling_covered_by_mech_vent": {
 										"type": "number"
 									},
@@ -4391,6 +4353,7 @@
 											"base_height",
 											"height",
 											"width",
+											"free_area_height",
 											"pitch"
 										],
 										"properties": {
@@ -4686,7 +4649,8 @@
 		"BuildingLength",
 		"BuildingWidth",
 		"NumberOfBedrooms",
-		"NumberOfTappedRooms",
+        "NumberOfWetRooms",
+        "NumberOfHotTappedRooms",
 		"NumberOfUtilityRooms",
 		"NumberOfBathrooms",
 		"NumberOfSanitaryAccommodations",
@@ -5307,13 +5271,9 @@
 					},
 					"then": {
 						"required": [
-							"EnergySupply",
 							"name"
 						],
 						"properties": {
-							"EnergySupply": {
-								"type": "string"
-							},
 							"name": {
 								"type": "string"
 							},

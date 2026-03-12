@@ -130,7 +130,6 @@ const expectedHouseInput: FhsInputSchema = {
 			HeatSource: {
 				["Heat pump 1"]: {
 					name: "Heat pump 1",
-					EnergySupply: "mains elec",
 					heater_position: 0.1,
 					type: "HeatSourceWet",
 					temp_flow_limit_upper: 65,
@@ -154,8 +153,6 @@ const expectedHouseInput: FhsInputSchema = {
 			"kitchen exhaust fan": {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 55,
-				sup_air_flw_ctrl: "ODA",
-				sup_air_temp_ctrl: "NO_CTRL",
 				vent_type: "Intermittent MEV",
 				SFP: 1.5,
 				position_exhaust: {},
@@ -186,7 +183,7 @@ const expectedHouseInput: FhsInputSchema = {
 	NumberOfBathrooms: 1,
 	NumberOfHabitableRooms: 4,
 	NumberOfSanitaryAccommodations: 1,
-	NumberOfTappedRooms: 2,
+	NumberOfHotTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
 	NumberOfWetRooms: 1,
 	SpaceCoolSystem: {
@@ -469,7 +466,6 @@ const expectedFlatInput: FhsInputSchema = {
 			HeatSource: {
 				["Heat pump 1"]: {
 					name: "Heat pump 1",
-					EnergySupply: "mains elec",
 					heater_position: 0.1,
 					type: "HeatSourceWet",
 					temp_flow_limit_upper: 65,
@@ -513,8 +509,6 @@ const expectedFlatInput: FhsInputSchema = {
 			"mvhr vent 1 name": {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 17,
-				sup_air_flw_ctrl: "ODA",
-				sup_air_temp_ctrl: "NO_CTRL",
 				vent_type: "MVHR",
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
@@ -545,8 +539,6 @@ const expectedFlatInput: FhsInputSchema = {
 			"mvhr vent 2 name": {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 3,
-				sup_air_flw_ctrl: "ODA",
-				sup_air_temp_ctrl: "NO_CTRL",
 				vent_type: "MVHR",
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
@@ -567,8 +559,6 @@ const expectedFlatInput: FhsInputSchema = {
 			"centralised MEV name": {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 8,
-				sup_air_flw_ctrl: "ODA",
-				sup_air_temp_ctrl: "NO_CTRL",
 				vent_type: "Centralised continuous MEV",
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
@@ -620,7 +610,7 @@ const expectedFlatInput: FhsInputSchema = {
 	NumberOfBathrooms: 1,
 	NumberOfHabitableRooms: 4,
 	NumberOfSanitaryAccommodations: 1,
-	NumberOfTappedRooms: 2,
+	NumberOfHotTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
 	NumberOfWetRooms: 2,
 	SpaceCoolSystem: {},
@@ -895,6 +885,7 @@ const expectedFlatInput: FhsInputSchema = {
 					height: 2,
 					width: 2,
 					base_height: 1,
+					free_area_height: 0,
 					thermal_resistance_construction: 0.1,
 					g_value: 0.2,
 					security_risk: true,

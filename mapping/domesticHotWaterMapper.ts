@@ -148,7 +148,6 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 				HeatSource: {
 					[heatSourceName]: {
 						name: heatSourceName,
-						EnergySupply: defaultElectricityEnergySupplyName,
 						heater_position: ws.heaterPosition,
 						type: "HeatSourceWet",
 						thermostat_position: ws.thermostatPosition,
@@ -169,7 +168,6 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 				HeatSource: {
 					[heatSourceName]: {
 						name: heatSourceName,
-						EnergySupply: ws.energySupply,
 						heater_position: ws.heaterPosition,
 						type: "HeatSourceWet",
 					},

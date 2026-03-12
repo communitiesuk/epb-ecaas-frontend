@@ -230,7 +230,6 @@ export interface components {
         HeatSourceWet: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
             /** @constant */
             type: "HeatSourceWet";
-            EnergySupply: string;
             name: string;
             temp_flow_limit_upper?: number;
         };
@@ -502,10 +501,6 @@ export interface components {
             min_flow_temp: number;
         };
         MechVentCommon: {
-            /** @enum {unknown} */
-            sup_air_flw_ctrl: "ODA";
-            /** @enum {unknown} */
-            sup_air_temp_ctrl: "NO_CTRL";
             design_zone_cooling_covered_by_mech_vent?: number;
             design_zone_heating_covered_by_mech_vent?: number;
             EnergySupply: string;
@@ -711,11 +706,6 @@ export interface components {
              * @description References a key (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1') in $.HeatSourceWet
              */
             HeatSourceWet: string;
-            /**
-             * Daily Hw Usage
-             * @description Daily hot water usage for the combi boiler system (unit: litre/day)
-             */
-            daily_HW_usage: number;
         } | {
             /** @enum {unknown} */
             ColdWaterSource: "header tank" | "mains water";
@@ -753,11 +743,6 @@ export interface components {
              * @default null
              */
             storage_loss_factor_2?: number | null;
-            /**
-             * Daily Hw Usage
-             * @description Daily hot water usage for the combi boiler system (unit: litre/day)
-             */
-            daily_HW_usage: number;
         });
         /** @description A possible hot water source */
         HeatBattery: {
@@ -1149,7 +1134,7 @@ export interface components {
             pitch: number;
             frame_area_fraction: number;
             g_value: number;
-            free_area_height?: number;
+            free_area_height: number;
             mid_height: number;
             max_window_open_area: number;
             security_risk: boolean;
@@ -1245,9 +1230,9 @@ export interface components {
             GroundFloorArea?: number;
             NumberOfBedrooms: number;
             /** @description A wet room is any room used for domestic activities (such as cooking, clothes washing and bathing) that produce significant amounts of airborne moisture, e.g. a kitchen, utility room or bathroom. For the purposes of Part F of the Building Regulations, sanitary accommodation is also regarded as a wet room. */
-            NumberOfWetRooms?: number;
-            /** @description A tapped room is any room with a tapping point (e.g. sink, bath, or shower) */
-            NumberOfTappedRooms: number;
+            NumberOfWetRooms: number;
+            /** @description A tapped room is any room with a hot water tapping point (e.g sink, bath or shower) with hot water from the central system, not including instantaneous hot water that's fed from the cold water pipework, for example a room with just an electric shower and/or electric water heater over the sink. */
+            NumberOfHotTappedRooms: number;
             /** @description A utility room is any that contains a sink or other feature or equipment that may reasonably be expected to produce significant quantities of water vapour */
             NumberOfUtilityRooms: number;
             /** @description A bathroom is any room that contains a bath or shower */
@@ -1461,10 +1446,6 @@ export interface components {
                 };
                 MechanicalVentilation?: {
                     [key: string]: ({
-                        /** @enum {unknown} */
-                        sup_air_flw_ctrl: "ODA";
-                        /** @enum {unknown} */
-                        sup_air_temp_ctrl: "NO_CTRL";
                         design_zone_cooling_covered_by_mech_vent?: number;
                         design_zone_heating_covered_by_mech_vent?: number;
                         /**
@@ -1708,7 +1689,6 @@ export interface components {
                 HeatSourceWet: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
                     /** @constant */
                     type: "HeatSourceWet";
-                    EnergySupply: string;
                     name: string;
                     temp_flow_limit_upper?: number;
                 };
@@ -1817,11 +1797,6 @@ export interface components {
                      * @description References a key (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1') in $.HeatSourceWet
                      */
                     HeatSourceWet: string;
-                    /**
-                     * Daily Hw Usage
-                     * @description Daily hot water usage for the combi boiler system (unit: litre/day)
-                     */
-                    daily_HW_usage: number;
                 } | {
                     /** @enum {unknown} */
                     ColdWaterSource: "header tank" | "mains water";
@@ -1859,11 +1834,6 @@ export interface components {
                      * @default null
                      */
                     storage_loss_factor_2?: number | null;
-                    /**
-                     * Daily Hw Usage
-                     * @description Daily hot water usage for the combi boiler system (unit: litre/day)
-                     */
-                    daily_HW_usage: number;
                 });
                 /** @description A possible hot water source */
                 HeatBattery: {
@@ -2305,10 +2275,6 @@ export interface components {
                     min_flow_temp: number;
                 };
                 MechVentCommon: {
-                    /** @enum {unknown} */
-                    sup_air_flw_ctrl: "ODA";
-                    /** @enum {unknown} */
-                    sup_air_temp_ctrl: "NO_CTRL";
                     design_zone_cooling_covered_by_mech_vent?: number;
                     design_zone_heating_covered_by_mech_vent?: number;
                     EnergySupply: string;
@@ -2545,7 +2511,7 @@ export interface components {
                     pitch: number;
                     frame_area_fraction: number;
                     g_value: number;
-                    free_area_height?: number;
+                    free_area_height: number;
                     mid_height: number;
                     max_window_open_area: number;
                     security_risk: boolean;

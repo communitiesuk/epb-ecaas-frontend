@@ -56,7 +56,7 @@ describe("dwelling details mapper", () => {
 		expect(fhsInputData.NumberOfBathrooms).toBe(state.numOfBathrooms);
 		expect(fhsInputData.NumberOfSanitaryAccommodations).toBe(state.numOfWCs);
 		expect(fhsInputData.NumberOfHabitableRooms).toBe(state.numOfHabitableRooms);
-		expect(fhsInputData.NumberOfTappedRooms).toBe(state.numOfRoomsWithTappingPoints);
+		expect(fhsInputData.NumberOfHotTappedRooms).toBe(state.numOfRoomsWithTappingPoints);
 		expect(fhsInputData.NumberOfWetRooms).toBe(state.numOfWetRooms);
 		expect(fhsInputData.PartGcompliance).toBe(state.isPartGCompliant);
 		expect(fhsInputData.PartO_active_cooling_required).toBe(state.partOActiveCoolingRequired);
