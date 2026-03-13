@@ -286,11 +286,9 @@ const heatSourceOptions = new Map(
 			label="Type of waste water heat recovery system"
 			validation="required"
 		/>
-		<FormKit
+		<FieldsSelectPcdbProduct
 			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'electricShower') && model.wwhrs === true"
 			id="selectWwhrsProduct"
-			type="govPcdbProduct"
-			label="Select a product"
 			name="wwhrsProductReference"
 			help="Select the WWHRS type from the PCDB using the button below."
 			:selected-product-reference="model.wwhrsProductReference"
