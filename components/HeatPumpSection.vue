@@ -5,17 +5,43 @@ import { heatPumpTypes } from "../utils/display";
 const route = useRoute();
 const store = useEcaasStore();
 
+type HeatPumpSectionPage = "space-heating" | "domestic-hot-water";
+
 const { model } = defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatPump" }>;
 	index: number;
 	boilers: [string, string][];
 	addBoilerPageId: PageId;
+	page: HeatPumpSectionPage;
 }>();
 
 const heatSources = getCombinedHeatSources(store);
 const emit = defineEmits(["update-heat-pump-model"]);
 
 const requireBoiler = model.productReference && model.backupCtrlType === "TopUp" && !model.powerMaxBackup;
+
+const shHeatPumpOptions = {
+	"airSource": heatPumpTypes["airSource"],
+	"groundSource": heatPumpTypes["groundSource"],
+	"waterSource": heatPumpTypes["waterSource"],
+	"booster": heatPumpTypes["booster"],
+	"exhaustAirMev": heatPumpTypes["exhaustAirMev"],
+	"exhaustAirMvhr": heatPumpTypes["exhaustAirMvhr"],
+	"exhaustAirMixed": heatPumpTypes["exhaustAirMixed"],
+};
+
+const dhwHeatPumpOptions = {
+	"hotWaterOnly": heatPumpTypes["hotWaterOnly"],
+	"airSource": heatPumpTypes["airSource"],
+	"groundSource": heatPumpTypes["groundSource"],
+	"waterSource": heatPumpTypes["waterSource"],
+	"booster": heatPumpTypes["booster"],
+};
+
+const heatPumpTypeOptionsMap = {
+	"space-heating": shHeatPumpOptions,
+	"domestic-hot-water": dhwHeatPumpOptions,
+} as const satisfies Record<HeatPumpSectionPage, Partial<Record<HeatPumpType, string>>>;
 </script>
 
 <template>
@@ -23,7 +49,7 @@ const requireBoiler = model.productReference && model.backupCtrlType === "TopUp"
 		id="typeOfHeatPump"
 		type="govRadios"
 		label="Type of heat pump"
-		:options="heatPumpTypes"
+		:options="heatPumpTypeOptionsMap[page]"
 		name="typeOfHeatPump"
 		validation="required"
 		@click="emit('update-heat-pump-model', 'typeOfHeatPump')" />

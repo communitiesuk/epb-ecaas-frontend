@@ -115,7 +115,8 @@ const boilers = heatSourceStoreData
 			:index="index"
 			:boilers="boilers"
 			add-boiler-page-id="heatSourceCreate"
-			@update-heat-pump-model="updateHeatSource" />
+			page="space-heating"
+			@update-heat-pump-model="updateHeatSource"/>
 		<BoilerSection
 			v-if="model?.typeOfHeatSource === 'boiler'"
 			:model="(model as BoilerModelType)"

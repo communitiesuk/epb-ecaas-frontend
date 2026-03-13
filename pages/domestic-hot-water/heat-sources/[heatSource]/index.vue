@@ -186,7 +186,8 @@ const domesticHotWaterBoilers = hotWaterHeatSourceStoreData
 const spaceHeatingBoilers = hotWaterHeatSourceStoreData
 	.filter(x => x.data.isExistingHeatSource)
 	.map(x => {
-		const heatSource = store.spaceHeating.heatSource.data.find(hs => hs.data.id === x.data.heatSourceId);
+		const heatSource = store.spaceHeating.heatSource.data
+			.find(hs => hs.data.id === x.data.heatSourceId);
 		
 		if (heatSource?.data.typeOfHeatSource === "boiler") {
 			return [heatSource.data.id, heatSource.data.name] as [string, string];
@@ -254,6 +255,7 @@ const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
 			:index="index"
 			:boilers="allBoilers"
 			add-boiler-page-id="heatSourcesCreate"
+			page="domestic-hot-water"
 			@update-heat-pump-model="updateHeatSource" />
 		<BoilerSection
 			v-if="model.isExistingHeatSource === false
