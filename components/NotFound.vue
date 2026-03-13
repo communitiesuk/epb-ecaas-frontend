@@ -1,5 +1,3 @@
-<script setup lang="ts">
-</script>
 <template>
 	<Title>Page not found</Title>
 	<main id="main-content" class="govuk-main-wrapper govuk-main-wrapper--l">
