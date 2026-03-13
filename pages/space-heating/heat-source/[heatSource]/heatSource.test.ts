@@ -618,6 +618,18 @@ describe("heatSource", () => {
 			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/heat-network");
 		});
 
+		test("the 'Booster heat pump' element navigates user to the space heating overview page when there are stored boosters", async () => {
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
+			await user.click(screen.getByTestId("typeOfHeatNetwork_communalHeatNetwork"));
+			await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
+			expect(screen.getByRole("link", { name: "Click here to add a booster heat pump" }).getAttribute("href")).toBe("/space-heating");
+		});
+
 		test("heat network data is saved to store state when form is valid", async () => {
 			vi.mocked(uuidv4).mockReturnValue(heatNetwork1.id as unknown as Buffer);
 

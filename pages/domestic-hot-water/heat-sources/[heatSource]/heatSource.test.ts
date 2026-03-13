@@ -913,3 +913,67 @@ describe("Heat pump section", () => {
 		});
 	});
 });
+
+describe("heat network", () => {
+	
+	test("heat network can be tagged with a booster heat pumps from DWH & space heating", async () => {
+
+		const booster: HeatSourceData = {
+			name: "Booster HP",
+			id: "boosterID-123",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "booster",
+			productReference: "2",
+		};
+
+		const dhwBooster: DomesticHotWaterHeatSourceData = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "booster",
+			name: "DHW Booster HP",
+			id: "dhwBoosterID-123",
+			coldWaterSource: "headerTank",
+			productReference: "1",
+		};
+
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [{ data: booster }],
+				},
+			},
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: dhwBooster } ],
+				},
+			},
+		});
+		
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "create" },
+			},
+		});
+		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+		await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
+		await user.click(screen.getByTestId("typeOfHeatNetwork_communalHeatNetwork"));
+		await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
+
+		expect(screen.getByTestId(`boosterHeatPumpId_${booster.id}`)).toBeDefined();
+		expect(screen.getByTestId(`boosterHeatPumpId_${dhwBooster.id}`)).toBeDefined();
+	});
+
+	test("the 'Booster heat pump' element navigates user to the DHW overview page when there are stored boosters", async () => {
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "create" },
+			},
+		});
+		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+		await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
+		await user.click(screen.getByTestId("typeOfHeatNetwork_communalHeatNetwork"));
+		await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
+		expect(screen.getByRole("link", { name: "Click here to add a booster heat pump" }).getAttribute("href")).toBe("/domestic-hot-water");
+	});
+});

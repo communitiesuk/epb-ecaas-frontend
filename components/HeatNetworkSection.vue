@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { heatNetworkTypes, typeOfHeatSource, uniqueName } from "#imports";
+import type { PageId } from "~/data/pages/pages";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -7,6 +8,7 @@ const store = useEcaasStore();
 defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatNetwork" }>;
 	index: number;
+	section: PageId;
 }>();
 
 const heatSources = getCombinedHeatSources(store);
@@ -61,6 +63,7 @@ const emit = defineEmits(["update-heat-network-model"]);
 			label="Booster heat pump"
 			help="Select the booster heat pump that has been added previously which will be used as the backup for the heat network"
 			name="boosterHeatPumpId"
+			:section="section"
 			validation="required"
 		/>
 		<FieldsEnergySupplies
@@ -116,6 +119,7 @@ const emit = defineEmits(["update-heat-network-model"]);
 			label="Booster heat pump"
 			help="Select the booster heat pump that has been added previously which will be used as the backup for the heat network"
 			name="boosterHeatPumpId"
+			:section="section"
 			validation="required"
 		/>
 		<FormKit
