@@ -53,7 +53,16 @@ const emit = defineEmits(["update-heat-network-model"]);
 			:selected-product-reference="model.productReference"
 			:selected-product-type="typeOfHeatSource.heatNetwork"
 			:page-url="route.fullPath"
-			:page-index="index" />
+			:page-index="index" 
+		/>
+		<FieldsBoosterHeatPumps
+			v-if="model.isHeatNetworkInPcdb"
+			id="boosterHeatPumpId"
+			label="Booster heat pump"
+			help="Select the booster heat pump that has been added previously which will be used as the backup for the heat network"
+			name="boosterHeatPumpId"
+			validation="required"
+		/>
 		<FieldsEnergySupplies
 			v-if="model.isHeatNetworkInPcdb"
 			id="energySupply"
@@ -94,6 +103,21 @@ const emit = defineEmits(["update-heat-network-model"]);
 			label="Can energy from the heat network be exported?"
 			name="canEnergyBeExported"
 			validation="required" />
+		<FormKit
+			v-if="model.isHeatNetworkInPcdb === false"
+			id="hasBoosterHeatPump"
+			type="govBoolean"
+			label="Does the heat network have a booster heat pump?"
+			name="hasBoosterHeatPump"
+			validation="required" />
+		<FieldsBoosterHeatPumps
+			v-if="model.isHeatNetworkInPcdb === false && 'hasBoosterHeatPump' in model && model.hasBoosterHeatPump"
+			id="boosterHeatPumpId"
+			label="Booster heat pump"
+			help="Select the booster heat pump that has been added previously which will be used as the backup for the heat network"
+			name="boosterHeatPumpId"
+			validation="required"
+		/>
 		<FormKit
 			v-if="model.isHeatNetworkInPcdb !== undefined"
 			id="usesHeatInterfaceUnits"

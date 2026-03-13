@@ -927,23 +927,34 @@ const heatNetworkBase = namedWithId.extend({
 	typeOfHeatNetwork,
 });
 
+
 const isHeatNetworkInPcdbFields = {
 	discriminator: "isHeatNetworkInPcdb",
-	variants:
-		[
-			z.object({
-				isHeatNetworkInPcdb: z.literal(true),
-				productReference: z.string().trim().min(1),
-				energySupply: fuelTypeZod.optional(),
-			}),
-			z.object({
-				isHeatNetworkInPcdb: z.literal(false),
-				emissionsFactor: z.number(),
-				outOfScopeEmissionsFactor: z.number(),
-				primaryEnergyFactor: z.number(),
-				canEnergyBeExported: z.boolean(),
-			}),
-		] satisfies Tuple,
+	variants: [
+		z.object({
+			isHeatNetworkInPcdb: z.literal(true),
+			productReference: z.string().trim().min(1),
+			energySupply: fuelTypeZod.optional(),
+			boosterHeatPumpId: z.string().trim().min(1),
+		}),
+		z.object({
+			isHeatNetworkInPcdb: z.literal(false),
+			hasBoosterHeatPump: z.literal(true),
+			boosterHeatPumpId: z.string().trim().min(1),
+			emissionsFactor: z.number(),
+			outOfScopeEmissionsFactor: z.number(),
+			primaryEnergyFactor: z.number(),
+			canEnergyBeExported: z.boolean(),
+		}),
+		z.object({
+			isHeatNetworkInPcdb: z.literal(false),
+			hasBoosterHeatPump: z.literal(false),
+			emissionsFactor: z.number(),
+			outOfScopeEmissionsFactor: z.number(),
+			primaryEnergyFactor: z.number(),
+			canEnergyBeExported: z.boolean(),
+		}),
+	] satisfies Tuple,
 };
 
 const usesHeatInterfaceUnitsFields = {
@@ -1450,6 +1461,7 @@ export type CorrectedJsonApiError = {
 
 export interface AssociatedItemValues {
 	id: string;
+	name?: string;
 	pitch?: number;
 	orientation?: number;
 }

@@ -98,6 +98,11 @@ const heatNetworkSummary: SummarySection = {
 	label: "Heat networks",
 	data:
 		heatNetworks.map((x) => {
+			const heatSources = store.spaceHeating.heatSource;
+			let taggedBoosterHP;
+			if ("boosterHeatPumpId" in x.data) {
+				taggedBoosterHP = store.getTaggedItem([heatSources], x.data.boosterHeatPumpId);
+			}
 
 			const heatSource = x.data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
 			const summary = {
@@ -107,6 +112,7 @@ const heatNetworkSummary: SummarySection = {
 				"Is the heat network in the PCDB": "isHeatNetworkInPcdb" in heatSource ? displayBoolean(heatSource.isHeatNetworkInPcdb) : emptyValueRendering,
 				...(heatSource.isHeatNetworkInPcdb === true && {
 					"Heat network product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+					"Booster heat pump": taggedBoosterHP && "name" in taggedBoosterHP ? taggedBoosterHP.name : emptyValueRendering,
 					"Energy supply": "energySupply" in heatSource && heatSource.energySupply !== undefined ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
 					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 					"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
@@ -116,6 +122,10 @@ const heatNetworkSummary: SummarySection = {
 					"Emissions factor including out of scope emissions": "emissionsFactor" in heatSource ? heatSource.emissionsFactor : emptyValueRendering,
 					"Primary energy factor": "primaryEnergyFactor" in heatSource ? heatSource.primaryEnergyFactor : emptyValueRendering,
 					"Can energy from the heat network be exported": "canEnergyBeExported" in heatSource ? heatSource.canEnergyBeExported : emptyValueRendering,
+					"Does it have a booster heat pump?": "hasBoosterHeatPump" in heatSource ? displayBoolean(heatSource.hasBoosterHeatPump) : emptyValueRendering,
+					...(heatSource.hasBoosterHeatPump === true && {
+						"Booster heat pump": taggedBoosterHP && "name" in taggedBoosterHP ? taggedBoosterHP.name : emptyValueRendering,
+					}),
 				}),
 				...(heatSource.isHeatNetworkInPcdb !== undefined && {
 					"Will the heat network use heat interface units": "usesHeatInterfaceUnits" in heatSource ? displayBoolean(heatSource.usesHeatInterfaceUnits) : emptyValueRendering,

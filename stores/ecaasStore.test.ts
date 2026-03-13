@@ -483,6 +483,7 @@ describe("hasCompleteState function", () => {
 
 			const expected = {
 				id: externalWall1.id,
+				name: externalWall1.name,
 				orientation: externalWall1.orientation,
 				pitch: externalWall1.pitch,
 			};
@@ -519,6 +520,7 @@ describe("hasCompleteState function", () => {
 			);
 			const expected = {
 				id: externalWall2.id,
+				name: externalWall2.name,
 				orientation: externalWall2.orientation,
 				pitch: externalWall2.pitch,
 			};
@@ -555,6 +557,7 @@ describe("hasCompleteState function", () => {
 
 			const expected = {
 				id: externalWall1.id,
+				name: externalWall1.name,
 				orientation: externalWall1.orientation,
 				pitch: externalWall1.pitch,
 			};

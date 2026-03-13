@@ -4,7 +4,7 @@ import type { GovTagProps } from "~/common.types";
 import type { Page } from "~/data/pages/pages.types";
 import type { EmptyObject } from "type-fest";
 import pagesData from "~/data/pages/pages";
-type KeysToDeleteCascade = "associatedItemId" | "taggedItem" | "heatSource" | "dhwHeatSourceId" | "waterStorage";
+type KeysToDeleteCascade = "associatedItemId" | "taggedItem" | "heatSource" | "dhwHeatSourceId" | "waterStorage" | "boosterHeatPumpId";
 export function getInitialState(): EcaasState {
 	const store: NulledForms<EcaasState> = {
 		dwellingDetails: {
@@ -127,22 +127,23 @@ export const useEcaasStore = defineStore("ecaas", {
 	},
 	actions: {
 		removeTaggedAssociations() {
-			return <T extends Record<string, unknown>>(
-				sections: EcaasFormList<T>[],
+			return (
+				sections: EcaasFormList<Record<string, unknown> | EcaasForm<{ name: string }>>[],
 				idToRemove: string | undefined,
 				keyToCheck: KeysToDeleteCascade = "associatedItemId",
 			) => {
 				for (const section of sections) {
-					section.data.find((item) => {
-						const idOfTaggedItem = (item.data as Partial<T>)[keyToCheck];
+					for (const item of section.data) {
+						 
+						const idOfTaggedItem = (item.data as Record<string, unknown>)[keyToCheck];
 						if (idOfTaggedItem === idToRemove) {
 							this.$patch(() => {
-								(item.data as Partial<T>)[keyToCheck as keyof typeof item.data] = undefined;
+								(item.data as Record<string, unknown>)[keyToCheck] = undefined;
 								item.complete = false;
 								section.complete = false;
 							});
 						}
-					});
+					}
 				}
 			};
 		},

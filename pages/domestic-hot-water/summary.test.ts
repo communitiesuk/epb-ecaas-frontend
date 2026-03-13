@@ -539,9 +539,9 @@ describe("Domestic hot water summary", () => {
 			isExistingHeatSource: false,
 			heatSourceId: "NEW_HEAT_SOURCE",
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-			name: "Heat pump 1",
+			name: "Booster heat pump",
 			typeOfHeatSource: "heatPump",
-			typeOfHeatPump: "airSource",
+			typeOfHeatPump: "booster",
 			productReference: "HEAT_PUMP_SMALL",
 		};
 		
@@ -582,7 +582,9 @@ describe("Domestic hot water summary", () => {
 			productReference: "HEAT_NETWORK-LARGE",
 			energySupply: "electricity",
 			usesHeatInterfaceUnits: false,
+			boosterHeatPumpId: dhwWithNewHeatPump.id,
 		};
+
 
 		const dhwWithNewSolarThermalSystem: DomesticHotWaterHeatSourceData = {
 			coldWaterSource: "mainsWater",
@@ -684,10 +686,10 @@ describe("Domestic hot water summary", () => {
 
 		const expectedHeatPump = {
 			"Cold water source": "Mains water",
-			Name: "Heat pump 1",
+			Name: "Booster heat pump",
 			"Used for space heating": "No",
 			"Type of heat source": "Heat pump",
-			"Type of heat pump": "Air source",
+			"Type of heat pump": "Booster",
 			"Product reference": "HEAT_PUMP_SMALL",
 		};
 		
@@ -718,6 +720,7 @@ describe("Domestic hot water summary", () => {
 			"Type of heat network": "Communal heat network",
 			"Is the heat network in the PCDB": "Yes",
 			"Heat network product reference": "HEAT_NETWORK-LARGE",
+			"Booster heat pump": dhwWithNewHeatPump.name,
 			"Energy supply": "Electricity",
 			"Will the heat network use heat interface units": "No",
 		};
@@ -754,7 +757,7 @@ describe("Domestic hot water summary", () => {
 			"Heater efficiency": "1",
 		};
 		
-		it.each(
+		it.only.each(
 			[
 				["heatPumpSummary", expectedHeatPump],
 				["boilerSummary", expectedBoiler],

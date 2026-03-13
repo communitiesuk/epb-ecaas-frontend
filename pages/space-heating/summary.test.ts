@@ -164,6 +164,14 @@ describe("Space heating summary page", () => {
 
 		it("displays the correct data for the heat network summary", async () => {
 
+			const boosterHeatPump: HeatSourceData = {
+				id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+				name: "Booster HP",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "airSource",
+				productReference: "HEATPUMP_LARGE",
+			};
+      
 			const heatNetwork1: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Heat network 1",
@@ -173,12 +181,14 @@ describe("Space heating summary page", () => {
 				productReference: "HEAT_NETWORK-LARGE",
 				energySupply: "electricity",
 				usesHeatInterfaceUnits: false,
+				boosterHeatPumpId: boosterHeatPump.id,
 			};
+
 			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: heatNetwork1 }],
+						data: [{ data: boosterHeatPump }, { data: heatNetwork1 }],
 					},
 				},
 			});
@@ -191,6 +201,7 @@ describe("Space heating summary page", () => {
 				"Type of heat network": "Communal heat network",
 				"Is the heat network in the PCDB": "Yes",
 				"Heat network product reference": "HEAT_NETWORK-LARGE",
+				"Booster heat pump": boosterHeatPump.name,
 				"Energy supply": "Electricity",
 				"Product name": "Mock product",
 				"Will the heat network use heat interface units": "No",

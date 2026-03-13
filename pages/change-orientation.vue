@@ -40,6 +40,12 @@ const model = ref({
 	updateDistantShading: [],
 });
 
+// const model = reactive({
+// 	newOrientation: undefined as number | undefined,
+// 	updateDistantShading: [] as string[],
+// });
+
+
 function getDiffInOrientation() {
 	if (frontDoorOrientation.value === undefined || model.value.newOrientation === undefined) return;
 	return model.value.newOrientation - frontDoorOrientation.value; 

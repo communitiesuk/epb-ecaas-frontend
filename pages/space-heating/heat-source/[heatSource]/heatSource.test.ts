@@ -32,6 +32,13 @@ describe("heatSource", () => {
 		productReference: "BOILER_SMALL",
 		locationOfBoiler: "heatedSpace",
 	};
+	const boosterHeatPump:HeatSourceData = {
+		id: "463c94f6-566c-49b2-af27-57e5c68b52222",
+		name: "Booster HP",
+		typeOfHeatSource: "heatPump",
+		typeOfHeatPump: "booster",
+		productReference: "HEATPUMP-SMALL",
+	};
 
 	describe("heat pump", () => {
 		const heatPumpProduct: Partial<DisplayProduct> = {
@@ -545,22 +552,6 @@ describe("heatSource", () => {
 			});
 		});
 
-		const populateValidHeatNetworkForm = async () => {
-			store.$patch({
-				dwellingDetails: {
-					generalSpecifications: {
-						data: { fuelType: ["electricity"] },
-					},
-				},
-			});
-			await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-			await user.click(screen.getByTestId("typeOfHeatNetwork_communalHeatNetwork"));
-			await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
-			await user.click(screen.getByTestId("energySupply_electricity"));
-			await user.click(screen.getByTestId("usesHeatInterfaceUnits_no"));
-			await user.click(screen.getByTestId("saveAndComplete"));
-		};
-
 		const heatNetwork1: HeatSourceData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 			name: "Heat network 1",
@@ -570,6 +561,7 @@ describe("heatSource", () => {
 			productReference: "HEATNETWORK-LARGE",
 			energySupply: "electricity",
 			usesHeatInterfaceUnits: false,
+			boosterHeatPumpId: boosterHeatPump.id,
 		};
 
 		const patchHeatNetworkDataToStore = async () => {
@@ -581,7 +573,7 @@ describe("heatSource", () => {
 				},
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: heatNetwork1 }],
+						data: [{ data: boosterHeatPump },{ data: heatNetwork1 } ],
 					},
 				},
 			});
@@ -629,16 +621,36 @@ describe("heatSource", () => {
 		test("heat network data is saved to store state when form is valid", async () => {
 			vi.mocked(uuidv4).mockReturnValue(heatNetwork1.id as unknown as Buffer);
 
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { fuelType: ["electricity"] },
+					},
+				},
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: boosterHeatPump }],
+					},
+				},
+			});
+	
+
 			await renderSuspended(HeatSourceForm, {
 				route: {
 					params: { "heatSource": "create" },
 				},
 			});
 
-			await populateValidHeatNetworkForm();
+			await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
+			await user.click(screen.getByTestId("typeOfHeatNetwork_communalHeatNetwork"));
+			await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
+			await user.click(screen.getByTestId("energySupply_electricity"));
+			await user.click(screen.getByTestId("usesHeatInterfaceUnits_no"));
+			await user.click(screen.getByTestId(`boosterHeatPumpId_${boosterHeatPump.id}`));
+			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const { data } = store.spaceHeating.heatSource;
-			expect(data[0]?.data).toEqual({
+			expect(data[1]?.data).toEqual({
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Communal heat network",
 				typeOfHeatSource: "heatNetwork",
@@ -646,6 +658,7 @@ describe("heatSource", () => {
 				isHeatNetworkInPcdb: true,
 				energySupply: "electricity",
 				usesHeatInterfaceUnits: false,
+				boosterHeatPumpId: boosterHeatPump.id,
 			});
 		});
 
@@ -654,7 +667,7 @@ describe("heatSource", () => {
 
 			await renderSuspended(HeatSourceForm, {
 				route: {
-					params: { "heatSource": "0" },
+					params: { "heatSource": "1" },
 				},
 			});
 
@@ -663,6 +676,7 @@ describe("heatSource", () => {
 			expect((await screen.findByTestId("typeOfHeatNetwork_communalHeatNetwork")).hasAttribute("checked"));
 			expect((await screen.findByTestId("isHeatNetworkInPcdb_yes")).hasAttribute("checked"));
 			expect((await screen.findByTestId("energySupply_electricity")).hasAttribute("checked"));
+			expect((await screen.findByTestId(`boosterHeatPumpId_${boosterHeatPump.id}`)).hasAttribute("checked"));
 			expect((await screen.findByTestId("usesHeatInterfaceUnits_no")).hasAttribute("checked"));
 		});
 
@@ -1398,6 +1412,7 @@ describe("heatSource", () => {
 			productReference: "HEATNETWORK-LARGE",
 			energySupply: "electricity",
 			usesHeatInterfaceUnits: false,
+			boosterHeatPumpId: boosterHeatPump.id,
 		};
 
 		const heatNetwork2: HeatSourceData = {
@@ -1411,13 +1426,14 @@ describe("heatSource", () => {
 			primaryEnergyFactor: 3,
 			canEnergyBeExported: true,
 			usesHeatInterfaceUnits: false,
+			hasBoosterHeatPump: false,
 		};
 
 		it("saves updated form data to store automatically", async () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: heatNetwork1 }],
+						data: [{ data: heatNetwork1 }, { data: boosterHeatPump }],
 					},
 				},
 			});

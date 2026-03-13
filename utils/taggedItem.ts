@@ -6,6 +6,7 @@ export const extractSectionItems = <T extends Record<string, unknown>>(
 
 		return {
 			id: item.id!,
+			name: item.name,
 			pitch: item.pitchOption === undefined ? item.pitch : extractPitch(item),
 			...("orientation" in item && { orientation: item.orientation }),
 		} as AssociatedItemValues;

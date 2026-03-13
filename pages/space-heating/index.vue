@@ -10,8 +10,7 @@ type SpaceHeatingType = keyof typeof store.spaceHeating;
 type SpaceHeatingData = EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> & EcaasForm<HeatingControlData>;
 
 const { heatSources: dhwHeatSources, waterStorage, hotWaterOutlets } = store.domesticHotWater;
-
-const { heatEmitters } = store.spaceHeating;
+const { heatEmitters, heatSource } = store.spaceHeating;
 function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 	const items = store.spaceHeating[spaceHeatingType]?.data;
 
@@ -30,8 +29,8 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 
 		if (heatSourceId) {
 			store.removeTaggedAssociations()([heatEmitters], heatSourceId, "heatSource"); 
+			store.removeTaggedAssociations()([heatSource, dhwHeatSources], heatSourceId, "boosterHeatPumpId"); 
 			
-
 			const dhwHeatSourceIdToRemove = dhwHeatSources.data
 				.filter(({ data: x }) => x.heatSourceId === heatSourceId)
 				.map(x => x.data.id)[0]; 
