@@ -39,6 +39,7 @@ describe("vent", () => {
 		effectiveVentilationArea: 10,
 		openingRatio: 1,
 		midHeightOfZone: 1,
+		hasAssociatedItem: true,
 	};
 
 	beforeEach(() => {
@@ -203,7 +204,7 @@ describe("vent", () => {
 			},
 		});
 
-		await user.click(screen.getByTestId("associatedItemId_na"));
+		await user.click(screen.getByTestId("associatedItemId_none"));
 
 		expect(screen.getByTestId("pitch")).toBeDefined();
 		expect(screen.getByTestId("orientation")).toBeDefined();

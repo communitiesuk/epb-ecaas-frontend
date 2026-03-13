@@ -11,6 +11,7 @@ const ventData = useItemToEdit("vent", ventStoreData);
 const model = ref(ventData?.data);
 
 const saveForm = (fields: VentData & Record<string, string>) => {
+	fields.hasAssociatedItem = !!fields.associatedItemId && fields.associatedItemId !== "none";
 
 	store.$patch((state) => {
 		const { vents } = state.infiltrationAndVentilation;
@@ -22,8 +23,13 @@ const saveForm = (fields: VentData & Record<string, string>) => {
 				effectiveVentilationArea: fields.effectiveVentilationArea,
 				openingRatio: 1,
 				midHeightOfZone: fields.midHeightOfZone,
-				pitch: fields.pitch,
-				orientation: fields.orientation,
+				...(fields.hasAssociatedItem ? {
+					hasAssociatedItem: true,
+				} : {
+					hasAssociatedItem: false,
+					pitch: 1,
+					orientation: 1,
+				}),
 			},
 			complete: true,
 		};
@@ -43,7 +49,7 @@ autoSaveElementForm<VentData>({
 			...newData,
 			data: {
 				...newData.data,
-				associatedItemId: newData.data.associatedItemId ?? "na",
+				associatedItemId: newData.data.associatedItemId ?? "none",
 			},
 		};
 		state.infiltrationAndVentilation.vents.complete = false;
@@ -58,7 +64,7 @@ const associatedWallWindowOptions = [
 ]
 	.flat()
 	.filter(x => x[0] != undefined)
-	.concat([["na", "None of the above"]]);
+	.concat([["none", "None of the above"]]);
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -100,7 +106,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="associatedItemId"
 			validation="required"
 		/>
-		<template v-if="associatedWallWindowOptions.length === 1 || model?.associatedItemId === 'na'">
+		<template v-if="associatedWallWindowOptions.length === 1 || model?.associatedItemId === 'none'">
 			<FieldsPitch label="Pitch of vent" />
 			<FieldsOrientation help="Enter the orientation of the external surface of the vent"/>
 		</template>

@@ -20,6 +20,7 @@ describe("vents", () => {
 		effectiveVentilationArea: 10,
 		openingRatio: 1,
 		midHeightOfZone: 1,
+		hasAssociatedItem: true,
 	};
 
 	const vent2: VentData = {

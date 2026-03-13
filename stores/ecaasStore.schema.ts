@@ -724,15 +724,25 @@ const ductworkDataZod = named.extend({
 
 export type DuctworkData = z.infer<typeof ductworkDataZod>;
 
-const ventDataZod = z.object({
+const baseVentDataZod = z.object({
 	name: z.string().trim().min(1),
-	associatedItemId: z.optional(z.guid()),
 	effectiveVentilationArea: z.number().min(1).max(999999),
 	openingRatio: z.number(),
 	midHeightOfZone: z.number().min(1).max(60),
-	pitch: z.optional(z.number().min(0).lt(180)),
-	orientation: z.optional(z.number().min(0).lt(360)),
+	associatedItemId: z.string().trim().min(1),
+	hasAssociatedItem: z.boolean(),
 });
+
+const ventDataZod = z.discriminatedUnion("associatedItemId", [
+	baseVentDataZod.extend({
+		hasAssociatedItem: z.literal(false),
+		pitch: z.number().min(0).lt(180),
+		orientation: z.number().min(0).lt(360),
+	}),
+	baseVentDataZod.extend({
+		hasAssociatedItem: z.literal(true),
+	}),
+]);
 
 export type VentData = z.infer<typeof ventDataZod>;
 

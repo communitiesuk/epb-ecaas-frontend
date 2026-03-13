@@ -141,16 +141,19 @@ export function mapVentsData(state: ResolvedState) {
 	const entries = state.infiltrationAndVentilation.vents.map((x): [string, SchemaVent] => {
 		const key = x.name;
 
-		const taggedItem = x.associatedItemId && x.associatedItemId !== "na" ? getResolvedTaggedItem(
+		const taggedItem = x.associatedItemId && x.associatedItemId !== "none" ? getResolvedTaggedItem(
 			[dwellingSpaceWindows, dwellingSpaceExternalWall],
 			x.associatedItemId,
 		) : null;
 
+		const ventOrientation = x.hasAssociatedItem ? taggedItem?.orientation : x.orientation;
+		const pitchForm = x.hasAssociatedItem ? taggedItem : x;
+
 		const val: SchemaVent = {
 			area_cm2: x.effectiveVentilationArea,
 			mid_height_air_flow_path: x.midHeightOfZone,
-			orientation360: taggedItem ? taggedItem.orientation! : x.orientation!,
-			pitch: extractPitch(taggedItem ?? x),
+			orientation360: ventOrientation!,
+			pitch: extractPitch(pitchForm!),
 		};
 
 		return [key, val];

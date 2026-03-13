@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { getTabItems, getUrl } from "#imports";
+import { getTabItems, getUrl, type VentData } from "#imports";
 
 const title = "Infiltration and ventilation summary";
 const store = useEcaasStore();
@@ -55,13 +55,16 @@ const ductworkSummary: SummarySection = {
 const ventData = store.infiltrationAndVentilation.vents.data;
 const walls = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpaceWindows } = store.dwellingFabric;
+
 const ventSummary: SummarySection = {
 	id: "vents",
 	label: "Vents",
-	data: ventData.map(({ data: x }) => {
+	data: ventData.map((vent) => {
+		const x = vent.data as VentData;
+
 		const taggedItem = store.getTaggedItem([walls.dwellingSpaceExternalWall, dwellingSpaceWindows], x.associatedItemId);
-		const orientation = taggedItem ? taggedItem.orientation : x.orientation;
-		const pitch = taggedItem ? taggedItem.pitch : x.pitch;
+		const orientation = x.hasAssociatedItem === true ? taggedItem!.orientation : x.orientation;
+		const pitch = x.hasAssociatedItem === true ? taggedItem!.pitch : x.pitch;
 
 		return {
 			"Name": x.name,

@@ -284,6 +284,7 @@ describe("infiltration ventilation mapper", () => {
 					effectiveVentilationArea: 100,
 					openingRatio: 0.6,
 					midHeightOfZone: 1.5,
+					hasAssociatedItem: true,
 				},
 			},
 		];
@@ -338,6 +339,8 @@ describe("infiltration ventilation mapper", () => {
 					midHeightOfZone: 1.5,
 					pitch: 45,
 					orientation: 180,
+					hasAssociatedItem: false,
+					associatedItemId: "none",
 				},
 			},
 		];
@@ -382,12 +385,13 @@ describe("infiltration ventilation mapper", () => {
 				...baseForm,
 				data: {
 					name: ventName,
-					associatedItemId: "na",
+					associatedItemId: "none",
 					effectiveVentilationArea: 100,
 					openingRatio: 0.6,
 					midHeightOfZone: 1.5,
 					pitch: 45,
 					orientation: 180,
+					hasAssociatedItem: false,
 				},
 			},
 		];

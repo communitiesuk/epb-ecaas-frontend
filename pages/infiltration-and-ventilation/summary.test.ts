@@ -61,6 +61,7 @@ const ventData: VentData = {
 	effectiveVentilationArea: 10,
 	openingRatio: 1,
 	midHeightOfZone: 1,
+	hasAssociatedItem: true,
 };
 
 const ventilationData: VentilationData = {
@@ -228,6 +229,7 @@ describe("Infiltration and ventilation summary", () => {
 							associatedItemId: undefined,
 							pitch: 90,
 							orientation: 0,
+							hasAssociatedItem: false,
 						},
 					}],
 				},
@@ -271,6 +273,7 @@ describe("Infiltration and ventilation summary", () => {
 		const ventData: Partial<VentData> = {
 			name: "Vent 1",
 			associatedItemId: window1.id,
+			hasAssociatedItem: true,
 		};
 
 		store.$patch({

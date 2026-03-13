@@ -123,6 +123,7 @@ describe("windows", () => {
 				effectiveVentilationArea: 10,
 				openingRatio: 1,
 				midHeightOfZone: 1,
+				hasAssociatedItem: true,
 			},
 		};
 
