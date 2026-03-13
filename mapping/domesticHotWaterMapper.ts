@@ -32,23 +32,27 @@ function mapShowersData(state: ResolvedState) {
 			instantaneousSystemC: "C",
 		} as const;
 		const dhwHotWaterSource = state.domesticHotWater.heatSources.find(hs => hs.id === x.dhwHeatSourceId);
-		const val: SchemaMixerShower = {
+
+		const mixedShower: SchemaMixerShower = {
 			type: "MixerShower",
 			ColdWaterSource: "mains water",
-			flowrate: x.flowRate,
-			allow_low_flowrate: false, // would be true for air-powered showers
 			HotWaterSource: dhwHotWaterSource?.isExistingHeatSource
 				? dhwHotWaterSource?.heatSourceId
 				: dhwHotWaterSource?.id,
+			...(x.wwhrs ? {
+				WWHRS: x.wwhrsProductReference,
+				WWHRS_configuration: WWHRS_configuration[x.wwhrsType],
+			} : {}),
+			...(x.isAirPowered ? {
+				allow_low_flowrate: true as const,
+				flowrate: 0,// TODO: remove flowrate and add PCDB product reference for air pump when FHS schema is updated to support this
+			} : {
+				allow_low_flowrate: false as const,
+				flowrate: x.flowRate,
+			}),
 		};
-		if (x.wwhrs) {
-			val.WWHRS = x.wwhrsProductReference;
-			val.WWHRS_configuration = WWHRS_configuration[x.wwhrsType];
-		}
 
-
-
-		return [key, val];
+		return [key, mixedShower];
 	});
 
 	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "electricShower").map((x): [string, SchemaInstantElecShower] => {
@@ -139,7 +143,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 			} else {
 				storageCylinderVolumeInLitres = asLitres(ws.storageCylinderVolume);
 			}
-			
+
 			const val: SchemaStorageTank & { ColdWaterSource: SchemaColdWaterSourceType } = {
 				daily_losses: ws.dailyEnergyLoss,
 				type: "StorageTank",

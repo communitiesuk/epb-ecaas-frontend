@@ -399,6 +399,41 @@ describe("domestic hot water mapper", () => {
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-c"]).toEqual(expectedShowerWwhrsC);
 			});
+			it.skip("maps mixed shower with air pump", () => {
+				const mixedShower: EcaasForm<MixedShowerData> = {
+					...baseForm,
+					data: {
+						id: "shower-air-pump",
+						name: "shower-air-pump",
+						wwhrs: false,
+						dhwHeatSourceId: "heatPump1",
+						typeOfHotWaterOutlet: "mixedShower",
+						isAirPowered: true,
+						airPoweredShowerProductRefernce: "AIR-PUMP-123",
+					},
+				};
+				store.$patch({
+					domesticHotWater: {
+						hotWaterOutlets: { data: [mixedShower], complete: true },
+						pipework: { data: [], complete: true },
+						heatSources: { data: [], complete: true },
+						waterStorage: { data: [], complete: true },
+					},
+				});
+
+				const result = mapDomesticHotWaterData(resolveState(store.$state));
+
+				const expectedShowerAirPump = {
+					type: "MixerShower",
+					ColdWaterSource: "mains water",
+					allow_low_flowrate: true,
+					HotWaterSource: "heatPump1",
+					// @ts-expect-error - to be added when FHS schema is updated to support product reference for air pump
+					airPoweredShowerProductRefernce: "AIR-PUMP-123",
+				} as const satisfies SchemaMixerShower;
+				expect(result.HotWaterDemand?.Shower?.["shower-air-pump"]).toEqual(expectedShowerAirPump);
+			});
+
 		});
 
 		describe("mixed showers without WWHRS", () => {
@@ -450,6 +485,8 @@ describe("domestic hot water mapper", () => {
 				expect(shower).not.toHaveProperty("WWHRS_configuration");
 			});
 		});
+
+
 
 		describe("edge cases", () => {
 			it("handles empty outlet arrays", () => {
