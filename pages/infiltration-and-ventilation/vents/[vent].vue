@@ -27,8 +27,8 @@ const saveForm = (fields: VentData & Record<string, string>) => {
 					hasAssociatedItem: true,
 				} : {
 					hasAssociatedItem: false,
-					pitch: 1,
-					orientation: 1,
+					pitch: fields.pitch,
+					orientation: fields.orientation,
 				}),
 			},
 			complete: true,
