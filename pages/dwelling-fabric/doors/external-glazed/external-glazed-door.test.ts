@@ -534,13 +534,13 @@ describe("external glazed door", () => {
 	});
 
 	describe("Handing external glazed door as a front door", () => {
-		
+
 		test("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
 			const frontDoor: Partial<ExternalGlazedDoorData> = {
 				name: "Front door",
 				isTheFrontDoor: true,
 			};
-			
+
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -574,7 +574,7 @@ describe("external glazed door", () => {
 				data: {
 					id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
 					name: "Roof 1",
-					typeOfRoof: "flat",
+					typeOfRoof: "flatAboveHeatedSpace",
 					pitchOption: "0",
 					pitch: 0,
 					length: 1,
@@ -606,14 +606,14 @@ describe("external glazed door", () => {
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
 
-		
+
 		const externalWallPitch0: Partial<ExternalWallData> = {
 			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
 			name: "External wall",
 			pitchOption: "custom",
 			pitch: 0,
 		};
-							
+
 		const externalWallPitch180: Partial<ExternalWallData> = {
 			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
 			name: "External wall",
@@ -622,7 +622,7 @@ describe("external glazed door", () => {
 		};
 
 		it.each([[0, externalWallPitch0], [180, externalWallPitch180]])("does not display the 'Is this the front door?' element if pitch of tagged item is %s", async (pitch, externalWall) => {
-			
+
 			const door: Partial<ExternalGlazedDoorData> = {
 				name: "External glazed door 1",
 				associatedItemId: externalWall.id,
@@ -639,7 +639,7 @@ describe("external glazed door", () => {
 						dwellingSpaceExternalGlazedDoor: {
 							data: [{ data: door }],
 						},
-					}, 
+					},
 				},
 			});
 
@@ -648,23 +648,23 @@ describe("external glazed door", () => {
 					params: { door: "0" },
 				},
 			});
-				
+
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
 
 		test("does not display the 'Is this the front door?' element if pitch is 0 or 180 because orientation is not asked for", async () => {
-		
+
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { door: "create" },
 				},
 			});
-		
+
 			await user.click(screen.getByTestId("pitchOption_custom"));
 			await user.type(screen.getByTestId("pitch"), "0");
 			await user.tab();
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
-		
+
 			await user.clear(screen.getByTestId("pitch"));
 			await user.type(screen.getByTestId("pitch"), "180");
 			await user.tab();
@@ -672,17 +672,17 @@ describe("external glazed door", () => {
 		});
 
 		test("displays banner when banner type is set to 'update-front-door", async () => {
-			
+
 			vi.mock("~/composables/banner", () => ({
 				useBanner: () => ref({ type: "update-front-door" }),
 			}));
-			
+
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { door: "create" },
 				},
 			});
-		
+
 			expect(screen.getByTestId("doorBanner")).not.toBeNull();
 		});
 	});
@@ -699,14 +699,14 @@ describe("external glazed door", () => {
 			await user.tab();
 			await user.click(screen.getByTestId("saveShadingObject"));
 		};
-	
+
 		it("initial add form has no cancel button", async () => {
 			await renderSuspended(ExternalGlazedDoor);
 			await user.click(screen.getByTestId("hasShading_yes"));
 			expect(screen.getByTestId("shading-add-form")).toBeDefined();
 			expect(screen.queryByTestId("cancelShadingObject")).toBeNull();
 		});
-	
+
 		const egdWithShading: EcaasForm<ExternalGlazedDoorData> = {
 			complete: true,
 			data: {
@@ -723,7 +723,7 @@ describe("external glazed door", () => {
 				],
 			},
 		};
-	
+
 		const egdWithTwoShadingItems: EcaasForm<ExternalGlazedDoorData> = {
 			complete: true,
 			data: {
@@ -746,18 +746,18 @@ describe("external glazed door", () => {
 				],
 			},
 		};
-	
+
 		it("should not render by default", async () => {
 			await renderSuspended(ExternalGlazedDoor);
 			expect(screen.queryByTestId("shading-section")).toBeNull();
 		});
-	
+
 		it("should render when user selects that the array has shading", async () => {
 			await renderSuspended(ExternalGlazedDoor);
 			await user.click(screen.getByTestId("hasShading_yes"));
 			expect(screen.getByTestId("shading-section")).toBeDefined();
 		});
-	
+
 		it("errors on outer submit if shading is yes but no object added", async () => {
 			await renderSuspended(ExternalGlazedDoor, {
 				route: { params: { array: "create" } },
@@ -765,23 +765,23 @@ describe("external glazed door", () => {
 			await user.click(screen.getByTestId("hasShading_yes"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 			expect(screen.getByTestId("shadingName_error")).toBeDefined();
-	
+
 			expect(screen.queryByTestId("cancelShadingObject")).toBeNull();
 		});
-	
+
 		it("hides the shading section when hasShading is changed back to no", async () => {
 			await renderSuspended(ExternalGlazedDoor);
 			await user.click(screen.getByTestId("hasShading_yes"));
 			await user.click(screen.getByTestId("hasShading_no"));
 			expect(screen.queryByTestId("shading-section")).toBeNull();
 		});
-	
+
 		describe("type-conditional fields", () => {
 			beforeEach(async () => {
 				await renderSuspended(ExternalGlazedDoor);
 				await user.click(screen.getByTestId("hasShading_yes"));
 			});
-	
+
 			it("shows height, distance and transparency when obstacle type is selected", async () => {
 				await user.click(screen.getByTestId("typeOfShading_obstacle"));
 				expect(screen.getByTestId("shadingHeight")).toBeDefined();
@@ -789,7 +789,7 @@ describe("external glazed door", () => {
 				expect(screen.getByTestId("shadingTransparency")).toBeDefined();
 				expect(screen.queryByTestId("shadingDepth")).toBeNull();
 			});
-	
+
 			it.each(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"])(
 				"shows depth and distance fields for %s type",
 				async (type) => {
@@ -800,13 +800,13 @@ describe("external glazed door", () => {
 					expect(screen.queryByTestId("shadingTransparency")).toBeNull();
 				},
 			);
-	
+
 			it("hides conditional fields when no type is selected", async () => {
 				expect(screen.queryByTestId("shadingHeight")).toBeNull();
 				expect(screen.queryByTestId("shadingDepth")).toBeNull();
 			});
 		});
-	
+
 		describe("saving a shading object", () => {
 			it("collapses the add form into a summary card with the name as title after saving an obstacle", async () => {
 				await renderSuspended(ExternalGlazedDoor);
@@ -815,7 +815,7 @@ describe("external glazed door", () => {
 				expect(screen.getByTestId("shading_summary_0")).toBeDefined();
 				expect(screen.getByText("Chimney")).toBeDefined();
 			});
-	
+
 			it("collapses the add form into a summary card after saving a fin/overhang/frame type", async () => {
 				await renderSuspended(ExternalGlazedDoor);
 				await user.click(screen.getByTestId("hasShading_yes"));
@@ -829,13 +829,13 @@ describe("external glazed door", () => {
 				expect(screen.getByTestId("shading_summary_0")).toBeDefined();
 				expect(screen.getByText("Left fin")).toBeDefined();
 			});
-	
+
 			it("shows an 'Add another shading object' button after the first item is saved", async () => {
 				await renderSuspended(ExternalGlazedDoor);
 				await saveFirstShadingObject();
 				expect(screen.getByTestId("addAnotherShadingObject")).toBeDefined();
 			});
-	
+
 			it("saves the shading object to the store", async () => {
 				store.$patch({
 					dwellingFabric: {
@@ -847,7 +847,7 @@ describe("external glazed door", () => {
 											...doorForState,
 											hasShading: true,
 											shading: [],
-										}, 
+										},
 									},
 								],
 							},
@@ -870,7 +870,7 @@ describe("external glazed door", () => {
 				await user.type(screen.getByTestId("shadingTransparency"), "0.5");
 				await user.tab();
 				await user.click(screen.getByTestId("saveShadingObject"));
-	
+
 				const door = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[0]!;
 				expect(door.data.hasShading).toBe(true);
 				const { shading } = door.data as Extract<ExternalGlazedDoorData, { hasShading: true }>;
@@ -883,11 +883,11 @@ describe("external glazed door", () => {
 					transparency: 0.5,
 				});
 			});
-	
+
 			it("displays existing shading items when opening a pre-populated array", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
+						dwellingSpaceDoors: {
 							dwellingSpaceExternalGlazedDoor: {
 								data: [egdWithShading],
 							},
@@ -903,7 +903,7 @@ describe("external glazed door", () => {
 			it("shows errors when fields are invalid in edit form", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
+						dwellingSpaceDoors: {
 							dwellingSpaceExternalGlazedDoor: {
 								data: [egdWithShading],
 							},
@@ -919,9 +919,9 @@ describe("external glazed door", () => {
 					route: { params: { door: "create" } },
 				});
 				await populateValidForm({ hasShading: true });
-	
+
 				await user.click(screen.getByTestId("typeOfShading_obstacle"));
-	
+
 				await user.click(screen.getByTestId("saveShadingObject"));
 				expect(screen.getByTestId("shadingName_error")).toBeDefined();
 				expect(screen.getByTestId("shadingHeight_error")).toBeDefined();
@@ -929,7 +929,7 @@ describe("external glazed door", () => {
 				expect(screen.getByTestId("shadingTransparency_error")).toBeDefined();
 			});
 		});
-	
+
 		describe("add another shading object", () => {
 			it("opens a new add form with a cancel button when 'Add another' is clicked", async () => {
 				await renderSuspended(ExternalGlazedDoor);
@@ -938,7 +938,7 @@ describe("external glazed door", () => {
 				expect(screen.getByTestId("shading-add-form")).toBeDefined();
 				expect(screen.getByTestId("cancelShadingObject")).toBeDefined();
 			});
-	
+
 			it("closes the new add form without removing saved items when cancel is clicked", async () => {
 				await renderSuspended(ExternalGlazedDoor);
 				await saveFirstShadingObject("Chimney");
@@ -947,7 +947,7 @@ describe("external glazed door", () => {
 				expect(screen.queryByTestId("shading-add-form")).toBeNull();
 				expect(screen.getByTestId("shading_summary_0")).toBeDefined();
 			});
-	
+
 			it("saves a second shading object after clicking add another", async () => {
 				await renderSuspended(ExternalGlazedDoor);
 				await saveFirstShadingObject("Chimney");
@@ -963,12 +963,12 @@ describe("external glazed door", () => {
 				expect(screen.queryByTestId("shading-add-form")).toBeNull();
 			});
 		});
-	
+
 		describe("editing a shading object", () => {
 			it("opens an edit form with 'Edit shading' title when edit is clicked", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
+						dwellingSpaceDoors: {
 							dwellingSpaceExternalGlazedDoor: {
 								data: [egdWithShading],
 							},
@@ -982,11 +982,11 @@ describe("external glazed door", () => {
 				expect(screen.getByText("Edit shading")).toBeDefined();
 				expect(screen.getByTestId("shading-add-form")).toBeDefined();
 			});
-	
+
 			it("prepopulates the edit form with the existing shading data", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
+						dwellingSpaceDoors: {
 							dwellingSpaceExternalGlazedDoor: {
 								data: [egdWithShading],
 							},
@@ -1003,11 +1003,11 @@ describe("external glazed door", () => {
 				expect((screen.getByTestId<HTMLInputElement>("shadingDistance")).value).toBe("2");
 				expect((screen.getByTestId<HTMLInputElement>("shadingTransparency")).value).toBe("0.5");
 			});
-	
+
 			it("updates the summary card when the edited item is saved", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
+						dwellingSpaceDoors: {
 							dwellingSpaceExternalGlazedDoor: {
 								data: [egdWithShading],
 							},
@@ -1026,12 +1026,12 @@ describe("external glazed door", () => {
 				expect(screen.getByText("Chimney")).toBeDefined();
 			});
 		});
-	
+
 		describe("removing a shading object", () => {
 			it("removes the item and opens a new empty add form when it is the only item", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
+						dwellingSpaceDoors: {
 							dwellingSpaceExternalGlazedDoor: {
 								data: [egdWithShading],
 							},
@@ -1046,11 +1046,11 @@ describe("external glazed door", () => {
 				expect(screen.getByTestId("shading-add-form")).toBeDefined();
 				expect(screen.queryByTestId("cancelShadingObject")).toBeNull();
 			});
-	
+
 			it("removes only the targeted item when other items exist", async () => {
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceDoors: { 
+						dwellingSpaceDoors: {
 							dwellingSpaceExternalGlazedDoor: {
 								data: [egdWithTwoShadingItems],
 							},
@@ -1067,6 +1067,6 @@ describe("external glazed door", () => {
 				expect(screen.queryByText("Chimney")).toBeNull();
 			});
 		});
-	
+
 	});
 });

@@ -738,10 +738,26 @@ describe("dwelling fabric mapper", () => {
 			thermalResistanceOfAdjacentUnheatedSpace: 1,
 		};
 
-		const roof: RoofData = {
+		const roofAboveHeatedSpace: RoofData = {
 			id: "roof-id",
-			name: "Roof 1",
-			typeOfRoof: "flat",
+			name: "Roof above heated space",
+			typeOfRoof: "flatAboveHeatedSpace",
+			pitchOption: "custom",
+			pitch: 0,
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			thermalResistance: 1,
+			colour: "Dark",
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+		};
+
+		const roofAboveUnheatedSpace: RoofData = {
+			id: "roof-unheated-space-id",
+			name: "Roof above unheated space",
+			typeOfRoof: "flatAboveUnheatedSpace",
 			pitchOption: "custom",
 			pitch: 0,
 			length: 1,
@@ -793,7 +809,14 @@ describe("dwelling fabric mapper", () => {
 			dwellingFabric: {
 				dwellingSpaceCeilingsAndRoofs: {
 					dwellingSpaceCeilings: { ...baseForm, data: [{ ...baseForm, data: ceiling }] },
-					dwellingSpaceRoofs: { ...baseForm, data: [{ ...baseForm, data: roof }, { ...baseForm, data: roofPitchedInsulatedAtCeiling }, { ...baseForm, data: roofPitchedInsulatedAtRoof }] },
+					dwellingSpaceRoofs: {
+						...baseForm,
+						data: [
+							{ ...baseForm, data: roofAboveHeatedSpace },
+							{ ...baseForm, data: roofAboveUnheatedSpace },
+							{ ...baseForm, data: roofPitchedInsulatedAtCeiling },
+							{ ...baseForm, data: roofPitchedInsulatedAtRoof }],
+					},
 				},
 			},
 		});
@@ -802,7 +825,8 @@ describe("dwelling fabric mapper", () => {
 		const fhsInputData = mapCeilingAndRoofData(resolveState(store.$state));
 		// Assert
 		const ceilingElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[ceiling.name + ceilingSuffix]! as BuildingElementAdjacentUnconditionedSpaceSimple;
-		const roofElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roof.name + roofSuffix]! as BuildingElementOpaque;
+		const roofAboveHeatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofAboveHeatedSpace.name + roofSuffix]! as BuildingElementOpaque;
+		const roofAboveUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofAboveUnheatedSpace.name + roofSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
 		const roofPitchedInsulatedAtCeilingElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofPitchedInsulatedAtCeiling.name + roofSuffix] as BuildingElementOpaque;
 		const roofPitchedInsulatedAtRoofElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofPitchedInsulatedAtRoof.name + roofSuffix] as BuildingElementOpaque;
 
@@ -818,23 +842,40 @@ describe("dwelling fabric mapper", () => {
 
 		expect(ceilingElement).toEqual(expectedCeiling);
 
-		const expectedRoof: BuildingElementOpaque = {
+		const expectedFlatRoofAboveHeatedSpace: BuildingElementOpaque = {
 			type: "BuildingElementOpaque",
-			pitch: roof.pitch,
+			pitch: roofAboveHeatedSpace.pitch,
 			orientation360: 0,
-			height: roof.length,
-			width: roof.width,
-			base_height: roof.elevationalHeightOfElement,
-			area: roof.surfaceArea,
-			thermal_resistance_construction: roof.thermalResistance,
-			colour: roof.colour,
-			areal_heat_capacity: roof.arealHeatCapacity,
-			mass_distribution_class: fullMassDistributionClass(roof.massDistributionClass),
+			height: roofAboveHeatedSpace.length,
+			width: roofAboveHeatedSpace.width,
+			base_height: roofAboveHeatedSpace.elevationalHeightOfElement,
+			area: roofAboveHeatedSpace.surfaceArea,
+			thermal_resistance_construction: roofAboveHeatedSpace.thermalResistance,
+			colour: roofAboveHeatedSpace.colour,
+			areal_heat_capacity: roofAboveHeatedSpace.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(roofAboveHeatedSpace.massDistributionClass),
 			is_external_door: false,
 			is_unheated_pitched_roof: false,
 		};
 
-		expect(roofElement).toEqual(expectedRoof);
+		expect(roofAboveHeatedSpaceElement).toEqual(expectedFlatRoofAboveHeatedSpace);
+
+		const expectedFlatRoofAboveUnheatedSpace: BuildingElementOpaque = {
+			type: "BuildingElementOpaque",
+			pitch: roofAboveUnheatedSpace.pitch,
+			orientation360: 0,
+			height: roofAboveUnheatedSpace.length,
+			width: roofAboveUnheatedSpace.width,
+			base_height: roofAboveUnheatedSpace.elevationalHeightOfElement,
+			area: roofAboveUnheatedSpace.surfaceArea,
+			thermal_resistance_construction: roofAboveUnheatedSpace.thermalResistance,
+			colour: roofAboveUnheatedSpace.colour,
+			areal_heat_capacity: roofAboveUnheatedSpace.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(roofAboveUnheatedSpace.massDistributionClass),
+			is_external_door: false,
+			is_unheated_pitched_roof: false,
+		};
+		expect(roofAboveUnheatedSpaceElement).toEqual(expectedFlatRoofAboveUnheatedSpace);
 
 		const expectedRoofPitchedInsulatedAtCeiling: BuildingElementOpaque = {
 			type: "BuildingElementOpaque",

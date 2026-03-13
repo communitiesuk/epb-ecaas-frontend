@@ -1784,7 +1784,7 @@ describe("FHS input mapper", () => {
 						data: {
 							id: "85343964-1c5f-416b-b4af-0d16c06d3046",
 							name: "roof 1",
-							typeOfRoof: "flat",
+							typeOfRoof: "flatAboveHeatedSpace",
 							pitch: 20,
 							orientation: 180,
 							length: 2.5,

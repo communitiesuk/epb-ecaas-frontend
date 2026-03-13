@@ -12,15 +12,78 @@ const roofData = useItemToEdit("roof", roofs);
 const roofId = roofData?.data.id ?? uuidv4();
 const model = ref(roofData?.data);
 
-const roofTypeOptions: Record<Exclude<RoofType, "unheatedPitched">, string | RadioOption> = {
-	flat: {
-		label: "Flat roof",
+type ActiveRoofType = Exclude<RoofType, "unheatedPitched">;
+
+const roofFieldText: Record<ActiveRoofType, {
+	lengthLabel: string;
+	lengthHelp: string;
+	widthLabel: string;
+	widthHelp: string;
+	elevationalHelp: string;
+	surfaceAreaHelp: string;
+	thermalResistanceHelp: string;
+	arealHeatCapacityHelp: string;
+	massDistributionHelp: string;
+}> = {
+	flatAboveHeatedSpace: {
+		lengthLabel: "Length of internal ceiling",
+		lengthHelp: "Enter the length of the internal adjacent ceiling",
+		widthLabel: "Width of internal ceiling",
+		widthHelp: "Enter the width of the internal adjacent ceiling",
+		elevationalHelp: "Enter the distance between the ground and the external surface of the roof",
+		surfaceAreaHelp: "Enter the net area of the internal adjacent ceiling. The area of all windows should be subtracted before entry. You do not need to subtract the area of PV arrays.",
+		thermalResistanceHelp: "Enter the thermal resistance of the adjacent ceiling and roof build-up from the structural deck to the top waterproof layer",
+		arealHeatCapacityHelp: "This is the sum of the heat capacities of all the construction layers in the ceiling and roof build up from the structural deck to the top waterproof layer",
+		massDistributionHelp: "This is the distribution of mass in the ceiling and roof build up from the structural deck to the top waterproof layer",
+	},
+	flatAboveUnheatedSpace: {
+		lengthLabel: "Length of internal ceiling",
+		lengthHelp: "Enter the length of the internal ceiling",
+		widthLabel: "Width of internal ceiling",
+		widthHelp: "Enter the width of the internal ceiling",
+		elevationalHelp: "Enter the distance between the ground and the external surface of the roof",
+		surfaceAreaHelp: "Enter the net area of the internal ceiling. You do not need to subtract the areas of windows or rooflights that are in the roof above the unheated space.",
+		thermalResistanceHelp: "Enter the thermal resistance of the adjacent ceiling, roof build-up from the structural deck to the top waterproof layer, and unheated space",
+		arealHeatCapacityHelp: "This is the sum of the heat capacities of all the construction layers in the ceiling but not the roof",
+		massDistributionHelp: "This is the distribution of mass in the roof, loft space and ceiling",
+	},
+	pitchedInsulatedAtRoof: {
+		lengthLabel: "Length of roof",
+		lengthHelp: "Enter the length of the exposed area of roof looking from the inside",
+		widthLabel: "Width of roof",
+		widthHelp: "Enter the width of the exposed area of roof looking from the inside",
+		elevationalHelp: "Enter the distance between the ground and the lowest point of the length measurement",
+		surfaceAreaHelp: "Enter the net area of the internal adjacent ceiling. The area of all windows should be subtracted before entry. You do not need to subtract the area of PV arrays.",
+		thermalResistanceHelp: "Enter the thermal resistance of the adjacent ceiling and roof build-up from the structural deck to the top waterproof layer",
+		arealHeatCapacityHelp: "This is the sum of the heat capacities of all the construction layers in the ceiling and roof build up from the structural deck to the top waterproof layer",
+		massDistributionHelp: "This is the distribution of mass in the ceiling and roof build up from the structural deck to the top waterproof layer",
+	},
+	pitchedInsulatedAtCeiling: {
+		lengthLabel: "Length of internal ceiling",
+		lengthHelp: "Enter the length of the internal ceiling",
+		widthLabel: "Width of internal ceiling",
+		widthHelp: "Enter the width of the internal ceiling",
+		elevationalHelp: "Enter the distance between the ground and the lowest point of the length measurement",
+		surfaceAreaHelp: "Enter the net area of the internal ceiling. You do not need to subtract the areas of windows or rooflights that are in the roof above the unheated space.",
+		thermalResistanceHelp: "Enter the thermal resistance of the adjacent ceiling, roof build-up from the structural deck to the top waterproof layer, and unheated space",
+		arealHeatCapacityHelp: "This is the sum of the heat capacities of all the construction layers in the ceiling but not the roof",
+		massDistributionHelp: "This is the distribution of mass in the roof, loft space and ceiling",
+	},
+};
+
+const roofTypeOptions: Record<ActiveRoofType, string | RadioOption> = {
+	flatAboveHeatedSpace: {
+		label: "Flat roof above a heated space",
+		hint: "This assumes the pitch is 0°",
+	},
+	flatAboveUnheatedSpace: {
+		label: "Flat roof above an unheated space",
 		hint: "This assumes the pitch is 0°",
 	},
 	pitchedInsulatedAtRoof: "Pitched roof insulated at roof or rafter",
 	pitchedInsulatedAtCeiling: "Pitched roof insulated at ceiling or joist",
 };
-const colourOptions = colourOptionsMap;
+
 
 const saveForm = (fields: RoofData) => {
 	store.$patch((state) => {
@@ -29,7 +92,7 @@ const saveForm = (fields: RoofData) => {
 		const currentId = roofData?.data.id;
 		let variantFields: 
 		| {
-			typeOfRoof: "pitchedInsulatedAtRoof" | "pitchedInsulatedAtCeiling" | "flat";
+			typeOfRoof: "pitchedInsulatedAtRoof" | "pitchedInsulatedAtCeiling" | "flatAboveHeatedSpace" | "flatAboveUnheatedSpace";
 			thermalResistance: number;
 		} | {
 			typeOfRoof: "unheatedPitched";
@@ -39,7 +102,8 @@ const saveForm = (fields: RoofData) => {
 		switch (fields.typeOfRoof) {
 			case "pitchedInsulatedAtRoof":
 			case "pitchedInsulatedAtCeiling":
-			case "flat":
+			case "flatAboveHeatedSpace":
+			case "flatAboveUnheatedSpace":
 				variantFields = {
 					typeOfRoof: fields.typeOfRoof,
 					thermalResistance: fields.thermalResistance,
@@ -95,7 +159,7 @@ autoSaveElementForm<RoofData>({
 watch(model, (newData, initialData) => {
 	if (initialData === undefined || initialData === newData) return; 
 	if (newData) {
-		if (newData?.typeOfRoof === "flat") return; 
+		if (newData?.typeOfRoof === "flatAboveHeatedSpace" || newData?.typeOfRoof === "flatAboveUnheatedSpace") return; 
 		if ([0, 180].includes(newData.pitch!)) {
 			const { dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
 			const doors = [dwellingSpaceExternalGlazedDoor.data, dwellingSpaceExternalUnglazedDoor.data].flat();
@@ -104,6 +168,13 @@ watch(model, (newData, initialData) => {
 			useBanner().value = { type: "update-front-door" };
 		}
 	}
+});
+
+const currentRoofFieldText = computed(() => {
+	if (model.value?.typeOfRoof && model.value.typeOfRoof !== "unheatedPitched") {
+		return roofFieldText[model.value.typeOfRoof];
+	}
+	return null;
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
@@ -146,8 +217,17 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<GovInset v-if="model?.typeOfRoof === 'pitchedInsulatedAtRoof' || model?.typeOfRoof === 'pitchedInsulatedAtCeiling'">
 			If the pitched roof has multiple orientations (for example, a gable or hip roof), each orientation must be added as a separate roof element.
 		</GovInset>
+		<FieldsThermalResistance :key="`thermalResistance-${model?.typeOfRoof}`" :help="currentRoofFieldText?.thermalResistanceHelp" />
+		<FieldsColourOfExternalSurface />	
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			:key="`arealHeatCapacity-${model?.typeOfRoof}`"
+			name="arealHeatCapacity"
+			:help="currentRoofFieldText?.arealHeatCapacityHelp"
+		/>
+		<FieldsMassDistributionClass :key="`massDistributionClass-${model?.typeOfRoof}`" :help="currentRoofFieldText?.massDistributionHelp" />
 		<FieldsPitch
-			v-if="model?.typeOfRoof === 'flat'"
+			v-if="model?.typeOfRoof === 'flatAboveHeatedSpace' || model?.typeOfRoof === 'flatAboveUnheatedSpace'"
 			label="Pitch of roof"
 			help="Enter the tilt angle of the external surface of the roof. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
 			:options="zeroPitchOptions()"
@@ -171,12 +251,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</div>
 			</div>
 		</template>
-
+		<FieldsElevationalHeight
+			:key="`elevationalHeight-${model?.typeOfRoof}`"
+			field="elevationalHeightOfElement"
+			label="Elevational height of roof at its base"
+			:help="currentRoofFieldText?.elevationalHelp"
+		/>
 		<FormKit
 			id="length"
+			:key="`length-${model?.typeOfRoof}`"
 			type="govInputWithSuffix"
-			label="Length of roof"
-			help="Enter the length of the building element"
+			:label="currentRoofFieldText?.lengthLabel ?? 'Length of roof'"
+			:help="currentRoofFieldText?.lengthHelp ?? 'Enter the length of the building element'"
 			name="length"
 			validation="required | number | min:0.001 | max:50"
 			suffix-text="m"
@@ -184,58 +270,25 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="width"
+			:key="`width-${model?.typeOfRoof}`"
 			type="govInputWithSuffix"
-			label="Width of roof"
-			help="Enter the width of the building element"
+			:label="currentRoofFieldText?.widthLabel ?? 'Width of roof'"
+			:help="currentRoofFieldText?.widthHelp ?? 'Enter the width of the building element'"
 			name="width"
 			validation="required | number | min:0.001 | max:50"
 			suffix-text="m"
 		/>
-		<FieldsElevationalHeight
-			field="elevationalHeightOfElement"
-			label="Elevational height of roof at its base"
-		/>
 		<FormKit
 			id="surfaceArea"
+			:key="`surfaceArea-${model?.typeOfRoof}`"
 			type="govInputWithSuffix"
 			label="Net surface area of ceiling"
-			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
+			:help="currentRoofFieldText?.surfaceAreaHelp ?? 'Enter the net area of the building element. The area of all windows or doors should be subtracted before entry.'"
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 			suffix-text="m²"
 			data-field="Zone.BuildingElement.*.area"
-		/>
-		<FormKit
-			id="colour"
-			type="govRadios"
-			label="Colour of external surface"
-			name="colour"
-			:options="colourOptions"
-			validation="required"
-			data-field="Zone.BuildingElement.*.colour"
-		/>
-
-		<template v-if="model?.typeOfRoof === 'flat' || model?.typeOfRoof === 'pitchedInsulatedAtRoof'">
-			
-			<FieldsThermalResistance/>
-			<FieldsArealHeatCapacity
-				id="arealHeatCapacity"
-				name="arealHeatCapacity"
-				help="This is the sum of the heat capacities of all the construction layers in the roof and ceiling; also known as effective areal heat capacity or kappa value"
-			/>
-			<FieldsMassDistributionClass help="This is the distribution of mass in the roof and ceiling" />
-		</template>
-
-		<template v-if="model?.typeOfRoof === 'pitchedInsulatedAtCeiling'">
-			<FieldsThermalResistance/>
-			<FieldsArealHeatCapacity
-				id="arealHeatCapacity"
-				name="arealHeatCapacity"
-				help="This is the sum of the heat capacities of all the construction layers in the roof, loft space and ceiling; also known as effective areal heat capacity or kappa value"
-			/>
-			<FieldsMassDistributionClass help="This is the distribution of mass in the roof, loft space and ceiling" />
-		</template>
-		
+		/>		
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

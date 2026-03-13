@@ -55,7 +55,7 @@ describe("ceilings and roofs", () => {
 		data: {
 			id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
 			name: "Roof 1",
-			typeOfRoof: "flat",
+			typeOfRoof: "flatAboveHeatedSpace",
 			pitchOption: "0",
 			pitch: 0,
 			length: 1,

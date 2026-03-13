@@ -37,7 +37,7 @@ describe("extractSectionItems", () => {
 		});
 
 		const { dwellingSpaceExternalWall } =
-      store.dwellingFabric.dwellingSpaceWalls;
+			store.dwellingFabric.dwellingSpaceWalls;
 
 		const actual = extractSectionItems(dwellingSpaceExternalWall);
 
@@ -48,12 +48,12 @@ describe("extractSectionItems", () => {
 	});
 
 	test("item has no pitch option or no orientation field", () => {
-		
+
 		const roof1: EcaasForm<RoofData, "name"> = {
 			data: {
 				id: "roof1-id",
 				name: "Roof 1",
-				typeOfRoof: "flat",
+				typeOfRoof: "flatAboveHeatedSpace",
 				pitchOption: "0",
 				pitch: 0,
 			},
@@ -80,7 +80,7 @@ describe("extractSectionItems", () => {
 		});
 
 		const { dwellingSpaceRoofs } =
-      store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 		const actual = extractSectionItems(dwellingSpaceRoofs);
 
@@ -112,7 +112,7 @@ describe("extractSectionItems", () => {
 		});
 
 		const { dwellingSpaceRoofs } =
-      store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 		const actual = extractSectionItems(dwellingSpaceRoofs);
 
@@ -133,7 +133,7 @@ describe("extractSectionItems", () => {
 			},
 		});
 		const { dwellingSpaceRoofs } =
-      store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 		const actual = extractSectionItems(dwellingSpaceRoofs);
 

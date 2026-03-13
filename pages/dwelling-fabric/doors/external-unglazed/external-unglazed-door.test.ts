@@ -512,7 +512,7 @@ describe("external unglazed door", () => {
 				data: {
 					id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
 					name: "Roof 1",
-					typeOfRoof: "flat",
+					typeOfRoof: "flatAboveHeatedSpace",
 					pitchOption: "0",
 					pitch: 0,
 					length: 1,
@@ -551,21 +551,21 @@ describe("external unglazed door", () => {
 			pitchOption: "custom",
 			pitch: 0,
 		};
-									
+
 		const externalWallPitch180: Partial<ExternalWallData> = {
 			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
 			name: "External wall",
 			pitchOption: "custom",
 			pitch: 180,
 		};
-		
+
 		it.each([[0, externalWallPitch0], [180, externalWallPitch180]])("does not display the 'Is this the front door?' element if pitch of tagged item is %s", async (pitch, externalWall) => {
-					
+
 			const door: Partial<ExternalUnglazedDoorData> = {
 				name: "External glazed door 1",
 				associatedItemId: externalWall.id,
 			};
-		
+
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -577,16 +577,16 @@ describe("external unglazed door", () => {
 						dwellingSpaceExternalUnglazedDoor: {
 							data: [{ data: door }],
 						},
-					}, 
+					},
 				},
 			});
-		
+
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
 					params: { door: "0" },
 				},
 			});
-						
+
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
 
@@ -610,17 +610,17 @@ describe("external unglazed door", () => {
 		});
 
 		test("displays banner when banner is set to 'update-front-door", async () => {
-			
+
 			vi.mock("~/composables/banner", () => ({
 				useBanner: () => ref({ type: "update-front-door" }),
 			}));
-			
+
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
 					params: { door: "create" },
 				},
 			});
-		
+
 			expect(screen.getByTestId("doorBanner")).not.toBeNull();
 		});
 	});

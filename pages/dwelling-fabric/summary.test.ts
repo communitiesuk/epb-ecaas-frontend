@@ -255,7 +255,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 		data: [{
 			data: {
 				name: "Flat roof",
-				typeOfRoof: "flat",
+				typeOfRoof: "flatAboveHeatedSpace",
 				pitchOption: "custom",
 				pitch: 180,
 				length: 1,
@@ -1089,7 +1089,7 @@ describe("dwelling space ceilings and roofs", () => {
 		await renderSuspended(Summary);
 		const expectedFlatRoof = {
 			"Name": "Flat roof",
-			"Type of roof": "Flat",
+			"Type of roof": "Flat above heated space",
 			"Pitch": `180 ${degrees.suffix}`,
 			"Length": `1 ${metre.suffix}`,
 			"Width": `1 ${metre.suffix}`,

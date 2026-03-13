@@ -392,7 +392,7 @@ const ceilingDataZod = z.discriminatedUnion(
 
 export type CeilingData = z.infer<typeof ceilingDataZod>;
 
-const roofType = z.enum(["flat", "pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling", "unheatedPitched"]);
+const roofType = z.enum(["flatAboveHeatedSpace", "flatAboveUnheatedSpace", "pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling", "unheatedPitched"]);
 
 export type RoofType = z.infer<typeof roofType>;
 
@@ -416,7 +416,7 @@ const roofDataZod = z.discriminatedUnion("typeOfRoof", [
 		uValue,
 	}),
 	roofDataBaseZod.extend({
-		typeOfRoof: z.enum(["pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling", "flat"]),
+		typeOfRoof: z.enum(["pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling", "flatAboveHeatedSpace", "flatAboveUnheatedSpace"]),
 		thermalResistance,
 	})]);
 
