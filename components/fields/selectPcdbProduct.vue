@@ -1,7 +1,9 @@
 <script setup lang="ts">
 
 defineProps<{
-	help?: string;
+	id?: string;
+	help?: string; 
+	name?: string;
 	selectedProductReference?: string;
 	selectedProductType?: string;
 	pageUrl?: string;
@@ -11,10 +13,10 @@ defineProps<{
 
 <template>
 	<FormKit
-		id="selectHeatPump"
+		:id="id || 'selectHeatPump'"
 		type="govPcdbProduct"
-		label="Select a heat pump"
-		name="productReference"
+		label="Select a product"
+		:name="name || 'productReference'"
 		validation="required"
 		:help="help"
 		:selected-product-reference="selectedProductReference"

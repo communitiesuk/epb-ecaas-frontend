@@ -230,14 +230,11 @@ const heatSourceOptions = new Map(
 				label="Is this shower air powered?"
 			/>
 			<!-- TODO: Plumb this PCDB in -->
-			<FormKit
+			<FieldsSelectPcdbProduct
 				v-if="model.isAirPowered === true"
 				id="airPoweredShowerProductRefernce"
-				type="govPcdbProduct"
-				label="Select an air pump product"
 				name="airPoweredShowerProductRefernce"
-				validation="required"
-				help="Select the air pump from the PCDB using the button below."
+				help="Select the shower type from the PCDB using the button below."
 				:selected-product-reference="model.airPoweredShowerProductRefernce"
 				:selected-product-type="model.typeOfHotWaterOutlet"
 				:page-url="route.fullPath"
