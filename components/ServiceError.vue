@@ -1,4 +1,5 @@
 <template>
+	<Title>Sorry there has been a problem</Title>
 	<main id="main-content" class="govuk-main-wrapper govuk-main-wrapper--l">
 		<div class="govuk-grid-row">
 			<div class="govuk-grid-column-two-thirds">
