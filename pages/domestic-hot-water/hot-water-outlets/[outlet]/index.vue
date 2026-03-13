@@ -23,22 +23,25 @@ const saveForm = (fields: HotWaterOutletsData) => {
 		const commonFields = {
 			name: fields.name,
 			id,
-
 		};
 
 		let hotWaterOutletItem: EcaasForm<HotWaterOutletsData>;
 
 		if (fields.typeOfHotWaterOutlet === "mixedShower") {
+			const conditionalOnAirPoweredFields = fields.isAirPowered
+				? { isAirPowered: fields.isAirPowered, airPoweredShowerProductRefernce: fields.airPoweredShowerProductRefernce }
+				: { isAirPowered: false as const , flowRate: fields.flowRate };
 			if (fields.wwhrs) {
 				hotWaterOutletItem = {
 					data: {
 						...commonFields,
 						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-						flowRate: fields.flowRate,
+
 						dhwHeatSourceId: fields.dhwHeatSourceId,
 						wwhrs: true,
 						wwhrsType: fields.wwhrsType,
 						wwhrsProductReference: fields.wwhrsProductReference,
+						...conditionalOnAirPoweredFields,
 					},
 					complete: true,
 				};
@@ -47,9 +50,9 @@ const saveForm = (fields: HotWaterOutletsData) => {
 					data: {
 						...commonFields,
 						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-						flowRate: fields.flowRate,
 						dhwHeatSourceId: fields.dhwHeatSourceId,
 						wwhrs: false,
+						...conditionalOnAirPoweredFields,
 					},
 					complete: true,
 				};
@@ -199,30 +202,51 @@ const heatSourceOptions = new Map(
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
-		/>
-		<FormKit
-			v-if="model.typeOfHotWaterOutlet === 'mixedShower'"	
-			id="dhwHeatSourceId"
-			name="dhwHeatSourceId"
-			type="govRadios"
-			label="Hot water source"
-			help="Select the relevant hot water source that has been added previously"
-			validation="required"
-			:options="heatSourceOptions"
-		>			
-			<div
-				v-if="!heatSourceOptions.size"
-				data-testid="noHeatSource"
-			>
-				<p class="govuk-error-message">No heat sources added.</p>
-				<NuxtLink :to="getUrl('heatSourcesCreate')" class="govuk-link gov-radios-add-link">
-					Click here to add a heat source
-				</NuxtLink>
-			</div>
-		</FormKit>
+		/><template v-if="model.typeOfHotWaterOutlet === 'mixedShower'">
+			<FormKit
+			
+				id="dhwHeatSourceId"
+				name="dhwHeatSourceId"
+				type="govRadios"
+				label="Hot water source"
+				help="Select the relevant hot water source that has been added previously"
+				validation="required"
+				:options="heatSourceOptions"
+			>			
+				<div
+					v-if="!heatSourceOptions.size"
+					data-testid="noHeatSource"
+				>
+					<p class="govuk-error-message">No heat sources added.</p>
+					<NuxtLink :to="getUrl('heatSourcesCreate')" class="govuk-link gov-radios-add-link">
+						Click here to add a heat source
+					</NuxtLink>
+				</div>
+			</FormKit>
+			<FormKit 
+				id="isAirPowered"
+				name="isAirPowered"
+				type="govBoolean"
+				label="Is this shower air powered?"
+			/>
+			<!-- TODO: Plumb this PCDB in -->
+			<FormKit
+				v-if="model.isAirPowered === true"
+				id="airPoweredShowerProductRefernce"
+				type="govPcdbProduct"
+				label="Select an air pump product"
+				name="airPoweredShowerProductRefernce"
+				validation="required"
+				help="Select the air pump from the PCDB using the button below."
+				:selected-product-reference="model.airPoweredShowerProductRefernce"
+				:selected-product-type="model.typeOfHotWaterOutlet"
+				:page-url="route.fullPath"
+				:page-index="index"
+			/>
+		</template>
 	
 		<FormKit
-			v-if="model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	
+			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' && model.isAirPowered === false) || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	
 			id="flowRate"
 			type="govInputWithSuffix"
 			label="Flow rate"

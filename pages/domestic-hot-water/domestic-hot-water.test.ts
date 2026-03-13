@@ -240,12 +240,12 @@ describe("Domestic hot water", () => {
 					},
 				},
 			});
-		
+
 			await renderSuspended(DomesticHotWater);
 			await user.click(await screen.findByTestId("waterStorage_remove_1"));
 			const { pipework } = store.domesticHotWater;
-	
-			expect(pipework.data[0]?.data.waterStorage).toBe(hwStorage1.data.id);		
+
+			expect(pipework.data[0]?.data.waterStorage).toBe(hwStorage1.data.id);
 			expect(pipework.data[1]?.data.waterStorage).toBeUndefined();
 		});
 	});
@@ -259,6 +259,7 @@ describe("Domestic hot water", () => {
 				flowRate: 100,
 				dhwHeatSourceId: "4eaf-48c1-4d3b-9f56-6d02b8f5c2bb",
 				wwhrs: false,
+				isAirPowered: false,
 			},
 		};
 
@@ -481,7 +482,7 @@ describe("Domestic hot water", () => {
 	});
 
 	describe("Heat Sources", () => {
-		
+
 		const boosterHeatPumpHotWater = {
 			data: {
 				id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5555",
@@ -609,13 +610,13 @@ describe("Domestic hot water", () => {
 					},
 				},
 			});
-		
+
 			await renderSuspended(DomesticHotWater);
 			await user.click(await screen.findByTestId("heatSources_remove_1"));
 			const { heatSources } = store.domesticHotWater;
-		
-			expect((heatSources.data[0]?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBeUndefined();	
-			expect(heatSources.data[0]?.complete).toBe(false);	
+
+			expect((heatSources.data[0]?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBeUndefined();
+			expect(heatSources.data[0]?.complete).toBe(false);
 		});
 
 		it("when a DHW heat source is removed it's removed from all other store items that reference it", async () => {
@@ -650,6 +651,7 @@ describe("Domestic hot water", () => {
 				flowRate: 10,
 				dhwHeatSourceId: heatSource2.data.id,
 				wwhrs: false,
+				isAirPowered: false,
 
 			};
 
@@ -666,16 +668,16 @@ describe("Domestic hot water", () => {
 					},
 				},
 			});
-		
+
 			await renderSuspended(DomesticHotWater);
 			await user.click(await screen.findByTestId("heatSources_remove_1"));
 			const { waterStorage, hotWaterOutlets } = store.domesticHotWater;
-	
-			expect(waterStorage.data[0]?.data.dhwHeatSourceId).toBe(heatSource1.data.id);		
-			expect(waterStorage.data[1]?.data.dhwHeatSourceId).toBeUndefined();	
-			expect(waterStorage.data[1]?.complete).toBe(false);	
 
-			const mixedShower = hotWaterOutlets.data[0]; 
+			expect(waterStorage.data[0]?.data.dhwHeatSourceId).toBe(heatSource1.data.id);
+			expect(waterStorage.data[1]?.data.dhwHeatSourceId).toBeUndefined();
+			expect(waterStorage.data[1]?.complete).toBe(false);
+
+			const mixedShower = hotWaterOutlets.data[0];
 			expect((mixedShower?.data as { dhwHeatSourceId: string }).dhwHeatSourceId).toBeUndefined();
 			expect(mixedShower?.complete).toBe(false);
 		});
@@ -707,8 +709,9 @@ describe("Domestic hot water", () => {
 
 		test("duplicate link is not displayed for heat sources which use existing space heating heat sources", async () => {
 			const heatPumpSpaceHeating: EcaasForm<HeatSourceData> = {
-				data: 
-				{ id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+				data:
+				{
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 					name: "Heat pump 1",
 					typeOfHeatSource: "heatPump",
 					typeOfHeatPump: "airSource",
@@ -728,7 +731,7 @@ describe("Domestic hot water", () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [heatPumpSpaceHeating, 					
+						data: [heatPumpSpaceHeating,
 						],
 					},
 				},
@@ -743,7 +746,7 @@ describe("Domestic hot water", () => {
 			});
 
 			await renderSuspended(DomesticHotWater);
-			expect(screen.getByTestId("heatSources_duplicate_0")).toBeDefined();		
+			expect(screen.getByTestId("heatSources_duplicate_0")).toBeDefined();
 			expect(screen.queryByTestId("heatSources_duplicate_1")).toBeNull();
 
 		});

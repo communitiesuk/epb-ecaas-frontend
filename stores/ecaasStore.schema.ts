@@ -1283,18 +1283,34 @@ export type WwhrsType = z.infer<typeof wwhrsTypeZod>;
 
 const mixedShowerBaseZod = namedWithId.extend({
 	typeOfHotWaterOutlet: z.literal("mixedShower"),
-	flowRate: z.number().min(8).max(15),
 	dhwHeatSourceId: z.uuidv4(),
 });
 
-const mixedShowerDataZod = z.discriminatedUnion("wwhrs", [
-	mixedShowerBaseZod.extend({ wwhrs: z.literal(false) }),
-	mixedShowerBaseZod.extend({
-		wwhrs: z.literal(true),
-		wwhrsType: wwhrsTypeZod,
-		wwhrsProductReference: z.string().optional(),
-	}),
-]);
+const hasAirPumpFields = {
+	discriminator: "isAirPowered",
+	variants: [
+		z.object({ isAirPowered: z.literal(false), flowRate: z.number().min(8).max(15) }),
+		z.object({ isAirPowered: z.literal(true), airPoweredShowerProductRefernce: z.string() }),
+	] satisfies Tuple,
+};
+
+const mixedShowerWwhrsFields = {
+	discriminator: "wwhrs",
+	variants: [
+		z.object({ wwhrs: z.literal(false) }),
+		z.object({
+			wwhrs: z.literal(true),
+			wwhrsType: wwhrsTypeZod,
+			wwhrsProductReference: z.string().optional(),
+		}),
+	] satisfies Tuple,
+};
+
+const mixedShowerDataZod = nestedDiscriminatedUnion(
+	mixedShowerBaseZod,
+	hasAirPumpFields,
+	mixedShowerWwhrsFields,
+);
 
 export type MixedShowerData = z.infer<typeof mixedShowerDataZod>;
 

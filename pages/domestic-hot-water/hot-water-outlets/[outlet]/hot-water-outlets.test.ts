@@ -25,6 +25,7 @@ describe("hot water outlets", () => {
 			flowRate: 10,
 			dhwHeatSourceId: heatPumpId,
 			wwhrs: false,
+			isAirPowered: false,
 		},
 	};
 
@@ -85,6 +86,7 @@ describe("hot water outlets", () => {
 		await user.clear(nameInput);
 		await user.type(nameInput, "Mixer shower 1");
 		await user.click(screen.getByTestId("dhwHeatSourceId_" + heatPumpId));
+		await user.click(screen.getByTestId("isAirPowered_no"));
 		await user.type(screen.getByTestId("flowRate"), "10");
 		await user.tab();
 	};
@@ -134,8 +136,6 @@ describe("hot water outlets", () => {
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("dhwHeatSourceId_error"))).toBeDefined();
-		expect((await screen.findByTestId("flowRate_error"))).toBeDefined();
-
 
 
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_electricShower"));
@@ -367,7 +367,7 @@ describe("hot water outlets", () => {
 				}
 
 				(Object.keys(hotWaterOutlet.data))
-					.filter(e => e !== "id" && e !== "typeOfHotWaterOutlet" && e !== "dhwHeatSourceId" && e !== "wwhrs")
+					.filter(e => e !== "id" && e !== "typeOfHotWaterOutlet" && e !== "dhwHeatSourceId" && e !== "wwhrs" && e !== "isAirPowered")
 					.forEach(async (key) => {
 						expect((await screen.findByTestId<HTMLInputElement>(key)).value)
 							.toBe(String((hotWaterOutlet.data)[key as (keyof typeof hotWaterOutlet.data)]));
@@ -392,6 +392,131 @@ describe("hot water outlets", () => {
 
 				expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
 			});
+		});
+	});
+
+	describe("air powered shower", () => {
+		const airPoweredMixerShower: EcaasForm<MixedShowerData> = {
+			data: {
+				name: "Air powered shower 1",
+				id: "c84528bb-f805-4f1e-95d3-2bd1717deca5",
+				typeOfHotWaterOutlet: "mixedShower",
+				dhwHeatSourceId: heatPumpId,
+				wwhrs: false,
+				isAirPowered: true,
+				airPoweredShowerProductRefernce: "AP-REF-001",
+			},
+		};
+
+		beforeEach(() => {
+			store.$reset();
+			addHeatPumpStoreData();
+		});
+
+		test("air pump product reference field is shown when isAirPowered is yes", async () => {
+			await renderSuspended(HotWaterOutlets, {
+				route: { params: { "hotWaterOutlet": "create" } },
+			});
+
+			await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
+			expect(screen.queryByTestId("airPoweredShowerProductRefernce")).toBeNull();
+
+			await user.click(screen.getByTestId("isAirPowered_yes"));
+			expect(screen.getByTestId("airPoweredShowerProductRefernce")).toBeDefined();
+		});
+
+		test("air pump product reference field is hidden when isAirPowered is no", async () => {
+			await renderSuspended(HotWaterOutlets, {
+				route: { params: { "hotWaterOutlet": "create" } },
+			});
+
+			await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
+			await user.click(screen.getByTestId("isAirPowered_yes"));
+			expect(screen.getByTestId("airPoweredShowerProductRefernce")).toBeDefined();
+
+			await user.click(screen.getByTestId("isAirPowered_no"));
+			expect(screen.queryByTestId("airPoweredShowerProductRefernce")).toBeNull();
+		});
+
+		test("air powered shower data is saved to store when form is valid", async () => {
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [{ data: { ...airPoweredMixerShower.data } }],
+					},
+				},
+			});
+
+			await renderSuspended(HotWaterOutlets, {
+				route: { params: { "hotWaterOutlet": "0" } },
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const { data } = store.domesticHotWater.hotWaterOutlets;
+			expect(data[0]?.data).toEqual(airPoweredMixerShower.data);
+			expect(data[0]?.complete).toBe(true);
+		});
+
+		test("form is prepopulated with air powered shower data when editing existing entry", async () => {
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [{ data: { ...airPoweredMixerShower.data }, complete: true }],
+					},
+				},
+			});
+
+			await renderSuspended(HotWaterOutlets, {
+				route: { params: { "hotWaterOutlet": "0" } },
+			});
+
+			expect((await screen.findByTestId<HTMLInputElement>("typeOfHotWaterOutlet_mixedShower")).checked).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("isAirPowered_yes")).checked).toBe(true);
+			expect(await screen.findByTestId("airPoweredShowerProductRefernce")).toBeDefined();
+		});
+
+		test("validation error is shown when isAirPowered is yes but no product is selected", async () => {
+			await renderSuspended(HotWaterOutlets, {
+				route: { params: { "hotWaterOutlet": "create" } },
+			});
+
+			await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
+			const nameInput = screen.getByTestId<HTMLInputElement>("name");
+			await user.clear(nameInput);
+			await user.type(nameInput, "Air powered shower 1");
+			await user.click(screen.getByTestId("dhwHeatSourceId_" + heatPumpId));
+			await user.tab();
+			await user.click(screen.getByTestId("isAirPowered_yes"));
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(await screen.findByTestId("airPoweredShowerProductRefernce_error")).toBeDefined();
+		});
+		test("flow rate is not shown when isAirPowered is yes", async () => {
+			await renderSuspended(HotWaterOutlets, {
+				route: { params: { "hotWaterOutlet": "create" } },
+			});
+
+			await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
+			await user.click(screen.getByTestId("isAirPowered_yes"));
+
+			expect(screen.queryByTestId("flowRate")).toBeNull();
+		});
+		test("flow rate validation error is shown when isAirPowered is no and flow rate is not entered", async () => {
+			await renderSuspended(HotWaterOutlets, {
+				route: { params: { "hotWaterOutlet": "create" } },
+			});
+
+			await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
+			const nameInput = screen.getByTestId<HTMLInputElement>("name");
+			await user.clear(nameInput);
+			await user.type(nameInput, "Mixer shower 1");
+			await user.click(screen.getByTestId("dhwHeatSourceId_" + heatPumpId));
+			await user.tab();
+			await user.click(screen.getByTestId("isAirPowered_no"));
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(await screen.findByTestId("flowRate_error")).toBeDefined();
 		});
 	});
 

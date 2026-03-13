@@ -216,6 +216,7 @@ describe("Domestic hot water summary", () => {
 				typeOfHotWaterOutlet: "mixedShower",
 				dhwHeatSourceId: "4eaf-48c1-4d3b-9f56-6d02b8f5c2bb",
 				wwhrs: false,
+				isAirPowered: false,
 			},
 		};
 
@@ -263,7 +264,7 @@ describe("Domestic hot water summary", () => {
 
 			// Should show tab for mixer showers (has data)
 			expect(screen.getByRole("link", { name: "Mixer showers" })).not.toBeNull();
-			
+
 			// Should NOT show tabs for types with no data
 			expect(screen.queryByRole("link", { name: "Electric showers" })).toBeNull();
 			expect(screen.queryByRole("link", { name: "Baths" })).toBeNull();
@@ -310,7 +311,7 @@ describe("Domestic hot water summary", () => {
 			expect(screen.getByRole("link", { name: "Mixer showers" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Electric showers" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Baths" })).not.toBeNull();
-			
+
 			// Should NOT show tab for type without data
 			expect(screen.queryByRole("link", { name: "Other" })).toBeNull();
 		});
@@ -467,6 +468,7 @@ describe("Domestic hot water summary", () => {
 					wwhrs: true,
 					wwhrsType: "instantaneousSystemA",
 					wwhrsProductReference: "WWHRS-PR-1",
+					isAirPowered: false as const,
 				},
 			};
 
@@ -531,9 +533,9 @@ describe("Domestic hot water summary", () => {
 			}
 		});
 	});
-	
+
 	describe("heat sources", () => {
-	
+
 		const dhwWithNewHeatPump: DomesticHotWaterHeatSourceData = {
 			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
@@ -544,7 +546,7 @@ describe("Domestic hot water summary", () => {
 			typeOfHeatPump: "booster",
 			productReference: "HEAT_PUMP_SMALL",
 		};
-		
+
 		const dhwWithNewBoiler: DomesticHotWaterHeatSourceData = {
 			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
@@ -650,20 +652,20 @@ describe("Domestic hot water summary", () => {
 		it("displays an empty tab state with link to create when no data is present", async () => {
 			store.$reset();
 			await renderSuspended(Summary);
-		
+
 			expect(screen.getByText("No heat sources added")).not.toBeNull();
-		
+
 			const addHeatSourceLink: HTMLAnchorElement = screen.getByRole("link", {
 				name: "Add heat source",
 			});
-		
+
 			expect(new URL(addHeatSourceLink.href).pathname).toBe(
 				getUrl("heatSourcesCreate"),
 			);
 		});
-		
+
 		it("should contain the correct tabs for heat sources", async () => {
-			
+
 			await renderSuspended(Summary);
 
 			expect(screen.getByRole("link", { name: "Heat pumps" })).not.toBeNull();
@@ -676,11 +678,11 @@ describe("Domestic hot water summary", () => {
 		});
 
 		it("displays an edit link that navigates to the domestic hot water form page when clicked", async () => {
-			
+
 			await renderSuspended(Summary);
-			
+
 			const heatSourcesSection = screen.getByRole("link", { name: "Edit" });
-			
+
 			expect(heatSourcesSection.getAttribute("href")).toBe("/domestic-hot-water");
 		});
 
@@ -692,7 +694,7 @@ describe("Domestic hot water summary", () => {
 			"Type of heat pump": "Booster",
 			"Product reference": "HEAT_PUMP_SMALL",
 		};
-		
+
 		const expectedBoiler = {
 			"Cold water source": "Mains water",
 			Name: "Boiler 1",
@@ -748,7 +750,7 @@ describe("Domestic hot water summary", () => {
 			Name: "Immersion heater",
 			"Type of heat source": "Immersion heater",
 			"Power": `4 ${kilowatt.suffix}`,
-		};	
+		};
 		const expectedPointOfUse = {
 			"Cold water source": "Mains water",
 			Name: "Point of use",
@@ -756,8 +758,8 @@ describe("Domestic hot water summary", () => {
 			"Energy supply": "Electricity",
 			"Heater efficiency": "1",
 		};
-		
-		it.only.each(
+
+		it.each(
 			[
 				["heatPumpSummary", expectedHeatPump],
 				["boilerSummary", expectedBoiler],
@@ -766,10 +768,10 @@ describe("Domestic hot water summary", () => {
 				["solarThermalSystemSummary", expectedSolarThermalSystem],
 				["immersionHeaterSummary", expectedImmersionHeater],
 				["pointOfUseSummary", expectedPointOfUse],
-		
+
 			],
 		)("for the %s it displays the correct stored data for new heat source items", async (sectionId, expectedData) => {
-			
+
 			await renderSuspended(Summary);
 			await verifyDataInSection(sectionId, expectedData);
 		});
@@ -797,7 +799,7 @@ describe("Domestic hot water summary", () => {
 								{ data: dhwWithExistingHeatBattery },
 								{ data: dhwWithExistingHeatNetwork },
 								{ data: dhwWithExistingSolarThermalSystem },
-	
+
 							],
 						},
 					},
@@ -809,13 +811,13 @@ describe("Domestic hot water summary", () => {
 				name: "Heat pump 1",
 				typeOfHeatSource: "heatPump",
 			};
-	
+
 			const boiler1: Partial<HeatSourceData> = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
 				name: "Boiler 1",
 				typeOfHeatSource: "boiler",
 			};
-			
+
 			const heatNetwork1: Partial<HeatSourceData> = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Heat network 1",
@@ -826,54 +828,54 @@ describe("Domestic hot water summary", () => {
 				name: "Heat battery 1",
 				typeOfHeatSource: "heatBattery",
 			};
-	
+
 			const solarThermalSystem1: Partial<HeatSourceData> = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
 				name: "Solar thermal system 1",
 				typeOfHeatSource: "solarThermalSystem",
 			};
-	
+
 			const dhwWithExistingHeatPump: DomesticHotWaterHeatSourceData = {
 				id: "hp-id",
 				coldWaterSource: "mainsWater",
 				isExistingHeatSource: true,
 				heatSourceId: heatPump1.id!,
 			};
-			
+
 			const dhwWithExistingBoiler: DomesticHotWaterHeatSourceData = {
 				id: "boiler-id",
 				coldWaterSource: "mainsWater",
 				isExistingHeatSource: true,
 				heatSourceId: boiler1.id!,
 			};
-	
+
 			const dhwWithExistingHeatBattery: DomesticHotWaterHeatSourceData = {
 				id: "hb-id",
 				coldWaterSource: "mainsWater",
 				isExistingHeatSource: true,
 				heatSourceId: heatBattery1.id!,
 			};
-	
+
 			const dhwWithExistingHeatNetwork: DomesticHotWaterHeatSourceData = {
 				id: "hn-id",
 				coldWaterSource: "headerTank",
 				isExistingHeatSource: true,
 				heatSourceId: heatNetwork1.id!,
 			};
-	
+
 			const dhwWithExistingSolarThermalSystem: DomesticHotWaterHeatSourceData = {
 				id: "solar-id",
 				coldWaterSource: "mainsWater",
 				isExistingHeatSource: true,
 				heatSourceId: solarThermalSystem1.id!,
 			};
-	
+
 			const expectedExistingHeatPump = {
 				"Cold water source": "Mains water",
 				Name: "Heat pump 1",
 				"Used for space heating": "YesView details in space heating summary",
 			};
-			
+
 			const expectedExistingBoiler = {
 				"Cold water source": "Mains water",
 				Name: "Boiler 1",
@@ -896,7 +898,7 @@ describe("Domestic hot water summary", () => {
 				Name: "Solar thermal system 1",
 				"Used for space heating": "YesView details in space heating summary",
 			};
-			
+
 			it.each(
 				[
 					["heatPumpSummary", expectedExistingHeatPump],
@@ -904,10 +906,10 @@ describe("Domestic hot water summary", () => {
 					["heatBatterySummary", expectedExistingHeatBattery],
 					["heatNetworkSummary", expectedExistingHeatNetwork],
 					["solarThermalSystemSummary", expectedExistingSolarThermalSystem],
-			
+
 				],
 			)("for the %s it displays the correct stored data for existing space heating heat source items", async (sectionId, expectedData) => {
-				
+
 				await renderSuspended(Summary);
 				await verifyDataInSection(sectionId, expectedData);
 			});

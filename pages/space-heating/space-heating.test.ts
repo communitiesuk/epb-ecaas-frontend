@@ -141,7 +141,7 @@ describe("space heating", () => {
 					typeOfHeatPump: "airSource",
 					productReference: "HEATPUMP_LARGE",
 				};
-			
+
 				const radiator: HeatEmittingData = {
 					name: "Radiator 1",
 					typeOfHeatEmitter: "radiator",
@@ -170,7 +170,7 @@ describe("space heating", () => {
 						},
 					},
 				});
-			
+
 				await renderSuspended(SpaceHeating);
 				await user.click(await screen.findByTestId("heatSource_remove_0"));
 
@@ -243,7 +243,7 @@ describe("space heating", () => {
 			});
 
 			it("domestic hot water heat sources that reference the deleted heat source are removed entirely", async () => {
-			
+
 				const heatPump1: HeatSourceData = {
 					id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
 					name: "Heat source 1",
@@ -282,7 +282,7 @@ describe("space heating", () => {
 			});
 
 			it("references to the domestic hot water heat sources that reference the deleted heat source are themselves removed", async () => {
-			
+
 				const heatPump1: HeatSourceData = {
 					id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
 					name: "Heat source 1",
@@ -343,6 +343,7 @@ describe("space heating", () => {
 					flowRate: 10,
 					dhwHeatSourceId: dhwWithExistingHeatSource1.id,
 					wwhrs: false,
+					isAirPowered: false,
 				};
 
 				store.$patch({
