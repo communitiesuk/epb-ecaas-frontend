@@ -432,6 +432,7 @@ const mixedShowerSummary: SummarySection = {
 			"Name": show(data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in data && data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(data.typeOfHotWaterOutlet) : emptyValueRendering,
 			"Hot water source": heatSourceName ? heatSourceName : emptyValueRendering,
+			"Is this an air pressure shower?": "isAirPressureShower" in data ? displayBoolean(data.isAirPressureShower) : emptyValueRendering,
 			"Flow rate": "flowRate" in data ? dim(data.flowRate, "litres per second") : emptyValueRendering,
 			"WWHRS installed": "wwhrs" in data ? displayBoolean(data.wwhrs) : emptyValueRendering,
 			"WWHRS type": "wwhrsType" in data && data.wwhrsType ? displayCamelToSentenceCase(String(data.wwhrsType)) : emptyValueRendering,

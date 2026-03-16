@@ -159,7 +159,7 @@ describe("domestic hot water mapper", () => {
 					dhwHeatSourceId: heatSourceId,
 					typeOfHotWaterOutlet: "mixedShower",
 					wwhrs: false,
-					isAirPowered: false,
+					isAirPressureShower: false,
 				},
 			};
 
@@ -265,7 +265,7 @@ describe("domestic hot water mapper", () => {
 						wwhrsProductReference: "WW-A-123",
 						dhwHeatSourceId: "heatPump1",
 						typeOfHotWaterOutlet: "mixedShower",
-						isAirPowered: false,
+						isAirPressureShower: false,
 					},
 				};
 
@@ -315,7 +315,7 @@ describe("domestic hot water mapper", () => {
 						wwhrsProductReference: "WW-B-456",
 						dhwHeatSourceId: "cylinder1",
 						typeOfHotWaterOutlet: "mixedShower",
-						isAirPowered: false,
+						isAirPressureShower: false,
 					},
 				};
 				const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
@@ -363,7 +363,7 @@ describe("domestic hot water mapper", () => {
 						wwhrsProductReference: "WW-C-789",
 						dhwHeatSourceId: "boiler1",
 						typeOfHotWaterOutlet: "mixedShower",
-						isAirPowered: false,
+						isAirPressureShower: false,
 					},
 				};
 
@@ -408,8 +408,8 @@ describe("domestic hot water mapper", () => {
 						wwhrs: false,
 						dhwHeatSourceId: "heatPump1",
 						typeOfHotWaterOutlet: "mixedShower",
-						isAirPowered: true,
-						airPoweredShowerProductRefernce: "AIR-PUMP-123",
+						isAirPressureShower: true,
+						airPressureShowerProductRefernce: "AIR-PUMP-123",
 					},
 				};
 				store.$patch({
@@ -429,7 +429,7 @@ describe("domestic hot water mapper", () => {
 					allow_low_flowrate: true,
 					HotWaterSource: "heatPump1",
 					// @ts-expect-error - to be added when FHS schema is updated to support product reference for air pump
-					airPoweredShowerProductRefernce: "AIR-PUMP-123",
+					airPressureShowerProductRefernce: "AIR-PUMP-123",
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower-air-pump"]).toEqual(expectedShowerAirPump);
 			});
@@ -447,7 +447,7 @@ describe("domestic hot water mapper", () => {
 						wwhrs: false,
 						dhwHeatSourceId: "cylinder2",
 						typeOfHotWaterOutlet: "mixedShower",
-						isAirPowered: false,
+						isAirPressureShower: false,
 					},
 				};
 
@@ -518,7 +518,7 @@ describe("domestic hot water mapper", () => {
 						wwhrsProductReference: "WW123",
 						dhwHeatSourceId: "dhwsource1",
 						typeOfHotWaterOutlet: "mixedShower",
-						isAirPowered: false,
+						isAirPressureShower: false,
 					},
 				};
 
@@ -531,7 +531,7 @@ describe("domestic hot water mapper", () => {
 						wwhrs: false,
 						dhwHeatSourceId: "source2",
 						typeOfHotWaterOutlet: "mixedShower",
-						isAirPowered: false,
+						isAirPressureShower: false,
 					},
 				};
 

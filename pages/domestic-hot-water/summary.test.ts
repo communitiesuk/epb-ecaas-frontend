@@ -216,7 +216,7 @@ describe("Domestic hot water summary", () => {
 				typeOfHotWaterOutlet: "mixedShower",
 				dhwHeatSourceId: "4eaf-48c1-4d3b-9f56-6d02b8f5c2bb",
 				wwhrs: false,
-				isAirPowered: false,
+				isAirPressureShower: false,
 			},
 		};
 
@@ -468,7 +468,7 @@ describe("Domestic hot water summary", () => {
 					wwhrs: true,
 					wwhrsType: "instantaneousSystemA",
 					wwhrsProductReference: "WWHRS-PR-1",
-					isAirPowered: false as const,
+					isAirPressureShower: false as const,
 				},
 			};
 
@@ -485,6 +485,7 @@ describe("Domestic hot water summary", () => {
 				"Name": "Mixer with WWHRS",
 				"Type of hot water outlet": "Mixed shower",
 				"Hot water source": "Heat pump",
+				"Is this an air pressure shower?": "No",
 				"Flow rate": `15 ${litrePerSecond.suffix}`,
 				"WWHRS installed": "Yes",
 				"WWHRS type": displayCamelToSentenceCase("instantaneousSystemA"),

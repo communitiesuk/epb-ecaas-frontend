@@ -1326,7 +1326,7 @@ describe("FHS input mapper", () => {
 							typeOfHotWaterOutlet: "mixedShower",
 							dhwHeatSourceId: "dhwHP-1",
 							wwhrs: false as const,
-							isAirPowered: false as const,
+							isAirPressureShower: false as const,
 						},
 					},
 					{
@@ -2116,7 +2116,7 @@ describe("FHS input mapper", () => {
 							typeOfHotWaterOutlet: "mixedShower",
 							dhwHeatSourceId: "dhwHP-1",
 							wwhrs: false as const,
-							isAirPowered: false as const,
+							isAirPressureShower: false as const,
 						},
 					},
 					{
@@ -2128,7 +2128,7 @@ describe("FHS input mapper", () => {
 							typeOfHotWaterOutlet: "mixedShower",
 							dhwHeatSourceId: "dhwHP-1",
 							wwhrs: false as const,
-							isAirPowered: false as const,
+							isAirPressureShower: false as const,
 						},
 					},
 					{

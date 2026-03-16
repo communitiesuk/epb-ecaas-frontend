@@ -28,9 +28,9 @@ const saveForm = (fields: HotWaterOutletsData) => {
 		let hotWaterOutletItem: EcaasForm<HotWaterOutletsData>;
 
 		if (fields.typeOfHotWaterOutlet === "mixedShower") {
-			const conditionalOnAirPoweredFields = fields.isAirPowered
-				? { isAirPowered: fields.isAirPowered, airPoweredShowerProductRefernce: fields.airPoweredShowerProductRefernce }
-				: { isAirPowered: false as const , flowRate: fields.flowRate };
+			const conditionalOnAirPoweredFields = fields.isAirPressureShower
+				? { isAirPressureShower: fields.isAirPressureShower, airPressureShowerProductRefernce: fields.airPressureShowerProductRefernce }
+				: { isAirPressureShower: false as const , flowRate: fields.flowRate };
 			if (fields.wwhrs) {
 				hotWaterOutletItem = {
 					data: {
@@ -224,18 +224,19 @@ const heatSourceOptions = new Map(
 				</div>
 			</FormKit>
 			<FormKit 
-				id="isAirPowered"
-				name="isAirPowered"
+				id="isAirPressureShower"
+				name="isAirPressureShower"
 				type="govBoolean"
-				label="Is this shower air powered?"
+				label="Is this an air pressure shower?"
+				help="Air pressure showers are showers that can be used at a lower flow rate by mixing air into the water stream"
 			/>
 			<!-- TODO: Plumb this PCDB in -->
 			<FieldsSelectPcdbProduct
-				v-if="model.isAirPowered === true"
-				id="airPoweredShowerProductRefernce"
-				name="airPoweredShowerProductRefernce"
+				v-if="model.isAirPressureShower === true"
+				id="airPressureShowerProductRefernce"
+				name="airPressureShowerProductRefernce"
 				help="Select the shower type from the PCDB using the button below."
-				:selected-product-reference="model.airPoweredShowerProductRefernce"
+				:selected-product-reference="model.airPressureShowerProductRefernce"
 				:selected-product-type="model.typeOfHotWaterOutlet"
 				:page-url="route.fullPath"
 				:page-index="index"
@@ -243,7 +244,7 @@ const heatSourceOptions = new Map(
 		</template>
 	
 		<FormKit
-			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' && model.isAirPowered === false) || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	
+			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' && model.isAirPressureShower === false) || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	
 			id="flowRate"
 			type="govInputWithSuffix"
 			label="Flow rate"

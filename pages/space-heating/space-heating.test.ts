@@ -186,7 +186,7 @@ describe("space heating", () => {
 					typeOfHeatPump: "booster",
 					productReference: "HEATPUMP_LARGE",
 				};
-      
+
 				const heatNetwork: HeatSourceData = {
 					id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 					name: "Heat network 1",
@@ -217,7 +217,7 @@ describe("space heating", () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
-							data: [ { data: boosterHeatPump }, { data: heatNetwork, complete: true } ],
+							data: [{ data: boosterHeatPump }, { data: heatNetwork, complete: true }],
 						},
 					},
 					domesticHotWater: {
@@ -229,14 +229,14 @@ describe("space heating", () => {
 						},
 					},
 				});
-      
+
 				await renderSuspended(SpaceHeating);
 				await user.click(await screen.findByTestId("heatSource_remove_0"));
 
 				const heatNetworkItem = store.spaceHeating.heatSource.data[0];
 				expect((heatNetworkItem?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBe(undefined);
 				expect(heatNetworkItem?.complete).toBe(false);
-        
+
 				const heatNetworkDHWItem = store.domesticHotWater.heatSources.data[0];
 				expect((heatNetworkDHWItem?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBe(undefined);
 				expect(heatNetworkDHWItem?.complete).toBe(false);
@@ -343,7 +343,7 @@ describe("space heating", () => {
 					flowRate: 10,
 					dhwHeatSourceId: dhwWithExistingHeatSource1.id,
 					wwhrs: false,
-					isAirPowered: false,
+					isAirPressureShower: false,
 				};
 
 				store.$patch({

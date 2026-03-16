@@ -259,7 +259,7 @@ describe("Domestic hot water", () => {
 				flowRate: 100,
 				dhwHeatSourceId: "4eaf-48c1-4d3b-9f56-6d02b8f5c2bb",
 				wwhrs: false,
-				isAirPowered: false,
+				isAirPressureShower: false,
 			},
 		};
 
@@ -651,7 +651,7 @@ describe("Domestic hot water", () => {
 				flowRate: 10,
 				dhwHeatSourceId: heatSource2.data.id,
 				wwhrs: false,
-				isAirPowered: false,
+				isAirPressureShower: false,
 
 			};
 

@@ -1298,10 +1298,10 @@ const mixedShowerBaseZod = namedWithId.extend({
 });
 
 const hasAirPumpFields = {
-	discriminator: "isAirPowered",
+	discriminator: "isAirPressureShower",
 	variants: [
-		z.object({ isAirPowered: z.literal(false), flowRate: z.number().min(8).max(15) }),
-		z.object({ isAirPowered: z.literal(true), airPoweredShowerProductRefernce: z.string() }),
+		z.object({ isAirPressureShower: z.literal(false), flowRate: z.number().min(8).max(15) }),
+		z.object({ isAirPressureShower: z.literal(true), airPressureShowerProductRefernce: z.string() }),
 	] satisfies Tuple,
 };
 

@@ -43,7 +43,7 @@ function mapShowersData(state: ResolvedState) {
 				WWHRS: x.wwhrsProductReference,
 				WWHRS_configuration: WWHRS_configuration[x.wwhrsType],
 			} : {}),
-			...(x.isAirPowered ? {
+			...(x.isAirPressureShower ? {
 				allow_low_flowrate: true as const,
 				flowrate: 0,// TODO: remove flowrate and add PCDB product reference for air pump when FHS schema is updated to support this
 			} : {
