@@ -88,7 +88,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="groundFloorArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
-			label="Footprint area’"
+			label="Footprint area"
 			help="Enter the total footprint of the dwelling"
 			name="groundFloorArea"
 			validation="required | number | min:0 | max:10000"
@@ -100,7 +100,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m³"
 			label="Volume"
 			name="volume"
-			help="Enter the volume of the whole thermal envelope of the dwelling, including internal walls and floors. It should be measured up to the loft insulation.’"
+			help="Enter the volume of the whole thermal envelope of the dwelling, including internal walls and floors. It should be measured up to the loft insulation."
 			validation="required | number | min:0 | max:50000"
 			data-field="Zone.volume"
 		/>
