@@ -65,8 +65,8 @@ describe("dwelling details mapper", () => {
 	describe("maps fueltype from general details input state to FHS input request", () => {
 
 		it("hardcodes electricity as a required fueltype, always included in EnergySupply", () => {
-		// Arrange
-	
+			// Arrange
+
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -75,10 +75,10 @@ describe("dwelling details mapper", () => {
 					},
 				},
 			});
-	
+
 			// Act
 			const fhsInputDataEnergySupply = mapEnergySupplyFuelTypeData(resolveState(store.$state));
-	
+
 			// Assert
 			const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 				EnergySupply: {
@@ -90,12 +90,12 @@ describe("dwelling details mapper", () => {
 					},
 				},
 			};
-			
-			expect(fhsInputDataEnergySupply).toEqual(expectedResult);	
+
+			expect(fhsInputDataEnergySupply).toEqual(expectedResult);
 		});
-	
+
 		it("filters out 'elecOnly' so it does not create a duplicate fuel entry besides hardcoded electricity", () => {
-		// Arrange
+			// Arrange
 			const state: GeneralDetailsData = {
 				typeOfDwelling: "flat",
 				storeysInDwelling: 3,
@@ -114,7 +114,7 @@ describe("dwelling details mapper", () => {
 				isPartGCompliant: false,
 				partOActiveCoolingRequired: true,
 			};
-	
+
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -123,10 +123,10 @@ describe("dwelling details mapper", () => {
 					},
 				},
 			});
-	
+
 			// Act
 			const fhsInputDataEnergySupply = mapEnergySupplyFuelTypeData(resolveState(store.$state));
-	
+
 			// Assert
 			const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 				EnergySupply: {
@@ -135,13 +135,13 @@ describe("dwelling details mapper", () => {
 					},
 				},
 			};
-			
-			expect(fhsInputDataEnergySupply).toEqual(expectedResult);	
+
+			expect(fhsInputDataEnergySupply).toEqual(expectedResult);
 		});
-	
+
 		it("sets is_export_capable to false for LPG fueltypes", () => {
 			// Arrange
-	
+
 			const state: GeneralDetailsData = {
 				typeOfDwelling: "flat",
 				storeysInDwelling: 3,
@@ -160,7 +160,7 @@ describe("dwelling details mapper", () => {
 				isPartGCompliant: false,
 				partOActiveCoolingRequired: true,
 			};
-	
+
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -169,10 +169,10 @@ describe("dwelling details mapper", () => {
 					},
 				},
 			});
-	
+
 			// Act
 			const fhsInputDataEnergySupply = mapEnergySupplyFuelTypeData(resolveState(store.$state));
-	
+
 			// Assert
 			const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 				EnergySupply: {
@@ -188,7 +188,7 @@ describe("dwelling details mapper", () => {
 					},
 				},
 			};
-	
+
 			expect(fhsInputDataEnergySupply).toEqual(expectedResult);
 		});
 	});
@@ -270,6 +270,7 @@ describe("dwelling details mapper", () => {
 		// Arrange
 		const state: AppliancesData = {
 			applianceType: ["Oven", "Clothes_drying", "Clothes_washing", "Fridge"],
+			kitchenExtractorHoodExternal: false,
 		};
 
 		store.$patch({
@@ -294,5 +295,7 @@ describe("dwelling details mapper", () => {
 		expect(fhsInputData.Appliances?.["Fridge-Freezer"]).toBe("Not Installed");
 		expect(fhsInputData.Appliances?.Dishwasher).toBe("Not Installed");
 		expect(fhsInputData.Appliances?.Freezer).toBe("Not Installed");
+
+		expect(fhsInputData.KitchenExtractorHoodExternal).toBe(false);
 	});
 });

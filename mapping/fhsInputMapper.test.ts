@@ -1026,6 +1026,7 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: {
 					applianceType: ["Fridge", "Fridge-Freezer", "Hobs"],
+					kitchenExtractorHoodExternal: false,
 				},
 			},
 		};
@@ -1440,7 +1441,8 @@ describe("FHS input mapper", () => {
 			appliances: {
 				...baseForm,
 				data: {
-					applianceType: ["Clothes_drying", "Fridge-Freezer", "KitchenExtractorHoodExternal"],
+					applianceType: ["Clothes_drying", "Fridge-Freezer"],
+					kitchenExtractorHoodExternal: true,
 				},
 			},
 		};

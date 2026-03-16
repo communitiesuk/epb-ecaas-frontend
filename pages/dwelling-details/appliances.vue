@@ -17,7 +17,6 @@ const appliances = {
 	Dishwasher: "Dishwasher",
 	Clothes_washing: "Washing machine",
 	Clothes_drying: "Tumble dryer",
-	KitchenExtractorHoodExternal: "Cooker hood extracting from the kitchen to outside",
 } as const satisfies Record<ApplianceKey, ApplianceKeyDisplay>;
 
 const saveForm = (fields: AppliancesData) => {
@@ -26,6 +25,7 @@ const saveForm = (fields: AppliancesData) => {
 			appliances: {
 				data: {
 					applianceType: fields.applianceType,
+					kitchenExtractorHoodExternal: fields.kitchenExtractorHoodExternal,
 				},
 				complete: true,
 			},
@@ -73,11 +73,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govCheckboxes"
 			name="applianceType"
 			label="Select the appliances that will be present in the dwelling"
+			help="Select the appliance if it will be installed by the house builder, or there is a marked space to install one. A fridge or a fridge-freezer must be selected."
 			:options="appliances"
 			:validation-rules="{ isFridgeInChoice }"
 			validation="required | isFridgeInChoice"
 			:validation-messages="{isFridgeInChoice: 'Fridge or Fridge-freezer is required.'}"
 		/> 
+		<FormKit
+			id="kitchenExtractorHoodExternal"	
+			type="govBoolean"
+			name="kitchenExtractorHoodExternal"
+			label="Does the cooker have an extractor hood that extracts to the outside of the building?"
+			validation="required"
+		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('dwellingDetails')" test-id="saveProgress" secondary>Save progress</GovButton>

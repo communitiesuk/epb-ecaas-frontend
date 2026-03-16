@@ -66,6 +66,7 @@ const appliancesSummary: SummarySection = {
 	label: "Appliances",
 	data: {
 		"Appliances": displayApplianceType(appliancesData.applianceType),
+		"Cooker hood extracting from the kitchen to outside": displayBoolean(appliancesData.kitchenExtractorHoodExternal),
 	},
 	editUrl: getUrl("appliances"),
 };

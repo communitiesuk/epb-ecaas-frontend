@@ -18,6 +18,7 @@ const appliancesState: AppliancesData = {
 		"Clothes_washing",
 		"Clothes_drying",
 	],
+	kitchenExtractorHoodExternal: true,
 };
 
 describe("Appliances", () => {
@@ -38,6 +39,7 @@ describe("Appliances", () => {
 		await user.click(screen.getByTestId("applianceType_Dishwasher"));
 		await user.click(screen.getByTestId("applianceType_Clothes_washing"));
 		await user.click(screen.getByTestId("applianceType_Clothes_drying"));
+		await user.click(screen.getByTestId("kitchenExtractorHoodExternal_yes"));
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -90,6 +92,15 @@ describe("Appliances", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(await screen.findByTestId("appliancesErrorSummary")).toBeDefined();
+	});
+
+	test("external hood error shows when no option is selected", async () => {
+		await renderSuspended(Appliances);
+
+		await user.click(screen.getByTestId("applianceType_Hobs"));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(screen.getByTestId("kitchenExtractorHoodExternal")).toBeDefined();
 	});
 
 	test("save progress button navigates user to the dwelling details overview page", async () => {

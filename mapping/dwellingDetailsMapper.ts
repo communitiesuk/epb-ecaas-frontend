@@ -9,7 +9,7 @@ export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSc
 	const energySupplyFuelTypeData = mapEnergySupplyFuelTypeData(state);
 	const externalFactorsData = mapExternalFactorsData(state);
 	const distantShadingData = mapDistantShadingData(state);
-	const appliancesData = mapAppliancesData(state); 
+	const appliancesData = mapAppliancesData(state);
 	return {
 		...generalDetailsData,
 		...energySupplyFuelTypeData,
@@ -30,11 +30,11 @@ export type GeneralFieldsFromDwelling = "General" |
 	"NumberOfHotTappedRooms" |
 	"NumberOfWetRooms" |
 	"PartGcompliance" |
-	"PartO_active_cooling_required";  
+	"PartO_active_cooling_required";
 
 export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema, GeneralFieldsFromDwelling> {
 	const { generalSpecifications: generalDetails } = state.dwellingDetails;
-	
+
 	return {
 		General:
 			generalDetails.typeOfDwelling === "flat"
@@ -67,8 +67,8 @@ export function mapEnergySupplyFuelTypeData(
 ): Pick<FhsInputSchema, "EnergySupply"> {
 	const fuelType = state.dwellingDetails.generalSpecifications.fuelType
 		.filter(x => x !== "electricity");
-		// electricity is always required as a fueltype - so its hardcoded into the
-		// EnergySupply object - therefore we filter out electricity so its not added twice
+	// electricity is always required as a fueltype - so its hardcoded into the
+	// EnergySupply object - therefore we filter out electricity so its not added twice
 
 	return {
 		EnergySupply: {
@@ -154,12 +154,12 @@ export function mapAppliancesData(
 ): Pick<FhsInputSchema, "Appliances" | "KitchenExtractorHoodExternal"> {
 	function getAppliancesAndKitchenExtractorHood(): [Record<
 		SchemaApplianceType,
-      "Default" | "Not Installed"
+		"Default" | "Not Installed"
 	>, boolean] {
-		const chosenAppliances = state.dwellingDetails.appliances.applianceType; 
+		const chosenAppliances = state.dwellingDetails.appliances.applianceType;
 		const appliancesMap = {} as Record<
 			SchemaApplianceType,
-      "Default" | "Not Installed"
+			"Default" | "Not Installed"
 		>;
 
 		for (const appliance of applianceKeys) {
@@ -170,7 +170,7 @@ export function mapAppliancesData(
 			}
 		}
 
-		const hasKitchenExtractorHood = chosenAppliances.includes(kitchenExtractorHoodExternalKey);
+		const hasKitchenExtractorHood = state.dwellingDetails.appliances.kitchenExtractorHoodExternal;
 
 		return [appliancesMap, hasKitchenExtractorHood];
 	}

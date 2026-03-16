@@ -108,7 +108,8 @@ export type ExternalFactorsData = z.infer<typeof externalFactorsDataZod>;
 export const kitchenExtractorHoodExternalKey = "KitchenExtractorHoodExternal";
 
 const appliancesDataZod = z.object({
-	applianceType: z.array(z.union([applianceTypeZod, z.literal(kitchenExtractorHoodExternalKey)])),
+	applianceType: z.array(applianceTypeZod),
+	kitchenExtractorHoodExternal: z.boolean(),
 });
 export type AppliancesData = z.infer<typeof appliancesDataZod>;
 export type ApplianceKey = AppliancesData["applianceType"][number];
@@ -1503,17 +1504,17 @@ type IsEcaasForm<T> = T extends EcaasForm<unknown> ? true : false;
 
 type Join<K, P> = K extends string | number
 	? P extends string | number
-		? `${K}/${P}`
-		: never
+	? `${K}/${P}`
+	: never
 	: never;
 
 type EcaasFormPaths<T> = {
 	[K in keyof T]:
 	IsEcaasForm<T[K]> extends true
-		? K
-		: T[K] extends object
-			? Join<K, EcaasFormPaths<T[K]>>
-			: never
+	? K
+	: T[K] extends object
+	? Join<K, EcaasFormPaths<T[K]>>
+	: never
 }[keyof T];
 
 export type EcaasFormPath = Exclude<EcaasFormPaths<EcaasState>, undefined>;

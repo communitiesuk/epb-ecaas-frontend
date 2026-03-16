@@ -48,6 +48,7 @@ const state: DwellingDetailSummary = {
 	},
 	appliances: {
 		applianceType: ["Clothes_drying", "Freezer", "Clothes_washing"],
+		kitchenExtractorHoodExternal: true,
 	},
 };
 
@@ -112,6 +113,7 @@ describe("Dwelling details summary", () => {
 
 		const expectedResult = {
 			"Appliances": "Tumble dryer, Freezer, Washing machine",
+			"Cooker hood extracting from the kitchen to outside": "Yes",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
