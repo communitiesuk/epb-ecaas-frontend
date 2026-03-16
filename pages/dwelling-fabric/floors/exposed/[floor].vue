@@ -9,8 +9,6 @@ const index = getStoreIndex(exposedFloorData);
 const floorData = useItemToEdit("floor", exposedFloorData);
 const model = ref(floorData?.data);
 
-const colourOptions = colourOptionsMap;
-
 const saveForm = (fields: ExposedFloorData) => {	
 	store.$patch((state) => {
 		const { dwellingSpaceExposedFloor } = state.dwellingFabric.dwellingSpaceFloors;
@@ -107,16 +105,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FieldsThermalResistance />
-		<FormKit
-			v-if="!(model?.pitch && model.pitch > 120)"
-			id="colour"
-			type="govRadios"
-			label="Colour of external surface"
-			name="colour"
-			:options="colourOptions"
-			validation="required"
-			data-field="Zone.BuildingElement.*.colour"
-		/>
+		<FieldsColourOfExternalSurface v-if="!(model?.pitch && model.pitch > 120)" />
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />

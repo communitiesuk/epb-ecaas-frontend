@@ -12,8 +12,6 @@ const index = getStoreIndex(externalUnglazedDoorData);
 const doorData = useItemToEdit("door", externalUnglazedDoorData);
 const model = ref(doorData?.data);
 
-const colourOptions = colourOptionsMap;
-
 const saveForm = (fields: ExternalUnglazedDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
@@ -170,16 +168,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</p>
 		</GovDetails>
 		</FormKit>
-		<FormKit
-			v-if="!(model?.pitch && model.pitch > 120)"
-			id="colour"
-			type="govRadios"
-			label="Colour of external surface"
-			name="colour"
-			:options="colourOptions"
-			validation="required"
-			data-field="Zone.BuildingElement.*.colour"
-		/>
+		<FieldsColourOfExternalSurface v-if="!(model?.pitch && model.pitch > 120)" />
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit

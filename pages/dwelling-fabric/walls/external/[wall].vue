@@ -11,7 +11,6 @@ const wallData = useItemToEdit("wall", externalWallData);
 const wallId = wallData?.data.id ?? uuidv4();
 const index = getStoreIndex(externalWallData);
 const model: Ref<ExternalWallData | undefined> = ref(wallData?.data);
-const colourOptions = colourOptionsMap;
 
 const saveForm = (fields: ExternalWallData) => {
 	store.$patch((state) => {
@@ -158,15 +157,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FieldsThermalResistance />
-		<FormKit
-			id="colour"
-			type="govRadios"
-			label="Colour of external surface"
-			name="colour"
-			:options="colourOptions"
-			validation="required"
-			data-field="Zone.BuildingElement.*.colour"
-		/>
+		<FieldsColourOfExternalSurface />
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
