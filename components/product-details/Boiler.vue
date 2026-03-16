@@ -31,6 +31,8 @@ const tableData: Record<string, string> =
 	...(data.technologyType === "RegularBoiler" && {
 		"Heat loss standby": data.heatLossStandby?.toString() ?? "-",
 	}),
+	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
+	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
 };
 </script>
 

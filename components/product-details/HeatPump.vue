@@ -26,6 +26,8 @@ const tableData: Record<string, string> =
 	"Power heating circ pump": data?.powerHeatingCircPump?.toString() ?? "-",
 	"Power crankcase heater": data?.powerCrankcaseHeater !== undefined ? `${data.powerCrankcaseHeater} kW` : "-",
 	"Power max backup": data?.powerMaxBackup !== undefined ? `${data.powerMaxBackup} kW` : "-",
+	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
+	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
 };
 </script>
 

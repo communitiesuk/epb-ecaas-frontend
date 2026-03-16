@@ -17,6 +17,8 @@ const tableData: Record<string, string> =
 	"Output power": data.outputPower?.toString() ?? "-",
 	"High heat retention": data.highHeatRetention?.toString() ?? "-",
 	"Control type": data.controlType ?? "-",
+	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
+	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
 };
 </script>
 

@@ -26,6 +26,8 @@ const BaseProduct = z.object({
 	brandName: z.string(),
 	modelName: z.string(),
 	modelQualifier: z.optional(z.nullable(z.string())),
+	firstYearOfManufacture: z.string().optional(),
+	finalYearOfManufacture: z.string().optional(),
 });
 
 export const heatPumpTestDataZod = z.object({

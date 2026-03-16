@@ -13,6 +13,8 @@ const tableData: Record<string, string> =
 	"Heat exchanger surface area": data.heatExchangerSurfaceArea?.toString() ?? "-",
 	"Heater position": data.heaterPosition?.toString() ?? "-",
 	"Usable temp": data.usableTemp?.toString() ?? "-",
+	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
+	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
 };
 </script>
 

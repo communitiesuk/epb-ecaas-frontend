@@ -9,6 +9,8 @@ const tableData: Record<string, string> =
 	...(data.technologyType === "CentralisedMev" && {
 		"Integral only": data.integralOnly ? (data.integralOnly === 0 ? "False" : "True") : "-",
 	}),
+	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
+	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
 };
 </script>
 

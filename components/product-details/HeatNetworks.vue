@@ -20,6 +20,8 @@ const tableData: Record<string, string> =
 	"Community heat network name": data.communityHeatNetworkName ?? "-",
 	"Postcode of the primary energy centre": data.postcodeOfThePrimaryEnergyCentre ?? "-",
 	"Description": data.descriptionOfNetwork ?? "-",
+	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
+	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
 };
 </script>
 

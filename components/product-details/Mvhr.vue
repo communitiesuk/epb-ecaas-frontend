@@ -8,6 +8,8 @@ const tableData: Record<string, string> =
 {
 	"Summer bypass": data.summerBypass?.toString() ?? "-",
 	"Integral only": data.integralOnly ? (data.integralOnly === 0 ? "False" : "True") : "-",
+	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
+	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
 };
 </script>
 

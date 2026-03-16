@@ -21,7 +21,8 @@ const tableData: Record<string, string> =
 	"Heat storage zone material kj per k above phase transition": data.heatStorageZoneMaterialKjPerKAbovePhaseTransition?.toString() ?? "-",
 	"Velocity in hex tube at 1 l per min m per s": data.velocityInHexTubeAt1LPerMinMPerS?.toString() ?? "-",
 	"Simultaneous charging and discharging": data.simultaneousChargingAndDischarging?.toString() ?? "-",
-
+	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
+	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
 };
 </script>
 

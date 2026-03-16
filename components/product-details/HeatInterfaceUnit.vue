@@ -13,6 +13,8 @@ const tableData: Record<string, string> =
 	"HUI daily loss": data.hiuDailyLoss?.toString() ?? "-",
 	"VWART 55": data.vwart55?.toString() ?? "-",
 	"Power aux": data.powerAux?.toString() ?? "-",
+	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
+	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
 };
 </script>
 

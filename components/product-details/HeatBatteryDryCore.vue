@@ -13,6 +13,8 @@ const tableData: Record<string, string> =
 	"Rated power instant": data.ratedPowerInstant?.toString() ?? "-",
 	"Electricity standby": data.electricityStandby?.toString() ?? "-",
 	"Power in": data.pwrIn?.toString() ?? "-",
+	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
+	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
 };
 </script>
 
