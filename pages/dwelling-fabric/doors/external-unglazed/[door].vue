@@ -12,30 +12,15 @@ const index = getStoreIndex(externalUnglazedDoorData);
 const doorData = useItemToEdit("door", externalUnglazedDoorData);
 const model = ref(doorData?.data);
 
-const saveForm = (fields: ExternalUnglazedDoorData) => {
+const saveForm = () => {
 	store.$patch((state) => {
-		const { dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
-
-		const shouldSavePitchOrientation = tagOptions.length === 0 || fields.associatedItemId === "none";
-
-		dwellingSpaceExternalUnglazedDoor.data[index] = {
-			data: {
-				name: fields.name,
-				isTheFrontDoor: fields.isTheFrontDoor,
-				height: fields.height,
-				width: fields.width,
-				elevationalHeight: fields.elevationalHeight,
-				arealHeatCapacity: fields.arealHeatCapacity,
-				massDistributionClass: fields.massDistributionClass,
-				colour: fields.colour,
-				associatedItemId: shouldSavePitchOrientation ? undefined : fields.associatedItemId,
-				pitch: shouldSavePitchOrientation ? fields.pitch : undefined,
-				orientation: shouldSavePitchOrientation ? fields.orientation : undefined,
-				thermalResistance: fields.thermalResistance,
-			},
-			complete: true,
-		};
-		dwellingSpaceExternalUnglazedDoor.complete = false;
+		const { dwellingSpaceExternalUnglazedDoor: doors } = state.dwellingFabric.dwellingSpaceDoors;
+		const currentDoor = doors.data[index];
+		if (!currentDoor) {
+			throw new Error("No unglazed door found to save");
+		}
+		currentDoor.complete = true;
+		doors.complete = false;
 	});
 	navigateTo("/dwelling-fabric/doors");
 };

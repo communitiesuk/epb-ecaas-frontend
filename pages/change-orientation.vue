@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getUrl, useBanner } from "#imports";
 import { getUpdatedOrientation } from "~/utils/changeOrientation";
+import { degrees } from "~/utils/units/angle";
 
 const store = useEcaasStore();
 const title = "Change orientation of dwelling";
@@ -119,15 +120,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					Current orientation of the front door
 				</label>
 				<div id="current-orientation-hint" class="govuk-hint">
-					The door below has been marked as the front door. To change this go to
-					<NuxtLink :to="getUrl('dwellingSpaceDoors')">
-						doors
-					</NuxtLink>
+					The door below has been marked as the front door.
 				</div>
 				<div v-if="!frontDoorName && frontDoorOrientation === undefined" class="govuk-error-message" :data-testid="`noFrontDoor_error`">
-					<span class="govuk-visually-hidden">Error:</span>No door has been marked as the front door, or the 'door' form has not been marked as complete. To change this go to <NuxtLink :to="getUrl('dwellingSpaceDoors')">
-						doors
-					</NuxtLink>
+					<span class="govuk-visually-hidden">Error:</span>No door has been marked as the front door, or the 'door' form has not been marked as complete.
 				</div>
 				<div
 					v-else-if="frontDoorName && frontDoorOrientation === undefined"
@@ -151,7 +147,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</div>
 				<ul v-if="frontDoorName && frontDoorOrientation !== undefined" class="govuk-list">
 					<li>Door: <span data-testid="frontDoorName" class="bold">{{ frontDoorName }}</span></li>
-					<li>Orientation: <span data-testid="currentOrientation" class="bold">{{ frontDoorOrientation }}</span></li>
+					<li>Orientation: <span data-testid="currentOrientation" class="bold">{{ frontDoorOrientation }}</span> {{ degrees.suffix }}</li>
 				</ul>
 			</div>
 			<FormKit

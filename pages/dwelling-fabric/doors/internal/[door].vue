@@ -18,16 +18,17 @@ const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
 
 const saveForm = () => {
 	store.$patch((state) => {
-		const { dwellingSpaceInternalDoor } = state.dwellingFabric.dwellingSpaceDoors;
-		const internalDoor = dwellingSpaceInternalDoor.data[index];
-		if (!internalDoor) {
+		const { dwellingSpaceInternalDoor: doors } = state.dwellingFabric.dwellingSpaceDoors;
+		const currentDoor = doors.data[index];
+		if (!currentDoor) {
 			throw new Error("No internal door found to save");
 		}
-		internalDoor.complete = true;
-		dwellingSpaceInternalDoor.complete = false;
+		currentDoor.complete = true;
+		doors.complete = false;
 	});
 	navigateTo("/dwelling-fabric/doors");
 };
+
 
 autoSaveElementForm<InternalDoorData>({
 	model,

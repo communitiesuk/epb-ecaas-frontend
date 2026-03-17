@@ -20,14 +20,12 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceExternalGlazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 
-		const shouldSavePitchOrientation = tagOptions.length === 0 || fields.associatedItemId === "none";
-
 		const commonFields = { 
 			name: fields.name,
-			associatedItemId: shouldSavePitchOrientation ? undefined : fields.associatedItemId,
+			associatedItemId: fields.associatedItemId,
 			isTheFrontDoor: fields.isTheFrontDoor,
-			pitch: shouldSavePitchOrientation ? fields.pitch : undefined,
-			orientation: shouldSavePitchOrientation ? fields.orientation : undefined,
+			pitch: fields.pitch,
+			orientation: fields.orientation,
 			height: fields.height,
 			width: fields.width,
 			securityRisk: fields.securityRisk,
