@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { isEcaasForm } from "#imports";
+import { v4 as uuidv4 } from "uuid";
 import formStatus from "~/constants/formStatus";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 
@@ -68,6 +69,7 @@ function handleDuplicate<T extends DomesticHotWaterData>(domesticHotWaterType: D
 				data: {
 					...item.data,
 					name: `${name} (${duplicates.length})`,
+					id: uuidv4(),
 				},
 			} as T;
 

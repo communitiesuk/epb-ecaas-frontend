@@ -682,7 +682,7 @@ describe("Domestic hot water", () => {
 			expect(mixedShower?.complete).toBe(false);
 		});
 
-		test("heat sources are duplicated when duplicate link is clicked", async () => {
+		test.only("heat sources are duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					heatSources: {
@@ -696,9 +696,14 @@ describe("Domestic hot water", () => {
 
 			await renderSuspended(DomesticHotWater);
 			await userEvent.click(screen.getByTestId("heatSources_duplicate_0"));
+			const items = store.domesticHotWater.heatSources.data;
+			expect(items[0]?.data.id).not.toBe(items[2]?.data.id);
+
 			await userEvent.click(screen.getByTestId("heatSources_duplicate_0"));
 			await userEvent.click(screen.getByTestId("heatSources_duplicate_2"));
 			await userEvent.click(screen.getByTestId("heatSources_duplicate_2"));
+
+
 			expect(screen.queryAllByTestId("heatSources_item").length).toBe(6);
 			expect(screen.getByText(heatSource1.data.name)).toBeDefined();
 			expect(screen.getByText(`${heatSource1.data.name} (1)`)).toBeDefined();
