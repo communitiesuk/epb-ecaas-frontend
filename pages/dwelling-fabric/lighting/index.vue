@@ -77,6 +77,9 @@ function hasIncompleteEntries() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<div class="govuk-inset-text">
+		<p class="govuk-body">Add both internal and external lighting outlets</p>
+	</div>
 	<CustomList
 		id="lighting"
 		title="Bulb"

@@ -85,34 +85,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 			data-field="Zone.Lighting.bulbs.count"
 		/>
-		<FormKit
-			id="power"
-			type="govInputWithSuffix"
-			label="Power"
-			name="power"
-			help="Enter the power of the bulb"
-			suffix-text="W"
-			:validation-rules="{ isInteger }"
-			validation="required | isInteger"
-			:validation-messages="{
-				isInteger: `Power must be an integer.`,
-			}"
-			data-field="Zone.Lighting.bulbs.power"
-		/>
-		<FormKit
-			id="efficacy"
-			type="govInputWithSuffix"
-			label="Efficacy"
-			name="efficacy"
-			help="Enter the efficacy of the bulb"
-			suffix-text="lm/W"
-			:validation-rules="{ isInteger }"
-			validation="required | isInteger"
-			:validation-messages="{
-				isInteger: `Efficacy must be an integer.`,
-			}"
-			data-field="Zone.Lighting.bulbs.efficacy"
-		/>
+		<FieldsLightingPower />
+		<FieldsLightingEfficacy />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

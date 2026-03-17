@@ -653,7 +653,7 @@ export type DwellingSpaceZoneParametersData = z.infer<typeof dwellingSpaceZonePa
 
 const dwellingSpaceLightingDataZod = named.extend({
 	numberOfBulbs: z.int().min(0),
-	power: z.int().min(0),
+	power: z.number().min(0),
 	efficacy: z.int().min(0),
 });
 
@@ -1504,17 +1504,17 @@ type IsEcaasForm<T> = T extends EcaasForm<unknown> ? true : false;
 
 type Join<K, P> = K extends string | number
 	? P extends string | number
-		? `${K}/${P}`
-		: never
+	? `${K}/${P}`
+	: never
 	: never;
 
 type EcaasFormPaths<T> = {
 	[K in keyof T]:
 	IsEcaasForm<T[K]> extends true
-		? K
-		: T[K] extends object
-			? Join<K, EcaasFormPaths<T[K]>>
-			: never
+	? K
+	: T[K] extends object
+	? Join<K, EcaasFormPaths<T[K]>>
+	: never
 }[keyof T];
 
 export type EcaasFormPath = Exclude<EcaasFormPaths<EcaasState>, undefined>;
