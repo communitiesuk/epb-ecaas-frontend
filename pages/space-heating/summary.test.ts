@@ -168,7 +168,7 @@ describe("Space heating summary page", () => {
 				id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
 				name: "Booster HP",
 				typeOfHeatSource: "heatPump",
-				typeOfHeatPump: "airSource",
+				typeOfHeatPump: "booster",
 				productReference: "HEATPUMP_LARGE",
 			};
       

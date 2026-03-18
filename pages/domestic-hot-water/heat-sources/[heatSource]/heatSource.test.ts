@@ -344,7 +344,6 @@ describe("Heat pump section", () => {
 			await user.click(screen.getByTestId("coldWaterSource_headerTank"));
 			await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
 		};
 
 		test("'HeatPumpSection' component displays when type of heat source is heat pump", async () => {
@@ -378,7 +377,7 @@ describe("Heat pump section", () => {
 			});
 			await populateValidHeatPumpForm();
 
-			expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/air-source");
+			expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/heat-pump");
 		});
 
 		test("heat pump data is saved to store state when form is valid", async () => {
@@ -396,9 +395,8 @@ describe("Heat pump section", () => {
 			const heatPump = store.domesticHotWater.heatSources.data[0];
 			expect(heatPump?.data).toEqual({
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-				name: "Air source heat pump",
+				name: "Heat pump",
 				typeOfHeatSource: "heatPump",
-				typeOfHeatPump: "airSource",
 				isExistingHeatSource: false,
 				heatSourceId: "NEW_HEAT_SOURCE",
 				coldWaterSource: "headerTank", 
@@ -422,7 +420,6 @@ describe("Heat pump section", () => {
 
 			expect((await screen.findByTestId("typeOfHeatSource_heatPump")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat pump 1");
-			expect((await screen.findByTestId("typeOfHeatPump_airSource")).hasAttribute("checked")).toBe(true);
 		});
 
 		test("heat pump is updated when data with id exists in store", async () => {
@@ -451,28 +448,6 @@ describe("Heat pump section", () => {
 			expect((data[0]!.data as { name: string }).name).toBe("Updated heat pump");
 		});
 
-		test("product reference is cleared when heat pump type changes", async () => {
-			store.$patch({
-				domesticHotWater: {
-					heatSources: {
-						data: [{ data: dhwWithNewHeatPump }],
-					},
-				},
-			});
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatPump_booster"));
-			const { data } = store.domesticHotWater.heatSources;
-			const heatSourceItem = data[0]!.data;
-			if ("productReference" in heatSourceItem) {
-				expect(heatSourceItem.productReference).toBeUndefined();
-			}
-		});
-
 		describe("heat pump default name", () => {
 			it("creates a new heat pump with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
@@ -488,7 +463,8 @@ describe("Heat pump section", () => {
 				expect((actualHeatSource.data as { name: string }).name).toBe("Heat pump");
 			});
 
-			it("adds heat pump type to name when heat pump type is selected", async () => {
+			//Can change this to add heat pump type to name when heat pump product is selected
+			it.skip("adds heat pump type to name when heat pump type is selected", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
@@ -517,11 +493,6 @@ describe("Heat pump section", () => {
 
 			await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(await screen.findByTestId("typeOfHeatPump_error")).toBeDefined();
-
-			await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(await screen.findByTestId("selectHeatPump_error")).toBeDefined();

@@ -55,7 +55,6 @@ describe("heatSource", () => {
 
 		const populateValidHeatPumpForm = async () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
 		};
 
 		const heatPump1: HeatSourceData = {
@@ -82,23 +81,8 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("typeOfHeatPump_booster"));
 			expect(screen.getByTestId("name")).toBeDefined();
 			expect(screen.queryByTestId("selectHeatPump")).toBeDefined();
-		});
-
-		test("select heat pump section only displays when type of heat pump has been selected", async () => {
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-			expect(screen.queryByTestId("selectHeatPump")).toBeNull();
-
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
-			expect(screen.queryByTestId("selectHeatPump")).not.toBeNull();
 		});
 
 		test("the 'Select a product' element navigates user to the products page", async () => {
@@ -108,9 +92,8 @@ describe("heatSource", () => {
 				},
 			});
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
 
-			expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/air-source");
+			expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/heat-pump"); //subject to change
 		});
 
 		test("heat pump data is saved to store state when form is valid", async () => {
@@ -127,9 +110,9 @@ describe("heatSource", () => {
 			const { data } = store.spaceHeating.heatSource;
 			expect(data[0]?.data).toEqual({
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-				name: "Air source heat pump",
+				name: "Heat pump",
 				typeOfHeatSource: "heatPump",
-				typeOfHeatPump: "airSource",
+				// typeOfHeatPump: "airSource",
 			});
 		});
 
@@ -150,7 +133,6 @@ describe("heatSource", () => {
 
 			expect((await screen.findByTestId("typeOfHeatSource_heatPump")).hasAttribute("checked"));
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat pump 1");
-			expect((await screen.findByTestId("typeOfHeatPump_airSource")).hasAttribute("checked"));
 		});
 
 		test("heat pump is updated when data with id exists in store", async () => {
@@ -179,29 +161,6 @@ describe("heatSource", () => {
 			expect(data[0]!.data.name).toBe("Updated heat pump");
 		});
 
-		test("product reference is cleared when heat pump type changes", async () => {
-
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [{ data: heatPump1 }],
-					},
-				},
-			});
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatPump_booster"));
-			const { data } = store.spaceHeating.heatSource;
-			const heatSourceItem = data[0]!.data;
-			if ("productReference" in heatSourceItem) {
-				expect(heatSourceItem.productReference).toBeUndefined();
-			}
-		});
-
 		test("required error messages are displayed when empty form is submitted", async () => {
 			await renderSuspended(HeatSourceForm, {
 				route: {
@@ -212,13 +171,7 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect(await screen.findByTestId("typeOfHeatPump_error")).toBeDefined();
-
-			await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
-			await user.click(screen.getByTestId("saveAndComplete"));
-
 			expect(await screen.findByTestId("selectHeatPump_error")).toBeDefined();
-
 		});
 
 		describe("heat pump default name", () => {
@@ -235,14 +188,15 @@ describe("heatSource", () => {
 				expect(actualHeatSource.data.name).toBe("Heat pump");
 			});
 
-			it("adds heat pump type to name when heat pump type is selected", async () => {
+			//Can change this to add heat pump type to name when a heat pump product is selected
+			it.skip("adds heat pump type to name when heat pump type is selected", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
 					},
 				});
 				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-				await user.click(screen.getByTestId("typeOfHeatPump_airSource"));
+				await user.click(screen.getByTestId("typeOfHeatPump_airSource")); 
 
 				const actualHeatSource = store.spaceHeating.heatSource.data[0]!;
 				expect(actualHeatSource.data.name).toBe("Air source heat pump");
@@ -1319,28 +1273,29 @@ describe("heatSource", () => {
 
 	describe("pcdb product", () => {
 		beforeEach(async () => {
-			const heatPumpProduct: Partial<DisplayProduct> = {
+			const heatBatteryProduct: Partial<DisplayProduct> = {
 				id: "1000",
 				brandName: "Brand",
-				technologyType: "AirSourceHeatPump",
+				technologyType: "HeatBatteryPCM",
 			};
 
 			mockFetch.mockReturnValue({
-				data: ref(heatPumpProduct),
+				data: ref(heatBatteryProduct),
 			});
 
-			const heatPump: HeatSourceData = {
+			const heatBattery: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-				name: "Heat pump 1",
-				typeOfHeatSource: "heatPump",
-				typeOfHeatPump: "airSource",
-				productReference: "HEATPUMP-SMALL",
+				name: "Heat battery 1",
+				typeOfHeatSource: "heatBattery",
+				typeOfHeatBattery: "heatBatteryPcm",
+				productReference: "HEATBATTERY-SMALL",
+				numberOfUnits: 1,
 			};
 
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: heatPump }],
+						data: [{ data: heatBattery }],
 					},
 				},
 			});
@@ -1353,13 +1308,13 @@ describe("heatSource", () => {
 		});
 
 		test("product reference is cleared when heat source subtype changes", async () => {
-			await user.click(screen.getByTestId("typeOfHeatPump_booster"));
+			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryDryCore"));
 
 			const { data } = store.spaceHeating.heatSource;
 			const heatSourceItem = data[0]!.data;
 
 			if ("productReference" in heatSourceItem) {
-				expect(heatSourceItem.productReference).toBeUndefined();
+				expect(heatSourceItem.productReference).toBe("");
 			}
 		});
 

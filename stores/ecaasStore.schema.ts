@@ -763,23 +763,7 @@ const airPermeabilityDataZod = z.object({
 
 export type AirPermeabilityData = z.infer<typeof airPermeabilityDataZod>;
 
-
 const heatingControlType = z.enum(["separateTemperatureControl", "separateTimeAndTemperatureControl"]);
-
-const _generalSpaceHeatingDataZod = z.object({
-	heatingControlType,
-	coolingRequired: z.boolean(),
-});
-
-export type GeneralSpaceHeating = z.infer<typeof _generalSpaceHeatingDataZod>;
-
-export type HeatGeneration = AssertFormKeysArePageIds<{
-	heatPump: EcaasFormList<HeatPumpData>;
-	boiler: EcaasForm<BoilerData[]>;
-	heatBattery: EcaasForm<HeatBatteryData[]>;
-	heatNetwork: EcaasForm<HeatNetworkData[]>;
-	heatInterfaceUnit: EcaasForm<HeatInterfaceUnitData[]>;
-}>;
 
 const typeOfHeatPump = z.enum([
 	"airSource",
@@ -791,34 +775,12 @@ const typeOfHeatPump = z.enum([
 	"exhaustAirMvhr",
 	"exhaustAirMixed",
 ]);
+
 const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
 const typeOfHeatNetwork = z.enum(["sleevedDistrictHeatNetwork", "unsleevedDistrictHeatNetwork", "communalHeatNetwork"]);
 const typeOfHeatBattery = z.enum(["heatBatteryPcm", "heatBatteryDryCore"]);
 const typeOflocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
 const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedContinuousMev", "decentralisedContinuousMev"]);
-
-const _heatPumpDataZod = namedWithId.extend({
-	productReference: z.string().trim().min(1),
-	typeOfHeatPump,
-});
-
-export type HeatPumpData = z.infer<typeof _heatPumpDataZod>;
-
-const _boilerDataZod = namedWithId;
-
-export type BoilerData = z.infer<typeof _boilerDataZod>;
-
-const _heatBatteryDataZod = namedWithId;
-
-export type HeatBatteryData = z.infer<typeof _heatBatteryDataZod>;
-
-const _heatNetworkDataZod = namedWithId;
-
-export type HeatNetworkData = z.infer<typeof _heatNetworkDataZod>;
-
-const _heatInterfaceUnitDataZod = namedWithId;
-
-export type HeatInterfaceUnitData = z.infer<typeof _heatInterfaceUnitDataZod>;
 
 // export type HeatEmitting = AssertFormKeysArePageIds<{
 // 	wetDistribution: EcaasFormList<WetDistributionData>;
