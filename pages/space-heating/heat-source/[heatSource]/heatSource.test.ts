@@ -561,7 +561,19 @@ describe("heatSource", () => {
 			productReference: "HEATNETWORK-LARGE",
 			energySupply: "electricity",
 			usesHeatInterfaceUnits: false,
+			isFifthGeneration: true,
 			boosterHeatPumpId: boosterHeatPump.id,
+		};
+		const heatNetwork2: HeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "Heat network 2",
+			typeOfHeatSource: "heatNetwork",
+			typeOfHeatNetwork: "communalHeatNetwork",
+			isHeatNetworkInPcdb: true,
+			productReference: "HEATNETWORK-LARGE",
+			energySupply: "electricity",
+			usesHeatInterfaceUnits: false,
+			isFifthGeneration: false,
 		};
 
 		const patchHeatNetworkDataToStore = async () => {
@@ -573,7 +585,7 @@ describe("heatSource", () => {
 				},
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: boosterHeatPump },{ data: heatNetwork1 } ],
+						data: [{ data: boosterHeatPump }, { data: heatNetwork1 }, { data: heatNetwork2 } ],
 					},
 				},
 			});
@@ -618,15 +630,47 @@ describe("heatSource", () => {
 			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/heat-network");
 		});
 
-		test("the 'Booster heat pump' element navigates user to the space heating overview page when there are stored boosters", async () => {
+		test("the 'Booster heat pump' element renders when isFifthGeneration is true", async () => {
+			patchHeatNetworkDataToStore();
 			await renderSuspended(HeatSourceForm, {
 				route: {
-					params: { "heatSource": "create" },
+					params: { "heatSource": "1" },
 				},
 			});
-			await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-			await user.click(screen.getByTestId("typeOfHeatNetwork_communalHeatNetwork"));
-			await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
+			expect(screen.getByTestId("boosterHeatPumpId")).not.toBeNull();
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "2" },
+				},
+			});
+			expect(screen.queryByTestId("boosterHeatPumpId")).toBeNull();
+
+		});
+
+		test("the 'Booster heat pump' element navigates user to the space heating overview page when there are stored boosters", async () => {
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { fuelType: ["electricity"] },
+					},
+				},
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: {
+							typeOfHeatSource: "heatNetwork",
+							typeOfHeatNetwork: "communalHeatNetwork",
+							isHeatNetworkInPcdb: true, 
+							isFifthGeneration: true } } ],
+					},
+				},
+			});
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+				},
+			});
+
 			expect(screen.getByRole("link", { name: "Click here to add a booster heat pump" }).getAttribute("href")).toBe("/space-heating");
 		});
 
@@ -658,7 +702,6 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
 			await user.click(screen.getByTestId("energySupply_electricity"));
 			await user.click(screen.getByTestId("usesHeatInterfaceUnits_no"));
-			await user.click(screen.getByTestId(`boosterHeatPumpId_${boosterHeatPump.id}`));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const { data } = store.spaceHeating.heatSource;
@@ -670,7 +713,6 @@ describe("heatSource", () => {
 				isHeatNetworkInPcdb: true,
 				energySupply: "electricity",
 				usesHeatInterfaceUnits: false,
-				boosterHeatPumpId: boosterHeatPump.id,
 			});
 		});
 
@@ -1424,6 +1466,7 @@ describe("heatSource", () => {
 			productReference: "HEATNETWORK-LARGE",
 			energySupply: "electricity",
 			usesHeatInterfaceUnits: false,
+			isFifthGeneration: true,
 			boosterHeatPumpId: boosterHeatPump.id,
 		};
 

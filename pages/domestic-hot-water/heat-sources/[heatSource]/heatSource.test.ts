@@ -916,7 +916,18 @@ describe("Heat pump section", () => {
 
 describe("heat network", () => {
 	
-	test("heat network can be tagged with a booster heat pumps from DWH & space heating", async () => {
+	const heatNetwork1: Partial<DomesticHotWaterHeatSourceData> = {
+		isExistingHeatSource: false,
+		heatSourceId: "NEW_HEAT_SOURCE",
+		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+		name: "Heat network",
+		typeOfHeatSource: "heatNetwork",
+		typeOfHeatNetwork: "communalHeatNetwork",
+		isHeatNetworkInPcdb: true,
+		isFifthGeneration: true,
+	};
+
+	test("a 5th generation heat network can be tagged with a booster heat pumps from DWH & space heating", async () => {
 
 		const booster: HeatSourceData = {
 			name: "Booster HP",
@@ -945,35 +956,36 @@ describe("heat network", () => {
 			},
 			domesticHotWater: {
 				heatSources: {
-					data: [{ data: dhwBooster } ],
+					data: [{ data: dhwBooster }, { data: heatNetwork1 } ],
 				},
 			},
 		});
 		
 		await renderSuspended(HeatSourceForm, {
 			route: {
-				params: { "heatSource": "create" },
+				params: { "heatSource": "1" },
 			},
 		});
-		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
-		await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-		await user.click(screen.getByTestId("typeOfHeatNetwork_communalHeatNetwork"));
-		await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
 
 		expect(screen.getByTestId(`boosterHeatPumpId_${booster.id}`)).toBeDefined();
 		expect(screen.getByTestId(`boosterHeatPumpId_${dhwBooster.id}`)).toBeDefined();
 	});
 
 	test("the 'Booster heat pump' element navigates user to the DHW overview page when there are stored boosters", async () => {
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "create" },
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [ { data: heatNetwork1 } ],
+				},
 			},
 		});
-		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
-		await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-		await user.click(screen.getByTestId("typeOfHeatNetwork_communalHeatNetwork"));
-		await user.click(screen.getByTestId("isHeatNetworkInPcdb_yes"));
+		
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "0" },
+			},
+		});
+
 		expect(screen.getByRole("link", { name: "Click here to add a booster heat pump" }).getAttribute("href")).toBe("/domestic-hot-water");
 	});
 });

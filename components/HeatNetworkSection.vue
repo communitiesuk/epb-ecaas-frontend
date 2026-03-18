@@ -58,7 +58,7 @@ const emit = defineEmits(["update-heat-network-model"]);
 			:page-index="index" 
 		/>
 		<FieldsBoosterHeatPumps
-			v-if="model.isHeatNetworkInPcdb"
+			v-if="model.isHeatNetworkInPcdb && model.isFifthGeneration"
 			id="boosterHeatPumpId"
 			label="Booster heat pump"
 			help="Select the booster heat pump that has been added previously which will be used as the backup for the heat network"

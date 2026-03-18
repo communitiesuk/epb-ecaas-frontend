@@ -944,9 +944,16 @@ const isHeatNetworkInPcdbFields = {
 	variants: [
 		z.object({
 			isHeatNetworkInPcdb: z.literal(true),
+			isFifthGeneration: z.literal(true),
 			productReference: z.string().trim().min(1),
 			energySupply: fuelTypeZod.optional(),
 			boosterHeatPumpId: z.string().trim().min(1),
+		}),
+		z.object({
+			isHeatNetworkInPcdb: z.literal(true),
+			isFifthGeneration: z.literal(false),
+			productReference: z.string().trim().min(1),
+			energySupply: fuelTypeZod.optional(),
 		}),
 		z.object({
 			isHeatNetworkInPcdb: z.literal(false),

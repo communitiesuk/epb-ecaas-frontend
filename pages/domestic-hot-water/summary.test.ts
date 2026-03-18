@@ -585,6 +585,7 @@ describe("Domestic hot water summary", () => {
 			productReference: "HEAT_NETWORK-LARGE",
 			energySupply: "electricity",
 			usesHeatInterfaceUnits: false,
+			isFifthGeneration: true,
 			boosterHeatPumpId: dhwWithNewHeatPump.id,
 		};
 
