@@ -26,7 +26,6 @@ const model = ref({
 
 if (!model.value.fuelType) {
 	model.value.fuelType = ["electricity"];
-	// model.value.fuelType = [];
 } 
 
 const typeOfDwellingOptions: Record<SchemaBuildType, SnakeToSentenceCase<SchemaBuildType>> = {

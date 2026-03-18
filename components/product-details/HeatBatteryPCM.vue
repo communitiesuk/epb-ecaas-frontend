@@ -22,7 +22,7 @@ const tableData: Record<string, string> =
 	"Velocity in hex tube at 1 l per min m per s": data.velocityInHexTubeAt1LPerMinMPerS?.toString() ?? "-",
 	"Simultaneous charging and discharging": data.simultaneousChargingAndDischarging?.toString() ?? "-",
 	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
+	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
 };
 </script>
 

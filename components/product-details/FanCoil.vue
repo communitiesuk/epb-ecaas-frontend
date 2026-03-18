@@ -10,7 +10,7 @@ const tableData: Record<string, string> =
 	"Number of fan point delta T": data.numberOfTestPointDeltaT?.toString() ?? "-",
 	"Frac convective": data.fracConvective?.toString() ?? "-",
 	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
+	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
 };
 </script>
 

@@ -14,7 +14,7 @@ const tableData: Record<string, string> =
 	"VWART 55": data.vwart55?.toString() ?? "-",
 	"Power aux": data.powerAux?.toString() ?? "-",
 	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
+	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
 };
 </script>
 

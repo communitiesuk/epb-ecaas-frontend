@@ -21,7 +21,7 @@ const tableData: Record<string, string> =
 	"Postcode of the primary energy centre": data.postcodeOfThePrimaryEnergyCentre ?? "-",
 	"Description": data.descriptionOfNetwork ?? "-",
 	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
+	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
 };
 </script>
 

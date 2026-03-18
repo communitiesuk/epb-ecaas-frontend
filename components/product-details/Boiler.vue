@@ -32,7 +32,7 @@ const tableData: Record<string, string> =
 		"Heat loss standby": data.heatLossStandby?.toString() ?? "-",
 	}),
 	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
+	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
 };
 </script>
 

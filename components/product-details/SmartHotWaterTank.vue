@@ -14,7 +14,7 @@ const tableData: Record<string, string> =
 	"Heater position": data.heaterPosition?.toString() ?? "-",
 	"Usable temp": data.usableTemp?.toString() ?? "-",
 	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
+	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
 };
 </script>
 

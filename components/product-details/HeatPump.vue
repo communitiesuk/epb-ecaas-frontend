@@ -27,7 +27,7 @@ const tableData: Record<string, string> =
 	"Power crankcase heater": data?.powerCrankcaseHeater !== undefined ? `${data.powerCrankcaseHeater} kW` : "-",
 	"Power max backup": data?.powerMaxBackup !== undefined ? `${data.powerMaxBackup} kW` : "-",
 	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": data?.finalYearOfManufacture ?? "-",
+	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
 };
 </script>
 
