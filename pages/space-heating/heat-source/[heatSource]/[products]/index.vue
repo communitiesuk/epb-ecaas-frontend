@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { page } from "~/data/pages/pages";
-import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import { heatPumpProductTypesMap, type DisplayProduct, type HeatPumpProduct } from "~/pcdb/pcdb.types";
 import { productTypeMap, type PcdbProduct } from "~/stores/ecaasStore.schema";
 
 definePageMeta({ layout: false });
@@ -68,6 +68,8 @@ const selectProduct = async (product: DisplayProduct) => {
 			}
 
 			if (heatSourceData.typeOfHeatSource === "heatPump") {
+				const heatPumpProduct = product as HeatPumpProduct;
+				heatSourceData.typeOfHeatPump = heatPumpProductTypesMap[heatPumpProduct.technologyType];
 				heatSourceData.backupCtrlType = product.backupCtrlType;
 				heatSourceData.powerMaxBackup = product.powerMaxBackup;
 			}
