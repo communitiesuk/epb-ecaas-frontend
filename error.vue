@@ -32,7 +32,6 @@ const testSiteMessage = "This is a test site.";
 				</div>
 			</div>
 		</main>
-		<GovFeedback />
 	</div>
 	<footer class="govuk-template__footer">
 		<GovFooter />

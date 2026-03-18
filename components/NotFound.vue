@@ -10,6 +10,7 @@
 				<p class="govuk-body">
 					If you pasted the web address, check you copied the entire address.
 				</p>
+				<GovButton href="/feedback" secondary>Send feedback</GovButton>
 			</div>
 		</div>
 	</main>
