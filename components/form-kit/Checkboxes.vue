@@ -23,13 +23,14 @@ const {
 
 const { mounted } = useMounted();
 
-const optionsSelectedValues = props.context._value || 
+const optionsSelectedValues = (props.context._value ?? []).length === 0 ?
 	Object.keys(options)
 		.filter(e => 
 			typeof options[e] === "object" && "checked" in options[e]
 				? options[e].checked
 				: false,
-		);
+		) : props.context._value ?? [];
+
 const optionsSelected = ref<string[]>([...optionsSelectedValues]);
 
 const handleChange = (value: string) => {

@@ -26,7 +26,8 @@ const model = ref({
 
 if (!model.value.fuelType) {
 	model.value.fuelType = ["electricity"];
-}
+	// model.value.fuelType = [];
+} 
 
 const typeOfDwellingOptions: Record<SchemaBuildType, SnakeToSentenceCase<SchemaBuildType>> = {
 	house: "House",
@@ -108,6 +109,14 @@ watch(() => model.value.typeOfDwelling, (newType, oldType) => {
 				door.data.orientation = undefined;
 			}
 		}
+	}
+});
+watch(() => model.value.fuelType, (newType) => {
+	if (!("electricity" in newType)) {
+		model.value.fuelType = [
+			...model.value.fuelType,
+			"electricity",
+		];
 	}
 });
 
