@@ -682,7 +682,7 @@ describe("Domestic hot water", () => {
 			expect(mixedShower?.complete).toBe(false);
 		});
 
-		test.only("heat sources are duplicated when duplicate link is clicked", async () => {
+		test("heat sources are duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					heatSources: {
