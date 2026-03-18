@@ -111,7 +111,7 @@ watch(() => model.value.typeOfDwelling, (newType, oldType) => {
 	}
 });
 watch(() => model.value.fuelType, (newType) => {
-	if (!("electricity" in newType)) {
+	if (!(newType.includes("electricity"))) {
 		model.value.fuelType = [
 			...model.value.fuelType,
 			"electricity",
