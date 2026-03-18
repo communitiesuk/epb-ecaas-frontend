@@ -17,42 +17,59 @@ const { data: { value } } = await useFetch("/api/products", {
 	},
 });
 
+const getHeatNetworkProduct = async (heatNetwork: DisplayProduct) => {
+	const { data } = await useFetch(`/api/products/${heatNetwork.id}/details`, {
+		query: {
+			technologyType: "HeatNetworks",
+		},
+	});
+	return data.value;
+};
+
 const { title, index, searchModel, searchData } = useProductsPage("heatSource");
 
 const { pagination } = searchData(value?.data ?? []);
 
-const selectProduct = (product: DisplayProduct) => {
+const selectProduct = async (product: DisplayProduct) => {
 	store.$patch((state) => {
 
 		const item = state.spaceHeating.heatSource.data[index];
 
 		if (item) {
-			const data = item.data as HeatSourceData;
-
-			if (data.typeOfHeatSource === "heatNetwork" &&
-				data.usesHeatInterfaceUnits &&
+			const heatSourceData = item.data as HeatSourceData;
+			
+			if (heatSourceData.typeOfHeatSource === "heatNetwork") {
+				if (heatSourceData.usesHeatInterfaceUnits &&
 				heatSourceProductType === "heatInterfaceUnit"
-			) {
-				data.heatInterfaceUnitProductReference = product.id;
-				return;
+				) {
+					heatSourceData.heatInterfaceUnitProductReference = product.id;
+					return;
+				}
+				if (!heatSourceData.isHeatNetworkInPcdb) return;
+				const heatNetwork = value?.data.find(x => x.id === product.id);
+				if (heatNetwork) {
+					getHeatNetworkProduct(heatNetwork).then((item) => {
+						if (item) {
+							if ("fifthGHeatNetwork" in item && item.fifthGHeatNetwork === 1) {
+								heatSourceData.isFifthGeneration = true;
+							}
+						}
+					});
+				}
 			}
 			
-			if (data.typeOfHeatSource === "heatNetwork" && !data.isHeatNetworkInPcdb) {
-				return;
-			}
-			
-			if (data.typeOfHeatSource === "boiler") {
+			if (heatSourceData.typeOfHeatSource === "boiler") {
 				if (product.boilerLocation === "internal") {
-					data.locationOfBoiler = "heatedSpace";
-					data.locationFromPcdb = true;
+					heatSourceData.locationOfBoiler = "heatedSpace";
+					heatSourceData.locationFromPcdb = true;
 				} else {
-					data.locationFromPcdb = false;
+					heatSourceData.locationFromPcdb = false;
 				}
 			}
 
-			if (data.typeOfHeatSource === "heatPump") {
-				data.backupCtrlType = product.backupCtrlType;
-				data.powerMaxBackup = product.powerMaxBackup;
+			if (heatSourceData.typeOfHeatSource === "heatPump") {
+				heatSourceData.backupCtrlType = product.backupCtrlType;
+				heatSourceData.powerMaxBackup = product.powerMaxBackup;
 			}
 
 			(item.data as PcdbProduct).productReference = product.id;

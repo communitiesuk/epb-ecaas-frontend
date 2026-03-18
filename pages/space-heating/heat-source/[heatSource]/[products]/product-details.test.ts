@@ -18,6 +18,7 @@ describe("Heat pump details", async () => {
 		typeOfHeatSource: "heatNetwork",
 		typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
 		usesHeatInterfaceUnits: true,
+		isHeatNetworkInPcdb: true,
 	};
 
 	const combiBoiler: Partial<HeatSourceData> = {
@@ -306,5 +307,31 @@ describe("Heat pump details", async () => {
 		
 		// Assert
 		expect((await screen.findByTestId("heatNetwork"))).toBeDefined();
+	});
+
+	test("when a heat network product is a fifth generation, isFifthGeneration is set to true", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "1",
+				products: "heat-network",
+				id: "1000",
+			},
+			path: "/1/heat-network/1000",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				id: "1000",
+				brandName: "Test",
+				modelName: "Heat network",
+				modelQualifier: "HNSMALL",
+				technologyType: "HeatNetworks",
+				fifthGHeatNetwork: 1,
+			}),
+		});	
+		await renderSuspended(ProductDetails);
+		await user.click(screen.getByTestId("selectProductButton"));
+		expect((store.spaceHeating.heatSource.data[1]!.data as { isFifthGeneration: boolean }).isFifthGeneration).toBe(true);
 	});
 });

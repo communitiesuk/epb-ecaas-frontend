@@ -27,7 +27,6 @@ const pageId = `${heatSourceType}Products` as PageId;
 const productType = heatSourceProductTypesDisplay[heatSourceProductType];
 
 const index = Number(params.heatSource);
-
 const { data: { value: data } } = await useFetch(`/api/products/${params.id}/details`, {
 	query: {
 		technologyType,
@@ -40,18 +39,24 @@ const backUrl = getUrl(pageId)
 const selectProduct = () => {
 	store.$patch((state) => {
 		const item = state.spaceHeating.heatSource.data[index];
-
+	
 		if (item && data) {
 			const heatSourceData = item.data as HeatSourceData;
+			
+			if (heatSourceData.typeOfHeatSource === "heatNetwork") {
 
-			if (heatSourceData.typeOfHeatSource === "heatNetwork" &&
-				heatSourceData.usesHeatInterfaceUnits &&
+				if (heatSourceData.usesHeatInterfaceUnits &&
 				heatSourceProductType === "heatInterfaceUnit"
-			) {
-				heatSourceData.heatInterfaceUnitProductReference = data.id;
-				return;
+				) {
+					heatSourceData.heatInterfaceUnitProductReference = data.id;
+					return;
+				}
+				if (!heatSourceData.isHeatNetworkInPcdb) return;
+				if ("fifthGHeatNetwork" in data && data.fifthGHeatNetwork === 1) {
+					heatSourceData.isFifthGeneration = true;
+				}
 			}
-
+			
 			if (heatSourceData.typeOfHeatSource === "boiler" && (data.technologyType === "CombiBoiler" || data.technologyType === "RegularBoiler")) {
 				if (data.boilerLocation === "internal") {
 					heatSourceData.locationOfBoiler = "heatedSpace";

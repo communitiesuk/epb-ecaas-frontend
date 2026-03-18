@@ -72,6 +72,7 @@ describe("Heat source products page", () => {
 		typeOfHeatSource: "heatNetwork",
 		typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
 		usesHeatInterfaceUnits: true,
+		isHeatNetworkInPcdb: true,
 	};
 
 	const combiBoiler1: Partial<HeatSourceData> = {
@@ -139,7 +140,7 @@ describe("Heat source products page", () => {
 				heatSource: "2",
 				products: "heat-interface-unit",
 			},
-			path: "/1/heat-interface-unit",
+			path: "/2/heat-interface-unit",
 		});
 
 		const mockedHeatInterfaceUnits: PaginatedResult<DisplayProduct> = {
@@ -243,5 +244,48 @@ describe("Heat source products page", () => {
 		await renderSuspended(Products);
 
 		expect(screen.getByTestId("heatNetworkProductsTable")).toBeDefined();
+	});
+
+	test("when a heat network product is a fifth generation, isFifthGeneration is set to true", async () => {
+	
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "2",
+				products: "heat-network",
+			},
+			path: "/0/air-source",
+		});
+	
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "2",
+				products: "heat-network",
+				id: "1000",
+			},
+			path: "/2/heat-network/1000",
+		});
+		const product = {
+			id: "1000",
+			brandName: "Test",
+			modelName: "Heat network",
+			modelQualifier: "HNSMALL",
+			technologyType: "HeatNetworks",
+		};
+		const heatNetworks = {
+			data: [product],
+		};
+		mockFetch.mockReturnValueOnce({
+			data: ref(heatNetworks),
+		});	
+		mockFetch.mockReturnValueOnce({
+			data: ref({
+				...product,
+				fifthGHeatNetwork: 1,
+			}),
+		});	
+
+		await renderSuspended(Products);
+		await user.click(screen.getByTestId("selectProductButton_0"));
+		expect((store.spaceHeating.heatSource.data[2]!.data as { isFifthGeneration: boolean }).isFifthGeneration).toBe(true);
 	});
 });
