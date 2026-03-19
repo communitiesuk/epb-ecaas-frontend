@@ -7,10 +7,10 @@
 				<p class="govuk-body">
 					If you typed the web address, check it is correct.
 				</p>
-				<p class="govuk-body">
+				<p class="govuk-body govuk-!-margin-bottom-4">
 					If you pasted the web address, check you copied the entire address.
 				</p>
-				<GovButton href="/feedback" secondary>Send feedback</GovButton>
+				<GovButton href="/feedback">Send feedback</GovButton>
 			</div>
 		</div>
 	</main>
