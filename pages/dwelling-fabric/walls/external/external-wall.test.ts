@@ -25,7 +25,7 @@ describe("external wall", () => {
 		height: 0.5,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		thermalResistance: 0.5,
+		uValue: 0.5,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
@@ -51,7 +51,7 @@ describe("external wall", () => {
 		await user.type(screen.getByTestId("height"), "0.5");
 		await user.type(screen.getByTestId("elevationalHeight"), "20");
 		await user.type(screen.getByTestId("surfaceArea"), "10");
-		await user.type(screen.getByTestId("thermalResistance"), "0.5");
+		await user.type(screen.getByTestId("uValue"), "0.5");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.click(screen.getByTestId("colour_Intermediate"));
@@ -88,7 +88,7 @@ describe("external wall", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("0.5");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("20");
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("10");
-		expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("0.5");
+		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.5");
 		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("colour_Intermediate")).hasAttribute("checked")).toBe(true);
@@ -106,7 +106,7 @@ describe("external wall", () => {
 		expect((await screen.findByTestId("height_error"))).toBeDefined();
 		expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
-		expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
+		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 		expect((await screen.findByTestId("colour_error"))).toBeDefined();

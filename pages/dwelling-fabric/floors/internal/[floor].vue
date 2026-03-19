@@ -21,7 +21,7 @@ const saveForm = (fields: InternalFloorData) => {
 			surfaceAreaOfElement: fields.surfaceAreaOfElement,
 			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
-			thermalResistance: fields.thermalResistance,
+			uValue: fields.uValue,
 		};
 
 		let floor: InternalFloorData;
@@ -106,7 +106,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
 		</template>
-		<FieldsThermalResistance  />
+		<FieldsUValue />
 		<FormKit
 			v-if="model?.typeOfInternalFloor === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"

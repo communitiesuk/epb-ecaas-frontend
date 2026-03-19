@@ -60,7 +60,7 @@ describe("floors", () => {
 		surfaceAreaOfElement: 5,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
-		thermalResistance: 1,
+		uValue: 1,
 	};
 
 	const internal2: InternalFloorData = {
@@ -69,7 +69,7 @@ describe("floors", () => {
 		surfaceAreaOfElement: 5,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
-		thermalResistance: 1,
+		uValue: 1,
 	};
 
 	const internal3: InternalFloorData = {
@@ -78,7 +78,7 @@ describe("floors", () => {
 		surfaceAreaOfElement: 5,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
-		thermalResistance: 1,
+		uValue: 1,
 	};
 
 	const exposed1: ExposedFloorData = {
@@ -88,7 +88,7 @@ describe("floors", () => {
 		width: 20,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		thermalResistance: 1,
+		uValue: 1,
 		colour: "Light",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
@@ -101,7 +101,7 @@ describe("floors", () => {
 		width: 20,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		thermalResistance: 1,
+		uValue: 1,
 		colour: "Dark",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
@@ -114,7 +114,7 @@ describe("floors", () => {
 		width: 20,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		thermalResistance: 1,
+		uValue: 1,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",

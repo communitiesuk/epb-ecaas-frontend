@@ -26,7 +26,7 @@ describe("roof", () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			thermalResistance: 1,
+			uValue: 1,
 			colour: "Light",
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
@@ -43,7 +43,7 @@ describe("roof", () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			thermalResistance: 1,
+			uValue: 1,
 			colour: "Light",
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
@@ -62,7 +62,7 @@ describe("roof", () => {
 		await user.type(screen.getByTestId("width"), "1");
 		await user.type(screen.getByTestId("elevationalHeightOfElement"), "2");
 		await user.type(screen.getByTestId("surfaceArea"), "1");
-		await user.type(screen.getByTestId("thermalResistance"), "1");
+		await user.type(screen.getByTestId("uValue"), "1");
 		await user.click(screen.getByTestId("colour_Light"));
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
@@ -109,7 +109,7 @@ describe("roof", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeightOfElement")).value).toBe("2");
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("1");
-		expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("1");
+		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
 		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 	});
@@ -134,8 +134,7 @@ describe("roof", () => {
 		expect((await screen.findByTestId("typeOfRoof_pitchedInsulatedAtRoof")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("pitch")).value).toBe("30");
 		expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("90");
-		expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("1");
-		expect(screen.queryByTestId("uValue")).toBeNull();
+		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -202,7 +201,7 @@ describe("roof", () => {
 
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 		expect((await screen.findByTestId("orientation_error"))).toBeDefined();
-		expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
+		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 	});
@@ -218,7 +217,7 @@ describe("roof", () => {
 		await user.click(screen.getByTestId("typeOfRoof_pitchedInsulatedAtRoof"));
 		await user.type(screen.getByTestId("pitch"), "90");
 		await user.type(screen.getByTestId("orientation"), "90");
-		await user.type(screen.getByTestId("thermalResistance"), "1");
+		await user.type(screen.getByTestId("uValue"), "1");
 		await user.tab();
 		await user.click(screen.getByTestId("saveAndComplete"));
 

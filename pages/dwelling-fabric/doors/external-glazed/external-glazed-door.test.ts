@@ -26,7 +26,7 @@ const externalWall: ExternalWallData = {
 	height: 0.5,
 	elevationalHeight: 20,
 	surfaceArea: 10,
-	thermalResistance: 1,
+	uValue: 1,
 	colour: "Intermediate",
 	arealHeatCapacity: "Very light",
 	massDistributionClass: "I",
@@ -45,7 +45,7 @@ const doorForState = {
 	heightOpenableArea: 14,
 	maximumOpenableArea: 13,
 	midHeightOpenablePart1: 11,
-	thermalResistance: 16,
+	uValue: 10,
 	numberOpenableParts: "1",
 	curtainsOrBlinds: true,
 	treatmentType: "blinds",
@@ -61,7 +61,7 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.type(screen.getByTestId("height"), "14");
 	await user.type(screen.getByTestId("width"), "48");
 	await user.type(screen.getByTestId("maximumOpenableArea"), "13");
-	await user.type(screen.getByTestId("thermalResistance"), "16");
+	await user.type(screen.getByTestId("uValue"), "10");
 	await user.click(screen.getByTestId("securityRisk_no"));
 	await user.type(screen.getByTestId("solarTransmittance"), "0.1");
 	await user.type(screen.getByTestId("elevationalHeight"), "14");
@@ -319,7 +319,7 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("14");
 			expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("48");
 			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("14");
-			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("16");
+			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("10");
 			expect((await screen.findByTestId<HTMLInputElement>("openingToFrameRatio")).value).toBe("0.2");
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 			expect((await screen.findByTestId("numberOpenableParts_1")).hasAttribute("checked")).toBe(true);
@@ -348,7 +348,7 @@ describe("external glazed door", () => {
 				heightOpenableArea: 14,
 				maximumOpenableArea: 13,
 				midHeightOpenablePart1: 11,
-				thermalResistance: 16,
+				uValue: 10,
 				numberOpenableParts: "1",
 				curtainsOrBlinds: true,
 				treatmentType: "blinds",
@@ -423,7 +423,7 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
 			expect((await screen.findByTestId("height_error"))).toBeDefined();
 			expect((await screen.findByTestId("width_error"))).toBeDefined();
-			expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
+			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 			expect((await screen.findByTestId("solarTransmittance_error"))).toBeDefined();
 			expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
 			expect((await screen.findByTestId("securityRisk_error"))).toBeDefined();
@@ -581,7 +581,7 @@ describe("external glazed door", () => {
 					width: 1,
 					elevationalHeightOfElement: 2,
 					surfaceArea: 1,
-					thermalResistance: 1,
+					uValue: 1,
 					colour: "Dark",
 					arealHeatCapacity: "Very light",
 					massDistributionClass: "I",

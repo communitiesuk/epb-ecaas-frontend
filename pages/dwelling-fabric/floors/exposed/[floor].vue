@@ -20,7 +20,7 @@ const saveForm = (fields: ExposedFloorData) => {
 			width: fields.width,
 			elevationalHeight: fields.elevationalHeight,
 			surfaceArea: fields.surfaceArea,
-			thermalResistance: fields.thermalResistance,
+			uValue: fields.uValue,
 			colour: fields.colour,
 			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
@@ -104,7 +104,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsThermalResistance />
+		<FieldsUValue />
 		<FieldsColourOfExternalSurface v-if="!(model?.pitch && model.pitch > 120)" />
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>

@@ -28,7 +28,7 @@ const externalWall: ExternalWallData = {
 	height: 0.5,
 	elevationalHeight: 20,
 	surfaceArea: 10,
-	thermalResistance: 1,
+	uValue: 1,
 	colour: "Intermediate",
 	arealHeatCapacity: "Very light",
 	massDistributionClass: "I",
@@ -41,7 +41,7 @@ const window1: EcaasForm<WindowData> = {
 		taggedItem: externalWall.id,
 		height: 1,
 		width: 1,
-		thermalResistance: 1,
+		uValue: 1,
 		securityRisk: true,
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
@@ -61,7 +61,7 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.click(screen.getByTestId(`taggedItem_${externalWall.id}`));
 	await user.type(screen.getByTestId("height"), "1");
 	await user.type(screen.getByTestId("width"), "1");
-	await user.type(screen.getByTestId("thermalResistance"), "1");
+	await user.type(screen.getByTestId("uValue"), "1");
 	await user.click(screen.getByTestId("securityRisk_no"));
 	await user.type(screen.getByTestId("solarTransmittance"), "0.1");
 	await user.type(screen.getByTestId("elevationalHeight"), "1");
@@ -326,7 +326,7 @@ describe("window", () => {
 			expect((await screen.findByTestId(`taggedItem_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
-			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
 			expect((await screen.findByTestId("securityRisk_yes")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("1");
@@ -345,7 +345,7 @@ describe("window", () => {
 					orientation: 24,
 					height: 1,
 					width: 1,
-					thermalResistance: 1,
+					uValue: 1,
 					securityRisk: true,
 					solarTransmittance: 0.1,
 					elevationalHeight: 1,
@@ -389,7 +389,7 @@ describe("window", () => {
 			expect((await screen.findByTestId("taggedItem_error"))).toBeDefined();
 			expect((await screen.findByTestId("height_error"))).toBeDefined();
 			expect((await screen.findByTestId("width_error"))).toBeDefined();
-			expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
+			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 			expect((await screen.findByTestId("securityRisk_error"))).toBeDefined();
 			expect((await screen.findByTestId("solarTransmittance_error"))).toBeDefined();
 			expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();

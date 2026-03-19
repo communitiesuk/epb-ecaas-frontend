@@ -24,7 +24,7 @@ describe("party wall", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		partyWallCavityType: "solid",
-		thermalResistance: 0.5,
+		uValue: 0.5,
 	};
 
 	afterEach(() => {
@@ -46,7 +46,7 @@ describe("party wall", () => {
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.click(screen.getByTestId("partyWallCavityType_solid"));
-		await user.type(screen.getByTestId("thermalResistance"), "0.5");
+		await user.type(screen.getByTestId("uValue"), "0.5");
 		await user.tab();
 
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -79,7 +79,7 @@ describe("party wall", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("10");
 		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("0.5");
+		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.5");
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -92,7 +92,7 @@ describe("party wall", () => {
 		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
-		expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
+		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 
 	});
 

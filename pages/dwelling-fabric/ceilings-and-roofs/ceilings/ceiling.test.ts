@@ -40,7 +40,7 @@ describe("ceiling", () => {
 			massDistributionClass: "I",
 			pitchOption: "0",
 			pitch: 0,
-			thermalResistance: 0.5,
+			uValue: 0.5,
 		},
 	};
 
@@ -57,7 +57,7 @@ describe("ceiling", () => {
 		if (overides.typeOfSpace === "unheatedSpace") {
 			await user.type(screen.getByTestId("uValue"), "1");
 		} else {
-			await user.type(screen.getByTestId("thermalResistance"), "0.5");
+			await user.type(screen.getByTestId("uValue"), "0.5");
 		}
 		await user.tab();
 	};
@@ -103,7 +103,7 @@ describe("ceiling", () => {
 			});
 
 			expect((await screen.findByTestId("type_heatedSpace")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("0.5");
+			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.5");
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Ceiling 2");
 			expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("5");
 			expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
@@ -123,7 +123,7 @@ describe("ceiling", () => {
 			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 			expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
-			expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
+			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 		});
 	});
 

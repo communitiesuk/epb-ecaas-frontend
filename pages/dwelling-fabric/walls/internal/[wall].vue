@@ -28,7 +28,7 @@ const saveForm = (fields: InternalWallData) => {
 				massDistributionClass: fields.massDistributionClass,
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
-				thermalResistance: fields.thermalResistance,
+				uValue: fields.uValue,
 			},
 			complete: true,
 		};
@@ -109,7 +109,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<p class="govuk-hint">The net surface area should only be for one side of the wall, not both.</p>
 			</GovDetails>
 		</FormKit>
-		<FieldsThermalResistance/>
+		<FieldsUValue/>
 		<FieldsArealHeatCapacity
 			id="arealHeatCapacity"
 			name="arealHeatCapacity"/>

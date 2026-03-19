@@ -229,7 +229,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 			area: x.surfaceAreaOfElement,
 			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
-			thermal_resistance_construction: x.thermalResistance,
+			u_value: x.uValue,
 			pitch: 180,
 		};
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
@@ -262,7 +262,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				width: x.width,
 				base_height: x.elevationalHeight,
 				area: x.surfaceArea,
-				thermal_resistance_construction: x.thermalResistance,
+				u_value: x.uValue,
 				colour: x.colour,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
@@ -361,7 +361,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				base_height: x.elevationalHeight,
 				area: x.surfaceArea,
 				colour: x.colour,
-				thermal_resistance_construction: x.thermalResistance,
+				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				is_external_door: false,
@@ -378,7 +378,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				type: "BuildingElementAdjacentConditionedSpace",
 				pitch: extractPitch(x),
 				area: x.surfaceAreaOfElement,
-				thermal_resistance_construction: x.thermalResistance,
+				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 			},
@@ -393,7 +393,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				type: "BuildingElementPartyWall",
 				pitch: extractPitch(x),
 				area: x.surfaceArea,
-				thermal_resistance_construction: x.thermalResistance,
+				u_value: x.uValue,
 				thermal_resistance_cavity: x.thermalResistanceCavity,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
@@ -412,7 +412,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 				pitch: extractPitch(x),
 				area: x.surfaceAreaOfElement,
-				thermal_resistance_construction: x.thermalResistance,
+				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
@@ -489,7 +489,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 			ceiling = {
 				...commonFields,
 				type: "BuildingElementAdjacentConditionedSpace",
-				thermal_resistance_construction: x.thermalResistance,
+				u_value: x.uValue,
 			};
 		};
 
@@ -498,10 +498,6 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 
 	const roofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceRoofs.map((x) => {
 		const nameWithSuffix = suffixName(x.name, roofSuffix);
-		const uValueOrThermalResistance: { thermal_resistance_construction: number } | { u_value: number } =
-			"thermalResistance" in x
-				? { thermal_resistance_construction: x.thermalResistance }
-				: { u_value: x.uValue };
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementOpaque",
@@ -511,7 +507,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 				width: x.width,
 				base_height: x.elevationalHeightOfElement,
 				area: x.surfaceArea,
-				...uValueOrThermalResistance,
+				u_value: x.uValue,
 				colour: x.colour,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
@@ -591,7 +587,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			internalDoor = {
 				...commonFields,
 				type: "BuildingElementAdjacentConditionedSpace",
-				thermal_resistance_construction: x.thermalResistance,
+				u_value: x.uValue,
 			};
 		};
 
@@ -624,7 +620,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			security_risk: x.securityRisk,
 			free_area_height: x.heightOpenableArea,
 			shading: x.hasShading ? mapShading(x.shading) : [],
-			thermal_resistance_construction: x.thermalResistance,
+			u_value: x.uValue,
 			treatment: x.curtainsOrBlinds ? [{
 				type: x.treatmentType,
 				controls: "manual",
@@ -659,7 +655,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				is_external_door: true,
 				is_unheated_pitched_roof: false, // this may need to be limited to opaque elements with a pitch <= 60
 				area: x.height * x.width, // this may be removed from the FHS schema shortly (though you could have e.g. arch shaped doors with a different area?)
-				thermal_resistance_construction: x.thermalResistance,
+				u_value: x.uValue,
 			},
 		};
 	});
@@ -748,7 +744,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				height: x.height,
 				width: x.width,
 				base_height: x.elevationalHeight,
-				thermal_resistance_construction: x.thermalResistance,
+				u_value: x.uValue,
 				g_value: x.solarTransmittance,
 				mid_height: midHeight,
 				security_risk: x.securityRisk,

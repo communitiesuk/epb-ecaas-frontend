@@ -31,7 +31,7 @@ describe("ceilings and roofs", () => {
 			massDistributionClass: "I",
 			pitchOption: "custom",
 			pitch: 180,
-			thermalResistance: 0.5,
+			uValue: 0.5,
 		},
 	};
 
@@ -62,7 +62,7 @@ describe("ceilings and roofs", () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			thermalResistance: 1,
+			uValue: 1,
 			colour: "Dark",
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
@@ -137,7 +137,7 @@ describe("ceilings and roofs", () => {
 					surfaceArea: 5,
 					arealHeatCapacity: "Very light",
 					massDistributionClass: "I",
-					thermalResistance: 0.5,
+					uValue: 0.5,
 				},
 			};
 
@@ -286,7 +286,7 @@ describe("ceilings and roofs", () => {
 					taggedItem: roof1.data.id,
 					height: 1,
 					width: 1,
-					thermalResistance: 1,
+					uValue: 1,
 					solarTransmittance: 0.1,
 					elevationalHeight: 1,
 					numberOpenableParts: "0",
@@ -308,7 +308,7 @@ describe("ceilings and roofs", () => {
 					colour: "Intermediate",
 					arealHeatCapacity: "Very light",
 					massDistributionClass: "I",
-					thermalResistance: 48,
+					uValue: 8,
 				},
 			};
 
@@ -326,7 +326,7 @@ describe("ceilings and roofs", () => {
 					heightOpenableArea: 1,
 					maximumOpenableArea: 1,
 					securityRisk: false,
-					thermalResistance: 42,
+					uValue: 9,
 					numberOpenableParts: "1",
 					curtainsOrBlinds: false,
 					hasShading: false,

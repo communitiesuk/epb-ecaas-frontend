@@ -22,7 +22,7 @@ describe("external unglazed door", () => {
 		height: 0.5,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		thermalResistance: 1,
+		uValue: 1,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
@@ -39,7 +39,7 @@ describe("external unglazed door", () => {
 			colour: "Intermediate",
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
-			thermalResistance: 24,
+			uValue: 10,
 		},
 	};
 
@@ -265,7 +265,7 @@ describe("external unglazed door", () => {
 			await user.type(screen.getByTestId("height"), "0.5");
 			await user.type(screen.getByTestId("width"), "20");
 			await user.type(screen.getByTestId("elevationalHeight"), "20");
-			await user.type(screen.getByTestId("thermalResistance"), "24");
+			await user.type(screen.getByTestId("uValue"), "10");
 			await user.click(screen.getByTestId("colour_Intermediate"));
 			await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 			await user.click(screen.getByTestId("massDistributionClass_I"));
@@ -310,7 +310,7 @@ describe("external unglazed door", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("0.5");
 			expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("20");
 			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("20");
-			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("24");
+			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("10");
 			expect((await screen.findByTestId("colour_Intermediate")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
@@ -329,7 +329,7 @@ describe("external unglazed door", () => {
 				colour: "Intermediate",
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
-				thermalResistance: 24,
+				uValue: 10,
 			} as const satisfies ExternalUnglazedDoorData;
 
 			store.$patch({
@@ -365,7 +365,7 @@ describe("external unglazed door", () => {
 			expect((await screen.findByTestId("height_error"))).toBeDefined();
 			expect((await screen.findByTestId("width_error"))).toBeDefined();
 			expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
-			expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
+			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 			expect((await screen.findByTestId("colour_error"))).toBeDefined();
 			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
@@ -519,7 +519,7 @@ describe("external unglazed door", () => {
 					width: 1,
 					elevationalHeightOfElement: 2,
 					surfaceArea: 1,
-					thermalResistance: 1,
+					uValue: 1,
 					colour: "Dark",
 					arealHeatCapacity: "Very light",
 					massDistributionClass: "I",

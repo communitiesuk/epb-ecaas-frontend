@@ -27,7 +27,7 @@ describe("vent", () => {
 		height: 0.5,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		thermalResistance: 1,
+		uValue: 1,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",

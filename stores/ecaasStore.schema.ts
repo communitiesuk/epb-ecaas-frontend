@@ -148,7 +148,7 @@ const baseInternalFloorData = named.extend({
 	surfaceAreaOfElement: z.number(),
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
-	thermalResistance,
+	uValue,
 });
 const internalFloorDataZod = z.discriminatedUnion(
 	"typeOfInternalFloor",
@@ -171,7 +171,7 @@ export const exposedFloorDataZod = named.extend({
 	width: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),
 	surfaceArea: z.number().min(0.01).max(10000),
-	thermalResistance,
+	uValue,
 	colour: colourZod,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
@@ -308,7 +308,7 @@ const externalWallDataZod = namedWithId.extend({
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	colour: colourZod,
-	thermalResistance,
+	uValue,
 });
 
 export type ExternalWallData = z.infer<typeof externalWallDataZod>;
@@ -319,14 +319,14 @@ const internalWallDataZod = namedWithId.extend({
 	massDistributionClass,
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
-	thermalResistance,
+	uValue,
 });
 
 export type InternalWallData = z.infer<typeof internalWallDataZod>;
 
 const wallsToUnheatedSpaceDataZod = namedWithId.extend({
 	surfaceAreaOfElement: z.number().min(0).max(10000),
-	thermalResistance,
+	uValue,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	pitchOption: standardPitchOption,
@@ -343,7 +343,7 @@ const partyWallDataZod = namedWithId.extend({
 	pitch: z.optional(z.number().min(60).max(120)),
 	surfaceArea: z.number().min(0.01).max(10000),
 	arealHeatCapacity: arealHeatCapacityZod,
-	thermalResistance,
+	uValue,
 	massDistributionClass,
 	partyWallCavityType: partyWallCavityTypeZod,
 	partyWallLiningType: z.optional(partyWallLiningTypeZod),
@@ -375,18 +375,17 @@ const baseCeilingData = namedWithId.extend({
 	massDistributionClass,
 	pitchOption: zeroPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
+	uValue,
 });
 const ceilingDataZod = z.discriminatedUnion(
 	"type",
 	[
 		baseCeilingData.extend({
 			type: z.literal("heatedSpace"),
-			thermalResistance,
 		}),
 		baseCeilingData.extend({
 			type: z.literal("unheatedSpace"),
 			thermalResistanceOfAdjacentUnheatedSpace,
-			uValue,
 		}),
 	],
 );
@@ -418,7 +417,7 @@ const roofDataZod = z.discriminatedUnion("typeOfRoof", [
 	}),
 	roofDataBaseZod.extend({
 		typeOfRoof: z.enum(["pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling", "flatAboveHeatedSpace", "flatAboveUnheatedSpace"]),
-		thermalResistance,
+		uValue,
 	})]);
 
 export type RoofData = z.infer<typeof roofDataZod>;
@@ -441,7 +440,7 @@ const externalUnglazedDoorDataZod = named.extend({
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	colour: colourZod,
-	thermalResistance,
+	uValue,
 });
 
 export type ExternalUnglazedDoorData = z.infer<typeof externalUnglazedDoorDataZod>;
@@ -454,7 +453,7 @@ const baseExternalGlazedDoorDataZod = named.extend({
 	orientation: z.number().min(0).lt(360).optional(),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
-	thermalResistance,
+	uValue,
 	securityRisk: z.boolean(),
 	solarTransmittance: z.number().min(0.01).max(1),
 	elevationalHeight: z.number().min(0).max(500),
@@ -567,7 +566,7 @@ const typeOfInternalDoorFields = {
 	variants: [
 		z.object({
 			typeOfInternalDoor: z.literal("heatedSpace"),
-			thermalResistance,
+			uValue,
 		}),
 		z.object({
 			typeOfInternalDoor: z.literal("unheatedSpace"),
@@ -604,7 +603,7 @@ const baseWindowData = namedWithId.extend({
 	orientation: z.number().min(0).lt(360).optional(),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
-	thermalResistance,
+	uValue,
 	securityRisk: z.boolean(),
 	solarTransmittance: z.number().min(0.01).max(1),
 	elevationalHeight: z.number().min(0).max(500),

@@ -194,7 +194,7 @@ describe("dwelling fabric mapper", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			thermalResistanceOfAdjacentUnheatedSpace: 1,
-			thermalResistance: 1,
+			uValue: 1,
 		};
 
 		const internalFloorHeatedSpace: InternalFloorData = {
@@ -203,7 +203,7 @@ describe("dwelling fabric mapper", () => {
 			surfaceAreaOfElement: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
-			thermalResistance: 1,
+			uValue: 1,
 		};
 
 		const exposedFloor: ExposedFloorData = {
@@ -213,7 +213,7 @@ describe("dwelling fabric mapper", () => {
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			thermalResistance: 1,
+			uValue: 1,
 			colour: "Dark",
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
@@ -392,7 +392,7 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 			area: internalFloorUnheatedSpace.surfaceAreaOfElement,
 			pitch: 180,
-			thermal_resistance_construction: 1,
+			u_value: internalFloorUnheatedSpace.uValue,
 			areal_heat_capacity: internalFloorUnheatedSpace.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(internalFloorUnheatedSpace.massDistributionClass),
 			thermal_resistance_unconditioned_space: internalFloorUnheatedSpace.thermalResistanceOfAdjacentUnheatedSpace,
@@ -401,7 +401,7 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementAdjacentConditionedSpace",
 			area: internalFloorHeatedSpace.surfaceAreaOfElement,
 			pitch: 180,
-			thermal_resistance_construction: internalFloorHeatedSpace.thermalResistance,
+			u_value: internalFloorHeatedSpace.uValue,
 			areal_heat_capacity: internalFloorHeatedSpace.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(internalFloorHeatedSpace.massDistributionClass),
 		};
@@ -416,7 +416,7 @@ describe("dwelling fabric mapper", () => {
 			width: exposedFloor.width,
 			base_height: exposedFloor.elevationalHeight,
 			pitch: exposedFloor.pitch,
-			thermal_resistance_construction: exposedFloor.thermalResistance,
+			u_value: exposedFloor.uValue,
 			colour: exposedFloor.colour,
 			areal_heat_capacity: exposedFloor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(exposedFloor.massDistributionClass),
@@ -486,7 +486,7 @@ describe("dwelling fabric mapper", () => {
 				colour: "Light",
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
-				thermalResistance: 1,
+				uValue: 1,
 			},
 		};
 
@@ -500,7 +500,7 @@ describe("dwelling fabric mapper", () => {
 				massDistributionClass: "I",
 				pitchOption: "90",
 				pitch: 90,
-				thermalResistance: 1,
+				uValue: 1,
 			},
 		};
 
@@ -512,7 +512,7 @@ describe("dwelling fabric mapper", () => {
 				pitchOption: "90",
 				pitch: 90,
 				surfaceArea: 10,
-				thermalResistance: 1,
+				uValue: 1,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				partyWallCavityType: "filled_unsealed",
@@ -528,7 +528,7 @@ describe("dwelling fabric mapper", () => {
 				pitchOption: "90",
 				pitch: 90,
 				surfaceArea: 10,
-				thermalResistance: 2,
+				uValue: 2,
 				arealHeatCapacity: "Light",
 				massDistributionClass: "E",
 				partyWallCavityType: "defined_resistance",
@@ -544,7 +544,7 @@ describe("dwelling fabric mapper", () => {
 				pitchOption: "90",
 				pitch: 90,
 				surfaceArea: 10,
-				thermalResistance: 1.5,
+				uValue: 1.5,
 				arealHeatCapacity: "Medium",
 				massDistributionClass: "D",
 				partyWallCavityType: "solid",
@@ -557,7 +557,7 @@ describe("dwelling fabric mapper", () => {
 				id: "unheated-id",
 				name: "Wall to unheated space 1",
 				surfaceAreaOfElement: 500,
-				thermalResistance: 1,
+				uValue: 1,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "E",
 				pitchOption: "90",
@@ -637,7 +637,7 @@ describe("dwelling fabric mapper", () => {
 			mass_distribution_class: fullMassDistributionClass(externalWall.data.massDistributionClass),
 			is_external_door: false,
 			is_unheated_pitched_roof: false,
-			thermal_resistance_construction: externalWall.data.thermalResistance,
+			u_value: externalWall.data.uValue,
 		};
 
 		expect(externalWallElement).toEqual(expectedExternalWall);
@@ -646,7 +646,7 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementAdjacentConditionedSpace",
 			pitch: internalWall.data.pitch!,
 			area: internalWall.data.surfaceAreaOfElement,
-			thermal_resistance_construction: internalWall.data.thermalResistance,
+			u_value: internalWall.data.uValue,
 			areal_heat_capacity: internalWall.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(internalWall.data.massDistributionClass),
 		};
@@ -657,7 +657,7 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementPartyWall",
 			pitch: partyWallWithLiningType.data.pitch!,
 			area: partyWallWithLiningType.data.surfaceArea,
-			thermal_resistance_construction: partyWallWithLiningType.data.thermalResistance,
+			u_value: partyWallWithLiningType.data.uValue,
 			areal_heat_capacity: partyWallWithLiningType.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(partyWallWithLiningType.data.massDistributionClass),
 			party_wall_cavity_type: "filled_unsealed",
@@ -674,7 +674,7 @@ describe("dwelling fabric mapper", () => {
 			mass_distribution_class: fullMassDistributionClass(partyWallWithThermalResistanceCavity.data.massDistributionClass),
 			party_wall_cavity_type: "defined_resistance",
 			thermal_resistance_cavity: 24,
-			thermal_resistance_construction: partyWallWithThermalResistanceCavity.data.thermalResistance,
+			u_value: partyWallWithThermalResistanceCavity.data.uValue,
 		};
 
 		expect(partyWallWithThermalResistanceCavityElement).toEqual(expectPartyWallWithThermalResistanceCavity);
@@ -683,7 +683,7 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementPartyWall",
 			pitch: partyWallWithoutExtraAttributes.data.pitch!,
 			area: partyWallWithoutExtraAttributes.data.surfaceArea,
-			thermal_resistance_construction: partyWallWithoutExtraAttributes.data.thermalResistance,
+			u_value: partyWallWithoutExtraAttributes.data.uValue,
 			areal_heat_capacity: partyWallWithoutExtraAttributes.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(partyWallWithoutExtraAttributes.data.massDistributionClass),
 			party_wall_cavity_type: "solid",
@@ -698,7 +698,7 @@ describe("dwelling fabric mapper", () => {
 			areal_heat_capacity: wallToUnheatedSpace.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(wallToUnheatedSpace.data.massDistributionClass),
 			thermal_resistance_unconditioned_space: wallToUnheatedSpace.data.thermalResistanceOfAdjacentUnheatedSpace,
-			thermal_resistance_construction: wallToUnheatedSpace.data.thermalResistance,
+			u_value: wallToUnheatedSpace.data.uValue,
 		};
 
 		expect(wallToUnheatedSpaceElement).toEqual(expectedWallToUnheatedSpace);
@@ -748,7 +748,7 @@ describe("dwelling fabric mapper", () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			thermalResistance: 1,
+			uValue: 1,
 			colour: "Dark",
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
@@ -764,7 +764,7 @@ describe("dwelling fabric mapper", () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			thermalResistance: 1,
+			uValue: 1,
 			colour: "Dark",
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
@@ -780,7 +780,7 @@ describe("dwelling fabric mapper", () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			thermalResistance: 1,
+			uValue: 1,
 			colour: "Dark",
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
@@ -796,7 +796,7 @@ describe("dwelling fabric mapper", () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			thermalResistance: 1,
+			uValue: 1,
 			colour: "Dark",
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
@@ -850,7 +850,7 @@ describe("dwelling fabric mapper", () => {
 			width: roofAboveHeatedSpace.width,
 			base_height: roofAboveHeatedSpace.elevationalHeightOfElement,
 			area: roofAboveHeatedSpace.surfaceArea,
-			thermal_resistance_construction: roofAboveHeatedSpace.thermalResistance,
+			u_value: roofAboveHeatedSpace.uValue,
 			colour: roofAboveHeatedSpace.colour,
 			areal_heat_capacity: roofAboveHeatedSpace.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(roofAboveHeatedSpace.massDistributionClass),
@@ -868,7 +868,7 @@ describe("dwelling fabric mapper", () => {
 			width: roofAboveUnheatedSpace.width,
 			base_height: roofAboveUnheatedSpace.elevationalHeightOfElement,
 			area: roofAboveUnheatedSpace.surfaceArea,
-			thermal_resistance_construction: roofAboveUnheatedSpace.thermalResistance,
+			u_value: roofAboveUnheatedSpace.uValue,
 			colour: roofAboveUnheatedSpace.colour,
 			areal_heat_capacity: roofAboveUnheatedSpace.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(roofAboveUnheatedSpace.massDistributionClass),
@@ -885,7 +885,7 @@ describe("dwelling fabric mapper", () => {
 			width: roofPitchedInsulatedAtCeiling.width,
 			base_height: roofPitchedInsulatedAtCeiling.elevationalHeightOfElement,
 			area: roofPitchedInsulatedAtCeiling.surfaceArea,
-			thermal_resistance_construction: roofPitchedInsulatedAtCeiling.thermalResistance,
+			u_value: roofPitchedInsulatedAtCeiling.uValue,
 			colour: roofPitchedInsulatedAtCeiling.colour,
 			areal_heat_capacity: roofPitchedInsulatedAtCeiling.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(roofPitchedInsulatedAtCeiling.massDistributionClass),
@@ -903,7 +903,7 @@ describe("dwelling fabric mapper", () => {
 			width: roofPitchedInsulatedAtRoof.width,
 			base_height: roofPitchedInsulatedAtRoof.elevationalHeightOfElement,
 			area: roofPitchedInsulatedAtRoof.surfaceArea,
-			thermal_resistance_construction: roofPitchedInsulatedAtRoof.thermalResistance,
+			u_value: roofPitchedInsulatedAtRoof.uValue,
 			colour: roofPitchedInsulatedAtRoof.colour,
 			areal_heat_capacity: roofPitchedInsulatedAtRoof.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(roofPitchedInsulatedAtRoof.massDistributionClass),
@@ -932,7 +932,7 @@ describe("dwelling fabric mapper", () => {
 				colour: "Light",
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
-				thermalResistance: 0.3,
+				uValue: 0.3,
 			},
 		};
 
@@ -946,7 +946,7 @@ describe("dwelling fabric mapper", () => {
 				massDistributionClass: "I",
 				pitchOption: "90",
 				pitch: 90,
-				thermalResistance: 1,
+				uValue: 1,
 			},
 		};
 
@@ -970,7 +970,7 @@ describe("dwelling fabric mapper", () => {
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
-			thermalResistance: 1,
+			uValue: 1,
 		};
 		const externalGlazedDoor: ExternalGlazedDoorData = {
 			name: "External glazed door 1",
@@ -985,7 +985,7 @@ describe("dwelling fabric mapper", () => {
 			midHeightOpenablePart1: 1,
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
-			thermalResistance: 7,
+			uValue: 7,
 			numberOpenableParts: "1",
 			curtainsOrBlinds: true,
 			treatmentType: "curtains",
@@ -1037,7 +1037,7 @@ describe("dwelling fabric mapper", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			colour: "Intermediate",
-			thermalResistance: 16,
+			uValue: 16,
 		};
 
 		const doorSuffix = " (door)";
@@ -1089,7 +1089,7 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementAdjacentConditionedSpace",
 			pitch: extractPitch(internalWall.data),
 			area: internalDoorHeatedSpace.surfaceArea,
-			thermal_resistance_construction: internalDoorHeatedSpace.thermalResistance,
+			u_value: internalDoorHeatedSpace.uValue,
 			areal_heat_capacity: internalDoorHeatedSpace.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(internalDoorHeatedSpace.massDistributionClass),
 		};
@@ -1142,7 +1142,7 @@ describe("dwelling fabric mapper", () => {
 				},
 			],
 			security_risk: false,
-			thermal_resistance_construction: externalGlazedDoor.thermalResistance,
+			u_value: externalGlazedDoor.uValue,
 			treatment: [{
 				type: externalGlazedDoor.treatmentType,
 				controls: "manual",
@@ -1166,7 +1166,7 @@ describe("dwelling fabric mapper", () => {
 			is_external_door: true,
 			is_unheated_pitched_roof: false,
 			colour: "Intermediate",
-			thermal_resistance_construction: externalUnglazedDoor.thermalResistance,
+			u_value: externalUnglazedDoor.uValue,
 		};
 
 		expect(externalUnglazedDoorElement).toEqual(expectedUnglazedDoor);
@@ -1189,7 +1189,7 @@ describe("dwelling fabric mapper", () => {
 				colour: "Intermediate",
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
-				thermalResistance: 0.3,
+				uValue: 0.3,
 			},
 		};
 
@@ -1199,7 +1199,7 @@ describe("dwelling fabric mapper", () => {
 			taggedItem: externalWall.data.id,
 			height: 1,
 			width: 1,
-			thermalResistance: 1,
+			uValue: 1,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "1",
@@ -1284,7 +1284,7 @@ describe("dwelling fabric mapper", () => {
 			height: window.height,
 			width: window.width,
 			base_height: window.elevationalHeight,
-			thermal_resistance_construction: window.thermalResistance,
+			u_value: window.uValue,
 			g_value: window.solarTransmittance,
 			mid_height: window.elevationalHeight + window.height / 2,
 			frame_area_fraction: 1 - window.openingToFrameRatio,
@@ -1336,7 +1336,7 @@ describe("dwelling fabric mapper", () => {
 			orientation: 180,
 			height: 1,
 			width: 1,
-			thermalResistance: 1,
+			uValue: 1,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",
@@ -1382,7 +1382,7 @@ describe("dwelling fabric mapper", () => {
 			pitch: 0,
 			height: 1,
 			width: 1,
-			thermalResistance: 1,
+			uValue: 1,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",
@@ -1426,7 +1426,7 @@ describe("dwelling fabric mapper", () => {
 			pitch: 180,
 			height: 1,
 			width: 1,
-			thermalResistance: 1,
+			uValue: 1,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",

@@ -128,8 +128,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | number | min:0 | max:10000"
 				suffix-text="m²"
 				data-field="Zone.BuildingElement.*.area" />
-			<FieldsUValue v-if="model.typeOfInternalDoor === 'unheatedSpace'" id="uValue" name="uValue" />
-			<FieldsThermalResistance v-if="model.typeOfInternalDoor === 'heatedSpace'"/>
+			<FieldsUValue />
 			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
 		</template>

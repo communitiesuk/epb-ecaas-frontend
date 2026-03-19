@@ -31,7 +31,7 @@ describe("doors", () => {
 		height: 0.5,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		thermalResistance: 1,
+		uValue: 1,
 		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
@@ -45,7 +45,7 @@ describe("doors", () => {
 		massDistributionClass: "I",
 		pitchOption: "90",
 		pitch: 90,
-		thermalResistance: 1,
+		uValue: 1,
 	};
 
 	const externalUnglazed1: EcaasForm<ExternalUnglazedDoorData> = {
@@ -59,7 +59,7 @@ describe("doors", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			colour: "Dark",
-			thermalResistance: 16,
+			uValue: 10,
 		},
 	};
 
@@ -74,7 +74,7 @@ describe("doors", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			colour: "Light",
-			thermalResistance: 28,
+			uValue: 8,
 		},
 	};
 
@@ -89,7 +89,7 @@ describe("doors", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			colour: "Intermediate",
-			thermalResistance: 23,
+			uValue: 7,
 		},
 	};
 
@@ -106,7 +106,7 @@ describe("doors", () => {
 			openingToFrameRatio: 0.2,
 			heightOpenableArea: 1,
 			maximumOpenableArea: 1,
-			thermalResistance: 37,
+			uValue: 9,
 			numberOpenableParts: "0",
 			curtainsOrBlinds: false,
 			hasShading: false,
@@ -128,7 +128,7 @@ describe("doors", () => {
 			midHeightOpenablePart1: 2,
 			heightOpenableArea: 1,
 			maximumOpenableArea: 1,
-			thermalResistance: 25,
+			uValue: 5,
 			numberOpenableParts: "1",
 			curtainsOrBlinds: false,
 			hasShading: false,
@@ -150,10 +150,10 @@ describe("doors", () => {
 			midHeightOpenablePart2: 1.2,
 			heightOpenableArea: 1,
 			maximumOpenableArea: 1,
-			thermalResistance: 41,
+			uValue: 4,
 			numberOpenableParts: "2",
 			curtainsOrBlinds: false,
-			hasShading: false,	
+			hasShading: false,
 		},
 	};
 
@@ -166,7 +166,7 @@ describe("doors", () => {
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
-			thermalResistance: 1,
+			uValue: 1,
 		},
 	};
 
@@ -179,7 +179,7 @@ describe("doors", () => {
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
-			thermalResistance: 1,
+			uValue: 1,
 		},
 	};
 
@@ -192,7 +192,7 @@ describe("doors", () => {
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
-			thermalResistance: 1,
+			uValue: 1,
 		},
 	};
 
@@ -350,9 +350,9 @@ describe("doors", () => {
 			const frontDoor: Partial<ExternalGlazedDoorData> = {
 				name: "Front door",
 				isTheFrontDoor: true,
-				orientation: 24,	
-			}; 
-	
+				orientation: 24,
+			};
+
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {

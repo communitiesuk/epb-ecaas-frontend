@@ -20,14 +20,14 @@ describe("internal door", () => {
 		arealHeatCapacity: "Very light",
 		pitchOption: "90",
 		pitch: 90,
-		thermalResistance: 0.1,
+		uValue: 0.1,
 	};
 
 	const wallToUnheatedSpace: WallsToUnheatedSpaceData = {
 		id: "55a95c36-bf0a-40d3-a31d-9e4f86798428",
 		name: "Wall to unheated space 1",
 		surfaceAreaOfElement: 500,
-		thermalResistance: 10,
+		uValue: 10,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		pitchOption: "90",
@@ -43,7 +43,7 @@ describe("internal door", () => {
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
-			thermalResistance: 0.1,
+			uValue: 0.1,
 		},
 	};
 	const internalDoorWithUnheatedSpace: EcaasForm<InternalDoorData> = {
@@ -95,7 +95,7 @@ describe("internal door", () => {
 
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 			await populateValidForm();
-			await user.type(screen.getByTestId("thermalResistance"), "0.1");
+			await user.type(screen.getByTestId("uValue"), "0.1");
 			await user.click(
 				screen.getByTestId(`associatedItemId_${internalWall.id}`),
 			);
@@ -128,7 +128,7 @@ describe("internal door", () => {
 			expect((await screen.findByTestId(`associatedItemId_${internalWall.id}`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("5");
 			expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("0.1");
+			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.1");
 		});
 
 		it("requires additional fields when heated space is selected", async () => {
@@ -142,7 +142,7 @@ describe("internal door", () => {
 			expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
-			expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
+			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 		});
 	});
 
@@ -226,6 +226,7 @@ describe("internal door", () => {
 
 		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 		await populateValidForm();
+		await user.type(screen.getByTestId("uValue"), "0.1");
 		await user.click(screen.getByTestId(`associatedItemId_${internalWall.id}`));
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -267,7 +268,7 @@ describe("internal door", () => {
 						data: stateWithFlat,
 					},
 				},
-				
+
 			});
 			await renderSuspended(InternalDoor, {
 				route: {
@@ -338,7 +339,7 @@ describe("internal door", () => {
 
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
-		
+
 		const internalWallPitch0: Partial<InternalWallData> = {
 			id: "e36223a9-420f-422f-ad3f-ccfcec1455c7",
 			name: "Internal 1",
@@ -353,7 +354,7 @@ describe("internal door", () => {
 		};
 
 		it.each([[0, internalWallPitch0], [180, internalWallPitch180]])("does not display the 'Is this the front door?' element if pitch of tagged item is %s", async (pitch, internalWall) => {
-			
+
 			const internalDoor: Partial<InternalDoorData> = {
 				typeOfInternalDoor: "heatedSpace",
 				name: "Internal 1",
@@ -376,7 +377,7 @@ describe("internal door", () => {
 						dwellingSpaceInternalDoor: {
 							data: [{ data: internalDoor }],
 						},
-					}, 
+					},
 				},
 			});
 
@@ -385,12 +386,12 @@ describe("internal door", () => {
 					params: { door: "0" },
 				},
 			});
-				
+
 			expect(screen.queryByTestId("isTheFrontDoor")).toBeNull();
 		});
 
 		it("displays error when user tries to mark the door as the front door but they have already marked another as the front door", async () => {
-			
+
 			const internalWall: Partial<InternalWallData> = {
 				id: "06cce939-0899-42cc-aa46-0d47c11a6ede",
 				name: "Internal 1",
@@ -446,17 +447,17 @@ describe("internal door", () => {
 		});
 
 		test("displays banner when banner is set to 'update-front-door", async () => {
-			
+
 			vi.mock("~/composables/banner", () => ({
 				useBanner: () => ref({ type: "update-front-door" }),
 			}));
-			
+
 			await renderSuspended(InternalDoor, {
 				route: {
 					params: { door: "create" },
 				},
 			});
-		
+
 			expect(screen.getByTestId("doorBanner")).not.toBeNull();
 		});
 	});

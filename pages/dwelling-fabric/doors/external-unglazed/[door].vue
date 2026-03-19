@@ -140,19 +140,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.width"
 		/>
 		<FieldsElevationalHeight />
-		<FormKit
-			id="thermalResistance"
-			type="govInputWithSuffix"
-			suffix-text="(m²·K)/W"
-			label="Thermal resistance"
-			help="Enter the thermal resistance of all layers in the door construction"
-			name="thermalResistance"
-			validation="required | number | min:0.00001 | max:50"
-		><GovDetails summary-text="Help with this input">
-			<p>Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer.
-			</p>
-		</GovDetails>
-		</FormKit>
+		<FieldsUValue/>
 		<FieldsColourOfExternalSurface v-if="!(model?.pitch && model.pitch > 120)" />
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>

@@ -91,6 +91,7 @@ const internalFloorSummary: SummarySection = {
 			"Type of internal floor": displayAdjacentSpaceType(x.typeOfInternalFloor, "Internal floor"),
 			"Name": show(x.name),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isInternalFloorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
@@ -109,7 +110,7 @@ const exposedFloorSummary: SummarySection = {
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
@@ -189,7 +190,7 @@ const externalWallSummary: SummarySection = {
 			"Length": dim(x.length, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
@@ -206,6 +207,7 @@ const internalWallSummary: SummarySection = {
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 		};
@@ -221,7 +223,7 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
-			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt"),
@@ -238,7 +240,7 @@ const partyWallSummary: SummarySection = {
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Cavity type": displaySnakeToSentenceCase(show(x.partyWallCavityType)),
@@ -286,7 +288,6 @@ const ceilingSummary: SummarySection = {
 	label: "Ceilings",
 	data: ceilingData.map(({ data: x }) => {
 		const isCeilingToUnheatedSpace = x.type === "unheatedSpace";
-		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;
 		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
 
 		return {
@@ -294,7 +295,7 @@ const ceilingSummary: SummarySection = {
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"U-value": isCeilingToUnheatedSpace ? uValue : undefined,
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isCeilingToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
@@ -312,8 +313,7 @@ const roofSummary: SummarySection = {
 
 		const pitch = dim(x.pitch, "degrees");
 		const orientation = x.orientation !== undefined ? dim(x.orientation, "degrees") : emptyValueRendering;
-		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering; 
-		const thermalResistance = "thermalResistance" in x ? dim(x.thermalResistance, "square metre kelvin per watt") : emptyValueRendering;
+		const uValue = dim(x.uValue, "watts per square metre kelvin");
 		const arealHeatCapacity = show(x.arealHeatCapacity);
 		const massDistributionClass = displayMassDistributionClass(x.massDistributionClass);
 
@@ -327,7 +327,6 @@ const roofSummary: SummarySection = {
 			"Elevational height of building element at its base": dim(x.elevationalHeightOfElement, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
 			"U-value": isTypeOfRoofSelected ? uValue : undefined,
-			"Thermal resistance": isTypeOfRoofSelected ? thermalResistance : undefined,
 			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": isTypeOfRoofSelected ? arealHeatCapacity : undefined,
 			"Mass distribution class": isTypeOfRoofSelected ? massDistributionClass : undefined,
@@ -376,7 +375,7 @@ const unglazedDoorSummary: SummarySection = {
 			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
-			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Is this the front door?": displayBoolean(x.isTheFrontDoor), 
 		};
 	}),
@@ -432,7 +431,7 @@ const glazedDoorSummary: SummarySection = {
 			"Orientation": orientation,
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
-			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Transmittance of solar energy": dim(x.solarTransmittance),
 			"Opening to frame ratio": dim(x.openingToFrameRatio),
@@ -467,7 +466,7 @@ const internalDoorSummary: SummarySection = {
 			"Name": show(x.name),
 			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
 			"Net surface area of element": dim(x.surfaceArea, "metres square"),
-			"U-value": isInternalDoorToUnheatedSpace ? uValue : undefined,
+			"U-value": uValue,
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isInternalDoorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
@@ -522,7 +521,7 @@ const windowSummary: SummarySection = {
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
-			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Transmittance of solar energy": show(x.solarTransmittance),
 			"Opening to frame ratio": show(x.openingToFrameRatio),
 			"Security risk": displayBoolean(x.securityRisk),

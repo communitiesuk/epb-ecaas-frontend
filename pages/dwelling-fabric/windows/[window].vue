@@ -48,7 +48,7 @@ const saveForm = (fields: WindowData) => {
 			orientation: shouldSavePitchOrientation ? fields.orientation : undefined,
 			height: fields.height,
 			width: fields.width,
-			thermalResistance: fields.thermalResistance,
+			uValue: fields.uValue,
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			securityRisk: fields.securityRisk,
@@ -239,7 +239,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			data-field="Zone.BuildingElement.*.width" />
 		<FieldsElevationalHeight />
 
-		<FieldsThermalResistance />
+		<FieldsUValue />
 		<FormKit
 			id="solarTransmittance"
 			type="govInputFloat"

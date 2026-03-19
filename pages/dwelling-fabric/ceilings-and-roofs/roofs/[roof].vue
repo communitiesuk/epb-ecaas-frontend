@@ -21,7 +21,7 @@ const roofFieldText: Record<ActiveRoofType, {
 	widthHelp: string;
 	elevationalHelp: string;
 	surfaceAreaHelp: string;
-	thermalResistanceHelp: string;
+	uValueHelp: string;
 	arealHeatCapacityHelp: string;
 	massDistributionHelp: string;
 }> = {
@@ -32,7 +32,7 @@ const roofFieldText: Record<ActiveRoofType, {
 		widthHelp: "Enter the width of the internal adjacent ceiling",
 		elevationalHelp: "Enter the distance between the ground and the external surface of the roof",
 		surfaceAreaHelp: "Enter the net area of the internal adjacent ceiling. The area of all windows should be subtracted before entry. You do not need to subtract the area of PV arrays.",
-		thermalResistanceHelp: "Enter the thermal resistance of the adjacent ceiling and roof build-up from the structural deck to the top waterproof layer",
+		uValueHelp: "Enter the U-value of the adjacent ceiling and roof build-up from the structural deck to the top waterproof layer",
 		arealHeatCapacityHelp: "This is the sum of the heat capacities of all the construction layers in the ceiling and roof build up from the structural deck to the top waterproof layer",
 		massDistributionHelp: "This is the distribution of mass in the ceiling and roof build up from the structural deck to the top waterproof layer",
 	},
@@ -43,7 +43,7 @@ const roofFieldText: Record<ActiveRoofType, {
 		widthHelp: "Enter the width of the internal ceiling",
 		elevationalHelp: "Enter the distance between the ground and the external surface of the roof",
 		surfaceAreaHelp: "Enter the net area of the internal ceiling. You do not need to subtract the areas of windows or rooflights that are in the roof above the unheated space.",
-		thermalResistanceHelp: "Enter the thermal resistance of the adjacent ceiling, roof build-up from the structural deck to the top waterproof layer, and unheated space",
+		uValueHelp: "Enter the U-value of the adjacent ceiling, roof build-up from the structural deck to the top waterproof layer, and unheated space",
 		arealHeatCapacityHelp: "This is the sum of the heat capacities of all the construction layers in the ceiling but not the roof",
 		massDistributionHelp: "This is the distribution of mass in the roof, loft space and ceiling",
 	},
@@ -54,7 +54,7 @@ const roofFieldText: Record<ActiveRoofType, {
 		widthHelp: "Enter the width of the exposed area of roof looking from the inside",
 		elevationalHelp: "Enter the distance between the ground and the lowest point of the length measurement",
 		surfaceAreaHelp: "Enter the net area of the internal adjacent ceiling. The area of all windows should be subtracted before entry. You do not need to subtract the area of PV arrays.",
-		thermalResistanceHelp: "Enter the thermal resistance of the adjacent ceiling and roof build-up from the structural deck to the top waterproof layer",
+		uValueHelp: "Enter the U-value of the adjacent ceiling and roof build-up from the structural deck to the top waterproof layer",
 		arealHeatCapacityHelp: "This is the sum of the heat capacities of all the construction layers in the ceiling and roof build up from the structural deck to the top waterproof layer",
 		massDistributionHelp: "This is the distribution of mass in the ceiling and roof build up from the structural deck to the top waterproof layer",
 	},
@@ -65,7 +65,7 @@ const roofFieldText: Record<ActiveRoofType, {
 		widthHelp: "Enter the width of the internal ceiling",
 		elevationalHelp: "Enter the distance between the ground and the lowest point of the length measurement",
 		surfaceAreaHelp: "Enter the net area of the internal ceiling. You do not need to subtract the areas of windows or rooflights that are in the roof above the unheated space.",
-		thermalResistanceHelp: "Enter the thermal resistance of the adjacent ceiling, roof build-up from the structural deck to the top waterproof layer, and unheated space",
+		uValueHelp: "Enter the U-value of the adjacent ceiling, roof build-up from the structural deck to the top waterproof layer, and unheated space",
 		arealHeatCapacityHelp: "This is the sum of the heat capacities of all the construction layers in the ceiling but not the roof",
 		massDistributionHelp: "This is the distribution of mass in the roof, loft space and ceiling",
 	},
@@ -93,7 +93,7 @@ const saveForm = (fields: RoofData) => {
 		let variantFields: 
 		| {
 			typeOfRoof: "pitchedInsulatedAtRoof" | "pitchedInsulatedAtCeiling" | "flatAboveHeatedSpace" | "flatAboveUnheatedSpace";
-			thermalResistance: number;
+			uValue: number;
 		} | {
 			typeOfRoof: "unheatedPitched";
 			uValue: number;
@@ -106,7 +106,7 @@ const saveForm = (fields: RoofData) => {
 			case "flatAboveUnheatedSpace":
 				variantFields = {
 					typeOfRoof: fields.typeOfRoof,
-					thermalResistance: fields.thermalResistance,
+					uValue: fields.uValue,
 				};
 				break;
 
@@ -218,7 +218,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<GovInset v-if="model?.typeOfRoof === 'pitchedInsulatedAtRoof' || model?.typeOfRoof === 'pitchedInsulatedAtCeiling'">
 				If the pitched roof has multiple orientations (for example, a gable or hip roof), each orientation must be added as a separate roof element.
 			</GovInset>
-			<FieldsThermalResistance :key="`thermalResistance-${model?.typeOfRoof}`" :help="currentRoofFieldText?.thermalResistanceHelp" />
+			<FieldsUValue :key="`uValue-${model?.typeOfRoof}`" :help="currentRoofFieldText?.uValueHelp" />
 			<FieldsColourOfExternalSurface />	
 			<FieldsArealHeatCapacity
 				id="arealHeatCapacity"

@@ -29,7 +29,7 @@ const saveForm = (fields: ExternalWallData) => {
 				length: fields.length,
 				elevationalHeight: fields.elevationalHeight,
 				surfaceArea: fields.surfaceArea,
-				thermalResistance: fields.thermalResistance,
+				uValue: fields.uValue,
 				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
 				colour: fields.colour,
@@ -156,7 +156,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsThermalResistance />
+		<FieldsUValue />
 		<FieldsColourOfExternalSurface />
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>

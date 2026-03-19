@@ -17,7 +17,7 @@ describe("internal floor", () => {
 		surfaceAreaOfElement: 5,
 		arealHeatCapacity: "Very light" as const,
 		massDistributionClass: "I" as const,
-		thermalResistance: 1,
+		uValue: 1,
 	};
 	const internalFloorHeatedSpace: InternalFloorData = {
 		...baseInternalFloorData,
@@ -39,7 +39,7 @@ describe("internal floor", () => {
 		await user.type(screen.getByTestId("surfaceAreaOfElement"), "5");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
-		await user.type(screen.getByTestId("thermalResistance"), "1");
+		await user.type(screen.getByTestId("uValue"), "1");
 		await user.tab();
 	};
 
@@ -96,6 +96,7 @@ describe("internal floor", () => {
 			expect((await screen.findByTestId("surfaceAreaOfElement_error"))).toBeDefined();
 			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
+			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 		});
 	});
 
