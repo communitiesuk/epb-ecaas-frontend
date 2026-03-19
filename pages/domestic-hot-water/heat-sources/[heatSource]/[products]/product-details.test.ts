@@ -5,7 +5,7 @@ import type { H3Error } from "h3";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 
-describe("Heat pump details", async () => {
+describe("Heat source details", async () => {
 	const smallHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
 		name: "Heat pump 2",
 		productReference: "HEATPUMP-SMALL",
@@ -34,6 +34,7 @@ describe("Heat pump details", async () => {
 		technologyType: "CombiBoiler",
 		boilerLocation: "internal",
 	};
+
 
 	const store = useEcaasStore();
 	const user = userEvent.setup();
@@ -149,6 +150,50 @@ describe("Heat pump details", async () => {
 		expect(heatSource).toEqual(expect.objectContaining({ locationOfBoiler: "heatedSpace" }));
 	});
 
+	test("when a heat network product is a fifth generation, isFifthGeneration is set to true", async () => {
+		
+		const heatNetwork: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "Heat network",
+			typeOfHeatSource: "heatNetwork",
+			typeOfHeatNetwork: "communalHeatNetwork",
+			isHeatNetworkInPcdb: true,
+		};
+
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: heatNetwork }],
+				},
+			},
+		});
+
+		mockRoute.mockReturnValueOnce({
+			params: {
+				heatSource: "0",
+				products: "heat-network",
+				id: "1000",
+			},
+			path: "/0/heat-network/1000",
+		});
+		
+		mockFetch.mockReturnValueOnce({
+			data: ref({
+				id: "1000",
+				brandName: "Test",
+				modelName: "Heat network",
+				modelQualifier: "HNSMALL",
+				technologyType: "HeatNetworks",
+				fifthGHeatNetwork: 1,
+			}),
+		});	
+		await renderSuspended(ProductDetails);
+		await user.click(screen.getByTestId("selectProductButton"));
+		expect((store.domesticHotWater.heatSources.data[0]!.data as { isFifthGeneration: boolean }).isFifthGeneration).toBe(true);
+	});
+		
 	test("Navigates to heat pump page when product is selected", async () => {
 		// Act
 		await renderSuspended(ProductDetails);

@@ -72,6 +72,16 @@ describe("Heat source products page", () => {
 		typeOfBoiler: "combiBoiler",
 	};
 
+	const heatNetwork: Partial<DomesticHotWaterHeatSourceData> = {
+		isExistingHeatSource: false,
+		heatSourceId: "NEW_HEAT_SOURCE",
+		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+		name: "Heat network",
+		typeOfHeatSource: "heatNetwork",
+		typeOfHeatNetwork: "communalHeatNetwork",
+		isHeatNetworkInPcdb: true,
+	};
+
 	beforeEach(() => {
 		store.$patch({
 			domesticHotWater: {
@@ -80,6 +90,8 @@ describe("Heat source products page", () => {
 						{ data: heatSource1 },
 						{ data: heatSource2 },
 						{ data: combiBoiler1 },
+						{ data: heatNetwork },
+
 					],
 				},
 			},
@@ -156,6 +168,49 @@ describe("Heat source products page", () => {
 		).toEqual(expect.objectContaining({ locationOfBoiler: "heatedSpace" }));
 	});
 
+	test("when a heat network product is a fifth generation, isFifthGeneration is set to true", async () => {
+		
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "3",
+				products: "heat-network",
+			},
+			path: "/3/air-source",
+		});
+		
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "3",
+				products: "heat-network",
+				id: "1000",
+			},
+			path: "/3/heat-network/1000",
+		});
+		const product = {
+			id: "1000",
+			brandName: "Test",
+			modelName: "Heat network",
+			modelQualifier: "HNSMALL",
+			technologyType: "HeatNetworks",
+		};
+		const heatNetworks = {
+			data: [product],
+		};
+		mockFetch.mockReturnValueOnce({
+			data: ref(heatNetworks),
+		});	
+		mockFetch.mockReturnValueOnce({
+			data: ref({
+				...product,
+				fifthGHeatNetwork: 1,
+			}),
+		});	
+	
+		await renderSuspended(Products);
+		await user.click(screen.getByTestId("selectProductButton_0"));
+		expect((store.domesticHotWater.heatSources.data[3]!.data as { isFifthGeneration: boolean }).isFifthGeneration).toBe(true);
+	});
+		
 	test("'Back to heat source' navigates user to the heat source at the correct index", async () => {
 		mockRoute.mockReturnValue({
 			params: {

@@ -253,7 +253,7 @@ describe("Heat source products page", () => {
 				heatSource: "2",
 				products: "heat-network",
 			},
-			path: "/0/air-source",
+			path: "/2/air-source",
 		});
 	
 		mockRoute.mockReturnValue({

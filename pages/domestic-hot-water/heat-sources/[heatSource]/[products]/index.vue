@@ -2,6 +2,7 @@
 import { page } from "~/data/pages/pages";
 import { heatPumpProductTypesMap, type DisplayProduct, type HeatPumpProduct } from "~/pcdb/pcdb.types";
 import { productTypeMap } from "~/stores/ecaasStore.schema";
+import { getHeatNetworkProduct } from "~/utils/getHeatNetworkProduct";
 
 definePageMeta({ layout: false });
 
@@ -24,9 +25,20 @@ const selectProduct = (product: DisplayProduct) => {
 		if (item) {
 			const data = item.data as HeatSourceData;
 			
-			if (data.typeOfHeatSource === "heatNetwork" && !data.isHeatNetworkInPcdb) {
-				return;
-			}
+			if (data.typeOfHeatSource === "heatNetwork") {
+				if (!data.isHeatNetworkInPcdb) return;
+				const heatNetwork = value?.data.find(x => x.id === product.id);
+				if (heatNetwork) {
+					getHeatNetworkProduct(heatNetwork).then((item) => {
+						if (item) {
+							if ("fifthGHeatNetwork" in item && item.fifthGHeatNetwork === 1) {
+								data.isFifthGeneration = true;
+							}
+						}
+					});
+				}
+			} 
+			
 
 			if (data.typeOfHeatSource === "boiler") {
 				if (product.boilerLocation === "internal") {

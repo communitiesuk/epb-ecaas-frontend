@@ -17,15 +17,6 @@ const { data: { value } } = await useFetch("/api/products", {
 	},
 });
 
-const getHeatNetworkProduct = async (heatNetwork: DisplayProduct) => {
-	const { data } = await useFetch(`/api/products/${heatNetwork.id}/details`, {
-		query: {
-			technologyType: "HeatNetworks",
-		},
-	});
-	return data.value;
-};
-
 const { title, index, searchModel, searchData } = useProductsPage("heatSource");
 
 const { pagination } = searchData(value?.data ?? []);
