@@ -778,7 +778,7 @@ const typeOfHeatPump = z.enum([
 const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
 const typeOfHeatNetwork = z.enum(["sleevedDistrictHeatNetwork", "unsleevedDistrictHeatNetwork", "communalHeatNetwork"]);
 const typeOfHeatBattery = z.enum(["heatBatteryPcm", "heatBatteryDryCore"]);
-const typeOflocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
+const typeOfLocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
 const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedContinuousMev", "decentralisedContinuousMev"]);
 
 // export type HeatEmitting = AssertFormKeysArePageIds<{
@@ -845,7 +845,7 @@ export type HeatPumpType = z.infer<typeof typeOfHeatPump>;
 export type TypeOfBoiler = z.infer<typeof typeOfBoiler>;
 export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;
 export type TypeOfHeatNetwork = z.infer<typeof typeOfHeatNetwork>;
-export type LocationOfCollectorLoopPipingType = z.infer<typeof typeOflocationOfLoopPiping>;
+export type LocationOfCollectorLoopPipingType = z.infer<typeof typeOfLocationOfLoopPiping>;
 
 export type HeatSourceType =
 	"heatPump" |
@@ -879,7 +879,7 @@ const heatBatteryBase = pcdbProduct.extend({
 
 const solarThermalSystemBase = namedWithId.extend({
 	typeOfHeatSource: z.literal("solarThermalSystem"),
-	locationOfCollectorLoopPiping: typeOflocationOfLoopPiping,
+	locationOfCollectorLoopPiping: typeOfLocationOfLoopPiping,
 	collectorModuleArea: z.number(),
 	numberOfCollectorModules: z.number(),
 	peakCollectorEfficiency: fraction,
