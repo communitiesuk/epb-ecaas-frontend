@@ -15,7 +15,7 @@ const typicalBulbEfficacies = [
 	{ energyEfficiencyGrade: "D", efficacy: "135 lm/W" },
 	{ energyEfficiencyGrade: "E", efficacy: "110 lm/W" },
 	{ energyEfficiencyGrade: "F", efficacy: "85 lm/W" },
-	{ energyEfficiencyGrade: "G", efficacy: "0" },
+	{ energyEfficiencyGrade: "G", efficacy: "0 lm/W" },
 ];
 </script>
 
