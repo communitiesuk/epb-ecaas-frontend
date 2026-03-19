@@ -9,7 +9,7 @@ const store = useEcaasStore();
 const route = useRoute();
 const pageId = kebabToCamelCase(route.params.products as string);
 
-const heatSourceProductType = pageId as HeatSourceProductType;
+const heatSourceProductType = pageId as (HeatSourceProductType | "heatPump");
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {

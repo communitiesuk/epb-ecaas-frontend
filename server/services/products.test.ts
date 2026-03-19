@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { getProduct, getProductDetails, getProducts } from "./products";
+import { getBatchProducts, getProduct, getProductDetails, getProducts } from "./products";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
 import type { H3Error } from "h3";
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, ExecuteStatementCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import products from "@/pcdb/data/products.json";
 
 describe("Products service", () => {
@@ -58,6 +58,31 @@ describe("Products service", () => {
 				technologyType,
 				...(x.backupCtrlType ? { backupCtrlType: x.backupCtrlType } : {}),
 				...(x.powerMaxBackup ? { powerMaxBackup: x.powerMaxBackup } : {}), 
+			})));
+		});
+
+		it("Returns products by multiple technology types", async () => {
+			const technologyTypes: TechnologyType[] = [
+				"AirSourceHeatPump",
+				"GroundSourceHeatPump",
+				"WaterSourceHeatPump",
+				"HotWaterOnlyHeatPump",
+				"BoosterHeatPump",
+			];
+			const mockedProducts = products.filter(x => technologyTypes.includes(x.technologyType as TechnologyType));
+
+			ddbMock.on(ExecuteStatementCommand).resolves({
+				Items: mockedProducts,
+			});
+
+			const result = await getBatchProducts(technologyTypes);
+
+			expect(result.data).toStrictEqual(mockedProducts.map(x => ({
+				id: x.id,
+				brandName: x.brandName,
+				modelName: x.modelName,
+				modelQualifier: x.modelQualifier,
+				technologyType: x.technologyType,
 			})));
 		});
 	});

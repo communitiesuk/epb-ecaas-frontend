@@ -23,6 +23,13 @@ export const spaceHeatingPages = [
 		parentId: "spaceHeating",
 	},
 	{
+		id: "heatPumpProducts",
+		title: "Select a heat pump",
+		url: "/space-heating/heat-source/:heatSource/heat-pump",
+		type: "task",
+		parentId: "heatSource",
+	},
+	{
 		id: "airSourceProducts",
 		title: "Select an air source heat pump",
 		url: "/space-heating/heat-source/:heatSource/air-source",

@@ -14,6 +14,18 @@ export async function getProducts(technologyType: TechnologyType, pageSize?: num
 	}) as PaginatedResult<DisplayProduct>;
 };
 
+export async function getBatchProducts(technologyTypes: TechnologyType[], pageSize?: number, startKey?: string): Promise<PaginatedResult<DisplayProduct>> {
+	technologyTypes.forEach(ensureValidTechnologyType);
+
+	const client = createPcdbClient();
+
+	return await client({
+		technologyType: technologyTypes,
+		pageSize,
+		startKey,
+	}) as PaginatedResult<DisplayProduct>;
+};
+
 export async function getProduct(id: number): Promise<DisplayProduct | undefined> {
 	ensureValidProductId(id);
 

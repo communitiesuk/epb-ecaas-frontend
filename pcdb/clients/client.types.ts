@@ -40,7 +40,7 @@ type ModelsStartingWith = {
 export type DisplayTechnologyProducts = {
 	name: "displayTechnologyProducts",
 	input: {
-		technologyType: TechnologyType,
+		technologyType: TechnologyType | TechnologyType[],
 		pageSize?: number,
 		startKey?: string,
 	} & ({

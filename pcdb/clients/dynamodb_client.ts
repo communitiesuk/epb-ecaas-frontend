@@ -1,7 +1,7 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import type { DisplayProduct, PaginatedResult, TechnologyType } from "../pcdb.types";
 import type { Command, Client, DisplayTechnologyProducts, DisplayById } from "./client.types";
-import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, GetCommand, QueryCommand, ExecuteStatementCommand } from "@aws-sdk/lib-dynamodb";
 
 const localConfig = {
 	region: "fakeRegion", 
@@ -36,8 +36,11 @@ export const dynamodbClient: Client = async <
 		// modelsStartingWith → string[]
 		return [] as unknown as U["output"];
 	}
-	if ("technologyType" in query) {
-		return await getProductsByTechnologyType(query);
+	if ("technologyType" in query && typeof query.technologyType === "string") {
+		return getProductsByTechnologyType(query);
+	}
+	if ("technologyType" in query && Array.isArray(query.technologyType)) {
+		return getProductsByTechnologyTypes(query);
 	}
 
 	return undefined as U["output"];
@@ -99,6 +102,41 @@ const getProductsByTechnologyType = async <U extends DisplayTechnologyProducts>(
 			technologyType: x.technologyType as TechnologyType,
 			...(x.backupCtrlType ? { backupCtrlType: x.backupCtrlType as string } : {}),
 			...(x.powerMaxBackup ? { powerMaxBackup: x.powerMaxBackup as number } : {}),
+			...(x.boilerLocation ? { boilerLocation: x.boilerLocation } : {}),
+			...(x.communityHeatNetworkName ? { communityHeatNetworkName: x.communityHeatNetworkName } : null),
+		};
+
+		return product;
+	}) ?? [];
+
+	const paginatedProducts: PaginatedResult<DisplayProduct> = {
+		data: products,
+		lastEvaluationKey: result.LastEvaluatedKey ? encodeURIComponent(JSON.stringify(result.LastEvaluatedKey)) : undefined,
+	};
+
+	return paginatedProducts;
+};
+
+const getProductsByTechnologyTypes = async <U extends DisplayTechnologyProducts>(query: U["input"]): Promise<U["output"]> => {
+	const technologyTypes = Array.isArray(query.technologyType) ? query.technologyType : [query.technologyType];
+
+	const result = await docClient.send(new ExecuteStatementCommand({
+		Statement: `
+			SELECT id, technologyType, brandName, modelName, modelQualifier, boilerLocation, communityHeatNetworkName
+			FROM products
+			WHERE technologyType IN [${technologyTypes.map(() => "?")}]
+		`,
+		Parameters: technologyTypes,
+		ConsistentRead: true,
+	}));
+
+	const products = result.Items?.map(x => {
+		const product: DisplayProduct = {
+			id: x.id as string,
+			brandName: x.brandName as string,
+			modelName: x.modelName as string,
+			modelQualifier: x.modelQualifier as string,
+			technologyType: x.technologyType as TechnologyType,
 			...(x.boilerLocation ? { boilerLocation: x.boilerLocation } : {}),
 			...(x.communityHeatNetworkName ? { communityHeatNetworkName: x.communityHeatNetworkName } : null),
 		};
