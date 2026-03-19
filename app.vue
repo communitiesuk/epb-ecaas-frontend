@@ -3,7 +3,6 @@ const store = useEcaasStore();
 const runtimeConfig = useRuntimeConfig();
 const env = runtimeConfig.public.environment;
 const testSiteMessage = "This is a test site.";
-
 onErrorCaptured(() => store.revalidate());
 </script>
 
