@@ -2,7 +2,7 @@
 import { getUrl } from "#imports";
 import type { PageId } from "~/data/pages/pages";
 
-const props = defineProps<{
+defineProps<{
 	id: string;
 	name: string;
 	label: string;
@@ -32,15 +32,9 @@ const dhwBoosters = dhwHeatSources.data
 
 const boosters = [spaceHeatingBoosters, dhwBoosters].flat();
 
-const spaceHeatingOptions = spaceHeatingBoosters
+const radioOptions = boosters
 	.map(({ data: x }) => x ? [x.id, (x as { name: string }).name] as [string, string] : undefined)
 	.filter(x => typeof x !== "undefined");
-
-const DHWAndSpaceHeatingOptions = boosters
-	.map(({ data: x }) => x ? [x.id, (x as { name: string }).name] as [string, string] : undefined)
-	.filter(x => typeof x !== "undefined");
-
-const radioOptions = props.section === "spaceHeating" ? spaceHeatingOptions : DHWAndSpaceHeatingOptions;
 
 </script>
 

@@ -602,22 +602,41 @@ describe("Domestic hot water", () => {
 			expect(within(populatedList).queryByText(heatSource2.data.name)).toBeNull();
 		});
 
-		it("when a DHW booster heat pump is removed it is removed from all store heat networks that reference it", async () => {
+	
+		it("references to the deleted DHW booster heat pump are removed from all heat network items", async () => {
+
+			const heatNetwork: Partial<HeatSourceData> = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+				typeOfHeatSource: "heatNetwork",
+				typeOfHeatNetwork: "communalHeatNetwork",
+				isHeatNetworkInPcdb: true,
+				isFifthGeneration: true,
+				boosterHeatPumpId: boosterHeatPumpHotWater.data.id,
+			};
 
 			store.$patch({
 				domesticHotWater: {
 					heatSources: {
-						data: [heatSource2, boosterHeatPumpHotWater],
+						data: [boosterHeatPumpHotWater, heatSource2],
+					},
+				},
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: heatNetwork, complete: true }],
 					},
 				},
 			});
-
+			
 			await renderSuspended(DomesticHotWater);
-			await user.click(await screen.findByTestId("heatSources_remove_1"));
-			const { heatSources } = store.domesticHotWater;
-
-			expect((heatSources.data[0]?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBeUndefined();
-			expect(heatSources.data[0]?.complete).toBe(false);
+			await user.click(await screen.findByTestId("heatSources_remove_0"));
+			
+			const heatNetworkItem = store.spaceHeating.heatSource.data[0];
+			expect((heatNetworkItem?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBe(undefined);
+			expect(heatNetworkItem?.complete).toBe(false);
+				
+			const heatNetworkDHWItem = store.domesticHotWater.heatSources.data[0];
+			expect((heatNetworkDHWItem?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBe(undefined);
+			expect(heatNetworkDHWItem?.complete).toBe(false);
 		});
 
 		it("when a DHW heat source is removed it's removed from all other store items that reference it", async () => {
@@ -653,7 +672,6 @@ describe("Domestic hot water", () => {
 				dhwHeatSourceId: heatSource2.data.id,
 				wwhrs: false,
 				isAirPressureShower: false,
-
 			};
 
 			store.$patch({

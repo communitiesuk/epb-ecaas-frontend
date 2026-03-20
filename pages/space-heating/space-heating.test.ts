@@ -178,44 +178,32 @@ describe("space heating", () => {
 				expect(emitterItem.heatSource).toBe(undefined);
 			});
 
-			it("references to the deleted booster heat pump are removed from all heat network items", async () => {
-				const boosterHeatPump: HeatSourceData = {
+			it("references to the deleted space heating booster heat pump are removed from all heat network items", async () => {
+
+				const boosterHeatPump: Partial<HeatSourceData> = {
 					id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
-					name: "Booster HP",
 					typeOfHeatSource: "heatPump",
 					typeOfHeatPump: "booster",
-					productReference: "HEATPUMP_LARGE",
 				};
 
-				const heatNetwork: HeatSourceData = {
+				const heatNetwork: Partial<HeatSourceData> = {
 					id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-					name: "Heat network 1",
 					typeOfHeatSource: "heatNetwork",
 					typeOfHeatNetwork: "communalHeatNetwork",
 					isHeatNetworkInPcdb: true,
-					productReference: "HEATNETWORK-LARGE",
-					energySupply: "electricity",
-					usesHeatInterfaceUnits: false,
 					isFifthGeneration: true,
 					boosterHeatPumpId: boosterHeatPump.id,
 				};
 
-				const heatNetworkDHW: DomesticHotWaterHeatSourceData = {
-					coldWaterSource: "headerTank",
+				const heatNetworkDHW: Partial<DomesticHotWaterHeatSourceData> = {
 					isExistingHeatSource: false,
-					heatSourceId: "NEW_HEAT_SOURCE",
 					id: "463c94f6-566c-49b2-af27-57e5c555555",
-					name: "Heat network DHW",
 					typeOfHeatSource: "heatNetwork",
 					typeOfHeatNetwork: "communalHeatNetwork",
 					isHeatNetworkInPcdb: true,
-					productReference: "HEATNETWORK-LARGE",
-					energySupply: "electricity",
-					usesHeatInterfaceUnits: false,
 					isFifthGeneration: true,
 					boosterHeatPumpId: boosterHeatPump.id,
 				};
-
 				store.$patch({
 					spaceHeating: {
 						heatSource: {

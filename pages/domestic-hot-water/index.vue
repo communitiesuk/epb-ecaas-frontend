@@ -8,7 +8,8 @@ const title = "Domestic hot water";
 
 const page = usePage();
 const store = useEcaasStore();
-const { waterStorage, hotWaterOutlets, pipework, heatSources } = store.domesticHotWater; 
+const { waterStorage, hotWaterOutlets, pipework, heatSources: dhwHeatSources } = store.domesticHotWater; 
+const { heatSource } = store.spaceHeating;
 
 type DomesticHotWaterType = keyof typeof store.domesticHotWater;
 type DomesticHotWaterData = EcaasForm<DomesticHotWaterHeatSourceData> & EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData>;
@@ -34,7 +35,7 @@ function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number)
 
 		if (heatSourceId) {
 			store.removeTaggedAssociations()([waterStorage, hotWaterOutlets], heatSourceId, "dhwHeatSourceId"); 
-			store.removeTaggedAssociations()([heatSources], heatSourceId, "boosterHeatPumpId"); 
+			store.removeTaggedAssociations()([heatSource, dhwHeatSources], heatSourceId, "boosterHeatPumpId"); 
 		}
 		if (waterStorageId) {
 			store.removeTaggedAssociations()([pipework], waterStorageId, "waterStorage"); 

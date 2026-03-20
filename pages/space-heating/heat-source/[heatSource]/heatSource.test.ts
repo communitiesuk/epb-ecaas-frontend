@@ -628,6 +628,42 @@ describe("heatSource", () => {
 			expect(screen.getByRole("link", { name: "Click here to add a booster heat pump" }).getAttribute("href")).toBe("/space-heating");
 		});
 
+		test("a 5th generation heat network can be tagged with a booster heat pumps from DWH & space heating", async () => {
+
+			const booster: DomesticHotWaterHeatSourceData = {
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "booster",
+				name: "DHW Booster HP",
+				id: "dhwBoosterID-123",
+				coldWaterSource: "headerTank",
+				productReference: "1",
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: boosterHeatPump }, { data: heatNetwork1 }],
+					},
+				},
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: booster } ],
+					},
+				},
+			});
+		
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "1" },
+				},
+			});
+
+			expect(screen.getByTestId(`boosterHeatPumpId_${booster.id}`)).toBeDefined();
+			expect(screen.getByTestId(`boosterHeatPumpId_${boosterHeatPump.id}`)).toBeDefined();
+		});
+
 		test("heat network data is saved to store state when form is valid", async () => {
 			vi.mocked(uuidv4).mockReturnValue(heatNetwork1.id as unknown as Buffer);
 
