@@ -105,8 +105,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				data-field="Zone.BuildingElement.*.area" />
 			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
+			<FieldsUValue />
 		</template>
-		<FieldsUValue />
 		<FormKit
 			v-if="model?.typeOfInternalFloor === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
