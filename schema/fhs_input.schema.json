@@ -796,6 +796,34 @@
 											"const": "HeatPump",
 											"title": "Type",
 											"type": "string"
+										},
+										"BufferTank": {
+											"type": "object",
+											"unevaluatedProperties": false,
+											"properties": {
+												"daily_losses": {
+													"type": "number",
+													"exclusiveMinimum": 0
+												},
+												"pump_fixed_flow_rate": {
+													"type": "number",
+													"exclusiveMinimum": 0
+												},
+												"pump_power_at_flow_rate": {
+													"type": "number",
+													"exclusiveMinimum": 0
+												},
+												"volume": {
+													"type": "number",
+													"exclusiveMinimum": 0
+												}
+											},
+											"required": [
+												"daily_losses",
+												"pump_fixed_flow_rate",
+												"pump_power_at_flow_rate",
+												"volume"
+											]
 										}
 									},
 									"required": [

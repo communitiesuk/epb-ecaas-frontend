@@ -773,6 +773,12 @@ export interface components {
              * @constant
              */
             type: "HeatPump";
+            BufferTank?: {
+                daily_losses: number;
+                pump_fixed_flow_rate: number;
+                pump_power_at_flow_rate: number;
+                volume: number;
+            };
         } | {
             /** @constant */
             type: "HeatPump";
@@ -1878,6 +1884,12 @@ export interface components {
                      * @constant
                      */
                     type: "HeatPump";
+                    BufferTank?: {
+                        daily_losses: number;
+                        pump_fixed_flow_rate: number;
+                        pump_power_at_flow_rate: number;
+                        volume: number;
+                    };
                 } | {
                     /** @constant */
                     type: "HeatPump";
