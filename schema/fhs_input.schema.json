@@ -5187,78 +5187,98 @@
 						}
 					},
 					"then": {
-						"required": [
-							"EnergySupply",
-							"power_max",
-							"tank_volume_declared",
-							"daily_losses_declared",
-							"in_use_factor_mismatch",
-							"test_data"
-						],
-						"properties": {
-							"EnergySupply": {
-								"type": "string"
+						"oneOf": [
+							{
+								"required": [
+									"EnergySupply",
+									"product_reference"
+								],
+								"properties": {
+									"EnergySupply": {
+										"type": "string"
+									},
+									"product_reference": {
+										"description": "A unique reference to a product held within the HEM database (PCDB)",
+										"title": "Reference to the product in the HEM database",
+										"type": "string"
+									}
+								}
 							},
-							"power_max": {
-								"type": "number",
-								"exclusiveMinimum": 0
-							},
-							"tank_volume_declared": {
-								"type": "number",
-								"exclusiveMinimum": 0
-							},
-							"heat_exchanger_surface_area_declared": {
-								"type": "number",
-								"exclusiveMinimum": 0
-							},
-							"daily_losses_declared": {
-								"type": "number",
-								"exclusiveMinimum": 0
-							},
-							"in_use_factor_mismatch": {
-								"type": "number",
-								"exclusiveMinimum": 0
-							},
-							"test_data": {
-								"type": "object",
-								"unevaluatedProperties": false,
-								"patternProperties": {
-									"M|L": {
+							{
+								"required": [
+									"EnergySupply",
+									"power_max",
+									"tank_volume_declared",
+									"daily_losses_declared",
+									"in_use_factor_mismatch",
+									"test_data"
+								],
+								"properties": {
+									"EnergySupply": {
+										"type": "string"
+									},
+									"power_max": {
+										"type": "number",
+										"exclusiveMinimum": 0
+									},
+									"tank_volume_declared": {
+										"type": "number",
+										"exclusiveMinimum": 0
+									},
+									"heat_exchanger_surface_area_declared": {
+										"type": "number",
+										"exclusiveMinimum": 0
+									},
+									"daily_losses_declared": {
+										"type": "number",
+										"exclusiveMinimum": 0
+									},
+									"in_use_factor_mismatch": {
+										"type": "number",
+										"exclusiveMinimum": 0
+									},
+									"test_data": {
 										"type": "object",
 										"unevaluatedProperties": false,
-										"required": [
-											"cop_dhw",
-											"hw_tapping_prof_daily_total",
-											"energy_input_measured",
-											"power_standby",
-											"hw_vessel_loss_daily"
-										],
-										"properties": {
-											"cop_dhw": {
-												"type": "number",
-												"exclusiveMinimum": 0
-											},
-											"hw_tapping_prof_daily_total": {
-												"type": "number",
-												"exclusiveMinimum": 0
-											},
-											"energy_input_measured": {
-												"type": "number",
-												"exclusiveMinimum": 0
-											},
-											"power_standby": {
-												"type": "number",
-												"exclusiveMinimum": 0
-											},
-											"hw_vessel_loss_daily": {
-												"type": "number",
-												"exclusiveMinimum": 0
+										"patternProperties": {
+											"M|L": {
+												"type": "object",
+												"unevaluatedProperties": false,
+												"required": [
+													"cop_dhw",
+													"hw_tapping_prof_daily_total",
+													"energy_input_measured",
+													"power_standby",
+													"hw_vessel_loss_daily"
+												],
+												"properties": {
+													"cop_dhw": {
+														"type": "number",
+														"exclusiveMinimum": 0
+													},
+													"hw_tapping_prof_daily_total": {
+														"type": "number",
+														"exclusiveMinimum": 0
+													},
+													"energy_input_measured": {
+														"type": "number",
+														"exclusiveMinimum": 0
+													},
+													"power_standby": {
+														"type": "number",
+														"exclusiveMinimum": 0
+													},
+													"hw_vessel_loss_daily": {
+														"type": "number",
+														"exclusiveMinimum": 0
+													}
+												}
 											}
 										}
 									}
 								}
 							}
-						}
+						]
 					}
 				},
 				{

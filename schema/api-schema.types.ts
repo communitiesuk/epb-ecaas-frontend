@@ -234,7 +234,16 @@ export interface components {
             temp_flow_limit_upper?: number;
         };
         /** @description A possible heat source for a hot water tank */
-        HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
+        HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & ({
+            /** @constant */
+            type: "HeatPump_HWOnly";
+            EnergySupply: string;
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
+        } | {
             /** @constant */
             type: "HeatPump_HWOnly";
             EnergySupply: string;
@@ -247,7 +256,7 @@ export interface components {
                 M?: components["schemas"]["HeatPump_HWOnlyTestData"];
                 L?: components["schemas"]["HeatPump_HWOnlyTestData"];
             };
-        };
+        });
         Tank: {
             ColdWaterSource: string;
             volume: number;
@@ -1693,7 +1702,16 @@ export interface components {
                     temp_flow_limit_upper?: number;
                 };
                 /** @description A possible heat source for a hot water tank */
-                HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
+                HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & ({
+                    /** @constant */
+                    type: "HeatPump_HWOnly";
+                    EnergySupply: string;
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                } | {
                     /** @constant */
                     type: "HeatPump_HWOnly";
                     EnergySupply: string;
@@ -1706,7 +1724,7 @@ export interface components {
                         M?: components["schemas"]["HeatPump_HWOnlyTestData"];
                         L?: components["schemas"]["HeatPump_HWOnlyTestData"];
                     };
-                };
+                });
                 HeatPump_HWOnlyTestData: {
                     cop_dhw: number;
                     hw_tapping_prof_daily_total: number;
