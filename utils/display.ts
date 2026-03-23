@@ -1,5 +1,5 @@
 import { objectFromEntries } from "ts-extras";
-import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import type { DisplayProduct, TechnologyGroup } from "~/pcdb/pcdb.types";
 import type { SchemaApplianceType, SchemaColour, SchemaFuelType, SchemaLeaksTestPressure, SchemaRadiatorType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
@@ -314,7 +314,8 @@ export const heatSourceProductTypesDisplay = {
 	"heatBatteryPcm": pluralize("PCM heat battery", "ies"),
 	"heatBatteryDryCore": pluralize("Dry core heat battery", "ies"),
 	"heatInterfaceUnit": pluralize("Heat interface unit"),
-} as const satisfies Record<HeatSourceProductType, (plural: boolean) => string>;
+	"heatPump": pluralize("Heat pump"),
+} as const satisfies Record<HeatSourceProductType | TechnologyGroup, (plural: boolean) => string>;
 
 export function displayHeatPumpType(type: HeatPumpType | undefined): string {
 	return heatPumpTypes[type!] ?? emptyValueRendering;

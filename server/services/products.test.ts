@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { getBatchProducts, getProduct, getProductDetails, getProducts } from "./products";
-import type { TechnologyType } from "~/pcdb/pcdb.types";
+import { getGroupProducts, getProductDetails, getProducts } from "./products";
+import type { TechnologyGroup, TechnologyType } from "~/pcdb/pcdb.types";
 import type { H3Error } from "h3";
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBDocumentClient, ExecuteStatementCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import products from "@/pcdb/data/products.json";
 
 describe("Products service", () => {
@@ -61,21 +61,33 @@ describe("Products service", () => {
 			})));
 		});
 
-		it("Returns products by multiple technology types", async () => {
-			const technologyTypes: TechnologyType[] = [
-				"AirSourceHeatPump",
-				"GroundSourceHeatPump",
-				"WaterSourceHeatPump",
-				"HotWaterOnlyHeatPump",
-				"BoosterHeatPump",
-			];
-			const mockedProducts = products.filter(x => technologyTypes.includes(x.technologyType as TechnologyType));
+		it("Returns bad request error when technology group is invalid", async () => {
+			// Arrange
+			let h3Error: H3Error | undefined;
 
-			ddbMock.on(ExecuteStatementCommand).resolves({
+			// Act
+			try {
+				await getGroupProducts("invalid type" as TechnologyGroup);
+			} catch (error) {
+				h3Error = error as H3Error;
+			}
+
+			// Assert
+			expect(h3Error?.cause).toStrictEqual({
+				statusCode: 400,
+				statusMessage: "Invalid product group",
+			});
+		});
+
+		it("Returns products by technology group", async () => {
+			const technologyGroup: TechnologyGroup = "heatPump";
+			const mockedProducts = products.filter(x => x.technologyGroup === technologyGroup);
+
+			ddbMock.on(QueryCommand).resolves({
 				Items: mockedProducts,
 			});
 
-			const result = await getBatchProducts(technologyTypes);
+			const result = await getGroupProducts("heatPump");
 
 			expect(result.data).toStrictEqual(mockedProducts.map(x => ({
 				id: x.id,
@@ -84,39 +96,6 @@ describe("Products service", () => {
 				modelQualifier: x.modelQualifier,
 				technologyType: x.technologyType,
 			})));
-		});
-
-		it("Fetches all remaining pages when a start key is provided", async () => {
-			const technologyTypes: TechnologyType[] = [
-				"AirSourceHeatPump",
-				"GroundSourceHeatPump",
-				"WaterSourceHeatPump",
-				"HotWaterOnlyHeatPump",
-				"BoosterHeatPump",
-			];
-			const mockedProducts = products.filter(x => technologyTypes.includes(x.technologyType as TechnologyType));
-			const firstPage = mockedProducts.slice(0, 2);
-			const secondPage = mockedProducts.slice(2, 4);
-			const thirdPage = mockedProducts.slice(4, 6);
-
-			ddbMock.on(ExecuteStatementCommand)
-				.resolvesOnce({
-					Items: firstPage,
-					NextToken: "next-1",
-				})
-				.resolvesOnce({
-					Items: secondPage,
-					NextToken: "next-2",
-				})
-				.resolvesOnce({
-					Items: thirdPage,
-				});
-
-			const result = await getBatchProducts(technologyTypes);
-
-			expect(ddbMock.commandCalls(ExecuteStatementCommand)).toHaveLength(3);
-			expect(result.data.map(x => x.id)).toStrictEqual([...firstPage, ...secondPage, ...thirdPage].map(x => x.id));
-			expect(result.lastEvaluationKey).toBeUndefined();
 		});
 	});
 
@@ -127,7 +106,7 @@ describe("Products service", () => {
 
 			// Act
 			try {
-				await getProduct(NaN);
+				await getProductDetails(NaN);
 			} catch (error) {
 				h3Error = error as H3Error;
 			}
@@ -146,7 +125,7 @@ describe("Products service", () => {
 
 			// Act
 			try {
-				await getProduct(1);
+				await getProductDetails(1);
 			} catch (error) {
 				h3Error = error as H3Error;
 			}
@@ -164,17 +143,10 @@ describe("Products service", () => {
 			ddbMock.on(GetCommand).resolves({ Item: product });
 
 			// Act
-			const result = await getProduct(1234);
-			const { id, brandName, modelName, modelQualifier, technologyType } = result!;
+			const result = await getProductDetails(1234);
 
 			// Assert
-			expect(result).toStrictEqual({
-				id,
-				brandName,
-				modelName,
-				modelQualifier,
-				technologyType,
-			});
+			expect(result).toStrictEqual(product);
 		});
 	});
 
@@ -185,7 +157,7 @@ describe("Products service", () => {
 
 			// Act
 			try {
-				await getProductDetails(NaN, "AirSourceHeatPump");
+				await getProductDetails(NaN);
 			} catch (error) {
 				h3Error = error as H3Error;
 			}
@@ -204,7 +176,7 @@ describe("Products service", () => {
 
 			// Act
 			try {
-				await getProductDetails(1, "AirSourceHeatPump");
+				await getProductDetails(1);
 			} catch (error) {
 				h3Error = error as H3Error;
 			}
@@ -222,7 +194,7 @@ describe("Products service", () => {
 			ddbMock.on(GetCommand).resolves({ Item: product });
 
 			// Act
-			const result = await getProductDetails(1234, "AirSourceHeatPump");
+			const result = await getProductDetails(1234);
 
 			// Assert
 			expect(result).toStrictEqual(product);

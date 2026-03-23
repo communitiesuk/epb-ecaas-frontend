@@ -1009,14 +1009,7 @@ export const productTypeMap = {
 	"centralisedContinuousMev": "CentralisedMev",
 	"decentralisedContinuousMev": "DecentralisedMev",
 	"instantElectricHeater": "DirectElectricHeaters",
-	"heatPump": [
-		"AirSourceHeatPump",
-		"BoosterHeatPump",
-		"GroundSourceHeatPump",
-		"WaterSourceHeatPump",
-		"HotWaterOnlyHeatPump",
-	],
-} as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType | "heatPump", TechnologyType | string | TechnologyType[]>;
+} as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType, TechnologyType | string | TechnologyType[]>;
 
 export type HeatEmitterType =
 	"radiator" |

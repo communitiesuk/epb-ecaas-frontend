@@ -1,12 +1,12 @@
-import { getBatchProducts, getProducts } from "../../services/products";
-import type { TechnologyType } from "~/pcdb/pcdb.types";
+import { getGroupProducts, getProducts } from "../../services/products";
+import type { TechnologyGroup, TechnologyType } from "~/pcdb/pcdb.types";
 
 export default defineEventHandler(async (event) => {
-	const { technologyType, pageSize, startKey } = getQuery(event);
+	const { technologyType, technologyGroup, pageSize, startKey } = getQuery(event);
 
-	if (Array.isArray(technologyType)) {
-		return await getBatchProducts(
-			technologyType as TechnologyType[],
+	if (technologyGroup) {
+		return await getGroupProducts(
+			technologyGroup as TechnologyGroup,
 			pageSize ? parseInt(pageSize.toString()) : undefined,
 			startKey?.toString(),
 		);

@@ -1,5 +1,5 @@
-import type { DisplayProduct, PaginatedResult, TechnologyType } from "../pcdb.types";
-import type { Command, Client, DisplayTechnologyProducts, DisplayById } from "./client.types";
+import type { DisplayProduct, PaginatedResult, TechnologyGroup, TechnologyType } from "../pcdb.types";
+import type { Command, Client, DisplayTechnologyProducts, DisplayTechnologyGroupProducts } from "./client.types";
 import data from "@/pcdb/data/products.json";
 
 export const noopClient: Client = async <
@@ -9,47 +9,17 @@ export const noopClient: Client = async <
 	query: U["input"],
 ): Promise<U["output"]> => {
 	// Return sensible no-op values per command type
-	if ("id" in query && "technologyType" in query) {
+	if ("id" in query) {
 		return getProductDetailsById(query) as U["output"];
 	}
-	if ("id" in query) {
-		return getProductById(query);
-	}
-	if ("startsWith" in query && "technologyType" in query) {
-		// brandsStartingWith → string[]
-		return [] as unknown as U["output"];
-	}
-	if ("startsWith" in query) {
-		// modelsStartingWith → string[]
-		return [] as unknown as U["output"];
-	}
-	if ("technologyType" in query && typeof query.technologyType === "string") {
+	if ("technologyType" in query) {
 		return getProductsByTechnologyType(query);
 	}
-	if ("technologyType" in query && Array.isArray(query.technologyType)) {
-		return getProductsByTechnologyTypes(query);
+	if ("technologyGroup" in query) {
+		return getProductsByTechnologyGroup(query);
 	}
 
 	return undefined as U["output"];
-};
-
-const getProductById = <U extends DisplayById>(query: U["input"]): U["output"] => {
-	const product = data.find(p => p.id === query.id.toString());
-
-	if (!product) {
-		return undefined;
-	}
-
-	const displayProduct: DisplayProduct = {
-		id: product.id,
-		brandName: product.brandName,
-		modelName: product.modelName,
-		modelQualifier: product.modelQualifier,
-		technologyType: product.technologyType as TechnologyType,
-		...("boilerLocation" in product ? { boilerLocation: product.boilerLocation as string } : {}),
-	};
-
-	return displayProduct;
 };
 
 const getProductDetailsById = (query: { id: number; }) => {
@@ -87,8 +57,8 @@ const getProductsByTechnologyType = <U extends DisplayTechnologyProducts>(query:
 	return paginatedProducts;
 };
 
-const getProductsByTechnologyTypes = <U extends DisplayTechnologyProducts>(query: U["input"]): U["output"] => {
-	const filteredProducts = data.filter(p => query.technologyType.includes(p.technologyType as TechnologyType));
+const getProductsByTechnologyGroup = <U extends DisplayTechnologyGroupProducts>(query: U["input"]): U["output"] => {
+	const filteredProducts = data.filter(p => query.technologyGroup.includes(p.technologyGroup as TechnologyGroup));
 
 	const startIndex = query.startKey ? parseInt(query.startKey) : 0;
 	const pageSize = !query.pageSize || query.pageSize > filteredProducts.length ? filteredProducts.length : query.pageSize;

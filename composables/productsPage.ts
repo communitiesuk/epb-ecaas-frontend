@@ -1,5 +1,5 @@
 import type { PageId } from "~/data/pages/pages";
-import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import { technologyGroups, type DisplayProduct, type TechnologyGroup } from "~/pcdb/pcdb.types";
 import { productTypeMap } from "~/stores/ecaasStore.schema";
 import type { ProductOrderOption, ProductSortOption } from "./productSearch";
 
@@ -8,7 +8,7 @@ export function useProductsPage(indexParam: string) {
 	const routeQuery = computed(() => route.query);
 	const pageId = kebabToCamelCase(route.params.products as string);
 
-	if (!(pageId in productTypeMap)) {
+	if (!(pageId in productTypeMap) && !technologyGroups.includes(pageId as TechnologyGroup)) {
 		throw createError({
 			statusCode: 400,
 			statusMessage: "Invalid product type selected",

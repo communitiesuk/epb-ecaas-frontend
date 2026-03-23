@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { page } from "~/data/pages/pages";
-import { heatPumpProductTypesMap, type DisplayProduct, type HeatPumpProduct } from "~/pcdb/pcdb.types";
-import { productTypeMap, type PcdbProduct } from "~/stores/ecaasStore.schema";
+import { heatPumpProductTypesMap, technologyGroups, type DisplayProduct, type HeatPumpProduct, type TechnologyGroup } from "~/pcdb/pcdb.types";
+import { productTypeMap, type HeatSourceProductType, type PcdbProduct } from "~/stores/ecaasStore.schema";
 
 definePageMeta({ layout: false });
 
@@ -9,11 +9,15 @@ const store = useEcaasStore();
 const route = useRoute();
 const pageId = kebabToCamelCase(route.params.products as string);
 
-const heatSourceProductType = pageId as (HeatSourceProductType | "heatPump");
+const heatSourceProductType = pageId as (HeatSourceProductType | TechnologyGroup);
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
-		technologyType: productTypeMap[heatSourceProductType],
+		...(technologyGroups.includes(heatSourceProductType as TechnologyGroup) ? {
+			technologyGroup: heatSourceProductType,
+		} : {
+			technologyType: productTypeMap[heatSourceProductType as HeatSourceProductType],
+		}),
 	},
 });
 

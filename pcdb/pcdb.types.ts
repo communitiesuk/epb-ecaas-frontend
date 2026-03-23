@@ -4,6 +4,9 @@ import { heatPumpBackupControlTypeZod, heatPumpSinkTypeZod, heatPumpSourceTypeZo
 
 const IntString = z.string().regex(/^\d+$/);
 
+export const technologyGroups = ["heatPump"] as const;
+const technologyGroupsZod = z.enum(technologyGroups);
+
 export const manufacturerZod = z.object({
 	id: IntString,
 	manufacturerReferenceNo: IntString,
@@ -28,6 +31,7 @@ const BaseProduct = z.object({
 	modelQualifier: z.optional(z.nullable(z.string())),
 	firstYearOfManufacture: z.string().optional(),
 	finalYearOfManufacture: z.string().optional(),
+	technologyGroup: z.optional(technologyGroupsZod),
 });
 
 export const heatPumpTestDataZod = z.object({
@@ -100,6 +104,7 @@ export const heatPumpProductZod = BaseProduct.extend({
 	minimumModulationRate35: z.nullable(z.number()),
 	testData: z.array(heatPumpTestDataZod),
 	technologyType: spaceHeatingHeatPumpProductTypes,
+	technologyGroup: z.literal("heatPump"),
 });
 
 export type HeatPumpProduct = z.infer<typeof heatPumpProductZod>;
@@ -359,6 +364,8 @@ const categoryTechnologies = {
 } as const satisfies Record<string, TechnologyType[]>;
 
 export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMap(x => categoryTechnologies[x]);
+
+export type TechnologyGroup = z.infer<typeof technologyGroupsZod>;
 
 export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier"> & {
 	technologyType: TechnologyType;

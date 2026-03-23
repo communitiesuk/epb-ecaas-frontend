@@ -1,7 +1,7 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import type { DisplayProduct, PaginatedResult, TechnologyType } from "../pcdb.types";
-import type { Command, Client, DisplayTechnologyProducts, DisplayById } from "./client.types";
-import { DynamoDBDocumentClient, GetCommand, QueryCommand, ExecuteStatementCommand } from "@aws-sdk/lib-dynamodb";
+import type { Command, Client, DisplayTechnologyProducts, DisplayTechnologyGroupProducts } from "./client.types";
+import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 const localConfig = {
 	region: "fakeRegion", 
@@ -22,52 +22,17 @@ export const dynamodbClient: Client = async <
 	query: U["input"],
 ): Promise<U["output"]> => {
 	// Return sensible no-op values per command type
-	if ("id" in query && "technologyType" in query) {
+	if ("id" in query) {
 		return await getProductDetailsById(query) as U["output"];
 	}
-	if ("id" in query) {
-		return await getProductById(query);
-	}
-	if ("startsWith" in query && "technologyType" in query) {
-		// brandsStartingWith → string[]
-		return [] as unknown as U["output"];
-	}
-	if ("startsWith" in query) {
-		// modelsStartingWith → string[]
-		return [] as unknown as U["output"];
-	}
-	if ("technologyType" in query && typeof query.technologyType === "string") {
+	if ("technologyType" in query) {
 		return getProductsByTechnologyType(query);
 	}
-	if ("technologyType" in query && Array.isArray(query.technologyType)) {
-		return getProductsByTechnologyTypes(query);
+	if ("technologyGroup" in query) {
+		return getProductsByTechnologyGroup(query);
 	}
 
 	return undefined as U["output"];
-};
-
-const getProductById = async <U extends DisplayById>(query: U["input"]): Promise<U["output"]> => {
-	const result = await docClient.send(new GetCommand({
-		TableName: "products",
-		Key: { id: query.id },
-	}));
-
-	const { Item } = result;
-
-	if (!Item) {
-		return undefined;
-	}
-
-	const product: DisplayProduct = {
-		id: Item.id as string,
-		brandName: Item.brandName as string,
-		modelName: Item.modelName as string,
-		modelQualifier: Item.modelQualifier as string,
-		technologyType: Item.technologyType as TechnologyType,
-		...(Item.communityHeatNetworkName ? { communityHeatNetworkName: Item.communityHeatNetworkName as string } : null),
-	};
-
-	return product;
 };
 
 const getProductDetailsById = async (query: { id: number; }) => {
@@ -79,6 +44,7 @@ const getProductDetailsById = async (query: { id: number; }) => {
 	const { Item } = result;
 
 	delete Item?.testData;
+	delete Item?.testDataEN14825;
 
 	return Item;
 };
@@ -117,22 +83,17 @@ const getProductsByTechnologyType = async <U extends DisplayTechnologyProducts>(
 	return paginatedProducts;
 };
 
-const getProductsByTechnologyTypes = async <U extends DisplayTechnologyProducts>(query: U["input"]): Promise<U["output"]> => {
-	const technologyTypes = Array.isArray(query.technologyType) ? query.technologyType : [query.technologyType];
-
+const getProductsByTechnologyGroup = async <U extends DisplayTechnologyGroupProducts>(query: U["input"]): Promise<U["output"]> => {
 	const products: DisplayProduct[] = [];
-	let nextToken: string | undefined;
+	let lastEvaluationKey: Record<string, unknown> | undefined;
 
 	do {
-		const result = await docClient.send(new ExecuteStatementCommand({
-			Statement: `
-				SELECT id, technologyType, brandName, modelName, modelQualifier, boilerLocation, communityHeatNetworkName
-				FROM products
-				WHERE technologyType IN [${technologyTypes.map(() => "?")}]
-			`,
-			Parameters: technologyTypes,
-			ConsistentRead: true,
-			NextToken: nextToken,
+		const result = await docClient.send(new QueryCommand({
+			TableName: "products",
+			IndexName: "by-technology-group",
+			KeyConditionExpression: "technologyGroup = :technologyGroup",
+			ExpressionAttributeValues: { ":technologyGroup": query.technologyGroup },
+			...lastEvaluationKey && { ExclusiveStartKey: lastEvaluationKey },
 		}));
 
 		products.push(...(result.Items?.map(x => {
@@ -149,8 +110,8 @@ const getProductsByTechnologyTypes = async <U extends DisplayTechnologyProducts>
 			return product;
 		}) ?? []));
 
-		nextToken = result.NextToken;
-	} while (nextToken);
+		lastEvaluationKey = result.LastEvaluatedKey;
+	} while (lastEvaluationKey);
 
 	const paginatedProducts: PaginatedResult<DisplayProduct> = {
 		data: products,

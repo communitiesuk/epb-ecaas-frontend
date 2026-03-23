@@ -33,6 +33,7 @@ describe("Heat pump details", async () => {
 		modelName: "Small Heat Pump",
 		modelQualifier: "HPSMALL",
 		technologyType: "AirSourceHeatPump",
+		technologyGroup: "heatPump",
 	};
 
 	const store = useEcaasStore();

@@ -2,6 +2,7 @@
     {
         "id": "1234",
         "technologyType": "AirSourceHeatPump",
+        "technologyGroup": "heatPump",
         "brandName": "Test",
         "modelName": "Large Heat Pump",
         "modelQualifier": "HPLARGE",
@@ -94,6 +95,7 @@
     {
         "id": "1235",
         "technologyType": "AirSourceHeatPump",
+        "technologyGroup": "heatPump",
         "brandName": "Test",
         "modelName": "Medium Heat Pump",
         "modelQualifier": "HPMEDIUM",
@@ -187,6 +189,7 @@
     {
         "id": "1236",
         "technologyType": "AirSourceHeatPump",
+        "technologyGroup": "heatPump",
         "brandName": "Test",
         "modelName": "Small Heat Pump",
         "modelQualifier": "HPSMALL",

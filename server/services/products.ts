@@ -1,6 +1,6 @@
 import { arrayIncludes } from "ts-extras";
 import { createPcdbClient } from "~/pcdb/clients/pcdb_client";
-import { technologyTypes, type Product, type DisplayProduct, type PaginatedResult, type TechnologyType } from "~/pcdb/pcdb.types";
+import { technologyTypes, type Product, type DisplayProduct, type PaginatedResult, type TechnologyType, type TechnologyGroup, technologyGroups } from "~/pcdb/pcdb.types";
 
 export async function getProducts(technologyType: TechnologyType, pageSize?: number, startKey?: string): Promise<PaginatedResult<DisplayProduct>> {
 	ensureValidTechnologyType(technologyType);
@@ -14,37 +14,29 @@ export async function getProducts(technologyType: TechnologyType, pageSize?: num
 	}) as PaginatedResult<DisplayProduct>;
 };
 
-export async function getBatchProducts(technologyTypes: TechnologyType[], pageSize?: number, startKey?: string): Promise<PaginatedResult<DisplayProduct>> {
-	technologyTypes.forEach(ensureValidTechnologyType);
+export async function getGroupProducts(technologyGroup: TechnologyGroup, pageSize?: number, startKey?: string): Promise<PaginatedResult<DisplayProduct>> {
+	if (!technologyGroup || !arrayIncludes(technologyGroups, technologyGroup as string)) {
+		throw createError({
+			statusCode: 400,
+			statusMessage: "Invalid product group",
+		});
+	}
 
 	const client = createPcdbClient();
 
 	return await client({
-		technologyType: technologyTypes,
+		technologyGroup,
 		pageSize,
 		startKey,
 	}) as PaginatedResult<DisplayProduct>;
 };
 
-export async function getProduct(id: number): Promise<DisplayProduct | undefined> {
+export async function getProductDetails(id: number): Promise<Product | undefined> {
 	ensureValidProductId(id);
 
 	const client = createPcdbClient();
 
-	const product = await client({ id }) as DisplayProduct | undefined;
-
-	ensureProductExists(product);
-
-	return product;
-};
-
-export async function getProductDetails(id: number, technologyType: TechnologyType): Promise<Product | undefined> {
-	ensureValidProductId(id);
-	ensureValidTechnologyType(technologyType);
-
-	const client = createPcdbClient();
-
-	const product = await client({ id, technologyType }) as Product | undefined;
+	const product = await client({ id }) as Product | undefined;
 
 	ensureProductExists(product);
 

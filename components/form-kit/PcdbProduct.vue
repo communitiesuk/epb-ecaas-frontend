@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from "@formkit/core";
 import { showErrorState, getErrorMessage } from "#imports";
-import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import type { Product } from "~/pcdb/pcdb.types";
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
@@ -32,7 +32,7 @@ function appendItemIndexToUrl(url: string, index: number) {
 const selectedProduct = ref<string | undefined>(selectedProductReference);
 
 const productsPageUrl = ref(appendItemIndexToUrl(pageUrl, index) + "/" + camelToKebabCase(selectedProductType ?? ""));
-const productData = ref<DisplayProduct | undefined | null>();
+const productData = ref<Product | undefined | null>();
 
 if (selectedProduct.value) {
 	await fetchProduct(selectedProductReference);
@@ -68,7 +68,7 @@ watch(props.context, async ({ attrs: {
 				Choose a product
 			</GovButton>
 			<div v-if="productData">
-				<template v-if="!!productData.communityHeatNetworkName">
+				<template v-if="'communityHeatNetworkName' in productData && !!productData.communityHeatNetworkName">
 					<ul class="govuk-list" data-testId="pcdbHeatNetworkProductData">
 						<li>Product reference: <span data-testid="productData_productReference" class="bold">{{ selectedProduct }}</span></li>
 						<li>Heat network name: <span class="bold">{{ productData.communityHeatNetworkName }}</span></li>
