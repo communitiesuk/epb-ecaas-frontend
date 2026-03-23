@@ -85,6 +85,39 @@ describe("Products service", () => {
 				technologyType: x.technologyType,
 			})));
 		});
+
+		it("Fetches all remaining pages when a start key is provided", async () => {
+			const technologyTypes: TechnologyType[] = [
+				"AirSourceHeatPump",
+				"GroundSourceHeatPump",
+				"WaterSourceHeatPump",
+				"HotWaterOnlyHeatPump",
+				"BoosterHeatPump",
+			];
+			const mockedProducts = products.filter(x => technologyTypes.includes(x.technologyType as TechnologyType));
+			const firstPage = mockedProducts.slice(0, 2);
+			const secondPage = mockedProducts.slice(2, 4);
+			const thirdPage = mockedProducts.slice(4, 6);
+
+			ddbMock.on(ExecuteStatementCommand)
+				.resolvesOnce({
+					Items: firstPage,
+					NextToken: "next-1",
+				})
+				.resolvesOnce({
+					Items: secondPage,
+					NextToken: "next-2",
+				})
+				.resolvesOnce({
+					Items: thirdPage,
+				});
+
+			const result = await getBatchProducts(technologyTypes);
+
+			expect(ddbMock.commandCalls(ExecuteStatementCommand)).toHaveLength(3);
+			expect(result.data.map(x => x.id)).toStrictEqual([...firstPage, ...secondPage, ...thirdPage].map(x => x.id));
+			expect(result.lastEvaluationKey).toBeUndefined();
+		});
 	});
 
 	describe("Get display product", async () => {

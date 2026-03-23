@@ -120,33 +120,40 @@ const getProductsByTechnologyType = async <U extends DisplayTechnologyProducts>(
 const getProductsByTechnologyTypes = async <U extends DisplayTechnologyProducts>(query: U["input"]): Promise<U["output"]> => {
 	const technologyTypes = Array.isArray(query.technologyType) ? query.technologyType : [query.technologyType];
 
-	const result = await docClient.send(new ExecuteStatementCommand({
-		Statement: `
-			SELECT id, technologyType, brandName, modelName, modelQualifier, boilerLocation, communityHeatNetworkName
-			FROM products
-			WHERE technologyType IN [${technologyTypes.map(() => "?")}]
-		`,
-		Parameters: technologyTypes,
-		ConsistentRead: true,
-	}));
+	const products: DisplayProduct[] = [];
+	let nextToken: string | undefined;
 
-	const products = result.Items?.map(x => {
-		const product: DisplayProduct = {
-			id: x.id as string,
-			brandName: x.brandName as string,
-			modelName: x.modelName as string,
-			modelQualifier: x.modelQualifier as string,
-			technologyType: x.technologyType as TechnologyType,
-			...(x.boilerLocation ? { boilerLocation: x.boilerLocation } : {}),
-			...(x.communityHeatNetworkName ? { communityHeatNetworkName: x.communityHeatNetworkName } : null),
-		};
+	do {
+		const result = await docClient.send(new ExecuteStatementCommand({
+			Statement: `
+				SELECT id, technologyType, brandName, modelName, modelQualifier, boilerLocation, communityHeatNetworkName
+				FROM products
+				WHERE technologyType IN [${technologyTypes.map(() => "?")}]
+			`,
+			Parameters: technologyTypes,
+			ConsistentRead: true,
+			NextToken: nextToken,
+		}));
 
-		return product;
-	}) ?? [];
+		products.push(...(result.Items?.map(x => {
+			const product: DisplayProduct = {
+				id: x.id as string,
+				brandName: x.brandName as string,
+				modelName: x.modelName as string,
+				modelQualifier: x.modelQualifier as string,
+				technologyType: x.technologyType as TechnologyType,
+				...(x.boilerLocation ? { boilerLocation: x.boilerLocation } : {}),
+				...(x.communityHeatNetworkName ? { communityHeatNetworkName: x.communityHeatNetworkName } : null),
+			};
+
+			return product;
+		}) ?? []));
+
+		nextToken = result.NextToken;
+	} while (nextToken);
 
 	const paginatedProducts: PaginatedResult<DisplayProduct> = {
 		data: products,
-		lastEvaluationKey: result.LastEvaluatedKey ? encodeURIComponent(JSON.stringify(result.LastEvaluatedKey)) : undefined,
 	};
 
 	return paginatedProducts;
