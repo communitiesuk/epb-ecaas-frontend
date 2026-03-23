@@ -87,8 +87,8 @@ function hasIncompleteEntries() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<div class="info">
-		<p class="govuk-hint">Only add external windows</p>
+	<div class="govuk-inset-text">
+		<p class="govuk-body">Only add external windows</p>
 	</div>
 	<CustomList
 		id="windows"

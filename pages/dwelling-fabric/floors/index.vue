@@ -90,7 +90,9 @@ function hasIncompleteEntries() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<p class="govuk-hint">Where you have a multiple storey dwelling, internal floors should be inputted as floors or ceilings. You do not need to enter both.</p>
+	<div class="govuk-inset-text">
+		<p class="govuk-body">Where you have a multiple storey dwelling, internal floors should be inputted as floors or ceilings. You do not need to enter both.</p>
+	</div>
 	<CustomList
 		id="ground"
 		title="Ground floor"
