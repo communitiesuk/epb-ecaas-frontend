@@ -96,8 +96,7 @@ const hasIncompleteEntries = () =>
 	</h1>
 	<div class="govuk-inset-text">
 		<p class="govuk-body">For ceilings next to roofs, both ceiling and roof details should be inputted as one roof
-			element. Where you have a multiple storey dwelling, internal floors should be inputted as floors or ceilings. You do
-			not need to enter both.</p>
+			element.</p>
 	</div>
 	<CustomList
 		id="ceilings"
