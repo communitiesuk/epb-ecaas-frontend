@@ -106,6 +106,12 @@ export const units = [
 		"dimension": "peak power",
 	},
 	{
+		"name": "kilowatt hours per day",
+		"suffix": "kWh/day",
+		"multiplier": 1,
+		"dimension": "energy per time",
+	},
+	{
 		"name": "CO2 per kilowatt-hour",
 		"suffix": "kgCO2e/kWh",
 		"multiplier": 1,

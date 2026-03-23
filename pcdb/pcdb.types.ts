@@ -65,6 +65,16 @@ export const heatPumpProductTypesMap = {
 	"ExhaustAirMixedHeatPump": "exhaustAirMixed",
 } as const satisfies Record<HeatPumpProductTypes, HeatPumpType>;
 
+const spaceHeatingHeatPumpProductTypes = z.enum([
+	"AirSourceHeatPump",
+	"GroundSourceHeatPump",
+	"WaterSourceHeatPump",
+	"BoosterHeatPump",
+	"ExhaustAirMevHeatPump",
+	"ExhaustAirMvhrHeatPump",
+	"ExhaustAirMixedHeatPump",
+]);
+
 export const heatPumpProductZod = BaseProduct.extend({
 	energySupply: z.string(), // need a better type for this
 	sourceType: heatPumpSourceTypeZod,
@@ -89,10 +99,27 @@ export const heatPumpProductZod = BaseProduct.extend({
 	minimumModulationRate: z.nullable(z.number()),
 	minimumModulationRate35: z.nullable(z.number()),
 	testData: z.array(heatPumpTestDataZod),
-	technologyType: heatPumpProductTypes,
+	technologyType: spaceHeatingHeatPumpProductTypes,
 });
 
 export type HeatPumpProduct = z.infer<typeof heatPumpProductZod>;
+
+export const hotWaterOnlyHeatPumpProductZod = BaseProduct.extend({
+	technologyType: z.literal("HotWaterOnlyHeatPump"),
+	productID: z.number(),
+	fuel: z.string(),
+	dataType: z.string(),
+	type: z.string(),
+	powerMax: z.number(),
+	vesselType: z.string(),
+	testVesselVolume: z.number(),
+	tankVolumeDeclared: z.number(),
+	heatExchangerSurfaceAreaDeclared: z.optional(z.number()),
+	dailyLossesDeclared: z.number(),
+	hwVesselLossDaily: z.number(),
+});
+
+export type HotWaterOnlyHeatPumpProduct = z.infer<typeof hotWaterOnlyHeatPumpProductZod>;
 
 
 export const boilerBase = BaseProduct.extend({
@@ -279,6 +306,7 @@ export type HeatNetworkProduct = z.infer<typeof heatNetworkZod>;
 
 export const productSchema = z.discriminatedUnion("technologyType", [
 	heatPumpProductZod,
+	hotWaterOnlyHeatPumpProductZod,
 	combiBoilerZod,
 	regularBoilerZod,
 	heatBatteryPcmZod,
