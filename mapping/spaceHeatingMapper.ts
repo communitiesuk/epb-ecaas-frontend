@@ -25,18 +25,10 @@ export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSou
 
 	return Object.fromEntries(
 		heatPumps.map((heatPump) => {
-			const backupBoiler = heatPump.backupBoiler ? state.spaceHeating.heatSource.find(x => x.typeOfHeatSource === "boiler" && x.id === heatPump.backupBoiler) : null;
-
 			const mappedHeatPump: SchemaHeatSourceWetHeatPump = {
 				type: "HeatPump",
 				product_reference: heatPump.productReference,
 				EnergySupply: "",
-				...(backupBoiler && backupBoiler.typeOfHeatSource === "boiler" ? {
-					boiler: {
-						boiler_location: backupBoiler.locationOfBoiler === "heatedSpace"
-							? "internal" : "external",
-					},
-				} : {}),
 			};
 
 			return [

@@ -399,8 +399,6 @@ export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName
 	technologyType: TechnologyType;
 	boilerLocation?: string;
 	communityHeatNetworkName?: string;
-	backupCtrlType?: string;
-	powerMaxBackup?: number;
 };
 
 export type DisplayProductWithFlowTemp = DisplayProduct & {

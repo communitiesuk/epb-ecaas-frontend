@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
-import { heatPumpProductTypesMap, type HeatPumpProduct, type HotWaterOnlyHeatPumpProduct } from "~/pcdb/pcdb.types";
+import { heatPumpProductTypesMap, type HotWaterOnlyHeatPumpProduct } from "~/pcdb/pcdb.types";
 import { productTypeMap, typeOfHeatSource, type HeatSourceData, type PcdbProduct } from "~/stores/ecaasStore.schema";
 import { boilerTypes, heatPumpTypes, heatSourceProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
@@ -50,18 +50,9 @@ const selectProduct = () => {
 				}
 			}
 
-			if (heatSourceData.typeOfHeatSource === "heatPump") {
-				if (data.technologyType === "HotWaterOnlyHeatPump") {
-					const hotWaterOnlyHeatPumpProduct = data as HotWaterOnlyHeatPumpProduct;
-					heatSourceData.typeOfHeatPump = heatPumpProductTypesMap[hotWaterOnlyHeatPumpProduct.technologyType];
-					heatSourceData.backupCtrlType = undefined;
-					heatSourceData.powerMaxBackup = undefined;
-				} else {
-					const heatPumpProduct = data as HeatPumpProduct;
-					heatSourceData.typeOfHeatPump = heatPumpProductTypesMap[heatPumpProduct.technologyType];
-					heatSourceData.backupCtrlType = heatPumpProduct.backupCtrlType;
-					heatSourceData.powerMaxBackup = heatPumpProduct.powerMaxBackup ?? undefined;
-				}
+			if (heatSourceData.typeOfHeatSource === "heatPump" && data.technologyType === "HotWaterOnlyHeatPump") {
+				const hotWaterOnlyHeatPumpProduct = data as HotWaterOnlyHeatPumpProduct;
+				heatSourceData.typeOfHeatPump = heatPumpProductTypesMap[hotWaterOnlyHeatPumpProduct.technologyType];
 			}
 
 			if (heatSourceData.typeOfHeatSource === "heatNetwork") {

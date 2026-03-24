@@ -90,57 +90,6 @@ describe("Space heating - heat sources", () => {
 				const actual = mapHeatPumps(resolvedState);
 				expect(actual).toEqual(expectedForSchema);
 			});
-
-			test("maps backup boiler for heat pumps if present", () => {
-				const heatPumpWithRequiredBackupBoiler: HeatSourceData = {
-					id: "heatPump1Id",
-					name: "Air source heat pump",
-					typeOfHeatSource: "heatPump",
-					typeOfHeatPump: "airSource",
-					productReference: "1234",
-					backupBoiler: "boilerId1",
-				};
-
-				const backupBoiler: HeatSourceData = {
-					id: "boilerId1",
-					name: "Combi boiler",
-					typeOfHeatSource: "boiler",
-					typeOfBoiler: "combiBoiler",
-					productReference: "5678",
-					locationOfBoiler: "heatedSpace",
-				};
-
-				store.$patch({
-					spaceHeating: {
-						heatSource: {
-							data: [
-								{ data: heatPumpWithRequiredBackupBoiler, complete: true },
-								{ data: backupBoiler, complete: true },
-							],
-							complete: true,
-						},
-					},
-				});
-
-				const expectedHeatPump: SchemaHeatSourceWetHeatPump = {
-					type: "HeatPump",
-					product_reference: heatPumpWithProductReference1.productReference,
-					EnergySupply: "",
-					...({
-						boiler: {
-							boiler_location: "internal",
-						},
-					}),
-				};
-
-				const expectedForSchema = {
-					[heatPumpWithRequiredBackupBoiler.name]: expectedHeatPump,
-				};
-				const resolvedState = resolveState(store.$state);
-
-				const actual = mapHeatPumps(resolvedState);
-				expect(actual).toEqual(expectedForSchema);
-			});
 		});
 	});
 	describe("mapBoilers", () => {

@@ -39,14 +39,13 @@ const selectProduct = () => {
 			const heatSourceData = item.data as HeatSourceData;
 			
 			if (heatSourceData.typeOfHeatSource === "heatNetwork") {
-
-				if (heatSourceData.usesHeatInterfaceUnits &&
-				heatSourceProductType === "heatInterfaceUnit"
-				) {
+				if (heatSourceData.usesHeatInterfaceUnits && heatSourceProductType === "heatInterfaceUnit") {
 					heatSourceData.heatInterfaceUnitProductReference = data.id;
 					return;
 				}
+
 				if (!heatSourceData.isHeatNetworkInPcdb) return;
+
 				if ("fifthGHeatNetwork" in data && data.fifthGHeatNetwork === 1) {
 					heatSourceData.isFifthGeneration = true;
 				}
@@ -64,8 +63,6 @@ const selectProduct = () => {
 			if (heatSourceData.typeOfHeatSource === "heatPump") {
 				const heatPumpProduct = data as HeatPumpProduct;
 				heatSourceData.typeOfHeatPump = heatPumpProductTypesMap[heatPumpProduct.technologyType];
-				heatSourceData.backupCtrlType = heatPumpProduct.backupCtrlType;
-				heatSourceData.powerMaxBackup = heatPumpProduct.powerMaxBackup ?? undefined;
 			}
 
 			const product = item.data as PcdbProduct;
