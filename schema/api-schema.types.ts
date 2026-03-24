@@ -779,6 +779,11 @@ export interface components {
                 pump_power_at_flow_rate: number;
                 volume: number;
             };
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a boiler product held within the HEM database (PCDB), if there is a need for a reference to a boiler product to be passed, and the heat pump is not packaged with a boiler.
+             */
+            boiler_product_reference?: string;
         } | {
             /** @constant */
             type: "HeatPump";
@@ -1890,6 +1895,11 @@ export interface components {
                         pump_power_at_flow_rate: number;
                         volume: number;
                     };
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a boiler product held within the HEM database (PCDB), if there is a need for a reference to a boiler product to be passed, and the heat pump is not packaged with a boiler.
+                     */
+                    boiler_product_reference?: string;
                 } | {
                     /** @constant */
                     type: "HeatPump";
