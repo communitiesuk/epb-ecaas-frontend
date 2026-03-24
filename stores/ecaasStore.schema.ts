@@ -773,6 +773,7 @@ const typeOfHeatPump = z.enum([
 	"exhaustAirMev",
 	"exhaustAirMvhr",
 	"exhaustAirMixed",
+	"hybridHeatPump",
 ]);
 
 const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
@@ -996,6 +997,7 @@ export const productTypeMap = {
 	"exhaustAirMev": "ExhaustAirMevHeatPump",
 	"exhaustAirMvhr": "ExhaustAirMvhrHeatPump",
 	"exhaustAirMixed": "ExhaustAirMixedHeatPump",
+	"hybridHeatPump": "HybridHeatPump",
 	"combiBoiler": "CombiBoiler",
 	"regularBoiler": "RegularBoiler",
 	"heatNetwork": "HeatNetworks",

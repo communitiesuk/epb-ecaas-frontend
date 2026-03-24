@@ -205,6 +205,32 @@ describe("Heat pump details", async () => {
 		expect((await screen.findByTestId("heatPump"))).toBeDefined();
 	});
 
+	test("Displays hybrid heat pump details when product is a hyrbid heat pump", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-pump",
+				id: "1000",
+			},
+			path: "/0/heat-pump/1000",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				...product,
+				modelName: "Hybrid heat pump",
+				technologyType: "HybridHeatPump",
+			}),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		
+		// Assert
+		expect((await screen.findByTestId("hybridHeatPump"))).toBeDefined();
+	});
+
 	test("Displays boiler details when product is a boiler", async () => {
 		// Arrange
 		mockRoute.mockReturnValue({

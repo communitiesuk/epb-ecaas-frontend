@@ -94,8 +94,10 @@ const selectProduct = () => {
 	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ data?.modelName }}</h1>
 	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
 
-	<ProductDetailsHotWaterHeatPump v-if="data?.technologyType === 'HotWaterOnlyHeatPump'" :product="data" />
+	<ProductDetailsHybridHeatPump v-if="!!data && data.technologyType === 'HybridHeatPump'" :product="data" />
+	<ProductDetailsHotWaterHeatPump v-else-if="data?.technologyType === 'HotWaterOnlyHeatPump'" :product="data" />
 	<ProductDetailsHeatPump v-else-if="!!data && heatSourceType in heatPumpTypes" :product="data" />
+
 	<ProductDetailsBoiler v-if="!!data && heatSourceType in boilerTypes" :product="data!"/>
 	<ProductDetailsHeatBatteryPCM v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryPcm" :product="data!" />
 	<ProductDetailsHeatBatteryDryCore v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryDryCore" :product="data!" />

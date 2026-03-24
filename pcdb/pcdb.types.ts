@@ -109,6 +109,33 @@ export const heatPumpProductZod = BaseProduct.extend({
 
 export type HeatPumpProduct = z.infer<typeof heatPumpProductZod>;
 
+export const hybridHeatPumpProductZod = BaseProduct.extend({
+	technologyType: z.literal("HybridHeatPump"),
+	technologyGroups: z.literal("heatPump"),
+	minModulationRate55: z.optional(z.number()),
+	minModulationRate35: z.optional(z.number()),
+	tempReturnFeedMax: z.optional(z.number()),
+	fuel: z.optional(z.string()),
+	tempLowerOperatingLimit: z.optional(z.number()),
+	powerOff: z.optional(z.number()),
+	modulatingControl: z.boolean(),
+	backupCtrlType: heatPumpBackupControlTypeZod,
+	hasCostRatioControl: z.boolean(),
+	varFlowTempCtrlDuringTest: z.boolean(),
+	powerStandby: z.optional(z.number()),
+	sinkType: heatPumpSinkTypeZod,
+	hybridBoilerType: z.string(),
+	boilerProductID: z.string(),
+	sourceType: heatPumpSourceTypeZod,
+	powerSourceCircPump: z.optional(z.number()),
+	powerHeatingCircPump: z.optional(z.number()),
+	powerCrankcaseHeater: z.optional(z.number()),
+	timeConstantOnoffOperation: z.optional(z.int()),
+	minTempDiffFlowReturnForHpToOperate: z.optional(z.int()),
+});
+
+export type HybridHeatPumpProduct = z.infer<typeof hybridHeatPumpProductZod>;
+
 export const hotWaterOnlyHeatPumpProductZod = BaseProduct.extend({
 	technologyType: z.literal("HotWaterOnlyHeatPump"),
 	productID: z.number(),
@@ -125,7 +152,6 @@ export const hotWaterOnlyHeatPumpProductZod = BaseProduct.extend({
 });
 
 export type HotWaterOnlyHeatPumpProduct = z.infer<typeof hotWaterOnlyHeatPumpProductZod>;
-
 
 export const boilerBase = BaseProduct.extend({
 	flueType: z.enum(["open", "room-sealed"]),
@@ -311,6 +337,7 @@ export type HeatNetworkProduct = z.infer<typeof heatNetworkZod>;
 
 export const productSchema = z.discriminatedUnion("technologyType", [
 	heatPumpProductZod,
+	hybridHeatPumpProductZod,
 	hotWaterOnlyHeatPumpProductZod,
 	combiBoilerZod,
 	regularBoilerZod,
@@ -343,6 +370,7 @@ const categoryTechnologies = {
 		"ExhaustAirMevHeatPump",
 		"ExhaustAirMvhrHeatPump",
 		"ExhaustAirMixedHeatPump",
+		"HybridHeatPump",
 	],
 	boiler: [
 		"CombiBoiler",

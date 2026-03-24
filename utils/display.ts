@@ -281,6 +281,7 @@ export const heatPumpTypes = {
 	"exhaustAirMev": "Exhaust air MEV",
 	"exhaustAirMvhr": "Exhaust air MVHR",
 	"exhaustAirMixed": "Exhaust air Mixed",
+	"hybridHeatPump": "Hybrid heat pump",
 } as const satisfies Record<HeatPumpType, string>;
 
 export const boilerTypes = {
@@ -308,6 +309,7 @@ export const heatSourceProductTypesDisplay = {
 	"exhaustAirMev": pluralize("Exhaust air MEV heat pump"),
 	"exhaustAirMvhr": pluralize("Exhaust air MVHR heat pump"),
 	"exhaustAirMixed": pluralize("Exhaust air mixed heat pump"),
+	"hybridHeatPump": pluralize("Hybrid heat pump"),
 	"combiBoiler": pluralize("Combi boiler"),
 	"regularBoiler": pluralize("Regular boiler"),
 	"heatNetwork": pluralize("Heat network"),
@@ -316,10 +318,6 @@ export const heatSourceProductTypesDisplay = {
 	"heatInterfaceUnit": pluralize("Heat interface unit"),
 	"heatPump": pluralize("Heat pump"),
 } as const satisfies Record<HeatSourceProductType | TechnologyGroup, (plural: boolean) => string>;
-
-export function displayHeatPumpType(type: HeatPumpType | undefined): string {
-	return heatPumpTypes[type!] ?? emptyValueRendering;
-}
 
 export type BoilerTypeDisplay = "Combi boiler" | "Regular boiler";
 export type BoilerLocationDisplay = "Heated space" | "Unheated space";
