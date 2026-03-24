@@ -768,14 +768,17 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: fanCoilNoWeatherCompensator.productReference,
 							wet_emitter_type: "fancoil",
+							n_units: 3,
 						},
 						{
 							product_reference: fanCoilNoWeatherCompensator.productReference,
 							wet_emitter_type: "fancoil",
+							n_units: 3,
 						},
 						{
 							product_reference: fanCoilNoWeatherCompensator.productReference,
 							wet_emitter_type: "fancoil",
+							n_units: 3,
 						},
 					],
 					design_flow_rate: fanCoilNoWeatherCompensator.designFlowRate,
@@ -817,10 +820,12 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: fanCoilWithWeatherCompensator.productReference,
 							wet_emitter_type: "fancoil",
+							n_units: 2,
 						},
 						{
 							product_reference: fanCoilWithWeatherCompensator.productReference,
 							wet_emitter_type: "fancoil",
+							n_units: 2,
 						},
 					],
 					variable_flow: fanCoilWithWeatherCompensator.hasVariableFlowRate,
