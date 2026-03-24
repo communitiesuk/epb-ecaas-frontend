@@ -288,11 +288,11 @@
         "modelQualifier": "SHWTLARGE",
 	    "volume": 78,
 	    "dailyLosses": 2.33,
-	    "pumpPower": null,
+	    "powerPumpKW": null,
 	    "maxFlowRatePumpLPerMin": null,
 	    "heatExchangerSurfaceArea": null,
 	    "heaterPosition": null,
-	    "usableTemp": null,
+	    "tempUsable": null,
 	    "heatSource": null
     }
 ]

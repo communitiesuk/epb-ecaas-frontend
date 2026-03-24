@@ -201,13 +201,13 @@ export const heatBatteryPcmZod = BaseProduct.extend({
 	ratedChargePower: z.nullable(z.number()),
 	maxRatedLosses: z.nullable(z.number()),
 	flowRateLPerMin: z.nullable(z.number()),
-	heatStorageZoneMaterialKjPerKDuringPhaseTransition: z.nullable(z.number()),
+	heatStorageZoneMaterialKjPerKDuringPhaseTransition: z.nullable(z.number()), // not getting value correctly
 	electricityStandby: z.nullable(z.number()),
 	inletDiameterMm: z.nullable(z.number()),
-	heatStorageZoneMaterialKjPerKBelowPhaseTransition: z.nullable(z.number()),
+	heatStorageZoneMaterialKjPerKBelowPhaseTransition: z.nullable(z.number()),// not getting value correctly
 	serviceProvision: z.nullable(z.string()),
-	heatStorageZoneMaterialKjPerKAbovePhaseTransition: z.nullable(z.number()),
-	velocityInHexTubeAt1LPerMinMPerS: z.nullable(z.number()),
+	heatStorageZoneMaterialKjPerKAbovePhaseTransition: z.nullable(z.number()),// not getting value correctly
+	velocityInHexTubeAt1LPerMinMPerS: z.nullable(z.number()),// not getting value correctly
 	simultaneousChargingAndDischarging: z.nullable(z.number()),
 });
 
@@ -230,11 +230,11 @@ export const smartHotWaterTankZod = BaseProduct.extend({
 	technologyType: z.literal("SmartHotWaterTank"),
 	volume: z.nullable(z.number()),
 	dailyLosses: z.nullable(z.number()),
-	pumpPower: z.nullable(z.number()),
+	powerPumpKW: z.nullable(z.number()),
 	maxFlowRatePumpLPerMin: z.nullable(z.number()),
 	heatExchangerSurfaceArea: z.nullable(z.number()),
 	heaterPosition: z.nullable(z.number()),
-	usableTemp: z.nullable(z.number()),
+	tempUsable: z.nullable(z.number()),
 	heatSource: z.nullable(z.string()),
 });
 
@@ -255,9 +255,9 @@ export const electricStorageHeaterZod = BaseProduct.extend({
 	storageCapacity: z.nullable(z.number()),
 	ratedPower: z.nullable(z.number()),
 	airFlowType: z.nullable(z.string()),
-	convectiveFraction: z.nullable(z.number()),
+	fracConvective: z.nullable(z.number()),
 	heatRetention: z.nullable(z.number()),
-	ratedFanPower: z.nullable(z.number()),
+	fanPwr: z.nullable(z.number()),
 	pwrIn: z.nullable(z.number()),
 	outputPower: z.nullable(z.number()),
 	highHeatRetention: z.nullable(z.number()),

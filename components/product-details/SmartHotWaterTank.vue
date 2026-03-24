@@ -10,11 +10,11 @@ const tableData: Record<string, string> =
 	"Final year of manufacture": show(data?.finalYearOfManufacture).replace("current", "Current"),
 	"Storage capacity": dim(data.volume, "litres"),
 	"Daily energy loss of ot water cylinder declared by manufacturer": dim(data.dailyLosses, "kilowatt hours per day"),
-	"Circulation pump power": dim(data.pumpPower, "kilowatt"),
+	"Circulation pump power": dim(data.powerPumpKW, "kilowatt"),
 	"Maximum pump flow rate": dim(data.maxFlowRatePumpLPerMin, "litres per minute"),
 	"Heat exchanger surface area": dim(data.heatExchangerSurfaceArea, "metres square"),
 	"Immersion heater position": data.heaterPosition ? formatIntoPercentage(data.heaterPosition) : "-",
-	"Lowest usable hot water temperature": dim(data.usableTemp, "celsius"),
+	"Lowest usable hot water temperature": dim(data.tempUsable, "celsius"),
 };
 </script>
 
