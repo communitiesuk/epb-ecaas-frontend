@@ -23,7 +23,7 @@ const tableData: Record<string, string> =
 	"Boiler location": data.boilerLocation ? capitalizeFirstLetter(data.boilerLocation) : "-",
 	"Part load net efficiency": data.efficiencyPartLoad ? formatIntoPercentage(data.efficiencyPartLoad) : "-",
 	"ErP space efficiency class": data.erpSpaceEfficiencyClass ? `${data.erpSpaceEfficiencyClass} A+++-G` : "-",
-	"ErP seasonal space heating efficiency": data.erPSpaceEfficiencyPerc ? formatIntoPercentage(data.erPSpaceEfficiencyPerc) : "-",
+	"ErP seasonal space heating efficiency": data.erpSpaceEfficiencyPerc ? formatIntoPercentage(data.erpSpaceEfficiencyPerc) : "-",
 	"Minimum thermal output": dim(data.powerBottomRange, "kilowatt"),
 	"Burner modulation type": data.burnerControl ? capitalizeFirstLetter(data.burnerControl) : "-",
 	...(data.technologyType === "CombiBoiler" && {

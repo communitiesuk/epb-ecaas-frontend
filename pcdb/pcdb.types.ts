@@ -169,7 +169,7 @@ export const boilerBase = BaseProduct.extend({
 	boilerLocation: z.nullable(z.string()),
 	efficiencyPartLoad: z.nullable(z.number()),
 	erpSpaceEfficiencyClass: z.nullable(z.string()),
-	erPSpaceEfficiencyPerc: z.nullable(z.number()),
+	erpSpaceEfficiencyPerc: z.nullable(z.number()),
 	powerBottomRange: z.nullable(z.number()),
 	burnerControl: z.nullable(z.string()),
 });
