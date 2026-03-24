@@ -7,6 +7,8 @@ const data = product as HeatNetworkProduct;
 
 const tableData: Record<string, string> = 
 {
+	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
+	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
 	"Percentage of heat 1": data.percentageOfHeat1?.toString() ?? "-",
 	"Percentage of heat 2": data.percentageOfHeat2?.toString() ?? "-",
 	"Percentage of heat 3": data.percentageOfHeat3?.toString() ?? "-",
@@ -20,8 +22,6 @@ const tableData: Record<string, string> =
 	"Community heat network name": data.communityHeatNetworkName ?? "-",
 	"Postcode of the primary energy centre": data.postcodeOfThePrimaryEnergyCentre ?? "-",
 	"Description": data.descriptionOfNetwork ?? "-",
-	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
 };
 </script>
 

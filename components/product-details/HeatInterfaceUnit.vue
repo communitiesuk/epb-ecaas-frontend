@@ -6,15 +6,15 @@ const data = product as HeatInterfaceUnitProduct;
 
 const tableData: Record<string, string> = 
 {
-	"Power circ pump": data.powerCircPump?.toString() ?? "-",
-	"Max power water 70": data.maxPowerWater70?.toString() ?? "-",
-	"VWART 70": data.vwart70?.toString() ?? "-",
-	"Max power water 55": data.maxPowerWater55?.toString() ?? "-",
-	"HUI daily loss": data.hiuDailyLoss?.toString() ?? "-",
-	"VWART 55": data.vwart55?.toString() ?? "-",
-	"Power aux": data.powerAux?.toString() ?? "-",
-	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
+	"First year of manufacture": show(data?.firstYearOfManufacture),
+	"Final year of manufacture": show(data?.finalYearOfManufacture).replace("current", "Current"),
+	"Circulation pump power": dim(data.powerCircPump, "kilowatt"),
+	"Maximum heat output (70°C flow temperature)": dim(data.maxPowerWater70, "kilowatt"),
+	"Return temperature during test at 70°C flow temperature)": dim(data.vwart70, "celsius"),
+	"Maximum heat output (55°C flow temperature)": dim(data.maxPowerWater55, "kilowatt"),
+	"Standing heat loss": dim(data.hiuDailyLoss, "kilowatt hours per day"),
+	"Return temperature during test at 55°C flow temperature)": dim(data.vwart55, "celsius"),
+	"Auxiliary power": dim(data.powerAux, "kilowatt"),
 };
 </script>
 

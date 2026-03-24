@@ -6,15 +6,15 @@ const data = product as HeatBatteryDryCoreProduct;
 
 const tableData: Record<string, string> = 
 {
-	"Heat storage capacity": data.heatStorageCapacity?.toString() ?? "-",
-	"Electricity circ pump": data.electricityCircPump?.toString() ?? "-",
-	"Fan power": data.fanPwr?.toString() ?? "-",
-	"Setpoint temp water": data.setpointTempWater?.toString() ?? "-",
-	"Rated power instant": data.ratedPowerInstant?.toString() ?? "-",
-	"Electricity standby": data.electricityStandby?.toString() ?? "-",
-	"Power in": data.pwrIn?.toString() ?? "-",
-	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
+	"First year of manufacture": show(data?.firstYearOfManufacture),
+	"Final year of manufacture": show(data?.finalYearOfManufacture).replace("current", "Current"),
+	"Heat storage capacity": dim(data.heatStorageCapacity, "kilowatt-hour"),
+	"Internal pump power": dim(data.electricityCircPump, "watt"),
+	"Fan power": dim(data.fanPwr, "kilowatt"),
+	"Target flow temperature": dim(data.setpointTempWater, "celsius"),
+	"Maximum instant heat output": dim(data.ratedPowerInstant, "kilowatt"),
+	"Standby power": dim(data.electricityStandby, "kilowatt"),
+	"Input charging power": dim(data.pwrIn, "kilowatt"),
 };
 </script>
 

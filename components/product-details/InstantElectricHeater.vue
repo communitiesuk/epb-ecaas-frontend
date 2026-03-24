@@ -6,11 +6,11 @@ const data = product as InstantElectricHeaterProduct;
 
 const tableData: Record<string, string> = 
 {
-	"c": data.c?.toString() ?? "-",
-	"Thermal mass": data.thermalMass?.toString() ?? "-",
-	"n": data.n?.toString() ?? "-",
-	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
+	"First year of manufacture": show(data?.firstYearOfManufacture),
+	"Final year of manufacture": show(data?.finalYearOfManufacture).replace("current", "Current"),
+	"c": show(data.c),
+	"Thermal mass": show(data.thermalMass),
+	"n": show(data.n),
 };
 </script>
 

@@ -6,10 +6,10 @@ const data = product as CentralisedMvhrProduct;
 
 const tableData: Record<string, string> = 
 {
-	"Summer bypass": data.summerBypass?.toString() ?? "-",
-	"Integral only": data.integralOnly ? (data.integralOnly === 0 ? "False" : "True") : "-",
-	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
+	"First year of manufacture": show(data?.firstYearOfManufacture),
+	"Final year of manufacture": show(data?.finalYearOfManufacture).replace("current", "Current"),
+	"Summer bypass": data.summerBypass ? (data.summerBypass === 0 ? "No" : "Yes") : "-",
+	"Integrated with heat pump": data.integralOnly ? (data.integralOnly === 0 ? "No" : "Yes") : "-",
 };
 </script>
 

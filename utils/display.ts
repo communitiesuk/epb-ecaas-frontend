@@ -14,8 +14,8 @@ export function show(value: string | number | undefined | null): string {
 }
 
 /** Renders a unit with correct visual suffix, falling back to "-" for undefined */
-export function dim(amount: UnitValue | number | undefined, unit?: UnitName): string {
-	if (amount as unknown === "") {
+export function dim(amount: UnitValue | number | undefined | null, unit?: UnitName): string {
+	if (amount as unknown === "" || amount == null) {
 		return emptyValueRendering;
 	}
 	if (typeof amount === "object") {

@@ -6,15 +6,15 @@ const data = product as SmartHotWaterTankProduct;
 
 const tableData: Record<string, string> = 
 {
-	"Volume": data.volume?.toString() ?? "-",
-	"Daily losses": data.dailyLosses?.toString() ?? "-",
-	"Pump power": data.pumpPower?.toString() ?? "-",
-	"Max flow rate pump l per min": data.maxFlowRatePumpLPerMin?.toString() ?? "-",
-	"Heat exchanger surface area": data.heatExchangerSurfaceArea?.toString() ?? "-",
-	"Heater position": data.heaterPosition?.toString() ?? "-",
-	"Usable temp": data.usableTemp?.toString() ?? "-",
-	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
+	"First year of manufacture": show(data?.firstYearOfManufacture),
+	"Final year of manufacture": show(data?.finalYearOfManufacture).replace("current", "Current"),
+	"Storage capacity": dim(data.volume, "litres"),
+	"Daily energy loss of ot water cylinder declared by manufacturer": dim(data.dailyLosses, "kilowatt hours per day"),
+	"Circulation pump power": dim(data.pumpPower, "kilowatt"),
+	"Maximum pump flow rate": dim(data.maxFlowRatePumpLPerMin, "litres per minute"),
+	"Heat exchanger surface area": dim(data.heatExchangerSurfaceArea, "metres square"),
+	"Immersion heater position": data.heaterPosition ? formatIntoPercentage(data.heaterPosition) : "-",
+	"Lowest usable hot water temperature": dim(data.usableTemp, "celsius"),
 };
 </script>
 

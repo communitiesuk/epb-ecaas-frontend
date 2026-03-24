@@ -6,11 +6,11 @@ const data = product as MevProduct;
 
 const tableData: Record<string, string> = 
 {
+	"First year of manufacture": show(data?.firstYearOfManufacture),
+	"Final year of manufacture": show(data?.finalYearOfManufacture).replace("current", "Current"),
 	...(data.technologyType === "CentralisedMev" && {
-		"Integral only": data.integralOnly ? (data.integralOnly === 0 ? "False" : "True") : "-",
+		"Integrated with heat pump": data.integralOnly ? (data.integralOnly === 0 ? "No" : "Yes") : "-",
 	}),
-	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
-	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
 };
 </script>
 

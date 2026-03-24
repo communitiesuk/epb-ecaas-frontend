@@ -254,7 +254,7 @@ export const electricStorageHeaterZod = BaseProduct.extend({
 	backupPower: z.nullable(z.number()),
 	storageCapacity: z.nullable(z.number()),
 	ratedPower: z.nullable(z.number()),
-	airFlowType: z.nullable(z.number()),
+	airFlowType: z.nullable(z.string()),
 	convectiveFraction: z.nullable(z.number()),
 	heatRetention: z.nullable(z.number()),
 	ratedFanPower: z.nullable(z.number()),
