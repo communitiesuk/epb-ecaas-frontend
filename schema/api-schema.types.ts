@@ -494,6 +494,7 @@ export interface components {
              * @description A unique reference to a product held within the HEM database (PCDB)
              */
             product_reference: string;
+            n_units: number;
         };
         EcoDesignControllerNoWeatherCompensator: {
             /** @enum {unknown} */
@@ -2299,6 +2300,7 @@ export interface components {
                      * @description A unique reference to a product held within the HEM database (PCDB)
                      */
                     product_reference: string;
+                    n_units: number;
                 };
                 EcoDesignControllerNoWeatherCompensator: {
                     /** @enum {unknown} */
