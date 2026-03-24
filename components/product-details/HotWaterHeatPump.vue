@@ -11,7 +11,7 @@ const tableData: Record<string, string> = {
 	"Volume of test cylinder": dim(data.testVesselVolume, "litres"),
 	"Daily energy loss declared by manufacturer": dim(data.dailyLossesDeclared, "kilowatt hours per day"),
 	"Volume of integrated hot water cylinder declared by manufacturer": dim(data.tankVolumeDeclared, "litres"),
-	"Fuel": show(data.fuel),
+	"Fuel": show(data.fuel).replace("mains_gas", "Mains gas").replace("electricity", "Electricity"),
 	"Daily energy loss of hot water cylinder declared by manufacturer": dim(data.hwVesselLossDaily, "kilowatt hours per day"),
 	"Maximum power": dim(data.powerMax, "kilowatt"),
 	"Integrated cylinder": show(data.vesselType),

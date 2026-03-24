@@ -9,7 +9,6 @@ const tableData: Record<string, string> =
 	"First year of manufacture": show(data?.firstYearOfManufacture),
 	"Final year of manufacture": show(data?.finalYearOfManufacture).replace("current", "Current"),
 	"Number of fan speeds": show(data.numberOfFanSpeeds),
-	"Number of fan point delta T": show(data.numberOfTestPointDeltaT),
 	"Convective heat ratio": data.fracConvective ? formatIntoPercentage(data.fracConvective) : "-",
 };
 </script>

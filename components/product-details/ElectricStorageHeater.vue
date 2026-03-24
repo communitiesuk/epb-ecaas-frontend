@@ -11,7 +11,7 @@ const tableData: Record<string, string> =
 	"Backup power": dim(data.backupPower, "kilowatt"),
 	"Storage capacity": dim(data.storageCapacity, "kilowatt-hour"),
 	"Rated charging power": dim(data.ratedPower, "kilowatt"),
-	"Air flow type": show(data.airFlowType),
+	"Air flow type": data.airFlowType ? capitalizeFirstLetter(data.airFlowType) : "-", 
 	"Convective heat ratio": data.convectiveFraction ? formatIntoPercentage(data.convectiveFraction) : "-",
 	"Heat retention": data.heatRetention ? formatIntoPercentage(data.heatRetention) : "-",
 	"Fan power": dim(data.ratedFanPower, "watt"),

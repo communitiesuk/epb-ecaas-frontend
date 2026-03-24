@@ -65,7 +65,7 @@ export const units = [
 	},
 	{
 		"name": "litres per minute",
-		"suffix": "litres per minute",
+		"suffix": "l/min",
 		"multiplier": 0.06,
 		"dimension": "flow rate",
 	},
