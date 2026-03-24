@@ -226,6 +226,7 @@ export function mapFanCoils(state: ResolvedState): Record<string, SchemaWetDistr
 			const emitter: SchemaFancoilWithProductReference = {
 				product_reference: fancoil.productReference,
 				wet_emitter_type: "fancoil",
+				n_units: fancoil.numOfFanCoils,
 			};
 			const ecoDesignController = mapEcoDesignController(fancoil);
 			const common = {
