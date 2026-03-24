@@ -45,8 +45,6 @@ const getProductsByTechnologyType = <U extends DisplayTechnologyProducts>(query:
 			brandName: x.brandName,
 			modelName: x.modelName,
 			modelQualifier: x.modelQualifier,
-			backupCtrlType: x.backupCtrlType,
-			powerMaxBackup: x.powerMaxBackup,
 		})) as DisplayProduct[];
 
 	const paginatedProducts: PaginatedResult<DisplayProduct> = {

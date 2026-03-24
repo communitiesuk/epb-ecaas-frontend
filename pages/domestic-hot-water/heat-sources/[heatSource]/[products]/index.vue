@@ -52,8 +52,6 @@ const selectProduct = (product: DisplayProduct) => {
 			if (data.typeOfHeatSource === "heatPump") {
 				const heatPumpProduct = product as HeatPumpProduct;
 				data.typeOfHeatPump = heatPumpProductTypesMap[heatPumpProduct.technologyType];
-				data.backupCtrlType = product.backupCtrlType;
-				data.powerMaxBackup = product.powerMaxBackup ?? undefined;
 			}
 
 			(item.data as PcdbProduct).productReference = product.id;
