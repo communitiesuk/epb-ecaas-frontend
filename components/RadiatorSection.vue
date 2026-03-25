@@ -62,7 +62,7 @@ const emit = defineEmits(["update-radiator-model"]);
 			name="minOutdoorTemp"
 			validation="required | number"
 			suffix-text="°C"
-			help="This is the coldest outdoor temperature expected for the dwelling. This is typically the temperature at which the design flow temperature operates." />
+			help="Enter the coldest outdoor temperature expected for the dwelling. This is typically the temperature at which the design flow temperature operates." />
 		<FormKit
 			v-if="ecoClasses.includes(model.ecoDesignControllerClass as EcoControlClassesWithExtraOptions)"
 			id="maxOutdoorTemp"
