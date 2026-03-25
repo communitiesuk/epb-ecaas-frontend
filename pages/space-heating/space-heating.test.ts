@@ -29,7 +29,7 @@ describe("space heating", () => {
 		typeOfHeatSource: "boiler",
 		typeOfBoiler: "combiBoiler",
 		productReference: "BOILER_SMALL",
-		locationOfBoiler: "heatedSpace",
+		needsSpecifiedLocation: false,
 	};
 
 	const heatSource2: HeatSourceData = {
@@ -38,7 +38,7 @@ describe("space heating", () => {
 		typeOfHeatSource: "boiler",
 		typeOfBoiler: "combiBoiler",
 		productReference: "BOILER_MEDIUM",
-		locationOfBoiler: "heatedSpace",
+		needsSpecifiedLocation: false,
 	};
 
 	const heatSource3: HeatSourceData = {
@@ -47,7 +47,8 @@ describe("space heating", () => {
 		typeOfHeatSource: "boiler",
 		typeOfBoiler: "regularBoiler",
 		productReference: "BOILER_LARGE",
-		locationOfBoiler: "heatedSpace",
+		needsSpecifiedLocation: true,
+		specifiedLocation: "internal",
 	};
 
 	describe("heat source", () => {

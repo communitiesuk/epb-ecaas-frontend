@@ -60,12 +60,8 @@ const selectProduct = (product: DisplayProduct) => {
 			
 
 			if (data.typeOfHeatSource === "boiler") {
-				if (product.boilerLocation === "internal") {
-					data.locationOfBoiler = "heatedSpace";
-					data.locationFromPcdb = true;
-				} else {
-					data.locationFromPcdb = false;
-				}
+				data.needsSpecifiedLocation = product.boilerLocation === "unknown";
+				delete data.specifiedLocation;
 			}
 
 			if (data.typeOfHeatSource === "heatPump") {

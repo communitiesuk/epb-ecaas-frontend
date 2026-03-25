@@ -13,6 +13,7 @@ import {
 import type { SchemaHeatSourceWetHeatPump } from "../schema/api-schema.types";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import type { HeatEmittingData } from "~/stores/ecaasStore.schema";
+import type { SchemaBoilerWithProductReference } from "~/schema/aliases";
 
 describe("Space heating - heat sources", () => {
 	describe("mapHeatPumps", () => {
@@ -102,7 +103,8 @@ describe("Space heating - heat sources", () => {
 				typeOfHeatSource: "boiler",
 				typeOfBoiler: "combiBoiler",
 				productReference: "1234",
-				locationOfBoiler: "heatedSpace",
+				needsSpecifiedLocation: true,
+				specifiedLocation: "internal",
 			};
 
 			const boiler2: HeatSourceData = {
@@ -111,7 +113,7 @@ describe("Space heating - heat sources", () => {
 				typeOfHeatSource: "boiler",
 				typeOfBoiler: "regularBoiler",
 				productReference: "5678",
-				locationOfBoiler: "unheatedSpace",
+				needsSpecifiedLocation: false,
 			};
 			test("maps stored boiler data to fit schema", () => {
 				store.$patch({
@@ -127,8 +129,8 @@ describe("Space heating - heat sources", () => {
 					[boiler1.name]: {
 						type: "Boiler",
 						product_reference: boiler1.productReference,
-						boiler_location: "internal",
-					},
+						specified_location: "internal",
+					} as const satisfies SchemaBoilerWithProductReference,
 				};
 				const resolvedState = resolveState(store.$state);
 
@@ -153,13 +155,12 @@ describe("Space heating - heat sources", () => {
 					[boiler1.name]: {
 						type: "Boiler",
 						product_reference: boiler1.productReference,
-						boiler_location: "internal",
-					},
+						specified_location: "internal",
+					} as const satisfies SchemaBoilerWithProductReference,
 					[boiler2.name]: {
 						type: "Boiler",
 						product_reference: boiler2.productReference,
-						boiler_location: "external",
-					},
+					} as const satisfies SchemaBoilerWithProductReference,
 				};
 
 				const resolvedState = resolveState(store.$state);

@@ -6,7 +6,7 @@ import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/sch
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, colourZod, ductShapeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, boilerLocationZod, colourZod, ductShapeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
 
 const fraction = z.number().min(0).max(1);
@@ -811,8 +811,8 @@ const heatPumpBase = pcdbProduct.extend({
 const boilerBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("boiler"),
 	typeOfBoiler,
-	locationOfBoiler: z.enum(["heatedSpace", "unheatedSpace"]),
-	locationFromPcdb: z.optional(z.boolean()),
+	specifiedLocation: z.optional(boilerLocationZod),
+	needsSpecifiedLocation: z.boolean(),
 });
 const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatBattery"),

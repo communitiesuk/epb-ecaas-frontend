@@ -52,12 +52,8 @@ const selectProduct = () => {
 			}
 			
 			if (heatSourceData.typeOfHeatSource === "boiler" && (data.technologyType === "CombiBoiler" || data.technologyType === "RegularBoiler")) {
-				if (data.boilerLocation === "internal") {
-					heatSourceData.locationOfBoiler = "heatedSpace";
-					heatSourceData.locationFromPcdb = true;
-				} else {
-					heatSourceData.locationFromPcdb = false;
-				}
+				heatSourceData.needsSpecifiedLocation = data.boilerLocation === "unknown";
+				delete heatSourceData.specifiedLocation;
 			}
 
 			if (heatSourceData.typeOfHeatSource === "heatPump") {

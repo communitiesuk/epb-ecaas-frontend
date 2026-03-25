@@ -30,7 +30,7 @@ describe("heatSource", () => {
 		typeOfHeatSource: "boiler",
 		typeOfBoiler: "combiBoiler",
 		productReference: "BOILER_SMALL",
-		locationOfBoiler: "heatedSpace",
+		needsSpecifiedLocation: false,
 	};
 	const boosterHeatPump:HeatSourceData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b52222",
@@ -209,7 +209,7 @@ describe("heatSource", () => {
 			id: "1000",
 			brandName: "Brand",
 			technologyType: "CombiBoiler",
-			boilerLocation: "internal",
+			boilerLocation: "unknown",
 		}; 
 
 		beforeEach(() => {
@@ -221,7 +221,6 @@ describe("heatSource", () => {
 		const populateValidBoilerForm = async () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
 			await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));
-			await user.click(screen.getByTestId("locationOfBoiler_heatedSpace"));
 		};
 
 		const boiler2: HeatSourceData = {
@@ -230,7 +229,8 @@ describe("heatSource", () => {
 			typeOfHeatSource: "boiler",
 			typeOfBoiler: "combiBoiler",
 			productReference: "BOILER_MEDIUM",
-			locationOfBoiler: "heatedSpace",
+			needsSpecifiedLocation: true,
+			specifiedLocation: "external",
 		};
 
 		test("'BoilerSection' component displays when type of heat source is boiler", async () => {
@@ -245,7 +245,6 @@ describe("heatSource", () => {
 			expect(screen.getByTestId("name")).toBeDefined();
 			expect(screen.getByTestId("typeOfBoiler")).toBeDefined();
 			expect(screen.queryByTestId("selectBoiler")).toBeDefined();
-			expect(screen.getByTestId("locationOfBoiler")).toBeDefined();
 		});
 
 		test("the 'Select a product' element navigates user to the products page", async () => {
@@ -276,7 +275,6 @@ describe("heatSource", () => {
 				name: "Combi boiler",
 				typeOfHeatSource: "boiler",
 				typeOfBoiler: "combiBoiler",
-				locationOfBoiler: "heatedSpace",
 			});
 		});
 
@@ -298,7 +296,6 @@ describe("heatSource", () => {
 			expect((await screen.findByTestId("typeOfHeatSource_boiler")).hasAttribute("checked"));
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Boiler 1");
 			expect((await screen.findByTestId("typeOfBoiler_combiBoiler")).hasAttribute("checked"));
-			expect((await screen.findByTestId("locationOfBoiler_heatedSpace")).hasAttribute("checked"));
 		});
 
 		test("boiler is updated when data with id exists in store", async () => {
@@ -340,7 +337,6 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("selectBoiler_error"))).toBeDefined();
-			expect((await screen.findByTestId("locationOfBoiler_error"))).toBeDefined();
 		});
 
 		describe("boiler default name", () => {

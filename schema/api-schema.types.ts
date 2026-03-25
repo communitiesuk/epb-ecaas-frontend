@@ -921,6 +921,12 @@ export interface components {
              * @description A unique reference to a product held within the HEM database (PCDB)
              */
             product_reference: string;
+            /**
+             * A boiler location, if the referenced PCDB product does not specify it
+             * @description An explicitly specified boiler location. Only required if the referenced PCDB product has a boiler_location value of 'unknown'.
+             * @enum {unknown}
+             */
+            specified_location?: "internal" | "external";
         } | {
             EnergySupply_aux: string;
             rated_power: number;
@@ -2037,6 +2043,12 @@ export interface components {
                      * @description A unique reference to a product held within the HEM database (PCDB)
                      */
                     product_reference: string;
+                    /**
+                     * A boiler location, if the referenced PCDB product does not specify it
+                     * @description An explicitly specified boiler location. Only required if the referenced PCDB product has a boiler_location value of 'unknown'.
+                     * @enum {unknown}
+                     */
+                    specified_location?: "internal" | "external";
                 } | {
                     EnergySupply_aux: string;
                     rated_power: number;

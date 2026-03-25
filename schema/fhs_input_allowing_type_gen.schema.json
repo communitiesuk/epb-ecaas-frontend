@@ -3054,6 +3054,14 @@
                                     "description": "A unique reference to a product held within the HEM database (PCDB)",
                                     "title": "Reference to the product in the HEM database",
                                     "type": "string"
+                                },
+                                "specified_location": {
+                                    "description": "An explicitly specified boiler location. Only required if the referenced PCDB product has a boiler_location value of 'unknown'.",
+                                    "title": "A boiler location, if the referenced PCDB product does not specify it",
+                                    "enum": [
+                                        "internal",
+                                        "external"
+                                    ]
                                 }
                             }
                         },

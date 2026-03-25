@@ -24,7 +24,7 @@ type BuildingElementType = SchemaBuildingElement["type"];
 export type BuildingElementOfType<T extends BuildingElementType> = Extract<SchemaBuildingElement, { type: T }>;
 export type BuildingElementGroundForSchema = BuildingElementOfType<"BuildingElementGround">;
 export type BuildingElementPartyWallForSchema = BuildingElementOfType<"BuildingElementPartyWall">;
-export type SchemaHeatSourceWetDetails = SchemaHeatSourceWetBoiler | SchemaHeatSourceWetHeatBattery | SchemaHeatSourceWetHeatPump | SchemaHeatSourceWetHiu;
+export type SchemaHeatSourceWetDetails = SchemaBoilerWithProductReference | SchemaHeatSourceWetHeatBattery | SchemaHeatSourceWetHeatPump | SchemaHeatSourceWetHiu;
 export type SchemaHeatSourceWetHeatEmitterDetails = SchemaRadiatorWithProductReference | SchemaUfhWithProductReference | SchemaFancoilWithProductReference;
 // utility function to make shading into valid external conditions
 type SchemaExternalConditionsInputFhs = FhsSchema["ExternalConditions"];
@@ -89,3 +89,5 @@ export type SchemaRadiatorType = SchemaRadiatorWithProductReference["radiator_ty
 export type SchemaStorageTank = Extract<SchemaHotWaterSourceDetails, { type: "StorageTank" }>;
 export type SchemaMechanicalVentilationInstallationType = Extract<SchemaMechanicalVentilation, { vent_type: "Decentralised continuous MEV", product_reference: string }>["installation_type"];
 export type SchemaMechanicalVentilationInstallationLocation = Extract<SchemaMechanicalVentilation, { vent_type: "Decentralised continuous MEV", product_reference: string }>["installation_location"];
+export type SchemaBoilerLocationType = Extract<components["schemas"]["HeatSourceWetBoiler"], { rated_power: number }>["boiler_location"];
+export type SchemaBoilerWithProductReference = Omit<Extract<SchemaHeatSourceWetBoiler, { product_reference: string, type: "Boiler" }>, "EnergySupply">;

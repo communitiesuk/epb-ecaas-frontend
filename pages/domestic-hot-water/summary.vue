@@ -114,7 +114,7 @@ const boilerSummary: SummarySection = {
 					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
 					"Type of boiler": "typeOfBoiler" in heatSource && heatSource.typeOfBoiler ? displayCamelToSentenceCase(heatSource.typeOfBoiler) : emptyValueRendering,
 					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-					"Location of boiler": "locationOfBoiler" in heatSource && heatSource.locationOfBoiler ? displayCamelToSentenceCase(heatSource.locationOfBoiler) : emptyValueRendering,
+					"Specified location": "specifiedLocation" in heatSource && heatSource.specifiedLocation ? displayBoilerLocation(heatSource.specifiedLocation) : emptyValueRendering,
 				}),
 			};
 			return summary;

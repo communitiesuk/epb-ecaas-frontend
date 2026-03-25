@@ -23,6 +23,7 @@ const verifyDataInSection = async (
 		const lineResult = screen.queryByTestId(
 			`summary-${section}-${hyphenate(key)}`,
 		);
+		expect(lineResult, `Summary key is ${key} and value is ${value}, but these were not found in the summary`).toBeTruthy();
 		expect(lineResult!.querySelector("dt")?.textContent).toBe(key);
 		expect(lineResult!.querySelector("dd")?.textContent).toBe(value);
 	}
@@ -557,7 +558,8 @@ describe("Domestic hot water summary", () => {
 			typeOfHeatSource: "boiler",
 			typeOfBoiler: "combiBoiler",
 			productReference: "BOILER_SMALL",
-			locationOfBoiler: "heatedSpace",
+			needsSpecifiedLocation: true,
+			specifiedLocation: "external",
 		};
 
 		const dhwWithNewHeatBattery: DomesticHotWaterHeatSourceData = {
@@ -704,7 +706,6 @@ describe("Domestic hot water summary", () => {
 			"Type of heat source": "Boiler",
 			"Type of boiler": "Combi boiler",
 			"Product reference": "BOILER_SMALL",
-			"Location of boiler": "Heated space",
 		};
 		const expectedHeatBattery = {
 			"Cold water source": "Mains water",

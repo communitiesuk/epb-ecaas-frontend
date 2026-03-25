@@ -167,7 +167,7 @@ describe("Heat source products page", () => {
 		).toEqual(expect.objectContaining({ heatInterfaceUnitProductReference: mockedHeatInterfaceUnits.data[0]?.id }));
 	});
 
-	test("Boiler location is stored as 'heatedSpace' when boiler location is 'internal'", async () => {
+	test("Form marks that it needs a specified boiler location when boiler location is 'unknown'", async () => {
 		mockRoute.mockReturnValue({
 			params: {
 				heatSource: "3",
@@ -183,7 +183,7 @@ describe("Heat source products page", () => {
 					brandName: "HEM Default",
 					modelName: "Combi Boiler",
 					technologyType: "CombiBoiler",
-					boilerLocation: "internal",
+					boilerLocation: "unknown",
 				},
 			],
 		};
@@ -198,7 +198,7 @@ describe("Heat source products page", () => {
 
 		expect(
 			store.spaceHeating.heatSource.data[3]!.data,
-		).toEqual(expect.objectContaining({ locationOfBoiler: "heatedSpace" }));
+		).toEqual(expect.objectContaining({ needsSpecifiedLocation: true }));
 	});
 
 	test("'Back to heat source' navigates user to the heat source at the correct index", async () => {

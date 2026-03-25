@@ -166,7 +166,7 @@ export const boilerBase = BaseProduct.extend({
 	electricityFullLoad: z.nullable(z.number()),
 	ratedPower: z.nullable(z.number()),
 	electricityStandby: z.nullable(z.number()),
-	boilerLocation: z.nullable(z.string()),
+	boilerLocation: z.nullable(z.enum(["internal", "external", "unknown"])),
 	efficiencyPartLoad: z.nullable(z.number()),
 	erpSpaceEfficiencyClass: z.nullable(z.string()),
 	erpSpaceEfficiencyPerc: z.nullable(z.number()),
@@ -397,7 +397,7 @@ export type TechnologyGroup = z.infer<typeof technologyGroupsZod>;
 
 export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier"> & {
 	technologyType: TechnologyType;
-	boilerLocation?: string;
+	boilerLocation?: "internal" | "external" | "unknown";
 	communityHeatNetworkName?: string;
 };
 

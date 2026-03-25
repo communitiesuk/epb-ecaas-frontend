@@ -33,7 +33,7 @@ describe("Heat source details", async () => {
 		brandName: "HEM Default",
 		modelName: "Combi Boiler",
 		technologyType: "CombiBoiler",
-		boilerLocation: "internal",
+		boilerLocation: "unknown",
 	};
 
 
@@ -134,7 +134,7 @@ describe("Heat source details", async () => {
 		expect((await screen.findByTestId("heatPump"))).toBeDefined();
 	});
 
-	test("Boiler location is stored as 'heatedSpace' when boiler location is 'internal'", async () => {
+	test("Form records that a specified location is needed when boiler location is 'unknown'", async () => {
 		// Arrange
 		mockRoute.mockReturnValue({
 			params: {
@@ -156,10 +156,10 @@ describe("Heat source details", async () => {
 		const heatSource = store.domesticHotWater.heatSources.data[1]?.data as HeatSourceData;
 
 		// Assert
-		expect(heatSource).toEqual(expect.objectContaining({ locationOfBoiler: "heatedSpace" }));
+		expect(heatSource).toEqual(expect.objectContaining({ needsSpecifiedLocation: true }));
 	});
 
-	test("Displays hybrid heat pump details when product is a hyrbid heat pump", async () => {
+	test("Displays hybrid heat pump details when product is a hybrid heat pump", async () => {
 		// Arrange
 		mockRoute.mockReturnValue({
 			params: {

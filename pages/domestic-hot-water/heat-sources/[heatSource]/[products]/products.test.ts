@@ -134,7 +134,7 @@ describe("Heat source products page", () => {
 		).toEqual(expect.objectContaining({ productReference: MOCKED_HEAT_PUMPS.data[1]?.id }));
 	});
 
-	test("Boiler location is stored as 'heatedSpace' when boiler location is 'internal'", async () => {
+	test("Form marks that boiler location does not need to be specified when boiler location is 'internal'", async () => {
 		mockRoute.mockReturnValue({
 			params: {
 				heatSource: "2",
@@ -165,7 +165,7 @@ describe("Heat source products page", () => {
 
 		expect(
 			store.domesticHotWater.heatSources.data[2]!.data,
-		).toEqual(expect.objectContaining({ locationOfBoiler: "heatedSpace" }));
+		).toEqual(expect.objectContaining({ needsSpecifiedLocation: false }));
 	});
 
 	test("when a heat network product is a fifth generation, isFifthGeneration is set to true", async () => {

@@ -158,7 +158,7 @@ describe("Heat pump details", async () => {
 		expect(heatSource).toEqual(expect.objectContaining({ heatInterfaceUnitProductReference: product.id }));
 	});
 
-	test("Boiler location is stored as 'heatedSpace' when boiler location is 'internal'", async () => {
+	test("Form records if specific location is needed when boiler location is 'unknown'", async () => {
 		// Arrange
 		mockRoute.mockReturnValue({
 			params: {
@@ -174,7 +174,7 @@ describe("Heat pump details", async () => {
 				...product,
 				modelName: "Combi boiler",
 				technologyType: "CombiBoiler",
-				boilerLocation: "internal",
+				boilerLocation: "unknown",
 			}),
 		});
 
@@ -185,7 +185,7 @@ describe("Heat pump details", async () => {
 		const heatSource = store.spaceHeating.heatSource.data[2]?.data as HeatSourceData;
 
 		// Assert
-		expect(heatSource).toEqual(expect.objectContaining({ locationOfBoiler: "heatedSpace" }));
+		expect(heatSource).toEqual(expect.objectContaining({ needsSpecifiedLocation: true }));
 	});
 
 	test("Navigates to heat pump page when product is selected", async () => {

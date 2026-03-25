@@ -1,6 +1,6 @@
 import { objectFromEntries } from "ts-extras";
 import type { DisplayProduct, TechnologyGroup } from "~/pcdb/pcdb.types";
-import type { SchemaApplianceType, SchemaColour, SchemaConvectiveType, SchemaFuelType, SchemaLeaksTestPressure, SchemaRadiatorType } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, SchemaConvectiveType, SchemaFuelType, SchemaLeaksTestPressure, SchemaRadiatorType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
@@ -445,4 +445,20 @@ export function displayConvectiveType(type: SchemaConvectiveType | undefined): C
 		return emptyValueRendering;
 	}
 	return convectiveTypes[type];
+}
+
+// we are using adjacent space types ("heated space"/ "unheated space") instead of location values ("internal"/ "external")
+export function displayBoilerLocation(locationType: SchemaBoilerLocationType | undefined): Capitalize<PascalToSentenceCase<AdjacentSpaceType>> | typeof emptyValueRendering {
+	if (!locationType) {
+		return emptyValueRendering;
+	}
+	switch (locationType) {
+		case "internal":
+			return "Heated space";
+		case "external":
+			return "Unheated space";
+		default:
+			locationType satisfies never;
+			throw new Error(`Unrecognised boiler location value '${locationType}' found.`);
+	}
 }

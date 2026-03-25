@@ -34,7 +34,8 @@ describe("Domestic hot water", () => {
 			typeOfHeatSource: "boiler",
 			typeOfBoiler: "combiBoiler",
 			productReference: "BOILER-12345",
-			locationOfBoiler: "heatedSpace",
+			needsSpecifiedLocation: true,
+			specifiedLocation: "internal",
 			heatSourceId: "NEW_HEAT_SOURCE",
 		},
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;

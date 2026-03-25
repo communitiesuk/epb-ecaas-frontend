@@ -2,7 +2,7 @@
 
 import type { UnionToTuple } from "type-fest";
 import * as z from "zod";
-import type { SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour, SchemaConvectiveType, SchemaApplianceType, SchemaFuelType, SchemaHeatNetworkType, SchemaRadiatorType, SchemaMechanicalVentilationInstallationType, SchemaMechanicalVentilationInstallationLocation } from "~/schema/aliases";
+import type { SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour, SchemaConvectiveType, SchemaApplianceType, SchemaFuelType, SchemaHeatNetworkType, SchemaRadiatorType, SchemaMechanicalVentilationInstallationType, SchemaMechanicalVentilationInstallationLocation, SchemaBoilerLocationType } from "~/schema/aliases";
 import type { ConciseMassDistributionClass } from "./ecaasStore.schema";
 import type { SchemaPartyWallCavityType, SchemaPartyWallLiningType } from "~/schema/api-schema.types";
 
@@ -31,6 +31,7 @@ export function zodLiteralFromUnionType<T, U extends UnionToTuple<T>[number] & s
 const applianceTypes = ["Oven", "Hobs", "Fridge-Freezer", "Dishwasher", "Clothes_washing", "Clothes_drying", "Fridge", "Freezer"] as const satisfies SchemaApplianceType[];
 const arealHeatCapacities = ["Very light", "Light", "Medium", "Heavy", "Very heavy"] as const satisfies SchemaArealHeatCapacity[];
 const batteryLocations = ["inside", "outside"] as const satisfies SchemaBatteryLocation[];
+const boilerLocations = ["internal", "external"] as const satisfies SchemaBoilerLocationType[];
 const colours = ["Light", "Intermediate", "Dark"] as const satisfies SchemaColour[];
 const convectiveTypes = ["Air heating (convectors, fan coils etc.)",
 	"Free heating surface (radiators, radiant panels etc.)",
@@ -100,6 +101,7 @@ const windShieldLocations = ["Sheltered", "Average", "Exposed"] as const satisfi
 export const applianceTypeZod = zodForTypeOptions(ensureAllUnion<SchemaApplianceType, (typeof applianceTypes)>(applianceTypes));
 export const arealHeatCapacityZod = zodForTypeOptions(ensureAllUnion<SchemaArealHeatCapacity, (typeof arealHeatCapacities)>(arealHeatCapacities));
 export const batteryLocationZod = zodForTypeOptions(ensureAllUnion<SchemaBatteryLocation, (typeof batteryLocations)>(batteryLocations));
+export const boilerLocationZod = zodForTypeOptions(ensureAllUnion<SchemaBoilerLocationType, (typeof boilerLocations)>(boilerLocations));
 export const colourZod = zodForTypeOptions(ensureAllUnion<SchemaColour, (typeof colours)>(colours));
 export const convectiveTypeZod = zodForTypeOptions(ensureAllUnion<SchemaConvectiveType, (typeof convectiveTypes)>(convectiveTypes));
 export const ductShapeZod = zodForTypeOptions(ensureAllUnion<SchemaDuctShape, (typeof ductShapes)>(ductShapes));

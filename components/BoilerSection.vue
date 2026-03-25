@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { AdjacentSpaceType, HeatSourceData } from "#imports";
 import { uniqueName } from "#imports";
+import type { SchemaBoilerLocationType } from "~/schema/aliases";
 import { boilerTypes, type BoilerLocationDisplay } from "~/utils/display";
 const route = useRoute();
 const store = useEcaasStore();
@@ -13,9 +14,9 @@ defineProps<{
 const heatSources = getCombinedHeatSources(store);
 
 const locationOfBoilerOptions = {
-	"heatedSpace": "Heated space",
-	"unheatedSpace": "Unheated space",
-} as const satisfies Record<AdjacentSpaceType, BoilerLocationDisplay>;
+	"internal": "Heated space",
+	"external": "Unheated space",
+} as const satisfies Record<SchemaBoilerLocationType, BoilerLocationDisplay>;
 
 const emit = defineEmits(["update-boiler-model"]);
 
@@ -56,8 +57,8 @@ const emit = defineEmits(["update-boiler-model"]);
 			:page-url="route.fullPath"
 			:page-index="index" />
 		<FormKit
-			v-if="model.typeOfBoiler && !model.locationFromPcdb"
-			id="locationOfBoiler"
+			v-if="model.typeOfBoiler && model.needsSpecifiedLocation"
+			id="specifiedLocation"
 			type="govRadios"
 			label="Location of boiler"
 			:options="locationOfBoilerOptions"

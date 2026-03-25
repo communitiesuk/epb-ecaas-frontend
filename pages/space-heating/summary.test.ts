@@ -59,7 +59,8 @@ describe("Space heating summary page", () => {
 				typeOfHeatSource: "boiler",
 				typeOfBoiler: "combiBoiler",
 				productReference: "BOILER_SMALL",
-				locationOfBoiler: "heatedSpace",
+				needsSpecifiedLocation: true,
+				specifiedLocation: "internal",
 			};
 
 			const store = useEcaasStore();

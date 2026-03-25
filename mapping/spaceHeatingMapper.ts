@@ -3,7 +3,6 @@ import type { HeatEmittingData } from "../stores/ecaasStore.schema";
 import type {
 	SchemaElecStorageHeaterWithProductReference,
 	SchemaFancoilWithProductReference,
-	SchemaHeatSourceWetBoiler,
 	SchemaHeatSourceWetHeatBattery,
 	SchemaHeatSourceWetHeatPump,
 	SchemaInstantElecHeater,
@@ -14,7 +13,7 @@ import type {
 	SchemaEcoDesignControllerNoWeatherCompensator,
 	SchemaEcoDesignControllerWeatherCompensator,
 } from "../schema/api-schema.types";
-import type { SchemaHeatSourceWetDetails, SchemaSpaceHeatSystem } from "~/schema/aliases";
+import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetDetails, SchemaSpaceHeatSystem } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import { objectFromEntries } from "ts-extras";
 
@@ -40,24 +39,20 @@ export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSou
 	);
 }
 
-export function mapBoilers(state: ResolvedState): Record<string, SchemaHeatSourceWetBoiler> {
+export function mapBoilers(state: ResolvedState): Record<string, SchemaBoilerWithProductReference> {
 	const heatSources = state.spaceHeating.heatSource;
 	const boilers = heatSources.filter(
 		(heatSource) => heatSource.typeOfHeatSource === "boiler",
 	);
-	// @ts-expect-error Missing properties on type
 	return objectFromEntries(
-		boilers.map((boiler) => {
+		boilers.map((boiler): [string, SchemaBoilerWithProductReference] => {
 			return [
 				boiler.name,
 				{
 					type: "Boiler",
 					product_reference: boiler.productReference,
-					boiler_location:
-						boiler.locationOfBoiler === "heatedSpace"
-							? "internal"
-							: "external",
-				},
+					specified_location: boiler.specifiedLocation,
+				} as const satisfies SchemaBoilerWithProductReference,
 			];
 		}),
 	);

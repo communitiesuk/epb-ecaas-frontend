@@ -2,7 +2,7 @@
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl, type HeatEmittingData } from "#imports";
 import type { SchemaFuelType } from "~/schema/aliases";
-import { displayConvectiveType } from "~/utils/display";
+import { displayBoilerLocation, displayConvectiveType } from "~/utils/display";
 
 async function fetchProduct(reference: string) {
 	const { data } = await useFetch(`/api/products/${reference}`);
@@ -69,7 +69,7 @@ const boilerSummary: SummarySection = {
 				"Type of boiler": "typeOfBoiler" in heatSource && heatSource.typeOfBoiler ? displayCamelToSentenceCase(heatSource.typeOfBoiler) : emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
-				"Location of boiler": "locationOfBoiler" in heatSource && heatSource.locationOfBoiler ? displayCamelToSentenceCase(heatSource.locationOfBoiler) : emptyValueRendering,
+				"Location of boiler": "specifiedLocation" in heatSource && heatSource.specifiedLocation ? displayBoilerLocation(heatSource.specifiedLocation) : emptyValueRendering,
 			};
 			return summary;
 		}) || [],
