@@ -260,7 +260,7 @@ const heatSourceOptions = new Map(
 			label="Heater position in the cylinder"
 			name="heaterPosition"
 			validation="required | number | min:0 | max:1"
-			help="Enter a number between 0 and 1. 0 is at the bottom and 1 is at the top."
+			help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
 		/>
 		<FormKit
 			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
@@ -269,7 +269,7 @@ const heatSourceOptions = new Map(
 			label="Thermostat position in the cylinder"
 			name="thermostatPosition"
 			validation="required | number | min:0 | max:1"
-			help="Enter a number between 0 and 1. 0 is at the bottom and 1 is at the top."
+			help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
 		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
