@@ -19,9 +19,9 @@ import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import { objectFromEntries } from "ts-extras";
 
 export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatPump> {
-	const heatsources = state.spaceHeating.heatSource;
-	const heatPumps = heatsources.filter(
-		(heatsource) => heatsource.typeOfHeatSource === "heatPump",
+	const heatSources = state.spaceHeating.heatSource;
+	const heatPumps = heatSources.filter(
+		(heatSource) => heatSource.typeOfHeatSource === "heatPump",
 	);
 
 	return objectFromEntries(
@@ -41,9 +41,9 @@ export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSou
 }
 
 export function mapBoilers(state: ResolvedState): Record<string, SchemaHeatSourceWetBoiler> {
-	const heatsources = state.spaceHeating.heatSource;
-	const boilers = heatsources.filter(
-		(heatsource) => heatsource.typeOfHeatSource === "boiler",
+	const heatSources = state.spaceHeating.heatSource;
+	const boilers = heatSources.filter(
+		(heatSource) => heatSource.typeOfHeatSource === "boiler",
 	);
 	// @ts-expect-error Missing properties on type
 	return objectFromEntries(
@@ -64,9 +64,9 @@ export function mapBoilers(state: ResolvedState): Record<string, SchemaHeatSourc
 }
 
 export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatBattery> {
-	const heatsources = state.spaceHeating.heatSource;
-	const heatBatteries = heatsources.filter(
-		(heatsource) => heatsource.typeOfHeatSource === "heatBattery",
+	const heatSources = state.spaceHeating.heatSource;
+	const heatBatteries = heatSources.filter(
+		(heatSource) => heatSource.typeOfHeatSource === "heatBattery",
 	);
 	// @ts-expect-error Missing properties on type
 	return objectFromEntries(
@@ -86,18 +86,18 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 }
 
 export function mapHeatNetworks(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatBattery> {
-	const heatsources = state.spaceHeating.heatSource;
-	const _heatNetworks = heatsources.filter(
-		(heatsource) => heatsource.typeOfHeatSource === "heatNetwork",
+	const heatSources = state.spaceHeating.heatSource;
+	const _heatNetworks = heatSources.filter(
+		(heatSource) => heatSource.typeOfHeatSource === "heatNetwork",
 	);
 
 	return {};
 }
 
 export function mapSolarThermalSystems(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatBattery> {
-	const heatsources = state.spaceHeating.heatSource;
-	const _solarThermals = heatsources.filter(
-		(heatsource) => heatsource.typeOfHeatSource === "solarThermalSystem",
+	const heatSources = state.spaceHeating.heatSource;
+	const _solarThermals = heatSources.filter(
+		(heatSource) => heatSource.typeOfHeatSource === "solarThermalSystem",
 	);
 
 	return {};
@@ -309,9 +309,9 @@ export function mapWarmAirHeater(state: ResolvedState): Record<string, SchemaWar
 export function getHeatSourceNameForEmitter(state: ResolvedState, emitter: HeatEmittingData): string {
 	const heatSources = state.spaceHeating.heatSource;
 	const heatSourceName = heatSources.find(
-		(heatsource) => {
+		(heatSource) => {
 			if ("heatSource" in emitter) {
-				return heatsource.id === emitter.heatSource;
+				return heatSource.id === emitter.heatSource;
 			}
 			return false;
 		},
