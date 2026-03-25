@@ -67,14 +67,14 @@ export function displayMassDistributionClass(value: ConciseMassDistributionClass
 type MassDistributionClassDisplay = "Internal" | "External" | "Divided" | "Equally" | "Inside";
 
 export function sentenceCase(value: string): string {
-	const replaced = value.replaceAll(/_/g, " ").trim();
+	const replaced = value.replace(/_/g, " ").trim();
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1).toLowerCase();
 }
 
 export type FlueGasExhaustSituationDisplay = "Into separate duct" | "Into room" | "Into mechanical vent";
 
 export function displaySnakeToSentenceCase(value: string): string {
-	const replaced = value.replaceAll(/_/g, " ");
+	const replaced = value.replace(/_/g, " ");
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1).toLowerCase();
 }
 

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import type { RadioOption } from "../form-kit/Radios.vue";
 
 interface RadiosProps {
@@ -30,7 +29,7 @@ const {
 
 const { mounted } = useMounted();
 
-const idWithKey = (key: string) => `${id}_${key.replaceAll(/ /g, "_")}`;
+const idWithKey = (key: string) => `${id}_${key.replace(/ /g, "_")}`;
 
 </script>
 

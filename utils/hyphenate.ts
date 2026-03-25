@@ -1,8 +1,10 @@
+import replaceAll from "string.prototype.replaceall";
+
 function hyphenate(value: string | undefined) {
 	if (value === undefined) {
 		return "";
 	}
-	const formattedString = value.trim().replaceAll(" ","-");
+	const formattedString = replaceAll(value.trim(), " ","-");
 
 	return formattedString.toLowerCase();
 }
