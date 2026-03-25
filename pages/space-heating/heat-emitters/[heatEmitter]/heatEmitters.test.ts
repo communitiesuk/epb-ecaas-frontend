@@ -444,7 +444,7 @@ describe("Heat emitters", () => {
 			await user.click(screen.getByTestId("typeOfHeatEmitter_instantElectricHeater"));
 
 			expect(screen.getByTestId("name")).toBeDefined();
-			expect(screen.getByTestId("convectionFractionForHeating")).toBeDefined();
+			expect(screen.getByTestId("convectiveType")).toBeDefined();
 			expect(screen.getByTestId("ratedPower")).toBeDefined();
 			expect(screen.getByTestId("numOfHeaters")).toBeDefined();
 		});
@@ -526,9 +526,8 @@ describe("Heat emitters", () => {
 				name: "IEH",
 				typeOfHeatEmitter: "instantElectricHeater",
 				ratedPower: 1,
-				convectionFractionForHeating: 1,
+				convectiveType: "Air heating (convectors, fan coils etc.)",
 				numOfHeaters: 1,
-				productReference: "IEH-SMALL",
 			};
 			store.$patch({
 				spaceHeating: {
@@ -615,9 +614,8 @@ describe("Heat emitters", () => {
 				name: "IEH",
 				typeOfHeatEmitter: "instantElectricHeater",
 				ratedPower: 1,
-				convectionFractionForHeating: 1,
+				convectiveType: "Air heating (convectors, fan coils etc.)",
 				numOfHeaters: 1,
-				productReference: "IEH-SMALL",
 			};
 			store.$patch({
 				spaceHeating: {

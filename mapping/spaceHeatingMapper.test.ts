@@ -408,16 +408,15 @@ describe("Space heating - emitters", () => {
 
 	const instantElectricHeater: HeatEmittingData = {
 		id: "ieh1",
-		name: "Instant Electric Heater 1",
+		name: "Instant Electric Heater",
 		typeOfHeatEmitter: "instantElectricHeater",
-		convectionFractionForHeating: 0.7,
+		convectiveType: "Ceiling heating, radiant ceiling electric heating",
 		numOfHeaters: 3,
 		ratedPower: 2000,
-		productReference: "IEH-SMALL",
 	};
 	const electricStorageHeater: HeatEmittingData = {
 		id: "esh1",
-		name: "Instant Electric Heater 1",
+		name: "Electric Storage Heater 1",
 		typeOfHeatEmitter: "electricStorageHeater",
 		productReference: "IEH-123",
 		numOfStorageHeaters: 4,
@@ -867,13 +866,23 @@ describe("Space heating - emitters", () => {
 			});
 
 			const expectedForSchema = {
-				[instantElectricHeater.name]: {
+				[`${instantElectricHeater.name} 1`]: {
 					type: "InstantElecHeater",
 					rated_power: instantElectricHeater.ratedPower,
-					// placeholders
-					convective_type: "Air heating (convectors, fan coils etc.)",
+					convective_type: "Ceiling heating, radiant ceiling electric heating",
 					EnergySupply: defaultElectricityEnergySupplyName,
-
+				},
+				[`${instantElectricHeater.name} 2`]: {
+					type: "InstantElecHeater",
+					rated_power: instantElectricHeater.ratedPower,
+					convective_type: "Ceiling heating, radiant ceiling electric heating",
+					EnergySupply: defaultElectricityEnergySupplyName,
+				},
+				[`${instantElectricHeater.name} 3`]: {
+					type: "InstantElecHeater",
+					rated_power: instantElectricHeater.ratedPower,
+					convective_type: "Ceiling heating, radiant ceiling electric heating",
+					EnergySupply: defaultElectricityEnergySupplyName,
 				},
 			};
 			const resolvedState = resolveState(store.$state);

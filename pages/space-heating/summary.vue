@@ -2,6 +2,7 @@
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl, type HeatEmittingData } from "#imports";
 import type { SchemaFuelType } from "~/schema/aliases";
+import { displayConvectiveType } from "~/utils/display";
 
 async function fetchProduct(reference: string) {
 	const { data } = await useFetch(`/api/products/${reference}`);
@@ -335,10 +336,8 @@ const instantElectricHeaterSummary: SummarySection = {
 		return { 
 			Name: show(instantElectricHeater.name),
 			"Type of heat emitter": "typeOfHeatEmitter" in instantElectricHeater && instantElectricHeater.typeOfHeatEmitter ? displayCamelToSentenceCase(instantElectricHeater.typeOfHeatEmitter) : emptyValueRendering,
-			"Product reference": "productReference" in instantElectricHeater ? instantElectricHeater.productReference : emptyValueRendering,
-			"Product name": "productReference" in instantElectricHeater && instantElectricHeater.productReference ? heatEmitterModelNames[instantElectricHeater.productReference] : emptyValueRendering,
 			"Rated power": "ratedPower" in instantElectricHeater ? dim(instantElectricHeater.ratedPower, "kilowatt") : emptyValueRendering,
-			"Convection fraction for heating": "convectionFractionForHeating" in instantElectricHeater ? instantElectricHeater.convectionFractionForHeating : emptyValueRendering,
+			"Type of convection": "convectiveType" in instantElectricHeater ? displayConvectiveType(instantElectricHeater.convectiveType) : emptyValueRendering,
 			"Number of heaters": "numOfHeaters" in instantElectricHeater ? instantElectricHeater.numOfHeaters : emptyValueRendering,
 		};
 	}),

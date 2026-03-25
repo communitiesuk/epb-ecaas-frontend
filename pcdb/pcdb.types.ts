@@ -307,14 +307,14 @@ const _mevProductSchema = z.discriminatedUnion("technologyType", [
 
 export type MevProduct = z.infer<typeof _mevProductSchema>;
 
-const instantElectricHeaterZod = BaseProduct.extend({
+const directElectricHeaterZod = BaseProduct.extend({
 	technologyType: z.literal("DirectElectricHeaters"),
 	c: z.nullable(z.number()),
 	thermalMass: z.nullable(z.number()),
 	n: z.nullable(z.number()),
 });
 
-export type InstantElectricHeaterProduct = z.infer<typeof instantElectricHeaterZod>;
+export type DirectElectricHeaterProduct = z.infer<typeof directElectricHeaterZod>;
 
 const heatNetworkZod = BaseProduct.extend({
 	technologyType: z.literal("HeatNetworks"),
@@ -350,7 +350,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	centralisedMvhrZod,
 	centralisedContinuousMevZod,
 	decentralisedContinuousMevZod,
-	instantElectricHeaterZod,
+	directElectricHeaterZod,
 	heatNetworkZod,
 ]);
 

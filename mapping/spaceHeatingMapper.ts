@@ -15,7 +15,9 @@ import type {
 	SchemaEcoDesignControllerWeatherCompensator,
 } from "../schema/api-schema.types";
 import type { SchemaHeatSourceWetDetails, SchemaSpaceHeatSystem } from "~/schema/aliases";
-import { defaultConvectiveType, defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
+import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
+import type { Integer } from "type-fest";
+import { objectFromEntries } from "ts-extras";
 
 export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatPump> {
 	const heatsources = state.spaceHeating.heatSource;
@@ -134,7 +136,7 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaWetDist
 				design_flow_temp: radiator.designFlowTemp,
 				HeatSource: { name: getHeatSourceNameForEmitter(state, radiator) },
 				ecodesign_controller: ecoDesignController,
-			};
+			} as const;
 
 			const data: SchemaWetDistribution = radiator.hasVariableFlowRate
 				? { ...common, variable_flow: true, min_flow_rate: radiator.minFlowRate, max_flow_rate: radiator.maxFlowRate }
@@ -330,18 +332,27 @@ export function mapInstantElectricHeaters(state: ResolvedState): Record<string, 
 		(emitter): emitter is Extract<HeatEmittingData, { typeOfHeatEmitter: "instantElectricHeater" }> => emitter.typeOfHeatEmitter === "instantElectricHeater",
 	);
 
-	return Object.fromEntries(
-		instantElecHeaters.map((emitter) => {
-			return [
-				emitter.name,
+	return objectFromEntries(
+		instantElecHeaters.map((emitter): [string, SchemaInstantElecHeater][] => {
+			const emitterName = (i: number): string => {
+				if (emitter.numOfHeaters === 1) {
+					return emitter.name;
+				}
+
+				return `${emitter.name} ${i + 1}`;
+			};
+
+			// output however many instant electric heaters were indicated in numOfHeaters field
+			return [...Array(emitter.numOfHeaters).keys()].map(i => [
+				emitterName(i),
 				{
 					type: "InstantElecHeater",
 					rated_power: emitter.ratedPower,
-					convective_type: defaultConvectiveType,
+					convective_type: emitter.convectiveType,
 					EnergySupply: defaultElectricityEnergySupplyName,
-				} as SchemaInstantElecHeater,
-			];
-		}),
+				} as const satisfies SchemaInstantElecHeater,
+			]);
+		}).flat(),
 	);
 }
 

@@ -1,10 +1,11 @@
 import { objectFromEntries } from "ts-extras";
 import type { DisplayProduct, TechnologyGroup } from "~/pcdb/pcdb.types";
-import type { SchemaApplianceType, SchemaColour, SchemaFuelType, SchemaLeaksTestPressure, SchemaRadiatorType } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaColour, SchemaConvectiveType, SchemaFuelType, SchemaLeaksTestPressure, SchemaRadiatorType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
 import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
+import type { Split } from "type-fest";
 
 export const emptyValueRendering = "-";
 
@@ -427,3 +428,21 @@ export const wwhrsTypes = {
 	"instantaneousSystemC": "WWHRS instantaneous system C",
 } as const satisfies Record<WwhrsType, string>;
 
+// we can get the display form by taking SchemaConvectiveType and
+// splitting off the first fragment before ", " or " ("
+type ConvectiveTypeDisplay = Split<Split<SchemaConvectiveType, " (">[0], ", ">[0];
+
+export const convectiveTypes = {
+	"Air heating (convectors, fan coils etc.)": "Air heating",
+	"Free heating surface (radiators, radiant panels etc.)": "Free heating surface",
+	"Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves": "Floor heating",
+	"Wall heating, radiant ceiling panels, accumulation stoves": "Wall heating",
+	"Ceiling heating, radiant ceiling electric heating": "Ceiling heating",
+} as const satisfies Record<SchemaConvectiveType, ConvectiveTypeDisplay>;
+
+export function displayConvectiveType(type: SchemaConvectiveType | undefined): ConvectiveTypeDisplay | typeof emptyValueRendering {
+	if (!type) {
+		return emptyValueRendering;
+	}
+	return convectiveTypes[type];
+}

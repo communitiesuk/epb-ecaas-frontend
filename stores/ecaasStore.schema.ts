@@ -1070,12 +1070,14 @@ const warmAirHeaterSchema = namedWithId.extend({
 	numOfWarmAirHeaters: z.number(),
 });
 
+export const instantElectricHeaterRatedPowerZod = z.number().min(0.1).max(70);
+export const numOfInstantElectricHeatersZod = z.number().min(1);
+
 const instantElectricHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("instantElectricHeater"),
-	productReference: z.string(),
-	convectionFractionForHeating: z.number(),
-	ratedPower: z.number(),
-	numOfHeaters: z.number(),
+	convectiveType: convectiveTypeZod,
+	ratedPower: instantElectricHeaterRatedPowerZod,
+	numOfHeaters: numOfInstantElectricHeatersZod,
 });
 
 const electricStorageHeaterSchema = namedWithId.extend({

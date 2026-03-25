@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { InstantElectricHeaterProduct, Product } from "~/pcdb/pcdb.types";
+import type { DirectElectricHeaterProduct, Product } from "~/pcdb/pcdb.types";
 
 const { product } = defineProps<{ product: Product }>();
-const data = product as InstantElectricHeaterProduct;
+const data = product as DirectElectricHeaterProduct;
 
 const tableData: Record<string, string> = 
 {

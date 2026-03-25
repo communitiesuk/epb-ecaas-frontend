@@ -434,10 +434,9 @@ describe("Space heating summary page", () => {
 			id: "151617",
 			name: "Instant Electric Heater 1",
 			typeOfHeatEmitter: "instantElectricHeater",
-			convectionFractionForHeating: 0.9,
+			convectiveType: "Air heating (convectors, fan coils etc.)",
 			numOfHeaters: 6,
 			ratedPower: 2.5,
-			productReference: "IEH-SMALL",
 		};
 		const electricStorageHeater: HeatEmittingData = {
 			id: "181920",
@@ -527,10 +526,8 @@ describe("Space heating summary page", () => {
 
 		const expectedInstantElectricHeaterData = {
 			Name: "Instant Electric Heater 1",
-			"Product reference": "IEH-SMALL",
-			"Product name": "Mock product",
 			"Rated power": "2.5 kW",
-			"Convection fraction for heating": "0.9",
+			"Type of convection": "Air heating",
 			"Number of heaters": "6",
 		};
 

@@ -10,7 +10,6 @@ export const defaultZoneName: string = "dwellingspace";
 export const defaultElectricityEnergySupplyName = "mains elec";
 export const minOutdoorTemp = 0;
 export const maxOutdoorTemp = 15;
-export const defaultConvectiveType = "Air heating (convectors, fan coils etc.)"; // we don't ask for this in the UI yet so defaulting
 
 export const defaultHeatSourceWetDetails = {
 	type: "HeatPump",
