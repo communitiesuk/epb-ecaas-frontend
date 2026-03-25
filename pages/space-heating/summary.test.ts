@@ -171,7 +171,7 @@ describe("Space heating summary page", () => {
 				typeOfHeatPump: "booster",
 				productReference: "HEATPUMP_LARGE",
 			};
-      
+
 			const heatNetwork1: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Heat network 1",
@@ -475,7 +475,7 @@ describe("Space heating summary page", () => {
 			"Design temperature difference across emitters": "10 °C",
 			"Number of radiators": "5",
 			"Is there a variable flow rate?": "No",
-			"Design flow rate": "100 litres per second",
+			"Design flow rate": "100 l/min",
 			"Eco design controller class": "2",
 			"Minimum outdoor temperature": "1 °C",
 			"Maximum outdoor temperature": "15 °C",
@@ -490,8 +490,8 @@ describe("Space heating summary page", () => {
 			"Design flow temperature": "50 °C",
 			"Design temperature difference across emitters": "10 °C",
 			"Is there a variable flow rate?": "Yes",
-			"Maximum flow rate": "200 litres per second",
-			"Minimum flow rate": "50 litres per second",
+			"Maximum flow rate": "200 l/min",
+			"Minimum flow rate": "50 l/min",
 			"Number of fan coils": "3",
 			"Eco design controller class": "2",
 			"Minimum outdoor temperature": "1 °C",
@@ -507,8 +507,8 @@ describe("Space heating summary page", () => {
 			"Design flow temperature": "35 °C",
 			"Design temperature difference across emitters": "10 °C",
 			"Is there a variable flow rate?": "Yes",
-			"Maximum flow rate": "150 litres per second",
-			"Minimum flow rate": "30 litres per second",
+			"Maximum flow rate": "150 l/min",
+			"Minimum flow rate": "30 l/min",
 			"Area of underfloor heating": "100 m²",
 			"Eco design controller class": "3",
 			"Minimum outdoor temperature": "0 °C",
