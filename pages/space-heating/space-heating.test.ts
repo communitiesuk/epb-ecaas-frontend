@@ -156,6 +156,7 @@ describe("space heating", () => {
 					minFlowRate: 50,
 					id: "radiator-1",
 					numOfRadiators: 5,
+					percentageRecirculated: 20,
 				};
 
 				store.$patch({

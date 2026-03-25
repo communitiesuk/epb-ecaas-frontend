@@ -86,7 +86,7 @@ describe("Heat emitters", () => {
 
 			const selectBox = screen.getByRole("combobox");
 			await user.selectOptions(selectBox, num);
-			if (expectToBeDisplayed) {			
+			if (expectToBeDisplayed) {
 				expect(screen.getByTestId("minFlowTemp")).toBeDefined();
 				expect(screen.getByTestId("minOutdoorTemp")).toBeDefined();
 				expect(screen.getByTestId("maxOutdoorTemp")).toBeDefined();
@@ -156,6 +156,7 @@ describe("Heat emitters", () => {
 			hasVariableFlowRate: false,
 			designFlowRate: 100,
 			length: 1200,
+			percentageRecirculated: 20,
 		};
 
 		test("form is prepopulated when data exists in state", async () => {
@@ -270,7 +271,7 @@ describe("Heat emitters", () => {
 
 			const selectBox = screen.getByRole("combobox");
 			await user.selectOptions(selectBox, num);
-			if (expectToBeDisplayed) {			
+			if (expectToBeDisplayed) {
 				expect(screen.getByTestId("minFlowTemp")).toBeDefined();
 				expect(screen.getByTestId("minOutdoorTemp")).toBeDefined();
 				expect(screen.getByTestId("maxOutdoorTemp")).toBeDefined();
@@ -365,7 +366,7 @@ describe("Heat emitters", () => {
 
 			const selectBox = screen.getByRole("combobox");
 			await user.selectOptions(selectBox, num);
-			if (expectToBeDisplayed) {			
+			if (expectToBeDisplayed) {
 				expect(screen.getByTestId("minFlowTemp")).toBeDefined();
 				expect(screen.getByTestId("minOutdoorTemp")).toBeDefined();
 				expect(screen.getByTestId("maxOutdoorTemp")).toBeDefined();
@@ -680,6 +681,7 @@ describe("Heat emitters", () => {
 					hasVariableFlowRate: false,
 					designFlowRate: 100,
 					length: 1200,
+					percentageRecirculated: 20,
 				};
 
 				store.$patch({
@@ -750,6 +752,7 @@ describe("Heat emitters", () => {
 				hasVariableFlowRate: false,
 				designFlowRate: 100,
 				length: 1200,
+				percentageRecirculated: 20,
 			};
 
 			test("marks section as not complete after editing an existing item", async () => {

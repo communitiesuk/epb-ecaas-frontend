@@ -135,7 +135,8 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaWetDist
 				design_flow_temp: radiator.designFlowTemp,
 				HeatSource: { name: getHeatSourceNameForEmitter(state, radiator) },
 				ecodesign_controller: ecoDesignController,
-			} as const;
+				bypass_fraction_recirculated: radiator.percentageRecirculated / 100,
+			};
 
 			const data: SchemaWetDistribution = radiator.hasVariableFlowRate
 				? { ...common, variable_flow: true, min_flow_rate: radiator.minFlowRate, max_flow_rate: radiator.maxFlowRate }
@@ -197,6 +198,7 @@ export function mapUnderfloorHeating(state: ResolvedState): Record<string, Schem
 				design_flow_temp: heating.designFlowTemp,
 				HeatSource: { name: getHeatSourceNameForEmitter(state, heating) },
 				ecodesign_controller: ecoDesignController,
+				bypass_fraction_recirculated: heating.percentageRecirculated / 100,
 			};
 
 			const data: SchemaWetDistribution = heating.hasVariableFlowRate
@@ -239,6 +241,7 @@ export function mapFanCoils(state: ResolvedState): Record<string, SchemaWetDistr
 				design_flow_temp: fancoil.designFlowTemp,
 				HeatSource: { name: getHeatSourceNameForEmitter(state, fancoil) },
 				ecodesign_controller: ecoDesignController,
+				bypass_fraction_recirculated: fancoil.percentageRecirculated / 100,
 			};
 			const data: SchemaWetDistribution = fancoil.hasVariableFlowRate
 				? { ...common, variable_flow: true, min_flow_rate: fancoil.minFlowRate, max_flow_rate: fancoil.maxFlowRate }

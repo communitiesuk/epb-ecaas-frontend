@@ -95,4 +95,5 @@ defineProps<{
 		label="Area of underfloor heating"
 		suffix-text="m²"
 		validation="required" />
+	<FieldsPercentageRecuirculated />
 </template>

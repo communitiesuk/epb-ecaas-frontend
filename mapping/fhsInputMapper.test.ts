@@ -216,6 +216,7 @@ const expectedHouseInput: FhsInputSchema = {
 			"temp_diff_emit_dsgn": 5,
 			"type": "WetDistribution",
 			"variable_flow": false,
+			"bypass_fraction_recirculated": 0.99,
 		},
 		"Warm Air Heater 1": {
 			"HeatSource": {
@@ -635,6 +636,7 @@ const expectedFlatInput: FhsInputSchema = {
 			"temp_diff_emit_dsgn": 5,
 			"type": "WetDistribution",
 			"variable_flow": false,
+			"bypass_fraction_recirculated": 0.2,
 		},
 		"Warm Air Heater 1": {
 			"HeatSource": {
@@ -1238,6 +1240,7 @@ describe("FHS input mapper", () => {
 						designTempDiffAcrossEmitters: 5,
 						hasVariableFlowRate: false,
 						designFlowRate: 200,
+						percentageRecirculated: 99,
 					},
 					complete: true,
 				},
@@ -2037,6 +2040,7 @@ describe("FHS input mapper", () => {
 						designTempDiffAcrossEmitters: 5,
 						hasVariableFlowRate: false,
 						designFlowRate: 200,
+						percentageRecirculated: 20,
 					},
 					complete: true,
 				},

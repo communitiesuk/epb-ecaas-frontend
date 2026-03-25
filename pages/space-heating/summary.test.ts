@@ -340,6 +340,7 @@ describe("Space heating summary page", () => {
 			hasVariableFlowRate: false,
 			designFlowRate: 100,
 			length: 1,
+			percentageRecirculated: 20,
 		};
 		const radiatorWithEcoDesign2367: HeatEmittingData = {
 			id: "5678",
@@ -358,6 +359,7 @@ describe("Space heating summary page", () => {
 			hasVariableFlowRate: false,
 			designFlowRate: 100,
 			length: 1,
+			percentageRecirculated: 21,
 		};
 		const fanCoil: HeatEmittingData = {
 			id: "5678",
@@ -371,6 +373,7 @@ describe("Space heating summary page", () => {
 			maxFlowRate: 200,
 			minFlowRate: 50,
 			numOfFanCoils: 3,
+			percentageRecirculated: 22,
 		};
 		const fanCoilWithEcoDesign2367: HeatEmittingData = {
 			id: "5678",
@@ -387,6 +390,7 @@ describe("Space heating summary page", () => {
 			maxFlowRate: 200,
 			minFlowRate: 50,
 			numOfFanCoils: 3,
+			percentageRecirculated: 23,
 		};
 
 		const ufh: HeatEmittingData = {
@@ -402,6 +406,7 @@ describe("Space heating summary page", () => {
 			minFlowRate: 30,
 			areaOfUnderfloorHeating: 100,
 			ecoDesignControllerClass: "1",
+			percentageRecirculated: 24,
 		};
 		const ufhWithEcoDesign2367: HeatEmittingData = {
 			id: "91011",
@@ -419,6 +424,7 @@ describe("Space heating summary page", () => {
 			minFlowTemp: 25,
 			minOutdoorTemp: 0,
 			maxOutdoorTemp: 20,
+			percentageRecirculated: 25,
 		};
 
 		const warmAirHeater: HeatEmittingData = {
@@ -476,6 +482,7 @@ describe("Space heating summary page", () => {
 			"Number of radiators": "5",
 			"Is there a variable flow rate?": "No",
 			"Design flow rate": "100 l/min",
+			"Percentage recirculated": "21 %",
 			"Eco design controller class": "2",
 			"Minimum outdoor temperature": "1 °C",
 			"Maximum outdoor temperature": "15 °C",
@@ -492,6 +499,7 @@ describe("Space heating summary page", () => {
 			"Is there a variable flow rate?": "Yes",
 			"Maximum flow rate": "200 l/min",
 			"Minimum flow rate": "50 l/min",
+			"Percentage recirculated": "23 %",
 			"Number of fan coils": "3",
 			"Eco design controller class": "2",
 			"Minimum outdoor temperature": "1 °C",
@@ -510,6 +518,7 @@ describe("Space heating summary page", () => {
 			"Maximum flow rate": "150 l/min",
 			"Minimum flow rate": "30 l/min",
 			"Area of underfloor heating": "100 m²",
+			"Percentage recirculated": "25 %",
 			"Eco design controller class": "3",
 			"Minimum outdoor temperature": "0 °C",
 			"Maximum outdoor temperature": "20 °C",

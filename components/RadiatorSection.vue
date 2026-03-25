@@ -117,5 +117,6 @@ const emit = defineEmits(["update-radiator-model"]);
 			:validation-messages="{
 				isInteger: `Number of radiators must be an integer.`,
 			}" />
+		<FieldsPercentageRecuirculated />
 	</template>
 </template>

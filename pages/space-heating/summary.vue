@@ -245,6 +245,7 @@ const radiatorSummary: SummarySection = {
 			"Maximum flow rate": "maxFlowRate" in radiator ? dim(radiator.maxFlowRate, "litres per minute") : emptyValueRendering,
 			"Minimum flow rate": "minFlowRate" in radiator ? dim(radiator.minFlowRate, "litres per minute") : emptyValueRendering,
 			"Design flow rate": "designFlowRate" in radiator ? dim(radiator.designFlowRate, "litres per minute") : emptyValueRendering,
+			"Percentage recirculated": "percentageRecirculated" in radiator ? `${radiator.percentageRecirculated} %` : emptyValueRendering,
 			"Number of radiators": "numOfRadiators" in radiator ? radiator.numOfRadiators : emptyValueRendering,
 		};
 	}),
@@ -276,6 +277,7 @@ const ufhSummary: SummarySection = {
 			"Minimum flow rate": "minFlowRate" in ufh ? dim(ufh.minFlowRate, "litres per minute") : emptyValueRendering,
 			"Design flow rate": "designFlowRate" in ufh ? dim(ufh.designFlowRate, "litres per minute") : emptyValueRendering,
 			"Area of underfloor heating": ufh.areaOfUnderfloorHeating ? dim(ufh.areaOfUnderfloorHeating, "metres square") : emptyValueRendering,
+			"Percentage recirculated": "percentageRecirculated" in ufh ? `${ufh.percentageRecirculated} %` : emptyValueRendering,
 		};
 	}),
 	editUrl: "/space-heating/heat-emitters",
@@ -304,6 +306,7 @@ const fanCoilSummary: SummarySection = {
 			"Maximum flow rate": "maxFlowRate" in fanCoil ? dim(fanCoil.maxFlowRate, "litres per minute") : emptyValueRendering,
 			"Minimum flow rate": "minFlowRate" in fanCoil ? dim(fanCoil.minFlowRate, "litres per minute") : emptyValueRendering,
 			"Design flow rate": "designFlowRate" in fanCoil ? dim(fanCoil.designFlowRate, "litres per minute") : emptyValueRendering,
+			"Percentage recirculated": "percentageRecirculated" in fanCoil ? `${fanCoil.percentageRecirculated} %` : emptyValueRendering,
 			"Number of fan coils": "numOfFanCoils" in fanCoil ? fanCoil.numOfFanCoils : emptyValueRendering,
 		};
 	}),

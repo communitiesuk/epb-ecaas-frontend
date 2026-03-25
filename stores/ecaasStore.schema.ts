@@ -975,6 +975,7 @@ const radiatorBase = namedWithId.extend({
 	designFlowTemp: z.number(),
 	designTempDiffAcrossEmitters: z.number(),
 	numOfRadiators: z.number(),
+	percentageRecirculated: z.number().min(0).max(100),
 });
 
 export type EcoControlClassesWithExtraOptions = "2" | "3" | "6" | "7";
@@ -1039,6 +1040,7 @@ const underfloorHeatingBase = namedWithId.extend({
 	designFlowTemp: z.number(),
 	designTempDiffAcrossEmitters: z.number(),
 	areaOfUnderfloorHeating: z.number(),
+	percentageRecirculated: z.number().min(0).max(100),
 });
 
 export const underFloorHeatingSchema = nestedDiscriminatedUnion(
@@ -1054,6 +1056,7 @@ const fanCoilBase = namedWithId.extend({
 	designFlowTemp: z.number(),
 	designTempDiffAcrossEmitters: z.number(),
 	numOfFanCoils: z.number(),
+	percentageRecirculated: z.number().min(0).max(100),
 });
 
 export const fanCoilSchema = nestedDiscriminatedUnion(

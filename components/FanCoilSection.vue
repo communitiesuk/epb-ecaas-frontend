@@ -96,4 +96,5 @@ defineProps<{
 		help="Enter the number of fan coil systems with this specification in the dwelling"
 		
 		validation="required" />
+	<FieldsPercentageRecuirculated />
 </template>

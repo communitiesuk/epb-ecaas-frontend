@@ -300,6 +300,7 @@ describe("Space heating - emitters", () => {
 		designTempDiffAcrossEmitters: 5,
 		hasVariableFlowRate: false,
 		designFlowRate: 200,
+		percentageRecirculated: 99,
 	};
 	const ufhWithWeatherCompensator: HeatEmittingData = {
 		id: "ufh2",
@@ -317,6 +318,7 @@ describe("Space heating - emitters", () => {
 		maxOutdoorTemp: 18,
 		minOutdoorTemp: 2,
 		minFlowTemp: 35,
+		percentageRecirculated: 95,
 	};
 
 	const warmAirHeater: HeatEmittingData = {
@@ -342,6 +344,7 @@ describe("Space heating - emitters", () => {
 		hasVariableFlowRate: false,
 		designFlowRate: 100,
 		length: 1000,
+		percentageRecirculated: 98,
 	};
 	const towelRadiatorNoWeatherCompensator: HeatEmittingData = {
 		id: "rad2",
@@ -356,6 +359,7 @@ describe("Space heating - emitters", () => {
 		designTempDiffAcrossEmitters: 12,
 		hasVariableFlowRate: false,
 		designFlowRate: 80,
+		percentageRecirculated: 97,
 	};
 	const towelRadiatorWithWeatherCompensator: HeatEmittingData = {
 		id: "rad3",
@@ -373,6 +377,7 @@ describe("Space heating - emitters", () => {
 		maxOutdoorTemp: 20,
 		minOutdoorTemp: 0,
 		minFlowTemp: 30,
+		percentageRecirculated: 96,
 	};
 
 	const fanCoilNoWeatherCompensator: HeatEmittingData = {
@@ -387,6 +392,7 @@ describe("Space heating - emitters", () => {
 		designTempDiffAcrossEmitters: 7,
 		hasVariableFlowRate: false,
 		designFlowRate: 150,
+		percentageRecirculated: 94,
 	};
 	const fanCoilWithWeatherCompensator: HeatEmittingData = {
 		id: "fc2",
@@ -404,6 +410,7 @@ describe("Space heating - emitters", () => {
 		minOutdoorTemp: 4,
 		minFlowTemp: 40,
 		minFlowRate: 120,
+		percentageRecirculated: 93,
 	};
 
 	const instantElectricHeater: HeatEmittingData = {
@@ -465,6 +472,7 @@ describe("Space heating - emitters", () => {
 						ecodesign_control_class: +standardRadiatorNoWeatherCompensator.ecoDesignControllerClass,
 					},
 					Zone: defaultZoneName,
+					bypass_fraction_recirculated: standardRadiatorNoWeatherCompensator.percentageRecirculated / 100,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -512,6 +520,7 @@ describe("Space heating - emitters", () => {
 						ecodesign_control_class: +towelRadiatorNoWeatherCompensator.ecoDesignControllerClass,
 					},
 					Zone: defaultZoneName,
+					bypass_fraction_recirculated: towelRadiatorNoWeatherCompensator.percentageRecirculated / 100,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -563,6 +572,7 @@ describe("Space heating - emitters", () => {
 						ecodesign_control_class: +standardRadiatorNoWeatherCompensator.ecoDesignControllerClass,
 					},
 					Zone: defaultZoneName,
+					bypass_fraction_recirculated: standardRadiatorNoWeatherCompensator.percentageRecirculated / 100,
 				}, [towelRadiatorNoWeatherCompensator.name]: {
 					type: "WetDistribution",
 					EnergySupply: defaultElectricityEnergySupplyName,
@@ -589,6 +599,7 @@ describe("Space heating - emitters", () => {
 						ecodesign_control_class: +towelRadiatorNoWeatherCompensator.ecoDesignControllerClass,
 					},
 					Zone: defaultZoneName,
+					bypass_fraction_recirculated: towelRadiatorNoWeatherCompensator.percentageRecirculated / 100,
 				},
 
 			};
@@ -639,6 +650,7 @@ describe("Space heating - emitters", () => {
 						min_flow_temp: towelRadiatorWithWeatherCompensator.minFlowTemp,
 					},
 					Zone: defaultZoneName,
+					bypass_fraction_recirculated: towelRadiatorWithWeatherCompensator.percentageRecirculated / 100,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -685,7 +697,7 @@ describe("Space heating - emitters", () => {
 						ecodesign_control_class: +ufhNoWeatherCompensator.ecoDesignControllerClass,
 					},
 					Zone: defaultZoneName,
-
+					bypass_fraction_recirculated: ufhNoWeatherCompensator.percentageRecirculated / 100,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -732,7 +744,7 @@ describe("Space heating - emitters", () => {
 					max_flow_rate: ufhWithWeatherCompensator.maxFlowRate,
 					min_flow_rate: ufhWithWeatherCompensator.minFlowRate,
 					Zone: defaultZoneName,
-
+					bypass_fraction_recirculated: ufhWithWeatherCompensator.percentageRecirculated / 100,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -791,6 +803,7 @@ describe("Space heating - emitters", () => {
 						ecodesign_control_class: +fanCoilNoWeatherCompensator.ecoDesignControllerClass,
 					},
 					Zone: defaultZoneName,
+					bypass_fraction_recirculated: fanCoilNoWeatherCompensator.percentageRecirculated / 100,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -842,6 +855,7 @@ describe("Space heating - emitters", () => {
 					max_flow_rate: fanCoilWithWeatherCompensator.maxFlowRate,
 					min_flow_rate: fanCoilWithWeatherCompensator.minFlowRate,
 					Zone: defaultZoneName,
+					bypass_fraction_recirculated: fanCoilWithWeatherCompensator.percentageRecirculated / 100,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -1011,6 +1025,7 @@ describe("Space heating - emitters", () => {
 							ecodesign_control_class: +standardRadiatorNoWeatherCompensator.ecoDesignControllerClass,
 						},
 						Zone: defaultZoneName,
+						bypass_fraction_recirculated: standardRadiatorNoWeatherCompensator.percentageRecirculated / 100,
 					},
 					[ufhNoWeatherCompensator.name]: {
 						type: "WetDistribution",
@@ -1033,6 +1048,7 @@ describe("Space heating - emitters", () => {
 							ecodesign_control_class: +ufhNoWeatherCompensator.ecoDesignControllerClass,
 						},
 						Zone: defaultZoneName,
+						bypass_fraction_recirculated: ufhNoWeatherCompensator.percentageRecirculated / 100,
 					},
 					[warmAirHeater.name]: {
 						type: "WarmAir",
