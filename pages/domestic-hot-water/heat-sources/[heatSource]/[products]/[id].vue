@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
-import { heatPumpProductTypesMap, type HotWaterOnlyHeatPumpProduct } from "~/pcdb/pcdb.types";
+import { heatPumpProductTypesMap, technologyGroups, type HotWaterOnlyHeatPumpProduct, type TechnologyGroup } from "~/pcdb/pcdb.types";
 import { productTypeMap, typeOfHeatSource, type HeatSourceData, type PcdbProduct } from "~/stores/ecaasStore.schema";
-import { boilerTypes, heatPumpTypes, heatSourceProductTypesDisplay } from "~/utils/display";
+import { boilerTypes, heatSourceProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
 
 definePageMeta({ layout: "one-column" });
@@ -13,28 +13,25 @@ const { params } = useRoute();
 
 const heatSourceType = kebabToCamelCase(params.products as string);
 
-if (!(heatSourceType in productTypeMap)) {
+if (!(heatSourceType in productTypeMap) && !technologyGroups.includes(heatSourceType as TechnologyGroup)) {
 	throw createError({
 		statusCode: 404,
 		statusMessage: "Product type not found",
 	});
 }
 
-const technologyType = productTypeMap[heatSourceType as HeatSourceProductType];
 const pageId = `${heatSourceType}Products` as PageId;
 const productType = heatSourceProductTypesDisplay[heatSourceType as HeatSourceProductType];
 
 const index = Number(params.heatSource);
 
-const { data: { value: data } } = await useFetch(`/api/products/${params.id}/details`, {
-	query: {
-		technologyType,
-	},
-});
+const { data: { value: data } } = await useFetch(`/api/products/${params.id}/details`);
 
 const backUrl = getUrl(pageId)
 	.replace(":heatSource", params.heatSource as string);
 
+
+// TODO refactor out
 const selectProduct = () => {
 	store.$patch((state) => {
 		const item = state.domesticHotWater.heatSources.data[index];
@@ -87,7 +84,7 @@ const selectProduct = () => {
 
 	<ProductDetailsHybridHeatPump v-if="!!data && data.technologyType === 'HybridHeatPump'" :product="data" />
 	<ProductDetailsHotWaterHeatPump v-else-if="data?.technologyType === 'HotWaterOnlyHeatPump'" :product="data" />
-	<ProductDetailsHeatPump v-else-if="!!data && heatSourceType in heatPumpTypes" :product="data" />
+	<ProductDetailsHeatPump v-else-if="!!data && technologyGroups.includes(data.technologyGroup as TechnologyGroup)" :product="data" />
 
 	<ProductDetailsBoiler v-if="!!data && heatSourceType in boilerTypes" :product="data!"/>
 	<ProductDetailsHeatBatteryPCM v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryPcm" :product="data!" />

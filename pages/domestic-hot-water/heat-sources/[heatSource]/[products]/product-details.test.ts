@@ -25,6 +25,7 @@ describe("Heat source details", async () => {
 		modelName: "Small Heat Pump",
 		modelQualifier: "HPSMALL",
 		technologyType: "AirSourceHeatPump",
+		technologyGroup: "heatPump",
 	};
 
 	const combiBoilerProduct: Partial<Product> = {
@@ -125,6 +126,14 @@ describe("Heat source details", async () => {
 		expect(heatSource.productReference).toBe("1000");
 	});
 
+	test("Displays heat pump details when product is a heat pump", async () => {
+		// Act
+		await renderSuspended(ProductDetails);
+			
+		// Assert
+		expect((await screen.findByTestId("heatPump"))).toBeDefined();
+	});
+
 	test("Boiler location is stored as 'heatedSpace' when boiler location is 'internal'", async () => {
 		// Arrange
 		mockRoute.mockReturnValue({
@@ -148,6 +157,32 @@ describe("Heat source details", async () => {
 
 		// Assert
 		expect(heatSource).toEqual(expect.objectContaining({ locationOfBoiler: "heatedSpace" }));
+	});
+
+	test("Displays hybrid heat pump details when product is a hyrbid heat pump", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-pump",
+				id: "1000",
+			},
+			path: "/0/heat-pump/1000",
+		});
+	
+		mockFetch.mockReturnValue({
+			data: ref({
+				...heatPumpProduct,
+				modelName: "Hybrid heat pump",
+				technologyType: "HybridHeatPump",
+			}),
+		});
+	
+		// Act
+		await renderSuspended(ProductDetails);
+			
+		// Assert
+		expect((await screen.findByTestId("hybridHeatPump"))).toBeDefined();
 	});
 
 	test("when a heat network product is a fifth generation, isFifthGeneration is set to true", async () => {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { page } from "~/data/pages/pages";
-import { heatPumpProductTypesMap, type DisplayProduct, type HeatPumpProduct } from "~/pcdb/pcdb.types";
+import { heatPumpProductTypesMap, technologyGroups, type DisplayProduct, type HeatPumpProduct, type TechnologyGroup } from "~/pcdb/pcdb.types";
 import { productTypeMap } from "~/stores/ecaasStore.schema";
 import { getHeatNetworkProduct } from "~/utils/getHeatNetworkProduct";
 
@@ -9,14 +9,33 @@ definePageMeta({ layout: false });
 const store = useEcaasStore();
 const { pageId, title, index, searchModel, searchData } = useProductsPage("heatSource");
 
+const heatSourceProductType = pageId as (HeatSourceProductType | TechnologyGroup);
+
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
-		technologyType: productTypeMap[pageId as HeatSourceProductType],
+		...(technologyGroups.includes(heatSourceProductType as TechnologyGroup) ? {
+			technologyGroup: heatSourceProductType,
+		} : {
+			technologyType: productTypeMap[heatSourceProductType as HeatSourceProductType],
+		}),
 	},
 });
 
+if (heatSourceProductType === "heatPump") {
+	const hWOHPValue = (await useFetch("/api/products", {
+		query: {
+			technologyType: productTypeMap["hotWaterOnly"],
+		},
+	})).data.value;
+	if (hWOHPValue && value) {
+		value.data = value.data.concat(hWOHPValue.data);
+	}
+}
+
 const { pagination } = searchData(value?.data ?? []);
 
+
+// TODO refactor out
 const selectProduct = (product: DisplayProduct) => {
 	store.$patch((state) => {
 

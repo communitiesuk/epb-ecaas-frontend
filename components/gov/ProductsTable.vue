@@ -36,6 +36,7 @@ const route = useRoute();
 					v-for="product, index in products"
 					:key="product.id"
 					class="govuk-table__row"
+					data-testid="productRow"
 				>
 					<td class="govuk-table__cell">{{ product.id }}</td>
 					<td class="govuk-table__cell">{{ product.brandName }}</td>

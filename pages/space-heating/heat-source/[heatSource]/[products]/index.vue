@@ -25,6 +25,8 @@ const { title, index, searchModel, searchData } = useProductsPage("heatSource");
 
 const { pagination } = searchData(value?.data ?? []);
 
+
+// TODO refactor out
 const selectProduct = async (product: DisplayProduct) => {
 	store.$patch((state) => {
 

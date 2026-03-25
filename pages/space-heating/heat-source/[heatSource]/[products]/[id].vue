@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
 import { heatPumpProductTypesMap, technologyGroups, type HeatPumpProduct, type TechnologyGroup } from "~/pcdb/pcdb.types";
-import { productTypeMap, typeOfHeatSource, type HeatSourceData, type PcdbProduct } from "~/stores/ecaasStore.schema";
+import { productTypeMap, typeOfHeatSource, type HeatSourceData, type HeatSourceProductType, type PcdbProduct } from "~/stores/ecaasStore.schema";
 import { boilerTypes, heatSourceProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
 
@@ -20,10 +20,8 @@ if (!(heatSourceType in productTypeMap) && !technologyGroups.includes(heatSource
 	});
 }
 
-const heatSourceProductType = heatSourceType as (HeatSourceProductType | TechnologyGroup);
-
 const pageId = `${heatSourceType}Products` as PageId;
-const productType = heatSourceProductTypesDisplay[heatSourceProductType];
+const productType = heatSourceProductTypesDisplay[heatSourceType as HeatSourceProductType];
 
 const index = Number(params.heatSource);
 const { data: { value: data } } = await useFetch(`/api/products/${params.id}/details`);
@@ -31,6 +29,8 @@ const { data: { value: data } } = await useFetch(`/api/products/${params.id}/det
 const backUrl = getUrl(pageId)
 	.replace(":heatSource", params.heatSource as string);
 
+
+// TODO refactor out
 const selectProduct = () => {
 	store.$patch((state) => {
 		const item = state.spaceHeating.heatSource.data[index];
@@ -39,7 +39,7 @@ const selectProduct = () => {
 			const heatSourceData = item.data as HeatSourceData;
 			
 			if (heatSourceData.typeOfHeatSource === "heatNetwork") {
-				if (heatSourceData.usesHeatInterfaceUnits && heatSourceProductType === "heatInterfaceUnit") {
+				if (heatSourceData.usesHeatInterfaceUnits && heatSourceType === "heatInterfaceUnit") {
 					heatSourceData.heatInterfaceUnitProductReference = data.id;
 					return;
 				}

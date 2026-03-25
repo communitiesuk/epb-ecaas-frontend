@@ -102,7 +102,7 @@ describe("Heat source products page", () => {
 		store.$reset();
 	});
 
-	test("title dependant on the type of heat pump", async () => {
+	test("title dependant on the type of heat source", async () => {
 		mockRoute.mockReturnValue({
 			params: {
 				pump: "0",
@@ -209,6 +209,50 @@ describe("Heat source products page", () => {
 		await renderSuspended(Products);
 		await user.click(screen.getByTestId("selectProductButton_0"));
 		expect((store.domesticHotWater.heatSources.data[3]!.data as { isFifthGeneration: boolean }).isFifthGeneration).toBe(true);
+	});
+
+	test("makes additional fetch for hot water only heat pumps if pageId is heatPump", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "1",
+				products: "heat-pump",
+			},
+			path: "/1/heat-pump",
+		});
+
+		const HOT_WATER_HEAT_PUMPS = {
+			data: [{
+				id: "1003",
+				brandName: "Test",
+				modelName: "Small Hot Water Only Heat Pump",
+				modelQualifier: "HWHPSMALL",
+				technologyType: "HotWaterOnlyHeatPump",
+			}],
+		};
+
+		mockFetch.mockResolvedValueOnce({
+			data: ref({ ...MOCKED_HEAT_PUMPS }),
+		}).mockResolvedValueOnce({
+			data: ref(HOT_WATER_HEAT_PUMPS),
+		});
+
+		await renderSuspended(Products);
+		expect(mockFetch).toHaveBeenCalledTimes(2);
+		
+		expect(mockFetch).toHaveBeenNthCalledWith(
+			1,
+			"/api/products",
+			{ query: { technologyGroup: "heatPump" } },
+			expect.any(String), // nuxt appears to call useFetch with "$-AeMDhtYIx" as an extra arg here (???)
+		);
+		expect(mockFetch).toHaveBeenNthCalledWith(
+			2,
+			"/api/products",
+			{ query: { technologyType: "HotWaterOnlyHeatPump" } },
+			expect.any(String), // nuxt appears to call useFetch with "$-AeMDhtYIx" as an extra arg here (???)
+		);
+		
+		expect(screen.queryAllByTestId("productRow").length).toBe(MOCKED_HEAT_PUMPS.data.length + HOT_WATER_HEAT_PUMPS.data.length);
 	});
 		
 	test("'Back to heat source' navigates user to the heat source at the correct index", async () => {
