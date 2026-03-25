@@ -228,7 +228,7 @@ const heatSourceOptions = new Map(
 				name="isAirPressureShower"
 				type="govBoolean"
 				label="Is this an air pressure shower?"
-				help="Air pressure showers are showers that can be used at a lower flow rate by mixing air into the water stream"
+				help="Air pressure showers are products that can be used at a lower flow rate by mixing air into the water stream"
 			/>
 			<!-- TODO: Plumb this PCDB in -->
 			<FieldsSelectPcdbProduct
