@@ -2,6 +2,7 @@
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { SchemaSpaceCoolSystemDetails } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName } from "./common";
+import { objectFromEntries } from "ts-extras";
 
 export function mapCoolingData(state: ResolvedState): Pick<FhsInputSchema, "SpaceCoolSystem"> {
 	return {
@@ -24,6 +25,6 @@ export function mapSpaceCoolSystems(state: ResolvedState): Pick<FhsInputSchema, 
 	});
 
 	return {
-		SpaceCoolSystem: Object.fromEntries(spaceCoolSystems),
+		SpaceCoolSystem: objectFromEntries(spaceCoolSystems),
 	};
 }

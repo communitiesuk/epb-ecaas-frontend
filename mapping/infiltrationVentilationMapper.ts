@@ -109,7 +109,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 
 		return [key, val];
 	});
-	return Object.fromEntries(entries);
+	return objectFromEntries(entries);
 }
 
 function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedState): SchemaMechanicalVentilationDuctwork[] {

@@ -16,7 +16,6 @@ import type {
 } from "../schema/api-schema.types";
 import type { SchemaHeatSourceWetDetails, SchemaSpaceHeatSystem } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
-import type { Integer } from "type-fest";
 import { objectFromEntries } from "ts-extras";
 
 export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatPump> {
@@ -25,7 +24,7 @@ export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSou
 		(heatsource) => heatsource.typeOfHeatSource === "heatPump",
 	);
 
-	return Object.fromEntries(
+	return objectFromEntries(
 		heatPumps.map((heatPump) => {
 			const mappedHeatPump: SchemaHeatSourceWetHeatPump = {
 				type: "HeatPump",
@@ -47,7 +46,7 @@ export function mapBoilers(state: ResolvedState): Record<string, SchemaHeatSourc
 		(heatsource) => heatsource.typeOfHeatSource === "boiler",
 	);
 	// @ts-expect-error Missing properties on type
-	return Object.fromEntries(
+	return objectFromEntries(
 		boilers.map((boiler) => {
 			return [
 				boiler.name,
@@ -70,7 +69,7 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 		(heatsource) => heatsource.typeOfHeatSource === "heatBattery",
 	);
 	// @ts-expect-error Missing properties on type
-	return Object.fromEntries(
+	return objectFromEntries(
 		heatBatteries.map((heatBattery) => {
 			return [
 				heatBattery.name,
@@ -114,7 +113,7 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaWetDist
 	const radiators = heatEmitters.filter(
 		(emitter): emitter is Extract<HeatEmittingData, { typeOfHeatEmitter: "radiator" }> => emitter.typeOfHeatEmitter === "radiator",
 	);
-	return Object.fromEntries(
+	return objectFromEntries(
 		radiators.map((radiator) => {
 			const emitter: SchemaRadiatorWithProductReference = radiator.typeOfRadiator === "standard" ? {
 				wet_emitter_type: "radiator",
@@ -181,7 +180,7 @@ export function mapUnderfloorHeating(state: ResolvedState): Record<string, Schem
 		(emitter): emitter is Extract<HeatEmittingData, { typeOfHeatEmitter: "underfloorHeating" }> => emitter.typeOfHeatEmitter === "underfloorHeating",
 	);
 
-	return Object.fromEntries(
+	return objectFromEntries(
 		ufh.map((heating) => {
 			const emitter: SchemaUfhWithProductReference = {
 				product_reference: heating.productReference,
@@ -223,7 +222,7 @@ export function mapFanCoils(state: ResolvedState): Record<string, SchemaWetDistr
 		(emitter): emitter is Extract<HeatEmittingData, { typeOfHeatEmitter: "fanCoil" }> => emitter.typeOfHeatEmitter === "fanCoil",
 	);
 
-	return Object.fromEntries(
+	return objectFromEntries(
 		fancoils.map((fancoil) => {
 			const emitter: SchemaFancoilWithProductReference = {
 				product_reference: fancoil.productReference,
@@ -264,8 +263,8 @@ export function mapElectricStorageHeaters(state: ResolvedState): Record<string, 
 	const electricStorageHeaters = heatEmitters?.filter(
 		(emitter): emitter is Extract<HeatEmittingData, { typeOfHeatEmitter: "electricStorageHeater" }> => emitter.typeOfHeatEmitter === "electricStorageHeater",
 	);
-	return Object.fromEntries(
-		electricStorageHeaters.map((emitter) => {
+	return objectFromEntries(
+		electricStorageHeaters.map((emitter): [string, SchemaElecStorageHeaterWithProductReference] => {
 			return [
 				emitter.name,
 				{
@@ -290,8 +289,8 @@ export function mapWarmAirHeater(state: ResolvedState): Record<string, SchemaWar
 	);
 
 
-	return Object.fromEntries(
-		warmAirHeaters.map((emitter) => {
+	return objectFromEntries(
+		warmAirHeaters.map((emitter): [string, SchemaWarmAir] => {
 			return [
 				emitter.name,
 				{

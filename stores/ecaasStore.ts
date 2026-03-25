@@ -4,6 +4,7 @@ import type { GovTagProps } from "~/common.types";
 import type { Page } from "~/data/pages/pages.types";
 import type { EmptyObject } from "type-fest";
 import pagesData from "~/data/pages/pages";
+import { objectFromEntries } from "ts-extras";
 type KeysToDeleteCascade = "associatedItemId" | "taggedItem" | "heatSource" | "dhwHeatSourceId" | "waterStorage" | "boosterHeatPumpId";
 export function getInitialState(): EcaasState {
 	const store: NulledForms<EcaasState> = {
@@ -84,7 +85,7 @@ export const useEcaasStore = defineStore("ecaas", {
 			);
 
 			return (page: Page): GovTagProps => {
-				const section = getSection(page.id, Object.fromEntries(stateEntries));
+				const section = getSection(page.id, objectFromEntries(stateEntries));
 
 				if (section) {
 					const entry = Object.entries(section).find((x) => x[0] === page.id)!;
@@ -195,7 +196,7 @@ export function hasCompleteState(state: EcaasState): boolean {
 	const sectionPages = pagesData.filter(page => page.type === "section");
 
 	return sectionPages.every(page => {
-		const section = Object.fromEntries(stateEntries.filter(e => e[0] === page.id));
+		const section = objectFromEntries(stateEntries.filter(e => e[0] === page.id));
 		return getSectionStatus(section as Record<string, object>).text === "Complete";
 	});
 }

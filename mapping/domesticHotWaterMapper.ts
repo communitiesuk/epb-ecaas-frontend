@@ -3,6 +3,7 @@ import type { SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTan
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { asLitres } from "~/utils/units/volume";
+import { objectFromEntries } from "ts-extras";
 
 
 export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputSchema> {
@@ -68,7 +69,7 @@ function mapShowersData(state: ResolvedState) {
 		return [key, val];
 	});
 
-	return Object.fromEntries([...mixedShowerEntries, ...electricShowerEntries]);
+	return objectFromEntries([...mixedShowerEntries, ...electricShowerEntries]);
 }
 
 function mapBathsData(state: ResolvedState) {
@@ -82,7 +83,7 @@ function mapBathsData(state: ResolvedState) {
 		return [key, val];
 	});
 
-	return Object.fromEntries(bathEntries);
+	return objectFromEntries(bathEntries);
 }
 
 function mapOthersData(state: ResolvedState) {
@@ -96,7 +97,7 @@ function mapOthersData(state: ResolvedState) {
 		return [key, val];
 	});
 
-	return Object.fromEntries(otherEntries);
+	return objectFromEntries(otherEntries);
 }
 
 export function mapHotWaterSourcesData(state: ResolvedState) {
