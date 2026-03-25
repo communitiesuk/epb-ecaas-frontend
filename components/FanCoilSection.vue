@@ -61,14 +61,14 @@ defineProps<{
 		name="maxOutdoorTemp"
 		validation="required | number"
 		suffix-text="°C"
-		help="This is the warmest outdoor temperature expected where the heating system is still active" />
+		help="Enter the warmest outdoor temperature expected where the heating system is still active" />
 	<FormKit
 		v-if="ecoClasses.includes(model.ecoDesignControllerClass as EcoControlClassesWithExtraOptions)"
 		id="minFlowTemp"
 		type="govInputWithSuffix"
 		label="Minimum flow temperature "
 		name="minFlowTemp"
-		help="Minimum flow temperature when using weather compensation"
+		help="Enter the lowest flow temperature the heating system will allow when using weather compensation"
 		validation="required | number"
 		suffix-text="°C" />
 	<FormKit
@@ -86,7 +86,7 @@ defineProps<{
 		name="designTempDiffAcrossEmitters"
 		validation="required | number"
 		suffix-text="°C"
-		help="The temperature difference between the flow and return water temperatures at each emitter. Typically between 5 and 15°C." />
+		help="Enter the temperature difference between the flow and return water temperatures. Typically between 5 and 15°C." />
 	<FieldsVariableFlowRate :model="model" />
 	<FormKit
 		id="numOfFanCoils"
