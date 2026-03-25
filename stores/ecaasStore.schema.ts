@@ -782,60 +782,6 @@ const typeOfHeatBattery = z.enum(["heatBatteryPcm", "heatBatteryDryCore"]);
 const typeOfLocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
 const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedContinuousMev", "decentralisedContinuousMev"]);
 
-// export type HeatEmitting = AssertFormKeysArePageIds<{
-// 	wetDistribution: EcaasFormList<WetDistributionData>;
-// 	instantElectricHeater: EcaasFormList<InstantElectricStorageData>;
-// 	electricStorageHeater: EcaasForm<ElectricStorageHeaterData[]>;
-// 	warmAirHeatPump: EcaasForm<WarmAirHeatPumpData[]>;
-// }>;
-
-// const electricStorageHeaterDataZod = named;
-
-// export type ElectricStorageHeaterData = z.infer<typeof electricStorageHeaterDataZod>;
-
-// const instantElectricStorageDataZod = named.extend({
-// 	ratedPower: z.number().min(0).max(70),
-// 	convectiveType: convectiveTypeZod,
-// });
-
-// export type InstantElectricStorageData = z.infer<typeof instantElectricStorageDataZod>;
-
-// const warmAirHeatPumpDataZod = named;
-
-// export type WarmAirHeatPumpData = z.infer<typeof warmAirHeatPumpDataZod>;
-
-// const baseWetDistributionData = named.extend({
-// 	heatSource: z.string(),
-// 	thermalMass: z.number(),
-// 	designTempDiffAcrossEmitters: z.number(),
-// 	designFlowTemp: z.number(),
-// 	designFlowRate: z.number(),
-// 	ecoDesignControllerClass: z.enum(["1", "2", "3", "4", "5", "6", "7", "8"]),
-// 	minimumFlowTemp: z.number().min(20).max(120),
-// 	minOutdoorTemp: z.number(),
-// 	maxOutdoorTemp: z.number(),
-// 	convectionFractionWet: fraction,
-// });
-// const wetDistributionDataZod = z.discriminatedUnion(
-// 	"typeOfSpaceHeater",
-// 	[
-// 		baseWetDistributionData.extend({
-// 			typeOfSpaceHeater: z.literal("radiator"),
-// 			numberOfRadiators: z.int().min(1),
-// 			exponent: z.number(),
-// 			constant: z.number(),
-// 		}),
-// 		baseWetDistributionData.extend({
-// 			typeOfSpaceHeater: z.literal("ufh"),
-// 			emitterFloorArea: z.number(),
-// 			equivalentThermalMass: z.number(),
-// 			systemPerformanceFactor: z.number(),
-// 		}),
-// 	],
-// );
-
-//export type WetDistributionData = z.infer<typeof wetDistributionDataZod>;
-
 export type SpaceHeatingNew = AssertEachKeyIsPageId<{
 	heatSource: EcaasFormList<HeatSourceData>,
 	heatEmitters: EcaasFormList<HeatEmittingData>
