@@ -201,13 +201,13 @@ export const heatBatteryPcmZod = BaseProduct.extend({
 	ratedChargePower: z.nullable(z.number()),
 	maxRatedLosses: z.nullable(z.number()),
 	flowRateLPerMin: z.nullable(z.number()),
-	heatStorageZoneMaterialKjPerKDuringPhaseTransition: z.nullable(z.number()), // not getting value correctly
+	heatStorageKJPerKDuringPhaseTransition: z.nullable(z.number()), // not getting value correctly
 	electricityStandby: z.nullable(z.number()),
 	inletDiameterMm: z.nullable(z.number()),
-	heatStorageZoneMaterialKjPerKBelowPhaseTransition: z.nullable(z.number()),// not getting value correctly
+	heatStorageKJPerKBelowPhaseTransition: z.nullable(z.number()),// not getting value correctly
 	serviceProvision: z.nullable(z.string()),
-	heatStorageZoneMaterialKjPerKAbovePhaseTransition: z.nullable(z.number()),// not getting value correctly
-	velocityInHexTubeAt1LPerMinMPerS: z.nullable(z.number()),// not getting value correctly
+	heatStorageKJPerKAbovePhaseTransition: z.nullable(z.number()),// not getting value correctly
+	velocityInHEXTubeAt1LPerMinMPerS: z.nullable(z.number()),// not getting value correctly
 	simultaneousChargingAndDischarging: z.nullable(z.number()),
 });
 
