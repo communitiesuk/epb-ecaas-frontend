@@ -86,11 +86,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</thead>
 				<tbody class="govuk-table__body">
 					<tr class="govuk-table__row">
-						<td class="govuk-table__cell">Separate temperature</td>
+						<td class="govuk-table__header">Separate temperature</td>
 						<td class="govuk-table__cell">This is, for example, where there is a room thermostat in one room and thermostatic radiator valves, but all rooms follow a single time schedule.</td>
 					</tr>
 					<tr class="govuk-table__row">
-						<td class="govuk-table__cell">Separate time and temperature</td>
+						<td class="govuk-table__header">Separate time and temperature</td>
 						<td class="govuk-table__cell">This is, for example, where there is independent heating schedules and target temperatures for different areas.</td>
 					</tr>
 				</tbody>
