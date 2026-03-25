@@ -87,36 +87,7 @@ defineProps<{
 		validation="required | number"
 		suffix-text="°C"
 		help="The temperature difference between the flow and return water temperatures at each emitter. Typically between 5 and 15°C." />
-	<FormKit
-		id="hasVariableFlowRate"
-		type="govBoolean"
-		label="Is there a variable flow rate?"
-		name="hasVariableFlowRate"
-		validation="required" />
-	<FormKit
-		v-if="model.hasVariableFlowRate"
-		id="maxFlowRate"
-		type="govInputWithSuffix"
-		label="Maximum flow rate"
-		name="maxFlowRate"
-		validation="required | number"
-		suffix-text="l/s" />
-	<FormKit
-		v-if="model.hasVariableFlowRate"
-		id="minFlowRate"
-		type="govInputWithSuffix"
-		label="Minimum flow rate"
-		name="minFlowRate"
-		validation="required | number"
-		suffix-text="l/s" />
-	<FormKit
-		v-if="model.hasVariableFlowRate === false"
-		id="designFlowRate"
-		type="govInputWithSuffix"
-		label="Design flow rate"
-		name="designFlowRate"
-		validation="required | number"
-		suffix-text="l/s" />
+	<FieldsVariableFlowRate :model="model" />
 	<FormKit
 		id="numOfFanCoils"
 		name="numOfFanCoils"
