@@ -14,6 +14,7 @@
 			"description": "Metadata for the input file"
 		},
 		"PartGcompliance": {
+			"description": "Indication for whether Part G has been complied with",
 			"type": "boolean"
 		},
 		"PartO_active_cooling_required": {
@@ -97,11 +98,13 @@
 						],
 						"properties": {
 							"start360": {
+								"description": "Starting angle of the shading segment (clockwise). (unit: \u00b0)",
 								"type": "integer",
 								"minimum": 0,
 								"maximum": 360
 							},
 							"end360": {
+								"description": "The end angle of the shading segment (clockwise). (unit: \u00b0)",
 								"type": "integer",
 								"minimum": 0,
 								"maximum": 360
@@ -124,11 +127,13 @@
 											]
 										},
 										"height": {
+											"description": "Height of the shading object. (Unit: m)",
 											"type": "number",
 											"exclusiveMinimum": 0,
 											"maximum": 400
 										},
 										"distance": {
+											"description": "Distance of the shading object from the building. (Unit: m)",
 											"type": "number",
 											"exclusiveMinimum": 0,
 											"maximum": 72000
