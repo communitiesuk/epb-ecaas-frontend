@@ -33,7 +33,7 @@ defineProps<{
 		:options="convectiveTypes"
 		name="convectiveType"
 		validation="required">
-		<GovDetails summary-text="Help with this input">
+		<GovDetails summary-text="Help with this input" classes="govuk-details__margin-bottom">
 			<table class="govuk-table">
 				<thead class="govuk-table__head">
 					<tr class="govuk-table__row">

@@ -23,3 +23,9 @@ defineProps<GovDetailsProps>();
 		</div>
 	</details>
 </template>
+
+<style lang="scss">
+	.govuk-details.govuk-details__margin-bottom {
+		margin-bottom: 10px;
+	}
+</style>
