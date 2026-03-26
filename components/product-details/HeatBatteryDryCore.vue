@@ -10,7 +10,7 @@ const tableData: Record<string, string> =
 	"Final year of manufacture": show(data?.finalYearOfManufacture).replace("current", "Current"),
 	"Heat storage capacity": dim(data.heatStorageCapacity, "kilowatt-hour"),
 	"Internal pump power": dim(data.electricityCircPump, "watt"),
-	"Fan power": dim(data.fanPwr, "kilowatt"),
+	"Internal fan power": dim(data.fanPwr, "kilowatt"),
 	"Target flow temperature": dim(data.setpointTempWater, "celsius"),
 	"Maximum instant heat output": dim(data.ratedPowerInstant, "kilowatt"),
 	"Standby power": dim(data.electricityStandby, "kilowatt"),

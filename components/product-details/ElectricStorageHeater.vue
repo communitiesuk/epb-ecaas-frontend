@@ -8,7 +8,6 @@ const tableData: Record<string, string> =
 {
 	"First year of manufacture": show(data?.firstYearOfManufacture),
 	"Final year of manufacture": show(data?.finalYearOfManufacture).replace("current", "Current"),
-	"Backup power": dim(data.backupPower, "kilowatt"),
 	"Storage capacity": dim(data.storageCapacity, "kilowatt-hour"),
 	"Rated charging power": dim(data.ratedPower, "kilowatt"),
 	"Air flow type": data.airFlowType ? capitalizeFirstLetter(data.airFlowType) : "-", 
@@ -18,7 +17,6 @@ const tableData: Record<string, string> =
 	"Input power": dim(data.pwrIn, "kilowatt"),
 	"Nominal heat output": dim(data.outputPower, "kilowatt"),
 	"High heat retention": data.highHeatRetention ? (data.highHeatRetention === 0 ? "No" : "Yes") : "-",
-	"Control type": show(data.controlType),
 };
 </script>
 

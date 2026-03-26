@@ -9,7 +9,7 @@ const tableData: Record<string, string> =
 	"First year of manufacture": show(data?.firstYearOfManufacture),
 	"Final year of manufacture": show(data?.finalYearOfManufacture).replace("current", "Current"),
 	"Storage capacity": dim(data.volume, "litres"),
-	"Daily energy loss of ot water cylinder declared by manufacturer": dim(data.dailyLosses, "kilowatt hours per day"),
+	"Daily energy loss of hot water cylinder declared by manufacturer": dim(data.dailyLosses, "kilowatt hours per day"),
 	"Circulation pump power": dim(data.powerPumpKW, "kilowatt"),
 	"Maximum pump flow rate": dim(data.maxFlowRatePumpLPerMin, "litres per minute"),
 	"Heat exchanger surface area": dim(data.heatExchangerSurfaceArea, "metres square"),
