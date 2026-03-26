@@ -7,6 +7,7 @@ const store = useEcaasStore();
 defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatBattery" }>;
 	index: number;
+	maxNumOfItemsIsOne?: boolean
 }>();
 
 const heatSources = getCombinedHeatSources(store);
@@ -45,7 +46,9 @@ const emit = defineEmits(["update-heat-battery-model"]);
 			:selected-product-reference="model.productReference"
 			:selected-product-type="model.typeOfHeatBattery"
 			:page-url="route.fullPath"
-			:page-index="index" />
+			:page-index="index" 
+			:max-num-of-items-is-one="maxNumOfItemsIsOne"
+		/>
 		<FormKit
 			id="numberOfUnits"
 			type="govInputInt"

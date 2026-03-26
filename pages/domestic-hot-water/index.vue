@@ -115,10 +115,9 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 		:items="store.domesticHotWater.heatSources.data
 			.filter(x => isEcaasForm(x))
 			.map(x=>({name: x.data.isExistingHeatSource ? getNameFromSpaceHeatingHeatSource(x.data.heatSourceId)! : x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress, preventDuplication: x.data.heatSourceId !== 'NEW_HEAT_SOURCE'}))"
-		:show-status="true"
-		:can-duplicate="false"
+		:show-status="true"		
+		:max-number-of-items=1
 		@remove="(index: number) => handleRemove('heatSources', index)"
-		@duplicate="(index: number) =>  handleDuplicate('heatSources', index)"
 	/>
 	<CustomList 
 		id="waterStorage"

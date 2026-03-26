@@ -128,31 +128,6 @@ describe("Heat Source Page", () => {
 		expect(screen.queryByTestId("typeOfHeatSource")).toBeNull();
 	});
 	
-	test("once an existing heat source has been selected, it appears greyed out and cannot be selected", async () => { 
-		store.$patch({
-			spaceHeating: {
-				heatSource: {
-					data: [{ data: existingHeatPumpSpaceHeating1 }],
-				},
-			},
-			domesticHotWater: {
-				heatSources: {
-					data: [{ data: dhwWithExistingHeatPump }],
-				},
-			},
-		});
-	
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "create" },
-			},
-		});
-		expect(screen.getByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`)
-			.hasAttribute("disabled")).toBeTruthy();
-		expect(screen.getByText(`${existingHeatPumpSpaceHeating1.name} (already used for water heating)`).textContent)
-			.toBeDefined();
-	});
-
 	test("save progress button navigates user to the domestic hot wate overview page", async () => {
 		await renderSuspended(HeatSourceForm);
 		const saveProgressButton = screen.getByTestId("saveProgress");
@@ -370,14 +345,10 @@ describe("Heat pump section", () => {
 		});
 
 		test("the 'Select a product' element navigates user to the products page", async () => {
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
+			await renderSuspended(HeatSourceForm);
 			await populateValidHeatPumpForm();
 
-			expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/heat-pump");
+			expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toContain("/heat-pump");
 		});
 
 		test("heat pump data is saved to store state when form is valid", async () => {
@@ -661,17 +632,6 @@ describe("Heat pump section", () => {
 	
 		};
 	
-		const pointOfUse2: DomesticHotWaterHeatSourceData = {
-			id: "463c94f6-566c-49b2-af27-57e5c222222",
-			name: "Point of use 2",
-			typeOfHeatSource: "pointOfUse",
-			energySupply: "mains_gas",
-			heaterEfficiency: 8,
-			coldWaterSource: "headerTank",
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-		};
-
 		test("'PointOfUseSection' component displays when type of heat source is Point of use", async () => {
 			
 			await renderSuspended(HeatSourceForm, {
@@ -739,26 +699,22 @@ describe("Heat pump section", () => {
 			store.$patch({
 				domesticHotWater: {
 					heatSources: {
-						data: [{ data: pointOfUse1 }, { data: pointOfUse2 }],
+						data: [{ data: pointOfUse1 }],
 					},
 				},
 			});
 	
 	
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "1" },
-				},
-			});
+			await renderSuspended(HeatSourceForm);
 	
 			await user.clear(screen.getByTestId("name"));
 			await user.type(screen.getByTestId("name"), "Updated point of use");
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
-			const pointOfUse = store.domesticHotWater.heatSources.data[1]?.data;
+			const pointOfUse = store.domesticHotWater.heatSources.data[0]?.data;
 	
-			expect(pointOfUse!.id).toBe(pointOfUse2.id);
+			expect(pointOfUse!.id).toBe(pointOfUse1.id);
 			expect((pointOfUse! as { name: string }).name).toBe("Updated point of use");
 		});
 
@@ -792,7 +748,7 @@ describe("heat network", () => {
 		isFifthGeneration: true,
 	};
 
-	test("a 5th generation heat network can be tagged with a booster heat pumps from DWH & space heating", async () => {
+	test("a 5th generation heat network can be tagged with a booster heat pump from DWH & space heating", async () => {
 
 		const booster: HeatSourceData = {
 			name: "Booster HP",
@@ -800,17 +756,6 @@ describe("heat network", () => {
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "booster",
 			productReference: "2",
-		};
-
-		const dhwBooster: DomesticHotWaterHeatSourceData = {
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-			typeOfHeatSource: "heatPump",
-			typeOfHeatPump: "booster",
-			name: "DHW Booster HP",
-			id: "dhwBoosterID-123",
-			coldWaterSource: "headerTank",
-			productReference: "1",
 		};
 
 		store.$patch({
@@ -821,19 +766,14 @@ describe("heat network", () => {
 			},
 			domesticHotWater: {
 				heatSources: {
-					data: [{ data: dhwBooster }, { data: heatNetwork1 } ],
+					data: [{ data: heatNetwork1 }],
 				},
 			},
 		});
 		
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "1" },
-			},
-		});
+		await renderSuspended(HeatSourceForm);
 
 		expect(screen.getByTestId(`boosterHeatPumpId_${booster.id}`)).toBeDefined();
-		expect(screen.getByTestId(`boosterHeatPumpId_${dhwBooster.id}`)).toBeDefined();
 	});
 
 	test("the 'Booster heat pump' element navigates user to the DHW overview page when there are stored boosters", async () => {
@@ -845,11 +785,7 @@ describe("heat network", () => {
 			},
 		});
 		
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm);
 
 		expect(screen.getByRole("link", { name: "Click here to add a booster heat pump" }).getAttribute("href")).toBe("/domestic-hot-water");
 	});

@@ -12,6 +12,7 @@ const { model } = defineProps<{
 	boilers: [string, string][];
 	addBoilerPageId: PageId;
 	page: HeatPumpSectionPage;
+	maxNumOfItemsIsOne?: boolean
 }>();
 
 const heatSources = getCombinedHeatSources(store);
@@ -35,5 +36,7 @@ const heatSources = getCombinedHeatSources(store);
 		:selected-product-reference="model.productReference"
 		:selected-product-type="'heatPump' /* this might need to be updated to pass through either which of DHW or SH, or just the list of different products */"
 		:page-url="route.fullPath"
-		:page-index="index" />
+		:page-index="index" 
+		:max-num-of-items-is-one="maxNumOfItemsIsOne"
+	/>
 </template>

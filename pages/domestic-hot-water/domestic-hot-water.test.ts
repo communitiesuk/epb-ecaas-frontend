@@ -517,25 +517,6 @@ describe("Domestic hot water", () => {
 			complete: true,
 		} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
-		const heatSource3SpaceHeating = {
-			data: {
-				name: "Jasper's Heat Pump",
-				id: "123e4567-e89b-12d3-a456-426614174000",
-				typeOfHeatSource: "heatPump",
-				productReference: "HEATPUMP-12345",
-				typeOfHeatPump: "airSource",
-			},
-		} as const satisfies EcaasForm<HeatSourceData>;
-
-		const heatSource3HotWater = {
-			data: {
-				id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bd",
-				coldWaterSource: "mainsWater",
-				isExistingHeatSource: true,
-				heatSourceId: heatSource3SpaceHeating.data.id,
-			},
-		} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
-
 		// // Can't get href to point to the right thing :(
 
 		// // test("Navigates to water storage create form when add link is clicked", async () => {
@@ -548,7 +529,7 @@ describe("Domestic hot water", () => {
 		// // 	);
 		// // });
 
-		test("Displays existing heat sources", async () => {
+		test("Displays existing heat source", async () => {
 			store.$patch({
 				domesticHotWater: {
 					heatSources: {
@@ -562,7 +543,7 @@ describe("Domestic hot water", () => {
 			expect(screen.getByText(heatSource1.data.name)).toBeDefined();
 		});
 
-		test("heat sources are removed when remove link is clicked", async () => {
+		test("heat source is removed when remove link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					heatSources: {
@@ -578,31 +559,6 @@ describe("Domestic hot water", () => {
 			await user.click(screen.getByTestId("heatSources_remove_0"));
 			expect(screen.queryByTestId("heatSources_items")).toBeNull();
 		});
-
-		it("should only remove the heat source object that is clicked", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [heatSource3SpaceHeating],
-					},
-				},
-				domesticHotWater: {
-					heatSources: {
-						data: [heatSource1, heatSource2, heatSource3HotWater],
-					},
-				},
-			});
-
-			await renderSuspended(DomesticHotWater);
-			await user.click(screen.getByTestId("heatSources_remove_1"));
-
-			const populatedList = screen.getByTestId("heatSources_items");
-
-			expect(within(populatedList).getByText(heatSource1.data.name)).toBeDefined();
-			expect(within(populatedList).getByText(heatSource3SpaceHeating.data.name)).toBeDefined();
-			expect(within(populatedList).queryByText(heatSource2.data.name)).toBeNull();
-		});
-
 	
 		it("references to the deleted DHW booster heat pump are removed from all heat network items", async () => {
 
@@ -702,78 +658,19 @@ describe("Domestic hot water", () => {
 			expect(mixedShower?.complete).toBe(false);
 		});
 
-		test("heat sources are duplicated when duplicate link is clicked", async () => {
+		test("only one heat source can be added so there is no duplicate link", async () => {
 			store.$patch({
 				domesticHotWater: {
 					heatSources: {
 						data: [
 							heatSource1,
-							heatSource2,
 						],
 					},
 				},
 			});
 
 			await renderSuspended(DomesticHotWater);
-			await userEvent.click(screen.getByTestId("heatSources_duplicate_0"));
-			const items = store.domesticHotWater.heatSources.data;
-			expect(items[0]?.data.id).not.toBe(items[2]?.data.id);
-
-			await userEvent.click(screen.getByTestId("heatSources_duplicate_0"));
-			await userEvent.click(screen.getByTestId("heatSources_duplicate_2"));
-			await userEvent.click(screen.getByTestId("heatSources_duplicate_2"));
-
-
-			expect(screen.queryAllByTestId("heatSources_item").length).toBe(6);
-			expect(screen.getByText(heatSource1.data.name)).toBeDefined();
-			expect(screen.getByText(`${heatSource1.data.name} (1)`)).toBeDefined();
-			expect(screen.getByText(`${heatSource1.data.name} (2)`)).toBeDefined();
-			expect(screen.getByText(`${heatSource1.data.name} (1) (1)`)).toBeDefined();
-			expect(screen.getByText(`${heatSource1.data.name} (1) (2)`)).toBeDefined();
-		});
-
-		test("duplicate link is not displayed for heat sources which use existing space heating heat sources", async () => {
-			const heatPumpSpaceHeating: EcaasForm<HeatSourceData> = {
-				data:
-				{
-					id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-					name: "Heat pump 1",
-					typeOfHeatSource: "heatPump",
-					typeOfHeatPump: "airSource",
-					productReference: "HEATPUMP-LARGE",
-				},
-			};
-
-			const heatSourceFromSpaceHeating: EcaasForm<DomesticHotWaterHeatSourceData> = {
-				data: {
-					id: "463c94f6-566c-49b2-af27-57e5c68b5c62",
-					coldWaterSource: "headerTank",
-					isExistingHeatSource: true,
-					heatSourceId: heatPumpSpaceHeating.data.id,
-				},
-			};
-
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [heatPumpSpaceHeating,
-						],
-					},
-				},
-				domesticHotWater: {
-					heatSources: {
-						data: [
-							heatSource1,
-							heatSourceFromSpaceHeating,
-						],
-					},
-				},
-			});
-
-			await renderSuspended(DomesticHotWater);
-			expect(screen.getByTestId("heatSources_duplicate_0")).toBeDefined();
-			expect(screen.queryByTestId("heatSources_duplicate_1")).toBeNull();
-
+			expect(screen.queryByTestId("heatSources_duplicate_0")).toBeNull();
 		});
 	});
 

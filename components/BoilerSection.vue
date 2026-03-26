@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AdjacentSpaceType, HeatSourceData } from "#imports";
+import type { HeatSourceData } from "#imports";
 import { uniqueName } from "#imports";
 import type { SchemaBoilerLocationType } from "~/schema/aliases";
 import { boilerTypes, type BoilerLocationDisplay } from "~/utils/display";
@@ -8,7 +8,8 @@ const store = useEcaasStore();
 
 defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "boiler" }>;
-	index: number;
+	index?: number;
+	maxNumOfItemsIsOne?: boolean
 }>();
 
 const heatSources = getCombinedHeatSources(store);
@@ -55,7 +56,9 @@ const emit = defineEmits(["update-boiler-model"]);
 			:selected-product-reference="model.productReference"
 			:selected-product-type="model.typeOfBoiler"
 			:page-url="route.fullPath"
-			:page-index="index" />
+			:page-index="index"
+			:max-num-of-items-is-one="maxNumOfItemsIsOne"
+		/>
 		<FormKit
 			v-if="model.typeOfBoiler && model.needsSpecifiedLocation"
 			id="specifiedLocation"

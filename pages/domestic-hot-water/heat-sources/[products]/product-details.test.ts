@@ -51,21 +51,13 @@ describe("Heat source details", async () => {
 	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	beforeEach(() => {
-		store.$patch({
-			domesticHotWater: {
-				heatSources: {
-					data: [{ data: smallHeatPump }, { data: combiBoiler }],
-				},
-			},
-		});
-
+		
 		mockRoute.mockReturnValue({
 			params: {
-				heatSource: "0",
 				products: "air-source",
 				id: "1000",
 			},
-			path: "/0/air-source/1000",
+			path: "/air-source/1000",
 		});
 
 		mockFetch.mockReturnValue({
@@ -82,15 +74,23 @@ describe("Heat source details", async () => {
 
 	test("Returns not found error when products route parameter is invalid", async () => {
 		// Arrange
+
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: smallHeatPump }],
+				},
+			},
+		});
+
 		let h3Error: H3Error | undefined;
 
 		mockRoute.mockReturnValue({
 			params: {
-				pump: "0",
 				products: "air-source-invalid",
 				id: "1234",
 			},
-			path: "/0/air-source-invalid/1234",
+			path: "/air-source-invalid/1234",
 		});
 
 		// Act
@@ -116,6 +116,14 @@ describe("Heat source details", async () => {
 	});
 
 	test("Store data updates when product is selected", async () => {
+		//Arrange
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: smallHeatPump }],
+				},
+			},
+		});
 		// Act
 		await renderSuspended(ProductDetails);
 		await user.click(screen.getByTestId("selectProductButton"));
@@ -136,13 +144,21 @@ describe("Heat source details", async () => {
 
 	test("Form records that a specified location is needed when boiler location is 'unknown'", async () => {
 		// Arrange
+
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: combiBoiler }],
+				},
+			},
+		});
+
 		mockRoute.mockReturnValue({
 			params: {
-				heatSource: "1",
 				products: "combi-boiler",
 				id: "1000",
 			},
-			path: "/1/combi-boiler/1000",
+			path: "/combi-boiler/1000",
 		});
 
 		mockFetch.mockReturnValue({
@@ -153,7 +169,7 @@ describe("Heat source details", async () => {
 		await renderSuspended(ProductDetails);
 		await user.click(screen.getByTestId("selectProductButton"));
 
-		const heatSource = store.domesticHotWater.heatSources.data[1]?.data as HeatSourceData;
+		const heatSource = store.domesticHotWater.heatSources.data[0]?.data as HeatSourceData;
 
 		// Assert
 		expect(heatSource).toEqual(expect.objectContaining({ needsSpecifiedLocation: true }));
@@ -161,16 +177,24 @@ describe("Heat source details", async () => {
 
 	test("Displays hybrid heat pump details when product is a hybrid heat pump", async () => {
 		// Arrange
-		mockRoute.mockReturnValue({
+
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: smallHeatPump }],
+				},
+			},
+		});
+
+		mockRoute.mockReturnValueOnce({
 			params: {
-				heatSource: "0",
 				products: "heat-pump",
 				id: "1000",
 			},
-			path: "/0/heat-pump/1000",
+			path: "/heat-pump/1000",
 		});
 	
-		mockFetch.mockReturnValue({
+		mockFetch.mockReturnValueOnce({
 			data: ref({
 				...heatPumpProduct,
 				modelName: "Hybrid heat pump",
@@ -207,11 +231,10 @@ describe("Heat source details", async () => {
 
 		mockRoute.mockReturnValueOnce({
 			params: {
-				heatSource: "0",
 				products: "heat-network",
 				id: "1000",
 			},
-			path: "/0/heat-network/1000",
+			path: "/heat-network/1000",
 		});
 		
 		mockFetch.mockReturnValueOnce({
@@ -235,6 +258,6 @@ describe("Heat source details", async () => {
 		await user.click(screen.getByTestId("selectProductButton"));
 
 		// Assert
-		expect(mockNavigateTo).toHaveBeenCalledWith("/domestic-hot-water/heat-sources/0");
+		expect(mockNavigateTo).toHaveBeenCalledWith("/domestic-hot-water/heat-sources");
 	});
 });

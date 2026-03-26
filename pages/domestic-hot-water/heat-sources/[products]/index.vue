@@ -7,7 +7,7 @@ import { getHeatNetworkProduct } from "~/utils/getHeatNetworkProduct";
 definePageMeta({ layout: false });
 
 const store = useEcaasStore();
-const { pageId, title, index, searchModel, searchData } = useProductsPage("heatSource");
+const { pageId, title, searchModel, searchData } = useProductsPage("heatSource");
 
 const heatSourceProductType = pageId as (HeatSourceProductType | TechnologyGroup);
 
@@ -39,7 +39,7 @@ const { pagination } = searchData(value?.data ?? []);
 const selectProduct = (product: DisplayProduct) => {
 	store.$patch((state) => {
 
-		const item = state.domesticHotWater.heatSources.data[index];
+		const item = state.domesticHotWater.heatSources.data[0];
 
 		if (item) {
 			const data = item.data as HeatSourceData;
@@ -73,7 +73,7 @@ const selectProduct = (product: DisplayProduct) => {
 		}
 	});
 
-	navigateTo(page("heatSources").url.replace(":heatSource", `${index}`));
+	navigateTo(page("heatSources").url);
 };
 </script>
 
@@ -87,7 +87,7 @@ const selectProduct = (product: DisplayProduct) => {
 		:products="pagination.getData()"
 		:total-pages="pagination.totalPages"
 		:on-select-product="selectProduct" />
-	<GovButton secondary :href="`/domestic-hot-water/heat-sources/${index}`" test-id="backToHeatSourceButton">
+	<GovButton secondary href="/domestic-hot-water/heat-sources" test-id="backToHeatSourceButton">
 		Back to heat source
 	</GovButton>
 </template>
