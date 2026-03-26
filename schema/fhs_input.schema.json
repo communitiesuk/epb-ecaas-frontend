@@ -181,9 +181,11 @@
 			"unevaluatedProperties": false,
 			"properties": {
 				"header tank": {
+					"description": "The content of this object can be blank, as the FHS wrapper will generate the HEM ColdWaterSource.",
 					"type": "object"
 				},
 				"mains water": {
+					"description": "The content of this object can be blank, as the FHS wrapper will generate the HEM ColdWaterSource.",
 					"type": "object"
 				}
 			},
