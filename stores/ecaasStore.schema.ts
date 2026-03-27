@@ -1178,7 +1178,6 @@ export type DomesticHotWaterHeatSourceData = z.infer<typeof domesticHotWaterHeat
 const hotWaterCylinderDataZod = namedWithId.extend({
 	typeOfWaterStorage: z.literal("hotWaterCylinder"),
 	storageCylinderVolume: z.union([zodUnit("volume"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-	initialTemperature: z.number(),
 	dailyEnergyLoss: z.number(),
 	dhwHeatSourceId: z.string(),
 	areaOfHeatExchanger: z.number(),

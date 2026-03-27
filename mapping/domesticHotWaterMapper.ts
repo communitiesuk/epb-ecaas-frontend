@@ -160,7 +160,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 					},
 				},
 				...(pipeworkEntries.length !== 0 ? { primary_pipework: pipeworkEntries } : {}),
-				init_temp: ws.initialTemperature,
+				init_temp: 60, // default init_temp while this field is still in schema
 			};
 			return val;
 		} else if (ws.typeOfWaterStorage === "smartHotWaterTank") {

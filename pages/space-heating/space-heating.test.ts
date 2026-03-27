@@ -310,7 +310,6 @@ describe("space heating", () => {
 					id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
 					typeOfWaterStorage: "hotWaterCylinder",
 					storageCylinderVolume: unitValue(5, litre),
-					initialTemperature: 60,
 					dailyEnergyLoss: 1,
 					dhwHeatSourceId: dhwWithExistingHeatSource2.id,
 					areaOfHeatExchanger: 1000,

@@ -218,7 +218,6 @@ describe("PV and electric batteries mapper", () => {
 							dailyEnergyLoss: 1,
 							typeOfWaterStorage: "hotWaterCylinder",
 							areaOfHeatExchanger: 1,
-							initialTemperature: 20,
 						},
 						complete: true,
 					}],

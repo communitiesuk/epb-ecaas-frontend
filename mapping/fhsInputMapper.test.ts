@@ -139,7 +139,7 @@ const expectedHouseInput: FhsInputSchema = {
 			daily_losses: 34,
 			volume: 200,
 			type: "StorageTank",
-			init_temp: 20.0,
+			init_temp: 60,
 		},
 	},
 	InfiltrationVentilation: {
@@ -496,7 +496,7 @@ const expectedFlatInput: FhsInputSchema = {
 				pipe_contents: "glycol25",
 				location: "external",
 			}],
-			init_temp: 20.0,
+			init_temp: 60,
 		},
 	},
 	InfiltrationVentilation: {
@@ -1310,7 +1310,6 @@ describe("FHS input mapper", () => {
 						storageCylinderVolume: 200,
 						dailyEnergyLoss: 34,
 						typeOfWaterStorage: "hotWaterCylinder",
-						initialTemperature: 20,
 						areaOfHeatExchanger: 2.5,
 						heaterPosition: 0.1,
 						thermostatPosition: 0.33,
@@ -2101,7 +2100,6 @@ describe("FHS input mapper", () => {
 						storageCylinderVolume: 80,
 						dailyEnergyLoss: 10,
 						typeOfWaterStorage: "hotWaterCylinder",
-						initialTemperature: 20,
 						areaOfHeatExchanger: 2.5,
 						heaterPosition: 0.1,
 						thermostatPosition: 0.33,

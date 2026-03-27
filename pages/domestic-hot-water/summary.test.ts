@@ -49,7 +49,6 @@ describe("Domestic hot water summary", () => {
 			typeOfWaterStorage: "hotWaterCylinder",
 			name: "Hot water cylinder",
 			storageCylinderVolume: 5,
-			initialTemperature: 60,
 			dailyEnergyLoss: 1,
 			dhwHeatSourceId: heatPumpId,
 			areaOfHeatExchanger: 2.5,
@@ -153,7 +152,6 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Hot water cylinder",
 				"Storage cylinder volume": `5 ${litre.suffix}`,
-				"Initial temperature": `60 ${degrees.suffix}C`,
 				"Daily energy loss": `1 ${kilowattHour.suffix}`,
 				"Heat source": "Heat pump",
 				"Area of heat exchanger installed": `2.5 ${metresSquare.suffix}`,

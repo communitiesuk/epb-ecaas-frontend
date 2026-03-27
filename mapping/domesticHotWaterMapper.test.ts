@@ -39,7 +39,6 @@ describe("domestic hot water mapper", () => {
 					typeOfWaterStorage: "hotWaterCylinder",
 					name: "hot water cylinder",
 					storageCylinderVolume: unitValue(90, litre),
-					initialTemperature: 65,
 					dailyEnergyLoss: 5,
 					dhwHeatSourceId: heatSourceId,
 					areaOfHeatExchanger: 2,
@@ -81,7 +80,7 @@ describe("domestic hot water mapper", () => {
 				daily_losses: 5,
 				volume: 90,
 				type: "StorageTank",
-				init_temp: 65,
+				init_temp: 60,
 			};
 
 			// Assert

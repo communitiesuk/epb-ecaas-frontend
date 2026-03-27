@@ -47,7 +47,6 @@ const saveForm = (fields: WaterStorageData) => {
 					...commonFields,
 					typeOfWaterStorage: fields.typeOfWaterStorage,
 					storageCylinderVolume: fields.storageCylinderVolume,
-					initialTemperature: fields.initialTemperature,
 					dailyEnergyLoss: fields.dailyEnergyLoss,
 					areaOfHeatExchanger: fields.areaOfHeatExchanger,
 					thermostatPosition: fields.thermostatPosition,
@@ -196,15 +195,6 @@ const heatSourceOptions = new Map(
 				withinMinAndMax: `Storage cylinder volume must be at least 0 and no more than 200,000 ${litre.name}.`,
 			}"
 			data-field="HotWaterSource['hw cylinder'].volume"
-		/>
-		<FormKit
-			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
-			id="initialTemperature"
-			type="govInputWithSuffix"
-			label="Initial temperature"
-			name="initialTemperature"
-			validation="required | number"
-			suffix-text="°C"
 		/>
 		<FormKit
 			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
