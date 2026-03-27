@@ -1336,7 +1336,7 @@ export interface components {
                 } & components["schemas"]["Tank"]) | components["schemas"]["SmartHotWaterTank"] | components["schemas"]["PointOfUse"] | components["schemas"]["HIU"] | components["schemas"]["CombiBoiler"] | components["schemas"]["HeatBattery"];
             };
             HeatSourceWet?: {
-                [key: string]: ({
+                [key: string]: (({
                     /** @constant */
                     is_heat_network?: true;
                     /**
@@ -1344,16 +1344,28 @@ export interface components {
                      * @enum {unknown}
                      */
                     heat_network_type: "sleeved DHN" | "unsleeved DHN" | "communal";
+                } & ({
                     EnergySupply?: string | {
-                        name?: string;
-                        is_export_capable?: boolean;
-                        factor?: {
+                        name: string;
+                        is_export_capable: boolean;
+                        factor: {
                             "Emissions Factor kgCO2e/kWh": number;
                             "Emissions Factor kgCO2e/kWh including out-of-scope emissions": number;
                             "Primary Energy Factor kWh/kWh delivered": number;
                         };
                     };
                 } | {
+                    /**
+                     * Reference to the heat network in the HEM database
+                     * @description A unique (product) reference to a heat network held within the HEM database (PCDB)
+                     */
+                    heat_network_reference: string;
+                    /**
+                     * Name of the sub heat network
+                     * @description The name of a sub heat network that is part of the heat network referenced by heat_network_reference
+                     */
+                    sub_heat_network_name: string;
+                })) | {
                     /** @constant */
                     is_heat_network?: false;
                     EnergySupply?: string;
@@ -2589,8 +2601,6 @@ export interface components {
                      */
                     cost_schedule_time_series_step: number;
                 };
-                /** @description Specific fan power, assumed inclusive of any in use factors unless SFP_in_use_factor also provided (unit: W/l/s) */
-                SFP: number;
                 /**
                  * ScheduleForDouble
                  * @description A dictionary of schedule entries where:

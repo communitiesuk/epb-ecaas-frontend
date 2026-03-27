@@ -724,54 +724,75 @@
 								"communal"
 							],
 							"description": "What type of heat network is present?"
-						},
-						"EnergySupply": {
-							"oneOf": [
-								{
-									"type": "string"
-								},
-								{
-									"type": "object",
-									"unevaluatedProperties": false,
-									"required": [
-										"name",
-										"factor",
-										"is_export_capable"
-									],
-									"properties": {
-										"name": {
-											"type": "string"
-										},
-										"is_export_capable": {
-											"type": "boolean"
-										},
-										"factor": {
-											"type": "object",
-											"unevaluatedProperties": false,
-											"required": [
-												"Emissions Factor kgCO2e/kWh",
-												"Emissions Factor kgCO2e/kWh including out-of-scope emissions",
-												"Primary Energy Factor kWh/kWh delivered"
-											],
-											"properties": {
-												"Emissions Factor kgCO2e/kWh": {
-													"type": "number"
-												},
-												"Emissions Factor kgCO2e/kWh including out-of-scope emissions": {
-													"type": "number"
-												},
-												"Primary Energy Factor kWh/kWh delivered": {
-													"type": "number"
-												}
-											}
-										}
-									}
-								}
-							]
 						}
 					},
 					"required": [
 						"heat_network_type"
+					],
+					"oneOf": [
+						{
+							"properties": {
+								"EnergySupply": {
+									"oneOf": [
+										{
+											"type": "string"
+										},
+										{
+											"type": "object",
+											"unevaluatedProperties": false,
+											"required": [
+												"name",
+												"factor",
+												"is_export_capable"
+											],
+											"properties": {
+												"name": {
+													"type": "string"
+												},
+												"is_export_capable": {
+													"type": "boolean"
+												},
+												"factor": {
+													"type": "object",
+													"unevaluatedProperties": false,
+													"required": [
+														"Emissions Factor kgCO2e/kWh",
+														"Emissions Factor kgCO2e/kWh including out-of-scope emissions",
+														"Primary Energy Factor kWh/kWh delivered"
+													],
+													"properties": {
+														"Emissions Factor kgCO2e/kWh": {
+															"type": "number"
+														},
+														"Emissions Factor kgCO2e/kWh including out-of-scope emissions": {
+															"type": "number"
+														},
+														"Primary Energy Factor kWh/kWh delivered": {
+															"type": "number"
+														}
+													}
+												}
+											}
+										}
+									]
+								}
+							}
+						},
+						{
+							"required": ["heat_network_reference", "sub_heat_network_name"],
+							"properties": {
+								"heat_network_reference": {
+									"description": "A unique (product) reference to a heat network held within the HEM database (PCDB)",
+									"title": "Reference to the heat network in the HEM database",
+									"type": "string"
+								},
+								"sub_heat_network_name": {
+									"description": "The name of a sub heat network that is part of the heat network referenced by heat_network_reference",
+									"title": "Name of the sub heat network",
+									"type": "string"
+								}
+							}
+						}
 					]
 				},
 				"else": {
