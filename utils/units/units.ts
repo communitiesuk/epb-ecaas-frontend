@@ -171,6 +171,12 @@ export const units = [
 		"multiplier": 1,
 		"dimension": "efficacy",
 	},
+	{
+		"name": "watts per litre per second",
+		"suffix": "W/(l/s)",
+		"multiplier": 1,
+		"dimension": "power",
+	},
 ] as const;
 
 export function asUnit<T extends UnitName>(name: T): UnitForName<T> {

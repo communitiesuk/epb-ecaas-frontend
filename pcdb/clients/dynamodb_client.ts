@@ -1,6 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import type { DisplayProduct, PaginatedResult, TechnologyType } from "../pcdb.types";
-import type { Command, Client, DisplayTechnologyProducts, DisplayTechnologyGroupProducts } from "./client.types";
+import type { DisplayProduct, PaginatedResult, TechnologyGroup, TechnologyType } from "../pcdb.types";
+import type { PcdbClient } from "./client.types";
 import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 const localConfig = {
@@ -15,48 +15,42 @@ const localConfig = {
 const client = new DynamoDBClient(process.env.NODE_ENV === "development" ? localConfig : {});
 const docClient = DynamoDBDocumentClient.from(client);
 
-export const dynamodbClient: Client = async <
-	T extends TechnologyType,
-	U extends Command<T>,
->(
-	query: U["input"],
-): Promise<U["output"]> => {
-	// Return sensible no-op values per command type
-	if ("id" in query) {
-		return await getProductDetailsById(query) as U["output"];
-	}
-	if ("technologyType" in query) {
-		return getProductsByTechnologyType(query);
-	}
-	if ("technologyGroup" in query) {
-		return getProductsByTechnologyGroup(query);
-	}
-
-	return undefined as U["output"];
+export const dynamodbClient: PcdbClient = {
+	async getProduct<T>(id: number, includeTestData: boolean) {
+		return await getProduct(id, includeTestData) as T;
+	},
+	async getProductsByTechnologyType(technologyType, pageSize, startKey) {
+		return await getProductsByTechnologyType(technologyType, pageSize, startKey);
+	},
+	async getProductsByTechnologyGroup(technologyGroup) {
+		return await getProductsByTechnologyGroup(technologyGroup);
+	},
 };
 
-const getProductDetailsById = async (query: { id: number; }) => {
+const getProduct = async (id: number, includeTestData: boolean) => {
 	const result = await docClient.send(new GetCommand({
 		TableName: "products",
-		Key: { id: query.id },
+		Key: { id },
 	}));
 
 	const { Item } = result;
 
-	delete Item?.testData;
-	delete Item?.testDataEN14825;
+	if (!includeTestData) {
+		delete Item?.testData;
+		delete Item?.testDataEN14825;
+	}
 
 	return Item;
 };
 
-const getProductsByTechnologyType = async <U extends DisplayTechnologyProducts>(query: U["input"]): Promise<U["output"]> => {
+const getProductsByTechnologyType = async (technologyType: TechnologyType, pageSize?: number, startKey?: string) => {
 	const result = await docClient.send(new QueryCommand({
 		TableName: "products",
 		IndexName: "by-technology-type",
 		KeyConditionExpression: "technologyType = :technologyType",
-		ExpressionAttributeValues: { ":technologyType": query.technologyType },
-		Limit: query.pageSize,
-		...query.startKey && { ExclusiveStartKey: JSON.parse(query.startKey) },
+		ExpressionAttributeValues: { ":technologyType": technologyType },
+		Limit: pageSize,
+		...startKey && { ExclusiveStartKey: JSON.parse(startKey) },
 	}));
 
 	const products = result.Items?.map(x => {
@@ -83,7 +77,7 @@ const getProductsByTechnologyType = async <U extends DisplayTechnologyProducts>(
 	return paginatedProducts;
 };
 
-const getProductsByTechnologyGroup = async <U extends DisplayTechnologyGroupProducts>(query: U["input"]): Promise<U["output"]> => {
+const getProductsByTechnologyGroup = async (technologyGroup: TechnologyGroup) => {
 	const products: DisplayProduct[] = [];
 	let lastEvaluationKey: Record<string, unknown> | undefined;
 
@@ -92,7 +86,7 @@ const getProductsByTechnologyGroup = async <U extends DisplayTechnologyGroupProd
 			TableName: "products",
 			IndexName: "by-technology-group",
 			KeyConditionExpression: "technologyGroup = :technologyGroup",
-			ExpressionAttributeValues: { ":technologyGroup": query.technologyGroup },
+			ExpressionAttributeValues: { ":technologyGroup": technologyGroup },
 			...lastEvaluationKey && { ExclusiveStartKey: lastEvaluationKey },
 		}));
 

@@ -3,11 +3,7 @@ import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl, type HeatEmittingData } from "#imports";
 import type { SchemaFuelType } from "~/schema/aliases";
 import { displayBoilerLocation, displayConvectiveType } from "~/utils/display";
-
-async function fetchProduct(reference: string) {
-	const { data } = await useFetch(`/api/products/${reference}`);
-	return data.value;
-}
+import { useProductReference } from "~/composables/productReference";
 
 const store = useEcaasStore();
 const title = "Space heating summary";
@@ -30,20 +26,8 @@ const warmAirHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "wa
 const instantElectricHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "instantElectricHeater");
 const electricStorageHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "electricStorageHeater");
 
-async function getProductModelNames(spaceHeatingElements: typeof heatSources | typeof heatEmitters): Promise<Record<string, string>> {
-	const modelNames: Record<string, string> = {};
-	await Promise.all(spaceHeatingElements.map(async (element) => {
-		if ("productReference" in element.data && element.data.productReference) {
-			const productData = await fetchProduct(element.data.productReference);
-			if (productData && productData.modelName) {	
-				modelNames[element.data.productReference] = productData.modelName;
-			}
-		}
-	}));
-	return modelNames;
-}
-const heatSourceModelNames = await getProductModelNames(heatSources);
-const heatEmitterModelNames = await getProductModelNames(heatEmitters);
+const heatSourceModelNames = await useProductReference(heatSources, productData => productData.modelName);
+const heatEmitterModelNames = await useProductReference(heatEmitters, productData => productData.modelName);
 
 const emptyHeatSourcesSummary: SummarySection = {
 	id: "heatSourceSummary",

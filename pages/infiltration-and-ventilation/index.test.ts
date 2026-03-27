@@ -17,7 +17,6 @@ describe("the ventilation task page", async () => {
 		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
 		mvhrLocation: "inside",
-		mvhrEfficiency: 0.1,
 		productReference: "1000",
 		midHeightOfAirFlowPathForExhaust: 1.5,
 		orientationOfExhaust: 90,
@@ -25,6 +24,12 @@ describe("the ventilation task page", async () => {
 		midHeightOfAirFlowPathForIntake: 1.5,
 		orientationOfIntake: 80,
 		pitchOfIntake: 10,
+		installedUnderApprovedScheme: true,
+		measuredFanPowerAndAirFlowRateKnown: false,
+		associatedItemId: "none",
+		hasAssociatedItem: false,
+		pitch: 90,
+		orientation: 180,
 	};
 
 	afterEach(() => {

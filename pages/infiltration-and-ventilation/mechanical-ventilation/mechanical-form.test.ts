@@ -17,9 +17,12 @@ describe("mechanical ventilation form", () => {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: "MVHR",
+		measuredFanPowerAndAirFlowRateKnown: true,
+		measuredFanPower: 40,
+		measuredAirFlowRate: 10,
 		airFlowRate: unitValue(12, litrePerSecond),
 		mvhrLocation: "inside",
-		mvhrEfficiency: 0.2,
+		installedUnderApprovedScheme: true,
 		midHeightOfAirFlowPathForExhaust: 1.5,
 		orientationOfExhaust: 90,
 		pitchOfExhaust: 30,
@@ -33,6 +36,7 @@ describe("mechanical ventilation form", () => {
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: "Intermittent MEV",
 		airFlowRate: unitValue(14, litrePerSecond),
+		specificFanPower: 40,
 	};
 
 	mockNuxtImport("navigateTo", () => {
@@ -56,15 +60,18 @@ describe("mechanical ventilation form", () => {
 		await user.click(
 			screen.getByTestId("typeOfMechanicalVentilationOptions_MVHR"),
 		);
+		await user.click(screen.getByTestId("measuredFanPowerAndAirFlowRateKnown_yes"));
+		await user.type(screen.getByTestId("measuredFanPower"), "40");
+		await user.type(screen.getByTestId("measuredAirFlowRate"), "10");
 		await user.type(screen.getByTestId("airFlowRate"), "12");
 		await user.click(screen.getByTestId("mvhrLocation_inside"));
-		await user.type(screen.getByTestId("mvhrEfficiency"), "0.2");
-		await user.type(screen.getByTestId("midHeightOfAirFlowPathForExhaust"), "1.5");
-		await user.type(screen.getByTestId("orientationOfExhaust"), "90");
-		await user.type(screen.getByTestId("pitchOfExhaust"), "30");
+		await user.click(screen.getByTestId("installedUnderApprovedScheme_yes"));
 		await user.type(screen.getByTestId("midHeightOfAirFlowPathForIntake"), "1.5");
 		await user.type(screen.getByTestId("orientationOfIntake"), "80");
 		await user.type(screen.getByTestId("pitchOfIntake"), "10");
+		await user.type(screen.getByTestId("midHeightOfAirFlowPathForExhaust"), "1.5");
+		await user.type(screen.getByTestId("orientationOfExhaust"), "90");
+		await user.type(screen.getByTestId("pitchOfExhaust"), "30");
 		await user.tab();
 
 		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
@@ -84,8 +91,8 @@ describe("mechanical ventilation form", () => {
 		await user.click(
 			screen.getByTestId("typeOfMechanicalVentilationOptions_Intermittent_MEV"),
 		);
-
 		await user.type(screen.getByTestId("airFlowRate"), "14");
+		await user.type(screen.getByTestId("specificFanPower"), "40");
 		await user.tab();
 
 		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
@@ -152,6 +159,15 @@ describe("mechanical ventilation form", () => {
 			).checked,
 		).toBe(true);
 		expect(
+			(await screen.findByTestId<HTMLInputElement>("measuredFanPowerAndAirFlowRateKnown_yes")).checked,
+		).toBe(true);
+		expect(
+			((await screen.findByTestId<HTMLInputElement>("measuredFanPower"))).value,
+		).toBe("40");
+		expect(
+			((await screen.findByTestId<HTMLInputElement>("measuredAirFlowRate"))).value,
+		).toBe("10");
+		expect(
 			((await screen.findByTestId<HTMLInputElement>("airFlowRate"))).value,
 		).toBe("12");
 		expect(
@@ -159,8 +175,8 @@ describe("mechanical ventilation form", () => {
 				.checked,
 		).toBe(true);
 		expect(
-			((await screen.findByTestId<HTMLInputElement>("mvhrEfficiency"))).value,
-		).toBe("0.2");
+			(await screen.findByTestId<HTMLInputElement>("installedUnderApprovedScheme_yes")).checked,
+		).toBe(true);
 		expect(
 			((await screen.findByTestId<HTMLInputElement>("midHeightOfAirFlowPathForIntake"))).value,
 		).toBe("1.5");
@@ -195,8 +211,9 @@ describe("mechanical ventilation form", () => {
 			expect(screen.getByTestId(error)).toBeDefined();
 		}
 		const mvhrErrorIds: string[] = [
+			"measuredFanPowerAndAirFlowRateKnown_error",
 			"mvhrLocation_error",
-			"mvhrEfficiency_error",
+			"installedUnderApprovedScheme_error",
 			"midHeightOfAirFlowPathForIntake_error",
 			"orientationOfIntake_error",
 			"pitchOfIntake_error",

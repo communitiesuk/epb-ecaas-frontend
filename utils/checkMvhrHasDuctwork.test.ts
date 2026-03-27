@@ -7,7 +7,6 @@ describe("checkMvhrHasDuctwork", () => {
 		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
 		mvhrLocation: "inside",
-		mvhrEfficiency: 0.2,
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
 		productReference: "1000",
 		midHeightOfAirFlowPathForExhaust: 1.5,
@@ -16,13 +15,19 @@ describe("checkMvhrHasDuctwork", () => {
 		midHeightOfAirFlowPathForIntake: 1.5,
 		orientationOfIntake: 80,
 		pitchOfIntake: 10,
+		installedUnderApprovedScheme: true,
+		measuredFanPowerAndAirFlowRateKnown: false,
+		associatedItemId: "none",
+		hasAssociatedItem: false,
+		pitch: 90,
+		orientation: 180,
 	};
+	
 	const mechanicalVentilationData2: MechanicalVentilationData = {
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
 		mvhrLocation: "inside",
-		mvhrEfficiency: 0.2,
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506h",
 		productReference: "1000",
 		midHeightOfAirFlowPathForExhaust: 1.5,
@@ -31,6 +36,12 @@ describe("checkMvhrHasDuctwork", () => {
 		midHeightOfAirFlowPathForIntake: 1.5,
 		orientationOfIntake: 80,
 		pitchOfIntake: 10,
+		installedUnderApprovedScheme: true,
+		measuredFanPowerAndAirFlowRateKnown: false,
+		associatedItemId: "none",
+		hasAssociatedItem: false,
+		pitch: 90,
+		orientation: 180,
 	};
 
 	const mechanicalVentilationData3: MechanicalVentilationData = {
@@ -39,6 +50,13 @@ describe("checkMvhrHasDuctwork", () => {
 		typeOfMechanicalVentilationOptions: "Decentralised continuous MEV",
 		airFlowRate: 14,
 		productReference: "1000",
+		installationType: "in_ceiling",
+		installationLocation: "other_wet_room",
+		installedUnderApprovedScheme: true,
+		associatedItemId: "none",
+		hasAssociatedItem: false,
+		pitch: 90,
+		orientation: 180,
 	};
 
 	const ductworkData1: DuctworkData = {

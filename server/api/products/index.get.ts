@@ -5,11 +5,7 @@ export default defineEventHandler(async (event) => {
 	const { technologyType, technologyGroup, pageSize, startKey } = getQuery(event);
 
 	if (technologyGroup) {
-		return await getGroupProducts(
-			technologyGroup as TechnologyGroup,
-			pageSize ? parseInt(pageSize.toString()) : undefined,
-			startKey?.toString(),
-		);
+		return await getGroupProducts(technologyGroup as TechnologyGroup);
 	}
 
 	return await getProducts(

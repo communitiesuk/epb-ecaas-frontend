@@ -6,6 +6,8 @@ import { unitValue } from "~/utils/units";
 import { getUrl, typeOfMechanicalVentilation, uniqueName, type MechanicalVentilationData } from "#imports";
 import Orientation from "~/components/fields/Orientation.vue";
 import Pitch from "~/components/fields/Pitch.vue";
+import { useAssociatedItems } from "~/composables/associatedItems";
+import { installationTypeOptions } from "~/utils/display";
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
@@ -36,7 +38,11 @@ const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation
 	outside: "Outside",
 };
 
-const saveForm = (fields: MechanicalVentilationData) => {
+const associatedItemOptions = useAssociatedItems(["wall", "roof", "window"]);
+
+const saveForm = async (fields: MechanicalVentilationData) => {
+	fields.hasAssociatedItem = !!fields.associatedItemId && fields.associatedItemId !== "none";
+
 	store.$patch((state) => {
 		const { mechanicalVentilation } = state.infiltrationAndVentilation;
 
@@ -44,29 +50,97 @@ const saveForm = (fields: MechanicalVentilationData) => {
 			id,
 			name: fields.name,
 			airFlowRate: fields.airFlowRate,
-			productReference: fields.productReference,
+			installedUnderApprovedScheme: fields.installedUnderApprovedScheme,
 		};
 
 		let mechanicalVentilationItem: MechanicalVentilationData;
 
-		if (fields.typeOfMechanicalVentilationOptions === "MVHR") {
-			mechanicalVentilationItem = {
-				...commonFields,
-				typeOfMechanicalVentilationOptions: "MVHR",
-				mvhrLocation: fields.mvhrLocation,
-				mvhrEfficiency: fields.mvhrEfficiency,
-				midHeightOfAirFlowPathForIntake: fields.midHeightOfAirFlowPathForIntake,
-				orientationOfIntake: fields.orientationOfIntake,
-				pitchOfIntake: fields.pitchOfIntake,
-				midHeightOfAirFlowPathForExhaust: fields.midHeightOfAirFlowPathForExhaust,
-				orientationOfExhaust: fields.orientationOfExhaust,
-				pitchOfExhaust: fields.pitchOfExhaust,
-			};
-		} else {
-			mechanicalVentilationItem = {
-				...commonFields,
-				typeOfMechanicalVentilationOptions: fields.typeOfMechanicalVentilationOptions,
-			};
+		switch (fields.typeOfMechanicalVentilationOptions) {
+			case "Centralised continuous MEV":
+				mechanicalVentilationItem = {
+					...commonFields,
+					typeOfMechanicalVentilationOptions: "Centralised continuous MEV",
+					productReference: fields.productReference,
+					associatedItemId: fields.associatedItemId,
+					...(fields.hasAssociatedItem ? {
+						hasAssociatedItem: fields.hasAssociatedItem,
+					} : {
+						hasAssociatedItem: false,
+						pitch: fields.pitch,
+						orientation: fields.orientation,
+					}),
+					...(fields.measuredFanPowerAndAirFlowRateKnown ? {
+						measuredFanPowerAndAirFlowRateKnown: true,
+						measuredAirFlowRate: fields.measuredAirFlowRate,
+						measuredFanPower: fields.measuredFanPower,
+					} : {
+						measuredFanPowerAndAirFlowRateKnown: false,
+					}),
+				};
+				break;
+
+			case "Decentralised continuous MEV":
+				mechanicalVentilationItem = {
+					...commonFields,
+					typeOfMechanicalVentilationOptions: "Decentralised continuous MEV",
+					productReference: fields.productReference,
+					installationType: fields.installationType,
+					installationLocation: fields.installationLocation,
+					associatedItemId: fields.associatedItemId,
+					...(fields.hasAssociatedItem ? {
+						hasAssociatedItem: fields.hasAssociatedItem,
+					} : {
+						hasAssociatedItem: false,
+						pitch: fields.pitch,
+						orientation: fields.orientation,
+					}),
+				};
+				break;
+
+			case "Intermittent MEV":
+				mechanicalVentilationItem = {
+					...commonFields,
+					typeOfMechanicalVentilationOptions: fields.typeOfMechanicalVentilationOptions,
+					specificFanPower: fields.specificFanPower,
+					associatedItemId: fields.associatedItemId,
+					...(fields.hasAssociatedItem ? {
+						hasAssociatedItem: fields.hasAssociatedItem,
+					} : {
+						hasAssociatedItem: false,
+						pitch: fields.pitch,
+						orientation: fields.orientation,
+					}),
+				};
+				break;
+		
+			default:
+				mechanicalVentilationItem = {
+					...commonFields,
+					typeOfMechanicalVentilationOptions: "MVHR",
+					productReference: fields.productReference,
+					mvhrLocation: fields.mvhrLocation,
+					midHeightOfAirFlowPathForIntake: fields.midHeightOfAirFlowPathForIntake,
+					orientationOfIntake: fields.orientationOfIntake,
+					pitchOfIntake: fields.pitchOfIntake,
+					midHeightOfAirFlowPathForExhaust: fields.midHeightOfAirFlowPathForExhaust,
+					orientationOfExhaust: fields.orientationOfExhaust,
+					pitchOfExhaust: fields.pitchOfExhaust,
+					associatedItemId: fields.associatedItemId,
+					...(fields.hasAssociatedItem ? {
+						hasAssociatedItem: fields.hasAssociatedItem,
+					} : {
+						hasAssociatedItem: false,
+						pitch: fields.pitch,
+						orientation: fields.orientation,
+					}),
+					...(fields.measuredFanPowerAndAirFlowRateKnown ? {
+						measuredFanPowerAndAirFlowRateKnown: true,
+						measuredAirFlowRate: fields.measuredAirFlowRate,
+						measuredFanPower: fields.measuredFanPower,
+					} : {
+						measuredFanPowerAndAirFlowRateKnown: false,
+					}),
+				};
 		}
 
 		mechanicalVentilation.data[index] = {
@@ -151,7 +225,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="productReference"
 			validation="required"
 			help="Select the MVHR model from the PCDB using the button below."
-			:selected-product-reference="model?.productReference"
+			:selected-product-reference="'productReference' in model ? model.productReference : null"
 			:selected-product-type="typeOfMechanicalVentilation.mvhr"
 			:page-url="route.fullPath"
 			:page-index="index"
@@ -164,7 +238,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="productReference"
 			validation="required"
 			help="Select the cenralised continuous MEV model from the PCDB using the button below."
-			:selected-product-reference="model?.productReference"
+			:selected-product-reference="'productReference' in model ? model.productReference : null"
 			:selected-product-type="typeOfMechanicalVentilation.centralisedContinuousMev"
 			:page-url="route.fullPath"
 			:page-index="index"
@@ -177,55 +251,49 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="productReference"
 			validation="required"
 			help="Select the decenralised continuous MEV model from the PCDB using the button below."
-			:selected-product-reference="model?.productReference"
+			:selected-product-reference="'productReference' in model ? model.productReference : null"
 			:selected-product-type="typeOfMechanicalVentilation.decentralisedContinuousMev"
 			:page-url="route.fullPath"
 			:page-index="index"
 		/>
-		<FormKit
-			id="airFlowRate"
-			name="airFlowRate"
-			label="Air flow rate"
-			help="Enter the required design air flow rate that will be supplied to or extracted from the ventilation zone by the system"
-			type="govInputWithUnit"
-			:unit="litrePerSecond"
-			validation="required"
-			data-field="InfiltrationVentilation.MechanicalVentilation.design_outdoor_air_flow_rate"
-		>
-			<GovDetails summary-text="Help with this input">
-				<table class="govuk-table">
-					<thead class="govuk-table__head">
-						<tr>
-							<th scope="col" class="govuk-table__header">Ventilation type</th>
-							<th scope="col" class="govuk-table__header">Typical airflow rates</th>
-							<th scope="col" class="govuk-table__header">Description</th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">MVHR (Mechanical Ventilation with Heat Recovery)</th>
-							<td class="govuk-table__cell">42 - 83 l/s</td>
-							<td class="govuk-table__cell">Whole-house system. Supplies fresh air and extracts stale air while recovering heat. Exact rate depends on dwelling size.</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Intermittent MEV (Mechanical Extract Ventilation)</th>
-							<td class="govuk-table__cell">8 - 17 l/s per fan (typically kitchen/bathroom)</td>
-							<td class="govuk-table__cell">Small fans that operate only when needed, for example a humidistat or user control. Each wet room usually has its own fan.</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Centralised Continuous MEV</th>
-							<td class="govuk-table__cell">17 - 42 l/s</td>
-							<td class="govuk-table__cell">A single unit continuously extracts from multiple rooms via ductwork. Airflow depends on dwelling size and number of wet rooms.</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Decentralised Continuous MEV (dMEV)</th>
-							<td class="govuk-table__cell">3 - 11 l/s per fan</td>
-							<td class="govuk-table__cell">Individual small fans in each wet room, running continuously at a low rate, with a boost function when needed.</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
-		</FormKit>
+		<template v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR' || model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV'">
+			<FormKit
+				id="measuredFanPowerAndAirFlowRateKnown"
+				type="govBoolean"
+				label="Do you know the measured fan power and air flow rate?"
+				name="measuredFanPowerAndAirFlowRateKnown"
+				validation="required"
+			/>
+			<template v-if="('measuredFanPowerAndAirFlowRateKnown' in model && model.measuredFanPowerAndAirFlowRateKnown)">
+				<FormKit
+					id="measuredFanPower"
+					type="govInputWithSuffix"
+					label="Measured fan power"
+					suffix-text="W"
+					name="measuredFanPower"
+					validation="required | number"
+				/>
+				<FormKit
+					id="measuredAirFlowRate"
+					type="govInputWithSuffix"
+					label="Measured air flow rate"
+					suffix-text="litres per second"
+					name="measuredAirFlowRate"
+					validation="required | number"
+				/>
+			</template>
+		</template>
+		<template v-if="model?.typeOfMechanicalVentilationOptions === 'Intermittent MEV'">
+			<FormKit
+				id="specificFanPower"
+				type="govInputWithSuffix"
+				label="Specific fan power"
+				suffix-text="W/(l/s)"
+				name="specificFanPower"
+				validation="required | number"
+			/>
+		</template>
+		<FieldsAirFlowRate />
 		<template v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR'">
 			<FormKit
 				id="mvhrLocation"
@@ -237,27 +305,39 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required"
 				data-field="InfiltrationVentilation.MechanicalVentilation.mvhr_location"
 			/>
+			<ClientOnly>
+				<FormKit
+					v-if="associatedItemOptions.length"
+					id="associatedItemId"
+					type="govRadios"
+					:options="new Map(associatedItemOptions)"
+					label="Associated wall, roof or window"
+					help="Select the wall, roof or window that this vent is in. It should have the same orientation and pitch as the vent."
+					name="associatedItemId"
+					validation="required"
+				/>
+			</ClientOnly>
+			<template v-if="associatedItemOptions.length <= 1 || (model && 'associatedItemId' in model && model.associatedItemId === 'none')">
+				<FieldsPitch label="Pitch of vent" help="Enter the tilt angle of the external surface of the vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors." />
+				<FieldsOrientation label="Orientation of vent" help="Enter the orientation of the vent's external surface" />
+			</template>
 			<FormKit
-				id="mvhrEfficiency"
-				type="govInputFloat"
-				label="MVHR efficiency"
-				help="Enter the MVHR's heat recovery efficiency, allowing for in-use factor. The value should be between 0 and 1."
-				name="mvhrEfficiency"
-				validation="required | min:0 | max:1"
-				data-field="InfiltrationVentilation.MechanicalVentilation.mvhr_efficiency">
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-					<p>The MVHR efficiency is how much heat the system recovers from outgoing air. A typical range is 0.85 to 0.95 for high performance systems.</p>
-				</GovDetails>
-			</FormKit>
+				id="installedUnderApprovedScheme"
+				type="govBoolean"
+				label="Is the vent installed under an approved installation scheme?"
+				name="installedUnderApprovedScheme"
+				validation="required"
+			/>
 			<FormKit
 				id="midHeightOfAirFlowPathForIntake"
 				type="govInputFloat"
 				label="Mid-height of air flow path for intake"
-				help="Enter the mid-height of the path through which the air flows in the intake, measured from ground level to the mid point of the intake."
+				help="Enter the mid-height of the path through which the air flows in the intake, measured from the bottom of the ventilation zone to the middle of the intake."
 				name="midHeightOfAirFlowPathForIntake"
 				validation="required | min:0"
-				data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_intake"
-			/>
+				data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_intake">
+				<FieldsMidHeightOfAirflowPathGuidance />
+			</FormKit>
 			<Orientation
 				id="orientationOfIntake"
 				name="orientationOfIntake"
@@ -276,11 +356,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				id="midHeightOfAirFlowPathForExhaust"
 				type="govInputFloat"
 				label="Mid-height of air flow path for exhaust"
-				help="Enter the mid-height of the path through which the air flows in the exhaust, measured from ground level to the mid point of the exhaust."
+				help="Enter the mid-height of the path through which the air flows in the exhaust, measured from the bottom of the ventilation zone to the middle of the exhaust."
 				name="midHeightOfAirFlowPathForExhaust"
 				validation="required | min:0"
-				data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_exhaust"
-			/>
+				data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_exhaust">
+				<FieldsMidHeightOfAirflowPathGuidance />
+			</FormKit>
 			<Orientation
 				id="orientationOfExhaust"
 				name="orientationOfExhaust"
@@ -296,6 +377,49 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				data-field="InfiltrationVentilation.MechanicalVentilation.pitch_of_exhaust"
 			/>
 		</template>
+		<template v-if="model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV'">
+			<FormKit
+				id="installationType"
+				type="govRadios"
+				:options="installationTypeOptions"
+				label="Where is the vent installed?"
+				name="installationType"
+				validation="required"
+			/>
+			<FormKit
+				id="installationLocation"
+				type="govRadios"
+				:options="installationTypeOptions"
+				label="Room where the vent is installed"
+				name="installationLocation"
+				validation="required"
+			/>
+		</template>
+		<template v-if="model?.typeOfMechanicalVentilationOptions !== 'MVHR'">
+			<ClientOnly>
+				<FormKit
+					v-if="associatedItemOptions.length > 1"
+					id="associatedItemId"
+					type="govRadios"
+					:options="new Map(associatedItemOptions)"
+					label="Associated wall, roof or window"
+					help="Select the wall, roof or window that this vent is in. It should have the same orientation and pitch as the vent."
+					name="associatedItemId"
+					validation="required"
+				/>
+			</ClientOnly>
+			<template v-if="associatedItemOptions.length <= 1 || (model && 'associatedItemId' in model && model.associatedItemId === 'none')">
+				<FieldsPitch label="Pitch of vent" help="Enter the tilt angle of the external surface of the vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors." />
+				<FieldsOrientation label="Orientation of vent" help="Enter the orientation of the vent's external surface" />
+			</template>
+			<FormKit
+				id="approvedInstallationScheme"
+				type="govBoolean"
+				label="Is the vent installed under an approved installation scheme?"
+				name="approvedInstallationScheme"
+				validation="required"
+			/>
+		</template>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
@@ -303,11 +427,3 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</div>
 	</FormKit>
 </template>
-
-<style scoped lang="scss">
-@use "sass:map";
-
-.custom-govuk__heading__padding {
-	padding-top: 2em;
-}
-</style>

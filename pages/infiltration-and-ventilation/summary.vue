@@ -1,25 +1,63 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl, type VentData } from "#imports";
+import { useProductReference } from "~/composables/productReference";
+import { installationLocationOptions, installationTypeOptions } from "~/utils/display";
 
 const title = "Infiltration and ventilation summary";
 const store = useEcaasStore();
 
 const mechanicalVentilationData = store.infiltrationAndVentilation.mechanicalVentilation.data;
 
+const mechanicalVentilationProductData = await useProductReference(
+	mechanicalVentilationData,
+	productData => productData.modelName,
+);
+
+const associatedItems = Object.fromEntries(useAssociatedItems(["wall", "roof", "window"]));
+
 const mechanicalVentilationSummary: SummarySection = {
 	id: "mechanicalVentilation",
 	label: "Mechanical ventilation",
-	data: mechanicalVentilationData?.map(({ data: x }) => {
+	data: mechanicalVentilationData?.map(({ data }) => {
+		const x = data as MechanicalVentilationData;
 		const isMvhr = x.typeOfMechanicalVentilationOptions === "MVHR";
 		const mvhrLocation = "mvhrLocation" in x ? displayCamelToSentenceCase(show(x.mvhrLocation)) : emptyValueRendering;
-		const mvhrEfficiency = "mvhrEfficiency" in x ? show(x.mvhrEfficiency) : emptyValueRendering;
 		return {
 			"Name": show(x.name),
 			"Type of mechanical ventilation": show(x.typeOfMechanicalVentilationOptions),
-			"Air flow rate": dim(x.airFlowRate, "litres per second"),
+			"Design air flow rate": dim(x.airFlowRate, "litres per second"),
 			"MVHR location": isMvhr ? mvhrLocation : undefined,
-			"MVHR efficiency": isMvhr ? mvhrEfficiency : undefined,
+			...(x.typeOfMechanicalVentilationOptions !== "Intermittent MEV" ? {
+				"Product reference": x.productReference,
+				"Product name": mechanicalVentilationProductData[x.productReference],
+			} : {}),
+			...((x.typeOfMechanicalVentilationOptions === "MVHR" || x.typeOfMechanicalVentilationOptions === "Centralised continuous MEV") && x.measuredFanPowerAndAirFlowRateKnown ? {
+				"Measured fan power": dim(x.measuredFanPower, "watt"),
+				"Measured air flow rate": dim(x.measuredAirFlowRate, "litres per second"),
+			} : {}),
+			...(x.typeOfMechanicalVentilationOptions === "MVHR" ? {
+				"MVHR location": displayCamelToSentenceCase(x.mvhrLocation),
+				"Mid-height of airflow path for intake": dim(x.midHeightOfAirFlowPathForIntake, "metres"),
+				"Orientation of intake": dim(x.orientationOfIntake, "degrees"),
+				"Pitch of intake": dim(x.pitchOfIntake, "degrees"),
+				"Mid-height of airflow path for exhaust": dim(x.midHeightOfAirFlowPathForExhaust, "metres"),
+				"Orientation of exhaust": dim(x.orientationOfExhaust, "degrees"),
+				"Pitch of exhaust": dim(x.pitchOfExhaust, "degrees"),
+			} : {}),
+			...(x.typeOfMechanicalVentilationOptions === "Intermittent MEV" ? {
+				"Specific fan power": dim(x.specificFanPower, "watts per litre per second"),
+			} : {}),
+			...(x.typeOfMechanicalVentilationOptions === "Decentralised continuous MEV" ? {
+				"Where is the vent installed?": installationTypeOptions[x.installationType],
+				"Room where the vent is installed": installationLocationOptions[x.installationLocation],
+			} : {}),
+			"Associated wall, roof or window": associatedItems[x.associatedItemId],
+			...(!x.hasAssociatedItem ? {
+				"Pitch of vent": dim(x.pitch, "degrees"),
+				"Orientation of vent": dim(x.orientation, "degrees"),
+			} : {}),
+			"Is the vent installed under an approved installation scheme?": displayBoolean(x.installedUnderApprovedScheme),
 		};
 	}) || [],
 	editUrl: getUrl("mechanicalVentilation"),

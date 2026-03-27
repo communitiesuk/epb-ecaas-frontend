@@ -1,6 +1,6 @@
 import { objectFromEntries } from "ts-extras";
 import type { DisplayProduct, TechnologyGroup } from "~/pcdb/pcdb.types";
-import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, SchemaConvectiveType, SchemaFuelType, SchemaLeaksTestPressure, SchemaRadiatorType } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, SchemaConvectiveType, SchemaFuelType, SchemaLeaksTestPressure, SchemaRadiatorType, SchemaMechanicalVentilationInstallationLocation, SchemaMechanicalVentilationInstallationType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
@@ -462,3 +462,14 @@ export function displayBoilerLocation(locationType: SchemaBoilerLocationType | u
 			throw new Error(`Unrecognised boiler location value '${locationType}' found.`);
 	}
 }
+
+export const installationTypeOptions: Record<SchemaMechanicalVentilationInstallationType, string> = {
+	in_ceiling: "In the ceiling",
+	in_duct: "In a duct",
+	through_wall: "Through a wall",
+};
+
+export const installationLocationOptions: Record<SchemaMechanicalVentilationInstallationLocation, string> = {
+	kitchen: "Kitchen",
+	other_wet_room: "Other wet room",
+};

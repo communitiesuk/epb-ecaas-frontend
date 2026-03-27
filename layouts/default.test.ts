@@ -11,7 +11,6 @@ describe("nav bar with ductwork", () => {
 		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
 		mvhrLocation: "inside",
-		mvhrEfficiency: 0.2,
 		productReference: "1000",
 		midHeightOfAirFlowPathForExhaust: 1.5,
 		orientationOfExhaust: 90,
@@ -19,6 +18,12 @@ describe("nav bar with ductwork", () => {
 		midHeightOfAirFlowPathForIntake: 1.5,
 		orientationOfIntake: 80,
 		pitchOfIntake: 10,
+		installedUnderApprovedScheme: true,
+		measuredFanPowerAndAirFlowRateKnown: false,
+		associatedItemId: "none",
+		hasAssociatedItem: false,
+		pitch: 90,
+		orientation: 180,
 	};
 
 	it("should not show the mvhr ductwork link when no mechanical ventilations of type mvhr have been added", async () => {

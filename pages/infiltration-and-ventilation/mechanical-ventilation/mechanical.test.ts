@@ -20,7 +20,6 @@ describe("mechanical ventilation overview", () => {
 		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
 		mvhrLocation: "inside",
-		mvhrEfficiency: 0.1,
 		productReference: "1000",
 		midHeightOfAirFlowPathForExhaust: 1.5,
 		orientationOfExhaust: 80,
@@ -28,6 +27,12 @@ describe("mechanical ventilation overview", () => {
 		midHeightOfAirFlowPathForIntake: 1.5,
 		orientationOfIntake: 80,
 		pitchOfIntake: 20,
+		installedUnderApprovedScheme: true,
+		measuredFanPowerAndAirFlowRateKnown: false,
+		associatedItemId: "none",
+		hasAssociatedItem: false,
+		pitch: 90,
+		orientation: 180,
 	};
 
 	const mechanicalVentilation2: MechanicalVentilationData = {
@@ -36,6 +41,13 @@ describe("mechanical ventilation overview", () => {
 		typeOfMechanicalVentilationOptions: "Decentralised continuous MEV",
 		airFlowRate: 14,
 		productReference: "1000",
+		installationType: "in_ceiling",
+		installationLocation: "other_wet_room",
+		installedUnderApprovedScheme: true,
+		associatedItemId: "none",
+		hasAssociatedItem: false,
+		pitch: 90,
+		orientation: 180,
 	};
 
 	const mechanicalVentilation3: MechanicalVentilationData = {
@@ -43,7 +55,12 @@ describe("mechanical ventilation overview", () => {
 		name: "Mechanical name 3",
 		typeOfMechanicalVentilationOptions: "Intermittent MEV",
 		airFlowRate: 14,
-		productReference: "1000",
+		specificFanPower: 50,
+		installedUnderApprovedScheme: true,
+		associatedItemId: "none",
+		hasAssociatedItem: false,
+		pitch: 90,
+		orientation: 180,
 	};
 
 	const mechanicalVentilation4: MechanicalVentilationData = {
@@ -52,7 +69,6 @@ describe("mechanical ventilation overview", () => {
 		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
 		mvhrLocation: "inside",
-		mvhrEfficiency: 0.1,
 		productReference: "1000",
 		midHeightOfAirFlowPathForExhaust: 1.5,
 		orientationOfExhaust: 80,
@@ -60,6 +76,12 @@ describe("mechanical ventilation overview", () => {
 		midHeightOfAirFlowPathForIntake: 1.5,
 		orientationOfIntake: 80,
 		pitchOfIntake: 20,
+		installedUnderApprovedScheme: true,
+		measuredFanPowerAndAirFlowRateKnown: false,
+		associatedItemId: "none",
+		hasAssociatedItem: false,
+		pitch: 90,
+		orientation: 180,
 	};
 
 	// linked to mechanicalVentilation1

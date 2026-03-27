@@ -2,19 +2,15 @@ import { arrayIncludes } from "ts-extras";
 import { createPcdbClient } from "~/pcdb/clients/pcdb_client";
 import { technologyTypes, type Product, type DisplayProduct, type PaginatedResult, type TechnologyType, type TechnologyGroup, technologyGroups } from "~/pcdb/pcdb.types";
 
+const client = createPcdbClient();
+
 export async function getProducts(technologyType: TechnologyType, pageSize?: number, startKey?: string): Promise<PaginatedResult<DisplayProduct>> {
 	ensureValidTechnologyType(technologyType);
 
-	const client = createPcdbClient();
-
-	return await client({
-		technologyType,
-		pageSize,
-		startKey,
-	}) as PaginatedResult<DisplayProduct>;
+	return await client.getProductsByTechnologyType(technologyType, pageSize, startKey);
 };
 
-export async function getGroupProducts(technologyGroup: TechnologyGroup, pageSize?: number, startKey?: string): Promise<PaginatedResult<DisplayProduct>> {
+export async function getGroupProducts(technologyGroup: TechnologyGroup): Promise<PaginatedResult<DisplayProduct>> {
 	if (!technologyGroup || !arrayIncludes(technologyGroups, technologyGroup as string)) {
 		throw createError({
 			statusCode: 400,
@@ -22,21 +18,13 @@ export async function getGroupProducts(technologyGroup: TechnologyGroup, pageSiz
 		});
 	}
 
-	const client = createPcdbClient();
-
-	return await client({
-		technologyGroup,
-		pageSize,
-		startKey,
-	}) as PaginatedResult<DisplayProduct>;
+	return await client.getProductsByTechnologyGroup(technologyGroup);
 };
 
-export async function getProductDetails(id: number): Promise<Product | undefined> {
+export async function getProductDetails(id: number, includeTestData: boolean = false): Promise<Product | undefined> {
 	ensureValidProductId(id);
 
-	const client = createPcdbClient();
-
-	const product = await client({ id }) as Product | undefined;
+	const product = await client.getProduct(id, includeTestData);
 
 	ensureProductExists(product);
 

@@ -17,7 +17,6 @@ describe("infiltration ventilation mapper", () => {
 			typeOfMechanicalVentilationOptions: "MVHR",
 			airFlowRate: unitValue(30, litrePerSecond),
 			mvhrLocation: "inside",
-			mvhrEfficiency: 1,
 			productReference: "1000",
 			midHeightOfAirFlowPathForExhaust: 1.5,
 			orientationOfExhaust: 90,
@@ -25,6 +24,14 @@ describe("infiltration ventilation mapper", () => {
 			midHeightOfAirFlowPathForIntake: 1.5,
 			orientationOfIntake: 80,
 			pitchOfIntake: 10,
+			installedUnderApprovedScheme: true,
+			measuredFanPowerAndAirFlowRateKnown: true,
+			measuredAirFlowRate: 37,
+			measuredFanPower: 12.26,
+			associatedItemId: "none",
+			hasAssociatedItem: false,
+			pitch: 90,
+			orientation: 180,
 		},
 	}];
 
@@ -77,7 +84,6 @@ describe("infiltration ventilation mapper", () => {
 		expect(firstMechVent?.vent_type).toBe("MVHR");
 		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(108);
 		expect(firstMechVent?.mvhr_location).toBe("inside");
-		expect("mvhr_eff" in firstMechVent && firstMechVent?.mvhr_eff).toBe(1);
 		expect("measured_air_flow_rate" in firstMechVent && firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
 		expect("measured_fan_power" in firstMechVent && firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.ductwork).toBeDefined();
@@ -203,7 +209,12 @@ describe("infiltration ventilation mapper", () => {
 				name: "bathroom exhaust fan",
 				typeOfMechanicalVentilationOptions: "Intermittent MEV",
 				airFlowRate: unitValue(40, litrePerSecond),
-				productReference: "1000",
+				specificFanPower: 50,
+				installedUnderApprovedScheme: true,
+				associatedItemId: "none",
+				hasAssociatedItem: false,
+				pitch: 90,
+				orientation: 180,
 			},
 		}];
 

@@ -36,6 +36,10 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 }
 
 export function mapMechanicalVentilationData(state: ResolvedState) {
+	const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
+	const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+	const { dwellingSpaceWindows } = state.dwellingFabric;
+
 	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map((x): [string, SchemaMechanicalVentilation] => {
 		let airFlowRateInCubicMetresPerHour: number;
 
@@ -55,16 +59,19 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 
 		const ventType = x.typeOfMechanicalVentilationOptions;
 
+		const associatedItem = getResolvedTaggedItem([
+			dwellingSpaceExternalWall,
+			dwellingSpaceRoofs,
+			dwellingSpaceWindows,
+		], x.associatedItemId);
+
 		switch (ventType) {
 			case "MVHR":
 				val = {
 					vent_type: "MVHR",
 					...commonFields,
 					mvhr_location: x.mvhrLocation,
-					mvhr_eff: x.mvhrEfficiency,
 					ductwork: [],
-					measured_air_flow_rate: 37,
-					measured_fan_power: 12.26,
 					position_exhaust: {
 						mid_height_air_flow_path: x.midHeightOfAirFlowPathForExhaust,
 						orientation360: x.orientationOfExhaust,
@@ -75,31 +82,51 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 						orientation360: x.orientationOfIntake,
 						pitch: x.pitchOfIntake,
 					},
+					installed_under_approved_scheme: x.installedUnderApprovedScheme,
+					product_reference: x.productReference,
+					...(x.measuredFanPowerAndAirFlowRateKnown ? {
+						measured_air_flow_rate: x.measuredAirFlowRate,
+						measured_fan_power: x.measuredFanPower,
+					} : {}),
 				};
 				break;
 			case "Centralised continuous MEV":
 				val = {
 					vent_type: "Centralised continuous MEV",
 					...commonFields,
-					measured_air_flow_rate: 37,
-					measured_fan_power: 12.26,
-					position_exhaust: {},
+					installed_under_approved_scheme: x.installedUnderApprovedScheme,
+					product_reference: x.productReference,
+					mid_height_air_flow_path: 10, // TODO: Remove?
+					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
+					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
+					...(x.measuredFanPowerAndAirFlowRateKnown ? {
+						measured_air_flow_rate: x.measuredAirFlowRate,
+						measured_fan_power: x.measuredFanPower,
+					} : {}),
 				};
 				break;
 			case "Intermittent MEV":
 				val = {
 					vent_type: "Intermittent MEV",
 					...commonFields,
-					SFP: 1.5,
+					SFP: x.specificFanPower,
 					position_exhaust: {},
+					installed_under_approved_scheme: x.installedUnderApprovedScheme,
+					pitch: x.hasAssociatedItem ? associatedItem!.pitch : x.pitch,
+					orientation360: x.hasAssociatedItem ? associatedItem!.orientation : x.orientation,
 				};
 				break;
 			case "Decentralised continuous MEV":
 				val = {
 					vent_type: "Decentralised continuous MEV",
 					...commonFields,
-					SFP: 1.5,
 					position_exhaust: {},
+					installation_type: x.installationType,
+					installation_location: x.installationLocation,
+					installed_under_approved_scheme: x.installedUnderApprovedScheme,
+					product_reference: x.productReference,
+					pitch: x.hasAssociatedItem ? associatedItem!.pitch : x.pitch,
+					orientation360: x.hasAssociatedItem ? associatedItem!.orientation : x.orientation,
 				};
 				break;
 			default:

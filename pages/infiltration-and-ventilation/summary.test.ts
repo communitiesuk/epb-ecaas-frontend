@@ -1,4 +1,4 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen } from "@testing-library/vue";
 import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
@@ -8,16 +8,28 @@ import { centimetresSquare, metresSquare } from "~/utils/units/area";
 import { metre, millimetre } from "~/utils/units/length";
 import { degrees } from "~/utils/units/angle";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
+import type { Product } from "~/pcdb/pcdb.types";
+import { watt, wattsPerLitrePerSecond } from "~/utils/units/power";
 
 vi.mock("uuid");
 
-const mechanicalVentilationData: MechanicalVentilationData = {
+const { mockFetch } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+}));
+
+mockNuxtImport("useFetch", () => mockFetch);
+
+const ventProduct: Partial<Product> = {
+	id: "1000",
+	modelName: "Vent Product",
+};
+
+const mvhrData: MechanicalVentilationData = {
 	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
 	name: "Mechanical name 1",
 	typeOfMechanicalVentilationOptions: "MVHR",
 	airFlowRate: 12,
 	mvhrLocation: "inside",
-	mvhrEfficiency: 0.2,
 	productReference: "1000",
 	midHeightOfAirFlowPathForExhaust: 1.5,
 	orientationOfExhaust: 90,
@@ -25,6 +37,58 @@ const mechanicalVentilationData: MechanicalVentilationData = {
 	midHeightOfAirFlowPathForIntake: 1.5,
 	orientationOfIntake: 80,
 	pitchOfIntake: 10,
+	installedUnderApprovedScheme: true,
+	measuredFanPowerAndAirFlowRateKnown: true,
+	measuredFanPower: 20,
+	measuredAirFlowRate: 10,
+	associatedItemId: "none",
+	hasAssociatedItem: false,
+	pitch: 90,
+	orientation: 180,
+};
+
+const intermittentMevData: MechanicalVentilationData = {
+	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
+	name: "Mechanical name 1",
+	typeOfMechanicalVentilationOptions: "Intermittent MEV",
+	specificFanPower: 10,
+	airFlowRate: 12,
+	associatedItemId: "none",
+	hasAssociatedItem: false,
+	pitch: 90,
+	orientation: 180,
+	installedUnderApprovedScheme: true,
+};
+
+const centralisedContinuousMevData: MechanicalVentilationData = {
+	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
+	name: "Mechanical name 1",
+	typeOfMechanicalVentilationOptions: "Centralised continuous MEV",
+	productReference: "1000",
+	measuredFanPowerAndAirFlowRateKnown: true,
+	measuredFanPower: 20,
+	measuredAirFlowRate: 10,
+	airFlowRate: 12,
+	associatedItemId: "none",
+	hasAssociatedItem: false,
+	pitch: 90,
+	orientation: 180,
+	installedUnderApprovedScheme: true,
+};
+
+const decentralisedContinuousMevData: MechanicalVentilationData = {
+	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
+	name: "Mechanical name 1",
+	typeOfMechanicalVentilationOptions: "Decentralised continuous MEV",
+	productReference: "1000",
+	airFlowRate: 12,
+	installationType: "in_ceiling",
+	installationLocation: "kitchen",
+	associatedItemId: "none",
+	hasAssociatedItem: false,
+	pitch: 90,
+	orientation: 180,
+	installedUnderApprovedScheme: true,
 };
 
 const ductworkData: DuctworkData = {
@@ -79,6 +143,16 @@ const airPermeabilityData: AirPermeabilityData = {
 describe("Infiltration and ventilation summary", () => {
 	const store = useEcaasStore();
 
+	beforeEach(() => {
+		mockFetch.mockResolvedValue({
+			data: { value: ventProduct },
+		});
+	});
+
+	afterEach(() => {
+		mockFetch.mockReset();
+	});
+
 	afterEach(() => {
 		store.$reset();
 	});
@@ -94,12 +168,12 @@ describe("Infiltration and ventilation summary", () => {
 		expect(screen.queryByRole("link", { name: "Combustion appliances" })).toBeNull();
 	});
 
-	it("should display the correct data for the mechanical ventilation section", async () => {
+	it("should display the correct data for the mechanical ventilation section when vent type is MVHR", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						{ data: mechanicalVentilationData },
+						{ data: mvhrData },
 					],
 				},
 			},
@@ -109,11 +183,118 @@ describe("Infiltration and ventilation summary", () => {
 		const expectedResult = {
 			"Name": "Mechanical name 1",
 			"Type of mechanical ventilation": "MVHR",
-			"Air flow rate": `12 ${litrePerSecond.suffix}`,
+			"Design air flow rate": `12 ${litrePerSecond.suffix}`,
 			"MVHR location": "Inside",
-			"MVHR efficiency": "0.2",
+			"Product reference": "1000",
+			"Product name": "Vent Product",
+			"Measured fan power": `20 ${watt.suffix}`,
+			"Measured air flow rate": `10 ${litrePerSecond.suffix}`,
+			"Mid-height of airflow path for intake": `1.5 ${metre.suffix}`,
+			"Orientation of intake": `80 ${degrees.suffix}`,
+			"Pitch of intake": `10 ${degrees.suffix}`,
+			"Mid-height of airflow path for exhaust": `1.5 ${metre.suffix}`,
+			"Orientation of exhaust": `90 ${degrees.suffix}`,
+			"Pitch of exhaust": `10 ${degrees.suffix}`,
+			"Orientation of vent": `180 ${degrees.suffix}`,
+			"Pitch of vent": `90 ${degrees.suffix}`,
+			"Is the vent installed under an approved installation scheme?": "Yes",
 		};
 
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the mechanical ventilation section when vent type is Intermittent MEV", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: intermittentMevData },
+					],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "Mechanical name 1",
+			"Type of mechanical ventilation": "Intermittent MEV",
+			"Specific fan power": `10 ${wattsPerLitrePerSecond.suffix}`,
+			"Design air flow rate": `12 ${litrePerSecond.suffix}`,
+			"Orientation of vent": `180 ${degrees.suffix}`,
+			"Pitch of vent": `90 ${degrees.suffix}`,
+			"Is the vent installed under an approved installation scheme?": "Yes",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the mechanical ventilation section when vent type is Centralised continuous MEV", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: centralisedContinuousMevData },
+					],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "Mechanical name 1",
+			"Type of mechanical ventilation": "Centralised continuous MEV",
+			"Product reference": "1000",
+			"Product name": "Vent Product",
+			"Measured fan power": `20 ${watt.suffix}`,
+			"Measured air flow rate": `10 ${litrePerSecond.suffix}`,
+			"Design air flow rate": `12 ${litrePerSecond.suffix}`,
+			"Orientation of vent": `180 ${degrees.suffix}`,
+			"Pitch of vent": `90 ${degrees.suffix}`,
+			"Is the vent installed under an approved installation scheme?": "Yes",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the mechanical ventilation section when vent type is Decentralised continuous MEV", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: decentralisedContinuousMevData },
+					],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "Mechanical name 1",
+			"Type of mechanical ventilation": "Decentralised continuous MEV",
+			"Product reference": "1000",
+			"Product name": "Vent Product",
+			"Design air flow rate": `12 ${litrePerSecond.suffix}`,
+			"Where is the vent installed?": "In the ceiling",
+			"Room where the vent is installed": "Kitchen",
+			"Orientation of vent": `180 ${degrees.suffix}`,
+			"Pitch of vent": `90 ${degrees.suffix}`,
+			"Is the vent installed under an approved installation scheme?": "Yes",
+		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
@@ -127,7 +308,7 @@ describe("Infiltration and ventilation summary", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						{ data: mechanicalVentilationData },
+						{ data: mvhrData },
 					],
 				},
 				ductwork: {
@@ -167,7 +348,7 @@ describe("Infiltration and ventilation summary", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						{ data: mechanicalVentilationData },
+						{ data: mvhrData },
 					],
 				},
 				ductwork: {

@@ -678,34 +678,79 @@ export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	airPermeability: EcaasForm<AirPermeabilityData>;
 }>;
 
-const baseMechanicalVentilationData = pcdbProduct.extend({
+const baseMechanicalVentilationData = namedWithId.extend({
 	airFlowRate: z.union([zodUnit("flow rate"), z.number()]),
+	installedUnderApprovedScheme: z.boolean(),
+	associatedItemId: z.string().trim().min(1),
 });
 
-const mechanicalVentilationDataZod = z.discriminatedUnion(
-	"typeOfMechanicalVentilationOptions",
-	[
-		baseMechanicalVentilationData.extend({
-			typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Intermittent MEV">("Intermittent MEV"),
-		}),
-		baseMechanicalVentilationData.extend({
-			typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Centralised continuous MEV">("Centralised continuous MEV"),
-		}),
-		baseMechanicalVentilationData.extend({
-			typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Decentralised continuous MEV">("Decentralised continuous MEV"),
-		}),
-		baseMechanicalVentilationData.extend({
-			typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "MVHR">("MVHR"),
-			mvhrLocation: mvhrLocationZod,
-			mvhrEfficiency: fraction,
-			midHeightOfAirFlowPathForIntake: z.number(),
-			orientationOfIntake: orientation,
-			pitchOfIntake: z.number().min(0).max(180),
-			midHeightOfAirFlowPathForExhaust: z.number(),
-			orientationOfExhaust: orientation,
-			pitchOfExhaust: z.number().min(0).max(180),
-		}),
-	],
+const baseMvhrData = baseMechanicalVentilationData.extend({
+	productReference: z.string().trim().min(1),
+	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "MVHR">("MVHR"),
+	measuredFanPowerAndAirFlowRateKnown: z.boolean(),
+	mvhrLocation: mvhrLocationZod,
+	midHeightOfAirFlowPathForIntake: z.number(),
+	orientationOfIntake: orientation,
+	pitchOfIntake: z.number().min(0).max(180),
+	midHeightOfAirFlowPathForExhaust: z.number(),
+	orientationOfExhaust: orientation,
+	pitchOfExhaust: z.number().min(0).max(180),
+});
+
+const intermittentMevData = baseMechanicalVentilationData.extend({
+	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Intermittent MEV">("Intermittent MEV"),
+	specificFanPower: z.number(),
+});
+
+const baseCentralisedContinuousMevData = baseMechanicalVentilationData.extend({
+	productReference: z.string().trim().min(1),
+	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Centralised continuous MEV">("Centralised continuous MEV"),
+	measuredFanPowerAndAirFlowRateKnown: z.boolean(),
+});
+
+const decentralisedContinuousMevData = baseMechanicalVentilationData.extend({
+	productReference: z.string().trim().min(1),
+	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Decentralised continuous MEV">("Decentralised continuous MEV"),
+	installationType: mechVentInstallationTypeZod,
+	installationLocation: mechVentInstallationLocationZod,
+});
+
+const baseMeasuredFanPowerAndAirFlowRateKnown = {
+	measuredFanPowerAndAirFlowRateKnown: z.literal(true),
+	measuredFanPower: z.number(),
+	measuredAirFlowRate: z.number(),
+};
+
+const mechanicalVentilationDataZod = nestedDiscriminatedUnion(
+	baseMechanicalVentilationData,
+	{
+		discriminator: "associatedItemId",
+		variants: [
+			z.object({
+				hasAssociatedItem: z.literal(false),
+				pitch: z.number().min(0).lt(180),
+				orientation: z.number().min(0).lt(360),
+			}),
+			z.object({
+				hasAssociatedItem: z.literal(true),
+			}),
+		] satisfies Tuple,
+	},
+	{
+		discriminator: "typeOfMechanicalVentilationOptions",
+		variants: [
+			...z.discriminatedUnion("measuredFanPowerAndAirFlowRateKnown", [
+				baseMvhrData.extend({ measuredFanPowerAndAirFlowRateKnown: z.literal(false) }),
+				baseMvhrData.extend(baseMeasuredFanPowerAndAirFlowRateKnown),
+			]).options,
+			intermittentMevData,
+			...z.discriminatedUnion("measuredFanPowerAndAirFlowRateKnown", [
+				baseCentralisedContinuousMevData.extend({ measuredFanPowerAndAirFlowRateKnown: z.literal(false) }),
+				baseCentralisedContinuousMevData.extend(baseMeasuredFanPowerAndAirFlowRateKnown),
+			]).options,
+			decentralisedContinuousMevData,
+		],
+	},
 );
 
 export type MechanicalVentilationData = z.infer<typeof mechanicalVentilationDataZod>;
