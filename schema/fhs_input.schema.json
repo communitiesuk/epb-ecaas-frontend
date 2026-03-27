@@ -2977,9 +2977,7 @@
 											"mvhr_location",
 											"ductwork",
 											"position_intake",
-											"position_exhaust",
-											"measured_fan_power",
-											"measured_air_flow_rate"
+											"position_exhaust"
 										],
 										"properties": {
 											"vent_type": {
@@ -3195,9 +3193,7 @@
 									},
 									{
 										"required": [
-											"vent_type",
-											"measured_fan_power",
-											"measured_air_flow_rate"
+											"vent_type"
 										],
 										"properties": {
 											"vent_type": {
@@ -3213,77 +3209,6 @@
 										"oneOf": [
 											{
 												"required": [
-													"mid_height_air_flow_path",
-													"orientation360",
-													"pitch"
-												],
-												"properties": {
-													"mid_height_air_flow_path": {
-														"type": "number",
-														"minimum": 1,
-														"maximum": 60,
-														"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
-													},
-													"orientation360": {
-														"type": "number",
-														"minimum": 0,
-														"maximum": 360,
-														"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
-													},
-													"pitch": {
-														"type": "number",
-														"minimum": 0,
-														"maximum": 180,
-														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
-													}
-												}
-											},
-											{
-												"required": [
-													"position_exhaust"
-												],
-												"properties": {
-													"position_exhaust": {
-														"type": "object",
-														"properties": {
-															"mid_height_air_flow_path": {
-																"type": "number",
-																"minimum": 1,
-																"maximum": 60,
-																"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
-															},
-															"orientation360": {
-																"type": "number",
-																"minimum": 0,
-																"maximum": 360,
-																"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
-															},
-															"pitch": {
-																"type": "number",
-																"minimum": 0,
-																"maximum": 180,
-																"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
-															}
-														}
-													}
-												}
-											}
-										]
-									},
-									{
-										"required": [
-											"vent_type"
-										],
-										"properties": {
-											"vent_type": {
-												"type": "string",
-												"const": "Intermittent MEV"
-											}
-										},
-										"oneOf": [
-											{
-												"required": [
-													"vent_type",
 													"mid_height_air_flow_path",
 													"orientation360",
 													"pitch"
