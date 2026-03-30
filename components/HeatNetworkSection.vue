@@ -9,7 +9,6 @@ defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatNetwork" }>;
 	index: number;
 	section: PageId;
-	maxNumOfItemsIsOne?: boolean
 }>();
 
 const heatSources = getCombinedHeatSources(store);
@@ -57,7 +56,6 @@ const emit = defineEmits(["update-heat-network-model"]);
 			:selected-product-type="typeOfHeatSource.heatNetwork"
 			:page-url="route.fullPath"
 			:page-index="index" 
-			:max-num-of-items-is-one="maxNumOfItemsIsOne"
 		/>
 		<FieldsBoosterHeatPumps
 			v-if="model.isHeatNetworkInPcdb && model.isFifthGeneration"
@@ -142,8 +140,6 @@ const emit = defineEmits(["update-heat-network-model"]);
 			:selected-product-reference="model.heatInterfaceUnitProductReference"
 			:selected-product-type="typeOfHeatSource.heatInterfaceUnit"
 			:page-url="route.fullPath"
-			:page-index="index" 
-			:max-num-of-items-is-one="maxNumOfItemsIsOne"
-		/>
+			:page-index="index" />
 	</template>
 </template>

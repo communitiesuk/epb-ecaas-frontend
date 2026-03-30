@@ -7,8 +7,7 @@ defineProps<{
 	selectedProductReference?: string;
 	selectedProductType?: string;
 	pageUrl?: string;
-	pageIndex?: number | null;
-	maxNumOfItemsIsOne?: boolean
+	pageIndex?: number;
 }>();
 </script>
 
@@ -24,6 +23,5 @@ defineProps<{
 		:selected-product-type="selectedProductType"
 		:page-url="pageUrl"
 		:page-index="pageIndex"
-		:max-num-of-items-is-one="maxNumOfItemsIsOne"
 	/> 
 </template>

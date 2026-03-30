@@ -82,40 +82,27 @@ describe("Heat source products page", () => {
 		isHeatNetworkInPcdb: true,
 	};
 
-	// beforeEach(() => {
-	// 	store.$patch({
-	// 		domesticHotWater: {
-	// 			heatSources: {
-	// 				data: [
-	// 					{ data: heatSource1 },
-	// 					{ data: heatSource2 },
-	// 					{ data: combiBoiler1 },
-	// 					{ data: heatNetwork },
+	beforeEach(() => {
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [
+						{ data: heatSource1 },
+						{ data: heatSource2 },
+						{ data: combiBoiler1 },
+						{ data: heatNetwork },
 
-	// 				],
-	// 			},
-	// 		},
-	// 	});
-	// });
+					],
+				},
+			},
+		});
+	});
 
 	afterEach(async () => {
 		store.$reset();
 	});
 
 	test("title dependant on the type of heat source", async () => {
-		
-		store.$patch({
-			domesticHotWater: {
-				heatSources: {
-					data: [
-						{ data: heatSource1 },
-					
-
-					],
-				},
-			},
-		});
-		
 		mockRoute.mockReturnValue({
 			params: {
 				pump: "0",
@@ -131,51 +118,29 @@ describe("Heat source products page", () => {
 	});
 
 	test("when a user selects a product its product reference gets stored", async () => {
-
-		store.$patch({
-			domesticHotWater: {
-				heatSources: {
-					data: [
-						{ data: heatSource1 },
-					
-
-					],
-				},
-			},
-		});
-		
 		mockRoute.mockReturnValue({
 			params: {
+				heatSource: "1",
 				products: "air-source",
 			},
-			path: "/air-source",
+			path: "/1/air-source",
 		});
 		await renderSuspended(Products);
 
 		await user.click(screen.getByTestId("selectProductButton_1"));
 
 		expect(
-			store.domesticHotWater.heatSources.data[0]!.data,
+			store.domesticHotWater.heatSources.data[1]!.data,
 		).toEqual(expect.objectContaining({ productReference: MOCKED_HEAT_PUMPS.data[1]?.id }));
 	});
 
 	test("Form marks that boiler location does not need to be specified when boiler location is 'internal'", async () => {
-		
-		store.$patch({
-			domesticHotWater: {
-				heatSources: {
-					data: [
-						{ data: combiBoiler1 },
-					],
-				},
-			},
-		});
-		
 		mockRoute.mockReturnValue({
 			params: {
+				heatSource: "2",
 				products: "combi-boiler",
 			},
-			path: "/combi-boiler",
+			path: "/2/combi-boiler",
 		});
 
 		const mockedCombiBoilers: PaginatedResult<DisplayProduct> = {
@@ -199,20 +164,12 @@ describe("Heat source products page", () => {
 		await user.click(screen.getByTestId("selectProductButton_0"));
 
 		expect(
-			store.domesticHotWater.heatSources.data[0]!.data,
+			store.domesticHotWater.heatSources.data[2]!.data,
 		).toEqual(expect.objectContaining({ needsSpecifiedLocation: false }));
 	});
 
 	test("when a heat network product is a fifth generation, isFifthGeneration is set to true", async () => {
-		store.$patch({
-			domesticHotWater: {
-				heatSources: {
-					data: [
-						{ data: heatNetwork },
-					],
-				},
-			},
-		});
+		
 		mockRoute.mockReturnValue({
 			params: {
 				heatSource: "3",
@@ -223,10 +180,11 @@ describe("Heat source products page", () => {
 		
 		mockRoute.mockReturnValue({
 			params: {
+				heatSource: "3",
 				products: "heat-network",
 				id: "1000",
 			},
-			path: "/heat-network/1000",
+			path: "/3/heat-network/1000",
 		});
 		const product = {
 			id: "1000",
@@ -250,25 +208,16 @@ describe("Heat source products page", () => {
 	
 		await renderSuspended(Products);
 		await user.click(screen.getByTestId("selectProductButton_0"));
-		expect((store.domesticHotWater.heatSources.data[0]!.data as { isFifthGeneration: boolean }).isFifthGeneration).toBe(true);
+		expect((store.domesticHotWater.heatSources.data[3]!.data as { isFifthGeneration: boolean }).isFifthGeneration).toBe(true);
 	});
 
 	test("makes additional fetch for hot water only heat pumps if pageId is heatPump", async () => {
-	
-		store.$patch({
-			domesticHotWater: {
-				heatSources: {
-					data: [
-						{ data: heatSource2 },
-					],
-				},
-			},
-		});
 		mockRoute.mockReturnValue({
 			params: {
+				heatSource: "1",
 				products: "heat-pump",
 			},
-			path: "/heat-pump",
+			path: "/1/heat-pump",
 		});
 
 		const HOT_WATER_HEAT_PUMPS = {
@@ -307,26 +256,18 @@ describe("Heat source products page", () => {
 	});
 		
 	test("'Back to heat source' navigates user to the heat source at the correct index", async () => {
-		store.$patch({
-			domesticHotWater: {
-				heatSources: {
-					data: [
-						{ data: heatSource1 },
-					],
-				},
-			},
-		});
 		mockRoute.mockReturnValue({
 			params: {
+				heatSource: "1",
 				products: "air-source",
 			},
-			path: "/air-source",
+			path: "/1/air-source",
 		});
 		await renderSuspended(Products);
 		const backButton = screen.getByTestId("backToHeatSourceButton");
 
 		expect(backButton.getAttribute("href")).toBe(
-			"/domestic-hot-water/heat-sources",
+			"/domestic-hot-water/heat-sources/1",
 		);
 	});
 });
