@@ -686,28 +686,6 @@ describe("Domestic hot water", () => {
 		});
 	});
 
-	it("disables the mark section as complete button when item is incomplete", async () => {
-		store.$patch({
-			domesticHotWater: {
-				waterStorage: {
-					data: [
-						{
-							data:
-								{ name: "Test Water Storage", typeOfWaterStorage: "hotWaterCylinder" },
-							complete: false,
-						},
-					],
-				},
-			},
-		});
-
-		await renderSuspended(DomesticHotWater);
-		const markAsCompleteButton = screen.getByRole("button", {
-			name: "Mark section as complete",
-		});
-		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
-	});
-
 	test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
 		store.$patch({
 			domesticHotWater: {
@@ -849,6 +827,39 @@ describe("Domestic hot water", () => {
 				await renderSuspended(DomesticHotWater);
 				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			});
+		});
+	});
+
+	describe("when imported file contains more than one DHW heat source", () => {
+
+		const extraHeatSource: Partial<DomesticHotWaterHeatSourceData> = {
+			name: "Extra heat source",
+			id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f11111",
+			coldWaterSource: "mainsWater",
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+		};
+
+		beforeEach(() => {
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: heatSource1.data, complete: true }, { data: extraHeatSource }],
+					},
+				},
+			});
+		});
+
+		it("disables the mark section as complete button", async () => {
+				
+			await renderSuspended(DomesticHotWater);
+			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
+		});
+
+		it("displays an error message informing users to remove the extra heat source/s", async () => {
+
+			await renderSuspended(DomesticHotWater);
+			expect(screen.getByTestId("heatSourceLimitExceededErrorSummary")).toBeDefined();
 		});
 	});
 });
