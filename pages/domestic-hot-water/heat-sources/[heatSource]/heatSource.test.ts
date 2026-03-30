@@ -519,16 +519,6 @@ describe("Heat pump section", () => {
 			heatSourceId: "NEW_HEAT_SOURCE",
 	
 		};
-	
-		const immersionHeater2: DomesticHotWaterHeatSourceData = {
-			id: "463c94f6-566c-49b2-af27-57e5c222222",
-			name: "Immersion heater 2",
-			typeOfHeatSource: "immersionHeater",
-			power: 2,
-			coldWaterSource: "headerTank",
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-		};
 
 		test("'ImmersionHeaterSection' component displays when type of heat source is immersion heater", async () => {
 			await renderSuspended(HeatSourceForm, {
@@ -590,7 +580,7 @@ describe("Heat pump section", () => {
 			store.$patch({
 				domesticHotWater: {
 					heatSources: {
-						data: [{ data: immersionHeater1 }, { data: immersionHeater2 }],
+						data: [{ data: immersionHeater1 }],
 					},
 				},
 			});
@@ -660,17 +650,6 @@ describe("Heat pump section", () => {
 			heatSourceId: "NEW_HEAT_SOURCE",
 	
 		};
-	
-		const pointOfUse2: DomesticHotWaterHeatSourceData = {
-			id: "463c94f6-566c-49b2-af27-57e5c222222",
-			name: "Point of use 2",
-			typeOfHeatSource: "pointOfUse",
-			energySupply: "mains_gas",
-			heaterEfficiency: 8,
-			coldWaterSource: "headerTank",
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-		};
 
 		test("'PointOfUseSection' component displays when type of heat source is Point of use", async () => {
 			
@@ -739,7 +718,7 @@ describe("Heat pump section", () => {
 			store.$patch({
 				domesticHotWater: {
 					heatSources: {
-						data: [{ data: pointOfUse1 }, { data: pointOfUse2 }],
+						data: [{ data: pointOfUse1 }],
 					},
 				},
 			});
@@ -747,7 +726,7 @@ describe("Heat pump section", () => {
 	
 			await renderSuspended(HeatSourceForm, {
 				route: {
-					params: { "heatSource": "1" },
+					params: { "heatSource": "0" },
 				},
 			});
 	
@@ -756,9 +735,9 @@ describe("Heat pump section", () => {
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
-			const pointOfUse = store.domesticHotWater.heatSources.data[1]?.data;
+			const pointOfUse = store.domesticHotWater.heatSources.data[0]?.data;
 	
-			expect(pointOfUse!.id).toBe(pointOfUse2.id);
+			expect(pointOfUse!.id).toBe(pointOfUse1.id);
 			expect((pointOfUse! as { name: string }).name).toBe("Updated point of use");
 		});
 
