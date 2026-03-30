@@ -3091,7 +3091,8 @@
 														"maximum": 180,
 														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
 													}
-												}
+												},
+												"required": ["mid_height_air_flow_path", "orientation360", "pitch"]
 											},
 											"position_exhaust": {
 												"type": "object",
@@ -3114,7 +3115,8 @@
 														"maximum": 180,
 														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
 													}
-												}
+												},
+												"required": ["mid_height_air_flow_path", "orientation360", "pitch"]
 											},
 											"measured_fan_power": {
 												"type": "number"
@@ -3207,7 +3209,8 @@
 																"maximum": 180,
 																"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
 															}
-														}
+														},
+														"required": ["mid_height_air_flow_path", "orientation360", "pitch"]
 													}
 												}
 											}

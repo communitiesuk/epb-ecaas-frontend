@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, type DomesticHotWaterHeatSourceData } from "#imports";
-import { DHWHeatSourceTypesWithDisplay } from "~/utils/display";
+import { DHWHeatSourceTypesWithDisplay } from "../../../../utils/display";
 
 const title = "Heat source";
 const store = useEcaasStore();
+const { getStoreIndex } = useForm();
+const route = useRoute();
 
-const index = 0;
-const hotWaterHeatSource = store.domesticHotWater.heatSources.data;
-const model = ref(hotWaterHeatSource[0]?.data as DomesticHotWaterHeatSourceData);
-const id = hotWaterHeatSource[0]?.data.id ?? uuidv4();
+const hotWaterHeatSourceStoreData = store.domesticHotWater.heatSources.data;
+const index = getStoreIndex(hotWaterHeatSourceStoreData);
+const hotWaterHeatSourceData = useItemToEdit("heatSource", hotWaterHeatSourceStoreData);
+const model = ref(hotWaterHeatSourceData?.data as DomesticHotWaterHeatSourceData);
+const id = hotWaterHeatSourceData?.data.id ?? uuidv4();
 
 export type HeatPumpModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "heatPump" }>;
 export type BoilerModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "boiler" }>;
@@ -61,11 +64,12 @@ export interface AutoSaveElementFormOptionsNoName<T> {
 
 const autoSaveElementFormNoName = <T extends DomesticHotWaterHeatSourceData>({
 	model,
+	storeData,
 	onPatch,
 }: AutoSaveElementFormOptionsNoName<T>) => {
 	watch(model, async (newData: Partial<T> | undefined, initialData: Partial<T> | undefined) => {
-
-		if (initialData === undefined || newData === undefined) {
+		const routeParam = route.params[Object.keys(route.params)[0]!];
+		if (initialData === undefined || newData === undefined || routeParam === undefined) {
 			return;
 		}
 
@@ -82,17 +86,17 @@ const autoSaveElementFormNoName = <T extends DomesticHotWaterHeatSourceData>({
 			return;
 		}
 			
-		// const index = getStoreIndex(storeData.data as EcaasForm<T>[]);
-		// if (routeParam === "create") {
-		// 	// we're about to save, so set the route parameter to the new index
-		// 	// we only expect this to trigger on the first change 
-		// 	// (after that, routeParam is no longer "create")
-		// 	route.params[Object.keys(route.params)[0]!] = index.toString();
+		const index = getStoreIndex(storeData.data as EcaasForm<T>[]);
+		if (routeParam === "create") {
+			// we're about to save, so set the route parameter to the new index
+			// we only expect this to trigger on the first change 
+			// (after that, routeParam is no longer "create")
+			route.params[Object.keys(route.params)[0]!] = index.toString();
 
-		// 	// change the url to reflect this
-		// 	const editItemPath = route.fullPath.replace("create", index.toString());
-		// 	history.replaceState({}, "", editItemPath);
-		// }
+			// change the url to reflect this
+			const editItemPath = route.fullPath.replace("create", index.toString());
+			history.replaceState({}, "", editItemPath);
+		}
 
 		store.$patch((state) => {
 			const dataToPatch: Partial<T> = { ...newData };
@@ -172,14 +176,14 @@ store.spaceHeating.heatSource.data
 radioOptions.set("NEW_HEAT_SOURCE", "Add a new water heating source");
 
 
-const domesticHotWaterBoilers = hotWaterHeatSource
+const domesticHotWaterBoilers = hotWaterHeatSourceStoreData
 	.filter(x => !x.data.isExistingHeatSource && x.data.typeOfHeatSource === "boiler")
 	.map(x => {
 		const dhwBoiler = (x.data as BoilerModelType);
 		return [dhwBoiler.id, dhwBoiler.name] as [string, string];
 	});
 
-const spaceHeatingBoilers = hotWaterHeatSource
+const spaceHeatingBoilers = hotWaterHeatSourceStoreData
 	.filter(x => x.data.isExistingHeatSource)
 	.map(x => {
 		const heatSource = store.spaceHeating.heatSource.data
@@ -250,16 +254,14 @@ const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
 			:model="(model as HeatPumpModelType)"
 			:index="index"
 			:boilers="allBoilers"
-			add-boiler-page-id="heatSources"
+			add-boiler-page-id="heatSourcesCreate"
 			page="domestic-hot-water"
-			:max-num-of-items-is-one="true"
 			@update-heat-pump-model="updateHeatSource" />
 		<BoilerSection
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'boiler'"
 			:model="(model as BoilerModelType)"
 			:index="index"
-			:max-num-of-items-is-one="true"
 			@update-boiler-model="updateHeatSource" />
 		<HeatNetworkSection
 			v-if="model.isExistingHeatSource === false
@@ -267,14 +269,12 @@ const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
 			:model="(model as HeatNetworkModelType)"
 			:index="index"
 			section="domesticHotWater"
-			:max-num-of-items-is-one="true"
 			@update-heat-network-model="updateHeatSource" />
 		<HeatBatterySection
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'heatBattery'"
 			:model="(model as HeatBatteryModelType)"
 			:index="index"
-			:max-num-of-items-is-one="true"
 			@update-heat-battery-model="updateHeatSource" />
 		<SolarThermalSystemSection
 			v-if="model.isExistingHeatSource === false

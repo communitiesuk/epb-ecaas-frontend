@@ -533,11 +533,11 @@ export interface components {
         } | {
             position_exhaust: {
                 /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
-                mid_height_air_flow_path?: number;
+                mid_height_air_flow_path: number;
                 /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
-                orientation360?: number;
+                orientation360: number;
                 /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
-                pitch?: number;
+                pitch: number;
             };
         };
         /**
@@ -1076,19 +1076,19 @@ export interface components {
             }[];
             position_intake: {
                 /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
-                mid_height_air_flow_path?: number;
+                mid_height_air_flow_path: number;
                 /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
-                orientation360?: number;
+                orientation360: number;
                 /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
-                pitch?: number;
+                pitch: number;
             };
             position_exhaust: {
                 /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
-                mid_height_air_flow_path?: number;
+                mid_height_air_flow_path: number;
                 /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
-                orientation360?: number;
+                orientation360: number;
                 /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
-                pitch?: number;
+                pitch: number;
             };
             measured_fan_power: number;
             measured_air_flow_rate: number;
@@ -1516,19 +1516,19 @@ export interface components {
                         measured_air_flow_rate?: number;
                         position_intake: {
                             /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
-                            mid_height_air_flow_path?: number;
+                            mid_height_air_flow_path: number;
                             /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
-                            orientation360?: number;
+                            orientation360: number;
                             /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
-                            pitch?: number;
+                            pitch: number;
                         };
                         position_exhaust: {
                             /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
-                            mid_height_air_flow_path?: number;
+                            mid_height_air_flow_path: number;
                             /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
-                            orientation360?: number;
+                            orientation360: number;
                             /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
-                            pitch?: number;
+                            pitch: number;
                         };
                     } | ({
                         /** @constant */
@@ -1550,11 +1550,11 @@ export interface components {
                     } | {
                         position_exhaust: {
                             /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
-                            mid_height_air_flow_path?: number;
+                            mid_height_air_flow_path: number;
                             /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
-                            orientation360?: number;
+                            orientation360: number;
                             /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
-                            pitch?: number;
+                            pitch: number;
                         };
                     })) | ({
                         /** @constant */
@@ -1571,11 +1571,11 @@ export interface components {
                     } | {
                         position_exhaust: {
                             /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
-                            mid_height_air_flow_path?: number;
+                            mid_height_air_flow_path: number;
                             /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
-                            orientation360?: number;
+                            orientation360: number;
                             /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
-                            pitch?: number;
+                            pitch: number;
                         };
                     })))) | (components["schemas"]["MechVentMVHR"] | components["schemas"]["MechVentDecentralisedContinuousMEV"] | components["schemas"]["MechVentIntermittentMEV"] | components["schemas"]["MechVentCentralisedContinuousMEV"]);
                 };
@@ -2346,19 +2346,19 @@ export interface components {
                     }[];
                     position_intake: {
                         /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
-                        mid_height_air_flow_path?: number;
+                        mid_height_air_flow_path: number;
                         /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
-                        orientation360?: number;
+                        orientation360: number;
                         /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
-                        pitch?: number;
+                        pitch: number;
                     };
                     position_exhaust: {
                         /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
-                        mid_height_air_flow_path?: number;
+                        mid_height_air_flow_path: number;
                         /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
-                        orientation360?: number;
+                        orientation360: number;
                         /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
-                        pitch?: number;
+                        pitch: number;
                     };
                     measured_fan_power: number;
                     measured_air_flow_rate: number;
@@ -2373,11 +2373,11 @@ export interface components {
                 } | {
                     position_exhaust: {
                         /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
-                        mid_height_air_flow_path?: number;
+                        mid_height_air_flow_path: number;
                         /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
-                        orientation360?: number;
+                        orientation360: number;
                         /** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
-                        pitch?: number;
+                        pitch: number;
                     };
                 };
                 MechVentDecentralisedContinuousMEV: components["schemas"]["MechVentCommon"] & components["schemas"]["MechVentMEVCommon"] & {

@@ -16,7 +16,6 @@ const {
 		"selected-product-type": selectedProductType,
 		"page-url": pageUrl,
 		"page-index": index,
-		"max-num-of-items-is-one": maxNumOfItemsIsOne,
 	},
 } = props.context;
 
@@ -31,19 +30,19 @@ function appendItemIndexToUrl(url: string, index: number) {
 }
 
 const selectedProduct = ref<string | undefined>(selectedProductReference);
-const url = (!maxNumOfItemsIsOne ? appendItemIndexToUrl(pageUrl, index) : pageUrl) + "/" + camelToKebabCase(selectedProductType ?? "");  
-const productsPageUrl = ref(url);
+
+const productsPageUrl = ref(appendItemIndexToUrl(pageUrl, index) + "/" + camelToKebabCase(selectedProductType ?? ""));
 const productData = ref<Product | undefined | null>();
-		
+
 if (selectedProduct.value) {
 	await fetchProduct(selectedProductReference);
 }
-		
+
 watch(props.context, async ({ attrs: {
 	"selected-product-reference": newProductReference,
 	"selected-product-type": newProductType,
 } }) => {
-	productsPageUrl.value = (!maxNumOfItemsIsOne ? appendItemIndexToUrl(pageUrl, index) : pageUrl) + "/" + camelToKebabCase(newProductType ?? "");
+	productsPageUrl.value = appendItemIndexToUrl(pageUrl, index) + "/" + camelToKebabCase(newProductType ?? "");
 	selectedProduct.value = newProductReference;
 
 	if (newProductReference) {

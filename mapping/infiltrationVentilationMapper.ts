@@ -88,7 +88,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 						measured_air_flow_rate: x.measuredAirFlowRate,
 						measured_fan_power: x.measuredFanPower,
 					} : {}),
-				};
+				} as const satisfies SchemaMechanicalVentilation;
 				break;
 			case "Centralised continuous MEV":
 				val = {
@@ -103,7 +103,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 						measured_air_flow_rate: x.measuredAirFlowRate,
 						measured_fan_power: x.measuredFanPower,
 					} : {}),
-				};
+				} as const satisfies SchemaMechanicalVentilation;
 				break;
 			case "Intermittent MEV":
 				val = {
@@ -113,20 +113,19 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					mid_height_air_flow_path: x.midHeightOfAirFlowPath,
 					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
 					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
-				};
+				} as const satisfies SchemaMechanicalVentilation;
 				break;
 			case "Decentralised continuous MEV":
 				val = {
 					vent_type: "Decentralised continuous MEV",
 					...commonFields,
-					position_exhaust: {},
 					installation_type: x.installationType,
 					installation_location: x.installationLocation,
 					installed_under_approved_scheme: x.installedUnderApprovedScheme,
 					product_reference: x.productReference,
 					pitch: x.hasAssociatedItem ? associatedItem!.pitch : x.pitch,
 					orientation360: x.hasAssociatedItem ? associatedItem!.orientation : x.orientation,
-				};
+				} as const satisfies SchemaMechanicalVentilation;
 				break;
 			default:
 				ventType satisfies never;

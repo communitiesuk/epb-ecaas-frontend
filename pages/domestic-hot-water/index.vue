@@ -92,15 +92,19 @@ function handleComplete() {
 	navigateTo("/");
 }
 
-const hasIncompleteEntries = () =>
-	Object.values(store.domesticHotWater)
+const hasIncompleteOrInvalidEntries = () => {
+	if (dhwHeatSources.data.length > 1) return true;
+	return Object.values(store.domesticHotWater)
 		.some(section => section.data.some(item => isEcaasForm(item) && !item.complete));
+};
 
 function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 	const heatSource = store.spaceHeating.heatSource.data
 		.find((x) => x.data.id === heatSourceId);
 	return heatSource ? heatSource.data.name : undefined;
 }
+
+const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used." }]);
 </script>
 
 <template>
@@ -108,15 +112,17 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<GovErrorSummary v-if="dhwHeatSources.data.length > 1" :error-list="errorMessages" test-id="heatSourceLimitExceededErrorSummary" />
 	<CustomList 
 		id="heatSources"
 		title="Heat sources"
 		:form-url="`${page?.url!}/heat-sources`"
 		:items="store.domesticHotWater.heatSources.data
 			.filter(x => isEcaasForm(x))
-			.map(x=>({name: x.data.isExistingHeatSource ? getNameFromSpaceHeatingHeatSource(x.data.heatSourceId)! : x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress, preventDuplication: x.data.heatSourceId !== 'NEW_HEAT_SOURCE'}))"
-		:show-status="true"		
+			.map(x=>({name: x.data.isExistingHeatSource ? getNameFromSpaceHeatingHeatSource(x.data.heatSourceId)! : x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+		:show-status="true"
 		:max-number-of-items=1
+		section="dHWHeatSources"
 		@remove="(index: number) => handleRemove('heatSources', index)"
 	/>
 	<CustomList 
@@ -164,7 +170,7 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 		<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
 		<CompleteElement
 			:is-complete="Object.values(store.domesticHotWater).every(section => section.complete)"
-			:disabled="hasIncompleteEntries()"
+			:disabled="hasIncompleteOrInvalidEntries()"
 			@completed="handleComplete"/>
 	</div>
 </template>

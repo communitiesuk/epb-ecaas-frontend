@@ -8,8 +8,7 @@ const store = useEcaasStore();
 
 defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "boiler" }>;
-	index?: number;
-	maxNumOfItemsIsOne?: boolean
+	index: number;
 }>();
 
 const heatSources = getCombinedHeatSources(store);
@@ -56,9 +55,7 @@ const emit = defineEmits(["update-boiler-model"]);
 			:selected-product-reference="model.productReference"
 			:selected-product-type="model.typeOfBoiler"
 			:page-url="route.fullPath"
-			:page-index="index"
-			:max-num-of-items-is-one="maxNumOfItemsIsOne"
-		/>
+			:page-index="index" />
 		<FormKit
 			v-if="model.typeOfBoiler && model.needsSpecifiedLocation"
 			id="specifiedLocation"

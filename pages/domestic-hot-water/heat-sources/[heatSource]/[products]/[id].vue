@@ -20,18 +20,21 @@ if (!(heatSourceType in productTypeMap) && !technologyGroups.includes(heatSource
 	});
 }
 
-const pageId = `${heatSourceType}DHWProducts` as PageId;
+const pageId = `${heatSourceType}Products` as PageId;
 const productType = heatSourceProductTypesDisplay[heatSourceType as HeatSourceProductType];
+
+const index = Number(params.heatSource);
 
 const { data: { value: data } } = await useFetch(`/api/products/${params.id}/details`);
 
+const backUrl = getUrl(pageId)
+	.replace(":heatSource", params.heatSource as string);
 
-const backUrl = getUrl(pageId);
 
 // TODO refactor out
 const selectProduct = () => {
 	store.$patch((state) => {
-		const item = state.domesticHotWater.heatSources.data[0];
+		const item = state.domesticHotWater.heatSources.data[index];
 		if (item && data) {
 			const heatSourceData = item?.data as HeatSourceData;
 
@@ -59,7 +62,7 @@ const selectProduct = () => {
 		}
 	});
 
-	navigateTo(getUrl("heatSources"));
+	navigateTo(getUrl("heatSources").replace(":heatSource", `${index}`));
 };
 </script>
 

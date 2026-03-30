@@ -17,6 +17,7 @@ const props = defineProps<{
 	onRemove?: (index: number) => void;
 	onDuplicate?: (index: number) => void;
 	showStatus?: boolean;
+	section?: string
 }>();
 
 function handleRemove(index: number, e: MouseEvent) {
@@ -30,15 +31,15 @@ function handleDuplicate(index: number, e: MouseEvent) {
 }
 
 function canAddMoreItems() {
-	return !props.maxNumberOfItems || !props.items || props.items?.length < props.maxNumberOfItems;
+	return !props.maxNumberOfItems || (!props.maxNumberOfItems && props.section !== "dHWHeatSources") || !props.items || props.items?.length < props.maxNumberOfItems; 
 }
 
 function routeForAddItem() {
-	return props.maxNumberOfItems === 1 ? props.formUrl : `${props.formUrl}/create`;
+	return props.maxNumberOfItems === 1 && props.section !== "dHWHeatSources" ? props.formUrl : `${props.formUrl}/create`;
 }
 
 function routeForEditItem(index: number) {
-	return props.maxNumberOfItems === 1 ? props.formUrl : `${props.formUrl}/${index}`;
+	return props.maxNumberOfItems === 1 && props.section !== "dHWHeatSources" ? props.formUrl : `${props.formUrl}/${index}`;
 
 }
 
@@ -55,9 +56,8 @@ function routeForEditItem(index: number) {
 					<p v-if="hint" class="govuk-hint govuk-!-margin-0 custom-summary-card__hint">{{ hint }}</p>
 				</div>
 				<ul class="govuk-summary-card__actions">
-					<li class="govuk-summary-card__action">
+					<li v-if="canAddMoreItems()" class="govuk-summary-card__action">
 						<NuxtLink
-							v-if="canAddMoreItems()"
 							class="govuk-link"
 							:data-testid="`${id}_add`"
 							:href=routeForAddItem()>{{ items && items.length > 0 ? "Add more" : "Add" }}</NuxtLink>
