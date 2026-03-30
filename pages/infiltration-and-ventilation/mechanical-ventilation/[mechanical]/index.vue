@@ -50,7 +50,6 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 			id,
 			name: fields.name,
 			airFlowRate: fields.airFlowRate,
-			installedUnderApprovedScheme: fields.installedUnderApprovedScheme,
 		};
 
 		let mechanicalVentilationItem: MechanicalVentilationData;
@@ -61,6 +60,8 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 					...commonFields,
 					typeOfMechanicalVentilationOptions: "Centralised continuous MEV",
 					productReference: fields.productReference,
+					midHeightOfAirFlowPath: fields.midHeightOfAirFlowPath,
+					installedUnderApprovedScheme: fields.installedUnderApprovedScheme,
 					associatedItemId: fields.associatedItemId,
 					...(fields.hasAssociatedItem ? {
 						hasAssociatedItem: fields.hasAssociatedItem,
@@ -86,6 +87,7 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 					productReference: fields.productReference,
 					installationType: fields.installationType,
 					installationLocation: fields.installationLocation,
+					installedUnderApprovedScheme: fields.installedUnderApprovedScheme,
 					associatedItemId: fields.associatedItemId,
 					...(fields.hasAssociatedItem ? {
 						hasAssociatedItem: fields.hasAssociatedItem,
@@ -102,6 +104,7 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 					...commonFields,
 					typeOfMechanicalVentilationOptions: fields.typeOfMechanicalVentilationOptions,
 					specificFanPower: fields.specificFanPower,
+					midHeightOfAirFlowPath: fields.midHeightOfAirFlowPath,
 					associatedItemId: fields.associatedItemId,
 					...(fields.hasAssociatedItem ? {
 						hasAssociatedItem: fields.hasAssociatedItem,
@@ -125,6 +128,7 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 					midHeightOfAirFlowPathForExhaust: fields.midHeightOfAirFlowPathForExhaust,
 					orientationOfExhaust: fields.orientationOfExhaust,
 					pitchOfExhaust: fields.pitchOfExhaust,
+					installedUnderApprovedScheme: fields.installedUnderApprovedScheme,
 					associatedItemId: fields.associatedItemId,
 					...(fields.hasAssociatedItem ? {
 						hasAssociatedItem: fields.hasAssociatedItem,
@@ -412,6 +416,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<FieldsPitch label="Pitch of vent" help="Enter the tilt angle of the external surface of the vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors." />
 				<FieldsOrientation label="Orientation of vent" help="Enter the orientation of the vent's external surface" />
 			</template>
+		</template>
+		<template v-if="model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV' || model?.typeOfMechanicalVentilationOptions === 'Intermittent MEV'">
+			<FormKit
+				id="midHeightOfAirFlowPath"
+				type="govInputWithSuffix"
+				label="Mid-height of airflow path"
+				help="Enter the height from the ventilation zone base height to the midpoint where the air flows through the vent"
+				suffix-text="m"
+				name="midHeightOfAirFlowPath"
+				validation="required | number"
+			/>
+		</template>
+		<template v-if="model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV' || model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV'">
 			<FormKit
 				id="approvedInstallationScheme"
 				type="govBoolean"

@@ -2961,6 +2961,7 @@
 						"oneOf": [
 							{
 								"type": "object",
+								"unevaluatedProperties": false,
 								"required": [
 									"product_reference",
 									"EnergySupply",
@@ -3291,6 +3292,7 @@
 							},
 							{
 								"type": "object",
+								"unevaluatedProperties": false,
 								"required": [
 									"vent_type",
 									"EnergySupply",

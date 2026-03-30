@@ -210,7 +210,7 @@ describe("infiltration ventilation mapper", () => {
 				typeOfMechanicalVentilationOptions: "Intermittent MEV",
 				airFlowRate: unitValue(40, litrePerSecond),
 				specificFanPower: 50,
-				installedUnderApprovedScheme: true,
+				midHeightOfAirFlowPath: 10,
 				associatedItemId: "none",
 				hasAssociatedItem: false,
 				pitch: 90,
@@ -233,10 +233,15 @@ describe("infiltration ventilation mapper", () => {
 		// Assert
 		const firstMechVent = fhsInputData["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;;
 		expect(firstMechVent).toBeDefined();
-		expect(firstMechVent?.EnergySupply).toBe("mains elec");
-		expect(firstMechVent?.vent_type).toBe("Intermittent MEV");
-		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(144);
-		expect(firstMechVent?.ductwork).toBeUndefined();
+		expect(firstMechVent).toStrictEqual({
+			vent_type: "Intermittent MEV",
+			EnergySupply: "mains elec",
+			design_outdoor_air_flow_rate: 144,
+			SFP: 50,
+			mid_height_air_flow_path: 10,
+			pitch: 90,
+			orientation360: 180,
+		});
 	});
 
 	it("maps vents to FHS input request", async () => {

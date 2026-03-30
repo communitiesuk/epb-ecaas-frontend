@@ -680,13 +680,13 @@ export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 
 const baseMechanicalVentilationData = namedWithId.extend({
 	airFlowRate: z.union([zodUnit("flow rate"), z.number()]),
-	installedUnderApprovedScheme: z.boolean(),
 	associatedItemId: z.string().trim().min(1),
 });
 
 const baseMvhrData = baseMechanicalVentilationData.extend({
 	productReference: z.string().trim().min(1),
 	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "MVHR">("MVHR"),
+	installedUnderApprovedScheme: z.boolean(),
 	measuredFanPowerAndAirFlowRateKnown: z.boolean(),
 	mvhrLocation: mvhrLocationZod,
 	midHeightOfAirFlowPathForIntake: z.number(),
@@ -700,17 +700,21 @@ const baseMvhrData = baseMechanicalVentilationData.extend({
 const intermittentMevData = baseMechanicalVentilationData.extend({
 	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Intermittent MEV">("Intermittent MEV"),
 	specificFanPower: z.number(),
+	midHeightOfAirFlowPath: z.number(),
 });
 
 const baseCentralisedContinuousMevData = baseMechanicalVentilationData.extend({
 	productReference: z.string().trim().min(1),
 	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Centralised continuous MEV">("Centralised continuous MEV"),
+	installedUnderApprovedScheme: z.boolean(),
 	measuredFanPowerAndAirFlowRateKnown: z.boolean(),
+	midHeightOfAirFlowPath: z.number(),
 });
 
 const decentralisedContinuousMevData = baseMechanicalVentilationData.extend({
 	productReference: z.string().trim().min(1),
 	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Decentralised continuous MEV">("Decentralised continuous MEV"),
+	installedUnderApprovedScheme: z.boolean(),
 	installationType: mechVentInstallationTypeZod,
 	installationLocation: mechVentInstallationLocationZod,
 });

@@ -57,7 +57,12 @@ const mechanicalVentilationSummary: SummarySection = {
 				"Pitch of vent": dim(x.pitch, "degrees"),
 				"Orientation of vent": dim(x.orientation, "degrees"),
 			} : {}),
-			"Is the vent installed under an approved installation scheme?": displayBoolean(x.installedUnderApprovedScheme),
+			...(x.typeOfMechanicalVentilationOptions === "Centralised continuous MEV" || x.typeOfMechanicalVentilationOptions === "Intermittent MEV" ? {
+				"Mid-height of airflow path": dim(x.midHeightOfAirFlowPath, "metres"),
+			} : {}),
+			...(x.typeOfMechanicalVentilationOptions !== "Intermittent MEV" ? {
+				"Is the vent installed under an approved installation scheme?": displayBoolean(x.installedUnderApprovedScheme),
+			} : {}),
 		};
 	}) || [],
 	editUrl: getUrl("mechanicalVentilation"),

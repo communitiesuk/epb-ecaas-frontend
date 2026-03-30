@@ -53,11 +53,11 @@ const intermittentMevData: MechanicalVentilationData = {
 	typeOfMechanicalVentilationOptions: "Intermittent MEV",
 	specificFanPower: 10,
 	airFlowRate: 12,
+	midHeightOfAirFlowPath: 10,
 	associatedItemId: "none",
 	hasAssociatedItem: false,
 	pitch: 90,
 	orientation: 180,
-	installedUnderApprovedScheme: true,
 };
 
 const centralisedContinuousMevData: MechanicalVentilationData = {
@@ -73,6 +73,7 @@ const centralisedContinuousMevData: MechanicalVentilationData = {
 	hasAssociatedItem: false,
 	pitch: 90,
 	orientation: 180,
+	midHeightOfAirFlowPath: 10,
 	installedUnderApprovedScheme: true,
 };
 
@@ -225,9 +226,9 @@ describe("Infiltration and ventilation summary", () => {
 			"Type of mechanical ventilation": "Intermittent MEV",
 			"Specific fan power": `10 ${wattsPerLitrePerSecond.suffix}`,
 			"Design air flow rate": `12 ${litrePerSecond.suffix}`,
+			"Mid-height of airflow path": `10 ${metre.suffix}`,
 			"Orientation of vent": `180 ${degrees.suffix}`,
 			"Pitch of vent": `90 ${degrees.suffix}`,
-			"Is the vent installed under an approved installation scheme?": "Yes",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
@@ -260,6 +261,7 @@ describe("Infiltration and ventilation summary", () => {
 			"Design air flow rate": `12 ${litrePerSecond.suffix}`,
 			"Orientation of vent": `180 ${degrees.suffix}`,
 			"Pitch of vent": `90 ${degrees.suffix}`,
+			"Mid-height of airflow path": `10 ${metre.suffix}`,
 			"Is the vent installed under an approved installation scheme?": "Yes",
 		};
 

@@ -56,7 +56,7 @@ describe("mechanical ventilation overview", () => {
 		typeOfMechanicalVentilationOptions: "Intermittent MEV",
 		airFlowRate: 14,
 		specificFanPower: 50,
-		installedUnderApprovedScheme: true,
+		midHeightOfAirFlowPath: 10,
 		associatedItemId: "none",
 		hasAssociatedItem: false,
 		pitch: 90,

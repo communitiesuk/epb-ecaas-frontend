@@ -96,7 +96,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					...commonFields,
 					installed_under_approved_scheme: x.installedUnderApprovedScheme,
 					product_reference: x.productReference,
-					mid_height_air_flow_path: 10, // TODO: Remove?
+					mid_height_air_flow_path: x.midHeightOfAirFlowPath,
 					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
 					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
 					...(x.measuredFanPowerAndAirFlowRateKnown ? {
@@ -110,10 +110,9 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					vent_type: "Intermittent MEV",
 					...commonFields,
 					SFP: x.specificFanPower,
-					position_exhaust: {},
-					installed_under_approved_scheme: x.installedUnderApprovedScheme,
-					pitch: x.hasAssociatedItem ? associatedItem!.pitch : x.pitch,
-					orientation360: x.hasAssociatedItem ? associatedItem!.orientation : x.orientation,
+					mid_height_air_flow_path: x.midHeightOfAirFlowPath,
+					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
+					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
 				};
 				break;
 			case "Decentralised continuous MEV":
