@@ -155,7 +155,11 @@ const expectedHouseInput: FhsInputSchema = {
 				design_outdoor_air_flow_rate: 55,
 				vent_type: "Intermittent MEV",
 				SFP: 1.5,
-				position_exhaust: {},
+				position_exhaust: {
+					mid_height_air_flow_path: 2, // TODO: replace with real value
+					pitch: 90, // TODO: replace with real value
+					orientation360: 90, // TODO: replace with real value
+				},
 			},
 		},
 		Vents: {
@@ -563,7 +567,11 @@ const expectedFlatInput: FhsInputSchema = {
 				vent_type: "Centralised continuous MEV",
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
-				position_exhaust: {},
+				position_exhaust: {
+					mid_height_air_flow_path: 2, // TODO: replace with real value
+					pitch: 90, // TODO: replace with real value
+					orientation360: 90, // TODO: replace with real value
+				},
 			},
 		},
 		Vents: {
