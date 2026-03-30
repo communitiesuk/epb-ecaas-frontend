@@ -48,6 +48,7 @@ describe("mechanical ventilation overview", () => {
 		hasAssociatedItem: false,
 		pitch: 90,
 		orientation: 180,
+		midHeightOfAirFlowPath: 2,
 	};
 
 	const mechanicalVentilation3: MechanicalVentilationData = {

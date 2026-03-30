@@ -123,8 +123,9 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					installation_location: x.installationLocation,
 					installed_under_approved_scheme: x.installedUnderApprovedScheme,
 					product_reference: x.productReference,
-					pitch: x.hasAssociatedItem ? associatedItem!.pitch : x.pitch,
-					orientation360: x.hasAssociatedItem ? associatedItem!.orientation : x.orientation,
+					mid_height_air_flow_path: x.midHeightOfAirFlowPath,
+					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
+					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
 				} as const satisfies SchemaMechanicalVentilation;
 				break;
 			default:

@@ -57,7 +57,7 @@ const mechanicalVentilationSummary: SummarySection = {
 				"Pitch of vent": dim(x.pitch, "degrees"),
 				"Orientation of vent": dim(x.orientation, "degrees"),
 			} : {}),
-			...(x.typeOfMechanicalVentilationOptions === "Centralised continuous MEV" || x.typeOfMechanicalVentilationOptions === "Intermittent MEV" ? {
+			...(x.typeOfMechanicalVentilationOptions !== "MVHR" ? {
 				"Mid-height of airflow path": dim(x.midHeightOfAirFlowPath, "metres"),
 			} : {}),
 			...(x.typeOfMechanicalVentilationOptions !== "Intermittent MEV" ? {

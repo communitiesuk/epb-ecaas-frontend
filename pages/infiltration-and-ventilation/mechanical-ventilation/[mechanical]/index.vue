@@ -88,6 +88,7 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 					installationType: fields.installationType,
 					installationLocation: fields.installationLocation,
 					installedUnderApprovedScheme: fields.installedUnderApprovedScheme,
+					midHeightOfAirFlowPath: fields.midHeightOfAirFlowPath,
 					associatedItemId: fields.associatedItemId,
 					...(fields.hasAssociatedItem ? {
 						hasAssociatedItem: fields.hasAssociatedItem,
@@ -416,8 +417,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<FieldsPitch label="Pitch of vent" help="Enter the tilt angle of the external surface of the vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors." />
 				<FieldsOrientation label="Orientation of vent" help="Enter the orientation of the vent's external surface" />
 			</template>
-		</template>
-		<template v-if="model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV' || model?.typeOfMechanicalVentilationOptions === 'Intermittent MEV'">
 			<FormKit
 				id="midHeightOfAirFlowPath"
 				type="govInputWithSuffix"

@@ -717,6 +717,7 @@ const decentralisedContinuousMevData = baseMechanicalVentilationData.extend({
 	installedUnderApprovedScheme: z.boolean(),
 	installationType: mechVentInstallationTypeZod,
 	installationLocation: mechVentInstallationLocationZod,
+	midHeightOfAirFlowPath: z.number(),
 });
 
 const baseMeasuredFanPowerAndAirFlowRateKnown = {
