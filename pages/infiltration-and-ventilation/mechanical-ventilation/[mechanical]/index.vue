@@ -7,7 +7,7 @@ import { getUrl, typeOfMechanicalVentilation, uniqueName, type MechanicalVentila
 import Orientation from "~/components/fields/Orientation.vue";
 import Pitch from "~/components/fields/Pitch.vue";
 import { useAssociatedItems } from "~/composables/associatedItems";
-import { installationTypeOptions } from "~/utils/display";
+import { installationTypeOptions, installationLocationOptions } from "~/utils/display";
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
@@ -394,7 +394,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FormKit
 				id="installationLocation"
 				type="govRadios"
-				:options="installationTypeOptions"
+				:options="installationLocationOptions"
 				label="Room where the vent is installed"
 				name="installationLocation"
 				validation="required"
@@ -429,10 +429,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</template>
 		<template v-if="model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV' || model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV'">
 			<FormKit
-				id="approvedInstallationScheme"
+				id="installedUnderApprovedScheme"
 				type="govBoolean"
 				label="Is the vent installed under an approved installation scheme?"
-				name="approvedInstallationScheme"
+				name="installedUnderApprovedScheme"
 				validation="required"
 			/>
 		</template>

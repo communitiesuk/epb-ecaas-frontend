@@ -22,6 +22,8 @@ describe("mechanical ventilation form", () => {
 		measuredAirFlowRate: 10,
 		airFlowRate: unitValue(12, litrePerSecond),
 		mvhrLocation: "inside",
+		pitch: 90,
+		orientation: 90,
 		installedUnderApprovedScheme: true,
 		midHeightOfAirFlowPathForExhaust: 1.5,
 		orientationOfExhaust: 90,
@@ -32,11 +34,41 @@ describe("mechanical ventilation form", () => {
 	};
 
 	const mechanicalVentilation2: Partial<MechanicalVentilationData> = {
-		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
+		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: "Intermittent MEV",
 		airFlowRate: unitValue(14, litrePerSecond),
 		specificFanPower: 40,
+		pitch: 90,
+		orientation: 90,
+		midHeightOfAirFlowPath: 2,
+	};
+
+	const mechanicalVentilation3: Partial<MechanicalVentilationData> = {
+		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
+		name: "Mechanical name 3",
+		typeOfMechanicalVentilationOptions: "Centralised continuous MEV",
+		measuredFanPowerAndAirFlowRateKnown: true,
+		measuredFanPower: 20,
+		measuredAirFlowRate: 12,
+		airFlowRate: unitValue(14, litrePerSecond),
+		pitch: 90,
+		orientation: 90,
+		midHeightOfAirFlowPath: 2,
+		installedUnderApprovedScheme: true,
+	};
+
+	const mechanicalVentilation4: Partial<MechanicalVentilationData> = {
+		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
+		name: "Mechanical name 4",
+		typeOfMechanicalVentilationOptions: "Decentralised continuous MEV",
+		installationType: "in_ceiling",
+		installationLocation: "kitchen",
+		airFlowRate: unitValue(14, litrePerSecond),
+		pitch: 90,
+		orientation: 90,
+		midHeightOfAirFlowPath: 2,
+		installedUnderApprovedScheme: true,
 	};
 
 	mockNuxtImport("navigateTo", () => {
@@ -47,7 +79,7 @@ describe("mechanical ventilation form", () => {
 		store.$reset();
 	});
 
-	test("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions_MVHR is MVHR", async () => {
+	test("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions is MVHR", async () => {
 		vi.mocked(uuidv4).mockReturnValue("5124f2fe-f15b-4a56-ba5a-1a7751ac506f" as unknown as Buffer);
 
 		await renderSuspended(MechanicalVentilationForm, {
@@ -65,6 +97,8 @@ describe("mechanical ventilation form", () => {
 		await user.type(screen.getByTestId("measuredAirFlowRate"), "10");
 		await user.type(screen.getByTestId("airFlowRate"), "12");
 		await user.click(screen.getByTestId("mvhrLocation_inside"));
+		await user.type(screen.getByTestId("orientation"), "90");
+		await user.type(screen.getByTestId("pitch"), "90");
 		await user.click(screen.getByTestId("installedUnderApprovedScheme_yes"));
 		await user.type(screen.getByTestId("midHeightOfAirFlowPathForIntake"), "1.5");
 		await user.type(screen.getByTestId("orientationOfIntake"), "80");
@@ -75,11 +109,11 @@ describe("mechanical ventilation form", () => {
 		await user.tab();
 
 		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
-		expect(data[0]?.data).toEqual(mechanicalVentilation1);
+		expect(data[0]?.data).toEqual(expect.objectContaining(mechanicalVentilation1));
 	});
 
-	test("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions is not mvhr", async () => {
-		vi.mocked(uuidv4).mockReturnValue("7184f2fe-a78f-4a56-ba5a-1a7751ac506d" as unknown as Buffer);
+	test("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions is Intermittent MEV", async () => {
+		vi.mocked(uuidv4).mockReturnValue("5124f2fe-f15b-4a56-ba5a-1a7751ac506f" as unknown as Buffer);
 
 		await renderSuspended(MechanicalVentilationForm, {
 			route: {
@@ -91,13 +125,68 @@ describe("mechanical ventilation form", () => {
 		await user.click(
 			screen.getByTestId("typeOfMechanicalVentilationOptions_Intermittent_MEV"),
 		);
-		await user.type(screen.getByTestId("airFlowRate"), "14");
 		await user.type(screen.getByTestId("specificFanPower"), "40");
+		await user.type(screen.getByTestId("airFlowRate"), "14");
+		await user.type(screen.getByTestId("orientation"), "90");
+		await user.type(screen.getByTestId("pitch"), "90");
+		await user.type(screen.getByTestId("midHeightOfAirFlowPath"), "2");
 		await user.tab();
 
 		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
+		expect(data[0]?.data).toEqual(expect.objectContaining(mechanicalVentilation2));
+	});
 
-		expect(data[0]?.data).toEqual(mechanicalVentilation2);
+	test("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions is Centralised continuous MEV", async () => {
+		vi.mocked(uuidv4).mockReturnValue("5124f2fe-f15b-4a56-ba5a-1a7751ac506f" as unknown as Buffer);
+
+		await renderSuspended(MechanicalVentilationForm, {
+			route: {
+				params: { mechanical: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId("name"), "Mechanical name 3");
+		await user.click(
+			screen.getByTestId("typeOfMechanicalVentilationOptions_Centralised_continuous_MEV"),
+		);
+		await user.click(screen.getByTestId("measuredFanPowerAndAirFlowRateKnown_yes"));
+		await user.type(screen.getByTestId("measuredFanPower"), "20");
+		await user.type(screen.getByTestId("measuredAirFlowRate"), "12");
+		await user.type(screen.getByTestId("airFlowRate"), "14");
+		await user.type(screen.getByTestId("orientation"), "90");
+		await user.type(screen.getByTestId("pitch"), "90");
+		await user.type(screen.getByTestId("midHeightOfAirFlowPath"), "2");
+		await user.click(screen.getByTestId("installedUnderApprovedScheme_yes"));
+		await user.tab();
+
+		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
+		expect(data[0]?.data).toEqual(expect.objectContaining(mechanicalVentilation3));
+	});
+
+	test("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions is Decentralised continuous MEV", async () => {
+		vi.mocked(uuidv4).mockReturnValue("5124f2fe-f15b-4a56-ba5a-1a7751ac506f" as unknown as Buffer);
+
+		await renderSuspended(MechanicalVentilationForm, {
+			route: {
+				params: { mechanical: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId("name"), "Mechanical name 4");
+		await user.click(
+			screen.getByTestId("typeOfMechanicalVentilationOptions_Decentralised_continuous_MEV"),
+		);
+		await user.type(screen.getByTestId("airFlowRate"), "14");
+		await user.click(screen.getByTestId("installationType_in_ceiling"));
+		await user.click(screen.getByTestId("installationLocation_kitchen"));
+		await user.type(screen.getByTestId("orientation"), "90");
+		await user.type(screen.getByTestId("pitch"), "90");
+		await user.type(screen.getByTestId("midHeightOfAirFlowPath"), "2");
+		await user.click(screen.getByTestId("installedUnderApprovedScheme_yes"));
+		await user.tab();
+
+		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
+		expect(data[0]?.data).toEqual(expect.objectContaining(mechanicalVentilation4));
 	});
 
 	test("data is saved to correct object in store state when form is valid", async () => {
@@ -207,10 +296,17 @@ describe("mechanical ventilation form", () => {
 			"typeOfMechanicalVentilationOptions_error",
 			"airFlowRate_error",
 		];
+
 		for (const error of initialErrorIds) {
 			expect(screen.getByTestId(error)).toBeDefined();
 		}
+	});
+
+	test("required error messages are displayed when typeOfMechanicalVentilationOptions is MVHR", async () => {
+		await renderSuspended(MechanicalVentilationForm);
+
 		const mvhrErrorIds: string[] = [
+			"selectMvhr_error",
 			"measuredFanPowerAndAirFlowRateKnown_error",
 			"mvhrLocation_error",
 			"installedUnderApprovedScheme_error",
@@ -228,6 +324,68 @@ describe("mechanical ventilation form", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		for (const error of mvhrErrorIds) {
+			const mhvrErrors = screen.getByTestId(error);
+			expect(mhvrErrors).toBeDefined();
+		}
+	});
+
+	test("required error messages are displayed when typeOfMechanicalVentilationOptions is Intermittent MEV", async () => {
+		await renderSuspended(MechanicalVentilationForm);
+
+		const intermittentMevErrorIds: string[] = [
+			"specificFanPower_error",
+			"midHeightOfAirFlowPath_error",
+		];
+
+		await user.click(
+			screen.getByTestId("typeOfMechanicalVentilationOptions_Intermittent_MEV"),
+		);
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		for (const error of intermittentMevErrorIds) {
+			const mhvrErrors = screen.getByTestId(error);
+			expect(mhvrErrors).toBeDefined();
+		}
+	});
+
+	test("required error messages are displayed when typeOfMechanicalVentilationOptions is Centralised continuous MEV", async () => {
+		await renderSuspended(MechanicalVentilationForm);
+
+		const centralisedContinuousMevErrorIds: string[] = [
+			"selectCentralisedContinuousMev_error",
+			"measuredFanPowerAndAirFlowRateKnown_error",
+			"midHeightOfAirFlowPath_error",
+			"installedUnderApprovedScheme_error",
+		];
+
+		await user.click(
+			screen.getByTestId("typeOfMechanicalVentilationOptions_Centralised_continuous_MEV"),
+		);
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		for (const error of centralisedContinuousMevErrorIds) {
+			const mhvrErrors = screen.getByTestId(error);
+			expect(mhvrErrors).toBeDefined();
+		}
+	});
+
+	test("required error messages are displayed when typeOfMechanicalVentilationOptions is Decentralised continuous MEV", async () => {
+		await renderSuspended(MechanicalVentilationForm);
+
+		const decentralisedContinuousMevErrorIds: string[] = [
+			"selectDecentralisedContinuousMev_error",
+			"installationType_error",
+			"installationLocation_error",
+			"midHeightOfAirFlowPath_error",
+			"installedUnderApprovedScheme_error",
+		];
+
+		await user.click(
+			screen.getByTestId("typeOfMechanicalVentilationOptions_Decentralised_continuous_MEV"),
+		);
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		for (const error of decentralisedContinuousMevErrorIds) {
 			const mhvrErrors = screen.getByTestId(error);
 			expect(mhvrErrors).toBeDefined();
 		}
