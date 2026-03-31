@@ -115,7 +115,7 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 	<GovErrorSummary v-if="dhwHeatSources.data.length > 1" :error-list="errorMessages" test-id="heatSourceLimitExceededErrorSummary" />
 	<CustomList 
 		id="heatSources"
-		title="Heat sources"
+		title="Heat source"
 		:form-url="`${page?.url!}/heat-sources`"
 		:items="store.domesticHotWater.heatSources.data
 			.filter(x => isEcaasForm(x))

@@ -670,12 +670,12 @@ describe("Domestic hot water summary", () => {
 
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "Heat pumps" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Boilers" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Heat networks" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Heat batteries" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Solar thermal systems" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Immersion heaters" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Heat pump" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Boiler" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Heat network" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Heat battery" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Solar thermal system" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Immersion heater" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Point of use" })).not.toBeNull();
 		});
 

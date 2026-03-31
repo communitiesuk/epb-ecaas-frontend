@@ -100,7 +100,7 @@ const emptyHeatSourcesSummary: SummarySection = {
 
 const boilerSummary: SummarySection = {
 	id: "boilerSummary",
-	label: "Boilers",
+	label: "Boiler",
 	data:
 		boilerSummaries.map(({ data: heatSource }) => {
 			const summary = {
@@ -124,7 +124,7 @@ const boilerSummary: SummarySection = {
 
 const heatPumpSummary: SummarySection = {
 	id: "heatPumpSummary",
-	label: "Heat pumps",
+	label: "Heat pump",
 	data:
 		heatPumpSummaries.map(({ data: heatSource }) => {
 			
@@ -147,7 +147,7 @@ const heatPumpSummary: SummarySection = {
 
 const heatNetworkSummary: SummarySection = {
 	id: "heatNetworkSummary",
-	label: "Heat networks",
+	label: "Heat network",
 	data:
 		heatNetworkSummaries.map(({ data: heatSource }) => {
 			const { heatSources } = store.domesticHotWater;
@@ -197,7 +197,7 @@ const heatNetworkSummary: SummarySection = {
 
 const heatBatterySummary: SummarySection = {
 	id: "heatBatterySummary",
-	label: "Heat batteries",
+	label: "Heat battery",
 	data:
 		heatBatterySummaries.map(({ data: heatSource }) => {
 			const summary = {
@@ -222,7 +222,7 @@ const heatBatterySummary: SummarySection = {
 
 const solarThermalSystemSummary: SummarySection = {
 	id: "solarThermalSystemSummary",
-	label: "Solar thermal systems",
+	label: "Solar thermal system",
 	data:
 		solarThermalSummaries.map(({ data: heatSource }) => {
 
@@ -290,7 +290,7 @@ const solarThermalSystemSummary: SummarySection = {
 
 const immersionHeaterSummary: SummarySection = {
 	id: "immersionHeaterSummary",
-	label: "Immersion heaters",
+	label: "Immersion heater",
 	data:
 		immersionHeaters.map((x) => {
 			const heatSource = x.data as Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "immersionHeater" }>;
