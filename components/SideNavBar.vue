@@ -15,6 +15,17 @@ function toggle(index: number) {
 function isOpen(index: number) {
 	return openStates.value[index];
 }
+function getUrl(url: string) {
+	const store = useEcaasStore();
+	
+	if (url !== "/domestic-hot-water/heat-sources/create") return url;
+
+	if (store.domesticHotWater.heatSources.data.length >= 1) {
+		return "/domestic-hot-water/heat-sources/0";
+	} else return url;
+}
+
+
 </script>
 
 <template>
@@ -34,8 +45,8 @@ function isOpen(index: number) {
 			<ul v-if="isOpen(index)" class="govuk-inset-text">
 				<template v-for="page in pagesData" :key="page.id">
 					<li v-if="page.parentId === parentPage.id && !page.url.includes(':') && !page.excludeFromNavigation?.()">
-						<NuxtLink class="govuk-link govuk-body-s" :to="page.url" @click.stop>
-							{{ page.title }}
+						<NuxtLink class="govuk-link govuk-body-s" :to="getUrl(page.url)" @click.stop>
+							{{ page.title  }}
 						</NuxtLink>
 					</li>
 				</template>
