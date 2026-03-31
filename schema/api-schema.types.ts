@@ -472,6 +472,7 @@ export interface components {
              * @description A unique reference to a product held within the HEM database (PCDB)
              */
             product_reference: string;
+            emitter_floor_area: number;
         };
         Fancoil: {
             /** @constant */
@@ -2275,6 +2276,7 @@ export interface components {
                      * @description A unique reference to a product held within the HEM database (PCDB)
                      */
                     product_reference: string;
+                    emitter_floor_area: number;
                 };
                 Fancoil: {
                     /** @constant */
