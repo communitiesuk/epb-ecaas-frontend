@@ -10,7 +10,7 @@ import {
 	mapInstantElectricHeaters,
 	mapSpaceHeatSystem,
 } from "./spaceHeatingMapper";
-import type { SchemaHeatSourceWetHeatPump } from "../schema/api-schema.types";
+import type { SchemaHeatSourceWetHeatPump, SchemaWetDistribution } from "../schema/api-schema.types";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import type { HeatEmittingData } from "~/stores/ecaasStore.schema";
 import type { SchemaBoilerWithProductReference } from "~/schema/aliases";
@@ -684,6 +684,7 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: ufhNoWeatherCompensator.productReference,
 							wet_emitter_type: "ufh",
+							emitter_floor_area: ufhNoWeatherCompensator.areaOfUnderfloorHeating,
 						},
 
 					],
@@ -727,6 +728,7 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: ufhWithWeatherCompensator.productReference,
 							wet_emitter_type: "ufh",
+							emitter_floor_area: ufhWithWeatherCompensator.areaOfUnderfloorHeating,
 						},
 
 					],
@@ -1035,6 +1037,7 @@ describe("Space heating - emitters", () => {
 							{
 								product_reference: ufhNoWeatherCompensator.productReference,
 								wet_emitter_type: "ufh",
+								emitter_floor_area: ufhNoWeatherCompensator.areaOfUnderfloorHeating,
 							},
 
 						],

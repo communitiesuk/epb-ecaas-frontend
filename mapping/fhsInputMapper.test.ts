@@ -213,6 +213,7 @@ const expectedHouseInput: FhsInputSchema = {
 				{
 					"product_reference": "UFH-123",
 					"wet_emitter_type": "ufh",
+					"emitter_floor_area": 50,
 				},
 			],
 			"temp_diff_emit_dsgn": 5,
@@ -638,6 +639,7 @@ const expectedFlatInput: FhsInputSchema = {
 				{
 					"product_reference": "UFH-123",
 					"wet_emitter_type": "ufh",
+					"emitter_floor_area": 50,
 				},
 			],
 			"temp_diff_emit_dsgn": 5,

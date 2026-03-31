@@ -181,7 +181,7 @@ export function mapUnderfloorHeating(state: ResolvedState): Record<string, Schem
 			const emitter: SchemaUfhWithProductReference = {
 				product_reference: heating.productReference,
 				wet_emitter_type: "ufh",
-
+				emitter_floor_area: heating.areaOfUnderfloorHeating,
 			};
 			const ecoDesignController = mapEcoDesignController(heating);
 			const common = {
