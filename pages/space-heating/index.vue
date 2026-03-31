@@ -84,7 +84,7 @@ function handleComplete() {
 		},
 	});
 
-	navigateTo("/space-heating");
+	navigateTo("/");
 }
 
 function checkIsComplete() {

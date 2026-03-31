@@ -512,7 +512,7 @@ describe("space heating", () => {
 
 			expect(screen.getByTestId("markAsCompleteButton")?.style.display).toBe("none");
 			expect(screen.getByTestId("completeSectionCompleted")?.style.display).not.toBe("none");
-			expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
+			expect(navigateToMock).toHaveBeenCalledWith("/");
 		});
 
 		it("marks space heating section as complete after 'mark as complete' button is clicked", async () => {
