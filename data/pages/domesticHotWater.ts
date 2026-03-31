@@ -31,14 +31,14 @@ const domesticHotWaterPages = [
 	},
 	{
 		id: "heatSources",
-		title: "Heat Sources",
+		title: "Heat Source",
 		url: "/domestic-hot-water/heat-sources/:heatSource",
 		type: "task",
 		parentId: "domesticHotWater",
 	},
 	{
 		id: "heatSourcesCreate",
-		title: "Heat Sources ",
+		title: "Heat Source ",
 		url: "/domestic-hot-water/heat-sources/create",
 		type: "task",
 		parentId: "domesticHotWater",
