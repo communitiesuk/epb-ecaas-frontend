@@ -12,7 +12,7 @@ defineProps<{
 const arealHeatCapacityOptions = {
 	"Very light": {
 		label: "Very light",
-		hint: "e.g. Light board of plastic",
+		hint: "e.g. Light board or plastic",
 	},
 	"Light": {
 		label: "Light",

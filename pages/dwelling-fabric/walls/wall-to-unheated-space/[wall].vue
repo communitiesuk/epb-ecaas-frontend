@@ -104,13 +104,17 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Net surface area of element"
-			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
+			help="Enter the net area of the building element, subtracting any doors or windows"
 			name="surfaceAreaOfElement"
 			validation="required | number | min:0 | max:10000"
 		/>
 		<FieldsUValue/>
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of the full thickness of the floor build-up"
+		/>
+		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" help="This is the distribution of mass in the full thickness of the floor build up" />
 		<FormKit
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
@@ -121,7 +125,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0 | max:3"
 		>
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<p>For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m²·K)/W for when the facing wall is not exposed.</p>
+				<p>The thermal resistance of unheated space is a measure of the degree of shelter that the unheated space provides to the building element. It is calculated as the thickness of the material divided by its thermal conductivity. A higher thermal resistance reduces heat transfer. The <br>U-value is the inverse of the total thermal resistance of a building element.</p>
+				<p>See the technical paper HEM-TP-05, in which Annex A includes a general way to calculate this and also some suggested default values for common scenarios.</p>
+				<p>The maximum thermal resistance of an unheated space is 2.5 (m²·K)/W. This is when the facing wall is not exposed.</p>
 				<p class="govuk-body">
 					<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
 						Guidance on thermal resistance of unheated spaces (opens in another window)
