@@ -59,7 +59,7 @@ const arealHeatCapacityOptions = {
 				<tbody class="govuk-table__body">
 					<tr class="govuk-table__row">
 						<th scope="row" class="govuk-table__header">Very light</th>
-						<td class="govuk-table__cell">Light board of plastic</td>
+						<td class="govuk-table__cell">Light board or plastic</td>
 						<td class="govuk-table__cell">Thin plastic composite panels; Thin plywood or hardboard; Fabric or thin membranes; Single glazing; Lightweight suspended ceilings.</td>
 						<td class="govuk-table__cell">50,000 J/(m²·K)</td>
 					</tr>

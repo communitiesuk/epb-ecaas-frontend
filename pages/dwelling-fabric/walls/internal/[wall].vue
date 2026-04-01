@@ -100,7 +100,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="surfaceAreaOfElement"
 			type="govInputWithSuffix"
 			label="Net surface area of element"
-			help="Net area of the opaque building element. The area of all windows or doors should be subtracted before entry."
+			help="Enter the net surface area of both sides of the building element. Subtract the area of any large openings, but not doors."
 			name="surfaceAreaOfElement"
 			validation="required | number | min:0 | max:10000"
 			suffix-text="m²"
@@ -109,11 +109,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<p class="govuk-hint">The net surface area should only be for one side of the wall, not both.</p>
 			</GovDetails>
 		</FormKit>
-		<FieldsUValue/>
+		<FieldsUValue
+			help="Enter the u-value of half the thickness of the construction build up"
+		/>
 		<FieldsArealHeatCapacity
 			id="arealHeatCapacity"
-			name="arealHeatCapacity"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of half the thickness of the construction build up"
+		/>
+		<FieldsMassDistributionClass
+			id="massDistributionClass"
+			name="massDistributionClass"
+			help="This is the distribution of mass in half the thickness of the construction build up"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
