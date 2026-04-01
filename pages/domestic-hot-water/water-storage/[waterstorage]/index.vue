@@ -236,7 +236,7 @@ const heatSourceOptions = new Map(
 			label="Heater position in the cylinder"
 			name="heaterPosition"
 			validation="required | number | min:0 | max:1"
-			help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
+			help="Enter a number between 0 and 1, rounded to one decimal place. 0 is at the bottom, 1 is at the top."
 		/>
 		<FormKit
 			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
