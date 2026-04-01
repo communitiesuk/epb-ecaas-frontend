@@ -139,10 +139,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.001 | max:50"
 			data-field="Zone.BuildingElement.*.width"
 		/>
-		<FieldsElevationalHeight />
+		<FieldsElevationalHeight
+			help="Enter the distance between the ground and the bottom of the door"
+		/>
 		<FieldsUValue/>
 		<FieldsColourOfExternalSurface v-if="!(model?.pitch && model.pitch > 120)" />
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of all the construction layers"
+		/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
 			v-if="tagHasValidPitch &&
