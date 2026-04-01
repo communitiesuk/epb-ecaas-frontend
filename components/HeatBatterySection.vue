@@ -51,6 +51,7 @@ const emit = defineEmits(["update-heat-battery-model"]);
 			type="govInputInt"
 			name="numberOfUnits"
 			label="Number of units"
+			help="Enter the number of heat battery units with this specification"
 			validation="required | isInteger | min:1"
 			:validation-messages="{
 				isInteger: `Number of units must be an integer.`,
