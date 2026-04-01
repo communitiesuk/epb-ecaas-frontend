@@ -59,15 +59,15 @@ const roofFieldText: Record<ActiveRoofType, {
 		massDistributionHelp: "This is the distribution of mass in the ceiling and roof build up from the structural deck to the top waterproof layer",
 	},
 	pitchedInsulatedAtCeiling: {
-		lengthLabel: "Length of internal ceiling",
+		lengthLabel: "Length of ceiling",
 		lengthHelp: "Enter the length of the internal ceiling",
-		widthLabel: "Width of internal ceiling",
+		widthLabel: "Width of ceiling",
 		widthHelp: "Enter the width of the internal ceiling",
 		elevationalHelp: "Enter the distance between the ground and the lowest point of the length measurement",
 		surfaceAreaHelp: "Enter the net area of the internal ceiling. You do not need to subtract the areas of windows or rooflights that are in the roof above the unheated space.",
-		uValueHelp: "Enter the U-value of the adjacent ceiling, roof build-up from the structural deck to the top waterproof layer, and unheated space",
-		arealHeatCapacityHelp: "This is the sum of the heat capacities of all the construction layers in the ceiling but not the roof",
-		massDistributionHelp: "This is the distribution of mass in the roof, loft space and ceiling",
+		uValueHelp: "Enter the U-value of the adjacent ceiling build up and unheated space, not the roof build up",
+		arealHeatCapacityHelp: "This is the sum of the heat capacities of the ceiling build up but not the roof",
+		massDistributionHelp: "This is the distribution of mass in the ceiling build up but not the roof",
 	},
 };
 

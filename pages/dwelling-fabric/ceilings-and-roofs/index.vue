@@ -95,8 +95,7 @@ const hasIncompleteEntries = () =>
 		{{ title }}
 	</h1>
 	<div class="govuk-inset-text">
-		<p class="govuk-body">For ceilings next to roofs, both ceiling and roof details should be inputted as one roof
-			element.</p>
+		<p class="govuk-body">Enter information about ceilings at the edge of the thermal envelope, for example next to loft spaces or roofs, as part of a roof element</p>
 	</div>
 	<CustomList
 		id="ceilings"
