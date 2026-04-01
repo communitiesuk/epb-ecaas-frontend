@@ -219,7 +219,7 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await user.click(screen.getByTestId("typeOfHeatEmitter_underfloorHeating"));
+			await user.click(screen.getByTestId("typeOfHeatEmitter_fanCoil"));
 			// Wait for change to propagate
 			const { data } = store.spaceHeating.heatEmitters;
 			const emitterItem = data[0]!.data;
@@ -229,7 +229,8 @@ describe("Heat emitters", () => {
 		});
 	});
 
-	describe("Underfloor heating", () => {
+	// skipping underfloor heating tests while this is switched off
+	describe.skip("Underfloor heating", () => {
 		test("Expected fields render when type of underfloor heating is selected", async () => {
 			await renderSuspended(HeatEmitterForm, {
 				route: {
@@ -485,7 +486,7 @@ describe("Heat emitters", () => {
 
 		it.each([
 			["radiator", "Radiator"],
-			["underfloorHeating", "Underfloor heating"],
+			// ["underfloorHeating", "Underfloor heating"], TODO uncomment once underfloor heating feature is restored
 			["fanCoil", "Fan coil"],
 			["warmAirHeater", "Warm air heater"],
 			["instantElectricHeater", "Instant electric heater"],
@@ -658,7 +659,7 @@ describe("Heat emitters", () => {
 
 			expect(screen.queryByTestId("heatEmitterErrorSummary")).not.toBeNull();
 
-			await user.click(screen.getByTestId("typeOfHeatEmitter_underfloorHeating"));
+			await user.click(screen.getByTestId("typeOfHeatEmitter_fanCoil"));
 			expect(screen.queryByTestId("heatEmitterErrorSummary")).toBeNull();
 		});
 
@@ -698,11 +699,11 @@ describe("Heat emitters", () => {
 					},
 				});
 
-				await user.click(screen.getByTestId("typeOfHeatEmitter_underfloorHeating"));
+				await user.click(screen.getByTestId("typeOfHeatEmitter_fanCoil"));
 
 				const actualHeatEmitter = store.spaceHeating.heatEmitters.data[0]!;
-				expect(actualHeatEmitter.data.typeOfHeatEmitter).toBe("underfloorHeating");
-				expect(actualHeatEmitter.data.name).toBe("Underfloor heating");
+				expect(actualHeatEmitter.data.typeOfHeatEmitter).toBe("fanCoil");
+				expect(actualHeatEmitter.data.name).toBe("Fan coil");
 			});
 			it("creates a new emitter automatically with given name", async () => {
 				await renderSuspended(HeatEmitterForm, {

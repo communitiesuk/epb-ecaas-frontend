@@ -1,3 +1,7 @@
+<script>
+
+</script>
+
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import ElectricStorageHeaterSection from "~/components/ElectricStorageHeaterSection.vue";
