@@ -45,7 +45,7 @@ const arealHeatCapacityOptions = {
 		:options="arealHeatCapacityOptions"
 		data-field="Zone.BuildingElement.*.areal_heat_capacity"
 	>
-		<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+		<GovDetails summary-text="Help with this input">
 			<p class="govuk-body">The areal heat capacity of a building element is not the same as the kappa value. Kappa values only consider the thermal mass directly exposed to the internal space, whereas the areal heat capacity  takes into account the full thickness of the building element.</p>
 			<table class="govuk-table">
 				<thead class="govuk-table__head">
