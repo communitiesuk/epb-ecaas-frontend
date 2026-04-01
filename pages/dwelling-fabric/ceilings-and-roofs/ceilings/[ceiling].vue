@@ -122,29 +122,56 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				:options="zeroPitchOptions()"
 				data-field="Zone.BuildingElement.*.pitch"
 			/>
-			<FormKit
-				id="surfaceArea"
-				type="govInputWithSuffix"
-				suffix-text="m²"
-				label="Net surface area of element"
-				help="Enter the net area of the building element. The area of all large openings should be subtracted before entry, but not doors."
-				name="surfaceArea"
-				validation="required | number | min:0 | max:10000"
-				data-field="Zone.BuildingElement.*.area"
-			/>
-			<FieldsUValue
-				help="Enter the U-value of half the construction build up. The other half should be input as an internal floor."
-			/>
-			<FieldsArealHeatCapacity
-				id="arealHeatCapacity"
-				name="arealHeatCapacity"
-				help="This is the sum of the heat capacities of half the thickness of the ceiling build up. The other half of the floor/ceiling build up should be entered as an internal floor."
-			/>
-			<FieldsMassDistributionClass
-				id="massDistributionClass"
-				name="massDistributionClass"
-				help="This is the mass distribution class of half the construction build up. The other half should be input as an internal floor."
-			/>
+			<template v-if="model.type === 'heatedSpace'">
+				<FormKit
+					id="surfaceArea"
+					type="govInputWithSuffix"
+					suffix-text="m²"
+					label="Net surface area of element"
+					help="Enter the net area of the building element. The area of all large openings should be subtracted before entry, but not doors."
+					name="surfaceArea"
+					validation="required | number | min:0 | max:10000"
+					data-field="Zone.BuildingElement.*.area"
+				/>
+				<FieldsUValue
+					help="Enter the U-value of half the construction build up. The other half should be input as an internal floor."
+				/>
+				<FieldsArealHeatCapacity
+					id="arealHeatCapacity"
+					name="arealHeatCapacity"
+					help="This is the sum of the heat capacities of half the thickness of the ceiling build up. The other half of the floor/ceiling build up should be entered as an internal floor."
+				/>
+				<FieldsMassDistributionClass
+					id="massDistributionClass"
+					name="massDistributionClass"
+					help="This is the mass distribution class of half the construction build up. The other half should be input as an internal floor."
+				/>
+			</template>
+			<template v-else>
+				<FormKit
+					id="surfaceArea"
+					type="govInputWithSuffix"
+					suffix-text="m²"
+					label="Net surface area of element"
+					help="Enter the net area of the building element, subtracting any doors or windows"
+					name="surfaceArea"
+					validation="required | number | min:0 | max:10000"
+					data-field="Zone.BuildingElement.*.area"
+				/>
+				<FieldsUValue
+					help="Enter the U-value of the full ceiling build up"
+				/>
+				<FieldsArealHeatCapacity
+					id="arealHeatCapacity"
+					name="arealHeatCapacity"
+					help="This is the sum of the heat capacities of the full ceiling build up"
+				/>
+				<FieldsMassDistributionClass
+					id="massDistributionClass"
+					name="massDistributionClass"
+					help="This is the distribution of mass in the full ceiling build up"
+				/>
+			</template>
 		</template>
 		<FormKit
 			v-if="model?.type === 'unheatedSpace'"
@@ -159,7 +186,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		>
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">
-					For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m²·K)/W for when the facing wall is not exposed.
+					The thermal resistance of unheated space is a measure of the degree of shelter that the unheated space provides to the building element. It is calculated as the thickness of the material divided by its thermal conductivity. A higher thermal resistance reduces heat transfer. The U-value is the inverse of the total thermal resistance of a building element.
+				</p>
+				<p class="govuk-hint">
+					See the technical paper HEM-TP-05, in which Annex A includes a general way to calculate this and also some suggested default values for common scenarios.​
+				</p>
+				<p class="govuk-hint">
+					The maximum thermal resistance of an unheated space is 2.5 (m²·K)/W. This is when the facing wall is not exposed.
 				</p>
 				<p class="govuk-body">
 					<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
