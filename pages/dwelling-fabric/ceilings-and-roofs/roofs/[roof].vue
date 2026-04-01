@@ -32,9 +32,9 @@ const roofFieldText: Record<ActiveRoofType, {
 		widthHelp: "Enter the width of the internal adjacent ceiling",
 		elevationalHelp: "Enter the distance between the ground and the external surface of the roof",
 		surfaceAreaHelp: "Enter the net area of the internal adjacent ceiling. The area of all windows should be subtracted before entry. You do not need to subtract the area of PV arrays.",
-		uValueHelp: "Enter the U-value of the adjacent ceiling and roof build-up from the structural deck to the top waterproof layer",
-		arealHeatCapacityHelp: "This is the sum of the heat capacities of all the construction layers in the ceiling and roof build up from the structural deck to the top waterproof layer",
-		massDistributionHelp: "This is the distribution of mass in the ceiling and roof build up from the structural deck to the top waterproof layer",
+		uValueHelp: "Enter the U-value of the full roof and ceiling build up",
+		arealHeatCapacityHelp: "This is the sum of the heat capacities of all the construction layers in the ceiling and roof build up",
+		massDistributionHelp: "This is the distribution of mass in the ceiling and roof build up",
 	},
 	flatAboveUnheatedSpace: {
 		lengthLabel: "Length of internal ceiling",
