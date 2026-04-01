@@ -117,7 +117,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="ductType"
 			validation="required"
 			data-field="InfiltrationVentilation.MechanicalVentilation.duct_type">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table ductwork-table">
 					<thead class="govuk-table__head">
 						<tr>
@@ -144,6 +144,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						</tr>
 					</tbody>
 				</table>
+				<img src="/img/mvhr-ductwork.png" alt="Diagram showing an intake from outside the thermal envelope going through the MVHR unit to supply points, and exhaust being passed out originating from extract points." class="govuk-!-margin-bottom-3">
 			</GovDetails>
 		</FormKit>
 		<FormKit
@@ -161,6 +162,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="mm"
 			label="Internal diameter of ductwork"
 			name="internalDiameterOfDuctwork"
+			help="Enter the average inner diameter of the duct. Typically between 60mm and 175mm."
 			validation="required | number | min:0 | max:1000"
 			data-field="InfiltrationVentilation.MechanicalVentilation.internal_diameter_mm">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
@@ -189,6 +191,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="mm"
 			label="External diameter of ductwork"
 			name="externalDiameterOfDuctwork"
+			help="Enter the average outer diameter of the duct. Typically between 75mm and 200mm."
 			validation="required | number | min:0 | max:1000"
 			data-field="InfiltrationVentilation.MechanicalVentilation.external_diameter_mm">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
@@ -216,7 +219,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Length of ductwork"
-			help="Enter the length of the piece of ductwork for this sub-object. Typically between 10m and 30m."
+			help="If the ductwork is outside the thermal envelope, enter the length of the ductwork that sits outside the heated area. Typically between 1m and 12m."
 			name="lengthOfDuctwork"
 			validation="required | number | min:0"
 			data-field="InfiltrationVentilation.MechanicalVentilation.length"/>
