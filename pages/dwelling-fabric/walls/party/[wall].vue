@@ -21,7 +21,7 @@ const partyWallCavityTypeOptions = {
 	filled_sealed: "Filled and sealed",
 	filled_unsealed: "Filled and unsealed",
 	solid: "Solid",
-	defined_resistance: "Defined resistance",
+	defined_resistance: "Define custom resistance",
 } as const satisfies Record<SchemaPartyWallCavityType, string>;
 const partyWallLiningTypeOptions = {
 	wet_plaster: "Wet plaster",
@@ -111,7 +111,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
 		/>
-		<FieldsUValue />
+		<FieldsUValue
+			help="Enter the U-value of half the construction build up"
+		/>
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
@@ -125,13 +127,21 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Net surface area of element"
-			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
+			help="Enter the net area of the building element, subtracting any doors or windows"
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of half the construction build up"
+		/>
+		<FieldsMassDistributionClass
+			id="massDistributionClass"
+			name="massDistributionClass"
+			help="This is the mass distribution class in half of the thickness of the construction build up"
+		/>
 		<FormKit
 			id="partyWallCavityType"
 			name="partyWallCavityType"
