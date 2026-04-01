@@ -133,7 +133,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				data-field="Zone.BuildingElement.*.area"
 			/>
 			<FieldsUValue
-				help="Enter the U value of half the construction build up. The other half should be input as an internal floor."
+				help="Enter the U-value of half the construction build up. The other half should be input as an internal floor."
 			/>
 			<FieldsArealHeatCapacity
 				id="arealHeatCapacity"
