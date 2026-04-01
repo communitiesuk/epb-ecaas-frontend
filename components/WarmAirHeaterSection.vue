@@ -23,14 +23,14 @@ defineProps<{
 		name="designTempDiffAcrossEmitters"
 		validation="required | number"
 		suffix-text="°C"
-		help="The temperature difference between the flow and return water temperatures at each emitter. Typically between 5 and 15°C." />
+		help="Enter the intended difference between the temperature of the air entering the heater and leaving it"/>
 	<FormKit
 		id="convectionFraction"
 		type="govInputFloat"
 		label="Convection fraction"
 		name="convectionFraction"
 		validation="required"
-		help="Enter the proportion of heat the heater emits through convection"/>	
+		help="Enter the proportion of heat the heater transfers to the room by the circulation of warm air rather than directly (for example by radiation)"/>
 	<FieldsHeatSources
 		id="heatSource"
 		name="heatSource"
