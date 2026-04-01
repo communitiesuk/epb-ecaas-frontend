@@ -144,10 +144,6 @@ describe("roof", () => {
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("typeOfRoof_error"))).toBeDefined();
-		expect((await screen.findByTestId("length_error"))).toBeDefined();
-		expect((await screen.findByTestId("width_error"))).toBeDefined();
-		expect((await screen.findByTestId("elevationalHeightOfElement_error"))).toBeDefined();
-		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {

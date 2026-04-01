@@ -215,81 +215,84 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				name="typeOfRoof"
 				validation="required"
 			/>
-			<GovInset v-if="model?.typeOfRoof === 'pitchedInsulatedAtRoof' || model?.typeOfRoof === 'pitchedInsulatedAtCeiling'">
-				If the pitched roof has multiple orientations (for example, a gable or hip roof), each orientation must be added as a separate roof element.
-			</GovInset>
-			<FieldsUValue :key="`uValue-${model?.typeOfRoof}`" :help="currentRoofFieldText?.uValueHelp" />
-			<FieldsColourOfExternalSurface />	
-			<FieldsArealHeatCapacity
-				id="arealHeatCapacity"
-				:key="`arealHeatCapacity-${model?.typeOfRoof}`"
-				name="arealHeatCapacity"
-				:help="currentRoofFieldText?.arealHeatCapacityHelp"
-			/>
-			<FieldsMassDistributionClass :key="`massDistributionClass-${model?.typeOfRoof}`" :help="currentRoofFieldText?.massDistributionHelp" />
-			<FieldsPitch
-				v-if="model?.typeOfRoof === 'flatAboveHeatedSpace' || model?.typeOfRoof === 'flatAboveUnheatedSpace'"
-				label="Pitch of roof"
-				help="Enter the tilt angle of the external surface of the roof. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
-				:options="zeroPitchOptions()"
-				:pitch-option="model?.pitchOption"
-				data-field="Zone.BuildingElement.*.pitch"
-			/>
 
-			<template v-if="model?.typeOfRoof === 'pitchedInsulatedAtRoof' || model?.typeOfRoof === 'pitchedInsulatedAtCeiling'">
+			<template v-if="model?.typeOfRoof">
+				<GovInset v-if="model?.typeOfRoof === 'pitchedInsulatedAtRoof' || model?.typeOfRoof === 'pitchedInsulatedAtCeiling'">
+					If the pitched roof has multiple orientations (for example, a gable or hip roof), each orientation must be added as a separate roof element.
+				</GovInset>
+				<FieldsUValue :key="`uValue-${model?.typeOfRoof}`" :help="currentRoofFieldText?.uValueHelp" />
+				<FieldsColourOfExternalSurface />	
+				<FieldsArealHeatCapacity
+					id="arealHeatCapacity"
+					:key="`arealHeatCapacity-${model?.typeOfRoof}`"
+					name="arealHeatCapacity"
+					:help="currentRoofFieldText?.arealHeatCapacityHelp"
+				/>
+				<FieldsMassDistributionClass :key="`massDistributionClass-${model?.typeOfRoof}`" :help="currentRoofFieldText?.massDistributionHelp" />
 				<FieldsPitch
+					v-if="model?.typeOfRoof === 'flatAboveHeatedSpace' || model?.typeOfRoof === 'flatAboveUnheatedSpace'"
 					label="Pitch of roof"
 					help="Enter the tilt angle of the external surface of the roof. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
+					:options="zeroPitchOptions()"
+					:pitch-option="model?.pitchOption"
 					data-field="Zone.BuildingElement.*.pitch"
 				/>
-				<FieldsOrientation
-					label="Orientation of roof"
-					data-field="Zone.BuildingElement.*.orientation"
-				/>
-				<div v-if="!!model?.orientation" class="govuk-error-summary">
-					<div role="alert" class="govuk-hint govuk-!-margin-bottom-0">
-						If the pitched roof has multiple orientations (e.g., a gable or hip roof), each orientation must be modelled as a separate roof element.
+
+				<template v-if="model?.typeOfRoof === 'pitchedInsulatedAtRoof' || model?.typeOfRoof === 'pitchedInsulatedAtCeiling'">
+					<FieldsPitch
+						label="Pitch of roof"
+						help="Enter the tilt angle of the external surface of the roof. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
+						data-field="Zone.BuildingElement.*.pitch"
+					/>
+					<FieldsOrientation
+						label="Orientation of roof"
+						data-field="Zone.BuildingElement.*.orientation"
+					/>
+					<div v-if="!!model?.orientation" class="govuk-error-summary">
+						<div role="alert" class="govuk-hint govuk-!-margin-bottom-0">
+							If the pitched roof has multiple orientations (e.g., a gable or hip roof), each orientation must be modelled as a separate roof element.
+						</div>
 					</div>
-				</div>
-			</template>
-			<FieldsElevationalHeight
-				:key="`elevationalHeight-${model?.typeOfRoof}`"
-				field="elevationalHeightOfElement"
-				label="Elevational height of roof at its base"
-				:help="currentRoofFieldText?.elevationalHelp"
-			/>
-			<FormKit
-				id="length"
-				:key="`length-${model?.typeOfRoof}`"
-				type="govInputWithSuffix"
-				:label="currentRoofFieldText?.lengthLabel ?? 'Length of roof'"
-				:help="currentRoofFieldText?.lengthHelp ?? 'Enter the length of the building element'"
-				name="length"
-				validation="required | number | min:0.001 | max:50"
-				suffix-text="m"
-				data-field="Zone.BuildingElement.*.height"
-			/>
-			<FormKit
-				id="width"
-				:key="`width-${model?.typeOfRoof}`"
-				type="govInputWithSuffix"
-				:label="currentRoofFieldText?.widthLabel ?? 'Width of roof'"
-				:help="currentRoofFieldText?.widthHelp ?? 'Enter the width of the building element'"
-				name="width"
-				validation="required | number | min:0.001 | max:50"
-				suffix-text="m"
-			/>
-			<FormKit
-				id="surfaceArea"
-				:key="`surfaceArea-${model?.typeOfRoof}`"
-				type="govInputWithSuffix"
-				label="Net surface area of ceiling"
-				:help="currentRoofFieldText?.surfaceAreaHelp ?? 'Enter the net area of the building element. The area of all windows or doors should be subtracted before entry.'"
-				name="surfaceArea"
-				validation="required | number | min:0.01 | max:10000"
-				suffix-text="m²"
-				data-field="Zone.BuildingElement.*.area"
-			/>		
+				</template>
+				<FieldsElevationalHeight
+					:key="`elevationalHeight-${model?.typeOfRoof}`"
+					field="elevationalHeightOfElement"
+					label="Elevational height of roof at its base"
+					:help="currentRoofFieldText?.elevationalHelp"
+				/>
+				<FormKit
+					id="length"
+					:key="`length-${model?.typeOfRoof}`"
+					type="govInputWithSuffix"
+					:label="currentRoofFieldText?.lengthLabel ?? 'Length of roof'"
+					:help="currentRoofFieldText?.lengthHelp ?? 'Enter the length of the building element'"
+					name="length"
+					validation="required | number | min:0.001 | max:50"
+					suffix-text="m"
+					data-field="Zone.BuildingElement.*.height"
+				/>
+				<FormKit
+					id="width"
+					:key="`width-${model?.typeOfRoof}`"
+					type="govInputWithSuffix"
+					:label="currentRoofFieldText?.widthLabel ?? 'Width of roof'"
+					:help="currentRoofFieldText?.widthHelp ?? 'Enter the width of the building element'"
+					name="width"
+					validation="required | number | min:0.001 | max:50"
+					suffix-text="m"
+				/>
+				<FormKit
+					id="surfaceArea"
+					:key="`surfaceArea-${model?.typeOfRoof}`"
+					type="govInputWithSuffix"
+					label="Net surface area of ceiling"
+					:help="currentRoofFieldText?.surfaceAreaHelp ?? 'Enter the net area of the building element. The area of all windows or doors should be subtracted before entry.'"
+					name="surfaceArea"
+					validation="required | number | min:0.01 | max:10000"
+					suffix-text="m²"
+					data-field="Zone.BuildingElement.*.area"
+				/>	
+			</template>	
 			<GovLLMWarning />
 			<div class="govuk-button-group">
 				<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
