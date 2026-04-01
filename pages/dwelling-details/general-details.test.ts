@@ -272,14 +272,6 @@ describe("General details", () => {
 			heatSourceId: "NEW_HEAT_SOURCE",
 		};
 
-		const smartHotWaterTank: Partial<SmartHotWaterTankData> = {
-			id: "55d318aa-f2c9-473f-9063-20457386a71b",
-			name: "Smart hot water tank",
-			typeOfWaterStorage: "smartHotWaterTank",
-			dhwHeatSourceId: "DHW_HEAT_SOURCE",
-			energySupply: "mains_gas",
-		};
-
 		const state: Partial<GeneralDetailsData> = {
 			typeOfDwelling: "house",
 			fuelType: ["mains_gas", "electricity", "LPG_bulk"],
@@ -300,9 +292,6 @@ describe("General details", () => {
 				heatSources: {
 					data: [{ data: heatNetworkDHW }, { data: heatBatteryDHW }, { data: pointOfUse }],
 				},
-				waterStorage: {
-					data: [{ data: smartHotWaterTank }],
-				},
 			},
 		});
 		await renderSuspended(GeneralDetails);
@@ -319,9 +308,6 @@ describe("General details", () => {
 		expect(DHWItems[1]?.complete).toBe(false);
 		expect((DHWItems[2]?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
 		expect(DHWItems[2]?.complete).toBe(false);
-
-		const waterStorage = store.domesticHotWater.waterStorage.data;
-		expect((waterStorage[0]?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
 	});
 
 	it("when type of dwelling is updated from flat to house, updates store so any internal door is not a front door", async () => {

@@ -39,7 +39,6 @@ describe("water storage", () => {
 			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
 			name: "Smart hot water tank 1",
 			dhwHeatSourceId: heatPumpId,
-			energySupply: "electricity",
 			productReference: "42",
 			heaterPosition: 0.8,
 		},
@@ -96,7 +95,6 @@ describe("water storage", () => {
 		await user.click(screen.getByTestId("chooseAProductButton"));
 		// Have to simulate product selection by directly setting the product reference in the store - the other page won't load in a unit test
 		await user.click(screen.getByTestId(`dhwHeatSourceId_${heatPumpId}`));
-		await user.click(screen.getByTestId(`energySupply_electricity`));
 		await user.type(screen.getByTestId("heaterPosition"), "0.8");
 		await user.tab();
 	};
