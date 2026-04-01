@@ -164,27 +164,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="internalDiameterOfDuctwork"
 			help="Enter the average inner diameter of the duct. Typically between 60mm and 175mm."
 			validation="required | number | min:0 | max:1000"
-			data-field="InfiltrationVentilation.MechanicalVentilation.internal_diameter_mm">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<table class="govuk-table">
-					<thead class="govuk-table__head">
-						<tr class="govuk-table__row">
-							<th scope="col" class="govuk-table__header">Explanation</th>
-							<th scope="col" class="govuk-table__header">Typical range</th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">Inner size of the duct, determining actual airflow capacity</td>
-							<td class="govuk-table__cell">
-								100 - 150mm<br>
-								(varies based on system needs)
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
-		</FormKit>
+			data-field="InfiltrationVentilation.MechanicalVentilation.internal_diameter_mm" />
 		<FormKit
 			id="externalDiameterOfDuctwork"
 			type="govInputWithSuffix"
@@ -193,27 +173,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="externalDiameterOfDuctwork"
 			help="Enter the average outer diameter of the duct. Typically between 75mm and 200mm."
 			validation="required | number | min:0 | max:1000"
-			data-field="InfiltrationVentilation.MechanicalVentilation.external_diameter_mm">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<table class="govuk-table">
-					<thead class="govuk-table__head">
-						<tr class="govuk-table__row">
-							<th scope="col" class="govuk-table__header">Explanation</th>
-							<th scope="col" class="govuk-table__header">Typical range</th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">Outer size of the duct, affecting airflow and space requirements</td>
-							<td class="govuk-table__cell">
-								125 - 160<br>
-								(standard domestic systems)
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
-		</FormKit>
+			data-field="InfiltrationVentilation.MechanicalVentilation.external_diameter_mm" />
 		<FormKit
 			id="lengthOfDuctwork"
 			type="govInputWithSuffix"
