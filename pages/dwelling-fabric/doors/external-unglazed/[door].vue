@@ -142,7 +142,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsElevationalHeight
 			help="Enter the distance between the ground and the bottom of the door"
 		/>
-		<FieldsUValue/>
+		<FieldsUValue
+			help="Enter the u-value of the full thickness of the door build up"
+		/>
 		<FieldsColourOfExternalSurface v-if="!(model?.pitch && model.pitch > 120)" />
 		<FieldsArealHeatCapacity
 			id="arealHeatCapacity"
