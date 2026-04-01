@@ -27,6 +27,18 @@ const heatEmitterData = useItemToEdit("heatEmitter", heatEmitterStoreData);
 const model = ref(heatEmitterData?.data);
 const id = heatEmitterData?.data?.id ?? uuidv4();
 
+// boolean for switch for underfloor heating feature
+const useUnderfloorHeating: boolean = false;
+
+let currentHeatEmitterTypes;
+
+if (useUnderfloorHeating) {
+	currentHeatEmitterTypes = heatEmitterTypes;
+} else {
+	const { underfloorHeating, ...remainingTypes } = heatEmitterTypes;
+	currentHeatEmitterTypes = remainingTypes;
+}
+
 const saveForm = () => {
 	store.$patch((state) => {
 		const { heatEmitters } = state.spaceHeating;
@@ -115,7 +127,8 @@ function updateHeatEmitter(type: string) {
 			id="typeOfHeatEmitter"
 			type="govRadios"
 			label="Type of heat emitter"
-			:options="heatEmitterTypes"
+			:help="(useUnderfloorHeating) ? undefined : 'Please note: underfloor heating is not currently available, but will be in future releases.'"
+			:options="currentHeatEmitterTypes"
 			name="typeOfHeatEmitter"
 			validation="required" />
 		<RadiatorSection
