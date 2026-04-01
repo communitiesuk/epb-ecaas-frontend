@@ -29,6 +29,7 @@ const state: DwellingDetailSummary = {
 		numOfRoomsWithTappingPoints: 2,
 		numOfWetRooms: 3,
 		fuelType: ["mains_gas", "LPG_bulk"],
+		canExportToGrid: "yes",
 		isPartGCompliant: true,
 		partOActiveCoolingRequired: false,
 	},

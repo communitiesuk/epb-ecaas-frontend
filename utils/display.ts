@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, Schem
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
 import type { Split } from "type-fest";
 
 export const emptyValueRendering = "-";
@@ -473,3 +473,9 @@ export const installationLocationOptions: Record<SchemaMechanicalVentilationInst
 	kitchen: "Kitchen",
 	other_wet_room: "Other wet room",
 };
+
+export const canExportToGridDisplay = {
+	yes: "Yes",
+	no_export: "No, generated energy can’t be exported to the grid",
+	no_generation: "No, no energy will be generated on site",
+} as const satisfies Record<GeneralDetailsData["canExportToGrid"], string>;

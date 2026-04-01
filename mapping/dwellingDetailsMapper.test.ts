@@ -26,6 +26,7 @@ describe("dwelling details mapper", () => {
 		numOfRoomsWithTappingPoints: 2,
 		numOfWetRooms: 3,
 		fuelType: ["mains_gas"],
+		canExportToGrid: "yes",
 		isPartGCompliant: false,
 		partOActiveCoolingRequired: true,
 	};
@@ -111,6 +112,7 @@ describe("dwelling details mapper", () => {
 				numOfRoomsWithTappingPoints: 2,
 				numOfWetRooms: 4,
 				fuelType: ["electricity"],
+				canExportToGrid: "no_export",
 				isPartGCompliant: false,
 				partOActiveCoolingRequired: true,
 			};
@@ -157,6 +159,7 @@ describe("dwelling details mapper", () => {
 				numOfRoomsWithTappingPoints: 2,
 				numOfWetRooms: 5,
 				fuelType: ["mains_gas", "LPG_bulk"],
+				canExportToGrid: "no_export",
 				isPartGCompliant: false,
 				partOActiveCoolingRequired: true,
 			};

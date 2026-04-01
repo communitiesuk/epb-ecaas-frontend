@@ -2,7 +2,7 @@ import GeneralDetails from "./general-details.vue";
 import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
-import type { GeneralDetailsData, HeatSourceData, SmartHotWaterTankData } from "~/stores/ecaasStore.schema";
+import type { GeneralDetailsData, HeatSourceData } from "~/stores/ecaasStore.schema";
 import type { SchemaFuelType } from "~/schema/aliases";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -23,6 +23,7 @@ const state: GeneralDetailsData = {
 	numOfRoomsWithTappingPoints: 2,
 	numOfWetRooms: 3,
 	fuelType: ["electricity"],
+	canExportToGrid: "yes",
 	isPartGCompliant: true,
 	partOActiveCoolingRequired: false,
 };
@@ -42,6 +43,7 @@ const stateWithFlat: GeneralDetailsData = {
 	numOfRoomsWithTappingPoints: 2,
 	numOfWetRooms: 4,
 	fuelType: ["electricity", "mains_gas"],
+	canExportToGrid: "no_generation",
 	isPartGCompliant: true,
 	partOActiveCoolingRequired: false,
 };
@@ -69,6 +71,7 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("numOfHabitableRooms"), "4");
 			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
 			await user.type(screen.getByTestId("numOfWetRooms"), "3");
+			await user.click(screen.getByTestId("canExportToGrid_yes"));
 			await user.click(screen.getByTestId("isPartGCompliant_yes"));
 			await user.click(screen.getByTestId("partOActiveCoolingRequired_no"));
 	
@@ -114,6 +117,7 @@ describe("General details", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("numOfWCs")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfHabitableRooms")).value).toBe("4");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfRoomsWithTappingPoints")).value).toBe("2");
+			expect((await screen.findByTestId("canExportToGrid_yes")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("isPartGCompliant_yes")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("partOActiveCoolingRequired_no")).hasAttribute("checked")).toBe(true);
 		});
@@ -134,6 +138,7 @@ describe("General details", () => {
 			expect((await screen.findByTestId("numOfBathrooms_error"))).toBeDefined();
 			expect((await screen.findByTestId("numOfWCs_error"))).toBeDefined();
 			expect((await screen.findByTestId("numOfHabitableRooms_error"))).toBeDefined();
+			expect((await screen.findByTestId("canExportToGrid_error"))).toBeDefined();
 			expect((await screen.findByTestId("isPartGCompliant_error"))).toBeDefined();
 			expect((await screen.findByTestId("partOActiveCoolingRequired"))).toBeDefined();
 
@@ -172,6 +177,7 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
 			await user.type(screen.getByTestId("numOfWetRooms"), "4");
 			await user.click(screen.getByTestId("fuelType_mains_gas"));
+			await user.click(screen.getByTestId("canExportToGrid_no_generation"));
 			await user.click(screen.getByTestId("isPartGCompliant_yes"));
 			await user.click(screen.getByTestId("partOActiveCoolingRequired_no"));
 
@@ -209,6 +215,7 @@ describe("General details", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("numOfHabitableRooms")).value).toBe("4");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfRoomsWithTappingPoints")).value).toBe("2");
 			expect((await screen.findByTestId("fuelType_mains_gas")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("canExportToGrid_no_generation")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("isPartGCompliant_yes")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("partOActiveCoolingRequired_no")).hasAttribute("checked")).toBe(true);
 		});

@@ -71,6 +71,7 @@ const baseGeneralDetails = z.object({
 	numOfRoomsWithTappingPoints: z.int().min(1),
 	numOfWetRooms: z.int().min(1),
 	fuelType: z.array(fuelTypeZod),
+	canExportToGrid: z.enum(["yes", "no_export", "no_generation"]),
 	isPartGCompliant: z.boolean(),
 	partOActiveCoolingRequired: z.boolean(),
 });

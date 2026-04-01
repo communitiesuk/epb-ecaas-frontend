@@ -33,6 +33,8 @@ const typeOfDwellingOptions: Record<SchemaBuildType, SnakeToSentenceCase<SchemaB
 	flat: "Flat",
 };
 
+const energyExportToGridOptions = canExportToGridDisplay;
+
 const saveForm = (fields: typeof model.value) => {
 
 	store.$patch({
@@ -53,6 +55,7 @@ const saveForm = (fields: typeof model.value) => {
 					numOfRoomsWithTappingPoints: fields.numOfRoomsWithTappingPoints,
 					numOfWetRooms: fields.numOfWetRooms,
 					fuelType: fields.fuelType,
+					canExportToGrid: fields.canExportToGrid,
 				},
 				complete: true,
 			},
@@ -388,6 +391,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="fuelTypeOptions"
 			validation="required"
 			data-field="EnergySupply.*.fuel"
+		/>
+		<FormKit
+			id="canExportToGrid"
+			type="govRadios"
+			:options="energyExportToGridOptions"
+			label="Can any energy generated on site be exported to the grid?"
+			name="canExportToGrid"
+			validation="required"
+			data-field="EnergySupply.*.is_export_capable"
 		/>
 		<FormKit
 			id="isPartGCompliant"

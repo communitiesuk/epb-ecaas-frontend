@@ -243,6 +243,14 @@ describe("PV and electric batteries mapper", () => {
 
 	it("exposes energy-supply flags from pv arrays (is_export_capable + priority)", () => {
 		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						canExportToGrid: "yes",
+					},
+					complete: true,
+				},
+			},
 			pvAndBatteries: {
 				pvArrays: {
 					data: [{
@@ -277,11 +285,19 @@ describe("PV and electric batteries mapper", () => {
 		});
 
 		const energySupply = mapPvArrayEnergySupplyData(resolveState(store.$state));
-		expect(energySupply).toEqual({ "Roof": { fuel: "electricity", is_export_capable: false, priority: ["ElectricBattery"] } });
+		expect(energySupply).toEqual({ "Roof": { fuel: "electricity", is_export_capable: true, priority: ["ElectricBattery"] } });
 	});
 
 	it("mapPvSystemEnergySupply returns keyed energy-supply object", () => {
 		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						canExportToGrid: "no_generation",
+					},
+					complete: true,
+				},
+			},
 			pvAndBatteries: {
 				pvArrays: {
 					data: [{

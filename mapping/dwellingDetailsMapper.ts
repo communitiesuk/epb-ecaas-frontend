@@ -70,6 +70,8 @@ export function mapEnergySupplyFuelTypeData(
 	// electricity is always required as a fueltype - so its hardcoded into the
 	// EnergySupply object - therefore we filter out electricity so its not added twice
 
+	const canExportToGrid = state.dwellingDetails.generalSpecifications.canExportToGrid === "yes";
+
 	return {
 		EnergySupply: {
 			[defaultElectricityEnergySupplyName]: {
@@ -82,7 +84,7 @@ export function mapEnergySupplyFuelTypeData(
 						{
 							fuel: fuelType,
 							...(["LPG_bulk", "LPG_bottled"].includes(fuelType) && {
-								is_export_capable: false,
+								is_export_capable: canExportToGrid,
 							}),
 						},
 					])
