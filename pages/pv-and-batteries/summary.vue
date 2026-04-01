@@ -45,7 +45,6 @@ const pvSummary: SummarySection = {
 			"Inverter peak power DC": dim(x.inverterPeakPowerDC, "kilowatt"),
 			"Location of inverter": displaySnakeToSentenceCase(show(x.locationOfInverter)),
 			"Inverter type": displaySnakeToSentenceCase(show(x.inverterType)),
-			"Can the electricity be exported to the grid": displayBoolean(x.canExportToGrid),
 			"Priority for generated electricity": displayCamelToSentenceCase(show(x.electricityPriority)), 
 			"Does anything shade the PV array?": displayBoolean(x.hasShading),
 			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvArrayData, { hasShading: true }>).shading) } : {}),

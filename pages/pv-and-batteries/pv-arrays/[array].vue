@@ -112,7 +112,6 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				id="peakPower"
 				type="govInputWithSuffix"
 				label="Peak power"
-				help="Enter the maximum power output the photovoltaic system can generate under ideal conditions"
 				name="peakPower"
 				validation="required | number | min:0.001 | max: 100"
 				suffix-text="kWp"
@@ -236,7 +235,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				id="lengthOfPV"
 				type="govInputWithSuffix"
 				label="Length of PV array"
-				help="Enter the length of the PV array so the area can be calculated"
+				help="Enter the length of the side of the array or panel that runs up the roof"
 				name="lengthOfPV"
 				validation="required | number | min:0 | max: 100"
 				suffix-text="m"
@@ -245,7 +244,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				id="widthOfPV"
 				type="govInputWithSuffix"
 				label="Width of PV array"
-				help="Enter the width of the PV array so the area can be calculated"
+				help="Enter the length of the side of the array or panel that runs horizontally"
 				name="widthOfPV"
 				validation="required | number | min:0 | max: 100"
 				suffix-text="m"
@@ -310,18 +309,10 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				</GovDetails>
 			</FormKit>
 			<FormKit
-				id="canExportToGrid"
-				type="govBoolean"
-				label="Can the electricity be exported to the grid?"
-				name="canExportToGrid"
-				validation="required"
-			/>
-
-			<FormKit
 				id="electricityPriority"
 				type="govRadios"
 				:options="electricityPriorityOptions"
-				label="What is the priority for generated electricity?"
+				label="Which system should receive surplus energy from this energy supply?"
 				name="electricityPriority"
 				validation="required"
 			/>

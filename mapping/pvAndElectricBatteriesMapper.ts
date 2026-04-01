@@ -53,10 +53,10 @@ export function mapPvArrayEnergySupplyData(state: ResolvedState): { [key: string
 	const EnergySupply: { [key: string]: SchemaEnergySupplyElectricity } = {};
 	pvArrays.forEach((system) => {
 		if (system.electricityPriority === "diverter") {
-			EnergySupply[system.name] = { priority: ["diverter"], is_export_capable: system.canExportToGrid, fuel: "electricity" };
+			EnergySupply[system.name] = { priority: ["diverter"], is_export_capable: false, fuel: "electricity" }; // TODO is_export_capable to be hooked into field in general details
 		};
 		if (system.electricityPriority === "electricBattery") {
-			EnergySupply[system.name] = { priority: ["ElectricBattery"], is_export_capable: system.canExportToGrid, fuel: "electricity" };
+			EnergySupply[system.name] = { priority: ["ElectricBattery"], is_export_capable: false, fuel: "electricity" }; // TODO is_export_capable to be hooked into field in general details
 		};
 	});
 	return EnergySupply;

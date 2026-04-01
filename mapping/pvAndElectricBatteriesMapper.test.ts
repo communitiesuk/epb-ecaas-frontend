@@ -31,7 +31,6 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerAC: 48,
 				inverterPeakPowerDC: 60,
 				locationOfInverter: "unheated_space",
-				canExportToGrid: false,
 				electricityPriority: "diverter",
 				inverterType: "string_inverter",
 				hasShading: false,
@@ -52,7 +51,6 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerAC: 96,
 				inverterPeakPowerDC: 120,
 				locationOfInverter: "unheated_space",
-				canExportToGrid: true,
 				electricityPriority: "electricBattery",
 				inverterType: "optimised_inverter",
 				hasShading: false,
@@ -260,7 +258,6 @@ describe("PV and electric batteries mapper", () => {
 							inverterPeakPowerAC: 1,
 							inverterPeakPowerDC: 1,
 							locationOfInverter: "heated_space",
-							canExportToGrid: true,
 							electricityPriority: "electricBattery",
 							inverterType: "string_inverter",
 						},
@@ -280,7 +277,7 @@ describe("PV and electric batteries mapper", () => {
 		});
 
 		const energySupply = mapPvArrayEnergySupplyData(resolveState(store.$state));
-		expect(energySupply).toEqual({ "Roof": { fuel: "electricity", is_export_capable: true, priority: ["ElectricBattery"] } });
+		expect(energySupply).toEqual({ "Roof": { fuel: "electricity", is_export_capable: false, priority: ["ElectricBattery"] } });
 	});
 
 	it("mapPvSystemEnergySupply returns keyed energy-supply object", () => {
@@ -300,7 +297,6 @@ describe("PV and electric batteries mapper", () => {
 							inverterPeakPowerAC: 1,
 							inverterPeakPowerDC: 1,
 							locationOfInverter: "heated_space",
-							canExportToGrid: true,
 							electricityPriority: "electricBattery",
 							inverterType: "string_inverter",
 						},
@@ -312,7 +308,7 @@ describe("PV and electric batteries mapper", () => {
 		});
 
 		const energySupply = mapPvArrayEnergySupplyData(resolveState(store.$state));
-		expect(energySupply).toEqual({ "Roof": { fuel: "electricity", is_export_capable: true, priority: ["ElectricBattery"] } });
+		expect(energySupply).toEqual({ "Roof": { fuel: "electricity", is_export_capable: false, priority: ["ElectricBattery"] } });
 	});
 	it("maps pv array shading data to the correct form for FHS input", () => {
 		const pvArrayWithShading: EcaasForm<PvArrayData> = {
@@ -328,7 +324,6 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerAC: 96,
 				inverterPeakPowerDC: 120,
 				locationOfInverter: "unheated_space",
-				canExportToGrid: true,
 				electricityPriority: "electricBattery",
 				inverterType: "optimised_inverter",
 				hasShading: true,

@@ -39,7 +39,6 @@ describe("pv systems and electric battery", () => {
 			inverterPeakPowerAC: 4,
 			inverterPeakPowerDC: 5,
 			locationOfInverter: "heated_space",
-			canExportToGrid: false,
 			electricityPriority: "diverter",
 			inverterType: "string_inverter",
 			hasShading: false,

@@ -26,7 +26,6 @@ describe("PV and electric batteries summary page", () => {
 				inverterPeakPowerDC: 3.5,
 				inverterPeakPowerAC: 2.4,
 				locationOfInverter: "unheated_space",
-				canExportToGrid: false,
 				electricityPriority: "diverter",
 				inverterType: "optimised_inverter",
 				hasShading: false,
@@ -89,7 +88,6 @@ describe("PV and electric batteries summary page", () => {
 				"Inverter peak power DC": `3.5 ${kilowatt.suffix}`,
 				"Location of inverter": "Unheated space",
 				"Inverter type": "Optimised inverter",
-				"Can the electricity be exported to the grid": "No",
 				"Priority for generated electricity": "Diverter",
 				"Does anything shade the PV array?": "No",
 			};
@@ -121,7 +119,6 @@ describe("PV and electric batteries summary page", () => {
 				"Inverter peak power DC": `3.5 ${kilowatt.suffix}`,
 				"Location of inverter": "Unheated space",
 				"Inverter type": "Optimised inverter",
-				"Can the electricity be exported to the grid": "No",
 				"Priority for generated electricity": "Diverter",
 				"Does anything shade the PV array?": "Yes",
 			};

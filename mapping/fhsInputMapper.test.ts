@@ -321,7 +321,7 @@ const expectedFlatInput: FhsInputSchema = {
 		},
 		["pv system 1"]: {
 			"fuel": "electricity",
-			"is_export_capable": true,
+			"is_export_capable": false,
 			"priority": [
 				"diverter",
 			],
@@ -2290,7 +2290,6 @@ describe("FHS input mapper", () => {
 						inverterPeakPowerDC: 3.8,
 						locationOfInverter: "heated_space",
 						inverterType: "optimised_inverter",
-						canExportToGrid: true,
 						electricityPriority: "diverter",
 						hasShading: true,
 						shading: [{

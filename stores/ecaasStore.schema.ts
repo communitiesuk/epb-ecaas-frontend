@@ -1363,7 +1363,6 @@ const pvArrayDataZod = z.object({
 	inverterPeakPowerDC: z.number(),
 	locationOfInverter: z.enum(["heated_space", "unheated_space"]),
 	inverterType: inverterTypeZod,
-	canExportToGrid: z.boolean(),
 	electricityPriority: z.enum(["diverter", "electricBattery"]),
 	hasShading: z.boolean(),
 });
