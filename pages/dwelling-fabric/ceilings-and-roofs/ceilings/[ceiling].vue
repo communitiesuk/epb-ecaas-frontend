@@ -127,14 +127,24 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				type="govInputWithSuffix"
 				suffix-text="m²"
 				label="Net surface area of element"
-				help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
+				help="Enter the net area of the building element. The area of all large openings should be subtracted before entry, but not doors."
 				name="surfaceArea"
 				validation="required | number | min:0 | max:10000"
 				data-field="Zone.BuildingElement.*.area"
 			/>
-			<FieldsUValue  />
-			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
-			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+			<FieldsUValue
+				help="Enter the U value of half the construction build up. The other half should be input as an internal floor."
+			/>
+			<FieldsArealHeatCapacity
+				id="arealHeatCapacity"
+				name="arealHeatCapacity"
+				help="This is the sum of the heat capacities of half the thickness of the ceiling build up. The other half of the floor/ceiling build up should be entered as an internal floor."
+			/>
+			<FieldsMassDistributionClass
+				id="massDistributionClass"
+				name="massDistributionClass"
+				help="This is the mass distribution class of half the construction build up. The other half should be input as an internal floor."
+			/>
 		</template>
 		<FormKit
 			v-if="model?.type === 'unheatedSpace'"
