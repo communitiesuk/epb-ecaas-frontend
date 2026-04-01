@@ -1291,19 +1291,10 @@ const mixedShowerDataZod = nestedDiscriminatedUnion(
 
 export type MixedShowerData = z.infer<typeof mixedShowerDataZod>;
 
-const electricShowerBaseZod = namedWithId.extend({
+const electricShowerDataZod = namedWithId.extend({
 	typeOfHotWaterOutlet: z.literal("electricShower"),
 	ratedPower: z.number().min(0).max(30),
 });
-
-const electricShowerDataZod = z.discriminatedUnion("wwhrs", [
-	electricShowerBaseZod.extend({ wwhrs: z.literal(false) }),
-	electricShowerBaseZod.extend({
-		wwhrs: z.literal(true),
-		wwhrsType: wwhrsTypeZod,
-		wwhrsProductReference: z.string().optional(),
-	}),
-]);
 
 export type ElectricShowerData = z.infer<typeof electricShowerDataZod>;
 

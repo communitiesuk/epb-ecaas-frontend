@@ -2179,7 +2179,6 @@ describe("FHS input mapper", () => {
 							name: "electric shower 1 name",
 							ratedPower: 20,
 							typeOfHotWaterOutlet: "electricShower",
-							wwhrs: false as const,
 						},
 					},
 					{

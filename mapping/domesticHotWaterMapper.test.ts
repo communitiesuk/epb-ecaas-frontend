@@ -168,7 +168,6 @@ describe("domestic hot water mapper", () => {
 					name: "shower2",
 					ratedPower: 10,
 					typeOfHotWaterOutlet: "electricShower",
-					wwhrs: false,
 				},
 			};
 
@@ -540,7 +539,6 @@ describe("domestic hot water mapper", () => {
 						name: "elec1",
 						ratedPower: 9.5,
 						typeOfHotWaterOutlet: "electricShower",
-						wwhrs: false,
 					},
 				};
 

@@ -223,7 +223,6 @@ describe("Domestic hot water summary", () => {
 				name: "Electric shower 1",
 				ratedPower: 10,
 				typeOfHotWaterOutlet: "electricShower",
-				wwhrs: false,
 			},
 		};
 
@@ -396,7 +395,6 @@ describe("Domestic hot water summary", () => {
 				"Name": "Electric shower 1",
 				"Type of hot water outlet": "Electric shower",
 				"Rated power": `10 ${kilowatt.suffix}`,
-				"WWHRS installed": "No",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -491,41 +489,6 @@ describe("Domestic hot water summary", () => {
 
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-mixedShower-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
-
-		test("displays WWHRS type and product when present for electric showers", async () => {
-			const electricWithWwhrs: EcaasForm<ElectricShowerData> = {
-				data: {
-					id: "electric-wwhrs-1",
-					name: "Electric with WWHRS",
-					ratedPower: 8,
-					typeOfHotWaterOutlet: "electricShower",
-					wwhrs: true,
-					wwhrsType: "instantaneousSystemA",
-					wwhrsProductReference: "WWHRS-PR-2",
-				},
-			};
-
-			store.$patch({
-				domesticHotWater: { hotWaterOutlets: { data: [electricWithWwhrs] } },
-			});
-
-			await renderSuspended(Summary);
-
-			const expectedResult = {
-				"Name": "Electric with WWHRS",
-				"Type of hot water outlet": "Electric shower",
-				"Rated power": `8 ${kilowatt.suffix}`,
-				"WWHRS installed": "Yes",
-				"WWHRS type": displayCamelToSentenceCase("instantaneousSystemA"),
-				"WWHRS product": "WWHRS-PR-2",
-			};
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-electricShower-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}

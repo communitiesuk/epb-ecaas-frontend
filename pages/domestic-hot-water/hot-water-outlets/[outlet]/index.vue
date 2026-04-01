@@ -58,29 +58,14 @@ const saveForm = (fields: HotWaterOutletsData) => {
 				};
 			}
 		} else if (fields.typeOfHotWaterOutlet === "electricShower") {
-			if (fields.wwhrs) {
-				hotWaterOutletItem = {
-					data: {
-						...commonFields,
-						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-						ratedPower: fields.ratedPower,
-						wwhrs: true,
-						wwhrsType: fields.wwhrsType,
-						wwhrsProductReference: fields.wwhrsProductReference,
-					},
-					complete: true,
-				};
-			} else {
-				hotWaterOutletItem = {
-					data: {
-						...commonFields,
-						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-						ratedPower: fields.ratedPower,
-						wwhrs: false,
-					},
-					complete: true,
-				};
-			}
+			hotWaterOutletItem = {
+				data: {
+					...commonFields,
+					typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
+					ratedPower: fields.ratedPower,
+				},
+				complete: true,
+			};
 		} else if (fields.typeOfHotWaterOutlet === "bath") {
 			hotWaterOutletItem = {
 				data: {
@@ -108,7 +93,7 @@ const saveForm = (fields: HotWaterOutletsData) => {
 	});
 	navigateTo(getUrl("domesticHotWater"));
 };
-			
+
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 watch(
@@ -118,8 +103,8 @@ watch(
 			errorMessages.value = [];
 			const preservedId = model.value?.id;
 			const defaultName = getHotWaterOutletDefaultName(newType);
-			model.value = { 
-				typeOfHotWaterOutlet: newType, 
+			model.value = {
+				typeOfHotWaterOutlet: newType,
 				id: preservedId,
 				...(defaultName && { name: defaultName }),
 			} as HotWaterOutletsData;
@@ -152,7 +137,7 @@ autoSaveElementForm<HotWaterOutletsData>({
 });
 
 // const isProductSelected = () => {
-// 	if (hotWaterOutletData.data.typeOfHotWaterOutlet !== "mixedShower" 
+// 	if (hotWaterOutletData.data.typeOfHotWaterOutlet !== "mixedShower"
 //         && hotWaterOutletData.data.typeOfHotWaterOutlet !== "electricShower") {
 // 		return false;
 // 	}
@@ -204,7 +189,6 @@ const heatSourceOptions = new Map(
 			validation="required"
 		/><template v-if="model.typeOfHotWaterOutlet === 'mixedShower'">
 			<FormKit
-			
 				id="dhwHeatSourceId"
 				name="dhwHeatSourceId"
 				type="govRadios"
@@ -212,7 +196,7 @@ const heatSourceOptions = new Map(
 				help="Select the relevant hot water source that has been added previously"
 				validation="required"
 				:options="heatSourceOptions"
-			>			
+			>
 				<div
 					v-if="!heatSourceOptions.size"
 					data-testid="noHeatSource"
@@ -223,7 +207,7 @@ const heatSourceOptions = new Map(
 					</NuxtLink>
 				</div>
 			</FormKit>
-			<FormKit 
+			<FormKit
 				id="isAirPressureShower"
 				name="isAirPressureShower"
 				type="govBoolean"
@@ -242,9 +226,9 @@ const heatSourceOptions = new Map(
 				:page-index="index"
 			/>
 		</template>
-	
+
 		<FormKit
-			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' && model.isAirPressureShower === false) || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"	
+			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' && model.isAirPressureShower === false) || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"
 			id="flowRate"
 			type="govInputWithSuffix"
 			label="Flow rate"
@@ -253,7 +237,7 @@ const heatSourceOptions = new Map(
 			validation="required|number|min:8|max:15"
 		/>
 		<FormKit
-			v-if="model.typeOfHotWaterOutlet === 'electricShower'"	
+			v-if="model.typeOfHotWaterOutlet === 'electricShower'"
 			id="ratedPower"
 			type="govInputWithSuffix"
 			label="Rated power"
@@ -262,7 +246,7 @@ const heatSourceOptions = new Map(
 			validation="required|number|min:0|max:30"
 		/>
 		<FormKit
-			v-if="model.typeOfHotWaterOutlet === 'bath'"	
+			v-if="model.typeOfHotWaterOutlet === 'bath'"
 			id="size"
 			type="govInputWithSuffix"
 			label="Size"
@@ -272,14 +256,14 @@ const heatSourceOptions = new Map(
 			data-field="HotWaterDemand.Bath.*.size"
 		/>
 		<FormKit
-			v-if="model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'electricShower'"
+			v-if="model.typeOfHotWaterOutlet === 'mixedShower'"
 			id="wwhrs"
 			name="wwhrs"
 			type="govBoolean"
 			label="Is there a waste water heat recovery system for this shower?"
 		/>
 		<FormKit
-			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'electricShower') && model.wwhrs === true"
+			v-if="model.typeOfHotWaterOutlet === 'mixedShower' && model.wwhrs === true"
 			id="wwhrsType"
 			name="wwhrsType"
 			type="govRadios"
@@ -288,7 +272,7 @@ const heatSourceOptions = new Map(
 			validation="required"
 		/>
 		<FieldsSelectPcdbProduct
-			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' || model.typeOfHotWaterOutlet === 'electricShower') && model.wwhrs === true"
+			v-if="model.typeOfHotWaterOutlet === 'mixedShower' && model.wwhrs === true"
 			id="selectWwhrsProduct"
 			name="wwhrsProductReference"
 			help="Select the WWHRS type from the PCDB using the button below."

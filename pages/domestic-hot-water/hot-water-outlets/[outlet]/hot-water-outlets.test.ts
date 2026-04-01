@@ -35,7 +35,6 @@ describe("hot water outlets", () => {
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca2",
 			typeOfHotWaterOutlet: "electricShower",
 			ratedPower: 5,
-			wwhrs: false,
 		},
 	};
 
@@ -271,6 +270,7 @@ describe("hot water outlets", () => {
 		expect(link).toBeDefined();
 		expect(link.getAttribute("href")).toBe(getUrl("heatSourcesCreate"));
 	});
+
 	test("navigate to water storage product selection for wwhrs when choose a product button is clicked", async () => {
 		await renderSuspended(HotWaterOutlets, {
 			route: {
@@ -278,7 +278,7 @@ describe("hot water outlets", () => {
 			},
 		});
 
-		await user.click(screen.getByTestId("typeOfHotWaterOutlet_electricShower"));
+		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
 
 		// toggle WWHRS option if present
 		const wwhrsYes = screen.queryByTestId("wwhrs_yes");
@@ -291,7 +291,7 @@ describe("hot water outlets", () => {
 
 		const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
 		expect(chooseProductButton).toBeDefined();
-		expect(chooseProductButton.pathname).toBe("/0/electric-shower");
+		expect(chooseProductButton.pathname).toBe("/0/mixed-shower");
 	});
 
 	[

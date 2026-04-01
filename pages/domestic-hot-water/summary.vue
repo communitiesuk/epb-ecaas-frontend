@@ -449,9 +449,6 @@ const electricShowerSummary: SummarySection = {
 			"Name": show(data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in data && data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(data.typeOfHotWaterOutlet) : emptyValueRendering,
 			"Rated power": "ratedPower" in data ? dim(data.ratedPower, "kilowatt") : emptyValueRendering,
-			"WWHRS installed": "wwhrs" in data ? displayBoolean(data.wwhrs) : emptyValueRendering,
-			"WWHRS type": "wwhrsType" in data && data.wwhrsType ? displayCamelToSentenceCase(String(data.wwhrsType)) : emptyValueRendering,
-			"WWHRS product": "wwhrsProductReference" in data ? show(data.wwhrsProductReference) : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("domesticHotWater"),
