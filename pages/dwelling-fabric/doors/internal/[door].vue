@@ -76,6 +76,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<div class="govuk-inset-text">
+		<p class="govuk-body">Only add internal doors at the edge of the thermal envelope, not within the dwelling. This would likely only ever be a door to an unheated space or, in a flat, a front door to a heated corridor.</p>
+	</div>
 	<FormKit
 		v-model="model"
 		type="form"
@@ -123,14 +126,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				id="surfaceArea"
 				type="govInputWithSuffix"
 				label="Net surface area of element"
-				help="Enter the net area of the building element. The area of all windows should be subtracted before entry."
+				help="Enter the area of the hole in the wall for this door and its frame"
 				name="surfaceArea"
 				validation="required | number | min:0 | max:10000"
 				suffix-text="m²"
 				data-field="Zone.BuildingElement.*.area" />
-			<FieldsUValue />
-			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
-			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
+			<FieldsUValue help="Enter the U-value of half the thickness of the door build up" />
+			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" help="This is the sum of the heat capacities of half the thickness of the door build up" />
+			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" help="This is the distribution of mass in half the thickness of the door build up" />
 		</template>
 		<FormKit
 			v-if="model?.typeOfInternalDoor === 'unheatedSpace'"
