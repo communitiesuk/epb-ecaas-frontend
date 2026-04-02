@@ -131,9 +131,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | number | min:0 | max:10000"
 				suffix-text="m²"
 				data-field="Zone.BuildingElement.*.area" />
-			<FieldsUValue help="Enter the U-value of half the thickness of the door build up" />
-			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" help="This is the sum of the heat capacities of half the thickness of the door build up" />
-			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" help="This is the distribution of mass in half the thickness of the door build up" />
+			<FieldsUValue v-if="model.typeOfInternalDoor === 'unheatedSpace'" help="Enter the U-value of the full thickness of the door build up" />
+			<FieldsUValue v-else help="Enter the U-value of half the thickness of the door build up" />
+			<FieldsArealHeatCapacity v-if="model.typeOfInternalDoor === 'unheatedSpace'" help="This is the sum of the heat capacities of the full thickness of the door build up" />
+			<FieldsArealHeatCapacity v-else help="This is the sum of the heat capacities of half the thickness of the door build up" />
+			<FieldsMassDistributionClass v-if="model.typeOfInternalDoor === 'unheatedSpace'" help="This is the distribution of mass in the full thickness of the door build up" />
+			<FieldsMassDistributionClass v-else help="This is the distribution of mass in half the thickness of the door build up" />
 		</template>
 		<FormKit
 			v-if="model?.typeOfInternalDoor === 'unheatedSpace'"
@@ -147,9 +150,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.thermal_resistance_unconditioned_space">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">
-					For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5
-					(m²·K)/W
-					for when the facing wall is not exposed.
+					The thermal resistance of unheated space is a measure of the degree of shelter that the unheated space provides to the building element. It is calculated as the thickness of the material divided by its thermal conductivity. A higher thermal resistance reduces heat transfer. The U-value is the inverse of the total thermal resistance of a building element.
+				</p>
+				<p class="govuk-hint">
+					See the technical paper HEM-TP-05, in which Annex A includes a general way to calculate this and also some suggested default values for common scenarios.
+				</p>
+				<p class="govuk-hint">
+					The maximum thermal resistance of an unheated space is 2.5
+					(m²·K)/W. This is when the facing wall is not exposed.
 				</p>
 				<p class="govuk-body">
 					<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
