@@ -44,6 +44,13 @@ const domesticHotWaterPages = [
 		parentId: "domesticHotWater",
 	},
 	{
+		id: "heatPumpDHWProducts",
+		title: "Select a heat pump",
+		url: "/domestic-hot-water/heat-sources/:heatSource/heat-pump",
+		type: "task",
+		parentId: "heatSources",
+	},
+	{
 		id: "airSourceDHWProducts",
 		title: "Select an air source heat pump",
 		url: "/domestic-hot-water/heat-sources/:heatSource/air-source",
@@ -124,6 +131,13 @@ const domesticHotWaterPages = [
 		id: "heatBatteryDryCoreDHWProducts",
 		title: "Select a dry core heat battery",
 		url: "/domestic-hot-water/heat-sources/:heatSource/heat-battery-dry-core",
+		type: "task",
+		parentId: "heatSources",
+	},
+	{
+		id: "heatNetworkDHWProducts",
+		title: "Select a heat network",
+		url: "/domestic-hot-water/heat-sources/:heatSource/heat-network",
 		type: "task",
 		parentId: "heatSources",
 	},
