@@ -2,18 +2,17 @@ import {
 	mapBoilers,
 	mapHeatBatteries,
 	mapHeatPumps,
-	mapRadiators,
-	mapUnderfloorHeating,
-	mapFanCoils,
 	mapElectricStorageHeaters,
 	mapWarmAirHeater,
 	mapInstantElectricHeaters,
+	mapWetDistributions,
 	mapSpaceHeatSystem,
 } from "./spaceHeatingMapper";
-import type { SchemaHeatSourceWetHeatPump } from "../schema/api-schema.types";
+import type { SchemaHeatSourceWetHeatPump, SchemaWetDistribution } from "../schema/api-schema.types";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
-import type { HeatEmittingData } from "~/stores/ecaasStore.schema";
+import type { HeatEmittingData, WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
 import type { SchemaBoilerWithProductReference } from "~/schema/aliases";
+
 
 describe("Space heating - heat sources", () => {
 	describe("mapHeatPumps", () => {
@@ -296,38 +295,6 @@ describe("Space heating - emitters", () => {
 		name: "Heat Battery 1",
 		maxFlowTemp: 30,
 	};
-	const ufhNoWeatherCompensator: HeatEmittingData = {
-		id: "ufh1",
-		name: "UFH System",
-		typeOfHeatEmitter: "underfloorHeating",
-		productReference: "UFH-123",
-		areaOfUnderfloorHeating: 50,
-		heatSource: heatPump.id!,
-		ecoDesignControllerClass: "1",
-		designFlowTemp: 40,
-		designTempDiffAcrossEmitters: 5,
-		hasVariableFlowRate: false,
-		designFlowRate: 200,
-		percentageRecirculated: 99,
-	};
-	const ufhWithWeatherCompensator: HeatEmittingData = {
-		id: "ufh2",
-		name: "UFH System Class 2",
-		typeOfHeatEmitter: "underfloorHeating",
-		productReference: "UFH-456",
-		areaOfUnderfloorHeating: 70,
-		heatSource: heatPump.id!,
-		ecoDesignControllerClass: "2",
-		designFlowTemp: 45,
-		designTempDiffAcrossEmitters: 6,
-		hasVariableFlowRate: true,
-		maxFlowRate: 300,
-		minFlowRate: 100,
-		maxOutdoorTemp: 18,
-		minOutdoorTemp: 2,
-		minFlowTemp: 35,
-		percentageRecirculated: 95,
-	};
 
 	const warmAirHeater: HeatEmittingData = {
 		id: "wah1",
@@ -337,88 +304,6 @@ describe("Space heating - emitters", () => {
 		numOfWarmAirHeaters: 2,
 		designTempDiffAcrossEmitters: 15,
 		heatSource: heatBattery.id!,
-	};
-	const standardRadiatorNoWeatherCompensator: HeatEmittingData = {
-		id: "rad1",
-		name: "Standard Radiator",
-		typeOfHeatEmitter: "radiator",
-		typeOfRadiator: "standard",
-		productReference: "RAD-123",
-		numOfRadiators: 2,
-		heatSource: heatPump.id!,
-		ecoDesignControllerClass: "1",
-		designFlowTemp: 55,
-		designTempDiffAcrossEmitters: 10,
-		hasVariableFlowRate: false,
-		designFlowRate: 100,
-		length: 1000,
-		percentageRecirculated: 98,
-	};
-	const towelRadiatorNoWeatherCompensator: HeatEmittingData = {
-		id: "rad2",
-		name: "Towel Radiator",
-		typeOfHeatEmitter: "radiator",
-		typeOfRadiator: "towel",
-		productReference: "RAD-456",
-		numOfRadiators: 2,
-		heatSource: heatPump.id!,
-		ecoDesignControllerClass: "1",
-		designFlowTemp: 60,
-		designTempDiffAcrossEmitters: 12,
-		hasVariableFlowRate: false,
-		designFlowRate: 80,
-		percentageRecirculated: 97,
-	};
-	const towelRadiatorWithWeatherCompensator: HeatEmittingData = {
-		id: "rad3",
-		name: "Towel Radiator Eco Class 2",
-		typeOfHeatEmitter: "radiator",
-		typeOfRadiator: "towel",
-		productReference: "RAD-789",
-		numOfRadiators: 2,
-		heatSource: heatPump.id!,
-		ecoDesignControllerClass: "2",
-		designFlowTemp: 60,
-		designTempDiffAcrossEmitters: 12,
-		hasVariableFlowRate: false,
-		designFlowRate: 80,
-		maxOutdoorTemp: 20,
-		minOutdoorTemp: 0,
-		minFlowTemp: 30,
-		percentageRecirculated: 96,
-	};
-
-	const fanCoilNoWeatherCompensator: HeatEmittingData = {
-		id: "fc1",
-		name: "Fan Coil 1",
-		typeOfHeatEmitter: "fanCoil",
-		productReference: "FC-123",
-		numOfFanCoils: 3,
-		heatSource: heatPump.id!,
-		ecoDesignControllerClass: "1",
-		designFlowTemp: 45,
-		designTempDiffAcrossEmitters: 7,
-		hasVariableFlowRate: false,
-		designFlowRate: 150,
-		percentageRecirculated: 94,
-	};
-	const fanCoilWithWeatherCompensator: HeatEmittingData = {
-		id: "fc2",
-		name: "Fan Coil 2",
-		typeOfHeatEmitter: "fanCoil",
-		productReference: "FC-456",
-		numOfFanCoils: 2,
-		heatSource: heatPump.id!,
-		ecoDesignControllerClass: "2",
-		designFlowTemp: 50,
-		designTempDiffAcrossEmitters: 8,
-		hasVariableFlowRate: true,
-		maxFlowRate: 250,
-		maxOutdoorTemp: 16,
-		minOutdoorTemp: 4,
-		minFlowTemp: 40,
-		minFlowRate: 120,
-		percentageRecirculated: 93,
 	};
 
 	const instantElectricHeater: HeatEmittingData = {
@@ -436,444 +321,400 @@ describe("Space heating - emitters", () => {
 		productReference: "IEH-123",
 		numOfStorageHeaters: 4,
 	};
-	describe("mapRadiators", () => {
+	const radiator: WetDistributionEmitterData = {
+		id: "radiator1",
+		name: "Radiator 1",
+		typeOfHeatEmitter: "radiator",
+		productReference: "RAD-123",
+		length: 1000,
+		numOfRadiators: 1,
+	};
+	const underfloorHeating: WetDistributionEmitterData = {
+		id: "ufh1",
+		name: "Underfloor Heating 1",
+		typeOfHeatEmitter: "underfloorHeating",
+		productReference: "UFH-123",
+		areaOfUnderfloorHeating: 50,
+	};
+	const fanCoil: WetDistributionEmitterData = {
+		id: "fanCoil1",
+		name: "Fan Coil 1",
+		typeOfHeatEmitter: "fanCoil",
+		productReference: "FC-123",
+		numOfFanCoils: 3,
+	};
+	const wetDistributionSystemBase = {
+		id: "wds1",
+		name: "Wet distribution system 1",
+		typeOfHeatEmitter: "wetDistributionSystem" as const,
+		heatSource: "hp1",
+		emitters: [
+			radiator,
+			underfloorHeating,
+			fanCoil,
+		],
+		percentageRecirculated: 20,
+		minFlowTemp: 30,
+	};
+	const wetDistributionSystemEcoDesign: HeatEmittingData = {
+		...wetDistributionSystemBase,
+		ecoDesignControllerClass: "2",
+		designFlowTemp: 55,
+		maxOutdoorTemp: 25,
+		minOutdoorTemp: -5,
+		designTempDiffAcrossEmitters: 20,
+		hasVariableFlowRate: false,
+		designFlowRate: 0.1,
+
+	};
+	const wetDistributionSystemNoEcoDesign: Extract<HeatEmittingData, { hasVariableFlowRate: false }> = {
+		...wetDistributionSystemBase,
+		ecoDesignControllerClass: "1",
+		designFlowTemp: 80,
+		designTempDiffAcrossEmitters: 20,
+		hasVariableFlowRate: false,
+		designFlowRate: 0.1,
+	};
+	const wetDistributionSystemVariableFlow: Extract<HeatEmittingData, { hasVariableFlowRate: true }> = {
+		...wetDistributionSystemBase,
+		ecoDesignControllerClass: "1",
+		designFlowTemp: 80,
+		designTempDiffAcrossEmitters: 20,
+		hasVariableFlowRate: true,
+		minFlowRate: 0.05,
+		maxFlowRate: 0.15,
+	};
+
+	describe("mapWetDistribution", () => {
 		const store = useEcaasStore();
-		test("maps stored standard radiator data to fit schema", () => {
+		beforeEach(() => {
+			store.$reset();
+		});
+		it("maps stored wet distribution system data with ecodesign controller to fit schema", () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
 						data: [
-							{ data: heatPump as HeatSourceData, complete: true }, 
+							{ data: heatPump as HeatSourceData, complete: true },
 							{ data: heatBattery as HeatSourceData, complete: true },
 						],
 						complete: true,
 					},
 					heatEmitters: {
-						data: [{ data: standardRadiatorNoWeatherCompensator, complete: true }],
+						data: [{ data: wetDistributionSystemEcoDesign, complete: true }],
 						complete: true,
 					},
 				},
 			});
-			const expectedForSchema = {
-				[standardRadiatorNoWeatherCompensator.name]: {
-					type: "WetDistribution",
-					EnergySupply: defaultElectricityEnergySupplyName,
-					emitters: [
-						{
-							product_reference: standardRadiatorNoWeatherCompensator.productReference,
-							wet_emitter_type: "radiator",
-							radiator_type: "standard",
-							length: 1000,
-						},
-						{
-							product_reference: standardRadiatorNoWeatherCompensator.productReference,
-							wet_emitter_type: "radiator",
-							radiator_type: "standard",
-							length: 1000,
-						},
-					],
-					design_flow_rate: standardRadiatorNoWeatherCompensator.designFlowRate,
-					variable_flow: standardRadiatorNoWeatherCompensator.hasVariableFlowRate,
-					design_flow_temp: standardRadiatorNoWeatherCompensator.designFlowTemp,
-					temp_diff_emit_dsgn: standardRadiatorNoWeatherCompensator.designTempDiffAcrossEmitters,
-					HeatSource: {
-						name: heatPump.name,
-					},
-					ecodesign_controller: {
-						ecodesign_control_class: +standardRadiatorNoWeatherCompensator.ecoDesignControllerClass,
-					},
-					Zone: defaultZoneName,
-					bypass_fraction_recirculated: standardRadiatorNoWeatherCompensator.percentageRecirculated / 100,
-				},
-			};
-			const resolvedState = resolveState(store.$state);
-			const actual = mapRadiators(resolvedState);
-			expect(actual).toEqual(expectedForSchema);
-		});
+			const ecoDesignControllerClass = wetDistributionSystemEcoDesign.typeOfHeatEmitter === "wetDistributionSystem" ? +wetDistributionSystemEcoDesign.ecoDesignControllerClass : undefined;
 
-		test("maps stored towel radiator data to fit schema", () => {
+			const expectedForSchema = {
+				[wetDistributionSystemEcoDesign.name]: {
+					type: "WetDistribution",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					emitters: [
+						{
+							product_reference: radiator.productReference,
+							wet_emitter_type: "radiator",
+							radiator_type: "standard",
+							length: radiator.length,
+						},
+						{
+							product_reference: underfloorHeating.productReference,
+							wet_emitter_type: "ufh",
+							emitter_floor_area: underfloorHeating.areaOfUnderfloorHeating,
+						},
+						{
+							product_reference: fanCoil.productReference,
+							wet_emitter_type: "fancoil",
+							n_units: fanCoil.numOfFanCoils,
+						},
+					],
+					variable_flow: wetDistributionSystemEcoDesign.hasVariableFlowRate,
+					design_flow_rate: wetDistributionSystemEcoDesign.designFlowRate,
+					design_flow_temp: wetDistributionSystemEcoDesign.designFlowTemp,
+					temp_diff_emit_dsgn: wetDistributionSystemEcoDesign.designTempDiffAcrossEmitters,
+					HeatSource: {
+						name: heatPump.name,
+					},
+					ecodesign_controller: {
+						ecodesign_control_class: ecoDesignControllerClass,
+						"max_outdoor_temp": 25,
+						"min_flow_temp": 30,
+						"min_outdoor_temp": - 5,
+					},
+					Zone: defaultZoneName,
+					bypass_fraction_recirculated: wetDistributionSystemEcoDesign.percentageRecirculated / 100,
+				},
+			} as Record<string, SchemaWetDistribution>;
+			const resolvedState = resolveState(store.$state);
+
+			const actual = mapWetDistributions(resolvedState);
+			expect(actual).toEqual(expectedForSchema);
+		});
+		it("maps stored wet distribution system data without ecodesign controller to fit schema", () => {
 			store.$patch({
 				spaceHeating: {
-					heatEmitters: {
-						data: [{ data: towelRadiatorNoWeatherCompensator, complete: true }],
-						complete: true,
-					},
 					heatSource: {
 						data: [{ data: heatPump as HeatSourceData, complete: true }],
+						complete: true,
+					},
+					heatEmitters: {
+						data: [{ data: wetDistributionSystemNoEcoDesign, complete: true }],
+						complete: true,
+					},
+				},
+			});
+			const ecoDesignControllerClass = wetDistributionSystemNoEcoDesign.typeOfHeatEmitter === "wetDistributionSystem" ? +wetDistributionSystemNoEcoDesign.ecoDesignControllerClass : undefined;
+			const expectedForSchema = {
+				[wetDistributionSystemNoEcoDesign.name]: {
+					type: "WetDistribution",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					emitters: [
+						{
+							product_reference: radiator.productReference,
+							wet_emitter_type: "radiator",
+							radiator_type: "standard",
+							length: radiator.length,
+						},
+						{
+							product_reference: underfloorHeating.productReference,
+							wet_emitter_type: "ufh",
+							emitter_floor_area: underfloorHeating.areaOfUnderfloorHeating,
+						},
+						{
+							product_reference: fanCoil.productReference,
+							wet_emitter_type: "fancoil",
+							n_units: fanCoil.numOfFanCoils,
+						},
+					],
+					variable_flow: wetDistributionSystemNoEcoDesign.hasVariableFlowRate,
+					design_flow_rate: wetDistributionSystemNoEcoDesign.designFlowRate,
+					design_flow_temp: wetDistributionSystemNoEcoDesign.designFlowTemp,
+					temp_diff_emit_dsgn: wetDistributionSystemNoEcoDesign.designTempDiffAcrossEmitters,
+					HeatSource: {
+						name: heatPump.name,
+					},
+					ecodesign_controller: {
+						ecodesign_control_class: ecoDesignControllerClass,
+					},
+					Zone: defaultZoneName,
+					bypass_fraction_recirculated: wetDistributionSystemNoEcoDesign.percentageRecirculated / 100,
+				},
+			} as Record<string, SchemaWetDistribution>;
+			const resolvedState = resolveState(store.$state);
+
+			const actual = mapWetDistributions(resolvedState);
+			expect(actual).toEqual(expectedForSchema);
+		});
+		it("maps stored wet distribution system data with variable flow to fit schema", () => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: heatPump as HeatSourceData, complete: true }],
+						complete: true,
+					},
+					heatEmitters: {
+						data: [{ data: wetDistributionSystemVariableFlow, complete: true }],
 						complete: true,
 					},
 				},
 			});
 			const expectedForSchema = {
-				[towelRadiatorNoWeatherCompensator.name]: {
+				[wetDistributionSystemVariableFlow.name]: {
 					type: "WetDistribution",
 					EnergySupply: defaultElectricityEnergySupplyName,
 					emitters: [
 						{
-							product_reference: towelRadiatorNoWeatherCompensator.productReference,
+							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
-							radiator_type: "towel",
+							radiator_type: "standard",
+							length: radiator.length,
 						},
 						{
-							product_reference: towelRadiatorNoWeatherCompensator.productReference,
-							wet_emitter_type: "radiator",
-							radiator_type: "towel",
+							product_reference: underfloorHeating.productReference,
+							wet_emitter_type: "ufh",
+							emitter_floor_area: underfloorHeating.areaOfUnderfloorHeating,
+						},
+						{
+							product_reference: fanCoil.productReference,
+							wet_emitter_type: "fancoil",
+							n_units: fanCoil.numOfFanCoils,
 						},
 					],
-					design_flow_rate: towelRadiatorNoWeatherCompensator.designFlowRate,
-					variable_flow: towelRadiatorNoWeatherCompensator.hasVariableFlowRate,
-					design_flow_temp: towelRadiatorNoWeatherCompensator.designFlowTemp,
-					temp_diff_emit_dsgn: towelRadiatorNoWeatherCompensator.designTempDiffAcrossEmitters,
+					variable_flow: wetDistributionSystemVariableFlow.hasVariableFlowRate,
+					min_flow_rate: wetDistributionSystemVariableFlow.minFlowRate,
+					max_flow_rate: wetDistributionSystemVariableFlow.maxFlowRate,
+					design_flow_temp: wetDistributionSystemVariableFlow.designFlowTemp,
+					temp_diff_emit_dsgn: wetDistributionSystemVariableFlow.designTempDiffAcrossEmitters,
 					HeatSource: {
 						name: heatPump.name,
 					},
 					ecodesign_controller: {
-						ecodesign_control_class: +towelRadiatorNoWeatherCompensator.ecoDesignControllerClass,
+						ecodesign_control_class: +wetDistributionSystemVariableFlow.ecoDesignControllerClass,
 					},
 					Zone: defaultZoneName,
-					bypass_fraction_recirculated: towelRadiatorNoWeatherCompensator.percentageRecirculated / 100,
+					bypass_fraction_recirculated: wetDistributionSystemVariableFlow.percentageRecirculated / 100,
 				},
-			};
+			} as Record<string, SchemaWetDistribution>;
 			const resolvedState = resolveState(store.$state);
-			const actual = mapRadiators(resolvedState);
+
+			const actual = mapWetDistributions(resolvedState);
 			expect(actual).toEqual(expectedForSchema);
 		});
-		test("handles combination of radiators", () => {
+		it("maps multiple wet distribution systems", () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: heatPump as HeatSourceData, complete: true }],
+						data: [
+							{ data: heatPump as HeatSourceData, complete: true },
+							{ data: { ...heatPump, name: "Heat Pump 2", id: "2" } as HeatSourceData, complete: true },
+						],
 						complete: true,
 					},
 					heatEmitters: {
 						data: [
-							{ data: standardRadiatorNoWeatherCompensator, complete: true },
-							{ data: towelRadiatorNoWeatherCompensator, complete: true },
+							{ data: { ...wetDistributionSystemEcoDesign } as HeatEmittingData, complete: true },
+							{ data: { ...wetDistributionSystemNoEcoDesign, heatSource: "2" } as HeatEmittingData, complete: true },
 						],
 						complete: true,
 					},
 				},
 			});
 			const expectedForSchema = {
-				[standardRadiatorNoWeatherCompensator.name]: {
+				[wetDistributionSystemEcoDesign.name]: {
 					type: "WetDistribution",
 					EnergySupply: defaultElectricityEnergySupplyName,
 					emitters: [
 						{
-							product_reference: standardRadiatorNoWeatherCompensator.productReference,
+							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
 							radiator_type: "standard",
-							length: 1000,
+							length: radiator.length,
 						},
 						{
-							product_reference: standardRadiatorNoWeatherCompensator.productReference,
+							product_reference: underfloorHeating.productReference,
+							wet_emitter_type: "ufh",
+							emitter_floor_area: underfloorHeating.areaOfUnderfloorHeating,
+						},
+						{
+							product_reference: fanCoil.productReference,
+							wet_emitter_type: "fancoil",
+							n_units: fanCoil.numOfFanCoils,
+						},
+					],
+					variable_flow: wetDistributionSystemEcoDesign.hasVariableFlowRate,
+					design_flow_rate: wetDistributionSystemEcoDesign.designFlowRate,
+					design_flow_temp: wetDistributionSystemEcoDesign.designFlowTemp,
+					temp_diff_emit_dsgn: wetDistributionSystemEcoDesign.designTempDiffAcrossEmitters,
+					HeatSource: {
+						name: heatPump.name,
+					},
+					ecodesign_controller: {
+						ecodesign_control_class: +wetDistributionSystemEcoDesign.ecoDesignControllerClass,
+						"max_outdoor_temp": 25,
+						"min_flow_temp": 30,
+						"min_outdoor_temp": - 5,
+					},
+					Zone: defaultZoneName,
+					bypass_fraction_recirculated: wetDistributionSystemEcoDesign.percentageRecirculated / 100,
+				},
+				[wetDistributionSystemNoEcoDesign.name]: {
+					type: "WetDistribution",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					emitters: [
+						{
+							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
 							radiator_type: "standard",
-							length: 1000,
-						},
-					],
-					design_flow_rate: standardRadiatorNoWeatherCompensator.designFlowRate,
-					variable_flow: standardRadiatorNoWeatherCompensator.hasVariableFlowRate,
-					design_flow_temp: standardRadiatorNoWeatherCompensator.designFlowTemp,
-					temp_diff_emit_dsgn: standardRadiatorNoWeatherCompensator.designTempDiffAcrossEmitters,
-					HeatSource: {
-						name: heatPump.name,
-					},
-					ecodesign_controller: {
-						ecodesign_control_class: +standardRadiatorNoWeatherCompensator.ecoDesignControllerClass,
-					},
-					Zone: defaultZoneName,
-					bypass_fraction_recirculated: standardRadiatorNoWeatherCompensator.percentageRecirculated / 100,
-				}, [towelRadiatorNoWeatherCompensator.name]: {
-					type: "WetDistribution",
-					EnergySupply: defaultElectricityEnergySupplyName,
-					emitters: [
-						{
-							product_reference: towelRadiatorNoWeatherCompensator.productReference,
-							wet_emitter_type: "radiator",
-							radiator_type: "towel",
+							length: radiator.length,
 						},
 						{
-							product_reference: towelRadiatorNoWeatherCompensator.productReference,
-							wet_emitter_type: "radiator",
-							radiator_type: "towel",
-						},
-					],
-					design_flow_rate: towelRadiatorNoWeatherCompensator.designFlowRate,
-					variable_flow: towelRadiatorNoWeatherCompensator.hasVariableFlowRate,
-					design_flow_temp: towelRadiatorNoWeatherCompensator.designFlowTemp,
-					temp_diff_emit_dsgn: towelRadiatorNoWeatherCompensator.designTempDiffAcrossEmitters,
-					HeatSource: {
-						name: heatPump.name,
-					},
-					ecodesign_controller: {
-						ecodesign_control_class: +towelRadiatorNoWeatherCompensator.ecoDesignControllerClass,
-					},
-					Zone: defaultZoneName,
-					bypass_fraction_recirculated: towelRadiatorNoWeatherCompensator.percentageRecirculated / 100,
-				},
-
-			};
-			const resolvedState = resolveState(store.$state);
-			const actual = mapRadiators(resolvedState);
-			expect(actual).toEqual(expectedForSchema);
-		});
-		test("handles radiator with eco class 2 specific temps", () => {
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [{ data: heatPump as HeatSourceData, complete: true }],
-						complete: true,
-					},
-					heatEmitters: {
-						data: [{ data: towelRadiatorWithWeatherCompensator, complete: true }],
-						complete: true,
-					},
-				},
-			});
-			const expectedForSchema = {
-				[towelRadiatorWithWeatherCompensator.name]: {
-					type: "WetDistribution",
-					EnergySupply: defaultElectricityEnergySupplyName,
-					emitters: [
-						{
-							product_reference: towelRadiatorWithWeatherCompensator.productReference,
-							wet_emitter_type: "radiator",
-							radiator_type: "towel",
-						},
-						{
-							product_reference: towelRadiatorWithWeatherCompensator.productReference,
-							wet_emitter_type: "radiator",
-							radiator_type: "towel",
-						},
-					],
-					design_flow_rate: towelRadiatorWithWeatherCompensator.designFlowRate,
-					variable_flow: towelRadiatorWithWeatherCompensator.hasVariableFlowRate,
-					design_flow_temp: towelRadiatorWithWeatherCompensator.designFlowTemp,
-					temp_diff_emit_dsgn: towelRadiatorWithWeatherCompensator.designTempDiffAcrossEmitters,
-					HeatSource: {
-						name: heatPump.name,
-					},
-					ecodesign_controller: {
-						ecodesign_control_class: +towelRadiatorWithWeatherCompensator.ecoDesignControllerClass,
-						max_outdoor_temp: towelRadiatorWithWeatherCompensator.maxOutdoorTemp,
-						min_outdoor_temp: towelRadiatorWithWeatherCompensator.minOutdoorTemp,
-						min_flow_temp: towelRadiatorWithWeatherCompensator.minFlowTemp,
-					},
-					Zone: defaultZoneName,
-					bypass_fraction_recirculated: towelRadiatorWithWeatherCompensator.percentageRecirculated / 100,
-				},
-			};
-			const resolvedState = resolveState(store.$state);
-			const actual = mapRadiators(resolvedState);
-			expect(actual).toEqual(expectedForSchema);
-		});
-	});
-
-	describe("mapUnderfloorHeating", () => {
-		const store = useEcaasStore();
-		test("maps stored ufh data", () => {
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [{ data: ufhNoWeatherCompensator, complete: true }],
-						complete: true,
-					},
-					heatSource: {
-						data: [{ data: heatPump as HeatSourceData, complete: true }],
-						complete: true,
-					},
-				},
-			});
-
-			const expectedForSchema = {
-				[ufhNoWeatherCompensator.name]: {
-					type: "WetDistribution",
-					EnergySupply: defaultElectricityEnergySupplyName,
-					emitters: [
-						{
-							product_reference: ufhNoWeatherCompensator.productReference,
+							product_reference: underfloorHeating.productReference,
 							wet_emitter_type: "ufh",
-							emitter_floor_area: ufhNoWeatherCompensator.areaOfUnderfloorHeating,
+							emitter_floor_area: underfloorHeating.areaOfUnderfloorHeating,
 						},
-
+						{
+							product_reference: fanCoil.productReference,
+							wet_emitter_type: "fancoil",
+							n_units: fanCoil.numOfFanCoils,
+						},
 					],
-					design_flow_rate: ufhNoWeatherCompensator.designFlowRate,
-					variable_flow: ufhNoWeatherCompensator.hasVariableFlowRate,
-					design_flow_temp: ufhNoWeatherCompensator.designFlowTemp,
-					temp_diff_emit_dsgn: ufhNoWeatherCompensator.designTempDiffAcrossEmitters,
+					variable_flow: wetDistributionSystemNoEcoDesign.hasVariableFlowRate,
+					design_flow_rate: wetDistributionSystemNoEcoDesign.designFlowRate,
+					design_flow_temp: wetDistributionSystemNoEcoDesign.designFlowTemp,
+					temp_diff_emit_dsgn: wetDistributionSystemNoEcoDesign.designTempDiffAcrossEmitters,
 					HeatSource: {
-						name: heatPump.name,
+						name: "Heat Pump 2",
 					},
 					ecodesign_controller: {
-						ecodesign_control_class: +ufhNoWeatherCompensator.ecoDesignControllerClass,
+						ecodesign_control_class: +wetDistributionSystemNoEcoDesign.ecoDesignControllerClass,
 					},
 					Zone: defaultZoneName,
-					bypass_fraction_recirculated: ufhNoWeatherCompensator.percentageRecirculated / 100,
+					bypass_fraction_recirculated: wetDistributionSystemNoEcoDesign.percentageRecirculated / 100,
 				},
-			};
+			} as Record<string, SchemaWetDistribution>;
 			const resolvedState = resolveState(store.$state);
-			const actual = mapUnderfloorHeating(resolvedState);
+
+			const actual = mapWetDistributions(resolvedState);
 			expect(actual).toEqual(expectedForSchema);
+
 		});
-		test("maps stored ufh data with eco class 2", () => {
+		it("expands multiple radiators into separate emitter entries", () => {
+			const multipleRadiators: WetDistributionEmitterData = {
+				id: "radiator2",
+				name: "Radiator 2",
+				typeOfHeatEmitter: "radiator",
+				productReference: "RAD-456",
+				length: 500,
+				numOfRadiators: 3,
+			};
+			const wetDistributionWithMultipleRadiators: HeatEmittingData = {
+				...wetDistributionSystemBase,
+				emitters: [multipleRadiators],
+				ecoDesignControllerClass: "1",
+				designFlowTemp: 80,
+				designTempDiffAcrossEmitters: 20,
+				hasVariableFlowRate: false,
+				designFlowRate: 0.1,
+			};
 			store.$patch({
 				spaceHeating: {
-					heatEmitters: {
-						data: [{ data: ufhWithWeatherCompensator, complete: true }],
-						complete: true,
-					},
 					heatSource: {
 						data: [{ data: heatPump as HeatSourceData, complete: true }],
 						complete: true,
 					},
-				},
-			});
-
-			const expectedForSchema = {
-				[ufhWithWeatherCompensator.name]: {
-					type: "WetDistribution",
-					EnergySupply: defaultElectricityEnergySupplyName,
-					emitters: [
-						{
-							product_reference: ufhWithWeatherCompensator.productReference,
-							wet_emitter_type: "ufh",
-							emitter_floor_area: ufhWithWeatherCompensator.areaOfUnderfloorHeating,
-						},
-
-					],
-					variable_flow: ufhWithWeatherCompensator.hasVariableFlowRate,
-					design_flow_temp: ufhWithWeatherCompensator.designFlowTemp,
-					temp_diff_emit_dsgn: ufhWithWeatherCompensator.designTempDiffAcrossEmitters,
-					HeatSource: {
-						name: heatPump.name,
-					},
-					ecodesign_controller: {
-						ecodesign_control_class: +ufhWithWeatherCompensator.ecoDesignControllerClass,
-						max_outdoor_temp: ufhWithWeatherCompensator.maxOutdoorTemp,
-						min_outdoor_temp: ufhWithWeatherCompensator.minOutdoorTemp,
-						min_flow_temp: ufhWithWeatherCompensator.minFlowTemp,
-					},
-					max_flow_rate: ufhWithWeatherCompensator.maxFlowRate,
-					min_flow_rate: ufhWithWeatherCompensator.minFlowRate,
-					Zone: defaultZoneName,
-					bypass_fraction_recirculated: ufhWithWeatherCompensator.percentageRecirculated / 100,
-				},
-			};
-			const resolvedState = resolveState(store.$state);
-			const actual = mapUnderfloorHeating(resolvedState);
-			expect(actual).toEqual(expectedForSchema);
-		});
-	});
-
-
-	describe("mapFanCoils", () => {
-		const store = useEcaasStore();
-
-		test("maps stored fan coil data", () => {
-			store.$patch({
-				spaceHeating: {
 					heatEmitters: {
-						data: [{ data: fanCoilNoWeatherCompensator, complete: true }],
-						complete: true,
-					},
-					heatSource: {
-						data: [{ data: heatPump as HeatSourceData, complete: true }],
+						data: [{ data: wetDistributionWithMultipleRadiators, complete: true }],
 						complete: true,
 					},
 				},
 			});
-
-			const expectedForSchema = {
-				[fanCoilNoWeatherCompensator.name]: {
-					type: "WetDistribution",
-					EnergySupply: defaultElectricityEnergySupplyName,
-					emitters: [
-						{
-							product_reference: fanCoilNoWeatherCompensator.productReference,
-							wet_emitter_type: "fancoil",
-							n_units: 3,
-						},
-						{
-							product_reference: fanCoilNoWeatherCompensator.productReference,
-							wet_emitter_type: "fancoil",
-							n_units: 3,
-						},
-						{
-							product_reference: fanCoilNoWeatherCompensator.productReference,
-							wet_emitter_type: "fancoil",
-							n_units: 3,
-						},
-					],
-					design_flow_rate: fanCoilNoWeatherCompensator.designFlowRate,
-					variable_flow: fanCoilNoWeatherCompensator.hasVariableFlowRate,
-					design_flow_temp: fanCoilNoWeatherCompensator.designFlowTemp,
-					temp_diff_emit_dsgn: fanCoilNoWeatherCompensator.designTempDiffAcrossEmitters,
-					HeatSource: {
-						name: heatPump.name,
-					},
-					ecodesign_controller: {
-						ecodesign_control_class: +fanCoilNoWeatherCompensator.ecoDesignControllerClass,
-					},
-					Zone: defaultZoneName,
-					bypass_fraction_recirculated: fanCoilNoWeatherCompensator.percentageRecirculated / 100,
-				},
-			};
 			const resolvedState = resolveState(store.$state);
-			const actual = mapFanCoils(resolvedState);
-			expect(actual).toEqual(expectedForSchema);
-		});
-		test("maps stored fan coil data with eco class 2", () => {
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [{ data: fanCoilWithWeatherCompensator, complete: true }],
-						complete: true,
-					},
-					heatSource: {
-						data: [{ data: heatPump as HeatSourceData, complete: true }],
-						complete: true,
-					},
-				},
-			});
+			const actual = mapWetDistributions(resolvedState);
 
-			const expectedForSchema = {
-				[fanCoilWithWeatherCompensator.name]: {
-					type: "WetDistribution",
-					EnergySupply: defaultElectricityEnergySupplyName,
-					emitters: [
-						{
-							product_reference: fanCoilWithWeatherCompensator.productReference,
-							wet_emitter_type: "fancoil",
-							n_units: 2,
-						},
-						{
-							product_reference: fanCoilWithWeatherCompensator.productReference,
-							wet_emitter_type: "fancoil",
-							n_units: 2,
-						},
-					],
-					variable_flow: fanCoilWithWeatherCompensator.hasVariableFlowRate,
-					design_flow_temp: fanCoilWithWeatherCompensator.designFlowTemp,
-					temp_diff_emit_dsgn: fanCoilWithWeatherCompensator.designTempDiffAcrossEmitters,
-					HeatSource: {
-						name: heatPump.name,
-					},
-					ecodesign_controller: {
-						ecodesign_control_class: +fanCoilWithWeatherCompensator.ecoDesignControllerClass,
-						max_outdoor_temp: fanCoilWithWeatherCompensator.maxOutdoorTemp,
-						min_outdoor_temp: fanCoilWithWeatherCompensator.minOutdoorTemp,
-						min_flow_temp: fanCoilWithWeatherCompensator.minFlowTemp,
-					},
-					max_flow_rate: fanCoilWithWeatherCompensator.maxFlowRate,
-					min_flow_rate: fanCoilWithWeatherCompensator.minFlowRate,
-					Zone: defaultZoneName,
-					bypass_fraction_recirculated: fanCoilWithWeatherCompensator.percentageRecirculated / 100,
+			const emitters = actual[wetDistributionWithMultipleRadiators.name]?.emitters;
+			expect(emitters).toHaveLength(3);
+			expect(emitters).toEqual([
+				{
+					product_reference: "RAD-456",
+					wet_emitter_type: "radiator",
+					radiator_type: "standard",
+					length: 500,
 				},
-			};
-			const resolvedState = resolveState(store.$state);
-			const actual = mapFanCoils(resolvedState);
-			expect(actual).toEqual(expectedForSchema);
+				{
+					product_reference: "RAD-456",
+					wet_emitter_type: "radiator",
+					radiator_type: "standard",
+					length: 500,
+				},
+				{
+					product_reference: "RAD-456",
+					wet_emitter_type: "radiator",
+					radiator_type: "standard",
+					length: 500,
+				},
+			]);
 		});
 	});
 	describe("instantElectricHeaters", () => {
@@ -992,7 +833,8 @@ describe("Space heating - emitters", () => {
 		beforeEach(() => {
 			store.$reset();
 		});
-		test("combines all emitter mappings", () => {
+
+		test("maps a combination of wet distribution, warm air heater, and instant electric heater", () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
@@ -1004,92 +846,34 @@ describe("Space heating - emitters", () => {
 					},
 					heatEmitters: {
 						data: [
-							{ data: standardRadiatorNoWeatherCompensator, complete: true },
-							{ data: ufhNoWeatherCompensator, complete: true },
+							{ data: wetDistributionSystemEcoDesign, complete: true },
 							{ data: warmAirHeater, complete: true },
-							{ data: electricStorageHeater, complete: true },
+							{ data: instantElectricHeater, complete: true },
 						],
 						complete: true,
 					},
 				},
 			});
 
-			const expectedForSchema = {
-				SpaceHeatSystem: {
-					[standardRadiatorNoWeatherCompensator.name]: {
-						type: "WetDistribution",
-						EnergySupply: defaultElectricityEnergySupplyName,
-						emitters: [
-							{
-								product_reference: standardRadiatorNoWeatherCompensator.productReference,
-								wet_emitter_type: "radiator",
-								radiator_type: "standard",
-								length: 1000,
-							},
-							{
-								product_reference: standardRadiatorNoWeatherCompensator.productReference,
-								wet_emitter_type: "radiator",
-								radiator_type: "standard",
-								length: 1000,
-							},
-						],
-						design_flow_rate: standardRadiatorNoWeatherCompensator.designFlowRate,
-						variable_flow: standardRadiatorNoWeatherCompensator.hasVariableFlowRate,
-						design_flow_temp: standardRadiatorNoWeatherCompensator.designFlowTemp,
-						temp_diff_emit_dsgn: standardRadiatorNoWeatherCompensator.designTempDiffAcrossEmitters,
-						HeatSource: {
-							name: heatPump.name,
-						},
-						ecodesign_controller: {
-							ecodesign_control_class: +standardRadiatorNoWeatherCompensator.ecoDesignControllerClass,
-						},
-						Zone: defaultZoneName,
-						bypass_fraction_recirculated: standardRadiatorNoWeatherCompensator.percentageRecirculated / 100,
-					},
-					[ufhNoWeatherCompensator.name]: {
-						type: "WetDistribution",
-						EnergySupply: defaultElectricityEnergySupplyName,
-						emitters: [
-							{
-								product_reference: ufhNoWeatherCompensator.productReference,
-								wet_emitter_type: "ufh",
-								emitter_floor_area: ufhNoWeatherCompensator.areaOfUnderfloorHeating,
-							},
-
-						],
-						design_flow_rate: ufhNoWeatherCompensator.designFlowRate,
-						variable_flow: ufhNoWeatherCompensator.hasVariableFlowRate,
-						design_flow_temp: ufhNoWeatherCompensator.designFlowTemp,
-						temp_diff_emit_dsgn: ufhNoWeatherCompensator.designTempDiffAcrossEmitters,
-						HeatSource: {
-							name: heatPump.name,
-						},
-						ecodesign_controller: {
-							ecodesign_control_class: +ufhNoWeatherCompensator.ecoDesignControllerClass,
-						},
-						Zone: defaultZoneName,
-						bypass_fraction_recirculated: ufhNoWeatherCompensator.percentageRecirculated / 100,
-					},
-					[warmAirHeater.name]: {
-						type: "WarmAir",
-						temp_diff_emit_dsgn: warmAirHeater.designTempDiffAcrossEmitters,
-						frac_convective: warmAirHeater.convectionFraction,
-						HeatSource: {
-							name: "Heat Battery 1",
-							temp_flow_limit_upper: 30,
-						},
-					},
-					[electricStorageHeater.name]: {
-						type: "ElecStorageHeater",
-						product_reference: electricStorageHeater.productReference,
-						n_units: electricStorageHeater.numOfStorageHeaters,
-					},
-				},
-			};
 			const resolvedState = resolveState(store.$state);
-
 			const actual = mapSpaceHeatSystem(resolvedState);
-			expect(actual).toEqual(expectedForSchema);
+
+			expect(actual.SpaceHeatSystem).toHaveProperty(wetDistributionSystemEcoDesign.name);
+			expect(actual.SpaceHeatSystem[wetDistributionSystemEcoDesign.name]).toEqual(
+				expect.objectContaining({ type: "WetDistribution" }),
+			);
+
+			expect(actual.SpaceHeatSystem).toHaveProperty(warmAirHeater.name);
+			expect(actual.SpaceHeatSystem[warmAirHeater.name]).toEqual(
+				expect.objectContaining({ type: "WarmAir" }),
+			);
+
+			expect(actual.SpaceHeatSystem).toHaveProperty(`${instantElectricHeater.name} 1`);
+			expect(actual.SpaceHeatSystem[`${instantElectricHeater.name} 1`]).toEqual(
+				expect.objectContaining({ type: "InstantElecHeater" }),
+			);
+			expect(actual.SpaceHeatSystem).toHaveProperty(`${instantElectricHeater.name} 2`);
+			expect(actual.SpaceHeatSystem).toHaveProperty(`${instantElectricHeater.name} 3`);
 		});
 	});
 });

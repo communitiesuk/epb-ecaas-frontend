@@ -16,6 +16,7 @@ const {
 		"selected-product-type": selectedProductType,
 		"page-url": pageUrl,
 		"page-index": index,
+		"emitter-index": emitterIndex,
 	},
 } = props.context;
 
@@ -24,14 +25,15 @@ async function fetchProduct(reference: string) {
 	productData.value = data.value;
 }
 
-function appendItemIndexToUrl(url: string, index: number) {
+function buildProductsPageUrl(url: string, index: number, productType: string, emitterIndex?: number) {
 	const lastUrlSegment = new RegExp("/[^/]*$");
-	return url.replace(lastUrlSegment, `/${index}`);
+	const newPath = url.replace(lastUrlSegment, `/${index}`) + "/" + camelToKebabCase(productType ?? "");
+	return emitterIndex != null ? `${newPath}?emitterIndex=${emitterIndex}` : newPath;
 }
 
 const selectedProduct = ref<string | undefined>(selectedProductReference);
 
-const productsPageUrl = ref(appendItemIndexToUrl(pageUrl, index) + "/" + camelToKebabCase(selectedProductType ?? ""));
+const productsPageUrl = ref(buildProductsPageUrl(pageUrl, index, selectedProductType ?? "", emitterIndex));
 const productData = ref<Product | undefined | null>();
 
 if (selectedProduct.value) {
@@ -41,8 +43,9 @@ if (selectedProduct.value) {
 watch(props.context, async ({ attrs: {
 	"selected-product-reference": newProductReference,
 	"selected-product-type": newProductType,
+	"emitter-index": newEmitterIndex,
 } }) => {
-	productsPageUrl.value = appendItemIndexToUrl(pageUrl, index) + "/" + camelToKebabCase(newProductType ?? "");
+	productsPageUrl.value = buildProductsPageUrl(pageUrl, index, newProductType ?? "", newEmitterIndex as number | undefined);
 	selectedProduct.value = newProductReference;
 
 	if (newProductReference) {

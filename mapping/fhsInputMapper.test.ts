@@ -197,7 +197,7 @@ const expectedHouseInput: FhsInputSchema = {
 		// },
 	},
 	SpaceHeatSystem: {
-		"UFH System": {
+		"Wet distribution system": {
 			"EnergySupply": "mains elec",
 			"HeatSource": {
 				"name": "Heat pump 1",
@@ -218,7 +218,7 @@ const expectedHouseInput: FhsInputSchema = {
 			"temp_diff_emit_dsgn": 5,
 			"type": "WetDistribution",
 			"variable_flow": false,
-			"bypass_fraction_recirculated": 0.99,
+			"bypass_fraction_recirculated": 0.2,
 		},
 		"Warm Air Heater 1": {
 			"HeatSource": {
@@ -277,7 +277,7 @@ const expectedHouseInput: FhsInputSchema = {
 					efficacy: 120,
 				}],
 			},
-			SpaceHeatSystem: ["UFH System"],
+			SpaceHeatSystem: ["Wet distribution system", "Warm Air Heater 1"],
 			ThermalBridging: {},
 			volume: 300,
 			livingroom_area: 50,
@@ -934,7 +934,7 @@ const expectedFlatInput: FhsInputSchema = {
 					],
 				},
 			},
-			SpaceHeatSystem: ["UFH System"],
+			SpaceHeatSystem: ["UFH System", "Warm Air Heater 1"],
 			ThermalBridging: {
 				"linear thermal bridge (bridge)": {
 					junction_type: "E3",
@@ -1103,7 +1103,7 @@ describe("FHS input mapper", () => {
 					livingZoneArea: 50,
 					groundFloorArea: 40,
 					restOfDwellingArea: 30,
-					// spaceHeatingSystemForThisZone: "some-wet-distribution",
+					// spaceHeatingSystemForThisZone: "Wet distribution system",
 					// spaceCoolingSystemForThisZone: [{
 					// 	name: "some-aircon-unit-name",
 					// }],
@@ -1243,18 +1243,24 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: [{
 					data: {
-						id: "ufh1",
-						name: "UFH System",
-						typeOfHeatEmitter: "underfloorHeating",
-						productReference: "UFH-123",
-						areaOfUnderfloorHeating: 50,
+						typeOfHeatEmitter: "wetDistributionSystem",
+						id: "Wet distribution system-id",
+						name: "Wet distribution system",
 						heatSource: "HP-1",
-						ecoDesignControllerClass: "1",
-						designFlowTemp: 40,
-						designTempDiffAcrossEmitters: 5,
-						hasVariableFlowRate: false,
 						designFlowRate: 200,
-						percentageRecirculated: 99,
+						hasVariableFlowRate: false,
+						percentageRecirculated: 20,
+						emitters: [{
+							name: "underfloor heating 1",
+							id: "ufh1",
+							productReference: "UFH-123",
+							typeOfHeatEmitter: "underfloorHeating",
+							areaOfUnderfloorHeating: 50,
+						}],
+						designTempDiffAcrossEmitters: 5,
+						designFlowTemp: 40,
+						ecoDesignControllerClass: "1",
+
 					},
 					complete: true,
 				},
@@ -2071,9 +2077,14 @@ describe("FHS input mapper", () => {
 					data: {
 						id: "ufh1",
 						name: "UFH System",
-						typeOfHeatEmitter: "underfloorHeating",
-						productReference: "UFH-123",
-						areaOfUnderfloorHeating: 50,
+						typeOfHeatEmitter: "wetDistributionSystem",
+						emitters: [{
+							id: "ufh-emitter-1",
+							name: "Underfloor heating 1",
+							typeOfHeatEmitter: "underfloorHeating",
+							productReference: "UFH-123",
+							areaOfUnderfloorHeating: 50,
+						}],
 						heatSource: "HP-1",
 						ecoDesignControllerClass: "1",
 						designFlowTemp: 40,

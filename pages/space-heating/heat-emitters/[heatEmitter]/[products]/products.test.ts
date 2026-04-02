@@ -38,8 +38,8 @@ describe("Heat emitter products page", () => {
 
 	const heatEmitter1: Partial<HeatEmittingData> = {
 		id: "463c94f6-566c-49b2-af27-222222222",
-		name: "Fan coil 1",
-		typeOfHeatEmitter: "fanCoil",
+		name: "Warm air heater 1",
+		typeOfHeatEmitter: "warmAirHeater",
 	};
 
 	beforeEach(async () => {
@@ -60,14 +60,15 @@ describe("Heat emitter products page", () => {
 		mockRoute.mockReturnValue({
 			params: {
 				heatEmitter: "0",
-				products: "fan-coil",
+				products: "electric-storage-heater",
 			},
-			path: "/0/fan-coil",
+			query: {},
+			path: "/0/electric-storage-heater",
 		});
 		await renderSuspended(Products);
 
 		expect(
-			screen.getByRole("heading", { name: "Select a fan coil" }),
+			screen.getByRole("heading", { name: "Select an electric storage heater" }),
 		);
 	});
 
@@ -75,9 +76,10 @@ describe("Heat emitter products page", () => {
 		mockRoute.mockReturnValue({
 			params: {
 				heatEmitter: "0",
-				products: "fan-coil",
+				products: "electric-storage-heater",
 			},
-			path: "/0/fan-coil",
+			query: {},
+			path: "/0/electric-storage-heater",
 		});
 		await renderSuspended(Products);
 
@@ -92,9 +94,10 @@ describe("Heat emitter products page", () => {
 		mockRoute.mockReturnValue({
 			params: {
 				heatEmitter: "0",
-				products: "fan-coil",
+				products: "electric-storage-heater",
 			},
-			path: "/0/fan-coil",
+			query: {},
+			path: "/0/electric-storage-heater",
 		});
 		await renderSuspended(Products);
 		const backButton = screen.getByTestId("backToHeatEmittersButton");

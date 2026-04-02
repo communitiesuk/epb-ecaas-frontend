@@ -337,28 +337,33 @@ describe("Space heating summary page", () => {
 			store.$reset();
 		});
 
-		const radiator: HeatEmittingData = {
-			id: "1234",
-			name: "Radiator 1",
-			typeOfHeatEmitter: "radiator",
-			typeOfRadiator: "standard",
-			productReference: "RAD-SMALL",
+		const wetDistributionSystem: HeatEmittingData = {
+			id: "wet-dist-1",
+			name: "Wet Distribution 1",
+			typeOfHeatEmitter: "wetDistributionSystem",
 			heatSource: "heat-pump-id",
 			ecoDesignControllerClass: "1",
 			designFlowTemp: 55,
 			designTempDiffAcrossEmitters: 10,
-			numOfRadiators: 5,
 			hasVariableFlowRate: false,
 			designFlowRate: 100,
-			length: 1,
 			percentageRecirculated: 20,
+			emitters: [
+				{
+					id: "radiator-1",
+					name: "Radiator 1",
+					typeOfHeatEmitter: "radiator",
+					productReference: "RAD-SMALL",
+					numOfRadiators: 5,
+					length: 1,
+				},
+			],
 		};
-		const radiatorWithEcoDesign2367: HeatEmittingData = {
-			id: "5678",
-			name: "Radiator 2",
-			typeOfHeatEmitter: "radiator",
-			typeOfRadiator: "standard",
-			productReference: "RAD-SMALL",
+
+		const wetDistributionSystemWithEcoDesign2: HeatEmittingData = {
+			id: "wet-dist-2",
+			name: "Wet Distribution 2",
+			typeOfHeatEmitter: "wetDistributionSystem",
 			heatSource: "heat-pump-id",
 			ecoDesignControllerClass: "2",
 			minFlowTemp: 45,
@@ -366,76 +371,34 @@ describe("Space heating summary page", () => {
 			maxOutdoorTemp: 15,
 			designFlowTemp: 55,
 			designTempDiffAcrossEmitters: 10,
-			numOfRadiators: 5,
-			hasVariableFlowRate: false,
-			designFlowRate: 100,
-			length: 1,
-			percentageRecirculated: 21,
-		};
-		const fanCoil: HeatEmittingData = {
-			id: "5678",
-			name: "Fan Coil 1",
-			typeOfHeatEmitter: "fanCoil",
-			productReference: "FC-SMALL",
-			heatSource: "boiler-id",
-			designFlowTemp: 50,
-			designTempDiffAcrossEmitters: 10,
-			hasVariableFlowRate: true, ecoDesignControllerClass: "1",
-			maxFlowRate: 200,
-			minFlowRate: 50,
-			numOfFanCoils: 3,
-			percentageRecirculated: 22,
-		};
-		const fanCoilWithEcoDesign2367: HeatEmittingData = {
-			id: "5678",
-			name: "Fan Coil 1",
-			typeOfHeatEmitter: "fanCoil",
-			productReference: "FC-SMALL",
-			heatSource: "boiler-id",
-			designFlowTemp: 50,
-			designTempDiffAcrossEmitters: 10,
-			hasVariableFlowRate: true, ecoDesignControllerClass: "2",
-			minFlowTemp: 45,
-			minOutdoorTemp: 1,
-			maxOutdoorTemp: 15,
-			maxFlowRate: 200,
-			minFlowRate: 50,
-			numOfFanCoils: 3,
-			percentageRecirculated: 23,
-		};
-
-		const ufh: HeatEmittingData = {
-			id: "91011",
-			name: "Underfloor Heating 1",
-			typeOfHeatEmitter: "underfloorHeating",
-			productReference: "UFH-SMALL",
-			heatSource: "heat-pump-id",
-			designFlowTemp: 35,
-			designTempDiffAcrossEmitters: 10,
 			hasVariableFlowRate: true,
-			maxFlowRate: 150,
-			minFlowRate: 30,
-			areaOfUnderfloorHeating: 100,
-			ecoDesignControllerClass: "1",
-			percentageRecirculated: 24,
-		};
-		const ufhWithEcoDesign2367: HeatEmittingData = {
-			id: "91011",
-			name: "Underfloor Heating 1",
-			typeOfHeatEmitter: "underfloorHeating",
-			productReference: "UFH-SMALL",
-			heatSource: "heat-pump-id",
-			designFlowTemp: 35,
-			designTempDiffAcrossEmitters: 10,
-			hasVariableFlowRate: true,
-			maxFlowRate: 150,
-			minFlowRate: 30,
-			areaOfUnderfloorHeating: 100,
-			ecoDesignControllerClass: "3",
-			minFlowTemp: 25,
-			minOutdoorTemp: 0,
-			maxOutdoorTemp: 20,
-			percentageRecirculated: 25,
+			minFlowRate: 50,
+			maxFlowRate: 200,
+			percentageRecirculated: 20,
+			emitters: [
+				{
+					id: "radiator-1",
+					name: "Radiator 1",
+					typeOfHeatEmitter: "radiator",
+					productReference: "RAD-SMALL",
+					numOfRadiators: 5,
+					length: 1,
+				},
+				{
+					id: "ufh-1",
+					name: "Underfloor Heating 1",
+					typeOfHeatEmitter: "underfloorHeating",
+					productReference: "UFH-SMALL",
+					areaOfUnderfloorHeating: 100,
+				},
+				{
+					id: "fc-1",
+					name: "Fan Coil 1",
+					typeOfHeatEmitter: "fanCoil",
+					productReference: "FC-SMALL",
+					numOfFanCoils: 3,
+				},
+			],
 		};
 
 		const warmAirHeater: HeatEmittingData = {
@@ -464,9 +427,7 @@ describe("Space heating summary page", () => {
 		};
 
 		it.each([
-			["radiatorSummary", radiator],
-			["underfloorHeatingSummary", ufh],
-			["fanCoilSummary", fanCoil],
+			["wetDistributionSystemSummary", wetDistributionSystem],
 			["warmAirHeaterSummary", warmAirHeater],
 			["instantElectricHeaterSummary", instantElectricHeater],
 			["electricStorageHeaterSummary", electricStorageHeater],
@@ -482,58 +443,40 @@ describe("Space heating summary page", () => {
 			expect(screen.getByTestId(testId)).not.toBeNull();
 		});
 
-		const expectedRadiatorData = {
-			Name: "Radiator 2",
-			"Type of heat emitter": "Radiator",
-			"Type of radiator": "Standard",
-			"Product reference": "RAD-SMALL",
-			"Product name": "Mock product",
-			"Design flow temperature": "55 °C",
-			"Design temperature difference across emitters": "10 °C",
-			"Number of radiators": "5",
-			"Is there a variable flow rate?": "No",
-			"Design flow rate": "100 l/min",
-			"Percentage recirculated": "21 %",
+		const expectedWetDistData = {
+			Name: "Wet Distribution 2",
+			"Type of heat emitter": "Wet distribution system",
 			"Eco design controller class": "2",
 			"Minimum outdoor temperature": "1 °C",
 			"Maximum outdoor temperature": "15 °C",
 			"Minimum flow temperature": "45 °C",
-		};
-
-		const expectedFanCoilData = {
-			Name: "Fan Coil 1",
-			"Type of heat emitter": "Fan coil",
-			"Product reference": "FC-SMALL",
-			"Product name": "Mock product",
-			"Design flow temperature": "50 °C",
+			"Design flow temperature": "55 °C",
 			"Design temperature difference across emitters": "10 °C",
 			"Is there a variable flow rate?": "Yes",
 			"Maximum flow rate": "200 l/min",
 			"Minimum flow rate": "50 l/min",
-			"Percentage recirculated": "23 %",
-			"Number of fan coils": "3",
-			"Eco design controller class": "2",
-			"Minimum outdoor temperature": "1 °C",
-			"Maximum outdoor temperature": "15 °C",
-			"Minimum flow temperature": "45 °C",
-		};
-
-		const expectedUfhData = {
-			Name: "Underfloor Heating 1",
-			"Type of heat emitter": "Underfloor heating",
-			"Product reference": "UFH-SMALL",
-			"Product name": "Mock product",
-			"Design flow temperature": "35 °C",
-			"Design temperature difference across emitters": "10 °C",
-			"Is there a variable flow rate?": "Yes",
-			"Maximum flow rate": "150 l/min",
-			"Minimum flow rate": "30 l/min",
-			"Area of underfloor heating": "100 m²",
-			"Percentage recirculated": "25 %",
-			"Eco design controller class": "3",
-			"Minimum outdoor temperature": "0 °C",
-			"Maximum outdoor temperature": "20 °C",
-			"Minimum flow temperature": "25 °C",
+			"Percentage recirculated": "20 %",
+			"Name of emitter 1": "Radiator 1",
+			"Type of emitter 1": "Radiator",
+			"Product reference of emitter 1": "RAD-SMALL",
+			"Product name of emitter 1": "Mock product",
+			"Number of radiators 1": "5",
+			"Number of fan coils 1": "-",
+			"Area of underfloor heating 1": "-",
+			"Name of emitter 2": "Underfloor Heating 1",
+			"Type of emitter 2": "Underfloor heating",
+			"Product reference of emitter 2": "UFH-SMALL",
+			"Product name of emitter 2": "Mock product",
+			"Number of radiators 2": "-",
+			"Number of fan coils 2": "-",
+			"Area of underfloor heating 2": "100 m²",
+			"Name of emitter 3": "Fan Coil 1",
+			"Type of emitter 3": "Fan coil",
+			"Product reference of emitter 3": "FC-SMALL",
+			"Product name of emitter 3": "Mock product",
+			"Number of radiators 3": "-",
+			"Number of fan coils 3": "3",
+			"Area of underfloor heating 3": "-",
 		};
 
 		const expectedWarmAirHeaterData = {
@@ -559,9 +502,7 @@ describe("Space heating summary page", () => {
 		};
 		it.each(
 			[
-				["radiatorSummary", expectedRadiatorData],
-				["fanCoilSummary", expectedFanCoilData],
-				["underfloorHeatingSummary", expectedUfhData],
+				["wetDistributionSystemSummary", expectedWetDistData],
 				["warmAirHeaterSummary", expectedWarmAirHeaterData],
 				["instantElectricHeaterSummary", expectedInstantElectricHeaterData],
 				["electricStorageHeaterSummary", expectedElectricStorageHeaterData],
@@ -573,9 +514,7 @@ describe("Space heating summary page", () => {
 				spaceHeating: {
 					heatEmitters: {
 						data: [
-							{ data: radiatorWithEcoDesign2367 },
-							{ data: fanCoilWithEcoDesign2367 },
-							{ data: ufhWithEcoDesign2367 },
+							{ data: wetDistributionSystemWithEcoDesign2 },
 							{ data: warmAirHeater },
 							{ data: instantElectricHeater },
 							{ data: electricStorageHeater },
@@ -599,6 +538,46 @@ describe("Space heating summary page", () => {
 			expect(new URL(addHeatEmitterLink.href).pathname).toBe(
 				getUrl("heatEmittersCreate"),
 			);
+		});
+
+		it("displays wet distribution system with draft emitter and missing fields as work in progress", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [{
+							data: {
+								id: "wet-dist-wip",
+								name: "WIP System",
+								typeOfHeatEmitter: "wetDistributionSystem",
+								heatSource: "heat-pump-id",
+								emitters: [
+									{
+										id: "draft-emitter-1",
+										name: "Draft Emitter",
+									},
+								],
+							},
+						}],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedData = {
+				Name: "WIP System",
+				"Type of heat emitter": "Wet distribution system",
+				"Percentage recirculated": "-",
+				"Name of emitter 1": "Draft Emitter",
+				"Type of emitter 1": "-",
+				"Product reference of emitter 1": "-",
+				"Product name of emitter 1": "-",
+				"Number of radiators 1": "-",
+				"Number of fan coils 1": "-",
+				"Area of underfloor heating 1": "-",
+			};
+
+			await verifyDataInSection("wetDistributionSystemSummary", expectedData);
 		});
 	});
 });

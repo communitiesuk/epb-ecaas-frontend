@@ -6,10 +6,25 @@ import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 
 describe("Heat pump details", async () => {
-	const fanCoil: Partial<HeatEmittingData> = {
-		name: "Fan coil 1",
-		productReference: "1000",
-		typeOfHeatEmitter: "fanCoil",
+	const wetDistributionSystem: Partial<HeatEmittingData> = {
+		name: "Wet distribution system 1",
+		typeOfHeatEmitter: "wetDistributionSystem",
+		heatSource: "HS1",
+		id: "463c94f6-566c-49b2-af27-222222222",
+		emitters: [
+			{
+				id: "1234",
+				name: "Fan coil 1",
+				typeOfHeatEmitter: "fanCoil",
+				numOfFanCoils: 2,
+			},
+		],
+	};
+
+	const electricStorageHeater: Partial<HeatEmittingData> = {
+		name: "Electric storage heater 1",
+		typeOfHeatEmitter: "electricStorageHeater",
+		id: "463c94f6-566c-49b2-af27-333333333",
 	};
 
 	const product: Partial<Product> = {
@@ -36,7 +51,10 @@ describe("Heat pump details", async () => {
 		store.$patch({
 			spaceHeating: {
 				heatEmitters: {
-					data: [{ data: fanCoil }],
+					data: [
+						{ data: wetDistributionSystem },
+						{ data: electricStorageHeater },
+					],
 				},
 			},
 		});
@@ -47,6 +65,7 @@ describe("Heat pump details", async () => {
 				products: "fan-coil",
 				id: "1000",
 			},
+			query: { emitterIndex: "0" },
 			path: "/0/fan-coil/1000",
 		});
 
@@ -72,6 +91,7 @@ describe("Heat pump details", async () => {
 				products: "fan-coil-invalid",
 				id: "1234",
 			},
+			query: {},
 			path: "/0/fan-coil-invalid/1234",
 		});
 
@@ -102,10 +122,10 @@ describe("Heat pump details", async () => {
 		await renderSuspended(ProductDetails);
 		await user.click(screen.getByTestId("selectProductButton"));
 
-		const heatSource = store.spaceHeating.heatEmitters.data[0]?.data as PcdbProduct;
+		const system = store.spaceHeating.heatEmitters.data[0]?.data as { emitters: Record<string, unknown>[] };
 
 		// Assert
-		expect(heatSource.productReference).toBe("1000");
+		expect(system.emitters[0]?.productReference).toBe("1000");
 	});
 
 	test("Navigates to heat emitter page when product is selected", async () => {
@@ -114,13 +134,13 @@ describe("Heat pump details", async () => {
 		await user.click(screen.getByTestId("selectProductButton"));
 
 		// Assert
-		expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-emitters/0");
+		expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-emitters/0?emitterIndex=0");
 	});
 
 	test("Displays fan coil details when product is a fan coil", async () => {
 		// Act
 		await renderSuspended(ProductDetails);
-		
+
 		// Assert
 		expect((await screen.findByTestId("fanCoil"))).toBeDefined();
 	});
@@ -129,11 +149,12 @@ describe("Heat pump details", async () => {
 		// Arrange
 		mockRoute.mockReturnValue({
 			params: {
-				heatEmitter: "0",
+				heatEmitter: "1",
 				products: "electric-storage-heater",
 				id: "1000",
 			},
-			path: "/0/electric-storage-heater/1000",
+			query: {},
+			path: "/1/electric-storage-heater/1000",
 		});
 
 		mockFetch.mockReturnValue({
@@ -146,7 +167,7 @@ describe("Heat pump details", async () => {
 
 		// Act
 		await renderSuspended(ProductDetails);
-		
+
 		// Assert
 		expect((await screen.findByTestId("electricStorageHeater"))).toBeDefined();
 	});

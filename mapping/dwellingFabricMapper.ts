@@ -40,16 +40,8 @@ export function mapZoneParametersData(
 	state: ResolvedState,
 ): Pick<FhsInputSchema, "HeatingControlType" | "Zone"> {
 	const { dwellingSpaceZoneParameters } = state.dwellingFabric;
-	const wetDistributionSystems = state.spaceHeating.heatEmitters?.filter(he => {
-		return he.typeOfHeatEmitter === "radiator"
-			|| he.typeOfHeatEmitter === "underfloorHeating"
-			|| he.typeOfHeatEmitter === "fanCoil";
-	});
-	const instantElectricHeaters = state.spaceHeating.heatEmitters.filter(he => he.typeOfHeatEmitter === "instantElectricHeater");
-	const spaceHeatingSystemNames = [
-		wetDistributionSystems.map(x => x.name),
-		instantElectricHeaters.map(x => x.name),
-	].flat();
+	const { heatEmitters } = state.spaceHeating;
+	const spaceHeatingSystemNames = heatEmitters.map(he => he.name);
 
 	return {
 		HeatingControlType: "SeparateTempControl", // sending this as a default value while we are only sending one zone

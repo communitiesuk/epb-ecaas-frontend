@@ -5,7 +5,9 @@ import { productTypeMap, type HeatEmittingProductType, type PcdbProduct } from "
 definePageMeta({ layout: false });
 
 const store = useEcaasStore();
+const route = useRoute();
 const { pageId, title, index, searchModel, searchData } = useProductsPage("heatEmitter");
+const emitterIndex = route.query.emitterIndex != null ? Number(route.query.emitterIndex) : null;
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
@@ -19,12 +21,22 @@ const selectProduct = (reference: string) => {
 	store.$patch((state) => {
 		const item = state.spaceHeating.heatEmitters.data[index];
 
-		if (item) {
+		if (item && emitterIndex != null) {
+			const emitters = (item.data as { emitters: Record<string, unknown>[] }).emitters;
+			const emitter = emitters[emitterIndex];
+			if (emitter) {
+				emitter.productReference = reference;
+			}
+		} else if (item) {
 			(item.data as PcdbProduct).productReference = reference;
 		}
 	});
 
-	navigateTo(page("heatEmitters").url.replace(":heatEmitter", `${index}`));
+	const returnUrl = emitterIndex != null
+		? `${page("heatEmitters").url.replace(":heatEmitter", `${index}`)}?emitterIndex=${emitterIndex}`
+		: page("heatEmitters").url.replace(":heatEmitter", `${index}`);
+
+	navigateTo(returnUrl);
 };
 </script>
 

@@ -352,12 +352,10 @@ export function displayDHWHeatSourceType(type: DHWHeatSourceType | undefined): D
 	return DHWHeatSourceTypesWithDisplay[type!] ?? emptyValueRendering;
 }
 
-export type HeatEmitterDisplay = "Radiator" | "Underfloor heating" | "Fan coil" | "Warm air heater" | "Instant electric heater" | "Electric storage heater";
+export type HeatEmitterDisplay = "Wet distribution system" | "Warm air heater" | "Instant electric heater" | "Electric storage heater";
 
 export const heatEmitterTypes = {
-	"radiator": "Radiator",
-	"underfloorHeating": "Underfloor heating",
-	"fanCoil": "Fan coil",
+	"wetDistributionSystem": "Wet distribution system",
 	"warmAirHeater": "Warm air heater",
 	"instantElectricHeater": "Instant electric heater",
 	"electricStorageHeater": "Electric storage heater",

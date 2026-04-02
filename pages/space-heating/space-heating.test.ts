@@ -143,21 +143,13 @@ describe("space heating", () => {
 					productReference: "HEATPUMP_LARGE",
 				};
 
-				const radiator: HeatEmittingData = {
-					name: "Radiator 1",
-					typeOfHeatEmitter: "radiator",
-					typeOfRadiator: "towel",
+				const wetdistribution: Partial<HeatEmittingData> = {
+					name: "Wet distribution system 1",
+					typeOfHeatEmitter: "wetDistributionSystem",
+					emitters: [
+					],
 					heatSource: heatPump1.id,
-					productReference: "RADIATOR_STANDARD",
-					designFlowTemp: 45,
-					designTempDiffAcrossEmitters: 10,
-					ecoDesignControllerClass: "4",
-					hasVariableFlowRate: true,
-					maxFlowRate: 200,
-					minFlowRate: 50,
-					id: "radiator-1",
-					numOfRadiators: 5,
-					percentageRecirculated: 20,
+
 				};
 
 				store.$patch({
@@ -168,7 +160,7 @@ describe("space heating", () => {
 							],
 						},
 						heatEmitters: {
-							data: [{ data: radiator }],
+							data: [{ data: wetdistribution }],
 						},
 					},
 				});
@@ -176,7 +168,7 @@ describe("space heating", () => {
 				await renderSuspended(SpaceHeating);
 				await user.click(await screen.findByTestId("heatSource_remove_0"));
 
-				const emitterItem = store.spaceHeating.heatEmitters.data[0]?.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "radiator" }>;
+				const emitterItem = store.spaceHeating.heatEmitters.data[0]?.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "wetDistributionSystem" }>;
 				expect(emitterItem.heatSource).toBe(undefined);
 			});
 

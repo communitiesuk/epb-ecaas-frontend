@@ -1015,44 +1015,21 @@ export const productTypeMap = {
 } as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType, TechnologyType | string | TechnologyType[]>;
 
 export type HeatEmitterType =
-	"radiator" |
-	"underfloorHeating" |
-	"fanCoil" |
+	"wetDistributionSystem" |
 	"instantElectricHeater" |
 	"electricStorageHeater" |
 	"warmAirHeater";
 
-const _typeOfHeatEmitter = z.enum(["fanCoil", "electricStorageHeater", "instantElectricHeater"]);
-
+const _typeOfHeatEmitter = z.enum(["wetDistributionSystem", "electricStorageHeater", "instantElectricHeater"]);
+const wetDistributionSystemEmitter = z.enum(["underfloorHeating", "fanCoil", "radiator"]);
 export const typeOfHeatEmitter = _typeOfHeatEmitter.enum;
-
-const radiatorBase = namedWithId.extend({
-	typeOfHeatEmitter: z.literal("radiator"),
-	productReference: z.string(),
-	heatSource: z.string(),
-	designFlowTemp: z.number(),
-	designTempDiffAcrossEmitters: z.number(),
-	numOfRadiators: z.number(),
-	percentageRecirculated: z.number().min(0).max(100),
-});
+export const typeOfWetDistributionSystemEmitter = wetDistributionSystemEmitter.enum;
 
 export type EcoControlClassesWithExtraOptions = "2" | "3" | "6" | "7";
 export const ecoClasses: EcoControlClassesWithExtraOptions[] = ["2", "3", "6", "7"];
 
 type Tuple = [unknown, ...unknown[]];
 
-const typeOfRadiatorFields = {
-	discriminator: "typeOfRadiator",
-	variants: [
-		z.object({
-			typeOfRadiator: z.literal("standard"),
-			length: z.number(),
-		}),
-		z.object({
-			typeOfRadiator: z.literal("towel"),
-		}),
-	] satisfies Tuple,
-};
 
 const ecoDesignControllerClassFields = {
 	discriminator: "ecoDesignControllerClass",
@@ -1084,44 +1061,62 @@ const variableFlowRateFields = {
 	] satisfies Tuple,
 };
 
-const radiatorSchema = nestedDiscriminatedUnion(
-	radiatorBase,
-	typeOfRadiatorFields,
-	ecoDesignControllerClassFields,
-	variableFlowRateFields,
-);
-
-const underfloorHeatingBase = namedWithId.extend({
-	typeOfHeatEmitter: z.literal("underfloorHeating"),
+const underfloorHeatingSchema = namedWithId.extend({
+	typeOfHeatEmitter: z.literal(typeOfWetDistributionSystemEmitter.underfloorHeating),
 	productReference: z.string(),
-	heatSource: z.string(),
-	designFlowTemp: z.number(),
-	designTempDiffAcrossEmitters: z.number(),
 	areaOfUnderfloorHeating: z.number(),
-	percentageRecirculated: z.number().min(0).max(100),
 });
 
-export const underFloorHeatingSchema = nestedDiscriminatedUnion(
-	underfloorHeatingBase,
-	variableFlowRateFields,
-	ecoDesignControllerClassFields,
-);
 
-const fanCoilBase = namedWithId.extend({
-	typeOfHeatEmitter: z.literal(typeOfHeatEmitter.fanCoil),
+
+const fanCoilSchema = namedWithId.extend({
+	typeOfHeatEmitter: z.literal(typeOfWetDistributionSystemEmitter.fanCoil),
 	productReference: z.string(),
+	numOfFanCoils: z.number(),
+});
+
+const radiatorSchema = namedWithId.extend({
+	typeOfHeatEmitter: z.literal(typeOfWetDistributionSystemEmitter.radiator),
+	productReference: z.string(),
+	numOfRadiators: z.number(),
+	length: z.number().min(0.001),
+});
+export type RadiatorData = z.infer<typeof radiatorSchema>;
+
+const wetDistributionSystemEmittersFields = z.discriminatedUnion("typeOfHeatEmitter", [
+	underfloorHeatingSchema,
+	fanCoilSchema,
+	radiatorSchema,
+]);
+export type WetDistributionEmitterData = z.infer<typeof wetDistributionSystemEmittersFields>;
+
+const wetDistributionSystemEmitterDraftSchema = z.object({
+	id: z.uuidv4().readonly(),
+	name: z.string().trim().min(1).optional(),
+	typeOfHeatEmitter: wetDistributionSystemEmitter.optional(),
+	productReference: z.string().optional(),
+	areaOfUnderfloorHeating: z.number().optional(),
+	numOfFanCoils: z.number().optional(),
+	numOfRadiators: z.number().optional(),
+	length: z.number().min(0.001).optional(),
+});
+
+const wetDistributionSystemBase = namedWithId.extend({
+	typeOfHeatEmitter: z.literal("wetDistributionSystem"),
 	heatSource: z.string(),
 	designFlowTemp: z.number(),
 	designTempDiffAcrossEmitters: z.number(),
-	numOfFanCoils: z.number(),
+	emitters: z.array(z.union([wetDistributionSystemEmittersFields, wetDistributionSystemEmitterDraftSchema])),
 	percentageRecirculated: z.number().min(0).max(100),
 });
 
-export const fanCoilSchema = nestedDiscriminatedUnion(
-	fanCoilBase,
-	variableFlowRateFields,
+const wetDistributionSystemSchema = nestedDiscriminatedUnion(
+	wetDistributionSystemBase,
 	ecoDesignControllerClassFields,
+	variableFlowRateFields,
 );
+
+export type WetDistributionSystemData = z.infer<typeof wetDistributionSystemSchema>;
 
 const warmAirHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("warmAirHeater"),
@@ -1147,16 +1142,15 @@ const electricStorageHeaterSchema = namedWithId.extend({
 	numOfStorageHeaters: z.number(),
 });
 
+
 const heatEmittingDataZod = z.discriminatedUnion("typeOfHeatEmitter", [
-	radiatorSchema,
-	underFloorHeatingSchema,
-	fanCoilSchema,
+	wetDistributionSystemSchema,
 	warmAirHeaterSchema,
 	instantElectricHeaterSchema,
 	electricStorageHeaterSchema,
 ]);
 
-export type HeatEmittingProductType = z.infer<typeof _typeOfHeatEmitter>;
+export type HeatEmittingProductType = Exclude<z.infer<typeof _typeOfHeatEmitter>, "wetDistributionSystem"> | "fanCoil";
 export type HeatEmittingData = z.infer<typeof heatEmittingDataZod>;
 
 const heatingControlsDataZod = named.extend({

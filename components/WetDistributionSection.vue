@@ -1,15 +1,11 @@
 <script setup lang="ts">
+import { FieldsHeatSources } from "#components";
 import { ecoClasses, ecoDesignControllerOptions } from "#imports";
-import type { UnderfloorHeatingModelType } from "~/pages/space-heating/heat-emitters/[heatEmitter]/index.vue";
-
-const route = useRoute();
 
 defineProps<{
-	model: UnderfloorHeatingModelType
+	model: WetDistributionSystemData;
 	index: number;
 }>();
-
-
 </script>
 
 <template>
@@ -19,23 +15,17 @@ defineProps<{
 		label="Name"
 		name="name"
 		validation="required" />
-	<FormKit
-		id="selectUnderFloorHeating"
-		type="govPcdbProduct"
-		label="Select product"
-		name="productReference"
-		validation="required"
-		help="Select a underfloor heating type from the PCDB using the button below."
-		:selected-product-reference="model.productReference"
-		:selected-product-type="model.typeOfHeatEmitter"
-		:page-url="route.fullPath"
-		:page-index="index" />
 	<FieldsHeatSources
 		id="heatSource"
 		name="heatSource"
 		label="Heat source"
 		help="Select the relevant heat source that has been added previously"
 		data-field="SpaceHeatSystem.*.HeatSource" />
+	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">	
+	<WetDistributionEmittersSection
+		:index="index" />
+	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+	<h2 class="govuk-heading-l">Flow temperature and rate</h2>
 	<FormKit
 		id="ecoDesignControllerClass"
 		type="govDropdown"
@@ -88,12 +78,20 @@ defineProps<{
 		suffix-text="°C"
 		help="Enter the temperature difference between the flow and return water temperatures. Typically between 5 and 15°C." />
 	<FieldsVariableFlowRate :model="model" />
-	<FormKit
-		id="areaOfUnderfloorHeating"
-		name="areaOfUnderfloorHeating"
-		type="govInputWithSuffix"
-		label="Area of underfloor heating"
-		suffix-text="m²"
-		validation="required" />
-	<FieldsPercentageRecuirculated />
+	<FieldsPercentageRecuirculated :model="model" />
+
 </template>
+
+<style scoped>
+.shading-summary :deep(.govuk-summary-list__key),
+.shading-summary :deep(.govuk-summary-list__value) {
+    font-size: 1.1875rem;
+}
+
+:deep(.govuk-fieldset__legend--m),
+:deep(.govuk-body--m),
+:deep(.govuk-label--m) {
+    font-size: 1.1875rem !important;
+}
+</style>
+

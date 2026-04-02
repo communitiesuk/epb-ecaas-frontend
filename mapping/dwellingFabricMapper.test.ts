@@ -41,7 +41,7 @@ describe("dwelling fabric mapper", () => {
 			spaceHeating: {
 				heatEmitters: {
 					data: [{
-						data: { name: "radiator 1", typeOfHeatEmitter: "radiator" }, complete: true,
+						data: { name: "wds 1", typeOfHeatEmitter: "wetDistributionSystem" }, complete: true,
 					},
 					{
 						data: { name: "ieh 1", typeOfHeatEmitter: "instantElectricHeater" }, complete: true,
@@ -65,7 +65,7 @@ describe("dwelling fabric mapper", () => {
 		expect(fhsInputData.Zone[defaultZoneName]?.volume).toBe(state.volume);
 		expect(fhsInputData.Zone[defaultZoneName]?.livingroom_area).toBe(state.livingZoneArea);
 		expect(fhsInputData.Zone[defaultZoneName]?.restofdwelling_area).toBe(state.restOfDwellingArea);
-		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatSystem).toEqual(["radiator 1", "ieh 1"]);
+		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatSystem).toEqual(["wds 1", "ieh 1"]);
 	});
 
 	it("maps lighting input state to FHS input request", () => {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { getTabItems, getUrl, type HeatEmittingData } from "#imports";
+import { getTabItems, getUrl, type HeatEmittingData, type WetDistributionSystemData, type WetDistributionEmitterData } from "#imports";
 import type { SchemaFuelType } from "~/schema/aliases";
 import { displayBoilerLocation, displayConvectiveType } from "~/utils/display";
 import { useProductReference } from "~/composables/productReference";
@@ -19,15 +19,48 @@ const solarThermalSystem = heatSources.filter(x => x.data.typeOfHeatSource === "
 
 const heatEmitters = store.spaceHeating.heatEmitters.data;
 
-const radiators = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "radiator");
-const underfloorHeating = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "underfloorHeating");
-const fanCoils = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "fanCoil");
+const wetDistributionSystems = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "wetDistributionSystem");
 const warmAirHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "warmAirHeater");
 const instantElectricHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "instantElectricHeater");
 const electricStorageHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "electricStorageHeater");
 
 const heatSourceModelNames = await useProductReference(heatSources, productData => productData.modelName);
 const heatEmitterModelNames = await useProductReference(heatEmitters, productData => productData.modelName);
+const nestedEmitterModelNames = await useProductReference(
+	wetDistributionSystems.flatMap(({ data }) =>
+		(data as WetDistributionSystemData).emitters.map(e => ({ data: e })),
+	) as EcaasForm<WetDistributionEmitterData>[],
+	productData => productData.modelName,
+);
+
+function formatEmitterRowsForSummary(emitters: WetDistributionEmitterData[]): Record<string, string | number> {
+	const rows: Record<string, string | number> = {};
+	emitters.forEach((emitter, i) => {
+		const n = i + 1;
+		rows[`Name of emitter ${n}`] = show(emitter.name);
+		rows[`Type of emitter ${n}`] = emitter.typeOfHeatEmitter ? displayCamelToSentenceCase(emitter.typeOfHeatEmitter as string) : emptyValueRendering;
+		rows[`Product reference of emitter ${n}`] = emitter.productReference ? emitter.productReference : emptyValueRendering;
+		rows[`Product name of emitter ${n}`] = emitter.productReference ? (nestedEmitterModelNames[emitter.productReference] || emptyValueRendering) : emptyValueRendering;
+		if (emitter.typeOfHeatEmitter === "radiator") {
+			rows[`Number of radiators ${n}`] = emitter.numOfRadiators != null ? emitter.numOfRadiators : emptyValueRendering;
+			rows[`Number of fan coils ${n}`] = emptyValueRendering;
+			rows[`Area of underfloor heating ${n}`] = emptyValueRendering;
+		} else if (emitter.typeOfHeatEmitter === "fanCoil") {
+			rows[`Number of radiators ${n}`] = emptyValueRendering;
+			rows[`Number of fan coils ${n}`] = emitter.numOfFanCoils != null ? emitter.numOfFanCoils : emptyValueRendering;
+			rows[`Area of underfloor heating ${n}`] = emptyValueRendering;
+		} else if (emitter.typeOfHeatEmitter === "underfloorHeating") {
+			rows[`Number of radiators ${n}`] = emptyValueRendering;
+			rows[`Number of fan coils ${n}`] = emptyValueRendering;
+			rows[`Area of underfloor heating ${n}`] = emitter.areaOfUnderfloorHeating != null ? dim(emitter.areaOfUnderfloorHeating , "metres square") : emptyValueRendering;
+		} else {
+			rows[`Number of radiators ${n}`] = emptyValueRendering;
+			rows[`Number of fan coils ${n}`] = emptyValueRendering;
+			rows[`Area of underfloor heating ${n}`] = emptyValueRendering;
+		}
+	});
+	return rows;
+}
 
 const emptyHeatSourcesSummary: SummarySection = {
 	id: "heatSourceSummary",
@@ -206,93 +239,28 @@ const solarThermalSystemSummary: SummarySection = {
 	editUrl: spaceHeatingUrl,
 };
 
-const radiatorSummary: SummarySection = {
-	id: "radiatorSummary",
-	label: "Radiators",
-	data: radiators.map((x) => {
-		const radiator = x.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "radiator" }>;
-		const heatGenerationData = store.spaceHeating.heatSource.data;
-		const heatSource = heatGenerationData.find(hs => hs.data.id === radiator.heatSource);
-		return { 
-			Name: show(radiator.name),
-			"Type of heat emitter": "typeOfHeatEmitter" in radiator && radiator.typeOfHeatEmitter ? displayCamelToSentenceCase(radiator.typeOfHeatEmitter) : emptyValueRendering,
-			"Type of radiator": "typeOfRadiator" in radiator && radiator.typeOfRadiator ? displayCamelToSentenceCase(radiator.typeOfRadiator) : emptyValueRendering,
-			"Product reference": "productReference" in radiator ? radiator.productReference : emptyValueRendering,
-			"Product name": "productReference" in radiator && radiator.productReference ? heatEmitterModelNames[radiator.productReference] : emptyValueRendering,
+const wetDistributionSystemSummary: SummarySection = {
+	id: "wetDistributionSystemSummary",
+	label: "Wet distribution systems",
+	data: wetDistributionSystems.map((x) => {
+		const wetDist = x.data as WetDistributionSystemData;
+		const heatSource = store.spaceHeating.heatSource.data.find(hs => hs.data.id === wetDist.heatSource);
+		return {
+			Name: show(wetDist.name),
+			"Type of heat emitter": displayHeatEmitterType(wetDist.typeOfHeatEmitter),
 			"Heat source": heatSource ? heatSource.data.name : emptyValueRendering,
-			"Eco design controller class": "ecoDesignControllerClass" in radiator && radiator.ecoDesignControllerClass ? displayCamelToSentenceCase(radiator.ecoDesignControllerClass) : emptyValueRendering,
-			"Minimum outdoor temperature": "minOutdoorTemp" in radiator ? dim(radiator.minOutdoorTemp, "celsius") : emptyValueRendering,
-			"Maximum outdoor temperature": "maxOutdoorTemp" in radiator ? dim(radiator.maxOutdoorTemp, "celsius") : emptyValueRendering,
-			"Minimum flow temperature": "minFlowTemp" in radiator ? dim(radiator.minFlowTemp, "celsius") : emptyValueRendering,
-			"Design flow temperature": "designFlowTemp" in radiator ? dim(radiator.designFlowTemp, "celsius") : emptyValueRendering,
-			"Design temperature difference across emitters": "designTempDiffAcrossEmitters" in radiator ? dim(radiator.designTempDiffAcrossEmitters, "celsius") : emptyValueRendering,
-			"Is there a variable flow rate?": "hasVariableFlowRate" in radiator ? displayBoolean(radiator.hasVariableFlowRate) : emptyValueRendering,
-			"Maximum flow rate": "maxFlowRate" in radiator ? dim(radiator.maxFlowRate, "litres per minute") : emptyValueRendering,
-			"Minimum flow rate": "minFlowRate" in radiator ? dim(radiator.minFlowRate, "litres per minute") : emptyValueRendering,
-			"Design flow rate": "designFlowRate" in radiator ? dim(radiator.designFlowRate, "litres per minute") : emptyValueRendering,
-			"Percentage recirculated": "percentageRecirculated" in radiator ? `${radiator.percentageRecirculated} %` : emptyValueRendering,
-			"Number of radiators": "numOfRadiators" in radiator ? radiator.numOfRadiators : emptyValueRendering,
-		};
-	}),
-	editUrl: spaceHeatingUrl,
-};
-
-const ufhSummary: SummarySection = {
-	id: "underfloorHeatingSummary",
-	label: "Underfloor heating",
-	data: underfloorHeating.map((x) => {
-		const ufh = x.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "underfloorHeating" }>;
-		const heatGenerationData = store.spaceHeating.heatSource.data;
-		const heatSource = heatGenerationData.find(hs => hs.data.id === ufh.heatSource);
-		
-		return { 
-			Name: show(ufh.name),
-			"Type of heat emitter": "typeOfHeatEmitter" in ufh && ufh.typeOfHeatEmitter ? displayCamelToSentenceCase(ufh.typeOfHeatEmitter) : emptyValueRendering,
-			"Product reference": "productReference" in ufh ? ufh.productReference : emptyValueRendering,
-			"Product name": "productReference" in ufh && ufh.productReference ? heatEmitterModelNames[ufh.productReference] : emptyValueRendering,
-			"Heat source": heatSource ? heatSource.data.name : emptyValueRendering,
-			"Eco design controller class": "ecoDesignControllerClass" in ufh && ufh.ecoDesignControllerClass ? displayCamelToSentenceCase(ufh.ecoDesignControllerClass) : emptyValueRendering,
-			"Minimum outdoor temperature": "minOutdoorTemp" in ufh ? dim(ufh.minOutdoorTemp, "celsius") : emptyValueRendering,
-			"Maximum outdoor temperature": "maxOutdoorTemp" in ufh ? dim(ufh.maxOutdoorTemp, "celsius") : emptyValueRendering,
-			"Minimum flow temperature": "minFlowTemp" in ufh ? dim(ufh.minFlowTemp, "celsius") : emptyValueRendering,
-			"Design flow temperature": "designFlowTemp" in ufh ? dim(ufh.designFlowTemp, "celsius") : emptyValueRendering,
-			"Design temperature difference across emitters": "designTempDiffAcrossEmitters" in ufh ? dim(ufh.designTempDiffAcrossEmitters, "celsius") : emptyValueRendering,
-			"Is there a variable flow rate?": "hasVariableFlowRate" in ufh ? displayBoolean(ufh.hasVariableFlowRate) : emptyValueRendering,
-			"Maximum flow rate": "maxFlowRate" in ufh ? dim(ufh.maxFlowRate, "litres per minute") : emptyValueRendering,
-			"Minimum flow rate": "minFlowRate" in ufh ? dim(ufh.minFlowRate, "litres per minute") : emptyValueRendering,
-			"Design flow rate": "designFlowRate" in ufh ? dim(ufh.designFlowRate, "litres per minute") : emptyValueRendering,
-			"Area of underfloor heating": ufh.areaOfUnderfloorHeating ? dim(ufh.areaOfUnderfloorHeating, "metres square") : emptyValueRendering,
-			"Percentage recirculated": "percentageRecirculated" in ufh ? `${ufh.percentageRecirculated} %` : emptyValueRendering,
-		};
-	}),
-	editUrl: "/space-heating/heat-emitters",
-};
-const fanCoilSummary: SummarySection = {
-	id: "fanCoilSummary",
-	label: "Fan coils",
-	data: fanCoils.map((x) => {
-		const fanCoil = x.data as Extract<HeatEmittingData, { typeOfHeatEmitter: "fanCoil" }>;
-		const heatGenerationData = store.spaceHeating.heatSource.data;
-		const heatSource = heatGenerationData.find(hs => hs.data.id === fanCoil.heatSource);
-		
-		return { 
-			Name: show(fanCoil.name),
-			"Type of heat emitter": "typeOfHeatEmitter" in fanCoil && fanCoil.typeOfHeatEmitter ? displayCamelToSentenceCase(fanCoil.typeOfHeatEmitter) : emptyValueRendering,
-			"Product reference": "productReference" in fanCoil ? fanCoil.productReference : emptyValueRendering,
-			"Product name": "productReference" in fanCoil && fanCoil.productReference ? heatEmitterModelNames[fanCoil.productReference] : emptyValueRendering,
-			"Heat source": heatSource ? heatSource.data.name : emptyValueRendering,
-			"Eco design controller class": "ecoDesignControllerClass" in fanCoil && fanCoil.ecoDesignControllerClass ? displayCamelToSentenceCase(fanCoil.ecoDesignControllerClass) : emptyValueRendering,
-			"Minimum outdoor temperature": "minOutdoorTemp" in fanCoil ? dim(fanCoil.minOutdoorTemp, "celsius") : emptyValueRendering,
-			"Maximum outdoor temperature": "maxOutdoorTemp" in fanCoil ? dim(fanCoil.maxOutdoorTemp, "celsius") : emptyValueRendering,
-			"Minimum flow temperature": "minFlowTemp" in fanCoil ? dim(fanCoil.minFlowTemp, "celsius") : emptyValueRendering,
-			"Design flow temperature": "designFlowTemp" in fanCoil ? dim(fanCoil.designFlowTemp, "celsius") : emptyValueRendering,
-			"Design temperature difference across emitters": "designTempDiffAcrossEmitters" in fanCoil ? dim(fanCoil.designTempDiffAcrossEmitters, "celsius") : emptyValueRendering,
-			"Is there a variable flow rate?": "hasVariableFlowRate" in fanCoil ? displayBoolean(fanCoil.hasVariableFlowRate) : emptyValueRendering,
-			"Maximum flow rate": "maxFlowRate" in fanCoil ? dim(fanCoil.maxFlowRate, "litres per minute") : emptyValueRendering,
-			"Minimum flow rate": "minFlowRate" in fanCoil ? dim(fanCoil.minFlowRate, "litres per minute") : emptyValueRendering,
-			"Design flow rate": "designFlowRate" in fanCoil ? dim(fanCoil.designFlowRate, "litres per minute") : emptyValueRendering,
-			"Percentage recirculated": "percentageRecirculated" in fanCoil ? `${fanCoil.percentageRecirculated} %` : emptyValueRendering,
-			"Number of fan coils": "numOfFanCoils" in fanCoil ? fanCoil.numOfFanCoils : emptyValueRendering,
+			"Eco design controller class": "ecoDesignControllerClass" in wetDist && wetDist.ecoDesignControllerClass ? displayCamelToSentenceCase(wetDist.ecoDesignControllerClass) : emptyValueRendering,
+			...("minOutdoorTemp" in wetDist ? { "Minimum outdoor temperature": dim(wetDist.minOutdoorTemp, "celsius") } : {}),
+			...("maxOutdoorTemp" in wetDist ? { "Maximum outdoor temperature": dim(wetDist.maxOutdoorTemp, "celsius") } : {}),
+			...("minFlowTemp" in wetDist ? { "Minimum flow temperature": dim(wetDist.minFlowTemp, "celsius") } : {}),
+			"Design flow temperature": "designFlowTemp" in wetDist ? dim(wetDist.designFlowTemp, "celsius") : emptyValueRendering,
+			"Design temperature difference across emitters": "designTempDiffAcrossEmitters" in wetDist ? dim(wetDist.designTempDiffAcrossEmitters, "celsius") : emptyValueRendering,
+			"Is there a variable flow rate?": "hasVariableFlowRate" in wetDist ? displayBoolean(wetDist.hasVariableFlowRate) : emptyValueRendering,
+			...("maxFlowRate" in wetDist ? { "Maximum flow rate": dim(wetDist.maxFlowRate, "litres per minute") } : {}),
+			...("minFlowRate" in wetDist ? { "Minimum flow rate": dim(wetDist.minFlowRate, "litres per minute") } : {}),
+			...("designFlowRate" in wetDist ? { "Design flow rate": dim(wetDist.designFlowRate, "litres per minute") } : {}),
+			"Percentage recirculated": "percentageRecirculated" in wetDist && wetDist.percentageRecirculated != null ? `${wetDist.percentageRecirculated} %` : emptyValueRendering,
+			...formatEmitterRowsForSummary(wetDist.emitters as WetDistributionEmitterData[]),
 		};
 	}),
 	editUrl: spaceHeatingUrl,
@@ -361,9 +329,7 @@ const heatSourceSections: SummarySection[] = [
 const populatedHeatSourceSections = getNonEmptySections(heatSourceSections);
 
 const heatEmitterSections: SummarySection[] = [
-	radiatorSummary,
-	ufhSummary,
-	fanCoilSummary,
+	wetDistributionSystemSummary,
 	warmAirHeaterSummary,
 	instantElectricHeaterSummary,
 	electricStorageHeaterSummary,

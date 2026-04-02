@@ -8,7 +8,8 @@ definePageMeta({ layout: "one-column" });
 
 const store = useEcaasStore();
 const router = useRouter();
-const { params } = useRoute();
+const { params, query } = useRoute();
+const emitterIndex = query.emitterIndex != null ? Number(query.emitterIndex) : null;
 
 const heatEmittingType = kebabToCamelCase(params.products as string);
 
@@ -38,13 +39,23 @@ const selectProduct = () => {
 	store.$patch((state) => {
 		const item = state.spaceHeating.heatEmitters.data[index];
 
-		if (item && data) {
+		if (item && data && emitterIndex != null) {
+			const emitters = (item.data as { emitters: Record<string, unknown>[] }).emitters;
+			const emitter = emitters[emitterIndex];
+			if (emitter) {
+				emitter.productReference = data.id;
+			}
+		} else if (item && data) {
 			const product = item.data as PcdbProduct;
 			product.productReference = data.id;
 		}
 	});
 
-	navigateTo(getUrl("heatEmitters").replace(":heatEmitter", `${index}`));
+	const returnUrl = emitterIndex != null
+		? `${getUrl("heatEmitters").replace(":heatEmitter", `${index}`)}?emitterIndex=${emitterIndex}`
+		: getUrl("heatEmitters").replace(":heatEmitter", `${index}`);
+
+	navigateTo(returnUrl);
 };
 </script>
 
@@ -60,7 +71,7 @@ const selectProduct = () => {
 	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ data?.modelName }}</h1>
 	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
 
-	<ProductDetailsFanCoil v-if="!!data && heatEmittingType === typeOfHeatEmitter.fanCoil" :product="data!" />
+	<ProductDetailsFanCoil v-if="!!data && heatEmittingType === 'fanCoil'" :product="data!" />
 	<ProductDetailsElectricStorageHeater v-if="!!data && heatEmittingType === typeOfHeatEmitter.electricStorageHeater" :product="data!" />
 
 	<div class="govuk-button-group">
