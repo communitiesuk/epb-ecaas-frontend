@@ -85,7 +85,7 @@ const aboveMinPower = (node: FormKitNode, min: number) => {
 		label="First order heat loss coefficient"
 		name="firstOrderHeatLossCoefficient"
 		validation="required | number | min:0 | max:10000"
-		help="This coefficient indicates how quickly the module looses heat to the environment. It can be between 0 and 100." />
+		help="This coefficient indicates how quickly the module loses heat to the environment. It can be between 0 and 100." />
 	<FormKit
 		id="secondOrderHeatLossCoefficient"
 		type="govInputWithSuffix"
