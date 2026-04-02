@@ -128,7 +128,7 @@ export function mapRadiators(state: ResolvedState): Record<string, SchemaWetDist
 				Zone: defaultZoneName,
 				type: "WetDistribution" as const,
 				design_flow_temp: radiator.designFlowTemp,
-				HeatSource: { name: getHeatSourceNameForEmitter(state, radiator) },
+				HeatSource: getHeatSourceData(state, radiator),
 				ecodesign_controller: ecoDesignController,
 				bypass_fraction_recirculated: radiator.percentageRecirculated / 100,
 			};
@@ -191,7 +191,7 @@ export function mapUnderfloorHeating(state: ResolvedState): Record<string, Schem
 				Zone: defaultZoneName,
 				type: "WetDistribution" as const,
 				design_flow_temp: heating.designFlowTemp,
-				HeatSource: { name: getHeatSourceNameForEmitter(state, heating) },
+				HeatSource: getHeatSourceData(state, heating),
 				ecodesign_controller: ecoDesignController,
 				bypass_fraction_recirculated: heating.percentageRecirculated / 100,
 			};
@@ -234,7 +234,7 @@ export function mapFanCoils(state: ResolvedState): Record<string, SchemaWetDistr
 				Zone: defaultZoneName,
 				type: "WetDistribution" as const,
 				design_flow_temp: fancoil.designFlowTemp,
-				HeatSource: { name: getHeatSourceNameForEmitter(state, fancoil) },
+				HeatSource: getHeatSourceData(state, fancoil),
 				ecodesign_controller: ecoDesignController,
 				bypass_fraction_recirculated: fancoil.percentageRecirculated / 100,
 			};
@@ -295,13 +295,21 @@ export function mapWarmAirHeater(state: ResolvedState): Record<string, SchemaWar
 					type: "WarmAir",
 					temp_diff_emit_dsgn: emitter.designTempDiffAcrossEmitters,
 					frac_convective: emitter.convectionFraction,
-					HeatSource: {
-						name: getHeatSourceNameForEmitter(state, emitter),
-					},
+					HeatSource: getHeatSourceData(state, emitter),
 				},
 			];
 		}),
 	);
+}
+
+export function getHeatSourceData(state: ResolvedState, emitter: HeatEmittingData) {
+	const temp_flow_limit_upper = getHeatSourceTempFlowLimitUpper(state, emitter);
+
+	return {
+		name: getHeatSourceNameForEmitter(state, emitter),
+		...(temp_flow_limit_upper ? { temp_flow_limit_upper } : {}),
+				
+	};
 }
 
 export function getHeatSourceNameForEmitter(state: ResolvedState, emitter: HeatEmittingData): string {
@@ -316,6 +324,23 @@ export function getHeatSourceNameForEmitter(state: ResolvedState, emitter: HeatE
 	)?.name ?? "";
 	return heatSourceName;
 }
+
+export function getHeatSourceTempFlowLimitUpper(state: ResolvedState, emitter: HeatEmittingData): number | undefined {
+	const heatSources = state.spaceHeating.heatSource;
+	const heatSource = heatSources.find(
+		(heatSource) => {
+			if ("heatSource" in emitter) {
+				return heatSource.id === emitter.heatSource;
+			}
+			return false;
+		},
+	);
+	const maxFlowTemp = heatSource && "maxFlowTemp" in heatSource ? heatSource.maxFlowTemp : undefined;
+	return maxFlowTemp;
+}
+
+
+
 
 export function mapInstantElectricHeaters(state: ResolvedState): Record<string, SchemaInstantElecHeater> {
 	const { heatEmitters } = state.spaceHeating as {

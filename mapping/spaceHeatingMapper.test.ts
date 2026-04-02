@@ -177,6 +177,7 @@ describe("Space heating - heat sources", () => {
 			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "heatBatteryPcm",
 			productReference: "1234",
+			maxFlowTemp: 32,
 			numberOfUnits: 1,
 			energySupply: "electricity",
 		};
@@ -289,6 +290,12 @@ describe("Space heating - emitters", () => {
 		id: "hp1",
 		name: "Heat Pump 1",
 	};
+	const heatBattery: Partial<HeatSourceData> = {
+		typeOfHeatBattery: "heatBatteryPcm",
+		id: "hb1",
+		name: "Heat Battery 1",
+		maxFlowTemp: 30,
+	};
 	const ufhNoWeatherCompensator: HeatEmittingData = {
 		id: "ufh1",
 		name: "UFH System",
@@ -329,7 +336,7 @@ describe("Space heating - emitters", () => {
 		convectionFraction: 0.8,
 		numOfWarmAirHeaters: 2,
 		designTempDiffAcrossEmitters: 15,
-		heatSource: heatPump.id!,
+		heatSource: heatBattery.id!,
 	};
 	const standardRadiatorNoWeatherCompensator: HeatEmittingData = {
 		id: "rad1",
@@ -435,7 +442,10 @@ describe("Space heating - emitters", () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: heatPump as HeatSourceData, complete: true }],
+						data: [
+							{ data: heatPump as HeatSourceData, complete: true }, 
+							{ data: heatBattery as HeatSourceData, complete: true },
+						],
 						complete: true,
 					},
 					heatEmitters: {
@@ -945,7 +955,9 @@ describe("Space heating - emitters", () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: heatPump as HeatSourceData, complete: true }],
+						data: [
+							{ data: heatPump as HeatSourceData, complete: true },
+							{ data: heatBattery as HeatSourceData, complete: true }],
 						complete: true,
 					},
 					heatEmitters: {
@@ -961,7 +973,8 @@ describe("Space heating - emitters", () => {
 					temp_diff_emit_dsgn: warmAirHeater.designTempDiffAcrossEmitters,
 					frac_convective: warmAirHeater.convectionFraction,
 					HeatSource: {
-						name: "Heat Pump 1",
+						name: "Heat Battery 1",
+						temp_flow_limit_upper: 30,
 					},
 				},
 			};
@@ -983,7 +996,10 @@ describe("Space heating - emitters", () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: heatPump as HeatSourceData, complete: true }],
+						data: [
+							{ data: heatPump as HeatSourceData, complete: true },
+							{ data: heatBattery as HeatSourceData, complete: true },
+						],
 						complete: true,
 					},
 					heatEmitters: {
@@ -1059,7 +1075,8 @@ describe("Space heating - emitters", () => {
 						temp_diff_emit_dsgn: warmAirHeater.designTempDiffAcrossEmitters,
 						frac_convective: warmAirHeater.convectionFraction,
 						HeatSource: {
-							name: "Heat Pump 1",
+							name: "Heat Battery 1",
+							temp_flow_limit_upper: 30,
 						},
 					},
 					[electricStorageHeater.name]: {

@@ -134,6 +134,7 @@ describe("Space heating summary page", () => {
 				typeOfHeatSource: "heatBattery",
 				typeOfHeatBattery: "heatBatteryPcm",
 				productReference: "HEAT_BATTERY_SMALL",
+				maxFlowTemp: 32,
 				numberOfUnits: 1,
 				energySupply: "electricity",
 			};
@@ -154,6 +155,7 @@ describe("Space heating summary page", () => {
 				"Type of heat battery": "Heat battery pcm",
 				"Product reference": "HEAT_BATTERY_SMALL",
 				"Product name": "Mock product",
+				"Maximum flow temperature": "32",
 				"Number of units": "1",
 				"Energy supply": "Electricity",
 			};

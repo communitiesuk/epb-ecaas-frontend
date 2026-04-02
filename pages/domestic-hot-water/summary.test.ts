@@ -530,6 +530,7 @@ describe("Domestic hot water summary", () => {
 			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "heatBatteryPcm",
 			productReference: "HEAT_BATTERY_SMALL",
+			maxFlowTemp: 32,
 			numberOfUnits: 1,
 			energySupply: "electricity",
 		};
@@ -679,6 +680,7 @@ describe("Domestic hot water summary", () => {
 			"Type of heat battery": "Heat battery pcm",
 			"Product reference": "HEAT_BATTERY_SMALL",
 			"Number of units": "1",
+			"Maximum flow temperature": "32",
 			"Energy supply": "Electricity",
 		};
 		const expectedHeatNetwork = {

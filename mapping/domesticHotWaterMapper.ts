@@ -110,11 +110,18 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 			throw new Error("referenced heat source for water storage not found");
 		}
 
+		const heatSource = referencedHeatSource.isExistingHeatSource
+			? state.spaceHeating.heatSource
+				.find(hs => hs.id === referencedHeatSource.heatSourceId)
+			: referencedHeatSource;
+
+		const temp_flow_limit_upper = heatSource && "maxFlowTemp" in heatSource ? heatSource.maxFlowTemp : undefined;
+
 		const heatSourceName = referencedHeatSource.isExistingHeatSource
 			? state.spaceHeating.heatSource
 				.find(hs => hs.id === referencedHeatSource.heatSourceId)?.name ?? "Heat source"
 			: referencedHeatSource.name;
-
+			
 		const coldWaterSource: SchemaColdWaterSourceType = ({
 			mainsWater: "mains water",
 			headerTank: "header tank",
@@ -156,7 +163,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 						heater_position: ws.heaterPosition,
 						type: "HeatSourceWet",
 						thermostat_position: ws.thermostatPosition,
-						temp_flow_limit_upper: 65,
+						...(temp_flow_limit_upper ? { temp_flow_limit_upper } : {}),
 					},
 				},
 				...(pipeworkEntries.length !== 0 ? { primary_pipework: pipeworkEntries } : {}),

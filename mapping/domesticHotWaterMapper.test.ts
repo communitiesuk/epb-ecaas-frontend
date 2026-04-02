@@ -28,6 +28,22 @@ describe("domestic hot water mapper", () => {
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
+	const battery = {
+		data: {
+			id: heatSourceId,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			name: "heatBattery",
+			typeOfHeatSource: "heatBattery",
+			coldWaterSource: "mainsWater",
+			isExistingHeatSource: false,
+			productReference: "HB-12345",
+			typeOfHeatBattery: "heatBatteryDryCore",
+			numberOfUnits: 1,
+			maxFlowTemp: 32,
+		},
+		complete: true,
+	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
 	describe("water storage", () => {
 
 		it("maps hot water cylinder input state to FHS input request", () => {
@@ -73,8 +89,64 @@ describe("domestic hot water mapper", () => {
 						heater_position: 0.3,
 						type: "HeatSourceWet",
 						name: heatPump.data.name,
-						temp_flow_limit_upper: 65,
 						thermostat_position: 0.5,
+					},
+				},
+				daily_losses: 5,
+				volume: 90,
+				type: "StorageTank",
+				init_temp: 60,
+			};
+
+			// Assert
+			expect(result).toEqual(expectedResult);
+		});
+
+		it("maps hot water cylinder input state with max flow temp to FHS input request", () => {
+			// Arrange
+			const hotWaterCylinder: EcaasForm<WaterStorageData> = {
+				...baseForm,
+				data: {
+					id: "hot water cylinder",
+					typeOfWaterStorage: "hotWaterCylinder",
+					name: "hot water cylinder",
+					storageCylinderVolume: unitValue(90, litre),
+					dailyEnergyLoss: 5,
+					dhwHeatSourceId: heatSourceId,
+					areaOfHeatExchanger: 2,
+					heaterPosition: 0.3,
+					thermostatPosition: 0.5,
+				},
+			};
+
+			store.$patch({
+				domesticHotWater: {
+					waterStorage: {
+						data: [hotWaterCylinder],
+						complete: true,
+					},
+					heatSources: {
+						data: [battery],
+						complete: true,
+					},
+					pipework: {
+						data: [],
+						complete: true,
+					},
+				},
+			});
+
+			// Acts
+			const result = mapHotWaterSourcesData(resolveState(store.$state))[0]!;
+			const expectedResult: Partial<FhsInputSchema["HotWaterSource"]["hw cylinder"]> = {
+				ColdWaterSource: "mains water",
+				HeatSource: {
+					[battery.data.name]: {
+						heater_position: 0.3,
+						type: "HeatSourceWet",
+						name: battery.data.name,
+						thermostat_position: 0.5,
+						temp_flow_limit_upper: 32,
 					},
 				},
 				daily_losses: 5,

@@ -720,6 +720,7 @@ describe("heatSource", () => {
 			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "heatBatteryPcm",
 			productReference: "HEAT_BATTERY_SMALL",
+			maxFlowTemp: 32,
 			numberOfUnits: 1,
 			energySupply: "electricity",
 		};
@@ -730,6 +731,7 @@ describe("heatSource", () => {
 			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "heatBatteryDryCore",
 			productReference: "HEAT_BATTERY_MEDIUM",
+			maxFlowTemp: 32,
 			numberOfUnits: 2,
 			energySupply: "LPG_bulk",
 		};
@@ -1207,6 +1209,7 @@ describe("heatSource", () => {
 				typeOfHeatSource: "heatBattery",
 				typeOfHeatBattery: "heatBatteryPcm",
 				productReference: "HEATBATTERY-SMALL",
+				maxFlowTemp: 32,
 				numberOfUnits: 1,
 			};
 

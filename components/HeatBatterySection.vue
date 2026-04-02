@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { heatBatteryTypes, uniqueName } from "#imports";
+import { celsius } from "~/utils/units/temperature";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -46,6 +47,16 @@ const emit = defineEmits(["update-heat-battery-model"]);
 			:selected-product-type="model.typeOfHeatBattery"
 			:page-url="route.fullPath"
 			:page-index="index" />
+		<FormKit
+			id="maxFlowTemp"
+			name="maxFlowTemp"
+			label="Maximum flow temperature"
+			help="Enter the highest temperature that the battery is allowed to operate at."
+			type="govInputWithUnit"
+			:unit="celsius"
+			validation="required"
+			data-field="HeatSourceWet |"
+		/>
 		<FormKit
 			id="numberOfUnits"
 			type="govInputInt"

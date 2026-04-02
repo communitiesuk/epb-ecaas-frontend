@@ -875,6 +875,7 @@ const boilerBase = pcdbProduct.extend({
 const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatBattery"),
 	typeOfHeatBattery,
+	maxFlowTemp: z.number().optional(),
 	numberOfUnits: z.number(),
 	energySupply: fuelTypeZod.optional(),
 });
@@ -1178,6 +1179,7 @@ const hotWaterHeatSourceExtension = {
 	heatSourceId: z.literal("NEW_HEAT_SOURCE"),
 	coldWaterSource: z.enum(["mainsWater", "headerTank"]),
 	isExistingHeatSource: z.literal(false),
+	maxFlowTemp: z.number().optional(),
 };
 
 const baseImmersionHeater = namedWithId.extend({
