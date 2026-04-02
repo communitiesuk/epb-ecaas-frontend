@@ -61,6 +61,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		@submit-invalid="handleInvalidSubmit"
 	>
 		<GovErrorSummary :error-list="errorMessages" test-id="exposedFloorErrorSummary"/>
+		<GovInset>It is assumed that the pitch of the floor is 180°. If this is not the case, enter the element as an external wall.</GovInset>
 		<FormKit
 			id="name"
 			type="govInputText"
@@ -104,10 +105,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsUValue />
+		<FieldsUValue help="Enter the U-value of the full thickness of the floor build-up" />
 		<FieldsColourOfExternalSurface v-if="!(model?.pitch && model.pitch > 120)" />
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of the full thickness of the floor build-up"
+		/>
+		<FieldsMassDistributionClass
+			id="massDistributionClass"
+			name="massDistributionClass"
+			help="This is the distribution of mass in the full thickness of the floor build up"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save an mark as complete" test-id="saveAndComplete" :ignore="true" />
