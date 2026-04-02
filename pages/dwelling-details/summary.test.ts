@@ -29,7 +29,7 @@ const state: DwellingDetailSummary = {
 		numOfRoomsWithTappingPoints: 2,
 		numOfWetRooms: 3,
 		fuelType: ["mains_gas", "LPG_bulk"],
-		canExportToGrid: "yes",
+		canExportToGrid: "no_export",
 		isPartGCompliant: true,
 		partOActiveCoolingRequired: false,
 	},
@@ -92,6 +92,9 @@ describe("Dwelling details summary", () => {
 			"Number of habitable rooms": "4",
 			"Total number of rooms with tapping points": "2",
 			"Energy sources": "Mains gas, LPG (Liquid petroleum gas) - bulk, Electricity",
+			"Can any energy generated on site be exported to the grid?": "No, generated energy can’t be exported to the grid",
+			"Is the dwelling Part G compliant?": "Yes",
+			"Is active cooling required to make the dwelling Part O compliant?": "No",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

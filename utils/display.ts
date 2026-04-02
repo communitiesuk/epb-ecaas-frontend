@@ -6,6 +6,7 @@ import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
 import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
 import type { Split } from "type-fest";
+import type { keyof } from "zod";
 
 export const emptyValueRendering = "-";
 
@@ -422,6 +423,7 @@ export function displayHotWaterOutletType(type: HotWaterOutletType | undefined):
 	}
 	return hotWaterOutletTypes[type];
 }
+
 export const wwhrsTypes = {
 	"instantaneousSystemA": "WWHRS instantaneous system A",
 	"instantaneousSystemB": "WWHRS instantaneous system B",
@@ -479,3 +481,10 @@ export const canExportToGridDisplay = {
 	no_export: "No, generated energy can’t be exported to the grid",
 	no_generation: "No, no energy will be generated on site",
 } as const satisfies Record<GeneralDetailsData["canExportToGrid"], string>;
+
+export function displayCanExportToGrid(type: GeneralDetailsData["canExportToGrid"] | undefined): (typeof canExportToGridDisplay)[GeneralDetailsData["canExportToGrid"]] | typeof emptyValueRendering {
+	if (!type) {
+		return emptyValueRendering;
+	}
+	return canExportToGridDisplay[type];
+}

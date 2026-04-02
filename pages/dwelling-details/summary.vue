@@ -29,6 +29,9 @@ const generalDetailsSummary: SummarySection = {
 		"Total number of rooms with tapping points": show(generalDetailsData.numOfRoomsWithTappingPoints),
 		"Total number of wet rooms": show(generalDetailsData.numOfWetRooms),
 		"Energy sources": displayFuelTypes(generalDetailsData.fuelType),
+		"Can any energy generated on site be exported to the grid?": displayCanExportToGrid(generalDetailsData.canExportToGrid),
+		"Is the dwelling Part G compliant?": displayBoolean(generalDetailsData.isPartGCompliant),
+		"Is active cooling required to make the dwelling Part O compliant?": displayBoolean(generalDetailsData.partOActiveCoolingRequired),
 	},
 	editUrl: getUrl("generalSpecifications"),
 };
