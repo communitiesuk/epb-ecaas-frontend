@@ -275,6 +275,7 @@ const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
 				&& model.typeOfHeatSource === 'heatBattery'"
 			:model="(model as HeatBatteryModelType)"
 			:index="index"
+			page="domestic hot water"
 			@update-heat-battery-model="updateHeatSource" />
 		<SolarThermalSystemSection
 			v-if="model.isExistingHeatSource === false

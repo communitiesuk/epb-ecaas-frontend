@@ -5,9 +5,12 @@ import { celsius } from "~/utils/units/temperature";
 const route = useRoute();
 const store = useEcaasStore();
 
+type HeatBatterySectionPage = "space heating" | "domestic hot water";
+
 defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatBattery" }>;
 	index: number;
+	page: HeatBatterySectionPage;
 }>();
 
 const heatSources = getCombinedHeatSources(store);
@@ -51,11 +54,11 @@ const emit = defineEmits(["update-heat-battery-model"]);
 			id="maxFlowTemp"
 			name="maxFlowTemp"
 			label="Maximum flow temperature"
-			help="Enter the highest temperature that the battery is allowed to operate at."
+			:help="`Enter the highest temperature that the battery is allowed to operate at for ${page}`"
 			type="govInputWithUnit"
 			:unit="celsius"
 			validation="required"
-			data-field="HeatSourceWet |"
+			:data-field="page == 'domestic hot water' ? 'HotWaterSource.*.HeatSource.*.temp_flow_limit_upper' :  'SpaceHeatSystem.*HeatSource.temp_flow_limit_upper'"
 		/>
 		<FormKit
 			id="numberOfUnits"

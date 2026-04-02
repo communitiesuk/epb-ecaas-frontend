@@ -132,6 +132,7 @@ const boilers = heatSourceStoreData
 			v-if="model?.typeOfHeatSource === 'heatBattery'"
 			:model="(model as HeatBatteryModelType)"
 			:index="index"
+			page="space heating"
 			@update-heat-battery-model="updateHeatSource" />
 		<SolarThermalSystemSection
 			v-if="model?.typeOfHeatSource === 'solarThermalSystem'"
