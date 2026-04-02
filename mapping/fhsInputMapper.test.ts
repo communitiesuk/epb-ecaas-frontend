@@ -727,7 +727,6 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 0.1,
 					type: "BuildingElementOpaque",
 					is_external_door: false,
-					colour: "Dark",
 					is_unheated_pitched_roof: false,
 				},
 				"party wall 1 (wall)": {
