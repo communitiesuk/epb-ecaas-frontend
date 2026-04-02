@@ -104,13 +104,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="surfaceAreaOfElement"
 			validation="required | number | min:0 | max:10000"
 			suffix-text="m²"
-			data-field="Zone.BuildingElement.*.area">
-			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">The net surface area should only be for one side of the wall, not both.</p>
-			</GovDetails>
-		</FormKit>
+			data-field="Zone.BuildingElement.*.area"
+		/>
 		<FieldsUValue
-			help="Enter the u-value of half the thickness of the construction build up"
+			help="Enter the U-value of half the thickness of the construction build up"
 		/>
 		<FieldsArealHeatCapacity
 			id="arealHeatCapacity"
