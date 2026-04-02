@@ -376,11 +376,11 @@ const greaterThanZero = (node: FormKitNode) => {
 			<FormKit
 				id="heightOfFloorUpperSurface"
 				type="govInputWithSuffix"
-				suffix-text="mm"
+				suffix-text="m"
 				label="Height of the floor upper surface"
-				help="Enter the height of the top surface of the ground floor above the external ground level. Typically between 15mm and 60mm."
+				help="Enter the height of the top surface of the ground floor above the external ground level. Typically between 0.015m and 0.06m."
 				name="heightOfFloorUpperSurface"
-				validation="required | number | min:0 | max:100000"
+				validation="required | number | min:0 | max:1000"
 				data-field="Zone.BuildingElement.*.height_upper_surface"/>
 			<FormKit
 				id="underfloorSpaceThermalResistance"
@@ -391,13 +391,15 @@ const greaterThanZero = (node: FormKitNode) => {
 				name="underfloorSpaceThermalResistance"
 				validation="required | number"
 				data-field="Zone.BuildingElement.*.thermal_resist_insul"
-			/>
+			>
+				<GovDetails summary-text="Help with this input"><p class="govuk-body">The thermal resistance of the insulation layer should be calculated for the part of the floor construction below the void, excluding the effect of surface resistances.</p></GovDetails>
+			</FormKit>
 			<FormKit
 				id="thermalTransmittanceOfWallsAboveGround"
 				type="govInputWithSuffix"
-				suffix-text="W/(m²·K)"
+				suffix-text="W(m²/K)"
 				label="Thermal transmittance of walls above ground"
-				help="Enter the thermal transmittance (or U-value) of the external walls above ground level. Typically between 0.13 and 0.25 W(m²·K)"
+				help="Enter the thermal transmittance (or U-value) of the external walls above ground level. Typically between 0.13 and 0.25 W(m²/K)"
 				name="thermalTransmittanceOfWallsAboveGround"
 				validation="required | number"
 				data-field="Zone.BuildingElement.*.thermal_transm_walls"/>
