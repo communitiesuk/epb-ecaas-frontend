@@ -312,7 +312,7 @@ describe("dwelling fabric mapper", () => {
 		const expectedGroundFloor: BuildingElementGroundForSchema = {
 			type: "BuildingElementGround",
 			area: groundFloor.surfaceArea,
-			total_area: groundFloor.surfaceArea,
+			total_area: groundFloor.totalArea,
 			u_value: groundFloor.uValue,
 			thermal_resistance_floor_construction: groundFloor.thermalResistance,
 			areal_heat_capacity: groundFloor.arealHeatCapacity,
@@ -432,7 +432,7 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementGround",
 			thermal_resistance_construction: floorAboveUnheatedBasement.thermalResistance,
 			u_value: floorAboveUnheatedBasement.uValue,
-			total_area: floorAboveUnheatedBasement.surfaceArea,
+			total_area: floorAboveUnheatedBasement.totalArea,
 			floor_type: "Unheated_basement",
 			thickness_walls: floorAboveUnheatedBasement.thicknessOfWalls / 1000,
 			perimeter: floorAboveUnheatedBasement.perimeter,

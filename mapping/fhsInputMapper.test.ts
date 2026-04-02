@@ -259,7 +259,7 @@ const expectedHouseInput: FhsInputSchema = {
 				"ground-floor (floor)": {
 					type: "BuildingElementGround",
 					area: 40,
-					total_area: 40,
+					total_area: 50,
 					u_value: 1,
 					thermal_resistance_floor_construction: 1,
 					areal_heat_capacity: "Very light",
@@ -669,7 +669,7 @@ const expectedFlatInput: FhsInputSchema = {
 				"ground floor 1 (floor)": {
 					type: "BuildingElementGround",
 					area: 12,
-					total_area: 12,
+					total_area: 20,
 					u_value: 5,
 					thermal_resistance_floor_construction: 2,
 					areal_heat_capacity: "Very light",
@@ -687,7 +687,7 @@ const expectedFlatInput: FhsInputSchema = {
 				"ground floor 2 (floor)": {
 					type: "BuildingElementGround",
 					area: 26,
-					total_area: 26,
+					total_area: 30,
 					depth_basement_floor: 2,
 					u_value: 5,
 					thermal_resistance_floor_construction: 2,

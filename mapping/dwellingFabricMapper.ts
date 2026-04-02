@@ -128,7 +128,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				groundFloor = {
 					type: "BuildingElementGround",
 					area: x.surfaceArea,
-					total_area: x.surfaceArea,
+					total_area: x.totalArea,
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
 					areal_heat_capacity: x.arealHeatCapacity,
@@ -145,7 +145,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				groundFloor = {
 					type: "BuildingElementGround",
 					area: x.surfaceArea,
-					total_area: x.surfaceArea,
+					total_area: x.totalArea,
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
 					areal_heat_capacity: x.arealHeatCapacity,
@@ -161,7 +161,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				groundFloor = {
 					type: "BuildingElementGround",
 					area: x.surfaceArea,
-					total_area: x.surfaceArea,
+					total_area: x.totalArea,
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
 					areal_heat_capacity: x.arealHeatCapacity,
@@ -182,7 +182,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				groundFloor = {
 					type: "BuildingElementGround",
 					area: x.surfaceArea,
-					total_area: x.surfaceArea,
+					total_area: x.totalArea,
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
 					areal_heat_capacity: x.arealHeatCapacity,
@@ -200,7 +200,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				groundFloor = {
 					type: "BuildingElementGround",
 					area: x.surfaceArea,
-					total_area: x.surfaceArea,
+					total_area: x.totalArea,
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
 					areal_heat_capacity: x.arealHeatCapacity,
@@ -280,7 +280,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				type: "BuildingElementGround",
 				thermal_resistance_construction: x.thermalResistance,
 				u_value: x.uValue,
-				total_area: x.surfaceArea,
+				total_area: x.totalArea,
 				floor_type: "Unheated_basement",
 				thickness_walls: x.thicknessOfWalls / 1000,
 				perimeter: x.perimeter,
