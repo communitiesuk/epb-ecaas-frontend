@@ -298,7 +298,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | number"
 			/>
 		</template>
-		<FieldsAirFlowRate />
+		<FormKit
+			id="airFlowRate"
+			name="airFlowRate"
+			label="Design air flow rate"
+			help="Enter the required design air flow rate that will be supplied to or extracted from the ventilation zone by the system. Typically between 10 and 50 l/s."
+			type="govInputWithUnit"
+			:unit="litrePerSecond"
+			validation="required"
+			data-field="InfiltrationVentilation.MechanicalVentilation.design_outdoor_air_flow_rate"
+		/>
 		<template v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR'">
 			<FormKit
 				id="mvhrLocation"
