@@ -180,7 +180,6 @@ describe("floors", () => {
 		arealHeatCapacity: "Medium",
 		massDistributionClass: "I",
 		depthOfBasementFloor: 2.5,
-		perimeter: 30,
 		psiOfWallJunction: 0.08,
 		thicknessOfWalls: 0.3,
 	};
@@ -194,7 +193,6 @@ describe("floors", () => {
 		arealHeatCapacity: "Heavy",
 		massDistributionClass: "E",
 		depthOfBasementFloor: 3,
-		perimeter: 32,
 		psiOfWallJunction: 0.1,
 		thicknessOfWalls: 0.4,
 	};
@@ -208,7 +206,6 @@ describe("floors", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "M",
 		depthOfBasementFloor: 2,
-		perimeter: 28,
 		psiOfWallJunction: 0.05,
 		thicknessOfWalls: 0.25,
 	};

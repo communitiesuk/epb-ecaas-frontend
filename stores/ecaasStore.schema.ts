@@ -276,7 +276,6 @@ const floorOfHeatedBasementDataZod = namedWithId.extend({
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	depthOfBasementFloor: z.number(),
-	perimeter: z.number().min(0).max(1000),
 	psiOfWallJunction: z.number().min(0).max(2),
 	thicknessOfWalls: z.number(),
 });

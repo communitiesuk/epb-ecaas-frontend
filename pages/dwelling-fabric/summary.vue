@@ -156,7 +156,6 @@ const heatedBasementSummary: SummarySection = {
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Depth of basement floor below ground": dim(x.depthOfBasementFloor, "metres"),
-			"Perimeter": dim(x.perimeter, "metres"),
 			"Psi of wall junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
 			"Thickness of walls": dim(x.thicknessOfWalls, "millimetres"),
 		};

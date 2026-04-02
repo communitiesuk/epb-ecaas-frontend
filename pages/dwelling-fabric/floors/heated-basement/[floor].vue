@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { NuxtLink } from "#components";
 import { getUrl, uniqueName } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 const title = "Floor of heated basement";
@@ -25,7 +24,6 @@ const saveForm = (fields: FloorOfHeatedBasementData) => {
 			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 			depthOfBasementFloor: fields.depthOfBasementFloor,
-			perimeter: fields.perimeter,
 			psiOfWallJunction: fields.psiOfWallJunction,
 			thicknessOfWalls: fields.thicknessOfWalls,
 		};
@@ -89,13 +87,17 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:1"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsUValue id="uValue" name="uValue" />
+		<FieldsUValue
+			id="uValue"
+			name="uValue"
+			help="Enter the U-value of the construction of the floor at the bottom of the lowest heated level of the dwelling, including the thermal resistance of the ground"	
+		/>
 		<FormKit
 			id="thermalResistance"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal resistance"
-			help="Enter the thermal resistance of all layers in the floor construction"
+			help="Enter the thermal resistance of all layers in the floor construction, not including the effects of the ground"
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50"
 		><GovDetails summary-text="Help with this input">
@@ -103,29 +105,25 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</p>
 		</GovDetails>
 		</FormKit>
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of the full thickness of the floor build-up"	
+		/>
+		<FieldsMassDistributionClass
+			id="massDistributionClass"
+			name="massDistributionClass"
+			help="This is the distribution of mass in the full thickness of the floor build up"	
+		/>
 		<FormKit
 			id="depthOfBasementFloor"
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Depth of basement floor"
-			help="Enter how far the basement floor is below  the outside ground level"
+			help="Measure the depth from the outside ground level to the upper surface of the basement floor. If the ground is uneven, enter the average depth."
 			name="depthOfBasementFloor"
 			validation="required | number"
 		/>
-		<FormKit
-			id="perimeter"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Perimeter"
-			help="Enter the length of the exposed perimeter of the floor. This should not include the length of the perimeter that is adjacent to another heated space."
-			name="perimeter"
-			validation="required | number | min:0 | max:1000"
-		><GovDetails summary-text="Help with this input">
-			<p class="govuk-hint">The exposed perimeter of the floor is where heat loss may occur, usually at the base of the external walls where they meet the ground floor.</p>
-		</GovDetails>
-		</FormKit>
 		<FormKit
 			id="psiOfWallJunction"
 			type="govInputWithSuffix"
@@ -142,10 +140,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Thickness of walls"
 			name="thicknessOfWalls"
 			validation="required | number"
-		><div class="govuk-hint">
-			<p>Enter the width or physical depth of the ground floor <NuxtLink :to="getUrl('dwellingSpaceWalls')">walls</NuxtLink> that are in contact with or directly relevant to the ground floor. Typically between 30mm to 80mm. If this varies, enter a weighted average</p>
-		</div>
-		</FormKit>
+			help="Enter the physical thickness of the ground floor wall. Typically more than 300mm. If the thickness varies, enter a weighted average."
+		/>
 		<div class="govuk-button-group govuk-!-margin-top-6">
 			<GovLLMWarning />
 			<div class="govuk-button-group">

@@ -317,7 +317,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				depth_basement_floor: x.depthOfBasementFloor,
-				perimeter: x.perimeter,
+				perimeter: 0, // see EC-1347
 				psi_wall_floor_junc: x.psiOfWallJunction,
 				thickness_walls: x.thicknessOfWalls / 1000,
 				floor_type: "Heated_basement",

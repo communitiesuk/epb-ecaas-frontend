@@ -124,7 +124,6 @@ const floorsData: FloorsData = {
 				arealHeatCapacity: "Medium",
 				massDistributionClass: "I",
 				depthOfBasementFloor: 2.5,
-				perimeter: 30,
 				psiOfWallJunction: 0.08,
 				thicknessOfWalls: 0.3,
 			},
@@ -537,7 +536,6 @@ describe("Dwelling space fabric summary", () => {
 			"Areal heat capacity": "Medium",
 			"Mass distribution class": "Internal",
 			"Depth of basement floor below ground": `2.5 ${metre.suffix}`,
-			"Perimeter": `30 ${metre.suffix}`,
 			"Psi of wall junction": `0.08 ${wattsPerMeterKelvin.suffix}`,
 			"Thickness of walls": `0.3 ${millimetre.suffix}`,
 		};
