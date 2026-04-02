@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { getUrl, uniqueName, type FloorAboveUnheatedBasementData } from "#imports";
+import { zodTypeAsFormKitValidation } from "#imports";
+import { groundSurfaceAreaZod, groundTotalAreaZod } from "~/stores/ecaasStore.schema";
 
 const title = "Floor above an unheated basement";
 const store = useEcaasStore();

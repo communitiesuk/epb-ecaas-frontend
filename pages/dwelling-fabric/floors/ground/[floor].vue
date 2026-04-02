@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { centimetre, metre, type Length } from "~/utils/units/length";
+import { zodTypeAsFormKitValidation } from "#imports";
 import type { SchemaWindShieldLocation } from "~/schema/aliases";
+import { groundSurfaceAreaZod, groundTotalAreaZod } from "~/stores/ecaasStore.schema";
 import { getUrl, type GroundFloorData, uniqueName, unitValue } from "#imports";
 
 const title = "Ground floor";

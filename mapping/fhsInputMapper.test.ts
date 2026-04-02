@@ -1698,7 +1698,6 @@ describe("FHS input mapper", () => {
 							arealHeatCapacity: "Medium",
 							massDistributionClass: "D",
 							pitch: 180,
-							colour: "Dark",
 							uValue: 0.1,
 						},
 					}],

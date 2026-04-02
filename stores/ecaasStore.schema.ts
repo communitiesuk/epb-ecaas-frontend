@@ -174,7 +174,6 @@ export const exposedFloorDataZod = named.extend({
 	elevationalHeight: z.number().min(0).max(500),
 	surfaceArea: z.number().min(0.01).max(10000),
 	uValue,
-	colour: colourZod,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 });

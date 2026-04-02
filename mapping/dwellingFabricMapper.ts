@@ -263,7 +263,6 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				base_height: x.elevationalHeight,
 				area: x.surfaceArea,
 				u_value: x.uValue,
-				colour: x.colour,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				pitch: x.pitch,

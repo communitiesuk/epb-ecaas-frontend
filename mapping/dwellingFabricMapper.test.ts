@@ -215,7 +215,6 @@ describe("dwelling fabric mapper", () => {
 			elevationalHeight: 20,
 			surfaceArea: 10,
 			uValue: 1,
-			colour: "Dark",
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 		};
@@ -419,7 +418,6 @@ describe("dwelling fabric mapper", () => {
 			base_height: exposedFloor.elevationalHeight,
 			pitch: exposedFloor.pitch,
 			u_value: exposedFloor.uValue,
-			colour: exposedFloor.colour,
 			areal_heat_capacity: exposedFloor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(exposedFloor.massDistributionClass),
 			is_external_door: false,

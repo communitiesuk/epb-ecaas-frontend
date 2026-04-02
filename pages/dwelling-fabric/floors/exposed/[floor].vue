@@ -21,7 +21,6 @@ const saveForm = (fields: ExposedFloorData) => {
 			elevationalHeight: fields.elevationalHeight,
 			surfaceArea: fields.surfaceArea,
 			uValue: fields.uValue,
-			colour: fields.colour,
 			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 		};
@@ -106,7 +105,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FieldsUValue help="Enter the U-value of the full thickness of the floor build-up" />
-		<FieldsColourOfExternalSurface v-if="!(model?.pitch && model.pitch > 120)" />
 		<FieldsArealHeatCapacity
 			id="arealHeatCapacity"
 			name="arealHeatCapacity"
