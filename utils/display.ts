@@ -6,7 +6,6 @@ import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
 import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
 import type { Split } from "type-fest";
-import type { keyof } from "zod";
 
 export const emptyValueRendering = "-";
 
