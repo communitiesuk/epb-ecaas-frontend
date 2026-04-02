@@ -105,11 +105,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Net surface area"
-			help="Enter the net surface area of the entire element"
+			help="Enter the net area of the building element, subtracting any doors or windows"
 			name="netSurfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>
-		<FieldsUValue id="uValue" name="uValue" />
+		<FieldsUValue
+			id="uValue"
+			name="uValue"
+			help="Enter the U-value of the construction of the full thickness of the wall build up, including the thermal resistance of the ground"
+		/>
 		<FormKit
 			id="thermalResistance"
 			type="govInputWithSuffix"
@@ -124,14 +128,22 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</p>
 		</GovDetails>
 		</FormKit>
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of the full thickness of the wall build-up"
+		/>
+		<FieldsMassDistributionClass
+			id="massDistributionClass"
+			name="massDistributionClass"
+			help="This is the distribution of mass in the full thickness of the wall build up"
+		/>
 		<FormKit
 			id="perimeter"
 			type="govInputWithSuffix"
 			suffix-text="m"
-			label="Perimeter"
-			help="Enter the length of the perimeter of the basement wall. This should not include any part of the perimeter that is adjacent to another heated space."
+			label="Exposed perimeter"
+			help="Enter the length of the basement wall where the basement meets the ground level surface"
 			name="perimeter"
 			validation="required | number | min:0 | max:1000"
 		/>
