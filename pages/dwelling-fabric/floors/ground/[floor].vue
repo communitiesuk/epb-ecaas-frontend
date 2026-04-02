@@ -200,8 +200,8 @@ const greaterThanZero = (node: FormKitNode) => {
 			id="surfaceArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
-			label="Net surface area of this element"
-			help="Enter the total surface area of the entire building element in the dwelling"
+			label="Net surface area"
+			help="Enter the net area of the building element, subtracting any doors or windows"
 			name="surfaceArea"
 			:validation="zodTypeAsFormKitValidation(groundSurfaceAreaZod)"
 			data-field="Zone.BuildingElement.*.area"
@@ -211,18 +211,18 @@ const greaterThanZero = (node: FormKitNode) => {
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Total area"
-			help="Enter the total area"
+			help="Enter the total area of the ground floor across the dwelling.  If the ground floor is made up of multiple floor types, this is the total area of all of the ground floor elements."
 			name="totalArea"
 			:validation="zodTypeAsFormKitValidation(groundTotalAreaZod)"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsUValue id="uValue" name="uValue" />
+		<FieldsUValue id="uValue" name="uValue" help="Enter the U-value of the full thickness of the floor build-up, including the thermal resistance of the ground.  If the floor is suspended, this should include the effects of the void." />
 		<FormKit
 			id="thermalResistance"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal resistance"
-			help="Enter the thermal resistance of all layers in the floor construction"
+			help="Enter the thermal resistance of all layers in the floor construction only, not including surface resistances. For suspended floors, this should be calculated for the part of the floor construction above the void."
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50"
 			data-field="Zone.BuildingElement.*.thermal_resistance_floor_construction">
@@ -230,14 +230,14 @@ const greaterThanZero = (node: FormKitNode) => {
 				<p class="govuk-hint">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
 			</GovDetails>
 		</FormKit>
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" help="This is the sum of the heat capacities of the full thickness of the floor build-up"/>
+		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" help="This is the distribution of mass in the full thickness of the floor build up"/>
 		<FormKit
 			id="perimeter"
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Perimeter"
-			help="Enter the length of the exposed perimeter of the floor."
+			help="Enter the length of the exposed perimeter of the floor. This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings."
 			name="perimeter"
 			validation="required | number | min:0 | max:1000"
 			data-field="Zone.BuildingElement.*.perimeter">
@@ -258,9 +258,9 @@ const greaterThanZero = (node: FormKitNode) => {
 		<FormKit
 			id="thicknessOfWalls"
 			type="govInputWithSuffix"
-			suffix-text="mm"
+			suffix-text="m"
 			label="Thickness of walls at the edge of the floor"
-			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 30mm to 80mm."
+			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 0.3m to 0.8m. If this value varies enter a weighted average."
 			name="thicknessOfWalls"
 			validation="required | number"
 			data-field="Zone.BuildingElement.*.thickness_walls">

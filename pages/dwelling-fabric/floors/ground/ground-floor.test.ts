@@ -134,6 +134,7 @@ describe("ground floor", () => {
 
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Ground 1");
 			expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("5");
+			expect((await screen.findByTestId<HTMLInputElement>("totalArea")).value).toBe("7");
 			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("1");
 			expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
@@ -151,6 +152,7 @@ describe("ground floor", () => {
 
 			expect((await screen.findByTestId("name_error"))).toBeDefined();
 			expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
+			expect((await screen.findByTestId("totalArea_error"))).toBeDefined();
 			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 			expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
 			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
