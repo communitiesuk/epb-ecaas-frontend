@@ -10,7 +10,7 @@ import {
 	mapInstantElectricHeaters,
 	mapSpaceHeatSystem,
 } from "./spaceHeatingMapper";
-import type { SchemaHeatSourceWetHeatPump, SchemaWetDistribution } from "../schema/api-schema.types";
+import type { SchemaHeatSourceWetHeatPump } from "../schema/api-schema.types";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import type { HeatEmittingData } from "~/stores/ecaasStore.schema";
 import type { SchemaBoilerWithProductReference } from "~/schema/aliases";

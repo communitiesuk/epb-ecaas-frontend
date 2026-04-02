@@ -188,8 +188,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<p class="govuk-hint">
 					The thermal resistance of unheated space is a measure of the degree of shelter that the unheated space provides to the building element. It is calculated as the thickness of the material divided by its thermal conductivity. A higher thermal resistance reduces heat transfer. The U-value is the inverse of the total thermal resistance of a building element.
 				</p>
-				<p class="govuk-hint">
-					See the technical paper HEM-TP-05, in which Annex A includes a general way to calculate this and also some suggested default values for common scenarios.​
+				<p class="govuk-hint"> See the technical paper HEM-TP-05, in which Annex A includes a general way to calculate this and also some suggested default values for common scenarios.
 				</p>
 				<p class="govuk-hint">
 					The maximum thermal resistance of an unheated space is 2.5 (m²·K)/W. This is when the facing wall is not exposed.
