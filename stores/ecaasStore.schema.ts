@@ -270,14 +270,15 @@ const floorAboveUnheatedBasementDataZod = named.extend({
 export type FloorAboveUnheatedBasementData = z.infer<typeof floorAboveUnheatedBasementDataZod>;
 
 const floorOfHeatedBasementDataZod = namedWithId.extend({
-	surfaceArea: z.number().min(1),
+	netSurfaceArea: z.number().min(5).max(10000),
+	totalArea: z.number().min(5),
 	uValue,
 	thermalResistance,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	depthOfBasementFloor: z.number(),
 	psiOfWallJunction: z.number().min(0).max(2),
-	thicknessOfWalls: z.number(),
+	thicknessOfWalls: z.number().min(0).max(100),
 });
 
 export type FloorOfHeatedBasementData = z.infer<typeof floorOfHeatedBasementDataZod>;

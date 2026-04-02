@@ -18,7 +18,8 @@ const saveForm = (fields: FloorOfHeatedBasementData) => {
 		const floor: FloorOfHeatedBasementData = {
 			id: floorId,
 			name: fields.name,
-			surfaceArea: fields.surfaceArea,
+			netSurfaceArea: fields.netSurfaceArea,
+			totalArea: fields.totalArea,
 			uValue: fields.uValue,
 			thermalResistance: fields.thermalResistance,
 			arealHeatCapacity: fields.arealHeatCapacity,
@@ -78,14 +79,24 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<FormKit
-			id="surfaceArea"
+			id="netSurfaceArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
-			label="Surface area"
-			help="Enter the surface area of the floor"
-			name="surfaceArea"
-			validation="required | number | min:1"
+			label="Net surface area"
+			help="Enter the net area of the building element, subtracting any doors or windows"
+			name="netSurfaceArea"
+			validation="required | number | min:5 | max: 10000"
 			data-field="Zone.BuildingElement.*.area"
+		/>
+		<FormKit
+			id="totalArea"
+			type="govInputWithSuffix"
+			suffix-text="m²"
+			label="Total area"
+			help="Enter the total area of the basement floor across the dwelling. If the basement floor is made up of multiple floor types, this is the total area of all of the basement floor elements."
+			name="totalArea"
+			validation="required | number | min:5"
+			data-field="Zone.BuildingElement.*.total_area"
 		/>
 		<FieldsUValue
 			id="uValue"

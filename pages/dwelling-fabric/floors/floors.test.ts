@@ -174,7 +174,8 @@ describe("floors", () => {
 	const floorOfHeatedBasement1: FloorOfHeatedBasementData = {
 		id: "974e8749-f465-4f43-a38a-3d0b97060a64",
 		name: "Floor of heated basement 1",
-		surfaceArea: 45,
+		netSurfaceArea: 45,
+		totalArea: 30,
 		uValue: 0.25,
 		thermalResistance: 4,
 		arealHeatCapacity: "Medium",
@@ -187,7 +188,8 @@ describe("floors", () => {
 	const floorOfHeatedBasement2: FloorOfHeatedBasementData = {
 		id: "074e8749-f465-4f43-a38a-3d0b97060a64",
 		name: "Floor of heated basement 2",
-		surfaceArea: 50,
+		netSurfaceArea: 50,
+		totalArea: 15,
 		uValue: 0.3,
 		thermalResistance: 3.5,
 		arealHeatCapacity: "Heavy",
@@ -200,7 +202,8 @@ describe("floors", () => {
 	const floorOfHeatedBasement3: FloorOfHeatedBasementData = {
 		id: "174e8749-f465-4f43-a38a-3d0b97060a64",
 		name: "Floor of heated basement 3",
-		surfaceArea: 40,
+		netSurfaceArea: 40,
+		totalArea: 22,
 		uValue: 0.2,
 		thermalResistance: 5,
 		arealHeatCapacity: "Very light",

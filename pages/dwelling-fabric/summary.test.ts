@@ -118,7 +118,8 @@ const floorsData: FloorsData = {
 			data: {
 				id: "heated-basement-floor-id",
 				name: "Floor of heated basement 1",
-				surfaceArea: 45,
+				netSurfaceArea: 45,
+				totalArea: 20,
 				uValue: 0.25,
 				thermalResistance: 4,
 				arealHeatCapacity: "Medium",
@@ -531,6 +532,7 @@ describe("Dwelling space fabric summary", () => {
 		const expectedResult = {
 			"Name": "Floor of heated basement 1",
 			"Net surface area of this element": `45 ${metresSquare.suffix}`,
+			"Total area": `20 ${metresSquare.suffix}`,
 			"U-value": `0.25 ${wattsPerSquareMeterKelvin.suffix}`,
 			"Thermal resistance": `4 ${squareMeterKelvinPerWatt.suffix}`,
 			"Areal heat capacity": "Medium",

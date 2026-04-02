@@ -310,8 +310,8 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementGround",
-				area: x.surfaceArea,
-				total_area: x.surfaceArea,
+				area: x.netSurfaceArea,
+				total_area: x.totalArea,
 				u_value: x.uValue,
 				thermal_resistance_floor_construction: x.thermalResistance,
 				areal_heat_capacity: x.arealHeatCapacity,

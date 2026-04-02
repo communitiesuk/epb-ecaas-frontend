@@ -237,7 +237,8 @@ describe("dwelling fabric mapper", () => {
 		const floorAboveHeatedBasement: FloorOfHeatedBasementData = {
 			id: "974e8749-f465-4f43-a38a-3d0b97060a64",
 			name: "Floor above heated basement 1",
-			surfaceArea: 5,
+			netSurfaceArea: 5,
+			totalArea: 10,
 			uValue: 1,
 			thermalResistance: 1,
 			arealHeatCapacity: "Very light",
@@ -449,7 +450,7 @@ describe("dwelling fabric mapper", () => {
 
 		const expectedFloorOfHeatedBasement: BuildingElementGroundForSchema = {
 			type: "BuildingElementGround",
-			total_area: floorAboveHeatedBasement.surfaceArea,
+			total_area: floorAboveHeatedBasement.totalArea,
 			mass_distribution_class: fullMassDistributionClass(floorAboveHeatedBasement.massDistributionClass),
 			areal_heat_capacity: floorAboveHeatedBasement.arealHeatCapacity,
 			depth_basement_floor: floorAboveHeatedBasement.depthOfBasementFloor,
@@ -457,7 +458,7 @@ describe("dwelling fabric mapper", () => {
 			psi_wall_floor_junc: floorAboveHeatedBasement.psiOfWallJunction,
 			thickness_walls: floorAboveHeatedBasement.thicknessOfWalls / 1000,
 			floor_type: "Heated_basement",
-			area: floorAboveHeatedBasement.surfaceArea,
+			area: floorAboveHeatedBasement.netSurfaceArea,
 			thermal_resistance_construction: floorAboveHeatedBasement.thermalResistance,
 			thermal_resistance_floor_construction: floorAboveHeatedBasement.thermalResistance,
 			u_value: floorAboveHeatedBasement.uValue,
@@ -583,7 +584,8 @@ describe("dwelling fabric mapper", () => {
 			data: {
 				id: "974e8749-f465-4f43-a38a-3d0b97060a64",
 				name: "Floor above heated basement 1",
-				surfaceArea: 5,
+				netSurfaceArea: 5,
+				totalArea: 10,
 				uValue: 1,
 				thermalResistance: 1,
 				arealHeatCapacity: "Very light",
@@ -1555,7 +1557,8 @@ describe("dwelling fabric mapper", () => {
 			data: {
 				id: "heated-basement-floor-id",
 				name: "Floor of heated basement 1",
-				surfaceArea: 45,
+				netSurfaceArea: 45,
+				totalArea: 20,
 				uValue: 0.25,
 				thermalResistance: 4,
 				arealHeatCapacity: "Medium",

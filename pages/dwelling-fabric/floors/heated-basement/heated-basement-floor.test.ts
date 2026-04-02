@@ -16,7 +16,8 @@ describe("floor of heated basement", () => {
 	const heatedBasementFloor: FloorOfHeatedBasementData = {
 		id: "test-floor-id-123",
 		name: "Heated Basement Floor 1",
-		surfaceArea: 45.0,
+		netSurfaceArea: 45.0,
+		totalArea: 25,
 		uValue: 0.25,
 		thermalResistance: 0.5,
 		arealHeatCapacity: "Medium",
@@ -36,7 +37,8 @@ describe("floor of heated basement", () => {
 		const defaults: FloorOfHeatedBasementData = {
 			id: "test-floor-id-123",
 			name: "Test Floor",
-			surfaceArea: 45,
+			netSurfaceArea: 45,
+			totalArea: 20,
 			uValue: 0.25,
 			thermalResistance: 0.5,
 			arealHeatCapacity: "Medium",
@@ -48,7 +50,7 @@ describe("floor of heated basement", () => {
 
 		const values: FloorOfHeatedBasementData = { ...defaults, ...overrides };
 		await user.type(screen.getByTestId("name"), values.name);
-		await user.type(screen.getByTestId("surfaceArea"), String(values.surfaceArea));
+		await user.type(screen.getByTestId("netSurfaceArea"), String(values.netSurfaceArea));
 		await user.type(screen.getByTestId("uValue"), String(values.uValue));
 		await user.type(screen.getByTestId("thermalResistance"), String(values.thermalResistance));
 		await user.click(screen.getByTestId(`arealHeatCapacity_${values.arealHeatCapacity}`));
@@ -68,7 +70,8 @@ describe("floor of heated basement", () => {
 		});
 
 		await user.type(screen.getByTestId("name"), "Heated Basement Floor 1");
-		await user.type(screen.getByTestId("surfaceArea"), "45.0");
+		await user.type(screen.getByTestId("netSurfaceArea"), "45.0");
+		await user.type(screen.getByTestId("totalArea"), "25");
 		await user.type(screen.getByTestId("uValue"), "0.25");
 		await user.type(screen.getByTestId("thermalResistance"), "0.5");
 		await user.click(screen.getByTestId("arealHeatCapacity_Medium"));
@@ -108,7 +111,7 @@ describe("floor of heated basement", () => {
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heated Basement Floor 1");
-		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("45");
+		expect((await screen.findByTestId<HTMLInputElement>("netSurfaceArea")).value).toBe("45");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.25");
 		expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("0.5");
 		expect((await screen.findByTestId("arealHeatCapacity_Medium")).hasAttribute("checked")).toBe(true);
@@ -127,7 +130,7 @@ describe("floor of heated basement", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
-		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
+		expect((await screen.findByTestId("netSurfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 		expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
@@ -147,7 +150,7 @@ describe("floor of heated basement", () => {
 		});
 
 		// change a field to trigger autosave
-		await user.type(screen.getByTestId("surfaceArea"), "12");
+		await user.type(screen.getByTestId("netSurfaceArea"), "12");
 		await user.tab();
 
 		await waitFor(() => {
@@ -172,7 +175,7 @@ describe("floor of heated basement", () => {
 		await renderSuspended(HeatedBasementFloor);
 
 		await user.type(screen.getByTestId("name"), "Heated Basement Floor 1");
-		await user.type(screen.getByTestId("surfaceArea"), "45.0");
+		await user.type(screen.getByTestId("netSurfaceArea"), "45.0");
 		await user.type(screen.getByTestId("uValue"), "0.25");
 		await user.type(screen.getByTestId("thermalResistance"), "0.5");
 		await user.click(screen.getByTestId("arealHeatCapacity_Medium"));
@@ -306,13 +309,13 @@ describe("floor of heated basement", () => {
 			});
 
 			await user.type(screen.getByTestId("name"), "Heated basement 1");
-			await user.type(screen.getByTestId("surfaceArea"), "50");
+			await user.type(screen.getByTestId("netSurfaceArea"), "50");
 			await user.type(screen.getByTestId("uValue"), "0.3");
 			await user.tab();
 
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement;
 			expect(data[0]!.data.name).toBe("Heated basement 1");
-			expect(data[0]!.data.surfaceArea).toBe(50);
+			expect(data[0]!.data.netSurfaceArea).toBe(50);
 			expect(data[0]!.data.uValue).toBe(0.3);
 		});
 
@@ -323,13 +326,13 @@ describe("floor of heated basement", () => {
 				},
 			});
 
-			await user.type(screen.getByTestId("surfaceArea"), "45");
+			await user.type(screen.getByTestId("netSurfaceArea"), "45");
 			await user.type(screen.getByTestId("uValue"), "0.25");
 			await user.tab();
 
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement;
 			expect(data[0]!.data.name).toBe("Floor of heated basement");
-			expect(data[0]!.data.surfaceArea).toBe(45);
+			expect(data[0]!.data.netSurfaceArea).toBe(45);
 			expect(data[0]!.data.uValue).toBe(0.25);
 		});
 
@@ -352,16 +355,16 @@ describe("floor of heated basement", () => {
 
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement;
 			expect(data[0]!.data.name).toBe("Heated Basement Floor 1");
-			expect(data[0]!.data.surfaceArea).toBe(45.0);
+			expect(data[0]!.data.netSurfaceArea).toBe(45.0);
 
 			await user.clear(screen.getByTestId("name"));
 			await user.type(screen.getByTestId("name"), "Updated basement floor");
-			await user.clear(screen.getByTestId("surfaceArea"));
-			await user.type(screen.getByTestId("surfaceArea"), "60");
+			await user.clear(screen.getByTestId("netSurfaceArea"));
+			await user.type(screen.getByTestId("netSurfaceArea"), "60");
 			await user.tab();
 
 			expect(data[0]!.data.name).toBe("Updated basement floor");
-			expect(data[0]!.data.surfaceArea).toBe(60);
+			expect(data[0]!.data.netSurfaceArea).toBe(60);
 		});
 
 		test("heated basement floor and section are set as 'not complete' after user edits floor", async () => {
