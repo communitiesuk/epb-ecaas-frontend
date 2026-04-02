@@ -883,8 +883,8 @@ const solarThermalSystemBase = namedWithId.extend({
 	secondOrderHeatLossCoefficient: z.number(),
 	heatLossCoefficientOfSolarLoopPipe: z.number(),
 	collectorMassFlowRate: z.number(),
-	powerOfCollectorPump: z.number(),
-	powerOfCollectorPumpController: z.number(),
+	powerOfCollectorPump: zodUnit("power"),
+	powerOfCollectorPumpController: zodUnit("power"),
 	pitch: z.number().min(0).max(90),
 	orientation,
 });

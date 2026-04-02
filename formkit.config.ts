@@ -18,6 +18,7 @@ import { FormKitBoolean, FormKitPcdbProduct } from "#components";
 import type { LengthUnit } from "./utils/units/length";
 import type { VolumeUnit } from "./utils/units/volume";
 import type { FlowRateUnit } from "./utils/units/flowRate";
+import type { PowerUnit } from "./utils/units/power";
 
 // Enable TypeScript support for custom inputs
 declare module "@formkit/inputs" {
@@ -47,7 +48,7 @@ declare module "@formkit/inputs" {
 		};
 		govInputWithUnit: {
 			type: "govInputWithUnit";
-			unit: LengthUnit | VolumeUnit | FlowRateUnit;
+			unit: LengthUnit | VolumeUnit | FlowRateUnit | PowerUnit;
 		};
 		govCheckboxes: {
 			type: "govCheckboxes";

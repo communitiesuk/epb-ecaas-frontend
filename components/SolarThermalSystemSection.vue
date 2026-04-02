@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { HeatSourceData } from "#imports";
 import { isInteger, uniqueName } from "#imports";
+import { kilowatt, type Power } from "~/utils/units/power";
 
 const store = useEcaasStore();
 
@@ -16,6 +17,11 @@ const locationOfCollectorLoopPipingOptions = {
 	"heatedSpace": "Heated space",
 	"unheatedSpace": "Unheated space",
 } as const satisfies Record<LocationOfCollectorLoopPipingType, LocationOfCollectorLoopPipingTypeDisplay>;
+
+const aboveMinPower = (node: FormKitNode, min: number) => {
+	const value = node.value as Power;
+	return value.amount >= min;
+};
 
 </script>
 
@@ -104,18 +110,28 @@ const locationOfCollectorLoopPipingOptions = {
 		validation="required | number | min:0 | max:10000" />
 	<FormKit
 		id="powerOfCollectorPump"
-		type="govInputWithSuffix"
-		suffix-text="W"
+		type="govInputWithUnit"
+		:unit="kilowatt"
 		label="Power of collector pump"
 		name="powerOfCollectorPump"
-		validation="required | number | min:0 | max:10000" />
+		:validation-rules="{ aboveMinPower }"
+		validation="required | aboveMinPower:0"
+		:validation-messages="{
+			aboveMinPower: `Power of collector pump must be at least 0 ${kilowatt.name}.`,
+		}"
+	/>
 	<FormKit
 		id="powerOfCollectorPumpController"
-		type="govInputWithSuffix"
-		suffix-text="W"
+		type="govInputWithUnit"
+		:unit="kilowatt"
 		label="Power of collector pump controller"
 		name="powerOfCollectorPumpController"
-		validation="required | number | min:0 | max:10000" />
+		:validation-rules="{ aboveMinPower }"
+		validation="required | aboveMinPower:0"
+		:validation-messages="{
+			aboveMinPower: `Power of collector pump must be at least 0 ${kilowatt.name}.`,
+		}"
+	/>
 	<FormKit
 		id="pitch"
 		type="govInputWithSuffix"

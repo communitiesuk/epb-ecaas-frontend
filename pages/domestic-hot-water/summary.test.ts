@@ -567,8 +567,13 @@ describe("Domestic hot water summary", () => {
 			secondOrderHeatLossCoefficient: 10,
 			heatLossCoefficientOfSolarLoopPipe: 100,
 			collectorMassFlowRate: 2,
-			powerOfCollectorPump: 30,
-			powerOfCollectorPumpController: 30,
+			"powerOfCollectorPump": {
+				"amount": 0.3,
+				"unit": "kilowatt",
+			},"powerOfCollectorPumpController": {
+				"amount": 0.3,
+				"unit": "kilowatt",
+			},
 			pitch: 60,
 			orientation: 60,
 		};
@@ -702,8 +707,8 @@ describe("Domestic hot water summary", () => {
 			"Second order heat loss coefficient": "10",
 			"Heat loss coefficient of solar loop piping": "100",
 			"Collector mass flow rate": "2",
-			"Power of collector pump": "30",
-			"Power of collector pump controller": "30",
+			"Power of collector pump": `0.3 ${kilowatt.suffix}`,
+			"Power of collector pump controller": `0.3 ${kilowatt.suffix}`,
 			"Pitch": `60 ${degrees.suffix}`,
 			"Orientation": `60 ${degrees.suffix}`,
 		};

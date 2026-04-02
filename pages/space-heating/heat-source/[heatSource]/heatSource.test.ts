@@ -4,6 +4,7 @@ import { screen } from "@testing-library/vue";
 import HeatSourceForm from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import { kilowatt } from "~/utils/units/power";
 
 vi.mock("uuid");
 
@@ -933,8 +934,8 @@ describe("heatSource", () => {
 			await user.type(screen.getByTestId("secondOrderHeatLossCoefficient"), "10");
 			await user.type(screen.getByTestId("heatLossCoefficientOfSolarLoopPipe"), "100");
 			await user.type(screen.getByTestId("collectorMassFlowRate"), "2");
-			await user.type(screen.getByTestId("powerOfCollectorPump"), "30");
-			await user.type(screen.getByTestId("powerOfCollectorPumpController"), "30");
+			await user.type(screen.getByTestId("powerOfCollectorPump"), "0.3");
+			await user.type(screen.getByTestId("powerOfCollectorPumpController"), "0.3");
 			await user.type(screen.getByTestId("pitch"), "60");
 			await user.type(screen.getByTestId("orientation"), "60");
 			await user.tab();
@@ -953,8 +954,8 @@ describe("heatSource", () => {
 			secondOrderHeatLossCoefficient: 10,
 			heatLossCoefficientOfSolarLoopPipe: 100,
 			collectorMassFlowRate: 2,
-			powerOfCollectorPump: 30,
-			powerOfCollectorPumpController: 30,
+			powerOfCollectorPump: unitValue(0.3, kilowatt),
+			powerOfCollectorPumpController: unitValue(0.3, kilowatt),
 			pitch: 60,
 			orientation: 60,
 		};
@@ -972,8 +973,8 @@ describe("heatSource", () => {
 			secondOrderHeatLossCoefficient: 20,
 			heatLossCoefficientOfSolarLoopPipe: 200,
 			collectorMassFlowRate: 10,
-			powerOfCollectorPump: 100,
-			powerOfCollectorPumpController: 100,
+			powerOfCollectorPump: unitValue(0.1, kilowatt),
+			powerOfCollectorPumpController: unitValue(0.1, kilowatt),
 			pitch: 90,
 			orientation: 90,
 		};
@@ -1027,8 +1028,14 @@ describe("heatSource", () => {
 				secondOrderHeatLossCoefficient: 10,
 				heatLossCoefficientOfSolarLoopPipe: 100,
 				collectorMassFlowRate: 2,
-				powerOfCollectorPump: 30,
-				powerOfCollectorPumpController: 30,
+				"powerOfCollectorPump": {
+					"amount": 0.3,
+					"unit": "kilowatt",
+				},
+				"powerOfCollectorPumpController": {
+					"amount": 0.3,
+					"unit": "kilowatt",
+				},
 				pitch: 60,
 				orientation: 60,
 			});
@@ -1059,8 +1066,8 @@ describe("heatSource", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("secondOrderHeatLossCoefficient")).value).toBe("10");
 			expect((await screen.findByTestId<HTMLInputElement>("heatLossCoefficientOfSolarLoopPipe")).value).toBe("100");
 			expect((await screen.findByTestId<HTMLInputElement>("collectorMassFlowRate")).value).toBe("2");
-			expect((await screen.findByTestId<HTMLInputElement>("powerOfCollectorPump")).value).toBe("30");
-			expect((await screen.findByTestId<HTMLInputElement>("powerOfCollectorPumpController")).value).toBe("30");
+			expect((await screen.findByTestId<HTMLInputElement>("powerOfCollectorPump")).value).toBe("0.3");
+			expect((await screen.findByTestId<HTMLInputElement>("powerOfCollectorPumpController")).value).toBe("0.3");
 			expect((await screen.findByTestId<HTMLInputElement>("pitch")).value).toBe("60");
 			expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("60");
 		});

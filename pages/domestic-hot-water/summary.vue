@@ -267,11 +267,11 @@ const solarThermalSystemSummary: SummarySection = {
 					"collectorMassFlowRate" in heatSource ? heatSource.collectorMassFlowRate : emptyValueRendering,
 
 					"Power of collector pump":
-					"powerOfCollectorPump" in heatSource ? heatSource.powerOfCollectorPump : emptyValueRendering,
+					"powerOfCollectorPump" in heatSource ? dim(heatSource.powerOfCollectorPump) : emptyValueRendering,
 
 					"Power of collector pump controller":
 					"powerOfCollectorPumpController" in heatSource
-						? heatSource.powerOfCollectorPumpController
+						? dim(heatSource.powerOfCollectorPumpController)
 						: emptyValueRendering,
 
 					"Pitch":

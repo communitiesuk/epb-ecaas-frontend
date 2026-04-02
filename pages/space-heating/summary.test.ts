@@ -2,6 +2,8 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen, within } from "@testing-library/vue";
 import SpaceHeatingSummary from "./summary.vue";
 import { degrees } from "~/utils/units/angle";
+import { kilowatt } from "~/utils/units/power";
+
 
 type ExpectedData = { [key: string]: string };
 const verifyDataInSection = async (
@@ -231,8 +233,14 @@ describe("Space heating summary page", () => {
 				secondOrderHeatLossCoefficient: 10,
 				heatLossCoefficientOfSolarLoopPipe: 100,
 				collectorMassFlowRate: 2,
-				powerOfCollectorPump: 30,
-				powerOfCollectorPumpController: 30,
+				"powerOfCollectorPump": {
+					"amount": 0.3,
+					"unit": "kilowatt",
+				},
+				"powerOfCollectorPumpController": {
+					"amount": 0.3,
+					"unit": "kilowatt",
+				},
 				pitch: 60,
 				orientation: 60,
 			};
@@ -259,8 +267,8 @@ describe("Space heating summary page", () => {
 				"Second order heat loss coefficient": "10",
 				"Heat loss coefficient of solar loop piping": "100",
 				"Collector mass flow rate": "2",
-				"Power of collector pump": "30",
-				"Power of collector pump controller": "30",
+				"Power of collector pump": `0.3 ${kilowatt.suffix}`,
+				"Power of collector pump controller": `0.3 ${kilowatt.suffix}`,
 				"Pitch": `60 ${degrees.suffix}`,
 				"Orientation": `60 ${degrees.suffix}`,
 			};
