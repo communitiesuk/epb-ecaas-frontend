@@ -128,11 +128,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.001 | max:50"
 			data-field="Zone.BuildingElement.*.height">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<p class="govuk-hint">Enter the height of the wall up to where the insulation stops.</p>
-				<p class="govuk-hint">If you have a non-rectangular wall (for example a gable end) and the insulation spans the
-					entire wall then enter the height of the wall from the base to the very top.</p>
-				<p class="govuk-hint">If you have a non-rectangular wall (for example a gable end) and the insulation does not
-					go all the way to the top, enter the maximum height of the part of the wall that has insulation.</p>
+				<p class="govuk-hint">Enter the height of the wall forming the edge of the thermal envelope.</p>
+				<p class="govuk-hint">If the loft space is heated, the full height of the wall up to the ceiling of the roof room should be included.</p>
+				<p class="govuk-hint">If the loft space is unheated, the entire roof should be excluded, and the height of the external wall should be measured up to the flat ceiling of the storey below.</p>
 			</GovDetails>
 		</FormKit>
 		<FormKit
@@ -156,10 +154,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsUValue />
+		<FieldsUValue help="Enter the U-value of the full thickness of the construction build up" />
 		<FieldsColourOfExternalSurface />
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of the full thickness of the construction build up"
+		/>
+		<FieldsMassDistributionClass
+			id="massDistributionClass"
+			name="massDistributionClass"
+			help="This is the distribution of mass in the full thickness of the construction build up"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
