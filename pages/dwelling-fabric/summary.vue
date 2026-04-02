@@ -49,22 +49,23 @@ const groundFloorSummary: SummarySection = {
 		const horizontalEdgeInsulationThermalResistance = "horizontalEdgeInsulationThermalResistance" in x ? dim(x.horizontalEdgeInsulationThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 		const verticalEdgeInsulationDepth = "verticalEdgeInsulationDepth" in x ? dim(x.verticalEdgeInsulationDepth, "metres") : emptyValueRendering;
 		const verticalEdgeInsulationThermalResistance = "verticalEdgeInsulationThermalResistance" in x ? dim(x.verticalEdgeInsulationThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
-		const heightOfFloorUpperSurface = "heightOfFloorUpperSurface" in x ? dim(x.heightOfFloorUpperSurface, "millimetres") : emptyValueRendering;
-		const underfloorSpaceThermalResistance = "underfloorSpaceThermalResistance" in x ? dim(x.underfloorSpaceThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
+		const heightOfFloorUpperSurface = "heightOfFloorUpperSurface" in x ? dim(x.heightOfFloorUpperSurface, "metres") : emptyValueRendering;
+		const underfloorSpaceThermalResistance = "underfloorSpaceThermalResistance" in x ? dim(x.underfloorSpaceThermalResistance, "watts per square metre kelvin") : emptyValueRendering;
 		const thermalTransmittanceOfWallsAboveGround = "thermalTransmittanceOfWallsAboveGround" in x ? dim(x.thermalTransmittanceOfWallsAboveGround, "watts per square metre kelvin") : emptyValueRendering;
 		const ventilationOpeningsArea = "ventilationOpeningsArea" in x ? dim(x.ventilationOpeningsArea, "millimetres square per metre") : emptyValueRendering;
 		const windShieldingFactor = "windShieldingFactor" in x ? show(x.windShieldingFactor) : emptyValueRendering;
 
 		return {
 			"Name": show(x.name),
-			"Net surface area of this element": dim(x.surfaceArea, "metres square"),
+			"Net surface area": dim(x.surfaceArea, "metres square"),
+			"Total area": dim(x.totalArea, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Perimeter": dim(x.perimeter, "metres"),
 			"Psi of wall junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
-			"Thickness of walls at the edge of the floor": dim(x.thicknessOfWalls, "millimetres"),
+			"Thickness of walls at the edge of the floor": dim(x.thicknessOfWalls, "metres"),
 			"Type of ground floor": displaySnakeToSentenceCase(show(x.typeOfGroundFloor)),
 			"Horizontal edge insulation width": horizontalEdgeInsulationWidth,
 			"Horizontal edge insulation thermal resistance": horizontalEdgeInsulationThermalResistance,

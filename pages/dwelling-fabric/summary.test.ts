@@ -56,6 +56,7 @@ const floorsData: FloorsData = {
 			data: {
 				name: "Ground 1",
 				surfaceArea: 5,
+				totalArea: 5,
 				uValue: 1,
 				thermalResistance: 1,
 				arealHeatCapacity: "Very light",
@@ -70,6 +71,7 @@ const floorsData: FloorsData = {
 			data: {
 				name: "Ground 2 with slab edge insulation",
 				surfaceArea: 5,
+				totalArea: 5,
 				uValue: 0.5,
 				thermalResistance: 2,
 				arealHeatCapacity: "Very light",
@@ -580,14 +582,15 @@ describe("Dwelling space fabric summary", () => {
 
 		const expectedResult = {
 			"Name": "Ground 1",
-			"Net surface area of this element": `5 ${metresSquare.suffix}`,
+			"Net surface area": `5 ${metresSquare.suffix}`,
+			"Total area": `5 ${metresSquare.suffix}`,
 			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 			"Thermal resistance": `1 ${squareMeterKelvinPerWatt.suffix}`,
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",
 			"Perimeter": `0 ${metre.suffix}`,
 			"Psi of wall junction": `0 ${wattsPerMeterKelvin.suffix}`,
-			"Thickness of walls at the edge of the floor": `0.3 ${millimetre.suffix}`,
+			"Thickness of walls at the edge of the floor": `0.3 ${metre.suffix}`,
 			"Type of ground floor": "Slab no edge insulation",
 			"Horizontal edge insulation width": `-`,
 			"Horizontal edge insulation thermal resistance": `-`,
@@ -597,14 +600,15 @@ describe("Dwelling space fabric summary", () => {
 
 		const expectedResultWithEdgeInsulation = {
 			"Name": "Ground 2 with slab edge insulation",
-			"Net surface area of this element": `5 ${metresSquare.suffix}`,
+			"Net surface area": `5 ${metresSquare.suffix}`,
+			"Total area": `5 ${metresSquare.suffix}`,
 			"U-value": `0.5 ${wattsPerSquareMeterKelvin.suffix}`,
 			"Thermal resistance": `2 ${squareMeterKelvinPerWatt.suffix}`,
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",
 			"Perimeter": `0 ${metre.suffix}`,
 			"Psi of wall junction": `0 ${wattsPerMeterKelvin.suffix}`,
-			"Thickness of walls at the edge of the floor": `0.3 ${millimetre.suffix}`,
+			"Thickness of walls at the edge of the floor": `0.3 ${metre.suffix}`,
 			"Type of ground floor": "Slab edge insulation",
 			"Horizontal edge insulation width": `0.5 ${metre.suffix}`,
 			"Horizontal edge insulation thermal resistance": `2 ${squareMeterKelvinPerWatt.suffix}`,
