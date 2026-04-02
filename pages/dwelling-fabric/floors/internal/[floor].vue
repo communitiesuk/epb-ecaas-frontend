@@ -95,17 +95,22 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				:validation-messages="{
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
 				}" />
-			<FormKit
-				id="surfaceAreaOfElement"
-				type="govInputWithSuffix"
+			<FieldsSurfaceArea
+				v-if="model?.typeOfInternalFloor === 'heatedSpace'"
 				label="Net surface area of the floor"
-				name="surfaceAreaOfElement"
-				validation="required | number | min:0 | max:10000"
-				suffix-text="m²"
-				data-field="Zone.BuildingElement.*.area" />
-			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
-			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
-			<FieldsUValue />
+				help="Enter the net area of the building element. The area of any windows should be subtracted before entry, but not doors."
+			/>
+			<FieldsSurfaceArea
+				v-if="model?.typeOfInternalFloor === 'unheatedSpace'"
+				label="Net surface area of the floor"
+				help="Enter the net area of the building element, subtracting any doors or windows"
+			/>
+			<FieldsArealHeatCapacity v-if="model?.typeOfInternalFloor === 'heatedSpace'" help="This is the sum of the heat capacities of half the construction build up. The other half should be input as a ceiling." />
+			<FieldsArealHeatCapacity v-if="model?.typeOfInternalFloor === 'unheatedSpace'" help="This is the sum of the heat capacities of the full thickness of the floor build up" />
+			<FieldsMassDistributionClass v-if="model?.typeOfInternalFloor === 'heatedSpace'" help="This is the mass distribution class of half the construction build up. The other half should be input as a ceiling." />
+			<FieldsMassDistributionClass v-if="model?.typeOfInternalFloor === 'unheatedSpace'" help="This is the distribution of mass for the full thickness of the floor build up" />
+			<FieldsUValue v-if="model?.typeOfInternalFloor === 'heatedSpace'" help="Enter the U-value of half the construction build up. The other half should be input as a ceiling." />
+			<FieldsUValue v-if="model?.typeOfInternalFloor === 'unheatedSpace'" help="Enter the U-value of the full thickness of the floor build-up" />
 		</template>
 		<FormKit
 			v-if="model?.typeOfInternalFloor === 'unheatedSpace'"

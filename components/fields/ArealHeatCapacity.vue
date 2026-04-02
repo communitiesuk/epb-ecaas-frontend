@@ -3,8 +3,8 @@ import type { SchemaArealHeatCapacity } from "~/schema/aliases";
 import type { RadioOption } from "../form-kit/Radios.vue";
 
 defineProps<{
-	id: string,
-	name: string;
+	id?: string,
+	name?: string;
 	label?: string;
 	help?: string;
 }>();
@@ -36,10 +36,10 @@ const arealHeatCapacityOptions = {
 
 <template>
 	<FormKit
-		:id="id"
+		:id="id ?? 'arealHeatCapacity'"
 		type="govRadios"
 		:label="label ?? 'Areal heat capacity'"
-		:name="name"
+		:name="name ?? 'arealHeatCapacity'"
 		:help="help ?? 'This is the sum of the heat capacities of all the construction layers, also known as effective areal heat capacity or kappa value'"
 		validation="required"
 		:options="arealHeatCapacityOptions"
