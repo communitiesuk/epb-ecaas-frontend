@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getUrl, uniqueName, type FloorAboveUnheatedBasementData } from "#imports";
+
 const title = "Floor above an unheated basement";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
@@ -16,6 +17,7 @@ const saveForm = (fields: FloorAboveUnheatedBasementData) => {
 		const floor: FloorAboveUnheatedBasementData = {
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
+			totalArea: fields.totalArea,
 			uValue: fields.uValue,
 			thermalResistance: fields.thermalResistance,
 			arealHeatCapacity: fields.arealHeatCapacity,
@@ -82,32 +84,54 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Net surface area"
-			help="Enter the net surface area of the entire building element in the dwelling"
+			help="Enter the net area of the building element, subtracting any doors or windows"
 			name="surfaceArea"
-			validation="required | number | min:1"
+			:validation="zodTypeAsFormKitValidation(groundSurfaceAreaZod)"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsUValue id="uValue" name="uValue" />
+		<FormKit
+			id="totalArea"
+			type="govInputWithSuffix"
+			suffix-text="m²"
+			label="Total area"
+			help="Enter the total area of the ground floor across the dwelling.  If the ground floor is made up of multiple floor types, this is the total area of all of the ground floor elements."
+			name="totalArea"
+			:validation="zodTypeAsFormKitValidation(groundTotalAreaZod)"
+			data-field="Zone.BuildingElement.*.total_area"
+		/>
+		<FieldsUValue
+			id="uValue"
+			name="uValue"
+			help="Enter the U-value of the construction of the floor at the bottom of the lowest heated level of the dwelling, including the thermal resistance of the ground and the basement void"
+		/>
 		<FormKit
 			id="thermalResistance"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal resistance"
-			help="Enter the thermal resistance of all layers in the floor construction"
+			help="Enter the thermal resistance of all layers in the floor construction, not including the effects of the ground or the void"
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
 			</GovDetails>
 		</FormKit>
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of the full thickness of the floor build-up"
+		/>
+		<FieldsMassDistributionClass
+			id="massDistributionClass"
+			name="massDistributionClass"
+			help="This is the distribution of mass in the full thickness of the floor build up"
+		/>
 		<FormKit
 			id="perimeter"
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Perimeter"
-			help="Enter the length of the exposed perimeter of the floor."
+			help="Enter the length of the exposed perimeter of the floor. This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings."
 			name="perimeter"
 			validation="required | number | min:0 | max:1000">
 			<GovDetails summary-text="Help with this input">
@@ -128,11 +152,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="mm"
 			label="Thickness of walls at the edge of the floor"
-			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 30mm to 80mm."
+			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 300mm to 800mm."
 			name="thicknessOfWalls"
 			validation="required | number">
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">This is usually measured from the inside surface to the outside surface.</p>
+				<p class="govuk-hint">This is usually measured from the inside surface to the outside surface. If the thickness varies, enter a weighted average.</p>
 			</GovDetails>
 		</FormKit>
 		<FormKit
@@ -140,7 +164,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Depth of the basement floor"
-			help="Enter the depth of the basement floor below ground level"
+			help="Measure the depth from the outside ground level to the upper surface of the basement floor. If the ground is uneven, enter the average depth."
 			name="depthOfBasementFloor"
 			validation="required | number"
 		/>
@@ -149,6 +173,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Height of the basement walls"
+			help="Enter the height of the basement walls above ground, measured from the ground to the upper surface of the floor of the conditioned space"
 			name="heightOfBasementWalls"
 			validation="required | number"
 		/>
@@ -157,7 +182,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal resistance of basement walls"
-			help="Enter the thermal resistance or R-value of the basement walls"
+			help="Enter the thermal resistance or R-value of the basement walls below ground, not including surface resistances"
 			name="thermalResistanceOfBasementWalls"
 			validation="required | number | min:0.00001 | max:50">
 			<GovDetails summary-text="Help with this input">
@@ -169,7 +194,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal transmittance of the basement walls"
-			help="Enter the thermal transmittance or R-value of the walls where they join the floor"
+			help="Enter the thermal resistance or U-value of the basement walls above ground, but below the heated space"
 			name="thermalTransmittanceOfBasementWalls"
 			validation="required | number"
 		/>
@@ -178,7 +203,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="W/(m²·K)"
 			label="Thermal transmittance of the foundations"
-			help="Enter the thermal transmittance or R-value of the foundation underneath the basement floor"
+			help="Enter the U-value of the ground floor construction, including surface resistances. This is the floor at the bottom of the lowest heated level of the dwelling."
 			name="thermalTransmittanceOfFoundations"
 			validation="required | number"
 		/>

@@ -14,7 +14,8 @@ describe("floor above unheated basement", () => {
 
 	const floorAboveUnheatedBasement: FloorAboveUnheatedBasementData = {
 		name: "Floor above unheated basement 1",
-		surfaceArea: 2,
+		surfaceArea: 7,
+		totalArea: 8,
 		uValue: 0.5,
 		thermalResistance: 1,
 		arealHeatCapacity: "Very light",
@@ -35,7 +36,8 @@ describe("floor above unheated basement", () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Floor above unheated basement 1");
-		await user.type(screen.getByTestId("surfaceArea"), "2");
+		await user.type(screen.getByTestId("surfaceArea"), "7");
+		await user.type(screen.getByTestId("totalArea"), "8");
 		await user.type(screen.getByTestId("uValue"), "0.5");
 		await user.type(screen.getByTestId("thermalResistance"), "1");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
@@ -85,7 +87,8 @@ describe("floor above unheated basement", () => {
 
 	
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Floor above unheated basement 1");
-		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("2");
+		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("7");
+		expect((await screen.findByTestId<HTMLInputElement>("totalArea")).value).toBe("8");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.5");
 		expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("1");
 		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
@@ -111,6 +114,7 @@ describe("floor above unheated basement", () => {
 	
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
+		expect((await screen.findByTestId("totalArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 		expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
@@ -146,7 +150,8 @@ describe("floor above unheated basement", () => {
 				
 		// Act
 		await user.type(screen.getByTestId("name"), "Floor above unheated basement 1");
-		await user.type(screen.getByTestId("surfaceArea"), "1");
+		await user.type(screen.getByTestId("surfaceArea"), "6");
+		await user.type(screen.getByTestId("totalArea"), "6");
 		await user.type(screen.getByTestId("uValue"), "1");
 		await user.type(screen.getByTestId("thermalResistance"), "1"); 
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
@@ -201,7 +206,8 @@ describe("floor above unheated basement", () => {
 			});
 			
 			await user.type(screen.getByTestId("name"), "Floor above unheated basement");
-			await user.type(screen.getByTestId("surfaceArea"), "1");
+			await user.type(screen.getByTestId("surfaceArea"), "6");
+			await user.type(screen.getByTestId("totalArea"), "6");
 			await user.type(screen.getByTestId("uValue"), "0.5");
 			await user.type(screen.getByTestId("thermalResistance"), "2");
 			await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
@@ -218,7 +224,8 @@ describe("floor above unheated basement", () => {
 			
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement;
 			expect(data[0]!.data.name).toBe("Floor above unheated basement");
-			expect(data[0]!.data.surfaceArea).toBe(1);
+			expect(data[0]!.data.surfaceArea).toBe(6);
+			expect(data[0]!.data.totalArea).toBe(6);
 			expect(data[0]!.data.uValue).toBe(0.5);
 			expect(data[0]!.data.thermalResistance).toBe(2);
 			expect(data[0]!.data.arealHeatCapacity).toBe("Very light");
@@ -268,7 +275,7 @@ describe("floor above unheated basement", () => {
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement;
 
 			expect(data[0]!.data.name).toBe("Floor above unheated basement 1");
-			expect(data[0]!.data.surfaceArea).toBe(2);
+			expect(data[0]!.data.surfaceArea).toBe(7);
 
 			await user.clear(screen.getByTestId("name"));
 			await user.type(screen.getByTestId("name"), "Updated floor");

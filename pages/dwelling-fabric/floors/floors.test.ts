@@ -18,6 +18,7 @@ describe("floors", () => {
 	const ground1: GroundFloorData = {
 		name: "Ground floor 1",
 		surfaceArea: 5,
+		totalArea: 7,
 		uValue: 1,
 		thermalResistance: 1,
 		arealHeatCapacity: "Very light",
@@ -31,6 +32,7 @@ describe("floors", () => {
 	const ground2: GroundFloorData = {
 		name: "Ground floor 2",
 		surfaceArea: 5,
+		totalArea: 7,
 		uValue: 1,
 		thermalResistance: 1,
 		arealHeatCapacity: "Very light",
@@ -44,6 +46,7 @@ describe("floors", () => {
 	const ground3: GroundFloorData = {
 		name: "Ground floor 3",
 		surfaceArea: 5,
+		totalArea: 7,
 		uValue: 1,
 		thermalResistance: 1,
 		arealHeatCapacity: "Very light",
@@ -123,6 +126,7 @@ describe("floors", () => {
 	const floorAboveUnheatedBasement1: FloorAboveUnheatedBasementData = {
 		name: "Floor above unheated basement 1",
 		surfaceArea: 10,
+		totalArea: 12,
 		uValue: 1,
 		thermalResistance: 1,
 		arealHeatCapacity: "Light",
@@ -140,6 +144,7 @@ describe("floors", () => {
 	const floorAboveUnheatedBasement2: FloorAboveUnheatedBasementData = {
 		name: "Floor above unheated basement 2",
 		surfaceArea: 8,
+		totalArea: 10,
 		uValue: 2,
 		thermalResistance: 0.5,
 		arealHeatCapacity: "Very light",
@@ -157,6 +162,7 @@ describe("floors", () => {
 	const floorAboveUnheatedBasement3: FloorAboveUnheatedBasementData = {
 		name: "Floor above unheated basement 3",
 		surfaceArea: 5,
+		totalArea: 8,
 		uValue: 1.5,
 		thermalResistance: 0.7,
 		arealHeatCapacity: "Medium",

@@ -53,6 +53,7 @@ const saveForm = (fields: GroundFloorData) => {
 		const commonFields = {
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
+			totalArea: fields.totalArea,
 			uValue: fields.uValue,
 			thermalResistance: fields.thermalResistance,
 			arealHeatCapacity: fields.arealHeatCapacity,
@@ -200,7 +201,17 @@ const greaterThanZero = (node: FormKitNode) => {
 			label="Net surface area of this element"
 			help="Enter the total surface area of the entire building element in the dwelling"
 			name="surfaceArea"
-			validation="required | number | min:1"
+			:validation="zodTypeAsFormKitValidation(groundSurfaceAreaZod)"
+			data-field="Zone.BuildingElement.*.area"
+		/>
+		<FormKit
+			id="totalArea"
+			type="govInputWithSuffix"
+			suffix-text="m²"
+			label="Total area"
+			help="Enter the total area"
+			name="totalArea"
+			:validation="zodTypeAsFormKitValidation(groundTotalAreaZod)"
 			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FieldsUValue id="uValue" name="uValue" />

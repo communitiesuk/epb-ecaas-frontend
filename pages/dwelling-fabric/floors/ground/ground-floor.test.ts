@@ -17,6 +17,7 @@ describe("ground floor", () => {
 	const groundFloor: GroundFloorData = {
 		name: "Ground 1",
 		surfaceArea: 5,
+		totalArea: 7,
 		uValue: 1,
 		thermalResistance: 1,
 		arealHeatCapacity: "Very light",
@@ -87,6 +88,7 @@ describe("ground floor", () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Ground 1");
 		await user.type(screen.getByTestId("surfaceArea"), "5");
+		await user.type(screen.getByTestId("totalArea"), "7");
 		await user.type(screen.getByTestId("uValue"), "1");
 		await user.type(screen.getByTestId("thermalResistance"), "1");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));

@@ -118,6 +118,7 @@ describe("dwelling fabric mapper", () => {
 		const groundFloor: GroundFloorData = {
 			name: "Ground 1",
 			surfaceArea: 5,
+			totalArea: 7,
 			uValue: 1,
 			thermalResistance: 1,
 			arealHeatCapacity: "Very light",
@@ -221,6 +222,7 @@ describe("dwelling fabric mapper", () => {
 		const floorAboveUnheatedBasement: FloorAboveUnheatedBasementData = {
 			name: "Floor above unheated basement 1",
 			surfaceArea: 3,
+			totalArea: 5,
 			uValue: 1,
 			thermalResistance: 2,
 			arealHeatCapacity: "Light",

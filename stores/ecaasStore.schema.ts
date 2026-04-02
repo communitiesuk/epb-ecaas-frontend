@@ -151,6 +151,7 @@ const baseInternalFloorData = named.extend({
 	massDistributionClass,
 	uValue,
 });
+
 const internalFloorDataZod = z.discriminatedUnion(
 	"typeOfInternalFloor",
 	[
@@ -180,8 +181,12 @@ export const exposedFloorDataZod = named.extend({
 
 export type ExposedFloorData = z.infer<typeof exposedFloorDataZod>;
 
+export const groundSurfaceAreaZod = z.number().min(5).max(10000);
+export const groundTotalAreaZod = z.number().min(5);
+
 const baseGroundFloorData = named.extend({
-	surfaceArea: z.number().min(1),
+	surfaceArea: groundSurfaceAreaZod,
+	totalArea: groundTotalAreaZod,
 	uValue,
 	thermalResistance,
 	arealHeatCapacity: arealHeatCapacityZod,
@@ -190,6 +195,7 @@ const baseGroundFloorData = named.extend({
 	psiOfWallJunction: z.number().min(0).max(2),
 	thicknessOfWalls: z.number(),
 });
+
 const slabEdgeInsulationBase = baseGroundFloorData.extend({
 	typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_edge_insulation">("Slab_edge_insulation"),
 });
@@ -252,7 +258,8 @@ const groundFloorDataZod = z.union(
 export type GroundFloorData = z.infer<typeof groundFloorDataZod>;
 
 const floorAboveUnheatedBasementDataZod = named.extend({
-	surfaceArea: z.number().min(1),
+	surfaceArea: groundSurfaceAreaZod,
+	totalArea: groundTotalAreaZod,
 	uValue,
 	thermalResistance,
 	arealHeatCapacity: arealHeatCapacityZod,
