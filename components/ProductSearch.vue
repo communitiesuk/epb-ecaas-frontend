@@ -22,7 +22,7 @@ const handleSubmit = (fields: typeof searchModel) => {
 	const query = Object.entries(fields).filter(e => !!e[1]);
 	const params = new URLSearchParams(query);
 
-	navigateTo(`?${params}`);
+	navigateTo(`?${params}`, { replace: true });
 };
 
 watch(model, (currentModel: ProductSearchModel, previousModel: ProductSearchModel) => {
