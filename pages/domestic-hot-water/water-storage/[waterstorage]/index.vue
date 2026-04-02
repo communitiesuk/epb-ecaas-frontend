@@ -183,9 +183,9 @@ const heatSourceOptions = new Map(
 			type="govInputWithUnit"
 			:unit="litre"
 			:validation-rules="{ withinMinAndMaxVolume }"
-			validation="required | withinMinAndMax:0,200000"
+			validation="required | withinMinAndMaxVolume:0,200000"
 			:validation-messages="{
-				withinMinAndMax: `Storage cylinder volume must be at least 0 and no more than 200,000 ${litre.name}.`,
+				withinMinAndMaxVolume: `Storage cylinder volume must be at least 0 and no more than 200,000 ${litre.name}.`,
 			}"
 			data-field="HotWaterSource['hw cylinder'].volume"
 		/>
