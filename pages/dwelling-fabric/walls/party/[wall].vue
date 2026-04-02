@@ -2,8 +2,8 @@
 import { v4 as uuidv4 } from "uuid";
 import { standardPitchOptions, getUrl, uniqueName, type SnakeToSentenceCase } from "#imports";
 import type { SchemaPartyWallCavityType, SchemaPartyWallLiningType } from "~/schema/api-schema.types";
-import { thermalResistanceCavityZod } from "~/stores/ecaasStore.schema";
-import { zodTypeAsFormKitValidation } from "#imports";
+import { thermalResistanceCavityZod, surfaceAreaPartyWallZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Party wall";
 const store = useEcaasStore();
@@ -129,7 +129,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Net surface area of element"
 			help="Enter the net area of the building element, subtracting any doors or windows"
 			name="surfaceArea"
-			validation="required | number | min:0.01 | max:10000"
+			:validation="zodTypeAsFormKitValidation(surfaceAreaPartyWallZod)"
 			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FieldsArealHeatCapacity

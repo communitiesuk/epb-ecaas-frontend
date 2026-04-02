@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getUrl, uniqueName, type FloorAboveUnheatedBasementData } from "#imports";
 import { zodTypeAsFormKitValidation } from "#imports";
-import { groundSurfaceAreaZod, groundTotalAreaZod } from "~/stores/ecaasStore.schema";
+import { groundSurfaceAreaZod, groundTotalAreaZod, groundPerimeterZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
 
 const title = "Floor above an unheated basement";
 const store = useEcaasStore();
@@ -135,7 +135,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Perimeter"
 			help="Enter the length of the exposed perimeter of the floor. This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings."
 			name="perimeter"
-			validation="required | number | min:0 | max:1000">
+			:validation="zodTypeAsFormKitValidation(groundPerimeterZod)">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">The exposed perimeter of the floor is where heat loss may occur, usually at the base of the external walls where they meet the ground floor.</p>
 			</GovDetails>
@@ -156,7 +156,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Thickness of walls at the edge of the floor"
 			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 300mm to 800mm."
 			name="thicknessOfWalls"
-			validation="required | number">
+			:validation="zodTypeAsFormKitValidation(thicknessOfWallsZod)">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">This is usually measured from the inside surface to the outside surface. If the thickness varies, enter a weighted average.</p>
 			</GovDetails>
@@ -186,7 +186,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Thermal resistance of basement walls"
 			help="Enter the thermal resistance or R-value of the basement walls below ground, not including surface resistances"
 			name="thermalResistanceOfBasementWalls"
-			validation="required | number | min:0.00001 | max:50">
+			validation="required | number">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
 			</GovDetails>

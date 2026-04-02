@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
+import { surfaceAreaAdjacentSpaceZod } from "~/stores/ecaasStore.schema";
 
 const title = "Internal floor";
 const store = useEcaasStore();
@@ -99,11 +100,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				v-if="model?.typeOfInternalFloor === 'heatedSpace'"
 				label="Net surface area of the floor"
 				help="Enter the net area of the building element. The area of any windows should be subtracted before entry, but not doors."
+				:zod="surfaceAreaAdjacentSpaceZod"
 			/>
 			<FieldsSurfaceArea
 				v-if="model?.typeOfInternalFloor === 'unheatedSpace'"
 				label="Net surface area of the floor"
 				help="Enter the net area of the building element, subtracting any doors or windows"
+				:zod="surfaceAreaAdjacentSpaceZod"
 			/>
 			<FieldsArealHeatCapacity v-if="model?.typeOfInternalFloor === 'heatedSpace'" help="This is the sum of the heat capacities of half the construction build up. The other half should be input as a ceiling." />
 			<FieldsArealHeatCapacity v-if="model?.typeOfInternalFloor === 'unheatedSpace'" help="This is the sum of the heat capacities of the full thickness of the floor build up" />

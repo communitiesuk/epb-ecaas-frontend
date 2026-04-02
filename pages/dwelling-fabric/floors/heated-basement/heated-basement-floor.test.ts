@@ -24,7 +24,7 @@ describe("floor of heated basement", () => {
 		massDistributionClass: "M",
 		depthOfBasementFloor: 2.5,
 		psiOfWallJunction: 0.05,
-		thicknessOfWalls: 300,
+		thicknessOfWalls: 50,
 	};
 
 	afterEach(() => {
@@ -45,7 +45,7 @@ describe("floor of heated basement", () => {
 			massDistributionClass: "M",
 			depthOfBasementFloor: 2.5,
 			psiOfWallJunction: 0.05,
-			thicknessOfWalls: 300,
+			thicknessOfWalls: 50,
 		};
 
 		const values: FloorOfHeatedBasementData = { ...defaults, ...overrides };
@@ -78,7 +78,7 @@ describe("floor of heated basement", () => {
 		await user.click(screen.getByTestId("massDistributionClass_M"));
 		await user.type(screen.getByTestId("depthOfBasementFloor"), "2.5");
 		await user.type(screen.getByTestId("psiOfWallJunction"), "0.05");
-		await user.type(screen.getByTestId("thicknessOfWalls"), "300");
+		await user.type(screen.getByTestId("thicknessOfWalls"), "50");
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -118,7 +118,7 @@ describe("floor of heated basement", () => {
 		expect((await screen.findByTestId("massDistributionClass_M")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("depthOfBasementFloor")).value).toBe("2.5");
 		expect((await screen.findByTestId<HTMLInputElement>("psiOfWallJunction")).value).toBe("0.05");
-		expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("300");
+		expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("50");
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -182,7 +182,7 @@ describe("floor of heated basement", () => {
 		await user.click(screen.getByTestId("massDistributionClass_M"));
 		await user.type(screen.getByTestId("depthOfBasementFloor"), "2.5");
 		await user.type(screen.getByTestId("psiOfWallJunction"), "0.05");
-		await user.type(screen.getByTestId("thicknessOfWalls"), "300");
+		await user.type(screen.getByTestId("thicknessOfWalls"), "50");
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		await waitFor(() => {

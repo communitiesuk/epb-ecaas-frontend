@@ -2,7 +2,8 @@
 import { NuxtLink } from "#components";
 import { getUrl, uniqueName } from "#imports";
 import { v4 as uuidv4 } from "uuid";
-import type { WallOfHeatedBasementData } from "~/stores/ecaasStore.schema";
+import { type WallOfHeatedBasementData, groundPerimeterZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Wall of heated basement";
 const store = useEcaasStore();
@@ -145,7 +146,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Exposed perimeter"
 			help="Enter the length of the basement wall where the basement meets the ground level surface"
 			name="perimeter"
-			validation="required | number | min:0 | max:1000"
+			:validation="zodTypeAsFormKitValidation(groundPerimeterZod)"
 		/>
 		<FormKit
 			id="associatedBasementFloorId"

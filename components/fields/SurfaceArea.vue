@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import type * as z from "zod";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 defineProps<{
 	id?: string,
 	name?: string;
 	label?: string;
 	help?: string;
+	zod: z.ZodType;
 }>();
 
 </script>
@@ -17,7 +20,7 @@ defineProps<{
 		suffix-text="m²"
 		:name="name ?? 'surfaceAreaOfElement'"
 		:help="help"
-		validation="required | number | min:0 | max:10000"
+		:validation="zodTypeAsFormKitValidation(zod)"
 		data-field="Zone.BuildingElement.*.area"
 	/>
 </template>

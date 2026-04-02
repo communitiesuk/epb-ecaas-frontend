@@ -2,6 +2,8 @@
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, zeroPitchOptions, uniqueName, type RoofData } from "#imports";
 import type { RadioOption } from "~/components/form-kit/Radios.vue";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { heightOpaqueZod, surfaceAreaOpaqueZod, widthOpaqueZod } from "~/stores/ecaasStore.schema";
 
 const title = "Roof";
 const store = useEcaasStore();
@@ -267,7 +269,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					:label="currentRoofFieldText?.lengthLabel ?? 'Length of roof'"
 					:help="currentRoofFieldText?.lengthHelp ?? 'Enter the length of the building element'"
 					name="length"
-					validation="required | number | min:0.001 | max:50"
+					:validation="zodTypeAsFormKitValidation(heightOpaqueZod)"
 					suffix-text="m"
 					data-field="Zone.BuildingElement.*.height"
 				/>
@@ -278,7 +280,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					:label="currentRoofFieldText?.widthLabel ?? 'Width of roof'"
 					:help="currentRoofFieldText?.widthHelp ?? 'Enter the width of the building element'"
 					name="width"
-					validation="required | number | min:0.001 | max:50"
+					:validation="zodTypeAsFormKitValidation(widthOpaqueZod)"
 					suffix-text="m"
 				/>
 				<FormKit
@@ -288,7 +290,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					label="Net surface area of ceiling"
 					:help="currentRoofFieldText?.surfaceAreaHelp ?? 'Enter the net area of the building element. The area of all windows or doors should be subtracted before entry.'"
 					name="surfaceArea"
-					validation="required | number | min:0.01 | max:10000"
+					:validation="zodTypeAsFormKitValidation(surfaceAreaOpaqueZod)"
 					suffix-text="m²"
 					data-field="Zone.BuildingElement.*.area"
 				/>	

@@ -2,7 +2,7 @@
 import { centimetre, metre, type Length } from "~/utils/units/length";
 import { zodTypeAsFormKitValidation } from "#imports";
 import type { SchemaWindShieldLocation } from "~/schema/aliases";
-import { groundSurfaceAreaZod, groundTotalAreaZod } from "~/stores/ecaasStore.schema";
+import { groundSurfaceAreaZod, groundTotalAreaZod, groundPerimeterZod, heightUpperSurfaceZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
 import { getUrl, type GroundFloorData, uniqueName, unitValue } from "#imports";
 
 const title = "Ground floor";
@@ -29,8 +29,6 @@ const model = ref(floorData?.data);
 const includesInsulationType = (type: string) => {
 	return (model.value as { edgeInsulationType?: string[] } | undefined)?.edgeInsulationType?.includes(type) ?? false;
 };
-
-
 
 // Removed heated and unheated basement options for summer
 type ReducedGroundFloorOptions = "Slab_no_edge_insulation" | "Slab_edge_insulation" | "Suspended_floor";
@@ -239,7 +237,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			label="Perimeter"
 			help="Enter the length of the exposed perimeter of the floor. This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings."
 			name="perimeter"
-			validation="required | number | min:0 | max:1000"
+			:validation="zodTypeAsFormKitValidation(groundPerimeterZod)"
 			data-field="Zone.BuildingElement.*.perimeter">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">The exposed perimeter of the floor is where heat loss may occur, usually at the base of the external walls where they meet the ground floor.</p>
@@ -262,7 +260,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			label="Thickness of walls at the edge of the floor"
 			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 0.3m to 0.8m. If this value varies enter a weighted average."
 			name="thicknessOfWalls"
-			validation="required | number"
+			:validation="zodTypeAsFormKitValidation(thicknessOfWallsZod)"
 			data-field="Zone.BuildingElement.*.thickness_walls">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">This is usually measured from the inside surface to the outside surface.</p>
@@ -380,7 +378,7 @@ const greaterThanZero = (node: FormKitNode) => {
 				label="Height of the floor upper surface"
 				help="Enter the height of the top surface of the ground floor above the external ground level. Typically between 0.015m and 0.06m."
 				name="heightOfFloorUpperSurface"
-				validation="required | number | min:0 | max:1000"
+				:validation="zodTypeAsFormKitValidation(heightUpperSurfaceZod)"
 				data-field="Zone.BuildingElement.*.height_upper_surface"/>
 			<FormKit
 				id="underfloorSpaceThermalResistance"

@@ -3,7 +3,8 @@ import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
 import { isInteger } from "~/utils/validation";
 import { getUrl, type DomesticHotWaterHeatSourceData, type EcaasForm, type FuelTypeDisplay, type GeneralDetailsData, type HeatSourceData } from "#imports";
 import type { CheckboxOption } from "~/components/form-kit/Checkboxes.vue";
-
+import { storeyOfFlatZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "General details";
 const store = useEcaasStore();
@@ -159,7 +160,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Storey of flat"
 			name="storeyOfFlat"
 			:validation-rules="{ isInteger }"
-			validation="required | isInteger | min:-50 | max:199"
+			:validation="`${zodTypeAsFormKitValidation(storeyOfFlatZod)} | isInteger`"
 			:validation-messages="{
 				isInteger: `Storey of flat must be a round number.`,
 			}"
@@ -172,7 +173,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Number of storeys in dwelling"
 			name="storeysInDwelling"
 			:validation-rules="{ isInteger }"
-			validation="required | isInteger | min:1 | max:250"
+			validation="required | isInteger | min:1"
 			:validation-messages="{
 				isInteger: `Number of storeys in dwelling must be an integer.`,
 			}"
@@ -198,7 +199,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Building length"
 			suffix-text="m"
 			name="buildingLength"
-			validation="required | number"
+			validation="required | number | min:0"
 			help="Enter the maximum horizontal distance across the building footprint"
 			data-field="BuildingLength">
 			<GovDetails summary-text="Help with this input">
@@ -248,7 +249,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Building width"
 			suffix-text="m"
 			name="buildingWidth"
-			validation="required | number"
+			validation="required | number | min:0"
 			help="Enter the maximum horizontal distance perpendicular to the building length"
 			data-field="BuildingWidth">
 			<GovDetails summary-text="Help with this input">
@@ -298,7 +299,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Number of bedrooms"
 			name="numOfBedrooms"
 			:validation-rules="{ isInteger }"
-			validation="required | isInteger | min:1"
+			validation="required | isInteger | min:0"
 			:validation-messages="{
 				isInteger: `Number of bedrooms must be an integer.`,
 			}"
@@ -311,7 +312,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Number of utility rooms"
 			name="numOfUtilityRooms"
 			:validation-rules="{ isInteger }"
-			validation="required | isInteger | min:1"
+			validation="required | isInteger | min:0"
 			:validation-messages="{
 				isInteger: `Number of utility rooms must be an integer.`,
 			}"
@@ -324,7 +325,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Number of bathrooms"
 			name="numOfBathrooms"
 			:validation-rules="{ isInteger }"
-			validation="required | isInteger | min:1"
+			validation="required | isInteger | min:0"
 			:validation-messages="{
 				isInteger: `Number of bathrooms must be an integer.`,
 			}"
@@ -337,7 +338,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Number of WCs"
 			name="numOfWCs"
 			:validation-rules="{ isInteger }"
-			validation="required | isInteger"
+			validation="required | isInteger | min:0"
 			:validation-messages="{
 				isInteger: `Number of WCs must be an integer.`,
 			}"
@@ -350,7 +351,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Number of habitable rooms"
 			name="numOfHabitableRooms"
 			:validation-rules="{ isInteger }"
-			validation="required | isInteger"
+			validation="required | isInteger | min:1"
 			:validation-messages="{
 				isInteger: `Number of habitable rooms must be an integer.`,
 			}"
@@ -363,7 +364,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Total number of rooms with tapping points"
 			name="numOfRoomsWithTappingPoints"
 			:validation-rules="{ isInteger }"
-			validation="required | isInteger"
+			validation="required | isInteger | min:1"
 			:validation-messages="{
 				isInteger: `Number of rooms with tapping points must be an integer.`,
 			}"
@@ -376,7 +377,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Total number of wet rooms"
 			name="numOfWetRooms"
 			:validation-rules="{ isInteger }"
-			validation="required | isInteger"
+			validation="required | isInteger | min:0"
 			:validation-messages="{
 				isInteger: `Number of wet rooms must be an integer.`,
 			}"

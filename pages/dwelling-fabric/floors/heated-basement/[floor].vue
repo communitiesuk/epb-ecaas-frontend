@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
 import { v4 as uuidv4 } from "uuid";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { groundSurfaceAreaZod, groundTotalAreaZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
+
 const title = "Floor of heated basement";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
@@ -85,7 +88,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Net surface area"
 			help="Enter the net area of the building element, subtracting any doors or windows"
 			name="netSurfaceArea"
-			validation="required | number | min:5 | max: 10000"
+			:validation="zodTypeAsFormKitValidation(groundSurfaceAreaZod)"
 			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FormKit
@@ -95,7 +98,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Total area"
 			help="Enter the total area of the basement floor across the dwelling. If the basement floor is made up of multiple floor types, this is the total area of all of the basement floor elements."
 			name="totalArea"
-			validation="required | number | min:5"
+			:validation="zodTypeAsFormKitValidation(groundTotalAreaZod)"
 			data-field="Zone.BuildingElement.*.total_area"
 		/>
 		<FieldsUValue
@@ -150,7 +153,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="mm"
 			label="Thickness of walls"
 			name="thicknessOfWalls"
-			validation="required | number"
+			:validation="zodTypeAsFormKitValidation(thicknessOfWallsZod)"
 			help="Enter the physical thickness of the ground floor wall. Typically more than 300mm. If the thickness varies, enter a weighted average."
 		/>
 		<div class="govuk-button-group govuk-!-margin-top-6">

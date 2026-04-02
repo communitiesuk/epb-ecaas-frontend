@@ -2,6 +2,8 @@
 import { NotificationsDoorBanner } from "#components";
 import { getUrl, standardPitchOptions, uniqueName } from "#imports";
 import { isFlatRoofItem } from "../../../../utils/isFlatRoofItem";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { heightOpaqueZod, widthOpaqueZod } from "~/stores/ecaasStore.schema";
 
 const title = "External unglazed door";
 const store = useEcaasStore();
@@ -126,7 +128,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Height"
 			help="Enter the length of the building element"
 			name="height"
-			validation="required | number | min:0.001 | max:50"
+			:validation="zodTypeAsFormKitValidation(heightOpaqueZod)"
 			data-field="Zone.BuildingElement.*.height"
 		/>
 		<FormKit
@@ -136,7 +138,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Width"
 			help="Enter the width of the building element"
 			name="width"
-			validation="required | number | min:0.001 | max:50"
+			:validation="zodTypeAsFormKitValidation(widthOpaqueZod)"
 			data-field="Zone.BuildingElement.*.width"
 		/>
 		<FieldsElevationalHeight

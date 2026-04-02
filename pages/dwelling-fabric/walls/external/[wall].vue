@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import { standardPitchOptions, getUrl, uniqueName } from "#imports";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { surfaceAreaOpaqueZod, widthOpaqueZod, heightOpaqueZod } from "~/stores/ecaasStore.schema";
 
 const title = "External wall";
 const store = useEcaasStore();
@@ -125,7 +127,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Height"
 			help="Enter the height of the building element"
 			name="height"
-			validation="required | number | min:0.001 | max:50"
+			:validation="zodTypeAsFormKitValidation(heightOpaqueZod)"
 			data-field="Zone.BuildingElement.*.height">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">Enter the height of the wall forming the edge of the thermal envelope.</p>
@@ -140,7 +142,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Length"
 			help="Enter the internal length of the wall which forms the edge of the thermal envelope"
 			name="length"
-			validation="required | number | min:0.001 | max:50"
+			:validation="zodTypeAsFormKitValidation(widthOpaqueZod)"
 			data-field="Zone.BuildingElement.*.width"
 		/>
 		<FieldsElevationalHeight />
@@ -151,7 +153,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Net surface area"
 			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
 			name="surfaceArea"
-			validation="required | number | min:0.01 | max:10000"
+			:validation="zodTypeAsFormKitValidation(surfaceAreaOpaqueZod)"
 			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FieldsUValue help="Enter the U-value of the full thickness of the construction build up" />

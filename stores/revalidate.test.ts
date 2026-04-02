@@ -36,7 +36,7 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 	},
 };
 
-const simpleCaseOneFieldOutOfRange = immutable.set(simpleCaseOnlyOneForm, "dwellingDetails.generalSpecifications.data.storeysInDwelling", 666); // max storeysInDwelling should be 250
+const simpleCaseOneFieldOutOfRange = immutable.set(simpleCaseOnlyOneForm, "dwellingDetails.generalSpecifications.data.storeysInDwelling", -1); // min storeysInDwelling should be 0
 
 const simpleCaseFieldMissing = immutable.del(simpleCaseOnlyOneForm, "dwellingDetails.generalSpecifications.data.numOfBedrooms");
 

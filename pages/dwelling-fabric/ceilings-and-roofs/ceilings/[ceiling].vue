@@ -2,6 +2,8 @@
 import type { CeilingData } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, zeroPitchOptions, uniqueName } from "#imports";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { surfaceAreaAdjacentSpaceZod } from "~/stores/ecaasStore.schema";
 
 const title = "Ceiling";
 const store = useEcaasStore();
@@ -130,7 +132,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					label="Net surface area of element"
 					help="Enter the net area of the building element. The area of all large openings should be subtracted before entry, but not doors."
 					name="surfaceArea"
-					validation="required | number | min:0 | max:10000"
+					:validation="zodTypeAsFormKitValidation(surfaceAreaAdjacentSpaceZod)"
 					data-field="Zone.BuildingElement.*.area"
 				/>
 				<FieldsUValue

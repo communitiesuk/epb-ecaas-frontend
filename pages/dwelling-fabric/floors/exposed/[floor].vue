@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { heightOpaqueZod, widthOpaqueZod, surfaceAreaOpaqueZod } from "~/stores/ecaasStore.schema";
+
 const title = "Exposed floor";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
@@ -80,7 +83,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Length"
 			help="Enter the length of the building element"
 			name="length"
-			validation="required | number | min:0.001 | max:50"
+			:validation="zodTypeAsFormKitValidation(heightOpaqueZod)"
 			data-field="Zone.BuildingElement.*.height"
 		/>
 		<FormKit
@@ -90,7 +93,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Width"
 			help="Enter the width of the building element"
 			name="width"
-			validation="required | number | min:0.001 | max:50"
+			:validation="zodTypeAsFormKitValidation(widthOpaqueZod)"
 			data-field="Zone.BuildingElement.*.width"
 		/>
 		<FieldsElevationalHeight />
@@ -101,7 +104,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Net surface area"
 			help="Enter the net area of the building element"
 			name="surfaceArea"
-			validation="required | number | min:0.01 | max:10000"
+			:validation="zodTypeAsFormKitValidation(surfaceAreaOpaqueZod)"
 			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FieldsUValue help="Enter the U-value of the full thickness of the floor build-up" />
