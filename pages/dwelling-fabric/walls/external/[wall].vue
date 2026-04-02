@@ -109,7 +109,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="orientation"
 			validation="required | number | min:0 | max:360"
 			data-field="Zone.BuildingElement.*.orientation">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<GovDetails summary-text="Help with this input">
 				<img src="/img/orientation-measurement.png" alt="Orientation measurement">
 				<p class="govuk-hint">To define an object's orientation, measure the angle of its outside face clockwise from
 					true North, accurate to the nearest degree.</p>
@@ -127,7 +127,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="height"
 			validation="required | number | min:0.001 | max:50"
 			data-field="Zone.BuildingElement.*.height">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">Enter the height of the wall forming the edge of the thermal envelope.</p>
 				<p class="govuk-hint">If the loft space is heated, the full height of the wall up to the ceiling of the roof room should be included.</p>
 				<p class="govuk-hint">If the loft space is unheated, the entire roof should be excluded, and the height of the external wall should be measured up to the flat ceiling of the storey below.</p>
@@ -166,7 +166,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="massDistributionClass"
 			help="This is the distribution of mass in the full thickness of the construction build up"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingSpaceWalls')" secondary>Save progress</GovButton>
