@@ -44,7 +44,8 @@ const locationOfCollectorLoopPipingOptions = {
 		suffix-text="m²"
 		label="Collector module area"
 		name="collectorModuleArea"
-		validation="required | number | min:0 | max:10000" />
+		validation="required | number | min:0 | max:10000"
+		help="Enter the area of the module placed on the roof to collect solar and turn it into heat" />
 	<FormKit
 		id="numberOfCollectorModules"
 		type="govInputInt"
@@ -61,28 +62,32 @@ const locationOfCollectorLoopPipingOptions = {
 		label="Peak collector efficiency"
 		name="peakCollectorEfficiency"
 		validation="required | number | min:0 | max:1"
-		help="Enter the peak efficiency of the solar collectors, as a decimal between 0 and 1" />
+		help="Enter the peak efficiency of the solar collectors, as a decimal between 0 and 1. This indicates how much of the solar radiation is converted into useable heat." />
 	<FormKit
 		id="incidenceAngleModifier"
-		type="govInputInt"
+		type="govInputFloat"
 		label="Incidence angle modifier"
 		name="incidenceAngleModifier"
 		validation="required | number | min:0 | max:1"
-		help="Enter the hemispherical incidence angle modifier, as a decimal between 0 and 1" />
+		help="Enter the hemispherical incidence angle modifier, as a decimal between 0 and 1">
+		<GovDetails summary-text="Help with this input"><p class="govuk-body">This is a constant which determines how the performance of the panel, or efficiency, changes as it moves away from directly facing the sun.</p></GovDetails>
+	</FormKit>		
 	<FormKit
 		id="firstOrderHeatLossCoefficient"
 		type="govInputWithSuffix"
 		suffix-text="W/(m²·K)"
 		label="First order heat loss coefficient"
 		name="firstOrderHeatLossCoefficient"
-		validation="required | number | min:0 | max:10000" />
+		validation="required | number | min:0 | max:10000"
+		help="This coefficient indicates how quickly the module looses heat to the environment. It can be between 0 and 100." />
 	<FormKit
 		id="secondOrderHeatLossCoefficient"
 		type="govInputWithSuffix"
 		suffix-text="W/(m²·K²)"
 		label="Second order heat loss coefficient"
 		name="secondOrderHeatLossCoefficient"
-		validation="required | number | min:0 | max:10000" />
+		validation="required | number | min:0 | max:10000"
+		help="This can be between 0 and 100" />
 	<FormKit
 		id="heatLossCoefficientOfSolarLoopPipe"
 		type="govInputWithSuffix"
