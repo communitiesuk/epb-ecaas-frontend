@@ -29,4 +29,8 @@ describe("convert zod types to formkit validation strings", () => {
 	it("converts a Zod schema with a lt constraint on a number to a viable FormKit validation string", () => {
 		expect(zodTypeAsFormKitValidation(z.number().min(0).lt(180))).toBe("required | number | min:0 | max:179.99999");
 	});
+
+	it("converts a Zod schema for an integer and a gt constraint to correct validation string", () => {
+		expect(zodTypeAsFormKitValidation(z.int().min(1))).toBe("required | number | min:1");
+	});
 });

@@ -70,7 +70,7 @@ export function zodTypeAsFormKitValidation(schema: z.ZodTypeAny): string {
 		if (typeof exclusiveMinimum !== "undefined") {
 			rules.push(`min:${exclusiveMinimum + smallFraction}`);
 		}
-		if (typeof maximum !== "undefined") {
+		if (typeof maximum !== "undefined" && maximum < 9000000000000000) {
 			rules.push(`max:${maximum}`);
 		}
 		if (typeof exclusiveMaximum !== "undefined") {
