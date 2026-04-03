@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
 import { v4 as uuidv4 } from "uuid";
+import type { CustomListItem } from "~/components/CustomList.vue";
+import { hasPackagedProduct } from "~/utils/packagedProduct";
 
 const title = "Space heating";
 const page = usePage();
@@ -11,14 +13,17 @@ type SpaceHeatingData = EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> 
 
 const { heatSources: dhwHeatSources, waterStorage, hotWaterOutlets } = store.domesticHotWater;
 const { heatEmitters, heatSource } = store.spaceHeating;
+
 function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 	const items = store.spaceHeating[spaceHeatingType]?.data;
+	const item = items[index] as SpaceHeatingData;
 
 	let heatSourceId;
 
 	if (items[index]?.data && "typeOfHeatSource" in items[index].data) {
 		heatSourceId = store.spaceHeating.heatSource.data[index]?.data.id;
 	}
+
 	if (items) {
 		items.splice(index, 1);
 
@@ -33,7 +38,7 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 			
 			const dhwHeatSourceIdToRemove = dhwHeatSources.data
 				.filter(({ data: x }) => x.heatSourceId === heatSourceId)
-				.map(x => x.data.id)[0]; 
+				.map(x => x.data.id)[0];
 
 			//remove dhw heat sources that reference deleted space heating heat source
 			const dhwHeatSourcesToKeep = dhwHeatSources.data.filter(({ data: x }) => x.heatSourceId !== heatSourceId); 
@@ -46,31 +51,77 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 
 			//remove reference to deleted dhw heat source
 			store.removeTaggedAssociations()([waterStorage, hotWaterOutlets], dhwHeatSourceIdToRemove, "dhwHeatSourceId"); 
+		}
 
+		if (isPackagedProduct(item.data)) {
+			const packageItemIds = item.data.packageProducts;
+
+			store.$patch(state => {
+				const filteredItems = state.spaceHeating[spaceHeatingType].data
+					.filter(x => "id" in x.data ? !packageItemIds?.includes(x.data.id!) : true);
+
+				state.spaceHeating[spaceHeatingType].data = filteredItems as SpaceHeatingData[];
+			});
 		}
 	}
 };
 
 function handleDuplicate<T extends SpaceHeatingData>(spaceHeatingType: SpaceHeatingType, index: number) {
-
 	const { data } = store.spaceHeating[spaceHeatingType];
-	const item = data?.[index];
+	const item = data?.[index] as SpaceHeatingData;
 
 	if (item) {
 		const duplicates = data.filter(x => x && x.data.name.match(duplicateNamePattern(item.data.name)));
 
 		store.$patch((state) => {
-			const newItem = {
-				complete: item.complete,
-				data: {
-					...item.data,
-					name: `${item.data.name} (${duplicates.length})`,
-					id: uuidv4(),
-				},
-			} as T;
+			if (!isPackagedProduct(item.data)) {
+				const newItem = {
+					complete: item.complete,
+					data: {
+						...item.data,
+						name: `${item.data.name} (${duplicates.length})`,
+						id: uuidv4(),
+					},
+				} as T;
 
-			state.spaceHeating[spaceHeatingType].data.push(newItem);
-			state.spaceHeating[spaceHeatingType].complete = false;
+				state.spaceHeating[spaceHeatingType].data.push(newItem);
+				state.spaceHeating[spaceHeatingType].complete = false;
+			} else {
+				const packageItemIds = item.data.packageProducts;
+
+				const packageItems = (data as SpaceHeatingData[]).filter(x => {
+					return "id" in x.data ? packageItemIds?.includes(x.data.id) : false;
+				});
+
+				const newPackageItems = packageItems.map(packageItem => {
+					const packagedDuplicates = data.filter(x => x && x.data.name.match(duplicateNamePattern(packageItem.data.name)));
+
+					const newPackagedItem: T = {
+						complete: true,
+						data: {
+							...packageItem.data,
+							id: uuidv4(),
+							name: `${packageItem.data.name} (${packagedDuplicates.length})`,
+						},
+					} as T;
+
+					return newPackagedItem;
+				});
+
+				const newItem = {
+					complete: item.complete,
+					data: {
+						...item.data,
+						name: `${item.data.name} (${duplicates.length})`,
+						id: uuidv4(),
+						packageProducts: newPackageItems.map(x => x.data.id),
+					},
+				} as T;
+
+				state.spaceHeating[spaceHeatingType].data.push(newItem);
+				state.spaceHeating[spaceHeatingType].data = state.spaceHeating[spaceHeatingType].data.concat(newPackageItems) as EcaasForm<HeatSourceData>[];
+				state.spaceHeating[spaceHeatingType].complete = false;
+			}
 		});
 	}
 }
@@ -114,9 +165,18 @@ function hasIncompleteEntries() {
 		title="Heat sources"
 		:form-url="`${page?.url!}/heat-source`"
 		:items="
-			store.spaceHeating.heatSource.data.map((x) => ({
-				name: x.data?.name,
-				status: x.complete ? formStatus.complete : formStatus.inProgress,
+			store.spaceHeating.heatSource.data.map((x => {
+				const heatSource = x as EcaasForm<HeatSourceData>;
+
+				const item: CustomListItem = {
+					name: heatSource.data?.name,
+					status: heatSource.complete ? formStatus.complete : formStatus.inProgress,
+					...(hasPackagedProduct(heatSource.data) ? {
+						actions: ['edit']
+					} : {}),
+				};
+
+				return item;
 			}))
 		"
 		:show-status="true"

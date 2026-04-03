@@ -854,17 +854,29 @@ export type HeatSourceType =
 
 export type PcdbProduct = z.infer<typeof pcdbProduct>;
 
-const heatPumpBase = pcdbProduct.extend({
+const pcdbPackagedProduct = pcdbProduct.extend({
+	packageProducts: z.optional(z.array(z.string())),
+});
+
+const hasPcdbPackagedProduct = pcdbProduct.extend({
+	packagedProductReference: z.optional(z.string()),
+});
+
+const heatPumpBase = pcdbPackagedProduct.extend({
 	typeOfHeatSource: z.literal("heatPump"),
 	typeOfHeatPump,
 });
 
-const boilerBase = pcdbProduct.extend({
+const boilerBase = hasPcdbPackagedProduct.extend({
 	typeOfHeatSource: z.literal("boiler"),
 	typeOfBoiler,
 	specifiedLocation: z.optional(boilerLocationZod),
 	needsSpecifiedLocation: z.boolean(),
 });
+
+export type HasPcdbPackagedProduct = z.infer<typeof hasPcdbPackagedProduct>;
+export type PcdbPackagedProduct = z.infer<typeof pcdbPackagedProduct>;
+
 const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatBattery"),
 	typeOfHeatBattery,

@@ -14,7 +14,7 @@ const props = defineProps<{
 	
 const {
 	id,
-	node: { name },
+	node: { name, props: { disabled } },
 	attrs: { options },
 	label,
 	help,
@@ -50,6 +50,7 @@ const optionsMap = options instanceof Map ? options : new Map(Object.entries(opt
 		:current-value="props.context._value"
 		:attrs="props.context.attrs"
 		:class-names="props.context.attrs['class-names']"
+		:disabled="disabled"
 	>
 		<slot />
 	</GovRadios>

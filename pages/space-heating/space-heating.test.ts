@@ -414,6 +414,76 @@ describe("space heating", () => {
 
 			expect(screen.getByTestId("heatSource_status_0").textContent).toBe(formStatus.complete.text);
 		});
+
+		describe("packaged heat sources", () => {
+			const heatPump: HeatSourceData = {
+				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+				name: "Heat pump",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "hybridHeatPump",
+				productReference: "1000",
+				packageProducts: ["2000"],
+			};
+
+			const boiler: HeatSourceData = {
+				id: "171a20a4-e775-4e51-873c-f1fc536076b1",
+				name: "Combi boiler",
+				typeOfHeatSource: "boiler",
+				typeOfBoiler: "combiBoiler",
+				productReference: "2000",
+				packagedProductReference: "1000",
+				needsSpecifiedLocation: false,
+			};
+
+			beforeEach(async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: heatPump, complete: true },
+								{ data: boiler, complete: true },
+							],
+						},
+					},
+				});
+
+				await renderSuspended(SpaceHeating);
+			});
+
+			it("removes heat sources which are packaged with the removed item", async () => {
+				await user.click(await screen.findByTestId("heatSource_remove_0"));
+				expect(store.spaceHeating.heatSource.data.length).toBe(0);
+			});
+
+			it("only displays an 'edit' action if heat source is packaged with a heat pump", async () => {
+				const boilerEditButton = screen.getByTestId("heatSource_edit_1");
+				const boilerDuplucateButton = screen.queryByTestId("heatSource_duplicate_1");
+				const boilerDeleteButton = screen.queryByTestId("heatSource_remove_1");
+
+				expect(boilerEditButton).toBeDefined();
+				expect(boilerDuplucateButton).toBeNull();
+				expect(boilerDeleteButton).toBeNull();
+			});
+
+			it ("duplicates a heat source when the heat pump it's packaged with is duplicated", async () => {
+				await user.click(await screen.findByTestId("heatSource_duplicate_0"));
+				
+				const spaceHeatingData = store.spaceHeating.heatSource.data;
+
+				expect(spaceHeatingData.length).toBe(4);
+				
+				const duplicateHeatPump = spaceHeatingData[2];
+				const duplicateBoiler = spaceHeatingData[3];
+
+				expect(duplicateHeatPump?.data).toEqual(expect.objectContaining({
+					name: "Heat pump (1)",
+				}));
+
+				expect(duplicateBoiler?.data).toEqual(expect.objectContaining({
+					name: "Combi boiler (1)",
+				}));
+			});
+		});
 	});
 
 	describe("heat emitters", async () => {

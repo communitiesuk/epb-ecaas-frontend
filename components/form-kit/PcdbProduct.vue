@@ -17,6 +17,7 @@ const {
 		"page-url": pageUrl,
 		"page-index": index,
 	},
+	node: { props: { disabled } },
 } = props.context;
 
 async function fetchProduct(reference: string) {
@@ -82,9 +83,16 @@ watch(props.context, async ({ attrs: {
 						<li>Model Qualifier: <span class="bold">{{ productData.modelQualifier ?? '-' }}</span></li>
 					</ul>
 				</template>
-				<GovButton secondary data-testId="selectAProductButton" :href="productsPageUrl" class="govuk-button__margin-bottom">
+				<GovButton
+					v-if="!disabled"
+					secondary
+					data-testId="selectAProductButton" 
+					href="productsPageUrl"
+					class="govuk-button__margin-bottom"
+				>
 					Select a different product
 				</GovButton>
+				<NuxtLink v-if="disabled" :href="`${productsPageUrl}/${productData.id}`" class="govuk-link">More details</NuxtLink>
 			</div>
 		</div>
 	</div>

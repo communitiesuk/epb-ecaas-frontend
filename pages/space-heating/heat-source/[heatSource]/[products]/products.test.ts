@@ -2,11 +2,12 @@ import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
 import Products from "./index.vue";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
-import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import type { BoilerProduct, DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
 
 describe("Heat source products page", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
+	
 	const { mockFetch, mockRoute } = vi.hoisted(() => ({
 		mockFetch: vi.fn(),
 		mockRoute: vi.fn(),
@@ -43,6 +44,13 @@ describe("Heat source products page", () => {
 				modelQualifier: "HPLARGE",
 				technologyType: "AirSourceHeatPump",
 			},
+			{
+				id: "1003",
+				brandName: "Test",
+				modelName: "Hybrid Heat Pump",
+				technologyType: "HybridHeatPump",
+				boilerProductID: "2000",
+			},
 		],
 	};
 
@@ -56,14 +64,6 @@ describe("Heat source products page", () => {
 		id: "463c94f6-566c-49b2-af27-222222222",
 		name: "Heat source 1",
 		typeOfHeatSource: "heatPump",
-		typeOfHeatPump: "airSource",
-	};
-
-	const heatSource2: Partial<HeatSourceData> = {
-		id: "463c94f6-566c-49b2-af27-111111111",
-		name: "Heat source 2",
-		typeOfHeatSource: "heatPump",
-		typeOfHeatPump: "airSource",
 	};
 
 	const heatNetwork1: Partial<HeatSourceData> = {
@@ -77,7 +77,7 @@ describe("Heat source products page", () => {
 
 	const combiBoiler1: Partial<HeatSourceData> = {
 		id: "463c94f6-566c-49b2-af27-444444444",
-		name: "Heat network 1",
+		name: "Combi boiler",
 		typeOfHeatSource: "boiler",
 		typeOfBoiler: "combiBoiler",
 	};
@@ -87,7 +87,6 @@ describe("Heat source products page", () => {
 			spaceHeating: {
 				heatSource: {
 					data: [
-						{ data: heatSource2 },
 						{ data: heatSource1 },
 						{ data: heatNetwork1 },
 						{ data: combiBoiler1 },
@@ -105,42 +104,42 @@ describe("Heat source products page", () => {
 		mockRoute.mockReturnValue({
 			params: {
 				heatSource: "0",
-				products: "air-source",
+				products: "heat-pump",
 			},
-			path: "/0/air-source",
+			path: "/0/heat-pump",
 		});
 		
 		await renderSuspended(Products);
 
 		expect(
-			screen.getByRole("heading", { name: "Select an air source heat pump" }),
+			screen.getByRole("heading", { name: "Select a heat pump" }),
 		);
 	});
 
 	test("when a user selects a product its product reference gets stored", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				heatSource: "1",
-				products: "air-source",
+				heatSource: "0",
+				products: "heat-pump",
 			},
-			path: "/1/air-source",
+			path: "/0/heat-pump",
 		});
 		await renderSuspended(Products);
 
 		await user.click(screen.getByTestId("selectProductButton_1"));
 
 		expect(
-			store.spaceHeating.heatSource.data[1]!.data,
+			store.spaceHeating.heatSource.data[0]!.data,
 		).toEqual(expect.objectContaining({ productReference: MOCKED_HEAT_PUMPS.data[1]?.id }));
 	});
 
 	test("when a user selects a heat interface unit product its product reference gets stored", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				heatSource: "2",
+				heatSource: "1",
 				products: "heat-interface-unit",
 			},
-			path: "/2/heat-interface-unit",
+			path: "/1/heat-interface-unit",
 		});
 
 		const mockedHeatInterfaceUnits: PaginatedResult<DisplayProduct> = {
@@ -163,17 +162,17 @@ describe("Heat source products page", () => {
 		await user.click(screen.getByTestId("selectProductButton_0"));
 
 		expect(
-			store.spaceHeating.heatSource.data[2]!.data,
+			store.spaceHeating.heatSource.data[1]!.data,
 		).toEqual(expect.objectContaining({ heatInterfaceUnitProductReference: mockedHeatInterfaceUnits.data[0]?.id }));
 	});
 
 	test("Form marks that it needs a specified boiler location when boiler location is 'unknown'", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				heatSource: "3",
+				heatSource: "2",
 				products: "combi-boiler",
 			},
-			path: "/3/combi-boiler",
+			path: "/2/combi-boiler",
 		});
 
 		const mockedCombiBoilers: PaginatedResult<DisplayProduct> = {
@@ -197,24 +196,24 @@ describe("Heat source products page", () => {
 		await user.click(screen.getByTestId("selectProductButton_0"));
 
 		expect(
-			store.spaceHeating.heatSource.data[3]!.data,
+			store.spaceHeating.heatSource.data[2]!.data,
 		).toEqual(expect.objectContaining({ needsSpecifiedLocation: true }));
 	});
 
 	test("'Back to heat source' navigates user to the heat source at the correct index", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				heatSource: "1",
-				products: "air-source",
+				heatSource: "0",
+				products: "heat-pump",
 			},
-			path: "/1/air-source",
+			path: "/0/heat-pump",
 		});
 
 		await renderSuspended(Products);
 		const backButton = screen.getByTestId("backToHeatSourceButton");
 
 		expect(backButton.getAttribute("href")).toBe(
-			"/space-heating/heat-source/1",
+			"/space-heating/heat-source/0",
 		);
 	});
 
@@ -222,9 +221,9 @@ describe("Heat source products page", () => {
 		mockRoute.mockReturnValue({
 			params: {
 				heatSource: "0",
-				products: "air-source",
+				products: "heat-pump",
 			},
-			path: "/0/air-source",
+			path: "/0/heat-pump",
 		});
 
 		await renderSuspended(Products);
@@ -235,10 +234,10 @@ describe("Heat source products page", () => {
 	test("heat network PCDB search and product table is displayed when selecting a heat network product", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				heatSource: "0",
+				heatSource: "1",
 				products: "heat-network",
 			},
-			path: "/0/heat-network",
+			path: "/1/heat-network",
 		});
 
 		await renderSuspended(Products);
@@ -247,23 +246,23 @@ describe("Heat source products page", () => {
 	});
 
 	test("when a heat network product is a fifth generation, isFifthGeneration is set to true", async () => {
-	
 		mockRoute.mockReturnValue({
 			params: {
-				heatSource: "2",
+				heatSource: "1",
 				products: "heat-network",
 			},
-			path: "/2/air-source",
+			path: "/1/heat-network",
 		});
 	
 		mockRoute.mockReturnValue({
 			params: {
-				heatSource: "2",
+				heatSource: "1",
 				products: "heat-network",
 				id: "1000",
 			},
-			path: "/2/heat-network/1000",
+			path: "/1/heat-network/1000",
 		});
+
 		const product = {
 			id: "1000",
 			brandName: "Test",
@@ -271,12 +270,15 @@ describe("Heat source products page", () => {
 			modelQualifier: "HNSMALL",
 			technologyType: "HeatNetworks",
 		};
+
 		const heatNetworks = {
 			data: [product],
 		};
+
 		mockFetch.mockReturnValueOnce({
 			data: ref(heatNetworks),
 		});	
+
 		mockFetch.mockReturnValueOnce({
 			data: ref({
 				...product,
@@ -286,6 +288,59 @@ describe("Heat source products page", () => {
 
 		await renderSuspended(Products);
 		await user.click(screen.getByTestId("selectProductButton_0"));
-		expect((store.spaceHeating.heatSource.data[2]!.data as { isFifthGeneration: boolean }).isFifthGeneration).toBe(true);
+		expect(store.spaceHeating.heatSource.data[1]!.data).toEqual(expect.objectContaining({
+			isFifthGeneration: true,
+		}));
+	});
+
+	test("a boiler heat source is created when a hybrid heat pump is selected", async () => {
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [
+						{ data: heatSource1 },
+					],
+				},
+			},
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-pump",
+			},
+			path: "/0/heat-pump",
+		});
+
+		mockFetch.mockReturnValueOnce({
+			data: ref(MOCKED_HEAT_PUMPS),
+		});
+
+		const mockBoiler: Partial<BoilerProduct> = {
+			id: "2000",
+			brandName: "Test",
+			modelName: "Combi boiler",
+			technologyType: "CombiBoiler",
+		};
+
+		mockFetch.mockReturnValueOnce({
+			data: ref(mockBoiler),
+		});
+		
+		await renderSuspended(Products);
+
+		await user.click(screen.getByTestId("selectProductButton_3"));
+
+		const heatSources = store.spaceHeating.heatSource.data;
+
+		expect(heatSources.length).toBe(2);
+
+		expect(heatSources[1]?.data).toEqual(expect.objectContaining({
+			name: "Combi boiler",
+			productReference: "2000",
+			packagedProductReference: "1003",
+			typeOfHeatSource: "boiler",
+			typeOfBoiler: "combiBoiler",
+		}));
 	});
 });

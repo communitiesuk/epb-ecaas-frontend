@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { GovTagProps } from "~/common.types";
 
-interface CustomListItem {
+type CustomListAction = "edit" | "duplicate" | "delete";
+
+export interface CustomListItem {
 	name: string;
 	status?: GovTagProps;
-	preventDuplication?: boolean
+	preventDuplication?: boolean;
+	actions?: CustomListAction[];
 }
 
 const props = defineProps<{
@@ -42,7 +45,6 @@ function routeForEditItem(index: number) {
 	return props.maxNumberOfItems === 1 && props.section !== "dHWHeatSources" ? props.formUrl : `${props.formUrl}/${index}`;
 
 }
-
 </script>
 
 <template>
@@ -81,11 +83,11 @@ function routeForEditItem(index: number) {
 						</dd>
 						<dd class="govuk-summary-list__actions">
 							<ul class="govuk-summary-list__actions-list">
-								<li class="govuk-summary-list__actions-list-item">
-									<NuxtLink class="govuk-link" :href=routeForEditItem(index)>Edit</NuxtLink>
+								<li v-if="typeof item === 'object' && item.actions ? item.actions.includes('edit') : true" class="govuk-summary-list__actions-list-item">
+									<NuxtLink class="govuk-link" :href=routeForEditItem(index) :data-testid="`${id}_edit_${index}`">Edit</NuxtLink>
 								</li>
 								<li
-									v-if="onDuplicate && canAddMoreItems() && (typeof item === 'string' || !item.preventDuplication)"
+									v-if="onDuplicate && canAddMoreItems() && (typeof item === 'string' || !item.preventDuplication) && (typeof item === 'object' && item.actions ? item.actions.includes('duplicate') : true)"
 									class="govuk-summary-list__actions-list-item">
 									<a
 										href="#"
@@ -93,7 +95,7 @@ function routeForEditItem(index: number) {
 										:data-testid="`${id}_duplicate_${index}`"
 										@click="handleDuplicate(index, $event)">Duplicate</a>
 								</li>
-								<li class="govuk-summary-list__actions-list-item">
+								<li v-if="typeof item === 'object' && item.actions ? item.actions.includes('delete') : true" class="govuk-summary-list__actions-list-item">
 									<a
 										href="#"
 										class="govuk-link"
