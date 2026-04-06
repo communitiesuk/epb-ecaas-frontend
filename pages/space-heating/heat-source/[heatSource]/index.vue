@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, type HeatSourceData } from "#imports";
-import { displayTechnologyType, heatSourceTypesWithDisplay } from "../../../../utils/display";
+import { heatSourceTypesWithDisplay } from "../../../../utils/display";
 import type { Product } from "~/pcdb/pcdb.types";
 import { hasPackagedProduct } from "~/utils/packagedProduct";
+import PackagedProductInset from "~/components/PackagedProductInset.vue";
 
 const title = "Heat source";
 const store = useEcaasStore();
@@ -100,10 +101,11 @@ const boilers = heatSourceStoreData
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovInset v-if="hasPackagedProduct(model) && packagedProduct">
-		<p>This product comes with the {{ packagedProduct.modelName }} {{ displayTechnologyType(packagedProduct.technologyType, false).toLowerCase() }} selected in heat sources, so some data entries are unchangeable.</p>
-		<p>If you want to add a different boiler then choose a different heat source product.</p>
-	</GovInset>
+	<PackagedProductInset
+		v-if="hasPackagedProduct(model) && packagedProduct"
+		:model="model"
+		:packaged-product="packagedProduct"
+	/>
 	<FormKit
 		v-model="model"
 		type="form"

@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import HeatSourceForm from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
-import type { DisplayProduct, HybridHeatPumpProduct } from "~/pcdb/pcdb.types";
+import type { BoilerProduct, DisplayProduct, HybridHeatPumpProduct } from "~/pcdb/pcdb.types";
 
 vi.mock("uuid");
 
@@ -359,16 +359,25 @@ describe("heatSource", () => {
 				},
 			});
 
-			const hybridHeatPump: Partial<HybridHeatPumpProduct> = {
-				id: "1003",
+			const hybridHeatPumpProduct: Partial<HybridHeatPumpProduct> = {
+				id: "1000",
 				brandName: "Test",
 				modelName: "Hybrid Heat Pump",
 				technologyType: "HybridHeatPump",
 				boilerProductID: "2000",
 			};
-
-			mockFetch.mockReturnValue({
-				data: ref(hybridHeatPump),
+	
+			const backupBoilerProduct: Partial<BoilerProduct> = {
+				id: "2000",
+				brandName: "Test",
+				modelName: "Hybrid Heat Pump",
+				technologyType: "CombiBoiler",
+			};
+	
+			mockFetch.mockReturnValueOnce({
+				data: ref(hybridHeatPumpProduct),
+			}).mockReturnValueOnce({
+				data: ref(backupBoilerProduct),
 			});
 
 			await renderSuspended(HeatSourceForm, {

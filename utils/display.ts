@@ -484,3 +484,8 @@ export const displayTechnologyType = (technologyType: TechnologyType, plural: bo
 	const productType = Object.entries(productTypeMap).find(x => x[1] === technologyType)?.[0];
 	return heatSourceProductTypesDisplay[productType as HeatSourceProductType](plural);
 };
+
+export const coldWaterSourceOptions: Record<string, string> = { 
+	headerTank: "Header tank",
+	mainsWater: "Mains water",
+} as const;
