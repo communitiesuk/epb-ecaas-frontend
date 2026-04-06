@@ -445,7 +445,7 @@ describe("Space heating summary page", () => {
 
 		const expectedWetDistData = {
 			Name: "Wet Distribution 2",
-			"Type of heat emitter": "Wet distribution system",
+			"Type of heat emitter": "Wet distribution system (Radiators, underfloor heating, etc.)",
 			"Eco design controller class": "2",
 			"Minimum outdoor temperature": "1 °C",
 			"Maximum outdoor temperature": "15 °C",
@@ -566,7 +566,7 @@ describe("Space heating summary page", () => {
 
 			const expectedData = {
 				Name: "WIP System",
-				"Type of heat emitter": "Wet distribution system",
+				"Type of heat emitter": "Wet distribution system (Radiators, underfloor heating, etc.)",
 				"Percentage recirculated": "-",
 				"Name of emitter 1": "Draft Emitter",
 				"Type of emitter 1": "-",

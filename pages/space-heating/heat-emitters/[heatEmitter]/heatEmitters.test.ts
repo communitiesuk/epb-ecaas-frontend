@@ -691,7 +691,7 @@ describe("Heat emitters", () => {
 		});
 
 		it.each([
-			["wetDistributionSystem", "Wet distribution system"],
+			["wetDistributionSystem", "Wet distribution system (Radiators, underfloor heating, etc.)"],
 			["warmAirHeater", "Warm air heater"],
 			["instantElectricHeater", "Instant electric heater"],
 			["electricStorageHeater", "Electric storage heater"],
