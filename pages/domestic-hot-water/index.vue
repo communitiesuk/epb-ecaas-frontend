@@ -119,6 +119,11 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 	return heatSource ? heatSource.data.name : undefined;
 }
 
+function maxHeatSourcesExceeded() {
+	const hasPackagedHeatSources = dhwHeatSources.data.every(x => isPackagedProduct(x.data) || hasPackagedProduct(x.data));
+	return dhwHeatSources.data.length > 1 && !hasPackagedHeatSources;
+}
+
 const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used." }]);
 </script>
 
@@ -127,7 +132,7 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovErrorSummary v-if="dhwHeatSources.data.length > 1" :error-list="errorMessages" test-id="heatSourceLimitExceededErrorSummary" />
+	<GovErrorSummary v-if="maxHeatSourcesExceeded()" :error-list="errorMessages" test-id="heatSourceLimitExceededErrorSummary" />
 	<CustomList 
 		id="heatSources"
 		title="Heat source"
