@@ -4,6 +4,11 @@ import type { WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
 import type { Product } from "~/pcdb/pcdb.types";
 
 const route = useRoute();
+const router = useRouter();
+
+const clearEmitterIndexFromUrl = () => {
+	router.replace({ query: { ...route.query, emitterIndex: undefined } });
+};
 
 const emitterTypeOptions = {
 	radiator: "Radiator",
@@ -123,6 +128,7 @@ const addEmitter = (type: unknown) => {
 	const newIndex = emitters.value.length - 1;
 	editIndex.value = newIndex;
 	formModel.value = { ...emitters.value[newIndex]! };
+	clearEmitterIndexFromUrl();
 };
 
 const removeEmitter = (emitterIndex: number) => {
@@ -142,6 +148,7 @@ const removeEmitter = (emitterIndex: number) => {
 const startEdit = (emitterIndex: number) => {
 	editIndex.value = emitterIndex;
 	formModel.value = { ...emitters.value[emitterIndex]! };
+	clearEmitterIndexFromUrl();
 	store.$patch((state) => {
 		const heatEmitter = state.spaceHeating.heatEmitters.data[props.index];
 		if (heatEmitter) {
@@ -187,6 +194,7 @@ watch(
 const saveEmitter = () => {
 	editIndex.value = null;
 	formModel.value = {};
+	clearEmitterIndexFromUrl();
 };
 </script>
 
@@ -248,7 +256,8 @@ const saveEmitter = () => {
 						:id="`typeOfHeatEmitter_${i}`"
 						type="govRadios"
 						label="Type of emitter"
-						:options="emitterTypeOptions"
+						:help="useUnderfloorHeating ? undefined : 'Please note, underfloor heating is not currently available, but will be in future releases.'"
+						:options="heatEmitterTypes"
 						name="typeOfHeatEmitter"
 						validation="required"
 					/>
@@ -368,6 +377,7 @@ const saveEmitter = () => {
 						type="govRadios"
 						label="Type of emitter"
 						:options="heatEmitterTypes"
+						:help="useUnderfloorHeating ? undefined : 'Please note, underfloor heating is not currently available, but will be in future releases.'"
 						name="emitterTypeSelection"
 						@input="addEmitter"
 					/>
