@@ -422,7 +422,7 @@ describe("space heating", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
-				packageProducts: ["2000"],
+				packageProducts: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
 			};
 
 			const boiler: HeatSourceData = {

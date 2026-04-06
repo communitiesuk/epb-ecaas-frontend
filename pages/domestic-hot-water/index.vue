@@ -46,11 +46,11 @@ function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number)
 		}
 
 		if (domesticHotWaterType === "heatSources" && item && isPackagedProduct(item.data)) {
-			const productReferences = item.data.packageProducts;
+			const packageItemIds = item.data.packageProducts;
 
 			store.$patch(state => {
 				const filteredItems = state.domesticHotWater[domesticHotWaterType].data
-					.filter(x => "productReference" in x.data ? !productReferences?.includes(x.data.productReference) : true);
+					.filter(x => "id" in x.data ? !packageItemIds?.includes(x.data.id) : true);
 
 				state.domesticHotWater[domesticHotWaterType].data = filteredItems;
 			});
