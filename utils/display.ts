@@ -1,5 +1,5 @@
 import { objectFromEntries } from "ts-extras";
-import type { DisplayProduct, TechnologyGroup } from "~/pcdb/pcdb.types";
+import type { DisplayProduct, TechnologyGroup, TechnologyType } from "~/pcdb/pcdb.types";
 import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, SchemaConvectiveType, SchemaFuelType, SchemaLeaksTestPressure, SchemaRadiatorType, SchemaMechanicalVentilationInstallationLocation, SchemaMechanicalVentilationInstallationType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
@@ -485,3 +485,13 @@ export function displayCanExportToGrid(type: GeneralDetailsData["canExportToGrid
 	}
 	return canExportToGridDisplay[type];
 }
+
+export const displayTechnologyType = (technologyType: TechnologyType, plural: boolean) => {
+	const productType = Object.entries(productTypeMap).find(x => x[1] === technologyType)?.[0];
+	return heatSourceProductTypesDisplay[productType as HeatSourceProductType](plural);
+};
+
+export const coldWaterSourceOptions: Record<string, string> = { 
+	headerTank: "Header tank",
+	mainsWater: "Mains water",
+} as const;

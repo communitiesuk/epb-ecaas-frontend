@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { isEcaasForm } from "#imports";
+import { hasPackagedProduct, isEcaasForm } from "#imports";
 import { v4 as uuidv4 } from "uuid";
+import type { CustomListItem } from "~/components/CustomList.vue";
 import formStatus from "~/constants/formStatus";
-import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, HeatSourceData } from "~/stores/ecaasStore.schema";
 
 const title = "Domestic hot water";
 
@@ -13,8 +14,10 @@ const { heatSource } = store.spaceHeating;
 
 type DomesticHotWaterType = keyof typeof store.domesticHotWater;
 type DomesticHotWaterData = EcaasForm<DomesticHotWaterHeatSourceData> & EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData>;
+
 function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number) {
 	const items = store.domesticHotWater[domesticHotWaterType]?.data;
+	const item = items[index];
 	
 	if (items) {
 		let heatSourceId: string | undefined;
@@ -28,6 +31,7 @@ function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number)
 		}
 
 		items.splice(index, 1);
+
 		store.$patch((state) => {
 			state.domesticHotWater[domesticHotWaterType].data = items.length ? items : [];
 			state.domesticHotWater[domesticHotWaterType].complete = false;
@@ -39,6 +43,17 @@ function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number)
 		}
 		if (waterStorageId) {
 			store.removeTaggedAssociations()([pipework], waterStorageId, "waterStorage"); 
+		}
+
+		if (domesticHotWaterType === "heatSources" && item && isPackagedProduct(item.data)) {
+			const { packageProductId } = item.data;
+
+			store.$patch(state => {
+				const packageProductIndex = state.domesticHotWater[domesticHotWaterType].data
+					.findIndex(x => "id" in x.data && x.data.id === packageProductId);
+
+				state.domesticHotWater[domesticHotWaterType].data.splice(packageProductIndex, 1);
+			});
 		}
 	}
 } 
@@ -104,6 +119,11 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 	return heatSource ? heatSource.data.name : undefined;
 }
 
+function maxHeatSourcesExceeded() {
+	const hasPackagedHeatSources = dhwHeatSources.data.every(x => isPackagedProduct(x.data) || hasPackagedProduct(x.data));
+	return dhwHeatSources.data.length > 1 && !hasPackagedHeatSources;
+}
+
 const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used." }]);
 </script>
 
@@ -112,14 +132,28 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovErrorSummary v-if="dhwHeatSources.data.length > 1" :error-list="errorMessages" test-id="heatSourceLimitExceededErrorSummary" />
+	<GovErrorSummary v-if="maxHeatSourcesExceeded()" :error-list="errorMessages" test-id="heatSourceLimitExceededErrorSummary" />
 	<CustomList 
 		id="heatSources"
 		title="Heat source"
 		:form-url="`${page?.url!}/heat-sources`"
-		:items="store.domesticHotWater.heatSources.data
-			.filter(x => isEcaasForm(x))
-			.map(x=>({name: x.data.isExistingHeatSource ? getNameFromSpaceHeatingHeatSource(x.data.heatSourceId)! : x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+		:items="
+			store.domesticHotWater.heatSources.data
+				.filter(x => isEcaasForm(x))
+				.map(x => {
+					const heatSource = x as EcaasForm<HeatSourceData>;
+
+					const item: CustomListItem = {
+						name: x.data.isExistingHeatSource ? getNameFromSpaceHeatingHeatSource(x.data.heatSourceId)! : x.data.name,
+						status: x.complete ? formStatus.complete : formStatus.inProgress,
+						...(hasPackagedProduct(heatSource.data) ? {
+							actions: ['edit']
+						} : {})
+					};
+
+					return item;
+				})
+		"
 		:show-status="true"
 		:max-number-of-items=1
 		section="dHWHeatSources"

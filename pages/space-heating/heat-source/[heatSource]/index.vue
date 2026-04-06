@@ -2,6 +2,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, type HeatSourceData } from "#imports";
 import { heatSourceTypesWithDisplay } from "../../../../utils/display";
+import type { Product } from "~/pcdb/pcdb.types";
+import { hasPackagedProduct } from "~/utils/packagedProduct";
+import PackagedProductInset from "~/components/PackagedProductInset.vue";
 
 const title = "Heat source";
 const store = useEcaasStore();
@@ -17,6 +20,13 @@ export type BoilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boile
 export type HeatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
 export type HeatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
 export type SolarThermalModelType = Extract<HeatSourceData, { typeOfHeatSource: "solarThermalSystem" }>;
+
+const packagedProduct = ref<Product | undefined>();
+
+if (hasPackagedProduct(model.value)) {
+	const productReferences = await useProductReference(heatSourceStoreData, product => product);
+	packagedProduct.value = productReferences[model.value.packagedProductReference!];
+}
 
 const saveForm = () => {
 	store.$patch((state) => {
@@ -48,12 +58,12 @@ watch(
 			errorMessages.value = [];
 			model.value = { typeOfHeatSource: newData.typeOfHeatSource, id: initialData.id } as HeatSourceData;
 		}
+		
 		if (model.value && !model.value.name) {
 			model.value.name = getHeatSourceDefaultName(model.value);
 		}
 	},
 );
-
 
 autoSaveElementForm<HeatSourceData>({
 	model,
@@ -84,16 +94,18 @@ function updateHeatSource(type: string) {
 const boilers = heatSourceStoreData
 	.filter(x => x.data.typeOfHeatSource === "boiler")
 	.map(x => [x.data.id, x.data.name] as [string, string]);
-
 </script>
 
-
 <template>
-
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<PackagedProductInset
+		v-if="hasPackagedProduct(model) && packagedProduct"
+		:model="model"
+		:packaged-product="packagedProduct"
+	/>
 	<FormKit
 		v-model="model"
 		type="form"
@@ -108,7 +120,9 @@ const boilers = heatSourceStoreData
 			label="Type of heat source"
 			:options="heatSourceTypesWithDisplay"
 			name="typeOfHeatSource"
-			validation="required" />
+			validation="required"
+			:disabled="hasPackagedProduct(model)"
+		/>
 		<HeatPumpSection
 			v-if="model?.typeOfHeatSource === 'heatPump'"
 			:model="(model as HeatPumpModelType)"
@@ -116,7 +130,8 @@ const boilers = heatSourceStoreData
 			:boilers="boilers"
 			add-boiler-page-id="heatSourceCreate"
 			page="space-heating"
-			@update-heat-pump-model="updateHeatSource"/>
+			@update-heat-pump-model="updateHeatSource"
+		/>
 		<BoilerSection
 			v-if="model?.typeOfHeatSource === 'boiler'"
 			:model="(model as BoilerModelType)"

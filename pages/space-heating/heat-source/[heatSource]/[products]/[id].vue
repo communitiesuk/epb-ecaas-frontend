@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
-import { heatPumpProductTypesMap, technologyGroups, type HeatPumpProduct, type TechnologyGroup } from "~/pcdb/pcdb.types";
-import { productTypeMap, typeOfHeatSource, type HeatSourceData, type HeatSourceProductType, type PcdbProduct } from "~/stores/ecaasStore.schema";
+import { technologyGroups, type DisplayProduct, type TechnologyGroup } from "~/pcdb/pcdb.types";
+import { productTypeMap, typeOfHeatSource, type EcaasForm, type HeatSourceData, type HeatSourceProductType } from "~/stores/ecaasStore.schema";
 import { boilerTypes, heatSourceProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
 
 definePageMeta({ layout: "one-column" });
 
-const store = useEcaasStore();
 const router = useRouter();
 const { params } = useRoute();
 
@@ -21,50 +20,23 @@ if (!(heatSourceType in productTypeMap) && !technologyGroups.includes(heatSource
 }
 
 const pageId = `${heatSourceType}Products` as PageId;
-const productType = heatSourceProductTypesDisplay[heatSourceType as HeatSourceProductType];
+const heatSourceProductType = heatSourceType as (HeatSourceProductType | TechnologyGroup);
+const productType = heatSourceProductTypesDisplay[heatSourceProductType];
 
 const index = Number(params.heatSource);
 const { data: { value: data } } = await useFetch(`/api/products/${params.id}/details`);
 
+const { selectHeatSourceProduct } = useSelectHeatSourceProduct(data ? [data as DisplayProduct] : [], heatSourceProductType);
+
 const backUrl = getUrl(pageId)
 	.replace(":heatSource", params.heatSource as string);
 
-
-// TODO refactor out
-const selectProduct = () => {
-	store.$patch((state) => {
-		const item = state.spaceHeating.heatSource.data[index];
-	
-		if (item && data) {
-			const heatSourceData = item.data as HeatSourceData;
-			
-			if (heatSourceData.typeOfHeatSource === "heatNetwork") {
-				if (heatSourceData.usesHeatInterfaceUnits && heatSourceType === "heatInterfaceUnit") {
-					heatSourceData.heatInterfaceUnitProductReference = data.id;
-					return;
-				}
-
-				if (!heatSourceData.isHeatNetworkInPcdb) return;
-
-				if ("fifthGHeatNetwork" in data && data.fifthGHeatNetwork === 1) {
-					heatSourceData.isFifthGeneration = true;
-				}
-			}
-			
-			if (heatSourceData.typeOfHeatSource === "boiler" && (data.technologyType === "CombiBoiler" || data.technologyType === "RegularBoiler")) {
-				heatSourceData.needsSpecifiedLocation = data.boilerLocation === "unknown";
-				delete heatSourceData.specifiedLocation;
-			}
-
-			if (heatSourceData.typeOfHeatSource === "heatPump") {
-				const heatPumpProduct = data as HeatPumpProduct;
-				heatSourceData.typeOfHeatPump = heatPumpProductTypesMap[heatPumpProduct.technologyType];
-			}
-
-			const product = item.data as PcdbProduct;
-			product.productReference = data.id;
-		}
-	});
+const selectProduct = async () => {
+	await selectHeatSourceProduct(
+		data as DisplayProduct,
+		(state) => state.spaceHeating.heatSource.data as EcaasForm<HeatSourceData>[],
+		index,
+	);
 
 	navigateTo(getUrl("heatSource").replace(":heatSource", `${index}`));
 };

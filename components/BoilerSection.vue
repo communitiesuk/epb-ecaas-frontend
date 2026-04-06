@@ -3,6 +3,8 @@ import type { HeatSourceData } from "#imports";
 import { uniqueName } from "#imports";
 import type { SchemaBoilerLocationType } from "~/schema/aliases";
 import { boilerTypes, type BoilerLocationDisplay } from "~/utils/display";
+import { hasPackagedProduct } from "~/utils/packagedProduct";
+
 const route = useRoute();
 const store = useEcaasStore();
 
@@ -19,7 +21,6 @@ const locationOfBoilerOptions = {
 } as const satisfies Record<SchemaBoilerLocationType, BoilerLocationDisplay>;
 
 const emit = defineEmits(["update-boiler-model"]);
-
 </script>
 
 <template>
@@ -30,7 +31,9 @@ const emit = defineEmits(["update-boiler-model"]);
 		:options="boilerTypes"
 		name="typeOfBoiler"
 		validation="required"
-		@click="emit('update-boiler-model', 'typeOfBoiler')" />
+		:disabled="hasPackagedProduct(model)"
+		@click="emit('update-boiler-model', 'typeOfBoiler')"
+	/>
 	<template v-if="model.typeOfBoiler">
 		<FormKit
 			id="name"
@@ -43,7 +46,8 @@ const emit = defineEmits(["update-boiler-model"]);
 			validation="required | uniqueName"
 			:validation-messages="{
 				uniqueName: 'An element with this name in domestic hot water or space heating already exists. Please enter a unique name.'
-			}" />
+			}"
+		/>
 		<FormKit
 			v-if="model.typeOfBoiler"
 			id="selectBoiler"
@@ -55,7 +59,9 @@ const emit = defineEmits(["update-boiler-model"]);
 			:selected-product-reference="model.productReference"
 			:selected-product-type="model.typeOfBoiler"
 			:page-url="route.fullPath"
-			:page-index="index" />
+			:page-index="index"
+			:disabled="hasPackagedProduct(model)"
+		/>
 		<FormKit
 			v-if="model.typeOfBoiler && model.needsSpecifiedLocation"
 			id="specifiedLocation"
@@ -63,6 +69,8 @@ const emit = defineEmits(["update-boiler-model"]);
 			label="Location of boiler"
 			:options="locationOfBoilerOptions"
 			name="locationOfBoiler"
-			validation="required" />
+			validation="required"
+			:disabled="hasPackagedProduct(model)"
+		/>
 	</template>
 </template>

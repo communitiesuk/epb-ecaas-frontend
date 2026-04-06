@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { getUrl, type DomesticHotWaterHeatSourceData } from "#imports";
-import { DHWHeatSourceTypesWithDisplay } from "../../../../utils/display";
+import { getUrl, hasPackagedProduct, type DomesticHotWaterHeatSourceData } from "#imports";
+import { coldWaterSourceOptions, DHWHeatSourceTypesWithDisplay } from "../../../../utils/display";
+import type { Product } from "~/pcdb/pcdb.types";
 
 const title = "Heat source";
 const store = useEcaasStore();
@@ -24,6 +25,13 @@ export type PointOfUseModelType = Extract<DomesticHotWaterHeatSourceData, { type
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
+const packagedProduct = ref<Product | undefined>();
+
+if (hasPackagedProduct(model.value)) {
+	const productReferences = await useProductReference(hotWaterHeatSourceStoreData, product => product);
+	packagedProduct.value = productReferences[model.value.packagedProductReference!];
+}
+
 const saveForm = () => {
 	store.$patch((state) => {
 		state.domesticHotWater.heatSources.data[index]!.complete = true;
@@ -32,7 +40,6 @@ const saveForm = () => {
 
 	navigateTo(getUrl("domesticHotWater"));
 };
-
 
 watch(
 	() => model.value,
@@ -105,6 +112,14 @@ const autoSaveElementFormNoName = <T extends DomesticHotWaterHeatSourceData>({
 				data: dataToPatch as T,
 			};
 
+			if (isPackagedProduct(newData) && newData.coldWaterSource) {
+				const packageProductIndex = state.domesticHotWater.heatSources.data.findIndex(x => x.data.id === newData.packageProductId);
+
+				if (packageProductIndex >= 0) {
+					state.domesticHotWater.heatSources.data[packageProductIndex]!.data.coldWaterSource = newData.coldWaterSource;
+				}
+			}
+
 			onPatch(state, elementData, index);
 		});
 	});
@@ -119,8 +134,6 @@ autoSaveElementFormNoName<DomesticHotWaterHeatSourceData>({
 		state.domesticHotWater.heatSources.complete = false;
 	},
 });
-
-
 
 function updateHeatSource(type: string) {
 
@@ -138,13 +151,6 @@ function updateHeatSource(type: string) {
 		},
 	);
 }
-
-const coldWaterSourceOptions = 
-	{ 
-		headerTank: "Header tank",
-		mainsWater: "Mains water",
-	} as const;
-
 
 const usedHeatSourceIds = store.domesticHotWater.heatSources.data
 	.map(x => x.data?.heatSourceId)
@@ -175,7 +181,6 @@ store.spaceHeating.heatSource.data
 
 radioOptions.set("NEW_HEAT_SOURCE", "Add a new water heating source");
 
-
 const domesticHotWaterBoilers = hotWaterHeatSourceStoreData
 	.filter(x => !x.data.isExistingHeatSource && x.data.typeOfHeatSource === "boiler")
 	.map(x => {
@@ -198,15 +203,18 @@ const spaceHeatingBoilers = hotWaterHeatSourceStoreData
 	.filter(x => x !== null);
 
 const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
-
 </script>
 
 <template>
-
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<PackagedProductInset
+		v-if="hasPackagedProduct(model) && packagedProduct"
+		:model="model"
+		:packaged-product="packagedProduct"
+	/>
 	<FormKit
 		v-model="model"
 		type="form"
@@ -222,6 +230,7 @@ const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
 			:options="coldWaterSourceOptions"
 			name="coldWaterSource"
 			validation="required"
+			:disabled="hasPackagedProduct(model)"
 		/>
 		<FormKit 
 			id="heatSourceId"
@@ -230,6 +239,7 @@ const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
 			:options="new Map(radioOptions)"
 			name="heatSourceId"
 			validation="required"
+			:disabled="hasPackagedProduct(model)"
 		>
 			<div class="govuk-hint">
 				<p>
@@ -247,7 +257,9 @@ const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
 			label="Type of heat source"
 			:options="DHWHeatSourceTypesWithDisplay"
 			name="typeOfHeatSource"
-			validation="required" />		
+			validation="required"
+			:disabled="hasPackagedProduct(model)"
+		/>		
 		<HeatPumpSection
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'heatPump'"

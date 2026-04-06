@@ -1,5 +1,5 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import type { Product } from "~/pcdb/pcdb.types";
+import type { BoilerProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 import ProductDetails from "./[id].vue";
 import type { H3Error } from "h3";
 import { screen } from "@testing-library/vue";
@@ -65,10 +65,10 @@ describe("Heat pump details", async () => {
 		mockRoute.mockReturnValue({
 			params: {
 				heatSource: "0",
-				products: "air-source",
+				products: "heat-pump",
 				id: "1000",
 			},
-			path: "/0/air-source/1000",
+			path: "/0/heat-pump/1000",
 		});
 
 		mockFetch.mockReturnValue({
@@ -115,7 +115,7 @@ describe("Heat pump details", async () => {
 		await renderSuspended(ProductDetails);
 
 		// Assert
-		expect(screen.getByTestId("backLink").innerText).toBe("Back to air source heat pumps");
+		expect(screen.getByTestId("backLink").innerText).toBe("Back to heat pumps");
 	});
 
 	test("Store data updates when product is selected", async () => {
@@ -127,6 +127,67 @@ describe("Heat pump details", async () => {
 
 		// Assert
 		expect(heatSource.productReference).toBe("1000");
+	});
+
+	test("A boiler heat source is created when a hybrid heat pump is selected", async () => {
+		// Arrange
+		const hybridHeatPump: Partial<HeatSourceData> = {
+			id: "463c94f6-566c-49b2-af27-444444444",
+			name: "Hybrid heat pump",
+			typeOfHeatSource: "heatPump",
+		};
+
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [
+						{ data: hybridHeatPump },
+					],
+				},
+			},
+		});
+
+		const hybridHeatPumpProduct: Partial<HybridHeatPumpProduct> = {
+			id: "1000",
+			brandName: "Test",
+			modelName: "Hybrid heat pump",
+			technologyType: "HybridHeatPump",
+			technologyGroup: "heatPump",
+			boilerProductID: "2000",
+		};
+
+		const backupBoilerProduct: Partial<BoilerProduct> = {
+			id: "2000",
+			brandName: "Test",
+			modelName: "Backup boiler",
+			technologyType: "CombiBoiler",
+			boilerLocation: "internal",
+		};
+
+		mockFetch.mockReturnValueOnce({
+			data: ref(hybridHeatPumpProduct),
+		});
+
+		mockFetch.mockReturnValueOnce({
+			data: ref(backupBoilerProduct),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		await user.click(screen.getByTestId("selectProductButton"));
+
+		// Assert
+		const heatSources = store.spaceHeating.heatSource.data;
+
+		expect(heatSources.length).toBe(2);
+
+		expect(heatSources[1]?.data).toStrictEqual(expect.objectContaining({
+			name: "Combi boiler",
+			productReference: "2000",
+			packagedProductReference: "1000",
+			typeOfHeatSource: "boiler",
+			typeOfBoiler: "combiBoiler",
+		}));
 	});
 
 	test("Store data updates when heat interface product is selected", async () => {

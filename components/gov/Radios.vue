@@ -15,6 +15,7 @@ interface RadiosProps {
 	currentValue: string | undefined;
 	attrs: Record<string, unknown>;
 	classNames?: Record<string, string>;
+	disabled?: boolean;
 }
 
 const {
@@ -59,7 +60,7 @@ const idWithKey = (key: string) => `${id}_${key.replace(/ /g, "_")}`;
 						:name="name"
 						:value="key"
 						:checked="mounted ? currentValue == key : false"
-						:disabled="typeof options.get(key) === 'object' ? (options.get(key) as RadioOption).disabled : false"
+						:disabled="(typeof options.get(key) === 'object' ? (options.get(key) as RadioOption).disabled : false) || disabled"
 						:data-testid="idWithKey(key)"
 						:aria-describedby="typeof options.get(key) === 'object' ? `${idWithKey(key)}_hint` : ''"
 						v-bind="attrs"

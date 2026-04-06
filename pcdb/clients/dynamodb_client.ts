@@ -99,6 +99,7 @@ const getProductsByTechnologyGroup = async (technologyGroup: TechnologyGroup) =>
 				technologyType: x.technologyType as TechnologyType,
 				...(x.boilerLocation ? { boilerLocation: x.boilerLocation } : {}),
 				...(x.communityHeatNetworkName ? { communityHeatNetworkName: x.communityHeatNetworkName } : null),
+				...(x.boilerProductID ? { boilerProductID: x.boilerProductID } : null),
 			};
 
 			return product;

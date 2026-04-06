@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import HeatSourceForm from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
-import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import type { BoilerProduct, DisplayProduct, HybridHeatPumpProduct } from "~/pcdb/pcdb.types";
 import { kilowatt } from "~/utils/units/power";
 
 vi.mock("uuid");
@@ -113,7 +113,6 @@ describe("heatSource", () => {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Heat pump",
 				typeOfHeatSource: "heatPump",
-				// typeOfHeatPump: "airSource",
 			});
 		});
 
@@ -338,6 +337,69 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("selectBoiler_error"))).toBeDefined();
+		});
+
+		test("disables input fields when boiler is packaged with a heat pump", async () => {
+			const backupBoiler: HeatSourceData = {
+				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+				name: "Backup boiler",
+				typeOfHeatSource: "boiler",
+				typeOfBoiler: "combiBoiler",
+				productReference: "BOILER_MEDIUM",
+				needsSpecifiedLocation: true,
+				packagedProductReference: "1000",
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [
+							{ data: backupBoiler },
+						],
+					},
+				},
+			});
+
+			const hybridHeatPumpProduct: Partial<HybridHeatPumpProduct> = {
+				id: "1000",
+				brandName: "Test",
+				modelName: "Hybrid Heat Pump",
+				technologyType: "HybridHeatPump",
+				boilerProductID: "2000",
+			};
+	
+			const backupBoilerProduct: Partial<BoilerProduct> = {
+				id: "2000",
+				brandName: "Test",
+				modelName: "Hybrid Heat Pump",
+				technologyType: "CombiBoiler",
+			};
+	
+			mockFetch.mockReturnValueOnce({
+				data: ref(hybridHeatPumpProduct),
+			}).mockReturnValueOnce({
+				data: ref(backupBoilerProduct),
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+				},
+			});
+
+			Object.keys(heatSourceTypesWithDisplay).forEach(type => {
+				expect(screen.getByTestId<HTMLInputElement>(`typeOfHeatSource_${type}`).disabled).toBe(true);
+			});
+
+			Object.keys(boilerTypes).forEach(type => {
+				expect(screen.getByTestId<HTMLInputElement>(`typeOfBoiler_${type}`).disabled).toBe(true);
+			});
+
+			expect(screen.queryByTestId("selectAProductButton")).toBeNull();
+
+			["internal", "external"].forEach(location => {
+				expect(screen.getByTestId<HTMLInputElement>(`specifiedLocation_${location}`).disabled).toBe(true);
+			});
 		});
 
 		describe("boiler default name", () => {

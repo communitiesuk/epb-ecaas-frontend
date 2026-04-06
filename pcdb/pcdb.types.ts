@@ -54,6 +54,7 @@ export const heatPumpProductTypes = z.enum([
 	"ExhaustAirMevHeatPump",
 	"ExhaustAirMvhrHeatPump",
 	"ExhaustAirMixedHeatPump",
+	"HybridHeatPump",
 ]);
 
 export type HeatPumpProductTypes = z.infer<typeof heatPumpProductTypes>;
@@ -67,6 +68,7 @@ export const heatPumpProductTypesMap = {
 	"ExhaustAirMevHeatPump": "exhaustAirMev",
 	"ExhaustAirMvhrHeatPump": "exhaustAirMvhr",
 	"ExhaustAirMixedHeatPump": "exhaustAirMixed",
+	"HybridHeatPump": "hybridHeatPump",
 } as const satisfies Record<HeatPumpProductTypes, HeatPumpType>;
 
 const spaceHeatingHeatPumpProductTypes = z.enum([
@@ -124,7 +126,7 @@ export const hybridHeatPumpProductZod = BaseProduct.extend({
 	varFlowTempCtrlDuringTest: z.boolean(),
 	powerStandby: z.optional(z.number()),
 	sinkType: heatPumpSinkTypeZod,
-	hybridBoilerType: z.string(),
+	hybridBoilerType: z.enum(["combi", "regular"]),
 	boilerProductID: z.string(),
 	sourceType: heatPumpSourceTypeZod,
 	powerSourceCircPump: z.optional(z.number()),
@@ -399,6 +401,7 @@ export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName
 	technologyType: TechnologyType;
 	boilerLocation?: "internal" | "external" | "unknown";
 	communityHeatNetworkName?: string;
+	boilerProductID?: string; 
 };
 
 export type DisplayProductWithFlowTemp = DisplayProduct & {

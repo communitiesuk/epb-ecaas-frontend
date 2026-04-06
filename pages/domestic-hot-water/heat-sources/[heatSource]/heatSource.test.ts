@@ -1,17 +1,37 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatSourceForm from "./index.vue";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import { v4 as uuidv4 } from "uuid";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
+import type { BoilerProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 
 vi.mock("uuid");
 
 const user = userEvent.setup();
 const store = useEcaasStore();
 
+const { mockFetch } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+}));
+
+mockNuxtImport("useFetch", () => mockFetch);
+
+const product: Partial<Product> = {
+	id: "1000",
+	brandName: "Brand",
+	modelName: "Model Name",
+};
+
+beforeEach(() => {
+	mockFetch.mockReturnValue({
+		data: ref(product),
+	});
+});
+
 afterEach(() => {
 	store.$reset();
+	mockFetch.mockReset();
 });
 
 const existingHeatPumpSpaceHeating1: HeatSourceData = {
@@ -45,6 +65,31 @@ const dhwWithNewHeatPump: DomesticHotWaterHeatSourceData = {
 	typeOfHeatSource: "heatPump",
 	typeOfHeatPump: "airSource",
 	productReference: "HEATPUMP-SMALL",
+};
+
+const hybridHeatPump: DomesticHotWaterHeatSourceData = {
+	coldWaterSource: "headerTank",
+	isExistingHeatSource: false,
+	heatSourceId: "NEW_HEAT_SOURCE",
+	id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+	name: "Heat pump 1",
+	typeOfHeatSource: "heatPump",
+	typeOfHeatPump: "hybridHeatPump",
+	productReference: "1000",
+	packageProductId: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+};
+
+const backupBoiler: DomesticHotWaterHeatSourceData = {
+	id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+	name: "Backup boiler",
+	heatSourceId: "NEW_HEAT_SOURCE",
+	coldWaterSource: "headerTank",
+	isExistingHeatSource: false,
+	typeOfHeatSource: "boiler",
+	typeOfBoiler: "combiBoiler",
+	productReference: "2000",
+	needsSpecifiedLocation: true,
+	packagedProductReference: "1000",
 };
 
 describe("Heat Source Page", () => {
@@ -169,7 +214,7 @@ describe("Heat Source Page", () => {
 	});
 
 	describe("unique name", () => {
-    
+	
 		const heatPump: Partial<DomesticHotWaterHeatSourceData> = {
 			isExistingHeatSource: false,
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
@@ -228,7 +273,7 @@ describe("Heat Source Page", () => {
 			name: "Heat source 1",
 			typeOfHeatSource: "pointOfUse",
 		};
-    
+	
 		it.each([["heat pump", heatPump], ["boiler", boiler], ["heat battery", heatBattery], ["heat network", heatNetwork], ["solar thermal system", solarThermalSystem],["immersion heater", immersionHeater], ["point of use", pointOfUse]])(
 			"check DHW heat sources %s and space heating heat sources to ensure name is unique", async (_name, heatSource) => {
 
@@ -250,13 +295,74 @@ describe("Heat Source Page", () => {
 						params: { "heatSource": "0" },
 					},
 				});
-    
+	
 				await user.click(screen.getByTestId("saveAndComplete"));
 				const nameError = await screen.findByTestId("name_error");
 				expect(nameError.innerText).toContain("An element with this name in domestic hot water or space heating already exists. Please enter a unique name.");
 			});
 	});
 
+});
+
+describe("Boiler section", () => {
+	it("disables input fields when boiler is packaged with a heat pump", async () => {
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [
+						{ data: backupBoiler },
+					],
+				},
+			},
+		});
+
+		const hybridHeatPumpProduct: Partial<HybridHeatPumpProduct> = {
+			id: "1000",
+			brandName: "Test",
+			modelName: "Hybrid Heat Pump",
+			technologyType: "HybridHeatPump",
+			boilerProductID: "2000",
+		};
+
+		const backupBoilerProduct: Partial<BoilerProduct> = {
+			id: "2000",
+			brandName: "Test",
+			modelName: "Hybrid Heat Pump",
+			technologyType: "CombiBoiler",
+		};
+
+		mockFetch.mockReturnValueOnce({
+			data: ref(hybridHeatPumpProduct),
+		}).mockReturnValueOnce({
+			data: ref(backupBoilerProduct),
+		});
+
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "0" },
+			},
+		});
+
+		Object.keys(coldWaterSourceOptions).forEach(option => {
+			expect(screen.getByTestId<HTMLInputElement>(`coldWaterSource_${option}`).disabled).toBe(true);
+		});
+
+		expect(screen.getByTestId<HTMLInputElement>(`heatSourceId_NEW_HEAT_SOURCE`).disabled).toBe(true);
+
+		Object.keys(heatSourceTypesWithDisplay).forEach(type => {
+			expect(screen.getByTestId<HTMLInputElement>(`typeOfHeatSource_${type}`).disabled).toBe(true);
+		});
+
+		Object.keys(boilerTypes).forEach(type => {
+			expect(screen.getByTestId<HTMLInputElement>(`typeOfBoiler_${type}`).disabled).toBe(true);
+		});
+
+		expect(screen.queryByTestId("selectAProductButton")).toBeNull();
+
+		["internal", "external"].forEach(location => {
+			expect(screen.getByTestId<HTMLInputElement>(`specifiedLocation_${location}`).disabled).toBe(true);
+		});
+	});
 });
 
 describe("Heat pump section", () => {
@@ -288,8 +394,8 @@ describe("Heat pump section", () => {
 				heatSourceId: existingHeatPumpSpaceHeating1.id,
 				id: "463c94f6-566c-49b2-af27-57e5c6811111",
 			});
-			
 		});
+
 		test("form is prepopulated when existing heat pump data reference exists in state", async () => {
 			store.$patch({
 				spaceHeating: {
@@ -337,7 +443,31 @@ describe("Heat pump section", () => {
 			expect((await screen.findByTestId("coldWaterSource_headerTank")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`)).hasAttribute("checked")).toBe(true);
 		});
+
+		test("Cold water source of backup boiler is updated when cold water source of hybrid heat pump is updated", async () => {
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [
+							{ data: hybridHeatPump },
+							{ data: backupBoiler },
+						],
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
+
+			expect(store.domesticHotWater.heatSources.data[1]?.data.coldWaterSource).toBe("mainsWater");
+		});
 	});
+
 	describe("New heat pump", () => {
 
 		const populateValidHeatPumpForm = async () => {

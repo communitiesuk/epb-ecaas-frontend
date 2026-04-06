@@ -682,6 +682,55 @@ describe("Domestic hot water", () => {
 			await renderSuspended(DomesticHotWater);
 			expect(screen.queryByTestId("heatSources_duplicate_0")).toBeNull();
 		});
+
+		describe("packaged heat sources", () => {
+			const heatPump: HeatSourceData = {
+				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+				name: "Heat pump",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "hybridHeatPump",
+				productReference: "1000",
+				packageProductId: "171a20a4-e775-4e51-873c-f1fc536076b1",
+			};
+
+			const boiler: HeatSourceData = {
+				id: "171a20a4-e775-4e51-873c-f1fc536076b1",
+				name: "Combi boiler",
+				typeOfHeatSource: "boiler",
+				typeOfBoiler: "combiBoiler",
+				productReference: "2000",
+				packagedProductReference: "1000",
+				needsSpecifiedLocation: false,
+			};
+
+			beforeEach(async () => {
+				store.$patch({
+					domesticHotWater: {
+						heatSources: {
+							data: [
+								{ data: heatPump, complete: true },
+								{ data: boiler, complete: true },
+							],
+						},
+					},
+				});
+
+				await renderSuspended(DomesticHotWater);
+			});
+
+			it("removes heat sources which are packaged with the removed item", async () => {
+				await user.click(await screen.findByTestId("heatSources_remove_0"));
+				expect(store.domesticHotWater.heatSources.data.length).toBe(0);
+			});
+
+			it("only displays an 'edit' action if heat source is packaged with a heat pump", async () => {
+				const boilerEditButton = screen.getByTestId("heatSources_edit_1");
+				const boilerDeleteButton = screen.queryByTestId("heatSources_remove_1");
+
+				expect(boilerEditButton).toBeDefined();
+				expect(boilerDeleteButton).toBeNull();
+			});
+		});
 	});
 
 	test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
@@ -699,6 +748,7 @@ describe("Domestic hot water", () => {
 			formStatus.inProgress.text,
 		);
 	});
+
 	describe("mark section as complete", () => {
 
 		const addCompleteHotWaterToStore = async () => {
@@ -858,6 +908,42 @@ describe("Domestic hot water", () => {
 
 			await renderSuspended(DomesticHotWater);
 			expect(screen.getByTestId("heatSourceLimitExceededErrorSummary")).toBeDefined();
+		});
+
+		it("does not display error message when all / both heat sources are packaged", async () => {
+			const heatPump: HeatSourceData = {
+				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+				name: "Heat pump",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "hybridHeatPump",
+				productReference: "1000",
+				packageProductId: "171a20a4-e775-4e51-873c-f1fc536076b1",
+			};
+
+			const boiler: HeatSourceData = {
+				id: "171a20a4-e775-4e51-873c-f1fc536076b1",
+				name: "Combi boiler",
+				typeOfHeatSource: "boiler",
+				typeOfBoiler: "combiBoiler",
+				productReference: "2000",
+				packagedProductReference: "1000",
+				needsSpecifiedLocation: false,
+			};
+
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [
+							{ data: heatPump, complete: true },
+							{ data: boiler, complete: true },
+						],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.queryByTestId("heatSourceLimitExceededErrorSummary")).toBeNull();
 		});
 	});
 });
