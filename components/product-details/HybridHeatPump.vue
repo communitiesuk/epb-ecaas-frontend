@@ -25,6 +25,7 @@ const tableData: Record<string, string> = {
 	"Power crankcase heater": data.powerCrankcaseHeater !== undefined ? `${data.powerCrankcaseHeater} kW` : "-",
 	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
 	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
+	"Integrated with boiler": "Yes",
 };
 </script>
 
