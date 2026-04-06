@@ -87,7 +87,7 @@ watch(props.context, async ({ attrs: {
 					v-if="!disabled"
 					secondary
 					data-testId="selectAProductButton" 
-					href="productsPageUrl"
+					:href="productsPageUrl"
 					class="govuk-button__margin-bottom"
 				>
 					Select a different product

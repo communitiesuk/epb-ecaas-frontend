@@ -46,13 +46,13 @@ function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number)
 		}
 
 		if (domesticHotWaterType === "heatSources" && item && isPackagedProduct(item.data)) {
-			const packageItemIds = item.data.packageProducts;
+			const { packageProductId } = item.data;
 
 			store.$patch(state => {
-				const filteredItems = state.domesticHotWater[domesticHotWaterType].data
-					.filter(x => "id" in x.data ? !packageItemIds?.includes(x.data.id) : true);
+				const packageProductIndex = state.domesticHotWater[domesticHotWaterType].data
+					.findIndex(x => "id" in x.data && x.data.id === packageProductId);
 
-				state.domesticHotWater[domesticHotWaterType].data = filteredItems;
+				state.domesticHotWater[domesticHotWaterType].data.splice(packageProductIndex, 1);
 			});
 		}
 	}

@@ -855,7 +855,7 @@ export type HeatSourceType =
 export type PcdbProduct = z.infer<typeof pcdbProduct>;
 
 const pcdbPackagedProduct = pcdbProduct.extend({
-	packageProducts: z.optional(z.array(z.string())),
+	packageProductId: z.optional(z.string()),
 });
 
 const hasPcdbPackagedProduct = pcdbProduct.extend({

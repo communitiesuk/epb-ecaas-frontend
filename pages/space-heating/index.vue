@@ -54,13 +54,13 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 		}
 
 		if (isPackagedProduct(item.data)) {
-			const packageItemIds = item.data.packageProducts;
+			const { packageProductId } = item.data;
 
 			store.$patch(state => {
-				const filteredItems = state.spaceHeating[spaceHeatingType].data
-					.filter(x => "id" in x.data ? !packageItemIds?.includes(x.data.id!) : true);
+				const packageProductIndex = state.spaceHeating[spaceHeatingType].data
+					.findIndex(x => "id" in x.data && x.data.id === packageProductId);
 
-				state.spaceHeating[spaceHeatingType].data = filteredItems as SpaceHeatingData[];
+				state.spaceHeating[spaceHeatingType].data.splice(packageProductIndex, 1);
 			});
 		}
 	}
@@ -87,26 +87,24 @@ function handleDuplicate<T extends SpaceHeatingData>(spaceHeatingType: SpaceHeat
 				state.spaceHeating[spaceHeatingType].data.push(newItem);
 				state.spaceHeating[spaceHeatingType].complete = false;
 			} else {
-				const packageItemIds = item.data.packageProducts;
+				const { packageProductId } = item.data;
 
-				const packageItems = (data as SpaceHeatingData[]).filter(x => {
-					return "id" in x.data ? packageItemIds?.includes(x.data.id) : false;
-				});
+				const packageItem = (data as SpaceHeatingData[]).find(x => "id" in x.data && x.data.id === packageProductId);
 
-				const newPackageItems = packageItems.map(packageItem => {
-					const packagedDuplicates = data.filter(x => x && x.data.name.match(duplicateNamePattern(packageItem.data.name)));
+				if (!packageItem) {
+					return;
+				}
 
-					const newPackagedItem: T = {
-						complete: true,
-						data: {
-							...packageItem.data,
-							id: uuidv4(),
-							name: `${packageItem.data.name} (${packagedDuplicates.length})`,
-						},
-					} as T;
+				const packagedDuplicates = data.filter(x => x && x.data.name.match(duplicateNamePattern(packageItem.data.name)));
 
-					return newPackagedItem;
-				});
+				const newPackagedItem: T = {
+					complete: true,
+					data: {
+						...packageItem.data,
+						id: uuidv4(),
+						name: `${packageItem.data.name} (${packagedDuplicates.length})`,
+					},
+				} as T;
 
 				const newItem = {
 					complete: item.complete,
@@ -114,12 +112,12 @@ function handleDuplicate<T extends SpaceHeatingData>(spaceHeatingType: SpaceHeat
 						...item.data,
 						name: `${item.data.name} (${duplicates.length})`,
 						id: uuidv4(),
-						packageProducts: newPackageItems.map(x => x.data.id),
+						packageProductId: newPackagedItem.data.id,
 					},
 				} as T;
 
 				state.spaceHeating[spaceHeatingType].data.push(newItem);
-				state.spaceHeating[spaceHeatingType].data = state.spaceHeating[spaceHeatingType].data.concat(newPackageItems) as EcaasForm<HeatSourceData>[];
+				state.spaceHeating[spaceHeatingType].data.push(newPackagedItem);
 				state.spaceHeating[spaceHeatingType].complete = false;
 			}
 		});
