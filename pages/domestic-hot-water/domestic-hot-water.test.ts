@@ -47,7 +47,7 @@ describe("Domestic hot water", () => {
 			dhwHeatSourceId: "weeeeee",
 			storageCylinderVolume: {
 				amount: 100,
-				unit: "litres",
+				unit: "litres" as const,
 			},
 			dailyEnergyLoss: 69,
 			typeOfWaterStorage: "hotWaterCylinder",

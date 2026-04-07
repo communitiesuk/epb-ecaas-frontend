@@ -48,7 +48,10 @@ describe("Domestic hot water summary", () => {
 			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
 			typeOfWaterStorage: "hotWaterCylinder",
 			name: "Hot water cylinder",
-			storageCylinderVolume: 5,
+			storageCylinderVolume: {
+				amount: 5,
+				unit: "litres" as const,
+			},
 			dailyEnergyLoss: 1,
 			dhwHeatSourceId: heatPumpId,
 			areaOfHeatExchanger: 2.5,

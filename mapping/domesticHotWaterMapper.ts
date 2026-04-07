@@ -144,13 +144,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 		});
 
 		if (ws.typeOfWaterStorage === "hotWaterCylinder") {
-			let storageCylinderVolumeInLitres: number;
-
-			if (typeof ws.storageCylinderVolume === "number") {
-				storageCylinderVolumeInLitres = ws.storageCylinderVolume;
-			} else {
-				storageCylinderVolumeInLitres = asLitres(ws.storageCylinderVolume);
-			}
+			const storageCylinderVolumeInLitres = asLitres(ws.storageCylinderVolume);
 
 			const val: SchemaStorageTank & { ColdWaterSource: SchemaColdWaterSourceType } = {
 				daily_losses: ws.dailyEnergyLoss,

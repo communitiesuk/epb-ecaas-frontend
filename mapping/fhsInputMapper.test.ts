@@ -1326,7 +1326,10 @@ describe("FHS input mapper", () => {
 						id: "some-hot-water-cyclinder",
 						name: "hw cylinder",
 						dhwHeatSourceId: "dhwHP-1",
-						storageCylinderVolume: 200,
+						storageCylinderVolume: {
+							amount: 200,
+							unit: "litres" as const,
+						},
 						dailyEnergyLoss: 34,
 						typeOfWaterStorage: "hotWaterCylinder",
 						areaOfHeatExchanger: 2.5,
@@ -2149,7 +2152,10 @@ describe("FHS input mapper", () => {
 						id: "hw cylinder 1 id",
 						name: "hw cylinder 1 name",
 						dhwHeatSourceId: "dhwHP-1",
-						storageCylinderVolume: 80,
+						storageCylinderVolume: {
+							amount: 80,
+							unit: "litres" as const,
+						},
 						dailyEnergyLoss: 10,
 						typeOfWaterStorage: "hotWaterCylinder",
 						areaOfHeatExchanger: 2.5,

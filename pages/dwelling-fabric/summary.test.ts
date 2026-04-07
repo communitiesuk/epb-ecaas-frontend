@@ -80,9 +80,15 @@ const floorsData: FloorsData = {
 				psiOfWallJunction: 0,
 				thicknessOfWalls: 0.3,
 				typeOfGroundFloor: "Slab_edge_insulation",
-				horizontalEdgeInsulationWidth: 0.5,
+				horizontalEdgeInsulationWidth: {
+					amount: 0.5,
+					unit: "metres" as const,
+				},
 				horizontalEdgeInsulationThermalResistance: 2,
-				verticalEdgeInsulationDepth: 0.3,
+				verticalEdgeInsulationDepth: {
+					amount: 0.3,
+					unit: "metres" as const,
+				},
 				verticalEdgeInsulationThermalResistance: 2,
 
 

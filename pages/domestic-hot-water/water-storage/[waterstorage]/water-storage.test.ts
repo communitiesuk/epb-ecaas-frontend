@@ -185,12 +185,9 @@ describe("water storage", () => {
 			).toBe(true);
 
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe(hotWaterCylinder.data.name);
-			if (typeof hotWaterCylinder.data.storageCylinderVolume === "object") {
-				expect((await screen.findByTestId<HTMLInputElement>("storageCylinderVolume")).value).toBe(
-					hotWaterCylinder.data.storageCylinderVolume.amount.toString());
-			} else {
-				throw new Error("storageCylinderVolume is not a unit value");
-			}
+			expect((await screen.findByTestId<HTMLInputElement>("storageCylinderVolume")).value).toBe(
+				hotWaterCylinder.data.storageCylinderVolume.amount.toString(),
+			);
 			expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe(hotWaterCylinder.data.dailyEnergyLoss.toString());
 			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("areaOfHeatExchanger")).value).toBe(hotWaterCylinder.data.areaOfHeatExchanger.toString());

@@ -17,15 +17,6 @@ const waterStorageData = waterStorageStoreData[index] as EcaasForm<WaterStorageD
 const model = ref(waterStorageData?.data);
 const id = waterStorageData?.data.id ?? uuidv4();
 
-if (waterStorageData?.data?.typeOfWaterStorage === "hotWaterCylinder"
-    && typeof waterStorageData.data.storageCylinderVolume === "number"
-) {
-	waterStorageData.data.storageCylinderVolume = unitValue(
-		waterStorageData.data.storageCylinderVolume,
-		litre,
-	);
-}
-
 const saveForm = (fields: WaterStorageData) => {
 	store.$patch((state) => {
 		const { waterStorage } = state.domesticHotWater;

@@ -214,23 +214,23 @@ const slabEdgeInsulationBase = baseGroundFloorData.extend({
 const horizontalEdgeInsulation = z.object({
 	edgeInsulationType: z.tuple([z.literal("horizontal")]),
 	// TODO constraints have not been put on zodUnit yet!
-	horizontalEdgeInsulationWidth: z.union([zodUnit("length"), z.number().min(0).max(10000)]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	horizontalEdgeInsulationWidth: zodUnit("length"),
 	horizontalEdgeInsulationThermalResistance: z.number(),
 });
 
 const verticalEdgeInsulation = z.object({
 	edgeInsulationType: z.tuple([z.literal("vertical")]),
 	// TODO constraints have not been put on zodUnit yet!
-	verticalEdgeInsulationDepth: z.union([zodUnit("length"), z.number().min(0).max(10000)]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	verticalEdgeInsulationDepth: zodUnit("length"),
 	verticalEdgeInsulationThermalResistance: z.number(),
 });
 
 const horizontalAndVerticalEdgeInsulation = z.object({
 	edgeInsulationType: z.union([z.tuple([z.literal("horizontal"), z.literal("vertical")]), z.tuple([z.literal("vertical"), z.literal("horizontal")])]),
 	// TODO constraints have not been put on zodUnit yet!
-	horizontalEdgeInsulationWidth: z.union([zodUnit("length"), z.number().min(0).max(10000)]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	horizontalEdgeInsulationWidth: zodUnit("length"),
 	horizontalEdgeInsulationThermalResistance: z.number(),
-	verticalEdgeInsulationDepth: z.union([zodUnit("length"), z.number().min(0).max(10000)]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	verticalEdgeInsulationDepth: zodUnit("length"),
 	verticalEdgeInsulationThermalResistance: z.number(),
 });
 
@@ -1271,7 +1271,7 @@ export type DomesticHotWaterHeatSourceData = z.infer<typeof domesticHotWaterHeat
 
 const hotWaterCylinderDataZod = namedWithId.extend({
 	typeOfWaterStorage: z.literal("hotWaterCylinder"),
-	storageCylinderVolume: z.union([zodUnit("volume"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	storageCylinderVolume: zodUnit("volume"),
 	dailyEnergyLoss: z.number(),
 	dhwHeatSourceId: z.string(),
 	areaOfHeatExchanger: z.number(),
