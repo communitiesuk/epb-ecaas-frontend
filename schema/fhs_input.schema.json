@@ -1688,9 +1688,8 @@
 														"description": "Fan power (W)"
 													},
 													"state_of_charge_init": {
-														"description": "State of charge at initialisation of dry core heat storage (ratio)",
-														"maximum": 1.0,
-														"minimum": 0.0,
+														"description": "State of charge at initialisation of dry core heat storage (ratio). NB. this field is marked for removal, and only a value of 1 is accepted.",
+														"const": 1.0,
 														"title": "State Of Charge Init",
 														"type": "number"
 													}
