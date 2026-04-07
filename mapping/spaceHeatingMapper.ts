@@ -316,7 +316,7 @@ export function mapWetDistributions(state: ResolvedState): Record<string, Schema
 				Zone: defaultZoneName,
 				type: "WetDistribution" as const,
 				design_flow_temp: wds.designFlowTemp,
-				HeatSource: { name: getHeatSourceNameForEmitter(state, wds) },
+				HeatSource: getHeatSourceData(state, wds),
 				ecodesign_controller: ecoDesignController,
 				bypass_fraction_recirculated: wds.percentageRecirculated / 100,
 			};

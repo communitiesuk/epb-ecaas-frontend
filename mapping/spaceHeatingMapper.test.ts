@@ -288,6 +288,7 @@ describe("Space heating - emitters", () => {
 		typeOfHeatPump: "airSource",
 		id: "hp1",
 		name: "Heat Pump 1",
+		maxFlowTemp: 14,
 	};
 	const heatBattery: Partial<HeatSourceData> = {
 		typeOfHeatBattery: "heatBatteryPcm",
@@ -436,6 +437,7 @@ describe("Space heating - emitters", () => {
 					temp_diff_emit_dsgn: wetDistributionSystemEcoDesign.designTempDiffAcrossEmitters,
 					HeatSource: {
 						name: heatPump.name,
+						temp_flow_limit_upper: heatPump.maxFlowTemp,
 					},
 					ecodesign_controller: {
 						ecodesign_control_class: ecoDesignControllerClass,
@@ -494,6 +496,7 @@ describe("Space heating - emitters", () => {
 					temp_diff_emit_dsgn: wetDistributionSystemNoEcoDesign.designTempDiffAcrossEmitters,
 					HeatSource: {
 						name: heatPump.name,
+						temp_flow_limit_upper: heatPump.maxFlowTemp,
 					},
 					ecodesign_controller: {
 						ecodesign_control_class: ecoDesignControllerClass,
@@ -549,6 +552,7 @@ describe("Space heating - emitters", () => {
 					temp_diff_emit_dsgn: wetDistributionSystemVariableFlow.designTempDiffAcrossEmitters,
 					HeatSource: {
 						name: heatPump.name,
+						temp_flow_limit_upper: heatPump.maxFlowTemp,
 					},
 					ecodesign_controller: {
 						ecodesign_control_class: +wetDistributionSystemVariableFlow.ecoDesignControllerClass,
@@ -609,6 +613,7 @@ describe("Space heating - emitters", () => {
 					temp_diff_emit_dsgn: wetDistributionSystemEcoDesign.designTempDiffAcrossEmitters,
 					HeatSource: {
 						name: heatPump.name,
+						temp_flow_limit_upper: heatPump.maxFlowTemp,
 					},
 					ecodesign_controller: {
 						ecodesign_control_class: +wetDistributionSystemEcoDesign.ecoDesignControllerClass,
@@ -646,6 +651,7 @@ describe("Space heating - emitters", () => {
 					temp_diff_emit_dsgn: wetDistributionSystemNoEcoDesign.designTempDiffAcrossEmitters,
 					HeatSource: {
 						name: "Heat Pump 2",
+						temp_flow_limit_upper: heatPump.maxFlowTemp,
 					},
 					ecodesign_controller: {
 						ecodesign_control_class: +wetDistributionSystemNoEcoDesign.ecoDesignControllerClass,
