@@ -19,15 +19,15 @@ const { getStoreIndex, autoSaveElementForm } = useForm();
 
 const mechanicalVentilationStoreData = store.infiltrationAndVentilation.mechanicalVentilation.data;
 const index = getStoreIndex(mechanicalVentilationStoreData);
-const mechanicalVentilation = useItemToEdit("mechanical", mechanicalVentilationStoreData);
-const id = mechanicalVentilation?.data.id ?? uuidv4();
+const mechanicalVentilationData = useItemToEdit("mechanical", mechanicalVentilationStoreData);
+const id = mechanicalVentilationData?.data.id ?? uuidv4();
 
 // prepopulate airFlowRate correctly when using old input format
-if (typeof mechanicalVentilation?.data.airFlowRate === "number") {
-	mechanicalVentilation.data.airFlowRate = unitValue(mechanicalVentilation.data.airFlowRate, litrePerSecond);
+if (typeof mechanicalVentilationData?.data.airFlowRate === "number") {
+	mechanicalVentilationData.data.airFlowRate = unitValue(mechanicalVentilationData.data.airFlowRate, litrePerSecond);
 }
 
-const model = ref(mechanicalVentilation?.data);
+const model = ref(mechanicalVentilationData?.data);
 
 const ventTypeOptions: Record<VentType, string> = {
 	MVHR: "MVHR (Mechanical Ventilation with Heat recovery)",
@@ -63,6 +63,8 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 		};
 
 		let mechanicalVentilationItem: MechanicalVentilationData;
+		const packagedProductReference = (mechanicalVentilationData?.data && hasPackagedProduct(mechanicalVentilationData.data)) ?
+			mechanicalVentilationData.data.packagedProductReference : undefined;
 
 		switch (fields.typeOfMechanicalVentilationOptions) {
 			case "Centralised continuous MEV":
@@ -87,6 +89,7 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 					} : {
 						measuredFanPowerAndAirFlowRateKnown: false,
 					}),
+					packagedProductReference,
 				};
 				break;
 
@@ -107,6 +110,7 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 						pitch: fields.pitch,
 						orientation: fields.orientation,
 					}),
+					packagedProductReference,
 				};
 				break;
 
@@ -155,6 +159,7 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 					} : {
 						measuredFanPowerAndAirFlowRateKnown: false,
 					}),
+					packagedProductReference,
 				};
 		}
 
