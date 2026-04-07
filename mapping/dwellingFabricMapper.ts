@@ -591,7 +591,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			x.associatedItemId,
 		)! : undefined;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
-		const midHeight = (x.height / 2) + x.elevationalHeight;
+		const midHeight = (x.height / 2) + state.infiltrationAndVentilation.naturalVentilation.baseHeightOfVentilationZone;
 
 		const glazedDoor = {
 			type: "BuildingElementTransparent",
@@ -725,7 +725,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			orientation = associatedElement.orientation!;
 		}
 
-		const midHeight = (x.height / 2) + x.elevationalHeight;
+		const midHeight = (x.height / 2) + state.infiltrationAndVentilation.naturalVentilation.baseHeightOfVentilationZone;
 
 		return {
 			[nameWithSuffix]: {

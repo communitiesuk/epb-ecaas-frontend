@@ -221,7 +221,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			type="govInputWithSuffix"
 			suffix-text="m" 
 			label="Height"
-			help="Enter the height of the building element"
+			help="Enter the height of the window, including the frame"
 			name="height"
 			:validation="zodTypeAsFormKitValidation(heightTransparentZod)"
 			data-field="Zone.BuildingElement.*.height" />
@@ -230,7 +230,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Width"
-			help="Enter the width of the building element"
+			help="Enter the width of the window, including the frame"
 			name="width"
 			:validation="zodTypeAsFormKitValidation(widthTransparentZod)"
 			data-field="Zone.BuildingElement.*.width" />
@@ -241,15 +241,15 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			id="solarTransmittance"
 			type="govInputFloat"
 			label="Transmittance of solar energy "
-			help="Enter the total solar energy transmittance, or G value, of the transparent part of the window. It should be a decimal between 0 and 1."
+			help="Enter the total solar energy transmittance or G value of the transparent part of the window. It should be a decimal between 0 and 1."
 			name="solarTransmittance"
 			:validation="zodTypeAsFormKitValidation(gValueZod)"
 			data-field="Zone.BuildingElement.*.g_value" />
 		<FormKit
 			id="openingToFrameRatio" 
 			type="govInputFloat"
-			label="Opening to frame ratio"
-			help="Enter the proportion of the window taken up by the total opening area compared to the frame"
+			label="Frame to opening ratio"
+			help="Enter the proportion of the window taken up by the frame compared to the total opening area. It should be a decimal between 0 and 1."
 			name="openingToFrameRatio"
 			validation="required | number | min:0 | max:1"
 			data-field="Zone.BuildingElement.*.frame_area_fraction">
@@ -264,11 +264,11 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 					<tbody class="govuk-table__body">
 						<tr class="govuk-table__row">
 							<th scope="row" class="govuk-table__header">0</th>
-							<td class="govuk-table__cell">There is no opening.</td>
+							<td class="govuk-table__cell">There is no frame, only glass</td>
 						</tr>
 						<tr class="govuk-table__row">
 							<th scope="row" class="govuk-table__header">1</th>
-							<td class="govuk-table__cell">There is no frame, only glass.</td>
+							<td class="govuk-table__cell">There is no glass</td>
 						</tr>
 					</tbody>
 				</table>
@@ -279,7 +279,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			name="securityRisk"
 			type="govBoolean"
 			label="Is having this window open a security risk?"
-			help="For example, if you are able to leave the window open at night it would not be a security risk"
+			help="A window is a security risk if you are unable to leave it open at night. If it is on the ground floor, in a basement, or is easily accessible, it is a security risk."
 			validation="required"
 			data-field="Zone.BuildingElement.*.security_risk"
 		/>
@@ -304,7 +304,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				type="govInputWithSuffix"
 				suffix-text="m²"
 				label="Maximum openable area"
-				help="Enter the total area of the gap created when the window is fully open"
+				help="Enter the total area of the gap created when the window is fully open, as defined by Part O"
 				name="maximumOpenableArea"
 				:validation="zodTypeAsFormKitValidation(maxWindowOpenAreaZod)"
 			/>
@@ -316,7 +316,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				type="govInputWithSuffix"
 				suffix-text="m"
 				label="Mid height of the air flow path for openable part 1 "
-				help="Enter the height from the ground to the midpoint of the openable section of the window"
+				help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the window when fully open"
 				name="midHeightOpenablePart1"
 				:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 			/>
@@ -326,7 +326,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 					type="govInputWithSuffix"
 					suffix-text="m"
 					label="Mid height of the air flow path for openable part 2 "
-					help="Enter the height from the ground to the midpoint of the openable section of the window"
+					help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the window when fully open"
 					name="midHeightOpenablePart2"
 					:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 				/>
@@ -336,7 +336,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 						type="govInputWithSuffix"
 						suffix-text="m"
 						label="Mid height of the air flow path for openable part 3 "
-						help="Enter the height from the ground to the midpoint of the openable section of the window"
+						help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the window when fully open"
 						name="midHeightOpenablePart3"
 						:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 					/>
@@ -346,7 +346,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 							type="govInputWithSuffix"
 							suffix-text="m"
 							label="Mid height of the air flow path for openable part 4 "
-							help="Enter the height from the ground to the midpoint of the openable section of the window"
+							help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the window when fully open"
 							name="midHeightOpenablePart4"
 							:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 						/>
