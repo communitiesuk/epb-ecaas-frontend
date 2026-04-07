@@ -2,8 +2,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { standardPitchOptions, getUrl, uniqueName, type SnakeToSentenceCase } from "#imports";
 import type { SchemaPartyWallCavityType, SchemaPartyWallLiningType } from "~/schema/api-schema.types";
-import { thermalResistanceCavityZod, surfaceAreaPartyWallZod } from "~/stores/ecaasStore.schema";
+import { surfaceAreaPartyWallZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import type { UnitValue } from "~/utils/units/types";
 
 const title = "Party wall";
 const store = useEcaasStore();
@@ -16,7 +17,7 @@ const index = getStoreIndex(partyWallData);
 const model: Ref<PartyWallData | undefined> = ref(wallData?.data);
 
 const greaterThanZero = (node: FormKitNode) => {
-	const value = node.value as Length;
+	const value = node.value as UnitValue;
 	return value.amount > 0;
 };
 
