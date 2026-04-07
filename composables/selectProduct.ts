@@ -1,15 +1,13 @@
-import { heatPumpProductTypesMap, type BoilerProduct, type DisplayProduct, type HeatPumpProduct, type HeatPumpProductTypes, type HybridHeatPumpProduct, type Product, type TechnologyGroup } from "~/pcdb/pcdb.types";
+import { heatPumpProductTypesMap, type BoilerProduct, type DisplayProduct, type HeatPumpProduct, type HeatPumpProductTypes, type HybridHeatPumpProduct, type Product, type TechnologyGroup, type TechnologyType } from "~/pcdb/pcdb.types";
 import { v4 as uuidv4 } from "uuid";
-
-async function getProduct(id: string) {
-	const { data } = await useFetch(`/api/products/${id}`);
-	return data.value;
-}
+import type { SchemaMechVentType } from "~/schema/aliases";
+import { useProductData } from "./productData";
 
 export function useSelectHeatSourceProduct(products: DisplayProduct[], heatSourceProductType: (HeatSourceProductType | TechnologyGroup)) {
 	const store = useEcaasStore();
 
 	const selectProduct = (
+		state: EcaasState,
 		heatSourceData: HeatSourceData | DomesticHotWaterHeatSourceData | undefined,
 		product: DisplayProduct | Product,
 		addBoilerProduct: (newProduct: BoilerProduct) => string,
@@ -33,7 +31,7 @@ export function useSelectHeatSourceProduct(products: DisplayProduct[], heatSourc
 				if ("fifthGHeatNetwork" in product) {
 					heatSourceData.isFifthGeneration = product.fifthGHeatNetwork === 1;
 				} else {
-					getProduct(heatNetwork.id).then((item) => {
+					useProductData(heatNetwork.id).then((item) => {
 						heatSourceData.isFifthGeneration = !!(item && "fifthGHeatNetwork" in item && item.fifthGHeatNetwork === 1);
 					});
 				}
@@ -55,12 +53,44 @@ export function useSelectHeatSourceProduct(products: DisplayProduct[], heatSourc
 					removeBoilerProduct?.(heatSourceData.packageProductId);
 				}
 
-				getProduct(heatPumpProduct.boilerProductID!).then(boiler => {
+				useProductData(heatPumpProduct.boilerProductID!).then(boiler => {
 					const boilerData = boiler as BoilerProduct;
 					const boilerId = addBoilerProduct?.(boilerData);
 
 					heatSourceData.packageProductId = boilerId;
 				});
+			}
+
+			if (heatPumpProduct.technologyType === "ExhaustAirMevHeatPump" ||
+				heatPumpProduct.technologyType === "ExhaustAirMixedHeatPump" ||
+				heatPumpProduct.technologyType === "ExhaustAirMvhrHeatPump"
+			) {
+				const mechanicalVentilationData = state.infiltrationAndVentilation.mechanicalVentilation.data;
+
+				if (heatSourceData.packageProductId) {
+					const ventToRemove = mechanicalVentilationData.findIndex(x => x.data.id === heatSourceData.id);
+					mechanicalVentilationData.splice(ventToRemove, 1);
+				}
+
+				const heatPumpMechVentTypeMap: Partial<Record<TechnologyType, SchemaMechVentType | undefined>> = {
+					"ExhaustAirMevHeatPump": "Centralised continuous MEV",
+					"ExhaustAirMvhrHeatPump": "MVHR",
+				};
+
+				const heatPumpType = heatPumpProductTypesMap[heatPumpProduct.technologyType];
+				const mechanicalVentilation: Partial<MechanicalVentilationData> = {
+					id: uuidv4(),
+					name: `${heatPumpTypes[heatPumpType]} HP`,
+					productReference: heatPumpProduct.id,
+					typeOfMechanicalVentilationOptions: heatPumpMechVentTypeMap[heatPumpProduct.technologyType],
+					packagedProductReference: heatPumpProduct.id,
+				};
+
+				mechanicalVentilationData.push({
+					data: mechanicalVentilation as MechanicalVentilationData,
+				});
+
+				heatSourceData.packageProductId = mechanicalVentilation.id!;
 			}
 		}
 
@@ -109,6 +139,7 @@ export function useSelectHeatSourceProduct(products: DisplayProduct[], heatSourc
 			};
 
 			selectProduct(
+				state,
 				heatSourceData,
 				product,
 				addBoilerProduct,
@@ -151,6 +182,7 @@ export function useSelectHeatSourceProduct(products: DisplayProduct[], heatSourc
 			};
 
 			selectProduct(
+				state,
 				heatSourceData,
 				product,
 				addBoilerProduct,

@@ -28,8 +28,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 const packagedProduct = ref<Product | undefined>();
 
 if (hasPackagedProduct(model.value)) {
-	const productReferences = await useProductReference(hotWaterHeatSourceStoreData, product => product);
-	packagedProduct.value = productReferences[model.value.packagedProductReference!];
+	const packagedProductData = await useProductData(model.value.packagedProductReference!);
+	packagedProduct.value = packagedProductData ?? undefined;
 }
 
 const saveForm = () => {

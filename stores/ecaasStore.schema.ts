@@ -692,6 +692,14 @@ const pcdbProduct = namedWithId.extend({
 	productReference: z.string().trim().min(1),
 });
 
+const pcdbPackagedProduct = pcdbProduct.extend({
+	packageProductId: z.optional(z.string()),
+});
+
+const hasPcdbPackagedProduct = pcdbProduct.extend({
+	packagedProductReference: z.optional(z.string()),
+});
+
 export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	mechanicalVentilation: EcaasFormList<MechanicalVentilationData>;
 	ductwork: EcaasFormList<DuctworkData>;
@@ -705,7 +713,7 @@ const baseMechanicalVentilationData = namedWithId.extend({
 	associatedItemId: z.string().trim().min(1),
 });
 
-const baseMvhrData = baseMechanicalVentilationData.extend({
+const baseMvhrData = baseMechanicalVentilationData.extend(hasPcdbPackagedProduct.shape).extend({
 	productReference: z.string().trim().min(1),
 	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "MVHR">("MVHR"),
 	installedUnderApprovedScheme: z.boolean(),
@@ -725,7 +733,7 @@ const intermittentMevData = baseMechanicalVentilationData.extend({
 	midHeightOfAirFlowPath: z.number(),
 });
 
-const baseCentralisedContinuousMevData = baseMechanicalVentilationData.extend({
+const baseCentralisedContinuousMevData = baseMechanicalVentilationData.extend(hasPcdbPackagedProduct.shape).extend({
 	productReference: z.string().trim().min(1),
 	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Centralised continuous MEV">("Centralised continuous MEV"),
 	installedUnderApprovedScheme: z.boolean(),
@@ -733,7 +741,7 @@ const baseCentralisedContinuousMevData = baseMechanicalVentilationData.extend({
 	midHeightOfAirFlowPath: z.number(),
 });
 
-const decentralisedContinuousMevData = baseMechanicalVentilationData.extend({
+const decentralisedContinuousMevData = baseMechanicalVentilationData.extend(hasPcdbPackagedProduct.shape).extend({
 	productReference: z.string().trim().min(1),
 	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Decentralised continuous MEV">("Decentralised continuous MEV"),
 	installedUnderApprovedScheme: z.boolean(),
@@ -874,14 +882,6 @@ export type HeatSourceType =
 	"solarThermalSystem";
 
 export type PcdbProduct = z.infer<typeof pcdbProduct>;
-
-const pcdbPackagedProduct = pcdbProduct.extend({
-	packageProductId: z.optional(z.string()),
-});
-
-const hasPcdbPackagedProduct = pcdbProduct.extend({
-	packagedProductReference: z.optional(z.string()),
-});
 
 const heatPumpBase = pcdbPackagedProduct.extend({
 	typeOfHeatSource: z.literal("heatPump"),

@@ -1,5 +1,5 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import type { BoilerProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
+import type { BoilerProduct, HeatPumpProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 import ProductDetails from "./[id].vue";
 import type { H3Error } from "h3";
 import { screen } from "@testing-library/vue";
@@ -8,6 +8,7 @@ import userEvent from "@testing-library/user-event";
 describe("Heat pump details", async () => {
 	const smallHeatPump: Partial<HeatSourceData> = {
 		name: "Heat pump 2",
+		typeOfHeatSource: "heatPump",
 		productReference: "HEATPUMP-SMALL",
 	};
 
@@ -188,6 +189,54 @@ describe("Heat pump details", async () => {
 			typeOfHeatSource: "boiler",
 			typeOfBoiler: "combiBoiler",
 		}));
+	});
+
+	test("A mechanical ventilation entry is created when an exhaust air heat pump is selected", async () => {
+		// Arrange
+		const exhaustAirHeatPump: Partial<HeatSourceData> = {
+			id: "463c94f6-566c-49b2-af27-444444444",
+			name: "Exhaust air heat pump",
+			typeOfHeatSource: "heatPump",
+		};
+
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [
+						{ data: exhaustAirHeatPump },
+					],
+				},
+			},
+		});
+
+		const exhaustAirHeatPumpProduct: Partial<HeatPumpProduct> = {
+			id: "1000",
+			brandName: "Test",
+			modelName: "Exhaust air heat pump",
+			technologyType: "ExhaustAirMvhrHeatPump",
+			technologyGroup: "heatPump",
+		};
+
+		mockFetch.mockReturnValueOnce({
+			data: ref(exhaustAirHeatPumpProduct),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		await user.click(screen.getByTestId("selectProductButton"));
+
+		// Assert
+		const mechanicalVentildationData = store.infiltrationAndVentilation.mechanicalVentilation.data;
+
+		const expectedData: Partial<MechanicalVentilationData> = {
+			name: "Exhaust air MVHR HP",
+			typeOfMechanicalVentilationOptions: "MVHR",
+			productReference: "1000",
+			packagedProductReference: "1000",
+		};
+
+		expect(mechanicalVentildationData.length).toBe(1);
+		expect(mechanicalVentildationData[0]?.data).toStrictEqual(expect.objectContaining(expectedData));
 	});
 
 	test("Store data updates when heat interface product is selected", async () => {

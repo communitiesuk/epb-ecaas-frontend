@@ -8,6 +8,9 @@ import Orientation from "~/components/fields/Orientation.vue";
 import Pitch from "~/components/fields/Pitch.vue";
 import { useAssociatedItems } from "~/composables/associatedItems";
 import { installationTypeOptions, installationLocationOptions } from "~/utils/display";
+import type { Product } from "~/pcdb/pcdb.types";
+import { useProductData } from "~/composables/productData";
+import { hasPackagedProduct } from "~/utils/packagedProduct";
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
@@ -39,6 +42,13 @@ const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation
 };
 
 const associatedItemOptions = useAssociatedItems(["wall", "roof", "window"]);
+
+const packagedProduct = ref<Product | undefined>();
+
+if (hasPackagedProduct(model.value!)) {
+	const packagedProductData = await useProductData(model.value.packagedProductReference!);
+	packagedProduct.value = packagedProductData ?? undefined;
+}
 
 const saveForm = async (fields: MechanicalVentilationData) => {
 	fields.hasAssociatedItem = !!fields.associatedItemId && fields.associatedItemId !== "none";
@@ -191,6 +201,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<PackagedProductInset
+		v-if="hasPackagedProduct(model!) && packagedProduct"
+		:model="model"
+		:packaged-product="packagedProduct"
+	/>
 	<FormKit
 		v-model="model"
 		type="form"
@@ -220,6 +235,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfMechanicalVentilationOptions"
 			validation="required"
 			data-field="InfiltrationVentilation.MechanicalVentilation.vent_type"
+			:disabled="hasPackagedProduct(model!) && !!model.typeOfMechanicalVentilationOptions"
 			@click="() => updateMechanicalVentilation('typeOfMechanicalVentilationOptions')"
 		/>
 		<FormKit
@@ -234,6 +250,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:selected-product-type="typeOfMechanicalVentilation.mvhr"
 			:page-url="route.fullPath"
 			:page-index="index"
+			:disabled="hasPackagedProduct(model!)"
 		/>
 		<FormKit
 			v-if="model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV'"

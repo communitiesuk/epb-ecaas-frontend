@@ -343,4 +343,52 @@ describe("Heat source products page", () => {
 			typeOfBoiler: "combiBoiler",
 		}));
 	});
+
+	test("a mechanical ventilation entry gets created when an exhaust air heat pump is selected", async () => {
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [
+						{ data: heatSource1 },
+					],
+				},
+			},
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-pump",
+			},
+			path: "/0/heat-pump",
+		});
+
+		const exhaustAirHeatPumpProduct: PaginatedResult<DisplayProduct> = {
+			data: [{
+				id: "1000",
+				brandName: "Test",
+				modelName: "Exhaust Air Heat Pump",
+				technologyType: "ExhaustAirMvhrHeatPump",
+			}],
+		};
+
+		mockFetch.mockReturnValueOnce({
+			data: ref(exhaustAirHeatPumpProduct),
+		});
+
+		await renderSuspended(Products);
+
+		await user.click(screen.getByTestId("selectProductButton_0"));
+
+		const mechanicalVentildationData = store.infiltrationAndVentilation.mechanicalVentilation.data;
+		const expectedData: Partial<MechanicalVentilationData> = {
+			name: "Exhaust air MVHR HP",
+			typeOfMechanicalVentilationOptions: "MVHR",
+			productReference: "1000",
+			packagedProductReference: "1000",
+		};
+
+		expect(mechanicalVentildationData.length).toBe(1);
+		expect(mechanicalVentildationData[0]?.data).toStrictEqual(expect.objectContaining(expectedData));
+	});
 });

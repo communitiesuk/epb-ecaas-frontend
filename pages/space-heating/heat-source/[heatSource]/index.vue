@@ -24,8 +24,8 @@ export type SolarThermalModelType = Extract<HeatSourceData, { typeOfHeatSource: 
 const packagedProduct = ref<Product | undefined>();
 
 if (hasPackagedProduct(model.value)) {
-	const productReferences = await useProductReference(heatSourceStoreData, product => product);
-	packagedProduct.value = productReferences[model.value.packagedProductReference!];
+	const packagedProductData = await useProductData(model.value.packagedProductReference!);
+	packagedProduct.value = packagedProductData ?? undefined;
 }
 
 const saveForm = () => {
