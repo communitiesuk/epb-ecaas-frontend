@@ -1060,6 +1060,14 @@ describe("dwelling fabric mapper", () => {
 					dwellingSpaceExternalUnglazedDoor: { ...baseForm, data: [{ ...baseForm, data: externalUnglazedDoor }] },
 				},
 			},
+			infiltrationAndVentilation: {
+				naturalVentilation: {
+					data: {
+						baseHeightOfVentilationZone: 30,
+					},
+					complete: true,
+				},
+			},
 		});
 
 		// Act
@@ -1095,7 +1103,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		expect(internalDoorHeatedSpaceElement).toEqual(expectedInternalDoorHeatedSpace);
-		const midHeight = externalGlazedDoor.elevationalHeight + externalGlazedDoor.height / 2;
+		const midHeight = 30 + externalGlazedDoor.height / 2;
 
 		const expectedExternalGlazedDoor: BuildingElementTransparent = {
 			type: "BuildingElementTransparent",
@@ -1268,6 +1276,14 @@ describe("dwelling fabric mapper", () => {
 					complete: true,
 				},
 			},
+			infiltrationAndVentilation: {
+				naturalVentilation: {
+					data: {
+						baseHeightOfVentilationZone: 30,
+					},
+					complete: true,
+				},
+			},
 		});
 
 		// Act
@@ -1287,7 +1303,7 @@ describe("dwelling fabric mapper", () => {
 			base_height: window.elevationalHeight,
 			u_value: window.uValue,
 			g_value: window.solarTransmittance,
-			mid_height: window.elevationalHeight + window.height / 2,
+			mid_height: 30 + window.height / 2,
 			frame_area_fraction: 1 - window.openingToFrameRatio,
 			security_risk: false,
 			free_area_height: 0,
@@ -1361,6 +1377,14 @@ describe("dwelling fabric mapper", () => {
 					complete: true,
 				},
 			},
+			infiltrationAndVentilation: {
+				naturalVentilation: {
+					data: {
+						baseHeightOfVentilationZone: 30,
+					},
+					complete: true,
+				},
+			},
 		});
 
 		const fhsInputData = mapWindowData(resolveState(store.$state));
@@ -1407,6 +1431,14 @@ describe("dwelling fabric mapper", () => {
 					complete: true,
 				},
 			},
+			infiltrationAndVentilation: {
+				naturalVentilation: {
+					data: {
+						baseHeightOfVentilationZone: 30,
+					},
+					complete: true,
+				},
+			},
 		});
 
 		const fhsInputData = mapWindowData(resolveState(store.$state));
@@ -1448,6 +1480,14 @@ describe("dwelling fabric mapper", () => {
 							complete: true,
 						},
 					],
+					complete: true,
+				},
+			},
+			infiltrationAndVentilation: {
+				naturalVentilation: {
+					data: {
+						baseHeightOfVentilationZone: 30,
+					},
 					complete: true,
 				},
 			},

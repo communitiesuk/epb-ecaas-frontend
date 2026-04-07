@@ -725,6 +725,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			orientation = associatedElement.orientation!;
 		}
 
+		console.log(state.infiltrationAndVentilation.naturalVentilation);
 		const midHeight = (x.height / 2) + state.infiltrationAndVentilation.naturalVentilation.baseHeightOfVentilationZone;
 
 		return {

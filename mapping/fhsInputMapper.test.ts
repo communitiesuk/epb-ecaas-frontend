@@ -784,7 +784,7 @@ const expectedFlatInput: FhsInputSchema = {
 					g_value: 0.5,
 					height: 3,
 					max_window_open_area: 3,
-					mid_height: 1.7,
+					mid_height: 2.5,
 					orientation360: 30,
 					pitch: 45,
 					security_risk: false,
@@ -821,7 +821,7 @@ const expectedFlatInput: FhsInputSchema = {
 					width: 1,
 					window_part_list: [
 						{
-							mid_height_air_flow_path: 1.7,
+							mid_height_air_flow_path: 2.5,
 						},
 						{
 							mid_height_air_flow_path: 3,
