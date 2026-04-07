@@ -176,6 +176,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 						name: heatSourceName,
 						heater_position: ws.heaterPosition,
 						type: "HeatSourceWet",
+						...(temp_flow_limit_upper ? { temp_flow_limit_upper } : {}),
 					},
 				},
 				...(pipeworkEntries.length !== 0 ? { primary_pipework: pipeworkEntries } : {}),

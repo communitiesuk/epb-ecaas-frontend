@@ -180,7 +180,7 @@ describe("domestic hot water mapper", () => {
 						complete: true,
 					},
 					heatSources: {
-						data: [heatPump],
+						data: [{ data: { ...heatPump.data, maxFlowTemp: 4 }, complete: true }],
 						complete: true,
 					},
 					pipework: {
@@ -201,6 +201,7 @@ describe("domestic hot water mapper", () => {
 						heater_position: 0.3,
 						type: "HeatSourceWet",
 						name: heatPump.data.name,
+						temp_flow_limit_upper: 4,
 					},
 				},
 				type: "SmartHotWaterTank",
