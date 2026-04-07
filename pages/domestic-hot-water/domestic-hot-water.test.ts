@@ -703,6 +703,23 @@ describe("Domestic hot water", () => {
 				needsSpecifiedLocation: false,
 			};
 
+			const exhaustAirHeatPump: HeatSourceData = {
+				id: "6d6587de-c0a9-42df-805c-23d9e9823f22",
+				name: "Exhaust air heat pump",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "exhaustAirMvhr",
+				productReference: "1000",
+				packageProductId: "9e66d667-6c31-4406-9223-7e2249a7fee3",
+			};
+
+			const mvhr: Partial<MechanicalVentilationData> = {
+				id: "9e66d667-6c31-4406-9223-7e2249a7fee3",
+				name: "Exhaust air MVHR HP",
+				productReference: "1000",
+				typeOfMechanicalVentilationOptions: "MVHR",
+				packagedProductReference: "1000",
+			};
+
 			beforeEach(async () => {
 				store.$patch({
 					domesticHotWater: {
@@ -729,6 +746,32 @@ describe("Domestic hot water", () => {
 
 				expect(boilerEditButton).toBeDefined();
 				expect(boilerDeleteButton).toBeNull();
+			});
+
+			it("removes mechanical vent which is packaged with the removed exhaust air heat pump", async () => {
+				store.$patch({
+					domesticHotWater: {
+						heatSources: {
+							data: [
+								{ data: exhaustAirHeatPump, complete: true },
+							],
+						},
+					},
+					infiltrationAndVentilation: {
+						mechanicalVentilation: {
+							data: [
+								{ data: mvhr },
+							],
+						},
+					},
+				});
+
+				await renderSuspended(DomesticHotWater);
+
+				await user.click(await screen.findByTestId("heatSources_remove_0"));
+
+				expect(store.domesticHotWater.heatSources.data.length).toBe(0);
+				expect(store.infiltrationAndVentilation.mechanicalVentilation.data.length).toBe(0);
 			});
 		});
 	});

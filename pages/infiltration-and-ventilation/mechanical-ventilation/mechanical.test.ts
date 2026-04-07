@@ -420,6 +420,36 @@ describe("mechanical ventilation overview", () => {
 		);
 	});
 
+	it("only displays an 'edit' action if heat source is packaged with a heat pump", async () => {
+		const packagedMechanicalVent: Partial<MechanicalVentilationData> = {
+			id: "9e66d667-6c31-4406-9223-7e2249a7fee3",
+			name: "Exhaust air MVHR HP",
+			productReference: "1000",
+			typeOfMechanicalVentilationOptions: "MVHR",
+			packagedProductReference: "1000",
+		};
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: packagedMechanicalVent },
+					],
+				},
+			},
+		});
+
+		await renderSuspended(MechanicalVentilationOverview);
+
+		const editButton = screen.getByTestId("mechanicalVentilation_edit_0");
+		const duplucateButton = screen.queryByTestId("mechanicalVentilation_duplicate_0");
+		const deleteButton = screen.queryByTestId("mechanicalVentilation_remove_0");
+
+		expect(editButton).toBeDefined();
+		expect(duplucateButton).toBeNull();
+		expect(deleteButton).toBeNull();
+	});
+
 	describe("mark section as complete", () => {
 		const addCompleteMechanicalVentilationToStore = async () => {
 			store.$patch({

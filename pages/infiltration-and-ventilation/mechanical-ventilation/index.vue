@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
+import type { CustomListItem } from "~/components/CustomList.vue";
 import formStatus from "~/constants/formStatus";
+import { hasPackagedProduct } from "~/utils/packagedProduct";
 
 const page = usePage();
 const title = "Mechanical ventilation";
@@ -81,10 +83,17 @@ function handleComplete() {
 		id="mechanicalVentilation"
 		title="Mechanical ventilation"
 		:form-url="page?.url!"
-		:items="store.infiltrationAndVentilation.mechanicalVentilation.data?.map(x => ({
-			name: x.data.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))"
+		:items="store.infiltrationAndVentilation.mechanicalVentilation.data?.map(x => {
+			const item: CustomListItem = {
+				name: x.data.name,
+				status: x.complete ? formStatus.complete : formStatus.inProgress,
+				...(hasPackagedProduct(x.data) ? {
+					actions: ['edit']
+				} : {}),
+			};
+
+			return item;
+		})"
 		:show-status="true"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"

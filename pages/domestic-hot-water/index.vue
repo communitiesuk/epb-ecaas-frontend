@@ -1,99 +1,18 @@
 <script setup lang="ts">
 import { hasPackagedProduct, isEcaasForm } from "#imports";
-import { v4 as uuidv4 } from "uuid";
 import type { CustomListItem } from "~/components/CustomList.vue";
+import { useDomesticHotWater } from "~/composables/domesticHotWater";
 import formStatus from "~/constants/formStatus";
-import type { DomesticHotWaterHeatSourceData, HeatSourceData } from "~/stores/ecaasStore.schema";
+import type { HeatSourceData } from "~/stores/ecaasStore.schema";
 
 const title = "Domestic hot water";
 
 const page = usePage();
 const store = useEcaasStore();
-const { waterStorage, hotWaterOutlets, pipework, heatSources: dhwHeatSources } = store.domesticHotWater; 
-const { heatSource } = store.spaceHeating;
+const { removeEntry, duplicateEntry } = useDomesticHotWater();
 
-type DomesticHotWaterType = keyof typeof store.domesticHotWater;
-type DomesticHotWaterData = EcaasForm<DomesticHotWaterHeatSourceData> & EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData>;
+const { heatSources: dhwHeatSources } = store.domesticHotWater;
 
-function handleRemove(domesticHotWaterType: DomesticHotWaterType, index: number) {
-	const items = store.domesticHotWater[domesticHotWaterType]?.data;
-	const item = items[index];
-	
-	if (items) {
-		let heatSourceId: string | undefined;
-		if (items[index]?.data && "typeOfHeatSource" in items[index].data) {
-			heatSourceId = store.domesticHotWater.heatSources.data[index]?.data.id;
-		}
-
-		let waterStorageId: string | undefined;
-		if (items[index]?.data && "typeOfWaterStorage" in items[index].data) {
-			waterStorageId = store.domesticHotWater.waterStorage.data[index]?.data.id;
-		}
-
-		items.splice(index, 1);
-
-		store.$patch((state) => {
-			state.domesticHotWater[domesticHotWaterType].data = items.length ? items : [];
-			state.domesticHotWater[domesticHotWaterType].complete = false;
-		});
-
-		if (heatSourceId) {
-			store.removeTaggedAssociations()([waterStorage, hotWaterOutlets], heatSourceId, "dhwHeatSourceId"); 
-			store.removeTaggedAssociations()([heatSource, dhwHeatSources], heatSourceId, "boosterHeatPumpId"); 
-		}
-		if (waterStorageId) {
-			store.removeTaggedAssociations()([pipework], waterStorageId, "waterStorage"); 
-		}
-
-		if (domesticHotWaterType === "heatSources" && item && isPackagedProduct(item.data)) {
-			const { packageProductId } = item.data;
-
-			store.$patch(state => {
-				const packageProductIndex = state.domesticHotWater[domesticHotWaterType].data
-					.findIndex(x => "id" in x.data && x.data.id === packageProductId);
-
-				state.domesticHotWater[domesticHotWaterType].data.splice(packageProductIndex, 1);
-			});
-		}
-	}
-} 
-
-function handleDuplicate<T extends DomesticHotWaterData>(domesticHotWaterType: DomesticHotWaterType, index: number) {
-	const data = store.domesticHotWater[domesticHotWaterType]?.data;
-	const item = data?.[index];
-	let name: string;
-    
-	if (item) {
-		const duplicates = data.filter(f => {
-			if (isEcaasForm(f) && isEcaasForm(item)) {
-				if (domesticHotWaterType === "heatSources" && (item.data as DomesticHotWaterHeatSourceData).isExistingHeatSource) {
-					// I have no idea what to do here
-					// Either prevent duplication of existing heat sources
-					// Or allow it and create a new entry in space heating too?
-					// Or create a new heat source in domestic hot water?
-					return false;
-				}
-				name = (item.data as { name: string }).name;
-				return (f.data as { name: string }).name.match(duplicateNamePattern(name));
-			}
-			return false;
-		});
-
-		store.$patch((state) => {
-			const newItem = {
-				complete: item.complete,
-				data: {
-					...item.data,
-					name: `${name} (${duplicates.length})`,
-					id: uuidv4(),
-				},
-			} as T;
-
-			state.domesticHotWater[domesticHotWaterType].data.push(newItem);
-			state.domesticHotWater[domesticHotWaterType].complete = false;
-		});
-	}
-}
 function handleComplete() {
 	store.$patch({
 		domesticHotWater: {
@@ -157,7 +76,7 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 		:show-status="true"
 		:max-number-of-items=1
 		section="dHWHeatSources"
-		@remove="(index: number) => handleRemove('heatSources', index)"
+		@remove="(index: number) => removeEntry('heatSources', index)"
 	/>
 	<CustomList 
 		id="waterStorage"
@@ -167,8 +86,8 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 			.filter(x => isEcaasForm(x))
 			.map(x=>({name: x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
 		:show-status="true"
-		@remove="(index: number) => handleRemove('waterStorage', index)"
-		@duplicate="(index: number) => handleDuplicate('waterStorage', index)"
+		@remove="(index: number) => removeEntry('waterStorage', index)"
+		@duplicate="(index: number) => duplicateEntry('waterStorage', index)"
 	/>
 
 	<CustomList 
@@ -179,8 +98,8 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 			.filter(x => isEcaasForm(x))
 			.map(x=>({name: x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
 		:show-status="true"
-		@remove="(index: number) => handleRemove('hotWaterOutlets', index)"
-		@duplicate="(index: number) => handleDuplicate('hotWaterOutlets', index)"
+		@remove="(index: number) => removeEntry('hotWaterOutlets', index)"
+		@duplicate="(index: number) => duplicateEntry('hotWaterOutlets', index)"
 	/>
 
 	<CustomList 
@@ -191,8 +110,8 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 			.filter(x => isEcaasForm(x))
 			.map(x=>({name: x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
 		:show-status="true"
-		@remove="(index: number) => handleRemove('pipework', index)"
-		@duplicate="(index: number) => handleDuplicate('pipework', index)"
+		@remove="(index: number) => removeEntry('pipework', index)"
+		@duplicate="(index: number) => duplicateEntry('pipework', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton

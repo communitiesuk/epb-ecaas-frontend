@@ -1,156 +1,14 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
-import { v4 as uuidv4 } from "uuid";
 import type { CustomListItem } from "~/components/CustomList.vue";
 import { hasPackagedProduct } from "~/utils/packagedProduct";
+import { useSpaceHeating } from "~/composables/spaceHeating";
 
 const title = "Space heating";
 const page = usePage();
 const store = useEcaasStore();
 
-export type SpaceHeatingType = keyof typeof store.spaceHeating;
-type SpaceHeatingData = EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> & EcaasForm<HeatingControlData>;
-	
-const { heatSources: dhwHeatSources, waterStorage, hotWaterOutlets } = store.domesticHotWater;
-const { heatEmitters, heatSource } = store.spaceHeating;
-function resetRankingsForHeatingSystems(state: EcaasState) {
-	state.spaceHeating.heatEmitters.data.forEach((heatEmitter) => {
-		const data = heatEmitter.data as { heatingRank?: number; };
-		data.heatingRank = undefined;
-	});
-}
-
-function markHeatingControlsAsInProgress(state: EcaasState) {
-	state.spaceHeating.heatingControls.complete = false;
-	state.spaceHeating.heatingControls.data.forEach((heatingControl) => {
-		heatingControl.complete = false;
-	});
-}
-
-function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
-	const items = store.spaceHeating[spaceHeatingType]?.data;
-	const item = items[index] as SpaceHeatingData;
-
-	let heatSourceId;
-
-	if (items[index]?.data && "typeOfHeatSource" in items[index].data) {
-		heatSourceId = store.spaceHeating.heatSource.data[index]?.data.id;
-	}
-
-	if (items) {
-		items.splice(index, 1);
-
-		store.$patch((state) => {
-			state.spaceHeating[spaceHeatingType].data = items.length ? items : [];
-			state.spaceHeating[spaceHeatingType].complete = false;
-
-			if (spaceHeatingType === "heatingControls" || spaceHeatingType === "heatEmitters") {
-				resetRankingsForHeatingSystems(state);
-				markHeatingControlsAsInProgress(state);
-			}
-		});
-
-		if (heatSourceId) {
-			store.removeTaggedAssociations()([heatEmitters], heatSourceId, "heatSource"); 
-			store.removeTaggedAssociations()([heatSource, dhwHeatSources], heatSourceId, "boosterHeatPumpId"); 
-			
-			const dhwHeatSourceIdToRemove = dhwHeatSources.data
-				.filter(({ data: x }) => x.heatSourceId === heatSourceId)
-				.map(x => x.data.id)[0];
-
-			//remove dhw heat sources that reference deleted space heating heat source
-			const dhwHeatSourcesToKeep = dhwHeatSources.data.filter(({ data: x }) => x.heatSourceId !== heatSourceId); 
-			store.$patch(state => {
-				state.domesticHotWater.heatSources.data = dhwHeatSourcesToKeep;
-				if (dhwHeatSourcesToKeep.length === 0) {
-					state.domesticHotWater.heatSources.complete = false;
-				}
-			});
-
-			//remove reference to deleted dhw heat source
-			store.removeTaggedAssociations()([waterStorage, hotWaterOutlets], dhwHeatSourceIdToRemove, "dhwHeatSourceId"); 
-		}
-
-		if (isPackagedProduct(item.data)) {
-			const { packageProductId } = item.data;
-
-			store.$patch(state => {
-				const packageProductIndex = state.spaceHeating[spaceHeatingType].data
-					.findIndex(x => "id" in x.data && x.data.id === packageProductId);
-
-				if (packageProductIndex >= 0) {
-					state.spaceHeating[spaceHeatingType].data.splice(packageProductIndex, 1);
-				}
-			});
-		}
-	}
-};
-
-function handleDuplicate<T extends SpaceHeatingData>(spaceHeatingType: SpaceHeatingType, index: number) {
-	const { data } = store.spaceHeating[spaceHeatingType];
-	const item = data?.[index] as SpaceHeatingData;
-
-	if (item) {
-		const duplicates = data.filter(x => x && x.data.name.match(duplicateNamePattern(item.data.name)));
-
-		store.$patch((state) => {
-			if (!isPackagedProduct(item.data)) {
-				const newItem = {
-					complete: item.complete,
-					data: {
-						...item.data,
-						name: `${item.data.name} (${duplicates.length})`,
-						id: uuidv4(),
-					},
-				} as T;
-
-				state.spaceHeating[spaceHeatingType].data.push(newItem);
-				state.spaceHeating[spaceHeatingType].complete = false;
-				if (spaceHeatingType === "heatEmitters") {
-					resetRankingsForHeatingSystems(state);
-					markHeatingControlsAsInProgress(state);
-				}
-			} else {
-				const { packageProductId } = item.data;
-
-				const packageItem = (data as SpaceHeatingData[]).find(x => "id" in x.data && x.data.id === packageProductId);
-
-				if (!packageItem) {
-					return;
-				}
-
-				const packagedDuplicates = data.filter(x => x && x.data.name.match(duplicateNamePattern(packageItem.data.name)));
-
-				const newPackagedItem: T = {
-					complete: true,
-					data: {
-						...packageItem.data,
-						id: uuidv4(),
-						name: `${packageItem.data.name} (${packagedDuplicates.length})`,
-					},
-				} as T;
-
-				const newItem = {
-					complete: item.complete,
-					data: {
-						...item.data,
-						name: `${item.data.name} (${duplicates.length})`,
-						id: uuidv4(),
-						packageProductId: newPackagedItem.data.id,
-					},
-				} as T;
-
-				state.spaceHeating[spaceHeatingType].data.push(newItem);
-				state.spaceHeating[spaceHeatingType].data.push(newPackagedItem);
-				state.spaceHeating[spaceHeatingType].complete = false;
-				if (spaceHeatingType === "heatEmitters") {
-					resetRankingsForHeatingSystems(state);
-					markHeatingControlsAsInProgress(state);
-				}
-			}
-		});
-	}
-}
+const { removeEntry, duplicateEntry } = useSpaceHeating();
 
 function handleComplete() {
 	store.$patch({
@@ -206,8 +64,8 @@ function hasIncompleteEntries() {
 			}))
 		"
 		:show-status="true"
-		@duplicate="(index: number) => handleDuplicate('heatSource', index)"
-		@remove="(index: number) => handleRemove('heatSource', index)"
+		@duplicate="(index: number) => duplicateEntry('heatSource', index)"
+		@remove="(index: number) => removeEntry('heatSource', index)"
 	/>
 	<CustomList
 		id="heatEmitters"
@@ -220,8 +78,8 @@ function hasIncompleteEntries() {
 			}))
 		"
 		:show-status="true"
-		@duplicate="(index: number) => handleDuplicate('heatEmitters', index)"
-		@remove="(index: number) => handleRemove('heatEmitters', index)"
+		@duplicate="(index: number) => duplicateEntry('heatEmitters', index)"
+		@remove="(index: number) => removeEntry('heatEmitters', index)"
 	/>
 	<CustomList
 		id="heatingControl"
@@ -235,7 +93,7 @@ function hasIncompleteEntries() {
 		"
 		:show-status="true"
 		:max-number-of-items="1"
-		@remove="(index: number) => handleRemove('heatingControls', index)"
+		@remove="(index: number) => removeEntry('heatingControls', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/" secondary> Return to overview </GovButton>

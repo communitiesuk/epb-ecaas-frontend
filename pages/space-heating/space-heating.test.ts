@@ -4,7 +4,7 @@ import {
 } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
-import SpaceHeating, { type SpaceHeatingType } from "./index.vue";
+import SpaceHeating from "./index.vue";
 import formStatus from "~/constants/formStatus";
 import HeatSourceForm from "./heat-source/[heatSource]/index.vue";
 import HeatEmitterForm from "./heat-emitters/[heatEmitter]/index.vue";
@@ -428,6 +428,23 @@ describe("space heating", () => {
 				needsSpecifiedLocation: false,
 			};
 
+			const exhaustAirHeatPump: HeatSourceData = {
+				id: "6d6587de-c0a9-42df-805c-23d9e9823f22",
+				name: "Exhaust air heat pump",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "exhaustAirMvhr",
+				productReference: "1000",
+				packageProductId: "9e66d667-6c31-4406-9223-7e2249a7fee3",
+			};
+
+			const mvhr: Partial<MechanicalVentilationData> = {
+				id: "9e66d667-6c31-4406-9223-7e2249a7fee3",
+				name: "Exhaust air MVHR HP",
+				productReference: "1000",
+				typeOfMechanicalVentilationOptions: "MVHR",
+				packagedProductReference: "1000",
+			};
+
 			beforeEach(async () => {
 				store.$patch({
 					spaceHeating: {
@@ -439,16 +456,44 @@ describe("space heating", () => {
 						},
 					},
 				});
-
-				await renderSuspended(SpaceHeating);
 			});
 
 			it("removes heat sources which are packaged with the removed item", async () => {
+				await renderSuspended(SpaceHeating);
+
 				await user.click(await screen.findByTestId("heatSource_remove_0"));
 				expect(store.spaceHeating.heatSource.data.length).toBe(0);
 			});
 
+			it("removes mechanical vent which is packaged with the removed exhaust air heat pump", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: exhaustAirHeatPump, complete: true },
+							],
+						},
+					},
+					infiltrationAndVentilation: {
+						mechanicalVentilation: {
+							data: [
+								{ data: mvhr },
+							],
+						},
+					},
+				});
+
+				await renderSuspended(SpaceHeating);
+
+				await user.click(await screen.findByTestId("heatSource_remove_0"));
+
+				expect(store.spaceHeating.heatSource.data.length).toBe(0);
+				expect(store.infiltrationAndVentilation.mechanicalVentilation.data.length).toBe(0);
+			});
+
 			it("only displays an 'edit' action if heat source is packaged with a heat pump", async () => {
+				await renderSuspended(SpaceHeating);
+
 				const boilerEditButton = screen.getByTestId("heatSource_edit_1");
 				const boilerDuplucateButton = screen.queryByTestId("heatSource_duplicate_1");
 				const boilerDeleteButton = screen.queryByTestId("heatSource_remove_1");
@@ -459,6 +504,8 @@ describe("space heating", () => {
 			});
 
 			it("duplicates a heat source when the heat pump it's packaged with is duplicated", async () => {
+				await renderSuspended(SpaceHeating);
+
 				await user.click(await screen.findByTestId("heatSource_duplicate_0"));
 
 				const spaceHeatingData = store.spaceHeating.heatSource.data;
@@ -474,6 +521,43 @@ describe("space heating", () => {
 
 				expect(duplicateBoiler?.data).toEqual(expect.objectContaining({
 					name: "Combi boiler (1)",
+				}));
+			});
+
+			it("duplicates a mechanical vent when the exhaust air heat pump it's packaged with is duplicated", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: exhaustAirHeatPump, complete: true },
+							],
+						},
+					},
+					infiltrationAndVentilation: {
+						mechanicalVentilation: {
+							data: [
+								{ data: mvhr },
+							],
+						},
+					},
+				});
+
+				await renderSuspended(SpaceHeating);
+
+				await user.click(await screen.findByTestId("heatSource_duplicate_0"));
+
+				const spaceHeatingData = store.spaceHeating.heatSource.data;
+				const mechanicalVentilationData = store.infiltrationAndVentilation.mechanicalVentilation.data;
+
+				expect(spaceHeatingData.length).toBe(2);
+				expect(mechanicalVentilationData.length).toBe(2);
+
+				expect(spaceHeatingData[1]?.data).toEqual(expect.objectContaining({
+					name: "Exhaust air heat pump (1)",
+				}));
+
+				expect(mechanicalVentilationData[1]?.data).toEqual(expect.objectContaining({
+					name: "Exhaust air MVHR HP (1)",
 				}));
 			});
 		});
@@ -716,7 +800,7 @@ describe("space heating", () => {
 
 			const spaceHeating = store.spaceHeating;
 			for (const key in spaceHeating) {
-				expect(spaceHeating[key as SpaceHeatingType]?.complete).toBe(true);
+				expect(spaceHeating[key as keyof typeof spaceHeating]?.complete).toBe(true);
 			};
 		});
 
