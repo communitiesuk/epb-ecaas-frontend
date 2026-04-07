@@ -4,7 +4,7 @@ import {
 } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
-import SpaceHeating from "./index.vue";
+import SpaceHeating, { type SpaceHeatingType } from "./index.vue";
 import formStatus from "~/constants/formStatus";
 import HeatSourceForm from "./heat-source/[heatSource]/index.vue";
 import { litre } from "~/utils/units/volume";
@@ -457,13 +457,13 @@ describe("space heating", () => {
 				expect(boilerDeleteButton).toBeNull();
 			});
 
-			it ("duplicates a heat source when the heat pump it's packaged with is duplicated", async () => {
+			it("duplicates a heat source when the heat pump it's packaged with is duplicated", async () => {
 				await user.click(await screen.findByTestId("heatSource_duplicate_0"));
-				
+
 				const spaceHeatingData = store.spaceHeating.heatSource.data;
 
 				expect(spaceHeatingData.length).toBe(4);
-				
+
 				const duplicateHeatPump = spaceHeatingData[2];
 				const duplicateBoiler = spaceHeatingData[3];
 
@@ -555,6 +555,69 @@ describe("space heating", () => {
 			expect(screen.getByText("Heat emitter 1 (1) (1)")).toBeDefined();
 			expect(screen.getByText("Heat emitter 1 (1) (2)")).toBeDefined();
 		});
+
+		it("marks heating controls as in progress when editing a heat emitter", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [heatEmitter1],
+					},
+					heatingControls: {
+						data: [
+							{
+								data: {
+									name: "Separate temperature control",
+									heatingControlType: "separateTemperatureControl",
+								},
+								complete: true,
+							},
+						],
+						complete: true,
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+			expect(store.spaceHeating.heatingControls.complete).toBe(true);
+
+			await user.click(screen.getByTestId("heatEmitters_edit_0"));
+
+			expect(store.spaceHeating.heatingControls.complete).toBe(false);
+		});
+	});
+
+	describe("heating controls", () => {
+		it("resets heat emitter rankings when heating controls is removed", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [
+							{ data: { name: "Emitter 1", heatingRank: 1 } },
+							{ data: { name: "Emitter 2", heatingRank: 2 } },
+						],
+					},
+					heatingControls: {
+						data: [
+							{
+								data: {
+									name: "Separate temperature control",
+									heatingControlType: "separateTemperatureControl",
+								},
+								complete: true,
+							},
+						],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+			await user.click(screen.getByTestId("heatingControl_remove_0"));
+
+			const firstEmitter = store.spaceHeating.heatEmitters.data[0]?.data as { heatingRank?: number };
+			const secondEmitter = store.spaceHeating.heatEmitters.data[1]?.data as { heatingRank?: number };
+			expect(firstEmitter.heatingRank).toBeUndefined();
+			expect(secondEmitter.heatingRank).toBeUndefined();
+		});
 	});
 
 	describe("mark space heating as complete", () => {
@@ -579,7 +642,6 @@ describe("space heating", () => {
 		it("marks space heating section as complete after 'mark as complete' button is clicked", async () => {
 			await user.click(await screen.findByTestId("markAsCompleteButton"));
 
-			type SpaceHeatingType = keyof typeof store.spaceHeating;
 			const spaceHeating = store.spaceHeating;
 			for (const key in spaceHeating) {
 				expect(spaceHeating[key as SpaceHeatingType]?.complete).toBe(true);

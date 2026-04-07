@@ -1141,7 +1141,7 @@ const wetDistributionSystemEmitterDraftSchema = z.object({
 	numOfRadiators: z.number().optional(),
 	length: z.number().min(0.001).optional(),
 });
-
+const heatingRank = z.number().int().min(1).optional();
 const wetDistributionSystemBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("wetDistributionSystem"),
 	heatSource: z.string(),
@@ -1149,6 +1149,7 @@ const wetDistributionSystemBase = namedWithId.extend({
 	designTempDiffAcrossEmitters: z.number(),
 	emitters: z.array(z.union([wetDistributionSystemEmittersFields, wetDistributionSystemEmitterDraftSchema])),
 	percentageRecirculated: z.number().min(0).max(100),
+	heatingRank,
 });
 
 const wetDistributionSystemSchema = nestedDiscriminatedUnion(
@@ -1165,6 +1166,7 @@ const warmAirHeaterSchema = namedWithId.extend({
 	heatSource: z.string(),
 	convectionFraction: z.number(),
 	numOfWarmAirHeaters: z.number(),
+	heatingRank,
 });
 
 export const instantElectricHeaterRatedPowerZod = z.number().min(0.1).max(70);
@@ -1175,12 +1177,14 @@ const instantElectricHeaterSchema = namedWithId.extend({
 	convectiveType: convectiveTypeZod,
 	ratedPower: instantElectricHeaterRatedPowerZod,
 	numOfHeaters: numOfInstantElectricHeatersZod,
+	heatingRank,
 });
 
 const electricStorageHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal(typeOfHeatEmitter.electricStorageHeater),
 	productReference: z.string(),
 	numOfStorageHeaters: z.number(),
+	heatingRank,
 });
 
 

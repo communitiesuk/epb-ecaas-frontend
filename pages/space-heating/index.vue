@@ -8,12 +8,17 @@ const title = "Space heating";
 const page = usePage();
 const store = useEcaasStore();
 
-type SpaceHeatingType = keyof typeof store.spaceHeating;
+export type SpaceHeatingType = keyof typeof store.spaceHeating;
 type SpaceHeatingData = EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> & EcaasForm<HeatingControlData>;
-
+	
 const { heatSources: dhwHeatSources, waterStorage, hotWaterOutlets } = store.domesticHotWater;
 const { heatEmitters, heatSource } = store.spaceHeating;
-
+function resetRankingsForHeatingSystems(state: EcaasState) {
+	state.spaceHeating.heatEmitters.data.forEach((heatEmitter) => {
+		const data = heatEmitter.data as { heatingRank?: number; };
+		data.heatingRank = undefined;
+	});
+}
 function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 	const items = store.spaceHeating[spaceHeatingType]?.data;
 	const item = items[index] as SpaceHeatingData;
@@ -30,6 +35,10 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 		store.$patch((state) => {
 			state.spaceHeating[spaceHeatingType].data = items.length ? items : [];
 			state.spaceHeating[spaceHeatingType].complete = false;
+
+			if (spaceHeatingType === "heatingControls") {
+				resetRankingsForHeatingSystems(state);
+			}
 		});
 
 		if (heatSourceId) {
