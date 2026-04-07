@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, type HeatSourceData } from "#imports";
-import { heatSourceTypesWithDisplay } from "../../../../utils/display";
+import { heatSourceTypesWithDisplay } from "~/utils/display";
 import type { Product } from "~/pcdb/pcdb.types";
 import { hasPackagedProduct } from "~/utils/packagedProduct";
 import PackagedProductInset from "~/components/PackagedProductInset.vue";
@@ -129,7 +129,7 @@ const boilers = heatSourceStoreData
 			:index="index"
 			:boilers="boilers"
 			add-boiler-page-id="heatSourceCreate"
-			page="space-heating"
+			page="space heating"
 			@update-heat-pump-model="updateHeatSource"
 		/>
 		<BoilerSection

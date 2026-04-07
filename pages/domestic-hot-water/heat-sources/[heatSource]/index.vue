@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, hasPackagedProduct, type DomesticHotWaterHeatSourceData } from "#imports";
-import { coldWaterSourceOptions, DHWHeatSourceTypesWithDisplay } from "../../../../utils/display";
+import { coldWaterSourceOptions, DHWHeatSourceTypesWithDisplay } from "~/utils/display";
 import type { Product } from "~/pcdb/pcdb.types";
 
 const title = "Heat source";
@@ -267,7 +267,7 @@ const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
 			:index="index"
 			:boilers="allBoilers"
 			add-boiler-page-id="heatSourcesCreate"
-			page="domestic-hot-water"
+			page="domestic hot water"
 			@update-heat-pump-model="updateHeatSource" />
 		<BoilerSection
 			v-if="model.isExistingHeatSource === false
