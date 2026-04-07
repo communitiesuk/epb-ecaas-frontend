@@ -2,7 +2,7 @@
 import { type HeatSourceData, uniqueName } from "#imports";
 import type { PageId } from "~/data/pages/pages";
 import { celsius } from "~/utils/units/temperature";
-import type { Length } from "~/utils/units/length";
+import type { UnitValue } from "~/utils/units/types";
 const route = useRoute();
 const store = useEcaasStore();
 
@@ -19,7 +19,7 @@ const { model } = defineProps<{
 const heatSources = getCombinedHeatSources(store);
 
 const greaterThanZero = (node: FormKitNode) => {
-	const value = node.value as Length;
+	const value = node.value as UnitValue;
 	return value.amount > 0;
 };
 </script>
