@@ -31,6 +31,20 @@ const heatEmitterData = useItemToEdit("heatEmitter", heatEmitterStoreData);
 const model = ref(heatEmitterData?.data);
 const id = heatEmitterData?.data?.id ?? uuidv4();
 
+function resetAllHeatEmitterRankings(state: EcaasState) {
+	state.spaceHeating.heatEmitters.data.forEach((heatEmitter) => {
+		const data = heatEmitter.data as { heatingRank?: number };
+		data.heatingRank = undefined;
+	});
+}
+
+function markHeatingControlsAsInProgress(state: EcaasState) {
+	state.spaceHeating.heatingControls.complete = false;
+	state.spaceHeating.heatingControls.data.forEach((heatingControl) => {
+		heatingControl.complete = false;
+	});
+}
+
 
 
 const saveForm = () => {
@@ -99,6 +113,8 @@ autoSaveElementForm<HeatEmittingData>({
 
 		state.spaceHeating.heatEmitters.data[index] = newData;
 		state.spaceHeating.heatEmitters.complete = false;
+		markHeatingControlsAsInProgress(state);
+		resetAllHeatEmitterRankings(state);
 	},
 });
 </script>

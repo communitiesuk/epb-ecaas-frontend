@@ -7,6 +7,7 @@ import { screen, within } from "@testing-library/vue";
 import SpaceHeating, { type SpaceHeatingType } from "./index.vue";
 import formStatus from "~/constants/formStatus";
 import HeatSourceForm from "./heat-source/[heatSource]/index.vue";
+import HeatEmitterForm from "./heat-emitters/[heatEmitter]/index.vue";
 import { litre } from "~/utils/units/volume";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -534,6 +535,33 @@ describe("space heating", () => {
 			expect(screen.queryByText("Heat emitter 2")).toBeNull();
 		});
 
+		it("removing a heat emitter marks heating controls incomplete and clears all heat emitter rankings", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [
+							{ data: { name: "Heat emitter 1", heatingRank: 1 }, complete: true },
+							{ data: { name: "Heat emitter 2", heatingRank: 2 }, complete: true },
+						],
+					},
+					heatingControls: {
+						data: [{ data: { name: "Separate temperature control", heatingControlType: "separateTemperatureControl" }, complete: true }],
+						complete: true,
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+			expect(store.spaceHeating.heatingControls.complete).toBe(true);
+
+			await user.click(screen.getByTestId("heatEmitters_remove_0"));
+
+			expect(store.spaceHeating.heatingControls.complete).toBe(false);
+			expect(store.spaceHeating.heatingControls.data[0]?.complete).toBe(false);
+			const remainingEmitter = store.spaceHeating.heatEmitters.data[0]?.data as { heatingRank?: number };
+			expect(remainingEmitter.heatingRank).toBeUndefined();
+		});
+
 		it("should duplicate the correct heat emitter when duplicate link is clicked", async () => {
 			store.$patch({
 				spaceHeating: {
@@ -556,11 +584,45 @@ describe("space heating", () => {
 			expect(screen.getByText("Heat emitter 1 (1) (2)")).toBeDefined();
 		});
 
-		it("marks heating controls as in progress when editing a heat emitter", async () => {
+		it("adding a heat emitter marks heating controls incomplete and clears all heat emitter rankings", async () => {
 			store.$patch({
 				spaceHeating: {
 					heatEmitters: {
-						data: [heatEmitter1],
+						data: [
+							{ data: { name: "Heat emitter 1", heatingRank: 1 }, complete: true },
+							{ data: { name: "Heat emitter 2", heatingRank: 2 }, complete: true },
+						],
+					},
+					heatingControls: {
+						data: [{ data: { name: "Separate temperature control", heatingControlType: "separateTemperatureControl" }, complete: true }],
+						complete: true,
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+			expect(store.spaceHeating.heatingControls.complete).toBe(true);
+
+			await user.click(screen.getByTestId("heatEmitters_duplicate_0"));
+
+			expect(store.spaceHeating.heatingControls.complete).toBe(false);
+			expect(store.spaceHeating.heatingControls.data[0]?.complete).toBe(false);
+			const firstEmitter = store.spaceHeating.heatEmitters.data[0]?.data as { heatingRank?: number };
+			const secondEmitter = store.spaceHeating.heatEmitters.data[1]?.data as { heatingRank?: number };
+			const thirdEmitter = store.spaceHeating.heatEmitters.data[2]?.data as { heatingRank?: number };
+			expect(firstEmitter.heatingRank).toBeUndefined();
+			expect(secondEmitter.heatingRank).toBeUndefined();
+			expect(thirdEmitter.heatingRank).toBeUndefined();
+		});
+
+		it("marks heating controls as in progress when heat emitter data is changed", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [
+							{ data: { ...heatEmitter1.data, heatingRank: 1 }, complete: false },
+							{ data: { ...heatEmitter2.data, heatingRank: 2 }, complete: false },
+						],
 					},
 					heatingControls: {
 						data: [
@@ -577,12 +639,22 @@ describe("space heating", () => {
 				},
 			});
 
-			await renderSuspended(SpaceHeating);
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "0" },
+				},
+			});
 			expect(store.spaceHeating.heatingControls.complete).toBe(true);
 
-			await user.click(screen.getByTestId("heatEmitters_edit_0"));
+			await user.click(screen.getByTestId("typeOfHeatEmitter_warmAirHeater"));
+			await user.tab();
 
 			expect(store.spaceHeating.heatingControls.complete).toBe(false);
+			expect(store.spaceHeating.heatingControls.data[0]?.complete).toBe(false);
+			const firstEmitter = store.spaceHeating.heatEmitters.data[0]?.data as { heatingRank?: number };
+			const secondEmitter = store.spaceHeating.heatEmitters.data[1]?.data as { heatingRank?: number };
+			expect(firstEmitter.heatingRank).toBeUndefined();
+			expect(secondEmitter.heatingRank).toBeUndefined();
 		});
 	});
 

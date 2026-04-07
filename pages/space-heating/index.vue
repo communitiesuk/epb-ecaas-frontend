@@ -19,6 +19,14 @@ function resetRankingsForHeatingSystems(state: EcaasState) {
 		data.heatingRank = undefined;
 	});
 }
+
+function markHeatingControlsAsInProgress(state: EcaasState) {
+	state.spaceHeating.heatingControls.complete = false;
+	state.spaceHeating.heatingControls.data.forEach((heatingControl) => {
+		heatingControl.complete = false;
+	});
+}
+
 function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 	const items = store.spaceHeating[spaceHeatingType]?.data;
 	const item = items[index] as SpaceHeatingData;
@@ -36,8 +44,9 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 			state.spaceHeating[spaceHeatingType].data = items.length ? items : [];
 			state.spaceHeating[spaceHeatingType].complete = false;
 
-			if (spaceHeatingType === "heatingControls") {
+			if (spaceHeatingType === "heatingControls" || spaceHeatingType === "heatEmitters") {
 				resetRankingsForHeatingSystems(state);
+				markHeatingControlsAsInProgress(state);
 			}
 		});
 
@@ -97,6 +106,10 @@ function handleDuplicate<T extends SpaceHeatingData>(spaceHeatingType: SpaceHeat
 
 				state.spaceHeating[spaceHeatingType].data.push(newItem);
 				state.spaceHeating[spaceHeatingType].complete = false;
+				if (spaceHeatingType === "heatEmitters") {
+					resetRankingsForHeatingSystems(state);
+					markHeatingControlsAsInProgress(state);
+				}
 			} else {
 				const { packageProductId } = item.data;
 
@@ -130,6 +143,10 @@ function handleDuplicate<T extends SpaceHeatingData>(spaceHeatingType: SpaceHeat
 				state.spaceHeating[spaceHeatingType].data.push(newItem);
 				state.spaceHeating[spaceHeatingType].data.push(newPackagedItem);
 				state.spaceHeating[spaceHeatingType].complete = false;
+				if (spaceHeatingType === "heatEmitters") {
+					resetRankingsForHeatingSystems(state);
+					markHeatingControlsAsInProgress(state);
+				}
 			}
 		});
 	}
