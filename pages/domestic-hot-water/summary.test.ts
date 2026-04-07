@@ -506,6 +506,7 @@ describe("Domestic hot water summary", () => {
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "booster",
 			productReference: "HEAT_PUMP_SMALL",
+			maxFlowTemp: 17,
 		};
 
 		const dhwWithNewBoiler: DomesticHotWaterHeatSourceData = {
@@ -662,6 +663,7 @@ describe("Domestic hot water summary", () => {
 			"Type of heat source": "Heat pump",
 			"Type of heat pump": "Booster",
 			"Product reference": "HEAT_PUMP_SMALL",
+			"Maximum flow temperature": "17",
 		};
 
 		const expectedBoiler = {

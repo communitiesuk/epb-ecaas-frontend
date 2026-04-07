@@ -99,6 +99,7 @@ describe("Space heating summary page", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "airSource",
 				productReference: "HEAT_PUMP_SMALL",
+				maxFlowTemp: 17,
 			};
 			const store = useEcaasStore();
 			store.$patch({
@@ -117,6 +118,7 @@ describe("Space heating summary page", () => {
 				"Type of heat pump": "Air source",
 				"Product reference": "HEAT_PUMP_SMALL",
 				"Product name": "Mock product",
+				"Maximum flow temperature": "17",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
