@@ -60,7 +60,9 @@ function handleRemove(spaceHeatingType: SpaceHeatingType, index: number) {
 				const packageProductIndex = state.spaceHeating[spaceHeatingType].data
 					.findIndex(x => "id" in x.data && x.data.id === packageProductId);
 
-				state.spaceHeating[spaceHeatingType].data.splice(packageProductIndex, 1);
+				if (packageProductIndex >= 0) {
+					state.spaceHeating[spaceHeatingType].data.splice(packageProductIndex, 1);
+				}
 			});
 		}
 	}
