@@ -16,10 +16,10 @@ const pagesData = [
 	},
 	...dwellingDetailsPages,
 	...dwellingFabricPages,
-	...infiltrationAndVentilationPages,
 	...spaceHeatingPages,
 	// ...restOfDwellingPages,
 	...domesticHotWaterPages,
+	...infiltrationAndVentilationPages,
 	...pvAndBatteriesPages,
 	...coolingPages,
 	{

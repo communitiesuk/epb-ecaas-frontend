@@ -37,6 +37,7 @@ const getProductsByTechnologyType = (technologyType: TechnologyType, pageSize?: 
 			brandName: x.brandName,
 			modelName: x.modelName,
 			modelQualifier: x.modelQualifier,
+			technologyType: x.technologyType as TechnologyType,
 		})) as DisplayProduct[];
 
 	const paginatedProducts: PaginatedResult<DisplayProduct> = {
@@ -56,6 +57,7 @@ const getProductsByTechnologyGroup = (technologyGroup: TechnologyGroup) => {
 			brandName: x.brandName,
 			modelName: x.modelName,
 			modelQualifier: x.modelQualifier,
+			technologyType: x.technologyType as TechnologyType,
 		})) as DisplayProduct[];
 
 	const paginatedProducts: PaginatedResult<DisplayProduct> = {
