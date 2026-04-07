@@ -37,7 +37,7 @@ const heatSources = [
 			<div v-if="!heatSources.length"
 			>
 				<p class="govuk-error-message">No heat sources added.</p>
-				<NuxtLink :to="getUrl('heatSource')" class="govuk-link gov-radios-add-link">
+				<NuxtLink :to="getUrl('heatSourceCreate')" class="govuk-link gov-radios-add-link">
 					Click here to add a heat source
 				</NuxtLink>
 			</div>
