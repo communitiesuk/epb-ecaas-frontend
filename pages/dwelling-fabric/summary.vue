@@ -421,9 +421,11 @@ const glazedDoorSummary: SummarySection = {
 		}
 
 		const treatmentType = "treatmentType" in x ? displayCamelToSentenceCase(show(x.treatmentType)) : emptyValueRendering;
+		const treatmentControls = "treatmentControls" in x
+			? show({ "auto_motorised": "Automatic", "manual": "Manual" }[x.treatmentControls])
+			: emptyValueRendering;
 		const thermalResistivityIncrease = "thermalResistivityIncrease" in x ? dim(x.thermalResistivityIncrease, "watts per square metre kelvin") : emptyValueRendering;
 		const solarTransmittanceReduction = "solarTransmittanceReduction" in x ? show(x.solarTransmittanceReduction) : emptyValueRendering;
-
 
 		return {
 			"Name": show(x.name),
@@ -437,6 +439,7 @@ const glazedDoorSummary: SummarySection = {
 			"Opening to frame ratio": dim(x.openingToFrameRatio),
 			"Is this the front door?": displayBoolean(x.isTheFrontDoor),
 			"Curtains or blinds": x.curtainsOrBlinds ? treatmentType : undefined,
+			"Window treatment controls": x.curtainsOrBlinds ? treatmentControls : undefined,
 			"Thermal resistivity increase": x.curtainsOrBlinds ? thermalResistivityIncrease : undefined,
 			"Solar transmittance reduction": x.curtainsOrBlinds ? solarTransmittanceReduction : undefined,
 			"Does anything shade the window?": displayBoolean(x.hasShading),
@@ -511,6 +514,9 @@ const windowSummary: SummarySection = {
 		const midHeightOpenablePart4 = "midHeightOpenablePart4" in x ? dim(x.midHeightOpenablePart4, "metres") : emptyValueRendering;
 
 		const treatmentType = "treatmentType" in x ? displayCamelToSentenceCase(show(x.treatmentType)) : emptyValueRendering;
+		const treatmentControls = "treatmentControls" in x
+			? show({ "auto_motorised": "Automatic", "manual": "Manual" }[x.treatmentControls])
+			: emptyValueRendering;
 		const thermalResistivityIncrease = "thermalResistivityIncrease" in x ? dim(x.thermalResistivityIncrease, "watts per square metre kelvin") : emptyValueRendering;
 		const solarTransmittanceReduction = "solarTransmittanceReduction" in x ? show(x.solarTransmittanceReduction) : emptyValueRendering;
 
@@ -531,7 +537,8 @@ const windowSummary: SummarySection = {
 			"Mid height of the air flow path for openable part 2": numberOfOpenableParts >= 2 ? midHeightOpenablePart2 : undefined,
 			"Mid height of the air flow path for openable part 3": numberOfOpenableParts >= 3 ? midHeightOpenablePart3 : undefined,
 			"Mid height of the air flow path for openable part 4": numberOfOpenableParts == 4 ? midHeightOpenablePart4 : undefined,
-			"Type": x.curtainsOrBlinds ? treatmentType : undefined,
+			"Curtains or blinds": x.curtainsOrBlinds ? treatmentType : undefined,
+			"Window treatment controls": x.curtainsOrBlinds ? treatmentControls : undefined,
 			"Thermal resistivity increase": x.curtainsOrBlinds ? thermalResistivityIncrease : undefined,
 			"Solar transmittance reduction": x.curtainsOrBlinds ? solarTransmittanceReduction : undefined,
 			"Does anything shade the window?": displayBoolean(x.hasShading),

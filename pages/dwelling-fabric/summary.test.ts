@@ -1250,6 +1250,7 @@ describe("dwelling space doors", () => {
 									elevationalHeight: 1,
 									openingToFrameRatio: 0.2,
 									maximumOpenableArea: 1,
+									numberOpenableParts: "1",
 									midHeightOpenablePart1: 1,
 									uValue: 10,
 									isTheFrontDoor: true,
@@ -1257,10 +1258,11 @@ describe("dwelling space doors", () => {
 									heightOpenableArea: 2,
 									curtainsOrBlinds: true,
 									treatmentType: "blinds",
+									treatmentControls: "auto_motorised",
 									thermalResistivityIncrease: 1,
 									solarTransmittanceReduction: 0.1,
 									hasShading: false,
-								},
+								} satisfies ExternalGlazedDoorData,
 							}],
 						},
 					},
@@ -1280,6 +1282,7 @@ describe("dwelling space doors", () => {
 				"U-value": `10 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Is this the front door?": "Yes",
 				"Curtains or blinds": "Blinds",
+				"Window treatment controls": "Automatic",
 				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Solar transmittance reduction": "0.1",
 			};
@@ -1317,6 +1320,7 @@ describe("dwelling space doors", () => {
 				"U-value": `10 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Is this the front door?": "-",
 				"Curtains or blinds": "Blinds",
+				"Window treatment controls": "Manual",
 				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Solar transmittance reduction": "0.1",
 			};
@@ -1365,6 +1369,7 @@ describe("dwelling space doors", () => {
 				"U-value": `10 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Is this the front door?": "-",
 				"Curtains or blinds": "Blinds",
+				"Window treatment controls": "Manual",
 				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Solar transmittance reduction": "0.1",
 			};
@@ -1565,7 +1570,7 @@ describe("dwelling space windows", () => {
 			"Transmittance of solar energy": "0.1",
 			"Elevational height of building element at its base": `1 ${metre.suffix}`,
 			"Number of openable parts": "0",
-			"Type": "Blinds",
+			"Curtains or blinds": "Blinds",
 			"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 			"Solar transmittance reduction": "0.1",
 		};
