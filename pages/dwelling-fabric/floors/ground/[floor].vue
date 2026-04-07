@@ -352,7 +352,7 @@ const greaterThanZero = (node: FormKitNode) => {
 					type="govInputWithUnit"
 					:unit="metre"
 					:validation-rules="{ exclusiveRangeFromMin: greaterThanZero }"
-					validation="required | exclusiveRangeFromMin:0"
+					validation="required | exclusiveRangeFromMin"
 					:validation-messages="{
 						exclusiveRangeFromMin: `Vertical edge insulation depth must be greater than 0 ${metre.name}.`,
 					}"

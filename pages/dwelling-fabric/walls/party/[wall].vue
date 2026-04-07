@@ -15,6 +15,11 @@ const wallId = wallData?.data.id ?? uuidv4();
 const index = getStoreIndex(partyWallData);
 const model: Ref<PartyWallData | undefined> = ref(wallData?.data);
 
+const greaterThanZero = (node: FormKitNode) => {
+	const value = node.value as Length;
+	return value.amount > 0;
+};
+
 const partyWallCavityTypeOptions = {
 	unfilled_unsealed: "Unfilled and unsealed",
 	unfilled_sealed: "Unfilled and sealed",
@@ -170,7 +175,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithUnit"
 			unit="square metre kelvin per watt"
 			label="Thermal resistance of the party wall cavity"
-			:validation="`required | ${ zodTypeAsFormKitValidation(thermalResistanceCavityZod) }`"
+			:validation-rules="{ exclusiveRangeFromMin: greaterThanZero }"
+			validation="required | exclusiveRangeFromMin"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
