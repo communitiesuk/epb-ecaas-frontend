@@ -234,7 +234,7 @@ const removeShading = (i: number) => {
 							type="govInputWithSuffix"
 							label="Height of obstacle"
 							:help="props.shadingSectionType === 'window'
-								? 'Height should be measured from the bottom to the top of the obstacle.'
+								? 'Height should be measured from the bottom to the top of the obstacle'
 								: undefined"
 							suffix-text="m"
 							validation="required | number | min:0"

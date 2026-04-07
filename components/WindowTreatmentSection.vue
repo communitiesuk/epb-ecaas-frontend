@@ -41,7 +41,7 @@ const windowTreatmentControlsOptions: Record<SchemaWindowTreatmentControl, "Manu
 		type="govInputWithSuffix"
 		suffix-text="W/(m²·K)"
 		label="Thermal resistivity increase"
-		help="Enter the thermal resistivity of the curtain or blind."
+		help="Enter the thermal resistivity of the curtain or blind"
 		name="thermalResistivityIncrease"
 		:validation="zodTypeAsFormKitValidation(deltaRZod)"
 	/>
