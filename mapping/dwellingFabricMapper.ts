@@ -41,7 +41,7 @@ export function mapZoneParametersData(
 ): Pick<FhsInputSchema, "HeatingControlType" | "Zone" | "GroundFloorArea"> {
 	const { dwellingSpaceZoneParameters } = state.dwellingFabric;
 	const { heatEmitters } = state.spaceHeating;
-	const spaceHeatingSystemNames = heatEmitters.map(he => he.name);
+	const spaceHeatingSystemNames = heatEmitters.toSorted((a, b) => (a.heatingRank ?? 0) - (b.heatingRank ?? 0)).map(he => he.name);
 
 	return {
 		HeatingControlType: "SeparateTempControl", // sending this as a default value while we are only sending one zone
