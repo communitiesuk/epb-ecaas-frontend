@@ -22,7 +22,7 @@ defineProps<{
 		id="selectElectricStorageHeater"
 		type="govPcdbProduct"
 		label="Select product"
-		name="selectElectricStorageHeater"
+		name="productReference"
 		validation="required"
 		help="Select the electric storage heater type from the PCDB using the button below."
 		:selected-product-reference="model.productReference"
