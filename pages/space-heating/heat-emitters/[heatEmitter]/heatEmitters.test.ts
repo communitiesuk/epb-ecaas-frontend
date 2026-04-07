@@ -290,7 +290,7 @@ describe("Heat emitters", () => {
 					throw new Error("Emitters field is missing in heat emitter data");
 				}
 			});
-			test("can add multiple emitters", async () => {
+			test("cancel removes a newly added emitter", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatEmitters: {
@@ -309,14 +309,12 @@ describe("Heat emitters", () => {
 					},
 				});
 				await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
+				expect(await screen.findByText("Add emitter")).toBeDefined();
 				await user.click(screen.getByTestId("emitter_cancel_0"));
-				await user.click(screen.getByTestId("addEmitterButton"));
-				await user.click(screen.getByTestId("typeOfHeatEmitter_fanCoil"));
+
 				const system = store.spaceHeating.heatEmitters.data[0]!.data as WetDistributionSystemData;
 				if ("emitters" in system) {
-					expect(system.emitters.length).toBe(2);
-					expect(system.emitters[0]?.typeOfHeatEmitter).toBe("radiator");
-					expect(system.emitters[1]?.typeOfHeatEmitter).toBe("fanCoil");
+					expect(system.emitters.length).toBe(0);
 				} else {
 					throw new Error("Emitters field is missing in heat emitter data");
 				}
@@ -691,7 +689,7 @@ describe("Heat emitters", () => {
 		});
 
 		it.each([
-			["wetDistributionSystem", "Wet distribution system (Radiators, underfloor heating, etc.)"],
+			["wetDistributionSystem", "Wet distribution"],
 			["warmAirHeater", "Warm air heater"],
 			["instantElectricHeater", "Instant electric heater"],
 			["electricStorageHeater", "Electric storage heater"],

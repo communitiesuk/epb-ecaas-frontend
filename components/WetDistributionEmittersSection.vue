@@ -39,6 +39,7 @@ const emitters = computed(() => {
 
 const formModel = ref<Record<string, unknown>>({});
 const editIndex = ref<number | null>(null);
+const addingEmitterIndex = ref<number | null>(null);
 const isEditing = computed(() => editIndex.value !== null);
 const showAddForm = ref(false);
 const emitterCards = ref<HTMLElement[]>([]);
@@ -127,6 +128,7 @@ const addEmitter = (type: unknown) => {
 
 	showAddForm.value = false;
 	const newIndex = emitters.value.length - 1;
+	addingEmitterIndex.value = newIndex;
 	editIndex.value = newIndex;
 	formModel.value = { ...emitters.value[newIndex]! };
 	clearEmitterIndexFromUrl();
@@ -144,9 +146,13 @@ const removeEmitter = (emitterIndex: number) => {
 		editIndex.value = null;
 		formModel.value = {};
 	}
+	if (addingEmitterIndex.value === emitterIndex) {
+		addingEmitterIndex.value = null;
+	}
 };
 
 const startEdit = (emitterIndex: number) => {
+	addingEmitterIndex.value = null;
 	editIndex.value = emitterIndex;
 	formModel.value = { ...emitters.value[emitterIndex]! };
 	clearEmitterIndexFromUrl();
@@ -159,9 +165,17 @@ const startEdit = (emitterIndex: number) => {
 };
 
 const cancelEdit = () => {
+	clearEmitterIndexFromUrl();
+	if (editIndex.value !== null && addingEmitterIndex.value === editIndex.value) {
+		removeEmitter(editIndex.value);
+		return;
+	}
+	addingEmitterIndex.value = null;
 	editIndex.value = null;
 	formModel.value = {};
 };
+
+const isAddEmitterCard = (emitterIndex: number) => addingEmitterIndex.value === emitterIndex;
 
 watch(
 	() => formModel.value.typeOfHeatEmitter,
@@ -193,6 +207,7 @@ watch(
 );
 
 const saveEmitter = () => {
+	addingEmitterIndex.value = null;
 	editIndex.value = null;
 	formModel.value = {};
 	clearEmitterIndexFromUrl();
@@ -210,7 +225,7 @@ const saveEmitter = () => {
 			class="govuk-summary-card"
 		>
 			<div class="govuk-summary-card__title-wrapper">
-				<h2 v-if="editIndex === i" class="govuk-summary-card__title">Edit emitter</h2>
+				<h2 v-if="editIndex === i" class="govuk-summary-card__title">{{ isAddEmitterCard(i) ? "Add emitter" : "Edit emitter" }}</h2>
 				<h2 v-else class="govuk-summary-card__title">{{ emitter.name }}</h2>
 				<ul v-if="editIndex !== i" class="govuk-summary-card__actions">
 					<li class="govuk-summary-card__action">
@@ -246,13 +261,7 @@ const saveEmitter = () => {
 					:incomplete-message="false"
 					@submit="saveEmitter"
 				>
-					<FormKit
-						:id="`emitterName_${i}`"
-						type="govInputText"
-						label="Name"
-						name="name"
-						validation="required"
-					/>
+					
 					<FormKit
 						:id="`typeOfHeatEmitter_${i}`"
 						type="govRadios"
@@ -260,6 +269,13 @@ const saveEmitter = () => {
 						:help="useUnderfloorHeating ? undefined : 'Please note, underfloor heating is not currently available, but will be in future releases.'"
 						:options="heatEmitterTypes"
 						name="typeOfHeatEmitter"
+						validation="required"
+					/>
+					<FormKit
+						:id="`emitterName_${i}`"
+						type="govInputText"
+						label="Name"
+						name="name"
 						validation="required"
 					/>
 					<template v-if="formModel.typeOfHeatEmitter === 'radiator'">

@@ -241,9 +241,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-testid="heatEmitterRanking"
 			class="govuk-form-group">
 			<fieldset class="govuk-fieldset">
-				<legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-					<h2 class="govuk-fieldset__heading">Rank the heating systems</h2>
-				</legend>
 				<FormKit
 					v-for="rankIndex in visibleHeatEmitterRanks"
 					:id="getHeatEmitterRankFieldId(rankIndex)"
