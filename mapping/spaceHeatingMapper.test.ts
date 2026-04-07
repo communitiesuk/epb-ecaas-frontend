@@ -12,6 +12,7 @@ import type { SchemaHeatSourceWetHeatPump, SchemaWetDistribution } from "../sche
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import type { HeatEmittingData, WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
 import type { SchemaBoilerWithProductReference } from "~/schema/aliases";
+import { celsius } from "~/utils/units/temperature";
 
 
 describe("Space heating - heat sources", () => {
@@ -176,7 +177,7 @@ describe("Space heating - heat sources", () => {
 			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "heatBatteryPcm",
 			productReference: "1234",
-			maxFlowTemp: 32,
+			maxFlowTemp: unitValue(32, celsius),
 			numberOfUnits: 1,
 			energySupply: "electricity",
 		};
@@ -288,13 +289,13 @@ describe("Space heating - emitters", () => {
 		typeOfHeatPump: "airSource",
 		id: "hp1",
 		name: "Heat Pump 1",
-		maxFlowTemp: 14,
+		maxFlowTemp: unitValue(14, celsius),
 	};
 	const heatBattery: Partial<HeatSourceData> = {
 		typeOfHeatBattery: "heatBatteryPcm",
 		id: "hb1",
 		name: "Heat Battery 1",
-		maxFlowTemp: 30,
+		maxFlowTemp: unitValue(30, celsius),
 	};
 
 	const warmAirHeater: HeatEmittingData = {
@@ -437,7 +438,7 @@ describe("Space heating - emitters", () => {
 					temp_diff_emit_dsgn: wetDistributionSystemEcoDesign.designTempDiffAcrossEmitters,
 					HeatSource: {
 						name: heatPump.name,
-						temp_flow_limit_upper: heatPump.maxFlowTemp,
+						temp_flow_limit_upper: heatPump.maxFlowTemp?.amount,
 					},
 					ecodesign_controller: {
 						ecodesign_control_class: ecoDesignControllerClass,
@@ -496,7 +497,7 @@ describe("Space heating - emitters", () => {
 					temp_diff_emit_dsgn: wetDistributionSystemNoEcoDesign.designTempDiffAcrossEmitters,
 					HeatSource: {
 						name: heatPump.name,
-						temp_flow_limit_upper: heatPump.maxFlowTemp,
+						temp_flow_limit_upper: heatPump.maxFlowTemp?.amount,
 					},
 					ecodesign_controller: {
 						ecodesign_control_class: ecoDesignControllerClass,
@@ -552,7 +553,7 @@ describe("Space heating - emitters", () => {
 					temp_diff_emit_dsgn: wetDistributionSystemVariableFlow.designTempDiffAcrossEmitters,
 					HeatSource: {
 						name: heatPump.name,
-						temp_flow_limit_upper: heatPump.maxFlowTemp,
+						temp_flow_limit_upper: heatPump.maxFlowTemp?.amount,
 					},
 					ecodesign_controller: {
 						ecodesign_control_class: +wetDistributionSystemVariableFlow.ecoDesignControllerClass,
@@ -651,7 +652,7 @@ describe("Space heating - emitters", () => {
 					temp_diff_emit_dsgn: wetDistributionSystemNoEcoDesign.designTempDiffAcrossEmitters,
 					HeatSource: {
 						name: "Heat Pump 2",
-						temp_flow_limit_upper: heatPump.maxFlowTemp,
+						temp_flow_limit_upper: heatPump.maxFlowTemp?.amount,
 					},
 					ecodesign_controller: {
 						ecodesign_control_class: +wetDistributionSystemNoEcoDesign.ecoDesignControllerClass,

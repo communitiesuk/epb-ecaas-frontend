@@ -903,7 +903,7 @@ export type PcdbProduct = z.infer<typeof pcdbProduct>;
 const heatPumpBase = pcdbPackagedProduct.extend({
 	typeOfHeatSource: z.literal("heatPump"),
 	typeOfHeatPump,
-	maxFlowTemp: z.number().optional(),
+	maxFlowTemp: zodUnit("temperature").optional(),
 });
 
 const boilerBase = hasPcdbPackagedProduct.extend({
@@ -919,7 +919,7 @@ export type PcdbPackagedProduct = z.infer<typeof pcdbPackagedProduct>;
 const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatBattery"),
 	typeOfHeatBattery,
-	maxFlowTemp: z.number().optional(),
+	maxFlowTemp: zodUnit("temperature").optional(),
 	numberOfUnits: z.number(),
 	energySupply: fuelTypeZod.optional(),
 });
@@ -1218,7 +1218,7 @@ const hotWaterHeatSourceExtension = {
 	heatSourceId: z.literal("NEW_HEAT_SOURCE"),
 	coldWaterSource: z.enum(["mainsWater", "headerTank"]),
 	isExistingHeatSource: z.literal(false),
-	maxFlowTemp: z.number().optional(),
+	maxFlowTemp: zodUnit("temperature").optional(),
 };
 
 const baseImmersionHeater = namedWithId.extend({

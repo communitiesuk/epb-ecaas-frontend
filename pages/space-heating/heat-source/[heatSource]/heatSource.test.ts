@@ -5,6 +5,7 @@ import HeatSourceForm from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
 import type { BoilerProduct, DisplayProduct, HybridHeatPumpProduct } from "~/pcdb/pcdb.types";
 import { kilowatt } from "~/utils/units/power";
+import { celsius } from "~/utils/units/temperature";
 
 vi.mock("uuid");
 
@@ -64,6 +65,7 @@ describe("heatSource", () => {
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "airSource",
 			productReference: "HEATPUMP-SMALL",
+			maxFlowTemp: unitValue(7, celsius),
 		};
 
 		const heatPump2: HeatSourceData = {
@@ -84,6 +86,7 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
 			expect(screen.getByTestId("name")).toBeDefined();
 			expect(screen.queryByTestId("selectHeatPump")).toBeDefined();
+			expect(screen.getByTestId("maxFlowTemp")).toBeDefined();
 		});
 
 		test("the 'Select a product' element navigates user to the products page", async () => {
@@ -133,6 +136,7 @@ describe("heatSource", () => {
 
 			expect((await screen.findByTestId("typeOfHeatSource_heatPump")).hasAttribute("checked"));
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat pump 1");
+			expect((await screen.findByTestId<HTMLInputElement>("maxFlowTemp")).value).toBe("7");
 		});
 
 		test("heat pump is updated when data with id exists in store", async () => {
@@ -782,7 +786,7 @@ describe("heatSource", () => {
 			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "heatBatteryPcm",
 			productReference: "HEAT_BATTERY_SMALL",
-			maxFlowTemp: 32,
+			maxFlowTemp: unitValue(32, celsius),
 			numberOfUnits: 1,
 			energySupply: "electricity",
 		};
@@ -793,7 +797,7 @@ describe("heatSource", () => {
 			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "heatBatteryDryCore",
 			productReference: "HEAT_BATTERY_MEDIUM",
-			maxFlowTemp: 32,
+			maxFlowTemp: unitValue(32, celsius),
 			numberOfUnits: 2,
 			energySupply: "LPG_bulk",
 		};
@@ -1271,7 +1275,7 @@ describe("heatSource", () => {
 				typeOfHeatSource: "heatBattery",
 				typeOfHeatBattery: "heatBatteryPcm",
 				productReference: "HEATBATTERY-SMALL",
-				maxFlowTemp: 32,
+				maxFlowTemp: unitValue(32, celsius),
 				numberOfUnits: 1,
 			};
 

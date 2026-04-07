@@ -115,7 +115,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 				.find(hs => hs.id === referencedHeatSource.heatSourceId)
 			: referencedHeatSource;
 
-		const temp_flow_limit_upper = heatSource && "maxFlowTemp" in heatSource ? heatSource.maxFlowTemp : undefined;
+		const temp_flow_limit_upper = heatSource && "maxFlowTemp" in heatSource ? heatSource.maxFlowTemp?.amount : undefined;
 
 		const heatSourceName = referencedHeatSource.isExistingHeatSource
 			? state.spaceHeating.heatSource

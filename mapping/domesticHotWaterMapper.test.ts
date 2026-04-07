@@ -1,8 +1,9 @@
 import type { BathData, DomesticHotWaterHeatSourceData, EcaasForm } from "~/stores/ecaasStore.schema";
 import { mapDomesticHotWaterData, mapHotWaterSourcesData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
-import { litre } from "../utils/units/volume";
+import { litre } from "~/utils/units/volume";
 import type { SchemaMixerShower } from "~/schema/api-schema.types";
+import { celsius } from "~/utils/units/temperature";
 
 const baseForm = {
 	data: [],
@@ -39,7 +40,7 @@ describe("domestic hot water mapper", () => {
 			productReference: "HB-12345",
 			typeOfHeatBattery: "heatBatteryDryCore",
 			numberOfUnits: 1,
-			maxFlowTemp: 32,
+			maxFlowTemp: unitValue(32, celsius),
 		},
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
@@ -180,7 +181,7 @@ describe("domestic hot water mapper", () => {
 						complete: true,
 					},
 					heatSources: {
-						data: [{ data: { ...heatPump.data, maxFlowTemp: 4 }, complete: true }],
+						data: [{ data: { ...heatPump.data, maxFlowTemp: unitValue(4, celsius) }, complete: true }],
 						complete: true,
 					},
 					pipework: {

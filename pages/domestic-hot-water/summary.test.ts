@@ -8,6 +8,7 @@ import { kilowatt, kilowattHour } from "~/utils/units/power";
 import { metresSquare } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
+import { celsius } from "~/utils/units/temperature";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -509,7 +510,7 @@ describe("Domestic hot water summary", () => {
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "booster",
 			productReference: "HEAT_PUMP_SMALL",
-			maxFlowTemp: 17,
+			maxFlowTemp: unitValue(17, celsius),
 		};
 
 		const dhwWithNewBoiler: DomesticHotWaterHeatSourceData = {
@@ -534,7 +535,7 @@ describe("Domestic hot water summary", () => {
 			typeOfHeatSource: "heatBattery",
 			typeOfHeatBattery: "heatBatteryPcm",
 			productReference: "HEAT_BATTERY_SMALL",
-			maxFlowTemp: 32,
+			maxFlowTemp: unitValue(32, celsius),
 			numberOfUnits: 1,
 			energySupply: "electricity",
 		};
@@ -666,7 +667,7 @@ describe("Domestic hot water summary", () => {
 			"Type of heat source": "Heat pump",
 			"Type of heat pump": "Booster",
 			"Product reference": "HEAT_PUMP_SMALL",
-			"Maximum flow temperature": "17",
+			"Maximum flow temperature": `17 ${celsius.suffix}`,
 		};
 
 		const expectedBoiler = {
@@ -685,7 +686,7 @@ describe("Domestic hot water summary", () => {
 			"Type of heat battery": "Heat battery pcm",
 			"Product reference": "HEAT_BATTERY_SMALL",
 			"Number of units": "1",
-			"Maximum flow temperature": "32",
+			"Maximum flow temperature": `32 ${celsius.suffix}`,
 			"Energy supply": "Electricity",
 		};
 		const expectedHeatNetwork = {

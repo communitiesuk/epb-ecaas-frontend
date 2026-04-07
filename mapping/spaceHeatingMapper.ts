@@ -208,7 +208,7 @@ export function getHeatSourceTempFlowLimitUpper(state: ResolvedState, emitter: H
 			return false;
 		},
 	);
-	const maxFlowTemp = heatSource && "maxFlowTemp" in heatSource ? heatSource.maxFlowTemp : undefined;
+	const maxFlowTemp = heatSource && "maxFlowTemp" in heatSource ? heatSource.maxFlowTemp?.amount : undefined;
 	return maxFlowTemp;
 }
 

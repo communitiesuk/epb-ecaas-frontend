@@ -3,6 +3,7 @@ import { screen, within } from "@testing-library/vue";
 import SpaceHeatingSummary from "./summary.vue";
 import { degrees } from "~/utils/units/angle";
 import { kilowatt } from "~/utils/units/power";
+import { celsius } from "~/utils/units/temperature";
 
 
 type ExpectedData = { [key: string]: string };
@@ -99,7 +100,7 @@ describe("Space heating summary page", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "airSource",
 				productReference: "HEAT_PUMP_SMALL",
-				maxFlowTemp: 17,
+				maxFlowTemp: unitValue(17, celsius),
 			};
 			const store = useEcaasStore();
 			store.$patch({
@@ -118,7 +119,7 @@ describe("Space heating summary page", () => {
 				"Type of heat pump": "Air source",
 				"Product reference": "HEAT_PUMP_SMALL",
 				"Product name": "Mock product",
-				"Maximum flow temperature": "17",
+				"Maximum flow temperature": `17 ${celsius.suffix}`,
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -136,7 +137,7 @@ describe("Space heating summary page", () => {
 				typeOfHeatSource: "heatBattery",
 				typeOfHeatBattery: "heatBatteryPcm",
 				productReference: "HEAT_BATTERY_SMALL",
-				maxFlowTemp: 32,
+				maxFlowTemp: unitValue(32, celsius),
 				numberOfUnits: 1,
 				energySupply: "electricity",
 			};
@@ -157,7 +158,7 @@ describe("Space heating summary page", () => {
 				"Type of heat battery": "Heat battery pcm",
 				"Product reference": "HEAT_BATTERY_SMALL",
 				"Product name": "Mock product",
-				"Maximum flow temperature": "32",
+				"Maximum flow temperature": `32 ${celsius.suffix}`,
 				"Number of units": "1",
 				"Energy supply": "Electricity",
 			};
