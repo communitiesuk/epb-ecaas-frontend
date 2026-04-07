@@ -722,7 +722,7 @@ export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 }>;
 
 const baseMechanicalVentilationData = namedWithId.extend({
-	airFlowRate: z.union([zodUnit("flow rate"), z.number()]),
+	airFlowRate: zodUnit("flow rate"),
 	associatedItemId: z.string().trim().min(1),
 });
 

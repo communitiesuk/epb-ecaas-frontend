@@ -5,7 +5,10 @@ describe("checkMvhrHasDuctwork", () => {
 	const mechanicalVentilationData1: MechanicalVentilationData = {
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: "MVHR",
-		airFlowRate: 12,
+		airFlowRate: {
+			amount: 12,
+			unit: "litres per second",
+		},
 		mvhrLocation: "inside",
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
 		productReference: "1000",
@@ -26,7 +29,10 @@ describe("checkMvhrHasDuctwork", () => {
 	const mechanicalVentilationData2: MechanicalVentilationData = {
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: "MVHR",
-		airFlowRate: 12,
+		airFlowRate: {
+			amount: 12,
+			unit: "litres per second",
+		},
 		mvhrLocation: "inside",
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506h",
 		productReference: "1000",
@@ -48,7 +54,10 @@ describe("checkMvhrHasDuctwork", () => {
 		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 		name: "Mechanical name 3",
 		typeOfMechanicalVentilationOptions: "Decentralised continuous MEV",
-		airFlowRate: 14,
+		airFlowRate: {
+			amount: 14,
+			unit: "litres per second",
+		},
 		productReference: "1000",
 		installationType: "in_ceiling",
 		installationLocation: "other_wet_room",

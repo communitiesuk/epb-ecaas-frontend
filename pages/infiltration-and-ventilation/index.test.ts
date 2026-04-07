@@ -15,7 +15,10 @@ describe("the ventilation task page", async () => {
 		id: uuidv4(),
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: "MVHR",
-		airFlowRate: 12,
+		airFlowRate: {
+			amount: 12,
+			unit: "litres per second",
+		},
 		mvhrLocation: "inside",
 		productReference: "1000",
 		midHeightOfAirFlowPathForExhaust: 1.5,

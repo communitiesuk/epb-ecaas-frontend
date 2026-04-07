@@ -9,7 +9,10 @@ describe("nav bar with ductwork", () => {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: "MVHR",
-		airFlowRate: 12,
+		airFlowRate: {
+			amount: 12,
+			unit: "litres per second",
+		},
 		mvhrLocation: "inside",
 		productReference: "1000",
 		midHeightOfAirFlowPathForExhaust: 1.5,
