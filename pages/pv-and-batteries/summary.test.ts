@@ -88,7 +88,7 @@ describe("PV and electric batteries summary page", () => {
 				"Inverter peak power DC": `3.5 ${kilowatt.suffix}`,
 				"Location of inverter": "Unheated space",
 				"Inverter type": "Optimised inverter",
-				"Priority for generated electricity": "Diverter",
+				"Which system should receive surplus energy from this energy supply?": "Diverter",
 				"Does anything shade the PV array?": "No",
 			};
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -119,7 +119,7 @@ describe("PV and electric batteries summary page", () => {
 				"Inverter peak power DC": `3.5 ${kilowatt.suffix}`,
 				"Location of inverter": "Unheated space",
 				"Inverter type": "Optimised inverter",
-				"Priority for generated electricity": "Diverter",
+				"Which system should receive surplus energy from this energy supply?": "Diverter",
 				"Does anything shade the PV array?": "Yes",
 			};
 			const shading1Expected = {
