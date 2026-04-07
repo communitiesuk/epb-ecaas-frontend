@@ -38,13 +38,14 @@ const suffixName = (name: string, suffix: string) => `${name} (${suffix})`;
 
 export function mapZoneParametersData(
 	state: ResolvedState,
-): Pick<FhsInputSchema, "HeatingControlType" | "Zone"> {
+): Pick<FhsInputSchema, "HeatingControlType" | "Zone" | "GroundFloorArea"> {
 	const { dwellingSpaceZoneParameters } = state.dwellingFabric;
 	const { heatEmitters } = state.spaceHeating;
 	const spaceHeatingSystemNames = heatEmitters.map(he => he.name);
 
 	return {
 		HeatingControlType: "SeparateTempControl", // sending this as a default value while we are only sending one zone
+		GroundFloorArea: dwellingSpaceZoneParameters.groundFloorArea,
 		Zone: {
 			[defaultZoneName]: {
 				...(spaceHeatingSystemNames.length ? { SpaceHeatSystem: spaceHeatingSystemNames } : {}),
@@ -77,7 +78,7 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zon
 	} as Pick<FhsInputSchema, "HeatingControlType" | "Zone">;
 }
 
-export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "GroundFloorArea" | "Zone"> {
+export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor, dwellingSpaceFloorAboveUnheatedBasement, dwellingSpaceFloorOfHeatedBasement } = state.dwellingFabric.dwellingSpaceFloors;
 	const floorSuffix = "floor";
 
@@ -319,7 +320,6 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 	}) || [];
 
 	return {
-		GroundFloorArea: dwellingSpaceGroundFloor.reduce((sum, floor) => sum + floor.surfaceArea, 0),
 		Zone: {
 			[defaultZoneName]: {
 				BuildingElement: Object.assign(
@@ -332,7 +332,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				),
 			} as Partial<SchemaZoneInput>,
 		},
-	} as Pick<FhsInputSchema, "GroundFloorArea" | "Zone">;
+	} as Pick<FhsInputSchema, "Zone">;
 }
 
 export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {

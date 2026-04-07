@@ -678,7 +678,7 @@ const _spaceHeatControlSystemData = named;
 const dwellingSpaceZoneParameterDataZod = z.object({
 	livingZoneArea: z.number().min(0).max(10000),
 	restOfDwellingArea: z.number().min(0).max(10000),
-	groundFloorArea: z.number().min(0).max(10000),
+	groundFloorArea: z.number().min(0),
 	volume: z.number().min(0),
 });
 

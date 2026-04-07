@@ -654,7 +654,7 @@ const expectedFlatInput: FhsInputSchema = {
 			"type": "WarmAir",
 		},
 	},
-	GroundFloorArea: 38,
+	GroundFloorArea: 60,
 	HeatSourceWet: {
 		"Heat pump 1": {
 			EnergySupply: defaultElectricityEnergySupplyName,

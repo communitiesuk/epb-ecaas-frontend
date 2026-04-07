@@ -286,7 +286,6 @@ describe("dwelling fabric mapper", () => {
 			},
 		});
 
-		const groundFloorsTotalArea = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.length * groundFloor.surfaceArea;
 		const floorSuffix = " (floor)";
 
 		// Act
@@ -305,8 +304,6 @@ describe("dwelling fabric mapper", () => {
 		const exposedFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[exposedFloor.name + floorSuffix] as BuildingElementOpaque;
 		const floorAboveUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveUnheatedBasement.name + floorSuffix] as BuildingElementGroundForSchema;
 		const floorAboveHeatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveHeatedBasement.name + floorSuffix] as BuildingElementGroundForSchema;
-
-		expect(fhsInputData.GroundFloorArea).toBe(groundFloorsTotalArea);
 
 		const expectedGroundFloor: BuildingElementGroundForSchema = {
 			type: "BuildingElementGround",

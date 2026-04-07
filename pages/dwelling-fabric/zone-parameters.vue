@@ -91,7 +91,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Footprint area"
 			help="Enter the total footprint of the dwelling"
 			name="groundFloorArea"
-			validation="required | number | min:0 | max:10000"
+			validation="required | number | min:0"
 			data-field="Zone.groundfloor_area"
 		/>
 		<FormKit
