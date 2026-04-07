@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { OnSiteGenerationVentilationStrategy, SchemaInverterType } from "~/schema/aliases";
 import { getUrl, uniqueName } from "#imports";
+import { peakPowerPvZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "PV array";
 const store = useEcaasStore();
@@ -113,7 +115,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				type="govInputWithSuffix"
 				label="Peak power"
 				name="peakPower"
-				validation="required | number | min:0.001 | max: 100"
+				:validation="zodTypeAsFormKitValidation(peakPowerPvZod)"
 				suffix-text="kWp"
 			>
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>

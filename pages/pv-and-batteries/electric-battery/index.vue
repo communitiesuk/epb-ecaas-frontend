@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { SchemaBatteryLocation } from "~/schema/aliases";
+import { capacityElectricBatteryZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import { getUrl } from "~/utils/page";
 
 const title = "Electric battery";
@@ -101,7 +103,7 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 			label="Capacity"
 			help="Enter the maximum capacity of the battery"
 			name="capacity"
-			validation="required | number | min:0 | max:50"
+			:validation="zodTypeAsFormKitValidation(capacityElectricBatteryZod)"
 			suffix-text="kWh"
 		/>
 		<FormKit

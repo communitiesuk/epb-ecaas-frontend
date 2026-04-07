@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { dwellingPartAreaZod, zoneVolumeZod, dwellingGroundFloorAreaZod } from "~/stores/ecaasStore.schema";
 
 const { autoSaveForm } = useForm();
 const store = useEcaasStore();
@@ -71,7 +73,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Floor area of the living zone"
 			help="The living zone includes all rooms in the thermal envelope apart from bedrooms and any wet or utility rooms"
 			name="livingZoneArea"
-			validation="required | number | min:0 | max:10000"
+			:validation="zodTypeAsFormKitValidation(dwellingPartAreaZod)"
 			data-field="Zone.livingzone_area"
 		/>
 		<FormKit
@@ -81,7 +83,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Floor area of the rest of dwelling"
 			help="This is the total conditioned floor area minus the area of the living zone"
 			name="restOfDwellingArea"
-			validation="required | number | min:0 | max:10000"
+			:validation="zodTypeAsFormKitValidation(dwellingPartAreaZod)"
 			data-field="Zone.restofdwelling_area"
 		/>
 		<FormKit
@@ -91,7 +93,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Footprint area"
 			help="Enter the total footprint of the dwelling"
 			name="groundFloorArea"
-			validation="required | number | min:0"
+			:validation="zodTypeAsFormKitValidation(dwellingGroundFloorAreaZod)"
 			data-field="Zone.groundfloor_area"
 		/>
 		<FormKit
@@ -101,7 +103,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Volume"
 			name="volume"
 			help="Enter the volume of the whole thermal envelope of the dwelling, including internal walls and floors. It should be measured up to the loft insulation."
-			validation="required | number | min:0 | max:50000"
+			:validation="zodTypeAsFormKitValidation(zoneVolumeZod)"
 			data-field="Zone.volume"
 		/>
 		<GovLLMWarning />

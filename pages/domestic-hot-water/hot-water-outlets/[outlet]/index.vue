@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { HotWaterOutletsData } from "~/stores/ecaasStore.schema";
+import { bathSizeZod, otherFlowRateZod, ratedPowerShowerZod, showerFlowRateZod, type HotWaterOutletsData } from "~/stores/ecaasStore.schema";
 import { getUrl, hotWaterOutletTypes, wwhrsTypes } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import { getHotWaterOutletDefaultName } from "~/utils/getHotWaterOutletDefaultName";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Hot water outlets";
 const store = useEcaasStore();
@@ -233,7 +234,7 @@ const heatSourceOptions = new Map(
 			label="Flow rate"
 			name="flowRate"
 			suffix-text="litres per second"
-			validation="required|number|min:8|max:15"
+			:validation="zodTypeAsFormKitValidation(model.typeOfHotWaterOutlet === 'mixedShower' ? showerFlowRateZod : otherFlowRateZod)"
 		/>
 		<FormKit
 			v-if="model.typeOfHotWaterOutlet === 'electricShower'"
@@ -242,7 +243,7 @@ const heatSourceOptions = new Map(
 			label="Rated power"
 			name="ratedPower"
 			suffix-text="kW"
-			validation="required|number|min:0|max:30"
+			:validation="zodTypeAsFormKitValidation(ratedPowerShowerZod)"
 		/>
 		<FormKit
 			v-if="model.typeOfHotWaterOutlet === 'bath'"
@@ -251,7 +252,7 @@ const heatSourceOptions = new Map(
 			label="Size"
 			name="size"
 			suffix-text="litres"
-			validation="required|number|min:0|max:500"
+			:validation="zodTypeAsFormKitValidation(bathSizeZod)"
 			data-field="HotWaterDemand.Bath.*.size"
 		/>
 		<FormKit

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
 import type { SchemaWaterPipeContentsType } from "~/schema/aliases";
+import { tankPrimaryPipeworkLengthZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const title = "Primary pipework for hot water";
@@ -147,7 +149,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Length"
 			help="Enter the length of the pipework between the cylinder and the heat source. Typically 5-20m for a small apartment and 20-50m for a larger house"
 			name="length"
-			validation="required | number | min:0 | max:200"
+			:validation="zodTypeAsFormKitValidation(tankPrimaryPipeworkLengthZod)"
 			suffix-text="m"
 			data-field="HotWaterSource['hw cylinder'].pipework.*.length" />
 		<FormKit
