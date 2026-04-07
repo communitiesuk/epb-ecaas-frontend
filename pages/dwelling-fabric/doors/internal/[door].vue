@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
+import { surfaceAreaAdjacentSpaceZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Internal door";
 const store = useEcaasStore();
@@ -128,7 +130,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Net surface area of element"
 				help="Enter the area of the hole in the wall for this door and its frame"
 				name="surfaceArea"
-				validation="required | number | min:0 | max:10000"
+				:validation="zodTypeAsFormKitValidation(surfaceAreaAdjacentSpaceZod)"
 				suffix-text="m²"
 				data-field="Zone.BuildingElement.*.area" />
 			<FieldsUValue v-if="model.typeOfInternalDoor === 'unheatedSpace'" help="Enter the U-value of the full thickness of the door build up" />

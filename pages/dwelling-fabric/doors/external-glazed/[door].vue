@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { getUrl, standardPitchOptions, uniqueName, type ExternalGlazedDoorData } from "#imports";
-import { isFlatRoofItem } from "../../../../utils/isFlatRoofItem";
+import { deltaRZod, fraction, gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { isFlatRoofItem } from "~/utils/isFlatRoofItem";
 import type { SchemaWindowTreatmentType } from "~/schema/aliases";
 
 const title = "External glazed door";
@@ -235,7 +237,7 @@ const tagHasValidPitch = computed(() => {
 			label="Height"
 			help="Enter the height of the building element"
 			name="height"
-			validation="required | number | min:0.001 | max:50"
+			:validation="zodTypeAsFormKitValidation(heightTransparentZod)"
 			data-field="Zone.BuildingElement.*.height"
 		/>
 		<FormKit
@@ -245,7 +247,7 @@ const tagHasValidPitch = computed(() => {
 			label="Width"
 			help="Enter the width of the building element"
 			name="width"
-			validation="required | number | min:0.001 | max:50"
+			:validation="zodTypeAsFormKitValidation(widthTransparentZod)"
 			data-field="Zone.BuildingElement.*.width"
 		/>
 		<FieldsElevationalHeight />
@@ -286,7 +288,7 @@ const tagHasValidPitch = computed(() => {
 			label="Transmittance of solar energy "
 			help="Enter the total solar energy transmittance or G value, or the transparent part of the window. It should be a decimal between 0 and 1."
 			name="solarTransmittance"
-			validation="required | number | min:0.01 | max:1"
+			:validation="zodTypeAsFormKitValidation(gValueZod)"
 			data-field="Zone.BuildingElement.*.g_value"
 		/>
 		<FormKit
@@ -319,7 +321,7 @@ const tagHasValidPitch = computed(() => {
 			label="Maximum openable area of door"
 			help="Enter the total area of the gap created when the door is fully open"
 			name="maximumOpenableArea"
-			validation="required | number | min:0.01 | max:10000"
+			:validation="zodTypeAsFormKitValidation(maxWindowOpenAreaZod)"
 			data-field="Zone.BuildingElement.*.max_window_open_area"
 		/>
 		<template v-if="!!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
@@ -330,7 +332,7 @@ const tagHasValidPitch = computed(() => {
 				label="Mid height of the air flow path for openable part 1 "
 				help="Enter the height from the ground to the midpoint of the openable section of the window"
 				name="midHeightOpenablePart1"
-				validation="required | number | min:0 | max:100"
+				:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 			/>
 			<template v-if="model.numberOpenableParts !== '1'">
 				<FormKit
@@ -340,7 +342,7 @@ const tagHasValidPitch = computed(() => {
 					label="Mid height of the air flow path for openable part 2 "
 					help="Enter the height from the ground to the midpoint of the openable section of the window"
 					name="midHeightOpenablePart2"
-					validation="required | number | min:0 | max:100"
+					:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 				/>
 				<template v-if="model.numberOpenableParts !== '2'">
 					<FormKit
@@ -350,7 +352,7 @@ const tagHasValidPitch = computed(() => {
 						label="Mid height of the air flow path for openable part 3 "
 						help="Enter the height from the ground to the midpoint of the openable section of the window"
 						name="midHeightOpenablePart3"
-						validation="required | number | min:0 | max:100"
+						:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 					/>
 					<template v-if="model.numberOpenableParts !== '3'">
 						<FormKit
@@ -360,7 +362,7 @@ const tagHasValidPitch = computed(() => {
 							label="Mid height of the air flow path for openable part 4 "
 							help="Enter the height from the ground to the midpoint of the openable section of the window"
 							name="midHeightOpenablePart4"
-							validation="required | number | min:0 | max:100"
+							:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 						/>
 					</template>
 				</template>
@@ -424,7 +426,7 @@ const tagHasValidPitch = computed(() => {
 				label="Thermal resistivity increase"
 				help="Enter the additional thermal resistivity applied to window when the curtain or blind is closed"
 				name="thermalResistivityIncrease"
-				validation="required | number | min:0 | max:100"
+				:validation="zodTypeAsFormKitValidation(deltaRZod)"
 			/>
 			<FormKit
 				id="solarTransmittanceReduction"
@@ -432,7 +434,7 @@ const tagHasValidPitch = computed(() => {
 				label="Solar transmittance reduction"
 				help="Enter the proportion of solar energy allowed through the window which is allowed into the zone when curtain or blind is closed. This should be a decimal between 0 and 1."
 				name="solarTransmittanceReduction"
-				validation="required | number | min:0 | max:1"
+				:validation="zodTypeAsFormKitValidation(fraction)"
 			/>
 		</template>
 		<GovLLMWarning />

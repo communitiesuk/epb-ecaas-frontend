@@ -9,7 +9,7 @@ import { zodUnit } from "~/utils/units/zod";
 import { arealHeatCapacityZod, batteryLocationZod, boilerLocationZod, colourZod, ductShapeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
 
-const fraction = z.number().min(0).max(1);
+export const fraction = z.number().min(0).max(1);
 const named = z.object({
 	name: z.string().trim().min(1),
 });
@@ -456,9 +456,9 @@ const externalUnglazedDoorDataZod = named.extend({
 	pitchOption: standardPitchOption.optional(),
 	pitch: z.number().min(0).max(180).optional(),
 	orientation: z.number().min(0).lt(360).optional(),
-	height: z.number().min(0.001).max(50),
-	width: z.number().min(0.001).max(50),
-	elevationalHeight: z.number().min(0).max(500),
+	height: heightOpaqueZod,
+	width: widthOpaqueZod,
+	elevationalHeight: baseHeightOpaqueZod,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	colour: colourZod,
@@ -467,21 +467,29 @@ const externalUnglazedDoorDataZod = named.extend({
 
 export type ExternalUnglazedDoorData = z.infer<typeof externalUnglazedDoorDataZod>;
 
+export const heightTransparentZod = z.number().min(0.001).max(50);
+export const widthTransparentZod = z.number().min(0.001).max(100);
+export const baseHeightTransparentZod = z.number().min(0).max(500);
+export const gValueZod = fraction;
+export const maxWindowOpenAreaZod = z.number().min(0).max(100);
+export const freeAreaHeightZod = z.number().min(0).max(100);
+export const midHeightAirFlowPathZod = z.number().min(0).max(100);
+
 const baseExternalGlazedDoorDataZod = named.extend({
 	isTheFrontDoor: z.boolean().optional(),
 	associatedItemId: z.guid().optional(),
 	pitchOption: standardPitchOption.optional(),
 	pitch: z.number().min(0).max(180).optional(),
 	orientation: z.number().min(0).lt(360).optional(),
-	height: z.number().min(0.001).max(50),
-	width: z.number().min(0.001).max(50),
+	height: heightTransparentZod,
+	width: widthTransparentZod,
 	uValue,
 	securityRisk: z.boolean(),
-	solarTransmittance: z.number().min(0.01).max(1),
-	elevationalHeight: z.number().min(0).max(500),
+	solarTransmittance: gValueZod,
+	elevationalHeight: baseHeightTransparentZod,
 	openingToFrameRatio: fraction,
-	maximumOpenableArea: z.number().min(0.01).max(10000),
-	heightOpenableArea: z.number().min(0.001).max(50),
+	maximumOpenableArea: maxWindowOpenAreaZod,
+	heightOpenableArea: freeAreaHeightZod,
 });
 
 const openablePartsFields = {
@@ -492,32 +500,34 @@ const openablePartsFields = {
 		}),
 		z.object({
 			numberOpenableParts: z.literal("1"),
-			maximumOpenableArea: z.number().min(0.01).max(10000),
-			midHeightOpenablePart1: z.number().min(0).max(100),
+			maximumOpenableArea: maxWindowOpenAreaZod,
+			midHeightOpenablePart1: midHeightAirFlowPathZod,
 		}),
 		z.object({
 			numberOpenableParts: z.literal("2"),
-			maximumOpenableArea: z.number().min(0.01).max(10000),
-			midHeightOpenablePart1: z.number().min(0).max(100),
-			midHeightOpenablePart2: z.number().min(0).max(100),
+			maximumOpenableArea: maxWindowOpenAreaZod,
+			midHeightOpenablePart1: midHeightAirFlowPathZod,
+			midHeightOpenablePart2: midHeightAirFlowPathZod,
 		}),
 		z.object({
 			numberOpenableParts: z.literal("3"),
-			maximumOpenableArea: z.number().min(0.01).max(10000),
-			midHeightOpenablePart1: z.number().min(0).max(100),
-			midHeightOpenablePart2: z.number().min(0).max(100),
-			midHeightOpenablePart3: z.number().min(0).max(100),
+			maximumOpenableArea: maxWindowOpenAreaZod,
+			midHeightOpenablePart1: midHeightAirFlowPathZod,
+			midHeightOpenablePart2: midHeightAirFlowPathZod,
+			midHeightOpenablePart3: midHeightAirFlowPathZod,
 		}),
 		z.object({
 			numberOpenableParts: z.literal("4"),
-			maximumOpenableArea: z.number().min(0.01).max(10000),
-			midHeightOpenablePart1: z.number().min(0).max(100),
-			midHeightOpenablePart2: z.number().min(0).max(100),
-			midHeightOpenablePart3: z.number().min(0).max(100),
-			midHeightOpenablePart4: z.number().min(0).max(100),
+			maximumOpenableArea: maxWindowOpenAreaZod,
+			midHeightOpenablePart1: midHeightAirFlowPathZod,
+			midHeightOpenablePart2: midHeightAirFlowPathZod,
+			midHeightOpenablePart3: midHeightAirFlowPathZod,
+			midHeightOpenablePart4: midHeightAirFlowPathZod,
 		}),
 	] satisfies Tuple,
 };
+
+export const deltaRZod = z.number().gt(0).max(100);
 
 const curtainsOrBlindsFields = {
 	discriminator: "curtainsOrBlinds",
@@ -525,7 +535,7 @@ const curtainsOrBlindsFields = {
 		z.object({
 			curtainsOrBlinds: z.literal(true),
 			treatmentType: windowTreatmentTypeZod,
-			thermalResistivityIncrease: z.number().min(0).max(100),
+			thermalResistivityIncrease: deltaRZod,
 			solarTransmittanceReduction: fraction,
 		}),
 		z.object({
@@ -578,7 +588,7 @@ export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorData>;
 
 const baseInternalDoorData = named.extend({
 	associatedItemId: z.guid(),
-	surfaceArea: z.number().min(0).max(10000),
+	surfaceArea: surfaceAreaAdjacentSpaceZod,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 });
@@ -623,12 +633,12 @@ const baseWindowData = namedWithId.extend({
 	taggedItem: z.guid().optional(),
 	pitch: z.number().min(0).max(180).optional(),
 	orientation: z.number().min(0).lt(360).optional(),
-	height: z.number().min(0.001).max(50),
-	width: z.number().min(0.001).max(50),
+	height: heightTransparentZod,
+	width: widthTransparentZod,
 	uValue,
 	securityRisk: z.boolean(),
-	solarTransmittance: z.number().min(0.01).max(1),
-	elevationalHeight: z.number().min(0).max(500),
+	solarTransmittance: gValueZod,
+	elevationalHeight: baseHeightTransparentZod,
 	openingToFrameRatio: fraction,
 });
 
@@ -646,10 +656,12 @@ export type ThermalBridgingData = AssertFormKeysArePageIds<{
 	dwellingSpacePointThermalBridges: EcaasFormList<PointThermalBridgeData>;
 }>;
 
+export const lengthThermalBridgeLinearZod = z.number().min(0).max(10000);
+
 const linearThermalBridgeDataZod = named.extend({
 	typeOfThermalBridge: thermalBridgeJunctionTypeZod,
 	linearThermalTransmittance: z.number(),
-	length: z.number().min(0).max(10000),
+	length: lengthThermalBridgeLinearZod,
 });
 
 export type LinearThermalBridgeData = z.infer<typeof linearThermalBridgeDataZod>;

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
 import type { SchemaThermalBridgeJunctionType } from "~/schema/aliases";
+import { lengthThermalBridgeLinearZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Linear thermal bridges";
 const store = useEcaasStore();
@@ -169,7 +171,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				type="govInputWithSuffix"
 				label="Length of thermal bridge"
 				name="length"
-				validation="required | number | min:0 | max:10000"
+				:validation="zodTypeAsFormKitValidation(lengthThermalBridgeLinearZod)"
 				suffix-text="m"
 				data-field="Zone.ThermalBridging.*.length"
 			/>
