@@ -537,6 +537,7 @@ const curtainsOrBlindsFields = {
 			treatmentType: windowTreatmentTypeZod,
 			thermalResistivityIncrease: deltaRZod,
 			solarTransmittanceReduction: fraction,
+			treatmentControls: z.enum(["auto_motorised", "manual"]),
 		}),
 		z.object({
 			curtainsOrBlinds: z.literal(false),

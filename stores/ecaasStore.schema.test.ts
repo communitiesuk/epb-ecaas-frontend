@@ -14,6 +14,7 @@ describe("windowData Zod schema", () => {
 			elevationalHeight: 1,
 			numberOpenableParts: "1",
 			curtainsOrBlinds: true,
+			treatmentControls: "manual",
 			treatmentType: "curtains",
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,

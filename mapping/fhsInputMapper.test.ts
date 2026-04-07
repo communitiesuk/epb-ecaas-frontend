@@ -1972,7 +1972,8 @@ describe("FHS input mapper", () => {
 						elevationalHeight: 1,
 						numberOpenableParts: "1",
 						curtainsOrBlinds: true,
-						treatmentType: "curtains" as const,
+						treatmentType: "curtains",
+						treatmentControls: "manual",
 						thermalResistivityIncrease: 1,
 						solarTransmittanceReduction: 0.1,
 						midHeightOpenablePart1: 1,
@@ -2012,7 +2013,7 @@ describe("FHS input mapper", () => {
 								height: 1,
 							},
 						] satisfies ShadingObjectData[],
-					},
+					} as const,
 				}],
 			},
 			dwellingSpaceThermalBridging: {

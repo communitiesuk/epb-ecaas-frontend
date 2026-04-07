@@ -282,6 +282,7 @@ describe("infiltration ventilation mapper", () => {
 			numberOpenableParts: "1",
 			curtainsOrBlinds: true,
 			treatmentType: "blinds",
+			treatmentControls: "manual",
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,
 			midHeightOpenablePart1: 1,

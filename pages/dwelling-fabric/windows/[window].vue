@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { WindowData } from "#imports";
-import type { SchemaWindowTreatmentType } from "~/schema/aliases";
 import { getUrl, uniqueName } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod } from "~/stores/ecaasStore.schema";
@@ -31,11 +30,6 @@ const tagOptions = [
 if (model.value && model.value.taggedItem === undefined) {
 	model.value.taggedItem = "none";
 }
-
-const windowTreatmentTypeOptions: Record<SchemaWindowTreatmentType, SnakeToSentenceCase<SchemaWindowTreatmentType>> = {
-	curtains: "Curtains",
-	blinds: "Blinds",
-};
 
 const saveForm = (fields: WindowData) => {
 	store.$patch((state) => {
@@ -117,6 +111,7 @@ const saveForm = (fields: WindowData) => {
 				...commonFieldsIncludingOpenableParts,
 				curtainsOrBlinds: true,
 				treatmentType: fields.treatmentType,
+				treatmentControls: fields.treatmentControls,
 				thermalResistivityIncrease: fields.thermalResistivityIncrease,
 				solarTransmittanceReduction: fields.solarTransmittanceReduction,
 			} as WindowData;
@@ -391,34 +386,10 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			name="curtainsOrBlinds"
 			validation="required"
 		/>
-		<template v-if="model && model.curtainsOrBlinds">
-			<FormKit
-				id="treatmentType"
-				type="govRadios"
-				:options="windowTreatmentTypeOptions"
-				label="Type"
-				help="This determines the behaviour. Curtains are scheduled and blinds respond to sunlight."
-				name="treatmentType"
-				validation="required"
-			/>
-			<FormKit
-				id="thermalResistivityIncrease"
-				type="govInputWithSuffix"
-				suffix-text="W/(m²·K)"
-				label="Thermal resistivity increase"
-				help="Enter the additional thermal resistivity applied to window when the curtain or blind is closed"
-				name="thermalResistivityIncrease"
-				validation="required | number | min:0 | max:100"
-			/>
-			<FormKit
-				id="solarTransmittanceReduction"
-				type="govInputFloat"
-				label="Solar transmittance reduction"
-				help="Enter the proportion of solar energy allowed through the window which is allowed into the zone when curtain or blind is closed. This should be a decimal between 0 and 1."
-				name="solarTransmittanceReduction"
-				validation="required | number | min:0 | max:1"
-			/>
-		</template>
+		<WindowTreatmentSection
+			v-if="model && model.curtainsOrBlinds"
+			treatment-section-type="window"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

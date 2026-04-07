@@ -49,6 +49,7 @@ const doorForState = {
 	numberOpenableParts: "1",
 	curtainsOrBlinds: true,
 	treatmentType: "blinds",
+	treatmentControls: "auto_motorised",
 	thermalResistivityIncrease: 1,
 	solarTransmittanceReduction: 0.1,
 	hasShading: false,
@@ -70,6 +71,7 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.type(screen.getByTestId("openingToFrameRatio"), "0.2");
 	await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
 	await user.click(screen.getByTestId("treatmentType_blinds"));
+	await user.click(screen.getByTestId("treatmentControls_auto_motorised"));
 	await user.type(screen.getByTestId("thermalResistivityIncrease"), "1");
 	await user.type(screen.getByTestId("solarTransmittanceReduction"), "0.1");
 	await user.click(screen.getByTestId(`hasShading_${hasShading ? "yes" : "no"}`));
@@ -328,6 +330,7 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("midHeightOpenablePart1")).value).toBe("11");
 			expect((await screen.findByTestId("hasShading")).hasAttribute("checked")).toBe(false);
 			expect((await screen.findByTestId("treatmentType_blinds")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("treatmentControls_auto_motorised")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("thermalResistivityIncrease")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittanceReduction")).value).toBe("0.1");
 		});
@@ -352,6 +355,7 @@ describe("external glazed door", () => {
 				numberOpenableParts: "1",
 				curtainsOrBlinds: true,
 				treatmentType: "blinds",
+				treatmentControls: "auto_motorised",
 				thermalResistivityIncrease: 1,
 				solarTransmittanceReduction: 0.1,
 				hasShading: false,

@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { getUrl, standardPitchOptions, uniqueName, type ExternalGlazedDoorData } from "#imports";
-import { deltaRZod, fraction, gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod } from "~/stores/ecaasStore.schema";
+import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import { isFlatRoofItem } from "~/utils/isFlatRoofItem";
-import type { SchemaWindowTreatmentType } from "~/schema/aliases";
 
 const title = "External glazed door";
 const store = useEcaasStore();
@@ -40,6 +39,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			...(fields.curtainsOrBlinds ? {
 				curtainsOrBlinds: true,
 				treatmentType: fields.treatmentType,
+				treatmentControls: fields.treatmentControls,
 				thermalResistivityIncrease: fields.thermalResistivityIncrease,
 				solarTransmittanceReduction: fields.solarTransmittanceReduction,
 			} : {
@@ -144,11 +144,6 @@ autoSaveElementForm<ExternalGlazedDoorData>({
 	},
 });
 
-const windowTreatmentTypeOptions: Record<SchemaWindowTreatmentType, SnakeToSentenceCase<SchemaWindowTreatmentType>> = {
-	curtains: "Curtains",
-	blinds: "Blinds",
-};
-
 function canBeFrontDoor(node: FormKitNode) {
 	if (node.value === true) {
 		const glazedDoorsExcludingCurrent = externalGlazedDoorData.toSpliced(index, 1);
@@ -235,7 +230,7 @@ const tagHasValidPitch = computed(() => {
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Height"
-			help="Enter the height of the building element"
+			help="Enter the height of the door, including the frame"
 			name="height"
 			:validation="zodTypeAsFormKitValidation(heightTransparentZod)"
 			data-field="Zone.BuildingElement.*.height"
@@ -245,7 +240,7 @@ const tagHasValidPitch = computed(() => {
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Width"
-			help="Enter the width of the building element"
+			help="Enter the width of the door, including the frame"
 			name="width"
 			:validation="zodTypeAsFormKitValidation(widthTransparentZod)"
 			data-field="Zone.BuildingElement.*.width"
@@ -255,8 +250,8 @@ const tagHasValidPitch = computed(() => {
 		<FormKit
 			id="openingToFrameRatio"
 			type="govInputFloat"
-			label="Window to frame ratio"
-			help="Enter the proportion of the door taken up by the window"
+			label="Frame to opening ratio"
+			help="Enter the proportion of the window taken up by the frame compared to the total opening area. It should be a decimal between 0 and 1."
 			name="openingToFrameRatio"
 			validation="required | number | min:0 | max:1"
 			data-field="Zone.BuildingElement.*.frame_area_fraction"
@@ -265,18 +260,18 @@ const tagHasValidPitch = computed(() => {
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">
-							<th scope="col" class="govuk-table__header govuk-!-width-one-third">Window to door ratio</th>
+							<th scope="col" class="govuk-table__header">Frame to opening ratio</th>
 							<th scope="col" class="govuk-table__header">Description</th>
 						</tr>
 					</thead>
 					<tbody class="govuk-table__body">
 						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">0</th>
-							<td class="govuk-table__cell">There is no window in the door.</td>
+							<th scope="row" class="govuk-table__header">0</th>
+							<td class="govuk-table__cell">There is no frame, only glass</td>
 						</tr>
 						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">1</th>
-							<td class="govuk-table__cell">There is no frame, only glass.</td>
+							<th scope="row" class="govuk-table__header">1</th>
+							<td class="govuk-table__cell">There is no glass</td>
 						</tr>
 					</tbody>
 				</table>
@@ -286,7 +281,7 @@ const tagHasValidPitch = computed(() => {
 			id="solarTransmittance"
 			type="govInputFloat"
 			label="Transmittance of solar energy "
-			help="Enter the total solar energy transmittance or G value, or the transparent part of the window. It should be a decimal between 0 and 1."
+			help="Enter the total solar energy transmittance or G value of the transparent part of the window. It should be a decimal between 0 and 1."
 			name="solarTransmittance"
 			:validation="zodTypeAsFormKitValidation(gValueZod)"
 			data-field="Zone.BuildingElement.*.g_value"
@@ -310,7 +305,7 @@ const tagHasValidPitch = computed(() => {
 			name="securityRisk"
 			type="govBoolean"
 			label="Is having this door open a security risk?"
-			help="For example, if you are able to leave the door open at night it would not be a security risk"
+			help="A door is a security risk if you are unable to leave it open at night. If it is on the ground floor, in a basement, or is easily accessible, it is a security risk."
 			validation="required"
 			data-field="Zone.BuildingElement.*.security_risk"
 		/>
@@ -319,7 +314,7 @@ const tagHasValidPitch = computed(() => {
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Maximum openable area of door"
-			help="Enter the total area of the gap created when the door is fully open"
+			help="Enter the total area of the gap created when the door is fully open, as defined by Part O"
 			name="maximumOpenableArea"
 			:validation="zodTypeAsFormKitValidation(maxWindowOpenAreaZod)"
 			data-field="Zone.BuildingElement.*.max_window_open_area"
@@ -330,7 +325,7 @@ const tagHasValidPitch = computed(() => {
 				type="govInputWithSuffix"
 				suffix-text="m"
 				label="Mid height of the air flow path for openable part 1 "
-				help="Enter the height from the ground to the midpoint of the openable section of the window"
+				help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the door when fully open"
 				name="midHeightOpenablePart1"
 				:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 			/>
@@ -340,7 +335,7 @@ const tagHasValidPitch = computed(() => {
 					type="govInputWithSuffix"
 					suffix-text="m"
 					label="Mid height of the air flow path for openable part 2 "
-					help="Enter the height from the ground to the midpoint of the openable section of the window"
+					help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the door when fully open"
 					name="midHeightOpenablePart2"
 					:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 				/>
@@ -350,7 +345,7 @@ const tagHasValidPitch = computed(() => {
 						type="govInputWithSuffix"
 						suffix-text="m"
 						label="Mid height of the air flow path for openable part 3 "
-						help="Enter the height from the ground to the midpoint of the openable section of the window"
+						help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the door when fully open"
 						name="midHeightOpenablePart3"
 						:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 					/>
@@ -360,7 +355,7 @@ const tagHasValidPitch = computed(() => {
 							type="govInputWithSuffix"
 							suffix-text="m"
 							label="Mid height of the air flow path for openable part 4 "
-							help="Enter the height from the ground to the midpoint of the openable section of the window"
+							help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the door when fully open"
 							name="midHeightOpenablePart4"
 							:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 						/>
@@ -409,34 +404,10 @@ const tagHasValidPitch = computed(() => {
 			name="curtainsOrBlinds"
 			validation="required"
 		/>
-		<template v-if="model && model.curtainsOrBlinds">
-			<FormKit
-				id="treatmentType"
-				type="govRadios"
-				:options="windowTreatmentTypeOptions"
-				label="Type"
-				help="This determines the behaviour. Curtains are scheduled and blinds respond to sunlight."
-				name="treatmentType"
-				validation="required"
-			/>
-			<FormKit
-				id="thermalResistivityIncrease"
-				type="govInputWithSuffix"
-				suffix-text="W/(m²·K)"
-				label="Thermal resistivity increase"
-				help="Enter the additional thermal resistivity applied to window when the curtain or blind is closed"
-				name="thermalResistivityIncrease"
-				:validation="zodTypeAsFormKitValidation(deltaRZod)"
-			/>
-			<FormKit
-				id="solarTransmittanceReduction"
-				type="govInputFloat"
-				label="Solar transmittance reduction"
-				help="Enter the proportion of solar energy allowed through the window which is allowed into the zone when curtain or blind is closed. This should be a decimal between 0 and 1."
-				name="solarTransmittanceReduction"
-				:validation="zodTypeAsFormKitValidation(fraction)"
-			/>
-		</template>
+		<WindowTreatmentSection
+			v-if="model && model.curtainsOrBlinds"
+			treatment-section-type="door"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

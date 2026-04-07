@@ -49,6 +49,7 @@ const window1: EcaasForm<WindowData> = {
 		numberOpenableParts: "0",
 		curtainsOrBlinds: true,
 		treatmentType: "blinds",
+		treatmentControls: "manual",
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
 		hasShading: false,
@@ -70,6 +71,7 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.click(screen.getByTestId("numberOpenableParts_0"));
 	await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
 	await user.click(screen.getByTestId("treatmentType_blinds"));
+	await user.click(screen.getByTestId("treatmentControls_manual"));
 	await user.type(screen.getByTestId("thermalResistivityIncrease"), "1");
 	await user.type(screen.getByTestId("solarTransmittanceReduction"), "0.1");
 	await user.click(screen.getByTestId(`hasShading_${hasShading ? "yes" : "no"}`));
@@ -332,6 +334,7 @@ describe("window", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("1");
 			expect((await screen.findByTestId("numberOpenableParts_0")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("treatmentType_blinds")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("treatmentControls_manual")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("thermalResistivityIncrease")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittanceReduction")).value).toBe("0.1");
 		});
@@ -353,6 +356,7 @@ describe("window", () => {
 					numberOpenableParts: "0",
 					curtainsOrBlinds: true,
 					treatmentType: "blinds",
+					treatmentControls: "auto_motorised",
 					thermalResistivityIncrease: 1,
 					solarTransmittanceReduction: 0.1,
 					hasShading: false,
