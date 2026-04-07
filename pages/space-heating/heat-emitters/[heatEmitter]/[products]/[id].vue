@@ -43,11 +43,11 @@ const selectProduct = () => {
 			const emitters = (item.data as { emitters: Record<string, unknown>[] }).emitters;
 			const emitter = emitters[emitterIndex];
 			if (emitter) {
-				emitter.productReference = data.id;
+				emitter.productReference = data.id.toString();
 			}
 		} else if (item && data) {
 			const product = item.data as PcdbProduct;
-			product.productReference = data.id;
+			product.productReference = data.id.toString();
 		}
 	});
 

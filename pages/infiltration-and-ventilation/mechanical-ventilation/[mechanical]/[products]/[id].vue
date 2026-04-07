@@ -42,7 +42,7 @@ const selectProduct = () => {
 
 		if (item && data) {
 			const product = item.data as PcdbProduct;
-			product.productReference = data.id;
+			product.productReference = data.id.toString();
 		}
 	});
 

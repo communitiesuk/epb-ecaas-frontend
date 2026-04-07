@@ -33,7 +33,7 @@ const backUrl = getUrl(pageId)
 
 const selectProduct = async () => {
 	await selectHotWaterHeatSourceProduct(
-		data as DisplayProduct,
+		{ ...data, id: data?.id.toString() } as DisplayProduct,
 		(state) => state.domesticHotWater.heatSources.data,
 		index,
 	);

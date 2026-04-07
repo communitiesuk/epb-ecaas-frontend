@@ -25,10 +25,10 @@ const selectProduct = (reference: string) => {
 			const emitters = (item.data as { emitters: Record<string, unknown>[] }).emitters;
 			const emitter = emitters[emitterIndex];
 			if (emitter) {
-				emitter.productReference = reference;
+				emitter.productReference = reference.toString();
 			}
 		} else if (item) {
-			(item.data as PcdbProduct).productReference = reference;
+			(item.data as PcdbProduct).productReference = reference.toString();;
 		}
 	});
 
@@ -49,7 +49,7 @@ const selectProduct = (reference: string) => {
 	<GovProductsTable
 		:products="pagination.getData()"
 		:total-pages="pagination.totalPages"
-		:on-select-product="p => selectProduct(p.id)" />
+		:on-select-product="p => selectProduct(p.id.toString())" />
 	<GovButton secondary :href="`/space-heating/heat-emitters/${index}`" test-id="backToHeatEmittersButton">
 		Back to heat emitters
 	</GovButton>

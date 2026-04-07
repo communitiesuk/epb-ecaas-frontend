@@ -33,7 +33,7 @@ const backUrl = getUrl(pageId)
 
 const selectProduct = async () => {
 	await selectHeatSourceProduct(
-		data as DisplayProduct,
+		{ ...data, id: data?.id.toString() } as DisplayProduct,
 		(state) => state.spaceHeating.heatSource.data as EcaasForm<HeatSourceData>[],
 		index,
 	);

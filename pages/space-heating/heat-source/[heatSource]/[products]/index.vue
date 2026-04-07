@@ -28,7 +28,7 @@ const { pagination } = searchData(value?.data ?? []);
 
 const selectProduct = async (product: DisplayProduct) => {
 	await selectHeatSourceProduct(
-		product,
+		{ ...product, id: product.id.toString() },
 		(state) => state.spaceHeating.heatSource.data as EcaasForm<HeatSourceData>[],
 		index,
 	);

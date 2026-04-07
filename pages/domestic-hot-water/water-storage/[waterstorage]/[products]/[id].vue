@@ -39,7 +39,7 @@ const selectProduct = () => {
 
 		if (item && data) {
 			const product = item.data as SmartHotWaterTankData;
-			product.productReference = data.id;
+			product.productReference = data.id.toString();
 		}
 	});
 

@@ -36,7 +36,7 @@ const { pagination } = searchData(value?.data ?? []);
 
 const selectProduct = async (product: DisplayProduct) => {
 	await selectHotWaterHeatSourceProduct(
-		product,
+		{ ...product, id: product.id.toString() },
 		(state) => state.domesticHotWater.heatSources.data,
 		index,
 	);

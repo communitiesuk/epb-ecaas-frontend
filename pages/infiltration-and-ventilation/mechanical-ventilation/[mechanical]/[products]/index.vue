@@ -22,7 +22,7 @@ const selectProduct = (reference: string) => {
 		const item = state.infiltrationAndVentilation.mechanicalVentilation.data[index];
 
 		if (item) {
-			(item.data as PcdbProduct).productReference = reference;
+			(item.data as PcdbProduct).productReference = reference.toString();
 		}
 	});
 
