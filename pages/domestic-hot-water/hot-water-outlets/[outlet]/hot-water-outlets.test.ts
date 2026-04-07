@@ -404,7 +404,7 @@ describe("hot water outlets", () => {
 				dhwHeatSourceId: heatPumpId,
 				wwhrs: false,
 				isAirPressureShower: true,
-				airPressureShowerProductRefernce: "AP-REF-001",
+				airPressureShowerProductReference: "AP-REF-001",
 			},
 		};
 
@@ -419,10 +419,10 @@ describe("hot water outlets", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
-			expect(screen.queryByTestId("airPressureShowerProductRefernce")).toBeNull();
+			expect(screen.queryByTestId("airPressureShowerProductReference")).toBeNull();
 
 			await user.click(screen.getByTestId("isAirPressureShower_yes"));
-			expect(screen.getByTestId("airPressureShowerProductRefernce")).toBeDefined();
+			expect(screen.getByTestId("airPressureShowerProductReference")).toBeDefined();
 		});
 
 		test("air pump product reference field is hidden when isAirPressureShower is no", async () => {
@@ -432,10 +432,10 @@ describe("hot water outlets", () => {
 
 			await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
 			await user.click(screen.getByTestId("isAirPressureShower_yes"));
-			expect(screen.getByTestId("airPressureShowerProductRefernce")).toBeDefined();
+			expect(screen.getByTestId("airPressureShowerProductReference")).toBeDefined();
 
 			await user.click(screen.getByTestId("isAirPressureShower_no"));
-			expect(screen.queryByTestId("airPressureShowerProductRefernce")).toBeNull();
+			expect(screen.queryByTestId("airPressureShowerProductReference")).toBeNull();
 		});
 
 		test("air powered shower data is saved to store when form is valid", async () => {
@@ -473,7 +473,7 @@ describe("hot water outlets", () => {
 
 			expect((await screen.findByTestId<HTMLInputElement>("typeOfHotWaterOutlet_mixedShower")).checked).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("isAirPressureShower_yes")).checked).toBe(true);
-			expect(await screen.findByTestId("airPressureShowerProductRefernce")).toBeDefined();
+			expect(await screen.findByTestId("airPressureShowerProductReference")).toBeDefined();
 		});
 
 		test("validation error is shown when isAirPressureShower is yes but no product is selected", async () => {
@@ -490,7 +490,7 @@ describe("hot water outlets", () => {
 			await user.click(screen.getByTestId("isAirPressureShower_yes"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect(await screen.findByTestId("airPressureShowerProductRefernce_error")).toBeDefined();
+			expect(await screen.findByTestId("airPressureShowerProductReference_error")).toBeDefined();
 		});
 		test("flow rate is not shown when isAirPressureShower is yes", async () => {
 			await renderSuspended(HotWaterOutlets, {

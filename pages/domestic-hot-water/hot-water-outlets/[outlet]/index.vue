@@ -29,14 +29,13 @@ const saveForm = (fields: HotWaterOutletsData) => {
 
 		if (fields.typeOfHotWaterOutlet === "mixedShower") {
 			const conditionalOnAirPoweredFields = fields.isAirPressureShower
-				? { isAirPressureShower: fields.isAirPressureShower, airPressureShowerProductRefernce: fields.airPressureShowerProductRefernce }
+				? { isAirPressureShower: fields.isAirPressureShower, airPressureShowerProductReference: fields.airPressureShowerProductReference }
 				: { isAirPressureShower: false as const , flowRate: fields.flowRate };
 			if (fields.wwhrs) {
 				hotWaterOutletItem = {
 					data: {
 						...commonFields,
 						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-
 						dhwHeatSourceId: fields.dhwHeatSourceId,
 						wwhrs: true,
 						wwhrsType: fields.wwhrsType,
@@ -217,10 +216,10 @@ const heatSourceOptions = new Map(
 			<!-- TODO: Plumb this PCDB in -->
 			<FieldsSelectPcdbProduct
 				v-if="model.isAirPressureShower === true"
-				id="airPressureShowerProductRefernce"
-				name="airPressureShowerProductRefernce"
+				id="airPressureShowerProductReference"
+				name="airPressureShowerProductReference"
 				help="Select the shower type from the PCDB using the button below."
-				:selected-product-reference="model.airPressureShowerProductRefernce"
+				:selected-product-reference="model.airPressureShowerProductReference"
 				:selected-product-type="model.typeOfHotWaterOutlet"
 				:page-url="route.fullPath"
 				:page-index="index"

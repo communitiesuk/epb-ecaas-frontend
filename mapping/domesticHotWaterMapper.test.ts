@@ -478,7 +478,7 @@ describe("domestic hot water mapper", () => {
 						dhwHeatSourceId: "heatPump1",
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: true,
-						airPressureShowerProductRefernce: "AIR-PUMP-123",
+						airPressureShowerProductReference: "AIR-PUMP-123",
 					},
 				};
 				store.$patch({
@@ -498,7 +498,7 @@ describe("domestic hot water mapper", () => {
 					allow_low_flowrate: true,
 					HotWaterSource: "heatPump1",
 					// @ts-expect-error - to be added when FHS schema is updated to support product reference for air pump
-					airPressureShowerProductRefernce: "AIR-PUMP-123",
+					airPressureShowerProductReference: "AIR-PUMP-123",
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower-air-pump"]).toEqual(expectedShowerAirPump);
 			});

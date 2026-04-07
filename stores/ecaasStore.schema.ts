@@ -1315,7 +1315,7 @@ const hasAirPumpFields = {
 	discriminator: "isAirPressureShower",
 	variants: [
 		z.object({ isAirPressureShower: z.literal(false), flowRate: z.number().min(8).max(15) }),
-		z.object({ isAirPressureShower: z.literal(true), airPressureShowerProductRefernce: z.string() }),
+		z.object({ isAirPressureShower: z.literal(true), airPressureShowerProductReference: z.string() }),
 	] satisfies Tuple,
 };
 
