@@ -342,11 +342,51 @@ const populatedHeatEmitterSections = getNonEmptySections(heatEmitterSections);
 const heatingControlsUrl = "/space-heating/heating-controls";
 const heatingControls = store.spaceHeating.heatingControls.data;
 
+const getHeatEmitterLabel = (heatEmitter: EcaasForm<HeatEmittingData>) => {
+	const name = heatEmitter.data.name?.trim();
+	if (name) {
+		return name;
+	}
+
+	return displayHeatEmitterType(heatEmitter.data.typeOfHeatEmitter) || "Heat emitter";
+};
+
+const heatingSystemRankLabels = [
+	"Primary heating system",
+	"Secondary heating system",
+	"3rd heating system",
+	"4th heating system",
+	"5th heating system",
+	"6th heating system",
+	"7th heating system",
+	"8th heating system",
+	"9th heating system",
+] as const;
+
+const getHeatingSystemLabel = (rank: number) => heatingSystemRankLabels[rank - 1] ?? `${rank}th heating system`;
+
+const getHeatingSystemSummaryRows = () => {
+	const rankedHeatEmitters = [...heatEmitters]
+		.filter((heatEmitter) => heatEmitter.data.heatingRank != null)
+		.sort((a, b) => (a.data.heatingRank ?? 0) - (b.data.heatingRank ?? 0));
+
+	return rankedHeatEmitters.reduce<Record<string, string>>((rows, heatEmitter) => {
+		const rank = heatEmitter.data.heatingRank;
+		if (!rank) {
+			return rows;
+		}
+
+		rows[getHeatingSystemLabel(rank)] = getHeatEmitterLabel(heatEmitter as EcaasForm<HeatEmittingData>);
+		return rows;
+	}, {});
+};
+
 const heatingControlsSummary: SummarySection = {
 	id: "heatingControls",
 	label: "Heating controls",
 	data: {
 		"Type of heating control": heatingControls[0]?.data?.heatingControlType ? displayCamelToSentenceCase(heatingControls[0]?.data.heatingControlType) : emptyValueRendering,
+		...getHeatingSystemSummaryRows(),
 	},
 	editUrl: heatingControlsUrl,
 };

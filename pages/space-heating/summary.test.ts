@@ -319,6 +319,127 @@ describe("Space heating summary page", () => {
 			await verifyDataInSection("heatingControls", expectedSectionData);
 		});
 
+		it("displays primary heating system when one ranked emitter exists", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatingControls: {
+						data: [{ data: heatingControl }],
+					},
+					heatEmitters: {
+						data: [{
+							data: {
+								id: "emitter-1",
+								name: "Radiator system",
+								typeOfHeatEmitter: "wetDistributionSystem",
+								heatingRank: 1,
+								emitters: [],
+							},
+						}],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedSectionData = {
+				"Type of heating control": "Separate temperature control",
+				"Primary heating system": "Radiator system",
+			};
+
+			await verifyDataInSection("heatingControls", expectedSectionData);
+		});
+
+		it("displays primary and secondary heating systems when two ranked emitters exist", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatingControls: {
+						data: [{ data: heatingControl }],
+					},
+					heatEmitters: {
+						data: [
+							{
+								data: {
+									id: "emitter-1",
+									name: "Radiator system",
+									typeOfHeatEmitter: "wetDistributionSystem",
+									heatingRank: 1,
+									emitters: [],
+								},
+							},
+							{
+								data: {
+									id: "emitter-2",
+									name: "Fan coil system",
+									typeOfHeatEmitter: "warmAirHeater",
+									heatingRank: 2,
+								},
+							},
+						],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedSectionData = {
+				"Type of heating control": "Separate temperature control",
+				"Primary heating system": "Radiator system",
+				"Secondary heating system": "Fan coil system",
+			};
+
+			await verifyDataInSection("heatingControls", expectedSectionData);
+		});
+
+		it("displays additional heating systems when more than two ranked emitters exist", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatingControls: {
+						data: [{ data: heatingControl }],
+					},
+					heatEmitters: {
+						data: [
+							{
+								data: {
+									id: "emitter-1",
+									name: "Radiator system",
+									typeOfHeatEmitter: "wetDistributionSystem",
+									heatingRank: 1,
+									emitters: [],
+								},
+							},
+							{
+								data: {
+									id: "emitter-2",
+									name: "Fan coil system",
+									typeOfHeatEmitter: "warmAirHeater",
+									heatingRank: 2,
+								},
+							},
+							{
+								data: {
+									id: "emitter-3",
+									name: "Backup electric system",
+									typeOfHeatEmitter: "instantElectricHeater",
+									heatingRank: 3,
+								},
+							},
+						],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedSectionData = {
+				"Type of heating control": "Separate temperature control",
+				"Primary heating system": "Radiator system",
+				"Secondary heating system": "Fan coil system",
+				"3rd heating system": "Backup electric system",
+			};
+
+			await verifyDataInSection("heatingControls", expectedSectionData);
+		});
+
 		it("displays an edit link that navigates to the heating control form page when clicked", async () => {
 			store.$patch({
 				spaceHeating: {
