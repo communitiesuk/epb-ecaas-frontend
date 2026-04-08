@@ -42,6 +42,10 @@ const selectProduct = async () => {
 			if (data?.technologyType === "AirPoweredShowers" && showerData.isAirPressureShower) {
 				showerData.airPressureShowerProductReference = data.id;
 			}
+
+			if (data?.technologyType === "InstantaneousWwhrSystem" && showerData.wwhrs) {
+				showerData.wwhrsProductReference = data.id;
+			}
 		}
 	});
 
@@ -62,6 +66,7 @@ const selectProduct = async () => {
 	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
 
 	<ProductDetailsAirPressureShower v-if="!!data && data.technologyType === 'AirPoweredShowers'" :product="data" />
+	<ProductDetailsWwhrs v-if="!!data && data.technologyType === 'InstantaneousWwhrSystem'" :product="data" />
 
 	<div class="govuk-button-group">
 		<GovButton

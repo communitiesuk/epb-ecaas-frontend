@@ -163,6 +163,13 @@ const domesticHotWaterPages = [
 		parentId: "hotWaterOutlets",
 	},
 	{
+		id: "wwhrsProducts",
+		title: "Select a waste water heat recovery system",
+		url: "/domestic-hot-water/hot-water-outlets/:outlet/wwhrs",
+		type: "task",
+		parentId: "hotWaterOutlets",
+	},
+	{
 		id: "pipeworkCreate",
 		title: "Pipework",
 		url: "/domestic-hot-water/pipework/create",

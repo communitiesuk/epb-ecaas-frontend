@@ -3,7 +3,7 @@ import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl, type HeatEmittingData, type WetDistributionSystemData, type WetDistributionEmitterData } from "#imports";
 import type { SchemaFuelType } from "~/schema/aliases";
 import { displayBoilerLocation, displayConvectiveType } from "~/utils/display";
-import { useProductReference } from "~/composables/productReference";
+import { useProductReferences } from "~/composables/productReferences";
 
 const store = useEcaasStore();
 const title = "Space heating summary";
@@ -24,9 +24,9 @@ const warmAirHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "wa
 const instantElectricHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "instantElectricHeater");
 const electricStorageHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "electricStorageHeater");
 
-const heatSourceModelNames = await useProductReference(heatSources, productData => productData.modelName);
-const heatEmitterModelNames = await useProductReference(heatEmitters, productData => productData.modelName);
-const nestedEmitterModelNames = await useProductReference(
+const heatSourceModelNames = await useProductReferences(heatSources, productData => productData.modelName);
+const heatEmitterModelNames = await useProductReferences(heatEmitters, productData => productData.modelName);
+const nestedEmitterModelNames = await useProductReferences(
 	wetDistributionSystems.flatMap(({ data }) =>
 		(data as WetDistributionSystemData).emitters.map(e => ({ data: e })),
 	) as EcaasForm<WetDistributionEmitterData>[],

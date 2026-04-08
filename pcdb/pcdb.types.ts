@@ -367,6 +367,21 @@ const airPoweredShowerZod = BaseProduct.extend({
 
 export type AirPoweredShowerProduct = z.infer<typeof airPoweredShowerZod>;
 
+const wwhrsZod = BaseProduct.extend({
+	technologyType: z.literal("InstantaneousWwhrSystem"),
+	pipeLength: z.optional(z.number()),
+	heatExchangerWasteConnection: z.optional(z.number()),
+	heatExchangerVolumeOfWater: z.optional(z.number()),
+	heatExchangerColdWaterConnection: z.optional(z.number()),
+	heatExchangerWetWeight: z.optional(z.number()),
+	numberOfFlowRates: z.optional(z.number()),
+	utilisationFactor: z.optional(z.number()),
+	heatExchangerLength: z.optional(z.number()),
+	heatExchangerDryWeight: z.optional(z.number()),
+});
+
+export type WwhrsProduct = z.infer<typeof wwhrsZod>;
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	heatPumpProductZod,
 	hybridHeatPumpProductZod,
@@ -386,6 +401,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	directElectricHeaterZod,
 	heatNetworkZod,
 	airPoweredShowerZod,
+	wwhrsZod,
 ]);
 
 type ProductSchemaUnion = z.infer<typeof productSchema>;
@@ -424,8 +440,15 @@ const categoryTechnologies = {
 		"StorageHeater",
 		"DirectElectricHeaters",
 	],
-	mechanicalVentilation: ["CentralisedMvhr", "CentralisedMev", "DecentralisedMev"],
-	hotWaterOutlets: ["AirPoweredShowers"],
+	mechanicalVentilation: [
+		"CentralisedMvhr",
+		"CentralisedMev",
+		"DecentralisedMev",
+	],
+	hotWaterOutlets: [
+		"AirPoweredShowers",
+		"InstantaneousWwhrSystem",
+	],
 } as const satisfies Record<string, TechnologyType[]>;
 
 export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMap(x => categoryTechnologies[x]);

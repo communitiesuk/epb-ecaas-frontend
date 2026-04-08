@@ -291,7 +291,7 @@ describe("hot water outlets", () => {
 
 		const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
 		expect(chooseProductButton).toBeDefined();
-		expect(chooseProductButton.pathname).toBe("/0/mixed-shower");
+		expect(chooseProductButton.pathname).toBe("/0/wwhrs");
 	});
 
 	[

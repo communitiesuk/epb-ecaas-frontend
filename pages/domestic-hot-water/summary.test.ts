@@ -10,10 +10,13 @@ import { degrees } from "~/utils/units/angle";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import { celsius } from "~/utils/units/temperature";
 
-const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport("navigateTo", () => {
-	return navigateToMock;
-});
+const { mockFetch, mockNavigateTo } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	mockNavigateTo: vi.fn(),
+}));
+
+mockNuxtImport("useFetch", () => mockFetch);
+mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 type ExpectedData = { [key: string]: string };
 const verifyDataInSection = async (
@@ -33,8 +36,10 @@ const verifyDataInSection = async (
 describe("Domestic hot water summary", () => {
 	const store = useEcaasStore();
 
-	afterEach(() => {
+	beforeEach(() => {
 		store.$reset();
+		mockFetch.mockReset();
+		mockFetch.mockReturnValue({ data: ref({ modelName: "Mock product" }) });
 	});
 
 	it("displays the correct title", async () => {
@@ -336,8 +341,6 @@ describe("Domestic hot water summary", () => {
 				"Hot water source": "Heat pump",
 				"Flow rate": `10 ${litrePerSecond.suffix}`,
 				"WWHRS installed": "No",
-				"WWHRS type": "-",
-				"WWHRS product": "-",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -371,10 +374,8 @@ describe("Domestic hot water summary", () => {
 				"Name": "Partial mixer",
 				"Type of hot water outlet": "Mixed shower",
 				"Hot water source": "-",
-				"Flow rate": "-",
+				"Is this an air pressure shower?": "-",
 				"WWHRS installed": "-",
-				"WWHRS type": "-",
-				"WWHRS product": "-",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -488,7 +489,47 @@ describe("Domestic hot water summary", () => {
 				"Flow rate": `15 ${litrePerSecond.suffix}`,
 				"WWHRS installed": "Yes",
 				"WWHRS type": displayCamelToSentenceCase("instantaneousSystemA"),
-				"WWHRS product": "WWHRS-PR-1",
+				"WWHRS product reference": "WWHRS-PR-1",
+				"WWHRS product": "Mock product",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-mixedShower-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+
+		test("displays air pressure shower product when present for mixer showers", async () => {
+			const mixerWithWwhrs: EcaasForm<MixedShowerData> = {
+				data: {
+					id: "mixer-wwhrs-1",
+					name: "Mixer with WWHRS",
+					typeOfHotWaterOutlet: "mixedShower",
+					dhwHeatSourceId: "heat-1",
+					wwhrs: false,
+					isAirPressureShower: true,
+					airPressureShowerProductReference: "1000",
+				},
+			};
+
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: { data: [mixerWithWwhrs] },
+					heatSources: { data: [{ data: { id: "heat-1", name: "Heat pump" } }] },
+				},
+			});
+
+			await renderSuspended(Summary);
+
+			const expectedResult = {
+				"Name": "Mixer with WWHRS",
+				"Type of hot water outlet": "Mixed shower",
+				"Hot water source": "Heat pump",
+				"Is this an air pressure shower?": "Yes",
+				"Air pressure shower product reference": "1000",
+				"Air pressure shower product": "Mock product",
+				"WWHRS installed": "No",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {

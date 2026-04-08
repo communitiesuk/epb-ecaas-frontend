@@ -423,21 +423,34 @@ const populatedHeatSourceSections = getNonEmptySections(heatSourceSections);
 const hotWaterOutletsAll = store.domesticHotWater.hotWaterOutlets.data;
 
 const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerData>[];
+const mixedShowerModelNames = await useProductReferences(mixedShowerData, productData => productData.modelName);
+
 const mixedShowerSummary: SummarySection = {
 	id: "mixedShower",
 	label: "Mixer showers",
 	data: mixedShowerData.map(({ data }) => {
 		
 		const heatSourceName = getHWHeatSourceName("dhwHeatSourceId" in data ? data.dhwHeatSourceId : undefined);
+		const airPressureShowerProductReference = "airPressureShowerProductReference" in data ? data.airPressureShowerProductReference : undefined;
+		const wwhrsProductReference = "wwhrsProductReference" in data ? data.wwhrsProductReference : undefined;
+
 		return {
 			"Name": show(data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in data && data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(data.typeOfHotWaterOutlet) : emptyValueRendering,
 			"Hot water source": heatSourceName ? heatSourceName : emptyValueRendering,
 			"Is this an air pressure shower?": "isAirPressureShower" in data ? displayBoolean(data.isAirPressureShower) : emptyValueRendering,
-			"Flow rate": "flowRate" in data ? dim(data.flowRate, "litres per second") : emptyValueRendering,
+			...("isAirPressureShower" in data && data.isAirPressureShower ? {
+				"Air pressure shower product reference": show(airPressureShowerProductReference),
+				"Air pressure shower product": airPressureShowerProductReference ? show(mixedShowerModelNames[data.airPressureShowerProductReference]) : emptyValueRendering,
+			} : {
+				"Flow rate": "flowRate" in data ? dim(data.flowRate, "litres per second") : emptyValueRendering,
+			}),
 			"WWHRS installed": "wwhrs" in data ? displayBoolean(data.wwhrs) : emptyValueRendering,
-			"WWHRS type": "wwhrsType" in data && data.wwhrsType ? displayCamelToSentenceCase(String(data.wwhrsType)) : emptyValueRendering,
-			"WWHRS product": "wwhrsProductReference" in data ? show(data.wwhrsProductReference) : emptyValueRendering,
+			...("wwhrs" in data && data.wwhrs ? {
+				"WWHRS type": "wwhrsType" in data && data.wwhrsType ? displayCamelToSentenceCase(String(data.wwhrsType)) : emptyValueRendering,
+				"WWHRS product reference": wwhrsProductReference,
+				"WWHRS product": wwhrsProductReference ? show(mixedShowerModelNames[wwhrsProductReference]) : emptyValueRendering,
+			} : {}),
 		};
 	}),
 	editUrl: getUrl("domesticHotWater"),

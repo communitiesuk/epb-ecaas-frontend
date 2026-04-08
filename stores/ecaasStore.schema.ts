@@ -1088,7 +1088,7 @@ export const typeOfMechanicalVentilation = _typeOfMechanicalVentilation.enum;
 
 export type MechanicalVentilationProductType = z.infer<typeof _typeOfMechanicalVentilation>;
 
-const _typeOfShowerProduct = z.enum(["airPressureShower"]);
+const _typeOfShowerProduct = z.enum(["airPressureShower", "wwhrs"]);
 
 export const typeOfShowerProduct = _typeOfShowerProduct.enum;
 
@@ -1119,6 +1119,7 @@ export const productTypeMap = {
 	"decentralisedContinuousMev": "DecentralisedMev",
 	"instantElectricHeater": "DirectElectricHeaters",
 	"airPressureShower": "AirPoweredShowers",
+	"wwhrs": "InstantaneousWwhrSystem",
 } as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType | ShowerProductType, TechnologyType | string | TechnologyType[]>;
 
 export type HeatEmitterType =

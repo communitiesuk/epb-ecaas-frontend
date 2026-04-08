@@ -12,7 +12,7 @@ const showerProductType = pageId as ShowerProductType;
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
-		technologyType: productTypeMap[showerProductType as ShowerProductType],
+		technologyType: productTypeMap[showerProductType],
 	},
 });
 
@@ -31,6 +31,10 @@ const selectProduct = async (product: DisplayProduct) => {
 
 			if (product.technologyType === "AirPoweredShowers" && showerData.isAirPressureShower) {
 				showerData.airPressureShowerProductReference = product.id;
+			}
+
+			if (product.technologyType === "InstantaneousWwhrSystem" && showerData.wwhrs) {
+				showerData.wwhrsProductReference = product.id;
 			}
 		}
 	});

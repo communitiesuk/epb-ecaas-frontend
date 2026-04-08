@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl, type VentData } from "#imports";
-import { useProductReference } from "~/composables/productReference";
+import { useProductReferences } from "~/composables/productReferences";
 import { installationLocationOptions, installationTypeOptions } from "~/utils/display";
 
 const title = "Infiltration and ventilation summary";
@@ -9,7 +9,7 @@ const store = useEcaasStore();
 
 const mechanicalVentilationData = store.infiltrationAndVentilation.mechanicalVentilation.data;
 
-const mechanicalVentilationProductData = await useProductReference(
+const mechanicalVentilationProductData = await useProductReferences(
 	mechanicalVentilationData,
 	productData => productData.modelName,
 );

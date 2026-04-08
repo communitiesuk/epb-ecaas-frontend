@@ -276,7 +276,7 @@ const heatSourceOptions = new Map(
 			name="wwhrsProductReference"
 			help="Select the WWHRS type from the PCDB using the button below."
 			:selected-product-reference="model.wwhrsProductReference"
-			:selected-product-type="model.typeOfHotWaterOutlet"
+			:selected-product-type="typeOfShowerProduct.wwhrs"
 			:page-url="route.fullPath"
 			:page-index="index"
 		/>
