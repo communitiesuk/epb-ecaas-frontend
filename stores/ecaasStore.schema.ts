@@ -776,36 +776,84 @@ const baseMeasuredFanPowerAndAirFlowRateKnown = {
 	measuredAirFlowRate: z.number(),
 };
 
-const mechanicalVentilationDataZod = nestedDiscriminatedUnion(
-	baseMechanicalVentilationData,
-	{
-		discriminator: "associatedItemId",
-		variants: [
-			z.object({
-				hasAssociatedItem: z.literal(false),
-				pitch: z.number().min(0).lt(180),
-				orientation: z.number().min(0).lt(360),
-			}),
-			z.object({
-				hasAssociatedItem: z.literal(true),
-			}),
-		] satisfies Tuple,
-	},
-	{
-		discriminator: "typeOfMechanicalVentilationOptions",
-		variants: [
-			...z.discriminatedUnion("measuredFanPowerAndAirFlowRateKnown", [
-				baseMvhrData.extend({ measuredFanPowerAndAirFlowRateKnown: z.literal(false) }),
-				baseMvhrData.extend(baseMeasuredFanPowerAndAirFlowRateKnown),
-			]).options,
-			intermittentMevData,
-			...z.discriminatedUnion("measuredFanPowerAndAirFlowRateKnown", [
-				baseCentralisedContinuousMevData.extend({ measuredFanPowerAndAirFlowRateKnown: z.literal(false) }),
-				baseCentralisedContinuousMevData.extend(baseMeasuredFanPowerAndAirFlowRateKnown),
-			]).options,
-			decentralisedContinuousMevData,
-		],
-	},
+function makeMVWithAssociatedItem<
+	T extends z.ZodRawShape & { hasAssociatedItem?: never },
+>(base: z.ZodObject<T>) {
+	return base.extend({
+		hasAssociatedItem: z.literal(false),
+		pitch: z.number().min(0).lt(180),
+		orientation: z.number().min(0).lt(360),
+	});
+}
+
+function makeMVWithoutAssociatedItem<
+	T extends z.ZodRawShape & { hasAssociatedItem?: never },
+>(base: z.ZodObject<T>) {
+	return base.extend({
+		hasAssociatedItem: z.literal(true),
+	});
+}
+
+const mechanicalVentilationDataZod = z.discriminatedUnion("hasAssociatedItem",
+	[
+		z.discriminatedUnion("typeOfMechanicalVentilationOptions",
+			[
+				z.discriminatedUnion("measuredFanPowerAndAirFlowRateKnown",
+					[
+						makeMVWithAssociatedItem(baseMechanicalVentilationData)
+							.extend(baseMvhrData.shape)
+							.extend({ measuredFanPowerAndAirFlowRateKnown: z.literal(false) }),
+						makeMVWithAssociatedItem(baseMechanicalVentilationData)
+							.extend(baseMvhrData.shape)
+							.extend(baseMeasuredFanPowerAndAirFlowRateKnown),
+					],
+				),
+				makeMVWithAssociatedItem(baseMechanicalVentilationData)
+					.extend(intermittentMevData.shape),
+				z.discriminatedUnion("measuredFanPowerAndAirFlowRateKnown",
+					[
+						makeMVWithAssociatedItem(baseMechanicalVentilationData)
+							.extend(baseCentralisedContinuousMevData.shape)
+							.extend({ measuredFanPowerAndAirFlowRateKnown: z.literal(false) }),
+						makeMVWithAssociatedItem(baseMechanicalVentilationData)
+							.extend(baseCentralisedContinuousMevData.shape)
+							.extend(baseMeasuredFanPowerAndAirFlowRateKnown),
+					],
+				),
+				makeMVWithAssociatedItem(baseMechanicalVentilationData)
+					.extend(decentralisedContinuousMevData.shape),
+			],
+		),
+
+		z.discriminatedUnion("typeOfMechanicalVentilationOptions",
+			[
+				z.discriminatedUnion("measuredFanPowerAndAirFlowRateKnown",
+					[
+						makeMVWithoutAssociatedItem(baseMechanicalVentilationData)
+							.extend(baseMvhrData.shape)
+							.extend({ measuredFanPowerAndAirFlowRateKnown: z.literal(false) }),
+						makeMVWithoutAssociatedItem(baseMechanicalVentilationData)
+							.extend(baseMvhrData.shape)
+							.extend(baseMeasuredFanPowerAndAirFlowRateKnown),
+					],
+				),
+				makeMVWithoutAssociatedItem(baseMechanicalVentilationData)
+					.extend(intermittentMevData.shape),
+				z.discriminatedUnion("measuredFanPowerAndAirFlowRateKnown",
+					[
+						makeMVWithoutAssociatedItem(baseMechanicalVentilationData)
+							.extend(baseCentralisedContinuousMevData.shape)
+							.extend({ measuredFanPowerAndAirFlowRateKnown: z.literal(false) }),
+						makeMVWithoutAssociatedItem(baseMechanicalVentilationData)
+							.extend(baseCentralisedContinuousMevData.shape)
+							.extend(baseMeasuredFanPowerAndAirFlowRateKnown),
+					],
+				),
+				makeMVWithoutAssociatedItem(baseMechanicalVentilationData)
+					.extend(decentralisedContinuousMevData.shape),
+			],
+		),
+	],
 );
 
 export type MechanicalVentilationData = z.infer<typeof mechanicalVentilationDataZod>;
@@ -833,7 +881,7 @@ const baseVentDataZod = z.object({
 	hasAssociatedItem: z.boolean(),
 });
 
-const ventDataZod = z.discriminatedUnion("associatedItemId", [
+const ventDataZod = z.discriminatedUnion("hasAssociatedItem", [
 	baseVentDataZod.extend({
 		hasAssociatedItem: z.literal(false),
 		pitch: z.number().min(0).lt(180),
