@@ -955,7 +955,7 @@ export type PcdbProduct = z.infer<typeof pcdbProduct>;
 
 const heatPumpBase = pcdbPackagedProduct.extend({
 	typeOfHeatSource: z.literal("heatPump"),
-	typeOfHeatPump,
+	typeOfHeatPump: typeOfHeatPump.optional(),
 	maxFlowTemp: zodUnit("temperature").optional(),
 });
 
