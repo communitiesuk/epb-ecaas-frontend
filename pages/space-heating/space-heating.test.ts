@@ -190,7 +190,7 @@ describe("space heating", () => {
 					typeOfHeatSource: "heatNetwork",
 					typeOfHeatNetwork: "communalHeatNetwork",
 					isHeatNetworkInPcdb: true,
-					isFifthGeneration: true,
+					hasBoosterHeatPump: true,
 					boosterHeatPumpId: boosterHeatPump.id,
 				};
 
@@ -200,7 +200,7 @@ describe("space heating", () => {
 					typeOfHeatSource: "heatNetwork",
 					typeOfHeatNetwork: "communalHeatNetwork",
 					isHeatNetworkInPcdb: true,
-					isFifthGeneration: true,
+					hasBoosterHeatPump: true,
 					boosterHeatPumpId: boosterHeatPump.id,
 				};
 				store.$patch({

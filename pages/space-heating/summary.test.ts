@@ -193,7 +193,7 @@ describe("Space heating summary page", () => {
 				productReference: "HEAT_NETWORK-LARGE",
 				energySupply: "electricity",
 				usesHeatInterfaceUnits: false,
-				isFifthGeneration: true,
+				hasBoosterHeatPump: true,
 				boosterHeatPumpId: boosterHeatPump.id,
 			};
 

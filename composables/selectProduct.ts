@@ -29,10 +29,10 @@ export function useSelectHeatSourceProduct(products: DisplayProduct[], heatSourc
 
 			if (heatNetwork) {
 				if ("fifthGHeatNetwork" in product) {
-					heatSourceData.isFifthGeneration = product.fifthGHeatNetwork === 1;
+					heatSourceData.hasBoosterHeatPump = product.fifthGHeatNetwork === 1;
 				} else {
 					useProductData(heatNetwork.id).then((item) => {
-						heatSourceData.isFifthGeneration = !!(item && "fifthGHeatNetwork" in item && item.fifthGHeatNetwork === 1);
+						heatSourceData.hasBoosterHeatPump = !!(item && "fifthGHeatNetwork" in item && item.fifthGHeatNetwork === 1);
 					});
 				}
 			}

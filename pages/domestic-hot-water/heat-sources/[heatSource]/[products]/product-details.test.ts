@@ -246,7 +246,7 @@ describe("Heat source details", async () => {
 		expect((await screen.findByTestId("hybridHeatPump"))).toBeDefined();
 	});
 
-	test("when a heat network product is a fifth generation, isFifthGeneration is set to true", async () => {
+	test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
 		
 		const heatNetwork: Partial<DomesticHotWaterHeatSourceData> = {
 			isExistingHeatSource: false,
@@ -287,7 +287,7 @@ describe("Heat source details", async () => {
 		});	
 		await renderSuspended(ProductDetails);
 		await user.click(screen.getByTestId("selectProductButton"));
-		expect((store.domesticHotWater.heatSources.data[0]!.data as { isFifthGeneration: boolean }).isFifthGeneration).toBe(true);
+		expect((store.domesticHotWater.heatSources.data[0]!.data as { hasBoosterHeatPump: boolean }).hasBoosterHeatPump).toBe(true);
 	});
 		
 	test("Navigates to heat pump page when product is selected", async () => {

@@ -245,7 +245,7 @@ describe("Heat source products page", () => {
 		expect(screen.getByTestId("heatNetworkProductsTable")).toBeDefined();
 	});
 
-	test("when a heat network product is a fifth generation, isFifthGeneration is set to true", async () => {
+	test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
 		mockRoute.mockReturnValue({
 			params: {
 				heatSource: "1",
@@ -289,7 +289,7 @@ describe("Heat source products page", () => {
 		await renderSuspended(Products);
 		await user.click(screen.getByTestId("selectProductButton_0"));
 		expect(store.spaceHeating.heatSource.data[1]!.data).toEqual(expect.objectContaining({
-			isFifthGeneration: true,
+			hasBoosterHeatPump: true,
 		}));
 	});
 

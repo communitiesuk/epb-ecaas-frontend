@@ -908,7 +908,7 @@ describe("heat network", () => {
 		typeOfHeatSource: "heatNetwork",
 		typeOfHeatNetwork: "communalHeatNetwork",
 		isHeatNetworkInPcdb: true,
-		isFifthGeneration: true,
+		hasBoosterHeatPump: true,
 	};
 
 	test("a 5th generation heat network can be tagged with a booster heat pumps from DWH & space heating", async () => {

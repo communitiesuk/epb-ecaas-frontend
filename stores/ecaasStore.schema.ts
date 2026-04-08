@@ -1006,29 +1006,15 @@ const isHeatNetworkInPcdbFields = {
 	variants: [
 		z.object({
 			isHeatNetworkInPcdb: z.literal(true),
-			isFifthGeneration: z.literal(true),
+			hasBoosterHeatPump: z.boolean(), 
 			productReference: z.string().trim().min(1),
 			energySupply: fuelTypeZod.optional(),
-			boosterHeatPumpId: z.string().trim().min(1),
-		}),
-		z.object({
-			isHeatNetworkInPcdb: z.literal(true),
-			isFifthGeneration: z.literal(false),
-			productReference: z.string().trim().min(1),
-			energySupply: fuelTypeZod.optional(),
+			boosterHeatPumpId: z.string().trim().min(1).optional(),
 		}),
 		z.object({
 			isHeatNetworkInPcdb: z.literal(false),
-			hasBoosterHeatPump: z.literal(true),
-			boosterHeatPumpId: z.string().trim().min(1),
-			emissionsFactor: z.number(),
-			outOfScopeEmissionsFactor: z.number(),
-			primaryEnergyFactor: z.number(),
-			canEnergyBeExported: z.boolean(),
-		}),
-		z.object({
-			isHeatNetworkInPcdb: z.literal(false),
-			hasBoosterHeatPump: z.literal(false),
+			hasBoosterHeatPump: z.boolean(),
+			boosterHeatPumpId: z.string().trim().min(1).optional(),
 			emissionsFactor: z.number(),
 			outOfScopeEmissionsFactor: z.number(),
 			primaryEnergyFactor: z.number(),

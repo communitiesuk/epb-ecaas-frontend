@@ -180,7 +180,7 @@ describe("Heat source products page", () => {
 		).toEqual(expect.objectContaining({ needsSpecifiedLocation: false }));
 	});
 
-	test("when a heat network product is a fifth generation, isFifthGeneration is set to true", async () => {
+	test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
 		
 		mockRoute.mockReturnValue({
 			params: {
@@ -220,7 +220,7 @@ describe("Heat source products page", () => {
 	
 		await renderSuspended(Products);
 		await user.click(screen.getByTestId("selectProductButton_0"));
-		expect((store.domesticHotWater.heatSources.data[3]!.data as { isFifthGeneration: boolean }).isFifthGeneration).toBe(true);
+		expect((store.domesticHotWater.heatSources.data[3]!.data as { hasBoosterHeatPump: boolean }).hasBoosterHeatPump).toBe(true);
 	});
 
 	test("makes additional fetch for hot water only heat pumps if pageId is heatPump", async () => {

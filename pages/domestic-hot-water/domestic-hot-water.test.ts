@@ -510,7 +510,7 @@ describe("Domestic hot water", () => {
 				energySupply: "LPG_condition_11F",
 				usesHeatInterfaceUnits: true,
 				heatInterfaceUnitProductReference: "HIU-12345",
-				isFifthGeneration: true,
+				hasBoosterHeatPump: true,
 				boosterHeatPumpId: boosterHeatPumpHotWater.data.id,
 			},
 			complete: true,
@@ -582,7 +582,7 @@ describe("Domestic hot water", () => {
 				typeOfHeatSource: "heatNetwork",
 				typeOfHeatNetwork: "communalHeatNetwork",
 				isHeatNetworkInPcdb: true,
-				isFifthGeneration: true,
+				hasBoosterHeatPump: true,
 				boosterHeatPumpId: boosterHeatPumpHotWater.data.id,
 			};
 

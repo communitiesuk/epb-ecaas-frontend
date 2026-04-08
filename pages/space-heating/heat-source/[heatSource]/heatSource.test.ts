@@ -462,7 +462,7 @@ describe("heatSource", () => {
 			productReference: "HEATNETWORK-LARGE",
 			energySupply: "electricity",
 			usesHeatInterfaceUnits: false,
-			isFifthGeneration: true,
+			hasBoosterHeatPump: true,
 			boosterHeatPumpId: boosterHeatPump.id,
 		};
 		const heatNetwork2: HeatSourceData = {
@@ -474,7 +474,7 @@ describe("heatSource", () => {
 			productReference: "HEATNETWORK-LARGE",
 			energySupply: "electricity",
 			usesHeatInterfaceUnits: false,
-			isFifthGeneration: false,
+			hasBoosterHeatPump: false,
 		};
 
 		const patchHeatNetworkDataToStore = async () => {
@@ -531,7 +531,7 @@ describe("heatSource", () => {
 			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/heat-network");
 		});
 
-		test("the 'Booster heat pump' element renders when isFifthGeneration is true", async () => {
+		test("the 'Booster heat pump' element renders when hasBoosterHeatPump is true", async () => {
 			patchHeatNetworkDataToStore();
 			await renderSuspended(HeatSourceForm, {
 				route: {
@@ -562,7 +562,7 @@ describe("heatSource", () => {
 							typeOfHeatSource: "heatNetwork",
 							typeOfHeatNetwork: "communalHeatNetwork",
 							isHeatNetworkInPcdb: true, 
-							isFifthGeneration: true } } ],
+							hasBoosterHeatPump: true } } ],
 					},
 				},
 			});
@@ -1414,7 +1414,7 @@ describe("heatSource", () => {
 			productReference: "HEATNETWORK-LARGE",
 			energySupply: "electricity",
 			usesHeatInterfaceUnits: false,
-			isFifthGeneration: true,
+			hasBoosterHeatPump: true,
 			boosterHeatPumpId: boosterHeatPump.id,
 		};
 
