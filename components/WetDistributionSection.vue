@@ -84,16 +84,4 @@ defineProps<{
 
 </template>
 
-<style scoped>
-.shading-summary :deep(.govuk-summary-list__key),
-.shading-summary :deep(.govuk-summary-list__value) {
-    font-size: 1.1875rem;
-}
-
-:deep(.govuk-fieldset__legend--m),
-:deep(.govuk-body--m),
-:deep(.govuk-label--m) {
-    font-size: 1.1875rem !important;
-}
-</style>
 
