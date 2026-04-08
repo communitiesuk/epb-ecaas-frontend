@@ -119,6 +119,18 @@ const heatSourceOptions = new Map(
 			: e.data.name,
 	]),
 );
+
+const heatSourceTypes = new Map(
+	store.domesticHotWater.heatSources.data.map((e) => [
+		e.data.id,
+		e.data.isExistingHeatSource
+			? store.spaceHeating.heatSource.data
+				.find((x) => x.data.id === e.data.heatSourceId)?.data.typeOfHeatSource
+                ?? "Invalid existing heat source"
+			: e.data.typeOfHeatSource,
+	]),
+);
+
 </script>
 
 <template>
@@ -212,13 +224,13 @@ const heatSourceOptions = new Map(
 			</div>
 		</FormKit>
 		<FormKit
-			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
+			v-if="model.typeOfWaterStorage === 'hotWaterCylinder' && model.dhwHeatSourceId && heatSourceTypes.get(model.dhwHeatSourceId) === 'heatPump'"
 			id="areaOfHeatExchanger"
 			type="govInputWithSuffix"
 			label="Area of heat exchanger installed"
 			suffix-text="m²"
 			name="areaOfHeatExchanger"
-			validation="required | number"
+			validation="number"
 		/>
 		<FormKit
 			v-if="model.typeOfWaterStorage !== undefined"

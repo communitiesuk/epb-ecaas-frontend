@@ -120,7 +120,6 @@ describe("water storage", () => {
 		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
 		expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
 		expect((await screen.findByTestId("dhwHeatSourceId_error"))).toBeDefined();
-		expect((await screen.findByTestId("areaOfHeatExchanger_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
 		expect((await screen.findByTestId("thermostatPosition_error"))).toBeDefined();
 
@@ -190,7 +189,7 @@ describe("water storage", () => {
 			);
 			expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe(hotWaterCylinder.data.dailyEnergyLoss.toString());
 			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("areaOfHeatExchanger")).value).toBe(hotWaterCylinder.data.areaOfHeatExchanger.toString());
+			expect((await screen.findByTestId<HTMLInputElement>("areaOfHeatExchanger")).value).toBe(hotWaterCylinder.data.areaOfHeatExchanger!.toString());
 			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value).toBe(hotWaterCylinder.data.heaterPosition.toString());
 			expect((await screen.findByTestId<HTMLInputElement>("thermostatPosition")).value).toBe(hotWaterCylinder.data.thermostatPosition.toString());
 		});

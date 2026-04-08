@@ -1294,7 +1294,7 @@ const hotWaterCylinderDataZod = namedWithId.extend({
 	storageCylinderVolume: zodUnit("volume"),
 	dailyEnergyLoss: z.number(),
 	dhwHeatSourceId: z.string(),
-	areaOfHeatExchanger: z.number(),
+	areaOfHeatExchanger: z.number().optional(),
 	heaterPosition: fraction,
 	thermostatPosition: fraction,
 });
