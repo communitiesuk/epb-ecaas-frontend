@@ -27,18 +27,42 @@ const getProductsByTechnologyType = (technologyType: TechnologyType, pageSize?: 
 
 	const startIndex = startKey ? parseInt(startKey) : 0;
 	const size = !pageSize || pageSize > filteredProducts.length ? filteredProducts.length : pageSize;
-	
+
 	let endIndex: number | undefined = startIndex + size;
 	endIndex = endIndex < filteredProducts.length ? endIndex : undefined;
 
 	const products = filteredProducts.slice(startIndex, endIndex)
-		.map(x => ({
-			id: x.id,
-			brandName: x.brandName,
-			modelName: x.modelName,
-			modelQualifier: x.modelQualifier,
-			technologyType: x.technologyType as TechnologyType,
-		})) as DisplayProduct[];
+		.map((x) => {
+			const product = x as Record<string, unknown>;
+			const id = (product.id ?? product.ID)?.toString();
+			if (!id) {
+				return undefined;
+			}
+
+			const technologyType = product.technologyType as TechnologyType;
+
+			if (technologyType === "ConvectorRadiator" && typeof product.type === "string" && typeof product.height === "number") {
+				return {
+					id,
+					type: product.type,
+					height: product.height,
+					technologyType,
+				} satisfies DisplayProduct;
+			}
+
+			if (technologyType === "ConvectorRadiator") {
+				return undefined;
+			}
+
+			return {
+				id,
+				brandName: typeof product.brandName === "string" ? product.brandName : "",
+				modelName: typeof product.modelName === "string" ? product.modelName : "",
+				modelQualifier: typeof product.modelQualifier === "string" ? product.modelQualifier : null,
+				technologyType,
+			} satisfies DisplayProduct;
+		})
+		.filter((x): x is NonNullable<typeof x> => x !== undefined);
 
 	const paginatedProducts: PaginatedResult<DisplayProduct> = {
 		data: products,
@@ -52,13 +76,37 @@ const getProductsByTechnologyGroup = (technologyGroup: TechnologyGroup) => {
 	const filteredProducts = data.filter(p => technologyGroup.includes(p.technologyGroup as TechnologyGroup));
 
 	const products = filteredProducts
-		.map(x => ({
-			id: x.id,
-			brandName: x.brandName,
-			modelName: x.modelName,
-			modelQualifier: x.modelQualifier,
-			technologyType: x.technologyType as TechnologyType,
-		})) as DisplayProduct[];
+		.map((x) => {
+			const product = x as Record<string, unknown>;
+			const id = (product.id ?? product.ID)?.toString();
+			if (!id) {
+				return undefined;
+			}
+
+			const technologyType = product.technologyType as TechnologyType;
+
+			if (technologyType === "ConvectorRadiator" && typeof product.type === "string" && typeof product.height === "number") {
+				return {
+					id,
+					type: product.type,
+					height: product.height,
+					technologyType,
+				} satisfies DisplayProduct;
+			}
+
+			if (technologyType === "ConvectorRadiator") {
+				return undefined;
+			}
+
+			return {
+				id,
+				brandName: typeof product.brandName === "string" ? product.brandName : "",
+				modelName: typeof product.modelName === "string" ? product.modelName : "",
+				modelQualifier: typeof product.modelQualifier === "string" ? product.modelQualifier : null,
+				technologyType,
+			} satisfies DisplayProduct;
+		})
+		.filter((x) => x !== undefined);
 
 	const paginatedProducts: PaginatedResult<DisplayProduct> = {
 		data: products,

@@ -30,6 +30,17 @@ describe("Heat emitter products page", () => {
 			},
 		],
 	};
+
+	const MOCKED_RADIATORS: PaginatedResult<DisplayProduct> = {
+		data: [
+			{
+				id: "60",
+				technologyType: "ConvectorRadiator",
+				type: "T33",
+				height: 900,
+			},
+		],
+	};
 	beforeEach(() => {
 		mockFetch.mockReturnValue({
 			data: ref(MOCKED_HEAT_EMITTERS),
@@ -70,6 +81,30 @@ describe("Heat emitter products page", () => {
 		expect(
 			screen.getByRole("heading", { name: "Select an electric storage heater" }),
 		);
+	});
+
+	test("title is shown for radiator products", async () => {
+		mockFetch.mockReset();
+		mockFetch.mockReturnValue({
+			data: ref(MOCKED_RADIATORS),
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				heatEmitter: "0",
+				products: "radiator",
+			},
+			query: { emitterIndex: "0" },
+			path: "/0/radiator",
+		});
+		await renderSuspended(Products);
+
+		expect(
+			screen.getByRole("heading", { name: "Select a radiator" }),
+		);
+		expect(screen.queryByText("Brand")).toBeNull();
+		expect(screen.getByText("T33")).toBeDefined();
+		expect(screen.getByText("900")).toBeDefined();
 	});
 
 	test("when a user selects a product its product reference gets stored", async () => {

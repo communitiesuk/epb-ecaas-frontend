@@ -171,4 +171,42 @@ describe("Heat pump details", async () => {
 		// Assert
 		expect((await screen.findByTestId("electricStorageHeater"))).toBeDefined();
 	});
+
+	test("Displays convector radiator details when product is a radiator", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatEmitter: "0",
+				products: "radiator",
+				id: "60",
+			},
+			query: { emitterIndex: "0" },
+			path: "/0/radiator/60",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				technologyType: "ConvectorRadiator",
+				ID: 60,
+				water_contents: 15.7344,
+				c: 0.0151485,
+				wetEmitterType: "radiator",
+				dataType: "illustrative_aggregated",
+				thermal_mass_per_m: 0.028337,
+				thermal_output_delta_50k: 3097,
+				weight: 79.8415,
+				frac_convective: 0.86,
+				type: "T33",
+				n: 1.36,
+				height: 900,
+			}),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect((await screen.findByTestId("convectorRadiator"))).toBeDefined();
+		expect(screen.getByRole("heading", { name: "T33 900 mm" })).toBeDefined();
+	});
 });

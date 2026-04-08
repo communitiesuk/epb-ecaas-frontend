@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
+import type { ConvectorRadiatorProduct, Product } from "~/pcdb/pcdb.types";
 import { productTypeMap, typeOfHeatEmitter, type HeatEmittingProductType, type PcdbProduct } from "~/stores/ecaasStore.schema";
 import { heatEmittingProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
+import { getRadiatorHeading, isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
 
 definePageMeta({ layout: "one-column" });
 
@@ -26,10 +28,29 @@ const productType = heatEmittingProductTypesDisplay[heatEmittingType as HeatEmit
 
 const index = Number(params.heatEmitter);
 
-const { data: { value: data } } = await useFetch(`/api/products/${params.id}/details`, {
+const { data: { value: data } } = await useFetch<Product | ConvectorRadiatorProduct>(`/api/products/${params.id}/details`, {
 	query: {
 		technologyType,
 	},
+});
+
+const radiatorProduct = computed(() => data && isConvectorRadiatorProduct(data) ? data : undefined);
+const nonRadiatorProduct = computed(() => data && !isConvectorRadiatorProduct(data) ? data : undefined);
+
+const productHeading = computed(() => {
+	if (!data) {
+		return "";
+	}
+
+	if (nonRadiatorProduct.value?.modelName) {
+		return nonRadiatorProduct.value.modelName;
+	}
+
+	if (radiatorProduct.value) {
+		return getRadiatorHeading(radiatorProduct.value);
+	}
+
+	return `Product ${params.id}`;
 });
 
 const backUrl = getUrl(pageId)
@@ -37,17 +58,18 @@ const backUrl = getUrl(pageId)
 
 const selectProduct = () => {
 	store.$patch((state) => {
+		const selectedReference = String(params.id);
 		const item = state.spaceHeating.heatEmitters.data[index];
 
 		if (item && data && emitterIndex != null) {
 			const emitters = (item.data as { emitters: Record<string, unknown>[] }).emitters;
 			const emitter = emitters[emitterIndex];
 			if (emitter) {
-				emitter.productReference = data.id.toString();
+				emitter.productReference = selectedReference;
 			}
 		} else if (item && data) {
 			const product = item.data as PcdbProduct;
-			product.productReference = data.id.toString();
+			product.productReference = selectedReference;
 		}
 	});
 
@@ -61,18 +83,19 @@ const selectProduct = () => {
 
 <template>
 	<Head>
-		<Title>{{ data?.modelName }}</Title>
+		<Title>{{ productHeading }}</Title>
 	</Head>
 
 	<NuxtLink :href="backUrl" class="govuk-back-link govuk-!-margin-top-0 govuk-!-margin-bottom-5" data-testid="backLink" @click="router.back()">
 		{{ productType ? `Back to ${sentenceToLowerCase(productType(true))}` : 'Back' }}
 	</NuxtLink>
 
-	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ data?.modelName }}</h1>
-	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
+	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ productHeading }}</h1>
+	<h2 v-if="nonRadiatorProduct?.brandName" class="govuk-caption-l govuk-!-margin-top-0">{{ nonRadiatorProduct.brandName }}</h2>
 
-	<ProductDetailsFanCoil v-if="!!data && heatEmittingType === 'fanCoil'" :product="data!" />
-	<ProductDetailsElectricStorageHeater v-if="!!data && heatEmittingType === typeOfHeatEmitter.electricStorageHeater" :product="data!" />
+	<ProductDetailsFanCoil v-if="!!nonRadiatorProduct && heatEmittingType === 'fanCoil'" :product="nonRadiatorProduct" />
+	<ProductDetailsConvectorRadiator v-if="!!radiatorProduct && heatEmittingType === 'radiator'" :product="radiatorProduct" />
+	<ProductDetailsElectricStorageHeater v-if="!!nonRadiatorProduct && heatEmittingType === typeOfHeatEmitter.electricStorageHeater" :product="nonRadiatorProduct" />
 
 	<div class="govuk-button-group">
 		<GovButton

@@ -1,7 +1,7 @@
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import Fuse, { type Expression } from "fuse.js";
 
-const productSortOption = ["id", "brandName", "modelName", "modelQualifier", "communityHeatNetworkName"] as const;
+const productSortOption = ["id", "brandName", "modelName", "modelQualifier", "type", "height", "communityHeatNetworkName"] as const;
 
 export type SearchOption = "productId" | "modelAndBrand" | "networkName";
 export type ProductSortOption = typeof productSortOption[number];
@@ -39,6 +39,7 @@ export function useProductSearch(products: DisplayProduct[], model: ProductSearc
 				"brandName",
 				"modelName",
 				"modelQualifier",
+				"type",
 				"communityHeatNetworkName",
 			],
 		});
@@ -50,6 +51,7 @@ export function useProductSearch(products: DisplayProduct[], model: ProductSearc
 						{ brandName: searchValue },
 						{ modelName: searchValue },
 						{ modelQualifier: searchValue },
+						{ type: searchValue },
 						{ communityHeatNetworkName: searchValue },
 					],
 				};

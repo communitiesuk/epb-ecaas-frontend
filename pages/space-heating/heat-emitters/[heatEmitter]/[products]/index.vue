@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { page } from "~/data/pages/pages";
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import { productTypeMap, type HeatEmittingProductType, type PcdbProduct } from "~/stores/ecaasStore.schema";
 
 definePageMeta({ layout: false });
@@ -15,7 +16,9 @@ const { data: { value } } = await useFetch("/api/products", {
 	},
 });
 
-const { pagination } = searchData(value?.data ?? []);
+const products = ref<DisplayProduct[]>(value?.data ?? []);
+
+const { pagination } = searchData(products.value);
 
 const selectProduct = (reference: string) => {
 	store.$patch((state) => {

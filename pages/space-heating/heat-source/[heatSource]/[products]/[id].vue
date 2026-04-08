@@ -55,7 +55,7 @@ const selectProduct = async () => {
 	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
 
 	<ProductDetailsHybridHeatPump v-if="!!data && data.technologyType === 'HybridHeatPump'" :product="data" />
-	<ProductDetailsHeatPump v-else-if="!!data && technologyGroups.includes(data.technologyGroup as TechnologyGroup)" :product="data!" />
+	<ProductDetailsHeatPump v-else-if="!!data && 'technologyGroup' in data && technologyGroups.includes(data.technologyGroup as TechnologyGroup)" :product="data!" />
 
 	<ProductDetailsBoiler v-if="!!data && heatSourceType in boilerTypes" :product="data!"/>
 	<ProductDetailsHeatBatteryPCM v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryPcm" :product="data!" />

@@ -268,6 +268,26 @@ export const electricStorageHeaterZod = BaseProduct.extend({
 
 export type ElectricStorageHeaterProduct = z.infer<typeof electricStorageHeaterZod>;
 
+export const convectorRadiatorInputZod = z.object({
+	technologyType: z.literal("ConvectorRadiator"),
+	ID: z.number(),
+	water_contents: z.number(),
+	c: z.number(),
+	wetEmitterType: z.string(),
+	dataType: z.string(),
+	thermal_mass_per_m: z.number(),
+	thermal_output_delta_50k: z.number(),
+	weight: z.number(),
+	frac_convective: z.number(),
+	type: z.string(),
+	n: z.number(),
+	height: z.number(),
+});
+
+export const convectorRadiatorZod = convectorRadiatorInputZod;
+
+export type ConvectorRadiatorProduct = z.infer<typeof convectorRadiatorZod>;
+
 export const heatInterfaceUnitZod = BaseProduct.extend({
 	technologyType: z.literal("HeatInterfaceUnit"),
 	powerCircPump: z.nullable(z.number()),
@@ -358,6 +378,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	smartHotWaterTankZod,
 	fancoilZod,
 	electricStorageHeaterZod,
+	convectorRadiatorZod,
 	heatInterfaceUnitZod,
 	centralisedMvhrZod,
 	centralisedContinuousMevZod,
@@ -367,11 +388,12 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	airPoweredShowerZod,
 ]);
 
-export type Product = z.infer<typeof productSchema>;
+type ProductSchemaUnion = z.infer<typeof productSchema>;
+export type Product = Exclude<ProductSchemaUnion, { technologyType: "ConvectorRadiator" }>;
 
 export const Products = z.array(productSchema);
 
-export type TechnologyType = Product["technologyType"];
+export type TechnologyType = ProductSchemaUnion["technologyType"];
 
 const categoryTechnologies = {
 	heatPump: [
@@ -398,6 +420,7 @@ const categoryTechnologies = {
 	waterStorage: ["SmartHotWaterTank"],
 	heatEmitting: [
 		"FanCoils",
+		"ConvectorRadiator",
 		"StorageHeater",
 		"DirectElectricHeaters",
 	],
@@ -409,12 +432,37 @@ export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMa
 
 export type TechnologyGroup = z.infer<typeof technologyGroupsZod>;
 
-export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "id" | "brandName" | "modelName" | "modelQualifier"> & {
+type DisplayProductBase = {
+	id: string;
 	technologyType: TechnologyType;
+	backupCtrlType?: string;
+	powerMaxBackup?: number;
 	boilerLocation?: "internal" | "external" | "unknown";
 	communityHeatNetworkName?: string;
-	boilerProductID?: string; 
+	boilerProductID?: string;
 };
+
+export type StandardDisplayProduct = DisplayProductBase & Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier"> & {
+	technologyType: Exclude<TechnologyType, "ConvectorRadiator">;
+	type?: never;
+	height?: never;
+};
+
+export type ConvectorRadiatorDisplayProduct = Pick<DisplayProductBase, "id"> & {
+	technologyType: "ConvectorRadiator";
+	type: ConvectorRadiatorProduct["type"];
+	height: ConvectorRadiatorProduct["height"];
+	brandName?: never;
+	modelName?: never;
+	modelQualifier?: never;
+	backupCtrlType?: never;
+	powerMaxBackup?: never;
+	boilerLocation?: never;
+	communityHeatNetworkName?: never;
+	boilerProductID?: never;
+};
+
+export type DisplayProduct = StandardDisplayProduct | ConvectorRadiatorDisplayProduct;
 
 export type DisplayProductWithFlowTemp = DisplayProduct & {
 	designFlowTemperature?: number;

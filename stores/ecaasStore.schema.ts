@@ -1110,6 +1110,7 @@ export const productTypeMap = {
 	"heatBatteryPcm": "HeatBatteryPCM",
 	"heatBatteryDryCore": "HeatBatteryDryCore",
 	"fanCoil": "FanCoils",
+	"radiator": "ConvectorRadiator",
 	"electricStorageHeater": "StorageHeater",
 	"smartHotWaterTank": "SmartHotWaterTank",
 	"heatInterfaceUnit": "HeatInterfaceUnit",
@@ -1266,7 +1267,7 @@ const heatEmittingDataZod = z.discriminatedUnion("typeOfHeatEmitter", [
 	electricStorageHeaterSchema,
 ]);
 
-export type HeatEmittingProductType = Exclude<z.infer<typeof _typeOfHeatEmitter>, "wetDistributionSystem"> | "fanCoil";
+export type HeatEmittingProductType = Exclude<z.infer<typeof _typeOfHeatEmitter>, "wetDistributionSystem"> | "fanCoil" | "radiator";
 export type HeatEmittingData = z.infer<typeof heatEmittingDataZod>;
 
 const heatingControlsDataZod = named.extend({

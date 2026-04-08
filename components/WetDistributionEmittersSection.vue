@@ -2,7 +2,8 @@
 import { v4 as uuidv4 } from "uuid";
 import { emitterFloorAreaZod, lengthRadiatorZod, type WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
-import type { Product } from "~/pcdb/pcdb.types";
+import type { ConvectorRadiatorProduct, Product } from "~/pcdb/pcdb.types";
+import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
 
 const route = useRoute();
 const router = useRouter();
@@ -60,9 +61,23 @@ const productDetails = ref<Record<string, string[]>>({});
 
 const fetchProductName = async (productReference: string) => {
 	if (productDetails.value[productReference]) return;
-	const { data: product } = await useFetch<Product>(`/api/products/${productReference}`);
-	if (product.value?.modelName) {
-		productDetails.value[productReference] = [product.value.brandName, product.value.modelName, product.value.modelQualifier].filter(Boolean) as string[];
+	const { data: product } = await useFetch<Product | ConvectorRadiatorProduct>(`/api/products/${productReference}`);
+	if (!product.value) {
+		return;
+	}
+
+	if ("modelName" in product.value && product.value.modelName) {
+		productDetails.value[productReference] = [
+			"brandName" in product.value ? product.value.brandName : undefined,
+			product.value.modelName,
+			"modelQualifier" in product.value ? product.value.modelQualifier : undefined,
+		].filter(Boolean) as string[];
+		return;
+	}
+
+	if (isConvectorRadiatorProduct(product.value) && product.value.type) {
+		const heightText = product.value.height != null ? `${product.value.height} mm` : undefined;
+		productDetails.value[productReference] = [product.value.type, heightText].filter(Boolean) as string[];
 	}
 };
 
@@ -280,11 +295,17 @@ const saveEmitter = () => {
 					/>
 					<template v-if="formModel.typeOfHeatEmitter === 'radiator'">
 						<FormKit
-							:id="`productReference_${i}`"
-							type="govInputText"
+							:id="`selectRadiator_${i}`"
+							type="govPcdbProduct"
 							label="Product reference"
 							name="productReference"
 							validation="required"
+							help="Select the radiator type from the PCDB using the button below."
+							:selected-product-reference="formModel.productReference as string"
+							selected-product-type="radiator"
+							:page-url="route.fullPath"
+							:page-index="props.index"
+							:emitter-index="i"
 						/>
 						<FormKit
 							:id="`numOfRadiators_${i}`"

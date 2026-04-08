@@ -56,7 +56,7 @@ const selectProduct = async () => {
 
 	<ProductDetailsHybridHeatPump v-if="!!data && data.technologyType === 'HybridHeatPump'" :product="data" />
 	<ProductDetailsHotWaterHeatPump v-else-if="data?.technologyType === 'HotWaterOnlyHeatPump'" :product="data" />
-	<ProductDetailsHeatPump v-else-if="!!data && technologyGroups.includes(data.technologyGroup as TechnologyGroup)" :product="data" />
+	<ProductDetailsHeatPump v-else-if="!!data && 'technologyGroup' in data && technologyGroups.includes(data.technologyGroup as TechnologyGroup)" :product="data" />
 
 	<ProductDetailsBoiler v-if="!!data && heatSourceType in boilerTypes" :product="data!"/>
 	<ProductDetailsHeatBatteryPCM v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryPcm" :product="data!" />

@@ -4,7 +4,7 @@ import type { PcdbClient } from "./client.types";
 import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 const localConfig = {
-	region: "fakeRegion", 
+	region: "fakeRegion",
 	endpoint: "http://localhost:8000",
 	credentials: {
 		accessKeyId: "fakeMyKeyId",
@@ -43,6 +43,48 @@ const getProduct = async (id: string, includeTestData: boolean) => {
 	return Item;
 };
 
+const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?: TechnologyType): DisplayProduct | undefined => {
+	const id = (item.id ?? item.ID)?.toString();
+	if (!id) {
+		return undefined;
+	}
+
+	const technologyType = (item.technologyType ?? fallbackTechnologyType) as TechnologyType;
+
+	if (technologyType === "ConvectorRadiator") {
+		if (typeof item.type !== "string") {
+			return undefined;
+		}
+
+		const height = typeof item.height === "number" ? item.height : typeof item.height === "string" ? parseFloat(item.height) : NaN;
+		if (!isFinite(height)) {
+			return undefined;
+		}
+
+		return {
+			id,
+			type: item.type,
+			height,
+			technologyType,
+		};
+	}
+
+	return {
+		id,
+		brandName: typeof item.brandName === "string" ? item.brandName : "",
+		modelName: typeof item.modelName === "string" ? item.modelName : "",
+		modelQualifier: typeof item.modelQualifier === "string" ? item.modelQualifier : null,
+		technologyType,
+		...(item.backupCtrlType ? { backupCtrlType: item.backupCtrlType as string } : {}),
+		...(item.powerMaxBackup ? { powerMaxBackup: item.powerMaxBackup as number } : {}),
+		...(item.boilerLocation === "internal" || item.boilerLocation === "external" || item.boilerLocation === "unknown"
+			? { boilerLocation: item.boilerLocation }
+			: {}),
+		...(typeof item.communityHeatNetworkName === "string" ? { communityHeatNetworkName: item.communityHeatNetworkName } : {}),
+		...(typeof item.boilerProductID === "string" ? { boilerProductID: item.boilerProductID } : {}),
+	};
+};
+
 const getProductsByTechnologyType = async (technologyType: TechnologyType, pageSize?: number, startKey?: string) => {
 	const result = await docClient.send(new QueryCommand({
 		TableName: "products",
@@ -53,21 +95,7 @@ const getProductsByTechnologyType = async (technologyType: TechnologyType, pageS
 		...startKey && { ExclusiveStartKey: JSON.parse(startKey) },
 	}));
 
-	const products = result.Items?.map(x => {
-		const product: DisplayProduct = {
-			id: x.id as string,
-			brandName: x.brandName as string,
-			modelName: x.modelName as string,
-			modelQualifier: x.modelQualifier as string,
-			technologyType: x.technologyType as TechnologyType,
-			...(x.backupCtrlType ? { backupCtrlType: x.backupCtrlType as string } : {}),
-			...(x.powerMaxBackup ? { powerMaxBackup: x.powerMaxBackup as number } : {}),
-			...(x.boilerLocation ? { boilerLocation: x.boilerLocation } : {}),
-			...(x.communityHeatNetworkName ? { communityHeatNetworkName: x.communityHeatNetworkName } : null),
-		};
-
-		return product;
-	}) ?? [];
+	const products = result.Items?.map(x => toDisplayProduct(x, technologyType)).filter((x): x is DisplayProduct => x !== undefined) ?? [];
 
 	const paginatedProducts: PaginatedResult<DisplayProduct> = {
 		data: products,
@@ -90,20 +118,7 @@ const getProductsByTechnologyGroup = async (technologyGroup: TechnologyGroup) =>
 			...lastEvaluationKey && { ExclusiveStartKey: lastEvaluationKey },
 		}));
 
-		products.push(...(result.Items?.map(x => {
-			const product: DisplayProduct = {
-				id: x.id as string,
-				brandName: x.brandName as string,
-				modelName: x.modelName as string,
-				modelQualifier: x.modelQualifier as string,
-				technologyType: x.technologyType as TechnologyType,
-				...(x.boilerLocation ? { boilerLocation: x.boilerLocation } : {}),
-				...(x.communityHeatNetworkName ? { communityHeatNetworkName: x.communityHeatNetworkName } : null),
-				...(x.boilerProductID ? { boilerProductID: x.boilerProductID } : null),
-			};
-
-			return product;
-		}) ?? []));
+		products.push(...(result.Items?.map(x => toDisplayProduct(x)).filter((x): x is DisplayProduct => x !== undefined) ?? []));
 
 		lastEvaluationKey = result.LastEvaluatedKey;
 	} while (lastEvaluationKey);

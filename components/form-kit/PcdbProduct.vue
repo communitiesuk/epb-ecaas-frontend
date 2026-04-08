@@ -2,6 +2,7 @@
 import type { FormKitFrameworkContext } from "@formkit/core";
 import { showErrorState, getErrorMessage } from "#imports";
 import type { Product } from "~/pcdb/pcdb.types";
+import { isConvectorRadiatorProduct, type AnyPcdbProduct } from "~/utils/convectorRadiator";
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
@@ -22,7 +23,7 @@ const {
 } = props.context;
 
 async function fetchProduct(reference: string) {
-	const response = await useFetch(`/api/products/${reference}`);
+	const response = await useFetch<AnyPcdbProduct>(`/api/products/${reference}`);
 	productData.value = response?.data?.value;
 }
 
@@ -35,7 +36,15 @@ function buildProductsPageUrl(url: string, index: number, productType: string, e
 const selectedProduct = ref<string | undefined>(selectedProductReference);
 
 const productsPageUrl = ref(buildProductsPageUrl(pageUrl, index, selectedProductType ?? "", emitterIndex));
-const productData = ref<Product | undefined | null>();
+const productData = ref<AnyPcdbProduct | undefined | null>();
+
+function hasModelDetails(product: Product): product is Product & { brandName: string; modelName: string; modelQualifier?: string | null } {
+	return "modelName" in product;
+}
+
+function productReferenceForDetails(product: AnyPcdbProduct): string {
+	return isConvectorRadiatorProduct(product) ? `${product.ID}` : product.id;
+}
 
 if (selectedProduct.value) {
 	await fetchProduct(selectedProductReference);
@@ -81,9 +90,15 @@ watch(props.context, async ({ attrs: {
 				<template v-else>
 					<ul class="govuk-list" data-testId="pcdbProductData">
 						<li>Product reference: <span data-testid="productData_productReference" class="bold">{{ selectedProduct }}</span></li>
-						<li>Brand: <span class="bold">{{ productData.brandName }}</span></li>
-						<li>Model: <span class="bold">{{ productData.modelName }}</span></li>
-						<li>Model Qualifier: <span class="bold">{{ productData.modelQualifier ?? '-' }}</span></li>
+						<template v-if="isConvectorRadiatorProduct(productData)">
+							<li>Type: <span class="bold">{{ productData.type ?? '-' }}</span></li>
+							<li>Height: <span class="bold">{{ productData.height != null ? `${productData.height} mm` : '-' }}</span></li>
+						</template>
+						<template v-else-if="hasModelDetails(productData)">
+							<li>Brand: <span class="bold">{{ productData.brandName }}</span></li>
+							<li>Model: <span class="bold">{{ productData.modelName }}</span></li>
+							<li>Model Qualifier: <span class="bold">{{ productData.modelQualifier ?? '-' }}</span></li>
+						</template>
 					</ul>
 				</template>
 				<GovButton
@@ -95,7 +110,7 @@ watch(props.context, async ({ attrs: {
 				>
 					Select a different product
 				</GovButton>
-				<NuxtLink v-if="disabled" :href="`${productsPageUrl}/${productData.id}`" class="govuk-link">More details</NuxtLink>
+				<NuxtLink v-if="disabled" :href="`${productsPageUrl}/${productReferenceForDetails(productData)}`" class="govuk-link">More details</NuxtLink>
 			</div>
 		</div>
 	</div>

@@ -1,5 +1,5 @@
 import { objectFromEntries } from "ts-extras";
-import type { DisplayProduct, TechnologyGroup, TechnologyType } from "~/pcdb/pcdb.types";
+import type { StandardDisplayProduct, TechnologyGroup, TechnologyType } from "~/pcdb/pcdb.types";
 import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, SchemaConvectiveType, SchemaFuelType, SchemaLeaksTestPressure, SchemaRadiatorType, SchemaMechanicalVentilationInstallationLocation, SchemaMechanicalVentilationInstallationType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
@@ -251,12 +251,13 @@ export function displayEcoDesignController(value: EcoDesignControllerValue | und
 // 	return `${product.brandName} - ${product.modelName}`;
 // }
 
+
 // temporary ones just for test fake heat pumps
-export type ProductDisplayString = FirstWord<DisplayProduct["modelName"]>;
+export type ProductDisplayString = FirstWord<StandardDisplayProduct["modelName"]>;
 
 type FirstWord<S extends string> = S extends `${infer Word} ${string}` ? Word : S;
 
-export function displayProduct(product: DisplayProduct): ProductDisplayString {
+export function displayProduct(product: StandardDisplayProduct): ProductDisplayString {
 	return product.modelName.split(" ")[0]!;
 }
 
@@ -396,6 +397,7 @@ export const waterStorageProductTypeDisplay = {
 
 export const heatEmittingProductTypesDisplay = {
 	"fanCoil": pluralize("Fan coil"),
+	"radiator": pluralize("Radiator"),
 	"electricStorageHeater": pluralize("Electric storage heater"),
 	"instantElectricHeater": pluralize("Instant electric heater"),
 } as const satisfies Record<HeatEmittingProductType, (plural: boolean) => string>;
@@ -495,7 +497,7 @@ export const displayTechnologyType = (technologyType: TechnologyType, plural: bo
 	return heatSourceProductTypesDisplay[productType as HeatSourceProductType](plural);
 };
 
-export const coldWaterSourceOptions: Record<string, string> = { 
+export const coldWaterSourceOptions: Record<string, string> = {
 	headerTank: "Header tank",
 	mainsWater: "Mains water",
 } as const;
