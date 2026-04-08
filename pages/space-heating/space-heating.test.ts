@@ -430,6 +430,7 @@ describe("space heating", () => {
 				productReference: "2000",
 				packagedProductReference: "1000",
 				needsSpecifiedLocation: false,
+				maxFlowTemp: unitValue(32, celsius),
 			};
 
 			const exhaustAirHeatPump: HeatSourceData = {

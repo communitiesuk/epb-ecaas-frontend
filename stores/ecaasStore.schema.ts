@@ -1288,7 +1288,6 @@ const hotWaterHeatSourceExtension = {
 	heatSourceId: z.literal("NEW_HEAT_SOURCE"),
 	coldWaterSource: z.enum(["mainsWater", "headerTank"]),
 	isExistingHeatSource: z.literal(false),
-	maxFlowTemp: zodUnit("temperature").optional(),
 };
 
 const baseImmersionHeater = namedWithId.extend({

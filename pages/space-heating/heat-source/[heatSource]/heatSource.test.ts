@@ -33,6 +33,8 @@ describe("heatSource", () => {
 		typeOfBoiler: "combiBoiler",
 		productReference: "BOILER_SMALL",
 		needsSpecifiedLocation: false,
+		maxFlowTemp: unitValue(12, celsius),
+		
 	};
 	const boosterHeatPump:HeatSourceData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b52222",
@@ -235,6 +237,7 @@ describe("heatSource", () => {
 			productReference: "BOILER_MEDIUM",
 			needsSpecifiedLocation: true,
 			specifiedLocation: "external",
+			maxFlowTemp: unitValue(2, celsius),
 		};
 
 		test("'BoilerSection' component displays when type of heat source is boiler", async () => {
@@ -352,6 +355,8 @@ describe("heatSource", () => {
 				productReference: "BOILER_MEDIUM",
 				needsSpecifiedLocation: true,
 				packagedProductReference: "1000",
+				maxFlowTemp: unitValue(32, celsius),
+				
 			};
 
 			store.$patch({
@@ -404,6 +409,8 @@ describe("heatSource", () => {
 			["internal", "external"].forEach(location => {
 				expect(screen.getByTestId<HTMLInputElement>(`specifiedLocation_${location}`).disabled).toBe(true);
 			});
+			expect(screen.getByTestId<HTMLInputElement>("maxFlowTemp").disabled).toBe(true);
+
 		});
 
 		describe("boiler default name", () => {

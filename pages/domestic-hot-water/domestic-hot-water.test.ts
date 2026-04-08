@@ -6,6 +6,7 @@ import formStatus from "~/constants/formStatus";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import HotWaterOutlets from "./hot-water-outlets/[outlet]/index.vue";
 import { litre } from "~/utils/units/volume";
+import { celsius } from "~/utils/units/temperature";
 
 const baseCompleteForm = {
 	data: [],
@@ -37,6 +38,7 @@ describe("Domestic hot water", () => {
 			needsSpecifiedLocation: true,
 			specifiedLocation: "internal",
 			heatSourceId: "NEW_HEAT_SOURCE",
+			maxFlowTemp: unitValue(12, celsius),
 		},
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
@@ -701,6 +703,7 @@ describe("Domestic hot water", () => {
 				productReference: "2000",
 				packagedProductReference: "1000",
 				needsSpecifiedLocation: false,
+				maxFlowTemp: unitValue(32, celsius),
 			};
 
 			const exhaustAirHeatPump: HeatSourceData = {
@@ -971,6 +974,7 @@ describe("Domestic hot water", () => {
 				productReference: "2000",
 				packagedProductReference: "1000",
 				needsSpecifiedLocation: false,
+				maxFlowTemp: unitValue(32, celsius),
 			};
 
 			store.$patch({
