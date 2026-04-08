@@ -284,6 +284,7 @@ const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
 				&& model.typeOfHeatSource === 'boiler'"
 			:model="(model as BoilerModelType)"
 			:index="index"
+			page="domestic hot water"
 			@update-boiler-model="updateHeatSource" />
 		<HeatNetworkSection
 			v-if="model.isExistingHeatSource === false

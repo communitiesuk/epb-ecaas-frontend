@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { v4 as uuidv4 } from "uuid";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import type { BoilerProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
+import { celsius } from "~/utils/units/temperature";
 
 vi.mock("uuid");
 
@@ -90,6 +91,7 @@ const backupBoiler: DomesticHotWaterHeatSourceData = {
 	productReference: "2000",
 	needsSpecifiedLocation: true,
 	packagedProductReference: "1000",
+	maxFlowTemp: unitValue(32, celsius),
 };
 
 describe("Heat Source Page", () => {
@@ -230,6 +232,7 @@ describe("Heat Source Page", () => {
 			name: "Heat source 1",
 			typeOfHeatSource: "boiler",
 			typeOfBoiler: "combiBoiler",
+			maxFlowTemp: unitValue(32, celsius),
 		};
 
 		const heatBattery: Partial<DomesticHotWaterHeatSourceData> = {
@@ -362,6 +365,8 @@ describe("Boiler section", () => {
 		["internal", "external"].forEach(location => {
 			expect(screen.getByTestId<HTMLInputElement>(`specifiedLocation_${location}`).disabled).toBe(true);
 		});
+
+		expect(screen.getByTestId<HTMLInputElement>(`maxFlowTemp`).disabled).toBe(true);
 	});
 });
 

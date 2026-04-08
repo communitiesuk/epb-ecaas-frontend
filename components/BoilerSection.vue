@@ -4,6 +4,7 @@ import { uniqueName } from "#imports";
 import type { SchemaBoilerLocationType } from "~/schema/aliases";
 import { boilerTypes, type BoilerLocationDisplay } from "~/utils/display";
 import { hasPackagedProduct } from "~/utils/packagedProduct";
+import { celsius } from "~/utils/units/temperature";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -11,6 +12,7 @@ const store = useEcaasStore();
 defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "boiler" }>;
 	index: number;
+	page: HeatSourceSectionPage;
 }>();
 
 const heatSources = getCombinedHeatSources(store);
@@ -71,6 +73,17 @@ const emit = defineEmits(["update-boiler-model"]);
 			name="locationOfBoiler"
 			validation="required"
 			:disabled="hasPackagedProduct(model)"
+		/>
+		<FormKit
+			id="maxFlowTemp"
+			name="maxFlowTemp"
+			label="Maximum flow temperature"
+			:help="`Enter the highest temperature that the battery is allowed to operate at for ${page}`"
+			type="govInputWithUnit"
+			:unit="celsius"
+			validation="required"
+			:disabled="hasPackagedProduct(model)"
+			:data-field="page == 'domestic hot water' ? 'HotWaterSource.*.HeatSource.*.temp_flow_limit_upper' :  'SpaceHeatSystem.*HeatSource.temp_flow_limit_upper'"
 		/>
 	</template>
 </template>

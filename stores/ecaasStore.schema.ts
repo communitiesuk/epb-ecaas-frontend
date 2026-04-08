@@ -879,6 +879,8 @@ const typeOfHeatBattery = z.enum(["heatBatteryPcm", "heatBatteryDryCore"]);
 const typeOfLocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
 const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedContinuousMev", "decentralisedContinuousMev"]);
 
+export type HeatSourceSectionPage = "space heating" | "domestic hot water";
+
 export type SpaceHeatingNew = AssertEachKeyIsPageId<{
 	heatSource: EcaasFormList<HeatSourceData>,
 	heatEmitters: EcaasFormList<HeatEmittingData>
@@ -911,6 +913,7 @@ const boilerBase = hasPcdbPackagedProduct.extend({
 	typeOfBoiler,
 	specifiedLocation: z.optional(boilerLocationZod),
 	needsSpecifiedLocation: z.boolean(),
+	maxFlowTemp: zodUnit("temperature").optional(),
 });
 
 export type HasPcdbPackagedProduct = z.infer<typeof hasPcdbPackagedProduct>;

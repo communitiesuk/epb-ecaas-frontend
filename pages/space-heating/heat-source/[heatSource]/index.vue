@@ -136,6 +136,7 @@ const boilers = heatSourceStoreData
 			v-if="model?.typeOfHeatSource === 'boiler'"
 			:model="(model as BoilerModelType)"
 			:index="index"
+			page="space heating"
 			@update-boiler-model="updateHeatSource" />
 		<HeatNetworkSection
 			v-if="model?.typeOfHeatSource === 'heatNetwork'"

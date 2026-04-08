@@ -9,6 +9,7 @@ import formStatus from "~/constants/formStatus";
 import HeatSourceForm from "./heat-source/[heatSource]/index.vue";
 import HeatEmitterForm from "./heat-emitters/[heatEmitter]/index.vue";
 import { litre } from "~/utils/units/volume";
+import { celsius } from "~/utils/units/temperature";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -31,6 +32,7 @@ describe("space heating", () => {
 		typeOfBoiler: "combiBoiler",
 		productReference: "BOILER_SMALL",
 		needsSpecifiedLocation: false,
+		maxFlowTemp: unitValue(32, celsius),
 	};
 
 	const heatSource2: HeatSourceData = {
@@ -40,6 +42,7 @@ describe("space heating", () => {
 		typeOfBoiler: "combiBoiler",
 		productReference: "BOILER_MEDIUM",
 		needsSpecifiedLocation: false,
+		maxFlowTemp: unitValue(32, celsius),
 	};
 
 	const heatSource3: HeatSourceData = {
@@ -50,6 +53,7 @@ describe("space heating", () => {
 		productReference: "BOILER_LARGE",
 		needsSpecifiedLocation: true,
 		specifiedLocation: "internal",
+		maxFlowTemp: unitValue(32, celsius),
 	};
 
 	describe("heat source", () => {

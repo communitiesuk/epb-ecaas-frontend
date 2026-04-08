@@ -6,14 +6,12 @@ import type { UnitValue } from "~/utils/units/types";
 const route = useRoute();
 const store = useEcaasStore();
 
-type HeatPumpSectionPage = "space heating" | "domestic hot water";
-
 const { model } = defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatPump" }>;
 	index: number;
 	boilers: [string, string][];
 	addBoilerPageId: PageId;
-	page: HeatPumpSectionPage;
+	page: HeatSourceSectionPage;
 }>();
 
 const heatSources = getCombinedHeatSources(store);
