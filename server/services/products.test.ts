@@ -57,7 +57,7 @@ describe("Products service", () => {
 				modelQualifier: x.modelQualifier,
 				technologyType,
 				...(x.backupCtrlType ? { backupCtrlType: x.backupCtrlType } : {}),
-				...(x.powerMaxBackup ? { powerMaxBackup: x.powerMaxBackup } : {}), 
+				...(x.powerMaxBackup ? { powerMaxBackup: x.powerMaxBackup } : {}),
 			})));
 		});
 
@@ -136,6 +136,8 @@ describe("Products service", () => {
 				modelName: x.modelName,
 				modelQualifier: x.modelQualifier,
 				technologyType: x.technologyType,
+				...(x.backupCtrlType ? { backupCtrlType: x.backupCtrlType } : {}),
+				...(x.powerMaxBackup ? { powerMaxBackup: x.powerMaxBackup } : {}),
 			})));
 		});
 	});
