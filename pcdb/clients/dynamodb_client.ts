@@ -16,7 +16,7 @@ const client = new DynamoDBClient(process.env.NODE_ENV === "development" ? local
 const docClient = DynamoDBDocumentClient.from(client);
 
 export const dynamodbClient: PcdbClient = {
-	async getProduct<T>(id: number, includeTestData: boolean) {
+	async getProduct<T>(id: string, includeTestData: boolean) {
 		return await getProduct(id, includeTestData) as T;
 	},
 	async getProductsByTechnologyType(technologyType, pageSize, startKey) {
@@ -27,7 +27,7 @@ export const dynamodbClient: PcdbClient = {
 	},
 };
 
-const getProduct = async (id: number, includeTestData: boolean) => {
+const getProduct = async (id: string, includeTestData: boolean) => {
 	const result = await docClient.send(new GetCommand({
 		TableName: "products",
 		Key: { id },

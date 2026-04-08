@@ -106,7 +106,7 @@ describe("Products service", () => {
 
 			// Act
 			try {
-				await getProductDetails(NaN);
+				await getProductDetails("");
 			} catch (error) {
 				h3Error = error as H3Error;
 			}
@@ -125,7 +125,7 @@ describe("Products service", () => {
 
 			// Act
 			try {
-				await getProductDetails(1);
+				await getProductDetails("1");
 			} catch (error) {
 				h3Error = error as H3Error;
 			}
@@ -143,7 +143,7 @@ describe("Products service", () => {
 			ddbMock.on(GetCommand).resolves({ Item: product });
 
 			// Act
-			const result = await getProductDetails(1234);
+			const result = await getProductDetails("1234");
 
 			// Assert
 			expect(result).toStrictEqual(product);
@@ -157,7 +157,7 @@ describe("Products service", () => {
 
 			// Act
 			try {
-				await getProductDetails(NaN);
+				await getProductDetails("");
 			} catch (error) {
 				h3Error = error as H3Error;
 			}
@@ -176,7 +176,7 @@ describe("Products service", () => {
 
 			// Act
 			try {
-				await getProductDetails(1);
+				await getProductDetails("1");
 			} catch (error) {
 				h3Error = error as H3Error;
 			}
@@ -194,7 +194,7 @@ describe("Products service", () => {
 			ddbMock.on(GetCommand).resolves({ Item: product });
 
 			// Act
-			const result = await getProductDetails(1234);
+			const result = await getProductDetails("1234");
 
 			// Assert
 			expect(result).toStrictEqual(product);

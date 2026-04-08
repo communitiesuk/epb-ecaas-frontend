@@ -3,7 +3,7 @@ import type { DisplayProduct, PaginatedResult, Product, TechnologyGroup, Technol
 export type ProductForTechnology<T extends TechnologyType> = Extract<Product, { technologyType: T }>;
 
 export interface PcdbClient {
-	getProduct: <T extends TechnologyType>(id: number, includeTestData: boolean) => Promise<ProductForTechnology<T> | undefined>;
+	getProduct: <T extends TechnologyType>(id: string, includeTestData: boolean) => Promise<ProductForTechnology<T> | undefined>;
 	getProductsByTechnologyType(technologyType: TechnologyType, pageSize?: number, startKey?: string): Promise<PaginatedResult<DisplayProduct>>;
 	getProductsByTechnologyGroup(technologyGroup: TechnologyGroup): Promise<PaginatedResult<DisplayProduct>>;
 };

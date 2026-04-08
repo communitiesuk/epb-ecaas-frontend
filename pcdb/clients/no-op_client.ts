@@ -3,7 +3,7 @@ import type { PcdbClient } from "./client.types";
 import data from "@/pcdb/data/products.json";
 
 export const noopClient: PcdbClient = {
-	async getProduct<T>(id: number) {
+	async getProduct<T>(id: string) {
 		return getProduct(id) as T;
 	},
 	async getProductsByTechnologyType(technologyType, pageSize, startKey) {
@@ -14,7 +14,7 @@ export const noopClient: PcdbClient = {
 	},
 };
 
-const getProduct = (id: number) => {
+const getProduct = (id: string) => {
 	const product = data.find(p => p.id === id.toString()) as Record<string, unknown>;
 
 	delete product?.testData;

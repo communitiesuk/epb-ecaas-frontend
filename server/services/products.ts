@@ -21,7 +21,7 @@ export async function getGroupProducts(technologyGroup: TechnologyGroup): Promis
 	return await client.getProductsByTechnologyGroup(technologyGroup);
 };
 
-export async function getProductDetails(id: number, includeTestData: boolean = false): Promise<Product | undefined> {
+export async function getProductDetails(id: string, includeTestData: boolean = false): Promise<Product | undefined> {
 	ensureValidProductId(id);
 
 	const product = await client.getProduct(id, includeTestData);
@@ -40,8 +40,8 @@ const ensureValidTechnologyType = (technologyType: TechnologyType) => {
 	}
 };
 
-const ensureValidProductId = (id: number) => {
-	if (isNaN(id)) {
+const ensureValidProductId = (id: string) => {
+	if (isNaN(parseInt(id))) {
 		throw createError({
 			statusCode: 400,
 			statusMessage: "Invalid product ID",
