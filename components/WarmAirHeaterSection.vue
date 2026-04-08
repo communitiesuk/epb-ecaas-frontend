@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { WarmAirHeaterModelType } from "~/pages/space-heating/heat-emitters/[heatEmitter]/index.vue";
-
+import { productCountZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 defineProps<{
 	model: WarmAirHeaterModelType
 }>();
-
 
 </script>
 
@@ -42,5 +42,7 @@ defineProps<{
 		name="numOfWarmAirHeaters"
 		type="govInputInt"
 		label="Number of warm air heaters"
-		help="Enter the number of warm air heaters with this specification in the dwelling" />
+		help="Enter the number of warm air heaters with this specification in the dwelling"
+		:validation="zodTypeAsFormKitValidation(productCountZod)"
+	/>
 </template>

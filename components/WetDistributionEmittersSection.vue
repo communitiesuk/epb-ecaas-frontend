@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { emitterFloorAreaZod, lengthRadiatorZod, type WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
+import { emitterFloorAreaZod, lengthRadiatorZod, productCountZod, type WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import type { ConvectorRadiatorProduct, Product } from "~/pcdb/pcdb.types";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
@@ -312,7 +312,7 @@ const saveEmitter = () => {
 							type="govInputInt"
 							label="Number of radiators"
 							name="numOfRadiators"
-							validation="required"
+							:validation="zodTypeAsFormKitValidation(productCountZod)"
 						/>
 						<FormKit
 							:id="`length_${i}`"
@@ -342,7 +342,7 @@ const saveEmitter = () => {
 							type="govInputInt"
 							label="Number of fan coils"
 							name="numOfFanCoils"
-							validation="required"
+							:validation="zodTypeAsFormKitValidation(productCountZod)"
 						/>
 					</template>
 					<template v-if="formModel.typeOfHeatEmitter === 'underfloorHeating'">

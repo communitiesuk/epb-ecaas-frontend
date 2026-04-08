@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { ElectricStorageHeaterModelType } from "~/pages/space-heating/heat-emitters/[heatEmitter]/index.vue";
+import { productCountZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const route = useRoute();
 
@@ -34,5 +36,7 @@ defineProps<{
 		name="numOfStorageHeaters"
 		type="govInputInt"
 		label="Number of storage heaters"
-		help="Enter the number of storage heaters with this specification in the dwelling" />
+		help="Enter the number of storage heaters with this specification in the dwelling"
+		:validation="zodTypeAsFormKitValidation(productCountZod)"
+	/>
 </template>

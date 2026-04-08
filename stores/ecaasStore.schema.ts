@@ -1165,10 +1165,12 @@ const underfloorHeatingSchema = namedWithId.extend({
 	areaOfUnderfloorHeating: emitterFloorAreaZod,
 });
 
+export const productCountZod = z.int().min(1);
+
 const fanCoilSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal(typeOfWetDistributionSystemEmitter.fanCoil),
 	productReference: z.string(),
-	numOfFanCoils: z.number(),
+	numOfFanCoils: productCountZod,
 });
 
 export const lengthRadiatorZod = z.number().gt(0);
@@ -1176,7 +1178,7 @@ export const lengthRadiatorZod = z.number().gt(0);
 const radiatorSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal(typeOfWetDistributionSystemEmitter.radiator),
 	productReference: z.string(),
-	numOfRadiators: z.number(),
+	numOfRadiators: productCountZod,
 	length: lengthRadiatorZod,
 });
 export type RadiatorData = z.infer<typeof radiatorSchema>;
@@ -1194,8 +1196,8 @@ const wetDistributionSystemEmitterDraftSchema = z.object({
 	typeOfHeatEmitter: wetDistributionSystemEmitter.optional(),
 	productReference: z.string().optional(),
 	areaOfUnderfloorHeating: emitterFloorAreaZod.optional(),
-	numOfFanCoils: z.number().optional(),
-	numOfRadiators: z.number().optional(),
+	numOfFanCoils: productCountZod.optional(),
+	numOfRadiators: productCountZod.optional(),
 	length: z.number().min(0.001).optional(),
 });
 
@@ -1225,12 +1227,12 @@ const warmAirHeaterSchema = namedWithId.extend({
 	designTempDiffAcrossEmitters: z.number(),
 	heatSource: z.string(),
 	convectionFraction: z.number(),
-	numOfWarmAirHeaters: z.number(),
+	numOfWarmAirHeaters: productCountZod,
 	heatingRank,
 });
 
 export const instantElectricHeaterRatedPowerZod = z.number().min(0.1).max(70);
-export const numOfInstantElectricHeatersZod = z.number().min(1);
+export const numOfInstantElectricHeatersZod = productCountZod;
 
 const instantElectricHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("instantElectricHeater"),
@@ -1243,7 +1245,7 @@ const instantElectricHeaterSchema = namedWithId.extend({
 const electricStorageHeaterSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal(typeOfHeatEmitter.electricStorageHeater),
 	productReference: z.string(),
-	numOfStorageHeaters: z.number(),
+	numOfStorageHeaters: productCountZod,
 	heatingRank,
 });
 
