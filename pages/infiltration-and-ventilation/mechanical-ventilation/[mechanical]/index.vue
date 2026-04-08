@@ -366,8 +366,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			/>
 			<FormKit
 				id="midHeightOfAirFlowPathForIntake"
-				type="govInputFloat"
+				type="govInputWithSuffix"
 				label="Mid-height of air flow path for intake"
+				suffix-text="m"
 				help="Enter the mid-height of the path through which the air flows in the intake, measured from the bottom of the ventilation zone to the middle of the intake."
 				name="midHeightOfAirFlowPathForIntake"
 				validation="required | min:0"
