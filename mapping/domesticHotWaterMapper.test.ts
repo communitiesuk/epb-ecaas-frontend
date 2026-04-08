@@ -33,6 +33,7 @@ describe("domestic hot water mapper", () => {
 		data: {
 			id: heatSourceId,
 			heatSourceId: "NEW_HEAT_SOURCE",
+			energySupply: "electricity",
 			name: "heatBattery",
 			typeOfHeatSource: "heatBattery",
 			coldWaterSource: "mainsWater",

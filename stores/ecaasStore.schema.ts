@@ -975,7 +975,7 @@ const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatBattery,
 	maxFlowTemp: zodUnit("temperature").optional(),
 	numberOfUnits: z.number(),
-	energySupply: fuelTypeZod.optional(),
+	energySupply: fuelTypeZod,
 });
 
 const solarThermalSystemBase = namedWithId.extend({

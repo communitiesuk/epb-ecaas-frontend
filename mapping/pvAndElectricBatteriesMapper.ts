@@ -1,15 +1,14 @@
-import type { EmptyObject } from "type-fest";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { objectFromEntries } from "ts-extras";
-import type { SchemaElectricBattery, SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
+import type { SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
 import type { SchemaWindowShadingObject } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName } from "./common";
 
 export function mapPvAndElectricBatteriesData(state: ResolvedState): [
 	Pick<FhsInputSchema, "OnSiteGeneration">,
-	{ "ElectricBattery": SchemaElectricBattery } | EmptyObject,
-	Pick<SchemaEnergySupplyElectricity, "diverter"> | EmptyObject,
-	{ "ElectricBattery": SchemaElectricBattery } | { "diverter": SchemaEnergySupplyElectricity } | EmptyObject,
+	Pick<SchemaEnergySupplyElectricity, "ElectricBattery">,
+	Pick<SchemaEnergySupplyElectricity, "diverter">,
+	{ [key: string]: Pick<SchemaEnergySupplyElectricity, "ElectricBattery"> | Pick<SchemaEnergySupplyElectricity, "diverter"> },
 ] {
 	return [
 		mapPvArrayData(state),
@@ -45,7 +44,7 @@ export function mapPvArrayData(state: ResolvedState): Pick<FhsInputSchema, "OnSi
 		})),
 	};
 }
-export function mapPvArrayEnergySupplyData(state: ResolvedState): { [key: string]: SchemaEnergySupplyElectricity } | EmptyObject {
+export function mapPvArrayEnergySupplyData(state: ResolvedState): { [key: string]: Pick<SchemaEnergySupplyElectricity, "ElectricBattery"> | Pick<SchemaEnergySupplyElectricity, "diverter"> } {
 	const pvArrays = state.pvAndBatteries.pvArrays;
 	if (pvArrays.length === 0) {
 		return {};
@@ -112,7 +111,7 @@ export function maPvArrayShadingData(shading: ShadingObjectData[]): SchemaWindow
 
 }
 
-export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery": SchemaElectricBattery } | EmptyObject {
+export function mapElectricBatteryData(state: ResolvedState): Pick<SchemaEnergySupplyElectricity, "ElectricBattery"> {
 	const electricBattery = state.pvAndBatteries.electricBattery[0];
 	if (electricBattery) {
 		return {
@@ -129,7 +128,7 @@ export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery
 	return {};
 }
 
-export function mapPvDiverterData(state: ResolvedState): Pick<SchemaEnergySupplyElectricity, "diverter"> | EmptyObject {
+export function mapPvDiverterData(state: ResolvedState): Pick<SchemaEnergySupplyElectricity, "diverter"> {
 	const diverter = state.pvAndBatteries.diverters[0];
 
 	if (!diverter) {

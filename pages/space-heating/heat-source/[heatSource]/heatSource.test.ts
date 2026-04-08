@@ -1272,6 +1272,7 @@ describe("heatSource", () => {
 			const heatBattery: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Heat battery 1",
+				energySupply: "electricity",
 				typeOfHeatSource: "heatBattery",
 				typeOfHeatBattery: "heatBatteryPcm",
 				productReference: "HEATBATTERY-SMALL",

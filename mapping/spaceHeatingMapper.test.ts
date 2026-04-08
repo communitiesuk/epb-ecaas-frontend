@@ -208,6 +208,7 @@ describe("Space heating - heat sources", () => {
 					battery_type: "pcm",
 					number_of_units: 1,
 					product_reference: heatBattery1.productReference,
+					EnergySupply: "electricity",
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -231,9 +232,7 @@ describe("Space heating - heat sources", () => {
 					type: "HeatBattery",
 					battery_type: "dry_core",
 					number_of_units: 2,
-					EnergySupply: {
-						type: "LPG_bottled",
-					},
+					EnergySupply: "LPG_bottled",
 					product_reference: heatBattery2.productReference,
 				},
 			};
@@ -263,14 +262,13 @@ describe("Space heating - heat sources", () => {
 					battery_type: "pcm",
 					number_of_units: 1,
 					product_reference: heatBattery1.productReference,
+					EnergySupply: "electricity",
 				},
 				[heatBattery2.name]: {
 					type: "HeatBattery",
 					battery_type: "dry_core",
 					number_of_units: 2,
-					EnergySupply: {
-						type: "LPG_bottled",
-					},
+					EnergySupply: "LPG_bottled",
 					product_reference: heatBattery2.productReference,
 				},
 			};

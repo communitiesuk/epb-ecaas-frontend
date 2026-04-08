@@ -1,5 +1,5 @@
 import type { StripDefs } from "./mapping.types";
-import type { SchemaFhsInputSchema } from "~/schema/api-schema.types";
+import type { SchemaEnergySupplyElectricity, SchemaFhsInputSchema } from "~/schema/api-schema.types";
 import type { SchemaHeatSourceWetHeatPumpWithProductReference, SchemaStorageTank } from "~/schema/aliases";
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
@@ -32,7 +32,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		...coolingData,
 		EnergySupply: {
 			[defaultElectricityEnergySupplyName]: {
-				...(fuelType && fuelType[defaultElectricityEnergySupplyName]),
+				...fuelType![defaultElectricityEnergySupplyName] as SchemaEnergySupplyElectricity,
 				...electricBatteries,
 				...diverter,
 			},
@@ -78,7 +78,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		})),
 	};
 
-	const fhsInput = merge.all([
+	const fhsInput = merge.all<FhsInputSchema>([
 		defaultAppliances,
 		dwellingDetailsData,
 		infiltrationVentilationData,
@@ -89,7 +89,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		pvData,
 		defaultColdWaterSource,
 		events,
-	]) as FhsInputSchema;
+	]);
 
 	console.log(fhsInput);
 
