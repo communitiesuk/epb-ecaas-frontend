@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import { getUrl, hasPackagedProduct, type DomesticHotWaterHeatSourceData } from "#imports";
 import { coldWaterSourceOptions, DHWHeatSourceTypesWithDisplay } from "~/utils/display";
 import type { Product } from "~/pcdb/pcdb.types";
+import { celsius } from "~/utils/units/temperature";
+import type { UnitValue } from "~/utils/units/types";
 
 const title = "Heat source";
 const store = useEcaasStore();
@@ -184,6 +186,7 @@ store.spaceHeating.heatSource.data
 					disabled: true, 
 				} : {
 					label: x.data.name,
+					typeOfHeatSource: x.data.typeOfHeatSource,
 					disabled: false,
 				},
 		);
@@ -213,6 +216,16 @@ const spaceHeatingBoilers = hotWaterHeatSourceStoreData
 	.filter(x => x !== null);
 
 const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
+
+const existingHeatSourceType = computed(() => {
+	return radioOptions.get(model?.value.heatSourceId).typeOfHeatSource;
+});
+
+const greaterThanZero = (node: FormKitNode) => {
+	const value = node.value as UnitValue;
+	return value.amount > 0;
+};
+
 </script>
 
 <template>
@@ -316,6 +329,21 @@ const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
 				&& model.typeOfHeatSource === 'pointOfUse'"
 			:model="(model as PointOfUseModelType)" 
 			:index="index" />
+		<FormKit
+			v-if="model.isExistingHeatSource && ['boiler', 'heatPump', 'heatBattery'].includes(existingHeatSourceType)"
+			id="maxFlowTemp"
+			name="maxFlowTemp"
+			label="Maximum flow temperature"
+			:help="`Enter the highest flow temperature that the heat source is allowed to operate at for domestic hot water`"
+			type="govInputWithUnit"
+			:unit="celsius"
+			:validation-rules="{ exclusiveRangeFromMin: greaterThanZero }"
+			validation="required | exclusiveRangeFromMin:0"
+			:validation-messages="{
+				exclusiveRangeFromMin: `Maximum flow temperature must be greater than 0.`,
+			}"
+			:data-field="'HotWaterSource.*.HeatSource.*.temp_flow_limit_upper'"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

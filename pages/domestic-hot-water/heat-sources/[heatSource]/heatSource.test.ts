@@ -41,6 +41,7 @@ const existingHeatPumpSpaceHeating1: HeatSourceData = {
 	typeOfHeatSource: "heatPump",
 	typeOfHeatPump: "airSource",
 	productReference: "HEATPUMP-LARGE",
+	maxFlowTemp: unitValue(7, celsius),
 };
 const existingHeatPumpSpaceHeating2: HeatSourceData = {
 	id: "463c94f6-566c-49b2-af27-57e5c68b5c31",
@@ -48,6 +49,7 @@ const existingHeatPumpSpaceHeating2: HeatSourceData = {
 	typeOfHeatSource: "heatPump",
 	typeOfHeatPump: "airSource",
 	productReference: "HEATPUMP-LARGE",
+	maxFlowTemp: unitValue(7, celsius),
 };
 
 const dhwWithExistingHeatPump: DomesticHotWaterHeatSourceData = {
@@ -66,6 +68,7 @@ const dhwWithNewHeatPump: DomesticHotWaterHeatSourceData = {
 	typeOfHeatSource: "heatPump",
 	typeOfHeatPump: "airSource",
 	productReference: "HEATPUMP-SMALL",
+	maxFlowTemp: unitValue(7, celsius),
 };
 
 const hybridHeatPump: DomesticHotWaterHeatSourceData = {
@@ -78,6 +81,7 @@ const hybridHeatPump: DomesticHotWaterHeatSourceData = {
 	typeOfHeatPump: "hybridHeatPump",
 	productReference: "1000",
 	packageProductId: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+	maxFlowTemp: unitValue(7, celsius),
 };
 
 const backupBoiler: DomesticHotWaterHeatSourceData = {
@@ -224,6 +228,7 @@ describe("Heat Source Page", () => {
 			name: "Heat source 1",
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "airSource",
+			maxFlowTemp: unitValue(7, celsius),
 		};
 		const boiler: Partial<DomesticHotWaterHeatSourceData> = {
 			isExistingHeatSource: false,
@@ -265,7 +270,7 @@ describe("Heat Source Page", () => {
 			isExistingHeatSource: false,
 			heatSourceId: "NEW_HEAT_SOURCE",
 			id: "463c94f6-566c-49b2-af27-57e5c888888",
-			name: "Heat source 1",  
+			name: "Heat source 1",
 			typeOfHeatSource: "immersionHeater",
 		};
 
@@ -276,7 +281,7 @@ describe("Heat Source Page", () => {
 			name: "Heat source 1",
 			typeOfHeatSource: "pointOfUse",
 		};
-	
+
 		it.each([["heat pump", heatPump], ["boiler", boiler], ["heat battery", heatBattery], ["heat network", heatNetwork], ["solar thermal system", solarThermalSystem],["immersion heater", immersionHeater], ["point of use", pointOfUse]])(
 			"check DHW heat sources %s and space heating heat sources to ensure name is unique", async (_name, heatSource) => {
 
@@ -298,7 +303,7 @@ describe("Heat Source Page", () => {
 						params: { "heatSource": "0" },
 					},
 				});
-	
+
 				await user.click(screen.getByTestId("saveAndComplete"));
 				const nameError = await screen.findByTestId("name_error");
 				expect(nameError.innerText).toContain("An element with this name in domestic hot water or space heating already exists. Please enter a unique name.");
@@ -379,7 +384,7 @@ describe("Heat pump section", () => {
 					heatSource: {
 						data: [{ data: existingHeatPumpSpaceHeating1 }],
 					},
-				},		
+				},
 			});
 
 			await renderSuspended(HeatSourceForm, {
@@ -532,7 +537,7 @@ describe("Heat pump section", () => {
 				typeOfHeatSource: "heatPump",
 				isExistingHeatSource: false,
 				heatSourceId: "NEW_HEAT_SOURCE",
-				coldWaterSource: "headerTank", 
+				coldWaterSource: "headerTank",
 			});
 		});
 
@@ -553,6 +558,7 @@ describe("Heat pump section", () => {
 
 			expect((await screen.findByTestId("typeOfHeatSource_heatPump")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat pump 1");
+			expect((await screen.findByTestId<HTMLInputElement>("maxFlowTemp")).value).toBe("7");
 		});
 
 		test("heat pump is updated when data with id exists in store", async () => {
@@ -629,6 +635,7 @@ describe("Heat pump section", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(await screen.findByTestId("selectHeatPump_error")).toBeDefined();
+			expect(await screen.findByTestId("maxFlowTemp_error")).toBeDefined();
 		});
 	});
 
