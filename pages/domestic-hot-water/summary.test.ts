@@ -524,6 +524,8 @@ describe("Domestic hot water summary", () => {
 			productReference: "BOILER_SMALL",
 			needsSpecifiedLocation: true,
 			specifiedLocation: "external",
+			maxFlowTemp: unitValue(12, celsius),
+
 		};
 
 		const dhwWithNewHeatBattery: DomesticHotWaterHeatSourceData = {
@@ -677,6 +679,8 @@ describe("Domestic hot water summary", () => {
 			"Type of heat source": "Boiler",
 			"Type of boiler": "Combi boiler",
 			"Product reference": "BOILER_SMALL",
+			"Maximum flow temperature": `12 ${celsius.suffix}`,
+		
 		};
 		const expectedHeatBattery = {
 			"Cold water source": "Mains water",

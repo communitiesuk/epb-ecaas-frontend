@@ -64,6 +64,8 @@ describe("Space heating summary page", () => {
 				productReference: "BOILER_SMALL",
 				needsSpecifiedLocation: true,
 				specifiedLocation: "internal",
+				maxFlowTemp: unitValue(2, celsius),
+				
 			};
 
 			const store = useEcaasStore();
@@ -83,6 +85,8 @@ describe("Space heating summary page", () => {
 				"Type of boiler": "Combi boiler",
 				"Product reference": "BOILER_SMALL",
 				"Location of boiler": "Heated space",
+				"Maximum flow temperature": `2 ${celsius.suffix}`,
+
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
