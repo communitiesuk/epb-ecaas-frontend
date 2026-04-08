@@ -85,6 +85,41 @@ const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?
 	};
 };
 
+const hasConvectorDisplayFields = (item: Record<string, unknown>) => {
+	if (typeof item.type !== "string") {
+		return false;
+	}
+
+	const parsedHeight = typeof item.height === "number"
+		? item.height
+		: typeof item.height === "string"
+			? parseFloat(item.height)
+			: NaN;
+
+	return isFinite(parsedHeight);
+};
+
+const hydrateConvectorItems = async (items: Record<string, unknown>[]) => {
+	console.log(`Hydrating ${items.length} ConvectorRadiator items`, { items });
+	return await Promise.all(items.map(async (item) => {
+		if (hasConvectorDisplayFields(item)) {
+			return item;
+		}
+
+		const key = item.id ?? item.ID;
+		if (key == null) {
+			return item;
+		}
+
+		const result = await docClient.send(new GetCommand({
+			TableName: "products",
+			Key: { id: key },
+		}));
+
+		return (result.Item as Record<string, unknown> | undefined) ?? item;
+	}));
+};
+
 const getProductsByTechnologyType = async (technologyType: TechnologyType, pageSize?: number, startKey?: string) => {
 	const result = await docClient.send(new QueryCommand({
 		TableName: "products",
@@ -95,7 +130,12 @@ const getProductsByTechnologyType = async (technologyType: TechnologyType, pageS
 		...startKey && { ExclusiveStartKey: JSON.parse(startKey) },
 	}));
 
-	const products = result.Items?.map(x => toDisplayProduct(x, technologyType)).filter((x): x is DisplayProduct => x !== undefined) ?? [];
+	const queryItems = result.Items ?? [];
+	const itemsToDisplay = technologyType === "ConvectorRadiator"
+		? await hydrateConvectorItems(queryItems)
+		: queryItems;
+
+	const products = itemsToDisplay.map(x => toDisplayProduct(x, technologyType)).filter((x): x is DisplayProduct => x !== undefined);
 
 	const paginatedProducts: PaginatedResult<DisplayProduct> = {
 		data: products,

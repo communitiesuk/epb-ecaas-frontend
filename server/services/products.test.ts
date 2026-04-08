@@ -61,6 +61,47 @@ describe("Products service", () => {
 			})));
 		});
 
+		it("Hydrates ConvectorRadiator products when query projection omits radiator fields", async () => {
+			// Arrange
+			const technologyType: TechnologyType = "ConvectorRadiator";
+			const projectedQueryItems = [{ id: "58" }];
+			const fullRadiator = {
+				id: "58",
+				technologyType,
+				type: "T33",
+				height: 700,
+			};
+
+			ddbMock.on(QueryCommand, {
+				TableName: "products",
+				IndexName: "by-technology-type",
+				KeyConditionExpression: "technologyType = :technologyType",
+				ExpressionAttributeValues: { ":technologyType": technologyType },
+			}).resolves({
+				Items: projectedQueryItems,
+			});
+
+			ddbMock.on(GetCommand, {
+				TableName: "products",
+				Key: { id: "58" },
+			}).resolves({
+				Item: fullRadiator,
+			});
+
+			// Act
+			const result = await getProducts(technologyType);
+
+			// Assert
+			expect(result.data).toStrictEqual([
+				{
+					id: "58",
+					technologyType,
+					type: "T33",
+					height: 700,
+				},
+			]);
+		});
+
 		it("Returns bad request error when technology group is invalid", async () => {
 			// Arrange
 			let h3Error: H3Error | undefined;
