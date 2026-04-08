@@ -90,6 +90,20 @@ describe("Heat emitter products page", () => {
 		).toEqual(expect.objectContaining({ productReference: MOCKED_HEAT_EMITTERS.data[0]?.id }));
 	});
 
+	test("more details link keeps emitter index in query params", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatEmitter: "0",
+				products: "electric-storage-heater",
+			},
+			query: { emitterIndex: "0" },
+			path: "/0/electric-storage-heater",
+		});
+		await renderSuspended(Products);
+
+		expect(screen.getByRole("link", { name: "More details" }).getAttribute("href")).toBe("/0/electric-storage-heater/1000?emitterIndex=0");
+	});
+
 	test("'Back to heat emitters' navigates user to the heat source at the correct index", async () => {
 		mockRoute.mockReturnValue({
 			params: {

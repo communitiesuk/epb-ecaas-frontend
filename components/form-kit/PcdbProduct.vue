@@ -22,8 +22,8 @@ const {
 } = props.context;
 
 async function fetchProduct(reference: string) {
-	const { data } = await useFetch(`/api/products/${reference}`);
-	productData.value = data.value;
+	const response = await useFetch(`/api/products/${reference}`);
+	productData.value = response?.data?.value;
 }
 
 function buildProductsPageUrl(url: string, index: number, productType: string, emitterIndex?: number) {

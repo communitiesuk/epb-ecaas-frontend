@@ -43,7 +43,7 @@ const route = useRoute();
 					<td class="govuk-table__cell">{{ product.modelName }}</td>
 					<td class="govuk-table__cell">{{ product.modelQualifier ?? '-' }}</td>
 					<td class="govuk-table__cell govuk-table__cell--select">
-						<NuxtLink :href="`${route.path}/${product.id}`" class="govuk-link govuk-!-margin-right-3">
+						<NuxtLink :to="{ path: `${route.path}/${product.id}`, query: route.query }" class="govuk-link govuk-!-margin-right-3">
 							More details
 						</NuxtLink>
 						<GovButton
