@@ -89,12 +89,15 @@ const generalDetailsDataZod = z.discriminatedUnion("typeOfDwelling", [
 
 export type GeneralDetailsData = z.infer<typeof generalDetailsDataZod>;
 
+export const heightShadingZod = z.number().gt(0).max(400);
+export const distanceShadingZod = z.number().gt(0).max(72000);
+
 const shadingDataZod = named.extend({
 	startAngle: z.number().min(0).max(360),
 	endAngle: z.number().min(0).max(360),
 	objectType: shadingObjectTypeZod,
-	height: z.number(),
-	distance: z.number().positive(),
+	height: heightShadingZod,
+	distance: distanceShadingZod,
 });
 
 export type ShadingData = z.infer<typeof shadingDataZod>;
@@ -1094,25 +1097,29 @@ const ecoDesignControllerClassFields = {
 	] satisfies Tuple,
 };
 
+export const flowRateWetDistributionZod = z.number().gt(0);
+
 const variableFlowRateFields = {
 	discriminator: "hasVariableFlowRate",
 	variants: [
 		z.object({
 			hasVariableFlowRate: z.literal(true),
-			minFlowRate: z.number(),
-			maxFlowRate: z.number(),
+			minFlowRate: flowRateWetDistributionZod,
+			maxFlowRate: flowRateWetDistributionZod,
 		}),
 		z.object({
 			hasVariableFlowRate: z.literal(false),
-			designFlowRate: z.number(),
+			designFlowRate: flowRateWetDistributionZod,
 		}),
 	] satisfies Tuple,
 };
 
+export const emitterFloorAreaZod = z.number().gt(0);
+
 const underfloorHeatingSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal(typeOfWetDistributionSystemEmitter.underfloorHeating),
 	productReference: z.string(),
-	areaOfUnderfloorHeating: z.number(),
+	areaOfUnderfloorHeating: emitterFloorAreaZod,
 });
 
 const fanCoilSchema = namedWithId.extend({
@@ -1121,11 +1128,13 @@ const fanCoilSchema = namedWithId.extend({
 	numOfFanCoils: z.number(),
 });
 
+export const lengthRadiatorZod = z.number().gt(0);
+
 const radiatorSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal(typeOfWetDistributionSystemEmitter.radiator),
 	productReference: z.string(),
 	numOfRadiators: z.number(),
-	length: z.number().min(0.001),
+	length: lengthRadiatorZod,
 });
 export type RadiatorData = z.infer<typeof radiatorSchema>;
 
@@ -1141,17 +1150,20 @@ const wetDistributionSystemEmitterDraftSchema = z.object({
 	name: z.string().trim().min(1).optional(),
 	typeOfHeatEmitter: wetDistributionSystemEmitter.optional(),
 	productReference: z.string().optional(),
-	areaOfUnderfloorHeating: z.number().optional(),
+	areaOfUnderfloorHeating: emitterFloorAreaZod.optional(),
 	numOfFanCoils: z.number().optional(),
 	numOfRadiators: z.number().optional(),
 	length: z.number().min(0.001).optional(),
 });
+
 const heatingRank = z.number().int().min(1).optional();
+export const tempDiffEmitDsgnWetDistributionZod = z.number().gt(0).max(70);
+
 const wetDistributionSystemBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("wetDistributionSystem"),
 	heatSource: z.string(),
 	designFlowTemp: z.number(),
-	designTempDiffAcrossEmitters: z.number(),
+	designTempDiffAcrossEmitters: tempDiffEmitDsgnWetDistributionZod,
 	emitters: z.array(z.union([wetDistributionSystemEmittersFields, wetDistributionSystemEmitterDraftSchema])),
 	percentageRecirculated: z.number().min(0).max(100),
 	heatingRank,
@@ -1413,6 +1425,8 @@ export type PvAndBatteries = AssertFormKeysArePageIds<{
 }>;
 
 export const peakPowerPvZod = z.number().min(0.001).max(100);
+export const sideLengthPvZod = z.number().gt(0).max(100);
+export const inverterPeakPowerPvZod = z.number().gt(0);
 
 const pvArrayDataZod = z.object({
 	name: z.string().trim().min(1),
@@ -1421,10 +1435,10 @@ const pvArrayDataZod = z.object({
 	pitch: z.number().min(0).max(90),
 	orientation,
 	elevationalHeight: z.number().min(0).max(500),
-	lengthOfPV: z.number().min(0).max(100),
-	widthOfPV: z.number().min(0).max(100),
-	inverterPeakPowerAC: z.number(),
-	inverterPeakPowerDC: z.number(),
+	lengthOfPV: sideLengthPvZod,
+	widthOfPV: sideLengthPvZod,
+	inverterPeakPowerAC: inverterPeakPowerPvZod,
+	inverterPeakPowerDC: inverterPeakPowerPvZod,
 	locationOfInverter: z.enum(["heated_space", "unheated_space"]),
 	inverterType: inverterTypeZod,
 	electricityPriority: z.enum(["diverter", "electricBattery"]),

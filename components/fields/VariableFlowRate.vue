@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { flowRateWetDistributionZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+
 defineProps<{
 	model: {
 		hasVariableFlowRate?: boolean | null;
@@ -20,7 +23,7 @@ defineProps<{
 		type="govInputWithSuffix"
 		label="Maximum flow rate"
 		name="maxFlowRate"
-		validation="required | number"
+		:validation="zodTypeAsFormKitValidation(flowRateWetDistributionZod)"
 		suffix-text="l/min" />
 	<FormKit
 		v-if="model.hasVariableFlowRate"
@@ -28,7 +31,7 @@ defineProps<{
 		type="govInputWithSuffix"
 		label="Minimum flow rate"
 		name="minFlowRate"
-		validation="required | number"
+		:validation="zodTypeAsFormKitValidation(flowRateWetDistributionZod)"
 		suffix-text="l/min" />
 	<FormKit
 		v-if="model.hasVariableFlowRate === false"
@@ -36,6 +39,6 @@ defineProps<{
 		type="govInputWithSuffix"
 		label="Design flow rate"
 		name="designFlowRate"
-		validation="required | number"
+		:validation="zodTypeAsFormKitValidation(flowRateWetDistributionZod)"
 		suffix-text="l/min" />
 </template>

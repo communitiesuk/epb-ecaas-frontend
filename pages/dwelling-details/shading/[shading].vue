@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { SchemaShadingObjectType } from "~/schema/aliases";
 import { getUrl, type ShadingData, uniqueName } from "#imports";
+import { distanceShadingZod, heightShadingZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Distant shading";
 const store = useEcaasStore();
@@ -126,7 +128,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Height"
 			suffix-text="m"
 			name="height"
-			validation="required | number"
+			:validation="zodTypeAsFormKitValidation(heightShadingZod)"
 			help="Enter the height of the object causing the shading"
 			data-field="ExternalConditions.shading_segments.*.shading.*.height"
 		/>
@@ -136,7 +138,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Distance"
 			suffix-text="m"
 			name="distance"
-			validation="required | number | min:0.001"
+			:validation="zodTypeAsFormKitValidation(distanceShadingZod)"
 			help="Enter the distance from the dwelling to the shading object"
 			data-field="ExternalConditions.shading_segments.*.shading.*.distance"
 		/>

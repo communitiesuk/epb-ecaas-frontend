@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { OnSiteGenerationVentilationStrategy, SchemaInverterType } from "~/schema/aliases";
 import { getUrl, uniqueName } from "#imports";
-import { peakPowerPvZod } from "~/stores/ecaasStore.schema";
+import { inverterPeakPowerPvZod, peakPowerPvZod, sideLengthPvZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "PV array";
@@ -239,7 +239,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				label="Length of PV array"
 				help="Enter the length of the side of the array or panel that runs up the roof"
 				name="lengthOfPV"
-				validation="required | number | min:0 | max: 100"
+				:validation="zodTypeAsFormKitValidation(sideLengthPvZod)"
 				suffix-text="m"
 			/>
 			<FormKit
@@ -248,7 +248,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				label="Width of PV array"
 				help="Enter the length of the side of the array or panel that runs horizontally"
 				name="widthOfPV"
-				validation="required | number | min:0 | max: 100"
+				:validation="zodTypeAsFormKitValidation(sideLengthPvZod)"
 				suffix-text="m"
 			/>
 			<FormKit
@@ -257,7 +257,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				label="Inverter peak power AC"
 				help="Enter the maximum amount of alternating current (AC) power the inverter can output at a given time under ideal conditions"
 				name="inverterPeakPowerAC"
-				validation="required | number"
+				:validation="zodTypeAsFormKitValidation(inverterPeakPowerPvZod)"
 				suffix-text="kW"
 			/>
 			<FormKit
@@ -266,7 +266,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				label="Inverter peak power DC"
 				help="Enter the maximum amount of direct current (DC) power the inverter can handle from the solar panel array"
 				name="inverterPeakPowerDC"
-				validation="required | number"
+				:validation="zodTypeAsFormKitValidation(inverterPeakPowerPvZod)"
 				suffix-text="kW"
 			/>
 			<FormKit

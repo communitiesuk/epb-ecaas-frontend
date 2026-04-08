@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import type { WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
+import { emitterFloorAreaZod, lengthRadiatorZod, type WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import type { Product } from "~/pcdb/pcdb.types";
 
 const route = useRoute();
@@ -282,7 +283,7 @@ const saveEmitter = () => {
 							label="Length"
 							name="length"
 							suffix-text="m"
-							validation="required | number | min:0.001"
+							:validation="zodTypeAsFormKitValidation(lengthRadiatorZod)"
 						/>
 					</template>
 					<template v-if="formModel.typeOfHeatEmitter === 'fanCoil'">
@@ -321,7 +322,7 @@ const saveEmitter = () => {
 							label="Area of underfloor heating"
 							name="areaOfUnderfloorHeating"
 							suffix-text="m²"
-							validation="required | number"
+							:validation="zodTypeAsFormKitValidation(emitterFloorAreaZod)"
 						/>
 					</template>
 					<div class="govuk-button-group">

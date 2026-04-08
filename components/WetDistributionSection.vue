@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { FieldsHeatSources } from "#components";
 import { ecoClasses, ecoDesignControllerOptions } from "#imports";
+import { tempDiffEmitDsgnWetDistributionZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 defineProps<{
 	model: WetDistributionSystemData;
@@ -74,7 +76,7 @@ defineProps<{
 		type="govInputWithSuffix"
 		label="Design temperature difference across the emitters"
 		name="designTempDiffAcrossEmitters"
-		validation="required | number"
+		:validation="zodTypeAsFormKitValidation(tempDiffEmitDsgnWetDistributionZod)"
 		suffix-text="°C"
 		help="Enter the temperature difference between the flow and return water temperatures. Typically between 5 and 15°C." />
 	<FieldsVariableFlowRate :model="model" />
