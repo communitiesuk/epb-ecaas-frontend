@@ -210,6 +210,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		v-if="hasPackagedProduct(model!) && packagedProduct"
 		:model="model"
 		:packaged-product="packagedProduct"
+		type="MVHR"
 	/>
 	<FormKit
 		v-model="model"

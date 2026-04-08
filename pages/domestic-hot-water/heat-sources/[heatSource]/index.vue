@@ -224,6 +224,7 @@ const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
 		v-if="hasPackagedProduct(model) && packagedProduct"
 		:model="model"
 		:packaged-product="packagedProduct"
+		type="boiler"
 	/>
 	<FormKit
 		v-model="model"
