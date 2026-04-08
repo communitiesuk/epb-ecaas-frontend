@@ -40,9 +40,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
-	<h1 class="govuk-heading-l">
+	<h2 class="govuk-heading-l">
 		{{ title }}
-	</h1>
+	</h2>
 	<template v-if="downloadUrl">
 		<GovPanel title="Export complete">
 			<p>{{ `${model.fileName}.json` }}</p>
