@@ -78,7 +78,7 @@ defineProps<{
 		suffix-text="°C"
 		help="Enter the temperature difference between the flow and return water temperatures. Typically between 5 and 15°C." />
 	<FieldsVariableFlowRate :model="model" />
-	<FieldsPercentageRecuirculated :model="model" />
+	<FieldsPercentageRecirculated :model="model" />
 
 </template>
 
