@@ -964,7 +964,7 @@ const boilerBase = hasPcdbPackagedProduct.extend({
 	typeOfBoiler,
 	specifiedLocation: z.optional(boilerLocationZod),
 	needsSpecifiedLocation: z.boolean(),
-	maxFlowTemp: zodUnit("temperature").optional(),
+	maxFlowTemp: zodUnit("temperature"),
 });
 
 export type HasPcdbPackagedProduct = z.infer<typeof hasPcdbPackagedProduct>;

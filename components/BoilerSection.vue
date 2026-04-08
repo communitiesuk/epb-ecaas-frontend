@@ -82,7 +82,6 @@ const emit = defineEmits(["update-boiler-model"]);
 			type="govInputWithUnit"
 			:unit="celsius"
 			validation="required"
-			:disabled="hasPackagedProduct(model)"
 			:data-field="page == 'domestic hot water' ? 'HotWaterSource.*.HeatSource.*.temp_flow_limit_upper' :  'SpaceHeatSystem.*HeatSource.temp_flow_limit_upper'"
 		/>
 	</template>

@@ -409,8 +409,6 @@ describe("heatSource", () => {
 			["internal", "external"].forEach(location => {
 				expect(screen.getByTestId<HTMLInputElement>(`specifiedLocation_${location}`).disabled).toBe(true);
 			});
-			expect(screen.getByTestId<HTMLInputElement>("maxFlowTemp").disabled).toBe(true);
-
 		});
 
 		describe("boiler default name", () => {

@@ -97,7 +97,7 @@ export function useSelectHeatSourceProduct(products: DisplayProduct[], heatSourc
 		(heatSourceData as PcdbProduct).productReference = product.id;
 	};
 
-	const createBoiler = (boilerData: BoilerProduct, packagedProductReference: string): HeatSourceData => ({
+	const createBoiler = (boilerData: BoilerProduct, packagedProductReference: string): Partial<HeatSourceData> => ({
 		id: uuidv4(),
 		name: boilerData.technologyType === "CombiBoiler" ? boilerTypes.combiBoiler : boilerTypes.regularBoiler,
 		productReference: boilerData.id,
@@ -123,11 +123,10 @@ export function useSelectHeatSourceProduct(products: DisplayProduct[], heatSourc
 				const heatSourceBoiler = createBoiler(boilerData, product.id);
 
 				state.spaceHeating.heatSource.data.splice(heatSourceIndex + 1, 0, {
-					data: heatSourceBoiler,
-					complete: true,
+					data: heatSourceBoiler as HeatSourceData,
 				});
 
-				return heatSourceBoiler.id;
+				return heatSourceBoiler.id!;
 			};
 
 			const removeBoilerProduct = (id: string) => {
@@ -158,7 +157,7 @@ export function useSelectHeatSourceProduct(products: DisplayProduct[], heatSourc
 			const heatSourceData = heatSources?.[heatSourceIndex]?.data;
 
 			const addBoilerProduct = (boilerData: BoilerProduct) => {
-				const heatSourceBoiler: DomesticHotWaterHeatSourceData = {
+				const heatSourceBoiler: Partial<DomesticHotWaterHeatSourceData> = {
 					...createBoiler(boilerData, product.id),
 					coldWaterSource: heatSourceData!.coldWaterSource,
 					isExistingHeatSource: false,
@@ -166,11 +165,10 @@ export function useSelectHeatSourceProduct(products: DisplayProduct[], heatSourc
 				};
 
 				state.domesticHotWater.heatSources.data.splice(heatSourceIndex + 1, 0, {
-					data: heatSourceBoiler,
-					complete: true,
+					data: heatSourceBoiler as DomesticHotWaterHeatSourceData,
 				});
 
-				return heatSourceBoiler.id;
+				return heatSourceBoiler.id!;
 			};
 
 			const removeBoilerProduct = (id: string) => {
