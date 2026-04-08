@@ -294,8 +294,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					suffix-text="m²"
 					data-field="Zone.BuildingElement.*.area"
 				/>	
-			</template>	
-			<GovLLMWarning />
+			</template>
 			<div class="govuk-button-group">
 				<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 				<GovButton :href="getUrl('dwellingSpaceCeilingsAndRoofs')" secondary test-id="saveProgress">Save progress</GovButton>

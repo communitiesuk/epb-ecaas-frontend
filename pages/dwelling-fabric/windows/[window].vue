@@ -390,7 +390,6 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			v-if="model && model.curtainsOrBlinds"
 			treatment-section-type="window"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingSpaceWindows')" test-id="saveProgress" secondary>Save progress</GovButton>

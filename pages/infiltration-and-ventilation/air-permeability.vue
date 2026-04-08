@@ -70,7 +70,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number"
 			suffix-text="m³/(h·m²)"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('infiltrationAndVentilation')" secondary>Save progress</GovButton>

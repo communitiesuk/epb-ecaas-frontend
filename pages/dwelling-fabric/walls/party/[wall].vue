@@ -179,7 +179,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-rules="{ exclusiveRangeFromMin: greaterThanZero }"
 			validation="required | exclusiveRangeFromMin"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingSpaceWalls')" secondary>Save progress</GovButton>

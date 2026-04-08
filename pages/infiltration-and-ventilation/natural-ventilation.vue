@@ -76,7 +76,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:minmax="{ min: -150, max: 750 }"
 			data-field="InfiltrationVentilation.ventilation_zone_base_height"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('infiltrationAndVentilation')" secondary>Save progress</GovButton>

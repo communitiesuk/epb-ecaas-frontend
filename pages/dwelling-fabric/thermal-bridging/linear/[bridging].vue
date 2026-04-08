@@ -176,7 +176,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				data-field="Zone.ThermalBridging.*.length"
 			/>
 		</template>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('dwellingSpaceThermalBridging')" secondary test-id="saveProgress">Save progress</GovButton>

@@ -143,5 +143,5 @@ const aboveMinPower = (node: FormKitNode, min: number) => {
 		data-field="Zone.BuildingElement.*.pitch" />
 	<FieldsOrientation
 		details-caption="To define the orientation, measure the angle of the panel clockwise from true North, accurate to the nearest degree. If the panel is facing true north then the orientation is 0°. If the panel is facing south then the orientation is 180°."
-		cleared-non-llm />
+	/>
 </template>

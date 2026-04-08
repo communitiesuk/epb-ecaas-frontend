@@ -77,7 +77,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="W/K"
 			data-field="Zone.ThermalBridging.*.heat_transfer_coeff"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('dwellingSpaceThermalBridging')" secondary test-id="saveProgress">Save progress</GovButton>

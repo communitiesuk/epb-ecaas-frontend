@@ -125,7 +125,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="thermalResistanceOfAdjacentUnheatedSpace"
 			validation="required | number | min:0 | max:3"
 			data-field="Zone.BuildingElement.*.thermal_resistance_unconditioned_space">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<GovDetails summary-text="Help with this input">
 				<p>For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5
 					(m²·K)/W
 					for when the facing wall is not exposed.</p>
@@ -136,7 +136,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</p>
 			</GovDetails>
 		</FormKit>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>

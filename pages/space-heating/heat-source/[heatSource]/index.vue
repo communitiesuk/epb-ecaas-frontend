@@ -155,7 +155,6 @@ const boilers = heatSourceStoreData
 			v-if="model?.typeOfHeatSource === 'solarThermalSystem'"
 			:model="(model as SolarThermalModelType)" 
 			:index="index" />
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('spaceHeating')" secondary test-id="saveProgress">Save progress</GovButton>

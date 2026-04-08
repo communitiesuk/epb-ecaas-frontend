@@ -87,7 +87,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FieldsLightingPower />
 		<FieldsLightingEfficacy />
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('dwellingSpaceLighting')" test-id="saveProgress" secondary>Save progress</GovButton>

@@ -127,7 +127,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				name="ventilationStrategy"
 				validation="required"
 			>
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<GovDetails summary-text="Help with this input">
 					<table class="govuk-table">
 						<thead class="govuk-table__head">
 							<tr class="govuk-table__row">
@@ -185,7 +185,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				validation="required | number | min:0 | max: 90"
 				suffix-text="°"
 			/>
-			<FieldsOrientation details-caption="To define the orientation of the PV array, measure the angle of the panel clockwise from true North, accurate to the nearest degree. If the panel is facing true north then the orientation is 0°. If the panel is facing south then the orientation is 180°." cleared-non-llm />
+			<FieldsOrientation details-caption="To define the orientation of the PV array, measure the angle of the panel clockwise from true North, accurate to the nearest degree. If the panel is facing true north then the orientation is 0°. If the panel is facing south then the orientation is 180°." />
 			<FormKit
 				id="elevationalHeight"
 				type="govInputWithSuffix"
@@ -247,7 +247,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				label="Inverter type"
 				name="inverterType"
 				validation="required">
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<GovDetails summary-text="Help with this input">
 					<table class="govuk-table">
 						<thead class="govuk-table__head">
 							<tr class="govuk-table__row">
@@ -299,7 +299,6 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				shading-section-type="PV"
 				:write-shading-to-store="writeShadingToStore"
 			/>
-			<GovLLMWarning />
 			<div class="govuk-button-group">
 				<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 				<GovButton :href="getUrl('pvAndBatteries')" secondary test-id="saveProgress">Save progress</GovButton>

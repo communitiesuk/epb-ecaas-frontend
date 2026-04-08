@@ -141,7 +141,7 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 			:validation-rules="{ chargeRateMaxGreaterThanMin }"
 			validation="required | number | chargeRateMaxGreaterThanMin"
 			suffix-text="kW">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">
@@ -171,7 +171,6 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 			validation="required | number"
 			suffix-text="kW"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('pvAndBatteries')" secondary test-id="saveProgress">Save progress</GovButton>

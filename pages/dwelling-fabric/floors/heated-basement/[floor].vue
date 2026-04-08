@@ -157,7 +157,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the physical thickness of the ground floor wall. Typically more than 300mm. If the thickness varies, enter a weighted average."
 		/>
 		<div class="govuk-button-group govuk-!-margin-top-6">
-			<GovLLMWarning />
 			<div class="govuk-button-group">
 				<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 				<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>

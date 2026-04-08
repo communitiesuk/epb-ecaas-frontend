@@ -290,7 +290,7 @@ const greaterThanZero = (node: FormKitNode) => {
 				help="Select all the types of edge insulation that apply to this floor"
 				validation="required"
 				data-field="Zone.BuildingElement.*.edge_insulation.*.type">
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<GovDetails summary-text="Help with this input">
 					<table class="govuk-table">
 						<thead class="govuk-table__head">
 							<tr class="govuk-table__row">
@@ -409,7 +409,7 @@ const greaterThanZero = (node: FormKitNode) => {
 				help="Enter the total area of the ventilation openings per metre of external wall perimeter. This needs to be above 1500mm² of opening per metre of wall."
 				name="ventilationOpeningsArea"
 				validation="required | number">
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<GovDetails summary-text="Help with this input">
 					<p class="govuk-hint">Often suspended floors require additional ventilation to prevent moisture build up and structural damage. While ventilation is crucial for moisture control, it can lead to heat loss from the building.</p>
 				</GovDetails>
 			</FormKit>
@@ -422,7 +422,7 @@ const greaterThanZero = (node: FormKitNode) => {
 				help="This refers to how much the external wind conditions impact the airflow and heat loss through the void beneath the suspended floor"
 				validation="required"
 				data-field="Zone.BuildingElement.*.shield_fact_location">
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<GovDetails summary-text="Help with this input">
 					<table class="govuk-table">
 						<thead class="ovuk-table__head">
 							<tr class="govuk-table__row">
@@ -538,7 +538,6 @@ const greaterThanZero = (node: FormKitNode) => {
 				data-field="Zone.BuildingElement.*.height_basement_walls"
 			/>
 		</template>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>

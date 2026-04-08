@@ -118,7 +118,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="massDistributionClass"
 			help="This is the distribution of mass in the full thickness of the floor build up"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save an mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>

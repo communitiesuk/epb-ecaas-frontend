@@ -173,8 +173,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<GovDetails
 				class="summary-text"
 				:summary-text="`Help with this input`"
-				classes="govuk-!-margin-bottom-4"
-				possibly-llm-placeholder>
+				classes="govuk-!-margin-bottom-4">
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">
@@ -208,9 +207,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Specify whether the coating is reflective"
 			name="surfaceReflectivity"
 			validation="required"
-			data-field="HotWaterSource['hw cylinder'].pipework.*.surface_reflectivity" />
-	
-		<GovLLMWarning />
+			data-field="HotWaterSource['hw cylinder'].pipework.*.surface_reflectivity"
+		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('domesticHotWater')" test-id="saveProgress" secondary>Save progress</GovButton>

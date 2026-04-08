@@ -119,7 +119,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:1 | max:999999"
 			suffix-text="cm²"
 			data-field="InfiltrationVentilation.Vents.area_cm2">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">
@@ -159,7 +159,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:1 | max:60"
 			suffix-text="m"
 			data-field="InfiltrationVentilation.Vents.mid_height_air_flow_path" />
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('vents')" secondary>Save progress</GovButton>

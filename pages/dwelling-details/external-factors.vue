@@ -83,7 +83,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 			help="This is the level of shielding a dwelling will have against external environmental factors such as wind, noise or outdoor pollutants"
 			data-field="InfiltrationVentilation.shield_class">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr>
@@ -138,7 +138,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 			help="This is the type of surrounding landscape once the dwelling has been built"
 			data-field="InfiltrationVentilation.terrain_class">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<GovDetails summary-text="Help with this input">
 				<p>Providing the terrain type helps determine how external conditions, such as wind speed and turbulence, will impact ventilation and airflow around a building.</p>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
@@ -208,7 +208,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<p>Answer yes if external noise was identified as an issue for Part O compliance. For example, where the local planning authority considered external noise to be an issue at the planning stage.</p>
 			</GovDetails>
 		</FormKit>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('dwellingDetails')" secondary>Save progress</GovButton>

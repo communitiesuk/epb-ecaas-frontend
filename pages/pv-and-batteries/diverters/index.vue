@@ -111,7 +111,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</div>
 			</FormKit>
 		</ClientOnly>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('pvAndBatteries')" secondary test-id="saveProgress">Save progress</GovButton>

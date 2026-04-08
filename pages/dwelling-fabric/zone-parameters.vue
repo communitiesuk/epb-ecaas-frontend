@@ -106,7 +106,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation="zodTypeAsFormKitValidation(zoneVolumeZod)"
 			data-field="Zone.volume"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingFabric')" test-id="saveProgress" secondary>Save progress</GovButton>

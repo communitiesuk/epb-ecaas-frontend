@@ -142,7 +142,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the distance from the dwelling to the shading object"
 			data-field="ExternalConditions.shading_segments.*.shading.*.distance"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('shading')" secondary>Save progress</GovButton>

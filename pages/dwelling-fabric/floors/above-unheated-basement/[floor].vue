@@ -210,7 +210,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number"
 		/>
 		<div class="govuk-button-group govuk-!-margin-top-6">
-			<GovLLMWarning />
 			<div class="govuk-button-group">
 				<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 				<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>

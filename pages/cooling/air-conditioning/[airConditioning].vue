@@ -96,7 +96,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the proportion of cool air the air conditioning unit emits through convection. Typically this is 1 as all cooling is by convection."
 			validation="required | number | between:0,1"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('cooling')" secondary test-id="saveProgress">Save progress</GovButton>
