@@ -337,6 +337,16 @@ const heatNetworkZod = BaseProduct.extend({
 
 export type HeatNetworkProduct = z.infer<typeof heatNetworkZod>;
 
+const airPoweredShowerZod = BaseProduct.extend({
+	technologyType: z.literal("AirPoweredShowers"),
+	allowLowFlowrate: z.boolean(),
+	inuseFactor: z.optional(z.number()),
+	originalFlowrate: z.optional(z.number()),
+	flowrate: z.optional(z.number()),
+});
+
+export type AirPoweredShowerProduct = z.infer<typeof airPoweredShowerZod>;
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	heatPumpProductZod,
 	hybridHeatPumpProductZod,
@@ -354,6 +364,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	decentralisedContinuousMevZod,
 	directElectricHeaterZod,
 	heatNetworkZod,
+	airPoweredShowerZod,
 ]);
 
 export type Product = z.infer<typeof productSchema>;
@@ -391,6 +402,7 @@ const categoryTechnologies = {
 		"DirectElectricHeaters",
 	],
 	mechanicalVentilation: ["CentralisedMvhr", "CentralisedMev", "DecentralisedMev"],
+	hotWaterOutlets: ["AirPoweredShowers"],
 } as const satisfies Record<string, TechnologyType[]>;
 
 export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMap(x => categoryTechnologies[x]);

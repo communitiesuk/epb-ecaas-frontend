@@ -470,7 +470,8 @@ describe("domestic hot water mapper", () => {
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-c"]).toEqual(expectedShowerWwhrsC);
 			});
-			it.skip("maps mixed shower with air pump", () => {
+
+			it("maps mixed shower with air pump", () => {
 				const mixedShower: EcaasForm<MixedShowerData> = {
 					...baseForm,
 					data: {
@@ -483,11 +484,22 @@ describe("domestic hot water mapper", () => {
 						airPressureShowerProductReference: "AIR-PUMP-123",
 					},
 				};
+
+				const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
+					...baseForm,
+					data: {
+						id: "heatPump1",
+						isExistingHeatSource: true,
+						heatSourceId: "heatPump1",
+						coldWaterSource: "mainsWater",
+					},
+				};
+
 				store.$patch({
 					domesticHotWater: {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
-						heatSources: { data: [], complete: true },
+						heatSources: { data: [hwSource1], complete: true },
 						waterStorage: { data: [], complete: true },
 					},
 				});
@@ -499,8 +511,7 @@ describe("domestic hot water mapper", () => {
 					ColdWaterSource: "mains water",
 					allow_low_flowrate: true,
 					HotWaterSource: "heatPump1",
-					// @ts-expect-error - to be added when FHS schema is updated to support product reference for air pump
-					airPressureShowerProductReference: "AIR-PUMP-123",
+					product_reference: "AIR-PUMP-123",
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower-air-pump"]).toEqual(expectedShowerAirPump);
 			});

@@ -156,6 +156,13 @@ const domesticHotWaterPages = [
 		parentId: "domesticHotWater",
 	},
 	{
+		id: "airPressureShowerProducts",
+		title: "Select an air pressure shower",
+		url: "/domestic-hot-water/hot-water-outlets/:outlet/air-pressure-shower",
+		type: "task",
+		parentId: "hotWaterOutlets",
+	},
+	{
 		id: "pipeworkCreate",
 		title: "Pipework",
 		url: "/domestic-hot-water/pipework/create",

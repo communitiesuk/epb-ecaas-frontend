@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { bathSizeZod, otherFlowRateZod, ratedPowerShowerZod, showerFlowRateZod, type HotWaterOutletsData } from "~/stores/ecaasStore.schema";
+import { bathSizeZod, otherFlowRateZod, ratedPowerShowerZod, showerFlowRateZod, typeOfShowerProduct, type HotWaterOutletsData } from "~/stores/ecaasStore.schema";
 import { getUrl, hotWaterOutletTypes, wwhrsTypes } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import { getHotWaterOutletDefaultName } from "~/utils/getHotWaterOutletDefaultName";
@@ -214,14 +214,13 @@ const heatSourceOptions = new Map(
 				label="Is this an air pressure shower?"
 				help="Air pressure showers are products that can be used at a lower flow rate by mixing air into the water stream"
 			/>
-			<!-- TODO: Plumb this PCDB in -->
 			<FieldsSelectPcdbProduct
 				v-if="model.isAirPressureShower === true"
 				id="airPressureShowerProductReference"
 				name="airPressureShowerProductReference"
 				help="Select the shower type from the PCDB using the button below."
 				:selected-product-reference="model.airPressureShowerProductReference"
-				:selected-product-type="model.typeOfHotWaterOutlet"
+				:selected-product-type="typeOfShowerProduct.airPressureShower"
 				:page-url="route.fullPath"
 				:page-index="index"
 			/>
