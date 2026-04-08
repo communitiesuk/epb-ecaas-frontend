@@ -418,9 +418,10 @@ export interface components {
             fan_pwr: number;
             /**
              * State Of Charge Init
-             * @description State of charge at initialisation of dry core heat storage (ratio)
+             * @description State of charge at initialisation of dry core heat storage (ratio). NB. this field is marked for removal, and only a value of 1 is accepted.
+             * @constant
              */
-            state_of_charge_init: number;
+            state_of_charge_init: 1;
         };
         ColdWaterSource: {
             /** @enum {unknown} */
@@ -969,6 +970,12 @@ export interface components {
             /** @enum {unknown} */
             WWHRS_configuration?: "A" | "B" | "C";
         } & ({
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
+        } | {
             /** @constant */
             allow_low_flowrate: true;
             flowrate: number;
@@ -2108,9 +2115,10 @@ export interface components {
                     fan_pwr: number;
                     /**
                      * State Of Charge Init
-                     * @description State of charge at initialisation of dry core heat storage (ratio)
+                     * @description State of charge at initialisation of dry core heat storage (ratio). NB. this field is marked for removal, and only a value of 1 is accepted.
+                     * @constant
                      */
-                    state_of_charge_init: number;
+                    state_of_charge_init: 1;
                 };
                 /** @description A possible wet heat source */
                 HeatSourceWetHIU: components["schemas"]["HeatSourceWetCommon"] & {
@@ -2142,6 +2150,12 @@ export interface components {
                     /** @enum {unknown} */
                     WWHRS_configuration?: "A" | "B" | "C";
                 } & ({
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                } | {
                     /** @constant */
                     allow_low_flowrate: true;
                     flowrate: number;
