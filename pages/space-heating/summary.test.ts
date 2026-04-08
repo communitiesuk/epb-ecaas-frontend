@@ -65,7 +65,7 @@ describe("Space heating summary page", () => {
 				needsSpecifiedLocation: true,
 				specifiedLocation: "internal",
 				maxFlowTemp: unitValue(2, celsius),
-				
+
 			};
 
 			const store = useEcaasStore();
