@@ -49,7 +49,7 @@ const greaterThanZero = (node: FormKitNode) => {
 		type="govInputWithUnit"
 		:unit="celsius"
 		:validation-rules="{ exclusiveRangeFromMin: greaterThanZero }"
-		validation="exclusiveRangeFromMin:0"
+		validation="required | exclusiveRangeFromMin:0"
 		:validation-messages="{
 			exclusiveRangeFromMin: `Maximum flow temperature must be greater than 0.`,
 		}"
