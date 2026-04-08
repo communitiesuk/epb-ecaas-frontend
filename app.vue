@@ -10,7 +10,7 @@ onErrorCaptured(() => store.revalidate());
 	<GovCookieBanner />
 	<header class="govuk-template__header">
 		<GovHeader classes="govuk-header--full-width-border" />
-		<GovServiceNavigation service-name="(Testing) Check Part L building compliance" />
+		<GovServiceNavigation service-name="Check Part L building compliance" />
 		<GovPhaseBanner v-if="env === 'ecaas-intg'" tag="Integration" classes="govuk-tag--green">
 			{{ testSiteMessage }}
 		</GovPhaseBanner>

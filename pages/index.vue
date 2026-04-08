@@ -2,7 +2,7 @@
 import dayjs from "dayjs";
 import { lastExportDateCookieName } from "~/utils/exportDate";
 
-const title = "(Testing) Check Part L building compliance";
+const title = "Check Part L building compliance";
 	
 const page = usePage();
 const store = useEcaasStore();
