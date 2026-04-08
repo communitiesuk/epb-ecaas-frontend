@@ -115,48 +115,10 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				type="govInputWithSuffix"
 				label="Peak power"
 				name="peakPower"
+				help="Enter the maximum power output the photovoltaic system can generate under ideal conditions"
 				:validation="zodTypeAsFormKitValidation(peakPowerPvZod)"
 				suffix-text="kWp"
-			>
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-					<table class="govuk-table">
-						<thead class="govuk-table__head">
-							<tr class="govuk-table__row">
-								<th scope="col" class="govuk-table__header">
-									Home type
-								</th>
-								<th scope="col" class="govuk-table__header">Typical peak power</th>
-							</tr>
-						</thead>
-						<tbody class="govuk-table__body">
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">Small flat</td>
-								<td class="govuk-table__cell">
-									0.5 - 1.5 kWp
-								</td>
-							</tr>
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">Terraced house</td>
-								<td class="govuk-table__cell">
-									1.5 - 2.5 kWp
-								</td>
-							</tr>
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">Semi-detached house</td>
-								<td class="govuk-table__cell">
-									2 - 3.5 kWp
-								</td>
-							</tr>
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">Detached house</td>
-								<td class="govuk-table__cell">
-									4 - 6 kWp
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</GovDetails>
-			</FormKit>
+			/>
 			<FormKit
 				id="ventilationStrategy"
 				type="govRadios"
