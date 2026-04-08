@@ -81,7 +81,7 @@ const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?
 			? { boilerLocation: item.boilerLocation }
 			: {}),
 		...(typeof item.communityHeatNetworkName === "string" ? { communityHeatNetworkName: item.communityHeatNetworkName } : {}),
-		...(typeof item.boilerProductID === "string" ? { boilerProductID: item.boilerProductID } : {}),
+		...(item.boilerProductID ? { boilerProductID: item.boilerProductID.toString() } : {}),
 	};
 };
 
