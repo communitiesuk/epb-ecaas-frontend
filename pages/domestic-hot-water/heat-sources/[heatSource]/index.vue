@@ -57,6 +57,16 @@ watch(
 				id: initialData.id,
 			} as DomesticHotWaterHeatSourceData;
 		}
+		if (initialData.isExistingHeatSource === false && newData.isExistingHeatSource === false && initialData.typeOfHeatSource !== newData.typeOfHeatSource) {
+			errorMessages.value = [];
+			model.value = { 
+				coldWaterSource: initialData.coldWaterSource,
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE" ,
+				id: initialData.id,
+				typeOfHeatSource: newData.typeOfHeatSource,
+			} as DomesticHotWaterHeatSourceData;
+		}
 		if (model.value.isExistingHeatSource === false && model.value.typeOfHeatSource && model.value && !model.value.name) {
 			model.value.name = getHeatSourceDefaultName(model.value);
 		}
