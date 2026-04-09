@@ -830,12 +830,14 @@ describe("Domestic hot water summary", () => {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Heat pump 1",
 				typeOfHeatSource: "heatPump",
+				maxFlowTemp: unitValue(10, celsius),
 			};
 
 			const boiler1: Partial<HeatSourceData> = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
 				name: "Boiler 1",
 				typeOfHeatSource: "boiler",
+				maxFlowTemp: unitValue(10, celsius),
 			};
 
 			const heatNetwork1: Partial<HeatSourceData> = {
@@ -843,10 +845,12 @@ describe("Domestic hot water summary", () => {
 				name: "Heat network 1",
 				typeOfHeatSource: "heatNetwork",
 			};
+
 			const heatBattery1: Partial<HeatSourceData> = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
 				name: "Heat battery 1",
 				typeOfHeatSource: "heatBattery",
+				maxFlowTemp: unitValue(10, celsius),
 			};
 
 			const solarThermalSystem1: Partial<HeatSourceData> = {
@@ -860,6 +864,7 @@ describe("Domestic hot water summary", () => {
 				coldWaterSource: "mainsWater",
 				isExistingHeatSource: true,
 				heatSourceId: heatPump1.id!,
+				maxFlowTemp: unitValue(20, celsius),
 			};
 
 			const dhwWithExistingBoiler: DomesticHotWaterHeatSourceData = {
@@ -867,6 +872,7 @@ describe("Domestic hot water summary", () => {
 				coldWaterSource: "mainsWater",
 				isExistingHeatSource: true,
 				heatSourceId: boiler1.id!,
+				maxFlowTemp: unitValue(20, celsius),
 			};
 
 			const dhwWithExistingHeatBattery: DomesticHotWaterHeatSourceData = {
@@ -874,6 +880,7 @@ describe("Domestic hot water summary", () => {
 				coldWaterSource: "mainsWater",
 				isExistingHeatSource: true,
 				heatSourceId: heatBattery1.id!,
+				maxFlowTemp: unitValue(20, celsius),
 			};
 
 			const dhwWithExistingHeatNetwork: DomesticHotWaterHeatSourceData = {
@@ -894,17 +901,21 @@ describe("Domestic hot water summary", () => {
 				"Cold water source": "Mains water",
 				Name: "Heat pump 1",
 				"Used for space heating": "YesView details in space heating summary",
+				"Maximum flow temperature": `20 ${celsius.suffix}`,
 			};
 
 			const expectedExistingBoiler = {
 				"Cold water source": "Mains water",
 				Name: "Boiler 1",
 				"Used for space heating": "YesView details in space heating summary",
+				"Maximum flow temperature": `20 ${celsius.suffix}`,
 			};
+
 			const expectedExistingHeatBattery = {
 				"Cold water source": "Mains water",
 				Name: "Heat battery 1",
 				"Used for space heating": "YesView details in space heating summary",
+				"Maximum flow temperature": `20 ${celsius.suffix}`,
 			};
 
 			const expectedExistingHeatNetwork = {

@@ -47,6 +47,7 @@ function createItemFromExistingHeatSources(heatSource: EcaasForm<DomesticHotWate
 				heatSourceType: item.data.typeOfHeatSource!,
 				isExistingHeatSource: true,
 				coldWaterSource: heatSource.data.coldWaterSource ?? undefined,
+				maxFlowTemp: heatSource.data.maxFlowTemp ?? undefined,
 			},
 		};
 	}
@@ -108,6 +109,7 @@ const boilerSummary: SummarySection = {
 				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
 				...(heatSource.isExistingHeatSource === true && {
 					"Used for space heating": heatSourceListItemWithLink,
+					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 				}),
 				...(heatSource.isExistingHeatSource === false && {
 					"Used for space heating": "No",
@@ -134,6 +136,7 @@ const heatPumpSummary: SummarySection = {
 				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
 				...(heatSource.isExistingHeatSource === true && {
 					"Used for space heating": heatSourceListItemWithLink,
+					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 				}),
 				...(heatSource.isExistingHeatSource === false && {
 					"Used for space heating": "No","Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
@@ -207,6 +210,7 @@ const heatBatterySummary: SummarySection = {
 				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
 				...(heatSource.isExistingHeatSource === true && {
 					"Used for space heating": heatSourceListItemWithLink,
+					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 				}),
 				...(heatSource.isExistingHeatSource === false && {
 					"Used for space heating": "No",

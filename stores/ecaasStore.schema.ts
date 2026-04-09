@@ -964,7 +964,7 @@ const boilerBase = hasPcdbPackagedProduct.extend({
 	typeOfBoiler,
 	specifiedLocation: z.optional(boilerLocationZod),
 	needsSpecifiedLocation: z.boolean(),
-	maxFlowTemp: zodUnit("temperature"),
+	maxFlowTemp: zodUnit("temperature").optional(),
 });
 
 export type HasPcdbPackagedProduct = z.infer<typeof hasPcdbPackagedProduct>;
@@ -1278,6 +1278,7 @@ const hotWaterHeatSourceExtension = {
 	heatSourceId: z.literal("NEW_HEAT_SOURCE"),
 	coldWaterSource: z.enum(["mainsWater", "headerTank"]),
 	isExistingHeatSource: z.literal(false),
+	maxFlowTemp: zodUnit("temperature").optional(),
 };
 
 const baseImmersionHeater = namedWithId.extend({
@@ -1326,6 +1327,7 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 			heatSourceId: z.string(),
 			coldWaterSource: z.enum(["mainsWater", "headerTank"]),
 			isExistingHeatSource: z.literal(true),
+			maxFlowTemp: zodUnit("temperature").optional(),
 		}),
 		newHotWaterHeatSourceDataZod,
 	],
