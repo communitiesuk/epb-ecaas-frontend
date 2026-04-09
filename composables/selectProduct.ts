@@ -145,11 +145,9 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 					useProductData(heatPumpProduct.id).then(details => {
 						createHotWaterCyliner(state, source, details as HeatPumpProduct, heatSourceData);
 					});
-
-					return;
+				} else {
+					createHotWaterCyliner(state, source, heatPumpProduct, heatSourceData);
 				}
-
-				createHotWaterCyliner(state, source, heatPumpProduct, heatSourceData);
 			}
 		}
 

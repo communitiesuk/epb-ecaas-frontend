@@ -3,7 +3,7 @@ import { hasPackagedProduct, isEcaasForm } from "#imports";
 import type { CustomListItem } from "~/components/CustomList.vue";
 import { useDomesticHotWater } from "~/composables/domesticHotWater";
 import formStatus from "~/constants/formStatus";
-import type { HeatSourceData } from "~/stores/ecaasStore.schema";
+import type { HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
 
 const title = "Domestic hot water";
 
@@ -84,7 +84,19 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 		:form-url="`${page?.url!}/water-storage`"
 		:items="store.domesticHotWater.waterStorage.data
 			.filter(x => isEcaasForm(x))
-			.map(x=>({name: x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+			.map(x => {
+				const waterStorage = x as EcaasForm<WaterStorageData>;
+
+				const item: CustomListItem = {
+					name: x.data.name,
+					status: x.complete ? formStatus.complete : formStatus.inProgress,
+					...(hasPackagedProduct(waterStorage.data) ? {
+						actions: ['edit']
+					} : {})
+				};
+
+				return item;
+			})"
 		:show-status="true"
 		@remove="(index: number) => removeEntry('waterStorage', index)"
 		@duplicate="(index: number) => duplicateEntry('waterStorage', index)"
