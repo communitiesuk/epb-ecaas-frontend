@@ -177,59 +177,59 @@ describe("space heating", () => {
 				expect(emitterItem.heatSource).toBe(undefined);
 			});
 
-			it("references to the deleted space heating booster heat pump are removed from all heat network items", async () => {
+			// it("references to the deleted space heating booster heat pump are removed from all heat network items", async () => {
 
-				const boosterHeatPump: Partial<HeatSourceData> = {
-					id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
-					typeOfHeatSource: "heatPump",
-					typeOfHeatPump: "booster",
-				};
+			// 	const boosterHeatPump: Partial<HeatSourceData> = {
+			// 		id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+			// 		typeOfHeatSource: "heatPump",
+			// 		typeOfHeatPump: "booster",
+			// 	};
 
-				const heatNetwork: Partial<HeatSourceData> = {
-					id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-					typeOfHeatSource: "heatNetwork",
-					typeOfHeatNetwork: "communalHeatNetwork",
-					isHeatNetworkInPcdb: true,
-					hasBoosterHeatPump: true,
-					boosterHeatPumpId: boosterHeatPump.id,
-				};
+			// 	const heatNetwork: Partial<HeatSourceData> = {
+			// 		id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+			// 		typeOfHeatSource: "heatNetwork",
+			// 		typeOfHeatNetwork: "communalHeatNetwork",
+			// 		isHeatNetworkInPcdb: true,
+			// 		hasBoosterHeatPump: true,
+			// 		boosterHeatPumpId: boosterHeatPump.id,
+			// 	};
 
-				const heatNetworkDHW: Partial<DomesticHotWaterHeatSourceData> = {
-					isExistingHeatSource: false,
-					id: "463c94f6-566c-49b2-af27-57e5c555555",
-					typeOfHeatSource: "heatNetwork",
-					typeOfHeatNetwork: "communalHeatNetwork",
-					isHeatNetworkInPcdb: true,
-					hasBoosterHeatPump: true,
-					boosterHeatPumpId: boosterHeatPump.id,
-				};
-				store.$patch({
-					spaceHeating: {
-						heatSource: {
-							data: [{ data: boosterHeatPump }, { data: heatNetwork, complete: true }],
-						},
-					},
-					domesticHotWater: {
-						heatSources: {
-							data: [
-								{ data: heatNetworkDHW, complete: true },
+			// 	const heatNetworkDHW: Partial<DomesticHotWaterHeatSourceData> = {
+			// 		isExistingHeatSource: false,
+			// 		id: "463c94f6-566c-49b2-af27-57e5c555555",
+			// 		typeOfHeatSource: "heatNetwork",
+			// 		typeOfHeatNetwork: "communalHeatNetwork",
+			// 		isHeatNetworkInPcdb: true,
+			// 		hasBoosterHeatPump: true,
+			// 		boosterHeatPumpId: boosterHeatPump.id,
+			// 	};
+			// 	store.$patch({
+			// 		spaceHeating: {
+			// 			heatSource: {
+			// 				data: [{ data: boosterHeatPump }, { data: heatNetwork, complete: true }],
+			// 			},
+			// 		},
+			// 		domesticHotWater: {
+			// 			heatSources: {
+			// 				data: [
+			// 					{ data: heatNetworkDHW, complete: true },
 
-							],
-						},
-					},
-				});
+			// 				],
+			// 			},
+			// 		},
+			// 	});
 
-				await renderSuspended(SpaceHeating);
-				await user.click(await screen.findByTestId("heatSource_remove_0"));
+			// 	await renderSuspended(SpaceHeating);
+			// 	await user.click(await screen.findByTestId("heatSource_remove_0"));
 
-				const heatNetworkItem = store.spaceHeating.heatSource.data[0];
-				expect((heatNetworkItem?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBe(undefined);
-				expect(heatNetworkItem?.complete).toBe(false);
+			// 	const heatNetworkItem = store.spaceHeating.heatSource.data[0];
+			// 	expect((heatNetworkItem?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBe(undefined);
+			// 	expect(heatNetworkItem?.complete).toBe(false);
 
-				const heatNetworkDHWItem = store.domesticHotWater.heatSources.data[0];
-				expect((heatNetworkDHWItem?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBe(undefined);
-				expect(heatNetworkDHWItem?.complete).toBe(false);
-			});
+			// 	const heatNetworkDHWItem = store.domesticHotWater.heatSources.data[0];
+			// 	expect((heatNetworkDHWItem?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBe(undefined);
+			// 	expect(heatNetworkDHWItem?.complete).toBe(false);
+			// });
 
 			it("domestic hot water heat sources that reference the deleted heat source are removed entirely", async () => {
 

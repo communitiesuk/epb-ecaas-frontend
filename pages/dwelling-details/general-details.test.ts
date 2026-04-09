@@ -233,14 +233,14 @@ describe("General details", () => {
 	});
 
 	it("if fuel type is updated, it is removed from all objects which reference it", async () => {
-		const heatNetworkSpaceHeating: Partial<HeatSourceData> = {
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-			name: "Heat network 1",
-			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "communalHeatNetwork",
-			isHeatNetworkInPcdb: true,
-			energySupply: "mains_gas",
-		};
+		// const heatNetworkSpaceHeating: Partial<HeatSourceData> = {
+		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+		// 	name: "Heat network 1",
+		// 	typeOfHeatSource: "heatNetwork",
+		// 	typeOfHeatNetwork: "communalHeatNetwork",
+		// 	isHeatNetworkInPcdb: true,
+		// 	energySupply: "mains_gas",
+		// };
 		const heatBatterySpaceHeating: Partial<HeatSourceData> = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
 			name: "Heat battery 1",
@@ -250,15 +250,15 @@ describe("General details", () => {
 			energySupply: "mains_gas",
 		};
 
-		const heatNetworkDHW: Partial<DomesticHotWaterHeatSourceData> = {
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-			name: "Heat source 1",
-			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "communalHeatNetwork",
-			energySupply: "mains_gas",
-		};
+		// const heatNetworkDHW: Partial<DomesticHotWaterHeatSourceData> = {
+		// 	isExistingHeatSource: false,
+		// 	heatSourceId: "NEW_HEAT_SOURCE",
+		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+		// 	name: "Heat source 1",
+		// 	typeOfHeatSource: "heatNetwork",
+		// 	typeOfHeatNetwork: "communalHeatNetwork",
+		// 	energySupply: "mains_gas",
+		// };
 
 		const heatBatteryDHW: Partial<DomesticHotWaterHeatSourceData> = {
 			isExistingHeatSource: false,
@@ -292,20 +292,27 @@ describe("General details", () => {
 			},
 			spaceHeating: {
 				heatSource: {
-					data: [{ data: heatNetworkSpaceHeating }, { data: heatBatterySpaceHeating }],
+					data: [
+						// { data: heatNetworkSpaceHeating },
+						{ data: heatBatterySpaceHeating },
+					],
 				},
 			},
 			domesticHotWater: {
 				heatSources: {
-					data: [{ data: heatNetworkDHW }, { data: heatBatteryDHW }, { data: pointOfUse }],
+					data: [
+						// { data: heatNetworkDHW },
+						{ data: heatBatteryDHW },
+						{ data: pointOfUse },
+					],
 				},
 			},
 		});
 		await renderSuspended(GeneralDetails);
 		await user.click(await screen.findByTestId("fuelType_mains_gas"));
-		const spaceHeatNetwork = store.spaceHeating.heatSource.data[0];
-		expect((spaceHeatNetwork?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
-		expect(spaceHeatNetwork?.complete).toBe(false);
+		const spaceHeatBattery = store.spaceHeating.heatSource.data[0];
+		expect((spaceHeatBattery?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
+		expect(spaceHeatBattery?.complete).toBe(false);
 
 
 		const DHWItems = store.domesticHotWater.heatSources.data;
@@ -313,8 +320,8 @@ describe("General details", () => {
 		expect(DHWItems[0]?.complete).toBe(false);
 		expect((DHWItems[1]?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
 		expect(DHWItems[1]?.complete).toBe(false);
-		expect((DHWItems[2]?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
-		expect(DHWItems[2]?.complete).toBe(false);
+		// expect((DHWItems[2]?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
+		// expect(DHWItems[2]?.complete).toBe(false);
 	});
 
 	it("when type of dwelling is updated from flat to house, updates store so any internal door is not a front door", async () => {

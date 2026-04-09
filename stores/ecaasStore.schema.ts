@@ -925,7 +925,7 @@ const typeOfHeatPump = z.enum([
 ]);
 
 const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
-const typeOfHeatNetwork = z.enum(["sleevedDistrictHeatNetwork", "unsleevedDistrictHeatNetwork", "communalHeatNetwork"]);
+const _typeOfHeatNetwork = z.enum(["sleevedDistrictHeatNetwork", "unsleevedDistrictHeatNetwork", "communalHeatNetwork"]);
 const typeOfHeatBattery = z.enum(["heatBatteryPcm", "heatBatteryDryCore"]);
 const typeOfLocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
 const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedContinuousMev", "decentralisedContinuousMev"]);
@@ -941,13 +941,13 @@ export type SpaceHeatingNew = AssertEachKeyIsPageId<{
 export type HeatPumpType = z.infer<typeof typeOfHeatPump>;
 export type TypeOfBoiler = z.infer<typeof typeOfBoiler>;
 export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;
-export type TypeOfHeatNetwork = z.infer<typeof typeOfHeatNetwork>;
+export type TypeOfHeatNetwork = z.infer<typeof _typeOfHeatNetwork>;
 export type LocationOfCollectorLoopPipingType = z.infer<typeof typeOfLocationOfLoopPiping>;
 
 export type HeatSourceType =
 	"heatPump" |
 	"boiler" |
-	"heatNetwork" |
+	// "HIU" |
 	"heatBattery";
 
 export type PcdbProduct = z.infer<typeof pcdbProduct>;
@@ -977,59 +977,59 @@ const heatBatteryBase = pcdbProduct.extend({
 	energySupply: fuelTypeZod,
 });
 
-const heatNetworkBase = namedWithId.extend({
-	typeOfHeatSource: z.literal("heatNetwork"),
-	typeOfHeatNetwork,
-});
+// const heatNetworkBase = namedWithId.extend({
+// 	typeOfHeatSource: z.literal("heatNetwork"),
+// 	typeOfHeatNetwork,
+// });
 
 
-const isHeatNetworkInPcdbFields = {
-	discriminator: "isHeatNetworkInPcdb",
-	variants: [
-		z.object({
-			isHeatNetworkInPcdb: z.literal(true),
-			hasBoosterHeatPump: z.boolean(), 
-			productReference: z.string().trim().min(1),
-			energySupply: fuelTypeZod.optional(),
-			boosterHeatPumpId: z.string().trim().min(1).optional(),
-		}),
-		z.object({
-			isHeatNetworkInPcdb: z.literal(false),
-			hasBoosterHeatPump: z.boolean(),
-			boosterHeatPumpId: z.string().trim().min(1).optional(),
-			emissionsFactor: z.number(),
-			outOfScopeEmissionsFactor: z.number(),
-			primaryEnergyFactor: z.number(),
-			canEnergyBeExported: z.boolean(),
-		}),
-	] satisfies Tuple,
-};
+// const isHeatNetworkInPcdbFields = {
+// 	discriminator: "isHeatNetworkInPcdb",
+// 	variants: [
+// 		z.object({
+// 			isHeatNetworkInPcdb: z.literal(true),
+// 			hasBoosterHeatPump: z.boolean(), 
+// 			productReference: z.string().trim().min(1),
+// 			energySupply: fuelTypeZod.optional(),
+// 			boosterHeatPumpId: z.string().trim().min(1).optional(),
+// 		}),
+// 		z.object({
+// 			isHeatNetworkInPcdb: z.literal(false),
+// 			hasBoosterHeatPump: z.boolean(),
+// 			boosterHeatPumpId: z.string().trim().min(1).optional(),
+// 			emissionsFactor: z.number(),
+// 			outOfScopeEmissionsFactor: z.number(),
+// 			primaryEnergyFactor: z.number(),
+// 			canEnergyBeExported: z.boolean(),
+// 		}),
+// 	] satisfies Tuple,
+// };
 
-const usesHeatInterfaceUnitsFields = {
-	discriminator: "usesHeatInterfaceUnits",
-	variants:
-		[
-			z.object({
-				usesHeatInterfaceUnits: z.literal(true),
-				heatInterfaceUnitProductReference: z.string().trim().min(1),
-			}),
-			z.object({
-				usesHeatInterfaceUnits: z.literal(false),
-			}),
-		] satisfies Tuple,
-};
+// const usesHeatInterfaceUnitsFields = {
+// 	discriminator: "usesHeatInterfaceUnits",
+// 	variants:
+// 		[
+// 			z.object({
+// 				usesHeatInterfaceUnits: z.literal(true),
+// 				heatInterfaceUnitProductReference: z.string().trim().min(1),
+// 			}),
+// 			z.object({
+// 				usesHeatInterfaceUnits: z.literal(false),
+// 			}),
+// 		] satisfies Tuple,
+// };
 
-const heatNetworkZodData = nestedDiscriminatedUnion(
-	heatNetworkBase,
-	isHeatNetworkInPcdbFields,
-	usesHeatInterfaceUnitsFields,
-);
+// const heatNetworkZodData = nestedDiscriminatedUnion(
+// 	heatNetworkBase,
+// 	isHeatNetworkInPcdbFields,
+// 	usesHeatInterfaceUnitsFields,
+// );
 
 const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpBase,
 	boilerBase,
 	heatBatteryBase,
-	heatNetworkZodData,
+	// heatNetworkZodData,
 ]);
 
 const _typeOfHeatSource = z.enum({
@@ -1298,22 +1298,22 @@ const heatPumpHotWaterSourceBase = heatPumpBase.extend(hotWaterHeatSourceExtensi
 const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceExtension);
 const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceExtension);
 const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
-const heatNetworkHotWaterSourceBase = heatNetworkBase.extend(hotWaterHeatSourceExtension);
+// const heatNetworkHotWaterSourceBase = heatNetworkBase.extend(hotWaterHeatSourceExtension);
 const immersionHeaterHotWaterSourceBase = baseImmersionHeater.extend(hotWaterHeatSourceExtension);
 const pointOfUseHotWaterSourceBase = basePointOfUse.extend(hotWaterHeatSourceExtension);
 
-const heatNetworkHotWaterSource = nestedDiscriminatedUnion(
-	heatNetworkHotWaterSourceBase,
-	isHeatNetworkInPcdbFields,
-	usesHeatInterfaceUnitsFields,
-);
+// const heatNetworkHotWaterSource = nestedDiscriminatedUnion(
+// 	heatNetworkHotWaterSourceBase,
+// 	isHeatNetworkInPcdbFields,
+// 	usesHeatInterfaceUnitsFields,
+// );
 
 const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpHotWaterSourceBase,
 	boilerHotWaterSourceBase,
 	heatBatteryHotWaterSourceBase,
 	solarThermalHotWaterSourceBase,
-	heatNetworkHotWaterSource,
+	// heatNetworkHotWaterSource,
 	immersionHeaterHotWaterSourceBase,
 	pointOfUseHotWaterSourceBase,
 ]);

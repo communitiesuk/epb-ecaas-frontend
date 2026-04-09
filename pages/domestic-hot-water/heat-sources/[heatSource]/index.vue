@@ -303,13 +303,13 @@ const greaterThanZero = (node: FormKitNode) => {
 			:index="index"
 			page="domestic hot water"
 			@update-boiler-model="updateHeatSource" />
-		<HeatNetworkSection
+		<!-- <HeatNetworkSection
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'heatNetwork'"
 			:model="(model as HeatNetworkModelType)"
 			:index="index"
 			section="domesticHotWater"
-			@update-heat-network-model="updateHeatSource" />
+			@update-heat-network-model="updateHeatSource" /> -->
 		<HeatBatterySection
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'heatBattery'"

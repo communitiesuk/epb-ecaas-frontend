@@ -583,21 +583,21 @@ describe("Domestic hot water summary", () => {
 			energySupply: "electricity",
 		};
 
-		const dhwWithNewHeatNetwork: DomesticHotWaterHeatSourceData = {
-			coldWaterSource: "mainsWater",
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-			name: "Heat network 1",
-			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "communalHeatNetwork",
-			isHeatNetworkInPcdb: true,
-			productReference: "HEAT_NETWORK-LARGE",
-			energySupply: "electricity",
-			usesHeatInterfaceUnits: false,
-			hasBoosterHeatPump: true,
-			boosterHeatPumpId: dhwWithNewHeatPump.id,
-		};
+		// const dhwWithNewHeatNetwork: DomesticHotWaterHeatSourceData = {
+		// 	coldWaterSource: "mainsWater",
+		// 	isExistingHeatSource: false,
+		// 	heatSourceId: "NEW_HEAT_SOURCE",
+		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+		// 	name: "Heat network 1",
+		// 	typeOfHeatSource: "heatNetwork",
+		// 	typeOfHeatNetwork: "communalHeatNetwork",
+		// 	isHeatNetworkInPcdb: true,
+		// 	productReference: "HEAT_NETWORK-LARGE",
+		// 	energySupply: "electricity",
+		// 	usesHeatInterfaceUnits: false,
+		// 	hasBoosterHeatPump: true,
+		// 	boosterHeatPumpId: dhwWithNewHeatPump.id,
+		// };
 
 
 		const dhwWithNewSolarThermalSystem: DomesticHotWaterHeatSourceData = {
@@ -656,7 +656,7 @@ describe("Domestic hot water summary", () => {
 							{ data: dhwWithNewHeatPump },
 							{ data: dhwWithNewBoiler },
 							{ data: dhwWithNewHeatBattery },
-							{ data: dhwWithNewHeatNetwork },
+							// { data: dhwWithNewHeatNetwork },
 							{ data: dhwWithNewSolarThermalSystem },
 							{ data: dhwImmersionHeater },
 							{ data: dhwPointOfUse },
@@ -687,7 +687,7 @@ describe("Domestic hot water summary", () => {
 
 			expect(screen.getByRole("link", { name: "Heat pump" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Boiler" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Heat network" })).not.toBeNull();
+			// expect(screen.getByRole("link", { name: "Heat network" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Heat battery" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Solar thermal system" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Immersion heater" })).not.toBeNull();
@@ -734,18 +734,18 @@ describe("Domestic hot water summary", () => {
 			"Maximum flow temperature": `32 ${celsius.suffix}`,
 			"Energy supply": "Electricity",
 		};
-		const expectedHeatNetwork = {
-			"Cold water source": "Mains water",
-			Name: "Heat network 1",
-			"Used for space heating": "No",
-			"Type of heat source": "Heat network",
-			"Type of heat network": "Communal heat network",
-			"Is the heat network in the PCDB": "Yes",
-			"Heat network product reference": "HEAT_NETWORK-LARGE",
-			"Booster heat pump": dhwWithNewHeatPump.name,
-			"Energy supply": "Electricity",
-			"Will the heat network use heat interface units": "No",
-		};
+		// const expectedHeatNetwork = {
+		// 	"Cold water source": "Mains water",
+		// 	Name: "Heat network 1",
+		// 	"Used for space heating": "No",
+		// 	"Type of heat source": "Heat network",
+		// 	"Type of heat network": "Communal heat network",
+		// 	"Is the heat network in the PCDB": "Yes",
+		// 	"Heat network product reference": "HEAT_NETWORK-LARGE",
+		// 	"Booster heat pump": dhwWithNewHeatPump.name,
+		// 	"Energy supply": "Electricity",
+		// 	"Will the heat network use heat interface units": "No",
+		// };
 		const expectedSolarThermalSystem = {
 			"Cold water source": "Mains water",
 			Name: "Solar thermal system",
@@ -784,7 +784,7 @@ describe("Domestic hot water summary", () => {
 				["heatPumpSummary", expectedHeatPump],
 				["boilerSummary", expectedBoiler],
 				["heatBatterySummary", expectedHeatBattery],
-				["heatNetworkSummary", expectedHeatNetwork],
+				// ["heatNetworkSummary", expectedHeatNetwork],
 				["solarThermalSystemSummary", expectedSolarThermalSystem],
 				["immersionHeaterSummary", expectedImmersionHeater],
 				["pointOfUseSummary", expectedPointOfUse],
@@ -804,7 +804,7 @@ describe("Domestic hot water summary", () => {
 								{ data: heatPump1 },
 								{ data: boiler1 },
 								{ data: heatBattery1 },
-								{ data: heatNetwork1 },
+								// { data: heatNetwork1 },
 							],
 						},
 					},
@@ -814,7 +814,7 @@ describe("Domestic hot water summary", () => {
 								{ data: dhwWithExistingHeatPump },
 								{ data: dhwWithExistingBoiler },
 								{ data: dhwWithExistingHeatBattery },
-								{ data: dhwWithExistingHeatNetwork },
+								// { data: dhwWithExistingHeatNetwork },
 							],
 						},
 					},
@@ -835,11 +835,11 @@ describe("Domestic hot water summary", () => {
 				maxFlowTemp: unitValue(10, celsius),
 			};
 
-			const heatNetwork1: Partial<HeatSourceData> = {
-				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-				name: "Heat network 1",
-				typeOfHeatSource: "heatNetwork",
-			};
+			// const heatNetwork1: Partial<HeatSourceData> = {
+			// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+			// 	name: "Heat network 1",
+			// 	typeOfHeatSource: "heatNetwork",
+			// };
 
 			const heatBattery1: Partial<HeatSourceData> = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
@@ -872,12 +872,12 @@ describe("Domestic hot water summary", () => {
 				maxFlowTemp: unitValue(20, celsius),
 			};
 
-			const dhwWithExistingHeatNetwork: DomesticHotWaterHeatSourceData = {
-				id: "hn-id",
-				coldWaterSource: "headerTank",
-				isExistingHeatSource: true,
-				heatSourceId: heatNetwork1.id!,
-			};
+			// const dhwWithExistingHeatNetwork: DomesticHotWaterHeatSourceData = {
+			// 	id: "hn-id",
+			// 	coldWaterSource: "headerTank",
+			// 	isExistingHeatSource: true,
+			// 	heatSourceId: heatNetwork1.id!,
+			// };
 
 			const expectedExistingHeatPump = {
 				"Cold water source": "Mains water",
@@ -900,18 +900,18 @@ describe("Domestic hot water summary", () => {
 				"Maximum flow temperature": `20 ${celsius.suffix}`,
 			};
 
-			const expectedExistingHeatNetwork = {
-				"Cold water source": "Header tank",
-				Name: "Heat network 1",
-				"Used for space heating": "YesView details in space heating summary",
-			};
+			// const expectedExistingHeatNetwork = {
+			// 	"Cold water source": "Header tank",
+			// 	Name: "Heat network 1",
+			// 	"Used for space heating": "YesView details in space heating summary",
+			// };
 
 			it.each(
 				[
 					["heatPumpSummary", expectedExistingHeatPump],
 					["boilerSummary", expectedExistingBoiler],
 					["heatBatterySummary", expectedExistingHeatBattery],
-					["heatNetworkSummary", expectedExistingHeatNetwork],
+					// ["heatNetworkSummary", expectedExistingHeatNetwork],
 				],
 			)("for the %s it displays the correct stored data for existing space heating heat source items", async (sectionId, expectedData) => {
 

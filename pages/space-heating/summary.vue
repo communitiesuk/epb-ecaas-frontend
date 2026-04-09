@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl, type HeatEmittingData, type WetDistributionSystemData, type WetDistributionEmitterData } from "#imports";
-import type { SchemaFuelType } from "~/schema/aliases";
 import { displayBoilerLocation, displayConvectiveType } from "~/utils/display";
 import { useProductReferences } from "~/composables/productReferences";
 
@@ -13,7 +12,7 @@ const spaceHeatingUrl = "/space-heating";
 const heatSources = store.spaceHeating.heatSource.data;
 const boilers = heatSources.filter(x => x.data.typeOfHeatSource === "boiler");
 const heatPumps = heatSources.filter(x => x.data.typeOfHeatSource === "heatPump");
-const heatNetworks = heatSources.filter(x => x.data.typeOfHeatSource === "heatNetwork");
+// const heatNetworks = heatSources.filter(x => x.data.typeOfHeatSource === "heatNetwork");
 const heatBatteries = heatSources.filter(x => x.data.typeOfHeatSource === "heatBattery");
 
 const heatEmitters = store.spaceHeating.heatEmitters.data;
@@ -112,51 +111,51 @@ const heatPumpSummary: SummarySection = {
 	editUrl: spaceHeatingUrl,
 };
 
-const heatNetworkSummary: SummarySection = {
-	id: "heatNetworkSummary",
-	label: "Heat networks",
-	data:
-		heatNetworks.map((x) => {
-			const heatSources = store.spaceHeating.heatSource;
-			let taggedBoosterHP;
-			if ("boosterHeatPumpId" in x.data) {
-				taggedBoosterHP = store.getTaggedItem([heatSources], x.data.boosterHeatPumpId);
-			}
+// const heatNetworkSummary: SummarySection = {
+// 	id: "heatNetworkSummary",
+// 	label: "Heat networks",
+// 	data:
+// 		heatNetworks.map((x) => {
+// 			const heatSources = store.spaceHeating.heatSource;
+// 			let taggedBoosterHP;
+// 			if ("boosterHeatPumpId" in x.data) {
+// 				taggedBoosterHP = store.getTaggedItem([heatSources], x.data.boosterHeatPumpId);
+// 			}
 
-			const heatSource = x.data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
-			const summary = {
-				Name: show(heatSource.name),
-				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
-				"Type of heat network": "typeOfHeatNetwork" in heatSource && heatSource.typeOfHeatNetwork ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
-				"Is the heat network in the PCDB": "isHeatNetworkInPcdb" in heatSource ? displayBoolean(heatSource.isHeatNetworkInPcdb) : emptyValueRendering,
-				...(heatSource.isHeatNetworkInPcdb === true && {
-					"Heat network product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-					"Booster heat pump": taggedBoosterHP && "name" in taggedBoosterHP ? taggedBoosterHP.name : emptyValueRendering,
-					"Energy supply": "energySupply" in heatSource && heatSource.energySupply !== undefined ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
-					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-					"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
-				}),
-				...(heatSource.isHeatNetworkInPcdb === false && {
-					"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply as SchemaFuelType] : emptyValueRendering,
-					"Emissions factor including out of scope emissions": "emissionsFactor" in heatSource ? heatSource.emissionsFactor : emptyValueRendering,
-					"Primary energy factor": "primaryEnergyFactor" in heatSource ? heatSource.primaryEnergyFactor : emptyValueRendering,
-					"Can energy from the heat network be exported": "canEnergyBeExported" in heatSource ? heatSource.canEnergyBeExported : emptyValueRendering,
-					"Does it have a booster heat pump?": "hasBoosterHeatPump" in heatSource ? displayBoolean(heatSource.hasBoosterHeatPump) : emptyValueRendering,
-					...(heatSource.hasBoosterHeatPump === true && {
-						"Booster heat pump": taggedBoosterHP && "name" in taggedBoosterHP ? taggedBoosterHP.name : emptyValueRendering,
-					}),
-				}),
-				...(heatSource.isHeatNetworkInPcdb !== undefined && {
-					"Will the heat network use heat interface units": "usesHeatInterfaceUnits" in heatSource ? displayBoolean(heatSource.usesHeatInterfaceUnits) : emptyValueRendering,
-				}),
-				...(heatSource.usesHeatInterfaceUnits === true && {
-					"Heat interface unit product reference": "heatInterfaceUnitProductReference" in heatSource ? heatSource.heatInterfaceUnitProductReference : emptyValueRendering,
-				}),
-			};
-			return summary;
-		}) || [],
-	editUrl: spaceHeatingUrl,
-};
+// 			const heatSource = x.data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
+// 			const summary = {
+// 				Name: show(heatSource.name),
+// 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
+// 				"Type of heat network": "typeOfHeatNetwork" in heatSource && heatSource.typeOfHeatNetwork ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
+// 				"Is the heat network in the PCDB": "isHeatNetworkInPcdb" in heatSource ? displayBoolean(heatSource.isHeatNetworkInPcdb) : emptyValueRendering,
+// 				...(heatSource.isHeatNetworkInPcdb === true && {
+// 					"Heat network product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+// 					"Booster heat pump": taggedBoosterHP && "name" in taggedBoosterHP ? taggedBoosterHP.name : emptyValueRendering,
+// 					"Energy supply": "energySupply" in heatSource && heatSource.energySupply !== undefined ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+// 					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+// 					"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
+// 				}),
+// 				...(heatSource.isHeatNetworkInPcdb === false && {
+// 					"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply as SchemaFuelType] : emptyValueRendering,
+// 					"Emissions factor including out of scope emissions": "emissionsFactor" in heatSource ? heatSource.emissionsFactor : emptyValueRendering,
+// 					"Primary energy factor": "primaryEnergyFactor" in heatSource ? heatSource.primaryEnergyFactor : emptyValueRendering,
+// 					"Can energy from the heat network be exported": "canEnergyBeExported" in heatSource ? heatSource.canEnergyBeExported : emptyValueRendering,
+// 					"Does it have a booster heat pump?": "hasBoosterHeatPump" in heatSource ? displayBoolean(heatSource.hasBoosterHeatPump) : emptyValueRendering,
+// 					...(heatSource.hasBoosterHeatPump === true && {
+// 						"Booster heat pump": taggedBoosterHP && "name" in taggedBoosterHP ? taggedBoosterHP.name : emptyValueRendering,
+// 					}),
+// 				}),
+// 				...(heatSource.isHeatNetworkInPcdb !== undefined && {
+// 					"Will the heat network use heat interface units": "usesHeatInterfaceUnits" in heatSource ? displayBoolean(heatSource.usesHeatInterfaceUnits) : emptyValueRendering,
+// 				}),
+// 				...(heatSource.usesHeatInterfaceUnits === true && {
+// 					"Heat interface unit product reference": "heatInterfaceUnitProductReference" in heatSource ? heatSource.heatInterfaceUnitProductReference : emptyValueRendering,
+// 				}),
+// 			};
+// 			return summary;
+// 		}) || [],
+// 	editUrl: spaceHeatingUrl,
+// };
 
 const heatBatterySummary: SummarySection = {
 	id: "heatBatterySummary",
@@ -262,7 +261,7 @@ function getNonEmptySections(summarySections: SummarySection[]) {
 const heatSourceSections: SummarySection[] = [
 	boilerSummary,
 	heatPumpSummary,
-	heatNetworkSummary,
+	// heatNetworkSummary,
 	heatBatterySummary,
 ];
 const populatedHeatSourceSections = getNonEmptySections(heatSourceSections);

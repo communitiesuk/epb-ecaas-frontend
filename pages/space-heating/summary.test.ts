@@ -172,58 +172,58 @@ describe("Space heating summary page", () => {
 			}
 		});
 
-		it("displays the correct data for the heat network summary", async () => {
+		// it("displays the correct data for the heat network summary", async () => {
 
-			const boosterHeatPump: HeatSourceData = {
-				id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
-				name: "Booster HP",
-				typeOfHeatSource: "heatPump",
-				typeOfHeatPump: "booster",
-				productReference: "HEATPUMP_LARGE",
-			};
+		// 	const boosterHeatPump: HeatSourceData = {
+		// 		id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+		// 		name: "Booster HP",
+		// 		typeOfHeatSource: "heatPump",
+		// 		typeOfHeatPump: "booster",
+		// 		productReference: "HEATPUMP_LARGE",
+		// 	};
 
-			const heatNetwork1: HeatSourceData = {
-				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-				name: "Heat network 1",
-				typeOfHeatSource: "heatNetwork",
-				typeOfHeatNetwork: "communalHeatNetwork",
-				isHeatNetworkInPcdb: true,
-				productReference: "HEAT_NETWORK-LARGE",
-				energySupply: "electricity",
-				usesHeatInterfaceUnits: false,
-				hasBoosterHeatPump: true,
-				boosterHeatPumpId: boosterHeatPump.id,
-			};
+		// 	const heatNetwork1: HeatSourceData = {
+		// 		id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+		// 		name: "Heat network 1",
+		// 		typeOfHeatSource: "heatNetwork",
+		// 		typeOfHeatNetwork: "communalHeatNetwork",
+		// 		isHeatNetworkInPcdb: true,
+		// 		productReference: "HEAT_NETWORK-LARGE",
+		// 		energySupply: "electricity",
+		// 		usesHeatInterfaceUnits: false,
+		// 		hasBoosterHeatPump: true,
+		// 		boosterHeatPumpId: boosterHeatPump.id,
+		// 	};
 
-			const store = useEcaasStore();
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [{ data: boosterHeatPump }, { data: heatNetwork1 }],
-					},
-				},
-			});
+		// 	const store = useEcaasStore();
+		// 	store.$patch({
+		// 		spaceHeating: {
+		// 			heatSource: {
+		// 				data: [{ data: boosterHeatPump }, { data: heatNetwork1 }],
+		// 			},
+		// 		},
+		// 	});
 
-			await renderSuspended(SpaceHeatingSummary);
+		// 	await renderSuspended(SpaceHeatingSummary);
 
-			const expectedResult = {
-				Name: "Heat network 1",
-				"Type of heat source": "Heat network",
-				"Type of heat network": "Communal heat network",
-				"Is the heat network in the PCDB": "Yes",
-				"Heat network product reference": "HEAT_NETWORK-LARGE",
-				"Booster heat pump": boosterHeatPump.name,
-				"Energy supply": "Electricity",
-				"Product name": "Mock product",
-				"Will the heat network use heat interface units": "No",
-			};
+		// 	const expectedResult = {
+		// 		Name: "Heat network 1",
+		// 		"Type of heat source": "Heat network",
+		// 		"Type of heat network": "Communal heat network",
+		// 		"Is the heat network in the PCDB": "Yes",
+		// 		"Heat network product reference": "HEAT_NETWORK-LARGE",
+		// 		"Booster heat pump": boosterHeatPump.name,
+		// 		"Energy supply": "Electricity",
+		// 		"Product name": "Mock product",
+		// 		"Will the heat network use heat interface units": "No",
+		// 	};
 
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-heatNetworkSummary-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
+		// 	for (const [key, value] of Object.entries(expectedResult)) {
+		// 		const lineResult = (await screen.findByTestId(`summary-heatNetworkSummary-${hyphenate(key)}`));
+		// 		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+		// 		expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		// 	}
+		// });
 	});
 	describe("Heating control section", () => {
 		const heatingControl: HeatingControlData = {

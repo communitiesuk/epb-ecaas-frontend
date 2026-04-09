@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { SchemaMechVentType } from "~/schema/aliases";
 import { useProductData } from "./productData";
 
-export function useSelectHeatSourceProduct(products: DisplayProduct[], heatSourceProductType: (HeatSourceProductType | TechnologyGroup)) {
+export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSourceProductType: (HeatSourceProductType | TechnologyGroup)) {
 	const store = useEcaasStore();
 
 	const selectProduct = (
@@ -17,26 +17,26 @@ export function useSelectHeatSourceProduct(products: DisplayProduct[], heatSourc
 			return;
 		}
 
-		if (heatSourceData.typeOfHeatSource === "heatNetwork") {
-			if (heatSourceData.usesHeatInterfaceUnits && heatSourceProductType === "heatInterfaceUnit") {
-				heatSourceData.heatInterfaceUnitProductReference = product.id;
-				return;
-			}
+		// if (heatSourceData.typeOfHeatSource === "heatNetwork") {
+		// 	if (heatSourceData.usesHeatInterfaceUnits && heatSourceProductType === "heatInterfaceUnit") {
+		// 		heatSourceData.heatInterfaceUnitProductReference = product.id;
+		// 		return;
+		// 	}
 
-			if (!heatSourceData.isHeatNetworkInPcdb) return;
+		// 	if (!heatSourceData.isHeatNetworkInPcdb) return;
 
-			const heatNetwork = products.find(x => x.id === product.id);
+		// 	const heatNetwork = products.find(x => x.id === product.id);
 
-			if (heatNetwork) {
-				if ("fifthGHeatNetwork" in product) {
-					heatSourceData.hasBoosterHeatPump = product.fifthGHeatNetwork === 1;
-				} else {
-					useProductData(heatNetwork.id).then((item) => {
-						heatSourceData.hasBoosterHeatPump = !!(item && "fifthGHeatNetwork" in item && item.fifthGHeatNetwork === 1);
-					});
-				}
-			}
-		}
+		// 	if (heatNetwork) {
+		// 		if ("fifthGHeatNetwork" in product) {
+		// 			heatSourceData.hasBoosterHeatPump = product.fifthGHeatNetwork === 1;
+		// 		} else {
+		// 			useProductData(heatNetwork.id).then((item) => {
+		// 				heatSourceData.hasBoosterHeatPump = !!(item && "fifthGHeatNetwork" in item && item.fifthGHeatNetwork === 1);
+		// 			});
+		// 		}
+		// 	}
+		// }
 		
 		if (heatSourceData.typeOfHeatSource === "boiler") {
 			const boilerProduct = product as (DisplayProduct | BoilerProduct);

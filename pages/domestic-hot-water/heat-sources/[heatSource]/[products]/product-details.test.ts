@@ -246,49 +246,49 @@ describe("Heat source details", async () => {
 		expect((await screen.findByTestId("hybridHeatPump"))).toBeDefined();
 	});
 
-	test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
+	// test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
 		
-		const heatNetwork: Partial<DomesticHotWaterHeatSourceData> = {
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-			name: "Heat network",
-			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "communalHeatNetwork",
-			isHeatNetworkInPcdb: true,
-		};
+	// 	const heatNetwork: Partial<DomesticHotWaterHeatSourceData> = {
+	// 		isExistingHeatSource: false,
+	// 		heatSourceId: "NEW_HEAT_SOURCE",
+	// 		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+	// 		name: "Heat network",
+	// 		typeOfHeatSource: "heatNetwork",
+	// 		typeOfHeatNetwork: "communalHeatNetwork",
+	// 		isHeatNetworkInPcdb: true,
+	// 	};
 
-		store.$patch({
-			domesticHotWater: {
-				heatSources: {
-					data: [{ data: heatNetwork }],
-				},
-			},
-		});
+	// 	store.$patch({
+	// 		domesticHotWater: {
+	// 			heatSources: {
+	// 				data: [{ data: heatNetwork }],
+	// 			},
+	// 		},
+	// 	});
 
-		mockRoute.mockReturnValueOnce({
-			params: {
-				heatSource: "0",
-				products: "heat-network",
-				id: "1000",
-			},
-			path: "/0/heat-network/1000",
-		});
+	// 	mockRoute.mockReturnValueOnce({
+	// 		params: {
+	// 			heatSource: "0",
+	// 			products: "heat-network",
+	// 			id: "1000",
+	// 		},
+	// 		path: "/0/heat-network/1000",
+	// 	});
 		
-		mockFetch.mockReturnValueOnce({
-			data: ref({
-				id: "1000",
-				brandName: "Test",
-				modelName: "Heat network",
-				modelQualifier: "HNSMALL",
-				technologyType: "HeatNetworks",
-				fifthGHeatNetwork: 1,
-			}),
-		});	
-		await renderSuspended(ProductDetails);
-		await user.click(screen.getByTestId("selectProductButton"));
-		expect((store.domesticHotWater.heatSources.data[0]!.data as { hasBoosterHeatPump: boolean }).hasBoosterHeatPump).toBe(true);
-	});
+	// 	mockFetch.mockReturnValueOnce({
+	// 		data: ref({
+	// 			id: "1000",
+	// 			brandName: "Test",
+	// 			modelName: "Heat network",
+	// 			modelQualifier: "HNSMALL",
+	// 			technologyType: "HeatNetworks",
+	// 			fifthGHeatNetwork: 1,
+	// 		}),
+	// 	});	
+	// 	await renderSuspended(ProductDetails);
+	// 	await user.click(screen.getByTestId("selectProductButton"));
+	// 	expect((store.domesticHotWater.heatSources.data[0]!.data as { hasBoosterHeatPump: boolean }).hasBoosterHeatPump).toBe(true);
+	// });
 		
 	test("Navigates to heat pump page when product is selected", async () => {
 		// Act

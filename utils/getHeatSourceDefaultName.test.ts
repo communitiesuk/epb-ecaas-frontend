@@ -47,26 +47,26 @@ describe("getHeatSourceDefaultName", () => {
 		expect(actual).toBe("Combi boiler");
 	});
 
-	test("just uses display versions of heat network types", () => {
-		const item: HeatSourceFormData = {
-			id: "123",
-			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
-		};
+	// test("just uses display versions of heat network types", () => {
+	// 	const item: HeatSourceFormData = {
+	// 		id: "123",
+	// 		typeOfHeatSource: "heatNetwork",
+	// 		typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+	// 	};
 
-		const actual = getHeatSourceDefaultName(item);
+	// 	const actual = getHeatSourceDefaultName(item);
 
-		expect(actual).toBe("Sleeved district heat network");
-	});
+	// 	expect(actual).toBe("Sleeved district heat network");
+	// });
 
-	test("use fallback display version for heat network when type not selected", () => {
-		const item: HeatSourceFormData = {
-			id: "123",
-			typeOfHeatSource: "heatNetwork",
-		};
+	// test("use fallback display version for heat network when type not selected", () => {
+	// 	const item: HeatSourceFormData = {
+	// 		id: "123",
+	// 		typeOfHeatSource: "heatNetwork",
+	// 	};
 
-		const actual = getHeatSourceDefaultName(item);
+	// 	const actual = getHeatSourceDefaultName(item);
 
-		expect(actual).toBe("Heat network");
-	});
+	// 	expect(actual).toBe("Heat network");
+	// });
 });

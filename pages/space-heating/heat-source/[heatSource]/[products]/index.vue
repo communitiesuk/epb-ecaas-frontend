@@ -59,12 +59,12 @@ const selectProduct = async (product: DisplayProduct) => {
 				:value="searchModel.searchTerm"
 			/>
 		</ProductSearch>
-		<HeatNetworkProductsTable
+		<!-- <HeatNetworkProductsTable
 			v-if="heatSourceProductType === 'heatNetwork'"
 			:products="pagination.getData()"
 			:total-pages="pagination.totalPages"
 			:on-select-product="selectProduct"
-		/>
+		/> -->
 	</template>
 	<template v-else>
 		<ProductSearch :model="searchModel" />

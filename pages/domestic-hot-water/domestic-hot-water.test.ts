@@ -482,36 +482,27 @@ describe("Domestic hot water", () => {
 	});
 
 	describe("Heat Sources", () => {
-
-		const boosterHeatPumpHotWater = {
-			data: {
-				id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5555",
-				coldWaterSource: "mainsWater",
-				isExistingHeatSource: false,
-				heatSourceId: "NEW_HEAT_SOURCE",
-				name: "Booster HP",
-				typeOfHeatSource: "heatPump",
-				typeOfHeatPump: "booster",
-				productReference: "HEATPUMP_LARGE",
-			},
-		} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
-
 		const heatSource2 = {
 			data: {
-				name: "Jasper's Old Laptop",
+				name: "Solar Thermal System 1",
 				id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bc",
 				coldWaterSource: "headerTank",
 				isExistingHeatSource: false,
-				typeOfHeatSource: "heatNetwork",
-				typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
-				productReference: "HEAT-12345",
+				typeOfHeatSource: "solarThermalSystem",
 				heatSourceId: "NEW_HEAT_SOURCE",
-				isHeatNetworkInPcdb: true,
-				energySupply: "LPG_condition_11F",
-				usesHeatInterfaceUnits: true,
-				heatInterfaceUnitProductReference: "HIU-12345",
-				hasBoosterHeatPump: true,
-				boosterHeatPumpId: boosterHeatPumpHotWater.data.id,
+				locationOfCollectorLoopPiping: "heatedSpace",
+				collectorModuleArea: 2,
+				numberOfCollectorModules: 6,
+				peakCollectorEfficiency: 0.94,
+				incidenceAngleModifier: 0.4,
+				firstOrderHeatLossCoefficient: 0.5,
+				secondOrderHeatLossCoefficient: 0.6,
+				heatLossCoefficientOfSolarLoopPipe: 0.7,
+				collectorMassFlowRate: 10,
+				powerOfCollectorPump: { amount: 50, unit: "kilowatt" },
+				powerOfCollectorPumpController: { amount: 10, unit: "kilowatt" },
+				pitch: 70,
+				orientation: 32,
 			},
 			complete: true,
 		} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
@@ -575,37 +566,37 @@ describe("Domestic hot water", () => {
 			expect(screen.queryByTestId("heatSources_items")).toBeNull();
 		});
 	
-		it("references to the deleted DHW booster heat pump are removed from all heat network items", async () => {
+		// it("references to the deleted DHW booster heat pump are removed from all heat network items", async () => {
 
-			const heatNetwork: Partial<HeatSourceData> = {
-				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-				typeOfHeatSource: "heatNetwork",
-				typeOfHeatNetwork: "communalHeatNetwork",
-				isHeatNetworkInPcdb: true,
-				hasBoosterHeatPump: true,
-				boosterHeatPumpId: boosterHeatPumpHotWater.data.id,
-			};
+		// 	const heatNetwork: Partial<HeatSourceData> = {
+		// 		id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+		// 		typeOfHeatSource: "heatNetwork",
+		// 		typeOfHeatNetwork: "communalHeatNetwork",
+		// 		isHeatNetworkInPcdb: true,
+		// 		hasBoosterHeatPump: true,
+		// 		boosterHeatPumpId: boosterHeatPumpHotWater.data.id,
+		// 	};
 
-			store.$patch({
-				domesticHotWater: {
-					heatSources: {
-						data: [boosterHeatPumpHotWater],
-					},
-				},
-				spaceHeating: {
-					heatSource: {
-						data: [{ data: heatNetwork, complete: true }],
-					},
-				},
-			});
+		// 	store.$patch({
+		// 		domesticHotWater: {
+		// 			heatSources: {
+		// 				data: [boosterHeatPumpHotWater],
+		// 			},
+		// 		},
+		// 		spaceHeating: {
+		// 			heatSource: {
+		// 				data: [{ data: heatNetwork, complete: true }],
+		// 			},
+		// 		},
+		// 	});
 			
-			await renderSuspended(DomesticHotWater);
-			await user.click(await screen.findByTestId("heatSources_remove_0"));
+		// 	await renderSuspended(DomesticHotWater);
+		// 	await user.click(await screen.findByTestId("heatSources_remove_0"));
 			
-			const heatNetworkItem = store.spaceHeating.heatSource.data[0];
-			expect((heatNetworkItem?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBe(undefined);
-			expect(heatNetworkItem?.complete).toBe(false);
-		});
+		// 	const heatNetworkItem = store.spaceHeating.heatSource.data[0];
+		// 	expect((heatNetworkItem?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBe(undefined);
+		// 	expect(heatNetworkItem?.complete).toBe(false);
+		// });
 
 		it("when a DHW heat source is removed it's removed from all other store items that reference it", async () => {
 

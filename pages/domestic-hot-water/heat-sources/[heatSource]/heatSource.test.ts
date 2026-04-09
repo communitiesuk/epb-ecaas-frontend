@@ -249,14 +249,14 @@ describe("Heat Source Page", () => {
 			typeOfHeatBattery: "heatBatteryPcm",
 		};
 
-		const heatNetwork: Partial<DomesticHotWaterHeatSourceData> = {
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-			name: "Heat source 1",
-			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "communalHeatNetwork",
-		};
+		// const heatNetwork: Partial<DomesticHotWaterHeatSourceData> = {
+		// 	isExistingHeatSource: false,
+		// 	heatSourceId: "NEW_HEAT_SOURCE",
+		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+		// 	name: "Heat source 1",
+		// 	typeOfHeatSource: "heatNetwork",
+		// 	typeOfHeatNetwork: "communalHeatNetwork",
+		// };
 
 		const solarThermalSystem: Partial<DomesticHotWaterHeatSourceData> = {
 			isExistingHeatSource: false,
@@ -282,7 +282,15 @@ describe("Heat Source Page", () => {
 			typeOfHeatSource: "pointOfUse",
 		};
 
-		it.each([["heat pump", heatPump], ["boiler", boiler], ["heat battery", heatBattery], ["heat network", heatNetwork], ["solar thermal system", solarThermalSystem],["immersion heater", immersionHeater], ["point of use", pointOfUse]])(
+		it.each([
+			["heat pump", heatPump],
+			["boiler", boiler],
+			["heat battery", heatBattery],
+			// ["heat network", heatNetwork],
+			["solar thermal system", solarThermalSystem],
+			["immersion heater", immersionHeater],
+			["point of use", pointOfUse],
+		])(
 			"check DHW heat sources %s and space heating heat sources to ensure name is unique", async (_name, heatSource) => {
 
 				store.$patch({
@@ -999,78 +1007,78 @@ describe("Heat pump section", () => {
 	});
 });
 
-describe("heat network", () => {
+// describe("heat network", () => {
 	
-	const heatNetwork1: Partial<DomesticHotWaterHeatSourceData> = {
-		isExistingHeatSource: false,
-		heatSourceId: "NEW_HEAT_SOURCE",
-		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-		name: "Heat network",
-		typeOfHeatSource: "heatNetwork",
-		typeOfHeatNetwork: "communalHeatNetwork",
-		isHeatNetworkInPcdb: true,
-		hasBoosterHeatPump: true,
-	};
+// 	const heatNetwork1: Partial<DomesticHotWaterHeatSourceData> = {
+// 		isExistingHeatSource: false,
+// 		heatSourceId: "NEW_HEAT_SOURCE",
+// 		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+// 		name: "Heat network",
+// 		typeOfHeatSource: "heatNetwork",
+// 		typeOfHeatNetwork: "communalHeatNetwork",
+// 		isHeatNetworkInPcdb: true,
+// 		hasBoosterHeatPump: true,
+// 	};
 
-	test("a 5th generation heat network can be tagged with a booster heat pumps from DWH & space heating", async () => {
+// 	test("a 5th generation heat network can be tagged with a booster heat pumps from DWH & space heating", async () => {
 
-		const booster: HeatSourceData = {
-			name: "Booster HP",
-			id: "boosterID-123",
-			typeOfHeatSource: "heatPump",
-			typeOfHeatPump: "booster",
-			productReference: "2",
-		};
+// 		const booster: HeatSourceData = {
+// 			name: "Booster HP",
+// 			id: "boosterID-123",
+// 			typeOfHeatSource: "heatPump",
+// 			typeOfHeatPump: "booster",
+// 			productReference: "2",
+// 		};
 
-		const dhwBooster: DomesticHotWaterHeatSourceData = {
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-			typeOfHeatSource: "heatPump",
-			typeOfHeatPump: "booster",
-			name: "DHW Booster HP",
-			id: "dhwBoosterID-123",
-			coldWaterSource: "headerTank",
-			productReference: "1",
-		};
+// 		const dhwBooster: DomesticHotWaterHeatSourceData = {
+// 			isExistingHeatSource: false,
+// 			heatSourceId: "NEW_HEAT_SOURCE",
+// 			typeOfHeatSource: "heatPump",
+// 			typeOfHeatPump: "booster",
+// 			name: "DHW Booster HP",
+// 			id: "dhwBoosterID-123",
+// 			coldWaterSource: "headerTank",
+// 			productReference: "1",
+// 		};
 
-		store.$patch({
-			spaceHeating: {
-				heatSource: {
-					data: [{ data: booster }],
-				},
-			},
-			domesticHotWater: {
-				heatSources: {
-					data: [{ data: dhwBooster }, { data: heatNetwork1 } ],
-				},
-			},
-		});
+// 		store.$patch({
+// 			spaceHeating: {
+// 				heatSource: {
+// 					data: [{ data: booster }],
+// 				},
+// 			},
+// 			domesticHotWater: {
+// 				heatSources: {
+// 					data: [{ data: dhwBooster }, { data: heatNetwork1 } ],
+// 				},
+// 			},
+// 		});
 		
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "1" },
-			},
-		});
+// 		await renderSuspended(HeatSourceForm, {
+// 			route: {
+// 				params: { "heatSource": "1" },
+// 			},
+// 		});
 
-		expect(screen.getByTestId(`boosterHeatPumpId_${booster.id}`)).toBeDefined();
-		expect(screen.getByTestId(`boosterHeatPumpId_${dhwBooster.id}`)).toBeDefined();
-	});
+// 		expect(screen.getByTestId(`boosterHeatPumpId_${booster.id}`)).toBeDefined();
+// 		expect(screen.getByTestId(`boosterHeatPumpId_${dhwBooster.id}`)).toBeDefined();
+// 	});
 
-	test("the 'Booster heat pump' element navigates user to the DHW overview page when there are stored boosters", async () => {
-		store.$patch({
-			domesticHotWater: {
-				heatSources: {
-					data: [ { data: heatNetwork1 } ],
-				},
-			},
-		});
+// 	test("the 'Booster heat pump' element navigates user to the DHW overview page when there are stored boosters", async () => {
+// 		store.$patch({
+// 			domesticHotWater: {
+// 				heatSources: {
+// 					data: [ { data: heatNetwork1 } ],
+// 				},
+// 			},
+// 		});
 		
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+// 		await renderSuspended(HeatSourceForm, {
+// 			route: {
+// 				params: { "heatSource": "0" },
+// 			},
+// 		});
 
-		expect(screen.getByRole("link", { name: "Click here to add a booster heat pump" }).getAttribute("href")).toBe("/domestic-hot-water");
-	});
-});
+// 		expect(screen.getByRole("link", { name: "Click here to add a booster heat pump" }).getAttribute("href")).toBe("/domestic-hot-water");
+// 	});
+// });

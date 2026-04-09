@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { heatNetworkTypes, typeOfHeatSource, uniqueName } from "#imports";
 import type { PageId } from "~/data/pages/pages";
 
@@ -142,4 +142,4 @@ const emit = defineEmits(["update-heat-network-model"]);
 			:page-url="route.fullPath"
 			:page-index="index" />
 	</template>
-</template>
+</template> -->

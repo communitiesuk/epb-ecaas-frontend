@@ -89,8 +89,12 @@ watch(() => model.value.fuelType, (newFuelTypes, oldFuelTypes) => {
 	if (newFuelTypes.length > oldFuelTypes.length) return;
 
 	const removedFuel = oldFuelTypes.find(fuel => !newFuelTypes.includes(fuel));
-	const spaceHeatingHeatSources = store.spaceHeating.heatSource.data.filter(({ data: x }) => x.typeOfHeatSource === "heatNetwork" || x.typeOfHeatSource === "heatBattery") as EcaasForm<Extract<HeatSourceData, { "typeOfHeatSource": "heatNetwork" | "heatBattery" }>>[];
-	const dhwHeatSources = store.domesticHotWater.heatSources.data.filter(({ data: x }) => x.isExistingHeatSource === false && (x.typeOfHeatSource === "heatNetwork" || x.typeOfHeatSource === "heatBattery" || x.typeOfHeatSource === "pointOfUse"));
+	const spaceHeatingHeatSources = store.spaceHeating.heatSource.data.filter(({ data: x }) => 
+		// x.typeOfHeatSource === "heatNetwork"|| 
+		x.typeOfHeatSource === "heatBattery") as EcaasForm<Extract<HeatSourceData, { "typeOfHeatSource": /*"heatNetwork"*/ | "heatBattery" }>>[];
+	const dhwHeatSources = store.domesticHotWater.heatSources.data.filter(({ data: x }) => x.isExistingHeatSource === false && (
+		// x.typeOfHeatSource === "heatNetwork" ||
+		x.typeOfHeatSource === "heatBattery" || x.typeOfHeatSource === "pointOfUse"));
 	const dhwWaterStorage = store.domesticHotWater.waterStorage.data.filter(({ data: x }) => x.typeOfWaterStorage === "smartHotWaterTank") as EcaasForm<SmartHotWaterTankData>[];
 
 	if (removedFuel) {
