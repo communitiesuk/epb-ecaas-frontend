@@ -71,7 +71,7 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 	);
 	const heatBatteryTypeMap = {
 		"heatBatteryPcm": "pcm",
-		"heatBatteryDryCore": "dry_core", 
+		"heatBatteryDryCore": "dry_core",
 	} as const;
 
 	return objectFromEntries(
@@ -161,18 +161,20 @@ export function mapWarmAirHeater(state: ResolvedState): Record<string, SchemaWar
 		(emitter): emitter is Extract<HeatEmittingData, { typeOfHeatEmitter: "warmAirHeater" }> => emitter.typeOfHeatEmitter === "warmAirHeater",
 	);
 
-
 	return objectFromEntries(
-		warmAirHeaters.map((emitter): [string, SchemaWarmAir] => {
-			return [
-				emitter.name,
-				{
-					type: "WarmAir",
-					temp_diff_emit_dsgn: emitter.designTempDiffAcrossEmitters,
-					frac_convective: emitter.convectionFraction,
-					HeatSource: getHeatSourceData(state, emitter),
-				},
-			];
+		warmAirHeaters.flatMap((emitter) => {
+			return Array.from({ length: emitter.numOfWarmAirHeaters }).map((_, i): [string, SchemaWarmAir] => {
+				const name = emitter.numOfWarmAirHeaters === 1 ? emitter.name : suffixWithNumber(emitter.name, i + 1);
+				return [
+					name,
+					{
+						type: "WarmAir",
+						temp_diff_emit_dsgn: emitter.designTempDiffAcrossEmitters,
+						frac_convective: emitter.convectionFraction,
+						HeatSource: getHeatSourceData(state, emitter),
+					},
+				];
+			});
 		}),
 	);
 }

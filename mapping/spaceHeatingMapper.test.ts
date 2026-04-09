@@ -280,7 +280,7 @@ describe("Space heating - heat sources", () => {
 					number_of_units: 1,
 					product_reference: heatBattery1.productReference,
 					EnergySupply: "electricity",
-					is_heat_network: false, 
+					is_heat_network: false,
 				},
 				[heatBattery2.name]: {
 					type: "HeatBattery",
@@ -319,7 +319,7 @@ describe("Space heating - emitters", () => {
 		name: "Warm Air Heater 1",
 		typeOfHeatEmitter: "warmAirHeater",
 		convectionFraction: 0.8,
-		numOfWarmAirHeaters: 2,
+		numOfWarmAirHeaters: 1,
 		designTempDiffAcrossEmitters: 15,
 		heatSource: heatBattery.id!,
 	};
@@ -833,6 +833,47 @@ describe("Space heating - emitters", () => {
 
 			const expectedForSchema = {
 				[warmAirHeater.name]: {
+					type: "WarmAir",
+					temp_diff_emit_dsgn: warmAirHeater.designTempDiffAcrossEmitters,
+					frac_convective: warmAirHeater.convectionFraction,
+					HeatSource: {
+						name: "Heat Battery 1",
+						temp_flow_limit_upper: 30,
+					},
+				},
+			};
+			const resolvedState = resolveState(store.$state);
+
+			const actual = mapWarmAirHeater(resolvedState);
+			expect(actual).toEqual(expectedForSchema);
+		});
+		test("maps multiple instances of a warm air heater", () => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [
+							{ data: heatPump as HeatSourceData, complete: true },
+							{ data: heatBattery as HeatSourceData, complete: true }],
+						complete: true,
+					},
+					heatEmitters: {
+						data: [{ data: { ...warmAirHeater, numOfWarmAirHeaters: 2 }, complete: true }],
+						complete: true,
+					},
+				},
+			});
+
+			const expectedForSchema = {
+				[warmAirHeater.name + " (1)"]: {
+					type: "WarmAir",
+					temp_diff_emit_dsgn: warmAirHeater.designTempDiffAcrossEmitters,
+					frac_convective: warmAirHeater.convectionFraction,
+					HeatSource: {
+						name: "Heat Battery 1",
+						temp_flow_limit_upper: 30,
+					},
+				},
+				[warmAirHeater.name + " (2)"]: {
 					type: "WarmAir",
 					temp_diff_emit_dsgn: warmAirHeater.designTempDiffAcrossEmitters,
 					frac_convective: warmAirHeater.convectionFraction,

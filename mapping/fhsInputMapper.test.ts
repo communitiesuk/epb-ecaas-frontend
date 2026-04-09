@@ -220,7 +220,15 @@ const expectedHouseInput: FhsInputSchema = {
 			"variable_flow": false,
 			"bypass_fraction_recirculated": 0.2,
 		},
-		"Warm Air Heater 1": {
+		"Warm Air Heater 1 (1)": {
+			"HeatSource": {
+				"name": "Heat pump 1",
+			},
+			"frac_convective": 0.8,
+			"temp_diff_emit_dsgn": 15,
+			"type": "WarmAir",
+		},
+		"Warm Air Heater 1 (2)": {
 			"HeatSource": {
 				"name": "Heat pump 1",
 			},
@@ -645,7 +653,15 @@ const expectedFlatInput: FhsInputSchema = {
 			"variable_flow": false,
 			"bypass_fraction_recirculated": 0.2,
 		},
-		"Warm Air Heater 1": {
+		"Warm Air Heater 1 (1)": {
+			"HeatSource": {
+				"name": "Heat pump 1",
+			},
+			"frac_convective": 0.8,
+			"temp_diff_emit_dsgn": 15,
+			"type": "WarmAir",
+		},
+		"Warm Air Heater 1 (2)": {
 			"HeatSource": {
 				"name": "Heat pump 1",
 			},
