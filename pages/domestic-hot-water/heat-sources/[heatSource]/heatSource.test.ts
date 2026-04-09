@@ -310,6 +310,107 @@ describe("Heat Source Page", () => {
 			});
 	});
 
+	describe("max flow temp input for existing heat source", () => {
+		const existingBoilerSpaceHeating: HeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c37",
+			name: "Combi boiler",
+			typeOfHeatSource: "boiler",
+			typeOfBoiler: "combiBoiler",
+			productReference: "2000",
+			needsSpecifiedLocation: true,
+			maxFlowTemp: unitValue(7, celsius),
+		};
+
+		const dhwWithExistingBoiler: DomesticHotWaterHeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c37",
+			coldWaterSource: "headerTank",
+			isExistingHeatSource: true,
+			heatSourceId: existingBoilerSpaceHeating.id,
+		};
+
+		const existingBatterySpaceHeating: HeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c38",
+			name: "Heat battery",
+			typeOfHeatSource: "heatBattery",
+			typeOfHeatBattery: "heatBatteryPcm",
+			productReference: "100",
+			maxFlowTemp: unitValue(7, celsius),
+			numberOfUnits: 1,
+			energySupply: "electricity",
+		};
+
+		const dhwWithExistingBattery: DomesticHotWaterHeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c38",
+			coldWaterSource: "headerTank",
+			isExistingHeatSource: true,
+			heatSourceId: existingBatterySpaceHeating.id,
+		};
+
+		const existingHeatNetworkSpaceHeating: HeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c136",
+			name: "Heat network",
+			typeOfHeatSource: "heatNetwork",
+			typeOfHeatNetwork: "communalHeatNetwork",
+			isHeatNetworkInPcdb: true,
+			hasBoosterHeatPump: true,
+			usesHeatInterfaceUnits: false,
+			productReference: "2001",
+		};
+
+		const dhwWithExistingHeatNetwork: DomesticHotWaterHeatSourceData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c136",
+			coldWaterSource: "headerTank",
+			isExistingHeatSource: true,
+			heatSourceId: existingHeatNetworkSpaceHeating.id,
+		};
+        
+		it.each([[existingHeatPumpSpaceHeating1, dhwWithExistingHeatPump], [existingBoilerSpaceHeating, dhwWithExistingBoiler], [existingBatterySpaceHeating, dhwWithExistingBattery]]) (
+			"when existing boiler, heat pump and heat battery has been selected, max flow temp input shows", async (existingHeatSource, dhwWithExistingHeatSource) => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: existingHeatSource }],
+						},
+					},
+					domesticHotWater: {
+						heatSources: {
+							data: [{ data: dhwWithExistingHeatSource }],
+						},
+					},
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				expect(screen.getByTestId("maxFlowTemp")).toBeDefined();
+			});
+
+		test("when an existing heat network has been selected, max flow temp input doesn't show", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: existingHeatNetworkSpaceHeating }],
+					},
+				},
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: dhwWithExistingHeatNetwork }],
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+				},
+			});
+
+			expect(screen.queryByTestId("maxFlowTemp")).toBeNull();
+		});
+	});
 });
 
 describe("Boiler section", () => {
