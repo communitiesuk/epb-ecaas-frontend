@@ -218,7 +218,10 @@ const spaceHeatingBoilers = hotWaterHeatSourceStoreData
 const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
 
 const existingHeatSourceType = computed(() => {
-	return radioOptions.get(model?.value.heatSourceId).typeOfHeatSource;
+	const selectedType = radioOptions.get(model?.value.heatSourceId).typeOfHeatSource || "";
+	const formattedType = displayCamelToSentenceCase(selectedType).toLowerCase();
+
+	return { selectedType, formattedType };
 });
 
 const greaterThanZero = (node: FormKitNode) => {
@@ -330,11 +333,12 @@ const greaterThanZero = (node: FormKitNode) => {
 			:model="(model as PointOfUseModelType)" 
 			:index="index" />
 		<FormKit
-			v-if="model.isExistingHeatSource && ['boiler', 'heatPump', 'heatBattery'].includes(existingHeatSourceType)"
+			v-if="model.isExistingHeatSource && ['boiler', 'heatPump', 'heatBattery'].includes(existingHeatSourceType.selectedType)"
 			id="maxFlowTemp"
+			:key="model.heatSourceId"
 			name="maxFlowTemp"
 			label="Maximum flow temperature"
-			:help="`Enter the highest flow temperature that the heat source is allowed to operate at for domestic hot water`"
+			:help="`Enter the highest flow temperature that the ${existingHeatSourceType.formattedType} is allowed to operate at for domestic hot water`"
 			type="govInputWithUnit"
 			:unit="celsius"
 			:validation-rules="{ exclusiveRangeFromMin: greaterThanZero }"
