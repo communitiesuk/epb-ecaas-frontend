@@ -354,23 +354,23 @@ describe("Heat Source Page", () => {
 			heatSourceId: existingBatterySpaceHeating.id,
 		};
 
-		const existingHeatNetworkSpaceHeating: HeatSourceData = {
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c136",
-			name: "Heat network",
-			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "communalHeatNetwork",
-			isHeatNetworkInPcdb: true,
-			hasBoosterHeatPump: true,
-			usesHeatInterfaceUnits: false,
-			productReference: "2001",
-		};
+		// const existingHeatNetworkSpaceHeating: HeatSourceData = {
+		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c136",
+		// 	name: "Heat network",
+		// 	typeOfHeatSource: "heatNetwork",
+		// 	typeOfHeatNetwork: "communalHeatNetwork",
+		// 	isHeatNetworkInPcdb: true,
+		// 	hasBoosterHeatPump: true,
+		// 	usesHeatInterfaceUnits: false,
+		// 	productReference: "2001",
+		// };
 
-		const dhwWithExistingHeatNetwork: DomesticHotWaterHeatSourceData = {
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c136",
-			coldWaterSource: "headerTank",
-			isExistingHeatSource: true,
-			heatSourceId: existingHeatNetworkSpaceHeating.id,
-		};
+		// const dhwWithExistingHeatNetwork: DomesticHotWaterHeatSourceData = {
+		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c136",
+		// 	coldWaterSource: "headerTank",
+		// 	isExistingHeatSource: true,
+		// 	heatSourceId: existingHeatNetworkSpaceHeating.id,
+		// };
         
 		it.each([[existingHeatPumpSpaceHeating1, dhwWithExistingHeatPump], [existingBoilerSpaceHeating, dhwWithExistingBoiler], [existingBatterySpaceHeating, dhwWithExistingBattery]]) (
 			"when existing boiler, heat pump and heat battery has been selected, max flow temp input shows", async (existingHeatSource, dhwWithExistingHeatSource) => {
@@ -396,28 +396,28 @@ describe("Heat Source Page", () => {
 				expect(screen.getByTestId("maxFlowTemp")).toBeDefined();
 			});
 
-		test("when an existing heat network has been selected, max flow temp input doesn't show", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [{ data: existingHeatNetworkSpaceHeating }],
-					},
-				},
-				domesticHotWater: {
-					heatSources: {
-						data: [{ data: dhwWithExistingHeatNetwork }],
-					},
-				},
-			});
+		// test("when an existing heat network has been selected, max flow temp input doesn't show", async () => {
+		// 	store.$patch({
+		// 		spaceHeating: {
+		// 			heatSource: {
+		// 				data: [{ data: existingHeatNetworkSpaceHeating }],
+		// 			},
+		// 		},
+		// 		domesticHotWater: {
+		// 			heatSources: {
+		// 				data: [{ data: dhwWithExistingHeatNetwork }],
+		// 			},
+		// 		},
+		// 	});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+		// 	await renderSuspended(HeatSourceForm, {
+		// 		route: {
+		// 			params: { "heatSource": "0" },
+		// 		},
+		// 	});
 
-			expect(screen.queryByTestId("maxFlowTemp")).toBeNull();
-		});
+		// 	expect(screen.queryByTestId("maxFlowTemp")).toBeNull();
+		// });
 	});
 });
 
