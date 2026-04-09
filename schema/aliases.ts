@@ -90,4 +90,4 @@ export type SchemaStorageTank = Extract<SchemaHotWaterSourceDetails, { type: "St
 export type SchemaMechanicalVentilationInstallationType = Extract<SchemaMechanicalVentilation, { vent_type: "Decentralised continuous MEV", product_reference: string }>["installation_type"];
 export type SchemaMechanicalVentilationInstallationLocation = Extract<SchemaMechanicalVentilation, { vent_type: "Decentralised continuous MEV", product_reference: string }>["installation_location"];
 export type SchemaBoilerLocationType = Extract<components["schemas"]["HeatSourceWetBoiler"], { rated_power: number }>["boiler_location"];
-export type SchemaBoilerWithProductReference = Omit<Extract<SchemaHeatSourceWetBoiler, { product_reference: string, type: "Boiler" }>, "EnergySupply">;
+export type SchemaBoilerWithProductReference = Extract<SchemaHeatSourceWetBoiler, { product_reference: string, type: "Boiler" }>;

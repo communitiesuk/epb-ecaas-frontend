@@ -165,7 +165,6 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 			};
 			return val;
 		} else if (ws.typeOfWaterStorage === "smartHotWaterTank") {
-			//error here is because the FHS schema json file needs to be updated to support product reference types on smart hot water tanks
 			const val: SchemaSmartHotWaterTank & { ColdWaterSource: SchemaColdWaterSourceType } = {
 				type: "SmartHotWaterTank",
 				product_reference: ws.productReference,

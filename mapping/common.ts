@@ -14,6 +14,7 @@ export const maxOutdoorTemp = 15;
 export const defaultHeatSourceWetDetails = {
 	type: "HeatPump",
 	EnergySupply: defaultElectricityEnergySupplyName,
+	is_heat_network: false,
 	backup_ctrl_type: "None",
 	min_temp_diff_flow_return_for_hp_to_operate: 0,
 	min_modulation_rate_35: 0.35,

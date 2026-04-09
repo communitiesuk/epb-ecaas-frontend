@@ -2,7 +2,7 @@
 
 import type { UnionToTuple } from "type-fest";
 import * as z from "zod";
-import type { SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour, SchemaConvectiveType, SchemaApplianceType, SchemaFuelType, SchemaHeatNetworkType, SchemaRadiatorType, SchemaMechanicalVentilationInstallationType, SchemaMechanicalVentilationInstallationLocation, SchemaBoilerLocationType } from "~/schema/aliases";
+import type { SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour, SchemaConvectiveType, SchemaApplianceType, SchemaFuelType, /*SchemaHeatNetworkType,*/ SchemaRadiatorType, SchemaMechanicalVentilationInstallationType, SchemaMechanicalVentilationInstallationLocation, SchemaBoilerLocationType } from "~/schema/aliases";
 import type { ConciseMassDistributionClass } from "./ecaasStore.schema";
 import type { SchemaPartyWallCavityType, SchemaPartyWallLiningType } from "~/schema/api-schema.types";
 
@@ -47,11 +47,11 @@ const fuelTypes = [
 	"mains_gas",
 	"electricity",
 ] as const satisfies SchemaFuelType[];
-const heatNetworkTypes = [
+const _heatNetworkTypes = [
 	"communal",
 	"sleeved DHN",
 	"unsleeved DHN",
-] as const satisfies SchemaHeatNetworkType[];
+] as const; //satisfies SchemaHeatNetworkType[];
 const heatPumpBackupControlTypes = ["None", "Substitute", "TopUp"] as const satisfies SchemaHeatPumpBackupControlType[];
 const heatPumpSinkTypes = ["Air", "Water", "Glycol25"] as const satisfies SchemaHeatPumpSinkType[];
 const heatPumpSourceTypes = [
@@ -107,7 +107,7 @@ export const convectiveTypeZod = zodForTypeOptions(ensureAllUnion<SchemaConvecti
 export const ductShapeZod = zodForTypeOptions(ensureAllUnion<SchemaDuctShape, (typeof ductShapes)>(ductShapes));
 export const ductTypeZod = zodForTypeOptions(ensureAllUnion<SchemaDuctType, (typeof ductTypes)>(ductTypes));
 export const fuelTypeZod = zodForTypeOptions(ensureAllUnion<SchemaFuelType, (typeof fuelTypes)>(fuelTypes));
-export const heatNetworkTypeZod = zodForTypeOptions(ensureAllUnion<SchemaHeatNetworkType, (typeof heatNetworkTypes)>(heatNetworkTypes));
+//export const heatNetworkTypeZod = zodForTypeOptions(ensureAllUnion<SchemaHeatNetworkType, (typeof heatNetworkTypes)>(heatNetworkTypes));
 export const heatPumpBackupControlTypeZod = zodForTypeOptions(ensureAllUnion<SchemaHeatPumpBackupControlType, (typeof heatPumpBackupControlTypes)>(heatPumpBackupControlTypes));
 export const heatPumpSinkTypeZod = zodForTypeOptions(ensureAllUnion<SchemaHeatPumpSinkType, (typeof heatPumpSinkTypes)>(heatPumpSinkTypes));
 export const heatPumpSourceTypeZod = zodForTypeOptions(ensureAllUnion<SchemaHeatPumpSourceType, (typeof heatPumpSourceTypes)>(heatPumpSourceTypes));

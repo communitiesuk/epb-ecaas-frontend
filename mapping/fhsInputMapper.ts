@@ -1,17 +1,15 @@
 import type { StripDefs } from "./mapping.types";
 import type { SchemaEnergySupplyElectricity, SchemaFhsInputSchema } from "~/schema/api-schema.types";
-import type { SchemaHeatSourceWetHeatPumpWithProductReference, SchemaStorageTank } from "~/schema/aliases";
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
 import { mapInfiltrationVentilationData } from "./infiltrationVentilationMapper";
 import { mapLivingSpaceFabricData as mapDwellingFabricData } from "./dwellingFabricMapper";
 import { mapPvAndElectricBatteriesData } from "./pvAndElectricBatteriesMapper";
 import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
-import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from "~/mapping/common";
-import { objectFromEntries } from "ts-extras";
+import { defaultElectricityEnergySupplyName } from "~/mapping/common";
 import type { Simplify, SimplifyDeep } from "type-fest";
 import { mapCoolingData } from "./coolingMapper";
-import { mapSpaceHeatSystem } from "./spaceHeatingMapper";
+import { mapSpaceHeatingHeatSources, mapSpaceHeatSystem } from "./spaceHeatingMapper";
 
 export type ResolvedState = SimplifyDeep<Resolved<EcaasState>>;
 
@@ -22,6 +20,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
 	const coolingData = mapCoolingData(state);
 	const spaceHeatingSystemData = mapSpaceHeatSystem(state);
+	const heatSourceWetData = mapSpaceHeatingHeatSources(state);
 
 	const [pvData, electricBatteries, diverter, pvArrayEnergySupply] = mapPvAndElectricBatteriesData(state);
 
@@ -55,28 +54,29 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		Appliances: {},
 	};
 	// Below uses default values until heat pump is set up to come from PCDB
-	const { HotWaterSource } = domesticHotWaterData;
-	const heatPumpName: string = Object.keys((HotWaterSource!["hw cylinder"] as SchemaStorageTank).HeatSource)[0]!;
-	const heatPumps = state.spaceHeating.heatSource.filter(hs => hs.typeOfHeatSource === "heatPump");
 
-	// use the picked heat pump if one is picked, otherwise fall back to the default
-	// TODO: correct this at point other heat sources are being added
-	const heatSourceWetData: Pick<FhsInputSchema, "HeatSourceWet"> = {
-		"HeatSourceWet": heatPumps.length === 0 ? {
-			[heatPumpName]: defaultHeatSourceWetDetails,
-		} : objectFromEntries(heatPumps.map(heatPump => {
-			const heatPumpWithProductReference: SchemaHeatSourceWetHeatPumpWithProductReference = {
-				product_reference: heatPump.productReference,
-				type: "HeatPump",
-				EnergySupply: defaultElectricityEnergySupplyName,
-				is_heat_network: false,
-			};
-			return [
-				heatPump.name,
-				heatPumpWithProductReference,
-			] as const;
-		})),
-	};
+	// const { HotWaterSource } = domesticHotWaterData;
+	// const heatPumpName: string = Object.keys((HotWaterSource!["hw cylinder"] as SchemaStorageTank).HeatSource)[0]!;
+	// const heatPumps = state.spaceHeating.heatSource.filter(hs => hs.typeOfHeatSource === "heatPump");
+
+	// // use the picked heat pump if one is picked, otherwise fall back to the default
+	// // TODO: correct this at point other heat sources are being added
+	// const heatSourceWetData: Pick<FhsInputSchema, "HeatSourceWet"> = {
+	// 	"HeatSourceWet": heatPumps.length === 0 ? {
+	// 		[heatPumpName]: defaultHeatSourceWetDetails,
+	// 	} : objectFromEntries(heatPumps.map(heatPump => {
+	// 		const heatPumpWithProductReference: SchemaHeatSourceWetHeatPumpWithProductReference = {
+	// 			product_reference: heatPump.productReference,
+	// 			type: "HeatPump",
+	// 			EnergySupply: defaultElectricityEnergySupplyName,
+	// 			is_heat_network: false,
+	// 		};
+	// 		return [
+	// 			heatPump.name,
+	// 			heatPumpWithProductReference,
+	// 		] as const;
+	// 	})),
+	// };
 
 	const fhsInput = merge.all<FhsInputSchema>([
 		defaultAppliances,

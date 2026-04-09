@@ -46,7 +46,8 @@ describe("Space heating - heat sources", () => {
 				const expectedHeatPump: SchemaHeatSourceWetHeatPump = {
 					type: "HeatPump",
 					product_reference: heatPumpWithProductReference1.productReference,
-					EnergySupply: "",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					is_heat_network: false,
 				};
 				const expectedForSchema = {
 					[heatPumpWithProductReference1.name]: expectedHeatPump,
@@ -61,12 +62,14 @@ describe("Space heating - heat sources", () => {
 				const expectedHeatPump1: SchemaHeatSourceWetHeatPump = {
 					type: "HeatPump",
 					product_reference: heatPumpWithProductReference1.productReference,
-					EnergySupply: "",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					is_heat_network: false,
 				};
 				const expectedHeatPump2: SchemaHeatSourceWetHeatPump = {
 					type: "HeatPump",
 					product_reference: heatPumpWithProductReference2.productReference,
-					EnergySupply: "",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					is_heat_network: false,
 				};
 				store.$patch({
 					spaceHeating: {
@@ -93,6 +96,7 @@ describe("Space heating - heat sources", () => {
 			});
 		});
 	});
+
 	describe("mapBoilers", () => {
 		describe("with product references", () => {
 			const store = useEcaasStore();
@@ -132,6 +136,8 @@ describe("Space heating - heat sources", () => {
 						type: "Boiler",
 						product_reference: boiler1.productReference,
 						specified_location: "internal",
+						EnergySupply: "mains_elec", // todo review
+						is_heat_network: false,
 					} as const satisfies SchemaBoilerWithProductReference,
 				};
 				const resolvedState = resolveState(store.$state);
@@ -158,10 +164,14 @@ describe("Space heating - heat sources", () => {
 						type: "Boiler",
 						product_reference: boiler1.productReference,
 						specified_location: "internal",
+						EnergySupply: "mains_elec", //todo review
+						is_heat_network: false,
 					} as const satisfies SchemaBoilerWithProductReference,
 					[boiler2.name]: {
 						type: "Boiler",
 						product_reference: boiler2.productReference,
+						EnergySupply: "mains_elec", //todo review
+						is_heat_network: false,
 					} as const satisfies SchemaBoilerWithProductReference,
 				};
 
@@ -171,6 +181,9 @@ describe("Space heating - heat sources", () => {
 				expect(actual).toEqual(expectedForSchema);
 			});
 		});
+	});
+
+	describe("mapHeatBatteries", () => {
 		const store = useEcaasStore();
 
 		const heatBattery1: HeatSourceData = {
@@ -211,6 +224,7 @@ describe("Space heating - heat sources", () => {
 					number_of_units: 1,
 					product_reference: heatBattery1.productReference,
 					EnergySupply: "electricity",
+					is_heat_network: false,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
@@ -236,6 +250,7 @@ describe("Space heating - heat sources", () => {
 					number_of_units: 2,
 					EnergySupply: "LPG_bottled",
 					product_reference: heatBattery2.productReference,
+					is_heat_network: false,
 				},
 			};
 
@@ -265,6 +280,7 @@ describe("Space heating - heat sources", () => {
 					number_of_units: 1,
 					product_reference: heatBattery1.productReference,
 					EnergySupply: "electricity",
+					is_heat_network: false, 
 				},
 				[heatBattery2.name]: {
 					type: "HeatBattery",
@@ -272,6 +288,7 @@ describe("Space heating - heat sources", () => {
 					number_of_units: 2,
 					EnergySupply: "LPG_bottled",
 					product_reference: heatBattery2.productReference,
+					is_heat_network: false,
 				},
 			};
 
@@ -279,7 +296,6 @@ describe("Space heating - heat sources", () => {
 			const actual = mapHeatBatteries(resolvedState);
 			expect(actual).toEqual(expectedForSchema);
 		});
-
 	});
 });
 

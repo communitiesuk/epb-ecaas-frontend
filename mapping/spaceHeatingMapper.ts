@@ -12,7 +12,7 @@ import type {
 	SchemaWetDistribution,
 	SchemaEcoDesignControllerNoWeatherCompensator,
 	SchemaEcoDesignControllerWeatherCompensator,
-	SchemaSolarThermalSystem,
+	SchemaHeatSourceWetHiu,
 } from "../schema/api-schema.types";
 import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetDetails, SchemaSpaceHeatSystem } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
@@ -29,7 +29,8 @@ export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSou
 			const mappedHeatPump: SchemaHeatSourceWetHeatPump = {
 				type: "HeatPump",
 				product_reference: heatPump.productReference,
-				EnergySupply: "",
+				EnergySupply: defaultElectricityEnergySupplyName,
+				is_heat_network: false, // todo change when HNs implemented
 			};
 
 			return [
@@ -55,6 +56,8 @@ export function mapBoilers(state: ResolvedState): Record<string, SchemaBoilerWit
 					...("specifiedLocation" in boiler
 						? { specified_location: boiler.specifiedLocation }
 						: {}),
+					EnergySupply: "mains_elec",
+					is_heat_network: false, // todo change when HNs implemented
 				} as const satisfies SchemaBoilerWithProductReference,
 			];
 		}),
@@ -81,58 +84,20 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 					number_of_units: heatBattery.numberOfUnits,
 					product_reference: heatBattery.productReference,
 					EnergySupply: heatBattery.energySupply,
+					is_heat_network: false as const, // todo change when HNs implemented
 				},
 			];
 		}),
 	);
 }
 
-//this is likely to be removed, is_heat_network is a property of other heat sources
-export function mapHeatNetworks(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatBattery> {
-	const heatSources = state.spaceHeating.heatSource;
-	const _heatNetworks = heatSources.filter(
-		(heatSource) => heatSource.typeOfHeatSource === "heatNetwork",
-	);
+export function mapHIUs(state: ResolvedState): Record<string, SchemaHeatSourceWetHiu> {
+	const _heatSources = state.spaceHeating.heatSource;
+	// const hius = heatSources.filter(
+	// 	(heatSource) => heatSource.typeOfHeatSource === "heatInterfaceUnit",
+	// );
 
 	return {};
-}
-
-export function mapSolarThermalSystems(state: ResolvedState): Record<string, SchemaSolarThermalSystem> {
-	const heatSources = state.spaceHeating.heatSource;
-	const solarThermals = heatSources.filter(
-		(heatSource) => heatSource.typeOfHeatSource === "solarThermalSystem",
-	);
-	const locationOfCollectorLoopPipingMap = {
-		"outside": "OUT",
-		"heatedSpace": "HS",
-		"unheatedSpace": "NHS",
-	} as const;
-
-	return objectFromEntries(solarThermals.map(sTS => {
-		return [
-			sTS.name,
-			{
-				type: "SolarThermalSystem" as const,
-				heater_position: 1, /////////////// TODO add to form?
-				sol_loc: locationOfCollectorLoopPipingMap[
-					sTS.locationOfCollectorLoopPiping
-				],
-				area_module: sTS.collectorModuleArea,
-				modules: sTS.numberOfCollectorModules,
-				peak_collector_efficiency: sTS.peakCollectorEfficiency,
-				incidence_angle_modifier: sTS.incidenceAngleModifier,
-				first_order_hlc: sTS.firstOrderHeatLossCoefficient,
-				second_order_hlc: sTS.secondOrderHeatLossCoefficient,
-				collector_mass_flow_rate: sTS.collectorMassFlowRate,
-				power_pump: sTS.powerOfCollectorPump.amount, // TODO confirm units
-				power_pump_control: sTS.powerOfCollectorPumpController.amount, // TODO confirm units
-				EnergySupply: "", /////////////// TODO add to form?
-				tilt: sTS.pitch,
-				orientation360: sTS.orientation,
-				solar_loop_piping_hlc: sTS.heatLossCoefficientOfSolarLoopPipe,
-			},
-		];
-	}));
 }
 
 function mapEcoDesignController<T extends { ecoDesignControllerClass: string, minOutdoorTemp?: number, maxOutdoorTemp?: number, minFlowTemp?: number }>(emitter: T) {
@@ -288,13 +253,14 @@ export function mapInstantElectricHeaters(state: ResolvedState): Record<string, 
 	);
 }
 
-export function mapSpaceHeating(state: ResolvedState): Record<string, SchemaHeatSourceWetDetails> {
+export function mapSpaceHeatingHeatSources(state: ResolvedState): { HeatSourceWet: Record<string, SchemaHeatSourceWetDetails> } {
 	return {
-		...mapHeatPumps(state),
-		...mapBoilers(state),
-		...mapHeatNetworks(state),
-		...mapHeatBatteries(state),
-		// ...mapSolarThermalSystems(state),
+		HeatSourceWet: {
+			...mapHeatPumps(state),
+			...mapBoilers(state),
+			...mapHeatBatteries(state),
+			//...mapHIUs(state),
+		},
 	};
 }
 
