@@ -796,8 +796,6 @@ describe("Domestic hot water summary", () => {
 			await verifyDataInSection(sectionId, expectedData);
 		});
 		describe("heat sources with existing space heating heat source", () => {
-
-
 			beforeEach(() => {
 				store.$patch({
 					spaceHeating: {
@@ -807,7 +805,6 @@ describe("Domestic hot water summary", () => {
 								{ data: boiler1 },
 								{ data: heatBattery1 },
 								{ data: heatNetwork1 },
-								{ data: solarThermalSystem1 },
 							],
 						},
 					},
@@ -818,8 +815,6 @@ describe("Domestic hot water summary", () => {
 								{ data: dhwWithExistingBoiler },
 								{ data: dhwWithExistingHeatBattery },
 								{ data: dhwWithExistingHeatNetwork },
-								{ data: dhwWithExistingSolarThermalSystem },
-
 							],
 						},
 					},
@@ -853,12 +848,6 @@ describe("Domestic hot water summary", () => {
 				maxFlowTemp: unitValue(10, celsius),
 			};
 
-			const solarThermalSystem1: Partial<HeatSourceData> = {
-				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
-				name: "Solar thermal system 1",
-				typeOfHeatSource: "solarThermalSystem",
-			};
-
 			const dhwWithExistingHeatPump: DomesticHotWaterHeatSourceData = {
 				id: "hp-id",
 				coldWaterSource: "mainsWater",
@@ -890,13 +879,6 @@ describe("Domestic hot water summary", () => {
 				heatSourceId: heatNetwork1.id!,
 			};
 
-			const dhwWithExistingSolarThermalSystem: DomesticHotWaterHeatSourceData = {
-				id: "solar-id",
-				coldWaterSource: "mainsWater",
-				isExistingHeatSource: true,
-				heatSourceId: solarThermalSystem1.id!,
-			};
-
 			const expectedExistingHeatPump = {
 				"Cold water source": "Mains water",
 				Name: "Heat pump 1",
@@ -924,20 +906,12 @@ describe("Domestic hot water summary", () => {
 				"Used for space heating": "YesView details in space heating summary",
 			};
 
-			const expectedExistingSolarThermalSystem = {
-				"Cold water source": "Mains water",
-				Name: "Solar thermal system 1",
-				"Used for space heating": "YesView details in space heating summary",
-			};
-
 			it.each(
 				[
 					["heatPumpSummary", expectedExistingHeatPump],
 					["boilerSummary", expectedExistingBoiler],
 					["heatBatterySummary", expectedExistingHeatBattery],
 					["heatNetworkSummary", expectedExistingHeatNetwork],
-					["solarThermalSystemSummary", expectedExistingSolarThermalSystem],
-
 				],
 			)("for the %s it displays the correct stored data for existing space heating heat source items", async (sectionId, expectedData) => {
 

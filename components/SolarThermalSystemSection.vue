@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import type { HeatSourceData } from "#imports";
 import { isInteger, uniqueName } from "#imports";
 import { kilowatt, type Power } from "~/utils/units/power";
 
 const store = useEcaasStore();
 
 defineProps<{
-	model: Extract<HeatSourceData, { "typeOfHeatSource": "solarThermalSystem" }>;
+	model: Extract<DomesticHotWaterHeatSourceData, { "typeOfHeatSource": "solarThermalSystem" }>;
 	index: number;
 }>();
 

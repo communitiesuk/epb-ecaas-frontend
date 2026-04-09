@@ -948,8 +948,7 @@ export type HeatSourceType =
 	"heatPump" |
 	"boiler" |
 	"heatNetwork" |
-	"heatBattery" |
-	"solarThermalSystem";
+	"heatBattery";
 
 export type PcdbProduct = z.infer<typeof pcdbProduct>;
 
@@ -976,23 +975,6 @@ const heatBatteryBase = pcdbProduct.extend({
 	maxFlowTemp: zodUnit("temperature").optional(),
 	numberOfUnits: z.number(),
 	energySupply: fuelTypeZod,
-});
-
-const solarThermalSystemBase = namedWithId.extend({
-	typeOfHeatSource: z.literal("solarThermalSystem"),
-	locationOfCollectorLoopPiping: typeOfLocationOfLoopPiping,
-	collectorModuleArea: z.number(),
-	numberOfCollectorModules: z.number(),
-	peakCollectorEfficiency: fraction,
-	incidenceAngleModifier: fraction,
-	firstOrderHeatLossCoefficient: z.number(),
-	secondOrderHeatLossCoefficient: z.number(),
-	heatLossCoefficientOfSolarLoopPipe: z.number(),
-	collectorMassFlowRate: z.number(),
-	powerOfCollectorPump: zodUnit("power"),
-	powerOfCollectorPumpController: zodUnit("power"),
-	pitch: z.number().min(0).max(90),
-	orientation,
 });
 
 const heatNetworkBase = namedWithId.extend({
@@ -1047,7 +1029,6 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpBase,
 	boilerBase,
 	heatBatteryBase,
-	solarThermalSystemBase,
 	heatNetworkZodData,
 ]);
 
@@ -1293,7 +1274,24 @@ const basePointOfUse = namedWithId.extend({
 	energySupply: fuelTypeZod.optional(),
 	heaterEfficiency: z.number(),
 });
-export type DHWHeatSourceType = HeatSourceType | "immersionHeater" | "pointOfUse";
+export type DHWHeatSourceType = HeatSourceType | "immersionHeater" | "pointOfUse" | "solarThermalSystem";
+
+const solarThermalSystemBase = namedWithId.extend({
+	typeOfHeatSource: z.literal("solarThermalSystem"),
+	locationOfCollectorLoopPiping: typeOfLocationOfLoopPiping,
+	collectorModuleArea: z.number(),
+	numberOfCollectorModules: z.number(),
+	peakCollectorEfficiency: fraction,
+	incidenceAngleModifier: fraction,
+	firstOrderHeatLossCoefficient: z.number(),
+	secondOrderHeatLossCoefficient: z.number(),
+	heatLossCoefficientOfSolarLoopPipe: z.number(),
+	collectorMassFlowRate: z.number(),
+	powerOfCollectorPump: zodUnit("power"),
+	powerOfCollectorPumpController: zodUnit("power"),
+	pitch: z.number().min(0).max(90),
+	orientation,
+});
 
 
 const heatPumpHotWaterSourceBase = heatPumpBase.extend(hotWaterHeatSourceExtension);

@@ -70,10 +70,7 @@ function addHeatSourceToCorrectSummaryList(heatSources: EcaasForm<DomesticHotWat
 			}	
 			if (item?.data.heatSourceType === "heatBattery") {
 				heatBatterySummaries.push(item);
-			}	
-			if (item?.data.heatSourceType === "solarThermalSystem") {
-				solarThermalSummaries.push(item);
-			}	
+			}
 		}
 	}
 }

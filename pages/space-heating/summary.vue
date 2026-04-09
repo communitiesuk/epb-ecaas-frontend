@@ -15,7 +15,6 @@ const boilers = heatSources.filter(x => x.data.typeOfHeatSource === "boiler");
 const heatPumps = heatSources.filter(x => x.data.typeOfHeatSource === "heatPump");
 const heatNetworks = heatSources.filter(x => x.data.typeOfHeatSource === "heatNetwork");
 const heatBatteries = heatSources.filter(x => x.data.typeOfHeatSource === "heatBattery");
-const solarThermalSystem = heatSources.filter(x => x.data.typeOfHeatSource === "solarThermalSystem");
 
 const heatEmitters = store.spaceHeating.heatEmitters.data;
 
@@ -180,67 +179,6 @@ const heatBatterySummary: SummarySection = {
 	editUrl: spaceHeatingUrl,
 };
 
-const solarThermalSystemSummary: SummarySection = {
-	id: "solarThermalSystemSummary",
-	label: "Solar thermal system",
-	data:
-		solarThermalSystem.map(({ data: heatSource }) => {
-
-			const summary = {
-				Name: show(heatSource.name),
-				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
-
-				"Location of collector loop piping":
-					"locationOfCollectorLoopPiping" in heatSource
-						&& heatSource.locationOfCollectorLoopPiping ? displayCamelToSentenceCase(heatSource.locationOfCollectorLoopPiping)
-						: emptyValueRendering,
-
-				"Collector module area":
-					"collectorModuleArea" in heatSource ? heatSource.collectorModuleArea : emptyValueRendering,
-
-				"Number of collector modules":
-					"numberOfCollectorModules" in heatSource ? heatSource.numberOfCollectorModules : emptyValueRendering,
-
-				"Peak collector efficiency":
-					"peakCollectorEfficiency" in heatSource ? heatSource.peakCollectorEfficiency : emptyValueRendering,
-
-				"Incidence angle modifier":
-					"incidenceAngleModifier" in heatSource ? heatSource.incidenceAngleModifier : emptyValueRendering,
-
-				"First order heat loss coefficient":
-					"firstOrderHeatLossCoefficient" in heatSource ? heatSource.firstOrderHeatLossCoefficient : emptyValueRendering,
-
-				"Second order heat loss coefficient":
-					"secondOrderHeatLossCoefficient" in heatSource ? heatSource.secondOrderHeatLossCoefficient : emptyValueRendering,
-
-				"Heat loss coefficient of solar loop piping":
-					"heatLossCoefficientOfSolarLoopPipe" in heatSource
-						? heatSource.heatLossCoefficientOfSolarLoopPipe
-						: emptyValueRendering,
-
-				"Collector mass flow rate":
-					"collectorMassFlowRate" in heatSource ? heatSource.collectorMassFlowRate : emptyValueRendering,
-
-				"Power of collector pump":
-					"powerOfCollectorPump" in heatSource ? dim(heatSource.powerOfCollectorPump) : emptyValueRendering,
-
-				"Power of collector pump controller":
-					"powerOfCollectorPumpController" in heatSource
-						? dim(heatSource.powerOfCollectorPumpController)
-						: emptyValueRendering,
-
-				"Pitch":
-					"pitch" in heatSource ? dim(heatSource.pitch, "degrees") : emptyValueRendering,
-
-				"Orientation":
-					"orientation" in heatSource ? dim(heatSource.orientation, "degrees") : emptyValueRendering,
-			};
-
-			return summary;
-		}) || [],
-	editUrl: spaceHeatingUrl,
-};
-
 const wetDistributionSystemSummary: SummarySection = {
 	id: "wetDistributionSystemSummary",
 	label: "Wet distribution systems",
@@ -326,7 +264,6 @@ const heatSourceSections: SummarySection[] = [
 	heatPumpSummary,
 	heatNetworkSummary,
 	heatBatterySummary,
-	solarThermalSystemSummary,
 ];
 const populatedHeatSourceSections = getNonEmptySections(heatSourceSections);
 

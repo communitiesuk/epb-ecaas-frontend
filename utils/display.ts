@@ -334,7 +334,6 @@ export const heatSourceTypesWithDisplay = {
 	"heatPump": "Heat pump",
 	"heatNetwork": "Heat network",
 	"heatBattery": "Heat battery",
-	"solarThermalSystem": "Solar thermal system",
 } as const satisfies Record<HeatSourceType, HeatSourceTypeDisplay>;
 
 export function displayHeatSourceType(type: HeatSourceType | undefined): HeatSourceTypeDisplay | typeof emptyValueRendering {
@@ -347,6 +346,7 @@ export const DHWHeatSourceTypesWithDisplay = {
 	...heatSourceTypesWithDisplay,
 	"immersionHeater": "Immersion heater",
 	"pointOfUse": "Point of use",
+	"solarThermalSystem": "Solar thermal system",
 } as const satisfies Record<DHWHeatSourceType, DHWHeatSourceTypeDisplay>;
 
 export function displayDHWHeatSourceType(type: DHWHeatSourceType | undefined): DHWHeatSourceTypeDisplay | typeof emptyValueRendering {

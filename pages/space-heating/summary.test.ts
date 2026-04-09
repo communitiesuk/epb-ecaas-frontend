@@ -1,8 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen, within } from "@testing-library/vue";
 import SpaceHeatingSummary from "./summary.vue";
-import { degrees } from "~/utils/units/angle";
-import { kilowatt } from "~/utils/units/power";
 import { celsius } from "~/utils/units/temperature";
 
 
@@ -222,68 +220,6 @@ describe("Space heating summary page", () => {
 
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-heatNetworkSummary-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
-
-		it("displays the correct data for the solar thermal system summary", async () => {
-
-			const solarThermalSystem1: HeatSourceData = {
-				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3333",
-				name: "Solar thermal system",
-				typeOfHeatSource: "solarThermalSystem",
-				locationOfCollectorLoopPiping: "outside",
-				collectorModuleArea: 1,
-				numberOfCollectorModules: 2,
-				peakCollectorEfficiency: 0,
-				incidenceAngleModifier: 1,
-				firstOrderHeatLossCoefficient: 1,
-				secondOrderHeatLossCoefficient: 10,
-				heatLossCoefficientOfSolarLoopPipe: 100,
-				collectorMassFlowRate: 2,
-				"powerOfCollectorPump": {
-					"amount": 0.3,
-					"unit": "kilowatt",
-				},
-				"powerOfCollectorPumpController": {
-					"amount": 0.3,
-					"unit": "kilowatt",
-				},
-				pitch: 60,
-				orientation: 60,
-			};
-			const store = useEcaasStore();
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [{ data: solarThermalSystem1 }],
-					},
-				},
-			});
-
-			await renderSuspended(SpaceHeatingSummary);
-
-			const expectedResult = {
-				Name: "Solar thermal system",
-				"Type of heat source": "Solar thermal system",
-				"Location of collector loop piping": "Outside",
-				"Collector module area": "1",
-				"Number of collector modules": "2",
-				"Peak collector efficiency": "0",
-				"Incidence angle modifier": "1",
-				"First order heat loss coefficient": "1",
-				"Second order heat loss coefficient": "10",
-				"Heat loss coefficient of solar loop piping": "100",
-				"Collector mass flow rate": "2",
-				"Power of collector pump": `0.3 ${kilowatt.suffix}`,
-				"Power of collector pump controller": `0.3 ${kilowatt.suffix}`,
-				"Pitch": `60 ${degrees.suffix}`,
-				"Orientation": `60 ${degrees.suffix}`,
-			};
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-solarThermalSystemSummary-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
