@@ -3697,7 +3697,7 @@
                 },
                 "thermal_mass": {
                     "type": "number",
-                    "description": "thermal_mass is required when the emitters include radiators"
+                    "description": "thermal_mass is required when the emitters include radiators not from PCDB"
                 }
             },
             "oneOf": [

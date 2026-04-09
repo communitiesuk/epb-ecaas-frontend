@@ -2696,9 +2696,10 @@
 												"type": "array",
 												"contains": {
 													"type": "object",
+													"required": ["n"],
 													"properties": {
-														"wet_emitter_type": {
-															"const": "radiator"
+														"n": {
+															"type": "number"
 														}
 													}
 												}
