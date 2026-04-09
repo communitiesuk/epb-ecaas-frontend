@@ -51,6 +51,7 @@ describe("Products service", () => {
 
 			// Assert
 			expect(result.data).toStrictEqual(airSourceHeatPumps.map(x => ({
+				displayProduct: true,
 				id: x.id,
 				brandName: x.brandName,
 				modelName: x.modelName,
@@ -131,6 +132,7 @@ describe("Products service", () => {
 			const result = await getGroupProducts("heatPump");
 
 			expect(result.data).toStrictEqual(mockedProducts.map(x => ({
+				displayProduct: true,
 				id: x.id,
 				brandName: x.brandName,
 				modelName: x.modelName,

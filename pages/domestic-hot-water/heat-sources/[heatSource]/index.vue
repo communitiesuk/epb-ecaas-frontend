@@ -125,7 +125,7 @@ const autoSaveElementFormNoName = <T extends DomesticHotWaterHeatSourceData>({
 			};
 
 			if (isPackagedProduct(newData) && newData.coldWaterSource) {
-				const packageProductIndex = state.domesticHotWater.heatSources.data.findIndex(x => x.data.id === newData.packageProductId);
+				const packageProductIndex = state.domesticHotWater.heatSources.data.findIndex(x => newData.packageProductIds?.includes(x.data.id));
 
 				if (packageProductIndex >= 0) {
 					state.domesticHotWater.heatSources.data[packageProductIndex]!.data.coldWaterSource = newData.coldWaterSource;

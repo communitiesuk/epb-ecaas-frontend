@@ -81,6 +81,9 @@ const spaceHeatingHeatPumpProductTypes = z.enum([
 	"ExhaustAirMixedHeatPump",
 ]);
 
+const vesselTypes = z.enum(["Integral", "Separate limiting characteristics", "Separate fixed characteristics"]);
+export type VesselType = z.infer<typeof vesselTypes>;
+
 export const heatPumpProductZod = BaseProduct.extend({
 	energySupply: z.string(), // need a better type for this
 	sourceType: heatPumpSourceTypeZod,
@@ -104,6 +107,10 @@ export const heatPumpProductZod = BaseProduct.extend({
 	standardRatingCapacity55C: z.nullable(z.number()),
 	minimumModulationRate: z.nullable(z.number()),
 	minimumModulationRate35: z.nullable(z.number()),
+	vesselType: z.optional(vesselTypes),
+	tankVolumeDeclared: z.optional(z.number()),
+	dailyLossesDeclared: z.optional(z.number()),
+	heatExchangerSurfaceAreaDeclared: z.optional(z.number()),
 	testData: z.array(heatPumpTestDataZod),
 	technologyType: spaceHeatingHeatPumpProductTypes,
 	technologyGroup: z.literal("heatPump"),
@@ -456,6 +463,7 @@ export const technologyTypes: string[] = objectKeys(categoryTechnologies).flatMa
 export type TechnologyGroup = z.infer<typeof technologyGroupsZod>;
 
 type DisplayProductBase = {
+	displayProduct: true;
 	id: string;
 	technologyType: TechnologyType;
 	backupCtrlType?: string;
@@ -463,6 +471,7 @@ type DisplayProductBase = {
 	boilerLocation?: "internal" | "external" | "unknown";
 	communityHeatNetworkName?: string;
 	boilerProductID?: string;
+	vesselType?: VesselType;
 };
 
 export type StandardDisplayProduct = DisplayProductBase & Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier"> & {
@@ -483,6 +492,7 @@ export type ConvectorRadiatorDisplayProduct = Pick<DisplayProductBase, "id"> & {
 	boilerLocation?: never;
 	communityHeatNetworkName?: never;
 	boilerProductID?: never;
+	vesselType?: never;
 };
 
 export type DisplayProduct = StandardDisplayProduct | ConvectorRadiatorDisplayProduct;
@@ -494,4 +504,10 @@ export type DisplayProductWithFlowTemp = DisplayProduct & {
 export interface PaginatedResult<T> {
 	data: T[];
 	lastEvaluationKey?: string;
+}
+
+export function isDisplayProduct(product: object): product is DisplayProduct {
+	return product !== undefined &&
+		"displayProduct" in product &&
+		!!product.displayProduct;
 }

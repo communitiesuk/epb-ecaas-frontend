@@ -55,6 +55,7 @@ const getProductsByTechnologyType = (technologyType: TechnologyType, pageSize?: 
 			}
 
 			return {
+				displayProduct: true,
 				id,
 				brandName: typeof product.brandName === "string" ? product.brandName : "",
 				modelName: typeof product.modelName === "string" ? product.modelName : "",
@@ -99,6 +100,7 @@ const getProductsByTechnologyGroup = (technologyGroup: TechnologyGroup) => {
 			}
 
 			return {
+				displayProduct: true,
 				id,
 				brandName: typeof product.brandName === "string" ? product.brandName : "",
 				modelName: typeof product.modelName === "string" ? product.modelName : "",

@@ -3,10 +3,10 @@ import { duplicateFormEntry } from "~/utils/duplicateFormEntry";
 export function useMechanicalVentilation() {
 	const store = useEcaasStore();
 
-	const removeMechanicalVents = (packageProductId: string) => {
+	const removeMechanicalVents = (packageProductIds: string[]) => {
 		store.$patch(state => {
 			const mechanicalVentilationData = state.infiltrationAndVentilation.mechanicalVentilation.data;
-			const packageProductIndex = mechanicalVentilationData.findIndex(x => x.data.id === packageProductId);
+			const packageProductIndex = mechanicalVentilationData.findIndex(x => packageProductIds.includes(x.data.id!));
 
 			if (packageProductIndex >= 0) {
 				mechanicalVentilationData.splice(packageProductIndex, 1);
@@ -16,10 +16,10 @@ export function useMechanicalVentilation() {
 
 	const duplicateMechanicalVent = (
 		state: EcaasState,
-		packageProductId: string,
+		packageProductIds: string[],
 	) => {
 		const mechanicalVentilationData = state.infiltrationAndVentilation.mechanicalVentilation.data;
-		const packageItem = mechanicalVentilationData.find(x => x.data.id === packageProductId);
+		const packageItem = mechanicalVentilationData.find(x => packageProductIds.includes(x.data.id!));
 
 		if (!packageItem) {
 			return;

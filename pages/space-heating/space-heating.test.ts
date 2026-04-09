@@ -419,7 +419,7 @@ describe("space heating", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
-				packageProductId: "171a20a4-e775-4e51-873c-f1fc536076b1",
+				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
 			};
 
 			const boiler: HeatSourceData = {
@@ -439,7 +439,7 @@ describe("space heating", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "exhaustAirMvhr",
 				productReference: "1000",
-				packageProductId: "9e66d667-6c31-4406-9223-7e2249a7fee3",
+				packageProductIds: ["9e66d667-6c31-4406-9223-7e2249a7fee3"],
 			};
 
 			const mvhr: Partial<MechanicalVentilationData> = {

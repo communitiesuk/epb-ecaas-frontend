@@ -19,6 +19,7 @@ describe("Heat source products page", () => {
 	const MOCKED_HEAT_PUMPS: PaginatedResult<DisplayProduct> = {
 		data: [
 			{
+				displayProduct: true,
 				id: "1000",
 				brandName: "Test",
 				modelName: "Small Heat Pump",
@@ -26,6 +27,7 @@ describe("Heat source products page", () => {
 				technologyType: "AirSourceHeatPump",
 			},
 			{
+				displayProduct: true,
 				id: "1001",
 				brandName: "Test",
 				modelName: "Medium Heat Pump",
@@ -33,6 +35,7 @@ describe("Heat source products page", () => {
 				technologyType: "AirSourceHeatPump",
 			},
 			{
+				displayProduct: true,
 				id: "1002",
 				brandName: "Test",
 				modelName: "Large Heat Pump",
@@ -40,6 +43,7 @@ describe("Heat source products page", () => {
 				technologyType: "AirSourceHeatPump",
 			},
 			{
+				displayProduct: true,
 				id: "1004",
 				brandName: "Test",
 				modelName: "Hybrid Heat Pump",
@@ -49,8 +53,9 @@ describe("Heat source products page", () => {
 		],
 	};
 
-	const HOT_WATER_HEAT_PUMPS = {
+	const HOT_WATER_HEAT_PUMPS: PaginatedResult<DisplayProduct> = {
 		data: [{
+			displayProduct: true,
 			id: "1003",
 			brandName: "Test",
 			modelName: "Small Hot Water Only Heat Pump",
@@ -158,6 +163,7 @@ describe("Heat source products page", () => {
 		const mockedCombiBoilers: PaginatedResult<DisplayProduct> = {
 			data: [
 				{
+					displayProduct: true,
 					id: "1000",
 					brandName: "HEM Default",
 					modelName: "Combi Boiler",

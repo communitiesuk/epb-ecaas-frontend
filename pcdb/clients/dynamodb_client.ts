@@ -1,5 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import type { DisplayProduct, PaginatedResult, TechnologyGroup, TechnologyType } from "../pcdb.types";
+import type { DisplayProduct, PaginatedResult, TechnologyGroup, TechnologyType, VesselType } from "../pcdb.types";
 import type { PcdbClient } from "./client.types";
 import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
@@ -70,6 +70,7 @@ const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?
 	}
 
 	return {
+		displayProduct: true,
 		id,
 		brandName: typeof item.brandName === "string" ? item.brandName : "",
 		modelName: typeof item.modelName === "string" ? item.modelName : "",
@@ -82,6 +83,7 @@ const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?
 			: {}),
 		...(typeof item.communityHeatNetworkName === "string" ? { communityHeatNetworkName: item.communityHeatNetworkName } : {}),
 		...(item.boilerProductID ? { boilerProductID: item.boilerProductID.toString() } : {}),
+		...(item.vesselType ? { vesselType: item.vesselType as VesselType } : {}),
 	};
 };
 

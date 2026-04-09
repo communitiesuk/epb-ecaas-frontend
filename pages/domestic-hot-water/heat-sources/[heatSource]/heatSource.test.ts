@@ -80,7 +80,7 @@ const hybridHeatPump: DomesticHotWaterHeatSourceData = {
 	typeOfHeatSource: "heatPump",
 	typeOfHeatPump: "hybridHeatPump",
 	productReference: "1000",
-	packageProductId: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+	packageProductIds: ["1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b"],
 	maxFlowTemp: unitValue(7, celsius),
 };
 

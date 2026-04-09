@@ -26,6 +26,7 @@ describe("Hot water outlet products page", () => {
 	const showerProducts: PaginatedResult<DisplayProduct> = {
 		data: [
 			{
+				displayProduct: true,
 				id: "1000",
 				brandName: "Brand",
 				modelName: "Air pressure shower",

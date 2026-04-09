@@ -9,6 +9,7 @@ export function hasPackagedProduct(model: object): model is HasPcdbPackagedProdu
 
 export function isPackagedProduct(model: object): model is PcdbPackagedProduct {
 	return model !== undefined &&
-		"packageProductId" in model &&
-		!!model.packageProductId;
+		"packageProductIds" in model &&
+		Array.isArray(model.packageProductIds) &&
+		model.packageProductIds.length > 0;
 };

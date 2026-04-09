@@ -24,6 +24,7 @@ describe("Heat source products page", () => {
 	const MOCKED_HEAT_PUMPS: PaginatedResult<DisplayProduct> = {
 		data: [
 			{
+				displayProduct: true,
 				id: "1000",
 				brandName: "Test",
 				modelName: "Small Heat Pump",
@@ -31,6 +32,7 @@ describe("Heat source products page", () => {
 				technologyType: "AirSourceHeatPump",
 			},
 			{
+				displayProduct: true,
 				id: "1001",
 				brandName: "Test",
 				modelName: "Medium Heat Pump",
@@ -38,6 +40,7 @@ describe("Heat source products page", () => {
 				technologyType: "AirSourceHeatPump",
 			},
 			{
+				displayProduct: true,
 				id: "1002",
 				brandName: "Test",
 				modelName: "Large Heat Pump",
@@ -45,6 +48,7 @@ describe("Heat source products page", () => {
 				technologyType: "AirSourceHeatPump",
 			},
 			{
+				displayProduct: true,
 				id: "1003",
 				brandName: "Test",
 				modelName: "Hybrid Heat Pump",
@@ -146,6 +150,7 @@ describe("Heat source products page", () => {
 		const mockedHeatInterfaceUnits: PaginatedResult<DisplayProduct> = {
 			data: [
 				{
+					displayProduct: true,
 					id: "1000",
 					brandName: "HEM Default",
 					modelName: "Heat Interface Unit",
@@ -179,6 +184,7 @@ describe("Heat source products page", () => {
 		const mockedCombiBoilers: PaginatedResult<DisplayProduct> = {
 			data: [
 				{
+					displayProduct: true,
 					id: "1000",
 					brandName: "HEM Default",
 					modelName: "Combi Boiler",
@@ -366,6 +372,7 @@ describe("Heat source products page", () => {
 
 		const exhaustAirHeatPumpProduct: PaginatedResult<DisplayProduct> = {
 			data: [{
+				displayProduct: true,
 				id: "1000",
 				brandName: "Test",
 				modelName: "Exhaust Air Heat Pump",

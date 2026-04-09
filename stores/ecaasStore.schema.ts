@@ -713,10 +713,10 @@ const pcdbProduct = namedWithId.extend({
 });
 
 const pcdbPackagedProduct = pcdbProduct.extend({
-	packageProductId: z.optional(z.string()),
+	packageProductIds: z.optional(z.array(z.string())),
 });
 
-const hasPcdbPackagedProduct = pcdbProduct.extend({
+const hasPcdbPackagedProduct = z.object({
 	packagedProductReference: z.optional(z.string()),
 });
 
@@ -733,19 +733,21 @@ const baseMechanicalVentilationData = namedWithId.extend({
 	associatedItemId: z.string().trim().min(1),
 });
 
-const baseMvhrData = baseMechanicalVentilationData.extend(hasPcdbPackagedProduct.shape).extend({
-	productReference: z.string().trim().min(1),
-	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "MVHR">("MVHR"),
-	installedUnderApprovedScheme: z.boolean(),
-	measuredFanPowerAndAirFlowRateKnown: z.boolean(),
-	mvhrLocation: mvhrLocationZod,
-	midHeightOfAirFlowPathForIntake: z.number(),
-	orientationOfIntake: orientation,
-	pitchOfIntake: z.number().min(0).max(180),
-	midHeightOfAirFlowPathForExhaust: z.number(),
-	orientationOfExhaust: orientation,
-	pitchOfExhaust: z.number().min(0).max(180),
-});
+const baseMvhrData = baseMechanicalVentilationData
+	.extend(pcdbProduct.shape)
+	.extend(hasPcdbPackagedProduct.shape)
+	.extend({
+		typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "MVHR">("MVHR"),
+		installedUnderApprovedScheme: z.boolean(),
+		measuredFanPowerAndAirFlowRateKnown: z.boolean(),
+		mvhrLocation: mvhrLocationZod,
+		midHeightOfAirFlowPathForIntake: z.number(),
+		orientationOfIntake: orientation,
+		pitchOfIntake: z.number().min(0).max(180),
+		midHeightOfAirFlowPathForExhaust: z.number(),
+		orientationOfExhaust: orientation,
+		pitchOfExhaust: z.number().min(0).max(180),
+	});
 
 const intermittentMevData = baseMechanicalVentilationData.extend({
 	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Intermittent MEV">("Intermittent MEV"),
@@ -753,22 +755,26 @@ const intermittentMevData = baseMechanicalVentilationData.extend({
 	midHeightOfAirFlowPath: z.number(),
 });
 
-const baseCentralisedContinuousMevData = baseMechanicalVentilationData.extend(hasPcdbPackagedProduct.shape).extend({
-	productReference: z.string().trim().min(1),
-	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Centralised continuous MEV">("Centralised continuous MEV"),
-	installedUnderApprovedScheme: z.boolean(),
-	measuredFanPowerAndAirFlowRateKnown: z.boolean(),
-	midHeightOfAirFlowPath: z.number(),
-});
+const baseCentralisedContinuousMevData = baseMechanicalVentilationData
+	.extend(pcdbProduct.shape)
+	.extend(hasPcdbPackagedProduct.shape)
+	.extend({
+		typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Centralised continuous MEV">("Centralised continuous MEV"),
+		installedUnderApprovedScheme: z.boolean(),
+		measuredFanPowerAndAirFlowRateKnown: z.boolean(),
+		midHeightOfAirFlowPath: z.number(),
+	});
 
-const decentralisedContinuousMevData = baseMechanicalVentilationData.extend(hasPcdbPackagedProduct.shape).extend({
-	productReference: z.string().trim().min(1),
-	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Decentralised continuous MEV">("Decentralised continuous MEV"),
-	installedUnderApprovedScheme: z.boolean(),
-	installationType: mechVentInstallationTypeZod,
-	installationLocation: mechVentInstallationLocationZod,
-	midHeightOfAirFlowPath: z.number(),
-});
+const decentralisedContinuousMevData = baseMechanicalVentilationData
+	.extend(pcdbProduct.shape)
+	.extend(hasPcdbPackagedProduct.shape)
+	.extend({
+		typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Decentralised continuous MEV">("Decentralised continuous MEV"),
+		installedUnderApprovedScheme: z.boolean(),
+		installationType: mechVentInstallationTypeZod,
+		installationLocation: mechVentInstallationLocationZod,
+		midHeightOfAirFlowPath: z.number(),
+	});
 
 const baseMeasuredFanPowerAndAirFlowRateKnown = {
 	measuredFanPowerAndAirFlowRateKnown: z.literal(true),
@@ -958,13 +964,15 @@ const heatPumpBase = pcdbPackagedProduct.extend({
 	maxFlowTemp: zodUnit("temperature").optional(),
 });
 
-const boilerBase = hasPcdbPackagedProduct.extend({
-	typeOfHeatSource: z.literal("boiler"),
-	typeOfBoiler,
-	specifiedLocation: z.optional(boilerLocationZod),
-	needsSpecifiedLocation: z.boolean(),
-	maxFlowTemp: zodUnit("temperature").optional(),
-});
+const boilerBase = pcdbProduct
+	.extend(hasPcdbPackagedProduct.shape)
+	.extend({
+		typeOfHeatSource: z.literal("boiler"),
+		typeOfBoiler,
+		specifiedLocation: z.optional(boilerLocationZod),
+		needsSpecifiedLocation: z.boolean(),
+		maxFlowTemp: zodUnit("temperature").optional(),
+	});
 
 export type HasPcdbPackagedProduct = z.infer<typeof hasPcdbPackagedProduct>;
 export type PcdbPackagedProduct = z.infer<typeof pcdbPackagedProduct>;
@@ -1333,15 +1341,17 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 
 export type DomesticHotWaterHeatSourceData = z.infer<typeof domesticHotWaterHeatSourceZod>;
 
-const hotWaterCylinderDataZod = namedWithId.extend({
-	typeOfWaterStorage: z.literal("hotWaterCylinder"),
-	storageCylinderVolume: zodUnit("volume"),
-	dailyEnergyLoss: z.number(),
-	dhwHeatSourceId: z.string(),
-	areaOfHeatExchanger: z.number().optional(),
-	heaterPosition: fraction,
-	thermostatPosition: fraction,
-});
+const hotWaterCylinderDataZod = namedWithId
+	.extend(hasPcdbPackagedProduct.shape)
+	.extend({
+		typeOfWaterStorage: z.literal("hotWaterCylinder"),
+		storageCylinderVolume: zodUnit("volume"),
+		dailyEnergyLoss: z.number(),
+		dhwHeatSourceId: z.string(),
+		areaOfHeatExchanger: z.number().optional(),
+		heaterPosition: fraction,
+		thermostatPosition: fraction,
+	});
 
 export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
 

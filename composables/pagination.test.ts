@@ -3,6 +3,7 @@ import type { DisplayProduct } from "~/pcdb/pcdb.types";
 describe("Pagination", () => {
 	const productData: DisplayProduct[] = [
 		{
+			displayProduct: true,
 			id: "1000",
 			brandName: "Test 1",
 			modelName: "Small Heat Pump",
@@ -10,6 +11,7 @@ describe("Pagination", () => {
 			technologyType: "AirSourceHeatPump",
 		},
 		{
+			displayProduct: true,
 			id: "1001",
 			brandName: "Test 1",
 			modelName: "Medium Heat Pump",
@@ -17,6 +19,7 @@ describe("Pagination", () => {
 			technologyType: "AirSourceHeatPump",
 		},
 		{
+			displayProduct: true,
 			id: "1002",
 			brandName: "Test 2",
 			modelName: "Large Heat Pump",
