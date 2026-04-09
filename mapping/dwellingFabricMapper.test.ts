@@ -844,7 +844,7 @@ describe("dwelling fabric mapper", () => {
 		const expectedFlatRoofAboveHeatedSpace: BuildingElementOpaque = {
 			type: "BuildingElementOpaque",
 			pitch: roofAboveHeatedSpace.pitch,
-			orientation360: 0,
+			// no orientation360 field here as pitch is 0, so this is illegal
 			height: roofAboveHeatedSpace.length,
 			width: roofAboveHeatedSpace.width,
 			base_height: roofAboveHeatedSpace.elevationalHeightOfElement,
@@ -862,7 +862,7 @@ describe("dwelling fabric mapper", () => {
 		const expectedFlatRoofAboveUnheatedSpace: BuildingElementOpaque = {
 			type: "BuildingElementOpaque",
 			pitch: roofAboveUnheatedSpace.pitch,
-			orientation360: 0,
+			// no orientation360 field here as pitch is 0, so this is illegal
 			height: roofAboveUnheatedSpace.length,
 			width: roofAboveUnheatedSpace.width,
 			base_height: roofAboveUnheatedSpace.elevationalHeightOfElement,

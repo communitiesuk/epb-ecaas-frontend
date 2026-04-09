@@ -342,11 +342,12 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	const externalWallData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalWall?.map(x => {
 		const nameWithSuffix = suffixName(x.name, wallSuffix);
 
+		const pitch = extractPitch(x);
+
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementOpaque",
-				pitch: extractPitch(x),
-				orientation360: x.orientation,
+				pitch,
 				height: x.height,
 				width: x.length,
 				base_height: x.elevationalHeight,
@@ -357,6 +358,8 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				is_external_door: false,
 				is_unheated_pitched_roof: false, // this may need to be limited to opaque elements with a pitch <= 60
+				// orientation360 is not specified if pitch is 0 or 180
+				...((pitch !== 0 && pitch !== 180) ? { orientation360: x.orientation } : {}),
 			},
 		};
 	}) || [];
@@ -489,11 +492,13 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 
 	const roofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceRoofs.map((x) => {
 		const nameWithSuffix = suffixName(x.name, roofSuffix);
+
+		const pitch = x.pitch;
+
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementOpaque",
-				pitch: x.pitch,
-				orientation360: x.orientation ?? 0,
+				pitch,
 				height: x.length,
 				width: x.width,
 				base_height: x.elevationalHeightOfElement,
@@ -504,6 +509,8 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				is_external_door: false,
 				is_unheated_pitched_roof: x.typeOfRoof === "pitchedInsulatedAtCeiling",
+				// orientation360 is not specified if pitch is 0 or 180
+				...((pitch !== 0 && pitch !== 180) ? { orientation360: x.orientation ?? 0 } : {}),
 			},
 		};
 	});
@@ -632,11 +639,12 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		)! : undefined;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
+		const pitch = extractPitch(associatedWallRoof ?? x);
+
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementOpaque",
-				pitch: extractPitch(associatedWallRoof ?? x),
-				orientation360: (associatedWallRoof ?? x).orientation!,
+				pitch,
 				height: x.height,
 				width: x.width,
 				base_height: x.elevationalHeight,
@@ -647,6 +655,8 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				is_unheated_pitched_roof: false, // this may need to be limited to opaque elements with a pitch <= 60
 				area: x.height * x.width, // this may be removed from the FHS schema shortly (though you could have e.g. arch shaped doors with a different area?)
 				u_value: x.uValue,
+				// orientation360 is not specified if pitch is 0 or 180
+				...((pitch !== 0 && pitch !== 180) ? { orientation360: (associatedWallRoof ?? x).orientation! } : {}),
 			},
 		};
 	});
