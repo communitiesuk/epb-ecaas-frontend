@@ -1,17 +1,19 @@
 <script setup lang="ts">
+import { uniqueName } from "#imports";
 import { getUrl } from "~/utils/page";
 
 const title = "Point thermal bridges";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const thermalBridgeData = useItemToEdit("bridging", store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data);
+const pointThermalBridgeData = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data;
+const index = getStoreIndex(pointThermalBridgeData);
+const thermalBridgeData = useItemToEdit("bridging", pointThermalBridgeData);
 const model = ref(thermalBridgeData?.data);
 
 const saveForm = (fields: PointThermalBridgeData) => {
 	store.$patch((state) => {
 		const { dwellingSpacePointThermalBridges } = state.dwellingFabric.dwellingSpaceThermalBridging;
-		const index = getStoreIndex(dwellingSpacePointThermalBridges.data);
 
 		dwellingSpacePointThermalBridges.data[index] = {
 			data: {
@@ -60,7 +62,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(pointThermalBridgeData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="heatTransferCoefficient"
@@ -69,9 +75,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="heatTransferCoefficient"
 			validation="required | number"
 			suffix-text="W/K"
-			data-field="Zone.ThermalBridging.heat_transfer_coeff"
+			data-field="Zone.ThermalBridging.*.heat_transfer_coeff"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('dwellingSpaceThermalBridging')" secondary test-id="saveProgress">Save progress</GovButton>

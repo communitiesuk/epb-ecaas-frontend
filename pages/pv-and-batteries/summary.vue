@@ -1,15 +1,37 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
+import type { ShadingObjectData } from "~/stores/ecaasStore.schema";
 import { getTabItems, getUrl } from "#imports";
 
 const title = "PV and electric batteries summary";
 const store = useEcaasStore();
 
-const pvSystems = store.pvAndBatteries.pvSystems.data;
+function formatShadingRowsForSummary(shading: ShadingObjectData[]): Record<string, string> {
+	const rows: Record<string, string> = {};
+	shading.forEach((shadingEntry, i) => {
+		const n = i + 1;
+		const typeOfShading = displaySnakeToSentenceCase(shadingEntry.typeOfShading);
+		rows[`Name of shading ${n}`] = shadingEntry.name;
+		rows[`Type of shading ${n}`] = typeOfShading;
+		rows[`Distance of shading ${n} from edge of PV`] = dim(shadingEntry.distance, "metres");
+		if (shadingEntry.typeOfShading === "obstacle") {
+			rows[`Height of shading ${n}`] = dim(shadingEntry.height, "metres");
+			rows[`Transparency of shading ${n}`] = show(shadingEntry.transparency + " %");
+			rows[`Depth of shading ${n}`] = emptyValueRendering;
+		} else {
+			rows[`Height of shading ${n}`] = emptyValueRendering;
+			rows[`Transparency of shading ${n}`] = emptyValueRendering;
+			rows[`Depth of shading ${n}`] = dim(shadingEntry.depth, "metres");
+		}
+	});
+	return rows;
+}
+
+const pvArrays = store.pvAndBatteries.pvArrays.data;
 const pvSummary: SummarySection = {
-	id: "pvSystems",
-	label: "PV systems",
-	data: pvSystems.map(({ data: x }) => {
+	id: "pvArrays",
+	label: "PV arrays",
+	data: pvArrays.map(({ data: x }) => {
 		return {
 			"Name": x.name,
 			"Peak power": dim(x.peakPower, "kilowatt peak"),
@@ -21,8 +43,11 @@ const pvSummary: SummarySection = {
 			"Width of PV": dim(x.widthOfPV, "metres"),
 			"Inverter peak power AC": dim(x.inverterPeakPowerAC, "kilowatt"),
 			"Inverter peak power DC": dim(x.inverterPeakPowerDC, "kilowatt"),
-			"Inverter is inside": displayBoolean(x.inverterIsInside),
+			"Location of inverter": displaySnakeToSentenceCase(show(x.locationOfInverter)),
 			"Inverter type": displaySnakeToSentenceCase(show(x.inverterType)),
+			"Which system should receive surplus energy from this energy supply?": displayCamelToSentenceCase(show(x.electricityPriority)), 
+			"Does anything shade the PV array?": displayBoolean(x.hasShading),
+			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvArrayData, { hasShading: true }>).shading) } : {}),
 		};
 	}),
 	editUrl: "/pv-and-batteries",
@@ -31,18 +56,29 @@ const pvSummary: SummarySection = {
 const electricBattery = store.pvAndBatteries.electricBattery.data;
 const batterySummary: SummarySection = {
 	id: "electricBattery",
-	label: "Electric battery",
+	label: "Electric batteries",
 	data: electricBattery.map(({ data: x }) => {
 		return {
 			"Name": x.name,
 			"Capacity": dim(x.capacity, "kilowatt-hour"),
-			"Battery age": x.batteryAge ? `${show(x.batteryAge)} years` : show(x.batteryAge),
 			"Charge efficiency": show(x.chargeEfficiency),
 			"Location": displayCamelToSentenceCase(show(x.location)),
-			"Grid charging possible": displayBoolean(x.gridChargingPossible),
 			"Maximum charge rate": dim(x.maximumChargeRate, "kilowatt"),
 			"Minimum charge rate": dim(x.minimumChargeRate, "kilowatt"),
 			"Maximum discharge rate": dim(x.maximumDischargeRate, "kilowatt"),
+		};
+	}),
+	editUrl: "/pv-and-batteries",
+};
+
+const diverters = store.pvAndBatteries.diverters.data;
+const diverterSummary: SummarySection = {
+	id: "diverters",
+	label: "Diverters",
+	data: diverters.map(({ data: x }) => {
+		return {
+			"Name": show(x.name),
+			"Associated hot water cylinder": show(store.domesticHotWater.waterStorage.data.find(y => y && y.data.id === x.hotWaterCylinder)?.data.name),
 		};
 	}),
 	editUrl: "/pv-and-batteries",
@@ -57,9 +93,9 @@ const batterySummary: SummarySection = {
 	<GovTabs v-slot="tabProps" :items="getTabItems([pvSummary])">
 		<SummaryTab :summary="pvSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
-				<h2 class="govuk-heading-m">No PV systems added</h2>
+				<h2 class="govuk-heading-m">No PV arrays added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
-					Add PV systems
+					Add PV arrays
 				</NuxtLink>
 			</template>
 		</SummaryTab>
@@ -67,9 +103,19 @@ const batterySummary: SummarySection = {
 	<GovTabs v-slot="tabProps" :items="getTabItems([batterySummary])">
 		<SummaryTab :summary="batterySummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
-				<h2 class="govuk-heading-m">No electric battery added</h2>
+				<h2 class="govuk-heading-m">No electric batteries added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
 					Add electric battery
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([diverterSummary])">
+		<SummaryTab :summary="diverterSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No diverters added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
+					Add diverter
 				</NuxtLink>
 			</template>
 		</SummaryTab>

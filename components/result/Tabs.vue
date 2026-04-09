@@ -17,7 +17,7 @@ const tabs: TabItem[] = [
 	</template>
 	<template v-if="result?.resultType === 'ok'">
 		<GovWarningText>
-			This is an indicative compliance report based on 0.34 home energy model. This is not the same model that will be used for future homes standard and shouldn't be used for compliance.
+			This is an indicative compliance report based on version 0.36 of the Home Energy Model. This is not the same model that will be used for future homes standard and shouldn't be used for compliance.
 		</GovWarningText>
 		<GovTabs v-slot="tabProps" :items="tabs">
 			<ResultPrimaryOutputTab :selected="tabProps.currentTab === 0" :data="result.response" />

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TerrainClass, VentilationShieldClass } from "~/schema/api-schema.types";
+import type { SchemaTerrainClass, SchemaVentilationShieldClass } from "~/schema/aliases";
 import { getUrl } from "#imports";
 
 const title = "External factors";
@@ -10,12 +10,12 @@ const model = ref({
 	...store.dwellingDetails.externalFactors.data,
 });
 
-const typeOfExposureOptions: Record<VentilationShieldClass, SnakeToSentenceCase<VentilationShieldClass>> = {
+const typeOfExposureOptions: Record<SchemaVentilationShieldClass, SnakeToSentenceCase<SchemaVentilationShieldClass>> = {
 	Open: "Open",
 	Normal: "Normal",
 	Shielded: "Shielded",
 };
-const terrainTypeOptions: Record<TerrainClass, PascalToSentenceCase<TerrainClass>> = {
+const terrainTypeOptions: Record<SchemaTerrainClass, PascalToSentenceCase<SchemaTerrainClass>> = {
 	OpenWater: "Open water",
 	OpenField: "Open field",
 	Suburban: "Suburban",
@@ -52,7 +52,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm" @submit-invalid="handleInvalidSubmit">
+	<FormKit
+		v-model="model"
+		type="form"
+		:actions="false"
+		:incomplete-message="false"
+		@submit="saveForm"
+		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="externalFactorsErrorSummary"/>
 		<FormKit
 			id="altitude"
@@ -77,7 +83,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 			help="This is the level of shielding a dwelling will have against external environmental factors such as wind, noise or outdoor pollutants"
 			data-field="InfiltrationVentilation.shield_class">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr>
@@ -132,7 +138,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 			help="This is the type of surrounding landscape once the dwelling has been built"
 			data-field="InfiltrationVentilation.terrain_class">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<GovDetails summary-text="Help with this input">
 				<p>Providing the terrain type helps determine how external conditions, such as wind speed and turbulence, will impact ventilation and airflow around a building.</p>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
@@ -196,10 +202,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Noise nuisance"
 			name="noiseNuisance"
 			validation="required"
-			help="Is there environmental noise from the surrounding area, which can influence whether occupants keep windows closed?"
-			data-field="InfiltrationVentilation.noise_nuisance"
-		/>
-		<GovLLMWarning />
+			help="Is there environmental noise from the surrounding area, which can influence whether occupants keep windows closed at night?"
+			data-field="InfiltrationVentilation.noise_nuisance">
+			<GovDetails summary-text="Help with this input">
+				<p>Answer yes if external noise was identified as an issue for Part O compliance. For example, where the local planning authority considered external noise to be an issue at the planning stage.</p>
+			</GovDetails>
+		</FormKit>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('dwellingDetails')" secondary>Save progress</GovButton>

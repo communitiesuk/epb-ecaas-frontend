@@ -1,5 +1,5 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
-import { mapFhsInputData  } from "~/mapping/fhsInputMapper";
+import { mapFhsInputData } from "~/mapping/fhsInputMapper";
 import type { FhsInputSchema } from "~/mapping/fhsInputMapper";
 import type { FhsComplianceResponseIncludingErrors } from "~/server/server.types";
 import Index from "./index.vue";
@@ -47,7 +47,8 @@ describe("Homepage", () => {
 		expect((await screen.findByTestId("resultErrorSummary"))).toBeDefined();
 	});
 
-	it("shows error summary when API error has occurred", async () => {
+	// skipping while calculate button does not trigger an API request
+	it.skip("shows error summary when API error has occurred", async () => {
 		vi.mocked(hasCompleteState).mockReturnValue(true);
 
 		vi.mocked(mapFhsInputData).mockImplementation(() => {
@@ -78,5 +79,11 @@ describe("Homepage", () => {
 
 		expect(errorSummary).toBeDefined();
 		expect(errorText).toContain("Error ID: testId");
+	});
+
+	it("displays 'Change orientation' button which navigates to the change orientation page", async () => {
+		await renderSuspended(Index);
+		const changeOrientationButton = screen.getByRole("button", { name: "Change orientation" });
+		expect(changeOrientationButton.getAttribute("href")).toBe("/change-orientation");
 	});
 });

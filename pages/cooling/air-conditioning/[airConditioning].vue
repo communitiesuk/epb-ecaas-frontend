@@ -1,28 +1,45 @@
 <script setup lang="ts">
-const title = "Air conditioning";
-const store = useEcaasStore();
-const { saveToList } = useForm();
+import { getUrl, uniqueName } from "#imports";
 
-const airConditioningData = useItemToEdit("airConditioning", store.cooling.airConditioning.data);
-const model: Ref<AirConditioningData> = ref(airConditioningData!);
+const title = "Air conditioning system";
+const store = useEcaasStore();
+const { autoSaveElementForm, getStoreIndex } = useForm();
+
+const airConditioningStoreData = store.cooling.airConditioning?.data;
+const index = getStoreIndex(airConditioningStoreData);
+const airConditioningData = useItemToEdit("airConditioning", airConditioningStoreData);
+const model = ref(airConditioningData?.data);
 
 const saveForm = (fields: AirConditioningData) => {
 	store.$patch((state) => {
 		const { airConditioning } = state.cooling;
 
-		const airConditioningItem: AirConditioningData = {
-			name: fields.name,
-			coolingCapacity: fields.coolingCapacity,
-			seasonalEnergyEfficiencyRatio: fields.seasonalEnergyEfficiencyRatio,
-			convectionFraction: fields.convectionFraction,
+		airConditioning.data[index] = {
+			data: {
+				name: fields.name,
+				coolingCapacity: fields.coolingCapacity,
+				seasonalEnergyEfficiencyRatio: fields.seasonalEnergyEfficiencyRatio,
+				convectionFraction: fields.convectionFraction,
+			},
+			complete: true,
 		};
 
-		saveToList(airConditioningItem, airConditioning);
 		store.cooling.airConditioning.complete = false;
-	});
+	},
+	);
 
 	navigateTo("/cooling");
 };
+
+autoSaveElementForm<AirConditioningData>({
+	model,
+	storeData: store.cooling.airConditioning,
+	defaultName: "Air conditioning system",
+	onPatch: (state, newData, index) => {
+		state.cooling.airConditioning.data[index] = newData;
+		state.cooling.airConditioning.complete = false;
+	},
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -47,7 +64,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(airConditioningStoreData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="coolingCapacity"
@@ -63,7 +84,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputFloat"
 			label="Seasonal energy efficiency ratio"
 			name="seasonalEnergyEfficiencyRatio"
-			help="A higher seasonal efficiency ratio indicates better energy efficiency across a typical cooling season. Typical ranges are between 4.0 and 7.0."
+			:help="false ? 'A higher seasonal efficiency ratio indicates better energy efficiency across a typical cooling season. Typical ranges are between 4.0 and 7.0.' : undefined"
 			validation="required | number | between:0,25"
 			suffix-text="kW"
 		/>
@@ -72,10 +93,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputFloat"
 			label="Convection fraction"
 			name="convectionFraction"
-			help="Enter the proportion of the system's sensible cooling output that is delivered through air movement as opposed to radiant cooling. Typically this is 1 as all cooling is by convection."
+			help="Enter the proportion of cool air the air conditioning unit emits through convection. Typically this is 1 as all cooling is by convection."
 			validation="required | number | between:0,1"
 		/>
-		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('cooling')" secondary test-id="saveProgress">Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

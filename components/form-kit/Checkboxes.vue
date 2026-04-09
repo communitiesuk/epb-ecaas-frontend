@@ -2,6 +2,13 @@
 import type { FormKitFrameworkContext } from "@formkit/core";
 import { showErrorState, getErrorMessage } from "#imports";
 
+export type CheckboxOption = {
+	label: string;
+	hint?: string;
+	disabled?: boolean;
+	checked?: boolean;
+};
+
 const props = defineProps<{
 	context: FormKitFrameworkContext
 }>();
@@ -16,7 +23,14 @@ const {
 
 const { mounted } = useMounted();
 
-const optionsSelectedValues = props.context._value || [];
+const optionsSelectedValues = (props.context._value ?? []).length === 0 ?
+	Object.keys(options)
+		.filter(e => 
+			typeof options[e] === "object" && "checked" in options[e]
+				? options[e].checked
+				: false,
+		) : props.context._value ?? [];
+
 const optionsSelected = ref<string[]>([...optionsSelectedValues]);
 
 const handleChange = (value: string) => {
@@ -57,9 +71,12 @@ const handleChange = (value: string) => {
 							:checked="mounted ? optionsSelected.includes(key) : false"
 							:data-testid="`${id}_${key}`"
 							v-bind="props.context.attrs"
+							:disabled="typeof options[key] === 'object' && 'disabled' in options[key] && options[key]['disabled']"
 							@change="handleChange(key)"
 						>
-						<label class="govuk-label govuk-checkboxes__label" :for="`${id}_${key}`">{{ options[key] }}</label>
+						<label class="govuk-label govuk-checkboxes__label" :for="`${id}_${key}`">
+							{{typeof options[key] === 'object' ? options[key].label : options[key]}}
+						</label>
 					</div>
 				</div>
 			</fieldset>

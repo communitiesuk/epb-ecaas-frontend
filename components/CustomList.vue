@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import type { GovTagProps } from "~/common.types";
 
-interface CustomListItem {
+type CustomListAction = "edit" | "duplicate" | "delete";
+
+export interface CustomListItem {
 	name: string;
 	status?: GovTagProps;
+	preventDuplication?: boolean;
+	actions?: CustomListAction[];
 }
 
 const props = defineProps<{
@@ -16,6 +20,7 @@ const props = defineProps<{
 	onRemove?: (index: number) => void;
 	onDuplicate?: (index: number) => void;
 	showStatus?: boolean;
+	section?: string
 }>();
 
 function handleRemove(index: number, e: MouseEvent) {
@@ -29,18 +34,17 @@ function handleDuplicate(index: number, e: MouseEvent) {
 }
 
 function canAddMoreItems() {
-	return !props.maxNumberOfItems || !props.items || props.items?.length < props.maxNumberOfItems;
+	return !props.maxNumberOfItems || (!props.maxNumberOfItems && props.section !== "dHWHeatSources") || !props.items || props.items?.length < props.maxNumberOfItems; 
 }
 
 function routeForAddItem() {
-	return props.maxNumberOfItems === 1 ? props.formUrl : `${props.formUrl}/create`;
+	return props.maxNumberOfItems === 1 && props.section !== "dHWHeatSources" ? props.formUrl : `${props.formUrl}/create`;
 }
 
 function routeForEditItem(index: number) {
-	return props.maxNumberOfItems === 1 ? props.formUrl : `${props.formUrl}/${index}`;
+	return props.maxNumberOfItems === 1 && props.section !== "dHWHeatSources" ? props.formUrl : `${props.formUrl}/${index}`;
 
 }
-
 </script>
 
 <template>
@@ -54,9 +58,10 @@ function routeForEditItem(index: number) {
 					<p v-if="hint" class="govuk-hint govuk-!-margin-0 custom-summary-card__hint">{{ hint }}</p>
 				</div>
 				<ul class="govuk-summary-card__actions">
-					<li class="govuk-summary-card__action">
+					<li v-if="canAddMoreItems()" class="govuk-summary-card__action">
 						<NuxtLink
-							v-if="canAddMoreItems()" class="govuk-link" :data-testid="`${id}_add`"
+							class="govuk-link"
+							:data-testid="`${id}_add`"
 							:href=routeForAddItem()>{{ items && items.length > 0 ? "Add more" : "Add" }}</NuxtLink>
 					</li>
 				</ul>
@@ -64,7 +69,9 @@ function routeForEditItem(index: number) {
 			<div v-if="items && items.length" class="govuk-summary-card__content" :data-testid="`${id}_items`">
 				<dl class="govuk-summary-list">
 					<div
-						v-for="(item, index) in items" :key="index" class="govuk-summary-list__row"
+						v-for="(item, index) in items"
+						:key="index"
+						class="govuk-summary-list__row"
 						:data-testid="`${id}_item`">
 						<dt class="govuk-summary-list__key">
 							{{ typeof item === 'string' ? item : item.name }}
@@ -76,19 +83,23 @@ function routeForEditItem(index: number) {
 						</dd>
 						<dd class="govuk-summary-list__actions">
 							<ul class="govuk-summary-list__actions-list">
-								<li class="govuk-summary-list__actions-list-item">
-									<NuxtLink class="govuk-link" :href=routeForEditItem(index)>Edit</NuxtLink>
+								<li v-if="typeof item === 'object' && item.actions ? item.actions.includes('edit') : true" class="govuk-summary-list__actions-list-item">
+									<NuxtLink class="govuk-link" :href=routeForEditItem(index) :data-testid="`${id}_edit_${index}`">Edit</NuxtLink>
 								</li>
 								<li
-									v-if="onDuplicate && canAddMoreItems()"
+									v-if="onDuplicate && canAddMoreItems() && (typeof item === 'string' || !item.preventDuplication) && (typeof item === 'object' && item.actions ? item.actions.includes('duplicate') : true)"
 									class="govuk-summary-list__actions-list-item">
 									<a
-										href="#" class="govuk-link" :data-testid="`${id}_duplicate_${index}`"
+										href="#"
+										class="govuk-link"
+										:data-testid="`${id}_duplicate_${index}`"
 										@click="handleDuplicate(index, $event)">Duplicate</a>
 								</li>
-								<li class="govuk-summary-list__actions-list-item">
+								<li v-if="typeof item === 'object' && item.actions ? item.actions.includes('delete') : true" class="govuk-summary-list__actions-list-item">
 									<a
-										href="#" class="govuk-link" :data-testid="`${id}_remove_${index}`"
+										href="#"
+										class="govuk-link"
+										:data-testid="`${id}_remove_${index}`"
 										@click="handleRemove(index, $event)">Remove</a>
 								</li>
 							</ul>

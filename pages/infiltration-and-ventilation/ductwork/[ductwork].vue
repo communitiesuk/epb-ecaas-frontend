@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { DuctShape, VentType   } from "~/schema/api-schema.types";
-import type { DuctType } from "~/schema/api-schema.types";
-import type { DuctworkData } from "#imports";
+import type { SchemaDuctShape, SchemaDuctType } from "~/schema/aliases";
+import type { DuctworkData, EcaasForm } from "#imports";
 import { getUrl } from "#imports";
 
 const title = "MVHR ductwork";
@@ -16,11 +15,11 @@ const ductwork = useItemToEdit(
 const model = ref(ductwork?.data);
 store.infiltrationAndVentilation.ductwork.complete = false;
 
-const ductworkCrossSectionalShapeOptions: Record<DuctShape, SnakeToSentenceCase<DuctShape>> = {
+const ductworkCrossSectionalShapeOptions: Record<SchemaDuctShape, SnakeToSentenceCase<SchemaDuctShape>> = {
 	circular: "Circular",
 	rectangular: "Rectangular",
 };
-const ductTypeOptions: Record<DuctType, SnakeToSentenceCase<DuctType>> = {
+const ductTypeOptions: Record<SchemaDuctType, SnakeToSentenceCase<SchemaDuctType>> = {
 	supply: "Supply",
 	extract: "Extract",
 	intake: "Intake",
@@ -30,9 +29,9 @@ const ductTypeOptions: Record<DuctType, SnakeToSentenceCase<DuctType>> = {
 const saveForm = (fields: DuctworkData) => {
 	store.$patch((state) => {
 		const { ductwork } = state.infiltrationAndVentilation;
-		const index = getStoreIndex(ductwork.data);
+		const index = getStoreIndex(ductwork.data as EcaasForm<DuctworkData>[]);
 
-		const commonFields = {
+		const ductworkItem: DuctworkData = {
 			name: fields.name,
 			mvhrUnit: fields.mvhrUnit,
 			ductType: fields.ductType,
@@ -40,29 +39,10 @@ const saveForm = (fields: DuctworkData) => {
 			lengthOfDuctwork: fields.lengthOfDuctwork,
 			thermalInsulationConductivityOfDuctwork: fields.thermalInsulationConductivityOfDuctwork,
 			surfaceReflectivity: fields.surfaceReflectivity,
+			ductworkCrossSectionalShape: fields.ductworkCrossSectionalShape,
+			internalDiameterOfDuctwork: fields.internalDiameterOfDuctwork,
+			externalDiameterOfDuctwork: fields.externalDiameterOfDuctwork,
 		};
-
-		let ductworkItem: DuctworkData;
-
-		switch (fields.ductworkCrossSectionalShape) {
-			case DuctShape.circular:
-				ductworkItem = {
-					...commonFields,
-					ductworkCrossSectionalShape: fields.ductworkCrossSectionalShape,
-					internalDiameterOfDuctwork: fields.internalDiameterOfDuctwork,
-					externalDiameterOfDuctwork: fields.externalDiameterOfDuctwork,
-				};
-				break;
-			case DuctShape.rectangular:
-				ductworkItem = {
-					...commonFields,
-					ductworkCrossSectionalShape: fields.ductworkCrossSectionalShape,
-					ductPerimeter: fields.ductPerimeter,
-				};
-				break;
-			default:
-				throw new Error("Missed a duct shape case");
-		}
 
 		ductwork.data[index] = {
 			data: ductworkItem,
@@ -120,8 +100,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 
 		<FormKit
-			id="mvhrUnit" type="govRadios" :options="new
-				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data.typeOfMechanicalVentilationOptions === VentType.MVHR).map((x)=> [x.data.id!, x.data.name]))"
+			id="mvhrUnit"
+			type="govRadios"
+			:options="new
+				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data.typeOfMechanicalVentilationOptions === 'MVHR').map((x)=> [x.data.id!, x.data.name]))"
 			label="MVHR unit" 
 			name="mvhrUnit" 
 			help="Select the MVHR unit that this ductwork is attached to"
@@ -133,8 +115,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="ductTypeOptions"
 			label="Duct type"
 			name="ductType"
-			validation="required">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			validation="required"
+			data-field="InfiltrationVentilation.MechanicalVentilation.duct_type">
+			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table ductwork-table">
 					<thead class="govuk-table__head">
 						<tr>
@@ -161,6 +144,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						</tr>
 					</tbody>
 				</table>
+				<img src="/img/mvhr-ductwork.png" alt="Diagram showing an intake from outside the thermal envelope going through the MVHR unit to supply points, and exhaust being passed out originating from extract points." class="govuk-!-margin-bottom-3">
 			</GovDetails>
 		</FormKit>
 		<FormKit
@@ -170,81 +154,35 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Ductwork cross sectional shape"
 			name="ductworkCrossSectionalShape"
 			validation="required"
+			data-field="InfiltrationVentilation.MechanicalVentilation.cross_section_shape	"
 		/>
-		<template v-if="model && model.ductworkCrossSectionalShape === DuctShape.circular">
-			<FormKit
-				id="internalDiameterOfDuctwork"
-				type="govInputWithSuffix"
-				suffix-text="mm"
-				label="Internal diameter of ductwork"
-				name="internalDiameterOfDuctwork"
-				validation="required | number | min:0 | max:1000">
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-					<table class="govuk-table">
-						<thead class="govuk-table__head">
-							<tr class="govuk-table__row">
-								<th scope="col" class="govuk-table__header">Explanation</th>
-								<th scope="col" class="govuk-table__header">Typical range</th>
-							</tr>
-						</thead>
-						<tbody class="govuk-table__body">
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">Inner size of the duct, determining actual airflow capacity</td>
-								<td class="govuk-table__cell">
-									100 - 150mm<br>
-									(varies based on system needs)
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</GovDetails>
-			</FormKit>
-			<FormKit
-				id="externalDiameterOfDuctwork"
-				type="govInputWithSuffix"
-				suffix-text="mm"
-				label="External diameter of ductwork"
-				name="externalDiameterOfDuctwork"
-				validation="required | number | min:0 | max:1000">
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-					<table class="govuk-table">
-						<thead class="govuk-table__head">
-							<tr class="govuk-table__row">
-								<th scope="col" class="govuk-table__header">Explanation</th>
-								<th scope="col" class="govuk-table__header">Typical range</th>
-							</tr>
-						</thead>
-						<tbody class="govuk-table__body">
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">Outer size of the duct, affecting airflow and space requirements</td>
-								<td class="govuk-table__cell">
-									125 - 160<br>
-									(standard domestic systems)
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</GovDetails>
-			</FormKit>
-		</template>
-
 		<FormKit
-			v-if="model && model.ductworkCrossSectionalShape === DuctShape.rectangular"
-			id="ductPerimeter"
+			id="internalDiameterOfDuctwork"
 			type="govInputWithSuffix"
 			suffix-text="mm"
-			label="Perimeter of ductwork"
-			name="ductPerimeter"
+			label="Internal diameter of ductwork"
+			name="internalDiameterOfDuctwork"
+			help="Enter the average inner diameter of the duct. Typically between 60mm and 175mm."
 			validation="required | number | min:0 | max:1000"
-		/>
+			data-field="InfiltrationVentilation.MechanicalVentilation.internal_diameter_mm" />
+		<FormKit
+			id="externalDiameterOfDuctwork"
+			type="govInputWithSuffix"
+			suffix-text="mm"
+			label="External diameter of ductwork"
+			name="externalDiameterOfDuctwork"
+			help="Enter the average outer diameter of the duct. Typically between 75mm and 200mm."
+			validation="required | number | min:0 | max:1000"
+			data-field="InfiltrationVentilation.MechanicalVentilation.external_diameter_mm" />
 		<FormKit
 			id="lengthOfDuctwork"
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Length of ductwork"
-			help="Enter the length of the piece of ductwork for this sub-object. Typically between 10m and 30m."
+			help="If the ductwork is outside the thermal envelope, enter the length of the ductwork that sits outside the heated area. Typically between 1m and 12m."
 			name="lengthOfDuctwork"
-			validation="required | number | min:0"/>
+			validation="required | number | min:0"
+			data-field="InfiltrationVentilation.MechanicalVentilation.length"/>
 
 		<FormKit
 			id="insulationThickness"
@@ -253,7 +191,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Insulation thickness"
 			help="Enter the thickness of the duct insulation. Typically between 25mm and 50mm."
 			name="insulationThickness"
-			validation="required | number | min:0 | max:100"/>
+			validation="required | number | min:0 | max:100"
+			data-field="InfiltrationVentilation.MechanicalVentilation.insulation_thickness_mm"/>
 			
 		<FormKit
 			id="thermalInsulationConductivityOfDuctwork"
@@ -262,7 +201,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Thermal conductivity of ductwork insulation"
 			help="Enter the thermal conductivity of the insulation. Typical values are between 0.03 and 0.04."
 			name="thermalInsulationConductivityOfDuctwork"
-			validation="required | number | min:0"/>
+			validation="required | number | min:0"
+			data-field="InfiltrationVentilation.MechanicalVentilation.insulation_thermal_conductivity"/>
 		
 		<FormKit
 			id="surfaceReflectivity"
@@ -273,8 +213,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Select whether the surface is reflective"
 			name="surfaceReflectivity"
 			validation="required"
+			data-field="InfiltrationVentilation.MechanicalVentilation.reflective"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('ductwork')" secondary>Save progress</GovButton>

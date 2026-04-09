@@ -2,18 +2,21 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import ExternalWall from "./[wall].vue";
-import { MassDistributionClass } from "~/schema/api-schema.types";
+import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+vi.mock("uuid");
+
 describe("external wall", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const state: ExternalWallData = {
+		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
 		name: "External wall 1",
 		pitchOption: "90",
 		pitch: 90,
@@ -22,10 +25,10 @@ describe("external wall", () => {
 		height: 0.5,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		solarAbsorption: 0.1,
-		uValue: 1,
-		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		uValue: 0.5,
+		colour: "Intermediate",
+		arealHeatCapacity: "Very light",
+		massDistributionClass: "I",
 	};
 
 	afterEach(() => {
@@ -33,6 +36,8 @@ describe("external wall", () => {
 	});
 
 	test("data is saved to store state when form is valid", async () => {
+		vi.mocked(uuidv4).mockReturnValue(state.id as unknown as Buffer);
+
 		await renderSuspended(ExternalWall, {
 			route: {
 				params: { wall: "create" },
@@ -46,15 +51,15 @@ describe("external wall", () => {
 		await user.type(screen.getByTestId("height"), "0.5");
 		await user.type(screen.getByTestId("elevationalHeight"), "20");
 		await user.type(screen.getByTestId("surfaceArea"), "10");
-		await user.type(screen.getByTestId("solarAbsorption"), "0.1");
-		await user.type(screen.getByTestId("uValue"), "1");
-		await user.click(screen.getByTestId("kappaValue_50000"));
+		await user.type(screen.getByTestId("uValue"), "0.5");
+		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
+		await user.click(screen.getByTestId("colour_Intermediate"));
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data = [] } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall || {};
-		
+
 		expect(data[0]?.data).toEqual(state);
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/walls");
 	});
@@ -83,12 +88,12 @@ describe("external wall", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("0.5");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("20");
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("10");
-		expect((await screen.findByTestId<HTMLInputElement>("solarAbsorption")).value).toBe("0.1");
-		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
-		expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.5");
+		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId("colour_Intermediate")).hasAttribute("checked")).toBe(true);
 	});
-		
+
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(ExternalWall);
 
@@ -101,10 +106,10 @@ describe("external wall", () => {
 		expect((await screen.findByTestId("height_error"))).toBeDefined();
 		expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
-		expect((await screen.findByTestId("solarAbsorption_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
-		expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
+		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
+		expect((await screen.findByTestId("colour_error"))).toBeDefined();
 
 	});
 
@@ -118,13 +123,72 @@ describe("external wall", () => {
 
 	test("requires pitch when custom pitch option is selected", async () => {
 		await renderSuspended(ExternalWall);
-    
+
 		await user.click(screen.getByTestId("pitchOption_custom"));
 		await user.click(screen.getByTestId("saveAndComplete"));
-    
+
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
+
+	it.each(["0", "180"])("if an external wall is tagged to a front door and its pitch is updated to %s the door is updated to a regular door that is not complete", async (pitch) => {
+						
+		const externalWall: Partial<ExternalWallData> = {
+			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+			name: "External wall 1",
+			pitchOption: "custom",
+			pitch: 10,
+		};
+
+		const unglazedDoor: Partial<ExternalUnglazedDoorData> = {
+			name: "External unglazed door 1",
+			associatedItemId: externalWall.id,
+			isTheFrontDoor: true,
+		};
+
+		const glazedDoor: Partial<ExternalGlazedDoorData> = {
+			name: "External glazed door 1",
+			associatedItemId: externalWall.id,
+			isTheFrontDoor: true,
+		};
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall }],
+					},
+				},
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalUnglazedDoor: {
+						data: [{ data: unglazedDoor, complete: true }],
+					},
+					dwellingSpaceExternalGlazedDoor: {
+						data: [{ data: glazedDoor, complete: true }],
+					},
+				}, 
+			},
+		});
+			
+		await renderSuspended(ExternalWall, {
+			route: {
+				params: { wall: "0" },
+			},
+		});
+							
+		await user.click(screen.getByTestId("pitchOption_custom"));
+		await user.clear(screen.getByTestId("pitch"));
+		await user.type(screen.getByTestId("pitch"), pitch);
+		await user.tab();
+		const { dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
+
+		expect(dwellingSpaceExternalGlazedDoor.data[0]?.complete).toBeFalsy();
+		expect(dwellingSpaceExternalGlazedDoor.data[0]?.data.isTheFrontDoor).toBeUndefined();
+
+		expect(dwellingSpaceExternalUnglazedDoor.data[0]?.complete).toBeFalsy();
+		expect(dwellingSpaceExternalUnglazedDoor.data[0]?.data.isTheFrontDoor).toBeUndefined();
+	});
+	
 	test("updated form data is automatically saved to store", async () => {
 		store.$patch({
 			dwellingFabric: {
@@ -143,7 +207,7 @@ describe("external wall", () => {
 				params: { wall: "0" },
 			},
 		});
-	
+
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
 		await user.clear(screen.getByTestId("height"));
@@ -157,14 +221,14 @@ describe("external wall", () => {
 		expect(data[0]?.data.name).toBe("External wall 2");
 		expect(data[0]?.data.height).toBe(3);
 	});
-	
+
 	test("partial form data is saved automatically with default name to store", async () => {
 		await renderSuspended(ExternalWall, {
 			route: {
 				params: { wall: "create" },
 			},
 		});
-		
+
 		await user.type(screen.getByTestId("height"), "3");
 		await user.tab();
 

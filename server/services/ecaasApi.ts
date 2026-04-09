@@ -25,7 +25,7 @@ const ecaasApi = {
 
 	getInfo: async () => {
 		const { accessToken } = (await clientSession.get());
-		const uri = `${process.env.ECAAS_API_URL}${ApiPaths.ApiMetadata}`;
+		const uri = `${process.env.ECAAS_API_URL}${ApiPaths.FHSCompliance}`;
 		const response = await fetch(uri, {
 			headers: {
 				"Authorization": `Bearer ${accessToken}`,

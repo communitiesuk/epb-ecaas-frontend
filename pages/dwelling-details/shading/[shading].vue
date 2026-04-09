@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import type { ShadingObjectType } from "~/schema/api-schema.types";
-import { getUrl, type ShadingData } from "#imports";
+import type { SchemaShadingObjectType } from "~/schema/aliases";
+import { getUrl, type ShadingData, uniqueName } from "#imports";
+import { distanceShadingZod, heightShadingZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Distant shading";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const index = getStoreIndex(store.dwellingDetails.shading.data);
 const shadingData = useItemToEdit("shading", store.dwellingDetails.shading.data);
 const model = ref(shadingData?.data);
 
-const objectTypeOptions: Record<ShadingObjectType, Capitalize<ShadingObjectType>> = {
+const objectTypeOptions: Record<SchemaShadingObjectType, Capitalize<SchemaShadingObjectType>> = {
 	obstacle: "Obstacle",
 	overhang: "Overhang",
 };
@@ -17,7 +20,6 @@ const objectTypeOptions: Record<ShadingObjectType, Capitalize<ShadingObjectType>
 const saveForm = (fields: ShadingData) => {
 	store.$patch((state) => {
 		const { shading } = state.dwellingDetails;
-		const index = getStoreIndex(shading.data);
 
 		shading.data[index] = {
 			data: {
@@ -77,25 +79,31 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(store.dwellingDetails.shading.data, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="startAngle"
 			type="govInputWithSuffix"
 			label="Shading start angle"
-			help="This is the absolute start angle from compass north of the segment"
+			help="Taken from the centre point of the dwelling and measuring clockwise from due North, this is the angle where the obstacle begins"
 			name="startAngle"
 			validation="required | number | min:0 | max:360"
 			suffix-text="°"
+			data-field="ExternalConditions.shading_segments.*.start360"
 		/>
 		<FormKit
 			id="endAngle"
 			type="govInputWithSuffix"
 			label="Shading end angle"
-			help="This is the absolute end angle from compass north of the segment clockwise from the start angle. The end angle must be greater than the start angle."
+			help="Taken from the centre point of the dwelling and measuring clockwise from due North, this is the angle where the obstacle ends"
 			name="endAngle"
 			validation="required | number | min:0 | max:360"
 			suffix-text="°"
+			data-field="ExternalConditions.shading_segments.*.end360"
 		/>
 		<FormKit
 			id="objectType"
@@ -104,11 +112,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Select the type of object causing the shading"
 			name="objectType"
 			:options="objectTypeOptions"
-			validation="required">
+			validation="required"
+			data-field="ExternalConditions.shading_segments.*.shading.*.type">
 			<GovDetails summary-text="Help with this input">
 				<ul class="govuk-list govuk-list--bullet">
-					<li>An obstacle (for example, a tree or building) ends at a certain height above ground level.</li>
-					<li>An overhang (for example, a roof or balcony) starts at a certain height above ground level.</li>
+					<li>An obstacle (for example, a tree or building) ends at a certain height above ground level</li>
+					<li>An overhang (for example, a roof or balcony) starts at a certain height above ground level. These are rare as it indicates that light is blocked above a certain height but not below it. It will only occur if, for example, there is an overpass or bridge close to the dwelling which blocks a substantial section of the sky.</li>
 				</ul>
 				<img src="/img/overhang-and-obstacle.png" alt="Overhang and obstacle">
 			</GovDetails>
@@ -119,8 +128,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Height"
 			suffix-text="m"
 			name="height"
-			validation="required | number"
+			:validation="zodTypeAsFormKitValidation(heightShadingZod)"
 			help="Enter the height of the object causing the shading"
+			data-field="ExternalConditions.shading_segments.*.shading.*.height"
 		/>
 		<FormKit
 			id="distance"
@@ -128,10 +138,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Distance"
 			suffix-text="m"
 			name="distance"
-			validation="required | number"
+			:validation="zodTypeAsFormKitValidation(distanceShadingZod)"
 			help="Enter the distance from the dwelling to the shading object"
+			data-field="ExternalConditions.shading_segments.*.shading.*.distance"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('shading')" secondary>Save progress</GovButton>

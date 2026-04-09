@@ -1,10 +1,10 @@
 describe("syncCacheToLocalStorage", () => {
 	const mockResponse = { test: "value" };
-	interface cacheData {
+	interface CacheData {
 		[key: string]: string;
 	}
 
-	function mockFetchResponse(mockResponse: cacheData | undefined) {
+	function mockFetchResponse(mockResponse: CacheData | undefined) {
 		return (global.$fetch = vi.fn(() =>
 			Promise.resolve(mockResponse),
 		) as unknown as typeof global.$fetch);
@@ -33,7 +33,7 @@ describe("syncCacheToLocalStorage", () => {
 	it("should fetch data from cache if local storage has no ecaas data", async () => {
 		mockFetchResponse(mockResponse);
 		await syncCacheToLocalStorage();
-		expect($fetch).toHaveBeenCalledWith("/api/getState", { method: "GET" });
+		expect($fetch).toHaveBeenCalledWith("/api/session", { method: "GET" });
 	});
 
 	it("should update local storage with cached data if local storage has no ecaas data", async () => {

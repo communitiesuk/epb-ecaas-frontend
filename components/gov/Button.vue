@@ -5,6 +5,7 @@ defineProps<{
 	disabled?: boolean;
 	testId?: string;
 	click?: (event: Event) => void;
+	classes?: string;
 }>();
 </script>
 
@@ -13,7 +14,7 @@ defineProps<{
 		v-if="href && !click"
 		:href="href"
 		role="button"
-		:class="`govuk-button ${secondary ? 'govuk-button--secondary' : ''}`"
+		:class="`govuk-button ${secondary ? 'govuk-button--secondary' : ''} ${classes ? classes : ''}`"
 		:disabled="disabled || undefined"
 		:aria-disabled="disabled || undefined"
 		:data-testId="testId || undefined"
@@ -23,7 +24,7 @@ defineProps<{
 	</NuxtLink>
 	<button
 		v-else
-		:class="`govuk-button ${secondary ? 'govuk-button--secondary' : ''}`"
+		:class="`govuk-button ${secondary ? 'govuk-button--secondary' : ''} ${classes ? classes : ''}`"
 		:disabled="disabled || undefined"
 		:aria-disabled="disabled || undefined"
 		data-module="govuk-button"

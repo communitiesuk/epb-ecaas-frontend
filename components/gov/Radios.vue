@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import type { RadioOption } from "../form-kit/Radios.vue";
 
 interface RadiosProps {
@@ -14,7 +13,9 @@ interface RadiosProps {
 	ariaDescribedBy?: string;
 	handleInput: (e: Event) => void;
 	currentValue: string | undefined;
-	attrs: Record<string, unknown>
+	attrs: Record<string, unknown>;
+	classNames?: Record<string, string>;
+	disabled?: boolean;
 }
 
 const {
@@ -24,11 +25,12 @@ const {
 	help = undefined,
 	ariaDescribedBy = undefined,
 	attrs,
+	classNames = {},
 } = defineProps<RadiosProps>();
 
 const { mounted } = useMounted();
 
-const idWithKey = (key: string) => `${id}_${key.replaceAll(/ /g, "_")}`;
+const idWithKey = (key: string) => `${id}_${key.replace(/ /g, "_")}`;
 
 </script>
 
@@ -49,7 +51,7 @@ const idWithKey = (key: string) => `${id}_${key.replaceAll(/ /g, "_")}`;
 			<p v-if="invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 				<span class="govuk-visually-hidden">Error:</span> {{ showErrorMessage() }}
 			</p>
-			<div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
+			<div :class="`govuk-radios govuk-radios--small ${classNames?.radios || ``}`" :data-testid="`${id}`" data-module="govuk-radios">
 				<div v-for="key in options.keys()" :key="key" class="govuk-radios__item">
 					<input
 						:id="idWithKey(key)"
@@ -58,12 +60,17 @@ const idWithKey = (key: string) => `${id}_${key.replaceAll(/ /g, "_")}`;
 						:name="name"
 						:value="key"
 						:checked="mounted ? currentValue == key : false"
+						:disabled="(typeof options.get(key) === 'object' ? (options.get(key) as RadioOption).disabled : false) || disabled"
 						:data-testid="idWithKey(key)"
 						:aria-describedby="typeof options.get(key) === 'object' ? `${idWithKey(key)}_hint` : ''"
 						v-bind="attrs"
 						@change="handleInput"
 					>
-					<label class="govuk-label govuk-radios__label" :for="idWithKey(key)">
+					<label 
+						class="govuk-label govuk-radios__label" 
+						:for="idWithKey(key)"
+						:class="{ 'govuk-label--disabled': (options.get(key) as RadioOption).disabled }"
+					>
 						{{ typeof options.get(key) === 'object' ? (options.get(key) as RadioOption).label : options.get(key) }}
 					</label>
 					<div v-if="(typeof options.get(key) === 'object')" :id="`${idWithKey(key)}_hint`" class="govuk-hint govuk-radios__hint">

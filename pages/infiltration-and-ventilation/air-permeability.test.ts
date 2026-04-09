@@ -18,12 +18,12 @@ describe("Air permeability", () => {
 	});
 
 	const state: AirPermeabilityData = {
-		testPressure: 1,
+		testPressure: "Pulse test only",
 		airTightnessTestResult: 1,
 	};
 
 	const populateValidForm = async () => {
-		await user.type(screen.getByTestId("testPressure"), "1");
+		await user.click(screen.getByTestId("testPressure_Pulse_test_only"));
 		await user.type(screen.getByTestId("airTightnessTestResult"), "1");
 		await user.tab();
 	};
@@ -42,12 +42,12 @@ describe("Air permeability", () => {
 	test("partial form data is automatically saved to store", async () => {
 		await renderSuspended(AirPermeability);
 
-		await user.type(screen.getByTestId("testPressure"), "1");
+		await user.click(screen.getByTestId("testPressure_Pulse_test_only"));
 		await user.tab();
 
 		const { data, complete } = store.infiltrationAndVentilation.airPermeability;
 		
-		expect(data.testPressure).toBe(1);
+		expect(data.testPressure).toBe("Pulse test only");
 		expect(complete).toBe(false);
 	});
 
@@ -62,7 +62,7 @@ describe("Air permeability", () => {
 
 		await renderSuspended(AirPermeability);
 
-		expect((await screen.findByTestId<HTMLInputElement>("testPressure")).value).toBe("1");
+		expect((await screen.findByTestId("testPressure_Pulse_test_only")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("airTightnessTestResult")).value).toBe("1");
 	});
 		

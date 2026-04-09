@@ -1,20 +1,28 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl } from "#imports";
+import { v4 as uuidv4 } from "uuid";
+import { standardPitchOptions, getUrl, uniqueName } from "#imports";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { surfaceAreaOpaqueZod, widthOpaqueZod, heightOpaqueZod } from "~/stores/ecaasStore.schema";
 
 const title = "External wall";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data);
+const externalWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data;
+const wallData = useItemToEdit("wall", externalWallData);
+const wallId = wallData?.data.id ?? uuidv4();
+const index = getStoreIndex(externalWallData);
 const model: Ref<ExternalWallData | undefined> = ref(wallData?.data);
 
 const saveForm = (fields: ExternalWallData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceWalls } = state.dwellingFabric;
 		const index = getStoreIndex(dwellingSpaceWalls.dwellingSpaceExternalWall.data);
+		const currentId = wallData?.data.id;
 
 		dwellingSpaceWalls.dwellingSpaceExternalWall.data[index] = {
 			data: {
+				id: currentId || uuidv4(),
 				name: fields.name,
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
@@ -23,10 +31,10 @@ const saveForm = (fields: ExternalWallData) => {
 				length: fields.length,
 				elevationalHeight: fields.elevationalHeight,
 				surfaceArea: fields.surfaceArea,
-				solarAbsorption: fields.solarAbsorption,
 				uValue: fields.uValue,
-				kappaValue: fields.kappaValue,
+				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
+				colour: fields.colour,
 			},
 			complete: true,
 		};
@@ -42,11 +50,22 @@ autoSaveElementForm({
 	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall,
 	defaultName: "External wall",
 	onPatch: (state, newData, index) => {
-		const { pitchOption, pitch } = newData.data;
-		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
+		newData.data.id ??= wallId;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.complete = false;
 	},
+});
+
+watch(() => model.value?.pitch, (newPitch, initialPitch) => {
+	if (initialPitch === undefined) return; 
+
+	if ([0, 180].includes(newPitch!)) {
+		const { dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
+		const doors = [dwellingSpaceExternalGlazedDoor.data, dwellingSpaceExternalUnglazedDoor.data].flat();
+		
+		convertFrontDoorToRegularDoor(doors as EcaasForm<ExternalGlazedDoorData | ExternalUnglazedDoorData>[], externalWallData, index);
+		useBanner().value = { type: "update-front-door" };
+	}
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
@@ -65,20 +84,24 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		:actions="false"
 		:incomplete-message="false"
 		@submit="saveForm"
-		@submit-invalid="handleInvalidSubmit"
-	>
-		<GovErrorSummary :error-list="errorMessages" test-id="externalWallErrorSummary"/>
+		@submit-invalid="handleInvalidSubmit">
+		<GovErrorSummary :error-list="errorMessages" test-id="externalWallErrorSummary" />
 		<FormKit
 			id="name"
 			type="govInputText"
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(externalWallData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
+			data-field="Zone.BuildingElement.*.pitch"
 		/>
 		<FormKit
 			id="orientation"
@@ -86,14 +109,17 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="°"
 			label="Orientation"
 			name="orientation"
-			validation="required | number | min:0 | max:360">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			validation="required | number | min:0 | max:360"
+			data-field="Zone.BuildingElement.*.orientation">
+			<GovDetails summary-text="Help with this input">
 				<img src="/img/orientation-measurement.png" alt="Orientation measurement">
-				<p class="govuk-hint">To define an object's orientation, measure the angle of its outside face clockwise from true North, accurate to the nearest degree.</p>
-				<p class="govuk-hint">If a wall has multiple orientations (i.e a hexagonal wall) each different orientation needs to be modelled separately</p>
+				<p class="govuk-hint">To define an object's orientation, measure the angle of its outside face clockwise from
+					true North, accurate to the nearest degree.</p>
+				<p class="govuk-hint">If a wall has multiple orientations (i.e a hexagonal wall) each different orientation
+					needs to be modelled separately</p>
 			</GovDetails>
 		</FormKit>
-		
+
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"
@@ -101,11 +127,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Height"
 			help="Enter the height of the building element"
 			name="height"
-			validation="required | number | min:0.001 | max:50">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<p class="govuk-hint">Enter the height of the wall up to where the insulation stops.</p>
-				<p class="govuk-hint">If you have a non-rectangular wall (for example a gable end) and the insulation spans the entire wall then enter the height of the wall from the base to the very top.</p>
-				<p class="govuk-hint">If you have a non-rectangular wall (for example a gable end) and the insulation does not go all the way to the top, enter the maximum height of the part of the wall that has insulation.</p>
+			:validation="zodTypeAsFormKitValidation(heightOpaqueZod)"
+			data-field="Zone.BuildingElement.*.height">
+			<GovDetails summary-text="Help with this input">
+				<p class="govuk-hint">Enter the height of the wall forming the edge of the thermal envelope.</p>
+				<p class="govuk-hint">If the loft space is heated, the full height of the wall up to the ceiling of the roof room should be included.</p>
+				<p class="govuk-hint">If the loft space is unheated, the entire roof should be excluded, and the height of the external wall should be measured up to the flat ceiling of the storey below.</p>
 			</GovDetails>
 		</FormKit>
 		<FormKit
@@ -113,9 +140,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Length"
-			help="Enter the length of the building element"
+			help="Enter the internal length of the wall which forms the edge of the thermal envelope"
 			name="length"
-			validation="required | number | min:0.001 | max:50"
+			:validation="zodTypeAsFormKitValidation(widthOpaqueZod)"
+			data-field="Zone.BuildingElement.*.width"
 		/>
 		<FieldsElevationalHeight />
 		<FormKit
@@ -125,13 +153,21 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Net surface area"
 			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
 			name="surfaceArea"
-			validation="required | number | min:0.01 | max:10000"
+			:validation="zodTypeAsFormKitValidation(surfaceAreaOpaqueZod)"
+			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption"/>
-		<FieldsUValue id="uValue" name="uValue" />
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
-		<GovLLMWarning />
+		<FieldsUValue help="Enter the U-value of the full thickness of the construction build up" />
+		<FieldsColourOfExternalSurface />
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of the full thickness of the construction build up"
+		/>
+		<FieldsMassDistributionClass
+			id="massDistributionClass"
+			name="massDistributionClass"
+			help="This is the distribution of mass in the full thickness of the construction build up"
+		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingSpaceWalls')" secondary>Save progress</GovButton>

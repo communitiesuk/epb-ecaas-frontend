@@ -10,63 +10,75 @@ import FormKitInputFloat from "./components/form-kit/InputFloat.vue";
 import FormKitInputInt from "./components/form-kit/InputInt.vue";
 import FormKitInputWithSuffix from "./components/form-kit/InputWithSuffix.vue";
 import FormKitInputWithUnit from "./components/form-kit/InputWithUnit.vue";
-import FormKitCheckboxes from "./components/form-kit/Checkboxes.vue";
+import FormKitCheckboxes, { type CheckboxOption } from "./components/form-kit/Checkboxes.vue";
+import FormKitCheckboxesWithExclusive from "./components/form-kit/CheckboxesWithExclusive.vue";
 import FormKitInputText from "./components/form-kit/InputText.vue";
 import FormKitInputTextWithSuffix from "./components/form-kit/InputTextWithSuffix.vue";
-import { FormKitBoolean } from "#components";
+import { FormKitBoolean, FormKitPcdbProduct } from "#components";
 import type { LengthUnit } from "./utils/units/length";
 import type { VolumeUnit } from "./utils/units/volume";
 import type { FlowRateUnit } from "./utils/units/flowRate";
+import type { PowerUnit } from "./utils/units/power";
 
 // Enable TypeScript support for custom inputs
 declare module "@formkit/inputs" {
 	interface FormKitInputProps<Props extends FormKitInputs<Props>> {
-		"govRadios": {
-			type: "govRadios",
-			options: Record<string, string | RadioOption> | Map<string, string>,
-			valueType?: "string" | "number"
-		},
-		"govButton": {
-			type: "govButton"
-		},
-		"govDropdown": {
-			type: "govDropdown",
-			options: FormKitOptionsProp | FormKitOptionsProp[]
-		},
-		"govInputFloat": {
-			type: "GovInputFloat"
-		},
-		"govInputInt": {
-			type: "govInputInt"
-		},
-		"govInputWithSuffix": {
-			type: "govInputWithSuffix",
-			suffixText: string
-		},
-		"govInputWithUnit": {
-			type: "govInputWithUnit",
-			unit: LengthUnit | VolumeUnit | FlowRateUnit,
-		},
-		"govCheckboxes": {
-			type: "govCheckboxes",
-			options: FormKitOptionsProp,
-			help?: string
-		},
-		"govInputText": {
-			type: "govInputText"
-		}, 
-		"govInputTextWithSuffix": {
-			type: "govInputWithSuffix",
-			suffixText: string
-		},
-		"govStoredList": {
-			type: "govStoredList",
-			options: StoredListOption[]
-		},
-		"govBoolean": {
-			type: "govBoolean",
-			trueLabel?: string,
-			falseLabel?: string
+		govRadios: {
+			type: "govRadios";
+			options: Record<string, string | RadioOption> | Map<string, string>;
+			valueType?: "string" | "number";
+			classNames?: Record<string, string>;
+		};
+		govButton: {
+			type: "govButton";
+		};
+		govDropdown: {
+			type: "govDropdown";
+			options: FormKitOptionsProp | FormKitOptionsProp[];
+		};
+		govInputFloat: {
+			type: "GovInputFloat";
+		};
+		govInputInt: {
+			type: "govInputInt";
+		};
+		govInputWithSuffix: {
+			type: "govInputWithSuffix";
+			suffixText: string;
+		};
+		govInputWithUnit: {
+			type: "govInputWithUnit";
+			unit: LengthUnit | VolumeUnit | FlowRateUnit | PowerUnit;
+		};
+		govCheckboxes: {
+			type: "govCheckboxes";
+			options: Record<string, string | CheckboxOption> | Map<string, string>;
+			help?: string;
+		};
+		govCheckboxesWithExclusive: {
+			type: "govCheckboxesWithExclusive";
+			options: FormKitOptionsProp;
+			extraOption: FormKitOptionsProp;
+			help?: string;
+		};
+		govInputText: {
+			type: "govInputText";
+		};
+		govInputTextWithSuffix: {
+			type: "govInputWithSuffix";
+			suffixText: string;
+		};
+		govStoredList: {
+			type: "govStoredList";
+			options: StoredListOption[];
+		};
+		govBoolean: {
+			type: "govBoolean";
+			trueLabel?: string;
+			falseLabel?: string;
+		};
+		govPcdbProduct: {
+			type: "govPcdbProduct";
 		}
 	}
 }
@@ -107,6 +119,10 @@ export default defineFormKitConfig(() => {
 				type: "input",
 				component: FormKitCheckboxes,
 			},
+			govCheckboxesWithExclusive: {
+				type: "input",
+				component: FormKitCheckboxesWithExclusive,
+			},
 			govInputText: {
 				type: "input",
 				component: FormKitInputText,
@@ -122,6 +138,11 @@ export default defineFormKitConfig(() => {
 			govBoolean: {
 				type: "input",
 				component: FormKitBoolean,
+			},
+			govPcdbProduct: {
+				type: "input",
+				component: FormKitPcdbProduct,
+
 			},
 		},
 	};

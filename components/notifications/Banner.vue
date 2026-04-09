@@ -11,6 +11,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<NotificationsImportSuccessBanner v-if="banner === 'import-complete'" />
-	<NotificationsImportSuccessWithUpdateBanner v-else-if="banner === 'import-caused-update'" />
+	<NotificationsImportSuccessBanner v-if="banner?.type === 'import-complete'" />
+	<NotificationsImportSuccessWithUpdateBanner v-else-if="banner?.type === 'import-caused-update'" />
+	<NotificationsChangeOrientationSuccessBanner v-else-if="banner?.type === 'change-orientation-complete'" :difference="banner.difference" :orientation="banner.orientation"  />
 </template>

@@ -16,12 +16,11 @@ describe("vents", () => {
 	});
 	const vent1: VentData = {
 		name: "Vent 1",
-		typeOfVent: "trickle",
+		associatedItemId: "0b77e247-53c5-42b8-9dbd-83cbfc8c3f4f",
 		effectiveVentilationArea: 10,
 		openingRatio: 1,
 		midHeightOfZone: 1,
-		orientation: 0,
-		pitch: 0,
+		hasAssociatedItem: true,
 	};
 
 	const vent2: VentData = {
@@ -215,22 +214,18 @@ describe("vents", () => {
 
 			it("marks vents as complete when section is marked", async () => {
 				expect(store.infiltrationAndVentilation.vents.complete).toBe(true);
-
 			});
 
 			it("marks vents as not complete if an item is removed", async () => {
 				await user.click(screen.getByTestId("vents_remove_0"));
 
 				expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
-
 			});
 
 			it("marks vents as not complete if an item is duplicated", async () => {
-
 				await user.click(screen.getByTestId("vents_duplicate_0"));
 
 				expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
-
 			});
 
 			it("vent is not complete after user adds a new ventilation item", async () => {
@@ -254,9 +249,7 @@ describe("vents", () => {
 				await user.tab();
 
 				expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
-
 			});
 		});
 	});
-
 });

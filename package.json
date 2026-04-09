@@ -11,7 +11,7 @@
     "lint:fix": "eslint . --fix",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "schema-ts": "npx openapi-typescript https://docs.building-energy-calculator.communities.gov.uk/openapi.yaml -o schema/api-schema.types.ts --path-params-as-types --make-paths-enum --root-types --enum",
+    "schema-ts": "npx openapi-typescript https://docs.building-energy-calculator.communities.gov.uk/openapi.yaml -o schema/api-schema.types.ts --path-params-as-types --make-paths-enum --root-types --default-non-nullable=false",
     "test": "vitest --typecheck",
     "typecheck": "nuxt typecheck",
     "typedtest": "nuxt typecheck && vitest run",
@@ -19,6 +19,9 @@
     "ci-e2e-test": "npx playwright test"
   },
   "dependencies": {
+    "@aws-sdk/client-config-service": "^3.914.0",
+    "@aws-sdk/client-dynamodb": "^3.913.0",
+    "@aws-sdk/lib-dynamodb": "^3.913.0",
     "@formkit/nuxt": "^1.6.9",
     "@nuxtjs/robots": "^5.2.10",
     "@pinia/nuxt": "^0.11.1",
@@ -30,16 +33,18 @@
     "dayjs": "^1.11.13",
     "deepmerge": "^4.3.1",
     "dotenv": "^17.2.0",
+    "fuse.js": "^7.1.0",
     "nuxt": "^3.15.4",
     "nuxt-auth-utils": "^0.5.20",
     "nuxt-gtag": "^3.0.3",
     "nuxt-security": "^2.2.0",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.3.0",
+    "string.prototype.replaceall": "^1.0.11",
     "uuid": "^11.1.0",
     "vue": "^3.5.13",
     "vue-router": "latest",
-    "zod": "^4.0.0"
+    "zod": "^4.2.0"
   },
   "devDependencies": {
     "@formkit/inputs": "^1.6.9",
@@ -55,28 +60,29 @@
     "@types/govuk-frontend": "^5.9.0",
     "@types/node": "^24.0.14",
     "@vue/test-utils": "^2.4.6",
-    "ajv": "^8.17.1",
+    "ajv": "^8.18.0",
     "aws-cdk": "^2.1006.0",
-    "aws-cdk-lib": "^2.189.1",
+    "aws-cdk-lib": "^2.240.0",
+    "aws-sdk-client-mock": "^4.1.0",
+    "commander": "13.1.0",
     "constructs": "^10.4.2",
-    "esbuild": "^0.25.0",
-    "eslint": "^9.34.0",
-    "govuk-frontend": "^5.10.2",
-    "happy-dom": "^15.11.6",
+    "eslint": "^9.39.4",
+    "eslint-plugin-es-x": "^9.6.0",
+    "govuk-frontend": "^6.0.0",
+    "happy-dom": "^20.8.9",
     "object-path-immutable": "4.1.2",
-    "openapi-typescript": "^7.6.1",
+    "openapi-typescript": "^7.13.0",
     "sass": "^1.81.0",
     "ts-extras": "^0.14.0",
     "tsx": "^4.19.2",
-    "type-fest": "^4.41.0",
+    "type-fest": "^5.4.4",
     "typescript": "^5.9.0",
-    "vite-plugin-static-copy": "^2.3.2",
     "vitest": "^3.0.9",
     "vue-tsc": "^2.2.10",
     "yn": "^5.0.0"
   },
   "engines": {
-    "node": "^22.11.0"
+    "node": "^22.22.0"
   },
   "overrides": {
     "@vercel/nft": "^0.27.4"

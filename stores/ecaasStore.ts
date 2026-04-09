@@ -1,70 +1,46 @@
 import { defineStore } from "pinia";
-import type { EcaasForm, EcaasState, UsesPitchComponent } from "./ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 import type { GovTagProps } from "~/common.types";
-import { PageType  } from "~/data/pages/pages.types";
 import type { Page } from "~/data/pages/pages.types";
-import { CombustionApplianceType } from "~/schema/api-schema.types";
 import type { EmptyObject } from "type-fest";
 import pagesData from "~/data/pages/pages";
-
+import { objectFromEntries } from "ts-extras";
+type KeysToDeleteCascade = "associatedItemId" | "taggedItem" | "heatSource" | "dhwHeatSourceId" | "waterStorage" | "boosterHeatPumpId";
 export function getInitialState(): EcaasState {
 	const store: NulledForms<EcaasState> = {
 		dwellingDetails: {
 			generalSpecifications: { data: {} },
 			shading: { data: [] },
 			externalFactors: { data: {} },
+			appliances: { data: {} },
 		},
 		infiltrationAndVentilation: {
 			mechanicalVentilation: { data: [] },
 			ductwork: { data: [] },
 			vents: { data: [] },
-			combustionAppliances: {
-				[CombustionApplianceType.open_fireplace]: { data: [] },
-				[CombustionApplianceType.closed_with_fan]: { data: [] },
-				[CombustionApplianceType.open_gas_flue_balancer]: { data: [] },
-				[CombustionApplianceType.open_gas_kitchen_stove]: { data: [] },
-				[CombustionApplianceType.open_gas_fire]: { data: [] },
-				[CombustionApplianceType.closed_fire]: { data: [] },
-			},
 			naturalVentilation: { data: {} },
 			airPermeability: { data: {} },
 		},
 		domesticHotWater: {
-			waterHeating: {
-				hotWaterCylinder: { data: [] },
-				immersionHeater: { data: [] },
-				solarThermal: { data: [] },
-				pointOfUse: { data: [] },
-				heatPump: { data: [] },
-				combiBoiler: { data: [] },
-				heatBattery: { data: [] },
-				smartHotWaterTank: { data: [] },
-				heatInterfaceUnit: { data: [] },
-			},
-			hotWaterOutlets: {
-				mixedShower: { data: [] },
-				electricShower: { data: [] },
-				bath: { data: [] },
-				otherOutlets: { data: [] },
-			},
-			pipework: {
-				primaryPipework: { data: [] },
-				secondaryPipework: { data: [] },
-			},
-			wwhrs: { data: [] },
+			heatSources: { data: [] },
+			waterStorage: { data: [] },
+			hotWaterOutlets: { data: [] },
+			pipework: { data: [] },
 		},
 		dwellingFabric: {
 			dwellingSpaceFloors: {
 				dwellingSpaceGroundFloor: { data: [] },
 				dwellingSpaceInternalFloor: { data: [] },
 				dwellingSpaceExposedFloor: { data: [] },
+				dwellingSpaceFloorAboveUnheatedBasement: { data: [] },
+				dwellingSpaceFloorOfHeatedBasement: { data: [] },
 			},
 			dwellingSpaceWalls: {
 				dwellingSpaceExternalWall: { data: [] },
 				dwellingSpaceInternalWall: { data: [] },
 				dwellingSpaceWallToUnheatedSpace: { data: [] },
 				dwellingSpacePartyWall: { data: [] },
+				dwellingSpaceWallOfHeatedBasement: { data: [] },
 			},
 			dwellingSpaceCeilingsAndRoofs: {
 				dwellingSpaceCeilings: { data: [] },
@@ -79,36 +55,26 @@ export function getInitialState(): EcaasState {
 			dwellingSpaceThermalBridging: {
 				dwellingSpaceLinearThermalBridges: { data: [] },
 				dwellingSpacePointThermalBridges: { data: [] },
-			}, 
+			},
 			dwellingSpaceZoneParameters: { data: {} },
-			dwellingSpaceLighting: { data: {} },
+			dwellingSpaceLighting: { data: [] },
 		},
-		heatingSystems: {
-			heatGeneration: {
-				heatPump: { data: [] },
-				boiler: { data: [] },
-				heatBattery: { data: [] },
-				heatNetwork: { data: [] },
-				heatInterfaceUnit: { data: [] },
-			},
-			energySupply: { data: {} },
-			heatEmitting: {
-				wetDistribution: { data: [] },
-				instantElectricHeater: { data: [] },
-				electricStorageHeater: { data: [] },
-				warmAirHeatPump: { data: [] },
-			},
-		},
-		pvAndBatteries: {
-			pvSystems: { data: [] },
-			electricBattery: { data: [] },
+		spaceHeating: {
+			heatSource: { data: [] },
+			heatEmitters: { data: [] },
+			heatingControls: { data: [] },
 		},
 		cooling: {
 			airConditioning: { data: [] },
 		},
+		pvAndBatteries: {
+			pvArrays: { data: [] },
+			electricBattery: { data: [] },
+			diverters: { data: [] },
+		},
 	};
 	return store as EcaasState;
-}	
+}
 
 export const useEcaasStore = defineStore("ecaas", {
 	state: getInitialState,
@@ -119,24 +85,24 @@ export const useEcaasStore = defineStore("ecaas", {
 			);
 
 			return (page: Page): GovTagProps => {
-				const section = getSection(page.id, Object.fromEntries(stateEntries));
+				const section = getSection(page.id, objectFromEntries(stateEntries));
 
 				if (section) {
 					const entry = Object.entries(section).find((x) => x[0] === page.id)!;
-					
-					if(page.id === "ductwork"){
+
+					if (page.id === "ductwork") {
 						return getDuctworkStatus(entry[1]);
 					}
 
-					if (page.type === PageType.Task) {
+					if (page.type === "task") {
 						return getTaskStatus(entry[1]);
 					}
 
-					if (page.type === PageType.TaskGroup) {
+					if (page.type === "taskGroup") {
 						return getSectionStatus(entry[1]);
 					}
 
-					if (page.type === PageType.Section) {
+					if (page.type === "section") {
 						return getSectionStatus(entry[1]);
 					}
 				}
@@ -144,11 +110,47 @@ export const useEcaasStore = defineStore("ecaas", {
 				return formStatus.notStarted;
 			};
 		},
+
+		getTaggedItem() {
+			return <T extends Record<string, unknown>>(
+				sections: EcaasFormList<Partial<T>>[],
+				id: string | undefined,
+			): AssociatedItemValues | undefined => {
+				const topLevelTaggedItem = getTopLevelTaggedItem(sections, id);
+				if (topLevelTaggedItem) return topLevelTaggedItem;
+
+				const nestedTaggedItem = getNestedTaggedItem(sections, id);
+				if (nestedTaggedItem && "taggedItem" in nestedTaggedItem) {
+					return this.getTaggedItem(sections, nestedTaggedItem.taggedItem as string);
+				}
+			};
+		},
 	},
 	actions: {
-		async postEcaasState (){
+		removeTaggedAssociations() {
+			return (
+				sections: EcaasFormList<Record<string, unknown> | EcaasForm<{ name: string }>>[],
+				idToRemove: string | undefined,
+				keyToCheck: KeysToDeleteCascade = "associatedItemId",
+			) => {
+				for (const section of sections) {
+					for (const item of section.data) {
+						 
+						const idOfTaggedItem = (item.data as Record<string, unknown>)[keyToCheck];
+						if (idOfTaggedItem === idToRemove) {
+							this.$patch(() => {
+								(item.data as Record<string, unknown>)[keyToCheck] = undefined;
+								item.complete = false;
+								section.complete = false;
+							});
+						}
+					}
+				}
+			};
+		},
+		async postEcaasState() {
 			try {
-				await $fetch("/api/setState", {
+				await $fetch("/api/session", {
 					method: "POST",
 					body: this.$state,
 				});
@@ -178,8 +180,9 @@ export type NulledForms<T> = { [P in keyof T]: T[P] extends EcaasForm<infer U> ?
 
 /** Function to wrap a form that uses the Pitch component (which writes to pitch and pitchOption fields) and extract the pitch number value */
 export function extractPitch(form: UsesPitchComponent): number {
+
 	const { pitch, pitchOption } = form;
-	if (pitchOption === "custom") {
+	if (pitchOption === "custom" || pitch !== undefined) {
 		return pitch!;
 	}
 	return Number(pitchOption);
@@ -190,10 +193,10 @@ export function hasCompleteState(state: EcaasState): boolean {
 		(e) => e[0] in getInitialState(),
 	);
 	// go over section pages and check they are all complete
-	const sectionPages = pagesData.filter(page => page.type === PageType.Section);
+	const sectionPages = pagesData.filter(page => page.type === "section");
 
 	return sectionPages.every(page => {
-		const section = Object.fromEntries(stateEntries.filter(e => e[0] === page.id));
+		const section = objectFromEntries(stateEntries.filter(e => e[0] === page.id));
 		return getSectionStatus(section as Record<string, object>).text === "Complete";
 	});
 }

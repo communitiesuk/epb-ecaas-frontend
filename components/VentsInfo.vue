@@ -1,6 +1,6 @@
 <template>
 	<div class="vent-info">
-		<p class="govuk-hint">Add all non-mechanical vents that are in the dwelling, including window vents and air bricks. This does not account for ventilation from chimneys.</p>
+		<GovInset class="govuk-hint">Add all non-mechanical vents that are in the dwelling, including trickle vents, air bricks, and any other window or wet room vents</GovInset>
 	</div>
 </template>
 

@@ -1,9 +1,11 @@
 import { objectFromEntries } from "ts-extras";
-import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass, WwhrsType } from "../schema/api-schema.types";
-import type { DisplayProduct } from "~/pcdb/products";
+import type { StandardDisplayProduct, TechnologyGroup, TechnologyType } from "~/pcdb/pcdb.types";
+import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, SchemaConvectiveType, SchemaFuelType, SchemaLeaksTestPressure, SchemaRadiatorType, SchemaMechanicalVentilationInstallationLocation, SchemaMechanicalVentilationInstallationType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
+import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, ShowerProductType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
+import type { Split } from "type-fest";
 
 export const emptyValueRendering = "-";
 
@@ -13,8 +15,8 @@ export function show(value: string | number | undefined | null): string {
 }
 
 /** Renders a unit with correct visual suffix, falling back to "-" for undefined */
-export function dim(amount: UnitValue | number | undefined, unit?: UnitName): string {
-	if (amount as unknown === "") {
+export function dim(amount: UnitValue | number | undefined | null, unit?: UnitName): string {
+	if (amount as unknown === "" || amount == null) {
 		return emptyValueRendering;
 	}
 	if (typeof amount === "object") {
@@ -46,17 +48,17 @@ export function displayBoolean(value: boolean | undefined): BooleanDisplay | typ
 
 type BooleanDisplay = "Yes" | "No";
 
-export function displayMassDistributionClass(value: MassDistributionClass | undefined): MassDistributionClassDisplay | typeof emptyValueRendering {
+export function displayMassDistributionClass(value: ConciseMassDistributionClass | undefined): MassDistributionClassDisplay | typeof emptyValueRendering {
 	switch (value) {
-		case MassDistributionClass.I:
+		case "I":
 			return "Internal";
-		case MassDistributionClass.E:
+		case "E":
 			return "External";
-		case MassDistributionClass.IE:
+		case "IE":
 			return "Divided";
-		case MassDistributionClass.D:
+		case "D":
 			return "Equally";
-		case MassDistributionClass.M:
+		case "M":
 			return "Inside";
 		default:
 			return emptyValueRendering;
@@ -66,62 +68,14 @@ export function displayMassDistributionClass(value: MassDistributionClass | unde
 type MassDistributionClassDisplay = "Internal" | "External" | "Divided" | "Equally" | "Inside";
 
 export function sentenceCase(value: string): string {
-	const replaced = value.replaceAll(/_/g, " ").trim();
+	const replaced = value.replace(/_/g, " ").trim();
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1).toLowerCase();
 }
 
 export type FlueGasExhaustSituationDisplay = "Into separate duct" | "Into room" | "Into mechanical vent";
 
-export function displayFlueGasExhaustSituation(value: FlueGasExhaustSituation): FlueGasExhaustSituationDisplay {
-	switch (value) {
-		case FlueGasExhaustSituation.into_separate_duct:
-			return "Into separate duct";
-		case FlueGasExhaustSituation.into_room:
-			return "Into room";
-		case FlueGasExhaustSituation.into_mech_vent:
-			return "Into mechanical vent";
-		default:
-			value satisfies never;
-			throw new Error(`Missed a flue gas exhaust situation case: ${value}`);
-	}
-}
-
-export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hobs" | "Kettle" | "Microwave" | "Lighting" | "Other";
-
-export function displayApplianceKey(value: ApplianceKey): ApplianceKeyDisplay {
-	switch (value) {
-		case ApplianceKey.Fridge:
-			return "Fridge";
-		case ApplianceKey.Freezer:
-			return "Freezer";
-		case ApplianceKey.Fridge_Freezer:
-			return "Fridge freezer";
-		case ApplianceKey.Dishwasher:
-			return "Dishwasher";
-		case ApplianceKey.Oven:
-			return "Oven";
-		case ApplianceKey.Clothes_washing:
-			return "Washing machine";
-		case ApplianceKey.Clothes_drying:
-			return "Tumble dryer";
-		case ApplianceKey.Hobs:
-			return "Hobs";
-		case ApplianceKey.Kettle:
-			return "Kettle";
-		case ApplianceKey.Microwave:
-			return "Microwave";
-		case ApplianceKey.lighting:
-			return "Lighting";
-		case ApplianceKey.Otherdevices:
-			return "Other";
-		default:
-			value satisfies never;
-			throw new Error(`Missed a appliance key case: ${value}`);
-	}
-}
-
 export function displaySnakeToSentenceCase(value: string): string {
-	const replaced = value.replaceAll(/_/g, " ");
+	const replaced = value.replace(/_/g, " ");
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1).toLowerCase();
 }
 
@@ -133,54 +87,63 @@ export function displayCamelToSentenceCase(value: string): string {
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1);
 }
 
-export function displayWwhrsType(value: WwhrsType): WwhrsTypeDisplay {
+export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge-freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hob";
+
+export function displayApplianceKey(value: ApplianceKey): ApplianceKeyDisplay {
 	switch (value) {
-		case WwhrsType.WWHRS_InstantaneousSystemA:
-			return "A";
-		case WwhrsType.WWHRS_InstantaneousSystemB:
-			return "B";
-		case WwhrsType.WWHRS_InstantaneousSystemC:
-			return "C";
+		case "Fridge":
+			return "Fridge";
+		case "Freezer":
+			return "Freezer";
+		case "Fridge-Freezer":
+			return "Fridge-freezer";
+		case "Dishwasher":
+			return "Dishwasher";
+		case "Oven":
+			return "Oven";
+		case "Clothes_washing":
+			return "Washing machine";
+		case "Clothes_drying":
+			return "Tumble dryer";
+		case "Hobs":
+			return "Hob";
 		default:
 			value satisfies never;
-			throw new Error(`Missed a Wwhrs type case: ${value}`);
+			throw new Error(`Missed a appliance key case: ${value}`);
 	}
 }
+// NB. this list is written out to be available at runtime, and could drift from all upstream values over time
+export const applianceKeys: SchemaApplianceType[] = [
+	"Clothes_drying",
+	"Clothes_washing",
+	"Dishwasher",
+	"Freezer",
+	"Fridge",
+	"Fridge-Freezer",
+	"Hobs",
+	"Oven",
+];
 
-export type WwhrsTypeDisplay = "A" | "B" | "C";
-
-export function displayDeliveryEnergyUseKey(key: string | ApplianceKey): string | ApplianceKeyDisplay {
-	return (Object.values(ApplianceKey).includes(key as ApplianceKey)) ? displayApplianceKey(key as ApplianceKey) : key;
+function isApplianceKey(value: string): value is SchemaApplianceType {
+	return applianceKeys.includes(value as SchemaApplianceType);
 }
 
-export const arealHeatCapacityOptions = {
-	"50000": "Very light",
-	"75000": "Light",
-	"110000": "Medium",
-	"175000": "Heavy",
-	"250000": "Very heavy",
-};
+export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): string | ApplianceKeyDisplay {
+	return (isApplianceKey(key)) ? displayApplianceKey(key) : key;
+}
 
-export type ArealHeatCapacityValue = keyof typeof arealHeatCapacityOptions extends infer K
-	? K extends string
-		? K extends `${infer N extends number}` ? N : never
-		: never
-	: never;
-
-export function displayArealHeatCapacity(value: ArealHeatCapacityValue | undefined): string {
-	if (typeof value === "undefined") {
-		return emptyValueRendering;
-	}
-
-	return arealHeatCapacityOptions[value] ?? ("" + value);
+export function displayApplianceType(appliances: ApplianceKey[] | undefined) {
+	if (appliances === undefined) return emptyValueRendering;
+	return appliances.map(appliance => displayApplianceKey(appliance)).join(", ");
 }
 
 type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;
 
 export function adjacentSpaceTypeOptions<T extends string>(element: T): Record<AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>> {
-	return objectFromEntries(Object.values(AdjacentSpaceType).map(key => [
-		key,
-		displayAdjacentSpaceType(key, element)!,
+
+	return objectFromEntries(adjacentSpaceTypes.map(entry => [
+		entry,
+		displayAdjacentSpaceType(entry, element)!,
 	] as const satisfies [AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>]));
 }
 
@@ -196,7 +159,7 @@ export function displayHeaterPosition(position: ImmersionHeaterPosition | undefi
 	if (typeof position === "undefined") {
 		return emptyValueRendering;
 	}
-	return `${ displayCamelToSentenceCase(position) } (${ immersionHeaterPositionValues[position] })`;
+	return `${displayCamelToSentenceCase(position)} (${immersionHeaterPositionValues[position]})`;
 }
 
 export function displayReflectivity(reflective: boolean | undefined): string {
@@ -206,6 +169,81 @@ export function displayReflectivity(reflective: boolean | undefined): string {
 	return reflective ? "Reflective" : "Not reflective";
 }
 
+export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressureTest: SchemaLeaksTestPressure) {
+	switch (typeOfInfiltrationPressureTest) {
+		case "Standard":
+			return "Blower door (test pressure is 50Pa)";
+		case "Pulse test only":
+			return "Pulse test (test pressure is 4Pa)";
+		default:
+			return emptyValueRendering;
+	}
+}
+
+
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" | "LPG (Liquid petroleum gas) - bottled" | "LPG - 11F" | "Mains gas" | "Electricity";
+
+export const energySupplyOptions = {
+	"mains_gas": "Mains gas",
+	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
+	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
+	"LPG_condition_11F": "LPG - 11F",
+	"electricity": "Electricity",
+} as const satisfies Record<SchemaFuelType, FuelTypeDisplay>;
+
+export function displayFuelTypes(fuelTypes: SchemaFuelType[] | undefined) {
+	if (fuelTypes === undefined) return emptyValueRendering;
+	const result = fuelTypes.map(type => energySupplyOptions[type]).join(", ");
+
+	if (!result.includes("Electricity")) {
+		return result + ", Electricity";
+	}
+	return result;
+}
+
+export function displayFuelType(fuelType: SchemaFuelType): FuelTypeDisplay {
+	switch (fuelType) {
+		case "LPG_bulk":
+			return "LPG (Liquid petroleum gas) - bulk";
+		case "LPG_bottled":
+			return "LPG (Liquid petroleum gas) - bottled";
+		case "LPG_condition_11F":
+			return "LPG - 11F";
+		case "electricity":
+			return "Electricity";
+		case "mains_gas":
+			return "Mains gas";
+		default:
+			fuelType satisfies never;
+			throw new Error(`Missed a fuel type case: ${fuelType}`);
+	}
+}
+
+export const ecoDesignControllerOptions = {
+	1: "I: On/Off Room Thermostat",
+	2: "II: Weather Compensator (Modulating Heaters)",
+	3: "III: Weather Compensator (On/Off Heaters)",
+	4: "IV: TPI Room Thermostat (On/Off Heaters)",
+	5: "V: Modulating Room Thermostat",
+	6: "VI: Weather Compensator + Room Sensor (Modulating)",
+	7: "VII: Weather Compensator + Room Sensor (On/Off)",
+	8: "VIII: Multi-Sensor Room Control (Modulating)",
+};
+
+export type EcoDesignControllerValue = keyof typeof ecoDesignControllerOptions extends infer K
+	? K extends string
+		? K extends `${infer N extends number}` ? N : never
+		: never
+	: never;
+
+export function displayEcoDesignController(value: EcoDesignControllerValue | undefined): string {
+	if (typeof value === "undefined") {
+		return emptyValueRendering;
+	}
+
+	return ecoDesignControllerOptions[value] ?? ("" + value);
+}
+
 // better type/ function for displaying products once we're dealing with realistic products
 // export type ProductDisplayString = `${DisplayProduct['brandName']} - ${DisplayProduct['modelName']}`;
 
@@ -213,11 +251,254 @@ export function displayReflectivity(reflective: boolean | undefined): string {
 // 	return `${product.brandName} - ${product.modelName}`;
 // }
 
+
 // temporary ones just for test fake heat pumps
-export type ProductDisplayString = FirstWord<DisplayProduct["modelName"]>;
+export type ProductDisplayString = FirstWord<StandardDisplayProduct["modelName"]>;
 
 type FirstWord<S extends string> = S extends `${infer Word} ${string}` ? Word : S;
 
-export function displayProduct(product: DisplayProduct): ProductDisplayString {
+export function displayProduct(product: StandardDisplayProduct): ProductDisplayString {
 	return product.modelName.split(" ")[0]!;
 }
+
+
+export type ColourDisplay = "Light" | "Medium" | "Dark";
+
+export const colourOptionsMap = {
+	"Light": "Light",
+	"Intermediate": "Medium",
+	"Dark": "Dark",
+} as const satisfies Record<SchemaColour, ColourDisplay>;
+
+export function displayColour(colour: SchemaColour | undefined): ColourDisplay | typeof emptyValueRendering {
+	return colourOptionsMap[colour!] ?? emptyValueRendering;
+}
+
+export const heatPumpTypes = {
+	"airSource": "Air source",
+	"groundSource": "Ground source",
+	"waterSource": "Water source",
+	"booster": "Booster",
+	"hotWaterOnly": "Hot water only",
+	"exhaustAirMev": "Exhaust air MEV",
+	"exhaustAirMvhr": "Exhaust air MVHR",
+	"exhaustAirMixed": "Exhaust air Mixed",
+	"hybridHeatPump": "Hybrid heat pump",
+} as const satisfies Record<HeatPumpType, string>;
+
+export const boilerTypes = {
+	"combiBoiler": "Combi boiler",
+	"regularBoiler": "Regular boiler",
+} as const satisfies Record<TypeOfBoiler, BoilerTypeDisplay>;
+
+export const heatBatteryTypes = {
+	"heatBatteryPcm": "PCM",
+	"heatBatteryDryCore": "Dry core",
+} as const satisfies Record<TypeOfHeatBattery, HeatBatteryTypeDisplay>;
+
+export const heatNetworkTypes = {
+	"sleevedDistrictHeatNetwork": "Sleeved district heat network",
+	"unsleevedDistrictHeatNetwork": "Unsleeved district heat network",
+	"communalHeatNetwork": "Communal heat network",
+} as const satisfies Record<TypeOfHeatNetwork, HeatNetworkTypeDisplay>;
+
+export const heatSourceProductTypesDisplay = {
+	"airSource": pluralize("Air source heat pump"),
+	"groundSource": pluralize("Ground source heat pump"),
+	"waterSource": pluralize("Water source heat pump"),
+	"booster": pluralize("Booster heat pump"),
+	"hotWaterOnly": pluralize("Hot water only heat pump"),
+	"exhaustAirMev": pluralize("Exhaust air MEV heat pump"),
+	"exhaustAirMvhr": pluralize("Exhaust air MVHR heat pump"),
+	"exhaustAirMixed": pluralize("Exhaust air mixed heat pump"),
+	"hybridHeatPump": pluralize("Hybrid heat pump"),
+	"combiBoiler": pluralize("Combi boiler"),
+	"regularBoiler": pluralize("Regular boiler"),
+	"heatNetwork": pluralize("Heat network"),
+	"heatBatteryPcm": pluralize("PCM heat battery", "ies"),
+	"heatBatteryDryCore": pluralize("Dry core heat battery", "ies"),
+	"heatInterfaceUnit": pluralize("Heat interface unit"),
+	"heatPump": pluralize("Heat pump"),
+} as const satisfies Record<HeatSourceProductType | TechnologyGroup, (plural: boolean) => string>;
+
+export type BoilerTypeDisplay = "Combi boiler" | "Regular boiler";
+export type BoilerLocationDisplay = "Heated space" | "Unheated space";
+export type HeatNetworkTypeDisplay = "Sleeved district heat network" | "Unsleeved district heat network" | "Communal heat network";
+export type HeatBatteryTypeDisplay = "PCM" | "Dry core";
+export type LocationOfCollectorLoopPipingTypeDisplay = "Outside" | "Heated space" | "Unheated space";
+
+export type HeatSourceTypeDisplay = "Heat pump" | "Boiler" | "Heat network" | "Heat battery" | "Solar thermal system";
+
+export const heatSourceTypesWithDisplay = {
+	"boiler": "Boiler",
+	"heatPump": "Heat pump",
+	// "heatNetwork": "Heat network",
+	"heatBattery": "Heat battery",
+} as const satisfies Record<HeatSourceType, HeatSourceTypeDisplay>;
+
+export function displayHeatSourceType(type: HeatSourceType | undefined): HeatSourceTypeDisplay | typeof emptyValueRendering {
+	return heatSourceTypesWithDisplay[type!] ?? emptyValueRendering;
+}
+
+export type DHWHeatSourceTypeDisplay = HeatSourceTypeDisplay | "Immersion heater" | "Point of use";
+
+export const DHWHeatSourceTypesWithDisplay = {
+	...heatSourceTypesWithDisplay,
+	"immersionHeater": "Immersion heater",
+	"pointOfUse": "Point of use",
+	"solarThermalSystem": "Solar thermal system",
+} as const satisfies Record<DHWHeatSourceType, DHWHeatSourceTypeDisplay>;
+
+export function displayDHWHeatSourceType(type: DHWHeatSourceType | undefined): DHWHeatSourceTypeDisplay | typeof emptyValueRendering {
+	return DHWHeatSourceTypesWithDisplay[type!] ?? emptyValueRendering;
+}
+
+export type HeatEmitterDisplay = "Wet distribution system (Radiators, underfloor heating, etc.)" | "Warm air heater" | "Instant electric heater" | "Electric storage heater";
+
+export const heatEmitterTypes = {
+	"wetDistributionSystem": "Wet distribution system (Radiators, underfloor heating, etc.)",
+	"warmAirHeater": "Warm air heater",
+	"instantElectricHeater": "Instant electric heater",
+	"electricStorageHeater": "Electric storage heater",
+
+} as const satisfies Record<HeatEmitterType, HeatEmitterDisplay>;
+
+export function displayHeatEmitterType(type: HeatEmitterType | undefined): HeatEmitterDisplay | typeof emptyValueRendering {
+	if (!type) {
+		return emptyValueRendering;
+	}
+	return heatEmitterTypes[type];
+}
+
+export const mechanicalVentilationProductTypesDisplay = {
+	"mvhr": pluralize("MVHR"),
+	"centralisedContinuousMev": pluralize("Centralised continuous MEV"),
+	"decentralisedContinuousMev": pluralize("Decentralised continuous MEV"),
+} as const satisfies Record<MechanicalVentilationProductType, (plural: boolean) => string>;
+
+export type RadiatorDisplay = "Standard" | "Towel radiator";
+
+export const radiatorTypes = {
+	standard: "Standard",
+	towel: "Towel radiator",
+
+} as const satisfies Record<SchemaRadiatorType, RadiatorDisplay>;
+
+export function displayRadiatorType(type: SchemaRadiatorType | undefined): RadiatorDisplay | typeof emptyValueRendering {
+	if (!type) {
+		return emptyValueRendering;
+	}
+	return radiatorTypes[type];
+}
+
+export const waterStorageProductTypeDisplay = {
+	"smartHotWaterTank": pluralize("Smart hot water tank"),
+} as const satisfies Record<WaterStorageProductType, (plural: boolean) => string>;
+
+export const heatEmittingProductTypesDisplay = {
+	"fanCoil": pluralize("Fan coil"),
+	"radiator": pluralize("Radiator"),
+	"electricStorageHeater": pluralize("Electric storage heater"),
+	"instantElectricHeater": pluralize("Instant electric heater"),
+} as const satisfies Record<HeatEmittingProductType, (plural: boolean) => string>;
+
+export const waterStorageTypes = {
+	"hotWaterCylinder": "Hot water cylinder",
+	"smartHotWaterTank": "Smart hot water tank",
+} as const satisfies Record<WaterStorageType, string>;
+
+export type HotWaterOutletDisplay = "Mixer shower" | "Electric shower" | "Bath" | "Other (basin tap, kitchen sink, etc.)";
+
+export const hotWaterOutletTypes = {
+	"mixedShower": "Mixer shower",
+	"electricShower": "Electric shower",
+	"bath": "Bath",
+	"otherHotWaterOutlet": "Other (basin tap, kitchen sink, etc.)",
+} as const satisfies Record<HotWaterOutletType, HotWaterOutletDisplay>;
+
+export const showerProductTypesDisplay = {
+	"airPressureShower": pluralize("Shower"),
+	"wwhrs": pluralize("Waste water heat recovery system"),
+} as const satisfies Record<ShowerProductType, (plural: boolean) => string>;
+
+export function displayHotWaterOutletType(type: HotWaterOutletType | undefined): HotWaterOutletDisplay | typeof emptyValueRendering {
+	if (!type) {
+		return emptyValueRendering;
+	}
+	return hotWaterOutletTypes[type];
+}
+
+export const wwhrsTypes = {
+	"instantaneousSystemA": "WWHRS instantaneous system A",
+	"instantaneousSystemB": "WWHRS instantaneous system B",
+	"instantaneousSystemC": "WWHRS instantaneous system C",
+} as const satisfies Record<WwhrsType, string>;
+
+// we can get the display form by taking SchemaConvectiveType and
+// splitting off the first fragment before ", " or " ("
+type ConvectiveTypeDisplay = Split<Split<SchemaConvectiveType, " (">[0], ", ">[0];
+
+export const convectiveTypes = {
+	"Air heating (convectors, fan coils etc.)": "Air heating",
+	"Free heating surface (radiators, radiant panels etc.)": "Free heating surface",
+	"Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves": "Floor heating",
+	"Wall heating, radiant ceiling panels, accumulation stoves": "Wall heating",
+	"Ceiling heating, radiant ceiling electric heating": "Ceiling heating",
+} as const satisfies Record<SchemaConvectiveType, ConvectiveTypeDisplay>;
+
+export function displayConvectiveType(type: SchemaConvectiveType | undefined): ConvectiveTypeDisplay | typeof emptyValueRendering {
+	if (!type) {
+		return emptyValueRendering;
+	}
+	return convectiveTypes[type];
+}
+
+// we are using adjacent space types ("heated space"/ "unheated space") instead of location values ("internal"/ "external")
+export function displayBoilerLocation(locationType: SchemaBoilerLocationType | undefined): Capitalize<PascalToSentenceCase<AdjacentSpaceType>> | typeof emptyValueRendering {
+	if (!locationType) {
+		return emptyValueRendering;
+	}
+	switch (locationType) {
+		case "internal":
+			return "Heated space";
+		case "external":
+			return "Unheated space";
+		default:
+			locationType satisfies never;
+			throw new Error(`Unrecognised boiler location value '${locationType}' found.`);
+	}
+}
+
+export const installationTypeOptions: Record<SchemaMechanicalVentilationInstallationType, string> = {
+	in_ceiling: "In the ceiling",
+	in_duct: "In a duct",
+	through_wall: "Through a wall",
+};
+
+export const installationLocationOptions: Record<SchemaMechanicalVentilationInstallationLocation, string> = {
+	kitchen: "Kitchen",
+	other_wet_room: "Other wet room",
+};
+
+export const canExportToGridDisplay = {
+	yes: "Yes",
+	no_export: "No, generated energy can’t be exported to the grid",
+	no_generation: "No, no energy will be generated on site",
+} as const satisfies Record<GeneralDetailsData["canExportToGrid"], string>;
+
+export function displayCanExportToGrid(type: GeneralDetailsData["canExportToGrid"] | undefined): (typeof canExportToGridDisplay)[GeneralDetailsData["canExportToGrid"]] | typeof emptyValueRendering {
+	if (!type) {
+		return emptyValueRendering;
+	}
+	return canExportToGridDisplay[type];
+}
+
+export const displayTechnologyType = (technologyType: TechnologyType, plural: boolean) => {
+	const productType = Object.entries(productTypeMap).find(x => x[1] === technologyType)?.[0];
+	return heatSourceProductTypesDisplay[productType as HeatSourceProductType](plural);
+};
+
+export const coldWaterSourceOptions: Record<string, string> = {
+	headerTank: "Header tank",
+	mainsWater: "Mains water",
+} as const;

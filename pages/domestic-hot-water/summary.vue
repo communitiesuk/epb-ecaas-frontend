@@ -1,198 +1,501 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { getTabItems, getUrl  } from "#imports";
+import { getTabItems, getUrl } from "#imports";
+import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
+import { displayDHWHeatSourceType } from "~/utils/display";
+import type { PageId } from "~/data/pages/pages";
 
-const title = "Domestic hot water";
+const title = "Domestic hot water summary";
 const store = useEcaasStore();
 
-const { heatPump } = store.heatingSystems.heatGeneration;
-const heatGenerationData = [
-	heatPump.data,
-	// boiler.data,
-	// heatBattery.data,
-	// heatNetwork.data,
-	// heatInterfaceUnit.data
-].flat().filter(x => !!x.data).map(x => ({ id: x.data.id, name: x.data.name }));
+const domesticHotWaterUrl = getUrl("domesticHotWater");
 
-const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data;
+const heatSources = store.domesticHotWater.heatSources.data;
+const dhwHeatSourcesFromSpaceHeating = heatSources.filter(({ data: x }) => x.isExistingHeatSource === true);
+const boilers = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "boiler");
+const heatPumps = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "heatPump");
+// const heatNetworks = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "heatNetwork");
+const heatBatteries = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "heatBattery");
+const solarThermalSystem = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "solarThermalSystem");
+const immersionHeaters = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "immersionHeater");
+const pointOfUse = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "pointOfUse");
+
+type SummaryHeatSource = {
+	data: {
+		name: string,
+		heatSourceType: HeatSourceType,
+		isExistingHeatSource: boolean
+		coldWaterSource: "mainsWater" | "headerTank"
+	}
+};
+
+const boilerSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...boilers];
+const heatPumpSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...heatPumps];
+// const heatNetworkSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...heatNetworks];
+const heatBatterySummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...heatBatteries];
+const solarThermalSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...solarThermalSystem];
+
+
+function createItemFromExistingHeatSources(heatSource: EcaasForm<DomesticHotWaterHeatSourceData>) {
+
+	const item = store.spaceHeating.heatSource.data.find(x => x.data.id === heatSource.data.heatSourceId);
+	if (item) {
+		return {
+			data: {
+				name: item.data.name,
+				heatSourceType: item.data.typeOfHeatSource!,
+				isExistingHeatSource: true,
+				coldWaterSource: heatSource.data.coldWaterSource ?? undefined,
+				maxFlowTemp: heatSource.data.maxFlowTemp ?? undefined,
+			},
+		};
+	}
+}
+
+function addHeatSourceToCorrectSummaryList(heatSources: EcaasForm<DomesticHotWaterHeatSourceData>[]) {
+	for (const heatSource of heatSources) {
+		const item = createItemFromExistingHeatSources(heatSource);
+		
+		if (item) {
+
+			if (item.data.heatSourceType === "boiler") {
+				boilerSummaries.push(item);
+			}
+			if (item?.data.heatSourceType === "heatPump") {
+				heatPumpSummaries.push(item);
+			}	
+			// if (item?.data.heatSourceType === "heatNetwork") {
+			// 	heatNetworkSummaries.push(item);
+			// }	
+			if (item?.data.heatSourceType === "heatBattery") {
+				heatBatterySummaries.push(item);
+			}
+		}
+	}
+}
+
+addHeatSourceToCorrectSummaryList(dhwHeatSourcesFromSpaceHeating);
+
+export type SummaryWithLink = {
+	text: "Yes" | "No",
+	link: PageId,
+	linkText: string
+};
+
+const heatSourceListItemWithLink: SummaryWithLink = {
+	text: "Yes",
+	link: "spaceHeatingSummary",
+	linkText: "View details in space heating summary",
+};
+
+const emptyHeatSourcesSummary: SummarySection = {
+	id: "emptyHeatSourcesSummary",
+	label: "Heat sources",
+	data: [],
+	editUrl: domesticHotWaterUrl,
+};
+
+const boilerSummary: SummarySection = {
+	id: "boilerSummary",
+	label: "Boiler",
+	data:
+		boilerSummaries.map(({ data: heatSource }) => {
+			const summary = {
+				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				...(heatSource.isExistingHeatSource === true && {
+					"Used for space heating": heatSourceListItemWithLink,
+					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
+				}),
+				...(heatSource.isExistingHeatSource === false && {
+					"Used for space heating": "No",
+					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+					"Type of boiler": "typeOfBoiler" in heatSource && heatSource.typeOfBoiler ? displayCamelToSentenceCase(heatSource.typeOfBoiler) : emptyValueRendering,
+					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+					"Specified location": "specifiedLocation" in heatSource && heatSource.specifiedLocation ? displayBoilerLocation(heatSource.specifiedLocation) : emptyValueRendering,
+					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
+				}),
+			};
+			return summary;
+		}) || [],
+	editUrl: domesticHotWaterUrl,
+};
+
+const heatPumpSummary: SummarySection = {
+	id: "heatPumpSummary",
+	label: "Heat pump",
+	data:
+		heatPumpSummaries.map(({ data: heatSource }) => {
+			
+			const summary = {
+				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				...(heatSource.isExistingHeatSource === true && {
+					"Used for space heating": heatSourceListItemWithLink,
+					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
+				}),
+				...(heatSource.isExistingHeatSource === false && {
+					"Used for space heating": "No","Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+					"Type of heat pump": "typeOfHeatPump" in heatSource && heatSource.typeOfHeatPump ? displayCamelToSentenceCase(heatSource.typeOfHeatPump) : emptyValueRendering,
+					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
+				}),
+			};
+			return summary;
+		}) || [],
+	editUrl: domesticHotWaterUrl,
+};
+
+// const heatNetworkSummary: SummarySection = {
+// 	id: "heatNetworkSummary",
+// 	label: "Heat network",
+// 	data:
+// 		heatNetworkSummaries.map(({ data: heatSource }) => {
+// 			const { heatSources } = store.domesticHotWater;
+// 			let taggedBoosterHP;
+// 			if ("boosterHeatPumpId" in heatSource) {
+// 				taggedBoosterHP = store.getTaggedItem([heatSources], heatSource.boosterHeatPumpId);
+// 			}
+// 			const summary = {
+// 				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
+// 				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+// 				...(heatSource.isExistingHeatSource === true && {
+// 					"Used for space heating": heatSourceListItemWithLink,
+// 				}),
+// 				...(heatSource.isExistingHeatSource === false && {
+// 					"Used for space heating": "No",
+// 					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+// 					"Type of heat network": "typeOfHeatNetwork" in heatSource ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
+// 					"Is the heat network in the PCDB": "isHeatNetworkInPcdb" in heatSource ? displayBoolean(heatSource.isHeatNetworkInPcdb) : emptyValueRendering,
+// 					...("isHeatNetworkInPcdb" in heatSource && heatSource.isHeatNetworkInPcdb === true && {
+// 						"Heat network product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+// 						"Booster heat pump": taggedBoosterHP && "name" in taggedBoosterHP ? taggedBoosterHP.name : emptyValueRendering,
+// 						"Energy supply": "energySupply" in heatSource && heatSource.energySupply !== undefined ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+// 						"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+// 					}),
+// 					...("isHeatNetworkInPcdb" in heatSource && heatSource.isHeatNetworkInPcdb === false && {
+// 						"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply as SchemaFuelType] : emptyValueRendering,
+// 						"Emissions factor including out of scope emissions": "emissionsFactor" in heatSource ? heatSource.emissionsFactor : emptyValueRendering,
+// 						"Primary energy factor": "primaryEnergyFactor" in heatSource ? heatSource.primaryEnergyFactor : emptyValueRendering,
+// 						"Can energy from the heat network be exported": "canEnergyBeExported" in heatSource ? heatSource.canEnergyBeExported : emptyValueRendering,
+// 						"Does it have a booster heat pump?": "hasBoosterHeatPump" in heatSource ? displayBoolean(heatSource.hasBoosterHeatPump) : emptyValueRendering,
+// 						...(heatSource.hasBoosterHeatPump === true && {
+// 							"Booster heat pump": taggedBoosterHP && "name" in taggedBoosterHP ? taggedBoosterHP.name : emptyValueRendering,
+// 						}),
+// 					}),
+// 					...("isHeatNetworkInPcdb" in heatSource && heatSource.isHeatNetworkInPcdb !== undefined && {
+// 						"Will the heat network use heat interface units": "usesHeatInterfaceUnits" in heatSource ? displayBoolean(heatSource.usesHeatInterfaceUnits) : emptyValueRendering,
+// 					}),
+// 					...("usesHeatInterfaceUnits" in heatSource && heatSource.usesHeatInterfaceUnits === true && {
+// 						"Heat interface unit product reference": "heatInterfaceUnitProductReference" in heatSource ? heatSource.heatInterfaceUnitProductReference : emptyValueRendering,
+// 					}),
+// 				}),
+// 			};
+// 			return summary;
+// 		}) || [],
+// 	editUrl: domesticHotWaterUrl,
+// };
+
+const heatBatterySummary: SummarySection = {
+	id: "heatBatterySummary",
+	label: "Heat battery",
+	data:
+		heatBatterySummaries.map(({ data: heatSource }) => {
+			const summary = {
+				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				...(heatSource.isExistingHeatSource === true && {
+					"Used for space heating": heatSourceListItemWithLink,
+					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
+				}),
+				...(heatSource.isExistingHeatSource === false && {
+					"Used for space heating": "No",
+					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+					"Type of heat battery": "typeOfHeatBattery" in heatSource && heatSource.typeOfHeatBattery ? displayCamelToSentenceCase(heatSource.typeOfHeatBattery) : emptyValueRendering,
+					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
+					"Number of units": "numberOfUnits" in heatSource ? heatSource.numberOfUnits : emptyValueRendering,
+					"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+				}),
+			};
+			return summary;
+		}) || [],
+	editUrl: domesticHotWaterUrl,
+};
+
+const solarThermalSystemSummary: SummarySection = {
+	id: "solarThermalSystemSummary",
+	label: "Solar thermal system",
+	data:
+		solarThermalSummaries.map(({ data: heatSource }) => {
+
+			const summary = {
+				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				...(heatSource.isExistingHeatSource === true && {
+					"Used for space heating": heatSourceListItemWithLink,
+				}),
+				...(heatSource.isExistingHeatSource === false && {
+					"Used for space heating": "No",
+					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+					"Location of collector loop piping":
+					"locationOfCollectorLoopPiping" in heatSource
+						&& heatSource.locationOfCollectorLoopPiping ? displayCamelToSentenceCase(heatSource.locationOfCollectorLoopPiping)
+						: emptyValueRendering,
+
+					"Collector module area":
+					"collectorModuleArea" in heatSource ? heatSource.collectorModuleArea : emptyValueRendering,
+
+					"Number of collector modules":
+					"numberOfCollectorModules" in heatSource ? heatSource.numberOfCollectorModules : emptyValueRendering,
+
+					"Peak collector efficiency":
+					"peakCollectorEfficiency" in heatSource ? heatSource.peakCollectorEfficiency : emptyValueRendering,
+
+					"Incidence angle modifier":
+					"incidenceAngleModifier" in heatSource ? heatSource.incidenceAngleModifier : emptyValueRendering,
+
+					"First order heat loss coefficient":
+					"firstOrderHeatLossCoefficient" in heatSource ? heatSource.firstOrderHeatLossCoefficient : emptyValueRendering,
+
+					"Second order heat loss coefficient":
+					"secondOrderHeatLossCoefficient" in heatSource ? heatSource.secondOrderHeatLossCoefficient : emptyValueRendering,
+
+					"Heat loss coefficient of solar loop piping":
+					"heatLossCoefficientOfSolarLoopPipe" in heatSource
+						? heatSource.heatLossCoefficientOfSolarLoopPipe
+						: emptyValueRendering,
+
+					"Collector mass flow rate":
+					"collectorMassFlowRate" in heatSource ? heatSource.collectorMassFlowRate : emptyValueRendering,
+
+					"Power of collector pump":
+					"powerOfCollectorPump" in heatSource ? dim(heatSource.powerOfCollectorPump) : emptyValueRendering,
+
+					"Power of collector pump controller":
+					"powerOfCollectorPumpController" in heatSource
+						? dim(heatSource.powerOfCollectorPumpController)
+						: emptyValueRendering,
+
+					"Pitch":
+					"pitch" in heatSource ? dim(heatSource.pitch, "degrees") : emptyValueRendering,
+
+					"Orientation":
+					"orientation" in heatSource ? dim(heatSource.orientation, "degrees") : emptyValueRendering,
+				}),
+			};
+
+			return summary;
+		}) || [],
+	editUrl: domesticHotWaterUrl,
+};
+
+
+const immersionHeaterSummary: SummarySection = {
+	id: "immersionHeaterSummary",
+	label: "Immersion heater",
+	data:
+		immersionHeaters.map((x) => {
+			const heatSource = x.data as Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "immersionHeater" }>;
+
+			const summary = {
+				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+				"Power": "power" in heatSource && dim(heatSource.power, "kilowatt"),
+			};
+			return summary;
+		}) || [],
+	editUrl: domesticHotWaterUrl,
+};
+
+
+const pointOfUseSummary: SummarySection = {
+	id: "pointOfUseSummary",
+	label: "Point of use",
+	data:
+		pointOfUse.map((x) => {
+			const heatSource = x.data as Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "pointOfUse" }>;
+
+			const summary = {
+				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+				"Energy supply": "energySupply" in heatSource && heatSource.energySupply !== undefined ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
+				"Heater efficiency": "heaterEfficiency" in heatSource ? heatSource.heaterEfficiency : emptyValueRendering,
+
+			};
+			return summary;
+		}) || [],
+	editUrl: domesticHotWaterUrl,
+};
+
+
+
+function getNonEmptySections(summarySections: SummarySection[]) {
+	return summarySections.filter(x => Array.isArray(x.data) && x.data.length > 0);
+}
+
+
+
+const heatSourceSections: SummarySection[] = [
+	boilerSummary,
+	heatPumpSummary,
+	// heatNetworkSummary,
+	heatBatterySummary,
+	solarThermalSystemSummary,
+	immersionHeaterSummary,
+	pointOfUseSummary,
+];
+
+const waterStorage = store.domesticHotWater.waterStorage.data;
+const hotWaterCylinders = waterStorage.filter(x => x.data.typeOfWaterStorage === "hotWaterCylinder");
+
+const emptyWaterStorageSummary: SummarySection = {
+	id: "waterStorageSummary",
+	label: "Water storage",
+	data: [],
+	editUrl: getUrl("waterStorageCreate"),
+};
+
+function getHWHeatSourceName(hwHeatSourceId: string | undefined) {
+	if (!hwHeatSourceId) {
+		return emptyValueRendering;
+	}
+
+	const hwHeatSourceData = store.domesticHotWater.heatSources.data
+		.find(x => x.data.id === hwHeatSourceId)?.data;
+
+	if (!hwHeatSourceData) {
+		return "Invalid heat source";
+	}
+
+	if (hwHeatSourceData.isExistingHeatSource) {
+		return store.spaceHeating.heatSource.data
+			.find((x) => x.data.id === hwHeatSourceData.heatSourceId)?.data.name
+					?? "Invalid space heating heat source";
+	} else {
+		return hwHeatSourceData.name ?? "Invalid hot water heat source name";
+	}
+}
+	
 const hotWaterCylinderSummary: SummarySection = {
 	id: "hotWaterCylinder",
-	label: "Hot Water Cylinder",
-	data: hotWaterCylinderData.map(d => {
+	label: "Hot water cylinders",
+	data: hotWaterCylinders.map(({ data: hwCylData }) => {
 		return {
-			"Name": show(d.data.name),
-			"Heat source": show(heatGenerationData.find(x => x.id === d.data.heatSource)?.name),
-			"Storage cylinder volume": dim(d.data.storageCylinderVolume, "litres"),
-			"Daily energy loss": dim(d.data.dailyEnergyLoss, "kilowatt-hour"),
+			"Name": show(hwCylData.name),
+			"Storage cylinder volume": "storageCylinderVolume" in hwCylData ? dim(hwCylData.storageCylinderVolume, "litres") : emptyValueRendering,
+			"Daily energy loss": "dailyEnergyLoss" in hwCylData ? dim(hwCylData.dailyEnergyLoss, "kilowatt-hour") : emptyValueRendering,
+			"Heat source": show(getHWHeatSourceName(hwCylData.dhwHeatSourceId)),
+			"Area of heat exchanger installed": "areaOfHeatExchanger" in hwCylData ? dim(hwCylData.areaOfHeatExchanger, "metres square") : emptyValueRendering,
+			"Heater position in the cylinder": "heaterPosition" in hwCylData ? show(hwCylData.heaterPosition) : emptyValueRendering,
+			"Thermostat position in the cylinder": "thermostatPosition" in hwCylData ? show(hwCylData.thermostatPosition) : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("waterHeating"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
-const immersionHeaterData = store.domesticHotWater.waterHeating.immersionHeater.data;
-const immersionHeaterSummary: SummarySection = {
-	id: "immersionHeater",
-	label: "Immersion heater",
-	data: immersionHeaterData.map(d => {
+const smartHotWaterCylinders = waterStorage.filter(x => x.data.typeOfWaterStorage === "smartHotWaterTank");
+
+const smartHotWaterCylinderSummary: SummarySection = {
+	id: "smartHotWaterCylinder",
+	label: "Smart hot water cylinders",
+	data: smartHotWaterCylinders.map(({ data: smartHWCylData }) => {
+
 		return {
-			"Name": show(d.name),
-			"Rated power": dim(d.ratedPower, "kilowatt"),
-			"Heater position": displayHeaterPosition(d.heaterPosition),
-			"Thermostat position": displayHeaterPosition(d.thermostatPosition),
+			"Name": show(smartHWCylData.name),
+			"Product reference": "productReference" in smartHWCylData ? show(smartHWCylData.productReference) : emptyValueRendering,
+			"Heat source": show(getHWHeatSourceName(smartHWCylData.dhwHeatSourceId)),
+			"Heater position in the cylinder": "heaterPosition" in smartHWCylData ? show(smartHWCylData.heaterPosition) : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("waterHeating"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
-const solarThermalData = store.domesticHotWater.waterHeating.solarThermal.data;
-const solarThermalSummary: SummarySection = {
-	id: "solarThermal",
-	label: "Solar thermal",
-	data: solarThermalData.map(d => {
-		return {
-			"Name": show(d.name),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
-
-const pointOfUseData = store.domesticHotWater.waterHeating.pointOfUse.data;
-const pointOfUseSummary: SummarySection = {
-	id: "pointOfUse",
-	label: "Point of use",
-	data: pointOfUseData.map(d => {
-		return {
-			"Name": show(d.name),
-			"Setpoint temperature": dim(d.setpointTemperature, "celsius"),
-			"Heater efficiency": show(d.heaterEfficiency),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
-
-const heatPumpData = store.domesticHotWater.waterHeating.heatPump.data;
-const heatPumpSummary: SummarySection = {
-	id: "heatPump",
-	label: "Heat pump",
-	data: heatPumpData.map(d => {
-		return {
-			"Name": show(d.data.name),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
-
-const combiBoilerData = store.domesticHotWater.waterHeating.combiBoiler.data;
-const combiBoilerSummary: SummarySection = {
-	id: "combiBoiler",
-	label: "Combi boiler",
-	data: combiBoilerData.map(d => {
-		return {
-			"Name": show(d.name),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
-
-const heatBatteryData = store.domesticHotWater.waterHeating.heatBattery.data;
-const heatBatterySummary: SummarySection = {
-	id: "heatBattery",
-	label: "Heat battery",
-	data: heatBatteryData.map(d => {
-		return {
-			"Name": show(d.name),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
-
-const smartHotWaterTankData = store.domesticHotWater.waterHeating.smartHotWaterTank.data;
-const smartHotWaterTankSummary: SummarySection = {
-	id: "smartHotWaterTank",
-	label: "Smart hot water tank",
-	data: smartHotWaterTankData.map(d => {
-		return {
-			"Name": show(d.name),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
-
-const heatInterfaceUnitData = store.domesticHotWater.waterHeating.heatInterfaceUnit.data;
-const heatInterfaceUnitSummary: SummarySection = {
-	id: "heatInterfaceUnit",
-	label: "Heat interface unit",
-	data: heatInterfaceUnitData.map(d => {
-		return {
-			"Name": show(d.name),
-		};
-	}),
-	editUrl: getUrl("waterHeating"),
-};
-
-const waterHeatingSummarySections: SummarySection[] = [
+const waterStorageSummarySections: SummarySection[] = [
 	hotWaterCylinderSummary,
-	immersionHeaterSummary,
-	solarThermalSummary,
-	pointOfUseSummary,
-	heatPumpSummary,
-	combiBoilerSummary,
-	heatBatterySummary,
-	smartHotWaterTankSummary,
-	heatInterfaceUnitSummary,
-].filter(x => x.data.length);
+	smartHotWaterCylinderSummary,
+];
+const populatedHeatSourceSections = getNonEmptySections(heatSourceSections);
 
-const mixedShowerData = store.domesticHotWater.hotWaterOutlets.mixedShower.data;
+
+const hotWaterOutletsAll = store.domesticHotWater.hotWaterOutlets.data;
+
+const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerData>[];
+const mixedShowerModelNames = await useProductReferences(mixedShowerData, productData => productData.modelName);
+
 const mixedShowerSummary: SummarySection = {
 	id: "mixedShower",
-	label: "Mixer shower",
-	data: mixedShowerData.map(d => { 
+	label: "Mixer showers",
+	data: mixedShowerData.map(({ data }) => {
+		
+		const heatSourceName = getHWHeatSourceName("dhwHeatSourceId" in data ? data.dhwHeatSourceId : undefined);
+		const airPressureShowerProductReference = "airPressureShowerProductReference" in data ? data.airPressureShowerProductReference : undefined;
+		const wwhrsProductReference = "wwhrsProductReference" in data ? data.wwhrsProductReference : undefined;
+
 		return {
-			"Name": show(d.data.name),
-			"Flow rate": dim(d.data.flowRate, "litres per hour"),
+			"Name": show(data.name),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in data && data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Hot water source": heatSourceName ? heatSourceName : emptyValueRendering,
+			"Is this an air pressure shower?": "isAirPressureShower" in data ? displayBoolean(data.isAirPressureShower) : emptyValueRendering,
+			...("isAirPressureShower" in data && data.isAirPressureShower ? {
+				"Air pressure shower product reference": show(airPressureShowerProductReference),
+				"Air pressure shower product": airPressureShowerProductReference ? show(mixedShowerModelNames[data.airPressureShowerProductReference]) : emptyValueRendering,
+			} : {
+				"Flow rate": "flowRate" in data ? dim(data.flowRate, "litres per second") : emptyValueRendering,
+			}),
+			"WWHRS installed": "wwhrs" in data ? displayBoolean(data.wwhrs) : emptyValueRendering,
+			...("wwhrs" in data && data.wwhrs ? {
+				"WWHRS type": "wwhrsType" in data && data.wwhrsType ? displayCamelToSentenceCase(String(data.wwhrsType)) : emptyValueRendering,
+				"WWHRS product reference": wwhrsProductReference,
+				"WWHRS product": wwhrsProductReference ? show(mixedShowerModelNames[wwhrsProductReference]) : emptyValueRendering,
+			} : {}),
 		};
 	}),
-	editUrl: getUrl("hotWaterOutlets"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
-const electricShowerData = store.domesticHotWater.hotWaterOutlets.electricShower.data;
+const electricShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "electricShower") as EcaasForm<ElectricShowerData>[];
 const electricShowerSummary: SummarySection = {
 	id: "electricShower",
-	label: "Electric shower",
-	data: electricShowerData.map(d => {   
+	label: "Electric showers",
+	data: electricShowerData.map(({ data }) => {
 		return {
-			"Name": show(d.data.name),
-			"Rated power": dim(d.data.ratedPower, "kilowatt"),
+			"Name": show(data.name),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in data && data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Rated power": "ratedPower" in data ? dim(data.ratedPower, "kilowatt") : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("hotWaterOutlets"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
-const bathData = store.domesticHotWater.hotWaterOutlets.bath.data;
+const bathData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "bath") as EcaasForm<BathData>[];
 const bathSummary: SummarySection = {
 	id: "bath",
-	label: "Bath",
+	label: "Baths",
 	data: bathData.map(d => {
 		return {
 			"Name": show(d.data.name),
-			"Size": dim(d.data.size, "litres"),
-			"Flow rate": dim(d.data.flowRate, "litres per minute"),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Size": "size" in d.data ? dim(d.data.size, "litres") : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("hotWaterOutlets"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
-const otherOutletsData = store.domesticHotWater.hotWaterOutlets.otherOutlets.data;
+const otherOutletsData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "otherHotWaterOutlet") as EcaasForm<OtherHotWaterOutletData>[];
 const otherOutletsSummary: SummarySection = {
 	id: "otherOutlets",
 	label: "Other",
 	data: otherOutletsData.map(d => {
 		return {
 			"Name": show(d.data.name),
-			"Flow rate": dim(d.data.flowRate, "litres per minute"),
+			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per second") : emptyValueRendering,
 		};
 	}),
-	editUrl: getUrl("hotWaterOutlets"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
 const hotWaterOutletsSummarySections: SummarySection[] = [
@@ -202,46 +505,42 @@ const hotWaterOutletsSummarySections: SummarySection[] = [
 	otherOutletsSummary,
 ];
 
-const primaryPipeworkData = store.domesticHotWater.pipework.primaryPipework.data;
-const primaryPipeworkSummary: SummarySection = {
-	id: "primaryPipework",
-	label: "Primary pipework",
-	data: primaryPipeworkData.map(d => {
+const emptyHotWaterOutletsSummary: SummarySection = {
+	id: "emptyHotWaterOutletsSummary",
+	label: "Hot water outlets",
+	data: [],
+	editUrl: getUrl("hotWaterOutletsCreate"),
+};
+
+const populatedHotWaterOutletsSections = getNonEmptySections(hotWaterOutletsSummarySections);
+
+
+
+const pipeworkData = store.domesticHotWater.pipework.data;
+const pipeworkSummary: SummarySection = {
+	id: "pipework",
+	label: "Pipework",
+	data: pipeworkData.map(d => {
 		return {
 			"Name": show(d.data.name),
+			"Location": displayCamelToSentenceCase(show(d.data.location)),
+			"Pipe contents": displayCamelToSentenceCase(show(d.data.pipeContents)),
 			"Internal diameter": dim(d.data.internalDiameter, "millimetres"),
 			"External diameter": dim(d.data.externalDiameter, "millimetres"),
 			"Length": dim(d.data.length, "metres"),
 			"Insulation thickness": dim(d.data.insulationThickness, "millimetres"),
 			"Thermal conductivity": dim(d.data.thermalConductivity, "watts per metre kelvin") ,
 			"Surface reflectivity": displayReflectivity(d.data.surfaceReflectivity),
-			"Pipe contents": displayCamelToSentenceCase(show(d.data.pipeContents)),
-			"Hot water cylinder": show(hotWaterCylinderData.find(x => x && x.data.id === d.data.hotWaterCylinder)?.data.name),
-			"Location": displayCamelToSentenceCase(show(d.data.location)),
 		};
 	}) || [],
-	editUrl: getUrl("pipework"),
-};
-
-const secondaryPipeworkData = store.domesticHotWater.pipework.secondaryPipework.data;
-const secondaryPipeworkSummary: SummarySection = {
-	id: "secondaryPipework",
-	label: "Secondary pipework",
-	data: secondaryPipeworkData.map(d => {
-		return {
-			"Name": show(d.data.name),
-			"Internal diameter": dim(d.data.internalDiameter, "millimetres"),
-			"Length": dim(d.data.length, "metres"),
-			"Location": displayCamelToSentenceCase(show(d.data.location)),
-		};
-	}) || [],
-	editUrl: getUrl("pipework"),
+	editUrl: getUrl("domesticHotWater"),
 };
 
 const pipeworkSummarySections: SummarySection[] = [
-	primaryPipeworkSummary,
-	secondaryPipeworkSummary,
+	pipeworkSummary,
 ];
+
+const populatedWaterStorageSections = getNonEmptySections(waterStorageSummarySections);
 
 </script>
 
@@ -250,73 +549,64 @@ const pipeworkSummarySections: SummarySection[] = [
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<h2 class="govuk-heading-m">Water heating</h2>
-	<GovTabs v-slot="tabProps" :items="getTabItems(waterHeatingSummarySections)">
-		<TabPanel id="waterHeating" :selected="!tabProps.currentItem">
-			<h2 class="govuk-heading-m">No water heating added</h2>
-			<NuxtLink class="govuk-link" :to="getUrl('waterHeating')">
-				Add water heating
-			</NuxtLink>
-		</TabPanel>
-		<SummaryTab :summary="hotWaterCylinderSummary" :selected="tabProps.currentItem?.id === 'hotWaterCylinder'" />
-		<SummaryTab :summary="immersionHeaterSummary" :selected="tabProps.currentItem?.id === 'immersionHeater'" />
-		<SummaryTab :summary="solarThermalSummary" :selected="tabProps.currentItem?.id === 'solarThermal'" />
-		<SummaryTab :summary="pointOfUseSummary" :selected="tabProps.currentItem?.id === 'pointOfUse'" />
-		<SummaryTab :summary="heatPumpSummary" :selected="tabProps.currentItem?.id === 'heatPump'" />
-		<SummaryTab :summary="combiBoilerSummary" :selected="tabProps.currentItem?.id === 'combiBoiler'" />
-		<SummaryTab :summary="heatBatterySummary" :selected="tabProps.currentItem?.id === 'heatBattery'" />
-		<SummaryTab :summary="smartHotWaterTankSummary" :selected="tabProps.currentItem?.id === 'smartHotWaterTank'" />
-		<SummaryTab :summary="heatInterfaceUnitSummary" :selected="tabProps.currentItem?.id === 'heatInterfaceUnit'" />
+	<GovTabs v-slot="tabProps" :items="populatedHeatSourceSections.length === 0 ? [emptyHeatSourcesSummary] : getTabItems(populatedHeatSourceSections)">
+		<template v-if="populatedHeatSourceSections.length === 0">
+			<SummaryTab :summary="emptyHeatSourcesSummary" :selected="tabProps.currentTab === 0">
+				<template #empty>
+					<h2 class="govuk-heading-m">No heat sources added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('heatSourcesCreate')">
+						Add heat source
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
+		<template v-for="section, i of populatedHeatSourceSections" :key="i">
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i"/>
+		</template>
 	</GovTabs>
-	<h2 class="govuk-heading-m">Hot water outlets</h2>
-	<GovTabs v-slot="tabProps" :items="getTabItems(hotWaterOutletsSummarySections)">
-		<SummaryTab :summary="mixedShowerSummary" :selected="tabProps.currentTab === 0">
-			<template #empty>
-				<h2 class="govuk-heading-m">No mixer shower added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('mixedShowerCreate')">
-					Add mixer shower
-				</NuxtLink>
-			</template>
-		</SummaryTab>
-		<SummaryTab :summary="electricShowerSummary" :selected="tabProps.currentTab === 1">
-			<template #empty>
-				<h2 class="govuk-heading-m">No electric shower added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('electricShowerCreate')">
-					Add electric shower
-				</NuxtLink>
-			</template>
-		</SummaryTab>
-		<SummaryTab :summary="bathSummary" :selected="tabProps.currentTab === 2">
-			<template #empty>
-				<h2 class="govuk-heading-m">No bath added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('bathCreate')">
-					Add bath
-				</NuxtLink>
-			</template>
-		</SummaryTab>
-		<SummaryTab :summary="otherOutletsSummary" :selected="tabProps.currentTab === 3">
-			<template #empty>
-				<h2 class="govuk-heading-m">No outlet added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('otherOutletsCreate')">
-					Add outlet
-				</NuxtLink>
-			</template>
-		</SummaryTab>
+	<GovTabs v-slot="tabProps" :items="populatedWaterStorageSections.length === 0 ? [emptyWaterStorageSummary] : getTabItems(populatedWaterStorageSections)">
+		<template v-if="populatedWaterStorageSections.length === 0">
+			<SummaryTab :summary="emptyWaterStorageSummary" :selected="tabProps.currentTab === 0">
+				<template #empty>
+					<h2 class="govuk-heading-m">No water storage added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('waterStorage')">
+						Add water storage
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
+		<template v-for="section, i of populatedWaterStorageSections" :key="i">
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i"/>
+		</template>
 	</GovTabs>
-	<h2 class="govuk-heading-m">Pipework</h2>
+
+	<GovTabs v-slot="tabProps" :items="populatedHotWaterOutletsSections.length === 0 ? [emptyHotWaterOutletsSummary] : getTabItems(populatedHotWaterOutletsSections)">
+		<template v-if="populatedHotWaterOutletsSections.length === 0">
+			<SummaryTab :summary="emptyHotWaterOutletsSummary" :selected="tabProps.currentTab === 0">
+				<template #empty>
+					<h2 class="govuk-heading-m">No hot water outlets added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsCreate')">
+						Add hot water outlet
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
+		<template v-for="section, i of populatedHotWaterOutletsSections" :key="i">
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i">
+				<template #empty>
+					<h2 class="govuk-heading-m">No {{ section.label.toLowerCase() }} added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('hotWaterOutletsCreate')">
+						Add {{ section.label.toLowerCase() }}
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
+	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems(pipeworkSummarySections)">
-		<SummaryTab :summary="primaryPipeworkSummary" :selected="tabProps.currentTab === 0" :edit-url="getUrl('pipework')!">
+		<SummaryTab :summary="pipeworkSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No pipework added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('primaryPipeworkCreate')">
-					Add pipework
-				</NuxtLink>
-			</template>
-		</SummaryTab>
-		<SummaryTab :summary="secondaryPipeworkSummary" :selected="tabProps.currentTab === 1" :edit-url="getUrl('pipework')!">
-			<template #empty>
-				<h2 class="govuk-heading-m">No pipework added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('secondaryPipeworkCreate')">
+				<NuxtLink class="govuk-link" :to="getUrl('pipeworkCreate')">
 					Add pipework
 				</NuxtLink>
 			</template>

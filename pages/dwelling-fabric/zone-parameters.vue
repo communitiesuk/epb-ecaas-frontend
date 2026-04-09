@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { dwellingPartAreaZod, zoneVolumeZod, dwellingGroundFloorAreaZod } from "~/stores/ecaasStore.schema";
 
 const { autoSaveForm } = useForm();
 const store = useEcaasStore();
@@ -18,8 +20,8 @@ const model = ref({
 // };
 
 // const spaceHeatingSystemOptions = [
-// 	store.heatingSystems.heatEmitting.wetDistribution.data.map(x => [x.name, x.name] as [string, string]),
-// 	store.heatingSystems.heatEmitting.instantElectricHeater.data.map(x => [x.name, x.name] as [string, string]),
+// 	store.spaceHeating.heatEmitting.wetDistribution.data.map(x => [x.name, x.name] as [string, string]),
+// 	store.spaceHeating.heatEmitting.instantElectricHeater.data.map(x => [x.name, x.name] as [string, string]),
 // ].flat();
 
 const saveForm = (fields: typeof model.value) => {
@@ -27,12 +29,10 @@ const saveForm = (fields: typeof model.value) => {
 		dwellingFabric: {
 			dwellingSpaceZoneParameters: {
 				data: {
-					area: fields.area,
+					livingZoneArea: fields.livingZoneArea,
+					restOfDwellingArea: fields.restOfDwellingArea,
+					groundFloorArea: fields.groundFloorArea,
 					volume: fields.volume,
-					spaceHeatingSystemForThisZone: fields.spaceHeatingSystemForThisZone,
-					// heatingControlType: fields.heatingControlType,
-					// spaceCoolingSystemForThisZone: fields.spaceCoolingSystemForThisZone,
-					// spaceHeatControlSystemForThisZone: fields.spaceHeatControlSystemForThisZone,
 				},
 				complete: true,
 			},
@@ -66,20 +66,35 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			test-id="zoneParametersErrorSummary"
 		/>
 		<h1 class="govuk-heading-l">Zone parameters</h1>
-		<p class="govuk-hint">For this release the information required about zones has been simplified. Please be aware that input relating to zones may change in future releases as the calculation model is refined.</p>
-		<!--		<p class="govuk-body">-->
-		<!--			<a href="/guidance/zone-parameters" target="_blank" class="govuk-link">-->
-		<!--				Zone parameters guidance (opens in another window)-->
-		<!--			</a>-->
-		<!--		</p>-->
 		<FormKit
-			id="area"
+			id="livingZoneArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
-			label="Area"
-			name="area"
-			help="Enter the total area of the floors in the dwelling"
-			validation="required"
+			label="Floor area of the living zone"
+			help="The living zone includes all rooms in the thermal envelope apart from bedrooms and any wet or utility rooms"
+			name="livingZoneArea"
+			:validation="zodTypeAsFormKitValidation(dwellingPartAreaZod)"
+			data-field="Zone.livingzone_area"
+		/>
+		<FormKit
+			id="restOfDwellingArea"
+			type="govInputWithSuffix"
+			suffix-text="m²"
+			label="Floor area of the rest of dwelling"
+			help="This is the total conditioned floor area minus the area of the living zone"
+			name="restOfDwellingArea"
+			:validation="zodTypeAsFormKitValidation(dwellingPartAreaZod)"
+			data-field="Zone.restofdwelling_area"
+		/>
+		<FormKit
+			id="groundFloorArea"
+			type="govInputWithSuffix"
+			suffix-text="m²"
+			label="Footprint area"
+			help="Enter the total footprint of the dwelling"
+			name="groundFloorArea"
+			:validation="zodTypeAsFormKitValidation(dwellingGroundFloorAreaZod)"
+			data-field="Zone.groundfloor_area"
 		/>
 		<FormKit
 			id="volume"
@@ -87,59 +102,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m³"
 			label="Volume"
 			name="volume"
-			help="Enter the volume of the whole dwelling"
-			validation="required"
+			help="Enter the volume of the whole thermal envelope of the dwelling, including internal walls and floors. It should be measured up to the loft insulation."
+			:validation="zodTypeAsFormKitValidation(zoneVolumeZod)"
 			data-field="Zone.volume"
 		/>
-		<!-- <FormKit
-			id="heatingControlType"
-			type="govRadios"
-			:options="heatingControlTypeOptions"
-			label="Heating control type"
-			name="heatingControlType"
-			validation="required"
-			help="Determines whether living-room and rest-of-dwelling have differing set-points/heating schedules"
-		/> -->
-
-		<!--		<FormKit-->
-		<!--			id="spaceHeatingSystemForThisZone"-->
-		<!--			type="govRadios"-->
-		<!--			label=" Heat emitting system for this zone"-->
-		<!--			name="spaceHeatingSystemForThisZone"-->
-		<!--			help="Select a heat emitting system that has already been added to the calculation. You can only add one heat emitting system for each zone."-->
-		<!--			:options="new Map(spaceHeatingSystemOptions)"-->
-		<!--			:link="getUrl('heatingSystems')"-->
-		<!--			validation="required">-->
-		<!--			<div v-if="!spaceHeatingSystemOptions.length">-->
-		<!--				<p class="govuk-error-message">No heat emitting systems added.</p>-->
-		<!--			</div>-->
-		<!--		</FormKit>-->
-
-		<!--		<p class="govuk-!-margin-bottom-5">-->
-		<!--			<NuxtLink :to="getUrl('heatEmitting')" class="govuk-link gov-radios-add-link">-->
-		<!--				{{spaceHeatingSystemOptions.length ? "Edit heat emitting systems" : "Add heat emitting system"}}-->
-		<!--			</NuxtLink>-->
-		<!--		</p>-->
-
-		<!-- <FormKit
-			id="spaceCoolingSystem"
-			type="govStoredList"
-			label="Cooling for this zone"
-			name="spaceCoolingSystem"
-			help="Select a space cooling system that has already been added to the calculation"
-			:options="[]"
-			:link="getUrl('cooling')"
-		/> -->
-		<!-- <FormKit
-			id="spaceHeatControlSystem"
-			type="govStoredList"
-			label="Space heat control system for this zone"
-			name="spaceHeatControlSystem"
-			help="Select a space heat control system that has already been added to the calculation"
-			:options="[]"
-			link="/"
-		/> -->
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingFabric')" test-id="saveProgress" secondary>Save progress</GovButton>

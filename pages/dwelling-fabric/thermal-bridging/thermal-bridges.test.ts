@@ -24,7 +24,7 @@ describe("thermal bridges", () => {
 	const linear1: EcaasForm<LinearThermalBridgeData> = {
 		data: {
 			name: "Linear 1",
-			typeOfThermalBridge: "e1",
+			typeOfThermalBridge: "E1",
 			linearThermalTransmittance: 1,
 			length: 2,
 		},
@@ -340,9 +340,12 @@ describe("thermal bridges", () => {
 					params: { linear: "create" },
 				},
 			});
+
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
 			await user.type(screen.getByTestId("length"), "13");
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
+			
 			expect(
 				store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete,
 			).toBe(false);
@@ -356,9 +359,11 @@ describe("thermal bridges", () => {
 				},
 			});
 
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
 			await user.clear(screen.getByTestId("length"));
 			await user.type(screen.getByTestId("length"), "13");
 			await user.tab();
+
 			expect(
 				store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges?.complete,
 			).toBe(false);

@@ -1,20 +1,28 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl } from "#imports";
+import { v4 as uuidv4 } from "uuid";
+import { standardPitchOptions, getUrl, uniqueName, type InternalDoorData, type EcaasForm } from "#imports";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { surfaceAreaAdjacentSpaceZod } from "~/stores/ecaasStore.schema";
 
 const title = "Wall to unheated space";
 const store = useEcaasStore();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
-const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data);
+const wallToUnheatedSpaceData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data;
+const wallData = useItemToEdit("wall", wallToUnheatedSpaceData);
+const wallId = wallData?.data.id ?? uuidv4();
+const index = getStoreIndex(wallToUnheatedSpaceData);
 const model: Ref<WallsToUnheatedSpaceData | undefined> = ref(wallData?.data);
 
 const saveForm = (fields: WallsToUnheatedSpaceData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceWalls } = state.dwellingFabric;
 		const index = getStoreIndex(dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data);
+		const currentId = wallData?.data.id;
 
 		dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data[index] = {
 			data: {
+				id: currentId || uuidv4(),
 				name: fields.name,
 				surfaceAreaOfElement: fields.surfaceAreaOfElement,
 				uValue: fields.uValue,
@@ -38,12 +46,23 @@ autoSaveElementForm({
 	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace,
 	defaultName: "Wall to unheated space",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= wallId;
 		const { pitchOption, pitch } = newData.data;
-
 		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.complete = false;
 	},
+});
+
+watch(() => model.value?.pitch, (newPitch, initialPitch) => {
+	if (initialPitch === undefined) return; 
+
+	if ([0, 180].includes(newPitch!)) {
+		const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+		
+		convertFrontDoorToRegularDoor(dwellingSpaceInternalDoor.data as EcaasForm<InternalDoorData>[], wallToUnheatedSpaceData, index);
+		useBanner().value = { type: "update-front-door" };
+	}
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
@@ -71,24 +90,33 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(wallToUnheatedSpaceData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
+			data-field="Zone.BuildingElement.*.pitch"
 		/>
 		<FormKit
 			id="surfaceAreaOfElement"
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Net surface area of element"
-			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
+			help="Enter the net area of the building element, subtracting any doors or windows"
 			name="surfaceAreaOfElement"
-			validation="required | number | min:0 | max:10000"
+			:validation="zodTypeAsFormKitValidation(surfaceAreaAdjacentSpaceZod)"
 		/>
-		<FieldsUValue id="uValue" name="uValue" />
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<FieldsUValue/>
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of the full thickness of the floor build-up"
+		/>
+		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" help="This is the distribution of mass in the full thickness of the floor build up" />
 		<FormKit
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
@@ -98,8 +126,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="thermalResistanceOfAdjacentUnheatedSpace"
 			validation="required | number | min:0 | max:3"
 		>
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<p>For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m²·K)/W for when the facing wall is not exposed.</p>
+			<GovDetails summary-text="Help with this input">
+				<p>The thermal resistance of unheated space is a measure of the degree of shelter that the unheated space provides to the building element. It is calculated as the thickness of the material divided by its thermal conductivity. A higher thermal resistance reduces heat transfer. The <br>U-value is the inverse of the total thermal resistance of a building element.</p>
+				<p>See the technical paper HEM-TP-05, in which Annex A includes a general way to calculate this and also some suggested default values for common scenarios.</p>
+				<p>The maximum thermal resistance of an unheated space is 2.5 (m²·K)/W. This is when the facing wall is not exposed.</p>
 				<p class="govuk-body">
 					<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
 						Guidance on thermal resistance of unheated spaces (opens in another window)
@@ -107,7 +137,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</p>
 			</GovDetails>
 		</FormKit>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingSpaceWalls')" secondary>Save progress</GovButton>

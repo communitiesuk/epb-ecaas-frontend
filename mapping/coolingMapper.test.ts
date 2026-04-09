@@ -1,9 +1,8 @@
-import { SpaceCoolSystemType  } from "~/schema/api-schema.types";
-import type { SchemaSpaceCoolSystemDetails } from "~/schema/api-schema.types";
+import type { FhsInputSchema } from "./fhsInputMapper";
 import { mapSpaceCoolSystems } from "./coolingMapper";
 
 
-describe("cooling mapper", () => {
+describe("cooling systems mapper", () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
@@ -22,7 +21,7 @@ describe("cooling mapper", () => {
 		store.$patch({
 			cooling: {
 				airConditioning: {
-					data: [airConditioning],
+					data: [{ data: airConditioning, complete: true }],
 					complete: true,
 				},
 			},
@@ -32,13 +31,15 @@ describe("cooling mapper", () => {
 		const result = mapSpaceCoolSystems(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Record<string, SchemaSpaceCoolSystemDetails> = {
-			"airCon1": {
-				EnergySupply: "mains elec",
-				cooling_capacity: 4,
-				frac_convective: 1,
-				efficiency: 1,
-				type: SpaceCoolSystemType.AirConditioning,
+		const expectedResult: Pick<FhsInputSchema, "SpaceCoolSystem"> = {
+			SpaceCoolSystem: {
+				"airCon1": {
+					EnergySupply: "mains elec",
+					cooling_capacity: 4,
+					frac_convective: 1,
+					efficiency: 1,
+					type: "AirConditioning",
+				},
 			},
 		};
 
@@ -64,7 +65,13 @@ describe("cooling mapper", () => {
 		store.$patch({
 			cooling: {
 				airConditioning: {
-					data: [airConditioner1, airConditioner2],
+					data: [{
+						data: airConditioner1,
+						complete: true,
+					}, {
+						data: airConditioner2,
+						complete: true,
+					}],
 					complete: true,
 				},
 			},
@@ -74,20 +81,22 @@ describe("cooling mapper", () => {
 		const result = mapSpaceCoolSystems(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Record<string, SchemaSpaceCoolSystemDetails> = {
-			"airConditioner1": {
-				EnergySupply: "mains elec",
-				cooling_capacity: 1,
-				frac_convective: 3,
-				efficiency: 2,
-				type: SpaceCoolSystemType.AirConditioning,
-			},
-			"airConditioner2": {
-				EnergySupply: "mains elec",
-				cooling_capacity: 7,
-				frac_convective: 5,
-				efficiency: 6,
-				type: SpaceCoolSystemType.AirConditioning,
+		const expectedResult: Pick<FhsInputSchema, "SpaceCoolSystem"> = {
+			SpaceCoolSystem: {
+				"airConditioner1": {
+					EnergySupply: "mains elec",
+					cooling_capacity: 1,
+					frac_convective: 3,
+					efficiency: 2,
+					type: "AirConditioning",
+				},
+				"airConditioner2": {
+					EnergySupply: "mains elec",
+					cooling_capacity: 7,
+					frac_convective: 5,
+					efficiency: 6,
+					type: "AirConditioning",
+				},
 			},
 		};
 

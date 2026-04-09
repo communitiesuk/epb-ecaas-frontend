@@ -2,7 +2,6 @@ import { objectEntries } from "ts-extras";
 import type { GovTagProps } from "~/common.types";
 import formStatus from "~/constants/formStatus";
 import pagesData from "~/data/pages/pages";
-import { PageType  } from "~/data/pages/pages.types";
 import type { Page } from "~/data/pages/pages.types";
 
 /**
@@ -48,7 +47,7 @@ export function getDuctworkStatus(task: EcaasForm<boolean>): GovTagProps {
 	const form = task;
 	const status = !isFormStarted(form)
 		? formStatus.notStarted
-		:( !checkMvhrHasDuctwork() || !store.infiltrationAndVentilation.ductwork.complete)
+		: (!checkMvhrHasDuctwork() || !store.infiltrationAndVentilation.ductwork.complete)
 			? formStatus.inProgress
 			: formStatus.complete;
 
@@ -91,7 +90,7 @@ export function getSectionStatus(section: Record<string, object>): GovTagProps {
 			numberOfCompleteTasks++; // if there's no task page, it shouldn't affect whether we consider everything else to be complete
 		}
 
-		if (taskPage?.type === PageType.Task) {
+		if (taskPage?.type === "task") {
 			const form = task[1] as EcaasForm<boolean>;
 
 			if (isFormStarted(form) || form.complete) {
@@ -107,7 +106,7 @@ export function getSectionStatus(section: Record<string, object>): GovTagProps {
 			}
 		}
 
-		if (taskPage?.type === PageType.TaskGroup) {
+		if (taskPage?.type === "taskGroup") {
 			const taskGroupStatus = getSectionStatus(task[1] as Record<string, object>);
 
 			if (taskGroupStatus !== formStatus.notStarted) {
@@ -119,7 +118,7 @@ export function getSectionStatus(section: Record<string, object>): GovTagProps {
 			}
 		}
 
-		if (taskPage?.type === PageType.Section) {
+		if (taskPage?.type === "section") {
 			status = getSectionStatus(task[1] as Record<string, object>);
 		}
 	});

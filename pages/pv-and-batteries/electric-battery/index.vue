@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import type { BatteryLocation } from "~/schema/api-schema.types";
+import type { SchemaBatteryLocation } from "~/schema/aliases";
+import { capacityElectricBatteryZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import { getUrl } from "~/utils/page";
 
 const title = "Electric battery";
@@ -16,10 +18,8 @@ const saveForm = (fields: ElectricBatteryData) => {
 			data: {
 				name: fields.name,
 				capacity: fields.capacity,
-				batteryAge: fields.batteryAge,
 				chargeEfficiency: fields.chargeEfficiency,
 				location: fields.location,
-				gridChargingPossible: fields.gridChargingPossible,
 				maximumChargeRate: fields.maximumChargeRate,
 				minimumChargeRate: fields.minimumChargeRate,
 				maximumDischargeRate: fields.maximumDischargeRate,
@@ -35,43 +35,28 @@ const saveForm = (fields: ElectricBatteryData) => {
 };
 
 watch(model, async (newData, initialData) => {
-	const storeData = store.pvAndBatteries.electricBattery.data[0];
 
 	if (initialData === undefined || newData === undefined) {
 		return;
-	}
+	};
 
 	const defaultName = "Electric battery";
-	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
-			Object.values(newData).some(x => x !== undefined);
 
-	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
-		if (initialData[key]  !== newData[key]) {
-			store.$patch(state => {
-				if (!storeData && isFirstEdit) {
-					state.pvAndBatteries.electricBattery.data = [{
-						data: {
-							...newData,
-							name: newData.name?.trim() || defaultName,
-						},
-					}];
-				} else {
-					state.pvAndBatteries.electricBattery.data[0] = {
-						data: {
-							...newData,
-							name: newData.name?.trim() || defaultName,
-						},
-					};
-				}
+	store.$patch(state => {
+		state.pvAndBatteries.electricBattery.data[0] = {
+			data: {
+				...newData,
+				name: newData.name?.trim() || defaultName,
+			},
+		};
 
-				state.pvAndBatteries.electricBattery.complete = false;
-			});
-		}}
+		state.pvAndBatteries.electricBattery.complete = false;
+	});
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
-const locationOptions: Record<BatteryLocation, SnakeToSentenceCase<BatteryLocation>> = {
+const locationOptions: Record<SchemaBatteryLocation, SnakeToSentenceCase<SchemaBatteryLocation>> = {
 	inside: "Inside",
 	outside: "Outside",
 };
@@ -118,23 +103,14 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 			label="Capacity"
 			help="Enter the maximum capacity of the battery"
 			name="capacity"
-			validation="required | number | min:0 | max:50"
+			:validation="zodTypeAsFormKitValidation(capacityElectricBatteryZod)"
 			suffix-text="kWh"
-		/>
-		<FormKit
-			id="batteryAge"
-			type="govInputWithSuffix"
-			label="Battery age"
-			help="Enter the starting age of the battery in years"
-			name="batteryAge"
-			validation="required | number | min:0 | max:100"
-			suffix-text="years"
 		/>
 		<FormKit
 			id="chargeEfficiency"
 			type="govInputFloat"
 			label="Charge/discharge efficiency"
-			help="Enter the percentage of energy retained during charging and discharging, as a decimal between 0 and 1 where 1 is no energy loss."
+			help="Enter the percentage of energy retained during the charge and discharge round trip, as a decimal between 0 and 1 where 1 is no energy loss"
 			name="chargeEfficiency"
 			validation="required | number | min:0 | max:1"
 		/>
@@ -147,17 +123,10 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 			validation="required"
 		/>
 		<FormKit
-			id="gridChargingPossible"
-			type="govBoolean"
-			label="Is charging from the grid possible?"
-			name="gridChargingPossible"
-			validation="required"
-		/>
-		<FormKit
 			id="maximumChargeRate"
 			type="govInputWithSuffix"
 			label="Maximum charge rate"
-			help="This is the maximum charge rate the battery allows during a single charging session or one-way trip"
+			help="This is the highest rate of power at which the battery can be charged. Additional available power will not be used for charging."
 			name="maximumChargeRate"
 			:validation-rules="{ chargeRateMaxGreaterThanMin }"
 			validation="required | number | chargeRateMaxGreaterThanMin"
@@ -167,12 +136,12 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 			id="minimumChargeRate"
 			type="govInputWithSuffix"
 			label="Minimum charge rate"
-			help="This is the lowest power at which the battery can be charged during a single one-way trip"
+			help="This is the lowest rate of power at which the battery can be charged. No charging will occur if the available power is less than this value."
 			name="minimumChargeRate"
 			:validation-rules="{ chargeRateMaxGreaterThanMin }"
 			validation="required | number | chargeRateMaxGreaterThanMin"
 			suffix-text="kW">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">
@@ -197,12 +166,11 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 			id="maximumDischargeRate"
 			type="govInputWithSuffix"
 			label="Maximum discharge rate"
-			help="This is the highest power at which the battery can discharge energy during a single one-way trip"
+			help="This is the maximum power output of the battery at any one time"
 			name="maximumDischargeRate"
 			validation="required | number"
 			suffix-text="kW"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('pvAndBatteries')" secondary test-id="saveProgress">Save progress</GovButton>

@@ -65,7 +65,7 @@ export const units = [
 	},
 	{
 		"name": "litres per minute",
-		"suffix": "litres per minute",
+		"suffix": "l/min",
 		"multiplier": 0.06,
 		"dimension": "flow rate",
 	},
@@ -104,6 +104,12 @@ export const units = [
 		"suffix": "kWp",
 		"multiplier": 1,
 		"dimension": "peak power",
+	},
+	{
+		"name": "kilowatt hours per day",
+		"suffix": "kWh/day",
+		"multiplier": 1,
+		"dimension": "energy per time",
 	},
 	{
 		"name": "CO2 per kilowatt-hour",
@@ -152,6 +158,24 @@ export const units = [
 		"suffix": "kWh/K",
 		"multiplier": 1,
 		"dimension": "energy per unit temperature",
+	},
+	{
+		"name": "watt",
+		"suffix": "W",
+		"multiplier": 1,
+		"dimension": "power",
+	},
+	{
+		"name": "lumen per watt",
+		"suffix": "lm/W",
+		"multiplier": 1,
+		"dimension": "efficacy",
+	},
+	{
+		"name": "watts per litre per second",
+		"suffix": "W/(l/s)",
+		"multiplier": 1,
+		"dimension": "power",
 	},
 ] as const;
 

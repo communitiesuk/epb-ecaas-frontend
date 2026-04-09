@@ -4,8 +4,8 @@ import userEvent from "@testing-library/user-event";
 import { createPinia, setActivePinia } from "pinia";
 import formStatus from "~/constants/formStatus";
 import pagesData from "~/data/pages/pages";
-import  MechanicalOverview  from "~/pages/infiltration-and-ventilation/mechanical-ventilation/index.vue";
-import { BuildType, DuctShape, DuctType, MVHRLocation, VentType } from "~/schema/api-schema.types";
+import MechanicalOverview from "~/pages/infiltration-and-ventilation/mechanical-ventilation/index.vue";
+
 const store = useEcaasStore();
 
 describe("Ecaas Store", () => {
@@ -17,15 +17,13 @@ describe("Ecaas Store", () => {
 	});
 
 	test("getStatus of section returns not started status when no forms are complete", () => {
-
-		const page = pagesData.find(p => p.id === "dwellingDetails");
+		const page = pagesData.find((p) => p.id === "dwellingDetails");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.notStarted);
 	});
 
 	test("getStatus of section returns in progress status when some forms are complete", () => {
-
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
@@ -34,32 +32,30 @@ describe("Ecaas Store", () => {
 			},
 		});
 
-		const page = pagesData.find(p => p.id === "dwellingDetails");
+		const page = pagesData.find((p) => p.id === "dwellingDetails");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
 	test("getStatus of section returns in progress status when forms have saved data", () => {
-
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
 					data: {
-						typeOfDwelling: BuildType.house,
+						typeOfDwelling: "house",
 					},
 				},
 			},
 		});
 
-		const page = pagesData.find(p => p.id === "dwellingDetails");
+		const page = pagesData.find((p) => p.id === "dwellingDetails");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
 	test("getStatus of a section containing grouped tasks returns in progress status when one of the grouped tasks is complete", () => {
-
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceFloors: {
@@ -76,14 +72,13 @@ describe("Ecaas Store", () => {
 			},
 		});
 
-		const page = pagesData.find(p => p.id === "dwellingFabric");
+		const page = pagesData.find((p) => p.id === "dwellingFabric");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
 	test("getStatus of section returns complete status when all forms are complete", () => {
-
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
@@ -95,29 +90,34 @@ describe("Ecaas Store", () => {
 				externalFactors: {
 					complete: true,
 				},
+				appliances: {
+					complete: true,
+				},
 			},
 		});
 
-		const page = pagesData.find(p => p.id === "dwellingDetails");
+		const page = pagesData.find((p) => p.id === "dwellingDetails");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);
 	});
 
 	test("getStatus of a section containing a grouped tasks returns complete when all forms are complete", () => {
-
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceFloors: {
 					dwellingSpaceExposedFloor: { complete: true },
 					dwellingSpaceInternalFloor: { complete: true },
 					dwellingSpaceGroundFloor: { complete: true },
+					dwellingSpaceFloorAboveUnheatedBasement: { complete: true },
+					dwellingSpaceFloorOfHeatedBasement: { complete: true },
 				},
 				dwellingSpaceWalls: {
 					dwellingSpaceExternalWall: { complete: true },
 					dwellingSpaceInternalWall: { complete: true },
 					dwellingSpaceWallToUnheatedSpace: { complete: true },
 					dwellingSpacePartyWall: { complete: true },
+					dwellingSpaceWallOfHeatedBasement: { complete: true },
 				},
 				dwellingSpaceCeilingsAndRoofs: {
 					dwellingSpaceCeilings: { complete: true },
@@ -132,46 +132,43 @@ describe("Ecaas Store", () => {
 				dwellingSpaceThermalBridging: {
 					dwellingSpaceLinearThermalBridges: { complete: true },
 					dwellingSpacePointThermalBridges: { complete: true },
-				}, 
+				},
 				dwellingSpaceZoneParameters: { complete: true },
 				dwellingSpaceLighting: { complete: true },
 			},
 		});
 
-		const page = pagesData.find(p => p.id === "dwellingFabric");
+		const page = pagesData.find((p) => p.id === "dwellingFabric");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);
 	});
 
 	test("getStatus of task returns not started status when form has no data", () => {
-
-		const page = pagesData.find(p => p.id === "generalSpecifications");
+		const page = pagesData.find((p) => p.id === "generalSpecifications");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.notStarted);
 	});
 
 	test("getStatus of task returns in progress status when form has saved data", () => {
-
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
 					data: {
-						typeOfDwelling: BuildType.house,
+						typeOfDwelling: "house",
 					},
 				},
 			},
 		});
 
-		const page = pagesData.find(p => p.id === "generalSpecifications");
+		const page = pagesData.find((p) => p.id === "generalSpecifications");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
 	test("getStatus of task returns complete status when form is complete", () => {
-
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
@@ -180,14 +177,13 @@ describe("Ecaas Store", () => {
 			},
 		});
 
-		const page = pagesData.find(p => p.id === "generalSpecifications");
+		const page = pagesData.find((p) => p.id === "generalSpecifications");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);
 	});
 
 	test("getStatus of task returns complete status when required forms are complete", () => {
-
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceFloors: {
@@ -200,11 +196,17 @@ describe("Ecaas Store", () => {
 					dwellingSpaceInternalFloor: {
 						complete: true,
 					},
+					dwellingSpaceFloorAboveUnheatedBasement: {
+						complete: true,
+					},
+					dwellingSpaceFloorOfHeatedBasement: {
+						complete: true,
+					},
 				},
 			},
 		});
 
-		const page = pagesData.find(p => p.id === "dwellingSpaceFloors");
+		const page = pagesData.find((p) => p.id === "dwellingSpaceFloors");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);
@@ -213,24 +215,54 @@ describe("Ecaas Store", () => {
 	const mechanicalVentilation1: MechanicalVentilationData = {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		airFlowRate: 12,
-		mvhrLocation: MVHRLocation.inside,
-		mvhrEfficiency: 0.2,
+		typeOfMechanicalVentilationOptions: "MVHR",
+		airFlowRate: {
+			amount: 12,
+			unit: "litres per second",
+		},
+		mvhrLocation: "inside",
+		productReference: "1000",
+		midHeightOfAirFlowPathForExhaust: 1.5,
+		orientationOfExhaust: 90,
+		pitchOfExhaust: 10,
+		midHeightOfAirFlowPathForIntake: 1.5,
+		orientationOfIntake: 80,
+		pitchOfIntake: 10,
+		installedUnderApprovedScheme: true,
+		measuredFanPowerAndAirFlowRateKnown: false,
+		associatedItemId: "none",
+		hasAssociatedItem: false,
+		pitch: 90,
+		orientation: 180,
 	};
 	const mechanicalVentilation2: MechanicalVentilationData = {
 		id: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
 		name: "Mechanical name 2",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		airFlowRate: 12,
-		mvhrLocation: MVHRLocation.inside,
-		mvhrEfficiency: 0.1,
+		typeOfMechanicalVentilationOptions: "MVHR",
+		airFlowRate: {
+			amount: 12,
+			unit: "litres per second",
+		},
+		mvhrLocation: "inside",
+		productReference: "1000",
+		midHeightOfAirFlowPathForExhaust: 1.5,
+		orientationOfExhaust: 90,
+		pitchOfExhaust: 10,
+		midHeightOfAirFlowPathForIntake: 1.5,
+		orientationOfIntake: 80,
+		pitchOfIntake: 10,
+		installedUnderApprovedScheme: true,
+		measuredFanPowerAndAirFlowRateKnown: false,
+		associatedItemId: "none",
+		hasAssociatedItem: false,
+		pitch: 90,
+		orientation: 180,
 	};
 	const ductwork1: DuctworkData = {
 		name: "Ductwork 1",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -241,8 +273,8 @@ describe("Ecaas Store", () => {
 	const ductwork2: DuctworkData = {
 		name: "Ductwork 2",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -250,22 +282,17 @@ describe("Ecaas Store", () => {
 		thermalInsulationConductivityOfDuctwork: 10,
 		surfaceReflectivity: true,
 	};
-	test("getStatus of ductwork task returns not started status when mvhr and ductwork is added then mvhr is removed", async() => {
-
+	test("getStatus of ductwork task returns not started status when mvhr and ductwork is added then mvhr is removed", async () => {
 		const user = userEvent.setup();
-		
+
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [
-						{ data: mechanicalVentilation1 },
-					],
+					data: [{ data: mechanicalVentilation1 }],
 					complete: true,
 				},
 				ductwork: {
-					data: [
-						{ data: ductwork1 },
-					],
+					data: [{ data: ductwork1 }],
 					complete: true,
 				},
 			},
@@ -274,15 +301,13 @@ describe("Ecaas Store", () => {
 
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
 
-		const page = pagesData.find(p => p.id === "ductwork");
+		const page = pagesData.find((p) => p.id === "ductwork");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.notStarted);
 	});
 
-	test("getStatus of ductwork task returns in progress status when multiple mvhrs are added but they dont all have an associated ductwork", async() => {
-
-		
+	test("getStatus of ductwork task returns in progress status when multiple mvhrs are added but they dont all have an associated ductwork", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -293,41 +318,33 @@ describe("Ecaas Store", () => {
 					complete: true,
 				},
 				ductwork: {
-					data: [
-						{ data: ductwork1 },
-						{ data: ductwork2 },
-					],
-					complete: true, 
+					data: [{ data: ductwork1 }, { data: ductwork2 }],
+					complete: true,
 				},
 			},
 		});
 
-		const page = pagesData.find(p => p.id === "ductwork");
+		const page = pagesData.find((p) => p.id === "ductwork");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
-	test("getStatus of ductwork task returns complete status when a mvhr has an associated ductwork", async() => {
-
+	test("getStatus of ductwork task returns complete status when a mvhr has an associated ductwork", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [
-						{ data: mechanicalVentilation1 },
-					],
+					data: [{ data: mechanicalVentilation1 }],
 					complete: true,
 				},
 				ductwork: {
-					data: [
-						{ data: ductwork1 },
-					],
+					data: [{ data: ductwork1 }],
 					complete: true,
 				},
 			},
 		});
 
-		const page = pagesData.find(p => p.id === "ductwork");
+		const page = pagesData.find((p) => p.id === "ductwork");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);
@@ -360,14 +377,14 @@ describe("extractPitch", () => {
 
 describe("postEcaasState", () => {
 	const store = useEcaasStore();
-	
-	it("should post ecaas state to setState endpoint", async () => {
+
+	it("should post ecaas state to session endpoint", async () => {
 		global.$fetch = vi.fn() as unknown as typeof global.$fetch;
 		const fetchSpy = vi.spyOn(global, "$fetch");
 		await store.postEcaasState();
 
 		expect(fetchSpy).toHaveBeenCalledTimes(1);
-		expect(fetchSpy).toHaveBeenCalledWith("/api/setState", {
+		expect(fetchSpy).toHaveBeenCalledWith("/api/session", {
 			body: store.$state,
 			method: "POST",
 		});
@@ -411,11 +428,188 @@ describe("hasCompleteState function", () => {
 	});
 
 	it("returns false when given state with pv battery section complete only", async () => {
-		const pvAndBatteriesSection = { pvSystems: { data: [], complete: true }, electricBattery: { data: [], complete: true } };
+		const pvAndBatteriesSection = {
+			pvArrays: { data: [], complete: true },
+			electricBattery: { data: [], complete: true },
+		};
 		store.$patch({ pvAndBatteries: pvAndBatteriesSection });
 
 		const result = hasCompleteState(store);
 
 		expect(result).toBe(false);
+	});
+
+	describe("getTaggedItem getter function", () => {
+		beforeEach(() => {
+			store.$reset();
+		});
+
+		const externalWall1: Partial<ExternalWallData> = {
+			id: "ex-wall-id",
+			name: "External wall 1",
+			pitchOption: "custom",
+			pitch: 66,
+			orientation: 77,
+		};
+
+		const externalWall2: Partial<ExternalWallData> = {
+			id: "ex-wall-id-2",
+			name: "External wall 2",
+			pitchOption: "custom",
+			pitch: 11,
+			orientation: 0,
+		};
+
+		const vent1: Partial<VentData> = {
+			name: "Vent 1",
+			associatedItemId: externalWall1.id,
+		};
+
+		const vent2: Partial<VentData> = {
+			name: "Vent 2",
+			associatedItemId: externalWall2.id,
+		};
+
+		const window: Partial<WindowData> = {
+			id: "window-id",
+			name: "Window 1",
+			taggedItem: externalWall1.id,
+		};
+
+		test("returns the correct values for a directly tagged top-level item", () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: externalWall1 }],
+						},
+					},
+				},
+				infiltrationAndVentilation: {
+					vents: {
+						data: [{ data: vent1 }],
+					},
+				},
+			});
+
+			const topLevelTaggedWalls =
+				store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+			const idOfTaggedWall = vent1.associatedItemId;
+			const actual = store.getTaggedItem([topLevelTaggedWalls], idOfTaggedWall);
+
+			const expected = {
+				id: externalWall1.id,
+				name: externalWall1.name,
+				orientation: externalWall1.orientation,
+				pitch: externalWall1.pitch,
+			};
+			expect(actual).toEqual(expected);
+		});
+
+		test("returns the correct values for a directly tagged top-level item even when multiple tagged and nested items exist", () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWindows: {
+						data: [{ data: window }],
+					},
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: externalWall1 }, { data: externalWall2 }],
+						},
+					},
+				},
+				infiltrationAndVentilation: {
+					vents: {
+						data: [{ data: vent1 }, { data: vent2 }],
+					},
+				},
+			});
+
+			const topLevelTaggedWalls =
+				store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows;
+			const idOfTaggedWall = vent2.associatedItemId;
+
+			const actual = store.getTaggedItem(
+				[topLevelTaggedWalls, nestedTaggedWindows],
+				idOfTaggedWall,
+			);
+			const expected = {
+				id: externalWall2.id,
+				name: externalWall2.name,
+				orientation: externalWall2.orientation,
+				pitch: externalWall2.pitch,
+			};
+			expect(actual).toEqual(expected);
+		});
+
+		test("resolves a nested item that references a top-level tagged item", () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWindows: {
+						data: [{ data: window }],
+					},
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: externalWall1 }],
+						},
+					},
+				},
+				infiltrationAndVentilation: {
+					vents: {
+						data: [{ data: vent1 }],
+					},
+				},
+			});
+
+			const topLevelTaggedWalls =
+				store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows;
+			const idOfTaggedWall = vent1.associatedItemId;
+			const actual = store.getTaggedItem(
+				[topLevelTaggedWalls, nestedTaggedWindows],
+				idOfTaggedWall,
+			);
+
+			const expected = {
+				id: externalWall1.id,
+				name: externalWall1.name,
+				orientation: externalWall1.orientation,
+				pitch: externalWall1.pitch,
+			};
+			expect(actual).toEqual(expected);
+		});
+
+		test("returns undefined when a nested item references a non-existent tagged item", () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWindows: {
+						data: [{ data: window }],
+					},
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [],
+						},
+					},
+				},
+				infiltrationAndVentilation: {
+					vents: {
+						data: [{ data: vent1 }],
+					},
+				},
+			});
+
+			const topLevelTaggedWalls =
+				store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows;
+			const idOfTaggedWall = vent1.associatedItemId;
+
+			const actual = store.getTaggedItem(
+				[topLevelTaggedWalls, nestedTaggedWindows],
+				idOfTaggedWall,
+			);
+
+			expect(actual).toEqual(undefined);
+		});
 	});
 });

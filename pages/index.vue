@@ -2,13 +2,13 @@
 import dayjs from "dayjs";
 import { lastExportDateCookieName } from "~/utils/exportDate";
 
-const title = "(Testing) Check Part L building compliance";
+const title = "Check Part L building compliance";
 	
 const page = usePage();
 const store = useEcaasStore();
 const { createTaskList } = useTaskList();
 const taskList = createTaskList(page);
-const calculateError = ref<CorrectedJsonApiError[] | boolean | undefined>();
+const calculateError = ref<CorrectedJsonApiError[] | string | boolean | undefined>();
 
 const showLoadingIndicator = ref(false);
 
@@ -22,7 +22,7 @@ const hideLoading = () => {
 const lastExportDateCookie = useCookie(lastExportDateCookieName);
 const exportDate = lastExportDateCookie.value ? dayjs(lastExportDateCookie.value) : undefined;
 
-const handleCalculateError = (errors?: CorrectedJsonApiError[] | boolean) => {
+const handleCalculateError = (errors?: CorrectedJsonApiError[] | string | boolean) => {
 	calculateError.value = errors;
 };
 
@@ -58,13 +58,16 @@ store.revalidate();
 		<p v-if="exportDate" class="govuk-body last-export govuk-!-margin-top-5">This calculation was exported on the {{ exportDate.format('DD/MM/YYYY') }} at {{ exportDate.format('HH:mm') }}.</p>
 		<div class="govuk-!-margin-top-8">
 			<ClientOnly>
-				<CalculateButton @loading="showLoading" @stop-loading="hideLoading" @error="handleCalculateError" />
+				<!-- use a dry run button until API is ready -->
+				<!-- <CalculateButton @loading="showLoading" @stop-loading="hideLoading" @error="handleCalculateError" /> -->
+				<CalculateButtonDryRun @loading="showLoading" @stop-loading="hideLoading" @error="handleCalculateError" />
 			</ClientOnly>
 		</div>
 		<div class="govuk-!-margin-top-1 govuk-button-group">
 			<GovButton secondary href="/export">Export</GovButton>
 			<GovButton secondary href="/import">Import</GovButton>
 			<GovButton secondary href="/clear-data">Clear data</GovButton>
+			<GovButton secondary href="/change-orientation">Change orientation</GovButton>
 		</div>
 	</div>
 	<div v-show="showLoadingIndicator">
@@ -76,7 +79,8 @@ store.revalidate();
 @use "sass:map";
 
 .last-export {
-	color: map.get($govuk-colours, "dark-grey")
+	// use suggested replacement colour for removed dark-grey for GOV.UK Frontend 6.0
+	color: #484949;
 }
 .govuk-error-summary {
   overflow-wrap: break-word;

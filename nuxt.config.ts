@@ -1,10 +1,11 @@
 import type { NuxtPage } from "nuxt/schema";
-import { viteStaticCopy } from "vite-plugin-static-copy";
 import yn from "yn";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	compatibilityDate: "2024-04-03",
+
+	rootDir: typeof process.env.EXPLICIT_ROOT_DIR !== "undefined" ? process.env.EXPLICIT_ROOT_DIR : undefined,
 
 	devtools: {
 		enabled:
@@ -27,30 +28,30 @@ export default defineNuxtConfig({
 				{
 					rel: "icon",
 					sizes: "48x48",
-					href: "/static/assets/rebrand/images/favicon.ico",
+					href: "/static/assets/images/favicon.ico",
 				},
 				{
 					rel: "icon",
 					sizes: "any",
-					href: "/static/assets/rebrand/images/favicon.svg",
+					href: "/static/assets/images/favicon.svg",
 					type: "image/svg+xml",
 				},
 				{
 					rel: "mask-icon",
-					href: "/static/assets/rebrand/images/govuk-icon-mask.svg",
+					href: "/static/assets/images/govuk-icon-mask.svg",
 					color: "#0b0c0c",
 				},
 				{
 					rel: "apple-touch-icon",
-					href: "/static/assets/rebrand/images/govuk-icon-180.png",
+					href: "/static/assets/images/govuk-icon-180.png",
 				},
-				{ rel: "manifest", href: "/static/assets/rebrand/manifest.json" },
+				{ rel: "manifest", href: "/static/assets/manifest.json" },
 			],
 			bodyAttrs: {
 				class: "govuk-template__body js-enabled govuk-frontend-supported",
 			},
 			htmlAttrs: {
-				class: "govuk-template govuk-template--rebranded",
+				class: "govuk-template",
 			},
 		},
 	},
@@ -67,21 +68,10 @@ export default defineNuxtConfig({
 						"import",
 					],
 					additionalData: `
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																				@use "/node_modules/govuk-frontend/dist/govuk/settings/colours-palette" as *;
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																				@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`,
+						@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`,
 				},
 			},
 		},
-		plugins: [
-			viteStaticCopy({
-				targets: [
-					{
-						src: "node_modules/govuk-frontend/dist/govuk/assets/*",
-						dest: "static/assets",
-					},
-				],
-			}),
-		],
 	},
 
 	modules: [
@@ -109,9 +99,6 @@ export default defineNuxtConfig({
 	},
 
 	runtimeConfig: {
-		redisEndpoint: "",
-		redisPassword: "",
-		redisUsername: "",
 		public: {
 			environment: process.env.NUXT_PUBLIC_ENVIRONMENT,
 		},

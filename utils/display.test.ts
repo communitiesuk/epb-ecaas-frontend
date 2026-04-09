@@ -1,4 +1,3 @@
-import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass } from "~/schema/api-schema.types";
 import { show, dim } from "./display";
 
 describe("Show function to make showable value", () => {
@@ -65,64 +64,32 @@ describe("Show boolean in display", () => {
 
 describe("Show MassDistributionClass in display", () => {
 	it("should return Internal when value is I", () => {
-		const result = displayMassDistributionClass(MassDistributionClass.I);
+		const result = displayMassDistributionClass("I");
 		expect(result).toBe("Internal");
 	});
 
 	it("should return External when value is E", () => {
-		const result = displayMassDistributionClass(MassDistributionClass.E);
+		const result = displayMassDistributionClass("E");
 		expect(result).toBe("External");
 	});
 
 	it("should return Divided when value is IE", () => {
-		const result = displayMassDistributionClass(MassDistributionClass.IE);
+		const result = displayMassDistributionClass("IE");
 		expect(result).toBe("Divided");
 	});
 
 	it("should return Equally when value is D", () => {
-		const result = displayMassDistributionClass(MassDistributionClass.D);
+		const result = displayMassDistributionClass("D");
 		expect(result).toBe("Equally");
 	});
 
 	it("should return Inside when value is M", () => {
-		const result = displayMassDistributionClass(MassDistributionClass.M);
+		const result = displayMassDistributionClass("M");
 		expect(result).toBe("Inside");
 	});
 
 	it("should return a hyphen when value is undefined", () => {
 		const result = displayMassDistributionClass(undefined);
-		expect(result).toBe("-");
-	});
-});
-
-describe("Show ArealHeatCapacity in display", () => {
-	it("should return very light when value is 50000", () => {
-		const result = displayArealHeatCapacity(50000);
-		expect(result).toBe("Very light");
-	});
-
-	it("should return light when value is 75000", () => {
-		const result = displayArealHeatCapacity(75000);
-		expect(result).toBe("Light");
-	});
-
-	it("should return medium when value is 110000", () => {
-		const result = displayArealHeatCapacity(110000);
-		expect(result).toBe("Medium");
-	});
-
-	it("should return heavy when value is 175000", () => {
-		const result = displayArealHeatCapacity(175000);
-		expect(result).toBe("Heavy");
-	});
-
-	it("should return very heavy when value is 250000", () => {
-		const result = displayArealHeatCapacity(250000);
-		expect(result).toBe("Very heavy");
-	});
-
-	it("should return a hyphen when value is undefined", () => {
-		const result = displayArealHeatCapacity(undefined);
 		expect(result).toBe("-");
 	});
 });
@@ -149,23 +116,6 @@ describe("Show string in sentence case", () => {
 	});
 });
 
-describe("Show flue gas exhaust situation in display", () => {
-	it('should display correct representiation of flue gas exhasut situation "into room"', () => {
-		const result = displayFlueGasExhaustSituation(FlueGasExhaustSituation.into_room);
-		expect(result).toBe("Into room");
-	});
-
-	it('should display correct representiation of flue gas exhasut situation "into mechanical vent"', () => {
-		const result = displayFlueGasExhaustSituation(FlueGasExhaustSituation.into_mech_vent);
-		expect(result).toBe("Into mechanical vent");
-	});
-
-	it('should display correct representiation of flue gas exhasut situation "into separate duct"', () => {
-		const result = displayFlueGasExhaustSituation(FlueGasExhaustSituation.into_separate_duct);
-		expect(result).toBe("Into separate duct");
-	});
-});
-
 describe("displaySnakeToSentenceCase", () => {
 	it("should convert snake_case to Sentence Case", () => {
 		const result = displaySnakeToSentenceCase("hello_world");
@@ -185,7 +135,7 @@ describe("displaySnakeToSentenceCase", () => {
 
 describe("displayDeliveryEnergyUseKey", () => {
 	it("should convert an appliance key to the correct display value", () => {
-		expect(displayDeliveryEnergyUseKey(ApplianceKey.Clothes_washing)).toBe("Washing machine");
+		expect(displayDeliveryEnergyUseKey("Clothes_washing")).toBe("Washing machine");
 	});
 
 	it("should pass anything else through verbatim", () => {
@@ -196,8 +146,8 @@ describe("displayDeliveryEnergyUseKey", () => {
 describe("adjacentSpaceTypeOptions", () => {
 	it("generates options correctly", () => {
 		const expectedOptions = {
-			[AdjacentSpaceType.heatedSpace]: "Trash compactor to heated space",
-			[AdjacentSpaceType.unheatedSpace]: "Trash compactor to unheated space",
+			heatedSpace: "Trash compactor to heated space",
+			unheatedSpace: "Trash compactor to unheated space",
 		};
 		expect(adjacentSpaceTypeOptions("Trash compactor")).toStrictEqual(expectedOptions);
 	});
@@ -206,7 +156,7 @@ describe("adjacentSpaceTypeOptions", () => {
 describe("displayAdjacentSpaceType", () => {
 	it("displays an adjacent space type correctly if provided", () => {
 		const expectedDisplay = "Trash compactor to heated space";
-		expect(displayAdjacentSpaceType(AdjacentSpaceType.heatedSpace, "Trash compactor")).toBe(expectedDisplay);
+		expect(displayAdjacentSpaceType("heatedSpace", "Trash compactor")).toBe(expectedDisplay);
 	});
 
 	it("returns undefined if adjacent space type is undefined", () => {

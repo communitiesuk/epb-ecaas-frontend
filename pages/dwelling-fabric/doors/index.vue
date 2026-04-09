@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isEcaasForm } from "~/stores/ecaasStore.schema";
+import { isEcaasForm, type EcaasForm, type ExternalGlazedDoorData, type InternalDoorData } from "~/stores/ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 
 const title = "Doors";
@@ -9,6 +9,9 @@ const store = useEcaasStore();
 type DoorType = keyof typeof store.dwellingFabric.dwellingSpaceDoors;
 type DoorData = EcaasForm<ExternalUnglazedDoorData> & EcaasForm<ExternalGlazedDoorData> & EcaasForm<InternalDoorData>;
 
+function isFrontDoor(door: EcaasForm<ExternalUnglazedDoorData | ExternalGlazedDoorData | InternalDoorData>) {
+	return door.complete && "isTheFrontDoor" in door.data && door.data.isTheFrontDoor;
+}
 function handleRemove(doorType: DoorType, index: number) {
 	const doors = store.dwellingFabric.dwellingSpaceDoors[doorType]?.data;
 
@@ -23,8 +26,8 @@ function handleRemove(doorType: DoorType, index: number) {
 } 
 
 function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) {
-	const doors  = store.dwellingFabric.dwellingSpaceDoors[doorType]?.data;
-	const door = doors?.[index];
+	const doors = store.dwellingFabric.dwellingSpaceDoors[doorType]?.data;
+	const door = doors?.[index] as EcaasForm<ExternalUnglazedDoorData | ExternalGlazedDoorData | InternalDoorData>;
 	let name: string;
     
 	if (door) {
@@ -38,7 +41,7 @@ function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) 
 
 		store.$patch((state) => {
 			const newItem = {
-				complete: door.complete,
+				complete: isFrontDoor(door) ? false : door.complete,
 				data: {
 					...door.data,
 					name: `${name} (${duplicates.length})`,
@@ -119,7 +122,7 @@ const hasIncompleteEntries = () =>
 			href="/dwelling-fabric"
 			secondary
 		>
-			Return to dwelling space
+			Return to dwelling fabric
 		</GovButton>
 		<CompleteElement
 			:is-complete="Object.values(store.dwellingFabric.dwellingSpaceDoors).every(section => section.complete)"

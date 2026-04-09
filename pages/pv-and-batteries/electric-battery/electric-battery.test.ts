@@ -3,7 +3,6 @@ import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import type { ElectricBatteryData } from "~/stores/ecaasStore.schema";
-import { BatteryLocation } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -22,10 +21,8 @@ describe("Electric battery", () => {
 		data: {
 			name: "Acme battery mk II",
 			capacity: 40,
-			batteryAge: 12,
 			chargeEfficiency: 0.9,
-			location: BatteryLocation.inside,
-			gridChargingPossible: false,
+			location: "inside",
 			maximumChargeRate: 30,
 			minimumChargeRate: 20,
 			maximumDischargeRate: 35,
@@ -35,10 +32,8 @@ describe("Electric battery", () => {
 	const fillForm = async () => {
 		await user.type(screen.getByTestId("name"), "Acme battery mk II");
 		await user.type(screen.getByTestId("capacity"), "40");
-		await user.type(screen.getByTestId("batteryAge"), "12");
 		await user.type(screen.getByTestId("chargeEfficiency"), "0.9");
 		await user.click(screen.getByTestId("location_inside"));
-		await user.click(screen.getByTestId("gridChargingPossible_no"));
 		await user.type(screen.getByTestId("maximumChargeRate"), "30");
 		await user.type(screen.getByTestId("minimumChargeRate"), "20");
 		await user.type(screen.getByTestId("maximumDischargeRate"), "35");
@@ -87,10 +82,8 @@ describe("Electric battery", () => {
         
 		await user.type(screen.getByTestId("name"), "Acme battery mk II");
 		await user.type(screen.getByTestId("capacity"), "40");
-		await user.type(screen.getByTestId("batteryAge"), "12");
 		await user.type(screen.getByTestId("chargeEfficiency"), "0.9");
 		await user.click(screen.getByTestId("location_inside"));
-		await user.click(screen.getByTestId("gridChargingPossible_no"));
 		await user.type(screen.getByTestId("maximumChargeRate"), "15");
 		await user.type(screen.getByTestId("minimumChargeRate"), "25");
 		await user.type(screen.getByTestId("maximumDischargeRate"), "35");
@@ -107,10 +100,8 @@ describe("Electric battery", () => {
         
 		await user.type(screen.getByTestId("name"), "Acme battery mk II");
 		await user.type(screen.getByTestId("capacity"), "40");
-		await user.type(screen.getByTestId("batteryAge"), "12");
 		await user.type(screen.getByTestId("chargeEfficiency"), "2.9");
 		await user.click(screen.getByTestId("location_inside"));
-		await user.click(screen.getByTestId("gridChargingPossible_no"));
 		await user.type(screen.getByTestId("maximumChargeRate"), "25");
 		await user.type(screen.getByTestId("minimumChargeRate"), "15");
 		await user.type(screen.getByTestId("maximumDischargeRate"), "35");

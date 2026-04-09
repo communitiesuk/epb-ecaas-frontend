@@ -1,26 +1,36 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl } from "#imports";
+import { v4 as uuidv4 } from "uuid";
+import { standardPitchOptions, getUrl, uniqueName } from "#imports";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { surfaceAreaAdjacentSpaceZod } from "~/stores/ecaasStore.schema";
 
 const title = "Internal wall";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data);
+const internalWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data;
+const wallData = useItemToEdit("wall", internalWallData);
+const wallId = wallData?.data.id ?? uuidv4();
+const index = getStoreIndex(internalWallData);
 const model: Ref<InternalWallData | undefined> = ref(wallData?.data);
 
 const saveForm = (fields: InternalWallData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceWalls } = state.dwellingFabric;
 		const index = getStoreIndex(dwellingSpaceWalls.dwellingSpaceExternalWall.data);
+		const currentId = wallData?.data.id;
+
 
 		dwellingSpaceWalls.dwellingSpaceInternalWall.data[index] = {
 			data: {
+				id: currentId || uuidv4(),
 				name: fields.name,
 				surfaceAreaOfElement: fields.surfaceAreaOfElement,
-				kappaValue: fields.kappaValue,
+				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
+				uValue: fields.uValue,
 			},
 			complete: true,
 		};
@@ -36,12 +46,23 @@ autoSaveElementForm({
 	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall,
 	defaultName: "Internal wall",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= wallId;
 		const { pitchOption, pitch } = newData.data;
-
 		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.complete = false;
 	},
+});
+
+watch(() => model.value?.pitch, (newPitch, initialPitch) => {
+	if (initialPitch === undefined) return; 
+
+	if ([0, 180].includes(newPitch!)) {
+		const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+		
+		convertFrontDoorToRegularDoor(dwellingSpaceInternalDoor.data as EcaasForm<InternalDoorData>[], internalWallData, index);
+		useBanner().value = { type: "update-front-door" };
+	}
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
@@ -66,27 +87,40 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(internalWallData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
+			data-field="Zone.BuildingElement.*.pitch"
 		/>
 		<FormKit
 			id="surfaceAreaOfElement"
 			type="govInputWithSuffix"
 			label="Net surface area of element"
-			help="Net area of the opaque building element. The area of all windows or doors should be subtracted before entry."
+			help="Enter the net surface area of both sides of the building element. Subtract the area of any large openings, but not doors."
 			name="surfaceAreaOfElement"
-			validation="required | number | min:0 | max:10000"
-			suffix-text="m²">
-			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">The net surface area should only be for one side of the wall, not both.</p>
-			</GovDetails>
-		</FormKit>
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
-		<GovLLMWarning />
+			:validation="zodTypeAsFormKitValidation(surfaceAreaAdjacentSpaceZod)"
+			suffix-text="m²"
+			data-field="Zone.BuildingElement.*.area"
+		/>
+		<FieldsUValue
+			help="Enter the U-value of half the thickness of the construction build up"
+		/>
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of half the thickness of the construction build up"
+		/>
+		<FieldsMassDistributionClass
+			id="massDistributionClass"
+			name="massDistributionClass"
+			help="This is the distribution of mass in half the thickness of the construction build up"
+		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingSpaceWalls')" secondary>Save progress</GovButton>

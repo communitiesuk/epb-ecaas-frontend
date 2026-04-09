@@ -1,0 +1,146 @@
+<script setup lang="ts">
+import { isInteger, uniqueName } from "#imports";
+import { kilowatt, type Power } from "~/utils/units/power";
+
+const store = useEcaasStore();
+
+defineProps<{
+	model: Extract<DomesticHotWaterHeatSourceData, { "typeOfHeatSource": "solarThermalSystem" }>;
+	index: number;
+}>();
+
+const heatSources = getCombinedHeatSources(store);
+
+const locationOfCollectorLoopPipingOptions = {
+	"outside": "Outside",
+	"heatedSpace": "Heated space",
+	"unheatedSpace": "Unheated space",
+} as const satisfies Record<LocationOfCollectorLoopPipingType, LocationOfCollectorLoopPipingTypeDisplay>;
+
+const aboveMinPower = (node: FormKitNode, min: number) => {
+	const value = node.value as Power;
+	return value.amount >= min;
+};
+
+</script>
+
+<template>
+	<FormKit
+		id="name"
+		type="govInputText"
+		label="Name"
+		help="Provide a name for this element so that it can be identified later"
+		name="name"
+		:validation-rules="{ uniqueName: uniqueName(heatSources, { id: model.id }) }"
+		validation="required | uniqueName"
+		:validation-messages="{
+			uniqueName: 'An element with this name in domestic hot water or space heating already exists. Please enter a unique name.'
+		}" />
+	<FormKit
+		id="locationOfCollectorLoopPiping"
+		type="govRadios"
+		label="Location of collector loop piping"
+		:options="locationOfCollectorLoopPipingOptions"
+		name="locationOfCollectorLoopPiping"
+		validation="required" />
+	<FormKit
+		id="collectorModuleArea"
+		type="govInputWithSuffix"
+		suffix-text="m²"
+		label="Collector module area"
+		name="collectorModuleArea"
+		validation="required | number | min:0 | max:10000"
+		help="Enter the area of the module placed on the roof to collect solar and turn it into heat" />
+	<FormKit
+		id="numberOfCollectorModules"
+		type="govInputInt"
+		label="Number of collector modules"
+		name="numberOfCollectorModules"
+		:validation-rules="{ isInteger }"
+		validation="required | isInteger | min:1"
+		:validation-messages="{
+			isInteger: `Number of collector modules must be an integer.`,
+		}" />
+	<FormKit
+		id="peakCollectorEfficiency"
+		type="govInputInt"
+		label="Peak collector efficiency"
+		name="peakCollectorEfficiency"
+		validation="required | number | min:0 | max:1"
+		help="Enter the peak efficiency of the solar collectors, as a decimal between 0 and 1. This indicates how much of the solar radiation is converted into useable heat." />
+	<FormKit
+		id="incidenceAngleModifier"
+		type="govInputFloat"
+		label="Incidence angle modifier"
+		name="incidenceAngleModifier"
+		validation="required | number | min:0 | max:1"
+		help="Enter the hemispherical incidence angle modifier, as a decimal between 0 and 1">
+		<GovDetails summary-text="Help with this input"><p class="govuk-body">This is a constant which determines how the performance of the panel, or efficiency, changes as it moves away from directly facing the sun.</p></GovDetails>
+	</FormKit>		
+	<FormKit
+		id="firstOrderHeatLossCoefficient"
+		type="govInputWithSuffix"
+		suffix-text="W/(m²·K)"
+		label="First order heat loss coefficient"
+		name="firstOrderHeatLossCoefficient"
+		validation="required | number | min:0 | max:10000"
+		help="This coefficient indicates how quickly the module loses heat to the environment. It can be between 0 and 100." />
+	<FormKit
+		id="secondOrderHeatLossCoefficient"
+		type="govInputWithSuffix"
+		suffix-text="W/(m²·K²)"
+		label="Second order heat loss coefficient"
+		name="secondOrderHeatLossCoefficient"
+		validation="required | number | min:0 | max:10000"
+		help="This can be between 0 and 100" />
+	<FormKit
+		id="heatLossCoefficientOfSolarLoopPipe"
+		type="govInputWithSuffix"
+		suffix-text="W/K"
+		label="Heat loss coefficient of solar loop piping"
+		name="heatLossCoefficientOfSolarLoopPipe"
+		validation="required | number | min:0 | max:10000" />
+	<FormKit
+		id="collectorMassFlowRate"
+		type="govInputWithSuffix"
+		suffix-text="kg/(s·m²)"
+		label="Collector mass flow rate"
+		name="collectorMassFlowRate"
+		validation="required | number | min:0 | max:10000" />
+	<FormKit
+		id="powerOfCollectorPump"
+		type="govInputWithUnit"
+		:unit="kilowatt"
+		label="Power of collector pump"
+		name="powerOfCollectorPump"
+		:validation-rules="{ aboveMinPower }"
+		validation="required | aboveMinPower:0"
+		:validation-messages="{
+			aboveMinPower: `Power of collector pump must be at least 0 ${kilowatt.name}.`,
+		}"
+	/>
+	<FormKit
+		id="powerOfCollectorPumpController"
+		type="govInputWithUnit"
+		:unit="kilowatt"
+		label="Power of collector pump controller"
+		name="powerOfCollectorPumpController"
+		:validation-rules="{ aboveMinPower }"
+		validation="required | aboveMinPower:0"
+		:validation-messages="{
+			aboveMinPower: `Power of collector pump must be at least 0 ${kilowatt.name}.`,
+		}"
+	/>
+	<FormKit
+		id="pitch"
+		type="govInputWithSuffix"
+		label="Pitch"
+		help="Enter the tilt angle, or inclination, of the PV array from horizontal measured upwards facing, where 0° is a horizontal surface and 90° is a vertical surface"
+		name="pitch"
+		validation="required | number | min:0 | max: 90"
+		suffix-text="°"
+		data-field="Zone.BuildingElement.*.pitch" />
+	<FieldsOrientation
+		details-caption="To define the orientation, measure the angle of the panel clockwise from true North, accurate to the nearest degree. If the panel is facing true north then the orientation is 0°. If the panel is facing south then the orientation is 180°."
+	/>
+</template>

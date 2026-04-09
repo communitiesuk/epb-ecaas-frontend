@@ -31,9 +31,16 @@ export interface ApiInfoResponse {
 }
 
 export type FhsComplianceResponseIncludingErrors = {
-	data: SchemaFhsComplianceResponse,
-	meta: SchemaFhsMeta,
+	data: SchemaFhsComplianceResponse;
+	meta: SchemaFhsMeta;
 } | {
-	errors: CorrectedJsonApiError[],
-	meta?: SchemaFhsMeta,
+	errors: CorrectedJsonApiError[];
+	meta?: SchemaFhsMeta;
+};
+
+export type CheckSchema = {
+	success: true;
+} | {
+	success: false;
+	error: string;
 };

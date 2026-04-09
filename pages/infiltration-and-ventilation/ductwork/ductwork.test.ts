@@ -4,7 +4,6 @@ import DuctworkOverview from "./index.vue";
 import DuctworkForm from "./[ductwork].vue";
 import userEvent from "@testing-library/user-event";
 import type { DuctworkData } from "../../../stores/ecaasStore.schema";
-import { DuctShape, DuctType } from "~/schema/api-schema.types";
 import formStatus from "~/constants/formStatus";
 
 describe("ductwork", async () => {
@@ -19,8 +18,8 @@ describe("ductwork", async () => {
 	const ductwork1: DuctworkData = {
 		name: "Ductwork 1",
 		mvhrUnit: "",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -31,8 +30,8 @@ describe("ductwork", async () => {
 	const ductwork2: DuctworkData = {
 		name: "Ductwork 2",
 		mvhrUnit: "",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.supply,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "supply",
 		internalDiameterOfDuctwork: 30,
 		externalDiameterOfDuctwork: 100,
 		insulationThickness: 10,
@@ -43,9 +42,10 @@ describe("ductwork", async () => {
 	const ductwork3: DuctworkData = {
 		name: "Ductwork 3",
 		mvhrUnit: "",
-		ductworkCrossSectionalShape: DuctShape.rectangular,
-		ductType: DuctType.exhaust,
-		ductPerimeter: 200,
+		ductworkCrossSectionalShape: "rectangular",
+		internalDiameterOfDuctwork: 30,
+		externalDiameterOfDuctwork: 100,
+		ductType: "exhaust",
 		insulationThickness: 100,
 		lengthOfDuctwork: 200,
 		thermalInsulationConductivityOfDuctwork: 1,
@@ -80,7 +80,11 @@ describe("ductwork", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: {
-					data: [{ data: ductwork1 }, { data: ductwork2 }, { data: ductwork3 }],
+					data: [
+						{ data: ductwork1 },
+						{ data: ductwork2 },
+						{ data: ductwork3 },
+					],
 				},
 			},
 		});
@@ -95,7 +99,10 @@ describe("ductwork", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: {
-					data: [{ data: ductwork1 }, { data: ductwork2 }],
+					data: [
+						{ data: ductwork1 },
+						{ data: ductwork2 },
+					],
 				},
 			},
 		});
@@ -119,7 +126,7 @@ describe("ductwork", async () => {
 						{
 							data: {
 								name: "Ductwork 1",
-								ductType: DuctType.intake,
+								ductType: "intake",
 							},
 							complete: false,
 						},

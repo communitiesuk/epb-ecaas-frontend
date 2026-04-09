@@ -2,6 +2,8 @@
 import type { Page } from "~/data/pages/pages.types";
 import pagesData from "../../data/pages/pages";
 
+const route = useRoute();
+
 const getBreadcrumbs = (id: string | undefined, breadcrumbs: Array<Page>): Array<Page> => {
 	const currentPage = pagesData.find(page => page.id === id);
 
@@ -13,22 +15,43 @@ const getBreadcrumbs = (id: string | undefined, breadcrumbs: Array<Page>): Array
 	return getBreadcrumbs(currentPage.parentId, breadcrumbs);
 };
 
+const getBreadcrumbUrl = (page: Page) => {
+	let path = page.url;
+
+	const routeSegments = route.path.split("/");
+	const paramSegments = page.url.split("/").filter(p => p.startsWith(":"));
+
+	if (paramSegments.length) {
+		routeSegments.splice(routeSegments.length - paramSegments.length, paramSegments.length);
+		path = routeSegments.join("/");
+	}
+
+	return path;
+};
+
 const pages = computed(() => {
-	const route = useRoute();
 	const params = Object.keys(route.params);
 
-	let path = route.path;
+	const path = route.path;
 	let currentPage = pagesData.find(page => page.url === path);
 
 	if (!currentPage && params.length) {
 		const segments = route.path.split("/");
-		segments.splice(segments.length - params.length, 1);
+		segments.splice(segments.length - params.length, params.length);
 
-		params.forEach(p => segments.push(`:${p}`));
+		const pathStart = segments.join("/");
+		const matchingRoutes = pagesData.filter(page => page.url.startsWith(pathStart) && page.url.includes(":"));
 
-		path = segments.join("/");
+		for (const match of matchingRoutes) {
+			let matchUrl = match.url;
 
-		currentPage = pagesData.find(page => page.url === path);
+			params.forEach(p => matchUrl = matchUrl.replace(`:${p}`, route.params[p] as string));
+
+			if (matchUrl === path) {
+				currentPage = match;
+				break;
+			}
+		}
 	}
 
 	return currentPage ? getBreadcrumbs(currentPage.id, []) : [];
@@ -39,7 +62,7 @@ const pages = computed(() => {
 	<nav v-if="pages.length > 1" class="govuk-breadcrumbs govuk-!-margin-top-0 govuk-!-margin-bottom-6" aria-label="Breadcrumb">
 		<ol class="govuk-breadcrumbs__list">
 			<li v-for="(page, index) in pages" :key="page.id" class="govuk-breadcrumbs__list-item">
-				<NuxtLink v-if="index !== pages.length - 1" class="govuk-breadcrumbs__link" :to="page.url">
+				<NuxtLink v-if="index !== pages.length - 1" class="govuk-breadcrumbs__link" :to="getBreadcrumbUrl(page)">
 					{{ page.title }}
 				</NuxtLink>
 				<span v-else>{{ page.title }}</span>

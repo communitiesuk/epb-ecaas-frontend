@@ -3,12 +3,12 @@ import type { EcaasForm } from "~/stores/ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 import { isEcaasForm } from "#imports";
 
-const title = "PV (photovoltaic) systems and electric batteries";
+const title = "PV systems and electric batteries";
 const page = usePage();
 const store = useEcaasStore();
 
 type PvAndBatteryType = keyof typeof store.pvAndBatteries;
-type PvAndBatteryData = EcaasForm<PvSystemData> & EcaasForm<ElectricBatteryData> & PvDiverterData;
+type PvAndBatteryData = EcaasForm<PvArrayData> & EcaasForm<ElectricBatteryData> & EcaasForm<PvDiverterData>;
 
 function handleRemove(pvAndBatteryType: PvAndBatteryType, index: number) {
 	const data = store.pvAndBatteries[pvAndBatteryType]?.data;
@@ -24,7 +24,7 @@ function handleRemove(pvAndBatteryType: PvAndBatteryType, index: number) {
 } 
 
 function handleDuplicate<T extends PvAndBatteryData>(pvAndBatteryType: PvAndBatteryType, index: number) {
-	const data  = store.pvAndBatteries[pvAndBatteryType]?.data;
+	const data = store.pvAndBatteries[pvAndBatteryType]?.data;
 	const item = data?.[index];
 	let name: string;
     
@@ -54,8 +54,9 @@ function handleDuplicate<T extends PvAndBatteryData>(pvAndBatteryType: PvAndBatt
 function handleComplete() {
 	store.$patch({
 		pvAndBatteries: {
-			pvSystems: { complete: true },
+			pvArrays: { complete: true },
 			electricBattery: { complete: true },
+			diverters: { complete: true },
 		},
 	});
 
@@ -76,16 +77,16 @@ const hasIncompleteEntries = () =>
 		{{ title }}
 	</h1>
 	<CustomList
-		id="pvSystems"
-		title="PV Systems"
-		:form-url="`${page?.url!}/pv-systems`"
-		:items="store.pvAndBatteries.pvSystems.data.filter(x => isEcaasForm(x)).map(x => ({
+		id="pvArrays"
+		title="PV arrays"
+		:form-url="`${page?.url!}/pv-arrays`"
+		:items="store.pvAndBatteries.pvArrays.data.filter(x => isEcaasForm(x)).map(x => ({
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))"
 		:show-status="true"
-		@remove="(index: number) => handleRemove('pvSystems', index)"
-		@duplicate="(index: number) => handleDuplicate('pvSystems', index)"
+		@remove="(index: number) => handleRemove('pvArrays', index)"
+		@duplicate="(index: number) => handleDuplicate('pvArrays', index)"
 	/>
 	<CustomList
 		id="electricBattery"
@@ -99,6 +100,18 @@ const hasIncompleteEntries = () =>
 		:show-status="true"
 		:max-number-of-items=1
 		@remove="(index: number) => handleRemove('electricBattery', index)"
+	/>
+	<CustomList
+		id="diverters"
+		title="Diverters"
+		:form-url="`${page?.url!}/diverters`"
+		:items="store.pvAndBatteries.diverters.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
+		:max-number-of-items=1
+		@remove="(index: number) => handleRemove('diverters', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton

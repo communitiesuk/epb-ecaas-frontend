@@ -66,7 +66,13 @@ watch(el, async (el) => {
 			{{ errorMessage.text }}
 		</p>
 		<div class="govuk-drop-zone" data-module="govuk-file-upload">
-			<input :id :name type="file" class="govuk-file-upload" :accept @change="change">
+			<input
+				:id
+				:name
+				type="file"
+				class="govuk-file-upload"
+				:accept
+				@change="change">
 		</div>
 	</div>
 </template>

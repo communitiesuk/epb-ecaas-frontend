@@ -1,33 +1,35 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { heightOpaqueZod, widthOpaqueZod, surfaceAreaOpaqueZod } from "~/stores/ecaasStore.schema";
+
 const title = "Exposed floor";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data);
+const exposedFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data;
+const index = getStoreIndex(exposedFloorData);
+const floorData = useItemToEdit("floor", exposedFloorData);
 const model = ref(floorData?.data);
 
 const saveForm = (fields: ExposedFloorData) => {	
 	store.$patch((state) => {
-		const { dwellingSpaceFloors } = state.dwellingFabric;
+		const { dwellingSpaceExposedFloor } = state.dwellingFabric.dwellingSpaceFloors;
 
 		const floor: ExposedFloorData = {
 			name: fields.name,
 			pitch: 180,
-			orientation: 0,
 			length: fields.length,
 			width: fields.width,
 			elevationalHeight: fields.elevationalHeight,
 			surfaceArea: fields.surfaceArea,
-			solarAbsorption: fields.solarAbsorption,
 			uValue: fields.uValue,
-			kappaValue: fields.kappaValue,
+			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 		};
 		
-		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceExposedFloor.data);
-		dwellingSpaceFloors.dwellingSpaceExposedFloor.data[index] =  { data: floor, complete: true };
-		dwellingSpaceFloors.dwellingSpaceExposedFloor.complete = false;
+		dwellingSpaceExposedFloor.data[index] = { data: floor, complete: true };
+		dwellingSpaceExposedFloor.complete = false;
 	}); 
 	navigateTo("/dwelling-fabric/floors");
 };
@@ -61,13 +63,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		@submit-invalid="handleInvalidSubmit"
 	>
 		<GovErrorSummary :error-list="errorMessages" test-id="exposedFloorErrorSummary"/>
+		<GovInset>It is assumed that the pitch of the floor is 180°. If this is not the case, enter the element as an external wall.</GovInset>
 		<FormKit
 			id="name"
 			type="govInputText"
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(exposedFloorData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="length"
@@ -76,7 +83,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Length"
 			help="Enter the length of the building element"
 			name="length"
-			validation="required | number | min:0.001 | max:50"
+			:validation="zodTypeAsFormKitValidation(heightOpaqueZod)"
+			data-field="Zone.BuildingElement.*.height"
 		/>
 		<FormKit
 			id="width"
@@ -85,7 +93,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Width"
 			help="Enter the width of the building element"
 			name="width"
-			validation="required | number | min:0.001 | max:50"
+			:validation="zodTypeAsFormKitValidation(widthOpaqueZod)"
+			data-field="Zone.BuildingElement.*.width"
 		/>
 		<FieldsElevationalHeight />
 		<FormKit
@@ -95,15 +104,22 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Net surface area"
 			help="Enter the net area of the building element"
 			name="surfaceArea"
-			validation="required | number | min:0.01 | max:10000"
+			:validation="zodTypeAsFormKitValidation(surfaceAreaOpaqueZod)"
+			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption" additional-text="The solar absorption coefficient of a material in an exposed floor directly affects heat loss because it dictates how much solar radiation is absorbed and converted into heat within the floor material. A higher solar absorption coefficient means more solar energy is absorbed, potentially increasing the floor's temperature and, consequently, the amount of heat lost to the surrounding environment."/>
-		<FieldsUValue id="uValue" name="uValue" />
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
-		<GovLLMWarning />
+		<FieldsUValue help="Enter the U-value of the full thickness of the floor build-up" />
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of the full thickness of the floor build-up"
+		/>
+		<FieldsMassDistributionClass
+			id="massDistributionClass"
+			name="massDistributionClass"
+			help="This is the distribution of mass in the full thickness of the floor build up"
+		/>
 		<div class="govuk-button-group">
-			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<FormKit type="govButton" label="Save an mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>

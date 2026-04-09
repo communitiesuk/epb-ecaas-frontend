@@ -6,10 +6,6 @@
 .cache
 dist
 
-# GOV.UK assets copied into public dir
-public/assets
-public/static/assets
-
 # Node dependencies
 node_modules
 
@@ -21,6 +17,7 @@ logs
 .DS_Store
 .fleet
 .idea
+.nuxtrc
 
 # Local env files
 .env
@@ -36,4 +33,5 @@ tmp
 /blob-report/
 /playwright/.cache/
 
-playwright/.auth
+# Docker DynamoDB
+docker/dynamodb

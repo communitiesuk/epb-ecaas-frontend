@@ -1,7 +1,7 @@
-import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType, FlueGasExhaustSituation, CombustionFuelType, CombustionAirSupplySituation, CombustionApplianceType } from "~/schema/api-schema.types";
-import { mapAirPermeabilityData, mapCombustionAppliancesData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
+import { mapAirPermeabilityData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
+import type { SchemaMechanicalVentilation } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
@@ -14,10 +14,24 @@ describe("infiltration ventilation mapper", () => {
 		data: {
 			id: "bathroom exhaust fan",
 			name: "bathroom exhaust fan",
-			typeOfMechanicalVentilationOptions: VentType.MVHR,
+			typeOfMechanicalVentilationOptions: "MVHR",
 			airFlowRate: unitValue(30, litrePerSecond),
-			mvhrLocation: MVHRLocation.inside,
-			mvhrEfficiency: 1,
+			mvhrLocation: "inside",
+			productReference: "1000",
+			midHeightOfAirFlowPathForExhaust: 1.5,
+			orientationOfExhaust: 90,
+			pitchOfExhaust: 10,
+			midHeightOfAirFlowPathForIntake: 1.5,
+			orientationOfIntake: 80,
+			pitchOfIntake: 10,
+			installedUnderApprovedScheme: true,
+			measuredFanPowerAndAirFlowRateKnown: true,
+			measuredAirFlowRate: 37,
+			measuredFanPower: 12.26,
+			associatedItemId: "none",
+			hasAssociatedItem: false,
+			pitch: 90,
+			orientation: 180,
 		},
 	}];
 
@@ -40,15 +54,14 @@ describe("infiltration ventilation mapper", () => {
 					data: {
 						ventilationZoneHeight: 20,
 						dwellingEnvelopeArea: 20,
-						dwellingElevationalLevelAtBase: 0,
-						crossVentilationPossible: false,
+						baseHeightOfVentilationZone: 0,
 						maxRequiredAirChangeRate: 5,
 					},
 				},
 				airPermeability: {
 					...baseForm,
 					data: {
-						testPressure: 5.0,
+						testPressure: "Pulse test only",
 						airTightnessTestResult: 2.2,
 					},
 				},
@@ -57,46 +70,52 @@ describe("infiltration ventilation mapper", () => {
 				},
 			},
 		});
-    
+
 		// Act
 		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
-    
+
 		// Assert
 		expect(fhsInputData.InfiltrationVentilation).toBeDefined();
 		expect(fhsInputData.InfiltrationVentilation?.MechanicalVentilation).toBeDefined();
 
-		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"];
+		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;
 		expect(firstMechVent).toBeDefined();
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
-		expect(firstMechVent?.vent_type).toBe(VentType.MVHR);
+		expect(firstMechVent?.vent_type).toBe("MVHR");
 		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(108);
-		expect(firstMechVent?.sup_air_flw_ctrl).toBe(SupplyAirFlowRateControlType.ODA); 
-		expect(firstMechVent?.sup_air_temp_ctrl).toBe(SupplyAirTemperatureControlType.CONST);
-		expect(firstMechVent?.mvhr_location).toBe(MVHRLocation.inside);
-		expect(firstMechVent?.mvhr_eff).toBe(1);
-		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
-		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
+		expect(firstMechVent?.mvhr_location).toBe("inside");
+		expect("measured_air_flow_rate" in firstMechVent && firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
+		expect("measured_fan_power" in firstMechVent && firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.ductwork).toBeDefined();
-		expect(firstMechVent?.SFP).not.toBeDefined();
+		expect(firstMechVent.position_exhaust).toEqual({
+			mid_height_air_flow_path: 1.5,
+			orientation360: 90,
+			pitch: 10,
+		});
+		expect(firstMechVent.position_intake).toEqual({
+			mid_height_air_flow_path: 1.5,
+			orientation360: 80,
+			pitch: 10,
+		});
 	});
 
 
 	it("maps ductwork input state to FHS input request", () => {
 		// Arrange
-		
+
 		const ductwork: EcaasForm<DuctworkData>[] = [{
 			...baseForm,
 			data: {
 				name: "ductwork 1",
 				mvhrUnit: "bathroom exhaust fan",
-				ductworkCrossSectionalShape: DuctShape.circular,
+				ductworkCrossSectionalShape: "circular",
 				internalDiameterOfDuctwork: 200,
 				externalDiameterOfDuctwork: 300,
 				lengthOfDuctwork: 10.0,
 				thermalInsulationConductivityOfDuctwork: 0.023,
 				insulationThickness: 100,
 				surfaceReflectivity: false,
-				ductType: DuctType.extract,
+				ductType: "extract",
 			},
 		}];
 
@@ -117,7 +136,7 @@ describe("infiltration ventilation mapper", () => {
 				airPermeability: {
 					...baseForm,
 					data: {
-						testPressure: 5.0,
+						testPressure: "Pulse test only",
 						airTightnessTestResult: 2.2,
 					},
 				},
@@ -126,22 +145,22 @@ describe("infiltration ventilation mapper", () => {
 				},
 			},
 		});
-    
+
 		// Act
 		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
 
 		// Assert
-		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"];
-		const firstDuctwork = firstMechVent!.ductwork![0];
+		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;;
+		const firstDuctwork = firstMechVent.ductwork[0];
 
-		expect(firstDuctwork?.cross_section_shape).toBe(DuctShape.circular);
+		expect(firstDuctwork?.cross_section_shape).toBe("circular");
 		expect(firstDuctwork?.internal_diameter_mm).toBe(200);
 		expect(firstDuctwork?.external_diameter_mm).toBe(300);
 		expect(firstDuctwork?.length).toBe(10);
 		expect(firstDuctwork?.insulation_thermal_conductivity).toBe(0.023);
 		expect(firstDuctwork?.insulation_thickness_mm).toBe(100);
 		expect(firstDuctwork?.reflective).toBe(false);
-		expect(firstDuctwork?.duct_type).toBe(DuctType.extract);
+		expect(firstDuctwork?.duct_type).toBe("extract");
 	});
 
 	it("maps input state for MVHR without ductwork to FHS input request", () => {
@@ -156,7 +175,7 @@ describe("infiltration ventilation mapper", () => {
 				airPermeability: {
 					...baseForm,
 					data: {
-						testPressure: 5.0,
+						testPressure: "Pulse test only",
 						airTightnessTestResult: 2.2,
 					},
 				},
@@ -169,14 +188,14 @@ describe("infiltration ventilation mapper", () => {
 				},
 			},
 		});
-    
+
 		// Act
 		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
 
 		// Assert
-		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"];
+		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;;
 
-		expect(firstMechVent!.ductwork).toStrictEqual([]);
+		expect(firstMechVent.ductwork).toStrictEqual([]);
 	});
 
 
@@ -188,8 +207,14 @@ describe("infiltration ventilation mapper", () => {
 			data: {
 				id: "bathroom exhaust fan",
 				name: "bathroom exhaust fan",
-				typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
+				typeOfMechanicalVentilationOptions: "Intermittent MEV",
 				airFlowRate: unitValue(40, litrePerSecond),
+				specificFanPower: 50,
+				midHeightOfAirFlowPath: 10,
+				associatedItemId: "none",
+				hasAssociatedItem: false,
+				pitch: 90,
+				orientation: 180,
 			},
 		}];
 
@@ -198,50 +223,111 @@ describe("infiltration ventilation mapper", () => {
 				mechanicalVentilation: {
 					...baseForm,
 					data: mechVent,
-				},				
+				},
 			},
 		});
 
 		// Act
 		const fhsInputData = mapMechanicalVentilationData(resolveState(store.$state));
-    
+
 		// Assert
-		const firstMechVent = fhsInputData["bathroom exhaust fan"];
+		const firstMechVent = fhsInputData["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;;
 		expect(firstMechVent).toBeDefined();
-		expect(firstMechVent?.EnergySupply).toBe("mains elec");
-		expect(firstMechVent?.vent_type).toBe(VentType.Intermittent_MEV);
-		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(144);
-		expect(firstMechVent?.sup_air_flw_ctrl).toBe(SupplyAirFlowRateControlType.ODA); 
-		expect(firstMechVent?.sup_air_temp_ctrl).toBe(SupplyAirTemperatureControlType.CONST);
-		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
-		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
-		expect(firstMechVent?.ductwork).toBeUndefined();
-		expect(firstMechVent?.SFP).toBe(1.5); // NOTE - hardcoded to sensible default for now
+		expect(firstMechVent).toStrictEqual({
+			vent_type: "Intermittent MEV",
+			EnergySupply: "mains elec",
+			design_outdoor_air_flow_rate: 144,
+			SFP: 50,
+			mid_height_air_flow_path: 10,
+			pitch: 90,
+			orientation360: 180,
+		});
 	});
 
 	it("maps vents to FHS input request", async () => {
-		const ventName = "Acme"; 
+		const ventName = "Acme";
 
 		// Arrange
-		const ventData: EcaasForm<VentData>[] = [{
-			...baseForm,
-			data: {
-				name: ventName,
-				typeOfVent: "airBrick",
-				effectiveVentilationArea: 100,
-				openingRatio: 0.6,
-				midHeightOfZone: 1.5,
-				orientation: 180,
-				pitch: 45,
+		const externalWallId = "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421";
+		const externalWall: EcaasForm<ExternalWallData>[] = [
+			{
+				...baseForm,
+				data: {
+					id: externalWallId,
+					name: "External wall 1",
+					pitchOption: "custom",
+					pitch: 45,
+					orientation: 180,
+					length: 20,
+					height: 0.5,
+					elevationalHeight: 20,
+					surfaceArea: 10,
+					uValue: 1,
+					colour: "Intermediate",
+					arealHeatCapacity: "Very light",
+					massDistributionClass: "I",
+				},
 			},
-		}];
+		];
 
+		const window: WindowData = {
+			id: "test-id-1",
+			name: "Window 1",
+			taggedItem: externalWallId,
+			height: 1,
+			width: 1,
+			uValue: 1,
+			solarTransmittance: 0.1,
+			elevationalHeight: 1,
+			numberOpenableParts: "1",
+			curtainsOrBlinds: true,
+			treatmentType: "blinds",
+			treatmentControls: "manual",
+			thermalResistivityIncrease: 1,
+			solarTransmittanceReduction: 0.1,
+			midHeightOpenablePart1: 1,
+			openingToFrameRatio: 0.3,
+			maximumOpenableArea: 1,
+			securityRisk: false,
+			hasShading: false,
+		};
+
+		const ventData: EcaasForm<VentData>[] = [
+			{
+				...baseForm,
+				data: {
+					name: ventName,
+					associatedItemId: window.id,
+					effectiveVentilationArea: 100,
+					openingRatio: 0.6,
+					midHeightOfZone: 1.5,
+					hasAssociatedItem: true,
+				},
+			},
+		];
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
 					...baseForm,
 					data: ventData,
-				},				
+				},
+			},
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						...baseForm,
+						data: externalWall,
+					},
+				},
+				dwellingSpaceWindows: {
+					data: [
+						{
+							data: window,
+							complete: true,
+						},
+					],
+					complete: true,
+				},
 			},
 		});
 
@@ -252,18 +338,119 @@ describe("infiltration ventilation mapper", () => {
 		const vent = fhsInputData[ventName];
 		expect(vent?.area_cm2).toBe(100);
 		expect(vent?.mid_height_air_flow_path).toBe(1.5);
-		expect(vent?.pressure_difference_ref).toBe(20);
 		expect(vent?.orientation360).toBe(180);
 		expect(vent?.pitch).toBe(45);
 	});
+
+	it("maps vents to FHS input request when associated item is not selected", () => {
+		const ventName = "Acme";
+
+		// Arrange
+		const ventData: EcaasForm<VentData>[] = [
+			{
+				...baseForm,
+				data: {
+					name: ventName,
+					effectiveVentilationArea: 100,
+					openingRatio: 0.6,
+					midHeightOfZone: 1.5,
+					pitch: 45,
+					orientation: 180,
+					hasAssociatedItem: false,
+					associatedItemId: "none",
+				},
+			},
+		];
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					...baseForm,
+					data: ventData,
+				},
+			},
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [
+						{
+							data: window,
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+		});
+
+		// Act
+		const fhsInputData = mapVentsData(resolveState(store.$state));
+
+		// Assert
+		const vent = fhsInputData[ventName];
+		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.mid_height_air_flow_path).toBe(1.5);
+		expect(vent?.orientation360).toBe(180);
+		expect(vent?.pitch).toBe(45);
+	});
+
+	it("maps vents to FHS input request when associated item is 'None of the above'", async () => {
+		const ventName = "Acme";
+
+		// Arrange
+		const ventData: EcaasForm<VentData>[] = [
+			{
+				...baseForm,
+				data: {
+					name: ventName,
+					associatedItemId: "none",
+					effectiveVentilationArea: 100,
+					openingRatio: 0.6,
+					midHeightOfZone: 1.5,
+					pitch: 45,
+					orientation: 180,
+					hasAssociatedItem: false,
+				},
+			},
+		];
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					...baseForm,
+					data: ventData,
+				},
+			},
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [
+						{
+							data: window,
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+		});
+
+		// Act
+		const fhsInputData = mapVentsData(resolveState(store.$state));
+
+		// Assert
+		const vent = fhsInputData[ventName];
+		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.mid_height_air_flow_path).toBe(1.5);
+		expect(vent?.orientation360).toBe(180);
+		expect(vent?.pitch).toBe(45);
+	});
+
 
 	it("maps ventilation data to extract needed fields", async () => {
 		// Arrange
 		const ventilationData: VentilationData = {
 			ventilationZoneHeight: 10,
 			dwellingEnvelopeArea: 200,
-			dwellingElevationalLevelAtBase: 4,
-			crossVentilationPossible: true,
+			baseHeightOfVentilationZone: 4,
 			maxRequiredAirChangeRate: 1.5,
 		};
 
@@ -281,8 +468,7 @@ describe("infiltration ventilation mapper", () => {
 		const expectedVentilationData = {
 			dwellingHeight: 10,
 			dwellingEnvelopeArea: 200,
-			dwellingElevationalLevelAtBase: 4,
-			crossVentilationPossible: true,
+			baseHeightOfVentilationZone: 4,
 		};
 		expect(fhsInputData).toEqual(expectedVentilationData);
 	});
@@ -290,7 +476,7 @@ describe("infiltration ventilation mapper", () => {
 	it("maps air permeability data to extract needed fields", async () => {
 		// Arrange
 		const airPermeabilityData: AirPermeabilityData = {
-			testPressure: 50,
+			testPressure: "Standard",
 			airTightnessTestResult: 5,
 		};
 
@@ -307,39 +493,7 @@ describe("infiltration ventilation mapper", () => {
 		const fhsInputData = mapAirPermeabilityData(resolveState(store.$state));
 
 		// Assert
-		expect(fhsInputData.test_pressure).toBe(50);
+		expect(fhsInputData.test_pressure).toBe("Standard");
 		expect(fhsInputData.test_result).toBe(5);
-	});
-
-	it("maps combustion appliances data to FHS input request", () => {
-		// Arrange
-		const combustionAppliances: CombustionApplianceData[] = [{
-			name: "Gas Boiler",
-			airSupplyToAppliance: CombustionAirSupplySituation.room_air,
-			exhaustMethodFromAppliance: FlueGasExhaustSituation.into_mech_vent,
-			typeOfFuel: CombustionFuelType.gas,
-		}];
-
-		store.$patch({
-			infiltrationAndVentilation: {
-				combustionAppliances: {
-					[CombustionApplianceType.open_gas_fire]: {
-						...baseForm,
-						data: combustionAppliances,
-					},
-				},
-			},
-		});
-
-		// Act
-		const fhsInputData = mapCombustionAppliancesData(resolveState(store.$state));
-
-		// Assert
-		const gasBoiler = fhsInputData["Gas Boiler"];
-		expect(gasBoiler).toBeDefined();
-		expect(gasBoiler?.supply_situation).toBe(CombustionAirSupplySituation.room_air);
-		expect(gasBoiler?.exhaust_situation).toBe(FlueGasExhaustSituation.into_mech_vent);
-		expect(gasBoiler?.fuel_type).toBe(CombustionFuelType.gas);
-		expect(gasBoiler?.appliance_type).toBe(CombustionApplianceType.open_gas_fire);
 	});
 });

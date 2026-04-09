@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
+import type { SchemaLeaksTestPressure } from "~/schema/aliases";
 
 const title = "Air permeability";
 const store = useEcaasStore();
@@ -8,6 +9,11 @@ const { autoSaveForm } = useForm();
 const model = ref({
 	...store.infiltrationAndVentilation.airPermeability.data,
 });
+
+const testPressureOptions = {
+	"Standard": "Blower door (test pressure is 50Pa)",
+	"Pulse test only": "Pulse test (test pressure is 4Pa)",
+} as const satisfies Record<SchemaLeaksTestPressure, string>;
 
 const saveForm = (fields: AirPermeabilityData) => {
 	store.$patch({
@@ -48,44 +54,22 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<GovErrorSummary :error-list="errorMessages" test-id="airPermeabilityErrorSummary"/>
 		<FormKit
 			id="testPressure"
-			type="govInputWithSuffix"
-			label="Test pressure"
-			help="Enter the reference pressure difference from the pressure test"
+			type="govRadios"
+			:options="testPressureOptions"
+			label="Type of infiltration pressure test"
+			help="Select the type of infiltration pressure test conducted"
 			name="testPressure"
-			validation="required | number | min:0 | max:500"
-			suffix-text="Pa"
-		>
-			<GovDetails summary-text="Help with this input">
-				<table class="govuk-table">
-					<thead class="govuk-table__head">
-						<tr class="govuk-table__row">
-							<th scope="col" class="govuk-table__header govuk-!-width-one-half">Type of test</th>
-							<th scope="col" class="govuk-table__header">Test pressure</th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table__header">Blower door</th>
-							<td class="govuk-table__cell">50 Pa</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table__header">Pulse</th>
-							<td class="govuk-table__cell">4 Pa</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
-		</FormKit>
+			validation="required"
+		/>
 		<FormKit
 			id="airTightnessTestResult"
 			type="govInputWithSuffix"
 			label="Air tightness test result"
-			help="Enter the amount of air leakage (in m³/h) from an airtightness test at the given reference pressure difference divided by the internal envelope area of the building (in m²)"
+			help="Enter the amount of air leakage from the airtightness test. This is the AP50 result from a blower door test or the AP4 result from the pulse test."
 			name="airTightnessTestResult"
 			validation="required | number"
 			suffix-text="m³/(h·m²)"
 		/>
-		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('infiltrationAndVentilation')" secondary>Save progress</GovButton>

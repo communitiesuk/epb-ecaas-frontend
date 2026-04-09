@@ -1,35 +1,34 @@
-import { PageType  } from "./pages.types";
 import type { Page } from "./pages.types";
 
-const coolingPages: Array<Page> = [
+const coolingPages = [
 	{
 		id: "cooling",
 		title: "Cooling",
 		url: "/cooling",
-		type: PageType.Section,
+		type: "section",
 		parentId: "taskList",
 	},
 	{
 		id: "airConditioning",
-		title: "Air conditioning",
-		url: "/cooling/air-conditioning/create",
-		type: PageType.Task,
-		parentId: "cooling",
-	},
-	{
-		id: "airConditioningEdit",
-		title: "Air conditioning",
+		title: "Air conditioning system",
 		url: "/cooling/air-conditioning/:airConditioning",
-		type: PageType.Task,
+		type: "task",
 		parentId: "cooling",
 	},
 	{
-		id: "coolingSummary",
+		id: "airConditioningCreate",
+		title: "Air conditioning system",
+		url: "/cooling/air-conditioning/create",
+		type: "task",
+		parentId: "cooling",
+	},
+	{
+		id: "coolingSystemsSummary",
 		title: "Summary",
 		url: "/cooling/summary",
-		type: PageType.Summary,
+		type: "summary",
 		parentId: "cooling",
 	},
-];
+] as const satisfies Array<Page>;
 
 export default coolingPages;

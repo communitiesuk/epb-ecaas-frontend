@@ -1,81 +1,83 @@
 <script setup lang="ts">
-import type { FormKitOptionsProp } from "@formkit/inputs";
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
+import type { SchemaThermalBridgeJunctionType } from "~/schema/aliases";
+import { lengthThermalBridgeLinearZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Linear thermal bridges";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const thermalBridgeData = useItemToEdit("bridging", store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data);
+const linearThermalBridgeStoreData = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data;
+const index = getStoreIndex(linearThermalBridgeStoreData);
+const thermalBridgeData = useItemToEdit("bridging", linearThermalBridgeStoreData);
 const model = ref(thermalBridgeData?.data);
 
 const defaultName = "Linear thermal bridge";
-const options: FormKitOptionsProp[] = [{
-	e1: "E1: Steel lintel with perforated steel base plate",
-	e2: "E2: Other lintels (including other steel lintels)",
-	e3: "E3: Sill",
-	e4: "E4: Jamb",
-	e5: "E5: Ground floor (normal)",
-	e6: "E6: Intermediate floor within a dwelling",
-	e7: "E7: Party floor between dwellings (in blocks of flats)",
-	e8: "E8: Balcony within a dwelling, wall insulation continuous",
-	e9: "E9: Balcony between dwellings, wall insulation continuous",
-	e10: "E10: Eaves (insulation at ceiling level)",
-	e11: "E11: Eaves (insulation at rafter level)",
-	e12: "E12: Gable (insulation at ceiling level)",
-	e13: "E13: Gable (insulation at rafter level)",
-	e14: "E14: Flat roof",
-	e15: "E15: Flat roof with parapet",
-	e16: "E16: Corner (normal)",
-	e17: "E17: Corner (inverted - internal area greater than external area)",
-	e18: "E18: Party wall between dwellings",
-	e19: "E19: Ground floor (inverted)",
-	e20: "E20: Exposed floor (normal)",
-	e21: "E21: Exposed floor (inverted)",
-	e22: "E22: Basement floor",
-	e23: "E23: Balcony within or between dwellings, balcony support penetrates wall insulation",
-	e24: "E24: Eaves (insulation at ceiling level - inverted)",
-	e25: "E25: Staggered party wall between dwellings",
-},{
-	p1: "P1: Party wall - Ground floor",
-	p2: "P2: Party wall - Intermediate floor within a dwelling",
-	p3: "P3: Party wall - Intermediate floor between dwellings (in blocks of flats)",
-	p4: "P4: Party wall - Roof (insulation at ceiling level)",
-	p5: "P5: Party wall - Roof (insulation at rafter level)",
-	p6: "P6: Party wall - Ground floor (inverted)",
-	p7: "P7: Party Wall - Exposed floor (normal)",
-	p8: "P8: Party Wall - Exposed floor (inverted)",
-},{
-	r1: "R1: Head of roof window",
-	r2: "R2: Sill of roof window",
-	r3: "R3: Jamb of roof window",
-	r4: "R4: Ridge (vaulted ceiling)",
-	r5: "R5: Ridge (inverted)",
-	r6: "R6: Flat ceiling",
-	r7: "R7: Flat ceiling (inverted)",
-	r8: "R8: Roof to wall (rafter)",
-	r9: "R9: Roof to wall (flat ceiling)",
-	r10: "R10: All other roof or room-in-roof junctions",
-	r11: "R11: Upstands or kerbs of rooflights",
-}];
 
-function getName(fields: LinearThermalBridgeData) {
-	const option = options.find(o => Object.keys(o).includes(fields.typeOfThermalBridge));
-	const entry = option ? Object.entries(option).find(o => o[0] === fields.typeOfThermalBridge) : undefined;
-	return entry?.[1] || defaultName;
-}
+type StartsWith<T extends string, Prefix extends string> = T extends `${Prefix}${string}` ? T : never;
+
+const junctionTypeOptions = [{
+	E1: "E1: Steel lintel with perforated steel base plate",
+	E2: "E2: Other lintels (including other steel lintels)",
+	E3: "E3: Sill",
+	E4: "E4: Jamb",
+	E5: "E5: Ground floor (normal)",
+	E6: "E6: Intermediate floor within a dwelling",
+	E7: "E7: Party floor between dwellings (in blocks of flats)",
+	E8: "E8: Balcony within a dwelling, wall insulation continuous",
+	E9: "E9: Balcony between dwellings, wall insulation continuous",
+	E10: "E10: Eaves (insulation at ceiling level)",
+	E11: "E11: Eaves (insulation at rafter level)",
+	E12: "E12: Gable (insulation at ceiling level)",
+	E13: "E13: Gable (insulation at rafter level)",
+	E14: "E14: Flat roof",
+	E15: "E15: Flat roof with parapet",
+	E16: "E16: Corner (normal)",
+	E17: "E17: Corner (inverted - internal area greater than external area)",
+	E18: "E18: Party wall between dwellings",
+	E19: "E19: Ground floor (inverted)",
+	E20: "E20: Exposed floor (normal)",
+	E21: "E21: Exposed floor (inverted)",
+	E22: "E22: Basement floor",
+	E23: "E23: Balcony within or between dwellings, balcony support penetrates wall insulation",
+	E24: "E24: Eaves (insulation at ceiling level - inverted)",
+	E25: "E25: Staggered party wall between dwellings",
+},{
+	P1: "P1: Party wall - Ground floor",
+	P2: "P2: Party wall - Intermediate floor within a dwelling",
+	P3: "P3: Party wall - Intermediate floor between dwellings (in blocks of flats)",
+	P4: "P4: Party wall - Roof (insulation at ceiling level)",
+	P5: "P5: Party wall - Roof (insulation at rafter level)",
+	P6: "P6: Party wall - Ground floor (inverted)",
+	P7: "P7: Party Wall - Exposed floor (normal)",
+	P8: "P8: Party Wall - Exposed floor (inverted)",
+},{
+	R1: "R1: Head of roof window",
+	R2: "R2: Sill of roof window",
+	R3: "R3: Jamb of roof window",
+	R4: "R4: Ridge (vaulted ceiling)",
+	R5: "R5: Ridge (inverted)",
+	R6: "R6: Flat ceiling",
+	R7: "R7: Flat ceiling (inverted)",
+	R8: "R8: Roof to wall (rafter)",
+	R9: "R9: Roof to wall (flat ceiling)",
+	R10: "R10: All other roof or room-in-roof junctions",
+	R11: "R11: Upstands or kerbs of rooflights",
+}] as const satisfies [
+	Record<StartsWith<SchemaThermalBridgeJunctionType, "E">, `${SchemaThermalBridgeJunctionType}: ${string}`>,
+	Record<StartsWith<SchemaThermalBridgeJunctionType, "P">, `${SchemaThermalBridgeJunctionType}: ${string}`>,
+	Record<StartsWith<SchemaThermalBridgeJunctionType, "R">, `${SchemaThermalBridgeJunctionType}: ${string}`>,
+];
 
 const saveForm = (fields: LinearThermalBridgeData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceLinearThermalBridges } = state.dwellingFabric.dwellingSpaceThermalBridging;
-		const index = getStoreIndex(dwellingSpaceLinearThermalBridges.data);
-
-		const name = getName(fields);
 
 		dwellingSpaceLinearThermalBridges.data[index] = {
 			data: {
-				name,
 				typeOfThermalBridge: fields.typeOfThermalBridge,
+				name: fields.name,
 				linearThermalTransmittance: fields.linearThermalTransmittance,
 				length: fields.length,
 			},
@@ -90,17 +92,29 @@ const saveForm = (fields: LinearThermalBridgeData) => {
 autoSaveElementForm<LinearThermalBridgeData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges,
-	defaultName,
+	defaultName: "",
 	onPatch: (state, newData, index) => {
-		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[index] = {
-			data: {
-				...newData.data,
-				name: getName(newData.data),
-			},
-		};
+		if (!newData.data.name) {
+			newData.data.name = getDefaultName(newData.data.typeOfThermalBridge) ?? defaultName;
+
+			model.value = {
+				...model.value,
+				name: newData.data.name,
+			};
+		}
+
+		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
 	},
 });
+
+const getDefaultName = (typeOfThermalBridge: SchemaThermalBridgeJunctionType): string | undefined => {
+	const options = junctionTypeOptions.find(o => Object.hasOwn(o, typeOfThermalBridge as PropertyKey)) as Record<string, string>;
+
+	if (options) {
+		return options[typeOfThermalBridge as string];
+	}
+};
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -123,32 +137,45 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="typeOfThermalBridge"
 			type="govDropdown"
 			label="Type of thermal bridge"
-			help="Select the junction type from SAP 10.2 Table R2"
+			help="Select the junction type from HEM guidance Table 3.7.2"
 			name="typeOfThermalBridge"
 			validation="required"
-			:options="options"
-			data-field="Zone.ThermalBridging.junction_type"
+			:options="junctionTypeOptions"
+			data-field="Zone.ThermalBridging.*.junction_type"
 		/>
-		<FormKit
-			id="linearThermalTransmittance"
-			type="govInputWithSuffix"
-			label="Linear thermal transmittance"
-			help="Enter the linear thermal transmittance of the thermal bridge"
-			name="linearThermalTransmittance"
-			validation="required | number"
-			suffix-text="W/(m·K)"
-			data-field="Zone.ThermalBridging.linear_thermal_transmittance"
-		/>
-		<FormKit
-			id="length"
-			type="govInputWithSuffix"
-			label="Length of thermal bridge"
-			name="length"
-			validation="required | number | min:0 | max:10000"
-			suffix-text="m"
-			data-field="Zone.ThermalBridging.length"
-		/>
-		<GovLLMWarning />
+		<template v-if="model?.typeOfThermalBridge">
+			<FormKit
+				id="name"
+				type="govInputText"
+				label="Name"
+				help="Provide a name for this element so that it can be identified later"
+				name="name"
+				:validation-rules="{ uniqueName: uniqueName(linearThermalBridgeStoreData, { index }) }"
+				validation="required | uniqueName"
+				:validation-messages="{
+					uniqueName: 'An element with this name already exists. Please enter a unique name.'
+				}"
+			/>
+			<FormKit
+				id="linearThermalTransmittance"
+				type="govInputWithSuffix"
+				label="Linear thermal transmittance"
+				help="Enter the linear thermal transmittance of the thermal bridge"
+				name="linearThermalTransmittance"
+				validation="required | number"
+				suffix-text="W/(m·K)"
+				data-field="Zone.ThermalBridging.*.linear_thermal_transmittance"
+			/>
+			<FormKit
+				id="length"
+				type="govInputWithSuffix"
+				label="Length of thermal bridge"
+				name="length"
+				:validation="zodTypeAsFormKitValidation(lengthThermalBridgeLinearZod)"
+				suffix-text="m"
+				data-field="Zone.ThermalBridging.*.length"
+			/>
+		</template>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('dwellingSpaceThermalBridging')" secondary test-id="saveProgress">Save progress</GovButton>

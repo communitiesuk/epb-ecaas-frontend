@@ -1,8 +1,6 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import DefaultPage from "./default.vue";
 import { screen } from "@testing-library/vue";
-import { MVHRLocation, VentType } from "~/schema/api-schema.types";
-
 
 describe("nav bar with ductwork", () => {
 	const store = useEcaasStore();
@@ -10,10 +8,25 @@ describe("nav bar with ductwork", () => {
 	const mechanicalVentilation1: MechanicalVentilationData = {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		airFlowRate: 12,
-		mvhrLocation: MVHRLocation.inside,
-		mvhrEfficiency: 0.2,
+		typeOfMechanicalVentilationOptions: "MVHR",
+		airFlowRate: {
+			amount: 12,
+			unit: "litres per second",
+		},
+		mvhrLocation: "inside",
+		productReference: "1000",
+		midHeightOfAirFlowPathForExhaust: 1.5,
+		orientationOfExhaust: 90,
+		pitchOfExhaust: 10,
+		midHeightOfAirFlowPathForIntake: 1.5,
+		orientationOfIntake: 80,
+		pitchOfIntake: 10,
+		installedUnderApprovedScheme: true,
+		measuredFanPowerAndAirFlowRateKnown: false,
+		associatedItemId: "none",
+		hasAssociatedItem: false,
+		pitch: 90,
+		orientation: 180,
 	};
 
 	it("should not show the mvhr ductwork link when no mechanical ventilations of type mvhr have been added", async () => {

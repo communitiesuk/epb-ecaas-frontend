@@ -2,7 +2,6 @@ import InfiltrationAndVentilationTaskPage from "./index.vue";
 import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { v4 as uuidv4 } from "uuid";
-import { MVHRLocation, VentType } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -15,10 +14,25 @@ describe("the ventilation task page", async () => {
 	const mechanicalVentilation1: MechanicalVentilationData = {
 		id: uuidv4(),
 		name: "Mechanical name 1",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		airFlowRate: 12,
-		mvhrLocation: MVHRLocation.inside,
-		mvhrEfficiency: 0.1,
+		typeOfMechanicalVentilationOptions: "MVHR",
+		airFlowRate: {
+			amount: 12,
+			unit: "litres per second",
+		},
+		mvhrLocation: "inside",
+		productReference: "1000",
+		midHeightOfAirFlowPathForExhaust: 1.5,
+		orientationOfExhaust: 90,
+		pitchOfExhaust: 10,
+		midHeightOfAirFlowPathForIntake: 1.5,
+		orientationOfIntake: 80,
+		pitchOfIntake: 10,
+		installedUnderApprovedScheme: true,
+		measuredFanPowerAndAirFlowRateKnown: false,
+		associatedItemId: "none",
+		hasAssociatedItem: false,
+		pitch: 90,
+		orientation: 180,
 	};
 
 	afterEach(() => {

@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import CookieConsent from "~/constants/cookieConsent";
+import type { CookieRef } from "#app";
+import type { CookieConsent } from "~/constants/cookieConsent";
 
 const serviceName = "Cookies on Check Part L building compliance";
 
-const cookieConsent = useCookie("cookieConsent");
+const cookieConsent: CookieRef<CookieConsent | undefined> = useCookie("cookieConsent");
 const hideCookieMessage = useCookie("hideCookieMessage");
 
 const { gtag } = useGtag();
 
 const handleAccept = () => {
-	cookieConsent.value = CookieConsent.Accepted;
+	cookieConsent.value = "accepted";
 
 	gtag("consent", "update", {
 		analytics_storage: "granted",
@@ -17,7 +18,7 @@ const handleAccept = () => {
 };
 
 const handleReject = () => {
-	cookieConsent.value = CookieConsent.Rejected;
+	cookieConsent.value = "rejected";
 
 	gtag("consent", "update", {
 		analytics_storage: "denied",
@@ -28,7 +29,12 @@ const handleHide = () => hideCookieMessage.value = "true";
 </script>
 
 <template>
-	<div v-if="!cookieConsent" class="govuk-cookie-banner" data-nosnippet role="region" aria-label="Cookies on {{ serviceName }}">
+	<div
+		v-if="!cookieConsent"
+		class="govuk-cookie-banner"
+		data-nosnippet
+		role="region"
+		aria-label="Cookies on {{ serviceName }}">
 		<div class="govuk-cookie-banner__message govuk-width-container">
 			<div class="govuk-grid-row">
 				<div class="govuk-grid-column-two-thirds">
@@ -55,18 +61,29 @@ const handleHide = () => hideCookieMessage.value = "true";
 		</div>
 	</div>
 
-	<div v-if="cookieConsent && !hideCookieMessage" class="govuk-cookie-banner" data-nosnippet role="region" aria-label="Cookies on {{ serviceName }}">
+	<div
+		v-if="cookieConsent && !hideCookieMessage"
+		class="govuk-cookie-banner"
+		data-nosnippet
+		role="region"
+		aria-label="Cookies on {{ serviceName }}">
 		<div class="govuk-cookie-banner__message govuk-width-container">
 			<div class="govuk-grid-row">
 				<div class="govuk-grid-column-two-thirds">
 					<div class="govuk-cookie-banner__content">
-						<p v-if="cookieConsent === CookieConsent.Accepted" class="govuk-body">You've accepted additional cookies. You can <a class="govuk-link" href="/cookies">change your cookie settings</a> at any time.</p>
-						<p v-if="cookieConsent === CookieConsent.Rejected" class="govuk-body">You've rejected analytics cookies. You can <a class="govuk-link" href="/cookies">change your cookie settings</a> at any time.</p>
+						<p v-if="cookieConsent === 'accepted'" class="govuk-body">You've accepted additional cookies. You can <a class="govuk-link" href="/cookies">change your cookie settings</a> at any time.</p>
+						<p v-if="cookieConsent === 'rejected'" class="govuk-body">You've rejected analytics cookies. You can <a class="govuk-link" href="/cookies">change your cookie settings</a> at any time.</p>
 					</div>
 				</div>
 			</div>
 			<div class="govuk-button-group">
-				<button value="yes" type="submit" name="cookies[hide]" class="govuk-button" data-module="govuk-button" @click="handleHide">
+				<button
+					value="yes"
+					type="submit"
+					name="cookies[hide]"
+					class="govuk-button"
+					data-module="govuk-button"
+					@click="handleHide">
 					Hide cookie message
 				</button>
 			</div>

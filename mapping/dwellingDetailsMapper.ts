@@ -1,31 +1,96 @@
-import { BuildType   } from "~/schema/api-schema.types";
-import type { SchemaInfiltrationVentilation, SchemaShadingSegment } from "~/schema/api-schema.types";
+import { applianceKeys } from "./../utils/display";
+import type { SchemaShadingSegment, SchemaInfiltrationVentilation, SchemaApplianceType } from "~/schema/aliases";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
+import { objectFromEntries } from "ts-extras";
+import { defaultElectricityEnergySupplyName } from "./common";
 
 export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSchema> {
 	const generalDetailsData = mapGeneralDetailsData(state);
+	const energySupplyFuelTypeData = mapEnergySupplyFuelTypeData(state);
 	const externalFactorsData = mapExternalFactorsData(state);
 	const distantShadingData = mapDistantShadingData(state);
-
+	const appliancesData = mapAppliancesData(state);
 	return {
 		...generalDetailsData,
+		...energySupplyFuelTypeData,
 		...externalFactorsData,
 		...distantShadingData,
+		...appliancesData,
 	};
 }
 
-export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema, "General" | "NumberOfBedrooms" | "PartGcompliance" | "PartO_active_cooling_required"> {
+export type GeneralFieldsFromDwelling = "General" |
+	"BuildingLength" |
+	"BuildingWidth" |
+	"NumberOfBedrooms" |
+	"NumberOfUtilityRooms" |
+	"NumberOfBathrooms" |
+	"NumberOfSanitaryAccommodations" |
+	"NumberOfHabitableRooms" |
+	"NumberOfHotTappedRooms" |
+	"NumberOfWetRooms" |
+	"PartGcompliance" |
+	"PartO_active_cooling_required";
+
+export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema, GeneralFieldsFromDwelling> {
 	const { generalSpecifications: generalDetails } = state.dwellingDetails;
-	
+
 	return {
-		General: {
-			build_type: generalDetails.typeOfDwelling,
-			storeys_in_building: generalDetails.storeysInDwelling,
-			...(generalDetails.typeOfDwelling === BuildType.flat ? { storey_of_dwelling: generalDetails.storeyOfFlat } : {}),
-		},
+		General:
+			generalDetails.typeOfDwelling === "flat"
+				? {
+					build_type: "flat",
+					storeys_in_dwelling: generalDetails.storeysInDwelling,
+					storey_of_dwelling: generalDetails.storeyOfFlat,
+					storeys_in_building: generalDetails.storeysInBuilding,
+				}
+				: {
+					build_type: "house",
+					storeys_in_dwelling: generalDetails.storeysInDwelling,
+				},
+		BuildingLength: generalDetails.buildingLength,
+		BuildingWidth: generalDetails.buildingWidth,
 		NumberOfBedrooms: generalDetails.numOfBedrooms,
-		PartGcompliance: true,
-		PartO_active_cooling_required: generalDetails.coolingRequired,
+		NumberOfUtilityRooms: generalDetails.numOfUtilityRooms,
+		NumberOfBathrooms: generalDetails.numOfBathrooms,
+		NumberOfSanitaryAccommodations: generalDetails.numOfWCs,
+		NumberOfHabitableRooms: generalDetails.numOfHabitableRooms,
+		NumberOfHotTappedRooms: generalDetails.numOfRoomsWithTappingPoints,
+		NumberOfWetRooms: generalDetails.numOfWetRooms,
+		PartGcompliance: generalDetails.isPartGCompliant,
+		PartO_active_cooling_required: generalDetails.partOActiveCoolingRequired,
+	};
+}
+
+export function mapEnergySupplyFuelTypeData(
+	state: ResolvedState,
+): Pick<FhsInputSchema, "EnergySupply"> {
+	const fuelType = state.dwellingDetails.generalSpecifications.fuelType
+		.filter(x => x !== "electricity");
+	// electricity is always required as a fueltype - so its hardcoded into the
+	// EnergySupply object - therefore we filter out electricity so its not added twice
+
+	const canExportToGrid = state.dwellingDetails.generalSpecifications.canExportToGrid === "yes";
+
+	return {
+		EnergySupply: {
+			[defaultElectricityEnergySupplyName]: {
+				fuel: "electricity",
+			},
+			...objectFromEntries(
+				fuelType
+					? fuelType.map((fuelType) => [
+						fuelType,
+						{
+							fuel: fuelType,
+							...(["LPG_bulk", "LPG_bottled"].includes(fuelType) && {
+								is_export_capable: canExportToGrid,
+							}),
+						},
+					])
+					: [],
+			),
+		},
 	};
 }
 
@@ -54,19 +119,14 @@ export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema
 	const range = 10;
 	const max = 360;
 	const segmentCount = max / range;
-	const segments: SchemaShadingSegment[] = [];
-
-	for (let index = 0; index < segmentCount; index++) {
-		segments.push({
-			number: index + 1,
-			start360: index * range,
-			end360: (index * range) + range,
-		});
-	}
+	const segments: SchemaShadingSegment[] = [...Array(segmentCount).keys()].map(index => ({
+		start360: index * range,
+		end360: (index * range) + range,
+	}));
 
 	shading.forEach(s => {
-		const startSegments = segments.filter(x => x.start360 < s.endAngle);
-		const endSegments = segments.filter(x => x.end360 > s.startAngle);
+		const startSegments = segments.filter(x => x.start360 != null && x.start360 < s.endAngle);
+		const endSegments = segments.filter(x => x.end360 != null && x.end360 > s.startAngle);
 		const matchingSegments = startSegments.filter(x => endSegments.includes(x));
 
 		segments.forEach(x => {
@@ -86,5 +146,41 @@ export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema
 		ExternalConditions: {
 			shading_segments: segments,
 		},
+	};
+}
+
+// export type InfiltrationFieldsFromDwelling = "altitude" | "shield_class" | "terrain_class" | "noise_nuisance";
+
+export function mapAppliancesData(
+	state: ResolvedState,
+): Pick<FhsInputSchema, "Appliances" | "KitchenExtractorHoodExternal"> {
+	function getAppliancesAndKitchenExtractorHood(): [Record<
+		SchemaApplianceType,
+		"Default" | "Not Installed"
+	>, boolean] {
+		const chosenAppliances = state.dwellingDetails.appliances.applianceType;
+		const appliancesMap = {} as Record<
+			SchemaApplianceType,
+			"Default" | "Not Installed"
+		>;
+
+		for (const appliance of applianceKeys) {
+			if (chosenAppliances.includes(appliance)) {
+				appliancesMap[appliance] = "Default";
+			} else {
+				appliancesMap[appliance] = "Not Installed";
+			}
+		}
+
+		const hasKitchenExtractorHood = state.dwellingDetails.appliances.kitchenExtractorHoodExternal;
+
+		return [appliancesMap, hasKitchenExtractorHood];
+	}
+
+	const [appliances, kitchenExtractorHoodExternal] = getAppliancesAndKitchenExtractorHood();
+
+	return {
+		Appliances: appliances,
+		KitchenExtractorHoodExternal: kitchenExtractorHoodExternal,
 	};
 }

@@ -1,12 +1,4 @@
-export enum PageType {
-	Root,
-	Section,
-	Task,
-	TaskGroup,
-	Summary,
-	Content,
-	Outputs,
-};
+export type PageType = "root" | "section" | "task" | "taskGroup" | "summary" | "content" | "outputs";
 
 export interface Page {
 	id: string;

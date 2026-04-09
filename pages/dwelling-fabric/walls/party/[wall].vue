@@ -1,27 +1,58 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl } from "#imports";
+import { v4 as uuidv4 } from "uuid";
+import { standardPitchOptions, getUrl, uniqueName, type SnakeToSentenceCase } from "#imports";
+import type { SchemaPartyWallCavityType, SchemaPartyWallLiningType } from "~/schema/api-schema.types";
+import { surfaceAreaPartyWallZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import type { UnitValue } from "~/utils/units/types";
 
 const title = "Party wall";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data);
+const partyWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data;
+const wallData = useItemToEdit("wall", partyWallData);
+const wallId = wallData?.data.id ?? uuidv4();
+const index = getStoreIndex(partyWallData);
 const model: Ref<PartyWallData | undefined> = ref(wallData?.data);
+
+const greaterThanZero = (node: FormKitNode) => {
+	const value = node.value as UnitValue;
+	return value.amount > 0;
+};
+
+const partyWallCavityTypeOptions = {
+	unfilled_unsealed: "Unfilled and unsealed",
+	unfilled_sealed: "Unfilled and sealed",
+	filled_sealed: "Filled and sealed",
+	filled_unsealed: "Filled and unsealed",
+	solid: "Solid",
+	defined_resistance: "Define custom resistance",
+} as const satisfies Record<SchemaPartyWallCavityType, string>;
+const partyWallLiningTypeOptions = {
+	wet_plaster: "Wet plaster",
+	dry_lined: "Dry lined",
+} as const satisfies Record<SchemaPartyWallLiningType, SnakeToSentenceCase<SchemaPartyWallLiningType>>;
 
 const saveForm = (fields: PartyWallData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceWalls } = state.dwellingFabric;
 		const index = getStoreIndex(dwellingSpaceWalls.dwellingSpacePartyWall.data);
+		const currentId = wallData?.data.id;
 
 		dwellingSpaceWalls.dwellingSpacePartyWall.data[index] = {
 			data: {
+				id: currentId || uuidv4(),
 				name: fields.name,
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 				surfaceArea: fields.surfaceArea,
-				uValue: fields.uValue,
-				kappaValue: fields.kappaValue,
+				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
+				partyWallCavityType: fields.partyWallCavityType,
+				partyWallLiningType: fields.partyWallLiningType,
+				thermalResistanceCavity: fields.thermalResistanceCavity,
+				uValue: fields.uValue,
 			},
 			complete: true,
 		};
@@ -37,6 +68,7 @@ autoSaveElementForm({
 	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall,
 	defaultName: "Party wall",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= wallId;
 		const { pitchOption, pitch } = newData.data;
 		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.data[index] = newData;
@@ -44,6 +76,16 @@ autoSaveElementForm({
 	},
 });
 
+watch(() => model.value?.pitch, (newPitch, initialPitch) => {
+	if (initialPitch === undefined) return; 
+
+	if ([0, 180].includes(newPitch!)) {
+		const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+		
+		convertFrontDoorToRegularDoor(dwellingSpaceInternalDoor.data as EcaasForm<InternalDoorData>[], partyWallData, index);
+		useBanner().value = { type: "update-front-door" };
+	}
+});
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
@@ -69,38 +111,74 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(partyWallData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
+		/>
+		<FieldsUValue
+			help="Enter the U-value of half the construction build up"
 		/>
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
+			help="Tilt angle of the surface from horizontal, between 60 and 120 degrees (wall range), where 90 means vertical"
+			:suppress-standard-guidance="true"
+			:custom-pitch-range="[60, 120]"
+			data-field="Zone.BuildingElement.*.pitch"
 		/>
 		<FormKit
 			id="surfaceArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Net surface area of element"
-			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
+			help="Enter the net area of the building element, subtracting any doors or windows"
 			name="surfaceArea"
-			validation="required | number | min:0.01 | max:10000"
+			:validation="zodTypeAsFormKitValidation(surfaceAreaPartyWallZod)"
+			data-field="Zone.BuildingElement.*.area"
+		/>
+		<FieldsArealHeatCapacity
+			id="arealHeatCapacity"
+			name="arealHeatCapacity"
+			help="This is the sum of the heat capacities of half the construction build up"
+		/>
+		<FieldsMassDistributionClass
+			id="massDistributionClass"
+			name="massDistributionClass"
+			help="This is the mass distribution class in half of the thickness of the construction build up"
 		/>
 		<FormKit
-			id="uValue"
-			type="govInputWithSuffix"
-			suffix-text="W/(m²·K)"
-			label="U-value"
-			help="This is the steady thermal transmittance of the materials that make up the building element"
-			name="uValue"
-			validation="required | number | min:0.01 | max:10">
-			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">
-					For the U-value of party walls, put the actual U-value of the materials of the wall. This helps determine the behaviour of the wall releasing heat back into the room.
-				</p>
-			</GovDetails>
-		</FormKit>
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
-		<GovLLMWarning />
+			id="partyWallCavityType"
+			name="partyWallCavityType"
+			type="govRadios"
+			label="Type of party wall cavity construction"
+			help="Select the type of party wall cavity construction. This affects heat loss through air movement."
+			:options="partyWallCavityTypeOptions"
+			validation="required"
+			data-field="Zone.BuildingElement.*.party_wall_cavity_type"
+		/>
+		<FormKit
+			v-if="['filled_unsealed', 'unfilled_sealed', 'unfilled_unsealed'].includes(model?.partyWallCavityType!)"
+			id="partyWallLiningType"
+			name="partyWallLiningType"
+			type="govRadios"
+			label="Type of party wall lining"
+			help="Select the type of party wall lining"
+			:options="partyWallLiningTypeOptions"
+			validation="required"
+			data-field="Zone.BuildingElement.*.party_wall_lining_type"
+		/>
+		<FormKit
+			v-if="model?.partyWallCavityType === 'defined_resistance'"
+			id="thermalResistanceCavity"
+			name="thermalResistanceCavity"
+			type="govInputWithUnit"
+			unit="square metre kelvin per watt"
+			label="Thermal resistance of the party wall cavity"
+			:validation-rules="{ exclusiveRangeFromMin: greaterThanZero }"
+			validation="required | exclusiveRangeFromMin"
+		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingSpaceWalls')" secondary>Save progress</GovButton>

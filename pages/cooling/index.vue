@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import formStatus from "~/constants/formStatus";
+
 const title = "Cooling";
 const page = usePage();
 const store = useEcaasStore();
@@ -21,13 +23,13 @@ function handleDuplicate(index: number) {
 	const item = data?.[index];
     
 	if (item) {
-		const duplicates = data.filter(f => f && f.name.match(duplicateNamePattern(item.name)));
+		const duplicates = data.filter(f => f && f.data.name.match(duplicateNamePattern(item.data.name)));
 
 		store.$patch((state) => {
 			const newItem = {
-				...item,
-				name: `${item.name} (${duplicates.length})`,
-			};
+				data: { ...item.data, name: `${item.data.name} (${duplicates.length})` },
+				complete: item.complete,
+			} as EcaasForm<AirConditioningData>;
 
 			state.cooling.airConditioning.data.push(newItem);
 			state.cooling.airConditioning.complete = false;
@@ -56,9 +58,13 @@ function handleComplete() {
 	</h1>
 	<CustomList
 		id="airConditioning"
-		title="Air conditioning"
+		title="Air conditioning systems"
 		:form-url="`${page?.url!}/air-conditioning`"
-		:items="store.cooling.airConditioning.data.flatMap(x => x ? [x.name] : [])"
+		:items="store.cooling.airConditioning.data?.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
@@ -66,6 +72,10 @@ function handleComplete() {
 		<GovButton href="/" secondary>
 			Return to overview
 		</GovButton>
-		<CompleteElement :is-complete="store.cooling.airConditioning?.complete ?? false" @completed="handleComplete"/>
+		<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
+		<CompleteElement
+			:is-complete="store.cooling.airConditioning?.complete ?? false"
+			:disabled="store.cooling.airConditioning.data.some(s => !s.complete)"
+			@completed="handleComplete"/>
 	</div>
 </template>

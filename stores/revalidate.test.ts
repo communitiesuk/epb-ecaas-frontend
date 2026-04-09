@@ -1,5 +1,4 @@
 import * as immutable from "object-path-immutable";
-import { BuildType, MassDistributionClass } from "~/schema/api-schema.types";
 
 // define some structures for the test fixtures using types
 
@@ -7,10 +6,21 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 	"dwellingDetails": {
 		"generalSpecifications": {
 			"data": {
-				"typeOfDwelling": BuildType.house,
+				"typeOfDwelling": "house",
 				"storeysInDwelling": 3,
 				"numOfBedrooms": 3,
-				"coolingRequired": false,
+				"numOfBathrooms": 1,
+				"numOfWCs": 1,
+				"numOfHabitableRooms": 4,
+				"numOfRoomsWithTappingPoints": 2,
+				"numOfWetRooms": 3,
+				"numOfUtilityRooms": 1,
+				"buildingLength": 7,
+				"buildingWidth": 7,
+				"fuelType": [],
+				"canExportToGrid": "no_generation",
+				"isPartGCompliant": true,
+				"partOActiveCoolingRequired": false,
 			},
 			"complete": true,
 		},
@@ -20,10 +30,13 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 		"externalFactors": {
 			"data": {} as ExternalFactorsData,
 		},
+		"appliances": {
+			"data": {} as AppliancesData,
+		},
 	},
 };
 
-const simpleCaseOneFieldOutOfRange = immutable.set(simpleCaseOnlyOneForm, "dwellingDetails.generalSpecifications.data.storeysInDwelling", 666); // max storeysInDwelling should be 250
+const simpleCaseOneFieldOutOfRange = immutable.set(simpleCaseOnlyOneForm, "dwellingDetails.generalSpecifications.data.storeysInDwelling", -1); // min storeysInDwelling should be 0
 
 const simpleCaseFieldMissing = immutable.del(simpleCaseOnlyOneForm, "dwellingDetails.generalSpecifications.data.numOfBedrooms");
 
@@ -32,6 +45,7 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 		"data": [
 			{
 				"data": {
+					"id": "5c809256-0702-48a5-bce0-7d1617e852fc",
 					"name": "Wall 1",
 					"pitchOption": "90",
 					"pitch": 90,
@@ -40,15 +54,16 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 					"length": 5,
 					"elevationalHeight": 25,
 					"surfaceArea": 40,
-					"solarAbsorption": 0.9,
-					"uValue": 5,
-					"kappaValue": 110000,
-					"massDistributionClass": MassDistributionClass.E,
+					"uValue": 0.5,
+					"colour": "Light",
+					"arealHeatCapacity": "Medium",
+					"massDistributionClass": "E",
 				},
 				"complete": true,
 			},
 			{
 				"data": {
+					"id": "81b62646-eac0-4f1f-8d26-a785a565c751",
 					"name": "Wall 2",
 					"pitchOption": "90",
 					"pitch": 90,
@@ -57,10 +72,10 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 					"length": 34,
 					"elevationalHeight": 20,
 					"surfaceArea": 30,
-					"solarAbsorption": 0.7,
-					"uValue": 6,
-					"kappaValue": 175000,
-					"massDistributionClass": MassDistributionClass.I,
+					"uValue": 0.6,
+					"colour": "Intermediate",
+					"arealHeatCapacity": "Heavy",
+					"massDistributionClass": "I",
 				},
 				"complete": true,
 			},
@@ -75,6 +90,7 @@ const twoLegacyCompleteValidWalls = {
 			"dwellingSpaceExternalWall": {
 				"data": [
 					{
+						"id": "5c809256-0702-48a5-bce0-7d1617e852fc",
 						"name": "Wall 1",
 						"pitchOption": "90",
 						"pitch": 90,
@@ -83,12 +99,13 @@ const twoLegacyCompleteValidWalls = {
 						"length": 5,
 						"elevationalHeight": 25,
 						"surfaceArea": 40,
-						"solarAbsorption": 0.9,
-						"uValue": 5,
-						"kappaValue": 110000,
-						"massDistributionClass": MassDistributionClass.E,
+						"uValue": 0.5,
+						"arealHeatCapacity": "Medium",
+						"massDistributionClass": "E",
+						"colour": "Light",
 					},
 					{
+						"id": "81b62646-eac0-4f1f-8d26-a785a565c751",
 						"name": "Wall 2",
 						"pitchOption": "90",
 						"pitch": 90,
@@ -97,10 +114,10 @@ const twoLegacyCompleteValidWalls = {
 						"length": 34,
 						"elevationalHeight": 20,
 						"surfaceArea": 30,
-						"solarAbsorption": 0.7,
-						"uValue": 6,
-						"kappaValue": 175000,
-						"massDistributionClass": MassDistributionClass.I,
+						"uValue": 0.6,
+						"arealHeatCapacity": "Heavy",
+						"massDistributionClass": "I",
+						"colour": "Intermediate",
 					},
 				],
 				"complete": true,
@@ -109,72 +126,49 @@ const twoLegacyCompleteValidWalls = {
 	},
 };
 
-const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, "dwellingSpaceExternalWall.data.1.data.solarAbsorption");
+const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, "dwellingSpaceExternalWall.data.1.data.elevationalHeight");
 
 const twoWallsOneMissingFieldOneInvalidValue = immutable.set(twoWallsOneMissingField, "dwellingSpaceExternalWall.data.0.massDistributionClass", "X"); // 'X' is invalid for a mass distribution class value
 
-const twoHeatPumps: Pick<EcaasState, "heatingSystems"> = {
-	"heatingSystems": {
-		"heatGeneration": {
-			"heatPump": {
-				"data": [
-					{
-						"data": {
-							"id": "1049a8a3-e520-4058-8f18-fdfbf2dde19a",
-							"name": "Heat pump 1",
-							"productReference": "HEATPUMP-SMALL",
-						},
-						"complete": true,
+const twoHeatPumps: Pick<EcaasState, "spaceHeating"> = {
+	"spaceHeating": {
+		"heatSource": {
+			"data": [
+				{
+					"data": {
+						"id": "1049a8a3-e520-4058-8f18-fdfbf2dde19a",
+						"name": "Heat pump 1",
+						"productReference": "HEATPUMP-SMALL",
+						"typeOfHeatSource": "heatPump",
+						"typeOfHeatPump": "airSource",
 					},
-					{
-						"data": {
-							"id": "2fa843a1-b774-42f8-b3ca-1f5f5a8a576a",
-							"name": "Heat pump 2",
-							"productReference": "HEATPUMP-LARGE",
-						},
-						"complete": true,
+					"complete": true,
+				},
+				{
+					"data": {
+						"id": "2fa843a1-b774-42f8-b3ca-1f5f5a8a576a",
+						"name": "Heat pump 2",
+						"productReference": "HEATPUMP-LARGE",
+						"typeOfHeatSource": "heatPump",
+						"typeOfHeatPump": "airSource",
 					},
-				],
-				"complete": true,
-			},
-			"boiler": {
-				"data": [],
-				"complete": true,
-			},
-			"heatBattery": {
-				"data": [],
-				"complete": true,
-			},
-			"heatNetwork": {
-				"data": [],
-				"complete": true,
-			},
-			"heatInterfaceUnit": {
-				"data": [],
-				"complete": true,
-			},
+					"complete": true,
+				},
+			],
+			"complete": true,
 		},
-		"energySupply": {
-			"data": {} as EnergySupplyData,
+		heatEmitters: {
+			data: [],
+			complete: true,
 		},
-		"heatEmitting": {
-			"wetDistribution": {
-				"data": [],
-			},
-			"instantElectricHeater": {
-				"data": [],
-			},
-			"electricStorageHeater": {
-				"data": [],
-			},
-			"warmAirHeatPump": {
-				"data": [],
-			},
+		heatingControls: {
+			data: [],
+			complete: true,
 		},
 	},
 };
 
-const twoHeatPumpsOneWithMissingFields = immutable.del(twoHeatPumps, "heatingSystems.heatGeneration.heatPump.data.1.data.productReference");
+const twoHeatPumpsOneWithMissingFields = immutable.del(twoHeatPumps, "spaceHeating.heatSource.data.1.data.productReference");
 
 const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> | undefined, number][] = [
 	[
@@ -250,7 +244,7 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 		"case where there are two heat pumps but one has missing field: individual heat pump and whole section should be marked invalid",
 		twoHeatPumpsOneWithMissingFields,
 		true,
-		immutable.set(immutable.set(twoHeatPumpsOneWithMissingFields, "heatingSystems.heatGeneration.heatPump.data.1.complete", false), "heatingSystems.heatGeneration.heatPump.complete", false),
+		immutable.set(immutable.set(twoHeatPumpsOneWithMissingFields, "spaceHeating.heatSource.data.1.complete", false), "spaceHeating.heatSource.complete", false),
 		1,
 	],
 	[

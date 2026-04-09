@@ -23,7 +23,7 @@ function handleRemove(thermalBridgingType: ThermalBridgingType, index: number) {
 } 
 
 function handleDuplicate<T extends ThermalBridgingData>(thermalBridgingType: ThermalBridgingType, index: number) {
-	const items  = store.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType]?.data;
+	const items = store.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType]?.data;
 	const item = items?.[index];
 	let name: string;
     
