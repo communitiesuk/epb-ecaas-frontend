@@ -12,10 +12,10 @@ const tableData: Record<string, string> =
 	...(data.finalYearOfManufacture ? {
 		"Final year of manufacture": show(data?.finalYearOfManufacture).replace("current", "Current"),
 	} : {}),
-	"Allow low flowrate": displayBoolean(data.allowLowFlowrate),
-	"Original flowrate": show(data.originalFlowrate),
-	"Flowrate": show(data.flowrate),
-	"Inuse factor": show(data.inuseFactor),
+	"Allows low flow rate": displayBoolean(data.allowLowFlowrate),
+	"Original flow rate": dim(data.originalFlowrate, "litres per minute"),
+	"Flow rate": dim(data.flowrate, "litres per minute"),
+	"In use factor": show(data.inuseFactor),
 };
 </script>
 
