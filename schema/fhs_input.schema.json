@@ -339,7 +339,8 @@
 					"peak_power": {
 						"type": "number",
 						"minimum": 0.001,
-						"maximum": 100
+						"maximum": 100,
+						"description": "Peak power; represents the electrical power of a photovoltaic system with a given area for a solar irradiance of 1 kW/m² on this surface (at 25 degrees) (unit: kW)"
 					},
 					"ventilation_strategy": {
 						"enum": [
@@ -352,44 +353,53 @@
 					"pitch": {
 						"type": "number",
 						"minimum": 0,
-						"maximum": 90
+						"maximum": 90,
+						"description": "The tilt angle (inclination) of the PV panel from horizontal, measured upwards facing, 0 to 90 (unit: ˚)"
 					},
 					"orientation360": {
 						"type": "integer",
 						"minimum": 0,
-						"maximum": 360
+						"maximum": 360,
+						"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)"
 					},
 					"base_height": {
 						"type": "number",
 						"minimum": 0,
-						"maximum": 500
+						"maximum": 500,
+						"description": "The distance between the ground and the lowest edge of the PV array (unit: m)"
 					},
 					"height": {
 						"type": "number",
 						"exclusiveMinimum": 0,
-						"maximum": 100
+						"maximum": 100,
+						"description": "Height of the PV array (unit: m)"
 					},
 					"width": {
 						"type": "number",
 						"exclusiveMinimum": 0,
-						"maximum": 100
+						"maximum": 100,
+						"description": "Width of the PV panel (unit: m)"
 					},
 					"EnergySupply": {
-						"type": "string"
+						"type": "string",
+						"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 					},
 					"shading": {
 						"$ref": "#/$defs/WindowShading"
 					},
 					"inverter_peak_power_dc": {
 						"type": "number",
-						"exclusiveMinimum": 0
+						"exclusiveMinimum": 0,
+						"description": "Peak power; represents the peak electrical DC power input to the inverter (unit: kW)"
 					},
 					"inverter_peak_power_ac": {
 						"type": "number",
-						"exclusiveMinimum": 0
+						"exclusiveMinimum": 0,
+						"description": "Peak power; represents the peak electrical AC power output from the inverter (unit: kW)"
 					},
 					"inverter_is_inside": {
-						"type": "boolean"
+						"type": "boolean",
+						"description": "Whether the inverter is considered inside the building"
 					},
 					"inverter_type": {
 						"enum": [
