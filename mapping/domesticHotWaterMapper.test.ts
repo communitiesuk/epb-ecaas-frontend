@@ -25,6 +25,7 @@ describe("domestic hot water mapper", () => {
 			isExistingHeatSource: false,
 			productReference: "HP-12345",
 			typeOfHeatPump: "airSource",
+			maxFlowTemp: unitValue(17, celsius),
 		},
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
@@ -92,6 +93,7 @@ describe("domestic hot water mapper", () => {
 						type: "HeatSourceWet",
 						name: heatPump.data.name,
 						thermostat_position: 0.5,
+						temp_flow_limit_upper: 17,
 					},
 				},
 				daily_losses: 5,
@@ -212,6 +214,143 @@ describe("domestic hot water mapper", () => {
 			// Assert
 			expect(result).toEqual(expectedResult);
 		});
+
+		describe("using a previously added heat source", () => {
+			const existingHeatPump = {
+				data: {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+					name: "Heat pump space",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "airSource",
+					productReference: "HEATPUMP-LARGE",
+					maxFlowTemp: unitValue(1, celsius),
+				},
+				complete: true,
+			} as const satisfies EcaasForm<HeatSourceData>;
+
+			const dhwWithExistingHeatPump = {
+				data: {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c62",
+					coldWaterSource: "mainsWater",
+					isExistingHeatSource: true,
+					heatSourceId: existingHeatPump.data.id,
+					maxFlowTemp: unitValue(50, celsius),
+				},
+				complete: true,
+			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+			const existingBoiler = {
+				data: {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c37",
+					name: "Boiler space",
+					typeOfHeatSource: "boiler",
+					typeOfBoiler: "combiBoiler",
+					productReference: "174",
+					needsSpecifiedLocation: true,
+					maxFlowTemp: unitValue(5, celsius),
+				},
+				complete: true,
+			} as const satisfies EcaasForm<HeatSourceData>;
+
+			const dhwWithExistingBoiler = {
+				data: {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c68",
+					coldWaterSource: "mainsWater",
+					isExistingHeatSource: true,
+					heatSourceId: existingBoiler.data.id,
+					maxFlowTemp: unitValue(40, celsius),
+				},
+				complete: true,
+			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+			const existingBattery = {
+				data: {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c44",
+					name: "Heat battery space",
+					typeOfHeatSource: "heatBattery",
+					typeOfHeatBattery: "heatBatteryPcm",
+					productReference: "179",
+					numberOfUnits: 1,
+					energySupply: "electricity",
+					maxFlowTemp: unitValue(11, celsius),
+				},
+				complete: true,
+			} as const satisfies EcaasForm<HeatSourceData>;
+
+			const dhwWithExistingBattery = {
+				data: {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c46",
+					coldWaterSource: "mainsWater",
+					isExistingHeatSource: true,
+					heatSourceId: existingBattery.data.id,
+					maxFlowTemp: unitValue(31, celsius),
+				},
+				complete: true,
+			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+			it.each([[existingHeatPump, dhwWithExistingHeatPump], [existingBoiler, dhwWithExistingBoiler], [existingBattery, dhwWithExistingBattery]]) (
+				"maps hot water cylinder input state to FHS input request with correct max flow temp", async (existingHeatSource, dhwWithExistingHeatSource) => {
+					const hotWaterCylinder: EcaasForm<WaterStorageData> = {
+						...baseForm,
+						data: {
+							id: "hot water cylinder",
+							typeOfWaterStorage: "hotWaterCylinder",
+							name: "hot water cylinder",
+							storageCylinderVolume: unitValue(90, litre),
+							dailyEnergyLoss: 5,
+							dhwHeatSourceId: dhwWithExistingHeatSource.data.id,
+							areaOfHeatExchanger: 2,
+							heaterPosition: 0.3,
+							thermostatPosition: 0.5,
+						},
+					};
+
+					store.$patch({
+						spaceHeating: {
+							heatSource: {
+								data: [existingHeatSource],
+								complete: true,
+							},
+						},
+						domesticHotWater: {
+							waterStorage: {
+								data: [hotWaterCylinder],
+								complete: true,
+							},
+							heatSources: {
+								data: [dhwWithExistingHeatSource],
+								complete: true,
+							},
+							pipework: {
+								data: [],
+								complete: true,
+							},
+						},
+					});
+
+					const result = mapHotWaterSourcesData(resolveState(store.$state))[0]!;
+					const expectedResult: Partial<FhsInputSchema["HotWaterSource"]["hw cylinder"]> = {
+						ColdWaterSource: "mains water",
+						HeatSource: {
+							[existingHeatSource.data.name]: {
+								heater_position: 0.3,
+								type: "HeatSourceWet",
+								name: existingHeatSource.data.name,
+								thermostat_position: 0.5,
+								temp_flow_limit_upper: dhwWithExistingHeatSource.data.maxFlowTemp.amount,
+							},
+						},
+						daily_losses: 5,
+						volume: 90,
+						type: "StorageTank",
+						init_temp: 60,
+					};
+
+					expect(result).toEqual(expectedResult);
+				});
+		});
+
+
 	});
 
 	describe("outlets", () => {

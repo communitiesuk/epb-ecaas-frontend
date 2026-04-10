@@ -5,6 +5,7 @@ import { ajv, humanReadable } from "~/schema/validator";
 import * as Sentry from "@sentry/nuxt";
 import type { CorrectedJsonApiError } from "~/stores/ecaasStore.schema";
 import type { ErrorObject } from "ajv";
+import { reportCalculateMetric } from "./sentryMetrics";
 
 const ecaasApi = {
 	getToken: async (clientId: string, clientSecret: string) => {
@@ -62,6 +63,8 @@ const ecaasApi = {
 
 			reportErrors(data, response.errors, errorMessage);
 		};
+
+		reportCalculateMetric(data, "errors" in response);
 
 		return response;
 	},

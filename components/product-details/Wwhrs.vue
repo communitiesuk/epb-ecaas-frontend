@@ -8,15 +8,14 @@ const tableData: Record<string, string> =
 {
 	"First year of manufacture": show(data?.firstYearOfManufacture),
 	"Final year of manufacture": show(data?.finalYearOfManufacture).replace("current", "Current"),
-	"Pipe length": show(data.pipeLength),
-	"Heat exchanger waste connection": show(data.heatExchangerWasteConnection),
-	"Heat exchanger volume of water": show(data.heatExchangerVolumeOfWater),
-	"Heat exchanger cold water connection": show(data.heatExchangerColdWaterConnection),
-	"Heat exchanger wet weight": show(data.heatExchangerWetWeight),
+	"Pipe length": dim(data.pipeLength, "millimetres"),
+	"Diameter of waste connection pipe": dim(data.heatExchangerWasteConnection, "millimetres"),
+	"Volume of water in the heat exchanger": dim(data.heatExchangerVolumeOfWater, "litres"),
+	"Diameter of cold pipe": dim(data.heatExchangerColdWaterConnection, "millimetres"),
 	"Number of flow rates": show(data.numberOfFlowRates),
 	"Utilisation factor": show(data.utilisationFactor),
-	"Heat exchanger length": show(data.heatExchangerLength),
-	"Heat exchanger dry weight": show(data.heatExchangerDryWeight),
+	"Heat exchanger length": dim(data.heatExchangerLength, "metres"),
+	"Weight of heat exchanger": dim(data.heatExchangerDryWeight, "kilograms"),
 };
 </script>
 

@@ -177,6 +177,12 @@ export const units = [
 		"multiplier": 1,
 		"dimension": "power",
 	},
+	{
+		name: "kilograms",
+		suffix: "kg",
+		multiplier: 1,
+		dimension: "mass",
+	},
 ] as const;
 
 export function asUnit<T extends UnitName>(name: T): UnitForName<T> {

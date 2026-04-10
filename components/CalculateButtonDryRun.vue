@@ -2,8 +2,9 @@
 
 // calculate button version which only performs dry run
 
-import { mapFhsInputData } from "~/mapping/fhsInputMapper";
+import { mapFhsInputData, type FhsInputSchema } from "~/mapping/fhsInputMapper";
 import type { CheckSchema } from "~/server/server.types";
+import { reportCalculateMetric } from "~/server/services/sentryMetrics";
 // import { ajv, humanReadable } from "~/schema/validator";
 import { hasCompleteState } from "~/stores/ecaasStore";
 
@@ -25,8 +26,10 @@ const calculate = async () => {
 	calculatePending.value = true;
 	let calculateError: string | boolean | undefined;
 
+	let inputPayload: FhsInputSchema | undefined = undefined;
+
 	try {
-		const inputPayload = mapFhsInputData(resolveState(store.$state));
+		inputPayload = mapFhsInputData(resolveState(store.$state));
 
 		console.log(JSON.stringify(inputPayload));
 
@@ -48,6 +51,7 @@ const calculate = async () => {
 	} finally {
 		calculatePending.value = false;
 		emit("stopLoading");
+		reportCalculateMetric(inputPayload ?? {}, !calculateError);
 	}
 
 	if (calculateError) {
