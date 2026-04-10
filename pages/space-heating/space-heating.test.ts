@@ -439,7 +439,10 @@ describe("space heating", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "exhaustAirMvhr",
 				productReference: "1000",
-				packageProductIds: ["9e66d667-6c31-4406-9223-7e2249a7fee3"],
+				packageProductIds: [
+					"9e66d667-6c31-4406-9223-7e2249a7fee3",
+					"f6182db2-42e2-4d7e-beb8-de6f9a8f2be9",
+				],
 			};
 
 			const mvhr: Partial<MechanicalVentilationData> = {
@@ -447,6 +450,13 @@ describe("space heating", () => {
 				name: "Exhaust air MVHR HP",
 				productReference: "1000",
 				typeOfMechanicalVentilationOptions: "MVHR",
+				packagedProductReference: "1000",
+			};
+
+			const hotWaterCylinder: Partial<WaterStorageData> = {
+				id: "f6182db2-42e2-4d7e-beb8-de6f9a8f2be9",
+				name: "Hot water cylinder",
+				typeOfWaterStorage: "hotWaterCylinder",
 				packagedProductReference: "1000",
 			};
 
@@ -470,12 +480,19 @@ describe("space heating", () => {
 				expect(store.spaceHeating.heatSource.data.length).toBe(0);
 			});
 
-			it("removes mechanical vent which is packaged with the removed exhaust air heat pump", async () => {
+			it("removes mechanical vent and hot water cylinder packaged with the removed heat pump", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
 							data: [
 								{ data: exhaustAirHeatPump, complete: true },
+							],
+						},
+					},
+					domesticHotWater: {
+						waterStorage: {
+							data: [
+								{ data: hotWaterCylinder },
 							],
 						},
 					},
@@ -493,6 +510,7 @@ describe("space heating", () => {
 				await user.click(await screen.findByTestId("heatSource_remove_0"));
 
 				expect(store.spaceHeating.heatSource.data.length).toBe(0);
+				expect(store.domesticHotWater.waterStorage.data.length).toBe(0);
 				expect(store.infiltrationAndVentilation.mechanicalVentilation.data.length).toBe(0);
 			});
 
@@ -508,7 +526,7 @@ describe("space heating", () => {
 				expect(boilerDeleteButton).toBeNull();
 			});
 
-			it("duplicates a heat source when the heat pump it's packaged with is duplicated", async () => {
+			it("duplicates a boiler when the heat pump it's packaged with is duplicated", async () => {
 				await renderSuspended(SpaceHeating);
 
 				await user.click(await screen.findByTestId("heatSource_duplicate_0"));
@@ -529,12 +547,19 @@ describe("space heating", () => {
 				}));
 			});
 
-			it("duplicates a mechanical vent when the exhaust air heat pump it's packaged with is duplicated", async () => {
+			it("duplicates a mechanical vent and hot water cylinder when the exhaust air heat pump it's packaged with is duplicated", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
 							data: [
 								{ data: exhaustAirHeatPump, complete: true },
+							],
+						},
+					},
+					domesticHotWater: {
+						waterStorage: {
+							data: [
+								{ data: hotWaterCylinder },
 							],
 						},
 					},
@@ -552,13 +577,19 @@ describe("space heating", () => {
 				await user.click(await screen.findByTestId("heatSource_duplicate_0"));
 
 				const spaceHeatingData = store.spaceHeating.heatSource.data;
+				const waterStorageData = store.domesticHotWater.waterStorage.data;
 				const mechanicalVentilationData = store.infiltrationAndVentilation.mechanicalVentilation.data;
 
 				expect(spaceHeatingData.length).toBe(2);
+				expect(waterStorageData.length).toBe(2);
 				expect(mechanicalVentilationData.length).toBe(2);
 
 				expect(spaceHeatingData[1]?.data).toEqual(expect.objectContaining({
 					name: "Exhaust air heat pump (1)",
+				}));
+
+				expect(waterStorageData[1]?.data).toEqual(expect.objectContaining({
+					name: "Hot water cylinder (1)",
 				}));
 
 				expect(mechanicalVentilationData[1]?.data).toEqual(expect.objectContaining({

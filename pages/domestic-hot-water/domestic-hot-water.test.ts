@@ -3,7 +3,7 @@ import DomesticHotWater from "@/pages/domestic-hot-water/index.vue";
 import { screen, within } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import formStatus from "~/constants/formStatus";
-import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
 import HotWaterOutlets from "./hot-water-outlets/[outlet]/index.vue";
 import { litre } from "~/utils/units/volume";
 import { celsius } from "~/utils/units/temperature";
@@ -703,7 +703,10 @@ describe("Domestic hot water", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "exhaustAirMvhr",
 				productReference: "1000",
-				packageProductIds: ["9e66d667-6c31-4406-9223-7e2249a7fee3"],
+				packageProductIds: [
+					"9e66d667-6c31-4406-9223-7e2249a7fee3",
+					"f6182db2-42e2-4d7e-beb8-de6f9a8f2be9",
+				],
 			};
 
 			const mvhr: Partial<MechanicalVentilationData> = {
@@ -711,6 +714,13 @@ describe("Domestic hot water", () => {
 				name: "Exhaust air MVHR HP",
 				productReference: "1000",
 				typeOfMechanicalVentilationOptions: "MVHR",
+				packagedProductReference: "1000",
+			};
+
+			const hotWaterCylinder: Partial<WaterStorageData> = {
+				id: "f6182db2-42e2-4d7e-beb8-de6f9a8f2be9",
+				name: "Hot water cylinder HP",
+				typeOfWaterStorage: "hotWaterCylinder",
 				packagedProductReference: "1000",
 			};
 
@@ -742,12 +752,17 @@ describe("Domestic hot water", () => {
 				expect(boilerDeleteButton).toBeNull();
 			});
 
-			it("removes mechanical vent which is packaged with the removed exhaust air heat pump", async () => {
+			it("removes mechanical vent and hot water cylinder packaged with the removed heat pump", async () => {
 				store.$patch({
 					domesticHotWater: {
 						heatSources: {
 							data: [
 								{ data: exhaustAirHeatPump, complete: true },
+							],
+						},
+						waterStorage: {
+							data: [
+								{ data: hotWaterCylinder },
 							],
 						},
 					},
@@ -765,6 +780,7 @@ describe("Domestic hot water", () => {
 				await user.click(await screen.findByTestId("heatSources_remove_0"));
 
 				expect(store.domesticHotWater.heatSources.data.length).toBe(0);
+				expect(store.domesticHotWater.waterStorage.data.length).toBe(0);
 				expect(store.infiltrationAndVentilation.mechanicalVentilation.data.length).toBe(0);
 			});
 		});

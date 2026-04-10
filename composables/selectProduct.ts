@@ -9,15 +9,31 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 	const store = useEcaasStore();
 
 	const createHotWaterCyliner = (state: EcaasState, source: HeatSourceSection, heatPumpDetails: HeatPumpProduct, heatSourceData: HeatSourceData | DomesticHotWaterHeatSourceData) => {
+		let heatSourceId = heatSourceData.id;
+		
+		if (source === "spaceHeating") {
+			const hotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+				id: uuidv4(),
+				isExistingHeatSource: true,
+				heatSourceId: heatSourceData.id,
+			};
+
+			heatSourceId = hotWaterHeatPump.id!;
+
+			state.domesticHotWater.heatSources.data.push({
+				data: hotWaterHeatPump as DomesticHotWaterHeatSourceData,
+			});
+		}
+
 		const hotWaterCylinder: Partial<WaterStorageData> = {
 			id: uuidv4(),
 			typeOfWaterStorage: "hotWaterCylinder",
-			name: "Hot water cylinder HP",
+			name: "Hot water cylinder",
 			...(heatPumpDetails.tankVolumeDeclared !== undefined ? {
 				storageCylinderVolume: unitValue(heatPumpDetails.tankVolumeDeclared, "litres"),
 			} : {}),
 			dailyEnergyLoss: heatPumpDetails.dailyLossesDeclared,
-			dhwHeatSourceId: source === "domesticHotWater" ? heatSourceData.id : undefined,
+			dhwHeatSourceId: heatSourceId,
 			areaOfHeatExchanger: heatPumpDetails.heatExchangerSurfaceAreaDeclared,
 			packagedProductReference: heatPumpDetails.id,
 		};

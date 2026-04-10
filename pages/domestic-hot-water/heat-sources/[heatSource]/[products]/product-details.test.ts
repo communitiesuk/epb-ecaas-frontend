@@ -1,5 +1,5 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import type { BoilerProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
+import type { BoilerProduct, HeatPumpProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 import ProductDetails from "./[id].vue";
 import type { H3Error } from "h3";
 import { screen } from "@testing-library/vue";
@@ -9,7 +9,9 @@ describe("Heat source details", async () => {
 	const smallHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
 		name: "Heat pump 2",
 		productReference: "HEATPUMP-SMALL",
+		typeOfHeatSource: "heatPump",
 		typeOfHeatPump: "airSource",
+		isExistingHeatSource: false,
 	};
 
 	const combiBoiler: Partial<HeatSourceData> = {
@@ -185,6 +187,62 @@ describe("Heat source details", async () => {
 			typeOfHeatSource: "boiler",
 			typeOfBoiler: "combiBoiler",
 		}));
+	});
+
+	test("A hot water cylinder is created when a heat pump with vessel type 'Integral' is selected", async () => {
+		// Arrange
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [
+						{ data: smallHeatPump },
+					],
+				},
+			},
+		});
+
+		const heatPumpDetails: Partial<HeatPumpProduct> = {
+			id: "1000",
+			brandName: "Test",
+			modelName: "Heat Pump",
+			technologyType: "AirSourceHeatPump",
+			vesselType: "Integral",
+			tankVolumeDeclared: 20,
+			dailyLossesDeclared: 10,
+			heatExchangerSurfaceAreaDeclared: 0.65,
+		};
+
+		mockFetch.mockReturnValueOnce({
+			data: ref(heatPumpDetails),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		await user.click(screen.getByTestId("selectProductButton"));
+
+		// Assert
+		const waterStorageData = store.domesticHotWater.waterStorage.data;
+		const expectedCylinderData: Partial<WaterStorageData> = {
+			name: "Hot water cylinder",
+			typeOfWaterStorage: "hotWaterCylinder",
+			packagedProductReference: "1000",
+			storageCylinderVolume: unitValue(20, "litres"),
+			dailyEnergyLoss: 10,
+			areaOfHeatExchanger: 0.65,
+		};
+
+		const hotWaterHeatSources = store.domesticHotWater.heatSources.data;
+		const expectedHotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			typeOfHeatPump: "airSource",
+			productReference: "1000",
+		};
+
+		expect(hotWaterHeatSources.length).toBe(1);
+		expect(hotWaterHeatSources[0]?.data).toStrictEqual(expect.objectContaining(expectedHotWaterHeatPump));
+
+		expect(waterStorageData.length).toBe(1);
+		expect(waterStorageData[0]?.data).toStrictEqual(expect.objectContaining(expectedCylinderData));
 	});
 
 	test("Displays heat pump details when product is a heat pump", async () => {
