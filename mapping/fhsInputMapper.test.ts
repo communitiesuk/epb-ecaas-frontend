@@ -480,6 +480,7 @@ const expectedFlatInput: FhsInputSchema = {
 					heater_position: 0.1,
 					type: "HeatSourceWet",
 					thermostat_position: 0.33,
+					temp_flow_limit_upper: 10,
 				},
 			},
 			daily_losses: 10,
@@ -634,6 +635,7 @@ const expectedFlatInput: FhsInputSchema = {
 			"EnergySupply": "mains elec",
 			"HeatSource": {
 				"name": "Heat pump 1",
+				"temp_flow_limit_upper": 18,
 			},
 			"Zone": "dwellingspace",
 			"design_flow_rate": 200,
@@ -656,6 +658,7 @@ const expectedFlatInput: FhsInputSchema = {
 		"Warm Air Heater 1 (1)": {
 			"HeatSource": {
 				"name": "Heat pump 1",
+				"temp_flow_limit_upper": 18,
 			},
 			"frac_convective": 0.8,
 			"temp_diff_emit_dsgn": 15,
@@ -664,6 +667,7 @@ const expectedFlatInput: FhsInputSchema = {
 		"Warm Air Heater 1 (2)": {
 			"HeatSource": {
 				"name": "Heat pump 1",
+				"temp_flow_limit_upper": 18,
 			},
 			"frac_convective": 0.8,
 			"temp_diff_emit_dsgn": 15,
@@ -2100,6 +2104,7 @@ describe("FHS input mapper", () => {
 						typeOfHeatSource: "heatPump",
 						typeOfHeatPump: "airSource",
 						productReference: "HP-456",
+						maxFlowTemp: { amount: 18, unit: "celsius" },
 					},
 					complete: true,
 				}],
@@ -2173,6 +2178,7 @@ describe("FHS input mapper", () => {
 						isExistingHeatSource: true,
 						heatSourceId: "HP-1",
 						coldWaterSource: "mainsWater",
+						maxFlowTemp: { amount: 10, unit: "celsius" },
 					},
 				}],
 			},

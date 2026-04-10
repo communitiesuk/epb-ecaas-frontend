@@ -115,7 +115,13 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 				.find(hs => hs.id === referencedHeatSource.heatSourceId)
 			: referencedHeatSource;
 
-		const temp_flow_limit_upper = heatSource && "maxFlowTemp" in heatSource ? heatSource.maxFlowTemp?.amount : undefined;
+		const temp_flow_limit_upper = (() => {
+			if (!referencedHeatSource.isExistingHeatSource) {
+				return heatSource && "maxFlowTemp" in heatSource ? heatSource.maxFlowTemp?.amount : undefined;
+			} else {
+				return referencedHeatSource.maxFlowTemp?.amount;
+			}
+		})();
 
 		const heatSourceName = referencedHeatSource.isExistingHeatSource
 			? state.spaceHeating.heatSource
