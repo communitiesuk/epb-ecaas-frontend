@@ -1,5 +1,4 @@
 import * as Sentry from "@sentry/nuxt";
-import { createHash } from "node:crypto";
 
 export function reportCalculateMetric(requestData: object, success: boolean) {
 	Sentry.withScope(scope => {
@@ -10,9 +9,7 @@ export function reportCalculateMetric(requestData: object, success: boolean) {
 	});
 }
 
+// we'll just use the length of the stringified data to give a rough measure of whether the data is a duplicate, without needing to use crypto stuff for hashing
 function hashForData(data: object): string {
-	const shasum = createHash("sha1");
-	shasum.update(JSON.stringify(data));
-
-	return shasum.digest("hex");
+	return btoa(JSON.stringify(data).length.toString());
 }
