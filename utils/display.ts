@@ -327,13 +327,14 @@ export type HeatNetworkTypeDisplay = "Sleeved district heat network" | "Unsleeve
 export type HeatBatteryTypeDisplay = "PCM" | "Dry core";
 export type LocationOfCollectorLoopPipingTypeDisplay = "Outside" | "Heated space" | "Unheated space";
 
-export type HeatSourceTypeDisplay = "Heat pump" | "Boiler" | "Heat network" | "Heat battery" | "Solar thermal system";
+export type HeatSourceTypeDisplay = "Heat pump" | "Boiler" | "Heat network" | "Heat battery" | "Solar thermal system" | "Heat interface unit";
 
 export const heatSourceTypesWithDisplay = {
 	"boiler": "Boiler",
 	"heatPump": "Heat pump",
 	// "heatNetwork": "Heat network",
 	"heatBattery": "Heat battery",
+	"heatInterfaceUnit": "Heat interface unit",
 } as const satisfies Record<HeatSourceType, HeatSourceTypeDisplay>;
 
 export function displayHeatSourceType(type: HeatSourceType | undefined): HeatSourceTypeDisplay | typeof emptyValueRendering {

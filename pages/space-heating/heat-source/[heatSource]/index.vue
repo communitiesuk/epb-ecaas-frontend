@@ -22,6 +22,7 @@ export type HeatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "hea
 export type BoilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
 export type HeatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
 export type HeatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
+export type HeatInterfaceUnitModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatInterfaceUnit" }>;
 
 const packagedProduct = ref<Product | undefined>();
 
@@ -167,6 +168,12 @@ const boilers = heatSourceStoreData
 			:index="index"
 			page="space heating"
 			@update-heat-battery-model="updateHeatSource" />
+		<HeatInterfaceUnitSection
+			v-if="model?.typeOfHeatSource === 'heatInterfaceUnit'"
+			:model="model as HeatInterfaceUnitModelType" 
+			:index="index"
+			page="space heating"
+			@update-heat-interface-unit-model="updateHeatSource" />	
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('spaceHeating')" secondary test-id="saveProgress">Save progress</GovButton>
