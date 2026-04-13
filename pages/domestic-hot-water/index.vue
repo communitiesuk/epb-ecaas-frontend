@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { hasPackagedProduct, isEcaasForm } from "#imports";
+import { hasPackagedProduct, isPackagedProduct, isEcaasForm } from "#imports";
 import type { CustomListItem } from "~/components/CustomList.vue";
 import { useDomesticHotWater } from "~/composables/domesticHotWater";
 import formStatus from "~/constants/formStatus";
@@ -33,9 +33,12 @@ const hasIncompleteOrInvalidEntries = () => {
 };
 
 function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
-	const heatSource = store.spaceHeating.heatSource.data
-		.find((x) => x.data.id === heatSourceId);
+	const heatSource = getExistingHeatSource(heatSourceId);
 	return heatSource ? heatSource.data.name : undefined;
+}
+
+function getExistingHeatSource(heatSourceId: string) {
+	return store.spaceHeating.heatSource.data.find(x => x.data.id === heatSourceId);
 }
 
 function maxHeatSourcesExceeded() {
@@ -61,11 +64,12 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 				.filter(x => isEcaasForm(x))
 				.map(x => {
 					const heatSource = x as EcaasForm<HeatSourceData>;
+					const existingHeatSource = x.data.isExistingHeatSource ? getExistingHeatSource(x.data.heatSourceId) : undefined;
 
 					const item: CustomListItem = {
 						name: x.data.isExistingHeatSource ? getNameFromSpaceHeatingHeatSource(x.data.heatSourceId)! : x.data.name,
 						status: x.complete ? formStatus.complete : formStatus.inProgress,
-						...(hasPackagedProduct(heatSource.data) ? {
+						...(hasPackagedProduct(heatSource.data) || isPackagedProduct(existingHeatSource?.data) ? {
 							actions: ['edit']
 						} : {})
 					};

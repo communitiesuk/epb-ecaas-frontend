@@ -42,8 +42,8 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 			data: hotWaterCylinder as WaterStorageData,
 		});
 
-		if (isPackagedProduct(heatSourceData)) {
-			heatSourceData.packageProductIds?.push(hotWaterCylinder.id!);
+		if ("packageProductIds" in heatSourceData && Array.isArray(heatSourceData.packageProductIds)) {
+			heatSourceData.packageProductIds.push(hotWaterCylinder.id!);
 		}
 	};
 
@@ -88,7 +88,9 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 
 		if (heatSourceData.typeOfHeatSource === "heatPump") {
 			const heatPumpProduct = product as (DisplayProduct | HeatPumpProduct | HybridHeatPumpProduct);
+
 			heatSourceData.typeOfHeatPump = heatPumpProductTypesMap[heatPumpProduct.technologyType as HeatPumpProductTypes];
+			heatSourceData.packageProductIds ??= [];
 
 			if (heatPumpProduct.technologyType === "HybridHeatPump") {
 				if (heatSourceData.packageProductIds?.length) {
