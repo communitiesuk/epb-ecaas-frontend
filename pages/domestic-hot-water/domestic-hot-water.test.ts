@@ -3,7 +3,7 @@ import DomesticHotWater from "@/pages/domestic-hot-water/index.vue";
 import { screen, within } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import formStatus from "~/constants/formStatus";
-import type { DomesticHotWaterHeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
 import HotWaterOutlets from "./hot-water-outlets/[outlet]/index.vue";
 import { litre } from "~/utils/units/volume";
 import { celsius } from "~/utils/units/temperature";
@@ -735,21 +735,79 @@ describe("Domestic hot water", () => {
 						},
 					},
 				});
-
-				await renderSuspended(DomesticHotWater);
 			});
 
 			it("removes heat sources which are packaged with the removed item", async () => {
+				await renderSuspended(DomesticHotWater);
+
 				await user.click(await screen.findByTestId("heatSources_remove_0"));
 				expect(store.domesticHotWater.heatSources.data.length).toBe(0);
 			});
 
 			it("only displays an 'edit' action if heat source is packaged with a heat pump", async () => {
+				await renderSuspended(DomesticHotWater);
+
 				const boilerEditButton = screen.getByTestId("heatSources_edit_1");
 				const boilerDeleteButton = screen.queryByTestId("heatSources_remove_1");
 
 				expect(boilerEditButton).toBeDefined();
 				expect(boilerDeleteButton).toBeNull();
+			});
+
+			it("only displayed an 'edit' action if heat source references an existing heat source which is comes with a hot water cylinder", async () => {
+				const heatPumpWithCylinder: HeatSourceData = {
+					...heatPump,
+					packageProductIds: ["c84528bb-f805-4f1e-95d3-2bd1717deca1"],
+				};
+
+				const existingHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+					id: "aed8bb17-9359-42c6-bda6-8ba551f1df2a",
+					isExistingHeatSource: true,
+					heatSourceId: heatPump.id,
+				};
+
+				const hotWaterCylinder: HotWaterCylinderData = {
+					name: "Hot water cylinder 1",
+					id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
+					typeOfWaterStorage: "hotWaterCylinder",
+					storageCylinderVolume: unitValue(5, litre),
+					dailyEnergyLoss: 1,
+					dhwHeatSourceId: heatPump.id,
+					areaOfHeatExchanger: 1000,
+					heaterPosition: 0.8,
+					thermostatPosition: 0.5,
+					packagedProductReference: heatPump.productReference,
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: heatPumpWithCylinder },
+							],
+						},
+					},
+					domesticHotWater: {
+						heatSources: {
+							data: [
+								{ data: existingHeatPump },
+							],
+						},
+						waterStorage: {
+							data: [
+								{ data: hotWaterCylinder },
+							],
+						},
+					},
+				});
+
+				await renderSuspended(DomesticHotWater);
+
+				const heatPumpEditButton = screen.getByTestId("heatSources_edit_0");
+				const heatSourcesDeleteButton = screen.queryByTestId("heatSources_remove_0");
+
+				expect(heatPumpEditButton).toBeDefined();
+				expect(heatSourcesDeleteButton).toBeNull();
 			});
 
 			it("removes mechanical vent and hot water cylinder packaged with the removed heat pump", async () => {
