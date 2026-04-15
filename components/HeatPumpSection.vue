@@ -16,6 +16,28 @@ const { model } = defineProps<{
 
 const heatSources = getCombinedHeatSources(store);
 
+const heatNetworkOptions = computed(() => {
+	const heatNetworks = heatSources.filter(source => {
+		return (source.data as HeatSourceData).typeOfHeatSource === "heatNetwork";
+	});
+
+	return Object.fromEntries(heatNetworks.map(network => {
+		const networkData = network.data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
+		return [
+			networkData.id,
+			{
+				label: networkData.name,
+				value: networkData.id,
+			},
+		];
+	}));
+});
+
+const defaultAssociatedHeatNetworkId = computed(() => {
+	const optionIds = Object.keys(heatNetworkOptions.value);
+	return optionIds.length === 1 ? optionIds[0] : undefined;
+});
+
 const greaterThanZero = (node: FormKitNode) => {
 	const value = node.value as UnitValue;
 	return value.amount > 0;
@@ -41,6 +63,30 @@ const greaterThanZero = (node: FormKitNode) => {
 		:selected-product-type="'heatPump' /* this might need to be updated to pass through either which of DHW or SH, or just the list of different products */"
 		:page-url="route.fullPath"
 		:page-index="index" />
+	<FormKit 
+		id="isConnectedToHeatNetwork"
+		type="govBoolean"
+		:name="'isConnectedToHeatNetwork'"
+		:label="'Is this heat pump connected to a heat network?'"
+		:value="model.isConnectedToHeatNetwork"
+	/>
+	<FormKit
+		v-if="model.isConnectedToHeatNetwork"
+		id="associatedHeatNetwork"
+		type="govRadios"
+		label="Associated heat network"
+		help="Select the heat network that heat pump is connected to"
+		:options="heatNetworkOptions"
+		name="associatedHeatNetworkId"
+		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
+	/>
+	<FieldsEnergySupplies
+		v-else
+		id="energySupply"
+		name="energySupply"
+		label="Energy supply"
+		help="Select the relevant energy supply that has been added previously" />
+
 	<FormKit
 		id="maxFlowTemp"
 		name="maxFlowTemp"

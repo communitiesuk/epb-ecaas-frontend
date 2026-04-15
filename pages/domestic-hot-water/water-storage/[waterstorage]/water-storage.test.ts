@@ -58,6 +58,8 @@ describe("water storage", () => {
 			productReference: "1234",
 			typeOfHeatPump: "airSource",
 			typeOfHeatSource: "heatPump",
+			isConnectedToHeatNetwork: false,
+			energySupply: "electricity",
 		},
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
@@ -246,7 +248,7 @@ describe("water storage", () => {
 			expect(chooseProductButton).toBeDefined();
 			expect(chooseProductButton.pathname).toContain("/domestic-hot-water/water-storage/0/smart-hot-water-tank");
 		});
-	
+
 		test("data is saved to store state when form is valid", async () => {
 			addHeatPumpStoreData();
 

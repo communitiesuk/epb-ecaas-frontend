@@ -103,6 +103,8 @@ describe("Space heating summary page", () => {
 				typeOfHeatPump: "airSource",
 				productReference: "HEAT_PUMP_SMALL",
 				maxFlowTemp: unitValue(17, celsius),
+				isConnectedToHeatNetwork: false,
+				energySupply: "electricity",
 			};
 			const store = useEcaasStore();
 			store.$patch({

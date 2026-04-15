@@ -23,6 +23,8 @@ describe("Space heating - heat sources", () => {
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "airSource",
 			productReference: "1234",
+			isConnectedToHeatNetwork: false,
+			energySupply: "electricity",
 		};
 
 		const heatPumpWithProductReference2: HeatSourceData = {
@@ -31,6 +33,8 @@ describe("Space heating - heat sources", () => {
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "booster",
 			productReference: "5678",
+			isConnectedToHeatNetwork: false,
+			energySupply: "electricity",
 		};
 		const store = useEcaasStore();
 		describe("with product references", () => {

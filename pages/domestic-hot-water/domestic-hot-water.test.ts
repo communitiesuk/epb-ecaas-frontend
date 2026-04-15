@@ -590,7 +590,7 @@ describe("Domestic hot water", () => {
 			await user.click(screen.getByTestId("heatSources_remove_0"));
 			expect(screen.queryByTestId("heatSources_items")).toBeNull();
 		});
-	
+
 		// it("references to the deleted DHW booster heat pump are removed from all heat network items", async () => {
 
 		// 	const heatNetwork: Partial<HeatSourceData> = {
@@ -614,10 +614,10 @@ describe("Domestic hot water", () => {
 		// 			},
 		// 		},
 		// 	});
-			
+
 		// 	await renderSuspended(DomesticHotWater);
 		// 	await user.click(await screen.findByTestId("heatSources_remove_0"));
-			
+
 		// 	const heatNetworkItem = store.spaceHeating.heatSource.data[0];
 		// 	expect((heatNetworkItem?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBe(undefined);
 		// 	expect(heatNetworkItem?.complete).toBe(false);
@@ -709,6 +709,8 @@ describe("Domestic hot water", () => {
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
+				isConnectedToHeatNetwork: false,
+				energySupply: "electricity",
 			};
 
 			const boiler: HeatSourceData = {
@@ -732,6 +734,8 @@ describe("Domestic hot water", () => {
 					"9e66d667-6c31-4406-9223-7e2249a7fee3",
 					"f6182db2-42e2-4d7e-beb8-de6f9a8f2be9",
 				],
+				isConnectedToHeatNetwork: false,
+				energySupply: "electricity",
 			};
 
 			const mvhr: Partial<MechanicalVentilationData> = {
@@ -1036,7 +1040,7 @@ describe("Domestic hot water", () => {
 		});
 
 		it("disables the mark section as complete button", async () => {
-				
+
 			await renderSuspended(DomesticHotWater);
 			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
 		});
@@ -1055,6 +1059,8 @@ describe("Domestic hot water", () => {
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
+				isConnectedToHeatNetwork: false,
+				energySupply: "electricity",
 			};
 
 			const boiler: HeatSourceData = {

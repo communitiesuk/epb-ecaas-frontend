@@ -552,6 +552,8 @@ describe("Domestic hot water summary", () => {
 			typeOfHeatPump: "booster",
 			productReference: "HEAT_PUMP_SMALL",
 			maxFlowTemp: unitValue(17, celsius),
+			isConnectedToHeatNetwork: false,
+			energySupply: "electricity",
 		};
 
 		const dhwWithNewBoiler: DomesticHotWaterHeatSourceData = {
@@ -619,7 +621,7 @@ describe("Domestic hot water summary", () => {
 			"powerOfCollectorPump": {
 				"amount": 0.3,
 				"unit": "kilowatt",
-			},"powerOfCollectorPumpController": {
+			}, "powerOfCollectorPumpController": {
 				"amount": 0.3,
 				"unit": "kilowatt",
 			},
@@ -721,7 +723,7 @@ describe("Domestic hot water summary", () => {
 			"Type of boiler": "Combi boiler",
 			"Product reference": "BOILER_SMALL",
 			"Maximum flow temperature": `12 ${celsius.suffix}`,
-		
+
 		};
 		const expectedHeatBattery = {
 			"Cold water source": "Mains water",

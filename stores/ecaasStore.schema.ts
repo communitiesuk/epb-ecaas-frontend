@@ -965,6 +965,18 @@ const heatPumpBase = pcdbPackagedProduct.extend({
 	maxFlowTemp: zodUnit("temperature").optional(),
 });
 
+
+const heatPumpDataZod = z.discriminatedUnion("isConnectedToHeatNetwork", [
+	heatPumpBase.extend({
+		isConnectedToHeatNetwork: z.literal(false),
+		energySupply: fuelTypeZod,
+	}),
+	heatPumpBase.extend({
+		isConnectedToHeatNetwork: z.literal(true),
+		associatedHeatNetworkId: z.string().trim().min(1),
+	}),
+]);
+
 const boilerBase = pcdbProduct
 	.extend(hasPcdbPackagedProduct.shape)
 	.extend({
@@ -1000,7 +1012,7 @@ const heatInterfaceUnitBase = pcdbProduct.extend({
 });
 
 const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
-	heatPumpBase,
+	heatPumpDataZod,
 	boilerBase,
 	heatBatteryBase,
 	heatInterfaceUnitBase,
@@ -1270,6 +1282,18 @@ const solarThermalSystemBase = namedWithId.extend({
 
 
 const heatPumpHotWaterSourceBase = heatPumpBase.extend(hotWaterHeatSourceExtension);
+
+const heatPumpHotWaterDataZod = z.discriminatedUnion("isConnectedToHeatNetwork", [
+	heatPumpHotWaterSourceBase.extend({
+		isConnectedToHeatNetwork: z.literal(false),
+		energySupply: fuelTypeZod,
+	}),
+	heatPumpHotWaterSourceBase.extend({
+		isConnectedToHeatNetwork: z.literal(true),
+		associatedHeatNetworkId: z.string().trim().min(1),
+	}),
+]);
+
 const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceExtension);
 const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceExtension);
 const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
@@ -1279,7 +1303,7 @@ const pointOfUseHotWaterSourceBase = basePointOfUse.extend(hotWaterHeatSourceExt
 const heatInterfaceUnitHotWaterSourceBase = heatInterfaceUnitBase.extend(hotWaterHeatSourceExtension);
 
 const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
-	heatPumpHotWaterSourceBase,
+	heatPumpHotWaterDataZod,
 	boilerHotWaterSourceBase,
 	heatBatteryHotWaterSourceBase,
 	solarThermalHotWaterSourceBase,
@@ -1558,17 +1582,17 @@ type IsEcaasForm<T> = T extends EcaasForm<unknown> ? true : false;
 
 type Join<K, P> = K extends string | number
 	? P extends string | number
-		? `${K}/${P}`
-		: never
+	? `${K}/${P}`
+	: never
 	: never;
 
 type EcaasFormPaths<T> = {
 	[K in keyof T]:
 	IsEcaasForm<T[K]> extends true
-		? K
-		: T[K] extends object
-			? Join<K, EcaasFormPaths<T[K]>>
-			: never
+	? K
+	: T[K] extends object
+	? Join<K, EcaasFormPaths<T[K]>>
+	: never
 }[keyof T];
 
 export type EcaasFormPath = Exclude<EcaasFormPaths<EcaasState>, undefined>;

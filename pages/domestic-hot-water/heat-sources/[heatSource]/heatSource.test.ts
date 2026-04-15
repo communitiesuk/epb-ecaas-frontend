@@ -43,6 +43,8 @@ const existingHeatPumpSpaceHeating1: HeatSourceData = {
 	typeOfHeatPump: "airSource",
 	productReference: "HEATPUMP-LARGE",
 	maxFlowTemp: unitValue(7, celsius),
+	isConnectedToHeatNetwork: false,
+	energySupply: "electricity",
 };
 const existingHeatPumpSpaceHeating2: HeatSourceData = {
 	id: "463c94f6-566c-49b2-af27-57e5c68b5c31",
@@ -51,6 +53,8 @@ const existingHeatPumpSpaceHeating2: HeatSourceData = {
 	typeOfHeatPump: "airSource",
 	productReference: "HEATPUMP-LARGE",
 	maxFlowTemp: unitValue(7, celsius),
+	isConnectedToHeatNetwork: false,
+	energySupply: "electricity",
 };
 
 const dhwWithExistingHeatPump: DomesticHotWaterHeatSourceData = {
@@ -70,6 +74,8 @@ const dhwWithNewHeatPump: DomesticHotWaterHeatSourceData = {
 	typeOfHeatPump: "airSource",
 	productReference: "HEATPUMP-SMALL",
 	maxFlowTemp: unitValue(7, celsius),
+	isConnectedToHeatNetwork: false,
+	energySupply: "electricity",
 };
 
 const hybridHeatPump: DomesticHotWaterHeatSourceData = {
@@ -83,6 +89,8 @@ const hybridHeatPump: DomesticHotWaterHeatSourceData = {
 	productReference: "1000",
 	packageProductIds: ["1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b"],
 	maxFlowTemp: unitValue(7, celsius),
+	isConnectedToHeatNetwork: false,
+	energySupply: "electricity",
 };
 
 const backupBoiler: DomesticHotWaterHeatSourceData = {
