@@ -94,7 +94,8 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 
 			if (heatPumpProduct.technologyType === "HybridHeatPump") {
 				if (heatSourceData.packageProductIds?.length) {
-					removeBoilerProduct?.(heatSourceData.packageProductIds[0]!);
+					const boilerId = heatSourceData.packageProductIds[0]!;
+					removeBoilerProduct?.(boilerId);
 				}
 
 				useProductData(heatPumpProduct.boilerProductID!).then(boiler => {
