@@ -13,6 +13,27 @@ defineProps<{
 
 const heatSources = getCombinedHeatSources(store);
 
+const heatNetworkOptions = computed(() => {
+	const heatNetworks = heatSources.filter(source => {
+		return (source.data as HeatSourceData).typeOfHeatSource === "heatNetwork";
+	});
+
+	return Object.fromEntries(heatNetworks.map(network => {
+		const networkData = network.data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
+		return [
+			networkData.id,
+			{
+				label: networkData.name,
+				value: networkData.id,
+			},
+		];
+	}));
+});
+
+const defaultAssociatedHeatNetworkId = computed(() => {
+	const optionIds = Object.keys(heatNetworkOptions.value);
+	return optionIds.length === 1 ? optionIds[0] : undefined;
+});
 </script>
 
 <template>
@@ -42,14 +63,15 @@ const heatSources = getCombinedHeatSources(store);
 	<FieldsMaxFlowTemp 
 		:model="model" 
 		:page="page"
-		help="Enter the highest flow temperature the HUI is allowed to operate at for space heating."
+		help="Enter the highest flow temperature the HUI is allowed to operate at"
 	/>
 	<FormKit
 		id="associatedHeatNetwork"
 		type="govRadios"
 		label="Is this heat interface unit associated with a heat network?"
-		:options="{}"
-		name="associatedHeatNetwork"
+		:options="heatNetworkOptions"
+		name="associatedHeatNetworkId"
+		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
 	/>
 	<FormKit
 		id="buildingLevelLosses"

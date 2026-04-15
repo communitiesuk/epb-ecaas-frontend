@@ -156,12 +156,12 @@ const boilers = heatSourceStoreData
 			:index="index"
 			page="space heating"
 			@update-boiler-model="updateHeatSource" />
-		<!-- <HeatNetworkSection
+		<HeatNetworkSection
 			v-if="model?.typeOfHeatSource === 'heatNetwork'"
 			:model="(model as HeatNetworkModelType)"
 			:index="index"
 			section="spaceHeating"
-			@update-heat-network-model="updateHeatSource" /> -->
+			@update-heat-network-model="updateHeatSource" />
 		<HeatBatterySection
 			v-if="model?.typeOfHeatSource === 'heatBattery'"
 			:model="(model as HeatBatteryModelType)"

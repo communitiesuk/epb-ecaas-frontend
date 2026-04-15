@@ -13,9 +13,9 @@ export const getHeatSourceDefaultName = (item: HeatSourceFormData): string => {
 		return boilerTypes[item.typeOfBoiler!];
 	}
 
-	// if (heatSourceType === "heatNetwork") {
-	// 	return item.typeOfHeatNetwork ? heatNetworkTypes[item.typeOfHeatNetwork] : "Heat network";
-	// }
+	if (heatSourceType === "heatNetwork") {
+		return item.typeOfHeatNetwork ? heatNetworkTypes[item.typeOfHeatNetwork] : "Heat network";
+	}
 	if (heatSourceType === "heatInterfaceUnit") {
 		return "Heat interface unit";
 	}
@@ -38,6 +38,6 @@ export type HeatSourceFormData = {
 	name?: string;
 	typeOfHeatPump?: HeatPumpType;
 	typeOfBoiler?: TypeOfBoiler;
-	// typeOfHeatNetwork?: TypeOfHeatNetwork;
+	typeOfHeatNetwork?: TypeOfHeatNetwork;
 	typeOfHeatBattery?: TypeOfHeatBattery;
 };

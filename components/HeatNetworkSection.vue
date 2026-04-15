@@ -1,5 +1,5 @@
-<!-- <script setup lang="ts">
-import { heatNetworkTypes, typeOfHeatSource, uniqueName } from "#imports";
+<script setup lang="ts">
+import { heatNetworkTypes, uniqueName } from "#imports";
 import type { PageId } from "~/data/pages/pages";
 
 const route = useRoute();
@@ -19,6 +19,29 @@ const emit = defineEmits(["update-heat-network-model"]);
 
 <template>
 	<FormKit
+		id="name"
+		type="govInputText"
+		label="Name"
+		help="Provide a name for this element so that it can be identified later"
+		name="name"
+		:validation-rules="{ uniqueName: uniqueName(heatSources, { id: model.id }) }"
+		validation="required | uniqueName"
+		:validation-messages="{
+			uniqueName: 'An element with this name in domestic hot water or space heating already exists. Please enter a unique name.'
+		}" />
+	
+	
+	<FieldsSelectPcdbProduct
+		id="selectHeatNetwork"
+		name="productReference"
+		label="Select a product"
+		help="Select a heat network product from the PCDB using the button below"
+		:selected-product-reference="model.productReference"
+		:selected-product-type="model.typeOfHeatSource"
+		:page-index="index"
+		:page-url="route.fullPath"
+	/>
+	<FormKit
 		id="typeOfHeatNetwork"
 		type="govRadios"
 		label="Type of heat network"
@@ -26,120 +49,11 @@ const emit = defineEmits(["update-heat-network-model"]);
 		name="typeOfHeatNetwork"
 		validation="required"
 		@click="emit('update-heat-network-model', 'typeOfHeatNetwork')" />
-	<template v-if="model.typeOfHeatNetwork">
-		<FormKit
-			id="name"
-			type="govInputText"
-			label="Name"
-			help="Provide a name for this element so that it can be identified later"
-			name="name"
-			:validation-rules="{ uniqueName: uniqueName(heatSources, { id: model.id }) }"
-			validation="required | uniqueName"
-			:validation-messages="{
-				uniqueName: 'An element with this name in domestic hot water or space heating already exists. Please enter a unique name.'
-			}" />
-		<FormKit
-			id="isHeatNetworkInPcdb"
-			type="govBoolean"
-			label="Is the heat network in the PCDB?"
-			name="isHeatNetworkInPcdb"
-			validation="required" />
-		<FormKit
-			v-if="model.isHeatNetworkInPcdb"
-			id="selectHeatNetwork"
-			type="govPcdbProduct"
-			label="Select a heat network"
-			name="productReference"
-			validation="required"
-			help="Select the heat network type from the PCDB using the button below."
-			:selected-product-reference="model.productReference"
-			:selected-product-type="typeOfHeatSource.heatNetwork"
-			:page-url="route.fullPath"
-			:page-index="index" 
-		/>
-		<FieldsBoosterHeatPumps
-			v-if="model.isHeatNetworkInPcdb && model.hasBoosterHeatPump"
-			id="boosterHeatPumpId"
-			label="Booster heat pump"
-			help="Select the booster heat pump that has been added previously which will be used as the backup for the heat network"
-			name="boosterHeatPumpId"
-			:section="section"
-			validation="required"
-		/>
-		<FieldsEnergySupplies
-			v-if="model.isHeatNetworkInPcdb"
-			id="energySupply"
-			name="energySupply"
-			label="Energy supply"
-			help="Select the relevant energy supply that has been added previously" />
-		<FormKit
-			v-if="model.isHeatNetworkInPcdb === false"
-			id="emissionsFactor"
-			type="govInputWithSuffix"
-			label="Emissions factor"
-			suffix-text="kgCO₂e/kWh"
-			name="emissionsFactor"
-			validation="required | number"
-			help="Equivalent amount of CO₂ emissions per KWh used. CO₂e is the CO₂ equivalent, including other greenhouse gases like methane which may have been emitted in addition to CO₂." />
-		<FormKit
-			v-if="model.isHeatNetworkInPcdb === false"
-			id="outOfScopeEmissionsFactor"
-			type="govInputWithSuffix"
-			label="Emissions factor including out of scope emissions"
-			suffix-text="kgCO₂e/kWh"
-			name="outOfScopeEmissionsFactor"
-			validation="required | number"
-			help="Equivalent amount of CO₂ emissions per kWh used, including out-of-scope emissions" />
-		<FormKit
-			v-if="model.isHeatNetworkInPcdb === false"
-			id="primaryEnergyFactor"
-			type="govInputWithSuffix"
-			label="Primary energy factor"
-			suffix-text="kWh/kWh"
-			name="primaryEnergyFactor"
-			validation="required | number"
-			help="For every kWh delivered to the home, the actual amount of primary energy in kWh needed to deliver that kWh." />
-		<FormKit
-			v-if="model.isHeatNetworkInPcdb === false"
-			id="canEnergyBeExported"
-			type="govBoolean"
-			label="Can energy from the heat network be exported?"
-			name="canEnergyBeExported"
-			validation="required" />
-		<FormKit
-			v-if="model.isHeatNetworkInPcdb === false"
-			id="hasBoosterHeatPump"
-			type="govBoolean"
-			label="Does the heat network have a booster heat pump?"
-			name="hasBoosterHeatPump"
-			validation="required" />
-		<FieldsBoosterHeatPumps
-			v-if="model.isHeatNetworkInPcdb === false && 'hasBoosterHeatPump' in model && model.hasBoosterHeatPump"
-			id="boosterHeatPumpId"
-			label="Booster heat pump"
-			help="Select the booster heat pump that has been added previously which will be used as the backup for the heat network"
-			name="boosterHeatPumpId"
-			:section="section"
-			validation="required"
-		/>
-		<FormKit
-			v-if="model.isHeatNetworkInPcdb !== undefined"
-			id="usesHeatInterfaceUnits"
-			type="govBoolean"
-			label="Will the heat network use heat interface units?"
-			name="usesHeatInterfaceUnits"
-			validation="required" />
-		<FormKit
-			v-if="model.usesHeatInterfaceUnits === true"
-			id="selectHeatInterfaceUnit"
-			type="govPcdbProduct"
-			label="Select a heat interface unit"
-			name="heatInterfaceUnitProductReference"
-			validation="required"
-			help="Select the heat interface unit type from the PCDB using the button below."
-			:selected-product-reference="model.heatInterfaceUnitProductReference"
-			:selected-product-type="typeOfHeatSource.heatInterfaceUnit"
-			:page-url="route.fullPath"
-			:page-index="index" />
-	</template>
-</template> -->
+	<GovInset>
+		<p>
+			If you have a heat interface unit (HIU) or booster heat pump as well as the heat network, enter it seperately.
+		</p>
+
+	</GovInset>
+		
+</template> 

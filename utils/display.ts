@@ -332,7 +332,7 @@ export type HeatSourceTypeDisplay = "Heat pump" | "Boiler" | "Heat network" | "H
 export const heatSourceTypesWithDisplay = {
 	"boiler": "Boiler",
 	"heatPump": "Heat pump",
-	// "heatNetwork": "Heat network",
+	"heatNetwork": "Heat network",
 	"heatBattery": "Heat battery",
 	"heatInterfaceUnit": "Heat interface unit",
 } as const satisfies Record<HeatSourceType, HeatSourceTypeDisplay>;
