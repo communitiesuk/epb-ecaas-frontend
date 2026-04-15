@@ -45,7 +45,7 @@ const associatedItemOptions = useAssociatedItems(["wall", "roof", "window"]);
 
 const packagedProduct = ref<Product | undefined>();
 
-if (hasPackagedProduct(model.value!)) {
+if (hasPackagedProduct(model.value)) {
 	const packagedProductData = await useProductData(model.value.packagedProductReference!);
 	packagedProduct.value = packagedProductData ?? undefined;
 }

@@ -337,6 +337,7 @@ describe("Heat source products page", () => {
 			modelName: "Heat network",
 			modelQualifier: "HNSMALL",
 			technologyType: "HeatNetworks",
+			displayProduct: true,
 		};
 
 		mockFetch.mockReturnValueOnce({
