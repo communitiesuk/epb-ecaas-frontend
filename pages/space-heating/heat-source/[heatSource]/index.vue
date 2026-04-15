@@ -83,7 +83,7 @@ autoSaveElementForm<HeatSourceData>({
 function updateHeatSource(type: string) {
 	watch(() => model.value[`${type}` as keyof HeatSourceData], (newHeatSourceSubtype, initialHeatSourceSubtype) => {
 		if (newHeatSourceSubtype !== initialHeatSourceSubtype) {
-			if ("productReference" in model.value) {
+			if ("productReference" in model.value && type !== "typeOfHeatNetwork") {
 				model.value.productReference = "";
 			}
 			const defaultName = getHeatSourceDefaultName(model.value);

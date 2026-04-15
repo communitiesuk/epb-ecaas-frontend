@@ -261,6 +261,22 @@ describe("heatSource", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("associatedHeatNetwork_1")).checked).toBe(true);
 		});
 
+		test("shows add heat network link when heat pump is connected and no heat networks exist", async () => {
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+			await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
+
+			expect(screen.getByText("No heat networks added.")).toBeDefined();
+			const addHeatNetworkLink = screen.getByRole("link", { name: "Click here to add a heat network" });
+			expect(addHeatNetworkLink.getAttribute("href")).toBe("/space-heating");
+			expect(screen.queryByTestId("associatedHeatNetwork")).toBeNull();
+		});
+
 		test("energy supply field displays when heat pump is not connected to heat network", async () => {
 			await renderSuspended(HeatSourceForm, {
 				route: {

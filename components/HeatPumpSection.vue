@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type HeatSourceData, uniqueName } from "#imports";
+import { getUrl, type HeatSourceData, uniqueName } from "#imports";
 import type { PageId } from "~/data/pages/pages";
 import { celsius } from "~/utils/units/temperature";
 import type { UnitValue } from "~/utils/units/types";
@@ -38,6 +38,8 @@ const defaultAssociatedHeatNetworkId = computed(() => {
 	return optionIds.length === 1 ? optionIds[0] : undefined;
 });
 
+const hasHeatNetworkOptions = computed(() => Object.keys(heatNetworkOptions.value).length > 0);
+
 const greaterThanZero = (node: FormKitNode) => {
 	const value = node.value as UnitValue;
 	return value.amount > 0;
@@ -71,7 +73,7 @@ const greaterThanZero = (node: FormKitNode) => {
 		:value="model.isConnectedToHeatNetwork"
 	/>
 	<FormKit
-		v-if="model.isConnectedToHeatNetwork"
+		v-if="model.isConnectedToHeatNetwork && hasHeatNetworkOptions"
 		id="associatedHeatNetwork"
 		type="govRadios"
 		label="Associated heat network"
@@ -80,6 +82,12 @@ const greaterThanZero = (node: FormKitNode) => {
 		name="associatedHeatNetworkId"
 		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
 	/>
+	<div v-else-if="model.isConnectedToHeatNetwork && !hasHeatNetworkOptions">
+		<p class="govuk-error-message">No heat networks added.</p>
+		<NuxtLink :to="getUrl('spaceHeating')" class="govuk-link gov-radios-add-link">
+			Click here to add a heat network
+		</NuxtLink>
+	</div>
 	<FieldsEnergySupplies
 		v-else
 		id="energySupply"
