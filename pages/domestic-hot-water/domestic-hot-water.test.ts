@@ -763,6 +763,7 @@ describe("Domestic hot water", () => {
 				const existingHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
 					id: "aed8bb17-9359-42c6-bda6-8ba551f1df2a",
 					isExistingHeatSource: true,
+					createdAutomatically: true,
 					heatSourceId: heatPump.id,
 				};
 

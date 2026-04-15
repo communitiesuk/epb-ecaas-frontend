@@ -33,12 +33,8 @@ const hasIncompleteOrInvalidEntries = () => {
 };
 
 function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
-	const heatSource = getExistingHeatSource(heatSourceId);
+	const heatSource = store.spaceHeating.heatSource.data.find(x => x.data.id === heatSourceId);
 	return heatSource ? heatSource.data.name : undefined;
-}
-
-function getExistingHeatSource(heatSourceId: string) {
-	return store.spaceHeating.heatSource.data.find(x => x.data.id === heatSourceId);
 }
 
 function maxHeatSourcesExceeded() {
@@ -64,12 +60,11 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 				.filter(x => isEcaasForm(x))
 				.map(x => {
 					const heatSource = x as EcaasForm<HeatSourceData>;
-					const existingHeatSource = x.data.isExistingHeatSource ? getExistingHeatSource(x.data.heatSourceId) : undefined;
 
 					const item: CustomListItem = {
 						name: x.data.isExistingHeatSource ? getNameFromSpaceHeatingHeatSource(x.data.heatSourceId)! : x.data.name,
 						status: x.complete ? formStatus.complete : formStatus.inProgress,
-						...(hasPackagedProduct(heatSource.data) || isPackagedProduct(existingHeatSource?.data) ? {
+						...(hasPackagedProduct(heatSource.data) || (x.data.isExistingHeatSource && x.data.createdAutomatically) ? {
 							actions: ['edit']
 						} : {})
 					};

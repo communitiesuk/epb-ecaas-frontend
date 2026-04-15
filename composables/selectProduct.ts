@@ -15,6 +15,7 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 			const hotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
 				id: uuidv4(),
 				isExistingHeatSource: true,
+				createdAutomatically: true,
 				heatSourceId: heatSourceData.id,
 			};
 

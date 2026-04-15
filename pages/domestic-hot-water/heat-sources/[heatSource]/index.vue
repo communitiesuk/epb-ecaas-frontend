@@ -228,7 +228,6 @@ const greaterThanZero = (node: FormKitNode) => {
 	const value = node.value as UnitValue;
 	return value.amount > 0;
 };
-
 </script>
 
 <template>
@@ -266,7 +265,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			:options="new Map(radioOptions)"
 			name="heatSourceId"
 			validation="required"
-			:disabled="hasPackagedProduct(model)"
+			:disabled="hasPackagedProduct(model) || (model.isExistingHeatSource && model.createdAutomatically)"
 		>
 			<div class="govuk-hint">
 				<p>

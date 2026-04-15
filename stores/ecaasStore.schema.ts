@@ -1333,6 +1333,7 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 			heatSourceId: z.string(),
 			coldWaterSource: z.enum(["mainsWater", "headerTank"]),
 			isExistingHeatSource: z.literal(true),
+			createdAutomatically: z.literal(true).optional(),
 			maxFlowTemp: zodUnit("temperature").optional(),
 		}),
 		newHotWaterHeatSourceDataZod,

@@ -211,12 +211,41 @@ describe("Heat Source Page", () => {
 		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water");
 	});
 
-
 	test("save progress button navigates user to the domestic hot wate overview page", async () => {
 		await renderSuspended(HeatSourceForm);
 		const saveProgressButton = screen.getByTestId("saveProgress");
 
 		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water");
+	});
+
+	test("disables input fields when heat source is created automatically", async () => {
+		const createdHeatPump: DomesticHotWaterHeatSourceData = {
+			...dhwWithExistingHeatPump,
+			createdAutomatically: true,
+		};
+
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [{ data: existingHeatPumpSpaceHeating1 }],
+				},
+			},
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: createdHeatPump }],
+				},
+			},
+		});
+
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "0" },
+			},
+		});
+
+		[createdHeatPump.heatSourceId, "NEW_HEAT_SOURCE"].forEach(option => {
+			expect(screen.getByTestId<HTMLInputElement>(`heatSourceId_${option}`).disabled).toBe(true);
+		});
 	});
 
 	describe("unique name", () => {
