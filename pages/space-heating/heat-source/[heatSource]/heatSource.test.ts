@@ -494,6 +494,52 @@ describe("heatSource", () => {
 
 				expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/heat-network");
 			});
+			test("renders error messages when form is submitted with empty required fields", async () => {
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "create" },
+					},
+				});
+				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				expect(await screen.findByTestId("selectHeatNetwork_error")).toBeDefined();
+				expect(await screen.findByTestId("typeOfHeatNetwork_error")).toBeDefined();
+			});
+			test("navigates to spaceHeating when a valid form is completed", async () => {
+				const heatNetwork: Partial<HeatSourceData> = {
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+					name: "Test heat network",
+					typeOfHeatSource: "heatNetwork",
+					productReference: "HEATNETWORK_SMALL",
+					typeOfHeatNetwork: "communalHeatNetwork",
+				};
+				const heatNetworkProduct: Partial<DisplayProduct> = {
+					id: "1000",
+					brandName: "Brand",
+					technologyType: "HeatNetworks",
+				};
+				mockFetch.mockReturnValue({
+					data: ref(heatNetworkProduct),
+				});
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatNetwork as HeatSourceData }],
+						},
+					},
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
+			});
 		});
 		describe("Heat interface unit", () => {
 			beforeEach(() => {
@@ -1089,4 +1135,3 @@ describe("heatSource", () => {
 		});
 
 	});
-});

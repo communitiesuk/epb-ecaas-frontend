@@ -51,7 +51,7 @@ const emit = defineEmits(["update-heat-network-model"]);
 		@click="emit('update-heat-network-model', 'typeOfHeatNetwork')" />
 	<GovInset>
 		<p>
-			If you have a heat interface unit (HIU) or booster heat pump as well as the heat network, enter it seperately.
+			If you have a heat interface unit (HIU) or booster heat pump as well as the heat network, enter it separately.
 		</p>
 
 	</GovInset>
