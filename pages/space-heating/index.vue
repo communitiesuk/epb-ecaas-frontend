@@ -26,7 +26,7 @@ function handleDuplicate(spaceHeatingType: SpaceHeatingType, index: number) {
 
 function handleRemoveHeatSource(index: number) {
 	duplicationError.value = false;
-	removeEntry("heatSource", index);
+	handleRemove("heatSource", index);
 }
 
 function handleComplete() {

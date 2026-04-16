@@ -14,6 +14,16 @@ const { removeEntry, duplicateEntry } = useDomesticHotWater();
 const { heatSources: dhwHeatSources } = store.domesticHotWater;
 
 const errorMessages = ref<{ id: string, text: string }[]>([]);
+const heatSourceTypesThatCanAddSecond = ["heatNetwork", "heatPump", "heatInterfaceUnit"] as const;
+
+const heatSourceMaxNumberOfItems = computed(() => {
+	if (dhwHeatSources.data.length !== 1) {
+		return 1;
+	}
+	const firstHeatSource = dhwHeatSources.data[0];
+	const firstHeatSourceType = firstHeatSource?.data && "typeOfHeatSource" in firstHeatSource.data && firstHeatSource?.data.typeOfHeatSource;
+	return firstHeatSourceType && heatSourceTypesThatCanAddSecond.includes(firstHeatSourceType as typeof heatSourceTypesThatCanAddSecond[number]) ? 2 : 1;
+});
 
 function handleComplete() {
 	const hasOtherHotWaterOutlet =
@@ -50,10 +60,19 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 	return heatSource ? heatSource.data.name : undefined;
 }
 
-
-const hasPackagedHeatSources = dhwHeatSources.data.every(x => isPackagedProduct(x.data) || hasPackagedProduct(x.data));
-const hasExceeded = dhwHeatSources.data.length > 1 && !hasPackagedHeatSources;
-if (hasExceeded) {
+function maxHeatSourcesExceeded() {
+	const hasPackagedHeatSources = dhwHeatSources.data.every(x => isPackagedProduct(x.data) || hasPackagedProduct(x.data));
+	if (dhwHeatSources.data.length === 2) {
+		const heatNetworks = dhwHeatSources.data.filter(x => (x.data as HeatSourceData).typeOfHeatSource === "heatNetwork");
+		const notHeatNetworkHeatSources = dhwHeatSources.data.filter(x => (x.data as HeatSourceData).typeOfHeatSource !== "heatNetwork")[0]?.data;
+		const typeOfHeatSource = notHeatNetworkHeatSources && "typeOfHeatSource" in notHeatNetworkHeatSources && notHeatNetworkHeatSources.typeOfHeatSource;
+		if (heatNetworks.length === 1 && (typeOfHeatSource === "heatPump" || typeOfHeatSource === "heatInterfaceUnit")) {
+			return false;
+		}
+	}
+	return dhwHeatSources.data.length > 1 && !hasPackagedHeatSources;
+}
+if (maxHeatSourcesExceeded()) {
 	errorMessages.value.push({ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used." });
 }
 
@@ -87,7 +106,7 @@ if (hasExceeded) {
 				})
 		"
 		:show-status="true"
-		:max-number-of-items=1
+		:max-number-of-items="heatSourceMaxNumberOfItems"
 		section="dHWHeatSources"
 		@remove="(index: number) => removeEntry('heatSources', index)"
 	/>

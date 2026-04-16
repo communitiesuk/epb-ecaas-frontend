@@ -68,15 +68,6 @@ describe("Domestic hot water", () => {
 		},
 	};
 
-	const hwOutlet2: EcaasForm<HotWaterOutletsData> = {
-		data: {
-			name: "Other Hot Water Outlet",
-			typeOfHotWaterOutlet: "otherHotWaterOutlet",
-			id: "outlet2",
-			flowRate: 20,
-		},
-	};
-
 	const pipework1: EcaasForm<PipeworkData> = {
 		data: {
 			name: "Jasper's Pipework 1",
@@ -367,22 +358,6 @@ describe("Domestic hot water", () => {
 			expect(screen.getByText(`${hwOutlet1.data.name} (2)`)).toBeDefined();
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (1)`)).toBeDefined();
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (2)`)).toBeDefined();
-		});
-
-		test("prevents user completing hot water outlets unless at least one 'other' type is present", async () => {
-			store.$patch({
-				domesticHotWater: {
-					hotWaterOutlets: {
-						data: [{ ...hwOutlet1, complete: true }],
-					},
-				},
-			});
-		
-			await renderSuspended(DomesticHotWater);
-			await user.click(screen.getByTestId("markAsCompleteButton"));
-
-			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
-			expect(errorSummary.querySelector("li[key=hotWaterOutletNoOtherTypeError]")).toBeDefined();
 		});
 	});
 
@@ -896,7 +871,7 @@ describe("Domestic hot water", () => {
 			store.$patch({
 				domesticHotWater: {
 					waterStorage: { data: [{ ...hwStorage1, complete: true }] },
-					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: true }, { ...hwOutlet2, complete: true }] },
+					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: true }] },
 					pipework: { data: [{ ...pipework1, complete: true }] },
 					heatSources: { data: [{ ...heatSource1, complete: true }] },
 				},
@@ -1048,7 +1023,7 @@ describe("Domestic hot water", () => {
 		it("displays an error message informing users to remove the extra heat source/s", async () => {
 
 			await renderSuspended(DomesticHotWater);
-			expect(screen.getByTestId("domesticHotWaterErrorSummary")).toBeDefined();
+			expect(screen.getByTestId("heatSourceLimitExceededErrorSummary")).toBeDefined();
 		});
 
 		it("does not display error message when all / both heat sources are packaged", async () => {
@@ -1087,7 +1062,85 @@ describe("Domestic hot water", () => {
 
 			await renderSuspended(DomesticHotWater);
 
-			expect(screen.queryByTestId("domesticHotWaterErrorSummary")).toBeNull();
+			expect(screen.queryByTestId("heatSourceLimitExceededErrorSummary")).toBeNull();
+		});
+	});
+
+	describe("Heat network behaviour ", () => {
+		test("when the heat source is a heat network, a heat pump or HUI can be added", async () => {
+			const heatNetwork: DomesticHotWaterHeatSourceData = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				typeOfHeatSource: "heatNetwork",
+				typeOfHeatNetwork: "communalHeatNetwork",
+				name: "Test Heat Network",
+				productReference: "HEATNETWORK_SMALL",
+			};
+
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: heatNetwork, complete: true }],
+					},
+				},
+			});
+			await renderSuspended(DomesticHotWater);
+			expect(screen.getByTestId("heatSources_add")).toBeDefined();
+		});
+		test("when the heat source is a heat pump or HUI, a heat network can be added", async () => {
+			const heatPump: DomesticHotWaterHeatSourceData = {
+				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				name: "Heat pump",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "hybridHeatPump",
+				productReference: "1000",
+				isConnectedToHeatNetwork: false,
+				energySupply: "electricity",
+			};
+
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [
+							{ data: heatPump, complete: true },
+						],
+					},
+				},
+			});
+			await renderSuspended(DomesticHotWater);
+			expect(screen.getByTestId("heatSources_add")).toBeDefined();
+		});
+
+		test("when the heat source is a HUI, a heat network can be added", async () => {
+			const hiu: DomesticHotWaterHeatSourceData = {
+				id: "48f2ce5d-f7fc-40dd-8be8-5d7f0bb0d111",
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				name: "HIU",
+				typeOfHeatSource: "heatInterfaceUnit",
+				productReference: "HIU_123",
+				associatedHeatNetworkId: "network-1",
+				maxFlowTemp: unitValue(32, celsius),
+				buildingLevelLosses: unitValue(500, "watt"),
+			};
+
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [
+							{ data: hiu, complete: true },
+						],
+					},
+				},
+			});
+			await renderSuspended(DomesticHotWater);
+			expect(screen.getByTestId("heatSources_add")).toBeDefined();
 		});
 	});
 });

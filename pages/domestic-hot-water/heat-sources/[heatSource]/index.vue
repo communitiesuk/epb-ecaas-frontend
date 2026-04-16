@@ -8,6 +8,7 @@ import type { UnitValue } from "~/utils/units/types";
 
 const title = "Heat source";
 const store = useEcaasStore();
+const { heatSources: dhwHeatSources } = store.domesticHotWater;
 const { getStoreIndex } = useForm();
 const route = useRoute();
 
@@ -224,6 +225,35 @@ const existingHeatSourceType = computed(() => {
 	return { selectedType, formattedType };
 });
 
+function hasHeatNetworkHeatSource() {
+	return dhwHeatSources.data.some((x, itemIndex) => itemIndex !== index && (x.data as HeatSourceData).typeOfHeatSource === "heatNetwork");
+}
+function hasHeatPumpOrHIUHeatSource() {
+	return dhwHeatSources.data.some((x, itemIndex) => {
+		if (itemIndex === index) {
+			return false;
+		}
+		const typeOfHeatSource = (x.data as HeatSourceData).typeOfHeatSource;
+		return typeOfHeatSource === "heatPump" || typeOfHeatSource === "heatInterfaceUnit";
+	});
+}
+function filterHeatSourceOptions(): Record<string, string> {
+	const { heatNetwork, heatPump, heatInterfaceUnit } = DHWHeatSourceTypesWithDisplay;
+	if (hasHeatNetworkHeatSource()) {
+		return {
+			heatPump,
+			heatInterfaceUnit,
+		};
+	}
+	if (hasHeatPumpOrHIUHeatSource()) {
+		return {
+			heatNetwork,
+		};
+	}
+	
+	return DHWHeatSourceTypesWithDisplay;
+}
+
 const greaterThanZero = (node: FormKitNode) => {
 	const value = node.value as UnitValue;
 	return value.amount > 0;
@@ -300,7 +330,7 @@ const isLinkedToHeatSourceWithCylinder = (): boolean => {
 			id="typeOfHeatSource"
 			type="govRadios"
 			label="Type of heat source"
-			:options="DHWHeatSourceTypesWithDisplay"
+			:options="filterHeatSourceOptions()"
 			name="typeOfHeatSource"
 			validation="required"
 			:disabled="hasPackagedProduct(model)"
