@@ -274,7 +274,6 @@ describe("heatSource", () => {
 			expect(screen.getByText("No heat networks added.")).toBeDefined();
 			const addHeatNetworkLink = screen.getByRole("link", { name: "Click here to add a heat network" });
 			expect(addHeatNetworkLink.getAttribute("href")).toBe("/space-heating");
-			expect(screen.queryByTestId("associatedHeatNetwork")).toBeNull();
 		});
 
 		test("energy supply field displays when heat pump is not connected to heat network", async () => {

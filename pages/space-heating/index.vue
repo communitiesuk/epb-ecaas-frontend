@@ -40,7 +40,31 @@ function handleComplete() {
 
 	navigateTo("/");
 }
+function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
+	if (!heatNetworkId) return;
+	store.$patch((state) => {
+		state.spaceHeating.heatSource.data.forEach((heatSource) => {
+			const typeOfHeatSource = heatSource.data?.typeOfHeatSource;
+			if (
+				(typeOfHeatSource === "heatPump" || typeOfHeatSource === "heatInterfaceUnit") &&
+				(heatSource.data as { associatedHeatNetworkId: string | undefined }).associatedHeatNetworkId === heatNetworkId
+			) {
+				(heatSource.data as { associatedHeatNetworkId: string | undefined }).associatedHeatNetworkId = undefined;
+				heatSource.complete = false;
+			} 
+		});
+	});
+}
+function handleRemove(type: "heatSource" | "heatEmitters" | "heatingControls", index: number) {
+	if (type === "heatSource") {
+		const heatSource = store.spaceHeating.heatSource.data[index];
+		if (heatSource?.data?.typeOfHeatSource === "heatNetwork") {
+			clearAssociationsWithHeatNetwork(heatSource.data.id);
+		}
+	}
 
+	removeEntry(type, index);
+}
 function checkIsComplete() {
 	const sections = store.spaceHeating;
 	return Object.values(sections).every((section) => section.complete);

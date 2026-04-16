@@ -233,6 +233,73 @@ describe("space heating", () => {
 			// 	expect(heatNetworkDHWItem?.complete).toBe(false);
 			// });
 
+			test("When a network is removed, it sets any associated heat pumps to incomplete and removes the association", async () => {
+				const heatNetwork: Partial<HeatSourceData> = {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+					typeOfHeatSource: "heatNetwork",
+					typeOfHeatNetwork: "communalHeatNetwork",
+					productReference: "HEATNETWORK_123",
+				};
+				const heatPumpWithAssociation: Partial<HeatSourceData> = {
+					id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "airSource",
+					productReference: "HEATPUMP_LARGE",
+					isConnectedToHeatNetwork: true,
+					associatedHeatNetworkId: heatNetwork.id,
+				};
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: heatNetwork, complete: true },
+								{ data: heatPumpWithAssociation, complete: true },
+							],
+							complete: true,
+						},
+					},
+				});
+				await renderSuspended(SpaceHeating);
+				await user.click(screen.getByTestId("heatSource_remove_0"));
+
+				const heatPumpItem = store.spaceHeating.heatSource.data[0];
+				expect((heatPumpItem!.data as { associatedHeatNetworkId: string }).associatedHeatNetworkId).toBe(undefined);
+				expect(heatPumpItem!.complete).toBe(false);
+				expect(store.spaceHeating.heatSource.complete).toBe(false);
+			});
+			test("When a heat network is removed, it sets any associated HIU to incomplete and removes the association", async () => {
+				const heatNetwork: Partial<HeatSourceData> = {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+					typeOfHeatSource: "heatNetwork",
+					typeOfHeatNetwork: "communalHeatNetwork",
+					productReference: "HEATNETWORK_123",
+				};
+				const hiu: Partial<HeatSourceData> = {
+					id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+					typeOfHeatSource: "heatInterfaceUnit",
+					productReference: "HIU_123",
+					associatedHeatNetworkId: heatNetwork.id,
+				};
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: heatNetwork, complete: true },
+								{ data: hiu, complete: true },
+							],
+							complete: true,
+						},
+					},
+				});
+				await renderSuspended(SpaceHeating);
+				await user.click(screen.getByTestId("heatSource_remove_0"));
+
+				const hiuItem = store.spaceHeating.heatSource.data[0];
+				expect((hiuItem!.data as { associatedHeatNetworkId: string }).associatedHeatNetworkId).toBe(undefined);
+				expect(hiuItem!.complete).toBe(false);
+				expect(store.spaceHeating.heatSource.complete).toBe(false);
+			});
+
 			it("domestic hot water heat sources that reference the deleted heat source are removed entirely", async () => {
 
 				const heatPump1: HeatSourceData = {

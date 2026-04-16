@@ -73,7 +73,7 @@ const greaterThanZero = (node: FormKitNode) => {
 		:value="model.isConnectedToHeatNetwork"
 	/>
 	<FormKit
-		v-if="model.isConnectedToHeatNetwork && hasHeatNetworkOptions"
+		v-if="model.isConnectedToHeatNetwork"
 		id="associatedHeatNetwork"
 		type="govRadios"
 		label="Associated heat network"
@@ -81,13 +81,13 @@ const greaterThanZero = (node: FormKitNode) => {
 		:options="heatNetworkOptions"
 		name="associatedHeatNetworkId"
 		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
-	/>
-	<div v-else-if="model.isConnectedToHeatNetwork && !hasHeatNetworkOptions">
+	>		<div v-if="!hasHeatNetworkOptions">
 		<p class="govuk-error-message">No heat networks added.</p>
 		<NuxtLink :to="getUrl('spaceHeating')" class="govuk-link gov-radios-add-link">
 			Click here to add a heat network
 		</NuxtLink>
 	</div>
+	</FormKit>
 	<FieldsEnergySupplies
 		v-else
 		id="energySupply"
