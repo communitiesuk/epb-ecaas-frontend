@@ -22,6 +22,7 @@ export type HeatPumpModelType = Extract<DomesticHotWaterHeatSourceData, { typeOf
 export type BoilerModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "boiler" }>;
 export type HeatNetworkModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
 export type HeatBatteryModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "heatBattery" }>;
+export type HeatInterfaceUnitModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "heatInterfaceUnit" }>;
 export type SolarThermalModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "solarThermalSystem" }>;
 export type ImmersionHeaterModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "immersionHeater" }>;
 export type PointOfUseModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "pointOfUse" }>;
@@ -154,7 +155,7 @@ function updateHeatSource(type: string) {
 		(newHeatSourceSubtype, initialHeatSourceSubtype) => {
 
 			if (model.value.isExistingHeatSource === false && newHeatSourceSubtype !== initialHeatSourceSubtype) {
-				if ("productReference" in model.value) {
+				if ("productReference" in model.value && type !== "typeOfHeatNetwork") {
 					model.value.productReference = "";
 				}
 				const defaultName = getHeatSourceDefaultName(model.value);
@@ -365,6 +366,13 @@ const isLinkedToHeatSourceWithCylinder = (): boolean => {
 			:index="index"
 			page="domestic hot water"
 			@update-heat-battery-model="updateHeatSource" />
+		<HeatInterfaceUnitSection
+			v-if="model.isExistingHeatSource === false
+				&& model.typeOfHeatSource === 'heatInterfaceUnit'"
+			:model="(model as HeatInterfaceUnitModelType)"
+			:index="index"
+			page="domestic hot water"
+			@update-heat-interface-unit-model="updateHeatSource" />
 		<SolarThermalSystemSection
 			v-if="model.isExistingHeatSource === false
 				&& model.typeOfHeatSource === 'solarThermalSystem'"

@@ -2,7 +2,7 @@
 import { celsius } from "~/utils/units/temperature";
 
 defineProps<{
-	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatInterfaceUnit" }>;
+	model: Extract<HeatSourceData | DomesticHotWaterHeatSourceData, { "typeOfHeatSource": "heatInterfaceUnit" }>;
 	page: "domestic hot water" | "space heating";
 	help?: string;
 }>();

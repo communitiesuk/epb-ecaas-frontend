@@ -7,7 +7,7 @@ const store = useEcaasStore();
 
 
 defineProps<{
-	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatInterfaceUnit" }>;
+	model: Extract<HeatSourceData | DomesticHotWaterHeatSourceData, { "typeOfHeatSource": "heatInterfaceUnit" }>;
 	index: number;
 	page: "domestic hot water" | "space heating";
 }>();
