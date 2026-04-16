@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { typeOfHeatSource, uniqueName } from "#imports";
+import { getUrl, typeOfHeatSource, uniqueName } from "#imports";
 import { watt } from "~/utils/units/power";
 
 const route = useRoute();
 const store = useEcaasStore();
+
 
 defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatInterfaceUnit" }>;
@@ -29,7 +30,7 @@ const heatNetworkOptions = computed(() => {
 		];
 	}));
 });
-
+const hasHeatNetworkOptions = computed(() => Object.keys(heatNetworkOptions.value).length > 0);
 const defaultAssociatedHeatNetworkId = computed(() => {
 	const optionIds = Object.keys(heatNetworkOptions.value);
 	return optionIds.length === 1 ? optionIds[0] : undefined;
@@ -54,24 +55,31 @@ const defaultAssociatedHeatNetworkId = computed(() => {
 		label="Select a heat interface unit"
 		name="productReference"
 		validation="required"
-		help="Select the heat interface unit type from the PCDB using the button below."
+		help="Select the heat interface unit type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
 		:selected-product-type="typeOfHeatSource.heatInterfaceUnit"
 		:page-url="route.fullPath"
 		:page-index="index" 
 	/>
+	<FormKit
+		id="associatedHeatNetwork"
+		type="govRadios"
+		label="Associated heat network"
+		help="Select the heat network that this heat pump is connected to"
+		:options="heatNetworkOptions"
+		name="associatedHeatNetworkId"
+		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
+	>		<div v-if="!hasHeatNetworkOptions">
+		<p class="govuk-error-message">No heat networks added.</p>
+		<NuxtLink :to="getUrl('spaceHeating')" class="govuk-link gov-radios-add-link">
+			Click here to add a heat network
+		</NuxtLink>
+	</div>
+	</FormKit>
 	<FieldsMaxFlowTemp 
 		:model="model" 
 		:page="page"
 		help="Enter the highest flow temperature the HUI is allowed to operate at"
-	/>
-	<FormKit
-		id="associatedHeatNetwork"
-		type="govRadios"
-		label="Is this heat interface unit associated with a heat network?"
-		:options="heatNetworkOptions"
-		name="associatedHeatNetworkId"
-		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
 	/>
 	<FormKit
 		id="buildingLevelLosses"
