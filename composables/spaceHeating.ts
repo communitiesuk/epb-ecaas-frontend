@@ -5,7 +5,7 @@ import { useMechanicalVentilation } from "./mechanicalVentilation";
 export function useSpaceHeating() {
 	const store = useEcaasStore();
 	const { removeMechanicalVents, duplicateMechanicalVent } = useMechanicalVentilation();
-	const { removeWaterStorage, duplicateWaterStorage } = useWaterStorage();
+	const { removeWaterStorage, preventDuplicateWaterStorage } = useWaterStorage();
 
 	type SpaceHeatingType = keyof typeof store.spaceHeating;
 	type SpaceHeatingData = EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> & EcaasForm<HeatingControlData>;
@@ -171,11 +171,7 @@ export function useSpaceHeating() {
 						}
 					}
 
-					const newWaterStorageData = duplicateWaterStorage(state, packageProductIds!);
-
-					if (newWaterStorageData) {
-						newPackageProductIds.push(newWaterStorageData.data.id);
-					}
+					preventDuplicateWaterStorage(state, packageProductIds!);
 
 					duplicatePackagedItem(
 						state,

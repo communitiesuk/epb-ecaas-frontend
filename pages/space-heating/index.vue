@@ -3,12 +3,31 @@ import formStatus from "~/constants/formStatus";
 import type { CustomListItem } from "~/components/CustomList.vue";
 import { hasPackagedProduct } from "~/utils/packagedProduct";
 import { useSpaceHeating } from "~/composables/spaceHeating";
+import { EcaasError } from "~/errors.types";
 
 const title = "Space heating";
 const page = usePage();
 const store = useEcaasStore();
 
+type SpaceHeatingType = keyof typeof store.spaceHeating;
+
 const { removeEntry, duplicateEntry } = useSpaceHeating();
+const duplicationError = ref(false);
+
+function handleDuplicate(spaceHeatingType: SpaceHeatingType, index: number) {
+	try {
+		duplicateEntry(spaceHeatingType, index);
+	} catch (error: unknown) {
+		if (error instanceof EcaasError && error.name === "DUPLICATION_ERROR") {
+			duplicationError.value = true;
+		}
+	}
+}
+
+function handleRemoveHeatSource(index: number) {
+	duplicationError.value = false;
+	removeEntry("heatSource", index);
+}
 
 function handleComplete() {
 	store.$patch({
@@ -37,13 +56,23 @@ function hasIncompleteEntries() {
 </script>
 
 <template>
-
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<GovErrorSummary
+		v-if="duplicationError"
+		:error-list="[
+			{
+				id: 'duplicateHeatSource',
+				text: 'There is another heat source that has a hot water cylinder attached as a packaged product. This cannot be duplicated as you cannot have multiple hot water heat sources or multiple hot water storage units.',
+			}
+		]"
+		:use-links="false"
+		test-id="duplicationError"
+	/>
 	<CustomList
 		id="heatSource"
 		title="Heat sources"
@@ -64,8 +93,8 @@ function hasIncompleteEntries() {
 			}))
 		"
 		:show-status="true"
-		@duplicate="(index: number) => duplicateEntry('heatSource', index)"
-		@remove="(index: number) => removeEntry('heatSource', index)"
+		@duplicate="(index: number) => handleDuplicate('heatSource', index)"
+		@remove="(index: number) => handleRemoveHeatSource(index)"
 	/>
 	<CustomList
 		id="heatEmitters"
@@ -78,7 +107,7 @@ function hasIncompleteEntries() {
 			}))
 		"
 		:show-status="true"
-		@duplicate="(index: number) => duplicateEntry('heatEmitters', index)"
+		@duplicate="(index: number) => handleDuplicate('heatEmitters', index)"
 		@remove="(index: number) => removeEntry('heatEmitters', index)"
 	/>
 	<CustomList

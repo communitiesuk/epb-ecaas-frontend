@@ -1,3 +1,4 @@
+import { EcaasError } from "~/errors.types";
 
 export function useWaterStorage() {
 	const store = useEcaasStore();
@@ -13,29 +14,20 @@ export function useWaterStorage() {
 		});
 	};
 
-	const duplicateWaterStorage = (
+	const preventDuplicateWaterStorage = (
 		state: EcaasState,
 		packageProductIds: string[],
 	) => {
 		const waterStorageData = state.domesticHotWater.waterStorage.data;
 		const packageItem = waterStorageData.find(x => packageProductIds.includes(x.data.id!));
 
-		if (!packageItem) {
-			return;
+		if (packageItem) {
+			throw new EcaasError("DUPLICATION_ERROR");
 		}
-
-		const packagedDuplicates = waterStorageData.filter(x => x && x.data.name.match(duplicateNamePattern(packageItem.data.name)));
-		
-		const newPackagedItem = duplicateFormEntry(packageItem, packagedDuplicates.length, false) as EcaasForm<WaterStorageData>;
-
-		waterStorageData.push(newPackagedItem);
-		state.domesticHotWater.waterStorage.complete = false;
-
-		return newPackagedItem;
 	};
 
 	return {
 		removeWaterStorage,
-		duplicateWaterStorage,
+		preventDuplicateWaterStorage,
 	};
 }
