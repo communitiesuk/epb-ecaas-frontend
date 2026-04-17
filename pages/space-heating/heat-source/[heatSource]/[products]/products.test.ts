@@ -18,11 +18,6 @@ describe("Heat source products page", () => {
 	mockNuxtImport("useRoute", () => mockRoute);
 	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
-	afterEach(() => {
-		mockFetch.mockReset();
-		mockRoute.mockReset();
-	});
-
 	const MOCKED_HEAT_PUMPS: PaginatedResult<DisplayProduct> = {
 		data: [
 			{
@@ -102,7 +97,10 @@ describe("Heat source products page", () => {
 		});
 	});
 
-	afterEach(async () => {
+	afterEach(() => {
+		mockFetch.mockReset();
+		mockRoute.mockReset();
+
 		store.$reset();
 	});
 
@@ -474,13 +472,22 @@ describe("Heat source products page", () => {
 		expect(waterStorageData[0]?.data).toStrictEqual(expect.objectContaining(expectedCylinderData));
 	});
 
-	test.only("selecting a heat pump with cylinder should throw an error and redirect to the space heating form", async () => {
+	test("selecting a heat pump with cylinder should throw an error and redirect to the space heating form", async () => {
+		const heatPump: Partial<HeatSourceData> = {
+			id: "463c94f6-566c-49b2-af27-222222222",
+			name: "Heat source 1",
+			typeOfHeatSource: "heatPump",
+		};
+
 		const hotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+			id: "c4f9f615-4ee8-49f0-b3bd-a48fc359dc24",
 			isExistingHeatSource: true,
+			createdAutomatically: true,
 			heatSourceId: heatSource1.id,
 		};
 
 		const cylinderData: Partial<WaterStorageData> = {
+			id: "5e267b2a-e3d6-4cfc-a776-30516527be4e",
 			name: "Hot water cylinder",
 			typeOfWaterStorage: "hotWaterCylinder",
 			packagedProductReference: "1000",
@@ -492,7 +499,7 @@ describe("Heat source products page", () => {
 			spaceHeating: {
 				heatSource: {
 					data: [
-						{ data: heatSource1 },
+						{ data: heatPump },
 					],
 				},
 			},
@@ -529,7 +536,7 @@ describe("Heat source products page", () => {
 			}],
 		};
 
-		mockFetch.mockReturnValueOnce({
+		mockFetch.mockReturnValue({
 			data: ref(heatPumpProduct),
 		});
 

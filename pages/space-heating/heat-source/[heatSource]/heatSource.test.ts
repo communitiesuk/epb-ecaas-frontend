@@ -180,7 +180,7 @@ describe("heatSource", () => {
 			expect(await screen.findByTestId("selectHeatPump_error")).toBeDefined();
 		});
 
-		test.only("renders error message when domestic hot water heat source conflict error occurs", async () => {
+		test("renders error message when domestic hot water heat source conflict error occurs", async () => {
 			const error: ErrorName = "DHW_HEAT_SOURCE_CONFLICT";
 
 			store.$patch({
