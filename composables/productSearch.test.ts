@@ -31,7 +31,7 @@ describe("Product search", () => {
 	it("Returns all products when no search parameters are present", () => {
 		// Act
 		const results = useProductSearch(productData, {});
-		
+
 		// Assert
 		expect(results.length).toBe(productData.length);
 	});
@@ -53,7 +53,7 @@ describe("Product search", () => {
 		const results = useProductSearch(productData, { searchTerm: "Test 1" });
 
 		// Assert
-		expect(results[0]?.brandName).toBe("Test 1");
+		expect((results[0] as { brandName: string })?.brandName).toBe("Test 1");
 	});
 
 	it("Returns products by model name when model is used as search parameter", () => {
@@ -61,7 +61,7 @@ describe("Product search", () => {
 		const results = useProductSearch(productData, { searchTerm: "Small Heat Pump" });
 
 		// Assert
-		expect(results[0]?.modelName).toBe("Small Heat Pump");
+		expect((results[0] as { modelName: string })?.modelName).toBe("Small Heat Pump");
 	});
 
 	it("Returns products by model qualifier when qualifier is used as search parameter", () => {
@@ -69,7 +69,7 @@ describe("Product search", () => {
 		const results = useProductSearch(productData, { searchTerm: "HPSMALL" });
 
 		// Assert
-		expect(results[0]?.modelQualifier).toBe("HPSMALL");
+		expect((results[0] as { modelQualifier: string })?.modelQualifier).toBe("HPSMALL");
 	});
 
 	it("Returns products when multiple fields are used as a search parameter", () => {
@@ -108,7 +108,7 @@ describe("Product search", () => {
 
 		// Assert
 		const expectedBrandNames = ["Test 1", "Test 2", "Test 3"];
-		const brandNames = results.map(r => r.brandName);
+		const brandNames = results.map(r => (r as { brandName: string })?.brandName);
 
 		expect(brandNames).toStrictEqual(expectedBrandNames);
 	});
@@ -119,7 +119,7 @@ describe("Product search", () => {
 
 		// Assert
 		const expectedModelNames = ["Large Heat Pump", "Medium Heat Pump", "Small Heat Pump"];
-		const modelNames = results.map(r => r.modelName);
+		const modelNames = results.map(r => (r as { modelName: string })?.modelName);
 
 		expect(modelNames).toStrictEqual(expectedModelNames);
 	});
@@ -130,7 +130,7 @@ describe("Product search", () => {
 
 		// Assert
 		const expectedModelQualifiers = ["HPLARGE", "HPMEDIUM", "HPSMALL"];
-		const modelQualifiers = results.map(r => r.modelQualifier);
+		const modelQualifiers = results.map(r => (r as { modelQualifier: string })?.modelQualifier);
 
 		expect(modelQualifiers).toStrictEqual(expectedModelQualifiers);
 	});

@@ -5,6 +5,7 @@ import type { H3Error } from "h3";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import products from "@/pcdb/data/products.json";
+import { dynamodbClient } from "~/pcdb/clients/dynamodb_client";
 
 describe("Products service", () => {
 	const ddbMock = mockClient(DynamoDBDocumentClient);
@@ -72,7 +73,7 @@ describe("Products service", () => {
 				type: "T33",
 				height: 700,
 			};
-
+			// first we list the product ids for the technology type, then we get the full product details for each radiator to hydrate the display product fields
 			ddbMock.on(QueryCommand, {
 				TableName: "products",
 				IndexName: "by-technology-type",
@@ -81,7 +82,7 @@ describe("Products service", () => {
 			}).resolves({
 				Items: projectedQueryItems,
 			});
-
+			// this will be simplified when we can query by convector radiator type and height to avoid the need for hydration
 			ddbMock.on(GetCommand, {
 				TableName: "products",
 				Key: { id: "58" },
@@ -95,6 +96,7 @@ describe("Products service", () => {
 			// Assert
 			expect(result.data).toStrictEqual([
 				{
+					displayProduct: true,
 					id: "58",
 					technologyType,
 					type: "T33",
@@ -143,7 +145,40 @@ describe("Products service", () => {
 			})));
 		});
 	});
+	describe("Get product with options", () => {
+		it("Returns product with matching test data entry when testDataId is provided", async () => {
+			// Arrange
+			const productId = "network-123";
+			const testDataId = "td-2";
+			const productFromTestData = {
+				id: productId,
+				technologyType: "HeatNetworks",
+				communityHeatNetworkName: "Network Alpha",
+				testData: { ID: testDataId, subheatNetworkName: "Sub 2" },
+			};
 
+			ddbMock.on(GetCommand, {
+				TableName: "products",
+				Key: { id: productId },
+			}).resolves({
+				Item: {
+					id: productId,
+					technologyType: "HeatNetworks",
+					communityHeatNetworkName: "Network Alpha",
+					testData: [
+						{ ID: "td-1", subheatNetworkName: "Sub 1" },
+						{ ID: testDataId, subheatNetworkName: "Sub 2" },
+					],
+				},
+			});
+
+			// Act
+			const result = await dynamodbClient.getProduct(productId, { includeTestData: false, testDataId });
+
+			// Assert
+			expect(result).toStrictEqual(productFromTestData);
+		});
+	});
 	describe("Get display product", async () => {
 		it("Returns bad request error when product ID is invalid", async () => {
 			// Arrange

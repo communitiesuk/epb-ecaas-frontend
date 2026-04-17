@@ -21,6 +21,9 @@ const route = useRoute();
 					<th scope="col" class="govuk-table__header govuk-table__header--brand">
 						<ColumnSort label="Network name" field="communityHeatNetworkName" />
 					</th>
+					<th scope="col" class="govuk-table__header govuk-table__header--subnetwork">
+						<ColumnSort label="Subnetwork name" field="subheatNetworkName" />
+					</th>
 					<th class="govuk-table__header">&nbsp;</th>
 				</tr>
 			</thead>
@@ -28,11 +31,12 @@ const route = useRoute();
 			<tbody class="govuk-table__body">
 				<tr
 					v-for="product, index in products"
-					:key="product.id"
+					:key="`${product.id}-${index}`"
 					class="govuk-table__row"
 				>
-					<td class="govuk-table__cell">{{ product.id }}</td>
+					<td class="govuk-table__cell">{{ product.productId }}</td>
 					<td class="govuk-table__cell">{{ product.communityHeatNetworkName }}</td>
+					<td class="govuk-table__cell">{{ product.subheatNetworkName }}</td>
 					<td class="govuk-table__cell govuk-table__cell--select">
 						<NuxtLink :href="`${route.path}/${product.id}`" class="govuk-link govuk-!-margin-right-3">
 							More details

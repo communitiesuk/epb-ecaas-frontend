@@ -142,8 +142,6 @@ describe("Heat source products page", () => {
 				{
 					displayProduct: true,
 					id: "4000",
-					brandName: "Test",
-					modelName: "Network",
 					technologyType: "HeatNetworks",
 					communityHeatNetworkName: "Example network",
 				},
@@ -166,6 +164,7 @@ describe("Heat source products page", () => {
 
 		expect(screen.getByTestId("heatNetworkProductsTable")).toBeDefined();
 		expect(screen.getByTestId("searchOption_networkName")).toBeDefined();
+		expect(screen.getByText("Search network name")).toBeDefined();
 	});
 
 	test("when a user selects a product its product reference gets stored", async () => {

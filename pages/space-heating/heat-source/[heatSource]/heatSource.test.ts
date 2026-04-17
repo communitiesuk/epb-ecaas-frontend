@@ -1026,6 +1026,34 @@ describe("heatSource", () => {
 				expect(await screen.findByTestId("selectHeatNetwork_error")).toBeDefined();
 				expect(await screen.findByTestId("typeOfHeatNetwork_error")).toBeDefined();
 			});
+
+			test("does not clear selected product when type of heat network changes", async () => {
+				const heatNetwork: HeatSourceData = {
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+					name: "Test heat network",
+					typeOfHeatSource: "heatNetwork",
+					productReference: "HEATNETWORK_SMALL",
+					typeOfHeatNetwork: "communalHeatNetwork",
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatNetwork }],
+						},
+					},
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("typeOfHeatNetwork_sleevedDistrictHeatNetwork"));
+
+				expect((store.spaceHeating.heatSource.data[0]!.data as HeatSourceData).productReference).toBe("HEATNETWORK_SMALL");
+			});
 			test("navigates to spaceHeating when a valid form is completed", async () => {
 				const heatNetwork: Partial<HeatSourceData> = {
 					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",

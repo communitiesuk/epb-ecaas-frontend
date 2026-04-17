@@ -35,6 +35,7 @@ describe("Heat emitter products page", () => {
 	const MOCKED_RADIATORS: PaginatedResult<DisplayProduct> = {
 		data: [
 			{
+				displayProduct: true,
 				id: "60",
 				technologyType: "ConvectorRadiator",
 				type: "T33",

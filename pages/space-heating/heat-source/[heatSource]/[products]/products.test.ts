@@ -333,11 +333,10 @@ describe("Heat source products page", () => {
 
 		const heatNetworkProduct: DisplayProduct = {
 			id: "1000",
-			brandName: "Test",
-			modelName: "Heat network",
-			modelQualifier: "HNSMALL",
 			technologyType: "HeatNetworks",
+			subheatNetworkName: "Test subnetwork",
 			displayProduct: true,
+
 		};
 
 		mockFetch.mockReturnValueOnce({
