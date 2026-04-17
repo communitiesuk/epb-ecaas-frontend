@@ -82,10 +82,26 @@ describe("domestic hot water mapper", () => {
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
-	const boiler = {
+	const combiBoiler = {
 		data: {
 			typeOfHeatSource: "boiler",
 			typeOfBoiler: "combiBoiler",
+			id: heatSourceId,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			isExistingHeatSource: false,
+			name: "DHW boiler",
+			coldWaterSource: "mainsWater",
+			productReference: "BOIL-12345",
+			maxFlowTemp: unitValue(32, celsius),
+			needsSpecifiedLocation: false,
+		},
+		complete: true,
+	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+	const regularBoiler = {
+		data: {
+			typeOfHeatSource: "boiler",
+			typeOfBoiler: "regularBoiler",
 			id: heatSourceId,
 			heatSourceId: "NEW_HEAT_SOURCE",
 			isExistingHeatSource: false,
@@ -148,8 +164,6 @@ describe("domestic hot water mapper", () => {
 		},
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
-
-	// heat sources referenced from space heating
 
 	describe("water storage and heat sources", () => {
 
@@ -323,7 +337,7 @@ describe("domestic hot water mapper", () => {
 							},
 						} as const satisfies Partial<FhsInputSchema>, 
 					},
-					{ heatSource: boiler, waterStorage: storageTank,
+					{ heatSource: combiBoiler, waterStorage: storageTank,
 						expected: {
 							HotWaterSource: {
 								"hw cylinder": {
@@ -332,21 +346,21 @@ describe("domestic hot water mapper", () => {
 									volume: storageTank.data.storageCylinderVolume.amount,
 									daily_losses: storageTank.data.dailyEnergyLoss,
 									HeatSource: {
-										[boiler.data.name]: {
+										[combiBoiler.data.name]: {
 											type: "HeatSourceWet",
-											name: boiler.data.name,
+											name: combiBoiler.data.name,
 											heater_position: storageTank.data.heaterPosition,
 											thermostat_position: storageTank.data.thermostatPosition,
-											temp_flow_limit_upper: boiler.data.maxFlowTemp.amount,
+											temp_flow_limit_upper: combiBoiler.data.maxFlowTemp.amount,
 										},
 									},
 								},
 							},
 							HeatSourceWet: {
-								[boiler.data.name]: {
+								[combiBoiler.data.name]: {
 									type: "Boiler",
 									is_heat_network: false,
-									product_reference: boiler.data.productReference,
+									product_reference: combiBoiler.data.productReference,
 									EnergySupply: "mains elec",
 								},
 							},
@@ -354,7 +368,7 @@ describe("domestic hot water mapper", () => {
 					},
 				// TODO { heatSource: heatInterfaceUnit, waterStorage: smartHotWaterTank },
 				],
-			)("maps a $heatSource.data.name heat source attached to a $waterStorage.data.name water storage",
+			)("maps a $heatSource.data.typeOfHeatSource heat source attached to a $waterStorage.data.typeOfWaterStorage water storage",
 				async ({ heatSource, waterStorage, expected }) => {
 					store.$patch({
 						domesticHotWater: {
@@ -400,19 +414,19 @@ describe("domestic hot water mapper", () => {
 					} as const satisfies Partial<FhsInputSchema>,
 				},
 				{ 
-					heatSource: boiler, expected: {
+					heatSource: combiBoiler, expected: {
 						HotWaterSource: {
 							"hw cylinder": {
 								type: "CombiBoiler",
-								HeatSourceWet: boiler.data.name,
+								HeatSourceWet: combiBoiler.data.name,
 								ColdWaterSource: "mains water",
 							},
 						},
 						HeatSourceWet: {
-							[boiler.data.name]: {
+							[combiBoiler.data.name]: {
 								type: "Boiler",
 								is_heat_network: false,
-								product_reference: boiler.data.productReference,
+								product_reference: combiBoiler.data.productReference,
 								EnergySupply: "mains elec",
 							},
 						},
@@ -429,7 +443,7 @@ describe("domestic hot water mapper", () => {
 					},
 				} as const satisfies Partial<FhsInputSchema> },
 			// TODO { heatSource: heatInterfaceUnit },
-			])("maps a $heatSource.data.name dhw heat source attached to no water storage",
+			])("maps a $heatSource.data.typeOfHeatSource dhw heat source attached to no water storage",
 				async ({ heatSource, expected }) => {
 					store.$patch({
 						domesticHotWater: {
@@ -449,6 +463,71 @@ describe("domestic hot water mapper", () => {
 					});
 
 					expect(mapHotWaterSourcesData(resolveState(store.$state))).toEqual(expected);
+				},
+			);
+
+			it.each([
+				{ 
+					name: "regular boiler",
+					heatSource: regularBoiler,
+				},
+				{ 
+					name: "heat pump",
+					heatSource: heatPump,
+				},
+				{ 
+					name: "solar thermal system",
+					heatSource: solarThermal,
+				},
+				{ 
+					name: "immersion heater",
+					heatSource: immersionHeater,
+				},
+			])("throws an error when given a $name without any water storage",
+				async ({ heatSource }) => {
+					store.$patch({
+						domesticHotWater: {
+							heatSources: {
+								data: [heatSource],
+								complete: true,
+							},
+							waterStorage: {
+								data: [],
+								complete: true,
+							},
+							pipework: {
+								data: [],
+								complete: true,
+							},
+						},
+					});
+
+					expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
+						.toThrow("Selected hot water heat source requires water storage - no water storage present");
+				},
+			);
+
+			it("throws an error when given a point of use heat source with water storage",
+				async () => {
+					store.$patch({
+						domesticHotWater: {
+							heatSources: {
+								data: [pointOfUse],
+								complete: true,
+							},
+							waterStorage: {
+								data: [storageTank],
+								complete: true,
+							},
+							pipework: {
+								data: [],
+								complete: true,
+							},
+						},
+					});
+
+					expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
+						.toThrow("Cannot have a point of use heat source heating a hot water cylinder or smart hot water tank");
 				},
 			);
 		});
@@ -477,15 +556,28 @@ describe("domestic hot water mapper", () => {
 				complete: true,
 			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
-			const existingBoiler = {
+			const existingCombiBoiler = {
 				data: {
 					id: heatSourceIdInSH,
 					name: "Boiler space",
 					typeOfHeatSource: "boiler",
 					typeOfBoiler: "combiBoiler",
 					productReference: "174",
-					needsSpecifiedLocation: true,
+					needsSpecifiedLocation: false,
 					maxFlowTemp: unitValue(5, celsius),
+				},
+				complete: true,
+			} as const satisfies EcaasForm<HeatSourceData>;
+
+			const existingRegularBoiler = {
+				data: {
+					id: heatSourceIdInSH,
+					name: "Regular ol' boiler",
+					typeOfHeatSource: "boiler",
+					typeOfBoiler: "regularBoiler",
+					productReference: "189",
+					needsSpecifiedLocation: false,
+					maxFlowTemp: unitValue(72, celsius),
 				},
 				complete: true,
 			} as const satisfies EcaasForm<HeatSourceData>;
@@ -495,7 +587,7 @@ describe("domestic hot water mapper", () => {
 					id: heatSourceId,
 					coldWaterSource: "mainsWater",
 					isExistingHeatSource: true,
-					heatSourceId: existingBoiler.data.id,
+					heatSourceId: existingCombiBoiler.data.id,
 					maxFlowTemp: unitValue(40, celsius),
 				},
 				complete: true,
@@ -593,7 +685,7 @@ describe("domestic hot water mapper", () => {
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{ 
-						heatSource: existingBoiler,
+						heatSource: existingCombiBoiler,
 						dhwHeatSource: dhwWithExistingBoiler,
 						waterStorage: smartHotWaterTank,
 						expected: {
@@ -601,9 +693,9 @@ describe("domestic hot water mapper", () => {
 								"hw cylinder": {
 									EnergySupply_pump: defaultElectricityEnergySupplyName,
 									HeatSource: {
-										[existingBoiler.data.name]: {
+										[existingCombiBoiler.data.name]: {
 											heater_position: smartHotWaterTank.data.heaterPosition,
-											name: existingBoiler.data.name,
+											name: existingCombiBoiler.data.name,
 											type: "HeatSourceWet",
 											temp_flow_limit_upper: dhwWithExistingBoiler.data.maxFlowTemp.amount,
 										},
@@ -613,10 +705,10 @@ describe("domestic hot water mapper", () => {
 								},
 							},
 							HeatSourceWet: {
-								[existingBoiler.data.name]: {
+								[existingCombiBoiler.data.name]: {
 									EnergySupply: defaultElectricityEnergySupplyName,
 									is_heat_network: false,
-									product_reference: existingBoiler.data.productReference,
+									product_reference: existingCombiBoiler.data.productReference,
 									type: "Boiler",
 								},
 							},
@@ -624,7 +716,7 @@ describe("domestic hot water mapper", () => {
 					},
 					// TODO { heatSource: heatInterfaceUnitInSH, waterStorage: storageTank },
 				],
-			)("maps a $heatSource.data.name dhw heat source attached to a $waterStorage.data.name water storage",
+			)("maps a $heatSource.data.typeOfHeatSource dhw heat source attached to a $waterStorage.data.typeOfWaterStorage water storage",
 				async ({ heatSource, dhwHeatSource, waterStorage, expected }) => {
 					store.$patch({
 						spaceHeating: {
@@ -677,27 +769,27 @@ describe("domestic hot water mapper", () => {
 						},
 					} as const satisfies Partial<FhsInputSchema>,
 				},
-				{ heatSource: existingBoiler, dhwHeatSource: dhwWithExistingBoiler,
+				{ heatSource: existingCombiBoiler, dhwHeatSource: dhwWithExistingBoiler,
 					expected: {
 						HotWaterSource: {
 							"hw cylinder": {
 								ColdWaterSource: "mains water",
-								HeatSourceWet: existingBoiler.data.name,
+								HeatSourceWet: existingCombiBoiler.data.name,
 								type: "CombiBoiler",
 							},
 						},
 						HeatSourceWet: {
-							[existingBoiler.data.name]: {
+							[existingCombiBoiler.data.name]: {
 								EnergySupply: defaultElectricityEnergySupplyName,
 								is_heat_network: false,
-								product_reference: existingBoiler.data.productReference,
+								product_reference: existingCombiBoiler.data.productReference,
 								type: "Boiler",
 							},
 						},
 					} as const satisfies Partial<FhsInputSchema>,
 				},
 				// TODO { heatSource: existingHIU },
-			])("maps a $heatSource.data.name dhw heat source attached to no water storage",
+			])("maps a $heatSource.data.typeOfHeatSource dhw heat source attached to no water storage",
 				async ({ heatSource, dhwHeatSource, expected }) => {
 					store.$patch({
 						spaceHeating: {
@@ -728,7 +820,46 @@ describe("domestic hot water mapper", () => {
 				},
 			);
 
-			
+			it.each([
+				{ 
+					name: "regular boiler",
+					heatSource: existingRegularBoiler,
+					dhwHeatSource: dhwWithExistingBoiler,
+				},
+				{ 
+					name: "heat pump",
+					heatSource: existingHeatPump,
+					dhwHeatSource: dhwWithExistingHeatPump,
+				},
+			])("throws an error when given a $name without any water storage",
+				async ({ heatSource, dhwHeatSource }) => {
+					store.$patch({
+						spaceHeating: {
+							heatSource: {
+								data: [heatSource],
+								complete: true,
+							},
+						},
+						domesticHotWater: {
+							heatSources: {
+								data: [dhwHeatSource],
+								complete: true,
+							},
+							waterStorage: {
+								data: [],
+								complete: true,
+							},
+							pipework: {
+								data: [],
+								complete: true,
+							},
+						},
+					});
+
+					expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
+						.toThrow("Selected hot water heat source requires water storage - no water storage present");
+				},
+			);
 		});
 	});
 
@@ -857,7 +988,7 @@ describe("domestic hot water mapper", () => {
 					domesticHotWater: {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
-						heatSources: { data: [boiler], complete: true },
+						heatSources: { data: [combiBoiler], complete: true },
 						waterStorage: { data: [], complete: true },
 					},
 				});
@@ -869,7 +1000,7 @@ describe("domestic hot water mapper", () => {
 					ColdWaterSource: "mains water",
 					flowrate: 8,
 					allow_low_flowrate: false,
-					HotWaterSource: boiler.data.name,
+					HotWaterSource: combiBoiler.data.name,
 					WWHRS: "WW-A-123",
 					WWHRS_configuration: "A",
 				};
@@ -936,7 +1067,7 @@ describe("domestic hot water mapper", () => {
 					domesticHotWater: {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
-						heatSources: { data: [boiler], complete: true },
+						heatSources: { data: [combiBoiler], complete: true },
 						waterStorage: { data: [storageTank], complete: true },
 					},
 				});
@@ -948,7 +1079,7 @@ describe("domestic hot water mapper", () => {
 					ColdWaterSource: "mains water",
 					flowrate: 10,
 					allow_low_flowrate: false,
-					HotWaterSource: boiler.data.name,
+					HotWaterSource: combiBoiler.data.name,
 					WWHRS: "WW-C-789",
 					WWHRS_configuration: "C",
 				} as const satisfies SchemaMixerShower;
