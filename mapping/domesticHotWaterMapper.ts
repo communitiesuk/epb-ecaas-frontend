@@ -217,16 +217,18 @@ function mapWaterStorageHeatSource(
 
 	switch (actualHeatSource.typeOfHeatSource) {
 		case "heatPump":
-			// if (actualHeatSource.typeOfHeatPump === "hotWaterOnly") {
-			// 	// HeatPump_HWOnly
-			// 	mappedWSHeatSource = {
-			// 		// [actualHeatSource.name]: {
-			// 		// 	type: "HeatPump_HWOnly",
-			// 		// 	heater_position: waterStorage.heaterPosition,
-			// 		// },
-			// 	} ;
-			// 	break;
-			// }
+			if (actualHeatSource.typeOfHeatPump === "hotWaterOnly") {
+				// HeatPump_HWOnly
+				mappedWSHeatSource = {
+					[actualHeatSource.name]: {
+						type: "HeatPump_HWOnly",
+						product_reference: actualHeatSource.productReference,
+						EnergySupply: defaultElectricityEnergySupplyName,
+						...commonWSHeatSourceProps,
+					} as const satisfies WaterStorageHeatSource<"HeatPump_HWOnly">,
+				} ;
+				break;
+			}
 			// falls through to "HeatSourceWet" if not a HWOnly heat pump
 		case "boiler":
 			// always falls through to "HeatSourceWet"
@@ -290,12 +292,25 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 		throw new Error("Cannot have a point of use heat source heating a hot water cylinder or smart hot water tank");
 	}
 
+	const needsHeatExSurfaceArea = actualHeatSource.typeOfHeatSource === "heatPump" 
+		&& actualHeatSource.typeOfHeatPump === "hotWaterOnly"
+		&& waterStorage.typeOfWaterStorage === "hotWaterCylinder";
+
+	if (needsHeatExSurfaceArea && !("areaOfHeatExchanger" in waterStorage)) {
+		throw new Error("Area of heat exchanger must be provided when using a hot water only heat pump");
+	}
+
+	const heatExchangerParam = needsHeatExSurfaceArea
+		? { heat_exchanger_surface_area: waterStorage.areaOfHeatExchanger }
+		: {};
+
 	const mappedWaterStorage = waterStorage.typeOfWaterStorage === "hotWaterCylinder"
 		? {
 			type: "StorageTank",
 			ColdWaterSource: coldWaterSourceMap[dhwHeatSource.coldWaterSource],
 			volume: waterStorage.storageCylinderVolume.amount,
 			daily_losses: waterStorage.dailyEnergyLoss,
+			...heatExchangerParam,
 		} as const satisfies Partial<SchemaStorageTank> : {
 			type: "SmartHotWaterTank",
 			product_reference: waterStorage.productReference,

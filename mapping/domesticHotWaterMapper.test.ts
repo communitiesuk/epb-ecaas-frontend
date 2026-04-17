@@ -36,6 +36,14 @@ describe("domestic hot water mapper", () => {
 		complete: true,
 	} as const satisfies EcaasForm<WaterStorageData>;
 
+	const storageTankWithHeatEx = {
+		data: {
+			...storageTank.data,
+			areaOfHeatExchanger: 42,
+		},
+		complete: true,
+	} as const satisfies EcaasForm<WaterStorageData>;
+
 	const smartHotWaterTank = {
 		data: {
 			typeOfWaterStorage: "smartHotWaterTank",
@@ -61,6 +69,20 @@ describe("domestic hot water mapper", () => {
 			productReference: "HP-12345",
 			typeOfHeatPump: "airSource",
 			maxFlowTemp: unitValue(17, celsius),
+		},
+		complete: true,
+	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+	const heatPumpHWOnly = {
+		data: {
+			id: heatSourceId,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			name: "DHW HW Only Heat Pump",
+			typeOfHeatSource: "heatPump",
+			coldWaterSource: "headerTank",
+			isExistingHeatSource: false,
+			productReference: "HP-12346",
+			typeOfHeatPump: "hotWaterOnly",
 		},
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
@@ -256,6 +278,28 @@ describe("domestic hot water mapper", () => {
 							},
 						} as const satisfies Partial<FhsInputSchema>,  
 					},		
+					{ heatSource: heatPumpHWOnly, waterStorage: storageTankWithHeatEx,
+						expected: {
+							HotWaterSource: {
+								"hw cylinder": {
+									type: "StorageTank",
+									ColdWaterSource: "header tank",
+									volume: storageTankWithHeatEx.data.storageCylinderVolume.amount,
+									daily_losses: storageTankWithHeatEx.data.dailyEnergyLoss,
+									heat_exchanger_surface_area: storageTankWithHeatEx.data.areaOfHeatExchanger,
+									HeatSource: {
+										[heatPumpHWOnly.data.name]: {
+											type: "HeatPump_HWOnly",
+											heater_position: storageTankWithHeatEx.data.heaterPosition,
+											thermostat_position: storageTankWithHeatEx.data.thermostatPosition,
+											product_reference: heatPumpHWOnly.data.productReference,
+											EnergySupply: defaultElectricityEnergySupplyName,
+										},
+									},
+								},
+							},
+						} as const satisfies Partial<FhsInputSchema>,  
+					},	
 					{ heatSource: immersionHeater, waterStorage: smartHotWaterTank,
 						expected: {
 							HotWaterSource: {
@@ -528,6 +572,30 @@ describe("domestic hot water mapper", () => {
 
 					expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
 						.toThrow("Cannot have a point of use heat source heating a hot water cylinder or smart hot water tank");
+				},
+			);
+
+			it("throws an error when given a hot water only heat pump and a hw cylinder with no heat exchanger area",
+				async () => {
+					store.$patch({
+						domesticHotWater: {
+							heatSources: {
+								data: [heatPumpHWOnly],
+								complete: true,
+							},
+							waterStorage: {
+								data: [storageTank],
+								complete: true,
+							},
+							pipework: {
+								data: [],
+								complete: true,
+							},
+						},
+					});
+
+					expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
+						.toThrow("Area of heat exchanger must be provided when using a hot water only heat pump");
 				},
 			);
 		});
