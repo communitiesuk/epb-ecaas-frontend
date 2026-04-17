@@ -110,7 +110,7 @@ const expectedHouseInput: FhsInputSchema = {
 		Shower: {
 			"some-mixer-shower-name": {
 				ColdWaterSource: "mains water",
-				HotWaterSource: "HP-1",
+				HotWaterSource: "Heat pump 1",
 				flowrate: 14,
 				allow_low_flowrate: false,
 				type: "MixerShower",
@@ -128,7 +128,7 @@ const expectedHouseInput: FhsInputSchema = {
 		"hw cylinder": {
 			ColdWaterSource: "mains water",
 			HeatSource: {
-				["Heat pump 1"]: {
+				"Heat pump 1": {
 					name: "Heat pump 1",
 					heater_position: 0.1,
 					type: "HeatSourceWet",
@@ -138,7 +138,6 @@ const expectedHouseInput: FhsInputSchema = {
 			daily_losses: 34,
 			volume: 200,
 			type: "StorageTank",
-			init_temp: 60,
 		},
 	},
 	InfiltrationVentilation: {
@@ -423,14 +422,14 @@ const expectedFlatInput: FhsInputSchema = {
 		Shower: {
 			"mixer shower 1 name": {
 				ColdWaterSource: "mains water",
-				HotWaterSource: "HP-1",
+				HotWaterSource: "Heat pump 1",
 				flowrate: 14,
 				allow_low_flowrate: false,
 				type: "MixerShower",
 			},
 			"mixer shower 2 name": {
 				ColdWaterSource: "mains water",
-				HotWaterSource: "HP-1",
+				HotWaterSource: "Heat pump 1",
 				flowrate: 12,
 				allow_low_flowrate: false,
 				type: "MixerShower",
@@ -506,7 +505,6 @@ const expectedFlatInput: FhsInputSchema = {
 				pipe_contents: "glycol25",
 				location: "external",
 			}],
-			init_temp: 60,
 		},
 	},
 	InfiltrationVentilation: {
