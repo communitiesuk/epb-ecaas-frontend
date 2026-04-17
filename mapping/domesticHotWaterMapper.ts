@@ -212,7 +212,7 @@ function mapWaterStorageHeatSource(
 		...(waterStorage.typeOfWaterStorage === "hotWaterCylinder"
 			? { thermostat_position: waterStorage.thermostatPosition }
 			: {}),
-		...(temp_flow_limit_upper ? { temp_flow_limit_upper } : {}),
+		...(temp_flow_limit_upper ? { temp_flow_limit_upper } : {}), //might want to factor this back in actually, as should never apply to SolarThermal or immersion
 	};
 
 	switch (actualHeatSource.typeOfHeatSource) {
@@ -340,11 +340,8 @@ function mapHeatSourceNoWS(
 ) {
 	let mappedHWCylinderBit, mappedHeatSourceWet;
 
-	const temp_flow_limit_upper = getTempFlowLimitUpper(dhwHeatSource, actualHeatSource);
-
 	const commonHWCylinderProps = {
 		ColdWaterSource: coldWaterSourceMap[dhwHeatSource.coldWaterSource],
-		...(temp_flow_limit_upper ? { temp_flow_limit_upper } : {}),
 	};
 
 	switch (actualHeatSource.typeOfHeatSource) {
