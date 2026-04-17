@@ -2,6 +2,7 @@ import { heatPumpProductTypesMap, isDisplayProduct, type BoilerProduct, type Dis
 import { v4 as uuidv4 } from "uuid";
 import type { SchemaMechVentType } from "~/schema/aliases";
 import { useProductData } from "./productData";
+import { EcaasError } from "~/errors.types";
 
 type HeatSourceSection = "spaceHeating" | "domesticHotWater";
 
@@ -146,8 +147,15 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 				heatSourceData.packageProductIds?.push(mechanicalVentilation.id!);
 			}
 
+			// Heat pump is packaged with hot water cylinder
 			if (heatPumpProduct.technologyType !== "HybridHeatPump" && heatPumpProduct.vesselType === "Integral") {
 				const waterStorage = state.domesticHotWater.waterStorage.data;
+				const dhwHeatSources = state.domesticHotWater.heatSources.data;
+
+				// Throw error if water storage or domestic hot water heat sources contain any entries
+				if (waterStorage.length || (source === "spaceHeating" && dhwHeatSources.length)) {
+					throw new EcaasError("DHW_HEAT_SOURCE_CONFLICT");
+				}
 
 				if (heatSourceData.packageProductIds?.length) {
 					const cylinderToRemove = waterStorage.find(x => heatSourceData.packageProductIds?.includes(x.data.id!));

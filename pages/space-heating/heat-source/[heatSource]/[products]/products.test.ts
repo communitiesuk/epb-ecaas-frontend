@@ -8,13 +8,15 @@ describe("Heat source products page", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 	
-	const { mockFetch, mockRoute } = vi.hoisted(() => ({
+	const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
 		mockFetch: vi.fn(),
 		mockRoute: vi.fn(),
+		mockNavigateTo: vi.fn(),
 	}));
 
 	mockNuxtImport("useFetch", () => mockFetch);
 	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	afterEach(() => {
 		mockFetch.mockReset();
@@ -470,5 +472,74 @@ describe("Heat source products page", () => {
 
 		expect(waterStorageData.length).toBe(1);
 		expect(waterStorageData[0]?.data).toStrictEqual(expect.objectContaining(expectedCylinderData));
+	});
+
+	test.only("selecting a heat pump with cylinder should throw an error and redirect to the space heating form", async () => {
+		const hotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: true,
+			heatSourceId: heatSource1.id,
+		};
+
+		const cylinderData: Partial<WaterStorageData> = {
+			name: "Hot water cylinder",
+			typeOfWaterStorage: "hotWaterCylinder",
+			packagedProductReference: "1000",
+			storageCylinderVolume: unitValue(20, "litres"),
+			dailyEnergyLoss: 10,
+		};
+
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [
+						{ data: heatSource1 },
+					],
+				},
+			},
+			domesticHotWater: {
+				heatSources: {
+					data: [
+						{ data: hotWaterHeatPump },
+					],
+				},
+				waterStorage: {
+					data: [
+						{ data: cylinderData },
+					],
+				},
+			},
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-pump",
+			},
+			path: "/0/heat-pump",
+		});
+
+		const heatPumpProduct: PaginatedResult<DisplayProduct> = {
+			data: [{
+				displayProduct: true,
+				id: "1000",
+				brandName: "Test",
+				modelName: "Heat Pump",
+				technologyType: "AirSourceHeatPump",
+				vesselType: "Integral",
+			}],
+		};
+
+		mockFetch.mockReturnValueOnce({
+			data: ref(heatPumpProduct),
+		});
+
+		await renderSuspended(Products);
+
+		await user.click(screen.getByTestId("selectProductButton_0"));
+
+		expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-source/0?error=DHW_HEAT_SOURCE_CONFLICT");
+		expect(store.spaceHeating.heatSource.data[0]?.data.productReference).toBeUndefined();
+		expect(store.domesticHotWater.heatSources.data.length).toBe(1);
+		expect(store.domesticHotWater.waterStorage.data.length).toBe(1);
 	});
 });

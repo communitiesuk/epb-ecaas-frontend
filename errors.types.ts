@@ -1,4 +1,4 @@
-type ErrorName = "DUPLICATION_ERROR";
+export type ErrorName = "DUPLICATION_ERROR" | "DHW_HEAT_SOURCE_CONFLICT";
 
 export class EcaasError extends Error {
 	override name: ErrorName;
