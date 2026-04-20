@@ -3057,7 +3057,8 @@
 						"Open",
 						"Normal",
 						"Shielded"
-					]
+					],
+					"description": "Indicates the exposure to wind of an air flow path on a facade (can can be open, normal and shielded)"
 				},
 				"terrain_class": {
 					"enum": [
@@ -3070,20 +3071,24 @@
 				"ventilation_zone_base_height": {
 					"type": "number",
 					"minimum": -150,
-					"maximum": 750
+					"maximum": 750,
+					"description": "Base height of the ventilation zone relative to ground (unit: m)"
 				},
 				"altitude": {
 					"type": "number",
 					"minimum": -150,
-					"maximum": 7200
+					"maximum": 7200,
+					"description": "Altitude of dwelling above sea level (unit: m)"
 				},
 				"ach_min_static_calcs": {
 					"type": "number",
-					"minimum": 0
+					"minimum": 0,
+					"description": "Minimum ACH (Air Changes per Hour) limit"
 				},
 				"ach_max_static_calcs": {
 					"type": "number",
-					"minimum": 0
+					"minimum": 0,
+					"description": "Maximum ACH (Air Changes per Hour) limit"
 				},
 				"noise_nuisance": {
 					"type": "boolean"
@@ -3103,25 +3108,30 @@
 							"mid_height_air_flow_path": {
 								"type": "number",
 								"minimum": 1,
-								"maximum": 60
+								"maximum": 60,
+								"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
 							},
 							"area_cm2": {
 								"type": "number",
 								"minimum": 1,
-								"maximum": 999999
+								"maximum": 999999,
+								"description": "Equivalent area of a vent (unit: cm2)"
 							},
 							"orientation360": {
 								"type": "number",
 								"minimum": 0,
-								"maximum": 360
+								"maximum": 360,
+								"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
 							},
 							"pitch": {
 								"type": "number",
 								"minimum": 0,
-								"maximum": 180
+								"maximum": 180,
+								"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
 							}
 						}
-					}
+					},
+					"description": "Provides details about available non-mechanical ventilation systems"
 				},
 				"Leaks": {
 					"type": "object",
@@ -3136,22 +3146,26 @@
 						"ventilation_zone_height": {
 							"type": "number",
 							"minimum": 1,
-							"maximum": 120
+							"maximum": 120,
+							"description": "Height of ventilation zone (unit: m)"
 						},
 						"test_pressure": {
 							"enum": [
 								"Standard",
 								"Pulse test only"
-							]
+							],
+							"description": "Reference pressure difference (unit: Pa)"
 						},
 						"test_result": {
 							"type": "number",
-							"exclusiveMinimum": 0
+							"exclusiveMinimum": 0,
+							"description": "Flow rate through (unit: m\u00b3/h.m\u00b2)"
 						},
 						"env_area": {
 							"type": "number",
 							"minimum": 5,
-							"maximum": 72000
+							"maximum": 72000,
+							"description": "Reference area of the envelope airtightness index"
 						}
 					}
 				},
@@ -3180,7 +3194,8 @@
 										"type": "string"
 									},
 									"EnergySupply": {
-										"type": "string"
+										"type": "string",
+										"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 									},
 									"design_outdoor_air_flow_rate": {
 										"type": "number",
@@ -3209,7 +3224,8 @@
 												"enum": [
 													"inside",
 													"outside"
-												]
+												],
+												"description": "Location of the MVHR unit (inside or outside the thermal envelope)"
 											},
 											"ductwork": {
 												"type": "array",
@@ -3231,30 +3247,36 @@
 															"enum": [
 																"circular",
 																"rectangular"
-															]
+															],
+															"description": "Whether the cross-section of duct is circular or rectangular (square)"
 														},
 														"internal_diameter_mm": {
 															"type": "number",
 															"minimum": 0,
-															"maximum": 1000
+															"maximum": 1000,
+															"description": "(unit: mm)"
 														},
 														"external_diameter_mm": {
 															"type": "number",
 															"minimum": 0,
-															"maximum": 1000
+															"maximum": 1000,
+															"description": "(unit: mm)"
 														},
 														"length": {
 															"type": "number",
-															"minimum": 0
+															"minimum": 0,
+															"description": "(unit: m)"
 														},
 														"insulation_thermal_conductivity": {
 															"type": "number",
-															"minimum": 0
+															"minimum": 0,
+															"description": "Thermal conductivity of the insulation (unit: W / m K)"
 														},
 														"insulation_thickness_mm": {
 															"type": "number",
 															"minimum": 0,
-															"maximum": 100
+															"maximum": 100,
+															"description": "(unit: mm)"
 														},
 														"reflective": {
 															"type": "boolean"
@@ -3268,7 +3290,8 @@
 															]
 														}
 													}
-												}
+												},
+												"description": "List of ductworks installed in this ventilation system"
 											},
 											"position_intake": {
 												"type": "object",
@@ -3292,7 +3315,12 @@
 														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
 													}
 												},
-												"required": ["mid_height_air_flow_path", "orientation360", "pitch"]
+												"required": [
+													"mid_height_air_flow_path",
+													"orientation360",
+													"pitch"
+												],
+												"description": "Position data for MVHR intake"
 											},
 											"position_exhaust": {
 												"type": "object",
@@ -3316,7 +3344,12 @@
 														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
 													}
 												},
-												"required": ["mid_height_air_flow_path", "orientation360", "pitch"]
+												"required": [
+													"mid_height_air_flow_path",
+													"orientation360",
+													"pitch"
+												],
+												"description": "Position data for MVHR exhaust or MEV extract"
 											},
 											"measured_fan_power": {
 												"type": "number"
@@ -3517,7 +3550,8 @@
 										]
 									},
 									"EnergySupply": {
-										"type": "string"
+										"type": "string",
+										"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 									},
 									"design_outdoor_air_flow_rate": {
 										"type": "number",
@@ -3553,13 +3587,15 @@
 												"mvhr_eff": {
 													"type": "number",
 													"minimum": 0,
-													"maximum": 1
+													"maximum": 1,
+													"description": "MVHR efficiency"
 												},
 												"mvhr_location": {
 													"enum": [
 														"inside",
 														"outside"
-													]
+													],
+													"description": "Location of the MVHR unit (inside or outside the thermal envelope)"
 												},
 												"ductwork": {
 													"type": "array",
@@ -3581,30 +3617,36 @@
 																"enum": [
 																	"circular",
 																	"rectangular"
-																]
+																],
+																"description": "Whether the cross-section of duct is circular or rectangular (square)"
 															},
 															"internal_diameter_mm": {
 																"type": "number",
 																"minimum": 0,
-																"maximum": 1000
+																"maximum": 1000,
+																"description": "(unit: mm)"
 															},
 															"external_diameter_mm": {
 																"type": "number",
 																"minimum": 0,
-																"maximum": 1000
+																"maximum": 1000,
+																"description": "(unit: mm)"
 															},
 															"length": {
 																"type": "number",
-																"minimum": 0
+																"minimum": 0,
+																"description": "(unit: m)"
 															},
 															"insulation_thermal_conductivity": {
 																"type": "number",
-																"minimum": 0
+																"minimum": 0,
+																"description": "Thermal conductivity of the insulation (unit: W / m K)"
 															},
 															"insulation_thickness_mm": {
 																"type": "number",
 																"minimum": 0,
-																"maximum": 100
+																"maximum": 100,
+																"description": "(unit: mm)"
 															},
 															"reflective": {
 																"type": "boolean"
@@ -3801,7 +3843,8 @@
 								]
 							}
 						]
-					}
+					},
+					"description": "Provides details about available mechanical ventilation systems"
 				}
 			}
 		},
@@ -4997,8 +5040,8 @@
 		"SFP": {
             "type": "number",
             "exclusiveMinimum": 0,
-            "description": "Specific fan power, assumed inclusive of any in use factors unless SFP_in_use_factor also provided (unit: W/l/s)"
-        },
+			"description": "Specific fan power, assumed inclusive of any in use factors unless SFP_in_use_factor also provided (unit: W/l/s)"
+		},
 		"ScheduleForDouble": {
 			"additionalProperties": {
 				"items": {
