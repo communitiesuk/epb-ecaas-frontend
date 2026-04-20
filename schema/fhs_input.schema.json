@@ -817,7 +817,8 @@
 				"else": {
 					"properties": {
 						"EnergySupply": {
-							"type": "string"
+							"type": "string",
+							"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 						}
 					}
 				},
@@ -850,19 +851,23 @@
 											"properties": {
 												"daily_losses": {
 													"type": "number",
-													"exclusiveMinimum": 0
+													"exclusiveMinimum": 0,
+													"description": "Standing heat loss (unit: kWh/day)"
 												},
 												"pump_fixed_flow_rate": {
 													"type": "number",
-													"exclusiveMinimum": 0
+													"exclusiveMinimum": 0,
+													"description": "Flow rate of the buffer tank - emitters loop (unit: l/min)"
 												},
 												"pump_power_at_flow_rate": {
 													"type": "number",
-													"exclusiveMinimum": 0
+													"exclusiveMinimum": 0,
+													"description": "Pump power of the buffer tank - emitters loop (unit: kW)"
 												},
 												"volume": {
 													"type": "number",
-													"exclusiveMinimum": 0
+													"exclusiveMinimum": 0,
+													"description": "Volume of the buffer tank (unit: litre)"
 												}
 											},
 											"required": [
@@ -870,7 +875,8 @@
 												"pump_fixed_flow_rate",
 												"pump_power_at_flow_rate",
 												"volume"
-											]
+											],
+											"description": "Optional buffer tank configuration for the heat pump system"
 										},
 										"boiler_product_reference": {
 											"description": "A unique reference to a boiler product held within the HEM database (PCDB), if there is a need for a reference to a boiler product to be passed, and the heat pump is not packaged with a boiler.",
@@ -912,79 +918,95 @@
 												"WaterGround",
 												"WaterSurface",
 												"HeatNetwork"
-											]
+											],
+											"description": "Type of heat source for the heat pump"
 										},
 										"sink_type": {
 											"enum": [
 												"Air",
 												"Water",
 												"Glycol25"
-											]
+											],
+											"description": "Type of heat sink for the heat pump"
 										},
 										"backup_ctrl_type": {
 											"enum": [
 												"None",
 												"TopUp",
 												"Substitute"
-											]
+											],
+											"description": "Type of backup control for the heat pump system"
 										},
 										"modulating_control": {
-											"type": "boolean"
+											"type": "boolean",
+											"description": "Whether the heat pump uses modulating control"
 										},
 										"min_modulation_rate_20": {
 											"type": "number",
 											"minimum": 0,
-											"maximum": 1
+											"maximum": 1,
+											"description": "Minimum modulation rate at 20\u00b0C flow temperature (dimensionless, 0-1)"
 										},
 										"min_modulation_rate_35": {
 											"type": "number",
 											"minimum": 0,
-											"maximum": 1
+											"maximum": 1,
+											"description": "Minimum modulation rate at 35\u00b0C flow temperature (dimensionless, 0-1)"
 										},
 										"min_modulation_rate_55": {
 											"type": "number",
 											"minimum": 0,
-											"maximum": 1
+											"maximum": 1,
+											"description": "Minimum modulation rate at 55\u00b0C flow temperature (dimensionless, 0-1)"
 										},
 										"temp_return_feed_max": {
 											"type": "number",
 											"minimum": 4,
-											"maximum": 80
+											"maximum": 80,
+											"description": "Maximum return feed temperature (unit: \u02daC)"
 										},
 										"temp_lower_operating_limit": {
 											"type": "number",
 											"minimum": -30,
-											"maximum": 0
+											"maximum": 0,
+											"description": "Lower temperature limit for heat pump operation (unit: \u02daC)"
 										},
 										"min_temp_diff_flow_return_for_hp_to_operate": {
 											"type": "number",
 											"minimum": 0,
-											"maximum": 50
+											"maximum": 50,
+											"description": "Minimum temperature difference between flow and return for heat pump operation (unit: K)"
 										},
 										"var_flow_temp_ctrl_during_test": {
-											"type": "boolean"
+											"type": "boolean",
+											"description": "Whether variable flow temperature control was used during testing"
 										},
 										"power_heating_circ_pump": {
 											"type": "number",
 											"minimum": 0,
-											"maximum": 1
+											"maximum": 1,
+											"description": "Power consumption of heating circuit pump (unit: kW)"
 										},
 										"power_source_circ_pump": {
 											"type": "number",
 											"minimum": 0,
-											"maximum": 1
+											"maximum": 1,
+											"description": "Power consumption of source circuit pump (unit: kW)"
 										},
 										"power_standby": {
 											"type": "number",
-											"minimum": 0
+											"minimum": 0,
+											"description": "Power consumption in standby mode (unit: kW)"
 										},
 										"power_crankcase_heater": {
 											"type": "number",
-											"minimum": 0
+											"minimum": 0,
+											"description": "Power consumption of crankcase heater (unit: kW)"
 										},
 										"power_off": {
 											"type": "number",
-											"minimum": 0
+											"minimum": 0,
+											"description": "Power consumption when heat pump is off (unit: kW)"
 										},
 										"BufferTank": {
 											"type": "object",
@@ -992,19 +1014,23 @@
 											"properties": {
 												"daily_losses": {
 													"type": "number",
-													"exclusiveMinimum": 0
+													"exclusiveMinimum": 0,
+													"description": "Standing heat loss (unit: kWh/day)"
 												},
 												"pump_fixed_flow_rate": {
 													"type": "number",
-													"exclusiveMinimum": 0
+													"exclusiveMinimum": 0,
+													"description": "Flow rate of the buffer tank - emitters loop (unit: l/min)"
 												},
 												"pump_power_at_flow_rate": {
 													"type": "number",
-													"exclusiveMinimum": 0
+													"exclusiveMinimum": 0,
+													"description": "Pump power of the buffer tank - emitters loop (unit: kW)"
 												},
 												"volume": {
 													"type": "number",
-													"exclusiveMinimum": 0
+													"exclusiveMinimum": 0,
+													"description": "Volume of the buffer tank (unit: litre)"
 												}
 											},
 											"required": [
@@ -1016,11 +1042,13 @@
 										},
 										"power_heating_warm_air_fan": {
 											"type": "number",
-											"minimum": 0
+											"minimum": 0,
+											"description": "Power consumption of warm air fan (unit: kW)"
 										},
 										"time_constant_onoff_operation": {
 											"type": "number",
-											"exclusiveMinimum": 0
+											"exclusiveMinimum": 0,
+											"description": "Time constant for on/off operation (unit: seconds)"
 										}
 									},
 									"allOf": [
@@ -1154,7 +1182,8 @@
 													},
 													"power_max_backup": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Backup resistive heater maximum power (unit: kW)"
 													}
 												}
 											}
@@ -1175,7 +1204,8 @@
 												"properties": {
 													"temp_distribution_heat_network": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Distribution temperature for heat network (unit: \u02daC)"
 													},
 													"EnergySupply_heat_network": {
 														"oneOf": [
@@ -1219,7 +1249,8 @@
 																	}
 																}
 															}
-														]
+														],
+														"description": "References a key in $.EnergySupply for heat network energy supply"
 													}
 												}
 											}
@@ -1240,11 +1271,13 @@
 												"properties": {
 													"eahp_mixed_max_temp": {
 														"type": "number",
-														"minimum": -273.15
+														"minimum": -273.15,
+														"description": "Maximum temperature for exhaust air heat pump mixed operation (unit: \u02daC)"
 													},
 													"eahp_mixed_min_temp": {
 														"type": "number",
-														"minimum": -273.15
+														"minimum": -273.15,
+														"description": "Minimum temperature for exhaust air heat pump mixed operation (unit: \u02daC)"
 													},
 													"test_data_EN14825": {
 														"type": "array",
@@ -1274,39 +1307,48 @@
 																},
 																"capacity": {
 																	"type": "number",
-																	"exclusiveMinimum": 0
+																	"exclusiveMinimum": 0,
+																	"description": "Heat output capacity at this test condition (unit: kW)"
 																},
 																"cop": {
 																	"type": "number",
-																	"exclusiveMinimum": 0
+																	"exclusiveMinimum": 0,
+																	"description": "Coefficient of performance at this test condition (dimensionless)"
 																},
 																"design_flow_temp": {
 																	"type": "number",
-																	"exclusiveMinimum": 0
+																	"exclusiveMinimum": 0,
+																	"description": "Design flow temperature for the heating system (unit: Celsius)"
 																},
 																"temp_outlet": {
 																	"type": "number",
-																	"exclusiveMinimum": 0
+																	"exclusiveMinimum": 0,
+																	"description": "Heat pump outlet temperature for the test condition (unit: Celsius)"
 																},
 																"temp_source": {
 																	"type": "number",
-																	"minimum": -273.15
+																	"minimum": -273.15,
+																	"description": "Heat pump source temperature for the test condition (unit: Celsius)"
 																},
 																"temp_test": {
 																	"type": "number",
-																	"minimum": -273.15
+																	"minimum": -273.15,
+																	"description": "Ambient air temperature for the test condition (unit: Celsius)"
 																},
 																"air_flow_rate": {
 																	"type": "number",
-																	"exclusiveMinimum": 0
+																	"exclusiveMinimum": 0,
+																	"description": "Air flow rate through the heat pump for the test condition (unit: m\u00b3/h)"
 																},
 																"eahp_mixed_ext_air_ratio": {
 																	"type": "number",
 																	"minimum": 0,
-																	"maximum": 1
+																	"maximum": 1,
+																	"description": "Ratio of external air to recirculated air for exhaust air heat pumps (dimensionless)"
 																}
 															}
-														}
+														},
+														"description": "EN14825 test data for the heat pump"
 													}
 												}
 											},
@@ -1338,34 +1380,42 @@
 																},
 																"capacity": {
 																	"type": "number",
-																	"exclusiveMinimum": 0
+																	"exclusiveMinimum": 0,
+																	"description": "Heat output capacity at this test condition (unit: kW)"
 																},
 																"cop": {
 																	"type": "number",
-																	"exclusiveMinimum": 0
+																	"exclusiveMinimum": 0,
+																	"description": "Coefficient of performance at this test condition (dimensionless)"
 																},
 																"air_flow_rate": {
 																	"type": "number",
-																	"exclusiveMinimum": 0
+																	"exclusiveMinimum": 0,
+																	"description": "Air flow rate through the heat pump for the test condition (unit: m\u00b3/h)"
 																},
 																"design_flow_temp": {
 																	"type": "number",
-																	"exclusiveMinimum": 0
+																	"exclusiveMinimum": 0,
+																	"description": "Design flow temperature for the heating system (unit: Celsius)"
 																},
 																"temp_outlet": {
 																	"type": "number",
-																	"exclusiveMinimum": 0
+																	"exclusiveMinimum": 0,
+																	"description": "Heat pump outlet temperature for the test condition (unit: Celsius)"
 																},
 																"temp_source": {
 																	"type": "number",
-																	"minimum": -273.15
+																	"minimum": -273.15,
+																	"description": "Heat pump source temperature for the test condition (unit: Celsius)"
 																},
 																"temp_test": {
 																	"type": "number",
-																	"minimum": -273.15
+																	"minimum": -273.15,
+																	"description": "Ambient air temperature for the test condition (unit: Celsius)"
 																}
 															}
-														}
+														},
+														"description": "EN14825 test data for the heat pump"
 													}
 												}
 											}
@@ -1401,7 +1451,8 @@
 												"external"
 											]
 										}
-									}
+									},
+									"description": "Standalone boiler heat source"
 								},
 								{
 									"required": [
@@ -1418,54 +1469,65 @@
 									],
 									"properties": {
 										"EnergySupply_aux": {
-											"type": "string"
+											"type": "string",
+											"description": "References a key in $.EnergySupply for auxiliary electrical power"
 										},
 										"rated_power": {
 											"type": "number",
-											"exclusiveMinimum": 0
+											"exclusiveMinimum": 0,
+											"description": "Rated power output of the boiler (unit: kW)"
 										},
 										"efficiency_full_load": {
 											"type": "number",
 											"minimum": 0.1,
-											"maximum": 1
+											"maximum": 1,
+											"description": "Boiler net efficiency at full load (dimensionless, 0-1)"
 										},
 										"efficiency_part_load": {
 											"type": "number",
 											"minimum": 0.1,
-											"maximum": 1.12
+											"maximum": 1.12,
+											"description": "Boiler net efficiency at part load (dimensionless, 0-1.12). Net efficiencies may exceed 1 in test data."
 										},
 										"boiler_location": {
 											"enum": [
 												"internal",
 												"external"
-											]
+											],
+											"description": "Location of the boiler (internal or external to the building)"
 										},
 										"modulation_load": {
 											"type": "number",
 											"minimum": 0.1,
-											"maximum": 1
+											"maximum": 1,
+											"description": "Modulation load ratio (dimensionless, 0-1)"
 										},
 										"electricity_circ_pump": {
 											"type": "number",
 											"minimum": 0.001,
-											"maximum": 1
+											"maximum": 1,
+											"description": "Electrical power consumption of circulation pump (unit: kW)"
 										},
 										"electricity_part_load": {
 											"type": "number",
 											"minimum": 0,
-											"maximum": 1
+											"maximum": 1,
+											"description": "Electrical power consumption at part load (unit: kW)"
 										},
 										"electricity_full_load": {
 											"type": "number",
 											"minimum": 0,
-											"maximum": 1
+											"maximum": 1,
+											"description": "Electrical power consumption at full load (unit: kW)"
 										},
 										"electricity_standby": {
 											"type": "number",
 											"minimum": 0,
-											"maximum": 0.1
+											"maximum": 0.1,
+											"description": "Electrical power consumption in standby mode (unit: kW)"
 										}
-									}
+									},
+									"description": "Standalone boiler heat source"
 								}
 							]
 						}
@@ -1515,9 +1577,11 @@
 													},
 													"number_of_units": {
 														"type": "integer",
-														"minimum": 1
+														"minimum": 1,
+														"description": "Number of heat battery units"
 													}
-												}
+												},
+												"description": "PCM (Phase Change Material) Heat Battery"
 											},
 											{
 												"required": [
@@ -1543,70 +1607,88 @@
 													"electricity_circ_pump": {
 														"type": "number",
 														"minimum": 0.001,
-														"maximum": 1
+														"maximum": 1,
+														"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 													},
 													"electricity_standby": {
 														"type": "number",
 														"exclusiveMinimum": 0,
-														"maximum": 0.1
+														"maximum": 0.1,
+														"description": "Electrical power consumption in standby mode (unit: kW)"
 													},
 													"rated_charge_power": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Rated charging power (unit: kW)"
 													},
 													"max_rated_losses": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Maximum rated heat losses (unit: kW)"
 													},
 													"number_of_units": {
 														"type": "integer",
-														"minimum": 1
+														"minimum": 1,
+														"description": "Number of heat battery units"
 													},
 													"simultaneous_charging_and_discharging": {
-														"type": "boolean"
+														"type": "boolean",
+														"description": "Whether the heat battery can charge and discharge simultaneously"
 													},
 													"heat_storage_kJ_per_K_above_Phase_transition": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Heat capacity of storage above phase transition (unit: kJ/K)"
 													},
 													"heat_storage_kJ_per_K_below_Phase_transition": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Heat capacity of storage below phase transition (unit: kJ/K)"
 													},
 													"heat_storage_kJ_per_K_during_Phase_transition": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Heat capacity of storage during phase transition (unit: kJ/K)"
 													},
 													"phase_transition_temperature_upper": {
 														"type": "number",
-														"minimum": -273.15
+														"minimum": -273.15,
+														"description": "Upper temperature limit for phase transition (unit: \u02daC)"
 													},
 													"phase_transition_temperature_lower": {
 														"type": "number",
-														"minimum": -273.15
+														"minimum": -273.15,
+														"description": "Lower temperature limit for phase transition (unit: \u02daC)"
 													},
 													"velocity_in_HEX_tube_at_1_l_per_min_m_per_s": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Velocity in heat exchanger tube at 1 litre/minute flow rate (unit: m/s)"
 													},
 													"A": {
-														"type": "number"
+														"type": "number",
+														"description": "Heat battery parameter A (dimensionless)"
 													},
 													"B": {
-														"type": "number"
+														"type": "number",
+														"description": "Heat battery parameter B (dimensionless)"
 													},
 													"inlet_diameter_mm": {
-														"type": "number"
+														"type": "number",
+														"description": "Inlet diameter of capillary tubes (unit: mm)"
 													},
 													"max_temperature": {
 														"type": "number",
-														"minimum": -273.15
+														"minimum": -273.15,
+														"description": "Maximum operating temperature (unit: \u02daC)"
 													},
 													"flow_rate_l_per_min": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Flow rate through the heat battery (unit: litre/minute)"
 													}
-												}
+												},
+												"description": "PCM (Phase Change Material) Heat Battery"
 											}
 										]
 									}
@@ -1744,7 +1826,8 @@
 										},
 										"building_level_distribution_losses": {
 											"type": "number",
-											"minimum": 0
+											"minimum": 0,
+											"description": "Heat losses from building-level distribution pipework (unit: W)"
 										},
 										"design_flow_temp": {
 											"type": "number",
@@ -1765,11 +1848,13 @@
 										},
 										"power_max": {
 											"type": "number",
-											"exclusiveMinimum": 0
+											"exclusiveMinimum": 0,
+											"description": "Maximum power output of the HIU (unit: kW)"
 										},
 										"building_level_distribution_losses": {
 											"type": "number",
-											"minimum": 0
+											"minimum": 0,
+											"description": "Heat losses from building-level distribution pipework (unit: W)"
 										}
 									}
 								}
@@ -1777,7 +1862,8 @@
 						}
 					}
 				]
-			}
+			},
+			"description": "Dictionary of available wet heat sources, keyed by user-defined names (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1'). Other models reference these keys via their heat_source_wet fields."
 		},
 		"HotWaterDemand": {
 			"type": "object",
