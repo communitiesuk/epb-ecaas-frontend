@@ -2114,7 +2114,7 @@
 									"minimum": 0.1,
 									"maximum": 500
 								},
-								"description": "Test flow rates in litres per minute (e.g., [5, 7, 9, 11, 13])",
+								"description": "Test flow rates in litres per minute (e.g., [5, 7, 9, 11, 13])"
 							},
 							"system_a_efficiencies": {
 								"type": "array",
@@ -2238,7 +2238,8 @@
 										"n_units": {
 											"type": "integer",
 											"minimum": 0,
-											"maximum": 100
+											"maximum": 100,
+											"description": "Number of units installed in the zone."
 										}
 									}
 								},
@@ -2259,16 +2260,19 @@
 										"pwr_in": {
 											"type": "number",
 											"minimum": 0.1,
-											"maximum": 70
+											"maximum": 70,
+											"description": "The rated power of the heating element which charges the storage medium with heat (unit: kW)"
 										},
 										"rated_power_instant": {
 											"type": "number",
 											"minimum": 0.1,
-											"maximum": 70
+											"maximum": 70,
+											"description": "The rated power output of the instantaneous backup heater (unit: kW)"
 										},
 										"storage_capacity": {
 											"type": "number",
-											"minimum": 0
+											"minimum": 0,
+											"description": "Storage capacity of the electric storage heater. (Unit: kWh)"
 										},
 										"air_flow_type": {
 											"enum": [
@@ -2278,18 +2282,22 @@
 										},
 										"frac_convective": {
 											"type": "number",
-											"minimum": 0
+											"minimum": 0,
+											"description": "Convective fraction for heating"
 										},
 										"n_units": {
 											"type": "integer",
 											"minimum": 0,
-											"maximum": 100
+											"maximum": 100,
+											"description": "Number of units installed in the zone."
 										},
 										"EnergySupply": {
-											"type": "string"
+											"type": "string",
+											"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 										},
 										"Zone": {
-											"type": "string"
+											"type": "string",
+											"description": "The zone where the unit(s) is/are installed. References a key in $.Zone."
 										},
 										"dry_core_min_output": {
 											"type": "array",
@@ -2298,7 +2306,8 @@
 												"items": {
 													"type": "number"
 												}
-											}
+											},
+											"description": "Minimum output of the electric storage heater. (Unit: kW) Data from test showing the output from the storage heater when not actively outputting heat, i.e. case losses only"
 										},
 										"dry_core_max_output": {
 											"type": "array",
@@ -2307,7 +2316,8 @@
 												"items": {
 													"type": "number"
 												}
-											}
+											},
+											"description": "Maximum output of the electric storage heater. (Unit: kW) Data from test showing the output from the storage heater when it is actively outputting heat, e.g. damper open / fan running."
 										}
 									},
 									"if": {
@@ -2324,7 +2334,8 @@
 										"properties": {
 											"fan_pwr": {
 												"type": "number",
-												"minimum": 0
+												"minimum": 0,
+												"description": "Fan power (unit: W)"
 											}
 										}
 									}
@@ -2350,7 +2361,8 @@
 								"rated_power": {
 									"type": "number",
 									"minimum": 0.1,
-									"maximum": 70
+									"maximum": 70,
+									"description": "Rated power of the instant electric heater. (Unit: kW)"
 								},
 								"convective_type": {
 									"enum": [
@@ -2362,7 +2374,8 @@
 									]
 								},
 								"EnergySupply": {
-									"type": "string"
+									"type": "string",
+									"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 								}
 							}
 						}
@@ -2387,7 +2400,8 @@
 							],
 							"properties": {
 								"EnergySupply": {
-									"type": "string"
+									"type": "string",
+									"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 								},
 								"emitters": {
 									"type": "array",
@@ -2442,7 +2456,8 @@
 																		},
 																		"length": {
 																			"type": "number",
-																			"exclusiveMinimum": 0
+																			"exclusiveMinimum": 0,
+																			"description": "The length of the emitter (unit: m)"
 																		}
 																	}
 																},
@@ -2466,15 +2481,18 @@
 															"properties": {
 																"length": {
 																	"type": "number",
-																	"exclusiveMinimum": 0
+																	"exclusiveMinimum": 0,
+																	"description": "The length of the emitter (unit: m)"
 																},
 																"n": {
 																	"type": "number",
 																	"exclusiveMinimum": 0,
-																	"maximum": 2
+																	"maximum": 2,
+																	"description": "Exponent from characteristic equation of emitters (e.g. derived from BS EN 442 tests)"
 																},
 																"frac_convective": {
-																	"type": "number"
+																	"type": "number",
+																	"description": "Convective fraction for heating"
 																}
 															},
 															"if": {
@@ -2489,11 +2507,13 @@
 																"properties": {
 																	"c_per_m": {
 																		"type": "number",
-																		"exclusiveMinimum": 0
+																		"exclusiveMinimum": 0,
+																		"description": "Constant from characteristic equation of emitters (e.g. derived from BS EN 442 tests) per the length of the emitter"
 																	},
 																	"thermal_mass_per_m": {
 																		"type": "number",
-																		"exclusiveMinimum": 0
+																		"exclusiveMinimum": 0,
+																		"description": "Thermal mass per meter length of the radiator (unit: kWh/K/m)"
 																	}
 																}
 															},
@@ -2505,11 +2525,13 @@
 																	"c": {
 																		"type": "number",
 																		"exclusiveMinimum": 0,
-																		"maximum": 2
+																		"maximum": 2,
+																		"description": "Constant from characteristic equation of emitters (e.g. derived from BS EN 442 tests)"
 																	},
 																	"thermal_mass": {
 																		"type": "number",
-																		"exclusiveMinimum": 0
+																		"exclusiveMinimum": 0,
+																		"description": "Thermal mass of the radiator (unit: kWh/K)"
 																	}
 																}
 															}
@@ -2536,7 +2558,8 @@
 																},
 																"emitter_floor_area": {
 																	"type": "number",
-																	"exclusiveMinimum": 0
+																	"exclusiveMinimum": 0,
+																	"description": "(unit: m\u00b2)"
 																}
 															},
 															"required": [
@@ -2556,18 +2579,22 @@
 															"properties": {
 																"equivalent_specific_thermal_mass": {
 																	"type": "number",
-																	"minimum": 0
+																	"minimum": 0,
+																	"description": "Equivalent thermal mass per m\u00b2 of floor area for under-floor heating systems (unit: kJ/m\u00b2K)"
 																},
 																"system_performance_factor": {
 																	"type": "number",
-																	"minimum": 0
+																	"minimum": 0,
+																	"description": "Heat output per m\u00b2 of floor area for under-floor heating systems (unit: W/m\u00b2K)"
 																},
 																"emitter_floor_area": {
 																	"type": "number",
-																	"exclusiveMinimum": 0
+																	"exclusiveMinimum": 0,
+																	"description": "(unit: m\u00b2)"
 																},
 																"frac_convective": {
-																	"type": "number"
+																	"type": "number",
+																	"description": "Convective fraction for heating"
 																}
 															}
 														}
@@ -2593,7 +2620,8 @@
 																},
 																"n_units": {
 																	"type": "integer",
-																	"minimum": 1
+																	"minimum": 1,
+																	"description": "Number of units of this specification of fancoil in Zone"
 																}
 															},
 															"required": [
@@ -2612,7 +2640,8 @@
 															"properties": {
 																"n_units": {
 																	"type": "integer",
-																	"minimum": 1
+																	"minimum": 1,
+																	"description": "Number of units of this specification of fancoil in Zone"
 																},
 																"fancoil_test_data": {
 																	"type": "object",
@@ -2633,14 +2662,16 @@
 																				],
 																				"properties": {
 																					"temperature_diff": {
-																						"type": "number"
+																						"type": "number",
+																						"description": "Difference in temperature between the hot water supplied to the fan coil and the air in the room (unit: Kelvin)"
 																					},
 																					"power_output": {
 																						"type": "array",
 																						"items": {
 																							"type": "number",
 																							"minimum": 0
-																						}
+																						},
+																						"description": "Heat output for a specific test temperature difference (unit: kW)"
 																					}
 																				}
 																			}
@@ -2650,12 +2681,15 @@
 																			"items": {
 																				"type": "number",
 																				"minimum": 0
-																			}
+																			},
+																			"description": "A list of fan powers for which heat output data is provided (unit: W)"
 																		}
-																	}
+																	},
+																	"description": "Manufacturer's data for fancoil unit"
 																},
 																"frac_convective": {
-																	"type": "number"
+																	"type": "number",
+																	"description": "Convective fraction for heating"
 																}
 															}
 														}
@@ -2668,15 +2702,18 @@
 								"temp_diff_emit_dsgn": {
 									"type": "number",
 									"exclusiveMinimum": 0,
-									"maximum": 70
+									"maximum": 70,
+									"description": "Design temperature difference across the emitters. (Unit: deg C or K)"
 								},
 								"variable_flow": {
-									"type": "boolean"
+									"type": "boolean",
+									"description": "Whether the heat source can modulate flow rate."
 								},
 								"bypass_fraction_recirculated": {
 									"type": "number",
 									"minimum": 0,
-									"exclusiveMaximum": 1
+									"exclusiveMaximum": 1,
+									"description": "Fraction of return back into flow water"
 								},
 								"HeatSource": {
 									"type": "object",
@@ -2690,7 +2727,8 @@
 										},
 										"temp_flow_limit_upper": {
 											"type": "number",
-											"exclusiveMinimum": 0
+											"exclusiveMinimum": 0,
+											"description": "Upper operating limit for temperature (unit: deg C)"
 										}
 									}
 								},
@@ -2709,27 +2747,32 @@
 										"min_outdoor_temp": {
 											"type": "integer",
 											"minimum": -60,
-											"maximum": 30
+											"maximum": 30,
+											"description": "Minimum outdoor temperature (unit: Celsius)"
 										},
 										"max_outdoor_temp": {
 											"type": "integer",
 											"minimum": 10,
-											"maximum": 50
+											"maximum": 50,
+											"description": "Maximum outdoor temperature (unit: Celsius)"
 										},
 										"min_flow_temp": {
 											"type": "integer",
 											"minimum": 20,
-											"maximum": 120
+											"maximum": 120,
+											"description": "Minimum flow temperature (unit: Celsius)"
 										}
 									}
 								},
 								"design_flow_temp": {
 									"type": "number",
 									"minimum": 20,
-									"maximum": 120
+									"maximum": 120,
+									"description": "Design flow temperature. (Unit: \u02daC)"
 								},
 								"Zone": {
-									"type": "string"
+									"type": "string",
+									"description": "Zone in which the emitters are located. References a key in $.Zone"
 								}
 							},
 							"allOf": [
@@ -2790,11 +2833,13 @@
 										"properties": {
 											"min_flow_rate": {
 												"type": "number",
-												"exclusiveMinimum": 0
+												"exclusiveMinimum": 0,
+												"description": "Minimum flow rate allowed (unit: litres/min)"
 											},
 											"max_flow_rate": {
 												"type": "number",
-												"exclusiveMinimum": 0
+												"exclusiveMinimum": 0,
+												"description": "Maximum flow rate allowed (unit: litres/min)"
 											}
 										}
 									},
@@ -2805,7 +2850,8 @@
 										"properties": {
 											"design_flow_rate": {
 												"type": "number",
-												"exclusiveMinimum": 0
+												"exclusiveMinimum": 0,
+												"description": "Constant flow rate if the heat source can't modulate flow rate (unit: l/s)"
 											}
 										}
 									}
@@ -2820,7 +2866,8 @@
 													"required": ["n"],
 													"properties": {
 														"n": {
-															"type": "number"
+															"type": "number",
+															"description": "Exponent from characteristic equation of emitters (e.g. derived from BS EN 442 tests)"
 														}
 													}
 												}
@@ -2834,7 +2881,8 @@
 										"properties": {
 											"thermal_mass": {
 												"type": "number",
-												"exclusiveMinimum": 0
+												"exclusiveMinimum": 0,
+												"description": "Thermal mass of the emitters, excluding any thermal mass entered under individual radiator/UFH entries and always excluding thermal mass of pipework. (Unit: kWh/K)"
 											}
 										}
 									}
@@ -2864,7 +2912,8 @@
 								"frac_convective": {
 									"type": "number",
 									"minimum": 0.1,
-									"maximum": 1
+									"maximum": 1,
+									"description": "Convective fraction for heating"
 								},
 								"HeatSource": {
 									"type": "object",
@@ -2878,7 +2927,8 @@
 										},
 										"temp_flow_limit_upper": {
 											"type": "number",
-											"exclusiveMinimum": 0
+											"exclusiveMinimum": 0,
+											"description": "Upper operating limit for temperature (unit: deg C)"
 										}
 									}
 								}
