@@ -4999,30 +4999,36 @@
 						"capacity": {
 							"type": "number",
 							"exclusiveMinimum": 0,
-							"maximum": 50
+							"maximum": 50,
+							"description": "The maximum capacity of the battery (unit: kWh)"
 						},
 						"charge_discharge_efficiency_round_trip": {
 							"type": "number",
 							"exclusiveMinimum": 0,
-							"maximum": 1
+							"maximum": 1,
+							"description": "Charge/discharge round trip efficiency of battery system (greater than 0, up to 1)"
 						},
 						"minimum_charge_rate_one_way_trip": {
 							"type": "number",
-							"minimum": 0
+							"minimum": 0,
+							"description": "The minimum charge rate one way trip the battery allows (unit: kW)"
 						},
 						"maximum_charge_rate_one_way_trip": {
 							"type": "number",
-							"exclusiveMinimum": 0
+							"exclusiveMinimum": 0,
+							"description": "The maximum charge rate one way trip the battery allows (unit: kW)"
 						},
 						"maximum_discharge_rate_one_way_trip": {
 							"type": "number",
-							"exclusiveMinimum": 0
+							"exclusiveMinimum": 0,
+							"description": "The maximum discharge rate one way trip the battery allows (unit: kW)"
 						},
 						"battery_location": {
 							"enum": [
 								"inside",
 								"outside"
-							]
+							],
+							"description": "The location of the battery (inside/outside)"
 						}
 					}
 				},
