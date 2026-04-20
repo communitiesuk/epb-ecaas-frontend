@@ -42,16 +42,6 @@ autoSaveElementForm<InternalDoorData>({
 	},
 });
 
-function canBeFrontDoor(node: FormKitNode) {
-	if (node.value === true) {
-		const internalDoorsExcludingCurrent = internalDoorData.toSpliced(index, 1);
-		const { dwellingSpaceExternalUnglazedDoor, dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
-		const doors = [...internalDoorsExcludingCurrent, dwellingSpaceExternalUnglazedDoor.data, dwellingSpaceExternalGlazedDoor.data].flat();
-		for (const door of doors) {
-			return !door.data.isTheFrontDoor;			
-		}
-	} return true;
-}
 const taggedWithCeiling = computed(() => {
 	return store.getTaggedItem(
 		[dwellingSpaceCeilings],
@@ -168,17 +158,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</p>
 			</GovDetails>
 		</FormKit>
-		<FormKit
-			v-if="model?.typeOfInternalDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat' && (taggedWithCeiling === false && tagHasValidPitch || !model?.associatedItemId)"
-			id="isTheFrontDoor"
-			type="govBoolean"
-			label="Is this the front door?"
-			name="isTheFrontDoor"
-			:validation-rules="{ canBeFrontDoor }"
-			validation="required | canBeFrontDoor" 
-			:validation-messages="{
-				canBeFrontDoor: 'Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead.'
-			}"
+		<FieldsFrontDoor
+			v-if="model?.typeOfInternalDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat' &&
+				(taggedWithCeiling === false && tagHasValidPitch || !model?.associatedItemId)"
+			:index="index"
+			door-type="Internal"
 		/>
 		<FieldsOrientation
 			v-if="model?.isTheFrontDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat' && model.isTheFrontDoor"

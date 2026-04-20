@@ -48,17 +48,6 @@ autoSaveElementForm<ExternalUnglazedDoorData>({
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.complete = false;
 	},
 });
-function canBeFrontDoor(node: FormKitNode) {
-	if (node.value === true) {
-		const unglazedDoorsExcludingCurrent = externalUnglazedDoorData.toSpliced(index, 1);
-		const { dwellingSpaceExternalGlazedDoor, dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
-		const doors = [...unglazedDoorsExcludingCurrent, dwellingSpaceExternalGlazedDoor.data, dwellingSpaceInternalDoor.data].flat();
-		for (const door of doors) {
-			return !door.data.isTheFrontDoor;			
-		}
-	} return true;
-}
-
 
 const tagHasValidPitch = computed(() => {
 	const taggedItem = store.getTaggedItem(
@@ -154,20 +143,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="This is the sum of the heat capacities of all the construction layers"
 		/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
-		<FormKit
+		<FieldsFrontDoor
 			v-if="tagHasValidPitch &&
 				(!isFlatRoofItem(model?.associatedItemId!) ||
 					!model?.associatedItemId ||
 					model.associatedItemId === 'none') && (model?.pitch !== 0 && model?.pitch !== 180)"
-			id="isTheFrontDoor"
-			type="govBoolean"
-			label="Is this the front door?"
-			name="isTheFrontDoor"
-			:validation-rules="{ canBeFrontDoor }"
-			validation="required | canBeFrontDoor" 
-			:validation-messages="{
-				canBeFrontDoor: 'Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead.'
-			}"
+			:index="index"
+			door-type="ExternalUnglazed"
 		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
