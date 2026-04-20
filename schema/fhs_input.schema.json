@@ -2958,20 +2958,24 @@
 					},
 					"cooling_capacity": {
 						"type": "number",
-						"exclusiveMinimum": 0
+						"exclusiveMinimum": 0,
+						"description": "Maximum cooling capacity of the system (unit: kW)"
 					},
 					"efficiency": {
 						"type": "number",
 						"exclusiveMinimum": 0,
-						"maximum": 25
+						"maximum": 25,
+						"description": "Efficiency of the air conditioning system. SEER (Seasonal energy efficiency ratio)"
 					},
 					"frac_convective": {
 						"type": "number",
 						"minimum": 0,
-						"maximum": 1
+						"maximum": 1,
+						"description": "Convective fraction for cooling"
 					},
 					"EnergySupply": {
-						"type": "string"
+						"type": "string",
+						"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 					},
 					"advanced_start": {
 						"type": "number"
