@@ -144,16 +144,6 @@ autoSaveElementForm<ExternalGlazedDoorData>({
 	},
 });
 
-function canBeFrontDoor(node: FormKitNode) {
-	if (node.value === true) {
-		const glazedDoorsExcludingCurrent = externalGlazedDoorData.toSpliced(index, 1);
-		const { dwellingSpaceExternalUnglazedDoor, dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
-		const doors = [...glazedDoorsExcludingCurrent, dwellingSpaceExternalUnglazedDoor.data, dwellingSpaceInternalDoor.data].flat();
-		for (const door of doors) {
-			return !door.data.isTheFrontDoor;			
-		}
-	} return true;
-}
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 const writeShadingToStore = (items: ShadingObjectData[]) => {
@@ -363,20 +353,13 @@ const tagHasValidPitch = computed(() => {
 				</template>
 			</template>
 		</template>
-		<FormKit
+		<FieldsFrontDoor
 			v-if="tagHasValidPitch &&
 				(!isFlatRoofItem(model?.associatedItemId!) ||
 					!model?.associatedItemId ||
 					model.associatedItemId === 'none') && (model?.pitch !== 0 && model?.pitch !== 180)"
-			id="isTheFrontDoor"
-			type="govBoolean"
-			label="Is this the front door?"
-			name="isTheFrontDoor"
-			:validation-rules="{ canBeFrontDoor }"
-			validation="required | canBeFrontDoor" 
-			:validation-messages="{
-				canBeFrontDoor: 'Another door has already been marked as the front door. Please change that entry if you wish to mark this door as the front door instead.'
-			}"
+			:index="index"
+			door-type="ExternalGlazed"
 		/>
 		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 		<h2 class="govuk-heading-l">Window shading</h2>

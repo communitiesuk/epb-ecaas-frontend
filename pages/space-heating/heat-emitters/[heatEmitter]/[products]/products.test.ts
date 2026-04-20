@@ -23,6 +23,7 @@ describe("Heat emitter products page", () => {
 	const MOCKED_HEAT_EMITTERS: PaginatedResult<DisplayProduct> = {
 		data: [
 			{
+				displayProduct: true,
 				id: "1000",
 				brandName: "Test",
 				modelName: "Fan coil",

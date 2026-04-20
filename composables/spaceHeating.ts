@@ -5,6 +5,7 @@ import { useMechanicalVentilation } from "./mechanicalVentilation";
 export function useSpaceHeating() {
 	const store = useEcaasStore();
 	const { removeMechanicalVents, duplicateMechanicalVent } = useMechanicalVentilation();
+	const { removeWaterStorage, preventDuplicateWaterStorage } = useWaterStorage();
 
 	type SpaceHeatingType = keyof typeof store.spaceHeating;
 	type SpaceHeatingData = EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> & EcaasForm<HeatingControlData>;
@@ -82,10 +83,10 @@ export function useSpaceHeating() {
 			}
 
 			if (isPackagedProduct(item.data)) {
-				const { packageProductId } = item.data;
+				const { packageProductIds } = item.data;
 
 				if (item.data.typeOfHeatPump === "hybridHeatPump") {
-					removeHybridHeatPumpBoilers(packageProductId!);
+					removeHybridHeatPumpBoilers(packageProductIds![0]!);
 					return;
 				}
 
@@ -93,9 +94,10 @@ export function useSpaceHeating() {
 					item.data.typeOfHeatPump === "exhaustAirMixed" ||
 					item.data.typeOfHeatPump === "exhaustAirMvhr"
 				) {
-					removeMechanicalVents(packageProductId!);
-					return;
+					removeMechanicalVents(packageProductIds!);
 				}
+
+				removeWaterStorage(packageProductIds!);
 			}
 		}
 	};
@@ -114,32 +116,19 @@ export function useSpaceHeating() {
 			const packagedDuplicates = data.filter(x => x && x.data.name.match(duplicateNamePattern(packageItem.data.name)));
 
 			const newPackagedItem = duplicateFormEntry(packageItem, packagedDuplicates.length) as T;
+			duplicatePackagedItem(state, [newPackagedItem.data.id], duplicates);
 
-			const newItem = {
-				complete: item.complete,
-				data: {
-					...item.data,
-					name: `${item.data.name} (${duplicates})`,
-					id: uuidv4(),
-					packageProductId: newPackagedItem.data.id,
-				},
-			} as T;
-
-			state.spaceHeating[spaceHeatingType].data.push(newItem);
 			state.spaceHeating[spaceHeatingType].data.push(newPackagedItem);
-			state.spaceHeating[spaceHeatingType].complete = false;
 		};
 
-		const duplicateMechanicalVentData = (state: EcaasState, packageProductId: string, duplicates: number) => {
-			const newPackagedItem = duplicateMechanicalVent(state, packageProductId);
-
+		const duplicatePackagedItem = (state: EcaasState, packageProductIds: string[], duplicates: number) => {
 			const newItem = {
 				complete: item.complete,
 				data: {
 					...item.data,
 					name: `${item.data.name} (${duplicates})`,
 					id: uuidv4(),
-					packageProductId: newPackagedItem!.data.id,
+					packageProductIds,
 				},
 			} as T;
 
@@ -162,18 +151,33 @@ export function useSpaceHeating() {
 						markHeatingControlsAsInProgress(state);
 					}
 				} else {
-					const { packageProductId } = item.data;
+					const { packageProductIds } = item.data;
 	
 					if (item.data.typeOfHeatPump === "hybridHeatPump") {
-						duplicateHybridHeatPump(state, packageProductId!, duplicates.length);
+						duplicateHybridHeatPump(state, packageProductIds![0]!, duplicates.length);
+						return;
 					}
+
+					const newPackageProductIds = [];
 	
 					if (item.data.typeOfHeatPump === "exhaustAirMev" ||
 						item.data.typeOfHeatPump === "exhaustAirMixed" ||
 						item.data.typeOfHeatPump === "exhaustAirMvhr"
 					) {
-						duplicateMechanicalVentData(state, packageProductId!, duplicates.length);
+						const newMechanicalVentData = duplicateMechanicalVent(state, packageProductIds!);
+
+						if (newMechanicalVentData) {
+							newPackageProductIds.push(newMechanicalVentData.data.id);
+						}
 					}
+
+					preventDuplicateWaterStorage(state, packageProductIds!);
+
+					duplicatePackagedItem(
+						state,
+						newPackageProductIds,
+						duplicates.length,
+					);
 				}
 			});
 		}

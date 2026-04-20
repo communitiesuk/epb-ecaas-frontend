@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import type { BoilerProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 import { celsius } from "~/utils/units/temperature";
+import type { HeatSourceData, WaterStorageData } from "../../../../stores/ecaasStore.schema";
 
 vi.mock("uuid");
 
@@ -80,7 +81,7 @@ const hybridHeatPump: DomesticHotWaterHeatSourceData = {
 	typeOfHeatSource: "heatPump",
 	typeOfHeatPump: "hybridHeatPump",
 	productReference: "1000",
-	packageProductId: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+	packageProductIds: ["1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b"],
 	maxFlowTemp: unitValue(7, celsius),
 };
 
@@ -211,12 +212,84 @@ describe("Heat Source Page", () => {
 		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water");
 	});
 
-
 	test("save progress button navigates user to the domestic hot wate overview page", async () => {
 		await renderSuspended(HeatSourceForm);
 		const saveProgressButton = screen.getByTestId("saveProgress");
 
 		expect(saveProgressButton.getAttribute("href")).toBe("/domestic-hot-water");
+	});
+
+	test("disables input fields when heat source is created automatically", async () => {
+		const createdHeatPump: DomesticHotWaterHeatSourceData = {
+			...dhwWithExistingHeatPump,
+			createdAutomatically: true,
+		};
+
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [{ data: existingHeatPumpSpaceHeating1 }],
+				},
+			},
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: createdHeatPump }],
+				},
+			},
+		});
+
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "0" },
+			},
+		});
+
+		[createdHeatPump.heatSourceId, "NEW_HEAT_SOURCE"].forEach(option => {
+			expect(screen.getByTestId<HTMLInputElement>(`heatSourceId_${option}`).disabled).toBe(true);
+		});
+	});
+
+	test("displays insets message when linked to a space heating heat source and hot water cylinder", async () => {
+		const spaceHeatingHeatPump: HeatSourceData = {
+			...existingHeatPumpSpaceHeating1,
+			packageProductIds: ["463c95f6-566c-41b2-af27-57e5c68b5c39"],
+		};
+
+		const hotWaterCylinder: Partial<WaterStorageData> = {
+			id: "463c95f6-566c-41b2-af27-57e5c68b5c39",
+			typeOfWaterStorage: "hotWaterCylinder",
+			packagedProductReference: existingHeatPumpSpaceHeating1.productReference,
+		};
+
+		const domesticHotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+			id: "473c95f6-566c-41b2-af28-59e5c68b5c39",
+			isExistingHeatSource: true,
+			heatSourceId: spaceHeatingHeatPump.id,
+		};
+
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [{ data: spaceHeatingHeatPump }],
+				},
+			},
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: domesticHotWaterHeatPump }],
+				},
+				waterStorage: {
+					data: [{ data: hotWaterCylinder }],
+				},
+			},
+		});
+
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "0" },
+			},
+		});
+
+		expect(screen.getByTestId("spaceHeatingHeatSourceWithCylinderInset")).toBeDefined();
 	});
 
 	describe("unique name", () => {

@@ -5,6 +5,7 @@ import HeatSourceForm from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
 import type { BoilerProduct, DisplayProduct, HybridHeatPumpProduct } from "~/pcdb/pcdb.types";
 import { celsius } from "~/utils/units/temperature";
+import type { ErrorName } from "~/errors.types";
 
 vi.mock("uuid");
 
@@ -177,6 +178,29 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(await screen.findByTestId("selectHeatPump_error")).toBeDefined();
+		});
+
+		test("renders error message when domestic hot water heat source conflict error occurs", async () => {
+			const error: ErrorName = "DHW_HEAT_SOURCE_CONFLICT";
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: heatPump1 }],
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "0" },
+					query: {
+						error,
+					},
+				},
+			});
+
+			expect(screen.getByTestId("heatSourceConflictError")).toBeDefined();
 		});
 
 		describe("heat pump default name", () => {

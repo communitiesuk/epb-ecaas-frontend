@@ -125,7 +125,7 @@ const autoSaveElementFormNoName = <T extends DomesticHotWaterHeatSourceData>({
 			};
 
 			if (isPackagedProduct(newData) && newData.coldWaterSource) {
-				const packageProductIndex = state.domesticHotWater.heatSources.data.findIndex(x => x.data.id === newData.packageProductId);
+				const packageProductIndex = state.domesticHotWater.heatSources.data.findIndex(x => newData.packageProductIds?.includes(x.data.id));
 
 				if (packageProductIndex >= 0) {
 					state.domesticHotWater.heatSources.data[packageProductIndex]!.data.coldWaterSource = newData.coldWaterSource;
@@ -229,6 +229,18 @@ const greaterThanZero = (node: FormKitNode) => {
 	return value.amount > 0;
 };
 
+const isLinkedToHeatSourceWithCylinder = (): boolean => {
+	if (model.value === undefined || !model.value.isExistingHeatSource) {
+		return false;
+	}
+
+	const spaceHeatingHeatSource = store.spaceHeating.heatSource.data.find(
+		(heatSource) => heatSource.data.id === model.value.heatSourceId);
+
+	const waterStorageIds = store.domesticHotWater.waterStorage.data.map(waterStorage => waterStorage.data.id);
+
+	return isPackagedProduct(spaceHeatingHeatSource?.data) && spaceHeatingHeatSource.data.packageProductIds!.some(id => waterStorageIds.includes(id));
+};
 </script>
 
 <template>
@@ -242,6 +254,12 @@ const greaterThanZero = (node: FormKitNode) => {
 		:packaged-product="packagedProduct"
 		type="boiler"
 	/>
+	<GovInset 
+		v-if="isLinkedToHeatSourceWithCylinder()"
+		test-id="spaceHeatingHeatSourceWithCylinderInset"
+	>
+		<p>A heat pump with a hot water cylinder has been selected as a heat source for space heating. As it is linked to a hot water cylinder, this heat pump has been automatically selected as the heat source for hot water. If this is incorrect, please select another heat pump product which is not attached to a hot water cylinder.</p>
+	</GovInset>
 	<FormKit
 		v-model="model"
 		type="form"
@@ -266,7 +284,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			:options="new Map(radioOptions)"
 			name="heatSourceId"
 			validation="required"
-			:disabled="hasPackagedProduct(model)"
+			:disabled="hasPackagedProduct(model) || (model.isExistingHeatSource && model.createdAutomatically)"
 		>
 			<div class="govuk-hint">
 				<p>

@@ -86,6 +86,7 @@ describe("Products page", () => {
 		// Arrange
 		const productData: DisplayProduct[] = [
 			{
+				displayProduct: true,
 				id: "1000",
 				brandName: "Test",
 				modelName: "Small Heat Pump",
@@ -93,6 +94,7 @@ describe("Products page", () => {
 				technologyType: "AirSourceHeatPump",
 			},
 			{
+				displayProduct: true,
 				id: "1001",
 				brandName: "Test",
 				modelName: "Medium Heat Pump",
@@ -100,6 +102,7 @@ describe("Products page", () => {
 				technologyType: "AirSourceHeatPump",
 			},
 			{
+				displayProduct: true,
 				id: "1002",
 				brandName: "Test",
 				modelName: "Large Heat Pump",

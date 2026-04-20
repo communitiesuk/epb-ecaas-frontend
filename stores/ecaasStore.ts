@@ -5,7 +5,10 @@ import type { Page } from "~/data/pages/pages.types";
 import type { EmptyObject } from "type-fest";
 import pagesData from "~/data/pages/pages";
 import { objectFromEntries } from "ts-extras";
+import { patchState } from "./patch";
+
 type KeysToDeleteCascade = "associatedItemId" | "taggedItem" | "heatSource" | "dhwHeatSourceId" | "waterStorage" | "boosterHeatPumpId";
+
 export function getInitialState(): EcaasState {
 	const store: NulledForms<EcaasState> = {
 		dwellingDetails: {
@@ -162,7 +165,8 @@ export const useEcaasStore = defineStore("ecaas", {
 			this.$reset();
 		},
 		revalidate() {
-			const { newState: newValidatedState } = revalidateState(this.$state as EcaasState);
+			const patchedState = patchState(this.$state as EcaasState);
+			const { newState: newValidatedState } = revalidateState(patchedState);
 
 			this.$patch({
 				...getInitialState(),

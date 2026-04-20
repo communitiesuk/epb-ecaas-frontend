@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { hasPackagedProduct, isEcaasForm } from "#imports";
+import { hasPackagedProduct, isPackagedProduct, isEcaasForm } from "#imports";
 import type { CustomListItem } from "~/components/CustomList.vue";
 import { useDomesticHotWater } from "~/composables/domesticHotWater";
 import formStatus from "~/constants/formStatus";
-import type { HeatSourceData } from "~/stores/ecaasStore.schema";
+import type { HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
 
 const title = "Domestic hot water";
 
@@ -33,8 +33,7 @@ const hasIncompleteOrInvalidEntries = () => {
 };
 
 function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
-	const heatSource = store.spaceHeating.heatSource.data
-		.find((x) => x.data.id === heatSourceId);
+	const heatSource = store.spaceHeating.heatSource.data.find(x => x.data.id === heatSourceId);
 	return heatSource ? heatSource.data.name : undefined;
 }
 
@@ -65,7 +64,7 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 					const item: CustomListItem = {
 						name: x.data.isExistingHeatSource ? getNameFromSpaceHeatingHeatSource(x.data.heatSourceId)! : x.data.name,
 						status: x.complete ? formStatus.complete : formStatus.inProgress,
-						...(hasPackagedProduct(heatSource.data) ? {
+						...(hasPackagedProduct(heatSource.data) || (x.data.isExistingHeatSource && x.data.createdAutomatically) ? {
 							actions: ['edit']
 						} : {})
 					};
@@ -84,7 +83,19 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 		:form-url="`${page?.url!}/water-storage`"
 		:items="store.domesticHotWater.waterStorage.data
 			.filter(x => isEcaasForm(x))
-			.map(x=>({name: x.data.name, status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+			.map(x => {
+				const waterStorage = x as EcaasForm<WaterStorageData>;
+
+				const item: CustomListItem = {
+					name: x.data.name,
+					status: x.complete ? formStatus.complete : formStatus.inProgress,
+					...(hasPackagedProduct(waterStorage.data) ? {
+						actions: ['edit']
+					} : {})
+				};
+
+				return item;
+			})"
 		:show-status="true"
 		@remove="(index: number) => removeEntry('waterStorage', index)"
 		@duplicate="(index: number) => duplicateEntry('waterStorage', index)"

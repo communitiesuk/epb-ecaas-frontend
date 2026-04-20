@@ -1,18 +1,20 @@
 import type { ZodError } from "zod";
 import { isEcaasForm, type EcaasForm, type EcaasFormPath } from "./ecaasStore.schema";
 
+type RevalidateError = ZodError<unknown> | string;
+
 type RevalidateResult = {
 	newState: Record<string, unknown>;
 } & ({
 	changed: false;
 } | {
 	changed: true;
-	errors: ZodError<unknown>[];
+	errors: RevalidateError[];
 });
 
 export function revalidateState(state: Record<string, unknown>, path: string[] = []): RevalidateResult {
 	const newState = { ...state };
-	const errors: ZodError<unknown>[] = [];
+	const errors: RevalidateError[] = [];
     
 	for (const key in state) {
 		const value = state[key];
@@ -91,7 +93,12 @@ function reformatForm(form: EcaasForm<unknown>) {
 	}
 }
 
-function revalidateForm(form: EcaasForm<unknown>, path: EcaasFormPath): [true, ZodError<unknown>[]] | [false] {
+function handleInvalidForm(form: EcaasForm<unknown>, path: EcaasFormPath, error: unknown) {
+	console.log(`revalidation found invalid form at path ${path}:`, error);
+	form.complete = false;
+}
+
+function revalidateForm(form: EcaasForm<unknown>, path: EcaasFormPath): [true, RevalidateError[]] | [false] {
 	const formSchema = formSchemas[path];
 
 	// following could happen if state contains nodes no longer in the schema, but if so we should just ignore these nodes
@@ -101,26 +108,37 @@ function revalidateForm(form: EcaasForm<unknown>, path: EcaasFormPath): [true, Z
 
 	// Form data is a single data object
 	if (!Array.isArray(form.data)) {
-		const validationResult = formSchema.safeParse(form.data);
+		try {
+			const validationResult = formSchema.safeParse(form.data);
 
-		if (validationResult.success) {
-			return [false];
+			if (validationResult.success) {
+				return [false];
+			}
+
+			handleInvalidForm(form, path, validationResult.error);
+
+			return [true, [validationResult.error]];
+		} catch (error) {
+			handleInvalidForm(form, path, error);
+
+			return [true, [error as string]];
 		}
-
-		console.log(`revalidation found invalid form at path ${path}:`, validationResult.error);
-		form.complete = false;
-
-		return [true, [validationResult.error]];
 	}
 
 	// // Form data is an array - validate data in each EcaasForm
-	const [changed, errors]: [boolean, ZodError<unknown>[]] = form.data.reduce(([changed, errors], current) => {
-		const validationResult = formSchema.safeParse(current.data);
+	const [changed, errors]: [boolean, RevalidateError[]] = form.data.reduce(([changed, errors], current) => {
+		try {
+			const validationResult = formSchema.safeParse(current.data);
 
-		current.complete = validationResult.success;
-		
-		return [!validationResult.success || changed, validationResult.error ? [...errors, validationResult.error] : errors];
-	}, [false as boolean, [] as ZodError<unknown>[]]);
+			current.complete = validationResult.success;
+			
+			return [!validationResult.success || changed, validationResult.error ? [...errors, validationResult.error] : errors];
+		} catch (error) {
+			handleInvalidForm(form, path, error);
+
+			return [true, [...errors, error]];
+		}
+	}, [false as boolean, [] as RevalidateError[]]);
 
 	if (changed) {
 		form.complete = false;

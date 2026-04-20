@@ -1,9 +1,9 @@
-import type { BathData, DomesticHotWaterHeatSourceData, EcaasForm } from "~/stores/ecaasStore.schema";
+import type { BathData, DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
 import { mapDomesticHotWaterData, mapHotWaterSourcesData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
-import { litre } from "~/utils/units/volume";
 import type { SchemaMixerShower } from "~/schema/api-schema.types";
 import { celsius } from "~/utils/units/temperature";
+import { defaultElectricityEnergySupplyName } from "./common";
 
 const baseForm = {
 	data: [],
@@ -13,13 +13,56 @@ const baseForm = {
 describe("domestic hot water mapper", () => {
 	const store = useEcaasStore();
 
+	afterEach(() => {
+		store.$reset();
+	});
+
 	const heatSourceId = "efa1b2c3-d4e5-6789-0123-456789abcdef";
+	const heatSourceIdInSH = "efa1b2c3-d4e5-6789-0123-456789abcd12";
+
+	// water storage
+
+	const storageTank = {
+		data: {
+			typeOfWaterStorage: "hotWaterCylinder",
+			dhwHeatSourceId: heatSourceId,
+			name: "Hot Water Cylinder",
+			id: "efa1b2c3-d4e5-6789-0123-456789abcd11",
+			storageCylinderVolume: { amount: 30, unit: "litres" },
+			dailyEnergyLoss: 40,
+			heaterPosition: 0.2,
+			thermostatPosition: 0.8,
+		},
+		complete: true,
+	} as const satisfies EcaasForm<WaterStorageData>;
+
+	const storageTankWithHeatEx = {
+		data: {
+			...storageTank.data,
+			areaOfHeatExchanger: 42,
+		},
+		complete: true,
+	} as const satisfies EcaasForm<WaterStorageData>;
+
+	const smartHotWaterTank = {
+		data: {
+			typeOfWaterStorage: "smartHotWaterTank",
+			dhwHeatSourceId: heatSourceId,
+			name: "Smart Hot Water Tank",
+			id: "efa1b2c3-d4e5-6789-0123-456789abcd12",
+			heaterPosition: 0.2,
+			productReference: "BLOOP-DOOP-123",
+		},
+		complete: true,
+	} as const satisfies EcaasForm<WaterStorageData>;
+
+	// heat sources inputted in DHW
 
 	const heatPump = {
 		data: {
 			id: heatSourceId,
 			heatSourceId: "NEW_HEAT_SOURCE",
-			name: "heatPump1",
+			name: "DHW heatPump",
 			typeOfHeatSource: "heatPump",
 			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
@@ -30,12 +73,26 @@ describe("domestic hot water mapper", () => {
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
-	const battery = {
+	const heatPumpHWOnly = {
+		data: {
+			id: heatSourceId,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			name: "DHW HW Only Heat Pump",
+			typeOfHeatSource: "heatPump",
+			coldWaterSource: "headerTank",
+			isExistingHeatSource: false,
+			productReference: "HP-12346",
+			typeOfHeatPump: "hotWaterOnly",
+		},
+		complete: true,
+	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+	const heatBattery = {
 		data: {
 			id: heatSourceId,
 			heatSourceId: "NEW_HEAT_SOURCE",
 			energySupply: "electricity",
-			name: "heatBattery",
+			name: "DHW heatBattery",
 			typeOfHeatSource: "heatBattery",
 			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
@@ -47,178 +104,506 @@ describe("domestic hot water mapper", () => {
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
-	describe("water storage", () => {
+	const combiBoiler = {
+		data: {
+			typeOfHeatSource: "boiler",
+			typeOfBoiler: "combiBoiler",
+			id: heatSourceId,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			isExistingHeatSource: false,
+			name: "DHW boiler",
+			coldWaterSource: "mainsWater",
+			productReference: "BOIL-12345",
+			maxFlowTemp: unitValue(32, celsius),
+			needsSpecifiedLocation: false,
+		},
+		complete: true,
+	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
-		it("maps hot water cylinder input state to FHS input request", () => {
-			// Arrange
-			const hotWaterCylinder: EcaasForm<WaterStorageData> = {
-				...baseForm,
-				data: {
-					id: "hot water cylinder",
-					typeOfWaterStorage: "hotWaterCylinder",
-					name: "hot water cylinder",
-					storageCylinderVolume: unitValue(90, litre),
-					dailyEnergyLoss: 5,
-					dhwHeatSourceId: heatSourceId,
-					areaOfHeatExchanger: 2,
-					heaterPosition: 0.3,
-					thermostatPosition: 0.5,
+	const regularBoiler = {
+		data: {
+			typeOfHeatSource: "boiler",
+			typeOfBoiler: "regularBoiler",
+			id: heatSourceId,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			isExistingHeatSource: false,
+			name: "DHW boiler",
+			coldWaterSource: "mainsWater",
+			productReference: "BOIL-12345",
+			maxFlowTemp: unitValue(32, celsius),
+			needsSpecifiedLocation: false,
+		},
+		complete: true,
+	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+	const immersionHeater = {
+		data: {
+			typeOfHeatSource: "immersionHeater",
+			id: heatSourceId,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			isExistingHeatSource: false,
+			name: "DHW immersion",
+			coldWaterSource: "mainsWater",
+			power: 49,
+		},
+		complete: true,
+	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+	const solarThermal = {
+		data: {
+			typeOfHeatSource: "solarThermalSystem",
+			id: heatSourceId,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			isExistingHeatSource: false,
+			name: "DHW immersion",
+			coldWaterSource: "mainsWater",
+			locationOfCollectorLoopPiping: "heatedSpace",
+			collectorModuleArea: 24,
+			numberOfCollectorModules: 3,
+			peakCollectorEfficiency: 0.99,
+			incidenceAngleModifier: 42,
+			firstOrderHeatLossCoefficient: 0.2,
+			secondOrderHeatLossCoefficient: 0.33,
+			heatLossCoefficientOfSolarLoopPipe: 0.6,
+			collectorMassFlowRate: 29,
+			powerOfCollectorPump: { amount: 39, unit: "kilowatt" },
+			powerOfCollectorPumpController: { amount: 2, unit: "kilowatt" },
+			pitch: 19,
+			orientation: 11,
+		},
+		complete: true,
+	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+	const pointOfUse = {
+		data: {
+			typeOfHeatSource: "pointOfUse",
+			id: heatSourceId,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			isExistingHeatSource: false,
+			name: "DHW POU",
+			coldWaterSource: "mainsWater",
+			heaterEfficiency: 0.88,
+		},
+		complete: true,
+	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+	describe("water storage and heat sources", () => {
+
+		/**
+		These are the permutations that we need to consider, in the format:
+		[heat source, water storage]
+
+		a * indicates that permutation is being explicitly tested
+
+		if no * is present, each component of that permutation should be 
+		included in some other test
+
+		null water storage cases should always be tested because they get 
+		mapped differently
+		 
+		--- heat source defined in DHW ---
+
+	*	[heatPump, storageTank],
+		[heatPump, smartHotWaterTank],
+		
+		[immersionHeater, storageTank],
+	*	[immersionHeater, smartHotWaterTank],
+		
+	*	[solarThermal, storageTank],
+		[solarThermal, smartHotWaterTank],
+		
+		[heatBattery, storageTank],
+	*	[heatBattery, smartHotWaterTank],
+	*	[heatBattery, null],
+		
+	*	[boiler, storageTank],
+		[boiler, smartHotWaterTank],
+	*	[boiler, null],
+		
+		// TODO HIUs
+		[heatInterfaceUnit, storageTank],
+	*	[heatInterfaceUnit, smartHotWaterTank],
+	*	[heatInterfaceUnit, null],
+
+	*	[pointOfUse, null],
+
+		--- heat source defined in SH ---
+		
+		[heatPumpInSH, storageTank],
+	*	[heatPumpInSH, smartHotWaterTank],
+		
+	*	[heatBatteryInSH, storageTank],
+		[heatBatteryInSH, smartHotWaterTank],
+	*	[heatBatteryInSH, null],
+		
+		[boilerInSH, storageTank],
+	*	[boilerInSH, smartHotWaterTank],
+	*	[boilerInSH, null],
+		
+		// TODO HIUs
+	*	[heatInterfaceUnitInSH, storageTank],
+		[heatInterfaceUnitInSH, smartHotWaterTank],
+	*	[heatInterfaceUnitInSH, null],
+		 */
+
+		describe("heat source defined in DHW", () => {
+			it.each(
+				[
+					{ heatSource: heatPump, waterStorage: storageTank,
+						expected: {
+							HotWaterSource: {
+								"hw cylinder": {
+									type: "StorageTank",
+									ColdWaterSource: "mains water",
+									volume: storageTank.data.storageCylinderVolume.amount,
+									daily_losses: storageTank.data.dailyEnergyLoss,
+									HeatSource: {
+										[heatPump.data.name]: {
+											type: "HeatSourceWet",
+											name: heatPump.data.name,
+											heater_position: storageTank.data.heaterPosition,
+											thermostat_position: storageTank.data.thermostatPosition,
+											temp_flow_limit_upper: heatPump.data.maxFlowTemp.amount,
+										},
+									},
+								},
+							},
+							HeatSourceWet: {
+								[heatPump.data.name]: {
+									type: "HeatPump",
+									is_heat_network: false,
+									product_reference: heatPump.data.productReference,
+									EnergySupply: "mains elec",
+								},
+							},
+						} as const satisfies Partial<FhsInputSchema>,  
+					},		
+					{ heatSource: heatPumpHWOnly, waterStorage: storageTankWithHeatEx,
+						expected: {
+							HotWaterSource: {
+								"hw cylinder": {
+									type: "StorageTank",
+									ColdWaterSource: "header tank",
+									volume: storageTankWithHeatEx.data.storageCylinderVolume.amount,
+									daily_losses: storageTankWithHeatEx.data.dailyEnergyLoss,
+									heat_exchanger_surface_area: storageTankWithHeatEx.data.areaOfHeatExchanger,
+									HeatSource: {
+										[heatPumpHWOnly.data.name]: {
+											type: "HeatPump_HWOnly",
+											heater_position: storageTankWithHeatEx.data.heaterPosition,
+											thermostat_position: storageTankWithHeatEx.data.thermostatPosition,
+											product_reference: heatPumpHWOnly.data.productReference,
+											EnergySupply: defaultElectricityEnergySupplyName,
+										},
+									},
+								},
+							},
+						} as const satisfies Partial<FhsInputSchema>,  
+					},	
+					{ heatSource: immersionHeater, waterStorage: smartHotWaterTank,
+						expected: {
+							HotWaterSource: {
+								"hw cylinder": {
+									type: "SmartHotWaterTank",
+									EnergySupply_pump: "mains elec",
+									product_reference: smartHotWaterTank.data.productReference,
+									HeatSource: {
+										[immersionHeater.data.name]: {
+											type: "ImmersionHeater",
+											power: immersionHeater.data.power,
+											EnergySupply: "mains elec",
+											heater_position: smartHotWaterTank.data.heaterPosition,
+										},
+									},
+								},
+							},
+						} as const satisfies Partial<FhsInputSchema>,
+					},
+					{ heatSource: solarThermal, waterStorage: storageTank,
+						expected: {
+							HotWaterSource: {
+								"hw cylinder": {
+									type: "StorageTank",
+									ColdWaterSource: "mains water",
+									volume: storageTank.data.storageCylinderVolume.amount,
+									daily_losses: storageTank.data.dailyEnergyLoss,
+									HeatSource: {
+										[solarThermal.data.name]: {
+											type: "SolarThermalSystem",
+											heater_position: storageTank.data.heaterPosition,
+											thermostat_position: storageTank.data.thermostatPosition,
+											sol_loc: "HS",
+											area_module: solarThermal.data.collectorModuleArea,
+											modules: solarThermal.data.numberOfCollectorModules,
+											peak_collector_efficiency: solarThermal.data.peakCollectorEfficiency,
+											incidence_angle_modifier: solarThermal.data.incidenceAngleModifier,
+											first_order_hlc: solarThermal.data.firstOrderHeatLossCoefficient,
+											second_order_hlc: solarThermal.data.secondOrderHeatLossCoefficient,
+											collector_mass_flow_rate: solarThermal.data.collectorMassFlowRate,
+											power_pump: solarThermal.data.powerOfCollectorPump.amount,
+											power_pump_control: solarThermal.data.powerOfCollectorPumpController.amount,
+											EnergySupply: defaultElectricityEnergySupplyName,
+											tilt: solarThermal.data.pitch,
+											orientation360: solarThermal.data.orientation,
+											solar_loop_piping_hlc: solarThermal.data.heatLossCoefficientOfSolarLoopPipe,
+										},
+									},
+								},
+							},
+						} as const satisfies Partial<FhsInputSchema>,
+					},
+					{ heatSource: heatBattery, waterStorage: smartHotWaterTank,
+						expected: {
+							HotWaterSource: {
+								"hw cylinder": {
+									type: "SmartHotWaterTank",
+									EnergySupply_pump: "mains elec",
+									product_reference: smartHotWaterTank.data.productReference,
+									HeatSource: {
+										[heatBattery.data.name]: {
+											type: "HeatSourceWet",
+											name: heatBattery.data.name,
+											heater_position: storageTank.data.heaterPosition,
+											temp_flow_limit_upper: heatBattery.data.maxFlowTemp.amount,
+										},
+									},
+								},
+							},
+							HeatSourceWet: {
+								[heatBattery.data.name]: {
+									type: "HeatBattery",
+									is_heat_network: false,
+									product_reference: heatBattery.data.productReference,
+									EnergySupply: "mains elec",
+									battery_type: "dry_core",
+									number_of_units: heatBattery.data.numberOfUnits,
+								},
+							},
+						} as const satisfies Partial<FhsInputSchema>, 
+					},
+					{ heatSource: combiBoiler, waterStorage: storageTank,
+						expected: {
+							HotWaterSource: {
+								"hw cylinder": {
+									type: "StorageTank",
+									ColdWaterSource: "mains water",
+									volume: storageTank.data.storageCylinderVolume.amount,
+									daily_losses: storageTank.data.dailyEnergyLoss,
+									HeatSource: {
+										[combiBoiler.data.name]: {
+											type: "HeatSourceWet",
+											name: combiBoiler.data.name,
+											heater_position: storageTank.data.heaterPosition,
+											thermostat_position: storageTank.data.thermostatPosition,
+											temp_flow_limit_upper: combiBoiler.data.maxFlowTemp.amount,
+										},
+									},
+								},
+							},
+							HeatSourceWet: {
+								[combiBoiler.data.name]: {
+									type: "Boiler",
+									is_heat_network: false,
+									product_reference: combiBoiler.data.productReference,
+									EnergySupply: "mains elec",
+								},
+							},
+						} as const satisfies Partial<FhsInputSchema>,
+					},
+				// TODO { heatSource: heatInterfaceUnit, waterStorage: smartHotWaterTank },
+				],
+			)("maps a $heatSource.data.typeOfHeatSource heat source attached to a $waterStorage.data.typeOfWaterStorage water storage",
+				async ({ heatSource, waterStorage, expected }) => {
+					store.$patch({
+						domesticHotWater: {
+							heatSources: {
+								data: [heatSource],
+								complete: true,
+							},
+							waterStorage: {
+								data: [waterStorage],
+								complete: true,
+							},
+							pipework: {
+								data: [],
+								complete: true,
+							},
+						},
+					});
+
+					expect(mapHotWaterSourcesData(resolveState(store.$state))).toEqual(expected);
 				},
-			};
+			);
 
-			store.$patch({
-				domesticHotWater: {
-					waterStorage: {
-						data: [hotWaterCylinder],
-						complete: true,
-					},
-					heatSources: {
-						data: [heatPump],
-						complete: true,
-					},
-					pipework: {
-						data: [],
-						complete: true,
-					},
+			it.each([
+				{ 
+					heatSource: heatBattery, expected: {
+						HotWaterSource: {
+							"hw cylinder": {
+								type: "HeatBattery",
+								HeatSourceWet: heatBattery.data.name,
+								ColdWaterSource: "mains water",
+							},
+						},
+						HeatSourceWet: {
+							[heatBattery.data.name]: {
+								type: "HeatBattery",
+								is_heat_network: false,
+								product_reference: heatBattery.data.productReference,
+								EnergySupply: "mains elec",
+								battery_type: "dry_core",
+								number_of_units: heatBattery.data.numberOfUnits,
+							},
+						},
+					} as const satisfies Partial<FhsInputSchema>,
 				},
-			});
-
-			// Acts
-			const result = mapHotWaterSourcesData(resolveState(store.$state))[0]!;
-			const expectedResult: Partial<FhsInputSchema["HotWaterSource"]["hw cylinder"]> = {
-				ColdWaterSource: "mains water",
-				HeatSource: {
-					[heatPump.data.name]: {
-						heater_position: 0.3,
-						type: "HeatSourceWet",
-						name: heatPump.data.name,
-						thermostat_position: 0.5,
-						temp_flow_limit_upper: 17,
-					},
+				{ 
+					heatSource: combiBoiler, expected: {
+						HotWaterSource: {
+							"hw cylinder": {
+								type: "CombiBoiler",
+								HeatSourceWet: combiBoiler.data.name,
+								ColdWaterSource: "mains water",
+							},
+						},
+						HeatSourceWet: {
+							[combiBoiler.data.name]: {
+								type: "Boiler",
+								is_heat_network: false,
+								product_reference: combiBoiler.data.productReference,
+								EnergySupply: "mains elec",
+							},
+						},
+					} as const satisfies Partial<FhsInputSchema>,
 				},
-				daily_losses: 5,
-				volume: 90,
-				type: "StorageTank",
-				init_temp: 60,
-			};
+				{ heatSource: pointOfUse, expected: {
+					HotWaterSource: {
+						"hw cylinder": {
+							type: "PointOfUse",
+							ColdWaterSource: "mains water",
+							efficiency: pointOfUse.data.heaterEfficiency,
+							EnergySupply: defaultElectricityEnergySupplyName,
+						},
+					},
+				} as const satisfies Partial<FhsInputSchema> },
+			// TODO { heatSource: heatInterfaceUnit },
+			])("maps a $heatSource.data.typeOfHeatSource dhw heat source attached to no water storage",
+				async ({ heatSource, expected }) => {
+					store.$patch({
+						domesticHotWater: {
+							heatSources: {
+								data: [heatSource],
+								complete: true,
+							},
+							waterStorage: {
+								data: [],
+								complete: true,
+							},
+							pipework: {
+								data: [],
+								complete: true,
+							},
+						},
+					});
 
-			// Assert
-			expect(result).toEqual(expectedResult);
+					expect(mapHotWaterSourcesData(resolveState(store.$state))).toEqual(expected);
+				},
+			);
+
+			it.each([
+				{ 
+					name: "regular boiler",
+					heatSource: regularBoiler,
+				},
+				{ 
+					name: "heat pump",
+					heatSource: heatPump,
+				},
+				{ 
+					name: "solar thermal system",
+					heatSource: solarThermal,
+				},
+				{ 
+					name: "immersion heater",
+					heatSource: immersionHeater,
+				},
+			])("throws an error when given a $name without any water storage",
+				async ({ heatSource }) => {
+					store.$patch({
+						domesticHotWater: {
+							heatSources: {
+								data: [heatSource],
+								complete: true,
+							},
+							waterStorage: {
+								data: [],
+								complete: true,
+							},
+							pipework: {
+								data: [],
+								complete: true,
+							},
+						},
+					});
+
+					expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
+						.toThrow("Selected hot water heat source requires water storage - no water storage present");
+				},
+			);
+
+			it("throws an error when given a point of use heat source with water storage",
+				async () => {
+					store.$patch({
+						domesticHotWater: {
+							heatSources: {
+								data: [pointOfUse],
+								complete: true,
+							},
+							waterStorage: {
+								data: [storageTank],
+								complete: true,
+							},
+							pipework: {
+								data: [],
+								complete: true,
+							},
+						},
+					});
+
+					expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
+						.toThrow("Cannot have a point of use heat source heating a hot water cylinder or smart hot water tank");
+				},
+			);
+
+			it("throws an error when given a hot water only heat pump and a hw cylinder with no heat exchanger area",
+				async () => {
+					store.$patch({
+						domesticHotWater: {
+							heatSources: {
+								data: [heatPumpHWOnly],
+								complete: true,
+							},
+							waterStorage: {
+								data: [storageTank],
+								complete: true,
+							},
+							pipework: {
+								data: [],
+								complete: true,
+							},
+						},
+					});
+
+					expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
+						.toThrow("Area of heat exchanger must be provided when using a hot water only heat pump");
+				},
+			);
 		});
 
-		it("maps hot water cylinder input state with max flow temp to FHS input request", () => {
-			// Arrange
-			const hotWaterCylinder: EcaasForm<WaterStorageData> = {
-				...baseForm,
-				data: {
-					id: "hot water cylinder",
-					typeOfWaterStorage: "hotWaterCylinder",
-					name: "hot water cylinder",
-					storageCylinderVolume: unitValue(90, litre),
-					dailyEnergyLoss: 5,
-					dhwHeatSourceId: heatSourceId,
-					areaOfHeatExchanger: 2,
-					heaterPosition: 0.3,
-					thermostatPosition: 0.5,
-				},
-			};
-
-			store.$patch({
-				domesticHotWater: {
-					waterStorage: {
-						data: [hotWaterCylinder],
-						complete: true,
-					},
-					heatSources: {
-						data: [battery],
-						complete: true,
-					},
-					pipework: {
-						data: [],
-						complete: true,
-					},
-				},
-			});
-
-			// Acts
-			const result = mapHotWaterSourcesData(resolveState(store.$state))[0]!;
-			const expectedResult: Partial<FhsInputSchema["HotWaterSource"]["hw cylinder"]> = {
-				ColdWaterSource: "mains water",
-				HeatSource: {
-					[battery.data.name]: {
-						heater_position: 0.3,
-						type: "HeatSourceWet",
-						name: battery.data.name,
-						thermostat_position: 0.5,
-						temp_flow_limit_upper: 32,
-					},
-				},
-				daily_losses: 5,
-				volume: 90,
-				type: "StorageTank",
-				init_temp: 60,
-			};
-
-			// Assert
-			expect(result).toEqual(expectedResult);
-		});
-
-		it("maps smart hot water tank input state to FHS input request", () => {
-			// Arrange		
-			const smartHotWaterTank: EcaasForm<WaterStorageData> = {
-				...baseForm,
-				data: {
-					id: "smart hot water tank",
-					typeOfWaterStorage: "smartHotWaterTank",
-					name: "smart hot water tank",
-					dhwHeatSourceId: heatSourceId,
-					heaterPosition: 0.3,
-					productReference: "SWT-12345",
-				},
-			};
-
-			store.$patch({
-				domesticHotWater: {
-					waterStorage: {
-						data: [smartHotWaterTank],
-						complete: true,
-					},
-					heatSources: {
-						data: [{ data: { ...heatPump.data, maxFlowTemp: unitValue(4, celsius) }, complete: true }],
-						complete: true,
-					},
-					pipework: {
-						data: [],
-						complete: true,
-					},
-				},
-			});
-
-			// Acts
-			const result = mapHotWaterSourcesData(resolveState(store.$state))[0]!;
-			const expectedResult: Partial<FhsInputSchema["HotWaterSource"]["hw cylinder"]> = {
-				ColdWaterSource: "mains water",
-				product_reference: "SWT-12345",
-				EnergySupply_pump: "mains elec",
-				HeatSource: {
-					[heatPump.data.name]: {
-						heater_position: 0.3,
-						type: "HeatSourceWet",
-						name: heatPump.data.name,
-						temp_flow_limit_upper: 4,
-					},
-				},
-				type: "SmartHotWaterTank",
-			};
-
-			// Assert
-			expect(result).toEqual(expectedResult);
-		});
-
-		describe("using a previously added heat source", () => {
+		describe("heat source defined in SH", () => {
 			const existingHeatPump = {
 				data: {
-					id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+					id: heatSourceIdInSH,
 					name: "Heat pump space",
 					typeOfHeatSource: "heatPump",
 					typeOfHeatPump: "airSource",
@@ -230,7 +615,7 @@ describe("domestic hot water mapper", () => {
 
 			const dhwWithExistingHeatPump = {
 				data: {
-					id: "463c94f6-566c-49b2-af27-57e5c68b5c62",
+					id: heatSourceId,
 					coldWaterSource: "mainsWater",
 					isExistingHeatSource: true,
 					heatSourceId: existingHeatPump.data.id,
@@ -239,25 +624,38 @@ describe("domestic hot water mapper", () => {
 				complete: true,
 			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
-			const existingBoiler = {
+			const existingCombiBoiler = {
 				data: {
-					id: "463c94f6-566c-49b2-af27-57e5c68b5c37",
+					id: heatSourceIdInSH,
 					name: "Boiler space",
 					typeOfHeatSource: "boiler",
 					typeOfBoiler: "combiBoiler",
 					productReference: "174",
-					needsSpecifiedLocation: true,
+					needsSpecifiedLocation: false,
 					maxFlowTemp: unitValue(5, celsius),
+				},
+				complete: true,
+			} as const satisfies EcaasForm<HeatSourceData>;
+
+			const existingRegularBoiler = {
+				data: {
+					id: heatSourceIdInSH,
+					name: "Regular ol' boiler",
+					typeOfHeatSource: "boiler",
+					typeOfBoiler: "regularBoiler",
+					productReference: "189",
+					needsSpecifiedLocation: false,
+					maxFlowTemp: unitValue(72, celsius),
 				},
 				complete: true,
 			} as const satisfies EcaasForm<HeatSourceData>;
 
 			const dhwWithExistingBoiler = {
 				data: {
-					id: "463c94f6-566c-49b2-af27-57e5c68b5c68",
+					id: heatSourceId,
 					coldWaterSource: "mainsWater",
 					isExistingHeatSource: true,
-					heatSourceId: existingBoiler.data.id,
+					heatSourceId: existingCombiBoiler.data.id,
 					maxFlowTemp: unitValue(40, celsius),
 				},
 				complete: true,
@@ -265,7 +663,7 @@ describe("domestic hot water mapper", () => {
 
 			const existingBattery = {
 				data: {
-					id: "463c94f6-566c-49b2-af27-57e5c68b5c44",
+					id: heatSourceIdInSH,
 					name: "Heat battery space",
 					typeOfHeatSource: "heatBattery",
 					typeOfHeatBattery: "heatBatteryPcm",
@@ -279,7 +677,7 @@ describe("domestic hot water mapper", () => {
 
 			const dhwWithExistingBattery = {
 				data: {
-					id: "463c94f6-566c-49b2-af27-57e5c68b5c46",
+					id: heatSourceId,
 					coldWaterSource: "mainsWater",
 					isExistingHeatSource: true,
 					heatSourceId: existingBattery.data.id,
@@ -287,38 +685,121 @@ describe("domestic hot water mapper", () => {
 				},
 				complete: true,
 			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
-
-			it.each([[existingHeatPump, dhwWithExistingHeatPump], [existingBoiler, dhwWithExistingBoiler], [existingBattery, dhwWithExistingBattery]]) (
-				"maps hot water cylinder input state to FHS input request with correct max flow temp", async (existingHeatSource, dhwWithExistingHeatSource) => {
-					const hotWaterCylinder: EcaasForm<WaterStorageData> = {
-						...baseForm,
-						data: {
-							id: "hot water cylinder",
-							typeOfWaterStorage: "hotWaterCylinder",
-							name: "hot water cylinder",
-							storageCylinderVolume: unitValue(90, litre),
-							dailyEnergyLoss: 5,
-							dhwHeatSourceId: dhwWithExistingHeatSource.data.id,
-							areaOfHeatExchanger: 2,
-							heaterPosition: 0.3,
-							thermostatPosition: 0.5,
-						},
-					};
-
+			
+			it.each(
+				[
+					{ 
+						heatSource: existingHeatPump,
+						dhwHeatSource: dhwWithExistingHeatPump,
+						waterStorage: smartHotWaterTank,
+						expected: {
+							HotWaterSource: {
+								"hw cylinder": {
+									EnergySupply_pump: defaultElectricityEnergySupplyName,
+									HeatSource: {
+										[existingHeatPump.data.name]: {
+											heater_position: smartHotWaterTank.data.heaterPosition,
+											name: existingHeatPump.data.name,
+											type: "HeatSourceWet",
+											temp_flow_limit_upper: dhwWithExistingHeatPump.data.maxFlowTemp.amount,
+										},
+									},
+									product_reference: smartHotWaterTank.data.productReference,
+									type: "SmartHotWaterTank",
+								},
+							},
+							HeatSourceWet: {
+								[existingHeatPump.data.name]: {
+									EnergySupply: defaultElectricityEnergySupplyName,
+									is_heat_network: false,
+									product_reference: existingHeatPump.data.productReference,
+									type: "HeatPump",
+								},
+							},
+						} as const satisfies Partial<FhsInputSchema>,
+					},
+					{ 
+						heatSource: existingBattery,
+						dhwHeatSource: dhwWithExistingBattery,
+						waterStorage: storageTank,
+						expected: {
+							HotWaterSource: {
+								"hw cylinder": {
+									ColdWaterSource: "mains water",
+									daily_losses: storageTank.data.dailyEnergyLoss,
+									HeatSource: {
+										[existingBattery.data.name]: {
+											heater_position: storageTank.data.heaterPosition,
+											name: existingBattery.data.name,
+											type: "HeatSourceWet",
+											thermostat_position: storageTank.data.thermostatPosition,
+											temp_flow_limit_upper: dhwWithExistingBattery.data.maxFlowTemp.amount,
+										},
+									},
+									type: "StorageTank",
+									volume: storageTank.data.storageCylinderVolume.amount,
+								},
+							},
+							HeatSourceWet: {
+								[existingBattery.data.name]: {
+									EnergySupply: defaultElectricityEnergySupplyName,
+									is_heat_network: false,
+									product_reference: existingBattery.data.productReference,
+									type: "HeatBattery",
+									battery_type: "pcm",
+									number_of_units: existingBattery.data.numberOfUnits,
+								},
+							},
+						} as const satisfies Partial<FhsInputSchema>,
+					},
+					{ 
+						heatSource: existingCombiBoiler,
+						dhwHeatSource: dhwWithExistingBoiler,
+						waterStorage: smartHotWaterTank,
+						expected: {
+							HotWaterSource: {
+								"hw cylinder": {
+									EnergySupply_pump: defaultElectricityEnergySupplyName,
+									HeatSource: {
+										[existingCombiBoiler.data.name]: {
+											heater_position: smartHotWaterTank.data.heaterPosition,
+											name: existingCombiBoiler.data.name,
+											type: "HeatSourceWet",
+											temp_flow_limit_upper: dhwWithExistingBoiler.data.maxFlowTemp.amount,
+										},
+									},
+									product_reference: smartHotWaterTank.data.productReference,
+									type: "SmartHotWaterTank",
+								},
+							},
+							HeatSourceWet: {
+								[existingCombiBoiler.data.name]: {
+									EnergySupply: defaultElectricityEnergySupplyName,
+									is_heat_network: false,
+									product_reference: existingCombiBoiler.data.productReference,
+									type: "Boiler",
+								},
+							},
+						} as const satisfies Partial<FhsInputSchema>,
+					},
+					// TODO { heatSource: heatInterfaceUnitInSH, waterStorage: storageTank },
+				],
+			)("maps a $heatSource.data.typeOfHeatSource dhw heat source attached to a $waterStorage.data.typeOfWaterStorage water storage",
+				async ({ heatSource, dhwHeatSource, waterStorage, expected }) => {
 					store.$patch({
 						spaceHeating: {
 							heatSource: {
-								data: [existingHeatSource],
+								data: [heatSource],
 								complete: true,
 							},
 						},
 						domesticHotWater: {
-							waterStorage: {
-								data: [hotWaterCylinder],
+							heatSources: {
+								data: [dhwHeatSource],
 								complete: true,
 							},
-							heatSources: {
-								data: [dhwWithExistingHeatSource],
+							waterStorage: {
+								data: [waterStorage],
 								complete: true,
 							},
 							pipework: {
@@ -328,38 +809,129 @@ describe("domestic hot water mapper", () => {
 						},
 					});
 
-					const result = mapHotWaterSourcesData(resolveState(store.$state))[0]!;
-					const expectedResult: Partial<FhsInputSchema["HotWaterSource"]["hw cylinder"]> = {
-						ColdWaterSource: "mains water",
-						HeatSource: {
-							[existingHeatSource.data.name]: {
-								heater_position: 0.3,
-								type: "HeatSourceWet",
-								name: existingHeatSource.data.name,
-								thermostat_position: 0.5,
-								temp_flow_limit_upper: dhwWithExistingHeatSource.data.maxFlowTemp.amount,
+					const result = mapHotWaterSourcesData(resolveState(store.$state));
+
+					expect(result).toEqual(expected);
+				},
+			);
+
+			it.each([
+				{ heatSource: existingBattery, dhwHeatSource: dhwWithExistingBattery,
+					expected: {
+						HotWaterSource: {
+							"hw cylinder": {
+								ColdWaterSource: "mains water",
+								HeatSourceWet: existingBattery.data.name,
+								type: "HeatBattery",
 							},
 						},
-						daily_losses: 5,
-						volume: 90,
-						type: "StorageTank",
-						init_temp: 60,
-					};
+						HeatSourceWet: {
+							[existingBattery.data.name]: {
+								EnergySupply: defaultElectricityEnergySupplyName,
+								battery_type: "pcm",
+								is_heat_network: false,
+								number_of_units: existingBattery.data.numberOfUnits,
+								product_reference: existingBattery.data.productReference,
+								type: "HeatBattery",
+							},
+						},
+					} as const satisfies Partial<FhsInputSchema>,
+				},
+				{ heatSource: existingCombiBoiler, dhwHeatSource: dhwWithExistingBoiler,
+					expected: {
+						HotWaterSource: {
+							"hw cylinder": {
+								ColdWaterSource: "mains water",
+								HeatSourceWet: existingCombiBoiler.data.name,
+								type: "CombiBoiler",
+							},
+						},
+						HeatSourceWet: {
+							[existingCombiBoiler.data.name]: {
+								EnergySupply: defaultElectricityEnergySupplyName,
+								is_heat_network: false,
+								product_reference: existingCombiBoiler.data.productReference,
+								type: "Boiler",
+							},
+						},
+					} as const satisfies Partial<FhsInputSchema>,
+				},
+				// TODO { heatSource: existingHIU },
+			])("maps a $heatSource.data.typeOfHeatSource dhw heat source attached to no water storage",
+				async ({ heatSource, dhwHeatSource, expected }) => {
+					store.$patch({
+						spaceHeating: {
+							heatSource: {
+								data: [heatSource],
+								complete: true,
+							},
+						},
+						domesticHotWater: {
+							heatSources: {
+								data: [dhwHeatSource],
+								complete: true,
+							},
+							waterStorage: {
+								data: [],
+								complete: true,
+							},
+							pipework: {
+								data: [],
+								complete: true,
+							},
+						},
+					});
 
-					expect(result).toEqual(expectedResult);
-				});
+					const result = mapHotWaterSourcesData(resolveState(store.$state));
+
+					expect(result).toEqual(expected);
+				},
+			);
+
+			it.each([
+				{ 
+					name: "regular boiler",
+					heatSource: existingRegularBoiler,
+					dhwHeatSource: dhwWithExistingBoiler,
+				},
+				{ 
+					name: "heat pump",
+					heatSource: existingHeatPump,
+					dhwHeatSource: dhwWithExistingHeatPump,
+				},
+			])("throws an error when given a $name without any water storage",
+				async ({ heatSource, dhwHeatSource }) => {
+					store.$patch({
+						spaceHeating: {
+							heatSource: {
+								data: [heatSource],
+								complete: true,
+							},
+						},
+						domesticHotWater: {
+							heatSources: {
+								data: [dhwHeatSource],
+								complete: true,
+							},
+							waterStorage: {
+								data: [],
+								complete: true,
+							},
+							pipework: {
+								data: [],
+								complete: true,
+							},
+						},
+					});
+
+					expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
+						.toThrow("Selected hot water heat source requires water storage - no water storage present");
+				},
+			);
 		});
-
-
 	});
 
 	describe("outlets", () => {
-		const store = useEcaasStore();
-
-		afterEach(() => {
-			store.$reset();
-		});
-
 		it("maps hot water outlets input state to FHS input request", () => {
 			// Arrange
 			const mixedShower: EcaasForm<MixedShowerData> = {
@@ -409,7 +981,7 @@ describe("domestic hot water mapper", () => {
 			store.$patch({
 				domesticHotWater: {
 					waterStorage: {
-						data: [],
+						data: [storageTank],
 						complete: true,
 					},
 					hotWaterOutlets: { data: [mixedShower, electricShower, bath, other], complete: true },
@@ -436,7 +1008,7 @@ describe("domestic hot water mapper", () => {
 							flowrate: 3,
 							allow_low_flowrate: false,
 							ColdWaterSource: "mains water",
-							HotWaterSource: heatSourceId,
+							HotWaterSource: heatPump.data.name,
 						},
 						"shower2": {
 							type: "InstantElecShower",
@@ -474,19 +1046,9 @@ describe("domestic hot water mapper", () => {
 						wwhrs: true,
 						wwhrsType: "instantaneousSystemA",
 						wwhrsProductReference: "WW-A-123",
-						dhwHeatSourceId: "heatPump1",
+						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: false,
-					},
-				};
-
-				const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
-					...baseForm,
-					data: {
-						id: "heatPump1",
-						isExistingHeatSource: true,
-						heatSourceId: "heatPump1",
-						coldWaterSource: "mainsWater",
 					},
 				};
 
@@ -494,7 +1056,7 @@ describe("domestic hot water mapper", () => {
 					domesticHotWater: {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
-						heatSources: { data: [hwSource1], complete: true },
+						heatSources: { data: [combiBoiler], complete: true },
 						waterStorage: { data: [], complete: true },
 					},
 				});
@@ -506,7 +1068,7 @@ describe("domestic hot water mapper", () => {
 					ColdWaterSource: "mains water",
 					flowrate: 8,
 					allow_low_flowrate: false,
-					HotWaterSource: "heatPump1",
+					HotWaterSource: combiBoiler.data.name,
 					WWHRS: "WW-A-123",
 					WWHRS_configuration: "A",
 				};
@@ -524,18 +1086,9 @@ describe("domestic hot water mapper", () => {
 						wwhrs: true,
 						wwhrsType: "instantaneousSystemB",
 						wwhrsProductReference: "WW-B-456",
-						dhwHeatSourceId: "cylinder1",
+						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: false,
-					},
-				};
-				const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
-					...baseForm,
-					data: {
-						id: "cylinder1",
-						isExistingHeatSource: true,
-						heatSourceId: "cylinder1",
-						coldWaterSource: "mainsWater",
 					},
 				};
 
@@ -543,7 +1096,7 @@ describe("domestic hot water mapper", () => {
 					domesticHotWater: {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
-						heatSources: { data: [hwSource1], complete: true },
+						heatSources: { data: [heatBattery], complete: true },
 						waterStorage: { data: [], complete: true },
 					},
 				});
@@ -555,7 +1108,7 @@ describe("domestic hot water mapper", () => {
 					ColdWaterSource: "mains water",
 					flowrate: 9,
 					allow_low_flowrate: false,
-					HotWaterSource: "cylinder1",
+					HotWaterSource: heatBattery.data.name,
 					WWHRS: "WW-B-456",
 					WWHRS_configuration: "B",
 				} as const satisfies SchemaMixerShower;
@@ -572,19 +1125,9 @@ describe("domestic hot water mapper", () => {
 						wwhrs: true,
 						wwhrsType: "instantaneousSystemC",
 						wwhrsProductReference: "WW-C-789",
-						dhwHeatSourceId: "boiler1",
+						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: false,
-					},
-				};
-
-				const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
-					...baseForm,
-					data: {
-						id: "boiler1",
-						isExistingHeatSource: true,
-						heatSourceId: "boiler1",
-						coldWaterSource: "mainsWater",
 					},
 				};
 
@@ -592,8 +1135,8 @@ describe("domestic hot water mapper", () => {
 					domesticHotWater: {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
-						heatSources: { data: [hwSource1], complete: true },
-						waterStorage: { data: [], complete: true },
+						heatSources: { data: [combiBoiler], complete: true },
+						waterStorage: { data: [storageTank], complete: true },
 					},
 				});
 
@@ -604,7 +1147,7 @@ describe("domestic hot water mapper", () => {
 					ColdWaterSource: "mains water",
 					flowrate: 10,
 					allow_low_flowrate: false,
-					HotWaterSource: "boiler1",
+					HotWaterSource: combiBoiler.data.name,
 					WWHRS: "WW-C-789",
 					WWHRS_configuration: "C",
 				} as const satisfies SchemaMixerShower;
@@ -618,20 +1161,10 @@ describe("domestic hot water mapper", () => {
 						id: "shower-air-pump",
 						name: "shower-air-pump",
 						wwhrs: false,
-						dhwHeatSourceId: "heatPump1",
+						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: true,
 						airPressureShowerProductReference: "AIR-PUMP-123",
-					},
-				};
-
-				const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
-					...baseForm,
-					data: {
-						id: "heatPump1",
-						isExistingHeatSource: true,
-						heatSourceId: "heatPump1",
-						coldWaterSource: "mainsWater",
 					},
 				};
 
@@ -639,8 +1172,8 @@ describe("domestic hot water mapper", () => {
 					domesticHotWater: {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
-						heatSources: { data: [hwSource1], complete: true },
-						waterStorage: { data: [], complete: true },
+						heatSources: { data: [heatPump], complete: true },
+						waterStorage: { data: [storageTank], complete: true },
 					},
 				});
 
@@ -650,7 +1183,7 @@ describe("domestic hot water mapper", () => {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					allow_low_flowrate: true,
-					HotWaterSource: "heatPump1",
+					HotWaterSource: heatPump.data.name,
 					product_reference: "AIR-PUMP-123",
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower-air-pump"]).toEqual(expectedShowerAirPump);
@@ -667,19 +1200,9 @@ describe("domestic hot water mapper", () => {
 						name: "shower-no-wwhrs",
 						flowRate: 7,
 						wwhrs: false,
-						dhwHeatSourceId: "cylinder2",
+						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: false,
-					},
-				};
-
-				const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
-					...baseForm,
-					data: {
-						id: "cylinder2",
-						isExistingHeatSource: true,
-						heatSourceId: "cylinder2",
-						coldWaterSource: "mainsWater",
 					},
 				};
 
@@ -687,8 +1210,8 @@ describe("domestic hot water mapper", () => {
 					domesticHotWater: {
 						hotWaterOutlets: { data: [mixedShower], complete: true },
 						pipework: { data: [], complete: true },
-						heatSources: { data: [hwSource1], complete: true },
-						waterStorage: { data: [], complete: true },
+						heatSources: { data: [heatPump], complete: true },
+						waterStorage: { data: [storageTank], complete: true },
 					},
 				});
 
@@ -700,7 +1223,7 @@ describe("domestic hot water mapper", () => {
 					ColdWaterSource: "mains water",
 					flowrate: 7,
 					allow_low_flowrate: false,
-					HotWaterSource: "cylinder2",
+					HotWaterSource: heatPump.data.name,
 				} as const satisfies SchemaMixerShower;
 				expect(shower).toEqual(expectedShowerNoWwhrs);
 				expect(shower).not.toHaveProperty("WWHRS");
@@ -711,13 +1234,14 @@ describe("domestic hot water mapper", () => {
 
 
 		describe("edge cases", () => {
+			//not sure it should handle empty arrays actually - maybe just throw?
 			it("handles empty outlet arrays", () => {
 				store.$patch({
 					domesticHotWater: {
 						hotWaterOutlets: { data: [], complete: true },
 						pipework: { data: [], complete: true },
-						heatSources: { data: [], complete: true },
-						waterStorage: { data: [], complete: true },
+						heatSources: { data: [heatPump], complete: true },
+						waterStorage: { data: [storageTank], complete: true },
 					},
 				});
 
@@ -738,7 +1262,7 @@ describe("domestic hot water mapper", () => {
 						wwhrs: true,
 						wwhrsType: "instantaneousSystemA",
 						wwhrsProductReference: "WW123",
-						dhwHeatSourceId: "dhwsource1",
+						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: false,
 					},
@@ -751,7 +1275,7 @@ describe("domestic hot water mapper", () => {
 						name: "shower2",
 						flowRate: 6,
 						wwhrs: false,
-						dhwHeatSourceId: "source2",
+						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: false,
 					},
@@ -767,20 +1291,20 @@ describe("domestic hot water mapper", () => {
 					},
 				};
 
-				const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
-					...baseForm,
-					data: {
-						id: "dhwsource1",
-						isExistingHeatSource: true,
-						heatSourceId: "source1",
-						coldWaterSource: "mainsWater",
-					},
-				};
+				// const hwSource1: EcaasForm<DomesticHotWaterHeatSourceData> = {
+				// 	...baseForm,
+				// 	data: {
+				// 		id: "dhwsource1",
+				// 		isExistingHeatSource: true,
+				// 		heatSourceId: "source1",
+				// 		coldWaterSource: "mainsWater",
+				// 	},
+				// };
 
 				const hwSource2: EcaasForm<DomesticHotWaterHeatSourceData> = {
 					...baseForm,
 					data: {
-						id: "source2",
+						id: heatSourceId,
 						isExistingHeatSource: false,
 						heatSourceId: "NEW_HEAT_SOURCE",
 						coldWaterSource: "mainsWater",
@@ -798,8 +1322,8 @@ describe("domestic hot water mapper", () => {
 							complete: true,
 						},
 						pipework: { data: [], complete: true },
-						heatSources: { data: [hwSource1, hwSource2], complete: true },
-						waterStorage: { data: [], complete: true },
+						heatSources: { data: [hwSource2], complete: true },
+						waterStorage: { data: [storageTank], complete: true },
 					},
 				});
 
@@ -810,7 +1334,7 @@ describe("domestic hot water mapper", () => {
 					ColdWaterSource: "mains water",
 					flowrate: 8,
 					allow_low_flowrate: false,
-					HotWaterSource: "source1",
+					HotWaterSource: "source2",
 					WWHRS: "WW123",
 					WWHRS_configuration: "A",
 				} as const satisfies SchemaMixerShower;

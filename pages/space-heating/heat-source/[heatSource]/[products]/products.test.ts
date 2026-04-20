@@ -2,28 +2,26 @@ import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
 import Products from "./index.vue";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
-import type { BoilerProduct, DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import type { BoilerProduct, DisplayProduct, HeatPumpProduct, PaginatedResult } from "~/pcdb/pcdb.types";
 
 describe("Heat source products page", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 	
-	const { mockFetch, mockRoute } = vi.hoisted(() => ({
+	const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
 		mockFetch: vi.fn(),
 		mockRoute: vi.fn(),
+		mockNavigateTo: vi.fn(),
 	}));
 
 	mockNuxtImport("useFetch", () => mockFetch);
 	mockNuxtImport("useRoute", () => mockRoute);
-
-	afterEach(() => {
-		mockFetch.mockReset();
-		mockRoute.mockReset();
-	});
+	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	const MOCKED_HEAT_PUMPS: PaginatedResult<DisplayProduct> = {
 		data: [
 			{
+				displayProduct: true,
 				id: "1000",
 				brandName: "Test",
 				modelName: "Small Heat Pump",
@@ -31,6 +29,7 @@ describe("Heat source products page", () => {
 				technologyType: "AirSourceHeatPump",
 			},
 			{
+				displayProduct: true,
 				id: "1001",
 				brandName: "Test",
 				modelName: "Medium Heat Pump",
@@ -38,6 +37,7 @@ describe("Heat source products page", () => {
 				technologyType: "AirSourceHeatPump",
 			},
 			{
+				displayProduct: true,
 				id: "1002",
 				brandName: "Test",
 				modelName: "Large Heat Pump",
@@ -45,6 +45,7 @@ describe("Heat source products page", () => {
 				technologyType: "AirSourceHeatPump",
 			},
 			{
+				displayProduct: true,
 				id: "1003",
 				brandName: "Test",
 				modelName: "Hybrid Heat Pump",
@@ -96,7 +97,10 @@ describe("Heat source products page", () => {
 		});
 	});
 
-	afterEach(async () => {
+	afterEach(() => {
+		mockFetch.mockReset();
+		mockRoute.mockReset();
+
 		store.$reset();
 	});
 
@@ -146,6 +150,7 @@ describe("Heat source products page", () => {
 		const mockedHeatInterfaceUnits: PaginatedResult<DisplayProduct> = {
 			data: [
 				{
+					displayProduct: true,
 					id: "1000",
 					brandName: "HEM Default",
 					modelName: "Heat Interface Unit",
@@ -179,6 +184,7 @@ describe("Heat source products page", () => {
 		const mockedCombiBoilers: PaginatedResult<DisplayProduct> = {
 			data: [
 				{
+					displayProduct: true,
 					id: "1000",
 					brandName: "HEM Default",
 					modelName: "Combi Boiler",
@@ -366,6 +372,7 @@ describe("Heat source products page", () => {
 
 		const exhaustAirHeatPumpProduct: PaginatedResult<DisplayProduct> = {
 			data: [{
+				displayProduct: true,
 				id: "1000",
 				brandName: "Test",
 				modelName: "Exhaust Air Heat Pump",
@@ -391,5 +398,155 @@ describe("Heat source products page", () => {
 
 		expect(mechanicalVentildationData.length).toBe(1);
 		expect(mechanicalVentildationData[0]?.data).toStrictEqual(expect.objectContaining(expectedData));
+	});
+
+	test("a hot water cylinder is created when a heat pump with vessel type 'Integral' is selected", async () => {
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [
+						{ data: heatSource1 },
+					],
+				},
+			},
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-pump",
+			},
+			path: "/0/heat-pump",
+		});
+
+		const heatPumpProduct: PaginatedResult<DisplayProduct> = {
+			data: [{
+				displayProduct: true,
+				id: "1000",
+				brandName: "Test",
+				modelName: "Heat Pump",
+				technologyType: "AirSourceHeatPump",
+				vesselType: "Integral",
+			}],
+		};
+
+		const heatPumpDetails: Partial<HeatPumpProduct> = {
+			id: "1000",
+			brandName: "Test",
+			modelName: "Heat Pump",
+			technologyType: "AirSourceHeatPump",
+			vesselType: "Integral",
+			tankVolumeDeclared: 20,
+			dailyLossesDeclared: 10,
+		};
+
+		mockFetch.mockReturnValueOnce({
+			data: ref(heatPumpProduct),
+		}).mockReturnValueOnce({
+			data: ref(heatPumpDetails),
+		});
+
+		await renderSuspended(Products);
+
+		await user.click(screen.getByTestId("selectProductButton_0"));
+
+		const waterStorageData = store.domesticHotWater.waterStorage.data;
+		const expectedCylinderData: Partial<WaterStorageData> = {
+			name: "Hot water cylinder",
+			typeOfWaterStorage: "hotWaterCylinder",
+			packagedProductReference: "1000",
+			storageCylinderVolume: unitValue(20, "litres"),
+			dailyEnergyLoss: 10,
+		};
+
+		const hotWaterHeatSources = store.domesticHotWater.heatSources.data;
+		const expectedHotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: true,
+			heatSourceId: heatSource1.id,
+		};
+
+		expect(hotWaterHeatSources.length).toBe(1);
+		expect(hotWaterHeatSources[0]?.data).toEqual(expect.objectContaining(expectedHotWaterHeatPump));
+
+		expect(waterStorageData.length).toBe(1);
+		expect(waterStorageData[0]?.data).toStrictEqual(expect.objectContaining(expectedCylinderData));
+	});
+
+	test("selecting a heat pump with cylinder should throw an error and redirect to the space heating form", async () => {
+		const heatPump: Partial<HeatSourceData> = {
+			id: "463c94f6-566c-49b2-af27-222222222",
+			name: "Heat source 1",
+			typeOfHeatSource: "heatPump",
+		};
+
+		const hotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+			id: "c4f9f615-4ee8-49f0-b3bd-a48fc359dc24",
+			isExistingHeatSource: true,
+			createdAutomatically: true,
+			heatSourceId: heatSource1.id,
+		};
+
+		const cylinderData: Partial<WaterStorageData> = {
+			id: "5e267b2a-e3d6-4cfc-a776-30516527be4e",
+			name: "Hot water cylinder",
+			typeOfWaterStorage: "hotWaterCylinder",
+			packagedProductReference: "1000",
+			storageCylinderVolume: unitValue(20, "litres"),
+			dailyEnergyLoss: 10,
+		};
+
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [
+						{ data: heatPump },
+					],
+				},
+			},
+			domesticHotWater: {
+				heatSources: {
+					data: [
+						{ data: hotWaterHeatPump },
+					],
+				},
+				waterStorage: {
+					data: [
+						{ data: cylinderData },
+					],
+				},
+			},
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-pump",
+			},
+			path: "/0/heat-pump",
+		});
+
+		const heatPumpProduct: PaginatedResult<DisplayProduct> = {
+			data: [{
+				displayProduct: true,
+				id: "1000",
+				brandName: "Test",
+				modelName: "Heat Pump",
+				technologyType: "AirSourceHeatPump",
+				vesselType: "Integral",
+			}],
+		};
+
+		mockFetch.mockReturnValue({
+			data: ref(heatPumpProduct),
+		});
+
+		await renderSuspended(Products);
+
+		await user.click(screen.getByTestId("selectProductButton_0"));
+
+		expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-source/0?error=DHW_HEAT_SOURCE_CONFLICT");
+		expect(store.spaceHeating.heatSource.data[0]?.data.productReference).toBeUndefined();
+		expect(store.domesticHotWater.heatSources.data.length).toBe(1);
+		expect(store.domesticHotWater.waterStorage.data.length).toBe(1);
 	});
 });

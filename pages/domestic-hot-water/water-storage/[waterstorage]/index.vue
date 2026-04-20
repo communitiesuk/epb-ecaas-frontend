@@ -3,7 +3,8 @@ import { litre, type Volume } from "~/utils/units/volume";
 import type { WaterStorageData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
 import { v4 as uuidv4 } from "uuid";
-import { waterStorageTypes } from "#imports";
+import { hasPackagedProduct, waterStorageTypes } from "#imports";
+import type { Product } from "~/pcdb/pcdb.types";
 
 const title = "Water storage";
 const store = useEcaasStore();
@@ -16,6 +17,13 @@ const index = getStoreIndex(waterStorageStoreData);
 const waterStorageData = waterStorageStoreData[index] as EcaasForm<WaterStorageData>;
 const model = ref(waterStorageData?.data);
 const id = waterStorageData?.data.id ?? uuidv4();
+
+const packagedProduct = ref<Product | undefined>();
+
+if (hasPackagedProduct(model.value)) {
+	const packagedProductData = await useProductData(model.value.packagedProductReference!);
+	packagedProduct.value = packagedProductData ?? undefined;
+}
 
 const saveForm = (fields: WaterStorageData) => {
 	store.$patch((state) => {
@@ -138,6 +146,12 @@ const heatSourceTypes = new Map(
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<PackagedProductInset
+		v-if="hasPackagedProduct(model) && packagedProduct"
+		:model="model"
+		:packaged-product="packagedProduct"
+		type="hot water cylinder"
+	/>
 	<FormKit
 		v-model="model"
 		type="form"
@@ -146,14 +160,17 @@ const heatSourceTypes = new Map(
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="waterStorageErrorSummary"/>
-		<FormKit
-			id="typeOfWaterStorage"
-			name="typeOfWaterStorage"
-			type="govRadios"
-			:options="waterStorageTypes"
-			label="Type of water storage"
-			validation="required"
-		/>
+		<ClientOnly>
+			<FormKit
+				id="typeOfWaterStorage"
+				name="typeOfWaterStorage"
+				type="govRadios"
+				:options="waterStorageTypes"
+				label="Type of water storage"
+				validation="required"
+				:disabled="hasPackagedProduct(model)"
+			/>
+		</ClientOnly>
 		<FormKit
 			v-if="model.typeOfWaterStorage !== undefined"
 			id="name"
@@ -191,6 +208,7 @@ const heatSourceTypes = new Map(
 				withinMinAndMaxVolume: `Storage cylinder volume must be at least 0 and no more than 200,000 ${litre.name}.`,
 			}"
 			data-field="HotWaterSource['hw cylinder'].volume"
+			:disabled="hasPackagedProduct(model)"
 		/>
 		<FormKit
 			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
@@ -202,6 +220,7 @@ const heatSourceTypes = new Map(
 			validation="required | number | min:0 | max:200"
 			suffix-text="kWh"
 			data-field="HotWaterSource['hw cylinder'].daily_losses"
+			:disabled="hasPackagedProduct(model)"
 		/>
 		<FormKit
 			v-if="model.typeOfWaterStorage !== undefined"
@@ -212,6 +231,7 @@ const heatSourceTypes = new Map(
 			help="Select the relevant heat source that has been added previously"
 			validation="required"
 			:options="heatSourceOptions"
+			:disabled="hasPackagedProduct(model)"
 		>			
 			<div
 				v-if="!heatSourceOptions.size"
@@ -231,6 +251,7 @@ const heatSourceTypes = new Map(
 			suffix-text="m²"
 			name="areaOfHeatExchanger"
 			validation="number"
+			:disabled="hasPackagedProduct(model)"
 		/>
 		<FormKit
 			v-if="model.typeOfWaterStorage !== undefined"

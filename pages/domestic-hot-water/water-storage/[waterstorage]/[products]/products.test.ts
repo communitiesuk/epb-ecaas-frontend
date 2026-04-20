@@ -23,6 +23,7 @@ describe("Heat source products page", () => {
 	const MOCKED_SHWTS: PaginatedResult<DisplayProduct> = {
 		data: [
 			{
+				displayProduct: true,
 				id: "42",
 				brandName: "Test",
 				modelName: "Large Smart Hot Water Tank",
@@ -30,6 +31,7 @@ describe("Heat source products page", () => {
 				technologyType: "SmartHotWaterTank",
 			},
 			{
+				displayProduct: true,
 				id: "43",
 				brandName: "Test",
 				modelName: "Medium Smart Hot Water Tank",

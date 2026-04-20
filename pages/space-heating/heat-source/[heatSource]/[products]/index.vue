@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useSelectHeatSourceProduct } from "~/composables/selectProduct";
 import { page } from "~/data/pages/pages";
+import { EcaasError } from "~/errors.types";
 import { technologyGroups, type DisplayProduct, type TechnologyGroup } from "~/pcdb/pcdb.types";
 import { productTypeMap, type EcaasForm, type HeatSourceData, type HeatSourceProductType } from "~/stores/ecaasStore.schema";
 
@@ -27,13 +28,21 @@ const { selectHeatSourceProduct } = useSelectHeatSourceProduct(value?.data ?? []
 const { pagination } = searchData(value?.data ?? []);
 
 const selectProduct = async (product: DisplayProduct) => {
-	await selectHeatSourceProduct(
-		{ ...product, id: product.id.toString() },
-		(state) => state.spaceHeating.heatSource.data as EcaasForm<HeatSourceData>[],
-		index,
-	);
+	const redirectUrl = page("heatSource").url.replace(":heatSource", `${index}`);
 
-	navigateTo(page("heatSource").url.replace(":heatSource", `${index}`));
+	try {
+		await selectHeatSourceProduct(
+			{ ...product, id: product.id.toString() },
+			(state) => state.spaceHeating.heatSource.data as EcaasForm<HeatSourceData>[],
+			index,
+		);
+
+		navigateTo(redirectUrl);
+	} catch (error) {
+		if (error instanceof EcaasError && error.name === "DHW_HEAT_SOURCE_CONFLICT") {
+			navigateTo(`${redirectUrl}?error=${error.name}`);
+		}
+	}
 };
 </script>
 

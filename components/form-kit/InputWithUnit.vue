@@ -10,7 +10,7 @@ const props = defineProps<{
 
 const {
 	id,
-	node: { name },
+	node: { name, props: { disabled } },
 	attrs: { unit },
 	label,
 	help,
@@ -69,6 +69,7 @@ function handleBlur(e: FocusEvent) {
 				:data-testId="id"
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 				v-bind="props.context.attrs"
+				:disabled="!!disabled"
 				@input="handleTyping"
 				@change="handleInput"
 				@blur="handleBlur"

@@ -4,6 +4,7 @@ import { useMechanicalVentilation } from "./mechanicalVentilation";
 export function useDomesticHotWater() {
 	const store = useEcaasStore();
 	const { removeMechanicalVents } = useMechanicalVentilation();
+	const { removeWaterStorage } = useWaterStorage();
 
 	type DomesticHotWaterType = keyof typeof store.domesticHotWater;
 	type DomesticHotWaterData = EcaasForm<DomesticHotWaterHeatSourceData> & EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData>;
@@ -55,10 +56,10 @@ export function useDomesticHotWater() {
 			}
 
 			if (domesticHotWaterType === "heatSources" && item && isPackagedProduct(item.data)) {
-				const { packageProductId } = item.data;
+				const { packageProductIds } = item.data;
 
 				if (item.data.typeOfHeatPump === "hybridHeatPump") {
-					removeHybridHeatPumpBoilers(packageProductId!);
+					removeHybridHeatPumpBoilers(packageProductIds![0]!);
 					return;
 				}
 
@@ -66,9 +67,10 @@ export function useDomesticHotWater() {
 					item.data.typeOfHeatPump === "exhaustAirMixed" ||
 					item.data.typeOfHeatPump === "exhaustAirMvhr"
 				) {
-					removeMechanicalVents(packageProductId!);
-					return;
+					removeMechanicalVents(packageProductIds!);
 				}
+
+				removeWaterStorage(packageProductIds!);
 			}
 		}
 	};

@@ -23,6 +23,7 @@ describe("Mechanical ventilation products page", () => {
 	const mockedMvhrs: PaginatedResult<DisplayProduct> = {
 		data: [
 			{
+				displayProduct: true,
 				id: "1000",
 				brandName: "Test",
 				modelName: "MVHR",

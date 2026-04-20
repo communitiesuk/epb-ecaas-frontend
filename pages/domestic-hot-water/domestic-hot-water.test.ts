@@ -3,7 +3,7 @@ import DomesticHotWater from "@/pages/domestic-hot-water/index.vue";
 import { screen, within } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import formStatus from "~/constants/formStatus";
-import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
 import HotWaterOutlets from "./hot-water-outlets/[outlet]/index.vue";
 import { litre } from "~/utils/units/volume";
 import { celsius } from "~/utils/units/temperature";
@@ -683,7 +683,7 @@ describe("Domestic hot water", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
-				packageProductId: "171a20a4-e775-4e51-873c-f1fc536076b1",
+				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
 			};
 
 			const boiler: HeatSourceData = {
@@ -703,7 +703,10 @@ describe("Domestic hot water", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "exhaustAirMvhr",
 				productReference: "1000",
-				packageProductId: "9e66d667-6c31-4406-9223-7e2249a7fee3",
+				packageProductIds: [
+					"9e66d667-6c31-4406-9223-7e2249a7fee3",
+					"f6182db2-42e2-4d7e-beb8-de6f9a8f2be9",
+				],
 			};
 
 			const mvhr: Partial<MechanicalVentilationData> = {
@@ -711,6 +714,13 @@ describe("Domestic hot water", () => {
 				name: "Exhaust air MVHR HP",
 				productReference: "1000",
 				typeOfMechanicalVentilationOptions: "MVHR",
+				packagedProductReference: "1000",
+			};
+
+			const hotWaterCylinder: Partial<WaterStorageData> = {
+				id: "f6182db2-42e2-4d7e-beb8-de6f9a8f2be9",
+				name: "Hot water cylinder HP",
+				typeOfWaterStorage: "hotWaterCylinder",
 				packagedProductReference: "1000",
 			};
 
@@ -725,16 +735,18 @@ describe("Domestic hot water", () => {
 						},
 					},
 				});
-
-				await renderSuspended(DomesticHotWater);
 			});
 
 			it("removes heat sources which are packaged with the removed item", async () => {
+				await renderSuspended(DomesticHotWater);
+
 				await user.click(await screen.findByTestId("heatSources_remove_0"));
 				expect(store.domesticHotWater.heatSources.data.length).toBe(0);
 			});
 
 			it("only displays an 'edit' action if heat source is packaged with a heat pump", async () => {
+				await renderSuspended(DomesticHotWater);
+
 				const boilerEditButton = screen.getByTestId("heatSources_edit_1");
 				const boilerDeleteButton = screen.queryByTestId("heatSources_remove_1");
 
@@ -742,12 +754,74 @@ describe("Domestic hot water", () => {
 				expect(boilerDeleteButton).toBeNull();
 			});
 
-			it("removes mechanical vent which is packaged with the removed exhaust air heat pump", async () => {
+			it("only displayed an 'edit' action if heat source references an existing heat source which is comes with a hot water cylinder", async () => {
+				const heatPumpWithCylinder: HeatSourceData = {
+					...heatPump,
+					packageProductIds: ["c84528bb-f805-4f1e-95d3-2bd1717deca1"],
+				};
+
+				const existingHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+					id: "aed8bb17-9359-42c6-bda6-8ba551f1df2a",
+					isExistingHeatSource: true,
+					createdAutomatically: true,
+					heatSourceId: heatPump.id,
+				};
+
+				const hotWaterCylinder: HotWaterCylinderData = {
+					name: "Hot water cylinder 1",
+					id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
+					typeOfWaterStorage: "hotWaterCylinder",
+					storageCylinderVolume: unitValue(5, litre),
+					dailyEnergyLoss: 1,
+					dhwHeatSourceId: heatPump.id,
+					areaOfHeatExchanger: 1000,
+					heaterPosition: 0.8,
+					thermostatPosition: 0.5,
+					packagedProductReference: heatPump.productReference,
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: heatPumpWithCylinder },
+							],
+						},
+					},
+					domesticHotWater: {
+						heatSources: {
+							data: [
+								{ data: existingHeatPump },
+							],
+						},
+						waterStorage: {
+							data: [
+								{ data: hotWaterCylinder },
+							],
+						},
+					},
+				});
+
+				await renderSuspended(DomesticHotWater);
+
+				const heatPumpEditButton = screen.getByTestId("heatSources_edit_0");
+				const heatSourcesDeleteButton = screen.queryByTestId("heatSources_remove_0");
+
+				expect(heatPumpEditButton).toBeDefined();
+				expect(heatSourcesDeleteButton).toBeNull();
+			});
+
+			it("removes mechanical vent and hot water cylinder packaged with the removed heat pump", async () => {
 				store.$patch({
 					domesticHotWater: {
 						heatSources: {
 							data: [
 								{ data: exhaustAirHeatPump, complete: true },
+							],
+						},
+						waterStorage: {
+							data: [
+								{ data: hotWaterCylinder },
 							],
 						},
 					},
@@ -765,6 +839,7 @@ describe("Domestic hot water", () => {
 				await user.click(await screen.findByTestId("heatSources_remove_0"));
 
 				expect(store.domesticHotWater.heatSources.data.length).toBe(0);
+				expect(store.domesticHotWater.waterStorage.data.length).toBe(0);
 				expect(store.infiltrationAndVentilation.mechanicalVentilation.data.length).toBe(0);
 			});
 		});
@@ -954,7 +1029,7 @@ describe("Domestic hot water", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
-				packageProductId: "171a20a4-e775-4e51-873c-f1fc536076b1",
+				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
 			};
 
 			const boiler: HeatSourceData = {
