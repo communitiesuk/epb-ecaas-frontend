@@ -5531,7 +5531,8 @@
 								],
 								"properties": {
 									"EnergySupply": {
-										"type": "string"
+										"type": "string",
+										"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 									},
 									"product_reference": {
 										"description": "A unique reference to a product held within the HEM database (PCDB)",
@@ -5551,27 +5552,33 @@
 								],
 								"properties": {
 									"EnergySupply": {
-										"type": "string"
+										"type": "string",
+										"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 									},
 									"power_max": {
 										"type": "number",
-										"exclusiveMinimum": 0
+										"exclusiveMinimum": 0,
+										"description": "(unit: kW)"
 									},
 									"tank_volume_declared": {
 										"type": "number",
-										"exclusiveMinimum": 0
+										"exclusiveMinimum": 0,
+										"description": "Tank volume stored in the database (unit: litres)"
 									},
 									"heat_exchanger_surface_area_declared": {
 										"type": "number",
-										"exclusiveMinimum": 0
+										"exclusiveMinimum": 0,
+										"description": "Surface area of heat exchanger stored in the database (unit: m2)"
 									},
 									"daily_losses_declared": {
 										"type": "number",
-										"exclusiveMinimum": 0
+										"exclusiveMinimum": 0,
+										"description": "Standing heat loss (unit: kWh/day)"
 									},
 									"in_use_factor_mismatch": {
 										"type": "number",
-										"exclusiveMinimum": 0
+										"exclusiveMinimum": 0,
+										"description": "In use factor to be applied to heat pump efficiency"
 									},
 									"test_data": {
 										"type": "object",
@@ -5590,27 +5597,33 @@
 												"properties": {
 													"cop_dhw": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "CoP measured during EN 16147 test"
 													},
 													"hw_tapping_prof_daily_total": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Daily energy requirement for tapping profile used for test (unit: kWh/day)"
 													},
 													"energy_input_measured": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Electrical input energy measured in EN 16147 test over 24 hrs (unit: kWh)"
 													},
 													"power_standby": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Standby power measured in EN 16147 test (unit: kW)"
 													},
 													"hw_vessel_loss_daily": {
 														"type": "number",
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Daily hot water vessel heat loss for a 45 K temperature difference between vessel and surroundings, tested in accordance with BS 1566 or EN 12897 or any equivalent standard. Vessel must be same as that used during EN 16147 test (unit: kWh/day)"
 													}
 												}
 											}
-										}
+										},
+										"description": "Dictionary with keys denoting tapping profile letter (M or L)"
 									}
 								}
 							}
