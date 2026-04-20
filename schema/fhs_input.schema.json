@@ -5671,10 +5671,12 @@
 							"power": {
 								"type": "number",
 								"minimum": 1,
-								"maximum": 10
+								"maximum": 10,
+								"description": "(unit: kW)"
 							},
 							"EnergySupply": {
-								"type": "string"
+								"type": "string",
+								"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 							}
 						}
 					}
