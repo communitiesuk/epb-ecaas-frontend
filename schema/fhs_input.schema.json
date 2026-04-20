@@ -3869,7 +3869,8 @@
 						],
 						"items": {
 							"type": "string"
-						}
+						},
+						"description": "Heating system details of the zone. References a key in $.SpaceHeatSystem"
 					},
 					"SpaceCoolSystem": {
 						"type": [
@@ -3878,7 +3879,8 @@
 						],
 						"items": {
 							"type": "string"
-						}
+						},
+						"description": "Cooling system details of the zone. References a key in $.SpaceCoolSystem"
 					},
 					"livingroom_area": {
 						"type": "number",
@@ -3893,7 +3895,8 @@
 					"volume": {
 						"type": "number",
 						"minimum": 0,
-						"maximum": 50000
+						"maximum": 50000,
+						"description": "Total volume of the zone. (Unit: m\u00b3)"
 					},
 					"Lighting": {
 						"type": "object",
@@ -3950,12 +3953,14 @@
 								"thermal_resistance_construction": {
 									"type": "number",
 									"minimum": 0.01,
-									"maximum": 50
+									"maximum": 50,
+									"description": "Thermal resistance (m\u00b2.K/W), must be positive if provided"
 								},
 								"u_value": {
 									"type": "number",
 									"minimum": 0.01,
-									"maximum": 10
+									"maximum": 10,
+									"description": "U-value (W/m\u00b2\u00b7K), must be positive if provided"
 								}
 							},
 							"oneOf": [
@@ -4004,7 +4009,8 @@
 											"pitch": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 180
+												"maximum": 180,
+												"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
 											},
 											"areal_heat_capacity": {
 												"enum": [
@@ -4021,7 +4027,8 @@
 											"area": {
 												"type": "number",
 												"minimum": 0.01,
-												"maximum": 10000
+												"maximum": 10000,
+												"description": "Area of the building element (m\u00b2), must be positive"
 											}
 										}
 									}
@@ -4035,6 +4042,7 @@
 										}
 									},
 									"then": {
+											"description": "Adjacent unconditioned space building elements",
 										"required": [
 											"thermal_resistance_unconditioned_space"
 										],
@@ -4042,7 +4050,8 @@
 											"thermal_resistance_unconditioned_space": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 3
+												"maximum": 3,
+												"description": "Effective thermal resistance of unheated space (unit: m\u00b2.K/W)"
 											}
 										}
 									}
@@ -4071,7 +4080,8 @@
 										"properties": {
 											"total_area": {
 												"type": "number",
-												"minimum": 5
+												"minimum": 5,
+												"description": "Total area of the building element across entire dwelling (unit: m\u00b2)"
 											},
 											"floor_type": {
 												"enum": [
@@ -4085,22 +4095,26 @@
 											"thickness_walls": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 100
+												"maximum": 100,
+												"description": "Thickness of the walls (unit: m)"
 											},
 											"perimeter": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 1000
+												"maximum": 1000,
+												"description": "Perimeter of the floor (unit: m)"
 											},
 											"psi_wall_floor_junc": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 2
+												"maximum": 2,
+												"description": "Linear thermal transmittance of the junction between the floor and the walls (unit: W/m.K)"
 											},
 											"thermal_resistance_floor_construction": {
 												"type": "number",
 												"minimum": 0.000001,
-												"maximum": 50
+												"maximum": 50,
+												"description": "Total thermal resistance of all layers in the floor construction, excluding surface resistances (unit: m\u00b2.K/W)"
 											},
 											"areal_heat_capacity": {
 												"enum": [
@@ -4130,6 +4144,7 @@
 													}
 												},
 												"then": {
+														"description": "Slab floor with edge insulation",
 													"required": [
 														"edge_insulation"
 													],
@@ -4152,7 +4167,8 @@
 																	},
 																	"edge_thermal_resistance": {
 																		"type": "number",
-																		"exclusiveMinimum": 0
+																		"exclusiveMinimum": 0,
+																		"description": "Thermal resistance of floor edge insulation (unit: m\u00b2K/W)"
 																	}
 																},
 																"allOf": [
@@ -4213,6 +4229,7 @@
 													}
 												},
 												"then": {
+													"description": "Suspended floor",
 													"required": [
 														"height_upper_surface",
 														"thermal_transm_walls",
@@ -4225,32 +4242,38 @@
 														"height_upper_surface": {
 															"type": "number",
 															"minimum": 0,
-															"maximum": 100
+															"maximum": 100,
+															"description": "Height of the floor upper surface (unit: m) - average value is used if h varies"
 														},
 														"thermal_transm_walls": {
 															"type": "number",
 															"minimum": 0,
-															"maximum": 100
+															"maximum": 100,
+															"description": "Thermal transmittance of walls above ground in accordance with ISO 6946, i.e. including surface resistances (unit: W/m\u00b2.K)"
 														},
 														"area_per_perimeter_vent": {
-															"type": "number"
+															"type": "number",
+															"description": "Area of ventilation openings per perimeter (unit: m\u00b2/m)"
 														},
 														"shield_fact_location": {
 															"enum": [
 																"Sheltered",
 																"Average",
 																"Exposed"
-															]
+															],
+															"description": "Wind shielding factor"
 														},
 														"thickness_walls": {
 															"type": "number",
 															"minimum": 0,
-															"maximum": 100
+															"maximum": 100,
+															"description": "Thickness of the walls (unit: m)"
 														},
 														"thermal_resist_insul": {
 															"type": "number",
 															"minimum": 0,
-															"maximum": 100
+															"maximum": 100,
+															"description": "Thermal resistance of insulation on base of underfloor space, excluding surface resistances (unit: m\u00b2.K/W)"
 														}
 													}
 												}
@@ -4284,14 +4307,17 @@
 														"thickness_walls": {
 															"type": "number",
 															"minimum": 0,
-															"maximum": 100
+															"maximum": 100,
+															"description": "Thickness of the walls (unit: m)"
 														},
 														"depth_basement_floor": {
 															"type": "number",
-															"exclusiveMinimum": 0
+															"exclusiveMinimum": 0,
+															"description": "Depth of basement floor below ground level (unit: m)"
 														},
 														"thermal_resist_walls_base": {
-															"type": "number"
+															"type": "number",
+															"description": "Thermal resistance of walls of the basement, excluding surface resistances (unit: m\u00b2.K/W)"
 														}
 													}
 												}
@@ -4305,6 +4331,7 @@
 													}
 												},
 												"then": {
+													"description": "Unheated basement",
 													"required": [
 														"thermal_transm_envi_base",
 														"thermal_transm_walls",
@@ -4312,13 +4339,16 @@
 													],
 													"properties": {
 														"thermal_transm_envi_base": {
-															"type": "number"
+															"type": "number",
+															"description": "Thermal transmittance of floor above basement in accordance with ISO 6946, i.e. including surface resistances (unit: W/m\u00b2.K)"
 														},
 														"thermal_transm_walls": {
-															"type": "number"
+															"type": "number",
+															"description": "Thermal transmittance of walls above ground in accordance with ISO 6946, i.e. including surface resistances (unit: W/m\u00b2.K)"
 														},
 														"height_basement_walls": {
-															"type": "number"
+															"type": "number",
+															"description": "Height of the basement walls above ground level (unit: m)"
 														}
 													}
 												}
@@ -4335,6 +4365,7 @@
 										}
 									},
 									"then": {
+											"description": "Opaque building elements (walls, roofs, etc.)",
 										"required": [
 											"areal_heat_capacity",
 											"mass_distribution_class",
@@ -4348,7 +4379,8 @@
 											"pitch": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 180
+												"maximum": 180,
+												"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
 											},
 											"is_unheated_pitched_roof": {
 												"type": "boolean"
@@ -4378,22 +4410,26 @@
 											"base_height": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 500
+												"maximum": 500,
+												"description": "The distance between the ground and the lowest edge of the element (unit: m)"
 											},
 											"height": {
 												"type": "number",
 												"minimum": 0.001,
-												"maximum": 50
+												"maximum": 50,
+												"description": "Height of the building element (m), must be positive"
 											},
 											"width": {
 												"type": "number",
 												"minimum": 0.001,
-												"maximum": 100
+												"maximum": 100,
+												"description": "Width of the building element (m), must be positive"
 											},
 											"area": {
 												"type": "number",
 												"minimum": 0.01,
-												"maximum": 10000
+												"maximum": 10000,
+												"description": "Area of the building element (m\u00b2), must be positive"
 											}
 										},
 										"allOf": [
@@ -4477,6 +4513,7 @@
 										}
 									},
 									"then": {
+											"description": "Party wall element for all party wall types, with specific handling for cavity air movement heat loss.\n\nFor cavity party walls, this accounts for non-negligible heat loss due to air movement\nwithin the cavity, as identified by research. The thermal resistance of the\nunconditioned space (cavity) is derived from the party wall cavity type and lining type.\nFive cavity types are supported:\nsolid, unfilled_unsealed, unfilled_sealed, filled_sealed, and defined_resistance.\nTwo lining types are supported:\nwet_plaster, and dry_lined",
 										"required": [
 											"area",
 											"areal_heat_capacity",
@@ -4589,6 +4626,7 @@
 										}
 									},
 									"then": {
+											"description": "Transparent building elements (windows, glazing)",
 										"required": [
 											"frame_area_fraction",
 											"g_value",
@@ -4607,32 +4645,38 @@
 											"pitch": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 180
+												"maximum": 180,
+												"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
 											},
 											"frame_area_fraction": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 1
+												"maximum": 1,
+												"description": "The frame area fraction of window, ratio of the projected frame area to the overall projected area of the glazed element of the window"
 											},
 											"g_value": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 1
+												"maximum": 1,
+												"description": "Total solar energy transmittance of the transparent part of the window"
 											},
 											"free_area_height": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 100
+												"maximum": 100,
+												"description": "Height of the openable area, corrected for obstruction due to the window frame of the openable section (unit: m)"
 											},
 											"mid_height": {
 												"type": "number",
 												"exclusiveMinimum": 0,
-												"maximum": 100
+												"maximum": 100,
+												"description": "Height of the mid-point of the window, relative to the base of the ventilation zone (unit: m)"
 											},
 											"max_window_open_area": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 100
+												"maximum": 100,
+												"description": "Openable area of the window ignoring the obstructing effect of the frame of the openable part"
 											},
 											"security_risk": {
 												"type": "boolean"
@@ -4649,7 +4693,8 @@
 														"mid_height_air_flow_path": {
 															"type": "number",
 															"minimum": 0,
-															"maximum": 100
+															"maximum": 100,
+															"description": "(unit: m)"
 														}
 													}
 												}
@@ -4684,12 +4729,14 @@
 														"delta_r": {
 															"type": "number",
 															"exclusiveMinimum": 0,
-															"maximum": 100
+															"maximum": 100,
+															"description": "Additional thermal resistance provided by a window treatment (unit: m\u00b2K/W)"
 														},
 														"trans_red": {
 															"type": "number",
 															"minimum": 0,
-															"maximum": 1
+															"maximum": 1,
+															"description": "Dimensionless factor describing the reduction in the amount of transmitted radiation due to a window treatment"
 														}
 													}
 												}
@@ -4697,17 +4744,20 @@
 											"base_height": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 500
+												"maximum": 500,
+												"description": "The distance between the ground and the lowest edge of the element (unit: m)"
 											},
 											"height": {
 												"type": "number",
 												"minimum": 0.001,
-												"maximum": 50
+												"maximum": 50,
+												"description": "Height of the building element (m), must be positive"
 											},
 											"width": {
 												"type": "number",
 												"minimum": 0.001,
-												"maximum": 100
+												"maximum": 100,
+												"description": "Width of the building element (m), must be positive"
 											}
 										},
 										"if": {
@@ -4746,7 +4796,8 @@
 									}
 								}
 							]
-						}
+						},
+						"description": "Dictionary of building elements present in the zone (e.g. walls, floors, windows, etc.)."
 					},
 					"ThermalBridging": {
 						"type": [
@@ -4784,12 +4835,14 @@
 										],
 										"properties": {
 											"linear_thermal_transmittance": {
-												"type": "number"
+												"type": "number",
+												"description": "Linear thermal transmittance of the thermal bridge. (Unit: W/m.K)"
 											},
 											"length": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 10000
+												"maximum": 10000,
+												"description": "Length of the thermal bridge over which the linear thermal transmittance applies. (Unit: m)"
 											},
 											"junction_type": {
 												"enum": [
@@ -4858,13 +4911,15 @@
 											"heat_transfer_coeff": {
 												"type": "number",
 												"minimum": 0,
-												"maximum": 2
+												"maximum": 2,
+												"description": "Heat transfer coefficient of the thermal bridge. (Unit: W/K)"
 											}
 										}
 									}
 								}
 							]
-						}
+						},
+						"description": "Overall heat transfer coefficient of the thermal bridge (in W/K), or dictionary of linear thermal transmittance details of the thermal bridges in the zone."
 					}
 				}
 			},
@@ -5381,7 +5436,8 @@
 					},
 					"distance": {
 						"type": "number",
-						"minimum": 0
+						"minimum": 0,
+						"description": "(unit: m)"
 					}
 				},
 				"if": {
@@ -5399,7 +5455,8 @@
 					"properties": {
 						"height": {
 							"type": "number",
-							"exclusiveMinimum": 0
+							"exclusiveMinimum": 0,
+							"description": "(unit: m)"
 						},
 						"transparency": {
 							"type": "number",
@@ -5415,7 +5472,8 @@
 					"properties": {
 						"depth": {
 							"type": "number",
-							"exclusiveMinimum": 0
+							"exclusiveMinimum": 0,
+							"description": "(unit: m)"
 						}
 					}
 				}
