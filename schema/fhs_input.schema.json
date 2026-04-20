@@ -2080,7 +2080,8 @@
 								"enum": [
 									"header tank",
 									"mains water"
-								]
+								],
+								"description": "References a key (e.g., \"mains water\") in $.ColdWaterSource"
 							}
 						},
 						"required": [
@@ -2103,7 +2104,8 @@
 								"enum": [
 									"header tank",
 									"mains water"
-								]
+								],
+								"description": "References a key (e.g., \"mains water\") in $.ColdWaterSource"
 							},
 							"flow_rates": {
 								"type": "array",
@@ -2111,7 +2113,8 @@
 									"type": "number",
 									"minimum": 0.1,
 									"maximum": 500
-								}
+								},
+								"description": "Test flow rates in litres per minute (e.g., [5, 7, 9, 11, 13])",
 							},
 							"system_a_efficiencies": {
 								"type": "array",
