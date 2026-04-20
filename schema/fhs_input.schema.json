@@ -5648,7 +5648,8 @@
 							},
 							"temp_flow_limit_upper": {
 								"type": "number",
-								"exclusiveMinimum": 0
+								"exclusiveMinimum": 0,
+								"description": "Upper operating limit for flow temperature (unit: \u00b0C). Optional."
 							}
 						}
 					}
