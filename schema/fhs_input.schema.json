@@ -1892,7 +1892,8 @@
 								"enum": [
 									"header tank",
 									"mains water"
-								]
+								],
+								"description": "References a key (e.g., \"mains water\") in $.ColdWaterSource"
 							}
 						},
 						"if": {
@@ -1927,17 +1928,20 @@
 										},
 										"allow_low_flowrate": {"type": "boolean"},
 										"HotWaterSource": {
-											"type": "string"
+											"type": "string",
+											"description": "Reference to HotWaterSource object that provides hot water to this shower."
 										},
 										"WWHRS": {
-											"type": "string"
+											"type": "string",
+											"description": "Reference to a key in Input.WWHRS"
 										},
 										"WWHRS_configuration": {
 											"enum": [
 												"A",
 												"B",
 												"C"
-											]
+											],
+											"description": "WWHRS system configuration for this shower connection"
 										}
 									},
 									"allOf": [
@@ -1950,7 +1954,8 @@
 											"then": {
 												"properties": {
 													"flowrate": {
-														"exclusiveMinimum": 0
+														"exclusiveMinimum": 0,
+														"description": "Shower flow rate (unit: litre/minute)"
 													}
 												}
 											}
@@ -1982,10 +1987,12 @@
 								"rated_power": {
 									"type": "number",
 									"exclusiveMinimum": 0,
-									"maximum": 30
+									"maximum": 30,
+									"description": "Shower's rated electrical power (unit: kW)"
 								},
 								"EnergySupply": {
-									"type": "string"
+									"type": "string",
+									"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 								}
 							}
 						}
@@ -2003,16 +2010,19 @@
 						"properties": {
 							"size": {
 								"type": "number",
-								"exclusiveMinimum": 0
+								"exclusiveMinimum": 0,
+								"description": "Volume held by bath (unit: litre)"
 							},
 							"ColdWaterSource": {
 								"enum": [
 									"header tank",
 									"mains water"
-								]
+								],
+								"description": "References a key (e.g., \"mains water\") in $.ColdWaterSource"
 							},
 							"HotWaterSource": {
-								"type": "string"
+								"type": "string",
+								"description": "Reference to HotWaterSource object that provides hot water to this bath."
 							}
 						}
 					}
@@ -2030,16 +2040,19 @@
 							"flowrate": {
 								"type": "number",
 								"minimum": 0.1,
-								"maximum": 15
+								"maximum": 15,
+								"description": "Tap/outlet flow rate (unit: litre/minute)"
 							},
 							"ColdWaterSource": {
 								"enum": [
 									"header tank",
 									"mains water"
-								]
+								],
+								"description": "References a key (e.g., \"mains water\") in $.ColdWaterSource"
 							},
 							"HotWaterSource": {
-								"type": "string"
+								"type": "string",
+								"description": "Reference to HotWaterSource object that provides hot water to this tapping point."
 							}
 						}
 					},
