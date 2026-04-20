@@ -12,23 +12,23 @@ defineProps<{
 const arealHeatCapacityOptions = {
 	"Very light": {
 		label: "Very light",
-		hint: "e.g. Light board or plastic",
+		hint: "For example, light board or plastic",
 	},
 	"Light": {
 		label: "Light",
-		hint: "e.g. 5-10 cm lightweight brick or concrete",
+		hint: "For example, 50-100 mm lightweight brick or concrete",
 	},
 	"Medium": {
 		label: "Medium",
-		hint: "e.g. 10-20 cm lightweight brick or concrete",
+		hint: "For example, 100-200 mm lightweight brick or concrete",
 	},
 	"Heavy": {
 		label: "Heavy",
-		hint: "e.g. 7-12 cm solid brick or heavyweight concrete",
+		hint: "For example, 70-120 mm solid brick or heavyweight concrete",
 	},
 	"Very heavy": {
 		label: "Very heavy",
-		hint: "e.g. More than 12 cm solid brick or heavyweight concrete",
+		hint: "For example, more than 120 mm solid brick or heavyweight concrete",
 	},
 } as const satisfies Record<SchemaArealHeatCapacity, RadioOption & { label: SchemaArealHeatCapacity }>;
 
@@ -65,26 +65,26 @@ const arealHeatCapacityOptions = {
 					</tr>
 					<tr class="govuk-table__row">
 						<th scope="row" class="govuk-table__header">Light</th>
-						<td class="govuk-table__cell">5-10 cm lightweight brick or concrete</td>
-						<td class="govuk-table__cell">Aerated concrete blocks (5-10 cm thick); Lightweight timber frame wall with thin sheathing; Thicker layer of less dense insulation board (e.g. 8cm EPS).</td>
+						<td class="govuk-table__cell">50-100 mm lightweight brick or concrete</td>
+						<td class="govuk-table__cell">Aerated concrete blocks (50-100 mm thick); Lightweight timber frame wall with thin sheathing; Thicker layer of less dense insulation board (for example 80 mm EPS).</td>
 						<td class="govuk-table__cell">75,000 J/(m²·K)</td>
 					</tr>
 					<tr class="govuk-table__row">
 						<th scope="row" class="govuk-table__header">Medium</th>
-						<td class="govuk-table__cell">10-20 cm lightweight brick or concrete</td>
-						<td class="govuk-table__cell">15 cm lightweight concrete block wall; 12 cm timber frame wall with some internal dense layers; 10 cm of standard concrete screed.</td>
+						<td class="govuk-table__cell">100-200 mm lightweight brick or concrete</td>
+						<td class="govuk-table__cell">150 mm lightweight concrete block wall; 120 mm timber frame wall with some internal dense layers; 100 mm of standard concrete screed.</td>
 						<td class="govuk-table__cell">110,000 J/(m²·K)</td>
 					</tr>
 					<tr class="govuk-table__row">
 						<th scope="row" class="govuk-table__header">Heavy</th>
-						<td class="govuk-table__cell">7-12 cm solid brick or heavyweight concrete</td>
-						<td class="govuk-table__cell">10 cm solid brick wall; 8 cm heavyweight concrete slab; Stone flooring (for example 2cm) on a thicker concrete subfloor (for example 10 cm).</td>
+						<td class="govuk-table__cell">70-120 mm solid brick or heavyweight concrete</td>
+						<td class="govuk-table__cell">100 mm solid brick wall; 80 mm heavyweight concrete slab; Stone flooring (for example 20 mm) on a thicker concrete subfloor (for example 100 mm).</td>
 						<td class="govuk-table__cell">175,000 J/(m²·K)</td>
 					</tr>
 					<tr class="govuk-table__row">
 						<th scope="row" class="govuk-table__header">Very heavy</th>
-						<td class="govuk-table__cell">More than 12 cm solid brick or heavyweight concrete</td>
-						<td class="govuk-table__cell">20 cm solid brick wall; 15 cm or thicker heavyweight concrete slab; Thick stone or masonry walls (for example 15 cm of limestone).</td>
+						<td class="govuk-table__cell">More than 120 mm solid brick or heavyweight concrete</td>
+						<td class="govuk-table__cell">200 mm solid brick wall; 150 mm or thicker heavyweight concrete slab; Thick stone or masonry walls (for example 150 mm of limestone).</td>
 						<td class="govuk-table__cell">250,000 J/(m²·K)</td>
 					</tr>
 				</tbody>
