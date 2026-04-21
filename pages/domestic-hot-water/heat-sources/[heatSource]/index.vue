@@ -227,17 +227,28 @@ const existingHeatSourceType = computed(() => {
 });
 
 function hasHeatNetworkHeatSource() {
-	return dhwHeatSources.data.some((x, itemIndex) => itemIndex !== index && (x.data as HeatSourceData).typeOfHeatSource === "heatNetwork");
+	return dhwHeatSources.data.some((x, itemIndex) => itemIndex !== index && getDhwHeatSourceType(x) === "heatNetwork");
 }
 function hasHeatPumpOrHIUHeatSource() {
 	return dhwHeatSources.data.some((x, itemIndex) => {
 		if (itemIndex === index) {
 			return false;
 		}
-		const typeOfHeatSource = (x.data as HeatSourceData).typeOfHeatSource;
+		const typeOfHeatSource = getDhwHeatSourceType(x);
 		return typeOfHeatSource === "heatPump" || typeOfHeatSource === "heatInterfaceUnit";
 	});
 }
+
+function getDhwHeatSourceType(heatSourceForm: EcaasForm<DomesticHotWaterHeatSourceData>): Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: string }>["typeOfHeatSource"] | undefined {
+	if (heatSourceForm.data.isExistingHeatSource) {
+		return store.spaceHeating.heatSource.data.find(
+			x => x.data.id === heatSourceForm.data.heatSourceId,
+		)?.data.typeOfHeatSource;
+	}
+
+	return heatSourceForm.data.typeOfHeatSource;
+}
+
 function filterHeatSourceOptions(): Record<string, string> {
 	const { heatNetwork, heatPump, heatInterfaceUnit } = DHWHeatSourceTypesWithDisplay;
 	if (hasHeatNetworkHeatSource()) {

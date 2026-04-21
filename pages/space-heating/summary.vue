@@ -108,7 +108,11 @@ const heatPumpSummary: SummarySection = {
 	label: "Heat pumps",
 	data:
 		heatPumps.map(({ data: heatSource }) => {
-
+			const heatNetWorkFields = "isConnectedToHeatNetwork" in heatSource && heatSource.isConnectedToHeatNetwork === true ? {
+				"Associated heat network": store.spaceHeating.heatSource.data.find(hs => hs.data.id === (heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: true }>).associatedHeatNetworkId)?.data.name ?? emptyValueRendering,
+			} : {
+				"Energy supply": "energySupply" in heatSource && (heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: false }>).energySupply ? energySupplyOptions[(heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: false }>).energySupply] : emptyValueRendering,
+			};
 			const summary = {
 				Name: show(heatSource.name),
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
@@ -117,11 +121,7 @@ const heatPumpSummary: SummarySection = {
 				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
 				"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 				"Is connected to a heat network": "isConnectedToHeatNetwork" in heatSource ? displayBoolean(heatSource.isConnectedToHeatNetwork) : emptyValueRendering,
-				...(heatSource.isConnectedToHeatNetwork === true ? {
-					"Associated heat network": store.spaceHeating.heatSource.data.find(hs => hs.data.id === (heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: true }>).associatedHeatNetworkId)?.data.name ?? emptyValueRendering,
-				} : {
-					"Energy supply": "energySupply" in heatSource && (heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: false }>).energySupply ? energySupplyOptions[(heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: false }>).energySupply] : emptyValueRendering,
-				}),
+				...heatNetWorkFields,
 			};
 			return summary;
 		}) || [],

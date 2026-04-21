@@ -3,7 +3,7 @@ import { hasPackagedProduct, isPackagedProduct, isEcaasForm } from "#imports";
 import type { CustomListItem } from "~/components/CustomList.vue";
 import { useDomesticHotWater } from "~/composables/domesticHotWater";
 import formStatus from "~/constants/formStatus";
-import type { HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
 
 const title = "Domestic hot water";
 
@@ -16,12 +16,22 @@ const { heatSources: dhwHeatSources } = store.domesticHotWater;
 const errorMessages = ref<{ id: string, text: string }[]>([]);
 const heatSourceTypesThatCanAddSecond = ["heatNetwork", "heatPump", "heatInterfaceUnit"] as const;
 
+function getDhwHeatSourceType(heatSourceForm: EcaasForm<DomesticHotWaterHeatSourceData>): Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: string }>["typeOfHeatSource"] | undefined {
+	if (heatSourceForm.data.isExistingHeatSource) {
+		return store.spaceHeating.heatSource.data.find(
+			x => x.data.id === heatSourceForm.data.heatSourceId,
+		)?.data.typeOfHeatSource;
+	}
+
+	return heatSourceForm.data.typeOfHeatSource;
+}
+
 const heatSourceMaxNumberOfItems = computed(() => {
 	if (dhwHeatSources.data.length !== 1) {
 		return 1;
 	}
 	const firstHeatSource = dhwHeatSources.data[0];
-	const firstHeatSourceType = firstHeatSource?.data && "typeOfHeatSource" in firstHeatSource.data && firstHeatSource?.data.typeOfHeatSource;
+	const firstHeatSourceType = firstHeatSource ? getDhwHeatSourceType(firstHeatSource) : undefined;
 	return firstHeatSourceType && heatSourceTypesThatCanAddSecond.includes(firstHeatSourceType as typeof heatSourceTypesThatCanAddSecond[number]) ? 2 : 1;
 });
 
@@ -63,9 +73,9 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 function maxHeatSourcesExceeded() {
 	const hasPackagedHeatSources = dhwHeatSources.data.every(x => isPackagedProduct(x.data) || hasPackagedProduct(x.data));
 	if (dhwHeatSources.data.length === 2) {
-		const heatNetworks = dhwHeatSources.data.filter(x => (x.data as HeatSourceData).typeOfHeatSource === "heatNetwork");
-		const notHeatNetworkHeatSources = dhwHeatSources.data.filter(x => (x.data as HeatSourceData).typeOfHeatSource !== "heatNetwork")[0]?.data;
-		const typeOfHeatSource = notHeatNetworkHeatSources && "typeOfHeatSource" in notHeatNetworkHeatSources && notHeatNetworkHeatSources.typeOfHeatSource;
+		const heatSourceTypes = dhwHeatSources.data.map(getDhwHeatSourceType);
+		const heatNetworks = heatSourceTypes.filter(type => type === "heatNetwork");
+		const typeOfHeatSource = heatSourceTypes.find(type => type && type !== "heatNetwork");
 		if (heatNetworks.length === 1 && (typeOfHeatSource === "heatPump" || typeOfHeatSource === "heatInterfaceUnit")) {
 			return false;
 		}
