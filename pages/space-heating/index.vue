@@ -24,11 +24,6 @@ function handleDuplicate(spaceHeatingType: SpaceHeatingType, index: number) {
 	}
 }
 
-function handleRemoveHeatSource(index: number) {
-	duplicationError.value = false;
-	handleRemove("heatSource", index);
-}
-
 function handleComplete() {
 	store.$patch({
 		spaceHeating: {
@@ -57,6 +52,7 @@ function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
 }
 function handleRemove(type: "heatSource" | "heatEmitters" | "heatingControls", index: number) {
 	if (type === "heatSource") {
+		duplicationError.value = false;
 		const heatSource = store.spaceHeating.heatSource.data[index];
 		if (heatSource?.data?.typeOfHeatSource === "heatNetwork") {
 			clearAssociationsWithHeatNetwork(heatSource.data.id);
@@ -118,7 +114,7 @@ function hasIncompleteEntries() {
 		"
 		:show-status="true"
 		@duplicate="(index: number) => handleDuplicate('heatSource', index)"
-		@remove="(index: number) => handleRemoveHeatSource(index)"
+		@remove="(index: number) => handleRemove('heatSource', index)"
 	/>
 	<CustomList
 		id="heatEmitters"
