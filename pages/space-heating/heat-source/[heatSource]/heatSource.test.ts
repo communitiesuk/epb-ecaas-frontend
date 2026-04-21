@@ -1064,7 +1064,6 @@ describe("heatSource", () => {
 				};
 				const heatNetworkProduct: Partial<DisplayProduct> = {
 					id: "1000",
-					brandName: "Brand",
 					technologyType: "HeatNetworks",
 				};
 				mockFetch.mockReturnValue({
@@ -1584,6 +1583,8 @@ describe("heatSource", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "airSource",
 				productReference: "HEATPUMP-SMALL",
+				isConnectedToHeatNetwork: false,
+				energySupply: "electricity",
 			};
 
 			store.$patch({
