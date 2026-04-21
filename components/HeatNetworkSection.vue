@@ -37,6 +37,7 @@ const emit = defineEmits(["update-heat-network-model"]);
 		label="Select a product"
 		help="Select a heat network product from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
+		:selected-sub-heat-network-id="model.subHeatNetworkId"
 		:selected-product-type="model.typeOfHeatSource"
 		:page-index="index"
 		:page-url="route.fullPath"

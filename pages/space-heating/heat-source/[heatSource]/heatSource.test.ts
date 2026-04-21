@@ -1087,6 +1087,46 @@ describe("heatSource", () => {
 
 				expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
 			});
+
+			test("displays subnetwork name for selected heat network product", async () => {
+				const heatNetwork: Partial<HeatSourceData> = {
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+					name: "Test heat network",
+					typeOfHeatSource: "heatNetwork",
+					productReference: "1000",
+					subHeatNetworkId: "td-2",
+					typeOfHeatNetwork: "communalHeatNetwork",
+				};
+
+				mockFetch.mockReturnValue({
+					data: ref({
+						id: "1000",
+						technologyType: "HeatNetworks",
+						communityHeatNetworkName: "Network Alpha",
+						testData: {
+							ID: "td-2",
+							subheatNetworkName: "Sub 2",
+						},
+					}),
+				});
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatNetwork as HeatSourceData }],
+						},
+					},
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				expect(screen.getByTestId("pcdbHeatNetworkProductData")).toBeDefined();
+				expect(screen.getByTestId("productData_subHeatNetworkName").textContent).toBe("Sub 2");
+			});
 		});
 		describe("Heat interface unit", () => {
 			beforeEach(() => {

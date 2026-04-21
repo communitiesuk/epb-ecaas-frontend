@@ -21,10 +21,10 @@ export async function getGroupProducts(technologyGroup: TechnologyGroup): Promis
 	return await client.getProductsByTechnologyGroup(technologyGroup);
 };
 
-export async function getProductDetails(id: string, includeTestData: boolean = false): Promise<Product | undefined> {
+export async function getProductDetails(id: string, { includeTestData = false, testDataId }: { includeTestData?: boolean; testDataId?: string } = {}): Promise<Product | undefined> {
 	ensureValidProductId(id);
 
-	const product = await client.getProduct(id, { includeTestData });
+	const product = await client.getProduct(id, { includeTestData, testDataId });
 
 	ensureProductExists(product);
 
