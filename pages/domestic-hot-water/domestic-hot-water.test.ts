@@ -68,6 +68,15 @@ describe("Domestic hot water", () => {
 		},
 	};
 
+	const hwOutlet2: EcaasForm<HotWaterOutletsData> = {
+		data: {
+			name: "Other Hot Water Outlet",
+			typeOfHotWaterOutlet: "otherHotWaterOutlet",
+			id: "outlet2",
+			flowRate: 20,
+		},
+	};
+
 	const pipework1: EcaasForm<PipeworkData> = {
 		data: {
 			name: "Jasper's Pipework 1",
@@ -358,6 +367,22 @@ describe("Domestic hot water", () => {
 			expect(screen.getByText(`${hwOutlet1.data.name} (2)`)).toBeDefined();
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (1)`)).toBeDefined();
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (2)`)).toBeDefined();
+		});
+
+		test("prevents user completing hot water outlets unless at least one 'other' type is present", async () => {
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [{ ...hwOutlet1, complete: true }],
+					},
+				},
+			});
+		
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+			expect(errorSummary.querySelector("li[key=hotWaterOutletNoOtherTypeError]")).toBeDefined();
 		});
 	});
 
@@ -867,7 +892,7 @@ describe("Domestic hot water", () => {
 			store.$patch({
 				domesticHotWater: {
 					waterStorage: { data: [{ ...hwStorage1, complete: true }] },
-					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: true }] },
+					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: true }, { ...hwOutlet2, complete: true }] },
 					pipework: { data: [{ ...pipework1, complete: true }] },
 					heatSources: { data: [{ ...heatSource1, complete: true }] },
 				},
@@ -1019,7 +1044,7 @@ describe("Domestic hot water", () => {
 		it("displays an error message informing users to remove the extra heat source/s", async () => {
 
 			await renderSuspended(DomesticHotWater);
-			expect(screen.getByTestId("heatSourceLimitExceededErrorSummary")).toBeDefined();
+			expect(screen.getByTestId("domesticHotWaterErrorSummary")).toBeDefined();
 		});
 
 		it("does not display error message when all / both heat sources are packaged", async () => {
@@ -1056,7 +1081,7 @@ describe("Domestic hot water", () => {
 
 			await renderSuspended(DomesticHotWater);
 
-			expect(screen.queryByTestId("heatSourceLimitExceededErrorSummary")).toBeNull();
+			expect(screen.queryByTestId("domesticHotWaterErrorSummary")).toBeNull();
 		});
 	});
 });

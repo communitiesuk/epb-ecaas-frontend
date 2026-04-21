@@ -13,7 +13,20 @@ const { removeEntry, duplicateEntry } = useDomesticHotWater();
 
 const { heatSources: dhwHeatSources } = store.domesticHotWater;
 
+const errorMessages = ref<{ id: string, text: string }[]>([]);
+
 function handleComplete() {
+	const hasOtherHotWaterOutlet =
+	store.domesticHotWater.hotWaterOutlets.data.some(
+		(outlet) => outlet.data.typeOfHotWaterOutlet === "otherHotWaterOutlet",
+	);
+	console.log(hasOtherHotWaterOutlet, "<<<other hot water outlet");
+
+	if (!hasOtherHotWaterOutlet) {
+		errorMessages.value.push({ id: "hotWaterOutletNoOtherTypeError", text: "You must add at least one hot water outlet that has the type 'other'" });
+		return;
+	}
+
 	store.$patch({
 		domesticHotWater: {
 			waterStorage: { complete: true },
@@ -37,12 +50,13 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 	return heatSource ? heatSource.data.name : undefined;
 }
 
-function maxHeatSourcesExceeded() {
-	const hasPackagedHeatSources = dhwHeatSources.data.every(x => isPackagedProduct(x.data) || hasPackagedProduct(x.data));
-	return dhwHeatSources.data.length > 1 && !hasPackagedHeatSources;
+
+const hasPackagedHeatSources = dhwHeatSources.data.every(x => isPackagedProduct(x.data) || hasPackagedProduct(x.data));
+const hasExceeded = dhwHeatSources.data.length > 1 && !hasPackagedHeatSources;
+if (hasExceeded) {
+	errorMessages.value.push({ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used." });
 }
 
-const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used." }]);
 </script>
 
 <template>
@@ -50,7 +64,7 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovErrorSummary v-if="maxHeatSourcesExceeded()" :error-list="errorMessages" test-id="heatSourceLimitExceededErrorSummary" />
+	<GovErrorSummary v-if="errorMessages.length > 0" :error-list="errorMessages" test-id="domesticHotWaterErrorSummary" :use-links="false"/>
 	<CustomList 
 		id="heatSources"
 		title="Heat source"
