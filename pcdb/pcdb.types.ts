@@ -478,7 +478,7 @@ type DisplayProductBase = {
 	height?: number;
 	communityHeatNetworkName?: string;
 	subheatNetworkName?: string;
-	subnetworkId?: string;
+	subHeatNetworkId?: string;
 	productId?: string;
 };
 
@@ -488,7 +488,7 @@ type StandardDisplayProductBase = DisplayProductBase & {
 	height?: never;
 	communityHeatNetworkName?: string;
 	subheatNetworkName?: never;
-	subnetworkId?: never;
+	subHeatNetworkId?: never;
 	productId?: never;
 };
 
@@ -506,7 +506,7 @@ type ConvectorRadiatorDisplayProductBase = DisplayProductBase & {
 	vesselType?: never;
 	communityHeatNetworkName?: never;
 	subheatNetworkName?: never;
-	subnetworkId?: never;
+	subHeatNetworkId?: never;
 	productId?: never;
 };
 
@@ -514,7 +514,7 @@ type HeatNetworkDisplayProduct = DisplayProductBase & {
 	technologyType: "HeatNetworks";
 	communityHeatNetworkName?: string;
 	subheatNetworkName?: string;
-	subnetworkId?: string;
+	subHeatNetworkId?: string;
 	productId?: string;
 	brandName?: never;
 	modelName?: never;

@@ -1001,6 +1001,7 @@ const heatBatteryBase = pcdbProduct.extend({
 const heatNetworkBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatNetwork"),
 	typeOfHeatNetwork,
+	subHeatNetworkId: z.string().trim().min(1).optional(),
 });
 
 

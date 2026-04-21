@@ -333,6 +333,8 @@ describe("Heat source products page", () => {
 
 		const heatNetworkProduct: DisplayProduct = {
 			id: "1000",
+			productId: "1000",
+			subHeatNetworkId: "subnetwork-1000",
 			technologyType: "HeatNetworks",
 			subheatNetworkName: "Test subnetwork",
 			displayProduct: true,
@@ -350,7 +352,8 @@ describe("Heat source products page", () => {
 		await user.click(screen.getByTestId("selectProductButton_0"));
 
 		expect(store.spaceHeating.heatSource.data[0]!.data).toEqual(expect.objectContaining({
-			productReference: heatNetworkProduct.id,
+			productReference: heatNetworkProduct.productId,
+			subHeatNetworkId: heatNetworkProduct.subHeatNetworkId,
 		}));
 	});
 

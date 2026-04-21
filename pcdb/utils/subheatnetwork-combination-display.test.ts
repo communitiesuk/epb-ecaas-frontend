@@ -17,16 +17,18 @@ describe("generateHeatNetworkSubNetworkDisplayProductCombinations", () => {
 		expect(result).toHaveLength(2);
 		expect(result[0]).toEqual({
 			displayProduct: true,
-			id: "td-1",
+			id: "net-1",
 			productId: "net-1",
+			subHeatNetworkId: "td-1",
 			technologyType: "HeatNetworks",
 			communityHeatNetworkName: "Alpha Network",
 			subheatNetworkName: "Sub A",
 		});
 		expect(result[1]).toEqual({
 			displayProduct: true,
-			id: "td-2",
+			id: "net-1",
 			productId: "net-1",
+			subHeatNetworkId: "td-2",
 			technologyType: "HeatNetworks",
 			communityHeatNetworkName: "Alpha Network",
 			subheatNetworkName: "Sub B",
