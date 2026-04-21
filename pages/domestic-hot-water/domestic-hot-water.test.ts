@@ -359,6 +359,21 @@ describe("Domestic hot water", () => {
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (1)`)).toBeDefined();
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (2)`)).toBeDefined();
 		});
+		test("prevents user completing hot water outlets unless at least one 'other' type is present", async () => {
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [{ ...hwOutlet1, complete: true }],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+			expect(errorSummary.querySelector("li[key=hotWaterOutletNoOtherTypeError]")).toBeDefined();
+		});
 	});
 
 	describe("Pipework", () => {
