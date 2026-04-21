@@ -40,8 +40,6 @@ function handleComplete() {
 	store.domesticHotWater.hotWaterOutlets.data.some(
 		(outlet) => outlet.data.typeOfHotWaterOutlet === "otherHotWaterOutlet",
 	);
-	console.log(hasOtherHotWaterOutlet, "<<<other hot water outlet");
-
 	if (!hasOtherHotWaterOutlet) {
 		errorMessages.value.push({ id: "hotWaterOutletNoOtherTypeError", text: "You must add at least one hot water outlet that has the type 'other'" });
 		return;

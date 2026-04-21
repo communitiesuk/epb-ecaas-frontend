@@ -868,10 +868,20 @@ describe("Domestic hot water", () => {
 	describe("mark section as complete", () => {
 
 		const addCompleteHotWaterToStore = async () => {
+			const otherOutlet: EcaasForm<HotWaterOutletsData> = {
+				data: {
+					name: "Other outlet for completion",
+					typeOfHotWaterOutlet: "otherHotWaterOutlet",
+					id: "outlet-complete",
+					flowRate: 12,
+				},
+				complete: true,
+			};
+
 			store.$patch({
 				domesticHotWater: {
 					waterStorage: { data: [{ ...hwStorage1, complete: true }] },
-					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: true }] },
+					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: true }, otherOutlet] },
 					pipework: { data: [{ ...pipework1, complete: true }] },
 					heatSources: { data: [{ ...heatSource1, complete: true }] },
 				},
@@ -1023,7 +1033,8 @@ describe("Domestic hot water", () => {
 		it("displays an error message informing users to remove the extra heat source/s", async () => {
 
 			await renderSuspended(DomesticHotWater);
-			expect(screen.getByTestId("heatSourceLimitExceededErrorSummary")).toBeDefined();
+			expect(screen.getByTestId("domesticHotWaterErrorSummary")).toBeDefined();
+			expect(screen.getByText("You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used.")).toBeDefined();
 		});
 
 		it("does not display error message when all / both heat sources are packaged", async () => {
