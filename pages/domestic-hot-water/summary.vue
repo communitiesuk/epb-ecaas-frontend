@@ -178,7 +178,7 @@ const heatNetworkSummary: SummarySection = {
 				...(heatSource.isExistingHeatSource === false && {
 					"Used for space heating": "No",
 					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
-					"Type of heat network": "typeOfHeatNetwork" in heatSource ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
+					"Type of heat network": "typeOfHeatNetwork" in heatSource && heatSource.typeOfHeatNetwork ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
 					"Product name": "id" in heatSource ? (heatNetworkProductNamesById[heatSource.id] ?? emptyValueRendering) : emptyValueRendering,
 					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 					"Sub-heat network ID": "subHeatNetworkId" in heatSource ? (heatSource.subHeatNetworkId ?? emptyValueRendering) : emptyValueRendering,
