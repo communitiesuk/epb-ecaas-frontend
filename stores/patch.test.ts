@@ -5,6 +5,7 @@ describe("ECaaS store patch", () => {
 	it("patches packageProductIds with deprecated packageProductId in heat sources", () => {
 		const legacyPackagedProducts: Record<string, unknown> = {
 			"domesticHotWater": {
+				...state.domesticHotWater,
 				"heatSources": {
 					"data": [
 						{
@@ -33,6 +34,7 @@ describe("ECaaS store patch", () => {
 
 		const expectedPackagedProducts: Record<string, unknown> = {
 			"domesticHotWater": {
+				...state.domesticHotWater,
 				"heatSources": {
 					"data": [
 						{
@@ -89,5 +91,67 @@ describe("ECaaS store patch", () => {
 			...state,
 			...expectedLighting,
 		}));
+	});
+
+	describe("patches legacy domestic hot water data", () => {
+		it("patches legacy hot water outlets", () => {
+			const legacyHotWaterOutlets: Record<string, unknown> = {
+				"domesticHotWater": {
+					...state.domesticHotWater,
+					"hotWaterOutlets": {
+						"mixerShower": { "data": [] },
+						"electricShower": { "data": [] },
+						"bath": { "data": [] },
+						"otherOutlets": { "data": [] },
+					},
+				},
+			};
+
+			const patchedState = patchState({
+				...state,
+				...legacyHotWaterOutlets,
+			});
+
+			const expectedHotWaterOutlets: Record<string, unknown> = {
+				"domesticHotWater": {
+					...state.domesticHotWater,
+					"hotWaterOutlets": { "data": [] },
+				},
+			};
+
+			expect(patchedState).toEqual(expect.objectContaining({
+				...state,
+				...expectedHotWaterOutlets,
+			}));
+		});
+
+		it("patches legacy pipework data", () => {
+			const legacyPipework: Record<string, unknown> = {
+				"domesticHotWater": {
+					...state.domesticHotWater,
+					"pipework": {
+						"primaryPipework": { "data": [] },
+						"secondaryPipework": { "data": [] },
+					},
+				},
+			};
+
+			const patchedState = patchState({
+				...state,
+				...legacyPipework,
+			});
+
+			const expectedPipework: Record<string, unknown> = {
+				"domesticHotWater": {
+					...state.domesticHotWater,
+					"pipework": { "data": [] },
+				},
+			};
+
+			expect(patchedState).toEqual(expect.objectContaining({
+				...state,
+				...expectedPipework,
+			}));
+		});
 	});
 });

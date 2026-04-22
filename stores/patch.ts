@@ -42,6 +42,30 @@ function patchLighting(state: Record<string, unknown>) {
 	lightingData.data = [];
 }
 
+function patchHotWaterOutlets(state: Record<string, unknown>) {
+	const storeState = state as EcaasState;
+
+	const hotWaterOutlets = storeState.domesticHotWater.hotWaterOutlets;
+
+	if (hotWaterOutlets && Object.keys(hotWaterOutlets).some(k => k !== "data")) {
+		storeState.domesticHotWater.hotWaterOutlets = {
+			data: hotWaterOutlets.data ?? [],
+		};
+	}
+}
+
+function patchPipework(state: Record<string, unknown>) {
+	const storeState = state as EcaasState;
+
+	const pipework = storeState.domesticHotWater.pipework;
+
+	if (Object.keys(pipework).some(k => k !== "data")) {
+		storeState.domesticHotWater.pipework = {
+			data: pipework.data ?? [],
+		};
+	}
+}
+
 /**
  * Patch state from deprecated properties
  * @param state 
@@ -50,6 +74,8 @@ function patchLighting(state: Record<string, unknown>) {
 export function patchState(state: Record<string, unknown>): Record<string, unknown> {
 	patchPackageProductIds(state);
 	patchLighting(state);
+	patchHotWaterOutlets(state);
+	patchPipework(state);
 
 	return state;
 }

@@ -60,7 +60,13 @@ function handleComplete() {
 const hasIncompleteOrInvalidEntries = () => {
 	if (dhwHeatSources.data.length > 1) return true;
 	return Object.values(store.domesticHotWater)
-		.some(section => section.data.some(item => isEcaasForm(item) && !item.complete));
+		.some(section => {
+			if (isEcaasForm(section)) {
+				return section.data.some(item => isEcaasForm(item) && !item.complete);
+			}
+			
+			return false;
+		});
 };
 
 function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
