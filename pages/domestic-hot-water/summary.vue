@@ -4,6 +4,7 @@ import { getTabItems, getUrl } from "#imports";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import { displayDHWHeatSourceType } from "~/utils/display";
 import type { PageId } from "~/data/pages/pages";
+import { getHeatNetworkProductName } from "~/utils/getHeatNetworkProductName";
 
 const title = "Domestic hot water summary";
 const store = useEcaasStore();
@@ -14,7 +15,8 @@ const heatSources = store.domesticHotWater.heatSources.data;
 const dhwHeatSourcesFromSpaceHeating = heatSources.filter(({ data: x }) => x.isExistingHeatSource === true);
 const boilers = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "boiler");
 const heatPumps = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "heatPump");
-// const heatNetworks = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "heatNetwork");
+const heatNetworks = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "heatNetwork");
+const heatInterfaceUnits = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "heatInterfaceUnit");
 const heatBatteries = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "heatBattery");
 const solarThermalSystem = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "solarThermalSystem");
 const immersionHeaters = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "immersionHeater");
@@ -31,7 +33,8 @@ type SummaryHeatSource = {
 
 const boilerSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...boilers];
 const heatPumpSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...heatPumps];
-// const heatNetworkSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...heatNetworks];
+const heatNetworkSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...heatNetworks];
+const heatInterfaceUnitSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...heatInterfaceUnits];
 const heatBatterySummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...heatBatteries];
 const solarThermalSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWaterHeatSourceData>> = [...solarThermalSystem];
 
@@ -64,9 +67,12 @@ function addHeatSourceToCorrectSummaryList(heatSources: EcaasForm<DomesticHotWat
 			if (item?.data.heatSourceType === "heatPump") {
 				heatPumpSummaries.push(item);
 			}	
-			// if (item?.data.heatSourceType === "heatNetwork") {
-			// 	heatNetworkSummaries.push(item);
-			// }	
+			if (item?.data.heatSourceType === "heatNetwork") {
+				heatNetworkSummaries.push(item);
+			}	
+			if (item?.data.heatSourceType === "heatInterfaceUnit") {
+				heatInterfaceUnitSummaries.push(item);
+			}	
 			if (item?.data.heatSourceType === "heatBattery") {
 				heatBatterySummaries.push(item);
 			}
@@ -75,6 +81,15 @@ function addHeatSourceToCorrectSummaryList(heatSources: EcaasForm<DomesticHotWat
 }
 
 addHeatSourceToCorrectSummaryList(dhwHeatSourcesFromSpaceHeating);
+
+const heatNetworkProductNamesById: Record<string, string> = {};
+await Promise.all(heatNetworks.map(async ({ data }) => {
+	const heatNetwork = data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
+	heatNetworkProductNamesById[heatNetwork.id] = await getHeatNetworkProductName(
+		heatNetwork.productReference,
+		heatNetwork.subHeatNetworkId,
+	);
+}));
 
 export type SummaryWithLink = {
 	text: "Yes" | "No",
@@ -146,55 +161,58 @@ const heatPumpSummary: SummarySection = {
 	editUrl: domesticHotWaterUrl,
 };
 
-// const heatNetworkSummary: SummarySection = {
-// 	id: "heatNetworkSummary",
-// 	label: "Heat network",
-// 	data:
-// 		heatNetworkSummaries.map(({ data: heatSource }) => {
-// 			const { heatSources } = store.domesticHotWater;
-// 			let taggedBoosterHP;
-// 			if ("boosterHeatPumpId" in heatSource) {
-// 				taggedBoosterHP = store.getTaggedItem([heatSources], heatSource.boosterHeatPumpId);
-// 			}
-// 			const summary = {
-// 				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
-// 				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
-// 				...(heatSource.isExistingHeatSource === true && {
-// 					"Used for space heating": heatSourceListItemWithLink,
-// 				}),
-// 				...(heatSource.isExistingHeatSource === false && {
-// 					"Used for space heating": "No",
-// 					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
-// 					"Type of heat network": "typeOfHeatNetwork" in heatSource ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
-// 					"Is the heat network in the PCDB": "isHeatNetworkInPcdb" in heatSource ? displayBoolean(heatSource.isHeatNetworkInPcdb) : emptyValueRendering,
-// 					...("isHeatNetworkInPcdb" in heatSource && heatSource.isHeatNetworkInPcdb === true && {
-// 						"Heat network product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-// 						"Booster heat pump": taggedBoosterHP && "name" in taggedBoosterHP ? taggedBoosterHP.name : emptyValueRendering,
-// 						"Energy supply": "energySupply" in heatSource && heatSource.energySupply !== undefined ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
-// 						"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-// 					}),
-// 					...("isHeatNetworkInPcdb" in heatSource && heatSource.isHeatNetworkInPcdb === false && {
-// 						"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply as SchemaFuelType] : emptyValueRendering,
-// 						"Emissions factor including out of scope emissions": "emissionsFactor" in heatSource ? heatSource.emissionsFactor : emptyValueRendering,
-// 						"Primary energy factor": "primaryEnergyFactor" in heatSource ? heatSource.primaryEnergyFactor : emptyValueRendering,
-// 						"Can energy from the heat network be exported": "canEnergyBeExported" in heatSource ? heatSource.canEnergyBeExported : emptyValueRendering,
-// 						"Does it have a booster heat pump?": "hasBoosterHeatPump" in heatSource ? displayBoolean(heatSource.hasBoosterHeatPump) : emptyValueRendering,
-// 						...(heatSource.hasBoosterHeatPump === true && {
-// 							"Booster heat pump": taggedBoosterHP && "name" in taggedBoosterHP ? taggedBoosterHP.name : emptyValueRendering,
-// 						}),
-// 					}),
-// 					...("isHeatNetworkInPcdb" in heatSource && heatSource.isHeatNetworkInPcdb !== undefined && {
-// 						"Will the heat network use heat interface units": "usesHeatInterfaceUnits" in heatSource ? displayBoolean(heatSource.usesHeatInterfaceUnits) : emptyValueRendering,
-// 					}),
-// 					...("usesHeatInterfaceUnits" in heatSource && heatSource.usesHeatInterfaceUnits === true && {
-// 						"Heat interface unit product reference": "heatInterfaceUnitProductReference" in heatSource ? heatSource.heatInterfaceUnitProductReference : emptyValueRendering,
-// 					}),
-// 				}),
-// 			};
-// 			return summary;
-// 		}) || [],
-// 	editUrl: domesticHotWaterUrl,
-// };
+const heatNetworkSummary: SummarySection = {
+	id: "heatNetworkSummary",
+	label: "Heat network",
+	data:
+		heatNetworkSummaries.map(({ data: heatSource }) => {
+			const summary = {
+				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				...(heatSource.isExistingHeatSource === true && {
+					"Used for space heating": heatSourceListItemWithLink,
+				}),
+				...(heatSource.isExistingHeatSource === false && {
+					"Used for space heating": "No",
+					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+					"Type of heat network": "typeOfHeatNetwork" in heatSource ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
+					"Product name": "id" in heatSource ? (heatNetworkProductNamesById[heatSource.id] ?? emptyValueRendering) : emptyValueRendering,
+					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+					"Sub-heat network ID": "subHeatNetworkId" in heatSource ? (heatSource.subHeatNetworkId ?? emptyValueRendering) : emptyValueRendering,
+					"Maximum flow temperature": "maxFlowTemp" in heatSource && heatSource.maxFlowTemp !== undefined ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
+				}),
+			};
+			return summary;
+		}) || [],
+	editUrl: domesticHotWaterUrl,
+};
+
+const heatInterfaceUnitSummary: SummarySection = {
+	id: "heatInterfaceUnitSummary",
+	label: "Heat interface unit",
+	data:
+		heatInterfaceUnitSummaries.map(({ data: heatSource }) => {
+			const associatedHeatNetwork = store.spaceHeating.heatSource.data.find(hs => hs.data.id === ("associatedHeatNetworkId" in heatSource ? heatSource.associatedHeatNetworkId : undefined));
+			const summary = {
+				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
+				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
+				...(heatSource.isExistingHeatSource === true && {
+					"Used for space heating": heatSourceListItemWithLink,
+					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
+				}),
+				...(heatSource.isExistingHeatSource === false && {
+					"Used for space heating": "No",
+					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
+					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
+					"Associated heat network": associatedHeatNetwork ? associatedHeatNetwork.data.name : emptyValueRendering,
+					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
+					"Building level losses": "buildingLevelLosses" in heatSource ? dim(heatSource.buildingLevelLosses) : emptyValueRendering,
+				}),
+			};
+			return summary;
+		}) || [],
+	editUrl: domesticHotWaterUrl,
+};
 
 const heatBatterySummary: SummarySection = {
 	id: "heatBatterySummary",
@@ -341,7 +359,8 @@ function getNonEmptySections(summarySections: SummarySection[]) {
 const heatSourceSections: SummarySection[] = [
 	boilerSummary,
 	heatPumpSummary,
-	// heatNetworkSummary,
+	heatNetworkSummary,
+	heatInterfaceUnitSummary,
 	heatBatterySummary,
 	solarThermalSystemSummary,
 	immersionHeaterSummary,

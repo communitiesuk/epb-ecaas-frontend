@@ -1,4 +1,3 @@
-import { useFetch } from "#imports";
 import { emptyValueRendering } from "~/utils/display";
 
 export function formatHeatNetworkProductName(heatNetworkName: string, subheatNetworkName: string): string {
@@ -13,24 +12,29 @@ export async function getHeatNetworkProductName(
 		return emptyValueRendering;
 	}
 
-	const response = await useFetch(`/api/products/${productReference}`, {
-		query: {
-			testDataId: subHeatNetworkId,
-		},
-	});
+	try {
+		const response = await fetch(`/api/products/${productReference}?testDataId=${subHeatNetworkId}`);
 
-	const product = response?.data?.value as Record<string, unknown> | undefined;
-	if (!product) {
+		if (!response.ok) {
+			return emptyValueRendering;
+		}
+
+		const product = await response.json() as Record<string, unknown> | undefined;
+
+		if (!product) {
+			return emptyValueRendering;
+		}
+
+		const heatNetworkName = product.communityHeatNetworkName as string | undefined;
+		const subheatNetworkName = (product.subheatNetworkName as string | undefined)
+			?? ((product.testData as Record<string, unknown> | undefined)?.subheatNetworkName as string | undefined);
+
+		if (!heatNetworkName || !subheatNetworkName) {
+			return emptyValueRendering;
+		}
+
+		return formatHeatNetworkProductName(heatNetworkName, subheatNetworkName);
+	} catch {
 		return emptyValueRendering;
 	}
-
-	const heatNetworkName = product.communityHeatNetworkName as string | undefined;
-	const subheatNetworkName = (product.subheatNetworkName as string | undefined)
-		?? ((product.testData as Record<string, unknown> | undefined)?.subheatNetworkName as string | undefined);
-
-	if (!heatNetworkName || !subheatNetworkName) {
-		return emptyValueRendering;
-	}
-
-	return formatHeatNetworkProductName(heatNetworkName, subheatNetworkName);
 }
