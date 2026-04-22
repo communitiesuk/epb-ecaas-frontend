@@ -607,6 +607,19 @@ describe("Domestic hot water summary", () => {
 			subHeatNetworkId: "sub-network-1",
 		};
 
+		const dhwWithNewHeatInterfaceUnit: DomesticHotWaterHeatSourceData = {
+			coldWaterSource: "mainsWater",
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c66",
+			name: "Heat interface unit 1",
+			typeOfHeatSource: "heatInterfaceUnit",
+			productReference: "HIU-LARGE",
+			associatedHeatNetworkId: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+			maxFlowTemp: unitValue(40, celsius),
+			buildingLevelLosses: unitValue(500, "watt"),
+		};
+
 		const dhwWithNewSolarThermalSystem: DomesticHotWaterHeatSourceData = {
 			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
@@ -664,6 +677,7 @@ describe("Domestic hot water summary", () => {
 							{ data: dhwWithNewBoiler },
 							{ data: dhwWithNewHeatBattery },
 							{ data: dhwWithNewHeatNetwork },
+							{ data: dhwWithNewHeatInterfaceUnit },
 							{ data: dhwWithNewSolarThermalSystem },
 							{ data: dhwImmersionHeater },
 							{ data: dhwPointOfUse },
@@ -751,6 +765,17 @@ describe("Domestic hot water summary", () => {
 			"Product reference": "HEAT_NETWORK-LARGE",
 			"Sub-heat network ID": "sub-network-1",
 		};
+		const expectedHeatInterfaceUnit = {
+			"Cold water source": "Mains water",
+			"Name": "Heat interface unit 1",
+			"Used for space heating": "No",
+			"Type of heat source": "Heat interface unit",
+			"Product reference": "HIU-LARGE",
+			"Product name": "Mock product",
+			"Associated heat network": "Heat network 1",
+			"Maximum flow temperature": `40 ${celsius.suffix}`,
+			"Building level losses": "500 W",
+		};
 		const expectedSolarThermalSystem = {
 			"Cold water source": "Mains water",
 			Name: "Solar thermal system",
@@ -790,6 +815,7 @@ describe("Domestic hot water summary", () => {
 				["boilerSummary", expectedBoiler],
 				["heatBatterySummary", expectedHeatBattery],
 				["heatNetworkSummary", expectedHeatNetwork],
+				["heatInterfaceUnitSummary", expectedHeatInterfaceUnit],
 				["solarThermalSystemSummary", expectedSolarThermalSystem],
 				["immersionHeaterSummary", expectedImmersionHeater],
 				["pointOfUseSummary", expectedPointOfUse],

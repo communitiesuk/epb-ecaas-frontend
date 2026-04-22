@@ -5,6 +5,7 @@ import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema"
 import { displayDHWHeatSourceType } from "~/utils/display";
 import type { PageId } from "~/data/pages/pages";
 import { getHeatNetworkProductName } from "~/utils/getHeatNetworkProductName";
+import { useProductReferences } from "~/composables/productReferences";
 
 const title = "Domestic hot water summary";
 const store = useEcaasStore();
@@ -81,6 +82,8 @@ function addHeatSourceToCorrectSummaryList(heatSources: EcaasForm<DomesticHotWat
 }
 
 addHeatSourceToCorrectSummaryList(dhwHeatSourcesFromSpaceHeating);
+
+const heatInterfaceUnitModelNames = await useProductReferences(heatInterfaceUnits, productData => productData.modelName);
 
 const heatNetworkProductNamesById: Record<string, string> = {};
 await Promise.all(heatNetworks.map(async ({ data }) => {
@@ -192,7 +195,10 @@ const heatInterfaceUnitSummary: SummarySection = {
 	label: "Heat interface unit",
 	data:
 		heatInterfaceUnitSummaries.map(({ data: heatSource }) => {
-			const associatedHeatNetwork = store.spaceHeating.heatSource.data.find(hs => hs.data.id === ("associatedHeatNetworkId" in heatSource ? heatSource.associatedHeatNetworkId : undefined));
+			const associatedHeatNetworkId = "associatedHeatNetworkId" in heatSource ? heatSource.associatedHeatNetworkId : undefined;
+			const associatedHeatNetwork = store.spaceHeating.heatSource.data.find(hs => hs.data.id === associatedHeatNetworkId)
+				?? store.domesticHotWater.heatSources.data.find(hs => hs.data.id === associatedHeatNetworkId);
+			const associatedHeatNetworkName = associatedHeatNetwork && "name" in associatedHeatNetwork.data ? associatedHeatNetwork.data.name : emptyValueRendering;
 			const summary = {
 				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
 				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
@@ -204,7 +210,8 @@ const heatInterfaceUnitSummary: SummarySection = {
 					"Used for space heating": "No",
 					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
 					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-					"Associated heat network": associatedHeatNetwork ? associatedHeatNetwork.data.name : emptyValueRendering,
+					"Product name": "productReference" in heatSource && heatSource.productReference ? heatInterfaceUnitModelNames[heatSource.productReference] : emptyValueRendering,
+					"Associated heat network": associatedHeatNetworkName,
 					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 					"Building level losses": "buildingLevelLosses" in heatSource ? dim(heatSource.buildingLevelLosses) : emptyValueRendering,
 				}),

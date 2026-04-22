@@ -61,6 +61,7 @@ const selectProduct = async () => {
 	<ProductDetailsBoiler v-if="!!data && heatSourceType in boilerTypes" :product="data!"/>
 	<ProductDetailsHeatBatteryPCM v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryPcm" :product="data!" />
 	<ProductDetailsHeatBatteryDryCore v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryDryCore" :product="data!" />
+	<ProductDetailsHeatInterfaceUnit v-if="!!data && heatSourceType === typeOfHeatSource.heatInterfaceUnit" :product="data!" />
 
 	<div class="govuk-button-group">
 		<GovButton
