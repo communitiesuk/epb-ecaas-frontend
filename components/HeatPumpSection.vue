@@ -89,7 +89,7 @@ const greaterThanZero = (node: FormKitNode) => {
 	</div>
 	</FormKit>
 	<FieldsEnergySupplies
-		v-else
+		v-if="model.isConnectedToHeatNetwork === false"
 		id="energySupply"
 		name="energySupply"
 		label="Energy supply"
