@@ -26,11 +26,32 @@ function getDhwHeatSourceType(heatSourceForm: EcaasForm<DomesticHotWaterHeatSour
 	return heatSourceForm.data.typeOfHeatSource;
 }
 
+function isHeatPumpConnectedToExistingHeatNetwork(heatSourceForm: EcaasForm<DomesticHotWaterHeatSourceData>): boolean {
+	if (heatSourceForm.data.isExistingHeatSource) {
+		const existingHeatSource = store.spaceHeating.heatSource.data.find(
+			x => x.data.id === heatSourceForm.data.heatSourceId,
+		)?.data;
+
+		if (existingHeatSource?.typeOfHeatSource === "heatPump") {
+			const heatpumpData = existingHeatSource as Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
+			return heatpumpData.isConnectedToHeatNetwork === true
+			&& !!heatpumpData.associatedHeatNetworkId;
+		} 
+		return false;
+	}
+	return heatSourceForm.data.typeOfHeatSource === "heatPump"
+		&& heatSourceForm.data.isConnectedToHeatNetwork === true
+		&& !!heatSourceForm.data.associatedHeatNetworkId;
+}
+
 const heatSourceMaxNumberOfItems = computed(() => {
 	if (dhwHeatSources.data.length !== 1) {
 		return 1;
 	}
 	const firstHeatSource = dhwHeatSources.data[0];
+	if (firstHeatSource && isHeatPumpConnectedToExistingHeatNetwork(firstHeatSource)) {
+		return 1;
+	}
 	const firstHeatSourceType = firstHeatSource ? getDhwHeatSourceType(firstHeatSource) : undefined;
 	return firstHeatSourceType && heatSourceTypesThatCanAddSecond.includes(firstHeatSourceType as typeof heatSourceTypesThatCanAddSecond[number]) ? 2 : 1;
 });
@@ -77,9 +98,13 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 function maxHeatSourcesExceeded() {
 	const hasPackagedHeatSources = dhwHeatSources.data.every(x => isPackagedProduct(x.data) || hasPackagedProduct(x.data));
 	if (dhwHeatSources.data.length === 2) {
+		const connectedHeatPump = dhwHeatSources.data.find(isHeatPumpConnectedToExistingHeatNetwork);
 		const heatSourceTypes = dhwHeatSources.data.map(getDhwHeatSourceType);
 		const heatNetworks = heatSourceTypes.filter(type => type === "heatNetwork");
 		const typeOfHeatSource = heatSourceTypes.find(type => type && type !== "heatNetwork");
+		if (connectedHeatPump && heatNetworks.length >= 1) {
+			return true;
+		}
 		if (heatNetworks.length === 1 && (typeOfHeatSource === "heatPump" || typeOfHeatSource === "heatInterfaceUnit")) {
 			return false;
 		}

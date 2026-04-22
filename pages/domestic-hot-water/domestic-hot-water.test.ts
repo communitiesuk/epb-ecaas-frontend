@@ -1168,5 +1168,44 @@ describe("Domestic hot water", () => {
 			await renderSuspended(DomesticHotWater);
 			expect(screen.getByTestId("heatSources_add")).toBeDefined();
 		});
+
+		test("when the first heat source is a heat pump connected to a space heating heat network, another heat network cannot be added", async () => {
+			const spaceHeatingHeatNetwork: HeatSourceData = {
+				id: "3a2fda59-4db4-4f31-aad4-8ff2e9c0f221",
+				name: "Space heating network",
+				typeOfHeatSource: "heatNetwork",
+				typeOfHeatNetwork: "communalHeatNetwork",
+				productReference: "HEATNETWORK_SMALL",
+			};
+
+			const connectedHeatPump: DomesticHotWaterHeatSourceData = {
+				id: "f1457a50-f9d9-4f31-92f5-bd6f7ff9dabc",
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				name: "Connected heat pump",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "hybridHeatPump",
+				productReference: "HP-123",
+				isConnectedToHeatNetwork: true,
+				associatedHeatNetworkId: spaceHeatingHeatNetwork.id,
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: spaceHeatingHeatNetwork, complete: true }],
+					},
+				},
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: connectedHeatPump, complete: true }],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			expect(screen.queryByTestId("heatSources_add")).toBeNull();
+		});
 	});
 });
