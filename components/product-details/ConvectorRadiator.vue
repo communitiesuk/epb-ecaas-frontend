@@ -4,14 +4,14 @@ import type { ConvectorRadiatorProduct } from "~/pcdb/pcdb.types";
 const { product: data } = defineProps<{ product: ConvectorRadiatorProduct }>();
 
 const tableData: Record<string, string> = {
-	"Water contents": dim(data.water_contents, "litres"),
-	"Thermal mass per metre": `${data.thermal_mass_per_m} (kWh/K)/m`,
-	"Thermal output delta 50": `${data.thermal_output_delta_50k} W/m`,
-	"Weight": `${data.weight} Kg`,
-	"Convection fraction": show(data.frac_convective),
+	"Water contents": dim(data.waterContents, "litres"),
+	"Thermal mass per metre": dim(data.thermalMassPerM, "kilowatt-hour per kelvin per metre"),
+	"Thermal output delta 50": dim(data.thermalOutputDelta50k, "watts per metre"),
+	"Weight": dim(data.weight, "kilograms"),
+	"Convection fraction": show(data.fracConvective),
 	"ID": show(data.ID),
 	"Type": show(data.type),
-	"Height": `${data.height} Mm`,
+	"Height": dim(data.height, "millimetres"),
 };
 </script>
 
