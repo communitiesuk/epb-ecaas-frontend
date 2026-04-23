@@ -65,6 +65,9 @@ function handleComplete() {
 
 function hasIncompleteEntries() {
 	const bulbs = store.dwellingFabric.dwellingSpaceLighting;
+	if (!bulbs.data.length) {
+		return true;
+	}
 
 	return bulbs.data.some(bulb => isEcaasForm(bulb) ? !bulb.complete : false);
 }
@@ -77,9 +80,9 @@ function hasIncompleteEntries() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<div class="govuk-inset-text">
-		<p class="govuk-body">Add both internal and external lighting outlets</p>
-	</div>
+	<GovInset>
+		<p>Add both internal and external lighting outlets. You must add at least one lighting entry.</p>
+	</GovInset>
 	<CustomList
 		id="lighting"
 		title="Bulb"

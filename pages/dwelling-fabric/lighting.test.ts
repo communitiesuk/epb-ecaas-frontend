@@ -148,4 +148,10 @@ describe("lighting", () => {
 		expect(screen.getByText("Bulb 2")).toBeDefined();
 		expect(store.dwellingFabric.dwellingSpaceLighting.data).toHaveLength(1);
 	});
+	test("mark as complete is disabled when no bulbs have been added", async () => {
+		await renderSuspended(Lighting);
+		const markCompleteButton = screen.getByTestId<HTMLInputElement>("markAsCompleteButton");
+
+		expect(markCompleteButton.disabled).toBe(true);
+	});
 });
