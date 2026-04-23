@@ -14,6 +14,7 @@ function isFrontDoor(door: EcaasForm<ExternalUnglazedDoorData | ExternalGlazedDo
 }
 function handleRemove(doorType: DoorType, index: number) {
 	const doors = store.dwellingFabric.dwellingSpaceDoors[doorType]?.data;
+	const windows = store.dwellingFabric.dwellingSpaceWindows.data;
 
 	if (doors) {
 		doors.splice(index, 1);
@@ -21,6 +22,12 @@ function handleRemove(doorType: DoorType, index: number) {
 		store.$patch((state) => {
 			state.dwellingFabric.dwellingSpaceDoors[doorType].data = doors.length ? doors : [];
 			state.dwellingFabric.dwellingSpaceDoors[doorType].complete = false;
+		});
+	}
+
+	if (doorType === "dwellingSpaceExternalGlazedDoor" && !doors.length && !windows.length) {
+		store.$patch((state) => {
+			state.dwellingFabric.dwellingSpaceWindows.complete = false;
 		});
 	}
 } 

@@ -226,6 +226,39 @@ describe("windows", () => {
 			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeFalsy();
 		});
 
+		test("mark as complete is disabled when no windows or external glazed doors have been added", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWindows: {
+						data: [],
+					},
+				},
+			});
+			await renderSuspended(Windows);
+			const markCompleteButton = screen.getByTestId<HTMLInputElement>("markAsCompleteButton");
+
+			expect(markCompleteButton.disabled).toBe(true);
+		});
+
+		test("mark as complete is enabled when there are no windows and an external glazed door has been added", async () => {
+			const externalGlazedDoor: Partial<ExternalGlazedDoorData> = {
+				name: "External Glazed Door 1",
+			}; 
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: externalGlazedDoor }],
+						},
+					},
+				},
+			});
+			await renderSuspended(Windows);
+			const markCompleteButton = screen.getByTestId<HTMLInputElement>("markAsCompleteButton");
+
+			expect(markCompleteButton.disabled).toBe(false);
+		});
+
 		test("displays a 'Completed' status indicator when section is marked as complete", async () => {
 
 			await renderSuspended(Windows);
