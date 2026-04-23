@@ -38,7 +38,7 @@ const route = useRoute();
 					<td class="govuk-table__cell">{{ product.communityHeatNetworkName }}</td>
 					<td class="govuk-table__cell">{{ product.subheatNetworkName }}</td>
 					<td class="govuk-table__cell govuk-table__cell--select">
-						<NuxtLink :href="`${route.path}/${product.id}`" class="govuk-link govuk-!-margin-right-3">
+						<NuxtLink :href="`${route.path}/${product.id}?testDataId=${product.subHeatNetworkId}`" class="govuk-link govuk-!-margin-right-3">
 							More details
 						</NuxtLink>
 						<GovButton

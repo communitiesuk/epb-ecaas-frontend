@@ -37,7 +37,18 @@ export function dim(amount: UnitValue | number | undefined | null, unit?: UnitNa
 function renderDimensionedValue<T extends number, U extends UnitName>(amount: T, unit: U): `${T} ${UnitForName<U>["suffix"]}` {
 	return `${amount} ${asUnit(unit).suffix}` as `${T} ${UnitForName<U>["suffix"]}`;
 }
-
+export function renderPercentageValue(amount: string | number | undefined | null): `${number} %` | typeof emptyValueRendering {
+	if (amount === undefined || amount === null) {
+		return emptyValueRendering;
+	}
+	if (typeof amount !== "number") {
+		amount = parseFloat(amount);
+		if (isNaN(amount)) {
+			return emptyValueRendering;
+		}
+	}
+	return `${amount} %`;
+}
 export function displayBoolean(value: boolean | undefined): BooleanDisplay | typeof emptyValueRendering {
 	if (typeof value === "undefined") {
 		return emptyValueRendering;
@@ -47,6 +58,44 @@ export function displayBoolean(value: boolean | undefined): BooleanDisplay | typ
 }
 
 type BooleanDisplay = "Yes" | "No";
+
+export type HeatNetworkServiceProvisionDisplay = "Space and water heating" | "Space heating only" | "Water heating only";
+
+export function displayHeatNetworkServiceProvision(value: number | null | undefined): HeatNetworkServiceProvisionDisplay | typeof emptyValueRendering {
+	if (value == null) {
+		return emptyValueRendering;
+	}
+
+	switch (value) {
+		case 1:
+			return "Space and water heating";
+		case 3:
+			return "Space heating only";
+		case 4:
+			return "Water heating only";
+		default:
+			return emptyValueRendering;
+	}
+}
+
+export type HeatNetworkDataSourceDisplay = "Estimated data" | "Recorded data" | "Forecast data";
+
+export function displayHeatNetworkDataSource(value: number | null | undefined): HeatNetworkDataSourceDisplay | typeof emptyValueRendering {
+	if (value == null) {
+		return emptyValueRendering;
+	}
+
+	switch (value) {
+		case 1:
+			return "Estimated data";
+		case 2:
+			return "Recorded data";
+		case 3:
+			return "Forecast data";
+		default:
+			return emptyValueRendering;
+	}
+}
 
 export function displayMassDistributionClass(value: ConciseMassDistributionClass | undefined): MassDistributionClassDisplay | typeof emptyValueRendering {
 	switch (value) {

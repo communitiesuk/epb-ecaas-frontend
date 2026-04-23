@@ -118,6 +118,18 @@ export const units = [
 		"dimension": "energy per time",
 	},
 	{
+		"name": "kilowatt hours per year",
+		"suffix": "kWh/year",
+		"multiplier": 1,
+		"dimension": "energy per time",
+	},
+	{
+		"name": "pence per kilowatt-hour",
+		"suffix": "p/kWh",
+		"multiplier": 1,
+		"dimension": "cost per energy",
+	},
+	{
 		"name": "CO2 per kilowatt-hour",
 		"suffix": "kgCO2e/kWh",
 		"multiplier": 1,
