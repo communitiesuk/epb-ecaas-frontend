@@ -144,6 +144,7 @@ export function mapElectricStorageHeaters(state: ResolvedState): Record<string, 
 					type: "ElecStorageHeater",
 					product_reference: emitter.productReference,
 					n_units: emitter.numOfStorageHeaters,
+					Zone: defaultZoneName,
 				},
 			];
 		}),

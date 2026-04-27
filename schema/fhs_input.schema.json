@@ -2233,7 +2233,8 @@
 								{
 									"required": [
 										"product_reference",
-										"n_units"
+										"n_units",
+										"Zone"
 									],
 									"properties": {
 										"product_reference": {
@@ -2246,6 +2247,10 @@
 											"minimum": 0,
 											"maximum": 100,
 											"description": "Number of units installed in the zone."
+										},
+										"Zone": {
+											"type": "string",
+											"description": "The zone where the unit(s) is/are installed. References a key in $.Zone."
 										}
 									}
 								},

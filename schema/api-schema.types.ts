@@ -92,24 +92,24 @@ export interface components {
         FhsMeta: {
             /**
              * @description An identifier representing which version of HEM (the specification) was used, or available to be used, in this calculation.
-             * @example 0.32
+             * @example 1.0.0a7
              */
             hem_version: string;
             /**
              * Format: date
              * @description The date when the version of the HEM specification being used was published. Format: YYYY-MM-DD.
-             * @example 2025-02-15
+             * @example 2026-02-27
              */
             hem_version_date: string;
             /**
              * @description An identifier representing which version of FHS (Future Homes Standard) (the specification) was used, or available to be used, in this calculation.
-             * @example 0.23
+             * @example 1.0.0a7
              */
             fhs_version: string;
             /**
              * Format: date
              * @description The date when the version of the FHS specification being used was published. Format: YYYY-MM-DD.
-             * @example 2025-02-15
+             * @example 2026-03-09
              */
             fhs_version_date: string;
             /**
@@ -1019,6 +1019,8 @@ export interface components {
              */
             product_reference: string;
             n_units: number;
+            /** @description The zone where the unit(s) is/are installed. References a key in $.Zone. */
+            Zone: string;
         };
         InstantElecHeater: {
             /** @constant */
@@ -1042,7 +1044,7 @@ export interface components {
             ecodesign_controller: components["schemas"]["EcoDesignControllerNoWeatherCompensator"] | components["schemas"]["EcoDesignControllerWeatherCompensator"];
             design_flow_temp: number;
             Zone: string;
-            /** @description thermal_mass is required when the emitters include radiators */
+            /** @description thermal_mass is required when the emitters include radiators not from PCDB */
             thermal_mass?: number;
         } & ({
             /** @constant */
@@ -2199,6 +2201,8 @@ export interface components {
                      */
                     product_reference: string;
                     n_units: number;
+                    /** @description The zone where the unit(s) is/are installed. References a key in $.Zone. */
+                    Zone: string;
                 };
                 InstantElecHeater: {
                     /** @constant */
@@ -2222,7 +2226,7 @@ export interface components {
                     ecodesign_controller: components["schemas"]["EcoDesignControllerNoWeatherCompensator"] | components["schemas"]["EcoDesignControllerWeatherCompensator"];
                     design_flow_temp: number;
                     Zone: string;
-                    /** @description thermal_mass is required when the emitters include radiators */
+                    /** @description thermal_mass is required when the emitters include radiators not from PCDB */
                     thermal_mass?: number;
                 } & ({
                     /** @constant */

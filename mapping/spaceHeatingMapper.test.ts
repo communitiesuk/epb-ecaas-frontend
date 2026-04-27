@@ -8,7 +8,7 @@ import {
 	mapWetDistributions,
 	mapSpaceHeatSystem,
 } from "./spaceHeatingMapper";
-import type { SchemaHeatSourceWetHeatPump, SchemaWetDistribution } from "../schema/api-schema.types";
+import type { SchemaElecStorageHeater, SchemaElecStorageHeaterWithProductReference, SchemaHeatSourceWetHeatPump, SchemaWetDistribution } from "../schema/api-schema.types";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import type { HeatEmittingData, WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
 import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetDetails } from "~/schema/aliases";
@@ -806,7 +806,8 @@ describe("Space heating - emitters", () => {
 					type: "ElecStorageHeater",
 					product_reference: electricStorageHeater.productReference,
 					n_units: electricStorageHeater.numOfStorageHeaters,
-				},
+					Zone: defaultZoneName,
+				} satisfies SchemaElecStorageHeaterWithProductReference,
 			};
 			const resolvedState = resolveState(store.$state);
 			const actual = mapElectricStorageHeaters(resolvedState);

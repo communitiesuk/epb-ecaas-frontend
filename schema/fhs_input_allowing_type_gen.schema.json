@@ -3559,7 +3559,8 @@
             "required": [
                 "type",
                 "product_reference",
-                "n_units"
+                "n_units",
+                "Zone"
             ],
             "properties": {
                 "type": {
@@ -3574,6 +3575,10 @@
                     "type": "integer",
                     "minimum": 0,
                     "maximum": 100
+                },
+                "Zone": {
+                    "type": "string",
+                    "description": "The zone where the unit(s) is/are installed. References a key in $.Zone."
                 }
             }
         },
