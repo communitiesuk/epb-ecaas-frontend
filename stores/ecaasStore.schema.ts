@@ -1596,7 +1596,7 @@ type EcaasFormPaths<T> = {
 			: never
 }[keyof T];
 
-export type EcaasFormPath = Exclude<EcaasFormPaths<EcaasState>, undefined>;
+export type EcaasFormPath = NonNullable<EcaasFormPaths<EcaasState>>;
 
 // a map of paths through the EcaasState type down to forms, to the schemas used to validate them
 // typing will enforce that each form has a corresponding Zod schema
