@@ -6,6 +6,8 @@ const title = "Check Part L building compliance";
 	
 const page = usePage();
 const store = useEcaasStore();
+store.revalidate();
+
 const { createTaskList } = useTaskList();
 const taskList = createTaskList(page);
 const calculateError = ref<CorrectedJsonApiError[] | string | boolean | undefined>();
@@ -32,8 +34,6 @@ const firstError = computed(() => {
 	}
 	return null;
 });
-
-store.revalidate();
 </script>
 
 <template>

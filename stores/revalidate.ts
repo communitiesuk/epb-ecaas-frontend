@@ -134,7 +134,7 @@ function revalidateForm(form: EcaasForm<unknown>, path: EcaasFormPath): [true, R
 			
 			return [!validationResult.success || changed, validationResult.error ? [...errors, validationResult.error] : errors];
 		} catch (error) {
-			handleInvalidForm(form, path, error);
+			handleInvalidForm(current, path, error);
 
 			return [true, [...errors, error]];
 		}

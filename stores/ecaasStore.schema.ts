@@ -619,7 +619,7 @@ const isTheFrontDoorFields = {
 			isTheFrontDoor: z.literal(false).optional(),
 		}),
 		z.object({
-			isTheFrontDoor: z.literal(true).optional(),
+			isTheFrontDoor: z.literal(true),
 			orientation: z.number().min(0).lt(360).optional(),
 		}),
 	] satisfies Tuple,
