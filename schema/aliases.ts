@@ -1,5 +1,5 @@
-import type { NonNegativeInteger, Simplify } from "type-fest";
-import type { components, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaMassDistributionClass, SchemaBuildingElementGround, SchemaBuildingElementOpaque, SchemaRadiatorWithProductReference, SchemaUfhWithProductReference, SchemaFancoilWithProductReference } from "./api-schema.types";
+import type { Simplify } from "type-fest";
+import type { components, SchemaMassDistributionClass, SchemaBuildingElementGround, SchemaBuildingElementOpaque, SchemaRadiatorWithProductReference, SchemaUfhWithProductReference, SchemaFancoilWithProductReference } from "./api-schema.types";
 
 // Some aliases to names in the API schema generated types, sometimes for more graceful backwards compatibility
 // as different names get used in the upstream schemas
@@ -24,7 +24,7 @@ type BuildingElementType = SchemaBuildingElement["type"];
 export type BuildingElementOfType<T extends BuildingElementType> = Extract<SchemaBuildingElement, { type: T }>;
 export type BuildingElementGroundForSchema = BuildingElementOfType<"BuildingElementGround">;
 export type BuildingElementPartyWallForSchema = BuildingElementOfType<"BuildingElementPartyWall">;
-export type SchemaHeatSourceWetDetails = SchemaBoilerWithProductReference | SchemaHeatSourceWetHeatBattery | SchemaHeatSourceWetHeatPump | SchemaHeatSourceWetHiu;
+export type SchemaHeatSourceWetDetails = NonNullable<FhsSchema["HeatSourceWet"]>[string];
 export type SchemaHeatSourceWetHeatEmitterDetails = SchemaRadiatorWithProductReference | SchemaUfhWithProductReference | SchemaFancoilWithProductReference;
 // utility function to make shading into valid external conditions
 type SchemaExternalConditionsInputFhs = FhsSchema["ExternalConditions"];
@@ -90,4 +90,4 @@ export type SchemaStorageTank = Extract<SchemaHotWaterSourceDetails, { type: "St
 export type SchemaMechanicalVentilationInstallationType = Extract<SchemaMechanicalVentilation, { vent_type: "Decentralised continuous MEV", product_reference: string }>["installation_type"];
 export type SchemaMechanicalVentilationInstallationLocation = Extract<SchemaMechanicalVentilation, { vent_type: "Decentralised continuous MEV", product_reference: string }>["installation_location"];
 export type SchemaBoilerLocationType = Extract<components["schemas"]["HeatSourceWetBoiler"], { rated_power: number }>["boiler_location"];
-export type SchemaBoilerWithProductReference = Extract<SchemaHeatSourceWetBoiler, { product_reference: string, type: "Boiler" }>;
+export type SchemaBoilerWithProductReference = Extract<SchemaHeatSourceWetDetails, { product_reference: string, type: "Boiler" }>;

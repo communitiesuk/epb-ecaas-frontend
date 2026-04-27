@@ -284,7 +284,6 @@ export interface components {
             /** @enum {unknown} */
             type: "HeatPump" | "Boiler" | "HIU" | "HeatBattery";
             EnergySupply: string;
-            is_heat_network: false; //!! horrible manual hack, review
         };
         /** ScheduleRepeaterEntryForDouble */
         ScheduleRepeaterEntryForDouble: number | null;

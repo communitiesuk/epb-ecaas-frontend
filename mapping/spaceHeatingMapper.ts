@@ -26,11 +26,11 @@ export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSou
 
 	return objectFromEntries(
 		heatPumps.map((heatPump) => {
-			const mappedHeatPump: SchemaHeatSourceWetHeatPump = {
+			const mappedHeatPump: SchemaHeatSourceWetDetails = {
 				type: "HeatPump",
 				product_reference: heatPump.productReference,
 				EnergySupply: defaultElectricityEnergySupplyName,
-				is_heat_network: false, // todo change when HNs implemented
+				is_heat_network: false, // TODO implement correct logic when HNs implemented
 			};
 
 			return [
@@ -57,8 +57,8 @@ export function mapBoilers(state: ResolvedState): Record<string, SchemaBoilerWit
 						? { specified_location: boiler.specifiedLocation }
 						: {}),
 					EnergySupply: "mains_elec",
-					is_heat_network: false, // todo change when HNs implemented
-				} as const satisfies SchemaBoilerWithProductReference,
+					is_heat_network: false, // TODO implement correct logic when HNs implemented
+				} as const satisfies SchemaHeatSourceWetDetails,
 			];
 		}),
 	);
@@ -84,8 +84,8 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 					number_of_units: heatBattery.numberOfUnits,
 					product_reference: heatBattery.productReference,
 					EnergySupply: heatBattery.energySupply,
-					is_heat_network: false as const, // todo change when HNs implemented
-				},
+					is_heat_network: false, // TODO implement correct logic when HNs implemented
+				} satisfies SchemaHeatSourceWetDetails,
 			];
 		}),
 	);

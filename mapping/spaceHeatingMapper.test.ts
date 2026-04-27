@@ -11,7 +11,7 @@ import {
 import type { SchemaHeatSourceWetHeatPump, SchemaWetDistribution } from "../schema/api-schema.types";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import type { HeatEmittingData, WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
-import type { SchemaBoilerWithProductReference } from "~/schema/aliases";
+import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetDetails } from "~/schema/aliases";
 import { celsius } from "~/utils/units/temperature";
 
 
@@ -47,7 +47,7 @@ describe("Space heating - heat sources", () => {
 						},
 					},
 				});
-				const expectedHeatPump: SchemaHeatSourceWetHeatPump = {
+				const expectedHeatPump: SchemaHeatSourceWetDetails = {
 					type: "HeatPump",
 					product_reference: heatPumpWithProductReference1.productReference,
 					EnergySupply: defaultElectricityEnergySupplyName,
@@ -63,13 +63,13 @@ describe("Space heating - heat sources", () => {
 			});
 
 			test("handles multiple heat pumps", () => {
-				const expectedHeatPump1: SchemaHeatSourceWetHeatPump = {
+				const expectedHeatPump1: SchemaHeatSourceWetDetails = {
 					type: "HeatPump",
 					product_reference: heatPumpWithProductReference1.productReference,
 					EnergySupply: defaultElectricityEnergySupplyName,
 					is_heat_network: false,
 				};
-				const expectedHeatPump2: SchemaHeatSourceWetHeatPump = {
+				const expectedHeatPump2: SchemaHeatSourceWetDetails = {
 					type: "HeatPump",
 					product_reference: heatPumpWithProductReference2.productReference,
 					EnergySupply: defaultElectricityEnergySupplyName,

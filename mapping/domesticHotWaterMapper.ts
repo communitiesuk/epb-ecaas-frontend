@@ -1,4 +1,4 @@
-import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaOtherWaterUseDetails, SchemaWaterPipework, SchemaStorageTank, SchemaBoilerWithProductReference } from "~/schema/aliases";
+import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaOtherWaterUseDetails, SchemaWaterPipework, SchemaStorageTank, SchemaBoilerWithProductReference, SchemaHeatSourceWetDetails } from "~/schema/aliases";
 import type { SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
@@ -149,38 +149,38 @@ function mapHeatSourceWet(
 			return { 
 				HeatSourceWet: {
 					[heatSource.name]: {
-						type: "HeatPump",
+						type: "HeatPump" as const,
 						product_reference: heatSource.productReference,
 						EnergySupply: defaultElectricityEnergySupplyName,
-						is_heat_network: false, // todo change when HNs implemented
-					} as const satisfies SchemaHeatSourceWetHeatPump,
+						is_heat_network: false, // TODO implement correct logic when HNs implemented
+					} as const satisfies SchemaHeatSourceWetDetails,
 				} satisfies FhsInputSchema["HeatSourceWet"], 
 			};
 		case "boiler":
 			return { 
 				HeatSourceWet: {
 					[heatSource.name]: {
-						type: "Boiler",
+						type: "Boiler" as const,
 						product_reference: heatSource.productReference,
 						...("specifiedLocation" in heatSource
 							? { specified_location: heatSource.specifiedLocation }
 							: {}),
 						EnergySupply: defaultElectricityEnergySupplyName,
-						is_heat_network: false, // todo change when HNs implemented
-					} as const satisfies SchemaBoilerWithProductReference, 
+						is_heat_network: false, // TODO implement correct logic when HNs implemented
+					} as const satisfies SchemaHeatSourceWetDetails, 
 				} satisfies FhsInputSchema["HeatSourceWet"],
 			};
 		case "heatBattery":
 			return { 
 				HeatSourceWet: {
 					[heatSource.name]: {
-						type: "HeatBattery",
+						type: "HeatBattery" as const,
 						product_reference: heatSource.productReference,
 						EnergySupply: defaultElectricityEnergySupplyName,
 						battery_type: batteryTypeMap[heatSource.typeOfHeatBattery],
 						number_of_units: heatSource.numberOfUnits,
-						is_heat_network: false, // todo change when HNs implemented
-					} as const satisfies SchemaHeatSourceWetHeatBattery,
+						is_heat_network: false, // TODO implement correct logic when HNs implemented
+					} as const satisfies SchemaHeatSourceWetDetails,
 				} satisfies FhsInputSchema["HeatSourceWet"], 
 			};
 	}
