@@ -64,24 +64,21 @@ function handleComplete() {
 	);
 
 
-	const hasWaterStorage = store.domesticHotWater.waterStorage.data.length;
-
-	const heatSourcesRequiringStorage = ["immersionHeater", "solarThermalSystem", "heatPump"];
-
-	const requiresWaterStorage = store.domesticHotWater.heatSources.data.some((heatSource) => {
-		const heatSourceType = getDhwHeatSourceType(heatSource);
-		return heatSourceType ? heatSourcesRequiringStorage.includes(heatSourceType) : false;
-	});
+	const hasWaterStorage = store.domesticHotWater.waterStorage.data.length > 0;
 
 	if (!hasOtherHotWaterOutlet) {
-		errorMessages.value.push({ id: "hotWaterOutletNoOtherTypeError", text: "You must add at least one hot water outlet that has the type 'other'.", href: `${page?.url}/hot-water-outlets/create` });
+		errorMessages.value.push({ 
+			id: "hotWaterOutletNoOtherTypeError", 
+			text: "You must add at least one hot water outlet that has the type 'other'.", 
+			href: `${page?.url}/hot-water-outlets/create` });
 		
 	}
 
-	if (requiresWaterStorage && !hasWaterStorage) {
+	if (heatSourceRequiresWaterStorage() && !hasWaterStorage) {
 		errorMessages.value.push({
 			id: "waterStorageRequiredError",
-			text: "Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump.", href: `${page?.url}/water-storage/create`,
+			text: "Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump.",
+			href: `${page?.url}/water-storage/create`,
 		});
 	}
 
@@ -134,6 +131,38 @@ function maxHeatSourcesExceeded() {
 }
 if (maxHeatSourcesExceeded()) {
 	errorMessages.value.push({ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used." });
+}
+
+function heatSourceRequiresWaterStorage() {
+	const dhwHeatSourcesRequiringWaterStorage = [
+		"immersionHeater",
+		"solarThermalSystem",
+		"heatPump",
+	];
+
+	const requiresWaterStorage = store.domesticHotWater.heatSources.data.some(
+		(heatSource) => {
+			const heatSourceType = getDhwHeatSourceType(heatSource);
+			return heatSourceType ? dhwHeatSourcesRequiringWaterStorage.includes(heatSourceType) : false;
+		},
+	);
+
+	const hasSpaceHeatingHeatPump =
+		hasReferenceToExistingSpaceHeatingHeatPump();
+	
+	return requiresWaterStorage || hasSpaceHeatingHeatPump;
+}
+
+function hasReferenceToExistingSpaceHeatingHeatPump(): boolean {
+	return store.domesticHotWater.heatSources.data.some((dhwHeatSource) => {
+		if (!dhwHeatSource.data.isExistingHeatSource) return false;
+
+		const linkedHeatSource = store.spaceHeating.heatSource.data.find(
+			(shHeatSource) => shHeatSource.data.id === dhwHeatSource.data.heatSourceId,
+		);
+
+		return linkedHeatSource?.data.typeOfHeatSource === "heatPump";
+	});
 }
 
 </script>
