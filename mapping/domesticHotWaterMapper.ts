@@ -134,8 +134,8 @@ function getActualHeatSourceFromDHWHeatSource(state: ResolvedState, waterStorage
 function mapHeatSourceWet(
 	heatSource: Exclude<
 		ReturnType<typeof getActualHeatSourceFromDHWHeatSource>,
-			| { typeOfHeatSource: "solarThermalSystem" }
-			| { typeOfHeatSource: "immersionHeater" }
+		| { typeOfHeatSource: "solarThermalSystem" }
+		| { typeOfHeatSource: "immersionHeater" }
 	>) {
 
 	const batteryTypeMap = {
@@ -146,7 +146,7 @@ function mapHeatSourceWet(
 	switch (heatSource.typeOfHeatSource) {
 		// TODO case "HIU":
 		case "heatPump":
-			return { 
+			return {
 				HeatSourceWet: {
 					[heatSource.name]: {
 						type: "HeatPump" as const,
@@ -154,10 +154,10 @@ function mapHeatSourceWet(
 						EnergySupply: defaultElectricityEnergySupplyName,
 						is_heat_network: false, // TODO implement correct logic when HNs implemented
 					} as const satisfies SchemaHeatSourceWetDetails,
-				} satisfies FhsInputSchema["HeatSourceWet"], 
+				} satisfies FhsInputSchema["HeatSourceWet"],
 			};
 		case "boiler":
-			return { 
+			return {
 				HeatSourceWet: {
 					[heatSource.name]: {
 						type: "Boiler" as const,
@@ -167,11 +167,11 @@ function mapHeatSourceWet(
 							: {}),
 						EnergySupply: defaultElectricityEnergySupplyName,
 						is_heat_network: false, // TODO implement correct logic when HNs implemented
-					} as const satisfies SchemaHeatSourceWetDetails, 
+					} as const satisfies SchemaHeatSourceWetDetails,
 				} satisfies FhsInputSchema["HeatSourceWet"],
 			};
 		case "heatBattery":
-			return { 
+			return {
 				HeatSourceWet: {
 					[heatSource.name]: {
 						type: "HeatBattery" as const,
@@ -181,7 +181,7 @@ function mapHeatSourceWet(
 						number_of_units: heatSource.numberOfUnits,
 						is_heat_network: false, // TODO implement correct logic when HNs implemented
 					} as const satisfies SchemaHeatSourceWetDetails,
-				} satisfies FhsInputSchema["HeatSourceWet"], 
+				} satisfies FhsInputSchema["HeatSourceWet"],
 			};
 	}
 };
@@ -226,12 +226,12 @@ function mapWaterStorageHeatSource(
 						EnergySupply: defaultElectricityEnergySupplyName,
 						...commonWSHeatSourceProps,
 					} as const satisfies WaterStorageHeatSource<"HeatPump_HWOnly">,
-				} ;
+				};
 				break;
 			}
-			// falls through to "HeatSourceWet" if not a HWOnly heat pump
+		// falls through to "HeatSourceWet" if not a HWOnly heat pump
 		case "boiler":
-			// always falls through to "HeatSourceWet"
+		// always falls through to "HeatSourceWet"
 		case "heatBattery":
 			// HeatSourceWet
 			mappedWSHeatSource = {
@@ -292,7 +292,7 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 		throw new Error("Cannot have a point of use heat source heating a hot water cylinder or smart hot water tank");
 	}
 
-	const needsHeatExSurfaceArea = actualHeatSource.typeOfHeatSource === "heatPump" 
+	const needsHeatExSurfaceArea = actualHeatSource.typeOfHeatSource === "heatPump"
 		&& actualHeatSource.typeOfHeatPump === "hotWaterOnly"
 		&& waterStorage.typeOfWaterStorage === "hotWaterCylinder";
 
@@ -319,7 +319,7 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 
 	const { mappedWSHeatSource, mappedHeatSourceWet }
 		= mapWaterStorageHeatSource(waterStorage, dhwHeatSource, actualHeatSource);
-		
+
 	return {
 		HotWaterSource: {
 			"hw cylinder": {
@@ -360,7 +360,14 @@ function mapHeatSourceNoWS(
 	};
 
 	switch (actualHeatSource.typeOfHeatSource) {
-		// TODO case "HIU":
+		case "heatInterfaceUnit":
+			mappedHWCylinderBit = {
+				type: "HIU",
+				HeatSourceWet: actualHeatSource.name,
+				...commonHWCylinderProps,
+			} as const satisfies FhsInputSchema["HotWaterSource"]["hw cylinder"];
+			mappedHeatSourceWet = mapHeatSourceWet(actualHeatSource);
+			break;
 		case "boiler":
 			mappedHWCylinderBit = {
 				type: "CombiBoiler",
@@ -411,7 +418,7 @@ function mapHotWaterSourcesWithoutWaterStorage(state: ResolvedState) {
 	}
 
 	const { mappedHWCylinderBit, mappedHeatSourceWet } = mapHeatSourceNoWS(dhwHeatSource, actualHeatSource);
-		
+
 	return {
 		HotWaterSource: {
 			"hw cylinder": {
