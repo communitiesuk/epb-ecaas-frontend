@@ -4,7 +4,6 @@ import type {
 	SchemaElecStorageHeaterWithProductReference,
 	SchemaFancoilWithProductReference,
 	SchemaHeatSourceWetHeatBattery,
-	SchemaHeatSourceWetHeatPump,
 	SchemaInstantElecHeater,
 	SchemaRadiatorWithProductReference,
 	SchemaUfhWithProductReference,
@@ -12,13 +11,27 @@ import type {
 	SchemaWetDistribution,
 	SchemaEcoDesignControllerNoWeatherCompensator,
 	SchemaEcoDesignControllerWeatherCompensator,
-	SchemaHeatSourceWetHiu,
 } from "../schema/api-schema.types";
-import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetDetails, SchemaSpaceHeatSystem } from "~/schema/aliases";
+import type { SchemaBoilerWithProductReference, SchemaHeatNetworkType, SchemaHeatSourceWetDetails, SchemaHeatSourceWetHeatPumpInput, SchemaHeatSourceWetHiuInput, SchemaSpaceHeatSystem } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import { objectFromEntries } from "ts-extras";
+function getAssociatedHeatNetworkType(associatedHeatNetworkId: string | undefined, state: ResolvedState): SchemaHeatNetworkType {
+	const heatNetworks = state.spaceHeating.heatSource.filter(source => source.typeOfHeatSource === "heatNetwork");
+	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
+	const heatNetorkType = associatedHeatNetwork ? associatedHeatNetwork?.typeOfHeatNetwork : undefined;
+	switch (heatNetorkType) {
+		case "sleevedDistrictHeatNetwork":
+			return "sleeved DHN" as const;
+		case "unsleevedDistrictHeatNetwork":
+			return "unsleeved DHN" as const;
+		case "communalHeatNetwork":
+			return "communal" as const;
+		default:
+			throw new Error(`Unknown heat network type ${heatNetorkType}`);
+	}
+}
 
-export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatPump> {
+export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatPumpInput> {
 	const heatSources = state.spaceHeating.heatSource;
 	const heatPumps = heatSources.filter(
 		(heatSource) => heatSource.typeOfHeatSource === "heatPump",
@@ -26,11 +39,18 @@ export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSou
 
 	return objectFromEntries(
 		heatPumps.map((heatPump) => {
-			const mappedHeatPump: SchemaHeatSourceWetDetails = {
+			const heatNetworkFields = heatPump.isConnectedToHeatNetwork ? {
+				is_heat_network: true as const,
+				heat_network_type: getAssociatedHeatNetworkType(heatPump.associatedHeatNetworkId, state),
+			} : {
+				is_heat_network: false as const,
+			};
+			const mappedHeatPump: SchemaHeatSourceWetHeatPumpInput = {
 				type: "HeatPump",
 				product_reference: heatPump.productReference,
 				EnergySupply: defaultElectricityEnergySupplyName,
-				is_heat_network: false, // TODO implement correct logic when HNs implemented
+				...heatNetworkFields,
+
 			};
 
 			return [
@@ -57,8 +77,7 @@ export function mapBoilers(state: ResolvedState): Record<string, SchemaBoilerWit
 						? { specified_location: boiler.specifiedLocation }
 						: {}),
 					EnergySupply: "mains_elec",
-					is_heat_network: false, // TODO implement correct logic when HNs implemented
-				} as const satisfies SchemaHeatSourceWetDetails,
+				} as const satisfies SchemaBoilerWithProductReference,
 			];
 		}),
 	);
@@ -84,20 +103,47 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 					number_of_units: heatBattery.numberOfUnits,
 					product_reference: heatBattery.productReference,
 					EnergySupply: heatBattery.energySupply,
-					is_heat_network: false, // TODO implement correct logic when HNs implemented
-				} satisfies SchemaHeatSourceWetDetails,
+					is_heat_network: false as const,
+				},
 			];
 		}),
 	);
 }
+function getSubnetworkId(associatedHeatNetworkId: string | undefined, state: ResolvedState): string | undefined {
+	const heatNetworks = state.spaceHeating.heatSource.filter(source => source.typeOfHeatSource === "heatNetwork");
+	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
+	return associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkId : undefined;
+}
+export function mapHIUs(state: ResolvedState): Record<string, SchemaHeatSourceWetHiuInput> {
+	const heatSources = state.spaceHeating.heatSource;
+	const hius = heatSources.filter(
+		(heatSource) => heatSource.typeOfHeatSource === "heatInterfaceUnit",
+	);
+	return objectFromEntries(
+		hius.map((hiu) => {
+			const heatNetworkType = hiu.associatedHeatNetworkId ? getAssociatedHeatNetworkType(hiu.associatedHeatNetworkId, state) : undefined;
+			const subHeatNetworkId = hiu.associatedHeatNetworkId ? getSubnetworkId(hiu.associatedHeatNetworkId, state) : undefined;
+			if (!heatNetworkType) {
+				throw new Error(`HIU ${hiu.name} is indicated as being connected to a heat network but no associated heat network was found`);
+			}
+			return [
+				hiu.name,
+				{
+					type: "HIU" as const,
+					product_reference: hiu.productReference ?? undefined,
+					design_flow_temp: hiu.maxFlowTemp.amount,
+					building_level_distribution_losses: typeof hiu.buildingLevelLosses === "object" && hiu.buildingLevelLosses !== null && "amount" in hiu.buildingLevelLosses ? hiu.buildingLevelLosses.amount : hiu.buildingLevelLosses,
+					is_heat_network: true as const,
+					heat_network_type: heatNetworkType,
+					heat_network_reference: hiu.associatedHeatNetworkId,
+					sub_heat_network_name: subHeatNetworkId ?? "",
+					EnergySupply: defaultElectricityEnergySupplyName,
+				} as const satisfies SchemaHeatSourceWetHiuInput,
 
-export function mapHIUs(state: ResolvedState): Record<string, SchemaHeatSourceWetHiu> {
-	const _heatSources = state.spaceHeating.heatSource;
-	// const hius = heatSources.filter(
-	// 	(heatSource) => heatSource.typeOfHeatSource === "heatInterfaceUnit",
-	// );
+			];
 
-	return {};
+		}),
+	);
 }
 
 function mapEcoDesignController<T extends { ecoDesignControllerClass: string, minOutdoorTemp?: number, maxOutdoorTemp?: number, minFlowTemp?: number }>(emitter: T) {
@@ -262,7 +308,7 @@ export function mapSpaceHeatingHeatSources(state: ResolvedState): { HeatSourceWe
 			...mapHeatPumps(state),
 			...mapBoilers(state),
 			...mapHeatBatteries(state),
-			//...mapHIUs(state),
+			...mapHIUs(state),
 		},
 	};
 }
