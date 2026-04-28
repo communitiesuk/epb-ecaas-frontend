@@ -4,6 +4,7 @@ withDefaults(defineProps<{
 	errorList?: Array<{
 		id: string;
 		text: string | undefined;
+		href?: string
 	}>;
 	testId?: string;
 	className?: string;
@@ -39,7 +40,10 @@ const navigateToField = (id: string) => (e: Event) => {
 			<div class="govuk-error-summary__body">
 				<ul v-if="errorList && errorList.length" class="govuk-list govuk-error-summary__list">
 					<li v-for="error in errorList" :key="error.id">
-						<a v-if="useLinks" :href="`#${error.id}`" :onclick="navigateToField(error.id)">{{ error.text }}</a>
+						<a
+							v-if="useLinks"
+							:href="error.href || `#${error.id}`"
+							@click="!error.href ? navigateToField(error.id) : undefined">{{ error.text }}</a>
 						<span v-else>{{ error.text }}</span>
 					</li>
 				</ul>

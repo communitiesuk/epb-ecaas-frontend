@@ -13,7 +13,7 @@ const { removeEntry, duplicateEntry } = useDomesticHotWater();
 
 const { heatSources: dhwHeatSources } = store.domesticHotWater;
 
-const errorMessages = ref<{ id: string, text: string }[]>([]);
+const errorMessages = ref<{ id: string, text: string, href?: string }[]>([]);
 const heatSourceTypesThatCanAddSecond = ["heatNetwork", "heatPump", "heatInterfaceUnit"] as const;
 
 function getDhwHeatSourceType(heatSourceForm: EcaasForm<DomesticHotWaterHeatSourceData>): Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: string }>["typeOfHeatSource"] | undefined {
@@ -57,14 +57,35 @@ const heatSourceMaxNumberOfItems = computed(() => {
 });
 
 function handleComplete() {
+	errorMessages.value = [];
+
 	const hasOtherHotWaterOutlet = store.domesticHotWater.hotWaterOutlets.data.some(
 		(outlet) => outlet.data.typeOfHotWaterOutlet === "otherHotWaterOutlet",
 	);
 
+
+	const hasWaterStorage = store.domesticHotWater.waterStorage.data.length;
+
+	const heatSourcesRequiringStorage = ["immersionHeater", "solarThermalSystem", "heatPump"];
+
+	const requiresWaterStorage = store.domesticHotWater.heatSources.data.some((heatSource) => {
+		const heatSourceType = getDhwHeatSourceType(heatSource);
+		return heatSourceType ? heatSourcesRequiringStorage.includes(heatSourceType) : false;
+	});
+
 	if (!hasOtherHotWaterOutlet) {
-		errorMessages.value.push({ id: "hotWaterOutletNoOtherTypeError", text: "You must add at least one hot water outlet that has the type 'other'" });
-		return;
+		errorMessages.value.push({ id: "hotWaterOutletNoOtherTypeError", text: "You must add at least one hot water outlet that has the type 'other'.", href: `${page?.url}/hot-water-outlets/create` });
+		
 	}
+
+	if (requiresWaterStorage && !hasWaterStorage) {
+		errorMessages.value.push({
+			id: "waterStorageRequiredError",
+			text: "Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump.", href: `${page?.url}/water-storage/create`,
+		});
+	}
+
+	if (errorMessages.value.length > 0) return;
 
 	store.$patch({
 		domesticHotWater: {
@@ -122,7 +143,7 @@ if (maxHeatSourcesExceeded()) {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovErrorSummary v-if="errorMessages.length > 0" :error-list="errorMessages" test-id="domesticHotWaterErrorSummary" :use-links="false"/>
+	<GovErrorSummary v-if="errorMessages.length > 0" :error-list="errorMessages" test-id="domesticHotWaterErrorSummary"/>
 	<CustomList 
 		id="heatSources"
 		title="Heat source"

@@ -5,6 +5,7 @@ import { coldWaterSourceOptions, DHWHeatSourceTypesWithDisplay } from "~/utils/d
 import type { Product } from "~/pcdb/pcdb.types";
 import { celsius } from "~/utils/units/temperature";
 import type { UnitValue } from "~/utils/units/types";
+import type { constants } from "buffer";
 
 const title = "Heat source";
 const store = useEcaasStore();
@@ -299,6 +300,26 @@ const isLinkedToHeatSourceWithCylinder = (): boolean => {
 
 	return isPackagedProduct(spaceHeatingHeatSource?.data) && spaceHeatingHeatSource.data.packageProductIds!.some(id => waterStorageIds.includes(id));
 };
+
+
+const hasWaterStorage = computed(() => {
+	return store.domesticHotWater.waterStorage.data.length > 0;
+});
+
+const heatSourceOptions = computed(() => {
+	const heatSourceOptions = filterHeatSourceOptions();
+
+	const result: Record<string, { label: string; disabled?: boolean }> = {};
+
+	for (const [key, label] of Object.entries(heatSourceOptions)) {
+		result[key] = {
+			label,
+			disabled: key === "pointOfUse" && hasWaterStorage.value,
+		};
+	}
+	return result;
+});
+
 </script>
 
 <template>
@@ -358,7 +379,7 @@ const isLinkedToHeatSourceWithCylinder = (): boolean => {
 			id="typeOfHeatSource"
 			type="govRadios"
 			label="Type of heat source"
-			:options="filterHeatSourceOptions()"
+			:options="heatSourceOptions"
 			name="typeOfHeatSource"
 			validation="required"
 			:disabled="hasPackagedProduct(model)"
