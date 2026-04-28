@@ -8,7 +8,7 @@ import {
 	mapWetDistributions,
 	mapSpaceHeatSystem,
 } from "./spaceHeatingMapper";
-import type { SchemaElecStorageHeater, SchemaElecStorageHeaterWithProductReference, SchemaHeatSourceWetHeatPump, SchemaWetDistribution } from "../schema/api-schema.types";
+import type { SchemaElecStorageHeaterWithProductReference, SchemaWetDistribution } from "../schema/api-schema.types";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import type { HeatEmittingData, WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
 import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetDetails } from "~/schema/aliases";
