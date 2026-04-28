@@ -938,12 +938,6 @@ const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedContinuousMev",
 
 export type HeatSourceSectionPage = "space heating" | "domestic hot water";
 
-export type SpaceHeatingNew = AssertEachKeyIsPageId<{
-	heatSource: EcaasFormList<HeatSourceData>,
-	heatEmitters: EcaasFormList<HeatEmittingData>
-	heatingControls: EcaasFormList<HeatingControlData>
-}>;
-
 export type HeatPumpType = z.infer<typeof typeOfHeatPump>;
 export type TypeOfBoiler = z.infer<typeof typeOfBoiler>;
 export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;

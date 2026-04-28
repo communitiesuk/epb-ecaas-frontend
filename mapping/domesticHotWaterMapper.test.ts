@@ -21,6 +21,21 @@ describe("domestic hot water mapper", () => {
 	const heatSourceId = "efa1b2c3-d4e5-6789-0123-456789abcdef";
 	const heatSourceIdInSH = "efa1b2c3-d4e5-6789-0123-456789abcd12";
 
+	const heatNetwork = {
+		data: {
+			id: "heat-network-123",
+			name: "Heat Network 123",
+			coldWaterSource: "mainsWater",
+			typeOfHeatSource: "heatNetwork",
+			productReference: "HN-12345",
+			typeOfHeatNetwork: "communalHeatNetwork",
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			maxFlowTemp: unitValue(32, celsius),
+			subHeatNetworkId: "sub-heat-network-123",
+		},
+		complete: true,
+	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 	// water storage
 
 	const storageTank = {
@@ -100,7 +115,7 @@ describe("domestic hot water mapper", () => {
 			coldWaterSource: "headerTank",
 			isExistingHeatSource: false,
 			productReference: "HIU-12346",
-			associatedHeatNetworkId: "heat-network-123",
+			associatedHeatNetworkId: heatNetwork.data.id,
 			buildingLevelLosses: unitValue(0.5, kilowatt),
 			maxFlowTemp: unitValue(17, celsius),
 		},
@@ -205,20 +220,7 @@ describe("domestic hot water mapper", () => {
 		},
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
-	const heatNetwork = {
-		data: {
-			id: "heat-network-123",
-			name: "Heat Network 123",
-			coldWaterSource: "mainsWater",
-			typeOfHeatSource: "heatNetwork",
-			productReference: "HN-12345",
-			typeOfHeatNetwork: "communalHeatNetwork",
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-			maxFlowTemp: unitValue(32, celsius),
-			subHeatNetworkId: "sub-heat-network-123",
-		},
-	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
 	describe("water storage and heat sources", () => {
 
 		/**
@@ -476,12 +478,13 @@ describe("domestic hot water mapper", () => {
 									design_flow_temp: heatInterfaceUnit.data.maxFlowTemp.amount,
 									building_level_distribution_losses: heatInterfaceUnit.data.buildingLevelLosses.amount,
 									heat_network_type: "communal",
+									sub_heat_network_name: heatNetwork.data.subHeatNetworkId,
 								},
 							},
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
-						heatSource: heatInterfaceUnit, waterStorage: storageTankWithHeatEx,
+						heatSource: heatInterfaceUnit, waterStorage: storageTank,
 						expected: {
 							HotWaterSource: {
 								"hw cylinder": {
@@ -489,13 +492,13 @@ describe("domestic hot water mapper", () => {
 									ColdWaterSource: "header tank",
 									volume: storageTankWithHeatEx.data.storageCylinderVolume.amount,
 									daily_losses: storageTankWithHeatEx.data.dailyEnergyLoss,
-									heat_exchanger_surface_area: storageTankWithHeatEx.data.areaOfHeatExchanger,
 									HeatSource: {
 										[heatInterfaceUnit.data.name]: {
 											type: "HeatSourceWet",
 											name: heatInterfaceUnit.data.name,
 											heater_position: storageTankWithHeatEx.data.heaterPosition,
 											temp_flow_limit_upper: heatInterfaceUnit.data.maxFlowTemp.amount,
+											thermostat_position: storageTankWithHeatEx.data.thermostatPosition,
 										},
 									},
 								},
@@ -554,7 +557,7 @@ describe("domestic hot water mapper", () => {
 					store.$patch({
 						domesticHotWater: {
 							heatSources: {
-								data: [heatSource],
+								data: [heatSource, heatNetwork],
 								complete: true,
 							},
 							waterStorage: {
@@ -631,7 +634,7 @@ describe("domestic hot water mapper", () => {
 							"hw cylinder": {
 								type: "HIU",
 								HeatSourceWet: heatInterfaceUnit.data.name,
-								ColdWaterSource: "mains water",
+								ColdWaterSource: "header tank",
 							},
 						},
 						HeatSourceWet: {
@@ -639,11 +642,12 @@ describe("domestic hot water mapper", () => {
 								type: "HIU",
 								is_heat_network: true,
 								product_reference: heatInterfaceUnit.data.productReference,
-								heat_network_reference: heatInterfaceUnit.data.associatedHeatNetworkId,
+								heat_network_reference: heatNetwork.data.name,
 								EnergySupply: defaultElectricityEnergySupplyName,
 								design_flow_temp: heatInterfaceUnit.data.maxFlowTemp.amount,
 								building_level_distribution_losses: heatInterfaceUnit.data.buildingLevelLosses.amount,
 								heat_network_type: "communal",
+								sub_heat_network_name: heatNetwork.data.subHeatNetworkId,
 							},
 						},
 					} as const satisfies Partial<FhsInputSchema>,
@@ -858,6 +862,7 @@ describe("domestic hot water mapper", () => {
 					buildingLevelLosses: unitValue(0.5, kilowatt),
 					maxFlowTemp: unitValue(17, celsius),
 				},
+				complete: true,
 			} as const satisfies EcaasForm<HeatSourceData>;
 			const dhwWithExistingHIU = {
 				data: {
@@ -993,12 +998,11 @@ describe("domestic hot water mapper", () => {
 									type: "HIU",
 									is_heat_network: true,
 									product_reference: heatInterfaceUnitInSH.data.productReference,
-									heat_network_reference: heatInterfaceUnitInSH.data.associatedHeatNetworkId,
+									heat_network_reference: heatNetwork.data.name,
 									EnergySupply: defaultElectricityEnergySupplyName,
 									design_flow_temp: heatInterfaceUnitInSH.data.maxFlowTemp.amount,
 									building_level_distribution_losses: heatInterfaceUnitInSH.data.buildingLevelLosses.amount,
 									heat_network_type: "communal",
-									HIU_daily_loss: heatInterfaceUnitInSH.data.buildingLevelLosses.amount,
 									sub_heat_network_name: heatNetwork.data.subHeatNetworkId,
 								},
 							},
@@ -1010,7 +1014,7 @@ describe("domestic hot water mapper", () => {
 					store.$patch({
 						spaceHeating: {
 							heatSource: {
-								data: [heatSource],
+								data: [heatSource, heatNetwork],
 								complete: true,
 							},
 						},
@@ -1094,12 +1098,11 @@ describe("domestic hot water mapper", () => {
 								type: "HIU",
 								is_heat_network: true,
 								product_reference: heatInterfaceUnitInSH.data.productReference,
-								heat_network_reference: heatInterfaceUnitInSH.data.associatedHeatNetworkId,
+								heat_network_reference: heatNetwork.data.name,
 								building_level_distribution_losses: heatInterfaceUnitInSH.data.buildingLevelLosses.amount,
 								design_flow_temp: heatInterfaceUnitInSH.data.maxFlowTemp.amount,
 								EnergySupply: defaultElectricityEnergySupplyName,
 								heat_network_type: "communal",
-								HIU_daily_loss: heatInterfaceUnitInSH.data.buildingLevelLosses.amount,
 								sub_heat_network_name: heatNetwork.data.subHeatNetworkId,
 							},
 						},
@@ -1110,7 +1113,7 @@ describe("domestic hot water mapper", () => {
 					store.$patch({
 						spaceHeating: {
 							heatSource: {
-								data: [heatSource],
+								data: [heatSource, heatNetwork],
 								complete: true,
 							},
 						},
