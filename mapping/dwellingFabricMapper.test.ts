@@ -41,10 +41,10 @@ describe("dwelling fabric mapper", () => {
 			spaceHeating: {
 				heatEmitters: {
 					data: [{
-						data: { name: "wds 1", typeOfHeatEmitter: "wetDistributionSystem", heatingRank: 2 }, complete: true,
+						data: { name: "wds 1", typeOfHeatEmitter: "wetDistributionSystem", heatingRank: 1 }, complete: true,
 					},
 					{
-						data: { name: "ieh 1", typeOfHeatEmitter: "instantElectricHeater", heatingRank: 1 }, complete: true,
+						data: { name: "ieh", typeOfHeatEmitter: "instantElectricHeater", heatingRank: 2, numOfHeaters: 2 }, complete: true,
 					},
 					], complete: true,
 				},
@@ -58,7 +58,7 @@ describe("dwelling fabric mapper", () => {
 			},
 		});
 
-		const heatSystemsNamesSortedByRank = ["ieh 1", "wds 1"];
+		const heatSystemsNamesSortedByRank = ["wds 1", "ieh 1", "ieh 2"];
 
 		// Act
 		const fhsInputData = mapZoneParametersData(resolveState(store.$state));
