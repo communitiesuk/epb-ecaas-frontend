@@ -13,13 +13,7 @@ defineProps<{
 	dataField?: string;
 }>();
 
-const energySupplies = useEnergySupplies();
-
-function getDefaultEnergySupply(supplies: [string, string][]) {
-	if (supplies.length === 1) {
-		return supplies[0]![0];
-	}
-}
+const { energySupplies, getDefaultEnergySupply } = useEnergySupplies();
 </script>
 
 <template>
@@ -31,7 +25,7 @@ function getDefaultEnergySupply(supplies: [string, string][]) {
 			:label="label"
 			:help="help"
 			:name="name"
-			:value="getDefaultEnergySupply(energySupplies)"
+			:value="getDefaultEnergySupply()"
 			:validation="validation ?? 'required'"
 			:validation-rules="validationRules"
 			:validation-messages="validationMessages"

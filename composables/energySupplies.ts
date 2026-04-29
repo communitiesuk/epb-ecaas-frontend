@@ -10,5 +10,14 @@ export function useEnergySupplies() {
 			.filter(x => typeof x !== "undefined")
 		: [["electricity", energySupplyOptions["electricity"]]] as [SchemaFuelType, string][];
 
-	return energySupplies;
+	function getDefaultEnergySupply() {
+		if (energySupplies.length === 1) {
+			return energySupplies[0]![0];
+		}
+	}
+
+	return {
+		energySupplies,
+		getDefaultEnergySupply,
+	};
 }

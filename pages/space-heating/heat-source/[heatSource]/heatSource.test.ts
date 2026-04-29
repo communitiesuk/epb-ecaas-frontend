@@ -666,6 +666,23 @@ describe("heatSource", () => {
 			expect((data[0]?.data as { energySupply: string }).energySupply).toBe("mains_gas");
 		});
 
+		test("heat pump data with default energy supply is saved to store state when form is valid and not connected to heat network", async () => {
+			vi.mocked(uuidv4).mockReturnValue(heatPump1.id as unknown as Buffer);
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+			await user.click(screen.getByTestId("isConnectedToHeatNetwork_no"));
+			await user.tab();
+
+			const { data } = store.spaceHeating.heatSource;
+			expect((data[0]?.data as { energySupply: string }).energySupply).toBe("electricity");
+		});
+
 		test("energy supply is prepopulated when existing heat pump data with energy supply exists in state", async () => {
 			const heatPumpWithEnergySupply: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
