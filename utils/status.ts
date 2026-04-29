@@ -122,7 +122,6 @@ export function getSectionStatus(section: Record<string, object>): GovTagProps {
 	if (numberOfCompleteTasks === tasks.length) {
 		status = formStatus.complete;
 	}
-	console.log(`Section status tasks, [${tasks.map(t => t[0]).join(", ")}]`, { section, status, numberOfCompleteTasks, tasksLength: tasks.length });
 	return status;
 }
 
