@@ -24,7 +24,16 @@ const heatSourceProductType = heatSourceType as (HeatSourceProductType | Technol
 const productType = heatSourceProductTypesDisplay[heatSourceProductType];
 
 const index = Number(params.heatSource);
-const { data: { value: data } } = await useFetch(`/api/products/${params.id}/details`);
+const { query } = useRoute();
+const { data: { value: data } } = await useFetch(`/api/products/${params.id}/details`, {
+	query: {
+		testDataId: query?.testDataId,
+	},
+});
+
+const isHeatNetwork = computed(() => data?.technologyType === "HeatNetworks");
+const title = isHeatNetwork.value ? (data as { communityHeatNetworkName?: string })?.communityHeatNetworkName : data?.modelName;
+const subtitle = isHeatNetwork.value ? (data as { testData: { subheatNetworkName?: string } })?.testData?.subheatNetworkName : data?.brandName;
 
 const { selectHeatSourceProduct } = useSelectHeatSourceProduct(data ? [data as DisplayProduct] : [], heatSourceProductType);
 
@@ -44,15 +53,15 @@ const selectProduct = async () => {
 
 <template>
 	<Head>
-		<Title>{{ data?.modelName }}</Title>
+		<Title>{{ title }}</Title>
 	</Head>
 
 	<NuxtLink :href="backUrl" class="govuk-back-link govuk-!-margin-top-0 govuk-!-margin-bottom-5" data-testid="backLink" @click="router.back()">
 		{{ productType ? `Back to ${sentenceToLowerCase(productType(true))}` : 'Back' }}
 	</NuxtLink>
 
-	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ data?.modelName }}</h1>
-	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
+	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ title }}</h1>
+	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ subtitle }}</h2>
 
 	<ProductDetailsHybridHeatPump v-if="!!data && data.technologyType === 'HybridHeatPump'" :product="data" />
 	<ProductDetailsHeatPump v-else-if="!!data && 'technologyGroup' in data && technologyGroups.includes(data.technologyGroup as TechnologyGroup)" :product="data!" />

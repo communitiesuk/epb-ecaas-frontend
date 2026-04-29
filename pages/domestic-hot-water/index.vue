@@ -3,7 +3,7 @@ import { hasPackagedProduct, isPackagedProduct, isEcaasForm } from "#imports";
 import type { CustomListItem } from "~/components/CustomList.vue";
 import { useDomesticHotWater } from "~/composables/domesticHotWater";
 import formStatus from "~/constants/formStatus";
-import type { HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
 
 const title = "Domestic hot water";
 
@@ -13,7 +13,59 @@ const { removeEntry, duplicateEntry } = useDomesticHotWater();
 
 const { heatSources: dhwHeatSources } = store.domesticHotWater;
 
+const errorMessages = ref<{ id: string, text: string }[]>([]);
+const heatSourceTypesThatCanAddSecond = ["heatNetwork", "heatPump", "heatInterfaceUnit"] as const;
+
+function getDhwHeatSourceType(heatSourceForm: EcaasForm<DomesticHotWaterHeatSourceData>): Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: string }>["typeOfHeatSource"] | undefined {
+	if (heatSourceForm.data.isExistingHeatSource) {
+		return store.spaceHeating.heatSource.data.find(
+			x => x.data.id === heatSourceForm.data.heatSourceId,
+		)?.data.typeOfHeatSource;
+	}
+
+	return heatSourceForm.data.typeOfHeatSource;
+}
+
+function isHeatPumpConnectedToExistingHeatNetwork(heatSourceForm: EcaasForm<DomesticHotWaterHeatSourceData>): boolean {
+	if (heatSourceForm.data.isExistingHeatSource) {
+		const existingHeatSource = store.spaceHeating.heatSource.data.find(
+			x => x.data.id === heatSourceForm.data.heatSourceId,
+		)?.data;
+
+		if (existingHeatSource?.typeOfHeatSource === "heatPump") {
+			const heatpumpData = existingHeatSource as Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
+			return heatpumpData.isConnectedToHeatNetwork === true
+			&& !!heatpumpData.associatedHeatNetworkId;
+		} 
+		return false;
+	}
+	return heatSourceForm.data.typeOfHeatSource === "heatPump"
+		&& heatSourceForm.data.isConnectedToHeatNetwork === true
+		&& !!heatSourceForm.data.associatedHeatNetworkId;
+}
+
+const heatSourceMaxNumberOfItems = computed(() => {
+	if (dhwHeatSources.data.length !== 1) {
+		return 1;
+	}
+	const firstHeatSource = dhwHeatSources.data[0];
+	if (firstHeatSource && isHeatPumpConnectedToExistingHeatNetwork(firstHeatSource)) {
+		return 1;
+	}
+	const firstHeatSourceType = firstHeatSource ? getDhwHeatSourceType(firstHeatSource) : undefined;
+	return firstHeatSourceType && heatSourceTypesThatCanAddSecond.includes(firstHeatSourceType as typeof heatSourceTypesThatCanAddSecond[number]) ? 2 : 1;
+});
+
 function handleComplete() {
+	const hasOtherHotWaterOutlet =
+	store.domesticHotWater.hotWaterOutlets.data.some(
+		(outlet) => outlet.data.typeOfHotWaterOutlet === "otherHotWaterOutlet",
+	);
+	if (!hasOtherHotWaterOutlet) {
+		errorMessages.value.push({ id: "hotWaterOutletNoOtherTypeError", text: "You must add at least one hot water outlet that has the type 'other'" });
+		return;
+	}
+
 	store.$patch({
 		domesticHotWater: {
 			waterStorage: { complete: true },
@@ -29,7 +81,13 @@ function handleComplete() {
 const hasIncompleteOrInvalidEntries = () => {
 	if (dhwHeatSources.data.length > 1) return true;
 	return Object.values(store.domesticHotWater)
-		.some(section => section.data.some(item => isEcaasForm(item) && !item.complete));
+		.some(section => {
+			if (isEcaasForm(section)) {
+				return section.data.some(item => isEcaasForm(item) && !item.complete);
+			}
+			
+			return false;
+		});
 };
 
 function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
@@ -39,10 +97,24 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 
 function maxHeatSourcesExceeded() {
 	const hasPackagedHeatSources = dhwHeatSources.data.every(x => isPackagedProduct(x.data) || hasPackagedProduct(x.data));
+	if (dhwHeatSources.data.length === 2) {
+		const connectedHeatPump = dhwHeatSources.data.find(isHeatPumpConnectedToExistingHeatNetwork);
+		const heatSourceTypes = dhwHeatSources.data.map(getDhwHeatSourceType);
+		const heatNetworks = heatSourceTypes.filter(type => type === "heatNetwork");
+		const typeOfHeatSource = heatSourceTypes.find(type => type && type !== "heatNetwork");
+		if (connectedHeatPump && heatNetworks.length >= 1) {
+			return true;
+		}
+		if (heatNetworks.length === 1 && (typeOfHeatSource === "heatPump" || typeOfHeatSource === "heatInterfaceUnit")) {
+			return false;
+		}
+	}
 	return dhwHeatSources.data.length > 1 && !hasPackagedHeatSources;
 }
+if (maxHeatSourcesExceeded()) {
+	errorMessages.value.push({ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used." });
+}
 
-const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used." }]);
 </script>
 
 <template>
@@ -50,7 +122,7 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovErrorSummary v-if="maxHeatSourcesExceeded()" :error-list="errorMessages" test-id="heatSourceLimitExceededErrorSummary" />
+	<GovErrorSummary v-if="errorMessages.length > 0" :error-list="errorMessages" test-id="domesticHotWaterErrorSummary" :use-links="false"/>
 	<CustomList 
 		id="heatSources"
 		title="Heat source"
@@ -73,7 +145,7 @@ const errorMessages = ref([{ id: "heatSourceLimitExceededError", text: "You can 
 				})
 		"
 		:show-status="true"
-		:max-number-of-items=1
+		:max-number-of-items="heatSourceMaxNumberOfItems"
 		section="dHWHeatSources"
 		@remove="(index: number) => removeEntry('heatSources', index)"
 	/>

@@ -22,6 +22,7 @@ export type HeatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "hea
 export type BoilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
 export type HeatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
 export type HeatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
+export type HeatInterfaceUnitModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatInterfaceUnit" }>;
 
 const packagedProduct = ref<Product | undefined>();
 
@@ -82,7 +83,7 @@ autoSaveElementForm<HeatSourceData>({
 function updateHeatSource(type: string) {
 	watch(() => model.value[`${type}` as keyof HeatSourceData], (newHeatSourceSubtype, initialHeatSourceSubtype) => {
 		if (newHeatSourceSubtype !== initialHeatSourceSubtype) {
-			if ("productReference" in model.value) {
+			if ("productReference" in model.value && type !== "typeOfHeatNetwork") {
 				model.value.productReference = "";
 			}
 			const defaultName = getHeatSourceDefaultName(model.value);
@@ -155,18 +156,24 @@ const boilers = heatSourceStoreData
 			:index="index"
 			page="space heating"
 			@update-boiler-model="updateHeatSource" />
-		<!-- <HeatNetworkSection
+		<HeatNetworkSection
 			v-if="model?.typeOfHeatSource === 'heatNetwork'"
 			:model="(model as HeatNetworkModelType)"
 			:index="index"
 			section="spaceHeating"
-			@update-heat-network-model="updateHeatSource" /> -->
+			@update-heat-network-model="updateHeatSource" />
 		<HeatBatterySection
 			v-if="model?.typeOfHeatSource === 'heatBattery'"
 			:model="(model as HeatBatteryModelType)"
 			:index="index"
 			page="space heating"
 			@update-heat-battery-model="updateHeatSource" />
+		<HeatInterfaceUnitSection
+			v-if="model?.typeOfHeatSource === 'heatInterfaceUnit'"
+			:model="model as HeatInterfaceUnitModelType" 
+			:index="index"
+			page="space heating"
+			@update-heat-interface-unit-model="updateHeatSource" />	
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('spaceHeating')" secondary test-id="saveProgress">Save progress</GovButton>

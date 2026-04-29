@@ -359,6 +359,21 @@ describe("Domestic hot water", () => {
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (1)`)).toBeDefined();
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (2)`)).toBeDefined();
 		});
+		test("prevents user completing hot water outlets unless at least one 'other' type is present", async () => {
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [{ ...hwOutlet1, complete: true }],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+			expect(errorSummary.querySelector("li[key=hotWaterOutletNoOtherTypeError]")).toBeDefined();
+		});
 	});
 
 	describe("Pipework", () => {
@@ -565,7 +580,7 @@ describe("Domestic hot water", () => {
 			await user.click(screen.getByTestId("heatSources_remove_0"));
 			expect(screen.queryByTestId("heatSources_items")).toBeNull();
 		});
-	
+
 		// it("references to the deleted DHW booster heat pump are removed from all heat network items", async () => {
 
 		// 	const heatNetwork: Partial<HeatSourceData> = {
@@ -589,10 +604,10 @@ describe("Domestic hot water", () => {
 		// 			},
 		// 		},
 		// 	});
-			
+
 		// 	await renderSuspended(DomesticHotWater);
 		// 	await user.click(await screen.findByTestId("heatSources_remove_0"));
-			
+
 		// 	const heatNetworkItem = store.spaceHeating.heatSource.data[0];
 		// 	expect((heatNetworkItem?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBe(undefined);
 		// 	expect(heatNetworkItem?.complete).toBe(false);
@@ -684,6 +699,8 @@ describe("Domestic hot water", () => {
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
+				isConnectedToHeatNetwork: false,
+				energySupply: "electricity",
 			};
 
 			const boiler: HeatSourceData = {
@@ -707,6 +724,8 @@ describe("Domestic hot water", () => {
 					"9e66d667-6c31-4406-9223-7e2249a7fee3",
 					"f6182db2-42e2-4d7e-beb8-de6f9a8f2be9",
 				],
+				isConnectedToHeatNetwork: false,
+				energySupply: "electricity",
 			};
 
 			const mvhr: Partial<MechanicalVentilationData> = {
@@ -864,10 +883,20 @@ describe("Domestic hot water", () => {
 	describe("mark section as complete", () => {
 
 		const addCompleteHotWaterToStore = async () => {
+			const otherOutlet: EcaasForm<HotWaterOutletsData> = {
+				data: {
+					name: "Other outlet for completion",
+					typeOfHotWaterOutlet: "otherHotWaterOutlet",
+					id: "outlet-complete",
+					flowRate: 12,
+				},
+				complete: true,
+			};
+
 			store.$patch({
 				domesticHotWater: {
 					waterStorage: { data: [{ ...hwStorage1, complete: true }] },
-					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: true }] },
+					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: true }, otherOutlet] },
 					pipework: { data: [{ ...pipework1, complete: true }] },
 					heatSources: { data: [{ ...heatSource1, complete: true }] },
 				},
@@ -1011,7 +1040,7 @@ describe("Domestic hot water", () => {
 		});
 
 		it("disables the mark section as complete button", async () => {
-				
+
 			await renderSuspended(DomesticHotWater);
 			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
 		});
@@ -1019,7 +1048,8 @@ describe("Domestic hot water", () => {
 		it("displays an error message informing users to remove the extra heat source/s", async () => {
 
 			await renderSuspended(DomesticHotWater);
-			expect(screen.getByTestId("heatSourceLimitExceededErrorSummary")).toBeDefined();
+			expect(screen.getByTestId("domesticHotWaterErrorSummary")).toBeDefined();
+			expect(screen.getByText("You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used.")).toBeDefined();
 		});
 
 		it("does not display error message when all / both heat sources are packaged", async () => {
@@ -1030,6 +1060,8 @@ describe("Domestic hot water", () => {
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
+				isConnectedToHeatNetwork: false,
+				energySupply: "electricity",
 			};
 
 			const boiler: HeatSourceData = {
@@ -1057,6 +1089,123 @@ describe("Domestic hot water", () => {
 			await renderSuspended(DomesticHotWater);
 
 			expect(screen.queryByTestId("heatSourceLimitExceededErrorSummary")).toBeNull();
+		});
+	});
+
+	describe("Heat network behaviour ", () => {
+		test("when the heat source is a heat network, a heat pump or HUI can be added", async () => {
+			const heatNetwork: DomesticHotWaterHeatSourceData = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				typeOfHeatSource: "heatNetwork",
+				typeOfHeatNetwork: "communalHeatNetwork",
+				name: "Test Heat Network",
+				productReference: "HEATNETWORK_SMALL",
+			};
+
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: heatNetwork, complete: true }],
+					},
+				},
+			});
+			await renderSuspended(DomesticHotWater);
+			expect(screen.getByTestId("heatSources_add")).toBeDefined();
+		});
+		test("when the heat source is a heat pump or HUI, a heat network can be added", async () => {
+			const heatPump: DomesticHotWaterHeatSourceData = {
+				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				name: "Heat pump",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "hybridHeatPump",
+				productReference: "1000",
+				isConnectedToHeatNetwork: false,
+				energySupply: "electricity",
+			};
+
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [
+							{ data: heatPump, complete: true },
+						],
+					},
+				},
+			});
+			await renderSuspended(DomesticHotWater);
+			expect(screen.getByTestId("heatSources_add")).toBeDefined();
+		});
+
+		test("when the heat source is a HUI, a heat network can be added", async () => {
+			const hiu: DomesticHotWaterHeatSourceData = {
+				id: "48f2ce5d-f7fc-40dd-8be8-5d7f0bb0d111",
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				name: "HIU",
+				typeOfHeatSource: "heatInterfaceUnit",
+				productReference: "HIU_123",
+				associatedHeatNetworkId: "network-1",
+				maxFlowTemp: unitValue(32, celsius),
+				buildingLevelLosses: unitValue(500, "watt"),
+			};
+
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [
+							{ data: hiu, complete: true },
+						],
+					},
+				},
+			});
+			await renderSuspended(DomesticHotWater);
+			expect(screen.getByTestId("heatSources_add")).toBeDefined();
+		});
+
+		test("when the first heat source is a heat pump connected to a space heating heat network, another heat network cannot be added", async () => {
+			const spaceHeatingHeatNetwork: HeatSourceData = {
+				id: "3a2fda59-4db4-4f31-aad4-8ff2e9c0f221",
+				name: "Space heating network",
+				typeOfHeatSource: "heatNetwork",
+				typeOfHeatNetwork: "communalHeatNetwork",
+				productReference: "HEATNETWORK_SMALL",
+			};
+
+			const connectedHeatPump: DomesticHotWaterHeatSourceData = {
+				id: "f1457a50-f9d9-4f31-92f5-bd6f7ff9dabc",
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				name: "Connected heat pump",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "hybridHeatPump",
+				productReference: "HP-123",
+				isConnectedToHeatNetwork: true,
+				associatedHeatNetworkId: spaceHeatingHeatNetwork.id,
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: spaceHeatingHeatNetwork, complete: true }],
+					},
+				},
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: connectedHeatPump, complete: true }],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			expect(screen.queryByTestId("heatSources_add")).toBeNull();
 		});
 	});
 });

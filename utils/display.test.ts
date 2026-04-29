@@ -1,4 +1,4 @@
-import { show, dim } from "./display";
+import { show, dim, renderPercentageValue } from "./display";
 
 describe("Show function to make showable value", () => {
 	it("renders a string as-is", () => {
@@ -164,3 +164,17 @@ describe("displayAdjacentSpaceType", () => {
 	});
 });
 
+describe("renderPercentageValue", () => {
+	it("renders a percentage value with a percent sign", () => {
+		expect(renderPercentageValue(50)).toBe("50 %");
+	});
+	it("renders empty value if input is undefined", () => {
+		expect(renderPercentageValue(undefined)).toBe("-");
+	});
+	it("renders empty value if input is null", () => {
+		expect(renderPercentageValue(null)).toBe("-");
+	});
+	it("parses string input to number and renders percentage", () => {
+		expect(renderPercentageValue("75")).toBe("75 %");
+	});
+});

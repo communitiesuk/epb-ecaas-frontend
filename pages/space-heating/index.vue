@@ -24,11 +24,6 @@ function handleDuplicate(spaceHeatingType: SpaceHeatingType, index: number) {
 	}
 }
 
-function handleRemoveHeatSource(index: number) {
-	duplicationError.value = false;
-	removeEntry("heatSource", index);
-}
-
 function handleComplete() {
 	store.$patch({
 		spaceHeating: {
@@ -40,7 +35,32 @@ function handleComplete() {
 
 	navigateTo("/");
 }
+function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
+	if (!heatNetworkId) return;
+	store.$patch((state) => {
+		state.spaceHeating.heatSource.data.forEach((heatSource) => {
+			const typeOfHeatSource = heatSource.data?.typeOfHeatSource;
+			if (
+				(typeOfHeatSource === "heatPump" || typeOfHeatSource === "heatInterfaceUnit") &&
+				(heatSource.data as { associatedHeatNetworkId: string | undefined }).associatedHeatNetworkId === heatNetworkId
+			) {
+				(heatSource.data as { associatedHeatNetworkId: string | undefined }).associatedHeatNetworkId = undefined;
+				heatSource.complete = false;
+			} 
+		});
+	});
+}
+function handleRemove(type: "heatSource" | "heatEmitters" | "heatingControls", index: number) {
+	if (type === "heatSource") {
+		duplicationError.value = false;
+		const heatSource = store.spaceHeating.heatSource.data[index];
+		if (heatSource?.data?.typeOfHeatSource === "heatNetwork") {
+			clearAssociationsWithHeatNetwork(heatSource.data.id);
+		}
+	}
 
+	removeEntry(type, index);
+}
 function checkIsComplete() {
 	const sections = store.spaceHeating;
 	return Object.values(sections).every((section) => section.complete);
@@ -94,7 +114,7 @@ function hasIncompleteEntries() {
 		"
 		:show-status="true"
 		@duplicate="(index: number) => handleDuplicate('heatSource', index)"
-		@remove="(index: number) => handleRemoveHeatSource(index)"
+		@remove="(index: number) => handleRemove('heatSource', index)"
 	/>
 	<CustomList
 		id="heatEmitters"

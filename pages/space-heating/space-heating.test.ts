@@ -146,6 +146,8 @@ describe("space heating", () => {
 					typeOfHeatSource: "heatPump",
 					typeOfHeatPump: "airSource",
 					productReference: "HEATPUMP_LARGE",
+					isConnectedToHeatNetwork: false,
+					energySupply: "electricity",
 				};
 
 				const wetdistribution: Partial<HeatEmittingData> = {
@@ -231,6 +233,73 @@ describe("space heating", () => {
 			// 	expect(heatNetworkDHWItem?.complete).toBe(false);
 			// });
 
+			test("When a network is removed, it sets any associated heat pumps to incomplete and removes the association", async () => {
+				const heatNetwork: Partial<HeatSourceData> = {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+					typeOfHeatSource: "heatNetwork",
+					typeOfHeatNetwork: "communalHeatNetwork",
+					productReference: "HEATNETWORK_123",
+				};
+				const heatPumpWithAssociation: Partial<HeatSourceData> = {
+					id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "airSource",
+					productReference: "HEATPUMP_LARGE",
+					isConnectedToHeatNetwork: true,
+					associatedHeatNetworkId: heatNetwork.id,
+				};
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: heatNetwork, complete: true },
+								{ data: heatPumpWithAssociation, complete: true },
+							],
+							complete: true,
+						},
+					},
+				});
+				await renderSuspended(SpaceHeating);
+				await user.click(screen.getByTestId("heatSource_remove_0"));
+
+				const heatPumpItem = store.spaceHeating.heatSource.data[0];
+				expect((heatPumpItem!.data as { associatedHeatNetworkId: string }).associatedHeatNetworkId).toBe(undefined);
+				expect(heatPumpItem!.complete).toBe(false);
+				expect(store.spaceHeating.heatSource.complete).toBe(false);
+			});
+			test("When a heat network is removed, it sets any associated HIU to incomplete and removes the association", async () => {
+				const heatNetwork: Partial<HeatSourceData> = {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+					typeOfHeatSource: "heatNetwork",
+					typeOfHeatNetwork: "communalHeatNetwork",
+					productReference: "HEATNETWORK_123",
+				};
+				const hiu: Partial<HeatSourceData> = {
+					id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+					typeOfHeatSource: "heatInterfaceUnit",
+					productReference: "HIU_123",
+					associatedHeatNetworkId: heatNetwork.id,
+				};
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: heatNetwork, complete: true },
+								{ data: hiu, complete: true },
+							],
+							complete: true,
+						},
+					},
+				});
+				await renderSuspended(SpaceHeating);
+				await user.click(screen.getByTestId("heatSource_remove_0"));
+
+				const hiuItem = store.spaceHeating.heatSource.data[0];
+				expect((hiuItem!.data as { associatedHeatNetworkId: string }).associatedHeatNetworkId).toBe(undefined);
+				expect(hiuItem!.complete).toBe(false);
+				expect(store.spaceHeating.heatSource.complete).toBe(false);
+			});
+
 			it("domestic hot water heat sources that reference the deleted heat source are removed entirely", async () => {
 
 				const heatPump1: HeatSourceData = {
@@ -239,6 +308,8 @@ describe("space heating", () => {
 					typeOfHeatSource: "heatPump",
 					typeOfHeatPump: "airSource",
 					productReference: "HEATPUMP_LARGE",
+					isConnectedToHeatNetwork: false,
+					energySupply: "electricity",
 				};
 
 				const dhwWithExistingHeatSource: DomesticHotWaterHeatSourceData = {
@@ -278,6 +349,8 @@ describe("space heating", () => {
 					typeOfHeatSource: "heatPump",
 					typeOfHeatPump: "airSource",
 					productReference: "HEATPUMP_LARGE",
+					isConnectedToHeatNetwork: false,
+					energySupply: "electricity",
 				};
 
 				const dhwWithExistingHeatSource1: DomesticHotWaterHeatSourceData = {
@@ -293,6 +366,8 @@ describe("space heating", () => {
 					typeOfHeatSource: "heatPump",
 					typeOfHeatPump: "airSource",
 					productReference: "HEATPUMP_LARGE",
+					isConnectedToHeatNetwork: false,
+					energySupply: "electricity",
 				};
 
 				const dhwWithExistingHeatSource2: DomesticHotWaterHeatSourceData = {
@@ -420,6 +495,8 @@ describe("space heating", () => {
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
+				isConnectedToHeatNetwork: false,
+				energySupply: "electricity",
 			};
 
 			const boiler: HeatSourceData = {
@@ -439,7 +516,13 @@ describe("space heating", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "exhaustAirMvhr",
 				productReference: "1000",
-				packageProductIds: ["9e66d667-6c31-4406-9223-7e2249a7fee3"],
+				packageProductIds: [
+					"9e66d667-6c31-4406-9223-7e2249a7fee3",
+					"f6182db2-42e2-4d7e-beb8-de6f9a8f2be9",
+				],
+				isConnectedToHeatNetwork: false,
+				energySupply: "electricity",
+
 			};
 
 			const mvhr: Partial<MechanicalVentilationData> = {
@@ -457,6 +540,8 @@ describe("space heating", () => {
 				typeOfHeatPump: "airSource",
 				productReference: "1000",
 				packageProductIds: ["f6182db2-42e2-4d7e-beb8-de6f9a8f2be9"],
+				isConnectedToHeatNetwork: false,
+				energySupply: "mains_gas",
 			};
 
 			const dhwHeatPump: Partial<DomesticHotWaterHeatSourceData> = {

@@ -94,6 +94,12 @@ export const units = [
 		"dimension": "energy",
 	},
 	{
+		"name": "kilowatt-hour per kelvin per metre",
+		"suffix": "(kWh/K)/m",
+		"multiplier": 1,
+		"dimension": "energy",
+	},
+	{
 		"name": "kilowatt",
 		"suffix": "kW",
 		"multiplier": "1",
@@ -110,6 +116,18 @@ export const units = [
 		"suffix": "kWh/day",
 		"multiplier": 1,
 		"dimension": "energy per time",
+	},
+	{
+		"name": "kilowatt hours per year",
+		"suffix": "kWh/year",
+		"multiplier": 1,
+		"dimension": "energy per time",
+	},
+	{
+		"name": "pence per kilowatt-hour",
+		"suffix": "p/kWh",
+		"multiplier": 1,
+		"dimension": "cost per energy",
 	},
 	{
 		"name": "CO2 per kilowatt-hour",
@@ -158,6 +176,12 @@ export const units = [
 		"suffix": "kWh/K",
 		"multiplier": 1,
 		"dimension": "energy per unit temperature",
+	},
+	{
+		"name": "watts per metre",
+		"suffix": "W/m",
+		"multiplier": 1,
+		"dimension": "power",
 	},
 	{
 		"name": "watt",

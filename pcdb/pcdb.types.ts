@@ -278,14 +278,14 @@ export type ElectricStorageHeaterProduct = z.infer<typeof electricStorageHeaterZ
 export const convectorRadiatorInputZod = z.object({
 	technologyType: z.literal("ConvectorRadiator"),
 	ID: z.number(),
-	water_contents: z.number(),
+	waterContents: z.number(),
 	c: z.number(),
 	wetEmitterType: z.string(),
 	dataType: z.string(),
-	thermal_mass_per_m: z.number(),
-	thermal_output_delta_50k: z.number(),
+	thermalMassPerM: z.number(),
+	thermalOutputDelta50k: z.number(),
 	weight: z.number(),
-	frac_convective: z.number(),
+	fracConvective: z.number(),
 	type: z.string(),
 	n: z.number(),
 	height: z.number(),
@@ -466,21 +466,33 @@ type DisplayProductBase = {
 	displayProduct: true;
 	id: string;
 	technologyType: TechnologyType;
+	brandName?: string;
+	modelName?: string;
+	modelQualifier?: string;
 	backupCtrlType?: string;
 	powerMaxBackup?: number;
 	boilerLocation?: "internal" | "external" | "unknown";
-	communityHeatNetworkName?: string;
 	boilerProductID?: string;
 	vesselType?: VesselType;
+	type?: string;
+	height?: number;
+	communityHeatNetworkName?: string;
+	subheatNetworkName?: string;
+	subHeatNetworkId?: string;
+	productId?: string;
 };
 
-export type StandardDisplayProduct = DisplayProductBase & Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier"> & {
-	technologyType: Exclude<TechnologyType, "ConvectorRadiator">;
+type StandardDisplayProductBase = DisplayProductBase & {
+	technologyType: Exclude<TechnologyType, "ConvectorRadiator" | "HeatNetworks">;
 	type?: never;
 	height?: never;
+	communityHeatNetworkName?: string;
+	subheatNetworkName?: never;
+	subHeatNetworkId?: never;
+	productId?: never;
 };
 
-export type ConvectorRadiatorDisplayProduct = Pick<DisplayProductBase, "id"> & {
+type ConvectorRadiatorDisplayProductBase = DisplayProductBase & {
 	technologyType: "ConvectorRadiator";
 	type: ConvectorRadiatorProduct["type"];
 	height: ConvectorRadiatorProduct["height"];
@@ -490,12 +502,37 @@ export type ConvectorRadiatorDisplayProduct = Pick<DisplayProductBase, "id"> & {
 	backupCtrlType?: never;
 	powerMaxBackup?: never;
 	boilerLocation?: never;
-	communityHeatNetworkName?: never;
 	boilerProductID?: never;
 	vesselType?: never;
+	communityHeatNetworkName?: never;
+	subheatNetworkName?: never;
+	subHeatNetworkId?: never;
+	productId?: never;
 };
 
-export type DisplayProduct = StandardDisplayProduct | ConvectorRadiatorDisplayProduct;
+type HeatNetworkDisplayProduct = DisplayProductBase & {
+	technologyType: "HeatNetworks";
+	communityHeatNetworkName?: string;
+	subheatNetworkName?: string;
+	subHeatNetworkId?: string;
+	productId?: string;
+	brandName?: never;
+	modelName?: never;
+	modelQualifier?: never;
+	backupCtrlType?: never;
+	powerMaxBackup?: never;
+	boilerLocation?: never;
+	boilerProductID?: never;
+	vesselType?: never;
+	type?: never;
+	height?: never;
+};
+
+export type StandardDisplayProduct = StandardDisplayProductBase & Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier">;
+
+export type ConvectorRadiatorDisplayProduct = ConvectorRadiatorDisplayProductBase & Pick<z.infer<typeof convectorRadiatorZod>, "type" | "height">;
+
+export type DisplayProduct = StandardDisplayProduct | ConvectorRadiatorDisplayProduct | HeatNetworkDisplayProduct;
 
 export type DisplayProductWithFlowTemp = DisplayProduct & {
 	designFlowTemperature?: number;

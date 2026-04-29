@@ -1,7 +1,7 @@
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import Fuse, { type Expression } from "fuse.js";
 
-const productSortOption = ["id", "brandName", "modelName", "modelQualifier", "type", "height", "communityHeatNetworkName"] as const;
+const productSortOption = ["id", "brandName", "modelName", "modelQualifier", "type", "height", "communityHeatNetworkName", "subheatNetworkName"] as const;
 
 export type SearchOption = "productId" | "modelAndBrand" | "networkName";
 export type ProductSortOption = typeof productSortOption[number];
@@ -43,7 +43,7 @@ export function useProductSearch(products: DisplayProduct[], model: ProductSearc
 				"communityHeatNetworkName",
 			],
 		});
-		
+
 		searchResults = fuse.search({
 			$and: searchTerm.split(" ").map((searchValue: string) => {
 				return {
@@ -70,7 +70,7 @@ export function sortProducts(searchResults: DisplayProduct[], sort: keyof Partia
 	return searchResults.sort((productA: DisplayProduct, productB: DisplayProduct) => {
 		const aValue = productA[sort];
 		const bValue = productB[sort];
-		
+
 		if (aValue && bValue) {
 			const [a, b] = [aValue, bValue].map(v => typeof v === "string" ? v.toLowerCase() : v);
 

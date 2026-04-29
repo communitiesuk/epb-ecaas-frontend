@@ -5,6 +5,7 @@ defineProps<{
 	help?: string; 
 	name?: string;
 	selectedProductReference?: string;
+	selectedSubHeatNetworkId?: string;
 	selectedProductType?: string;
 	pageUrl?: string;
 	pageIndex?: number;
@@ -20,6 +21,7 @@ defineProps<{
 		validation="required"
 		:help="help"
 		:selected-product-reference="selectedProductReference"
+		:selected-sub-heat-network-id="selectedSubHeatNetworkId"
 		:selected-product-type="selectedProductType"
 		:page-url="pageUrl"
 		:page-index="pageIndex"

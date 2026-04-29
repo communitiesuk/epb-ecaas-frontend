@@ -1,5 +1,5 @@
-import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaOtherWaterUseDetails, SchemaWaterPipework, SchemaStorageTank, SchemaBoilerWithProductReference } from "~/schema/aliases";
-import type { SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
+import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaOtherWaterUseDetails, SchemaWaterPipework, SchemaStorageTank, SchemaHeatSourceWetDetails } from "~/schema/aliases";
+import type { SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { objectFromEntries } from "ts-extras";
@@ -130,58 +130,95 @@ function getActualHeatSourceFromDHWHeatSource(state: ResolvedState, waterStorage
 	}
 	return actualHeatSource;
 }
+function getAssociatedHeatNetwork(state: ResolvedState, associatedHeatNetworkId: string) {
+	const associatedHeatNetwork = state.spaceHeating.heatSource?.find(hs => hs.id === associatedHeatNetworkId);
 
+	if (!associatedHeatNetwork) {
+		return state.domesticHotWater.heatSources.find(hs => hs.id === associatedHeatNetworkId);
+	}
+	return associatedHeatNetwork;
+}
 function mapHeatSourceWet(
 	heatSource: Exclude<
 		ReturnType<typeof getActualHeatSourceFromDHWHeatSource>,
-			| { typeOfHeatSource: "solarThermalSystem" }
-			| { typeOfHeatSource: "immersionHeater" }
-	>) {
+		| { typeOfHeatSource: "solarThermalSystem" }
+		| { typeOfHeatSource: "immersionHeater" }
+	>,
+	state: ResolvedState,
+) {
 
 	const batteryTypeMap = {
 		"heatBatteryPcm": "pcm",
 		"heatBatteryDryCore": "dry_core",
 	} as const;
 
+	const heatNetworkFields = "isConnectedToHeatNetwork" in heatSource && heatSource.isConnectedToHeatNetwork ? {
+		is_heat_network: true as const,
+		heat_network_type: "communal" as const, // temp
+	} : { is_heat_network: false as const, EnergySupply: defaultElectricityEnergySupplyName };
 	switch (heatSource.typeOfHeatSource) {
-		// TODO case "HIU":
+		case "heatInterfaceUnit":
+			{
+				const associatedHeatNetwork = heatSource.associatedHeatNetworkId ? getAssociatedHeatNetwork(state, heatSource.associatedHeatNetworkId) : undefined;
+				const subHeatNetworkId = associatedHeatNetwork && "subHeatNetworkId" in associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkId : undefined;
+				const designFlowTemp = "maxFlowTemp" in heatSource ? heatSource.maxFlowTemp?.amount : undefined;
+				const associatedHeatNetworkName = associatedHeatNetwork && "name" in associatedHeatNetwork ? associatedHeatNetwork.name : undefined;
+				if (!subHeatNetworkId || !associatedHeatNetworkName || designFlowTemp === undefined) {
+					throw new Error("Expected a sub heat network ID, associated heat network name, and design flow temperature for a heat interface unit heat source associated with a heat network");
+				}
+				return {
+					HeatSourceWet: {
+						[heatSource.name]: {
+							type: "HIU" as const,
+							product_reference: heatSource.productReference,
+							EnergySupply: defaultElectricityEnergySupplyName,
+							heat_network_type: "communal" as const, // temp
+							heat_network_reference: associatedHeatNetworkName,
+							building_level_distribution_losses: heatSource.buildingLevelLosses.amount,
+							is_heat_network: true as const,
+							sub_heat_network_name: subHeatNetworkId,
+							design_flow_temp: designFlowTemp,
+						} as const satisfies SchemaHeatSourceWetDetails,
+					} satisfies FhsInputSchema["HeatSourceWet"],
+				};
+			};
 		case "heatPump":
-			return { 
+			return {
 				HeatSourceWet: {
 					[heatSource.name]: {
-						type: "HeatPump",
+						type: "HeatPump" as const,
 						product_reference: heatSource.productReference,
 						EnergySupply: defaultElectricityEnergySupplyName,
-						is_heat_network: false, // todo change when HNs implemented
-					} as const satisfies SchemaHeatSourceWetHeatPump,
-				} satisfies FhsInputSchema["HeatSourceWet"], 
+						...heatNetworkFields,
+					} as const satisfies SchemaHeatSourceWetDetails,
+				} satisfies FhsInputSchema["HeatSourceWet"],
 			};
 		case "boiler":
-			return { 
+			return {
 				HeatSourceWet: {
 					[heatSource.name]: {
-						type: "Boiler",
+						type: "Boiler" as const,
 						product_reference: heatSource.productReference,
 						...("specifiedLocation" in heatSource
 							? { specified_location: heatSource.specifiedLocation }
 							: {}),
 						EnergySupply: defaultElectricityEnergySupplyName,
-						is_heat_network: false, // todo change when HNs implemented
-					} as const satisfies SchemaBoilerWithProductReference, 
+						is_heat_network: false,
+					} as const satisfies SchemaHeatSourceWetDetails,
 				} satisfies FhsInputSchema["HeatSourceWet"],
 			};
 		case "heatBattery":
-			return { 
+			return {
 				HeatSourceWet: {
 					[heatSource.name]: {
-						type: "HeatBattery",
+						type: "HeatBattery" as const,
 						product_reference: heatSource.productReference,
 						EnergySupply: defaultElectricityEnergySupplyName,
 						battery_type: batteryTypeMap[heatSource.typeOfHeatBattery],
 						number_of_units: heatSource.numberOfUnits,
-						is_heat_network: false, // todo change when HNs implemented
-					} as const satisfies SchemaHeatSourceWetHeatBattery,
-				} satisfies FhsInputSchema["HeatSourceWet"], 
+						is_heat_network: false, // TODO implement correct logic when HNs implemented
+					} as const satisfies SchemaHeatSourceWetDetails,
+				} satisfies FhsInputSchema["HeatSourceWet"],
 			};
 	}
 };
@@ -193,6 +230,7 @@ function mapWaterStorageHeatSource(
 		ReturnType<typeof getActualHeatSourceFromDHWHeatSource>,
 		| { typeOfHeatSource: "pointOfUse" }
 	>,
+	state: ResolvedState,
 ) {
 	type WaterStorageHeatSource<T extends SchemaSmartHotWaterTank["HeatSource"][string]["type"]>
 		= Extract<
@@ -226,12 +264,13 @@ function mapWaterStorageHeatSource(
 						EnergySupply: defaultElectricityEnergySupplyName,
 						...commonWSHeatSourceProps,
 					} as const satisfies WaterStorageHeatSource<"HeatPump_HWOnly">,
-				} ;
+				};
 				break;
 			}
-			// falls through to "HeatSourceWet" if not a HWOnly heat pump
+		// falls through to "HeatSourceWet" if not a HWOnly heat pump
 		case "boiler":
-			// always falls through to "HeatSourceWet"
+		// always falls through to "HeatSourceWet"
+		case "heatInterfaceUnit":
 		case "heatBattery":
 			// HeatSourceWet
 			mappedWSHeatSource = {
@@ -241,7 +280,7 @@ function mapWaterStorageHeatSource(
 					...commonWSHeatSourceProps,
 				} as const satisfies WaterStorageHeatSource<"HeatSourceWet">,
 			};
-			mappedHeatSourceWet = mapHeatSourceWet(actualHeatSource);
+			mappedHeatSourceWet = mapHeatSourceWet(actualHeatSource, state);
 			break;
 		case "solarThermalSystem":
 			// SolarThermalSystem
@@ -292,9 +331,10 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 		throw new Error("Cannot have a point of use heat source heating a hot water cylinder or smart hot water tank");
 	}
 
-	const needsHeatExSurfaceArea = actualHeatSource.typeOfHeatSource === "heatPump" 
+	const needsHeatExSurfaceArea = actualHeatSource.typeOfHeatSource === "heatPump"
 		&& actualHeatSource.typeOfHeatPump === "hotWaterOnly"
 		&& waterStorage.typeOfWaterStorage === "hotWaterCylinder";
+
 
 	if (needsHeatExSurfaceArea && !("areaOfHeatExchanger" in waterStorage)) {
 		throw new Error("Area of heat exchanger must be provided when using a hot water only heat pump");
@@ -318,8 +358,8 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 		} as const satisfies Partial<SchemaSmartHotWaterTank>;
 
 	const { mappedWSHeatSource, mappedHeatSourceWet }
-		= mapWaterStorageHeatSource(waterStorage, dhwHeatSource, actualHeatSource);
-		
+		= mapWaterStorageHeatSource(waterStorage, dhwHeatSource, actualHeatSource, state);
+
 	return {
 		HotWaterSource: {
 			"hw cylinder": {
@@ -352,6 +392,7 @@ function mapHeatSourceNoWS(
 		| { typeOfHeatSource: "immersionHeater" }
 		| { typeOfHeatSource: "boiler", typeOfBoiler: "regularBoiler" }
 	>,
+	state: ResolvedState,
 ) {
 	let mappedHWCylinderBit, mappedHeatSourceWet;
 
@@ -360,14 +401,21 @@ function mapHeatSourceNoWS(
 	};
 
 	switch (actualHeatSource.typeOfHeatSource) {
-		// TODO case "HIU":
+		case "heatInterfaceUnit":
+			mappedHWCylinderBit = {
+				type: "HIU",
+				HeatSourceWet: actualHeatSource.name,
+				...commonHWCylinderProps,
+			} as const satisfies FhsInputSchema["HotWaterSource"]["hw cylinder"];
+			mappedHeatSourceWet = mapHeatSourceWet(actualHeatSource, state);
+			break;
 		case "boiler":
 			mappedHWCylinderBit = {
 				type: "CombiBoiler",
 				HeatSourceWet: actualHeatSource.name,
 				...commonHWCylinderProps,
 			} as const satisfies FhsInputSchema["HotWaterSource"]["hw cylinder"];
-			mappedHeatSourceWet = mapHeatSourceWet(actualHeatSource);
+			mappedHeatSourceWet = mapHeatSourceWet(actualHeatSource, state);
 			break;
 		case "heatBattery":
 			mappedHWCylinderBit = {
@@ -375,7 +423,7 @@ function mapHeatSourceNoWS(
 				HeatSourceWet: actualHeatSource.name,
 				...commonHWCylinderProps,
 			} as const satisfies FhsInputSchema["HotWaterSource"]["hw cylinder"];
-			mappedHeatSourceWet = mapHeatSourceWet(actualHeatSource);
+			mappedHeatSourceWet = mapHeatSourceWet(actualHeatSource, state);
 			break;
 		case "pointOfUse":
 			mappedHWCylinderBit = {
@@ -410,8 +458,8 @@ function mapHotWaterSourcesWithoutWaterStorage(state: ResolvedState) {
 		throw new Error("Selected hot water heat source requires water storage - no water storage present");
 	}
 
-	const { mappedHWCylinderBit, mappedHeatSourceWet } = mapHeatSourceNoWS(dhwHeatSource, actualHeatSource);
-		
+	const { mappedHWCylinderBit, mappedHeatSourceWet } = mapHeatSourceNoWS(dhwHeatSource, actualHeatSource, state);
+
 	return {
 		HotWaterSource: {
 			"hw cylinder": {

@@ -4,6 +4,7 @@ import merge from "deepmerge";
 import { defaultZoneName } from "./common";
 import { asMetres } from "../utils/units/length";
 
+
 function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
 	// note - use parseFloat and toFixed to avoid JS precision issues
 	return parseFloat((1 - openingToFrameRatio).toFixed(10));
@@ -34,14 +35,19 @@ export function mapLivingSpaceFabricData(
 }
 
 
-const suffixName = (name: string, suffix: string) => `${name} (${suffix})`;
+const suffixName = (name: string, suffix: string | number) => `${name} (${suffix})`;
 
 export function mapZoneParametersData(
 	state: ResolvedState,
 ): Pick<FhsInputSchema, "HeatingControlType" | "Zone" | "GroundFloorArea"> {
 	const { dwellingSpaceZoneParameters } = state.dwellingFabric;
 	const { heatEmitters } = state.spaceHeating;
-	const spaceHeatingSystemNames = heatEmitters.toSorted((a, b) => (a.heatingRank ?? 0) - (b.heatingRank ?? 0)).map(he => he.name);
+	const spaceHeatingSystemNames = heatEmitters.toSorted((a, b) => (a.heatingRank ?? 0) - (b.heatingRank ?? 0)).flatMap(he => {
+		if (he.typeOfHeatEmitter === "instantElectricHeater" && he.numOfHeaters > 1) {
+			return Array.from({ length: he.numOfHeaters }, (_, i) => `${he.name} ${i + 1}`);
+		}
+		return [he.name];
+	});
 
 	return {
 		HeatingControlType: "SeparateTempControl", // sending this as a default value while we are only sending one zone

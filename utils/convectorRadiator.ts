@@ -8,6 +8,7 @@ export function isConvectorRadiatorProduct(product: AnyPcdbProduct): product is 
 
 export function asRadiatorDisplayProduct(product: ConvectorRadiatorProduct): DisplayProduct {
 	return {
+		displayProduct: true,
 		id: `${product.ID}`,
 		type: product.type,
 		height: product.height,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { field } = defineProps<{ label: string; field: ProductSortOption | "communityHeatNetworkName" }>();
+const { field } = defineProps<{ label: string; field: ProductSortOption }>();
 
 const route = useRoute();
 

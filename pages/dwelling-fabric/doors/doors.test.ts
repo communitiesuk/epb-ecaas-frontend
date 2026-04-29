@@ -368,6 +368,27 @@ describe("doors", () => {
 			expect(screen.getByTestId("externalGlazed_status_0").innerText).toBe("Complete");
 			expect(screen.getByTestId("externalGlazed_status_1").innerText).toBe("In progress");
 		});
+
+		test("windows section is marked incomplete when external glazed door is removed and there are no windows", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [externalGlazed1],
+						},
+					},
+					dwellingSpaceWindows: {
+						data: [],
+						complete: true,
+					},
+				},
+			});
+
+			await renderSuspended(Doors);
+			await user.click(screen.getByTestId("externalGlazed_remove_0"));
+
+			expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
+		});
 	});
 
 	describe("internal door", () => {

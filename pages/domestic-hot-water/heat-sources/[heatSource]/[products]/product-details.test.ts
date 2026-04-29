@@ -248,9 +248,33 @@ describe("Heat source details", async () => {
 	test("Displays heat pump details when product is a heat pump", async () => {
 		// Act
 		await renderSuspended(ProductDetails);
-			
+
 		// Assert
 		expect((await screen.findByTestId("heatPump"))).toBeDefined();
+	});
+
+	test("Displays heat interface unit details when product is a heat interface unit", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-interface-unit",
+				id: "1000",
+			},
+			path: "/0/heat-interface-unit/1000",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				id: "1000",
+				brandName: "Test",
+				modelName: "Heat interface unit",
+				technologyType: "HeatInterfaceUnit",
+			}),
+		});
+
+		await renderSuspended(ProductDetails);
+
+		expect((await screen.findByTestId("heatInterfaceUnit"))).toBeDefined();
 	});
 
 	test("Form records that a specified location is needed when boiler location is 'unknown'", async () => {
@@ -288,7 +312,7 @@ describe("Heat source details", async () => {
 			},
 			path: "/0/heat-pump/1000",
 		});
-	
+
 		mockFetch.mockReturnValue({
 			data: ref({
 				...heatPumpProduct,
@@ -296,16 +320,16 @@ describe("Heat source details", async () => {
 				technologyType: "HybridHeatPump",
 			}),
 		});
-	
+
 		// Act
 		await renderSuspended(ProductDetails);
-			
+
 		// Assert
 		expect((await screen.findByTestId("hybridHeatPump"))).toBeDefined();
 	});
 
 	// test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
-		
+
 	// 	const heatNetwork: Partial<DomesticHotWaterHeatSourceData> = {
 	// 		isExistingHeatSource: false,
 	// 		heatSourceId: "NEW_HEAT_SOURCE",
@@ -332,7 +356,7 @@ describe("Heat source details", async () => {
 	// 		},
 	// 		path: "/0/heat-network/1000",
 	// 	});
-		
+
 	// 	mockFetch.mockReturnValueOnce({
 	// 		data: ref({
 	// 			id: "1000",
@@ -347,7 +371,7 @@ describe("Heat source details", async () => {
 	// 	await user.click(screen.getByTestId("selectProductButton"));
 	// 	expect((store.domesticHotWater.heatSources.data[0]!.data as { hasBoosterHeatPump: boolean }).hasBoosterHeatPump).toBe(true);
 	// });
-		
+
 	test("Navigates to heat pump page when product is selected", async () => {
 		// Act
 		await renderSuspended(ProductDetails);

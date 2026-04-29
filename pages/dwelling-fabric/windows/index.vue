@@ -73,6 +73,12 @@ function handleComplete() {
 function hasIncompleteEntries() {
 
 	const windows = store.dwellingFabric.dwellingSpaceWindows;
+	const externalGlazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor;
+
+	if (!windows.data.length && !externalGlazedDoors.data.length) {
+		return true;
+	}
+
 	return windows.data.some(
 		window => isEcaasForm(window) ? !window.complete : false);
 }
@@ -87,9 +93,9 @@ function hasIncompleteEntries() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<div class="govuk-inset-text">
-		<p class="govuk-body">Only add external windows</p>
-	</div>
+	<GovInset>
+		<p>Only add external windows. You must add at least one window or external glazed door.</p>
+	</GovInset>
 	<CustomList
 		id="windows"
 		title="Window"

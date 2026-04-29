@@ -1,7 +1,8 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import type { DisplayProduct, PaginatedResult, TechnologyGroup, TechnologyType, VesselType } from "../pcdb.types";
 import type { PcdbClient } from "./client.types";
-import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, BatchGetCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { generateHeatNetworkSubNetworkDisplayProductCombinations } from "../utils/subheatnetwork-combination-display";
 
 const localConfig = {
 	region: "fakeRegion",
@@ -14,10 +15,13 @@ const localConfig = {
 
 const client = new DynamoDBClient(process.env.NODE_ENV === "development" ? localConfig : {});
 const docClient = DynamoDBDocumentClient.from(client);
-
+interface GetProductOptions {
+	includeTestData: boolean;
+	testDataId?: string;
+}
 export const dynamodbClient: PcdbClient = {
-	async getProduct<T>(id: string, includeTestData: boolean) {
-		return await getProduct(id, includeTestData) as T;
+	async getProduct<T>(id: string, { includeTestData = false, testDataId }: GetProductOptions) {
+		return await getProduct(id, { includeTestData, testDataId }) as T;
 	},
 	async getProductsByTechnologyType(technologyType, pageSize, startKey) {
 		return await getProductsByTechnologyType(technologyType, pageSize, startKey);
@@ -27,7 +31,7 @@ export const dynamodbClient: PcdbClient = {
 	},
 };
 
-const getProduct = async (id: string, includeTestData: boolean) => {
+const getProduct = async (id: string, { includeTestData = false, testDataId }: GetProductOptions) => {
 	const result = await docClient.send(new GetCommand({
 		TableName: "products",
 		Key: { id },
@@ -35,22 +39,33 @@ const getProduct = async (id: string, includeTestData: boolean) => {
 
 	const { Item } = result;
 
-	if (!includeTestData) {
+	if (!includeTestData && !testDataId) {
 		delete Item?.testData;
 		delete Item?.testDataEN14825;
 	}
+	if (testDataId) {
+		const testData = Array.isArray(Item?.testData) ? Item.testData as Record<string, unknown>[] : [];
+		const match = testData.find((entry) => (entry.ID ?? entry.id)?.toString() === testDataId);
+
+		if (Item && match) {
+			Item.testData = match;
+		}
+		return Item;
+	};
 
 	return Item;
 };
 
-const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?: TechnologyType): DisplayProduct | undefined => {
+const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?: TechnologyType): DisplayProduct | DisplayProduct[] | undefined => {
 	const id = (item.id ?? item.ID)?.toString();
 	if (!id) {
 		return undefined;
 	}
 
 	const technologyType = (item.technologyType ?? fallbackTechnologyType) as TechnologyType;
-
+	if (technologyType === "HeatNetworks") {
+		return generateHeatNetworkSubNetworkDisplayProductCombinations(item);
+	}
 	if (technologyType === "ConvectorRadiator") {
 		if (typeof item.type !== "string") {
 			return undefined;
@@ -62,6 +77,7 @@ const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?
 		}
 
 		return {
+			displayProduct: true,
 			id,
 			type: item.type,
 			height,
@@ -74,7 +90,7 @@ const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?
 		id,
 		brandName: typeof item.brandName === "string" ? item.brandName : "",
 		modelName: typeof item.modelName === "string" ? item.modelName : "",
-		modelQualifier: typeof item.modelQualifier === "string" ? item.modelQualifier : null,
+		modelQualifier: typeof item.modelQualifier === "string" ? item.modelQualifier : "",
 		technologyType,
 		...(item.backupCtrlType ? { backupCtrlType: item.backupCtrlType as string } : {}),
 		...(item.powerMaxBackup ? { powerMaxBackup: item.powerMaxBackup as number } : {}),
@@ -101,8 +117,27 @@ const hasConvectorDisplayFields = (item: Record<string, unknown>) => {
 	return isFinite(parsedHeight);
 };
 
+const hydrateHeatNetworkItems = async (items: Record<string, unknown>[]) => {
+	const keys = items
+		.map(item => item.id ?? item.ID)
+		.filter((key): key is string => key != null)
+		.map(key => ({ id: key }));
+
+	if (keys.length === 0) {
+		return items;
+	}
+
+	const result = await docClient.send(new BatchGetCommand({
+		RequestItems: {
+			products: { Keys: keys },
+		},
+	}));
+
+	const fetched = (result.Responses?.products ?? []) as Record<string, unknown>[];
+	return fetched.length > 0 ? fetched : items;
+};
+
 const hydrateConvectorItems = async (items: Record<string, unknown>[]) => {
-	console.log(`Hydrating ${items.length} ConvectorRadiator items`, { items });
 	return await Promise.all(items.map(async (item) => {
 		if (hasConvectorDisplayFields(item)) {
 			return item;
@@ -133,11 +168,20 @@ const getProductsByTechnologyType = async (technologyType: TechnologyType, pageS
 	}));
 
 	const queryItems = result.Items ?? [];
-	const itemsToDisplay = technologyType === "ConvectorRadiator"
-		? await hydrateConvectorItems(queryItems)
-		: queryItems;
+	let itemsToDisplay: Record<string, unknown>[];
+	switch (technologyType) {
+		case "ConvectorRadiator":
+			itemsToDisplay = await hydrateConvectorItems(queryItems);
+			break;
+		case "HeatNetworks":
+			itemsToDisplay = await hydrateHeatNetworkItems(queryItems);
+			break;
+		default:
+			itemsToDisplay = queryItems;
+	}
 
-	const products = itemsToDisplay.map(x => toDisplayProduct(x, technologyType)).filter((x): x is DisplayProduct => x !== undefined);
+
+	const products = itemsToDisplay.flatMap(x => toDisplayProduct(x, technologyType) ?? []).filter((x): x is DisplayProduct => x !== undefined);
 
 	const paginatedProducts: PaginatedResult<DisplayProduct> = {
 		data: products,
@@ -160,7 +204,7 @@ const getProductsByTechnologyGroup = async (technologyGroup: TechnologyGroup) =>
 			...lastEvaluationKey && { ExclusiveStartKey: lastEvaluationKey },
 		}));
 
-		products.push(...(result.Items?.map(x => toDisplayProduct(x)).filter((x): x is DisplayProduct => x !== undefined) ?? []));
+		products.push(...(result.Items?.flatMap(x => toDisplayProduct(x)).filter((x): x is DisplayProduct => x !== undefined) ?? []));
 
 		lastEvaluationKey = result.LastEvaluatedKey;
 	} while (lastEvaluationKey);
