@@ -50,6 +50,7 @@ function patchHotWaterOutlets(state: Record<string, unknown>) {
 	if (hotWaterOutlets && Object.keys(hotWaterOutlets).some(k => k !== "data")) {
 		storeState.domesticHotWater.hotWaterOutlets = {
 			data: hotWaterOutlets.data ?? [],
+			complete: hotWaterOutlets.complete ?? false,
 		};
 	}
 }
@@ -62,6 +63,7 @@ function patchPipework(state: Record<string, unknown>) {
 	if (Object.keys(pipework).some(k => k !== "data")) {
 		storeState.domesticHotWater.pipework = {
 			data: pipework.data ?? [],
+			complete: pipework.complete ?? false,
 		};
 	}
 }

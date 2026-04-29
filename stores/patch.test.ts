@@ -115,7 +115,10 @@ describe("ECaaS store patch", () => {
 			const expectedHotWaterOutlets: Record<string, unknown> = {
 				"domesticHotWater": {
 					...state.domesticHotWater,
-					"hotWaterOutlets": { "data": [] },
+					"hotWaterOutlets": {
+						"data": [],
+						"complete": false,
+					},
 				},
 			};
 
@@ -144,7 +147,10 @@ describe("ECaaS store patch", () => {
 			const expectedPipework: Record<string, unknown> = {
 				"domesticHotWater": {
 					...state.domesticHotWater,
-					"pipework": { "data": [] },
+					"pipework": {
+						"data": [],
+						"complete": false,
+					},
 				},
 			};
 

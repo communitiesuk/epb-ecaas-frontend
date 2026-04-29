@@ -57,10 +57,10 @@ const heatSourceMaxNumberOfItems = computed(() => {
 });
 
 function handleComplete() {
-	const hasOtherHotWaterOutlet =
-	store.domesticHotWater.hotWaterOutlets.data.some(
+	const hasOtherHotWaterOutlet = store.domesticHotWater.hotWaterOutlets.data.some(
 		(outlet) => outlet.data.typeOfHotWaterOutlet === "otherHotWaterOutlet",
 	);
+
 	if (!hasOtherHotWaterOutlet) {
 		errorMessages.value.push({ id: "hotWaterOutletNoOtherTypeError", text: "You must add at least one hot water outlet that has the type 'other'" });
 		return;
