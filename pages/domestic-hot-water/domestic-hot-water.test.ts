@@ -248,6 +248,34 @@ describe("Domestic hot water", () => {
 			expect(pipework.data[0]?.data.waterStorage).toBe(hwStorage1.data.id);
 			expect(pipework.data[1]?.data.waterStorage).toBeUndefined();
 		});
+
+		test("the user should not be able to input a water storage when a point of use heat source is selected error message", async () => {
+			const pointOfUse = {
+				data: {
+					typeOfHeatSource: "pointOfUse",
+					id: "fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
+					heatSourceId: "NEW_HEAT_SOURCE",
+					isExistingHeatSource: false,
+					name: "DHW POU",
+					coldWaterSource: "mainsWater",
+					heaterEfficiency: 0.88,
+				},
+				complete: true,
+			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [pointOfUse],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(store.domesticHotWater.waterStorage.data.length).toBe(0);
+			expect(screen.getByTestId("waterStorageConflictMessage")).toBeDefined();
+		});
 	});
 
 	describe("Hot water outlets", () => {

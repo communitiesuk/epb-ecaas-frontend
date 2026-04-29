@@ -165,6 +165,13 @@ function hasReferenceToExistingSpaceHeatingHeatPump(): boolean {
 	});
 }
 
+const isPointOfUseSelected = computed(() =>
+	store.domesticHotWater.heatSources.data.some((heatSource) => {
+		const heatSourceType = getDhwHeatSourceType(heatSource);
+		return heatSourceType === "pointOfUse";
+	}),
+);
+
 </script>
 
 <template>
@@ -218,6 +225,10 @@ function hasReferenceToExistingSpaceHeatingHeatPump(): boolean {
 
 				return item;
 			})"
+		:conflict-message="isPointOfUseSelected 
+			? `No water storage can be added when 'point of use' is selected as the heat source.` 
+			: undefined"
+		conflict-message-test-id="waterStorageConflictMessage"
 		:show-status="true"
 		@remove="(index: number) => removeEntry('waterStorage', index)"
 		@duplicate="(index: number) => duplicateEntry('waterStorage', index)"
