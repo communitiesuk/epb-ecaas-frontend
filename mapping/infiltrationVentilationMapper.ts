@@ -59,11 +59,11 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 
 		const ventType = x.typeOfMechanicalVentilationOptions;
 
-		const associatedItem = getResolvedTaggedItem([
+		const associatedItem = x.associatedItemId ? getResolvedTaggedItem([
 			dwellingSpaceExternalWall,
 			dwellingSpaceRoofs,
 			dwellingSpaceWindows,
-		], x.associatedItemId);
+		], x.associatedItemId) : undefined;
 
 		switch (ventType) {
 			case "MVHR":

@@ -52,7 +52,7 @@ const mechanicalVentilationSummary: SummarySection = {
 				"Where is the vent installed?": installationTypeOptions[x.installationType],
 				"Room where the vent is installed": installationLocationOptions[x.installationLocation],
 			} : {}),
-			"Associated wall, roof or window": associatedItems[x.associatedItemId],
+			"Associated wall, roof or window": x.associatedItemId ? associatedItems[x.associatedItemId] : undefined,
 			...(!x.hasAssociatedItem ? {
 				"Pitch of vent": dim(x.pitch, "degrees"),
 				"Orientation of vent": dim(x.orientation, "degrees"),
