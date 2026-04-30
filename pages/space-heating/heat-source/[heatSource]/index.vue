@@ -50,7 +50,6 @@ const saveForm = () => {
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 function removePackagedProducts(packageProductIds: string[]) {
-	console.log("Removing packaged products with ids:", packageProductIds);
 	store.$patch((state) => {
 		const heatSources = state.spaceHeating.heatSource.data.filter((x) => {
 			return !("packagedProductReference" in x.data) || !packageProductIds.includes((x.data.id));
@@ -76,7 +75,6 @@ watch(
 			errorMessages.value = [];
 			model.value = { typeOfHeatSource: newData.typeOfHeatSource, id: initialData.id } as HeatSourceData;
 			if (initialData.typeOfHeatSource === "heatPump") {
-				console.log({ initialData, newData });
 				removePackagedProducts(initialData.packageProductIds ?? []);
 			}
 		}
