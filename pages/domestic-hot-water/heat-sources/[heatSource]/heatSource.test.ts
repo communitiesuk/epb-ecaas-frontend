@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatSourceForm from "./index.vue";
-import { screen } from "@testing-library/vue";
+import { screen, waitFor } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import { v4 as uuidv4 } from "uuid";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
@@ -1210,6 +1210,52 @@ describe("Heat pump section", () => {
 			expect(await screen.findByTestId("heaterEfficiency_error")).toBeDefined();		
 
 		});
+	});
+	it("removes backup boiler packaged with heat pump when heat source is changed from heat pump to another type", async () => {
+		const hybridHeatPumpProduct: Partial<HybridHeatPumpProduct> = {
+			id: "1000",
+			brandName: "Test",
+			modelName: "Hybrid Heat Pump",
+			technologyType: "HybridHeatPump",
+			boilerProductID: "2000",
+		};
+	
+		const backupBoilerProduct: Partial<BoilerProduct> = {
+			id: "2000",
+			brandName: "Test",
+			modelName: "Hybrid Heat Pump",
+			technologyType: "CombiBoiler",
+		};
+	
+		mockFetch.mockReturnValueOnce({
+			data: ref(hybridHeatPumpProduct),
+		}).mockReturnValueOnce({
+			data: ref(backupBoilerProduct),
+		});
+	
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [
+						{ data: backupBoiler },
+						{ data: hybridHeatPump },
+					],
+				},
+			},
+		});
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "1" },
+			},
+		});
+		const backUpBolerInStoreBeforeChange = store.domesticHotWater.heatSources.data.find(hs => hs.data.id === backupBoiler.id);
+		expect(backUpBolerInStoreBeforeChange).toBeDefined();
+		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+		await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+		await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));
+		await user.tab();
+		const backUpBolerInStoreAfterChange = store.domesticHotWater.heatSources.data.find(hs => hs.data.id === backupBoiler.id);
+		expect(backUpBolerInStoreAfterChange).toBeUndefined();
 	});
 });
 

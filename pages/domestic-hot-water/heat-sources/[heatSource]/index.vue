@@ -35,7 +35,20 @@ if (hasPackagedProduct(model.value)) {
 	const packagedProductData = await useProductData(model.value.packagedProductReference!);
 	packagedProduct.value = packagedProductData ?? undefined;
 }
-
+function removePackagedProducts(packageProductIds: string[]) {
+	store.$patch((state) => {
+		const heatSources = state.domesticHotWater.heatSources.data.filter((x) => {
+			return !("packagedProductReference" in x.data) || !packageProductIds.includes((x.data.id));
+		});
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: heatSources,
+				},
+			},
+		});
+	});
+}
 const saveForm = () => {
 	store.$patch((state) => {
 		state.domesticHotWater.heatSources.data[index]!.complete = true;
@@ -62,6 +75,9 @@ watch(
 			} as DomesticHotWaterHeatSourceData;
 		}
 		if (initialData.isExistingHeatSource === false && newData.isExistingHeatSource === false && initialData.typeOfHeatSource !== newData.typeOfHeatSource) {
+			if (initialData.typeOfHeatSource === "heatPump") {
+				removePackagedProducts(initialData.packageProductIds ?? []);
+			}
 			errorMessages.value = [];
 			model.value = { 
 				coldWaterSource: initialData.coldWaterSource,
