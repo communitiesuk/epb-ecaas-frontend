@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatSourceForm from "./index.vue";
-import { screen, waitFor } from "@testing-library/vue";
+import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import { v4 as uuidv4 } from "uuid";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
