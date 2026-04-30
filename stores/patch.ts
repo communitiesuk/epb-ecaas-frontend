@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Copy deprecated packageProductId value to new packageProductIds array
@@ -69,6 +70,22 @@ function patchPipework(state: Record<string, unknown>) {
 }
 
 /**
+ * Handle edge case where emitters do not have an ID
+ * @param state 
+ */
+function patchHeatEmitterIds(state: Record<string, unknown>) {
+	const storeState = state as EcaasState;
+
+	storeState.spaceHeating.heatEmitters.data.forEach(emittersData => {
+		if ("emitters" in emittersData.data) {
+			emittersData.data.emitters.forEach(emitter => {
+				emitter.id ??= uuidv4();
+			});
+		}
+	});
+}
+
+/**
  * Patch state from deprecated properties
  * @param state 
  * @returns Patched state
@@ -78,6 +95,7 @@ export function patchState(state: Record<string, unknown>): Record<string, unkno
 	patchLighting(state);
 	patchHotWaterOutlets(state);
 	patchPipework(state);
+	patchHeatEmitterIds(state);
 
 	return state;
 }

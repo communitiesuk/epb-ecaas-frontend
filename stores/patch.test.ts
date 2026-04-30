@@ -16,6 +16,7 @@ describe("ECaaS store patch", () => {
 				},
 			},
 			"spaceHeating": {
+				...state.spaceHeating,
 				"heatSource": {
 					"data": [
 						{
@@ -45,6 +46,7 @@ describe("ECaaS store patch", () => {
 				},
 			},
 			"spaceHeating": {
+				...state.spaceHeating,
 				"heatSource": {
 					"data": [
 						{
@@ -159,5 +161,52 @@ describe("ECaaS store patch", () => {
 				...expectedPipework,
 			}));
 		});
+	});
+
+	it("patches heat emitter ids", () => {
+		const emittersWithoutIds: Record<string, unknown> = {
+			"spaceHeating": {
+				...state.spaceHeating,
+				"heatEmitters": {
+					"data": [
+						{
+							"data": {
+								"emitters": [
+									{
+										"name": "T21",
+										"typeOfHeatEmitter": "radiator",
+										"productReference": "33",
+										"numOfRadiators": 1,
+										"length": 0.6,
+									},
+									{
+										"id": "84d03439-d746-4a96-9d3a-279786ef9ce6",
+										"name": "T2",
+										"typeOfHeatEmitter": "radiator",
+										"productReference": "48",
+										"numOfRadiators": 9,
+										"length": 0.8,
+									},
+								],
+							},
+						},
+					],
+				},
+			},
+		};
+
+		const patchedState = patchState({
+			...state,
+			...emittersWithoutIds,
+		}) as EcaasState;
+
+		const patchedEmitterData = patchedState.spaceHeating.heatEmitters.data[0]!.data;
+
+		expect("emitters" in patchedEmitterData).toBe(true);
+
+		if ("emitters" in patchedEmitterData) {
+			expect(patchedEmitterData.emitters[0]?.id).toBeDefined();
+			expect(patchedEmitterData.emitters[1]?.id).toBe("84d03439-d746-4a96-9d3a-279786ef9ce6");
+		}
 	});
 });
