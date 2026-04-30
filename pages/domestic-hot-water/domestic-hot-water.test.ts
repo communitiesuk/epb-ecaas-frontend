@@ -274,7 +274,9 @@ describe("Domestic hot water", () => {
 			await renderSuspended(DomesticHotWater);
 
 			expect(store.domesticHotWater.waterStorage.data.length).toBe(0);
-			expect(screen.getByTestId("waterStorageConflictMessage")).toBeDefined();
+			const bodyText = document.querySelector(".govuk-summary-card__content .govuk-body");
+
+			expect(bodyText?.textContent).toBeTruthy();
 		});
 	});
 

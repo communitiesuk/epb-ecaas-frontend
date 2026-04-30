@@ -22,7 +22,6 @@ const props = defineProps<{
 	showStatus?: boolean;
 	section?: string;
 	conflictMessage?: string;
-	conflictMessageTestId?: string;
 }>();
 
 function handleRemove(index: number, e: MouseEvent) {
@@ -69,11 +68,12 @@ function routeForEditItem(index: number) {
 					</li>
 				</ul>
 			</div>
-			<div v-if="conflictMessage" class="govuk-summary-card__content" :data-testid="conflictMessageTestId">
+			<div v-if="conflictMessage" class="govuk-summary-card__content">
 				<div class="govuk-body">
 					{{ conflictMessage }}
 				</div>
 			</div>
+
 			<div v-else-if="items && items.length" class="govuk-summary-card__content" :data-testid="`${id}_items`">
 				<dl class="govuk-summary-list">
 					<div

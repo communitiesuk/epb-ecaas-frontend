@@ -13,7 +13,7 @@ const { removeEntry, duplicateEntry } = useDomesticHotWater();
 
 const { heatSources: dhwHeatSources } = store.domesticHotWater;
 
-const errorMessages = ref<{ id: string, text: string, href?: string }[]>([]);
+const { errorMessages, addError, clearErrors } = useErrorSummary();
 const heatSourceTypesThatCanAddSecond = ["heatNetwork", "heatPump", "heatInterfaceUnit"] as const;
 
 function getDhwHeatSourceType(heatSourceForm: EcaasForm<DomesticHotWaterHeatSourceData>): Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: string }>["typeOfHeatSource"] | undefined {
@@ -57,7 +57,7 @@ const heatSourceMaxNumberOfItems = computed(() => {
 });
 
 function handleComplete() {
-	errorMessages.value = [];
+	clearErrors();
 
 	const hasOtherHotWaterOutlet = store.domesticHotWater.hotWaterOutlets.data.some(
 		(outlet) => outlet.data.typeOfHotWaterOutlet === "otherHotWaterOutlet",
@@ -67,7 +67,7 @@ function handleComplete() {
 	const hasWaterStorage = store.domesticHotWater.waterStorage.data.length > 0;
 
 	if (!hasOtherHotWaterOutlet) {
-		errorMessages.value.push({ 
+		addError({ 
 			id: "hotWaterOutletNoOtherTypeError", 
 			text: "You must add at least one hot water outlet that has the type 'other'.", 
 			href: `${page?.url}/hot-water-outlets/create` });
@@ -75,7 +75,7 @@ function handleComplete() {
 	}
 
 	if (heatSourceRequiresWaterStorage() && !hasWaterStorage) {
-		errorMessages.value.push({
+		addError({
 			id: "waterStorageRequiredError",
 			text: "Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump.",
 			href: `${page?.url}/water-storage/create`,
@@ -130,7 +130,7 @@ function maxHeatSourcesExceeded() {
 	return dhwHeatSources.data.length > 1 && !hasPackagedHeatSources;
 }
 if (maxHeatSourcesExceeded()) {
-	errorMessages.value.push({ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used." });
+	addError({ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used." });
 }
 
 function heatSourceRequiresWaterStorage() {
@@ -228,7 +228,6 @@ const isPointOfUseSelected = computed(() =>
 		:conflict-message="isPointOfUseSelected 
 			? `No water storage can be added when 'point of use' is selected as the heat source.` 
 			: undefined"
-		conflict-message-test-id="waterStorageConflictMessage"
 		:show-status="true"
 		@remove="(index: number) => removeEntry('waterStorage', index)"
 		@duplicate="(index: number) => duplicateEntry('waterStorage', index)"
