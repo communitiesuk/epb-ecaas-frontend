@@ -2567,6 +2567,18 @@
                                     "description": "A unique reference to a boiler product held within the HEM database (PCDB), if there is a need for a reference to a boiler product to be passed, and the heat pump is not packaged with a boiler.",
                                     "title": "Reference to the product in the HEM database",
                                     "type": "string"
+                                },
+                                "boiler": {
+                                    "type": "object",
+                                    "description": "A container for a boiler's cost_schedule_hybrid, if this is available. This field will be merged onto the data for any boiler packaged with the indicated heat pump product.",
+                                    "properties": {
+                                        "cost_schedule_hybrid": {
+                                            "$ref": "#/$defs/BoilerCostScheduleHybrid"
+                                        }
+                                    },
+                                    "required": [
+                                        "cost_schedule_hybrid"
+                                    ]
                                 }
                             },
                             "required": [
