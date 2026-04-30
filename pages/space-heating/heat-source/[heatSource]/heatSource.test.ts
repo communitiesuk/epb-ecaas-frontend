@@ -1007,6 +1007,72 @@ describe("heatSource", () => {
 				const actualHeatSource = store.spaceHeating.heatSource.data[0]!;
 				expect(actualHeatSource.data.name).toBe("Combi boiler");
 			});
+			it("removes backup boiler packaged with heat pump when heat source is changed from heat pump to another type", async () => {
+				const backupBoiler: HeatSourceData = {
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+					name: "Backup boiler",
+					typeOfHeatSource: "boiler",
+					typeOfBoiler: "combiBoiler",
+					productReference: "BOILER_MEDIUM",
+					needsSpecifiedLocation: true,
+					packagedProductReference: "1000",
+					maxFlowTemp: unitValue(32, celsius),
+				};
+				const heatPump: HeatSourceData = {
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+					name: "Heat pump",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "airSource",
+					productReference: "HEATPUMP-SMALL",
+					maxFlowTemp: unitValue(7, celsius),
+					isConnectedToHeatNetwork: false,
+					energySupply: "electricity",
+					packageProductIds: ["1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b"],
+				};
+				const hybridHeatPumpProduct: Partial<HybridHeatPumpProduct> = {
+					id: "1000",
+					brandName: "Test",
+					modelName: "Hybrid Heat Pump",
+					technologyType: "HybridHeatPump",
+					boilerProductID: "2000",
+				};
+
+				const backupBoilerProduct: Partial<BoilerProduct> = {
+					id: "2000",
+					brandName: "Test",
+					modelName: "Hybrid Heat Pump",
+					technologyType: "CombiBoiler",
+				};
+
+				mockFetch.mockReturnValueOnce({
+					data: ref(hybridHeatPumpProduct),
+				}).mockReturnValueOnce({
+					data: ref(backupBoilerProduct),
+				});
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: backupBoiler },
+								{ data: heatPump },
+							],
+						},
+					},
+				});
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "1" },
+					},
+				});
+				const backUpBolerInStoreBeforeChange = store.spaceHeating.heatSource.data.find(hs => hs.data.id === backupBoiler.id);
+				expect(backUpBolerInStoreBeforeChange).toBeDefined();
+				await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+				await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));
+				await user.tab();
+				const backUpBolerInStoreAfterChange = store.spaceHeating.heatSource.data.find(hs => hs.data.id === backupBoiler.id);
+				expect(backUpBolerInStoreAfterChange).toBeUndefined();
+			});
 		});
 		describe("heat network", () => {
 			test("'HeatNetworkSection' component displays when type of heat source is heat network", async () => {
