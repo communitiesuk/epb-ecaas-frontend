@@ -5,6 +5,7 @@ import WaterStorage from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
 import { litre } from "~/utils/units/volume";
 import { unitValue } from "~/utils/units";
+import { celsius } from "~/utils/units/temperature";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -60,6 +61,7 @@ describe("water storage", () => {
 			typeOfHeatSource: "heatPump",
 			isConnectedToHeatNetwork: false,
 			energySupply: "electricity",
+			maxFlowTemp: unitValue(30, celsius),
 		},
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 

@@ -148,6 +148,7 @@ describe("space heating", () => {
 					productReference: "HEATPUMP_LARGE",
 					isConnectedToHeatNetwork: false,
 					energySupply: "electricity",
+					maxFlowTemp: unitValue(30, "celsius"),
 				};
 
 				const wetdistribution: Partial<HeatEmittingData> = {
@@ -310,6 +311,7 @@ describe("space heating", () => {
 					productReference: "HEATPUMP_LARGE",
 					isConnectedToHeatNetwork: false,
 					energySupply: "electricity",
+					maxFlowTemp: unitValue(30, "celsius"),
 				};
 
 				const dhwWithExistingHeatSource: DomesticHotWaterHeatSourceData = {
@@ -351,6 +353,7 @@ describe("space heating", () => {
 					productReference: "HEATPUMP_LARGE",
 					isConnectedToHeatNetwork: false,
 					energySupply: "electricity",
+					maxFlowTemp: unitValue(30, "celsius"),
 				};
 
 				const dhwWithExistingHeatSource1: DomesticHotWaterHeatSourceData = {
@@ -368,6 +371,7 @@ describe("space heating", () => {
 					productReference: "HEATPUMP_LARGE",
 					isConnectedToHeatNetwork: false,
 					energySupply: "electricity",
+					maxFlowTemp: unitValue(30, "celsius"),
 				};
 
 				const dhwWithExistingHeatSource2: DomesticHotWaterHeatSourceData = {
@@ -497,6 +501,7 @@ describe("space heating", () => {
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
 				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
+				maxFlowTemp: unitValue(30, "celsius"),
 			};
 
 			const boiler: HeatSourceData = {
@@ -522,6 +527,7 @@ describe("space heating", () => {
 				],
 				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
+				maxFlowTemp: unitValue(30, "celsius"),
 
 			};
 
@@ -542,6 +548,7 @@ describe("space heating", () => {
 				packageProductIds: ["f6182db2-42e2-4d7e-beb8-de6f9a8f2be9"],
 				isConnectedToHeatNetwork: false,
 				energySupply: "mains_gas",
+				maxFlowTemp: unitValue(30, "celsius"),
 			};
 
 			const dhwHeatPump: Partial<DomesticHotWaterHeatSourceData> = {

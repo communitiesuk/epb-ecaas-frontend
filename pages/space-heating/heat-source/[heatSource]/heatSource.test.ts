@@ -44,6 +44,7 @@ describe("heatSource", () => {
 		productReference: "HEATPUMP-SMALL",
 		isConnectedToHeatNetwork: false,
 		energySupply: "electricity",
+		maxFlowTemp: unitValue(30, "celsius"),
 	};
 
 	describe("heat pump", () => {
@@ -82,6 +83,7 @@ describe("heatSource", () => {
 			productReference: "HEATPUMP-LARGE",
 			isConnectedToHeatNetwork: false,
 			energySupply: "mains_gas",
+			maxFlowTemp: unitValue(30, "celsius"),
 		};
 
 		test("'HeatPumpSection' component displays when type of heat source is heat pump", async () => {
@@ -1570,6 +1572,7 @@ describe("heatSource", () => {
 					productReference: "HEATPUMP-SMALL",
 					isConnectedToHeatNetwork: false,
 					energySupply: "electricity",
+					maxFlowTemp: unitValue(30, "celsius"),
 				};
 
 				store.$patch({
@@ -1912,6 +1915,7 @@ describe("heatSource", () => {
 				productReference: "HEATPUMP-SMALL",
 				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
+				maxFlowTemp: unitValue(30, "celsius"),
 			};
 
 			store.$patch({
@@ -1954,6 +1958,7 @@ describe("heatSource", () => {
 				productReference: "HEATBATTERY-DRY-CORE",
 				energySupply: "electricity",
 				numberOfUnits: 2,
+				maxFlowTemp: unitValue(30, "celsius"),
 			};
 
 			const heatBattery2: HeatSourceData = {
@@ -1964,6 +1969,7 @@ describe("heatSource", () => {
 				productReference: "HEATBATTERY-PCM",
 				numberOfUnits: 4,
 				energySupply: "electricity",
+				maxFlowTemp: unitValue(30, "celsius"),
 			};
 
 			it("saves updated form data to store automatically", async () => {

@@ -158,6 +158,7 @@ describe("Heat Source Page", () => {
 			productReference: "HEATPUMP-SMALL",
 			isConnectedToHeatNetwork: false,
 			energySupply: "electricity",
+			maxFlowTemp: unitValue(30, celsius),
 		};
 
 		store.$patch({

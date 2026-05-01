@@ -31,7 +31,6 @@ describe("domestic hot water mapper", () => {
 			typeOfHeatNetwork: "communalHeatNetwork",
 			isExistingHeatSource: false,
 			heatSourceId: "NEW_HEAT_SOURCE",
-			maxFlowTemp: unitValue(32, celsius),
 			subHeatNetworkId: "sub-heat-network-123",
 		},
 		complete: true,
@@ -103,6 +102,7 @@ describe("domestic hot water mapper", () => {
 			typeOfHeatPump: "hotWaterOnly",
 			isConnectedToHeatNetwork: false,
 			energySupply: "mains_gas",
+			maxFlowTemp: unitValue(17, celsius),
 		},
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
@@ -1565,6 +1565,7 @@ describe("domestic hot water mapper", () => {
 						typeOfHeatPump: "groundSource",
 						isConnectedToHeatNetwork: false,
 						energySupply: "electricity",
+						maxFlowTemp: unitValue(30, celsius),
 					},
 				};
 

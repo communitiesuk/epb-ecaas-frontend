@@ -250,7 +250,6 @@ function mapWaterStorageHeatSource(
 		...(waterStorage.typeOfWaterStorage === "hotWaterCylinder"
 			? { thermostat_position: waterStorage.thermostatPosition }
 			: {}),
-		...(temp_flow_limit_upper ? { temp_flow_limit_upper } : {}), //might want to factor this back in actually, as should never apply to SolarThermal or immersion
 	};
 
 	switch (actualHeatSource.typeOfHeatSource) {
@@ -277,6 +276,7 @@ function mapWaterStorageHeatSource(
 				[actualHeatSource.name]: {
 					type: "HeatSourceWet",
 					name: actualHeatSource.name,
+					temp_flow_limit_upper,
 					...commonWSHeatSourceProps,
 				} as const satisfies WaterStorageHeatSource<"HeatSourceWet">,
 			};

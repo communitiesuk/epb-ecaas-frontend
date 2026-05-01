@@ -50,7 +50,7 @@ function createItemFromExistingHeatSources(heatSource: EcaasForm<DomesticHotWate
 				heatSourceType: item.data.typeOfHeatSource!,
 				isExistingHeatSource: true,
 				coldWaterSource: heatSource.data.coldWaterSource ?? undefined,
-				maxFlowTemp: heatSource.data.maxFlowTemp ?? undefined,
+				maxFlowTemp: heatSource.data.isExistingHeatSource ? heatSource.data.maxFlowTemp : undefined,
 			},
 		};
 	}

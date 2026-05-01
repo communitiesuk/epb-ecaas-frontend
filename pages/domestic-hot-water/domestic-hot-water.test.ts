@@ -733,6 +733,7 @@ describe("Domestic hot water", () => {
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
 				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
+				maxFlowTemp: unitValue(30, celsius),
 			};
 
 			const boiler: HeatSourceData = {
@@ -758,6 +759,7 @@ describe("Domestic hot water", () => {
 				],
 				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
+				maxFlowTemp: unitValue(30, celsius),
 			};
 
 			const mvhr: Partial<MechanicalVentilationData> = {
@@ -1137,6 +1139,7 @@ describe("Domestic hot water", () => {
 					productReference: "HEATPUMP-SMALL",
 					isConnectedToHeatNetwork: false,
 					energySupply: "electricity",
+					maxFlowTemp: unitValue(30, celsius),
 				},
 				complete: true,
 			} as const satisfies EcaasForm<HeatSourceData>;
@@ -1372,6 +1375,7 @@ describe("Domestic hot water", () => {
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
 				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
+				maxFlowTemp: unitValue(30, celsius),
 			};
 
 			const boiler: HeatSourceData = {
@@ -1437,6 +1441,7 @@ describe("Domestic hot water", () => {
 				productReference: "1000",
 				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
+				maxFlowTemp: unitValue(30, celsius),
 			};
 
 			store.$patch({
@@ -1499,6 +1504,7 @@ describe("Domestic hot water", () => {
 				productReference: "HP-123",
 				isConnectedToHeatNetwork: true,
 				associatedHeatNetworkId: spaceHeatingHeatNetwork.id,
+				maxFlowTemp: unitValue(30, celsius),
 			};
 
 			store.$patch({
