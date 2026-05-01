@@ -308,12 +308,16 @@ const hasWaterStorage = computed(() => {
 const heatSourceOptions = computed(() => {
 	const heatSourceOptions = filterHeatSourceOptions();
 
-	const result: Record<string, { label: string; disabled?: boolean }> = {};
+	const result: Record<string, { label: string; disabled?: boolean, hint?: string }> = {};
 
 	for (const [key, label] of Object.entries(heatSourceOptions)) {
+		const isPointOfUseDisabled = key === "pointOfUse" && hasWaterStorage.value;
 		result[key] = {
 			label,
 			disabled: key === "pointOfUse" && hasWaterStorage.value,
+			hint: isPointOfUseDisabled
+				? "Point of use can only be selected when there is no water storage."
+				: undefined,
 		};
 	}
 	return result;

@@ -1239,6 +1239,32 @@ describe("Heat pump section", () => {
 			expect(screen.getByTestId("typeOfHeatSource_pointOfUse").hasAttribute("disabled")).toBeTruthy();
 		});
 
+		test("point of use hint text is displayed when point of use is disabled", async () => {
+			const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
+				data: {
+					name: "Hot water cylinder 1",
+					id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
+					typeOfWaterStorage: "hotWaterCylinder",
+					storageCylinderVolume: unitValue(5, litre),
+					dailyEnergyLoss: 1,
+					dhwHeatSourceId: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+					areaOfHeatExchanger: 1000,
+					heaterPosition: 0.8,
+					thermostatPosition: 0.5,
+				},
+			};
+			store.$patch({
+				domesticHotWater: {
+					waterStorage: {
+						data: [hotWaterCylinder],
+					},
+				},
+			});
+			await renderSuspended(HeatSourceForm);
+			await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+			expect(screen.getByText("Point of use can only be selected when there is no water storage.")).toBeTruthy();	
+		});
+
 		test("if heat source type is not point of use, it is not disabled when water storage has been selected", async () => {
 			const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
 				data: {
