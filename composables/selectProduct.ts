@@ -11,7 +11,7 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 
 	const createHotWaterCyliner = (state: EcaasState, source: HeatSourceSection, heatPumpDetails: HeatPumpProduct, heatSourceData: HeatSourceData | DomesticHotWaterHeatSourceData) => {
 		let heatSourceId = heatSourceData.id;
-		
+
 		if (source === "spaceHeating") {
 			const hotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
 				id: uuidv4(),
@@ -81,7 +81,7 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 		// 		}
 		// 	}
 		// }
-		
+
 		if (heatSourceData.typeOfHeatSource === "boiler") {
 			const boilerProduct = product as (DisplayProduct | BoilerProduct);
 			heatSourceData.needsSpecifiedLocation = boilerProduct.boilerLocation === "unknown";
@@ -94,12 +94,23 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 			heatSourceData.typeOfHeatPump = heatPumpProductTypesMap[heatPumpProduct.technologyType as HeatPumpProductTypes];
 			heatSourceData.packageProductIds ??= [];
 
-			if (heatPumpProduct.technologyType === "HybridHeatPump") {
-				if (heatSourceData.packageProductIds?.length) {
-					const boilerId = heatSourceData.packageProductIds[0]!;
-					removeBoilerProduct?.(boilerId);
-				}
+			if (heatSourceData.packageProductIds.length) {
+				const mechVentData = state.infiltrationAndVentilation.mechanicalVentilation.data;
+				const waterStorageData = state.domesticHotWater.waterStorage.data;
 
+				for (const packagedId of [...heatSourceData.packageProductIds]) {
+					removeBoilerProduct(packagedId);
+
+					const ventIdx = mechVentData.findIndex(x => x.data.id === packagedId);
+					if (ventIdx >= 0) mechVentData.splice(ventIdx, 1);
+
+					const storageIdx = waterStorageData.findIndex(x => x.data.id === packagedId);
+					if (storageIdx >= 0) waterStorageData.splice(storageIdx, 1);
+				}
+				heatSourceData.packageProductIds = [];
+			}
+
+			if (heatPumpProduct.technologyType === "HybridHeatPump") {
 				useProductData(heatPumpProduct.boilerProductID!).then(boiler => {
 					const boilerData = boiler as BoilerProduct;
 					const boilerId = addBoilerProduct?.(boilerData);
@@ -113,18 +124,6 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 				heatPumpProduct.technologyType === "ExhaustAirMvhrHeatPump"
 			) {
 				const mechanicalVentilationData = state.infiltrationAndVentilation.mechanicalVentilation.data;
-
-				if (heatSourceData.packageProductIds?.length) {
-					const ventToRemove = mechanicalVentilationData.find(x => heatSourceData.packageProductIds?.includes(x.data.id!));
-					const ventIndex = ventToRemove ? mechanicalVentilationData.indexOf(ventToRemove) : undefined;
-
-					if (ventToRemove && ventIndex && ventIndex >= 0) {
-						mechanicalVentilationData.splice(ventIndex, 1);
-
-						const packageProductIdIndex = heatSourceData.packageProductIds.indexOf(ventToRemove.data.id!);
-						heatSourceData.packageProductIds.splice(packageProductIdIndex, 1);
-					}
-				}
 
 				const heatPumpMechVentTypeMap: Partial<Record<TechnologyType, SchemaMechVentType | undefined>> = {
 					"ExhaustAirMevHeatPump": "Centralised continuous MEV",
@@ -155,18 +154,6 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 				// Throw error if water storage or domestic hot water heat sources contain any entries
 				if (waterStorage.length || (source === "spaceHeating" && dhwHeatSources.length)) {
 					throw new EcaasError("DHW_HEAT_SOURCE_CONFLICT");
-				}
-
-				if (heatSourceData.packageProductIds?.length) {
-					const cylinderToRemove = waterStorage.find(x => heatSourceData.packageProductIds?.includes(x.data.id!));
-					const cylinderIndex = cylinderToRemove ? waterStorage.indexOf(cylinderToRemove) : undefined;
-
-					if (cylinderToRemove && cylinderIndex && cylinderIndex >= 0) {
-						waterStorage.splice(cylinderIndex, 1);
-
-						const packageProductIdIndex = heatSourceData.packageProductIds.indexOf(cylinderToRemove.data.id!);
-						heatSourceData.packageProductIds.splice(packageProductIdIndex, 1);
-					}
 				}
 
 				if (isDisplayProduct(heatPumpProduct)) {
@@ -221,10 +208,10 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 			};
 
 			const removeBoilerProduct = (id: string) => {
-				const boilerToRemove = state.spaceHeating.heatSource.data.findIndex(x => x.data.id === id);
+				const boilerToRemoveIdx = state.spaceHeating.heatSource.data.findIndex(x => x.data.id === id);
 
-				if (boilerToRemove) {
-					state.spaceHeating.heatSource.data.splice(boilerToRemove, 1);
+				if (boilerToRemoveIdx >= 0) {
+					state.spaceHeating.heatSource.data.splice(boilerToRemoveIdx, 1);
 				}
 			};
 
@@ -264,10 +251,10 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 			};
 
 			const removeBoilerProduct = (id: string) => {
-				const boilerToRemove = state.domesticHotWater.heatSources.data.findIndex(x => x.data.id === id);
+				const boilerToRemoveIdx = state.domesticHotWater.heatSources.data.findIndex(x => x.data.id === id);
 
-				if (boilerToRemove) {
-					state.domesticHotWater.heatSources.data.splice(boilerToRemove, 1);
+				if (boilerToRemoveIdx !== -1) {
+					state.domesticHotWater.heatSources.data.splice(boilerToRemoveIdx, 1);
 				}
 			};
 

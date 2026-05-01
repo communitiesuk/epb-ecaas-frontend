@@ -1073,6 +1073,7 @@ describe("heatSource", () => {
 				const backUpBolerInStoreAfterChange = store.spaceHeating.heatSource.data.find(hs => hs.data.id === backupBoiler.id);
 				expect(backUpBolerInStoreAfterChange).toBeUndefined();
 			});
+
 		});
 		describe("heat network", () => {
 			test("'HeatNetworkSection' component displays when type of heat source is heat network", async () => {
@@ -1595,6 +1596,209 @@ describe("heatSource", () => {
 					typeOfHeatSource: "boiler",
 				});
 			});
+			it("removes packaged boiler when new none packeged boiler is selected", async () => {
+				const backupBoiler: HeatSourceData = {
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+					name: "Backup boiler",
+					typeOfHeatSource: "boiler",
+					typeOfBoiler: "combiBoiler",
+					productReference: "BOILER_MEDIUM",
+					needsSpecifiedLocation: true,
+					packagedProductReference: "1000",
+					maxFlowTemp: unitValue(32, celsius),
+				};
+				const heatPump: HeatSourceData = {
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+					name: "Heat pump",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "airSource",
+					productReference: "HEATPUMP-SMALL",
+					maxFlowTemp: unitValue(7, celsius),
+					isConnectedToHeatNetwork: false,
+					energySupply: "electricity",
+					packageProductIds: ["1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b"],
+				};
+				const hybridHeatPumpProduct: Partial<HybridHeatPumpProduct> = {
+					id: "1000",
+					brandName: "Test",
+					modelName: "Hybrid Heat Pump",
+					technologyType: "HybridHeatPump",
+					boilerProductID: "2000",
+				};
+
+				const backupBoilerProduct: Partial<BoilerProduct> = {
+					id: "2000",
+					brandName: "Test",
+					modelName: "Hybrid Heat Pump",
+					technologyType: "CombiBoiler",
+				};
+
+				mockFetch.mockReturnValueOnce({
+					data: ref(hybridHeatPumpProduct),
+				}).mockReturnValueOnce({
+					data: ref(backupBoilerProduct),
+				});
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{ data: heatPump },
+								{ data: backupBoiler },
+							],
+						},
+					},
+				});
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+				const backupBoilerInStoreBeforeChange = store.spaceHeating.heatSource.data.find(hs => hs.data.id === backupBoiler.id);
+				expect(backupBoilerInStoreBeforeChange).toBeDefined();
+
+				// Simulate selecting a different (non-hybrid) product from the products page
+				const newProduct: Partial<DisplayProduct> = {
+					id: "NEW-PRODUCT-ID",
+					technologyType: "AirSourceHeatPump",
+				};
+				const { selectHeatSourceProduct } = useSelectHeatSourceProduct([], "heatPump");
+				await selectHeatSourceProduct(
+					newProduct as DisplayProduct,
+					(state) => state.spaceHeating.heatSource.data as EcaasForm<HeatSourceData>[],
+					0,
+				);
+
+				const backupBoilerInStoreAfterChange = store.spaceHeating.heatSource.data.find(hs => hs.data.id === backupBoiler.id);
+				expect(backupBoilerInStoreAfterChange).toBeUndefined();
+				const heatPumpAfterChange = store.spaceHeating.heatSource.data[0]!.data as Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
+				expect(heatPumpAfterChange.packageProductIds).toEqual([]);
+				expect(heatPumpAfterChange.productReference).toBe("NEW-PRODUCT-ID");
+
+			});
+
+			it("removes packaged mechanical ventilation when a different non-packaged heat pump is selected", async () => {
+				const packagedMechanicalVentilationId = "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8c";
+				const heatPump: HeatSourceData = {
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+					name: "Heat pump",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "airSource",
+					productReference: "HEATPUMP-SMALL",
+					maxFlowTemp: unitValue(7, celsius),
+					isConnectedToHeatNetwork: false,
+					energySupply: "electricity",
+					packageProductIds: [packagedMechanicalVentilationId],
+				};
+
+				const packagedMechanicalVentilation: Partial<MechanicalVentilationData> = {
+					id: packagedMechanicalVentilationId,
+					name: "Packaged MEV",
+					productReference: "HEATPUMP-SMALL",
+					typeOfMechanicalVentilationOptions: "Centralised continuous MEV",
+					packagedProductReference: "HEATPUMP-SMALL",
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPump }],
+						},
+					},
+					infiltrationAndVentilation: {
+						mechanicalVentilation: {
+							data: [{ data: packagedMechanicalVentilation as MechanicalVentilationData }],
+						},
+					},
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				const packagedMechVentBeforeChange = store.infiltrationAndVentilation.mechanicalVentilation.data.find(item => item.data.id === packagedMechanicalVentilationId);
+				expect(packagedMechVentBeforeChange).toBeDefined();
+
+				const newProduct: Partial<DisplayProduct> = {
+					id: "NEW-PRODUCT-ID",
+					technologyType: "AirSourceHeatPump",
+				};
+				const { selectHeatSourceProduct } = useSelectHeatSourceProduct([], "heatPump");
+				await selectHeatSourceProduct(
+					newProduct as DisplayProduct,
+					(state) => state.spaceHeating.heatSource.data as EcaasForm<HeatSourceData>[],
+					0,
+				);
+
+				const packagedMechVentAfterChange = store.infiltrationAndVentilation.mechanicalVentilation.data.find(item => item.data.id === packagedMechanicalVentilationId);
+				expect(packagedMechVentAfterChange).toBeUndefined();
+				const heatPumpAfterChange = store.spaceHeating.heatSource.data[0]!.data as Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
+				expect(heatPumpAfterChange.packageProductIds).toEqual([]);
+				expect(heatPumpAfterChange.productReference).toBe("NEW-PRODUCT-ID");
+			});
+
+			it("removes packaged water storage when a different non-packaged heat pump is selected", async () => {
+				const packagedWaterStorageId = "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8d";
+				const heatPump: HeatSourceData = {
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+					name: "Heat pump",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "airSource",
+					productReference: "HEATPUMP-SMALL",
+					maxFlowTemp: unitValue(7, celsius),
+					isConnectedToHeatNetwork: false,
+					energySupply: "electricity",
+					packageProductIds: [packagedWaterStorageId],
+				};
+
+				const packagedWaterStorage: Partial<WaterStorageData> = {
+					id: packagedWaterStorageId,
+					name: "Packaged hot water cylinder",
+					typeOfWaterStorage: "hotWaterCylinder",
+					packagedProductReference: "HEATPUMP-SMALL",
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPump }],
+						},
+					},
+					domesticHotWater: {
+						waterStorage: {
+							data: [{ data: packagedWaterStorage as WaterStorageData }],
+						},
+					},
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				const packagedWaterStorageBeforeChange = store.domesticHotWater.waterStorage.data.find(item => item.data.id === packagedWaterStorageId);
+				expect(packagedWaterStorageBeforeChange).toBeDefined();
+
+				const newProduct: Partial<DisplayProduct> = {
+					id: "NEW-PRODUCT-ID",
+					technologyType: "AirSourceHeatPump",
+				};
+				const { selectHeatSourceProduct } = useSelectHeatSourceProduct([], "heatPump");
+				await selectHeatSourceProduct(
+					newProduct as DisplayProduct,
+					(state) => state.spaceHeating.heatSource.data as EcaasForm<HeatSourceData>[],
+					0,
+				);
+
+				const packagedWaterStorageAfterChange = store.domesticHotWater.waterStorage.data.find(item => item.data.id === packagedWaterStorageId);
+				expect(packagedWaterStorageAfterChange).toBeUndefined();
+				const heatPumpAfterChange = store.spaceHeating.heatSource.data[0]!.data as Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
+				expect(heatPumpAfterChange.packageProductIds).toEqual([]);
+				expect(heatPumpAfterChange.productReference).toBe("NEW-PRODUCT-ID");
+			});
 		});
 
 		describe("pcdb product", () => {
@@ -1807,6 +2011,5 @@ describe("heatSource", () => {
 				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatBattery");
 			});
 		});
-
 	});
 });
