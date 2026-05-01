@@ -1262,7 +1262,7 @@ describe("Heat pump section", () => {
 			});
 			await renderSuspended(HeatSourceForm);
 			await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
-			expect(screen.getByText("Point of use can only be selected when there is no water storage.")).toBeTruthy();	
+			expect(screen.getByText("Point of use can only be selected when there is no water storage")).toBeTruthy();	
 		});
 
 		test("if heat source type is not point of use, it is not disabled when water storage has been selected", async () => {

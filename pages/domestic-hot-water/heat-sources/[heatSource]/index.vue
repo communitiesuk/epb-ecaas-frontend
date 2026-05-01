@@ -316,7 +316,7 @@ const heatSourceOptions = computed(() => {
 			label,
 			disabled: key === "pointOfUse" && hasWaterStorage.value,
 			hint: isPointOfUseDisabled
-				? "Point of use can only be selected when there is no water storage."
+				? "Point of use can only be selected when there is no water storage"
 				: undefined,
 		};
 	}
