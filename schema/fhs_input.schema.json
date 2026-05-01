@@ -44,10 +44,10 @@
 			"description": "A wet room is any room used for domestic activities (such as cooking, clothes washing and bathing) that produce significant amounts of airborne moisture, e.g. a kitchen, utility room or bathroom. For the purposes of Part F of the Building Regulations, sanitary accommodation is also regarded as a wet room."
 		},
 		"NumberOfHotTappedRooms": {
-            "type": "integer",
-            "minimum": 1,
-            "description": "A tapped room is any room with a hot water tapping point (e.g sink, bath or shower) with hot water from the central system, not including instantaneous hot water that's fed from the cold water pipework, for example a room with just an electric shower and/or electric water heater over the sink."
-        },
+			"type": "integer",
+			"minimum": 1,
+			"description": "A tapped room is any room with a hot water tapping point (e.g sink, bath or shower) with hot water from the central system, not including instantaneous hot water that's fed from the cold water pipework, for example a room with just an electric shower and/or electric water heater over the sink."
+		},
 		"NumberOfUtilityRooms": {
 			"type": "integer",
 			"minimum": 0,
@@ -804,7 +804,10 @@
 							}
 						},
 						{
-							"required": ["heat_network_reference", "sub_heat_network_name"],
+							"required": [
+								"heat_network_reference",
+								"sub_heat_network_name"
+							],
 							"properties": {
 								"heat_network_reference": {
 									"description": "A unique (product) reference to a heat network held within the HEM database (PCDB)",
@@ -888,6 +891,18 @@
 											"description": "A unique reference to a boiler product held within the HEM database (PCDB), if there is a need for a reference to a boiler product to be passed, and the heat pump is not packaged with a boiler.",
 											"title": "Reference to the product in the HEM database",
 											"type": "string"
+										},
+										"boiler": {
+											"type": "object",
+											"description": "A container for a boiler's cost_schedule_hybrid, if this is available. This field will be merged onto the data for any boiler packaged with the indicated heat pump product.",
+											"properties": {
+												"cost_schedule_hybrid": {
+													"$ref": "#/$defs/BoilerCostScheduleHybrid"
+												}
+											},
+											"required": [
+												"cost_schedule_hybrid"
+											]
 										}
 									},
 									"required": [
@@ -1442,7 +1457,9 @@
 						"then": {
 							"oneOf": [
 								{
-									"required": ["product_reference"],
+									"required": [
+										"product_reference"
+									],
 									"properties": {
 										"product_reference": {
 											"description": "A unique reference to a product held within the HEM database (PCDB)",
@@ -1716,8 +1733,8 @@
 												],
 												"properties": {
 													"product_reference": {
-													"description": "A unique reference to a product held within the HEM database (PCDB)",
-													"title": "Reference to the product in the HEM database",
+														"description": "A unique reference to a product held within the HEM database (PCDB)",
+														"title": "Reference to the product in the HEM database",
 														"type": "string"
 													},
 													"number_of_units": {
@@ -1912,7 +1929,9 @@
 						"then": {
 							"oneOf": [
 								{
-									"required": ["product_reference"],
+									"required": [
+										"product_reference"
+									],
 									"properties": {
 										"product_reference": {
 											"description": "A unique reference to a product held within the HEM database (PCDB)",
@@ -1932,7 +1951,9 @@
 											"minimum": 8,
 											"maximum": 15
 										},
-										"allow_low_flowrate": {"type": "boolean"},
+										"allow_low_flowrate": {
+											"type": "boolean"
+										},
 										"HotWaterSource": {
 											"type": "string",
 											"description": "Reference to HotWaterSource object that provides hot water to this shower."
@@ -1954,7 +1975,9 @@
 										{
 											"if": {
 												"properties": {
-													"allow_low_flowrate": {"const": true}
+													"allow_low_flowrate": {
+														"const": true
+													}
 												}
 											},
 											"then": {
@@ -1969,7 +1992,9 @@
 										{
 											"if": {
 												"properties": {
-													"allow_low_flowrate": {"const": false}
+													"allow_low_flowrate": {
+														"const": false
+													}
 												}
 											},
 											"then": {
@@ -2874,7 +2899,9 @@
 												"type": "array",
 												"contains": {
 													"type": "object",
-													"required": ["n"],
+													"required": [
+														"n"
+													],
 													"properties": {
 														"n": {
 															"type": "number",
@@ -3448,7 +3475,11 @@
 																"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
 															}
 														},
-														"required": ["mid_height_air_flow_path", "orientation360", "pitch"]
+														"required": [
+															"mid_height_air_flow_path",
+															"orientation360",
+															"pitch"
+														]
 													}
 												}
 											}
@@ -3801,7 +3832,9 @@
 												"SFP"
 											],
 											"properties": {
-												"SFP": {"$ref": "#/$defs/SFP"}
+												"SFP": {
+													"$ref": "#/$defs/SFP"
+												}
 											}
 										}
 									},
@@ -3827,21 +3860,46 @@
 										"then": {
 											"oneOf": [
 												{
-													"required": ["measured_fan_power", "measured_air_flow_rate"],
-													"not": {"required": ["SFP"]}
+													"required": [
+														"measured_fan_power",
+														"measured_air_flow_rate"
+													],
+													"not": {
+														"required": [
+															"SFP"
+														]
+													}
 												},
 												{
-													"required": ["SFP"],
-													"not": {"anyOf": [
-														{"required": ["measured_fan_power"]},
-														{"required": ["measured_air_flow_rate"]}
-													]}
+													"required": [
+														"SFP"
+													],
+													"not": {
+														"anyOf": [
+															{
+																"required": [
+																	"measured_fan_power"
+																]
+															},
+															{
+																"required": [
+																	"measured_air_flow_rate"
+																]
+															}
+														]
+													}
 												}
 											],
 											"properties": {
-												"measured_fan_power": {"type": "number"},
-												"measured_air_flow_rate": {"type": "number"},
-												"SFP": {"$ref": "#/$defs/SFP"}
+												"measured_fan_power": {
+													"type": "number"
+												},
+												"measured_air_flow_rate": {
+													"type": "number"
+												},
+												"SFP": {
+													"$ref": "#/$defs/SFP"
+												}
 											}
 										}
 									}
@@ -4047,7 +4105,7 @@
 										}
 									},
 									"then": {
-											"description": "Adjacent unconditioned space building elements",
+										"description": "Adjacent unconditioned space building elements",
 										"required": [
 											"thermal_resistance_unconditioned_space"
 										],
@@ -4149,7 +4207,7 @@
 													}
 												},
 												"then": {
-														"description": "Slab floor with edge insulation",
+													"description": "Slab floor with edge insulation",
 													"required": [
 														"edge_insulation"
 													],
@@ -4370,7 +4428,7 @@
 										}
 									},
 									"then": {
-											"description": "Opaque building elements (walls, roofs, etc.)",
+										"description": "Opaque building elements (walls, roofs, etc.)",
 										"required": [
 											"areal_heat_capacity",
 											"mass_distribution_class",
@@ -4518,7 +4576,7 @@
 										}
 									},
 									"then": {
-											"description": "Party wall element for all party wall types, with specific handling for cavity air movement heat loss.\n\nFor cavity party walls, this accounts for non-negligible heat loss due to air movement\nwithin the cavity, as identified by research. The thermal resistance of the\nunconditioned space (cavity) is derived from the party wall cavity type and lining type.\nFive cavity types are supported:\nsolid, unfilled_unsealed, unfilled_sealed, filled_sealed, and defined_resistance.\nTwo lining types are supported:\nwet_plaster, and dry_lined",
+										"description": "Party wall element for all party wall types, with specific handling for cavity air movement heat loss.\n\nFor cavity party walls, this accounts for non-negligible heat loss due to air movement\nwithin the cavity, as identified by research. The thermal resistance of the\nunconditioned space (cavity) is derived from the party wall cavity type and lining type.\nFive cavity types are supported:\nsolid, unfilled_unsealed, unfilled_sealed, filled_sealed, and defined_resistance.\nTwo lining types are supported:\nwet_plaster, and dry_lined",
 										"required": [
 											"area",
 											"areal_heat_capacity",
@@ -4631,7 +4689,7 @@
 										}
 									},
 									"then": {
-											"description": "Transparent building elements (windows, glazing)",
+										"description": "Transparent building elements (windows, glazing)",
 										"required": [
 											"frame_area_fraction",
 											"g_value",
@@ -4956,8 +5014,8 @@
 		"BuildingLength",
 		"BuildingWidth",
 		"NumberOfBedrooms",
-        "NumberOfWetRooms",
-        "NumberOfHotTappedRooms",
+		"NumberOfWetRooms",
+		"NumberOfHotTappedRooms",
 		"NumberOfUtilityRooms",
 		"NumberOfBathrooms",
 		"NumberOfSanitaryAccommodations",
@@ -5104,8 +5162,8 @@
 			"type": "object"
 		},
 		"SFP": {
-            "type": "number",
-            "exclusiveMinimum": 0,
+			"type": "number",
+			"exclusiveMinimum": 0,
 			"description": "Specific fan power, assumed inclusive of any in use factors unless SFP_in_use_factor also provided (unit: W/l/s)"
 		},
 		"ScheduleForDouble": {

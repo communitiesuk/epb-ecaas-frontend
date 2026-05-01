@@ -4,13 +4,28 @@ import { getValidationMessages } from "@formkit/validation";
  * Handles invalid form submission and populates error messages to be displayed as an error summary
  * @returns Handler for invalid form submission and the populated error messages
  */
+
+type ErrorSummaryItem = {
+	id: string;
+	text: string | undefined;
+	href?: string;
+};
+
 export function useErrorSummary() {
-	const errorMessagesValue: Array<{ id: string; text: string | undefined }> = [];
-	const errorMessages = ref(errorMessagesValue);
+	const errorMessages = ref<ErrorSummaryItem[]>([]);
+
+	const addError = (error: ErrorSummaryItem) => {
+		errorMessages.value.push(error);
+	};
+
+	const clearErrors = () => {
+		errorMessages.value = [];
+	};
 
 	const handleInvalidSubmit = (node: FormKitNode) => {
 		const validationErrors = getValidationMessages(node);
-		errorMessages.value = [];
+
+		clearErrors();
 
 		validationErrors.forEach(messages => {
 			const errors = messages.map(message => ({
@@ -24,5 +39,5 @@ export function useErrorSummary() {
 		window.scrollTo(0, 0);
 	};
 
-	return { handleInvalidSubmit, errorMessages };
+	return { handleInvalidSubmit, errorMessages, addError, clearErrors };
 }

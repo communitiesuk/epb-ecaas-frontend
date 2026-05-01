@@ -787,6 +787,10 @@ export interface components {
              * @description A unique reference to a boiler product held within the HEM database (PCDB), if there is a need for a reference to a boiler product to be passed, and the heat pump is not packaged with a boiler.
              */
             boiler_product_reference?: string;
+            /** @description A container for a boiler's cost_schedule_hybrid, if this is available. This field will be merged onto the data for any boiler packaged with the indicated heat pump product. */
+            boiler?: {
+                cost_schedule_hybrid: components["schemas"]["BoilerCostScheduleHybrid"];
+            };
         } | {
             /** @constant */
             type: "HeatPump";
@@ -1902,6 +1906,10 @@ export interface components {
                      * @description A unique reference to a boiler product held within the HEM database (PCDB), if there is a need for a reference to a boiler product to be passed, and the heat pump is not packaged with a boiler.
                      */
                     boiler_product_reference?: string;
+                    /** @description A container for a boiler's cost_schedule_hybrid, if this is available. This field will be merged onto the data for any boiler packaged with the indicated heat pump product. */
+                    boiler?: {
+                        cost_schedule_hybrid: components["schemas"]["BoilerCostScheduleHybrid"];
+                    };
                 } | {
                     /** @constant */
                     type: "HeatPump";

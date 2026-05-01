@@ -35,7 +35,20 @@ if (hasPackagedProduct(model.value)) {
 	const packagedProductData = await useProductData(model.value.packagedProductReference!);
 	packagedProduct.value = packagedProductData ?? undefined;
 }
-
+function removePackagedProducts(packageProductIds: string[]) {
+	store.$patch((state) => {
+		const heatSources = state.domesticHotWater.heatSources.data.filter((x) => {
+			return !("packagedProductReference" in x.data) || !packageProductIds.includes((x.data.id));
+		});
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: heatSources,
+				},
+			},
+		});
+	});
+}
 const saveForm = () => {
 	store.$patch((state) => {
 		state.domesticHotWater.heatSources.data[index]!.complete = true;
@@ -62,6 +75,9 @@ watch(
 			} as DomesticHotWaterHeatSourceData;
 		}
 		if (initialData.isExistingHeatSource === false && newData.isExistingHeatSource === false && initialData.typeOfHeatSource !== newData.typeOfHeatSource) {
+			if (initialData.typeOfHeatSource === "heatPump") {
+				removePackagedProducts(initialData.packageProductIds ?? []);
+			}
 			errorMessages.value = [];
 			model.value = { 
 				coldWaterSource: initialData.coldWaterSource,
@@ -283,6 +299,30 @@ const isLinkedToHeatSourceWithCylinder = (): boolean => {
 
 	return isPackagedProduct(spaceHeatingHeatSource?.data) && spaceHeatingHeatSource.data.packageProductIds!.some(id => waterStorageIds.includes(id));
 };
+
+
+const hasWaterStorage = computed(() => {
+	return store.domesticHotWater.waterStorage.data.length > 0;
+});
+
+const heatSourceOptions = computed(() => {
+	const heatSourceOptions = filterHeatSourceOptions();
+
+	const result: Record<string, { label: string; disabled?: boolean, hint?: string }> = {};
+
+	for (const [key, label] of Object.entries(heatSourceOptions)) {
+		const isPointOfUseDisabled = key === "pointOfUse" && hasWaterStorage.value;
+		result[key] = {
+			label,
+			disabled: key === "pointOfUse" && hasWaterStorage.value,
+			hint: isPointOfUseDisabled
+				? "Point of use can only be selected when there is no water storage"
+				: undefined,
+		};
+	}
+	return result;
+});
+
 </script>
 
 <template>
@@ -342,7 +382,7 @@ const isLinkedToHeatSourceWithCylinder = (): boolean => {
 			id="typeOfHeatSource"
 			type="govRadios"
 			label="Type of heat source"
-			:options="filterHeatSourceOptions()"
+			:options="heatSourceOptions"
 			name="typeOfHeatSource"
 			validation="required"
 			:disabled="hasPackagedProduct(model)"

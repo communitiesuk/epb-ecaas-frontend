@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import type { BoilerProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 import { celsius } from "~/utils/units/temperature";
+import { litre } from "~/utils/units/volume";
 import type { HeatSourceData, WaterStorageData } from "../../../../stores/ecaasStore.schema";
 
 vi.mock("uuid");
@@ -157,6 +158,7 @@ describe("Heat Source Page", () => {
 			productReference: "HEATPUMP-SMALL",
 			isConnectedToHeatNetwork: false,
 			energySupply: "electricity",
+			maxFlowTemp: unitValue(30, celsius),
 		};
 
 		store.$patch({
@@ -1210,6 +1212,131 @@ describe("Heat pump section", () => {
 			expect(await screen.findByTestId("heaterEfficiency_error")).toBeDefined();		
 
 		});
+
+		test("point of use heat source is disabled when a water storage has been selected", async () => {
+			const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
+				data: {
+					name: "Hot water cylinder 1",
+					id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
+					typeOfWaterStorage: "hotWaterCylinder",
+					storageCylinderVolume: unitValue(5, litre),
+					dailyEnergyLoss: 1,
+					dhwHeatSourceId: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+					areaOfHeatExchanger: 1000,
+					heaterPosition: 0.8,
+					thermostatPosition: 0.5,
+				},
+			};
+			store.$patch({
+				domesticHotWater: {
+					waterStorage: {
+						data: [hotWaterCylinder],
+					},
+				},
+			});
+			await renderSuspended(HeatSourceForm);
+			await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+			expect(screen.getByTestId("typeOfHeatSource_pointOfUse").hasAttribute("disabled")).toBeTruthy();
+		});
+
+		test("point of use hint text is displayed when point of use is disabled", async () => {
+			const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
+				data: {
+					name: "Hot water cylinder 1",
+					id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
+					typeOfWaterStorage: "hotWaterCylinder",
+					storageCylinderVolume: unitValue(5, litre),
+					dailyEnergyLoss: 1,
+					dhwHeatSourceId: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+					areaOfHeatExchanger: 1000,
+					heaterPosition: 0.8,
+					thermostatPosition: 0.5,
+				},
+			};
+			store.$patch({
+				domesticHotWater: {
+					waterStorage: {
+						data: [hotWaterCylinder],
+					},
+				},
+			});
+			await renderSuspended(HeatSourceForm);
+			await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+			expect(screen.getByText("Point of use can only be selected when there is no water storage")).toBeTruthy();	
+		});
+
+		test("if heat source type is not point of use, it is not disabled when water storage has been selected", async () => {
+			const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
+				data: {
+					name: "Hot water cylinder 1",
+					id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
+					typeOfWaterStorage: "hotWaterCylinder",
+					storageCylinderVolume: unitValue(5, litre),
+					dailyEnergyLoss: 1,
+					dhwHeatSourceId: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+					areaOfHeatExchanger: 1000,
+					heaterPosition: 0.8,
+					thermostatPosition: 0.5,
+				},
+			};
+			store.$patch({
+				domesticHotWater: {
+					waterStorage: {
+						data: [hotWaterCylinder],
+					},
+				},
+			});
+			await renderSuspended(HeatSourceForm);
+			await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+			expect(screen.getByTestId("typeOfHeatSource_immersionHeater").hasAttribute("disabled")).toBeFalsy();
+			expect(screen.getByTestId("typeOfHeatSource_heatPump").hasAttribute("disabled")).toBeFalsy();
+		});
+	});
+	it("removes backup boiler packaged with heat pump when heat source is changed from heat pump to another type", async () => {
+		const hybridHeatPumpProduct: Partial<HybridHeatPumpProduct> = {
+			id: "1000",
+			brandName: "Test",
+			modelName: "Hybrid Heat Pump",
+			technologyType: "HybridHeatPump",
+			boilerProductID: "2000",
+		};
+	
+		const backupBoilerProduct: Partial<BoilerProduct> = {
+			id: "2000",
+			brandName: "Test",
+			modelName: "Hybrid Heat Pump",
+			technologyType: "CombiBoiler",
+		};
+	
+		mockFetch.mockReturnValueOnce({
+			data: ref(hybridHeatPumpProduct),
+		}).mockReturnValueOnce({
+			data: ref(backupBoilerProduct),
+		});
+	
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [
+						{ data: backupBoiler },
+						{ data: hybridHeatPump },
+					],
+				},
+			},
+		});
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "1" },
+			},
+		});
+		const backUpBolerInStoreBeforeChange = store.domesticHotWater.heatSources.data.find(hs => hs.data.id === backupBoiler.id);
+		expect(backUpBolerInStoreBeforeChange).toBeDefined();
+		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+		await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+		await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));
+		await user.tab();
+		const backUpBolerInStoreAfterChange = store.domesticHotWater.heatSources.data.find(hs => hs.data.id === backupBoiler.id);
+		expect(backUpBolerInStoreAfterChange).toBeUndefined();
 	});
 });
 

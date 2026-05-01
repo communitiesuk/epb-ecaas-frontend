@@ -6,6 +6,7 @@ import { resolveState } from "~/stores/resolve";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { centimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
+import { celsius } from "~/utils/units/temperature";
 
 
 const baseForm = {
@@ -200,6 +201,7 @@ const expectedHouseInput: FhsInputSchema = {
 			"EnergySupply": "mains elec",
 			"HeatSource": {
 				"name": "Heat pump 1",
+				"temp_flow_limit_upper": 30,
 			},
 			"Zone": "dwellingspace",
 			"design_flow_rate": 200,
@@ -222,6 +224,7 @@ const expectedHouseInput: FhsInputSchema = {
 		"Warm Air Heater 1 (1)": {
 			"HeatSource": {
 				"name": "Heat pump 1",
+				"temp_flow_limit_upper": 30,
 			},
 			"frac_convective": 0.8,
 			"temp_diff_emit_dsgn": 15,
@@ -230,6 +233,7 @@ const expectedHouseInput: FhsInputSchema = {
 		"Warm Air Heater 1 (2)": {
 			"HeatSource": {
 				"name": "Heat pump 1",
+				"temp_flow_limit_upper": 30,
 			},
 			"frac_convective": 0.8,
 			"temp_diff_emit_dsgn": 15,
@@ -1257,6 +1261,7 @@ describe("FHS input mapper", () => {
 						productReference: "HP-456",
 						isConnectedToHeatNetwork: false,
 						energySupply: "electricity",
+						maxFlowTemp: unitValue(30, celsius),
 					},
 					complete: true,
 				}],

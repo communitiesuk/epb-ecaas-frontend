@@ -20,7 +20,8 @@ const props = defineProps<{
 	onRemove?: (index: number) => void;
 	onDuplicate?: (index: number) => void;
 	showStatus?: boolean;
-	section?: string
+	section?: string;
+	conflictMessage?: string;
 }>();
 
 function handleRemove(index: number, e: MouseEvent) {
@@ -34,6 +35,7 @@ function handleDuplicate(index: number, e: MouseEvent) {
 }
 
 function canAddMoreItems() {
+	if (props.conflictMessage) return false;
 	return !props.maxNumberOfItems || (!props.maxNumberOfItems && props.section !== "dHWHeatSources") || !props.items || props.items?.length < props.maxNumberOfItems; 
 }
 
@@ -66,7 +68,13 @@ function routeForEditItem(index: number) {
 					</li>
 				</ul>
 			</div>
-			<div v-if="items && items.length" class="govuk-summary-card__content" :data-testid="`${id}_items`">
+			<div v-if="conflictMessage" class="govuk-summary-card__content">
+				<div class="govuk-body">
+					{{ conflictMessage }}
+				</div>
+			</div>
+
+			<div v-else-if="items && items.length" class="govuk-summary-card__content" :data-testid="`${id}_items`">
 				<dl class="govuk-summary-list">
 					<div
 						v-for="(item, index) in items"

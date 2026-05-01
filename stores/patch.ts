@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Copy deprecated packageProductId value to new packageProductIds array
@@ -50,6 +51,7 @@ function patchHotWaterOutlets(state: Record<string, unknown>) {
 	if (hotWaterOutlets && Object.keys(hotWaterOutlets).some(k => k !== "data")) {
 		storeState.domesticHotWater.hotWaterOutlets = {
 			data: hotWaterOutlets.data ?? [],
+			complete: hotWaterOutlets.complete ?? false,
 		};
 	}
 }
@@ -62,8 +64,25 @@ function patchPipework(state: Record<string, unknown>) {
 	if (Object.keys(pipework).some(k => k !== "data")) {
 		storeState.domesticHotWater.pipework = {
 			data: pipework.data ?? [],
+			complete: pipework.complete ?? false,
 		};
 	}
+}
+
+/**
+ * Handle edge case where emitters do not have an ID
+ * @param state 
+ */
+function patchHeatEmitterIds(state: Record<string, unknown>) {
+	const storeState = state as EcaasState;
+
+	storeState.spaceHeating.heatEmitters.data.forEach(emittersData => {
+		if ("emitters" in emittersData.data) {
+			emittersData.data.emitters.forEach(emitter => {
+				emitter.id ??= uuidv4();
+			});
+		}
+	});
 }
 
 /**
@@ -76,6 +95,7 @@ export function patchState(state: Record<string, unknown>): Record<string, unkno
 	patchLighting(state);
 	patchHotWaterOutlets(state);
 	patchPipework(state);
+	patchHeatEmitterIds(state);
 
 	return state;
 }

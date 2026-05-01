@@ -28,6 +28,7 @@ describe("Space heating - heat sources", () => {
 			productReference: "1234",
 			isConnectedToHeatNetwork: false,
 			energySupply: "electricity",
+			maxFlowTemp: unitValue(30, celsius),
 		};
 
 		const heatPumpWithProductReference2: HeatSourceData = {
@@ -38,6 +39,7 @@ describe("Space heating - heat sources", () => {
 			productReference: "5678",
 			isConnectedToHeatNetwork: false,
 			energySupply: "electricity",
+			maxFlowTemp: unitValue(30, celsius),
 		};
 		const store = useEcaasStore();
 		describe("with product references", () => {
@@ -82,6 +84,7 @@ describe("Space heating - heat sources", () => {
 					productReference: "9999",
 					isConnectedToHeatNetwork: true,
 					associatedHeatNetworkId: "heatNetwork1Id",
+					maxFlowTemp: unitValue(30, celsius),
 				};
 				store.$patch({
 					spaceHeating: {
@@ -274,6 +277,7 @@ describe("Space heating - heat sources", () => {
 			productReference: "5678",
 			numberOfUnits: 2,
 			energySupply: "LPG_bottled",
+			maxFlowTemp: unitValue(30, celsius),
 		};
 
 		test("maps stored pcm heat battery data to fit schema", () => {

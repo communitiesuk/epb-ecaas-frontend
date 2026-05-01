@@ -97,11 +97,7 @@ export function getSectionStatus(section: Record<string, object>): GovTagProps {
 				status = formStatus.inProgress;
 			}
 
-			if (form.complete) {
-				numberOfCompleteTasks++;
-			}
-
-			if (taskPage.excludeFromNavigation?.call(globalThis)) {
+			if (form.complete || taskPage.excludeFromNavigation?.call(globalThis)) {
 				numberOfCompleteTasks++;
 			}
 		}
@@ -126,15 +122,14 @@ export function getSectionStatus(section: Record<string, object>): GovTagProps {
 	if (numberOfCompleteTasks === tasks.length) {
 		status = formStatus.complete;
 	}
-
 	return status;
 }
 
 function isFormStarted(form: EcaasForm<boolean>): boolean {
 	return (
 		form.data &&
-    (Array.isArray(form.data)
-    	? !!form.data.length
-    	: !!Object.entries(form.data).length)
+		(Array.isArray(form.data)
+			? !!form.data.length
+			: !!Object.entries(form.data).length)
 	);
 }

@@ -248,6 +248,36 @@ describe("Domestic hot water", () => {
 			expect(pipework.data[0]?.data.waterStorage).toBe(hwStorage1.data.id);
 			expect(pipework.data[1]?.data.waterStorage).toBeUndefined();
 		});
+
+		test("the user should not be able to input a water storage when a point of use heat source is selected error message", async () => {
+			const pointOfUse = {
+				data: {
+					typeOfHeatSource: "pointOfUse",
+					id: "fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
+					heatSourceId: "NEW_HEAT_SOURCE",
+					isExistingHeatSource: false,
+					name: "DHW POU",
+					coldWaterSource: "mainsWater",
+					heaterEfficiency: 0.88,
+				},
+				complete: true,
+			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [pointOfUse],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(store.domesticHotWater.waterStorage.data.length).toBe(0);
+			const bodyText = document.querySelector(".govuk-summary-card__content .govuk-body");
+
+			expect(bodyText?.textContent).toBeTruthy();
+		});
 	});
 
 	describe("Hot water outlets", () => {
@@ -372,7 +402,9 @@ describe("Domestic hot water", () => {
 			await user.click(screen.getByTestId("markAsCompleteButton"));
 
 			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
-			expect(errorSummary.querySelector("li[key=hotWaterOutletNoOtherTypeError]")).toBeDefined();
+			expect(errorSummary.textContent).toContain(
+				"You must add at least one hot water outlet that has the type 'other'",
+			);
 		});
 	});
 
@@ -701,6 +733,7 @@ describe("Domestic hot water", () => {
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
 				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
+				maxFlowTemp: unitValue(30, celsius),
 			};
 
 			const boiler: HeatSourceData = {
@@ -726,6 +759,7 @@ describe("Domestic hot water", () => {
 				],
 				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
+				maxFlowTemp: unitValue(30, celsius),
 			};
 
 			const mvhr: Partial<MechanicalVentilationData> = {
@@ -903,6 +937,17 @@ describe("Domestic hot water", () => {
 			});
 		};
 
+		const otherHotWaterOutlet: EcaasForm<HotWaterOutletsData> = {
+			data: {
+				name: "Other outlet for completion",
+				typeOfHotWaterOutlet: "otherHotWaterOutlet",
+				id: "outlet-complete",
+				flowRate: 12,
+			},
+			complete: true,
+		};
+
+
 		beforeEach(async () => {
 			await renderSuspended(DomesticHotWater);
 		});
@@ -944,6 +989,274 @@ describe("Domestic hot water", () => {
 
 			const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
 			expect(completedStatusElement?.style.display).not.toBe("none");
+		});
+
+		it("displays an error message showing water storage is required if an immersion heater heat source has been selected", async () => {
+			const immersionHeater = {
+				data: {
+					typeOfHeatSource: "immersionHeater",
+					id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
+					heatSourceId: "NEW_HEAT_SOURCE",
+					isExistingHeatSource: false,
+					name: "DHW immersion",
+					coldWaterSource: "mainsWater",
+					power: 49,
+				},
+				complete: true,
+			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [otherHotWaterOutlet],
+					},
+					heatSources: {
+						data: [immersionHeater],
+					},
+					waterStorage: {
+						data: [],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+			expect(errorSummary.textContent).toContain(
+				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
+			);
+
+			const link = errorSummary.querySelector("a");
+
+			expect(link?.getAttribute("href")).toContain("water-storage");
+		});
+
+		it("displays an error message showing water storage is required if a solar thermal system heat source has been selected", async () => {
+			const solarThermalSystem = {
+				data: {
+					typeOfHeatSource: "solarThermalSystem",
+					id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
+					heatSourceId: "NEW_HEAT_SOURCE",
+					isExistingHeatSource: false,
+					name: "DHW immersion",
+					coldWaterSource: "mainsWater",
+					locationOfCollectorLoopPiping: "heatedSpace",
+					collectorModuleArea: 24,
+					numberOfCollectorModules: 3,
+					peakCollectorEfficiency: 0.99,
+					incidenceAngleModifier: 42,
+					firstOrderHeatLossCoefficient: 0.2,
+					secondOrderHeatLossCoefficient: 0.33,
+					heatLossCoefficientOfSolarLoopPipe: 0.6,
+					collectorMassFlowRate: 29,
+					powerOfCollectorPump: { amount: 39, unit: "kilowatt" },
+					powerOfCollectorPumpController: { amount: 2, unit: "kilowatt" },
+					pitch: 19,
+					orientation: 11,
+				},
+				complete: true,
+			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [otherHotWaterOutlet],
+					},
+					heatSources: {
+						data: [solarThermalSystem],
+					},
+					waterStorage: {
+						data: [], 
+					},
+				},
+			});
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+			expect(errorSummary.textContent).toContain(
+				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
+			);
+
+			const link = errorSummary.querySelector("a");
+
+			expect(link?.getAttribute("href")).toContain("water-storage");
+		});
+
+		it("displays an error message showing water storage is required if a heat pump heat source has been selected", async () => {
+			const heatPump = {
+				data: {
+					id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
+					heatSourceId: "NEW_HEAT_SOURCE",
+					name: "DHW heatPump",
+					typeOfHeatSource: "heatPump",
+					coldWaterSource: "mainsWater",
+					isExistingHeatSource: false,
+					productReference: "HP-12345",
+					typeOfHeatPump: "airSource",
+					maxFlowTemp: unitValue(17, celsius),
+					isConnectedToHeatNetwork: false,
+					energySupply: "electricity",
+				},
+				complete: true,
+			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [otherHotWaterOutlet],
+					},
+					heatSources: {
+						data: [heatPump],
+					},
+					waterStorage: {
+						data: [],
+					},
+				},
+			});
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+			expect(errorSummary.textContent).toContain(
+				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
+			);
+
+			const link = errorSummary.querySelector("a");
+
+			expect(link?.getAttribute("href")).toContain("water-storage");
+		});
+
+		it("displays an error message showing water storage is require if space heating heat pump has been selected", async () => {
+			const spaceHeatingHeatPump = {
+				data: {
+					id: "463c94f6-566c-49b2-af27-57e5c68b52222",
+					name: "Booster HP",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "booster",
+					productReference: "HEATPUMP-SMALL",
+					isConnectedToHeatNetwork: false,
+					energySupply: "electricity",
+					maxFlowTemp: unitValue(30, celsius),
+				},
+				complete: true,
+			} as const satisfies EcaasForm<HeatSourceData>;
+			
+			const dhwWithExistingHeatPump = {
+				data: {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c62",
+					coldWaterSource: "headerTank",
+					isExistingHeatSource: true,
+					heatSourceId: spaceHeatingHeatPump.data.id,
+				},
+				complete: true,
+			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [spaceHeatingHeatPump],
+					},
+				},
+				domesticHotWater: {
+					waterStorage: {
+						data: [],
+					},
+					heatSources: {
+						data: [dhwWithExistingHeatPump],
+					},
+					hotWaterOutlets: {
+						data: [otherHotWaterOutlet],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+			expect(errorSummary.textContent).toContain(
+				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
+			);
+
+			const link = errorSummary.querySelector("a");
+
+			expect(link?.getAttribute("href")).toContain("water-storage");
+		});
+
+		it("displays all error messages if there are more than one", async () => {
+			const heatPump = {
+				data: {
+					id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
+					heatSourceId: "NEW_HEAT_SOURCE",
+					name: "DHW heatPump",
+					typeOfHeatSource: "heatPump",
+					coldWaterSource: "mainsWater",
+					isExistingHeatSource: false,
+					productReference: "HP-12345",
+					typeOfHeatPump: "airSource",
+					maxFlowTemp: unitValue(17, celsius),
+					isConnectedToHeatNetwork: false,
+					energySupply: "electricity",
+				},
+				complete: true,
+			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [],
+					},
+					heatSources: {
+						data: [heatPump],
+					},
+					waterStorage: {
+						data: [],
+					},
+				},
+			});
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+			expect(errorSummary.textContent).toContain(
+				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
+			);
+			expect(errorSummary.textContent).toContain(
+				"You must add at least one hot water outlet that has the type 'other'",
+			);
+
+			const links = errorSummary.querySelectorAll("a");
+
+			expect(links[0]?.getAttribute("href")).toContain("hot-water-outlets");
+			expect(links[1]?.getAttribute("href")).toContain("water-storage");
+		});
+
+		it("does not display error summary when requirements are met", async () => {
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						data: [otherHotWaterOutlet],
+					},
+					heatSources: {
+						data: [{ ...heatSource1 }],
+					},
+					waterStorage: {
+						data: [{ ...hwStorage1 }],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = screen.queryByTestId("domesticHotWaterErrorSummary");
+
+			expect(errorSummary).toBeNull();
 		});
 
 		describe("after section has been marked as complete", () => {
@@ -1049,7 +1362,7 @@ describe("Domestic hot water", () => {
 
 			await renderSuspended(DomesticHotWater);
 			expect(screen.getByTestId("domesticHotWaterErrorSummary")).toBeDefined();
-			expect(screen.getByText("You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used.")).toBeDefined();
+			expect(screen.getByText("You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used")).toBeDefined();
 		});
 
 		it("does not display error message when all / both heat sources are packaged", async () => {
@@ -1062,6 +1375,7 @@ describe("Domestic hot water", () => {
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
 				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
+				maxFlowTemp: unitValue(30, celsius),
 			};
 
 			const boiler: HeatSourceData = {
@@ -1127,6 +1441,7 @@ describe("Domestic hot water", () => {
 				productReference: "1000",
 				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
+				maxFlowTemp: unitValue(30, celsius),
 			};
 
 			store.$patch({
@@ -1189,6 +1504,7 @@ describe("Domestic hot water", () => {
 				productReference: "HP-123",
 				isConnectedToHeatNetwork: true,
 				associatedHeatNetworkId: spaceHeatingHeatNetwork.id,
+				maxFlowTemp: unitValue(30, celsius),
 			};
 
 			store.$patch({

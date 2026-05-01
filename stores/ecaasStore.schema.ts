@@ -730,7 +730,7 @@ export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 
 const baseMechanicalVentilationData = namedWithId.extend({
 	airFlowRate: zodUnit("flow rate"),
-	associatedItemId: z.string().trim().min(1),
+	associatedItemId: z.string().trim().min(1).optional(),
 });
 
 const baseMvhrData = baseMechanicalVentilationData
@@ -883,7 +883,7 @@ const baseVentDataZod = z.object({
 	effectiveVentilationArea: z.number().min(1).max(999999),
 	openingRatio: z.number(),
 	midHeightOfZone: z.number().min(1).max(60),
-	associatedItemId: z.string().trim().min(1),
+	associatedItemId: z.string().trim().min(1).optional(),
 	hasAssociatedItem: z.boolean(),
 });
 
@@ -956,9 +956,8 @@ export type PcdbProduct = z.infer<typeof pcdbProduct>;
 const heatPumpBase = pcdbPackagedProduct.extend({
 	typeOfHeatSource: z.literal("heatPump"),
 	typeOfHeatPump: typeOfHeatPump.optional(),
-	maxFlowTemp: zodUnit("temperature").optional(),
+	maxFlowTemp: zodUnit("temperature"),
 });
-
 
 const heatPumpDataZod = z.discriminatedUnion("isConnectedToHeatNetwork", [
 	heatPumpBase.extend({
@@ -978,7 +977,7 @@ const boilerBase = pcdbProduct
 		typeOfBoiler,
 		specifiedLocation: z.optional(boilerLocationZod),
 		needsSpecifiedLocation: z.boolean(),
-		maxFlowTemp: zodUnit("temperature").optional(),
+		maxFlowTemp: zodUnit("temperature"),
 	});
 
 export type HasPcdbPackagedProduct = z.infer<typeof hasPcdbPackagedProduct>;
@@ -987,7 +986,7 @@ export type PcdbPackagedProduct = z.infer<typeof pcdbPackagedProduct>;
 const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatBattery"),
 	typeOfHeatBattery,
-	maxFlowTemp: zodUnit("temperature").optional(),
+	maxFlowTemp: zodUnit("temperature"),
 	numberOfUnits: z.number(),
 	energySupply: fuelTypeZod,
 });
@@ -997,7 +996,6 @@ const heatNetworkBase = pcdbProduct.extend({
 	typeOfHeatNetwork,
 	subHeatNetworkId: z.string().trim().min(1).optional(),
 });
-
 
 const heatInterfaceUnitBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatInterfaceUnit"),
@@ -1241,7 +1239,6 @@ const hotWaterHeatSourceExtension = {
 	heatSourceId: z.literal("NEW_HEAT_SOURCE"),
 	coldWaterSource: z.enum(["mainsWater", "headerTank"]),
 	isExistingHeatSource: z.literal(false),
-	maxFlowTemp: zodUnit("temperature").optional(),
 };
 
 const baseImmersionHeater = namedWithId.extend({
@@ -1275,7 +1272,6 @@ const solarThermalSystemBase = namedWithId.extend({
 	orientation,
 });
 
-
 const heatPumpHotWaterSourceBase = heatPumpBase.extend(hotWaterHeatSourceExtension);
 
 const heatPumpHotWaterDataZod = z.discriminatedUnion("isConnectedToHeatNetwork", [
@@ -1291,6 +1287,7 @@ const heatPumpHotWaterDataZod = z.discriminatedUnion("isConnectedToHeatNetwork",
 
 const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceExtension);
 const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceExtension);
+
 const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
 const heatNetworkHotWaterSourceBase = heatNetworkBase.extend(hotWaterHeatSourceExtension);
 const immersionHeaterHotWaterSourceBase = baseImmersionHeater.extend(hotWaterHeatSourceExtension);

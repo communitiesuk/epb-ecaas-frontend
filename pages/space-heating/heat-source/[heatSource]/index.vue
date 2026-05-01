@@ -12,6 +12,7 @@ const store = useEcaasStore();
 const route = useRoute();
 
 const { autoSaveElementForm, getStoreIndex } = useForm();
+const { getDefaultEnergySupply } = useEnergySupplies();
 
 const heatSourceStoreData = store.spaceHeating.heatSource.data;
 const index = getStoreIndex(heatSourceStoreData);
@@ -48,7 +49,20 @@ const saveForm = () => {
 };
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
-
+function removePackagedProducts(packageProductIds: string[]) {
+	store.$patch((state) => {
+		const heatSources = state.spaceHeating.heatSource.data.filter((x) => {
+			return !("packagedProductReference" in x.data) || !packageProductIds.includes((x.data.id));
+		});
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: heatSources,
+				},
+			},
+		});
+	});
+}
 watch(
 	() => model.value,
 	(newData, initialData) => {
@@ -60,6 +74,9 @@ watch(
 		) {
 			errorMessages.value = [];
 			model.value = { typeOfHeatSource: newData.typeOfHeatSource, id: initialData.id } as HeatSourceData;
+			if (initialData.typeOfHeatSource === "heatPump") {
+				removePackagedProducts(initialData.packageProductIds ?? []);
+			}
 		}
 		
 		if (model.value && !model.value.name) {
@@ -74,6 +91,11 @@ autoSaveElementForm<HeatSourceData>({
 	defaultName: "Heat source",
 	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
+
+		if (newData.data.typeOfHeatSource === "heatPump" && newData.data.isConnectedToHeatNetwork === false) {
+			newData.data.energySupply ??= getDefaultEnergySupply()!;
+		}
+
 		state.spaceHeating.heatSource.data[index] = newData;
 		state.spaceHeating.heatSource.complete = false;
 	},
@@ -175,7 +197,7 @@ const boilers = heatSourceStoreData
 			page="space heating"
 			@update-heat-interface-unit-model="updateHeatSource" />	
 		<div class="govuk-button-group">
-			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('spaceHeating')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>
