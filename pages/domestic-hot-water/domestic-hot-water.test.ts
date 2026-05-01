@@ -403,7 +403,7 @@ describe("Domestic hot water", () => {
 
 			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
 			expect(errorSummary.textContent).toContain(
-				"You must add at least one hot water outlet that has the type 'other'.",
+				"You must add at least one hot water outlet that has the type 'other'",
 			);
 		});
 	});
@@ -1024,7 +1024,7 @@ describe("Domestic hot water", () => {
 
 			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
 			expect(errorSummary.textContent).toContain(
-				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump.",
+				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
 			);
 
 			const link = errorSummary.querySelector("a");
@@ -1077,7 +1077,7 @@ describe("Domestic hot water", () => {
 
 			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
 			expect(errorSummary.textContent).toContain(
-				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump.",
+				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
 			);
 
 			const link = errorSummary.querySelector("a");
@@ -1121,7 +1121,7 @@ describe("Domestic hot water", () => {
 
 			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
 			expect(errorSummary.textContent).toContain(
-				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump.",
+				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
 			);
 
 			const link = errorSummary.querySelector("a");
@@ -1179,7 +1179,7 @@ describe("Domestic hot water", () => {
 
 			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
 			expect(errorSummary.textContent).toContain(
-				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump.",
+				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
 			);
 
 			const link = errorSummary.querySelector("a");
@@ -1224,10 +1224,10 @@ describe("Domestic hot water", () => {
 
 			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
 			expect(errorSummary.textContent).toContain(
-				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump.",
+				"Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
 			);
 			expect(errorSummary.textContent).toContain(
-				"You must add at least one hot water outlet that has the type 'other'.",
+				"You must add at least one hot water outlet that has the type 'other'",
 			);
 
 			const links = errorSummary.querySelectorAll("a");
@@ -1362,7 +1362,7 @@ describe("Domestic hot water", () => {
 
 			await renderSuspended(DomesticHotWater);
 			expect(screen.getByTestId("domesticHotWaterErrorSummary")).toBeDefined();
-			expect(screen.getByText("You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used.")).toBeDefined();
+			expect(screen.getByText("You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used")).toBeDefined();
 		});
 
 		it("does not display error message when all / both heat sources are packaged", async () => {

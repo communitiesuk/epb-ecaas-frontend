@@ -69,7 +69,7 @@ function handleComplete() {
 	if (!hasOtherHotWaterOutlet) {
 		addError({ 
 			id: "hotWaterOutletNoOtherTypeError", 
-			text: "You must add at least one hot water outlet that has the type 'other'.", 
+			text: "You must add at least one hot water outlet that has the type 'other'", 
 			href: `${page?.url}/hot-water-outlets/create` });
 		
 	}
@@ -77,7 +77,7 @@ function handleComplete() {
 	if (heatSourceRequiresWaterStorage() && !hasWaterStorage) {
 		addError({
 			id: "waterStorageRequiredError",
-			text: "Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump.",
+			text: "Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
 			href: `${page?.url}/water-storage/create`,
 		});
 	}
@@ -130,7 +130,7 @@ function maxHeatSourcesExceeded() {
 	return dhwHeatSources.data.length > 1 && !hasPackagedHeatSources;
 }
 if (maxHeatSourcesExceeded()) {
-	addError({ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used." });
+	addError({ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used" });
 }
 
 function heatSourceRequiresWaterStorage() {
