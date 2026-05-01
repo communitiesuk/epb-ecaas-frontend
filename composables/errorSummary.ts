@@ -25,7 +25,7 @@ export function useErrorSummary() {
 	const handleInvalidSubmit = (node: FormKitNode) => {
 		const validationErrors = getValidationMessages(node);
 
-		clearErrors()
+		clearErrors();
 
 		validationErrors.forEach(messages => {
 			const errors = messages.map(message => ({
