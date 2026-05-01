@@ -15,6 +15,7 @@ import type {
 import type { SchemaBoilerWithProductReference, SchemaHeatNetworkType, SchemaHeatSourceWetDetails, SchemaHeatSourceWetHeatPumpInput, SchemaHeatSourceWetHiuInput, SchemaSpaceHeatSystem } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import { objectFromEntries } from "ts-extras";
+
 function getAssociatedHeatNetworkType(associatedHeatNetworkId: string | undefined, state: ResolvedState): SchemaHeatNetworkType {
 	const heatNetworks = state.spaceHeating.heatSource.filter(source => source.typeOfHeatSource === "heatNetwork");
 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
@@ -109,11 +110,13 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 		}),
 	);
 }
+
 function getSubnetworkId(associatedHeatNetworkId: string | undefined, state: ResolvedState): string | undefined {
 	const heatNetworks = state.spaceHeating.heatSource.filter(source => source.typeOfHeatSource === "heatNetwork");
 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
 	return associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkId : undefined;
 }
+
 export function mapHIUs(state: ResolvedState): Record<string, SchemaHeatSourceWetHiuInput> {
 	const heatSources = state.spaceHeating.heatSource;
 	const hius = heatSources.filter(
@@ -345,6 +348,7 @@ function mapEmittersForWetDistribution(emitters: WetDistributionEmitterData[]): 
 		}
 	});
 }
+
 export function mapWetDistributions(state: ResolvedState): Record<string, SchemaWetDistribution> {
 
 	const { heatEmitters } = state.spaceHeating as {

@@ -15,6 +15,7 @@ function toggle(index: number) {
 function isOpen(index: number) {
 	return openStates.value[index];
 }
+
 function getUrl(url: string) {
 	const store = useEcaasStore();
 	

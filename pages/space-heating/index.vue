@@ -35,6 +35,7 @@ function handleComplete() {
 
 	navigateTo("/");
 }
+
 function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
 	if (!heatNetworkId) return;
 	store.$patch((state) => {
@@ -50,6 +51,7 @@ function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
 		});
 	});
 }
+
 function handleRemove(type: "heatSource" | "heatEmitters" | "heatingControls", index: number) {
 	if (type === "heatSource") {
 		duplicationError.value = false;
@@ -61,6 +63,7 @@ function handleRemove(type: "heatSource" | "heatEmitters" | "heatingControls", i
 
 	removeEntry(type, index);
 }
+
 function checkIsComplete() {
 	const sections = store.spaceHeating;
 	return Object.values(sections).every((section) => section.complete);

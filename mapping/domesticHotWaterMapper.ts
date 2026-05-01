@@ -130,6 +130,7 @@ function getActualHeatSourceFromDHWHeatSource(state: ResolvedState, waterStorage
 	}
 	return actualHeatSource;
 }
+
 function getAssociatedHeatNetwork(state: ResolvedState, associatedHeatNetworkId: string) {
 	const associatedHeatNetwork = state.spaceHeating.heatSource?.find(hs => hs.id === associatedHeatNetworkId);
 
@@ -138,6 +139,7 @@ function getAssociatedHeatNetwork(state: ResolvedState, associatedHeatNetworkId:
 	}
 	return associatedHeatNetwork;
 }
+
 function mapHeatSourceWet(
 	heatSource: Exclude<
 		ReturnType<typeof getActualHeatSourceFromDHWHeatSource>,
@@ -221,7 +223,7 @@ function mapHeatSourceWet(
 				} satisfies FhsInputSchema["HeatSourceWet"],
 			};
 	}
-};
+}
 
 function mapWaterStorageHeatSource(
 	waterStorage: WaterStorageData,
@@ -381,7 +383,7 @@ function getTempFlowLimitUpper(
 	} else {
 		return dhwHeatSource.maxFlowTemp?.amount;
 	}
-};
+}
 
 function mapHeatSourceNoWS(
 	dhwHeatSource: DomesticHotWaterHeatSourceData,

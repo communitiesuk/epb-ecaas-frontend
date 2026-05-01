@@ -35,6 +35,7 @@ if (hasPackagedProduct(model.value)) {
 	const packagedProductData = await useProductData(model.value.packagedProductReference!);
 	packagedProduct.value = packagedProductData ?? undefined;
 }
+
 function removePackagedProducts(packageProductIds: string[]) {
 	store.$patch((state) => {
 		const heatSources = state.domesticHotWater.heatSources.data.filter((x) => {
@@ -49,6 +50,7 @@ function removePackagedProducts(packageProductIds: string[]) {
 		});
 	});
 }
+
 const saveForm = () => {
 	store.$patch((state) => {
 		state.domesticHotWater.heatSources.data[index]!.complete = true;
@@ -245,6 +247,7 @@ const existingHeatSourceType = computed(() => {
 function hasHeatNetworkHeatSource() {
 	return dhwHeatSources.data.some((x, itemIndex) => itemIndex !== index && getDhwHeatSourceType(x) === "heatNetwork");
 }
+
 function hasHeatPumpOrHIUHeatSource() {
 	return dhwHeatSources.data.some((x, itemIndex) => {
 		if (itemIndex === index) {

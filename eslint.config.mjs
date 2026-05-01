@@ -19,6 +19,7 @@ export default withNuxt(
 			'@stylistic/no-multi-spaces': 'error',
 			'@stylistic/no-whitespace-before-property': 'error',
 			'@stylistic/object-curly-spacing': ["error", "always"],
+			'@stylistic/padding-line-between-statements': ['error', { blankLine: 'always', prev: 'function', next: '*'}, { blankLine: 'always', prev: '*', next: 'function'}],
 			'@stylistic/quotes': ['error', 'double', { avoidEscape: true, allowTemplateLiterals: 'always' }],
 			'@stylistic/space-before-blocks': 'error',
 			'@stylistic/space-infix-ops': 'error',

@@ -49,6 +49,7 @@ const saveForm = () => {
 };
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
 function removePackagedProducts(packageProductIds: string[]) {
 	store.$patch((state) => {
 		const heatSources = state.spaceHeating.heatSource.data.filter((x) => {
@@ -63,6 +64,7 @@ function removePackagedProducts(packageProductIds: string[]) {
 		});
 	});
 }
+
 watch(
 	() => model.value,
 	(newData, initialData) => {

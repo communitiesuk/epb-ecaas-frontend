@@ -3,6 +3,7 @@ defineProps<{
 	difference: number,
 	orientation: number
 }>();
+
 function getRotation(difference: number) {
 	return difference < 0 ? `${Math.abs(difference)}° anticlockwise` : `${difference}° clockwise`;
 }
