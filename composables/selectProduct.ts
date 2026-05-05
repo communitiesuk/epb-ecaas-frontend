@@ -145,23 +145,26 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 
 				heatSourceData.packageProductIds?.push(mechanicalVentilation.id!);
 			}
+			const waterStorage = state.domesticHotWater.waterStorage.data;
+			const dhwHeatSources = state.domesticHotWater.heatSources.data;
 
-			// Heat pump is packaged with hot water cylinder
-			if (heatPumpProduct.technologyType !== "HybridHeatPump" && heatPumpProduct.vesselType === "Integral") {
-				const waterStorage = state.domesticHotWater.waterStorage.data;
-				const dhwHeatSources = state.domesticHotWater.heatSources.data;
+			if (waterStorage.length || (source === "spaceHeating" && dhwHeatSources.length)) {
+				throw new EcaasError("DHW_HEAT_SOURCE_CONFLICT");
+			}
+			// Necessary because vessel type is not available unless we useProductData
 
-				// Throw error if water storage or domestic hot water heat sources contain any entries
-				if (waterStorage.length || (source === "spaceHeating" && dhwHeatSources.length)) {
-					throw new EcaasError("DHW_HEAT_SOURCE_CONFLICT");
-				}
+			if (heatPumpProduct.technologyType !== "HybridHeatPump") {
 
+				const createCylinderIfHasVessel = (details: HeatPumpProduct) => {
+					if (!details.vesselType) return;
+					createHotWaterCyliner(state, source, details, heatSourceData);
+				};
 				if (isDisplayProduct(heatPumpProduct)) {
 					useProductData(heatPumpProduct.id).then(details => {
-						createHotWaterCyliner(state, source, details as HeatPumpProduct, heatSourceData);
+						createCylinderIfHasVessel(details as HeatPumpProduct);
 					});
 				} else {
-					createHotWaterCyliner(state, source, heatPumpProduct, heatSourceData);
+					createCylinderIfHasVessel(heatPumpProduct);
 				}
 			}
 		}
