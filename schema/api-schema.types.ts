@@ -687,6 +687,8 @@ export interface components {
             HeatSource: {
                 [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
             };
+            /** @description References a key (e.g., "mains water") in $.ColdWaterSource */
+            ColdWaterSource: string;
         } | components["schemas"]["Tank"]);
         /** @description A possible hot water source */
         PointOfUse: {
@@ -1800,6 +1802,8 @@ export interface components {
                     HeatSource: {
                         [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
                     };
+                    /** @description References a key (e.g., "mains water") in $.ColdWaterSource */
+                    ColdWaterSource: string;
                 } | components["schemas"]["Tank"]);
                 /** @description A possible hot water source */
                 PointOfUse: {

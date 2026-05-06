@@ -13,6 +13,18 @@ import { mapSpaceHeatingHeatSources, mapSpaceHeatSystem } from "./spaceHeatingMa
 
 export type ResolvedState = SimplifyDeep<Resolved<EcaasState>>;
 
+export const defaultColdWaterSourceReference = "mains water";
+
+const defaultColdWaterSource: Pick<FhsInputSchema, "ColdWaterSource"> = {
+	ColdWaterSource: {
+		[defaultColdWaterSourceReference]: {
+			start_day: 0,
+			temperatures: [3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
+			time_series_step: 1,
+		},
+	},
+};
+
 export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const dwellingDetailsData = mapDwellingDetailsData(state);
 	const infiltrationVentilationData = mapInfiltrationVentilationData(state);
@@ -41,15 +53,6 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 
 	const events: Pick<FhsInputSchema, "Events"> = { Events: {} };
 
-	const defaultColdWaterSource: Pick<FhsInputSchema, "ColdWaterSource"> = {
-		ColdWaterSource: {
-			"mains water": {
-				start_day: 0,
-				temperatures: [3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
-				time_series_step: 1,
-			},
-		},
-	};
 	const defaultAppliances: Pick<FhsInputSchema, "Appliances"> = {
 		Appliances: {},
 	};

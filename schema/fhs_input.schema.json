@@ -5295,12 +5295,22 @@
 								"$ref": "#/$defs/HeatSource"
 							},
 							"description": "Dictionary of heating systems connected to the smart hot water tank"
+						},
+						"ColdWaterSource": {
+							"type": "string",
+							"reference_to": [
+								"$.cold_water_source",
+								"$.pre_heated_water_source",
+								"$.wwhrs"
+							],
+							"description": "References a key (e.g., \"mains water\") in $.ColdWaterSource"
 						}
 					},
 					"required": [
 						"product_reference",
 						"EnergySupply_pump",
-						"HeatSource"
+						"HeatSource",
+						"ColdWaterSource"
 					]
 				},
 				{

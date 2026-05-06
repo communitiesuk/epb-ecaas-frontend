@@ -351,6 +351,7 @@ describe("domestic hot water mapper", () => {
 											heater_position: smartHotWaterTank.data.heaterPosition,
 										},
 									},
+									ColdWaterSource: "mains water",
 								},
 							},
 						} as const satisfies Partial<FhsInputSchema>,
@@ -405,6 +406,7 @@ describe("domestic hot water mapper", () => {
 											temp_flow_limit_upper: heatBattery.data.maxFlowTemp.amount,
 										},
 									},
+									ColdWaterSource: "mains water",
 								},
 							},
 							HeatSourceWet: {
@@ -465,6 +467,7 @@ describe("domestic hot water mapper", () => {
 											name: heatInterfaceUnit.data.name,
 										},
 									},
+									ColdWaterSource: "mains water",
 								},
 							},
 							HeatSourceWet: {
@@ -533,6 +536,7 @@ describe("domestic hot water mapper", () => {
 											name: heatInterfaceUnit.data.name,
 										},
 									},
+									ColdWaterSource: "mains water",
 								},
 							},
 							HeatSourceWet: {
@@ -891,6 +895,7 @@ describe("domestic hot water mapper", () => {
 											temp_flow_limit_upper: dhwWithExistingHeatPump.data.maxFlowTemp.amount,
 										},
 									},
+									ColdWaterSource: "mains water",
 									product_reference: smartHotWaterTank.data.productReference,
 									type: "SmartHotWaterTank",
 								},
@@ -955,6 +960,7 @@ describe("domestic hot water mapper", () => {
 											temp_flow_limit_upper: dhwWithExistingBoiler.data.maxFlowTemp.amount,
 										},
 									},
+									ColdWaterSource: "mains water",
 									product_reference: smartHotWaterTank.data.productReference,
 									type: "SmartHotWaterTank",
 								},

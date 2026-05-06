@@ -2177,7 +2177,8 @@
                         {
                             "required": [
                                 "product_reference",
-                                "HeatSource"
+                                "HeatSource",
+                                "ColdWaterSource"
                             ],
                             "properties": {
                                 "product_reference": {
@@ -2266,6 +2267,15 @@
                                             }
                                         ]
                                     }
+                                },
+                                "ColdWaterSource": {
+                                    "type": "string",
+                                    "reference_to": [
+                                        "$.cold_water_source",
+                                        "$.pre_heated_water_source",
+                                        "$.wwhrs"
+                                    ],
+                                    "description": "References a key (e.g., \"mains water\") in $.ColdWaterSource"
                                 }
                             }
                         },

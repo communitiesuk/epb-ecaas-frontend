@@ -1,6 +1,6 @@
 import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaOtherWaterUseDetails, SchemaWaterPipework, SchemaStorageTank, SchemaHeatSourceWetDetails } from "~/schema/aliases";
 import type { SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
-import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
+import { defaultColdWaterSourceReference, type FhsInputSchema, type ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { objectFromEntries } from "ts-extras";
 
@@ -356,6 +356,7 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 			type: "SmartHotWaterTank",
 			product_reference: waterStorage.productReference,
 			EnergySupply_pump: defaultElectricityEnergySupplyName,
+			ColdWaterSource: defaultColdWaterSourceReference,
 		} as const satisfies Partial<SchemaSmartHotWaterTank>;
 
 	const { mappedWSHeatSource, mappedHeatSourceWet }
