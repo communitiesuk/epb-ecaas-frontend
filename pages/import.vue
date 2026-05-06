@@ -30,7 +30,7 @@ const doImport = (_event: Event) => {
 		return;
 	}
 	const reader = new FileReader();
-	reader.onload = () => {
+	reader.onload = async () => {
 		if (reader.result === null) {
 			return;
 		}
@@ -46,6 +46,7 @@ const doImport = (_event: Event) => {
 
 		errorMessage.value = null;
 
+		await patchLegacySubHeatNetworkNames(fileState);
 		const { newState: newValidatedState, changed: revalidationCausedUpdate } = revalidateState(fileState);
 		fileState = newValidatedState as EcaasState;
 

@@ -1,5 +1,6 @@
 import type { ZodError } from "zod";
 import { isEcaasForm, type EcaasForm, type EcaasFormPath } from "./ecaasStore.schema";
+import type { Product } from "~/pcdb/pcdb.types";
 
 type RevalidateError = ZodError<unknown> | string;
 
@@ -15,7 +16,6 @@ type RevalidateResult = {
 export function revalidateState(state: Record<string, unknown>, path: string[] = []): RevalidateResult {
 	const newState = { ...state };
 	const errors: RevalidateError[] = [];
-    
 	for (const key in state) {
 		const value = state[key];
 
@@ -37,7 +37,6 @@ export function revalidateState(state: Record<string, unknown>, path: string[] =
 			}
 		} else if (typeof value === "object" && value !== null) {
 			const nodeResult = revalidateState(value as Record<string, unknown>, [...path, key]);
-			
 			if (nodeResult.changed) {
 				errors.push(...nodeResult.errors);
 				newState[key] = nodeResult.newState;
@@ -59,6 +58,55 @@ export function revalidateState(state: Record<string, unknown>, path: string[] =
 	};
 }
 
+function getLegacyHeatNetworkForms(state: Record<string, unknown>): EcaasForm<Record<string, unknown>>[] {
+	const storeState = state as Partial<EcaasState>;
+	const spaceHeatingHeatSources = storeState.spaceHeating?.heatSource?.data;
+	const domesticHotWaterHeatSources = storeState.domesticHotWater?.heatSources?.data;
+	const forms = [
+		...(Array.isArray(spaceHeatingHeatSources) ? spaceHeatingHeatSources : []),
+		...(Array.isArray(domesticHotWaterHeatSources) ? domesticHotWaterHeatSources : []),
+	];
+
+	return forms.filter(isEcaasForm) as EcaasForm<Record<string, unknown>>[];
+}
+
+export async function patchLegacySubHeatNetworkNames(
+	state: Record<string, unknown>,
+): Promise<Record<string, unknown>> {
+	const forms = getLegacyHeatNetworkForms(state);
+
+	for (const form of forms) {
+		if (form.data.typeOfHeatSource !== "heatNetwork") {
+			continue;
+		}
+
+		const subHeatNetworkId = typeof form.data.subHeatNetworkId === "string" ? form.data.subHeatNetworkId : undefined;
+		if (!subHeatNetworkId) {
+			continue;
+		}
+
+		const productReference = typeof form.data.productReference === "string" ? form.data.productReference : undefined;
+		if (!productReference) {
+			continue;
+		}
+
+		try {
+			const product = await $fetch<Product>(
+				`/api/products/${encodeURIComponent(productReference)}?testDataId=${encodeURIComponent(subHeatNetworkId)}`,
+			);
+			const subHeatNetworkName = (product as { testData: { subheatNetworkName?: string } })?.testData?.subheatNetworkName;
+			if (typeof subHeatNetworkName === "string" && subHeatNetworkName) {
+				form.data.subHeatNetworkName = subHeatNetworkName;
+				delete form.data.subHeatNetworkId;
+			}
+		} catch {
+			// leave the form data unchanged if fetch fails
+		}
+	}
+
+	return state;
+}
+
 function formPath(path: string[], currentKey: string): EcaasFormPath {
 	return [...path, currentKey].join("/") as EcaasFormPath;
 }
@@ -75,7 +123,6 @@ function reformatForm(form: EcaasForm<unknown>) {
 
 	// Check for any non-EcaasForm objects in array
 	if (!allEcaasForms) {
-		
 		// Extract form data which are EcaasForms
 		const ecaasForms = form.data.filter(isEcaasForm);
 
@@ -131,7 +178,6 @@ function revalidateForm(form: EcaasForm<unknown>, path: EcaasFormPath): [true, R
 			const validationResult = formSchema.safeParse(current.data);
 
 			current.complete = validationResult.success;
-			
 			return [!validationResult.success || changed, validationResult.error ? [...errors, validationResult.error] : errors];
 		} catch (error) {
 			handleInvalidForm(current, path, error);

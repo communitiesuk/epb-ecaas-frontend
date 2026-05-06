@@ -138,7 +138,7 @@ export const useEcaasStore = defineStore("ecaas", {
 			) => {
 				for (const section of sections) {
 					for (const item of section.data) {
-						 
+
 						const idOfTaggedItem = (item.data as Record<string, unknown>)[keyToCheck];
 						if (idOfTaggedItem === idToRemove) {
 							this.$patch(() => {
@@ -166,12 +166,14 @@ export const useEcaasStore = defineStore("ecaas", {
 		},
 		revalidate() {
 			const patchedState = patchState(this.$state as EcaasState);
-			const { newState: newValidatedState } = revalidateState(patchedState);
+			patchLegacySubHeatNetworkNames(patchedState).then(() => {
+				const { newState: newValidatedState } = revalidateState(patchedState);
 
-			this.$patch({
-				...getInitialState(),
-				...newValidatedState,
-				lastResult: undefined,
+				this.$patch({
+					...getInitialState(),
+					...newValidatedState,
+					lastResult: undefined,
+				});
 			});
 		},
 	},
