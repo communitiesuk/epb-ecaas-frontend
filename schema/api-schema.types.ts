@@ -237,7 +237,6 @@ export interface components {
         HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & ({
             /** @constant */
             type: "HeatPump_HWOnly";
-            EnergySupply: string;
             /**
              * Reference to the product in the HEM database
              * @description A unique reference to a product held within the HEM database (PCDB)
@@ -1506,7 +1505,7 @@ export interface components {
                         product_reference: string;
                         EnergySupply: string;
                         /** @description Design outdoor air flow rate (m3/hr) */
-                        design_outdoor_air_flow_rate?: number;
+                        design_outdoor_air_flow_rate: number;
                         /** @description Whether or not this system was installed under an approved installation scheme */
                         installed_under_approved_scheme: boolean;
                     } & ({
@@ -1722,7 +1721,6 @@ export interface components {
                 HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & ({
                     /** @constant */
                     type: "HeatPump_HWOnly";
-                    EnergySupply: string;
                     /**
                      * Reference to the product in the HEM database
                      * @description A unique reference to a product held within the HEM database (PCDB)

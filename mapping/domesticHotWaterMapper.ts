@@ -262,7 +262,6 @@ function mapWaterStorageHeatSource(
 					[actualHeatSource.name]: {
 						type: "HeatPump_HWOnly",
 						product_reference: actualHeatSource.productReference,
-						EnergySupply: defaultElectricityEnergySupplyName,
 						...commonWSHeatSourceProps,
 					} as const satisfies WaterStorageHeatSource<"HeatPump_HWOnly">,
 				};

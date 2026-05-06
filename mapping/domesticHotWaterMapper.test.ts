@@ -329,7 +329,6 @@ describe("domestic hot water mapper", () => {
 											heater_position: storageTankWithHeatEx.data.heaterPosition,
 											thermostat_position: storageTankWithHeatEx.data.thermostatPosition,
 											product_reference: heatPumpHWOnly.data.productReference,
-											EnergySupply: defaultElectricityEnergySupplyName,
 										},
 									},
 								},
