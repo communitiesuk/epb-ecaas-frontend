@@ -1180,7 +1180,7 @@ describe("heatSource", () => {
 					name: "Test heat network",
 					typeOfHeatSource: "heatNetwork",
 					productReference: "1000",
-					subHeatNetworkId: "td-2",
+					subHeatNetworkName: "Sub 2",
 					typeOfHeatNetwork: "communalHeatNetwork",
 				};
 

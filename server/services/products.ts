@@ -25,7 +25,6 @@ export async function getProductDetails(id: string, { includeTestData = false, t
 	ensureValidProductId(id);
 
 	const product = await client.getProduct(id, { includeTestData, testDataId });
-	console.log("product", product);
 	ensureProductExists(product);
 
 	return product;

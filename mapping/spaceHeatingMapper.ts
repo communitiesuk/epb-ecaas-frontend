@@ -111,10 +111,10 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 	);
 }
 
-function getSubnetworkId(associatedHeatNetworkId: string | undefined, state: ResolvedState): string | undefined {
+function getSubnetworkName(associatedHeatNetworkId: string | undefined, state: ResolvedState): string | undefined {
 	const heatNetworks = state.spaceHeating.heatSource.filter(source => source.typeOfHeatSource === "heatNetwork");
 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
-	return associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkId : undefined;
+	return associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkName : undefined;
 }
 
 export function mapHIUs(state: ResolvedState): Record<string, SchemaHeatSourceWetHiuInput> {
@@ -125,7 +125,7 @@ export function mapHIUs(state: ResolvedState): Record<string, SchemaHeatSourceWe
 	return objectFromEntries(
 		hius.map((hiu) => {
 			const heatNetworkType = hiu.associatedHeatNetworkId ? getAssociatedHeatNetworkType(hiu.associatedHeatNetworkId, state) : undefined;
-			const subHeatNetworkId = hiu.associatedHeatNetworkId ? getSubnetworkId(hiu.associatedHeatNetworkId, state) : undefined;
+			const subHeatNetworkName = hiu.associatedHeatNetworkId ? getSubnetworkName(hiu.associatedHeatNetworkId, state) : undefined;
 			if (!heatNetworkType) {
 				throw new Error(`HIU ${hiu.name} is indicated as being connected to a heat network but no associated heat network was found`);
 			}
@@ -139,7 +139,7 @@ export function mapHIUs(state: ResolvedState): Record<string, SchemaHeatSourceWe
 					is_heat_network: true as const,
 					heat_network_type: heatNetworkType,
 					heat_network_reference: hiu.associatedHeatNetworkId,
-					sub_heat_network_name: subHeatNetworkId ?? "",
+					sub_heat_network_name: subHeatNetworkName ?? "",
 					EnergySupply: defaultElectricityEnergySupplyName,
 				} as const satisfies SchemaHeatSourceWetHiuInput,
 

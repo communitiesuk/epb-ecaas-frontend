@@ -3,7 +3,6 @@ import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl, type HeatEmittingData, type WetDistributionSystemData, type WetDistributionEmitterData } from "#imports";
 import { displayBoilerLocation, displayConvectiveType } from "~/utils/display";
 import { useProductReferences } from "~/composables/productReferences";
-import { getHeatNetworkProductName } from "~/utils/getHeatNetworkProductName";
 
 const store = useEcaasStore();
 const title = "Space heating summary";
@@ -25,14 +24,6 @@ const instantElectricHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter
 const electricStorageHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "electricStorageHeater");
 
 const heatSourceModelNames = await useProductReferences(heatSources, productData => productData.modelName);
-const heatNetworkProductNamesById: Record<string, string> = {};
-await Promise.all(heatNetworks.map(async ({ data }) => {
-	const heatNetwork = data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
-	heatNetworkProductNamesById[heatNetwork.id] = await getHeatNetworkProductName(
-		heatNetwork.productReference,
-		heatNetwork.subHeatNetworkId,
-	);
-}));
 
 const heatEmitterModelNames = await useProductReferences(heatEmitters, productData => productData.modelName);
 const nestedEmitterModelNames = await useProductReferences(
@@ -139,9 +130,8 @@ const heatNetworkSummary: SummarySection = {
 				Name: show(heatSource.name),
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
 				"Type of heat network": "typeOfHeatNetwork" in heatSource && heatSource.typeOfHeatNetwork ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
-				"Product name": heatNetworkProductNamesById[heatSource.id] ?? emptyValueRendering,
 				"Product reference": productReference ?? emptyValueRendering,
-				"Sub-heat network ID": "subHeatNetworkId" in heatSource ? (heatSource.subHeatNetworkId ?? emptyValueRendering) : emptyValueRendering,
+				"Sub-heat network name": "subHeatNetworkName" in heatSource ? (heatSource.subHeatNetworkName ?? emptyValueRendering) : emptyValueRendering,
 			};
 			return summary;
 		}) || [],

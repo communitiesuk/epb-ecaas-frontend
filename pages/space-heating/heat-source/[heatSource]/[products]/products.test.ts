@@ -353,7 +353,7 @@ describe("Heat source products page", () => {
 
 		expect(store.spaceHeating.heatSource.data[0]!.data).toEqual(expect.objectContaining({
 			productReference: heatNetworkProduct.productId,
-			subHeatNetworkId: heatNetworkProduct.subHeatNetworkId,
+			subHeatNetworkName: heatNetworkProduct.subheatNetworkName,
 		}));
 	});
 

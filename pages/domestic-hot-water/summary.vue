@@ -4,7 +4,6 @@ import { getTabItems, getUrl } from "#imports";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import { displayDHWHeatSourceType } from "~/utils/display";
 import type { PageId } from "~/data/pages/pages";
-import { getHeatNetworkProductName } from "~/utils/getHeatNetworkProductName";
 import { useProductReferences } from "~/composables/productReferences";
 
 const title = "Domestic hot water summary";
@@ -84,15 +83,6 @@ function addHeatSourceToCorrectSummaryList(heatSources: EcaasForm<DomesticHotWat
 addHeatSourceToCorrectSummaryList(dhwHeatSourcesFromSpaceHeating);
 
 const heatInterfaceUnitModelNames = await useProductReferences(heatInterfaceUnits, productData => productData.modelName);
-
-const heatNetworkProductNamesById: Record<string, string> = {};
-await Promise.all(heatNetworks.map(async ({ data }) => {
-	const heatNetwork = data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
-	heatNetworkProductNamesById[heatNetwork.id] = await getHeatNetworkProductName(
-		heatNetwork.productReference,
-		heatNetwork.subHeatNetworkId,
-	);
-}));
 
 export type SummaryWithLink = {
 	text: "Yes" | "No",
@@ -179,9 +169,8 @@ const heatNetworkSummary: SummarySection = {
 					"Used for space heating": "No",
 					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
 					"Type of heat network": "typeOfHeatNetwork" in heatSource && heatSource.typeOfHeatNetwork ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
-					"Product name": "id" in heatSource ? (heatNetworkProductNamesById[heatSource.id] ?? emptyValueRendering) : emptyValueRendering,
 					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-					"Sub-heat network ID": "subHeatNetworkId" in heatSource ? (heatSource.subHeatNetworkId ?? emptyValueRendering) : emptyValueRendering,
+					"Sub-heat network name": "subHeatNetworkName" in heatSource ? (heatSource.subHeatNetworkName ?? emptyValueRendering) : emptyValueRendering,
 					"Maximum flow temperature": "maxFlowTemp" in heatSource && heatSource.maxFlowTemp !== undefined ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 				}),
 			};

@@ -17,13 +17,11 @@ const verifyDataInSection = async (
 		expect(lineResult!.querySelector("dd")?.textContent).toBe(value);
 	}
 };
-const { mockFetch, mockGlobalFetch } = vi.hoisted(() => ({
+const { mockFetch } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
-	mockGlobalFetch: vi.fn(),
 }));
 
 mockNuxtImport("useFetch", () => mockFetch);
-vi.stubGlobal("fetch", mockGlobalFetch);
 
 
 const store = useEcaasStore();
@@ -227,16 +225,13 @@ describe("Space heating summary page", () => {
 			}
 		});
 		it("displays the correct data for the heat network summary", async () => {
-			mockGlobalFetch.mockResolvedValue({
-				ok: true, json: async () => ({ communityHeatNetworkName: "Community Network A", subheatNetworkName: "Subnetwork 2" }),
-			} as Response);
 			const heatNetwork1: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Heat network 1",
 				typeOfHeatSource: "heatNetwork",
 				typeOfHeatNetwork: "communalHeatNetwork",
 				productReference: "HEAT_NETWORK-LARGE",
-				subHeatNetworkId: "td-2",
+				subHeatNetworkName: "Sub 2",
 			};
 
 			const store = useEcaasStore();
@@ -255,8 +250,7 @@ describe("Space heating summary page", () => {
 				"Type of heat source": "Heat network",
 				"Type of heat network": "Communal heat network",
 				"Product reference": "HEAT_NETWORK-LARGE",
-				"Product name": "Community Network A - Subnetwork 2",
-				"Sub-heat network ID": "td-2",
+				"Sub-heat network name": "Sub 2",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -264,12 +258,9 @@ describe("Space heating summary page", () => {
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
-
-			expect(screen.queryByTestId(`summary-heatNetworkSummary-${hyphenate("Heat network name")}`)).toBeNull();
-			expect(screen.queryByTestId(`summary-heatNetworkSummary-${hyphenate("Subheatnetwork name")}`)).toBeNull();
 		});
 
-		it("renders emptyValueRendering for missing combined heat network product name", async () => {
+		it("renders emptyValueRendering for missing sub-heat network name", async () => {
 			mockFetch.mockReturnValue({ data: ref({ modelName: "Mock heat network product" }) });
 			const heatNetwork1: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c66",
@@ -291,7 +282,7 @@ describe("Space heating summary page", () => {
 			await renderSuspended(SpaceHeatingSummary);
 
 			const expectedResult = {
-				"Product name": "-",
+				"Sub-heat network name": "-",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {

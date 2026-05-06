@@ -74,7 +74,7 @@ describe("Space heating - heat sources", () => {
 					typeOfHeatSource: "heatNetwork",
 					typeOfHeatNetwork: "communalHeatNetwork",
 					productReference: "9999",
-					subHeatNetworkId: "subHeatNetwork1Id",
+					subHeatNetworkName: "subHeatNetwork1Name",
 				};
 				const heatPumpConnectedToNetwork: HeatSourceData = {
 					id: "heatPump3Id",
@@ -387,7 +387,7 @@ describe("Space heating - heat sources", () => {
 			typeOfHeatSource: "heatNetwork",
 			typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
 			productReference: "SHDN-123",
-			subHeatNetworkId: "shn1",
+			subHeatNetworkName: "shn1",
 		};
 		test("maps HIU connected to heat network", () => {
 			const hiuConnected = { ...hiu, isConnectedToHeatNetwork: true, associatedHeatNetworkId: "hn2" };
@@ -412,7 +412,7 @@ describe("Space heating - heat sources", () => {
 					heat_network_type: "sleeved DHN",
 					EnergySupply: defaultElectricityEnergySupplyName,
 					heat_network_reference: "hn2",
-					sub_heat_network_name: heatNetwork.subHeatNetworkId, // THIS NEEDS LOOKING AT AND THINKING ABOUT 
+					sub_heat_network_name: heatNetwork.subHeatNetworkName,
 				},
 			};
 			const resolvedState = resolveState(store.$state);
