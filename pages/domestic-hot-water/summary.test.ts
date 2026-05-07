@@ -1,7 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Summary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
-import { ref } from "vue";
 import { litre } from "~/utils/units/volume";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { displayCamelToSentenceCase } from "~/utils/display";
@@ -10,6 +9,7 @@ import { metresSquare } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import { celsius } from "~/utils/units/temperature";
+import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 
 const { mockFetch, mockNavigateTo } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
@@ -40,7 +40,7 @@ describe("Domestic hot water summary", () => {
 	beforeEach(() => {
 		store.$reset();
 		mockFetch.mockReset();
-		mockFetch.mockReturnValue({ data: ref({ modelName: "Mock product" }) });
+		mockBatchFetchProducts(mockFetch);
 	});
 
 	it("displays the correct title", async () => {

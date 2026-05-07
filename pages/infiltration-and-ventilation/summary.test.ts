@@ -8,8 +8,8 @@ import { centimetresSquare, metresSquare } from "~/utils/units/area";
 import { metre, millimetre } from "~/utils/units/length";
 import { degrees } from "~/utils/units/angle";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
-import type { Product } from "~/pcdb/pcdb.types";
 import { watt, wattsPerLitrePerSecond } from "~/utils/units/power";
+import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 
 vi.mock("uuid");
 
@@ -18,11 +18,6 @@ const { mockFetch } = vi.hoisted(() => ({
 }));
 
 mockNuxtImport("useFetch", () => mockFetch);
-
-const ventProduct: Partial<Product> = {
-	id: "1000",
-	modelName: "Vent Product",
-};
 
 const mvhrData: MechanicalVentilationData = {
 	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
@@ -158,13 +153,8 @@ describe("Infiltration and ventilation summary", () => {
 	const store = useEcaasStore();
 
 	beforeEach(() => {
-		mockFetch.mockResolvedValue({
-			data: { value: ventProduct },
-		});
-	});
-
-	afterEach(() => {
 		mockFetch.mockReset();
+		mockBatchFetchProducts(mockFetch, "Vent Product");
 	});
 
 	afterEach(() => {

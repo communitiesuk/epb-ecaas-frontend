@@ -1,4 +1,4 @@
-import type { DisplayProduct, PaginatedResult, TechnologyGroup, TechnologyType, VesselType } from "../pcdb.types";
+import type { DisplayProduct, PaginatedResult, Product, TechnologyGroup, TechnologyType, VesselType } from "../pcdb.types";
 import type { PcdbClient } from "./client.types";
 import data from "@/pcdb/data/products.json";
 import { generateHeatNetworkSubNetworkDisplayProductCombinations } from "../utils/subheatnetwork-combination-display";
@@ -11,6 +11,9 @@ interface GetProductOptions {
 export const noopClient: PcdbClient = {
 	async getProduct<T>(id: string, { includeTestData = false, testDataId }: GetProductOptions) {
 		return getProduct(id, { includeTestData, testDataId }) as T;
+	},
+	async getProductsByIds(ids) {
+		return getProductsByIds(ids);
 	},
 	async getProductsByTechnologyType(technologyType, pageSize, startKey) {
 		return getProductsByTechnologyType(technologyType, pageSize, startKey);
@@ -40,6 +43,11 @@ const getProduct = (id: string, { includeTestData = false, testDataId }: GetProd
 	}
 
 	return product;
+};
+
+const getProductsByIds = (ids: string[]): Product[] => {
+	const idsSet = new Set(ids);
+	return data.filter(product => idsSet.has(product.id.toString())) as Product[];
 };
 
 const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?: TechnologyType): DisplayProduct | DisplayProduct[] | undefined => {

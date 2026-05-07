@@ -4,6 +4,7 @@ export type ProductForTechnology<T extends TechnologyType> = Extract<Product, { 
 
 export interface PcdbClient {
 	getProduct: <T extends TechnologyType>(id: string, { includeTestData, testDataId }: { includeTestData: boolean, testDataId?: string }) => Promise<ProductForTechnology<T> | undefined>;
+	getProductsByIds(ids: string[]): Promise<Product[]>;
 	getProductsByTechnologyType(technologyType: TechnologyType, pageSize?: number, startKey?: string): Promise<PaginatedResult<DisplayProduct>>;
 	getProductsByTechnologyGroup(technologyGroup: TechnologyGroup): Promise<PaginatedResult<DisplayProduct>>;
 };

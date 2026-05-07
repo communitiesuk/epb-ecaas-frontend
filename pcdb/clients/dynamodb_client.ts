@@ -1,5 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import type { DisplayProduct, PaginatedResult, TechnologyGroup, TechnologyType, VesselType } from "../pcdb.types";
+import type { DisplayProduct, PaginatedResult, Product, TechnologyGroup, TechnologyType, VesselType } from "../pcdb.types";
 import type { PcdbClient } from "./client.types";
 import { DynamoDBDocumentClient, BatchGetCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { generateHeatNetworkSubNetworkDisplayProductCombinations } from "../utils/subheatnetwork-combination-display";
@@ -22,6 +22,9 @@ interface GetProductOptions {
 export const dynamodbClient: PcdbClient = {
 	async getProduct<T>(id: string, { includeTestData = false, testDataId }: GetProductOptions) {
 		return await getProduct(id, { includeTestData, testDataId }) as T;
+	},
+	async getProductsByIds(ids) {
+		return await getProductsByIds(ids);
 	},
 	async getProductsByTechnologyType(technologyType, pageSize, startKey) {
 		return await getProductsByTechnologyType(technologyType, pageSize, startKey);
@@ -54,6 +57,34 @@ const getProduct = async (id: string, { includeTestData = false, testDataId }: G
 	};
 
 	return Item;
+};
+
+const getProductsByIds = async (ids: string[]): Promise<Product[]> => {
+	const uniqueIds = Array.from(new Set(ids));
+	const chunks: string[][] = [];
+
+	for (let index = 0; index < uniqueIds.length; index += 100) {
+		chunks.push(uniqueIds.slice(index, index + 100));
+	}
+
+	const products: Record<string, unknown>[] = [];
+
+	for (const chunk of chunks) {
+		let pendingKeys = chunk.map(id => ({ id }));
+
+		while (pendingKeys.length > 0) {
+			const result = await docClient.send(new BatchGetCommand({
+				RequestItems: {
+					products: { Keys: pendingKeys },
+				},
+			}));
+
+			products.push(...((result.Responses?.products ?? []) as Record<string, unknown>[]));
+			pendingKeys = (result.UnprocessedKeys?.products?.Keys as { id: string }[] | undefined) ?? [];
+		}
+	}
+
+	return products as Product[];
 };
 
 const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?: TechnologyType): DisplayProduct | DisplayProduct[] | undefined => {

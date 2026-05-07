@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen, within } from "@testing-library/vue";
 import SpaceHeatingSummary from "./summary.vue";
 import { celsius } from "~/utils/units/temperature";
+import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 
 
 type ExpectedData = { [key: string]: string };
@@ -28,7 +29,20 @@ const store = useEcaasStore();
 beforeEach(() => {
 	store.$reset();
 	mockFetch.mockReset();
-	mockFetch.mockReturnValue({ data: ref({ modelName: "Mock product" }) });
+	mockFetch.mockImplementation((url: string, options?: { query?: { ids?: string } }) => {
+		if (url === "/api/products/batch") {
+			const ids = options?.query?.ids
+				?.split(",")
+				.map(id => id.trim())
+				.filter(Boolean) ?? [];
+
+			return {
+				data: ref(ids.map(id => ({ id, modelName: "Mock product" }))),
+			};
+		}
+
+		return { data: ref({ modelName: "Mock product" }) };
+	});
 });
 
 
@@ -96,7 +110,6 @@ describe("Space heating summary page", () => {
 		});
 
 		it("displays the correct data for the heat pump summary (not connected to heat network)", async () => {
-			mockFetch.mockReturnValueOnce({ data: ref({ modelName: "Mock product" }) });
 			const heatPump1: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Heat pump 1",
@@ -137,7 +150,6 @@ describe("Space heating summary page", () => {
 		});
 
 		it("displays the correct data for the heat pump summary (connected to heat network)", async () => {
-			mockFetch.mockReturnValueOnce({ data: ref({ modelName: "Mock product" }) });
 			const heatNetwork: HeatSourceData = {
 				id: "network-1",
 				name: "Heat network 1",
@@ -261,7 +273,6 @@ describe("Space heating summary page", () => {
 		});
 
 		it("renders emptyValueRendering for missing sub-heat network name", async () => {
-			mockFetch.mockReturnValue({ data: ref({ modelName: "Mock heat network product" }) });
 			const heatNetwork1: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c66",
 				name: "Heat network 2",
@@ -292,7 +303,9 @@ describe("Space heating summary page", () => {
 		});
 
 		it("displays the correct data for the heat interface unit summary", async () => {
-			mockFetch.mockReturnValue({ data: ref({ modelName: "Mock HIU product" }) });
+			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
+				"HIU-LARGE": "Mock HIU product",
+			});
 			const heatNetwork: HeatSourceData = {
 				id: "network-1",
 				name: "Heat network 1",
