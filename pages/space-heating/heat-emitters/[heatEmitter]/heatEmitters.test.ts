@@ -262,8 +262,7 @@ describe("Heat emitters", () => {
 					throw new Error("Emitters field is missing in heat emitter data");
 				}
 			});
-			test.skip("can add an underfloor heating as an emitter", async () => {
-				// skipped because underfloor heating is currently unavailable, but test will be re-enabled when the feature is added
+			test("can add an underfloor heating as an emitter", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatEmitters: {
@@ -281,11 +280,11 @@ describe("Heat emitters", () => {
 						params: { "heatEmitter": "0" },
 					},
 				});
-				await user.click(screen.getByTestId("typeOfHeatEmitter_underfloorHeating"));
+				await user.click(screen.getByTestId("typeOfHeatEmitter_underFloorHeating"));
 				const system = store.spaceHeating.heatEmitters.data[0]!.data as WetDistributionSystemData;
 				if ("emitters" in system) {
 					expect(system.emitters.length).toBe(1);
-					expect(system.emitters[0]?.typeOfHeatEmitter).toBe("underfloorHeating");
+					expect(system.emitters[0]?.typeOfHeatEmitter).toBe("underFloorHeating");
 				} else {
 					throw new Error("Emitters field is missing in heat emitter data");
 				}
@@ -554,7 +553,7 @@ describe("Heat emitters", () => {
 						{
 							id: "emitter1",
 							name: "Emitter 1",
-							typeOfHeatEmitter: "underfloorHeating",
+							typeOfHeatEmitter: "underFloorHeating",
 							productReference: "1000",
 						},
 					],
@@ -573,15 +572,15 @@ describe("Heat emitters", () => {
 					},
 				});
 				await user.click(screen.getByTestId("emitter_edit_0"));
-				expect(screen.getByTestId("areaOfUnderfloorHeating_0")).toBeDefined();
-				await user.type(screen.getByTestId("areaOfUnderfloorHeating_0"), "50");
+				expect(screen.getByTestId("areaOfUnderFloorHeating_0")).toBeDefined();
+				await user.type(screen.getByTestId("areaOfUnderFloorHeating_0"), "50");
 				await user.tab();
 				await user.click(screen.getByTestId("saveEmitter_0"));
 				const system = store.spaceHeating.heatEmitters.data[0]!.data as WetDistributionSystemData;
 				if ("emitters" in system) {
 					const emitter = system.emitters[0]!;
-					expect(emitter.typeOfHeatEmitter).toBe("underfloorHeating");
-					expect((emitter as { areaOfUnderfloorHeating: number }).areaOfUnderfloorHeating).toBe(50);
+					expect(emitter.typeOfHeatEmitter).toBe("underFloorHeating");
+					expect((emitter as { areaOfUnderFloorHeating: number }).areaOfUnderFloorHeating).toBe(50);
 				} else {
 					throw new Error("Emitters field is missing in heat emitter data");
 				}
@@ -803,7 +802,7 @@ describe("Heat emitters", () => {
 			const incompleteUfh = {
 				id: "1234",
 				name: "Underfloor heating",
-				typeOfHeatEmitter: "underfloorHeating" as const,
+				typeOfHeatEmitter: "underFloorHeating" as const,
 			};
 			const wetDistributionSystemWithUfhEmitter: HeatEmittingData = {
 				...wetDistributionSystem,
@@ -829,7 +828,7 @@ describe("Heat emitters", () => {
 
 			const system = store.spaceHeating.heatEmitters.data[0];
 			expect(system?.complete).toBe(false);
-			expect(screen.getByTestId("areaOfUnderfloorHeating_0_error")).toBeDefined();
+			expect(screen.getByTestId("areaOfUnderFloorHeating_0_error")).toBeDefined();
 		});
 		test("saves a valid radiator emitter to store", async () => {
 			const radiatorEmitter: HeatEmittingData = {
@@ -912,7 +911,7 @@ describe("Heat emitters", () => {
 					{
 						id: "emitter1",
 						name: "Underfloor heating",
-						typeOfHeatEmitter: "underfloorHeating" as const,
+						typeOfHeatEmitter: "underFloorHeating" as const,
 						productReference: "1000",
 					},
 				],
@@ -932,14 +931,14 @@ describe("Heat emitters", () => {
 
 			await user.click(screen.getByTestId("emitter_edit_0"));
 			expect(screen.getByTestId("emitterName_0")).toBeDefined();
-			await user.type(screen.getByTestId("areaOfUnderfloorHeating_0"), "25");
+			await user.type(screen.getByTestId("areaOfUnderFloorHeating_0"), "25");
 			await user.tab();
 			await user.click(screen.getByTestId("saveEmitter_0"));
 
 			const system = store.spaceHeating.heatEmitters.data[0];
 			const emitter = (system?.data as WetDistributionSystemData).emitters[0];
 			expect(emitter?.name).toBe("Underfloor heating");
-			expect((emitter as { areaOfUnderfloorHeating: number }).areaOfUnderfloorHeating).toBe(25);
+			expect((emitter as { areaOfUnderFloorHeating: number }).areaOfUnderFloorHeating).toBe(25);
 		});
 		test("editing emitter sets system complete to false", async () => {
 			const radiatorEmitter: HeatEmittingData = {

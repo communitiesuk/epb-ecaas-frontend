@@ -209,4 +209,43 @@ describe("Heat pump details", async () => {
 		expect((await screen.findByTestId("convectorRadiator"))).toBeDefined();
 		expect(screen.getByRole("heading", { name: "T33 900 mm" })).toBeDefined();
 	});
+
+	test("Displays underfloor heating details when product is an underfloor heating system", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatEmitter: "2",
+				products: "under-floor-heating",
+				id: "101",
+			},
+			query: { emitterIndex: "2" },
+			path: "/2/under-floor-heating/101",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				technologyType: "UnderFloorHeating",
+				ID: 101,
+				floorFinishCompatibility: "7mm Thin laminates",
+				equivalentSpecificThermalMass: 257.7,
+				systemName: "Standard screed floor",
+				dataType: "illustrative_conservative",
+				wetEmitterType: "ufh",
+				systemType: "in-screed",
+				depthOfFloorStructuralMaterial: 65,
+				pipeCentres: 250,
+				fracConvective: 0.43,
+				systemPerformanceFactor: 2.91,
+				structuralFloorMaterial: "Sand & Cement Screed",
+				floorFinishResistance: 0.05,
+			}),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect((await screen.findByTestId("underFloorHeating"))).toBeDefined();
+		expect(screen.getByRole("heading", { name: "Standard screed floor (250mm pipe centres)" })).toBeDefined();
+	});
 });

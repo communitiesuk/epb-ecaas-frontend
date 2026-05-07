@@ -33,12 +33,18 @@ const nestedEmitterModelNames = await useProductReferences(
 	productData => productData.modelName,
 );
 
+const emitterTypeOptions = {
+	radiator: "Radiator",
+	underFloorHeating: "Underfloor heating",
+	fanCoil: "Fan coil",
+} as const;
+
 function formatEmitterRowsForSummary(emitters: WetDistributionEmitterData[]): Record<string, string | number> {
 	const rows: Record<string, string | number> = {};
 	emitters.forEach((emitter, i) => {
 		const n = i + 1;
 		rows[`Name of emitter ${n}`] = show(emitter.name);
-		rows[`Type of emitter ${n}`] = emitter.typeOfHeatEmitter ? displayCamelToSentenceCase(emitter.typeOfHeatEmitter as string) : emptyValueRendering;
+		rows[`Type of emitter ${n}`] = emitterTypeOptions[emitter.typeOfHeatEmitter] ?? emptyValueRendering;
 		rows[`Product reference of emitter ${n}`] = emitter.productReference ? emitter.productReference : emptyValueRendering;
 		rows[`Product name of emitter ${n}`] = emitter.productReference ? (nestedEmitterModelNames[emitter.productReference] || emptyValueRendering) : emptyValueRendering;
 		if (emitter.typeOfHeatEmitter === "radiator") {
@@ -49,10 +55,10 @@ function formatEmitterRowsForSummary(emitters: WetDistributionEmitterData[]): Re
 			rows[`Number of radiators ${n}`] = emptyValueRendering;
 			rows[`Number of fan coils ${n}`] = emitter.numOfFanCoils != null ? emitter.numOfFanCoils : emptyValueRendering;
 			rows[`Area of underfloor heating ${n}`] = emptyValueRendering;
-		} else if (emitter.typeOfHeatEmitter === "underfloorHeating") {
+		} else if (emitter.typeOfHeatEmitter === "underFloorHeating") {
 			rows[`Number of radiators ${n}`] = emptyValueRendering;
 			rows[`Number of fan coils ${n}`] = emptyValueRendering;
-			rows[`Area of underfloor heating ${n}`] = emitter.areaOfUnderfloorHeating != null ? dim(emitter.areaOfUnderfloorHeating , "metres square") : emptyValueRendering;
+			rows[`Area of underfloor heating ${n}`] = emitter.areaOfUnderFloorHeating != null ? dim(emitter.areaOfUnderFloorHeating , "metres square") : emptyValueRendering;
 		} else {
 			rows[`Number of radiators ${n}`] = emptyValueRendering;
 			rows[`Number of fan coils ${n}`] = emptyValueRendering;

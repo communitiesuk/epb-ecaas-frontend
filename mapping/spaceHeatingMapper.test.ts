@@ -470,12 +470,12 @@ describe("Space heating - emitters", () => {
 		length: 1000,
 		numOfRadiators: 1,
 	};
-	const underfloorHeating: WetDistributionEmitterData = {
+	const underFloorHeating: WetDistributionEmitterData = {
 		id: "ufh1",
 		name: "Underfloor Heating 1",
-		typeOfHeatEmitter: "underfloorHeating",
+		typeOfHeatEmitter: "underFloorHeating",
 		productReference: "UFH-123",
-		areaOfUnderfloorHeating: 50,
+		areaOfUnderFloorHeating: 50,
 	};
 	const fanCoil: WetDistributionEmitterData = {
 		id: "fanCoil1",
@@ -491,7 +491,7 @@ describe("Space heating - emitters", () => {
 		heatSource: "hp1",
 		emitters: [
 			radiator,
-			underfloorHeating,
+			underFloorHeating,
 			fanCoil,
 		],
 		percentageRecirculated: 20,
@@ -561,9 +561,9 @@ describe("Space heating - emitters", () => {
 							length: radiator.length,
 						},
 						{
-							product_reference: underfloorHeating.productReference,
+							product_reference: underFloorHeating.productReference,
 							wet_emitter_type: "ufh",
-							emitter_floor_area: underfloorHeating.areaOfUnderfloorHeating,
+							emitter_floor_area: underFloorHeating.areaOfUnderFloorHeating,
 						},
 						{
 							product_reference: fanCoil.productReference,
@@ -620,9 +620,9 @@ describe("Space heating - emitters", () => {
 							length: radiator.length,
 						},
 						{
-							product_reference: underfloorHeating.productReference,
+							product_reference: underFloorHeating.productReference,
 							wet_emitter_type: "ufh",
-							emitter_floor_area: underfloorHeating.areaOfUnderfloorHeating,
+							emitter_floor_area: underFloorHeating.areaOfUnderFloorHeating,
 						},
 						{
 							product_reference: fanCoil.productReference,
@@ -675,9 +675,9 @@ describe("Space heating - emitters", () => {
 							length: radiator.length,
 						},
 						{
-							product_reference: underfloorHeating.productReference,
+							product_reference: underFloorHeating.productReference,
 							wet_emitter_type: "ufh",
-							emitter_floor_area: underfloorHeating.areaOfUnderfloorHeating,
+							emitter_floor_area: underFloorHeating.areaOfUnderFloorHeating,
 						},
 						{
 							product_reference: fanCoil.productReference,
@@ -737,9 +737,9 @@ describe("Space heating - emitters", () => {
 							length: radiator.length,
 						},
 						{
-							product_reference: underfloorHeating.productReference,
+							product_reference: underFloorHeating.productReference,
 							wet_emitter_type: "ufh",
-							emitter_floor_area: underfloorHeating.areaOfUnderfloorHeating,
+							emitter_floor_area: underFloorHeating.areaOfUnderFloorHeating,
 						},
 						{
 							product_reference: fanCoil.productReference,
@@ -775,9 +775,9 @@ describe("Space heating - emitters", () => {
 							length: radiator.length,
 						},
 						{
-							product_reference: underfloorHeating.productReference,
+							product_reference: underFloorHeating.productReference,
 							wet_emitter_type: "ufh",
-							emitter_floor_area: underfloorHeating.areaOfUnderfloorHeating,
+							emitter_floor_area: underFloorHeating.areaOfUnderFloorHeating,
 						},
 						{
 							product_reference: fanCoil.productReference,

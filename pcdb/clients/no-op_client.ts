@@ -72,6 +72,25 @@ const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?
 		};
 	}
 
+	if (technologyType === "UnderFloorHeating") {
+		if (typeof item.systemName !== "string") return undefined;
+		if (typeof item.floorFinishCompatibility !== "string") return undefined;
+
+		const pipeCentres = typeof item.pipeCentres === "number" ? item.pipeCentres : typeof item.pipeCentres === "string" ? parseFloat(item.pipeCentres) : NaN;
+		if (!isFinite(pipeCentres)) {
+			return undefined;
+		}
+
+		return {
+			displayProduct: true,
+			id,
+			systemName: item.systemName,
+			floorFinishCompatibility: item.floorFinishCompatibility,
+			pipeCentres,
+			technologyType,
+		};
+	}
+
 	return {
 		displayProduct: true,
 		id,

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from "@formkit/core";
 import { showErrorState, getErrorMessage } from "#imports";
-import type { Product } from "~/pcdb/pcdb.types";
-import { isConvectorRadiatorProduct, type AnyPcdbProduct } from "~/utils/convectorRadiator";
+import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
+import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
+import { isUnderfloorHeatingProduct } from "~/utils/underFloorHeating";
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
@@ -40,12 +41,17 @@ const selectedSubHeatNetwork = ref<string | undefined>(selectedSubHeatNetworkNam
 const productsPageUrl = ref(buildProductsPageUrl(pageUrl, index, selectedProductType ?? "", emitterIndex));
 const productData = ref<AnyPcdbProduct | undefined | null>();
 
-function hasModelDetails(product: Product): product is Product & { brandName: string; modelName: string; modelQualifier?: string | null } {
-	return "modelName" in product;
+function hasModelDetails(
+	product: AnyPcdbProduct,
+): product is Extract<AnyPcdbProduct, { modelName: string; brandName: string; modelQualifier?: string | null }> {
+	return "modelName" in product && "brandName" in product;
 }
 
 function productReferenceForDetails(product: AnyPcdbProduct): string {
-	return isConvectorRadiatorProduct(product) ? `${product.ID}` : product.id;
+	if (isConvectorRadiatorProduct(product) || isUnderfloorHeatingProduct(product)) {
+		return String(product.ID);
+	}
+	return product.id;
 }
 
 if (selectedProduct.value) {
@@ -98,6 +104,12 @@ watch(props.context, async ({ attrs: {
 						<template v-if="isConvectorRadiatorProduct(productData)">
 							<li>Type: <span class="bold">{{ productData.type ?? '-' }}</span></li>
 							<li>Height: <span class="bold">{{ productData.height != null ? `${productData.height} mm` : '-' }}</span></li>
+						</template>
+						<template v-else-if="isUnderfloorHeatingProduct(productData)">
+							<li>System Name: <span class="bold">{{ productData.systemName ?? '-' }}</span></li>
+							<li>Floor Finish Compatibility: <span class="bold">{{ productData.floorFinishCompatibility ?? '-' }}</span></li>
+							<li>Pipe Centres: <span class="bold">{{ productData.pipeCentres != null ? `${productData.pipeCentres} mm` : '-' }}</span></li>
+
 						</template>
 						<template v-else-if="hasModelDetails(productData)">
 							<li>Brand: <span class="bold">{{ productData.brandName }}</span></li>

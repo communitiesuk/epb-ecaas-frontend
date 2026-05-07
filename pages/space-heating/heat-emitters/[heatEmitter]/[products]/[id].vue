@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
-import type { ConvectorRadiatorProduct, Product } from "~/pcdb/pcdb.types";
+import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { productTypeMap, typeOfHeatEmitter, type HeatEmittingProductType, type PcdbProduct } from "~/stores/ecaasStore.schema";
 import { heatEmittingProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
 import { getRadiatorHeading, isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
+import { getUnderfloorHeatingHeading, isUnderfloorHeatingProduct } from "~/utils/underFloorHeating";
 
 definePageMeta({ layout: "one-column" });
 
@@ -28,18 +29,29 @@ const productType = heatEmittingProductTypesDisplay[heatEmittingType as HeatEmit
 
 const index = Number(params.heatEmitter);
 
-const { data: { value: data } } = await useFetch<Product | ConvectorRadiatorProduct>(`/api/products/${params.id}/details`, {
+const { data: { value: data } } = await useFetch<AnyPcdbProduct>(`/api/products/${params.id}/details`, {
 	query: {
 		technologyType,
 	},
 });
 
-const radiatorProduct = computed(() => data && isConvectorRadiatorProduct(data) ? data : undefined);
-const nonRadiatorProduct = computed(() => data && !isConvectorRadiatorProduct(data) ? data : undefined);
+const product = computed(() => data);
+const radiatorProduct = computed(() => product.value && isConvectorRadiatorProduct(product.value) ? product.value : undefined);
+const underFloorHeatingProduct = computed(() => product.value && isUnderfloorHeatingProduct(product.value) ? product.value : undefined);
+const nonRadiatorProduct = computed(() => {
+	if (!data) return undefined;
+	if (isConvectorRadiatorProduct(data)) return undefined;
+	if (isUnderfloorHeatingProduct(data)) return undefined;
+	return data;
+});
 
 const productHeading = computed(() => {
 	if (!data) {
 		return "";
+	}
+
+	if (underFloorHeatingProduct.value) {
+		return getUnderfloorHeatingHeading(underFloorHeatingProduct.value);
 	}
 
 	if (nonRadiatorProduct.value?.modelName) {
@@ -49,6 +61,7 @@ const productHeading = computed(() => {
 	if (radiatorProduct.value) {
 		return getRadiatorHeading(radiatorProduct.value);
 	}
+
 
 	return `Product ${params.id}`;
 });
@@ -95,6 +108,7 @@ const selectProduct = () => {
 
 	<ProductDetailsFanCoil v-if="!!nonRadiatorProduct && heatEmittingType === 'fanCoil'" :product="nonRadiatorProduct" />
 	<ProductDetailsConvectorRadiator v-if="!!radiatorProduct && heatEmittingType === 'radiator'" :product="radiatorProduct" />
+	<ProductDetailsUnderFloorHeating v-if="!!underFloorHeatingProduct" :product="underFloorHeatingProduct"/>
 	<ProductDetailsElectricStorageHeater v-if="!!nonRadiatorProduct && heatEmittingType === typeOfHeatEmitter.electricStorageHeater" :product="nonRadiatorProduct" />
 
 	<div class="govuk-button-group">

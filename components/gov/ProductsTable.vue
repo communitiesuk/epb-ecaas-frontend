@@ -10,15 +10,49 @@ const props = defineProps<{
 }>();
 
 const usesRadiatorColumns = computed(() => props.products.some(product => product.technologyType === "ConvectorRadiator"));
-const primaryColumnLabel = computed(() => usesRadiatorColumns.value ? "Type" : "Model");
-const secondaryColumnLabel = computed(() => usesRadiatorColumns.value ? "Height (mm)" : "Model qualifier");
-const primarySortField = computed<ProductSortOption>(() => usesRadiatorColumns.value ? "type" : "modelName");
-const secondarySortField = computed<ProductSortOption>(() => usesRadiatorColumns.value ? "height" : "modelQualifier");
+const usesUnderfloorHeatingColumns = computed(() => props.products.some(product => product.technologyType === "UnderFloorHeating"));
+const primaryColumnLabel = computed(() => {
+	if (usesRadiatorColumns.value) return "Type";
+	if (usesUnderfloorHeatingColumns.value) return "System name";
+	return "Model";
+});
+const secondaryColumnLabel = computed(() => {
+	if (usesRadiatorColumns.value) return "Height (mm)";
+	if (usesUnderfloorHeatingColumns.value) return "Pipe centres (mm)";
+	return "Model qualifier";
+});
+const primarySortField = computed<ProductSortOption>(() => {
+	if (usesRadiatorColumns.value) return "type";
+	if (usesUnderfloorHeatingColumns.value) return "systemName";
+	return "modelName";
+});
+const secondarySortField = computed<ProductSortOption>(() => {
+	if (usesRadiatorColumns.value) return "height";
+	if (usesUnderfloorHeatingColumns.value) return "pipeCentres";
+	return "modelQualifier";
+});
+const primaryValue = (product: DisplayProduct) => {
+	if (product.technologyType === "ConvectorRadiator") {
+		return product.type ?? "-";
+	}
 
-const primaryValue = (product: DisplayProduct) => usesRadiatorColumns.value ? (product.type ?? "-") : (product.modelName ?? "-");
-const secondaryValue = (product: DisplayProduct) => usesRadiatorColumns.value
-	? (product.height != null ? `${product.height}` : "-")
-	: (product.modelQualifier ?? "-");
+	if (product.technologyType === "UnderFloorHeating") {
+		return product.systemName ?? "-";
+	}
+
+	return product.modelName ?? "-";
+};
+const secondaryValue = (product: DisplayProduct) => {
+	if (product.technologyType === "ConvectorRadiator") {
+		return product.height != null ? `${product.height}` : "-";
+	}
+
+	if (product.technologyType === "UnderFloorHeating") {
+		return product.pipeCentres != null ? `${product.pipeCentres}` : "-";
+	}
+
+	return product.modelQualifier ?? "-";
+};
 </script>
 
 <template>
@@ -29,7 +63,7 @@ const secondaryValue = (product: DisplayProduct) => usesRadiatorColumns.value
 					<th scope="col" class="govuk-table__header govuk-table__header--id">
 						<ColumnSort label="Product ID" field="id" />
 					</th>
-					<th v-if="!usesRadiatorColumns" scope="col" class="govuk-table__header govuk-table__header--brand">
+					<th v-if="!usesRadiatorColumns && !usesUnderfloorHeatingColumns" scope="col" class="govuk-table__header govuk-table__header--brand">
 						<ColumnSort label="Brand" field="brandName" />
 					</th>
 					<th scope="col" class="govuk-table__header">
@@ -50,7 +84,7 @@ const secondaryValue = (product: DisplayProduct) => usesRadiatorColumns.value
 					data-testid="productRow"
 				>
 					<td class="govuk-table__cell">{{ product.id }}</td>
-					<td v-if="!usesRadiatorColumns" class="govuk-table__cell">{{ product.brandName ?? '-' }}</td>
+					<td v-if="!usesRadiatorColumns && !usesUnderfloorHeatingColumns" class="govuk-table__cell">{{ product.brandName ?? '-' }}</td>
 					<td class="govuk-table__cell">{{ primaryValue(product) }}</td>
 					<td class="govuk-table__cell">{{ secondaryValue(product) }}</td>
 					<td class="govuk-table__cell govuk-table__cell--select">

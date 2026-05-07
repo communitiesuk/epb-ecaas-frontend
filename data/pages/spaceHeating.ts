@@ -149,6 +149,13 @@ export const spaceHeatingPages = [
 		parentId: "heatEmitters",
 	},
 	{
+		id: "underFloorHeatingProducts",
+		title: "Select an underfloor heating system",
+		url: "/space-heating/heat-emitters/:heatEmitter/under-floor-heating",
+		type: "task",
+		parentId: "heatEmitters",
+	},
+	{
 		id: "electricStorageHeaterProducts",
 		title: "Select an electric storage heater",
 		url: "/space-heating/heat-emitters/:heatEmitter/electric-storage-heater",

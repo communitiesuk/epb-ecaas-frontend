@@ -1,6 +1,4 @@
-import type { ConvectorRadiatorDisplayProduct, ConvectorRadiatorProduct, DisplayProduct, Product } from "~/pcdb/pcdb.types";
-
-export type AnyPcdbProduct = Product | ConvectorRadiatorProduct;
+import type { ConvectorRadiatorDisplayProduct, ConvectorRadiatorProduct, DisplayProduct, AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 export function isConvectorRadiatorProduct(product: AnyPcdbProduct): product is ConvectorRadiatorProduct {
 	return product.technologyType === "ConvectorRadiator";

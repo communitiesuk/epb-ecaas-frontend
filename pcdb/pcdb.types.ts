@@ -389,6 +389,26 @@ const wwhrsZod = BaseProduct.extend({
 
 export type WwhrsProduct = z.infer<typeof wwhrsZod>;
 
+export const underFloorHeatingZod = z.object({
+	technologyType: z.literal("UnderFloorHeating"),
+	floorFinishCompatibility: z.string(),
+	equivalentSpecificThermalMass: z.number(),
+	systemName: z.string(),
+	dataType: z.string(),
+	wetEmitterType: z.string(),
+	systemType: z.string(),
+	depthOfFloorStructuralMaterial: z.number(),
+	pipeCentres: z.number(),
+	fracConvective: z.number(),
+	ID: z.number(),
+	systemPerformanceFactor: z.number(),
+	structuralFloorMaterial: z.string(),
+	floorFinishResistance: z.number(),
+});
+
+export type UnderFloorHeatingProduct = z.infer<typeof underFloorHeatingZod>;
+
+
 export const productSchema = z.discriminatedUnion("technologyType", [
 	heatPumpProductZod,
 	hybridHeatPumpProductZod,
@@ -409,10 +429,11 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	heatNetworkZod,
 	airPoweredShowerZod,
 	wwhrsZod,
+	underFloorHeatingZod,
 ]);
 
 type ProductSchemaUnion = z.infer<typeof productSchema>;
-export type Product = Exclude<ProductSchemaUnion, { technologyType: "ConvectorRadiator" }>;
+export type Product = Exclude<ProductSchemaUnion, { technologyType: "ConvectorRadiator" | "UnderFloorHeating" }>;
 
 export const Products = z.array(productSchema);
 
@@ -446,6 +467,7 @@ const categoryTechnologies = {
 		"ConvectorRadiator",
 		"StorageHeater",
 		"DirectElectricHeaters",
+		"UnderFloorHeating",
 	],
 	mechanicalVentilation: [
 		"CentralisedMvhr",
@@ -483,7 +505,7 @@ type DisplayProductBase = {
 };
 
 type StandardDisplayProductBase = DisplayProductBase & {
-	technologyType: Exclude<TechnologyType, "ConvectorRadiator" | "HeatNetworks">;
+	technologyType: Exclude<TechnologyType, "ConvectorRadiator" | "HeatNetworks" | "UnderFloorHeating">;
 	type?: never;
 	height?: never;
 	communityHeatNetworkName?: string;
@@ -528,11 +550,36 @@ type HeatNetworkDisplayProduct = DisplayProductBase & {
 	height?: never;
 };
 
+type UnderFloorHeatingDisplayProductBase = DisplayProductBase & {
+	technologyType: "UnderFloorHeating";
+	systemName: UnderFloorHeatingProduct["systemName"];
+	floorFinishCompatibility: UnderFloorHeatingProduct["floorFinishCompatibility"];
+	pipeCentres: UnderFloorHeatingProduct["pipeCentres"]
+	brandName?: never;
+	modelName?: never;
+	modelQualifier?: never;
+	backupCtrlType?: never;
+	powerMaxBackup?: never;
+	boilerLocation?: never;
+	boilerProductID?: never;
+	vesselType?: never;
+	type?: never;
+	height?: never;
+	communityHeatNetworkName?: never;
+	subheatNetworkName?: never;
+	subHeatNetworkId?: never;
+	productId?: never;
+};
+
 export type StandardDisplayProduct = StandardDisplayProductBase & Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier">;
 
 export type ConvectorRadiatorDisplayProduct = ConvectorRadiatorDisplayProductBase & Pick<z.infer<typeof convectorRadiatorZod>, "type" | "height">;
 
-export type DisplayProduct = StandardDisplayProduct | ConvectorRadiatorDisplayProduct | HeatNetworkDisplayProduct;
+export type UnderFloorHeatingDisplayProduct = UnderFloorHeatingDisplayProductBase & Pick<z.infer<typeof underFloorHeatingZod>, "systemName" | "floorFinishCompatibility" | "pipeCentres">;
+
+export type AnyPcdbProduct = Product | ConvectorRadiatorProduct | UnderFloorHeatingProduct;
+
+export type DisplayProduct = StandardDisplayProduct | ConvectorRadiatorDisplayProduct | HeatNetworkDisplayProduct | UnderFloorHeatingDisplayProduct;
 
 export type DisplayProductWithFlowTemp = DisplayProduct & {
 	designFlowTemperature?: number;
