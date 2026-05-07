@@ -21,7 +21,8 @@ const heatBatteries = heatSources.filter(({ data: x }) => x.isExistingHeatSource
 const solarThermalSystem = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "solarThermalSystem");
 const immersionHeaters = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "immersionHeater");
 const pointOfUse = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "pointOfUse");
-
+const hotWaterOutletsAll = store.domesticHotWater.hotWaterOutlets.data;
+const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerData>[];
 type SummaryHeatSource = {
 	data: {
 		name: string,
@@ -82,7 +83,8 @@ function addHeatSourceToCorrectSummaryList(heatSources: EcaasForm<DomesticHotWat
 
 addHeatSourceToCorrectSummaryList(dhwHeatSourcesFromSpaceHeating);
 
-const heatInterfaceUnitModelNames = await useProductReferences(heatInterfaceUnits, productData => productData.modelName);
+const productNames = await useProductReferences([...heatInterfaceUnits,...mixedShowerData] as EcaasForm<DomesticHotWaterHeatSourceData>[], productData => productData.modelName);
+
 
 export type SummaryWithLink = {
 	text: "Yes" | "No",
@@ -199,7 +201,7 @@ const heatInterfaceUnitSummary: SummarySection = {
 					"Used for space heating": "No",
 					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
 					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-					"Product name": "productReference" in heatSource && heatSource.productReference ? heatInterfaceUnitModelNames[heatSource.productReference] : emptyValueRendering,
+					"Product name": "productReference" in heatSource && heatSource.productReference ? productNames[heatSource.productReference] : emptyValueRendering,
 					"Associated heat network": associatedHeatNetworkName,
 					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 					"Building level losses": "buildingLevelLosses" in heatSource ? dim(heatSource.buildingLevelLosses) : emptyValueRendering,
@@ -435,10 +437,10 @@ const waterStorageSummarySections: SummarySection[] = [
 const populatedHeatSourceSections = getNonEmptySections(heatSourceSections);
 
 
-const hotWaterOutletsAll = store.domesticHotWater.hotWaterOutlets.data;
 
-const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerData>[];
-const mixedShowerModelNames = await useProductReferences(mixedShowerData, productData => productData.modelName);
+
+
+
 
 const mixedShowerSummary: SummarySection = {
 	id: "mixedShower",
@@ -456,7 +458,7 @@ const mixedShowerSummary: SummarySection = {
 			"Is this an air pressure shower?": "isAirPressureShower" in data ? displayBoolean(data.isAirPressureShower) : emptyValueRendering,
 			...("isAirPressureShower" in data && data.isAirPressureShower ? {
 				"Air pressure shower product reference": show(airPressureShowerProductReference),
-				"Air pressure shower product": airPressureShowerProductReference ? show(mixedShowerModelNames[data.airPressureShowerProductReference]) : emptyValueRendering,
+				"Air pressure shower product": airPressureShowerProductReference ? show(productNames[data.airPressureShowerProductReference]) : emptyValueRendering,
 			} : {
 				"Flow rate": "flowRate" in data ? dim(data.flowRate, "litres per second") : emptyValueRendering,
 			}),
@@ -464,7 +466,7 @@ const mixedShowerSummary: SummarySection = {
 			...("wwhrs" in data && data.wwhrs ? {
 				"WWHRS type": "wwhrsType" in data && data.wwhrsType ? displayCamelToSentenceCase(String(data.wwhrsType)) : emptyValueRendering,
 				"WWHRS product reference": wwhrsProductReference,
-				"WWHRS product": wwhrsProductReference ? show(mixedShowerModelNames[wwhrsProductReference]) : emptyValueRendering,
+				"WWHRS product": wwhrsProductReference ? show(productNames[wwhrsProductReference]) : emptyValueRendering,
 			} : {}),
 		};
 	}),

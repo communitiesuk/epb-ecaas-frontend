@@ -22,31 +22,22 @@ const wetDistributionSystems = heatEmitters.filter(x => x.data.typeOfHeatEmitter
 const warmAirHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "warmAirHeater");
 const instantElectricHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "instantElectricHeater");
 const electricStorageHeaters = heatEmitters.filter(x => x.data.typeOfHeatEmitter === "electricStorageHeater");
-
-const heatSourceModelNames = await useProductReferences(heatSources, productData => productData.modelName);
-
-const heatEmitterModelNames = await useProductReferences(heatEmitters, productData => productData.modelName);
-const nestedEmitterModelNames = await useProductReferences(
-	wetDistributionSystems.flatMap(({ data }) =>
-		(data as WetDistributionSystemData).emitters.map(e => ({ data: e })),
-	) as EcaasForm<WetDistributionEmitterData>[],
+const wetDistributionFlatMapped = wetDistributionSystems.flatMap(({ data }) =>
+	(data as WetDistributionSystemData).emitters.map(e => ({ data: e })),
+) as EcaasForm<WetDistributionEmitterData>[];
+const modelNames = await useProductReferences(
+	[...heatSources, ...heatEmitters, ...wetDistributionFlatMapped] as EcaasForm<HeatSourceData | HeatEmittingData | WetDistributionEmitterData>[],
 	productData => productData.modelName,
 );
-
-const emitterTypeOptions = {
-	radiator: "Radiator",
-	underFloorHeating: "Underfloor heating",
-	fanCoil: "Fan coil",
-} as const;
 
 function formatEmitterRowsForSummary(emitters: WetDistributionEmitterData[]): Record<string, string | number> {
 	const rows: Record<string, string | number> = {};
 	emitters.forEach((emitter, i) => {
 		const n = i + 1;
 		rows[`Name of emitter ${n}`] = show(emitter.name);
-		rows[`Type of emitter ${n}`] = emitterTypeOptions[emitter.typeOfHeatEmitter] ?? emptyValueRendering;
+		rows[`Type of emitter ${n}`] = emitter.typeOfHeatEmitter ? displayCamelToSentenceCase(emitter.typeOfHeatEmitter as string) : emptyValueRendering;
 		rows[`Product reference of emitter ${n}`] = emitter.productReference ? emitter.productReference : emptyValueRendering;
-		rows[`Product name of emitter ${n}`] = emitter.productReference ? (nestedEmitterModelNames[emitter.productReference] || emptyValueRendering) : emptyValueRendering;
+		rows[`Product name of emitter ${n}`] = emitter.productReference ? (modelNames[emitter.productReference] || emptyValueRendering) : emptyValueRendering;
 		if (emitter.typeOfHeatEmitter === "radiator") {
 			rows[`Number of radiators ${n}`] = emitter.numOfRadiators != null ? emitter.numOfRadiators : emptyValueRendering;
 			rows[`Number of fan coils ${n}`] = emptyValueRendering;
@@ -91,7 +82,7 @@ const boilerSummary: SummarySection = {
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
 				"Type of boiler": "typeOfBoiler" in heatSource && heatSource.typeOfBoiler ? displayCamelToSentenceCase(heatSource.typeOfBoiler) : emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
+				"Product name": "productReference" in heatSource && heatSource.productReference ? modelNames[heatSource.productReference] : emptyValueRendering,
 				"Location of boiler": "specifiedLocation" in heatSource && heatSource.specifiedLocation ? displayBoilerLocation(heatSource.specifiedLocation) : emptyValueRendering,
 				"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 			};
@@ -115,7 +106,7 @@ const heatPumpSummary: SummarySection = {
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
 				"Type of heat pump": "typeOfHeatPump" in heatSource && heatSource.typeOfHeatPump ? displayCamelToSentenceCase(heatSource.typeOfHeatPump) : emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
+				"Product name": "productReference" in heatSource && heatSource.productReference ? modelNames[heatSource.productReference] : emptyValueRendering,
 				"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 				"Is connected to a heat network": "isConnectedToHeatNetwork" in heatSource ? displayBoolean(heatSource.isConnectedToHeatNetwork) : emptyValueRendering,
 				...heatNetWorkFields,
@@ -154,7 +145,7 @@ const heatInterfaceUnitSummary: SummarySection = {
 				Name: show(heatSource.name),
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
 				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
+				"Product name": "productReference" in heatSource && heatSource.productReference ? modelNames[heatSource.productReference] : emptyValueRendering,
 				"Associated heat network": associatedHeatNetwork ? associatedHeatNetwork.data.name : emptyValueRendering,
 				"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 				"Building level losses": "buildingLevelLosses" in heatSource ? dim(heatSource.buildingLevelLosses) : emptyValueRendering,
@@ -175,7 +166,7 @@ const heatBatterySummary: SummarySection = {
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
 				"Type of heat battery": "typeOfHeatBattery" in heatSource && heatSource.typeOfHeatBattery ? displayCamelToSentenceCase(heatSource.typeOfHeatBattery) : emptyValueRendering,
 				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
+				"Product name": "productReference" in heatSource && heatSource.productReference ? modelNames[heatSource.productReference] : emptyValueRendering,
 				"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 				"Number of units": "numberOfUnits" in heatSource ? heatSource.numberOfUnits : emptyValueRendering,
 				"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
@@ -254,7 +245,7 @@ const electricStorageHeaterSummary: SummarySection = {
 			Name: show(electricStorageHeater.name),
 			"Type of heat emitter": "typeOfHeatEmitter" in electricStorageHeater && electricStorageHeater.typeOfHeatEmitter ? displayCamelToSentenceCase(electricStorageHeater.typeOfHeatEmitter) : emptyValueRendering,
 			"Product reference": "productReference" in electricStorageHeater ? electricStorageHeater.productReference : emptyValueRendering,
-			"Product name": "productReference" in electricStorageHeater && electricStorageHeater.productReference ? heatEmitterModelNames[electricStorageHeater.productReference] : emptyValueRendering,
+			"Product name": "productReference" in electricStorageHeater && electricStorageHeater.productReference ? modelNames[electricStorageHeater.productReference] : emptyValueRendering,
 			"Number of storage heaters": "numOfStorageHeaters" in electricStorageHeater ? electricStorageHeater.numOfStorageHeaters : emptyValueRendering,
 		};
 	}),
