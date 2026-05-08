@@ -289,6 +289,7 @@ describe("infiltration ventilation mapper", () => {
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
 			securityRisk: false,
+			rooflight: true,
 			hasShading: false,
 		};
 

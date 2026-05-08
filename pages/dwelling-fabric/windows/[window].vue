@@ -48,6 +48,7 @@ const saveForm = (fields: WindowData) => {
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			securityRisk: fields.securityRisk,
+			rooflight: fields.rooflight,
 			openingToFrameRatio: fields.openingToFrameRatio,
 		};
 
@@ -282,6 +283,14 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			help="A window is a security risk if you are unable to leave it open at night. If it is on the ground floor, in a basement, or is easily accessible, it is a security risk."
 			validation="required"
 			data-field="Zone.BuildingElement.*.security_risk"
+		/>
+		<FormKit
+			id="rooflight"
+			name="rooflight"
+			type="govBoolean"
+			label="Is the window a rooflight?"
+			validation="required"
+			data-field="Zone.BuildingElement.*.rooflight"
 		/>
 		<FormKit
 			id="numberOpenableParts"

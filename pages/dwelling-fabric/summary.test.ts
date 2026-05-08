@@ -366,6 +366,7 @@ const windowData: EcaasForm<WindowData> = {
 		width: 1,
 		uValue: 1,
 		securityRisk: true,
+		rooflight: false,
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		openingToFrameRatio: 0.2,

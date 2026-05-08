@@ -10,6 +10,7 @@ describe("windowData Zod schema", () => {
 			width: 2,
 			uValue: 0.1,
 			securityRisk: true,
+			rooflight: false,
 			solarTransmittance: 0.2,
 			elevationalHeight: 1,
 			numberOpenableParts: "1",

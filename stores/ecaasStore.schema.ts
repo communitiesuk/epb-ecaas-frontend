@@ -641,6 +641,7 @@ const baseWindowData = namedWithId.extend({
 	width: widthTransparentZod,
 	uValue,
 	securityRisk: z.boolean(),
+	rooflight: z.boolean(),
 	solarTransmittance: gValueZod,
 	elevationalHeight: baseHeightTransparentZod,
 	openingToFrameRatio: fraction,

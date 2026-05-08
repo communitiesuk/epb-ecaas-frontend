@@ -1150,6 +1150,7 @@ describe("dwelling fabric mapper", () => {
 				},
 			],
 			security_risk: false,
+			rooflight: false,
 			u_value: externalGlazedDoor.uValue,
 			treatment: [{
 				type: externalGlazedDoor.treatmentType,
@@ -1220,6 +1221,7 @@ describe("dwelling fabric mapper", () => {
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
 			securityRisk: false,
+			rooflight: true,
 			hasShading: true,
 			shading: [
 				{
@@ -1306,6 +1308,7 @@ describe("dwelling fabric mapper", () => {
 			mid_height: 30 + window.height / 2,
 			frame_area_fraction: 1 - window.openingToFrameRatio,
 			security_risk: false,
+			rooflight: true,
 			free_area_height: 0,
 			max_window_open_area: window.maximumOpenableArea,
 			window_part_list: [
@@ -1359,6 +1362,7 @@ describe("dwelling fabric mapper", () => {
 			numberOpenableParts: "0",
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
+			rooflight: false,
 			curtainsOrBlinds: false,
 			hasShading: false,
 		};
@@ -1413,6 +1417,7 @@ describe("dwelling fabric mapper", () => {
 			numberOpenableParts: "0",
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
+			rooflight: false,
 			curtainsOrBlinds: false,
 			hasShading: false,
 		};
@@ -1465,6 +1470,7 @@ describe("dwelling fabric mapper", () => {
 			numberOpenableParts: "0",
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
+			rooflight: false,
 			curtainsOrBlinds: false,
 			hasShading: false,
 		};

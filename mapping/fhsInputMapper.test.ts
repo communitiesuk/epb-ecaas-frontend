@@ -810,6 +810,7 @@ const expectedFlatInput: FhsInputSchema = {
 					orientation360: 30,
 					pitch: 45,
 					security_risk: false,
+					rooflight: false,
 					shading: [
 						{
 							type: "overhang",
@@ -919,6 +920,7 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 0.1,
 					g_value: 0.2,
 					security_risk: true,
+					rooflight: true,
 					mid_height: 2,
 					frame_area_fraction: 0.2, // inverse openingToFrameRatio (1 - 0.8) 
 					max_window_open_area: 1,
@@ -2010,6 +2012,7 @@ describe("FHS input mapper", () => {
 						width: 2,
 						uValue: 0.1,
 						securityRisk: true,
+						rooflight: true,
 						solarTransmittance: 0.2,
 						elevationalHeight: 1,
 						numberOpenableParts: "1",

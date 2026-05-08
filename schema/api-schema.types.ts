@@ -1178,6 +1178,7 @@ export interface components {
             mid_height: number;
             max_window_open_area: number;
             security_risk: boolean;
+            rooflight: boolean;
             window_part_list: {
                 mid_height_air_flow_path: number;
             }[];
@@ -2584,6 +2585,7 @@ export interface components {
                     mid_height: number;
                     max_window_open_area: number;
                     security_risk: boolean;
+                    rooflight: boolean;
                     window_part_list: {
                         mid_height_air_flow_path: number;
                     }[];

@@ -4946,6 +4946,7 @@
                 "mid_height",
                 "max_window_open_area",
                 "security_risk",
+                "rooflight",
                 "window_part_list",
                 "shading",
                 "base_height",
@@ -4989,6 +4990,9 @@
                     "maximum": 100
                 },
                 "security_risk": {
+                    "type": "boolean"
+                },
+                "rooflight": {
                     "type": "boolean"
                 },
                 "window_part_list": {

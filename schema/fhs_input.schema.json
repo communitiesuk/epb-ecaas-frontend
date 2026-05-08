@@ -4697,6 +4697,7 @@
 											"mid_height",
 											"max_window_open_area",
 											"security_risk",
+											"rooflight",
 											"window_part_list",
 											"shading",
 											"base_height",
@@ -4743,6 +4744,9 @@
 												"description": "Openable area of the window ignoring the obstructing effect of the frame of the openable part"
 											},
 											"security_risk": {
+												"type": "boolean"
+											},
+											"rooflight": {
 												"type": "boolean"
 											},
 											"window_part_list": {

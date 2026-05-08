@@ -343,6 +343,7 @@
                     "mid_height": 1.5,
                     "max_window_open_area": 3,
                     "security_risk": true,
+                    "rooflight": true,
                     "window_part_list": [
                         {
                         "mid_height_air_flow_path": 1.5
@@ -368,6 +369,7 @@
                     "mid_height": 1.5,
                     "max_window_open_area": 3,
                     "security_risk": true,
+                    "rooflight": true,
                     "window_part_list": [
                         {
                         "mid_height_air_flow_path": 1.5
@@ -428,6 +430,7 @@
                     "mid_height": 1.5,
                     "max_window_open_area": 3,
                     "security_risk": false,
+                    "rooflight": false,
                     "window_part_list": [
                         {
                         "mid_height_air_flow_path": 1.5
@@ -453,6 +456,7 @@
                     "mid_height": 1.5,
                     "max_window_open_area": 3,
                     "security_risk": false,
+                    "rooflight": false,
                     "window_part_list": [
                         {
                         "mid_height_air_flow_path": 1.5

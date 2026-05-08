@@ -293,6 +293,7 @@ describe("ceilings and roofs", () => {
 					openingToFrameRatio: 0.2,
 					curtainsOrBlinds: false,
 					securityRisk: false,
+					rooflight: false,
 					hasShading: false,
 				},
 				complete: true,
