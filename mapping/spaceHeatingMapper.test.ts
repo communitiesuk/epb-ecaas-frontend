@@ -406,7 +406,6 @@ describe("Space heating - heat sources", () => {
 				[hiu.name]: {
 					type: "HIU",
 					product_reference: hiu.productReference,
-					design_flow_temp: hiu.maxFlowTemp.amount,
 					building_level_distribution_losses: typeof hiu.buildingLevelLosses === "object" && hiu.buildingLevelLosses !== null && "amount" in hiu.buildingLevelLosses ? hiu.buildingLevelLosses.amount : hiu.buildingLevelLosses,
 					is_heat_network: true,
 					heat_network_type: "sleeved DHN",

@@ -163,10 +163,9 @@ function mapHeatSourceWet(
 			{
 				const associatedHeatNetwork = heatSource.associatedHeatNetworkId ? getAssociatedHeatNetwork(state, heatSource.associatedHeatNetworkId) : undefined;
 				const subHeatNetworkName = associatedHeatNetwork && "subHeatNetworkName" in associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkName : undefined;
-				const designFlowTemp = "maxFlowTemp" in heatSource ? heatSource.maxFlowTemp?.amount : undefined;
 				const associatedHeatNetworkName = associatedHeatNetwork && "name" in associatedHeatNetwork ? associatedHeatNetwork.name : undefined;
-				if (!subHeatNetworkName || !associatedHeatNetworkName || designFlowTemp === undefined) {
-					throw new Error("Expected a sub heat network name, associated heat network name, and design flow temperature for a heat interface unit heat source associated with a heat network");
+				if (!subHeatNetworkName || !associatedHeatNetworkName) {
+					throw new Error("Expected a sub heat network name, and associated heat network name for a heat interface unit heat source associated with a heat network");
 				}
 				return {
 					HeatSourceWet: {
@@ -179,7 +178,6 @@ function mapHeatSourceWet(
 							building_level_distribution_losses: heatSource.buildingLevelLosses.amount,
 							is_heat_network: true as const,
 							sub_heat_network_name: subHeatNetworkName,
-							design_flow_temp: designFlowTemp,
 						} as const satisfies SchemaHeatSourceWetDetails,
 					} satisfies FhsInputSchema["HeatSourceWet"],
 				};

@@ -1838,8 +1838,7 @@
 								{
 									"required": [
 										"product_reference",
-										"building_level_distribution_losses",
-										"design_flow_temp"
+										"building_level_distribution_losses"
 									],
 									"properties": {
 										"product_reference": {
@@ -1851,10 +1850,6 @@
 											"type": "number",
 											"minimum": 0,
 											"description": "Heat losses from building-level distribution pipework (unit: W)"
-										},
-										"design_flow_temp": {
-											"type": "number",
-											"description": "The flow temperature expected to be set - typically either 55°C or 70°C"
 										}
 									}
 								},

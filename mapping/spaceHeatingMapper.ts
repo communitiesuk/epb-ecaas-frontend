@@ -134,7 +134,6 @@ export function mapHIUs(state: ResolvedState): Record<string, SchemaHeatSourceWe
 				{
 					type: "HIU" as const,
 					product_reference: hiu.productReference ?? undefined,
-					design_flow_temp: hiu.maxFlowTemp.amount,
 					building_level_distribution_losses: typeof hiu.buildingLevelLosses === "object" && hiu.buildingLevelLosses !== null && "amount" in hiu.buildingLevelLosses ? hiu.buildingLevelLosses.amount : hiu.buildingLevelLosses,
 					is_heat_network: true as const,
 					heat_network_type: heatNetworkType,

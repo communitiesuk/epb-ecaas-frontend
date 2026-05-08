@@ -960,8 +960,6 @@ export interface components {
              */
             product_reference: string;
             building_level_distribution_losses: number;
-            /** @description The flow temperature expected to be set - typically either 55°C or 70°C */
-            design_flow_temp: number;
         } | {
             HIU_daily_loss: number;
             power_max: number;
@@ -2143,8 +2141,6 @@ export interface components {
                      */
                     product_reference: string;
                     building_level_distribution_losses: number;
-                    /** @description The flow temperature expected to be set - typically either 55°C or 70°C */
-                    design_flow_temp: number;
                 } | {
                     HIU_daily_loss: number;
                     power_max: number;
