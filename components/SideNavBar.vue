@@ -8,6 +8,11 @@ const parentPages: Array<Page> = pagesData.filter(
 
 const openStates = ref(Array(parentPages.length).fill(true));
 
+const hasHydrated = ref(false);
+onMounted(() => {
+	hasHydrated.value = true;
+});
+
 function toggle(index: number) {
 	openStates.value[index] = !openStates.value[index];
 }
@@ -20,6 +25,7 @@ function getUrl(url: string) {
 	const store = useEcaasStore();
 	
 	if (url !== "/domestic-hot-water/heat-sources/create") return url;
+	if (!hasHydrated.value) return url;
 
 	if (store.domesticHotWater.heatSources.data.length >= 1) {
 		return "/domestic-hot-water/heat-sources/0";
