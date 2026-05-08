@@ -17,6 +17,11 @@ const hotWaterOutletData = hotWaterOutletsStoreData[index] as EcaasForm<HotWater
 const model = ref(hotWaterOutletData?.data);
 const id = hotWaterOutletData?.data.id ?? uuidv4();
 
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
+
 const saveForm = (fields: HotWaterOutletsData) => {
 	store.$patch((state) => {
 		const { hotWaterOutlets } = state.domesticHotWater;
@@ -187,7 +192,8 @@ const heatSourceOptions = new Map(
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
-		/><template v-if="model.typeOfHotWaterOutlet === 'mixedShower'">
+		/>
+		<template v-if="hasMounted && model.typeOfHotWaterOutlet === 'mixedShower'">
 			<FormKit
 				id="dhwHeatSourceId"
 				name="dhwHeatSourceId"

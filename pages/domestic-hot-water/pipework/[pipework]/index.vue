@@ -47,6 +47,10 @@ const saveForm = (fields: PipeworkData) => {
 	navigateTo(getUrl("domesticHotWater"));
 };
 
+const hasMounted = ref(false);	
+onMounted(() => {
+	hasMounted.value = true;
+});
 
 autoSaveElementForm<PipeworkData>({
 	model,
@@ -87,26 +91,25 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}" />
-		<ClientOnly>
-			<FormKit
-				id="waterStorage"
-				type="govRadios"
-				:options="new Map(store.domesticHotWater.waterStorage.data
-					.filter(x => x.data.id !== undefined)
-					.map(x => [x.data.id as string, x.data.name]))"		
-				label="Hot water cylinder"
-				help="Select a hot water cylinder that this pipework is connected to"
-				name="waterStorage"
-				validation="required">
-				<div
-					v-if="!store.domesticHotWater.waterStorage.data.length">
-					<p class="govuk-error-message">No hot water cylinder added.</p>
-					<NuxtLink :to="getUrl('waterStorageCreate')" class="govuk-link gov-radios-add-link">
-						Click here to add a hot water cylinder
-					</NuxtLink>
-				</div>
-			</FormKit>
-		</ClientOnly>
+		<FormKit
+			v-if="hasMounted"
+			id="waterStorage"
+			type="govRadios"
+			:options="new Map(store.domesticHotWater.waterStorage.data
+				.filter(x => x.data.id !== undefined)
+				.map(x => [x.data.id as string, x.data.name]))"		
+			label="Hot water cylinder"
+			help="Select a hot water cylinder that this pipework is connected to"
+			name="waterStorage"
+			validation="required">
+			<div
+				v-if="!store.domesticHotWater.waterStorage.data.length">
+				<p class="govuk-error-message">No hot water cylinder added.</p>
+				<NuxtLink :to="getUrl('waterStorageCreate')" class="govuk-link gov-radios-add-link">
+					Click here to add a hot water cylinder
+				</NuxtLink>
+			</div>
+		</FormKit>
 		<FormKit
 			id="location"
 			type="govRadios"
