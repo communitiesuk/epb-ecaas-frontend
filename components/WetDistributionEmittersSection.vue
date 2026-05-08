@@ -15,14 +15,14 @@ const clearEmitterIndexFromUrl = () => {
 
 const emitterTypeOptions = {
 	radiator: "Radiator",
-	underFloorHeating: "Underfloor heating",
+	underfloorHeating: "Underfloor heating",
 	fanCoil: "Fan coil",
 } as const;
 
-const useUnderFloorHeating: boolean = true;
+const useUnderfloorHeating: boolean = true;
 
-const { underFloorHeating, ...others } = emitterTypeOptions;
-const heatEmitterTypes = useUnderFloorHeating ? emitterTypeOptions : others;
+const { underfloorHeating, ...others } = emitterTypeOptions;
+const heatEmitterTypes = useUnderfloorHeating ? emitterTypeOptions : others;
 type EmitterType = keyof typeof emitterTypeOptions;
 
 const props = defineProps<{
@@ -118,11 +118,11 @@ const emitterSummaryData = (emitter: Partial<WetDistributionEmitterData> & { id:
 				"Fan coil product": product,
 				"Number of fan coils": (emitter as { numOfFanCoils?: number }).numOfFanCoils,
 			};
-		case "underFloorHeating":
+		case "underfloorHeating":
 			return {
 				"Type of emitter": typeName,
 				"Underfloor heating product": product,
-				"Area of underfloor heating": (emitter as { areaOfUnderFloorHeating?: number }).areaOfUnderFloorHeating != null ? `${(emitter as { areaOfUnderFloorHeating: number }).areaOfUnderFloorHeating} m²` : undefined,
+				"Area of underfloor heating": (emitter as { areaOfUnderfloorHeating?: number }).areaOfUnderfloorHeating != null ? `${(emitter as { areaOfUnderfloorHeating: number }).areaOfUnderfloorHeating} m²` : undefined,
 			};
 		default:
 			return {
@@ -350,7 +350,7 @@ const saveEmitter = () => {
 							:validation="zodTypeAsFormKitValidation(productCountZod)"
 						/>
 					</template>
-					<template v-if="formModel.typeOfHeatEmitter === 'underFloorHeating'">
+					<template v-if="formModel.typeOfHeatEmitter === 'underfloorHeating'">
 						<FormKit
 							:id="`selectUnderfloorHeating_${i}`"
 							type="govPcdbProduct"
@@ -359,16 +359,16 @@ const saveEmitter = () => {
 							validation="required"
 							help="Select the underfloor heating type from the PCDB using the button below."
 							:selected-product-reference="formModel.productReference as string"
-							selected-product-type="underFloorHeating"
+							selected-product-type="underfloorHeating"
 							:page-url="route.fullPath"
 							:page-index="props.index"
 							:emitter-index="i"
 						/>
 						<FormKit
-							:id="`areaOfUnderFloorHeating_${i}`"
+							:id="`areaOfUnderfloorHeating_${i}`"
 							type="govInputWithSuffix"
 							label="Area of underfloor heating"
-							name="areaOfUnderFloorHeating"
+							name="areaOfUnderfloorHeating"
 							suffix-text="m²"
 							:validation="zodTypeAsFormKitValidation(emitterFloorAreaZod)"
 						/>

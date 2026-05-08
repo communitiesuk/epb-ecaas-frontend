@@ -215,11 +215,11 @@ describe("Heat pump details", async () => {
 		mockRoute.mockReturnValue({
 			params: {
 				heatEmitter: "2",
-				products: "under-floor-heating",
+				products: "underfloor-heating",
 				id: "101",
 			},
 			query: { emitterIndex: "2" },
-			path: "/2/under-floor-heating/101",
+			path: "/2/underfloor-heating/101",
 		});
 
 		mockFetch.mockReturnValue({
@@ -245,7 +245,7 @@ describe("Heat pump details", async () => {
 		await renderSuspended(ProductDetails);
 
 		// Assert
-		expect((await screen.findByTestId("underFloorHeating"))).toBeDefined();
+		expect((await screen.findByTestId("underfloorHeating"))).toBeDefined();
 		expect(screen.getByRole("heading", { name: "Standard screed floor (250mm pipe centres)" })).toBeDefined();
 	});
 });

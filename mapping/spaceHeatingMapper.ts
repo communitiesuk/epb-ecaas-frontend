@@ -329,11 +329,11 @@ function mapEmittersForWetDistribution(emitters: WetDistributionEmitterData[]): 
 			} as const satisfies SchemaRadiatorWithProductReference;
 
 			return Array.from({ length: emitter.numOfRadiators }, () => radiator);
-		} else if (emitter.typeOfHeatEmitter === "underFloorHeating") {
+		} else if (emitter.typeOfHeatEmitter === "underfloorHeating") {
 			return [{
 				wet_emitter_type: "ufh",
 				product_reference: emitter.productReference,
-				emitter_floor_area: emitter.areaOfUnderFloorHeating,
+				emitter_floor_area: emitter.areaOfUnderfloorHeating,
 			} as const satisfies SchemaUfhWithProductReference];
 		} else if (emitter.typeOfHeatEmitter === "fanCoil") {
 			return [{

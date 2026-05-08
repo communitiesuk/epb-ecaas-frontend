@@ -149,9 +149,9 @@ export const spaceHeatingPages = [
 		parentId: "heatEmitters",
 	},
 	{
-		id: "underFloorHeatingProducts",
+		id: "underfloorHeatingProducts",
 		title: "Select an underfloor heating system",
-		url: "/space-heating/heat-emitters/:heatEmitter/under-floor-heating",
+		url: "/space-heating/heat-emitters/:heatEmitter/underfloor-heating",
 		type: "task",
 		parentId: "heatEmitters",
 	},

@@ -46,10 +46,10 @@ function formatEmitterRowsForSummary(emitters: WetDistributionEmitterData[]): Re
 			rows[`Number of radiators ${n}`] = emptyValueRendering;
 			rows[`Number of fan coils ${n}`] = emitter.numOfFanCoils != null ? emitter.numOfFanCoils : emptyValueRendering;
 			rows[`Area of underfloor heating ${n}`] = emptyValueRendering;
-		} else if (emitter.typeOfHeatEmitter === "underFloorHeating") {
+		} else if (emitter.typeOfHeatEmitter === "underfloorHeating") {
 			rows[`Number of radiators ${n}`] = emptyValueRendering;
 			rows[`Number of fan coils ${n}`] = emptyValueRendering;
-			rows[`Area of underfloor heating ${n}`] = emitter.areaOfUnderFloorHeating != null ? dim(emitter.areaOfUnderFloorHeating , "metres square") : emptyValueRendering;
+			rows[`Area of underfloor heating ${n}`] = emitter.areaOfUnderfloorHeating != null ? dim(emitter.areaOfUnderfloorHeating , "metres square") : emptyValueRendering;
 		} else {
 			rows[`Number of radiators ${n}`] = emptyValueRendering;
 			rows[`Number of fan coils ${n}`] = emptyValueRendering;

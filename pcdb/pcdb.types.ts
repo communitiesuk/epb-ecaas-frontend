@@ -389,7 +389,7 @@ const wwhrsZod = BaseProduct.extend({
 
 export type WwhrsProduct = z.infer<typeof wwhrsZod>;
 
-export const underFloorHeatingZod = z.object({
+export const underfloorHeatingZod = z.object({
 	technologyType: z.literal("UnderFloorHeating"),
 	floorFinishCompatibility: z.string(),
 	equivalentSpecificThermalMass: z.number(),
@@ -406,7 +406,7 @@ export const underFloorHeatingZod = z.object({
 	floorFinishResistance: z.number(),
 });
 
-export type UnderFloorHeatingProduct = z.infer<typeof underFloorHeatingZod>;
+export type UnderFloorHeatingProduct = z.infer<typeof underfloorHeatingZod>;
 
 
 export const productSchema = z.discriminatedUnion("technologyType", [
@@ -429,7 +429,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	heatNetworkZod,
 	airPoweredShowerZod,
 	wwhrsZod,
-	underFloorHeatingZod,
+	underfloorHeatingZod,
 ]);
 
 type ProductSchemaUnion = z.infer<typeof productSchema>;
@@ -575,7 +575,7 @@ export type StandardDisplayProduct = StandardDisplayProductBase & Pick<z.infer<t
 
 export type ConvectorRadiatorDisplayProduct = ConvectorRadiatorDisplayProductBase & Pick<z.infer<typeof convectorRadiatorZod>, "type" | "height">;
 
-export type UnderFloorHeatingDisplayProduct = UnderFloorHeatingDisplayProductBase & Pick<z.infer<typeof underFloorHeatingZod>, "systemName" | "floorFinishCompatibility" | "pipeCentres">;
+export type UnderFloorHeatingDisplayProduct = UnderFloorHeatingDisplayProductBase & Pick<z.infer<typeof underfloorHeatingZod>, "systemName" | "floorFinishCompatibility" | "pipeCentres">;
 
 export type AnyPcdbProduct = Product | ConvectorRadiatorProduct | UnderFloorHeatingProduct;
 

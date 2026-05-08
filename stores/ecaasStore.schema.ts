@@ -1067,7 +1067,7 @@ export const productTypeMap = {
 	"instantElectricHeater": "DirectElectricHeaters",
 	"airPressureShower": "AirPoweredShowers",
 	"wwhrs": "InstantaneousWwhrSystem",
-	"underFloorHeating": "UnderFloorHeating",
+	"underfloorHeating": "UnderFloorHeating",
 } as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType | ShowerProductType, TechnologyType | string | TechnologyType[]>;
 
 export type HeatEmitterType =
@@ -1077,7 +1077,7 @@ export type HeatEmitterType =
 	"warmAirHeater";
 
 const _typeOfHeatEmitter = z.enum(["wetDistributionSystem", "electricStorageHeater", "instantElectricHeater"]);
-const wetDistributionSystemEmitter = z.enum(["underFloorHeating", "fanCoil", "radiator"]);
+const wetDistributionSystemEmitter = z.enum(["underfloorHeating", "fanCoil", "radiator"]);
 export const typeOfHeatEmitter = _typeOfHeatEmitter.enum;
 export const typeOfWetDistributionSystemEmitter = wetDistributionSystemEmitter.enum;
 
@@ -1121,10 +1121,10 @@ const variableFlowRateFields = {
 
 export const emitterFloorAreaZod = z.number().gt(0);
 
-const underFloorHeatingSchema = namedWithId.extend({
-	typeOfHeatEmitter: z.literal(typeOfWetDistributionSystemEmitter.underFloorHeating),
+const underfloorHeatingSchema = namedWithId.extend({
+	typeOfHeatEmitter: z.literal(typeOfWetDistributionSystemEmitter.underfloorHeating),
 	productReference: z.string(),
-	areaOfUnderFloorHeating: emitterFloorAreaZod,
+	areaOfUnderfloorHeating: emitterFloorAreaZod,
 });
 
 export const productCountZod = z.int().min(1);
@@ -1146,7 +1146,7 @@ const radiatorSchema = namedWithId.extend({
 export type RadiatorData = z.infer<typeof radiatorSchema>;
 
 const wetDistributionSystemEmittersFields = z.discriminatedUnion("typeOfHeatEmitter", [
-	underFloorHeatingSchema,
+	underfloorHeatingSchema,
 	fanCoilSchema,
 	radiatorSchema,
 ]);
@@ -1157,7 +1157,7 @@ const wetDistributionSystemEmitterDraftSchema = z.object({
 	name: z.string().trim().min(1).optional(),
 	typeOfHeatEmitter: wetDistributionSystemEmitter.optional(),
 	productReference: z.string().optional(),
-	areaOfUnderFloorHeating: emitterFloorAreaZod.optional(),
+	areaOfUnderfloorHeating: emitterFloorAreaZod.optional(),
 	numOfFanCoils: productCountZod.optional(),
 	numOfRadiators: productCountZod.optional(),
 	length: z.number().min(0.001).optional(),
@@ -1218,7 +1218,7 @@ const heatEmittingDataZod = z.discriminatedUnion("typeOfHeatEmitter", [
 	electricStorageHeaterSchema,
 ]);
 
-export type HeatEmittingProductType = Exclude<z.infer<typeof _typeOfHeatEmitter>, "wetDistributionSystem"> | "fanCoil" | "radiator" | "underFloorHeating";
+export type HeatEmittingProductType = Exclude<z.infer<typeof _typeOfHeatEmitter>, "wetDistributionSystem"> | "fanCoil" | "radiator" | "underfloorHeating";
 export type HeatEmittingData = z.infer<typeof heatEmittingDataZod>;
 
 const heatingControlsDataZod = named.extend({
