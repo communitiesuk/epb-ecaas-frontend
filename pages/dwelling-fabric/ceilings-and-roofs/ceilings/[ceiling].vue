@@ -15,7 +15,10 @@ const ceilingId = ceilingData?.data.id ?? uuidv4();
 const model = ref(ceilingData?.data);
 
 const typeOfCeilingOptions = adjacentSpaceTypeOptions("Ceiling");
-
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
 const saveForm = (fields: CeilingData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceCeilings } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
@@ -106,7 +109,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="type"
 			validation="required"
 		/>
-		<template v-if="!!model?.type">
+		<template v-if="hasMounted && !!model?.type">
 			<FormKit
 				id="name"
 				type="govInputText"
@@ -176,7 +179,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</template>
 		</template>
 		<FormKit
-			v-if="model?.type === 'unheatedSpace'"
+			v-if="hasMounted && model?.type === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"

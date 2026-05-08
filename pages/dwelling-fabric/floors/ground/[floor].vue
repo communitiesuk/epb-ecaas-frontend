@@ -12,7 +12,10 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
 const index = getStoreIndex(groundFloorData);
 const floorData = useItemToEdit("floor", groundFloorData);
-
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
 // prepopulate edge insulation width/depth when using old input format (raw number stored in centimetres)
 if (floorData?.data) {
 	const data = floorData.data as Record<string, unknown>;
@@ -277,7 +280,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			data-field="Zone.BuildingElement.*.floor_type"
 		/>
 
-		<template v-if="model?.typeOfGroundFloor === 'Slab_edge_insulation'">
+		<template v-if="hasMounted && model?.typeOfGroundFloor === 'Slab_edge_insulation'">
 			<FormKit
 				id="edgeInsulationType"
 				type="govCheckboxes"
@@ -370,7 +373,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			</template>
 		</template>
 
-		<template v-if="model?.typeOfGroundFloor === 'Suspended_floor'">
+		<template v-if="hasMounted && model?.typeOfGroundFloor === 'Suspended_floor'">
 			<FormKit
 				id="heightOfFloorUpperSurface"
 				type="govInputWithSuffix"
@@ -472,7 +475,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			</FormKit>
 		</template>
 
-		<template v-if="model?.typeOfGroundFloor === 'Heated_basement'">
+		<template v-if="hasMounted && model?.typeOfGroundFloor === 'Heated_basement'">
 			<FormKit
 				id="depthOfBasementFloorBelowGround"
 				type="govInputWithSuffix"
@@ -493,7 +496,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			/>
 		</template>
 
-		<template v-if="model?.typeOfGroundFloor === 'Unheated_basement'">
+		<template v-if="hasMounted && model?.typeOfGroundFloor === 'Unheated_basement'">
 			<FormKit
 				id="thermalTransmittanceOfFloorAboveBasement"
 				type="govInputWithSuffix"
