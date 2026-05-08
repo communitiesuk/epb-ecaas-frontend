@@ -132,10 +132,10 @@ describe("Heat emitter products page", () => {
 		mockRoute.mockReturnValue({
 			params: {
 				heatEmitter: "2",
-				products: "underfloor-heating",
+				products: "under-floor-heating",
 			},
 			query: { emitterIndex: "2" },
-			path: "/2/underfloor-heating",
+			path: "/2/under-floor-heating",
 		});
 		await renderSuspended(Products);
 

@@ -3,7 +3,7 @@ import type { FormKitFrameworkContext } from "@formkit/core";
 import { showErrorState, getErrorMessage } from "#imports";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
-import { isUnderfloorHeatingProduct } from "~/utils/underFloorHeating";
+import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
@@ -48,7 +48,7 @@ function hasModelDetails(
 }
 
 function productReferenceForDetails(product: AnyPcdbProduct): string {
-	if (isConvectorRadiatorProduct(product) || isUnderfloorHeatingProduct(product)) {
+	if (isConvectorRadiatorProduct(product) || isUnderFloorHeatingProduct(product)) {
 		return String(product.ID);
 	}
 	return product.id;
@@ -105,7 +105,7 @@ watch(props.context, async ({ attrs: {
 							<li>Type: <span class="bold">{{ productData.type ?? '-' }}</span></li>
 							<li>Height: <span class="bold">{{ productData.height != null ? `${productData.height} mm` : '-' }}</span></li>
 						</template>
-						<template v-else-if="isUnderfloorHeatingProduct(productData)">
+						<template v-else-if="isUnderFloorHeatingProduct(productData)">
 							<li>System Name: <span class="bold">{{ productData.systemName ?? '-' }}</span></li>
 							<li>Floor Finish Compatibility: <span class="bold">{{ productData.floorFinishCompatibility ?? '-' }}</span></li>
 							<li>Pipe Centres: <span class="bold">{{ productData.pipeCentres != null ? `${productData.pipeCentres} mm` : '-' }}</span></li>

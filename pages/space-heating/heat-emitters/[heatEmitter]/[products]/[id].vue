@@ -5,7 +5,7 @@ import { productTypeMap, typeOfHeatEmitter, type HeatEmittingProductType, type P
 import { heatEmittingProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
 import { getRadiatorHeading, isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
-import { getUnderfloorHeatingHeading, isUnderfloorHeatingProduct } from "~/utils/underFloorHeating";
+import { getUnderFloorHeatingHeading, isUnderFloorHeatingProduct, getUnderFloorHeatingSubtitle } from "~/utils/underFloorHeating";
 
 definePageMeta({ layout: "one-column" });
 
@@ -37,11 +37,11 @@ const { data: { value: data } } = await useFetch<AnyPcdbProduct>(`/api/products/
 
 const product = computed(() => data);
 const radiatorProduct = computed(() => product.value && isConvectorRadiatorProduct(product.value) ? product.value : undefined);
-const underFloorHeatingProduct = computed(() => product.value && isUnderfloorHeatingProduct(product.value) ? product.value : undefined);
+const underFloorHeatingProduct = computed(() => product.value && isUnderFloorHeatingProduct(product.value) ? product.value : undefined);
 const nonRadiatorProduct = computed(() => {
 	if (!data) return undefined;
 	if (isConvectorRadiatorProduct(data)) return undefined;
-	if (isUnderfloorHeatingProduct(data)) return undefined;
+	if (isUnderFloorHeatingProduct(data)) return undefined;
 	return data;
 });
 
@@ -51,7 +51,7 @@ const productHeading = computed(() => {
 	}
 
 	if (underFloorHeatingProduct.value) {
-		return getUnderfloorHeatingHeading(underFloorHeatingProduct.value);
+		return getUnderFloorHeatingHeading(underFloorHeatingProduct.value);
 	}
 
 	if (nonRadiatorProduct.value?.modelName) {
@@ -72,7 +72,7 @@ const productSubtitle = computed(() => {
 	}
 
 	if (underFloorHeatingProduct.value) {
-		return getUnderfloorHeatingSubtitle(underFloorHeatingProduct.value);
+		return getUnderFloorHeatingSubtitle(underFloorHeatingProduct.value);
 	}
 
 	if (radiatorProduct.value) {

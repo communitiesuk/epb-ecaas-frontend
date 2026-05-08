@@ -1,10 +1,10 @@
 import type { UnderFloorHeatingProduct, DisplayProduct, UnderFloorHeatingDisplayProduct, AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
-export function isUnderfloorHeatingProduct(product: AnyPcdbProduct): product is UnderFloorHeatingProduct {
+export function isUnderFloorHeatingProduct(product: AnyPcdbProduct): product is UnderFloorHeatingProduct {
 	return product.technologyType === "UnderFloorHeating";
 }
 
-export function asUnderfloorHeatingDisplayProduct(product: UnderFloorHeatingProduct): DisplayProduct {
+export function asUnderFloorHeatingDisplayProduct(product: UnderFloorHeatingProduct): DisplayProduct {
 	return {
 		displayProduct: true,
 		id: `${product.ID}`,
@@ -15,14 +15,14 @@ export function asUnderfloorHeatingDisplayProduct(product: UnderFloorHeatingProd
 	};
 }
 
-export function isUnderfloorHeatingDisplayProduct(product: DisplayProduct): product is UnderFloorHeatingDisplayProduct {
+export function isUnderFloorHeatingDisplayProduct(product: DisplayProduct): product is UnderFloorHeatingDisplayProduct {
 	return product.technologyType === "UnderFloorHeating";
 }
 
-export function getUnderfloorHeatingHeading(product: UnderFloorHeatingProduct): string {
+export function getUnderFloorHeatingHeading(product: UnderFloorHeatingProduct): string {
 	return product.systemName;
 }
 
-export function getUnderfloorHeatingSubtitle(product: UnderFloorHeatingProduct): string {
+export function getUnderFloorHeatingSubtitle(product: UnderFloorHeatingProduct): string {
 	return `${product.pipeCentres}mm spacing between heating pipes`;
 }

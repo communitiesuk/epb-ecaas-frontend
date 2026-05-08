@@ -577,9 +577,9 @@ describe("Space heating summary page", () => {
 				{
 					id: "ufh-1",
 					name: "Underfloor Heating 1",
-					typeOfHeatEmitter: "underfloorHeating",
+					typeOfHeatEmitter: "underFloorHeating",
 					productReference: "UFH-SMALL",
-					areaOfUnderfloorHeating: 100,
+					areaOfUnderFloorHeating: 100,
 				},
 				{
 					id: "fc-1",

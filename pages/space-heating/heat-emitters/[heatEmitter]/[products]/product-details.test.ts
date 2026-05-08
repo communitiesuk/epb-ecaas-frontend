@@ -216,11 +216,11 @@ describe("Heat pump details", async () => {
 		mockRoute.mockReturnValue({
 			params: {
 				heatEmitter: "2",
-				products: "underfloor-heating",
+				products: "under-floor-heating",
 				id: "101",
 			},
 			query: { emitterIndex: "2" },
-			path: "/2/underfloor-heating/101",
+			path: "/2/under-floor-heating/101",
 		});
 
 		mockFetch.mockReturnValue({

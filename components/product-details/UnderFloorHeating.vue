@@ -18,5 +18,5 @@ const tableData: Record<string, string> = {
 </script>
 
 <template>
-	<ProductDetails id="underfloorHeating" :data="tableData" />
+	<ProductDetails id="underFloorHeating" :data="tableData" />
 </template>
