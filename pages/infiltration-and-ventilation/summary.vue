@@ -9,7 +9,7 @@ const store = useEcaasStore();
 
 const mechanicalVentilationData = store.infiltrationAndVentilation.mechanicalVentilation.data;
 
-const mechanicalVentilationProductData = await useProductReferences(
+const modelNames = await useProductReferences(
 	mechanicalVentilationData,
 	productData => productData.modelName,
 );
@@ -30,7 +30,7 @@ const mechanicalVentilationSummary: SummarySection = {
 			"MVHR location": isMvhr ? mvhrLocation : undefined,
 			...(x.typeOfMechanicalVentilationOptions !== "Intermittent MEV" ? {
 				"Product reference": x.productReference,
-				"Product name": mechanicalVentilationProductData[x.productReference],
+				"Product name": modelNames[x.productReference],
 			} : {}),
 			...((x.typeOfMechanicalVentilationOptions === "MVHR" || x.typeOfMechanicalVentilationOptions === "Centralised continuous MEV") && x.measuredFanPowerAndAirFlowRateKnown ? {
 				"Measured fan power": dim(x.measuredFanPower, "watt"),
