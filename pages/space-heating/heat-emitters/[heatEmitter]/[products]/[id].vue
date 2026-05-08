@@ -66,6 +66,26 @@ const productHeading = computed(() => {
 	return `Product ${params.id}`;
 });
 
+const productSubtitle = computed(() => {
+	if (!data) {
+		return "";
+	}
+
+	if (underFloorHeatingProduct.value) {
+		return getUnderfloorHeatingSubtitle(underFloorHeatingProduct.value);
+	}
+
+	if (radiatorProduct.value) {
+		return getRadiatorSubtitle(radiatorProduct.value);
+	}
+
+	if (nonRadiatorProduct.value?.brandName) {
+		return nonRadiatorProduct.value.brandName;
+	}
+
+	return "";
+});
+
 const backUrl = getUrl(pageId)
 	.replace(":heatEmitter", params.heatEmitter as string);
 
@@ -104,7 +124,7 @@ const selectProduct = () => {
 	</NuxtLink>
 
 	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ productHeading }}</h1>
-	<h2 v-if="nonRadiatorProduct?.brandName" class="govuk-caption-l govuk-!-margin-top-0">{{ nonRadiatorProduct.brandName }}</h2>
+	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ productSubtitle }}</h2>
 
 	<ProductDetailsFanCoil v-if="!!nonRadiatorProduct && heatEmittingType === 'fanCoil'" :product="nonRadiatorProduct" />
 	<ProductDetailsConvectorRadiator v-if="!!radiatorProduct && heatEmittingType === 'radiator'" :product="radiatorProduct" />

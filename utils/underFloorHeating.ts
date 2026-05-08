@@ -20,5 +20,9 @@ export function isUnderfloorHeatingDisplayProduct(product: DisplayProduct): prod
 }
 
 export function getUnderfloorHeatingHeading(product: UnderFloorHeatingProduct): string {
-	return `${product.systemName} (${product.pipeCentres}mm pipe centres)`;
+	return product.systemName;
+}
+
+export function getUnderfloorHeatingSubtitle(product: UnderFloorHeatingProduct): string {
+	return `${product.pipeCentres}mm spacing between heating pipes`;
 }

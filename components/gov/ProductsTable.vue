@@ -13,12 +13,12 @@ const usesRadiatorColumns = computed(() => props.products.some(product => produc
 const usesUnderfloorHeatingColumns = computed(() => props.products.some(product => product.technologyType === "UnderFloorHeating"));
 const primaryColumnLabel = computed(() => {
 	if (usesRadiatorColumns.value) return "Type";
-	if (usesUnderfloorHeatingColumns.value) return "System name";
+	if (usesUnderfloorHeatingColumns.value) return "System";
 	return "Model";
 });
 const secondaryColumnLabel = computed(() => {
 	if (usesRadiatorColumns.value) return "Height (mm)";
-	if (usesUnderfloorHeatingColumns.value) return "Pipe centres (mm)";
+	if (usesUnderfloorHeatingColumns.value) return "Spacing between heating pipes (mm)";
 	return "Model qualifier";
 });
 const primarySortField = computed<ProductSortOption>(() => {
@@ -119,7 +119,7 @@ const secondaryValue = (product: DisplayProduct) => {
 }
 
 .govuk-table__header--model-qualifier {
-	width: 145px;
+	width: 180px;
 }
 
 .govuk-table__cell--select {

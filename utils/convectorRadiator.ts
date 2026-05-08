@@ -19,6 +19,10 @@ export function isConvectorRadiatorDisplayProduct(product: DisplayProduct): prod
 }
 
 export function getRadiatorHeading(product: ConvectorRadiatorProduct): string {
-	const height = product.height != null ? ` ${product.height} mm` : "";
-	return `${product.type}${height}`;
+	return product.type;
+}
+
+export function getRadiatorSubtitle(product: ConvectorRadiatorProduct): string {
+	const height = product.height != null ? `Height ${product.height}mm` : "";
+	return height;
 }

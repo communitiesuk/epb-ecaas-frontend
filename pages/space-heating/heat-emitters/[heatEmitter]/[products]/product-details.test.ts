@@ -207,7 +207,8 @@ describe("Heat pump details", async () => {
 
 		// Assert
 		expect((await screen.findByTestId("convectorRadiator"))).toBeDefined();
-		expect(screen.getByRole("heading", { name: "T33 900 mm" })).toBeDefined();
+		expect(screen.getByRole("heading", { name: "T33" })).toBeDefined();
+		expect(screen.getByText("Height 900mm")).toBeDefined();
 	});
 
 	test("Displays underfloor heating details when product is an underfloor heating system", async () => {
@@ -245,7 +246,8 @@ describe("Heat pump details", async () => {
 		await renderSuspended(ProductDetails);
 
 		// Assert
-		expect((await screen.findByTestId("underfloorHeating"))).toBeDefined();
-		expect(screen.getByRole("heading", { name: "Standard screed floor (250mm pipe centres)" })).toBeDefined();
+		expect((await screen.findByTestId("underFloorHeating"))).toBeDefined();
+		expect(screen.getByRole("heading", { name: "Standard screed floor" })).toBeDefined();
+		expect(screen.getByText("250mm spacing between heating pipes")).toBeDefined();
 	});
 });

@@ -4,14 +4,16 @@ import type { UnderFloorHeatingProduct } from "~/pcdb/pcdb.types";
 const { product: data } = defineProps<{ product: UnderFloorHeatingProduct }>();
 
 const tableData: Record<string, string> = {
-	"System name": show(data.systemName),
-	"Floor finish compatibility": show(data.floorFinishCompatibility),
-	"Pipe centres": dim(data.pipeCentres, "millimetres"),
+	"System": show(data.systemName),
+	"System type": show(data.systemType),
+	"R-value of floor finish": dim(data.floorFinishResistance, "square metre kelvin per watt"),
+	"Spacing between heating pipes": dim(data.pipeCentres, "millimetres"),
+	"Structural floor material description": show(data.structuralFloorMaterial),
 	"Depth of floor structural material": dim(data.depthOfFloorStructuralMaterial, "millimetres"),
-	"Equivalent specific thermal mass": dim(data.equivalentSpecificThermalMass, "kilojoules per square metre per kelvin"),
-	"Floor finish resistance": dim(data.floorFinishResistance, "square metre kelvin per watt"),
-	"Fraction convective": show(data.fracConvective),
-	"System performance factor": show(data.systemPerformanceFactor),
+	"Floor finishes the system is suitable for": show(data.floorFinishCompatibility),
+	"System performance factor": dim(data.systemPerformanceFactor, "watts per square metre kelvin"),
+	"Equivalent specific thermal mass of system": dim(data.equivalentSpecificThermalMass, "kilojoules per square metre per kelvin"),
+	"Convection fraction": show(data.fracConvective),
 };
 </script>
 
