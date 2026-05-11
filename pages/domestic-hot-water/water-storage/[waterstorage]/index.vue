@@ -9,8 +9,13 @@ import type { Product } from "~/pcdb/pcdb.types";
 const title = "Water storage";
 const store = useEcaasStore();
 const route = useRoute();
-
 const { autoSaveElementForm, getStoreIndex } = useForm();
+
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
+
 
 const waterStorageStoreData = store.domesticHotWater.waterStorage.data;
 const index = getStoreIndex(waterStorageStoreData);
@@ -116,10 +121,7 @@ watch(
 		}
 	},
 );
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+
 const heatSourceOptions = new Map(
 	store.domesticHotWater.heatSources.data.map((e) => [
 		e.data.id,

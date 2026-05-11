@@ -8,8 +8,13 @@ import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 const title = "Hot water outlets";
 const store = useEcaasStore();
 const route = useRoute();
-
 const { autoSaveElementForm, getStoreIndex } = useForm();
+
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
+
 
 const hotWaterOutletsStoreData = store.domesticHotWater.hotWaterOutlets.data;
 const index = getStoreIndex(hotWaterOutletsStoreData);
@@ -17,10 +22,7 @@ const hotWaterOutletData = hotWaterOutletsStoreData[index] as EcaasForm<HotWater
 const model = ref(hotWaterOutletData?.data);
 const id = hotWaterOutletData?.data.id ?? uuidv4();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+
 
 const saveForm = (fields: HotWaterOutletsData) => {
 	store.$patch((state) => {
@@ -169,6 +171,7 @@ const heatSourceOptions = new Map(
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovErrorSummary :error-list="errorMessages" test-id="hotWaterOutletErrorSummary"/>
 	<FormKit
+		v-if="hasMounted"
 		v-model="model"
 		type="form"
 		validation-visibility="submit"
@@ -185,7 +188,7 @@ const heatSourceOptions = new Map(
 			validation="required"
 		/>
 		<FormKit
-			v-if="model.typeOfHotWaterOutlet"
+			v-if="model?.typeOfHotWaterOutlet"
 			id="name"
 			type="govInputText"
 			label="Name"

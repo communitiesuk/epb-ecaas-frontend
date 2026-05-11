@@ -8,6 +8,11 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const title = "Primary pipework for hot water";
 const store = useEcaasStore();
 
+const hasMounted = ref(false);	
+onMounted(() => {
+	hasMounted.value = true;
+});
+
 const index = getStoreIndex(store.domesticHotWater.pipework.data);
 const pipeworkData = useItemToEdit("pipework", store.domesticHotWater.pipework.data);
 const model = ref(pipeworkData?.data);
@@ -46,11 +51,6 @@ const saveForm = (fields: PipeworkData) => {
 
 	navigateTo(getUrl("domesticHotWater"));
 };
-
-const hasMounted = ref(false);	
-onMounted(() => {
-	hasMounted.value = true;
-});
 
 autoSaveElementForm<PipeworkData>({
 	model,

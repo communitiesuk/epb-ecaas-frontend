@@ -11,10 +11,12 @@ const store = useEcaasStore();
 const { heatSources: dhwHeatSources } = store.domesticHotWater;
 const { getStoreIndex } = useForm();
 const route = useRoute();
+
 const hasMounted = ref(false);
 onMounted(() => {
 	hasMounted.value = true;
 });
+
 const hotWaterHeatSourceStoreData = store.domesticHotWater.heatSources.data;
 const index = getStoreIndex(hotWaterHeatSourceStoreData);
 const hotWaterHeatSourceData = useItemToEdit("heatSource", hotWaterHeatSourceStoreData);
@@ -366,6 +368,7 @@ const heatSourceOptions = computed(() => {
 			:disabled="hasPackagedProduct(model)"
 		/>
 		<FormKit 
+			v-if="hasMounted"
 			id="heatSourceId"
 			type="govRadios"
 			label="Use a previously added heat source"
