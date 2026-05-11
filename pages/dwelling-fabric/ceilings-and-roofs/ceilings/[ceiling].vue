@@ -9,16 +9,19 @@ const title = "Ceiling";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
+
+
 const index = getStoreIndex(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data);
 const ceilingData = useItemToEdit("ceiling", store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data);
 const ceilingId = ceilingData?.data.id ?? uuidv4();
 const model = ref(ceilingData?.data);
 
 const typeOfCeilingOptions = adjacentSpaceTypeOptions("Ceiling");
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+
 const saveForm = (fields: CeilingData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceCeilings } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;

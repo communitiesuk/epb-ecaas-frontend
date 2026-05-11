@@ -6,6 +6,11 @@ const title = "Internal floor";
 const store = useEcaasStore();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
+
 const internalFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data;
 const index = getStoreIndex(internalFloorData);
 const floorData = useItemToEdit("floor", internalFloorData);
@@ -58,10 +63,7 @@ autoSaveElementForm<InternalFloorData>({
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
 	},
 });
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>

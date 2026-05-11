@@ -5,9 +5,16 @@ import { v4 as uuidv4 } from "uuid";
 import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
+
+
 const title = "Window";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
+
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
 
 const windowsData = store.dwellingFabric.dwellingSpaceWindows.data;
 const window = useItemToEdit("window", windowsData);
@@ -203,7 +210,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			label="Associated wall or roof"
 			help="Select the wall or roof that this door is in. It should have the same orientation and pitch as the door."
 		/>
-		<template v-if="model && (model.taggedItem === 'none' || tagOptions.length === 1)">
+		<template v-if="hasMounted && model && (model.taggedItem === 'none' || tagOptions.length === 1)">
 			<FieldsPitch
 				id="pitch"
 				name="pitch"
@@ -298,7 +305,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			validation="required"
 		/>
 
-		<template v-if="!!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
+		<template v-if="hasMounted && !!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
 			<FormKit
 				id="maximumOpenableArea"
 				type="govInputWithSuffix"
@@ -308,9 +315,6 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				name="maximumOpenableArea"
 				:validation="zodTypeAsFormKitValidation(maxWindowOpenAreaZod)"
 			/>
-		</template>
-
-		<template v-if="!!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
 			<FormKit
 				id="midHeightOpenablePart1"
 				type="govInputWithSuffix"
@@ -369,7 +373,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			validation="required"
 		/>
 		<ShadingSection
-			v-if="model?.hasShading"
+			v-if="hasMounted && model?.hasShading"
 			:index="index"
 			:model="shading"
 			shading-section-type="window"
@@ -387,7 +391,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			validation="required"
 		/>
 		<WindowTreatmentSection
-			v-if="model && model.curtainsOrBlinds"
+			v-if="hasMounted && model && model.curtainsOrBlinds"
 			treatment-section-type="window"
 		/>
 		<div class="govuk-button-group">

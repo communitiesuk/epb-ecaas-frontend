@@ -9,13 +9,16 @@ const title = "Ground floor";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
-const index = getStoreIndex(groundFloorData);
-const floorData = useItemToEdit("floor", groundFloorData);
 const hasMounted = ref(false);
 onMounted(() => {
 	hasMounted.value = true;
 });
+
+
+const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
+const index = getStoreIndex(groundFloorData);
+const floorData = useItemToEdit("floor", groundFloorData);
+
 // prepopulate edge insulation width/depth when using old input format (raw number stored in centimetres)
 if (floorData?.data) {
 	const data = floorData.data as Record<string, unknown>;

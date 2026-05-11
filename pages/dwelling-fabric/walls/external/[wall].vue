@@ -8,6 +8,11 @@ const title = "External wall";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
+
 const externalWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data;
 const wallData = useItemToEdit("wall", externalWallData);
 const wallId = wallData?.data.id ?? uuidv4();
@@ -99,6 +104,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<FieldsPitch
+			v-if="hasMounted"
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
 			data-field="Zone.BuildingElement.*.pitch"

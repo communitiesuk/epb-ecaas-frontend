@@ -9,6 +9,11 @@ const title = "Wall of heated basement";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
+
 const wallOfHeatedBasementData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallOfHeatedBasement?.data;
 const index = getStoreIndex(wallOfHeatedBasementData);
 const wallData = useItemToEdit("wall", wallOfHeatedBasementData);
@@ -149,6 +154,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation="zodTypeAsFormKitValidation(groundPerimeterZod)"
 		/>
 		<FormKit
+			v-if="hasMounted"
 			id="associatedBasementFloorId"
 			:key="basementFloorOptions.size"
 			name="associatedBasementFloorId"
@@ -159,7 +165,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="basementFloorOptions"
 		>
 			<div
-				v-if="!basementFloorOptions.size"
+				v-if=" !basementFloorOptions.size"
 				data-testid="noBasementFloor"
 			>
 				<p class="govuk-error-message">No basement floors added.</p>

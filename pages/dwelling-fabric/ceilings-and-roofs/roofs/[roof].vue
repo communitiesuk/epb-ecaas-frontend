@@ -8,15 +8,18 @@ import { heightOpaqueZod, surfaceAreaOpaqueZod, widthOpaqueZod } from "~/stores/
 const title = "Roof";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
+
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
+
 const roofs = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data;
 const index = getStoreIndex(roofs);
 const roofData = useItemToEdit("roof", roofs);
 const roofId = roofData?.data.id ?? uuidv4();
 const model = ref(roofData?.data);
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+
 type ActiveRoofType = Exclude<RoofType, "unheatedPitched">;
 
 const roofFieldText: Record<ActiveRoofType, {
