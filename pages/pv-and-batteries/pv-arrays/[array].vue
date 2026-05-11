@@ -8,6 +8,11 @@ const title = "PV array";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
+
 const pvArraysStoreData = store.pvAndBatteries.pvArrays.data;
 const index = getStoreIndex(pvArraysStoreData);
 const PvArrayData = useItemToEdit("array", pvArraysStoreData);
@@ -293,7 +298,7 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				validation="required"
 			/>
 			<ShadingSection
-				v-if="model?.hasShading"
+				v-if="hasMounted && model?.hasShading"
 				:index="index"
 				:model="shading"
 				shading-section-type="PV"
