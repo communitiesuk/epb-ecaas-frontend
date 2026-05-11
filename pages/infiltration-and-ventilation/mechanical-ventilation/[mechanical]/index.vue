@@ -17,6 +17,11 @@ const store = useEcaasStore();
 const route = useRoute();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
+
 const mechanicalVentilationStoreData = store.infiltrationAndVentilation.mechanicalVentilation.data;
 const index = getStoreIndex(mechanicalVentilationStoreData);
 const mechanicalVentilationData = useItemToEdit("mechanical", mechanicalVentilationStoreData);
@@ -232,117 +237,117 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
-		/>
-		<FormKit
-			id="typeOfMechanicalVentilationOptions"
-			type="govRadios"
-			:options="ventTypeOptions"
-			label="Type of mechanical ventilation"
-			name="typeOfMechanicalVentilationOptions"
-			validation="required"
-			data-field="InfiltrationVentilation.MechanicalVentilation.vent_type"
-			:disabled="hasPackagedProduct(model!) && !!model.typeOfMechanicalVentilationOptions"
-			@click="() => updateMechanicalVentilation('typeOfMechanicalVentilationOptions')"
-		/>
-		<FormKit
-			v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR'"
-			id="selectMvhr"
-			type="govPcdbProduct"
-			label="Select a product"
-			name="productReference"
-			validation="required"
-			help="Select the mechanical vent type from the PCDB using the button below"
-			:selected-product-reference="'productReference' in model ? model.productReference : null"
-			:selected-product-type="typeOfMechanicalVentilation.mvhr"
-			:page-url="route.fullPath"
-			:page-index="index"
-			:disabled="hasPackagedProduct(model!)"
-		/>
-		<FormKit
-			v-if="model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV'"
-			id="selectCentralisedContinuousMev"
-			type="govPcdbProduct"
-			label="Select a product"
-			name="productReference"
-			validation="required"
-			help="Select the mechanical vent type from the PCDB using the button below"
-			:selected-product-reference="'productReference' in model ? model.productReference : null"
-			:selected-product-type="typeOfMechanicalVentilation.centralisedContinuousMev"
-			:page-url="route.fullPath"
-			:page-index="index"
-		/>
-		<FormKit
-			v-if="model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV'"
-			id="selectDecentralisedContinuousMev"
-			type="govPcdbProduct"
-			label="Select a product"
-			name="productReference"
-			validation="required"
-			help="Select the mechanical vent type from the PCDB using the button below"
-			:selected-product-reference="'productReference' in model ? model.productReference : null"
-			:selected-product-type="typeOfMechanicalVentilation.decentralisedContinuousMev"
-			:page-url="route.fullPath"
-			:page-index="index"
-		/>
-		<template v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR' || model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV'">
+		/>	<template v-if="hasMounted">
 			<FormKit
-				id="measuredFanPowerAndAirFlowRateKnown"
-				type="govBoolean"
-				label="Do you know the measured fan power and air flow rate?"
-				name="measuredFanPowerAndAirFlowRateKnown"
+				id="typeOfMechanicalVentilationOptions"
+				type="govRadios"
+				:options="ventTypeOptions"
+				label="Type of mechanical ventilation"
+				name="typeOfMechanicalVentilationOptions"
 				validation="required"
+				data-field="InfiltrationVentilation.MechanicalVentilation.vent_type"
+				:disabled="hasPackagedProduct(model!) && !!model.typeOfMechanicalVentilationOptions"
+				@click="() => updateMechanicalVentilation('typeOfMechanicalVentilationOptions')"
 			/>
-			<template v-if="('measuredFanPowerAndAirFlowRateKnown' in model && model.measuredFanPowerAndAirFlowRateKnown)">
+			<FormKit
+				v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR'"
+				id="selectMvhr"
+				type="govPcdbProduct"
+				label="Select a product"
+				name="productReference"
+				validation="required"
+				help="Select the mechanical vent type from the PCDB using the button below"
+				:selected-product-reference="'productReference' in model ? model.productReference : null"
+				:selected-product-type="typeOfMechanicalVentilation.mvhr"
+				:page-url="route.fullPath"
+				:page-index="index"
+				:disabled="hasPackagedProduct(model!)"
+			/>
+			<FormKit
+				v-if=" model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV'"
+				id="selectCentralisedContinuousMev"
+				type="govPcdbProduct"
+				label="Select a product"
+				name="productReference"
+				validation="required"
+				help="Select the mechanical vent type from the PCDB using the button below"
+				:selected-product-reference="'productReference' in model ? model.productReference : null"
+				:selected-product-type="typeOfMechanicalVentilation.centralisedContinuousMev"
+				:page-url="route.fullPath"
+				:page-index="index"
+			/>
+			<FormKit
+				v-if="model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV'"
+				id="selectDecentralisedContinuousMev"
+				type="govPcdbProduct"
+				label="Select a product"
+				name="productReference"
+				validation="required"
+				help="Select the mechanical vent type from the PCDB using the button below"
+				:selected-product-reference="'productReference' in model ? model.productReference : null"
+				:selected-product-type="typeOfMechanicalVentilation.decentralisedContinuousMev"
+				:page-url="route.fullPath"
+				:page-index="index"
+			/>
+	
+			<template v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR' || model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV'">
 				<FormKit
-					id="measuredFanPower"
-					type="govInputWithSuffix"
-					label="Measured fan power"
-					suffix-text="W"
-					name="measuredFanPower"
-					validation="required | number"
+					id="measuredFanPowerAndAirFlowRateKnown"
+					type="govBoolean"
+					label="Do you know the measured fan power and air flow rate?"
+					name="measuredFanPowerAndAirFlowRateKnown"
+					validation="required"
 				/>
+				<template v-if="('measuredFanPowerAndAirFlowRateKnown' in model && model.measuredFanPowerAndAirFlowRateKnown)">
+					<FormKit
+						id="measuredFanPower"
+						type="govInputWithSuffix"
+						label="Measured fan power"
+						suffix-text="W"
+						name="measuredFanPower"
+						validation="required | number"
+					/>
+					<FormKit
+						id="measuredAirFlowRate"
+						type="govInputWithSuffix"
+						label="Measured air flow rate"
+						suffix-text="litres per second"
+						name="measuredAirFlowRate"
+						validation="required | number"
+					/>
+				</template>
+			</template>
+			<template v-if="model?.typeOfMechanicalVentilationOptions === 'Intermittent MEV'">
 				<FormKit
-					id="measuredAirFlowRate"
+					id="specificFanPower"
 					type="govInputWithSuffix"
-					label="Measured air flow rate"
-					suffix-text="litres per second"
-					name="measuredAirFlowRate"
+					label="Specific fan power"
+					suffix-text="W/(l/s)"
+					name="specificFanPower"
 					validation="required | number"
 				/>
 			</template>
-		</template>
-		<template v-if="model?.typeOfMechanicalVentilationOptions === 'Intermittent MEV'">
 			<FormKit
-				id="specificFanPower"
-				type="govInputWithSuffix"
-				label="Specific fan power"
-				suffix-text="W/(l/s)"
-				name="specificFanPower"
-				validation="required | number"
-			/>
-		</template>
-		<FormKit
-			id="airFlowRate"
-			name="airFlowRate"
-			label="Design air flow rate"
-			help="Enter the required design air flow rate that will be supplied to or extracted from the ventilation zone by the system. Typically between 10 and 50 l/s."
-			type="govInputWithUnit"
-			:unit="litrePerSecond"
-			validation="required"
-			data-field="InfiltrationVentilation.MechanicalVentilation.design_outdoor_air_flow_rate"
-		/>
-		<template v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR'">
-			<FormKit
-				id="mvhrLocation"
-				type="govRadios"
-				:options="mvhrLocationOptions"
-				label="MVHR location"
-				help="Select whether the MVHR unit is located inside or outside the thermal envelope"
-				name="mvhrLocation"
+				id="airFlowRate"
+				name="airFlowRate"
+				label="Design air flow rate"
+				help="Enter the required design air flow rate that will be supplied to or extracted from the ventilation zone by the system. Typically between 10 and 50 l/s."
+				type="govInputWithUnit"
+				:unit="litrePerSecond"
 				validation="required"
-				data-field="InfiltrationVentilation.MechanicalVentilation.mvhr_location"
+				data-field="InfiltrationVentilation.MechanicalVentilation.design_outdoor_air_flow_rate"
 			/>
-			<ClientOnly>
+			<template v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR'">
+				<FormKit
+					id="mvhrLocation"
+					type="govRadios"
+					:options="mvhrLocationOptions"
+					label="MVHR location"
+					help="Select whether the MVHR unit is located inside or outside the thermal envelope"
+					name="mvhrLocation"
+					validation="required"
+					data-field="InfiltrationVentilation.MechanicalVentilation.mvhr_location"
+				/>
 				<FormKit
 					v-if="associatedItemOptions.length"
 					id="associatedItemId"
@@ -353,89 +358,88 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					name="associatedItemId"
 					validation="required"
 				/>
-			</ClientOnly>
-			<template v-if="associatedItemOptions.length <= 1 || (model && 'associatedItemId' in model && model.associatedItemId === 'none')">
-				<FieldsPitch label="Pitch of vent" help="Enter the tilt angle of the external surface of the vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors." />
-				<FieldsOrientation label="Orientation of vent" help="Enter the orientation of the vent's external surface" />
+
+				<template v-if="associatedItemOptions.length <= 1 || (model && 'associatedItemId' in model && model.associatedItemId === 'none')">
+					<FieldsPitch label="Pitch of vent" help="Enter the tilt angle of the external surface of the vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors." />
+					<FieldsOrientation label="Orientation of vent" help="Enter the orientation of the vent's external surface" />
+				</template>
+				<FormKit
+					id="installedUnderApprovedScheme"
+					type="govBoolean"
+					label="Is the vent installed under an approved installation scheme?"
+					name="installedUnderApprovedScheme"
+					validation="required"
+				/>
+				<FormKit
+					id="midHeightOfAirFlowPathForIntake"
+					type="govInputWithSuffix"
+					label="Mid-height of air flow path for intake"
+					suffix-text="m"
+					help="Enter the mid-height of the path through which the air flows in the intake, measured from the bottom of the ventilation zone to the middle of the intake."
+					name="midHeightOfAirFlowPathForIntake"
+					validation="required | min:0"
+					data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_intake">
+					<FieldsMidHeightOfAirflowPathGuidance />
+				</FormKit>
+				<Orientation
+					id="orientationOfIntake"
+					name="orientationOfIntake"
+					label="Orientation of intake"
+					help="Enter the orientation of the vent which takes in the air"
+					data-field="InfiltrationVentilation.MechanicalVentilation.orientation_of_intake"
+				/>
+				<Pitch
+					id="pitchOfIntake"
+					name="pitchOfIntake"
+					label="Pitch of intake"
+					help="Enter the pitch of the vent which takes in the air. 0° meant the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
+					data-field="InfiltrationVentilation.MechanicalVentilation.pitch_of_intake"
+				/>
+				<FormKit
+					id="midHeightOfAirFlowPathForExhaust"
+					type="govInputWithSuffix"
+					label="Mid-height of air flow path for exhaust"
+					suffix-text="m"
+					help="Enter the mid-height of the path through which the air flows in the exhaust, measured from the bottom of the ventilation zone to the middle of the exhaust."
+					name="midHeightOfAirFlowPathForExhaust"
+					validation="required | min:0"
+					data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_exhaust">
+					<FieldsMidHeightOfAirflowPathGuidance />
+				</FormKit>
+				<Orientation
+					id="orientationOfExhaust"
+					name="orientationOfExhaust"
+					label="Orientation of exhaust"
+					help="Enter the orientation of the exhaust vent"
+					data-field="InfiltrationVentilation.MechanicalVentilation.orientation_of_exhaust"
+				/>
+				<Pitch
+					id="pitchOfExhaust"
+					name="pitchOfExhaust"
+					label="Pitch of exhaust"
+					help="Enter the pitch of the exhaust vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
+					data-field="InfiltrationVentilation.MechanicalVentilation.pitch_of_exhaust"
+				/>
 			</template>
-			<FormKit
-				id="installedUnderApprovedScheme"
-				type="govBoolean"
-				label="Is the vent installed under an approved installation scheme?"
-				name="installedUnderApprovedScheme"
-				validation="required"
-			/>
-			<FormKit
-				id="midHeightOfAirFlowPathForIntake"
-				type="govInputWithSuffix"
-				label="Mid-height of air flow path for intake"
-				suffix-text="m"
-				help="Enter the mid-height of the path through which the air flows in the intake, measured from the bottom of the ventilation zone to the middle of the intake."
-				name="midHeightOfAirFlowPathForIntake"
-				validation="required | min:0"
-				data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_intake">
-				<FieldsMidHeightOfAirflowPathGuidance />
-			</FormKit>
-			<Orientation
-				id="orientationOfIntake"
-				name="orientationOfIntake"
-				label="Orientation of intake"
-				help="Enter the orientation of the vent which takes in the air"
-				data-field="InfiltrationVentilation.MechanicalVentilation.orientation_of_intake"
-			/>
-			<Pitch
-				id="pitchOfIntake"
-				name="pitchOfIntake"
-				label="Pitch of intake"
-				help="Enter the pitch of the vent which takes in the air. 0° meant the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
-				data-field="InfiltrationVentilation.MechanicalVentilation.pitch_of_intake"
-			/>
-			<FormKit
-				id="midHeightOfAirFlowPathForExhaust"
-				type="govInputWithSuffix"
-				label="Mid-height of air flow path for exhaust"
-				suffix-text="m"
-				help="Enter the mid-height of the path through which the air flows in the exhaust, measured from the bottom of the ventilation zone to the middle of the exhaust."
-				name="midHeightOfAirFlowPathForExhaust"
-				validation="required | min:0"
-				data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_exhaust">
-				<FieldsMidHeightOfAirflowPathGuidance />
-			</FormKit>
-			<Orientation
-				id="orientationOfExhaust"
-				name="orientationOfExhaust"
-				label="Orientation of exhaust"
-				help="Enter the orientation of the exhaust vent"
-				data-field="InfiltrationVentilation.MechanicalVentilation.orientation_of_exhaust"
-			/>
-			<Pitch
-				id="pitchOfExhaust"
-				name="pitchOfExhaust"
-				label="Pitch of exhaust"
-				help="Enter the pitch of the exhaust vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
-				data-field="InfiltrationVentilation.MechanicalVentilation.pitch_of_exhaust"
-			/>
-		</template>
-		<template v-if="model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV'">
-			<FormKit
-				id="installationType"
-				type="govRadios"
-				:options="installationTypeOptions"
-				label="Where is the vent installed?"
-				name="installationType"
-				validation="required"
-			/>
-			<FormKit
-				id="installationLocation"
-				type="govRadios"
-				:options="installationLocationOptions"
-				label="Room where the vent is installed"
-				name="installationLocation"
-				validation="required"
-			/>
-		</template>
-		<template v-if="model?.typeOfMechanicalVentilationOptions !== 'MVHR'">
-			<ClientOnly>
+			<template v-if="model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV'">
+				<FormKit
+					id="installationType"
+					type="govRadios"
+					:options="installationTypeOptions"
+					label="Where is the vent installed?"
+					name="installationType"
+					validation="required"
+				/>
+				<FormKit
+					id="installationLocation"
+					type="govRadios"
+					:options="installationLocationOptions"
+					label="Room where the vent is installed"
+					name="installationLocation"
+					validation="required"
+				/>
+			</template>
+			<template v-if="model?.typeOfMechanicalVentilationOptions !== 'MVHR'">
 				<FormKit
 					v-if="associatedItemOptions.length > 1"
 					id="associatedItemId"
@@ -446,30 +450,31 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					name="associatedItemId"
 					validation="required"
 				/>
-			</ClientOnly>
-			<template v-if="associatedItemOptions.length <= 1 || (model && 'associatedItemId' in model && model.associatedItemId === 'none')">
-				<FieldsPitch label="Pitch of vent" help="Enter the tilt angle of the external surface of the vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors." />
-				<FieldsOrientation label="Orientation of vent" help="Enter the orientation of the vent's external surface" />
+				<template v-if="associatedItemOptions.length <= 1 || (model && 'associatedItemId' in model && model.associatedItemId === 'none')">
+					<FieldsPitch label="Pitch of vent" help="Enter the tilt angle of the external surface of the vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors." />
+					<FieldsOrientation label="Orientation of vent" help="Enter the orientation of the vent's external surface" />
+				</template>
+				<FormKit
+					id="midHeightOfAirFlowPath"
+					type="govInputWithSuffix"
+					label="Mid-height of airflow path"
+					help="Enter the height from the ventilation zone base height to the midpoint where the air flows through the vent"
+					suffix-text="m"
+					name="midHeightOfAirFlowPath"
+					validation="required | number"
+				/>
 			</template>
-			<FormKit
-				id="midHeightOfAirFlowPath"
-				type="govInputWithSuffix"
-				label="Mid-height of airflow path"
-				help="Enter the height from the ventilation zone base height to the midpoint where the air flows through the vent"
-				suffix-text="m"
-				name="midHeightOfAirFlowPath"
-				validation="required | number"
-			/>
+			<template v-if="model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV' || model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV'">
+				<FormKit
+					id="installedUnderApprovedScheme"
+					type="govBoolean"
+					label="Is the vent installed under an approved installation scheme?"
+					name="installedUnderApprovedScheme"
+					validation="required"
+				/>
+			</template>
 		</template>
-		<template v-if="model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV' || model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV'">
-			<FormKit
-				id="installedUnderApprovedScheme"
-				type="govBoolean"
-				label="Is the vent installed under an approved installation scheme?"
-				name="installedUnderApprovedScheme"
-				validation="required"
-			/>
-		</template>
+
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('mechanicalVentilation')" secondary>Save progress</GovButton>
