@@ -4,6 +4,10 @@ import { displayHeatEmitterType, getUrl, type HeatingControlData } from "#import
 const title = "Heating controls";
 const store = useEcaasStore();
 
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
 
 const heatingControlOptions = {
 	separateTemperatureControl: "Separate temperature control",
@@ -146,6 +150,10 @@ watch(model, async (newData, initialData) => {
 		return;
 	};
 
+	if (!newData.heatingControlType) {
+		return;
+	}
+
 	store.$patch(state => {
 		state.spaceHeating.heatingControls.data[0] = {
 			data: {
@@ -236,7 +244,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</table>
 		</GovDetails></FormKit>
 		<div
-			v-if="heatEmitters.length > 0"
+			v-if="hasMounted && heatEmitters.length > 0"
 			id="heatEmitterRanking"
 			data-testid="heatEmitterRanking"
 			class="govuk-form-group">

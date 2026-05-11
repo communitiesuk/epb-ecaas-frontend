@@ -121,6 +121,11 @@ function updateHeatSource(type: string) {
 const boilers = heatSourceStoreData
 	.filter(x => x.data.typeOfHeatSource === "boiler")
 	.map(x => [x.data.id, x.data.name] as [string, string]);
+
+const hasMounted = ref(false);
+onMounted(() => {
+	hasMounted.value = true;
+});
 </script>
 
 <template>
@@ -165,8 +170,9 @@ const boilers = heatSourceStoreData
 			validation="required"
 			:disabled="hasPackagedProduct(model)"
 		/>
+
 		<HeatPumpSection
-			v-if="model?.typeOfHeatSource === 'heatPump'"
+			v-if="hasMounted && model?.typeOfHeatSource === 'heatPump'"
 			:model="(model as HeatPumpModelType)"
 			:index="index"
 			:boilers="boilers"
@@ -175,29 +181,30 @@ const boilers = heatSourceStoreData
 			@update-heat-pump-model="updateHeatSource"
 		/>
 		<BoilerSection
-			v-if="model?.typeOfHeatSource === 'boiler'"
+			v-if="hasMounted && model?.typeOfHeatSource === 'boiler'"
 			:model="(model as BoilerModelType)"
 			:index="index"
 			page="space heating"
 			@update-boiler-model="updateHeatSource" />
 		<HeatNetworkSection
-			v-if="model?.typeOfHeatSource === 'heatNetwork'"
+			v-if="hasMounted && model?.typeOfHeatSource === 'heatNetwork'"
 			:model="(model as HeatNetworkModelType)"
 			:index="index"
 			section="spaceHeating"
 			@update-heat-network-model="updateHeatSource" />
 		<HeatBatterySection
-			v-if="model?.typeOfHeatSource === 'heatBattery'"
+			v-if="hasMounted && model?.typeOfHeatSource === 'heatBattery'"
 			:model="(model as HeatBatteryModelType)"
 			:index="index"
 			page="space heating"
 			@update-heat-battery-model="updateHeatSource" />
 		<HeatInterfaceUnitSection
-			v-if="model?.typeOfHeatSource === 'heatInterfaceUnit'"
+			v-if="hasMounted && model?.typeOfHeatSource === 'heatInterfaceUnit'"
 			:model="model as HeatInterfaceUnitModelType" 
 			:index="index"
 			page="space heating"
 			@update-heat-interface-unit-model="updateHeatSource" />	
+	
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('spaceHeating')" secondary test-id="saveProgress">Save progress</GovButton>
