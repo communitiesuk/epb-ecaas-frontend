@@ -403,7 +403,7 @@ const hotWaterCylinderSummary: SummarySection = {
 		return {
 			"Name": show(hwCylData.name),
 			"Storage cylinder volume": "storageCylinderVolume" in hwCylData ? dim(hwCylData.storageCylinderVolume, "litres") : emptyValueRendering,
-			"Daily energy loss": "dailyEnergyLoss" in hwCylData ? dim(hwCylData.dailyEnergyLoss, "kilowatt-hour") : emptyValueRendering,
+			"Daily energy loss": "dailyEnergyLoss" in hwCylData ? dim(hwCylData.dailyEnergyLoss, "kilowatt hours per day") : emptyValueRendering,
 			"Heat source": show(getHWHeatSourceName(hwCylData.dhwHeatSourceId)),
 			"Area of heat exchanger installed": "areaOfHeatExchanger" in hwCylData ? dim(hwCylData.areaOfHeatExchanger, "metres square") : emptyValueRendering,
 			"Heater position in the cylinder": "heaterPosition" in hwCylData ? show(hwCylData.heaterPosition) : emptyValueRendering,

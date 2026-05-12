@@ -14,3 +14,5 @@ export const kilowattPeak = asUnit("kilowatt peak");
 export const watt = asUnit("watt");
 
 export const wattsPerLitrePerSecond = asUnit("watts per litre per second");
+
+export const kilowattHoursPerDay = asUnit("kilowatt hours per day");

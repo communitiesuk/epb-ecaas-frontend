@@ -223,7 +223,7 @@ const heatSourceTypes = new Map(
 				help="Enter the estimated energy lost from the tank per day"
 				name="dailyEnergyLoss"
 				validation="required | number | min:0 | max:200"
-				suffix-text="kWh"
+				suffix-text="kWh/day"
 				data-field="HotWaterSource['hw cylinder'].daily_losses"
 				:disabled="hasPackagedProduct(model)"
 			/>

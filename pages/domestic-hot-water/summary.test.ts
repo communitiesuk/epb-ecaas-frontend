@@ -4,7 +4,7 @@ import { screen, within } from "@testing-library/vue";
 import { litre } from "~/utils/units/volume";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { displayCamelToSentenceCase } from "~/utils/display";
-import { kilowatt, kilowattHour } from "~/utils/units/power";
+import { kilowatt, kilowattHoursPerDay } from "~/utils/units/power";
 import { metresSquare } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
@@ -161,7 +161,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Hot water cylinder",
 				"Storage cylinder volume": `5 ${litre.suffix}`,
-				"Daily energy loss": `1 ${kilowattHour.suffix}`,
+				"Daily energy loss": `1 ${kilowattHoursPerDay.suffix}`,
 				"Heat source": "Heat pump",
 				"Area of heat exchanger installed": `2.5 ${metresSquare.suffix}`,
 				"Heater position in the cylinder": "0.8",
