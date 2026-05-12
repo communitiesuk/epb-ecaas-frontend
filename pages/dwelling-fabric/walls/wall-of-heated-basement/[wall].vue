@@ -125,7 +125,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal resistance"
-			help="Enter the thermal resistance of all layers in the floor construction"
+			help="Enter the thermal resistance of all layers in the wall construction"
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50"
 
