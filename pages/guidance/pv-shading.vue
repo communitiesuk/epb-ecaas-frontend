@@ -51,7 +51,7 @@ const title = "Calculating distant shading";
 	<p class="govuk-body">The diagram below shows how to measure the inputs required for side fins and overhangs.</p>
 	<img src="/img/measure-side-fins-and-overhangs.png" alt="Measure side fins and overhangs" class="govuk-!-margin-bottom-3">
 	<h2 class="govuk-heading-m">Measuring obstacles</h2>
-	<p class="govuk-body">The diagram below shows how to measure the inputs required for side fins and overhangs.</p>
+	<p class="govuk-body">The diagram below shows how to measure the inputs required for obstacles.</p>
 	<img src="/img/measure-obstacles.png" alt="Measure inputs required for obstacles" class="govuk-!-margin-bottom-3">
 
 </template>
