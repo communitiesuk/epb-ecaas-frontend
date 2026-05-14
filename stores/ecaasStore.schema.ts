@@ -5,7 +5,7 @@ import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, S
 import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/schema/aliases";
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
-import { zodUnit } from "~/utils/units/zod";
+import { addConstraints, zodUnit } from "~/utils/units/zod";
 import { arealHeatCapacityZod, batteryLocationZod, boilerLocationZod, colourZod, ductShapeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
 
@@ -196,8 +196,8 @@ export const groundSurfaceAreaZod = z.number().min(5).max(10000);
 export const groundTotalAreaZod = z.number().min(5);
 export const groundPerimeterZod = z.number().min(0).max(1000);
 
-export const thicknessOfWallsZod = zodUnit("length", { min: 0, max: 100 });
-
+export const thicknessOfWallsZod = addConstraints(zodUnit("length"), { min: 0, max: 10000 });
+export const thicknessOfGroundFloorWallsZod = addConstraints(zodUnit("length"), { min: 0, max: 100 });
 const baseGroundFloorData = named.extend({
 	surfaceArea: groundSurfaceAreaZod,
 	totalArea: groundTotalAreaZod,
@@ -207,7 +207,7 @@ const baseGroundFloorData = named.extend({
 	massDistributionClass,
 	perimeter: groundPerimeterZod,
 	psiOfWallJunction: z.number().min(0).max(2),
-	thicknessOfWalls: thicknessOfWallsZod,
+	thicknessOfWalls: thicknessOfGroundFloorWallsZod,
 });
 
 const slabEdgeInsulationBase = baseGroundFloorData.extend({
