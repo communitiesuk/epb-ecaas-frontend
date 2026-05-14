@@ -66,5 +66,16 @@ describe("zodUnit", () => {
 		it("does not allow both max and lt", () => {
 			expect(() => addConstraints(zodUnit("length"), { max: 10, lt: 10 })).toThrowError();
 		});
+		it("adds constraints when applied multiple times", () => {
+			const base = zodUnit("length");
+			const withMax = addConstraints(base, { max: 10 });
+			const withMaxAndGreaterThan = addConstraints(withMax, { gt: 1 });
+
+			expect(withMaxAndGreaterThan.parse(unitValue(5, metre))).toBeTruthy();
+			expect(() => withMaxAndGreaterThan.parse(unitValue(10, metre))).toBeTruthy();
+			expect(() => withMaxAndGreaterThan.parse(unitValue(0, metre))).toThrowError();
+			expect(() => withMaxAndGreaterThan.parse(unitValue(1, metre))).toThrowError();
+			expect(() => withMaxAndGreaterThan.parse(unitValue(11, metre))).toThrowError();
+		});
 	});
 });

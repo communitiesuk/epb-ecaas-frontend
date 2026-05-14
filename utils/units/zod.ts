@@ -20,12 +20,12 @@ export function zodUnit<T extends DimensionName>(dimension: T): ZodObjectForDime
 
 export function addConstraints<T extends DimensionName>(schema: ZodObjectForDimension<T>, constraints: ConstraintsForDimension = {}): ZodObjectForDimension<T> {
 	validateConstraints(constraints);
-	const amount = createAmountSchema(constraints);
+	const amount = createAmountSchema(constraints, schema.shape.amount);
 	return schema.extend({ amount }) as ZodObjectForDimension<T>;
 }
 
-function createAmountSchema(constraints: ConstraintsForDimension = {}): z.ZodNumber {
-	let amountSchema = z.number();
+function createAmountSchema(constraints: ConstraintsForDimension = {}, baseSchema: z.ZodNumber = z.number()): z.ZodNumber {
+	let amountSchema = baseSchema;
 	if (!constraints) return amountSchema;
 	if (constraints.min !== undefined) {
 		amountSchema = amountSchema.min(constraints.min);
