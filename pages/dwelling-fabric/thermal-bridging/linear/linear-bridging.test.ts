@@ -26,12 +26,12 @@ describe("linear thermal bridges", () => {
 	});
 
 	const populateValidForm = async () => {
-		await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
+		await user.click(screen.getByTestId("typeOfThermalBridge_E1"));
 		await user.type(screen.getByTestId("linearThermalTransmittance"), "1");
 		await user.type(screen.getByTestId("length"), "2");
 		await user.tab();
 	};
-	
+
 	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(LinearBridging, {
 			route: {
@@ -64,7 +64,7 @@ describe("linear thermal bridges", () => {
 			},
 		});
 
-		expect((await screen.findByTestId<HTMLSelectElement>("typeOfThermalBridge")).value).toBe("E1");
+		expect((await screen.findByTestId<HTMLInputElement>("typeOfThermalBridge_E1")).checked).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("linearThermalTransmittance")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("length")).value).toBe("2");
 	});
@@ -79,7 +79,7 @@ describe("linear thermal bridges", () => {
 	it("shows required error messages when only type of thermal bridge is submitted", async () => {
 		await renderSuspended(LinearBridging);
 
-		await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
+		await user.click(screen.getByTestId("typeOfThermalBridge_E1"));
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("linearThermalTransmittance_error"))).toBeDefined();
@@ -96,7 +96,7 @@ describe("linear thermal bridges", () => {
 
 	it("navigates to thermal bridging page when valid form is completed", async () => {
 		await renderSuspended(LinearBridging);
-	
+
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -120,7 +120,7 @@ describe("linear thermal bridges", () => {
 				},
 			});
 
-			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
+			await user.click(screen.getByTestId("typeOfThermalBridge_E1"));
 			await user.tab();
 
 			const actualLinearBridge = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[0]!;
@@ -135,7 +135,7 @@ describe("linear thermal bridges", () => {
 				},
 			});
 
-			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
+			await user.click(screen.getByTestId("typeOfThermalBridge_E1"));
 			await user.type(screen.getByTestId("linearThermalTransmittance"), "5");
 			await user.tab();
 
@@ -163,7 +163,7 @@ describe("linear thermal bridges", () => {
 				},
 			});
 
-			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
+			await user.click(screen.getByTestId("typeOfThermalBridge_E1"));
 			await user.clear(screen.getByTestId("length"));
 			await user.clear(screen.getByTestId("linearThermalTransmittance"));
 			await user.tab();
@@ -195,7 +195,7 @@ describe("linear thermal bridges", () => {
 				},
 			});
 
-			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
+			await user.click(screen.getByTestId("typeOfThermalBridge_E1"));
 			await user.type(screen.getByTestId("length"), "10");
 			await user.tab();
 
@@ -205,28 +205,54 @@ describe("linear thermal bridges", () => {
 			expect(linearBridging.complete).not.toBe(true);
 		});
 
-		it("updates the name to the default name once the user unselects the type of thermal bridge", async () => {
+		it("updates the name to the selected default name when the user changes the type of thermal bridge", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
 						dwellingSpaceLinearThermalBridges: {
-							data: [{ ...state }],
+							data: [{
+								data: {
+									...state.data,
+									name: "",
+								},
+							}],
 						},
 					},
 				},
 			});
-			
+
 			await renderSuspended(LinearBridging, {
 				route: {
 					params: { linear: "0" },
 				},
 			});
 
-			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "");
+			await user.click(screen.getByTestId("typeOfThermalBridge_E2"));
 			await user.tab();
 
 			const linearBridging = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges;
-			expect(linearBridging.data[0]!.data.name).toBe("Linear thermal bridge");
+			expect(linearBridging.data[0]!.data.name).toBe("E2: Other lintels (including other steel lintels)");
+		});
+
+		it("updates the type of thermal bridge when the user changes the selection", async () => {
+			await renderSuspended(LinearBridging, {
+				route: {
+					params: { linear: "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfThermalBridge_E1"));
+			await user.tab();
+
+			const linearBridging = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges;
+			expect(linearBridging.data[0]!.data.typeOfThermalBridge).toBe("E1");
+			expect(linearBridging.data[0]!.data.name).toBe("E1: Steel lintel with perforated steel base plate");
+
+			await user.click(screen.getByTestId("typeOfThermalBridge_E2"));
+			await user.tab();
+
+			expect(linearBridging.data[0]!.data.typeOfThermalBridge).toBe("E2");
+			expect(linearBridging.data[0]!.data.name).toBe("E2: Other lintels (including other steel lintels)");
 		});
 	});
 });

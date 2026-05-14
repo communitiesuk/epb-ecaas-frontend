@@ -304,7 +304,7 @@ describe("thermal bridges", () => {
 
 			it("marks each thermal bridging section as complete when button is clicked", async () => {
 				const { dwellingSpaceLinearThermalBridges, dwellingSpacePointThermalBridges } =
-        store.dwellingFabric.dwellingSpaceThermalBridging;
+					store.dwellingFabric.dwellingSpaceThermalBridging;
 
 				expect(dwellingSpaceLinearThermalBridges?.complete).toBe(true);
 				expect(dwellingSpacePointThermalBridges?.complete).toBe(true);
@@ -315,7 +315,7 @@ describe("thermal bridges", () => {
 				await user.click(screen.getByTestId("pointThermalBridges_remove_0"));
 
 				const { dwellingSpaceLinearThermalBridges, dwellingSpacePointThermalBridges } =
-        store.dwellingFabric.dwellingSpaceThermalBridging;
+					store.dwellingFabric.dwellingSpaceThermalBridging;
 
 				expect(dwellingSpaceLinearThermalBridges?.complete).toBe(false);
 				expect(dwellingSpacePointThermalBridges?.complete).toBe(false);
@@ -326,7 +326,7 @@ describe("thermal bridges", () => {
 				await user.click(screen.getByTestId("pointThermalBridges_duplicate_0"));
 
 				const { dwellingSpaceLinearThermalBridges, dwellingSpacePointThermalBridges } =
-        store.dwellingFabric.dwellingSpaceThermalBridging;
+					store.dwellingFabric.dwellingSpaceThermalBridging;
 
 				expect(dwellingSpaceLinearThermalBridges?.complete).toBe(false);
 				expect(dwellingSpacePointThermalBridges?.complete).toBe(false);
@@ -341,11 +341,11 @@ describe("thermal bridges", () => {
 				},
 			});
 
-			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
+			await user.click(screen.getByLabelText("E1: Steel lintel with perforated steel base plate"));
 			await user.type(screen.getByTestId("length"), "13");
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
-			
+
 			expect(
 				store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete,
 			).toBe(false);
@@ -359,7 +359,7 @@ describe("thermal bridges", () => {
 				},
 			});
 
-			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
+			await user.click(screen.getByLabelText("E1: Steel lintel with perforated steel base plate"));
 			await user.clear(screen.getByTestId("length"));
 			await user.type(screen.getByTestId("length"), "13");
 			await user.tab();
