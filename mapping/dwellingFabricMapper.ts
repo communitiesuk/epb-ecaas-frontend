@@ -2,7 +2,7 @@ import type { SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaTher
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from "deepmerge";
 import { defaultZoneName } from "./common";
-import { asMetres } from "../utils/units/length";
+import { asMetres, type Length } from "../utils/units/length";
 
 
 function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
@@ -36,6 +36,10 @@ export function mapLivingSpaceFabricData(
 
 
 const suffixName = (name: string, suffix: string | number) => `${name} (${suffix})`;
+
+function mapLegacyMillimetresToMetres(value: number | Length): number {
+	return typeof value === "number" ? value / 1000 : asMetres(value);
+}
 
 export function mapZoneParametersData(
 	state: ResolvedState,
@@ -134,7 +138,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
-					thickness_walls: x.thicknessOfWalls / 1000,
+					thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 					floor_type: x.typeOfGroundFloor,
 					edge_insulation: mapEdgeInsulation(x),
 				};
@@ -151,7 +155,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
-					thickness_walls: x.thicknessOfWalls / 1000,
+					thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 					floor_type: x.typeOfGroundFloor,
 				};
 				break;
@@ -167,7 +171,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
-					thickness_walls: x.thicknessOfWalls / 1000,
+					thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 					floor_type: x.typeOfGroundFloor,
 					height_upper_surface: x.heightOfFloorUpperSurface / 1000,
 					area_per_perimeter_vent: x.ventilationOpeningsArea / 1e6,
@@ -188,7 +192,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
-					thickness_walls: x.thicknessOfWalls / 1000,
+					thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 					floor_type: x.typeOfGroundFloor,
 					depth_basement_floor: x.depthOfBasementFloorBelowGround,
 					thermal_resist_walls_base: x.thermalResistanceOfBasementWalls,
@@ -206,7 +210,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
-					thickness_walls: x.thicknessOfWalls / 1000,
+					thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 					floor_type: x.typeOfGroundFloor,
 					height_basement_walls: x.heightOfBasementWallsAboveGround,
 					thermal_transm_walls: x.thermalTransmittanceOfWallsAboveGround,
@@ -280,7 +284,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 				u_value: x.uValue,
 				total_area: x.totalArea,
 				floor_type: "Unheated_basement",
-				thickness_walls: x.thicknessOfWalls / 1000,
+				thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 				perimeter: x.perimeter,
 				psi_wall_floor_junc: x.psiOfWallJunction,
 				thermal_resistance_floor_construction: x.thermalResistance,
@@ -317,7 +321,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 				depth_basement_floor: x.depthOfBasementFloor,
 				perimeter: 0, // see EC-1347
 				psi_wall_floor_junc: x.psiOfWallJunction,
-				thickness_walls: x.thicknessOfWalls / 1000,
+				thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 				floor_type: "Heated_basement",
 				thermal_resistance_construction: x.thermalResistance,
 				thermal_resist_walls_base: wallOfHeatedBasement?.thermalResistance,
@@ -441,7 +445,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				depth_basement_floor: floorOfHeatedBasement.depthOfBasementFloor,
 				perimeter: wall.perimeter,
 				psi_wall_floor_junc: floorOfHeatedBasement.psiOfWallJunction,
-				thickness_walls: floorOfHeatedBasement.thicknessOfWalls / 1000,
+				thickness_walls: mapLegacyMillimetresToMetres(floorOfHeatedBasement.thicknessOfWalls),
 			},
 		};
 	}) || [];

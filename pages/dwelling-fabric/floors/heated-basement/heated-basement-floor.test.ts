@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
 import HeatedBasementFloor from "./[floor].vue";
 import { v4 as uuidv4 } from "uuid";
+import { millimetre } from "~/utils/units/length";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -24,7 +25,7 @@ describe("floor of heated basement", () => {
 		massDistributionClass: "M",
 		depthOfBasementFloor: 2.5,
 		psiOfWallJunction: 0.05,
-		thicknessOfWalls: 50,
+		thicknessOfWalls: unitValue(50, millimetre),
 	};
 
 	afterEach(() => {
@@ -45,7 +46,7 @@ describe("floor of heated basement", () => {
 			massDistributionClass: "M",
 			depthOfBasementFloor: 2.5,
 			psiOfWallJunction: 0.05,
-			thicknessOfWalls: 50,
+			thicknessOfWalls: unitValue(50, millimetre),
 		};
 
 		const values: FloorOfHeatedBasementData = { ...defaults, ...overrides };
@@ -57,7 +58,7 @@ describe("floor of heated basement", () => {
 		await user.click(screen.getByTestId(`massDistributionClass_${values.massDistributionClass}`));
 		await user.type(screen.getByTestId("depthOfBasementFloor"), String(values.depthOfBasementFloor));
 		await user.type(screen.getByTestId("psiOfWallJunction"), String(values.psiOfWallJunction));
-		await user.type(screen.getByTestId("thicknessOfWalls"), String(values.thicknessOfWalls));
+		await user.type(screen.getByTestId("thicknessOfWalls"), String(values.thicknessOfWalls.amount));
 	};
 
 	test("data is saved to store state and marked as complete when form is valid", async () => {
@@ -264,11 +265,11 @@ describe("floor of heated basement", () => {
 				},
 			});
 
-			await populateValidForm({ thicknessOfWalls: 0 });
+			await populateValidForm({ thicknessOfWalls: unitValue(0, millimetre) });
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const { dwellingSpaceFloorOfHeatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
-			expect(dwellingSpaceFloorOfHeatedBasement?.data[0]?.data.thicknessOfWalls).toBe(0);
+			expect(dwellingSpaceFloorOfHeatedBasement?.data[0]?.data.thicknessOfWalls).toEqual(unitValue(0, millimetre));
 		});
 
 		test("accepts large values for thickness of walls", async () => {
@@ -278,25 +279,11 @@ describe("floor of heated basement", () => {
 				},
 			});
 
-			await populateValidForm({ thicknessOfWalls: 5000 });
+			await populateValidForm({ thicknessOfWalls: unitValue(5000, millimetre) });
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const { dwellingSpaceFloorOfHeatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
-			expect(dwellingSpaceFloorOfHeatedBasement?.data[0]?.data.thicknessOfWalls).toBe(5000);
-		});
-
-		test("accepts negative values for thickness of walls", async () => {
-			await renderSuspended(HeatedBasementFloor, {
-				route: {
-					params: { floor: "create" },
-				},
-			});
-
-			await populateValidForm({ thicknessOfWalls: -100 });
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			const { dwellingSpaceFloorOfHeatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
-			expect(dwellingSpaceFloorOfHeatedBasement?.data[0]?.data.thicknessOfWalls).toBe(-100);
+			expect(dwellingSpaceFloorOfHeatedBasement?.data[0]?.data.thicknessOfWalls).toEqual(unitValue(5000, millimetre));
 		});
 	});
 

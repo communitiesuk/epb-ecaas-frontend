@@ -24,7 +24,7 @@ describe("ground floor", () => {
 		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
-		thicknessOfWalls: 0.8,
+		thicknessOfWalls: unitValue(0.8, metre),
 		typeOfGroundFloor: "Slab_no_edge_insulation",
 	};
 

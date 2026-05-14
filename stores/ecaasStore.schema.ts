@@ -196,8 +196,7 @@ export const groundSurfaceAreaZod = z.number().min(5).max(10000);
 export const groundTotalAreaZod = z.number().min(5);
 export const groundPerimeterZod = z.number().min(0).max(1000);
 
-// This is changed from 100 to 1000 as we ask for the thickness in mm
-export const thicknessOfWallsZod = z.number().min(0).max(100000);
+export const thicknessOfWallsZod = zodUnit("length", { min: 0, max: 100 });
 
 const baseGroundFloorData = named.extend({
 	surfaceArea: groundSurfaceAreaZod,

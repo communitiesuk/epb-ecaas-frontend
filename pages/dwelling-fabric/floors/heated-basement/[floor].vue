@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { getUrl, uniqueName } from "#imports";
+import { getUrl, uniqueName, unitValue } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import { groundSurfaceAreaZod, groundTotalAreaZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
+import { millimetre } from "~/utils/units/length";
 
 const title = "Floor of heated basement";
 const store = useEcaasStore();
@@ -11,6 +12,14 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const floorOfHeatedBasementData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement?.data;
 const index = getStoreIndex(floorOfHeatedBasementData);
 const floorData = useItemToEdit("floor", floorOfHeatedBasementData);
+
+if (floorData?.data) {
+	const data = floorData.data as Record<string, unknown>;
+	if ("thicknessOfWalls" in data && typeof data.thicknessOfWalls === "number") {
+		data.thicknessOfWalls = unitValue(data.thicknessOfWalls, millimetre);
+	}
+}
+
 const floorId = floorData?.data.id ?? uuidv4();
 const model = ref(floorData?.data);
 
@@ -29,7 +38,7 @@ const saveForm = (fields: FloorOfHeatedBasementData) => {
 			massDistributionClass: fields.massDistributionClass,
 			depthOfBasementFloor: fields.depthOfBasementFloor,
 			psiOfWallJunction: fields.psiOfWallJunction,
-			thicknessOfWalls: fields.thicknessOfWalls,
+			thicknessOfWalls: unitValue(fields.thicknessOfWalls.amount, millimetre),
 		};
 		
 		dwellingSpaceFloorOfHeatedBasement.data[index] = { data: floor, complete: true };
@@ -149,9 +158,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="thicknessOfWalls"
-			type="govInputWithSuffix"
-			suffix-text="mm"
+			type="govInputWithUnit"
 			label="Thickness of walls"
+			:unit="millimetre"
 			name="thicknessOfWalls"
 			:validation="zodTypeAsFormKitValidation(thicknessOfWallsZod)"
 			help="Enter the physical thickness of the ground floor wall. Typically more than 300mm. If the thickness varies, enter a weighted average."

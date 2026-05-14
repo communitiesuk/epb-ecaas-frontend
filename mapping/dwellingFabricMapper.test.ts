@@ -8,7 +8,7 @@ import type {
 	ExternalUnglazedDoorData,
 	PartyWallData,
 } from "~/stores/ecaasStore.schema";
-import { asMetres, centimetre, type Length } from "~/utils/units/length";
+import { asMetres, centimetre, metre, millimetre, type Length } from "~/utils/units/length";
 
 type BuildingElementOpaque = BuildingElementOfType<"BuildingElementOpaque">;
 type BuildingElementAdjacentConditionedSpace = BuildingElementOfType<"BuildingElementAdjacentConditionedSpace">;
@@ -127,7 +127,7 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 			perimeter: 0,
 			psiOfWallJunction: 0,
-			thicknessOfWalls: 30,
+			thicknessOfWalls: unitValue(0.5, metre),
 			typeOfGroundFloor: "Slab_no_edge_insulation",
 		};
 
@@ -230,7 +230,7 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "E",
 			perimeter: 5,
 			psiOfWallJunction: 1.2,
-			thicknessOfWalls: 20,
+			thicknessOfWalls: unitValue(20, millimetre),
 			depthOfBasementFloor: 1,
 			heightOfBasementWalls: 0.9,
 			thermalResistanceOfBasementWalls: 0.6,
@@ -248,7 +248,7 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 			depthOfBasementFloor: 1,
 			psiOfWallJunction: 1,
-			thicknessOfWalls: 30,
+			thicknessOfWalls: unitValue(20, millimetre),
 		};
 		const wallOfHeatedBasement: WallOfHeatedBasementData = {
 			id: "heated-basement-wall-id",
@@ -317,7 +317,7 @@ describe("dwelling fabric mapper", () => {
 			mass_distribution_class: fullMassDistributionClass(groundFloor.massDistributionClass),
 			perimeter: groundFloor.perimeter,
 			psi_wall_floor_junc: groundFloor.psiOfWallJunction,
-			thickness_walls: groundFloor.thicknessOfWalls / 1000,
+			thickness_walls: groundFloor.thicknessOfWalls.amount,
 			floor_type: groundFloor.typeOfGroundFloor,
 		};
 
@@ -358,7 +358,7 @@ describe("dwelling fabric mapper", () => {
 			...expectedGroundFloor,
 			floor_type: groundFloorWithSuspendedFloor.typeOfGroundFloor,
 			height_upper_surface: groundFloorWithSuspendedFloor.heightOfFloorUpperSurface / 1000,
-			thickness_walls: groundFloorWithSuspendedFloor.thicknessOfWalls / 1000,
+			thickness_walls: groundFloorWithSuspendedFloor.thicknessOfWalls.amount,
 			thermal_resist_insul: groundFloorWithSuspendedFloor.underfloorSpaceThermalResistance,
 			thermal_transm_walls: groundFloorWithSuspendedFloor.thermalTransmittanceOfWallsAboveGround,
 			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea / 1e6,
@@ -367,8 +367,12 @@ describe("dwelling fabric mapper", () => {
 
 		expect(groundFloorWithSuspendedFloorElement).toEqual(expectedGroundFloorSuspendedFloor);
 
-		const expectedGroundFloorWithHeatedBasement: BuildingElementGroundForSchema = {
+		const expectedGroundFloorWithThicknessInMillimetres: BuildingElementGroundForSchema = {
 			...expectedGroundFloor,
+			thickness_walls: groundFloor.thicknessOfWalls.amount,
+		};
+		const expectedGroundFloorWithHeatedBasement: BuildingElementGroundForSchema = {
+			...expectedGroundFloorWithThicknessInMillimetres,
 			floor_type: groundFloorWithHeatedBasement.typeOfGroundFloor,
 			depth_basement_floor: groundFloorWithHeatedBasement.depthOfBasementFloorBelowGround,
 			thermal_resist_walls_base: groundFloorWithHeatedBasement.thermalResistanceOfBasementWalls,
@@ -377,7 +381,7 @@ describe("dwelling fabric mapper", () => {
 		expect(groundFloorWithHeatedBasementElement).toEqual(expectedGroundFloorWithHeatedBasement);
 
 		const expectedGroundFloorWithUnheatedBasement: BuildingElementGroundForSchema = {
-			...expectedGroundFloor,
+			...expectedGroundFloorWithThicknessInMillimetres,
 			floor_type: groundFloorWithUnheatedBasement.typeOfGroundFloor,
 			thermal_transm_envi_base: groundFloorWithUnheatedBasement.thermalTransmittanceOfFloorAboveBasement,
 			height_basement_walls: groundFloorWithUnheatedBasement.heightOfBasementWallsAboveGround,
@@ -431,7 +435,7 @@ describe("dwelling fabric mapper", () => {
 			u_value: floorAboveUnheatedBasement.uValue,
 			total_area: floorAboveUnheatedBasement.totalArea,
 			floor_type: "Unheated_basement",
-			thickness_walls: floorAboveUnheatedBasement.thicknessOfWalls / 1000,
+			thickness_walls: asMetres(floorAboveUnheatedBasement.thicknessOfWalls),
 			perimeter: floorAboveUnheatedBasement.perimeter,
 			psi_wall_floor_junc: floorAboveUnheatedBasement.psiOfWallJunction,
 			thermal_resistance_floor_construction: floorAboveUnheatedBasement.thermalResistance,
@@ -455,7 +459,7 @@ describe("dwelling fabric mapper", () => {
 			depth_basement_floor: floorAboveHeatedBasement.depthOfBasementFloor,
 			perimeter: 0,
 			psi_wall_floor_junc: floorAboveHeatedBasement.psiOfWallJunction,
-			thickness_walls: floorAboveHeatedBasement.thicknessOfWalls / 1000,
+			thickness_walls: asMetres(floorAboveHeatedBasement.thicknessOfWalls),
 			floor_type: "Heated_basement",
 			area: floorAboveHeatedBasement.netSurfaceArea,
 			thermal_resistance_construction: floorAboveHeatedBasement.thermalResistance,
@@ -591,7 +595,7 @@ describe("dwelling fabric mapper", () => {
 				massDistributionClass: "I",
 				depthOfBasementFloor: 1,
 				psiOfWallJunction: 1,
-				thicknessOfWalls: 30,
+				thicknessOfWalls: unitValue(20, millimetre),
 			},
 		};
 		const wallSuffix = " (wall)";
@@ -716,7 +720,7 @@ describe("dwelling fabric mapper", () => {
 			psi_wall_floor_junc: floorOfHeatedBasement.data.psiOfWallJunction,
 			depth_basement_floor: floorOfHeatedBasement.data.depthOfBasementFloor,
 			perimeter: wallOfHeatedBasement.data.perimeter,
-			thickness_walls: floorOfHeatedBasement.data.thicknessOfWalls / 1000,
+			thickness_walls: asMetres(floorOfHeatedBasement.data.thicknessOfWalls),
 		};
 
 		expect(fhsInputData.Zone[defaultZoneName]!.BuildingElement[wallOfHeatedBasement.data.name + wallSuffix]).toEqual(expectedWallOfHeatedBasement);
@@ -1606,7 +1610,7 @@ describe("dwelling fabric mapper", () => {
 				massDistributionClass: "I",
 				depthOfBasementFloor: 2.5,
 				psiOfWallJunction: 0.08,
-				thicknessOfWalls: 300,
+				thicknessOfWalls: unitValue(20, millimetre),
 			},
 		};
 

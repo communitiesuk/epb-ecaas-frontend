@@ -4,7 +4,7 @@ import { mapFhsInputData } from "./fhsInputMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
-import { centimetre } from "../utils/units/length";
+import { centimetre, metre, millimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
 import { celsius } from "~/utils/units/temperature";
 
@@ -703,7 +703,7 @@ const expectedFlatInput: FhsInputSchema = {
 						width: 0.32,
 					}],
 					psi_wall_floor_junc: 0.4,
-					thickness_walls: 0.05,
+					thickness_walls: 0.8,
 					floor_type: "Slab_edge_insulation",
 				},
 				"ground floor 2 (floor)": {
@@ -1161,7 +1161,7 @@ describe("FHS input mapper", () => {
 							massDistributionClass: "I",
 							perimeter: 100,
 							psiOfWallJunction: 1,
-							thicknessOfWalls: 80,
+							thicknessOfWalls: unitValue(80, millimetre),
 							typeOfGroundFloor: "Slab_no_edge_insulation",
 						},
 					}],
@@ -1677,7 +1677,7 @@ describe("FHS input mapper", () => {
 								massDistributionClass: "E",
 								perimeter: 40,
 								psiOfWallJunction: 0.4,
-								thicknessOfWalls: 50,
+								thicknessOfWalls: unitValue(0.8, metre),
 								typeOfGroundFloor: "Slab_edge_insulation" as const,
 								edgeInsulationType: ["horizontal"] as ["horizontal"],
 								horizontalEdgeInsulationWidth: unitValue(32, centimetre),
@@ -1697,7 +1697,7 @@ describe("FHS input mapper", () => {
 								perimeter: 21,
 								psiOfWallJunction: 0.8,
 								typeOfGroundFloor: "Heated_basement",
-								thicknessOfWalls: 40,
+								thicknessOfWalls: unitValue(40, millimetre),
 								depthOfBasementFloorBelowGround: 2,
 								thermalResistanceOfBasementWalls: 3,
 							},

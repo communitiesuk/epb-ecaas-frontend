@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import FloorAboveUnheatedBasement from "./[floor].vue";
+import { millimetre } from "~/utils/units/length";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -22,7 +23,7 @@ describe("floor above unheated basement", () => {
 		massDistributionClass: "E",
 		perimeter: 0.5,
 		psiOfWallJunction: 0.4,
-		thicknessOfWalls: 0.6,
+		thicknessOfWalls: unitValue(60, millimetre),
 		depthOfBasementFloor: 0.5,
 		heightOfBasementWalls: 1,
 		thermalResistanceOfBasementWalls: 1.2,
@@ -44,7 +45,7 @@ describe("floor above unheated basement", () => {
 		await user.click(screen.getByTestId("massDistributionClass_E"));
 		await user.type(screen.getByTestId("perimeter"), "0.5");
 		await user.type(screen.getByTestId("psiOfWallJunction"), "0.4");
-		await user.type(screen.getByTestId("thicknessOfWalls"), "0.6");
+		await user.type(screen.getByTestId("thicknessOfWalls"), "60");
 		await user.type(screen.getByTestId("depthOfBasementFloor"), "0.5");
 		await user.type(screen.getByTestId("heightOfBasementWalls"), "1");
 		await user.type(screen.getByTestId("thermalResistanceOfBasementWalls"), "1.2");
@@ -52,7 +53,7 @@ describe("floor above unheated basement", () => {
 		await user.type(screen.getByTestId("thermalTransmittanceOfFoundations"), "1.4");
 		await user.tab();
 	};
-	
+
 	test("data is saved to store state and marked as complete when form is valid", async () => {
 		await renderSuspended(FloorAboveUnheatedBasement, {
 			route: {
@@ -62,12 +63,12 @@ describe("floor above unheated basement", () => {
 
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
-	
+
 		const actual = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement.data[0];
 		expect(actual?.data).toEqual(floorAboveUnheatedBasement);
 		expect(actual?.complete).toBe(true);
 	});
-	
+
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			dwellingFabric: {
@@ -78,14 +79,14 @@ describe("floor above unheated basement", () => {
 				},
 			},
 		});
-	
+
 		await renderSuspended(FloorAboveUnheatedBasement, {
 			route: {
 				params: { "floor": "0" },
 			},
 		});
 
-	
+
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Floor above unheated basement 1");
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("7");
 		expect((await screen.findByTestId<HTMLInputElement>("totalArea")).value).toBe("8");
@@ -95,23 +96,23 @@ describe("floor above unheated basement", () => {
 		expect((await screen.findByTestId("massDistributionClass_E")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("perimeter")).value).toBe("0.5");
 		expect((await screen.findByTestId<HTMLInputElement>("psiOfWallJunction")).value).toBe("0.4");
-		expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("0.6");
+		expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("60");
 		expect((await screen.findByTestId<HTMLInputElement>("depthOfBasementFloor")).value).toBe("0.5");
 		expect((await screen.findByTestId<HTMLInputElement>("heightOfBasementWalls")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("thermalResistanceOfBasementWalls")).value).toBe("1.2");
 		expect((await screen.findByTestId<HTMLInputElement>("thermalTransmittanceOfBasementWalls")).value).toBe("1.3");
 		expect((await screen.findByTestId<HTMLInputElement>("thermalTransmittanceOfFoundations")).value).toBe("1.4");
 	});
-			
+
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(FloorAboveUnheatedBasement, {
 			route: {
 				params: { floor: "create" },
 			},
 		});
-	
+
 		await user.click(screen.getByTestId("saveAndComplete"));
-	
+
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("totalArea_error"))).toBeDefined();
@@ -136,10 +137,10 @@ describe("floor above unheated basement", () => {
 			},
 		});
 		await user.click(screen.getByTestId("saveAndComplete"));
-		
+
 		expect((await screen.findByTestId("floorAboveUnheatedBasementErrorSummary"))).toBeDefined();
 	});
-		
+
 	test("app navigates to floors page when valid form is completed", async () => {
 		// Arrange
 		await renderSuspended(FloorAboveUnheatedBasement, {
@@ -147,13 +148,13 @@ describe("floor above unheated basement", () => {
 				params: { floor: "create" },
 			},
 		});
-				
+
 		// Act
 		await user.type(screen.getByTestId("name"), "Floor above unheated basement 1");
 		await user.type(screen.getByTestId("surfaceArea"), "6");
 		await user.type(screen.getByTestId("totalArea"), "6");
 		await user.type(screen.getByTestId("uValue"), "1");
-		await user.type(screen.getByTestId("thermalResistance"), "1"); 
+		await user.type(screen.getByTestId("thermalResistance"), "1");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.type(screen.getByTestId("perimeter"), "1");
@@ -166,11 +167,11 @@ describe("floor above unheated basement", () => {
 		await user.type(screen.getByTestId("thermalTransmittanceOfFoundations"), "1");
 		await user.tab();
 		await user.click(screen.getByTestId("saveAndComplete"));
-			
+
 		// Assert
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors");
 	});
-	
+
 	test("floor above unheated basement section is marked as 'not complete' after form is saved and marked as complete", async () => {
 		// Arrange
 		store.$patch({
@@ -189,7 +190,7 @@ describe("floor above unheated basement", () => {
 				params: { floor: "0" },
 			},
 		});
-		
+
 		// Act
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -204,7 +205,7 @@ describe("floor above unheated basement", () => {
 					params: { floor: "create" },
 				},
 			});
-			
+
 			await user.type(screen.getByTestId("name"), "Floor above unheated basement");
 			await user.type(screen.getByTestId("surfaceArea"), "6");
 			await user.type(screen.getByTestId("totalArea"), "6");
@@ -221,7 +222,7 @@ describe("floor above unheated basement", () => {
 			await user.type(screen.getByTestId("thermalTransmittanceOfBasementWalls"), "1");
 			await user.type(screen.getByTestId("thermalTransmittanceOfFoundations"), "0.9");
 			await user.tab();
-			
+
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement;
 			expect(data[0]!.data.name).toBe("Floor above unheated basement");
 			expect(data[0]!.data.surfaceArea).toBe(6);
@@ -232,7 +233,7 @@ describe("floor above unheated basement", () => {
 			expect(data[0]!.data.massDistributionClass).toBe("E");
 			expect(data[0]!.data.perimeter).toBe(1);
 			expect(data[0]!.data.psiOfWallJunction).toBe(0.5);
-			expect(data[0]!.data.thicknessOfWalls).toBe(0.7);
+			expect(data[0]!.data.thicknessOfWalls).toEqual(unitValue(0.7, millimetre));
 			expect(data[0]!.data.depthOfBasementFloor).toBe(0.3);
 			expect(data[0]!.data.heightOfBasementWalls).toBe(0.8);
 			expect(data[0]!.data.thermalResistanceOfBasementWalls).toBe(1.2);
@@ -246,10 +247,10 @@ describe("floor above unheated basement", () => {
 					params: { floor: "create" },
 				},
 			});
-			
+
 			await user.type(screen.getByTestId("surfaceArea"), "10");
 			await user.tab();
-			
+
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement;
 			expect(data[0]!.data.name).toBe("Floor of an unheated basement");
 			expect(data[0]!.data.surfaceArea).toBe(10);
@@ -265,7 +266,7 @@ describe("floor above unheated basement", () => {
 					},
 				},
 			});
-			
+
 			await renderSuspended(FloorAboveUnheatedBasement, {
 				route: {
 					params: { floor: 0 },
@@ -286,7 +287,7 @@ describe("floor above unheated basement", () => {
 			expect(data[0]!.data.name).toBe("Updated floor");
 			expect(data[0]!.data.surfaceArea).toBe(10);
 		});
-		
+
 		test("ground floor and ground floor section are set as 'not complete' after user edits a ground floor", async () => {
 			// Arrange
 			store.$patch({
@@ -305,11 +306,11 @@ describe("floor above unheated basement", () => {
 					params: { floor: "0" },
 				},
 			});
-		
+
 			// Act
 			await user.type(screen.getByTestId("name"), "Floor above unheated basement 2");
 			await user.tab();
-		
+
 			// Assert
 			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement.data[0]?.complete).not.toBe(true);
 			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement.complete).not.toBe(true);
