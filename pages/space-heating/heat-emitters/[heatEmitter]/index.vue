@@ -22,10 +22,7 @@ const title = "Heat emitters";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 
 const heatEmitterStoreData = store.spaceHeating.heatEmitters.data;
@@ -144,7 +141,7 @@ autoSaveElementForm<HeatEmittingData>({
 			:options="heatEmitterTypes"
 			name="typeOfHeatEmitter"
 			validation="required" />
-		<template v-if="hasMounted">
+		<template v-if="mounted">
 			<WetDistributionSection
 				v-if="model?.typeOfHeatEmitter === 'wetDistributionSystem'"
 				:model="(model as WetDistributionSystemData)"

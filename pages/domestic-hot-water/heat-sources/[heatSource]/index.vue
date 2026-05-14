@@ -12,10 +12,7 @@ const { heatSources: dhwHeatSources } = store.domesticHotWater;
 const { getStoreIndex } = useForm();
 const route = useRoute();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 const hotWaterHeatSourceStoreData = store.domesticHotWater.heatSources.data;
 const index = getStoreIndex(hotWaterHeatSourceStoreData);
@@ -368,7 +365,7 @@ const heatSourceOptions = computed(() => {
 			:disabled="hasPackagedProduct(model)"
 		/>
 		<FormKit 
-			v-if="hasMounted"
+			v-if="mounted"
 			id="heatSourceId"
 			type="govRadios"
 			label="Use a previously added heat source"
@@ -386,7 +383,7 @@ const heatSourceOptions = computed(() => {
 				</p>
 			</div>
 		</FormKit>
-		<template v-if="hasMounted">
+		<template v-if="mounted">
 
 	
 			<FormKit

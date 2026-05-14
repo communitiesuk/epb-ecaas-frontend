@@ -25,10 +25,10 @@ const model = ref({
 	...store.dwellingDetails.generalSpecifications.data,
 });
 
-const hasMounted = ref(false);
+const mounted = ref(false);
 
 onMounted(() => {
-	hasMounted.value = true;
+	mounted.value = true;
 });
 
 if (!model.value.fuelType) {
@@ -164,7 +164,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="General.build_type"
 		/>
 		<FormKit
-			v-if="hasMounted && model.typeOfDwelling === 'flat'"
+			v-if="mounted && model.typeOfDwelling === 'flat'"
 			id="storeyOfFlat"
 			type="govInputInt"
 			label="Storey of flat"
@@ -190,7 +190,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="General.storeys_in_dwelling"
 		/>
 		<FormKit
-			v-if="hasMounted && model.typeOfDwelling === 'flat'"
+			v-if="mounted && model.typeOfDwelling === 'flat'"
 			id="storeysInBuilding"
 			type="govInputInt"
 			label="Number of storeys in building"

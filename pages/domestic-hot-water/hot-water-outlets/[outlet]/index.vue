@@ -10,10 +10,7 @@ const store = useEcaasStore();
 const route = useRoute();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 
 const hotWaterOutletsStoreData = store.domesticHotWater.hotWaterOutlets.data;
@@ -171,7 +168,7 @@ const heatSourceOptions = new Map(
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovErrorSummary :error-list="errorMessages" test-id="hotWaterOutletErrorSummary"/>
 	<FormKit
-		v-if="hasMounted"
+		v-if="mounted"
 		v-model="model"
 		type="form"
 		validation-visibility="submit"
@@ -196,7 +193,7 @@ const heatSourceOptions = new Map(
 			name="name"
 			validation="required"
 		/>
-		<template v-if="hasMounted && model.typeOfHotWaterOutlet === 'mixedShower'">
+		<template v-if="mounted && model.typeOfHotWaterOutlet === 'mixedShower'">
 			<FormKit
 				id="dhwHeatSourceId"
 				name="dhwHeatSourceId"

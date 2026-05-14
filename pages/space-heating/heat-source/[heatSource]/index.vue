@@ -122,10 +122,7 @@ const boilers = heatSourceStoreData
 	.filter(x => x.data.typeOfHeatSource === "boiler")
 	.map(x => [x.data.id, x.data.name] as [string, string]);
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 </script>
 
 <template>
@@ -172,7 +169,7 @@ onMounted(() => {
 		/>
 
 		<HeatPumpSection
-			v-if="hasMounted && model?.typeOfHeatSource === 'heatPump'"
+			v-if="mounted && model?.typeOfHeatSource === 'heatPump'"
 			:model="(model as HeatPumpModelType)"
 			:index="index"
 			:boilers="boilers"
@@ -181,25 +178,25 @@ onMounted(() => {
 			@update-heat-pump-model="updateHeatSource"
 		/>
 		<BoilerSection
-			v-if="hasMounted && model?.typeOfHeatSource === 'boiler'"
+			v-if="mounted && model?.typeOfHeatSource === 'boiler'"
 			:model="(model as BoilerModelType)"
 			:index="index"
 			page="space heating"
 			@update-boiler-model="updateHeatSource" />
 		<HeatNetworkSection
-			v-if="hasMounted && model?.typeOfHeatSource === 'heatNetwork'"
+			v-if="mounted && model?.typeOfHeatSource === 'heatNetwork'"
 			:model="(model as HeatNetworkModelType)"
 			:index="index"
 			section="spaceHeating"
 			@update-heat-network-model="updateHeatSource" />
 		<HeatBatterySection
-			v-if="hasMounted && model?.typeOfHeatSource === 'heatBattery'"
+			v-if="mounted && model?.typeOfHeatSource === 'heatBattery'"
 			:model="(model as HeatBatteryModelType)"
 			:index="index"
 			page="space heating"
 			@update-heat-battery-model="updateHeatSource" />
 		<HeatInterfaceUnitSection
-			v-if="hasMounted && model?.typeOfHeatSource === 'heatInterfaceUnit'"
+			v-if="mounted && model?.typeOfHeatSource === 'heatInterfaceUnit'"
 			:model="model as HeatInterfaceUnitModelType" 
 			:index="index"
 			page="space heating"

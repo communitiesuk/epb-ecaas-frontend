@@ -9,10 +9,7 @@ const title = "Wall of heated basement";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 const wallOfHeatedBasementData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallOfHeatedBasement?.data;
 const index = getStoreIndex(wallOfHeatedBasementData);
@@ -154,7 +151,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation="zodTypeAsFormKitValidation(groundPerimeterZod)"
 		/>
 		<FormKit
-			v-if="hasMounted"
+			v-if="mounted"
 			id="associatedBasementFloorId"
 			:key="basementFloorOptions.size"
 			name="associatedBasementFloorId"

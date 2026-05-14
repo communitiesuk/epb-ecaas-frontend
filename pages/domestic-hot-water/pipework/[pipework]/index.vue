@@ -8,9 +8,9 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const title = "Primary pipework for hot water";
 const store = useEcaasStore();
 
-const hasMounted = ref(false);	
+const mounted = ref(false);	
 onMounted(() => {
-	hasMounted.value = true;
+	mounted.value = true;
 });
 
 const index = getStoreIndex(store.domesticHotWater.pipework.data);
@@ -92,7 +92,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}" />
 		<FormKit
-			v-if="hasMounted"
+			v-if="mounted"
 			id="waterStorage"
 			type="govRadios"
 			:options="new Map(store.domesticHotWater.waterStorage.data

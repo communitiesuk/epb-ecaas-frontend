@@ -8,10 +8,7 @@ const title = "Wall to unheated space";
 const store = useEcaasStore();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 const wallToUnheatedSpaceData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data;
 const wallData = useItemToEdit("wall", wallToUnheatedSpaceData);
@@ -102,7 +99,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<FieldsPitch
-			v-if="hasMounted"
+			v-if="mounted"
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
 			data-field="Zone.BuildingElement.*.pitch"

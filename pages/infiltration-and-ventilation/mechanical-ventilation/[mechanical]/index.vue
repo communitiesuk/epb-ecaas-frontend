@@ -17,10 +17,7 @@ const store = useEcaasStore();
 const route = useRoute();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 const mechanicalVentilationStoreData = store.infiltrationAndVentilation.mechanicalVentilation.data;
 const index = getStoreIndex(mechanicalVentilationStoreData);
@@ -237,7 +234,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
-		/>	<template v-if="hasMounted">
+		/>	<template v-if="mounted">
 			<FormKit
 				id="typeOfMechanicalVentilationOptions"
 				type="govRadios"

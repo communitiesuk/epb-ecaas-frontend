@@ -8,10 +8,7 @@ const parentPages: Array<Page> = pagesData.filter(
 
 const openStates = ref(Array(parentPages.length).fill(true));
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 function toggle(index: number) {
 	openStates.value[index] = !openStates.value[index];
@@ -25,7 +22,7 @@ function getUrl(url: string) {
 	const store = useEcaasStore();
 	
 	if (url !== "/domestic-hot-water/heat-sources/create") return url;
-	if (!hasMounted.value) return url;
+	if (!mounted.value) return url;
 
 	if (store.domesticHotWater.heatSources.data.length >= 1) {
 		return "/domestic-hot-water/heat-sources/0";
@@ -37,7 +34,7 @@ function shouldShowPage(page: Page, parentPageId: string) {
 		return false;
 	}
 
-	if (page.excludeFromNavigation && !hasMounted.value) {
+	if (page.excludeFromNavigation && !mounted.value) {
 		return false;
 	}
 

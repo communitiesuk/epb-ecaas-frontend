@@ -11,10 +11,7 @@ const store = useEcaasStore();
 const route = useRoute();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 
 const waterStorageStoreData = store.domesticHotWater.waterStorage.data;
@@ -165,7 +162,7 @@ const heatSourceTypes = new Map(
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="waterStorageErrorSummary"/>
-		<template v-if="hasMounted">
+		<template v-if="mounted">
 			<FormKit
 				id="typeOfWaterStorage"
 				name="typeOfWaterStorage"

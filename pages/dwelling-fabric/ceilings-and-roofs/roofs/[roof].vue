@@ -9,10 +9,7 @@ const title = "Roof";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 const roofs = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data;
 const index = getStoreIndex(roofs);
@@ -223,7 +220,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 
-		<template v-if=" hasMounted&&model?.typeOfRoof">
+		<template v-if=" mounted&&model?.typeOfRoof">
 			<GovInset v-if="model?.typeOfRoof === 'pitchedInsulatedAtRoof' || model?.typeOfRoof === 'pitchedInsulatedAtCeiling'">
 				If the pitched roof has multiple orientations (for example, a gable or hip roof), each orientation must be added as a separate roof element.
 			</GovInset>

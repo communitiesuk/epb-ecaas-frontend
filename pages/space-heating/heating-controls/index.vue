@@ -4,10 +4,7 @@ import { displayHeatEmitterType, getUrl, type HeatingControlData } from "#import
 const title = "Heating controls";
 const store = useEcaasStore();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 const heatingControlOptions = {
 	separateTemperatureControl: "Separate temperature control",
@@ -244,7 +241,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</table>
 		</GovDetails></FormKit>
 		<div
-			v-if="hasMounted && heatEmitters.length > 0"
+			v-if="mounted && heatEmitters.length > 0"
 			id="heatEmitterRanking"
 			data-testid="heatEmitterRanking"
 			class="govuk-form-group">

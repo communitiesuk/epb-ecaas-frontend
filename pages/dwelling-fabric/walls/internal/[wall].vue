@@ -8,10 +8,7 @@ const title = "Internal wall";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 const internalWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data;
 const wallData = useItemToEdit("wall", internalWallData);
@@ -99,7 +96,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<FieldsPitch
-			v-if="hasMounted"
+			v-if="mounted"
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
 			data-field="Zone.BuildingElement.*.pitch"

@@ -9,10 +9,7 @@ const title = "Ground floor";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 
 const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
@@ -286,7 +283,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			data-field="Zone.BuildingElement.*.floor_type"
 		/>
 
-		<template v-if="hasMounted && model?.typeOfGroundFloor === 'Slab_edge_insulation'">
+		<template v-if="mounted && model?.typeOfGroundFloor === 'Slab_edge_insulation'">
 			<FormKit
 				id="edgeInsulationType"
 				type="govCheckboxes"
@@ -379,7 +376,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			</template>
 		</template>
 
-		<template v-if="hasMounted && model?.typeOfGroundFloor === 'Suspended_floor'">
+		<template v-if="mounted && model?.typeOfGroundFloor === 'Suspended_floor'">
 			<FormKit
 				id="heightOfFloorUpperSurface"
 				type="govInputWithSuffix"
@@ -481,7 +478,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			</FormKit>
 		</template>
 
-		<template v-if="hasMounted && model?.typeOfGroundFloor === 'Heated_basement'">
+		<template v-if="mounted && model?.typeOfGroundFloor === 'Heated_basement'">
 			<FormKit
 				id="depthOfBasementFloorBelowGround"
 				type="govInputWithSuffix"
@@ -502,7 +499,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			/>
 		</template>
 
-		<template v-if="hasMounted && model?.typeOfGroundFloor === 'Unheated_basement'">
+		<template v-if="mounted && model?.typeOfGroundFloor === 'Unheated_basement'">
 			<FormKit
 				id="thermalTransmittanceOfFloorAboveBasement"
 				type="govInputWithSuffix"

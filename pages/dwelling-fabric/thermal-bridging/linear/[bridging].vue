@@ -8,10 +8,7 @@ const title = "Linear thermal bridges";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
  
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 const linearThermalBridgeStoreData = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data;
 const index = getStoreIndex(linearThermalBridgeStoreData);
@@ -150,7 +147,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="junctionTypeOptions"
 			data-field="Zone.ThermalBridging.*.junction_type"
 		/>
-		<template v-if="hasMounted && model?.typeOfThermalBridge">
+		<template v-if="mounted && model?.typeOfThermalBridge">
 			<FormKit
 				id="name"
 				type="govInputText"

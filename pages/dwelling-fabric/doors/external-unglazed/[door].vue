@@ -9,10 +9,7 @@ const title = "External unglazed door";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 const externalUnglazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor?.data;
 const index = getStoreIndex(externalUnglazedDoorData);
@@ -96,13 +93,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<FieldsAssociatedWallRoof
-			v-if="hasMounted"
+			v-if="mounted"
 			id="associatedItemId"
 			name="associatedItemId"
 			label="Associated wall or roof"
 			help="Select the wall or roof that this door is in. It should have the same orientation and pitch as the door."
 		/>
-		<template v-if="hasMounted && model && (model.associatedItemId === 'none' || tagOptions.length === 0)">
+		<template v-if="mounted && model && (model.associatedItemId === 'none' || tagOptions.length === 0)">
 			<FieldsPitch
 				:pitch-option="model?.pitchOption"
 				:options='standardPitchOptions()'

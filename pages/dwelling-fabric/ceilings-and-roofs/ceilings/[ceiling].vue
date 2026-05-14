@@ -9,10 +9,7 @@ const title = "Ceiling";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 
 const index = getStoreIndex(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data);
@@ -112,7 +109,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="type"
 			validation="required"
 		/>
-		<template v-if="hasMounted && !!model?.type">
+		<template v-if="mounted && !!model?.type">
 			<FormKit
 				id="name"
 				type="govInputText"
@@ -182,7 +179,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</template>
 		</template>
 		<FormKit
-			v-if="hasMounted && model?.type === 'unheatedSpace'"
+			v-if="mounted && model?.type === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"

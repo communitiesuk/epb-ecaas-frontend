@@ -5,10 +5,7 @@ const title = "Vent";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const hasMounted = ref(false);
-onMounted(() => {
-	hasMounted.value = true;
-});
+const { mounted } = useMounted();
 
 const ventStoreData = store.infiltrationAndVentilation.vents.data;
 const index = getStoreIndex(ventStoreData);
@@ -102,7 +99,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<FormKit
-			v-if="hasMounted && associatedWallWindowOptions.length > 1"
+			v-if="mounted && associatedWallWindowOptions.length > 1"
 			id="associatedItemId"
 			type="govRadios"
 			:options="new Map(associatedWallWindowOptions)"
@@ -111,7 +108,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="associatedItemId"
 			validation="required"
 		/>
-		<template v-if="hasMounted && (associatedWallWindowOptions.length === 1 || model?.associatedItemId === 'none')">
+		<template v-if="mounted && (associatedWallWindowOptions.length === 1 || model?.associatedItemId === 'none')">
 			<FieldsPitch label="Pitch of vent" />
 			<FieldsOrientation help="Enter the orientation of the external surface of the vent"/>
 		</template>
