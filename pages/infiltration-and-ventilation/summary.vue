@@ -52,7 +52,9 @@ const mechanicalVentilationSummary: SummarySection = {
 				"Where is the vent installed?": installationTypeOptions[x.installationType],
 				"Room where the vent is installed": installationLocationOptions[x.installationLocation],
 			} : {}),
-			"Associated wall, roof or window": x.associatedItemId ? associatedItems[x.associatedItemId] : undefined,
+			"Associated wall, roof or window": x.associatedItemId && x.associatedItemId !== "none"
+				? associatedItems[x.associatedItemId] ?? emptyValueRendering
+				: emptyValueRendering,
 			...(!x.hasAssociatedItem ? {
 				"Pitch of vent": dim(x.pitch, "degrees"),
 				"Orientation of vent": dim(x.orientation, "degrees"),
@@ -106,13 +108,17 @@ const ventSummary: SummarySection = {
 		const x = vent.data as VentData;
 
 		const taggedItem = store.getTaggedItem([walls.dwellingSpaceExternalWall, dwellingSpaceWindows], x.associatedItemId);
-		const orientation = x.hasAssociatedItem === true ? taggedItem!.orientation : x.orientation;
-		const pitch = x.hasAssociatedItem === true ? taggedItem!.pitch : x.pitch;
+		const associatedItemName = x.associatedItemId && x.associatedItemId !== "none"
+			? associatedItems[x.associatedItemId] ?? emptyValueRendering
+			: emptyValueRendering;
+		const orientation = taggedItem?.orientation ?? (x as { orientation?: number })?.orientation;
+		const pitch = x.hasAssociatedItem === true ? taggedItem?.pitch : x.pitch;
 
 		return {
 			"Name": x.name,
 			"Effective ventilation area": dim(x.effectiveVentilationArea, "centimetres square"),
 			"Mid height of zone": dim(x.midHeightOfZone, "metres"),
+			"Associated wall or window": associatedItemName,
 			"Orientation": orientation !== undefined ? dim(orientation, "degrees") : emptyValueRendering,
 			"Pitch": pitch !== undefined ? dim(pitch, "degrees") : emptyValueRendering,
 		};

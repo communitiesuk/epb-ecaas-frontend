@@ -367,6 +367,7 @@ const unglazedDoorSummary: SummarySection = {
 
 		return {
 			"Name": show(x.name),
+			"Associated wall or roof": taggedItem?.name ?? emptyValueRendering,
 			"Pitch": pitch,
 			"Orientation": orientation,
 			"Height": dim(x.height, "metres"),
@@ -429,6 +430,7 @@ const glazedDoorSummary: SummarySection = {
 
 		return {
 			"Name": show(x.name),
+			"Associated wall or roof": taggedItem?.name ?? emptyValueRendering,
 			"Pitch": pitch,
 			"Orientation": orientation,
 			"Height": dim(x.height, "metres"),
@@ -467,6 +469,7 @@ const internalDoorSummary: SummarySection = {
 		return {
 			"Type": displayAdjacentSpaceType(x.typeOfInternalDoor, "Internal door"),
 			"Name": show(x.name),
+			"Associated wall or ceiling": show(taggedItem?.name),
 			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
 			"Net surface area of element": dim(x.surfaceArea, "metres square"),
 			"U-value": uValue,
@@ -522,6 +525,7 @@ const windowSummary: SummarySection = {
 
 		return {
 			"Name": show(x.name),
+			"Associated wall or roof": taggedItem?.name ?? emptyValueRendering,
 			"Pitch": pitch,
 			"Orientation": orientation,
 			"Height": dim(x.height, "metres"),

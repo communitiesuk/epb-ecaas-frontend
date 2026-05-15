@@ -391,6 +391,7 @@ describe("Infiltration and ventilation summary", () => {
 
 		const expectedResult = {
 			Name: "Vent 1",
+			"Associated wall or window": "External wall 1",
 			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
 			"Mid height of zone": `1 ${metre.suffix}`,
 			Orientation: `0 ${degrees.suffix}`,
@@ -427,6 +428,7 @@ describe("Infiltration and ventilation summary", () => {
 
 		const expectedResult = {
 			Name: "Vent 1",
+			"Associated wall or window": "-",
 			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
 			"Mid height of zone": `1 ${metre.suffix}`,
 			Orientation: `0 ${degrees.suffix}`,
@@ -485,6 +487,7 @@ describe("Infiltration and ventilation summary", () => {
 
 		const expectedResult = {
 			Name: "Vent 1",
+			"Associated wall or window": "Window 1",
 			Orientation: `77 ${degrees.suffix}`,
 			Pitch: `66 ${degrees.suffix}`,
 		};
