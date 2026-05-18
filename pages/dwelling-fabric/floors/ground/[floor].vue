@@ -2,7 +2,7 @@
 import { centimetre, metre, millimetre, type Length } from "~/utils/units/length";
 import { zodTypeAsFormKitValidation } from "#imports";
 import type { SchemaWindShieldLocation } from "~/schema/aliases";
-import { groundSurfaceAreaZod, groundTotalAreaZod, groundPerimeterZod, heightUpperSurfaceZod, thicknessOfGroundFloorWallsZod } from "~/stores/ecaasStore.schema";
+import { groundSurfaceAreaZod, groundTotalAreaZod, groundPerimeterZod, heightUpperSurfaceZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
 import { getUrl, type GroundFloorData, uniqueName, unitValue } from "#imports";
 
 const title = "Ground floor";
@@ -66,7 +66,7 @@ const saveForm = (fields: GroundFloorData) => {
 			massDistributionClass: fields.massDistributionClass,
 			perimeter: fields.perimeter,
 			psiOfWallJunction: fields.psiOfWallJunction,
-			thicknessOfWalls: unitValue(fields.thicknessOfWalls.amount, metre),
+			thicknessOfWalls: unitValue(fields.thicknessOfWalls.amount, millimetre),
 		};
 
 		let floorData: GroundFloorData;
@@ -262,11 +262,11 @@ const greaterThanZero = (node: FormKitNode) => {
 		<FormKit
 			id="thicknessOfWalls"
 			type="govInputWithUnit"
-			:unit="metre"
+			:unit="millimetre"
 			label="Thickness of walls at the edge of the floor"
 			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 0.3m to 0.8m. If this value varies enter a weighted average."
 			name="thicknessOfWalls"
-			:validation="zodTypeAsFormKitValidation(thicknessOfGroundFloorWallsZod)"
+			:validation="zodTypeAsFormKitValidation(thicknessOfWallsZod)"
 			data-field="Zone.BuildingElement.*.thickness_walls">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">This is usually measured from the inside surface to the outside surface.</p>

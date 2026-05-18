@@ -2,7 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import GroundFloor from "./[floor].vue";
-import { metre } from "~/utils/units/length";
+import { metre, millimetre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -24,7 +24,7 @@ describe("ground floor", () => {
 		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
-		thicknessOfWalls: unitValue(0.8, metre),
+		thicknessOfWalls: unitValue(80, millimetre),
 		typeOfGroundFloor: "Slab_no_edge_insulation",
 	};
 
@@ -95,7 +95,7 @@ describe("ground floor", () => {
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.type(screen.getByTestId("perimeter"), "0");
 		await user.type(screen.getByTestId("psiOfWallJunction"), "0");
-		await user.type(screen.getByTestId("thicknessOfWalls"), "0.8");
+		await user.type(screen.getByTestId("thicknessOfWalls"), "80");
 		await user.click(screen.getByTestId("typeOfGroundFloor_Slab_no_edge_insulation"));
 	};
 
@@ -141,7 +141,7 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("perimeter")).value).toBe("0");
 			expect((await screen.findByTestId<HTMLInputElement>("psiOfWallJunction")).value).toBe("0");
-			expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("0.8");
+			expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("80");
 			expect((await screen.findByTestId("typeOfGroundFloor_Slab_no_edge_insulation")).hasAttribute("checked")).toBe(true);
 		});
 
@@ -332,7 +332,6 @@ describe("ground floor", () => {
 			await populateValidForm();
 			await user.click(screen.getByTestId("typeOfGroundFloor_Suspended_floor"));
 			await user.type(screen.getByTestId("heightOfFloorUpperSurface"), "0");
-			await user.type(screen.getByTestId("thicknessOfWalls"), "0");
 			await user.type(screen.getByTestId("underfloorSpaceThermalResistance"), "0");
 			await user.type(screen.getByTestId("thermalTransmittanceOfWallsAboveGround"), "0");
 			await user.type(screen.getByTestId("ventilationOpeningsArea"), "0");
@@ -364,7 +363,7 @@ describe("ground floor", () => {
 
 			expect((await screen.findByTestId("typeOfGroundFloor_Suspended_floor")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("heightOfFloorUpperSurface")).value).toBe("0");
-			expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("0.8");
+			expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("80");
 			expect((await screen.findByTestId<HTMLInputElement>("underfloorSpaceThermalResistance")).value).toBe("0");
 			expect((await screen.findByTestId<HTMLInputElement>("thermalTransmittanceOfWallsAboveGround")).value).toBe("0");
 			expect((await screen.findByTestId<HTMLInputElement>("ventilationOpeningsArea")).value).toBe("0");
