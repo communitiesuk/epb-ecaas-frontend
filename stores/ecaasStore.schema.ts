@@ -196,8 +196,8 @@ export const groundSurfaceAreaZod = z.number().min(5).max(10000);
 export const groundTotalAreaZod = z.number().min(5);
 export const groundPerimeterZod = z.number().min(0).max(1000);
 
-export const thicknessOfWallsZod = addConstraints(zodUnit("length"), { min: 0, max: 10000 });
-export const thicknessOfGroundFloorWallsZod = addConstraints(zodUnit("length"), { min: 0, max: 100 });
+export const thicknessOfWallsZod = addConstraints(zodUnit("length"), { min: 0, max: 100000 });
+
 const baseGroundFloorData = named.extend({
 	surfaceArea: groundSurfaceAreaZod,
 	totalArea: groundTotalAreaZod,
@@ -207,7 +207,7 @@ const baseGroundFloorData = named.extend({
 	massDistributionClass,
 	perimeter: groundPerimeterZod,
 	psiOfWallJunction: z.number().min(0).max(2),
-	thicknessOfWalls: thicknessOfGroundFloorWallsZod,
+	thicknessOfWalls: thicknessOfWallsZod,
 });
 
 const slabEdgeInsulationBase = baseGroundFloorData.extend({
@@ -1575,17 +1575,17 @@ type IsEcaasForm<T> = T extends EcaasForm<unknown> ? true : false;
 
 type Join<K, P> = K extends string | number
 	? P extends string | number
-		? `${K}/${P}`
-		: never
+	? `${K}/${P}`
+	: never
 	: never;
 
 type EcaasFormPaths<T> = {
 	[K in keyof T]:
 	IsEcaasForm<T[K]> extends true
-		? K
-		: T[K] extends object
-			? Join<K, EcaasFormPaths<T[K]>>
-			: never
+	? K
+	: T[K] extends object
+	? Join<K, EcaasFormPaths<T[K]>>
+	: never
 }[keyof T];
 
 export type EcaasFormPath = NonNullable<EcaasFormPaths<EcaasState>>;
