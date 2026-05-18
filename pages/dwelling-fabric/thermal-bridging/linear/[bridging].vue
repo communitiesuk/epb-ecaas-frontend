@@ -19,7 +19,7 @@ const defaultName = "Linear thermal bridge";
 
 type StartsWith<T extends string, Prefix extends string> = T extends `${Prefix}${string}` ? T : never;
 
-const junctionTypeOptions = {
+const junctionTypeOptions = [{
 	E1: "E1: Steel lintel with perforated steel base plate",
 	E2: "E2: Other lintels (including other steel lintels)",
 	E3: "E3: Sill",
@@ -45,7 +45,7 @@ const junctionTypeOptions = {
 	E23: "E23: Balcony within or between dwellings, balcony support penetrates wall insulation",
 	E24: "E24: Eaves (insulation at ceiling level - inverted)",
 	E25: "E25: Staggered party wall between dwellings",
-
+},{
 	P1: "P1: Party wall - Ground floor",
 	P2: "P2: Party wall - Intermediate floor within a dwelling",
 	P3: "P3: Party wall - Intermediate floor between dwellings (in blocks of flats)",
@@ -54,7 +54,7 @@ const junctionTypeOptions = {
 	P6: "P6: Party wall - Ground floor (inverted)",
 	P7: "P7: Party Wall - Exposed floor (normal)",
 	P8: "P8: Party Wall - Exposed floor (inverted)",
-
+},{
 	R1: "R1: Head of roof window",
 	R2: "R2: Sill of roof window",
 	R3: "R3: Jamb of roof window",
@@ -66,8 +66,11 @@ const junctionTypeOptions = {
 	R9: "R9: Roof to wall (flat ceiling)",
 	R10: "R10: All other roof or room-in-roof junctions",
 	R11: "R11: Upstands or kerbs of rooflights",
-} as const satisfies Record<StartsWith<SchemaThermalBridgeJunctionType, "E" | "P" | "R">, string>;
-
+}] as const satisfies [
+	Record<StartsWith<SchemaThermalBridgeJunctionType, "E">, `${SchemaThermalBridgeJunctionType}: ${string}`>,
+	Record<StartsWith<SchemaThermalBridgeJunctionType, "P">, `${SchemaThermalBridgeJunctionType}: ${string}`>,
+	Record<StartsWith<SchemaThermalBridgeJunctionType, "R">, `${SchemaThermalBridgeJunctionType}: ${string}`>,
+];
 
 const saveForm = (fields: LinearThermalBridgeData) => {
 	store.$patch((state) => {
@@ -93,8 +96,7 @@ autoSaveElementForm<LinearThermalBridgeData>({
 	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges,
 	defaultName: "",
 	onPatch: (state, newData, index) => {
-		const isDefaultName = Object.values(junctionTypeOptions).includes(newData.data.name as never);
-		if (!newData.data.name || isDefaultName) {
+		if (!newData.data.name) {
 			newData.data.name = getDefaultName(newData.data.typeOfThermalBridge) ?? defaultName;
 
 			model.value = {
@@ -109,7 +111,11 @@ autoSaveElementForm<LinearThermalBridgeData>({
 });
 
 const getDefaultName = (typeOfThermalBridge: SchemaThermalBridgeJunctionType): string | undefined => {
-	return junctionTypeOptions[typeOfThermalBridge];
+	const options = junctionTypeOptions.find(o => Object.hasOwn(o, typeOfThermalBridge as PropertyKey)) as Record<string, string>;
+
+	if (options) {
+		return options[typeOfThermalBridge as string];
+	}
 };
 
 
@@ -133,7 +139,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<GovErrorSummary :error-list="errorMessages" test-id="linearBridgeErrorSummary"/>
 		<FormKit
 			id="typeOfThermalBridge"
-			type="govRadios"
+			type="govDropdown"
 			label="Type of thermal bridge"
 			help="Select the junction type from HEM guidance Table 3.7.2"
 			name="typeOfThermalBridge"
