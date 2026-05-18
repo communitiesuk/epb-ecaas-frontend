@@ -16,6 +16,12 @@ const modelNames = await useProductReferences(
 
 const associatedItems = Object.fromEntries(useAssociatedItems(["wall", "roof", "window"]));
 
+const { 
+	dwellingSpaceWindows, 
+	dwellingSpaceWalls, 
+	dwellingSpaceCeilingsAndRoofs: { dwellingSpaceRoofs }, 
+} = store.dwellingFabric;
+
 const mechanicalVentilationSummary: SummarySection = {
 	id: "mechanicalVentilation",
 	label: "Mechanical ventilation",
@@ -23,6 +29,9 @@ const mechanicalVentilationSummary: SummarySection = {
 		const x = data as MechanicalVentilationData;
 		const isMvhr = x.typeOfMechanicalVentilationOptions === "MVHR";
 		const mvhrLocation = "mvhrLocation" in x ? displayCamelToSentenceCase(show(x.mvhrLocation)) : emptyValueRendering;
+		const taggedItem = store.getTaggedItem([dwellingSpaceWalls.dwellingSpaceExternalWall, dwellingSpaceWindows, dwellingSpaceRoofs], x.associatedItemId);
+		const orientation = taggedItem?.orientation ?? (x as { orientation?: number })?.orientation;
+		const pitch = x.hasAssociatedItem === true ? taggedItem?.pitch : x.pitch;
 		return {
 			"Name": show(x.name),
 			"Type of mechanical ventilation": show(x.typeOfMechanicalVentilationOptions),
@@ -37,7 +46,7 @@ const mechanicalVentilationSummary: SummarySection = {
 				"Measured air flow rate": dim(x.measuredAirFlowRate, "litres per second"),
 			} : {}),
 			...(x.typeOfMechanicalVentilationOptions === "MVHR" ? {
-				"MVHR location": displayCamelToSentenceCase(x.mvhrLocation),
+				"MVHR location": mvhrLocation,
 				"Mid-height of airflow path for intake": dim(x.midHeightOfAirFlowPathForIntake, "metres"),
 				"Orientation of intake": dim(x.orientationOfIntake, "degrees"),
 				"Pitch of intake": dim(x.pitchOfIntake, "degrees"),
@@ -55,10 +64,8 @@ const mechanicalVentilationSummary: SummarySection = {
 			"Associated wall, roof or window": x.associatedItemId && x.associatedItemId !== "none"
 				? associatedItems[x.associatedItemId] ?? emptyValueRendering
 				: emptyValueRendering,
-			...(!x.hasAssociatedItem ? {
-				"Pitch of vent": dim(x.pitch, "degrees"),
-				"Orientation of vent": dim(x.orientation, "degrees"),
-			} : {}),
+			"Pitch of vent": pitch !== undefined ? dim(pitch, "degrees") : emptyValueRendering,
+			"Orientation of vent": orientation !== undefined ? dim(orientation, "degrees") : emptyValueRendering,
 			...(x.typeOfMechanicalVentilationOptions !== "MVHR" ? {
 				"Mid-height of airflow path": dim(x.midHeightOfAirFlowPath, "metres"),
 			} : {}),
@@ -98,8 +105,6 @@ const ductworkSummary: SummarySection = {
 };
 
 const ventData = store.infiltrationAndVentilation.vents.data;
-const walls = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceWindows } = store.dwellingFabric;
 
 const ventSummary: SummarySection = {
 	id: "vents",
@@ -107,7 +112,7 @@ const ventSummary: SummarySection = {
 	data: ventData.map((vent) => {
 		const x = vent.data as VentData;
 
-		const taggedItem = store.getTaggedItem([walls.dwellingSpaceExternalWall, dwellingSpaceWindows], x.associatedItemId);
+		const taggedItem = store.getTaggedItem([dwellingSpaceWalls.dwellingSpaceExternalWall, dwellingSpaceWindows], x.associatedItemId);
 		const associatedItemName = x.associatedItemId && x.associatedItemId !== "none"
 			? associatedItems[x.associatedItemId] ?? emptyValueRendering
 			: emptyValueRendering;
