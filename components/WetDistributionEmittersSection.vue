@@ -2,8 +2,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { emitterFloorAreaZod, lengthRadiatorZod, productCountZod, type WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
-import type { ConvectorRadiatorProduct, Product } from "~/pcdb/pcdb.types";
+import type { ConvectorRadiatorProduct, Product, UnderFloorHeatingProduct } from "~/pcdb/pcdb.types";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
+import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
 
 const route = useRoute();
 const router = useRouter();
@@ -14,13 +15,13 @@ const clearEmitterIndexFromUrl = () => {
 
 const emitterTypeOptions = {
 	radiator: "Radiator",
-	underfloorHeating: "Underfloor heating",
+	underFloorHeating: "Underfloor heating",
 	fanCoil: "Fan coil",
 } as const;
-// boolean for switch for underfloor heating feature
-const useUnderfloorHeating: boolean = false;
 
-const { underfloorHeating, ...others } = emitterTypeOptions;
+const useUnderfloorHeating: boolean = true;
+
+const { underFloorHeating, ...others } = emitterTypeOptions;
 const heatEmitterTypes = useUnderfloorHeating ? emitterTypeOptions : others;
 type EmitterType = keyof typeof emitterTypeOptions;
 
@@ -61,7 +62,7 @@ const productDetails = ref<Record<string, string[]>>({});
 
 const fetchProductName = async (productReference: string) => {
 	if (productDetails.value[productReference]) return;
-	const { data: product } = await useFetch<Product | ConvectorRadiatorProduct>(`/api/products/${productReference}`);
+	const { data: product } = await useFetch<Product | ConvectorRadiatorProduct | UnderFloorHeatingProduct>(`/api/products/${productReference}`);
 	if (!product.value) {
 		return;
 	}
@@ -78,6 +79,11 @@ const fetchProductName = async (productReference: string) => {
 	if (isConvectorRadiatorProduct(product.value) && product.value.type) {
 		const heightText = product.value.height != null ? `${product.value.height} mm` : undefined;
 		productDetails.value[productReference] = [product.value.type, heightText].filter(Boolean) as string[];
+	}
+
+	if (isUnderFloorHeatingProduct(product.value) && product.value.systemName) {
+		const pipeCentresText = product.value.pipeCentres !== null ? `${product.value.pipeCentres} mm` : undefined;
+		productDetails.value[productReference] = [product.value.systemName, pipeCentresText].filter(Boolean) as string[];
 	}
 };
 
@@ -112,11 +118,11 @@ const emitterSummaryData = (emitter: Partial<WetDistributionEmitterData> & { id:
 				"Fan coil product": product,
 				"Number of fan coils": (emitter as { numOfFanCoils?: number }).numOfFanCoils,
 			};
-		case "underfloorHeating":
+		case "underFloorHeating":
 			return {
 				"Type of emitter": typeName,
 				"Underfloor heating product": product,
-				"Area of underfloor heating": (emitter as { areaOfUnderfloorHeating?: number }).areaOfUnderfloorHeating != null ? `${(emitter as { areaOfUnderfloorHeating: number }).areaOfUnderfloorHeating} m²` : undefined,
+				"Area of underfloor heating": (emitter as { areaOfUnderFloorHeating?: number }).areaOfUnderFloorHeating != null ? `${(emitter as { areaOfUnderFloorHeating: number }).areaOfUnderFloorHeating} m²` : undefined,
 			};
 		default:
 			return {
@@ -281,7 +287,6 @@ const saveEmitter = () => {
 						:id="`typeOfHeatEmitter_${i}`"
 						type="govRadios"
 						label="Type of emitter"
-						:help="useUnderfloorHeating ? undefined : 'Please note, underfloor heating is not currently available, but will be in future releases.'"
 						:options="heatEmitterTypes"
 						name="typeOfHeatEmitter"
 						validation="required"
@@ -345,19 +350,25 @@ const saveEmitter = () => {
 							:validation="zodTypeAsFormKitValidation(productCountZod)"
 						/>
 					</template>
-					<template v-if="formModel.typeOfHeatEmitter === 'underfloorHeating'">
+					<template v-if="formModel.typeOfHeatEmitter === 'underFloorHeating'">
 						<FormKit
-							:id="`productReference_${i}`"
-							type="govInputText"
+							:id="`selectUnderFloorHeating_${i}`"
+							type="govPcdbProduct"
 							label="Product reference"
 							name="productReference"
 							validation="required"
+							help="Select the underfloor heating type from the PCDB using the button below."
+							:selected-product-reference="formModel.productReference as string"
+							selected-product-type="underFloorHeating"
+							:page-url="route.fullPath"
+							:page-index="props.index"
+							:emitter-index="i"
 						/>
 						<FormKit
-							:id="`areaOfUnderfloorHeating_${i}`"
+							:id="`areaOfUnderFloorHeating_${i}`"
 							type="govInputWithSuffix"
 							label="Area of underfloor heating"
-							name="areaOfUnderfloorHeating"
+							name="areaOfUnderFloorHeating"
 							suffix-text="m²"
 							:validation="zodTypeAsFormKitValidation(emitterFloorAreaZod)"
 						/>
@@ -415,7 +426,6 @@ const saveEmitter = () => {
 						type="govRadios"
 						label="Type of emitter"
 						:options="heatEmitterTypes"
-						:help="useUnderfloorHeating ? undefined : 'Please note, underfloor heating is not currently available, but will be in future releases.'"
 						name="emitterTypeSelection"
 						@input="addEmitter"
 					/>

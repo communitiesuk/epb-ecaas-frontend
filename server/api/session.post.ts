@@ -16,6 +16,7 @@ async function getSessionId(event: H3Event) {
 	}
 	return sessionId;
 }
+
 export default defineEventHandler(async (event) => {
 	const timeToLive = Math.floor(Date.now() / 1000) + twoWeeksInSeconds;
 	const body = await readBody(event);

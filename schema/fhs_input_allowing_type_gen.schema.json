@@ -995,6 +995,7 @@
 								"required": [
 									"product_reference",
 									"EnergySupply",
+                                    "design_outdoor_air_flow_rate",
 									"installed_under_approved_scheme"
 								],
 								"properties": {
@@ -1919,15 +1920,11 @@
                         {
                             "required": [
                                 "type",
-                                "EnergySupply",
                                 "product_reference"
                             ],
                             "properties": {
                                 "type": {
                                     "const": "HeatPump_HWOnly"
-                                },
-                                "EnergySupply": {
-                                    "type": "string"
                                 },
                                 "product_reference": {
                                     "description": "A unique reference to a product held within the HEM database (PCDB)",
@@ -2180,7 +2177,8 @@
                         {
                             "required": [
                                 "product_reference",
-                                "HeatSource"
+                                "HeatSource",
+                                "ColdWaterSource"
                             ],
                             "properties": {
                                 "product_reference": {
@@ -2269,6 +2267,15 @@
                                             }
                                         ]
                                     }
+                                },
+                                "ColdWaterSource": {
+                                    "type": "string",
+                                    "reference_to": [
+                                        "$.cold_water_source",
+                                        "$.pre_heated_water_source",
+                                        "$.wwhrs"
+                                    ],
+                                    "description": "References a key (e.g., \"mains water\") in $.ColdWaterSource"
                                 }
                             }
                         },
@@ -3316,8 +3323,7 @@
                         {
                             "required": [
                                 "product_reference",
-                                "building_level_distribution_losses",
-                                "design_flow_temp"
+                                "building_level_distribution_losses"
                             ],
                             "properties": {
                                 "product_reference": {
@@ -3328,10 +3334,6 @@
                                 "building_level_distribution_losses": {
                                     "type": "number",
                                     "minimum": 0
-                                },
-                                "design_flow_temp": {
-                                    "type": "number",
-                                    "description": "The flow temperature expected to be set - typically either 55°C or 70°C"
                                 }
                             }
                         },

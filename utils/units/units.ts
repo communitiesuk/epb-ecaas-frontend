@@ -207,6 +207,12 @@ export const units = [
 		multiplier: 1,
 		dimension: "mass",
 	},
+	{
+		"name": "kilojoules per square metre per kelvin",
+		"suffix": "kJ/(m²·K)",
+		"multiplier": 1,
+		"dimension": "energy per area temperature",
+	},
 ] as const;
 
 export function asUnit<T extends UnitName>(name: T): UnitForName<T> {

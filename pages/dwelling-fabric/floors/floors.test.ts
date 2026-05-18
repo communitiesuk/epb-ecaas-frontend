@@ -5,6 +5,7 @@ import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
 import formStatus from "~/constants/formStatus";
 import type { FloorOfHeatedBasementData } from "~/stores/ecaasStore.schema";
+import { metre, millimetre } from "~/utils/units/length";
 
 describe("floors", () => {
 	const store = useEcaasStore();
@@ -25,7 +26,7 @@ describe("floors", () => {
 		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
-		thicknessOfWalls: 0.3,
+		thicknessOfWalls: unitValue(0.3, metre),
 		typeOfGroundFloor: "Slab_no_edge_insulation",
 	};
 
@@ -39,7 +40,7 @@ describe("floors", () => {
 		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
-		thicknessOfWalls: 0.4,
+		thicknessOfWalls: unitValue(0.4, metre),
 		typeOfGroundFloor: "Slab_no_edge_insulation",
 	};
 
@@ -53,7 +54,7 @@ describe("floors", () => {
 		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
-		thicknessOfWalls: 0.5,
+		thicknessOfWalls: unitValue(0.5, metre),
 		typeOfGroundFloor: "Slab_no_edge_insulation",
 	};
 
@@ -130,7 +131,7 @@ describe("floors", () => {
 		massDistributionClass: "E",
 		perimeter: 2,
 		psiOfWallJunction: 0.5,
-		thicknessOfWalls: 0.5,
+		thicknessOfWalls: unitValue(0.5, millimetre),
 		depthOfBasementFloor: 1,
 		heightOfBasementWalls: 2,
 		thermalResistanceOfBasementWalls: 1,
@@ -148,7 +149,7 @@ describe("floors", () => {
 		massDistributionClass: "IE",
 		perimeter: 2.5,
 		psiOfWallJunction: 0.9,
-		thicknessOfWalls: 0.7,
+		thicknessOfWalls: unitValue(0.7, millimetre),
 		depthOfBasementFloor: 0.5,
 		heightOfBasementWalls: 3,
 		thermalResistanceOfBasementWalls: 1.5,
@@ -166,7 +167,7 @@ describe("floors", () => {
 		massDistributionClass: "D",
 		perimeter: 1.5,
 		psiOfWallJunction: 0.3,
-		thicknessOfWalls: 1,
+		thicknessOfWalls: unitValue(1, millimetre),
 		depthOfBasementFloor: 0.8,
 		heightOfBasementWalls: 2,
 		thermalResistanceOfBasementWalls: 0.7,
@@ -185,7 +186,7 @@ describe("floors", () => {
 		massDistributionClass: "I",
 		depthOfBasementFloor: 2.5,
 		psiOfWallJunction: 0.08,
-		thicknessOfWalls: 0.3,
+		thicknessOfWalls: unitValue(0.3, millimetre),
 	};
 
 	const floorOfHeatedBasement2: FloorOfHeatedBasementData = {
@@ -199,7 +200,7 @@ describe("floors", () => {
 		massDistributionClass: "E",
 		depthOfBasementFloor: 3,
 		psiOfWallJunction: 0.1,
-		thicknessOfWalls: 0.4,
+		thicknessOfWalls: unitValue(0.4, millimetre),
 	};
 
 	const floorOfHeatedBasement3: FloorOfHeatedBasementData = {
@@ -213,7 +214,7 @@ describe("floors", () => {
 		massDistributionClass: "M",
 		depthOfBasementFloor: 2,
 		psiOfWallJunction: 0.05,
-		thicknessOfWalls: 0.25,
+		thicknessOfWalls: unitValue(0.25, millimetre),
 	};
 
 	afterEach(() => {

@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, waitFor } from "@testing-library/vue";
 import HeatSourceForm from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
 import type { BoilerProduct, DisplayProduct, HybridHeatPumpProduct } from "~/pcdb/pcdb.types";
@@ -1180,7 +1180,7 @@ describe("heatSource", () => {
 					name: "Test heat network",
 					typeOfHeatSource: "heatNetwork",
 					productReference: "1000",
-					subHeatNetworkId: "td-2",
+					subHeatNetworkName: "Sub 2",
 					typeOfHeatNetwork: "communalHeatNetwork",
 				};
 
@@ -1209,9 +1209,10 @@ describe("heatSource", () => {
 						params: { "heatSource": "0" },
 					},
 				});
-
-				expect(screen.getByTestId("pcdbHeatNetworkProductData")).toBeDefined();
-				expect(screen.getByTestId("productData_subHeatNetworkName").textContent).toBe("Sub 2");
+				await waitFor(() => {
+					expect(screen.getByTestId("pcdbHeatNetworkProductData")).toBeDefined();
+					expect(screen.getByTestId("productData_subHeatNetworkName").textContent).toBe("Sub 2");
+				});
 			});
 		});
 		describe("Heat interface unit", () => {

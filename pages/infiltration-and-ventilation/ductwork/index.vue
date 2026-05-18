@@ -51,6 +51,7 @@ function handleComplete() {
 	}
 		
 }
+
 function checkIsComplete() {
 	if (!store.infiltrationAndVentilation.ductwork.complete) {
 		return false;

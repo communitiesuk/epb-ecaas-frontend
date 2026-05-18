@@ -8,6 +8,9 @@ const title = "External glazed door";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const { mounted } = useMounted();
+
+
 const externalGlazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data;
 const index = getStoreIndex(externalGlazedDoorData);
 const doorData = useItemToEdit("door", externalGlazedDoorData);
@@ -196,12 +199,13 @@ const tagHasValidPitch = computed(() => {
 			}"
 		/>
 		<FieldsAssociatedWallRoof
+			v-if="mounted"
 			id="associatedItemId"
 			name="associatedItemId"
 			label="Associated wall or roof"
 			help="Select the wall or roof that this door is in. It should have the same orientation and pitch as the door."
 		/>
-		<template v-if="model && (model.associatedItemId === 'none' || tagOptions.length === 0)">
+		<template v-if="mounted && model && (model.associatedItemId === 'none' || tagOptions.length === 0)">
 			<FieldsPitch
 				:pitch-option="model?.pitchOption"
 				:options='standardPitchOptions()'
@@ -309,7 +313,7 @@ const tagHasValidPitch = computed(() => {
 			:validation="zodTypeAsFormKitValidation(maxWindowOpenAreaZod)"
 			data-field="Zone.BuildingElement.*.max_window_open_area"
 		/>
-		<template v-if="!!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
+		<template v-if="mounted && !!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
 			<FormKit
 				id="midHeightOpenablePart1"
 				type="govInputWithSuffix"
@@ -354,7 +358,7 @@ const tagHasValidPitch = computed(() => {
 			</template>
 		</template>
 		<FieldsFrontDoor
-			v-if="tagHasValidPitch &&
+			v-if="mounted && tagHasValidPitch &&
 				(!isFlatRoofItem(model?.associatedItemId!) ||
 					!model?.associatedItemId ||
 					model.associatedItemId === 'none') && (model?.pitch !== 0 && model?.pitch !== 180)"
@@ -371,7 +375,7 @@ const tagHasValidPitch = computed(() => {
 			validation="required"
 		/>
 		<ShadingSection
-			v-if="model?.hasShading"
+			v-if="mounted && model?.hasShading"
 			:index="index"
 			:model="shading"
 			shading-section-type="window"
@@ -388,7 +392,7 @@ const tagHasValidPitch = computed(() => {
 			validation="required"
 		/>
 		<WindowTreatmentSection
-			v-if="model && model.curtainsOrBlinds"
+			v-if="mounted && model && model.curtainsOrBlinds"
 			treatment-section-type="door"
 		/>
 		<div class="govuk-button-group">

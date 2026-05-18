@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { centimetre, metre, type Length } from "~/utils/units/length";
+import { centimetre, metre, millimetre, type Length } from "~/utils/units/length";
 import { zodTypeAsFormKitValidation } from "#imports";
 import type { SchemaWindShieldLocation } from "~/schema/aliases";
 import { groundSurfaceAreaZod, groundTotalAreaZod, groundPerimeterZod, heightUpperSurfaceZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
@@ -9,11 +9,14 @@ const title = "Ground floor";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const { mounted } = useMounted();
+
+
 const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
 const index = getStoreIndex(groundFloorData);
 const floorData = useItemToEdit("floor", groundFloorData);
 
-// prepopulate edge insulation width/depth when using old input format (raw number stored in centimetres)
+// prepopulate unit inputs when using old input format (raw numbers)
 if (floorData?.data) {
 	const data = floorData.data as Record<string, unknown>;
 	if ("horizontalEdgeInsulationWidth" in data && typeof data.horizontalEdgeInsulationWidth === "number") {
@@ -21,6 +24,9 @@ if (floorData?.data) {
 	}
 	if ("verticalEdgeInsulationDepth" in data && typeof data.verticalEdgeInsulationDepth === "number") {
 		data.verticalEdgeInsulationDepth = unitValue(data.verticalEdgeInsulationDepth, centimetre);
+	}
+	if ("thicknessOfWalls" in data && typeof data.thicknessOfWalls === "number") {
+		data.thicknessOfWalls = unitValue(data.thicknessOfWalls, millimetre);
 	}
 }
 
@@ -60,7 +66,7 @@ const saveForm = (fields: GroundFloorData) => {
 			massDistributionClass: fields.massDistributionClass,
 			perimeter: fields.perimeter,
 			psiOfWallJunction: fields.psiOfWallJunction,
-			thicknessOfWalls: fields.thicknessOfWalls,
+			thicknessOfWalls: unitValue(fields.thicknessOfWalls.amount, millimetre),
 		};
 
 		let floorData: GroundFloorData;
@@ -255,8 +261,8 @@ const greaterThanZero = (node: FormKitNode) => {
 		/>
 		<FormKit
 			id="thicknessOfWalls"
-			type="govInputWithSuffix"
-			suffix-text="m"
+			type="govInputWithUnit"
+			:unit="millimetre"
 			label="Thickness of walls at the edge of the floor"
 			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 0.3m to 0.8m. If this value varies enter a weighted average."
 			name="thicknessOfWalls"
@@ -277,7 +283,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			data-field="Zone.BuildingElement.*.floor_type"
 		/>
 
-		<template v-if="model?.typeOfGroundFloor === 'Slab_edge_insulation'">
+		<template v-if="mounted && model?.typeOfGroundFloor === 'Slab_edge_insulation'">
 			<FormKit
 				id="edgeInsulationType"
 				type="govCheckboxes"
@@ -370,7 +376,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			</template>
 		</template>
 
-		<template v-if="model?.typeOfGroundFloor === 'Suspended_floor'">
+		<template v-if="mounted && model?.typeOfGroundFloor === 'Suspended_floor'">
 			<FormKit
 				id="heightOfFloorUpperSurface"
 				type="govInputWithSuffix"
@@ -472,7 +478,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			</FormKit>
 		</template>
 
-		<template v-if="model?.typeOfGroundFloor === 'Heated_basement'">
+		<template v-if="mounted && model?.typeOfGroundFloor === 'Heated_basement'">
 			<FormKit
 				id="depthOfBasementFloorBelowGround"
 				type="govInputWithSuffix"
@@ -493,7 +499,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			/>
 		</template>
 
-		<template v-if="model?.typeOfGroundFloor === 'Unheated_basement'">
+		<template v-if="mounted && model?.typeOfGroundFloor === 'Unheated_basement'">
 			<FormKit
 				id="thermalTransmittanceOfFloorAboveBasement"
 				type="govInputWithSuffix"

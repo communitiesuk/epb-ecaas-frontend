@@ -237,7 +237,6 @@ export interface components {
         HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & ({
             /** @constant */
             type: "HeatPump_HWOnly";
-            EnergySupply: string;
             /**
              * Reference to the product in the HEM database
              * @description A unique reference to a product held within the HEM database (PCDB)
@@ -688,6 +687,8 @@ export interface components {
             HeatSource: {
                 [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
             };
+            /** @description References a key (e.g., "mains water") in $.ColdWaterSource */
+            ColdWaterSource: string;
         } | components["schemas"]["Tank"]);
         /** @description A possible hot water source */
         PointOfUse: {
@@ -959,8 +960,6 @@ export interface components {
              */
             product_reference: string;
             building_level_distribution_losses: number;
-            /** @description The flow temperature expected to be set - typically either 55°C or 70°C */
-            design_flow_temp: number;
         } | {
             HIU_daily_loss: number;
             power_max: number;
@@ -1506,7 +1505,7 @@ export interface components {
                         product_reference: string;
                         EnergySupply: string;
                         /** @description Design outdoor air flow rate (m3/hr) */
-                        design_outdoor_air_flow_rate?: number;
+                        design_outdoor_air_flow_rate: number;
                         /** @description Whether or not this system was installed under an approved installation scheme */
                         installed_under_approved_scheme: boolean;
                     } & ({
@@ -1722,7 +1721,6 @@ export interface components {
                 HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & ({
                     /** @constant */
                     type: "HeatPump_HWOnly";
-                    EnergySupply: string;
                     /**
                      * Reference to the product in the HEM database
                      * @description A unique reference to a product held within the HEM database (PCDB)
@@ -1802,6 +1800,8 @@ export interface components {
                     HeatSource: {
                         [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
                     };
+                    /** @description References a key (e.g., "mains water") in $.ColdWaterSource */
+                    ColdWaterSource: string;
                 } | components["schemas"]["Tank"]);
                 /** @description A possible hot water source */
                 PointOfUse: {
@@ -2141,8 +2141,6 @@ export interface components {
                      */
                     product_reference: string;
                     building_level_distribution_losses: number;
-                    /** @description The flow temperature expected to be set - typically either 55°C or 70°C */
-                    design_flow_temp: number;
                 } | {
                     HIU_daily_loss: number;
                     power_max: number;

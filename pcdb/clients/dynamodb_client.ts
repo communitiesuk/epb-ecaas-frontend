@@ -1,5 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import type { DisplayProduct, PaginatedResult, TechnologyGroup, TechnologyType, VesselType } from "../pcdb.types";
+import type { DisplayProduct, PaginatedResult, Product, TechnologyGroup, TechnologyType, VesselType } from "../pcdb.types";
 import type { PcdbClient } from "./client.types";
 import { DynamoDBDocumentClient, BatchGetCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { generateHeatNetworkSubNetworkDisplayProductCombinations } from "../utils/subheatnetwork-combination-display";
@@ -22,6 +22,9 @@ interface GetProductOptions {
 export const dynamodbClient: PcdbClient = {
 	async getProduct<T>(id: string, { includeTestData = false, testDataId }: GetProductOptions) {
 		return await getProduct(id, { includeTestData, testDataId }) as T;
+	},
+	async getProductsByIds(ids) {
+		return await getProductsByIds(ids);
 	},
 	async getProductsByTechnologyType(technologyType, pageSize, startKey) {
 		return await getProductsByTechnologyType(technologyType, pageSize, startKey);
@@ -56,6 +59,34 @@ const getProduct = async (id: string, { includeTestData = false, testDataId }: G
 	return Item;
 };
 
+const getProductsByIds = async (ids: string[]): Promise<Product[]> => {
+	const uniqueIds = Array.from(new Set(ids));
+	const chunks: string[][] = [];
+
+	for (let index = 0; index < uniqueIds.length; index += 100) {
+		chunks.push(uniqueIds.slice(index, index + 100));
+	}
+
+	const products: Record<string, unknown>[] = [];
+
+	for (const chunk of chunks) {
+		let pendingKeys = chunk.map(id => ({ id }));
+
+		while (pendingKeys.length > 0) {
+			const result = await docClient.send(new BatchGetCommand({
+				RequestItems: {
+					products: { Keys: pendingKeys },
+				},
+			}));
+
+			products.push(...((result.Responses?.products ?? []) as Record<string, unknown>[]));
+			pendingKeys = (result.UnprocessedKeys?.products?.Keys as { id: string }[] | undefined) ?? [];
+		}
+	}
+
+	return products as Product[];
+};
+
 const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?: TechnologyType): DisplayProduct | DisplayProduct[] | undefined => {
 	const id = (item.id ?? item.ID)?.toString();
 	if (!id) {
@@ -63,6 +94,8 @@ const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?
 	}
 
 	const technologyType = (item.technologyType ?? fallbackTechnologyType) as TechnologyType;
+	if (!technologyType) return undefined;
+
 	if (technologyType === "HeatNetworks") {
 		return generateHeatNetworkSubNetworkDisplayProductCombinations(item);
 	}
@@ -85,6 +118,21 @@ const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?
 		};
 	}
 
+	if (technologyType === "UnderFloorHeating") {
+		if (typeof item.systemName !== "string") return undefined;
+		if (typeof item.floorFinishCompatibility !== "string") return undefined;
+		if (typeof item.pipeCentres !== "number") return undefined;
+
+		return {
+			displayProduct: true,
+			id,
+			systemName: item.systemName,
+			floorFinishCompatibility: item.floorFinishCompatibility,
+			pipeCentres: item.pipeCentres,
+			technologyType,
+		};
+	}
+
 	return {
 		displayProduct: true,
 		id,
@@ -103,7 +151,7 @@ const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?
 	};
 };
 
-const hasConvectorDisplayFields = (item: Record<string, unknown>) => {
+const hasConvectorRadiatorDisplayFields = (item: Record<string, unknown>) => {
 	if (typeof item.type !== "string") {
 		return false;
 	}
@@ -115,6 +163,22 @@ const hasConvectorDisplayFields = (item: Record<string, unknown>) => {
 			: NaN;
 
 	return isFinite(parsedHeight);
+};
+
+const hasUnderfloorHeatingDisplayFields = (item: Record<string, unknown>) => {
+	if (typeof item.systemName !== "string") return false;
+	if (typeof item.floorFinishCompatibility !== "string") return false;
+
+	const pipeCentres =
+		typeof item.pipeCentres === "number"
+			? item.pipeCentres
+			: typeof item.pipeCentres === "string"
+				? parseFloat(item.pipeCentres)
+				: NaN;
+
+	if (!isFinite(pipeCentres)) return false;
+
+	return true;
 };
 
 const hydrateHeatNetworkItems = async (items: Record<string, unknown>[]) => {
@@ -137,9 +201,29 @@ const hydrateHeatNetworkItems = async (items: Record<string, unknown>[]) => {
 	return fetched.length > 0 ? fetched : items;
 };
 
-const hydrateConvectorItems = async (items: Record<string, unknown>[]) => {
+const hydrateConvectorRadiatorItems = async (items: Record<string, unknown>[]) => {
 	return await Promise.all(items.map(async (item) => {
-		if (hasConvectorDisplayFields(item)) {
+		if (hasConvectorRadiatorDisplayFields(item)) {
+			return item;
+		}
+
+		const key = item.id ?? item.ID;
+		if (key == null) {
+			return item;
+		}
+
+		const result = await docClient.send(new GetCommand({
+			TableName: "products",
+			Key: { id: key },
+		}));
+
+		return (result.Item as Record<string, unknown> | undefined) ?? item;
+	}));
+};
+
+const hydrateUnderfloorHeatingItems = async (items: Record<string, unknown>[]) => {
+	return await Promise.all(items.map(async (item) => {
+		if (hasUnderfloorHeatingDisplayFields(item)) {
 			return item;
 		}
 
@@ -171,10 +255,13 @@ const getProductsByTechnologyType = async (technologyType: TechnologyType, pageS
 	let itemsToDisplay: Record<string, unknown>[];
 	switch (technologyType) {
 		case "ConvectorRadiator":
-			itemsToDisplay = await hydrateConvectorItems(queryItems);
+			itemsToDisplay = await hydrateConvectorRadiatorItems(queryItems);
 			break;
 		case "HeatNetworks":
 			itemsToDisplay = await hydrateHeatNetworkItems(queryItems);
+			break;
+		case "UnderFloorHeating":
+			itemsToDisplay = await hydrateUnderfloorHeatingItems(queryItems);
 			break;
 		default:
 			itemsToDisplay = queryItems;

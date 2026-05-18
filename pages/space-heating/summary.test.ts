@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen, within } from "@testing-library/vue";
 import SpaceHeatingSummary from "./summary.vue";
 import { celsius } from "~/utils/units/temperature";
+import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 
 
 type ExpectedData = { [key: string]: string };
@@ -17,20 +18,31 @@ const verifyDataInSection = async (
 		expect(lineResult!.querySelector("dd")?.textContent).toBe(value);
 	}
 };
-const { mockFetch, mockGlobalFetch } = vi.hoisted(() => ({
+const { mockFetch } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
-	mockGlobalFetch: vi.fn(),
 }));
 
 mockNuxtImport("useFetch", () => mockFetch);
-vi.stubGlobal("fetch", mockGlobalFetch);
 
 
 const store = useEcaasStore();
 beforeEach(() => {
 	store.$reset();
 	mockFetch.mockReset();
-	mockFetch.mockReturnValue({ data: ref({ modelName: "Mock product" }) });
+	mockFetch.mockImplementation((url: string, options?: { query?: { ids?: string } }) => {
+		if (url === "/api/products/batch") {
+			const ids = options?.query?.ids
+				?.split(",")
+				.map(id => id.trim())
+				.filter(Boolean) ?? [];
+
+			return {
+				data: ref(ids.map(id => ({ id, modelName: "Mock product" }))),
+			};
+		}
+
+		return { data: ref({ modelName: "Mock product" }) };
+	});
 });
 
 
@@ -98,7 +110,6 @@ describe("Space heating summary page", () => {
 		});
 
 		it("displays the correct data for the heat pump summary (not connected to heat network)", async () => {
-			mockFetch.mockReturnValueOnce({ data: ref({ modelName: "Mock product" }) });
 			const heatPump1: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Heat pump 1",
@@ -139,7 +150,6 @@ describe("Space heating summary page", () => {
 		});
 
 		it("displays the correct data for the heat pump summary (connected to heat network)", async () => {
-			mockFetch.mockReturnValueOnce({ data: ref({ modelName: "Mock product" }) });
 			const heatNetwork: HeatSourceData = {
 				id: "network-1",
 				name: "Heat network 1",
@@ -227,16 +237,13 @@ describe("Space heating summary page", () => {
 			}
 		});
 		it("displays the correct data for the heat network summary", async () => {
-			mockGlobalFetch.mockResolvedValue({
-				ok: true, json: async () => ({ communityHeatNetworkName: "Community Network A", subheatNetworkName: "Subnetwork 2" }),
-			} as Response);
 			const heatNetwork1: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Heat network 1",
 				typeOfHeatSource: "heatNetwork",
 				typeOfHeatNetwork: "communalHeatNetwork",
 				productReference: "HEAT_NETWORK-LARGE",
-				subHeatNetworkId: "td-2",
+				subHeatNetworkName: "Sub 2",
 			};
 
 			const store = useEcaasStore();
@@ -255,8 +262,7 @@ describe("Space heating summary page", () => {
 				"Type of heat source": "Heat network",
 				"Type of heat network": "Communal heat network",
 				"Product reference": "HEAT_NETWORK-LARGE",
-				"Product name": "Community Network A - Subnetwork 2",
-				"Sub-heat network ID": "td-2",
+				"Sub-heat network name": "Sub 2",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -264,13 +270,9 @@ describe("Space heating summary page", () => {
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
-
-			expect(screen.queryByTestId(`summary-heatNetworkSummary-${hyphenate("Heat network name")}`)).toBeNull();
-			expect(screen.queryByTestId(`summary-heatNetworkSummary-${hyphenate("Subheatnetwork name")}`)).toBeNull();
 		});
 
-		it("renders emptyValueRendering for missing combined heat network product name", async () => {
-			mockFetch.mockReturnValue({ data: ref({ modelName: "Mock heat network product" }) });
+		it("renders emptyValueRendering for missing sub-heat network name", async () => {
 			const heatNetwork1: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c66",
 				name: "Heat network 2",
@@ -291,7 +293,7 @@ describe("Space heating summary page", () => {
 			await renderSuspended(SpaceHeatingSummary);
 
 			const expectedResult = {
-				"Product name": "-",
+				"Sub-heat network name": "-",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -301,7 +303,9 @@ describe("Space heating summary page", () => {
 		});
 
 		it("displays the correct data for the heat interface unit summary", async () => {
-			mockFetch.mockReturnValue({ data: ref({ modelName: "Mock HIU product" }) });
+			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
+				"HIU-LARGE": "Mock HIU product",
+			});
 			const heatNetwork: HeatSourceData = {
 				id: "network-1",
 				name: "Heat network 1",
@@ -573,9 +577,9 @@ describe("Space heating summary page", () => {
 				{
 					id: "ufh-1",
 					name: "Underfloor Heating 1",
-					typeOfHeatEmitter: "underfloorHeating",
+					typeOfHeatEmitter: "underFloorHeating",
 					productReference: "UFH-SMALL",
-					areaOfUnderfloorHeating: 100,
+					areaOfUnderFloorHeating: 100,
 				},
 				{
 					id: "fc-1",

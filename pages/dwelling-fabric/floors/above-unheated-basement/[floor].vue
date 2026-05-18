@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { getUrl, uniqueName, type FloorAboveUnheatedBasementData } from "#imports";
+import { getUrl, uniqueName, unitValue, type FloorAboveUnheatedBasementData } from "#imports";
 import { zodTypeAsFormKitValidation } from "#imports";
 import { groundSurfaceAreaZod, groundTotalAreaZod, groundPerimeterZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
+import { millimetre } from "~/utils/units/length";
 
 const title = "Floor above an unheated basement";
 const store = useEcaasStore();
@@ -10,6 +11,14 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const floorAboveUnheatedBasementData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement?.data;
 const index = getStoreIndex(floorAboveUnheatedBasementData);
 const floorData = useItemToEdit("floor", floorAboveUnheatedBasementData);
+
+if (floorData?.data) {
+	const data = floorData.data as Record<string, unknown>;
+	if ("thicknessOfWalls" in data && typeof data.thicknessOfWalls === "number") {
+		data.thicknessOfWalls = unitValue(data.thicknessOfWalls, millimetre);
+	}
+}
+
 const model = ref(floorData?.data);
 
 const saveForm = (fields: FloorAboveUnheatedBasementData) => {	
@@ -151,11 +160,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="thicknessOfWalls"
-			type="govInputWithSuffix"
-			suffix-text="mm"
+			type="govInputWithUnit"
+
 			label="Thickness of walls at the edge of the floor"
 			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 300mm to 800mm."
 			name="thicknessOfWalls"
+			:unit="millimetre"
 			:validation="zodTypeAsFormKitValidation(thicknessOfWallsZod)">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">This is usually measured from the inside surface to the outside surface. If the thickness varies, enter a weighted average.</p>

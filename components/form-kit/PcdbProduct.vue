@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from "@formkit/core";
 import { showErrorState, getErrorMessage } from "#imports";
-import type { Product } from "~/pcdb/pcdb.types";
-import { isConvectorRadiatorProduct, type AnyPcdbProduct } from "~/utils/convectorRadiator";
+import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
+import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
+import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
@@ -14,7 +15,7 @@ const {
 	id,
 	attrs: {
 		"selected-product-reference": selectedProductReference,
-		"selected-sub-heat-network-id": selectedSubHeatNetworkId,
+		"selected-sub-heat-network-name": selectedSubHeatNetworkName,
 		"selected-product-type": selectedProductType,
 		"page-url": pageUrl,
 		"page-index": index,
@@ -23,12 +24,8 @@ const {
 	node: { props: { disabled } },
 } = props.context;
 
-async function fetchProduct(reference: string, subHeatNetworkId?: string) {
-	const response = await useFetch<AnyPcdbProduct>(`/api/products/${reference}`, {
-		query: selectedProductType === "heatNetwork" && subHeatNetworkId
-			? { testDataId: subHeatNetworkId }
-			: undefined,
-	});
+async function fetchProduct(reference: string) {
+	const response = await useFetch<AnyPcdbProduct>(`/api/products/${reference}`);
 	productData.value = response?.data?.value;
 }
 
@@ -39,56 +36,40 @@ function buildProductsPageUrl(url: string, index: number, productType: string, e
 }
 
 const selectedProduct = ref<string | undefined>(selectedProductReference);
+const selectedSubHeatNetwork = ref<string | undefined>(selectedSubHeatNetworkName as string | undefined);
 
 const productsPageUrl = ref(buildProductsPageUrl(pageUrl, index, selectedProductType ?? "", emitterIndex));
 const productData = ref<AnyPcdbProduct | undefined | null>();
 
-function getHeatNetworkSubnetworkName(product: AnyPcdbProduct | undefined | null): string | undefined {
-	if (!product || !("communityHeatNetworkName" in product)) {
-		return undefined;
-	}
-
-	const maybeHeatNetwork = product as unknown as Record<string, unknown>;
-
-	if (typeof maybeHeatNetwork.subheatNetworkName === "string" && maybeHeatNetwork.subheatNetworkName) {
-		return maybeHeatNetwork.subheatNetworkName;
-	}
-
-	if (maybeHeatNetwork.testData && typeof maybeHeatNetwork.testData === "object") {
-		const subheatNetworkName = (maybeHeatNetwork.testData as Record<string, unknown>).subheatNetworkName;
-		if (typeof subheatNetworkName === "string" && subheatNetworkName) {
-			return subheatNetworkName;
-		}
-	}
-
-	return undefined;
-}
-
-const heatNetworkSubnetworkName = computed(() => getHeatNetworkSubnetworkName(productData.value));
-
-function hasModelDetails(product: Product): product is Product & { brandName: string; modelName: string; modelQualifier?: string | null } {
-	return "modelName" in product;
+function hasModelDetails(
+	product: AnyPcdbProduct,
+): product is Extract<AnyPcdbProduct, { modelName: string; brandName: string; modelQualifier?: string | null }> {
+	return "modelName" in product && "brandName" in product;
 }
 
 function productReferenceForDetails(product: AnyPcdbProduct): string {
-	return isConvectorRadiatorProduct(product) ? `${product.ID}` : product.id;
+	if (isConvectorRadiatorProduct(product) || isUnderFloorHeatingProduct(product)) {
+		return String(product.ID);
+	}
+	return product.id;
 }
 
 if (selectedProduct.value) {
-	await fetchProduct(selectedProductReference, selectedSubHeatNetworkId);
+	await fetchProduct(selectedProductReference);
 }
 
 watch(props.context, async ({ attrs: {
 	"selected-product-reference": newProductReference,
-	"selected-sub-heat-network-id": newSubHeatNetworkId,
+	"selected-sub-heat-network-name": newSubHeatNetworkName,
 	"selected-product-type": newProductType,
 	"emitter-index": newEmitterIndex,
 } }) => {
 	productsPageUrl.value = buildProductsPageUrl(pageUrl, index, newProductType ?? "", newEmitterIndex as number | undefined);
 	selectedProduct.value = newProductReference;
+	selectedSubHeatNetwork.value = newSubHeatNetworkName as string | undefined;
 
 	if (newProductReference) {
-		await fetchProduct(newProductReference, newSubHeatNetworkId as string | undefined);
+		await fetchProduct(newProductReference);
 		return;
 	}
 
@@ -114,7 +95,7 @@ watch(props.context, async ({ attrs: {
 					<ul class="govuk-list" data-testId="pcdbHeatNetworkProductData">
 						<li>Product reference: <span data-testid="productData_productReference" class="bold">{{ selectedProduct }}</span></li>
 						<li>Heat network name: <span class="bold">{{ productData.communityHeatNetworkName }}</span></li>
-						<li>Subnetwork name: <span data-testid="productData_subHeatNetworkName" class="bold">{{ heatNetworkSubnetworkName ?? '-' }}</span></li>
+						<li>Subnetwork name: <span data-testid="productData_subHeatNetworkName" class="bold">{{ selectedSubHeatNetwork ?? '-' }}</span></li>
 					</ul>
 				</template>
 				<template v-else>
@@ -123,6 +104,12 @@ watch(props.context, async ({ attrs: {
 						<template v-if="isConvectorRadiatorProduct(productData)">
 							<li>Type: <span class="bold">{{ productData.type ?? '-' }}</span></li>
 							<li>Height: <span class="bold">{{ productData.height != null ? `${productData.height} mm` : '-' }}</span></li>
+						</template>
+						<template v-else-if="isUnderFloorHeatingProduct(productData)">
+							<li>System Name: <span class="bold">{{ productData.systemName ?? '-' }}</span></li>
+							<li>Floor Finish Compatibility: <span class="bold">{{ productData.floorFinishCompatibility ?? '-' }}</span></li>
+							<li>Pipe Centres: <span class="bold">{{ productData.pipeCentres != null ? `${productData.pipeCentres} mm` : '-' }}</span></li>
+
 						</template>
 						<template v-else-if="hasModelDetails(productData)">
 							<li>Brand: <span class="bold">{{ productData.brandName }}</span></li>

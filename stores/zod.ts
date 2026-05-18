@@ -10,6 +10,7 @@ type NoneEmptyArray = readonly unknown[] & { 0: unknown };
 type CompareUnionWithArray<P, Q extends NoneEmptyArray> = Exclude<P, Q[number]> extends never
 	? (Exclude<Q[number], P> extends never ? Q : ReadonlyArray<P>)
 	: readonly [...Q, Exclude<P, Q[number]>];
+
 /** a passthrough function that does a type-level check that the passed array contains all members of the references union type */
 function ensureAllUnion<P, Q extends NoneEmptyArray>(values: CompareUnionWithArray<P, Q>) {
 	return values;

@@ -9,6 +9,8 @@ const title = "Wall of heated basement";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const { mounted } = useMounted();
+
 const wallOfHeatedBasementData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallOfHeatedBasement?.data;
 const index = getStoreIndex(wallOfHeatedBasementData);
 const wallData = useItemToEdit("wall", wallOfHeatedBasementData);
@@ -120,7 +122,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal resistance"
-			help="Enter the thermal resistance of all layers in the floor construction"
+			help="Enter the thermal resistance of all layers in the wall construction"
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50"
 
@@ -149,6 +151,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation="zodTypeAsFormKitValidation(groundPerimeterZod)"
 		/>
 		<FormKit
+			v-if="mounted"
 			id="associatedBasementFloorId"
 			:key="basementFloorOptions.size"
 			name="associatedBasementFloorId"
@@ -159,7 +162,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="basementFloorOptions"
 		>
 			<div
-				v-if="!basementFloorOptions.size"
+				v-if=" !basementFloorOptions.size"
 				data-testid="noBasementFloor"
 			>
 				<p class="govuk-error-message">No basement floors added.</p>

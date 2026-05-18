@@ -1,27 +1,23 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Summary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
-import { ref } from "vue";
 import { litre } from "~/utils/units/volume";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { displayCamelToSentenceCase } from "~/utils/display";
-import { kilowatt, kilowattHour } from "~/utils/units/power";
+import { kilowatt, kilowattHoursPerDay } from "~/utils/units/power";
 import { metresSquare } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import { celsius } from "~/utils/units/temperature";
+import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 
-const { mockFetch, mockGlobalFetch, mockNavigateTo } = vi.hoisted(() => ({
+const { mockFetch, mockNavigateTo } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
-	mockGlobalFetch: vi.fn(),
 	mockNavigateTo: vi.fn(),
 }));
 
 mockNuxtImport("useFetch", () => mockFetch);
 mockNuxtImport("navigateTo", () => mockNavigateTo);
-
-// Mock global fetch for the getHeatNetworkProductName utility
-vi.stubGlobal("fetch", mockGlobalFetch);
 
 type ExpectedData = { [key: string]: string };
 const verifyDataInSection = async (
@@ -44,12 +40,7 @@ describe("Domestic hot water summary", () => {
 	beforeEach(() => {
 		store.$reset();
 		mockFetch.mockReset();
-		mockGlobalFetch.mockReset();
-		mockFetch.mockReturnValue({ data: ref({ modelName: "Mock product" }) });
-		mockGlobalFetch.mockResolvedValue({
-			ok: true,
-			json: async () => ({ communityHeatNetworkName: "Community Network A", subheatNetworkName: "Subnetwork 1" }),
-		} as Response);
+		mockBatchFetchProducts(mockFetch);
 	});
 
 	it("displays the correct title", async () => {
@@ -170,7 +161,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Hot water cylinder",
 				"Storage cylinder volume": `5 ${litre.suffix}`,
-				"Daily energy loss": `1 ${kilowattHour.suffix}`,
+				"Daily energy loss": `1 ${kilowattHoursPerDay.suffix}`,
 				"Heat source": "Heat pump",
 				"Area of heat exchanger installed": `2.5 ${metresSquare.suffix}`,
 				"Heater position in the cylinder": "0.8",
@@ -604,7 +595,7 @@ describe("Domestic hot water summary", () => {
 			typeOfHeatSource: "heatNetwork",
 			typeOfHeatNetwork: "communalHeatNetwork",
 			productReference: "HEAT_NETWORK-LARGE",
-			subHeatNetworkId: "sub-network-1",
+			subHeatNetworkName: "Sub Network 1",
 		};
 
 		const dhwWithNewHeatInterfaceUnit: DomesticHotWaterHeatSourceData = {
@@ -761,9 +752,8 @@ describe("Domestic hot water summary", () => {
 			"Used for space heating": "No",
 			"Type of heat source": "Heat network",
 			"Type of heat network": "Communal heat network",
-			"Product name": "Community Network A - Subnetwork 1",
 			"Product reference": "HEAT_NETWORK-LARGE",
-			"Sub-heat network ID": "sub-network-1",
+			"Sub-heat network name": "Sub Network 1",
 		};
 		const expectedHeatInterfaceUnit = {
 			"Cold water source": "Mains water",
@@ -870,7 +860,7 @@ describe("Domestic hot water summary", () => {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Heat network 1",
 				typeOfHeatSource: "heatNetwork",
-				subHeatNetworkId: "sub-network-1",
+				subHeatNetworkName: "Sub Network 1",
 				productReference: "HEAT_NETWORK-LARGE",
 			};
 

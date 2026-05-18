@@ -8,6 +8,8 @@ const title = "Wall to unheated space";
 const store = useEcaasStore();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
+const { mounted } = useMounted();
+
 const wallToUnheatedSpaceData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data;
 const wallData = useItemToEdit("wall", wallToUnheatedSpaceData);
 const wallId = wallData?.data.id ?? uuidv4();
@@ -97,6 +99,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<FieldsPitch
+			v-if="mounted"
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
 			data-field="Zone.BuildingElement.*.pitch"

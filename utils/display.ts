@@ -37,6 +37,7 @@ export function dim(amount: UnitValue | number | undefined | null, unit?: UnitNa
 function renderDimensionedValue<T extends number, U extends UnitName>(amount: T, unit: U): `${T} ${UnitForName<U>["suffix"]}` {
 	return `${amount} ${asUnit(unit).suffix}` as `${T} ${UnitForName<U>["suffix"]}`;
 }
+
 export function renderPercentageValue(amount: string | number | undefined | null): `${number} %` | typeof emptyValueRendering {
 	if (amount === undefined || amount === null) {
 		return emptyValueRendering;
@@ -450,6 +451,7 @@ export const heatEmittingProductTypesDisplay = {
 	"radiator": pluralize("Radiator"),
 	"electricStorageHeater": pluralize("Electric storage heater"),
 	"instantElectricHeater": pluralize("Instant electric heater"),
+	"underFloorHeating": pluralize("Underfloor heating"),
 } as const satisfies Record<HeatEmittingProductType, (plural: boolean) => string>;
 
 export const waterStorageTypes = {

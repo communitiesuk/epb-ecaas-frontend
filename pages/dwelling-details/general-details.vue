@@ -25,6 +25,12 @@ const model = ref({
 	...store.dwellingDetails.generalSpecifications.data,
 });
 
+const mounted = ref(false);
+
+onMounted(() => {
+	mounted.value = true;
+});
+
 if (!model.value.fuelType) {
 	model.value.fuelType = ["electricity"];
 } 
@@ -132,6 +138,24 @@ autoSaveForm<GeneralDetailsData>(model, (state, newData) => {
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
+const minBuildingStoreys = (node: FormKitNode) => {
+	const storeyOfFlat = node.at("storeyOfFlat")?.value as number | undefined;
+	const storeysInDwelling = node.at("storeysInDwelling")?.value as number | undefined;
+	const storeysInBuilding = node.value as number;
+
+	if (storeyOfFlat === undefined || storeysInDwelling === undefined || storeysInBuilding === undefined) {
+		return true;
+	}
+
+	let minStoreys = (storeyOfFlat - 1) + storeysInDwelling;
+
+	if (storeyOfFlat === 1) {
+		minStoreys += 1;
+	}
+
+	return minStoreys <= storeysInBuilding;
+};
 </script>
 
 <template>
@@ -158,13 +182,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="General.build_type"
 		/>
 		<FormKit
-			v-if="model.typeOfDwelling === 'flat'"
+			v-if="mounted && model.typeOfDwelling === 'flat'"
 			id="storeyOfFlat"
 			type="govInputInt"
 			label="Storey of flat"
 			name="storeyOfFlat"
 			:validation-rules="{ isInteger }"
-			:validation="`${zodTypeAsFormKitValidation(storeyOfFlatZod)} | isInteger`"
+			:validation="`${zodTypeAsFormKitValidation(storeyOfFlatZod)} | isInteger | min:1`"
 			:validation-messages="{
 				isInteger: `Storey of flat must be a round number.`,
 			}"
@@ -184,15 +208,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="General.storeys_in_dwelling"
 		/>
 		<FormKit
-			v-if="model.typeOfDwelling === 'flat'"
+			v-if="mounted && model.typeOfDwelling === 'flat'"
 			id="storeysInBuilding"
 			type="govInputInt"
 			label="Number of storeys in building"
 			name="storeysInBuilding"
-			:validation-rules="{ isInteger }"
-			validation="required | isInteger | min:1"
+			:validation-rules="{ isInteger, minBuildingStoreys }"
+			validation="required | isInteger | min:1 | minBuildingStoreys"
 			:validation-messages="{
 				isInteger: `Storeys in building must be a round number.`,
+				minBuildingStoreys: `The number of storeys in the building must be more than the storey of flat and number of storeys in the dwelling combined`,
 			}"
 			help="Enter the number of storeys in the part of the building that the dwelling is in"
 			data-field="General.storeys_in_building"

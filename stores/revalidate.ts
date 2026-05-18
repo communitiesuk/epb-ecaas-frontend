@@ -15,7 +15,6 @@ type RevalidateResult = {
 export function revalidateState(state: Record<string, unknown>, path: string[] = []): RevalidateResult {
 	const newState = { ...state };
 	const errors: RevalidateError[] = [];
-    
 	for (const key in state) {
 		const value = state[key];
 
@@ -37,7 +36,6 @@ export function revalidateState(state: Record<string, unknown>, path: string[] =
 			}
 		} else if (typeof value === "object" && value !== null) {
 			const nodeResult = revalidateState(value as Record<string, unknown>, [...path, key]);
-			
 			if (nodeResult.changed) {
 				errors.push(...nodeResult.errors);
 				newState[key] = nodeResult.newState;
@@ -75,7 +73,6 @@ function reformatForm(form: EcaasForm<unknown>) {
 
 	// Check for any non-EcaasForm objects in array
 	if (!allEcaasForms) {
-		
 		// Extract form data which are EcaasForms
 		const ecaasForms = form.data.filter(isEcaasForm);
 
@@ -131,7 +128,6 @@ function revalidateForm(form: EcaasForm<unknown>, path: EcaasFormPath): [true, R
 			const validationResult = formSchema.safeParse(current.data);
 
 			current.complete = validationResult.success;
-			
 			return [!validationResult.success || changed, validationResult.error ? [...errors, validationResult.error] : errors];
 		} catch (error) {
 			handleInvalidForm(current, path, error);

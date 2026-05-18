@@ -7,6 +7,8 @@ const title = "Internal door";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const { mounted } = useMounted();
+
 const internalDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor?.data;
 const index = getStoreIndex(internalDoorData);
 const doorData = useItemToEdit("door", internalDoorData);
@@ -88,7 +90,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="This affects which inputs are necessary."
 			name="typeOfInternalDoor"
 			validation="required" />
-		<template v-if="!!model?.typeOfInternalDoor">
+		<template v-if="mounted && !!model?.typeOfInternalDoor">
 			<FormKit
 				id="name"
 				type="govInputText"
@@ -131,7 +133,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsMassDistributionClass v-else help="This is the distribution of mass in half the thickness of the door build up" />
 		</template>
 		<FormKit
-			v-if="model?.typeOfInternalDoor === 'unheatedSpace'"
+			v-if="mounted && model?.typeOfInternalDoor === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
@@ -159,13 +161,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<FieldsFrontDoor
-			v-if="model?.typeOfInternalDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat' &&
+			v-if="mounted && model?.typeOfInternalDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat' &&
 				(taggedWithCeiling === false && tagHasValidPitch || !model?.associatedItemId)"
 			:index="index"
 			door-type="Internal"
 		/>
 		<FieldsOrientation
-			v-if="model?.isTheFrontDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat' && model.isTheFrontDoor"
+			v-if="mounted && model?.isTheFrontDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat' && model.isTheFrontDoor"
 			id="orientation"
 			name="orientation"
 			data-field="Zone.BuildingElement.*.orientation360"

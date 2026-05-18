@@ -10,6 +10,8 @@ const title = "Party wall";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const { mounted } = useMounted();
+
 const partyWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data;
 const wallData = useItemToEdit("wall", partyWallData);
 const wallId = wallData?.data.id ?? uuidv4();
@@ -20,7 +22,6 @@ const greaterThanZero = (node: FormKitNode) => {
 	const value = node.value as UnitValue;
 	return value.amount > 0;
 };
-
 const partyWallCavityTypeOptions = {
 	unfilled_unsealed: "Unfilled and unsealed",
 	unfilled_sealed: "Unfilled and sealed",
@@ -121,6 +122,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the U-value of half the construction build up"
 		/>
 		<FieldsPitch
+			v-if="mounted"
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
 			help="Tilt angle of the surface from horizontal, between 60 and 120 degrees (wall range), where 90 means vertical"
@@ -159,7 +161,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.party_wall_cavity_type"
 		/>
 		<FormKit
-			v-if="['filled_unsealed', 'unfilled_sealed', 'unfilled_unsealed'].includes(model?.partyWallCavityType!)"
+			v-if="mounted && ['filled_unsealed', 'unfilled_sealed', 'unfilled_unsealed'].includes(model?.partyWallCavityType!)"
 			id="partyWallLiningType"
 			name="partyWallLiningType"
 			type="govRadios"
@@ -170,7 +172,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.party_wall_lining_type"
 		/>
 		<FormKit
-			v-if="model?.partyWallCavityType === 'defined_resistance'"
+			v-if="mounted && model?.partyWallCavityType === 'defined_resistance'"
 			id="thermalResistanceCavity"
 			name="thermalResistanceCavity"
 			type="govInputWithUnit"

@@ -12,6 +12,8 @@ const { heatSources: dhwHeatSources } = store.domesticHotWater;
 const { getStoreIndex } = useForm();
 const route = useRoute();
 
+const { mounted } = useMounted();
+
 const hotWaterHeatSourceStoreData = store.domesticHotWater.heatSources.data;
 const index = getStoreIndex(hotWaterHeatSourceStoreData);
 const hotWaterHeatSourceData = useItemToEdit("heatSource", hotWaterHeatSourceStoreData);
@@ -35,6 +37,7 @@ if (hasPackagedProduct(model.value)) {
 	const packagedProductData = await useProductData(model.value.packagedProductReference!);
 	packagedProduct.value = packagedProductData ?? undefined;
 }
+
 function removePackagedProducts(packageProductIds: string[]) {
 	store.$patch((state) => {
 		const heatSources = state.domesticHotWater.heatSources.data.filter((x) => {
@@ -49,6 +52,7 @@ function removePackagedProducts(packageProductIds: string[]) {
 		});
 	});
 }
+
 const saveForm = () => {
 	store.$patch((state) => {
 		state.domesticHotWater.heatSources.data[index]!.complete = true;
@@ -245,6 +249,7 @@ const existingHeatSourceType = computed(() => {
 function hasHeatNetworkHeatSource() {
 	return dhwHeatSources.data.some((x, itemIndex) => itemIndex !== index && getDhwHeatSourceType(x) === "heatNetwork");
 }
+
 function hasHeatPumpOrHIUHeatSource() {
 	return dhwHeatSources.data.some((x, itemIndex) => {
 		if (itemIndex === index) {
@@ -360,6 +365,7 @@ const heatSourceOptions = computed(() => {
 			:disabled="hasPackagedProduct(model)"
 		/>
 		<FormKit 
+			v-if="mounted"
 			id="heatSourceId"
 			type="govRadios"
 			label="Use a previously added heat source"
@@ -377,84 +383,87 @@ const heatSourceOptions = computed(() => {
 				</p>
 			</div>
 		</FormKit>
-		<FormKit
-			v-if="model.isExistingHeatSource === false"
-			id="typeOfHeatSource"
-			type="govRadios"
-			label="Type of heat source"
-			:options="heatSourceOptions"
-			name="typeOfHeatSource"
-			validation="required"
-			:disabled="hasPackagedProduct(model)"
-		/>		
-		<HeatPumpSection
-			v-if="model.isExistingHeatSource === false
-				&& model.typeOfHeatSource === 'heatPump'"
-			:model="(model as HeatPumpModelType)"
-			:index="index"
-			:boilers="allBoilers"
-			add-boiler-page-id="heatSourcesCreate"
-			page="domestic hot water"
-			@update-heat-pump-model="updateHeatSource" />
-		<BoilerSection
-			v-if="model.isExistingHeatSource === false
-				&& model.typeOfHeatSource === 'boiler'"
-			:model="(model as BoilerModelType)"
-			:index="index"
-			page="domestic hot water"
-			@update-boiler-model="updateHeatSource" />
-		<HeatNetworkSection
-			v-if="model.isExistingHeatSource === false
-				&& model.typeOfHeatSource === 'heatNetwork'"
-			:model="(model as HeatNetworkModelType)"
-			:index="index"
-			section="domesticHotWater"
-			@update-heat-network-model="updateHeatSource" />
-		<HeatBatterySection
-			v-if="model.isExistingHeatSource === false
-				&& model.typeOfHeatSource === 'heatBattery'"
-			:model="(model as HeatBatteryModelType)"
-			:index="index"
-			page="domestic hot water"
-			@update-heat-battery-model="updateHeatSource" />
-		<HeatInterfaceUnitSection
-			v-if="model.isExistingHeatSource === false
-				&& model.typeOfHeatSource === 'heatInterfaceUnit'"
-			:model="(model as HeatInterfaceUnitModelType)"
-			:index="index"
-			page="domestic hot water"
-			@update-heat-interface-unit-model="updateHeatSource" />
-		<SolarThermalSystemSection
-			v-if="model.isExistingHeatSource === false
-				&& model.typeOfHeatSource === 'solarThermalSystem'"
-			:model="(model as SolarThermalModelType)" 
-			:index="index" />
-		<ImmersionHeaterSection
-			v-if="model.isExistingHeatSource === false
-				&& model.typeOfHeatSource === 'immersionHeater'"
-			:model="(model as ImmersionHeaterModelType)" 
-			:index="index" />
-		<PointOfUseSection
-			v-if="model.isExistingHeatSource === false
-				&& model.typeOfHeatSource === 'pointOfUse'"
-			:model="(model as PointOfUseModelType)" 
-			:index="index" />
-		<FormKit
-			v-if="model.isExistingHeatSource && ['boiler', 'heatPump', 'heatBattery'].includes(existingHeatSourceType.selectedType)"
-			id="maxFlowTemp"
-			:key="model.heatSourceId"
-			name="maxFlowTemp"
-			label="Maximum flow temperature"
-			:help="`Enter the highest flow temperature that the ${existingHeatSourceType.formattedType} is allowed to operate at for domestic hot water`"
-			type="govInputWithUnit"
-			:unit="celsius"
-			:validation-rules="{ exclusiveRangeFromMin: greaterThanZero }"
-			validation="required | exclusiveRangeFromMin:0"
-			:validation-messages="{
-				exclusiveRangeFromMin: `Maximum flow temperature must be greater than 0.`,
-			}"
-			:data-field="'HotWaterSource.*.HeatSource.*.temp_flow_limit_upper'"
-		/>
+		<template v-if="mounted">
+
+	
+			<FormKit
+				v-if="model.isExistingHeatSource === false"
+				id="typeOfHeatSource"
+				type="govRadios"
+				label="Type of heat source"
+				:options="heatSourceOptions"
+				name="typeOfHeatSource"
+				validation="required"
+				:disabled="hasPackagedProduct(model)"
+			/>		
+			<HeatPumpSection
+				v-if="model.isExistingHeatSource === false
+					&& model.typeOfHeatSource === 'heatPump'"
+				:model="(model as HeatPumpModelType)"
+				:index="index"
+				:boilers="allBoilers"
+				add-boiler-page-id="heatSourcesCreate"
+				page="domestic hot water"
+				@update-heat-pump-model="updateHeatSource" />
+			<BoilerSection
+				v-if="model.isExistingHeatSource === false
+					&& model.typeOfHeatSource === 'boiler'"
+				:model="(model as BoilerModelType)"
+				:index="index"
+				page="domestic hot water"
+				@update-boiler-model="updateHeatSource" />
+			<HeatNetworkSection
+				v-if="model.isExistingHeatSource === false
+					&& model.typeOfHeatSource === 'heatNetwork'"
+				:model="(model as HeatNetworkModelType)"
+				:index="index"
+				section="domesticHotWater"
+				@update-heat-network-model="updateHeatSource" />
+			<HeatBatterySection
+				v-if="model.isExistingHeatSource === false
+					&& model.typeOfHeatSource === 'heatBattery'"
+				:model="(model as HeatBatteryModelType)"
+				:index="index"
+				page="domestic hot water"
+				@update-heat-battery-model="updateHeatSource" />
+			<HeatInterfaceUnitSection
+				v-if="model.isExistingHeatSource === false
+					&& model.typeOfHeatSource === 'heatInterfaceUnit'"
+				:model="(model as HeatInterfaceUnitModelType)"
+				:index="index"
+				page="domestic hot water"
+				@update-heat-interface-unit-model="updateHeatSource" />
+			<SolarThermalSystemSection
+				v-if="model.isExistingHeatSource === false
+					&& model.typeOfHeatSource === 'solarThermalSystem'"
+				:model="(model as SolarThermalModelType)" 
+				:index="index" />
+			<ImmersionHeaterSection
+				v-if="model.isExistingHeatSource === false
+					&& model.typeOfHeatSource === 'immersionHeater'"
+				:model="(model as ImmersionHeaterModelType)" 
+				:index="index" />
+			<PointOfUseSection
+				v-if="model.isExistingHeatSource === false
+					&& model.typeOfHeatSource === 'pointOfUse'"
+				:model="(model as PointOfUseModelType)" 
+				:index="index" />
+			<FormKit
+				v-if="model.isExistingHeatSource && ['boiler', 'heatPump', 'heatBattery'].includes(existingHeatSourceType.selectedType)"
+				id="maxFlowTemp"
+				:key="model.heatSourceId"
+				name="maxFlowTemp"
+				label="Maximum flow temperature"
+				:help="`Enter the highest flow temperature that the ${existingHeatSourceType.formattedType} is allowed to operate at for domestic hot water`"
+				type="govInputWithUnit"
+				:unit="celsius"
+				:validation-rules="{ exclusiveRangeFromMin: greaterThanZero }"
+				validation="required | exclusiveRangeFromMin:0"
+				:validation-messages="{
+					exclusiveRangeFromMin: `Maximum flow temperature must be greater than 0.`,
+				}"
+				:data-field="'HotWaterSource.*.HeatSource.*.temp_flow_limit_upper'"
+			/>	</template>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('domesticHotWater')" secondary test-id="saveProgress">Save progress</GovButton>

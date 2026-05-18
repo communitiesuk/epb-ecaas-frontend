@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { PageId } from "~/data/pages/pages";
-import type { ConvectorRadiatorProduct, Product } from "~/pcdb/pcdb.types";
+import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { productTypeMap, typeOfHeatEmitter, type HeatEmittingProductType, type PcdbProduct } from "~/stores/ecaasStore.schema";
 import { heatEmittingProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
 import { getRadiatorHeading, isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
+import { getUnderFloorHeatingHeading, isUnderFloorHeatingProduct, getUnderFloorHeatingSubtitle } from "~/utils/underFloorHeating";
 
 definePageMeta({ layout: "one-column" });
 
@@ -28,18 +29,29 @@ const productType = heatEmittingProductTypesDisplay[heatEmittingType as HeatEmit
 
 const index = Number(params.heatEmitter);
 
-const { data: { value: data } } = await useFetch<Product | ConvectorRadiatorProduct>(`/api/products/${params.id}/details`, {
+const { data: { value: data } } = await useFetch<AnyPcdbProduct>(`/api/products/${params.id}/details`, {
 	query: {
 		technologyType,
 	},
 });
 
-const radiatorProduct = computed(() => data && isConvectorRadiatorProduct(data) ? data : undefined);
-const nonRadiatorProduct = computed(() => data && !isConvectorRadiatorProduct(data) ? data : undefined);
+const product = computed(() => data);
+const radiatorProduct = computed(() => product.value && isConvectorRadiatorProduct(product.value) ? product.value : undefined);
+const underFloorHeatingProduct = computed(() => product.value && isUnderFloorHeatingProduct(product.value) ? product.value : undefined);
+const nonRadiatorProduct = computed(() => {
+	if (!data) return undefined;
+	if (isConvectorRadiatorProduct(data)) return undefined;
+	if (isUnderFloorHeatingProduct(data)) return undefined;
+	return data;
+});
 
 const productHeading = computed(() => {
 	if (!data) {
 		return "";
+	}
+
+	if (underFloorHeatingProduct.value) {
+		return getUnderFloorHeatingHeading(underFloorHeatingProduct.value);
 	}
 
 	if (nonRadiatorProduct.value?.modelName) {
@@ -50,7 +62,28 @@ const productHeading = computed(() => {
 		return getRadiatorHeading(radiatorProduct.value);
 	}
 
+
 	return `Product ${params.id}`;
+});
+
+const productSubtitle = computed(() => {
+	if (!data) {
+		return "";
+	}
+
+	if (underFloorHeatingProduct.value) {
+		return getUnderFloorHeatingSubtitle(underFloorHeatingProduct.value);
+	}
+
+	if (radiatorProduct.value) {
+		return getRadiatorSubtitle(radiatorProduct.value);
+	}
+
+	if (nonRadiatorProduct.value?.brandName) {
+		return nonRadiatorProduct.value.brandName;
+	}
+
+	return "";
 });
 
 const backUrl = getUrl(pageId)
@@ -91,10 +124,11 @@ const selectProduct = () => {
 	</NuxtLink>
 
 	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ productHeading }}</h1>
-	<h2 v-if="nonRadiatorProduct?.brandName" class="govuk-caption-l govuk-!-margin-top-0">{{ nonRadiatorProduct.brandName }}</h2>
+	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ productSubtitle }}</h2>
 
 	<ProductDetailsFanCoil v-if="!!nonRadiatorProduct && heatEmittingType === 'fanCoil'" :product="nonRadiatorProduct" />
 	<ProductDetailsConvectorRadiator v-if="!!radiatorProduct && heatEmittingType === 'radiator'" :product="radiatorProduct" />
+	<ProductDetailsUnderFloorHeating v-if="!!underFloorHeatingProduct" :product="underFloorHeatingProduct"/>
 	<ProductDetailsElectricStorageHeater v-if="!!nonRadiatorProduct && heatEmittingType === typeOfHeatEmitter.electricStorageHeater" :product="nonRadiatorProduct" />
 
 	<div class="govuk-button-group">

@@ -25,10 +25,17 @@ export async function getProductDetails(id: string, { includeTestData = false, t
 	ensureValidProductId(id);
 
 	const product = await client.getProduct(id, { includeTestData, testDataId });
-
 	ensureProductExists(product);
 
 	return product;
+};
+
+export async function getProductsBatch(ids: string[]): Promise<Product[]> {
+	const uniqueIds = Array.from(new Set(ids));
+	const validIds = uniqueIds.filter(id => id.trim().length > 0);
+
+	const products = await client.getProductsByIds(validIds);
+	return products.filter((product): product is Product => product !== undefined);
 };
 
 const ensureValidTechnologyType = (technologyType: TechnologyType) => {

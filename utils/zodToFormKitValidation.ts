@@ -2,6 +2,8 @@ import * as z from "zod";
 
 type SchemaWithDef<T extends string, U = unknown> = { _def: Record<T, U> };
 
+type ZodObjectShape = Record<string, z.ZodTypeAny>;
+
 function unwrap(schema: z.ZodType): z.ZodType {
 	// unwrap effects/defaults/nullable/optional so we can inspect the inner schema
 	// handle unions that include undefined by returning the non-undefined option (if any)
@@ -37,12 +39,33 @@ function isOptional(schema: z.ZodTypeAny): boolean {
 
 const smallFraction = 0.00001;
 
+function getObjectShape(schema: z.ZodObject<z.ZodRawShape>): ZodObjectShape {
+	const shapeDef = (schema as unknown as SchemaWithDef<"shape", ZodObjectShape | (() => ZodObjectShape)>)._def.shape;
+	return typeof shapeDef === "function" ? shapeDef() : shapeDef;
+}
+
+function getUnitAmountSchema(schema: z.ZodTypeAny): z.ZodNumber | undefined {
+	if (!(schema instanceof z.ZodObject)) return undefined;
+
+	const shape = getObjectShape(schema as z.ZodObject<z.ZodRawShape>);
+	const amount = shape.amount;
+	const unit = shape.unit;
+
+	if (!(amount instanceof z.ZodNumber)) return undefined;
+	if (!(unit instanceof z.ZodEnum || unit instanceof z.ZodLiteral)) return undefined;
+
+	return amount;
+}
+
 export function zodTypeAsFormKitValidation(schema: z.ZodTypeAny): string {
 	const rules: string[] = [];
 
 	if (!isOptional(schema)) rules.push("required");
 
-	const s = unwrap(schema);
+	const unwrappedSchema = unwrap(schema);
+	const unitAmountSchema = getUnitAmountSchema(unwrappedSchema);
+	const isUnitSchema = !!unitAmountSchema;
+	const s = unitAmountSchema ?? unwrappedSchema;
 
 	if (s instanceof z.ZodString) {
 		const checks = (s as unknown as SchemaWithDef<"checks">)._def.checks as Array<{ kind: string, value: string, regex: RegExp }> | undefined;
@@ -62,19 +85,19 @@ export function zodTypeAsFormKitValidation(schema: z.ZodTypeAny): string {
 			}
 		}
 	} else if (s instanceof z.ZodNumber) {
-		rules.push("number");
+		rules.push(isUnitSchema ? "zodUnitNumber" : "number");
 		const { minimum, exclusiveMinimum, maximum, exclusiveMaximum } = s._zod.bag;
 		if (typeof minimum !== "undefined") {
-			rules.push(`min:${minimum}`);
+			rules.push(`${isUnitSchema ? "zodUnitMin" : "min"}:${minimum}`);
 		}
 		if (typeof exclusiveMinimum !== "undefined") {
-			rules.push(`min:${exclusiveMinimum + smallFraction}`);
+			rules.push(`${isUnitSchema ? "zodUnitGreaterThan" : "min"}:${isUnitSchema ? exclusiveMinimum : exclusiveMinimum + smallFraction}`);
 		}
 		if (typeof maximum !== "undefined" && maximum < 9000000000000000) {
-			rules.push(`max:${maximum}`);
+			rules.push(`${isUnitSchema ? "zodUnitMax" : "max"}:${maximum}`);
 		}
 		if (typeof exclusiveMaximum !== "undefined") {
-			rules.push(`max:${exclusiveMaximum - smallFraction}`);
+			rules.push(`${isUnitSchema ? "zodUnitLessThan" : "max"}:${isUnitSchema ? exclusiveMaximum : exclusiveMaximum - smallFraction}`);
 		}
 	} else if (s instanceof z.ZodEnum) {
 		const vals = s instanceof z.ZodEnum ? (s as unknown as SchemaWithDef<"values", ArrayLike<unknown>>)._def.values as string[] : Object.values((s as unknown as SchemaWithDef<"values", ArrayLike<unknown>>)._def.values);

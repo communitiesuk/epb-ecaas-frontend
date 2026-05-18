@@ -12,6 +12,7 @@ type DoorData = EcaasForm<ExternalUnglazedDoorData> & EcaasForm<ExternalGlazedDo
 function isFrontDoor(door: EcaasForm<ExternalUnglazedDoorData | ExternalGlazedDoorData | InternalDoorData>) {
 	return door.complete && "isTheFrontDoor" in door.data && door.data.isTheFrontDoor;
 }
+
 function handleRemove(doorType: DoorType, index: number) {
 	const doors = store.dwellingFabric.dwellingSpaceDoors[doorType]?.data;
 	const windows = store.dwellingFabric.dwellingSpaceWindows.data;

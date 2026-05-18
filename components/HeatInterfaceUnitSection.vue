@@ -79,7 +79,7 @@ const defaultAssociatedHeatNetworkId = computed(() => {
 	<FieldsMaxFlowTemp 
 		:model="model" 
 		:page="page"
-		help="Enter the highest flow temperature the HUI is allowed to operate at"
+		help="Enter the highest flow temperature the HIU is allowed to operate at"
 	/>
 	<FormKit
 		id="buildingLevelLosses"

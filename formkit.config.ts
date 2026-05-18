@@ -19,6 +19,7 @@ import type { LengthUnit } from "./utils/units/length";
 import type { VolumeUnit } from "./utils/units/volume";
 import type { FlowRateUnit } from "./utils/units/flowRate";
 import type { PowerUnit } from "./utils/units/power";
+import { unitValidationMessages, unitValidationRules } from "./utils/formKitUnitValidation";
 
 // Enable TypeScript support for custom inputs
 declare module "@formkit/inputs" {
@@ -86,6 +87,12 @@ declare module "@formkit/inputs" {
 // Register custom inputs with FormKit
 export default defineFormKitConfig(() => {
 	return {
+		messages: {
+			en: {
+				validation: unitValidationMessages,
+			},
+		},
+		rules: unitValidationRules,
 		inputs: {
 			govRadios: {
 				type: "input",

@@ -7,6 +7,8 @@ import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 const title = "Linear thermal bridges";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
+ 
+const { mounted } = useMounted();
 
 const linearThermalBridgeStoreData = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data;
 const index = getStoreIndex(linearThermalBridgeStoreData);
@@ -116,6 +118,8 @@ const getDefaultName = (typeOfThermalBridge: SchemaThermalBridgeJunctionType): s
 	}
 };
 
+
+
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
@@ -143,7 +147,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="junctionTypeOptions"
 			data-field="Zone.ThermalBridging.*.junction_type"
 		/>
-		<template v-if="model?.typeOfThermalBridge">
+		<template v-if="mounted && model?.typeOfThermalBridge">
 			<FormKit
 				id="name"
 				type="govInputText"

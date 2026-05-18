@@ -8,8 +8,8 @@ import { centimetresSquare, metresSquare } from "~/utils/units/area";
 import { metre, millimetre } from "~/utils/units/length";
 import { degrees } from "~/utils/units/angle";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
-import type { Product } from "~/pcdb/pcdb.types";
 import { watt, wattsPerLitrePerSecond } from "~/utils/units/power";
+import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 
 vi.mock("uuid");
 
@@ -18,11 +18,6 @@ const { mockFetch } = vi.hoisted(() => ({
 }));
 
 mockNuxtImport("useFetch", () => mockFetch);
-
-const ventProduct: Partial<Product> = {
-	id: "1000",
-	modelName: "Vent Product",
-};
 
 const mvhrData: MechanicalVentilationData = {
 	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
@@ -133,6 +128,15 @@ const externalWall: ExternalWallData = {
 	arealHeatCapacity: "Very light",
 	massDistributionClass: "I",
 };
+
+const roof: Partial<RoofData> = {
+	id: "0b77e247-53c5-42b8-9dbd-83cbfc8c1111",
+	name: "Roof 1",
+	pitchOption: "custom",
+	pitch: 35,
+	orientation: 140,
+};
+
 const ventData: VentData = {
 	name: "Vent 1",
 	associatedItemId: externalWall.id,
@@ -158,13 +162,8 @@ describe("Infiltration and ventilation summary", () => {
 	const store = useEcaasStore();
 
 	beforeEach(() => {
-		mockFetch.mockResolvedValue({
-			data: { value: ventProduct },
-		});
-	});
-
-	afterEach(() => {
 		mockFetch.mockReset();
+		mockBatchFetchProducts(mockFetch, "Vent Product");
 	});
 
 	afterEach(() => {
@@ -251,6 +250,80 @@ describe("Infiltration and ventilation summary", () => {
 		}
 	});
 
+	it("should display associated item orientation and pitch for Intermittent MEV", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall }],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						data: {
+							...intermittentMevData,
+							associatedItemId: externalWall.id,
+							hasAssociatedItem: true,
+						},
+					}],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Associated wall, roof or window": "External wall 1",
+			"Orientation of vent": `${externalWall.orientation} ${degrees.suffix}`,
+			"Pitch of vent": `${externalWall.pitch} ${degrees.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display associated roof orientation and pitch for Intermittent MEV", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceRoofs: {
+						data: [{ data: roof }],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						data: {
+							...intermittentMevData,
+							associatedItemId: roof.id,
+							hasAssociatedItem: true,
+						},
+					}],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Associated wall, roof or window": "Roof 1",
+			"Orientation of vent": `${roof.orientation} ${degrees.suffix}`,
+			"Pitch of vent": `${roof.pitch} ${degrees.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
 	it("should display the correct data for the mechanical ventilation section when vent type is Centralised continuous MEV", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -285,6 +358,43 @@ describe("Infiltration and ventilation summary", () => {
 		}
 	});
 
+	it("should display associated item orientation and pitch for Centralised continuous MEV", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall }],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						data: {
+							...centralisedContinuousMevData,
+							associatedItemId: externalWall.id,
+							hasAssociatedItem: true,
+						},
+					}],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Associated wall, roof or window": "External wall 1",
+			"Orientation of vent": `${externalWall.orientation} ${degrees.suffix}`,
+			"Pitch of vent": `${externalWall.pitch} ${degrees.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
 	it("should display the correct data for the mechanical ventilation section when vent type is Decentralised continuous MEV", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -310,6 +420,43 @@ describe("Infiltration and ventilation summary", () => {
 			"Pitch of vent": `90 ${degrees.suffix}`,
 			"Mid-height of airflow path": `2 ${metre.suffix}`,
 			"Is the vent installed under an approved installation scheme?": "Yes",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display associated item orientation and pitch for Decentralised continuous MEV", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall }],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						data: {
+							...decentralisedContinuousMevData,
+							associatedItemId: externalWall.id,
+							hasAssociatedItem: true,
+						},
+					}],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Associated wall, roof or window": "External wall 1",
+			"Orientation of vent": `${externalWall.orientation} ${degrees.suffix}`,
+			"Pitch of vent": `${externalWall.pitch} ${degrees.suffix}`,
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
@@ -401,6 +548,7 @@ describe("Infiltration and ventilation summary", () => {
 
 		const expectedResult = {
 			Name: "Vent 1",
+			"Associated wall or window": "External wall 1",
 			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
 			"Mid height of zone": `1 ${metre.suffix}`,
 			Orientation: `0 ${degrees.suffix}`,
@@ -437,6 +585,7 @@ describe("Infiltration and ventilation summary", () => {
 
 		const expectedResult = {
 			Name: "Vent 1",
+			"Associated wall or window": "-",
 			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
 			"Mid height of zone": `1 ${metre.suffix}`,
 			Orientation: `0 ${degrees.suffix}`,
@@ -495,6 +644,7 @@ describe("Infiltration and ventilation summary", () => {
 
 		const expectedResult = {
 			Name: "Vent 1",
+			"Associated wall or window": "Window 1",
 			Orientation: `77 ${degrees.suffix}`,
 			Pitch: `66 ${degrees.suffix}`,
 		};

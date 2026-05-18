@@ -1,6 +1,6 @@
 import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaOtherWaterUseDetails, SchemaWaterPipework, SchemaStorageTank, SchemaHeatSourceWetDetails } from "~/schema/aliases";
 import type { SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
-import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
+import { defaultColdWaterSourceReference, type FhsInputSchema, type ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { objectFromEntries } from "ts-extras";
 
@@ -130,6 +130,7 @@ function getActualHeatSourceFromDHWHeatSource(state: ResolvedState, waterStorage
 	}
 	return actualHeatSource;
 }
+
 function getAssociatedHeatNetwork(state: ResolvedState, associatedHeatNetworkId: string) {
 	const associatedHeatNetwork = state.spaceHeating.heatSource?.find(hs => hs.id === associatedHeatNetworkId);
 
@@ -138,6 +139,7 @@ function getAssociatedHeatNetwork(state: ResolvedState, associatedHeatNetworkId:
 	}
 	return associatedHeatNetwork;
 }
+
 function mapHeatSourceWet(
 	heatSource: Exclude<
 		ReturnType<typeof getActualHeatSourceFromDHWHeatSource>,
@@ -160,11 +162,10 @@ function mapHeatSourceWet(
 		case "heatInterfaceUnit":
 			{
 				const associatedHeatNetwork = heatSource.associatedHeatNetworkId ? getAssociatedHeatNetwork(state, heatSource.associatedHeatNetworkId) : undefined;
-				const subHeatNetworkId = associatedHeatNetwork && "subHeatNetworkId" in associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkId : undefined;
-				const designFlowTemp = "maxFlowTemp" in heatSource ? heatSource.maxFlowTemp?.amount : undefined;
+				const subHeatNetworkName = associatedHeatNetwork && "subHeatNetworkName" in associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkName : undefined;
 				const associatedHeatNetworkName = associatedHeatNetwork && "name" in associatedHeatNetwork ? associatedHeatNetwork.name : undefined;
-				if (!subHeatNetworkId || !associatedHeatNetworkName || designFlowTemp === undefined) {
-					throw new Error("Expected a sub heat network ID, associated heat network name, and design flow temperature for a heat interface unit heat source associated with a heat network");
+				if (!subHeatNetworkName || !associatedHeatNetworkName) {
+					throw new Error("Expected a sub heat network name, and associated heat network name for a heat interface unit heat source associated with a heat network");
 				}
 				return {
 					HeatSourceWet: {
@@ -176,8 +177,7 @@ function mapHeatSourceWet(
 							heat_network_reference: associatedHeatNetworkName,
 							building_level_distribution_losses: heatSource.buildingLevelLosses.amount,
 							is_heat_network: true as const,
-							sub_heat_network_name: subHeatNetworkId,
-							design_flow_temp: designFlowTemp,
+							sub_heat_network_name: subHeatNetworkName,
 						} as const satisfies SchemaHeatSourceWetDetails,
 					} satisfies FhsInputSchema["HeatSourceWet"],
 				};
@@ -221,7 +221,7 @@ function mapHeatSourceWet(
 				} satisfies FhsInputSchema["HeatSourceWet"],
 			};
 	}
-};
+}
 
 function mapWaterStorageHeatSource(
 	waterStorage: WaterStorageData,
@@ -260,7 +260,6 @@ function mapWaterStorageHeatSource(
 					[actualHeatSource.name]: {
 						type: "HeatPump_HWOnly",
 						product_reference: actualHeatSource.productReference,
-						EnergySupply: defaultElectricityEnergySupplyName,
 						...commonWSHeatSourceProps,
 					} as const satisfies WaterStorageHeatSource<"HeatPump_HWOnly">,
 				};
@@ -355,6 +354,7 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 			type: "SmartHotWaterTank",
 			product_reference: waterStorage.productReference,
 			EnergySupply_pump: defaultElectricityEnergySupplyName,
+			ColdWaterSource: defaultColdWaterSourceReference,
 		} as const satisfies Partial<SchemaSmartHotWaterTank>;
 
 	const { mappedWSHeatSource, mappedHeatSourceWet }
@@ -381,7 +381,7 @@ function getTempFlowLimitUpper(
 	} else {
 		return dhwHeatSource.maxFlowTemp?.amount;
 	}
-};
+}
 
 function mapHeatSourceNoWS(
 	dhwHeatSource: DomesticHotWaterHeatSourceData,

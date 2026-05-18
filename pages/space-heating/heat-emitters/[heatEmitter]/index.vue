@@ -11,7 +11,7 @@ import { getUrl, typeOfHeatEmitter, type WetDistributionSystemData } from "#impo
 
 export type WetDistributionSystemModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "wetDistributionSystem" }>;
 export type RadiatorModelType = Extract<WetDistributionSystemModelType["emitters"][number], { "typeOfHeatEmitter": "radiator" }>;
-export type UnderfloorHeatingModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "underfloorHeating" }>;
+export type UnderFloorHeatingModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "underFloorHeating" }>;
 export type FanCoilModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "fanCoil" }>;
 export type WarmAirHeaterModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "warmAirHeater" }>;
 export type InstantElectricHeaterModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "instantElectricHeater" }>;
@@ -20,8 +20,9 @@ export type ElectricStorageHeaterModelType = Extract<HeatEmittingData, { "typeOf
 
 const title = "Heat emitters";
 const store = useEcaasStore();
-
 const { autoSaveElementForm, getStoreIndex } = useForm();
+
+const { mounted } = useMounted();
 
 
 const heatEmitterStoreData = store.spaceHeating.heatEmitters.data;
@@ -140,21 +141,23 @@ autoSaveElementForm<HeatEmittingData>({
 			:options="heatEmitterTypes"
 			name="typeOfHeatEmitter"
 			validation="required" />
-		<WetDistributionSection
-			v-if="model?.typeOfHeatEmitter === 'wetDistributionSystem'"
-			:model="(model as WetDistributionSystemData)"
-			:index="index" />
-		<InstantElectricHeaterSection
-			v-if="model?.typeOfHeatEmitter === 'instantElectricHeater'"
-			:model="(model as InstantElectricHeaterModelType)"
-			:index="index" />
-		<ElectricStorageHeaterSection
-			v-if="model?.typeOfHeatEmitter === typeOfHeatEmitter.electricStorageHeater"
-			:model="(model as ElectricStorageHeaterModelType)" 
-			:index="index"/>
-		<WarmAirHeaterSection
-			v-if="model?.typeOfHeatEmitter === 'warmAirHeater'"
-			:model="(model as WarmAirHeaterModelType)" />
+		<template v-if="mounted">
+			<WetDistributionSection
+				v-if="model?.typeOfHeatEmitter === 'wetDistributionSystem'"
+				:model="(model as WetDistributionSystemData)"
+				:index="index" />
+			<InstantElectricHeaterSection
+				v-if="model?.typeOfHeatEmitter === 'instantElectricHeater'"
+				:model="(model as InstantElectricHeaterModelType)"
+				:index="index" />
+			<ElectricStorageHeaterSection
+				v-if="model?.typeOfHeatEmitter === typeOfHeatEmitter.electricStorageHeater"
+				:model="(model as ElectricStorageHeaterModelType)" 
+				:index="index"/>
+			<WarmAirHeaterSection
+				v-if="model?.typeOfHeatEmitter === 'warmAirHeater'"
+				:model="(model as WarmAirHeaterModelType)" />
+		</template>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('spaceHeating')" secondary test-id="saveProgress">Save progress</GovButton>

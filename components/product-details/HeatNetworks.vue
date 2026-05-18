@@ -28,6 +28,7 @@ type HeatNetworkDetailsProduct = HeatNetworkProduct & {
 
 const { product } = defineProps<{ product: Product }>();
 const rawData = product as HeatNetworkDetailsProduct;
+
 function flattenHeatNetworkData(value: HeatNetworkDetailsProduct): HeatNetworkDetailsProduct & HeatNetworkTestData {
 	const nested = Array.isArray(value.testData) ? value.testData[0] : value.testData;
 
@@ -49,6 +50,7 @@ function formatDate(value: string | null | undefined): string {
 	const parsed = dayjs(value);
 	return parsed.isValid() ? parsed.format("DD MMM YYYY") : value;
 }
+
 const withSuffix = (amount: number | null | undefined, suffix: string): string => {
 	if (amount === null || amount === undefined) {
 		return show(amount);

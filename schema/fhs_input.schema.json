@@ -1838,8 +1838,7 @@
 								{
 									"required": [
 										"product_reference",
-										"building_level_distribution_losses",
-										"design_flow_temp"
+										"building_level_distribution_losses"
 									],
 									"properties": {
 										"product_reference": {
@@ -1851,10 +1850,6 @@
 											"type": "number",
 											"minimum": 0,
 											"description": "Heat losses from building-level distribution pipework (unit: W)"
-										},
-										"design_flow_temp": {
-											"type": "number",
-											"description": "The flow temperature expected to be set - typically either 55°C or 70°C"
 										}
 									}
 								},
@@ -3211,6 +3206,7 @@
 								"required": [
 									"product_reference",
 									"EnergySupply",
+									"design_outdoor_air_flow_rate",
 									"installed_under_approved_scheme"
 								],
 								"properties": {
@@ -5294,12 +5290,22 @@
 								"$ref": "#/$defs/HeatSource"
 							},
 							"description": "Dictionary of heating systems connected to the smart hot water tank"
+						},
+						"ColdWaterSource": {
+							"type": "string",
+							"reference_to": [
+								"$.cold_water_source",
+								"$.pre_heated_water_source",
+								"$.wwhrs"
+							],
+							"description": "References a key (e.g., \"mains water\") in $.ColdWaterSource"
 						}
 					},
 					"required": [
 						"product_reference",
 						"EnergySupply_pump",
-						"HeatSource"
+						"HeatSource",
+						"ColdWaterSource"
 					]
 				},
 				{
@@ -5589,14 +5595,9 @@
 						"oneOf": [
 							{
 								"required": [
-									"EnergySupply",
 									"product_reference"
 								],
 								"properties": {
-									"EnergySupply": {
-										"type": "string",
-										"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
-									},
 									"product_reference": {
 										"description": "A unique reference to a product held within the HEM database (PCDB)",
 										"title": "Reference to the product in the HEM database",

@@ -37,6 +37,7 @@ function handleDuplicate(index: number) {
 		store.infiltrationAndVentilation.vents.complete = false;
 	}
 }
+
 function handleComplete() {
 	store.$patch({
 		infiltrationAndVentilation: {

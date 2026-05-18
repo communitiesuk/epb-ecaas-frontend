@@ -63,7 +63,7 @@ const floorsData: FloorsData = {
 				massDistributionClass: "I",
 				perimeter: 0,
 				psiOfWallJunction: 0,
-				thicknessOfWalls: 0.3,
+				thicknessOfWalls: unitValue(0.3, metre),
 				typeOfGroundFloor: "Slab_no_edge_insulation",
 			},
 		},
@@ -78,7 +78,7 @@ const floorsData: FloorsData = {
 				massDistributionClass: "I",
 				perimeter: 0,
 				psiOfWallJunction: 0,
-				thicknessOfWalls: 0.3,
+				thicknessOfWalls: unitValue(0.3, metre),
 				typeOfGroundFloor: "Slab_edge_insulation",
 				horizontalEdgeInsulationWidth: {
 					amount: 0.5,
@@ -134,7 +134,7 @@ const floorsData: FloorsData = {
 				massDistributionClass: "I",
 				depthOfBasementFloor: 2.5,
 				psiOfWallJunction: 0.08,
-				thicknessOfWalls: 0.3,
+				thicknessOfWalls: unitValue(0.3, millimetre),
 			},
 		}],
 	},
@@ -149,7 +149,7 @@ const floorsData: FloorsData = {
 				massDistributionClass: "I",
 				perimeter: 30,
 				psiOfWallJunction: 0.08,
-				thicknessOfWalls: 0.3,
+				thicknessOfWalls: unitValue(0.3, millimetre),
 				depthOfBasementFloor: 0.5,
 				heightOfBasementWalls: 1,
 				thermalResistanceOfBasementWalls: 0.5,
@@ -1178,6 +1178,7 @@ describe("dwelling space doors", () => {
 
 			const expectedResult = {
 				"Name": "External unglazed door 1",
+				"Associated wall or roof": "-",
 				"Pitch": `72 ${degrees.suffix}`,
 				"Orientation": `24 ${degrees.suffix}`,
 				"Height": `0.5 ${metre.suffix}`,
@@ -1214,6 +1215,7 @@ describe("dwelling space doors", () => {
 
 			const expectedResult = {
 				"Name": "External unglazed door 1",
+				"Associated wall or roof": wallsData.dwellingSpaceExternalWall.data[0]?.data.name,
 				"Pitch": `${wallsData.dwellingSpaceExternalWall.data[0]?.data.pitch} ${degrees.suffix}`,
 				"Orientation": `${wallsData.dwellingSpaceExternalWall.data[0]?.data.orientation} ${degrees.suffix}`,
 				"Height": `0.5 ${metre.suffix}`,
@@ -1273,6 +1275,7 @@ describe("dwelling space doors", () => {
 
 			const expectedResult = {
 				"Name": "External glazed door 1",
+				"Associated wall or roof": "-",
 				"Orientation": `24 ${degrees.suffix}`,
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
@@ -1311,6 +1314,7 @@ describe("dwelling space doors", () => {
 
 			const expectedResult = {
 				"Name": "External glazed door 1",
+				"Associated wall or roof": wallsData.dwellingSpaceExternalWall.data[0]?.data.name,
 				"Orientation": `0 ${degrees.suffix}`,
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
@@ -1360,6 +1364,7 @@ describe("dwelling space doors", () => {
 			});
 			const baseExpected = {
 				"Name": "External glazed door 1",
+				"Associated wall or roof": wallsData.dwellingSpaceExternalWall.data[0]?.data.name,
 				"Orientation": `0 ${degrees.suffix}`,
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
@@ -1484,6 +1489,7 @@ describe("dwelling space doors", () => {
 		const expectedResult = {
 			"Type": "Internal door to heated space",
 			"Name": "Internal 1",
+			"Associated wall or ceiling": wallsData.dwellingSpaceInternalWall.data[0]?.data.name,
 			"Net surface area of element": `5 ${metresSquare.suffix}`,
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",
@@ -1522,6 +1528,7 @@ describe("dwelling space doors", () => {
 		const expectedResult = {
 			"Type": "Internal door to heated space",
 			"Name": "Internal 1",
+			"Associated wall or ceiling": wallsData.dwellingSpaceInternalWall.data[0]?.data.name,
 			"Pitch": `10 ${degrees.suffix}`,
 			"Net surface area of element": `5 ${metresSquare.suffix}`,
 			"Areal heat capacity": "Very light",
@@ -1561,6 +1568,7 @@ describe("dwelling space windows", () => {
 		await renderSuspended(Summary);
 		const baseExpected = {
 			"Name": "Window 1",
+			"Associated wall or roof": wallsData.dwellingSpaceExternalWall.data[0]?.data.name,
 			"Orientation": `0 ${degrees.suffix}`,
 			"Height": `1 ${metre.suffix}`,
 			"Width": `1 ${metre.suffix}`,

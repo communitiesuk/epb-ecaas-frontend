@@ -1407,7 +1407,7 @@ describe("Domestic hot water", () => {
 	});
 
 	describe("Heat network behaviour ", () => {
-		test("when the heat source is a heat network, a heat pump or HUI can be added", async () => {
+		test("when the heat source is a heat network, a heat pump or HIU can be added", async () => {
 			const heatNetwork: DomesticHotWaterHeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				coldWaterSource: "mainsWater",
@@ -1429,7 +1429,7 @@ describe("Domestic hot water", () => {
 			await renderSuspended(DomesticHotWater);
 			expect(screen.getByTestId("heatSources_add")).toBeDefined();
 		});
-		test("when the heat source is a heat pump or HUI, a heat network can be added", async () => {
+		test("when the heat source is a heat pump or HIU, a heat network can be added", async () => {
 			const heatPump: DomesticHotWaterHeatSourceData = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
 				coldWaterSource: "mainsWater",
@@ -1457,7 +1457,7 @@ describe("Domestic hot water", () => {
 			expect(screen.getByTestId("heatSources_add")).toBeDefined();
 		});
 
-		test("when the heat source is a HUI, a heat network can be added", async () => {
+		test("when the heat source is a HIU, a heat network can be added", async () => {
 			const hiu: DomesticHotWaterHeatSourceData = {
 				id: "48f2ce5d-f7fc-40dd-8be8-5d7f0bb0d111",
 				coldWaterSource: "mainsWater",

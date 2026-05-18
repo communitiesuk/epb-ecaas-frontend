@@ -43,6 +43,20 @@ describe("Heat emitter products page", () => {
 			},
 		],
 	};
+
+	const MOCKED_UNDERFLOOR_HEATING: PaginatedResult<DisplayProduct> = {
+		data: [
+			{
+				displayProduct: true,
+				id: "101",
+				technologyType: "UnderFloorHeating",
+				systemName: "Standard screed floor",
+				floorFinishCompatibility: "7mm Thin laminates",
+				pipeCentres: 250,
+			},
+		],
+	};
+
 	beforeEach(() => {
 		mockFetch.mockReturnValue({
 			data: ref(MOCKED_HEAT_EMITTERS),
@@ -107,6 +121,30 @@ describe("Heat emitter products page", () => {
 		expect(screen.queryByText("Brand")).toBeNull();
 		expect(screen.getByText("T33")).toBeDefined();
 		expect(screen.getByText("900")).toBeDefined();
+	});
+
+	test("title is shown for underfloor heating products", async () => {
+		mockFetch.mockReset();
+		mockFetch.mockReturnValue({
+			data: ref(MOCKED_UNDERFLOOR_HEATING),
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				heatEmitter: "2",
+				products: "under-floor-heating",
+			},
+			query: { emitterIndex: "2" },
+			path: "/2/under-floor-heating",
+		});
+		await renderSuspended(Products);
+
+		expect(
+			screen.getByRole("heading", { name: "Select an underfloor heating system" }),
+		);
+		expect(screen.queryByText("Brand")).toBeNull();
+		expect(screen.getByText("Standard screed floor")).toBeDefined();
+		expect(screen.getByText("250")).toBeDefined();
 	});
 
 	test("when a user selects a product its product reference gets stored", async () => {

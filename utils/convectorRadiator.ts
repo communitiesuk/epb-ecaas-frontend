@@ -1,6 +1,4 @@
-import type { ConvectorRadiatorDisplayProduct, ConvectorRadiatorProduct, DisplayProduct, Product } from "~/pcdb/pcdb.types";
-
-export type AnyPcdbProduct = Product | ConvectorRadiatorProduct;
+import type { ConvectorRadiatorDisplayProduct, ConvectorRadiatorProduct, DisplayProduct, AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 export function isConvectorRadiatorProduct(product: AnyPcdbProduct): product is ConvectorRadiatorProduct {
 	return product.technologyType === "ConvectorRadiator";
@@ -21,6 +19,10 @@ export function isConvectorRadiatorDisplayProduct(product: DisplayProduct): prod
 }
 
 export function getRadiatorHeading(product: ConvectorRadiatorProduct): string {
-	const height = product.height != null ? ` ${product.height} mm` : "";
-	return `${product.type}${height}`;
+	return product.type;
+}
+
+export function getRadiatorSubtitle(product: ConvectorRadiatorProduct): string {
+	const height = product.height != null ? `Height ${product.height}mm` : "";
+	return height;
 }

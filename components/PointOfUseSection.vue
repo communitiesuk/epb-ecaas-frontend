@@ -31,10 +31,10 @@ const heatSources = getCombinedHeatSources(store);
 		help="Select the relevant energy supply that has been added previously" />
 	<FormKit
 		id="heaterEfficiency"
-		type="govInputInt"
+		type="govInputFloat"
 		label="Heater efficiency"
 		help="Enter the the efficiency of the heater as a decimal between 0 and 1"
 		name="heaterEfficiency"
-		validation="required | number | min:0 | max:1"
+		validation="required | min:0 | max:1"
 	/>
 </template>

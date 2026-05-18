@@ -6,6 +6,8 @@ const title = "Internal floor";
 const store = useEcaasStore();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
+const { mounted } = useMounted();
+
 const internalFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data;
 const index = getStoreIndex(internalFloorData);
 const floorData = useItemToEdit("floor", internalFloorData);
@@ -59,6 +61,7 @@ autoSaveElementForm<InternalFloorData>({
 	},
 });
 
+
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
@@ -84,7 +87,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="This affects the additional inputs needed"
 			name="typeOfInternalFloor"
 			validation="required" />
-		<template v-if="!!model?.typeOfInternalFloor">
+		<template v-if="mounted&&!!model?.typeOfInternalFloor">
 			<FormKit
 				id="name"
 				type="govInputText"
@@ -116,7 +119,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsUValue v-if="model?.typeOfInternalFloor === 'unheatedSpace'" help="Enter the U-value of the full thickness of the floor build-up" />
 		</template>
 		<FormKit
-			v-if="model?.typeOfInternalFloor === 'unheatedSpace'"
+			v-if="mounted&&model?.typeOfInternalFloor === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"

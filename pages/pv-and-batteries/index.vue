@@ -51,6 +51,7 @@ function handleDuplicate<T extends PvAndBatteryData>(pvAndBatteryType: PvAndBatt
 		});
 	}
 }
+
 function handleComplete() {
 	store.$patch({
 		pvAndBatteries: {

@@ -28,6 +28,9 @@ const tableData: Record<string, string> =
 	"Power of circulation pump": dim(data?.powerHeatingCircPump, "kilowatt"),
 	"Power of crankcase heater": dim(data?.powerCrankcaseHeater, "kilowatt"),
 	"Maximum power of backup": dim(data?.powerMaxBackup, "kilowatt"),
+	"Storage cylinder volume": dim(data.tankVolumeDeclared, "litres"),
+	"Daily energy loss": dim(data.dailyLossesDeclared, "kilowatt hours per day"),
+	"Area of heat exchanger installed": dim(data.heatExchangerSurfaceAreaDeclared, "metres square"),
 };
 </script>
 

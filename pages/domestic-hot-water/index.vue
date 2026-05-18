@@ -129,6 +129,7 @@ function maxHeatSourcesExceeded() {
 	}
 	return dhwHeatSources.data.length > 1 && !hasPackagedHeatSources;
 }
+
 if (maxHeatSourcesExceeded()) {
 	addError({ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used" });
 }

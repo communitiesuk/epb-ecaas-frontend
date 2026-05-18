@@ -9,8 +9,10 @@ import type { Product } from "~/pcdb/pcdb.types";
 const title = "Water storage";
 const store = useEcaasStore();
 const route = useRoute();
-
 const { autoSaveElementForm, getStoreIndex } = useForm();
+
+const { mounted } = useMounted();
+
 
 const waterStorageStoreData = store.domesticHotWater.waterStorage.data;
 const index = getStoreIndex(waterStorageStoreData);
@@ -160,7 +162,7 @@ const heatSourceTypes = new Map(
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="waterStorageErrorSummary"/>
-		<ClientOnly>
+		<template v-if="mounted">
 			<FormKit
 				id="typeOfWaterStorage"
 				name="typeOfWaterStorage"
@@ -170,110 +172,111 @@ const heatSourceTypes = new Map(
 				validation="required"
 				:disabled="hasPackagedProduct(model)"
 			/>
-		</ClientOnly>
-		<FormKit
-			v-if="model.typeOfWaterStorage !== undefined"
-			id="name"
-			type="govInputText"
-			label="Name"
-			help="Provide a name for this element so that it can be identified later"
-			name="name"
-			validation="required"
-		/>
-		<FormKit
-			v-if="model.typeOfWaterStorage === 'smartHotWaterTank'"	
-			id="selectSmartHotWaterTank"
-			type="govPcdbProduct"
-			label="Select a smart hot water tank"
-			name="productReference"
-			:validation-rules="{ isProductSelected }"
-			validation="required | isProductSelected"
-			help="Select the smart hot water tank from the PCDB using the button below."
-			:selected-product-reference="model.productReference"
-			:selected-product-type="model.typeOfWaterStorage"
-			:page-url="route.fullPath"
-			:page-index="index"
-		/>
-		<FormKit
-			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
-			id="storageCylinderVolume"
-			name="storageCylinderVolume"
-			label="Storage cylinder volume"
-			help="Enter the total internal capacity of the tank"
-			type="govInputWithUnit"
-			:unit="litre"
-			:validation-rules="{ withinMinAndMaxVolume }"
-			validation="required | withinMinAndMaxVolume:1,1000"
-			:validation-messages="{
-				withinMinAndMaxVolume: `Storage cylinder volume must be at least 0 and no more than 200,000 ${litre.name}.`,
-			}"
-			data-field="HotWaterSource['hw cylinder'].volume"
-			:disabled="hasPackagedProduct(model)"
-		/>
-		<FormKit
-			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
-			id="dailyEnergyLoss"
-			type="govInputWithSuffix"
-			label="Daily energy loss"
-			help="Enter the estimated energy lost from the tank per day"
-			name="dailyEnergyLoss"
-			validation="required | number | min:0 | max:200"
-			suffix-text="kWh"
-			data-field="HotWaterSource['hw cylinder'].daily_losses"
-			:disabled="hasPackagedProduct(model)"
-		/>
-		<FormKit
-			v-if="model.typeOfWaterStorage !== undefined"
-			id="dhwHeatSourceId"
-			name="dhwHeatSourceId"
-			type="govRadios"
-			label="Heat source"
-			help="Select the relevant heat source that has been added previously"
-			validation="required"
-			:options="heatSourceOptions"
-			:disabled="hasPackagedProduct(model)"
-		>			
-			<div
-				v-if="!heatSourceOptions.size"
-				data-testid="noHeatSource"
-			>
-				<p class="govuk-error-message">No heat sources added.</p>
-				<NuxtLink :to="getUrl('heatSourcesCreate')" class="govuk-link gov-radios-add-link">
-					Click here to add a heat source
-				</NuxtLink>
+	
+			<FormKit
+				v-if="model.typeOfWaterStorage !== undefined"
+				id="name"
+				type="govInputText"
+				label="Name"
+				help="Provide a name for this element so that it can be identified later"
+				name="name"
+				validation="required"
+			/>
+			<FormKit
+				v-if="model.typeOfWaterStorage === 'smartHotWaterTank'"	
+				id="selectSmartHotWaterTank"
+				type="govPcdbProduct"
+				label="Select a smart hot water tank"
+				name="productReference"
+				:validation-rules="{ isProductSelected }"
+				validation="required | isProductSelected"
+				help="Select the smart hot water tank from the PCDB using the button below."
+				:selected-product-reference="model.productReference"
+				:selected-product-type="model.typeOfWaterStorage"
+				:page-url="route.fullPath"
+				:page-index="index"
+			/>
+			<FormKit
+				v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
+				id="storageCylinderVolume"
+				name="storageCylinderVolume"
+				label="Storage cylinder volume"
+				help="Enter the total internal capacity of the tank"
+				type="govInputWithUnit"
+				:unit="litre"
+				:validation-rules="{ withinMinAndMaxVolume }"
+				validation="required | withinMinAndMaxVolume:1,1000"
+				:validation-messages="{
+					withinMinAndMaxVolume: `Storage cylinder volume must be at least 0 and no more than 200,000 ${litre.name}.`,
+				}"
+				data-field="HotWaterSource['hw cylinder'].volume"
+				:disabled="hasPackagedProduct(model)"
+			/>
+			<FormKit
+				v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
+				id="dailyEnergyLoss"
+				type="govInputWithSuffix"
+				label="Daily energy loss"
+				help="Enter the estimated energy lost from the tank per day"
+				name="dailyEnergyLoss"
+				validation="required | number | min:0 | max:200"
+				suffix-text="kWh/day"
+				data-field="HotWaterSource['hw cylinder'].daily_losses"
+				:disabled="hasPackagedProduct(model)"
+			/>
+			<FormKit
+				v-if="model.typeOfWaterStorage !== undefined"
+				id="dhwHeatSourceId"
+				name="dhwHeatSourceId"
+				type="govRadios"
+				label="Heat source"
+				help="Select the relevant heat source that has been added previously"
+				validation="required"
+				:options="heatSourceOptions"
+				:disabled="hasPackagedProduct(model)"
+			>			
+				<div
+					v-if="!heatSourceOptions.size"
+					data-testid="noHeatSource"
+				>
+					<p class="govuk-error-message">No heat sources added.</p>
+					<NuxtLink :to="getUrl('heatSourcesCreate')" class="govuk-link gov-radios-add-link">
+						Click here to add a heat source
+					</NuxtLink>
+				</div>
+			</FormKit>
+			<FormKit
+				v-if="model.typeOfWaterStorage === 'hotWaterCylinder' && model.dhwHeatSourceId && heatSourceTypes.get(model.dhwHeatSourceId) === 'heatPump'"
+				id="areaOfHeatExchanger"
+				type="govInputWithSuffix"
+				label="Area of heat exchanger installed"
+				suffix-text="m²"
+				name="areaOfHeatExchanger"
+				validation="number"
+				:disabled="hasPackagedProduct(model)"
+			/>
+			<FormKit
+				v-if="model.typeOfWaterStorage !== undefined"
+				id="heaterPosition"
+				type="govInputFloat"
+				label="Heater position in the cylinder"
+				name="heaterPosition"
+				validation="required | number | min:0 | max:1"
+				help="Enter a number between 0 and 1, rounded to one decimal place. 0 is at the bottom, 1 is at the top."
+			/>
+			<FormKit
+				v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
+				id="thermostatPosition"
+				type="govInputFloat"
+				label="Thermostat position in the cylinder"
+				name="thermostatPosition"
+				validation="required | number | min:0 | max:1"
+				help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
+			/>
+			<div class="govuk-button-group">
+				<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+				<GovButton :href="getUrl('domesticHotWater')" secondary>Save progress</GovButton>
 			</div>
-		</FormKit>
-		<FormKit
-			v-if="model.typeOfWaterStorage === 'hotWaterCylinder' && model.dhwHeatSourceId && heatSourceTypes.get(model.dhwHeatSourceId) === 'heatPump'"
-			id="areaOfHeatExchanger"
-			type="govInputWithSuffix"
-			label="Area of heat exchanger installed"
-			suffix-text="m²"
-			name="areaOfHeatExchanger"
-			validation="number"
-			:disabled="hasPackagedProduct(model)"
-		/>
-		<FormKit
-			v-if="model.typeOfWaterStorage !== undefined"
-			id="heaterPosition"
-			type="govInputFloat"
-			label="Heater position in the cylinder"
-			name="heaterPosition"
-			validation="required | number | min:0 | max:1"
-			help="Enter a number between 0 and 1, rounded to one decimal place. 0 is at the bottom, 1 is at the top."
-		/>
-		<FormKit
-			v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
-			id="thermostatPosition"
-			type="govInputFloat"
-			label="Thermostat position in the cylinder"
-			name="thermostatPosition"
-			validation="required | number | min:0 | max:1"
-			help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
-		/>
-		<div class="govuk-button-group">
-			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
-			<GovButton :href="getUrl('domesticHotWater')" secondary>Save progress</GovButton>
-		</div>
+		</template>
 	</FormKit>
 </template>

@@ -4,7 +4,6 @@ import { getTabItems, getUrl } from "#imports";
 import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import { displayDHWHeatSourceType } from "~/utils/display";
 import type { PageId } from "~/data/pages/pages";
-import { getHeatNetworkProductName } from "~/utils/getHeatNetworkProductName";
 import { useProductReferences } from "~/composables/productReferences";
 
 const title = "Domestic hot water summary";
@@ -22,7 +21,8 @@ const heatBatteries = heatSources.filter(({ data: x }) => x.isExistingHeatSource
 const solarThermalSystem = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "solarThermalSystem");
 const immersionHeaters = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "immersionHeater");
 const pointOfUse = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "pointOfUse");
-
+const hotWaterOutletsAll = store.domesticHotWater.hotWaterOutlets.data;
+const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerData>[];
 type SummaryHeatSource = {
 	data: {
 		name: string,
@@ -83,16 +83,8 @@ function addHeatSourceToCorrectSummaryList(heatSources: EcaasForm<DomesticHotWat
 
 addHeatSourceToCorrectSummaryList(dhwHeatSourcesFromSpaceHeating);
 
-const heatInterfaceUnitModelNames = await useProductReferences(heatInterfaceUnits, productData => productData.modelName);
+const productNames = await useProductReferences([...heatInterfaceUnits,...mixedShowerData] as EcaasForm<DomesticHotWaterHeatSourceData>[], productData => productData.modelName);
 
-const heatNetworkProductNamesById: Record<string, string> = {};
-await Promise.all(heatNetworks.map(async ({ data }) => {
-	const heatNetwork = data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
-	heatNetworkProductNamesById[heatNetwork.id] = await getHeatNetworkProductName(
-		heatNetwork.productReference,
-		heatNetwork.subHeatNetworkId,
-	);
-}));
 
 export type SummaryWithLink = {
 	text: "Yes" | "No",
@@ -179,9 +171,8 @@ const heatNetworkSummary: SummarySection = {
 					"Used for space heating": "No",
 					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
 					"Type of heat network": "typeOfHeatNetwork" in heatSource && heatSource.typeOfHeatNetwork ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
-					"Product name": "id" in heatSource ? (heatNetworkProductNamesById[heatSource.id] ?? emptyValueRendering) : emptyValueRendering,
 					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-					"Sub-heat network ID": "subHeatNetworkId" in heatSource ? (heatSource.subHeatNetworkId ?? emptyValueRendering) : emptyValueRendering,
+					"Sub-heat network name": "subHeatNetworkName" in heatSource ? (heatSource.subHeatNetworkName ?? emptyValueRendering) : emptyValueRendering,
 					"Maximum flow temperature": "maxFlowTemp" in heatSource && heatSource.maxFlowTemp !== undefined ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 				}),
 			};
@@ -210,7 +201,7 @@ const heatInterfaceUnitSummary: SummarySection = {
 					"Used for space heating": "No",
 					"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
 					"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
-					"Product name": "productReference" in heatSource && heatSource.productReference ? heatInterfaceUnitModelNames[heatSource.productReference] : emptyValueRendering,
+					"Product name": "productReference" in heatSource && heatSource.productReference ? productNames[heatSource.productReference] : emptyValueRendering,
 					"Associated heat network": associatedHeatNetworkName,
 					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 					"Building level losses": "buildingLevelLosses" in heatSource ? dim(heatSource.buildingLevelLosses) : emptyValueRendering,
@@ -412,7 +403,7 @@ const hotWaterCylinderSummary: SummarySection = {
 		return {
 			"Name": show(hwCylData.name),
 			"Storage cylinder volume": "storageCylinderVolume" in hwCylData ? dim(hwCylData.storageCylinderVolume, "litres") : emptyValueRendering,
-			"Daily energy loss": "dailyEnergyLoss" in hwCylData ? dim(hwCylData.dailyEnergyLoss, "kilowatt-hour") : emptyValueRendering,
+			"Daily energy loss": "dailyEnergyLoss" in hwCylData ? dim(hwCylData.dailyEnergyLoss, "kilowatt hours per day") : emptyValueRendering,
 			"Heat source": show(getHWHeatSourceName(hwCylData.dhwHeatSourceId)),
 			"Area of heat exchanger installed": "areaOfHeatExchanger" in hwCylData ? dim(hwCylData.areaOfHeatExchanger, "metres square") : emptyValueRendering,
 			"Heater position in the cylinder": "heaterPosition" in hwCylData ? show(hwCylData.heaterPosition) : emptyValueRendering,
@@ -446,10 +437,10 @@ const waterStorageSummarySections: SummarySection[] = [
 const populatedHeatSourceSections = getNonEmptySections(heatSourceSections);
 
 
-const hotWaterOutletsAll = store.domesticHotWater.hotWaterOutlets.data;
 
-const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerData>[];
-const mixedShowerModelNames = await useProductReferences(mixedShowerData, productData => productData.modelName);
+
+
+
 
 const mixedShowerSummary: SummarySection = {
 	id: "mixedShower",
@@ -467,7 +458,7 @@ const mixedShowerSummary: SummarySection = {
 			"Is this an air pressure shower?": "isAirPressureShower" in data ? displayBoolean(data.isAirPressureShower) : emptyValueRendering,
 			...("isAirPressureShower" in data && data.isAirPressureShower ? {
 				"Air pressure shower product reference": show(airPressureShowerProductReference),
-				"Air pressure shower product": airPressureShowerProductReference ? show(mixedShowerModelNames[data.airPressureShowerProductReference]) : emptyValueRendering,
+				"Air pressure shower product": airPressureShowerProductReference ? show(productNames[data.airPressureShowerProductReference]) : emptyValueRendering,
 			} : {
 				"Flow rate": "flowRate" in data ? dim(data.flowRate, "litres per second") : emptyValueRendering,
 			}),
@@ -475,7 +466,7 @@ const mixedShowerSummary: SummarySection = {
 			...("wwhrs" in data && data.wwhrs ? {
 				"WWHRS type": "wwhrsType" in data && data.wwhrsType ? displayCamelToSentenceCase(String(data.wwhrsType)) : emptyValueRendering,
 				"WWHRS product reference": wwhrsProductReference,
-				"WWHRS product": wwhrsProductReference ? show(mixedShowerModelNames[wwhrsProductReference]) : emptyValueRendering,
+				"WWHRS product": wwhrsProductReference ? show(productNames[wwhrsProductReference]) : emptyValueRendering,
 			} : {}),
 		};
 	}),

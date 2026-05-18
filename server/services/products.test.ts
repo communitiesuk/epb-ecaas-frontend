@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { getGroupProducts, getProductDetails, getProducts } from "./products";
+import { getGroupProducts, getProductDetails, getProducts, getProductsBatch } from "./products";
 import type { TechnologyGroup, TechnologyType } from "~/pcdb/pcdb.types";
 import type { H3Error } from "h3";
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { BatchGetCommand, DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import products from "@/pcdb/data/products.json";
 import { dynamodbClient } from "~/pcdb/clients/dynamodb_client";
 
@@ -177,6 +177,28 @@ describe("Products service", () => {
 
 			// Assert
 			expect(result).toStrictEqual(productFromTestData);
+		});
+	});
+
+	describe("Get product batch", () => {
+		it("Returns matching products for provided IDs", async () => {
+			const matchingProducts = products.filter(p => ["1234", "1235"].includes(p.id));
+
+			ddbMock.on(BatchGetCommand, {
+				RequestItems: {
+					products: {
+						Keys: [{ id: "1234" }, { id: "1235" }],
+					},
+				},
+			}).resolves({
+				Responses: {
+					products: matchingProducts,
+				},
+			});
+
+			const result = await getProductsBatch(["1234", "1235"]);
+
+			expect(result).toStrictEqual(matchingProducts);
 		});
 	});
 	describe("Get display product", async () => {

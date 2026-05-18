@@ -15,6 +15,7 @@ import type {
 import type { SchemaBoilerWithProductReference, SchemaHeatNetworkType, SchemaHeatSourceWetDetails, SchemaHeatSourceWetHeatPumpInput, SchemaHeatSourceWetHiuInput, SchemaSpaceHeatSystem } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import { objectFromEntries } from "ts-extras";
+
 function getAssociatedHeatNetworkType(associatedHeatNetworkId: string | undefined, state: ResolvedState): SchemaHeatNetworkType {
 	const heatNetworks = state.spaceHeating.heatSource.filter(source => source.typeOfHeatSource === "heatNetwork");
 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
@@ -109,11 +110,13 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 		}),
 	);
 }
-function getSubnetworkId(associatedHeatNetworkId: string | undefined, state: ResolvedState): string | undefined {
+
+function getSubnetworkName(associatedHeatNetworkId: string | undefined, state: ResolvedState): string | undefined {
 	const heatNetworks = state.spaceHeating.heatSource.filter(source => source.typeOfHeatSource === "heatNetwork");
 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
-	return associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkId : undefined;
+	return associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkName : undefined;
 }
+
 export function mapHIUs(state: ResolvedState): Record<string, SchemaHeatSourceWetHiuInput> {
 	const heatSources = state.spaceHeating.heatSource;
 	const hius = heatSources.filter(
@@ -122,7 +125,7 @@ export function mapHIUs(state: ResolvedState): Record<string, SchemaHeatSourceWe
 	return objectFromEntries(
 		hius.map((hiu) => {
 			const heatNetworkType = hiu.associatedHeatNetworkId ? getAssociatedHeatNetworkType(hiu.associatedHeatNetworkId, state) : undefined;
-			const subHeatNetworkId = hiu.associatedHeatNetworkId ? getSubnetworkId(hiu.associatedHeatNetworkId, state) : undefined;
+			const subHeatNetworkName = hiu.associatedHeatNetworkId ? getSubnetworkName(hiu.associatedHeatNetworkId, state) : undefined;
 			if (!heatNetworkType) {
 				throw new Error(`HIU ${hiu.name} is indicated as being connected to a heat network but no associated heat network was found`);
 			}
@@ -131,12 +134,11 @@ export function mapHIUs(state: ResolvedState): Record<string, SchemaHeatSourceWe
 				{
 					type: "HIU" as const,
 					product_reference: hiu.productReference ?? undefined,
-					design_flow_temp: hiu.maxFlowTemp.amount,
 					building_level_distribution_losses: typeof hiu.buildingLevelLosses === "object" && hiu.buildingLevelLosses !== null && "amount" in hiu.buildingLevelLosses ? hiu.buildingLevelLosses.amount : hiu.buildingLevelLosses,
 					is_heat_network: true as const,
 					heat_network_type: heatNetworkType,
 					heat_network_reference: hiu.associatedHeatNetworkId,
-					sub_heat_network_name: subHeatNetworkId ?? "",
+					sub_heat_network_name: subHeatNetworkName ?? "",
 					EnergySupply: defaultElectricityEnergySupplyName,
 				} as const satisfies SchemaHeatSourceWetHiuInput,
 
@@ -327,11 +329,11 @@ function mapEmittersForWetDistribution(emitters: WetDistributionEmitterData[]): 
 			} as const satisfies SchemaRadiatorWithProductReference;
 
 			return Array.from({ length: emitter.numOfRadiators }, () => radiator);
-		} else if (emitter.typeOfHeatEmitter === "underfloorHeating") {
+		} else if (emitter.typeOfHeatEmitter === "underFloorHeating") {
 			return [{
 				wet_emitter_type: "ufh",
 				product_reference: emitter.productReference,
-				emitter_floor_area: emitter.areaOfUnderfloorHeating,
+				emitter_floor_area: emitter.areaOfUnderFloorHeating,
 			} as const satisfies SchemaUfhWithProductReference];
 		} else if (emitter.typeOfHeatEmitter === "fanCoil") {
 			return [{
@@ -345,6 +347,7 @@ function mapEmittersForWetDistribution(emitters: WetDistributionEmitterData[]): 
 		}
 	});
 }
+
 export function mapWetDistributions(state: ResolvedState): Record<string, SchemaWetDistribution> {
 
 	const { heatEmitters } = state.spaceHeating as {

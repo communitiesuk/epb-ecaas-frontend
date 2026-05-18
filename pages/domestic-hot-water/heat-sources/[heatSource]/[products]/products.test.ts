@@ -2,7 +2,7 @@ import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
 import Products from "./index.vue";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
-import type { BoilerProduct, DisplayProduct, HeatPumpProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import type { BoilerProduct, DisplayProduct, HeatPumpProduct, PaginatedResult, VesselType } from "~/pcdb/pcdb.types";
 
 describe("Heat source products page", () => {
 	const store = useEcaasStore();
@@ -349,7 +349,11 @@ describe("Heat source products page", () => {
 		}));
 	});
 
-	test("a hot water cylinder is created when a heat pump with vessel type 'Integral' is selected", async () => {
+	test.each([
+		"Integral",
+		"Separate limiting characteristics",
+		"Separate fixed characteristics",
+	] as const satisfies VesselType[])("a hot water cylinder is created when a heat pump with vessel type '%s' is selected", async (vesselType) => {
 		store.$patch({
 			domesticHotWater: {
 				heatSources: {
@@ -375,7 +379,7 @@ describe("Heat source products page", () => {
 				brandName: "Test",
 				modelName: "Heat Pump",
 				technologyType: "AirSourceHeatPump",
-				vesselType: "Integral",
+				vesselType,
 			}],
 		};
 
@@ -384,7 +388,7 @@ describe("Heat source products page", () => {
 			brandName: "Test",
 			modelName: "Heat Pump",
 			technologyType: "AirSourceHeatPump",
-			vesselType: "Integral",
+			vesselType,
 			tankVolumeDeclared: 20,
 			dailyLossesDeclared: 10,
 		};

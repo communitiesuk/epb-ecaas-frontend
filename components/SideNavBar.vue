@@ -8,6 +8,8 @@ const parentPages: Array<Page> = pagesData.filter(
 
 const openStates = ref(Array(parentPages.length).fill(true));
 
+const { mounted } = useMounted();
+
 function toggle(index: number) {
 	openStates.value[index] = !openStates.value[index];
 }
@@ -15,14 +17,28 @@ function toggle(index: number) {
 function isOpen(index: number) {
 	return openStates.value[index];
 }
+
 function getUrl(url: string) {
 	const store = useEcaasStore();
 	
 	if (url !== "/domestic-hot-water/heat-sources/create") return url;
+	if (!mounted.value) return url;
 
 	if (store.domesticHotWater.heatSources.data.length >= 1) {
 		return "/domestic-hot-water/heat-sources/0";
 	} else return url;
+}
+
+function shouldShowPage(page: Page, parentPageId: string) {
+	if (page.parentId !== parentPageId || page.url.includes(":")) {
+		return false;
+	}
+
+	if (page.excludeFromNavigation && !mounted.value) {
+		return false;
+	}
+
+	return !page.excludeFromNavigation?.();
 }
 
 
@@ -44,7 +60,7 @@ function getUrl(url: string) {
 			</button>
 			<ul v-if="isOpen(index)" class="govuk-inset-text">
 				<template v-for="page in pagesData" :key="page.id">
-					<li v-if="page.parentId === parentPage.id && !page.url.includes(':') && !page.excludeFromNavigation?.()">
+					<li v-if="shouldShowPage(page, parentPage.id)">
 						<NuxtLink class="govuk-link govuk-body-s" :to="getUrl(page.url)" @click.stop>
 							{{ page.title  }}
 						</NuxtLink>

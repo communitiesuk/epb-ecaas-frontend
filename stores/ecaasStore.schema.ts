@@ -5,7 +5,7 @@ import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, S
 import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/schema/aliases";
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
-import { zodUnit } from "~/utils/units/zod";
+import { addConstraints, zodUnit } from "~/utils/units/zod";
 import { arealHeatCapacityZod, batteryLocationZod, boilerLocationZod, colourZod, ductShapeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
 
@@ -196,7 +196,7 @@ export const groundSurfaceAreaZod = z.number().min(5).max(10000);
 export const groundTotalAreaZod = z.number().min(5);
 export const groundPerimeterZod = z.number().min(0).max(1000);
 
-export const thicknessOfWallsZod = z.number().min(0).max(100);
+export const thicknessOfWallsZod = addConstraints(zodUnit("length"), { min: 0, max: 100000 });
 
 const baseGroundFloorData = named.extend({
 	surfaceArea: groundSurfaceAreaZod,
@@ -994,7 +994,7 @@ const heatBatteryBase = pcdbProduct.extend({
 const heatNetworkBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatNetwork"),
 	typeOfHeatNetwork,
-	subHeatNetworkId: z.string().trim().min(1).optional(),
+	subHeatNetworkName: z.string().optional(),
 });
 
 const heatInterfaceUnitBase = pcdbProduct.extend({
@@ -1067,6 +1067,7 @@ export const productTypeMap = {
 	"instantElectricHeater": "DirectElectricHeaters",
 	"airPressureShower": "AirPoweredShowers",
 	"wwhrs": "InstantaneousWwhrSystem",
+	"underFloorHeating": "UnderFloorHeating",
 } as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType | ShowerProductType, TechnologyType | string | TechnologyType[]>;
 
 export type HeatEmitterType =
@@ -1076,7 +1077,7 @@ export type HeatEmitterType =
 	"warmAirHeater";
 
 const _typeOfHeatEmitter = z.enum(["wetDistributionSystem", "electricStorageHeater", "instantElectricHeater"]);
-const wetDistributionSystemEmitter = z.enum(["underfloorHeating", "fanCoil", "radiator"]);
+const wetDistributionSystemEmitter = z.enum(["underFloorHeating", "fanCoil", "radiator"]);
 export const typeOfHeatEmitter = _typeOfHeatEmitter.enum;
 export const typeOfWetDistributionSystemEmitter = wetDistributionSystemEmitter.enum;
 
@@ -1120,10 +1121,10 @@ const variableFlowRateFields = {
 
 export const emitterFloorAreaZod = z.number().gt(0);
 
-const underfloorHeatingSchema = namedWithId.extend({
-	typeOfHeatEmitter: z.literal(typeOfWetDistributionSystemEmitter.underfloorHeating),
+const underFloorHeatingSchema = namedWithId.extend({
+	typeOfHeatEmitter: z.literal(typeOfWetDistributionSystemEmitter.underFloorHeating),
 	productReference: z.string(),
-	areaOfUnderfloorHeating: emitterFloorAreaZod,
+	areaOfUnderFloorHeating: emitterFloorAreaZod,
 });
 
 export const productCountZod = z.int().min(1);
@@ -1145,7 +1146,7 @@ const radiatorSchema = namedWithId.extend({
 export type RadiatorData = z.infer<typeof radiatorSchema>;
 
 const wetDistributionSystemEmittersFields = z.discriminatedUnion("typeOfHeatEmitter", [
-	underfloorHeatingSchema,
+	underFloorHeatingSchema,
 	fanCoilSchema,
 	radiatorSchema,
 ]);
@@ -1156,7 +1157,7 @@ const wetDistributionSystemEmitterDraftSchema = z.object({
 	name: z.string().trim().min(1).optional(),
 	typeOfHeatEmitter: wetDistributionSystemEmitter.optional(),
 	productReference: z.string().optional(),
-	areaOfUnderfloorHeating: emitterFloorAreaZod.optional(),
+	areaOfUnderFloorHeating: emitterFloorAreaZod.optional(),
 	numOfFanCoils: productCountZod.optional(),
 	numOfRadiators: productCountZod.optional(),
 	length: z.number().min(0.001).optional(),
@@ -1217,7 +1218,7 @@ const heatEmittingDataZod = z.discriminatedUnion("typeOfHeatEmitter", [
 	electricStorageHeaterSchema,
 ]);
 
-export type HeatEmittingProductType = Exclude<z.infer<typeof _typeOfHeatEmitter>, "wetDistributionSystem"> | "fanCoil" | "radiator";
+export type HeatEmittingProductType = Exclude<z.infer<typeof _typeOfHeatEmitter>, "wetDistributionSystem"> | "fanCoil" | "radiator" | "underFloorHeating";
 export type HeatEmittingData = z.infer<typeof heatEmittingDataZod>;
 
 const heatingControlsDataZod = named.extend({
@@ -1574,17 +1575,17 @@ type IsEcaasForm<T> = T extends EcaasForm<unknown> ? true : false;
 
 type Join<K, P> = K extends string | number
 	? P extends string | number
-		? `${K}/${P}`
-		: never
+	? `${K}/${P}`
+	: never
 	: never;
 
 type EcaasFormPaths<T> = {
 	[K in keyof T]:
 	IsEcaasForm<T[K]> extends true
-		? K
-		: T[K] extends object
-			? Join<K, EcaasFormPaths<T[K]>>
-			: never
+	? K
+	: T[K] extends object
+	? Join<K, EcaasFormPaths<T[K]>>
+	: never
 }[keyof T];
 
 export type EcaasFormPath = NonNullable<EcaasFormPaths<EcaasState>>;
