@@ -32,7 +32,7 @@ const stateWithFlat: GeneralDetailsData = {
 	typeOfDwelling: "flat",
 	storeyOfFlat: 1,
 	storeysInDwelling: 2,
-	storeysInBuilding: 1,
+	storeysInBuilding: 3,
 	buildingLength: 10,
 	buildingWidth: 5,
 	numOfBedrooms: 3,
@@ -166,7 +166,7 @@ describe("General details", () => {
 			await user.click(screen.getByTestId("typeOfDwelling_flat"));
 			await user.type(screen.getByTestId("storeyOfFlat"), "1");
 			await user.type(screen.getByTestId("storeysInDwelling"), "2");
-			await user.type(screen.getByTestId("storeysInBuilding"), "1");
+			await user.type(screen.getByTestId("storeysInBuilding"), "3");
 			await user.type(screen.getByTestId("buildingLength"), "10");
 			await user.type(screen.getByTestId("buildingWidth"), "5");
 			await user.type(screen.getByTestId("numOfBedrooms"), "3");
@@ -205,7 +205,7 @@ describe("General details", () => {
 			expect((await screen.findByTestId("typeOfDwelling_flat")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("storeyOfFlat")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("storeysInDwelling")).value).toBe("2");
-			expect((await screen.findByTestId<HTMLInputElement>("storeysInBuilding")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("storeysInBuilding")).value).toBe("3");
 			expect((await screen.findByTestId<HTMLInputElement>("buildingLength")).value).toBe("10");
 			expect((await screen.findByTestId<HTMLInputElement>("buildingWidth")).value).toBe("5");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfBedrooms")).value).toBe("3");
@@ -229,6 +229,22 @@ describe("General details", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("storeyOfFlat_error"))).toBeDefined();
+		});
+
+		test("display error when storeys in dwelling exceeds storeys in building", async () => {
+			const user = userEvent.setup();
+
+			await renderSuspended(GeneralDetails);
+
+			await user.click(screen.getByTestId("typeOfDwelling_flat"));
+			await user.type(screen.getByTestId("storeyOfFlat"), "2");
+			await user.type(screen.getByTestId("storeysInDwelling"), "2");
+			await user.type(screen.getByTestId("storeysInBuilding"), "1");
+
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect((await screen.findByTestId("storeysInBuilding_error"))).toBeDefined();
 		});
 	});
 
