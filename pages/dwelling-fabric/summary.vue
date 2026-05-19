@@ -563,6 +563,7 @@ const linearThermalBridgesSummary: SummarySection = {
 			"Type of thermal bridge": displayCamelToSentenceCase(show(x.typeOfThermalBridge)),
 			"Linear thermal transmittance": dim(x.linearThermalTransmittance, "watts per metre kelvin"),
 			"Length of thermal bridge": dim(x.length, "metres"),
+			"Reference": show(x.reference),
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceThermalBridging"),
@@ -575,6 +576,7 @@ const pointThermalBridgesSummary: SummarySection = {
 		return {
 			"Name": show(x.name),
 			"Heat transfer coefficient": dim(x.heatTransferCoefficient, "watts per kelvin"),
+			"Reference": show(x.reference),
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceThermalBridging"),

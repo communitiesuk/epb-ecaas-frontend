@@ -666,12 +666,14 @@ const linearThermalBridgeDataZod = named.extend({
 	typeOfThermalBridge: thermalBridgeJunctionTypeZod,
 	linearThermalTransmittance: z.number(),
 	length: lengthThermalBridgeLinearZod,
+	reference: z.optional(z.string()),
 });
 
 export type LinearThermalBridgeData = z.infer<typeof linearThermalBridgeDataZod>;
 
 const pointThermalBridgeDataZod = named.extend({
 	heatTransferCoefficient: z.number().min(0).max(2),
+	reference: z.optional(z.string()),
 });
 
 export type PointThermalBridgeData = z.infer<typeof pointThermalBridgeDataZod>;
