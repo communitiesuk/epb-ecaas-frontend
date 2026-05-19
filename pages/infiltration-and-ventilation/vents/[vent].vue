@@ -58,15 +58,7 @@ autoSaveElementForm<VentData>({
 	},
 });
 
-const { dwellingSpaceWindows, dwellingSpaceWalls } = store.dwellingFabric;
-
-const associatedWallWindowOptions = [
-	dwellingSpaceWindows.data.map(x => [x.data.id, x.data.name] as [string, string]),
-	dwellingSpaceWalls.dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
-]
-	.flat()
-	.filter(x => x[0] != undefined)
-	.concat([["none", "None of the above"]]);
+const associatedWallWindowOptions = useAssociatedItems(["wall", "window"]);
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>

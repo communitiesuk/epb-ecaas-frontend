@@ -7,9 +7,9 @@ export function useAssociatedItems(itemTypes: Array<"wall" | "roof" | "window">)
 	const { dwellingSpaceWindows } = store.dwellingFabric;
 
 	const options = [
-		(itemTypes.includes("wall") ? dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]) : []),
-		(itemTypes.includes("roof") ? dwellingSpaceRoofs.data.map(x => [x.data.id, x.data.name] as [string, string]) : []),
-		(itemTypes.includes("window") ? dwellingSpaceWindows.data.map(x => [x.data.id, x.data.name] as [string, string]) : []),
+		(itemTypes.includes("wall") ? dwellingSpaceExternalWall.data.map(x => [x.data.id, `${x.data.name} (Wall)`] as [string, string]) : []),
+		(itemTypes.includes("roof") ? dwellingSpaceRoofs.data.map(x => [x.data.id, `${x.data.name} (Roof)`] as [string, string]) : []),
+		(itemTypes.includes("window") ? dwellingSpaceWindows.data.map(x => [x.data.id, `${x.data.name} (Window)`] as [string, string]) : []),
 	]
 		.flat()
 		.filter(x => x[0] !== undefined)

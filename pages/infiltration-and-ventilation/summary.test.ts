@@ -275,7 +275,7 @@ describe("Infiltration and ventilation summary", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Associated wall, roof or window": "External wall 1",
+			"Associated wall, roof or window": "External wall 1 (Wall)",
 			"Orientation of vent": `${externalWall.orientation} ${degrees.suffix}`,
 			"Pitch of vent": `${externalWall.pitch} ${degrees.suffix}`,
 		};
@@ -312,7 +312,7 @@ describe("Infiltration and ventilation summary", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Associated wall, roof or window": "Roof 1",
+			"Associated wall, roof or window": "Roof 1 (Roof)",
 			"Orientation of vent": `${roof.orientation} ${degrees.suffix}`,
 			"Pitch of vent": `${roof.pitch} ${degrees.suffix}`,
 		};
@@ -383,7 +383,7 @@ describe("Infiltration and ventilation summary", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Associated wall, roof or window": "External wall 1",
+			"Associated wall, roof or window": "External wall 1 (Wall)",
 			"Orientation of vent": `${externalWall.orientation} ${degrees.suffix}`,
 			"Pitch of vent": `${externalWall.pitch} ${degrees.suffix}`,
 		};
@@ -454,7 +454,7 @@ describe("Infiltration and ventilation summary", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Associated wall, roof or window": "External wall 1",
+			"Associated wall, roof or window": "External wall 1 (Wall)",
 			"Orientation of vent": `${externalWall.orientation} ${degrees.suffix}`,
 			"Pitch of vent": `${externalWall.pitch} ${degrees.suffix}`,
 		};
@@ -548,7 +548,7 @@ describe("Infiltration and ventilation summary", () => {
 
 		const expectedResult = {
 			Name: "Vent 1",
-			"Associated wall or window": "External wall 1",
+			"Associated wall or window": "External wall 1 (Wall)",
 			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
 			"Mid height of zone": `1 ${metre.suffix}`,
 			Orientation: `0 ${degrees.suffix}`,
@@ -644,7 +644,7 @@ describe("Infiltration and ventilation summary", () => {
 
 		const expectedResult = {
 			Name: "Vent 1",
-			"Associated wall or window": "Window 1",
+			"Associated wall or window": "Window 1 (Window)",
 			Orientation: `77 ${degrees.suffix}`,
 			Pitch: `66 ${degrees.suffix}`,
 		};
