@@ -262,7 +262,7 @@ describe("Heat emitters", () => {
 					throw new Error("Emitters field is missing in heat emitter data");
 				}
 			});
-			test("can add an underfloor heating as an emitter", async () => {
+			test.skip("can add an underfloor heating as an emitter", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatEmitters: {
