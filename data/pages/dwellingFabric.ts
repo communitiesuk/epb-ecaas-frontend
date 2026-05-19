@@ -331,7 +331,7 @@ const dwellingFabricPages = [
 		parentId: "dwellingSpaceThermalBridging",
 	},
 	{
-		id: "dwellingSpaceSummary",
+		id: "dwellingFabricSummary",
 		title: "Summary",
 		url: "/dwelling-fabric/summary",
 		type: "summary",

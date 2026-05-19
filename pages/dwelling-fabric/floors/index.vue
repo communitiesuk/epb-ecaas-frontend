@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
 import { v4 as uuidv4 } from "uuid";
+import { page as pages } from "~/data/pages/pages";
+
 const title = "Floor elements";
 const page = usePage();
 const store = useEcaasStore();
@@ -151,11 +153,11 @@ function hasIncompleteEntries() {
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceFloorOfHeatedBasement', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton
-			href="/dwelling-fabric"
-			secondary
-		>
+		<GovButton :href="pages('dwellingFabric').url" secondary>
 			Return to dwelling fabric
+		</GovButton>
+		<GovButton :href="pages('dwellingFabricSummary').url" secondary>
+			View summary
 		</GovButton>
 		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 

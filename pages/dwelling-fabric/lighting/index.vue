@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
+import { page as pages } from "~/data/pages/pages";
 
 const title = "Lighting";
 const page = usePage();
@@ -96,8 +97,11 @@ function hasIncompleteEntries() {
 		@duplicate="handleDuplicate"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/dwelling-fabric" secondary>
+		<GovButton :href="pages('dwellingFabric').url" secondary>
 			Return to dwelling fabric
+		</GovButton>
+		<GovButton :href="pages('dwellingFabricSummary').url" secondary>
+			View summary
 		</GovButton>
 		<CompleteElement
 			:is-complete="store.dwellingFabric.dwellingSpaceLighting.complete ?? false"
