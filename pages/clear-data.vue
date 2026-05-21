@@ -23,7 +23,7 @@ const handleClearData = async () => {
 			<Title>{{ title }}</Title>
 		</Head>
 
-		<NuxtLink href="/" class="govuk-back-link" data-testid="backLink">Back to task list</NuxtLink>
+		<NuxtLink href="/" class="govuk-back-link" data-testid="backLink">Back to overview</NuxtLink>
 
 		<div class="govuk-panel govuk-panel--confirmation clear-data-panel" data-testid="clearDataPanel">
 			<h1 class="govuk-panel__title">

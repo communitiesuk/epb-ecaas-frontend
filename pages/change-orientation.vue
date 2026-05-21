@@ -102,6 +102,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
+	<NuxtLink href="/" class="govuk-back-link govuk-!-margin-top-0 govuk-!-margin-bottom-6" data-testid="backLink">Back to overview</NuxtLink>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<FormKit
 		v-model="model"
