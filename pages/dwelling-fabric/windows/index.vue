@@ -83,6 +83,20 @@ function hasIncompleteEntries() {
 		window => isEcaasForm(window) ? !window.complete : false);
 }
 
+function getOrientation(windowData: WindowData) {
+	const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+	const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
+	if (windowData.taggedItem) {
+		const associatedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], windowData.taggedItem);
+		
+		if (associatedItem) {
+			return associatedItem.orientation;
+		}
+	}
+
+	return windowData.orientation;
+}
 </script>
 
 <template>
@@ -99,10 +113,14 @@ function hasIncompleteEntries() {
 		id="windows"
 		title="Window"
 		:form-url="page?.url!"
-		:items="store.dwellingFabric.dwellingSpaceWindows.data.map(x => ({
-			name: x.data.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))"
+		:items="store.dwellingFabric.dwellingSpaceWindows.data.map(x => {
+			const orientation = getOrientation(x.data as WindowData);
+
+			return {
+				name: `${x.data.name}` + (orientation !== undefined ? ` (${orientation}° from north)` : ''),
+				status: x.complete ? formStatus.complete : formStatus.inProgress
+			};
+		})"
 		:show-status="true"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate" />

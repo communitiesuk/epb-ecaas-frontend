@@ -81,6 +81,35 @@ describe("windows", () => {
 		store.$reset();
 	});
 
+	test("window orientation is displayed with name", async () => {
+		const windowWithOrientation: EcaasForm<WindowData> = {
+			data: {
+				...window1.data,
+				name: "Window 2",
+				taggedItem: undefined,
+				orientation: 90,
+			},
+			complete: true,
+		};
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall }],
+					},
+				},
+				dwellingSpaceWindows: {
+					data: [window1, windowWithOrientation],
+				},
+			},
+		});
+
+		await renderSuspended(Windows);
+
+		expect(screen.getByText("Window 1 (0° from north)")).toBeDefined();
+		expect(screen.getByText("Window 2 (90° from north)")).toBeDefined();
+	});
 
 	test("window is removed when remove link is clicked", async () => {
 		store.$patch({
