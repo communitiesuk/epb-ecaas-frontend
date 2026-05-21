@@ -2,6 +2,7 @@ import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
 import HeatEmitterForm from "./index.vue";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
+import { millimetre } from "~/utils/units/length";
 
 const { navigateToMock, mockFetch } = vi.hoisted(() => ({
 	navigateToMock: vi.fn(),
@@ -426,7 +427,7 @@ describe("Heat emitters", () => {
 					const emitter = system.emitters[0]!;
 					expect(emitter.typeOfHeatEmitter).toBe("radiator");
 					expect((emitter as { numOfRadiators: number }).numOfRadiators).toBe(2);
-					expect((emitter as { length: number }).length).toBe(1.5);
+					expect((emitter as { length: { amount: number } }).length.amount).toBe(1.5);
 				} else {
 					throw new Error("Emitters field is missing in heat emitter data");
 				}
@@ -594,7 +595,7 @@ describe("Heat emitters", () => {
 							name: "My radiator",
 							typeOfHeatEmitter: "radiator",
 							numOfRadiators: 4,
-							length: 2.5,
+							length: unitValue(2500, millimetre),
 						},
 					],
 				};
@@ -618,7 +619,41 @@ describe("Heat emitters", () => {
 				expect(screen.getByTestId<HTMLInputElement>("emitterName_0").value).toBe("My radiator");
 				expect(screen.getByTestId<HTMLInputElement>("typeOfHeatEmitter_0_radiator").hasAttribute("checked")).toBe(true);
 				expect(screen.getByTestId<HTMLInputElement>("numOfRadiators_0").value).toBe("4");
-				expect(screen.getByTestId<HTMLInputElement>("length_0").value).toBe("2.5");
+				expect(screen.getByTestId<HTMLInputElement>("length_0").value).toBe("2500");
+			});
+
+			test("edit form converts legacy numeric radiator length to unit value", async () => {
+				const wetDistributionSystemWithLegacyRadiator: HeatEmittingData = {
+					...wetDistributionSystem,
+					emitters: [
+						{
+							id: "emitter1",
+							name: "Legacy radiator",
+							typeOfHeatEmitter: "radiator",
+							numOfRadiators: 2,
+							// @ts-expect-error legacy persisted value before length switched to zodUnit
+							length: 2.5,
+						},
+					],
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{ data: wetDistributionSystemWithLegacyRadiator, complete: true }],
+						},
+					},
+				});
+
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("emitter_edit_0"));
+
+				expect(screen.getByTestId<HTMLInputElement>("length_0").value).toBe("2500");
 			});
 		});
 	});
@@ -866,7 +901,7 @@ describe("Heat emitters", () => {
 			const emitter = (system?.data as WetDistributionSystemData).emitters[0];
 			expect(emitter?.name).toBe("Radiator");
 			expect((emitter as { numOfRadiators: number }).numOfRadiators).toBe(3);
-			expect((emitter as { length: number }).length).toBe(1.2);
+			expect((emitter as { length: { amount: number } }).length.amount).toBe(1.2);
 		});
 		test("saves a valid fan coil emitter to store", async () => {
 			const fanCoilEmitter: HeatEmittingData = {
@@ -1070,7 +1105,7 @@ describe("Heat emitters", () => {
 						id: "emitter1",
 						name: "Radiator 1",
 						typeOfHeatEmitter: "radiator",
-						length: 1.5,
+						length: unitValue(1500, millimetre),
 						numOfRadiators: 2,
 						productReference: "product-ref-123",
 					}],

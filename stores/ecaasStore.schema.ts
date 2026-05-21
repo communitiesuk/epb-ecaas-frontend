@@ -1137,7 +1137,7 @@ const fanCoilSchema = namedWithId.extend({
 	numOfFanCoils: productCountZod,
 });
 
-export const lengthRadiatorZod = z.number().gt(0);
+export const lengthRadiatorZod = addConstraints(zodUnit("length"), { gt: 0 });
 
 const radiatorSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal(typeOfWetDistributionSystemEmitter.radiator),
@@ -1162,7 +1162,7 @@ const wetDistributionSystemEmitterDraftSchema = z.object({
 	areaOfUnderFloorHeating: emitterFloorAreaZod.optional(),
 	numOfFanCoils: productCountZod.optional(),
 	numOfRadiators: productCountZod.optional(),
-	length: z.number().min(0.001).optional(),
+	length: lengthRadiatorZod.optional(),
 });
 
 const heatingRank = z.number().int().min(1).optional();
