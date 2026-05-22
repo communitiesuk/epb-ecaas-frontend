@@ -1358,7 +1358,7 @@ export interface components {
                      */
                     heat_network_type: "sleeved DHN" | "unsleeved DHN" | "communal";
                 } & ({
-                    EnergySupply?: string | {
+                    EnergySupply: string | {
                         name: string;
                         is_export_capable: boolean;
                         factor: {
@@ -1381,7 +1381,7 @@ export interface components {
                 })) | {
                     /** @constant */
                     is_heat_network?: false;
-                    EnergySupply?: string;
+                    EnergySupply: string;
                 }) & (components["schemas"]["HeatSourceWetHeatPump"] | components["schemas"]["HeatSourceWetBoiler"] | components["schemas"]["HeatSourceWetHeatBattery"] | components["schemas"]["HeatSourceWetHIU"]);
             };
             HotWaterDemand?: {

@@ -716,7 +716,6 @@
 				"unevaluatedProperties": false,
 				"required": [
 					"type",
-					"EnergySupply",
 					"is_heat_network"
 				],
 				"properties": {
@@ -756,6 +755,9 @@
 					],
 					"oneOf": [
 						{
+							"required": [
+								"EnergySupply"
+							],
 							"properties": {
 								"EnergySupply": {
 									"oneOf": [
@@ -824,6 +826,9 @@
 					]
 				},
 				"else": {
+					"required": [
+						"EnergySupply"
+					],
 					"properties": {
 						"EnergySupply": {
 							"type": "string",

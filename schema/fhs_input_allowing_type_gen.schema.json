@@ -423,7 +423,6 @@
                 "unevaluatedProperties": false,
                 "required": [
                     "type",
-                    "EnergySupply",
                     "is_heat_network"
                 ],
                 "allOf": [
@@ -448,6 +447,9 @@
                                 ],
                                 "oneOf": [
                                     {
+                                        "required": [
+                                            "EnergySupply"
+                                        ],
                                         "properties": {
                                             "EnergySupply": {
                                                 "oneOf": [
@@ -513,6 +515,9 @@
                                 ]
                             },
                             {
+                                "required": [
+                                    "EnergySupply"
+                                ],
                                 "properties": {
                                     "is_heat_network": {
                                         "const": false
