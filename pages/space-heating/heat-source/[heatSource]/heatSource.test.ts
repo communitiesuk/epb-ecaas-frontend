@@ -34,8 +34,8 @@ describe("heatSource", () => {
 		productReference: "BOILER_SMALL",
 		needsSpecifiedLocation: false,
 		maxFlowTemp: unitValue(12, celsius),
-
 	};
+
 	const boosterHeatPump: HeatSourceData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b52222",
 		name: "Booster HP",
@@ -1806,28 +1806,42 @@ describe("heatSource", () => {
 		});
 
 		describe("pcdb product", () => {
-			beforeEach(async () => {
-				const heatBatteryProduct: Partial<DisplayProduct> = {
-					id: "1000",
-					brandName: "Brand",
-					technologyType: "HeatBatteryPCM",
-				};
+			const heatBatteryProduct: Partial<DisplayProduct> = {
+				id: "1000",
+				brandName: "Brand",
+				technologyType: "HeatBatteryPCM",
+			};
 
-				mockFetch.mockReturnValue({
-					data: ref(heatBatteryProduct),
-				});
+			const heatPumpProduct: Partial<DisplayProduct> = {
+				id: "1000",
+				brandName: "Brand",
+				modelName: "Model",
+				technologyType: "AirSourceHeatPump",
+			};
 
-				const heatBattery: HeatSourceData = {
-					id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-					name: "Heat battery 1",
-					energySupply: "electricity",
-					typeOfHeatSource: "heatBattery",
-					typeOfHeatBattery: "heatBatteryPcm",
-					productReference: "HEATBATTERY-SMALL",
-					maxFlowTemp: unitValue(32, celsius),
-					numberOfUnits: 1,
-				};
+			const heatBattery: HeatSourceData = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+				name: "Heat battery 1",
+				energySupply: "electricity",
+				typeOfHeatSource: "heatBattery",
+				typeOfHeatBattery: "heatBatteryPcm",
+				productReference: "HEATBATTERY-SMALL",
+				maxFlowTemp: unitValue(32, celsius),
+				numberOfUnits: 1,
+			};
 
+			const heatPump: HeatSourceData = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+				name: "Heat pump 1",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "airSource",
+				productReference: "HEATPUMP-SMALL",
+				maxFlowTemp: unitValue(7, celsius),
+				isConnectedToHeatNetwork: false,
+				energySupply: "electricity",
+			};
+
+			test("product reference is cleared when heat source subtype changes", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
@@ -1836,14 +1850,16 @@ describe("heatSource", () => {
 					},
 				});
 
+				mockFetch.mockReturnValue({
+					data: ref(heatBatteryProduct),
+				});
+
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "0" },
 					},
 				});
-			});
 
-			test("product reference is cleared when heat source subtype changes", async () => {
 				await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryDryCore"));
 
 				const { data } = store.spaceHeating.heatSource;
@@ -1855,7 +1871,113 @@ describe("heatSource", () => {
 			});
 
 			test("product data is displayed when a PCDB product is selected which is not a heat network", async () => {
-				expect(screen.getByTestId("pcdbProductData")).toBeDefined();
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatBattery }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatBatteryProduct),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				expect(await screen.findByTestId("pcdbProductData")).toBeDefined();
+			});
+
+			test("'Packaged products' displays 'None' when heat pump product is not packaged with another", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPump }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatPumpProduct),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("None");
+			});
+
+			test("'Packaged products' displayed 'Comes with boiler' when heat pump product comes packaged with a boiler", async () => {
+				const hybridHeatPump: Partial<HeatSourceData> = {
+					...heatPump,
+					typeOfHeatPump: "hybridHeatPump",
+					packageProductIds: [boiler1.id],
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: hybridHeatPump }, { data: boiler1 }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatPumpProduct),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("Comes with boiler");
+			});
+
+			test("'Packaged products' displays 'Comes with hot water cylinder' when heat pump product comes packaged with a hot water cylinder", async () => {
+				const hotWaterCylinder: Partial<WaterStorageData> = {
+					id: "289bb9c5-6c50-486f-8634-bc89ecfd64a7",
+					name: "Hot water cylinder",
+					typeOfWaterStorage: "hotWaterCylinder",
+				};
+
+				const heatPumpWithCylinder: Partial<HeatSourceData> = {
+					...heatPump,
+					packageProductIds: [hotWaterCylinder.id!],
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPumpWithCylinder }],
+						},
+					},
+					domesticHotWater: {
+						waterStorage: {
+							data: [{ data: hotWaterCylinder }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatPumpProduct),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("Comes with hot water cylinder");
 			});
 		});
 

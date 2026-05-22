@@ -97,15 +97,27 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 			if (heatSourceData.packageProductIds.length) {
 				const mechVentData = state.infiltrationAndVentilation.mechanicalVentilation.data;
 				const waterStorageData = state.domesticHotWater.waterStorage.data;
+				const dhwHeatSourceData = state.domesticHotWater.heatSources.data;
 
 				for (const packagedId of [...heatSourceData.packageProductIds]) {
 					removeBoilerProduct(packagedId);
 
 					const ventIdx = mechVentData.findIndex(x => x.data.id === packagedId);
-					if (ventIdx >= 0) mechVentData.splice(ventIdx, 1);
+
+					if (ventIdx >= 0) {
+						mechVentData.splice(ventIdx, 1);
+					}
 
 					const storageIdx = waterStorageData.findIndex(x => x.data.id === packagedId);
-					if (storageIdx >= 0) waterStorageData.splice(storageIdx, 1);
+
+					if (storageIdx >= 0) {
+						if (source === "spaceHeating") {
+							const dhwHeatSourceIdIndex = dhwHeatSourceData.findIndex(x => x.data.id === waterStorageData[storageIdx]?.data.dhwHeatSourceId);
+							dhwHeatSourceData.splice(dhwHeatSourceIdIndex, 1);
+						}
+
+						waterStorageData.splice(storageIdx, 1);
+					}
 				}
 				heatSourceData.packageProductIds = [];
 			}

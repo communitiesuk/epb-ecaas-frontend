@@ -63,8 +63,10 @@ const greaterThanZero = (node: FormKitNode) => {
 		help="Select the heat pump type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
 		:selected-product-type="'heatPump' /* this might need to be updated to pass through either which of DHW or SH, or just the list of different products */"
+		:heat-source="model"
 		:page-url="route.fullPath"
-		:page-index="index" />
+		:page-index="index"
+	/>
 	<FormKit 
 		id="isConnectedToHeatNetwork"
 		type="govBoolean"
