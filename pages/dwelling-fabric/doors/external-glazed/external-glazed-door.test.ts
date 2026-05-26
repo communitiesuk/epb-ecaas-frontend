@@ -33,6 +33,7 @@ const externalWall: ExternalWallData = {
 };
 
 const doorForState = {
+	id: "door-for-state-id",
 	name: "External glazed door 1",
 	isTheFrontDoor: false,
 	associatedItemId: externalWall.id,
@@ -337,6 +338,7 @@ describe("external glazed door", () => {
 
 		test("form is prepopulated with none of the above associated wall, as well as pitch and orientation when there is no tagged item", async () => {
 			const doorNoTag = {
+				id: "door-no-tag-id",
 				name: "External glazed door 1",
 				isTheFrontDoor: false,
 				pitchOption: "custom",

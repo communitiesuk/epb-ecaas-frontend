@@ -296,6 +296,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 };
 
 const externalGlazedDoorData = {
+	id: "external-glazed-door-id",
 	name: "External glazed door 1",
 	associatedItemId: externalWallId,
 	height: 1,
@@ -1245,6 +1246,7 @@ describe("dwelling space doors", () => {
 						dwellingSpaceExternalGlazedDoor: {
 							data: [{
 								data: {
+									id: "door-id",
 									name: "External glazed door 1",
 									pitch: 72,
 									orientation: 24,

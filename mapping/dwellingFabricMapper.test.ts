@@ -976,6 +976,7 @@ describe("dwelling fabric mapper", () => {
 			uValue: 1,
 		};
 		const externalGlazedDoor: ExternalGlazedDoorData = {
+			id: "external-glazed-door-id",
 			name: "External glazed door 1",
 			isTheFrontDoor: false,
 			associatedItemId: externalWall.data.id,

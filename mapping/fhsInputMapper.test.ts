@@ -1915,6 +1915,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
+							id: "external-glazed-door-id",	
 							name: "external glazed door",
 							height: 3,
 							width: 1,

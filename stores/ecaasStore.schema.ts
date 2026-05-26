@@ -478,7 +478,7 @@ export const maxWindowOpenAreaZod = z.number().min(0).max(100);
 export const freeAreaHeightZod = z.number().min(0).max(100);
 export const midHeightAirFlowPathZod = z.number().min(0).max(100);
 
-const baseExternalGlazedDoorDataZod = named.extend({
+const baseExternalGlazedDoorDataZod = namedWithId.extend({
 	isTheFrontDoor: z.boolean().optional(),
 	associatedItemId: z.guid().optional(),
 	pitchOption: standardPitchOption.optional(),
