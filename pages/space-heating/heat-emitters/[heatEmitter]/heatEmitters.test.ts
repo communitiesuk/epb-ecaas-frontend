@@ -459,7 +459,7 @@ describe("Heat emitters", () => {
 				});
 				await user.click(screen.getByTestId("emitter_edit_0"));
 				await user.type(screen.getByTestId("numOfRadiators_0"), "2");
-				await user.type(screen.getByTestId("length_0"), "1.5");
+				await user.type(screen.getByTestId("length_0"), "1500");
 				await user.tab();
 				await user.click(screen.getByTestId("saveEmitter_0"));
 
@@ -468,7 +468,7 @@ describe("Heat emitters", () => {
 				expect(screen.getByTestId("summary-emitter-0-type-of-emitter").textContent).toContain("Radiator");
 				expect(screen.getByTestId("summary-emitter-0-radiator-product").textContent).toContain("Test");
 				expect(screen.getByTestId("summary-emitter-0-radiator-product").textContent).toContain("Fan coil");
-				expect(screen.getByTestId("summary-emitter-0-length").textContent).toContain("1.5 m");
+				expect(screen.getByTestId("summary-emitter-0-length-of-radiator").textContent).toContain("1500 mm");
 				expect(screen.getByTestId("summary-emitter-0-number-of-radiators").textContent).toContain("2");
 			});
 			test("fan coils have expected fields", async () => {
