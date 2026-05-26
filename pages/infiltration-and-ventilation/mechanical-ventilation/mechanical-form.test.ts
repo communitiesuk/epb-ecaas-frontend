@@ -400,4 +400,31 @@ describe("mechanical ventilation form", () => {
 			await screen.findByTestId("mechanicalVentilationErrorSummary"),
 		).toBeDefined();
 	});
+
+	test("renders external glazed door as an associated item option", async () => {
+		const externalGlazedDoor: Partial<ExternalGlazedDoorData> = {
+			id: "0b77e247-53c5-42b8-9dbd-83cbfc8abcde",
+			name: "External glazed door 1",
+		};
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalGlazedDoor: {
+						data: [{ data: externalGlazedDoor }],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(MechanicalVentilationForm, {
+			route: {
+				params: { mechanical: "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfMechanicalVentilationOptions_Intermittent_MEV"));
+
+		expect(await screen.findByTestId(`associatedItemId_${externalGlazedDoor.id}`)).toBeDefined();
+	});
 });

@@ -58,8 +58,7 @@ autoSaveElementForm<VentData>({
 	},
 });
 
-const associatedWallWindowOptions = useAssociatedItems(["wall", "window"]);
-
+const associatedWallWindowOptions = useAssociatedItems(["wall", "window", "externalGlazedDoor"]);
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 

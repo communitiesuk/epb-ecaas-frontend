@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import ExternalGlazedDoor from "./[door].vue";
+import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 const store = useEcaasStore();
@@ -10,6 +11,8 @@ const user = userEvent.setup();
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
+
+vi.mock("uuid");
 
 afterEach(() => {
 	store.$reset();
@@ -274,6 +277,7 @@ describe("external glazed door", () => {
 		});
 
 		test("data is saved to store state when form is valid", async () => {
+			vi.mocked(uuidv4).mockReturnValue("mock-uuid" as unknown as Buffer);
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { externalGlazed: "create" },
@@ -287,7 +291,7 @@ describe("external glazed door", () => {
 
 			const { data = [] } = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor || {};
 
-			expect(data[0]).toEqual({ ...state, complete: true });
+			expect(data[0]).toEqual({ data: { ...state.data, id: "mock-uuid" }, complete: true });
 			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/doors");
 		});
 
@@ -1073,6 +1077,52 @@ describe("external glazed door", () => {
 				expect(screen.queryByText("Chimney")).toBeNull();
 			});
 		});
+	});
+	describe("legacy data handling", () => {
+		it("adds id to door data without an id when form is saved", async () => {
+			vi.mocked(uuidv4).mockReturnValue("mock-id" as unknown as Buffer);
+			const doorWithoutId: Partial<ExternalGlazedDoorData> = {
+				name: "External glazed door 1",
+				isTheFrontDoor: false,
+				pitchOption: "custom",
+				pitch: 45,
+				orientation: 90,
+				height: 14,
+				width: 48,
+				securityRisk: false,
+				solarTransmittance: 0.1,
+				elevationalHeight: 14,
+				openingToFrameRatio: 0.2,
+				heightOpenableArea: 14,
+				maximumOpenableArea: 13,
+				midHeightOpenablePart1: 11,
+				uValue: 10,
+				numberOpenableParts: "1",
+				curtainsOrBlinds: true,
+				treatmentType: "blinds",
+				treatmentControls: "auto_motorised",
+				thermalResistivityIncrease: 1,
+				solarTransmittanceReduction: 0.1,
+				hasShading: false,
+			};
 
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: doorWithoutId }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { door: "0" },
+				},
+			});
+
+			expect(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[0]!.data.id).toBe("mock-id"); 
+		});
 	});
 });
