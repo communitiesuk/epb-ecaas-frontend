@@ -128,7 +128,7 @@ const emitterSummaryData = (emitter: Partial<WetDistributionEmitterData> & { id:
 			return {
 				"Type of emitter": typeName,
 				"Radiator product": product,
-				"Length": radiatorLength ? `${radiatorLength.amount} ${radiatorLength.unit}` : undefined,
+				"Length of radiator": radiatorLength ? `${radiatorLength.amount} mm` : undefined,
 				"Number of radiators": (emitter as { numOfRadiators?: number }).numOfRadiators,
 			};
 		}
@@ -335,7 +335,7 @@ const saveEmitter = () => {
 						<FormKit
 							:id="`length_${i}`"
 							type="govInputWithUnit"
-							label="Length"
+							label="Length of radiator"
 							name="length"
 							:unit="millimetre"
 							:validation="zodTypeAsFormKitValidation(lengthRadiatorZod)"
