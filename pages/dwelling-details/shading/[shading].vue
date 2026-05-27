@@ -58,9 +58,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<p class="govuk-body">
+	<GovInset>
+		<p class="govuk-body">
+			Only add shading objects that are separate from the building. Add objects attached to the building to window shading.
+		</p>
 		<a href="/guidance/calculating-distant-shading" target="_blank" class="govuk-link">Guidance on shading (opens in another window)</a>
-	</p>
+	</GovInset>
 	<FormKit
 		v-model="model"
 		type="form"
@@ -69,6 +72,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit"
 	>
+		
 		<GovErrorSummary
 			:error-list="errorMessages"
 			test-id="ShadingErrorSummary"
