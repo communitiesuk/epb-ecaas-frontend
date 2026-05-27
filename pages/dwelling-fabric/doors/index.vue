@@ -117,6 +117,7 @@ const hasIncompleteEntries = () =>
 	<CustomList
 		id="internal"
 		title="Internal door"
+		hint="Only add internal doors the edge of the thermal envelope"
 		:form-url="`${page?.url!}/internal`"
 		:items="store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data.filter(x => isEcaasForm(x)).map(x => ({
 			name: x.data?.name,
