@@ -164,7 +164,7 @@ describe("Heat source products page", () => {
 
 		expect(screen.getByTestId("heatNetworkProductsTable")).toBeDefined();
 		expect(screen.getByTestId("searchOption_networkName")).toBeDefined();
-		expect(screen.getByText("Search network name")).toBeDefined();
+		expect(screen.getByText("Search network or subnetwork")).toBeDefined();
 	});
 
 	test("when a user selects a product its product reference gets stored", async () => {

@@ -256,6 +256,7 @@ describe("Heat source products page", () => {
 		await renderSuspended(Products);
 
 		expect(screen.getByTestId("heatNetworkProductsTable")).toBeDefined();
+		expect(screen.getByText("Search network or subnetwork")).toBeDefined();
 	});
 
 	// test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {

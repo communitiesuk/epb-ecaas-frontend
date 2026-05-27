@@ -18,6 +18,27 @@ const { data: { value } } = await useFetch("/api/products", {
 
 const products = ref<DisplayProduct[]>(value?.data ?? []);
 
+const searchTerms = computed(() => {
+	switch (pageId) {
+		case "radiator":
+			return {
+				label: "Search type or height",
+				placeholder: "Enter type or height",
+			};
+		case "underFloorHeating":	
+			return {
+				label: "Search system or spacing",
+				placeholder: "Enter system or spacing",
+			};
+		default:
+			return {
+				label: "Search brand or model",
+				placeholder: "Enter brand or model",
+			};
+	}
+});
+
+
 const { pagination } = searchData(products.value);
 
 const selectProduct = (reference: string) => {
@@ -48,7 +69,11 @@ const selectProduct = (reference: string) => {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<ProductSearch :model="searchModel" />
+	<ProductSearch
+		:model="searchModel"
+		:search-term-label="searchTerms.label"
+		:search-term-placeholder="searchTerms.placeholder"
+	/>
 	<GovProductsTable
 		:products="pagination.getData()"
 		:total-pages="pagination.totalPages"
