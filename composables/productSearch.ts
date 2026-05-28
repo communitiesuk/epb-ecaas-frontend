@@ -40,8 +40,10 @@ export function useProductSearch(products: DisplayProduct[], model: ProductSearc
 				"modelName",
 				"modelQualifier",
 				"type",
+				"height",
 				"systemName",
 				"communityHeatNetworkName",
+				"subheatNetworkName",
 			],
 		});
 
@@ -53,8 +55,10 @@ export function useProductSearch(products: DisplayProduct[], model: ProductSearc
 						{ modelName: searchValue },
 						{ modelQualifier: searchValue },
 						{ type: searchValue },
+						{ height: searchValue },
 						{ systemName: searchValue },
 						{ communityHeatNetworkName: searchValue },
+						{ subheatNetworkName: searchValue },
 					],
 				};
 			}) as Expression[],

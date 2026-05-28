@@ -151,20 +151,6 @@ const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?
 	};
 };
 
-const hasConvectorRadiatorDisplayFields = (item: Record<string, unknown>) => {
-	if (typeof item.type !== "string") {
-		return false;
-	}
-
-	const parsedHeight = typeof item.height === "number"
-		? item.height
-		: typeof item.height === "string"
-			? parseFloat(item.height)
-			: NaN;
-
-	return isFinite(parsedHeight);
-};
-
 const hasUnderfloorHeatingDisplayFields = (item: Record<string, unknown>) => {
 	if (typeof item.systemName !== "string") return false;
 	if (typeof item.floorFinishCompatibility !== "string") return false;
@@ -201,26 +187,6 @@ const hydrateHeatNetworkItems = async (items: Record<string, unknown>[]) => {
 	return fetched.length > 0 ? fetched : items;
 };
 
-const hydrateConvectorRadiatorItems = async (items: Record<string, unknown>[]) => {
-	return await Promise.all(items.map(async (item) => {
-		if (hasConvectorRadiatorDisplayFields(item)) {
-			return item;
-		}
-
-		const key = item.id ?? item.ID;
-		if (key == null) {
-			return item;
-		}
-
-		const result = await docClient.send(new GetCommand({
-			TableName: "products",
-			Key: { id: key },
-		}));
-
-		return (result.Item as Record<string, unknown> | undefined) ?? item;
-	}));
-};
-
 const hydrateUnderfloorHeatingItems = async (items: Record<string, unknown>[]) => {
 	return await Promise.all(items.map(async (item) => {
 		if (hasUnderfloorHeatingDisplayFields(item)) {
@@ -250,13 +216,10 @@ const getProductsByTechnologyType = async (technologyType: TechnologyType, pageS
 		Limit: pageSize,
 		...startKey && { ExclusiveStartKey: JSON.parse(startKey) },
 	}));
-
+	console.log("Query result:", result.Count, result.Items?.length);
 	const queryItems = result.Items ?? [];
 	let itemsToDisplay: Record<string, unknown>[];
 	switch (technologyType) {
-		case "ConvectorRadiator":
-			itemsToDisplay = await hydrateConvectorRadiatorItems(queryItems);
-			break;
 		case "HeatNetworks":
 			itemsToDisplay = await hydrateHeatNetworkItems(queryItems);
 			break;
@@ -290,7 +253,7 @@ const getProductsByTechnologyGroup = async (technologyGroup: TechnologyGroup) =>
 			ExpressionAttributeValues: { ":technologyGroup": technologyGroup },
 			...lastEvaluationKey && { ExclusiveStartKey: lastEvaluationKey },
 		}));
-
+		console.log("Query result:", result);
 		products.push(...(result.Items?.flatMap(x => toDisplayProduct(x)).filter((x): x is DisplayProduct => x !== undefined) ?? []));
 
 		lastEvaluationKey = result.LastEvaluatedKey;

@@ -14,12 +14,13 @@ const modelNames = await useProductReferences(
 	productData => productData.modelName,
 );
 
-const associatedItems = Object.fromEntries(useAssociatedItems(["wall", "roof", "window"]));
+const associatedItems = Object.fromEntries(useAssociatedItems(["wall", "roof", "window", "externalGlazedDoor"]));
 
 const { 
 	dwellingSpaceWindows, 
 	dwellingSpaceWalls, 
 	dwellingSpaceCeilingsAndRoofs: { dwellingSpaceRoofs }, 
+	dwellingSpaceDoors: { dwellingSpaceExternalGlazedDoor },
 } = store.dwellingFabric;
 
 const mechanicalVentilationSummary: SummarySection = {
@@ -29,7 +30,7 @@ const mechanicalVentilationSummary: SummarySection = {
 		const x = data as MechanicalVentilationData;
 		const isMvhr = x.typeOfMechanicalVentilationOptions === "MVHR";
 		const mvhrLocation = "mvhrLocation" in x ? displayCamelToSentenceCase(show(x.mvhrLocation)) : emptyValueRendering;
-		const taggedItem = store.getTaggedItem([dwellingSpaceWalls.dwellingSpaceExternalWall, dwellingSpaceWindows, dwellingSpaceRoofs], x.associatedItemId);
+		const taggedItem = store.getTaggedItem([dwellingSpaceWalls.dwellingSpaceExternalWall, dwellingSpaceWindows, dwellingSpaceRoofs, dwellingSpaceExternalGlazedDoor], x.associatedItemId);
 		const orientation = taggedItem?.orientation ?? (x as { orientation?: number })?.orientation;
 		const pitch = x.hasAssociatedItem === true ? taggedItem?.pitch : x.pitch;
 		return {
@@ -112,7 +113,7 @@ const ventSummary: SummarySection = {
 	data: ventData.map((vent) => {
 		const x = vent.data as VentData;
 
-		const taggedItem = store.getTaggedItem([dwellingSpaceWalls.dwellingSpaceExternalWall, dwellingSpaceWindows], x.associatedItemId);
+		const taggedItem = store.getTaggedItem([dwellingSpaceWalls.dwellingSpaceExternalWall, dwellingSpaceWindows, dwellingSpaceExternalGlazedDoor], x.associatedItemId);
 		const associatedItemName = x.associatedItemId && x.associatedItemId !== "none"
 			? associatedItems[x.associatedItemId] ?? emptyValueRendering
 			: emptyValueRendering;

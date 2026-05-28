@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { CustomListItem } from "~/components/CustomList.vue";
 import formStatus from "~/constants/formStatus";
 import { hasPackagedProduct } from "~/utils/packagedProduct";
+import { page as pages } from "~/data/pages/pages";
 
 const page = usePage();
 const title = "Mechanical ventilation";
@@ -72,7 +73,6 @@ function handleComplete() {
 </script>
 
 <template>
-
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
@@ -102,8 +102,11 @@ function handleComplete() {
 		v-if="mvhrArray.length > 0"
 		class="govuk-body">Note if you remove a MVHR this will also remove any associated ductwork</p>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/infiltration-and-ventilation" secondary>
+		<GovButton :href="pages('infiltrationAndVentilation').url" secondary>
 			Return to infiltration and ventilation
+		</GovButton>
+		<GovButton :href="pages('infiltrationAndVentilationSummary').url" secondary>
+			View summary
 		</GovButton>
 		<CompleteElement
 			:is-complete="!!store.infiltrationAndVentilation.mechanicalVentilation?.complete"

@@ -58,16 +58,9 @@ const selectProduct = async (product: DisplayProduct) => {
 				networkName: 'Network name',
 				productId: 'Product ID',
 			}"
-		>
-			<FieldsProductSearch
-				v-if="searchModel.searchOption !== 'productId'"
-				id="searchTerm"
-				name="searchTerm"
-				label="Search network name"
-				placeholder="Enter network name"
-				:value="searchModel.searchTerm"
-			/>
-		</ProductSearch>
+			search-term-label="Search network or subnetwork"
+			search-term-placeholder="Enter network or subnetwork"
+		/>
 		<HeatNetworkProductsTable
 			v-if="heatSourceProductType === 'heatNetwork'"
 			:products="pagination.getData()"

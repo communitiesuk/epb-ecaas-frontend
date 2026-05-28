@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
+import { page as pages } from "~/data/pages/pages";
 
 const title = "Distant shading";
 const page = usePage();
@@ -72,8 +73,11 @@ function handleComplete() {
 		@duplicate="handleDuplicate"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/dwelling-details" secondary>
+		<GovButton :href="pages('dwellingDetails').url" secondary>
 			Return to dwelling details
+		</GovButton>
+		<GovButton :href="pages('dwellingDetailsSummary').url" secondary>
+			View summary
 		</GovButton>
 		<CompleteElement
 			:is-complete="!!store.dwellingDetails.shading.complete"

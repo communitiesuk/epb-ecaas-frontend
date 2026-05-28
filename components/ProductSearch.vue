@@ -1,9 +1,16 @@
 <script setup lang="ts">
-const { model: searchModel, searchOptions = {
-	modelAndBrand: "Brand and model",
-	productId: "Product ID",
-} } = defineProps<{
+const {  
+	model: searchModel, 
+	searchTermLabel = "Search brand or model",
+	searchOptions = {
+		modelAndBrand: "Brand and model",
+		productId: "Product ID",
+	},
+	searchTermPlaceholder = "Enter brand or model",
+} = defineProps<{
 	model: ProductSearchModel;
+	searchTermLabel?: string;
+	searchTermPlaceholder?: string;
 	searchOptions?: Partial<Record<SearchOption, string>>;
 }>();
 
@@ -77,8 +84,8 @@ watch(() => searchModel, (currentSearch: ProductSearchModel) => {
 						v-if="model.searchOption !== 'productId'"
 						id="searchTerm"
 						name="searchTerm"
-						label="Search brand or model"
-						placeholder="Enter brand or model"
+						:label="searchTermLabel"
+						:placeholder="searchTermPlaceholder"
 						:value="model.searchTerm"
 					/>
 				</template>

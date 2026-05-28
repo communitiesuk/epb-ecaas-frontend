@@ -478,7 +478,7 @@ export const maxWindowOpenAreaZod = z.number().min(0).max(100);
 export const freeAreaHeightZod = z.number().min(0).max(100);
 export const midHeightAirFlowPathZod = z.number().min(0).max(100);
 
-const baseExternalGlazedDoorDataZod = named.extend({
+const baseExternalGlazedDoorDataZod = namedWithId.extend({
 	isTheFrontDoor: z.boolean().optional(),
 	associatedItemId: z.guid().optional(),
 	pitchOption: standardPitchOption.optional(),
@@ -666,12 +666,14 @@ const linearThermalBridgeDataZod = named.extend({
 	typeOfThermalBridge: thermalBridgeJunctionTypeZod,
 	linearThermalTransmittance: z.number(),
 	length: lengthThermalBridgeLinearZod,
+	reference: z.optional(z.string()),
 });
 
 export type LinearThermalBridgeData = z.infer<typeof linearThermalBridgeDataZod>;
 
 const pointThermalBridgeDataZod = named.extend({
 	heatTransferCoefficient: z.number().min(0).max(2),
+	reference: z.optional(z.string()),
 });
 
 export type PointThermalBridgeData = z.infer<typeof pointThermalBridgeDataZod>;
@@ -1135,7 +1137,7 @@ const fanCoilSchema = namedWithId.extend({
 	numOfFanCoils: productCountZod,
 });
 
-export const lengthRadiatorZod = z.number().gt(0);
+export const lengthRadiatorZod = addConstraints(zodUnit("length"), { gt: 0 });
 
 const radiatorSchema = namedWithId.extend({
 	typeOfHeatEmitter: z.literal(typeOfWetDistributionSystemEmitter.radiator),
@@ -1160,7 +1162,7 @@ const wetDistributionSystemEmitterDraftSchema = z.object({
 	areaOfUnderFloorHeating: emitterFloorAreaZod.optional(),
 	numOfFanCoils: productCountZod.optional(),
 	numOfRadiators: productCountZod.optional(),
-	length: z.number().min(0.001).optional(),
+	length: lengthRadiatorZod.optional(),
 });
 
 const heatingRank = z.number().int().min(1).optional();
@@ -1575,17 +1577,17 @@ type IsEcaasForm<T> = T extends EcaasForm<unknown> ? true : false;
 
 type Join<K, P> = K extends string | number
 	? P extends string | number
-	? `${K}/${P}`
-	: never
+		? `${K}/${P}`
+		: never
 	: never;
 
 type EcaasFormPaths<T> = {
 	[K in keyof T]:
 	IsEcaasForm<T[K]> extends true
-	? K
-	: T[K] extends object
-	? Join<K, EcaasFormPaths<T[K]>>
-	: never
+		? K
+		: T[K] extends object
+			? Join<K, EcaasFormPaths<T[K]>>
+			: never
 }[keyof T];
 
 export type EcaasFormPath = NonNullable<EcaasFormPaths<EcaasState>>;

@@ -25,16 +25,16 @@ const { dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUn
 const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 const options = adjacentSpaceType === "heatedSpace" ? [
-	dwellingSpaceInternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
+	dwellingSpaceInternalWall.data.map(x => [x.data.id, `${x.data.name} (Wall)`] as [string, string]),
 	dwellingSpaceCeilings.data
 		.filter(x => x.data.type === "heatedSpace")
-		.map(x => [x.data.id, x.data.name] as [string, string]),
+		.map(x => [x.data.id, `${x.data.name} (Ceiling)`] as [string, string]),
 ] : [
-	dwellingSpaceWallToUnheatedSpace.data.map(x => [x.data.id, x.data.name] as [string, string]),
+	dwellingSpaceWallToUnheatedSpace.data.map(x => [x.data.id, `${x.data.name} (Wall)`] as [string, string]),
 	dwellingSpaceCeilings.data
 		.filter(x => x.data.type === "unheatedSpace")
-		.map(x => [x.data.id, x.data.name] as [string, string]),
-	dwellingSpacePartyWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
+		.map(x => [x.data.id, `${x.data.name} (Ceiling)`] as [string, string]),
+	dwellingSpacePartyWall.data.map(x => [x.data.id, `${x.data.name} (Wall)`] as [string, string]),
 ];
 
 const flattenedOptions = options.flat().filter(x => x[0] !== undefined);

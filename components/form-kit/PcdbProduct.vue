@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from "@formkit/core";
-import { showErrorState, getErrorMessage } from "#imports";
+import { showErrorState, getErrorMessage, isPackagedProduct, type HeatSourceData } from "#imports";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
 import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
+
+const store = useEcaasStore();
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
@@ -17,6 +19,7 @@ const {
 		"selected-product-reference": selectedProductReference,
 		"selected-sub-heat-network-name": selectedSubHeatNetworkName,
 		"selected-product-type": selectedProductType,
+		"heat-source": heatSource,
 		"page-url": pageUrl,
 		"page-index": index,
 		"emitter-index": emitterIndex,
@@ -75,6 +78,32 @@ watch(props.context, async ({ attrs: {
 
 	productData.value = undefined;
 });
+
+function getPackagedProductType() {
+	const heatSourceData: HeatSourceData | undefined = heatSource;
+
+	if (!heatSourceData) {
+		return undefined;
+	}
+
+	if (!isPackagedProduct(heatSourceData)) {
+		return "None";
+	}
+
+	const spaceHeatingBoilers = store.spaceHeating.heatSource.data.filter(x => x.data.typeOfHeatSource === "boiler").map(x => x.data.id);
+	const dhwBoilers = store.domesticHotWater.heatSources.data.filter(x => !x.data.isExistingHeatSource && x.data.typeOfHeatSource === "boiler").map(x => x.data.id);
+	const hotWaterCylinders = store.domesticHotWater.waterStorage.data.filter(x => x.data.typeOfWaterStorage === "hotWaterCylinder").map(x => x.data.id);
+
+	const boilers = spaceHeatingBoilers.concat(dhwBoilers);
+
+	if (heatSourceData.packageProductIds?.some(id => boilers.includes(id))) {
+		return "Comes with boiler";
+	}
+
+	if (heatSourceData.packageProductIds?.some(id => hotWaterCylinders.includes(id))) {
+		return "Comes with hot water cylinder";
+	}
+}
 </script>
 
 <template>
@@ -109,14 +138,18 @@ watch(props.context, async ({ attrs: {
 							<li>System Name: <span class="bold">{{ productData.systemName ?? '-' }}</span></li>
 							<li>Floor Finish Compatibility: <span class="bold">{{ productData.floorFinishCompatibility ?? '-' }}</span></li>
 							<li>Pipe Centres: <span class="bold">{{ productData.pipeCentres != null ? `${productData.pipeCentres} mm` : '-' }}</span></li>
-
 						</template>
 						<template v-else-if="hasModelDetails(productData)">
 							<li>Brand: <span class="bold">{{ productData.brandName }}</span></li>
 							<li>Model: <span class="bold">{{ productData.modelName }}</span></li>
 							<li>Model Qualifier: <span class="bold">{{ productData.modelQualifier ?? '-' }}</span></li>
+							<li>Packaged products: <span class="bold" data-testid="productData_packagedProducts">{{ getPackagedProductType() }}</span></li>
 						</template>
 					</ul>
+					<div class="govuk-!-margin-bottom-4">
+						<NuxtLink v-if="hasModelDetails(productData)" :href="`${productsPageUrl}/${productData.id}`" class="govuk-link">More details</NuxtLink>
+						<NuxtLink v-else-if="isConvectorRadiatorProduct(productData) || isUnderFloorHeatingProduct(productData)" :href="`${productsPageUrl}/${productData.ID}`" class="govuk-link">More details</NuxtLink>
+					</div>
 				</template>
 				<GovButton
 					v-if="!disabled"

@@ -16,6 +16,7 @@ describe("point thermal bridges", () => {
 		data: {
 			name: "Point 1",
 			heatTransferCoefficient: 1,
+			reference: "Ref",
 		},
 	};
 
@@ -26,6 +27,7 @@ describe("point thermal bridges", () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Point 1");
 		await user.type(screen.getByTestId("heatTransferCoefficient"), "1");
+		await user.type(screen.getByTestId("reference"), "Ref");
 		await user.tab();
 	};
 	
@@ -62,6 +64,7 @@ describe("point thermal bridges", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Point 1");
 		expect((await screen.findByTestId<HTMLInputElement>("heatTransferCoefficient")).value).toBe("1");
+		expect((await screen.findByTestId<HTMLInputElement>("reference")).value).toBe("Ref");
 	});
 
 	it("shows required error messages when empty form is submitted", async () => {

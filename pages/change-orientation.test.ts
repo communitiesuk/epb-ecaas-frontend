@@ -233,6 +233,7 @@ describe("Change orientation", () => {
 		
 			const updateOrientation = async (newOrientation: string) => {
 				await user.type(screen.getByTestId("newOrientation"), newOrientation);
+				await user.click(screen.getByTestId("updateDistantShading_no"));
 				await user.tab();
 				await user.click(screen.getByTestId("changeOrientationButton"));
 			};
@@ -433,7 +434,7 @@ describe("Change orientation", () => {
 			await renderSuspended(ChangeOrientation);
 			await user.type(screen.getByTestId("newOrientation"), "20");
 			await user.tab();
-			await user.click(screen.getByTestId("updateDistantShading_updateShading"));
+			await user.click(screen.getByTestId("updateDistantShading_yes"));
 			await user.click(screen.getByTestId("changeOrientationButton"));
 			const shading = store.dwellingDetails.shading.data;
 			expect(shading[0]?.data.startAngle).toBe(30);

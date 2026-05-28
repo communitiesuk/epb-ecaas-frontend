@@ -3,25 +3,25 @@ import { displayHeatEmitterType, getUrl, type HeatingControlData } from "#import
 
 const title = "Heating controls";
 const store = useEcaasStore();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 const { mounted } = useMounted();
 
+const heatingControlData = store.spaceHeating.heatingControls.data[0];
+const model = ref(heatingControlData?.data as HeatingControlData);
+const heatEmitters = store.spaceHeating.heatEmitters.data;
+
+const heatEmitterRankWords = ["primary", "second", "third", "fourth", "fifth", "sixth"] as const;
 const heatingControlOptions = {
 	separateTemperatureControl: "Separate temperature control",
 	separateTimeAndTemperatureControl: "Separate time and temperature control",
 };
 
-const heatingControlData = store.spaceHeating.heatingControls.data[0];
-const model = ref(heatingControlData?.data as HeatingControlData);
-const heatEmitters = computed(() => store.spaceHeating.heatEmitters.data);
-const heatEmitterRankWords = ["primary", "second", "third", "fourth", "fifth", "sixth"] as const;
-
-const getHeatEmitterLabel = (heatEmitter: (typeof heatEmitters.value)[number]) => {
+const getHeatEmitterLabel = (heatEmitter: (typeof heatEmitters)[number]) => {
 	const name = heatEmitter.data.name?.trim();
 	if (name) {
 		return name;
 	}
-
 	return displayHeatEmitterType(heatEmitter.data.typeOfHeatEmitter) || "Heat emitter";
 };
 
@@ -53,35 +53,30 @@ const getHeatEmitterRankRenderKey = (rankIndex: number) => {
 	return `${getHeatEmitterRankFieldId(rankIndex)}-${higherSelections}`;
 };
 
-const buildInitialHeatEmitterRankings = () => Array.from({ length: heatEmitters.value.length }, (_, rankIndex) => {
-	const emitterIndex = heatEmitters.value.findIndex((heatEmitter) => heatEmitter.data.heatingRank === rankIndex + 1);
+
+
+const buildInitialHeatEmitterRankings = () => Array.from({ length: heatEmitters.length }, (_, rankIndex) => {
+	const emitterIndex = heatEmitters.findIndex((heatEmitter) => heatEmitter.data.heatingRank === rankIndex + 1);
 	return emitterIndex === -1 ? undefined : `${emitterIndex}`;
 });
 
+
+
 const heatEmitterRankings = ref<Array<string | undefined>>(buildInitialHeatEmitterRankings());
 
-const visibleHeatEmitterRanks = computed(() => heatEmitters.value
+const visibleHeatEmitterRanks = computed(() => heatEmitters
 	.map((_, rankIndex) => rankIndex)
 	.filter((rankIndex) => rankIndex === 0 || heatEmitterRankings.value[rankIndex - 1] != null));
 
 const heatEmitterOptionsForRank = (rankIndex: number) => {
-	const selectedHigherRanks = heatEmitterRankings.value
-		.slice(0, rankIndex)
-		.filter((selection) => selection != null);
-	const currentSelection = heatEmitterRankings.value[rankIndex];
-	const availableEmitterIndexes = heatEmitters.value
-		.map((_, emitterIndex) => emitterIndex)
-		.filter((emitterIndex) => {
-			const optionValue = `${emitterIndex}`;
-			return !selectedHigherRanks.includes(optionValue) || optionValue === currentSelection;
-		});
+	const selected = heatEmitterRankings.value.slice(0, rankIndex).filter((selection) => selection != null);
+
+	const current = heatEmitterRankings.value[rankIndex];
 
 	return Object.fromEntries(
-		availableEmitterIndexes.map((emitterIndex) => {
-			const heatEmitter = heatEmitters.value[emitterIndex]!;
-			const optionValue = `${emitterIndex}`;
-			return [optionValue, getHeatEmitterLabel(heatEmitter)];
-		}),
+		heatEmitters
+			.map((emitter, index) => [String(index), getHeatEmitterLabel(emitter)] as const)
+			.filter(([value]) => !selected.includes(value) || value === current),
 	);
 };
 
@@ -89,26 +84,24 @@ const haveRankingsChanged = (a: (string | undefined)[], b: (string | undefined)[
 	if (a.length !== b.length) {
 		return true;
 	}
+	return a.some((selection, index) => selection !== b[index]);
 
-	for (let i = 0; i < a.length; i += 1) {
-		if (a[i] !== b[i]) {
-			return true;
-		}
-	}
-
-	return false;
 };
 
-const removeDuplicateEmitterRankSelections = (rankings: (string | undefined)[]) => {
-	for (let rankIndex = 0; rankIndex < rankings.length; rankIndex += 1) {
-		const selectedEmitter = rankings[rankIndex];
-		if (selectedEmitter == null) {
+const removeDuplicateEmitterRankSelections = (
+	rankings: (string | undefined)[],
+) => {
+	const seen = new Set<string>();
+	for (let index = 0; index < rankings.length; index++) {
+		const selection = rankings[index];
+		if (selection == null) {
 			continue;
 		}
-
-		if (rankings.slice(0, rankIndex).includes(selectedEmitter)) {
-			rankings[rankIndex] = undefined;
+		if (seen.has(selection)) {
+			rankings[index] = undefined;
+			continue;
 		}
+		seen.add(selection);
 	}
 };
 
@@ -116,11 +109,36 @@ const clearRanksAfterChangedIndex = (rankings: (string | undefined)[], changedAt
 	if (changedAt === -1) {
 		return;
 	}
+	rankings.fill(undefined, changedAt + 1);
+};
 
-	for (let rankIndex = changedAt + 1; rankIndex < rankings.length; rankIndex += 1) {
-		rankings[rankIndex] = undefined;
+const autoSelectSingleRemainingHeatEmitters = (rankings: (string | undefined)[]) => {
+	for (let rankIndex = 0; rankIndex < rankings.length; rankIndex += 1) {
+		if (rankings[rankIndex] != null) {
+			continue;
+		}
+		if (rankIndex > 0 && rankings[rankIndex - 1] == null) {
+			break;
+		}
+		const selectedHigherRanks = rankings
+			.slice(0, rankIndex)
+			.filter((selection) => selection != null);
+		const avalailableEmitterIndexes = [] as string[];
+		heatEmitters.forEach((_, emitterIndex) => {
+			if (!selectedHigherRanks.includes(String(emitterIndex))) {
+				avalailableEmitterIndexes.push(String(emitterIndex));
+			}
+		});	
+		if (avalailableEmitterIndexes.length === 1) {
+			rankings[rankIndex] = avalailableEmitterIndexes[0];
+		}
 	}
 };
+
+
+onMounted(() => {
+	autoSelectSingleRemainingHeatEmitters(heatEmitterRankings.value);
+});
 
 const saveForm = (fields: HeatingControlData) => {
 	store.$patch((state) => {
@@ -171,30 +189,25 @@ watch(heatEmitterRankings, (newRankings, previousRankings) => {
 	clearRanksAfterChangedIndex(rankings, changedAt);
 
 	removeDuplicateEmitterRankSelections(rankings);
+	autoSelectSingleRemainingHeatEmitters(rankings);
 
 	const selectionsChanged = haveRankingsChanged(rankings, newRankings);
 
 	if (selectionsChanged) {
 		heatEmitterRankings.value = rankings;
-		return;
 	}
-
 	store.$patch((state) => {
 		state.spaceHeating.heatEmitters.data.forEach((heatEmitter, emitterIndex) => {
-			const heatingRankIndex = rankings.findIndex((selection) => selection === `${emitterIndex}`);
-			const data = heatEmitter.data as { heatingRank?: number };
+			const data = heatEmitter.data as { heatingRank?: number; };
+			const heatingRankIndex = rankings.findIndex((selection) => selection === String(emitterIndex));
 
-			if (heatingRankIndex === -1) {
-				delete data.heatingRank;
-				return;
-			}
-
-			data.heatingRank = heatingRankIndex + 1;
+			data.heatingRank = heatingRankIndex === -1 ? undefined : heatingRankIndex + 1;
 		});
 	});
+	
 }, { deep: true });
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
 </script>
 
 <template>

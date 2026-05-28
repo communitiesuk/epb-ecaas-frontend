@@ -42,12 +42,23 @@ describe("vent", () => {
 		hasAssociatedItem: true,
 	};
 
+
+	const externalGlazedDoor: Partial<ExternalGlazedDoorData> = {
+		name: "External glazed door 1",
+		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a8a",
+	};
+
 	beforeEach(() => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWalls: {
 					dwellingSpaceExternalWall: {
 						data: [{ data: externalWall }],
+					},
+				},
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalGlazedDoor: {
+						data: [{ data: { ...externalGlazedDoor } as Partial<ExternalGlazedDoorData> & { id: string } }],
 					},
 				},
 			},
@@ -184,6 +195,11 @@ describe("vent", () => {
 						data: [],
 					},
 				},
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalGlazedDoor: {
+						data: [],
+					},
+				},
 			},
 		});
 
@@ -233,5 +249,15 @@ describe("vent", () => {
 
 		expect(screen.queryByTestId("pitch")).toBeNull();
 		expect(screen.queryByTestId("orientation")).toBeNull();
+	});
+
+	test("renders external glazed door as an associated item option", async () => {
+		await renderSuspended(Vent, {
+			route: {
+				params: { vent: "create" },
+			},
+		});
+
+		expect(await screen.findByTestId(`associatedItemId_${externalGlazedDoor.id}`)).toBeDefined();
 	});
 });

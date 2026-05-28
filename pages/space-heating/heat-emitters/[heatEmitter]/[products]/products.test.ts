@@ -118,6 +118,8 @@ describe("Heat emitter products page", () => {
 		expect(
 			screen.getByRole("heading", { name: "Select a radiator" }),
 		);
+		expect(screen.getByText("Type and height")).toBeDefined();
+		expect(screen.getByText("Search type or height")).toBeDefined();
 		expect(screen.queryByText("Brand")).toBeNull();
 		expect(screen.getByText("T33")).toBeDefined();
 		expect(screen.getByText("900")).toBeDefined();
@@ -142,6 +144,7 @@ describe("Heat emitter products page", () => {
 		expect(
 			screen.getByRole("heading", { name: "Select an underfloor heating system" }),
 		);
+		expect(screen.getByText("Search system or spacing")).toBeDefined();
 		expect(screen.queryByText("Brand")).toBeNull();
 		expect(screen.getByText("Standard screed floor")).toBeDefined();
 		expect(screen.getByText("250")).toBeDefined();

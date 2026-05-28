@@ -18,6 +18,7 @@ describe("linear thermal bridges", () => {
 			typeOfThermalBridge: "E1",
 			linearThermalTransmittance: 1,
 			length: 2,
+			reference: "Ref",
 		},
 	};
 
@@ -29,6 +30,7 @@ describe("linear thermal bridges", () => {
 		await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
 		await user.type(screen.getByTestId("linearThermalTransmittance"), "1");
 		await user.type(screen.getByTestId("length"), "2");
+		await user.type(screen.getByTestId("reference"), "Ref");
 		await user.tab();
 	};
 	
@@ -67,6 +69,7 @@ describe("linear thermal bridges", () => {
 		expect((await screen.findByTestId<HTMLSelectElement>("typeOfThermalBridge")).value).toBe("E1");
 		expect((await screen.findByTestId<HTMLInputElement>("linearThermalTransmittance")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("length")).value).toBe("2");
+		expect((await screen.findByTestId<HTMLInputElement>("reference")).value).toBe("Ref");
 	});
 
 	it("shows required error messages when empty form is submitted", async () => {

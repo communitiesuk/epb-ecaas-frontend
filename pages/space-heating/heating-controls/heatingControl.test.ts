@@ -287,5 +287,43 @@ describe("Heating controls", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 			expect(screen.getByTestId("primaryHeatEmitter_error")).toBeDefined();
 		});
+		test("if there is only one heating system, the option should be pre-selected", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [
+							{ data: { name: "Lounge storage heater", typeOfHeatEmitter: "electricStorageHeater" } },
+						],
+					},
+				},
+			});
+			await renderSuspended(HeatingControls, {
+				route: {
+					params: { "heatingControl": "create" },
+				},
+			});
+			await populateValidForm();
+			expect(screen.getByTestId<HTMLInputElement>("primaryHeatEmitter_0").checked).toBe(true);
+		});
+		test("pre selects final heating system if one is already ranked", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [
+							{ data: { name: "Lounge storage heater", typeOfHeatEmitter: "electricStorageHeater", heatingRank: 1 } },
+							{ data: { name: "Hallway warm air", typeOfHeatEmitter: "warmAirHeater" } },
+						],
+					},
+				},
+			});
+			await renderSuspended(HeatingControls, {
+				route: {
+					params: { "heatingControl": "create" },
+				},
+			});
+			await populateValidForm();
+			expect(screen.getByTestId<HTMLInputElement>("primaryHeatEmitter_0").checked).toBe(true);
+			expect(screen.getByTestId<HTMLInputElement>("secondaryHeatEmitter_1").checked).toBe(true);
+		});
 	});
 });

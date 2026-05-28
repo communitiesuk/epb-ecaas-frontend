@@ -93,8 +93,9 @@ describe("doors", () => {
 		},
 	};
 
-	const externalGlazed1: EcaasForm<ExternalGlazedDoorData> = {
+	const externalGlazed1: EcaasForm<ExternalGlazedDoorData> = { 
 		data: {
+			id: "external-glazed-door-id",
 			name: "externalGlazed1 name",
 			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
@@ -116,6 +117,7 @@ describe("doors", () => {
 
 	const externalGlazed2: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
+			id: "external-glazed-door-id-2",
 			name: "externalGlazed2 name",
 			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,
@@ -137,6 +139,7 @@ describe("doors", () => {
 
 	const externalGlazed3: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
+			id: "external-glazed-door-id-3",
 			name: "externalGlazed3 name",
 			isTheFrontDoor: false,
 			associatedItemId: externalWall.id,

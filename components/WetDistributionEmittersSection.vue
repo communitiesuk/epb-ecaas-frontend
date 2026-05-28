@@ -5,9 +5,26 @@ import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import type { ConvectorRadiatorProduct, Product, UnderFloorHeatingProduct } from "~/pcdb/pcdb.types";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
 import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
+import { millimetre, type Length } from "~/utils/units/length";
 
 const route = useRoute();
 const router = useRouter();
+
+function updateLegacyRadiatorLengthInStore() {
+	store.$patch((state) => {
+		const heatEmitter = state.spaceHeating.heatEmitters.data[props.index];
+		if (!heatEmitter || !("emitters" in heatEmitter.data)) {
+			return;
+		}
+
+		const emittersList = (heatEmitter.data as { emitters: Record<string, unknown>[] }).emitters;
+		emittersList.forEach((emitter) => {
+			if (emitter.typeOfHeatEmitter === "radiator" && typeof emitter.length === "number") {
+				emitter.length = unitValue(emitter.length * 1000, millimetre);
+			}
+		});
+	});
+}
 
 const clearEmitterIndexFromUrl = () => {
 	router.replace({ query: { ...route.query, emitterIndex: undefined } });
@@ -19,7 +36,7 @@ const emitterTypeOptions = {
 	fanCoil: "Fan coil",
 } as const;
 
-const useUnderfloorHeating: boolean = true;
+const useUnderfloorHeating: boolean = false; // currently unavailable in PCDB, so hide option until it is
 
 const { underFloorHeating, ...others } = emitterTypeOptions;
 const heatEmitterTypes = useUnderfloorHeating ? emitterTypeOptions : others;
@@ -30,7 +47,6 @@ const props = defineProps<{
 }>();
 
 const store = useEcaasStore();
-
 const emitters = computed(() => {
 	const heatEmitter = store.spaceHeating.heatEmitters.data[props.index];
 	if (heatEmitter && "emitters" in heatEmitter.data) {
@@ -48,16 +64,17 @@ const emitterCards = ref<HTMLElement[]>([]);
 
 const queryEmitterIndex = route.query.emitterIndex != null ? Number(route.query.emitterIndex) : null;
 if (queryEmitterIndex != null && emitters.value[queryEmitterIndex]) {
+	updateLegacyRadiatorLengthInStore();
 	editIndex.value = queryEmitterIndex;
 	formModel.value = { ...emitters.value[queryEmitterIndex] };
 }
 
 onMounted(() => {
+	updateLegacyRadiatorLengthInStore();
 	if (queryEmitterIndex != null && emitterCards.value[queryEmitterIndex]) {
 		emitterCards.value[queryEmitterIndex].scrollIntoView({ behavior: "instant", block: "start" });
-	}
+	}	
 });
-
 const productDetails = ref<Record<string, string[]>>({});
 
 const fetchProductName = async (productReference: string) => {
@@ -104,14 +121,17 @@ const emitterSummaryData = (emitter: Partial<WetDistributionEmitterData> & { id:
 	const typeName = typeOfHeatEmitter ? emitterTypeOptions[typeOfHeatEmitter] : undefined;
 	const product = productReference ? productDetails.value[productReference] : undefined;
 
+
 	switch (typeOfHeatEmitter) {
-		case "radiator":
+		case "radiator": {
+			const radiatorLength = (emitter as { length: Length }).length;
 			return {
 				"Type of emitter": typeName,
 				"Radiator product": product,
-				"Length": (emitter as { length?: number }).length != null ? `${(emitter as { length: number }).length} m` : undefined,
+				"Length of radiator": radiatorLength ? `${radiatorLength.amount} mm` : undefined,
 				"Number of radiators": (emitter as { numOfRadiators?: number }).numOfRadiators,
 			};
+		}
 		case "fanCoil":
 			return {
 				"Type of emitter": typeName,
@@ -281,12 +301,12 @@ const saveEmitter = () => {
 					:actions="false"
 					:incomplete-message="false"
 					@submit="saveEmitter"
-				>
-					
+				>	
 					<FormKit
 						:id="`typeOfHeatEmitter_${i}`"
 						type="govRadios"
 						label="Type of emitter"
+						:help="useUnderfloorHeating ? undefined : 'Please note, underfloor heating is not currently available, but will be in future releases.'"
 						:options="heatEmitterTypes"
 						name="typeOfHeatEmitter"
 						validation="required"
@@ -313,19 +333,20 @@ const saveEmitter = () => {
 							:emitter-index="i"
 						/>
 						<FormKit
+							:id="`length_${i}`"
+							type="govInputWithUnit"
+							label="Length of radiator"
+							name="length"
+							:unit="millimetre"
+							:validation="zodTypeAsFormKitValidation(lengthRadiatorZod)"
+						/>
+						<FormKit
 							:id="`numOfRadiators_${i}`"
 							type="govInputInt"
 							label="Number of radiators"
 							name="numOfRadiators"
+							help="Enter the number of radiators in this wet distribution system with this specification"
 							:validation="zodTypeAsFormKitValidation(productCountZod)"
-						/>
-						<FormKit
-							:id="`length_${i}`"
-							type="govInputWithSuffix"
-							label="Length"
-							name="length"
-							suffix-text="m"
-							:validation="zodTypeAsFormKitValidation(lengthRadiatorZod)"
 						/>
 					</template>
 					<template v-if="formModel.typeOfHeatEmitter === 'fanCoil'">
@@ -425,6 +446,7 @@ const saveEmitter = () => {
 						id="typeOfHeatEmitter"
 						type="govRadios"
 						label="Type of emitter"
+						:help="useUnderfloorHeating ? undefined : 'Please note, underfloor heating is not currently available, but will be in future releases.'"
 						:options="heatEmitterTypes"
 						name="emitterTypeSelection"
 						@input="addEmitter"

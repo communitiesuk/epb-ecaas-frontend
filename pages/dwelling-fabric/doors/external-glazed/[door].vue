@@ -3,11 +3,12 @@ import { getUrl, standardPitchOptions, uniqueName, type ExternalGlazedDoorData }
 import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import { isFlatRoofItem } from "~/utils/isFlatRoofItem";
+import { v4 as uuidv4 } from "uuid";
+
 
 const title = "External glazed door";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
-
 const { mounted } = useMounted();
 
 
@@ -20,11 +21,21 @@ const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoof
 
 const shading = model?.value && "shading" in model.value ? model.value.shading : [];
 
+function assignIdToLegacyData(doorData: { id?: string } | undefined) {
+	if (!doorData) return;
+	doorData.id ??= uuidv4();
+}
+
+onMounted(() => {
+	assignIdToLegacyData(doorData?.data);
+});
+
 const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceExternalGlazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 
 		const commonFields = { 
+			id: doorData?.data.id ?? uuidv4(),
 			name: fields.name,
 			associatedItemId: fields.associatedItemId,
 			isTheFrontDoor: fields.isTheFrontDoor,
@@ -138,6 +149,7 @@ autoSaveElementForm<ExternalGlazedDoorData>({
 	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor,
 	defaultName: "External glazed door",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= uuidv4();
 		const existingShading = (state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index]?.data as Record<string, unknown> | undefined)?.shading;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index] = newData;
 		if (existingShading !== undefined) {

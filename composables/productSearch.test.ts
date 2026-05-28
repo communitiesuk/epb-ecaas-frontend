@@ -80,6 +80,46 @@ describe("Product search", () => {
 		expect(results[0]?.id).toBe("1000");
 	});
 
+	it("Returns heat network products by subnetwork name when subnetwork is used as a search parameter", () => {
+		const heatNetworkData: DisplayProduct[] = [
+			...productData,
+			{
+				displayProduct: true,
+				id: "1003",
+				technologyType: "HeatNetworks",
+				communityHeatNetworkName: "Test Heat Network",
+				subheatNetworkName: "Test Subnetwork",
+			},
+		];
+
+		// Act
+		const results = useProductSearch(heatNetworkData, { searchTerm: "Test Subnetwork" });
+
+		// Assert
+		expect(results).toHaveLength(1);
+		expect(results[0]?.id).toBe("1003");
+	});
+
+	it("Returns radiator products by height when height is used as a search parameter", () => {
+		const radiatorData: DisplayProduct[] = [
+			...productData,
+			{
+				displayProduct: true,
+				id: "1004",
+				technologyType: "ConvectorRadiator",
+				type: "T33",
+				height: 900,
+			},
+		];
+
+		// Act
+		const results = useProductSearch(radiatorData, { searchTerm: "900" });
+
+		// Assert
+		expect(results).toHaveLength(1);
+		expect(results[0]?.id).toBe("1004");
+	});
+
 	it("Returns products sorted by ID in ascending order when sort parameter is present", () => {
 		// Act
 		const results = useProductSearch(productData, { sort: "id" });

@@ -19,6 +19,7 @@ const saveForm = (fields: PointThermalBridgeData) => {
 			data: {
 				name: fields.name,
 				heatTransferCoefficient: fields.heatTransferCoefficient,
+				reference: fields.reference,
 			},
 			complete: true,
 		};
@@ -76,6 +77,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number"
 			suffix-text="W/K"
 			data-field="Zone.ThermalBridging.*.heat_transfer_coeff"
+		/>
+		<FormKit
+			id="reference"
+			type="govInputText"
+			label="Reference (optional)"
+			name="reference"
 		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

@@ -63,17 +63,15 @@ describe("Products service", () => {
 			})));
 		});
 
-		it("Hydrates ConvectorRadiator products when query projection omits radiator fields", async () => {
+		it("Returns ConvectorRadiator products from query projection in one pass", async () => {
 			// Arrange
 			const technologyType: TechnologyType = "ConvectorRadiator";
-			const projectedQueryItems = [{ id: "58" }];
-			const fullRadiator = {
+			const projectedQueryItems = [{
 				id: "58",
 				technologyType,
 				type: "T33",
 				height: 700,
-			};
-			// first we list the product ids for the technology type, then we get the full product details for each radiator to hydrate the display product fields
+			}];
 			ddbMock.on(QueryCommand, {
 				TableName: "products",
 				IndexName: "by-technology-type",
@@ -81,13 +79,6 @@ describe("Products service", () => {
 				ExpressionAttributeValues: { ":technologyType": technologyType },
 			}).resolves({
 				Items: projectedQueryItems,
-			});
-			// this will be simplified when we can query by convector radiator type and height to avoid the need for hydration
-			ddbMock.on(GetCommand, {
-				TableName: "products",
-				Key: { id: "58" },
-			}).resolves({
-				Item: fullRadiator,
 			});
 
 			// Act

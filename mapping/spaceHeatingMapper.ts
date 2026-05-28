@@ -15,6 +15,7 @@ import type {
 import type { SchemaBoilerWithProductReference, SchemaHeatNetworkType, SchemaHeatSourceWetDetails, SchemaHeatSourceWetHeatPumpInput, SchemaHeatSourceWetHiuInput, SchemaSpaceHeatSystem } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import { objectFromEntries } from "ts-extras";
+import { asMetres } from "~/utils/units/length";
 
 function getAssociatedHeatNetworkType(associatedHeatNetworkId: string | undefined, state: ResolvedState): SchemaHeatNetworkType {
 	const heatNetworks = state.spaceHeating.heatSource.filter(source => source.typeOfHeatSource === "heatNetwork");
@@ -325,7 +326,7 @@ function mapEmittersForWetDistribution(emitters: WetDistributionEmitterData[]): 
 				wet_emitter_type: "radiator",
 				product_reference: emitter.productReference,
 				radiator_type: "standard",
-				length: emitter.length,
+				length: asMetres(emitter.length),
 			} as const satisfies SchemaRadiatorWithProductReference;
 
 			return Array.from({ length: emitter.numOfRadiators }, () => radiator);

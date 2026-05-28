@@ -314,6 +314,7 @@ describe("ceilings and roofs", () => {
 
 			const externalGlazed: EcaasForm<ExternalGlazedDoorData> = {
 				data: {
+					id: "external-glazed-door-id",
 					isTheFrontDoor: false,
 					name: "external glazed name",
 					associatedItemId: roof1.data.id,

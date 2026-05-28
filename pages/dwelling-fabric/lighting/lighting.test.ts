@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen } from "@testing-library/vue";
-import Lighting from "./lighting/index.vue";
+import Lighting from "./index.vue";
 import userEvent from "@testing-library/user-event";
 import formStatus from "~/constants/formStatus";
 

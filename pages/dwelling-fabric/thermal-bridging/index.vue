@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { isEcaasForm } from "~/stores/ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
+import { page as pages } from "~/data/pages/pages";
 
 const title = "Thermal bridging";
 const page = usePage();
@@ -102,11 +103,11 @@ const hasIncompleteEntries = () =>
 		@duplicate="(index: number) => handleDuplicate('dwellingSpacePointThermalBridges', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton
-			href="/dwelling-fabric"
-			secondary
-		>
+		<GovButton :href="pages('dwellingFabric').url" secondary>
 			Return to dwelling fabric
+		</GovButton>
+		<GovButton :href="pages('dwellingFabricSummary').url" secondary>
+			View summary
 		</GovButton>
 		<CompleteElement
 			:is-complete="Object.values(store.dwellingFabric.dwellingSpaceThermalBridging).every(section => section.complete)"

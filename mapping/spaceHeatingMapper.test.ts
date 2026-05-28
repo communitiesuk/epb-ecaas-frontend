@@ -16,7 +16,7 @@ import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetHeatPumpInput
 import { celsius } from "~/utils/units/temperature";
 import { kilowatt } from "~/utils/units/power";
 import { unitValue } from "~/utils/units/units";
-
+import { asMetres, millimetre } from "~/utils/units/length";
 
 describe("Space heating - heat sources", () => {
 	describe("mapHeatPumps", () => {
@@ -466,7 +466,7 @@ describe("Space heating - emitters", () => {
 		name: "Radiator 1",
 		typeOfHeatEmitter: "radiator",
 		productReference: "RAD-123",
-		length: 1000,
+		length: unitValue(1000, millimetre),
 		numOfRadiators: 1,
 	};
 	const underFloorHeating: WetDistributionEmitterData = {
@@ -557,7 +557,7 @@ describe("Space heating - emitters", () => {
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
 							radiator_type: "standard",
-							length: radiator.length,
+							length: asMetres(radiator.length),
 						},
 						{
 							product_reference: underFloorHeating.productReference,
@@ -616,7 +616,7 @@ describe("Space heating - emitters", () => {
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
 							radiator_type: "standard",
-							length: radiator.length,
+							length: asMetres(radiator.length),
 						},
 						{
 							product_reference: underFloorHeating.productReference,
@@ -671,7 +671,7 @@ describe("Space heating - emitters", () => {
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
 							radiator_type: "standard",
-							length: radiator.length,
+							length: asMetres(radiator.length),
 						},
 						{
 							product_reference: underFloorHeating.productReference,
@@ -733,7 +733,7 @@ describe("Space heating - emitters", () => {
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
 							radiator_type: "standard",
-							length: radiator.length,
+							length: asMetres(radiator.length),
 						},
 						{
 							product_reference: underFloorHeating.productReference,
@@ -771,7 +771,7 @@ describe("Space heating - emitters", () => {
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
 							radiator_type: "standard",
-							length: radiator.length,
+							length: asMetres(radiator.length),
 						},
 						{
 							product_reference: underFloorHeating.productReference,
@@ -811,7 +811,7 @@ describe("Space heating - emitters", () => {
 				name: "Radiator 2",
 				typeOfHeatEmitter: "radiator",
 				productReference: "RAD-456",
-				length: 500,
+				length: unitValue(500,millimetre),
 				numOfRadiators: 3,
 			};
 			const wetDistributionWithMultipleRadiators: HeatEmittingData = {
@@ -845,19 +845,19 @@ describe("Space heating - emitters", () => {
 					product_reference: "RAD-456",
 					wet_emitter_type: "radiator",
 					radiator_type: "standard",
-					length: 500,
+					length: asMetres(unitValue(500,millimetre)),
 				},
 				{
 					product_reference: "RAD-456",
 					wet_emitter_type: "radiator",
 					radiator_type: "standard",
-					length: 500,
+					length: asMetres(unitValue(500,millimetre)),
 				},
 				{
 					product_reference: "RAD-456",
 					wet_emitter_type: "radiator",
 					radiator_type: "standard",
-					length: 500,
+					length: asMetres(unitValue(500,millimetre)),
 				},
 			]);
 		});

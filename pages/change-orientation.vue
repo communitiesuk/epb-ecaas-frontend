@@ -36,16 +36,13 @@ const frontDoorOrientation = computed(() => {
 	}
 });
 
-const model = ref({
+const model = ref<{
+	newOrientation: number | undefined;
+	updateDistantShading: boolean | undefined;
+}>({
 	newOrientation: undefined,
-	updateDistantShading: [],
+	updateDistantShading: undefined,
 });
-
-// const model = reactive({
-// 	newOrientation: undefined as number | undefined,
-// 	updateDistantShading: [] as string[],
-// });
-
 
 function getDiffInOrientation() {
 	if (frontDoorOrientation.value === undefined || model.value.newOrientation === undefined) return;
@@ -77,10 +74,11 @@ const changeOrientationOfItems = () => {
 		const items = [roofs.data, ...doors.value, pvs.data, externalWalls.data, windows.data].flat() as EcaasForm<{ orientation?: number }>[];
 		updateOrientations(items, difference);
 		
-		if (model.value.updateDistantShading.length) {
+		if (model.value.updateDistantShading) {
 			const shadingItems = store.dwellingDetails.shading;
 			updateShadingAngles(shadingItems, difference);
 		}
+
 		banner.value = { type: "change-orientation-complete", difference, orientation: model.value.newOrientation! };
 	}
 };
@@ -104,6 +102,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
+	<NuxtLink href="/" class="govuk-back-link govuk-!-margin-top-0 govuk-!-margin-bottom-6" data-testid="backLink">Back to overview</NuxtLink>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<FormKit
 		v-model="model"
@@ -161,14 +160,17 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			/>
 			<FormKit
 				id="updateDistantShading"
-				type="govCheckboxes"
+				type="govBoolean"
 				name="updateDistantShading"
-				label="Do you want to update the shading as well?"
-				:options="{ updateShading: 'Change orientation of shading'}"
+				label="Change orientation of distant shading"
+				help="Selecting 'Yes' will also change the orientation of the distant shading objects. Window and PV shading orientations always change."
+				true-label="Yes, change distance shading"
+				false-label="No, don't change distant shading"
+				validation="required"
 			/> 
 			<div class="govuk-!-margin-top-1 govuk-button-group">
 				<ClientOnly>
-					<GovButton type="submit" test-id="changeOrientationButton" :disabled="!(frontDoor && frontDoorOrientation !== undefined) || !hasNewOrientaton">Change orientation</GovButton>
+					<GovButton type="submit" test-id="changeOrientationButton" :disabled="!(frontDoor && frontDoorOrientation !== undefined) || !hasNewOrientaton || model.updateDistantShading === undefined">Change orientation</GovButton>
 				</ClientOnly>
 				<GovButton href="/" secondary>
 					Return to overview

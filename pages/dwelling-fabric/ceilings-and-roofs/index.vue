@@ -2,6 +2,7 @@
 import { isEcaasForm } from "~/stores/ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 import { v4 as uuidv4 } from "uuid";
+import { page as pages } from "~/data/pages/pages";
 
 const title = "Ceilings and roofs";
 const page = usePage();
@@ -87,7 +88,6 @@ const hasIncompleteEntries = () =>
 </script>
 
 <template>
-
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
@@ -120,8 +120,11 @@ const hasIncompleteEntries = () =>
 		@remove="(index: number) => handleRemove('dwellingSpaceRoofs', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceRoofs', index)" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/dwelling-fabric" secondary>
+		<GovButton :href="pages('dwellingFabric').url" secondary>
 			Return to dwelling fabric
+		</GovButton>
+		<GovButton :href="pages('dwellingFabricSummary').url" secondary>
+			View summary
 		</GovButton>
 		<CompleteElement
 			:is-complete="Object.values(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs).every(section => section.complete)"

@@ -3,7 +3,7 @@ import type { HeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 
 const { product } = defineProps<{ product: Product }>();
 const data = product as HeatPumpProduct;
-
+const packagedProduct = data?.vesselType ? "Comes with hot water cylinder" : emptyValueRendering;
 const tableData: Record<string, string> = 
 {
 	"First year of manufacture": show(data?.firstYearOfManufacture),
@@ -28,6 +28,7 @@ const tableData: Record<string, string> =
 	"Power of circulation pump": dim(data?.powerHeatingCircPump, "kilowatt"),
 	"Power of crankcase heater": dim(data?.powerCrankcaseHeater, "kilowatt"),
 	"Maximum power of backup": dim(data?.powerMaxBackup, "kilowatt"),
+	"Packaged products": packagedProduct,
 	"Storage cylinder volume": dim(data.tankVolumeDeclared, "litres"),
 	"Daily energy loss": dim(data.dailyLossesDeclared, "kilowatt hours per day"),
 	"Area of heat exchanger installed": dim(data.heatExchangerSurfaceAreaDeclared, "metres square"),

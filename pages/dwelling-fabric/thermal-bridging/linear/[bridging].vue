@@ -82,6 +82,7 @@ const saveForm = (fields: LinearThermalBridgeData) => {
 				name: fields.name,
 				linearThermalTransmittance: fields.linearThermalTransmittance,
 				length: fields.length,
+				reference: fields.reference,
 			},
 			complete: true,
 		};
@@ -178,6 +179,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				:validation="zodTypeAsFormKitValidation(lengthThermalBridgeLinearZod)"
 				suffix-text="m"
 				data-field="Zone.ThermalBridging.*.length"
+			/>
+			<FormKit
+				id="reference"
+				type="govInputText"
+				label="Reference (optional)"
+				name="reference"
 			/>
 		</template>
 		<div class="govuk-button-group">

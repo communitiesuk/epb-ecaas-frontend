@@ -3,6 +3,7 @@ import { screen, within } from "@testing-library/vue";
 import SpaceHeatingSummary from "./summary.vue";
 import { celsius } from "~/utils/units/temperature";
 import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
+import { millimetre } from "~/utils/units/length";
 
 
 type ExpectedData = { [key: string]: string };
@@ -545,7 +546,7 @@ describe("Space heating summary page", () => {
 					typeOfHeatEmitter: "radiator",
 					productReference: "RAD-SMALL",
 					numOfRadiators: 5,
-					length: 1,
+					length: unitValue(1000, millimetre),
 				},
 			],
 		};
@@ -572,7 +573,7 @@ describe("Space heating summary page", () => {
 					typeOfHeatEmitter: "radiator",
 					productReference: "RAD-SMALL",
 					numOfRadiators: 5,
-					length: 1,
+					length: unitValue(1000, millimetre),
 				},
 				{
 					id: "ufh-1",

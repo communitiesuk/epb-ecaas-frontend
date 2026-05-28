@@ -57,15 +57,9 @@ const selectProduct = async (product: DisplayProduct) => {
 				networkName: 'Network name',
 				productId: 'Product ID',
 			}"
-		>
-			<FieldsProductSearch
-				id="searchTerm"
-				name="searchTerm"
-				label="Search network name"
-				placeholder="Enter network name"
-				:value="searchModel.searchTerm"
-			/>
-		</ProductSearch>
+			search-term-label="Search network or subnetwork"
+			search-term-placeholder="Enter network or subnetwork"
+		/>
 		<HeatNetworkProductsTable
 			:products="pagination.getData()"
 			:total-pages="pagination.totalPages"

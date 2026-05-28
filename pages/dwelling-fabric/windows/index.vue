@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-
 import formStatus from "~/constants/formStatus";
+import { page as pages } from "~/data/pages/pages";
 
 const title = "Windows";
 const page = usePage();
@@ -83,10 +83,23 @@ function hasIncompleteEntries() {
 		window => isEcaasForm(window) ? !window.complete : false);
 }
 
+function getOrientation(windowData: WindowData) {
+	const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+	const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
+	if (windowData.taggedItem) {
+		const associatedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], windowData.taggedItem);
+		
+		if (associatedItem) {
+			return associatedItem.orientation;
+		}
+	}
+
+	return windowData.orientation;
+}
 </script>
 
 <template>
-
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
@@ -100,16 +113,23 @@ function hasIncompleteEntries() {
 		id="windows"
 		title="Window"
 		:form-url="page?.url!"
-		:items="store.dwellingFabric.dwellingSpaceWindows.data.map(x => ({
-			name: x.data.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))"
+		:items="store.dwellingFabric.dwellingSpaceWindows.data.map(x => {
+			const orientation = getOrientation(x.data as WindowData);
+
+			return {
+				name: `${x.data.name}` + (orientation !== undefined ? ` (${orientation}° from north)` : ''),
+				status: x.complete ? formStatus.complete : formStatus.inProgress
+			};
+		})"
 		:show-status="true"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/dwelling-fabric" secondary>
+		<GovButton :href="pages('dwellingFabric').url" secondary>
 			Return to dwelling fabric
+		</GovButton>
+		<GovButton :href="pages('dwellingFabricSummary').url" secondary>
+			View summary
 		</GovButton>
 		<CompleteElement
 			:is-complete="store.dwellingFabric.dwellingSpaceWindows.complete ?? false"

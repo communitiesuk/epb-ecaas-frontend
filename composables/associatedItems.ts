@@ -1,15 +1,17 @@
 
-export function useAssociatedItems(itemTypes: Array<"wall" | "roof" | "window">): [string, string][] {
+export function useAssociatedItems(itemTypes: Array<"wall" | "roof" | "window" | "externalGlazedDoor">): [string, string][] {
 	const store = useEcaasStore();
 
 	const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
 	const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	const { dwellingSpaceWindows } = store.dwellingFabric;
+	const { dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
 
 	const options = [
-		(itemTypes.includes("wall") ? dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]) : []),
-		(itemTypes.includes("roof") ? dwellingSpaceRoofs.data.map(x => [x.data.id, x.data.name] as [string, string]) : []),
-		(itemTypes.includes("window") ? dwellingSpaceWindows.data.map(x => [x.data.id, x.data.name] as [string, string]) : []),
+		(itemTypes.includes("wall") ? dwellingSpaceExternalWall.data.map(x => [x.data.id, `${x.data.name} (Wall)`] as [string, string]) : []),
+		(itemTypes.includes("roof") ? dwellingSpaceRoofs.data.map(x => [x.data.id, `${x.data.name} (Roof)`] as [string, string]) : []),
+		(itemTypes.includes("window") ? dwellingSpaceWindows.data.map(x => [x.data.id, `${x.data.name} (Window)`] as [string, string]) : []),
+		(itemTypes.includes("externalGlazedDoor") ? dwellingSpaceExternalGlazedDoor.data.map(x => [x.data.id, `${x.data.name} (External glazed door)`] as [string, string]) : []),
 	]
 		.flat()
 		.filter(x => x[0] !== undefined)

@@ -296,6 +296,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 };
 
 const externalGlazedDoorData = {
+	id: "external-glazed-door-id",
 	name: "External glazed door 1",
 	associatedItemId: externalWallId,
 	height: 1,
@@ -402,6 +403,7 @@ const thermalBridgingData: ThermalBridgingData = {
 					typeOfThermalBridge: "E1",
 					linearThermalTransmittance: 1,
 					length: 2,
+					reference: "Ref",
 				},
 			},
 		],
@@ -412,6 +414,7 @@ const thermalBridgingData: ThermalBridgingData = {
 				data: {
 					name: "Point 1",
 					heatTransferCoefficient: 1,
+					reference: "Ref",
 				},
 			},
 		],
@@ -1243,6 +1246,7 @@ describe("dwelling space doors", () => {
 						dwellingSpaceExternalGlazedDoor: {
 							data: [{
 								data: {
+									id: "door-id",
 									name: "External glazed door 1",
 									pitch: 72,
 									orientation: 24,
@@ -1696,6 +1700,7 @@ describe("dwelling space thermal bridges", () => {
 			"Type of thermal bridge": "E1",
 			"Linear thermal transmittance": `1 ${wattsPerMeterKelvin.suffix}`,
 			"Length of thermal bridge": `2 ${metre.suffix}`,
+			"Reference": "Ref",
 		};
 
 
@@ -1720,6 +1725,7 @@ describe("dwelling space thermal bridges", () => {
 		const expectedResult = {
 			"Name": "Point 1",
 			"Heat transfer coefficient": `1 ${wattsPerKelvin.suffix}`,
+			"Reference": "Ref",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

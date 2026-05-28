@@ -248,7 +248,7 @@ const isPointOfUseSelected = computed(() =>
 
 	<CustomList 
 		id="pipework"
-		title="Pipework"
+		title="Primary pipework"
 		:form-url="`${page?.url!}/pipework`"
 		:items="store.domesticHotWater.pipework.data
 			.filter(x => isEcaasForm(x))

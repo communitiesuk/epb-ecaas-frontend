@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
+import { page as pages } from "~/data/pages/pages";
 
 const title = "Vents";
 const page = usePage();
@@ -67,8 +68,11 @@ function handleComplete() {
 		@duplicate="handleDuplicate"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/infiltration-and-ventilation" secondary>
+		<GovButton :href="pages('infiltrationAndVentilation').url" secondary>
 			Return to infiltration and ventilation
+		</GovButton>
+		<GovButton :href="pages('infiltrationAndVentilationSummary').url" secondary>
+			View summary
 		</GovButton>
 		<CompleteElement
 			:is-complete="store.infiltrationAndVentilation.vents?.complete ?? false"
