@@ -118,6 +118,7 @@ describe("Heat emitter products page", () => {
 		expect(
 			screen.getByRole("heading", { name: "Select a radiator" }),
 		);
+		expect(screen.getByText("Type and height")).toBeDefined();
 		expect(screen.getByText("Search type or height")).toBeDefined();
 		expect(screen.queryByText("Brand")).toBeNull();
 		expect(screen.getByText("T33")).toBeDefined();

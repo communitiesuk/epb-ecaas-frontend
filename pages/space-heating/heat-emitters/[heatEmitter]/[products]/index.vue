@@ -38,6 +38,26 @@ const searchTerms = computed(() => {
 	}
 });
 
+const searchOptions = computed(() => {
+	switch (pageId) {
+		case "radiator":
+			return {
+				modelAndBrand: "Type and height",
+				productId: "Product ID",
+			};
+		case "underFloorHeating":
+			return {
+				modelAndBrand: "System and spacing",
+				productId: "Product ID",
+			};
+		default:
+			return {
+				modelAndBrand: "Brand and model",
+				productId: "Product ID",
+			};
+	}
+});
+
 
 const { pagination } = searchData(products.value);
 
@@ -71,6 +91,7 @@ const selectProduct = (reference: string) => {
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<ProductSearch
 		:model="searchModel"
+		:search-options="searchOptions"
 		:search-term-label="searchTerms.label"
 		:search-term-placeholder="searchTerms.placeholder"
 	/>
