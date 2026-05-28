@@ -201,6 +201,16 @@ const greaterThanZero = (node: FormKitNode) => {
 			}"
 		/>
 		<FormKit
+			id="typeOfGroundFloor"
+			type="govRadios"
+			:options="typeOfGroundFloorOptions"
+			label="Type of ground floor "
+			help="The type of ground floor affects the additional inputs needed"
+			name="typeOfGroundFloor"
+			validation="required"
+			data-field="Zone.BuildingElement.*.floor_type"
+		/>
+		<FormKit
 			id="surfaceArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
@@ -220,13 +230,18 @@ const greaterThanZero = (node: FormKitNode) => {
 			:validation="zodTypeAsFormKitValidation(groundTotalAreaZod)"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsUValue id="uValue" name="uValue" help="Enter the U-value of the full thickness of the floor build-up, including the thermal resistance of the ground.  If the floor is suspended, this should include the effects of the void." />
+		<FieldsUValue
+			id="uValue"
+			name="uValue"
+			label="U-value of floor and ground"
+			help="Enter the U-value of the full thickness of the floor build-up, including the ground.  If the floor is suspended, this should include the effects of the void."
+		/>
 		<FormKit
 			id="thermalResistance"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
-			label="Thermal resistance"
-			help="Enter the thermal resistance of all layers in the floor construction only, not including surface resistances. For suspended floors, this should be calculated for the part of the floor construction above the void."
+			label="Thermal resistance of floor only"
+			help="Enter the thermal resistance of all layers in the floor construction only, not including surface resistances.  For suspended floors, this should be calculated for the part of the floor construction above the void."
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50"
 			data-field="Zone.BuildingElement.*.thermal_resistance_floor_construction">
@@ -272,17 +287,6 @@ const greaterThanZero = (node: FormKitNode) => {
 				<p class="govuk-hint">This is usually measured from the inside surface to the outside surface.</p>
 			</GovDetails>
 		</FormKit>
-		<FormKit
-			id="typeOfGroundFloor"
-			type="govRadios"
-			:options="typeOfGroundFloorOptions"
-			label="Type of ground floor "
-			help="The type of ground floor affects the additional inputs needed"
-			name="typeOfGroundFloor"
-			validation="required"
-			data-field="Zone.BuildingElement.*.floor_type"
-		/>
-
 		<template v-if="mounted && model?.typeOfGroundFloor === 'Slab_edge_insulation'">
 			<FormKit
 				id="edgeInsulationType"

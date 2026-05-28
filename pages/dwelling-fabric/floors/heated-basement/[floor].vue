@@ -113,13 +113,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsUValue
 			id="uValue"
 			name="uValue"
-			help="Enter the U-value of the construction of the floor at the bottom of the lowest heated level of the dwelling, including the thermal resistance of the ground"	
+			label="U-value of floor and ground"
+			help="Enter the U-value of the construction of the floor at the bottom of the lowest heated level of the dwelling, including the thermal resistance of the ground"
 		/>
 		<FormKit
 			id="thermalResistance"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
-			label="Thermal resistance"
+			label="Thermal resistance of floor only"
 			help="Enter the thermal resistance of all layers in the floor construction, not including the effects of the ground"
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50"
