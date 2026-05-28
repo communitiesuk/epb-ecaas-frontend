@@ -100,15 +100,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
 				}" />
 			<FieldsSurfaceArea
-				v-if="model?.typeOfInternalFloor === 'heatedSpace'"
+				v-if="model?.typeOfInternalFloor === 'heatedSpace' || model?.typeOfInternalFloor === 'unheatedSpace'"
 				label="Net surface area of the floor"
-				help="Enter the net area of the building element. The area of any windows should be subtracted before entry, but not doors."
-				:zod="surfaceAreaAdjacentSpaceZod"
-			/>
-			<FieldsSurfaceArea
-				v-if="model?.typeOfInternalFloor === 'unheatedSpace'"
-				label="Net surface area of the floor"
-				help="Enter the net area of the building element, subtracting any doors or windows"
+				help="Enter the net area of the building element. The area of all large openings such as for staircases should be subtracted before entry, but not doors."
 				:zod="surfaceAreaAdjacentSpaceZod"
 			/>
 			<FieldsArealHeatCapacity v-if="model?.typeOfInternalFloor === 'heatedSpace'" help="This is the sum of the heat capacities of half the construction build up. The other half should be input as a ceiling." />
