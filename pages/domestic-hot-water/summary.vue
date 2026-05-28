@@ -536,7 +536,7 @@ const populatedHotWaterOutletsSections = getNonEmptySections(hotWaterOutletsSumm
 const pipeworkData = store.domesticHotWater.pipework.data;
 const pipeworkSummary: SummarySection = {
 	id: "pipework",
-	label: "Pipework",
+	label: "Primary pipework",
 	data: pipeworkData.map(d => {
 		return {
 			"Name": show(d.data.name),
