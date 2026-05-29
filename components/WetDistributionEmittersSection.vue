@@ -297,10 +297,10 @@ const saveEmitter = () => {
 			<div v-else class="govuk-summary-card__content">
 				<FormKit
 					v-model="formModel"
-					:name="`emitters[${i}]`"
 					type="form"
 					:actions="false"
 					:incomplete-message="false"
+					:ignore="true"
 					@submit="saveEmitter"
 				>	
 					<FormKit
