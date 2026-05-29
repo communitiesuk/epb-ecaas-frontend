@@ -1,7 +1,3 @@
-<script>
-
-</script>
-
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import ElectricStorageHeaterSection from "~/components/ElectricStorageHeaterSection.vue";
@@ -17,13 +13,11 @@ export type WarmAirHeaterModelType = Extract<HeatEmittingData, { "typeOfHeatEmit
 export type InstantElectricHeaterModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "instantElectricHeater" }>;
 export type ElectricStorageHeaterModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "electricStorageHeater" }>;
 
-
 const title = "Heat emitters";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const { mounted } = useMounted();
-
 
 const heatEmitterStoreData = store.spaceHeating.heatEmitters.data;
 const index = getStoreIndex(heatEmitterStoreData);
@@ -46,8 +40,6 @@ function markHeatingControlsAsInProgress(state: EcaasState) {
 	});
 }
 
-
-
 const saveForm = () => {
 	store.$patch((state) => {
 		const { heatEmitters } = state.spaceHeating;
@@ -55,6 +47,7 @@ const saveForm = () => {
 		if (!emitter) {
 			throw new Error("No heat emitter found to save");
 		}
+
 		emitter.complete = true;
 		heatEmitters.complete = false;
 	});
@@ -111,7 +104,6 @@ autoSaveElementForm<HeatEmittingData>({
 			newData.complete = existing.complete;
 		}
 
-
 		state.spaceHeating.heatEmitters.data[index] = newData;
 		state.spaceHeating.heatEmitters.complete = false;
 		markHeatingControlsAsInProgress(state);
@@ -121,7 +113,6 @@ autoSaveElementForm<HeatEmittingData>({
 </script>
 
 <template>
-
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
@@ -159,7 +150,7 @@ autoSaveElementForm<HeatEmittingData>({
 				:model="(model as WarmAirHeaterModelType)" />
 		</template>
 		<div class="govuk-button-group">
-			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('spaceHeating')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>

@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import type { H3Error } from "h3";
-import ProductDetails from "./[id].vue";
+import ProductDetails from "./[id]/index.vue";
 import { screen } from "@testing-library/vue";
 import type { Product } from "~/pcdb/pcdb.types";
 

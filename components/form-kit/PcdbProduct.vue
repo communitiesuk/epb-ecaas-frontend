@@ -38,23 +38,22 @@ function buildProductsPageUrl(url: string, index: number, productType: string, e
 	return emitterIndex != null ? `${newPath}?emitterIndex=${emitterIndex}` : newPath;
 }
 
+function buildProductDetailsPageUrl(url: string, productType: string, productId: string) {
+	const lastUrlSegment = new RegExp("/[^/]*$");
+	return url.replace(lastUrlSegment, `/${index}`) + "/" + camelToKebabCase(productType ?? "") + `/${productId}` + "/details";
+}
+
 const selectedProduct = ref<string | undefined>(selectedProductReference);
 const selectedSubHeatNetwork = ref<string | undefined>(selectedSubHeatNetworkName as string | undefined);
 
 const productsPageUrl = ref(buildProductsPageUrl(pageUrl, index, selectedProductType ?? "", emitterIndex));
+const productDetailsPageUrl = ref(buildProductDetailsPageUrl(pageUrl, selectedProductType ?? "", selectedProductReference));
 const productData = ref<AnyPcdbProduct | undefined | null>();
 
 function hasModelDetails(
 	product: AnyPcdbProduct,
 ): product is Extract<AnyPcdbProduct, { modelName: string; brandName: string; modelQualifier?: string | null }> {
 	return "modelName" in product && "brandName" in product;
-}
-
-function productReferenceForDetails(product: AnyPcdbProduct): string {
-	if (isConvectorRadiatorProduct(product) || isUnderFloorHeatingProduct(product)) {
-		return String(product.ID);
-	}
-	return product.id;
 }
 
 if (selectedProduct.value) {
@@ -68,6 +67,7 @@ watch(props.context, async ({ attrs: {
 	"emitter-index": newEmitterIndex,
 } }) => {
 	productsPageUrl.value = buildProductsPageUrl(pageUrl, index, newProductType ?? "", newEmitterIndex as number | undefined);
+	productDetailsPageUrl.value = buildProductDetailsPageUrl(pageUrl, newProductType ?? "", newProductReference);
 	selectedProduct.value = newProductReference;
 	selectedSubHeatNetwork.value = newSubHeatNetworkName as string | undefined;
 
@@ -146,11 +146,10 @@ function getPackagedProductType() {
 							<li>Packaged products: <span class="bold" data-testid="productData_packagedProducts">{{ getPackagedProductType() }}</span></li>
 						</template>
 					</ul>
-					<div class="govuk-!-margin-bottom-4">
-						<NuxtLink v-if="hasModelDetails(productData)" :href="`${productsPageUrl}/${productData.id}`" class="govuk-link">More details</NuxtLink>
-						<NuxtLink v-else-if="isConvectorRadiatorProduct(productData) || isUnderFloorHeatingProduct(productData)" :href="`${productsPageUrl}/${productData.ID}`" class="govuk-link">More details</NuxtLink>
-					</div>
 				</template>
+				<div class="govuk-!-margin-bottom-4">
+					<NuxtLink :href="productDetailsPageUrl" class="govuk-link">More details</NuxtLink>
+				</div>
 				<GovButton
 					v-if="!disabled"
 					secondary
@@ -160,7 +159,6 @@ function getPackagedProductType() {
 				>
 					Select a different product
 				</GovButton>
-				<NuxtLink v-if="disabled" :href="`${productsPageUrl}/${productReferenceForDetails(productData)}`" class="govuk-link">More details</NuxtLink>
 			</div>
 		</div>
 	</div>

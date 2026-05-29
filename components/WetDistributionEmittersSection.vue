@@ -297,6 +297,7 @@ const saveEmitter = () => {
 			<div v-else class="govuk-summary-card__content">
 				<FormKit
 					v-model="formModel"
+					:name="`emitters[${i}]`"
 					type="form"
 					:actions="false"
 					:incomplete-message="false"
@@ -326,7 +327,7 @@ const saveEmitter = () => {
 							name="productReference"
 							validation="required"
 							help="Select the radiator type from the PCDB using the button below."
-							:selected-product-reference="formModel.productReference as string"
+							:selected-product-reference="(formModel.productReference as string)"
 							selected-product-type="radiator"
 							:page-url="route.fullPath"
 							:page-index="props.index"
@@ -357,7 +358,7 @@ const saveEmitter = () => {
 							name="productReference"
 							validation="required"
 							help="Select the fan coil type from the PCDB using the button below."
-							:selected-product-reference="formModel.productReference as string"
+							:selected-product-reference="(formModel.productReference as string)"
 							selected-product-type="fanCoil"
 							:page-url="route.fullPath"
 							:page-index="props.index"
@@ -379,7 +380,7 @@ const saveEmitter = () => {
 							name="productReference"
 							validation="required"
 							help="Select the underfloor heating type from the PCDB using the button below."
-							:selected-product-reference="formModel.productReference as string"
+							:selected-product-reference="(formModel.productReference as string)"
 							selected-product-type="underFloorHeating"
 							:page-url="route.fullPath"
 							:page-index="props.index"
@@ -395,13 +396,13 @@ const saveEmitter = () => {
 						/>
 					</template>
 					<div class="govuk-button-group">
-						<button
-							type="submit"
-							class="govuk-button govuk-button--secondary"
-							:data-testid="`saveEmitter_${i}`"
-						>
-							Save emitter
-						</button>
+						<FormKit
+							type="govButton"
+							label="Save emitter"
+							:classes="{ button: 'govuk-button--secondary' }"
+							:test-id="`saveEmitter_${i}`"
+							:ignore="true"
+						/>
 						<a
 							href="#"
 							class="govuk-link govuk-body-s"

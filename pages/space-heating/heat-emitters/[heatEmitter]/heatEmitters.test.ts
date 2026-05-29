@@ -827,12 +827,15 @@ describe("Heat emitters", () => {
 			});
 
 			await user.click(screen.getByTestId("emitter_edit_0"));
+
 			await user.click(screen.getByTestId("saveEmitter_0"));
 
 			const system = store.spaceHeating.heatEmitters.data[0];
+
 			expect(system?.complete).toBe(false);
-			expect(screen.getByTestId("numOfFanCoils_0_error")).toBeDefined();
+			expect(screen.findByTestId("numOfFanCoils_0_error")).toBeDefined();
 		});
+
 		test("doesn't save an invalid underfloor heating to store", async () => {
 			const incompleteUfh = {
 				id: "1234",

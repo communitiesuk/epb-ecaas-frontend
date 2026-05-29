@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import WaterStorageProductDetailsPage from "~/components/WaterStorageProductDetailsPage.vue";
 import type { PageId } from "~/data/pages/pages";
-import { productTypeMap, typeOfWaterStorage, type WaterStorageProductType } from "~/stores/ecaasStore.schema";
+import type { WaterStorageProductType } from "~/stores/ecaasStore.schema";
 import { sentenceToLowerCase } from "~/utils/string";
+import type { Product } from "~/pcdb/pcdb.types";
 
 definePageMeta({ layout: "one-column" });
 
@@ -18,22 +20,17 @@ if (!(waterStorageType in productTypeMap)) {
 	});
 }
 
-const technologyType = productTypeMap[waterStorageType as WaterStorageProductType];
 const pageId = `${waterStorageType}Products` as PageId;
 const productType = waterStorageProductTypeDisplay[waterStorageType as WaterStorageProductType];
 
-const index = Number(params.waterstorage);
-
-const { data: { value: data } } = await useFetch(`/api/products/${params.id}/details`, {
-	query: {
-		technologyType,
-	},
-});
+const data = await useProductDetails(params.id as string);
 
 const backUrl = getUrl(pageId)
 	.replace(":waterstorage", params.waterstorage as string);
 
 const selectProduct = () => {
+	const index = Number(params.waterstorage);
+	
 	store.$patch((state) => {
 		const item = state.domesticHotWater.waterStorage.data[index];
 
@@ -48,18 +45,11 @@ const selectProduct = () => {
 </script>
 
 <template>
-	<Head>
-		<Title>{{ data?.modelName }}</Title>
-	</Head>
-
 	<NuxtLink :href="backUrl" class="govuk-back-link govuk-!-margin-top-0 govuk-!-margin-bottom-5" data-testid="backLink" @click="router.back()">
 		{{ productType ? `Back to ${sentenceToLowerCase(productType(true))}` : 'Back' }}
 	</NuxtLink>
 
-	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ data?.modelName }}</h1>
-	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
-
-	<ProductDetailsSmartHotWaterTank v-if="!!data && waterStorageType === typeOfWaterStorage.smartHotWaterTank" :product="data!" />
+	<WaterStorageProductDetailsPage :product="(data as Product)" :water-storage-type="waterStorageType" />
 
 	<div class="govuk-button-group">
 		<GovButton
