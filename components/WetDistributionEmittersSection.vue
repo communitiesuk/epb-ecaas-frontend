@@ -10,22 +10,6 @@ import { millimetre, type Length } from "~/utils/units/length";
 const route = useRoute();
 const router = useRouter();
 
-function updateLegacyRadiatorLengthInStore() {
-	store.$patch((state) => {
-		const heatEmitter = state.spaceHeating.heatEmitters.data[props.index];
-		if (!heatEmitter || !("emitters" in heatEmitter.data)) {
-			return;
-		}
-
-		const emittersList = (heatEmitter.data as { emitters: Record<string, unknown>[] }).emitters;
-		emittersList.forEach((emitter) => {
-			if (emitter.typeOfHeatEmitter === "radiator" && typeof emitter.length === "number") {
-				emitter.length = unitValue(emitter.length * 1000, millimetre);
-			}
-		});
-	});
-}
-
 const clearEmitterIndexFromUrl = () => {
 	router.replace({ query: { ...route.query, emitterIndex: undefined } });
 };
@@ -64,13 +48,11 @@ const emitterCards = ref<HTMLElement[]>([]);
 
 const queryEmitterIndex = route.query.emitterIndex != null ? Number(route.query.emitterIndex) : null;
 if (queryEmitterIndex != null && emitters.value[queryEmitterIndex]) {
-	updateLegacyRadiatorLengthInStore();
 	editIndex.value = queryEmitterIndex;
 	formModel.value = { ...emitters.value[queryEmitterIndex] };
 }
 
 onMounted(() => {
-	updateLegacyRadiatorLengthInStore();
 	if (queryEmitterIndex != null && emitterCards.value[queryEmitterIndex]) {
 		emitterCards.value[queryEmitterIndex].scrollIntoView({ behavior: "instant", block: "start" });
 	}	

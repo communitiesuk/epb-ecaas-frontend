@@ -621,40 +621,6 @@ describe("Heat emitters", () => {
 				expect(screen.getByTestId<HTMLInputElement>("numOfRadiators_0").value).toBe("4");
 				expect(screen.getByTestId<HTMLInputElement>("length_0").value).toBe("2500");
 			});
-
-			test("edit form converts legacy numeric radiator length to unit value", async () => {
-				const wetDistributionSystemWithLegacyRadiator: HeatEmittingData = {
-					...wetDistributionSystem,
-					emitters: [
-						{
-							id: "emitter1",
-							name: "Legacy radiator",
-							typeOfHeatEmitter: "radiator",
-							numOfRadiators: 2,
-							// @ts-expect-error legacy persisted value before length switched to zodUnit
-							length: 2.5,
-						},
-					],
-				};
-
-				store.$patch({
-					spaceHeating: {
-						heatEmitters: {
-							data: [{ data: wetDistributionSystemWithLegacyRadiator, complete: true }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
-
-				await user.click(screen.getByTestId("emitter_edit_0"));
-
-				expect(screen.getByTestId<HTMLInputElement>("length_0").value).toBe("2500");
-			});
 		});
 	});
 

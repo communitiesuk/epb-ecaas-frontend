@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { millimetre } from "~/utils/units/length";
 
 /**
  * Copy deprecated packageProductId value to new packageProductIds array
@@ -68,6 +69,35 @@ function patchPipework(state: Record<string, unknown>) {
 		};
 	}
 }
+/**
+ * Handle legacy radiator product references and lengths persisted in old formats
+ */
+
+function patchRadiators(state: Record<string, unknown>) {
+	const storeState = state as EcaasState;
+	
+	const heatEmitters = storeState.spaceHeating.heatEmitters.data;
+	heatEmitters.forEach(heatEmitter => {
+		if (!heatEmitter || !("emitters" in heatEmitter.data)) {
+			return;
+		}
+
+		const emittersList = heatEmitter.data.emitters;
+		emittersList.forEach((emitter) => {
+			if (emitter.typeOfHeatEmitter === "radiator") {
+				if (typeof emitter.productReference === "string" && !emitter.productReference.startsWith("CR")) {
+					emitter.productReference = `CR${emitter.productReference}`;
+				}
+				if (typeof emitter.length === "number") {
+					emitter.length = unitValue(emitter.length * 1000, millimetre);
+				}
+			}
+		});
+	});
+}
+
+
+
 
 /**
  * Handle edge case where emitters do not have an ID
@@ -85,6 +115,8 @@ function patchHeatEmitterIds(state: Record<string, unknown>) {
 	});
 }
 
+
+
 /**
  * Patch state from deprecated properties
  * @param state 
@@ -96,6 +128,7 @@ export function patchState(state: Record<string, unknown>): Record<string, unkno
 	patchHotWaterOutlets(state);
 	patchPipework(state);
 	patchHeatEmitterIds(state);
+	patchRadiators(state);
 
 	return state;
 }
