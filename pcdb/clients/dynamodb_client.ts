@@ -216,9 +216,11 @@ const getProductsByTechnologyType = async (technologyType: TechnologyType, pageS
 		Limit: pageSize,
 		...startKey && { ExclusiveStartKey: JSON.parse(startKey) },
 	}));
-	console.log("Query result:", result.Count, result.Items?.length);
+
 	const queryItems = result.Items ?? [];
+
 	let itemsToDisplay: Record<string, unknown>[];
+	
 	switch (technologyType) {
 		case "HeatNetworks":
 			itemsToDisplay = await hydrateHeatNetworkItems(queryItems);
@@ -253,7 +255,7 @@ const getProductsByTechnologyGroup = async (technologyGroup: TechnologyGroup) =>
 			ExpressionAttributeValues: { ":technologyGroup": technologyGroup },
 			...lastEvaluationKey && { ExclusiveStartKey: lastEvaluationKey },
 		}));
-		console.log("Query result:", result);
+
 		products.push(...(result.Items?.flatMap(x => toDisplayProduct(x)).filter((x): x is DisplayProduct => x !== undefined) ?? []));
 
 		lastEvaluationKey = result.LastEvaluatedKey;
