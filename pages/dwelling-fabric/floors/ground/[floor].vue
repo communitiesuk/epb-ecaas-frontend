@@ -249,6 +249,29 @@ const greaterThanZero = (node: FormKitNode) => {
 				<p class="govuk-hint">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
 			</GovDetails>
 		</FormKit>
+		<template v-if="mounted && model?.typeOfGroundFloor === 'Suspended_floor'">
+			<FormKit
+				id="underfloorSpaceThermalResistance"
+				type="govInputWithSuffix"
+				suffix-text="(m²·K)/W"
+				label="Thermal resistance of insulation on base of underfloor space"
+				help="Enter the thermal resistance of the insulation installed at the base of the underfloor space. Typically between 0.5 and 2.5 (m²·K)/W"
+				name="underfloorSpaceThermalResistance"
+				validation="required | number"
+				data-field="Zone.BuildingElement.*.thermal_resist_insul"
+			>
+				<GovDetails summary-text="Help with this input"><p class="govuk-body">The thermal resistance of the insulation layer should be calculated for the part of the floor construction below the void, excluding the effect of surface resistances.</p></GovDetails>
+			</FormKit>
+			<FormKit
+				id="thermalTransmittanceOfWallsAboveGround"
+				type="govInputWithSuffix"
+				suffix-text="W(m²/K)"
+				label="U-value of walls above ground"
+				help="Enter the U-value of the external walls above ground level. Typically between 0.08 and 0.25 W(m²/K)"
+				name="thermalTransmittanceOfWallsAboveGround"
+				validation="required | number"
+				data-field="Zone.BuildingElement.*.thermal_transm_walls"/>
+		</template>
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" help="This is the sum of the heat capacities of the full thickness of the floor build-up"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" help="This is the distribution of mass in the full thickness of the floor build up"/>
 		<FormKit
@@ -390,27 +413,6 @@ const greaterThanZero = (node: FormKitNode) => {
 				name="heightOfFloorUpperSurface"
 				:validation="zodTypeAsFormKitValidation(heightUpperSurfaceZod)"
 				data-field="Zone.BuildingElement.*.height_upper_surface"/>
-			<FormKit
-				id="underfloorSpaceThermalResistance"
-				type="govInputWithSuffix"
-				suffix-text="(m²·K)/W"
-				label="Thermal resistance of insulation on base of underfloor space"
-				help="Enter the thermal resistance or R-value of the insulation installed at the base of the underfloor space. Typically between 0.5 and 2.5 (m²·K)/W"
-				name="underfloorSpaceThermalResistance"
-				validation="required | number"
-				data-field="Zone.BuildingElement.*.thermal_resist_insul"
-			>
-				<GovDetails summary-text="Help with this input"><p class="govuk-body">The thermal resistance of the insulation layer should be calculated for the part of the floor construction below the void, excluding the effect of surface resistances.</p></GovDetails>
-			</FormKit>
-			<FormKit
-				id="thermalTransmittanceOfWallsAboveGround"
-				type="govInputWithSuffix"
-				suffix-text="W(m²/K)"
-				label="Thermal transmittance of walls above ground"
-				help="Enter the thermal transmittance (or U-value) of the external walls above ground level. Typically between 0.13 and 0.25 W(m²/K)"
-				name="thermalTransmittanceOfWallsAboveGround"
-				validation="required | number"
-				data-field="Zone.BuildingElement.*.thermal_transm_walls"/>
 			<FormKit
 				id="ventilationOpeningsArea"
 				type="govInputWithSuffix"
