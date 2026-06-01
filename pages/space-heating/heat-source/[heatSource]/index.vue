@@ -19,6 +19,25 @@ const index = getStoreIndex(heatSourceStoreData);
 const heatSourceData = useItemToEdit("heatSource", heatSourceStoreData);
 const model = ref(heatSourceData?.data as HeatSourceData);
 const id = heatSourceData?.data.id ?? uuidv4();
+
+const applyHeatSourceQueryDefaults = () => {
+	if (route.params.heatSource !== "create") return;
+	if (route.query.typeOfHeatSource !== "heatNetwork") return;
+
+	model.value = {
+		id: model.value?.id ?? id,
+		typeOfHeatSource: "heatNetwork",
+	} as HeatSourceData;
+};
+
+watch(
+	() => [route.params.heatSource, route.query.typeOfHeatSource],
+	() => {
+		applyHeatSourceQueryDefaults();
+	},
+	{ immediate: true },
+);
+
 export type HeatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
 export type BoilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
 export type HeatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;

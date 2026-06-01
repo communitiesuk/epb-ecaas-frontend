@@ -71,7 +71,7 @@ const defaultAssociatedHeatNetworkId = computed(() => {
 		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
 	>		<div v-if="!hasHeatNetworkOptions">
 		<p class="govuk-error-message">No heat networks added.</p>
-		<NuxtLink :to="getUrl('spaceHeating')" class="govuk-link gov-radios-add-link">
+		<NuxtLink :to="`${getUrl('heatSourceCreate')}?typeOfHeatSource=heatNetwork`" class="govuk-link gov-radios-add-link">
 			Click here to add a heat network
 		</NuxtLink>
 	</div>
