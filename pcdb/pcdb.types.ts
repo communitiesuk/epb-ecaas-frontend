@@ -277,7 +277,7 @@ export type ElectricStorageHeaterProduct = z.infer<typeof electricStorageHeaterZ
 
 export const convectorRadiatorInputZod = z.object({
 	technologyType: z.literal("ConvectorRadiator"),
-	ID: z.number(),
+	ID: z.string(),
 	waterContents: z.number(),
 	c: z.number(),
 	wetEmitterType: z.string(),
