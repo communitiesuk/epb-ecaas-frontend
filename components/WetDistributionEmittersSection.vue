@@ -61,7 +61,7 @@ const productDetails = ref<Record<string, string[]>>({});
 
 const fetchProductName = async (productReference: string) => {
 	if (productDetails.value[productReference]) return;
-	const { data: product } = await useFetch<Product | ConvectorRadiatorProduct | UnderFloorHeatingProduct>(`/api/products/${productReference}`);
+	const { data: product } = await useFetch<Product | ConvectorRadiatorProduct | UnderFloorHeatingProduct>(`/api/products/${encodeURIComponent(productReference)}`);
 	if (!product.value) {
 		return;
 	}
@@ -78,6 +78,7 @@ const fetchProductName = async (productReference: string) => {
 	if (isConvectorRadiatorProduct(product.value) && product.value.type) {
 		const heightText = product.value.height != null ? `${product.value.height} mm` : undefined;
 		productDetails.value[productReference] = [product.value.type, heightText].filter(Boolean) as string[];
+		return;
 	}
 
 	if (isUnderFloorHeatingProduct(product.value) && product.value.systemName) {
@@ -86,16 +87,24 @@ const fetchProductName = async (productReference: string) => {
 	}
 };
 
+const syncEmitterProductNames = () => {
+	emitters.value.forEach((emitter) => {
+		if (emitter.productReference) {
+			fetchProductName(emitter.productReference);
+		}
+	});
+};
+
+onMounted(() => {
+	syncEmitterProductNames();
+});
+
 watch(
 	emitters,
-	(list) => {
-		list.forEach((emitter) => {
-			if (emitter.productReference) {
-				fetchProductName(emitter.productReference);
-			}
-		});
+	() => {
+		syncEmitterProductNames();
 	},
-	{ immediate: true },
+	{ immediate: true, deep: true, flush: "post" },
 );
 
 const emitterSummaryData = (emitter: Partial<WetDistributionEmitterData> & { id: string }) => {

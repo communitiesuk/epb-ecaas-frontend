@@ -106,7 +106,7 @@ const heatPumpSummary: SummarySection = {
 	data:
 		heatPumps.map(({ data: heatSource }) => {
 			const heatNetWorkFields = "isConnectedToHeatNetwork" in heatSource && heatSource.isConnectedToHeatNetwork === true ? {
-				"Associated heat network": store.spaceHeating.heatSource.data.find(hs => hs.data.id === (heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: true }>).associatedHeatNetworkId)?.data.name ?? emptyValueRendering,
+				"Associated heat network": store.spaceHeating.heatSource.data.find(hs => hs.data.id === heatSource.associatedHeatNetworkId)?.data.name ?? emptyValueRendering,
 			} : {
 				"Energy supply": "energySupply" in heatSource && (heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: false }>).energySupply ? energySupplyOptions[(heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: false }>).energySupply] : emptyValueRendering,
 			};
