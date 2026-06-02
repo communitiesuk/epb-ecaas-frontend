@@ -272,6 +272,7 @@ describe("Product search", () => {
 
 		expect(results.map(r => r.id)).toStrictEqual(["2003", "2002", "2004", "2001"]);
 	});
+	
 	it("sorts by height treating them as numberical values, even when they are strings", () => {
 		const radiatorData: DisplayProduct[] = [
 			{
@@ -309,5 +310,22 @@ describe("Product search", () => {
 
 		// Assert
 		expect(results.map(r => r.id)).toStrictEqual(["3003", "3001", "3004", "3002"]);
+	});
+	
+	it("Returns HEM default products first", () => {
+		// Act
+		const results = useProductSearch([
+			...productData,
+			{
+				displayProduct: true,
+				id: "1003",
+				brandName: "HEM Default",
+				modelName: "Small Heat Pump",
+				technologyType: "AirSourceHeatPump",
+			},
+		], {});
+
+		// Assert
+		expect(results[0]?.brandName).toBe("HEM Default");
 	});
 });

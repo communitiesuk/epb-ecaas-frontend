@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from "@formkit/core";
-import { showErrorState, getErrorMessage, isPackagedProduct, type HeatSourceData } from "#imports";
+import { showErrorState, getErrorMessage, isPackagedProduct, type HeatSourceData, hasModelDetails } from "#imports";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
 import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
@@ -23,6 +23,7 @@ const {
 		"page-url": pageUrl,
 		"page-index": index,
 		"emitter-index": emitterIndex,
+		"on-product-loaded": onProductLoaded,
 	},
 	node: { props: { disabled } },
 } = props.context;
@@ -30,6 +31,7 @@ const {
 async function fetchProduct(reference: string) {
 	const response = await useFetch<AnyPcdbProduct>(`/api/products/${reference}`);
 	productData.value = response?.data?.value;
+	onProductLoaded?.(productData.value);
 }
 
 function buildProductsPageUrl(url: string, index: number, productType: string, emitterIndex?: number) {
@@ -61,12 +63,6 @@ const selectedSubHeatNetwork = ref<string | undefined>(selectedSubHeatNetworkNam
 const productsPageUrl = ref(buildProductsPageUrl(pageUrl, index, selectedProductType ?? "", emitterIndex));
 const productDetailsPageUrl = ref(buildProductDetailsPageUrl(pageUrl, selectedProductType ?? "", selectedProductReference));
 const productData = ref<AnyPcdbProduct | undefined | null>();
-
-function hasModelDetails(
-	product: AnyPcdbProduct,
-): product is Extract<AnyPcdbProduct, { modelName: string; brandName: string; modelQualifier?: string | null }> {
-	return "modelName" in product && "brandName" in product;
-}
 
 if (selectedProduct.value) {
 	await fetchProduct(selectedProductReference);

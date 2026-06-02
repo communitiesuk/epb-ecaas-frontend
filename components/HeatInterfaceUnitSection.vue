@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { getUrl, typeOfHeatSource, uniqueName } from "#imports";
 import { watt } from "~/utils/units/power";
+import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 const route = useRoute();
 const store = useEcaasStore();
-
 
 defineProps<{
 	model: Extract<HeatSourceData | DomesticHotWaterHeatSourceData, { "typeOfHeatSource": "heatInterfaceUnit" }>;
 	index: number;
 	page: "domestic hot water" | "space heating";
+	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
 const heatSources = getCombinedHeatSources(store);
@@ -49,17 +50,15 @@ const defaultAssociatedHeatNetworkId = computed(() => {
 		:validation-messages="{
 			uniqueName: 'An element with this name in domestic hot water or space heating already exists. Please enter a unique name.'
 		}" />
-	<FormKit
+	<FieldsSelectPcdbProduct
 		id="selectHeatInterfaceUnit"
-		type="govPcdbProduct"
 		label="Select a heat interface unit"
-		name="productReference"
-		validation="required"
 		help="Select the heat interface unit type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
 		:selected-product-type="typeOfHeatSource.heatInterfaceUnit"
 		:page-url="route.fullPath"
-		:page-index="index" 
+		:page-index="index"
+		@product-loaded="onProductLoaded"
 	/>
 	<FormKit
 		id="associatedHeatNetwork"
@@ -69,12 +68,13 @@ const defaultAssociatedHeatNetworkId = computed(() => {
 		:options="heatNetworkOptions"
 		name="associatedHeatNetworkId"
 		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
-	>		<div v-if="!hasHeatNetworkOptions">
-		<p class="govuk-error-message">No heat networks added.</p>
-		<NuxtLink :to="`${getUrl('heatSourceCreate')}?typeOfHeatSource=heatNetwork`" class="govuk-link gov-radios-add-link">
-			Click here to add a heat network
-		</NuxtLink>
-	</div>
+	>
+		<div v-if="!hasHeatNetworkOptions">
+			<p class="govuk-error-message">No heat networks added.</p>
+			<NuxtLink :to="`${getUrl('heatSourceCreate')}?typeOfHeatSource=heatNetwork`" class="govuk-link gov-radios-add-link">
+				Click here to add a heat network
+			</NuxtLink>
+		</div>
 	</FormKit>
 	<FieldsMaxFlowTemp 
 		:model="model" 

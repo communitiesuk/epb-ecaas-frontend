@@ -4,7 +4,7 @@ import type { WaterStorageData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
 import { v4 as uuidv4 } from "uuid";
 import { hasPackagedProduct, waterStorageTypes } from "#imports";
-import type { Product } from "~/pcdb/pcdb.types";
+import type { Product, AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 const title = "Water storage";
 const store = useEcaasStore();
@@ -13,13 +13,13 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const { mounted } = useMounted();
 
-
 const waterStorageStoreData = store.domesticHotWater.waterStorage.data;
 const index = getStoreIndex(waterStorageStoreData);
 const waterStorageData = waterStorageStoreData[index] as EcaasForm<WaterStorageData>;
 const model = ref(waterStorageData?.data);
 const id = waterStorageData?.data.id ?? uuidv4();
 
+const productBrandName = ref<string | undefined>();
 const packagedProduct = ref<Product | undefined>();
 
 if (hasPackagedProduct(model.value)) {
@@ -119,6 +119,12 @@ watch(
 	},
 );
 
+function handleProductLoaded(product: AnyPcdbProduct) {
+	if (hasModelDetails(product)) {
+		productBrandName.value = product.brandName;
+	}
+}
+
 const heatSourceOptions = new Map(
 	store.domesticHotWater.heatSources.data.map((e) => [
 		e.data.id,
@@ -140,7 +146,6 @@ const heatSourceTypes = new Map(
 			: e.data.typeOfHeatSource,
 	]),
 );
-
 </script>
 
 <template>
@@ -172,7 +177,6 @@ const heatSourceTypes = new Map(
 				validation="required"
 				:disabled="hasPackagedProduct(model)"
 			/>
-	
 			<FormKit
 				v-if="model.typeOfWaterStorage !== undefined"
 				id="name"
@@ -195,6 +199,7 @@ const heatSourceTypes = new Map(
 				:selected-product-type="model.typeOfWaterStorage"
 				:page-url="route.fullPath"
 				:page-index="index"
+				:on-product-loaded="handleProductLoaded"
 			/>
 			<FormKit
 				v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
@@ -273,6 +278,7 @@ const heatSourceTypes = new Map(
 				validation="required | number | min:0 | max:1"
 				help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
 			/>
+			<HemDefaultProductWarning :brand-names="[productBrandName]" />
 			<div class="govuk-button-group">
 				<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 				<GovButton :href="getUrl('domesticHotWater')" secondary>Save progress</GovButton>

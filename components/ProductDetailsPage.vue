@@ -2,6 +2,7 @@
 import { technologyGroups, type Product, type TechnologyGroup } from "~/pcdb/pcdb.types";
 import { typeOfHeatSource } from "~/stores/ecaasStore.schema";
 import { boilerTypes } from "~/utils/display";
+import HemDefaultProductInset from "./HemDefaultProductInset.vue";
 
 const { product: data } = defineProps<{
 	product: Product;
@@ -20,6 +21,8 @@ const subtitle = isHeatNetwork.value ? (data as { testData: { subheatNetworkName
 
 	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ title }}</h1>
 	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ subtitle }}</h2>
+
+	<HemDefaultProductInset />
 
 	<ProductDetailsHybridHeatPump v-if="!!data && data.technologyType === 'HybridHeatPump'" :product="data" />
 	<ProductDetailsHotWaterHeatPump v-else-if="data?.technologyType === 'HotWaterOnlyHeatPump'" :product="data" />

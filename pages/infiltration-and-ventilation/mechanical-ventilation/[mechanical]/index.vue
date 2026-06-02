@@ -10,7 +10,7 @@ import { useAssociatedItems } from "~/composables/associatedItems";
 import { installationTypeOptions, installationLocationOptions } from "~/utils/display";
 import type { Product } from "~/pcdb/pcdb.types";
 import { useProductData } from "~/composables/productData";
-import { hasPackagedProduct } from "~/utils/packagedProduct";
+import { hasPackagedProduct } from "~/utils/products";
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();

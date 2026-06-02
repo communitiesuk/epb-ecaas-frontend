@@ -2,8 +2,8 @@
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, type HeatSourceData } from "#imports";
 import { heatSourceTypesWithDisplay } from "~/utils/display";
-import type { Product } from "~/pcdb/pcdb.types";
-import { hasPackagedProduct } from "~/utils/packagedProduct";
+import type { AnyPcdbProduct, Product } from "~/pcdb/pcdb.types";
+import { hasPackagedProduct } from "~/utils/products";
 import PackagedProductInset from "~/components/PackagedProductInset.vue";
 import type { ErrorName } from "~/errors.types";
 
@@ -44,6 +44,7 @@ export type HeatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "
 export type HeatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
 export type HeatInterfaceUnitModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatInterfaceUnit" }>;
 
+const productBrandName = ref<string | undefined>();
 const packagedProduct = ref<Product | undefined>();
 
 if (hasPackagedProduct(model.value)) {
@@ -122,7 +123,6 @@ autoSaveElementForm<HeatSourceData>({
 	},
 });
 
-
 function updateHeatSource(type: string) {
 	watch(() => model.value[`${type}` as keyof HeatSourceData], (newHeatSourceSubtype, initialHeatSourceSubtype) => {
 		if (newHeatSourceSubtype !== initialHeatSourceSubtype) {
@@ -133,8 +133,13 @@ function updateHeatSource(type: string) {
 			model.value.name = defaultName;
 			store.spaceHeating.heatSource.data[index]!.data.name = defaultName;
 		}
-	},
-	);
+	});
+}
+
+function handleProductLoaded(product: AnyPcdbProduct) {
+	if (hasModelDetails(product)) {
+		productBrandName.value = product.brandName;
+	}
 }
 
 const boilers = heatSourceStoreData
@@ -195,32 +200,40 @@ const { mounted } = useMounted();
 			add-boiler-page-id="heatSourceCreate"
 			page="space heating"
 			@update-heat-pump-model="updateHeatSource"
+			@product-loaded="handleProductLoaded"
 		/>
 		<BoilerSection
 			v-if="mounted && model?.typeOfHeatSource === 'boiler'"
 			:model="(model as BoilerModelType)"
 			:index="index"
 			page="space heating"
-			@update-boiler-model="updateHeatSource" />
+			@update-boiler-model="updateHeatSource"
+			@product-loaded="handleProductLoaded"
+		/>
 		<HeatNetworkSection
 			v-if="mounted && model?.typeOfHeatSource === 'heatNetwork'"
 			:model="(model as HeatNetworkModelType)"
 			:index="index"
 			section="spaceHeating"
-			@update-heat-network-model="updateHeatSource" />
+			@update-heat-network-model="updateHeatSource"
+		/>
 		<HeatBatterySection
 			v-if="mounted && model?.typeOfHeatSource === 'heatBattery'"
 			:model="(model as HeatBatteryModelType)"
 			:index="index"
 			page="space heating"
-			@update-heat-battery-model="updateHeatSource" />
+			@update-heat-battery-model="updateHeatSource"
+			@product-loaded="handleProductLoaded"
+		/>
 		<HeatInterfaceUnitSection
 			v-if="mounted && model?.typeOfHeatSource === 'heatInterfaceUnit'"
-			:model="model as HeatInterfaceUnitModelType" 
+			:model="(model as HeatInterfaceUnitModelType)" 
 			:index="index"
 			page="space heating"
-			@update-heat-interface-unit-model="updateHeatSource" />	
-	
+			@update-heat-interface-unit-model="updateHeatSource"
+			@product-loaded="handleProductLoaded"
+		/>
+		<HemDefaultProductWarning :brand-names="[productBrandName]" />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('spaceHeating')" secondary test-id="saveProgress">Save progress</GovButton>

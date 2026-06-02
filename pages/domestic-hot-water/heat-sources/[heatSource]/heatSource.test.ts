@@ -22,7 +22,7 @@ mockNuxtImport("useFetch", () => mockFetch);
 
 const product: Partial<Product> = {
 	id: "1000",
-	brandName: "Brand",
+	brandName: "HEM Default",
 	modelName: "Model Name",
 };
 
@@ -626,6 +626,31 @@ describe("Heat Source Page", () => {
 
 		// 	expect(screen.queryByTestId("maxFlowTemp")).toBeNull();
 		// });
+	});
+
+	test("Renders HEM default product warning when default product is selected", async () => {
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: dhwWithNewHeatPump }],
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				...product,
+				brandName: "HEM Default",
+			}),
+		});
+
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "0" },
+			},
+		});
+
+		expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 	});
 });
 

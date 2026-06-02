@@ -3,8 +3,9 @@ import type { HeatSourceData } from "#imports";
 import { uniqueName } from "#imports";
 import type { SchemaBoilerLocationType } from "~/schema/aliases";
 import { boilerTypes, type BoilerLocationDisplay } from "~/utils/display";
-import { hasPackagedProduct } from "~/utils/packagedProduct";
+import { hasPackagedProduct } from "~/utils/products";
 import { celsius } from "~/utils/units/temperature";
+import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -13,6 +14,7 @@ defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "boiler" }>;
 	index: number;
 	page: HeatSourceSectionPage;
+	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
 const heatSources = getCombinedHeatSources(store);
@@ -50,19 +52,17 @@ const emit = defineEmits(["update-boiler-model"]);
 				uniqueName: 'An element with this name in domestic hot water or space heating already exists. Please enter a unique name.'
 			}"
 		/>
-		<FormKit
+		<FieldsSelectPcdbProduct
 			v-if="model.typeOfBoiler"
 			id="selectBoiler"
-			type="govPcdbProduct"
 			label="Select a boiler"
-			name="productReference"
-			validation="required"
 			help="Select the boiler model from the PCDB using the button below."
 			:selected-product-reference="model.productReference"
 			:selected-product-type="model.typeOfBoiler"
 			:page-url="route.fullPath"
 			:page-index="index"
 			:disabled="hasPackagedProduct(model)"
+			@product-loaded="onProductLoaded"
 		/>
 		<FormKit
 			v-if="model.typeOfBoiler && model.needsSpecifiedLocation"

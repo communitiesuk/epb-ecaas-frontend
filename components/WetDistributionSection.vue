@@ -3,11 +3,20 @@ import { FieldsHeatSources } from "#components";
 import { ecoClasses, ecoDesignControllerOptions } from "#imports";
 import { tempDiffEmitDsgnWetDistributionZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 defineProps<{
 	model: WetDistributionSystemData;
 	index: number;
 }>();
+
+const productBrandNames = ref<string[]>([]);
+
+function handleProductLoaded(product: AnyPcdbProduct) {
+	if (hasModelDetails(product)) {
+		productBrandNames.value.push(product.brandName);
+	}
+}
 </script>
 
 <template>
@@ -24,8 +33,7 @@ defineProps<{
 		help="Select the relevant heat source that has been added previously"
 		data-field="SpaceHeatSystem.*.HeatSource" />
 	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">	
-	<WetDistributionEmittersSection
-		:index="index" />
+	<WetDistributionEmittersSection :index="index" @product-loaded="handleProductLoaded" />
 	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 	<h2 class="govuk-heading-l">Flow temperature and rate</h2>
 	<FormKit
@@ -81,7 +89,7 @@ defineProps<{
 		help="Enter the temperature difference between the flow and return water temperatures. Typically between 5 and 15°C." />
 	<FieldsVariableFlowRate :model="model" />
 	<FieldsPercentageRecirculated :model="model" />
-
+	<HemDefaultProductWarning :brand-names="productBrandNames" />
 </template>
 
 

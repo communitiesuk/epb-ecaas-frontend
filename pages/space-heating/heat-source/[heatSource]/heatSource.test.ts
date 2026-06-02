@@ -2004,6 +2004,31 @@ describe("heatSource", () => {
 
 				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("Comes with hot water cylinder");
 			});
+
+			test("Renders HEM default product warning when default product is selected", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPump }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref({
+						...heatPumpProduct,
+						brandName: "HEM Default",
+					}),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
+			});
 		});
 
 		test("error summary is displayed when an invalid form in submitted", async () => {

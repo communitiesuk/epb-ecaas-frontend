@@ -69,6 +69,16 @@ export function useProductSearch(products: DisplayProduct[], model: ProductSearc
 		searchResults = sortProducts(searchResults, model.sort, order);
 	}
 
+	if (!productId?.length && !searchTerm?.length) {
+		const hemDefaultIndex = searchResults.findIndex(x => x.brandName === "HEM Default");
+		const hemDefault = searchResults[hemDefaultIndex];
+
+		if (hemDefault) {
+			searchResults.splice(hemDefaultIndex, 1);
+			searchResults.unshift(hemDefault);
+		}
+	}
+
 	return searchResults;
 }
 

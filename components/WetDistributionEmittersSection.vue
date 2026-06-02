@@ -2,13 +2,19 @@
 import { v4 as uuidv4 } from "uuid";
 import { emitterFloorAreaZod, lengthRadiatorZod, productCountZod, type WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
-import type { ConvectorRadiatorProduct, Product, UnderFloorHeatingProduct } from "~/pcdb/pcdb.types";
+import type { ConvectorRadiatorProduct, Product, AnyPcdbProduct, UnderFloorHeatingProduct } from "~/pcdb/pcdb.types";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
 import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
 import { millimetre, type Length } from "~/utils/units/length";
 
+const props = defineProps<{
+	index: number;
+	onProductLoaded?: (product: AnyPcdbProduct) => void;
+}>();
+
 const route = useRoute();
 const router = useRouter();
+const store = useEcaasStore();
 
 const clearEmitterIndexFromUrl = () => {
 	router.replace({ query: { ...route.query, emitterIndex: undefined } });
@@ -26,11 +32,6 @@ const { underFloorHeating, ...others } = emitterTypeOptions;
 const heatEmitterTypes = useUnderfloorHeating ? emitterTypeOptions : others;
 type EmitterType = keyof typeof emitterTypeOptions;
 
-const props = defineProps<{
-	index: number;
-}>();
-
-const store = useEcaasStore();
 const emitters = computed(() => {
 	const heatEmitter = store.spaceHeating.heatEmitters.data[props.index];
 	if (heatEmitter && "emitters" in heatEmitter.data) {
@@ -72,6 +73,8 @@ const fetchProductName = async (productReference: string) => {
 			product.value.modelName,
 			"modelQualifier" in product.value ? product.value.modelQualifier : undefined,
 		].filter(Boolean) as string[];
+
+		props.onProductLoaded?.(product.value);
 		return;
 	}
 
@@ -111,7 +114,6 @@ const emitterSummaryData = (emitter: Partial<WetDistributionEmitterData> & { id:
 	const { typeOfHeatEmitter, productReference } = emitter;
 	const typeName = typeOfHeatEmitter ? emitterTypeOptions[typeOfHeatEmitter] : undefined;
 	const product = productReference ? productDetails.value[productReference] : undefined;
-
 
 	switch (typeOfHeatEmitter) {
 		case "radiator": {
@@ -342,18 +344,15 @@ const saveEmitter = () => {
 						/>
 					</template>
 					<template v-if="formModel.typeOfHeatEmitter === 'fanCoil'">
-						<FormKit
+						<FieldsSelectPcdbProduct
 							:id="`selectFanCoil_${i}`"
-							type="govPcdbProduct"
-							label="Select a product"
-							name="productReference"
-							validation="required"
 							help="Select the fan coil type from the PCDB using the button below."
 							:selected-product-reference="(formModel.productReference as string)"
 							selected-product-type="fanCoil"
 							:page-url="route.fullPath"
 							:page-index="props.index"
 							:emitter-index="i"
+							@product-loaded="onProductLoaded"
 						/>
 						<FormKit
 							:id="`numOfFanCoils_${i}`"

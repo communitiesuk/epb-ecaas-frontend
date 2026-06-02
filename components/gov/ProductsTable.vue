@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import type { ProductSortOption } from "~/composables/productSearch";
+import HemDefaultProductInset from "../HemDefaultProductInset.vue";
 
 const route = useRoute();
 const props = defineProps<{
@@ -56,6 +57,7 @@ const secondaryValue = (product: DisplayProduct) => {
 </script>
 
 <template>
+	<HemDefaultProductInset />
 	<div class="govuk-form-group" data-testid="productsTable">
 		<table class="govuk-table govuk-!-margin-top-4">
 			<thead class="govuk-table__head">

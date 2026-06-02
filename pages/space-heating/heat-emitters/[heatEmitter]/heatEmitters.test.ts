@@ -3,6 +3,7 @@ import HeatEmitterForm from "./index.vue";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import { millimetre } from "~/utils/units/length";
+import type { DisplayProduct } from "~/pcdb/pcdb.types.js";
 
 const { navigateToMock, mockFetch } = vi.hoisted(() => ({
 	navigateToMock: vi.fn(),
@@ -25,12 +26,46 @@ const wetDistributionSystem: HeatEmittingData = {
 	percentageRecirculated: 20,
 	emitters: [],
 };
+
+const wetDistributionSystemWithEmitters: HeatEmittingData = {
+	...wetDistributionSystem,
+	emitters: [
+		{
+			id: "emitter1",
+			name: "Emitter 1",
+			typeOfHeatEmitter: "radiator",
+			numOfRadiators: 2,
+			productReference: "1000",
+		},
+		{
+			id: "emitter2",
+			name: "Emitter 2",
+			typeOfHeatEmitter: "fanCoil",
+			numOfFanCoils: 3,
+			productReference: "1001",
+		},
+	],
+};
+
 describe("Heat emitters", () => {
 	const user = userEvent.setup();
 	const store = useEcaasStore();
+
+	const radiatorProduct: Partial<DisplayProduct> = {
+		id: "1000",
+		technologyType: "ConvectorRadiator",
+	};
+
+	const fanCoilProduct: Partial<DisplayProduct> = {
+		id: "1001",
+		brandName: "Test",
+		modelName: "Fan coil",
+		technologyType: "FanCoils",
+	};
+
 	beforeEach(() => {
 		mockFetch.mockReturnValue({
-			data: ref({ id: "1000", brandName: "Test", modelName: "Fan coil", technologyType: "FanCoils" }),
+			data: ref(fanCoilProduct),
 		});
 	});
 	afterEach(() => {
@@ -137,10 +172,6 @@ describe("Heat emitters", () => {
 
 			expect(screen.getByTestId("designFlowRate")).toBeDefined();
 		});
-
-
-
-
 
 		test("form is prepopulated when data exists in state", async () => {
 			store.$patch({
@@ -320,24 +351,6 @@ describe("Heat emitters", () => {
 				}
 			});
 			test("renders existing emitters with correct data", async () => {
-				const wetDistributionSystemWithEmitters: HeatEmittingData = {
-					...wetDistributionSystem,
-					emitters: [
-						{
-							id: "emitter1",
-							name: "Emitter 1",
-							typeOfHeatEmitter: "radiator",
-							numOfRadiators: 2,
-						},
-						{
-							id: "emitter2",
-							name: "Emitter 2",
-							typeOfHeatEmitter: "fanCoil",
-							numOfFanCoils: 3,
-						},
-					],
-				};
-
 				store.$patch({
 					spaceHeating: {
 						heatEmitters: {
@@ -620,6 +633,36 @@ describe("Heat emitters", () => {
 				expect(screen.getByTestId<HTMLInputElement>("typeOfHeatEmitter_0_radiator").hasAttribute("checked")).toBe(true);
 				expect(screen.getByTestId<HTMLInputElement>("numOfRadiators_0").value).toBe("4");
 				expect(screen.getByTestId<HTMLInputElement>("length_0").value).toBe("2500");
+			});
+
+			test("Renders HEM default product warning when default product is selected", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{ data: wetDistributionSystemWithEmitters, complete: true }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValueOnce({
+					data: ref({
+						...radiatorProduct,
+						brandName: "HEM Default",
+					}),
+				}).mockReturnValueOnce({
+					data: ref({
+						...fanCoilProduct,
+						brandName: "HEM Default",
+					}),
+				});
+
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "0" },
+					},
+				});
+
+				expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 			});
 		});
 	});

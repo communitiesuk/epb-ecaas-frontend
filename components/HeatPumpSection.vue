@@ -3,15 +3,18 @@ import { getUrl, type HeatSourceData, uniqueName } from "#imports";
 import type { PageId } from "~/data/pages/pages";
 import { celsius } from "~/utils/units/temperature";
 import type { UnitValue } from "~/utils/units/types";
+import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
+
 const route = useRoute();
 const store = useEcaasStore();
 
-const { model } = defineProps<{
+const { model, onProductLoaded = undefined } = defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatPump" }>;
 	index: number;
 	boilers: [string, string][];
 	addBoilerPageId: PageId;
 	page: HeatSourceSectionPage;
+	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
 const heatSources = getCombinedHeatSources(store);
@@ -66,6 +69,7 @@ const greaterThanZero = (node: FormKitNode) => {
 		:heat-source="model"
 		:page-url="route.fullPath"
 		:page-index="index"
+		@product-loaded="onProductLoaded"
 	/>
 	<FormKit 
 		id="isConnectedToHeatNetwork"

@@ -7,10 +7,13 @@ import { litre } from "~/utils/units/volume";
 import { unitValue } from "~/utils/units";
 import { celsius } from "~/utils/units/temperature";
 
-const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport("navigateTo", () => {
-	return navigateToMock;
-});
+const { mockFetch, navigateToMock } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	navigateToMock: vi.fn(),
+}));
+
+mockNuxtImport("useFetch", () => mockFetch);
+mockNuxtImport("navigateTo", () => navigateToMock);
 
 vi.mock("uuid");
 
@@ -64,7 +67,6 @@ describe("water storage", () => {
 			maxFlowTemp: unitValue(30, celsius),
 		},
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
-
 
 	const addHeatPumpStoreData = () => {
 		store.$patch({
@@ -282,17 +284,13 @@ describe("water storage", () => {
 		});
 
 		test("form is prepopulated when data exists in state", async () => {
-			const mockFetch = vi.hoisted(() => vi.fn(() => (
-				{
-					data: ref({
-						brandName: "Test",
-						modelName: "Large Smart Hot Water Tank",
-						modelQualifier: "SHWTLARGE",
-					}),
-				}
-			)));
-
-			mockNuxtImport("useFetch", () => mockFetch);
+			mockFetch.mockReturnValue({
+				data: ref({
+					brandName: "Test",
+					modelName: "Large Smart Hot Water Tank",
+					modelQualifier: "SHWTLARGE",
+				}),
+			});
 
 			store.$patch({
 				domesticHotWater: {
@@ -359,6 +357,34 @@ describe("water storage", () => {
 			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
 
 			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
+		});
+
+		test("Renders HEM default product warning when default product is selected", async () => {
+			mockFetch.mockReturnValue({
+				data: ref({
+					brandName: "HEM Default",
+					modelName: "Large Smart Hot Water Tank",
+					modelQualifier: "SHWTLARGE",
+				}),
+			});
+
+			store.$patch({
+				domesticHotWater: {
+					waterStorage: {
+						data: [{ ...smartHotWaterTank }],
+					},
+				},
+			});
+
+			addHeatPumpStoreData();
+	
+			await renderSuspended(WaterStorage, {
+				route: {
+					params: { "waterstorage": "0" },
+				},
+			});
+	
+			expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 		});
 	});
 });
