@@ -50,7 +50,7 @@ const groundFloorSummary: SummarySection = {
 		const verticalEdgeInsulationDepth = "verticalEdgeInsulationDepth" in x ? dim(x.verticalEdgeInsulationDepth, "metres") : emptyValueRendering;
 		const verticalEdgeInsulationThermalResistance = "verticalEdgeInsulationThermalResistance" in x ? dim(x.verticalEdgeInsulationThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 		const heightOfFloorUpperSurface = "heightOfFloorUpperSurface" in x ? dim(x.heightOfFloorUpperSurface, "metres") : emptyValueRendering;
-		const underfloorSpaceThermalResistance = "underfloorSpaceThermalResistance" in x ? dim(x.underfloorSpaceThermalResistance, "watts per square metre kelvin") : emptyValueRendering;
+		const underfloorSpaceThermalResistance = "underfloorSpaceThermalResistance" in x ? dim(x.underfloorSpaceThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 		const thermalTransmittanceOfWallsAboveGround = "thermalTransmittanceOfWallsAboveGround" in x ? dim(x.thermalTransmittanceOfWallsAboveGround, "watts per square metre kelvin") : emptyValueRendering;
 		const ventilationOpeningsArea = "ventilationOpeningsArea" in x ? dim(x.ventilationOpeningsArea, "millimetres square per metre") : emptyValueRendering;
 		const windShieldingFactor = "windShieldingFactor" in x ? show(x.windShieldingFactor) : emptyValueRendering;
@@ -61,6 +61,8 @@ const groundFloorSummary: SummarySection = {
 			"Total area": dim(x.totalArea, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"Thermal resistance of insulation on base of underfloor space": underfloorSpaceThermalResistance,
+			"U-value of walls above ground": thermalTransmittanceOfWallsAboveGround,
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Perimeter": dim(x.perimeter, "metres"),
@@ -72,8 +74,6 @@ const groundFloorSummary: SummarySection = {
 			"Vertical edge insulation depth": verticalEdgeInsulationDepth,
 			"Vertical edge insulation thermal resistance": verticalEdgeInsulationThermalResistance,			
 			"Height of the floor upper surface": heightOfFloorUpperSurface ,	
-			"Thermal resistance of insulation on base of underfloor space": underfloorSpaceThermalResistance,
-			"Thermal transmittance of walls above ground": thermalTransmittanceOfWallsAboveGround,
 			"Area of ventilation openings per perimeter": ventilationOpeningsArea,
 			"Wind shielding factor": windShieldingFactor,
 		};
