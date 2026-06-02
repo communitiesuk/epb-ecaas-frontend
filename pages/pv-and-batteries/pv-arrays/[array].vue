@@ -196,7 +196,11 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				name="elevationalHeight"
 				validation="required | number | min:0 | max: 500"
 				suffix-text="m"
-			/>
+			>
+				<GovDetails summary-text="Help with this input">
+					<img src="/img/elevation-heigh-of-pv-array.png" alt="Diagram showing elevational height of PV array at its base" class="govuk-!-margin-bottom-3">
+				</GovDetails>
+			</FormKit>
 			<FormKit
 				id="lengthOfPV"
 				type="govInputWithSuffix"
@@ -205,7 +209,11 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				name="lengthOfPV"
 				:validation="zodTypeAsFormKitValidation(sideLengthPvZod)"
 				suffix-text="m"
-			/>
+			>
+				<GovDetails summary-text="Help with this input">
+					<img src="/img/length-of-pv-array.png" alt="Diagram showing length of PV array" class="govuk-!-margin-bottom-3">
+				</GovDetails>
+			</FormKit>
 			<FormKit
 				id="widthOfPV"
 				type="govInputWithSuffix"
