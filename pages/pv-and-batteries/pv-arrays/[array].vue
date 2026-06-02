@@ -48,7 +48,7 @@ const saveForm = (fields: PvArrayData) => {
 		pvArrays.data[index] = {
 			data: fields.hasShading
 				? { ...fields, hasShading: true, shading: existingShading ?? [] } as PvArrayData
-				: { ...fields, hasShading: false } as PvArrayData,
+				: { ...fields, hasShading: false },
 			complete: true,
 		};
 		pvArrays.complete = false;

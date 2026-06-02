@@ -8,7 +8,7 @@ import type {
 	ExternalUnglazedDoorData,
 	PartyWallData,
 } from "~/stores/ecaasStore.schema";
-import { asMetres, centimetre, metre, millimetre, type Length } from "~/utils/units/length";
+import { asMetres, centimetre, metre, millimetre } from "~/utils/units/length";
 
 type BuildingElementOpaque = BuildingElementOfType<"BuildingElementOpaque">;
 type BuildingElementAdjacentConditionedSpace = BuildingElementOfType<"BuildingElementAdjacentConditionedSpace">;
@@ -97,9 +97,7 @@ describe("dwelling fabric mapper", () => {
 		// Act
 		const fhsInputData = mapLightingData(resolveState(store.$state));
 
-		let bulbs = fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs;
-
-		bulbs = bulbs as NonNullable<typeof bulbs>;
+		const bulbs = fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs;
 
 		// Assert
 		expect(bulbs).toEqual([
@@ -326,7 +324,7 @@ describe("dwelling fabric mapper", () => {
 		const expectedHorizonalEdgeInsulation: SchemaEdgeInsulationHorizontal[] = [{
 			type: "horizontal" as const,
 			edge_thermal_resistance: groundFloorWithHorizontalEdgeInsulation.horizontalEdgeInsulationThermalResistance,
-			width: asMetres(groundFloorWithHorizontalEdgeInsulation.horizontalEdgeInsulationWidth as Length),
+			width: asMetres(groundFloorWithHorizontalEdgeInsulation.horizontalEdgeInsulationWidth),
 		}];
 
 		expect("edge_insulation" in groundFloorWithHorizontalEdgeInsulationElement && groundFloorWithHorizontalEdgeInsulationElement.edge_insulation).toEqual(expectedHorizonalEdgeInsulation);
@@ -334,7 +332,7 @@ describe("dwelling fabric mapper", () => {
 		const expectedVerticalEdgeInsulation: SchemaEdgeInsulationVertical[] = [{
 			type: "vertical" as const,
 			edge_thermal_resistance: groundFloorWithVerticalEdgeInsulation.verticalEdgeInsulationThermalResistance,
-			depth: asMetres(groundFloorWithVerticalEdgeInsulation.verticalEdgeInsulationDepth as Length),
+			depth: asMetres(groundFloorWithVerticalEdgeInsulation.verticalEdgeInsulationDepth),
 		}];
 
 		expect("edge_insulation" in groundFloorWithVerticalEdgeInsulationElement && groundFloorWithVerticalEdgeInsulationElement.edge_insulation).toEqual(expectedVerticalEdgeInsulation);
@@ -343,12 +341,12 @@ describe("dwelling fabric mapper", () => {
 			{
 				type: "horizontal" as const,
 				edge_thermal_resistance: groundFloorWithHorizontalAndVerticalEdgeInsulation.horizontalEdgeInsulationThermalResistance,
-				width: asMetres(groundFloorWithHorizontalAndVerticalEdgeInsulation.horizontalEdgeInsulationWidth as Length),
+				width: asMetres(groundFloorWithHorizontalAndVerticalEdgeInsulation.horizontalEdgeInsulationWidth),
 			},
 			{
 				type: "vertical" as const,
 				edge_thermal_resistance: groundFloorWithHorizontalAndVerticalEdgeInsulation.verticalEdgeInsulationThermalResistance,
-				depth: asMetres(groundFloorWithHorizontalAndVerticalEdgeInsulation.verticalEdgeInsulationDepth as Length),
+				depth: asMetres(groundFloorWithHorizontalAndVerticalEdgeInsulation.verticalEdgeInsulationDepth),
 			},
 		];
 

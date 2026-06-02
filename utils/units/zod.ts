@@ -21,7 +21,7 @@ export function zodUnit<T extends DimensionName>(dimension: T): ZodObjectForDime
 export function addConstraints<T extends DimensionName>(schema: ZodObjectForDimension<T>, constraints: ConstraintsForDimension = {}): ZodObjectForDimension<T> {
 	validateConstraints(constraints);
 	const amount = createAmountSchema(constraints, schema.shape.amount);
-	return schema.extend({ amount }) as ZodObjectForDimension<T>;
+	return schema.extend({ amount });
 }
 
 function createAmountSchema(constraints: ConstraintsForDimension = {}, baseSchema: z.ZodNumber = z.number()): z.ZodNumber {

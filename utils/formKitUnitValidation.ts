@@ -5,7 +5,7 @@ type ValidationMessageContext = { name: string, args: unknown[] };
 function getNumericAmount(value: unknown): number | undefined {
 	if (typeof value === "number") return value;
 	if (typeof value === "object" && value !== null && "amount" in value) {
-		const amount = (value as { amount: unknown }).amount;
+		const amount = value.amount;
 		return typeof amount === "number" && !Number.isNaN(amount) ? amount : undefined;
 	}
 	return undefined;
@@ -14,7 +14,7 @@ function getNumericAmount(value: unknown): number | undefined {
 function isEmptyValue(value: unknown): boolean {
 	if (value === undefined || value === null || value === "") return true;
 	if (typeof value === "object" && value !== null && "amount" in value) {
-		const amount = (value as { amount: unknown }).amount;
+		const amount = value.amount;
 		return amount === undefined || amount === null || amount === "";
 	}
 	return false;
