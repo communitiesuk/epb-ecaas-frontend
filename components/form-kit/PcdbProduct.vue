@@ -35,7 +35,19 @@ async function fetchProduct(reference: string) {
 function buildProductsPageUrl(url: string, index: number, productType: string, emitterIndex?: number) {
 	const lastUrlSegment = new RegExp("/[^/]*$");
 	const newPath = url.replace(lastUrlSegment, `/${index}`) + "/" + camelToKebabCase(productType ?? "");
-	return emitterIndex != null ? `${newPath}?emitterIndex=${emitterIndex}` : newPath;
+	const params = new URLSearchParams();
+
+	if (emitterIndex != null) {
+		params.set("emitterIndex", `${emitterIndex}`);
+	}
+
+	if (productType === "radiator") {
+		params.set("sort", "type");
+		params.set("order", "asc");
+	}
+
+	const query = params.toString();
+	return query ? `${newPath}?${query}` : newPath;
 }
 
 function buildProductDetailsPageUrl(url: string, productType: string, productId: string) {

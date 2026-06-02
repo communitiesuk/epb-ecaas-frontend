@@ -98,21 +98,55 @@ function getSortValue(product: DisplayProduct, sort: ProductSortOption) {
 	return undefined;
 }
 
+function compareProductIds(aId: string | number, bId: string | number, order: ProductOrderOption) {
+	const aNumber = typeof aId === "string" ? Number(aId.trim().match(/\d+/)?.[0] ?? "0") : aId;
+	const bNumber = typeof bId === "string" ? Number(bId.trim().match(/\d+/)?.[0] ?? "0") : bId;
+
+	if (aNumber < bNumber) {
+		return order === "asc" ? -1 : 1;
+	}
+
+	if (aNumber > bNumber) {
+		return order === "asc" ? 1 : -1;
+	}
+
+	return 0;
+}
+
 export function sortProducts(searchResults: DisplayProduct[], sort: ProductSortOption, order: ProductOrderOption) {
 	return searchResults.sort((productA: DisplayProduct, productB: DisplayProduct) => {
+		if (sort === "id") {
+			return compareProductIds(productA.id, productB.id, order);
+		}
+
 		const aValue = getSortValue(productA, sort);
 		const bValue = getSortValue(productB, sort);
 
+		const heightAtoSecondarySort = productA.technologyType === "ConvectorRadiator" ? productA.height ?? 0 : 0;
+		const heightBtoSecondarySort = productB.technologyType === "ConvectorRadiator" ? productB.height ?? 0 : 0;
+
 		if (aValue != null && bValue != null) {
 			const [a, b] = [aValue, bValue].map(v => typeof v === "string" ? v.toLowerCase() : v);
-
+			if (sort === "height") {
+				return order === "asc" ? Number(aValue) - Number(bValue) : Number(bValue) - Number(aValue);
+			}
 			if (a! < b!) {
 				return order === "asc" ? -1 : 1;
 			}
 
 			if (a! > b!) {
 				return order === "asc" ? 1 : -1;
+			}	
+			
+
+			if (a === b && (heightAtoSecondarySort || heightBtoSecondarySort)) {
+				if (heightAtoSecondarySort < heightBtoSecondarySort) {
+					return -1;
+				} else {
+					return 1;
+				}
 			}
+		
 
 			return 0;
 		}

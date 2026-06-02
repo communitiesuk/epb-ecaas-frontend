@@ -681,6 +681,21 @@ describe("Heat emitters", () => {
 		});
 	});
 
+	describe("Radiator", () => {
+		test("the 'Select a product' element adds the default radiator sort query", async () => {
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfHeatEmitter_wetDistributionSystem"));
+			await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
+
+			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/radiator?emitterIndex=0&sort=type&order=asc");
+		});
+	});
+
 	describe("Default names", () => {
 		const store = useEcaasStore();
 
