@@ -33,6 +33,8 @@ describe("mechanical ventilation overview", () => {
 		installedUnderApprovedScheme: true,
 		measuredFanPowerAndAirFlowRateKnown: false,
 		associatedItemId: "none",
+		associatedItemIdForIntake: "none",
+		associatedItemIdForExhaust: "none",
 		hasAssociatedItem: false,
 		pitch: 90,
 		orientation: 180,
@@ -92,6 +94,8 @@ describe("mechanical ventilation overview", () => {
 		installedUnderApprovedScheme: true,
 		measuredFanPowerAndAirFlowRateKnown: false,
 		associatedItemId: "none",
+		associatedItemIdForIntake: "none",
+		associatedItemIdForExhaust: "none",
 		hasAssociatedItem: false,
 		pitch: 90,
 		orientation: 180,
@@ -378,12 +382,12 @@ describe("mechanical ventilation overview", () => {
 		).not.toBeNull();
 	});
 
-	it("marks mechanical ventilation as not complete when user saves a new or edited form after marking section as complete", async () => {
+	it("marks mechanical ventilation as not complete when user saves an edited form after marking section as complete", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						{ data: mechanicalVentilation1 },
+						{ data: mechanicalVentilation1, complete: true },
 					],
 				},
 			},
@@ -398,6 +402,44 @@ describe("mechanical ventilation overview", () => {
 			},
 		});
 
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;
+		expect(complete).toBe(false);
+
+		await renderSuspended(MechanicalVentilationOverview);
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
+	});
+
+	it("marks mechanical ventilation as not complete when user saves a newly created form after marking section as complete", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: mechanicalVentilation1, complete: true },
+					],
+				},
+			},
+		});
+
+		await renderSuspended(MechanicalVentilationOverview);
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+
+		await renderSuspended(MechanicalVentilationForm, {
+			route: {
+				params: { mechanical: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId("name"), "Created mechanical ventilation");
+		await user.click(screen.getByTestId("typeOfMechanicalVentilationOptions_Intermittent_MEV"));
+		await user.type(screen.getByTestId("specificFanPower"), "20");
+		await user.type(screen.getByTestId("airFlowRate"), "10");
+		await user.type(screen.getByTestId("orientation"), "180");
+		await user.type(screen.getByTestId("pitch"), "90");
+		await user.type(screen.getByTestId("midHeightOfAirFlowPath"), "1.5");
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;

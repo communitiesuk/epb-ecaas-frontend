@@ -99,6 +99,87 @@ describe("infiltration ventilation mapper", () => {
 		});
 	});
 
+	it("maps MVHR intake and exhaust orientation and pitch from associated elements when selected", () => {
+		const externalWallId = "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421";
+		const roofId = "7f2f63b1-6b3f-44d6-8380-f5dc2badc99a";
+		const roofData: Partial<RoofData> = {
+			id: roofId,
+			name: "Roof 1",
+			pitchOption: "custom",
+			pitch: 35,
+			orientation: 140,
+		};
+		const extrenalWallData: Partial<ExternalWallData> = {
+			id: externalWallId,
+			name: "External wall 1",
+			pitchOption: "custom",
+			pitch: 45,
+			orientation: 180,
+			length: 20,
+			height: 0.5,
+			elevationalHeight: 20,
+			surfaceArea: 10,
+			uValue: 1,
+			colour: "Intermediate",
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+		};
+
+		const mvhrWithAssociated = {
+			...mechVentMvhr[0]!.data,
+			hasAssociatedItem: true,
+			associatedItemIdForIntake: externalWallId,
+			associatedItemIdForExhaust: roofId,
+		};
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						...baseForm,
+						data: [{
+							...baseForm,
+							data: extrenalWallData,
+						}],
+					},
+				},
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceRoofs: {
+						...baseForm,
+						data: [{
+							...baseForm,
+							data: roofData as RoofData,
+						}],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					...baseForm,
+					data: [{
+						...baseForm,
+						data: mvhrWithAssociated,
+					}],
+				},
+			},
+		});
+
+		const fhsInputData = mapMechanicalVentilationData(resolveState(store.$state));
+		const firstMechVent = fhsInputData["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;
+
+		expect(firstMechVent.position_intake).toEqual({
+			mid_height_air_flow_path: 1.5,
+			orientation360: extrenalWallData.orientation,
+			pitch: extrenalWallData.pitch,
+		});
+
+		expect(firstMechVent.position_exhaust).toEqual({
+			mid_height_air_flow_path: 1.5,
+			orientation360: roofData.orientation,
+			pitch: roofData.pitch,
+		});
+	});
+
 
 	it("maps ductwork input state to FHS input request", () => {
 		// Arrange

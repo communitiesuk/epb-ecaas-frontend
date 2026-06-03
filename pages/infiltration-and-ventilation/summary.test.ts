@@ -220,6 +220,51 @@ describe("Infiltration and ventilation summary", () => {
 		}
 	});
 
+	it("should display associated item orientation and pitch for MVHR intake and exhaust", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall }],
+					},
+				},
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceRoofs: {
+						data: [{ data: roof as RoofData }],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						data: {
+							...mvhrData,
+							associatedItemIdForIntake: externalWall.id,
+							associatedItemIdForExhaust: roof.id,
+						},
+					}],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Wall, roof or window that the intake is in": "External wall 1 (Wall)",
+			"Orientation of intake": `${externalWall.orientation} ${degrees.suffix}`,
+			"Pitch of intake": `${externalWall.pitch} ${degrees.suffix}`,
+			"Wall, roof or window that the exhaust is in": "Roof 1 (Roof)",
+			"Orientation of exhaust": `${roof.orientation} ${degrees.suffix}`,
+			"Pitch of exhaust": `${roof.pitch} ${degrees.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
 	it("should display the correct data for the mechanical ventilation section when vent type is Intermittent MEV", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {

@@ -743,6 +743,8 @@ const baseMvhrData = baseMechanicalVentilationData
 		installedUnderApprovedScheme: z.boolean(),
 		measuredFanPowerAndAirFlowRateKnown: z.boolean(),
 		mvhrLocation: mvhrLocationZod,
+		associatedItemIdForIntake: z.string().trim().min(1).optional(),
+		associatedItemIdForExhaust: z.string().trim().min(1).optional(),
 		midHeightOfAirFlowPathForIntake: z.number(),
 		orientationOfIntake: orientation,
 		pitchOfIntake: z.number().min(0).max(180),
