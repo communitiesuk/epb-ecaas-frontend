@@ -127,7 +127,7 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 					const boilerData = boiler as BoilerProduct;
 					const boilerId = addBoilerProduct?.(boilerData);
 
-					heatSourceData.packageProductIds = [boilerId];
+					heatSourceData.packageProductIds?.push(boilerId);
 				});
 			}
 
