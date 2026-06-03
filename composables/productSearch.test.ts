@@ -319,13 +319,21 @@ describe("Product search", () => {
 			{
 				displayProduct: true,
 				id: "1003",
-				brandName: "HEM Default",
+				brandName: "HEM Default 1",
+				modelName: "Small Heat Pump",
+				technologyType: "AirSourceHeatPump",
+			},
+			{
+				displayProduct: true,
+				id: "1004",
+				brandName: "HEM Default 2",
 				modelName: "Small Heat Pump",
 				technologyType: "AirSourceHeatPump",
 			},
 		], {});
 
 		// Assert
-		expect(results[0]?.brandName).toBe("HEM Default");
+		expect(results[0]?.brandName).toBe("HEM Default 1");
+		expect(results[1]?.brandName).toBe("HEM Default 2");
 	});
 });

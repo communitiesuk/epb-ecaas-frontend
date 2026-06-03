@@ -70,13 +70,14 @@ export function useProductSearch(products: DisplayProduct[], model: ProductSearc
 	}
 
 	if (!productId?.length && !searchTerm?.length) {
-		const hemDefaultIndex = searchResults.findIndex(x => x.brandName === "HEM Default");
-		const hemDefault = searchResults[hemDefaultIndex];
+		const hemDefaults = searchResults.filter(x => x.brandName?.includes("HEM Default")).reverse();
 
-		if (hemDefault) {
+		hemDefaults.forEach(hemDefault => {
+			const hemDefaultIndex = searchResults.indexOf(hemDefault);
+
 			searchResults.splice(hemDefaultIndex, 1);
 			searchResults.unshift(hemDefault);
-		}
+		});
 	}
 
 	return searchResults;
