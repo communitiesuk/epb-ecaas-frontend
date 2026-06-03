@@ -6,17 +6,10 @@ const parentPages: Array<Page> = pagesData.filter(
 	(page) => page.type === "section",
 );
 
-const openStates = ref(Array(parentPages.length).fill(true));
-
 const { mounted } = useMounted();
+const isOpen = ref<boolean>(false);
 
-function toggle(index: number) {
-	openStates.value[index] = !openStates.value[index];
-}
-
-function isOpen(index: number) {
-	return openStates.value[index];
-}
+const toggleMenu = () => isOpen.value = !isOpen.value;
 
 function getUrl(url: string) {
 	const store = useEcaasStore();
@@ -40,33 +33,36 @@ function shouldShowPage(page: Page, parentPageId: string) {
 
 	return !page.excludeFromNavigation?.();
 }
-
-
 </script>
 
 <template>
 	<nav class="accordion-nav">
-		<div v-for="(parentPage, index) in parentPages" :key="parentPage.id">
-			<button class="govuk-accordion__section-button" @click="toggle(index)">
+		<div :class="`govuk-accordion__section ${isOpen ? 'govuk-accordion__section--expanded' : ''}`">
+			<button class="govuk-accordion__section-button" @click="toggleMenu">
 				<span class="govuk-accordion__section-heading-text govuk-!-font-size-16">
-					<span class="govuk-accordion__section-heading-text-focus">
-						{{ parentPage.title }}
-					</span>
+					<span class="govuk-accordion__section-heading-text-focus">Menu</span>
 				</span>
 				<span class="govuk-accordion__section-toggle">
-					<span v-if="isOpen(index)" class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--up"/>
+					<span v-if="isOpen" class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--up"/>
 					<span v-else class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"/>
 				</span>
 			</button>
-			<ul v-if="isOpen(index)" class="govuk-inset-text">
-				<template v-for="page in pagesData" :key="page.id">
-					<li v-if="shouldShowPage(page, parentPage.id)">
-						<NuxtLink class="govuk-link govuk-body-s" :to="getUrl(page.url)" @click.stop>
-							{{ page.title  }}
-						</NuxtLink>
-					</li>
-				</template>
-			</ul>
+			<div class="govuk-accordion__section-content">
+				<div v-for="(parentPage) in parentPages" :key="parentPage.id">
+					<NuxtLink class="govuk-link govuk-body-s" :to="getUrl(parentPage.url)" @click.stop>
+						{{ parentPage.title  }}
+					</NuxtLink>
+					<ul class="govuk-inset-text">
+						<template v-for="page in pagesData" :key="page.id">
+							<li v-if="shouldShowPage(page, parentPage.id)">
+								<NuxtLink class="govuk-link govuk-body-s" :to="getUrl(page.url)" @click.stop>
+									{{ page.title  }}
+								</NuxtLink>
+							</li>
+						</template>
+					</ul>
+				</div>
+			</div>
 		</div>
 	</nav>
 </template>
@@ -83,28 +79,31 @@ function shouldShowPage(page: Page, parentPageId: string) {
 		}
 	}
 
-	.govuk-accordion__section-button {
-		display: flex;
-		width: 100%;
-		justify-content: space-between;
-		background: transparent;
-		border: none;
-		margin-bottom: 0;
-	}
+	.govuk-frontend-supported {
+		.govuk-accordion__section-button {
+			display: flex;
+			width: 100%;
+			justify-content: space-between;
+			background: transparent;
+			border: none;
+			margin-bottom: 0;
+		}
 
-	.govuk-accordion__section-heading-text {
-		margin: 0;
-		color: govuk-colour("blue");
-	}
+		.govuk-accordion__section-heading-text {
+			margin: 0;
+			color: govuk-colour("blue");
+		}
 
-	.govuk-accordion__section-toggle {
-		margin: 0;
-		font-size: 0rem;
+		.govuk-accordion__section-toggle {
+			margin: 0;
+			font-size: 0rem;
+		}
 	}
 
 	.govuk-inset-text {
 		list-style-type: none;
-		margin: 10px 0;
+		margin: 10px 0 30px;
 		border-left-width: 1px;
+		padding-top: 5px;
 	}
 </style>
