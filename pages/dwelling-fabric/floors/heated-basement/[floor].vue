@@ -37,7 +37,6 @@ const saveForm = (fields: FloorOfHeatedBasementData) => {
 			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 			depthOfBasementFloor: fields.depthOfBasementFloor,
-			psiOfWallJunction: fields.psiOfWallJunction,
 			thicknessOfWalls: unitValue(fields.thicknessOfWalls.amount, millimetre),
 		};
 		
@@ -147,15 +146,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Measure the depth from the outside ground level to the upper surface of the basement floor. If the ground is uneven, enter the average depth."
 			name="depthOfBasementFloor"
 			validation="required | number"
-		/>
-		<FormKit
-			id="psiOfWallJunction"
-			type="govInputWithSuffix"
-			suffix-text="W/(m·K)"
-			label="Psi value of E22 junction"
-			help="This is the linear thermal transmittance of the junction between the floor and the walls, if there are multiple values enter an average weighted by length"
-			name="psiOfWallJunction"
-			validation="required | number | min:0 | max:2"
 		/>
 		<FormKit
 			id="thicknessOfWalls"

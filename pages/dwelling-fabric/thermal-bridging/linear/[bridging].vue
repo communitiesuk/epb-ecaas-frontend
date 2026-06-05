@@ -72,17 +72,26 @@ const junctionTypeOptions = [{
 	Record<StartsWith<SchemaThermalBridgeJunctionType, "R">, `${SchemaThermalBridgeJunctionType}: ${string}`>,
 ];
 
+const associatedGroundFloorOptions = useAssociatedItems(["groundFloor"]);
+const associatedFloorAboveUnheatedBasement = useAssociatedItems(["floorAboveUnheatedBasement", "none"]);
+const associatedHeatedBasementFloor = useAssociatedItems(["heatedBasementFloor"]);
+
 const saveForm = (fields: LinearThermalBridgeData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceLinearThermalBridges } = state.dwellingFabric.dwellingSpaceThermalBridging;
 
 		dwellingSpaceLinearThermalBridges.data[index] = {
 			data: {
-				typeOfThermalBridge: fields.typeOfThermalBridge,
 				name: fields.name,
 				linearThermalTransmittance: fields.linearThermalTransmittance,
 				length: fields.length,
 				reference: fields.reference,
+				...(fields.typeOfThermalBridge === "E5" || fields.typeOfThermalBridge === "E6" || fields.typeOfThermalBridge === "E22" ? {
+					typeOfThermalBridge: fields.typeOfThermalBridge,
+					associatedItemId: fields.associatedItemId,
+				} : {
+					typeOfThermalBridge: fields.typeOfThermalBridge,
+				}),
 			},
 			complete: true,
 		};
@@ -118,8 +127,6 @@ const getDefaultName = (typeOfThermalBridge: SchemaThermalBridgeJunctionType): s
 		return options[typeOfThermalBridge as string];
 	}
 };
-
-
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -161,6 +168,48 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
 				}"
 			/>
+			<FormKit
+				v-if="model.typeOfThermalBridge === 'E5'"
+				id="associatedItemId"
+				type="govRadios"
+				:options="new Map(associatedGroundFloorOptions)"
+				label="Associated ground floor"
+				help="Select the ground floor element that this thermal bridge relates to"
+				name="associatedItemId"
+				validation="required"
+			>
+				<GovDetails summary-text="Help with this input">
+					<p class="govuk-body">All ground floor entries must have at least one E5 junction associated with it. The total lengths of all E5 junctions associated with a ground floor must match the length of the ground floor.</p>
+				</GovDetails>
+			</FormKit>
+			<FormKit
+				v-if="model.typeOfThermalBridge === 'E6'"
+				id="associatedItemId"
+				type="govRadios"
+				:options="new Map(associatedFloorAboveUnheatedBasement)"
+				label="Associated floor above unheated basement"
+				help="Select the floor above an unheated basement element that this thermal bridge relates to"
+				name="associatedItemId"
+				validation="required"
+			>
+				<GovDetails summary-text="Help with this input">
+					<p class="govuk-body">All floor above an unheated basement entries must have at least one E6 junction associated with it. The total lengths of all E6 junctions associated with a floor above an unheated basement must be no longer than the perimeter of the floor element.</p>
+				</GovDetails>
+			</FormKit>
+			<FormKit
+				v-if="model.typeOfThermalBridge === 'E22'"
+				id="associatedItemId"
+				type="govRadios"
+				:options="new Map(associatedHeatedBasementFloor)"
+				label="Associated heated basement floor"
+				help="Select the unheated basement floor element that this thermal bridge relates to"
+				name="associatedItemId"
+				validation="required"
+			>
+				<GovDetails summary-text="Help with this input">
+					<p class="govuk-body">All heated basement floor entries must have at least one E22 junction associated with it. The total lengths of all E22 junctions associated with a heated basement floor must match the length of the floor element.</p>
+				</GovDetails>
+			</FormKit>
 			<FormKit
 				id="linearThermalTransmittance"
 				type="govInputWithSuffix"

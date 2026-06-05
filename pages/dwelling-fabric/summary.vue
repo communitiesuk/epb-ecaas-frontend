@@ -66,7 +66,6 @@ const groundFloorSummary: SummarySection = {
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Perimeter": dim(x.perimeter, "metres"),
-			"Psi of wall junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
 			"Thickness of walls at the edge of the floor": dim(x.thicknessOfWalls, "metres"),
 			"Type of ground floor": displaySnakeToSentenceCase(show(x.typeOfGroundFloor)),
 			"Horizontal edge insulation width": horizontalEdgeInsulationWidth,
@@ -131,7 +130,6 @@ const floorAboveUnheatedBasementSummary: SummarySection = {
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Perimeter": dim(x.perimeter, "metres"),
-			"PSI value of E6 junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
 			"Thickness of walls at the edge of the floor": dim(x.thicknessOfWalls, "millimetres"),
 			"Depth of the basement floor": dim(x.depthOfBasementFloor, "metres"),
 			"Height of the basement walls": dim(x.heightOfBasementWalls, "metres"),
@@ -157,7 +155,6 @@ const heatedBasementSummary: SummarySection = {
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Depth of basement floor below ground": dim(x.depthOfBasementFloor, "metres"),
-			"Psi of wall junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
 			"Thickness of walls": dim(x.thicknessOfWalls, "millimetres"),
 		};
 	}) || [],

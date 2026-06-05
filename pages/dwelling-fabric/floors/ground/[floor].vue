@@ -4,6 +4,7 @@ import { zodTypeAsFormKitValidation } from "#imports";
 import type { SchemaWindShieldLocation } from "~/schema/aliases";
 import { groundSurfaceAreaZod, groundTotalAreaZod, groundPerimeterZod, heightUpperSurfaceZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
 import { getUrl, type GroundFloorData, uniqueName, unitValue } from "#imports";
+import { v4 as uuidv4 } from "uuid";
 
 const title = "Ground floor";
 const store = useEcaasStore();
@@ -57,6 +58,7 @@ const saveForm = (fields: GroundFloorData) => {
 		const { dwellingSpaceFloors } = state.dwellingFabric;
 
 		const commonFields = {
+			id: uuidv4(),
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
 			totalArea: fields.totalArea,
@@ -65,7 +67,6 @@ const saveForm = (fields: GroundFloorData) => {
 			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 			perimeter: fields.perimeter,
-			psiOfWallJunction: fields.psiOfWallJunction,
 			thicknessOfWalls: unitValue(fields.thicknessOfWalls.amount, millimetre),
 		};
 
@@ -287,16 +288,6 @@ const greaterThanZero = (node: FormKitNode) => {
 				<p class="govuk-hint">The exposed perimeter of the floor is where heat loss may occur, usually at the base of the external walls where they meet the ground floor.</p>
 			</GovDetails>
 		</FormKit>
-		<FormKit
-			id="psiOfWallJunction"
-			type="govInputWithSuffix"
-			suffix-text="W/(m·K)"
-			label="PSI value of E5 junction"
-			help="This is the linear thermal transmittance of the junction between the floor and the walls"
-			name="psiOfWallJunction"
-			validation="required | number | min:0 | max:2"
-			data-field="Zone.BuildingElement.*.psi_wall_floor_junc"
-		/>
 		<FormKit
 			id="thicknessOfWalls"
 			type="govInputWithUnit"

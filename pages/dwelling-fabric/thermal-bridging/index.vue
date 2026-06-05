@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isEcaasForm } from "~/stores/ecaasStore.schema";
+import { isEcaasForm, type EcaasForm, type FloorAboveUnheatedBasementData, type GroundFloorData } from "~/stores/ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 import { page as pages } from "~/data/pages/pages";
 
@@ -53,6 +53,10 @@ function handleDuplicate<T extends ThermalBridgingData>(thermalBridgingType: The
 }
 
 function handleComplete() {
+	if (!validatePsiJunctions()) {
+		return;
+	}
+
 	store.$patch({
 		dwellingFabric: {
 			dwellingSpaceThermalBridging: {
@@ -69,6 +73,42 @@ const hasIncompleteEntries = () =>
 	Object.values(store.dwellingFabric.dwellingSpaceThermalBridging)
 		.some(section => section.data.some(item => isEcaasForm(item) && !item.complete));
 
+const validatePsiJunctions = (): boolean => {
+	const { dwellingSpaceGroundFloor, dwellingSpaceFloorAboveUnheatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
+	const linearThermalBridges = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data;
+
+	const validateJunctions = (type: "E5" | "E6", data: EcaasForm<GroundFloorData | FloorAboveUnheatedBasementData>[]) => {
+		const groupedByAssociatedItem = Object.groupBy(linearThermalBridges, x => {
+			const e5Bridge = x.data as LinearThermalBridgeData;
+			
+			if (e5Bridge.typeOfThermalBridge === type) {
+				return e5Bridge.associatedItemId;
+			}
+
+			return "ungrouped";
+		});
+
+		const associatedItemIds = Object.keys(groupedByAssociatedItem);
+
+		if (associatedItemIds.some(x => x === undefined)) {
+			return false;
+		}
+
+		return associatedItemIds.every(associatedItemId => {
+			const associatedGroundFloor = data.find(x => x.data.id === associatedItemId);
+
+			const totalLength = groupedByAssociatedItem[associatedItemId]?.map(x => x.data.length)
+				.reduce((acc, curr) => (acc ?? 0) + (curr ?? 0), 0);
+
+			return (totalLength ?? 0) <= (associatedGroundFloor?.data.perimeter ?? 0);
+		});
+	};
+
+	return [
+		validateJunctions("E5", dwellingSpaceGroundFloor.data as EcaasForm<GroundFloorData>[]),
+		validateJunctions("E6", dwellingSpaceFloorAboveUnheatedBasement.data as EcaasForm<FloorAboveUnheatedBasementData>[]),
+	].every(isValid => isValid);
+};
 </script>
 
 <template>

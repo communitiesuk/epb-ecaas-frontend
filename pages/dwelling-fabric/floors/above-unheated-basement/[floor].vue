@@ -3,6 +3,7 @@ import { getUrl, uniqueName, unitValue, type FloorAboveUnheatedBasementData } fr
 import { zodTypeAsFormKitValidation } from "#imports";
 import { groundSurfaceAreaZod, groundTotalAreaZod, groundPerimeterZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
 import { millimetre } from "~/utils/units/length";
+import { v4 as uuidv4 } from "uuid";
 
 const title = "Floor above an unheated basement";
 const store = useEcaasStore();
@@ -26,6 +27,7 @@ const saveForm = (fields: FloorAboveUnheatedBasementData) => {
 		const { dwellingSpaceFloorAboveUnheatedBasement } = state.dwellingFabric.dwellingSpaceFloors;
 
 		const floor: FloorAboveUnheatedBasementData = {
+			id: uuidv4(),
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
 			totalArea: fields.totalArea,
@@ -34,7 +36,6 @@ const saveForm = (fields: FloorAboveUnheatedBasementData) => {
 			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 			perimeter: fields.perimeter,
-			psiOfWallJunction: fields.psiOfWallJunction,
 			thicknessOfWalls: fields.thicknessOfWalls,
 			depthOfBasementFloor: fields.depthOfBasementFloor,
 			heightOfBasementWalls: fields.heightOfBasementWalls,
@@ -150,15 +151,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<p class="govuk-hint">The exposed perimeter of the floor is where heat loss may occur, usually at the base of the external walls where they meet the ground floor.</p>
 			</GovDetails>
 		</FormKit>
-		<FormKit
-			id="psiOfWallJunction"
-			type="govInputWithSuffix"
-			suffix-text="W/(m·K)"
-			label="PSI value of E6 junction"
-			help="This is the linear thermal transmittance of the junction between the floor and the walls"
-			name="psiOfWallJunction"
-			validation="required | number | min:0 | max:2"
-		/>
 		<FormKit
 			id="thicknessOfWalls"
 			type="govInputWithUnit"
