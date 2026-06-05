@@ -14,7 +14,7 @@ export function mapPvAndElectricBatteriesData(state: ResolvedState): [
 		mapPvArrayData(state),
 		mapElectricBatteryData(state),
 		mapPvDiverterData(state),
-		mapPvArrayEnergySupplyData(state),
+		mapDiverterEnergySupplyData(state),
 	];
 }
 
@@ -44,14 +44,17 @@ export function mapPvArrayData(state: ResolvedState): Pick<FhsInputSchema, "OnSi
 		})),
 	};
 }
-export function mapPvArrayEnergySupplyData(state: ResolvedState): { [key: string]: Pick<SchemaEnergySupplyElectricity, "ElectricBattery"> | Pick<SchemaEnergySupplyElectricity, "diverter"> } {
-	const pvArrays = state.pvAndBatteries.pvArrays;
-	if (pvArrays.length === 0) {
+export function mapDiverterEnergySupplyData(state: ResolvedState): { [key: string]: Pick<SchemaEnergySupplyElectricity, "ElectricBattery"> | Pick<SchemaEnergySupplyElectricity, "diverter"> } {
+	const diverters = state.pvAndBatteries.diverters;
+
+	if (diverters.length === 0) {
 		return {};
 	}
+
 	const canExportToGrid = state.dwellingDetails.generalSpecifications.canExportToGrid === "yes";
 	const EnergySupply: { [key: string]: SchemaEnergySupplyElectricity } = {};
-	pvArrays.forEach((system) => {
+
+	diverters.forEach((system) => {
 		if (system.electricityPriority === "diverter") {
 			EnergySupply[system.name] = { priority: ["diverter"], is_export_capable: canExportToGrid, fuel: "electricity" }; // TODO is_export_capable to be hooked into field in general details
 		};

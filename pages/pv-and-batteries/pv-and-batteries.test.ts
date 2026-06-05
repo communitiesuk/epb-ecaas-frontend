@@ -39,7 +39,6 @@ describe("pv systems and electric battery", () => {
 			inverterPeakPowerAC: 4,
 			inverterPeakPowerDC: 5,
 			locationOfInverter: "heated_space",
-			electricityPriority: "diverter",
 			inverterType: "string_inverter",
 			hasShading: false,
 
@@ -75,6 +74,7 @@ describe("pv systems and electric battery", () => {
 	const diverter1: EcaasForm<PvDiverterData> = {
 		data: {
 			name: "Diverter 1",
+			electricityPriority: "diverter",
 		},
 	};
 

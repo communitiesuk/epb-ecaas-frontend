@@ -1477,7 +1477,6 @@ const pvArrayDataZod = z.object({
 	inverterPeakPowerDC: inverterPeakPowerPvZod,
 	locationOfInverter: z.enum(["heated_space", "unheated_space"]),
 	inverterType: inverterTypeZod,
-	electricityPriority: z.enum(["diverter", "electricBattery"]),
 	hasShading: z.boolean(),
 });
 
@@ -1511,6 +1510,7 @@ export type ElectricBatteryData = z.infer<typeof electricBatteryDataZod>;
 const pvDiverterDataZod = z.object({
 	name: z.string().trim().min(1),
 	hotWaterCylinder: z.optional(z.string()),
+	electricityPriority: z.optional(z.enum(["diverter", "electricBattery"])),
 });
 
 export type PvDiverterData = z.infer<typeof pvDiverterDataZod>;

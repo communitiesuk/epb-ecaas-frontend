@@ -11,6 +11,14 @@ const hotWaterCylinderOptions: [WaterStorageData["id"], WaterStorageData["name"]
 	= store.domesticHotWater.waterStorage.data
 		.filter(x => x.data.id !== undefined).map(x => [x.data.id as string, x.data.name]);
 
+const electricityPriorityOptions: Record<string, string> = {
+	diverter: "Diverter",
+	electricBattery: "Electric battery",
+};
+
+const hasElectricBattery = !!store.pvAndBatteries.electricBattery.data.length;
+const hasPvArray = !!store.pvAndBatteries.pvArrays.data.length;
+
 const saveForm = (fields: PvDiverterData) => {
 	store.$patch((state) => {
 		const { diverters } = state.pvAndBatteries;
@@ -19,6 +27,7 @@ const saveForm = (fields: PvDiverterData) => {
 			data: {
 				name: fields.name,
 				hotWaterCylinder: fields.hotWaterCylinder,
+				electricityPriority: fields.electricityPriority,
 			},
 			complete: true,
 		};
@@ -110,6 +119,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					</NuxtLink>
 				</div>
 			</FormKit>
+			<FormKit
+				v-if="hasElectricBattery && hasPvArray"
+				id="electricityPriority"
+				type="govRadios"
+				:options="electricityPriorityOptions"
+				label="Which system should receive surplus energy from this energy supply?"
+				name="electricityPriority"
+				validation="required"
+			/>
 		</ClientOnly>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

@@ -26,7 +26,6 @@ describe("PV and electric batteries summary page", () => {
 				inverterPeakPowerDC: 3.5,
 				inverterPeakPowerAC: 2.4,
 				locationOfInverter: "unheated_space",
-				electricityPriority: "diverter",
 				inverterType: "optimised_inverter",
 				hasShading: false,
 			},
@@ -88,7 +87,6 @@ describe("PV and electric batteries summary page", () => {
 				"Inverter peak power DC": `3.5 ${kilowatt.suffix}`,
 				"Location of inverter": "Unheated space",
 				"Inverter type": "Optimised inverter",
-				"Which system should receive surplus energy from this energy supply?": "Diverter",
 				"Does anything shade the PV array?": "No",
 			};
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -119,7 +117,6 @@ describe("PV and electric batteries summary page", () => {
 				"Inverter peak power DC": `3.5 ${kilowatt.suffix}`,
 				"Location of inverter": "Unheated space",
 				"Inverter type": "Optimised inverter",
-				"Which system should receive surplus energy from this energy supply?": "Diverter",
 				"Does anything shade the PV array?": "Yes",
 			};
 			const shading1Expected = {
@@ -318,6 +315,7 @@ describe("Diverters section", () => {
 			data: {
 				name: "Diverter 1",
 				hotWaterCylinder: hotWaterCylinderId,
+				electricityPriority: "diverter",
 			},
 		};
 
@@ -372,6 +370,7 @@ describe("Diverters section", () => {
 		const expectedResult = {
 			"Name": "Diverter 1",
 			"Associated hot water cylinder": hotWaterCylinderName,
+			//"Which system should receive surplus energy from this energy supply?": "Diverter",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

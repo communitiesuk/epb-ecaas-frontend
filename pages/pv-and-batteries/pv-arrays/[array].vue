@@ -33,11 +33,6 @@ const inverterLocationOptions: Record<string, string> = {
 	unheated_space: "Unheated space",
 };
 
-const electricityPriorityOptions: Record<string, string> = {
-	diverter: "Diverter",
-	electricBattery: "Electric battery",
-};
-
 const shading = model?.value && "shading" in model.value ? model.value.shading : [];
 
 const saveForm = (fields: PvArrayData) => {
@@ -282,14 +277,6 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 					</table>
 				</GovDetails>
 			</FormKit>
-			<FormKit
-				id="electricityPriority"
-				type="govRadios"
-				:options="electricityPriorityOptions"
-				label="Which system should receive surplus energy from this energy supply?"
-				name="electricityPriority"
-				validation="required"
-			/>
 			<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 			<h2 class="govuk-heading-l">PV array shading</h2>
 			<p class="govuk-body">

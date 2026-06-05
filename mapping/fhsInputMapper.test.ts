@@ -328,8 +328,11 @@ const expectedFlatInput: FhsInputSchema = {
 				minimum_charge_rate_one_way_trip: 80,
 				maximum_discharge_rate_one_way_trip: 20,
 			},
+			diverter: {
+				HeatSource: "Heat pump 1",
+			},
 		},
-		["pv system 1"]: {
+		["diverter 1"]: {
 			"fuel": "electricity",
 			"is_export_capable": false,
 			"priority": [
@@ -2350,7 +2353,6 @@ describe("FHS input mapper", () => {
 						inverterPeakPowerDC: 3.8,
 						locationOfInverter: "heated_space",
 						inverterType: "optimised_inverter",
-						electricityPriority: "diverter",
 						hasShading: true,
 						shading: [{
 							name: "Chimney",
@@ -2379,7 +2381,13 @@ describe("FHS input mapper", () => {
 			},
 			diverters: {
 				...baseForm,
-				data: [],
+				data: [{
+					data: {
+						name: "diverter 1",
+						electricityPriority: "diverter",
+					},
+					complete: true,
+				}],
 			},
 		};
 

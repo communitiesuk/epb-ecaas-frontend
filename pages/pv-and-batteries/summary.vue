@@ -45,7 +45,6 @@ const pvSummary: SummarySection = {
 			"Inverter peak power DC": dim(x.inverterPeakPowerDC, "kilowatt"),
 			"Location of inverter": displaySnakeToSentenceCase(show(x.locationOfInverter)),
 			"Inverter type": displaySnakeToSentenceCase(show(x.inverterType)),
-			"Which system should receive surplus energy from this energy supply?": displayCamelToSentenceCase(show(x.electricityPriority)), 
 			"Does anything shade the PV array?": displayBoolean(x.hasShading),
 			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvArrayData, { hasShading: true }>).shading) } : {}),
 		};
@@ -79,6 +78,7 @@ const diverterSummary: SummarySection = {
 		return {
 			"Name": show(x.name),
 			"Associated hot water cylinder": show(store.domesticHotWater.waterStorage.data.find(y => y && y.data.id === x.hotWaterCylinder)?.data.name),
+			"Which system should receive surplus energy from this energy supply?": displayCamelToSentenceCase(show(x.electricityPriority)),
 		};
 	}),
 	editUrl: "/pv-and-batteries",

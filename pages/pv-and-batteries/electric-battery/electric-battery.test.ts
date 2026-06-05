@@ -113,6 +113,53 @@ describe("Electric battery", () => {
 		expect((await screen.findByTestId("electricBatteryErrorSummary"))).toBeDefined();
 	});
 
+	it("sets diverters to incomplete if pv array is present and electric priority field has no value", async () => {
+		const pvArray: EcaasForm<PvArrayData> = {
+			data: {
+				name: "PV 1",
+				peakPower: 4,
+				ventilationStrategy: "unventilated",
+				pitch: 45,
+				orientation: 20,
+				elevationalHeight: 100,
+				lengthOfPV: 20,
+				widthOfPV: 20,
+				inverterPeakPowerAC: 4,
+				inverterPeakPowerDC: 5,
+				locationOfInverter: "heated_space",
+				inverterType: "optimised_inverter",
+				hasShading: false,
+			},
+		};
+
+		const diverter: EcaasForm<PvDiverterData> = {
+			data: {
+				name: "Diverter 1",
+			},
+			complete: true,
+		};
+
+		store.$patch({
+			pvAndBatteries: {
+				pvArrays: {
+					data: [pvArray],
+				},
+				diverters: {
+					data: [diverter],
+					complete: true,
+				},
+			},
+		});
+
+		await renderSuspended(ElectricBattery);
+
+		await fillForm();
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(store.pvAndBatteries.diverters.complete).toBe(false);
+		expect(store.pvAndBatteries.diverters.data[0]?.complete).toBe(false);
+	});
+
 	describe("partially saving data", () => {
 		it("creates a new battery automatically with given name", async () => {
 			await renderSuspended(ElectricBattery);
