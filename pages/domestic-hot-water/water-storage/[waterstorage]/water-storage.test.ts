@@ -30,7 +30,6 @@ describe("water storage", () => {
 			typeOfWaterStorage: "hotWaterCylinder",
 			storageCylinderVolume: unitValue(5, litre),
 			dailyEnergyLoss: 1,
-			dhwHeatSourceId: heatPumpId,
 			areaOfHeatExchanger: 1000,
 			heaterPosition: 0.8,
 			thermostatPosition: 0.5,
@@ -42,7 +41,6 @@ describe("water storage", () => {
 			typeOfWaterStorage: "smartHotWaterTank",
 			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
 			name: "Smart hot water tank 1",
-			dhwHeatSourceId: heatPumpId,
 			productReference: "42",
 			heaterPosition: 0.8,
 		},
@@ -194,7 +192,6 @@ describe("water storage", () => {
 				hotWaterCylinder.data.storageCylinderVolume.amount.toString(),
 			);
 			expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe(hotWaterCylinder.data.dailyEnergyLoss.toString());
-			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("areaOfHeatExchanger")).value).toBe(hotWaterCylinder.data.areaOfHeatExchanger!.toString());
 			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value).toBe(hotWaterCylinder.data.heaterPosition.toString());
 			expect((await screen.findByTestId<HTMLInputElement>("thermostatPosition")).value).toBe(hotWaterCylinder.data.thermostatPosition.toString());
@@ -221,20 +218,6 @@ describe("water storage", () => {
 
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value)
 				.toBe("Hot water cylinder");
-		});
-
-		test("if only one dhw heat source present, it is autoselected", async () => {
-			addHeatPumpStoreData();
-
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
-
-			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
 		});
 	});
 
@@ -317,8 +300,6 @@ describe("water storage", () => {
 			expect((await screen.findByTestId("productData_productReference")).textContent)
 				.toBe(smartHotWaterTank.data.productReference);
 
-			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`))
-				.hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value)
 				.toBe(smartHotWaterTank.data.heaterPosition.toString());
 		});
@@ -343,20 +324,6 @@ describe("water storage", () => {
 			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
 
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Smart hot water tank");
-		});
-
-		test("if only one dhw heat source present, it is autoselected", async () => {
-			addHeatPumpStoreData();
-
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
-
-			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
 		});
 
 		test("Renders HEM default product warning when default product is selected", async () => {

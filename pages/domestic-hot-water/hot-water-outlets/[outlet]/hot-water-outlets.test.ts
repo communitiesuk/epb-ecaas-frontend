@@ -27,7 +27,6 @@ describe("hot water outlets", () => {
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
 			typeOfHotWaterOutlet: "mixedShower",
 			flowRate: 10,
-			dhwHeatSourceId: heatPumpId,
 			wwhrs: false,
 			isAirPressureShower: false,
 		},
@@ -441,7 +440,6 @@ describe("hot water outlets", () => {
 				name: "Air powered shower 1",
 				id: "c84528bb-f805-4f1e-95d3-2bd1717deca5",
 				typeOfHotWaterOutlet: "mixedShower",
-				dhwHeatSourceId: heatPumpId,
 				wwhrs: false,
 				isAirPressureShower: true,
 				airPressureShowerProductReference: "AP-REF-001",
@@ -570,8 +568,6 @@ describe("hot water outlets", () => {
 					},
 				},
 			});
-
-			addHeatPumpStoreData();
 			await renderSuspended(HotWaterOutlets, {
 				route: {
 					params: { "hotWaterOutlet": "0" },

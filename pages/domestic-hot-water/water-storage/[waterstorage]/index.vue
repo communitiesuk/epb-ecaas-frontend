@@ -34,7 +34,6 @@ const saveForm = (fields: WaterStorageData) => {
 		const commonFields = {
 			name: fields.name,
 			id,
-			dhwHeatSourceId: fields.dhwHeatSourceId,	
 			heaterPosition: fields.heaterPosition,
 		};
 
@@ -110,10 +109,6 @@ watch(
 				...(defaultName && { name: defaultName }),
 			} as WaterStorageData;
 
-			if (heatSourceOptions.size === 1) {
-				newValue.dhwHeatSourceId = heatSourceOptions.keys().next().value!;
-			}
-
 			model.value = newValue;
 		}
 	},
@@ -136,16 +131,19 @@ const heatSourceOptions = new Map(
 	]),
 );
 
-const heatSourceTypes = new Map(
-	store.domesticHotWater.heatSources.data.map((e) => [
-		e.data.id,
-		e.data.isExistingHeatSource
-			? store.spaceHeating.heatSource.data
-				.find((x) => x.data.id === e.data.heatSourceId)?.data.typeOfHeatSource
-                ?? "Invalid existing heat source"
-			: e.data.typeOfHeatSource,
-	]),
-);
+
+// there can only be one heat source, 2 if one is a heatnetwork so check that either is a heat pump
+function heatSourceIsHeatPump() {
+	const heatSources = store.domesticHotWater.heatSources.data.map((e) => {
+		if (e.data.isExistingHeatSource) {
+			return store.spaceHeating.heatSource.data
+				.find((x) => x.data.id === e.data.heatSourceId)?.data.typeOfHeatSource;
+		} else {
+			return e.data.typeOfHeatSource;
+		}
+	});	
+	return heatSources.length === 1 || (heatSources.length === 2 && heatSources.includes("heatPump"));
+}
 </script>
 
 <template>
@@ -251,7 +249,7 @@ const heatSourceTypes = new Map(
 				</div>
 			</FormKit>
 			<FormKit
-				v-if="model.typeOfWaterStorage === 'hotWaterCylinder' && model.dhwHeatSourceId && heatSourceTypes.get(model.dhwHeatSourceId) === 'heatPump'"
+				v-if="model.typeOfWaterStorage === 'hotWaterCylinder' && heatSourceIsHeatPump()"
 				id="areaOfHeatExchanger"
 				type="govInputWithSuffix"
 				label="Area of heat exchanger installed"

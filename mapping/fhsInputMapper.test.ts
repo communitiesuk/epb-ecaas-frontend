@@ -111,7 +111,7 @@ const expectedHouseInput: FhsInputSchema = {
 		Shower: {
 			"some-mixer-shower-name": {
 				ColdWaterSource: "mains water",
-				HotWaterSource: "Heat pump 1",
+				HotWaterSource: "hw cylinder",
 				flowrate: 14,
 				allow_low_flowrate: false,
 				type: "MixerShower",
@@ -426,14 +426,14 @@ const expectedFlatInput: FhsInputSchema = {
 		Shower: {
 			"mixer shower 1 name": {
 				ColdWaterSource: "mains water",
-				HotWaterSource: "Heat pump 1",
+				HotWaterSource: "hw cylinder",
 				flowrate: 14,
 				allow_low_flowrate: false,
 				type: "MixerShower",
 			},
 			"mixer shower 2 name": {
 				ColdWaterSource: "mains water",
-				HotWaterSource: "Heat pump 1",
+				HotWaterSource: "hw cylinder",
 				flowrate: 12,
 				allow_low_flowrate: false,
 				type: "MixerShower",
@@ -1355,7 +1355,6 @@ describe("FHS input mapper", () => {
 					data: {
 						id: "some-hot-water-cyclinder",
 						name: "hw cylinder",
-						dhwHeatSourceId: "dhwHP-1",
 						storageCylinderVolume: {
 							amount: 200,
 							unit: "litres" as const,
@@ -1378,7 +1377,6 @@ describe("FHS input mapper", () => {
 							name: "some-mixer-shower-name",
 							flowRate: 14,
 							typeOfHotWaterOutlet: "mixedShower",
-							dhwHeatSourceId: "dhwHP-1",
 							wwhrs: false as const,
 							isAirPressureShower: false as const,
 						},
@@ -2197,7 +2195,6 @@ describe("FHS input mapper", () => {
 					data: {
 						id: "hw cylinder 1 id",
 						name: "hw cylinder 1 name",
-						dhwHeatSourceId: "dhwHP-1",
 						storageCylinderVolume: {
 							amount: 80,
 							unit: "litres" as const,
@@ -2220,7 +2217,6 @@ describe("FHS input mapper", () => {
 							name: "mixer shower 1 name",
 							flowRate: 14,
 							typeOfHotWaterOutlet: "mixedShower",
-							dhwHeatSourceId: "dhwHP-1",
 							wwhrs: false as const,
 							isAirPressureShower: false as const,
 						},
@@ -2232,7 +2228,6 @@ describe("FHS input mapper", () => {
 							name: "mixer shower 2 name",
 							flowRate: 12,
 							typeOfHotWaterOutlet: "mixedShower",
-							dhwHeatSourceId: "dhwHP-1",
 							wwhrs: false as const,
 							isAirPressureShower: false as const,
 						},

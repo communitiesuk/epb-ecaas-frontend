@@ -1332,7 +1332,6 @@ const hotWaterCylinderDataZod = namedWithId
 		typeOfWaterStorage: z.literal("hotWaterCylinder"),
 		storageCylinderVolume: zodUnit("volume"),
 		dailyEnergyLoss: z.number(),
-		dhwHeatSourceId: z.string(),
 		areaOfHeatExchanger: z.number().optional(),
 		heaterPosition: fraction,
 		thermostatPosition: fraction,
@@ -1343,7 +1342,6 @@ export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
 const smartHotWaterTankDataZod = namedWithId.extend({
 	typeOfWaterStorage: z.literal("smartHotWaterTank"),
 	productReference: z.string(),
-	dhwHeatSourceId: z.string(),
 	heaterPosition: fraction,
 });
 
@@ -1363,7 +1361,6 @@ export type WwhrsType = z.infer<typeof wwhrsTypeZod>;
 
 const mixedShowerBaseZod = namedWithId.extend({
 	typeOfHotWaterOutlet: z.literal("mixedShower"),
-	dhwHeatSourceId: z.uuidv4(),
 });
 
 export const showerFlowRateZod = z.number().min(8).max(15);

@@ -45,7 +45,6 @@ const addHeatPumpAndHotWaterCylinder = () => {
 					data: {
 						name: "HWC1",
 						id: hotWaterCylinderId,
-						dhwHeatSourceId: dhwHeatPumpId,
 						storageCylinderVolume: {
 							amount: 1,
 							unit: "litres",

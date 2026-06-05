@@ -40,7 +40,6 @@ const saveForm = (fields: HotWaterOutletsData) => {
 					data: {
 						...commonFields,
 						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-						dhwHeatSourceId: fields.dhwHeatSourceId,
 						wwhrs: true,
 						wwhrsType: fields.wwhrsType,
 						wwhrsProductReference: fields.wwhrsProductReference,
@@ -53,7 +52,6 @@ const saveForm = (fields: HotWaterOutletsData) => {
 					data: {
 						...commonFields,
 						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-						dhwHeatSourceId: fields.dhwHeatSourceId,
 						wwhrs: false,
 						...conditionalOnAirPoweredFields,
 					},

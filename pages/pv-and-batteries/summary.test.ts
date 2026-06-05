@@ -350,7 +350,6 @@ describe("Diverters section", () => {
 						data: {
 							name: hotWaterCylinderName,
 							id: hotWaterCylinderId,
-							dhwHeatSourceId: dhwHeatPumpId,
 							storageCylinderVolume: {
 								amount: 1,
 								unit: "litres",

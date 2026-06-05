@@ -20,7 +20,6 @@ const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
 		typeOfWaterStorage: "hotWaterCylinder",
 		storageCylinderVolume: unitValue(5, litre),
 		dailyEnergyLoss: 1,
-		dhwHeatSourceId: "12345678-1234-1234-1234-123456789abc",
 		areaOfHeatExchanger: 1000,
 		heaterPosition: 0.8,
 		thermostatPosition: 0.5,

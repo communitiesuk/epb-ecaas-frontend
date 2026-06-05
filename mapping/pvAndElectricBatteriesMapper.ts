@@ -130,24 +130,22 @@ export function mapElectricBatteryData(state: ResolvedState): Pick<SchemaEnergyS
 
 export function mapPvDiverterData(state: ResolvedState): Pick<SchemaEnergySupplyElectricity, "diverter"> {
 	const diverter = state.pvAndBatteries.diverters[0];
-
+	const { domesticHotWater, spaceHeating } = state;
 	if (!diverter) {
 		return {};
 	}
 
-	const hotWaterCylinder = state.domesticHotWater.waterStorage
-		.filter(x => x.id === diverter?.hotWaterCylinder)[0]!;
-	const dhwHeatSource = state.domesticHotWater.heatSources
-		.find(x => x.id === hotWaterCylinder.dhwHeatSourceId)!;
-
-	const heatSourceName = dhwHeatSource.isExistingHeatSource
-		? state.spaceHeating.heatSource.find(x => x.id === dhwHeatSource.heatSourceId)!.name
-		: dhwHeatSource.name;
-
-
+	const dhwHeatSource = domesticHotWater.heatSources.filter(x => x.isExistingHeatSource === false);
+	const existingHeatSources = domesticHotWater.heatSources.filter(x => x.isExistingHeatSource === true).map(x => x.heatSourceId);
+	const heatSourcesFromSpaceHeating = spaceHeating.heatSource.filter(x => existingHeatSources.includes(x.id));
+	const both = [...dhwHeatSource, ...heatSourcesFromSpaceHeating];
+	const heatSourceForDiverter = both.filter(x => x.typeOfHeatSource !== "heatNetwork");
+	if (heatSourceForDiverter.length !== 1) {
+		throw new Error("Expected exactly one non-heat-network heat source for diverter, found " + heatSourceForDiverter.length);
+	}
 	return {
 		diverter: {
-			"HeatSource": heatSourceName,
+			"HeatSource": heatSourceForDiverter[0]!.name,
 		},
 	};
 }

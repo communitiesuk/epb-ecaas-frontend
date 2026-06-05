@@ -22,7 +22,6 @@ describe("Hot water outlet product details", () => {
 	const airPressureShower: Partial<HotWaterOutletsData> = {
 		typeOfHotWaterOutlet: "mixedShower",
 		name: "Mixer shower",
-		dhwHeatSourceId: "db257659-f1f0-4ada-9fa5-b26293e3b387",
 		isAirPressureShower: true,
 	};
 
