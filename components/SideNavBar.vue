@@ -40,7 +40,7 @@ function shouldShowPage(page: Page, parentPageId: string) {
 		<div :class="`govuk-accordion__section ${isOpen ? 'govuk-accordion__section--expanded' : ''}`">
 			<button class="govuk-accordion__section-button" @click="toggleMenu">
 				<span class="govuk-accordion__section-heading-text govuk-!-font-size-16">
-					<span class="govuk-accordion__section-heading-text-focus">Menu</span>
+					<span class="govuk-accordion__section-heading-text-focus">Go to another page</span>
 				</span>
 				<span class="govuk-accordion__section-toggle">
 					<span v-if="isOpen" class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--up"/>
@@ -82,7 +82,7 @@ function shouldShowPage(page: Page, parentPageId: string) {
 	.govuk-frontend-supported {
 		.govuk-accordion__section-button {
 			display: flex;
-			width: 100%;
+			width: 68%;
 			justify-content: space-between;
 			background: transparent;
 			border: none;
