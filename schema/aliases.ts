@@ -95,3 +95,10 @@ export type SchemaMechanicalVentilationInstallationType = Extract<SchemaMechanic
 export type SchemaMechanicalVentilationInstallationLocation = Extract<SchemaMechanicalVentilation, { vent_type: "Decentralised continuous MEV", product_reference: string }>["installation_location"];
 export type SchemaBoilerLocationType = Extract<components["schemas"]["HeatSourceWetBoiler"], { rated_power: number }>["boiler_location"];
 export type SchemaBoilerWithProductReference = Extract<SchemaHeatSourceWetBoilerInput, { product_reference: string, type: "Boiler" }>;
+
+// We currently have an issue with WWHRS having a union of unkown which collapses the entire type to unkown so this is manual for now
+type SchemaWWHRSKnownValue = {
+	product_reference: string;
+	ColdWaterSource: SchemaColdWaterSourceType;
+};
+export type SchemaWWHRS = Record<string, SchemaWWHRSKnownValue>; 

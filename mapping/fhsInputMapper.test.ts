@@ -116,6 +116,15 @@ const expectedHouseInput: FhsInputSchema = {
 				allow_low_flowrate: false,
 				type: "MixerShower",
 			},
+			"some-mixer-shower-name-with-wwhrs": {
+				ColdWaterSource: "mains water",
+				HotWaterSource: "hw cylinder",
+				flowrate: 14,
+				allow_low_flowrate: false,
+				type: "MixerShower",
+				WWHRS: "WWHRS - some-mixer-shower-name-with-wwhrs",
+				WWHRS_configuration: "A",
+			},
 		},
 		Bath: {},
 		Other: {
@@ -248,6 +257,11 @@ const expectedHouseInput: FhsInputSchema = {
 			product_reference: "HP-456",
 			is_heat_network: false,
 		},
+	},
+	WWHRS: {
+		"WWHRS - some-mixer-shower-name-with-wwhrs": {
+			ColdWaterSource: "mains water",
+			product_reference: "test-product-ref" },
 	},
 	Zone: {
 		[defaultZoneName]: {
@@ -1381,6 +1395,19 @@ describe("FHS input mapper", () => {
 							flowRate: 14,
 							typeOfHotWaterOutlet: "mixedShower",
 							wwhrs: false as const,
+							isAirPressureShower: false as const,
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							id: "some-mixer-shower-wwhrs-id",
+							name: "some-mixer-shower-name-with-wwhrs",
+							flowRate: 14,
+							typeOfHotWaterOutlet: "mixedShower",
+							wwhrs: true as const,
+							wwhrsType: "instantaneousSystemA" as const,
+							wwhrsProductReference: "test-product-ref",
 							isAirPressureShower: false as const,
 						},
 					},

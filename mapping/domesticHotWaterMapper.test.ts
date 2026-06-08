@@ -1,5 +1,5 @@
 import type { BathData, DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
-import { mapDomesticHotWaterData, mapHotWaterSourcesData } from "./domesticHotWaterMapper";
+import { makeWWHRSName, mapDomesticHotWaterData, mapHotWaterSourcesData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import type { SchemaMixerShower } from "~/schema/api-schema.types";
 import { celsius } from "~/utils/units/temperature";
@@ -1358,18 +1358,19 @@ describe("domestic hot water mapper", () => {
 				});
 
 				const result = mapDomesticHotWaterData(resolveState(store.$state));
-
+				const wwhrsName = makeWWHRSName("shower-wwhrs-a");
 				const expectedShower: SchemaMixerShower = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 8,
 					allow_low_flowrate: false,
 					HotWaterSource: "hw cylinder",
-					WWHRS: "WW-A-123",
+					WWHRS: wwhrsName,
 					WWHRS_configuration: "A",
 				};
-
+			
 				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-a"]).toEqual(expectedShower);
+				expect(result.WWHRS?.[wwhrsName]).toEqual({ product_reference: "WW-A-123", ColdWaterSource: "mains water" });
 			});
 
 			it("maps WWHRS configuration type B", () => {
@@ -1398,16 +1399,20 @@ describe("domestic hot water mapper", () => {
 
 				const result = mapDomesticHotWaterData(resolveState(store.$state));
 
+				const wwhrsName = makeWWHRSName("shower-wwhrs-b");
+				
 				const expectedShowerWwhrsB = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 9,
 					allow_low_flowrate: false,
 					HotWaterSource: "hw cylinder",
-					WWHRS: "WW-B-456",
+					WWHRS: wwhrsName,
 					WWHRS_configuration: "B",
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-b"]).toEqual(expectedShowerWwhrsB);
+				expect(result.WWHRS?.[wwhrsName]).toEqual({ product_reference: "WW-B-456", ColdWaterSource: "mains water" });
+
 			});
 
 			it("maps WWHRS configuration type C", () => {
@@ -1435,17 +1440,18 @@ describe("domestic hot water mapper", () => {
 				});
 
 				const result = mapDomesticHotWaterData(resolveState(store.$state));
-
+				const wwhrsName = makeWWHRSName("shower-wwhrs-c");
 				const expectedShowerWwhrsC = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 10,
 					allow_low_flowrate: false,
 					HotWaterSource: "hw cylinder",
-					WWHRS: "WW-C-789",
+					WWHRS: wwhrsName,
 					WWHRS_configuration: "C",
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-c"]).toEqual(expectedShowerWwhrsC);
+				expect(result.WWHRS?.[wwhrsName]).toEqual({ product_reference: "WW-C-789", ColdWaterSource: "mains water" });
 			});
 
 			it("maps mixed shower with air pump", () => {
@@ -1621,17 +1627,18 @@ describe("domestic hot water mapper", () => {
 				});
 
 				const result = mapDomesticHotWaterData(resolveState(store.$state));
-
+				const wwhrsName = makeWWHRSName("shower1");
 				const expectedShower1 = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 8,
 					allow_low_flowrate: false,
 					HotWaterSource: "hw cylinder",
-					WWHRS: "WW123",
+					WWHRS: wwhrsName,
 					WWHRS_configuration: "A",
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower1"]).toEqual(expectedShower1);
+				expect(result.WWHRS?.[wwhrsName]).toEqual({ product_reference: "WW123", ColdWaterSource: "mains water" });
 
 				const expectedShower2 = {
 					type: "MixerShower",
