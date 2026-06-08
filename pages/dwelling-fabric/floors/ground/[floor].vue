@@ -225,7 +225,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Total area"
-			help="Enter the total area of the ground floor across the dwelling.  If the ground floor is made up of multiple floor types, this is the total area of all of the ground floor elements apart from basement walls."
+			help="Enter the total area of the ground floor across the dwelling.  If the ground floor is made up of multiple floor entries, this is the total area of all of the floor elements in contact with the ground."
 			name="totalArea"
 			:validation="zodTypeAsFormKitValidation(groundTotalAreaZod)"
 			data-field="Zone.BuildingElement.*.area"
