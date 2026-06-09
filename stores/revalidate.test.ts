@@ -10,7 +10,6 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 				"storeysInDwelling": 3,
 				"numOfBedrooms": 3,
 				"numOfBathrooms": 1,
-				"numOfWCs": 1,
 				"numOfHabitableRooms": 4,
 				"numOfRoomsWithTappingPoints": 2,
 				"numOfWetRooms": 3,

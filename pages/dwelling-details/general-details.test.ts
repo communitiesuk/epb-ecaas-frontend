@@ -18,7 +18,6 @@ const state: GeneralDetailsData = {
 	numOfBedrooms: 3,
 	numOfUtilityRooms: 2,
 	numOfBathrooms: 1,
-	numOfWCs: 1,
 	numOfHabitableRooms: 4,
 	numOfRoomsWithTappingPoints: 2,
 	numOfWetRooms: 3,
@@ -38,7 +37,6 @@ const stateWithFlat: GeneralDetailsData = {
 	numOfBedrooms: 3,
 	numOfUtilityRooms: 2,
 	numOfBathrooms: 1,
-	numOfWCs: 1,
 	numOfHabitableRooms: 4,
 	numOfRoomsWithTappingPoints: 2,
 	numOfWetRooms: 4,
@@ -67,7 +65,6 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("numOfBedrooms"), "3");
 			await user.type(screen.getByTestId("numOfUtilityRooms"), "2");
 			await user.type(screen.getByTestId("numOfBathrooms"), "1");
-			await user.type(screen.getByTestId("numOfWCs"), "1");
 			await user.type(screen.getByTestId("numOfHabitableRooms"), "4");
 			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
 			await user.type(screen.getByTestId("numOfWetRooms"), "3");
@@ -114,7 +111,6 @@ describe("General details", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("numOfBedrooms")).value).toBe("3");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfUtilityRooms")).value).toBe("2");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfBathrooms")).value).toBe("1");
-			expect((await screen.findByTestId<HTMLInputElement>("numOfWCs")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfHabitableRooms")).value).toBe("4");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfRoomsWithTappingPoints")).value).toBe("2");
 			expect((await screen.findByTestId("canExportToGrid_yes")).hasAttribute("checked")).toBe(true);
@@ -136,7 +132,6 @@ describe("General details", () => {
 			expect((await screen.findByTestId("numOfBedrooms_error"))).toBeDefined();
 			expect((await screen.findByTestId("numOfUtilityRooms_error"))).toBeDefined();
 			expect((await screen.findByTestId("numOfBathrooms_error"))).toBeDefined();
-			expect((await screen.findByTestId("numOfWCs_error"))).toBeDefined();
 			expect((await screen.findByTestId("numOfHabitableRooms_error"))).toBeDefined();
 			expect((await screen.findByTestId("canExportToGrid_error"))).toBeDefined();
 			expect((await screen.findByTestId("isPartGCompliant_error"))).toBeDefined();
@@ -172,7 +167,6 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("numOfBedrooms"), "3");
 			await user.type(screen.getByTestId("numOfUtilityRooms"), "2");
 			await user.type(screen.getByTestId("numOfBathrooms"), "1");
-			await user.type(screen.getByTestId("numOfWCs"), "1");
 			await user.type(screen.getByTestId("numOfHabitableRooms"), "4");
 			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
 			await user.type(screen.getByTestId("numOfWetRooms"), "4");
@@ -211,7 +205,6 @@ describe("General details", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("numOfBedrooms")).value).toBe("3");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfUtilityRooms")).value).toBe("2");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfBathrooms")).value).toBe("1");
-			expect((await screen.findByTestId<HTMLInputElement>("numOfWCs")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfHabitableRooms")).value).toBe("4");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfRoomsWithTappingPoints")).value).toBe("2");
 			expect((await screen.findByTestId("fuelType_mains_gas")).hasAttribute("checked")).toBe(true);

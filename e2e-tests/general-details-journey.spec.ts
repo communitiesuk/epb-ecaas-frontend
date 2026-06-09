@@ -16,7 +16,6 @@ const fillGeneralDetailsForm = async (page: Page) => {
 	await page.getByTestId("numOfBedrooms").fill("3");
 	await page.getByTestId("numOfUtilityRooms").fill("1");
 	await page.getByTestId("numOfBathrooms").fill("3");
-	await page.getByTestId("numOfWCs").fill("2");
 	await page.getByTestId("numOfHabitableRooms").fill("7");
 	await page.getByTestId("numOfRoomsWithTappingPoints").fill("1");
 	await page.getByTestId("fuelType_elecOnly").click();
@@ -50,7 +49,6 @@ test.describe("General details form data persistence", () => {
 		await expect(page.getByTestId("numOfBedrooms")).toHaveValue("3");
 		await expect(page.getByTestId("numOfUtilityRooms")).toHaveValue("1");
 		await expect(page.getByTestId("numOfBathrooms")).toHaveValue("3");
-		await expect(page.getByTestId("numOfWCs")).toHaveValue("2");
 		await expect(page.getByTestId("numOfHabitableRooms")).toHaveValue("7");
 		await expect(page.getByTestId("numOfRoomsWithTappingPoints")).toHaveValue("1");
 		await expect(page.getByTestId("fuelType_elecOnly")).toBeChecked();
@@ -68,7 +66,6 @@ test.describe("General details form data persistence", () => {
 		await expect(page.getByTestId("numOfBedrooms")).toHaveValue("3");
 		await expect(page.getByTestId("numOfUtilityRooms")).toHaveValue("1");
 		await expect(page.getByTestId("numOfBathrooms")).toHaveValue("3");
-		await expect(page.getByTestId("numOfWCs")).toHaveValue("2");
 		await expect(page.getByTestId("numOfHabitableRooms")).toHaveValue("7");
 		await expect(page.getByTestId("numOfRoomsWithTappingPoints")).toHaveValue("1");
 		await expect(page.getByTestId("fuelType_elecOnly")).toBeChecked();
@@ -90,7 +87,6 @@ test.describe("General details form data persistence", () => {
 		await expect(page.getByTestId("numOfBedrooms")).toHaveValue("3");
 		await expect(page.getByTestId("numOfUtilityRooms")).toHaveValue("1");
 		await expect(page.getByTestId("numOfBathrooms")).toHaveValue("3");
-		await expect(page.getByTestId("numOfWCs")).toHaveValue("2");
 		await expect(page.getByTestId("numOfHabitableRooms")).toHaveValue("7");
 		await expect(page.getByTestId("numOfRoomsWithTappingPoints")).toHaveValue("1");
 		await expect(page.getByTestId("fuelType_elecOnly")).toBeChecked();

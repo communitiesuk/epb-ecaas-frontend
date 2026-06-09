@@ -66,7 +66,6 @@ const baseGeneralDetails = z.object({
 	numOfBedrooms: z.int().min(0),
 	numOfUtilityRooms: z.int().min(0),
 	numOfBathrooms: z.int().min(0),
-	numOfWCs: z.int().min(0),
 	numOfHabitableRooms: z.int().min(1),
 	numOfRoomsWithTappingPoints: z.int().min(1),
 	numOfWetRooms: z.int().min(0),

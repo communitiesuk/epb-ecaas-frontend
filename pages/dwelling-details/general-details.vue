@@ -57,7 +57,6 @@ const saveForm = (fields: typeof model.value) => {
 					numOfBedrooms: fields.numOfBedrooms,
 					numOfUtilityRooms: fields.numOfUtilityRooms,
 					numOfBathrooms: fields.numOfBathrooms,
-					numOfWCs: fields.numOfWCs,
 					numOfHabitableRooms: fields.numOfHabitableRooms,
 					numOfRoomsWithTappingPoints: fields.numOfRoomsWithTappingPoints,
 					numOfWetRooms: fields.numOfWetRooms,
@@ -360,19 +359,6 @@ const minBuildingStoreys = (node: FormKitNode) => {
 			}"
 			help="Enter the number of rooms containing a bath or shower"
 			data-field="NumberOfBathrooms"
-		/>
-		<FormKit
-			id="numOfWCs"
-			type="govInputInt"
-			label="Number of WCs"
-			name="numOfWCs"
-			:validation-rules="{ isInteger }"
-			validation="required | isInteger | min:0"
-			:validation-messages="{
-				isInteger: `Number of WCs must be an integer.`,
-			}"
-			help="Enter the number of rooms containing one or more flush toilets or urinals but not a bath or shower"
-			data-field="NumberOfSanitaryAccommodations"
 		/>
 		<FormKit
 			id="numOfHabitableRooms"
