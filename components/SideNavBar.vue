@@ -6,8 +6,15 @@ const parentPages: Array<Page> = pagesData.filter(
 	(page) => page.type === "section",
 );
 
+const summaryOnlySections = [
+	"spaceHeating",
+	"domesticHotWater",
+	"pvAndBatteries",
+	"cooling",
+];
+
 const { mounted } = useMounted();
-const isOpen = ref<boolean>(false);
+const isOpen = ref<boolean>(true);
 
 const toggleMenu = () => isOpen.value = !isOpen.value;
 
@@ -31,6 +38,10 @@ function shouldShowPage(page: Page, parentPageId: string) {
 		return false;
 	}
 
+	if (summaryOnlySections.includes(parentPageId) && page.title !== "Summary") {
+		return false;
+	}
+
 	return !page.excludeFromNavigation?.();
 }
 </script>
@@ -39,7 +50,7 @@ function shouldShowPage(page: Page, parentPageId: string) {
 	<nav class="accordion-nav">
 		<div :class="`govuk-accordion__section ${isOpen ? 'govuk-accordion__section--expanded' : ''}`">
 			<button class="govuk-accordion__section-button" @click="toggleMenu">
-				<span class="govuk-accordion__section-heading-text govuk-!-font-size-16">
+				<span class="govuk-accordion__section-heading-text govuk-!-font-size-14">
 					<span class="govuk-accordion__section-heading-text-focus">Go to another page</span>
 				</span>
 				<span class="govuk-accordion__section-toggle">
@@ -82,7 +93,7 @@ function shouldShowPage(page: Page, parentPageId: string) {
 	.govuk-frontend-supported {
 		.govuk-accordion__section-button {
 			display: flex;
-			width: 68%;
+			width: 100%;
 			justify-content: space-between;
 			background: transparent;
 			border: none;
@@ -97,6 +108,7 @@ function shouldShowPage(page: Page, parentPageId: string) {
 		.govuk-accordion__section-toggle {
 			margin: 0;
 			font-size: 0rem;
+			padding-top: 6px;
 		}
 	}
 
