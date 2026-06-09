@@ -124,7 +124,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				id="electricityPriority"
 				type="govRadios"
 				:options="electricityPriorityOptions"
-				label="Which system should receive surplus energy from this energy supply?"
+				label="Which system should be the first to receive surplus energy from the PV?"
 				name="electricityPriority"
 				validation="required"
 			/>

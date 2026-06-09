@@ -78,7 +78,7 @@ const diverterSummary: SummarySection = {
 		return {
 			"Name": show(x.name),
 			"Associated hot water cylinder": show(store.domesticHotWater.waterStorage.data.find(y => y && y.data.id === x.hotWaterCylinder)?.data.name),
-			"Which system should receive surplus energy from this energy supply?": displayCamelToSentenceCase(show(x.electricityPriority)),
+			"Which system should be the first to receive surplus energy from the PV?": displayCamelToSentenceCase(show(x.electricityPriority)),
 		};
 	}),
 	editUrl: "/pv-and-batteries",

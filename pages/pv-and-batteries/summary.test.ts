@@ -370,7 +370,7 @@ describe("Diverters section", () => {
 		const expectedResult = {
 			"Name": "Diverter 1",
 			"Associated hot water cylinder": hotWaterCylinderName,
-			//"Which system should receive surplus energy from this energy supply?": "Diverter",
+			"Which system should be the first to receive surplus energy from the PV?": "Diverter",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
