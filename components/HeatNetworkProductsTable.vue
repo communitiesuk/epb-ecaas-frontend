@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
-import HemDefaultProductInset from "./HemDefaultProductInset.vue";
 
 defineProps<{
 	products: DisplayProduct[];
@@ -12,7 +11,6 @@ const route = useRoute();
 </script>
 
 <template>
-	<HemDefaultProductInset />
 	<div class="govuk-form-group" data-testid="heatNetworkProductsTable">
 		<table class="govuk-table govuk-!-margin-top-4">
 			<thead class="govuk-table__head">

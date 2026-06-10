@@ -20,6 +20,11 @@ describe("Heat pump details", async () => {
 		technologyType: "SmartHotWaterTank",
 	};
 
+	const hemDefaultShwtProduct: Partial<Product> = {
+		...shwtProduct,
+		brandName: "HEM Default",
+	};
+
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
@@ -108,6 +113,27 @@ describe("Heat pump details", async () => {
 
 		// Assert
 		expect(waterStorage.productReference).toBe("42");
+	});
+
+	test("Does not display HEM default inset when product is not HEM Default", async () => {
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect(screen.queryByTestId("hemDefaultProductInset")).toBeNull();
+	});
+
+	test("Displays HEM default inset when product brand is HEM Default", async () => {
+		// Arrange
+		mockFetch.mockReturnValue({
+			data: ref(hemDefaultShwtProduct),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect((await screen.findByTestId("hemDefaultProductInset"))).toBeDefined();
 	});
 
 	test("Navigates to water storage page when product is selected", async () => {

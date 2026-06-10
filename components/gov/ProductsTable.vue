@@ -57,7 +57,7 @@ const secondaryValue = (product: DisplayProduct) => {
 </script>
 
 <template>
-	<HemDefaultProductInset />
+	<HemDefaultProductInset v-if="!usesRadiatorColumns && !usesUnderfloorHeatingColumns" />
 	<div class="govuk-form-group" data-testid="productsTable">
 		<table class="govuk-table govuk-!-margin-top-4">
 			<thead class="govuk-table__head">

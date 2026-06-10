@@ -2,6 +2,7 @@
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { typeOfHeatEmitter } from "~/stores/ecaasStore.schema";
 import { getRadiatorHeading, isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
+import { isHemDefaultProduct } from "~/utils/hemDefaultProduct";
 import { getUnderFloorHeatingHeading, isUnderFloorHeatingProduct, getUnderFloorHeatingSubtitle } from "~/utils/underFloorHeating";
 import HemDefaultProductInset from "./HemDefaultProductInset.vue";
 
@@ -72,7 +73,7 @@ const productSubtitle = computed(() => {
 	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ productHeading }}</h1>
 	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ productSubtitle }}</h2>
 
-	<HemDefaultProductInset />
+	<HemDefaultProductInset v-if="isHemDefaultProduct(data)" />
 
 	<ProductDetailsFanCoil v-if="!!nonRadiatorProduct && heatEmittingType === 'fanCoil'" :product="nonRadiatorProduct" />
 	<ProductDetailsConvectorRadiator v-if="!!radiatorProduct && heatEmittingType === 'radiator'" :product="radiatorProduct" />

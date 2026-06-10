@@ -253,6 +253,36 @@ describe("Heat source details", async () => {
 		expect((await screen.findByTestId("heatPump"))).toBeDefined();
 	});
 
+	test("Does not display HEM default inset when product is not HEM Default", async () => {
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect(screen.queryByTestId("hemDefaultProductInset")).toBeNull();
+	});
+
+	test("Displays HEM default inset when product brand is HEM Default", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "1",
+				products: "combi-boiler",
+				id: "1000",
+			},
+			path: "/1/combi-boiler/1000",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(combiBoilerProduct),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect((await screen.findByTestId("hemDefaultProductInset"))).toBeDefined();
+	});
+
 	test("Displays heat interface unit details when product is a heat interface unit", async () => {
 		mockRoute.mockReturnValue({
 			params: {

@@ -32,6 +32,11 @@ describe("Hot water outlet product details", () => {
 		technologyType: "AirPoweredShowers",
 	};
 
+	const hemDefaultShowerProduct: Partial<Product> = {
+		...showerProduct,
+		brandName: "HEM Default",
+	};
+
 	const wwhrsProduct: Partial<Product> = {
 		id: "1000",
 		brandName: "Brand",
@@ -125,6 +130,27 @@ describe("Hot water outlet product details", () => {
 			
 		// Assert
 		expect((await screen.findByTestId("airPressureShower"))).toBeDefined();
+	});
+
+	test("Does not display HEM default inset when product is not HEM Default", async () => {
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect(screen.queryByTestId("hemDefaultProductInset")).toBeNull();
+	});
+
+	test("Displays HEM default inset when product brand is HEM Default", async () => {
+		// Arrange
+		mockFetch.mockReturnValue({
+			data: ref(hemDefaultShowerProduct),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect((await screen.findByTestId("hemDefaultProductInset"))).toBeDefined();
 	});
 
 	test("Displays WWHRS details when product is a WWHRS", async () => {

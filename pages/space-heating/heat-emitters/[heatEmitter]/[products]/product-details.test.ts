@@ -145,6 +145,30 @@ describe("Heat pump details", async () => {
 		expect((await screen.findByTestId("fanCoil"))).toBeDefined();
 	});
 
+	test("Does not display HEM default inset when product is not HEM Default", async () => {
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect(screen.queryByTestId("hemDefaultProductInset")).toBeNull();
+	});
+
+	test("Displays HEM default inset when product brand is HEM Default", async () => {
+		// Arrange
+		mockFetch.mockReturnValue({
+			data: ref({
+				...product,
+				brandName: "HEM Default",
+			}),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect((await screen.findByTestId("hemDefaultProductInset"))).toBeDefined();
+	});
+
 	test("Displays electric storage heater details when product is an electric storage heater", async () => {
 		// Arrange
 		mockRoute.mockReturnValue({

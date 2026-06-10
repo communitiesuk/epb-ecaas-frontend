@@ -150,6 +150,46 @@ describe("Heat emitter products page", () => {
 		expect(screen.getByText("250")).toBeDefined();
 	});
 
+	test("does not render HEM default inset for radiator products", async () => {
+		mockFetch.mockReset();
+		mockFetch.mockReturnValue({
+			data: ref(MOCKED_RADIATORS),
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				heatEmitter: "0",
+				products: "radiator",
+			},
+			query: { emitterIndex: "0" },
+			path: "/0/radiator",
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.queryByTestId("hemDefaultProductInset")).toBeNull();
+	});
+
+	test("does not render HEM default inset for underfloor heating products", async () => {
+		mockFetch.mockReset();
+		mockFetch.mockReturnValue({
+			data: ref(MOCKED_UNDERFLOOR_HEATING),
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				heatEmitter: "2",
+				products: "under-floor-heating",
+			},
+			query: { emitterIndex: "2" },
+			path: "/2/under-floor-heating",
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.queryByTestId("hemDefaultProductInset")).toBeNull();
+	});
+
 	test("when a user selects a product its product reference gets stored", async () => {
 		mockRoute.mockReturnValue({
 			params: {
