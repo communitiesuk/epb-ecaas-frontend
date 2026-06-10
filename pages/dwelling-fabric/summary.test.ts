@@ -315,6 +315,8 @@ const externalGlazedDoorData = {
 	treatmentControls: "manual",
 	thermalResistivityIncrease: 1,
 	solarTransmittanceReduction: 0.1,
+	depthOfReveal: 20,
+	distanceFromGlassToStartOfReveal: 10,
 	hasShading: false,
 } satisfies ExternalGlazedDoorData;
 
@@ -376,6 +378,8 @@ const windowData: EcaasForm<WindowData> = {
 		treatmentControls: "manual",
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
+		depthOfReveal: 20,
+		distanceFromGlassToStartOfReveal: 10,
 		hasShading: false,
 	},
 };
@@ -389,7 +393,6 @@ const windowDataWithShading: EcaasForm<WindowData> = {
 			{ name: "Test 2", typeOfShading: "left_side_fin", distance: 2, depth: 22 },
 			{ name: "Test 3", typeOfShading: "right_side_fin", distance: 3, depth: 33 },
 			{ name: "Test 4", typeOfShading: "overhang", distance: 4, depth: 44 },
-			{ name: "Test 5", typeOfShading: "frame_or_reveal", distance: 5, depth: 55 },
 		],
 	},
 };
@@ -1267,6 +1270,8 @@ describe("dwelling space doors", () => {
 									treatmentControls: "auto_motorised",
 									thermalResistivityIncrease: 1,
 									solarTransmittanceReduction: 0.1,
+									depthOfReveal: 20,
+									distanceFromGlassToStartOfReveal: 10,
 									hasShading: false,
 								} satisfies ExternalGlazedDoorData,
 							}],
@@ -1292,6 +1297,8 @@ describe("dwelling space doors", () => {
 				"Window treatment controls": "Automatic",
 				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Solar transmittance reduction": "0.1",
+				"Depth of reveal": `20 ${millimetre.suffix}`,
+				"Distance from glass to start of reveal": `10 ${millimetre.suffix}`,
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -1331,6 +1338,8 @@ describe("dwelling space doors", () => {
 				"Window treatment controls": "Manual",
 				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Solar transmittance reduction": "0.1",
+				"Depth of reveal": `20 ${millimetre.suffix}`,
+				"Distance from glass to start of reveal": `10 ${millimetre.suffix}`,
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -1358,7 +1367,6 @@ describe("dwelling space doors", () => {
 										{ name: "Test 2", typeOfShading: "left_side_fin", distance: 2, depth: 22 },
 										{ name: "Test 3", typeOfShading: "right_side_fin", distance: 3, depth: 33 },
 										{ name: "Test 4", typeOfShading: "overhang", distance: 4, depth: 44 },
-										{ name: "Test 5", typeOfShading: "frame_or_reveal", distance: 5, depth: 55 },
 									] satisfies ShadingObjectData[],
 								} satisfies ExternalGlazedDoorData,
 							}],
@@ -1381,6 +1389,8 @@ describe("dwelling space doors", () => {
 				"Window treatment controls": "Manual",
 				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Solar transmittance reduction": "0.1",
+				"Depth of reveal": `20 ${millimetre.suffix}`,
+				"Distance from glass to start of reveal": `10 ${millimetre.suffix}`,
 			};
 			const shading1Expected = {
 				"Name of shading 1": "Test 1",
@@ -1407,12 +1417,6 @@ describe("dwelling space doors", () => {
 				"Distance of shading 4 from glass": `4 ${metre.suffix}`,
 				"Depth of shading 4": `44 ${metre.suffix}`,
 			};
-			const shading5Expected = {
-				"Name of shading 5": "Test 5",
-				"Type of shading 5": "Frame or reveal",
-				"Distance of shading 5 from glass": `5 ${metre.suffix}`,
-				"Depth of shading 5": `55 ${metre.suffix}`,
-			};
 			await renderSuspended(Summary);
 
 			for (const [key, value] of Object.entries({
@@ -1421,7 +1425,6 @@ describe("dwelling space doors", () => {
 				...shading2Expected,
 				...shading3Expected,
 				...shading4Expected,
-				...shading5Expected,
 			})) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceGlazedDoors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -1585,6 +1588,8 @@ describe("dwelling space windows", () => {
 			"Curtains or blinds": "Blinds",
 			"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 			"Solar transmittance reduction": "0.1",
+			"Depth of reveal": `20 ${millimetre.suffix}`,
+			"Distance from glass to start of reveal": `10 ${millimetre.suffix}`,
 		};
 
 		const shading1Expected = {
@@ -1612,12 +1617,6 @@ describe("dwelling space windows", () => {
 			"Distance of shading 4 from glass": `4 ${metre.suffix}`,
 			"Depth of shading 4": `44 ${metre.suffix}`,
 		};
-		const shading5Expected = {
-			"Name of shading 5": "Test 5",
-			"Type of shading 5": "Frame or reveal",
-			"Distance of shading 5 from glass": `5 ${metre.suffix}`,
-			"Depth of shading 5": `55 ${metre.suffix}`,
-		};
 
 		for (const [key, value] of Object.entries({
 			...baseExpected,
@@ -1625,7 +1624,6 @@ describe("dwelling space windows", () => {
 			...shading2Expected,
 			...shading3Expected,
 			...shading4Expected,
-			...shading5Expected,
 		})) {
 			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWindows-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);

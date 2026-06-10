@@ -444,6 +444,8 @@ const glazedDoorSummary: SummarySection = {
 			"Window treatment controls": x.curtainsOrBlinds ? treatmentControls : undefined,
 			"Thermal resistivity increase": x.curtainsOrBlinds ? thermalResistivityIncrease : undefined,
 			"Solar transmittance reduction": x.curtainsOrBlinds ? solarTransmittanceReduction : undefined,
+			"Depth of reveal": dim(x.depthOfReveal, "millimetres"),
+			"Distance from glass to start of reveal": dim(x.distanceFromGlassToStartOfReveal, "millimetres"),
 			"Does anything shade the window?": displayBoolean(x.hasShading),
 			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvArrayData, { hasShading: true }>).shading) } : {}),
 		};
@@ -545,6 +547,8 @@ const windowSummary: SummarySection = {
 			"Window treatment controls": x.curtainsOrBlinds ? treatmentControls : undefined,
 			"Thermal resistivity increase": x.curtainsOrBlinds ? thermalResistivityIncrease : undefined,
 			"Solar transmittance reduction": x.curtainsOrBlinds ? solarTransmittanceReduction : undefined,
+			"Depth of reveal": dim(x.depthOfReveal, "millimetres"),
+			"Distance from glass to start of reveal": dim(x.distanceFromGlassToStartOfReveal, "millimetres"),
 			"Does anything shade the window?": displayBoolean(x.hasShading),
 			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvArrayData, { hasShading: true }>).shading) } : {}),
 		};
