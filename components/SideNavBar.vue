@@ -50,7 +50,7 @@ function shouldShowPage(page: Page, parentPageId: string) {
 	<nav class="accordion-nav">
 		<div :class="`govuk-accordion__section ${isOpen ? 'govuk-accordion__section--expanded' : ''}`">
 			<button class="govuk-accordion__section-button" @click="toggleMenu">
-				<span class="govuk-accordion__section-heading-text govuk-!-font-size-14">
+				<span class="govuk-accordion__section-heading-text govuk-!-font-size-18">
 					<span class="govuk-accordion__section-heading-text-focus">Go to another page</span>
 				</span>
 				<span class="govuk-accordion__section-toggle">
@@ -102,7 +102,7 @@ function shouldShowPage(page: Page, parentPageId: string) {
 
 		.govuk-accordion__section-heading-text {
 			margin: 0;
-			color: govuk-colour("blue");
+			color: #1d70b8;
 		}
 
 		.govuk-accordion__section-toggle {
