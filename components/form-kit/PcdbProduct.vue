@@ -172,7 +172,7 @@ function isPackagedWithHotWaterCylinder(packagedIds: string[]) {
 	return packagedIds.some(id => hotWaterCylinderIds.includes(id));
 }
 
-function isHeatPump(heatSource: {typeOfHeatSource?: string} | undefined): heatSource is HeatSourceData {
+function isHeatPump(heatSource: { typeOfHeatSource?: string } | undefined): heatSource is HeatSourceData {
 	return heatSource?.typeOfHeatSource === "heatPump";
 }
 
@@ -189,18 +189,20 @@ function getHeatPumpType() {
 }
 
 function getBoilerIds() {
-	const {spaceHeating: {heatSource: spaceHeatingHeatSource}, domesticHotWater: {heatSources: domesticHotWaterHeatSources}} = store;
+	const { spaceHeating: { heatSource: spaceHeatingHeatSource }, domesticHotWater: { heatSources: domesticHotWaterHeatSources } } = store;
 	return [
 		...spaceHeatingHeatSource.data.filter(x => x.data.typeOfHeatSource === "boiler"),
 		...domesticHotWaterHeatSources.data.filter(x => (x.data as { typeOfHeatSource?: string })?.typeOfHeatSource === "boiler"),
 	].map(x => x.data.id);
 }
+
 function getWaterCylinderIds() {
-	const {domesticHotWater: {waterStorage}} = store;
+	const { domesticHotWater: { waterStorage } } = store;
 	return waterStorage.data
 		.filter(x => x.data.typeOfWaterStorage === "hotWaterCylinder")
 		.map(x => x.data.id);
 }
+
 function isPackagedWithHeatPump() {
 	const associatedItemId = (heatSource as { id?: string } | undefined)?.id ?? selectedProductReference;
 
