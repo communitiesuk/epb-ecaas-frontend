@@ -86,7 +86,6 @@ describe("water storage", () => {
 		await user.type(screen.getByTestId("name"), " 1");
 		await user.type(screen.getByTestId("storageCylinderVolume"), "5");
 		await user.type(screen.getByTestId("dailyEnergyLoss"), "1");
-		await user.click(screen.getByTestId(`dhwHeatSourceId_${heatPumpId}`));
 		await user.type(screen.getByTestId("areaOfHeatExchanger"), "1000");
 		await user.type(screen.getByTestId("heaterPosition"), "0.8");
 		await user.type(screen.getByTestId("thermostatPosition"), "0.5");
@@ -98,7 +97,6 @@ describe("water storage", () => {
 		await user.type(screen.getByTestId("name"), " 1");
 		await user.click(screen.getByTestId("chooseAProductButton"));
 		// Have to simulate product selection by directly setting the product reference in the store - the other page won't load in a unit test
-		await user.click(screen.getByTestId(`dhwHeatSourceId_${heatPumpId}`));
 		await user.type(screen.getByTestId("heaterPosition"), "0.8");
 		await user.tab();
 	};
@@ -123,7 +121,6 @@ describe("water storage", () => {
 		// expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
 		expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
-		expect((await screen.findByTestId("dhwHeatSourceId_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
 		expect((await screen.findByTestId("thermostatPosition_error"))).toBeDefined();
 
@@ -134,7 +131,6 @@ describe("water storage", () => {
 		// not name, this is filled in by default
 		// expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("selectSmartHotWaterTank_error"))).toBeDefined();
-		expect((await screen.findByTestId("dhwHeatSourceId_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
 	});
 

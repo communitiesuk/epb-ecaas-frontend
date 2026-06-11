@@ -120,17 +120,6 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 	}
 }
 
-const heatSourceOptions = new Map(
-	store.domesticHotWater.heatSources.data.map((e) => [
-		e.data.id,
-		e.data.isExistingHeatSource
-			? store.spaceHeating.heatSource.data
-				.find((x) => x.data.id === e.data.heatSourceId)?.data.name
-                ?? "Invalid existing heat source"
-			: e.data.name,
-	]),
-);
-
 
 // there can only be one heat source, 2 if one is a heatnetwork so check that either is a heat pump
 function heatSourceIsHeatPump() {
@@ -227,27 +216,6 @@ function heatSourceIsHeatPump() {
 				data-field="HotWaterSource['hw cylinder'].daily_losses"
 				:disabled="hasPackagedProduct(model)"
 			/>
-			<FormKit
-				v-if="model.typeOfWaterStorage !== undefined"
-				id="dhwHeatSourceId"
-				name="dhwHeatSourceId"
-				type="govRadios"
-				label="Heat source"
-				help="Select the relevant heat source that has been added previously"
-				validation="required"
-				:options="heatSourceOptions"
-				:disabled="hasPackagedProduct(model)"
-			>			
-				<div
-					v-if="!heatSourceOptions.size"
-					data-testid="noHeatSource"
-				>
-					<p class="govuk-error-message">No heat sources added.</p>
-					<NuxtLink :to="getUrl('heatSourcesCreate')" class="govuk-link gov-radios-add-link">
-						Click here to add a heat source
-					</NuxtLink>
-				</div>
-			</FormKit>
 			<FormKit
 				v-if="model.typeOfWaterStorage === 'hotWaterCylinder' && heatSourceIsHeatPump()"
 				id="areaOfHeatExchanger"

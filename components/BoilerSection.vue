@@ -59,6 +59,7 @@ const emit = defineEmits(["update-boiler-model"]);
 			help="Select the boiler model from the PCDB using the button below."
 			:selected-product-reference="model.productReference"
 			:selected-product-type="model.typeOfBoiler"
+			:heat-source="model"
 			:page-url="route.fullPath"
 			:page-index="index"
 			:disabled="hasPackagedProduct(model)"

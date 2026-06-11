@@ -272,6 +272,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Select the mechanical vent type from the PCDB using the button below"
 				:selected-product-reference="'productReference' in model ? model.productReference : null"
 				:selected-product-type="typeOfMechanicalVentilation.mvhr"
+				:heat-source="model"
 				:page-url="route.fullPath"
 				:page-index="index"
 				:disabled="hasPackagedProduct(model!)"
@@ -286,6 +287,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Select the mechanical vent type from the PCDB using the button below"
 				:selected-product-reference="'productReference' in model ? model.productReference : null"
 				:selected-product-type="typeOfMechanicalVentilation.centralisedContinuousMev"
+				:heat-source="model"
 				:page-url="route.fullPath"
 				:page-index="index"
 			/>
@@ -299,6 +301,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Select the mechanical vent type from the PCDB using the button below"
 				:selected-product-reference="'productReference' in model ? model.productReference : null"
 				:selected-product-type="typeOfMechanicalVentilation.decentralisedContinuousMev"
+				:heat-source="model"
 				:page-url="route.fullPath"
 				:page-index="index"
 			/>
