@@ -52,6 +52,8 @@ const window1: EcaasForm<WindowData> = {
 		treatmentControls: "manual",
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
+		depthOfReveal: 20,
+		distanceFromGlassToStartOfReveal: 10,
 		hasShading: false,
 	},
 	complete: true,
@@ -74,6 +76,8 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.click(screen.getByTestId("treatmentControls_manual"));
 	await user.type(screen.getByTestId("thermalResistivityIncrease"), "1");
 	await user.type(screen.getByTestId("solarTransmittanceReduction"), "0.1");
+	await user.type(screen.getByTestId("depthOfReveal"), "20");
+	await user.type(screen.getByTestId("distanceFromGlassToStartOfReveal"), "10");
 	await user.click(screen.getByTestId(`hasShading_${hasShading ? "yes" : "no"}`));
 };
 
@@ -694,7 +698,7 @@ describe("window", () => {
 				expect(screen.queryByTestId("shadingDepth")).toBeNull();
 			});
 		
-			it.each(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"])(
+			it.each(["left_side_fin", "right_side_fin", "overhang"])(
 				"shows depth and distance fields for %s type",
 				async (type) => {
 					await user.click(screen.getByTestId(`typeOfShading_${type}`));
@@ -720,7 +724,7 @@ describe("window", () => {
 				expect(screen.getByText("Chimney")).toBeDefined();
 			});
 		
-			it("collapses the add form into a summary card after saving a fin/overhang/frame type", async () => {
+			it("collapses the add form into a summary card after saving a fin/overhang type", async () => {
 				await renderSuspended(Window);
 				await user.click(screen.getByTestId("hasShading_yes"));
 				await user.type(screen.getByTestId("shadingName"), "Left fin");
