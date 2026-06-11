@@ -842,15 +842,15 @@ const expectedFlatInput: FhsInputSchema = {
 							distance: 5,
 						},
 						{
-							type: "reveal",
-							depth: 4,
-							distance: 3,
-						},
-						{
 							type: "obstacle",
 							transparency: 0.2,
 							distance: 2,
 							height: 1,
+						},
+						{
+							type: "reveal",
+							depth: 200,
+							distance: 100,
 						},
 					],
 					type: "BuildingElementTransparent",
@@ -957,15 +957,15 @@ const expectedFlatInput: FhsInputSchema = {
 							distance: 5,
 						},
 						{
-							type: "reveal",
-							depth: 4,
-							distance: 3,
-						},
-						{
 							type: "obstacle",
 							transparency: 0.2,
 							distance: 2,
 							height: 1,
+						},
+						{
+							type: "reveal",
+							depth: 200,
+							distance: 100,
 						},
 					],
 				},
@@ -1956,6 +1956,8 @@ describe("FHS input mapper", () => {
 							numberOpenableParts: "1",
 							curtainsOrBlinds: false,
 							hasShading: true,
+							depthOfReveal: 200,
+							distanceFromGlassToStartOfReveal: 100,
 							shading: [
 								{
 									name: "blep",
@@ -1975,12 +1977,12 @@ describe("FHS input mapper", () => {
 									depth: 6,
 									distance: 5,
 								},
-								{
-									name: "blomp",
-									typeOfShading: "frame_or_reveal",
-									depth: 4,
-									distance: 3,
-								},
+								// {
+								// 	name: "blomp",
+								// 	typeOfShading: "frame_or_reveal",
+								// 	depth: 4,
+								// 	distance: 3,
+								// },
 								{
 									name: "blomk",
 									typeOfShading: "obstacle",
@@ -2046,6 +2048,8 @@ describe("FHS input mapper", () => {
 						midHeightOpenablePart1: 1,
 						openingToFrameRatio: 0.8,
 						maximumOpenableArea: 1,
+						depthOfReveal: 200,
+						distanceFromGlassToStartOfReveal: 100,
 						hasShading: true,
 						shading: [
 							{
@@ -2066,12 +2070,12 @@ describe("FHS input mapper", () => {
 								depth: 6,
 								distance: 5,
 							},
-							{
-								name: "blomp",
-								typeOfShading: "frame_or_reveal",
-								depth: 4,
-								distance: 3,
-							},
+							// {
+							// 	name: "blomp",
+							// 	typeOfShading: "frame_or_reveal",
+							// 	depth: 4,
+							// 	distance: 3,
+							// },
 							{
 								name: "blomk",
 								typeOfShading: "obstacle",

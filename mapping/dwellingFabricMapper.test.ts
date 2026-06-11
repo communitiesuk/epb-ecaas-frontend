@@ -995,6 +995,8 @@ describe("dwelling fabric mapper", () => {
 			thermalResistivityIncrease: 20,
 			solarTransmittanceReduction: 0.4,
 			hasShading: true,
+			depthOfReveal: 200,
+			distanceFromGlassToStartOfReveal: 100,
 			shading: [
 				{
 					name: "blep",
@@ -1013,12 +1015,6 @@ describe("dwelling fabric mapper", () => {
 					typeOfShading: "right_side_fin",
 					depth: 5,
 					distance: 6,
-				},
-				{
-					name: "blomp",
-					typeOfShading: "frame_or_reveal",
-					depth: 7,
-					distance: 8,
 				},
 				{
 					name: "blomk",
@@ -1141,15 +1137,15 @@ describe("dwelling fabric mapper", () => {
 					distance: 6,
 				},
 				{
-					type: "reveal",
-					depth: 7,
-					distance: 8,
-				},
-				{
 					type: "obstacle",
 					transparency: 0.2,
 					distance: 9,
 					height: 10,
+				},
+				{
+					type: "reveal",
+					depth: 200,
+					distance: 100,
 				},
 			],
 			security_risk: false,
@@ -1224,6 +1220,8 @@ describe("dwelling fabric mapper", () => {
 			maximumOpenableArea: 1,
 			securityRisk: false,
 			hasShading: true,
+			depthOfReveal: 200,
+			distanceFromGlassToStartOfReveal: 100,
 			shading: [
 				{
 					name: "blep",
@@ -1242,12 +1240,6 @@ describe("dwelling fabric mapper", () => {
 					typeOfShading: "right_side_fin",
 					depth: 5,
 					distance: 6,
-				},
-				{
-					name: "blomp",
-					typeOfShading: "frame_or_reveal",
-					depth: 7,
-					distance: 8,
 				},
 				{
 					name: "blomk",
@@ -1333,15 +1325,15 @@ describe("dwelling fabric mapper", () => {
 					distance: 6,
 				},
 				{
-					type: "reveal",
-					depth: 7,
-					distance: 8,
-				},
-				{
 					type: "obstacle",
 					transparency: 0.2,
 					distance: 9,
 					height: 10,
+				},
+				{
+					type: "reveal",
+					depth: 200,
+					distance: 100,
 				},
 			],
 		};

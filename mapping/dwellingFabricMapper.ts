@@ -547,19 +547,31 @@ const shadingTypeNameMap = {
 } as const;
 
 const mapShading = (shadingObjects: ShadingObjectData[]) => {
-	return shadingObjects.map(obj => {
-		return obj.typeOfShading === "obstacle" ? {
-			type: shadingTypeNameMap[obj.typeOfShading],
-			transparency: obj.transparency / 100,
-			distance: obj.distance,
-			height: obj.height,
-		} : {
-			type: shadingTypeNameMap[obj.typeOfShading],
-			depth: obj.depth,
-			distance: obj.distance,
-		};
-	});
+	return shadingObjects
+		.filter(obj => obj.typeOfShading !== "frame_or_reveal")
+		.map(obj => {
+			return obj.typeOfShading === "obstacle"
+				? {
+					type: shadingTypeNameMap[obj.typeOfShading],
+					transparency: obj.transparency / 100,
+					distance: obj.distance,
+					height: obj.height,
+				}
+				: {
+					type: shadingTypeNameMap[obj.typeOfShading],
+					depth: obj.depth,
+					distance: obj.distance,
+				};
+		});
 };
+
+function mapFrameOrReveal(depth: number, distance: number) {
+	return {
+		type: shadingTypeNameMap.frame_or_reveal,
+		depth,
+		distance,
+	} as const;
+}
 
 export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
@@ -627,7 +639,12 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			max_window_open_area: x.maximumOpenableArea,
 			security_risk: x.securityRisk,
 			free_area_height: x.heightOpenableArea,
-			shading: x.hasShading ? mapShading(x.shading) : [],
+			shading: [
+				...(x.hasShading ? mapShading(x.shading) : []),
+				...(x.depthOfReveal && x.distanceFromGlassToStartOfReveal
+					? [mapFrameOrReveal(x.depthOfReveal, x.distanceFromGlassToStartOfReveal)]
+					: []),
+			],
 			u_value: x.uValue,
 			treatment: x.curtainsOrBlinds ? [{
 				type: x.treatmentType,
@@ -764,7 +781,12 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
 				max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
 				window_part_list: mapWindowPartList(x),
-				shading: x.hasShading ? mapShading(x.shading) : [],
+				shading: [
+					...(x.hasShading ? mapShading(x.shading) : []),
+					...(x.depthOfReveal && x.distanceFromGlassToStartOfReveal
+						? [mapFrameOrReveal(x.depthOfReveal, x.distanceFromGlassToStartOfReveal)]
+						: []),
+				],
 			},
 		};
 	});
