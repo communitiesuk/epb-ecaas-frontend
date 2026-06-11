@@ -56,8 +56,6 @@ const doorForState = {
 	treatmentControls: "auto_motorised",
 	thermalResistivityIncrease: 1,
 	solarTransmittanceReduction: 0.1,
-	depthOfReveal: 20,
-	distanceFromGlassToStartOfReveal: 10,
 	hasShading: false,
 } as const satisfies ExternalGlazedDoorData;
 
@@ -80,8 +78,6 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.click(screen.getByTestId("treatmentControls_auto_motorised"));
 	await user.type(screen.getByTestId("thermalResistivityIncrease"), "1");
 	await user.type(screen.getByTestId("solarTransmittanceReduction"), "0.1");
-	await user.type(screen.getByTestId("depthOfReveal"), "20");
-	await user.type(screen.getByTestId("distanceFromGlassToStartOfReveal"), "10");
 	await user.click(screen.getByTestId(`hasShading_${hasShading ? "yes" : "no"}`));
 };
 
@@ -804,7 +800,7 @@ describe("external glazed door", () => {
 				expect(screen.queryByTestId("shadingDepth")).toBeNull();
 			});
 
-			it.each(["left_side_fin", "right_side_fin", "overhang"])(
+			it.each(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"])(
 				"shows depth and distance fields for %s type",
 				async (type) => {
 					await user.click(screen.getByTestId(`typeOfShading_${type}`));

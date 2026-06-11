@@ -476,7 +476,6 @@ export const gValueZod = fraction;
 export const maxWindowOpenAreaZod = z.number().min(0).max(100);
 export const freeAreaHeightZod = z.number().min(0).max(100);
 export const midHeightAirFlowPathZod = z.number().min(0).max(100);
-export const revealDimensionZod = z.number().min(0);
 
 const baseExternalGlazedDoorDataZod = namedWithId.extend({
 	isTheFrontDoor: z.boolean().optional(),
@@ -493,8 +492,6 @@ const baseExternalGlazedDoorDataZod = namedWithId.extend({
 	openingToFrameRatio: fraction,
 	maximumOpenableArea: maxWindowOpenAreaZod,
 	heightOpenableArea: freeAreaHeightZod,
-	depthOfReveal: revealDimensionZod.optional(),
-	distanceFromGlassToStartOfReveal: revealDimensionZod.optional(),
 });
 
 const openablePartsFields = {
@@ -646,8 +643,6 @@ const baseWindowData = namedWithId.extend({
 	solarTransmittance: gValueZod,
 	elevationalHeight: baseHeightTransparentZod,
 	openingToFrameRatio: fraction,
-	depthOfReveal: revealDimensionZod.optional(),
-	distanceFromGlassToStartOfReveal: revealDimensionZod.optional(),
 });
 
 export const windowDataZod = nestedDiscriminatedUnion(

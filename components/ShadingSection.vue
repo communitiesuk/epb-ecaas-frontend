@@ -29,6 +29,7 @@ const typeOptionsMap = {
 		frame_or_reveal: "Frame or reveal",
 	} ,
 	"window": {
+		frame_or_reveal: "Reveal",
 		left_side_fin: "Left side fin",
 		right_side_fin: "Right side fin",
 		overhang: "Overhang",
@@ -50,6 +51,7 @@ const typeOptionsSummaryMap = {
 		left_side_fin: "Left side fin",
 		right_side_fin: "Right side fin",
 		overhang: "Overhang",
+		frame_or_reveal: "Reveal",
 	},
 } as const;
 const typeOptionsSummary = typeOptionsSummaryMap[props.shadingSectionType];
@@ -61,29 +63,36 @@ const shadingSummaryData = (item: ShadingObjectData) => {
 		case "window":
 			if (item.typeOfShading === "obstacle") {
 				return {
-					"Type of shading": typeOptionsSummary[item.typeOfShading as keyof typeof typeOptionsSummary],
+					"Type of shading": typeOptionsSummary[item.typeOfShading],
 					"Height": `${item.height}m`,
 					"Distance from glass": `${item.distance}m`,
 					"Transparency": `${item.transparency}%`,
 				};
 			}
+			if (item.typeOfShading === "frame_or_reveal") {
+				return {
+					"Type of shading": typeOptionsSummary[item.typeOfShading],
+					[`Depth of ${sentenceToLowerCase(typeOptions[item.typeOfShading])}`]: `${item.depth}m`,
+					"Distance from glass to start of reveal": `${item.distance}m`,
+				};
+			}
 			return {
-				"Type of shading": typeOptionsSummary[item.typeOfShading as keyof typeof typeOptionsSummary],
-				[`Depth of ${sentenceToLowerCase(typeOptions[item.typeOfShading as keyof typeof typeOptions])}`]: `${item.depth}m`,
+				"Type of shading": typeOptionsSummary[item.typeOfShading],
+				[`Depth of ${sentenceToLowerCase(typeOptions[item.typeOfShading])}`]: `${item.depth}m`,
 				"Distance from glass": `${item.distance}m`,
 			};
 		case "PV":
 			if (item.typeOfShading === "obstacle") {
 				return {
-					"Type of shading": typeOptionsSummary[item.typeOfShading as keyof typeof typeOptionsSummary],
+					"Type of shading": typeOptionsSummary[item.typeOfShading],
 					"Height": `${item.height}m`,
 					"Distance from edge of PV": `${item.distance}m`,
 					"Transparency": `${item.transparency}%`,
 				};
 			}
 			return {
-				"Type of shading": typeOptionsSummary[item.typeOfShading as keyof typeof typeOptionsSummary],
-				[`Depth of ${sentenceToLowerCase(typeOptions[item.typeOfShading as keyof typeof typeOptions])}`]: `${item.depth}m`,
+				"Type of shading": typeOptionsSummary[item.typeOfShading],
+				[`Depth of ${sentenceToLowerCase(typeOptions[item.typeOfShading])}`]: `${item.depth}m`,
 				"Distance from edge of PV": `${item.distance}m`,
 			};
 	}
@@ -259,7 +268,7 @@ const removeShading = (i: number) => {
 							:key="`depth-${formModel.typeOfShading}`"
 							v-model="formModel.depth"
 							type="govInputWithSuffix"
-							:label="'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading as keyof typeof typeOptions] as string)"
+							:label="'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading] as string)"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
@@ -280,7 +289,7 @@ const removeShading = (i: number) => {
 							:key="`depth-${formModel.typeOfShading}`"
 							v-model="formModel.depth"
 							type="govInputWithSuffix"
-							label="Depth of frame or reveal"
+							:label="'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading] as string)"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
@@ -410,7 +419,7 @@ const removeShading = (i: number) => {
 							:key="`depth-${formModel.typeOfShading}`"
 							v-model="formModel.depth"
 							type="govInputWithSuffix"
-							:label="'Depth of ' + sentenceToLowerCase((typeOptions as any)[formModel.typeOfShading] as string)"
+							:label="'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading] as string)"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
@@ -431,7 +440,7 @@ const removeShading = (i: number) => {
 							:key="`depth-${formModel.typeOfShading}`"
 							v-model="formModel.depth"
 							type="govInputWithSuffix"
-							label="Depth of frame or reveal"
+							:label="'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading] as string)"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
@@ -439,7 +448,12 @@ const removeShading = (i: number) => {
 							id="shadingDistance"
 							v-model="formModel.distance"
 							type="govInputWithSuffix"
-							label="Distance from edge of PV"
+							:label="props.shadingSectionType === 'window'
+								? 'Distance from glass to start of reveal'
+								: 'Distance from edge of PV'"
+							:help="props.shadingSectionType === 'window'
+								? 'This is usually the thickness of the frame'
+								: undefined"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>

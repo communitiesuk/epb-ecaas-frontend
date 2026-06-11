@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getUrl, standardPitchOptions, uniqueName, type ExternalGlazedDoorData } from "#imports";
-import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod, revealDimensionZod } from "~/stores/ecaasStore.schema";
+import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import { isFlatRoofItem } from "~/utils/isFlatRoofItem";
 import { v4 as uuidv4 } from "uuid";
@@ -50,8 +50,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			maximumOpenableArea: fields.maximumOpenableArea,
 			heightOpenableArea: fields.height,
 			uValue: fields.uValue,
-			depthOfReveal: fields.depthOfReveal,
-			distanceFromGlassToStartOfReveal: fields.distanceFromGlassToStartOfReveal,
 			...(fields.curtainsOrBlinds ? {
 				curtainsOrBlinds: true,
 				treatmentType: fields.treatmentType,
@@ -382,27 +380,9 @@ const tagHasValidPitch = computed(() => {
 		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 		<h2 class="govuk-heading-l">Window shading</h2>
 		<FormKit
-			id="depthOfReveal"
-			type="govInputWithSuffix"
-			label="Depth of reveal"
-			name="depthOfReveal"
-			suffix-text="mm"
-			:validation="zodTypeAsFormKitValidation(revealDimensionZod)"
-		/>
-		<FormKit
-			id="distanceFromGlassToStartOfReveal"
-			type="govInputWithSuffix"
-			label="Distance from glass to start of reveal"
-			help="This is usually the thickness of the frame"
-			name="distanceFromGlassToStartOfReveal"
-			suffix-text="mm"
-			:validation="zodTypeAsFormKitValidation(revealDimensionZod)"
-		/>
-		<FormKit
 			id="hasShading"
 			type="govBoolean"
-			label="Does anything else shade the window?"
-			help="This could be an overhang, side fin or obstacle. Do not include anything already entered in distant shading."
+			label="Does anything shade the window?"
 			name="hasShading"
 			validation="required"
 		/>
