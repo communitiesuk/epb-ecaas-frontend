@@ -24,7 +24,6 @@ describe("floor of heated basement", () => {
 		arealHeatCapacity: "Medium",
 		massDistributionClass: "M",
 		depthOfBasementFloor: 2.5,
-		psiOfWallJunction: 0.05,
 		thicknessOfWalls: unitValue(50, millimetre),
 	};
 
@@ -45,7 +44,6 @@ describe("floor of heated basement", () => {
 			arealHeatCapacity: "Medium",
 			massDistributionClass: "M",
 			depthOfBasementFloor: 2.5,
-			psiOfWallJunction: 0.05,
 			thicknessOfWalls: unitValue(50, millimetre),
 		};
 
@@ -57,7 +55,6 @@ describe("floor of heated basement", () => {
 		await user.click(screen.getByTestId(`arealHeatCapacity_${values.arealHeatCapacity}`));
 		await user.click(screen.getByTestId(`massDistributionClass_${values.massDistributionClass}`));
 		await user.type(screen.getByTestId("depthOfBasementFloor"), String(values.depthOfBasementFloor));
-		await user.type(screen.getByTestId("psiOfWallJunction"), String(values.psiOfWallJunction));
 		await user.type(screen.getByTestId("thicknessOfWalls"), String(values.thicknessOfWalls.amount));
 	};
 
@@ -78,7 +75,6 @@ describe("floor of heated basement", () => {
 		await user.click(screen.getByTestId("arealHeatCapacity_Medium"));
 		await user.click(screen.getByTestId("massDistributionClass_M"));
 		await user.type(screen.getByTestId("depthOfBasementFloor"), "2.5");
-		await user.type(screen.getByTestId("psiOfWallJunction"), "0.05");
 		await user.type(screen.getByTestId("thicknessOfWalls"), "50");
 
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -118,7 +114,6 @@ describe("floor of heated basement", () => {
 		expect((await screen.findByTestId("arealHeatCapacity_Medium")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_M")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("depthOfBasementFloor")).value).toBe("2.5");
-		expect((await screen.findByTestId<HTMLInputElement>("psiOfWallJunction")).value).toBe("0.05");
 		expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("50");
 	});
 
@@ -137,7 +132,6 @@ describe("floor of heated basement", () => {
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 		expect((await screen.findByTestId("depthOfBasementFloor_error"))).toBeDefined();
-		expect((await screen.findByTestId("psiOfWallJunction_error"))).toBeDefined();
 		expect((await screen.findByTestId("thicknessOfWalls_error"))).toBeDefined();
 	});
 
@@ -177,12 +171,12 @@ describe("floor of heated basement", () => {
 
 		await user.type(screen.getByTestId("name"), "Heated Basement Floor 1");
 		await user.type(screen.getByTestId("netSurfaceArea"), "45.0");
+		await user.type(screen.getByTestId("totalArea"), "25");
 		await user.type(screen.getByTestId("uValue"), "0.25");
 		await user.type(screen.getByTestId("thermalResistance"), "0.5");
 		await user.click(screen.getByTestId("arealHeatCapacity_Medium"));
 		await user.click(screen.getByTestId("massDistributionClass_M"));
 		await user.type(screen.getByTestId("depthOfBasementFloor"), "2.5");
-		await user.type(screen.getByTestId("psiOfWallJunction"), "0.05");
 		await user.type(screen.getByTestId("thicknessOfWalls"), "50");
 		await user.click(screen.getByTestId("saveAndComplete"));
 

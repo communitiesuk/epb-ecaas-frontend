@@ -289,7 +289,7 @@ const expectedHouseInput: FhsInputSchema = {
 					areal_heat_capacity: "Very light",
 					mass_distribution_class: "I: Mass concentrated at internal side",
 					perimeter: 100,
-					psi_wall_floor_junc: 1,
+					psi_wall_floor_junc: 0,
 					thickness_walls: 0.08,
 					floor_type: "Slab_no_edge_insulation",
 				},
@@ -717,7 +717,7 @@ const expectedFlatInput: FhsInputSchema = {
 						type: "horizontal",
 						width: 0.32,
 					}],
-					psi_wall_floor_junc: 0.4,
+					psi_wall_floor_junc: 0,
 					thickness_walls: 0.8,
 					floor_type: "Slab_edge_insulation",
 				},
@@ -732,7 +732,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: "D: Mass equally distributed",
 					perimeter: 21,
 					thermal_resist_walls_base: 3,
-					psi_wall_floor_junc: 0.8,
+					psi_wall_floor_junc: 0,
 					thickness_walls: 0.04,
 					floor_type: "Heated_basement",
 				},
@@ -1166,6 +1166,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
+							id: "f4ef5b62-d7b5-4c3c-be29-e3d98876ff22",
 							name: "ground-floor",
 							surfaceArea: 40,
 							totalArea: 50,
@@ -1174,7 +1175,6 @@ describe("FHS input mapper", () => {
 							arealHeatCapacity: "Very light",
 							massDistributionClass: "I",
 							perimeter: 100,
-							psiOfWallJunction: 1,
 							thicknessOfWalls: unitValue(80, millimetre),
 							typeOfGroundFloor: "Slab_no_edge_insulation",
 						},
@@ -1692,6 +1692,7 @@ describe("FHS input mapper", () => {
 						{
 							...baseForm,
 							data: {
+								id: "ad81239d-bb32-458e-aa3a-cb7ec376fbe3",
 								name: "ground floor 1",
 								surfaceArea: 12,
 								totalArea: 20,
@@ -1700,7 +1701,6 @@ describe("FHS input mapper", () => {
 								arealHeatCapacity: "Very light",
 								massDistributionClass: "E",
 								perimeter: 40,
-								psiOfWallJunction: 0.4,
 								thicknessOfWalls: unitValue(0.8, metre),
 								typeOfGroundFloor: "Slab_edge_insulation" as const,
 								edgeInsulationType: ["horizontal"] as ["horizontal"],
@@ -1711,6 +1711,7 @@ describe("FHS input mapper", () => {
 						{
 							...baseForm,
 							data: {
+								id: "f5021de4-518a-41b4-8f14-0d8a9804cdd9",
 								name: "ground floor 2",
 								surfaceArea: 26,
 								totalArea: 30,
@@ -1719,7 +1720,6 @@ describe("FHS input mapper", () => {
 								arealHeatCapacity: "Very light",
 								massDistributionClass: "D",
 								perimeter: 21,
-								psiOfWallJunction: 0.8,
 								typeOfGroundFloor: "Heated_basement",
 								thicknessOfWalls: unitValue(40, millimetre),
 								depthOfBasementFloorBelowGround: 2,

@@ -41,8 +41,8 @@ const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation
 	outside: "Outside",
 };
 
-const associatedItemOptions = useAssociatedItems(["wall", "roof", "window", "externalGlazedDoor"]);
-const mvhrAssociatedItemOptions = useAssociatedItems(["wall", "roof", "window"]);
+const associatedItemOptions = useAssociatedItems(["wall", "roof", "window", "externalGlazedDoor", "none"]);
+const mvhrAssociatedItemOptions = useAssociatedItems(["wall", "roof", "window", "none"]);
 
 const packagedProduct = ref<Product | undefined>();
 

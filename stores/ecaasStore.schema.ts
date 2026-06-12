@@ -197,7 +197,7 @@ export const groundPerimeterZod = z.number().min(0).max(1000);
 
 export const thicknessOfWallsZod = addConstraints(zodUnit("length"), { min: 0, max: 100000 });
 
-const baseGroundFloorData = named.extend({
+const baseGroundFloorData = namedWithId.extend({
 	surfaceArea: groundSurfaceAreaZod,
 	totalArea: groundTotalAreaZod,
 	uValue,
@@ -205,7 +205,6 @@ const baseGroundFloorData = named.extend({
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	perimeter: groundPerimeterZod,
-	psiOfWallJunction: z.number().min(0).max(2),
 	thicknessOfWalls: thicknessOfWallsZod,
 });
 
@@ -272,7 +271,7 @@ const groundFloorDataZod = z.union(
 
 export type GroundFloorData = z.infer<typeof groundFloorDataZod>;
 
-const floorAboveUnheatedBasementDataZod = named.extend({
+const floorAboveUnheatedBasementDataZod = namedWithId.extend({
 	surfaceArea: groundSurfaceAreaZod,
 	totalArea: groundTotalAreaZod,
 	uValue,
@@ -280,7 +279,6 @@ const floorAboveUnheatedBasementDataZod = named.extend({
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	perimeter: groundPerimeterZod,
-	psiOfWallJunction: z.number().min(0).max(2),
 	thicknessOfWalls: thicknessOfWallsZod,
 	depthOfBasementFloor: z.number(),
 	heightOfBasementWalls: z.number(),
@@ -299,7 +297,6 @@ const floorOfHeatedBasementDataZod = namedWithId.extend({
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	depthOfBasementFloor: z.number(),
-	psiOfWallJunction: z.number().min(0).max(2),
 	thicknessOfWalls: thicknessOfWallsZod,
 });
 
@@ -666,12 +663,22 @@ export type ThermalBridgingData = AssertFormKeysArePageIds<{
 
 export const lengthThermalBridgeLinearZod = z.number().min(0).max(10000);
 
-const linearThermalBridgeDataZod = named.extend({
+const baseLinearThermalBridgeData = named.extend({
 	typeOfThermalBridge: thermalBridgeJunctionTypeZod,
 	linearThermalTransmittance: z.number(),
 	length: lengthThermalBridgeLinearZod,
 	reference: z.optional(z.string()),
 });
+
+const linearThermalBridgeDataZod = z.discriminatedUnion("typeOfThermalBridge", [
+	baseLinearThermalBridgeData.extend({
+		typeOfThermalBridge: thermalBridgeJunctionTypeZod.extract(["E5", "E6", "E22"]),
+		associatedItemId: z.string().trim().min(1),
+	}),
+	baseLinearThermalBridgeData.extend({
+		typeOfThermalBridge: thermalBridgeJunctionTypeZod.exclude(["E5", "E6", "E22"]),
+	}),
+]);
 
 export type LinearThermalBridgeData = z.infer<typeof linearThermalBridgeDataZod>;
 

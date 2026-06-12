@@ -14,8 +14,8 @@ const modelNames = await useProductReferences(
 	productData => productData.modelName,
 );
 
-const associatedItems = Object.fromEntries(useAssociatedItems(["wall", "roof", "window", "externalGlazedDoor"]));
-const mvhrAssociatedItems = Object.fromEntries(useAssociatedItems(["wall", "roof", "window"]));
+const associatedItems = Object.fromEntries(useAssociatedItems(["wall", "roof", "window", "externalGlazedDoor", "none"]));
+const mvhrAssociatedItems = Object.fromEntries(useAssociatedItems(["wall", "roof", "window", "none"]));
 
 const { 
 	dwellingSpaceWindows, 
