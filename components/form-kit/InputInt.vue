@@ -42,6 +42,7 @@ function handleBlur(e: FocusEvent) {
 		<div v-if="help" :id="`${id}_hint`" class="govuk-hint">
 			{{ help }}
 		</div>
+		<slot />
 		<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 			<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 		</p>

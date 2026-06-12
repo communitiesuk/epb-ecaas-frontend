@@ -432,7 +432,7 @@ const minBuildingStoreys = (node: FormKitNode) => {
 			name="isPartGCompliant"
 			validation="required"
 			data-field="PartGcompliance"
-			help="This confirms that water usage is 125 litres per person per day or less."
+			help="This confirms that water usage is 125 litres per person per day or less"
 		/>
 		<FormKit
 			id="partOActiveCoolingRequired"
