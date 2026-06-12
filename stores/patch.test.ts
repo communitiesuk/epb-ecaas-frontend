@@ -67,6 +67,7 @@ describe("ECaaS store patch", () => {
 	it("patches lighting as an array when imported data is an object", () => {
 		const legacyLighting: Record<string, unknown> = {
 			"dwellingFabric": {
+				...state.dwellingFabric,
 				"dwellingSpaceLighting": {
 					"data": {
 						"numberOfLEDBulbs": 35,
@@ -83,6 +84,7 @@ describe("ECaaS store patch", () => {
 
 		const expectedLighting: Record<string, unknown> = {
 			"dwellingFabric": {
+				...state.dwellingFabric,
 				"dwellingSpaceLighting": {
 					"data": [],
 				},
@@ -307,5 +309,53 @@ describe("ECaaS store patch", () => {
 				"unit": "millimetres",
 			});
 		}
+	});
+
+	it("patches floor ids", () => {
+		const floorsWithoutIds: Record<string, unknown> = {
+			"dwellingFabric": {
+				...state.dwellingFabric,
+				"dwellingSpaceFloors": {
+					"dwellingSpaceGroundFloor": {
+						"data": [
+							{
+								"data": {
+									"name": "Floor 1",
+								},
+							},
+						],
+					},
+					"dwellingSpaceFloorAboveUnheatedBasement": {
+						"data": [
+							{
+								"data": {
+									"name": "Floor 2",
+								},
+							},
+						],
+					},
+					"dwellingSpaceFloorOfHeatedBasement": {
+						"data": [
+							{
+								"data": {
+									"name": "Floor 3",
+								},
+							},
+						],
+					},
+				},
+			},
+		};
+
+		const patchedState = patchState({
+			...state,
+			...floorsWithoutIds,
+		}) as EcaasState;
+
+		const { dwellingSpaceGroundFloor, dwellingSpaceFloorAboveUnheatedBasement, dwellingSpaceFloorOfHeatedBasement } = patchedState.dwellingFabric.dwellingSpaceFloors;
+
+		expect(dwellingSpaceGroundFloor.data[0]?.data.id).toBeDefined();
+		expect(dwellingSpaceFloorAboveUnheatedBasement.data[0]?.data.id).toBeDefined();
+		expect(dwellingSpaceFloorOfHeatedBasement.data[0]?.data.id).toBeDefined();
 	});
 });

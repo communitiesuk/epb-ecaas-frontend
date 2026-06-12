@@ -69,10 +69,10 @@ function patchPipework(state: Record<string, unknown>) {
 		};
 	}
 }
+
 /**
  * Handle legacy radiator product references and lengths persisted in old formats
  */
-
 function patchRadiators(state: Record<string, unknown>) {
 	const storeState = state as EcaasState;
 	
@@ -96,9 +96,6 @@ function patchRadiators(state: Record<string, unknown>) {
 	});
 }
 
-
-
-
 /**
  * Handle edge case where emitters do not have an ID
  * @param state 
@@ -115,7 +112,15 @@ function patchHeatEmitterIds(state: Record<string, unknown>) {
 	});
 }
 
+function patchFloorIds(state: Record<string, unknown>) {
+	const storeState = state as EcaasState;
 
+	const { dwellingSpaceGroundFloor, dwellingSpaceFloorAboveUnheatedBasement, dwellingSpaceFloorOfHeatedBasement } = storeState.dwellingFabric.dwellingSpaceFloors;
+
+	dwellingSpaceGroundFloor.data.forEach(floor => floor.data.id ??= uuidv4());
+	dwellingSpaceFloorAboveUnheatedBasement.data.forEach(floor => floor.data.id ??= uuidv4());
+	dwellingSpaceFloorOfHeatedBasement.data.forEach(floor => floor.data.id ??= uuidv4());
+}
 
 /**
  * Patch state from deprecated properties
@@ -129,6 +134,7 @@ export function patchState(state: Record<string, unknown>): Record<string, unkno
 	patchPipework(state);
 	patchHeatEmitterIds(state);
 	patchRadiators(state);
+	patchFloorIds(state);
 
 	return state;
 }
