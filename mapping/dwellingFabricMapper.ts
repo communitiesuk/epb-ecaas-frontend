@@ -41,6 +41,13 @@ function mapLegacyMillimetresToMetres(value: number | Length): number {
 	return typeof value === "number" ? value / 1000 : asMetres(value);
 }
 
+function calculatePsiValue(linearThermalBridges: LinearThermalBridgeData[]) {
+	const psiWithLengths = linearThermalBridges.reduce((prev, curr) => prev + (curr.linearThermalTransmittance * curr.length), 0);
+	const totalLength = linearThermalBridges.reduce((prev, curr) => prev + curr.length, 0);
+
+	return totalLength === 0 ? 0 : psiWithLengths / totalLength;
+}
+
 export function mapZoneParametersData(
 	state: ResolvedState,
 ): Pick<FhsInputSchema, "HeatingControlType" | "Zone" | "GroundFloorArea"> {
@@ -90,6 +97,7 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zon
 
 export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor, dwellingSpaceFloorAboveUnheatedBasement, dwellingSpaceFloorOfHeatedBasement } = state.dwellingFabric.dwellingSpaceFloors;
+	const { dwellingSpaceLinearThermalBridges } = state.dwellingFabric.dwellingSpaceThermalBridging;
 	const floorSuffix = "floor";
 
 	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: "Slab_edge_insulation" }>): SchemaEdgeInsulation {
@@ -120,11 +128,12 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 		return insulation;
 	}
 
-
 	const groundFloorData: { [key: string]: BuildingElementGroundForSchema }[] = dwellingSpaceGroundFloor.map(x => {
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
 
 		let groundFloor: BuildingElementGroundForSchema;
+
+		const groundFloorThermalBridges = dwellingSpaceLinearThermalBridges?.filter(b => b.typeOfThermalBridge === "E5" && b.associatedItemId === x.id) ?? [];
 
 		switch (x.typeOfGroundFloor) {
 			case "Slab_edge_insulation": {
@@ -137,7 +146,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					areal_heat_capacity: x.arealHeatCapacity,
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
-					psi_wall_floor_junc: x.psiOfWallJunction,
+					psi_wall_floor_junc: calculatePsiValue(groundFloorThermalBridges),
 					thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 					floor_type: x.typeOfGroundFloor,
 					edge_insulation: mapEdgeInsulation(x),
@@ -154,7 +163,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					areal_heat_capacity: x.arealHeatCapacity,
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
-					psi_wall_floor_junc: x.psiOfWallJunction,
+					psi_wall_floor_junc: calculatePsiValue(groundFloorThermalBridges),
 					thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 					floor_type: x.typeOfGroundFloor,
 				};
@@ -170,7 +179,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					areal_heat_capacity: x.arealHeatCapacity,
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
-					psi_wall_floor_junc: x.psiOfWallJunction,
+					psi_wall_floor_junc: calculatePsiValue(groundFloorThermalBridges),
 					thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 					floor_type: x.typeOfGroundFloor,
 					height_upper_surface: x.heightOfFloorUpperSurface / 1000,
@@ -191,7 +200,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					areal_heat_capacity: x.arealHeatCapacity,
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
-					psi_wall_floor_junc: x.psiOfWallJunction,
+					psi_wall_floor_junc: calculatePsiValue(groundFloorThermalBridges),
 					thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 					floor_type: x.typeOfGroundFloor,
 					depth_basement_floor: x.depthOfBasementFloorBelowGround,
@@ -209,7 +218,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					areal_heat_capacity: x.arealHeatCapacity,
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
-					psi_wall_floor_junc: x.psiOfWallJunction,
+					psi_wall_floor_junc: calculatePsiValue(groundFloorThermalBridges),
 					thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 					floor_type: x.typeOfGroundFloor,
 					height_basement_walls: x.heightOfBasementWallsAboveGround,
@@ -277,6 +286,8 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 
 	const floorAboveUnheatedBasementData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceFloorAboveUnheatedBasement?.map(x => {
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
+		const floorAboveUnheatedBasementThermalBridges = dwellingSpaceLinearThermalBridges?.filter(b => b.typeOfThermalBridge === "E6" && b.associatedItemId === x.id) ?? [];
+
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementGround",
@@ -286,7 +297,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 				floor_type: "Unheated_basement",
 				thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 				perimeter: x.perimeter,
-				psi_wall_floor_junc: x.psiOfWallJunction,
+				psi_wall_floor_junc: calculatePsiValue(floorAboveUnheatedBasementThermalBridges),
 				thermal_resistance_floor_construction: x.thermalResistance,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
@@ -304,11 +315,17 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 		if (!x.id) {
 			throw new Error(`Floor of heated basement '${x.name}' must have an ID`);
 		}
+
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
+
 		const wallOfHeatedBasement = state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallOfHeatedBasement?.find(wall => wall.associatedBasementFloorId === x.id);
+
 		if (!wallOfHeatedBasement) {
 			throw new Error(`No wall of heated basement found associated with floor of heated basement with id ${x.id}`);
 		}
+
+		const floorOfUnheatedBasementThermalBridges = dwellingSpaceLinearThermalBridges?.filter(b => b.typeOfThermalBridge === "E22" && b.associatedItemId === x.id) ?? [];
+
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementGround",
@@ -320,7 +337,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				depth_basement_floor: x.depthOfBasementFloor,
 				perimeter: 0, // see EC-1347
-				psi_wall_floor_junc: x.psiOfWallJunction,
+				psi_wall_floor_junc: calculatePsiValue(floorOfUnheatedBasementThermalBridges),
 				thickness_walls: mapLegacyMillimetresToMetres(x.thicknessOfWalls),
 				floor_type: "Heated_basement",
 				thermal_resistance_construction: x.thermalResistance,
@@ -427,9 +444,14 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	const wallOfHeatedBasementData: { [key: string]: BuildingElementGroundForSchema }[] = dwellingSpaceWallOfHeatedBasement?.map(wall => {
 		const nameWithSuffix = suffixName(wall.name, wallSuffix);
 		const floorOfHeatedBasement = state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement?.find(floor => floor.id === wall.associatedBasementFloorId);
+		const { dwellingSpaceLinearThermalBridges } = state.dwellingFabric.dwellingSpaceThermalBridging;
+
 		if (!floorOfHeatedBasement) {
 			throw new Error(`Wall of heated basement '${wall.name}' references floor ID '${wall.associatedBasementFloorId}' which does not exist`);
 		};
+
+		const floorOfUnheatedBasementThermalBridges = dwellingSpaceLinearThermalBridges?.filter(b => b.typeOfThermalBridge === "E22" && b.associatedItemId === floorOfHeatedBasement.id) ?? [];
+
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementGround",
@@ -444,7 +466,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				thermal_resistance_floor_construction: wall.thermalResistance,
 				depth_basement_floor: floorOfHeatedBasement.depthOfBasementFloor,
 				perimeter: wall.perimeter,
-				psi_wall_floor_junc: floorOfHeatedBasement.psiOfWallJunction,
+				psi_wall_floor_junc: calculatePsiValue(floorOfUnheatedBasementThermalBridges),
 				thickness_walls: mapLegacyMillimetresToMetres(floorOfHeatedBasement.thicknessOfWalls),
 			},
 		};

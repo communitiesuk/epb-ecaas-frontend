@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isEcaasForm, type EcaasForm, type FloorAboveUnheatedBasementData, type GroundFloorData } from "~/stores/ecaasStore.schema";
+import { isEcaasForm, type EcaasForm, type FloorAboveUnheatedBasementData, type FloorOfHeatedBasementData, type GroundFloorData } from "~/stores/ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 import { page as pages } from "~/data/pages/pages";
 
@@ -74,15 +74,16 @@ const hasIncompleteEntries = () =>
 		.some(section => section.data.some(item => isEcaasForm(item) && !item.complete));
 
 const validatePsiJunctions = (): boolean => {
-	const { dwellingSpaceGroundFloor, dwellingSpaceFloorAboveUnheatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
+	const { dwellingSpaceGroundFloor, dwellingSpaceFloorAboveUnheatedBasement, dwellingSpaceFloorOfHeatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
+	const { dwellingSpaceWallOfHeatedBasement } = store.dwellingFabric.dwellingSpaceWalls;
 	const linearThermalBridges = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data;
 
-	const validateJunctions = (type: "E5" | "E6", data: EcaasForm<GroundFloorData | FloorAboveUnheatedBasementData>[]) => {
+	const validateJunctions = (type: "E5" | "E6" | "E22", data: EcaasForm<GroundFloorData | FloorAboveUnheatedBasementData | FloorOfHeatedBasementData>[]) => {
 		const groupedByAssociatedItem = Object.groupBy(linearThermalBridges, x => {
-			const e5Bridge = x.data as LinearThermalBridgeData;
+			const bridge = x.data as LinearThermalBridgeData;
 			
-			if (e5Bridge.typeOfThermalBridge === type) {
-				return e5Bridge.associatedItemId;
+			if (bridge.typeOfThermalBridge === type) {
+				return bridge.associatedItemId;
 			}
 
 			return "ungrouped";
@@ -94,19 +95,26 @@ const validatePsiJunctions = (): boolean => {
 			return false;
 		}
 
-		return associatedItemIds.every(associatedItemId => {
-			const associatedGroundFloor = data.find(x => x.data.id === associatedItemId);
+		return associatedItemIds.filter(x => x !== "ungrouped").every(associatedItemId => {
+			const associatedFloor = data.find(x => x.data.id === associatedItemId);
 
 			const totalLength = groupedByAssociatedItem[associatedItemId]?.map(x => x.data.length)
 				.reduce((acc, curr) => (acc ?? 0) + (curr ?? 0), 0);
 
-			return (totalLength ?? 0) <= (associatedGroundFloor?.data.perimeter ?? 0);
+			if (associatedFloor && "perimeter" in associatedFloor.data) {
+				return (totalLength ?? 0) <= (associatedFloor?.data.perimeter ?? 0);
+			}
+
+			const wallOfHeatedBasement = dwellingSpaceWallOfHeatedBasement.data.find(wall => wall.data.associatedBasementFloorId === associatedFloor?.data.id);
+
+			return (totalLength ?? 0) <= (wallOfHeatedBasement?.data.perimeter ?? 0);
 		});
 	};
 
 	return [
 		validateJunctions("E5", dwellingSpaceGroundFloor.data as EcaasForm<GroundFloorData>[]),
 		validateJunctions("E6", dwellingSpaceFloorAboveUnheatedBasement.data as EcaasForm<FloorAboveUnheatedBasementData>[]),
+		validateJunctions("E22", dwellingSpaceFloorOfHeatedBasement.data as EcaasForm<FloorOfHeatedBasementData>[]),
 	].every(isValid => isValid);
 };
 </script>
