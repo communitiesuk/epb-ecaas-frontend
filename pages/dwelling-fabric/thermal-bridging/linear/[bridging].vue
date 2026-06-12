@@ -181,6 +181,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<GovDetails summary-text="Help with this input">
 					<p class="govuk-body">All ground floor entries must have at least one E5 junction associated with it. The total lengths of all E5 junctions associated with a ground floor must match the length of the ground floor.</p>
 				</GovDetails>
+				<div v-if="!associatedGroundFloorOptions.length">
+					<p class="govuk-error-message">No ground floors added.</p>
+					<NuxtLink :to="getUrl('dwellingSpaceGroundFloorCreate')" class="govuk-link gov-radios-add-link">
+						Click here to add a ground floor
+					</NuxtLink>
+				</div>
 			</FormKit>
 			<FormKit
 				v-if="model.typeOfThermalBridge === 'E6'"
@@ -195,6 +201,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<GovDetails summary-text="Help with this input">
 					<p class="govuk-body">All floor above an unheated basement entries must have at least one E6 junction associated with it. The total lengths of all E6 junctions associated with a floor above an unheated basement must be no longer than the perimeter of the floor element.</p>
 				</GovDetails>
+				<div v-if="!associatedFloorAboveUnheatedBasement.length">
+					<p class="govuk-error-message">No floors above an unheated basement added.</p>
+					<NuxtLink :to="getUrl('dwellingSpaceFloorAboveUnheatedBasementCreate')" class="govuk-link gov-radios-add-link">
+						Click here to add a floor above an unheated basement
+					</NuxtLink>
+				</div>
 			</FormKit>
 			<FormKit
 				v-if="model.typeOfThermalBridge === 'E22'"
@@ -209,6 +221,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<GovDetails summary-text="Help with this input">
 					<p class="govuk-body">All heated basement floor entries must have at least one E22 junction associated with it. The total lengths of all E22 junctions associated with a heated basement floor must match the length of the floor element.</p>
 				</GovDetails>
+				<div v-if="!associatedHeatedBasementFloor.length">
+					<p class="govuk-error-message">No heated basement floors added.</p>
+					<NuxtLink :to="getUrl('dwellingSpaceFloorOfHeatedBasementCreate')" class="govuk-link gov-radios-add-link">
+						Click here to add a heated basement floor
+					</NuxtLink>
+				</div>
 			</FormKit>
 			<FormKit
 				id="linearThermalTransmittance"

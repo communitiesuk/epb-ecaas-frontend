@@ -12,10 +12,10 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const { mounted } = useMounted();
 
-
 const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
 const index = getStoreIndex(groundFloorData);
 const floorData = useItemToEdit("floor", groundFloorData);
+const floorId = floorData?.data.id ?? uuidv4();
 
 // prepopulate unit inputs when using old input format (raw numbers)
 if (floorData?.data) {
@@ -58,7 +58,7 @@ const saveForm = (fields: GroundFloorData) => {
 		const { dwellingSpaceFloors } = state.dwellingFabric;
 
 		const commonFields = {
-			id: uuidv4(),
+			id: floorId,
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
 			totalArea: fields.totalArea,
@@ -70,13 +70,13 @@ const saveForm = (fields: GroundFloorData) => {
 			thicknessOfWalls: unitValue(fields.thicknessOfWalls.amount, millimetre),
 		};
 
-		let floorData: GroundFloorData;
+		let groundFloorData: GroundFloorData;
 
 		switch (fields.typeOfGroundFloor) {
 			case "Slab_edge_insulation":
 			{
 				if ("horizontalEdgeInsulationWidth" in fields && "verticalEdgeInsulationDepth" in fields) {
-					floorData = {
+					groundFloorData = {
 						...commonFields,
 						typeOfGroundFloor: "Slab_edge_insulation",
 						edgeInsulationType: ["horizontal", "vertical"],
@@ -86,7 +86,7 @@ const saveForm = (fields: GroundFloorData) => {
 						verticalEdgeInsulationThermalResistance: fields.verticalEdgeInsulationThermalResistance,
 					};
 				} else if ("horizontalEdgeInsulationWidth" in fields) {
-					floorData = {
+					groundFloorData = {
 						...commonFields,
 						typeOfGroundFloor: "Slab_edge_insulation",
 						edgeInsulationType: ["horizontal"],
@@ -94,7 +94,7 @@ const saveForm = (fields: GroundFloorData) => {
 						horizontalEdgeInsulationThermalResistance: fields.horizontalEdgeInsulationThermalResistance,
 					};
 				} else {
-					floorData = {
+					groundFloorData = {
 						...commonFields,
 						typeOfGroundFloor: "Slab_edge_insulation",
 						edgeInsulationType: ["vertical"],
@@ -105,13 +105,13 @@ const saveForm = (fields: GroundFloorData) => {
 				break;
 			}
 			case "Slab_no_edge_insulation":
-				floorData = {
+				groundFloorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 				};
 				break;
 			case "Suspended_floor":
-				floorData = {
+				groundFloorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					heightOfFloorUpperSurface: fields.heightOfFloorUpperSurface,
@@ -122,7 +122,7 @@ const saveForm = (fields: GroundFloorData) => {
 				};
 				break;
 			case "Heated_basement":
-				floorData = {
+				groundFloorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					depthOfBasementFloorBelowGround: fields.depthOfBasementFloorBelowGround,
@@ -130,7 +130,7 @@ const saveForm = (fields: GroundFloorData) => {
 				};
 				break;
 			case "Unheated_basement":
-				floorData = {
+				groundFloorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					thermalTransmittanceOfFloorAboveBasement: fields.thermalTransmittanceOfFloorAboveBasement,
@@ -150,7 +150,7 @@ const saveForm = (fields: GroundFloorData) => {
 			dwellingSpaceFloors.dwellingSpaceGroundFloor = { data: [] };
 		}
 		
-		dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = { data: floorData, complete: true };
+		dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = { data: groundFloorData, complete: true };
 		dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
 	});
 
@@ -162,6 +162,7 @@ autoSaveElementForm<GroundFloorData>({
 	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor,
 	defaultName: "Ground floor",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= floorId;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
 	},
