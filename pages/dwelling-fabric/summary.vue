@@ -382,7 +382,7 @@ const unglazedDoorSummary: SummarySection = {
 
 function formatShadingRowsForSummary(shading: ShadingObjectData[]): Record<string, string> {
 	const rows: Record<string, string> = {};
-	shading.forEach((shadingEntry, i) => {
+	shading?.forEach((shadingEntry, i) => {
 		const n = i + 1;
 		const typeOfShading = displaySnakeToSentenceCase(shadingEntry.typeOfShading);
 		rows[`Name of shading ${n}`] = shadingEntry.name;
