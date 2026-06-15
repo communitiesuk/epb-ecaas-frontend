@@ -92,7 +92,7 @@ describe("Dwelling details summary", () => {
 			"Energy sources": "Mains gas, LPG (Liquid petroleum gas) - bulk, Electricity",
 			"Can any energy generated on site be exported to the grid?": "No, generated energy can’t be exported to the grid",
 			"Is the dwelling Part G compliant?": "Yes",
-			"Is active cooling required to make the dwelling Part O compliant?": "No",
+			"Is air conditioning required for the dwelling to be part O compliant?": "No",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
