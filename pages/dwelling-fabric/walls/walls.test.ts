@@ -103,8 +103,7 @@ describe("walls", () => {
 		uValue: 1,
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
-		partyWallCavityType: "defined_resistance",
-		thermalResistanceCavity: 4.2,
+		partyWallCavityType: "solid",
 	};
 
 	const party2: PartyWallData = {

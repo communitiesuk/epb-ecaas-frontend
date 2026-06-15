@@ -242,7 +242,6 @@ const partyWallSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Cavity type": displaySnakeToSentenceCase(show(x.partyWallCavityType)),
 			"Lining type": displaySnakeToSentenceCase(show(x.partyWallLiningType)),
-			"Thermal resistance of cavity": dim(x.thermalResistanceCavity, "square metre kelvin per watt"),
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceWalls"),

@@ -368,7 +368,6 @@ const partyWallDataZod = namedWithId.extend({
 	massDistributionClass,
 	partyWallCavityType: partyWallCavityTypeZod,
 	partyWallLiningType: z.optional(partyWallLiningTypeZod),
-	thermalResistanceCavity: thermalResistanceCavityZod,
 });
 
 export type PartyWallData = z.infer<typeof partyWallDataZod>;

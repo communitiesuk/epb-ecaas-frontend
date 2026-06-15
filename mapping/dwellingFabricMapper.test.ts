@@ -557,22 +557,6 @@ describe("dwelling fabric mapper", () => {
 			},
 		};
 
-		const partyWallWithThermalResistanceCavity: EcaasForm<PartyWallData> = {
-			...baseForm,
-			data: {
-				id: "party-id-with-thermal-resistance-cavity",
-				name: "Party wall 2",
-				pitchOption: "90",
-				pitch: 90,
-				surfaceArea: 10,
-				uValue: 2,
-				arealHeatCapacity: "Light",
-				massDistributionClass: "E",
-				partyWallCavityType: "defined_resistance",
-				thermalResistanceCavity: 24,
-			},
-		};
-
 		const partyWallWithoutExtraAttributes: EcaasForm<PartyWallData> = {
 			...baseForm,
 			data: {
@@ -638,7 +622,7 @@ describe("dwelling fabric mapper", () => {
 				dwellingSpaceWalls: {
 					dwellingSpaceExternalWall: { ...baseForm, data: [externalWall] },
 					dwellingSpaceInternalWall: { ...baseForm, data: [internalWall] },
-					dwellingSpacePartyWall: { ...baseForm, data: [partyWallWithLiningType, partyWallWithThermalResistanceCavity, partyWallWithoutExtraAttributes] },
+					dwellingSpacePartyWall: { ...baseForm, data: [partyWallWithLiningType, partyWallWithoutExtraAttributes] },
 					dwellingSpaceWallToUnheatedSpace: { ...baseForm, data: [wallToUnheatedSpace] },
 					dwellingSpaceWallOfHeatedBasement: { ...baseForm, data: [wallOfHeatedBasement] },
 
@@ -656,7 +640,6 @@ describe("dwelling fabric mapper", () => {
 		const externalWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalWall.data.name + wallSuffix]! as BuildingElementOpaque;
 		const internalWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalWall.data.name + wallSuffix]! as BuildingElementAdjacentConditionedSpace;
 		const partyWallWithLiningTypeElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyWallWithLiningType.data.name + wallSuffix]! as BuildingElementPartyWall;
-		const partyWallWithThermalResistanceCavityElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyWallWithThermalResistanceCavity.data.name + wallSuffix]! as BuildingElementPartyWall;
 		const partyWallWithoutExtraAttributesElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyWallWithoutExtraAttributes.data.name + wallSuffix]! as BuildingElementPartyWall;
 		const wallToUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[wallToUnheatedSpace.data.name + wallSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
 
@@ -701,19 +684,6 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		expect(partyWallWithLiningTypeElement).toEqual(expectedPartyWallWithLiningType);
-
-		const expectPartyWallWithThermalResistanceCavity: BuildingElementPartyWall = {
-			type: "BuildingElementPartyWall",
-			pitch: partyWallWithThermalResistanceCavity.data.pitch!,
-			area: partyWallWithThermalResistanceCavity.data.surfaceArea,
-			areal_heat_capacity: partyWallWithThermalResistanceCavity.data.arealHeatCapacity,
-			mass_distribution_class: fullMassDistributionClass(partyWallWithThermalResistanceCavity.data.massDistributionClass),
-			party_wall_cavity_type: "defined_resistance",
-			thermal_resistance_cavity: 24,
-			u_value: partyWallWithThermalResistanceCavity.data.uValue,
-		};
-
-		expect(partyWallWithThermalResistanceCavityElement).toEqual(expectPartyWallWithThermalResistanceCavity);
 
 		const expectPartyWallWithoutExtraAttributes: BuildingElementPartyWall = {
 			type: "BuildingElementPartyWall",

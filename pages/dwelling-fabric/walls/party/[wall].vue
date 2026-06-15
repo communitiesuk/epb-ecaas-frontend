@@ -4,7 +4,6 @@ import { standardPitchOptions, getUrl, uniqueName, type SnakeToSentenceCase } fr
 import type { SchemaPartyWallCavityType, SchemaPartyWallLiningType } from "~/schema/api-schema.types";
 import { surfaceAreaPartyWallZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
-import type { UnitValue } from "~/utils/units/types";
 
 const title = "Party wall";
 const store = useEcaasStore();
@@ -18,18 +17,14 @@ const wallId = wallData?.data.id ?? uuidv4();
 const index = getStoreIndex(partyWallData);
 const model: Ref<PartyWallData | undefined> = ref(wallData?.data);
 
-const greaterThanZero = (node: FormKitNode) => {
-	const value = node.value as UnitValue;
-	return value.amount > 0;
-};
 const partyWallCavityTypeOptions = {
 	unfilled_unsealed: "Unfilled and unsealed",
 	unfilled_sealed: "Unfilled and sealed",
 	filled_sealed: "Filled and sealed",
 	filled_unsealed: "Filled and unsealed",
 	solid: "Solid",
-	defined_resistance: "Define custom resistance",
-} as const satisfies Record<SchemaPartyWallCavityType, string>;
+} as const satisfies Record<Exclude<SchemaPartyWallCavityType, "defined_resistance">, string>;
+
 const partyWallLiningTypeOptions = {
 	wet_plaster: "Wet plaster",
 	dry_lined: "Dry lined",
@@ -52,7 +47,6 @@ const saveForm = (fields: PartyWallData) => {
 				massDistributionClass: fields.massDistributionClass,
 				partyWallCavityType: fields.partyWallCavityType,
 				partyWallLiningType: fields.partyWallLiningType,
-				thermalResistanceCavity: fields.thermalResistanceCavity,
 				uValue: fields.uValue,
 			},
 			complete: true,
@@ -170,16 +164,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="partyWallLiningTypeOptions"
 			validation="required"
 			data-field="Zone.BuildingElement.*.party_wall_lining_type"
-		/>
-		<FormKit
-			v-if="mounted && model?.partyWallCavityType === 'defined_resistance'"
-			id="thermalResistanceCavity"
-			name="thermalResistanceCavity"
-			type="govInputWithUnit"
-			unit="square metre kelvin per watt"
-			label="Thermal resistance of the party wall cavity"
-			:validation-rules="{ exclusiveRangeFromMin: greaterThanZero }"
-			validation="required | exclusiveRangeFromMin"
 		/>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

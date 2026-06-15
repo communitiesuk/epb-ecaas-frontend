@@ -415,12 +415,10 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				pitch: extractPitch(x),
 				area: x.surfaceArea,
 				u_value: x.uValue,
-				thermal_resistance_cavity: x.thermalResistanceCavity,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				party_wall_cavity_type: x.partyWallCavityType,
 				...(["unfilled_unsealed", "unfilled_sealed", "filled_unsealed"].includes(x.partyWallCavityType) && { party_wall_lining_type: x.partyWallLiningType }),
-				...(x.partyWallCavityType === "defined_resistance" && { thermal_resistance_cavity: x.thermalResistanceCavity }),
 			},
 		};
 	}) || [];
