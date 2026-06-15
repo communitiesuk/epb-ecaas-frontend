@@ -191,11 +191,11 @@ const minBuildingStoreys = (node: FormKitNode) => {
 			:validation-messages="{
 				isInteger: `Storey of flat must be a round number.`,
 			}"
-			help="If the flat is over multiple storeys, enter the storey of the lowest habitable area"
+			help="A ground floor flat would be 1, first floor would be 2, second floor would be 3, and so on"
 			data-field="General.storey_of_dwelling"
 		>
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-body">A ground floor flat would be 1, first floor would be 2, second floor would be 3, and so on.</p>
+				<p class="govuk-body">If the flat is over multiple storeys, enter the storey of the lowest habitable area.</p>
 			</GovDetails>
 		</FormKit>
 		<FormKit

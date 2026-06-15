@@ -30,7 +30,7 @@ const generalDetailsSummary: SummarySection = {
 		"Energy sources": displayFuelTypes(generalDetailsData.fuelType),
 		"Can any energy generated on site be exported to the grid?": displayCanExportToGrid(generalDetailsData.canExportToGrid),
 		"Is the dwelling Part G compliant?": displayBoolean(generalDetailsData.isPartGCompliant),
-		"Is active cooling required to make the dwelling Part O compliant?": displayBoolean(generalDetailsData.partOActiveCoolingRequired),
+		"Is air conditioning required for the dwelling to be part O compliant?": displayBoolean(generalDetailsData.partOActiveCoolingRequired),
 	},
 	editUrl: getUrl("generalSpecifications"),
 };
