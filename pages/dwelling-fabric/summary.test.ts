@@ -1623,6 +1623,342 @@ describe("dwelling space windows", () => {
 		}
 	});
 
+	it("should display the correct data for the windows section when there is more than one window", async () => {
+		const store = useEcaasStore();
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [{
+						data: {
+							...windowData.data,
+							hasShading: true,
+							shading: [
+								{ name: "Window 1 Shading 1", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
+								{ name: "Window 1 Shading 2", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 22 },
+							],
+						},
+					},
+					{
+						data: {
+							...windowData.data,
+							id: "test-id-2",
+							name: "Window 2",
+							hasShading: true,
+							shading: [
+								{ name: "Window 2 Shading 1", typeOfShading: "right_side_fin", distance: 1, depth: 11 },
+								{ name: "Window 2 Shading 2", typeOfShading: "overhang", distance: 4, depth: 44 } ],
+						},
+					}],
+				},
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+		const window2Shading1Expected = {
+			"Name of shading 1": "Window 2 Shading 1",
+			"Type of shading 1": "Right side fin",
+			"Distance of shading 1 from glass": `1 ${metre.suffix}`,
+			"Depth of shading 1": `11 ${metre.suffix}`,
+		};
+
+		const window2Shading2Expected = {
+			"Name of shading 2": "Window 2 Shading 2",
+			"Type of shading 2": "Overhang",
+			"Distance of shading 2 from glass": `4 ${metre.suffix}`,
+			"Depth of shading 2": `44 ${metre.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(window2Shading1Expected)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWindows-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			const ddCells = lineResult.querySelectorAll("dd");
+			expect(ddCells[1]?.textContent).toBe(value);
+		}
+
+		for (const [key, value] of Object.entries(window2Shading2Expected)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWindows-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			const ddCells = lineResult.querySelectorAll("dd");
+			expect(ddCells[1]?.textContent).toBe(value);
+		}	
+	});
+
+	// it("should display height/transparency but not depth when only obstacle shading exists (single window)", async () => {
+	// 	const store = useEcaasStore();
+
+	// 	store.$patch({
+	// 		dwellingFabric: {
+	// 			dwellingSpaceWindows: {
+	// 				data: [{
+	// 					data: {
+	// 						...windowData.data,
+	// 						hasShading: true,
+	// 						shading: [
+	// 							{ name: "Obstacle 1", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 30 },
+	// 							{ name: "Obstacle 2", typeOfShading: "obstacle", distance: 4, height: 26, transparency: 40 },
+	// 						],
+	// 					},
+	// 				}],
+	// 			},
+	// 			dwellingSpaceWalls: {
+	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+	// 			},
+	// 		},
+	// 	});
+
+	// 	await renderSuspended(Summary);
+
+	// 	expect(screen.queryByText(/Height of shading 1/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading 1/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Height of shading 2/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading 2/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Depth of shading/i)).toBeNull();
+	// });
+
+	// it("should display depth but not height/transparency when only non-obstacle shading exists (single window)", async () => {
+	// 	const store = useEcaasStore();
+
+	// 	store.$patch({
+	// 		dwellingFabric: {
+	// 			dwellingSpaceWindows: {
+	// 				data: [{
+	// 					data: {
+	// 						...windowData.data,
+	// 						hasShading: true,
+	// 						shading: [
+	// 							{ name: "Left fin", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
+	// 							{ name: "Right fin", typeOfShading: "right_side_fin", distance: 2, depth: 13 },
+	// 						],
+	// 					},
+	// 				}],
+	// 			},
+	// 			dwellingSpaceWalls: {
+	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+	// 			},
+	// 		},
+	// 	});
+
+	// 	await renderSuspended(Summary);
+
+	// 	expect(screen.queryByText(/Depth of shading 1/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Depth of shading 2/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Height of shading/i)).toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading/i)).toBeNull();
+	// });
+
+	// it("should display both obstacle and non-obstacle fields when mixed shading exists (single window)", async () => {
+	// 	const store = useEcaasStore();
+
+	// 	store.$patch({
+	// 		dwellingFabric: {
+	// 			dwellingSpaceWindows: {
+	// 				data: [{
+	// 					data: {
+	// 						...windowData.data,
+	// 						hasShading: true,
+	// 						shading: [
+	// 							{ name: "Obstacle 1", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 30 },
+	// 							{ name: "Right fin", typeOfShading: "right_side_fin", distance: 2, depth: 13 },
+	// 						],
+	// 					},
+	// 				}],
+	// 			},
+	// 			dwellingSpaceWalls: {
+	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+	// 			},
+	// 		},
+	// 	});
+
+	// 	await renderSuspended(Summary);
+
+	// 	expect(screen.queryByText(/Height of shading 1/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading 1/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Depth of shading 2/i)).not.toBeNull();
+	// });
+
+	// it("should display height/transparency but not depth when only obstacle shading exists (multiple windows)", async () => {
+	// 	const store = useEcaasStore();
+
+	// 	store.$patch({
+	// 		dwellingFabric: {
+	// 			dwellingSpaceWindows: {
+	// 				data: [
+	// 					{
+	// 						data: {
+	// 							...windowData.data,
+	// 							hasShading: true,
+	// 							shading: [
+	// 								{ name: "Obstacle 1", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 30 },
+	// 								{ name: "Obstacle 2", typeOfShading: "obstacle", distance: 2, height: 26, transparency: 34 },
+	// 							],
+	// 						},
+	// 					},
+	// 					{
+	// 						data: {
+	// 							...windowData.data,
+	// 							id: "test-id-2",
+	// 							name: "Window 2",
+	// 							hasShading: true,
+	// 							shading: [
+	// 								{ name: "Obstacle 1", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 30 },
+	// 								{ name: "Obstacle 2", typeOfShading: "obstacle", distance: 2, height: 26, transparency: 34 },
+	// 							],
+	// 						},
+	// 					},
+	// 				],
+	// 			},
+	// 			dwellingSpaceWalls: {
+	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+	// 			},
+	// 		},
+	// 	});
+
+	// 	await renderSuspended(Summary);
+
+	// 	expect(screen.queryByText(/Height of shading 1/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading 1/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Height of shading 2/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading 2/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Depth of shading/i)).toBeNull();
+	// });
+
+	// it("should display depth but not height/transparency when only non-obstacle shading exists (multiple windows)", async () => {
+	// 	const store = useEcaasStore();
+
+	// 	store.$patch({
+	// 		dwellingFabric: {
+	// 			dwellingSpaceWindows: {
+	// 				data: [
+	// 					{
+	// 						data: {
+	// 							...windowData.data,
+	// 							hasShading: true,
+	// 							shading: [
+	// 								{ name: "Left fin", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
+	// 								{ name: "Right fin", typeOfShading: "right_side_fin", distance: 2, depth: 13 },
+	// 							],
+	// 						},
+	// 					},
+	// 					{
+	// 						data: {
+	// 							...windowData.data,
+	// 							id: "test-id-2",
+	// 							name: "Window 2",
+	// 							hasShading: true,
+	// 							shading: [
+	// 								{ name: "Overhang", typeOfShading: "overhang", distance: 1, depth: 11 },
+	// 								{ name: "Right fin", typeOfShading: "right_side_fin", distance: 4, depth: 20 },
+	// 							],
+	// 						},
+	// 					},
+	// 				],
+	// 			},
+	// 			dwellingSpaceWalls: {
+	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+	// 			},
+	// 		},
+	// 	});
+
+	// 	await renderSuspended(Summary);
+
+	// 	expect(screen.queryByText(/Depth of shading 1/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Depth of shading 2/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Height of shading/i)).toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading/i)).toBeNull();
+	// });
+
+	// it("should display both obstacle and non-obstacle fields when mixed shading exists (multiple windows)", async () => {
+	// 	const store = useEcaasStore();
+
+	// 	store.$patch({
+	// 		dwellingFabric: {
+	// 			dwellingSpaceWindows: {
+	// 				data: [
+	// 					{
+	// 						data: {
+	// 							...windowData.data,
+	// 							hasShading: true,
+	// 							shading: [
+	// 								{ name: "Left fin", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
+	// 								{ name: "Obstacle", typeOfShading: "obstacle", distance: 2, height: 26, transparency: 34 },
+	// 							],
+	// 						},
+	// 					},
+	// 					{
+	// 						data: {
+	// 							...windowData.data,
+	// 							id: "test-id-2",
+	// 							name: "Window 2",
+	// 							hasShading: true,
+	// 							shading: [
+	// 								{ name: "Overhang", typeOfShading: "overhang", distance: 1, depth: 11 },
+	// 								{ name: "Right fin", typeOfShading: "right_side_fin", distance: 4, depth: 20 },
+	// 							],
+	// 						},
+	// 					},
+	// 				],
+	// 			},
+	// 			dwellingSpaceWalls: {
+	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+	// 			},
+	// 		},
+	// 	});
+
+	// 	await renderSuspended(Summary);
+
+	// 	const window1Shading2Expected = {
+	// 		"Name of shading 2": "Obstacle",
+	// 		"Type of shading 2": "Obstacle",
+	// 		"Distance of shading 2 from glass": `2 ${metre.suffix}`,
+	// 		"Height of shading 2": `26 ${metre.suffix}`,
+	// 		"Transparency of shading 2": "34 %",
+	// 		"Depth of shading 2": "-",
+	// 	};
+
+	// 	for (const [key, value] of Object.entries(window1Shading2Expected)) {
+	// 		const lineResult = await screen.findByTestId(
+	// 			`summary-dwellingSpaceWindows-${hyphenate(key)}`,
+	// 		);
+
+	// 		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+
+	// 		const ddCells = lineResult.querySelectorAll("dd");
+
+	// 		expect(ddCells[0]?.textContent).toBe(value);
+	// 	}
+
+	// 	const window2Shading2Expected = {
+	// 		"Name of shading 2": "Right fin",
+	// 		"Type of shading 2": "Right side fin",
+	// 		"Distance of shading 2 from glass": `4 ${metre.suffix}`,
+	// 		"Height of shading 2": "-",
+	// 		"Transparency of shading 2": "-",
+	// 		"Depth of shading 2": `20 ${metre.suffix}`,
+	// 	};
+
+	// 	for (const [key, value] of Object.entries(window2Shading2Expected)) {
+	// 		const lineResult = await screen.findByTestId(
+	// 			`summary-dwellingSpaceWindows-${hyphenate(key)}`,
+	// 		);
+
+	// 		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+
+	// 		const ddCells = lineResult.querySelectorAll("dd");
+
+	// 		expect(ddCells[1]?.textContent).toBe(value);
+	// 	}
+	// });
+
 	it("displays transparency for obstacle when non-obstacle shading is added first", async () => {
 		const store = useEcaasStore();
 		store.$patch({

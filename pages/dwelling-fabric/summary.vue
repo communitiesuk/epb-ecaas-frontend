@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { emptyValueRendering, getUrl, getTabItems } from "#imports";
+import { emptyValueRendering, getUrl, getTabItems, type ExternalGlazedDoorData, type WindowData } from "#imports";
 import { displayColour } from "~/utils/display";
 
 const title = "Dwelling fabric summary";
@@ -379,24 +379,57 @@ const unglazedDoorSummary: SummarySection = {
 	editUrl: getUrl("dwellingSpaceDoors"),
 };
 
+// function formatShadingRowsForSummary(shading: ShadingObjectData[]): Record<string, string> {
+// 	const rows: Record<string, string> = {};
+// 	shading?.forEach((shadingEntry, i) => {
+// 		const n = i + 1;
+// 		const typeOfShading = displaySnakeToSentenceCase(shadingEntry.typeOfShading);
+// 		const isObstacle = shadingEntry.typeOfShading === "obstacle";
+
+// 		rows[`Name of shading ${n}`] = shadingEntry.name;
+// 		rows[`Type of shading ${n}`] = typeOfShading;
+// 		rows[`Distance of shading ${n} from glass`] = dim(shadingEntry.distance, "metres");
+
+// 		if (isObstacle) {
+// 			rows[`Height of shading ${n}`] = dim(shadingEntry.height, "metres");
+// 			rows[`Transparency of shading ${n}`] = show(shadingEntry.transparency + " %");
+// 			// rows[`Depth of shading ${n}`] = emptyValueRendering;
+// 		} else {
+// 			// rows[`Height of shading ${n}`] = emptyValueRendering;
+// 			// rows[`Transparency of shading ${n}`] = emptyValueRendering;
+// 			rows[`Depth of shading ${n}`] = dim(shadingEntry.depth, "metres");
+// 		}
+// 	});
+// 	return rows;
+// }
+
 function formatShadingRowsForSummary(shading: ShadingObjectData[]): Record<string, string> {
 	const rows: Record<string, string> = {};
+
 	shading?.forEach((shadingEntry, i) => {
 		const n = i + 1;
-		const typeOfShading = displaySnakeToSentenceCase(shadingEntry.typeOfShading);
+		const isObstacle = shadingEntry.typeOfShading === "obstacle";
+
 		rows[`Name of shading ${n}`] = shadingEntry.name;
-		rows[`Type of shading ${n}`] = typeOfShading;
+		rows[`Type of shading ${n}`] = displaySnakeToSentenceCase(shadingEntry.typeOfShading);
 		rows[`Distance of shading ${n} from glass`] = dim(shadingEntry.distance, "metres");
-		if (shadingEntry.typeOfShading === "obstacle") {
-			rows[`Height of shading ${n}`] = dim(shadingEntry.height, "metres");
-			rows[`Transparency of shading ${n}`] = show(shadingEntry.transparency + " %");
-			rows[`Depth of shading ${n}`] = emptyValueRendering;
-		} else {
-			rows[`Height of shading ${n}`] = emptyValueRendering;
-			rows[`Transparency of shading ${n}`] = emptyValueRendering;
-			rows[`Depth of shading ${n}`] = dim(shadingEntry.depth, "metres");
-		}
+
+		rows[`Height of shading ${n}`] =
+            isObstacle
+            	? dim(shadingEntry.height, "metres")
+            	: emptyValueRendering;
+
+		rows[`Transparency of shading ${n}`] =
+            isObstacle
+            	? show(shadingEntry.transparency + " %")
+            	: emptyValueRendering;
+
+		rows[`Depth of shading ${n}`] =
+            isObstacle
+            	? emptyValueRendering
+            	: dim(shadingEntry.depth, "metres");
 	});
+
 	return rows;
 }
 
@@ -443,7 +476,7 @@ const glazedDoorSummary: SummarySection = {
 			"Depth of reveal": dim(x.depthOfReveal, "millimetres"),
 			"Distance from glass to start of reveal": dim(x.distanceFromGlassToStartOfReveal, "millimetres"),
 			"Does anything shade the window?": displayBoolean(x.hasShading),
-			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvArrayData, { hasShading: true }>).shading) } : {}),
+			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<ExternalGlazedDoorData, { hasShading: true }>).shading) } : {}),
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceDoors"),
@@ -546,7 +579,7 @@ const windowSummary: SummarySection = {
 			"Depth of reveal": dim(x.depthOfReveal, "millimetres"),
 			"Distance from glass to start of reveal": dim(x.distanceFromGlassToStartOfReveal, "millimetres"),
 			"Does anything shade the window?": displayBoolean(x.hasShading),
-			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvArrayData, { hasShading: true }>).shading) } : {}),
+			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<WindowData, { hasShading: true }>).shading) } : {}),
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceWindows"),
