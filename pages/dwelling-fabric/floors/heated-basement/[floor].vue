@@ -150,11 +150,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="thicknessOfWalls"
 			type="govInputWithUnit"
-			label="Thickness of walls"
+			label="Thickness of walls where they meet the floor"
 			:unit="millimetre"
 			name="thicknessOfWalls"
 			:validation="zodTypeAsFormKitValidation(thicknessOfWallsZod)"
-			help="Enter the physical thickness of the ground floor wall. Typically more than 300mm. If the thickness varies, enter a weighted average."
+			help="Typically between 30mm to 80mm. If this value varies, enter a weighted average."
 		/>
 		<div class="govuk-button-group govuk-!-margin-top-6">
 			<div class="govuk-button-group">

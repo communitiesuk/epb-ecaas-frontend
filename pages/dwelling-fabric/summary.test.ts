@@ -139,6 +139,7 @@ const floorsData: FloorsData = {
 		data: [{
 			data: {
 				name: "Floor above unheated basement 1",
+				totalArea: 45,
 				surfaceArea: 45,
 				uValue: 0.25,
 				thermalResistance: 4,
@@ -550,7 +551,7 @@ describe("Dwelling space fabric summary", () => {
 			"Areal heat capacity": "Medium",
 			"Mass distribution class": "Internal",
 			"Depth of basement floor below ground": `2.5 ${metre.suffix}`,
-			"Thickness of walls": `0.3 ${millimetre.suffix}`,
+			"Thickness of walls where they meet the floor": `0.3 ${millimetre.suffix}`,
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
@@ -700,17 +701,18 @@ describe("Dwelling space fabric summary", () => {
 		const expectedResult = {
 			"Name": "Floor above unheated basement 1",
 			"Net surface area": `45 ${metresSquare.suffix}`,
-			"U-value": `0.25 ${wattsPerSquareMeterKelvin.suffix}`,
-			"Thermal resistance": `4 ${squareMeterKelvinPerWatt.suffix}`,
+			"Total area": `45 ${metresSquare.suffix}`,
 			"Areal heat capacity": "Medium",
 			"Mass distribution class": "Internal",
+			"U-value of floor, basement void and ground": `0.25 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Thermal resistance of floor only": `4 ${squareMeterKelvinPerWatt.suffix}`,
+			"U-value of the foundations": `1.5 ${wattsPerSquareMeterKelvin.suffix}`,
 			"Perimeter": `30 ${metre.suffix}`,
+			"Depth of the basement floor below ground level": `0.5 ${metre.suffix}`,
+			"Height of the basement walls above ground": `1 ${metre.suffix}`,
+			"U-value of the basement walls above ground": `1 ${squareMeterKelvinPerWatt.suffix}`,
+			"Thermal resistance of basement walls below ground": `0.5 ${squareMeterKelvinPerWatt.suffix}`,
 			"Thickness of walls at the edge of the floor": `0.3 ${millimetre.suffix}`,
-			"Depth of the basement floor": `0.5 ${metre.suffix}`,
-			"Height of the basement walls": `1 ${metre.suffix}`,
-			"Thermal resistance of basement walls": `0.5 ${squareMeterKelvinPerWatt.suffix}`,
-			"Thermal transmittance of the basement walls": `1 ${squareMeterKelvinPerWatt.suffix}`,
-			"Thermal transmittance of the foundations": `1.5 ${wattsPerSquareMeterKelvin.suffix}`,
 		};
 
 

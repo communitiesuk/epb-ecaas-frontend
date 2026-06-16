@@ -50,7 +50,6 @@ autoSaveElementForm<WallOfHeatedBasementData>({
 	},
 });
 
-
 watch(
 	() => [model.value, store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement.data.length] as const,
 	() => {
@@ -63,6 +62,7 @@ watch(
 		}
 	},
 );
+
 const { dwellingSpaceFloorOfHeatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
 const basementFloorOptions = 
 	new Map(
@@ -70,7 +70,6 @@ const basementFloorOptions =
 			.filter((e) => e?.data?.id != null)
 			.map((e) => [e.data.id!, e.data.name]),
 	);
-
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -82,6 +81,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<GovInset>Only use this to enter walls that are underground. Enter any parts of walls in the basement that are not underground as an external or internal wall.</GovInset>
 	<FormKit
 		v-model="model"
 		type="form"
