@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 const title = "Ground floor";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
-
+const nuxtApp = useNuxtApp();
 const { mounted } = useMounted();
 
 const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
@@ -165,6 +165,8 @@ autoSaveElementForm<GroundFloorData>({
 		newData.data.id ??= floorId;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
+
+		nuxtApp.callHook("app:floor:updated", newData.data);
 	},
 });
 

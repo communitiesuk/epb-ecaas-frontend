@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isEcaasForm, type EcaasForm, type FloorAboveUnheatedBasementData, type GroundFloorData, type LinearThermalBridgeData } from "~/stores/ecaasStore.schema";
+import { isEcaasForm, type EcaasForm, type LinearThermalBridgeData } from "~/stores/ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 import { page as pages } from "~/data/pages/pages";
 
@@ -21,6 +21,9 @@ function handleRemove(thermalBridgingType: ThermalBridgingType, index: number) {
 			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].data = items.length ? items : [];
 			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].complete = false;
 		});
+
+		const { errors } = useJunctionValidation();
+		psiJunctionErrors.value = errors;
 	}
 } 
 
@@ -50,14 +53,13 @@ function handleDuplicate<T extends ThermalBridgingData>(thermalBridgingType: The
 			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].data.push(newItem);
 			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].complete = false;
 		});
+
+		const { errors } = useJunctionValidation();
+		psiJunctionErrors.value = errors;
 	}
 }
 
 function handleComplete() {
-	if (!validatePsiJunctions()) {
-		return;
-	}
-
 	store.$patch({
 		dwellingFabric: {
 			dwellingSpaceThermalBridging: {
@@ -74,40 +76,8 @@ const hasIncompleteEntries = () =>
 	Object.values(store.dwellingFabric.dwellingSpaceThermalBridging)
 		.some(section => section.data.some(item => isEcaasForm(item) && !item.complete));
 
-const validatePsiJunctions = (): boolean => {
-	psiJunctionErrors.value = [];
-
-	const { dwellingSpaceGroundFloor, dwellingSpaceFloorAboveUnheatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
-	const linearThermalBridges = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data;
-
-	const validateJunctions = (data: EcaasForm<GroundFloorData | FloorAboveUnheatedBasementData>[], type: "E5" | "E6") => {
-		data.forEach(floor => {
-			const thermalBridging = linearThermalBridges.filter(x => {
-				const bridge = x.data as LinearThermalBridgeData;
-
-				return bridge.typeOfThermalBridge === type && 
-					(type === "E6" ? (bridge.associatedItemId === floor.data.id || bridge.associatedItemId === "none") :
-						bridge.associatedItemId === floor.data.id);
-			});
-
-			if (!thermalBridging.length) {
-				psiJunctionErrors.value.push(`You must add an ${type} junction associated with the element ${floor.data.name}`);
-				return;
-			}
-
-			const totalLength = thermalBridging.map(x => x.data.length).reduce((acc, curr) => (acc ?? 0) + (curr ?? 0), 0);
-
-			if ((totalLength ?? 0) > (floor.data.perimeter ?? 0)) {
-				psiJunctionErrors.value.push(`The total lengths of all the thermal bridges associated with ${floor.data.name} are longer than the perimeter of the element itself.`);
-			}
-		});
-	};
-
-	validateJunctions(dwellingSpaceGroundFloor.data as EcaasForm<GroundFloorData>[], "E5");
-	validateJunctions(dwellingSpaceFloorAboveUnheatedBasement.data as EcaasForm<FloorAboveUnheatedBasementData>[], "E6");
-
-	return !psiJunctionErrors.value.length;
-};
+const { errors } = useJunctionValidation();
+psiJunctionErrors.value = errors;
 </script>
 
 <template>
@@ -117,16 +87,18 @@ const validatePsiJunctions = (): boolean => {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovErrorSummary
-		test-id="errorSummary"
-		:error-list="[
-			...psiJunctionErrors.map((error, index) => ({
-				id: `thermalBridgesAssociatedElements_${index}`,
-				text: error
-			})),
-		]"
-		:use-links="false"
-	/>
+	<ClientOnly>
+		<GovErrorSummary
+			test-id="errorSummary"
+			:error-list="[
+				...psiJunctionErrors.map((error, index) => ({
+					id: `thermalBridgesAssociatedElements_${index}`,
+					text: error
+				})),
+			]"
+			:use-links="false"
+		/>
+	</ClientOnly>
 	<CustomList
 		id="linearThermalBridges"
 		title="Linear thermal bridges"
@@ -158,9 +130,12 @@ const validatePsiJunctions = (): boolean => {
 		<GovButton :href="pages('dwellingFabricSummary').url" secondary>
 			View summary
 		</GovButton>
-		<CompleteElement
-			:is-complete="Object.values(store.dwellingFabric.dwellingSpaceThermalBridging).every(section => section.complete)"
-			:disabled="hasIncompleteEntries()"
-			@completed="handleComplete"/>
+		<ClientOnly>
+			<CompleteElement
+				:is-complete="Object.values(store.dwellingFabric.dwellingSpaceThermalBridging).every(section => section.complete)"
+				:disabled="!!psiJunctionErrors.length || hasIncompleteEntries()"
+				@completed="handleComplete"
+			/>
+		</ClientOnly>
 	</div>
 </template>

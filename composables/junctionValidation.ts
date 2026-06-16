@@ -1,41 +1,36 @@
 
-export function useJunctionValidation(): boolean {
+export function useJunctionValidation() {
 	const store = useEcaasStore();
+	const errors: string[] = [];
 
 	const { dwellingSpaceGroundFloor, dwellingSpaceFloorAboveUnheatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
 	const linearThermalBridges = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data;
 
-	const validateJunctions = (type: "E5" | "E6", data: EcaasForm<GroundFloorData | FloorAboveUnheatedBasementData>[]) => {
-		const groupedByAssociatedItem = Object.groupBy(linearThermalBridges, x => {
-			const bridge = x.data as LinearThermalBridgeData;
-			
-			if (bridge.typeOfThermalBridge === type) {
-				return bridge.associatedItemId;
+	const validateJunctions = (data: EcaasForm<GroundFloorData | FloorAboveUnheatedBasementData>[], type: "E5" | "E6") => {
+		data.forEach(floor => {
+			const thermalBridging = linearThermalBridges.filter(x => {
+				const bridge = x.data as LinearThermalBridgeData;
+
+				return bridge.typeOfThermalBridge === type && 
+					(type === "E6" ? (bridge.associatedItemId === floor.data.id || bridge.associatedItemId === "none") :
+						bridge.associatedItemId === floor.data.id);
+			});
+
+			if (!thermalBridging.length) {
+				errors.push(`You must add an ${type} junction associated with the element ${floor.data.name}`);
+				return;
 			}
 
-			return "ungrouped";
+			const totalLength = thermalBridging.map(x => x.data.length).reduce((acc, curr) => (acc ?? 0) + (curr ?? 0), 0);
+
+			if ((totalLength ?? 0) > (floor.data.perimeter ?? 0)) {
+				errors.push(`The total lengths of all the thermal bridges associated with ${floor.data.name} are longer than the perimeter of the element itself.`);
+			}
 		});
-
-		const associatedItemIds = Object.keys(groupedByAssociatedItem);
-
-		if (associatedItemIds.some(x => x === "undefined")) {
-			return false;
-		}
-
-		return associatedItemIds
-			.filter(x => x !== "ungrouped")
-			.every(associatedItemId => {
-				const associatedFloor = data.find(x => x.data.id === associatedItemId);
-
-				const totalLength = groupedByAssociatedItem[associatedItemId]?.map(x => x.data.length)
-					.reduce((acc, curr) => (acc ?? 0) + (curr ?? 0), 0);
-
-				return (totalLength ?? 0) <= (associatedFloor?.data.perimeter ?? 0);
-			});
 	};
 
-	return [
-		validateJunctions("E5", dwellingSpaceGroundFloor.data as EcaasForm<GroundFloorData>[]),
-		validateJunctions("E6", dwellingSpaceFloorAboveUnheatedBasement.data as EcaasForm<FloorAboveUnheatedBasementData>[]),
-	].every(isValid => isValid);
+	validateJunctions(dwellingSpaceGroundFloor.data as EcaasForm<GroundFloorData>[], "E5");
+	validateJunctions(dwellingSpaceFloorAboveUnheatedBasement.data as EcaasForm<FloorAboveUnheatedBasementData>[], "E6");
+
+	return { errors };
 }

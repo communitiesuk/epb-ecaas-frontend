@@ -238,7 +238,7 @@ describe("thermal bridges", () => {
 		});
 	});
 
-	describe("validate thermal bridging associated floors", () => {
+	describe("junction validation", () => {
 		it("displays an error when ground floor has no associated E5 thermal bridging", async () => {
 			const groundFloor: Partial<GroundFloorData> = {
 				id: "b8e0b021-dbf2-446f-a52c-7b2cddcb9cb2",
@@ -259,7 +259,6 @@ describe("thermal bridges", () => {
 			});
 
 			await renderSuspended(ThermalBridges);
-			await user.click(screen.getByTestId("markAsCompleteButton"));
 
 			const error = screen.getByTestId("errorSummary")
 				.querySelectorAll("li > span")
@@ -267,6 +266,7 @@ describe("thermal bridges", () => {
 				.find(e => e[1].textContent === "You must add an E5 junction associated with the element Ground floor 1");
 
 			expect(error).toBeDefined();
+			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
 		});
 
 		it("displays an error when floor above unheated basement has no associated E6 thermal bridging", async () => {
@@ -289,7 +289,6 @@ describe("thermal bridges", () => {
 			});
 
 			await renderSuspended(ThermalBridges);
-			await user.click(screen.getByTestId("markAsCompleteButton"));
 
 			const error = screen.getByTestId("errorSummary")
 				.querySelectorAll("li > span")
@@ -297,6 +296,7 @@ describe("thermal bridges", () => {
 				.find(e => e[1].textContent === "You must add an E6 junction associated with the element Floor above unheated basement");
 
 			expect(error).toBeDefined();
+			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
 		});
 
 		it("displays an error when total length of thermal bridging exceeds perimeter of associated floor", async () => {
@@ -334,7 +334,6 @@ describe("thermal bridges", () => {
 			});
 
 			await renderSuspended(ThermalBridges);
-			await user.click(screen.getByTestId("markAsCompleteButton"));
 
 			const error = screen.getByTestId("errorSummary")
 				.querySelectorAll("li > span")
@@ -342,6 +341,7 @@ describe("thermal bridges", () => {
 				.find(e => e[1].textContent === "The total lengths of all the thermal bridges associated with Ground floor 1 are longer than the perimeter of the element itself.");
 
 			expect(error).toBeDefined();
+			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
 		});
 	});
 
