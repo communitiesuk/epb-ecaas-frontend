@@ -12,6 +12,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const floorAboveUnheatedBasementData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement?.data;
 const index = getStoreIndex(floorAboveUnheatedBasementData);
 const floorData = useItemToEdit("floor", floorAboveUnheatedBasementData);
+const floorId = floorData?.data.id ?? uuidv4();
 
 if (floorData?.data) {
 	const data = floorData.data as Record<string, unknown>;
@@ -27,7 +28,7 @@ const saveForm = (fields: FloorAboveUnheatedBasementData) => {
 		const { dwellingSpaceFloorAboveUnheatedBasement } = state.dwellingFabric.dwellingSpaceFloors;
 
 		const floor: FloorAboveUnheatedBasementData = {
-			id: uuidv4(),
+			id: floorId,
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
 			totalArea: fields.totalArea,
@@ -55,6 +56,7 @@ autoSaveElementForm<FloorAboveUnheatedBasementData>({
 	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement,
 	defaultName: "Floor of an unheated basement",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= floorId;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement.complete = false;
 	},

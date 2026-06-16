@@ -108,6 +108,10 @@ autoSaveElementForm<LinearThermalBridgeData>({
 	onPatch: (state, newData, index) => {
 		if (!newData.data.name) {
 			newData.data.name = getDefaultName(newData.data.typeOfThermalBridge) ?? defaultName;
+			
+			if (newData.data.typeOfThermalBridge === "E6") {
+				newData.data.associatedItemId ??= "none";
+			}
 
 			model.value = {
 				...model.value,
@@ -189,7 +193,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</div>
 			</FormKit>
 			<FormKit
-				v-if="model.typeOfThermalBridge === 'E6'"
+				v-if="model.typeOfThermalBridge === 'E6' && associatedFloorAboveUnheatedBasement.length > 1"
 				id="associatedItemId"
 				type="govRadios"
 				:options="new Map(associatedFloorAboveUnheatedBasement)"
