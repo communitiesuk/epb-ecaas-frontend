@@ -59,8 +59,8 @@ const firstError = computed(() => {
 		<div class="govuk-!-margin-top-8">
 			<ClientOnly>
 				<!-- use a dry run button until API is ready -->
-				<!-- <CalculateButton @loading="showLoading" @stop-loading="hideLoading" @error="handleCalculateError" /> -->
-				<CalculateButtonDryRun @loading="showLoading" @stop-loading="hideLoading" @error="handleCalculateError" />
+				<CalculateButton @loading="showLoading" @stop-loading="hideLoading" @error="handleCalculateError" />
+				<!--<CalculateButtonDryRun @loading="showLoading" @stop-loading="hideLoading" @error="handleCalculateError" />-->
 			</ClientOnly>
 		</div>
 		<div class="govuk-!-margin-top-1 govuk-button-group">
