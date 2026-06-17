@@ -1263,6 +1263,9 @@ describe("FHS input mapper", () => {
 		};
 
 		const spaceHeating: SpaceHeating = {
+			heatNetworks: {
+				...baseForm,
+			},
 			heatSource: {
 				...baseForm,
 				complete: true,
@@ -2141,6 +2144,9 @@ describe("FHS input mapper", () => {
 		};
 
 		const spaceHeating: SpaceHeating = {
+			heatNetworks: {
+				...baseForm,
+			},
 			heatSource: {
 				...baseForm,
 				complete: true,

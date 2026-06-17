@@ -55,6 +55,207 @@ describe("space heating", () => {
 		maxFlowTemp: unitValue(32, celsius),
 	};
 
+	describe("Heat Networks", () => {
+		const heatNetwork1: HeatNetworkData = {
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8f",
+			name: "Heat Network 1",
+			productReference: "SLEEVED_DISTRICT_HEAT_NETWORK",
+			typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+			subHeatNetworkName: "Sub Heat Network Name 1",
+		};
+
+		const heatNetwork2: HeatNetworkData = {
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8g",
+			name: "Heat Network 2",
+			productReference: "UNSLEEVED_DISTRICT_HEAT_NETWORK",
+			typeOfHeatNetwork: "unsleevedDistrictHeatNetwork",
+			subHeatNetworkName: "Sub Heat Network Name 2",
+		};
+
+		const heatNetwork3: HeatNetworkData = {
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8h",
+			name: "Heat Network 3",
+			productReference: "COMMUNAL_HEAT_NETWORK",
+			typeOfHeatNetwork: "communalHeatNetwork",
+			subHeatNetworkName: "Sub Heat Network Name 3",
+		};
+
+		it("should display heat networks section", async () => {
+			await renderSuspended(SpaceHeating);
+
+			expect(
+				screen.getByText("Heat networks"),
+			).toBeDefined();
+		});
+
+		it("should display heat network entries", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [{
+							data: heatNetwork1,
+							complete: true,
+						},
+						{
+							data: heatNetwork2,
+							complete: true,
+						}],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+
+			expect(screen.getByText("Heat Network 1")).toBeDefined();
+			expect(screen.getByText("Heat Network 2")).toBeDefined();
+		});
+
+		it("should remove heat network when remove link is clicked", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [{
+							data: heatNetwork1,
+							complete: true,
+						}],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+
+			await user.click(
+				screen.getByTestId("heatNetworks_remove_0"),
+			);
+
+			expect(
+				screen.queryByText("Heat Network 1"),
+			).toBeNull();
+		});
+
+		it("should only remove the heat network that is clicked if there are multiple heat networks", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [{
+							data: heatNetwork1,
+							complete: true,
+						},
+						{
+							data: heatNetwork2,
+							complete: true,
+						},
+						{
+							data: heatNetwork3,
+							complete: true,
+						}],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+
+			await user.click(
+				screen.getByTestId("heatNetworks_remove_1"),
+			);
+
+			expect(
+				screen.queryByText("Heat Network 2"),
+			).toBeNull();
+
+			expect(
+				screen.queryByText("Heat Network 1"),
+			).toBeDefined();
+
+			expect(
+				screen.queryByText("Heat Network 3"),
+			).toBeDefined();
+		});
+
+		it("should duplicate the correct heat network when duplicate link is clicked", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [
+							{ data: heatNetwork1 },
+							{ data: heatNetwork2 },
+
+						],
+					},
+				},
+			});
+			await renderSuspended(SpaceHeating);
+			await userEvent.click(screen.getByTestId("heatNetworks_duplicate_0"));
+			await userEvent.click(screen.getByTestId("heatNetworks_duplicate_0"));
+			await userEvent.click(screen.getByTestId("heatNetworks_duplicate_2"));
+			await userEvent.click(screen.getByTestId("heatNetworks_duplicate_2"));
+
+			expect(screen.queryAllByTestId("heatNetworks_item").length).toBe(6);
+			expect(screen.getByText("Heat Network 1")).toBeDefined();
+			expect(screen.getByText("Heat Network 1 (1)")).toBeDefined();
+			expect(screen.getByText("Heat Network 1 (2)")).toBeDefined();
+			expect(screen.getByText("Heat Network 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Heat Network 1 (1) (2)")).toBeDefined();
+		});
+
+		it("should duplicate the second heat network only", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [
+							{ data: heatNetwork1 },
+							{ data: heatNetwork2 },
+						],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+
+			await userEvent.click(
+				screen.getByTestId("heatNetworks_duplicate_1"),
+			);
+
+			expect(screen.getByText("Heat Network 1")).toBeDefined();
+			expect(screen.getByText("Heat Network 2")).toBeDefined();
+			expect(screen.getByText("Heat Network 2 (1)")).toBeDefined();
+		});
+
+		it("should show heat network as complete", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [{
+							data: heatNetwork1,
+							complete: true,
+						}],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+
+			expect(screen.getByText("Complete")).toBeDefined();
+		});
+
+		it("should show heat network as in progress if heat network is not completed", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [{
+							data: heatNetwork1,
+							complete: false,
+						}],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+
+			expect(screen.getByText("In progress")).toBeDefined();
+		});
+	});
+
 	describe("heat source", () => {
 
 		it("heat source is duplicated when duplicate link is clicked", async () => {

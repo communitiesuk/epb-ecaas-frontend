@@ -8,7 +8,7 @@ export function useSpaceHeating() {
 	const { removeWaterStorage, preventDuplicateWaterStorage } = useWaterStorage();
 
 	type SpaceHeatingType = keyof typeof store.spaceHeating;
-	type SpaceHeatingData = EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> & EcaasForm<HeatingControlData>;
+	type SpaceHeatingData = EcaasForm<HeatNetworkData> & EcaasForm<HeatSourceData> & EcaasForm<HeatEmittingData> & EcaasForm<HeatingControlData>;
 
 	const { heatSources: dhwHeatSources, waterStorage, hotWaterOutlets } = store.domesticHotWater;
 	const { heatEmitters, heatSource } = store.spaceHeating;

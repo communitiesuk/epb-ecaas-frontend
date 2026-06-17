@@ -9,6 +9,20 @@ export const spaceHeatingPages = [
 		parentId: "taskList",
 	},
 	{
+		id: "heatNetworks",
+		title: "Heat network",
+		url: "/space-heating/heat-networks/:heatNetwork",
+		type: "task",
+		parentId: "spaceHeating",
+	},
+	{
+		id: "heatNetworksCreate",
+		title: "Heat network",
+		url: "/space-heating/heat-networks/create",
+		type: "task",
+		parentId: "spaceHeating",
+	},
+	{
 		id: "heatSource",
 		title: "Heat source",
 		url: "/space-heating/heat-source/:heatSource",

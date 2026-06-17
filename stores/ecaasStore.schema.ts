@@ -1030,6 +1030,13 @@ export const typeOfHeatSource = _typeOfHeatSource.enum;
 export type HeatSourceProductType = z.infer<typeof _typeOfHeatSource>;
 export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
 
+export const heatNetworkDataZod = pcdbProduct.extend({
+	typeOfHeatNetwork,
+	subHeatNetworkName: z.string().optional(),
+});
+
+export type HeatNetworkData = z.infer<typeof heatNetworkDataZod>;
+
 const _typeOfWaterStorage = z.enum(["smartHotWaterTank"]);
 
 export const typeOfWaterStorage = _typeOfWaterStorage.enum;
@@ -1545,6 +1552,7 @@ export type UsesPitchComponent = {
 	pitchOption?: PitchOption;
 };
 export type SpaceHeating = AssertEachKeyIsPageId<{
+	heatNetworks: EcaasFormList<HeatNetworkData>,
 	heatSource: EcaasFormList<HeatSourceData>,
 	heatEmitters: EcaasFormList<HeatEmittingData>
 	heatingControls: EcaasFormList<HeatingControlData>
@@ -1642,6 +1650,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"infiltrationAndVentilation/vents": ventDataZod,
 	"infiltrationAndVentilation/naturalVentilation": ventilationDataZod,
 	"infiltrationAndVentilation/airPermeability": airPermeabilityDataZod,
+	"spaceHeating/heatNetworks": heatNetworkDataZod,
 	"spaceHeating/heatSource": heatSourceDataZod,
 	"spaceHeating/heatEmitters": heatEmittingDataZod,
 	"spaceHeating/heatingControls": heatingControlsDataZod,

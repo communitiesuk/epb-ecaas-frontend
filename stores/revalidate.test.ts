@@ -131,6 +131,10 @@ const twoWallsOneMissingFieldOneInvalidValue = immutable.set(twoWallsOneMissingF
 
 const twoHeatPumps: Pick<EcaasState, "spaceHeating"> = {
 	"spaceHeating": {
+		heatNetworks: {
+			data: [],
+			complete: true,
+		},
 		"heatSource": {
 			"data": [
 				{
