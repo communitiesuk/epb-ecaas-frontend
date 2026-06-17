@@ -415,6 +415,11 @@ function formatShadingRowsForSummary(shading: ShadingObjectData[]): Record<strin
 		rows[`Type of shading ${n}`] = displaySnakeToSentenceCase(shadingEntry.typeOfShading);
 		rows[`Distance of shading ${n} from glass`] = dim(shadingEntry.distance, "metres");
 
+		rows[`Depth of shading ${n}`] =
+            isObstacle
+            	? emptyValueRendering
+            	: dim(shadingEntry.depth, "metres");
+
 		rows[`Height of shading ${n}`] =
             isObstacle
             	? dim(shadingEntry.height, "metres")
@@ -424,11 +429,6 @@ function formatShadingRowsForSummary(shading: ShadingObjectData[]): Record<strin
             isObstacle
             	? show(shadingEntry.transparency + " %")
             	: emptyValueRendering;
-
-		rows[`Depth of shading ${n}`] =
-            isObstacle
-            	? emptyValueRendering
-            	: dim(shadingEntry.depth, "metres");
 	});
 
 	return rows;
