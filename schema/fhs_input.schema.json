@@ -58,6 +58,11 @@
 			"minimum": 0,
 			"description": "A bathroom is any room that contains a bath or shower"
 		},
+		"NumberOfSanitaryAccommodations": {
+			"type": "integer",
+			"minimum": 0,
+			"description": "Any space containing one or more flush toilets or urinals but not a bath or shower. Multiple cubicles counts as one space as long as there is free circulation of air throughout"
+		},
 		"NumberOfHabitableRooms": {
 			"type": "integer",
 			"minimum": 1,
@@ -5014,6 +5019,7 @@
 		"NumberOfHotTappedRooms",
 		"NumberOfUtilityRooms",
 		"NumberOfBathrooms",
+		"NumberOfSanitaryAccommodations",
 		"NumberOfHabitableRooms",
 		"HeatingControlType",
 		"KitchenExtractorHoodExternal",

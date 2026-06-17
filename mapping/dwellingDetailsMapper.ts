@@ -25,6 +25,7 @@ export type GeneralFieldsFromDwelling = "General" |
 	"NumberOfBedrooms" |
 	"NumberOfUtilityRooms" |
 	"NumberOfBathrooms" |
+	"NumberOfSanitaryAccommodations" |
 	"NumberOfHabitableRooms" |
 	"NumberOfHotTappedRooms" |
 	"NumberOfWetRooms" |
@@ -52,6 +53,7 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 		NumberOfBedrooms: generalDetails.numOfBedrooms,
 		NumberOfUtilityRooms: generalDetails.numOfUtilityRooms,
 		NumberOfBathrooms: generalDetails.numOfBathrooms,
+		NumberOfSanitaryAccommodations: 1, // send a canned value of 1 for this deprecated field
 		NumberOfHabitableRooms: generalDetails.numOfHabitableRooms,
 		NumberOfHotTappedRooms: generalDetails.numOfRoomsWithTappingPoints,
 		NumberOfWetRooms: generalDetails.numOfWetRooms,
