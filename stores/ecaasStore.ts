@@ -165,7 +165,7 @@ export const useEcaasStore = defineStore("ecaas", {
 			this.$reset();
 		},
 		revalidate() {
-			const patchedState = patchState(this.$state as EcaasState);
+			const patchedState = patchState(this.$state as unknown as Record<string, unknown>);
 			patchLegacySubHeatNetworkNames(patchedState).then(() => {
 				const { newState: newValidatedState } = revalidateState(patchedState);
 
@@ -203,6 +203,6 @@ export function hasCompleteState(state: EcaasState): boolean {
 
 	return sectionPages.every(page => {
 		const section = objectFromEntries(stateEntries.filter(e => e[0] === page.id));
-		return getSectionStatus(section as Record<string, object>).text === "Complete";
+		return getSectionStatus(section).text === "Complete";
 	});
 }

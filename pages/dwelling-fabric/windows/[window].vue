@@ -2,7 +2,7 @@
 import type { WindowData } from "#imports";
 import { getUrl, uniqueName } from "#imports";
 import { v4 as uuidv4 } from "uuid";
-import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod } from "~/stores/ecaasStore.schema";
+import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod, revealDimensionZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 
@@ -53,6 +53,8 @@ const saveForm = (fields: WindowData) => {
 			elevationalHeight: fields.elevationalHeight,
 			securityRisk: fields.securityRisk,
 			openingToFrameRatio: fields.openingToFrameRatio,
+			depthOfReveal: fields.depthOfReveal,
+			distanceFromGlassToStartOfReveal: fields.distanceFromGlassToStartOfReveal,
 		};
 
 		let commonFieldsIncludingOpenableParts;
@@ -363,9 +365,27 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			</a>
 		</p>
 		<FormKit
+			id="depthOfReveal"
+			type="govInputWithSuffix"
+			label="Depth of reveal"
+			name="depthOfReveal"
+			suffix-text="mm"
+			:validation="zodTypeAsFormKitValidation(revealDimensionZod)"
+		/>
+		<FormKit
+			id="distanceFromGlassToStartOfReveal"
+			type="govInputWithSuffix"
+			label="Distance from glass to start of reveal"
+			help="This is usually the thickness of the frame"
+			name="distanceFromGlassToStartOfReveal"
+			suffix-text="mm"
+			:validation="zodTypeAsFormKitValidation(revealDimensionZod)"
+		/>
+		<FormKit
 			id="hasShading"
 			type="govBoolean"
-			label="Does anything shade the window?"
+			label="Does anything else shade the window?"
+			help="This could be an overhang, side fin or obstacle. Do not include anything already entered in distant shading."
 			name="hasShading"
 			validation="required"
 		/>

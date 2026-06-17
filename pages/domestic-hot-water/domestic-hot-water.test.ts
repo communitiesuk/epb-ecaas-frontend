@@ -46,7 +46,6 @@ describe("Domestic hot water", () => {
 		data: {
 			name: "Jasper's Cylinder 1",
 			id: "what",
-			dhwHeatSourceId: "weeeeee",
 			storageCylinderVolume: {
 				amount: 100,
 				unit: "litres" as const,
@@ -89,7 +88,6 @@ describe("Domestic hot water", () => {
 				name: "Jasper's Cylinder 2",
 				id: "what2",
 				typeOfWaterStorage: "smartHotWaterTank",
-				dhwHeatSourceId: "weeeeee3",
 				heaterPosition: 0.8,
 				productReference: "SMART-12345",
 			},
@@ -99,7 +97,6 @@ describe("Domestic hot water", () => {
 			data: {
 				name: "Jasper's Cylinder 3",
 				id: "what3",
-				dhwHeatSourceId: "weeeeee3",
 				storageCylinderVolume: {
 					amount: 102,
 					unit: "litres",
@@ -287,7 +284,6 @@ describe("Domestic hot water", () => {
 				typeOfHotWaterOutlet: "mixedShower",
 				id: "outlet2",
 				flowRate: 100,
-				dhwHeatSourceId: "4eaf-48c1-4d3b-9f56-6d02b8f5c2bb",
 				wwhrs: false,
 				isAirPressureShower: false,
 			},
@@ -645,68 +641,6 @@ describe("Domestic hot water", () => {
 		// 	expect(heatNetworkItem?.complete).toBe(false);
 		// });
 
-		it("when a DHW heat source is removed it's removed from all other store items that reference it", async () => {
-
-			const cylinder1: WaterStorageData = {
-				name: "Hot water cylinder 1",
-				id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
-				typeOfWaterStorage: "hotWaterCylinder",
-				storageCylinderVolume: unitValue(5, litre),
-				dailyEnergyLoss: 1,
-				dhwHeatSourceId: heatSource2.data.id,
-				areaOfHeatExchanger: 1000,
-				heaterPosition: 0.8,
-				thermostatPosition: 0.5,
-			};
-
-			const cylinder2: WaterStorageData = {
-				name: "Smart Hot Water Tank 2",
-				id: "c84528bb-f805-4f1e-95d3-2bd1717deca2",
-				typeOfWaterStorage: "smartHotWaterTank",
-				dhwHeatSourceId: heatSource2.data.id,
-				heaterPosition: 0.8,
-				productReference: "SMRT-12345",
-			};
-
-			const mixerShower: MixedShowerData = {
-				name: "Mixer shower 1",
-				id: "c84528bb-f805-4f1e-95d3-2bd1717deca3",
-				typeOfHotWaterOutlet: "mixedShower",
-				flowRate: 10,
-				dhwHeatSourceId: heatSource2.data.id,
-				wwhrs: false,
-				isAirPressureShower: false,
-			};
-
-			store.$patch({
-				domesticHotWater: {
-					waterStorage: {
-						data: [{ data: cylinder1 }, { data: cylinder2 }],
-					},
-					hotWaterOutlets: {
-						data: [{ data: mixerShower }],
-					},
-					heatSources: {
-						data: [heatSource2],
-					},
-				},
-			});
-
-			await renderSuspended(DomesticHotWater);
-			await user.click(await screen.findByTestId("heatSources_remove_0"));
-			const { waterStorage, hotWaterOutlets } = store.domesticHotWater;
-
-			expect(waterStorage.data[0]?.data.dhwHeatSourceId).toBeUndefined();
-			expect(waterStorage.data[0]?.complete).toBe(false);
-
-			expect(waterStorage.data[1]?.data.dhwHeatSourceId).toBeUndefined();
-			expect(waterStorage.data[1]?.complete).toBe(false);
-
-			const mixedShower = hotWaterOutlets.data[0];
-			expect((mixedShower?.data as { dhwHeatSourceId: string }).dhwHeatSourceId).toBeUndefined();
-			expect(mixedShower?.complete).toBe(false);
-		});
-
 		test("heat sources cannot be duplicated", async () => {
 			store.$patch({
 				domesticHotWater: {
@@ -826,7 +760,6 @@ describe("Domestic hot water", () => {
 					typeOfWaterStorage: "hotWaterCylinder",
 					storageCylinderVolume: unitValue(5, litre),
 					dailyEnergyLoss: 1,
-					dhwHeatSourceId: heatPump.id,
 					areaOfHeatExchanger: 1000,
 					heaterPosition: 0.8,
 					thermostatPosition: 0.5,

@@ -3,6 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import FloorAboveUnheatedBasement from "./[floor].vue";
 import { millimetre } from "~/utils/units/length";
+import { v4 as uuidv4 } from "uuid";
+
+vi.mock("uuid");
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -14,6 +17,7 @@ describe("floor above unheated basement", () => {
 	const user = userEvent.setup();
 
 	const floorAboveUnheatedBasement: FloorAboveUnheatedBasementData = {
+		id: "65120939-bdaa-49cd-9a82-6987156cb4d0",
 		name: "Floor above unheated basement 1",
 		surfaceArea: 7,
 		totalArea: 8,
@@ -22,7 +26,6 @@ describe("floor above unheated basement", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "E",
 		perimeter: 0.5,
-		psiOfWallJunction: 0.4,
 		thicknessOfWalls: unitValue(60, millimetre),
 		depthOfBasementFloor: 0.5,
 		heightOfBasementWalls: 1,
@@ -30,6 +33,10 @@ describe("floor above unheated basement", () => {
 		thermalTransmittanceOfBasementWalls: 1.3,
 		thermalTransmittanceOfFoundations: 1.4,
 	};
+
+	beforeEach(() => {
+		vi.mocked(uuidv4).mockReturnValue(floorAboveUnheatedBasement.id as unknown as Buffer);
+	});
 
 	afterEach(() => {
 		store.$reset();
@@ -44,7 +51,6 @@ describe("floor above unheated basement", () => {
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_E"));
 		await user.type(screen.getByTestId("perimeter"), "0.5");
-		await user.type(screen.getByTestId("psiOfWallJunction"), "0.4");
 		await user.type(screen.getByTestId("thicknessOfWalls"), "60");
 		await user.type(screen.getByTestId("depthOfBasementFloor"), "0.5");
 		await user.type(screen.getByTestId("heightOfBasementWalls"), "1");
@@ -95,7 +101,6 @@ describe("floor above unheated basement", () => {
 		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_E")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("perimeter")).value).toBe("0.5");
-		expect((await screen.findByTestId<HTMLInputElement>("psiOfWallJunction")).value).toBe("0.4");
 		expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("60");
 		expect((await screen.findByTestId<HTMLInputElement>("depthOfBasementFloor")).value).toBe("0.5");
 		expect((await screen.findByTestId<HTMLInputElement>("heightOfBasementWalls")).value).toBe("1");
@@ -121,7 +126,6 @@ describe("floor above unheated basement", () => {
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 		expect((await screen.findByTestId("perimeter_error"))).toBeDefined();
-		expect((await screen.findByTestId("psiOfWallJunction_error"))).toBeDefined();
 		expect((await screen.findByTestId("thicknessOfWalls_error"))).toBeDefined();
 		expect((await screen.findByTestId("depthOfBasementFloor_error"))).toBeDefined();
 		expect((await screen.findByTestId("heightOfBasementWalls_error"))).toBeDefined();
@@ -158,7 +162,6 @@ describe("floor above unheated basement", () => {
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.type(screen.getByTestId("perimeter"), "1");
-		await user.type(screen.getByTestId("psiOfWallJunction"), "1");
 		await user.type(screen.getByTestId("thicknessOfWalls"), "1");
 		await user.type(screen.getByTestId("depthOfBasementFloor"), "1");
 		await user.type(screen.getByTestId("heightOfBasementWalls"), "1");
@@ -214,7 +217,6 @@ describe("floor above unheated basement", () => {
 			await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 			await user.click(screen.getByTestId("massDistributionClass_E"));
 			await user.type(screen.getByTestId("perimeter"), "1");
-			await user.type(screen.getByTestId("psiOfWallJunction"), "0.5");
 			await user.type(screen.getByTestId("thicknessOfWalls"), "0.7");
 			await user.type(screen.getByTestId("depthOfBasementFloor"), "0.3");
 			await user.type(screen.getByTestId("heightOfBasementWalls"), "0.8");
@@ -232,7 +234,6 @@ describe("floor above unheated basement", () => {
 			expect(data[0]!.data.arealHeatCapacity).toBe("Very light");
 			expect(data[0]!.data.massDistributionClass).toBe("E");
 			expect(data[0]!.data.perimeter).toBe(1);
-			expect(data[0]!.data.psiOfWallJunction).toBe(0.5);
 			expect(data[0]!.data.thicknessOfWalls).toEqual(unitValue(0.7, millimetre));
 			expect(data[0]!.data.depthOfBasementFloor).toBe(0.3);
 			expect(data[0]!.data.heightOfBasementWalls).toBe(0.8);

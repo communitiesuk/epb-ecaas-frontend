@@ -14,7 +14,8 @@ const modelNames = await useProductReferences(
 	productData => productData.modelName,
 );
 
-const associatedItems = Object.fromEntries(useAssociatedItems(["wall", "roof", "window", "externalGlazedDoor"]));
+const associatedItems = Object.fromEntries(useAssociatedItems(["wall", "roof", "window", "externalGlazedDoor", "none"]));
+const mvhrAssociatedItems = Object.fromEntries(useAssociatedItems(["wall", "roof", "window", "none"]));
 
 const { 
 	dwellingSpaceWindows, 
@@ -31,8 +32,18 @@ const mechanicalVentilationSummary: SummarySection = {
 		const isMvhr = x.typeOfMechanicalVentilationOptions === "MVHR";
 		const mvhrLocation = "mvhrLocation" in x ? displayCamelToSentenceCase(show(x.mvhrLocation)) : emptyValueRendering;
 		const taggedItem = store.getTaggedItem([dwellingSpaceWalls.dwellingSpaceExternalWall, dwellingSpaceWindows, dwellingSpaceRoofs, dwellingSpaceExternalGlazedDoor], x.associatedItemId);
+		const intakeTaggedItem = x.typeOfMechanicalVentilationOptions === "MVHR" && x.associatedItemIdForIntake && x.associatedItemIdForIntake !== "none"
+			? store.getTaggedItem([dwellingSpaceWalls.dwellingSpaceExternalWall, dwellingSpaceWindows, dwellingSpaceRoofs], x.associatedItemIdForIntake)
+			: undefined;
+		const exhaustTaggedItem = x.typeOfMechanicalVentilationOptions === "MVHR" && x.associatedItemIdForExhaust && x.associatedItemIdForExhaust !== "none"
+			? store.getTaggedItem([dwellingSpaceWalls.dwellingSpaceExternalWall, dwellingSpaceWindows, dwellingSpaceRoofs], x.associatedItemIdForExhaust)
+			: undefined;
 		const orientation = taggedItem?.orientation ?? (x as { orientation?: number })?.orientation;
 		const pitch = x.hasAssociatedItem === true ? taggedItem?.pitch : x.pitch;
+		const intakeOrientation = intakeTaggedItem?.orientation ?? ("orientationOfIntake" in x ? x.orientationOfIntake : undefined);
+		const intakePitch = intakeTaggedItem?.pitch ?? ("pitchOfIntake" in x ? x.pitchOfIntake : undefined);
+		const exhaustOrientation = exhaustTaggedItem?.orientation ?? ("orientationOfExhaust" in x ? x.orientationOfExhaust : undefined);
+		const exhaustPitch = exhaustTaggedItem?.pitch ?? ("pitchOfExhaust" in x ? x.pitchOfExhaust : undefined);
 		return {
 			"Name": show(x.name),
 			"Type of mechanical ventilation": show(x.typeOfMechanicalVentilationOptions),
@@ -48,12 +59,18 @@ const mechanicalVentilationSummary: SummarySection = {
 			} : {}),
 			...(x.typeOfMechanicalVentilationOptions === "MVHR" ? {
 				"MVHR location": mvhrLocation,
+				"Wall, roof or window that the intake is in": x.associatedItemIdForIntake && x.associatedItemIdForIntake !== "none"
+					? mvhrAssociatedItems[x.associatedItemIdForIntake] ?? emptyValueRendering
+					: emptyValueRendering,
 				"Mid-height of airflow path for intake": dim(x.midHeightOfAirFlowPathForIntake, "metres"),
-				"Orientation of intake": dim(x.orientationOfIntake, "degrees"),
-				"Pitch of intake": dim(x.pitchOfIntake, "degrees"),
+				"Orientation of intake": intakeOrientation !== undefined ? dim(intakeOrientation, "degrees") : emptyValueRendering,
+				"Pitch of intake": intakePitch !== undefined ? dim(intakePitch, "degrees") : emptyValueRendering,
+				"Wall, roof or window that the exhaust is in": x.associatedItemIdForExhaust && x.associatedItemIdForExhaust !== "none"
+					? mvhrAssociatedItems[x.associatedItemIdForExhaust] ?? emptyValueRendering
+					: emptyValueRendering,
 				"Mid-height of airflow path for exhaust": dim(x.midHeightOfAirFlowPathForExhaust, "metres"),
-				"Orientation of exhaust": dim(x.orientationOfExhaust, "degrees"),
-				"Pitch of exhaust": dim(x.pitchOfExhaust, "degrees"),
+				"Orientation of exhaust": exhaustOrientation !== undefined ? dim(exhaustOrientation, "degrees") : emptyValueRendering,
+				"Pitch of exhaust": exhaustPitch !== undefined ? dim(exhaustPitch, "degrees") : emptyValueRendering,
 			} : {}),
 			...(x.typeOfMechanicalVentilationOptions === "Intermittent MEV" ? {
 				"Specific fan power": dim(x.specificFanPower, "watts per litre per second"),

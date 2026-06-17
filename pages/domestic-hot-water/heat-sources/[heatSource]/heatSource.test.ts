@@ -22,7 +22,7 @@ mockNuxtImport("useFetch", () => mockFetch);
 
 const product: Partial<Product> = {
 	id: "1000",
-	brandName: "Brand",
+	brandName: "HEM Default",
 	modelName: "Model Name",
 };
 
@@ -627,6 +627,31 @@ describe("Heat Source Page", () => {
 		// 	expect(screen.queryByTestId("maxFlowTemp")).toBeNull();
 		// });
 	});
+
+	test("Renders HEM default product warning when default product is selected", async () => {
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: dhwWithNewHeatPump }],
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				...product,
+				brandName: "HEM Default",
+			}),
+		});
+
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "0" },
+			},
+		});
+
+		expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
+	});
 });
 
 describe("Boiler section", () => {
@@ -1221,7 +1246,6 @@ describe("Heat pump section", () => {
 					typeOfWaterStorage: "hotWaterCylinder",
 					storageCylinderVolume: unitValue(5, litre),
 					dailyEnergyLoss: 1,
-					dhwHeatSourceId: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 					areaOfHeatExchanger: 1000,
 					heaterPosition: 0.8,
 					thermostatPosition: 0.5,
@@ -1247,7 +1271,6 @@ describe("Heat pump section", () => {
 					typeOfWaterStorage: "hotWaterCylinder",
 					storageCylinderVolume: unitValue(5, litre),
 					dailyEnergyLoss: 1,
-					dhwHeatSourceId: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 					areaOfHeatExchanger: 1000,
 					heaterPosition: 0.8,
 					thermostatPosition: 0.5,
@@ -1273,7 +1296,6 @@ describe("Heat pump section", () => {
 					typeOfWaterStorage: "hotWaterCylinder",
 					storageCylinderVolume: unitValue(5, litre),
 					dailyEnergyLoss: 1,
-					dhwHeatSourceId: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 					areaOfHeatExchanger: 1000,
 					heaterPosition: 0.8,
 					thermostatPosition: 0.5,

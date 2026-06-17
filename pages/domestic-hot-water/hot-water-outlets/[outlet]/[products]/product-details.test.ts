@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import type { H3Error } from "h3";
-import ProductDetails from "./[id].vue";
+import ProductDetails from "./[id]/index.vue";
 import { screen } from "@testing-library/vue";
 import type { Product } from "~/pcdb/pcdb.types";
 
@@ -22,7 +22,6 @@ describe("Hot water outlet product details", () => {
 	const airPressureShower: Partial<HotWaterOutletsData> = {
 		typeOfHotWaterOutlet: "mixedShower",
 		name: "Mixer shower",
-		dhwHeatSourceId: "db257659-f1f0-4ada-9fa5-b26293e3b387",
 		isAirPressureShower: true,
 	};
 
@@ -31,6 +30,11 @@ describe("Hot water outlet product details", () => {
 		brandName: "Brand",
 		modelName: "Air pressure shower",
 		technologyType: "AirPoweredShowers",
+	};
+
+	const hemDefaultShowerProduct: Partial<Product> = {
+		...showerProduct,
+		brandName: "HEM Default",
 	};
 
 	const wwhrsProduct: Partial<Product> = {
@@ -126,6 +130,27 @@ describe("Hot water outlet product details", () => {
 			
 		// Assert
 		expect((await screen.findByTestId("airPressureShower"))).toBeDefined();
+	});
+
+	test("Does not display HEM default inset when product is not HEM Default", async () => {
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect(screen.queryByTestId("hemDefaultProductInset")).toBeNull();
+	});
+
+	test("Displays HEM default inset when product brand is HEM Default", async () => {
+		// Arrange
+		mockFetch.mockReturnValue({
+			data: ref(hemDefaultShowerProduct),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect((await screen.findByTestId("hemDefaultProductInset"))).toBeDefined();
 	});
 
 	test("Displays WWHRS details when product is a WWHRS", async () => {

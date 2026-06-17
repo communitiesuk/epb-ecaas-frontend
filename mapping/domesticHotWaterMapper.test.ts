@@ -1,5 +1,5 @@
 import type { BathData, DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
-import { mapDomesticHotWaterData, mapHotWaterSourcesData } from "./domesticHotWaterMapper";
+import { makeWWHRSName, mapDomesticHotWaterData, mapHotWaterSourcesData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import type { SchemaMixerShower } from "~/schema/api-schema.types";
 import { celsius } from "~/utils/units/temperature";
@@ -40,7 +40,6 @@ describe("domestic hot water mapper", () => {
 	const storageTank = {
 		data: {
 			typeOfWaterStorage: "hotWaterCylinder",
-			dhwHeatSourceId: heatSourceId,
 			name: "Hot Water Cylinder",
 			id: "efa1b2c3-d4e5-6789-0123-456789abcd11",
 			storageCylinderVolume: { amount: 30, unit: "litres" },
@@ -62,7 +61,6 @@ describe("domestic hot water mapper", () => {
 	const smartHotWaterTank = {
 		data: {
 			typeOfWaterStorage: "smartHotWaterTank",
-			dhwHeatSourceId: heatSourceId,
 			name: "Smart Hot Water Tank",
 			id: "efa1b2c3-d4e5-6789-0123-456789abcd12",
 			heaterPosition: 0.2,
@@ -1040,6 +1038,56 @@ describe("domestic hot water mapper", () => {
 				},
 			);
 
+			it("throws an explicit error when there is no non-heat-network DHW reference heat source", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [existingHeatPump],
+							complete: true,
+						},
+					},
+					domesticHotWater: {
+						heatSources: {
+							data: [heatNetwork],
+							complete: true,
+						},
+						waterStorage: {
+							data: [storageTank],
+							complete: true,
+						},
+						pipework: {
+							data: [],
+							complete: true,
+						},
+					},
+				});
+
+				expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
+					.toThrow("Expected exactly one non-heat-network heat source, found 0");
+			});
+
+			it("throws an explicit error when more than one non-heat-network DHW reference heat source exists", async () => {
+				store.$patch({
+					domesticHotWater: {
+						heatSources: {
+							data: [heatPump, heatBattery],
+							complete: true,
+						},
+						waterStorage: {
+							data: [storageTank],
+							complete: true,
+						},
+						pipework: {
+							data: [],
+							complete: true,
+						},
+					},
+				});
+
+				expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
+					.toThrow("Expected exactly one non-heat-network heat source, found 2");
+			});
+
 			it.each([
 				{
 					heatSource: existingBattery, dhwHeatSource: dhwWithExistingBattery,
@@ -1190,7 +1238,6 @@ describe("domestic hot water mapper", () => {
 					id: "shower1",
 					name: "shower1",
 					flowRate: 3,
-					dhwHeatSourceId: heatSourceId,
 					typeOfHotWaterOutlet: "mixedShower",
 					wwhrs: false,
 					isAirPressureShower: false,
@@ -1258,7 +1305,7 @@ describe("domestic hot water mapper", () => {
 							flowrate: 3,
 							allow_low_flowrate: false,
 							ColdWaterSource: "mains water",
-							HotWaterSource: heatPump.data.name,
+							HotWaterSource: "hw cylinder",
 						},
 						"shower2": {
 							type: "InstantElecShower",
@@ -1296,7 +1343,6 @@ describe("domestic hot water mapper", () => {
 						wwhrs: true,
 						wwhrsType: "instantaneousSystemA",
 						wwhrsProductReference: "WW-A-123",
-						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: false,
 					},
@@ -1312,18 +1358,19 @@ describe("domestic hot water mapper", () => {
 				});
 
 				const result = mapDomesticHotWaterData(resolveState(store.$state));
-
+				const wwhrsName = makeWWHRSName("shower-wwhrs-a");
 				const expectedShower: SchemaMixerShower = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 8,
 					allow_low_flowrate: false,
-					HotWaterSource: combiBoiler.data.name,
-					WWHRS: "WW-A-123",
+					HotWaterSource: "hw cylinder",
+					WWHRS: wwhrsName,
 					WWHRS_configuration: "A",
 				};
-
+			
 				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-a"]).toEqual(expectedShower);
+				expect(result.WWHRS?.[wwhrsName]).toEqual({ product_reference: "WW-A-123", ColdWaterSource: "mains water" });
 			});
 
 			it("maps WWHRS configuration type B", () => {
@@ -1336,7 +1383,6 @@ describe("domestic hot water mapper", () => {
 						wwhrs: true,
 						wwhrsType: "instantaneousSystemB",
 						wwhrsProductReference: "WW-B-456",
-						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: false,
 					},
@@ -1353,16 +1399,20 @@ describe("domestic hot water mapper", () => {
 
 				const result = mapDomesticHotWaterData(resolveState(store.$state));
 
+				const wwhrsName = makeWWHRSName("shower-wwhrs-b");
+				
 				const expectedShowerWwhrsB = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 9,
 					allow_low_flowrate: false,
-					HotWaterSource: heatBattery.data.name,
-					WWHRS: "WW-B-456",
+					HotWaterSource: "hw cylinder",
+					WWHRS: wwhrsName,
 					WWHRS_configuration: "B",
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-b"]).toEqual(expectedShowerWwhrsB);
+				expect(result.WWHRS?.[wwhrsName]).toEqual({ product_reference: "WW-B-456", ColdWaterSource: "mains water" });
+
 			});
 
 			it("maps WWHRS configuration type C", () => {
@@ -1375,7 +1425,6 @@ describe("domestic hot water mapper", () => {
 						wwhrs: true,
 						wwhrsType: "instantaneousSystemC",
 						wwhrsProductReference: "WW-C-789",
-						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: false,
 					},
@@ -1391,17 +1440,18 @@ describe("domestic hot water mapper", () => {
 				});
 
 				const result = mapDomesticHotWaterData(resolveState(store.$state));
-
+				const wwhrsName = makeWWHRSName("shower-wwhrs-c");
 				const expectedShowerWwhrsC = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 10,
 					allow_low_flowrate: false,
-					HotWaterSource: combiBoiler.data.name,
-					WWHRS: "WW-C-789",
+					HotWaterSource: "hw cylinder",
+					WWHRS: wwhrsName,
 					WWHRS_configuration: "C",
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower-wwhrs-c"]).toEqual(expectedShowerWwhrsC);
+				expect(result.WWHRS?.[wwhrsName]).toEqual({ product_reference: "WW-C-789", ColdWaterSource: "mains water" });
 			});
 
 			it("maps mixed shower with air pump", () => {
@@ -1411,7 +1461,6 @@ describe("domestic hot water mapper", () => {
 						id: "shower-air-pump",
 						name: "shower-air-pump",
 						wwhrs: false,
-						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: true,
 						airPressureShowerProductReference: "AIR-PUMP-123",
@@ -1433,7 +1482,7 @@ describe("domestic hot water mapper", () => {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					allow_low_flowrate: true,
-					HotWaterSource: heatPump.data.name,
+					HotWaterSource: "hw cylinder",
 					product_reference: "AIR-PUMP-123",
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower-air-pump"]).toEqual(expectedShowerAirPump);
@@ -1450,7 +1499,6 @@ describe("domestic hot water mapper", () => {
 						name: "shower-no-wwhrs",
 						flowRate: 7,
 						wwhrs: false,
-						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: false,
 					},
@@ -1473,7 +1521,7 @@ describe("domestic hot water mapper", () => {
 					ColdWaterSource: "mains water",
 					flowrate: 7,
 					allow_low_flowrate: false,
-					HotWaterSource: heatPump.data.name,
+					HotWaterSource: "hw cylinder",
 				} as const satisfies SchemaMixerShower;
 				expect(shower).toEqual(expectedShowerNoWwhrs);
 				expect(shower).not.toHaveProperty("WWHRS");
@@ -1512,7 +1560,6 @@ describe("domestic hot water mapper", () => {
 						wwhrs: true,
 						wwhrsType: "instantaneousSystemA",
 						wwhrsProductReference: "WW123",
-						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: false,
 					},
@@ -1525,7 +1572,6 @@ describe("domestic hot water mapper", () => {
 						name: "shower2",
 						flowRate: 6,
 						wwhrs: false,
-						dhwHeatSourceId: heatSourceId,
 						typeOfHotWaterOutlet: "mixedShower",
 						isAirPressureShower: false,
 					},
@@ -1581,24 +1627,25 @@ describe("domestic hot water mapper", () => {
 				});
 
 				const result = mapDomesticHotWaterData(resolveState(store.$state));
-
+				const wwhrsName = makeWWHRSName("shower1");
 				const expectedShower1 = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 8,
 					allow_low_flowrate: false,
-					HotWaterSource: "source2",
-					WWHRS: "WW123",
+					HotWaterSource: "hw cylinder",
+					WWHRS: wwhrsName,
 					WWHRS_configuration: "A",
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower1"]).toEqual(expectedShower1);
+				expect(result.WWHRS?.[wwhrsName]).toEqual({ product_reference: "WW123", ColdWaterSource: "mains water" });
 
 				const expectedShower2 = {
 					type: "MixerShower",
 					ColdWaterSource: "mains water",
 					flowrate: 6,
 					allow_low_flowrate: false,
-					HotWaterSource: "source2",
+					HotWaterSource: "hw cylinder",
 				} as const satisfies SchemaMixerShower;
 				expect(result.HotWaterDemand?.Shower?.["shower2"]).toEqual(expectedShower2);
 

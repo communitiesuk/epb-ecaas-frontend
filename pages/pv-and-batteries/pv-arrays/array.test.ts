@@ -26,7 +26,6 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.type(screen.getByTestId("inverterPeakPowerAC"), "4");
 	await user.type(screen.getByTestId("inverterPeakPowerDC"), "5");
 	await user.click(screen.getByTestId("locationOfInverter_heated_space"));
-	await user.click(screen.getByTestId("electricityPriority_electricBattery"));
 	await user.click(screen.getByTestId("inverterType_optimised_inverter"));
 	await user.click(screen.getByTestId(`hasShading_${hasShading ? "yes" : "no"}`));
 };
@@ -44,7 +43,6 @@ describe("PV array", () => {
 			inverterPeakPowerAC: 4,
 			inverterPeakPowerDC: 5,
 			locationOfInverter: "heated_space",
-			electricityPriority: "electricBattery",
 			inverterType: "optimised_inverter",
 			hasShading: false,
 		},
@@ -78,9 +76,6 @@ describe("PV array", () => {
 		expect(screen.getByLabelText("Unheated space")).toBeDefined();
 		expect(screen.getAllByLabelText("Yes")).toBeDefined();
 		expect(screen.getAllByLabelText("No")).toBeDefined();
-		expect(screen.getByText("Which system should receive surplus energy from this energy supply?")).toBeDefined();
-		expect(screen.getByLabelText("Diverter")).toBeDefined();
-		expect(screen.getByLabelText("Electric battery")).toBeDefined();
 		expect(screen.getByText("Inverter type", { selector: "legend" })).toBeDefined();
 		expect(screen.queryByText("PV shading")).toBeNull();
 	});
@@ -104,7 +99,6 @@ describe("PV array", () => {
 		expect((await screen.findByTestId("inverterPeakPowerAC_error"))).toBeDefined();
 		expect((await screen.findByTestId("inverterPeakPowerDC_error"))).toBeDefined();
 		expect((await screen.findByTestId("locationOfInverter_error"))).toBeDefined();
-		expect((await screen.findByTestId("electricityPriority_error"))).toBeDefined();
 		expect((await screen.findByTestId("inverterType_error"))).toBeDefined();
 
 		expect((await screen.findByTestId("photovoltaicErrorSummary"))).toBeDefined();

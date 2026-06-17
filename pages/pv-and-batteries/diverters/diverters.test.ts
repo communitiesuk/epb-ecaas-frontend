@@ -45,7 +45,6 @@ const addHeatPumpAndHotWaterCylinder = () => {
 					data: {
 						name: "HWC1",
 						id: hotWaterCylinderId,
-						dhwHeatSourceId: dhwHeatPumpId,
 						storageCylinderVolume: {
 							amount: 1,
 							unit: "litres",
@@ -126,6 +125,7 @@ describe("Diverters", () => {
 	it("navigates to pv and batteries page when save progress button is clicked", async () => {
 		await renderSuspended(Diverters);
 		await user.type(screen.getByTestId("name"), "Test diverter");
+
 		await user.click(screen.getByTestId("saveProgress"));
 
 		expect(navigateToMock).toHaveBeenCalledWith("/pv-and-batteries");
@@ -144,6 +144,71 @@ describe("Diverters", () => {
 		addHeatPumpAndHotWaterCylinder();
 		await renderSuspended(Diverters);
 		expect((await screen.findByTestId(`hotWaterCylinder_${hotWaterCylinderId}`)).hasAttribute("checked")).toBe(true);
+	});
+
+	describe("surplus energy", () => {
+		const pvArray: EcaasForm<PvArrayData> = {
+			data: {
+				name: "PV 1",
+				peakPower: 4,
+				ventilationStrategy: "unventilated",
+				pitch: 45,
+				orientation: 20,
+				elevationalHeight: 100,
+				lengthOfPV: 20,
+				widthOfPV: 20,
+				inverterPeakPowerAC: 4,
+				inverterPeakPowerDC: 5,
+				locationOfInverter: "heated_space",
+				inverterType: "optimised_inverter",
+				hasShading: false,
+			},
+		};
+
+		const fullElectricBattery: EcaasForm<ElectricBatteryData> = {
+			data: {
+				name: "Acme battery mk II",
+				capacity: 40,
+				chargeEfficiency: 0.9,
+				location: "inside",
+				maximumChargeRate: 30,
+				minimumChargeRate: 20,
+				maximumDischargeRate: 35,
+			},
+		};
+
+		beforeEach(async () => {
+			store.$patch({
+				pvAndBatteries: {
+					pvArrays: {
+						data: [pvArray],
+					},
+					electricBattery: {
+						data: [fullElectricBattery],
+					},
+				},
+			});
+
+			addHeatPumpAndHotWaterCylinder();
+
+			await renderSuspended(Diverters);
+			await populateValidForm();
+		});
+
+		it("requires surplus energy field when pv array and electric battery have been added", async () => {
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(screen.getByTestId("electricityPriority_error")).toBeDefined();
+		});
+
+		it("saves electricity priority to store when pv array and electric battery have been added", async () => {
+			await user.click(screen.getByTestId("electricityPriority_electricBattery"));
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const diverterData = store.pvAndBatteries.diverters.data[0];
+
+			expect(diverterData?.data.electricityPriority).toBe("electricBattery");
+		});
 	});
 
 	describe("partially saving data", () => {

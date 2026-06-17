@@ -106,7 +106,7 @@ const heatPumpSummary: SummarySection = {
 	data:
 		heatPumps.map(({ data: heatSource }) => {
 			const heatNetWorkFields = "isConnectedToHeatNetwork" in heatSource && heatSource.isConnectedToHeatNetwork === true ? {
-				"Associated heat network": store.spaceHeating.heatSource.data.find(hs => hs.data.id === (heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: true }>).associatedHeatNetworkId)?.data.name ?? emptyValueRendering,
+				"Associated heat network": store.spaceHeating.heatSource.data.find(hs => hs.data.id === heatSource.associatedHeatNetworkId)?.data.name ?? emptyValueRendering,
 			} : {
 				"Energy supply": "energySupply" in heatSource && (heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: false }>).energySupply ? energySupplyOptions[(heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: false }>).energySupply] : emptyValueRendering,
 			};
@@ -196,7 +196,7 @@ const wetDistributionSystemSummary: SummarySection = {
 			"Type of heat emitter": displayHeatEmitterType(wetDist.typeOfHeatEmitter),
 			"Heat source": heatSource ? heatSource.data.name : emptyValueRendering,
 			"Eco design controller class": "ecoDesignControllerClass" in wetDist && wetDist.ecoDesignControllerClass ? displayCamelToSentenceCase(wetDist.ecoDesignControllerClass) : emptyValueRendering,
-			...("minOutdoorTemp" in wetDist ? { "Minimum outdoor temperature": dim(wetDist.minOutdoorTemp, "celsius") } : {}),
+			...("minOutdoorTemp" in wetDist ? { "Outdoor temperature for maximum flow temperature": dim(wetDist.minOutdoorTemp, "celsius") } : {}),
 			...("maxOutdoorTemp" in wetDist ? { "Maximum outdoor temperature": dim(wetDist.maxOutdoorTemp, "celsius") } : {}),
 			...("minFlowTemp" in wetDist ? { "Minimum flow temperature": dim(wetDist.minFlowTemp, "celsius") } : {}),
 			"Design flow temperature": "designFlowTemp" in wetDist ? dim(wetDist.designFlowTemp, "celsius") : emptyValueRendering,

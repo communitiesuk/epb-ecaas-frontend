@@ -4,6 +4,9 @@ import { screen } from "@testing-library/vue";
 import GroundFloor from "./[floor].vue";
 import { metre, millimetre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units";
+import { v4 as uuidv4 } from "uuid";
+
+vi.mock("uuid");
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -15,6 +18,7 @@ describe("ground floor", () => {
 	const user = userEvent.setup();
 
 	const groundFloor: GroundFloorData = {
+		id: "0d5b322a-8bd7-4f45-8027-ebe9f2056e70",
 		name: "Ground 1",
 		surfaceArea: 5,
 		totalArea: 7,
@@ -23,7 +27,6 @@ describe("ground floor", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		perimeter: 0,
-		psiOfWallJunction: 0,
 		thicknessOfWalls: unitValue(80, millimetre),
 		typeOfGroundFloor: "Slab_no_edge_insulation",
 	};
@@ -81,6 +84,10 @@ describe("ground floor", () => {
 	// 	heightOfBasementWallsAboveGround: 0
 	// };
 
+	beforeEach(() => {
+		vi.mocked(uuidv4).mockReturnValue(groundFloor.id as unknown as Buffer);
+	});
+
 	afterEach(() => {
 		store.$reset();
 	});
@@ -94,7 +101,6 @@ describe("ground floor", () => {
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.type(screen.getByTestId("perimeter"), "0");
-		await user.type(screen.getByTestId("psiOfWallJunction"), "0");
 		await user.type(screen.getByTestId("thicknessOfWalls"), "80");
 		await user.click(screen.getByTestId("typeOfGroundFloor_Slab_no_edge_insulation"));
 	};
@@ -140,7 +146,6 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("perimeter")).value).toBe("0");
-			expect((await screen.findByTestId<HTMLInputElement>("psiOfWallJunction")).value).toBe("0");
 			expect((await screen.findByTestId<HTMLInputElement>("thicknessOfWalls")).value).toBe("80");
 			expect((await screen.findByTestId("typeOfGroundFloor_Slab_no_edge_insulation")).hasAttribute("checked")).toBe(true);
 		});
@@ -158,7 +163,6 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 			expect((await screen.findByTestId("perimeter_error"))).toBeDefined();
-			expect((await screen.findByTestId("psiOfWallJunction_error"))).toBeDefined();
 			expect((await screen.findByTestId("thicknessOfWalls_error"))).toBeDefined();
 			expect((await screen.findByTestId("typeOfGroundFloor_error"))).toBeDefined();
 		});

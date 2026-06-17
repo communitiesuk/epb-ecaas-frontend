@@ -21,7 +21,6 @@ describe("dwelling details mapper", () => {
 		numOfBedrooms: 2,
 		numOfUtilityRooms: 2,
 		numOfBathrooms: 1,
-		numOfWCs: 1,
 		numOfHabitableRooms: 3,
 		numOfRoomsWithTappingPoints: 2,
 		numOfWetRooms: 3,
@@ -55,7 +54,6 @@ describe("dwelling details mapper", () => {
 		expect(fhsInputData.NumberOfBedrooms).toBe(state.numOfBedrooms);
 		expect(fhsInputData.NumberOfUtilityRooms).toBe(state.numOfUtilityRooms);
 		expect(fhsInputData.NumberOfBathrooms).toBe(state.numOfBathrooms);
-		expect(fhsInputData.NumberOfSanitaryAccommodations).toBe(state.numOfWCs);
 		expect(fhsInputData.NumberOfHabitableRooms).toBe(state.numOfHabitableRooms);
 		expect(fhsInputData.NumberOfHotTappedRooms).toBe(state.numOfRoomsWithTappingPoints);
 		expect(fhsInputData.NumberOfWetRooms).toBe(state.numOfWetRooms);
@@ -107,7 +105,6 @@ describe("dwelling details mapper", () => {
 				numOfBedrooms: 2,
 				numOfUtilityRooms: 2,
 				numOfBathrooms: 1,
-				numOfWCs: 1,
 				numOfHabitableRooms: 3,
 				numOfRoomsWithTappingPoints: 2,
 				numOfWetRooms: 4,
@@ -154,7 +151,6 @@ describe("dwelling details mapper", () => {
 				numOfBedrooms: 2,
 				numOfUtilityRooms: 2,
 				numOfBathrooms: 1,
-				numOfWCs: 1,
 				numOfHabitableRooms: 3,
 				numOfRoomsWithTappingPoints: 2,
 				numOfWetRooms: 5,

@@ -50,7 +50,6 @@ autoSaveElementForm<WallOfHeatedBasementData>({
 	},
 });
 
-
 watch(
 	() => [model.value, store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement.data.length] as const,
 	() => {
@@ -63,6 +62,7 @@ watch(
 		}
 	},
 );
+
 const { dwellingSpaceFloorOfHeatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
 const basementFloorOptions = 
 	new Map(
@@ -70,7 +70,6 @@ const basementFloorOptions =
 			.filter((e) => e?.data?.id != null)
 			.map((e) => [e.data.id!, e.data.name]),
 	);
-
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -82,6 +81,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<GovInset>Only use this to enter walls that are underground. Enter any parts of walls in the basement that are not underground as an external or internal wall.</GovInset>
 	<FormKit
 		v-model="model"
 		type="form"
@@ -115,13 +115,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsUValue
 			id="uValue"
 			name="uValue"
+			label="U-value of wall and ground"
 			help="Enter the U-value of the construction of the full thickness of the wall build up, including the thermal resistance of the ground"
 		/>
 		<FormKit
 			id="thermalResistance"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
-			label="Thermal resistance"
+			label="Thermal resistance of wall only"
 			help="Enter the thermal resistance of all layers in the wall construction"
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50"

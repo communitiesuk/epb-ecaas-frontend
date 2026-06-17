@@ -7,10 +7,13 @@ import { litre } from "~/utils/units/volume";
 import { unitValue } from "~/utils/units";
 import { celsius } from "~/utils/units/temperature";
 
-const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport("navigateTo", () => {
-	return navigateToMock;
-});
+const { mockFetch, navigateToMock } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	navigateToMock: vi.fn(),
+}));
+
+mockNuxtImport("useFetch", () => mockFetch);
+mockNuxtImport("navigateTo", () => navigateToMock);
 
 vi.mock("uuid");
 
@@ -27,7 +30,6 @@ describe("water storage", () => {
 			typeOfWaterStorage: "hotWaterCylinder",
 			storageCylinderVolume: unitValue(5, litre),
 			dailyEnergyLoss: 1,
-			dhwHeatSourceId: heatPumpId,
 			areaOfHeatExchanger: 1000,
 			heaterPosition: 0.8,
 			thermostatPosition: 0.5,
@@ -39,7 +41,6 @@ describe("water storage", () => {
 			typeOfWaterStorage: "smartHotWaterTank",
 			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
 			name: "Smart hot water tank 1",
-			dhwHeatSourceId: heatPumpId,
 			productReference: "42",
 			heaterPosition: 0.8,
 		},
@@ -65,7 +66,6 @@ describe("water storage", () => {
 		},
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
-
 	const addHeatPumpStoreData = () => {
 		store.$patch({
 			dwellingDetails: {
@@ -86,7 +86,6 @@ describe("water storage", () => {
 		await user.type(screen.getByTestId("name"), " 1");
 		await user.type(screen.getByTestId("storageCylinderVolume"), "5");
 		await user.type(screen.getByTestId("dailyEnergyLoss"), "1");
-		await user.click(screen.getByTestId(`dhwHeatSourceId_${heatPumpId}`));
 		await user.type(screen.getByTestId("areaOfHeatExchanger"), "1000");
 		await user.type(screen.getByTestId("heaterPosition"), "0.8");
 		await user.type(screen.getByTestId("thermostatPosition"), "0.5");
@@ -98,7 +97,6 @@ describe("water storage", () => {
 		await user.type(screen.getByTestId("name"), " 1");
 		await user.click(screen.getByTestId("chooseAProductButton"));
 		// Have to simulate product selection by directly setting the product reference in the store - the other page won't load in a unit test
-		await user.click(screen.getByTestId(`dhwHeatSourceId_${heatPumpId}`));
 		await user.type(screen.getByTestId("heaterPosition"), "0.8");
 		await user.tab();
 	};
@@ -123,7 +121,6 @@ describe("water storage", () => {
 		// expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
 		expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
-		expect((await screen.findByTestId("dhwHeatSourceId_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
 		expect((await screen.findByTestId("thermostatPosition_error"))).toBeDefined();
 
@@ -134,7 +131,6 @@ describe("water storage", () => {
 		// not name, this is filled in by default
 		// expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("selectSmartHotWaterTank_error"))).toBeDefined();
-		expect((await screen.findByTestId("dhwHeatSourceId_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
 	});
 
@@ -192,7 +188,6 @@ describe("water storage", () => {
 				hotWaterCylinder.data.storageCylinderVolume.amount.toString(),
 			);
 			expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe(hotWaterCylinder.data.dailyEnergyLoss.toString());
-			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("areaOfHeatExchanger")).value).toBe(hotWaterCylinder.data.areaOfHeatExchanger!.toString());
 			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value).toBe(hotWaterCylinder.data.heaterPosition.toString());
 			expect((await screen.findByTestId<HTMLInputElement>("thermostatPosition")).value).toBe(hotWaterCylinder.data.thermostatPosition.toString());
@@ -219,20 +214,6 @@ describe("water storage", () => {
 
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value)
 				.toBe("Hot water cylinder");
-		});
-
-		test("if only one dhw heat source present, it is autoselected", async () => {
-			addHeatPumpStoreData();
-
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
-
-			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
 		});
 	});
 
@@ -282,17 +263,13 @@ describe("water storage", () => {
 		});
 
 		test("form is prepopulated when data exists in state", async () => {
-			const mockFetch = vi.hoisted(() => vi.fn(() => (
-				{
-					data: ref({
-						brandName: "Test",
-						modelName: "Large Smart Hot Water Tank",
-						modelQualifier: "SHWTLARGE",
-					}),
-				}
-			)));
-
-			mockNuxtImport("useFetch", () => mockFetch);
+			mockFetch.mockReturnValue({
+				data: ref({
+					brandName: "Test",
+					modelName: "Large Smart Hot Water Tank",
+					modelQualifier: "SHWTLARGE",
+				}),
+			});
 
 			store.$patch({
 				domesticHotWater: {
@@ -319,8 +296,6 @@ describe("water storage", () => {
 			expect((await screen.findByTestId("productData_productReference")).textContent)
 				.toBe(smartHotWaterTank.data.productReference);
 
-			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`))
-				.hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value)
 				.toBe(smartHotWaterTank.data.heaterPosition.toString());
 		});
@@ -347,18 +322,32 @@ describe("water storage", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Smart hot water tank");
 		});
 
-		test("if only one dhw heat source present, it is autoselected", async () => {
-			addHeatPumpStoreData();
+		test("Renders HEM default product warning when default product is selected", async () => {
+			mockFetch.mockReturnValue({
+				data: ref({
+					brandName: "HEM Default",
+					modelName: "Large Smart Hot Water Tank",
+					modelQualifier: "SHWTLARGE",
+				}),
+			});
 
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "create" },
+			store.$patch({
+				domesticHotWater: {
+					waterStorage: {
+						data: [{ ...smartHotWaterTank }],
+					},
 				},
 			});
 
-			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
-
-			expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
+			addHeatPumpStoreData();
+	
+			await renderSuspended(WaterStorage, {
+				route: {
+					params: { "waterstorage": "0" },
+				},
+			});
+	
+			expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 		});
 	});
 });

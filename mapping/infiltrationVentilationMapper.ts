@@ -66,7 +66,23 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 		], x.associatedItemId) : undefined;
 
 		switch (ventType) {
-			case "MVHR":
+			case "MVHR": {
+				const intakeAssociatedItem = x.associatedItemIdForIntake && x.associatedItemIdForIntake !== "none"
+					? getResolvedTaggedItem([
+						dwellingSpaceExternalWall,
+						dwellingSpaceRoofs,
+						dwellingSpaceWindows,
+					], x.associatedItemIdForIntake)
+					: undefined;
+
+				const exhaustAssociatedItem = x.associatedItemIdForExhaust && x.associatedItemIdForExhaust !== "none"
+					? getResolvedTaggedItem([
+						dwellingSpaceExternalWall,
+						dwellingSpaceRoofs,
+						dwellingSpaceWindows,
+					], x.associatedItemIdForExhaust)
+					: undefined;
+
 				val = {
 					vent_type: "MVHR",
 					...commonFields,
@@ -74,13 +90,13 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					ductwork: [],
 					position_exhaust: {
 						mid_height_air_flow_path: x.midHeightOfAirFlowPathForExhaust,
-						orientation360: x.orientationOfExhaust,
-						pitch: x.pitchOfExhaust,
+						orientation360: exhaustAssociatedItem?.orientation ?? x.orientationOfExhaust,
+						pitch: exhaustAssociatedItem?.pitch ?? x.pitchOfExhaust,
 					},
 					position_intake: {
 						mid_height_air_flow_path: x.midHeightOfAirFlowPathForIntake,
-						orientation360: x.orientationOfIntake,
-						pitch: x.pitchOfIntake,
+						orientation360: intakeAssociatedItem?.orientation ?? x.orientationOfIntake,
+						pitch: intakeAssociatedItem?.pitch ?? x.pitchOfIntake,
 					},
 					installed_under_approved_scheme: x.installedUnderApprovedScheme,
 					product_reference: x.productReference,
@@ -90,6 +106,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					} : {}),
 				} as const satisfies SchemaMechanicalVentilation;
 				break;
+			}
 			case "Centralised continuous MEV":
 				val = {
 					vent_type: "Centralised continuous MEV",

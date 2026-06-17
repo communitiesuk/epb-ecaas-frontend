@@ -24,7 +24,6 @@ const state: DwellingDetailSummary = {
 		numOfBedrooms: 3,
 		numOfUtilityRooms: 2,
 		numOfBathrooms: 1,
-		numOfWCs: 1,
 		numOfHabitableRooms: 4,
 		numOfRoomsWithTappingPoints: 2,
 		numOfWetRooms: 3,
@@ -88,13 +87,12 @@ describe("Dwelling details summary", () => {
 			"Number of bedrooms": "3",
 			"Number of utility rooms": "2",
 			"Number of bathrooms": "1",
-			"Number of WCs": "1",
 			"Number of habitable rooms": "4",
 			"Total number of rooms with tapping points": "2",
 			"Energy sources": "Mains gas, LPG (Liquid petroleum gas) - bulk, Electricity",
 			"Can any energy generated on site be exported to the grid?": "No, generated energy can’t be exported to the grid",
 			"Is the dwelling Part G compliant?": "Yes",
-			"Is active cooling required to make the dwelling Part O compliant?": "No",
+			"Is air conditioning required for the dwelling to be part O compliant?": "No",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

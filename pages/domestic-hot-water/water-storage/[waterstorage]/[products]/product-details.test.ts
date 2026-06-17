@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import type { Product } from "~/pcdb/pcdb.types";
-import ProductDetails from "./[id].vue";
+import ProductDetails from "./[id]/index.vue";
 import type { H3Error } from "h3";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
@@ -18,6 +18,11 @@ describe("Heat pump details", async () => {
 		modelName: "Large Smart Hot Water Tank",
 		modelQualifier: "SHWTLARGE",
 		technologyType: "SmartHotWaterTank",
+	};
+
+	const hemDefaultShwtProduct: Partial<Product> = {
+		...shwtProduct,
+		brandName: "HEM Default",
 	};
 
 	const store = useEcaasStore();
@@ -108,6 +113,27 @@ describe("Heat pump details", async () => {
 
 		// Assert
 		expect(waterStorage.productReference).toBe("42");
+	});
+
+	test("Does not display HEM default inset when product is not HEM Default", async () => {
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect(screen.queryByTestId("hemDefaultProductInset")).toBeNull();
+	});
+
+	test("Displays HEM default inset when product brand is HEM Default", async () => {
+		// Arrange
+		mockFetch.mockReturnValue({
+			data: ref(hemDefaultShwtProduct),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+
+		// Assert
+		expect((await screen.findByTestId("hemDefaultProductInset"))).toBeDefined();
 	});
 
 	test("Navigates to water storage page when product is selected", async () => {

@@ -2,7 +2,7 @@
 import { v4 as uuidv4 } from "uuid";
 import type { CustomListItem } from "~/components/CustomList.vue";
 import formStatus from "~/constants/formStatus";
-import { hasPackagedProduct } from "~/utils/packagedProduct";
+import { hasPackagedProduct } from "~/utils/products";
 import { page as pages } from "~/data/pages/pages";
 
 const page = usePage();

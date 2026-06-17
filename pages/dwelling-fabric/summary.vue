@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { emptyValueRendering, getUrl, getTabItems } from "#imports";
+import { emptyValueRendering, getUrl, getTabItems, type ExternalGlazedDoorData, type WindowData } from "#imports";
 import { displayColour } from "~/utils/display";
 
 const title = "Dwelling fabric summary";
@@ -50,7 +50,7 @@ const groundFloorSummary: SummarySection = {
 		const verticalEdgeInsulationDepth = "verticalEdgeInsulationDepth" in x ? dim(x.verticalEdgeInsulationDepth, "metres") : emptyValueRendering;
 		const verticalEdgeInsulationThermalResistance = "verticalEdgeInsulationThermalResistance" in x ? dim(x.verticalEdgeInsulationThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 		const heightOfFloorUpperSurface = "heightOfFloorUpperSurface" in x ? dim(x.heightOfFloorUpperSurface, "metres") : emptyValueRendering;
-		const underfloorSpaceThermalResistance = "underfloorSpaceThermalResistance" in x ? dim(x.underfloorSpaceThermalResistance, "watts per square metre kelvin") : emptyValueRendering;
+		const underfloorSpaceThermalResistance = "underfloorSpaceThermalResistance" in x ? dim(x.underfloorSpaceThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 		const thermalTransmittanceOfWallsAboveGround = "thermalTransmittanceOfWallsAboveGround" in x ? dim(x.thermalTransmittanceOfWallsAboveGround, "watts per square metre kelvin") : emptyValueRendering;
 		const ventilationOpeningsArea = "ventilationOpeningsArea" in x ? dim(x.ventilationOpeningsArea, "millimetres square per metre") : emptyValueRendering;
 		const windShieldingFactor = "windShieldingFactor" in x ? show(x.windShieldingFactor) : emptyValueRendering;
@@ -61,10 +61,11 @@ const groundFloorSummary: SummarySection = {
 			"Total area": dim(x.totalArea, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"Thermal resistance of insulation on base of underfloor space": underfloorSpaceThermalResistance,
+			"U-value of walls above ground": thermalTransmittanceOfWallsAboveGround,
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Perimeter": dim(x.perimeter, "metres"),
-			"Psi of wall junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
 			"Thickness of walls at the edge of the floor": dim(x.thicknessOfWalls, "metres"),
 			"Type of ground floor": displaySnakeToSentenceCase(show(x.typeOfGroundFloor)),
 			"Horizontal edge insulation width": horizontalEdgeInsulationWidth,
@@ -72,8 +73,6 @@ const groundFloorSummary: SummarySection = {
 			"Vertical edge insulation depth": verticalEdgeInsulationDepth,
 			"Vertical edge insulation thermal resistance": verticalEdgeInsulationThermalResistance,			
 			"Height of the floor upper surface": heightOfFloorUpperSurface ,	
-			"Thermal resistance of insulation on base of underfloor space": underfloorSpaceThermalResistance,
-			"Thermal transmittance of walls above ground": thermalTransmittanceOfWallsAboveGround,
 			"Area of ventilation openings per perimeter": ventilationOpeningsArea,
 			"Wind shielding factor": windShieldingFactor,
 		};
@@ -126,18 +125,18 @@ const floorAboveUnheatedBasementSummary: SummarySection = {
 		return {
 			"Name": show(x.name),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"Total area": dim(x.totalArea, "metres square"),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"U-value of floor, basement void and ground": dim(x.uValue, "watts per square metre kelvin"),
+			"Thermal resistance of floor only": dim(x.thermalResistance, "square metre kelvin per watt"),
+			"U-value of the foundations": dim(x.thermalTransmittanceOfFoundations, "watts per square metre kelvin"),
 			"Perimeter": dim(x.perimeter, "metres"),
-			"PSI value of E6 junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
+			"Depth of the basement floor below ground level": dim(x.depthOfBasementFloor, "metres"),
+			"Height of the basement walls above ground": dim(x.heightOfBasementWalls, "metres"),
+			"U-value of the basement walls above ground": dim(x.thermalTransmittanceOfBasementWalls, "square metre kelvin per watt"),
+			"Thermal resistance of basement walls below ground": dim(x.thermalResistanceOfBasementWalls, "square metre kelvin per watt"),
 			"Thickness of walls at the edge of the floor": dim(x.thicknessOfWalls, "millimetres"),
-			"Depth of the basement floor": dim(x.depthOfBasementFloor, "metres"),
-			"Height of the basement walls": dim(x.heightOfBasementWalls, "metres"),
-			"Thermal resistance of basement walls": dim(x.thermalResistanceOfBasementWalls, "square metre kelvin per watt"),
-			"Thermal transmittance of the basement walls": dim(x.thermalTransmittanceOfBasementWalls, "square metre kelvin per watt"),
-			"Thermal transmittance of the foundations": dim(x.thermalTransmittanceOfFoundations, "watts per square metre kelvin"),
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceFloors"),
@@ -157,8 +156,7 @@ const heatedBasementSummary: SummarySection = {
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Depth of basement floor below ground": dim(x.depthOfBasementFloor, "metres"),
-			"Psi of wall junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
-			"Thickness of walls": dim(x.thicknessOfWalls, "millimetres"),
+			"Thickness of walls where they meet the floor": dim(x.thicknessOfWalls, "millimetres"),
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceFloors"),
@@ -245,7 +243,6 @@ const partyWallSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Cavity type": displaySnakeToSentenceCase(show(x.partyWallCavityType)),
 			"Lining type": displaySnakeToSentenceCase(show(x.partyWallLiningType)),
-			"Thermal resistance of cavity": dim(x.thermalResistanceCavity, "square metre kelvin per watt"),
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceWalls"),
@@ -383,24 +380,57 @@ const unglazedDoorSummary: SummarySection = {
 	editUrl: getUrl("dwellingSpaceDoors"),
 };
 
+// function formatShadingRowsForSummary(shading: ShadingObjectData[]): Record<string, string> {
+// 	const rows: Record<string, string> = {};
+// 	shading?.forEach((shadingEntry, i) => {
+// 		const n = i + 1;
+// 		const typeOfShading = displaySnakeToSentenceCase(shadingEntry.typeOfShading);
+// 		const isObstacle = shadingEntry.typeOfShading === "obstacle";
+
+// 		rows[`Name of shading ${n}`] = shadingEntry.name;
+// 		rows[`Type of shading ${n}`] = typeOfShading;
+// 		rows[`Distance of shading ${n} from glass`] = dim(shadingEntry.distance, "metres");
+
+// 		if (isObstacle) {
+// 			rows[`Height of shading ${n}`] = dim(shadingEntry.height, "metres");
+// 			rows[`Transparency of shading ${n}`] = show(shadingEntry.transparency + " %");
+// 			// rows[`Depth of shading ${n}`] = emptyValueRendering;
+// 		} else {
+// 			// rows[`Height of shading ${n}`] = emptyValueRendering;
+// 			// rows[`Transparency of shading ${n}`] = emptyValueRendering;
+// 			rows[`Depth of shading ${n}`] = dim(shadingEntry.depth, "metres");
+// 		}
+// 	});
+// 	return rows;
+// }
+
 function formatShadingRowsForSummary(shading: ShadingObjectData[]): Record<string, string> {
 	const rows: Record<string, string> = {};
-	shading.forEach((shadingEntry, i) => {
+
+	shading?.forEach((shadingEntry, i) => {
 		const n = i + 1;
-		const typeOfShading = displaySnakeToSentenceCase(shadingEntry.typeOfShading);
+		const isObstacle = shadingEntry.typeOfShading === "obstacle";
+
 		rows[`Name of shading ${n}`] = shadingEntry.name;
-		rows[`Type of shading ${n}`] = typeOfShading;
+		rows[`Type of shading ${n}`] = displaySnakeToSentenceCase(shadingEntry.typeOfShading);
 		rows[`Distance of shading ${n} from glass`] = dim(shadingEntry.distance, "metres");
-		if (shadingEntry.typeOfShading === "obstacle") {
-			rows[`Height of shading ${n}`] = dim(shadingEntry.height, "metres");
-			rows[`Transparency of shading ${n}`] = show(shadingEntry.transparency + " %");
-			rows[`Depth of shading ${n}`] = emptyValueRendering;
-		} else {
-			rows[`Height of shading ${n}`] = emptyValueRendering;
-			rows[`Transparency of shading ${n}`] = emptyValueRendering;
-			rows[`Depth of shading ${n}`] = dim(shadingEntry.depth, "metres");
-		}
+
+		rows[`Depth of shading ${n}`] =
+            isObstacle
+            	? emptyValueRendering
+            	: dim(shadingEntry.depth, "metres");
+
+		rows[`Height of shading ${n}`] =
+            isObstacle
+            	? dim(shadingEntry.height, "metres")
+            	: emptyValueRendering;
+
+		rows[`Transparency of shading ${n}`] =
+            isObstacle
+            	? show(shadingEntry.transparency + " %")
+            	: emptyValueRendering;
 	});
+
 	return rows;
 }
 
@@ -444,8 +474,10 @@ const glazedDoorSummary: SummarySection = {
 			"Window treatment controls": x.curtainsOrBlinds ? treatmentControls : undefined,
 			"Thermal resistivity increase": x.curtainsOrBlinds ? thermalResistivityIncrease : undefined,
 			"Solar transmittance reduction": x.curtainsOrBlinds ? solarTransmittanceReduction : undefined,
+			"Depth of reveal": dim(x.depthOfReveal, "millimetres"),
+			"Distance from glass to start of reveal": dim(x.distanceFromGlassToStartOfReveal, "millimetres"),
 			"Does anything shade the window?": displayBoolean(x.hasShading),
-			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvArrayData, { hasShading: true }>).shading) } : {}),
+			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<ExternalGlazedDoorData, { hasShading: true }>).shading) } : {}),
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceDoors"),
@@ -545,8 +577,10 @@ const windowSummary: SummarySection = {
 			"Window treatment controls": x.curtainsOrBlinds ? treatmentControls : undefined,
 			"Thermal resistivity increase": x.curtainsOrBlinds ? thermalResistivityIncrease : undefined,
 			"Solar transmittance reduction": x.curtainsOrBlinds ? solarTransmittanceReduction : undefined,
+			"Depth of reveal": dim(x.depthOfReveal, "millimetres"),
+			"Distance from glass to start of reveal": dim(x.distanceFromGlassToStartOfReveal, "millimetres"),
 			"Does anything shade the window?": displayBoolean(x.hasShading),
-			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvArrayData, { hasShading: true }>).shading) } : {}),
+			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<WindowData, { hasShading: true }>).shading) } : {}),
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceWindows"),

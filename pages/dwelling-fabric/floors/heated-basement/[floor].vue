@@ -37,7 +37,6 @@ const saveForm = (fields: FloorOfHeatedBasementData) => {
 			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 			depthOfBasementFloor: fields.depthOfBasementFloor,
-			psiOfWallJunction: fields.psiOfWallJunction,
 			thicknessOfWalls: unitValue(fields.thicknessOfWalls.amount, millimetre),
 		};
 		
@@ -105,7 +104,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Total area"
-			help="Enter the total area of the ground floor across the dwelling.  If the ground floor is made up of multiple floor types, this is the total area of all of the ground floor elements apart from basement walls."
+			help="Enter the total area of the ground floor across the dwelling.  If the ground floor is made up of multiple floor entries, this is the total area of all of the floor elements in contact with the ground."
 			name="totalArea"
 			:validation="zodTypeAsFormKitValidation(groundTotalAreaZod)"
 			data-field="Zone.BuildingElement.*.total_area"
@@ -113,13 +112,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsUValue
 			id="uValue"
 			name="uValue"
-			help="Enter the U-value of the construction of the floor at the bottom of the lowest heated level of the dwelling, including the thermal resistance of the ground"	
+			label="U-value of floor and ground"
+			help="Enter the U-value of the construction of the floor at the bottom of the lowest heated level of the dwelling, including the thermal resistance of the ground"
 		/>
 		<FormKit
 			id="thermalResistance"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
-			label="Thermal resistance"
+			label="Thermal resistance of floor only"
 			help="Enter the thermal resistance of all layers in the floor construction, not including the effects of the ground"
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50"
@@ -148,22 +148,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number"
 		/>
 		<FormKit
-			id="psiOfWallJunction"
-			type="govInputWithSuffix"
-			suffix-text="W/(m·K)"
-			label="Psi value of E22 junction"
-			help="This is the linear thermal transmittance of the junction between the floor and the walls, if there are multiple values enter an average weighted by length"
-			name="psiOfWallJunction"
-			validation="required | number | min:0 | max:2"
-		/>
-		<FormKit
 			id="thicknessOfWalls"
 			type="govInputWithUnit"
-			label="Thickness of walls"
+			label="Thickness of walls where they meet the floor"
 			:unit="millimetre"
 			name="thicknessOfWalls"
 			:validation="zodTypeAsFormKitValidation(thicknessOfWallsZod)"
-			help="Enter the physical thickness of the ground floor wall. Typically more than 300mm. If the thickness varies, enter a weighted average."
+			help="Typically between 30mm to 80mm. If this value varies, enter a weighted average."
 		/>
 		<div class="govuk-button-group govuk-!-margin-top-6">
 			<div class="govuk-button-group">

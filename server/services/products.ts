@@ -48,7 +48,7 @@ const ensureValidTechnologyType = (technologyType: TechnologyType) => {
 };
 
 const ensureValidProductId = (id: string) => {
-	if (isNaN(parseInt(id))) {
+	if (!id || id.trim().length === 0) {
 		throw createError({
 			statusCode: 400,
 			statusMessage: "Invalid product ID",

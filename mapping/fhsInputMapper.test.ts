@@ -111,10 +111,19 @@ const expectedHouseInput: FhsInputSchema = {
 		Shower: {
 			"some-mixer-shower-name": {
 				ColdWaterSource: "mains water",
-				HotWaterSource: "Heat pump 1",
+				HotWaterSource: "hw cylinder",
 				flowrate: 14,
 				allow_low_flowrate: false,
 				type: "MixerShower",
+			},
+			"some-mixer-shower-name-with-wwhrs": {
+				ColdWaterSource: "mains water",
+				HotWaterSource: "hw cylinder",
+				flowrate: 14,
+				allow_low_flowrate: false,
+				type: "MixerShower",
+				WWHRS: "WWHRS - some-mixer-shower-name-with-wwhrs",
+				WWHRS_configuration: "A",
 			},
 		},
 		Bath: {},
@@ -183,7 +192,6 @@ const expectedHouseInput: FhsInputSchema = {
 	BuildingWidth: 20,
 	NumberOfBathrooms: 1,
 	NumberOfHabitableRooms: 4,
-	NumberOfSanitaryAccommodations: 1,
 	NumberOfHotTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
 	NumberOfWetRooms: 1,
@@ -249,6 +257,11 @@ const expectedHouseInput: FhsInputSchema = {
 			is_heat_network: false,
 		},
 	},
+	WWHRS: {
+		"WWHRS - some-mixer-shower-name-with-wwhrs": {
+			ColdWaterSource: "mains water",
+			product_reference: "test-product-ref" },
+	},
 	Zone: {
 		[defaultZoneName]: {
 			BuildingElement: {
@@ -276,7 +289,7 @@ const expectedHouseInput: FhsInputSchema = {
 					areal_heat_capacity: "Very light",
 					mass_distribution_class: "I: Mass concentrated at internal side",
 					perimeter: 100,
-					psi_wall_floor_junc: 1,
+					psi_wall_floor_junc: 0,
 					thickness_walls: 0.08,
 					floor_type: "Slab_no_edge_insulation",
 				},
@@ -328,8 +341,11 @@ const expectedFlatInput: FhsInputSchema = {
 				minimum_charge_rate_one_way_trip: 80,
 				maximum_discharge_rate_one_way_trip: 20,
 			},
+			diverter: {
+				HeatSource: "Heat pump 1",
+			},
 		},
-		["pv system 1"]: {
+		["diverter 1"]: {
 			"fuel": "electricity",
 			"is_export_capable": false,
 			"priority": [
@@ -426,14 +442,14 @@ const expectedFlatInput: FhsInputSchema = {
 		Shower: {
 			"mixer shower 1 name": {
 				ColdWaterSource: "mains water",
-				HotWaterSource: "Heat pump 1",
+				HotWaterSource: "hw cylinder",
 				flowrate: 14,
 				allow_low_flowrate: false,
 				type: "MixerShower",
 			},
 			"mixer shower 2 name": {
 				ColdWaterSource: "mains water",
-				HotWaterSource: "Heat pump 1",
+				HotWaterSource: "hw cylinder",
 				flowrate: 12,
 				allow_low_flowrate: false,
 				type: "MixerShower",
@@ -627,7 +643,6 @@ const expectedFlatInput: FhsInputSchema = {
 	PartO_active_cooling_required: true,
 	NumberOfBathrooms: 1,
 	NumberOfHabitableRooms: 4,
-	NumberOfSanitaryAccommodations: 1,
 	NumberOfHotTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
 	NumberOfWetRooms: 2,
@@ -702,7 +717,7 @@ const expectedFlatInput: FhsInputSchema = {
 						type: "horizontal",
 						width: 0.32,
 					}],
-					psi_wall_floor_junc: 0.4,
+					psi_wall_floor_junc: 0,
 					thickness_walls: 0.8,
 					floor_type: "Slab_edge_insulation",
 				},
@@ -717,7 +732,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: "D: Mass equally distributed",
 					perimeter: 21,
 					thermal_resist_walls_base: 3,
-					psi_wall_floor_junc: 0.8,
+					psi_wall_floor_junc: 0,
 					thickness_walls: 0.04,
 					floor_type: "Heated_basement",
 				},
@@ -758,8 +773,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 90,
 					type: "BuildingElementPartyWall",
 					u_value: 1,
-					party_wall_cavity_type: "defined_resistance",
-					thermal_resistance_cavity: 4.2,
+					party_wall_cavity_type: "solid",
 				},
 				"external wall 1 (wall)": {
 					type: "BuildingElementOpaque",
@@ -827,15 +841,15 @@ const expectedFlatInput: FhsInputSchema = {
 							distance: 5,
 						},
 						{
-							type: "reveal",
-							depth: 4,
-							distance: 3,
-						},
-						{
 							type: "obstacle",
 							transparency: 0.2,
 							distance: 2,
 							height: 1,
+						},
+						{
+							type: "reveal",
+							depth: 200,
+							distance: 100,
 						},
 					],
 					type: "BuildingElementTransparent",
@@ -942,15 +956,15 @@ const expectedFlatInput: FhsInputSchema = {
 							distance: 5,
 						},
 						{
-							type: "reveal",
-							depth: 4,
-							distance: 3,
-						},
-						{
 							type: "obstacle",
 							transparency: 0.2,
 							distance: 2,
 							height: 1,
+						},
+						{
+							type: "reveal",
+							depth: 200,
+							distance: 100,
 						},
 					],
 				},
@@ -1021,7 +1035,6 @@ describe("FHS input mapper", () => {
 					numOfRoomsWithTappingPoints: 2,
 					numOfWetRooms: 1,
 					numOfUtilityRooms: 1,
-					numOfWCs: 1,
 					buildingLength: 10,
 					buildingWidth: 20,
 					fuelType: ["electricity"],
@@ -1152,6 +1165,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
+							id: "f4ef5b62-d7b5-4c3c-be29-e3d98876ff22",
 							name: "ground-floor",
 							surfaceArea: 40,
 							totalArea: 50,
@@ -1160,7 +1174,6 @@ describe("FHS input mapper", () => {
 							arealHeatCapacity: "Very light",
 							massDistributionClass: "I",
 							perimeter: 100,
-							psiOfWallJunction: 1,
 							thicknessOfWalls: unitValue(80, millimetre),
 							typeOfGroundFloor: "Slab_no_edge_insulation",
 						},
@@ -1355,7 +1368,6 @@ describe("FHS input mapper", () => {
 					data: {
 						id: "some-hot-water-cyclinder",
 						name: "hw cylinder",
-						dhwHeatSourceId: "dhwHP-1",
 						storageCylinderVolume: {
 							amount: 200,
 							unit: "litres" as const,
@@ -1378,8 +1390,20 @@ describe("FHS input mapper", () => {
 							name: "some-mixer-shower-name",
 							flowRate: 14,
 							typeOfHotWaterOutlet: "mixedShower",
-							dhwHeatSourceId: "dhwHP-1",
 							wwhrs: false as const,
+							isAirPressureShower: false as const,
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							id: "some-mixer-shower-wwhrs-id",
+							name: "some-mixer-shower-name-with-wwhrs",
+							flowRate: 14,
+							typeOfHotWaterOutlet: "mixedShower",
+							wwhrs: true as const,
+							wwhrsType: "instantaneousSystemA" as const,
+							wwhrsProductReference: "test-product-ref",
 							isAirPressureShower: false as const,
 						},
 					},
@@ -1450,7 +1474,6 @@ describe("FHS input mapper", () => {
 					numOfRoomsWithTappingPoints: 2,
 					numOfWetRooms: 2,
 					numOfUtilityRooms: 1,
-					numOfWCs: 1,
 					buildingLength: 10,
 					buildingWidth: 20,
 					fuelType: ["electricity"],
@@ -1668,6 +1691,7 @@ describe("FHS input mapper", () => {
 						{
 							...baseForm,
 							data: {
+								id: "ad81239d-bb32-458e-aa3a-cb7ec376fbe3",
 								name: "ground floor 1",
 								surfaceArea: 12,
 								totalArea: 20,
@@ -1676,7 +1700,6 @@ describe("FHS input mapper", () => {
 								arealHeatCapacity: "Very light",
 								massDistributionClass: "E",
 								perimeter: 40,
-								psiOfWallJunction: 0.4,
 								thicknessOfWalls: unitValue(0.8, metre),
 								typeOfGroundFloor: "Slab_edge_insulation" as const,
 								edgeInsulationType: ["horizontal"] as ["horizontal"],
@@ -1687,6 +1710,7 @@ describe("FHS input mapper", () => {
 						{
 							...baseForm,
 							data: {
+								id: "f5021de4-518a-41b4-8f14-0d8a9804cdd9",
 								name: "ground floor 2",
 								surfaceArea: 26,
 								totalArea: 30,
@@ -1695,7 +1719,6 @@ describe("FHS input mapper", () => {
 								arealHeatCapacity: "Very light",
 								massDistributionClass: "D",
 								perimeter: 21,
-								psiOfWallJunction: 0.8,
 								typeOfGroundFloor: "Heated_basement",
 								thicknessOfWalls: unitValue(40, millimetre),
 								depthOfBasementFloorBelowGround: 2,
@@ -1771,8 +1794,7 @@ describe("FHS input mapper", () => {
 							uValue: 1,
 							arealHeatCapacity: "Very light",
 							massDistributionClass: "E",
-							partyWallCavityType: "defined_resistance",
-							thermalResistanceCavity: 4.2,
+							partyWallCavityType: "solid",
 						},
 					}],
 				},
@@ -1932,6 +1954,8 @@ describe("FHS input mapper", () => {
 							numberOpenableParts: "1",
 							curtainsOrBlinds: false,
 							hasShading: true,
+							depthOfReveal: 200,
+							distanceFromGlassToStartOfReveal: 100,
 							shading: [
 								{
 									name: "blep",
@@ -1951,12 +1975,12 @@ describe("FHS input mapper", () => {
 									depth: 6,
 									distance: 5,
 								},
-								{
-									name: "blomp",
-									typeOfShading: "frame_or_reveal",
-									depth: 4,
-									distance: 3,
-								},
+								// {
+								// 	name: "blomp",
+								// 	typeOfShading: "frame_or_reveal",
+								// 	depth: 4,
+								// 	distance: 3,
+								// },
 								{
 									name: "blomk",
 									typeOfShading: "obstacle",
@@ -2022,6 +2046,8 @@ describe("FHS input mapper", () => {
 						midHeightOpenablePart1: 1,
 						openingToFrameRatio: 0.8,
 						maximumOpenableArea: 1,
+						depthOfReveal: 200,
+						distanceFromGlassToStartOfReveal: 100,
 						hasShading: true,
 						shading: [
 							{
@@ -2042,12 +2068,12 @@ describe("FHS input mapper", () => {
 								depth: 6,
 								distance: 5,
 							},
-							{
-								name: "blomp",
-								typeOfShading: "frame_or_reveal",
-								depth: 4,
-								distance: 3,
-							},
+							// {
+							// 	name: "blomp",
+							// 	typeOfShading: "frame_or_reveal",
+							// 	depth: 4,
+							// 	distance: 3,
+							// },
 							{
 								name: "blomk",
 								typeOfShading: "obstacle",
@@ -2197,7 +2223,6 @@ describe("FHS input mapper", () => {
 					data: {
 						id: "hw cylinder 1 id",
 						name: "hw cylinder 1 name",
-						dhwHeatSourceId: "dhwHP-1",
 						storageCylinderVolume: {
 							amount: 80,
 							unit: "litres" as const,
@@ -2220,7 +2245,6 @@ describe("FHS input mapper", () => {
 							name: "mixer shower 1 name",
 							flowRate: 14,
 							typeOfHotWaterOutlet: "mixedShower",
-							dhwHeatSourceId: "dhwHP-1",
 							wwhrs: false as const,
 							isAirPressureShower: false as const,
 						},
@@ -2232,7 +2256,6 @@ describe("FHS input mapper", () => {
 							name: "mixer shower 2 name",
 							flowRate: 12,
 							typeOfHotWaterOutlet: "mixedShower",
-							dhwHeatSourceId: "dhwHP-1",
 							wwhrs: false as const,
 							isAirPressureShower: false as const,
 						},
@@ -2355,7 +2378,6 @@ describe("FHS input mapper", () => {
 						inverterPeakPowerDC: 3.8,
 						locationOfInverter: "heated_space",
 						inverterType: "optimised_inverter",
-						electricityPriority: "diverter",
 						hasShading: true,
 						shading: [{
 							name: "Chimney",
@@ -2384,7 +2406,13 @@ describe("FHS input mapper", () => {
 			},
 			diverters: {
 				...baseForm,
-				data: [],
+				data: [{
+					data: {
+						name: "diverter 1",
+						electricityPriority: "diverter",
+					},
+					complete: true,
+				}],
 			},
 		};
 

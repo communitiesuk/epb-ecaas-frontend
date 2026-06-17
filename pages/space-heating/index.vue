@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
 import type { CustomListItem } from "~/components/CustomList.vue";
-import { hasPackagedProduct } from "~/utils/packagedProduct";
+import { hasPackagedProduct } from "~/utils/products";
 import { useSpaceHeating } from "~/composables/spaceHeating";
 import { EcaasError } from "~/errors.types";
 

@@ -375,27 +375,6 @@ const emptyWaterStorageSummary: SummarySection = {
 	editUrl: getUrl("waterStorageCreate"),
 };
 
-function getHWHeatSourceName(hwHeatSourceId: string | undefined) {
-	if (!hwHeatSourceId) {
-		return emptyValueRendering;
-	}
-
-	const hwHeatSourceData = store.domesticHotWater.heatSources.data
-		.find(x => x.data.id === hwHeatSourceId)?.data;
-
-	if (!hwHeatSourceData) {
-		return "Invalid heat source";
-	}
-
-	if (hwHeatSourceData.isExistingHeatSource) {
-		return store.spaceHeating.heatSource.data
-			.find((x) => x.data.id === hwHeatSourceData.heatSourceId)?.data.name
-					?? "Invalid space heating heat source";
-	} else {
-		return hwHeatSourceData.name ?? "Invalid hot water heat source name";
-	}
-}
-	
 const hotWaterCylinderSummary: SummarySection = {
 	id: "hotWaterCylinder",
 	label: "Hot water cylinders",
@@ -404,7 +383,6 @@ const hotWaterCylinderSummary: SummarySection = {
 			"Name": show(hwCylData.name),
 			"Storage cylinder volume": "storageCylinderVolume" in hwCylData ? dim(hwCylData.storageCylinderVolume, "litres") : emptyValueRendering,
 			"Daily energy loss": "dailyEnergyLoss" in hwCylData ? dim(hwCylData.dailyEnergyLoss, "kilowatt hours per day") : emptyValueRendering,
-			"Heat source": show(getHWHeatSourceName(hwCylData.dhwHeatSourceId)),
 			"Area of heat exchanger installed": "areaOfHeatExchanger" in hwCylData ? dim(hwCylData.areaOfHeatExchanger, "metres square") : emptyValueRendering,
 			"Heater position in the cylinder": "heaterPosition" in hwCylData ? show(hwCylData.heaterPosition) : emptyValueRendering,
 			"Thermostat position in the cylinder": "thermostatPosition" in hwCylData ? show(hwCylData.thermostatPosition) : emptyValueRendering,
@@ -423,7 +401,6 @@ const smartHotWaterCylinderSummary: SummarySection = {
 		return {
 			"Name": show(smartHWCylData.name),
 			"Product reference": "productReference" in smartHWCylData ? show(smartHWCylData.productReference) : emptyValueRendering,
-			"Heat source": show(getHWHeatSourceName(smartHWCylData.dhwHeatSourceId)),
 			"Heater position in the cylinder": "heaterPosition" in smartHWCylData ? show(smartHWCylData.heaterPosition) : emptyValueRendering,
 		};
 	}),
@@ -447,14 +424,12 @@ const mixedShowerSummary: SummarySection = {
 	label: "Mixer showers",
 	data: mixedShowerData.map(({ data }) => {
 		
-		const heatSourceName = getHWHeatSourceName("dhwHeatSourceId" in data ? data.dhwHeatSourceId : undefined);
 		const airPressureShowerProductReference = "airPressureShowerProductReference" in data ? data.airPressureShowerProductReference : undefined;
 		const wwhrsProductReference = "wwhrsProductReference" in data ? data.wwhrsProductReference : undefined;
 
 		return {
 			"Name": show(data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in data && data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(data.typeOfHotWaterOutlet) : emptyValueRendering,
-			"Hot water source": heatSourceName ? heatSourceName : emptyValueRendering,
 			"Is this an air pressure shower?": "isAirPressureShower" in data ? displayBoolean(data.isAirPressureShower) : emptyValueRendering,
 			...("isAirPressureShower" in data && data.isAirPressureShower ? {
 				"Air pressure shower product reference": show(airPressureShowerProductReference),

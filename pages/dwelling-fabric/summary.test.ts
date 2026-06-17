@@ -62,7 +62,6 @@ const floorsData: FloorsData = {
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				perimeter: 0,
-				psiOfWallJunction: 0,
 				thicknessOfWalls: unitValue(0.3, metre),
 				typeOfGroundFloor: "Slab_no_edge_insulation",
 			},
@@ -77,7 +76,6 @@ const floorsData: FloorsData = {
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				perimeter: 0,
-				psiOfWallJunction: 0,
 				thicknessOfWalls: unitValue(0.3, metre),
 				typeOfGroundFloor: "Slab_edge_insulation",
 				horizontalEdgeInsulationWidth: {
@@ -133,7 +131,6 @@ const floorsData: FloorsData = {
 				arealHeatCapacity: "Medium",
 				massDistributionClass: "I",
 				depthOfBasementFloor: 2.5,
-				psiOfWallJunction: 0.08,
 				thicknessOfWalls: unitValue(0.3, millimetre),
 			},
 		}],
@@ -142,13 +139,13 @@ const floorsData: FloorsData = {
 		data: [{
 			data: {
 				name: "Floor above unheated basement 1",
+				totalArea: 45,
 				surfaceArea: 45,
 				uValue: 0.25,
 				thermalResistance: 4,
 				arealHeatCapacity: "Medium",
 				massDistributionClass: "I",
 				perimeter: 30,
-				psiOfWallJunction: 0.08,
 				thicknessOfWalls: unitValue(0.3, millimetre),
 				depthOfBasementFloor: 0.5,
 				heightOfBasementWalls: 1,
@@ -315,6 +312,8 @@ const externalGlazedDoorData = {
 	treatmentControls: "manual",
 	thermalResistivityIncrease: 1,
 	solarTransmittanceReduction: 0.1,
+	depthOfReveal: 20,
+	distanceFromGlassToStartOfReveal: 10,
 	hasShading: false,
 } satisfies ExternalGlazedDoorData;
 
@@ -376,6 +375,8 @@ const windowData: EcaasForm<WindowData> = {
 		treatmentControls: "manual",
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
+		depthOfReveal: 20,
+		distanceFromGlassToStartOfReveal: 10,
 		hasShading: false,
 	},
 };
@@ -389,7 +390,6 @@ const windowDataWithShading: EcaasForm<WindowData> = {
 			{ name: "Test 2", typeOfShading: "left_side_fin", distance: 2, depth: 22 },
 			{ name: "Test 3", typeOfShading: "right_side_fin", distance: 3, depth: 33 },
 			{ name: "Test 4", typeOfShading: "overhang", distance: 4, depth: 44 },
-			{ name: "Test 5", typeOfShading: "frame_or_reveal", distance: 5, depth: 55 },
 		],
 	},
 };
@@ -551,8 +551,7 @@ describe("Dwelling space fabric summary", () => {
 			"Areal heat capacity": "Medium",
 			"Mass distribution class": "Internal",
 			"Depth of basement floor below ground": `2.5 ${metre.suffix}`,
-			"Psi of wall junction": `0.08 ${wattsPerMeterKelvin.suffix}`,
-			"Thickness of walls": `0.3 ${millimetre.suffix}`,
+			"Thickness of walls where they meet the floor": `0.3 ${millimetre.suffix}`,
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
@@ -600,7 +599,6 @@ describe("Dwelling space fabric summary", () => {
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",
 			"Perimeter": `0 ${metre.suffix}`,
-			"Psi of wall junction": `0 ${wattsPerMeterKelvin.suffix}`,
 			"Thickness of walls at the edge of the floor": `0.3 ${metre.suffix}`,
 			"Type of ground floor": "Slab no edge insulation",
 			"Horizontal edge insulation width": `-`,
@@ -618,7 +616,6 @@ describe("Dwelling space fabric summary", () => {
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",
 			"Perimeter": `0 ${metre.suffix}`,
-			"Psi of wall junction": `0 ${wattsPerMeterKelvin.suffix}`,
 			"Thickness of walls at the edge of the floor": `0.3 ${metre.suffix}`,
 			"Type of ground floor": "Slab edge insulation",
 			"Horizontal edge insulation width": `0.5 ${metre.suffix}`,
@@ -704,18 +701,18 @@ describe("Dwelling space fabric summary", () => {
 		const expectedResult = {
 			"Name": "Floor above unheated basement 1",
 			"Net surface area": `45 ${metresSquare.suffix}`,
-			"U-value": `0.25 ${wattsPerSquareMeterKelvin.suffix}`,
-			"Thermal resistance": `4 ${squareMeterKelvinPerWatt.suffix}`,
+			"Total area": `45 ${metresSquare.suffix}`,
 			"Areal heat capacity": "Medium",
 			"Mass distribution class": "Internal",
+			"U-value of floor, basement void and ground": `0.25 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Thermal resistance of floor only": `4 ${squareMeterKelvinPerWatt.suffix}`,
+			"U-value of the foundations": `1.5 ${wattsPerSquareMeterKelvin.suffix}`,
 			"Perimeter": `30 ${metre.suffix}`,
-			"PSI value of E6 junction": `0.08 ${wattsPerMeterKelvin.suffix}`,
+			"Depth of the basement floor below ground level": `0.5 ${metre.suffix}`,
+			"Height of the basement walls above ground": `1 ${metre.suffix}`,
+			"U-value of the basement walls above ground": `1 ${squareMeterKelvinPerWatt.suffix}`,
+			"Thermal resistance of basement walls below ground": `0.5 ${squareMeterKelvinPerWatt.suffix}`,
 			"Thickness of walls at the edge of the floor": `0.3 ${millimetre.suffix}`,
-			"Depth of the basement floor": `0.5 ${metre.suffix}`,
-			"Height of the basement walls": `1 ${metre.suffix}`,
-			"Thermal resistance of basement walls": `0.5 ${squareMeterKelvinPerWatt.suffix}`,
-			"Thermal transmittance of the basement walls": `1 ${squareMeterKelvinPerWatt.suffix}`,
-			"Thermal transmittance of the foundations": `1.5 ${wattsPerSquareMeterKelvin.suffix}`,
 		};
 
 
@@ -1267,6 +1264,8 @@ describe("dwelling space doors", () => {
 									treatmentControls: "auto_motorised",
 									thermalResistivityIncrease: 1,
 									solarTransmittanceReduction: 0.1,
+									depthOfReveal: 20,
+									distanceFromGlassToStartOfReveal: 10,
 									hasShading: false,
 								} satisfies ExternalGlazedDoorData,
 							}],
@@ -1292,6 +1291,8 @@ describe("dwelling space doors", () => {
 				"Window treatment controls": "Automatic",
 				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Solar transmittance reduction": "0.1",
+				"Depth of reveal": `20 ${millimetre.suffix}`,
+				"Distance from glass to start of reveal": `10 ${millimetre.suffix}`,
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -1331,6 +1332,8 @@ describe("dwelling space doors", () => {
 				"Window treatment controls": "Manual",
 				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Solar transmittance reduction": "0.1",
+				"Depth of reveal": `20 ${millimetre.suffix}`,
+				"Distance from glass to start of reveal": `10 ${millimetre.suffix}`,
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -1358,7 +1361,6 @@ describe("dwelling space doors", () => {
 										{ name: "Test 2", typeOfShading: "left_side_fin", distance: 2, depth: 22 },
 										{ name: "Test 3", typeOfShading: "right_side_fin", distance: 3, depth: 33 },
 										{ name: "Test 4", typeOfShading: "overhang", distance: 4, depth: 44 },
-										{ name: "Test 5", typeOfShading: "frame_or_reveal", distance: 5, depth: 55 },
 									] satisfies ShadingObjectData[],
 								} satisfies ExternalGlazedDoorData,
 							}],
@@ -1381,6 +1383,8 @@ describe("dwelling space doors", () => {
 				"Window treatment controls": "Manual",
 				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Solar transmittance reduction": "0.1",
+				"Depth of reveal": `20 ${millimetre.suffix}`,
+				"Distance from glass to start of reveal": `10 ${millimetre.suffix}`,
 			};
 			const shading1Expected = {
 				"Name of shading 1": "Test 1",
@@ -1407,12 +1411,6 @@ describe("dwelling space doors", () => {
 				"Distance of shading 4 from glass": `4 ${metre.suffix}`,
 				"Depth of shading 4": `44 ${metre.suffix}`,
 			};
-			const shading5Expected = {
-				"Name of shading 5": "Test 5",
-				"Type of shading 5": "Frame or reveal",
-				"Distance of shading 5 from glass": `5 ${metre.suffix}`,
-				"Depth of shading 5": `55 ${metre.suffix}`,
-			};
 			await renderSuspended(Summary);
 
 			for (const [key, value] of Object.entries({
@@ -1421,7 +1419,6 @@ describe("dwelling space doors", () => {
 				...shading2Expected,
 				...shading3Expected,
 				...shading4Expected,
-				...shading5Expected,
 			})) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceGlazedDoors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -1585,6 +1582,8 @@ describe("dwelling space windows", () => {
 			"Curtains or blinds": "Blinds",
 			"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 			"Solar transmittance reduction": "0.1",
+			"Depth of reveal": `20 ${millimetre.suffix}`,
+			"Distance from glass to start of reveal": `10 ${millimetre.suffix}`,
 		};
 
 		const shading1Expected = {
@@ -1612,12 +1611,6 @@ describe("dwelling space windows", () => {
 			"Distance of shading 4 from glass": `4 ${metre.suffix}`,
 			"Depth of shading 4": `44 ${metre.suffix}`,
 		};
-		const shading5Expected = {
-			"Name of shading 5": "Test 5",
-			"Type of shading 5": "Frame or reveal",
-			"Distance of shading 5 from glass": `5 ${metre.suffix}`,
-			"Depth of shading 5": `55 ${metre.suffix}`,
-		};
 
 		for (const [key, value] of Object.entries({
 			...baseExpected,
@@ -1625,13 +1618,348 @@ describe("dwelling space windows", () => {
 			...shading2Expected,
 			...shading3Expected,
 			...shading4Expected,
-			...shading5Expected,
 		})) {
 			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWindows-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 		}
 	});
+
+	it("should display the correct data for the windows section when there is more than one window", async () => {
+		const store = useEcaasStore();
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [{
+						data: {
+							...windowData.data,
+							hasShading: true,
+							shading: [
+								{ name: "Window 1 Shading 1", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
+								{ name: "Window 1 Shading 2", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 22 },
+							],
+						},
+					},
+					{
+						data: {
+							...windowData.data,
+							id: "test-id-2",
+							name: "Window 2",
+							hasShading: true,
+							shading: [
+								{ name: "Window 2 Shading 1", typeOfShading: "right_side_fin", distance: 1, depth: 11 },
+								{ name: "Window 2 Shading 2", typeOfShading: "overhang", distance: 4, depth: 44 } ],
+						},
+					}],
+				},
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+		const window2Shading1Expected = {
+			"Name of shading 1": "Window 2 Shading 1",
+			"Type of shading 1": "Right side fin",
+			"Distance of shading 1 from glass": `1 ${metre.suffix}`,
+			"Depth of shading 1": `11 ${metre.suffix}`,
+		};
+
+		const window2Shading2Expected = {
+			"Name of shading 2": "Window 2 Shading 2",
+			"Type of shading 2": "Overhang",
+			"Distance of shading 2 from glass": `4 ${metre.suffix}`,
+			"Depth of shading 2": `44 ${metre.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(window2Shading1Expected)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWindows-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			const ddCells = lineResult.querySelectorAll("dd");
+			expect(ddCells[1]?.textContent).toBe(value);
+		}
+
+		for (const [key, value] of Object.entries(window2Shading2Expected)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWindows-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			const ddCells = lineResult.querySelectorAll("dd");
+			expect(ddCells[1]?.textContent).toBe(value);
+		}	
+	});
+
+	// it("should display height/transparency but not depth when only obstacle shading exists (single window)", async () => {
+	// 	const store = useEcaasStore();
+
+	// 	store.$patch({
+	// 		dwellingFabric: {
+	// 			dwellingSpaceWindows: {
+	// 				data: [{
+	// 					data: {
+	// 						...windowData.data,
+	// 						hasShading: true,
+	// 						shading: [
+	// 							{ name: "Obstacle 1", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 30 },
+	// 							{ name: "Obstacle 2", typeOfShading: "obstacle", distance: 4, height: 26, transparency: 40 },
+	// 						],
+	// 					},
+	// 				}],
+	// 			},
+	// 			dwellingSpaceWalls: {
+	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+	// 			},
+	// 		},
+	// 	});
+
+	// 	await renderSuspended(Summary);
+
+	// 	expect(screen.queryByText(/Height of shading 1/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading 1/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Height of shading 2/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading 2/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Depth of shading/i)).toBeNull();
+	// });
+
+	// it("should display depth but not height/transparency when only non-obstacle shading exists (single window)", async () => {
+	// 	const store = useEcaasStore();
+
+	// 	store.$patch({
+	// 		dwellingFabric: {
+	// 			dwellingSpaceWindows: {
+	// 				data: [{
+	// 					data: {
+	// 						...windowData.data,
+	// 						hasShading: true,
+	// 						shading: [
+	// 							{ name: "Left fin", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
+	// 							{ name: "Right fin", typeOfShading: "right_side_fin", distance: 2, depth: 13 },
+	// 						],
+	// 					},
+	// 				}],
+	// 			},
+	// 			dwellingSpaceWalls: {
+	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+	// 			},
+	// 		},
+	// 	});
+
+	// 	await renderSuspended(Summary);
+
+	// 	expect(screen.queryByText(/Depth of shading 1/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Depth of shading 2/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Height of shading/i)).toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading/i)).toBeNull();
+	// });
+
+	// it("should display both obstacle and non-obstacle fields when mixed shading exists (single window)", async () => {
+	// 	const store = useEcaasStore();
+
+	// 	store.$patch({
+	// 		dwellingFabric: {
+	// 			dwellingSpaceWindows: {
+	// 				data: [{
+	// 					data: {
+	// 						...windowData.data,
+	// 						hasShading: true,
+	// 						shading: [
+	// 							{ name: "Obstacle 1", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 30 },
+	// 							{ name: "Right fin", typeOfShading: "right_side_fin", distance: 2, depth: 13 },
+	// 						],
+	// 					},
+	// 				}],
+	// 			},
+	// 			dwellingSpaceWalls: {
+	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+	// 			},
+	// 		},
+	// 	});
+
+	// 	await renderSuspended(Summary);
+
+	// 	expect(screen.queryByText(/Height of shading 1/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading 1/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Depth of shading 2/i)).not.toBeNull();
+	// });
+
+	// it("should display height/transparency but not depth when only obstacle shading exists (multiple windows)", async () => {
+	// 	const store = useEcaasStore();
+
+	// 	store.$patch({
+	// 		dwellingFabric: {
+	// 			dwellingSpaceWindows: {
+	// 				data: [
+	// 					{
+	// 						data: {
+	// 							...windowData.data,
+	// 							hasShading: true,
+	// 							shading: [
+	// 								{ name: "Obstacle 1", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 30 },
+	// 								{ name: "Obstacle 2", typeOfShading: "obstacle", distance: 2, height: 26, transparency: 34 },
+	// 							],
+	// 						},
+	// 					},
+	// 					{
+	// 						data: {
+	// 							...windowData.data,
+	// 							id: "test-id-2",
+	// 							name: "Window 2",
+	// 							hasShading: true,
+	// 							shading: [
+	// 								{ name: "Obstacle 1", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 30 },
+	// 								{ name: "Obstacle 2", typeOfShading: "obstacle", distance: 2, height: 26, transparency: 34 },
+	// 							],
+	// 						},
+	// 					},
+	// 				],
+	// 			},
+	// 			dwellingSpaceWalls: {
+	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+	// 			},
+	// 		},
+	// 	});
+
+	// 	await renderSuspended(Summary);
+
+	// 	expect(screen.queryByText(/Height of shading 1/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading 1/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Height of shading 2/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading 2/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Depth of shading/i)).toBeNull();
+	// });
+
+	// it("should display depth but not height/transparency when only non-obstacle shading exists (multiple windows)", async () => {
+	// 	const store = useEcaasStore();
+
+	// 	store.$patch({
+	// 		dwellingFabric: {
+	// 			dwellingSpaceWindows: {
+	// 				data: [
+	// 					{
+	// 						data: {
+	// 							...windowData.data,
+	// 							hasShading: true,
+	// 							shading: [
+	// 								{ name: "Left fin", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
+	// 								{ name: "Right fin", typeOfShading: "right_side_fin", distance: 2, depth: 13 },
+	// 							],
+	// 						},
+	// 					},
+	// 					{
+	// 						data: {
+	// 							...windowData.data,
+	// 							id: "test-id-2",
+	// 							name: "Window 2",
+	// 							hasShading: true,
+	// 							shading: [
+	// 								{ name: "Overhang", typeOfShading: "overhang", distance: 1, depth: 11 },
+	// 								{ name: "Right fin", typeOfShading: "right_side_fin", distance: 4, depth: 20 },
+	// 							],
+	// 						},
+	// 					},
+	// 				],
+	// 			},
+	// 			dwellingSpaceWalls: {
+	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+	// 			},
+	// 		},
+	// 	});
+
+	// 	await renderSuspended(Summary);
+
+	// 	expect(screen.queryByText(/Depth of shading 1/i)).not.toBeNull();
+	// 	expect(screen.queryByText(/Depth of shading 2/i)).not.toBeNull();
+
+	// 	expect(screen.queryByText(/Height of shading/i)).toBeNull();
+	// 	expect(screen.queryByText(/Transparency of shading/i)).toBeNull();
+	// });
+
+	// it("should display both obstacle and non-obstacle fields when mixed shading exists (multiple windows)", async () => {
+	// 	const store = useEcaasStore();
+
+	// 	store.$patch({
+	// 		dwellingFabric: {
+	// 			dwellingSpaceWindows: {
+	// 				data: [
+	// 					{
+	// 						data: {
+	// 							...windowData.data,
+	// 							hasShading: true,
+	// 							shading: [
+	// 								{ name: "Left fin", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
+	// 								{ name: "Obstacle", typeOfShading: "obstacle", distance: 2, height: 26, transparency: 34 },
+	// 							],
+	// 						},
+	// 					},
+	// 					{
+	// 						data: {
+	// 							...windowData.data,
+	// 							id: "test-id-2",
+	// 							name: "Window 2",
+	// 							hasShading: true,
+	// 							shading: [
+	// 								{ name: "Overhang", typeOfShading: "overhang", distance: 1, depth: 11 },
+	// 								{ name: "Right fin", typeOfShading: "right_side_fin", distance: 4, depth: 20 },
+	// 							],
+	// 						},
+	// 					},
+	// 				],
+	// 			},
+	// 			dwellingSpaceWalls: {
+	// 				dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+	// 			},
+	// 		},
+	// 	});
+
+	// 	await renderSuspended(Summary);
+
+	// 	const window1Shading2Expected = {
+	// 		"Name of shading 2": "Obstacle",
+	// 		"Type of shading 2": "Obstacle",
+	// 		"Distance of shading 2 from glass": `2 ${metre.suffix}`,
+	// 		"Height of shading 2": `26 ${metre.suffix}`,
+	// 		"Transparency of shading 2": "34 %",
+	// 		"Depth of shading 2": "-",
+	// 	};
+
+	// 	for (const [key, value] of Object.entries(window1Shading2Expected)) {
+	// 		const lineResult = await screen.findByTestId(
+	// 			`summary-dwellingSpaceWindows-${hyphenate(key)}`,
+	// 		);
+
+	// 		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+
+	// 		const ddCells = lineResult.querySelectorAll("dd");
+
+	// 		expect(ddCells[0]?.textContent).toBe(value);
+	// 	}
+
+	// 	const window2Shading2Expected = {
+	// 		"Name of shading 2": "Right fin",
+	// 		"Type of shading 2": "Right side fin",
+	// 		"Distance of shading 2 from glass": `4 ${metre.suffix}`,
+	// 		"Height of shading 2": "-",
+	// 		"Transparency of shading 2": "-",
+	// 		"Depth of shading 2": `20 ${metre.suffix}`,
+	// 	};
+
+	// 	for (const [key, value] of Object.entries(window2Shading2Expected)) {
+	// 		const lineResult = await screen.findByTestId(
+	// 			`summary-dwellingSpaceWindows-${hyphenate(key)}`,
+	// 		);
+
+	// 		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+
+	// 		const ddCells = lineResult.querySelectorAll("dd");
+
+	// 		expect(ddCells[1]?.textContent).toBe(value);
+	// 	}
+	// });
 
 	it("displays transparency for obstacle when non-obstacle shading is added first", async () => {
 		const store = useEcaasStore();

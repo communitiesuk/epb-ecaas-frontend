@@ -259,6 +259,20 @@ describe("Heat source products page", () => {
 		expect(screen.getByText("Search network or subnetwork")).toBeDefined();
 	});
 
+	test("does not render HEM default inset for heat network products", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "1",
+				products: "heat-network",
+			},
+			path: "/1/heat-network",
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.queryByTestId("hemDefaultProductInset")).toBeNull();
+	});
+
 	// test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
 	// 	mockRoute.mockReturnValue({
 	// 		params: {

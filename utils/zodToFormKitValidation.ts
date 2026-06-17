@@ -47,7 +47,7 @@ function getObjectShape(schema: z.ZodObject<z.ZodRawShape>): ZodObjectShape {
 function getUnitAmountSchema(schema: z.ZodTypeAny): z.ZodNumber | undefined {
 	if (!(schema instanceof z.ZodObject)) return undefined;
 
-	const shape = getObjectShape(schema as z.ZodObject<z.ZodRawShape>);
+	const shape = getObjectShape(schema);
 	const amount = shape.amount;
 	const unit = shape.unit;
 

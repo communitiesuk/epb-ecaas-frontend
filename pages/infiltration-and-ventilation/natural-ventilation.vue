@@ -67,7 +67,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:5 | max:72000"
 			suffix-text="m²"
 			data-field="InfiltrationVentilation.Leaks.env_area"
-		/>
+		>
+			<GovDetails summary-text="Help with this input">
+				<p class="govuk-body">This should be included on the test report for air tightness.</p>
+			</GovDetails>
+		</FormKit>
 		
 		<FieldsElevationalHeight
 			field="baseHeightOfVentilationZone"

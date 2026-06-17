@@ -238,6 +238,113 @@ describe("thermal bridges", () => {
 		});
 	});
 
+	describe("junction validation", () => {
+		it("displays an error when ground floor has no associated E5 thermal bridging", async () => {
+			const groundFloor: Partial<GroundFloorData> = {
+				id: "b8e0b021-dbf2-446f-a52c-7b2cddcb9cb2",
+				name: "Ground floor 1",
+				perimeter: 20,
+			};
+
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{
+								data: groundFloor,
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(ThermalBridges);
+
+			const error = screen.getByTestId("errorSummary")
+				.querySelectorAll("li > span")
+				.entries()
+				.find(e => e[1].textContent === "You must add an E5 junction associated with the element Ground floor 1");
+
+			expect(error).toBeDefined();
+			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
+		});
+
+		it("displays an error when floor above unheated basement has no associated E6 thermal bridging", async () => {
+			const floorAboveUnheatedBasement: Partial<GroundFloorData> = {
+				id: "b8e0b021-dbf2-446f-a52c-7b2cddcb9cb2",
+				name: "Floor above unheated basement",
+				perimeter: 20,
+			};
+
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceFloorAboveUnheatedBasement: {
+							data: [{
+								data: floorAboveUnheatedBasement,
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(ThermalBridges);
+
+			const error = screen.getByTestId("errorSummary")
+				.querySelectorAll("li > span")
+				.entries()
+				.find(e => e[1].textContent === "You must add an E6 junction associated with the element Floor above unheated basement");
+
+			expect(error).toBeDefined();
+			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
+		});
+
+		it("displays an error when total length of thermal bridging exceeds perimeter of associated floor", async () => {
+			const groundFloor: Partial<GroundFloorData> = {
+				id: "b8e0b021-dbf2-446f-a52c-7b2cddcb9cb2",
+				name: "Ground floor 1",
+				perimeter: 20,
+			};
+
+			const e5ThermalBridge: LinearThermalBridgeData = {
+				...linear1.data,
+				length: 30,
+				typeOfThermalBridge: "E5",
+				associatedItemId: groundFloor.id!,
+			};
+
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{
+								data: groundFloor,
+							}],
+						},
+					},
+					dwellingSpaceThermalBridging: {
+						dwellingSpaceLinearThermalBridges: {
+							data: [{
+								data: e5ThermalBridge,
+								complete: true,
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(ThermalBridges);
+
+			const error = screen.getByTestId("errorSummary")
+				.querySelectorAll("li > span")
+				.entries()
+				.find(e => e[1].textContent === "The total lengths of all the thermal bridges associated with Ground floor 1 are longer than the perimeter of the element itself.");
+
+			expect(error).toBeDefined();
+			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
+		});
+	});
+
 	describe("mark section as complete", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
@@ -368,6 +475,7 @@ describe("thermal bridges", () => {
 				store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges?.complete,
 			).toBe(false);
 		});
+
 		it("marks correspondiing section as not complete after adding a new point thermal bridge item", async () => {
 
 			await renderSuspended(PointThermalBridgeForm, {

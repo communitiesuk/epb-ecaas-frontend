@@ -2,7 +2,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, hasPackagedProduct, type DomesticHotWaterHeatSourceData } from "#imports";
 import { coldWaterSourceOptions, DHWHeatSourceTypesWithDisplay } from "~/utils/display";
-import type { Product } from "~/pcdb/pcdb.types";
+import type { Product, AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { celsius } from "~/utils/units/temperature";
 import type { UnitValue } from "~/utils/units/types";
 
@@ -31,6 +31,7 @@ export type PointOfUseModelType = Extract<DomesticHotWaterHeatSourceData, { type
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
+const productBrandName = ref<string | undefined>();
 const packagedProduct = ref<Product | undefined>();
 
 if (hasPackagedProduct(model.value)) {
@@ -305,6 +306,11 @@ const isLinkedToHeatSourceWithCylinder = (): boolean => {
 	return isPackagedProduct(spaceHeatingHeatSource?.data) && spaceHeatingHeatSource.data.packageProductIds!.some(id => waterStorageIds.includes(id));
 };
 
+function handleProductLoaded(product: AnyPcdbProduct) {
+	if (hasModelDetails(product)) {
+		productBrandName.value = product.brandName;
+	}
+}
 
 const hasWaterStorage = computed(() => {
 	return store.domesticHotWater.waterStorage.data.length > 0;
@@ -327,7 +333,6 @@ const heatSourceOptions = computed(() => {
 	}
 	return result;
 });
-
 </script>
 
 <template>
@@ -384,8 +389,6 @@ const heatSourceOptions = computed(() => {
 			</div>
 		</FormKit>
 		<template v-if="mounted">
-
-	
 			<FormKit
 				v-if="model.isExistingHeatSource === false"
 				id="typeOfHeatSource"
@@ -395,7 +398,7 @@ const heatSourceOptions = computed(() => {
 				name="typeOfHeatSource"
 				validation="required"
 				:disabled="hasPackagedProduct(model)"
-			/>		
+			/>
 			<HeatPumpSection
 				v-if="model.isExistingHeatSource === false
 					&& model.typeOfHeatSource === 'heatPump'"
@@ -404,35 +407,44 @@ const heatSourceOptions = computed(() => {
 				:boilers="allBoilers"
 				add-boiler-page-id="heatSourcesCreate"
 				page="domestic hot water"
-				@update-heat-pump-model="updateHeatSource" />
+				@update-heat-pump-model="updateHeatSource"
+				@product-loaded="handleProductLoaded"
+			/>
 			<BoilerSection
 				v-if="model.isExistingHeatSource === false
 					&& model.typeOfHeatSource === 'boiler'"
 				:model="(model as BoilerModelType)"
 				:index="index"
 				page="domestic hot water"
-				@update-boiler-model="updateHeatSource" />
+				@update-boiler-model="updateHeatSource"
+				@product-loaded="handleProductLoaded"
+			/>
 			<HeatNetworkSection
 				v-if="model.isExistingHeatSource === false
 					&& model.typeOfHeatSource === 'heatNetwork'"
 				:model="(model as HeatNetworkModelType)"
 				:index="index"
 				section="domesticHotWater"
-				@update-heat-network-model="updateHeatSource" />
+				@update-heat-network-model="updateHeatSource"
+			/>
 			<HeatBatterySection
 				v-if="model.isExistingHeatSource === false
 					&& model.typeOfHeatSource === 'heatBattery'"
 				:model="(model as HeatBatteryModelType)"
 				:index="index"
 				page="domestic hot water"
-				@update-heat-battery-model="updateHeatSource" />
+				@update-heat-battery-model="updateHeatSource"
+				@product-loaded="handleProductLoaded"
+			/>
 			<HeatInterfaceUnitSection
 				v-if="model.isExistingHeatSource === false
 					&& model.typeOfHeatSource === 'heatInterfaceUnit'"
 				:model="(model as HeatInterfaceUnitModelType)"
 				:index="index"
 				page="domestic hot water"
-				@update-heat-interface-unit-model="updateHeatSource" />
+				@update-heat-interface-unit-model="updateHeatSource"
+				@product-loaded="handleProductLoaded"
+			/>
 			<SolarThermalSystemSection
 				v-if="model.isExistingHeatSource === false
 					&& model.typeOfHeatSource === 'solarThermalSystem'"
@@ -463,7 +475,9 @@ const heatSourceOptions = computed(() => {
 					exclusiveRangeFromMin: `Maximum flow temperature must be greater than 0.`,
 				}"
 				:data-field="'HotWaterSource.*.HeatSource.*.temp_flow_limit_upper'"
-			/>	</template>
+			/>
+		</template>
+		<HemDefaultProductWarning :brand-names="[productBrandName]" />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('domesticHotWater')" secondary test-id="saveProgress">Save progress</GovButton>

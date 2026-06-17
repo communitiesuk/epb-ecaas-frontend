@@ -380,8 +380,8 @@ export type LocationOfCollectorLoopPipingTypeDisplay = "Outside" | "Heated space
 export type HeatSourceTypeDisplay = "Heat pump" | "Boiler" | "Heat network" | "Heat battery" | "Solar thermal system" | "Heat interface unit";
 
 export const heatSourceTypesWithDisplay = {
-	"boiler": "Boiler",
 	"heatPump": "Heat pump",
+	"boiler": "Boiler",
 	"heatNetwork": "Heat network",
 	"heatBattery": "Heat battery",
 	"heatInterfaceUnit": "Heat interface unit",

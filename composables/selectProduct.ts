@@ -10,7 +10,6 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 	const store = useEcaasStore();
 
 	const createHotWaterCyliner = (state: EcaasState, source: HeatSourceSection, heatPumpDetails: HeatPumpProduct, heatSourceData: HeatSourceData | DomesticHotWaterHeatSourceData) => {
-		let heatSourceId = heatSourceData.id;
 
 		if (source === "spaceHeating") {
 			const hotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
@@ -19,8 +18,6 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 				createdAutomatically: true,
 				heatSourceId: heatSourceData.id,
 			};
-
-			heatSourceId = hotWaterHeatPump.id!;
 
 			state.domesticHotWater.heatSources.data.push({
 				data: hotWaterHeatPump as DomesticHotWaterHeatSourceData,
@@ -35,7 +32,6 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 				storageCylinderVolume: unitValue(heatPumpDetails.tankVolumeDeclared, "litres"),
 			} : {}),
 			dailyEnergyLoss: heatPumpDetails.dailyLossesDeclared,
-			dhwHeatSourceId: heatSourceId,
 			areaOfHeatExchanger: heatPumpDetails.heatExchangerSurfaceAreaDeclared,
 			packagedProductReference: heatPumpDetails.id,
 		};
@@ -97,7 +93,6 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 			if (heatSourceData.packageProductIds.length) {
 				const mechVentData = state.infiltrationAndVentilation.mechanicalVentilation.data;
 				const waterStorageData = state.domesticHotWater.waterStorage.data;
-				const dhwHeatSourceData = state.domesticHotWater.heatSources.data;
 
 				for (const packagedId of [...heatSourceData.packageProductIds]) {
 					removeBoilerProduct(packagedId);
@@ -111,12 +106,12 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 					const storageIdx = waterStorageData.findIndex(x => x.data.id === packagedId);
 
 					if (storageIdx >= 0) {
-						if (source === "spaceHeating") {
-							const dhwHeatSourceIdIndex = dhwHeatSourceData.findIndex(x => x.data.id === waterStorageData[storageIdx]?.data.dhwHeatSourceId);
-							dhwHeatSourceData.splice(dhwHeatSourceIdIndex, 1);
+						const heatSourceForWaterStorageInDHW = state.domesticHotWater.heatSources.data.findIndex(x => x.data.heatSourceId === heatSourceData.id);
+						waterStorageData.splice(storageIdx, 1);
+						if (heatSourceForWaterStorageInDHW >= 0) {
+							state.domesticHotWater.heatSources.data.splice(heatSourceForWaterStorageInDHW, 1);
 						}
 
-						waterStorageData.splice(storageIdx, 1);
 					}
 				}
 				heatSourceData.packageProductIds = [];
@@ -127,7 +122,7 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 					const boilerData = boiler as BoilerProduct;
 					const boilerId = addBoilerProduct?.(boilerData);
 
-					heatSourceData.packageProductIds = [boilerId];
+					heatSourceData.packageProductIds?.push(boilerId);
 				});
 			}
 

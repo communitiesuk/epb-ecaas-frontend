@@ -57,7 +57,6 @@ const saveForm = (fields: typeof model.value) => {
 					numOfBedrooms: fields.numOfBedrooms,
 					numOfUtilityRooms: fields.numOfUtilityRooms,
 					numOfBathrooms: fields.numOfBathrooms,
-					numOfWCs: fields.numOfWCs,
 					numOfHabitableRooms: fields.numOfHabitableRooms,
 					numOfRoomsWithTappingPoints: fields.numOfRoomsWithTappingPoints,
 					numOfWetRooms: fields.numOfWetRooms,
@@ -192,9 +191,13 @@ const minBuildingStoreys = (node: FormKitNode) => {
 			:validation-messages="{
 				isInteger: `Storey of flat must be a round number.`,
 			}"
-			help="If the flat is over multiple storeys, enter the storey of the lowest habitable area"
+			help="A ground floor flat would be 1, first floor would be 2, second floor would be 3, and so on"
 			data-field="General.storey_of_dwelling"
-		/>
+		>
+			<GovDetails summary-text="Help with this input">
+				<p class="govuk-body">If the flat is over multiple storeys, enter the storey of the lowest habitable area.</p>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="storeysInDwelling"
 			type="govInputInt"
@@ -334,7 +337,11 @@ const minBuildingStoreys = (node: FormKitNode) => {
 			}"
 			help="Enter the number of rooms in the dwelling excluding the primary living area and any wet rooms or utility rooms"
 			data-field="NumberOfBedrooms"
-		/>
+		>
+			<GovDetails summary-text="Help with this input">
+				<p class="govuk-body">The number of bedrooms should not include any corridors. A studio apartment should have 1 bedroom.</p>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="numOfUtilityRooms"
 			type="govInputInt"
@@ -360,19 +367,6 @@ const minBuildingStoreys = (node: FormKitNode) => {
 			}"
 			help="Enter the number of rooms containing a bath or shower"
 			data-field="NumberOfBathrooms"
-		/>
-		<FormKit
-			id="numOfWCs"
-			type="govInputInt"
-			label="Number of WCs"
-			name="numOfWCs"
-			:validation-rules="{ isInteger }"
-			validation="required | isInteger | min:0"
-			:validation-messages="{
-				isInteger: `Number of WCs must be an integer.`,
-			}"
-			help="Enter the number of rooms containing one or more flush toilets or urinals but not a bath or shower"
-			data-field="NumberOfSanitaryAccommodations"
 		/>
 		<FormKit
 			id="numOfHabitableRooms"
@@ -438,11 +432,12 @@ const minBuildingStoreys = (node: FormKitNode) => {
 			name="isPartGCompliant"
 			validation="required"
 			data-field="PartGcompliance"
+			help="This confirms that water usage is 125 litres per person per day or less"
 		/>
 		<FormKit
 			id="partOActiveCoolingRequired"
 			type="govBoolean"
-			label="Is active cooling required to make the dwelling Part O compliant?"
+			label="Is air conditioning required for the dwelling to be part O compliant?"
 			name="partOActiveCoolingRequired"
 			validation="required"
 			data-field="PartO_active_cooling_required"

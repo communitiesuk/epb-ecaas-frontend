@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { heatBatteryTypes, uniqueName } from "#imports";
 import { celsius } from "~/utils/units/temperature";
+import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -11,6 +12,7 @@ defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatBattery" }>;
 	index: number;
 	page: HeatBatterySectionPage;
+	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
 const heatSources = getCombinedHeatSources(store);
@@ -39,17 +41,16 @@ const emit = defineEmits(["update-heat-battery-model"]);
 			:validation-messages="{
 				uniqueName: 'An element with this name in domestic hot water or space heating already exists. Please enter a unique name.'
 			}" />
-		<FormKit
+		<FieldsSelectPcdbProduct
 			id="selectHeatBattery"
-			type="govPcdbProduct"
 			label="Select a heat battery"
-			name="productReference"
-			validation="required"
 			help="Select the heat battery type from the PCDB using the button below."
 			:selected-product-reference="model.productReference"
 			:selected-product-type="model.typeOfHeatBattery"
 			:page-url="route.fullPath"
-			:page-index="index" />
+			:page-index="index"
+			@product-loaded="onProductLoaded"
+		/>
 		<FormKit
 			id="maxFlowTemp"
 			name="maxFlowTemp"

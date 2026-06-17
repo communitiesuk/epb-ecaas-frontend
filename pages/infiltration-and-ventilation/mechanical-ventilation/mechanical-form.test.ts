@@ -22,8 +22,11 @@ describe("mechanical ventilation form", () => {
 		measuredAirFlowRate: 10,
 		airFlowRate: unitValue(12, litrePerSecond),
 		mvhrLocation: "inside",
+		associatedItemId: "none",
+		orientation: 45,
 		pitch: 90,
-		orientation: 90,
+		associatedItemIdForIntake: "none",
+		associatedItemIdForExhaust: "none",
 		installedUnderApprovedScheme: true,
 		midHeightOfAirFlowPathForExhaust: 1.5,
 		orientationOfExhaust: 90,
@@ -97,8 +100,11 @@ describe("mechanical ventilation form", () => {
 		await user.type(screen.getByTestId("measuredAirFlowRate"), "10");
 		await user.type(screen.getByTestId("airFlowRate"), "12");
 		await user.click(screen.getByTestId("mvhrLocation_inside"));
-		await user.type(screen.getByTestId("orientation"), "90");
+		await user.click(screen.getByTestId("associatedItemId_none"));
+		await user.type(screen.getByTestId("orientation"), "45");
 		await user.type(screen.getByTestId("pitch"), "90");
+		await user.click(screen.getByTestId("associatedItemIdForIntake_none"));
+		await user.click(screen.getByTestId("associatedItemIdForExhaust_none"));
 		await user.click(screen.getByTestId("installedUnderApprovedScheme_yes"));
 		await user.type(screen.getByTestId("midHeightOfAirFlowPathForIntake"), "1.5");
 		await user.type(screen.getByTestId("orientationOfIntake"), "80");
@@ -264,6 +270,21 @@ describe("mechanical ventilation form", () => {
 				.checked,
 		).toBe(true);
 		expect(
+			(await screen.findByTestId<HTMLInputElement>("associatedItemId_none")).checked,
+		).toBe(true);
+		expect(
+			((await screen.findByTestId<HTMLInputElement>("orientation"))).value,
+		).toBe("45");
+		expect(
+			((await screen.findByTestId<HTMLInputElement>("pitch"))).value,
+		).toBe("90");
+		expect(
+			(await screen.findByTestId<HTMLInputElement>("associatedItemIdForIntake_none")).checked,
+		).toBe(true);
+		expect(
+			(await screen.findByTestId<HTMLInputElement>("associatedItemIdForExhaust_none")).checked,
+		).toBe(true);
+		expect(
 			(await screen.findByTestId<HTMLInputElement>("installedUnderApprovedScheme_yes")).checked,
 		).toBe(true);
 		expect(
@@ -309,13 +330,12 @@ describe("mechanical ventilation form", () => {
 			"selectMvhr_error",
 			"measuredFanPowerAndAirFlowRateKnown_error",
 			"mvhrLocation_error",
+			"associatedItemId_error",
+			"associatedItemIdForIntake_error",
+			"associatedItemIdForExhaust_error",
 			"installedUnderApprovedScheme_error",
 			"midHeightOfAirFlowPathForIntake_error",
-			"orientationOfIntake_error",
-			"pitchOfIntake_error",
 			"midHeightOfAirFlowPathForExhaust_error",
-			"orientationOfExhaust_error",
-			"pitchOfExhaust_error",
 		];
 
 		await user.click(
@@ -327,6 +347,33 @@ describe("mechanical ventilation form", () => {
 			const mhvrErrors = screen.getByTestId(error);
 			expect(mhvrErrors).toBeDefined();
 		}
+	});
+
+	test("orientation and pitch errors are displayed for intake and exhaust when associated items are none", async () => {
+		await renderSuspended(MechanicalVentilationForm);
+
+		await user.click(screen.getByTestId("typeOfMechanicalVentilationOptions_MVHR"));
+		await user.click(screen.getByTestId("associatedItemId_none"));
+		await user.click(screen.getByTestId("associatedItemIdForIntake_none"));
+		await user.click(screen.getByTestId("associatedItemIdForExhaust_none"));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const mvhrManualPitchAndOrientationErrors: string[] = [
+			"orientation_error",
+			"pitch_error",
+			"orientationOfIntake_error",
+			"pitchOfIntake_error",
+			"orientationOfExhaust_error",
+			"pitchOfExhaust_error",
+		];
+
+		for (const error of mvhrManualPitchAndOrientationErrors) {
+			expect(screen.getByTestId(error)).toBeDefined();
+		}
+
+		expect(screen.queryByTestId("associatedItemId_error")).toBeNull();
+		expect(screen.queryByTestId("associatedItemIdForIntake_error")).toBeNull();
+		expect(screen.queryByTestId("associatedItemIdForExhaust_error")).toBeNull();
 	});
 
 	test("required error messages are displayed when typeOfMechanicalVentilationOptions is Intermittent MEV", async () => {

@@ -3,6 +3,7 @@ import type { PageId } from "~/data/pages/pages";
 import type { ShowerProductType } from "~/stores/ecaasStore.schema";
 import { showerProductTypesDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
+import type { Product } from "~/pcdb/pcdb.types";
 
 definePageMeta({ layout: "one-column" });
 
@@ -23,12 +24,13 @@ const pageId = `${showerProduct}Products` as PageId;
 const showerProductType = showerProduct as ShowerProductType;
 const productType = showerProductTypesDisplay[showerProductType];
 
-const index = Number(params.outlet);
-const { data: { value: data } } = await useFetch(`/api/products/${params.id}/details`);
+const data = await useProductDetails(params.id as string);
 
 const backUrl = getUrl(pageId).replace(":outlet", params.outlet as string);
 
 const selectProduct = async () => {
+	const index = Number(params.outlet);
+
 	store.$patch(state => {
 		const hotWaterOutletData = state.domesticHotWater.hotWaterOutlets.data[index]?.data;
 
@@ -54,19 +56,11 @@ const selectProduct = async () => {
 </script>
 
 <template>
-	<Head>
-		<Title>{{ data?.modelName }}</Title>
-	</Head>
-
 	<NuxtLink :href="backUrl" class="govuk-back-link govuk-!-margin-top-0 govuk-!-margin-bottom-5" data-testid="backLink" @click="router.back()">
 		{{ productType ? `Back to ${sentenceToLowerCase(productType(true))}` : 'Back' }}
 	</NuxtLink>
 
-	<h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ data?.modelName }}</h1>
-	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
-
-	<ProductDetailsAirPressureShower v-if="!!data && data.technologyType === 'AirPoweredShowers'" :product="data" />
-	<ProductDetailsWwhrs v-if="!!data && data.technologyType === 'InstantaneousWwhrSystem'" :product="data" />
+	<HotWaterOutletProductDetailsPage :product="(data as Product)" />
 
 	<div class="govuk-button-group">
 		<GovButton

@@ -6,9 +6,10 @@ import type {
 	DwellingSpaceZoneParametersData,
 	EcaasForm,
 	ExternalUnglazedDoorData,
+	LinearThermalBridgeData,
 	PartyWallData,
 } from "~/stores/ecaasStore.schema";
-import { asMetres, centimetre, metre, millimetre, type Length } from "~/utils/units/length";
+import { asMetres, centimetre, metre, millimetre } from "~/utils/units/length";
 
 type BuildingElementOpaque = BuildingElementOfType<"BuildingElementOpaque">;
 type BuildingElementAdjacentConditionedSpace = BuildingElementOfType<"BuildingElementAdjacentConditionedSpace">;
@@ -97,9 +98,7 @@ describe("dwelling fabric mapper", () => {
 		// Act
 		const fhsInputData = mapLightingData(resolveState(store.$state));
 
-		let bulbs = fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs;
-
-		bulbs = bulbs as NonNullable<typeof bulbs>;
+		const bulbs = fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs;
 
 		// Assert
 		expect(bulbs).toEqual([
@@ -118,6 +117,7 @@ describe("dwelling fabric mapper", () => {
 	it("maps floor input state to FHS input request", () => {
 		// Arrange
 		const groundFloor: GroundFloorData = {
+			id: "a0209d6e-b8de-4bc0-a760-4c6f19932657",
 			name: "Ground 1",
 			surfaceArea: 5,
 			totalArea: 7,
@@ -125,8 +125,7 @@ describe("dwelling fabric mapper", () => {
 			thermalResistance: 1,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
-			perimeter: 0,
-			psiOfWallJunction: 0,
+			perimeter: 20,
 			thicknessOfWalls: unitValue(0.5, metre),
 			typeOfGroundFloor: "Slab_no_edge_insulation",
 		};
@@ -221,6 +220,7 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 		};
 		const floorAboveUnheatedBasement: FloorAboveUnheatedBasementData = {
+			id: "2e280a48-41b4-44c2-8216-41f51faef93b",
 			name: "Floor above unheated basement 1",
 			surfaceArea: 3,
 			totalArea: 5,
@@ -229,7 +229,6 @@ describe("dwelling fabric mapper", () => {
 			arealHeatCapacity: "Light",
 			massDistributionClass: "E",
 			perimeter: 5,
-			psiOfWallJunction: 1.2,
 			thicknessOfWalls: unitValue(20, millimetre),
 			depthOfBasementFloor: 1,
 			heightOfBasementWalls: 0.9,
@@ -247,7 +246,6 @@ describe("dwelling fabric mapper", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			depthOfBasementFloor: 1,
-			psiOfWallJunction: 1,
 			thicknessOfWalls: unitValue(20, millimetre),
 		};
 		const wallOfHeatedBasement: WallOfHeatedBasementData = {
@@ -261,6 +259,31 @@ describe("dwelling fabric mapper", () => {
 			thermalResistance: 1.5,
 			perimeter: 120,
 		};
+		const linearThermalBridgeData1: LinearThermalBridgeData = {
+			name: "E5",
+			typeOfThermalBridge: "E5",
+			linearThermalTransmittance: 1,
+			length: 2,
+			reference: "Ref",
+			associatedItemId: groundFloor.id,
+		};
+		const linearThermalBridgeData2: LinearThermalBridgeData = {
+			name: "E6",
+			typeOfThermalBridge: "E6",
+			linearThermalTransmittance: 2,
+			length: 4,
+			reference: "Ref",
+			associatedItemId: floorAboveUnheatedBasement.id,
+		};
+		const linearThermalBridgeData3: LinearThermalBridgeData = {
+			name: "E22",
+			typeOfThermalBridge: "E22",
+			linearThermalTransmittance: 3,
+			length: 6,
+			reference: "Ref",
+			associatedItemId: floorAboveHeatedBasement.id,
+		};
+
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceFloors: {
@@ -283,7 +306,18 @@ describe("dwelling fabric mapper", () => {
 				},
 				dwellingSpaceWalls: {
 					dwellingSpaceWallOfHeatedBasement: { ...baseForm, data: [{ ...baseForm, data: wallOfHeatedBasement }] },
-
+				},
+				dwellingSpaceThermalBridging: {
+					dwellingSpaceLinearThermalBridges: {
+						...baseForm,
+						data: [{
+							...baseForm, data: linearThermalBridgeData1,
+						}, {
+							...baseForm, data: linearThermalBridgeData2,
+						}, {
+							...baseForm, data: linearThermalBridgeData3,
+						}],
+					},
 				},
 			},
 		});
@@ -316,7 +350,7 @@ describe("dwelling fabric mapper", () => {
 			areal_heat_capacity: groundFloor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(groundFloor.massDistributionClass),
 			perimeter: groundFloor.perimeter,
-			psi_wall_floor_junc: groundFloor.psiOfWallJunction,
+			psi_wall_floor_junc: 1,
 			thickness_walls: groundFloor.thicknessOfWalls.amount,
 			floor_type: groundFloor.typeOfGroundFloor,
 		};
@@ -326,7 +360,7 @@ describe("dwelling fabric mapper", () => {
 		const expectedHorizonalEdgeInsulation: SchemaEdgeInsulationHorizontal[] = [{
 			type: "horizontal" as const,
 			edge_thermal_resistance: groundFloorWithHorizontalEdgeInsulation.horizontalEdgeInsulationThermalResistance,
-			width: asMetres(groundFloorWithHorizontalEdgeInsulation.horizontalEdgeInsulationWidth as Length),
+			width: asMetres(groundFloorWithHorizontalEdgeInsulation.horizontalEdgeInsulationWidth),
 		}];
 
 		expect("edge_insulation" in groundFloorWithHorizontalEdgeInsulationElement && groundFloorWithHorizontalEdgeInsulationElement.edge_insulation).toEqual(expectedHorizonalEdgeInsulation);
@@ -334,7 +368,7 @@ describe("dwelling fabric mapper", () => {
 		const expectedVerticalEdgeInsulation: SchemaEdgeInsulationVertical[] = [{
 			type: "vertical" as const,
 			edge_thermal_resistance: groundFloorWithVerticalEdgeInsulation.verticalEdgeInsulationThermalResistance,
-			depth: asMetres(groundFloorWithVerticalEdgeInsulation.verticalEdgeInsulationDepth as Length),
+			depth: asMetres(groundFloorWithVerticalEdgeInsulation.verticalEdgeInsulationDepth),
 		}];
 
 		expect("edge_insulation" in groundFloorWithVerticalEdgeInsulationElement && groundFloorWithVerticalEdgeInsulationElement.edge_insulation).toEqual(expectedVerticalEdgeInsulation);
@@ -343,12 +377,12 @@ describe("dwelling fabric mapper", () => {
 			{
 				type: "horizontal" as const,
 				edge_thermal_resistance: groundFloorWithHorizontalAndVerticalEdgeInsulation.horizontalEdgeInsulationThermalResistance,
-				width: asMetres(groundFloorWithHorizontalAndVerticalEdgeInsulation.horizontalEdgeInsulationWidth as Length),
+				width: asMetres(groundFloorWithHorizontalAndVerticalEdgeInsulation.horizontalEdgeInsulationWidth),
 			},
 			{
 				type: "vertical" as const,
 				edge_thermal_resistance: groundFloorWithHorizontalAndVerticalEdgeInsulation.verticalEdgeInsulationThermalResistance,
-				depth: asMetres(groundFloorWithHorizontalAndVerticalEdgeInsulation.verticalEdgeInsulationDepth as Length),
+				depth: asMetres(groundFloorWithHorizontalAndVerticalEdgeInsulation.verticalEdgeInsulationDepth),
 			},
 		];
 
@@ -437,7 +471,7 @@ describe("dwelling fabric mapper", () => {
 			floor_type: "Unheated_basement",
 			thickness_walls: asMetres(floorAboveUnheatedBasement.thicknessOfWalls),
 			perimeter: floorAboveUnheatedBasement.perimeter,
-			psi_wall_floor_junc: floorAboveUnheatedBasement.psiOfWallJunction,
+			psi_wall_floor_junc: 2,
 			thermal_resistance_floor_construction: floorAboveUnheatedBasement.thermalResistance,
 			areal_heat_capacity: floorAboveUnheatedBasement.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(floorAboveUnheatedBasement.massDistributionClass),
@@ -458,7 +492,7 @@ describe("dwelling fabric mapper", () => {
 			areal_heat_capacity: floorAboveHeatedBasement.arealHeatCapacity,
 			depth_basement_floor: floorAboveHeatedBasement.depthOfBasementFloor,
 			perimeter: 0,
-			psi_wall_floor_junc: floorAboveHeatedBasement.psiOfWallJunction,
+			psi_wall_floor_junc: 3,
 			thickness_walls: asMetres(floorAboveHeatedBasement.thicknessOfWalls),
 			floor_type: "Heated_basement",
 			area: floorAboveHeatedBasement.netSurfaceArea,
@@ -523,22 +557,6 @@ describe("dwelling fabric mapper", () => {
 			},
 		};
 
-		const partyWallWithThermalResistanceCavity: EcaasForm<PartyWallData> = {
-			...baseForm,
-			data: {
-				id: "party-id-with-thermal-resistance-cavity",
-				name: "Party wall 2",
-				pitchOption: "90",
-				pitch: 90,
-				surfaceArea: 10,
-				uValue: 2,
-				arealHeatCapacity: "Light",
-				massDistributionClass: "E",
-				partyWallCavityType: "defined_resistance",
-				thermalResistanceCavity: 24,
-			},
-		};
-
 		const partyWallWithoutExtraAttributes: EcaasForm<PartyWallData> = {
 			...baseForm,
 			data: {
@@ -594,7 +612,6 @@ describe("dwelling fabric mapper", () => {
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				depthOfBasementFloor: 1,
-				psiOfWallJunction: 1,
 				thicknessOfWalls: unitValue(20, millimetre),
 			},
 		};
@@ -605,7 +622,7 @@ describe("dwelling fabric mapper", () => {
 				dwellingSpaceWalls: {
 					dwellingSpaceExternalWall: { ...baseForm, data: [externalWall] },
 					dwellingSpaceInternalWall: { ...baseForm, data: [internalWall] },
-					dwellingSpacePartyWall: { ...baseForm, data: [partyWallWithLiningType, partyWallWithThermalResistanceCavity, partyWallWithoutExtraAttributes] },
+					dwellingSpacePartyWall: { ...baseForm, data: [partyWallWithLiningType, partyWallWithoutExtraAttributes] },
 					dwellingSpaceWallToUnheatedSpace: { ...baseForm, data: [wallToUnheatedSpace] },
 					dwellingSpaceWallOfHeatedBasement: { ...baseForm, data: [wallOfHeatedBasement] },
 
@@ -623,7 +640,6 @@ describe("dwelling fabric mapper", () => {
 		const externalWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalWall.data.name + wallSuffix]! as BuildingElementOpaque;
 		const internalWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalWall.data.name + wallSuffix]! as BuildingElementAdjacentConditionedSpace;
 		const partyWallWithLiningTypeElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyWallWithLiningType.data.name + wallSuffix]! as BuildingElementPartyWall;
-		const partyWallWithThermalResistanceCavityElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyWallWithThermalResistanceCavity.data.name + wallSuffix]! as BuildingElementPartyWall;
 		const partyWallWithoutExtraAttributesElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyWallWithoutExtraAttributes.data.name + wallSuffix]! as BuildingElementPartyWall;
 		const wallToUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[wallToUnheatedSpace.data.name + wallSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
 
@@ -669,19 +685,6 @@ describe("dwelling fabric mapper", () => {
 
 		expect(partyWallWithLiningTypeElement).toEqual(expectedPartyWallWithLiningType);
 
-		const expectPartyWallWithThermalResistanceCavity: BuildingElementPartyWall = {
-			type: "BuildingElementPartyWall",
-			pitch: partyWallWithThermalResistanceCavity.data.pitch!,
-			area: partyWallWithThermalResistanceCavity.data.surfaceArea,
-			areal_heat_capacity: partyWallWithThermalResistanceCavity.data.arealHeatCapacity,
-			mass_distribution_class: fullMassDistributionClass(partyWallWithThermalResistanceCavity.data.massDistributionClass),
-			party_wall_cavity_type: "defined_resistance",
-			thermal_resistance_cavity: 24,
-			u_value: partyWallWithThermalResistanceCavity.data.uValue,
-		};
-
-		expect(partyWallWithThermalResistanceCavityElement).toEqual(expectPartyWallWithThermalResistanceCavity);
-
 		const expectPartyWallWithoutExtraAttributes: BuildingElementPartyWall = {
 			type: "BuildingElementPartyWall",
 			pitch: partyWallWithoutExtraAttributes.data.pitch!,
@@ -717,7 +720,7 @@ describe("dwelling fabric mapper", () => {
 			areal_heat_capacity: wallOfHeatedBasement.data.arealHeatCapacity,
 			thermal_resist_walls_base: wallOfHeatedBasement.data.thermalResistance,
 			thermal_resistance_floor_construction: floorOfHeatedBasement.data.thermalResistance,
-			psi_wall_floor_junc: floorOfHeatedBasement.data.psiOfWallJunction,
+			psi_wall_floor_junc: 0,
 			depth_basement_floor: floorOfHeatedBasement.data.depthOfBasementFloor,
 			perimeter: wallOfHeatedBasement.data.perimeter,
 			thickness_walls: asMetres(floorOfHeatedBasement.data.thicknessOfWalls),
@@ -997,6 +1000,8 @@ describe("dwelling fabric mapper", () => {
 			thermalResistivityIncrease: 20,
 			solarTransmittanceReduction: 0.4,
 			hasShading: true,
+			depthOfReveal: 200,
+			distanceFromGlassToStartOfReveal: 100,
 			shading: [
 				{
 					name: "blep",
@@ -1015,12 +1020,6 @@ describe("dwelling fabric mapper", () => {
 					typeOfShading: "right_side_fin",
 					depth: 5,
 					distance: 6,
-				},
-				{
-					name: "blomp",
-					typeOfShading: "frame_or_reveal",
-					depth: 7,
-					distance: 8,
 				},
 				{
 					name: "blomk",
@@ -1143,15 +1142,15 @@ describe("dwelling fabric mapper", () => {
 					distance: 6,
 				},
 				{
-					type: "reveal",
-					depth: 7,
-					distance: 8,
-				},
-				{
 					type: "obstacle",
 					transparency: 0.2,
 					distance: 9,
 					height: 10,
+				},
+				{
+					type: "reveal",
+					depth: 200,
+					distance: 100,
 				},
 			],
 			security_risk: false,
@@ -1226,6 +1225,8 @@ describe("dwelling fabric mapper", () => {
 			maximumOpenableArea: 1,
 			securityRisk: false,
 			hasShading: true,
+			depthOfReveal: 200,
+			distanceFromGlassToStartOfReveal: 100,
 			shading: [
 				{
 					name: "blep",
@@ -1244,12 +1245,6 @@ describe("dwelling fabric mapper", () => {
 					typeOfShading: "right_side_fin",
 					depth: 5,
 					distance: 6,
-				},
-				{
-					name: "blomp",
-					typeOfShading: "frame_or_reveal",
-					depth: 7,
-					distance: 8,
 				},
 				{
 					name: "blomk",
@@ -1335,15 +1330,15 @@ describe("dwelling fabric mapper", () => {
 					distance: 6,
 				},
 				{
-					type: "reveal",
-					depth: 7,
-					distance: 8,
-				},
-				{
 					type: "obstacle",
 					transparency: 0.2,
 					distance: 9,
 					height: 10,
+				},
+				{
+					type: "reveal",
+					depth: 200,
+					distance: 100,
 				},
 			],
 		};
@@ -1610,7 +1605,6 @@ describe("dwelling fabric mapper", () => {
 				arealHeatCapacity: "Medium",
 				massDistributionClass: "I",
 				depthOfBasementFloor: 2.5,
-				psiOfWallJunction: 0.08,
 				thicknessOfWalls: unitValue(20, millimetre),
 			},
 		};

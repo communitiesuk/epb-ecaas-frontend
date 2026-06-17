@@ -142,6 +142,66 @@ describe("Product search", () => {
 		expect(ids).toStrictEqual(expectedIds);
 	});
 
+	it("Sorts prefixed product IDs by numeric suffix in ascending order", () => {
+		const radiatorData: DisplayProduct[] = [
+			{
+				displayProduct: true,
+				id: "CR21",
+				technologyType: "ConvectorRadiator",
+				type: "T20",
+				height: 1950,
+			},
+			{
+				displayProduct: true,
+				id: "CR2",
+				technologyType: "ConvectorRadiator",
+				type: "T10",
+				height: 1950,
+			},
+			{
+				displayProduct: true,
+				id: "CR6",
+				technologyType: "ConvectorRadiator",
+				type: "T11",
+				height: 1950,
+			},
+		];
+
+		const results = useProductSearch(radiatorData, { sort: "id", order: "asc" });
+
+		expect(results.map(r => r.id)).toStrictEqual(["CR2", "CR6", "CR21"]);
+	});
+
+	it("Sorts prefixed product IDs by numeric suffix in descending order", () => {
+		const radiatorData: DisplayProduct[] = [
+			{
+				displayProduct: true,
+				id: "CR21",
+				technologyType: "ConvectorRadiator",
+				type: "T20",
+				height: 1950,
+			},
+			{
+				displayProduct: true,
+				id: "CR2",
+				technologyType: "ConvectorRadiator",
+				type: "T10",
+				height: 1950,
+			},
+			{
+				displayProduct: true,
+				id: "CR6",
+				technologyType: "ConvectorRadiator",
+				type: "T11",
+				height: 1950,
+			},
+		];
+
+		const results = useProductSearch(radiatorData, { sort: "id", order: "desc" });
+
+		expect(results.map(r => r.id)).toStrictEqual(["CR21", "CR6", "CR2"]);
+	});
+
 	it("Returns products sorted by brand name in ascending order when sort parameter is present", () => {
 		// Act
 		const results = useProductSearch(productData, { sort: "brandName" });
@@ -173,5 +233,107 @@ describe("Product search", () => {
 		const modelQualifiers = results.map(r => (r as { modelQualifier: string })?.modelQualifier);
 
 		expect(modelQualifiers).toStrictEqual(expectedModelQualifiers);
+	});
+
+	it("Returns radiator products sorted by type with height as secondary sort in ascending order", () => {
+		const radiatorData: DisplayProduct[] = [
+			{
+				displayProduct: true,
+				id: "2001",
+				technologyType: "ConvectorRadiator",
+				type: "T22",
+				height: 800,
+			},
+			{
+				displayProduct: true,
+				id: "2002",
+				technologyType: "ConvectorRadiator",
+				type: "T11",
+				height: 700,
+			},
+			{
+				displayProduct: true,
+				id: "2003",
+				technologyType: "ConvectorRadiator",
+				type: "T11",
+				height: 500,
+			},
+			{
+				displayProduct: true,
+				id: "2004",
+				technologyType: "ConvectorRadiator",
+				type: "T11",
+				height: 900,
+			},
+		];
+
+
+		const results = useProductSearch(radiatorData, { sort: "type", order: "asc" });
+
+		expect(results.map(r => r.id)).toStrictEqual(["2003", "2002", "2004", "2001"]);
+	});
+	
+	it("sorts by height treating them as numberical values, even when they are strings", () => {
+		const radiatorData: DisplayProduct[] = [
+			{
+				displayProduct: true,
+				id: "3001",
+				technologyType: "ConvectorRadiator",
+				type: "T11",
+				height: 810,
+			},
+			{
+				displayProduct: true,
+				id: "3002",
+				technologyType: "ConvectorRadiator",
+				type: "T11",
+				height: 7350,
+			},
+			{
+				displayProduct: true,
+				id: "3003",
+				technologyType: "ConvectorRadiator",
+				type: "T11",
+				height: 540,
+			},
+			{
+				displayProduct: true,
+				id: "3004",
+				technologyType: "ConvectorRadiator",
+				type: "T11",
+				height: 1100,
+			},
+		];
+
+		// Act
+		const results = useProductSearch(radiatorData, { sort: "height", order: "asc" });
+
+		// Assert
+		expect(results.map(r => r.id)).toStrictEqual(["3003", "3001", "3004", "3002"]);
+	});
+	
+	it("Returns HEM default products first", () => {
+		// Act
+		const results = useProductSearch([
+			...productData,
+			{
+				displayProduct: true,
+				id: "1003",
+				brandName: "HEM Default 1",
+				modelName: "Small Heat Pump",
+				technologyType: "AirSourceHeatPump",
+			},
+			{
+				displayProduct: true,
+				id: "1004",
+				brandName: "HEM Default 2",
+				modelName: "Small Heat Pump",
+				technologyType: "AirSourceHeatPump",
+			},
+		], {});
+
+		// Assert
+		expect(results[0]?.brandName).toBe("HEM Default 1");
+		expect(results[1]?.brandName).toBe("HEM Default 2");
 	});
 });

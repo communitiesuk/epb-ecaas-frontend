@@ -47,6 +47,19 @@ describe("heatSource", () => {
 		maxFlowTemp: unitValue(30, "celsius"),
 	};
 
+	test("preselects heat network on create page when typeOfHeatSource query param is heatNetwork", async () => {
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "create" },
+				query: {
+					typeOfHeatSource: "heatNetwork",
+				},
+			},
+		});
+
+		expect((await screen.findByTestId<HTMLInputElement>("typeOfHeatSource_heatNetwork")).checked).toBe(true);
+	});
+
 	describe("heat pump", () => {
 		const heatPumpProduct: Partial<DisplayProduct> = {
 			id: "1000",
@@ -1311,6 +1324,18 @@ describe("heatSource", () => {
 				expect((await screen.findByTestId<HTMLInputElement>("associatedHeatNetwork_1")).checked).toBe(true);
 			});
 
+			test("add heat network link navigates to create heat source page with heat network preselected", async () => {
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "create" },
+					},
+				});
+				await user.click(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit"));
+
+				const addHeatNetworkLink = screen.getByRole("link", { name: "Click here to add a heat network" });
+				expect(addHeatNetworkLink.getAttribute("href")).toBe("/space-heating/heat-source/create?typeOfHeatSource=heatNetwork");
+			});
+
 
 		});
 		describe("heat battery", () => {
@@ -1978,6 +2003,31 @@ describe("heatSource", () => {
 				});
 
 				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("Comes with hot water cylinder");
+			});
+
+			test("Renders HEM default product warning when default product is selected", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPump }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref({
+						...heatPumpProduct,
+						brandName: "HEM Default",
+					}),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 			});
 		});
 

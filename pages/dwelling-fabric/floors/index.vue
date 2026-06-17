@@ -6,6 +6,7 @@ import { page as pages } from "~/data/pages/pages";
 const title = "Floor elements";
 const page = usePage();
 const store = useEcaasStore();
+const nuxtApp = useNuxtApp();
 
 type FloorType = keyof typeof store.dwellingFabric.dwellingSpaceFloors;
 
@@ -13,12 +14,18 @@ function handleRemove(floorType: FloorType, index: number) {
 	const floors = store.dwellingFabric.dwellingSpaceFloors[floorType]?.data;
 
 	if (floors) {
+		const floor = floors[index]?.data;
+
 		floors.splice(index, 1);
 
 		store.$patch((state) => {
 			state.dwellingFabric.dwellingSpaceFloors[floorType].data = floors.length ? floors : [];
 			state.dwellingFabric.dwellingSpaceFloors[floorType].complete = false;
 		});
+
+		if (floor && "id" in floor) {
+			nuxtApp.callHook("app:floor:removed", floor.id as string);
+		}
 	}
 } 
 

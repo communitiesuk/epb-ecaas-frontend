@@ -1,6 +1,6 @@
 import type { SchemaElectricBattery, SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
-import { mapElectricBatteryData, mapPvDiverterData, mapPvArrayData, mapPvArrayEnergySupplyData } from "./pvAndElectricBatteriesMapper";
+import { mapElectricBatteryData, mapPvDiverterData, mapPvArrayData, mapDiverterEnergySupplyData } from "./pvAndElectricBatteriesMapper";
 import type { SchemaWindowShadingObject } from "~/schema/aliases";
 
 const baseForm = {
@@ -31,7 +31,6 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerAC: 48,
 				inverterPeakPowerDC: 60,
 				locationOfInverter: "unheated_space",
-				electricityPriority: "diverter",
 				inverterType: "string_inverter",
 				hasShading: false,
 			},
@@ -51,7 +50,6 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerAC: 96,
 				inverterPeakPowerDC: 120,
 				locationOfInverter: "unheated_space",
-				electricityPriority: "electricBattery",
 				inverterType: "optimised_inverter",
 				hasShading: false,
 			},
@@ -171,6 +169,7 @@ describe("PV and electric batteries mapper", () => {
 			data: {
 				name: "Diverter 1",
 				hotWaterCylinder: hotWaterCylinderId,
+				electricityPriority: "diverter",
 			},
 			complete: true,
 		};
@@ -208,7 +207,6 @@ describe("PV and electric batteries mapper", () => {
 						data: {
 							name: "HWC1",
 							id: hotWaterCylinderId,
-							dhwHeatSourceId: dhwHeatPumpId,
 							storageCylinderVolume: {
 								amount: 1,
 								unit: "litres",
@@ -240,8 +238,131 @@ describe("PV and electric batteries mapper", () => {
 
 		expect(result).toEqual(expectedResult);
 	});
+	it("throws an error if the diverter heat source cannot be found", () => {
+		const diverter1: EcaasForm<PvDiverterData> = {
+			data: {
+				name: "Diverter 1",
+				hotWaterCylinder: "nonExistentCylinderId",
+				electricityPriority: "diverter",
+			},
+			complete: true,
+		};
 
-	it("exposes energy-supply flags from pv arrays (is_export_capable + priority)", () => {
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [],
+					complete: true,
+				},
+				waterStorage: {
+					data: [],
+					complete: true,
+				},
+			},
+			spaceHeating: {
+				heatSource: {
+					data: [],
+					complete: true,
+				},
+			},
+			pvAndBatteries: {
+				diverters: {
+					data: [diverter1],
+					complete: true,
+				},
+			},
+		});
+
+		expect(() => mapPvDiverterData(resolveState(store.$state))).toThrowError("Expected exactly one non-heat-network heat source for diverter, found 0");
+	});
+	it("throws an error if more than one potential heat source for the diverter is found", () => {
+		const hotWaterCylinderId = "88ea3f45-6f2a-40e2-9117-0541bd8a97f3";
+		const heatPumpId = "56ddc6ce-7a91-4263-b051-96c7216bb01e";
+		const dhwHeatPumpId = "56ddc6ce-7a91-4263-b051-96c7216b1234";
+
+		const diverter1: EcaasForm<PvDiverterData> = {
+			data: {
+				name: "Diverter 1",
+				hotWaterCylinder: hotWaterCylinderId,
+				electricityPriority: "diverter",
+			},
+			complete: true,
+		};
+
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [{
+						data: {
+							name: "HP1",
+							id: heatPumpId,
+							productReference: "HEATPUMP-SMALL",
+						},
+						complete: true,
+					}],
+					complete: true,
+				},
+
+			},
+			domesticHotWater: {
+				heatSources: {
+					data: [{
+						data: {
+							id: dhwHeatPumpId,
+							isExistingHeatSource: false,
+							heatSourceId: "NEW_HEAT_SOURCE",
+							coldWaterSource: "mainsWater",
+						},
+						complete: true,
+					},
+					{
+						data: {
+							id: dhwHeatPumpId,
+							isExistingHeatSource: true,
+							heatSourceId: heatPumpId,
+							coldWaterSource: "mainsWater",
+						},
+						complete: true,
+					}],
+					complete: true,
+				},
+				waterStorage: {
+					data: [{
+						data: {
+							name: "HWC1",
+							id: hotWaterCylinderId,
+							storageCylinderVolume: {
+								amount: 1,
+								unit: "litres",
+							},
+							dailyEnergyLoss: 1,
+							typeOfWaterStorage: "hotWaterCylinder",
+							areaOfHeatExchanger: 1,
+						},
+						complete: true,
+					}],
+					complete: true,
+				},
+			},
+			pvAndBatteries: {
+				diverters: {
+					data: [diverter1],
+					complete: true,
+				},
+			},
+		});
+
+		expect(() => mapPvDiverterData(resolveState(store.$state))).toThrowError("Expected exactly one non-heat-network heat source for diverter, found 2");
+	});
+	it("exposes energy-supply flags from diverters (is_export_capable + priority)", () => {
+		const diverter1: EcaasForm<PvDiverterData> = {
+			data: {
+				name: "Roof",
+				electricityPriority: "electricBattery",
+			},
+			complete: true,
+		};
+
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
@@ -252,43 +373,26 @@ describe("PV and electric batteries mapper", () => {
 				},
 			},
 			pvAndBatteries: {
-				pvArrays: {
-					data: [{
-						data: {
-							name: "Roof",
-							peakPower: 1,
-							pitch: 20,
-							orientation: 10,
-							ventilationStrategy: "unventilated",
-							elevationalHeight: 1,
-							lengthOfPV: 1,
-							widthOfPV: 1,
-							inverterPeakPowerAC: 1,
-							inverterPeakPowerDC: 1,
-							locationOfInverter: "heated_space",
-							electricityPriority: "electricBattery",
-							inverterType: "string_inverter",
-						},
-						complete: true,
-					}],
-					complete: true,
-				},
-				electricBattery: {
-					data: [],
-					complete: true,
-				},
 				diverters: {
-					data: [],
+					data: [diverter1],
 					complete: true,
 				},
 			},
 		});
 
-		const energySupply = mapPvArrayEnergySupplyData(resolveState(store.$state));
+		const energySupply = mapDiverterEnergySupplyData(resolveState(store.$state));
 		expect(energySupply).toEqual({ "Roof": { fuel: "electricity", is_export_capable: true, priority: ["ElectricBattery"] } });
 	});
 
 	it("mapPvSystemEnergySupply returns keyed energy-supply object", () => {
+		const diverter1: EcaasForm<PvDiverterData> = {
+			data: {
+				name: "Roof",
+				electricityPriority: "electricBattery",
+			},
+			complete: true,
+		};
+
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
@@ -299,31 +403,14 @@ describe("PV and electric batteries mapper", () => {
 				},
 			},
 			pvAndBatteries: {
-				pvArrays: {
-					data: [{
-						data: {
-							name: "Roof",
-							peakPower: 1,
-							pitch: 20,
-							orientation: 10,
-							ventilationStrategy: "unventilated",
-							elevationalHeight: 1,
-							lengthOfPV: 1,
-							widthOfPV: 1,
-							inverterPeakPowerAC: 1,
-							inverterPeakPowerDC: 1,
-							locationOfInverter: "heated_space",
-							electricityPriority: "electricBattery",
-							inverterType: "string_inverter",
-						},
-						complete: true,
-					}],
+				diverters: {
+					data: [diverter1],
 					complete: true,
 				},
 			},
 		});
 
-		const energySupply = mapPvArrayEnergySupplyData(resolveState(store.$state));
+		const energySupply = mapDiverterEnergySupplyData(resolveState(store.$state));
 		expect(energySupply).toEqual({ "Roof": { fuel: "electricity", is_export_capable: false, priority: ["ElectricBattery"] } });
 	});
 	it("maps pv array shading data to the correct form for FHS input", () => {
@@ -340,7 +427,6 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerAC: 96,
 				inverterPeakPowerDC: 120,
 				locationOfInverter: "unheated_space",
-				electricityPriority: "electricBattery",
 				inverterType: "optimised_inverter",
 				hasShading: true,
 				shading: [{

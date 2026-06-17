@@ -1,3 +1,4 @@
+import type { HookResult } from "nuxt/schema";
 import type { SummaryData } from "./components/SummaryList.vue";
 
 export interface GovTagProps {
@@ -11,4 +12,11 @@ export interface SummarySection {
 	label: string;
 	data: SummaryData | SummaryData[];
 	editUrl: string;
+}
+
+declare module "#app" {
+	interface RuntimeNuxtHooks {
+		"app:floor:removed": (id: string) => HookResult,
+		"app:floor:updated": (floor: GroundFloorData | FloorAboveUnheatedBasementData) => HookResult,
+	}
 }

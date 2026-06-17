@@ -76,7 +76,7 @@ const mechVentInstallationTypes = [
 	"through_wall",
 ] as const satisfies SchemaMechanicalVentilationInstallationType[];
 const mhvrLocations = ["inside", "outside"] as const satisfies MVHRLocation[];
-const partyWallCavityTypes = ["defined_resistance", "filled_sealed", "filled_unsealed", "solid", "unfilled_sealed", "unfilled_unsealed"] as const satisfies SchemaPartyWallCavityType[];
+const partyWallCavityTypes = ["filled_sealed", "filled_unsealed", "solid", "unfilled_sealed", "unfilled_unsealed"] as const satisfies SchemaPartyWallCavityType[];
 const partyWallLiningTypes = ["dry_lined", "wet_plaster"] as const satisfies SchemaPartyWallLiningType[];
 const photovoltaicVentilationStrategies = [
 	"unventilated",
@@ -117,7 +117,7 @@ export const massDistributionClassZod = zodForTypeOptions(ensureAllUnion<Concise
 export const mechVentInstallationLocationZod = zodForTypeOptions(ensureAllUnion<SchemaMechanicalVentilationInstallationLocation, (typeof mechVentInstallationLocations)>(mechVentInstallationLocations));
 export const mechVentInstallationTypeZod = zodForTypeOptions(ensureAllUnion<SchemaMechanicalVentilationInstallationType, (typeof mechVentInstallationTypes)>(mechVentInstallationTypes));
 export const mvhrLocationZod = zodForTypeOptions(ensureAllUnion<MVHRLocation, (typeof mhvrLocations)>(mhvrLocations));
-export const partyWallCavityTypeZod = zodForTypeOptions(ensureAllUnion<SchemaPartyWallCavityType, (typeof partyWallCavityTypes)>(partyWallCavityTypes));
+export const partyWallCavityTypeZod = zodForTypeOptions(ensureAllUnion<Exclude<SchemaPartyWallCavityType, "defined_resistance">, (typeof partyWallCavityTypes)>(partyWallCavityTypes));
 export const partyWallLiningTypeZod = zodForTypeOptions(ensureAllUnion<SchemaPartyWallLiningType, (typeof partyWallLiningTypes)>(partyWallLiningTypes));
 export const photovoltaicVentilationStrategyZod = zodForTypeOptions(ensureAllUnion<SchemaPhotovoltaicVentilationStrategy, (typeof photovoltaicVentilationStrategies)>(photovoltaicVentilationStrategies));
 export const radiatorTypeZod = zodForTypeOptions(ensureAllUnion<SchemaRadiatorType, (typeof radiatorTypes)>(radiatorTypes));

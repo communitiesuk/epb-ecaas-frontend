@@ -232,4 +232,167 @@ describe("linear thermal bridges", () => {
 			expect(linearBridging.data[0]!.data.name).toBe("Linear thermal bridge");
 		});
 	});
+
+	describe("E5 thermal bridge type", () => {
+		const groundFloor: Partial<GroundFloorData> = {
+			id: "0d5b322a-8bd7-4f45-8027-ebe9f2056e70",
+			name: "Ground 1",
+			perimeter: 40,
+		};
+
+		beforeEach(async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{ data: groundFloor }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(LinearBridging, {
+				route: {
+					params: { bridging: "create" },
+				},
+			});
+
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E5");
+		});
+
+		test("displays associated ground floor input", async () => {
+			expect(screen.getByTestId(`associatedItemId_${groundFloor.id}`)).toBeDefined();
+		});
+
+		test("displays required error message when associated ground floor is not selected", async () => {
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
+		});
+
+		test("stores selected associated ground floor", async () => {
+			await populateValidForm();
+
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E5");
+			await user.click(screen.getByTestId(`associatedItemId_${groundFloor.id}`));
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const { data } = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges;
+
+			expect(data[0]?.data).toHaveProperty("associatedItemId");
+
+			if ("associatedItemId" in data[0]!.data) {
+				expect(data[0]!.data.associatedItemId).toBe(groundFloor.id);
+			}
+		});
+	});
+
+	describe("E6 thermal bridge type", () => {
+		const floorAboveHeatedBasement: Partial<FloorAboveUnheatedBasementData> = {
+			id: "0d5b322a-8bd7-4f45-8027-ebe9f2056e70",
+			name: "Floor above unheated basement 1",
+			perimeter: 40,
+		};
+
+		beforeEach(async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceFloorAboveUnheatedBasement: {
+							data: [{ data: floorAboveHeatedBasement }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(LinearBridging, {
+				route: {
+					params: { bridging: "create" },
+				},
+			});
+
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E6");
+		});
+
+		test("displays associated floor above unheated basement input", async () => {
+			expect(screen.getByTestId(`associatedItemId_${floorAboveHeatedBasement.id}`)).toBeDefined();
+			expect(screen.getByTestId("associatedItemId_none")).toBeDefined();
+		});
+
+		test("displays required error message when associated floor above unheated basement is not selected", async () => {
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
+		});
+
+		test("stores selected associated floor above unheated basement", async () => {
+			await populateValidForm();
+
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E6");
+			await user.click(screen.getByTestId(`associatedItemId_${floorAboveHeatedBasement.id}`));
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const { data } = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges;
+
+			expect(data[0]?.data).toHaveProperty("associatedItemId");
+
+			if ("associatedItemId" in data[0]!.data) {
+				expect(data[0]!.data.associatedItemId).toBe(floorAboveHeatedBasement.id);
+			}
+		});
+	});
+
+	describe("E22 thermal bridge type", () => {
+		const heatedBasementFloor: Partial<FloorOfHeatedBasementData> = {
+			id: "0d5b322a-8bd7-4f45-8027-ebe9f2056e70",
+			name: "Heated basement floor 1",
+			//perimeter: 40,
+		};
+
+		beforeEach(async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceFloorOfHeatedBasement: {
+							data: [{ data: heatedBasementFloor }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(LinearBridging, {
+				route: {
+					params: { bridging: "create" },
+				},
+			});
+
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E22");
+		});
+
+		test("displays associated heated basement floor input", async () => {
+			expect(screen.getByTestId(`associatedItemId_${heatedBasementFloor.id}`)).toBeDefined();
+		});
+
+		test("displays required error message when associated heated basement floor is not selected", async () => {
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
+		});
+
+		test("stores selected associated heated basement floor", async () => {
+			await populateValidForm();
+
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E22");
+			await user.click(screen.getByTestId(`associatedItemId_${heatedBasementFloor.id}`));
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const { data } = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges;
+
+			expect(data[0]?.data).toHaveProperty("associatedItemId");
+
+			if ("associatedItemId" in data[0]!.data) {
+				expect(data[0]!.data.associatedItemId).toBe(heatedBasementFloor.id);
+			}
+		});
+	});
 });

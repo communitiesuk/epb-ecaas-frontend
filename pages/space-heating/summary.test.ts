@@ -638,7 +638,7 @@ describe("Space heating summary page", () => {
 			Name: "Wet Distribution 2",
 			"Type of heat emitter": "Wet distribution system (Radiators, underfloor heating, etc.)",
 			"Eco design controller class": "2",
-			"Minimum outdoor temperature": "1 °C",
+			"Outdoor temperature for maximum flow temperature": "1 °C",
 			"Maximum outdoor temperature": "15 °C",
 			"Minimum flow temperature": "45 °C",
 			"Design flow temperature": "55 °C",

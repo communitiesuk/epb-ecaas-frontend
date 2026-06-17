@@ -4,17 +4,18 @@ import { zodTypeAsFormKitValidation } from "#imports";
 import type { SchemaWindShieldLocation } from "~/schema/aliases";
 import { groundSurfaceAreaZod, groundTotalAreaZod, groundPerimeterZod, heightUpperSurfaceZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
 import { getUrl, type GroundFloorData, uniqueName, unitValue } from "#imports";
+import { v4 as uuidv4 } from "uuid";
 
 const title = "Ground floor";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
-
+const nuxtApp = useNuxtApp();
 const { mounted } = useMounted();
-
 
 const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
 const index = getStoreIndex(groundFloorData);
 const floorData = useItemToEdit("floor", groundFloorData);
+const floorId = floorData?.data.id ?? uuidv4();
 
 // prepopulate unit inputs when using old input format (raw numbers)
 if (floorData?.data) {
@@ -57,6 +58,7 @@ const saveForm = (fields: GroundFloorData) => {
 		const { dwellingSpaceFloors } = state.dwellingFabric;
 
 		const commonFields = {
+			id: floorId,
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
 			totalArea: fields.totalArea,
@@ -65,17 +67,16 @@ const saveForm = (fields: GroundFloorData) => {
 			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 			perimeter: fields.perimeter,
-			psiOfWallJunction: fields.psiOfWallJunction,
 			thicknessOfWalls: unitValue(fields.thicknessOfWalls.amount, millimetre),
 		};
 
-		let floorData: GroundFloorData;
+		let groundFloorData: GroundFloorData;
 
 		switch (fields.typeOfGroundFloor) {
 			case "Slab_edge_insulation":
 			{
 				if ("horizontalEdgeInsulationWidth" in fields && "verticalEdgeInsulationDepth" in fields) {
-					floorData = {
+					groundFloorData = {
 						...commonFields,
 						typeOfGroundFloor: "Slab_edge_insulation",
 						edgeInsulationType: ["horizontal", "vertical"],
@@ -85,7 +86,7 @@ const saveForm = (fields: GroundFloorData) => {
 						verticalEdgeInsulationThermalResistance: fields.verticalEdgeInsulationThermalResistance,
 					};
 				} else if ("horizontalEdgeInsulationWidth" in fields) {
-					floorData = {
+					groundFloorData = {
 						...commonFields,
 						typeOfGroundFloor: "Slab_edge_insulation",
 						edgeInsulationType: ["horizontal"],
@@ -93,7 +94,7 @@ const saveForm = (fields: GroundFloorData) => {
 						horizontalEdgeInsulationThermalResistance: fields.horizontalEdgeInsulationThermalResistance,
 					};
 				} else {
-					floorData = {
+					groundFloorData = {
 						...commonFields,
 						typeOfGroundFloor: "Slab_edge_insulation",
 						edgeInsulationType: ["vertical"],
@@ -104,13 +105,13 @@ const saveForm = (fields: GroundFloorData) => {
 				break;
 			}
 			case "Slab_no_edge_insulation":
-				floorData = {
+				groundFloorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 				};
 				break;
 			case "Suspended_floor":
-				floorData = {
+				groundFloorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					heightOfFloorUpperSurface: fields.heightOfFloorUpperSurface,
@@ -121,7 +122,7 @@ const saveForm = (fields: GroundFloorData) => {
 				};
 				break;
 			case "Heated_basement":
-				floorData = {
+				groundFloorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					depthOfBasementFloorBelowGround: fields.depthOfBasementFloorBelowGround,
@@ -129,7 +130,7 @@ const saveForm = (fields: GroundFloorData) => {
 				};
 				break;
 			case "Unheated_basement":
-				floorData = {
+				groundFloorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					thermalTransmittanceOfFloorAboveBasement: fields.thermalTransmittanceOfFloorAboveBasement,
@@ -149,7 +150,7 @@ const saveForm = (fields: GroundFloorData) => {
 			dwellingSpaceFloors.dwellingSpaceGroundFloor = { data: [] };
 		}
 		
-		dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = { data: floorData, complete: true };
+		dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = { data: groundFloorData, complete: true };
 		dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
 	});
 
@@ -161,8 +162,11 @@ autoSaveElementForm<GroundFloorData>({
 	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor,
 	defaultName: "Ground floor",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= floorId;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
+
+		nuxtApp.callHook("app:floor:updated", newData.data);
 	},
 });
 
@@ -201,6 +205,16 @@ const greaterThanZero = (node: FormKitNode) => {
 			}"
 		/>
 		<FormKit
+			id="typeOfGroundFloor"
+			type="govRadios"
+			:options="typeOfGroundFloorOptions"
+			label="Type of ground floor "
+			help="The type of ground floor affects the additional inputs needed"
+			name="typeOfGroundFloor"
+			validation="required"
+			data-field="Zone.BuildingElement.*.floor_type"
+		/>
+		<FormKit
 			id="surfaceArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
@@ -215,18 +229,23 @@ const greaterThanZero = (node: FormKitNode) => {
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Total area"
-			help="Enter the total area of the ground floor across the dwelling.  If the ground floor is made up of multiple floor types, this is the total area of all of the ground floor elements apart from basement walls."
+			help="Enter the total area of the ground floor across the dwelling.  If the ground floor is made up of multiple floor entries, this is the total area of all of the floor elements in contact with the ground."
 			name="totalArea"
 			:validation="zodTypeAsFormKitValidation(groundTotalAreaZod)"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsUValue id="uValue" name="uValue" help="Enter the U-value of the full thickness of the floor build-up, including the thermal resistance of the ground.  If the floor is suspended, this should include the effects of the void." />
+		<FieldsUValue
+			id="uValue"
+			name="uValue"
+			label="U-value of floor and ground"
+			help="Enter the U-value of the full thickness of the floor build-up, including the ground.  If the floor is suspended, this should include the effects of the void."
+		/>
 		<FormKit
 			id="thermalResistance"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
-			label="Thermal resistance"
-			help="Enter the thermal resistance of all layers in the floor construction only, not including surface resistances. For suspended floors, this should be calculated for the part of the floor construction above the void."
+			label="Thermal resistance of floor only"
+			help="Enter the thermal resistance of all layers in the floor construction only, not including surface resistances.  For suspended floors, this should be calculated for the part of the floor construction above the void."
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50"
 			data-field="Zone.BuildingElement.*.thermal_resistance_floor_construction">
@@ -234,6 +253,29 @@ const greaterThanZero = (node: FormKitNode) => {
 				<p class="govuk-hint">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
 			</GovDetails>
 		</FormKit>
+		<template v-if="mounted && model?.typeOfGroundFloor === 'Suspended_floor'">
+			<FormKit
+				id="underfloorSpaceThermalResistance"
+				type="govInputWithSuffix"
+				suffix-text="(m²·K)/W"
+				label="Thermal resistance of insulation on base of underfloor space"
+				help="Enter the thermal resistance of the insulation installed at the base of the underfloor space. Typically between 0.5 and 2.5 (m²·K)/W"
+				name="underfloorSpaceThermalResistance"
+				validation="required | number"
+				data-field="Zone.BuildingElement.*.thermal_resist_insul"
+			>
+				<GovDetails summary-text="Help with this input"><p class="govuk-body">The thermal resistance of the insulation layer should be calculated for the part of the floor construction below the void, excluding the effect of surface resistances.</p></GovDetails>
+			</FormKit>
+			<FormKit
+				id="thermalTransmittanceOfWallsAboveGround"
+				type="govInputWithSuffix"
+				suffix-text="W(m²/K)"
+				label="U-value of walls above ground"
+				help="Enter the U-value of the external walls above ground level. Typically between 0.08 and 0.25 W(m²/K)"
+				name="thermalTransmittanceOfWallsAboveGround"
+				validation="required | number"
+				data-field="Zone.BuildingElement.*.thermal_transm_walls"/>
+		</template>
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" help="This is the sum of the heat capacities of the full thickness of the floor build-up"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" help="This is the distribution of mass in the full thickness of the floor build up"/>
 		<FormKit
@@ -250,16 +292,6 @@ const greaterThanZero = (node: FormKitNode) => {
 			</GovDetails>
 		</FormKit>
 		<FormKit
-			id="psiOfWallJunction"
-			type="govInputWithSuffix"
-			suffix-text="W/(m·K)"
-			label="PSI value of E5 junction"
-			help="This is the linear thermal transmittance of the junction between the floor and the walls"
-			name="psiOfWallJunction"
-			validation="required | number | min:0 | max:2"
-			data-field="Zone.BuildingElement.*.psi_wall_floor_junc"
-		/>
-		<FormKit
 			id="thicknessOfWalls"
 			type="govInputWithUnit"
 			:unit="millimetre"
@@ -272,17 +304,6 @@ const greaterThanZero = (node: FormKitNode) => {
 				<p class="govuk-hint">This is usually measured from the inside surface to the outside surface.</p>
 			</GovDetails>
 		</FormKit>
-		<FormKit
-			id="typeOfGroundFloor"
-			type="govRadios"
-			:options="typeOfGroundFloorOptions"
-			label="Type of ground floor "
-			help="The type of ground floor affects the additional inputs needed"
-			name="typeOfGroundFloor"
-			validation="required"
-			data-field="Zone.BuildingElement.*.floor_type"
-		/>
-
 		<template v-if="mounted && model?.typeOfGroundFloor === 'Slab_edge_insulation'">
 			<FormKit
 				id="edgeInsulationType"
@@ -386,27 +407,6 @@ const greaterThanZero = (node: FormKitNode) => {
 				name="heightOfFloorUpperSurface"
 				:validation="zodTypeAsFormKitValidation(heightUpperSurfaceZod)"
 				data-field="Zone.BuildingElement.*.height_upper_surface"/>
-			<FormKit
-				id="underfloorSpaceThermalResistance"
-				type="govInputWithSuffix"
-				suffix-text="(m²·K)/W"
-				label="Thermal resistance of insulation on base of underfloor space"
-				help="Enter the thermal resistance or R-value of the insulation installed at the base of the underfloor space. Typically between 0.5 and 2.5 (m²·K)/W"
-				name="underfloorSpaceThermalResistance"
-				validation="required | number"
-				data-field="Zone.BuildingElement.*.thermal_resist_insul"
-			>
-				<GovDetails summary-text="Help with this input"><p class="govuk-body">The thermal resistance of the insulation layer should be calculated for the part of the floor construction below the void, excluding the effect of surface resistances.</p></GovDetails>
-			</FormKit>
-			<FormKit
-				id="thermalTransmittanceOfWallsAboveGround"
-				type="govInputWithSuffix"
-				suffix-text="W(m²/K)"
-				label="Thermal transmittance of walls above ground"
-				help="Enter the thermal transmittance (or U-value) of the external walls above ground level. Typically between 0.13 and 0.25 W(m²/K)"
-				name="thermalTransmittanceOfWallsAboveGround"
-				validation="required | number"
-				data-field="Zone.BuildingElement.*.thermal_transm_walls"/>
 			<FormKit
 				id="ventilationOpeningsArea"
 				type="govInputWithSuffix"

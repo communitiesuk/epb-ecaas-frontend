@@ -67,6 +67,7 @@ describe("ECaaS store patch", () => {
 	it("patches lighting as an array when imported data is an object", () => {
 		const legacyLighting: Record<string, unknown> = {
 			"dwellingFabric": {
+				...state.dwellingFabric,
 				"dwellingSpaceLighting": {
 					"data": {
 						"numberOfLEDBulbs": 35,
@@ -83,6 +84,7 @@ describe("ECaaS store patch", () => {
 
 		const expectedLighting: Record<string, unknown> = {
 			"dwellingFabric": {
+				...state.dwellingFabric,
 				"dwellingSpaceLighting": {
 					"data": [],
 				},
@@ -208,5 +210,152 @@ describe("ECaaS store patch", () => {
 			expect(patchedEmitterData.emitters[0]?.id).toBeDefined();
 			expect(patchedEmitterData.emitters[1]?.id).toBe("84d03439-d746-4a96-9d3a-279786ef9ce6");
 		}
+	});
+
+	it("patches legacy radiator product references to include CR prefix", () => {
+		const legacyRadiatorProductReferences: Record<string, unknown> = {
+			"spaceHeating": {
+				...state.spaceHeating,
+				"heatEmitters": {
+					"data": [
+						{
+							"data": {
+								"emitters": [
+									{
+										"id": "12345",
+										"name": "Legacy radiator",
+										"typeOfHeatEmitter": "radiator",
+										"productReference": "33",
+										"numOfRadiators": 2,
+										"length": 1.2,
+									},
+									{
+										"id": "67890",
+										"name": "Already prefixed radiator",
+										"typeOfHeatEmitter": "radiator",
+										"productReference": "CR34",
+										"numOfRadiators": 1,
+										"length": 0.6,
+									},
+									{
+										"id": "FC100",
+										"name": "Fan coil",
+										"typeOfHeatEmitter": "fanCoil",
+										"productReference": "35",
+										"numOfFanCoils": 1,
+									},
+								],
+							},
+						},
+					],
+				},
+			},
+		};
+
+		const patchedState = patchState({
+			...state,
+			...legacyRadiatorProductReferences,
+		}) as EcaasState;
+
+		const patchedEmitterData = patchedState.spaceHeating.heatEmitters.data[0]!.data;
+
+		expect("emitters" in patchedEmitterData).toBe(true);
+
+		if ("emitters" in patchedEmitterData) {
+			expect(patchedEmitterData.emitters[0]?.productReference).toBe("CR33");
+			expect(patchedEmitterData.emitters[1]?.productReference).toBe("CR34");
+			expect(patchedEmitterData.emitters[2]?.productReference).toBe("35");
+			expect(patchedEmitterData.emitters[0]?.id).toBe("12345");
+			expect(patchedEmitterData.emitters[1]?.id).toBe("67890");
+		}
+	});
+
+	it("converts legacy numeric radiator length values to millimetres", () => {
+		const legacyRadiatorLengths: Record<string, unknown> = {
+			"spaceHeating": {
+				...state.spaceHeating,
+				"heatEmitters": {
+					"data": [
+						{
+							"data": {
+								"emitters": [
+									{
+										"id": "12345",
+										"name": "Legacy radiator",
+										"typeOfHeatEmitter": "radiator",
+										"productReference": "33",
+										"numOfRadiators": 2,
+										"length": 0.6,
+									},
+								],
+							},
+						},
+					],
+				},
+			},
+		};
+
+		const patchedState = patchState({
+			...state,
+			...legacyRadiatorLengths,
+		}) as EcaasState;
+
+		const patchedEmitterData = patchedState.spaceHeating.heatEmitters.data[0]!.data;
+
+		if ("emitters" in patchedEmitterData) {
+			const radiator = patchedEmitterData.emitters[0] as { length?: { amount: number; unit: string } };
+			expect(radiator?.length).toEqual({
+				"amount": 600,
+				"unit": "millimetres",
+			});
+		}
+	});
+
+	it("patches floor ids", () => {
+		const floorsWithoutIds: Record<string, unknown> = {
+			"dwellingFabric": {
+				...state.dwellingFabric,
+				"dwellingSpaceFloors": {
+					"dwellingSpaceGroundFloor": {
+						"data": [
+							{
+								"data": {
+									"name": "Floor 1",
+								},
+							},
+						],
+					},
+					"dwellingSpaceFloorAboveUnheatedBasement": {
+						"data": [
+							{
+								"data": {
+									"name": "Floor 2",
+								},
+							},
+						],
+					},
+					"dwellingSpaceFloorOfHeatedBasement": {
+						"data": [
+							{
+								"data": {
+									"name": "Floor 3",
+								},
+							},
+						],
+					},
+				},
+			},
+		};
+
+		const patchedState = patchState({
+			...state,
+			...floorsWithoutIds,
+		}) as EcaasState;
+
+		const { dwellingSpaceGroundFloor, dwellingSpaceFloorAboveUnheatedBasement, dwellingSpaceFloorOfHeatedBasement } = patchedState.dwellingFabric.dwellingSpaceFloors;
+
+		expect(dwellingSpaceGroundFloor.data[0]?.data.id).toBeDefined();
+		expect(dwellingSpaceFloorAboveUnheatedBasement.data[0]?.data.id).toBeDefined();
+		expect(dwellingSpaceFloorOfHeatedBasement.data[0]?.data.id).toBeDefined();
 	});
 });

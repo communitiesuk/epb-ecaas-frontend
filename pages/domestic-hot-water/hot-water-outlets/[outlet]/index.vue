@@ -4,14 +4,13 @@ import { getUrl, hotWaterOutletTypes, wwhrsTypes } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import { getHotWaterOutletDefaultName } from "~/utils/getHotWaterOutletDefaultName";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 const title = "Hot water outlets";
 const store = useEcaasStore();
 const route = useRoute();
 const { autoSaveElementForm, getStoreIndex } = useForm();
-
 const { mounted } = useMounted();
-
 
 const hotWaterOutletsStoreData = store.domesticHotWater.hotWaterOutlets.data;
 const index = getStoreIndex(hotWaterOutletsStoreData);
@@ -19,7 +18,7 @@ const hotWaterOutletData = hotWaterOutletsStoreData[index] as EcaasForm<HotWater
 const model = ref(hotWaterOutletData?.data);
 const id = hotWaterOutletData?.data.id ?? uuidv4();
 
-
+const productBrandName = ref<string | undefined>();
 
 const saveForm = (fields: HotWaterOutletsData) => {
 	store.$patch((state) => {
@@ -41,7 +40,6 @@ const saveForm = (fields: HotWaterOutletsData) => {
 					data: {
 						...commonFields,
 						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-						dhwHeatSourceId: fields.dhwHeatSourceId,
 						wwhrs: true,
 						wwhrsType: fields.wwhrsType,
 						wwhrsProductReference: fields.wwhrsProductReference,
@@ -54,7 +52,6 @@ const saveForm = (fields: HotWaterOutletsData) => {
 					data: {
 						...commonFields,
 						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
-						dhwHeatSourceId: fields.dhwHeatSourceId,
 						wwhrs: false,
 						...conditionalOnAirPoweredFields,
 					},
@@ -140,6 +137,12 @@ autoSaveElementForm<HotWaterOutletsData>({
 	},
 });
 
+function handleProductLoaded(product: AnyPcdbProduct) {
+	if (hasModelDetails(product)) {
+		productBrandName.value = product.brandName;
+	}
+}
+
 // const isProductSelected = () => {
 // 	if (hotWaterOutletData.data.typeOfHotWaterOutlet !== "mixedShower"
 //         && hotWaterOutletData.data.typeOfHotWaterOutlet !== "electricShower") {
@@ -158,7 +161,6 @@ const heatSourceOptions = new Map(
 			: e.data.name,
 	]),
 );
-
 </script>
 
 <template>
@@ -229,6 +231,7 @@ const heatSourceOptions = new Map(
 				:selected-product-type="typeOfShowerProduct.airPressureShower"
 				:page-url="route.fullPath"
 				:page-index="index"
+				@product-loaded="handleProductLoaded"
 			/>
 		</template>
 
@@ -285,7 +288,9 @@ const heatSourceOptions = new Map(
 			:selected-product-type="typeOfShowerProduct.wwhrs"
 			:page-url="route.fullPath"
 			:page-index="index"
+			@product-loaded="handleProductLoaded"
 		/>
+		<HemDefaultProductWarning :brand-names="[productBrandName]" />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('domesticHotWater')" secondary test-id="saveProgress">Save progress</GovButton>

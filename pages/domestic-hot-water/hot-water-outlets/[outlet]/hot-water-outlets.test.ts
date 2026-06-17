@@ -3,11 +3,15 @@ import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
 import HotWaterOutlets from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
+import type { Product } from "~/pcdb/pcdb.types.js";
 
-const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport("navigateTo", () => {
-	return navigateToMock;
-});
+const { mockFetch, navigateToMock } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	navigateToMock: vi.fn(),
+}));
+
+mockNuxtImport("useFetch", () => mockFetch);
+mockNuxtImport("navigateTo", () => navigateToMock);
 
 vi.mock("uuid");
 
@@ -23,7 +27,6 @@ describe("hot water outlets", () => {
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
 			typeOfHotWaterOutlet: "mixedShower",
 			flowRate: 10,
-			dhwHeatSourceId: heatPumpId,
 			wwhrs: false,
 			isAirPressureShower: false,
 		},
@@ -294,6 +297,42 @@ describe("hot water outlets", () => {
 		expect(chooseProductButton.pathname).toBe("/0/wwhrs");
 	});
 
+	test("Renders HEM default product warning when default product is selected", async () => {
+		const product: Partial<Product> = {
+			id: "1000",
+			brandName: "HEM Default",
+			modelName: "Model Name",
+		};
+
+		mockFetch.mockReturnValue({
+			data: ref({ ...product }),
+		});
+
+		const airPressureShower: EcaasForm<MixedShowerData> = {
+			data: {
+				...mixerShower.data,
+				isAirPressureShower: true,
+				airPressureShowerProductReference: "1000",
+			},
+		};
+
+		store.$patch({
+			domesticHotWater: {
+				hotWaterOutlets: {
+					data: [airPressureShower],
+				},
+			},
+		});
+
+		await renderSuspended(HotWaterOutlets, {
+			route: {
+				params: { "outlet": "0" },
+			},
+		});
+
+		expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
+	});
+
 	[
 		{
 			type: "mixedShower",
@@ -401,7 +440,6 @@ describe("hot water outlets", () => {
 				name: "Air powered shower 1",
 				id: "c84528bb-f805-4f1e-95d3-2bd1717deca5",
 				typeOfHotWaterOutlet: "mixedShower",
-				dhwHeatSourceId: heatPumpId,
 				wwhrs: false,
 				isAirPressureShower: true,
 				airPressureShowerProductReference: "AP-REF-001",
@@ -530,8 +568,6 @@ describe("hot water outlets", () => {
 					},
 				},
 			});
-
-			addHeatPumpStoreData();
 			await renderSuspended(HotWaterOutlets, {
 				route: {
 					params: { "hotWaterOutlet": "0" },

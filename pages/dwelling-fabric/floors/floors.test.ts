@@ -17,6 +17,7 @@ describe("floors", () => {
 	});
 
 	const ground1: GroundFloorData = {
+		id: "88f49436-2cf5-434b-8e9d-8938d781b460",
 		name: "Ground floor 1",
 		surfaceArea: 5,
 		totalArea: 7,
@@ -25,12 +26,12 @@ describe("floors", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		perimeter: 0,
-		psiOfWallJunction: 0,
 		thicknessOfWalls: unitValue(0.3, metre),
 		typeOfGroundFloor: "Slab_no_edge_insulation",
 	};
 
 	const ground2: GroundFloorData = {
+		id: "741e16ed-b16f-4dbb-98be-0a0be61445d5",
 		name: "Ground floor 2",
 		surfaceArea: 5,
 		totalArea: 7,
@@ -39,12 +40,12 @@ describe("floors", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		perimeter: 0,
-		psiOfWallJunction: 0,
 		thicknessOfWalls: unitValue(0.4, metre),
 		typeOfGroundFloor: "Slab_no_edge_insulation",
 	};
 
 	const ground3: GroundFloorData = {
+		id: "0d5b322a-8bd7-4f45-8027-ebe9f2056e70",
 		name: "Ground floor 3",
 		surfaceArea: 5,
 		totalArea: 7,
@@ -53,7 +54,6 @@ describe("floors", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		perimeter: 0,
-		psiOfWallJunction: 0,
 		thicknessOfWalls: unitValue(0.5, metre),
 		typeOfGroundFloor: "Slab_no_edge_insulation",
 	};
@@ -122,6 +122,7 @@ describe("floors", () => {
 	};
 
 	const floorAboveUnheatedBasement1: FloorAboveUnheatedBasementData = {
+		id: "f50c72d5-9553-4403-a9ae-5e7295279902",
 		name: "Floor above unheated basement 1",
 		surfaceArea: 10,
 		totalArea: 12,
@@ -130,7 +131,6 @@ describe("floors", () => {
 		arealHeatCapacity: "Light",
 		massDistributionClass: "E",
 		perimeter: 2,
-		psiOfWallJunction: 0.5,
 		thicknessOfWalls: unitValue(0.5, millimetre),
 		depthOfBasementFloor: 1,
 		heightOfBasementWalls: 2,
@@ -140,6 +140,7 @@ describe("floors", () => {
 	};
 
 	const floorAboveUnheatedBasement2: FloorAboveUnheatedBasementData = {
+		id: "7eec11f9-ac5f-4ca2-8733-f49111dd21b1",
 		name: "Floor above unheated basement 2",
 		surfaceArea: 8,
 		totalArea: 10,
@@ -148,7 +149,6 @@ describe("floors", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "IE",
 		perimeter: 2.5,
-		psiOfWallJunction: 0.9,
 		thicknessOfWalls: unitValue(0.7, millimetre),
 		depthOfBasementFloor: 0.5,
 		heightOfBasementWalls: 3,
@@ -158,6 +158,7 @@ describe("floors", () => {
 	};
 
 	const floorAboveUnheatedBasement3: FloorAboveUnheatedBasementData = {
+		id: "21be369b-7c76-41ee-a25e-551a0de1621b",
 		name: "Floor above unheated basement 3",
 		surfaceArea: 5,
 		totalArea: 8,
@@ -166,7 +167,6 @@ describe("floors", () => {
 		arealHeatCapacity: "Medium",
 		massDistributionClass: "D",
 		perimeter: 1.5,
-		psiOfWallJunction: 0.3,
 		thicknessOfWalls: unitValue(1, millimetre),
 		depthOfBasementFloor: 0.8,
 		heightOfBasementWalls: 2,
@@ -185,7 +185,6 @@ describe("floors", () => {
 		arealHeatCapacity: "Medium",
 		massDistributionClass: "I",
 		depthOfBasementFloor: 2.5,
-		psiOfWallJunction: 0.08,
 		thicknessOfWalls: unitValue(0.3, millimetre),
 	};
 
@@ -199,7 +198,6 @@ describe("floors", () => {
 		arealHeatCapacity: "Heavy",
 		massDistributionClass: "E",
 		depthOfBasementFloor: 3,
-		psiOfWallJunction: 0.1,
 		thicknessOfWalls: unitValue(0.4, millimetre),
 	};
 
@@ -213,7 +211,6 @@ describe("floors", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "M",
 		depthOfBasementFloor: 2,
-		psiOfWallJunction: 0.05,
 		thicknessOfWalls: unitValue(0.25, millimetre),
 	};
 

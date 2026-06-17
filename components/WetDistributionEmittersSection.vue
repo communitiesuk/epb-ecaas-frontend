@@ -2,29 +2,19 @@
 import { v4 as uuidv4 } from "uuid";
 import { emitterFloorAreaZod, lengthRadiatorZod, productCountZod, type WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
-import type { ConvectorRadiatorProduct, Product, UnderFloorHeatingProduct } from "~/pcdb/pcdb.types";
+import type { ConvectorRadiatorProduct, Product, AnyPcdbProduct, UnderFloorHeatingProduct } from "~/pcdb/pcdb.types";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
 import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
 import { millimetre, type Length } from "~/utils/units/length";
 
+const props = defineProps<{
+	index: number;
+	onProductLoaded?: (product: AnyPcdbProduct) => void;
+}>();
+
 const route = useRoute();
 const router = useRouter();
-
-function updateLegacyRadiatorLengthInStore() {
-	store.$patch((state) => {
-		const heatEmitter = state.spaceHeating.heatEmitters.data[props.index];
-		if (!heatEmitter || !("emitters" in heatEmitter.data)) {
-			return;
-		}
-
-		const emittersList = (heatEmitter.data as { emitters: Record<string, unknown>[] }).emitters;
-		emittersList.forEach((emitter) => {
-			if (emitter.typeOfHeatEmitter === "radiator" && typeof emitter.length === "number") {
-				emitter.length = unitValue(emitter.length * 1000, millimetre);
-			}
-		});
-	});
-}
+const store = useEcaasStore();
 
 const clearEmitterIndexFromUrl = () => {
 	router.replace({ query: { ...route.query, emitterIndex: undefined } });
@@ -42,11 +32,6 @@ const { underFloorHeating, ...others } = emitterTypeOptions;
 const heatEmitterTypes = useUnderfloorHeating ? emitterTypeOptions : others;
 type EmitterType = keyof typeof emitterTypeOptions;
 
-const props = defineProps<{
-	index: number;
-}>();
-
-const store = useEcaasStore();
 const emitters = computed(() => {
 	const heatEmitter = store.spaceHeating.heatEmitters.data[props.index];
 	if (heatEmitter && "emitters" in heatEmitter.data) {
@@ -64,13 +49,11 @@ const emitterCards = ref<HTMLElement[]>([]);
 
 const queryEmitterIndex = route.query.emitterIndex != null ? Number(route.query.emitterIndex) : null;
 if (queryEmitterIndex != null && emitters.value[queryEmitterIndex]) {
-	updateLegacyRadiatorLengthInStore();
 	editIndex.value = queryEmitterIndex;
 	formModel.value = { ...emitters.value[queryEmitterIndex] };
 }
 
 onMounted(() => {
-	updateLegacyRadiatorLengthInStore();
 	if (queryEmitterIndex != null && emitterCards.value[queryEmitterIndex]) {
 		emitterCards.value[queryEmitterIndex].scrollIntoView({ behavior: "instant", block: "start" });
 	}	
@@ -79,7 +62,7 @@ const productDetails = ref<Record<string, string[]>>({});
 
 const fetchProductName = async (productReference: string) => {
 	if (productDetails.value[productReference]) return;
-	const { data: product } = await useFetch<Product | ConvectorRadiatorProduct | UnderFloorHeatingProduct>(`/api/products/${productReference}`);
+	const { data: product } = await useFetch<Product | ConvectorRadiatorProduct | UnderFloorHeatingProduct>(`/api/products/${encodeURIComponent(productReference)}`);
 	if (!product.value) {
 		return;
 	}
@@ -90,12 +73,15 @@ const fetchProductName = async (productReference: string) => {
 			product.value.modelName,
 			"modelQualifier" in product.value ? product.value.modelQualifier : undefined,
 		].filter(Boolean) as string[];
+
+		props.onProductLoaded?.(product.value);
 		return;
 	}
 
 	if (isConvectorRadiatorProduct(product.value) && product.value.type) {
 		const heightText = product.value.height != null ? `${product.value.height} mm` : undefined;
 		productDetails.value[productReference] = [product.value.type, heightText].filter(Boolean) as string[];
+		return;
 	}
 
 	if (isUnderFloorHeatingProduct(product.value) && product.value.systemName) {
@@ -104,23 +90,30 @@ const fetchProductName = async (productReference: string) => {
 	}
 };
 
+const syncEmitterProductNames = () => {
+	emitters.value.forEach((emitter) => {
+		if (emitter.productReference) {
+			fetchProductName(emitter.productReference);
+		}
+	});
+};
+
+onMounted(() => {
+	syncEmitterProductNames();
+});
+
 watch(
 	emitters,
-	(list) => {
-		list.forEach((emitter) => {
-			if (emitter.productReference) {
-				fetchProductName(emitter.productReference);
-			}
-		});
+	() => {
+		syncEmitterProductNames();
 	},
-	{ immediate: true },
+	{ immediate: true, deep: true, flush: "post" },
 );
 
 const emitterSummaryData = (emitter: Partial<WetDistributionEmitterData> & { id: string }) => {
 	const { typeOfHeatEmitter, productReference } = emitter;
 	const typeName = typeOfHeatEmitter ? emitterTypeOptions[typeOfHeatEmitter] : undefined;
 	const product = productReference ? productDetails.value[productReference] : undefined;
-
 
 	switch (typeOfHeatEmitter) {
 		case "radiator": {
@@ -300,6 +293,7 @@ const saveEmitter = () => {
 					type="form"
 					:actions="false"
 					:incomplete-message="false"
+					:ignore="true"
 					@submit="saveEmitter"
 				>	
 					<FormKit
@@ -326,7 +320,7 @@ const saveEmitter = () => {
 							name="productReference"
 							validation="required"
 							help="Select the radiator type from the PCDB using the button below."
-							:selected-product-reference="formModel.productReference as string"
+							:selected-product-reference="(formModel.productReference as string)"
 							selected-product-type="radiator"
 							:page-url="route.fullPath"
 							:page-index="props.index"
@@ -350,18 +344,15 @@ const saveEmitter = () => {
 						/>
 					</template>
 					<template v-if="formModel.typeOfHeatEmitter === 'fanCoil'">
-						<FormKit
+						<FieldsSelectPcdbProduct
 							:id="`selectFanCoil_${i}`"
-							type="govPcdbProduct"
-							label="Select a product"
-							name="productReference"
-							validation="required"
 							help="Select the fan coil type from the PCDB using the button below."
-							:selected-product-reference="formModel.productReference as string"
+							:selected-product-reference="(formModel.productReference as string)"
 							selected-product-type="fanCoil"
 							:page-url="route.fullPath"
 							:page-index="props.index"
 							:emitter-index="i"
+							@product-loaded="onProductLoaded"
 						/>
 						<FormKit
 							:id="`numOfFanCoils_${i}`"
@@ -379,7 +370,7 @@ const saveEmitter = () => {
 							name="productReference"
 							validation="required"
 							help="Select the underfloor heating type from the PCDB using the button below."
-							:selected-product-reference="formModel.productReference as string"
+							:selected-product-reference="(formModel.productReference as string)"
 							selected-product-type="underFloorHeating"
 							:page-url="route.fullPath"
 							:page-index="props.index"
@@ -395,13 +386,13 @@ const saveEmitter = () => {
 						/>
 					</template>
 					<div class="govuk-button-group">
-						<button
-							type="submit"
-							class="govuk-button govuk-button--secondary"
-							:data-testid="`saveEmitter_${i}`"
-						>
-							Save emitter
-						</button>
+						<FormKit
+							type="govButton"
+							label="Save emitter"
+							:classes="{ button: 'govuk-button--secondary' }"
+							:test-id="`saveEmitter_${i}`"
+							:ignore="true"
+						/>
 						<a
 							href="#"
 							class="govuk-link govuk-body-s"

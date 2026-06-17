@@ -4,7 +4,7 @@ import type { WaterStorageData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
 import { v4 as uuidv4 } from "uuid";
 import { hasPackagedProduct, waterStorageTypes } from "#imports";
-import type { Product } from "~/pcdb/pcdb.types";
+import type { Product, AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 const title = "Water storage";
 const store = useEcaasStore();
@@ -13,13 +13,13 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const { mounted } = useMounted();
 
-
 const waterStorageStoreData = store.domesticHotWater.waterStorage.data;
 const index = getStoreIndex(waterStorageStoreData);
 const waterStorageData = waterStorageStoreData[index] as EcaasForm<WaterStorageData>;
 const model = ref(waterStorageData?.data);
 const id = waterStorageData?.data.id ?? uuidv4();
 
+const productBrandName = ref<string | undefined>();
 const packagedProduct = ref<Product | undefined>();
 
 if (hasPackagedProduct(model.value)) {
@@ -34,7 +34,6 @@ const saveForm = (fields: WaterStorageData) => {
 		const commonFields = {
 			name: fields.name,
 			id,
-			dhwHeatSourceId: fields.dhwHeatSourceId,	
 			heaterPosition: fields.heaterPosition,
 		};
 
@@ -110,37 +109,30 @@ watch(
 				...(defaultName && { name: defaultName }),
 			} as WaterStorageData;
 
-			if (heatSourceOptions.size === 1) {
-				newValue.dhwHeatSourceId = heatSourceOptions.keys().next().value!;
-			}
-
 			model.value = newValue;
 		}
 	},
 );
 
-const heatSourceOptions = new Map(
-	store.domesticHotWater.heatSources.data.map((e) => [
-		e.data.id,
-		e.data.isExistingHeatSource
-			? store.spaceHeating.heatSource.data
-				.find((x) => x.data.id === e.data.heatSourceId)?.data.name
-                ?? "Invalid existing heat source"
-			: e.data.name,
-	]),
-);
+function handleProductLoaded(product: AnyPcdbProduct) {
+	if (hasModelDetails(product)) {
+		productBrandName.value = product.brandName;
+	}
+}
 
-const heatSourceTypes = new Map(
-	store.domesticHotWater.heatSources.data.map((e) => [
-		e.data.id,
-		e.data.isExistingHeatSource
-			? store.spaceHeating.heatSource.data
-				.find((x) => x.data.id === e.data.heatSourceId)?.data.typeOfHeatSource
-                ?? "Invalid existing heat source"
-			: e.data.typeOfHeatSource,
-	]),
-);
 
+// there can only be one heat source, 2 if one is a heatnetwork so check that either is a heat pump
+function heatSourceIsHeatPump() {
+	const heatSources = store.domesticHotWater.heatSources.data.map((e) => {
+		if (e.data.isExistingHeatSource) {
+			return store.spaceHeating.heatSource.data
+				.find((x) => x.data.id === e.data.heatSourceId)?.data.typeOfHeatSource;
+		} else {
+			return e.data.typeOfHeatSource;
+		}
+	});	
+	return heatSources.length === 1 || (heatSources.length === 2 && heatSources.includes("heatPump"));
+}
 </script>
 
 <template>
@@ -172,7 +164,6 @@ const heatSourceTypes = new Map(
 				validation="required"
 				:disabled="hasPackagedProduct(model)"
 			/>
-	
 			<FormKit
 				v-if="model.typeOfWaterStorage !== undefined"
 				id="name"
@@ -195,6 +186,7 @@ const heatSourceTypes = new Map(
 				:selected-product-type="model.typeOfWaterStorage"
 				:page-url="route.fullPath"
 				:page-index="index"
+				:on-product-loaded="handleProductLoaded"
 			/>
 			<FormKit
 				v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
@@ -225,28 +217,7 @@ const heatSourceTypes = new Map(
 				:disabled="hasPackagedProduct(model)"
 			/>
 			<FormKit
-				v-if="model.typeOfWaterStorage !== undefined"
-				id="dhwHeatSourceId"
-				name="dhwHeatSourceId"
-				type="govRadios"
-				label="Heat source"
-				help="Select the relevant heat source that has been added previously"
-				validation="required"
-				:options="heatSourceOptions"
-				:disabled="hasPackagedProduct(model)"
-			>			
-				<div
-					v-if="!heatSourceOptions.size"
-					data-testid="noHeatSource"
-				>
-					<p class="govuk-error-message">No heat sources added.</p>
-					<NuxtLink :to="getUrl('heatSourcesCreate')" class="govuk-link gov-radios-add-link">
-						Click here to add a heat source
-					</NuxtLink>
-				</div>
-			</FormKit>
-			<FormKit
-				v-if="model.typeOfWaterStorage === 'hotWaterCylinder' && model.dhwHeatSourceId && heatSourceTypes.get(model.dhwHeatSourceId) === 'heatPump'"
+				v-if="model.typeOfWaterStorage === 'hotWaterCylinder' && heatSourceIsHeatPump()"
 				id="areaOfHeatExchanger"
 				type="govInputWithSuffix"
 				label="Area of heat exchanger installed"
@@ -273,6 +244,7 @@ const heatSourceTypes = new Map(
 				validation="required | number | min:0 | max:1"
 				help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
 			/>
+			<HemDefaultProductWarning :brand-names="[productBrandName]" />
 			<div class="govuk-button-group">
 				<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 				<GovButton :href="getUrl('domesticHotWater')" secondary>Save progress</GovButton>

@@ -4,13 +4,11 @@ import type { MVHRLocation, VentType } from "~/schema/aliases";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
 import { getUrl, typeOfMechanicalVentilation, uniqueName, type MechanicalVentilationData } from "#imports";
-import Orientation from "~/components/fields/Orientation.vue";
-import Pitch from "~/components/fields/Pitch.vue";
 import { useAssociatedItems } from "~/composables/associatedItems";
 import { installationTypeOptions, installationLocationOptions } from "~/utils/display";
 import type { Product } from "~/pcdb/pcdb.types";
 import { useProductData } from "~/composables/productData";
-import { hasPackagedProduct } from "~/utils/packagedProduct";
+import { hasPackagedProduct } from "~/utils/products";
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
@@ -43,7 +41,8 @@ const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation
 	outside: "Outside",
 };
 
-const associatedItemOptions = useAssociatedItems(["wall", "roof", "window", "externalGlazedDoor"]);
+const associatedItemOptions = useAssociatedItems(["wall", "roof", "window", "externalGlazedDoor", "none"]);
+const mvhrAssociatedItemOptions = useAssociatedItems(["wall", "roof", "window", "none"]);
 
 const packagedProduct = ref<Product | undefined>();
 
@@ -133,18 +132,34 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 				};
 				break;
 		
-			default:
+			default: {
+				const mvhrAssociatedItems = [
+					...state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data,
+					...state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data,
+					...state.dwellingFabric.dwellingSpaceWindows.data,
+				];
+
+				const intakeAssociatedItem = fields.associatedItemIdForIntake && fields.associatedItemIdForIntake !== "none"
+					? mvhrAssociatedItems.find(x => x.data.id === fields.associatedItemIdForIntake)?.data
+					: undefined;
+
+				const exhaustAssociatedItem = fields.associatedItemIdForExhaust && fields.associatedItemIdForExhaust !== "none"
+					? mvhrAssociatedItems.find(x => x.data.id === fields.associatedItemIdForExhaust)?.data
+					: undefined;
+
 				mechanicalVentilationItem = {
 					...commonFields,
 					typeOfMechanicalVentilationOptions: "MVHR",
 					productReference: fields.productReference,
 					mvhrLocation: fields.mvhrLocation,
 					midHeightOfAirFlowPathForIntake: fields.midHeightOfAirFlowPathForIntake,
-					orientationOfIntake: fields.orientationOfIntake,
-					pitchOfIntake: fields.pitchOfIntake,
+					orientationOfIntake: intakeAssociatedItem?.orientation ?? fields.orientationOfIntake,
+					pitchOfIntake: intakeAssociatedItem?.pitch ?? fields.pitchOfIntake,
 					midHeightOfAirFlowPathForExhaust: fields.midHeightOfAirFlowPathForExhaust,
-					orientationOfExhaust: fields.orientationOfExhaust,
-					pitchOfExhaust: fields.pitchOfExhaust,
+					orientationOfExhaust: exhaustAssociatedItem?.orientation ?? fields.orientationOfExhaust,
+					pitchOfExhaust: exhaustAssociatedItem?.pitch ?? fields.pitchOfExhaust,
+					associatedItemIdForIntake: fields.associatedItemIdForIntake,
+					associatedItemIdForExhaust: fields.associatedItemIdForExhaust,
 					installedUnderApprovedScheme: fields.installedUnderApprovedScheme,
 					associatedItemId: fields.associatedItemId,
 					...(fields.hasAssociatedItem ? {
@@ -163,6 +178,7 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 					}),
 					packagedProductReference,
 				};
+			}
 		}
 
 		mechanicalVentilation.data[index] = {
@@ -256,6 +272,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Select the mechanical vent type from the PCDB using the button below"
 				:selected-product-reference="'productReference' in model ? model.productReference : null"
 				:selected-product-type="typeOfMechanicalVentilation.mvhr"
+				:heat-source="model"
 				:page-url="route.fullPath"
 				:page-index="index"
 				:disabled="hasPackagedProduct(model!)"
@@ -270,6 +287,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Select the mechanical vent type from the PCDB using the button below"
 				:selected-product-reference="'productReference' in model ? model.productReference : null"
 				:selected-product-type="typeOfMechanicalVentilation.centralisedContinuousMev"
+				:heat-source="model"
 				:page-url="route.fullPath"
 				:page-index="index"
 			/>
@@ -283,6 +301,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Select the mechanical vent type from the PCDB using the button below"
 				:selected-product-reference="'productReference' in model ? model.productReference : null"
 				:selected-product-type="typeOfMechanicalVentilation.decentralisedContinuousMev"
+				:heat-source="model"
 				:page-url="route.fullPath"
 				:page-index="index"
 			/>
@@ -350,23 +369,67 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					id="associatedItemId"
 					type="govRadios"
 					:options="new Map(associatedItemOptions)"
-					label="Associated wall, roof or window"
-					help="Select the wall, roof or window that this vent is in. It should have the same orientation and pitch as the vent."
+					label="Wall, roof or window that the vent is in"
+					help="This should have the same orientation and pitch as the vent"
 					name="associatedItemId"
 					validation="required"
 				/>
-
 				<template v-if="associatedItemOptions.length <= 1 || (model && 'associatedItemId' in model && model.associatedItemId === 'none')">
 					<FieldsPitch label="Pitch of vent" help="Enter the tilt angle of the external surface of the vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors." />
 					<FieldsOrientation label="Orientation of vent" help="Enter the orientation of the vent's external surface" />
 				</template>
 				<FormKit
-					id="installedUnderApprovedScheme"
-					type="govBoolean"
-					label="Is the vent installed under an approved installation scheme?"
-					name="installedUnderApprovedScheme"
+					v-if="mvhrAssociatedItemOptions.length"
+					id="associatedItemIdForIntake"
+					type="govRadios"
+					:options="new Map(mvhrAssociatedItemOptions)"
+					label="Wall, roof or window that the intake is in"
+					help="This should have the same orientation and pitch as the vent that takes in air"
+					name="associatedItemIdForIntake"
 					validation="required"
 				/>
+				<template v-if="mvhrAssociatedItemOptions.length <= 1 || (model && 'associatedItemIdForIntake' in model && model.associatedItemIdForIntake === 'none')">
+					<FieldsOrientation
+						id="orientationOfIntake"
+						name="orientationOfIntake"
+						label="Orientation of intake"
+						help="Enter the orientation of the vent which takes in air. This should be the same orientation as the wall, window or roof that the intake vent is situated in."
+						data-field="InfiltrationVentilation.MechanicalVentilation.orientation_of_intake"
+					/>
+					<FieldsPitch
+						id="pitchOfIntake"
+						name="pitchOfIntake"
+						label="Pitch of intake"
+						help="Enter the pitch of the vent which takes in air. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
+						data-field="InfiltrationVentilation.MechanicalVentilation.pitch_of_intake"
+					/>
+				</template>
+				<FormKit
+					v-if="mvhrAssociatedItemOptions.length"
+					id="associatedItemIdForExhaust"
+					type="govRadios"
+					:options="new Map(mvhrAssociatedItemOptions)"
+					label="Wall, roof or window that the exhaust is in"
+					help="This should have the same orientation and pitch as the exhaust vent"
+					name="associatedItemIdForExhaust"
+					validation="required"
+				/>
+				<template v-if="mvhrAssociatedItemOptions.length <= 1 || (model && 'associatedItemIdForExhaust' in model && model.associatedItemIdForExhaust === 'none')">
+					<FieldsOrientation
+						id="orientationOfExhaust"
+						name="orientationOfExhaust"
+						label="Orientation of exhaust"
+						help="Enter the orientation of the exhaust vent. This should be the same orientation as the wall, window or roof that the exhaust vent is situated in."
+						data-field="InfiltrationVentilation.MechanicalVentilation.orientation_of_exhaust"
+					/>
+					<FieldsPitch
+						id="pitchOfExhaust"
+						name="pitchOfExhaust"
+						label="Pitch of exhaust"
+						help="Enter the pitch of the exhaust vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
+						data-field="InfiltrationVentilation.MechanicalVentilation.pitch_of_exhaust"
+					/>
+				</template>
 				<FormKit
 					id="midHeightOfAirFlowPathForIntake"
 					type="govInputWithSuffix"
@@ -378,20 +441,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_intake">
 					<FieldsMidHeightOfAirflowPathGuidance />
 				</FormKit>
-				<Orientation
-					id="orientationOfIntake"
-					name="orientationOfIntake"
-					label="Orientation of intake"
-					help="Enter the orientation of the vent which takes in the air"
-					data-field="InfiltrationVentilation.MechanicalVentilation.orientation_of_intake"
-				/>
-				<Pitch
-					id="pitchOfIntake"
-					name="pitchOfIntake"
-					label="Pitch of intake"
-					help="Enter the pitch of the vent which takes in the air. 0° meant the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
-					data-field="InfiltrationVentilation.MechanicalVentilation.pitch_of_intake"
-				/>
 				<FormKit
 					id="midHeightOfAirFlowPathForExhaust"
 					type="govInputWithSuffix"
@@ -403,20 +452,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_exhaust">
 					<FieldsMidHeightOfAirflowPathGuidance />
 				</FormKit>
-				<Orientation
-					id="orientationOfExhaust"
-					name="orientationOfExhaust"
-					label="Orientation of exhaust"
-					help="Enter the orientation of the exhaust vent"
-					data-field="InfiltrationVentilation.MechanicalVentilation.orientation_of_exhaust"
-				/>
-				<Pitch
-					id="pitchOfExhaust"
-					name="pitchOfExhaust"
-					label="Pitch of exhaust"
-					help="Enter the pitch of the exhaust vent. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
-					data-field="InfiltrationVentilation.MechanicalVentilation.pitch_of_exhaust"
-				/>
 			</template>
 			<template v-if="model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV'">
 				<FormKit
@@ -461,7 +496,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					validation="required | number"
 				/>
 			</template>
-			<template v-if="model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV' || model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV'">
+			<template
+				v-if="model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV' 
+					|| model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV' 
+					|| model?.typeOfMechanicalVentilationOptions === 'MVHR'"
+			>
 				<FormKit
 					id="installedUnderApprovedScheme"
 					type="govBoolean"

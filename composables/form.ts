@@ -54,7 +54,7 @@ export function useForm() {
 				onPatch(state, {
 					data: newData,
 					complete: false,
-				} as EcaasForm<T>);
+				});
 			});
 		});
 	};

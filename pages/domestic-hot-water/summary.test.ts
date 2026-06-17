@@ -60,7 +60,6 @@ describe("Domestic hot water summary", () => {
 				unit: "litres" as const,
 			},
 			dailyEnergyLoss: 1,
-			dhwHeatSourceId: heatPumpId,
 			areaOfHeatExchanger: 2.5,
 			heaterPosition: 0.8,
 			thermostatPosition: 0.5,
@@ -71,7 +70,6 @@ describe("Domestic hot water summary", () => {
 			typeOfWaterStorage: "smartHotWaterTank",
 			name: "Smart hot water cylinder",
 			productReference: "SMART-HOT-WATER-CYLINDER",
-			dhwHeatSourceId: heatPumpId,
 			heaterPosition: 0.3,
 		};
 
@@ -162,7 +160,6 @@ describe("Domestic hot water summary", () => {
 				"Name": "Hot water cylinder",
 				"Storage cylinder volume": `5 ${litre.suffix}`,
 				"Daily energy loss": `1 ${kilowattHoursPerDay.suffix}`,
-				"Heat source": "Heat pump",
 				"Area of heat exchanger installed": `2.5 ${metresSquare.suffix}`,
 				"Heater position in the cylinder": "0.8",
 				"Thermostat position in the cylinder": "0.5",
@@ -192,7 +189,6 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Smart hot water cylinder",
 				"Product reference": "SMART-HOT-WATER-CYLINDER",
-				"Heat source": "Heat pump",
 				"Heater position in the cylinder": "0.3",
 			};
 
@@ -221,7 +217,6 @@ describe("Domestic hot water summary", () => {
 				name: "Mixer shower 1",
 				flowRate: 10,
 				typeOfHotWaterOutlet: "mixedShower",
-				dhwHeatSourceId: "4eaf-48c1-4d3b-9f56-6d02b8f5c2bb",
 				wwhrs: false,
 				isAirPressureShower: false,
 			},
@@ -261,7 +256,7 @@ describe("Domestic hot water summary", () => {
 						data: [mixedShower], // Only mixer shower has data
 					},
 					heatSources: {
-						data: [{ data: { id: mixedShower.data.dhwHeatSourceId, name: "Heat pump" } }],
+						data: [{ data: { id: "test-heat-source-id", name: "Heat pump" } }],
 					},
 				},
 			});
@@ -306,7 +301,7 @@ describe("Domestic hot water summary", () => {
 						data: [mixedShower, electricShower, bathData],
 					},
 					heatSources: {
-						data: [{ data: { id: mixedShower.data.dhwHeatSourceId, name: "Heat pump" } }],
+						data: [{ data: { id: "test-heat-source-id", name: "Heat pump" } }],
 					},
 				},
 			});
@@ -329,7 +324,7 @@ describe("Domestic hot water summary", () => {
 						data: [mixedShower],
 					},
 					heatSources: {
-						data: [{ data: { id: mixedShower.data.dhwHeatSourceId, name: "Heat pump" } }],
+						data: [{ data: { id: "test-heat-source-id", name: "Heat pump" } }],
 					},
 				},
 			});
@@ -339,7 +334,6 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Mixer shower 1",
 				"Type of hot water outlet": "Mixed shower",
-				"Hot water source": "Heat pump",
 				"Flow rate": `10 ${litrePerSecond.suffix}`,
 				"WWHRS installed": "No",
 			};
@@ -374,7 +368,6 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Partial mixer",
 				"Type of hot water outlet": "Mixed shower",
-				"Hot water source": "-",
 				"Is this an air pressure shower?": "-",
 				"WWHRS installed": "-",
 			};
@@ -465,7 +458,6 @@ describe("Domestic hot water summary", () => {
 					name: "Mixer with WWHRS",
 					flowRate: 15,
 					typeOfHotWaterOutlet: "mixedShower",
-					dhwHeatSourceId: "heat-1",
 					wwhrs: true,
 					wwhrsType: "instantaneousSystemA",
 					wwhrsProductReference: "WWHRS-PR-1",
@@ -485,7 +477,6 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Mixer with WWHRS",
 				"Type of hot water outlet": "Mixed shower",
-				"Hot water source": "Heat pump",
 				"Is this an air pressure shower?": "No",
 				"Flow rate": `15 ${litrePerSecond.suffix}`,
 				"WWHRS installed": "Yes",
@@ -507,7 +498,6 @@ describe("Domestic hot water summary", () => {
 					id: "mixer-wwhrs-1",
 					name: "Mixer with WWHRS",
 					typeOfHotWaterOutlet: "mixedShower",
-					dhwHeatSourceId: "heat-1",
 					wwhrs: false,
 					isAirPressureShower: true,
 					airPressureShowerProductReference: "1000",
@@ -526,7 +516,6 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Mixer with WWHRS",
 				"Type of hot water outlet": "Mixed shower",
-				"Hot water source": "Heat pump",
 				"Is this an air pressure shower?": "Yes",
 				"Air pressure shower product reference": "1000",
 				"Air pressure shower product": "Mock product",

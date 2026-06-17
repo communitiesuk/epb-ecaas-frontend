@@ -33,11 +33,6 @@ const inverterLocationOptions: Record<string, string> = {
 	unheated_space: "Unheated space",
 };
 
-const electricityPriorityOptions: Record<string, string> = {
-	diverter: "Diverter",
-	electricBattery: "Electric battery",
-};
-
 const shading = model?.value && "shading" in model.value ? model.value.shading : [];
 
 const saveForm = (fields: PvArrayData) => {
@@ -48,7 +43,7 @@ const saveForm = (fields: PvArrayData) => {
 		pvArrays.data[index] = {
 			data: fields.hasShading
 				? { ...fields, hasShading: true, shading: existingShading ?? [] } as PvArrayData
-				: { ...fields, hasShading: false } as PvArrayData,
+				: { ...fields, hasShading: false },
 			complete: true,
 		};
 		pvArrays.complete = false;
@@ -196,7 +191,11 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				name="elevationalHeight"
 				validation="required | number | min:0 | max: 500"
 				suffix-text="m"
-			/>
+			>
+				<GovDetails summary-text="Help with this input">
+					<img src="/img/elevation-heigh-of-pv-array.png" alt="Diagram showing elevational height of PV array at its base" class="govuk-!-margin-bottom-3">
+				</GovDetails>
+			</FormKit>
 			<FormKit
 				id="lengthOfPV"
 				type="govInputWithSuffix"
@@ -205,7 +204,11 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				name="lengthOfPV"
 				:validation="zodTypeAsFormKitValidation(sideLengthPvZod)"
 				suffix-text="m"
-			/>
+			>
+				<GovDetails summary-text="Help with this input">
+					<img src="/img/length-of-pv-array.png" alt="Diagram showing length of PV array" class="govuk-!-margin-bottom-3">
+				</GovDetails>
+			</FormKit>
 			<FormKit
 				id="widthOfPV"
 				type="govInputWithSuffix"
@@ -274,14 +277,6 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 					</table>
 				</GovDetails>
 			</FormKit>
-			<FormKit
-				id="electricityPriority"
-				type="govRadios"
-				:options="electricityPriorityOptions"
-				label="Which system should receive surplus energy from this energy supply?"
-				name="electricityPriority"
-				validation="required"
-			/>
 			<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 			<h2 class="govuk-heading-l">PV array shading</h2>
 			<p class="govuk-body">

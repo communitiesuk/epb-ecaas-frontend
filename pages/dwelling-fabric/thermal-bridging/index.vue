@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { isEcaasForm } from "~/stores/ecaasStore.schema";
+import { isEcaasForm, type EcaasForm, type LinearThermalBridgeData } from "~/stores/ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 import { page as pages } from "~/data/pages/pages";
 
 const title = "Thermal bridging";
 const page = usePage();
 const store = useEcaasStore();
+const psiJunctionErrors = ref<string[]>([]);
 
 type ThermalBridgingType = keyof typeof store.dwellingFabric.dwellingSpaceThermalBridging;
 type ThermalBridgingData = EcaasForm<LinearThermalBridgeData> & EcaasForm<PointThermalBridgeData>;
@@ -20,6 +21,9 @@ function handleRemove(thermalBridgingType: ThermalBridgingType, index: number) {
 			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].data = items.length ? items : [];
 			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].complete = false;
 		});
+
+		const { errors } = useJunctionValidation();
+		psiJunctionErrors.value = errors;
 	}
 } 
 
@@ -49,6 +53,9 @@ function handleDuplicate<T extends ThermalBridgingData>(thermalBridgingType: The
 			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].data.push(newItem);
 			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].complete = false;
 		});
+
+		const { errors } = useJunctionValidation();
+		psiJunctionErrors.value = errors;
 	}
 }
 
@@ -69,6 +76,8 @@ const hasIncompleteEntries = () =>
 	Object.values(store.dwellingFabric.dwellingSpaceThermalBridging)
 		.some(section => section.data.some(item => isEcaasForm(item) && !item.complete));
 
+const { errors } = useJunctionValidation();
+psiJunctionErrors.value = errors;
 </script>
 
 <template>
@@ -78,6 +87,18 @@ const hasIncompleteEntries = () =>
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<ClientOnly>
+		<GovErrorSummary
+			test-id="errorSummary"
+			:error-list="[
+				...psiJunctionErrors.map((error, index) => ({
+					id: `thermalBridgesAssociatedElements_${index}`,
+					text: error
+				})),
+			]"
+			:use-links="false"
+		/>
+	</ClientOnly>
 	<CustomList
 		id="linearThermalBridges"
 		title="Linear thermal bridges"
@@ -109,9 +130,12 @@ const hasIncompleteEntries = () =>
 		<GovButton :href="pages('dwellingFabricSummary').url" secondary>
 			View summary
 		</GovButton>
-		<CompleteElement
-			:is-complete="Object.values(store.dwellingFabric.dwellingSpaceThermalBridging).every(section => section.complete)"
-			:disabled="hasIncompleteEntries()"
-			@completed="handleComplete"/>
+		<ClientOnly>
+			<CompleteElement
+				:is-complete="Object.values(store.dwellingFabric.dwellingSpaceThermalBridging).every(section => section.complete)"
+				:disabled="!!psiJunctionErrors.length || hasIncompleteEntries()"
+				@completed="handleComplete"
+			/>
+		</ClientOnly>
 	</div>
 </template>
