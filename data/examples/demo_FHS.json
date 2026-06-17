@@ -10,6 +10,7 @@
     "NumberOfTappedRooms": 3,
     "NumberOfUtilityRooms": 0,
     "NumberOfBathrooms": 2,
+    "NumberOfSanitaryAccommodations": 1,
     "HeatingControlType": "SeparateTempControl",
     "ExternalConditions": {
         "air_temperatures": [0.0, 2.5, 5.0, 7.5, 10.0, 12.5, 15.0, 20.0],

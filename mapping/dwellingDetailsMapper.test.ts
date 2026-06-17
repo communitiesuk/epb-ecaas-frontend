@@ -54,6 +54,7 @@ describe("dwelling details mapper", () => {
 		expect(fhsInputData.NumberOfBedrooms).toBe(state.numOfBedrooms);
 		expect(fhsInputData.NumberOfUtilityRooms).toBe(state.numOfUtilityRooms);
 		expect(fhsInputData.NumberOfBathrooms).toBe(state.numOfBathrooms);
+		expect(fhsInputData.NumberOfSanitaryAccommodations).toBe(1); // check canned value is being sent for deprecated field
 		expect(fhsInputData.NumberOfHabitableRooms).toBe(state.numOfHabitableRooms);
 		expect(fhsInputData.NumberOfHotTappedRooms).toBe(state.numOfRoomsWithTappingPoints);
 		expect(fhsInputData.NumberOfWetRooms).toBe(state.numOfWetRooms);

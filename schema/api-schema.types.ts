@@ -1275,6 +1275,8 @@ export interface components {
             NumberOfUtilityRooms: number;
             /** @description A bathroom is any room that contains a bath or shower */
             NumberOfBathrooms: number;
+            /** @description Any space containing one or more flush toilets or urinals but not a bath or shower. Multiple cubicles counts as one space as long as there is free circulation of air throughout */
+            NumberOfSanitaryAccommodations: number;
             /** @description A habitable room is any that is not used solely as a kitchen, bathroom, utility, cellar or sanitary accommodation */
             NumberOfHabitableRooms: number;
             /** @enum {unknown} */
