@@ -198,11 +198,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<p class="govuk-hint">
 					The maximum thermal resistance of an unheated space is 2.5 (m²·K)/W. This is when the facing wall is not exposed.
 				</p>
-				<p class="govuk-body">
-					<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
-						Guidance on thermal resistance of unheated spaces (opens in another window)
-					</a>
-				</p>
 			</GovDetails>
 		</FormKit>
 		<div class="govuk-button-group">
