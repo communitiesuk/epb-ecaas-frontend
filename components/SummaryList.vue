@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, ref } from "vue";
 import { getUrl } from "#imports";
 import formatData from "~/utils/format-data";
 import hyphenate from "~/utils/hyphenate";
@@ -8,13 +9,29 @@ export type SummaryData = {
 	[key: string]: string | number | boolean | string[] | SummaryWithLink | undefined;
 };
 
-const props = defineProps<{ data: SummaryData | SummaryData[]; id: string; }>();
+const props = defineProps<{ data: SummaryData | SummaryData[]; id: string; stickyFirstColumn?: boolean; }>();
 
-const overflow = Array.isArray(props.data) && props.data.length > 3;
+const overflow = computed(() => Array.isArray(props.data) && props.data.length > 3);
+
+const scrollContainer = ref<HTMLElement | null>(null);
+const isHorizontallyScrolled = ref(false);
+
+const updateScrollState = () => {
+	isHorizontallyScrolled.value =
+		(scrollContainer.value?.scrollLeft ?? 0) > 0;
+};
+
 </script>
 
 <template>
-	<div :class="overflow ? 'govuk-summary-list-overflow' : ''">
+	<div
+		ref="scrollContainer"
+		:class="[
+			overflow ? 'govuk-summary-list-overflow' : '',
+			overflow && stickyFirstColumn ? 'govuk-summary-list-overflow--sticky-first-column' : '',
+			overflow && stickyFirstColumn && isHorizontallyScrolled ? 'govuk-summary-list-overflow--scrolled' : '',
+		]"
+		@scroll.passive="updateScrollState">
 		<dl class="govuk-summary-list">
 			<template v-if="!Array.isArray(data)">
 				<div
@@ -83,6 +100,28 @@ const overflow = Array.isArray(props.data) && props.data.length > 3;
 
 		.govuk-summary-list {
 			width: max-content;
+		}
+	}
+
+	.govuk-summary-list-overflow--sticky-first-column {
+		.govuk-summary-list__key {
+			position: sticky;
+			left: 0;
+			z-index: 2;
+			background: #fff;
+		}
+		::after{
+			content: '';
+			position: absolute;
+			inset: 0 0 0 auto;
+			width: 1px;
+			background: transparent;
+		}
+	}
+
+	.govuk-summary-list-overflow--scrolled {
+		.govuk-summary-list__key::after {
+			box-shadow: 1px 0 0 #b1b4b6;
 		}
 	}
 
