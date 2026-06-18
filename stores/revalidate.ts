@@ -69,7 +69,6 @@ function reformatForm(form: EcaasForm<unknown>) {
 
 	// Form data is an array
 	const allEcaasForms = form.data.every(isEcaasForm);
-	let ecaasFormData: EcaasForm<unknown>[] = allEcaasForms ? form.data : [];
 
 	// Check for any non-EcaasForm objects in array
 	if (!allEcaasForms) {
@@ -80,7 +79,7 @@ function reformatForm(form: EcaasForm<unknown>) {
 		const nonEcaasForms = form.data.filter(x => !isEcaasForm(x));
 
 		// Wrap form data in an array of EcaasForms and join with EcaasForms
-		ecaasFormData = ecaasForms.concat(nonEcaasForms.map(x => ({
+		const ecaasFormData = ecaasForms.concat(nonEcaasForms.map(x => ({
 			data: x,
 			complete: true,
 		})));
