@@ -11,7 +11,7 @@ export const spaceHeatingPages = [
 	{
 		id: "heatNetworks",
 		title: "Heat network",
-		url: "/space-heating/heat-networks/:heatNetwork",
+		url: "/space-heating/heat-networks",
 		type: "task",
 		parentId: "spaceHeating",
 	},
@@ -19,6 +19,13 @@ export const spaceHeatingPages = [
 		id: "heatNetworksCreate",
 		title: "Heat network",
 		url: "/space-heating/heat-networks/create",
+		type: "task",
+		parentId: "spaceHeating",
+	},
+	{
+		id: "heatNetworks",
+		title: "Heat network",
+		url: "/space-heating/heat-networks/:heatNetwork",
 		type: "task",
 		parentId: "spaceHeating",
 	},
