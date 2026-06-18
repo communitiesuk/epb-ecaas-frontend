@@ -261,8 +261,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 			data: {
 				name: "Flat roof",
 				typeOfRoof: "flatAboveHeatedSpace",
-				pitchOption: "custom",
-				pitch: 180,
+				pitch: 0,
 				length: 1,
 				width: 1,
 				elevationalHeightOfElement: 2,
@@ -276,7 +275,6 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 			data: {
 				name: "Pitched roof",
 				typeOfRoof: "pitchedInsulatedAtRoof",
-				pitchOption: "custom",
 				pitch: 180,
 				orientation: 30,
 				length: 1,
@@ -1102,7 +1100,7 @@ describe("dwelling space ceilings and roofs", () => {
 		const expectedFlatRoof = {
 			"Name": "Flat roof",
 			"Type of roof": "Flat above heated space",
-			"Pitch": `180 ${degrees.suffix}`,
+			"Pitch": `0 ${degrees.suffix}`,
 			"Length": `1 ${metre.suffix}`,
 			"Width": `1 ${metre.suffix}`,
 			"Elevational height of building element at its base": `2 ${metre.suffix}`,

@@ -105,7 +105,6 @@ describe("infiltration ventilation mapper", () => {
 		const roofData: Partial<RoofData> = {
 			id: roofId,
 			name: "Roof 1",
-			pitchOption: "custom",
 			pitch: 35,
 			orientation: 140,
 		};

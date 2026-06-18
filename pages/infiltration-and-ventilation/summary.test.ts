@@ -132,7 +132,6 @@ const externalWall: ExternalWallData = {
 const roof: Partial<RoofData> = {
 	id: "0b77e247-53c5-42b8-9dbd-83cbfc8c1111",
 	name: "Roof 1",
-	pitchOption: "custom",
 	pitch: 35,
 	orientation: 140,
 };

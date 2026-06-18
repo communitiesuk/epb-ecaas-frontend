@@ -54,7 +54,6 @@ describe("extractSectionItems", () => {
 				id: "roof1-id",
 				name: "Roof 1",
 				typeOfRoof: "flatAboveHeatedSpace",
-				pitchOption: "0",
 				pitch: 0,
 			},
 		};

@@ -412,13 +412,12 @@ const ceilingDataZod = z.discriminatedUnion(
 
 export type CeilingData = z.infer<typeof ceilingDataZod>;
 
-const roofType = z.enum(["flatAboveHeatedSpace", "flatAboveUnheatedSpace", "pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling", "unheatedPitched"]);
+const roofType = z.enum(["flatAboveHeatedSpace", "flatAboveUnheatedSpace", "pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling"]);
 
 export type RoofType = z.infer<typeof roofType>;
 
-const roofDataBaseZod = namedWithId.extend({
+const roofDataZod = namedWithId.extend({
 	typeOfRoof: roofType,
-	pitchOption: z.optional(zeroPitchOption),
 	pitch: z.number().min(0).max(180),
 	orientation: z.optional(orientation),
 	length: heightOpaqueZod,
@@ -428,17 +427,8 @@ const roofDataBaseZod = namedWithId.extend({
 	colour: colourZod,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
+	uValue,
 });
-
-const roofDataZod = z.discriminatedUnion("typeOfRoof", [
-	roofDataBaseZod.extend({
-		typeOfRoof: z.enum(["unheatedPitched"]),
-		uValue,
-	}),
-	roofDataBaseZod.extend({
-		typeOfRoof: z.enum(["pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling", "flatAboveHeatedSpace", "flatAboveUnheatedSpace"]),
-		uValue,
-	})]);
 
 export type RoofData = z.infer<typeof roofDataZod>;
 
