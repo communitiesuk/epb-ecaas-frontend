@@ -12,6 +12,7 @@ export interface SummarySection {
 	label: string;
 	data: SummaryData | SummaryData[];
 	editUrl: string;
+	stickyFirstColumn?: boolean;
 }
 
 declare module "#app" {

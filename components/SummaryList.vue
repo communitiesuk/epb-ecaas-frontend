@@ -9,7 +9,40 @@ export type SummaryData = {
 	[key: string]: string | number | boolean | string[] | SummaryWithLink | undefined;
 };
 
-const props = defineProps<{ data: SummaryData | SummaryData[]; id: string; stickyFirstColumn?: boolean; }>();
+
+/**
+ * Transposes an array of objects into a 2D array of strings.
+ *
+ * Used by the SummaryList component when the `transposed` prop is `true`.
+ * All values are coerced to strings, so this should only be used with data
+ * that can be meaningfully converted to strings.
+ *
+ * Currently used only for thermal bridging data. If additional data types
+ * require transposition in the future, consider generalising this function.
+ *
+ * @param data - Array of objects to transpose.
+ * @returns A 2D array of strings containing the transposed data.
+ */
+function transposeData(data: SummaryData[]): string[][] {
+	if (!data.length) return [];
+
+	const keys = Object.keys(data[0]!);
+	const transposed: string[][] = [];
+
+	transposed.push(keys);
+
+	for (const row of data) {
+		const newRow: string[] = [];
+		for (const key of keys) {
+			newRow.push(String(row[key]));
+		}
+		transposed.push(newRow);
+	}
+
+	return transposed;
+}
+
+const props = defineProps<{ data: SummaryData | SummaryData[]; id: string; stickyFirstColumn?: boolean; transposed?: boolean }>();
 
 const overflow = computed(() => Array.isArray(props.data) && props.data.length > 3);
 
@@ -32,7 +65,7 @@ const updateScrollState = () => {
 			overflow && stickyFirstColumn && isHorizontallyScrolled ? 'govuk-summary-list-overflow--scrolled' : '',
 		]"
 		@scroll.passive="updateScrollState">
-		<dl class="govuk-summary-list">
+		<dl v-if="!transposed" class="govuk-summary-list">
 			<template v-if="!Array.isArray(data)">
 				<div
 					v-for="(value, key) in data"
@@ -54,7 +87,7 @@ const updateScrollState = () => {
 					</dd>
 				</div>
 			</template>
-			<template v-if="Array.isArray(data) && data.length">
+			<template v-if="Array.isArray(data) && data.length && !transposed">
 				<template v-for="(key, keyIndex) in Object.keys(data[0]!)" :key="key">
 					<div v-if="data.some(x => x[key] != undefined)" class="govuk-summary-list__row" :data-testid="`summary-${id}-${hyphenate(key as string)}`">
 						<dt class="govuk-summary-list__key" >{{ key }}</dt>
@@ -90,6 +123,23 @@ const updateScrollState = () => {
 				</template>
 			</template>
 		</dl>
+		<table v-else-if="Array.isArray(data) && data.length" class="govuk-summary-list" data-testid="summary-transposed-table">
+			<tbody>
+				<template v-for="(row, rowIndex) in transposeData(data)" :key="`row-${rowIndex}`">
+					<tr class="govuk-summary-list__row" :data-testid="`summary-${id}-row-${rowIndex}`">
+						<template v-for="(cell, cellIndex) in row" :key="`cell-${cellIndex}`">
+							<td
+								:class="[
+									cellIndex === 0 ? 'govuk-summary-list__key' : 'govuk-summary-list__value',
+									rowIndex === 0 ? 'govuk-!-font-weight-bold' : '',
+								]">
+								{{ cell }}
+							</td>
+						</template>
+					</tr>
+				</template>
+			</tbody>
+		</table>
 	</div>
 </template>
 

@@ -404,6 +404,15 @@ const thermalBridgingData: ThermalBridgingData = {
 					reference: "Ref",
 				},
 			},
+			{
+				data: {
+					name: "E1: Sill",
+					typeOfThermalBridge: "E1",
+					linearThermalTransmittance: 2,
+					length: 3,
+					reference: "Ref 2",
+				},
+			},
 		],
 	},
 	dwellingSpacePointThermalBridges: {
@@ -2012,7 +2021,7 @@ describe("dwelling space thermal bridges", () => {
 		expect(screen.getByRole("link", { name: "Point thermal bridges" })).not.toBeNull();
 	});
 
-	it("should display the correct data for the linear thermal bridges section", async () => {
+	it("should display transposed data for the linear thermal bridges section", async () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceThermalBridging: {
@@ -2022,22 +2031,25 @@ describe("dwelling space thermal bridges", () => {
 		});
 
 		await renderSuspended(Summary);
-		const expectedResult = {
-			"Type of thermal bridge": "E1",
-			"Linear thermal transmittance": `1 ${wattsPerMeterKelvin.suffix}`,
-			"Length of thermal bridge": `2 ${metre.suffix}`,
-			"Reference": "Ref",
-		};
 
+		const firstRow = await screen.findByTestId("summary-dwellingSpaceLinearThermalBridging-row-0");
+		expect(firstRow.closest("table")?.parentElement?.classList.contains("govuk-summary-list-overflow--sticky-first-column")).toBe(false);
+		expect(firstRow.querySelector("td")?.textContent).toBe("Type of thermal bridge");
+		expect(firstRow.querySelectorAll("td")[1]?.textContent).toBe("Linear thermal transmittance");
+		expect(firstRow.querySelectorAll("td")[2]?.textContent).toBe("Length of thermal bridge");
+		expect(firstRow.querySelectorAll("td")[3]?.textContent).toBe("Reference");
 
-		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceLinearThermalBridging-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		for (let i = 0; i < thermalBridgingData.dwellingSpaceLinearThermalBridges.data.length; i++) {
+			const row = await screen.findByTestId(`summary-dwellingSpaceLinearThermalBridging-row-${i + 1}`);
+			const data = thermalBridgingData.dwellingSpaceLinearThermalBridges.data[i]?.data;
+			expect(row.querySelectorAll("td")[0]?.textContent).toBe(data?.typeOfThermalBridge);
+			expect(row.querySelectorAll("td")[1]?.textContent).toBe(`${data?.linearThermalTransmittance} ${wattsPerMeterKelvin.suffix}`);
+			expect(row.querySelectorAll("td")[2]?.textContent).toBe(`${data?.length} ${metre.suffix}`);
+			expect(row.querySelectorAll("td")[3]?.textContent).toBe(data?.reference);
 		}
 	});
 
-	it("should display the correct data for the point thermal bridges section", async () => {
+	it("should display transposed data for the point thermal bridges section", async () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceThermalBridging: {
@@ -2047,17 +2059,18 @@ describe("dwelling space thermal bridges", () => {
 		});
 
 		await renderSuspended(Summary);
+		const firstRow = await screen.findByTestId("summary-dwellingSpacePointThermalBridging-row-0");
+		expect(firstRow.closest("table")?.parentElement?.classList.contains("govuk-summary-list-overflow--sticky-first-column")).toBe(false);
+		expect(firstRow.querySelector("td")?.textContent).toBe("Name");
+		expect(firstRow.querySelectorAll("td")[1]?.textContent).toBe("Heat transfer coefficient");
+		expect(firstRow.querySelectorAll("td")[2]?.textContent).toBe("Reference");
 
-		const expectedResult = {
-			"Name": "Point 1",
-			"Heat transfer coefficient": `1 ${wattsPerKelvin.suffix}`,
-			"Reference": "Ref",
-		};
-
-		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-dwellingSpacePointThermalBridging-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		for (let i = 0; i < thermalBridgingData.dwellingSpacePointThermalBridges.data.length; i++) {
+			const row = await screen.findByTestId(`summary-dwellingSpacePointThermalBridging-row-${i + 1}`);
+			const data = thermalBridgingData.dwellingSpacePointThermalBridges.data[i]?.data;
+			expect(row.querySelectorAll("td")[0]?.textContent).toBe(data?.name);
+			expect(row.querySelectorAll("td")[1]?.textContent).toBe(`${data?.heatTransferCoefficient} ${wattsPerKelvin.suffix}`);
+			expect(row.querySelectorAll("td")[2]?.textContent).toBe(data?.reference);
 		}
 	});
 });

@@ -592,6 +592,7 @@ const pointThermalBridgesData = store.dwellingFabric.dwellingSpaceThermalBridgin
 const linearThermalBridgesSummary: SummarySection = {
 	id: "dwellingSpaceLinearThermalBridging",
 	label: "Linear thermal bridges",
+	stickyFirstColumn: false,
 	data: linearThermalBridgesData.map(({ data: x }) => {
 		return {
 			"Type of thermal bridge": displayCamelToSentenceCase(show(x.typeOfThermalBridge)),
@@ -606,6 +607,7 @@ const linearThermalBridgesSummary: SummarySection = {
 const pointThermalBridgesSummary: SummarySection = {
 	id: "dwellingSpacePointThermalBridging",
 	label: "Point thermal bridges",
+	stickyFirstColumn: false,
 	data: pointThermalBridgesData.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
@@ -799,7 +801,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 	</GovTabs>
 
 	<GovTabs v-slot="tabProps" :items="getTabItems(thermalBridgeSummarySections)">
-		<SummaryTab :summary="linearThermalBridgesSummary" :selected="tabProps.currentTab === 0">
+		<SummaryTab :summary="linearThermalBridgesSummary" :selected="tabProps.currentTab === 0" :transposed="true">
 			<template #empty>
 				<h2 class="govuk-heading-m">No linear thermal bridges added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceLinearThermalBridgesCreate')">
@@ -808,7 +810,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 			</template>
 		</SummaryTab>
 
-		<SummaryTab :summary="pointThermalBridgesSummary" :selected="tabProps.currentTab === 1">
+		<SummaryTab :summary="pointThermalBridgesSummary" :selected="tabProps.currentTab === 1" :transposed="true">
 			<template #empty>
 				<h2 class="govuk-heading-m">No point thermal bridges added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpacePointThermalBridgesCreate')">
