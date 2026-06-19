@@ -1,11 +1,19 @@
 import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaOtherWaterUseDetails, SchemaWaterPipework, SchemaStorageTank, SchemaHeatSourceWetDetails, SchemaWWHRS } from "~/schema/aliases";
-import type { SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
-import { defaultColdWaterSourceReference, type FhsInputSchema, type ResolvedState } from "./fhsInputMapper";
+import type { SchemaHeaderTankOrMainsWater, SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { objectFromEntries } from "ts-extras";
+
+export const defaultColdWaterSourceData: SchemaHeaderTankOrMainsWater = {
+	start_day: 0,
+	temperatures: [3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
+	time_series_step: 1,
+};
+
 export function makeWWHRSName(name:string) {
 	return `WWHRS - ${name}`;
 } 
+
 export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { showers, WWHRS } = mapShowersData(state);
 	const baths = mapBathsData(state);
@@ -35,7 +43,11 @@ const coldWaterSourceMap = {
 >;
 
 function mapShowersData(state: ResolvedState) {
+	const dhwHeatSource = getDomesticHotWaterHeatSource(state);
+	const coldWaterSource = coldWaterSourceMap[dhwHeatSource.coldWaterSource];
+
 	let WWHRS: SchemaWWHRS | undefined = undefined;
+
 	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "mixedShower").map((x): [string, SchemaMixerShower] => {
 		const key = x.name;
 		const WWHRS_configuration = {
@@ -45,11 +57,14 @@ function mapShowersData(state: ResolvedState) {
 		} as const;
 		if (x.wwhrs && x.wwhrsProductReference) {
 			WWHRS ??= {};
-			WWHRS[makeWWHRSName(x.name)] = { product_reference: x.wwhrsProductReference, ColdWaterSource: "mains water" };
+			WWHRS[makeWWHRSName(x.name)] = {
+				product_reference: x.wwhrsProductReference,
+				ColdWaterSource: coldWaterSource,
+			};
 		}
 		const mixedShower: SchemaMixerShower = {
 			type: "MixerShower",
-			ColdWaterSource: "mains water",
+			ColdWaterSource: coldWaterSource,
 			HotWaterSource: "hw cylinder",
 			...(x.wwhrs ? {
 				WWHRS: makeWWHRSName(x.name),
@@ -71,7 +86,7 @@ function mapShowersData(state: ResolvedState) {
 		const key = x.name;
 		const val: SchemaInstantElecShower = {
 			type: "InstantElecShower",
-			ColdWaterSource: "mains water",
+			ColdWaterSource: coldWaterSource,
 			rated_power: x.ratedPower,
 			EnergySupply: defaultElectricityEnergySupplyName,
 		};
@@ -84,10 +99,13 @@ function mapShowersData(state: ResolvedState) {
 }
 
 function mapBathsData(state: ResolvedState) {
+	const dhwHeatSource = getDomesticHotWaterHeatSource(state);
+	const coldWaterSource = coldWaterSourceMap[dhwHeatSource.coldWaterSource];
+
 	const bathEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "bath").map((x): [string, SchemaBathDetails] => {
 		const key = x.name;
 		const val: SchemaBathDetails = {
-			ColdWaterSource: "mains water",
+			ColdWaterSource: coldWaterSource,
 			size: x.size,
 		};
 
@@ -98,10 +116,13 @@ function mapBathsData(state: ResolvedState) {
 }
 
 function mapOthersData(state: ResolvedState) {
+	const dhwHeatSource = getDomesticHotWaterHeatSource(state);
+	const coldWaterSource = coldWaterSourceMap[dhwHeatSource.coldWaterSource];
+
 	const otherEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "otherHotWaterOutlet").map((x): [string, SchemaOtherWaterUseDetails] => {
 		const key = x.name;
 		const val: SchemaOtherWaterUseDetails = {
-			ColdWaterSource: "mains water",
+			ColdWaterSource: coldWaterSource,
 			flowrate: x.flowRate,
 		};
 
@@ -375,7 +396,7 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 			type: "SmartHotWaterTank",
 			product_reference: waterStorage.productReference,
 			EnergySupply_pump: defaultElectricityEnergySupplyName,
-			ColdWaterSource: defaultColdWaterSourceReference,
+			ColdWaterSource: "mains water",
 		} as const satisfies Partial<SchemaSmartHotWaterTank>;
 
 	const { mappedWSHeatSource, mappedHeatSourceWet }
@@ -390,6 +411,13 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 			},
 		},
 		...mappedHeatSourceWet,
+		ColdWaterSource: {
+			...mappedWaterStorage.ColdWaterSource === "header tank" ? {
+				["header tank"]: defaultColdWaterSourceData,
+			} : {
+				["mains water"]: defaultColdWaterSourceData,
+			},
+		},
 	} as const satisfies Partial<FhsInputSchema>;
 }
 

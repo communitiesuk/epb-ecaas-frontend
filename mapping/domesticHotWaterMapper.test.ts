@@ -1,5 +1,5 @@
 import type { BathData, DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
-import { makeWWHRSName, mapDomesticHotWaterData, mapHotWaterSourcesData } from "./domesticHotWaterMapper";
+import { defaultColdWaterSourceData, makeWWHRSName, mapDomesticHotWaterData, mapHotWaterSourcesData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import type { SchemaMixerShower } from "~/schema/api-schema.types";
 import { celsius } from "~/utils/units/temperature";
@@ -17,6 +17,18 @@ describe("domestic hot water mapper", () => {
 	afterEach(() => {
 		store.$reset();
 	});
+	
+	const coldWaterSourceMainsWater: Pick<FhsInputSchema, "ColdWaterSource"> = {
+		ColdWaterSource: {
+			["mains water"]: defaultColdWaterSourceData,
+		},
+	};
+
+	const coldWaterSourceHeaderTank: Pick<FhsInputSchema, "ColdWaterSource"> = {
+		ColdWaterSource: {
+			["header tank"]: defaultColdWaterSourceData,
+		},
+	};
 
 	const heatSourceId = "efa1b2c3-d4e5-6789-0123-456789abcdef";
 	const heatSourceIdInSH = "efa1b2c3-d4e5-6789-0123-456789abcd12";
@@ -309,6 +321,7 @@ describe("domestic hot water mapper", () => {
 									EnergySupply: "mains elec",
 								},
 							},
+							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -331,6 +344,7 @@ describe("domestic hot water mapper", () => {
 									},
 								},
 							},
+							ColdWaterSource: coldWaterSourceHeaderTank.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -352,6 +366,7 @@ describe("domestic hot water mapper", () => {
 									ColdWaterSource: "mains water",
 								},
 							},
+							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -386,6 +401,7 @@ describe("domestic hot water mapper", () => {
 									},
 								},
 							},
+							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -417,6 +433,7 @@ describe("domestic hot water mapper", () => {
 									number_of_units: heatBattery.data.numberOfUnits,
 								},
 							},
+							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -447,6 +464,7 @@ describe("domestic hot water mapper", () => {
 									EnergySupply: "mains elec",
 								},
 							},
+							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -480,6 +498,7 @@ describe("domestic hot water mapper", () => {
 									sub_heat_network_name: heatNetwork.data.subHeatNetworkName,
 								},
 							},
+							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -514,6 +533,7 @@ describe("domestic hot water mapper", () => {
 									heat_network_type: "communal",
 								},
 							},
+							ColdWaterSource: coldWaterSourceHeaderTank.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -547,6 +567,7 @@ describe("domestic hot water mapper", () => {
 									heat_network_type: "communal",
 								},
 							},
+							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 				],
@@ -902,6 +923,7 @@ describe("domestic hot water mapper", () => {
 									type: "HeatPump",
 								},
 							},
+							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -936,6 +958,7 @@ describe("domestic hot water mapper", () => {
 									number_of_units: existingBattery.data.numberOfUnits,
 								},
 							},
+							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -967,6 +990,7 @@ describe("domestic hot water mapper", () => {
 									type: "Boiler",
 								},
 							},
+							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					// HIU in SH
@@ -1004,6 +1028,7 @@ describe("domestic hot water mapper", () => {
 									sub_heat_network_name: heatNetwork.data.subHeatNetworkName,
 								},
 							},
+							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 				],
