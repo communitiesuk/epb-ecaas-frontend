@@ -1264,6 +1264,7 @@ describe("domestic hot water mapper", () => {
 					name: "shower1",
 					flowRate: 3,
 					typeOfHotWaterOutlet: "mixedShower",
+					coldWaterSource: "mainsWater",
 					wwhrs: false,
 					isAirPressureShower: false,
 				},
@@ -1276,6 +1277,7 @@ describe("domestic hot water mapper", () => {
 					name: "shower2",
 					ratedPower: 10,
 					typeOfHotWaterOutlet: "electricShower",
+					coldWaterSource: "mainsWater",
 				},
 			};
 
@@ -1286,7 +1288,7 @@ describe("domestic hot water mapper", () => {
 					name: "bath1",
 					size: 70,
 					typeOfHotWaterOutlet: "bath",
-
+					coldWaterSource: "mainsWater",
 				},
 			};
 
@@ -1297,6 +1299,7 @@ describe("domestic hot water mapper", () => {
 					name: "other1",
 					flowRate: 4,
 					typeOfHotWaterOutlet: "otherHotWaterOutlet",
+					coldWaterSource: "mainsWater",
 				},
 			};
 
@@ -1369,6 +1372,7 @@ describe("domestic hot water mapper", () => {
 						wwhrsType: "instantaneousSystemA",
 						wwhrsProductReference: "WW-A-123",
 						typeOfHotWaterOutlet: "mixedShower",
+						coldWaterSource: "mainsWater",
 						isAirPressureShower: false,
 					},
 				};
@@ -1409,6 +1413,7 @@ describe("domestic hot water mapper", () => {
 						wwhrsType: "instantaneousSystemB",
 						wwhrsProductReference: "WW-B-456",
 						typeOfHotWaterOutlet: "mixedShower",
+						coldWaterSource: "mainsWater",
 						isAirPressureShower: false,
 					},
 				};
@@ -1451,6 +1456,7 @@ describe("domestic hot water mapper", () => {
 						wwhrsType: "instantaneousSystemC",
 						wwhrsProductReference: "WW-C-789",
 						typeOfHotWaterOutlet: "mixedShower",
+						coldWaterSource: "mainsWater",
 						isAirPressureShower: false,
 					},
 				};
@@ -1487,6 +1493,7 @@ describe("domestic hot water mapper", () => {
 						name: "shower-air-pump",
 						wwhrs: false,
 						typeOfHotWaterOutlet: "mixedShower",
+						coldWaterSource: "mainsWater",
 						isAirPressureShower: true,
 						airPressureShowerProductReference: "AIR-PUMP-123",
 					},
@@ -1525,6 +1532,7 @@ describe("domestic hot water mapper", () => {
 						flowRate: 7,
 						wwhrs: false,
 						typeOfHotWaterOutlet: "mixedShower",
+						coldWaterSource: "mainsWater",
 						isAirPressureShower: false,
 					},
 				};
@@ -1586,6 +1594,7 @@ describe("domestic hot water mapper", () => {
 						wwhrsType: "instantaneousSystemA",
 						wwhrsProductReference: "WW123",
 						typeOfHotWaterOutlet: "mixedShower",
+						coldWaterSource: "mainsWater",
 						isAirPressureShower: false,
 					},
 				};
@@ -1598,6 +1607,7 @@ describe("domestic hot water mapper", () => {
 						flowRate: 6,
 						wwhrs: false,
 						typeOfHotWaterOutlet: "mixedShower",
+						coldWaterSource: "mainsWater",
 						isAirPressureShower: false,
 					},
 				};
@@ -1609,6 +1619,7 @@ describe("domestic hot water mapper", () => {
 						name: "elec1",
 						ratedPower: 9.5,
 						typeOfHotWaterOutlet: "electricShower",
+						coldWaterSource: "mainsWater",
 					},
 				};
 

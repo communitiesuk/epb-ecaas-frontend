@@ -26,6 +26,7 @@ describe("hot water outlets", () => {
 			name: "Mixer shower 1",
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
 			typeOfHotWaterOutlet: "mixedShower",
+			coldWaterSource: "mainsWater",
 			flowRate: 10,
 			wwhrs: false,
 			isAirPressureShower: false,
@@ -37,6 +38,7 @@ describe("hot water outlets", () => {
 			name: "Electric shower 1",
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca2",
 			typeOfHotWaterOutlet: "electricShower",
+			coldWaterSource: "mainsWater",
 			ratedPower: 5,
 		},
 	};
@@ -46,6 +48,7 @@ describe("hot water outlets", () => {
 			name: "Bath 1",
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca3",
 			typeOfHotWaterOutlet: "bath",
+			coldWaterSource: "mainsWater",
 			size: 150,
 		},
 	};
@@ -55,6 +58,7 @@ describe("hot water outlets", () => {
 			name: "Other hot water outlet 1",
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca4",
 			typeOfHotWaterOutlet: "otherHotWaterOutlet",
+			coldWaterSource: "mainsWater",
 			flowRate: 8,
 		},
 	};
@@ -87,6 +91,7 @@ describe("hot water outlets", () => {
 		const nameInput = screen.getByTestId<HTMLInputElement>("name");
 		await user.clear(nameInput);
 		await user.type(nameInput, "Mixer shower 1");
+		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
 		await user.click(screen.getByTestId("dhwHeatSourceId_" + heatPumpId));
 		await user.click(screen.getByTestId("isAirPressureShower_no"));
 		await user.type(screen.getByTestId("flowRate"), "10");
@@ -98,15 +103,18 @@ describe("hot water outlets", () => {
 		const nameInput = screen.getByTestId<HTMLInputElement>("name");
 		await user.clear(nameInput);
 		await user.type(nameInput, "Electric shower 1");
+		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
 		await user.type(screen.getByTestId("ratedPower"), "5");
 		await user.tab();
 	};
 
 	const populateValidFormBath = async () => {
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_bath"));
+		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
 		const nameInput = screen.getByTestId<HTMLInputElement>("name");
 		await user.clear(nameInput);
 		await user.type(nameInput, "Bath 1");
+		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
 		await user.type(screen.getByTestId("size"), "150");
 		await user.tab();
 	};
@@ -114,6 +122,7 @@ describe("hot water outlets", () => {
 	const populateValidFormOHWO = async () => {
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_otherHotWaterOutlet"));
 		await user.type(screen.getByTestId("name"), "Other hot water outlet 1");
+		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
 		await user.type(screen.getByTestId("flowRate"), "8");
 		await user.tab();
 	};
@@ -125,40 +134,41 @@ describe("hot water outlets", () => {
 			},
 		});
 
-
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("typeOfHotWaterOutlet_error"))).toBeDefined();
 
-
-
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
+
 		await clearName(user);
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
+		expect((await screen.findByTestId("coldWaterSource_error"))).toBeDefined();
 		expect((await screen.findByTestId("dhwHeatSourceId_error"))).toBeDefined();
-
 
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_electricShower"));
 		await user.click(screen.getByTestId("saveAndComplete"));
 		await clearName(user);
 		await user.click(screen.getByTestId("saveAndComplete"));
+
 		expect((await screen.findByTestId("ratedPower_error"))).toBeDefined();
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
+		expect((await screen.findByTestId("coldWaterSource_error"))).toBeDefined();
 
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_bath"));
 		await user.click(screen.getByTestId("saveAndComplete"));
 		await clearName(user);
 		await user.click(screen.getByTestId("saveAndComplete"));
 
+		expect((await screen.findByTestId("coldWaterSource_error"))).toBeDefined();
 		expect((await screen.findByTestId("size_error"))).toBeDefined();
-
 
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_otherHotWaterOutlet"));
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
+		expect((await screen.findByTestId("coldWaterSource_error"))).toBeDefined();
 		expect((await screen.findByTestId("flowRate_error"))).toBeDefined();
 	});
 
@@ -389,7 +399,6 @@ describe("hot water outlets", () => {
 					},
 				});
 
-
 				addHeatPumpStoreData();
 				await renderSuspended(HotWaterOutlets, {
 					route: {
@@ -405,8 +414,10 @@ describe("hot water outlets", () => {
 					expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
 				}
 
+				expect((await screen.findByTestId<HTMLInputElement>(`coldWaterSource_${hotWaterOutlet.data.coldWaterSource}`)).checked).toBe(true);
+
 				(Object.keys(hotWaterOutlet.data))
-					.filter(e => e !== "id" && e !== "typeOfHotWaterOutlet" && e !== "dhwHeatSourceId" && e !== "wwhrs" && e !== "isAirPressureShower")
+					.filter(e => e !== "id" && e !== "typeOfHotWaterOutlet" && !e.startsWith("coldWaterSource") && e !== "dhwHeatSourceId" && e !== "wwhrs" && e !== "isAirPressureShower")
 					.forEach(async (key) => {
 						expect((await screen.findByTestId<HTMLInputElement>(key)).value)
 							.toBe(String((hotWaterOutlet.data)[key as (keyof typeof hotWaterOutlet.data)]));
@@ -440,6 +451,7 @@ describe("hot water outlets", () => {
 				name: "Air powered shower 1",
 				id: "c84528bb-f805-4f1e-95d3-2bd1717deca5",
 				typeOfHotWaterOutlet: "mixedShower",
+				coldWaterSource: "mainsWater",
 				wwhrs: false,
 				isAirPressureShower: true,
 				airPressureShowerProductReference: "AP-REF-001",

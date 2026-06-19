@@ -431,6 +431,7 @@ const mixedShowerSummary: SummarySection = {
 			"Name": show(data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in data && data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(data.typeOfHotWaterOutlet) : emptyValueRendering,
 			"Is this an air pressure shower?": "isAirPressureShower" in data ? displayBoolean(data.isAirPressureShower) : emptyValueRendering,
+			"Cold water source": data.coldWaterSource ? displayCamelToSentenceCase(data.coldWaterSource) : emptyValueRendering,
 			...("isAirPressureShower" in data && data.isAirPressureShower ? {
 				"Air pressure shower product reference": show(airPressureShowerProductReference),
 				"Air pressure shower product": airPressureShowerProductReference ? show(productNames[data.airPressureShowerProductReference]) : emptyValueRendering,
@@ -456,6 +457,7 @@ const electricShowerSummary: SummarySection = {
 		return {
 			"Name": show(data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in data && data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Cold water source": displayCamelToSentenceCase(data.coldWaterSource),
 			"Rated power": "ratedPower" in data ? dim(data.ratedPower, "kilowatt") : emptyValueRendering,
 		};
 	}),
@@ -470,6 +472,7 @@ const bathSummary: SummarySection = {
 		return {
 			"Name": show(d.data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Cold water source": displayCamelToSentenceCase(d.data.coldWaterSource),
 			"Size": "size" in d.data ? dim(d.data.size, "litres") : emptyValueRendering,
 		};
 	}),
@@ -484,6 +487,7 @@ const otherOutletsSummary: SummarySection = {
 		return {
 			"Name": show(d.data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
+			"Cold water source": displayCamelToSentenceCase(d.data.coldWaterSource),
 			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per second") : emptyValueRendering,
 		};
 	}),

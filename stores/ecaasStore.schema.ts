@@ -938,6 +938,7 @@ const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
 const typeOfHeatNetwork = z.enum(["sleevedDistrictHeatNetwork", "unsleevedDistrictHeatNetwork", "communalHeatNetwork"]);
 const typeOfHeatBattery = z.enum(["heatBatteryPcm", "heatBatteryDryCore"]);
 const typeOfLocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
+const coldWaterSource = z.enum(["mainsWater", "headerTank"]);
 const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedContinuousMev", "decentralisedContinuousMev"]);
 
 export type HeatSourceSectionPage = "space heating" | "domestic hot water";
@@ -1242,7 +1243,7 @@ export type DomesticHotWater = AssertEachKeyIsPageId<{
 
 const hotWaterHeatSourceExtension = {
 	heatSourceId: z.literal("NEW_HEAT_SOURCE"),
-	coldWaterSource: z.enum(["mainsWater", "headerTank"]),
+	coldWaterSource,
 	isExistingHeatSource: z.literal(false),
 };
 
@@ -1315,7 +1316,7 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 		z.object({
 			id: z.uuidv4().readonly(),
 			heatSourceId: z.string(),
-			coldWaterSource: z.enum(["mainsWater", "headerTank"]),
+			coldWaterSource,
 			isExistingHeatSource: z.literal(true),
 			createdAutomatically: z.literal(true).optional(),
 			maxFlowTemp: zodUnit("temperature").optional(),
@@ -1359,7 +1360,11 @@ export type WaterStorageData = z.infer<typeof waterStorageDataZod>;
 const wwhrsTypeZod = z.enum(["instantaneousSystemA", "instantaneousSystemB", "instantaneousSystemC"]);
 export type WwhrsType = z.infer<typeof wwhrsTypeZod>;
 
-const mixedShowerBaseZod = namedWithId.extend({
+const hotWaterOutletBase = namedWithId.extend({
+	coldWaterSource,
+});
+
+const mixedShowerBaseZod = hotWaterOutletBase.extend({
 	typeOfHotWaterOutlet: z.literal("mixedShower"),
 });
 
@@ -1395,7 +1400,7 @@ export type MixedShowerData = z.infer<typeof mixedShowerDataZod>;
 
 export const ratedPowerShowerZod = z.number().gt(0).max(30);
 
-const electricShowerDataZod = namedWithId.extend({
+const electricShowerDataZod = hotWaterOutletBase.extend({
 	typeOfHotWaterOutlet: z.literal("electricShower"),
 	ratedPower: ratedPowerShowerZod,
 });
@@ -1404,7 +1409,7 @@ export type ElectricShowerData = z.infer<typeof electricShowerDataZod>;
 
 export const bathSizeZod = z.number().gt(0);
 
-const bathDataZod = namedWithId.extend({
+const bathDataZod = hotWaterOutletBase.extend({
 	typeOfHotWaterOutlet: z.literal("bath"),
 	size: bathSizeZod,
 });
@@ -1413,7 +1418,7 @@ export type BathData = z.infer<typeof bathDataZod>;
 
 export const otherFlowRateZod = z.number().min(0.1).max(15);
 
-const otherHotWaterOutletDataZod = namedWithId.extend({
+const otherHotWaterOutletDataZod = hotWaterOutletBase.extend({
 	typeOfHotWaterOutlet: z.literal("otherHotWaterOutlet"),
 	flowRate: otherFlowRateZod,
 });

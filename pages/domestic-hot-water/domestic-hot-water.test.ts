@@ -62,6 +62,7 @@ describe("Domestic hot water", () => {
 		data: {
 			name: "Jasper's Steamy Bath",
 			typeOfHotWaterOutlet: "bath",
+			coldWaterSource: "mainsWater",
 			id: "outlet1",
 			size: 100,
 		},
@@ -282,6 +283,7 @@ describe("Domestic hot water", () => {
 			data: {
 				name: "Jasper's Powerful Shower",
 				typeOfHotWaterOutlet: "mixedShower",
+				coldWaterSource: "mainsWater",
 				id: "outlet2",
 				flowRate: 100,
 				wwhrs: false,
@@ -293,6 +295,7 @@ describe("Domestic hot water", () => {
 			data: {
 				name: "Jasper's Ambiguous Water Outlet",
 				typeOfHotWaterOutlet: "otherHotWaterOutlet",
+				coldWaterSource: "mainsWater",
 				id: "outlet3",
 				flowRate: 100,
 			},
@@ -854,6 +857,7 @@ describe("Domestic hot water", () => {
 				data: {
 					name: "Other outlet for completion",
 					typeOfHotWaterOutlet: "otherHotWaterOutlet",
+					coldWaterSource: "mainsWater",
 					id: "outlet-complete",
 					flowRate: 12,
 				},
@@ -874,6 +878,7 @@ describe("Domestic hot water", () => {
 			data: {
 				name: "Other outlet for completion",
 				typeOfHotWaterOutlet: "otherHotWaterOutlet",
+				coldWaterSource: "mainsWater",
 				id: "outlet-complete",
 				flowRate: 12,
 			},

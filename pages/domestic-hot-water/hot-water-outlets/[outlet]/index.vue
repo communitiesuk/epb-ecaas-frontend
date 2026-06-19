@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { bathSizeZod, otherFlowRateZod, ratedPowerShowerZod, showerFlowRateZod, typeOfShowerProduct, type HotWaterOutletsData } from "~/stores/ecaasStore.schema";
-import { getUrl, hotWaterOutletTypes, wwhrsTypes } from "#imports";
+import { coldWaterSourceOptions, getUrl, hotWaterOutletTypes, wwhrsTypes } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import { getHotWaterOutletDefaultName } from "~/utils/getHotWaterOutletDefaultName";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
@@ -27,6 +27,7 @@ const saveForm = (fields: HotWaterOutletsData) => {
 		const commonFields = {
 			name: fields.name,
 			id,
+			coldWaterSource: fields.coldWaterSource,
 		};
 
 		let hotWaterOutletItem: EcaasForm<HotWaterOutletsData>;
@@ -216,6 +217,14 @@ const heatSourceOptions = new Map(
 				</div>
 			</FormKit>
 			<FormKit
+				id="coldWaterSource"
+				type="govRadios"
+				label="Cold water source"
+				:options="coldWaterSourceOptions"
+				name="coldWaterSource"
+				validation="required"
+			/>
+			<FormKit
 				id="isAirPressureShower"
 				name="isAirPressureShower"
 				type="govBoolean"
@@ -234,7 +243,15 @@ const heatSourceOptions = new Map(
 				@product-loaded="handleProductLoaded"
 			/>
 		</template>
-
+		<FormKit
+			v-if="model.typeOfHotWaterOutlet !== 'mixedShower'"
+			id="coldWaterSource"
+			type="govRadios"
+			label="Cold water source"
+			:options="coldWaterSourceOptions"
+			name="coldWaterSource"
+			validation="required"
+		/>
 		<FormKit
 			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' && model.isAirPressureShower === false) || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"
 			id="flowRate"

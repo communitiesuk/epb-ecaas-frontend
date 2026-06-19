@@ -217,6 +217,7 @@ describe("Domestic hot water summary", () => {
 				name: "Mixer shower 1",
 				flowRate: 10,
 				typeOfHotWaterOutlet: "mixedShower",
+				coldWaterSource: "mainsWater",
 				wwhrs: false,
 				isAirPressureShower: false,
 			},
@@ -228,6 +229,7 @@ describe("Domestic hot water summary", () => {
 				name: "Electric shower 1",
 				ratedPower: 10,
 				typeOfHotWaterOutlet: "electricShower",
+				coldWaterSource: "mainsWater",
 			},
 		};
 
@@ -237,6 +239,7 @@ describe("Domestic hot water summary", () => {
 				name: "Bath 1",
 				size: 170,
 				typeOfHotWaterOutlet: "bath",
+				coldWaterSource: "mainsWater",
 			},
 		};
 
@@ -246,6 +249,7 @@ describe("Domestic hot water summary", () => {
 				name: "Basin tap 1",
 				flowRate: 10,
 				typeOfHotWaterOutlet: "otherHotWaterOutlet",
+				coldWaterSource: "mainsWater",
 			},
 		};
 
@@ -334,6 +338,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Mixer shower 1",
 				"Type of hot water outlet": "Mixed shower",
+				"Cold water source": "Mains water",
 				"Flow rate": `10 ${litrePerSecond.suffix}`,
 				"WWHRS installed": "No",
 			};
@@ -368,6 +373,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Partial mixer",
 				"Type of hot water outlet": "Mixed shower",
+				"Cold water source": "-",
 				"Is this an air pressure shower?": "-",
 				"WWHRS installed": "-",
 			};
@@ -393,6 +399,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Electric shower 1",
 				"Type of hot water outlet": "Electric shower",
+				"Cold water source": "Mains water",
 				"Rated power": `10 ${kilowatt.suffix}`,
 			};
 
@@ -417,6 +424,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Bath 1",
 				"Type of hot water outlet": "Bath",
+				"Cold water source": "Mains water",
 				"Size": `170 ${litre.suffix}`,
 			};
 
@@ -441,6 +449,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Basin tap 1",
 				"Type of hot water outlet": "Other hot water outlet",
+				"Cold water source": "Mains water",
 				"Flow rate": `10 ${litrePerSecond.suffix}`,
 			};
 
@@ -458,6 +467,7 @@ describe("Domestic hot water summary", () => {
 					name: "Mixer with WWHRS",
 					flowRate: 15,
 					typeOfHotWaterOutlet: "mixedShower",
+					coldWaterSource: "mainsWater",
 					wwhrs: true,
 					wwhrsType: "instantaneousSystemA",
 					wwhrsProductReference: "WWHRS-PR-1",
@@ -477,6 +487,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Mixer with WWHRS",
 				"Type of hot water outlet": "Mixed shower",
+				"Cold water source": "Mains water",
 				"Is this an air pressure shower?": "No",
 				"Flow rate": `15 ${litrePerSecond.suffix}`,
 				"WWHRS installed": "Yes",
@@ -498,6 +509,7 @@ describe("Domestic hot water summary", () => {
 					id: "mixer-wwhrs-1",
 					name: "Mixer with WWHRS",
 					typeOfHotWaterOutlet: "mixedShower",
+					coldWaterSource: "mainsWater",
 					wwhrs: false,
 					isAirPressureShower: true,
 					airPressureShowerProductReference: "1000",
@@ -516,6 +528,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Mixer with WWHRS",
 				"Type of hot water outlet": "Mixed shower",
+				"Cold water source": "Mains water",
 				"Is this an air pressure shower?": "Yes",
 				"Air pressure shower product reference": "1000",
 				"Air pressure shower product": "Mock product",
