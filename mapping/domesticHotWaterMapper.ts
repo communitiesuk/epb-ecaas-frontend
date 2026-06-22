@@ -10,10 +10,6 @@ export const defaultColdWaterSourceData: SchemaHeaderTankOrMainsWater = {
 	time_series_step: 1,
 };
 
-export function makeWWHRSName(name:string) {
-	return `WWHRS - ${name}`;
-} 
-
 export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { showers, WWHRS } = mapShowersData(state);
 	const baths = mapBathsData(state);
@@ -45,30 +41,32 @@ const coldWaterSourceMap = {
 function mapShowersData(state: ResolvedState) {
 	const dhwHeatSource = getDomesticHotWaterHeatSource(state);
 	const coldWaterSource = coldWaterSourceMap[dhwHeatSource.coldWaterSource];
+	const { wwhrs, hotWaterOutlets } = state.domesticHotWater;
 
 	let WWHRS: SchemaWWHRS | undefined = undefined;
 
-	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "mixedShower").map((x): [string, SchemaMixerShower] => {
+	const mixedShowerEntries = hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "mixedShower").map((x): [string, SchemaMixerShower] => {
 		const key = x.name;
-		const WWHRS_configuration = {
-			instantaneousSystemA: "A",
-			instantaneousSystemB: "B",
-			instantaneousSystemC: "C",
-		} as const;
-		if (x.wwhrs && x.wwhrsProductReference) {
-			WWHRS ??= {};
-			WWHRS[makeWWHRSName(x.name)] = {
-				product_reference: x.wwhrsProductReference,
-				ColdWaterSource: coldWaterSource,
-			};
+		let associatedWwhrs: WwhrsData | undefined;
+
+		if (x.wwhrs && x.associatedWwhrs) {
+			associatedWwhrs = wwhrs.find(s => s.id === x.associatedWwhrs);
+
+			if (associatedWwhrs) {
+				WWHRS ??= {};
+				WWHRS[associatedWwhrs.name] = {
+					product_reference: associatedWwhrs.productReference,
+					ColdWaterSource: coldWaterSource,
+				};
+			}
 		}
+
 		const mixedShower: SchemaMixerShower = {
 			type: "MixerShower",
 			ColdWaterSource: coldWaterSource,
 			HotWaterSource: "hw cylinder",
-			...(x.wwhrs ? {
-				WWHRS: makeWWHRSName(x.name),
-				WWHRS_configuration: WWHRS_configuration[x.wwhrsType],
+			...(x.wwhrs && associatedWwhrs ? {
+				WWHRS: associatedWwhrs.name,
 			} : {}),
 			...(x.isAirPressureShower ? {
 				allow_low_flowrate: true as const,

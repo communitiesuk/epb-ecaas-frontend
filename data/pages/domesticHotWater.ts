@@ -30,9 +30,9 @@ const domesticHotWaterPages = [
 		parentId: "domesticHotWater",
 	},
 	{
-		id: "wwhrs",
+		id: "wwhrsCreate",
 		title: "Waste water heat recovery systems",
-		url: "/domestic-hot-water/wwhrs/:system/create",
+		url: "/domestic-hot-water/wwhrs/create",
 		type: "task",
 		parentId: "domesticHotWater",
 	},

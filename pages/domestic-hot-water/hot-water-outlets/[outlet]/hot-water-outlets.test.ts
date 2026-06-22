@@ -21,6 +21,15 @@ describe("hot water outlets", () => {
 
 	const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
+	const wwhrs: EcaasForm<WwhrsData> = {
+		data: {
+			id: "00ab3e41-7d7f-4c42-b5f0-a0fc7152a962",
+			name: "WWHRS",
+			coldWaterSource: "mainsWater",
+			productReference: "1000",
+		},
+	};
+
 	const mixerShower: EcaasForm<MixedShowerData> = {
 		data: {
 			name: "Mixer shower 1",
@@ -28,7 +37,8 @@ describe("hot water outlets", () => {
 			typeOfHotWaterOutlet: "mixedShower",
 			coldWaterSource: "mainsWater",
 			flowRate: 10,
-			wwhrs: false,
+			wwhrs: true,
+			associatedWwhrs: wwhrs.data.id,
 			isAirPressureShower: false,
 		},
 	};
@@ -95,6 +105,8 @@ describe("hot water outlets", () => {
 		await user.click(screen.getByTestId("dhwHeatSourceId_" + heatPumpId));
 		await user.click(screen.getByTestId("isAirPressureShower_no"));
 		await user.type(screen.getByTestId("flowRate"), "10");
+		await user.click(screen.getByTestId("wwhrs_yes"));
+		await user.click(screen.getByTestId(`associatedWwhrs_${wwhrs.data.id}`));
 		await user.tab();
 	};
 
@@ -172,6 +184,20 @@ describe("hot water outlets", () => {
 		expect((await screen.findByTestId("flowRate_error"))).toBeDefined();
 	});
 
+	test("requires associated WWHRS when outlet has a WWHRS", async () => {
+		await renderSuspended(HotWaterOutlets, {
+			route: {
+				params: { "hotWaterOutlet": "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
+		await user.click(screen.getByTestId("wwhrs_yes"));
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(screen.getByTestId("associatedWwhrs_error")).toBeDefined();
+	});
 
 	//awaiting pcdb merge
 	// test("navigate to pcdb product select page for wwhrs when choose a product button is clicked", async () => {
@@ -284,29 +310,6 @@ describe("hot water outlets", () => {
 		expect(link.getAttribute("href")).toBe(getUrl("heatSourcesCreate"));
 	});
 
-	test("navigate to water storage product selection for wwhrs when choose a product button is clicked", async () => {
-		await renderSuspended(HotWaterOutlets, {
-			route: {
-				params: { "hotWaterOutlet": "create" },
-			},
-		});
-
-		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
-
-		// toggle WWHRS option if present
-		const wwhrsYes = screen.queryByTestId("wwhrs_yes");
-		if (wwhrsYes) {
-			await user.click(wwhrsYes);
-		}
-
-		// select WWHRS type
-		await user.click(screen.getByTestId("wwhrsType_instantaneousSystemA"));
-
-		const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
-		expect(chooseProductButton).toBeDefined();
-		expect(chooseProductButton.pathname).toBe("/0/wwhrs");
-	});
-
 	test("Renders HEM default product warning when default product is selected", async () => {
 		const product: Partial<Product> = {
 			id: "1000",
@@ -368,6 +371,14 @@ describe("hot water outlets", () => {
 		describe(type, () => {
 			beforeEach(() => {
 				store.$reset();
+
+				store.$patch({
+					domesticHotWater: {
+						wwhrs: {
+							data: [wwhrs],
+						},
+					},
+				});
 			});
 
 			test("data is saved to store state when form is valid", async () => {
@@ -411,13 +422,15 @@ describe("hot water outlets", () => {
 				).toBe(true);
 
 				if (type === "mixedShower") {
-					expect((await screen.findByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`)).hasAttribute("checked")).toBe(true);
+					expect(screen.getByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`).checked).toBe(true);
+					expect(screen.getByTestId<HTMLInputElement>("wwhrs_yes").checked).toBe(true);
+					expect(screen.getByTestId<HTMLInputElement>(`associatedWwhrs_${wwhrs.data.id}`).checked).toBe(true);
 				}
 
 				expect((await screen.findByTestId<HTMLInputElement>(`coldWaterSource_${hotWaterOutlet.data.coldWaterSource}`)).checked).toBe(true);
 
 				(Object.keys(hotWaterOutlet.data))
-					.filter(e => e !== "id" && e !== "typeOfHotWaterOutlet" && !e.startsWith("coldWaterSource") && e !== "dhwHeatSourceId" && e !== "wwhrs" && e !== "isAirPressureShower")
+					.filter(e => e !== "id" && e !== "typeOfHotWaterOutlet" && !e.startsWith("coldWaterSource") && e !== "dhwHeatSourceId" && e !== "wwhrs" && e !== "associatedWwhrs" && e !== "isAirPressureShower")
 					.forEach(async (key) => {
 						expect((await screen.findByTestId<HTMLInputElement>(key)).value)
 							.toBe(String((hotWaterOutlet.data)[key as (keyof typeof hotWaterOutlet.data)]));

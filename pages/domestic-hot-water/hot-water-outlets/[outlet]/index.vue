@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { bathSizeZod, otherFlowRateZod, ratedPowerShowerZod, showerFlowRateZod, typeOfShowerProduct, type HotWaterOutletsData } from "~/stores/ecaasStore.schema";
-import { coldWaterSourceOptions, getUrl, hotWaterOutletTypes, wwhrsTypes } from "#imports";
+import { coldWaterSourceOptions, getUrl, hotWaterOutletTypes } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import { getHotWaterOutletDefaultName } from "~/utils/getHotWaterOutletDefaultName";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
@@ -42,8 +42,7 @@ const saveForm = (fields: HotWaterOutletsData) => {
 						...commonFields,
 						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
 						wwhrs: true,
-						wwhrsType: fields.wwhrsType,
-						wwhrsProductReference: fields.wwhrsProductReference,
+						associatedWwhrs: fields.associatedWwhrs,
 						...conditionalOnAirPoweredFields,
 					},
 					complete: true,
@@ -162,6 +161,8 @@ const heatSourceOptions = new Map(
 			: e.data.name,
 	]),
 );
+
+const associatedWwhrs = useAssociatedItems(["wwhrs"]);
 </script>
 
 <template>
@@ -289,24 +290,20 @@ const heatSourceOptions = new Map(
 		/>
 		<FormKit
 			v-if="model.typeOfHotWaterOutlet === 'mixedShower' && model.wwhrs === true"
-			id="wwhrsType"
-			name="wwhrsType"
+			id="associatedWwhrs"
+			name="associatedWwhrs"
 			type="govRadios"
-			:options="wwhrsTypes"
-			label="Type of waste water heat recovery system"
+			:options="new Map(associatedWwhrs)"
+			label="Waste water heat recovery system"
 			validation="required"
-		/>
-		<FieldsSelectPcdbProduct
-			v-if="model.typeOfHotWaterOutlet === 'mixedShower' && model.wwhrs === true"
-			id="selectWwhrsProduct"
-			name="wwhrsProductReference"
-			help="Select the WWHRS type from the PCDB using the button below."
-			:selected-product-reference="model.wwhrsProductReference"
-			:selected-product-type="typeOfShowerProduct.wwhrs"
-			:page-url="route.fullPath"
-			:page-index="index"
-			@product-loaded="handleProductLoaded"
-		/>
+		>
+			<div v-if="!associatedWwhrs.length">
+				<p class="govuk-error-message">No WWHRS added.</p>
+				<NuxtLink :to="getUrl('wwhrsCreate')" class="govuk-link gov-radios-add-link">
+					Click here to add a WWHRS
+				</NuxtLink>
+			</div>
+		</FormKit>
 		<HemDefaultProductWarning :brand-names="[productBrandName]" />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

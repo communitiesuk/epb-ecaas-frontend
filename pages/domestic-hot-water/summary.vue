@@ -413,19 +413,14 @@ const waterStorageSummarySections: SummarySection[] = [
 ];
 const populatedHeatSourceSections = getNonEmptySections(heatSourceSections);
 
-
-
-
-
-
+const { wwhrs } = store.domesticHotWater;
 
 const mixedShowerSummary: SummarySection = {
 	id: "mixedShower",
 	label: "Mixer showers",
 	data: mixedShowerData.map(({ data }) => {
-		
 		const airPressureShowerProductReference = "airPressureShowerProductReference" in data ? data.airPressureShowerProductReference : undefined;
-		const wwhrsProductReference = "wwhrsProductReference" in data ? data.wwhrsProductReference : undefined;
+		const taggedWwhrs = data.wwhrs ? store.getTaggedItem([wwhrs], data.associatedWwhrs) : undefined;
 
 		return {
 			"Name": show(data.name),
@@ -440,9 +435,7 @@ const mixedShowerSummary: SummarySection = {
 			}),
 			"WWHRS installed": "wwhrs" in data ? displayBoolean(data.wwhrs) : emptyValueRendering,
 			...("wwhrs" in data && data.wwhrs ? {
-				"WWHRS type": "wwhrsType" in data && data.wwhrsType ? displayCamelToSentenceCase(String(data.wwhrsType)) : emptyValueRendering,
-				"WWHRS product reference": wwhrsProductReference,
-				"WWHRS product": wwhrsProductReference ? show(productNames[wwhrsProductReference]) : emptyValueRendering,
+				"WWHRS": show(taggedWwhrs?.name),
 			} : {}),
 		};
 	}),

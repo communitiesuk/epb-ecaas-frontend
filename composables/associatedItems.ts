@@ -1,5 +1,5 @@
 
-type AssociatedItemType = "wall" | "roof" | "window" | "externalGlazedDoor" | "groundFloor" | "floorAboveUnheatedBasement" | "heatedBasementFloor" | "none";
+type AssociatedItemType = "wall" | "roof" | "window" | "externalGlazedDoor" | "groundFloor" | "floorAboveUnheatedBasement" | "heatedBasementFloor" | "wwhrs" | "none";
 
 export function useAssociatedItems(itemTypes: Array<AssociatedItemType>): [string, string][] {
 	const store = useEcaasStore();
@@ -9,6 +9,7 @@ export function useAssociatedItems(itemTypes: Array<AssociatedItemType>): [strin
 	const { dwellingSpaceWindows } = store.dwellingFabric;
 	const { dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
 	const { dwellingSpaceGroundFloor, dwellingSpaceFloorAboveUnheatedBasement, dwellingSpaceFloorOfHeatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
+	const { wwhrs } = store.domesticHotWater;
 
 	const mapOption = (label: string) => (element: EcaasForm<{ id?: string; name: string; }>) =>
 		[element.data.id, `${element.data.name} (${label})`] as [string, string];
@@ -21,6 +22,7 @@ export function useAssociatedItems(itemTypes: Array<AssociatedItemType>): [strin
 		(itemTypes.includes("groundFloor") ? dwellingSpaceGroundFloor.data.map(mapOption("Ground floor")) : []),
 		(itemTypes.includes("floorAboveUnheatedBasement") ? dwellingSpaceFloorAboveUnheatedBasement.data.map(mapOption("Floor above unheated basement")) : []),
 		(itemTypes.includes("heatedBasementFloor") ? dwellingSpaceFloorOfHeatedBasement.data.map(mapOption("Heated basement floor")) : []),
+		(itemTypes.includes("wwhrs") ? wwhrs.data.map(mapOption("WWHRS")) : []),
 	]
 		.flat()
 		.filter(x => x[0] !== undefined)

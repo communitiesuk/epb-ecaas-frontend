@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, Schem
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, ShowerProductType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, ShowerProductType, TypeOfBoiler, WaterStorageProductType } from "~/stores/ecaasStore.schema";
 import type { Split } from "type-fest";
 
 export const emptyValueRendering = "-";
@@ -479,12 +479,6 @@ export function displayHotWaterOutletType(type: HotWaterOutletType | undefined):
 	}
 	return hotWaterOutletTypes[type];
 }
-
-export const wwhrsTypes = {
-	"instantaneousSystemA": "WWHRS instantaneous system A",
-	"instantaneousSystemB": "WWHRS instantaneous system B",
-	"instantaneousSystemC": "WWHRS instantaneous system C",
-} as const satisfies Record<WwhrsType, string>;
 
 // we can get the display form by taking SchemaConvectiveType and
 // splitting off the first fragment before ", " or " ("

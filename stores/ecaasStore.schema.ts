@@ -1364,9 +1364,6 @@ const waterStorageDataZod = z.discriminatedUnion("typeOfWaterStorage", [
 
 export type WaterStorageData = z.infer<typeof waterStorageDataZod>;
 
-const wwhrsTypeZod = z.enum(["instantaneousSystemA", "instantaneousSystemB", "instantaneousSystemC"]);
-export type WwhrsType = z.infer<typeof wwhrsTypeZod>;
-
 const hotWaterOutletBase = namedWithId.extend({
 	coldWaterSource,
 });
@@ -1391,8 +1388,7 @@ const mixedShowerWwhrsFields = {
 		z.object({ wwhrs: z.literal(false) }),
 		z.object({
 			wwhrs: z.literal(true),
-			wwhrsType: wwhrsTypeZod,
-			wwhrsProductReference: z.string().optional(),
+			associatedWwhrs: z.guid(),
 		}),
 	] satisfies Tuple,
 };

@@ -32,10 +32,6 @@ const selectProduct = async (product: DisplayProduct) => {
 			if (product.technologyType === "AirPoweredShowers" && showerData.isAirPressureShower) {
 				showerData.airPressureShowerProductReference = product.id;
 			}
-
-			if (product.technologyType === "InstantaneousWwhrSystem" && showerData.wwhrs) {
-				showerData.wwhrsProductReference = product.id;
-			}
 		}
 	});
 

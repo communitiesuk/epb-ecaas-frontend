@@ -3,11 +3,10 @@ import Summary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
 import { litre } from "~/utils/units/volume";
 import { litrePerSecond } from "~/utils/units/flowRate";
-import { displayCamelToSentenceCase } from "~/utils/display";
 import { kilowatt, kilowattHoursPerDay } from "~/utils/units/power";
 import { metresSquare } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
-import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, EcaasForm, WwhrsData } from "~/stores/ecaasStore.schema";
 import { celsius } from "~/utils/units/temperature";
 import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 
@@ -461,6 +460,15 @@ describe("Domestic hot water summary", () => {
 		});
 
 		test("displays WWHRS type and product when present for mixer showers", async () => {
+			const wwhrs: EcaasForm<WwhrsData> = {
+				data: {
+					id: "6ff16f20-b401-471f-95d0-edbbf91b2a49",
+					name: "WWHRS",
+					coldWaterSource: "mainsWater",
+					productReference: "WWHRS-PR-1",
+				},
+			};
+
 			const mixerWithWwhrs: EcaasForm<MixedShowerData> = {
 				data: {
 					id: "mixer-wwhrs-1",
@@ -469,8 +477,7 @@ describe("Domestic hot water summary", () => {
 					typeOfHotWaterOutlet: "mixedShower",
 					coldWaterSource: "mainsWater",
 					wwhrs: true,
-					wwhrsType: "instantaneousSystemA",
-					wwhrsProductReference: "WWHRS-PR-1",
+					associatedWwhrs: wwhrs.data.id,
 					isAirPressureShower: false as const,
 				},
 			};
@@ -478,6 +485,7 @@ describe("Domestic hot water summary", () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: { data: [mixerWithWwhrs] },
+					wwhrs: { data: [wwhrs] },
 					heatSources: { data: [{ data: { id: "heat-1", name: "Heat pump" } }] },
 				},
 			});
@@ -491,9 +499,7 @@ describe("Domestic hot water summary", () => {
 				"Is this an air pressure shower?": "No",
 				"Flow rate": `15 ${litrePerSecond.suffix}`,
 				"WWHRS installed": "Yes",
-				"WWHRS type": displayCamelToSentenceCase("instantaneousSystemA"),
-				"WWHRS product reference": "WWHRS-PR-1",
-				"WWHRS product": "Mock product",
+				"WWHRS": "WWHRS",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
