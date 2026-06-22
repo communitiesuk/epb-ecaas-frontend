@@ -23,6 +23,20 @@ const domesticHotWaterPages = [
 		parentId: "domesticHotWater",
 	},
 	{
+		id: "wwhrs",
+		title: "Waste water heat recovery systems",
+		url: "/domestic-hot-water/wwhrs/:system",
+		type: "task",
+		parentId: "domesticHotWater",
+	},
+	{
+		id: "wwhrs",
+		title: "Waste water heat recovery systems",
+		url: "/domestic-hot-water/wwhrs/:system/create",
+		type: "task",
+		parentId: "domesticHotWater",
+	},
+	{
 		id: "waterStorage",
 		title: "Water storage",
 		url: "/domestic-hot-water/water-storage/:waterstorage",

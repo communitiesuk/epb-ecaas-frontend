@@ -1363,6 +1363,9 @@ describe("FHS input mapper", () => {
 				},
 				],
 			},
+			wwhrs: {
+				...baseForm,
+			},
 			waterStorage: {
 				...baseForm,
 				data: [{
@@ -2220,6 +2223,9 @@ describe("FHS input mapper", () => {
 						maxFlowTemp: { amount: 10, unit: "celsius" },
 					},
 				}],
+			},
+			wwhrs: {
+				...baseForm,
 			},
 			waterStorage: {
 				...baseForm,

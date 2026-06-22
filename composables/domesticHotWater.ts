@@ -7,7 +7,7 @@ export function useDomesticHotWater() {
 	const { removeWaterStorage } = useWaterStorage();
 
 	type DomesticHotWaterType = keyof typeof store.domesticHotWater;
-	type DomesticHotWaterData = EcaasForm<DomesticHotWaterHeatSourceData> & EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData>;
+	type DomesticHotWaterData = EcaasForm<DomesticHotWaterHeatSourceData> & EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData> & EcaasForm<WwhrsData>;
 
 	const { waterStorage, hotWaterOutlets, pipework, heatSources: dhwHeatSources } = store.domesticHotWater; 
 	const { heatSource } = store.spaceHeating;

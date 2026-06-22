@@ -3,7 +3,7 @@ import DomesticHotWater from "@/pages/domestic-hot-water/index.vue";
 import { screen, within } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import formStatus from "~/constants/formStatus";
-import type { DomesticHotWaterHeatSourceData, HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, WaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
 import HotWaterOutlets from "./hot-water-outlets/[outlet]/index.vue";
 import { litre } from "~/utils/units/volume";
 import { celsius } from "~/utils/units/temperature";
@@ -41,6 +41,15 @@ describe("Domestic hot water", () => {
 			maxFlowTemp: unitValue(12, celsius),
 		},
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+	const wwhrs1: EcaasForm<WwhrsData> = {
+		data: {
+			id: "baae7e60-7158-4e13-a14c-2d1c228766de",
+			name: "WWHRS 1",
+			coldWaterSource: "mainsWater",
+			productReference: "1000",
+		},
+	};
 
 	const hwStorage1: EcaasForm<WaterStorageData> = {
 		data: {
@@ -867,6 +876,7 @@ describe("Domestic hot water", () => {
 			store.$patch({
 				domesticHotWater: {
 					waterStorage: { data: [{ ...hwStorage1, complete: true }] },
+					wwhrs: { data: [{ ...wwhrs1, complete: true }] },
 					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: true }, otherOutlet] },
 					pipework: { data: [{ ...pipework1, complete: true }] },
 					heatSources: { data: [{ ...heatSource1, complete: true }] },

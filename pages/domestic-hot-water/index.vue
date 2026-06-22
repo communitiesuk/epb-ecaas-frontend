@@ -63,7 +63,6 @@ function handleComplete() {
 		(outlet) => outlet.data.typeOfHotWaterOutlet === "otherHotWaterOutlet",
 	);
 
-
 	const hasWaterStorage = store.domesticHotWater.waterStorage.data.length > 0;
 
 	if (!hasOtherHotWaterOutlet) {
@@ -87,6 +86,7 @@ function handleComplete() {
 	store.$patch({
 		domesticHotWater: {
 			waterStorage: { complete: true },
+			wwhrs: { complete: true },
 			hotWaterOutlets: { complete: true },
 			pipework: { complete: true },
 			heatSources: { complete: true },
@@ -207,6 +207,27 @@ const isPointOfUseSelected = computed(() =>
 		section="dHWHeatSources"
 		@remove="(index: number) => removeEntry('heatSources', index)"
 	/>
+
+	<CustomList 
+		id="wwhrs"
+		title="Waste water heat recovery systems (optional)"
+		:form-url="`${page?.url!}/wwhrs`"
+		:items="store.domesticHotWater.wwhrs.data
+			.filter(x => isEcaasForm(x))
+			.map(x => {
+				const item: CustomListItem = {
+					name: x.data.name,
+					status: x.complete ? formStatus.complete : formStatus.inProgress,
+					actions: ['edit']
+				};
+
+				return item;
+			})"
+		:show-status="true"
+		@remove="(index: number) => removeEntry('wwhrs', index)"
+		@duplicate="(index: number) => duplicateEntry('wwhrs', index)"
+	/>
+
 	<CustomList 
 		id="waterStorage"
 		title="Water storage"

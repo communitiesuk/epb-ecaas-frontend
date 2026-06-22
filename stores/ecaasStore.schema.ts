@@ -1236,6 +1236,7 @@ export type HeatingControlData = z.infer<typeof heatingControlsDataZod>;
 
 export type DomesticHotWater = AssertEachKeyIsPageId<{
 	heatSources: EcaasFormList<DomesticHotWaterHeatSourceData>;
+	wwhrs: EcaasFormList<WwhrsData>;
 	waterStorage: EcaasFormList<WaterStorageData>;
 	hotWaterOutlets: EcaasFormList<HotWaterOutletsData>;
 	pipework: EcaasFormList<PipeworkData>;
@@ -1326,6 +1327,12 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 );
 
 export type DomesticHotWaterHeatSourceData = z.infer<typeof domesticHotWaterHeatSourceZod>;
+
+const wwhrsDataZod = pcdbProduct.extend({
+	coldWaterSource,
+});
+
+export type WwhrsData = z.infer<typeof wwhrsDataZod>;
 
 const hotWaterCylinderDataZod = namedWithId
 	.extend(hasPcdbPackagedProduct.shape)
@@ -1605,6 +1612,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingDetails/appliances": appliancesDataZod,
 
 	"domesticHotWater/waterStorage": waterStorageDataZod,
+	"domesticHotWater/wwhrs": wwhrsDataZod,
 	"domesticHotWater/heatSources": domesticHotWaterHeatSourceZod,
 	"domesticHotWater/hotWaterOutlets": hotWaterOutletsDataZod,
 	"domesticHotWater/pipework": pipeworkDataZod,

@@ -232,8 +232,6 @@ function isPackagedWithHeatPump() {
 
 	return isPackagedWithDomesticHotWaterHeatPump;
 }
-
-
 </script>
 
 <template>
