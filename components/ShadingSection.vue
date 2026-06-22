@@ -147,7 +147,7 @@ const removeShading = (i: number) => {
 
 <template>
 	<div data-testid="shading-section">
-		<h2 v-if="shadingItems.length" class="govuk-heading-m">Objects that shade the {{props.shadingSectionType === 'PV' ? "PV array" : 'window'}}</h2>
+		<h2 v-if="shadingItems.length" class="govuk-heading-m">Objects that shade the {{props.shadingSectionType}}</h2>
 		<div
 			v-for="(item, i) in shadingItems"
 			:key="i"

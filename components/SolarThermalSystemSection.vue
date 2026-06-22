@@ -135,7 +135,7 @@ const aboveMinPower = (node: FormKitNode, min: number) => {
 		id="pitch"
 		type="govInputWithSuffix"
 		label="Pitch"
-		help="Enter the tilt angle, or inclination, of the PV array from horizontal measured upwards facing, where 0° is a horizontal surface and 90° is a vertical surface"
+		help="Enter the tilt angle, or inclination, of the PV from horizontal measured upwards facing, where 0° is a horizontal surface and 90° is a vertical surface"
 		name="pitch"
 		validation="required | number | min:0 | max: 90"
 		suffix-text="°"

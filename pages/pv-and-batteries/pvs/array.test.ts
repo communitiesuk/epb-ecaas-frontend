@@ -1,5 +1,5 @@
 import { screen } from "@testing-library/vue";
-import PVScreen from "./[array].vue";
+import PVScreen from "./[pv].vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 
@@ -29,8 +29,8 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.click(screen.getByTestId("inverterType_optimised_inverter"));
 	await user.click(screen.getByTestId(`hasShading_${hasShading ? "yes" : "no"}`));
 };
-describe("PV array", () => {
-	const pvArray: EcaasForm<PvArrayData> = {
+describe("PV", () => {
+	const pv: EcaasForm<PvData> = {
 		data: {
 			name: "PV 1",
 			peakPower: 4,
@@ -48,14 +48,14 @@ describe("PV array", () => {
 		},
 	};
 
-	const pvArray2: EcaasForm<PvArrayData> = {
-		data: { ...pvArray.data, name: "PV 2" },
+	const pv2: EcaasForm<PvData> = {
+		data: { ...pv.data, name: "PV 2" },
 	};
 
 	it("should have a heading", async () => {
 		await renderSuspended(PVScreen);
 		expect(
-			screen.getByRole("heading", { name: "PV array" }),
+			screen.getByRole("heading", { name: "PV" }),
 		).toBeDefined();
 	});
 
@@ -66,9 +66,9 @@ describe("PV array", () => {
 		expect(screen.getAllByText("Ventilation strategy")).toBeDefined();
 		expect(screen.getByText("Pitch")).toBeDefined();
 		expect(screen.getByText("Orientation")).toBeDefined();
-		expect(screen.getByText("Elevational height of PV array at its base")).toBeDefined();
-		expect(screen.getByText("Length of PV array")).toBeDefined();
-		expect(screen.getByText("Width of PV array")).toBeDefined();
+		expect(screen.getByText("Elevational height of PV at its base")).toBeDefined();
+		expect(screen.getByText("Length of PV")).toBeDefined();
+		expect(screen.getByText("Width of PV")).toBeDefined();
 		expect(screen.getByText("Inverter peak power AC")).toBeDefined();
 		expect(screen.getByText("Inverter peak power DC")).toBeDefined();
 		expect(screen.getByText("Location of inverter")).toBeDefined();
@@ -77,13 +77,13 @@ describe("PV array", () => {
 		expect(screen.getAllByLabelText("Yes")).toBeDefined();
 		expect(screen.getAllByLabelText("No")).toBeDefined();
 		expect(screen.getByText("Inverter type", { selector: "legend" })).toBeDefined();
-		expect(screen.queryByText("PV shading")).toBeNull();
+		expect(screen.queryByText("PV shading")).toBeDefined();
 	});
 
 	it("should error when user submits an empty form", async () => {
 		await renderSuspended(PVScreen, {
 			route: {
-				params: { array: "create" },
+				params: { pv: "create" },
 			},
 		});
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -107,15 +107,15 @@ describe("PV array", () => {
 	it("data is saved to store when form is valid", async () => {
 		await renderSuspended(PVScreen, {
 			route: {
-				params: { array: "create" },
+				params: { pv: "create" },
 			},
 		});
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data } = store.pvAndBatteries.pvArrays;
+		const { data } = store.pvAndBatteries.pvs;
 
-		expect(data[0]).toEqual({ ...pvArray, complete: true });
+		expect(data[0]).toEqual({ ...pv, complete: true });
 	});
 
 	it("navigates to pv and batteries page when valid form is completed", async () => {
@@ -137,14 +137,14 @@ describe("PV array", () => {
 		it("creates a new pv system automatically with given name", async () => {
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { array: "create" },
+					params: { pv: "create" },
 				},
 			});
 
 			await user.type(screen.getByTestId("name"), "New pv system");
 			await user.tab();
 
-			const actualPvSystem = store.pvAndBatteries.pvArrays.data[0]!;
+			const actualPvSystem = store.pvAndBatteries.pvs.data[0]!;
 			expect(actualPvSystem.data.name).toBe("New pv system");
 			expect(actualPvSystem.data.peakPower).toBeUndefined();
 			expect(actualPvSystem.data.inverterType).toBeUndefined();
@@ -153,32 +153,32 @@ describe("PV array", () => {
 		it("creates a new pv system automatically with default name after other data is entered", async () => {
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { array: "create" },
+					params: { pv: "create" },
 				},
 			});
 
 			await user.type(screen.getByTestId("elevationalHeight"), "7");
 			await user.tab();
 
-			const actualPvArray = store.pvAndBatteries.pvArrays.data[0]!;
-			expect(actualPvArray.data.name).toBe("PV array");
-			expect(actualPvArray.data.peakPower).toBeUndefined();
-			expect(actualPvArray.data.inverterType).toBeUndefined();
-			expect(actualPvArray.data.elevationalHeight).toBe(7);
+			const actualPv = store.pvAndBatteries.pvs.data[0]!;
+			expect(actualPv.data.name).toBe("PV");
+			expect(actualPv.data.peakPower).toBeUndefined();
+			expect(actualPv.data.inverterType).toBeUndefined();
+			expect(actualPv.data.elevationalHeight).toBe(7);
 		});
 
 		it("saves updated form data to correct store object automatically", async () => {
 			store.$patch({
 				pvAndBatteries: {
-					pvArrays: {
-						data: [pvArray, pvArray2],
+					pvs: {
+						data: [pv, pv2],
 					},
 				},
 			});
 
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { array: "1" },
+					params: { pv: "1" },
 				},
 			});
 
@@ -191,7 +191,7 @@ describe("PV array", () => {
 			await user.type(screen.getByTestId("peakPower"), "22");
 			await user.tab();
 
-			const actualPvSystem = store.pvAndBatteries.pvArrays.data[1]!;
+			const actualPvSystem = store.pvAndBatteries.pvs.data[1]!;
 			expect(actualPvSystem.data.name).toBe("Updated PV 2");
 			expect(actualPvSystem.data.peakPower).toBe(22);
 		});
@@ -199,8 +199,8 @@ describe("PV array", () => {
 		test("pv system and pv systems section are set as 'not complete' after user edits an item", async () => {
 			store.$patch({
 				pvAndBatteries: {
-					pvArrays: {
-						data: [{ ...pvArray, complete: true }],
+					pvs: {
+						data: [{ ...pv, complete: true }],
 						complete: true,
 					},
 				},
@@ -208,23 +208,23 @@ describe("PV array", () => {
 
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { array: "0" },
+					params: { pv: "0" },
 				},
 			});
 
 			await user.type(screen.getByTestId("name"), "PV system");
 			await user.tab();
 
-			const pvArrays = store.pvAndBatteries.pvArrays;
+			const pvs = store.pvAndBatteries.pvs;
 
-			expect(pvArrays.data[0]!.complete).not.toBe(true);
-			expect(pvArrays.complete).not.toBe(true);
+			expect(pvs.data[0]!.complete).not.toBe(true);
+			expect(pvs.complete).not.toBe(true);
 		});
 	});
 });
 
 describe("PV shading section", () => {
-	const pvArrayBaseFields = {
+	const pvBaseFields = {
 		name: "PV 1",
 		peakPower: 4,
 		ventilationStrategy: "unventilated" as const,
@@ -260,10 +260,10 @@ describe("PV shading section", () => {
 		expect(screen.queryByTestId("cancelShadingObject")).toBeNull();
 	});
 
-	const pvArrayWithShading: EcaasForm<PvArrayData> = {
+	const pvWithShading: EcaasForm<PvData> = {
 		complete: true,
 		data: {
-			...pvArrayBaseFields,
+			...pvBaseFields,
 			hasShading: true,
 			shading: [
 				{
@@ -277,10 +277,10 @@ describe("PV shading section", () => {
 		},
 	};
 
-	const pvArrayWithTwoShadingItems: EcaasForm<PvArrayData> = {
+	const pvWithTwoShadingItems: EcaasForm<PvData> = {
 		complete: true,
 		data: {
-			...pvArrayBaseFields,
+			...pvBaseFields,
 			hasShading: true,
 			shading: [
 				{
@@ -313,7 +313,7 @@ describe("PV shading section", () => {
 
 	it("errors on outer submit if shading is yes but no object added", async () => {
 		await renderSuspended(PVScreen, {
-			route: { params: { array: "create" } },
+			route: { params: { pv: "create" } },
 		});
 		await user.click(screen.getByTestId("hasShading_yes"));
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -392,13 +392,13 @@ describe("PV shading section", () => {
 		it("saves the shading object to the store", async () => {
 			store.$patch({
 				pvAndBatteries: {
-					pvArrays: {
+					pvs: {
 						data: [{ data: { name: "PV 1", hasShading: true, shading: [] } }],
 					},
 				},
 			});
 			await renderSuspended(PVScreen, {
-				route: { params: { array: "0" } },
+				route: { params: { pv: "0" } },
 			});
 			await populateValidForm({ hasShading: true });
 			await user.type(screen.getByTestId("shadingName"), "Chimney");
@@ -409,9 +409,9 @@ describe("PV shading section", () => {
 			await user.tab();
 			await user.click(screen.getByTestId("saveShadingObject"));
 
-			const pvArray = store.pvAndBatteries.pvArrays.data[0]!;
-			expect(pvArray.data.hasShading).toBe(true);
-			const { shading } = pvArray.data as Extract<PvArrayData, { hasShading: true }>;
+			const pv = store.pvAndBatteries.pvs.data[0]!;
+			expect(pv.data.hasShading).toBe(true);
+			const { shading } = pv.data as { hasShading: true; shading: ShadingObjectData[] };
 			expect(shading).toHaveLength(1);
 			expect(shading[0]).toMatchObject({
 				name: "Chimney",
@@ -424,20 +424,20 @@ describe("PV shading section", () => {
 
 		it("displays existing shading items when opening a pre-populated array", async () => {
 			store.$patch({
-				pvAndBatteries: { pvArrays: { data: [pvArrayWithShading] } },
+				pvAndBatteries: { pvs: { data: [pvWithShading] } },
 			});
 			await renderSuspended(PVScreen, {
-				route: { params: { array: "0" } },
+				route: { params: { pv: "0" } },
 			});
 			expect(screen.getByTestId("shading_summary_0")).toBeDefined();
 			expect(screen.getByText("Chimney")).toBeDefined();
 		});
 		it("shows errors when fields are invalid in edit form", async () => {
 			store.$patch({
-				pvAndBatteries: { pvArrays: { data: [pvArrayWithShading] } },
+				pvAndBatteries: { pvs: { data: [pvWithShading] } },
 			});
 			await renderSuspended(PVScreen, {
-				route: { params: { array: "create" } },
+				route: { params: { pv: "create" } },
 			});
 			await populateValidForm({ hasShading: true });
 
@@ -488,10 +488,10 @@ describe("PV shading section", () => {
 	describe("editing a shading object", () => {
 		it("opens an edit form with 'Edit shading' title when edit is clicked", async () => {
 			store.$patch({
-				pvAndBatteries: { pvArrays: { data: [pvArrayWithShading] } },
+				pvAndBatteries: { pvs: { data: [pvWithShading] } },
 			});
 			await renderSuspended(PVScreen, {
-				route: { params: { array: "0" } },
+				route: { params: { pv: "0" } },
 			});
 			await user.click(screen.getByTestId("shading_edit_0"));
 			expect(screen.getByText("Edit shading")).toBeDefined();
@@ -500,10 +500,10 @@ describe("PV shading section", () => {
 
 		it("prepopulates the edit form with the existing shading data", async () => {
 			store.$patch({
-				pvAndBatteries: { pvArrays: { data: [pvArrayWithShading] } },
+				pvAndBatteries: { pvs: { data: [pvWithShading] } },
 			});
 			await renderSuspended(PVScreen, {
-				route: { params: { array: "0" } },
+				route: { params: { pv: "0" } },
 			});
 			await user.click(screen.getByTestId("shading_edit_0"));
 			expect((screen.getByTestId<HTMLInputElement>("shadingName")).value).toBe("Chimney");
@@ -515,10 +515,10 @@ describe("PV shading section", () => {
 
 		it("updates the summary card when the edited item is saved", async () => {
 			store.$patch({
-				pvAndBatteries: { pvArrays: { data: [pvArrayWithShading] } },
+				pvAndBatteries: { pvs: { data: [pvWithShading] } },
 			});
 			await renderSuspended(PVScreen, {
-				route: { params: { array: "0" } },
+				route: { params: { pv: "0" } },
 			});
 			await user.click(screen.getByTestId("shading_edit_0"));
 			await user.clear(screen.getByTestId("shadingName"));
@@ -533,10 +533,10 @@ describe("PV shading section", () => {
 	describe("removing a shading object", () => {
 		it("removes the item and opens a new empty add form when it is the only item", async () => {
 			store.$patch({
-				pvAndBatteries: { pvArrays: { data: [pvArrayWithShading] } },
+				pvAndBatteries: { pvs: { data: [pvWithShading] } },
 			});
 			await renderSuspended(PVScreen, {
-				route: { params: { array: "0" } },
+				route: { params: { pv: "0" } },
 			});
 			await user.click(screen.getByTestId("shading_remove_0"));
 			expect(screen.queryByTestId("shading_summary_0")).toBeNull();
@@ -546,10 +546,10 @@ describe("PV shading section", () => {
 
 		it("removes only the targeted item when other items exist", async () => {
 			store.$patch({
-				pvAndBatteries: { pvArrays: { data: [pvArrayWithTwoShadingItems] } },
+				pvAndBatteries: { pvs: { data: [pvWithTwoShadingItems] } },
 			});
 			await renderSuspended(PVScreen, {
-				route: { params: { array: "0" } },
+				route: { params: { pv: "0" } },
 			});
 			await user.click(screen.getByTestId("shading_remove_0"));
 			expect(screen.queryByTestId("shading-add-form")).toBeNull();

@@ -72,7 +72,7 @@ export function getInitialState(): EcaasState {
 			airConditioning: { data: [] },
 		},
 		pvAndBatteries: {
-			pvArrays: { data: [] },
+			pvs: { data: [] },
 			electricBattery: { data: [] },
 			diverters: { data: [] },
 		},

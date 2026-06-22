@@ -13,7 +13,7 @@ describe("PV and electric batteries summary page", () => {
 
 	describe("PV systems section", () => {
 
-		const pvArray: EcaasForm<PvArrayData> = {
+		const pv: EcaasForm<PvData> = {
 			data: {
 				name: "PV Roof",
 				peakPower: 3.5,
@@ -30,9 +30,9 @@ describe("PV and electric batteries summary page", () => {
 				hasShading: false,
 			},
 		};
-		const pvArrayWithShading: EcaasForm<PvArrayData> = {
+		const pvWithShading: EcaasForm<PvData> = {
 			data: {
-				...pvArray.data,
+				...pv.data,
 				hasShading: true,
 				shading: [
 					{ name: "Test 1", typeOfShading: "obstacle", distance: 1, height: 11, transparency: 11 },
@@ -45,16 +45,16 @@ describe("PV and electric batteries summary page", () => {
 		};
 		it("displays the pv arrays tab", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
-			expect(screen.getByRole("link", { name: "PV arrays" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "PVs" })).not.toBeNull();
 		});
 
 		it("displays an empty tab state when no data is present", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
 
-			expect(screen.getByText("No PV arrays added")).not.toBeNull();
+			expect(screen.getByText("No PVs added")).not.toBeNull();
 
 			const addPVArraysLink: HTMLAnchorElement = screen.getByRole("link", {
-				name: "Add PV arrays",
+				name: "Add PVs",
 			});
 
 			expect(new URL(addPVArraysLink.href).pathname).toBe(
@@ -66,8 +66,8 @@ describe("PV and electric batteries summary page", () => {
 			const store = useEcaasStore();
 			store.$patch({
 				pvAndBatteries: {
-					pvArrays: {
-						data: [pvArray],
+					pvs: {
+						data: [pv],
 					},
 				},
 			});
@@ -87,20 +87,20 @@ describe("PV and electric batteries summary page", () => {
 				"Inverter peak power DC": `3.5 ${kilowatt.suffix}`,
 				"Location of inverter": "Unheated space",
 				"Inverter type": "Optimised inverter",
-				"Does anything shade the PV array?": "No",
+				"Does anything shade the PV?": "No",
 			};
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-pvArrays-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-pvs-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
-		it("displays the correct data for PV array when shading is added", async () => {
+		it("displays the correct data for PV when shading is added", async () => {
 			const store = useEcaasStore();
 			store.$patch({
 				pvAndBatteries: {
-					pvArrays: {
-						data: [pvArrayWithShading],
+					pvs: {
+						data: [pvWithShading],
 					},
 				},
 			});
@@ -117,7 +117,7 @@ describe("PV and electric batteries summary page", () => {
 				"Inverter peak power DC": `3.5 ${kilowatt.suffix}`,
 				"Location of inverter": "Unheated space",
 				"Inverter type": "Optimised inverter",
-				"Does anything shade the PV array?": "Yes",
+				"Does anything shade the PV?": "Yes",
 			};
 			const shading1Expected = {
 				"Name of shading 1": "Test 1",
@@ -169,7 +169,7 @@ describe("PV and electric batteries summary page", () => {
 				...shading4Expected,
 				...shading5Expected,
 			})) {
-				const lineResult = (await screen.findByTestId(`summary-pvArrays-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-pvs-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
@@ -178,10 +178,10 @@ describe("PV and electric batteries summary page", () => {
 			const store = useEcaasStore();
 			store.$patch({
 				pvAndBatteries: {
-					pvArrays: {
+					pvs: {
 						data: [{
 							data: {
-								...pvArray.data,
+								...pv.data,
 								hasShading: true,
 								shading: [
 									{ name: "Test 1", typeOfShading: "left_side_fin", distance: 1, depth: 11 },
@@ -190,7 +190,7 @@ describe("PV and electric batteries summary page", () => {
 						},
 						{
 							data: {
-								...pvArray.data,
+								...pv.data,
 								hasShading: true,
 								shading: [
 									{ name: "Test 2", typeOfShading: "obstacle", distance: 2, height: 22, transparency: 22 },
@@ -211,7 +211,7 @@ describe("PV and electric batteries summary page", () => {
 				"Depth of shading 1": "-",
 			};
 			for (const [key, value] of Object.entries(transparencyExpected)) {
-				const lineResult = (await screen.findByTestId(`summary-pvArrays-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-pvs-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				const ddCells = lineResult.querySelectorAll("dd");
 				expect(ddCells[1]?.textContent).toBe(value);

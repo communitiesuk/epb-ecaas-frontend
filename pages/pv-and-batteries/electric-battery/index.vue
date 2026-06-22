@@ -52,8 +52,8 @@ watch(model, async (newData, initialData) => {
 
 		state.pvAndBatteries.electricBattery.complete = false;
 
-		// Require electricity priority to be set on diverters if PV array has also been created
-		if (state.pvAndBatteries.pvArrays.data.length) {
+		// Require electricity priority to be set on diverters if PV has also been created
+		if (state.pvAndBatteries.pvs.data.length) {
 			const divertersToUpdate = state.pvAndBatteries.diverters.data.filter(x => !x.data.electricityPriority);
 
 			if (divertersToUpdate.length) {

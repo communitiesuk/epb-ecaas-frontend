@@ -429,7 +429,7 @@ describe("hasCompleteState function", () => {
 
 	it("returns false when given state with pv battery section complete only", async () => {
 		const pvAndBatteriesSection = {
-			pvArrays: { data: [], complete: true },
+			pvs: { data: [], complete: true },
 			electricBattery: { data: [], complete: true },
 		};
 		store.$patch({ pvAndBatteries: pvAndBatteriesSection });

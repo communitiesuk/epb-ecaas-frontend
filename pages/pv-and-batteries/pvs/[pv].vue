@@ -4,16 +4,16 @@ import { getUrl, uniqueName } from "#imports";
 import { inverterPeakPowerPvZod, peakPowerPvZod, sideLengthPvZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
-const title = "PV array";
+const title = "PV";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const { mounted } = useMounted();
 
-const pvArraysStoreData = store.pvAndBatteries.pvArrays.data;
-const index = getStoreIndex(pvArraysStoreData);
-const PvArrayData = useItemToEdit("array", pvArraysStoreData);
-const model = ref(PvArrayData?.data);
+const pvsStoreData = store.pvAndBatteries.pvs.data;
+const index = getStoreIndex(pvsStoreData);
+const PvData = useItemToEdit("pv", pvsStoreData);
+const model = ref(PvData?.data);
 
 
 const ventilationStrategyOptions: Record<OnSiteGenerationVentilationStrategy, string> = {
@@ -35,34 +35,34 @@ const inverterLocationOptions: Record<string, string> = {
 
 const shading = model?.value && "shading" in model.value ? model.value.shading : [];
 
-const saveForm = (fields: PvArrayData) => {
+const saveForm = (fields: PvData) => {
 	store.$patch((state) => {
-		const { pvArrays } = state.pvAndBatteries;
-		const existingShading = (pvArrays.data[index]?.data as Record<string, unknown>)?.shading;
+		const { pvs } = state.pvAndBatteries;
+		const existingShading = (pvs.data[index]?.data as Record<string, unknown>)?.shading;
 
-		pvArrays.data[index] = {
+		pvs.data[index] = {
 			data: fields.hasShading
-				? { ...fields, hasShading: true, shading: existingShading ?? [] } as PvArrayData
+				? { ...fields, hasShading: true, shading: existingShading ?? [] } as PvData
 				: { ...fields, hasShading: false },
 			complete: true,
 		};
-		pvArrays.complete = false;
+		pvs.complete = false;
 	});
 
 	navigateTo("/pv-and-batteries");
 };
 
-autoSaveElementForm<PvArrayData>({
+autoSaveElementForm<PvData>({
 	model,
-	storeData: store.pvAndBatteries.pvArrays,
-	defaultName: "PV array",
+	storeData: store.pvAndBatteries.pvs,
+	defaultName: "PV",
 	onPatch: (state, newData, index) => {
-		const existingShading = (state.pvAndBatteries.pvArrays.data[index]?.data as Record<string, unknown> | undefined)?.shading;
-		state.pvAndBatteries.pvArrays.data[index] = newData;
+		const existingShading = (state.pvAndBatteries.pvs.data[index]?.data as Record<string, unknown> | undefined)?.shading;
+		state.pvAndBatteries.pvs.data[index] = newData;
 		if (existingShading !== undefined) {
-			(state.pvAndBatteries.pvArrays.data[index].data as Record<string, unknown>).shading = existingShading;
+			(state.pvAndBatteries.pvs.data[index].data as Record<string, unknown>).shading = existingShading;
 		}
-		state.pvAndBatteries.pvArrays.complete = false;
+		state.pvAndBatteries.pvs.complete = false;
 	},
 });
 
@@ -70,9 +70,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 const writeShadingToStore = (items: ShadingObjectData[]) => {
 	store.$patch((state) => {
-		const pvArray = state.pvAndBatteries.pvArrays.data[index];
-		if (!pvArray) return;
-		(pvArray.data as Record<string, unknown>).shading = items;
+		const pv = state.pvAndBatteries.pvs.data[index];
+		if (!pv) return;
+		(pv.data as Record<string, unknown>).shading = items;
 	});
 };
 </script>
@@ -91,6 +91,11 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 			@submit="saveForm"
 			@submit-invalid="handleInvalidSubmit"
 		>
+			<GovInset>
+				<p>
+					If a section of PV has a different orientation or pitch, add it separately.
+				</p>
+			</GovInset>
 			<GovErrorSummary
 				:error-list="errorMessages"
 				test-id="photovoltaicErrorSummary"
@@ -99,9 +104,9 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				id="name"
 				type="govInputText"
 				label="Name"
-				help="Provide a name so this PV array can be identified later"
+				help="Provide a name so this PV can be identified later"
 				name="name"
-				:validation-rules="{ uniqueName: uniqueName(pvArraysStoreData, { index }) }"
+				:validation-rules="{ uniqueName: uniqueName(pvsStoreData, { index }) }"
 				validation="required | uniqueName"
 				:validation-messages="{
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
@@ -177,42 +182,42 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				id="pitch"
 				type="govInputWithSuffix"
 				label="Pitch"
-				help="Enter the tilt angle, or inclination, of the PV array from horizontal measured upwards facing, where 0° is a horizontal surface and 90° is a vertical surface"
+				help="Enter the tilt angle, or inclination, of the PV from horizontal measured upwards facing, where 0° is a horizontal surface and 90° is a vertical surface"
 				name="pitch"
 				validation="required | number | min:0 | max: 90"
 				suffix-text="°"
 			/>
-			<FieldsOrientation details-caption="To define the orientation of the PV array, measure the angle of the panel clockwise from true North, accurate to the nearest degree. If the panel is facing true north then the orientation is 0°. If the panel is facing south then the orientation is 180°." />
+			<FieldsOrientation details-caption="To define the orientation of the PV, measure the angle of the panel clockwise from true North, accurate to the nearest degree. If the panel is facing true north then the orientation is 0°. If the panel is facing south then the orientation is 180°." />
 			<FormKit
 				id="elevationalHeight"
 				type="govInputWithSuffix"
-				label="Elevational height of PV array at its base"
+				label="Elevational height of PV at its base"
 				help="Enter the distance between the ground and the lowest edge of the PV"
 				name="elevationalHeight"
 				validation="required | number | min:0 | max: 500"
 				suffix-text="m"
 			>
 				<GovDetails summary-text="Help with this input">
-					<img src="/img/elevation-heigh-of-pv-array.png" alt="Diagram showing elevational height of PV array at its base" class="govuk-!-margin-bottom-3">
+					<img src="/img/elevation-heigh-of-pv.png" alt="Diagram showing elevational height of PV at its base" class="govuk-!-margin-bottom-3">
 				</GovDetails>
 			</FormKit>
 			<FormKit
 				id="lengthOfPV"
 				type="govInputWithSuffix"
-				label="Length of PV array"
+				label="Length of PV"
 				help="Enter the length of the side of the array or panel that runs up the roof"
 				name="lengthOfPV"
 				:validation="zodTypeAsFormKitValidation(sideLengthPvZod)"
 				suffix-text="m"
 			>
 				<GovDetails summary-text="Help with this input">
-					<img src="/img/length-of-pv-array.png" alt="Diagram showing length of PV array" class="govuk-!-margin-bottom-3">
+					<img src="/img/length-of-pv.png" alt="Diagram showing length of PV" class="govuk-!-margin-bottom-3">
 				</GovDetails>
 			</FormKit>
 			<FormKit
 				id="widthOfPV"
 				type="govInputWithSuffix"
-				label="Width of PV array"
+				label="Width of PV"
 				help="Enter the length of the side of the array or panel that runs horizontally"
 				name="widthOfPV"
 				:validation="zodTypeAsFormKitValidation(sideLengthPvZod)"
@@ -278,14 +283,14 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				</GovDetails>
 			</FormKit>
 			<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-			<h2 class="govuk-heading-l">PV array shading</h2>
+			<h2 class="govuk-heading-l">PV shading</h2>
 			<p class="govuk-body">
-				<a href="/guidance/pv-shading" target="_blank" class="govuk-link">Guidance on PV array shading (opens in another window)</a>
+				<a href="/guidance/pv-shading" target="_blank" class="govuk-link">Guidance on PV shading (opens in another window)</a>
 			</p>
 			<FormKit
 				id="hasShading"
 				type="govBoolean"
-				label="Does anything shade the PV array?"
+				label="Does anything shade the PV?"
 				name="hasShading"
 				validation="required"
 			/>

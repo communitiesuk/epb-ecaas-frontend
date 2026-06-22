@@ -1467,7 +1467,7 @@ export type PipeworkData = z.infer<typeof pipeworkDataZod>;
 // NEW HOT WATER END   =======================================================================
 
 export type PvAndBatteries = AssertFormKeysArePageIds<{
-	pvArrays: EcaasFormList<PvArrayData>;
+	pvs: EcaasFormList<PvData>;
 	electricBattery: EcaasFormList<ElectricBatteryData>;
 	diverters: EcaasFormList<PvDiverterData>;
 }>;
@@ -1476,7 +1476,7 @@ export const peakPowerPvZod = z.number().min(0.001).max(100);
 export const sideLengthPvZod = z.number().gt(0).max(100);
 export const inverterPeakPowerPvZod = z.number().gt(0);
 
-const pvArrayDataZod = z.object({
+const pvDataZod = z.object({
 	name: z.string().trim().min(1),
 	peakPower: peakPowerPvZod,
 	ventilationStrategy: photovoltaicVentilationStrategyZod,
@@ -1492,18 +1492,18 @@ const pvArrayDataZod = z.object({
 	hasShading: z.boolean(),
 });
 
-const pvArrayShadingDataZod = z.discriminatedUnion("hasShading", [
-	pvArrayDataZod.extend({
+const pvShadingDataZod = z.discriminatedUnion("hasShading", [
+	pvDataZod.extend({
 		hasShading: z.literal(false),
 	}),
-	pvArrayDataZod.extend({
+	pvDataZod.extend({
 		hasShading: z.literal(true),
 		shading: z.array(shadingObjectDataZod),
 	}),
 ]);
 
 
-export type PvArrayData = z.infer<typeof pvArrayShadingDataZod>;
+export type PvData = z.infer<typeof pvShadingDataZod>;
 
 export const capacityElectricBatteryZod = z.number().gt(0).max(50);
 
@@ -1646,7 +1646,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"spaceHeating/heatEmitters": heatEmittingDataZod,
 	"spaceHeating/heatingControls": heatingControlsDataZod,
 	"cooling/airConditioning": airConditioningDataZod,
-	"pvAndBatteries/pvArrays": pvArrayShadingDataZod,
+	"pvAndBatteries/pvs": pvShadingDataZod,
 	"pvAndBatteries/electricBattery": electricBatteryDataZod,
 	"pvAndBatteries/diverters": pvDiverterDataZod,
 };

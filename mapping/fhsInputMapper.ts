@@ -22,7 +22,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const spaceHeatingSystemData = mapSpaceHeatSystem(state);
 	const heatSourceWetData = mapSpaceHeatingHeatSources(state);
 
-	const [pvData, electricBatteries, diverter, pvArrayEnergySupply] = mapPvAndElectricBatteriesData(state);
+	const [pvData, electricBatteries, diverter, pvEnergySupply] = mapPvAndElectricBatteriesData(state);
 
 	const fuelType = dwellingDetailsData.EnergySupply;
 
@@ -35,7 +35,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 				...electricBatteries,
 				...diverter,
 			},
-			...pvArrayEnergySupply,
+			...pvEnergySupply,
 		},
 	};
 

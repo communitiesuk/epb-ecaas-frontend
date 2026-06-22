@@ -257,22 +257,22 @@ describe("Change orientation", () => {
 				});
 			});
 		
-			it("PV arrays", async () => {
+			it("PVs", async () => {
 		
-				const pvArray: Partial<PvArrayData> = {
+				const pv: Partial<PvData> = {
 					name: "PV 1",
 					orientation: 20,
 				};
 
-				const pvArray2: Partial<PvArrayData> = {
+				const pv2: Partial<PvData> = {
 					name: "PV 2",
 					orientation: 340,
 				};
 
 				store.$patch({
 					pvAndBatteries: {
-						pvArrays: {
-							data: [{ data: pvArray }, { data: pvArray2 }],
+						pvs: {
+							data: [{ data: pv }, { data: pv2 }],
 						},
 					},
 				});
@@ -280,9 +280,9 @@ describe("Change orientation", () => {
 				await renderSuspended(ChangeOrientation);
 				await updateOrientation("130");
 		
-				const { pvArrays } = store.pvAndBatteries;
-				expect(pvArrays.data[0]?.data.orientation).toBe(50);
-				expect(pvArrays.data[1]?.data.orientation).toBe(10);
+				const { pvs } = store.pvAndBatteries;
+				expect(pvs.data[0]?.data.orientation).toBe(50);
+				expect(pvs.data[1]?.data.orientation).toBe(10);
 			});
 
 			it("doors", async () => {

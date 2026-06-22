@@ -97,6 +97,47 @@ describe("ECaaS store patch", () => {
 		}));
 	});
 
+	it("patches legacy pv arrays to pvs", () => {
+		const legacyPvs: Record<string, unknown> = {
+			"pvAndBatteries": {
+				...state.pvAndBatteries,
+				"pvArrays": {
+					"data": [
+						{
+							"data": {
+								"name": "Legacy PV",
+							},
+							"complete": true,
+						},
+					],
+					"complete": true,
+				},
+			},
+		};
+
+		const patchedState = patchState({
+			...state,
+			...legacyPvs,
+		}) as EcaasState & {
+			pvAndBatteries: EcaasState["pvAndBatteries"] & {
+				pvArrays?: unknown;
+			};
+		};
+
+		expect(patchedState.pvAndBatteries.pvs).toEqual({
+			"data": [
+				{
+					"data": {
+						"name": "Legacy PV",
+					},
+					"complete": true,
+				},
+			],
+			"complete": true,
+		});
+		expect(patchedState.pvAndBatteries).not.toHaveProperty("pvArrays");
+	});
+
 	describe("patches legacy domestic hot water data", () => {
 		it("patches legacy hot water outlets", () => {
 			const legacyHotWaterOutlets: Record<string, unknown> = {

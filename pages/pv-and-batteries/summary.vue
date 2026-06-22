@@ -27,11 +27,11 @@ function formatShadingRowsForSummary(shading: ShadingObjectData[]): Record<strin
 	return rows;
 }
 
-const pvArrays = store.pvAndBatteries.pvArrays.data;
+const pvs = store.pvAndBatteries.pvs.data;
 const pvSummary: SummarySection = {
-	id: "pvArrays",
-	label: "PV arrays",
-	data: pvArrays.map(({ data: x }) => {
+	id: "pvs",
+	label: "PVs",
+	data: pvs.map(({ data: x }) => {
 		return {
 			"Name": x.name,
 			"Peak power": dim(x.peakPower, "kilowatt peak"),
@@ -45,8 +45,8 @@ const pvSummary: SummarySection = {
 			"Inverter peak power DC": dim(x.inverterPeakPowerDC, "kilowatt"),
 			"Location of inverter": displaySnakeToSentenceCase(show(x.locationOfInverter)),
 			"Inverter type": displaySnakeToSentenceCase(show(x.inverterType)),
-			"Does anything shade the PV array?": displayBoolean(x.hasShading),
-			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvArrayData, { hasShading: true }>).shading) } : {}),
+			"Does anything shade the PV?": displayBoolean(x.hasShading),
+			...(x.hasShading ? { ...formatShadingRowsForSummary((x as Extract<PvData, { hasShading: true }>).shading) } : {}),
 		};
 	}),
 	editUrl: "/pv-and-batteries",
@@ -93,9 +93,9 @@ const diverterSummary: SummarySection = {
 	<GovTabs v-slot="tabProps" :items="getTabItems([pvSummary])">
 		<SummaryTab :summary="pvSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
-				<h2 class="govuk-heading-m">No PV arrays added</h2>
+				<h2 class="govuk-heading-m">No PVs added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
-					Add PV arrays
+					Add PVs
 				</NuxtLink>
 			</template>
 		</SummaryTab>

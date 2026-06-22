@@ -11,7 +11,7 @@ const title = "Calculating distant shading";
 	</h1>
 	<p class="govuk-body">The output of the PV system is limited by any shading on the panels. These could be distant objects (for example neighbouring buildings, see the distant shading section) and/or nearby objects (for example a chimney stack or a separate part of the roof.)</p>
 	<p class="govuk-body">For further details see 6.2.4.7 calculation procedure in BS EN 15316-4-3:2017.</p>
-	<p class="govuk-body">In the PV array shading section you need to add nearby objects. Nearby shading objects are categorised into four types:</p>
+	<p class="govuk-body">In the PV shading section you need to add nearby objects. Nearby shading objects are categorised into four types:</p>
 	
 	<table class="govuk-table">
 		<thead class="govuk-table__head">
@@ -26,22 +26,22 @@ const title = "Calculating distant shading";
 			<tr class="govuk-table__row">
 				<th scope="row" class="govuk-table__header">Overhangs (1)</th>
 				<td class="govuk-table__cell">
-					Horizontal shading elements located above the PV array, defined by their depth and distance from the array surface.</td>
+					Horizontal shading elements located above the PV, defined by their depth and distance from the array surface.</td>
 			</tr>
 			<tr class="govuk-table__row">
 				<th scope="row" class="govuk-table__header">Side fins (2)</th>
 				<td class="govuk-table__cell">
-					Vertical shading elements located on either side of the PV array, defined by their depth and distance from the array surface.</td>
+					Vertical shading elements located on either side of the PV, defined by their depth and distance from the array surface.</td>
 			</tr>
 			<tr class="govuk-table__row">
 				<th scope="row" class="govuk-table__header">Reveals (setbacks) (3)</th>
 				<td class="govuk-table__cell">
-					Horizontal and vertical shading elements surrounding the PV array, defined by their depth and distance from the array surface. Treated as a combination of equivalent overhangs and side fins due to incomplete variable definitions in the methods described in the BS EN ISO 52016-1:2017 and PD CEN ISO/TR 52016-2:2017. These are unusual with PV arrays.</td>
+					Horizontal and vertical shading elements surrounding the PV, defined by their depth and distance from the array surface. Treated as a combination of equivalent overhangs and side fins due to incomplete variable definitions in the methods described in the BS EN ISO 52016-1:2017 and PD CEN ISO/TR 52016-2:2017. These are unusual with PVs.</td>
 			</tr>
 			<tr class="govuk-table__row">
 				<th scope="row" class="govuk-table__header">Obstacles (4)</th>
 				<td class="govuk-table__cell">
-					Ground-attached objects, such as balustrades, defined by their height, distance from the PV array, and transparency.</td>
+					Ground-attached objects, such as balustrades, defined by their height, distance from the PV, and transparency.</td>
 			</tr>
 		</tbody>
 	</table>

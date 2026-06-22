@@ -17,7 +17,7 @@ const electricityPriorityOptions: Record<string, string> = {
 };
 
 const hasElectricBattery = !!store.pvAndBatteries.electricBattery.data.length;
-const hasPvArray = !!store.pvAndBatteries.pvArrays.data.length;
+const hasPv = !!store.pvAndBatteries.pvs.data.length;
 
 const saveForm = (fields: PvDiverterData) => {
 	store.$patch((state) => {
@@ -120,7 +120,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</div>
 			</FormKit>
 			<FormKit
-				v-if="hasElectricBattery && hasPvArray"
+				v-if="hasElectricBattery && hasPv"
 				id="electricityPriority"
 				type="govRadios"
 				:options="electricityPriorityOptions"

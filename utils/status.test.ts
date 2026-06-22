@@ -3,7 +3,7 @@ import type { GovTagProps } from "~/common.types";
 describe("getSectionStatus util function", () => {
 
 	it("should return a 'not started' form status given a section with no status", () => {
-		const pvAndBatteriesSection = { pvArrays: { data: [] }, electricBattery: { data: [] } };
+		const pvAndBatteriesSection = { pvs: { data: [] }, electricBattery: { data: [] } };
 
 		const actual = getSectionStatus(pvAndBatteriesSection);
 
@@ -24,7 +24,7 @@ describe("getSectionStatus util function", () => {
 			minimumChargeRate: 4.5,
 			maximumDischargeRate: 2.3,
 		};
-		const pvAndBatteriesSection = { pvArrays: { data: [] }, electricBattery: { data: [battery], complete: false } };
+		const pvAndBatteriesSection = { pvs: { data: [] }, electricBattery: { data: [battery], complete: false } };
 
 		const actual = getSectionStatus(pvAndBatteriesSection);
 
@@ -37,7 +37,7 @@ describe("getSectionStatus util function", () => {
 
 
 	it("should return an 'complete' form status given a pvAndBatteriesSection marked as complete", () => {
-		const pvAndBatteriesSection = { pvArrays: { data: [], complete: true }, electricBattery: { data: [], complete: true } };
+		const pvAndBatteriesSection = { pvs: { data: [], complete: true }, electricBattery: { data: [], complete: true } };
 
 		const actual = getSectionStatus(pvAndBatteriesSection);
 

@@ -147,7 +147,7 @@ describe("Diverters", () => {
 	});
 
 	describe("surplus energy", () => {
-		const pvArray: EcaasForm<PvArrayData> = {
+		const pv: EcaasForm<PvData> = {
 			data: {
 				name: "PV 1",
 				peakPower: 4,
@@ -180,8 +180,8 @@ describe("Diverters", () => {
 		beforeEach(async () => {
 			store.$patch({
 				pvAndBatteries: {
-					pvArrays: {
-						data: [pvArray],
+					pvs: {
+						data: [pv],
 					},
 					electricBattery: {
 						data: [fullElectricBattery],

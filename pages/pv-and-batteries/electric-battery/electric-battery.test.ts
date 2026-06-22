@@ -114,7 +114,7 @@ describe("Electric battery", () => {
 	});
 
 	it("sets diverters to incomplete if pv array is present and electric priority field has no value", async () => {
-		const pvArray: EcaasForm<PvArrayData> = {
+		const pv: EcaasForm<PvData> = {
 			data: {
 				name: "PV 1",
 				peakPower: 4,
@@ -141,8 +141,8 @@ describe("Electric battery", () => {
 
 		store.$patch({
 			pvAndBatteries: {
-				pvArrays: {
-					data: [pvArray],
+				pvs: {
+					data: [pv],
 				},
 				diverters: {
 					data: [diverter],

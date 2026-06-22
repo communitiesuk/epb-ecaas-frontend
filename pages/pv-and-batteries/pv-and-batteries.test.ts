@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import PvAndBatteries from "./index.vue";
-import PvSystemForm from "./pv-arrays/[array].vue";
+import PvSystemForm from "./pvs/[pv].vue";
 import ElectricBatteryForm from "./electric-battery/index.vue";
 import DivertersForm from "./diverters/index.vue";
 import { screen } from "@testing-library/vue";
@@ -26,7 +26,7 @@ describe("pv systems and electric battery", () => {
 		store.$reset();
 	});
 
-	const pvArray1: EcaasForm<PvArrayData> = {
+	const pv1: EcaasForm<PvData> = {
 		data: {
 			name: "PV Array 1",
 			peakPower: 4,
@@ -45,16 +45,16 @@ describe("pv systems and electric battery", () => {
 		},
 	};
 
-	const pvArray2: EcaasForm<PvArrayData> = {
+	const pv2: EcaasForm<PvData> = {
 		data: {
-			...pvArray1.data,
+			...pv1.data,
 			name: "PV Array 2",
 		},
 	};
 
-	const pvArray3: EcaasForm<PvArrayData> = {
+	const pv3: EcaasForm<PvData> = {
 		data: {
-			...pvArray1.data,
+			...pv1.data,
 			name: "PV Array 3",
 		},
 	};
@@ -82,36 +82,36 @@ describe("pv systems and electric battery", () => {
 		test("pv array is removed when remove link is clicked", async () => {
 			store.$patch({
 				pvAndBatteries: {
-					pvArrays: {
+					pvs: {
 						...baseForm,
-						data: [pvArray1],
+						data: [pv1],
 					},
 				},
 			});
 
 			await renderSuspended(PvAndBatteries);
 
-			expect(screen.getAllByTestId("pvArrays_items")).toBeDefined();
+			expect(screen.getAllByTestId("pvs_items")).toBeDefined();
 
-			await user.click(screen.getByTestId("pvArrays_remove_0"));
+			await user.click(screen.getByTestId("pvs_remove_0"));
 
-			expect(screen.queryByTestId("pvArrays_items")).toBeNull();
+			expect(screen.queryByTestId("pvs_items")).toBeNull();
 		});
 
 		it("should only remove the pv array object that is clicked", async () => {
 			store.$patch({
 				pvAndBatteries: {
-					pvArrays: {
+					pvs: {
 						...baseForm,
-						data: [pvArray1, pvArray2, pvArray3],
+						data: [pv1, pv2, pv3],
 					},
 				},
 			});
 
 			await renderSuspended(PvAndBatteries);
-			await user.click(screen.getByTestId("pvArrays_remove_1"));
+			await user.click(screen.getByTestId("pvs_remove_1"));
 
-			const populatedList = screen.getByTestId("pvArrays_items");
+			const populatedList = screen.getByTestId("pvs_items");
 
 			expect(within(populatedList).getByText("PV Array 1")).toBeDefined();
 			expect(within(populatedList).getByText("PV Array 3")).toBeDefined();
@@ -121,19 +121,19 @@ describe("pv systems and electric battery", () => {
 		test("pv array is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				pvAndBatteries: {
-					pvArrays: {
-						data: [pvArray1, pvArray2],
+					pvs: {
+						data: [pv1, pv2],
 					},
 				},
 			});
 
 			await renderSuspended(PvAndBatteries);
-			await userEvent.click(screen.getByTestId("pvArrays_duplicate_0"));
-			await userEvent.click(screen.getByTestId("pvArrays_duplicate_0"));
-			await userEvent.click(screen.getByTestId("pvArrays_duplicate_2"));
-			await userEvent.click(screen.getByTestId("pvArrays_duplicate_2"));
+			await userEvent.click(screen.getByTestId("pvs_duplicate_0"));
+			await userEvent.click(screen.getByTestId("pvs_duplicate_0"));
+			await userEvent.click(screen.getByTestId("pvs_duplicate_2"));
+			await userEvent.click(screen.getByTestId("pvs_duplicate_2"));
 
-			expect(screen.queryAllByTestId("pvArrays_item").length).toBe(6);
+			expect(screen.queryAllByTestId("pvs_item").length).toBe(6);
 			expect(screen.getByText("PV Array 1")).toBeDefined();
 			expect(screen.getByText("PV Array 1 (1)")).toBeDefined();
 			expect(screen.getByText("PV Array 1 (2)")).toBeDefined();
@@ -196,15 +196,15 @@ describe("pv systems and electric battery", () => {
 	test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
 		store.$patch({
 			pvAndBatteries: {
-				pvArrays: {
-					data: [pvArray1],
+				pvs: {
+					data: [pv1],
 				},
 			},
 		});
 
 		await renderSuspended(PvAndBatteries);
 
-		expect(screen.getByTestId("pvArrays_status_0").textContent).toBe(
+		expect(screen.getByTestId("pvs_status_0").textContent).toBe(
 			formStatus.inProgress.text,
 		);
 	});
@@ -217,7 +217,7 @@ describe("pv systems and electric battery", () => {
 		const addCompletePvAndBatteryToStore = async () => {
 			store.$patch({
 				pvAndBatteries: {
-					pvArrays: { data: [{ ...pvArray1, complete: true }] },
+					pvs: { data: [{ ...pv1, complete: true }] },
 					electricBattery: { data: [{ ...electricBattery, complete: true }] },
 					diverters: { data: [{ ...diverter1, complete: true }] },
 				},
@@ -233,7 +233,7 @@ describe("pv systems and electric battery", () => {
 		});
 
 		const pvAndBatteryForms = {
-			pvArrays: PvSystemForm,
+			pvs: PvSystemForm,
 			electricBattery: ElectricBatteryForm,
 			diverters: DivertersForm,
 		};
@@ -243,7 +243,7 @@ describe("pv systems and electric battery", () => {
 		it("disables the Mark section as complete button when a section is incomplete", async () => {
 			store.$patch({
 				pvAndBatteries: {
-					pvArrays: { data: [{ ...pvArray1, complete: false }] },
+					pvs: { data: [{ ...pv1, complete: false }] },
 					electricBattery: { data: [{ ...electricBattery, complete: false }] },
 				},
 			});
@@ -289,36 +289,36 @@ describe("pv systems and electric battery", () => {
 			});
 
 			it("marks each PV and battery section as complete", () => {
-				const { pvArrays, electricBattery } = store.pvAndBatteries;
-				expect(pvArrays?.complete).toBe(true);
+				const { pvs, electricBattery } = store.pvAndBatteries;
+				expect(pvs?.complete).toBe(true);
 				expect(electricBattery?.complete).toBe(true);
 			});
 
 			it("marks section as not complete if an item is removed", async () => {
-				await user.click(screen.getByTestId("pvArrays_remove_0"));
+				await user.click(screen.getByTestId("pvs_remove_0"));
 				await user.click(screen.getByTestId("electricBattery_remove_0"));
 
-				const { pvArrays, electricBattery } = store.pvAndBatteries;
-				expect(pvArrays?.complete).toBe(false);
+				const { pvs, electricBattery } = store.pvAndBatteries;
+				expect(pvs?.complete).toBe(false);
 				expect(electricBattery?.complete).toBe(false);
 			});
 
 			it("marks section as not complete if an item is duplicated", async () => {
-				await user.click(screen.getByTestId("pvArrays_duplicate_0"));
+				await user.click(screen.getByTestId("pvs_duplicate_0"));
 				// await user.click(screen.getByTestId("electricBattery_duplicate_0"));
 
-				const { pvArrays } = store.pvAndBatteries;
-				expect(pvArrays?.complete).toBe(false);
+				const { pvs } = store.pvAndBatteries;
+				expect(pvs?.complete).toBe(false);
 				// expect(electricBattery?.complete).toBe(false);
 			});
 
 			it("marks section as not complete after adding a new item", async () => {
 				for (const section of Object.keys(store.pvAndBatteries) as SectionKey[]) {
 
-					if (section === "pvArrays") {
+					if (section === "pvs") {
 						await renderSuspended(pvAndBatteryForms[section], {
 							route: {
-								path: "/pv-and-batteries/pv-arrays/create",
+								path: "/pv-and-batteries/pvs/create",
 							},
 						});
 					} else {
@@ -336,7 +336,7 @@ describe("pv systems and electric battery", () => {
 			it("marks section as not complete after editing an existing item", async () => {
 				for (const section of Object.keys(store.pvAndBatteries) as SectionKey[]) {
 
-					if (section === "pvArrays") {
+					if (section === "pvs") {
 						await renderSuspended(pvAndBatteryForms[section], {
 							route: { params: { "system": "0" } },
 						});
