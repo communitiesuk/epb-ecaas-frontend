@@ -1037,6 +1037,12 @@ export const heatNetworkDataZod = pcdbProduct.extend({
 
 export type HeatNetworkData = z.infer<typeof heatNetworkDataZod>;
 
+const _typeOfHeatNetwork = z.enum(["heatNetwork"]);
+
+export const typeOfHeatNetworkProduct = _typeOfHeatNetwork.enum;
+
+export type HeatNetworkProductType = z.infer<typeof _typeOfHeatNetwork>;
+
 const _typeOfWaterStorage = z.enum(["smartHotWaterTank"]);
 
 export const typeOfWaterStorage = _typeOfWaterStorage.enum;

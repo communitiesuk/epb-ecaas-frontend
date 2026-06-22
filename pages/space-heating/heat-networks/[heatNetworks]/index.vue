@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { uniqueName, getUrl, type HeatNetworkData } from "#imports"; 
+import type { HeatNetworkData } from "~/stores/ecaasStore.schema";
+import { getUrl } from "~/utils/page";
+import { v4 as uuidv4 } from "uuid";
+import { uniqueName } from "#imports";
 
 const title = "Heat network";
 const store = useEcaasStore();
 const route = useRoute();
-
 const { autoSaveElementForm, getStoreIndex } = useForm();
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
 
 const heatNetworkStoreData = store.spaceHeating.heatNetworks?.data;
 const index = getStoreIndex(heatNetworkStoreData);
-const heatNetworkData = useItemToEdit("heatNetworks", heatNetworkStoreData);
-const model = ref(heatNetworkData?.data as HeatNetworkData);
+const heatNetworkData = heatNetworkStoreData[index] as EcaasForm<HeatNetworkData>;
+const model = ref(heatNetworkData?.data);
+const id = heatNetworkData?.data.id ?? uuidv4();
 
 const heatNetworkTypes = {
 	sleevedDistrictHeatNetwork: "Sleeved district heat network",
@@ -25,7 +28,7 @@ const saveForm = (fields: HeatNetworkData) => {
 
 		heatNetworks.data[index] = {
 			data: {
-				id: fields.id,
+				id,
 				name: fields.name,
 				typeOfHeatNetwork: fields.typeOfHeatNetwork,
 				productReference: fields.productReference,
@@ -39,15 +42,20 @@ const saveForm = (fields: HeatNetworkData) => {
 	navigateTo("/space-heating");
 };
 
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
+
 autoSaveElementForm<HeatNetworkData>({
 	model,
 	storeData: store.spaceHeating.heatNetworks,
 	defaultName: "Heat network",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= id;
 		state.spaceHeating.heatNetworks.data[index] = newData;
 		state.spaceHeating.heatNetworks.complete = false;
 	},
 });
+
 </script>
 
 <template>
@@ -75,8 +83,6 @@ autoSaveElementForm<HeatNetworkData>({
 			:validation-messages="{
 				uniqueName: 'An element with this name in domestic hot water or space heating already exists. Please enter a unique name.'
 			}" />
-	
-	
 		<FieldsSelectPcdbProduct
 			id="selectHeatNetwork"
 			name="productReference"
@@ -84,7 +90,7 @@ autoSaveElementForm<HeatNetworkData>({
 			help="Select a heat network product from the PCDB using the button below"
 			:selected-product-reference="model.productReference"
 			:selected-sub-heat-network-name="model.subHeatNetworkName"
-			:selected-product-type="model.typeOfHeatNetwork"
+			selected-product-type="heatNetwork"
 			:page-index="index"
 			:page-url="route.fullPath"
 		/>

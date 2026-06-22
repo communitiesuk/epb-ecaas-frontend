@@ -373,7 +373,6 @@ export const heatSourceProductTypesDisplay = {
 
 export type BoilerTypeDisplay = "Combi boiler" | "Regular boiler";
 export type BoilerLocationDisplay = "Heated space" | "Unheated space";
-export type HeatNetworkTypeDisplay = "Sleeved district heat network" | "Unsleeved district heat network" | "Communal heat network";
 export type HeatBatteryTypeDisplay = "PCM" | "Dry core";
 export type LocationOfCollectorLoopPipingTypeDisplay = "Outside" | "Heated space" | "Unheated space";
 
@@ -403,6 +402,13 @@ export const DHWHeatSourceTypesWithDisplay = {
 export function displayDHWHeatSourceType(type: DHWHeatSourceType | undefined): DHWHeatSourceTypeDisplay | typeof emptyValueRendering {
 	return DHWHeatSourceTypesWithDisplay[type!] ?? emptyValueRendering;
 }
+
+export const heatNetworkProductTypeDisplay = {
+	"heatNetwork": pluralize("Heat network"),
+} as const satisfies Record<HeatNetworkProductType, (plural: boolean) => string>;
+
+export type HeatNetworkTypeDisplay = "Sleeved district heat network" | "Unsleeved district heat network" | "Communal heat network";
+
 
 export type HeatEmitterDisplay = "Wet distribution system (Radiators, underfloor heating, etc.)" | "Warm air heater" | "Instant electric heater" | "Electric storage heater";
 
