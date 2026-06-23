@@ -16,5 +16,5 @@ const { product: data } = defineProps<{ product: Product }>();
 
 	<HemDefaultProductInset v-if="isHemDefaultProduct(data)" />
 
-	<ProductDetailsAirPressureShower v-if="!!data && data.technologyType === 'AirPoweredShowers'" :product="data" />
+	<ProductDetailsWwhrs v-if="!!data && data.technologyType === 'InstantaneousWwhrSystem'" :product="data" />
 </template>

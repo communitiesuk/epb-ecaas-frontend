@@ -5,7 +5,7 @@ import ProductDetails from "./[id]/index.vue";
 import { screen } from "@testing-library/vue";
 import type { Product } from "~/pcdb/pcdb.types";
 
-describe("Hot water outlet product details", () => {
+describe("WWHRS product details", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
@@ -19,30 +19,31 @@ describe("Hot water outlet product details", () => {
 	mockNuxtImport("useRoute", () => mockRoute);
 	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
-	const airPressureShower: Partial<HotWaterOutletsData> = {
-		typeOfHotWaterOutlet: "mixedShower",
-		name: "Mixer shower",
-		isAirPressureShower: true,
+	const wwhrs: Partial<WwhrsData> = {
+		id: "1c1bfa48-d4f5-4438-af55-5e7523ddfd62",
+		name: "WWHRS",
+		coldWaterSource: "mainsWater",
 	};
 
-	const showerProduct: Partial<Product> = {
+	const wwhrsProduct: Partial<Product> = {
 		id: "1000",
 		brandName: "Brand",
-		modelName: "Air pressure shower",
-		technologyType: "AirPoweredShowers",
+		modelName: "Model",
+		modelQualifier: "System A",
+		technologyType: "InstantaneousWwhrSystem",
 	};
 
-	const hemDefaultShowerProduct: Partial<Product> = {
-		...showerProduct,
+	const hemDefaultWwhrsProduct: Partial<Product> = {
+		...wwhrsProduct,
 		brandName: "HEM Default",
 	};
 
 	beforeEach(() => {
 		store.$patch({
 			domesticHotWater: {
-				hotWaterOutlets: {
+				wwhrs: {
 					data: [
-						{ data: airPressureShower },
+						{ data: wwhrs },
 					],
 				},
 			},
@@ -50,14 +51,14 @@ describe("Hot water outlet product details", () => {
 		
 		mockRoute.mockReturnValue({
 			params: {
-				outlet: "0",
-				products: "air-pressure-shower",
+				system: "0",
+				products: "wwhrs",
 			},
-			path: "/0/air-pressure-shower",
+			path: "/0/wwhrs",
 		});
 
 		mockFetch.mockReturnValue({
-			data: ref(showerProduct),
+			data: ref(wwhrsProduct),
 		});
 	});
 
@@ -74,11 +75,11 @@ describe("Hot water outlet product details", () => {
 
 		mockRoute.mockReturnValue({
 			params: {
-				outlet: "0",
-				products: "air-source-invalid",
+				system: "0",
+				products: "wwhrs-invalid",
 				id: "1234",
 			},
-			path: "/0/air-source-invalid/1234",
+			path: "/0/wwhrs-invalid/1234",
 		});
 
 		// Act
@@ -100,7 +101,7 @@ describe("Hot water outlet product details", () => {
 		await renderSuspended(ProductDetails);
 
 		// Assert
-		expect(screen.getByTestId("backLink").innerText).toBe("Back to showers");
+		expect(screen.getByTestId("backLink").innerText).toBe("Back to waste water heat recovery systems");
 	});
 
 	test("Store data updates when product is selected", async () => {
@@ -108,13 +109,10 @@ describe("Hot water outlet product details", () => {
 		await renderSuspended(ProductDetails);
 		await user.click(screen.getByTestId("selectProductButton"));
 
-		const hotWaterOutlet = store.domesticHotWater.hotWaterOutlets.data[0]?.data;
+		const wwhrsItem = store.domesticHotWater.wwhrs.data[0]?.data;
 
 		// Assert
-		const productReference = "airPressureShowerProductReference" in hotWaterOutlet! ?
-			hotWaterOutlet.airPressureShowerProductReference : undefined;
-			
-		expect(productReference).toBe("1000");
+		expect(wwhrsItem?.productReference).toBe("1000");
 	});
 
 	test("Does not display HEM default inset when product is not HEM Default", async () => {
@@ -128,7 +126,7 @@ describe("Hot water outlet product details", () => {
 	test("Displays HEM default inset when product brand is HEM Default", async () => {
 		// Arrange
 		mockFetch.mockReturnValue({
-			data: ref(hemDefaultShowerProduct),
+			data: ref(hemDefaultWwhrsProduct),
 		});
 
 		// Act
@@ -138,12 +136,12 @@ describe("Hot water outlet product details", () => {
 		expect((await screen.findByTestId("hemDefaultProductInset"))).toBeDefined();
 	});
 
-	test("Navigates to hot water outlets page when product is selected", async () => {
+	test("Navigates to WWHRS page when product is selected", async () => {
 		// Act
 		await renderSuspended(ProductDetails);
 		await user.click(screen.getByTestId("selectProductButton"));
 
 		// Assert
-		expect(mockNavigateTo).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets/0");
+		expect(mockNavigateTo).toHaveBeenCalledWith("/domestic-hot-water/wwhrs/0");
 	});
 });

@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, Schem
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, ShowerProductType, TypeOfBoiler, WaterStorageProductType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, ShowerProductType, TypeOfBoiler, WaterStorageProductType, WwhrsProductType } from "~/stores/ecaasStore.schema";
 import type { Split } from "type-fest";
 
 export const emptyValueRendering = "-";
@@ -471,6 +471,10 @@ export const hotWaterOutletTypes = {
 export const showerProductTypesDisplay = {
 	"airPressureShower": pluralize("Shower"),
 } as const satisfies Record<ShowerProductType, (plural: boolean) => string>;
+
+export const wwhrsProductTypeDisplay = {
+	"wwhrs": pluralize("Waste water heat recovery system"),
+} as const satisfies Record<WwhrsProductType, (plural: boolean) => string>;
 
 export function displayHotWaterOutletType(type: HotWaterOutletType | undefined): HotWaterOutletDisplay | typeof emptyValueRendering {
 	if (!type) {
