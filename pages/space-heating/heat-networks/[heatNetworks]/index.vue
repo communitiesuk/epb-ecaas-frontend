@@ -86,7 +86,7 @@ autoSaveElementForm<HeatNetworkData>({
 		<FieldsSelectPcdbProduct
 			id="selectHeatNetwork"
 			name="productReference"
-			label="Select a product"
+			label="Select a heat network"
 			help="Select a heat network product from the PCDB using the button below"
 			:selected-product-reference="model.productReference"
 			:selected-sub-heat-network-name="model.subHeatNetworkName"

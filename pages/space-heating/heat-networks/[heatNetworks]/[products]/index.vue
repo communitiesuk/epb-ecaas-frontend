@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { productTypeMap, type HeatNetworkProductType } from "#imports";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
-import { productTypeMap, type HeatNetworkData } from "~/stores/ecaasStore.schema";
 
-definePageMeta({ layout: false });
+definePageMeta({ layout: "one-column" });
 
 const store = useEcaasStore();
-const { pageId, title, index, searchModel, searchData } = useProductsPage("heatNetworks");
+const { pageId, title, index, searchModel, searchData } = useProductsPage("heatNetwork");
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
@@ -15,10 +15,13 @@ const { data: { value } } = await useFetch("/api/products", {
 
 const { pagination } = searchData(value?.data ?? []);
 
-const selectProduct = (product: DisplayProduct) => {
+const selectProduct = async (product: DisplayProduct) => {
+	window.console.log("index:", index);
+	window.console.log("networks:", store.spaceHeating.heatNetworks.data);
 	store.$patch((state) => {
 		(state.spaceHeating.heatNetworks.data[index]!.data as HeatNetworkData).productReference = product.id.toString();
 	});
+
 
 	navigateTo(getUrl("heatNetworks").replace(":heatNetwork", `${index}`));
 };
