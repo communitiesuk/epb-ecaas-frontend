@@ -470,7 +470,6 @@ export const hotWaterOutletTypes = {
 
 export const showerProductTypesDisplay = {
 	"airPressureShower": pluralize("Shower"),
-	"wwhrs": pluralize("Waste water heat recovery system"),
 } as const satisfies Record<ShowerProductType, (plural: boolean) => string>;
 
 export function displayHotWaterOutletType(type: HotWaterOutletType | undefined): HotWaterOutletDisplay | typeof emptyValueRendering {

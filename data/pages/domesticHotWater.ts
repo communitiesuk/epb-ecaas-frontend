@@ -37,6 +37,13 @@ const domesticHotWaterPages = [
 		parentId: "domesticHotWater",
 	},
 	{
+		id: "wwhrsProducts",
+		title: "Select a waste water heat recovery system",
+		url: "/domestic-hot-water/wwhrs/:system/wwhrs",
+		type: "task",
+		parentId: "domesticHotWater",
+	},
+	{
 		id: "waterStorage",
 		title: "Water storage",
 		url: "/domestic-hot-water/water-storage/:waterstorage",
@@ -173,13 +180,6 @@ const domesticHotWaterPages = [
 		id: "airPressureShowerProducts",
 		title: "Select an air pressure shower",
 		url: "/domestic-hot-water/hot-water-outlets/:outlet/air-pressure-shower",
-		type: "task",
-		parentId: "hotWaterOutlets",
-	},
-	{
-		id: "wwhrsProducts",
-		title: "Select a waste water heat recovery system",
-		url: "/domestic-hot-water/hot-water-outlets/:outlet/wwhrs",
 		type: "task",
 		parentId: "hotWaterOutlets",
 	},
