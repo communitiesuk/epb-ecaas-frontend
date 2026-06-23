@@ -14,7 +14,7 @@ describe("linear thermal bridges", () => {
 
 	const state: EcaasForm<LinearThermalBridgeData> = {
 		data: {
-			name: "E1: Steel lintel with perforated steel base plate",
+			name: "E1",
 			typeOfThermalBridge: "E1",
 			linearThermalTransmittance: 1,
 			length: 2,
@@ -127,7 +127,7 @@ describe("linear thermal bridges", () => {
 			await user.tab();
 
 			const actualLinearBridge = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[0]!;
-			expect(actualLinearBridge.data.name).toBe("E1: Steel lintel with perforated steel base plate");
+			expect(actualLinearBridge.data.name).toBe("E1");
 			expect(actualLinearBridge.data.length).toBeUndefined();
 		});
 
@@ -144,7 +144,7 @@ describe("linear thermal bridges", () => {
 
 			const actualLinearBridge = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[0]!;
 
-			expect(actualLinearBridge.data.name).toBe("E1: Steel lintel with perforated steel base plate");
+			expect(actualLinearBridge.data.name).toBe("E1");
 			expect(actualLinearBridge.data.linearThermalTransmittance).toBe(5);
 			expect(actualLinearBridge.data.length).toBeUndefined();
 		});

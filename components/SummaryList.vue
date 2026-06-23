@@ -44,7 +44,21 @@ function transposeData(data: SummaryData[]): string[][] {
 
 const props = defineProps<{ data: SummaryData | SummaryData[]; id: string; stickyFirstColumn?: boolean; transposed?: boolean }>();
 
-const overflow = computed(() => Array.isArray(props.data) && props.data.length > 3);
+const transposedData = computed(() => {
+	if (!Array.isArray(props.data)) return [];
+
+	return transposeData(props.data);
+});
+
+const overflow = computed(() => {
+	if (!Array.isArray(props.data) || !props.data.length) return false;
+
+	if (props.transposed) {
+		return (transposedData.value[0]?.length ?? 0) > 3;
+	}
+
+	return props.data.length > 3;
+});
 
 const scrollContainer = ref<HTMLElement | null>(null);
 const isHorizontallyScrolled = ref(false);
@@ -125,7 +139,7 @@ const updateScrollState = () => {
 		</dl>
 		<table v-else-if="Array.isArray(data) && data.length" class="govuk-summary-list" data-testid="summary-transposed-table">
 			<tbody>
-				<template v-for="(row, rowIndex) in transposeData(data)" :key="`row-${rowIndex}`">
+				<template v-for="(row, rowIndex) in transposedData" :key="`row-${rowIndex}`">
 					<tr class="govuk-summary-list__row" :data-testid="`summary-${id}-row-${rowIndex}`">
 						<template v-for="(cell, cellIndex) in row" :key="`cell-${cellIndex}`">
 							<td

@@ -128,7 +128,7 @@ const getDefaultName = (typeOfThermalBridge: SchemaThermalBridgeJunctionType): s
 	const options = junctionTypeOptions.find(o => Object.hasOwn(o, typeOfThermalBridge as PropertyKey)) as Record<string, string>;
 
 	if (options) {
-		return options[typeOfThermalBridge as string];
+		return options[typeOfThermalBridge as string]?.split(":")[0];
 	}
 };
 

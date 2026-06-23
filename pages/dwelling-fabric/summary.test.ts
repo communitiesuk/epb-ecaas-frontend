@@ -2033,19 +2033,21 @@ describe("dwelling space thermal bridges", () => {
 		await renderSuspended(Summary);
 
 		const firstRow = await screen.findByTestId("summary-dwellingSpaceLinearThermalBridging-row-0");
-		expect(firstRow.closest("table")?.parentElement?.classList.contains("govuk-summary-list-overflow--sticky-first-column")).toBe(false);
-		expect(firstRow.querySelector("td")?.textContent).toBe("Type of thermal bridge");
+		expect(firstRow.closest("table")?.parentElement?.classList.contains("govuk-summary-list-overflow--sticky-first-column")).toBe(true);
+		expect(firstRow.querySelector("td")?.textContent).toBe("Name");
 		expect(firstRow.querySelectorAll("td")[1]?.textContent).toBe("Linear thermal transmittance");
 		expect(firstRow.querySelectorAll("td")[2]?.textContent).toBe("Length of thermal bridge");
-		expect(firstRow.querySelectorAll("td")[3]?.textContent).toBe("Reference");
+		expect(firstRow.querySelectorAll("td")[3]?.textContent).toBe("Type of thermal bridge");
+		expect(firstRow.querySelectorAll("td")[4]?.textContent).toBe("Reference");
 
 		for (let i = 0; i < thermalBridgingData.dwellingSpaceLinearThermalBridges.data.length; i++) {
 			const row = await screen.findByTestId(`summary-dwellingSpaceLinearThermalBridging-row-${i + 1}`);
 			const data = thermalBridgingData.dwellingSpaceLinearThermalBridges.data[i]?.data;
-			expect(row.querySelectorAll("td")[0]?.textContent).toBe(data?.typeOfThermalBridge);
+			expect(row.querySelectorAll("td")[0]?.textContent).toBe(data?.name);
 			expect(row.querySelectorAll("td")[1]?.textContent).toBe(`${data?.linearThermalTransmittance} ${wattsPerMeterKelvin.suffix}`);
 			expect(row.querySelectorAll("td")[2]?.textContent).toBe(`${data?.length} ${metre.suffix}`);
-			expect(row.querySelectorAll("td")[3]?.textContent).toBe(data?.reference);
+			expect(row.querySelectorAll("td")[3]?.textContent).toBe(data?.typeOfThermalBridge);
+			expect(row.querySelectorAll("td")[4]?.textContent).toBe(data?.reference);
 		}
 	});
 
