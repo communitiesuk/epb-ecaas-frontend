@@ -1,5 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import type { DisplayProduct, Product } from "~/pcdb/pcdb.types";
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
 import ProductDetails from "./[id]/index.vue";
 import { screen } from "@testing-library/vue";
 import type { H3Error } from "h3";
@@ -34,6 +35,16 @@ describe("Heat network details", async () => {
 	mockNuxtImport("useFetch", () => mockFetch);
 	mockNuxtImport("useRoute", () => mockRoute);
 	mockNuxtImport("navigateTo", () => mockNavigateTo);
+
+	const route: Partial<RouteLocationNormalizedLoadedGeneric> = {
+		params: {
+			heatNetwork: "0",
+			products: "heat-network",
+			id: "1000",
+		},
+		query: { "testDataId": "60" },
+		path: "/0/heat-networks/1000",
+	};
     
 	beforeEach(() => {
 		store.$patch({
@@ -45,16 +56,9 @@ describe("Heat network details", async () => {
 				},
 			},
 		});
-    
-		mockRoute.mockReturnValue({
-			params: {
-				heatNetwork: "0",
-				products: "heat-network",
-				id: "1000",
-			},
-			path: "/0/heat-networks/1000",
-		});
-    
+		
+		mockRoute.mockReturnValue(route);
+		
 		mockFetch.mockReturnValue({
 			data: ref(product),
 		});
@@ -69,14 +73,7 @@ describe("Heat network details", async () => {
 
 	test("Displays heat network details when product is a heat network", async () => {
 	// Arrange
-		mockRoute.mockReturnValue({
-			params: {
-				heatNetwork: "1",
-				products: "heat-network",
-				id: "1000",
-			},
-			path: "/1/heat-network/1000",
-		});
+		mockRoute.mockReturnValue(route);
 
 		mockFetch.mockReturnValue({
 			data: ref({

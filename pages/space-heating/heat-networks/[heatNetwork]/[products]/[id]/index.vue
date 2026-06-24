@@ -10,7 +10,7 @@ definePageMeta({ layout: "one-column" });
 
 const store = useEcaasStore();
 const router = useRouter();
-const { params } = useRoute();
+const { params, query } = useRoute();
 
 const heatNetworkType = kebabToCamelCase(params.products as string);
 
@@ -25,7 +25,7 @@ const pageId = `${heatNetworkType}Products1` as PageId;
 const productType = heatNetworkProductTypeDisplay[heatNetworkType as HeatNetworkProductType];
 
 
-const data = await useProductDetails(params.id as string);
+const data = await useProductDetails(params.id as string, query.testDataId as string);
 
 const backUrl = getUrl(pageId)
 	.replace(":heatNetwork", params.heatNetwork as string);

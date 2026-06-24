@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { technologyGroups, type Product, type TechnologyGroup } from "~/pcdb/pcdb.types";
+import type { Product } from "~/pcdb/pcdb.types";
 
 const { product: data } = defineProps<{
 	product: Product;

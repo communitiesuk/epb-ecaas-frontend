@@ -17,7 +17,9 @@ const { pagination } = searchData(value?.data ?? []);
 
 const selectProduct = async (product: DisplayProduct) => {
 	store.$patch((state) => {
-		(state.spaceHeating.heatNetworks.data[index]!.data as HeatNetworkData).productReference = product.id.toString();
+		const heatNetworkData = state.spaceHeating.heatNetworks.data[index]!.data as HeatNetworkData;
+		heatNetworkData.productReference = product.id.toString();
+		heatNetworkData.subHeatNetworkName = product.subheatNetworkName;
 	});
 
 
