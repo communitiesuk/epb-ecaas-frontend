@@ -33,20 +33,15 @@ describe("domestic hot water mapper", () => {
 	const heatSourceId = "efa1b2c3-d4e5-6789-0123-456789abcdef";
 	const heatSourceIdInSH = "efa1b2c3-d4e5-6789-0123-456789abcd12";
 
-	const heatNetwork = {
+	const heatNetwork: EcaasForm<HeatNetworkData> = {
 		data: {
-			id: "heat-network-123",
-			name: "Heat Network 123",
-			coldWaterSource: "mainsWater",
-			typeOfHeatSource: "heatNetwork",
-			productReference: "HN-12345",
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8f",
+			name: "Heat Network",
+			productReference: "42",
 			typeOfHeatNetwork: "communalHeatNetwork",
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-			subHeatNetworkName: "sub-heat-network-123",
 		},
 		complete: true,
-	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+	};
 	// water storage
 
 	const storageTank = {
@@ -586,9 +581,15 @@ describe("domestic hot water mapper", () => {
 			)("maps a $heatSource.data.typeOfHeatSource heat source attached to a $waterStorage.data.typeOfWaterStorage water storage",
 				async ({ heatSource, waterStorage, expected }) => {
 					store.$patch({
+						spaceHeating: {
+							heatNetworks: {
+								data: [heatNetwork],
+								complete: true,
+							},
+						},
 						domesticHotWater: {
 							heatSources: {
-								data: [heatSource, heatNetwork],
+								data: [heatSource],
 								complete: true,
 							},
 							waterStorage: {
@@ -685,9 +686,15 @@ describe("domestic hot water mapper", () => {
 			])("maps a $heatSource.data.typeOfHeatSource dhw heat source attached to no water storage",
 				async ({ heatSource, expected }) => {
 					store.$patch({
+						spaceHeating: {
+							heatNetworks: {
+								data: [heatNetwork],
+								complete: true,
+							},
+						},
 						domesticHotWater: {
 							heatSources: {
-								data: [heatSource, heatNetwork],
+								data: [heatSource],
 								complete: true,
 							},
 							waterStorage: {
@@ -1048,8 +1055,12 @@ describe("domestic hot water mapper", () => {
 				async ({ heatSource, dhwHeatSource, waterStorage, expected }) => {
 					store.$patch({
 						spaceHeating: {
+							heatNetworks: {
+								data: [heatNetwork],
+								complete: true,
+							},
 							heatSource: {
-								data: [heatSource, heatNetwork],
+								data: [heatSource],
 								complete: true,
 							},
 						},
@@ -1078,16 +1089,16 @@ describe("domestic hot water mapper", () => {
 			it("throws an explicit error when there is no non-heat-network DHW reference heat source", async () => {
 				store.$patch({
 					spaceHeating: {
+						heatNetworks: {
+							data: [heatNetwork],
+							complete: true,
+						},
 						heatSource: {
 							data: [existingHeatPump],
 							complete: true,
 						},
 					},
 					domesticHotWater: {
-						heatSources: {
-							data: [heatNetwork],
-							complete: true,
-						},
 						waterStorage: {
 							data: [storageTank],
 							complete: true,
@@ -1196,8 +1207,12 @@ describe("domestic hot water mapper", () => {
 				async ({ heatSource, dhwHeatSource, expected }) => {
 					store.$patch({
 						spaceHeating: {
+							heatNetworks: {
+								data: [heatNetwork],
+								complete: true,
+							},
 							heatSource: {
-								data: [heatSource, heatNetwork],
+								data: [heatSource],
 								complete: true,
 							},
 						},

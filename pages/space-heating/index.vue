@@ -56,10 +56,11 @@ function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
 function handleRemove(type: "heatNetworks" | "heatSource" | "heatEmitters" | "heatingControls", index: number) {
 	if (type === "heatSource") {
 		duplicationError.value = false;
-		const heatSource = store.spaceHeating.heatSource.data[index];
-		if (heatSource?.data?.typeOfHeatSource === "heatNetwork") {
-			clearAssociationsWithHeatNetwork(heatSource.data.id);
-		}
+	}
+
+	if (type === "heatNetworks") {
+		const heatNetwork = store.spaceHeating.heatNetworks.data[index];
+		clearAssociationsWithHeatNetwork(heatNetwork?.data.id);
 	}
 
 	removeEntry(type, index);

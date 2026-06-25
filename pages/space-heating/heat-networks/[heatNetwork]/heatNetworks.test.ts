@@ -40,6 +40,19 @@ describe("Heat Networks", () => {
 		await user.tab();
 	};
 
+	test("heat networks displays form correctly", async () => {
+		await renderSuspended(HeatNetworks, {
+			route: {
+				params: { "heatNetwork": "create" },
+			},
+		});
+		await populateValidForm();
+
+		expect(screen.getByTestId("name")).toBeDefined();
+		expect(screen.getByTestId("selectHeatNetwork")).toBeDefined();
+		expect(screen.getByTestId("typeOfHeatNetwork")).toBeDefined();
+	});
+
 	test("heat network data is saved to store state when form is valid", async () => {
 
 		vi.mocked(uuidv4).mockReturnValue(heatNetwork.data.id as unknown as Buffer);
@@ -191,6 +204,33 @@ describe("Heat Networks", () => {
 			expect(screen.getByTestId("pcdbHeatNetworkProductData")).toBeDefined();
 			expect(screen.getByTestId("productData_subHeatNetworkName").textContent).toBe("Sub 2");
 		});
+	});
+
+	test("does not clear selected product when type of heat network changes", async () => {
+		const heatNetwork: HeatNetworkData = {
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+			name: "Test heat network",
+			productReference: "HEATNETWORK_SMALL",
+			typeOfHeatNetwork: "communalHeatNetwork",
+		};
+
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [{ data: heatNetwork }],
+				},
+			},
+		});
+
+		await renderSuspended(HeatNetworks, {
+			route: {
+				params: { "heatNetwork": "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfHeatNetwork_sleevedDistrictHeatNetwork"));
+
+		expect((store.spaceHeating.heatNetworks.data[0]!.data as HeatNetworkData).productReference).toBe("HEATNETWORK_SMALL");
 	});
     
 	describe("partially saving data", () => {

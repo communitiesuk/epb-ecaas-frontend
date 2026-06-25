@@ -68,10 +68,9 @@ describe("Space heating - heat sources", () => {
 			});
 
 			test("maps heat pump connected to a heat network", () => {
-				const heatNetwork: HeatSourceData = {
+				const heatNetwork: HeatNetworkData = {
 					id: "heatNetwork1Id",
 					name: "Communal heat network",
-					typeOfHeatSource: "heatNetwork",
 					typeOfHeatNetwork: "communalHeatNetwork",
 					productReference: "9999",
 					subHeatNetworkName: "subHeatNetwork1Name",
@@ -88,11 +87,11 @@ describe("Space heating - heat sources", () => {
 				};
 				store.$patch({
 					spaceHeating: {
+						heatNetworks: {
+							data: [{ data: heatNetwork, complete: true }],
+						},
 						heatSource: {
-							data: [
-								{ data: heatNetwork, complete: true },
-								{ data: heatPumpConnectedToNetwork, complete: true },
-							],
+							data: [{ data: heatPumpConnectedToNetwork, complete: true }],
 							complete: true,
 						},
 					},
@@ -381,10 +380,9 @@ describe("Space heating - heat sources", () => {
 			associatedHeatNetworkId: "hn2",
 			productReference: "HIU-123",
 		};
-		const heatNetwork: HeatSourceData = {
+		const heatNetwork: HeatNetworkData = {
 			id: "hn2",
 			name: "Sleeved DHN",
-			typeOfHeatSource: "heatNetwork",
 			typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
 			productReference: "SHDN-123",
 			subHeatNetworkName: "shn1",
@@ -393,11 +391,11 @@ describe("Space heating - heat sources", () => {
 			const hiuConnected = { ...hiu, isConnectedToHeatNetwork: true, associatedHeatNetworkId: "hn2" };
 			store.$patch({
 				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork, complete: true }],
+					},
 					heatSource: {
-						data: [
-							{ data: heatNetwork, complete: true },
-							{ data: hiuConnected, complete: true },
-						],
+						data: [{ data: hiuConnected, complete: true }],
 						complete: true,
 					},
 				},

@@ -176,12 +176,6 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 			}
 		}
 
-		if (heatSourceData.typeOfHeatSource === "heatNetwork" && isDisplayProduct(product) && product.technologyType === "HeatNetworks") {
-			heatSourceData.productReference = product.productId ?? product.id;
-			heatSourceData.subHeatNetworkName = product.subheatNetworkName;
-			return;
-		}
-
 		(heatSourceData as PcdbProduct).productReference = product.id;
 	};
 

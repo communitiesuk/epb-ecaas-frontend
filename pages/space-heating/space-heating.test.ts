@@ -435,9 +435,8 @@ describe("space heating", () => {
 			// });
 
 			test("When a network is removed, it sets any associated heat pumps to incomplete and removes the association", async () => {
-				const heatNetwork: Partial<HeatSourceData> = {
+				const heatNetwork: Partial<HeatNetworkData> = {
 					id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-					typeOfHeatSource: "heatNetwork",
 					typeOfHeatNetwork: "communalHeatNetwork",
 					productReference: "HEATNETWORK_123",
 				};
@@ -451,9 +450,11 @@ describe("space heating", () => {
 				};
 				store.$patch({
 					spaceHeating: {
+						heatNetworks: {
+							data: [{ data: heatNetwork, complete: true }],
+						},
 						heatSource: {
 							data: [
-								{ data: heatNetwork, complete: true },
 								{ data: heatPumpWithAssociation, complete: true },
 							],
 							complete: true,
@@ -469,9 +470,8 @@ describe("space heating", () => {
 				expect(store.spaceHeating.heatSource.complete).toBe(false);
 			});
 			test("When a heat network is removed, it sets any associated HIU to incomplete and removes the association", async () => {
-				const heatNetwork: Partial<HeatSourceData> = {
+				const heatNetwork: Partial<HeatNetworkData> = {
 					id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-					typeOfHeatSource: "heatNetwork",
 					typeOfHeatNetwork: "communalHeatNetwork",
 					productReference: "HEATNETWORK_123",
 				};
@@ -483,9 +483,11 @@ describe("space heating", () => {
 				};
 				store.$patch({
 					spaceHeating: {
+						heatNetworks: {
+							data: [{ data: heatNetwork, complete: true }],
+						},
 						heatSource: {
 							data: [
-								{ data: heatNetwork, complete: true },
 								{ data: hiu, complete: true },
 							],
 							complete: true,

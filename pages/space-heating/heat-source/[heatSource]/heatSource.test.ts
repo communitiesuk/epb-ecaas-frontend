@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen, waitFor } from "@testing-library/vue";
+import { screen } from "@testing-library/vue";
 import HeatSourceForm from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
 import type { BoilerProduct, DisplayProduct, HybridHeatPumpProduct } from "~/pcdb/pcdb.types";
@@ -46,19 +46,6 @@ describe("heatSource", () => {
 		energySupply: "electricity",
 		maxFlowTemp: unitValue(30, "celsius"),
 	};
-
-	test("preselects heat network on create page when typeOfHeatSource query param is heatNetwork", async () => {
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "create" },
-				query: {
-					typeOfHeatSource: "heatNetwork",
-				},
-			},
-		});
-
-		expect((await screen.findByTestId<HTMLInputElement>("typeOfHeatSource_heatNetwork")).checked).toBe(true);
-	});
 
 	describe("heat pump", () => {
 		const heatPumpProduct: Partial<DisplayProduct> = {
@@ -207,22 +194,20 @@ describe("heatSource", () => {
 		test("renders multiple heat network options when heat pump is connected and multiple heat networks exist in state", async () => {
 			store.$patch({
 				spaceHeating: {
-					heatSource: {
+					heatNetworks: {
 						data: [{
 							data: {
 								id: "1",
-								typeOfHeatSource: "heatNetwork",
 								typeOfHeatNetwork: "communalHeatNetwork",
 								name: "Test heat network",
-							} as HeatSourceData,
+							} as HeatNetworkData,
 						},
 						{
 							data: {
 								id: "2",
-								typeOfHeatSource: "heatNetwork",
 								typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
 								name: "Test sub heat network",
-							} as HeatSourceData,
+							} as HeatNetworkData,
 						}],
 					},
 				},
@@ -251,14 +236,13 @@ describe("heatSource", () => {
 		test("automatically selects heat network when heat pump is connected and only one heat network is available in state", async () => {
 			store.$patch({
 				spaceHeating: {
-					heatSource: {
+					heatNetworks: {
 						data: [{
 							data: {
 								id: "1",
-								typeOfHeatSource: "heatNetwork",
 								typeOfHeatNetwork: "communalHeatNetwork",
 								name: "Test heat network",
-							} as HeatSourceData,
+							} as HeatNetworkData,
 						}],
 					},
 				},
@@ -307,14 +291,13 @@ describe("heatSource", () => {
 		test("energy supply is hidden when heat pump is connected to heat network", async () => {
 			store.$patch({
 				spaceHeating: {
-					heatSource: {
+					heatNetworks: {
 						data: [{
 							data: {
 								id: "1",
-								typeOfHeatSource: "heatNetwork",
 								typeOfHeatNetwork: "communalHeatNetwork",
 								name: "Test heat network",
-							} as HeatSourceData,
+							} as HeatNetworkData,
 						}],
 					},
 				},
@@ -470,22 +453,20 @@ describe("heatSource", () => {
 		test("renders multiple heat network options when heat pump is connected and multiple heat networks exist in state", async () => {
 			store.$patch({
 				spaceHeating: {
-					heatSource: {
+					heatNetworks: {
 						data: [{
 							data: {
 								id: "1",
-								typeOfHeatSource: "heatNetwork",
 								typeOfHeatNetwork: "communalHeatNetwork",
 								name: "Test heat network",
-							} as HeatSourceData,
+							} as HeatNetworkData,
 						},
 						{
 							data: {
 								id: "2",
-								typeOfHeatSource: "heatNetwork",
 								typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
 								name: "Test sub heat network",
-							} as HeatSourceData,
+							} as HeatNetworkData,
 						}],
 					},
 				},
@@ -514,14 +495,13 @@ describe("heatSource", () => {
 		test("automatically selects heat network when heat pump is connected and only one heat network is available in state", async () => {
 			store.$patch({
 				spaceHeating: {
-					heatSource: {
+					heatNetworks: {
 						data: [{
 							data: {
 								id: "1",
-								typeOfHeatSource: "heatNetwork",
 								typeOfHeatNetwork: "communalHeatNetwork",
 								name: "Test heat network",
-							} as HeatSourceData,
+							} as HeatNetworkData,
 						}],
 					},
 				},
@@ -555,14 +535,13 @@ describe("heatSource", () => {
 		test("energy supply is hidden when heat pump is connected to heat network", async () => {
 			store.$patch({
 				spaceHeating: {
-					heatSource: {
+					heatNetworks: {
 						data: [{
 							data: {
 								id: "1",
-								typeOfHeatSource: "heatNetwork",
 								typeOfHeatNetwork: "communalHeatNetwork",
 								name: "Test heat network",
-							} as HeatSourceData,
+							} as HeatNetworkData,
 						}],
 					},
 				},
@@ -1090,144 +1069,7 @@ describe("heatSource", () => {
 			});
 
 		});
-		describe("heat network", () => {
-			test("'HeatNetworkSection' component displays when type of heat source is heat network", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
 
-				expect(screen.getByTestId("name")).toBeDefined();
-				expect(screen.getByTestId("selectHeatNetwork")).toBeDefined();
-				expect(screen.getByTestId("typeOfHeatNetwork")).toBeDefined();
-			});
-			test("the 'Select a product' element navigates user to the products page", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-
-				expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/heat-network");
-			});
-			test("renders error messages when form is submitted with empty required fields", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-				await user.click(screen.getByTestId("saveAndComplete"));
-
-				expect(await screen.findByTestId("selectHeatNetwork_error")).toBeDefined();
-				expect(await screen.findByTestId("typeOfHeatNetwork_error")).toBeDefined();
-			});
-
-			test("does not clear selected product when type of heat network changes", async () => {
-				const heatNetwork: HeatSourceData = {
-					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
-					name: "Test heat network",
-					typeOfHeatSource: "heatNetwork",
-					productReference: "HEATNETWORK_SMALL",
-					typeOfHeatNetwork: "communalHeatNetwork",
-				};
-
-				store.$patch({
-					spaceHeating: {
-						heatSource: {
-							data: [{ data: heatNetwork }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatNetwork_sleevedDistrictHeatNetwork"));
-
-				expect((store.spaceHeating.heatSource.data[0]!.data as HeatSourceData).productReference).toBe("HEATNETWORK_SMALL");
-			});
-			test("navigates to spaceHeating when a valid form is completed", async () => {
-				const heatNetwork: Partial<HeatSourceData> = {
-					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
-					name: "Test heat network",
-					typeOfHeatSource: "heatNetwork",
-					productReference: "HEATNETWORK_SMALL",
-					typeOfHeatNetwork: "communalHeatNetwork",
-				};
-				const heatNetworkProduct: Partial<DisplayProduct> = {
-					id: "1000",
-					technologyType: "HeatNetworks",
-				};
-				mockFetch.mockReturnValue({
-					data: ref(heatNetworkProduct),
-				});
-
-				store.$patch({
-					spaceHeating: {
-						heatSource: {
-							data: [{ data: heatNetwork as HeatSourceData }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
-				await user.click(screen.getByTestId("saveAndComplete"));
-
-				expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
-			});
-
-			test("displays subnetwork name for selected heat network product", async () => {
-				const heatNetwork: Partial<HeatSourceData> = {
-					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
-					name: "Test heat network",
-					typeOfHeatSource: "heatNetwork",
-					productReference: "1000",
-					subHeatNetworkName: "Sub 2",
-					typeOfHeatNetwork: "communalHeatNetwork",
-				};
-
-				mockFetch.mockReturnValue({
-					data: ref({
-						id: "1000",
-						technologyType: "HeatNetworks",
-						communityHeatNetworkName: "Network Alpha",
-						testData: {
-							ID: "td-2",
-							subheatNetworkName: "Sub 2",
-						},
-					}),
-				});
-
-				store.$patch({
-					spaceHeating: {
-						heatSource: {
-							data: [{ data: heatNetwork as HeatSourceData }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId("pcdbHeatNetworkProductData")).toBeDefined();
-					expect(screen.getByTestId("productData_subHeatNetworkName").textContent).toBe("Sub 2");
-				});
-			});
-		});
 		describe("Heat interface unit", () => {
 			beforeEach(() => {
 				store.$reset();
@@ -1259,23 +1101,21 @@ describe("heatSource", () => {
 			test("renders multiple heat network options when multiple heat networks exist in state", async () => {
 				store.$patch({
 					spaceHeating: {
-						heatSource: {
+						heatNetworks: {
 							data: [{
 								data: {
 									id: "1",
-									typeOfHeatSource: "heatNetwork",
 									typeOfHeatNetwork: "communalHeatNetwork",
 									name: "Test heat network",
-								} as HeatSourceData,
+								} as HeatNetworkData,
 							},
 
 							{
 								data: {
 									id: "2",
-									typeOfHeatSource: "heatNetwork",
 									typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
 									name: "Test sub heat network",
-								} as HeatSourceData,
+								} as HeatNetworkData,
 							},
 							],
 						},
@@ -1302,14 +1142,13 @@ describe("heatSource", () => {
 			test("automatically selects heat network when only one heat network is available in state", async () => {
 				store.$patch({
 					spaceHeating: {
-						heatSource: {
+						heatNetworks: {
 							data: [{
 								data: {
 									id: "1",
-									typeOfHeatSource: "heatNetwork",
 									typeOfHeatNetwork: "communalHeatNetwork",
 									name: "Test heat network",
-								} as HeatSourceData,
+								} as HeatNetworkData,
 							}],
 						},
 					},

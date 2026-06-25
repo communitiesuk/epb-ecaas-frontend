@@ -151,10 +151,9 @@ describe("Space heating summary page", () => {
 		});
 
 		it("displays the correct data for the heat pump summary (connected to heat network)", async () => {
-			const heatNetwork: HeatSourceData = {
+			const heatNetwork: HeatNetworkData = {
 				id: "network-1",
 				name: "Heat network 1",
-				typeOfHeatSource: "heatNetwork",
 				typeOfHeatNetwork: "communalHeatNetwork",
 				productReference: "HEAT_NETWORK_1",
 			};
@@ -171,8 +170,11 @@ describe("Space heating summary page", () => {
 			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork }],
+					},
 					heatSource: {
-						data: [{ data: heatNetwork }, { data: heatPump2 }],
+						data: [{ data: heatPump2 }],
 					},
 				},
 			});
@@ -238,10 +240,9 @@ describe("Space heating summary page", () => {
 			}
 		});
 		it("displays the correct data for the heat network summary", async () => {
-			const heatNetwork1: HeatSourceData = {
+			const heatNetwork1: HeatNetworkData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Heat network 1",
-				typeOfHeatSource: "heatNetwork",
 				typeOfHeatNetwork: "communalHeatNetwork",
 				productReference: "HEAT_NETWORK-LARGE",
 				subHeatNetworkName: "Sub 2",
@@ -250,7 +251,7 @@ describe("Space heating summary page", () => {
 			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
-					heatSource: {
+					heatNetworks: {
 						data: [{ data: heatNetwork1 }],
 					},
 				},
@@ -274,10 +275,9 @@ describe("Space heating summary page", () => {
 		});
 
 		it("renders emptyValueRendering for missing sub-heat network name", async () => {
-			const heatNetwork1: HeatSourceData = {
+			const heatNetwork1: HeatNetworkData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c66",
 				name: "Heat network 2",
-				typeOfHeatSource: "heatNetwork",
 				typeOfHeatNetwork: "communalHeatNetwork",
 				productReference: "HEAT_NETWORK-MEDIUM",
 			};
@@ -285,7 +285,7 @@ describe("Space heating summary page", () => {
 			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
-					heatSource: {
+					heatNetworks: {
 						data: [{ data: heatNetwork1 }],
 					},
 				},
@@ -307,10 +307,9 @@ describe("Space heating summary page", () => {
 			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
 				"HIU-LARGE": "Mock HIU product",
 			});
-			const heatNetwork: HeatSourceData = {
+			const heatNetwork: HeatNetworkData = {
 				id: "network-1",
 				name: "Heat network 1",
-				typeOfHeatSource: "heatNetwork",
 				typeOfHeatNetwork: "communalHeatNetwork",
 				productReference: "HEAT_NETWORK_1",
 			};
@@ -327,8 +326,11 @@ describe("Space heating summary page", () => {
 			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork }],
+					},
 					heatSource: {
-						data: [{ data: heatNetwork }, { data: hiu }],
+						data: [{ data: hiu }],
 					},
 				},
 			});

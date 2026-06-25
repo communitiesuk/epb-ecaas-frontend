@@ -248,7 +248,7 @@ const existingHeatSourceType = computed(() => {
 });
 
 function hasHeatNetworkHeatSource() {
-	return dhwHeatSources.data.some((x, itemIndex) => itemIndex !== index && getDhwHeatSourceType(x) === "heatNetwork");
+	return !!store.spaceHeating.heatNetworks.data.length;
 }
 
 function hasHeatPumpOrHIUHeatSource() {
@@ -272,7 +272,8 @@ function getDhwHeatSourceType(heatSourceForm: EcaasForm<DomesticHotWaterHeatSour
 }
 
 function filterHeatSourceOptions(): Record<string, string> {
-	const { heatNetwork, heatPump, heatInterfaceUnit } = DHWHeatSourceTypesWithDisplay;
+	const { heatPump, heatInterfaceUnit } = DHWHeatSourceTypesWithDisplay;
+	const { heatNetwork } = heatNetworkProductTypeDisplay;
 	if (hasHeatNetworkHeatSource()) {
 		return {
 			heatPump,
@@ -281,7 +282,7 @@ function filterHeatSourceOptions(): Record<string, string> {
 	}
 	if (hasHeatPumpOrHIUHeatSource()) {
 		return {
-			heatNetwork,
+			heatNetwork: heatNetwork(false),
 		};
 	}
 	
@@ -418,14 +419,6 @@ const heatSourceOptions = computed(() => {
 				page="domestic hot water"
 				@update-boiler-model="updateHeatSource"
 				@product-loaded="handleProductLoaded"
-			/>
-			<HeatNetworkSection
-				v-if="model.isExistingHeatSource === false
-					&& model.typeOfHeatSource === 'heatNetwork'"
-				:model="(model as HeatNetworkModelType)"
-				:index="index"
-				section="domesticHotWater"
-				@update-heat-network-model="updateHeatSource"
 			/>
 			<HeatBatterySection
 				v-if="model.isExistingHeatSource === false

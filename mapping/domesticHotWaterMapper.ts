@@ -139,9 +139,9 @@ function mapOthersData(state: ResolvedState) {
  */
 function getDomesticHotWaterHeatSource(state: ResolvedState) {
 	// NOTE: this logic will change upon the redesign of the heat networks section.
-	const heatSources = state.domesticHotWater.heatSources.filter(x => x.isExistingHeatSource === true || x.typeOfHeatSource !== "heatNetwork");
+	const heatSources = state.domesticHotWater.heatSources.filter(x => x.isExistingHeatSource === true);
 	const spaceHeatingHeatSources = (state.spaceHeating.heatSource ?? [])
-		.filter(x => x.typeOfHeatSource !== "heatNetwork").map(x => x.id);
+		.map(x => x.id);
 	const noneHeatNetworkHeatSources = heatSources.filter(x => {
 		if (x.isExistingHeatSource) {
 			return !spaceHeatingHeatSources.includes(x.id);
@@ -164,20 +164,14 @@ function getActualHeatSourceFromDHWHeatSource(state: ResolvedState) {
 	const { domesticHotWater, spaceHeating } = state;
 	const dhwHeatSources = domesticHotWater.heatSources.filter(x => x.isExistingHeatSource === false);
 	const allHeatSources = [...dhwHeatSources, ...(spaceHeating.heatSource ?? [])];
-	const noneHeatNetworkHeatSources = allHeatSources.filter(x => x.typeOfHeatSource !== "heatNetwork");
-	if (noneHeatNetworkHeatSources.length !== 1) {
-		throw new Error("Expected exactly one non-heat-network heat source, found " + noneHeatNetworkHeatSources.length);
+	if (allHeatSources.length !== 1) {
+		throw new Error("Expected exactly one non-heat-network heat source, found " + allHeatSources.length);
 	}
-	return noneHeatNetworkHeatSources[0]!;
+	return allHeatSources[0]!;
 }
 
 function getAssociatedHeatNetwork(state: ResolvedState, associatedHeatNetworkId: string) {
-	const associatedHeatNetwork = state.spaceHeating.heatSource?.find(hs => hs.id === associatedHeatNetworkId);
-
-	if (!associatedHeatNetwork) {
-		return state.domesticHotWater.heatSources.find(hs => hs.id === associatedHeatNetworkId);
-	}
-	return associatedHeatNetwork;
+	return state.spaceHeating.heatNetworks?.find(network => network.id === associatedHeatNetworkId);
 }
 
 function mapHeatSourceWet(

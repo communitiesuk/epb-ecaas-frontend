@@ -594,17 +594,17 @@ describe("Domestic hot water summary", () => {
 			energySupply: "electricity",
 		};
 
-		const dhwWithNewHeatNetwork: DomesticHotWaterHeatSourceData = {
-			coldWaterSource: "mainsWater",
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-			name: "Heat network 1",
-			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "communalHeatNetwork",
-			productReference: "HEAT_NETWORK-LARGE",
-			subHeatNetworkName: "Sub Network 1",
-		};
+		// const dhwWithNewHeatNetwork: DomesticHotWaterHeatSourceData = {
+		// 	coldWaterSource: "mainsWater",
+		// 	isExistingHeatSource: false,
+		// 	heatSourceId: "NEW_HEAT_SOURCE",
+		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+		// 	name: "Heat network 1",
+		// 	typeOfHeatSource: "heatNetwork",
+		// 	typeOfHeatNetwork: "communalHeatNetwork",
+		// 	productReference: "HEAT_NETWORK-LARGE",
+		// 	subHeatNetworkName: "Sub Network 1",
+		// };
 
 		const dhwWithNewHeatInterfaceUnit: DomesticHotWaterHeatSourceData = {
 			coldWaterSource: "mainsWater",
@@ -675,7 +675,7 @@ describe("Domestic hot water summary", () => {
 							{ data: dhwWithNewHeatPump },
 							{ data: dhwWithNewBoiler },
 							{ data: dhwWithNewHeatBattery },
-							{ data: dhwWithNewHeatNetwork },
+							// { data: dhwWithNewHeatNetwork },
 							{ data: dhwWithNewHeatInterfaceUnit },
 							{ data: dhwWithNewSolarThermalSystem },
 							{ data: dhwImmersionHeater },
@@ -828,12 +828,14 @@ describe("Domestic hot water summary", () => {
 			beforeEach(() => {
 				store.$patch({
 					spaceHeating: {
+						heatNetworks: {
+							data: [{ data: heatNetwork1 }],
+						},
 						heatSource: {
 							data: [
 								{ data: heatPump1 },
 								{ data: boiler1 },
-								{ data: heatBattery1 },
-								{ data: heatNetwork1 },
+								{ data: heatBattery1 },	
 							],
 						},
 					},
@@ -864,10 +866,9 @@ describe("Domestic hot water summary", () => {
 				maxFlowTemp: unitValue(10, celsius),
 			};
 
-			const heatNetwork1: Partial<HeatSourceData> = {
+			const heatNetwork1: Partial<HeatNetworkData> = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Heat network 1",
-				typeOfHeatSource: "heatNetwork",
 				subHeatNetworkName: "Sub Network 1",
 				productReference: "HEAT_NETWORK-LARGE",
 			};

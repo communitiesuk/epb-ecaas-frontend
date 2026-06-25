@@ -107,19 +107,86 @@ describe("Heat Network Products Page", () => {
 		).toEqual(expect.objectContaining({ productReference: MOCKED_HEAT_NETWORKS.data[1]?.id }));
 	});
 
-	// 	test("'Back to water storage' navigates user to the water storage at the correct index", async () => {
-	// 		mockRoute.mockReturnValue({
-	// 			params: {
-	// 				waterstorage: "1",
-	// 				products: "smart-hot-water-tank",
-	// 			},
-	// 			path: "/1/smart-hot-water-tank",
-	// 		});
-	// 		await renderSuspended(Products);
-	// 		const backButton = screen.getByTestId("backToWaterStorageButton");
 
-// 		expect(backButton.getAttribute("href")).toBe(
-// 			"/domestic-hot-water/water-storage/1",
-// 		);
-// 	});
+	test("when a user selects a product its sub heat network name gets stored", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatNetwork: "0",
+				products: "heat-network",
+			},
+			path: "/0/heat-network",
+		});
+	
+		await renderSuspended(Products);
+	
+		await user.click(screen.getByTestId("selectProductButton_0"));
+	
+		expect(store.spaceHeating.heatNetworks.data[0]!.data).toEqual(expect.objectContaining({
+			subHeatNetworkName: MOCKED_HEAT_NETWORKS.data[0]?.subheatNetworkName,
+		}));
+	});
+
+	test("'Back to heat network' navigates user to the heat network at the correct index", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatNetwork: "1",
+				products: "heat-network",
+			},
+			path: "/1/heat-network",
+		});
+		await renderSuspended(Products);
+		const backButton = screen.getByTestId("backToHeatNetworkButton");
+
+		expect(backButton.getAttribute("href")).toBe(
+			"/space-heating/heat-networks/1",
+		);
+	});
+
+	// test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
+	// 	mockRoute.mockReturnValue({
+	// 		params: {
+	// 			heatNetworks: "1",
+	// 			products: "heat-network",
+	// 		},
+	// 		path: "/1/heat-network",
+	// 	});
+	
+	// 	mockRoute.mockReturnValue({
+	// 		params: {
+	// 			heatNetwork: "1",
+	// 			products: "heat-network",
+	// 			id: "1000",
+	// 		},
+	// 		path: "/1/heat-network/1000",
+	// 	});
+	
+	// 	const product = {
+	// 		id: "1000",
+	// 		brandName: "Test",
+	// 		modelName: "Heat network",
+	// 		modelQualifier: "HNSMALL",
+	// 		technologyType: "HeatNetworks",
+	// 	};
+	
+	// 	const heatNetworks = {
+	// 		data: [product],
+	// 	};
+	
+	// 	mockFetch.mockReturnValueOnce({
+	// 		data: ref(heatNetworks),
+	// 	});	
+	
+	// 	mockFetch.mockReturnValueOnce({
+	// 		data: ref({
+	// 			...product,
+	// 			fifthGHeatNetwork: 1,
+	// 		}),
+	// 	});	
+	
+	// 	await renderSuspended(Products);
+	// 	await user.click(screen.getByTestId("selectProductButton_0"));
+	// 	expect(store.spaceHeating.heatNetworks.data[1]!.data).toEqual(expect.objectContaining({
+	// 		hasBoosterHeatPump: true,
+	// 	}));
+	//});
 });

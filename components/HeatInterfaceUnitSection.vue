@@ -2,6 +2,7 @@
 import { getUrl, typeOfHeatSource, uniqueName } from "#imports";
 import { watt } from "~/utils/units/power";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
+import { useHeatNetworks } from "~/composables/heatNetworks";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -15,27 +16,8 @@ defineProps<{
 
 const heatSources = getCombinedHeatSources(store);
 
-const heatNetworkOptions = computed(() => {
-	const heatNetworks = heatSources.filter(source => {
-		return (source.data as HeatSourceData).typeOfHeatSource === "heatNetwork";
-	});
+const { heatNetworkOptions, hasHeatNetworkOptions, defaultAssociatedHeatNetworkId } = useHeatNetworks();
 
-	return Object.fromEntries(heatNetworks.map(network => {
-		const networkData = network.data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
-		return [
-			networkData.id,
-			{
-				label: networkData.name,
-				value: networkData.id,
-			},
-		];
-	}));
-});
-const hasHeatNetworkOptions = computed(() => Object.keys(heatNetworkOptions.value).length > 0);
-const defaultAssociatedHeatNetworkId = computed(() => {
-	const optionIds = Object.keys(heatNetworkOptions.value);
-	return optionIds.length === 1 ? optionIds[0] : undefined;
-});
 </script>
 
 <template>

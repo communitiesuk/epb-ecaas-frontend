@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { productTypeMap, type HeatNetworkProductType } from "#imports";
+import { productTypeMap } from "#imports";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 
 definePageMeta({ layout: "one-column" });
 
 const store = useEcaasStore();
-const { pageId, title, index, searchModel, searchData } = useProductsPage("heatNetwork");
+const { title, index, searchModel, searchData } = useProductsPage("heatNetwork");
 
 const { data: { value } } = await useFetch("/api/products", {
 	query: {
-		technologyType: productTypeMap[pageId as HeatNetworkProductType],
+		technologyType: productTypeMap["heatNetwork"],
 	},
 });
 

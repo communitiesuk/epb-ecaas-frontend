@@ -115,7 +115,10 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 
 function maxHeatSourcesExceeded() {
 	const hasPackagedHeatSources = dhwHeatSources.data.every(x => isPackagedProduct(x.data) || hasPackagedProduct(x.data));
-	if (dhwHeatSources.data.length === 2) {
+	const heatNetworks = store.spaceHeating.heatNetworks.data;
+	if (dhwHeatSources.data.length === 1 && heatNetworks.length > 0) {
+		return false;
+
 		const connectedHeatPump = dhwHeatSources.data.find(isHeatPumpConnectedToExistingHeatNetwork);
 		const heatSourceTypes = dhwHeatSources.data.map(getDhwHeatSourceType);
 		const heatNetworks = heatSourceTypes.filter(type => type === "heatNetwork");
@@ -127,6 +130,11 @@ function maxHeatSourcesExceeded() {
 			return false;
 		}
 	}
+	
+	if (heatNetworks.length === 0 && dhwHeatSources.data.length < 2) {
+		return false;
+	}
+	
 	return dhwHeatSources.data.length > 1 && !hasPackagedHeatSources;
 }
 

@@ -33,5 +33,4 @@ const subtitle = isHeatNetwork.value ? (data as { testData: { subheatNetworkName
 	<ProductDetailsHeatBatteryPCM v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryPcm" :product="data!" />
 	<ProductDetailsHeatBatteryDryCore v-if="!!data && heatSourceType === typeOfHeatSource.heatBatteryDryCore" :product="data!" />
 	<ProductDetailsHeatInterfaceUnit v-if="!!data && heatSourceType === typeOfHeatSource.heatInterfaceUnit" :product="data!" />
-	<ProductDetailsHeatNetworks v-if="!!data && heatSourceType === typeOfHeatSource.heatNetwork" :product="data!" />
 </template>

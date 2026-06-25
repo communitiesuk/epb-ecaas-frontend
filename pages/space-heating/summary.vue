@@ -12,7 +12,7 @@ const spaceHeatingUrl = "/space-heating";
 const heatSources = store.spaceHeating.heatSource.data;
 const boilers = heatSources.filter(x => x.data.typeOfHeatSource === "boiler");
 const heatPumps = heatSources.filter(x => x.data.typeOfHeatSource === "heatPump");
-const heatNetworks = heatSources.filter(x => x.data.typeOfHeatSource === "heatNetwork");
+const heatNetworks = store.spaceHeating.heatNetworks.data;
 const heatInterfaceUnits = heatSources.filter(x => x.data.typeOfHeatSource === "heatInterfaceUnit");
 const heatBatteries = heatSources.filter(x => x.data.typeOfHeatSource === "heatBattery");
 
@@ -130,14 +130,12 @@ const heatNetworkSummary: SummarySection = {
 	label: "Heat networks",
 	data:
 		heatNetworks.map((x) => {
-			const heatSource = x.data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
-			const productReference = "productReference" in heatSource ? heatSource.productReference : undefined;
+			const heatNetwork = x.data as HeatNetworkData;
 			const summary = {
-				Name: show(heatSource.name),
-				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
-				"Type of heat network": "typeOfHeatNetwork" in heatSource && heatSource.typeOfHeatNetwork ? displayCamelToSentenceCase(heatSource.typeOfHeatNetwork) : emptyValueRendering,
-				"Product reference": productReference ?? emptyValueRendering,
-				"Sub-heat network name": "subHeatNetworkName" in heatSource ? (heatSource.subHeatNetworkName ?? emptyValueRendering) : emptyValueRendering,
+				Name: show(heatNetwork.name),
+				"Type of heat network": heatNetwork.typeOfHeatNetwork ? displayCamelToSentenceCase(heatNetwork.typeOfHeatNetwork) : emptyValueRendering,
+				"Product reference": show(heatNetwork.productReference),
+				"Sub-heat network name": show(heatNetwork.subHeatNetworkName),
 			};
 			return summary;
 		}) || [],

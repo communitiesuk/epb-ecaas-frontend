@@ -50,29 +50,11 @@ const selectProduct = async (product: DisplayProduct) => {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<template v-if="heatSourceProductType === 'heatNetwork'">
-		<ProductSearch
-			:model="searchModel"
-			:search-options="{
-				networkName: 'Network name',
-				productId: 'Product ID',
-			}"
-			search-term-label="Search network or subnetwork"
-			search-term-placeholder="Enter network or subnetwork"
-		/>
-		<HeatNetworkProductsTable
-			:products="pagination.getData()"
-			:total-pages="pagination.totalPages"
-			:on-select-product="selectProduct"
-		/>
-	</template>
-	<template v-else>
-		<ProductSearch :model="searchModel" />
-		<GovProductsTable
-			:products="pagination.getData()"
-			:total-pages="pagination.totalPages"
-			:on-select-product="selectProduct" />
-	</template>
+	<ProductSearch :model="searchModel" />
+	<GovProductsTable
+		:products="pagination.getData()"
+		:total-pages="pagination.totalPages"
+		:on-select-product="selectProduct" />
 	<GovButton secondary :href="`/domestic-hot-water/heat-sources/${index}`" test-id="backToHeatSourceButton">
 		Back to heat source
 	</GovButton>

@@ -18,7 +18,7 @@ import { objectFromEntries } from "ts-extras";
 import { asMetres } from "~/utils/units/length";
 
 function getAssociatedHeatNetworkType(associatedHeatNetworkId: string | undefined, state: ResolvedState): SchemaHeatNetworkType {
-	const heatNetworks = state.spaceHeating.heatSource.filter(source => source.typeOfHeatSource === "heatNetwork");
+	const heatNetworks = state.spaceHeating.heatNetworks;
 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
 	const heatNetorkType = associatedHeatNetwork ? associatedHeatNetwork?.typeOfHeatNetwork : undefined;
 	switch (heatNetorkType) {
@@ -113,7 +113,7 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 }
 
 function getSubnetworkName(associatedHeatNetworkId: string | undefined, state: ResolvedState): string | undefined {
-	const heatNetworks = state.spaceHeating.heatSource.filter(source => source.typeOfHeatSource === "heatNetwork");
+	const heatNetworks = state.spaceHeating.heatNetworks;
 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
 	return associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkName : undefined;
 }
