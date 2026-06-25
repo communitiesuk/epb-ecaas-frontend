@@ -15,9 +15,17 @@ const calculateError = ref<CorrectedJsonApiError[] | string | boolean | undefine
 const showLoadingIndicator = ref(false);
 
 const showLoading = () => {
+	setPageLayout("default", {
+		sidebar: false,
+	});
+
 	showLoadingIndicator.value = true;
 };
 const hideLoading = () => {
+	setPageLayout("default", {
+		sidebar: true,
+	});
+	
 	showLoadingIndicator.value = false;
 };
 
