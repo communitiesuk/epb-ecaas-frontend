@@ -100,8 +100,48 @@ autoSaveElementForm<HeatNetworkData>({
 			label="Type of heat network"
 			:options="heatNetworkTypes"
 			name="typeOfHeatNetwork"
-			validation="required"
-		/>
+			validation="required">
+			<GovDetails summary-text="Help with this input" classes="govuk-details__margin-bottom">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header govuk-!-width-one-third">Type of heat network</th>
+							<th scope="col" class="govuk-table__header">Description</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header">Communal</th>
+							<td class="govuk-table__cell">A communal heat network supplies heat to multiple consumers within a single building (for example, a block of flats). The central heat source is usually a large boiler or heat pump and is housed on-site, typically in a basement or on the roof. Communal heat networks are also known as community heating.</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header">Sleeved district</th>
+							<td class="govuk-table__cell">
+								<p class="govuk-body">
+									A district heat network operates on a much larger scale, supplying heat and hot water to multiple buildings across a wider area, such as a housing development, neighbourhood, or entire city centre.
+								</p>
+
+								<p class="govuk-body govuk-!-margin-bottom-0">
+									A sleeved network segments the system to track the exact source of heat. This allows a specific building connected to the network to be supplied directly by a new, low-carbon technology (such as a local heat pump). The building is then credited with that lower carbon factor rather than taking the network's system-wide average.
+								</p>
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header">Unsleeved district</th>
+							<td class="govuk-table__cell">
+								<p class="govuk-body">
+									A district heat network operates on a much larger scale, supplying heat and hot water to multiple buildings across a wider area, such as a housing development, neighbourhood, or entire city centre.
+								</p>
+
+								<p class="govuk-body govuk-!-margin-bottom-0">
+									In a traditional unsleeved network, the carbon intensity of the heat is calculated as an average across the entire system, regardless of where the heat was initially generated. Every property connected to the network is assigned this same average carbon footprint.
+								</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<GovInset>
 			<p>
 				If you have a heat interface unit (HIU) or booster heat pump as well as the heat network, enter it separately.
