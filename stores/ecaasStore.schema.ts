@@ -1254,6 +1254,7 @@ export type HeatingControlData = z.infer<typeof heatingControlsDataZod>;
 export type DomesticHotWater = AssertEachKeyIsPageId<{
 	heatSources: EcaasFormList<DomesticHotWaterHeatSourceData>;
 	wwhrs: EcaasFormList<WwhrsData>;
+	preheatedWaterStorage: EcaasFormList<PreheatedWaterStorageData>;
 	waterStorage: EcaasFormList<WaterStorageData>;
 	hotWaterOutlets: EcaasFormList<HotWaterOutletsData>;
 	pipework: EcaasFormList<PipeworkData>;
@@ -1345,11 +1346,43 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 
 export type DomesticHotWaterHeatSourceData = z.infer<typeof domesticHotWaterHeatSourceZod>;
 
+const wwhrsTypeZod = z.enum(["System A", "System B", "System C"]);
+export type WwhrsType = z.infer<typeof wwhrsTypeZod>;
+
 const wwhrsDataZod = pcdbProduct.extend({
 	coldWaterSource,
+	wwhrsType: z.optional(wwhrsTypeZod),
 });
 
 export type WwhrsData = z.infer<typeof wwhrsDataZod>;
+
+const preheatedWaterCylinderDataZod = namedWithId
+	.extend(hasPcdbPackagedProduct.shape)
+	.extend({
+		typeOfWaterStorage: z.literal("hotWaterCylinder"),
+		storageCylinderVolume: zodUnit("volume"),
+		dailyEnergyLoss: z.number(),
+		areaOfHeatExchanger: z.number().optional(),
+		heaterPosition: fraction,
+		thermostatPosition: fraction,
+	});
+
+export type PreheatedWaterCylinderData = z.infer<typeof preheatedWaterCylinderDataZod>;
+
+const preheatedSmartHotWaterTank = namedWithId.extend({
+	typeOfWaterStorage: z.literal("smartHotWaterTank"),
+	productReference: z.string(),
+	heaterPosition: fraction,
+});
+
+export type PreheatedSmartHotWaterTankData = z.infer<typeof preheatedSmartHotWaterTank>;
+
+const preheatedWaterStorageDataZod = z.discriminatedUnion("typeOfWaterStorage", [
+	preheatedWaterCylinderDataZod,
+	preheatedSmartHotWaterTank,
+]);
+
+export type PreheatedWaterStorageData = z.infer<typeof preheatedWaterStorageDataZod>;
 
 const hotWaterCylinderDataZod = namedWithId
 	.extend(hasPcdbPackagedProduct.shape)
@@ -1625,6 +1658,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingDetails/shading": shadingDataZod,
 	"dwellingDetails/appliances": appliancesDataZod,
 
+	"domesticHotWater/preheatedWaterStorage": preheatedWaterStorageDataZod,
 	"domesticHotWater/waterStorage": waterStorageDataZod,
 	"domesticHotWater/wwhrs": wwhrsDataZod,
 	"domesticHotWater/heatSources": domesticHotWaterHeatSourceZod,

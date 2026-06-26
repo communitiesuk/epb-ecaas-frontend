@@ -3,7 +3,7 @@ import DomesticHotWater from "@/pages/domestic-hot-water/index.vue";
 import { screen, within } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import formStatus from "~/constants/formStatus";
-import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, WaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, PreheatedWaterStorageData, WaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
 import HotWaterOutlets from "./hot-water-outlets/[outlet]/index.vue";
 import { litre } from "~/utils/units/volume";
 import { celsius } from "~/utils/units/temperature";
@@ -41,6 +41,22 @@ describe("Domestic hot water", () => {
 			maxFlowTemp: unitValue(12, celsius),
 		},
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+	const preheatedStorage1: EcaasForm<PreheatedWaterStorageData> = {
+		data: {
+			name: "Preheated water cylinder",
+			id: "0f3f13fe-6200-49f2-9e4f-91125ae974f3",
+			storageCylinderVolume: {
+				amount: 100,
+				unit: "litres" as const,
+			},
+			dailyEnergyLoss: 69,
+			typeOfWaterStorage: "hotWaterCylinder",
+			areaOfHeatExchanger: 2.5,
+			heaterPosition: 0.8,
+			thermostatPosition: 0.5,
+		},
+	};
 
 	const wwhrs1: EcaasForm<WwhrsData> = {
 		data: {
@@ -91,6 +107,56 @@ describe("Domestic hot water", () => {
 			location: "unheatedSpace",
 		},
 	};
+
+	describe("Preheated water storage", () => {
+		test("displays existing preheated water storage", async () => {
+			store.$patch({
+				domesticHotWater: {
+					preheatedWaterStorage: {
+						...baseCompleteForm,
+						data: [preheatedStorage1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.getByText(preheatedStorage1.data.name)).toBeDefined();
+		});
+
+		test("preheated water storage is removed when remove link is clicked", async () => {
+			store.$patch({
+				domesticHotWater: {
+					preheatedWaterStorage: {
+						...baseCompleteForm,
+						data: [preheatedStorage1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.getAllByTestId("preheatedWaterStorage_items")).toBeDefined();
+
+			await user.click(screen.getByTestId("preheatedWaterStorage_remove_0"));
+			expect(screen.queryByTestId("preheatedWaterStorage_items")).toBeNull();
+		});
+
+		test("only 1 preheated water storage item can be added", async () => {
+			store.$patch({
+				domesticHotWater: {
+					preheatedWaterStorage: {
+						...baseCompleteForm,
+						data: [preheatedStorage1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.queryByTestId("preheatedWaterStorage_add")).toBeNull();
+		});
+	});
 
 	describe("Water storage", () => {
 		const hwStorage2: EcaasForm<SmartHotWaterTankData> = {
@@ -397,6 +463,7 @@ describe("Domestic hot water", () => {
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (1)`)).toBeDefined();
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (2)`)).toBeDefined();
 		});
+
 		test("prevents user completing hot water outlets unless at least one 'other' type is present", async () => {
 			store.$patch({
 				domesticHotWater: {

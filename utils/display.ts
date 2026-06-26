@@ -461,8 +461,8 @@ export const heatEmittingProductTypesDisplay = {
 } as const satisfies Record<HeatEmittingProductType, (plural: boolean) => string>;
 
 export const waterStorageTypes = {
-	"hotWaterCylinder": "Hot water cylinder",
-	"smartHotWaterTank": "Smart hot water tank",
+	"hotWaterCylinder": "Standard water cylinder",
+	"smartHotWaterTank": "Smart water cylinder",
 } as const satisfies Record<WaterStorageType, string>;
 
 export type HotWaterOutletDisplay = "Mixer shower" | "Electric shower" | "Bath" | "Other (basin tap, kitchen sink, etc.)";

@@ -1377,6 +1377,9 @@ describe("FHS input mapper", () => {
 					},
 				}],
 			},
+			preheatedWaterStorage: {
+				...baseForm,
+			},
 			waterStorage: {
 				...baseForm,
 				data: [{
@@ -2238,6 +2241,9 @@ describe("FHS input mapper", () => {
 				}],
 			},
 			wwhrs: {
+				...baseForm,
+			},
+			preheatedWaterStorage: {
 				...baseForm,
 			},
 			waterStorage: {

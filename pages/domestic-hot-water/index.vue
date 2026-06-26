@@ -86,6 +86,7 @@ function handleComplete() {
 	store.$patch({
 		domesticHotWater: {
 			waterStorage: { complete: true },
+			preheatedWaterStorage: { complete: true },
 			wwhrs: { complete: true },
 			hotWaterOutlets: { complete: true },
 			pipework: { complete: true },
@@ -229,6 +230,27 @@ const isPointOfUseSelected = computed(() =>
 	/>
 
 	<CustomList 
+		id="preheatedWaterStorage"
+		title="Pre-heated water cylinder (optional)"
+		:form-url="`${page?.url!}/preheated-water-storage`"
+		:items="store.domesticHotWater.preheatedWaterStorage.data
+			.filter(x => isEcaasForm(x))
+			.map(x => {
+				const item: CustomListItem = {
+					name: x.data.name,
+					status: x.complete ? formStatus.complete : formStatus.inProgress,
+					actions: ['edit', 'delete']
+				};
+
+				return item;
+			})"
+		:show-status="true"
+		:max-number-of-items="1"
+		@remove="(index: number) => removeEntry('preheatedWaterStorage', index)"
+		@duplicate="(index: number) => duplicateEntry('preheatedWaterStorage', index)"
+	/>
+
+	<CustomList 
 		id="waterStorage"
 		title="Water storage"
 		:form-url="`${page?.url!}/water-storage`"
@@ -255,7 +277,7 @@ const isPointOfUseSelected = computed(() =>
 		@duplicate="(index: number) => duplicateEntry('waterStorage', index)"
 	/>
 
-	<CustomList 
+	<CustomList
 		id="hotWaterOutlets"
 		title="Hot water outlets"
 		:form-url="`${page?.url!}/hot-water-outlets`"

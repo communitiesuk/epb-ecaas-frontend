@@ -114,6 +114,10 @@ export function useForm() {
 	 * @returns Boolean
 	 */
 export const hasChangedFields = <T extends object>(newData: T, initialData: T) => {
+	if (!initialData) {
+		return false;
+	}
+
 	const initialDataKeys = Object.keys(initialData) as (keyof typeof initialData)[];
 	return initialDataKeys.some(x => initialData[x] !== newData[x]);
 };
