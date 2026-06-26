@@ -109,6 +109,7 @@ function hasIncompleteEntries() {
 			}))
 		"
 		:show-status="true"
+		:max-number-of-items="1"
 		@duplicate="(index:number) => handleDuplicate('heatNetworks', index)"
 		@remove="(index:number) => removeEntry('heatNetworks', index)"
 	/>
