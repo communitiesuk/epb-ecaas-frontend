@@ -548,6 +548,7 @@ type HeatNetworkDisplayProduct = DisplayProductBase & {
 	vesselType?: never;
 	type?: never;
 	height?: never;
+	boosterHeatPump?: boolean;
 };
 
 type UnderFloorHeatingDisplayProductBase = DisplayProductBase & {

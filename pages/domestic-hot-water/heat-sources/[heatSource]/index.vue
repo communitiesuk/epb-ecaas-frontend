@@ -251,6 +251,13 @@ function hasHeatNetworkHeatSource() {
 	return !!store.spaceHeating.heatNetworks.data.length;
 }
 
+function isCommunalHeatNetworkWithoutBoosterHeatPump() {
+	return store.spaceHeating.heatNetworks.data.some((heatNetwork) => {
+		return heatNetwork.data.typeOfHeatNetwork === "communalHeatNetwork"
+		&& !heatNetwork.data.boosterHeatPump;
+	});
+}
+
 function hasHeatPumpOrHIUHeatSource() {
 	return dhwHeatSources.data.some((x, itemIndex) => {
 		if (itemIndex === index) {
@@ -274,6 +281,13 @@ function getDhwHeatSourceType(heatSourceForm: EcaasForm<DomesticHotWaterHeatSour
 function filterHeatSourceOptions(): Record<string, string> {
 	const { heatPump, heatInterfaceUnit } = DHWHeatSourceTypesWithDisplay;
 	const { heatNetwork } = heatNetworkProductTypeDisplay;
+
+	if (isCommunalHeatNetworkWithoutBoosterHeatPump()) {
+		return {
+			heatInterfaceUnit,
+		};
+	}
+	
 	if (hasHeatNetworkHeatSource()) {
 		return {
 			heatPump,

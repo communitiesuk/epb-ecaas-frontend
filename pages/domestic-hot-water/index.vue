@@ -119,16 +119,16 @@ function maxHeatSourcesExceeded() {
 	if (dhwHeatSources.data.length === 1 && heatNetworks.length > 0) {
 		return false;
 
-		const connectedHeatPump = dhwHeatSources.data.find(isHeatPumpConnectedToExistingHeatNetwork);
-		const heatSourceTypes = dhwHeatSources.data.map(getDhwHeatSourceType);
-		const heatNetworks = heatSourceTypes.filter(type => type === "heatNetwork");
-		const typeOfHeatSource = heatSourceTypes.find(type => type && type !== "heatNetwork");
-		if (connectedHeatPump && heatNetworks.length >= 1) {
-			return true;
-		}
-		if (heatNetworks.length === 1 && (typeOfHeatSource === "heatPump" || typeOfHeatSource === "heatInterfaceUnit")) {
-			return false;
-		}
+		// const connectedHeatPump = dhwHeatSources.data.find(isHeatPumpConnectedToExistingHeatNetwork);
+		// const heatSourceTypes = dhwHeatSources.data.map(getDhwHeatSourceType);
+		// const heatNetworks = heatSourceTypes.filter(type => type === "heatNetwork");
+		// const typeOfHeatSource = heatSourceTypes.find(type => type && type !== "heatNetwork");
+		// if (connectedHeatPump && heatNetworks.length >= 1) {
+		// 	return true;
+		// }
+		// if (heatNetworks.length === 1 && (typeOfHeatSource === "heatPump" || typeOfHeatSource === "heatInterfaceUnit")) {
+		// 	return false;
+		// }
 	}
 	
 	if (heatNetworks.length === 0 && dhwHeatSources.data.length < 2) {

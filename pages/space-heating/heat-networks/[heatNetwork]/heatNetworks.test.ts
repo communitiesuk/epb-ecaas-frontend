@@ -31,6 +31,7 @@ describe("Heat Networks", () => {
 
 	afterEach(() => {
 		store.$reset();
+		//navigateToMock.mockReset();
 	});
 
 	const populateValidForm = async () => {
@@ -112,19 +113,12 @@ describe("Heat Networks", () => {
 			data: ref(heatNetworkProduct),
 		});
 	
-		store.$patch({
-			spaceHeating: {
-				heatSource: {
-					data: [heatNetwork],
-				},
-			},
-		});
-	
 		await renderSuspended(HeatNetworks, {
 			route: {
 				params: { "heatNetwork": "create" },
 			},
 		});
+		
 		await user.click(screen.getByTestId("saveAndComplete"));
 	
 		expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
@@ -163,7 +157,7 @@ describe("Heat Networks", () => {
 			},
 		});
 	
-		expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/heat-network");
+		expect(navigateToMock).toHaveBeenCalledWith("/0/heat-network");	
 	});
 
 	test("displays subnetwork name for selected heat network product", async () => {
@@ -231,6 +225,18 @@ describe("Heat Networks", () => {
 		await user.click(screen.getByTestId("typeOfHeatNetwork_sleevedDistrictHeatNetwork"));
 
 		expect((store.spaceHeating.heatNetworks.data[0]!.data as HeatNetworkData).productReference).toBe("HEATNETWORK_SMALL");
+	});
+
+	test("creates a heat network with default name when 'choose a product' is selected", async () => {
+		await renderSuspended(HeatNetworks, {
+			route: {
+				params: { "heatNetwork": "create" },
+			},
+		});
+		await user.click(screen.getByTestId("chooseAProductButton"));
+
+		expect((store.spaceHeating.heatNetworks.data.length)).toBe(1);
+		expect((store.spaceHeating.heatNetworks.data[0]?.data.name)).toBe("Heat network");
 	});
     
 	describe("partially saving data", () => {

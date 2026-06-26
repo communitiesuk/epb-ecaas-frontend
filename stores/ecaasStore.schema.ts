@@ -1024,6 +1024,7 @@ export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
 export const heatNetworkDataZod = pcdbProduct.extend({
 	typeOfHeatNetwork,
 	subHeatNetworkName: z.string().optional(),
+	boosterHeatPump: z.boolean().optional(),
 });
 
 export type HeatNetworkData = z.infer<typeof heatNetworkDataZod>;

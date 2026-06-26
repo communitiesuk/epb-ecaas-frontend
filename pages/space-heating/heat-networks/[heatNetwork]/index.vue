@@ -15,12 +15,29 @@ const index = getStoreIndex(heatNetworkStoreData);
 const heatNetworkData = heatNetworkStoreData[index] as EcaasForm<HeatNetworkData>;
 const model = ref(heatNetworkData?.data);
 const id = heatNetworkData?.data.id ?? uuidv4();
+const defaultName = "Heat network";
 
 const heatNetworkTypes = {
 	sleevedDistrictHeatNetwork: "Sleeved district heat network",
 	unsleevedDistrictHeatNetwork: "Unsleeved district heat network",
 	communalHeatNetwork: "Communal heat network", 
 };
+
+function handleChooseProduct() {
+	if (!model.value.id) {
+		store.$patch((state) => {
+			const { heatNetworks } = state.spaceHeating;
+
+			heatNetworks.data[index] = {
+				data: {
+					id,
+					name: defaultName,
+				},
+			};
+			heatNetworks.complete = false;
+		});
+	}
+}
 
 const saveForm = (fields: HeatNetworkData) => {
 	store.$patch((state) => {
@@ -48,7 +65,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 autoSaveElementForm<HeatNetworkData>({
 	model,
 	storeData: store.spaceHeating.heatNetworks,
-	defaultName: "Heat network",
+	defaultName,
 	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
 		state.spaceHeating.heatNetworks.data[index] = newData;
@@ -93,6 +110,7 @@ autoSaveElementForm<HeatNetworkData>({
 			selected-product-type="heatNetwork"
 			:page-index="index"
 			:page-url="route.fullPath"
+			@choose-product="handleChooseProduct"
 		/>
 		<FormKit
 			id="typeOfHeatNetwork"

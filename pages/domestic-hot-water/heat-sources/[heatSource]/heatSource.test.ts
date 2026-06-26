@@ -1322,8 +1322,7 @@ describe("Heat pump section", () => {
 	});
 });
 
-describe("heat network", () => {
-	
+describe("Heat Networks", () => {
 	const communalHeatNetwork: Partial<HeatNetworkData> = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c13",
 		name: "Communal Heat Network",
@@ -1337,7 +1336,7 @@ describe("heat network", () => {
 		typeOfHeatSource: "heatInterfaceUnit",
 	};
 
-	test("if heat network is a communal heat network without a booster heat pump flag, only show HIU as an option", async () => {
+	test("if the heat network is a communal heat network without a booster heat pump flag, show HIU & add new water heating source options in previously added heat source section", async () => {
 		store.$patch({
 			spaceHeating: {
 				heatNetworks: {
@@ -1358,8 +1357,63 @@ describe("heat network", () => {
 		const heatSourceRadios = component.container.querySelectorAll("#heatSourceId input[type=radio]");
 		
 		expect(screen.getByTestId("heatSourceId_hiuId")).toBeDefined();
+		expect(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE")).toBeDefined();
 		expect(heatSourceRadios.length).toBe(2);
 	});
+
+	test("if the heat network is a communal heat network without a booster heat pump flag, only show HIU as an option in type of heat source when add new water heating source is selected", async () => {
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [{ data: communalHeatNetwork }],
+					complete: true,
+				},
+				heatSource: {
+					data: [{ data: heatInterfaceUnit }],
+				},
+			},
+		});
+		const component = await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "create" },
+			},
+		});
+		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+
+
+		const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
+		
+		expect(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeDefined();
+		expect(heatSourceRadios.length).toBe(1);
+	});
+
+	test("if the heat network is a communal heat network with a booster heat pump flag, only show HIU as an option in type of heat source when add new water heating source is selected", async () => {
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [{ data: communalHeatNetwork }],
+					complete: true,
+				},
+				heatSource: {
+					data: [{ data: heatInterfaceUnit }],
+				},
+			},
+		});
+		const component = await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "create" },
+			},
+		});
+		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+
+
+		const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
+		
+		expect(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeDefined();
+		expect(heatSourceRadios.length).toBe(1);
+	});
+
+
 	// 	const heatNetwork1: Partial<DomesticHotWaterHeatSourceData> = {
 	// 		isExistingHeatSource: false,
 	// 		heatSourceId: "NEW_HEAT_SOURCE",

@@ -15,6 +15,7 @@ defineProps<{
 	pageIndex?: number;
 	disabled?: boolean;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
+	onChooseProduct?: () => void;
 }>();
 </script>
 
@@ -35,5 +36,6 @@ defineProps<{
 		:page-index="pageIndex"
 		:disabled="disabled"
 		:on-product-loaded="onProductLoaded"
+		:on-choose-product="onChooseProduct"
 	/> 
 </template>

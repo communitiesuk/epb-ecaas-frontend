@@ -25,6 +25,7 @@ const {
 		"page-index": index,
 		"emitter-index": emitterIndex,
 		"on-product-loaded": onProductLoaded,
+		"on-choose-product": onChooseProduct,
 	},
 	node: { props: { disabled } },
 } = props.context;
@@ -232,6 +233,12 @@ function isPackagedWithHeatPump() {
 
 	return isPackagedWithDomesticHotWaterHeatPump;
 }
+
+function handleChooseProduct() {
+	onChooseProduct?.();
+	navigateTo(productsPageUrl.value);
+}
+
 </script>
 
 <template>
@@ -244,7 +251,7 @@ function isPackagedWithHeatPump() {
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 			</p>
-			<GovButton v-show="!productData" class="govuk-button__margin-bottom" data-testId="chooseAProductButton" :href="productsPageUrl">
+			<GovButton v-show="!productData" class="govuk-button__margin-bottom" data-testId="chooseAProductButton" @click="handleChooseProduct">
 				Choose a product
 			</GovButton>
 			<div v-if="productData">
