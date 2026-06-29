@@ -1547,7 +1547,7 @@ export interface components {
                         /** @constant */
                         vent_type: "Decentralised continuous MEV";
                         /** @enum {string} */
-                        installation_type: "in_ceiling" | "in_duct" | "through_wall";
+                        installation_type: "in_ceiling" | "through_wall";
                         /**
                          * @description Whether the system is installed in a kitchen or in another wet room that is not a kitchen
                          * @enum {string}

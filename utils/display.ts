@@ -526,7 +526,6 @@ export function displayBoilerLocation(locationType: SchemaBoilerLocationType | u
 
 export const installationTypeOptions: Record<SchemaMechanicalVentilationInstallationType, string> = {
 	in_ceiling: "In the ceiling",
-	in_duct: "In a duct",
 	through_wall: "Through a wall",
 };
 

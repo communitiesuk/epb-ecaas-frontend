@@ -1177,7 +1177,6 @@
 												"type": "string",
 												"enum": [
 													"in_ceiling",
-													"in_duct",
 													"through_wall"
 												]
 											},

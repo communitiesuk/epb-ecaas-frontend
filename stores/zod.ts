@@ -72,7 +72,6 @@ const mechVentInstallationLocations = [
 ] as const satisfies SchemaMechanicalVentilationInstallationLocation[];
 const mechVentInstallationTypes = [
 	"in_ceiling",
-	"in_duct",
 	"through_wall",
 ] as const satisfies SchemaMechanicalVentilationInstallationType[];
 const mhvrLocations = ["inside", "outside"] as const satisfies MVHRLocation[];
