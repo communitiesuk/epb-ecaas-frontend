@@ -1262,7 +1262,7 @@ export type DomesticHotWater = AssertEachKeyIsPageId<{
 
 const hotWaterHeatSourceExtension = {
 	heatSourceId: z.literal("NEW_HEAT_SOURCE"),
-	coldWaterSource,
+	coldWaterSource: z.string(),
 	isExistingHeatSource: z.literal(false),
 };
 
@@ -1335,7 +1335,7 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 		z.object({
 			id: z.uuidv4().readonly(),
 			heatSourceId: z.string(),
-			coldWaterSource,
+			coldWaterSource: z.string(),
 			isExistingHeatSource: z.literal(true),
 			createdAutomatically: z.literal(true).optional(),
 			maxFlowTemp: zodUnit("temperature").optional(),
@@ -1365,6 +1365,7 @@ const preheatedWaterCylinderDataZod = namedWithId
 		areaOfHeatExchanger: z.number().optional(),
 		heaterPosition: fraction,
 		thermostatPosition: fraction,
+		coldWaterSource,
 	});
 
 export type PreheatedWaterCylinderData = z.infer<typeof preheatedWaterCylinderDataZod>;
@@ -1373,6 +1374,7 @@ const preheatedSmartHotWaterTank = namedWithId.extend({
 	typeOfWaterStorage: z.literal("smartHotWaterTank"),
 	productReference: z.string(),
 	heaterPosition: fraction,
+	coldWaterSource,
 });
 
 export type PreheatedSmartHotWaterTankData = z.infer<typeof preheatedSmartHotWaterTank>;

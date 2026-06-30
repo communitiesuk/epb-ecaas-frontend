@@ -33,6 +33,7 @@ describe("preheated water storage", () => {
 			areaOfHeatExchanger: 1000,
 			heaterPosition: 0.8,
 			thermostatPosition: 0.5,
+			coldWaterSource: "mainsWater",
 		},
 	};
 
@@ -43,6 +44,7 @@ describe("preheated water storage", () => {
 			name: "Smart water cylinder 1",
 			productReference: "42",
 			heaterPosition: 0.8,
+			coldWaterSource: "mainsWater",
 		},
 	};
 

@@ -34,6 +34,7 @@ const saveForm = (fields: PreheatedWaterStorageData) => {
 			name: fields.name,
 			id,
 			heaterPosition: fields.heaterPosition,
+			coldWaterSource: fields.coldWaterSource,
 		};
 
 		let waterStorageItem: EcaasForm<PreheatedWaterStorageData>;
@@ -162,7 +163,7 @@ const wwhrsMap = new Map(wwhrs);
 				name="typeOfWaterStorage"
 				type="govRadios"
 				:options="waterStorageTypes"
-				label="Type of water storage"
+				label="Type of pre-heated water cylinder"
 				validation="required"
 				:disabled="hasPackagedProduct(model)"
 			/>
@@ -250,7 +251,7 @@ const wwhrsMap = new Map(wwhrs);
 				id="coldWaterSource"
 				type="govRadios"
 				label="Cold water source"
-				:options="new Map([...coldWaterSourcesMap, ...wwhrsMap])"
+				:options="new Map([...wwhrsMap, ...coldWaterSourcesMap])"
 				name="coldWaterSource"
 				validation="required"
 			/>

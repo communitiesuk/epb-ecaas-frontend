@@ -11,7 +11,7 @@ const page = usePage();
 const store = useEcaasStore();
 const { removeEntry, duplicateEntry } = useDomesticHotWater();
 
-const { heatSources: dhwHeatSources } = store.domesticHotWater;
+const { heatSources: dhwHeatSources, preheatedWaterStorage, waterStorage } = store.domesticHotWater;
 
 const { errorMessages, addError, clearErrors } = useErrorSummary();
 const heatSourceTypesThatCanAddSecond = ["heatNetwork", "heatPump", "heatInterfaceUnit"] as const;
@@ -45,14 +45,22 @@ function isHeatPumpConnectedToExistingHeatNetwork(heatSourceForm: EcaasForm<Dome
 }
 
 const heatSourceMaxNumberOfItems = computed(() => {
-	if (dhwHeatSources.data.length !== 1) {
-		return 1;
-	}
 	const firstHeatSource = dhwHeatSources.data[0];
+
+	if (preheatedWaterStorage.data.length &&
+		waterStorage.data.length &&
+		firstHeatSource?.data.coldWaterSource &&
+		firstHeatSource.data.coldWaterSource === preheatedWaterStorage.data[0]?.data.id
+	) {
+		return 2;
+	}
+
 	if (firstHeatSource && isHeatPumpConnectedToExistingHeatNetwork(firstHeatSource)) {
 		return 1;
 	}
+
 	const firstHeatSourceType = firstHeatSource ? getDhwHeatSourceType(firstHeatSource) : undefined;
+
 	return firstHeatSourceType && heatSourceTypesThatCanAddSecond.includes(firstHeatSourceType as typeof heatSourceTypesThatCanAddSecond[number]) ? 2 : 1;
 });
 

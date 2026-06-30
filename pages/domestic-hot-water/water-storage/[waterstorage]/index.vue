@@ -146,8 +146,6 @@ const preheatedWaterStorage = useAssociatedItems(["preheatedWaterStorage"]);
 const coldWaterSourcesMap = new Map(Object.entries(coldWaterSourceOptions));
 const wwhrsMap = new Map(wwhrs);
 const preheatedWaterStorageMap = new Map(preheatedWaterStorage);
-
-console.log("preheated storage", preheatedWaterStorageMap);
 </script>
 
 <template>
@@ -175,7 +173,7 @@ console.log("preheated storage", preheatedWaterStorageMap);
 				name="typeOfWaterStorage"
 				type="govRadios"
 				:options="waterStorageTypes"
-				label="Type of water storage"
+				label="Type of hot water cylinder"
 				validation="required"
 				:disabled="hasPackagedProduct(model)"
 			/>
@@ -263,7 +261,7 @@ console.log("preheated storage", preheatedWaterStorageMap);
 				id="coldWaterSource"
 				type="govRadios"
 				label="Cold water source"
-				:options="new Map([...coldWaterSourcesMap, ...wwhrsMap, ...preheatedWaterStorageMap])"
+				:options="new Map([...preheatedWaterStorageMap, ...wwhrsMap, ...coldWaterSourcesMap])"
 				name="coldWaterSource"
 				validation="required"
 			/>

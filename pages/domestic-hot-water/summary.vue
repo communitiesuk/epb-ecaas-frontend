@@ -28,7 +28,7 @@ type SummaryHeatSource = {
 		name: string,
 		heatSourceType: HeatSourceType,
 		isExistingHeatSource: boolean
-		coldWaterSource: "mainsWater" | "headerTank"
+		coldWaterSource: string
 	}
 };
 

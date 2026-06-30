@@ -333,6 +333,11 @@ const heatSourceOptions = computed(() => {
 	}
 	return result;
 });
+
+const preheatedWaterStorage = useAssociatedItems(["preheatedWaterStorage"]);
+
+const coldWaterSourcesMap = new Map(Object.entries(coldWaterSourceOptions));
+const preheatedWaterStorageMap = new Map(preheatedWaterStorage);
 </script>
 
 <template>
@@ -364,7 +369,7 @@ const heatSourceOptions = computed(() => {
 			id="coldWaterSource"
 			type="govRadios"
 			label="Cold water source"
-			:options="coldWaterSourceOptions"
+			:options="new Map([...preheatedWaterStorageMap, ...coldWaterSourcesMap])"
 			name="coldWaterSource"
 			validation="required"
 			:disabled="hasPackagedProduct(model)"
