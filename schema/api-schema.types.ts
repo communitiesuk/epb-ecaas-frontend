@@ -1574,6 +1574,11 @@ export interface components {
                         vent_type: "Centralised continuous MEV";
                         measured_fan_power?: number;
                         measured_air_flow_rate?: number;
+                        /**
+                         * @description Whether the duct size is 125mm or greater, or less than 125mm. These two options can be standardly referenced as '125mm diameter or 204 x 60mm (rectangular) or larger' and '100mm diameter or 100 x 50mm (rectangular)' respectively, but the cut-off point should be 125mm. This optional field is not passed to the FHS wrapper, but is used as a tiebreak if the referenced product in the HEM database has test data for multiple duct sizes (and therefore is not optional if this is the case).
+                         * @enum {string}
+                         */
+                        indicated_duct_size?: "125mm_or_larger" | "smaller_than_125mm";
                     } & ({
                         /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
                         mid_height_air_flow_path: number;
