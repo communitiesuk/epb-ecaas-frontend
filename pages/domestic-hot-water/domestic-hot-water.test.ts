@@ -1266,6 +1266,58 @@ describe("Domestic hot water", () => {
 			expect(link?.getAttribute("href")).toContain("water-storage");
 		});
 
+		it("displays an error when two heat sources are added without one being connected to a pre-heated water tank", async () => {
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [{
+							data: {
+								...heatSource1.data,
+								coldWaterSource: preheatedStorage1.data.id,
+							},
+						}],
+					},
+					preheatedWaterStorage: {
+						data: [preheatedStorage1],
+					},
+					waterStorage: {
+						data: [hwStorage1],
+					},
+				},
+			});
+
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [
+							heatSource1,
+							{
+								data: {
+									...heatSource1.data,
+									coldWaterSource: preheatedStorage1.data.id,
+								},
+							},
+						],
+					},
+					preheatedWaterStorage: {
+						data: [preheatedStorage1],
+					},
+					waterStorage: {
+						data: [hwStorage1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+
+			expect(errorSummary.textContent).toContain(
+				"You can only have two heat sources if one is connected to a pre-heated water tank.",
+			);
+		});
+
 		it("displays all error messages if there are more than one", async () => {
 			const heatPump = {
 				data: {
