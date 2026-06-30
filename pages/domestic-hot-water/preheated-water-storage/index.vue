@@ -78,12 +78,13 @@ const withinMinAndMaxVolume = (node: FormKitNode, min: number, max: number) => {
 
 autoSaveForm<PreheatedWaterStorageData>(model, (state, newData) => {
 	const storageType = newData.data.typeOfWaterStorage;
+	newData.data.id ??= id;
 	newData.data.name ??= waterStorageTypes[storageType];
 	state.domesticHotWater.preheatedWaterStorage.data = [newData];
 });
 
 const isProductSelected = () => {
-	if (preheatedData.data.typeOfWaterStorage !== "smartHotWaterTank") {
+	if (preheatedData?.data.typeOfWaterStorage !== "smartHotWaterTank") {
 		return false;
 	}
 	return preheatedData?.data.productReference ? true : false;
@@ -127,6 +128,13 @@ function heatSourceIsHeatPump() {
 	});	
 	return heatSources.length === 1 || (heatSources.length === 2 && heatSources.includes("heatPump"));
 }
+
+const wwhrs = store.domesticHotWater.wwhrs.data
+	.filter(x => x.data.wwhrsType === "System A" || x.data.wwhrsType === "System C")
+	.map(mapOption("WWHRS"));
+
+const coldWaterSourcesMap = new Map(Object.entries(coldWaterSourceOptions));
+const wwhrsMap = new Map(wwhrs);
 </script>
 
 <template>
@@ -237,6 +245,14 @@ function heatSourceIsHeatPump() {
 				name="thermostatPosition"
 				validation="required | number | min:0 | max:1"
 				help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
+			/>
+			<FormKit
+				id="coldWaterSource"
+				type="govRadios"
+				label="Cold water source"
+				:options="new Map([...coldWaterSourcesMap, ...wwhrsMap])"
+				name="coldWaterSource"
+				validation="required"
 			/>
 			<HemDefaultProductWarning :brand-names="[productBrandName]" />
 			<div class="govuk-button-group">

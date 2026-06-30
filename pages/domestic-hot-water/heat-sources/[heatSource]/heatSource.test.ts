@@ -1249,6 +1249,7 @@ describe("Heat pump section", () => {
 					areaOfHeatExchanger: 1000,
 					heaterPosition: 0.8,
 					thermostatPosition: 0.5,
+					coldWaterSource: "mainsWater",
 				},
 			};
 			store.$patch({
@@ -1274,6 +1275,7 @@ describe("Heat pump section", () => {
 					areaOfHeatExchanger: 1000,
 					heaterPosition: 0.8,
 					thermostatPosition: 0.5,
+					coldWaterSource: "mainsWater",
 				},
 			};
 			store.$patch({
@@ -1299,6 +1301,7 @@ describe("Heat pump section", () => {
 					areaOfHeatExchanger: 1000,
 					heaterPosition: 0.8,
 					thermostatPosition: 0.5,
+					coldWaterSource: "mainsWater",
 				},
 			};
 			store.$patch({

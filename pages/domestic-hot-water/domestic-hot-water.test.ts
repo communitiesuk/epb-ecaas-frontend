@@ -80,6 +80,7 @@ describe("Domestic hot water", () => {
 			areaOfHeatExchanger: 2.5,
 			heaterPosition: 0.8,
 			thermostatPosition: 0.5,
+			coldWaterSource: "mainsWater",
 		},
 	};
 
@@ -166,6 +167,7 @@ describe("Domestic hot water", () => {
 				typeOfWaterStorage: "smartHotWaterTank",
 				heaterPosition: 0.8,
 				productReference: "SMART-12345",
+				coldWaterSource: "mainsWater",
 			},
 		};
 
@@ -182,6 +184,7 @@ describe("Domestic hot water", () => {
 				areaOfHeatExchanger: 2.5,
 				heaterPosition: 0.8,
 				thermostatPosition: 0.5,
+				coldWaterSource: "mainsWater",
 			},
 		};
 
@@ -843,6 +846,7 @@ describe("Domestic hot water", () => {
 					heaterPosition: 0.8,
 					thermostatPosition: 0.5,
 					packagedProductReference: heatPump.productReference,
+					coldWaterSource: "mainsWater",
 				};
 
 				store.$patch({

@@ -89,6 +89,7 @@ describe("preheated water storage", () => {
 		await user.type(screen.getByTestId("areaOfHeatExchanger"), "1000");
 		await user.type(screen.getByTestId("heaterPosition"), "0.8");
 		await user.type(screen.getByTestId("thermostatPosition"), "0.5");
+		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
 		await user.tab();
 	};
 
@@ -98,6 +99,7 @@ describe("preheated water storage", () => {
 		await user.click(screen.getByTestId("chooseAProductButton"));
 		// Have to simulate product selection by directly setting the product reference in the store - the other page won't load in a unit test
 		await user.type(screen.getByTestId("heaterPosition"), "0.8");
+		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
 		await user.tab();
 	};
 
@@ -124,6 +126,8 @@ describe("preheated water storage", () => {
 		// smart water cylinder specific
 		expect((await screen.findByTestId("selectSmartHotWaterTank_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
+
+		expect((await screen.findByTestId("coldWaterSource_error"))).toBeDefined();
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
@@ -134,7 +138,53 @@ describe("preheated water storage", () => {
 		expect((await screen.findByTestId("waterStorageErrorSummary"))).toBeDefined();
 	});
 
-	describe.only("preheated water cylinder", () => {
+	test("includes WWHRS (System A or C) and pre-heated water cylinder in cold water source options", async () => {
+		const wwhrsDataA: EcaasForm<WwhrsData> = {
+			data: {
+				id: "563d2dcd-b407-4a8a-a5d7-a565ef154bb6",
+				name: "WWHRS A",
+				coldWaterSource: "mainsWater",
+				productReference: "1000",
+				wwhrsType: "System A",
+			},
+		};
+
+		const wwhrsDataB: EcaasForm<WwhrsData> = {
+			data: {
+				id: "6b956eea-a405-497a-a079-e587d426298e",
+				name: "WWHRS B",
+				coldWaterSource: "mainsWater",
+				productReference: "1001",
+				wwhrsType: "System B",
+			},
+		};
+
+		const wwhrsDataC: EcaasForm<WwhrsData> = {
+			data: {
+				id: "b4210549-ed01-49ac-bcb3-9de4a1c67db8",
+				name: "WWHRS C",
+				coldWaterSource: "mainsWater",
+				productReference: "1002",
+				wwhrsType: "System C",
+			},
+		};
+
+		store.$patch({
+			domesticHotWater: {
+				wwhrs: {
+					data: [wwhrsDataA, wwhrsDataB, wwhrsDataC],
+				},
+			},
+		});
+
+		await renderSuspended(PreheatedWaterStorage);
+
+		expect(screen.getByTestId(`coldWaterSource_${wwhrsDataA.data.id}`)).toBeDefined();
+		expect(screen.getByTestId(`coldWaterSource_${wwhrsDataC.data.id}`)).toBeDefined();
+		expect(screen.queryByTestId(`coldWaterSource_${wwhrsDataB.data.id}`)).toBeNull();
+	});
+
+	describe("preheated water cylinder", () => {
 		afterEach(() => {
 			store.$reset();
 		});
@@ -191,7 +241,7 @@ describe("preheated water storage", () => {
 			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
 		});
 
-		test.only("name defaults to 'Standard water cylinder' when Standard water cylinder is selected'", async () => {
+		test("name defaults to 'Standard water cylinder' when Standard water cylinder is selected'", async () => {
 			await renderSuspended(PreheatedWaterStorage);
 
 			await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
@@ -205,7 +255,7 @@ describe("preheated water storage", () => {
 		test("navigate to pcdb product select page when choose a product button is clicked", async () => {
 			await renderSuspended(PreheatedWaterStorage, {
 				route: {
-					path: "/domestic-hot-water/preheated-water-storage",
+					path: "/domestic-hot-water/preheated-water-storage/0",
 				},
 			});
 
@@ -213,7 +263,7 @@ describe("preheated water storage", () => {
 
 			const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
 			expect(chooseProductButton).toBeDefined();
-			expect(chooseProductButton.pathname).toContain("/domestic-hot-water/preheated-water-storage/smart-hot-water-tank");
+			expect(chooseProductButton.pathname).toContain("/domestic-hot-water/preheated-water-storage/0/smart-hot-water-tank");
 		});
 
 		test("data is saved to store state when form is valid", async () => {

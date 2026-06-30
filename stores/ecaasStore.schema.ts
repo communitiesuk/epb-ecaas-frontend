@@ -1393,6 +1393,7 @@ const hotWaterCylinderDataZod = namedWithId
 		areaOfHeatExchanger: z.number().optional(),
 		heaterPosition: fraction,
 		thermostatPosition: fraction,
+		coldWaterSource,
 	});
 
 export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
@@ -1401,6 +1402,7 @@ const smartHotWaterTankDataZod = namedWithId.extend({
 	typeOfWaterStorage: z.literal("smartHotWaterTank"),
 	productReference: z.string(),
 	heaterPosition: fraction,
+	coldWaterSource,
 });
 
 export type SmartHotWaterTankData = z.infer<typeof smartHotWaterTankDataZod>;

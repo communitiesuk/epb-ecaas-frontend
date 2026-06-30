@@ -3,8 +3,9 @@ import { litre, type Volume } from "~/utils/units/volume";
 import type { WaterStorageData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
 import { v4 as uuidv4 } from "uuid";
-import { hasPackagedProduct, waterStorageTypes } from "#imports";
+import { coldWaterSourceOptions, hasPackagedProduct, waterStorageTypes } from "#imports";
 import type { Product, AnyPcdbProduct } from "~/pcdb/pcdb.types";
+import { mapOption } from "~/composables/associatedItems";
 
 const title = "Water storage";
 const store = useEcaasStore();
@@ -48,6 +49,7 @@ const saveForm = (fields: WaterStorageData) => {
 					dailyEnergyLoss: fields.dailyEnergyLoss,
 					areaOfHeatExchanger: fields.areaOfHeatExchanger,
 					thermostatPosition: fields.thermostatPosition,
+					coldWaterSource: fields.coldWaterSource,
 				},
 				complete: true,
 			};
@@ -57,6 +59,7 @@ const saveForm = (fields: WaterStorageData) => {
 					...commonFields,
 					typeOfWaterStorage: fields.typeOfWaterStorage,
 					productReference: fields.productReference,
+					coldWaterSource: fields.coldWaterSource,
 				},
 				complete: true,
 			};
@@ -133,6 +136,18 @@ function heatSourceIsHeatPump() {
 	});	
 	return heatSources.length === 1 || (heatSources.length === 2 && heatSources.includes("heatPump"));
 }
+
+const wwhrs = store.domesticHotWater.wwhrs.data
+	.filter(x => x.data.wwhrsType === "System A" || x.data.wwhrsType === "System C")
+	.map(mapOption("WWHRS"));
+
+const preheatedWaterStorage = useAssociatedItems(["preheatedWaterStorage"]);
+
+const coldWaterSourcesMap = new Map(Object.entries(coldWaterSourceOptions));
+const wwhrsMap = new Map(wwhrs);
+const preheatedWaterStorageMap = new Map(preheatedWaterStorage);
+
+console.log("preheated storage", preheatedWaterStorageMap);
 </script>
 
 <template>
@@ -243,6 +258,14 @@ function heatSourceIsHeatPump() {
 				name="thermostatPosition"
 				validation="required | number | min:0 | max:1"
 				help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
+			/>
+			<FormKit
+				id="coldWaterSource"
+				type="govRadios"
+				label="Cold water source"
+				:options="new Map([...coldWaterSourcesMap, ...wwhrsMap, ...preheatedWaterStorageMap])"
+				name="coldWaterSource"
+				validation="required"
 			/>
 			<HemDefaultProductWarning :brand-names="[productBrandName]" />
 			<div class="govuk-button-group">

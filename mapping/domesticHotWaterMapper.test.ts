@@ -58,6 +58,7 @@ describe("domestic hot water mapper", () => {
 			dailyEnergyLoss: 40,
 			heaterPosition: 0.2,
 			thermostatPosition: 0.8,
+			coldWaterSource: "mainsWater",
 		},
 		complete: true,
 	} as const satisfies EcaasForm<WaterStorageData>;
@@ -77,6 +78,7 @@ describe("domestic hot water mapper", () => {
 			id: "efa1b2c3-d4e5-6789-0123-456789abcd12",
 			heaterPosition: 0.2,
 			productReference: "BLOOP-DOOP-123",
+			coldWaterSource: "mainsWater",
 		},
 		complete: true,
 	} as const satisfies EcaasForm<WaterStorageData>;

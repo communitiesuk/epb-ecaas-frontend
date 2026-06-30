@@ -62,6 +62,7 @@ describe("Domestic hot water summary", () => {
 			areaOfHeatExchanger: 2.5,
 			heaterPosition: 0.8,
 			thermostatPosition: 0.5,
+			coldWaterSource: "mainsWater",
 		};
 
 		const smartHotWaterCylinder: SmartHotWaterTankData = {
@@ -70,6 +71,7 @@ describe("Domestic hot water summary", () => {
 			name: "Smart hot water cylinder",
 			productReference: "SMART-HOT-WATER-CYLINDER",
 			heaterPosition: 0.3,
+			coldWaterSource: "mainsWater",
 		};
 
 		const addHotWaterCylinderData = () => {
