@@ -110,6 +110,58 @@ describe("Domestic hot water", () => {
 		},
 	};
 
+	describe("WWHRS", () => {
+		test("displays existing wwhrs", async () => {
+			store.$patch({
+				domesticHotWater: {
+					wwhrs: {
+						...baseCompleteForm,
+						data: [wwhrs1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.getByText(wwhrs1.data.name)).toBeDefined();
+		});
+
+		test("wwhrs is removed when remove link is clicked", async () => {
+			store.$patch({
+				domesticHotWater: {
+					wwhrs: {
+						...baseCompleteForm,
+						data: [wwhrs1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.getAllByTestId("wwhrs_items")).toBeDefined();
+
+			await user.click(screen.getByTestId("wwhrs_remove_0"));
+			expect(screen.queryByTestId("wwhrs_items")).toBeNull();
+		});
+
+		test("wwhrs are duplicated when duplicate link is clicked", async () => {
+			store.$patch({
+				domesticHotWater: {
+					wwhrs: {
+						data: [wwhrs1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			await userEvent.click(screen.getByTestId("wwhrs_duplicate_0"));
+			expect(screen.queryAllByTestId("wwhrs_item").length).toBe(2);
+			expect(screen.getByText(wwhrs1.data.name)).toBeDefined();
+			expect(screen.getByText(`${wwhrs1.data.name} (1)`)).toBeDefined();
+		});
+	});
+
 	describe("Preheated water storage", () => {
 		test("displays existing preheated water storage", async () => {
 			store.$patch({

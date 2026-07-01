@@ -263,7 +263,6 @@ checkMaxHeatSourcesExceeded();
 				const item: CustomListItem = {
 					name: x.data.name,
 					status: x.complete ? formStatus.complete : formStatus.inProgress,
-					actions: ['edit']
 				};
 
 				return item;
