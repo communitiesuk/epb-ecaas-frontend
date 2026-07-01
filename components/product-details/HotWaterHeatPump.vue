@@ -15,6 +15,7 @@ const tableData: Record<string, string> = {
 	"Daily energy loss of hot water cylinder declared by manufacturer": dim(data.hwVesselLossDaily, "kilowatt hours per day"),
 	"Maximum power": dim(data.powerMax, "kilowatt"),
 	"Integrated cylinder": show(data.vesselType),
+	"Model qualifier": show(data.modelQualifier),
 };
 </script>
 

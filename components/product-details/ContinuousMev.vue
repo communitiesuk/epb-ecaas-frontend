@@ -11,6 +11,7 @@ const tableData: Record<string, string> =
 	...(data.technologyType === "CentralisedMev" && {
 		"Integrated with heat pump": data.integralOnly ? (data.integralOnly === 0 ? "No" : "Yes") : "-",
 	}),
+	"Model qualifier": show(data.modelQualifier),
 };
 </script>
 

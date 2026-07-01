@@ -15,6 +15,7 @@ const tableData: Record<string, string> =
 	"Standing heat loss": dim(data.hiuDailyLoss, "kilowatt hours per day"),
 	"Return temperature during test at 55°C flow temperature": dim(data.vwart55, "celsius"),
 	"Auxiliary power": dim(data.powerAux, "kilowatt"),
+	"Model qualifier": show(data.modelQualifier),
 };
 </script>
 
