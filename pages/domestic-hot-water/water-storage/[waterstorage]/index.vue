@@ -258,6 +258,7 @@ const preheatedWaterStorageMap = new Map(preheatedWaterStorage);
 				help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
 			/>
 			<FormKit
+				v-if="model.typeOfWaterStorage !== undefined"
 				id="coldWaterSource"
 				type="govRadios"
 				label="Cold water source"

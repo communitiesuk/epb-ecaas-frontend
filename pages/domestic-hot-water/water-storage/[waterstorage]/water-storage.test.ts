@@ -205,6 +205,7 @@ describe("water storage", () => {
 		});
 
 		await renderSuspended(WaterStorage);
+		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 
 		expect(screen.getByTestId(`coldWaterSource_${wwhrsDataA.data.id}`)).toBeDefined();
 		expect(screen.getByTestId(`coldWaterSource_${wwhrsDataC.data.id}`)).toBeDefined();
