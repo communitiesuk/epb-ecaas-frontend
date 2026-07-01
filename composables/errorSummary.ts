@@ -9,6 +9,7 @@ export type ErrorSummaryItem = {
 	id: string;
 	text: string | undefined;
 	href?: string;
+	disableLink?: boolean;
 };
 
 export function useErrorSummary() {

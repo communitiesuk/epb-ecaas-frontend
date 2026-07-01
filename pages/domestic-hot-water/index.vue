@@ -12,7 +12,7 @@ const page = usePage();
 const store = useEcaasStore();
 const { removeEntry, duplicateEntry } = useDomesticHotWater();
 
-const { heatSources: dhwHeatSources, preheatedWaterStorage, waterStorage } = store.domesticHotWater;
+const { heatSources: dhwHeatSources, preheatedWaterStorage } = store.domesticHotWater;
 
 const { errorMessages, addError, clearErrors } = useErrorSummary();
 const heatSourceTypesThatCanAddSecond = ["heatNetwork", "heatPump", "heatInterfaceUnit"] as const;
@@ -45,19 +45,21 @@ function isHeatPumpConnectedToExistingHeatNetwork(heatSourceForm: EcaasForm<Dome
 		&& !!heatSourceForm.data.associatedHeatNetworkId;
 }
 
-function isHeatSourceConnectedToPreheatedWaterCylinder(heatSource?: EcaasForm<DomesticHotWaterHeatSourceData>) {
+function isHeatSourceConnectedToPreheatedWaterCylinder() {
+	const coldWaterSources = dhwHeatSources.data.map(x => x.data.coldWaterSource);
+	const preheatedWaterStorageId = preheatedWaterStorage.data[0]?.data.id;
+
 	return (
-		preheatedWaterStorage.data.length &&
-		waterStorage.data.length &&
-		heatSource?.data.coldWaterSource &&
-		heatSource.data.coldWaterSource === preheatedWaterStorage.data[0]?.data.id
+		coldWaterSources.length &&
+		preheatedWaterStorageId &&
+		coldWaterSources.includes(preheatedWaterStorageId)
 	);
 }
 
 const heatSourceMaxNumberOfItems = computed(() => {
 	const firstHeatSource = dhwHeatSources.data[0];
 
-	if (isHeatSourceConnectedToPreheatedWaterCylinder(firstHeatSource)) {
+	if (isHeatSourceConnectedToPreheatedWaterCylinder()) {
 		return 2;
 	}
 
@@ -79,8 +81,6 @@ function handleComplete() {
 
 	const hasWaterStorage = store.domesticHotWater.waterStorage.data.length > 0;
 
-	const heatSource = dhwHeatSources.data[0];
-
 	if (!hasOtherHotWaterOutlet) {
 		addError({ 
 			id: "hotWaterOutletNoOtherTypeError", 
@@ -94,16 +94,6 @@ function handleComplete() {
 			id: "waterStorageRequiredError",
 			text: "Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
 			href: `${page?.url}/water-storage/create`,
-		});
-	}
-
-	if (dhwHeatSources.data.length > 1 &&
-		heatSource?.data.coldWaterSource &&
-		heatSource.data.coldWaterSource !== preheatedWaterStorage.data[0]?.data.id
-	) {
-		addError({
-			id: "connectedPreHeatedWaterStorageRequiredError",
-			text: "You can only have two heat sources if one is connected to a pre-heated water tank.",
 		});
 	}
 
@@ -124,7 +114,10 @@ function handleComplete() {
 }
 
 const hasIncompleteOrInvalidEntries = () => {
-	if (dhwHeatSources.data.length > 1) return true;
+	if (dhwHeatSources.data.length > heatSourceMaxNumberOfItems.value) {
+		return true;
+	}
+
 	return Object.values(store.domesticHotWater)
 		.some(section => {
 			if (isEcaasForm(section)) {
@@ -144,20 +137,21 @@ function checkMaxHeatSourcesExceeded() {
 	const error: ErrorSummaryItem = {
 		id: "heatSourceLimitExceededError",
 		text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used",
+		disableLink: true,
 	};
 
 	if (dhwHeatSources.data.length === 2) {
 		const coldWaterSources = dhwHeatSources.data.map(x => x.data.coldWaterSource);
 		const preheatedWaterStorageId = preheatedWaterStorage.data[0]?.data.id;
 
-		if (waterStorage.data.length &&
-			coldWaterSources.length &&
+		if (coldWaterSources.length &&
 			preheatedWaterStorageId &&
-			coldWaterSources.includes(preheatedWaterStorageId)
+			!coldWaterSources.includes(preheatedWaterStorageId)
 		) {
 			addError({
 				id: "heatSourceLimitExceededError",
 				text: "You can only have two heat sources if one is connected to a pre-heated water tank.",
+				disableLink: true,
 			});
 			return;
 		}
@@ -302,7 +296,7 @@ checkMaxHeatSourcesExceeded();
 
 	<CustomList 
 		id="waterStorage"
-		title="Water storage"
+		title="Hot water cylinder (optional)"
 		:form-url="`${page?.url!}/water-storage`"
 		:items="store.domesticHotWater.waterStorage.data
 			.filter(x => isEcaasForm(x))

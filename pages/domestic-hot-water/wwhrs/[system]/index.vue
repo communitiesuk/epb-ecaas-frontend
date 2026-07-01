@@ -30,6 +30,7 @@ const saveForm = (fields: WwhrsData) => {
 				name: fields.name,
 				coldWaterSource: fields.coldWaterSource,
 				productReference: fields.productReference,
+				wwhrsType: wwhrs.data[index]?.data.wwhrsType,
 			},
 			complete: true,
 		};

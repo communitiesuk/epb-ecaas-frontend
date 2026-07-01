@@ -3,6 +3,7 @@ import type { SchemaHeaderTankOrMainsWater, SchemaInstantElecShower, SchemaMixer
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { objectFromEntries } from "ts-extras";
+import { useColdWaterSource } from "~/composables/coldWaterSource";
 
 export const defaultColdWaterSourceData: SchemaHeaderTankOrMainsWater = {
 	start_day: 0,
@@ -38,26 +39,20 @@ const coldWaterSourceMap = {
 	SchemaColdWaterSourceType
 >;
 
-function getColdWaterSource(source: string, state: ResolvedState): SchemaColdWaterSourceType {
-	const { preheatedWaterStorage, waterStorage } = state.domesticHotWater;
-	type ColdWaterSourceKey = keyof typeof coldWaterSourceMap;
+function getColdWaterSourceData(source: DomesticHotWaterHeatSourceData): SchemaColdWaterSourceType {
+	const { getColdWaterSource } = useColdWaterSource();
+	const coldWaterSource = getColdWaterSource(source);
 
-	if (source in coldWaterSourceMap) {
-		return coldWaterSourceMap[source as ColdWaterSourceKey];
-	}
-
-	const waterStorageItem = [...preheatedWaterStorage, ...waterStorage].find(x => x.id === source);
-
-	if (!waterStorageItem) {
+	if (!coldWaterSource) {
 		throw new Error("No cold water source for heat source");
 	}
 
-	return coldWaterSourceMap[waterStorageItem.coldWaterSource];
+	return coldWaterSourceMap[coldWaterSource];
 }
 
 function mapShowersData(state: ResolvedState) {
 	const dhwHeatSource = getDomesticHotWaterHeatSource(state);
-	const coldWaterSource = getColdWaterSource(dhwHeatSource.coldWaterSource, state);
+	const coldWaterSource = getColdWaterSourceData(dhwHeatSource);
 	const { wwhrs, hotWaterOutlets } = state.domesticHotWater;
 
 	let WWHRS: SchemaWWHRS | undefined = undefined;
@@ -115,7 +110,7 @@ function mapShowersData(state: ResolvedState) {
 
 function mapBathsData(state: ResolvedState) {
 	const dhwHeatSource = getDomesticHotWaterHeatSource(state);
-	const coldWaterSource = getColdWaterSource(dhwHeatSource.coldWaterSource, state);
+	const coldWaterSource = getColdWaterSourceData(dhwHeatSource);
 
 	const bathEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "bath").map((x): [string, SchemaBathDetails] => {
 		const key = x.name;
@@ -132,7 +127,7 @@ function mapBathsData(state: ResolvedState) {
 
 function mapOthersData(state: ResolvedState) {
 	const dhwHeatSource = getDomesticHotWaterHeatSource(state);
-	const coldWaterSource = getColdWaterSource(dhwHeatSource.coldWaterSource, state);
+	const coldWaterSource = getColdWaterSourceData(dhwHeatSource);
 
 	const otherEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "otherHotWaterOutlet").map((x): [string, SchemaOtherWaterUseDetails] => {
 		const key = x.name;
@@ -382,7 +377,7 @@ function mapWaterStorageHeatSource(
 function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: WaterStorageData) {
 	const dhwHeatSource = getDomesticHotWaterHeatSource(state);
 	const actualHeatSource = getActualHeatSourceFromDHWHeatSource(state);
-	const coldWaterSource = getColdWaterSource(dhwHeatSource.coldWaterSource, state);
+	const coldWaterSource = getColdWaterSourceData(dhwHeatSource);
 
 	if (actualHeatSource.typeOfHeatSource === "pointOfUse") {
 		throw new Error("Cannot have a point of use heat source heating a hot water cylinder or smart hot water tank");
@@ -459,7 +454,7 @@ function mapHeatSourceNoWS(
 	>,
 	state: ResolvedState,
 ) {
-	const coldWaterSource = getColdWaterSource(dhwHeatSource.coldWaterSource, state);
+	const coldWaterSource = getColdWaterSourceData(dhwHeatSource);
 	let mappedHWCylinderBit, mappedHeatSourceWet;
 
 	const commonHWCylinderProps = {

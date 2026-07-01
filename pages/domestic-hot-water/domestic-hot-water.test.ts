@@ -1270,31 +1270,13 @@ describe("Domestic hot water", () => {
 			store.$patch({
 				domesticHotWater: {
 					heatSources: {
-						data: [{
-							data: {
-								...heatSource1.data,
-								coldWaterSource: preheatedStorage1.data.id,
-							},
-						}],
-					},
-					preheatedWaterStorage: {
-						data: [preheatedStorage1],
-					},
-					waterStorage: {
-						data: [hwStorage1],
-					},
-				},
-			});
-
-			store.$patch({
-				domesticHotWater: {
-					heatSources: {
 						data: [
 							heatSource1,
 							{
 								data: {
 									...heatSource1.data,
-									coldWaterSource: preheatedStorage1.data.id,
+									id: "fb62acf2-10b1-4983-bc08-7350f8e4a413",
+									name: "Heat source 2",
 								},
 							},
 						],

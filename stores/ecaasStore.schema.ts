@@ -941,6 +941,8 @@ const typeOfLocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSp
 const coldWaterSource = z.enum(["mainsWater", "headerTank"]);
 const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedContinuousMev", "decentralisedContinuousMev"]);
 
+export const typeOfColdWaterSource = coldWaterSource.enum;
+
 export type HeatSourceSectionPage = "space heating" | "domestic hot water";
 
 export type HeatPumpType = z.infer<typeof typeOfHeatPump>;
@@ -1365,7 +1367,7 @@ const preheatedWaterCylinderDataZod = namedWithId
 		areaOfHeatExchanger: z.number().optional(),
 		heaterPosition: fraction,
 		thermostatPosition: fraction,
-		coldWaterSource,
+		coldWaterSource: z.string(),
 	});
 
 export type PreheatedWaterCylinderData = z.infer<typeof preheatedWaterCylinderDataZod>;
@@ -1374,7 +1376,7 @@ const preheatedSmartHotWaterTank = namedWithId.extend({
 	typeOfWaterStorage: z.literal("smartHotWaterTank"),
 	productReference: z.string(),
 	heaterPosition: fraction,
-	coldWaterSource,
+	coldWaterSource: z.string(),
 });
 
 export type PreheatedSmartHotWaterTankData = z.infer<typeof preheatedSmartHotWaterTank>;
@@ -1395,7 +1397,7 @@ const hotWaterCylinderDataZod = namedWithId
 		areaOfHeatExchanger: z.number().optional(),
 		heaterPosition: fraction,
 		thermostatPosition: fraction,
-		coldWaterSource,
+		coldWaterSource: z.string(),
 	});
 
 export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
@@ -1404,7 +1406,7 @@ const smartHotWaterTankDataZod = namedWithId.extend({
 	typeOfWaterStorage: z.literal("smartHotWaterTank"),
 	productReference: z.string(),
 	heaterPosition: fraction,
-	coldWaterSource,
+	coldWaterSource: z.string(),
 });
 
 export type SmartHotWaterTankData = z.infer<typeof smartHotWaterTankDataZod>;
