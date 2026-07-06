@@ -1,5 +1,5 @@
-import type { BathData, DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, WaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
-import { defaultColdWaterSourceData, mapDomesticHotWaterData, mapHotWaterSourcesData } from "./domesticHotWaterMapper";
+import type { BathData, DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, PreheatedWaterStorageData, WaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
+import { defaultColdWaterSourceData, mapDomesticHotWaterData, mapHotWaterSourcesData, mapPreheatedWaterSourceData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import type { SchemaMixerShower } from "~/schema/api-schema.types";
 import { celsius } from "~/utils/units/temperature";
@@ -47,8 +47,8 @@ describe("domestic hot water mapper", () => {
 		},
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
-	// water storage
 
+	// water storage
 	const storageTank = {
 		data: {
 			typeOfWaterStorage: "hotWaterCylinder",
@@ -245,8 +245,20 @@ describe("domestic hot water mapper", () => {
 		},
 	};
 
-	describe("water storage and heat sources", () => {
+	const preheatedTank: EcaasForm<PreheatedWaterStorageData> = {
+		data: {
+			typeOfWaterStorage: "hotWaterCylinder",
+			name: "Pre-heated Water Cylinder",
+			id: "98e86654-da4f-4b16-a883-374a5175b4b9",
+			storageCylinderVolume: { amount: 30, unit: "litres" },
+			dailyEnergyLoss: 40,
+			heaterPosition: 0.2,
+			coldWaterSource: wwhrs.data.id,
+		},
+		complete: true,
+	};
 
+	describe("water storage and heat sources", () => {
 		/**
 		These are the permutations that we need to consider, in the format:
 		[heat source, water storage]
@@ -1265,6 +1277,167 @@ describe("domestic hot water mapper", () => {
 						.toThrow("Selected hot water heat source requires water storage - no water storage present");
 				},
 			);
+		});
+
+		describe("pre-heated water storage", () => {
+			it("maps pre-heated water cylinders to PreHeatedWaterStorage", () => {
+				const heatPumpWithCylinder = {
+					data: {
+						...heatPumpHWOnly.data,
+						coldWaterSource: preheatedTank.data.id,
+					},
+					complete: true,
+				} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+				store.$patch({
+					domesticHotWater: {
+						heatSources: {
+							data: [heatPumpWithCylinder],
+							complete: true,
+						},
+						wwhrs: {
+							data: [wwhrs],
+							complete: true,
+						},
+						preheatedWaterStorage: {
+							data: [preheatedTank],
+							complete: true,
+						},
+					},
+				});
+
+				const result = mapPreheatedWaterSourceData(resolveState(store.$state));
+
+				const expected: Partial<FhsInputSchema> = {
+					PreHeatedWaterSource: {
+						"preheated tank": {
+							ColdWaterSource: "mains water",
+							volume: 30,
+							daily_losses: 40,
+							HeatSource: {
+								[heatPumpHWOnly.data.name]: {
+									heater_position: preheatedTank.data.heaterPosition,
+									type: "HeatPump_HWOnly",
+									product_reference: heatPumpHWOnly.data.productReference,
+								},
+							},
+						},
+					},
+					ColdWaterSource: {
+						"mains water": defaultColdWaterSourceData,
+					},
+				};
+
+				expect(result).toEqual(expected);
+			});
+
+			it("maps pre-heated water cylinder cold water source to hot water cylinder", () => {
+				const hotWaterCylinder: EcaasForm<WaterStorageData> = {
+					data: {
+						...storageTank.data,
+						coldWaterSource: preheatedTank.data.id,
+					},
+					complete: true,
+				};
+
+				const preheatedCylinder: EcaasForm<PreheatedWaterStorageData> = {
+					data: {
+						...preheatedTank.data,
+						coldWaterSource: "mainsWater",
+					},
+					complete: true,
+				};
+
+				const heatPumpWithCylinder = {
+					data: {
+						...heatPumpHWOnly.data,
+						coldWaterSource: preheatedCylinder.data.id,
+					},
+					complete: true,
+				} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+				const boilerWithCylinder = {
+					data: {
+						...combiBoiler.data,
+						coldWaterSource: hotWaterCylinder.data.id,
+					}, 
+					complete: true,
+				} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+				store.$patch({
+					domesticHotWater: {
+						heatSources: {
+							data: [heatPumpWithCylinder, boilerWithCylinder],
+							complete: true,
+						},
+						preheatedWaterStorage: {
+							data: [preheatedCylinder],
+							complete: true,
+						},
+						waterStorage: {
+							data: [hotWaterCylinder],
+							complete: true,
+						},
+						pipework: {
+							data: [],
+							complete: true,
+						},
+					},
+				});
+
+				const result = mapHotWaterSourcesData(resolveState(store.$state));
+
+				const expected: Partial<FhsInputSchema> = {
+					HotWaterSource: {
+						"hw cylinder": {
+							type: "StorageTank",
+							ColdWaterSource: "mains water",
+							volume: 30,
+							daily_losses: 40,
+							HeatSource: {
+								[combiBoiler.data.name]: {
+									heater_position: hotWaterCylinder.data.heaterPosition,
+									type: "HeatSourceWet",
+									name: combiBoiler.data.name,
+									temp_flow_limit_upper: combiBoiler.data.maxFlowTemp.amount,
+									thermostat_position: storageTank.data.thermostatPosition,
+								},
+							},
+						},
+					},
+					HeatSourceWet: {
+						[combiBoiler.data.name]: {
+							EnergySupply: "mains elec",
+							is_heat_network: false,
+							product_reference: combiBoiler.data.productReference,
+							type: "Boiler",
+						},
+					},
+					ColdWaterSource: {
+						"mains water": defaultColdWaterSourceData,
+					},
+				};
+
+				expect(result).toEqual(expected);
+			});
+
+			it("throws an error when no heat source is connected to pre-heated water cylinder", () => {
+				store.$patch({
+					domesticHotWater: {
+						heatSources: {
+							data: [heatPump],
+							complete: true,
+						},
+						preheatedWaterStorage: {
+							data: [preheatedTank],
+							complete: true,
+						},
+					},
+				});
+
+				expect(() => mapPreheatedWaterSourceData(resolveState(store.$state)))
+					.toThrow("No heat source connected to pre-heated water cylinder");
+			});
 		});
 	});
 

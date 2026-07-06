@@ -52,9 +52,7 @@ describe("Domestic hot water", () => {
 			},
 			dailyEnergyLoss: 69,
 			typeOfWaterStorage: "hotWaterCylinder",
-			areaOfHeatExchanger: 2.5,
 			heaterPosition: 0.8,
-			thermostatPosition: 0.5,
 			coldWaterSource: "mainsWater",
 		},
 	};

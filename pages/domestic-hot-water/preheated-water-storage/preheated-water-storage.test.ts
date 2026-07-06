@@ -30,9 +30,7 @@ describe("preheated water storage", () => {
 			typeOfWaterStorage: "hotWaterCylinder",
 			storageCylinderVolume: unitValue(5, litre),
 			dailyEnergyLoss: 1,
-			areaOfHeatExchanger: 1000,
 			heaterPosition: 0.8,
-			thermostatPosition: 0.5,
 			coldWaterSource: "mainsWater",
 		},
 	};
@@ -88,9 +86,7 @@ describe("preheated water storage", () => {
 		await user.type(screen.getByTestId("name"), " 1");
 		await user.type(screen.getByTestId("storageCylinderVolume"), "5");
 		await user.type(screen.getByTestId("dailyEnergyLoss"), "1");
-		await user.type(screen.getByTestId("areaOfHeatExchanger"), "1000");
 		await user.type(screen.getByTestId("heaterPosition"), "0.8");
-		await user.type(screen.getByTestId("thermostatPosition"), "0.5");
 		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
 		await user.tab();
 	};
@@ -120,7 +116,6 @@ describe("preheated water storage", () => {
 		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
 		expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
-		expect((await screen.findByTestId("thermostatPosition_error"))).toBeDefined();
 
 		await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -229,9 +224,7 @@ describe("preheated water storage", () => {
 				preheatedWaterCylinder.data.storageCylinderVolume.amount.toString(),
 			);
 			expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe(preheatedWaterCylinder.data.dailyEnergyLoss.toString());
-			expect((await screen.findByTestId<HTMLInputElement>("areaOfHeatExchanger")).value).toBe(preheatedWaterCylinder.data.areaOfHeatExchanger!.toString());
 			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value).toBe(preheatedWaterCylinder.data.heaterPosition.toString());
-			expect((await screen.findByTestId<HTMLInputElement>("thermostatPosition")).value).toBe(preheatedWaterCylinder.data.thermostatPosition.toString());
 		});
 
 		test("navigates to domestic hot water page when valid form is completed", async () => {

@@ -46,8 +46,6 @@ const saveForm = (fields: PreheatedWaterStorageData) => {
 					typeOfWaterStorage: fields.typeOfWaterStorage,
 					storageCylinderVolume: fields.storageCylinderVolume,
 					dailyEnergyLoss: fields.dailyEnergyLoss,
-					areaOfHeatExchanger: fields.areaOfHeatExchanger,
-					thermostatPosition: fields.thermostatPosition,
 				},
 				complete: true,
 			};
@@ -114,20 +112,6 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 	if (hasModelDetails(product)) {
 		productBrandName.value = product.brandName;
 	}
-}
-
-
-// there can only be one heat source, 2 if one is a heatnetwork so check that either is a heat pump
-function heatSourceIsHeatPump() {
-	const heatSources = store.domesticHotWater.heatSources.data.map((e) => {
-		if (e.data.isExistingHeatSource) {
-			return store.spaceHeating.heatSource.data
-				.find((x) => x.data.id === e.data.heatSourceId)?.data.typeOfHeatSource;
-		} else {
-			return e.data.typeOfHeatSource;
-		}
-	});	
-	return heatSources.length === 1 || (heatSources.length === 2 && heatSources.includes("heatPump"));
 }
 
 const wwhrs = store.domesticHotWater.wwhrs.data
@@ -218,16 +202,6 @@ const wwhrsMap = new Map(wwhrs);
 					data-field="HotWaterSource['hw cylinder'].daily_losses"
 					:disabled="hasPackagedProduct(model)"
 				/>
-				<FormKit
-					v-if="heatSourceIsHeatPump()"
-					id="areaOfHeatExchanger"
-					type="govInputWithSuffix"
-					label="Area of heat exchanger installed"
-					suffix-text="m²"
-					name="areaOfHeatExchanger"
-					validation="number"
-					:disabled="hasPackagedProduct(model)"
-				/>
 			</template>
 			<FormKit
 				v-if="model.typeOfWaterStorage !== undefined"
@@ -237,15 +211,6 @@ const wwhrsMap = new Map(wwhrs);
 				name="heaterPosition"
 				validation="required | number | min:0 | max:1"
 				help="Enter a number between 0 and 1, rounded to one decimal place. 0 is at the bottom, 1 is at the top."
-			/>
-			<FormKit
-				v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
-				id="thermostatPosition"
-				type="govInputFloat"
-				label="Thermostat position in the cylinder"
-				name="thermostatPosition"
-				validation="required | number | min:0 | max:1"
-				help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
 			/>
 			<FormKit
 				v-if="model.typeOfWaterStorage !== undefined"

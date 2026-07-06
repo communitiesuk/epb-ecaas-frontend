@@ -441,9 +441,7 @@ const preheatedWaterCylinderSummary: SummarySection = {
 			"Name": show(cylData.name),
 			"Storage cylinder volume": "storageCylinderVolume" in cylData ? dim(cylData.storageCylinderVolume, "litres") : emptyValueRendering,
 			"Daily energy loss": "dailyEnergyLoss" in cylData ? dim(cylData.dailyEnergyLoss, "kilowatt hours per day") : emptyValueRendering,
-			"Area of heat exchanger installed": "areaOfHeatExchanger" in cylData ? dim(cylData.areaOfHeatExchanger, "metres square") : emptyValueRendering,
 			"Heater position in the cylinder": "heaterPosition" in cylData ? show(cylData.heaterPosition) : emptyValueRendering,
-			"Thermostat position in the cylinder": "thermostatPosition" in cylData ? show(cylData.thermostatPosition) : emptyValueRendering,
 			"Cold water source": displayCamelToSentenceCase(show(coldWaterSource)),
 		};
 	}),

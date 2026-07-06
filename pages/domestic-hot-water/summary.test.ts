@@ -59,9 +59,7 @@ describe("Domestic hot water summary", () => {
 				unit: "litres" as const,
 			},
 			dailyEnergyLoss: 1,
-			areaOfHeatExchanger: 2.5,
 			heaterPosition: 0.8,
-			thermostatPosition: 0.5,
 			coldWaterSource: "mainsWater",
 		};
 
@@ -161,9 +159,7 @@ describe("Domestic hot water summary", () => {
 				"Name": "Pre-heated water cylinder",
 				"Storage cylinder volume": `5 ${litre.suffix}`,
 				"Daily energy loss": `1 ${kilowattHoursPerDay.suffix}`,
-				"Area of heat exchanger installed": `2.5 ${metresSquare.suffix}`,
 				"Heater position in the cylinder": "0.8",
-				"Thermostat position in the cylinder": "0.5",
 				"Cold water source": "Mains water",
 			};
 
@@ -436,9 +432,7 @@ describe("Domestic hot water summary", () => {
 					typeOfWaterStorage: "hotWaterCylinder",
 					storageCylinderVolume: unitValue(5, litre),
 					dailyEnergyLoss: 1,
-					areaOfHeatExchanger: 1000,
 					heaterPosition: 0.8,
-					thermostatPosition: 0.5,
 					coldWaterSource: "mainsWater",
 				},
 			};

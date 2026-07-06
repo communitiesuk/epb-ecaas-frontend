@@ -1364,9 +1364,7 @@ const preheatedWaterCylinderDataZod = namedWithId
 		typeOfWaterStorage: z.literal("hotWaterCylinder"),
 		storageCylinderVolume: zodUnit("volume"),
 		dailyEnergyLoss: z.number(),
-		areaOfHeatExchanger: z.number().optional(),
 		heaterPosition: fraction,
-		thermostatPosition: fraction,
 		coldWaterSource: z.string(),
 	});
 
