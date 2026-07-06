@@ -1895,6 +1895,70 @@
                 }
             ]
         },
+        "SolarThermalSystemWithProductReference": {
+            "required": [
+                "product_reference",
+                "sol_loc",
+                "area_module",
+                "modules",
+                "collector_mass_flow_rate",
+                "EnergySupply",
+                "tilt",
+                "orientation360",
+                "solar_loop_piping_hlc"
+            ],
+            "properties": {
+                "product_reference": {
+                    "description": "A unique reference to a product held within the HEM database (PCDB)",
+                    "title": "Reference to the product in the HEM database",
+                    "type": "string"
+                },
+                "sol_loc": {
+                    "enum": [
+                        "OUT",
+                        "NHS",
+                        "HS"
+                    ],
+                    "description": "Location of the main part of the collector loop piping"
+                },
+                "area_module": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "description": "Collector module reference area (unit: m2)"
+                },
+                "modules": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Number of collector modules installed"
+                },
+                "collector_mass_flow_rate": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "description": "Mass flow rate solar loop (unit: kg/s)"
+                },
+                "EnergySupply": {
+                    "type": "string",
+                    "description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
+                },
+                "tilt": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 90,
+                    "description": "Tilt angle (inclination) of the solar thermal panel from horizontal, measured upwards facing, 0 to 90, in degrees. 0=horizontal surface, 90=vertical surface. Needed to calculate solar irradiation at the panel surface."
+                },
+                "orientation360": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 360,
+                    "description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+                },
+                "solar_loop_piping_hlc": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "description": "Heat loss coefficient of the collector loop piping (unit: W/K)"
+                }
+            }
+        },
         "HeatSourceWet": {
             "description": "A possible heat source for a hot water tank",
             "allOf": [
@@ -2270,6 +2334,9 @@
                                             },
                                             {
                                                 "$ref": "#/$defs/SolarThermalSystem"
+                                            },
+                                            {
+                                                "$ref": "#/$defs/SolarThermalSystemWithProductReference"
                                             },
                                             {
                                                 "$ref": "#/$defs/HeatSourceWet"
