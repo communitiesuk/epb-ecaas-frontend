@@ -139,6 +139,37 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 	}
 }
 
+function isCommunalHeatNetworkWithoutBoosterHeatPump() {
+	return store.spaceHeating.heatNetworks.data.some(
+		x => x.data.typeOfHeatNetwork === "communalHeatNetwork" && !x.data.boosterHeatPump,
+	);
+}
+
+function isCommunalHeatNetworkWithBoosterHeatPump() {
+	return store.spaceHeating.heatNetworks.data.some(
+		x => x.data.typeOfHeatNetwork === "communalHeatNetwork" && x.data.boosterHeatPump,
+	);
+}
+
+function getHeatSourceTypeHelpText() {
+	if (isCommunalHeatNetworkWithoutBoosterHeatPump()) {
+		return "As a communal heat network has been added, the heat source must be a HIU";
+	}
+
+	return "As a district heat network has been added, the heat source must be a HIU";
+}
+
+const heatSourceOptions = computed(() => {
+	if (store.spaceHeating.heatNetworks.data) {
+		return {
+			heatInterfaceUnit: heatSourceTypesWithDisplay.heatInterfaceUnit,
+		};
+	}
+
+	return heatSourceTypesWithDisplay;
+});
+
+
 const boilers = heatSourceStoreData
 	.filter(x => x.data.typeOfHeatSource === "boiler")
 	.map(x => [x.data.id, x.data.name] as [string, string]);
@@ -151,6 +182,9 @@ const { mounted } = useMounted();
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<div class="govuk-inset-text">
+		<p>Add in the heat sources required for space heating systems.</p>
+	</div>
 	<GovErrorSummary
 		v-if="(route.query.error as ErrorName) === 'DHW_HEAT_SOURCE_CONFLICT'"
 		:error-list="[
@@ -183,10 +217,11 @@ const { mounted } = useMounted();
 			id="typeOfHeatSource"
 			type="govRadios"
 			label="Type of heat source"
-			:options="heatSourceTypesWithDisplay"
+			:options="heatSourceOptions"
 			name="typeOfHeatSource"
 			validation="required"
 			:disabled="hasPackagedProduct(model)"
+			:help="getHeatSourceTypeHelpText()"
 		/>
 
 		<HeatPumpSection

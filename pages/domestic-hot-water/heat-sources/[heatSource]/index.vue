@@ -258,6 +258,20 @@ function isCommunalHeatNetworkWithoutBoosterHeatPump() {
 	});
 }
 
+function isCommunalHeatNetworkWithBoosterHeatPump() {
+	return store.spaceHeating.heatNetworks.data.some(
+		x => x.data.typeOfHeatNetwork === "communalHeatNetwork" && x.data.boosterHeatPump,
+	);
+}
+
+function getHeatSourceTypeHelpText() {
+	if (isCommunalHeatNetworkWithoutBoosterHeatPump()) {
+		return "As a communal heat network has been added, the heat source must be a HIU";
+	}
+
+	return "As a district heat network has been added, the heat source must be a HIU";
+}
+
 function hasHeatPumpOrHIUHeatSource() {
 	return dhwHeatSources.data.some((x, itemIndex) => {
 		if (itemIndex === index) {
@@ -413,6 +427,7 @@ const heatSourceOptions = computed(() => {
 				name="typeOfHeatSource"
 				validation="required"
 				:disabled="hasPackagedProduct(model)"
+				:help="getHeatSourceTypeHelpText()"
 			/>
 			<HeatPumpSection
 				v-if="model.isExistingHeatSource === false
