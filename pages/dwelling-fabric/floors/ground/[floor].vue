@@ -264,7 +264,9 @@ const greaterThanZero = (node: FormKitNode) => {
 				validation="required | number"
 				data-field="Zone.BuildingElement.*.thermal_resist_insul"
 			>
-				<GovDetails summary-text="Help with this input"><p class="govuk-body">The thermal resistance of the insulation layer should be calculated for the part of the floor construction below the void, excluding the effect of surface resistances.</p></GovDetails>
+				<GovDetails summary-text="Help with this input">
+					<p class="govuk-body">The thermal resistance of the insulation layer should be calculated for the part of the floor construction below the void, excluding the effect of surface resistances. If there is no insulation, enter 0.</p>
+				</GovDetails>
 			</FormKit>
 			<FormKit
 				id="thermalTransmittanceOfWallsAboveGround"
