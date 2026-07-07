@@ -296,7 +296,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			type="govInputWithUnit"
 			:unit="millimetre"
 			label="Thickness of walls at the edge of the floor"
-			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 0.3m to 0.8m. If this value varies enter a weighted average."
+			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 30mm to 80mm. If this value varies enter a weighted average."
 			name="thicknessOfWalls"
 			:validation="zodTypeAsFormKitValidation(thicknessOfWallsZod)"
 			data-field="Zone.BuildingElement.*.thickness_walls">

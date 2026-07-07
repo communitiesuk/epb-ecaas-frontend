@@ -62,7 +62,7 @@ const floorsData: FloorsData = {
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				perimeter: 0,
-				thicknessOfWalls: unitValue(0.3, metre),
+				thicknessOfWalls: unitValue(30, millimetre),
 				typeOfGroundFloor: "Slab_no_edge_insulation",
 			},
 		},
@@ -76,7 +76,7 @@ const floorsData: FloorsData = {
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				perimeter: 0,
-				thicknessOfWalls: unitValue(0.3, metre),
+				thicknessOfWalls: unitValue(30, millimetre),
 				typeOfGroundFloor: "Slab_edge_insulation",
 				horizontalEdgeInsulationWidth: {
 					amount: 0.5,
@@ -131,7 +131,7 @@ const floorsData: FloorsData = {
 				arealHeatCapacity: "Medium",
 				massDistributionClass: "I",
 				depthOfBasementFloor: 2.5,
-				thicknessOfWalls: unitValue(0.3, millimetre),
+				thicknessOfWalls: unitValue(30, millimetre),
 			},
 		}],
 	},
@@ -146,7 +146,7 @@ const floorsData: FloorsData = {
 				arealHeatCapacity: "Medium",
 				massDistributionClass: "I",
 				perimeter: 30,
-				thicknessOfWalls: unitValue(0.3, millimetre),
+				thicknessOfWalls: unitValue(30, millimetre),
 				depthOfBasementFloor: 0.5,
 				heightOfBasementWalls: 1,
 				thermalResistanceOfBasementWalls: 0.5,
@@ -558,7 +558,7 @@ describe("Dwelling space fabric summary", () => {
 			"Areal heat capacity": "Medium",
 			"Mass distribution class": "Internal",
 			"Depth of basement floor below ground": `2.5 ${metre.suffix}`,
-			"Thickness of walls where they meet the floor": `0.3 ${millimetre.suffix}`,
+			"Thickness of walls where they meet the floor": `30 ${millimetre.suffix}`,
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
@@ -606,7 +606,7 @@ describe("Dwelling space fabric summary", () => {
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",
 			"Exposed perimeter": `0 ${metre.suffix}`,
-			"Thickness of walls at the edge of the floor": `0.3 ${metre.suffix}`,
+			"Thickness of walls at the edge of the floor": `30 ${millimetre.suffix}`,
 			"Type of ground floor": "Slab no edge insulation",
 			"Horizontal edge insulation width": `-`,
 			"Horizontal edge insulation thermal resistance": `-`,
@@ -623,7 +623,7 @@ describe("Dwelling space fabric summary", () => {
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",
 			"Exposed perimeter": `0 ${metre.suffix}`,
-			"Thickness of walls at the edge of the floor": `0.3 ${metre.suffix}`,
+			"Thickness of walls at the edge of the floor": `30 ${millimetre.suffix}`,
 			"Type of ground floor": "Slab edge insulation",
 			"Horizontal edge insulation width": `0.5 ${metre.suffix}`,
 			"Horizontal edge insulation thermal resistance": `2 ${squareMeterKelvinPerWatt.suffix}`,
@@ -719,7 +719,7 @@ describe("Dwelling space fabric summary", () => {
 			"Height of the basement walls above ground": `1 ${metre.suffix}`,
 			"U-value of the basement walls above ground": `1 ${squareMeterKelvinPerWatt.suffix}`,
 			"Thermal resistance of basement walls below ground": `0.5 ${squareMeterKelvinPerWatt.suffix}`,
-			"Thickness of walls at the edge of the floor": `0.3 ${millimetre.suffix}`,
+			"Thickness of walls at the edge of the floor": `30 ${millimetre.suffix}`,
 		};
 
 

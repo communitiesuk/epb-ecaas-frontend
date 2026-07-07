@@ -66,7 +66,7 @@ const groundFloorSummary: SummarySection = {
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Exposed perimeter": dim(x.perimeter, "metres"),
-			"Thickness of walls at the edge of the floor": dim(x.thicknessOfWalls, "metres"),
+			"Thickness of walls at the edge of the floor": dim(x.thicknessOfWalls, "millimetres"),
 			"Type of ground floor": displaySnakeToSentenceCase(show(x.typeOfGroundFloor)),
 			"Horizontal edge insulation width": horizontalEdgeInsulationWidth,
 			"Horizontal edge insulation thermal resistance": horizontalEdgeInsulationThermalResistance,
