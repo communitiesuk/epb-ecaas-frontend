@@ -158,7 +158,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Pre-heated water cylinder",
 				"Storage cylinder volume": `5 ${litre.suffix}`,
-				"Daily energy loss": `1 ${kilowattHoursPerDay.suffix}`,
+				"Daily standing loss": `1 ${kilowattHoursPerDay.suffix}`,
 				"Heater position in the cylinder": "0.8",
 				"Cold water source": "Mains water",
 			};
@@ -346,7 +346,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Hot water cylinder",
 				"Storage cylinder volume": `5 ${litre.suffix}`,
-				"Daily energy loss": `1 ${kilowattHoursPerDay.suffix}`,
+				"Daily standing loss": `1 ${kilowattHoursPerDay.suffix}`,
 				"Area of heat exchanger installed": `2.5 ${metresSquare.suffix}`,
 				"Heater position in the cylinder": "0.8",
 				"Thermostat position in the cylinder": "0.5",

@@ -194,7 +194,7 @@ const wwhrsMap = new Map(wwhrs);
 				<FormKit
 					id="dailyEnergyLoss"
 					type="govInputWithSuffix"
-					label="Daily energy loss"
+					label="Daily standing loss"
 					help="Enter the estimated energy lost from the tank per day"
 					name="dailyEnergyLoss"
 					validation="required | number | min:0 | max:200"

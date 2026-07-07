@@ -391,7 +391,7 @@ const hotWaterCylinderSummary: SummarySection = {
 		return {
 			"Name": show(hwCylData.name),
 			"Storage cylinder volume": "storageCylinderVolume" in hwCylData ? dim(hwCylData.storageCylinderVolume, "litres") : emptyValueRendering,
-			"Daily energy loss": "dailyEnergyLoss" in hwCylData ? dim(hwCylData.dailyEnergyLoss, "kilowatt hours per day") : emptyValueRendering,
+			"Daily standing loss": "dailyEnergyLoss" in hwCylData ? dim(hwCylData.dailyEnergyLoss, "kilowatt hours per day") : emptyValueRendering,
 			"Area of heat exchanger installed": "areaOfHeatExchanger" in hwCylData ? dim(hwCylData.areaOfHeatExchanger, "metres square") : emptyValueRendering,
 			"Heater position in the cylinder": "heaterPosition" in hwCylData ? show(hwCylData.heaterPosition) : emptyValueRendering,
 			"Thermostat position in the cylinder": "thermostatPosition" in hwCylData ? show(hwCylData.thermostatPosition) : emptyValueRendering,
@@ -440,7 +440,7 @@ const preheatedWaterCylinderSummary: SummarySection = {
 		return {
 			"Name": show(cylData.name),
 			"Storage cylinder volume": "storageCylinderVolume" in cylData ? dim(cylData.storageCylinderVolume, "litres") : emptyValueRendering,
-			"Daily energy loss": "dailyEnergyLoss" in cylData ? dim(cylData.dailyEnergyLoss, "kilowatt hours per day") : emptyValueRendering,
+			"Daily standing loss": "dailyEnergyLoss" in cylData ? dim(cylData.dailyEnergyLoss, "kilowatt hours per day") : emptyValueRendering,
 			"Heater position in the cylinder": "heaterPosition" in cylData ? show(cylData.heaterPosition) : emptyValueRendering,
 			"Cold water source": displayCamelToSentenceCase(show(coldWaterSource)),
 		};
