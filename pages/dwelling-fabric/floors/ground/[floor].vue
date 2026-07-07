@@ -405,7 +405,7 @@ const greaterThanZero = (node: FormKitNode) => {
 				type="govInputWithSuffix"
 				suffix-text="m"
 				label="Height of the floor upper surface"
-				help="Enter the height of the top surface of the ground floor above the external ground level. Typically between 0.015m and 0.06m."
+				help="Enter the height of the top surface of the ground floor above the external ground level. Typically between 0.15m and 0.6m."
 				name="heightOfFloorUpperSurface"
 				:validation="zodTypeAsFormKitValidation(heightUpperSurfaceZod)"
 				data-field="Zone.BuildingElement.*.height_upper_surface"/>
