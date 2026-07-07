@@ -188,7 +188,7 @@ const wwhrsMap = new Map(wwhrs);
 					:validation-messages="{
 						withinMinAndMaxVolume: `Storage cylinder volume must be at least 0 and no more than 200,000 ${litre.name}.`,
 					}"
-					data-field="HotWaterSource['hw cylinder'].volume"
+					data-field="PreHeatedWaterSource['preheated tank'].volume"
 					:disabled="hasPackagedProduct(model)"
 				/>
 				<FormKit
@@ -199,7 +199,7 @@ const wwhrsMap = new Map(wwhrs);
 					name="dailyEnergyLoss"
 					validation="required | number | min:0 | max:200"
 					suffix-text="kWh/day"
-					data-field="HotWaterSource['hw cylinder'].daily_losses"
+					data-field="PreHeatedWaterSource['preheated tank'].daily_losses"
 					:disabled="hasPackagedProduct(model)"
 				/>
 			</template>
