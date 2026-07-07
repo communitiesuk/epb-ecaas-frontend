@@ -139,34 +139,49 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 	}
 }
 
+const heatNetwork = computed(() => store.spaceHeating.heatNetworks.data[0]?.data);
+
 function isCommunalHeatNetworkWithoutBoosterHeatPump() {
-	return store.spaceHeating.heatNetworks.data.some(
-		x => x.data.typeOfHeatNetwork === "communalHeatNetwork" && !x.data.boosterHeatPump,
-	);
+	return heatNetwork.value?.typeOfHeatNetwork === "communalHeatNetwork"
+		&& !heatNetwork.value.boosterHeatPump;
 }
 
 function isCommunalHeatNetworkWithBoosterHeatPump() {
-	return store.spaceHeating.heatNetworks.data.some(
-		x => x.data.typeOfHeatNetwork === "communalHeatNetwork" && x.data.boosterHeatPump,
-	);
+	return heatNetwork.value?.typeOfHeatNetwork === "communalHeatNetwork"
+		&& heatNetwork.value.boosterHeatPump;
+}
+
+function isDistrictHeatNetwork() {
+	return heatNetwork.value?.typeOfHeatNetwork === "sleevedDistrictHeatNetwork"
+		|| heatNetwork.value?.typeOfHeatNetwork === "unsleevedDistrictHeatNetwork";
 }
 
 function getHeatSourceTypeHelpText() {
 	if (isCommunalHeatNetworkWithoutBoosterHeatPump()) {
-		return "As a communal heat network has been added, the heat source must be a HIU";
+		return "As a traditional communal heat network has been added, the heat source must be a HIU";
 	}
 
-	return "As a district heat network has been added, the heat source must be a HIU";
+	if (isCommunalHeatNetworkWithBoosterHeatPump()) {
+		return "As a 5th generation (ambient loop) communal heat network has been added, the heat source must be a booster heat pump";
+	}
+
+	if (isDistrictHeatNetwork())
+		return "As a district heat network has been added, the heat source must be a HIU";
 }
 
-const heatSourceOptions = computed(() => {
-	if (store.spaceHeating.heatNetworks.data) {
+const heatSourceOptions = computed<Record<string, string>>(() => {
+	if (isCommunalHeatNetworkWithoutBoosterHeatPump() || isDistrictHeatNetwork()) {
 		return {
 			heatInterfaceUnit: heatSourceTypesWithDisplay.heatInterfaceUnit,
 		};
 	}
+	if (isCommunalHeatNetworkWithBoosterHeatPump()) {
+		return {
+			heatPump: "Booster heat pump",
+		};
+	}
 
-	return heatSourceTypesWithDisplay;
+	return heatSourceTypesWithDisplay as Record<string, string>;
 });
 
 

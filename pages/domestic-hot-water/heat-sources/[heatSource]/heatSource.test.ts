@@ -1330,10 +1330,35 @@ describe("Heat Networks", () => {
 		subHeatNetworkName: "Sub Communal Heat Network",
 	};
 
+	const sleevedDistrictHeatNetwork: Partial<HeatNetworkData> = {
+		id: "463c94f6-566c-49b2-af27-57e5c68b5c15",
+		name: "Sleeved District Heat Network",
+		typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+		subHeatNetworkName: "Sub Sleeved District Heat Network",
+	};
+
+	const unsleevedDistrictHeatNetwork: Partial<HeatNetworkData> = {
+		id: "463c94f6-566c-49b2-af27-57e5c68b5c17",
+		name: "Unsleeved District Heat Network",
+		typeOfHeatNetwork: "unsleevedDistrictHeatNetwork",
+		subHeatNetworkName: "Sub Unsleeved District Heat Network",
+	};
+
 	const heatInterfaceUnit: Partial<HeatSourceData> = {
 		id: "hiuId",
 		name: "Heat Interface Unit",
 		typeOfHeatSource: "heatInterfaceUnit",
+	};
+
+	const boosterHeatPump: HeatSourceData = {
+		id: "463c94f6-566c-49b2-af27-57e5c68b52222",
+		name: "Booster HP",
+		typeOfHeatSource: "heatPump",
+		typeOfHeatPump: "booster",
+		productReference: "HEATPUMP-SMALL",
+		isConnectedToHeatNetwork: false,
+		energySupply: "electricity",
+		maxFlowTemp: unitValue(30, "celsius"),
 	};
 
 	test("if the heat network is a communal heat network without a booster heat pump flag, show HIU & add new water heating source options in previously added heat source section", async () => {
@@ -1361,7 +1386,7 @@ describe("Heat Networks", () => {
 		expect(heatSourceRadios.length).toBe(2);
 	});
 
-	test("if the heat network is a communal heat network without a booster heat pump flag, only show HIU as an option in type of heat source when add new water heating source is selected", async () => {
+	test("if the heat network is a communal heat network without a booster heat pump flag, only show HIU as an option in type of heat source", async () => {
 		store.$patch({
 			spaceHeating: {
 				heatNetworks: {
@@ -1380,18 +1405,18 @@ describe("Heat Networks", () => {
 		});
 		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
 
-
 		const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
 		
 		expect(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeDefined();
+		expect(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE")).toBeDefined();
 		expect(heatSourceRadios.length).toBe(1);
 	});
 
-	test("if the heat network is a communal heat network with a booster heat pump flag, only show HIU as an option in type of heat source when add new water heating source is selected", async () => {
+	test("if the heat network is a sleeved district heat network, only show HIU as an option in type of heat source", async () => {
 		store.$patch({
 			spaceHeating: {
 				heatNetworks: {
-					data: [{ data: communalHeatNetwork }],
+					data: [{ data: sleevedDistrictHeatNetwork }],
 					complete: true,
 				},
 				heatSource: {
@@ -1406,12 +1431,62 @@ describe("Heat Networks", () => {
 		});
 		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
 
+		const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
+		
+		expect(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeDefined();
+		expect(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE")).toBeDefined();
+		expect(heatSourceRadios.length).toBe(1);
+	});
+
+	test("if the heat network is an unsleeved district heat network, only show HIU as an option in type of heat source", async () => {
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [{ data: sleevedDistrictHeatNetwork }],
+					complete: true,
+				},
+				heatSource: {
+					data: [{ data: heatInterfaceUnit }],
+				},
+			},
+		});
+		const component = await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "create" },
+			},
+		});
+		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
 
 		const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
 		
 		expect(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeDefined();
+		expect(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE")).toBeDefined();
 		expect(heatSourceRadios.length).toBe(1);
 	});
+
+	// test("if heat network is a communal heat network with a booster heat pump flag, only show booster heat pump as an option", async () => {
+	// 	store.$patch({
+	// 		spaceHeating: {
+	// 			heatNetworks: {
+	// 				data: [{ data: communalHeatNetwork }],
+	// 				complete: true,
+	// 			},
+	// 			heatSource: {
+	// 				data: [{ data: boosterHeatPump }],
+	// 			},
+	// 		},
+	// 	});
+	// 	const component = await renderSuspended(HeatSourceForm, {
+	// 		route: {
+	// 			params: { "heatSource": "create" },
+	// 		},
+	// 	});
+	
+	// 	const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
+			
+	// 	expect(screen.getByTestId("typeOfHeatSource_heatPump")).toBeDefined();
+	// 	expect(heatSourceRadios.length).toBe(1);
+	// });
 
 
 	// 	const heatNetwork1: Partial<DomesticHotWaterHeatSourceData> = {

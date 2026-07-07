@@ -252,24 +252,28 @@ function hasHeatNetworkHeatSource() {
 }
 
 function isCommunalHeatNetworkWithoutBoosterHeatPump() {
-	return store.spaceHeating.heatNetworks.data.some((heatNetwork) => {
-		return heatNetwork.data.typeOfHeatNetwork === "communalHeatNetwork"
-		&& !heatNetwork.data.boosterHeatPump;
-	});
+	const heatNetworks = store.spaceHeating.heatNetworks.data;
+	if (heatNetworks.length != 0)
+		return store.spaceHeating.heatNetworks.data.some(
+			x => x.data.typeOfHeatNetwork === "communalHeatNetwork" && !x.data.boosterHeatPump,
+		);
 }
 
-function isCommunalHeatNetworkWithBoosterHeatPump() {
-	return store.spaceHeating.heatNetworks.data.some(
-		x => x.data.typeOfHeatNetwork === "communalHeatNetwork" && x.data.boosterHeatPump,
-	);
+function isDistrictHeatNetwork() {
+	const heatNetworks = store.spaceHeating.heatNetworks.data;
+	if (heatNetworks.length != 0)
+		return store.spaceHeating.heatNetworks.data.some(
+			x => x.data.typeOfHeatNetwork === "sleevedDistrictHeatNetwork" || x.data.typeOfHeatNetwork === "unsleevedDistrictHeatNetwork",
+		);
 }
 
 function getHeatSourceTypeHelpText() {
 	if (isCommunalHeatNetworkWithoutBoosterHeatPump()) {
-		return "As a communal heat network has been added, the heat source must be a HIU";
+		return "As a traditional communal heat network has been added, the heat source must be a HIU";
 	}
 
-	return "As a district heat network has been added, the heat source must be a HIU";
+	if (isDistrictHeatNetwork())
+		return "As a district heat network has been added, the heat source must be a HIU";
 }
 
 function hasHeatPumpOrHIUHeatSource() {
@@ -296,7 +300,7 @@ function filterHeatSourceOptions(): Record<string, string> {
 	const { heatPump, heatInterfaceUnit } = DHWHeatSourceTypesWithDisplay;
 	const { heatNetwork } = heatNetworkProductTypeDisplay;
 
-	if (isCommunalHeatNetworkWithoutBoosterHeatPump()) {
+	if (isCommunalHeatNetworkWithoutBoosterHeatPump() || isDistrictHeatNetwork()) {
 		return {
 			heatInterfaceUnit,
 		};

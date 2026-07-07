@@ -142,51 +142,51 @@ describe("Heat Network Products Page", () => {
 		);
 	});
 
-	// test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
-	// 	mockRoute.mockReturnValue({
-	// 		params: {
-	// 			heatNetworks: "1",
-	// 			products: "heat-network",
-	// 		},
-	// 		path: "/1/heat-network",
-	// 	});
+	test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatNetworks: "1",
+				products: "heat-network",
+			},
+			path: "/1/heat-network",
+		});
 	
-	// 	mockRoute.mockReturnValue({
-	// 		params: {
-	// 			heatNetwork: "1",
-	// 			products: "heat-network",
-	// 			id: "1000",
-	// 		},
-	// 		path: "/1/heat-network/1000",
-	// 	});
+		mockRoute.mockReturnValue({
+			params: {
+				heatNetwork: "1",
+				products: "heat-network",
+				id: "1000",
+			},
+			path: "/1/heat-network/1000",
+		});
 	
-	// 	const product = {
-	// 		id: "1000",
-	// 		brandName: "Test",
-	// 		modelName: "Heat network",
-	// 		modelQualifier: "HNSMALL",
-	// 		technologyType: "HeatNetworks",
-	// 	};
+		const product = {
+			id: "1000",
+			brandName: "Test",
+			modelName: "Heat network",
+			modelQualifier: "HNSMALL",
+			technologyType: "HeatNetworks",
+		};
 	
-	// 	const heatNetworks = {
-	// 		data: [product],
-	// 	};
+		const heatNetworks = {
+			data: [product],
+		};
 	
-	// 	mockFetch.mockReturnValueOnce({
-	// 		data: ref(heatNetworks),
-	// 	});	
+		mockFetch.mockReturnValueOnce({
+			data: ref(heatNetworks),
+		});	
 	
-	// 	mockFetch.mockReturnValueOnce({
-	// 		data: ref({
-	// 			...product,
-	// 			fifthGHeatNetwork: 1,
-	// 		}),
-	// 	});	
+		mockFetch.mockReturnValueOnce({
+			data: ref({
+				...product,
+				fifthGHeatNetwork: 1,
+			}),
+		});	
 	
-	// 	await renderSuspended(Products);
-	// 	await user.click(screen.getByTestId("selectProductButton_0"));
-	// 	expect(store.spaceHeating.heatNetworks.data[1]!.data).toEqual(expect.objectContaining({
-	// 		hasBoosterHeatPump: true,
-	// 	}));
-	//});
+		await renderSuspended(Products);
+		await user.click(screen.getByTestId("selectProductButton_0"));
+		expect(store.spaceHeating.heatNetworks.data[1]!.data).toEqual(expect.objectContaining({
+			hasBoosterHeatPump: true,
+		}));
+	});
 });

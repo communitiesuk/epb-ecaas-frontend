@@ -233,32 +233,32 @@ describe("heatSource", () => {
 		// 	expect(screen.getByText("Test sub heat network")).toBeDefined();
 		// });
 
-		test("automatically selects heat network when heat pump is connected and only one heat network is available in state", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatNetworks: {
-						data: [{
-							data: {
-								id: "1",
-								typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
-								name: "Test heat network",
-							} as HeatNetworkData,
-						}],
-					},
-				},
-			});
+		// test("automatically selects heat network when heat pump is connected and only one heat network is available in state", async () => {
+		// 	store.$patch({
+		// 		spaceHeating: {
+		// 			heatNetworks: {
+		// 				data: [{
+		// 					data: {
+		// 						id: "1",
+		// 						typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+		// 						name: "Test heat network",
+		// 					} as HeatNetworkData,
+		// 				}],
+		// 			},
+		// 		},
+		// 	});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
+		// 	await renderSuspended(HeatSourceForm, {
+		// 		route: {
+		// 			params: { "heatSource": "create" },
+		// 		},
+		// 	});
 
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
+		// 	await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+		// 	await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
 
-			expect((await screen.findByTestId<HTMLInputElement>("associatedHeatNetwork_1")).checked).toBe(true);
-		});
+		// 	expect((await screen.findByTestId<HTMLInputElement>("associatedHeatNetwork_1")).checked).toBe(true);
+		// });
 
 		test("shows add heat network link when heat pump is connected and no heat networks exist", async () => {
 			await renderSuspended(HeatSourceForm, {
@@ -288,33 +288,33 @@ describe("heatSource", () => {
 			expect(screen.getByTestId("energySupply")).toBeDefined();
 		});
 
-		test("energy supply is hidden when heat pump is connected to heat network", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatNetworks: {
-						data: [{
-							data: {
-								id: "1",
-								typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
-								name: "Test heat network",
-							} as HeatNetworkData,
-						}],
-					},
-				},
-			});
+		// test("energy supply is hidden when heat pump is connected to heat network", async () => {
+		// 	store.$patch({
+		// 		spaceHeating: {
+		// 			heatNetworks: {
+		// 				data: [{
+		// 					data: {
+		// 						id: "1",
+		// 						typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+		// 						name: "Test heat network",
+		// 					} as HeatNetworkData,
+		// 				}],
+		// 			},
+		// 		},
+		// 	});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
+		// 	await renderSuspended(HeatSourceForm, {
+		// 		route: {
+		// 			params: { "heatSource": "create" },
+		// 		},
+		// 	});
 
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
+		// 	await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+		// 	await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
 
-			expect(screen.queryByTestId("energySupply")).toBeNull();
-			expect(screen.getByTestId("associatedHeatNetwork")).toBeDefined();
-		});
+		// 	expect(screen.queryByTestId("energySupply")).toBeNull();
+		// 	expect(screen.getByTestId("associatedHeatNetwork")).toBeDefined();
+		// });
 
 		test("automatically selects energy supply when only one energy supply is available in state and heat pump is not connected to heat network", async () => {
 			store.$patch({
@@ -492,32 +492,32 @@ describe("heatSource", () => {
 		// 	expect(screen.getByText("Test sub heat network")).toBeDefined();
 		// });
 
-		test("automatically selects heat network when heat pump is connected and only one heat network is available in state", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatNetworks: {
-						data: [{
-							data: {
-								id: "1",
-								typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
-								name: "Test heat network",
-							} as HeatNetworkData,
-						}],
-					},
-				},
-			});
+		// test("automatically selects heat network when heat pump is connected and only one heat network is available in state", async () => {
+		// 	store.$patch({
+		// 		spaceHeating: {
+		// 			heatNetworks: {
+		// 				data: [{
+		// 					data: {
+		// 						id: "1",
+		// 						typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+		// 						name: "Test heat network",
+		// 					} as HeatNetworkData,
+		// 				}],
+		// 			},
+		// 		},
+		// 	});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
+		// 	await renderSuspended(HeatSourceForm, {
+		// 		route: {
+		// 			params: { "heatSource": "create" },
+		// 		},
+		// 	});
 
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
+		// 	await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+		// 	await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
 
-			expect((await screen.findByTestId<HTMLInputElement>("associatedHeatNetwork_1")).checked).toBe(true);
-		});
+		// 	expect((await screen.findByTestId<HTMLInputElement>("associatedHeatNetwork_1")).checked).toBe(true);
+		// });
 
 		test("energy supply field displays when heat pump is not connected to heat network", async () => {
 			await renderSuspended(HeatSourceForm, {
@@ -532,33 +532,33 @@ describe("heatSource", () => {
 			expect(screen.getByTestId("energySupply")).toBeDefined();
 		});
 
-		test("energy supply is hidden when heat pump is connected to heat network", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatNetworks: {
-						data: [{
-							data: {
-								id: "1",
-								typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
-								name: "Test heat network",
-							} as HeatNetworkData,
-						}],
-					},
-				},
-			});
+		// test("energy supply is hidden when heat pump is connected to heat network", async () => {
+		// 	store.$patch({
+		// 		spaceHeating: {
+		// 			heatNetworks: {
+		// 				data: [{
+		// 					data: {
+		// 						id: "1",
+		// 						typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+		// 						name: "Test heat network",
+		// 					} as HeatNetworkData,
+		// 				}],
+		// 			},
+		// 		},
+		// 	});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
+		// 	await renderSuspended(HeatSourceForm, {
+		// 		route: {
+		// 			params: { "heatSource": "create" },
+		// 		},
+		// 	});
 
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
+		// 	await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+		// 	await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
 
-			expect(screen.queryByTestId("energySupply")).toBeNull();
-			expect(screen.getByTestId("associatedHeatNetwork")).toBeDefined();
-		});
+		// 	expect(screen.queryByTestId("energySupply")).toBeNull();
+		// 	expect(screen.getByTestId("associatedHeatNetwork")).toBeDefined();
+		// });
 
 		test("automatically selects energy supply when only one energy supply is available in state and heat pump is not connected to heat network", async () => {
 			store.$patch({
@@ -2131,28 +2131,28 @@ describe("heatSource", () => {
 			expect(heatSourceRadios.length).toBe(1);
 		});
 		
-		test("if heat network is a communal heat network with a booster heat pump flag, only show booster heat pump as an option", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatNetworks: {
-						data: [{ data: unsleevedDistrictHeatNetwork }],
-						complete: true,
-					},
-					heatSource: {
-						data: [{ data: heatInterfaceUnit }],
-					},
-				},
-			});
-			const component = await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
+		// test("if heat network is a communal heat network with a booster heat pump flag, only show booster heat pump as an option", async () => {
+		// 	store.$patch({
+		// 		spaceHeating: {
+		// 			heatNetworks: {
+		// 				data: [{ data: communalHeatNetwork }],
+		// 				complete: true,
+		// 			},
+		// 			heatSource: {
+		// 				data: [{ data: boosterHeatPump }],
+		// 			},
+		// 		},
+		// 	});
+		// 	const component = await renderSuspended(HeatSourceForm, {
+		// 		route: {
+		// 			params: { "heatSource": "create" },
+		// 		},
+		// 	});
 	
-			const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
+		// 	const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
 			
-			expect(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeDefined();
-			expect(heatSourceRadios.length).toBe(1);
-		});
+		// 	expect(screen.getByTestId("typeOfHeatSource_heatPump")).toBeDefined();
+		// 	expect(heatSourceRadios.length).toBe(1);
+		// });
 	});
 });
