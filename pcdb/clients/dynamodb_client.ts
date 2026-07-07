@@ -148,6 +148,7 @@ const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?
 		...(typeof item.communityHeatNetworkName === "string" ? { communityHeatNetworkName: item.communityHeatNetworkName } : {}),
 		...(item.boilerProductID ? { boilerProductID: item.boilerProductID.toString() } : {}),
 		...(item.vesselType ? { vesselType: item.vesselType as VesselType } : {}),
+		...(item.boosterHeatPump ? { boosterHeatPump: item.boosterHeatPump as boolean } : {}),
 	};
 };
 

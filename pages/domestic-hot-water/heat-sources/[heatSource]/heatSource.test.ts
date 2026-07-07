@@ -14,9 +14,21 @@ vi.mock("uuid");
 const user = userEvent.setup();
 const store = useEcaasStore();
 
-const { mockFetch } = vi.hoisted(() => ({
+const { mockFetch, navigateToMock } = vi.hoisted(() => ({
+	navigateToMock: vi.fn(),
 	mockFetch: vi.fn(),
 }));
+
+mockNuxtImport("navigateTo", () => navigateToMock);
+mockNuxtImport("useFetch", () => mockFetch);
+
+afterEach(() => {
+	store.$reset();
+	mockFetch.mockReset();
+	navigateToMock.mockReset();
+});
+
+
 
 mockNuxtImport("useFetch", () => mockFetch);
 
@@ -521,24 +533,6 @@ describe("Heat Source Page", () => {
 			isExistingHeatSource: true,
 			heatSourceId: existingBatterySpaceHeating.id,
 		};
-
-		// const existingHeatNetworkSpaceHeating: HeatSourceData = {
-		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c136",
-		// 	name: "Heat network",
-		// 	typeOfHeatSource: "heatNetwork",
-		// 	typeOfHeatNetwork: "communalHeatNetwork",
-		// 	isHeatNetworkInPcdb: true,
-		// 	hasBoosterHeatPump: true,
-		// 	usesHeatInterfaceUnits: false,
-		// 	productReference: "2001",
-		// };
-
-		// const dhwWithExistingHeatNetwork: DomesticHotWaterHeatSourceData = {
-		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c136",
-		// 	coldWaterSource: "headerTank",
-		// 	isExistingHeatSource: true,
-		// 	heatSourceId: existingHeatNetworkSpaceHeating.id,
-		// };
         
 		it.each([[existingHeatPumpSpaceHeating1, dhwWithExistingHeatPump], [existingBoilerSpaceHeating, dhwWithExistingBoiler], [existingBatterySpaceHeating, dhwWithExistingBattery]]) (
 			"when existing boiler, heat pump and heat battery has been selected, max flow temp input shows", async (existingHeatSource, dhwWithExistingHeatSource) => {
@@ -563,29 +557,6 @@ describe("Heat Source Page", () => {
 
 				expect(screen.getByTestId("maxFlowTemp")).toBeDefined();
 			});
-
-		// test("when an existing heat network has been selected, max flow temp input doesn't show", async () => {
-		// 	store.$patch({
-		// 		spaceHeating: {
-		// 			heatSource: {
-		// 				data: [{ data: existingHeatNetworkSpaceHeating }],
-		// 			},
-		// 		},
-		// 		domesticHotWater: {
-		// 			heatSources: {
-		// 				data: [{ data: dhwWithExistingHeatNetwork }],
-		// 			},
-		// 		},
-		// 	});
-
-		// 	await renderSuspended(HeatSourceForm, {
-		// 		route: {
-		// 			params: { "heatSource": "0" },
-		// 		},
-		// 	});
-
-		// 	expect(screen.queryByTestId("maxFlowTemp")).toBeNull();
-		// });
 	});
 
 	test("Renders HEM default product warning when default product is selected", async () => {
@@ -817,7 +788,10 @@ describe("Heat pump section", () => {
 			});
 			await populateValidHeatPumpForm();
 
-			expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/heat-pump");
+			await user.click(screen.getByTestId("chooseAProductButton"));
+
+			expect(navigateToMock).toHaveBeenCalledWith("/0/heat-pump");
+
 		});
 
 		test("heat pump data is saved to store state when form is valid", async () => {
@@ -1330,6 +1304,14 @@ describe("Heat Networks", () => {
 		subHeatNetworkName: "Sub Communal Heat Network",
 	};
 
+	const communalHeatNetworkWithBooster: Partial<HeatNetworkData> = {
+		id: "463c94f6-566c-49b2-af27-57e5c68b5c20",
+		name: "Communal Heat Network with Booster",
+		typeOfHeatNetwork: "communalHeatNetwork",
+		subHeatNetworkName: "Sub Communal Heat Network with Booster",
+		boosterHeatPump: true,
+	};
+
 	const sleevedDistrictHeatNetwork: Partial<HeatNetworkData> = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c15",
 		name: "Sleeved District Heat Network",
@@ -1442,7 +1424,7 @@ describe("Heat Networks", () => {
 		store.$patch({
 			spaceHeating: {
 				heatNetworks: {
-					data: [{ data: sleevedDistrictHeatNetwork }],
+					data: [{ data: unsleevedDistrictHeatNetwork }],
 					complete: true,
 				},
 				heatSource: {
@@ -1464,41 +1446,43 @@ describe("Heat Networks", () => {
 		expect(heatSourceRadios.length).toBe(1);
 	});
 
-	// test("if heat network is a communal heat network with a booster heat pump flag, only show booster heat pump as an option", async () => {
-	// 	store.$patch({
-	// 		spaceHeating: {
-	// 			heatNetworks: {
-	// 				data: [{ data: communalHeatNetwork }],
-	// 				complete: true,
-	// 			},
-	// 			heatSource: {
-	// 				data: [{ data: boosterHeatPump }],
-	// 			},
-	// 		},
-	// 	});
-	// 	const component = await renderSuspended(HeatSourceForm, {
-	// 		route: {
-	// 			params: { "heatSource": "create" },
-	// 		},
-	// 	});
+	test("if heat network is a communal heat network with a booster heat pump flag, only show booster heat pump as an option", async () => {
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [{ data: communalHeatNetworkWithBooster }],
+					complete: true,
+				},
+				heatSource: {
+					data: [{ data: boosterHeatPump }],
+				},
+			},
+		});
+		const component = await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "create" },
+			},
+		});
+		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
 	
-	// 	const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
+		const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
 			
-	// 	expect(screen.getByTestId("typeOfHeatSource_heatPump")).toBeDefined();
-	// 	expect(heatSourceRadios.length).toBe(1);
-	// });
+		expect(screen.getByTestId("typeOfHeatSource_heatPump")).toBeDefined();
+		expect(heatSourceRadios.length).toBe(1);
+		expect(screen.findByLabelText("Booster heat pump"));
+	});
 
 
-	// 	const heatNetwork1: Partial<DomesticHotWaterHeatSourceData> = {
-	// 		isExistingHeatSource: false,
-	// 		heatSourceId: "NEW_HEAT_SOURCE",
-	// 		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-	// 		name: "Heat network",
-	// 		typeOfHeatSource: "heatNetwork",
-	// 		typeOfHeatNetwork: "communalHeatNetwork",
-	// 		isHeatNetworkInPcdb: true,
-	// 		hasBoosterHeatPump: true,
-	// 	};
+	// const heatNetwork1: Partial<DomesticHotWaterHeatSourceData> = {
+	// 	isExistingHeatSource: false,
+	// 	heatSourceId: "NEW_HEAT_SOURCE",
+	// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+	// 	name: "Heat network",
+	// 	typeOfHeatSource: "heatNetwork",
+	// 	typeOfHeatNetwork: "communalHeatNetwork",
+	// 	isHeatNetworkInPcdb: true,
+	// 	hasBoosterHeatPump: true,
+	// };
 
 	// 	test("a 5th generation heat network can be tagged with a booster heat pumps from DWH & space heating", async () => {
 

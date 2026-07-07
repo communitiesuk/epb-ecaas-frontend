@@ -259,6 +259,14 @@ function isCommunalHeatNetworkWithoutBoosterHeatPump() {
 		);
 }
 
+function isCommunalHeatNetworkWithBoosterHeatPump() {
+	const heatNetworks = store.spaceHeating.heatNetworks.data;
+	if (heatNetworks.length != 0)
+		return store.spaceHeating.heatNetworks.data.some(
+			x => x.data.typeOfHeatNetwork === "communalHeatNetwork" && x.data.boosterHeatPump,
+		);
+}
+
 function isDistrictHeatNetwork() {
 	const heatNetworks = store.spaceHeating.heatNetworks.data;
 	if (heatNetworks.length != 0)
@@ -270,6 +278,10 @@ function isDistrictHeatNetwork() {
 function getHeatSourceTypeHelpText() {
 	if (isCommunalHeatNetworkWithoutBoosterHeatPump()) {
 		return "As a traditional communal heat network has been added, the heat source must be a HIU";
+	}
+
+	if (isCommunalHeatNetworkWithBoosterHeatPump()) {
+		return "As a 5th generation (ambient loop) communal heat network has been added, the heat source must be a booster heat pump";
 	}
 
 	if (isDistrictHeatNetwork())
@@ -303,6 +315,12 @@ function filterHeatSourceOptions(): Record<string, string> {
 	if (isCommunalHeatNetworkWithoutBoosterHeatPump() || isDistrictHeatNetwork()) {
 		return {
 			heatInterfaceUnit,
+		};
+	}
+
+	if (isCommunalHeatNetworkWithBoosterHeatPump()) {
+		return {
+			heatPump: "Booster heat pump",
 		};
 	}
 	

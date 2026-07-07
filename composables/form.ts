@@ -71,14 +71,10 @@ export function useForm() {
 	}: AutoSaveElementFormOptions<T>) => {
 		watch(model, async (newData: PartialExceptName<T> | undefined, initialData: PartialExceptName<T> | undefined) => {
 			const routeParam = route.params[Object.keys(route.params)[0]!];
-			window.console.log(routeParam);
 			if (initialData === undefined || newData === undefined || routeParam === undefined) {
 				return;
 			}
-			window.console.log(newData, "<<< NEW DATA");
-			window.console.log(initialData, "<<<< INITIAL DATA");
 			if (!hasChangedFields(newData, initialData)) {
-				window.console.log("Not changed");
 				return;
 			}
 			
@@ -93,7 +89,6 @@ export function useForm() {
 				const editItemPath = route.fullPath.replace("create", index.toString());
 				history.replaceState({}, "", editItemPath);
 			}
-			window.console.log("Before patch");
 
 			store.$patch((state) => {
 				const name = getName(newData, defaultName);

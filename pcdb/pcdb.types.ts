@@ -502,6 +502,7 @@ type DisplayProductBase = {
 	subheatNetworkName?: string;
 	subHeatNetworkId?: string;
 	productId?: string;
+	boosterHeatPump?: boolean;
 };
 
 type StandardDisplayProductBase = DisplayProductBase & {
