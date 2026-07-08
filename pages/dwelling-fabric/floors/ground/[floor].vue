@@ -271,9 +271,9 @@ const greaterThanZero = (node: FormKitNode) => {
 			<FormKit
 				id="thermalTransmittanceOfWallsAboveGround"
 				type="govInputWithSuffix"
-				suffix-text="W(m²/K)"
+				suffix-text="W/(m²·K)"
 				label="U-value of walls above ground"
-				help="Enter the U-value of the external walls above ground level. Typically between 0.08 and 0.25 W(m²/K)"
+				help="Enter the U-value of the external walls above ground level. Typically between 0.08 and 0.25 W/(m²·K)"
 				name="thermalTransmittanceOfWallsAboveGround"
 				validation="required | number"
 				data-field="Zone.BuildingElement.*.thermal_transm_walls"/>
