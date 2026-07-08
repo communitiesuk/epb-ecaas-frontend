@@ -20,6 +20,7 @@ const selectProduct = async (product: DisplayProduct) => {
 		const heatNetworkData = state.spaceHeating.heatNetworks.data[index]!.data as HeatNetworkData;
 		heatNetworkData.productReference = product.id.toString();
 		heatNetworkData.subHeatNetworkName = product.subheatNetworkName;
+		heatNetworkData.boosterHeatPump = product.boosterHeatPump;
 	});
 
 
