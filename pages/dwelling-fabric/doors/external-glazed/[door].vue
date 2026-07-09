@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { getUrl, standardPitchOptions, uniqueName, type ExternalGlazedDoorData } from "#imports";
-import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod, revealDimensionZod } from "~/stores/ecaasStore.schema";
+import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod, revealDimensionZod, freeAreaHeightZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import { isFlatRoofItem } from "~/utils/isFlatRoofItem";
 import { v4 as uuidv4 } from "uuid";
-
 
 const title = "External glazed door";
 const store = useEcaasStore();
@@ -48,7 +47,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			elevationalHeight: fields.elevationalHeight,
 			openingToFrameRatio: fields.openingToFrameRatio,
 			maximumOpenableArea: fields.maximumOpenableArea,
-			heightOpenableArea: fields.height,
+			freeAreaHeight: fields.freeAreaHeight ?? fields.height,
 			uValue: fields.uValue,
 			depthOfReveal: fields.depthOfReveal,
 			distanceFromGlassToStartOfReveal: fields.distanceFromGlassToStartOfReveal,
@@ -328,6 +327,15 @@ const tagHasValidPitch = computed(() => {
 			data-field="Zone.BuildingElement.*.max_window_open_area"
 		/>
 		<template v-if="mounted && !!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
+			<FormKit
+				id="freeAreaHeight"
+				type="govInputWithSuffix"
+				suffix-text="m"
+				label="Free area height of door opening"
+				help="Enter the vertical height of the gap created when the door is open. This is usually the height of the void minus the frame width."
+				name="freeAreaHeight"
+				:validation="zodTypeAsFormKitValidation(freeAreaHeightZod)"
+			/>
 			<FormKit
 				id="midHeightOpenablePart1"
 				type="govInputWithSuffix"

@@ -478,7 +478,7 @@ const baseExternalGlazedDoorDataZod = namedWithId.extend({
 	elevationalHeight: baseHeightTransparentZod,
 	openingToFrameRatio: fraction,
 	maximumOpenableArea: maxWindowOpenAreaZod,
-	heightOpenableArea: freeAreaHeightZod,
+	freeAreaHeight: freeAreaHeightZod,
 	depthOfReveal: revealDimensionZod.optional(),
 	distanceFromGlassToStartOfReveal: revealDimensionZod.optional(),
 });
@@ -632,6 +632,7 @@ const baseWindowData = namedWithId.extend({
 	solarTransmittance: gValueZod,
 	elevationalHeight: baseHeightTransparentZod,
 	openingToFrameRatio: fraction,
+	freeAreaHeight: freeAreaHeightZod,
 	depthOfReveal: revealDimensionZod.optional(),
 	distanceFromGlassToStartOfReveal: revealDimensionZod.optional(),
 });
