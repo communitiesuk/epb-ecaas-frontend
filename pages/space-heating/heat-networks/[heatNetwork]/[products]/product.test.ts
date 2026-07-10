@@ -142,6 +142,66 @@ describe("Heat Network Products Page", () => {
 		);
 	});
 
+	test("does not render HEM default inset for heat network products", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatNetwork: "1",
+				products: "heat-network",
+			},
+			path: "/1/heat-network",
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.queryByTestId("hemDefaultProductInset")).toBeNull();
+	});
+
+	test("heat network PCDB search and product table is displayed when selecting a heat network product", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatNetwork: "1",
+				products: "heat-network",
+			},
+			path: "/1/heat-network",
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.getByTestId("heatNetworkProductsTable")).toBeDefined();
+		expect(screen.getByText("Search network or subnetwork")).toBeDefined();
+	});
+
+	test("uses heat-network specific search labels and table for heat network products", async () => {
+		const mockedHeatNetworks: PaginatedResult<DisplayProduct> = {
+			data: [
+				{
+					displayProduct: true,
+					id: "4000",
+					technologyType: "HeatNetworks",
+					communityHeatNetworkName: "Example network",
+				},
+			],
+		};
+	
+		mockRoute.mockReturnValue({
+			params: {
+				heatNetwork: "1",
+				products: "heat-network",
+			},
+			path: "/1/heat-network",
+		});
+	
+		mockFetch.mockReturnValue({
+			data: ref(mockedHeatNetworks),
+		});
+	
+		await renderSuspended(Products);
+	
+		expect(screen.getByTestId("heatNetworkProductsTable")).toBeDefined();
+		expect(screen.getByTestId("searchOption_networkName")).toBeDefined();
+		expect(screen.getByText("Search network or subnetwork")).toBeDefined();
+	});
+
 	// test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
 	// 	mockRoute.mockReturnValue({
 	// 		params: {

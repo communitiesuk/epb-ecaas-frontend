@@ -156,6 +156,7 @@ describe("Space heating summary page", () => {
 				name: "Heat network 1",
 				typeOfHeatNetwork: "communalHeatNetwork",
 				productReference: "HEAT_NETWORK_1",
+				boosterHeatPump: true,
 			};
 			const heatPump2: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c22",
@@ -261,7 +262,6 @@ describe("Space heating summary page", () => {
 
 			const expectedResult = {
 				Name: "Heat network 1",
-				"Type of heat source": "Heat network",
 				"Type of heat network": "Communal heat network",
 				"Product reference": "HEAT_NETWORK-LARGE",
 				"Sub-heat network name": "Sub 2",

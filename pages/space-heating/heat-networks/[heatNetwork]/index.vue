@@ -31,9 +31,13 @@ function handleChooseProduct() {
 			heatNetworks.data[index] = {
 				data: {
 					id,
-					name: defaultName,
+					name: model.value.name || defaultName,
+					typeOfHeatNetwork: model.value.typeOfHeatNetwork,
+					productReference: model.value.productReference,
+					subHeatNetworkName: model.value.subHeatNetworkName,
 				},
 			};
+
 			heatNetworks.complete = false;
 		});
 	}

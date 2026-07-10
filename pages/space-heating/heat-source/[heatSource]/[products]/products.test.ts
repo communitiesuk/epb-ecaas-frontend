@@ -244,35 +244,6 @@ describe("Heat source products page", () => {
 		expect(screen.getByTestId("productsTable")).toBeDefined();
 	});
 
-	test("heat network PCDB search and product table is displayed when selecting a heat network product", async () => {
-		mockRoute.mockReturnValue({
-			params: {
-				heatSource: "1",
-				products: "heat-network",
-			},
-			path: "/1/heat-network",
-		});
-
-		await renderSuspended(Products);
-
-		expect(screen.getByTestId("heatNetworkProductsTable")).toBeDefined();
-		expect(screen.getByText("Search network or subnetwork")).toBeDefined();
-	});
-
-	test("does not render HEM default inset for heat network products", async () => {
-		mockRoute.mockReturnValue({
-			params: {
-				heatSource: "1",
-				products: "heat-network",
-			},
-			path: "/1/heat-network",
-		});
-
-		await renderSuspended(Products);
-
-		expect(screen.queryByTestId("hemDefaultProductInset")).toBeNull();
-	});
-
 	test("a boiler heat source is created when a hybrid heat pump is selected", async () => {
 		store.$patch({
 			spaceHeating: {

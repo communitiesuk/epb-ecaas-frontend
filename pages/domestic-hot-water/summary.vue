@@ -157,9 +157,8 @@ const heatInterfaceUnitSummary: SummarySection = {
 	data:
 		heatInterfaceUnitSummaries.map(({ data: heatSource }) => {
 			const associatedHeatNetworkId = "associatedHeatNetworkId" in heatSource ? heatSource.associatedHeatNetworkId : undefined;
-			const associatedHeatNetwork = store.spaceHeating.heatSource.data.find(hs => hs.data.id === associatedHeatNetworkId)
-				?? store.domesticHotWater.heatSources.data.find(hs => hs.data.id === associatedHeatNetworkId);
-			const associatedHeatNetworkName = associatedHeatNetwork && "name" in associatedHeatNetwork.data ? associatedHeatNetwork.data.name : emptyValueRendering;
+			const associatedHeatNetwork = store.spaceHeating.heatNetworks.data.find(heatNetwork => heatNetwork.data.id === associatedHeatNetworkId);
+			const associatedHeatNetworkName = associatedHeatNetwork?.data.name ?? emptyValueRendering;
 			const summary = {
 				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
 				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,

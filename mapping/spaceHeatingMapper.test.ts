@@ -75,6 +75,7 @@ describe("Space heating - heat sources", () => {
 					productReference: "9999",
 					subHeatNetworkName: "subHeatNetwork1Name",
 				};
+
 				const heatPumpConnectedToNetwork: HeatSourceData = {
 					id: "heatPump3Id",
 					name: "Heat pump on network",
@@ -89,6 +90,7 @@ describe("Space heating - heat sources", () => {
 					spaceHeating: {
 						heatNetworks: {
 							data: [{ data: heatNetwork, complete: true }],
+							complete: true,
 						},
 						heatSource: {
 							data: [{ data: heatPumpConnectedToNetwork, complete: true }],
@@ -393,6 +395,7 @@ describe("Space heating - heat sources", () => {
 				spaceHeating: {
 					heatNetworks: {
 						data: [{ data: heatNetwork, complete: true }],
+						complete: true,
 					},
 					heatSource: {
 						data: [{ data: hiuConnected, complete: true }],

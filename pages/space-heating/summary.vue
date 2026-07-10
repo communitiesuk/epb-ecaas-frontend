@@ -68,6 +68,13 @@ function formatEmitterRowsForSummary(emitters: WetDistributionEmitterData[]): Re
 	return rows;
 }
 
+const emptyHeatNetworkSummary: SummarySection = {
+	id: "heatNetworkSummary",
+	label: "Heat networks",
+	data: [],
+	editUrl: spaceHeatingUrl,
+};
+
 const emptyHeatSourcesSummary: SummarySection = {
 	id: "heatSourceSummary",
 	label: "Heat sources",
@@ -106,7 +113,7 @@ const heatPumpSummary: SummarySection = {
 	data:
 		heatPumps.map(({ data: heatSource }) => {
 			const heatNetWorkFields = "isConnectedToHeatNetwork" in heatSource && heatSource.isConnectedToHeatNetwork === true ? {
-				"Associated heat network": store.spaceHeating.heatSource.data.find(hs => hs.data.id === heatSource.associatedHeatNetworkId)?.data.name ?? emptyValueRendering,
+				"Associated heat network": store.spaceHeating.heatNetworks.data.find(heatNetwork => heatNetwork.data.id === heatSource.associatedHeatNetworkId)?.data.name ?? emptyValueRendering,
 			} : {
 				"Energy supply": "energySupply" in heatSource && (heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: false }>).energySupply ? energySupplyOptions[(heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: false }>).energySupply] : emptyValueRendering,
 			};
@@ -147,7 +154,7 @@ const heatInterfaceUnitSummary: SummarySection = {
 	label: "Heat interface units",
 	data:
 		heatInterfaceUnits.map(({ data: heatSource }) => {
-			const associatedHeatNetwork = store.spaceHeating.heatSource.data.find(hs => hs.data.id === (heatSource as Extract<HeatSourceData, { typeOfHeatSource: "heatInterfaceUnit" }>).associatedHeatNetworkId);
+			const associatedHeatNetwork = store.spaceHeating.heatNetworks.data.find(heatNetwork => heatNetwork.data.id === (heatSource as Extract<HeatSourceData, { typeOfHeatSource: "heatInterfaceUnit" }>).associatedHeatNetworkId); 
 			const summary = {
 				Name: show(heatSource.name),
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
@@ -263,10 +270,15 @@ function getNonEmptySections(summarySections: SummarySection[]) {
 	return summarySections.filter(x => Array.isArray(x.data) && x.data.length > 0);
 }
 
+const heatNetworkSections: SummarySection[] = [
+	heatNetworkSummary,
+];
+
+const populatedHeatNetworkSections = getNonEmptySections(heatNetworkSections);
+
 const heatSourceSections: SummarySection[] = [
 	boilerSummary,
 	heatPumpSummary,
-	heatNetworkSummary,
 	heatInterfaceUnitSummary,
 	heatBatterySummary,
 ];
@@ -340,6 +352,25 @@ const heatingControlsSummary: SummarySection = {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<GovTabs 
+		v-slot="tabProps" 
+		:items="populatedHeatNetworkSections.length === 0 ? [emptyHeatNetworkSummary] : populatedHeatNetworkSections"
+	>
+		<template v-if="populatedHeatNetworkSections.length === 0">
+			<SummaryTab :summary="emptyHeatNetworkSummary" :selected="tabProps.currentTab === 0">
+				<template #empty>
+					<h2 class="govuk-heading-m">No heat networks added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('heatNetworksCreate')">
+						Add heat network
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
+
+		<template v-for="section, i of populatedHeatNetworkSections" :key="i">
+			<SummaryTab :summary="section" :selected="tabProps.currentTab === i" />
+		</template>
+	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="populatedHeatSourceSections.length === 0? [emptyHeatSourcesSummary] : populatedHeatSourceSections">
 		<template v-if="populatedHeatSourceSections.length === 0">
 			<SummaryTab :summary="emptyHeatSourcesSummary" :selected="tabProps.currentTab === 0">

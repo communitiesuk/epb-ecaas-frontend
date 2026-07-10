@@ -234,7 +234,8 @@ function isPackagedWithHeatPump() {
 	return isPackagedWithDomesticHotWaterHeatPump;
 }
 
-function handleChooseProduct() {
+function handleChooseProduct(event: Event) {
+	event.preventDefault();
 	onChooseProduct?.();
 	navigateTo(productsPageUrl.value);
 }
@@ -251,7 +252,11 @@ function handleChooseProduct() {
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 			</p>
-			<GovButton v-show="!productData" class="govuk-button__margin-bottom" data-testId="chooseAProductButton" @click="handleChooseProduct">
+			<GovButton
+				v-show="!productData"
+				class="govuk-button__margin-bottom"
+				data-testId="chooseAProductButton"
+				@click="handleChooseProduct">
 				Choose a product
 			</GovButton>
 			<div v-if="productData">

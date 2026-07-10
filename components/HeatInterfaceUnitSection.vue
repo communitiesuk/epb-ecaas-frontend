@@ -50,6 +50,7 @@ const { heatNetworkOptions, hasHeatNetworkOptions, defaultAssociatedHeatNetworkI
 		:options="heatNetworkOptions"
 		name="associatedHeatNetworkId"
 		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
+		validation="required"
 	>
 		<div v-if="!hasHeatNetworkOptions">
 			<p class="govuk-error-message">No heat networks added.</p>

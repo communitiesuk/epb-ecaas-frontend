@@ -104,7 +104,7 @@ describe("Heat Networks", () => {
 		).toBe(true);
 	});
 
-	test("navigates to spaceHeating when a valid form is completed", async () => {
+	it("navigates to space heating when valid form is completed", async () => {
 		const heatNetworkProduct: Partial<DisplayProduct> = {
 			id: "1000",
 			technologyType: "HeatNetworks",
@@ -115,10 +115,10 @@ describe("Heat Networks", () => {
 	
 		await renderSuspended(HeatNetworks, {
 			route: {
-				params: { "heatNetwork": "create" },
+				params: { "heatNetwork": "0" },
 			},
 		});
-		
+	
 		await user.click(screen.getByTestId("saveAndComplete"));
 	
 		expect(navigateToMock).toHaveBeenCalledWith("/space-heating");

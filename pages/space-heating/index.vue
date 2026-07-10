@@ -40,6 +40,7 @@ function handleComplete() {
 function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
 	if (!heatNetworkId) return;
 	store.$patch((state) => {
+
 		state.spaceHeating.heatSource.data.forEach((heatSource) => {
 			const typeOfHeatSource = heatSource.data?.typeOfHeatSource;
 			if (
@@ -48,6 +49,7 @@ function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
 			) {
 				(heatSource.data as { associatedHeatNetworkId: string | undefined }).associatedHeatNetworkId = undefined;
 				heatSource.complete = false;
+				state.spaceHeating.heatSource.complete = false;
 			} 
 		});
 	});
@@ -111,7 +113,7 @@ function hasIncompleteEntries() {
 		:show-status="true"
 		:max-number-of-items="1"
 		@duplicate="(index:number) => handleDuplicate('heatNetworks', index)"
-		@remove="(index:number) => removeEntry('heatNetworks', index)"
+		@remove="(index:number) => handleRemove('heatNetworks', index)"
 	/>
 	<CustomList
 		id="heatSource"

@@ -346,20 +346,23 @@ describe("space heating", () => {
 			// 	expect(heatNetworkDHWItem?.complete).toBe(false);
 			// });
 
-			test("When a network is removed, it sets any associated heat pumps to incomplete and removes the association", async () => {
+			test("When a communal heat network is removed with a booster heat pump flag, it sets any associated booster heat pumps to incomplete and removes the association", async () => {
 				const heatNetwork: Partial<HeatNetworkData> = {
 					id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 					typeOfHeatNetwork: "communalHeatNetwork",
 					productReference: "HEATNETWORK_123",
+					boosterHeatPump: true,
 				};
-				const heatPumpWithAssociation: Partial<HeatSourceData> = {
+				const boosterHeatPumpWithAssociation: Partial<HeatSourceData> = {
 					id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+					name: "Booster HP",
 					typeOfHeatSource: "heatPump",
-					typeOfHeatPump: "airSource",
-					productReference: "HEATPUMP_LARGE",
+					typeOfHeatPump: "booster",
+					productReference: "HEATPUMP_SMALL",
 					isConnectedToHeatNetwork: true,
 					associatedHeatNetworkId: heatNetwork.id,
 				};
+
 				store.$patch({
 					spaceHeating: {
 						heatNetworks: {
@@ -367,14 +370,14 @@ describe("space heating", () => {
 						},
 						heatSource: {
 							data: [
-								{ data: heatPumpWithAssociation, complete: true },
+								{ data: boosterHeatPumpWithAssociation, complete: true },
 							],
 							complete: true,
 						},
 					},
 				});
 				await renderSuspended(SpaceHeating);
-				await user.click(screen.getByTestId("heatSource_remove_0"));
+				await user.click(screen.getByTestId("heatNetworks_remove_0"));
 
 				const heatPumpItem = store.spaceHeating.heatSource.data[0];
 				expect((heatPumpItem!.data as { associatedHeatNetworkId: string }).associatedHeatNetworkId).toBe(undefined);
@@ -407,9 +410,10 @@ describe("space heating", () => {
 					},
 				});
 				await renderSuspended(SpaceHeating);
-				await user.click(screen.getByTestId("heatSource_remove_0"));
-
+				await user.click(screen.getByTestId("heatNetworks_remove_0"));
+				
 				const hiuItem = store.spaceHeating.heatSource.data[0];
+		
 				expect((hiuItem!.data as { associatedHeatNetworkId: string }).associatedHeatNetworkId).toBe(undefined);
 				expect(hiuItem!.complete).toBe(false);
 				expect(store.spaceHeating.heatSource.complete).toBe(false);

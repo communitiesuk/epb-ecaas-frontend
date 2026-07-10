@@ -20,8 +20,8 @@ import { asMetres } from "~/utils/units/length";
 function getAssociatedHeatNetworkType(associatedHeatNetworkId: string | undefined, state: ResolvedState): SchemaHeatNetworkType {
 	const heatNetworks = state.spaceHeating.heatNetworks;
 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
-	const heatNetorkType = associatedHeatNetwork ? associatedHeatNetwork?.typeOfHeatNetwork : undefined;
-	switch (heatNetorkType) {
+	const heatNetworkType = associatedHeatNetwork ? associatedHeatNetwork?.typeOfHeatNetwork : undefined;
+	switch (heatNetworkType) {
 		case "sleevedDistrictHeatNetwork":
 			return "sleeved DHN" as const;
 		case "unsleevedDistrictHeatNetwork":
@@ -29,7 +29,7 @@ function getAssociatedHeatNetworkType(associatedHeatNetworkId: string | undefine
 		case "communalHeatNetwork":
 			return "communal" as const;
 		default:
-			throw new Error(`Unknown heat network type ${heatNetorkType}`);
+			throw new Error(`Unknown heat network type ${heatNetworkType}`);
 	}
 }
 

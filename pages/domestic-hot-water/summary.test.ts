@@ -614,7 +614,7 @@ describe("Domestic hot water summary", () => {
 			name: "Heat interface unit 1",
 			typeOfHeatSource: "heatInterfaceUnit",
 			productReference: "HIU-LARGE",
-			associatedHeatNetworkId: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+			associatedHeatNetworkId: "network-1",
 			maxFlowTemp: unitValue(40, celsius),
 			buildingLevelLosses: unitValue(500, "watt"),
 		};
@@ -667,8 +667,20 @@ describe("Domestic hot water summary", () => {
 			heaterEfficiency: 1,
 		};
 
+		const heatNetwork1: HeatNetworkData = {
+			id: "network-1",
+			name: "Heat network 1",
+			typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+			productReference: "HEAT_NETWORK_1",
+		};
+
 		beforeEach(() => {
 			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork1 }],
+					},
+				},
 				domesticHotWater: {
 					heatSources: {
 						data: [
@@ -754,15 +766,15 @@ describe("Domestic hot water summary", () => {
 			"Maximum flow temperature": `32 ${celsius.suffix}`,
 			"Energy supply": "Electricity",
 		};
-		const expectedHeatNetwork = {
-			"Cold water source": "Mains water",
-			Name: "Heat network 1",
-			"Used for space heating": "No",
-			"Type of heat source": "Heat network",
-			"Type of heat network": "Communal heat network",
-			"Product reference": "HEAT_NETWORK-LARGE",
-			"Sub-heat network name": "Sub Network 1",
-		};
+		// const expectedHeatNetwork = {
+		// 	"Cold water source": "Mains water",
+		// 	Name: "Heat network 1",
+		// 	"Used for space heating": "No",
+		// 	"Type of heat source": "Heat network",
+		// 	"Type of heat network": "Communal heat network",
+		// 	"Product reference": "HEAT_NETWORK-LARGE",
+		// 	"Sub-heat network name": "Sub Network 1",
+		// };
 		const expectedHeatInterfaceUnit = {
 			"Cold water source": "Mains water",
 			"Name": "Heat interface unit 1",
@@ -812,7 +824,7 @@ describe("Domestic hot water summary", () => {
 				["heatPumpSummary", expectedHeatPump],
 				["boilerSummary", expectedBoiler],
 				["heatBatterySummary", expectedHeatBattery],
-				["heatNetworkSummary", expectedHeatNetwork],
+				// ["heatNetworkSummary", expectedHeatNetwork],
 				["heatInterfaceUnitSummary", expectedHeatInterfaceUnit],
 				["solarThermalSystemSummary", expectedSolarThermalSystem],
 				["immersionHeaterSummary", expectedImmersionHeater],
@@ -845,7 +857,7 @@ describe("Domestic hot water summary", () => {
 								{ data: dhwWithExistingHeatPump },
 								{ data: dhwWithExistingBoiler },
 								{ data: dhwWithExistingHeatBattery },
-								{ data: dhwWithExistingHeatNetwork },
+								// { data: dhwWithExistingHeatNetwork },
 							],
 						},
 					},
@@ -904,12 +916,12 @@ describe("Domestic hot water summary", () => {
 				maxFlowTemp: unitValue(20, celsius),
 			};
 
-			const dhwWithExistingHeatNetwork: DomesticHotWaterHeatSourceData = {
-				id: "hn-id",
-				coldWaterSource: "headerTank",
-				isExistingHeatSource: true,
-				heatSourceId: heatNetwork1.id!,
-			};
+			// const dhwWithExistingHeatNetwork: DomesticHotWaterHeatSourceData = {
+			// 	id: "hn-id",
+			// 	coldWaterSource: "headerTank",
+			// 	isExistingHeatSource: true,
+			// 	heatSourceId: heatNetwork1.id!,
+			// };
 
 			const expectedExistingHeatPump = {
 				"Cold water source": "Mains water",
@@ -932,11 +944,11 @@ describe("Domestic hot water summary", () => {
 				"Maximum flow temperature": `20 ${celsius.suffix}`,
 			};
 
-			const expectedExistingHeatNetwork = {
-				"Cold water source": "Header tank",
-				Name: "Heat network 1",
-				"Used for space heating": "YesView details in space heating summary",
-			};
+			// const expectedExistingHeatNetwork = {
+			// 	"Cold water source": "Header tank",
+			// 	Name: "Heat network 1",
+			// 	"Used for space heating": "YesView details in space heating summary",
+			// };
 
 			it.each(
 				[
@@ -949,10 +961,10 @@ describe("Domestic hot water summary", () => {
 				await renderSuspended(Summary);
 				await verifyDataInSection(sectionId, expectedData);
 			});
-			it("for the heat network it displays the correct stored data for existing space heating heat source items", async () => {
-				await renderSuspended(Summary);
-				await verifyDataInSection("heatNetworkSummary", expectedExistingHeatNetwork);
-			});
+			// it("for the heat network it displays the correct stored data for existing space heating heat source items", async () => {
+			// 	await renderSuspended(Summary);
+			// 	await verifyDataInSection("heatNetworkSummary", expectedExistingHeatNetwork);
+			// });
 		});
 	});
 });

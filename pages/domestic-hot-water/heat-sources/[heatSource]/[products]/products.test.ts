@@ -136,37 +136,6 @@ describe("Heat source products page", () => {
 		);
 	});
 
-	test("uses heat-network specific search labels and table for heat network products", async () => {
-		const mockedHeatNetworks: PaginatedResult<DisplayProduct> = {
-			data: [
-				{
-					displayProduct: true,
-					id: "4000",
-					technologyType: "HeatNetworks",
-					communityHeatNetworkName: "Example network",
-				},
-			],
-		};
-
-		mockRoute.mockReturnValue({
-			params: {
-				heatSource: "1",
-				products: "heat-network",
-			},
-			path: "/1/heat-network",
-		});
-
-		mockFetch.mockReturnValue({
-			data: ref(mockedHeatNetworks),
-		});
-
-		await renderSuspended(Products);
-
-		expect(screen.getByTestId("heatNetworkProductsTable")).toBeDefined();
-		expect(screen.getByTestId("searchOption_networkName")).toBeDefined();
-		expect(screen.getByText("Search network or subnetwork")).toBeDefined();
-	});
-
 	test("when a user selects a product its product reference gets stored", async () => {
 		mockRoute.mockReturnValue({
 			params: {

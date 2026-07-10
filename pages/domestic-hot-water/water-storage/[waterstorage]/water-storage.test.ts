@@ -48,6 +48,7 @@ describe("water storage", () => {
 
 	afterEach(() => {
 		store.$reset();
+		navigateToMock.mockReset();
 	});
 
 	const heatPump = {
@@ -221,15 +222,14 @@ describe("water storage", () => {
 		test("navigate to pcdb product select page when choose a product button is clicked", async () => {
 			await renderSuspended(WaterStorage, {
 				route: {
-					path: "/domestic-hot-water/water-storage/create",
+					params: { "waterStorage": "create" },
 				},
 			});
 
 			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
+			await user.click(screen.getByTestId("chooseAProductButton"));
 
-			const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
-			expect(chooseProductButton).toBeDefined();
-			expect(chooseProductButton.pathname).toContain("/domestic-hot-water/water-storage/0/smart-hot-water-tank");
+			expect(navigateToMock).toHaveBeenCalledWith("/0/smart-hot-water-tank");
 		});
 
 		test("data is saved to store state when form is valid", async () => {
@@ -302,9 +302,28 @@ describe("water storage", () => {
 
 		test("navigates to domestic hot water page when valid form is completed", async () => {
 			addHeatPumpStoreData();
-			await renderSuspended(WaterStorage);
+
+			await renderSuspended(WaterStorage, {
+				route: {
+					params: { waterStorage: "create" },
+				},
+			});
 
 			await populateValidFormSHWT();
+
+			store.$patch(state => {
+				(state.domesticHotWater.waterStorage.data[0]!.data as SmartHotWaterTankData)
+					.productReference = "42";
+			});
+
+			await renderSuspended(WaterStorage, {
+				route: {
+					params: { waterStorage: "0" },
+				},
+			});
+
+			navigateToMock.mockClear();
+
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
