@@ -75,12 +75,12 @@ const baseGeneralDetails = z.object({
 	partOActiveCoolingRequired: z.boolean(),
 });
 
-export const storeyOfFlatZod = z.int().min(-50).max(199);
+// export const storeyOfFlatZod = z.int().min(-50).max(199);
 
 const generalDetailsDataZod = z.discriminatedUnion("typeOfDwelling", [
 	baseGeneralDetails.extend({
 		typeOfDwelling: z.literal("flat"),
-		storeyOfFlat: storeyOfFlatZod,
+		// storeyOfFlat: storeyOfFlatZod,
 		storeysInBuilding: z.int().min(1),
 	}),
 	baseGeneralDetails.extend({ typeOfDwelling: z.literal("house") }),

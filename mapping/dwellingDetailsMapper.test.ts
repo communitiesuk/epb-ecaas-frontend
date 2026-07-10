@@ -14,7 +14,7 @@ describe("dwelling details mapper", () => {
 	const state: GeneralDetailsData = {
 		typeOfDwelling: "flat",
 		storeysInDwelling: 3,
-		storeyOfFlat: 1,
+		// storeyOfFlat: 1,
 		storeysInBuilding: 1,
 		buildingLength: 10,
 		buildingWidth: 20,
@@ -48,7 +48,7 @@ describe("dwelling details mapper", () => {
 		// Assert
 		expect(fhsInputData.General.build_type).toBe(state.typeOfDwelling);
 		expect(fhsInputData.General.storeys_in_dwelling).toBe(state.storeysInDwelling);
-		expect(fhsInputData.General.build_type === "flat" ? fhsInputData.General.storey_of_dwelling : undefined).toBe(state.storeyOfFlat);
+		// expect(fhsInputData.General.build_type === "flat" ? fhsInputData.General.storey_of_dwelling : undefined).toBe(state.storeyOfFlat);
 		expect(fhsInputData.BuildingLength).toBe(state.buildingLength);
 		expect(fhsInputData.BuildingWidth).toBe(state.buildingWidth);
 		expect(fhsInputData.NumberOfBedrooms).toBe(state.numOfBedrooms);
@@ -99,7 +99,7 @@ describe("dwelling details mapper", () => {
 			const state: GeneralDetailsData = {
 				typeOfDwelling: "flat",
 				storeysInDwelling: 3,
-				storeyOfFlat: 1,
+				// storeyOfFlat: 1,
 				storeysInBuilding: 1,
 				buildingLength: 10,
 				buildingWidth: 20,
@@ -145,7 +145,7 @@ describe("dwelling details mapper", () => {
 			const state: GeneralDetailsData = {
 				typeOfDwelling: "flat",
 				storeysInDwelling: 3,
-				storeyOfFlat: 1,
+				// storeyOfFlat: 1,
 				storeysInBuilding: 1,
 				buildingLength: 10,
 				buildingWidth: 20,

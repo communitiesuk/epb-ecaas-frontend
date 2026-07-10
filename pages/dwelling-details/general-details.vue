@@ -3,8 +3,8 @@ import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
 import { isInteger } from "~/utils/validation";
 import { getUrl, type DomesticHotWaterHeatSourceData, type EcaasForm, type FuelTypeDisplay, type GeneralDetailsData, type HeatSourceData } from "#imports";
 import type { CheckboxOption } from "~/components/form-kit/Checkboxes.vue";
-import { storeyOfFlatZod } from "~/stores/ecaasStore.schema";
-import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+// import { storeyOfFlatZod } from "~/stores/ecaasStore.schema";
+// import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "General details";
 const store = useEcaasStore();
@@ -50,7 +50,7 @@ const saveForm = (fields: typeof model.value) => {
 				data: {
 					typeOfDwelling: fields.typeOfDwelling,
 					storeysInDwelling: fields.storeysInDwelling,
-					storeyOfFlat: fields.typeOfDwelling === "flat" ? fields.storeyOfFlat : undefined,
+					// storeyOfFlat: fields.typeOfDwelling === "flat" ? fields.storeyOfFlat : undefined,
 					storeysInBuilding: fields.typeOfDwelling === "flat" ? fields.storeysInBuilding : undefined,
 					buildingLength: fields.buildingLength,
 					buildingWidth: fields.buildingWidth,
@@ -75,7 +75,7 @@ function removeRefsToFuelType(
 	heatSources: EcaasForm<
 		Extract<
 			HeatSourceData,
-			{ "typeOfHeatSource": "heatNetwork" | "heatBattery" }
+			{ "typeOfHeatSource": /*"heatNetwork"*/ | "heatBattery" }
 		> | DomesticHotWaterHeatSourceData | SmartHotWaterTankData
 	>[],
 	removedFuelType: SchemaFuelType,
@@ -138,23 +138,23 @@ autoSaveForm<GeneralDetailsData>(model, (state, newData) => {
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
-const minBuildingStoreys = (node: FormKitNode) => {
-	const storeyOfFlat = node.at("storeyOfFlat")?.value as number | undefined;
-	const storeysInDwelling = node.at("storeysInDwelling")?.value as number | undefined;
-	const storeysInBuilding = node.value as number;
+// const minBuildingStoreys = (node: FormKitNode) => {
+// 	const storeyOfFlat = node.at("storeyOfFlat")?.value as number | undefined;
+// 	const storeysInDwelling = node.at("storeysInDwelling")?.value as number | undefined;
+// 	const storeysInBuilding = node.value as number;
 
-	if (storeyOfFlat === undefined || storeysInDwelling === undefined || storeysInBuilding === undefined) {
-		return true;
-	}
+// 	if (storeyOfFlat === undefined || storeysInDwelling === undefined || storeysInBuilding === undefined) {
+// 		return true;
+// 	}
 
-	let minStoreys = (storeyOfFlat - 1) + storeysInDwelling;
+// 	let minStoreys = (storeyOfFlat - 1) + storeysInDwelling;
 
-	if (storeyOfFlat === 1) {
-		minStoreys += 1;
-	}
+// 	if (storeyOfFlat === 1) {
+// 		minStoreys += 1;
+// 	}
 
-	return minStoreys <= storeysInBuilding;
-};
+// 	return minStoreys <= storeysInBuilding;
+// };
 </script>
 
 <template>
@@ -180,7 +180,7 @@ const minBuildingStoreys = (node: FormKitNode) => {
 			help="Select the broad dwelling classification"
 			data-field="General.build_type"
 		/>
-		<FormKit
+		<!-- <FormKit
 			v-if="mounted && model.typeOfDwelling === 'flat'"
 			id="storeyOfFlat"
 			type="govInputInt"
@@ -197,7 +197,7 @@ const minBuildingStoreys = (node: FormKitNode) => {
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-body">If the flat is over multiple storeys, enter the storey of the lowest habitable area.</p>
 			</GovDetails>
-		</FormKit>
+		</FormKit> -->
 		<FormKit
 			id="storeysInDwelling"
 			type="govInputInt"
@@ -216,11 +216,10 @@ const minBuildingStoreys = (node: FormKitNode) => {
 			type="govInputInt"
 			label="Number of storeys in building"
 			name="storeysInBuilding"
-			:validation-rules="{ isInteger, minBuildingStoreys }"
-			validation="required | isInteger | min:1 | minBuildingStoreys"
+			:validation-rules="{ isInteger }"
+			validation="required | isInteger | min:1"
 			:validation-messages="{
 				isInteger: `Storeys in building must be a round number.`,
-				minBuildingStoreys: `The number of storeys in the building must be more than the storey of flat and number of storeys in the dwelling combined`,
 			}"
 			help="Enter the number of storeys in the part of the building that the dwelling is in"
 			data-field="General.storeys_in_building"

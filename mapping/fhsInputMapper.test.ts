@@ -434,7 +434,7 @@ const expectedFlatInput: FhsInputSchema = {
 	General: {
 		build_type: "flat",
 		storeys_in_building: 6,
-		storey_of_dwelling: 3,
+		storey_of_dwelling: 1,
 		storeys_in_dwelling: 1,
 	},
 	HeatingControlType: "SeparateTempControl",
@@ -1488,7 +1488,7 @@ describe("FHS input mapper", () => {
 				data: {
 					typeOfDwelling: "flat",
 					storeysInDwelling: 1,
-					storeyOfFlat: 3,
+					// storeyOfFlat: 1,
 					storeysInBuilding: 6,
 					numOfBedrooms: 2,
 					numOfBathrooms: 1,

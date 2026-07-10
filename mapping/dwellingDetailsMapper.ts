@@ -41,7 +41,7 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 				? {
 					build_type: "flat",
 					storeys_in_dwelling: generalDetails.storeysInDwelling,
-					storey_of_dwelling: generalDetails.storeyOfFlat,
+					storey_of_dwelling: 1, // this will need to be removed when schema updated
 					storeys_in_building: generalDetails.storeysInBuilding,
 				}
 				: {
