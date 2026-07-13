@@ -55,6 +55,28 @@ describe("space heating", () => {
 		maxFlowTemp: unitValue(32, celsius),
 	};
 
+	const heatBattery: HeatSourceData = {
+		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
+		name: "Heat battery 1",
+		typeOfHeatSource: "heatBattery",
+		typeOfHeatBattery: "heatBatteryPcm",
+		productReference: "HEAT_BATTERY_SMALL",
+		maxFlowTemp: unitValue(32, celsius),
+		numberOfUnits: 1,
+		energySupply: "electricity",
+	};
+
+	const boosterHeatPump: HeatSourceData = {
+		id: "463c94f6-566c-49b2-af27-57e5c68b52222",
+		name: "Booster HP",
+		typeOfHeatSource: "heatPump",
+		typeOfHeatPump: "booster",
+		productReference: "HEATPUMP-SMALL",
+		isConnectedToHeatNetwork: false,
+		energySupply: "electricity",
+		maxFlowTemp: unitValue(30, "celsius"),
+	};
+
 	describe("Heat Networks", () => {
 		const heatNetwork: HeatNetworkData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8f",
@@ -165,6 +187,52 @@ describe("space heating", () => {
 		it("shows add link when there are no heat networks stored", async () => {
 			await renderSuspended(SpaceHeating);
 			expect(screen.queryByTestId("heatNetworks_add")).toBeDefined();
+		});
+
+		test("A heat network cannot be added if a heat source of type boiler already exists.", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: heatSource1 }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+			expect(screen.queryByTestId("heatNetworks_add")).toBeNull();
+			expect(screen.getByText("A heat network cannot be added as it isn't compatible with the heat sources already entered.")).toBeDefined();
+		});
+
+		test("A heat network cannot be added if a heat source of type heat battery already exists.", async () => {
+
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: heatBattery }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+			expect(screen.queryByTestId("heatNetworks_add")).toBeNull();
+			expect(screen.getByText("A heat network cannot be added as it isn't compatible with the heat sources already entered.")).toBeDefined();
+		});
+
+		test("A heat network cannot be added if a heat source of type heat pump already exists and it isn't a booster heat pump.", async () => {
+
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: boosterHeatPump }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+			expect(screen.queryByTestId("heatNetworks_add")).toBeNull();
+			expect(screen.getByText("A heat network cannot be added as it isn't compatible with the heat sources already entered.")).toBeDefined();
 		});
 	});
 

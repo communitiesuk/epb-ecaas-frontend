@@ -80,6 +80,34 @@ function hasIncompleteEntries() {
 		items.data.some((item) => (isEcaasForm(item) ? !item.complete : false)),
 	);
 }
+
+const hasIncompatibleHeatSourceForHeatNetwork = computed(() =>
+	store.spaceHeating.heatSource.data.some((heatSource) => {
+		const data = heatSource.data;
+
+		if (!data) {
+			return false;
+		}
+
+		if (data.typeOfHeatSource === "boiler") {
+			return true;
+		}
+
+		if (data.typeOfHeatSource === "heatBattery") {
+			return true;
+		}
+
+		if (
+			data.typeOfHeatSource === "heatPump" &&
+			// data.typeOfHeatPump !== "booster"
+		) {
+			return true;
+		}
+
+		return false;
+	}),
+);
+
 </script>
 
 <template>
@@ -112,6 +140,11 @@ function hasIncompleteEntries() {
 		"
 		:show-status="true"
 		:max-number-of-items="1"
+		:conflict-message="
+			hasIncompatibleHeatSourceForHeatNetwork
+				? `A heat network cannot be added as it isn't compatible with the heat sources already entered.`
+				: undefined
+		"
 		@duplicate="(index:number) => handleDuplicate('heatNetworks', index)"
 		@remove="(index:number) => handleRemove('heatNetworks', index)"
 	/>
