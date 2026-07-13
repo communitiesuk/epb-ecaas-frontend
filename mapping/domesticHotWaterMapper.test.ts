@@ -35,10 +35,11 @@ describe("domestic hot water mapper", () => {
 
 	const heatNetwork: EcaasForm<HeatNetworkData> = {
 		data: {
-			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8f",
+			id: "heat-network-123",
 			name: "Heat Network",
 			productReference: "42",
 			typeOfHeatNetwork: "communalHeatNetwork",
+			subHeatNetworkName: "Sub Heat Network",
 		},
 		complete: true,
 	};
@@ -1086,7 +1087,7 @@ describe("domestic hot water mapper", () => {
 				},
 			);
 
-			it("throws an explicit error when there is no non-heat-network DHW reference heat source", async () => {
+			it("throws an explicit error when there is no DHW heat source", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatNetworks: {
@@ -1099,6 +1100,10 @@ describe("domestic hot water mapper", () => {
 						},
 					},
 					domesticHotWater: {
+						heatSources: {
+							data: [],
+							complete: true,
+						},
 						waterStorage: {
 							data: [storageTank],
 							complete: true,
@@ -1111,7 +1116,7 @@ describe("domestic hot water mapper", () => {
 				});
 
 				expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
-					.toThrow("Expected exactly one non-heat-network heat source, found 0");
+					.toThrow("Expected exactly one domestic hot water heat source, found 0");
 			});
 
 			it("throws an explicit error when more than one non-heat-network DHW reference heat source exists", async () => {
@@ -1133,7 +1138,7 @@ describe("domestic hot water mapper", () => {
 				});
 
 				expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
-					.toThrow("Expected exactly one non-heat-network heat source, found 2");
+					.toThrow("Expected exactly one domestic hot water heat source, found 2");
 			});
 
 			it.each([
@@ -1278,6 +1283,32 @@ describe("domestic hot water mapper", () => {
 						.toThrow("Selected hot water heat source requires water storage - no water storage present");
 				},
 			);
+		});
+
+		it("throws an explicit error when a DHW heat source reference cannot find its Space Heating heat source", async () => {
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [{
+							data: {
+								id: heatSourceId,
+								isExistingHeatSource: true,
+								heatSourceId: "missing-id",
+								coldWaterSource: "mainsWater",
+							},
+							complete: true,
+						}],
+						complete: true,
+					},
+					waterStorage: {
+						data: [storageTank],
+						complete: true,
+					},
+				},
+			});
+
+			expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
+				.toThrow("Expected associated space heating heat source");
 		});
 	});
 

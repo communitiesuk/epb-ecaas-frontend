@@ -137,41 +137,81 @@ function mapOthersData(state: ResolvedState) {
  * Assumes the selected non-heat-network DHW entry carries the relevant DHW
  * information needed later in mapping.
  */
-function getDomesticHotWaterHeatSource(state: ResolvedState) {
-	// NOTE: this logic will change upon the redesign of the heat networks section.
-	const heatSources = state.domesticHotWater.heatSources.filter(x => x.isExistingHeatSource === true);
-	const spaceHeatingHeatSources = (state.spaceHeating.heatSource ?? [])
-		.map(x => x.id);
-	const noneHeatNetworkHeatSources = heatSources.filter(x => {
-		if (x.isExistingHeatSource) {
-			return !spaceHeatingHeatSources.includes(x.id);
-		}
-		return true;
-	});
 
-	if (noneHeatNetworkHeatSources.length !== 1) {
-		throw new Error("Expected exactly one non-heat-network heat source, found " + noneHeatNetworkHeatSources.length);
+function getDomesticHotWaterHeatSource(state: ResolvedState) {
+	const heatSources = state.domesticHotWater.heatSources ?? [];
+
+	if (heatSources.length !== 1) {
+		throw new Error(
+			`Expected exactly one domestic hot water heat source, found ${heatSources.length}`,
+		);
 	}
-		
-	return noneHeatNetworkHeatSources[0]!;
+
+	return heatSources[0]!;
 }
 
 /**
  * Resolves the actual heat source details from either space heating or DHW,
  * depending on where the source was originally created.
  */
+
+
 function getActualHeatSourceFromDHWHeatSource(state: ResolvedState) {
-	const { domesticHotWater, spaceHeating } = state;
-	const dhwHeatSources = domesticHotWater.heatSources.filter(x => x.isExistingHeatSource === false);
-	const allHeatSources = [...dhwHeatSources, ...(spaceHeating.heatSource ?? [])];
-	if (allHeatSources.length !== 1) {
-		throw new Error("Expected exactly one non-heat-network heat source, found " + allHeatSources.length);
+	const dhwHeatSource = getDomesticHotWaterHeatSource(state);
+
+	if (dhwHeatSource.isExistingHeatSource) {
+		const heatSource = state.spaceHeating.heatSource?.find(
+			x => x.id === dhwHeatSource.heatSourceId,
+		);
+
+		if (!heatSource) {
+			throw new Error("Expected associated space heating heat source");
+		}
+
+		return heatSource;
 	}
-	return allHeatSources[0]!;
+
+	return dhwHeatSource;
 }
 
 function getAssociatedHeatNetwork(state: ResolvedState, associatedHeatNetworkId: string) {
 	return state.spaceHeating.heatNetworks?.find(network => network.id === associatedHeatNetworkId);
+}
+
+function getHeatNetworkFields(
+	state: ResolvedState,
+	associatedHeatNetworkId: string,
+) {
+	const network = getAssociatedHeatNetwork(state, associatedHeatNetworkId);
+
+	if (!network) {
+		throw new Error(
+			`Expected associated heat network ${associatedHeatNetworkId} to exist`,
+		);
+	}
+
+	const heatNetworkTypeMap = {
+		communalHeatNetwork: "communal",
+		sleevedDistrictHeatNetwork: "sleeved DHN",
+		unsleevedDistrictHeatNetwork: "unsleeved DHN",
+	} as const;
+
+	if (!network.name) {
+		throw new Error("Expected associated heat network to have a name");
+	}
+
+	if (!network.subHeatNetworkName) {
+		throw new Error(
+			"Expected associated heat network to have a sub heat network name",
+		);
+	}
+
+	return {
+		is_heat_network: true as const,
+		heat_network_type: heatNetworkTypeMap[network.typeOfHeatNetwork],
+		heat_network_reference: network.name,
+		sub_heat_network_name: network.subHeatNetworkName,
+	};
 }
 
 function mapHeatSourceWet(
@@ -188,33 +228,22 @@ function mapHeatSourceWet(
 		"heatBatteryDryCore": "dry_core",
 	} as const;
 
-	const heatNetworkFields = "isConnectedToHeatNetwork" in heatSource && heatSource.isConnectedToHeatNetwork ? {
-		is_heat_network: true as const,
-		heat_network_type: "communal" as const, // temp
-	} : { is_heat_network: false as const, EnergySupply: defaultElectricityEnergySupplyName };
 	switch (heatSource.typeOfHeatSource) {
 		case "heatInterfaceUnit":
-			{
-				const associatedHeatNetwork = heatSource.associatedHeatNetworkId ? getAssociatedHeatNetwork(state, heatSource.associatedHeatNetworkId) : undefined;
-				const subHeatNetworkName = associatedHeatNetwork && "subHeatNetworkName" in associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkName : undefined;
-				const associatedHeatNetworkName = associatedHeatNetwork && "name" in associatedHeatNetwork ? associatedHeatNetwork.name : undefined;
-				if (!subHeatNetworkName || !associatedHeatNetworkName) {
-					throw new Error("Expected a sub heat network name, and associated heat network name for a heat interface unit heat source associated with a heat network");
-				}
-				return {
-					HeatSourceWet: {
-						[heatSource.name]: {
-							type: "HIU" as const,
-							product_reference: heatSource.productReference,
-							EnergySupply: defaultElectricityEnergySupplyName,
-							heat_network_type: "communal" as const, // temp
-							heat_network_reference: associatedHeatNetworkName,
-							building_level_distribution_losses: heatSource.buildingLevelLosses.amount,
-							is_heat_network: true as const,
-							sub_heat_network_name: subHeatNetworkName,
-						} as const satisfies SchemaHeatSourceWetDetails,
-					} satisfies FhsInputSchema["HeatSourceWet"],
-				};
+			return {
+				HeatSourceWet: {
+					[heatSource.name]: {
+						type: "HIU" as const,
+						product_reference: heatSource.productReference,
+						EnergySupply: defaultElectricityEnergySupplyName,
+						building_level_distribution_losses:
+					heatSource.buildingLevelLosses.amount,
+						...getHeatNetworkFields(
+							state,
+							heatSource.associatedHeatNetworkId,
+						),
+					} as const satisfies SchemaHeatSourceWetDetails,
+				} satisfies FhsInputSchema["HeatSourceWet"],
 			};
 		case "heatPump":
 			return {
@@ -223,7 +252,14 @@ function mapHeatSourceWet(
 						type: "HeatPump" as const,
 						product_reference: heatSource.productReference,
 						EnergySupply: defaultElectricityEnergySupplyName,
-						...heatNetworkFields,
+						...(heatSource.isConnectedToHeatNetwork
+							? getHeatNetworkFields(
+								state,
+								heatSource.associatedHeatNetworkId,
+							)
+							: {
+								is_heat_network: false as const,
+							}),
 					} as const satisfies SchemaHeatSourceWetDetails,
 				} satisfies FhsInputSchema["HeatSourceWet"],
 			};
