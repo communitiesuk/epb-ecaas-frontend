@@ -18,7 +18,8 @@ const generalDetailsSummary: SummarySection = {
 	data: {
 		"Type of dwelling": displayCamelToSentenceCase(show(generalDetailsData.typeOfDwelling)),
 		// ...(generalDetailsData.typeOfDwelling === "flat" ? { "Storey of flat": dim(generalDetailsData.storeyOfFlat) } : {}),
-		...(generalDetailsData.typeOfDwelling === "flat" ? { "Number of storeys in building": show(generalDetailsData.storeysInBuilding) } : { "Number of storeys in building": show(generalDetailsData.storeysInDwelling) }),
+		...(generalDetailsData.typeOfDwelling === "flat" ? { "Number of storeys in dwelling": show(generalDetailsData.storeysInDwelling) } : {}),
+		...(generalDetailsData.typeOfDwelling === "flat" ? { "Number of storeys in building": show(generalDetailsData.storeysInBuilding) } : { "Number of storeys in dwelling": show(generalDetailsData.storeysInDwelling) }),
 		"Building length": dim(generalDetailsData.buildingLength, "metres"),
 		"Building width": dim(generalDetailsData.buildingWidth, "metres"),
 		"Number of bedrooms": show(generalDetailsData.numOfBedrooms),
