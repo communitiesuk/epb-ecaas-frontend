@@ -83,7 +83,7 @@ function hasIncompleteEntries() {
 
 const hasIncompatibleHeatSourceForHeatNetwork = computed(() =>
 	store.spaceHeating.heatSource.data.some((heatSource) => {
-		const data = heatSource.data;
+		const data = heatSource.data as HeatSourceData | undefined;
 
 		if (!data) {
 			return false;
@@ -99,7 +99,7 @@ const hasIncompatibleHeatSourceForHeatNetwork = computed(() =>
 
 		if (
 			data.typeOfHeatSource === "heatPump" &&
-			// data.typeOfHeatPump !== "booster"
+			data.typeOfHeatPump !== "booster"
 		) {
 			return true;
 		}

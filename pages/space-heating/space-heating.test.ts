@@ -66,6 +66,18 @@ describe("space heating", () => {
 		energySupply: "electricity",
 	};
 
+	const heatPump: HeatSourceData = {
+		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+		name: "Heat pump",
+		typeOfHeatSource: "heatPump",
+		typeOfHeatPump: "hybridHeatPump",
+		productReference: "1000",
+		packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
+		isConnectedToHeatNetwork: false,
+		energySupply: "electricity",
+		maxFlowTemp: unitValue(30, celsius),
+	};
+
 	const boosterHeatPump: HeatSourceData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b52222",
 		name: "Booster HP",
@@ -225,7 +237,7 @@ describe("space heating", () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: boosterHeatPump }],
+						data: [{ data: heatPump }],
 					},
 				},
 			});
