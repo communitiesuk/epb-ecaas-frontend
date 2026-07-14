@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import HeatNetworkProductDetailsPage from "~/components/HeatNetworkProductDetailsPage.vue";
 import type { PageId } from "~/data/pages/pages";
-import type { Product } from "~/pcdb/pcdb.types";
+import type { Product, HeatNetworkProduct } from "~/pcdb/pcdb.types";
 import type { HeatNetworkData, HeatNetworkProductType } from "~/stores/ecaasStore.schema";
 import { heatNetworkProductTypeDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
@@ -26,6 +26,7 @@ const productType = heatNetworkProductTypeDisplay[heatNetworkType as HeatNetwork
 
 
 const data = await useProductDetails(params.id as string, query.testDataId as string);
+const heatNetwork = data as HeatNetworkProduct;
 
 const backUrl = getUrl(pageId)
 	.replace(":heatNetwork", params.heatNetwork as string);
@@ -38,6 +39,7 @@ const selectProduct = () => {
 		if (item && data) {
 			const product = item.data as HeatNetworkData;
 			product.productReference = data.id.toString();
+			product.boosterHeatPump = heatNetwork.boosterHeatPump;
 		}
 	});
 

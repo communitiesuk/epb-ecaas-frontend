@@ -55,29 +55,47 @@ describe("space heating", () => {
 		maxFlowTemp: unitValue(32, celsius),
 	};
 
+	const heatBattery: HeatSourceData = {
+		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
+		name: "Heat battery 1",
+		typeOfHeatSource: "heatBattery",
+		typeOfHeatBattery: "heatBatteryPcm",
+		productReference: "HEAT_BATTERY_SMALL",
+		maxFlowTemp: unitValue(32, celsius),
+		numberOfUnits: 1,
+		energySupply: "electricity",
+	};
+
+	const heatPump: HeatSourceData = {
+		id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+		name: "Heat pump",
+		typeOfHeatSource: "heatPump",
+		typeOfHeatPump: "hybridHeatPump",
+		productReference: "1000",
+		packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
+		isConnectedToHeatNetwork: false,
+		energySupply: "electricity",
+		maxFlowTemp: unitValue(30, celsius),
+	};
+
+	const boosterHeatPump: HeatSourceData = {
+		id: "463c94f6-566c-49b2-af27-57e5c68b52222",
+		name: "Booster HP",
+		typeOfHeatSource: "heatPump",
+		typeOfHeatPump: "booster",
+		productReference: "HEATPUMP-SMALL",
+		isConnectedToHeatNetwork: false,
+		energySupply: "electricity",
+		maxFlowTemp: unitValue(30, "celsius"),
+	};
+
 	describe("Heat Networks", () => {
-		const heatNetwork1: HeatNetworkData = {
+		const heatNetwork: HeatNetworkData = {
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8f",
-			name: "Heat Network 1",
+			name: "Heat Network",
 			productReference: "SLEEVED_DISTRICT_HEAT_NETWORK",
 			typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
-			subHeatNetworkName: "Sub Heat Network Name 1",
-		};
-
-		const heatNetwork2: HeatNetworkData = {
-			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8g",
-			name: "Heat Network 2",
-			productReference: "UNSLEEVED_DISTRICT_HEAT_NETWORK",
-			typeOfHeatNetwork: "unsleevedDistrictHeatNetwork",
-			subHeatNetworkName: "Sub Heat Network Name 2",
-		};
-
-		const heatNetwork3: HeatNetworkData = {
-			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8h",
-			name: "Heat Network 3",
-			productReference: "COMMUNAL_HEAT_NETWORK",
-			typeOfHeatNetwork: "communalHeatNetwork",
-			subHeatNetworkName: "Sub Heat Network Name 3",
+			subHeatNetworkName: "Sub Heat Network Name",
 		};
 
 		it("should display heat networks section", async () => {
@@ -93,11 +111,7 @@ describe("space heating", () => {
 				spaceHeating: {
 					heatNetworks: {
 						data: [{
-							data: heatNetwork1,
-							complete: true,
-						},
-						{
-							data: heatNetwork2,
+							data: heatNetwork,
 							complete: true,
 						}],
 					},
@@ -106,8 +120,7 @@ describe("space heating", () => {
 
 			await renderSuspended(SpaceHeating);
 
-			expect(screen.getByText("Heat Network 1")).toBeDefined();
-			expect(screen.getByText("Heat Network 2")).toBeDefined();
+			expect(screen.getByText("Heat Network")).toBeDefined();
 		});
 
 		it("should remove heat network when remove link is clicked", async () => {
@@ -115,7 +128,7 @@ describe("space heating", () => {
 				spaceHeating: {
 					heatNetworks: {
 						data: [{
-							data: heatNetwork1,
+							data: heatNetwork,
 							complete: true,
 						}],
 					},
@@ -129,96 +142,8 @@ describe("space heating", () => {
 			);
 
 			expect(
-				screen.queryByText("Heat Network 1"),
+				screen.queryByText("Heat Network"),
 			).toBeNull();
-		});
-
-		it("should only remove the heat network that is clicked if there are multiple heat networks", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatNetworks: {
-						data: [{
-							data: heatNetwork1,
-							complete: true,
-						},
-						{
-							data: heatNetwork2,
-							complete: true,
-						},
-						{
-							data: heatNetwork3,
-							complete: true,
-						}],
-					},
-				},
-			});
-
-			await renderSuspended(SpaceHeating);
-
-			await user.click(
-				screen.getByTestId("heatNetworks_remove_1"),
-			);
-
-			expect(
-				screen.queryByText("Heat Network 2"),
-			).toBeNull();
-
-			expect(
-				screen.queryByText("Heat Network 1"),
-			).toBeDefined();
-
-			expect(
-				screen.queryByText("Heat Network 3"),
-			).toBeDefined();
-		});
-
-		it("should duplicate the correct heat network when duplicate link is clicked", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatNetworks: {
-						data: [
-							{ data: heatNetwork1 },
-							{ data: heatNetwork2 },
-
-						],
-					},
-				},
-			});
-			await renderSuspended(SpaceHeating);
-			await userEvent.click(screen.getByTestId("heatNetworks_duplicate_0"));
-			await userEvent.click(screen.getByTestId("heatNetworks_duplicate_0"));
-			await userEvent.click(screen.getByTestId("heatNetworks_duplicate_2"));
-			await userEvent.click(screen.getByTestId("heatNetworks_duplicate_2"));
-
-			expect(screen.queryAllByTestId("heatNetworks_item").length).toBe(6);
-			expect(screen.getByText("Heat Network 1")).toBeDefined();
-			expect(screen.getByText("Heat Network 1 (1)")).toBeDefined();
-			expect(screen.getByText("Heat Network 1 (2)")).toBeDefined();
-			expect(screen.getByText("Heat Network 1 (1) (1)")).toBeDefined();
-			expect(screen.getByText("Heat Network 1 (1) (2)")).toBeDefined();
-		});
-
-		it("should duplicate the second heat network only", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatNetworks: {
-						data: [
-							{ data: heatNetwork1 },
-							{ data: heatNetwork2 },
-						],
-					},
-				},
-			});
-
-			await renderSuspended(SpaceHeating);
-
-			await userEvent.click(
-				screen.getByTestId("heatNetworks_duplicate_1"),
-			);
-
-			expect(screen.getByText("Heat Network 1")).toBeDefined();
-			expect(screen.getByText("Heat Network 2")).toBeDefined();
-			expect(screen.getByText("Heat Network 2 (1)")).toBeDefined();
 		});
 
 		it("should show heat network as complete", async () => {
@@ -226,7 +151,7 @@ describe("space heating", () => {
 				spaceHeating: {
 					heatNetworks: {
 						data: [{
-							data: heatNetwork1,
+							data: heatNetwork,
 							complete: true,
 						}],
 					},
@@ -243,7 +168,7 @@ describe("space heating", () => {
 				spaceHeating: {
 					heatNetworks: {
 						data: [{
-							data: heatNetwork1,
+							data: heatNetwork,
 							complete: false,
 						}],
 					},
@@ -253,6 +178,73 @@ describe("space heating", () => {
 			await renderSuspended(SpaceHeating);
 
 			expect(screen.getByText("In progress")).toBeDefined();
+		});
+
+		it("hides the add link when there is already one heat network stored", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [{
+							data: heatNetwork,
+							complete: true,
+						}],
+					},
+				},
+			});
+		
+			await renderSuspended(SpaceHeating);
+			expect(screen.queryByTestId("heatNetworks_add")).toBeNull();
+		});
+
+		it("shows add link when there are no heat networks stored", async () => {
+			await renderSuspended(SpaceHeating);
+			expect(screen.queryByTestId("heatNetworks_add")).toBeDefined();
+		});
+
+		test("A heat network cannot be added if a heat source of type boiler already exists.", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: heatSource1 }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+			expect(screen.queryByTestId("heatNetworks_add")).toBeNull();
+			expect(screen.getByText("A heat network cannot be added as it isn't compatible with the heat sources already entered.")).toBeDefined();
+		});
+
+		test("A heat network cannot be added if a heat source of type heat battery already exists.", async () => {
+
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: heatBattery }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+			expect(screen.queryByTestId("heatNetworks_add")).toBeNull();
+			expect(screen.getByText("A heat network cannot be added as it isn't compatible with the heat sources already entered.")).toBeDefined();
+		});
+
+		test("A heat network cannot be added if a heat source of type heat pump already exists and it isn't a booster heat pump.", async () => {
+
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: heatPump }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeating);
+			expect(screen.queryByTestId("heatNetworks_add")).toBeNull();
+			expect(screen.getByText("A heat network cannot be added as it isn't compatible with the heat sources already entered.")).toBeDefined();
 		});
 	});
 
@@ -434,34 +426,38 @@ describe("space heating", () => {
 			// 	expect(heatNetworkDHWItem?.complete).toBe(false);
 			// });
 
-			test("When a network is removed, it sets any associated heat pumps to incomplete and removes the association", async () => {
-				const heatNetwork: Partial<HeatSourceData> = {
+			test("When a communal heat network is removed with a booster heat pump flag, it sets any associated booster heat pumps to incomplete and removes the association", async () => {
+				const heatNetwork: Partial<HeatNetworkData> = {
 					id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-					typeOfHeatSource: "heatNetwork",
 					typeOfHeatNetwork: "communalHeatNetwork",
 					productReference: "HEATNETWORK_123",
+					boosterHeatPump: true,
 				};
-				const heatPumpWithAssociation: Partial<HeatSourceData> = {
+				const boosterHeatPumpWithAssociation: Partial<HeatSourceData> = {
 					id: "0b77e247-53c5-42b8-9dbd-83cbfc811111",
+					name: "Booster HP",
 					typeOfHeatSource: "heatPump",
-					typeOfHeatPump: "airSource",
-					productReference: "HEATPUMP_LARGE",
+					typeOfHeatPump: "booster",
+					productReference: "HEATPUMP_SMALL",
 					isConnectedToHeatNetwork: true,
 					associatedHeatNetworkId: heatNetwork.id,
 				};
+
 				store.$patch({
 					spaceHeating: {
+						heatNetworks: {
+							data: [{ data: heatNetwork, complete: true }],
+						},
 						heatSource: {
 							data: [
-								{ data: heatNetwork, complete: true },
-								{ data: heatPumpWithAssociation, complete: true },
+								{ data: boosterHeatPumpWithAssociation, complete: true },
 							],
 							complete: true,
 						},
 					},
 				});
 				await renderSuspended(SpaceHeating);
-				await user.click(screen.getByTestId("heatSource_remove_0"));
+				await user.click(screen.getByTestId("heatNetworks_remove_0"));
 
 				const heatPumpItem = store.spaceHeating.heatSource.data[0];
 				expect((heatPumpItem!.data as { associatedHeatNetworkId: string }).associatedHeatNetworkId).toBe(undefined);
@@ -469,9 +465,8 @@ describe("space heating", () => {
 				expect(store.spaceHeating.heatSource.complete).toBe(false);
 			});
 			test("When a heat network is removed, it sets any associated HIU to incomplete and removes the association", async () => {
-				const heatNetwork: Partial<HeatSourceData> = {
+				const heatNetwork: Partial<HeatNetworkData> = {
 					id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-					typeOfHeatSource: "heatNetwork",
 					typeOfHeatNetwork: "communalHeatNetwork",
 					productReference: "HEATNETWORK_123",
 				};
@@ -483,9 +478,11 @@ describe("space heating", () => {
 				};
 				store.$patch({
 					spaceHeating: {
+						heatNetworks: {
+							data: [{ data: heatNetwork, complete: true }],
+						},
 						heatSource: {
 							data: [
-								{ data: heatNetwork, complete: true },
 								{ data: hiu, complete: true },
 							],
 							complete: true,
@@ -493,9 +490,10 @@ describe("space heating", () => {
 					},
 				});
 				await renderSuspended(SpaceHeating);
-				await user.click(screen.getByTestId("heatSource_remove_0"));
-
+				await user.click(screen.getByTestId("heatNetworks_remove_0"));
+				
 				const hiuItem = store.spaceHeating.heatSource.data[0];
+		
 				expect((hiuItem!.data as { associatedHeatNetworkId: string }).associatedHeatNetworkId).toBe(undefined);
 				expect(hiuItem!.complete).toBe(false);
 				expect(store.spaceHeating.heatSource.complete).toBe(false);

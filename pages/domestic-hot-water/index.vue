@@ -158,15 +158,14 @@ function checkMaxHeatSourcesExceeded() {
 
 		const connectedHeatPump = dhwHeatSources.data.find(isHeatPumpConnectedToExistingHeatNetwork);
 		const heatSourceTypes = dhwHeatSources.data.map(getDhwHeatSourceType);
-		const heatNetworks = heatSourceTypes.filter(type => type === "heatNetwork");
-		const typeOfHeatSource = heatSourceTypes.find(type => type && type !== "heatNetwork");
+		const heatNetworks = store.spaceHeating.heatNetworks.data;
 
 		if (connectedHeatPump && heatNetworks.length >= 1) {
 			addError(error);
 			return;
 		}
 
-		if (heatNetworks.length === 1 && (typeOfHeatSource === "heatPump" || typeOfHeatSource === "heatInterfaceUnit")) {
+		if (heatNetworks.length === 1 && heatSourceTypes.includes("heatPump") || heatSourceTypes.includes("heatInterfaceUnit")) {
 			return;
 		}
 	}

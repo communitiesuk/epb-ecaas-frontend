@@ -953,7 +953,6 @@ export type TypeOfHeatNetwork = z.infer<typeof typeOfHeatNetwork>;
 export type LocationOfCollectorLoopPipingType = z.infer<typeof typeOfLocationOfLoopPiping>;
 
 export type HeatSourceType =
-	"heatNetwork" |
 	"heatPump" |
 	"boiler" |
 	"heatInterfaceUnit" |
@@ -999,12 +998,6 @@ const heatBatteryBase = pcdbProduct.extend({
 	energySupply: fuelTypeZod,
 });
 
-const heatNetworkBase = pcdbProduct.extend({
-	typeOfHeatSource: z.literal("heatNetwork"),
-	typeOfHeatNetwork,
-	subHeatNetworkName: z.string().optional(),
-});
-
 const heatInterfaceUnitBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatInterfaceUnit"),
 	maxFlowTemp: zodUnit("temperature"),
@@ -1017,13 +1010,11 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	boilerBase,
 	heatBatteryBase,
 	heatInterfaceUnitBase,
-	heatNetworkBase,
 ]);
 
 const _typeOfHeatSource = z.enum({
 	...typeOfHeatPump.enum,
 	...typeOfBoiler.enum,
-	...z.enum(["heatNetwork"]).enum,
 	...typeOfHeatBattery.enum,
 	...z.enum(["heatInterfaceUnit"]).enum,
 });
@@ -1036,6 +1027,7 @@ export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
 export const heatNetworkDataZod = pcdbProduct.extend({
 	typeOfHeatNetwork,
 	subHeatNetworkName: z.string().optional(),
+	boosterHeatPump: z.boolean().optional(),
 });
 
 export type HeatNetworkData = z.infer<typeof heatNetworkDataZod>;
@@ -1093,7 +1085,7 @@ export const productTypeMap = {
 	"airPressureShower": "AirPoweredShowers",
 	"wwhrs": "InstantaneousWwhrSystem",
 	"underFloorHeating": "UnderFloorHeating",
-} as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType | ShowerProductType | WwhrsProductType, TechnologyType | string | TechnologyType[]>;
+} as const satisfies Record<HeatSourceProductType | HeatNetworkProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType | ShowerProductType | WwhrsProductType, TechnologyType | string | TechnologyType[]>;
 
 export type HeatEmitterType =
 	"wetDistributionSystem" |
@@ -1317,7 +1309,6 @@ const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceExtension);
 const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceExtension);
 
 const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
-const heatNetworkHotWaterSourceBase = heatNetworkBase.extend(hotWaterHeatSourceExtension);
 const immersionHeaterHotWaterSourceBase = baseImmersionHeater.extend(hotWaterHeatSourceExtension);
 const pointOfUseHotWaterSourceBase = basePointOfUse.extend(hotWaterHeatSourceExtension);
 const heatInterfaceUnitHotWaterSourceBase = heatInterfaceUnitBase.extend(hotWaterHeatSourceExtension);
@@ -1327,7 +1318,6 @@ const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	boilerHotWaterSourceBase,
 	heatBatteryHotWaterSourceBase,
 	solarThermalHotWaterSourceBase,
-	heatNetworkHotWaterSourceBase,
 	immersionHeaterHotWaterSourceBase,
 	pointOfUseHotWaterSourceBase,
 	heatInterfaceUnitHotWaterSourceBase,

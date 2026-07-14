@@ -354,7 +354,7 @@ const heatNetworkZod = BaseProduct.extend({
 	communityHeatNetworkVersionNumber: z.nullable(z.number()),
 	heatSource2: z.nullable(z.string()),
 	numberOfSubheatNetworks: z.nullable(z.number()),
-	fifthGearHeatNetwork: z.nullable(z.number()),
+	boosterHeatPump: z.optional(z.boolean()),
 	heatSource1: z.nullable(z.string()),
 	validityEndDate: z.nullable(z.string()),
 	communityHeatNetworkName: z.nullable(z.string()),
@@ -502,6 +502,7 @@ type DisplayProductBase = {
 	subheatNetworkName?: string;
 	subHeatNetworkId?: string;
 	productId?: string;
+	boosterHeatPump?: boolean;
 };
 
 type StandardDisplayProductBase = DisplayProductBase & {
@@ -548,6 +549,7 @@ type HeatNetworkDisplayProduct = DisplayProductBase & {
 	vesselType?: never;
 	type?: never;
 	height?: never;
+	boosterHeatPump?: boolean;
 };
 
 type UnderFloorHeatingDisplayProductBase = DisplayProductBase & {

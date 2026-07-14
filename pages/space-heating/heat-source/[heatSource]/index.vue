@@ -22,11 +22,9 @@ const id = heatSourceData?.data.id ?? uuidv4();
 
 const applyHeatSourceQueryDefaults = () => {
 	if (route.params.heatSource !== "create") return;
-	if (route.query.typeOfHeatSource !== "heatNetwork") return;
 
 	model.value = {
 		id: model.value?.id ?? id,
-		typeOfHeatSource: "heatNetwork",
 	} as HeatSourceData;
 };
 
@@ -40,7 +38,6 @@ watch(
 
 export type HeatPumpModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
 export type BoilerModelType = Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
-export type HeatNetworkModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
 export type HeatBatteryModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
 export type HeatInterfaceUnitModelType = Extract<HeatSourceData, { typeOfHeatSource: "heatInterfaceUnit" }>;
 
@@ -142,6 +139,52 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 	}
 }
 
+const heatNetwork = computed(() => store.spaceHeating.heatNetworks.data[0]?.data);
+
+function isCommunalHeatNetworkWithoutBoosterHeatPump() {
+	return heatNetwork.value?.typeOfHeatNetwork === "communalHeatNetwork"
+		&& !heatNetwork.value.boosterHeatPump;
+}
+
+function isCommunalHeatNetworkWithBoosterHeatPump() {
+	return heatNetwork.value?.typeOfHeatNetwork === "communalHeatNetwork"
+		&& heatNetwork.value.boosterHeatPump;
+}
+
+function isDistrictHeatNetwork() {
+	return heatNetwork.value?.typeOfHeatNetwork === "sleevedDistrictHeatNetwork"
+		|| heatNetwork.value?.typeOfHeatNetwork === "unsleevedDistrictHeatNetwork";
+}
+
+function getHeatSourceTypeHelpText() {
+	if (isCommunalHeatNetworkWithoutBoosterHeatPump()) {
+		return "As a traditional communal heat network has been added, the heat source must be a HIU";
+	}
+
+	if (isCommunalHeatNetworkWithBoosterHeatPump()) {
+		return "As a 5th generation (ambient loop) communal heat network has been added, the heat source must be a booster heat pump";
+	}
+
+	if (isDistrictHeatNetwork())
+		return "As a district heat network has been added, the heat source must be a HIU";
+}
+
+const heatSourceOptions = computed<Record<string, string>>(() => {
+	if (isCommunalHeatNetworkWithoutBoosterHeatPump() || isDistrictHeatNetwork()) {
+		return {
+			heatInterfaceUnit: heatSourceTypesWithDisplay.heatInterfaceUnit,
+		};
+	}
+	if (isCommunalHeatNetworkWithBoosterHeatPump()) {
+		return {
+			heatPump: "Booster heat pump",
+		};
+	}
+
+	return heatSourceTypesWithDisplay as Record<string, string>;
+});
+
+
 const boilers = heatSourceStoreData
 	.filter(x => x.data.typeOfHeatSource === "boiler")
 	.map(x => [x.data.id, x.data.name] as [string, string]);
@@ -154,6 +197,9 @@ const { mounted } = useMounted();
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<div class="govuk-inset-text">
+		<p>Add in the heat sources required for space heating systems.</p>
+	</div>
 	<GovErrorSummary
 		v-if="(route.query.error as ErrorName) === 'DHW_HEAT_SOURCE_CONFLICT'"
 		:error-list="[
@@ -186,10 +232,11 @@ const { mounted } = useMounted();
 			id="typeOfHeatSource"
 			type="govRadios"
 			label="Type of heat source"
-			:options="heatSourceTypesWithDisplay"
+			:options="heatSourceOptions"
 			name="typeOfHeatSource"
 			validation="required"
 			:disabled="hasPackagedProduct(model)"
+			:help="getHeatSourceTypeHelpText()"
 		/>
 
 		<HeatPumpSection
@@ -209,13 +256,6 @@ const { mounted } = useMounted();
 			page="space heating"
 			@update-boiler-model="updateHeatSource"
 			@product-loaded="handleProductLoaded"
-		/>
-		<HeatNetworkSection
-			v-if="mounted && model?.typeOfHeatSource === 'heatNetwork'"
-			:model="(model as HeatNetworkModelType)"
-			:index="index"
-			section="spaceHeating"
-			@update-heat-network-model="updateHeatSource"
 		/>
 		<HeatBatterySection
 			v-if="mounted && model?.typeOfHeatSource === 'heatBattery'"

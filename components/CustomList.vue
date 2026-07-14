@@ -40,12 +40,21 @@ function canAddMoreItems() {
 }
 
 function routeForAddItem() {
-	return props.maxNumberOfItems === 1 && props.section !== "dHWHeatSources" ? props.formUrl : `${props.formUrl}/create`;
+	if (props.id === "heatNetworks") {
+		return `${props.formUrl}/create`;
+	}
+
+	return props.maxNumberOfItems === 1 && props.section !== "dHWHeatSources"
+		? props.formUrl
+		: `${props.formUrl}/create`;
 }
 
 function routeForEditItem(index: number) {
-	return props.maxNumberOfItems === 1 && props.section !== "dHWHeatSources" ? props.formUrl : `${props.formUrl}/${index}`;
+	if (props.id === "heatNetworks") {
+		return `${props.formUrl}/${index}`;
+	}
 
+	return props.maxNumberOfItems === 1 && props.section !== "dHWHeatSources" ? props.formUrl : `${props.formUrl}/${index}`;
 }
 </script>
 

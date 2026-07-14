@@ -74,7 +74,6 @@ export function useForm() {
 			if (initialData === undefined || newData === undefined || routeParam === undefined) {
 				return;
 			}
-
 			if (!hasChangedFields(newData, initialData)) {
 				return;
 			}

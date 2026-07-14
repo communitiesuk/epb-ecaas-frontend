@@ -4,6 +4,7 @@ import type { PageId } from "~/data/pages/pages";
 import { celsius } from "~/utils/units/temperature";
 import type { UnitValue } from "~/utils/units/types";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
+import { useHeatNetworks } from "~/composables/heatNetworks";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -19,29 +20,7 @@ const { model, onProductLoaded = undefined } = defineProps<{
 
 const heatSources = getCombinedHeatSources(store);
 
-const heatNetworkOptions = computed(() => {
-	const heatNetworks = heatSources.filter(source => {
-		return (source.data as HeatSourceData).typeOfHeatSource === "heatNetwork";
-	});
-
-	return Object.fromEntries(heatNetworks.map(network => {
-		const networkData = network.data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
-		return [
-			networkData.id,
-			{
-				label: networkData.name,
-				value: networkData.id,
-			},
-		];
-	}));
-});
-
-const defaultAssociatedHeatNetworkId = computed(() => {
-	const optionIds = Object.keys(heatNetworkOptions.value);
-	return optionIds.length === 1 ? optionIds[0] : undefined;
-});
-
-const hasHeatNetworkOptions = computed(() => Object.keys(heatNetworkOptions.value).length > 0);
+const { heatNetworkOptions, hasHeatNetworkOptions, defaultAssociatedHeatNetworkId } = useHeatNetworks();
 
 const greaterThanZero = (node: FormKitNode) => {
 	const value = node.value as UnitValue;

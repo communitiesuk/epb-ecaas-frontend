@@ -364,7 +364,6 @@ export const heatSourceProductTypesDisplay = {
 	"hybridHeatPump": pluralize("Hybrid heat pump"),
 	"combiBoiler": pluralize("Combi boiler"),
 	"regularBoiler": pluralize("Regular boiler"),
-	"heatNetwork": pluralize("Heat network"),
 	"heatBatteryPcm": pluralize("PCM heat battery", "ies"),
 	"heatBatteryDryCore": pluralize("Dry core heat battery", "ies"),
 	"heatInterfaceUnit": pluralize("Heat interface unit"),
@@ -381,7 +380,6 @@ export type HeatSourceTypeDisplay = "Heat pump" | "Boiler" | "Heat network" | "H
 export const heatSourceTypesWithDisplay = {
 	"heatPump": "Heat pump",
 	"boiler": "Boiler",
-	"heatNetwork": "Heat network",
 	"heatBattery": "Heat battery",
 	"heatInterfaceUnit": "Heat interface unit",
 } as const satisfies Record<HeatSourceType, HeatSourceTypeDisplay>;

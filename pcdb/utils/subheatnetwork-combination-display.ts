@@ -17,6 +17,7 @@ export function generateHeatNetworkSubNetworkDisplayProductCombinations(item: Re
 			technologyType: "HeatNetworks",
 			communityHeatNetworkName,
 			subheatNetworkName,
+			boosterHeatPump: item.boosterHeatPump === true, 
 		} satisfies DisplayProduct;
 	});
 }

@@ -40,6 +40,7 @@ function handleComplete() {
 function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
 	if (!heatNetworkId) return;
 	store.$patch((state) => {
+
 		state.spaceHeating.heatSource.data.forEach((heatSource) => {
 			const typeOfHeatSource = heatSource.data?.typeOfHeatSource;
 			if (
@@ -48,6 +49,7 @@ function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
 			) {
 				(heatSource.data as { associatedHeatNetworkId: string | undefined }).associatedHeatNetworkId = undefined;
 				heatSource.complete = false;
+				state.spaceHeating.heatSource.complete = false;
 			} 
 		});
 	});
@@ -56,10 +58,11 @@ function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
 function handleRemove(type: "heatNetworks" | "heatSource" | "heatEmitters" | "heatingControls", index: number) {
 	if (type === "heatSource") {
 		duplicationError.value = false;
-		const heatSource = store.spaceHeating.heatSource.data[index];
-		if (heatSource?.data?.typeOfHeatSource === "heatNetwork") {
-			clearAssociationsWithHeatNetwork(heatSource.data.id);
-		}
+	}
+
+	if (type === "heatNetworks") {
+		const heatNetwork = store.spaceHeating.heatNetworks.data[index];
+		clearAssociationsWithHeatNetwork(heatNetwork?.data.id);
 	}
 
 	removeEntry(type, index);
@@ -77,6 +80,34 @@ function hasIncompleteEntries() {
 		items.data.some((item) => (isEcaasForm(item) ? !item.complete : false)),
 	);
 }
+
+const hasIncompatibleHeatSourceForHeatNetwork = computed(() =>
+	store.spaceHeating.heatSource.data.some((heatSource) => {
+		const data = heatSource.data as HeatSourceData | undefined;
+
+		if (!data) {
+			return false;
+		}
+
+		if (data.typeOfHeatSource === "boiler") {
+			return true;
+		}
+
+		if (data.typeOfHeatSource === "heatBattery") {
+			return true;
+		}
+
+		if (
+			data.typeOfHeatSource === "heatPump" &&
+			data.typeOfHeatPump !== "booster"
+		) {
+			return true;
+		}
+
+		return false;
+	}),
+);
+
 </script>
 
 <template>
@@ -108,8 +139,14 @@ function hasIncompleteEntries() {
 			}))
 		"
 		:show-status="true"
+		:max-number-of-items="1"
+		:conflict-message="
+			hasIncompatibleHeatSourceForHeatNetwork
+				? `A heat network cannot be added as it isn't compatible with the heat sources already entered.`
+				: undefined
+		"
 		@duplicate="(index:number) => handleDuplicate('heatNetworks', index)"
-		@remove="(index:number) => removeEntry('heatNetworks', index)"
+		@remove="(index:number) => handleRemove('heatNetworks', index)"
 	/>
 	<CustomList
 		id="heatSource"

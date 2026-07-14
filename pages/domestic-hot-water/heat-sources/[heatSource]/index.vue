@@ -248,7 +248,44 @@ const existingHeatSourceType = computed(() => {
 });
 
 function hasHeatNetworkHeatSource() {
-	return dhwHeatSources.data.some((x, itemIndex) => itemIndex !== index && getDhwHeatSourceType(x) === "heatNetwork");
+	return !!store.spaceHeating.heatNetworks.data.length;
+}
+
+function isCommunalHeatNetworkWithoutBoosterHeatPump() {
+	const heatNetworks = store.spaceHeating.heatNetworks.data;
+	if (heatNetworks.length != 0)
+		return store.spaceHeating.heatNetworks.data.some(
+			x => x.data.typeOfHeatNetwork === "communalHeatNetwork" && !x.data.boosterHeatPump,
+		);
+}
+
+function isCommunalHeatNetworkWithBoosterHeatPump() {
+	const heatNetworks = store.spaceHeating.heatNetworks.data;
+	if (heatNetworks.length != 0)
+		return store.spaceHeating.heatNetworks.data.some(
+			x => x.data.typeOfHeatNetwork === "communalHeatNetwork" && x.data.boosterHeatPump,
+		);
+}
+
+function isDistrictHeatNetwork() {
+	const heatNetworks = store.spaceHeating.heatNetworks.data;
+	if (heatNetworks.length != 0)
+		return store.spaceHeating.heatNetworks.data.some(
+			x => x.data.typeOfHeatNetwork === "sleevedDistrictHeatNetwork" || x.data.typeOfHeatNetwork === "unsleevedDistrictHeatNetwork",
+		);
+}
+
+function getHeatSourceTypeHelpText() {
+	if (isCommunalHeatNetworkWithoutBoosterHeatPump()) {
+		return "As a traditional communal heat network has been added, the heat source must be a HIU";
+	}
+
+	if (isCommunalHeatNetworkWithBoosterHeatPump()) {
+		return "As a 5th generation (ambient loop) communal heat network has been added, the heat source must be a booster heat pump";
+	}
+
+	if (isDistrictHeatNetwork())
+		return "As a district heat network has been added, the heat source must be a HIU";
 }
 
 function hasHeatPumpOrHIUHeatSource() {
@@ -272,7 +309,21 @@ function getDhwHeatSourceType(heatSourceForm: EcaasForm<DomesticHotWaterHeatSour
 }
 
 function filterHeatSourceOptions(): Record<string, string> {
-	const { heatNetwork, heatPump, heatInterfaceUnit } = DHWHeatSourceTypesWithDisplay;
+	const { heatPump, heatInterfaceUnit } = DHWHeatSourceTypesWithDisplay;
+	const { heatNetwork } = heatNetworkProductTypeDisplay;
+
+	if (isCommunalHeatNetworkWithoutBoosterHeatPump() || isDistrictHeatNetwork()) {
+		return {
+			heatInterfaceUnit,
+		};
+	}
+
+	if (isCommunalHeatNetworkWithBoosterHeatPump()) {
+		return {
+			heatPump: "Booster heat pump",
+		};
+	}
+	
 	if (hasHeatNetworkHeatSource()) {
 		return {
 			heatPump,
@@ -281,7 +332,7 @@ function filterHeatSourceOptions(): Record<string, string> {
 	}
 	if (hasHeatPumpOrHIUHeatSource()) {
 		return {
-			heatNetwork,
+			heatNetwork: heatNetwork(false),
 		};
 	}
 	
@@ -403,6 +454,7 @@ const preheatedWaterStorageMap = new Map(preheatedWaterStorage);
 				name="typeOfHeatSource"
 				validation="required"
 				:disabled="hasPackagedProduct(model)"
+				:help="getHeatSourceTypeHelpText()"
 			/>
 			<HeatPumpSection
 				v-if="model.isExistingHeatSource === false
@@ -423,14 +475,6 @@ const preheatedWaterStorageMap = new Map(preheatedWaterStorage);
 				page="domestic hot water"
 				@update-boiler-model="updateHeatSource"
 				@product-loaded="handleProductLoaded"
-			/>
-			<HeatNetworkSection
-				v-if="model.isExistingHeatSource === false
-					&& model.typeOfHeatSource === 'heatNetwork'"
-				:model="(model as HeatNetworkModelType)"
-				:index="index"
-				section="domesticHotWater"
-				@update-heat-network-model="updateHeatSource"
 			/>
 			<HeatBatterySection
 				v-if="model.isExistingHeatSource === false

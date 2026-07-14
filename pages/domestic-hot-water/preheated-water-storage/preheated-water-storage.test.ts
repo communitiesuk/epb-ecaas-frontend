@@ -256,10 +256,11 @@ describe("preheated water storage", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
+			await user.click(screen.getByTestId("chooseAProductButton"));
 
 			const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
 			expect(chooseProductButton).toBeDefined();
-			expect(chooseProductButton.pathname).toContain("/domestic-hot-water/preheated-water-storage/0/smart-hot-water-tank");
+			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/preheated-water-storage/0/smart-hot-water-tank");
 		});
 
 		test("data is saved to store state when form is valid", async () => {
