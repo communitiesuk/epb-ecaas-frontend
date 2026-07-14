@@ -264,14 +264,16 @@ const greaterThanZero = (node: FormKitNode) => {
 				validation="required | number"
 				data-field="Zone.BuildingElement.*.thermal_resist_insul"
 			>
-				<GovDetails summary-text="Help with this input"><p class="govuk-body">The thermal resistance of the insulation layer should be calculated for the part of the floor construction below the void, excluding the effect of surface resistances.</p></GovDetails>
+				<GovDetails summary-text="Help with this input">
+					<p class="govuk-body">The thermal resistance of the insulation layer should be calculated for the part of the floor construction below the void, excluding the effect of surface resistances. If there is no insulation, enter 0.</p>
+				</GovDetails>
 			</FormKit>
 			<FormKit
 				id="thermalTransmittanceOfWallsAboveGround"
 				type="govInputWithSuffix"
-				suffix-text="W(m²/K)"
+				suffix-text="W/(m²·K)"
 				label="U-value of walls above ground"
-				help="Enter the U-value of the external walls above ground level. Typically between 0.08 and 0.25 W(m²/K)"
+				help="Enter the U-value of the external walls above ground level. Typically between 0.08 and 0.25 W/(m²·K)"
 				name="thermalTransmittanceOfWallsAboveGround"
 				validation="required | number"
 				data-field="Zone.BuildingElement.*.thermal_transm_walls"/>
@@ -282,13 +284,13 @@ const greaterThanZero = (node: FormKitNode) => {
 			id="perimeter"
 			type="govInputWithSuffix"
 			suffix-text="m"
-			label="Perimeter"
-			help="Enter the length of the exposed perimeter of the floor. This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings."
+			label="Exposed perimeter"
+			help="Enter the length of the exposed perimeter of the floor"
 			name="perimeter"
 			:validation="zodTypeAsFormKitValidation(groundPerimeterZod)"
 			data-field="Zone.BuildingElement.*.perimeter">
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">The exposed perimeter of the floor is where heat loss may occur, usually at the base of the external walls where they meet the ground floor.</p>
+				<p class="govuk-hint">This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings.</p>
 			</GovDetails>
 		</FormKit>
 		<FormKit
@@ -296,7 +298,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			type="govInputWithUnit"
 			:unit="millimetre"
 			label="Thickness of walls at the edge of the floor"
-			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 0.3m to 0.8m. If this value varies enter a weighted average."
+			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 30mm to 80mm. If this value varies enter a weighted average."
 			name="thicknessOfWalls"
 			:validation="zodTypeAsFormKitValidation(thicknessOfWallsZod)"
 			data-field="Zone.BuildingElement.*.thickness_walls">
@@ -403,7 +405,7 @@ const greaterThanZero = (node: FormKitNode) => {
 				type="govInputWithSuffix"
 				suffix-text="m"
 				label="Height of the floor upper surface"
-				help="Enter the height of the top surface of the ground floor above the external ground level. Typically between 0.015m and 0.06m."
+				help="Enter the height of the top surface of the ground floor above the external ground level. Typically between 0.15m and 0.6m."
 				name="heightOfFloorUpperSurface"
 				:validation="zodTypeAsFormKitValidation(heightUpperSurfaceZod)"
 				data-field="Zone.BuildingElement.*.height_upper_surface"/>

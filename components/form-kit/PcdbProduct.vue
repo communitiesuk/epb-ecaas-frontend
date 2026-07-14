@@ -36,9 +36,10 @@ async function fetchProduct(reference: string) {
 	onProductLoaded?.(productData.value);
 }
 
-function buildProductsPageUrl(url: string, index: number, productType: string, emitterIndex?: number) {
+function buildProductsPageUrl(url: string, index: number | undefined, productType: string, emitterIndex?: number) {
 	const lastUrlSegment = new RegExp("/[^/]*$");
-	const newPath = url.replace(lastUrlSegment, `/${index}`) + "/" + camelToKebabCase(productType ?? "");
+	const indexSegment = index !== undefined ? `/${index}` : "";
+	const newPath = url.replace(lastUrlSegment, indexSegment) + "/" + camelToKebabCase(productType ?? "");
 	const params = new URLSearchParams();
 
 	if (emitterIndex != null) {

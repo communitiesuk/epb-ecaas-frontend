@@ -75,12 +75,12 @@ const baseGeneralDetails = z.object({
 	partOActiveCoolingRequired: z.boolean(),
 });
 
-export const storeyOfFlatZod = z.int().min(-50).max(199);
+// export const storeyOfFlatZod = z.int().min(-50).max(199);
 
 const generalDetailsDataZod = z.discriminatedUnion("typeOfDwelling", [
 	baseGeneralDetails.extend({
 		typeOfDwelling: z.literal("flat"),
-		storeyOfFlat: storeyOfFlatZod,
+		// storeyOfFlat: storeyOfFlatZod,
 		storeysInBuilding: z.int().min(1),
 	}),
 	baseGeneralDetails.extend({ typeOfDwelling: z.literal("house") }),
@@ -478,7 +478,7 @@ const baseExternalGlazedDoorDataZod = namedWithId.extend({
 	elevationalHeight: baseHeightTransparentZod,
 	openingToFrameRatio: fraction,
 	maximumOpenableArea: maxWindowOpenAreaZod,
-	heightOpenableArea: freeAreaHeightZod,
+	freeAreaHeight: freeAreaHeightZod,
 	depthOfReveal: revealDimensionZod.optional(),
 	distanceFromGlassToStartOfReveal: revealDimensionZod.optional(),
 });
@@ -632,6 +632,7 @@ const baseWindowData = namedWithId.extend({
 	solarTransmittance: gValueZod,
 	elevationalHeight: baseHeightTransparentZod,
 	openingToFrameRatio: fraction,
+	freeAreaHeight: freeAreaHeightZod,
 	depthOfReveal: revealDimensionZod.optional(),
 	distanceFromGlassToStartOfReveal: revealDimensionZod.optional(),
 });
@@ -941,6 +942,8 @@ const typeOfLocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSp
 const coldWaterSource = z.enum(["mainsWater", "headerTank"]);
 const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedContinuousMev", "decentralisedContinuousMev"]);
 
+export const typeOfColdWaterSource = coldWaterSource.enum;
+
 export type HeatSourceSectionPage = "space heating" | "domestic hot water";
 
 export type HeatPumpType = z.infer<typeof typeOfHeatPump>;
@@ -1246,6 +1249,7 @@ export type HeatingControlData = z.infer<typeof heatingControlsDataZod>;
 export type DomesticHotWater = AssertEachKeyIsPageId<{
 	heatSources: EcaasFormList<DomesticHotWaterHeatSourceData>;
 	wwhrs: EcaasFormList<WwhrsData>;
+	preheatedWaterStorage: EcaasFormList<PreheatedWaterStorageData>;
 	waterStorage: EcaasFormList<WaterStorageData>;
 	hotWaterOutlets: EcaasFormList<HotWaterOutletsData>;
 	pipework: EcaasFormList<PipeworkData>;
@@ -1253,7 +1257,7 @@ export type DomesticHotWater = AssertEachKeyIsPageId<{
 
 const hotWaterHeatSourceExtension = {
 	heatSourceId: z.literal("NEW_HEAT_SOURCE"),
-	coldWaterSource,
+	coldWaterSource: z.string(),
 	isExistingHeatSource: z.literal(false),
 };
 
@@ -1324,7 +1328,7 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 		z.object({
 			id: z.uuidv4().readonly(),
 			heatSourceId: z.string(),
-			coldWaterSource,
+			coldWaterSource: z.string(),
 			isExistingHeatSource: z.literal(true),
 			createdAutomatically: z.literal(true).optional(),
 			maxFlowTemp: zodUnit("temperature").optional(),
@@ -1335,11 +1339,43 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 
 export type DomesticHotWaterHeatSourceData = z.infer<typeof domesticHotWaterHeatSourceZod>;
 
+const wwhrsTypeZod = z.enum(["System A", "System B", "System C"]);
+export type WwhrsType = z.infer<typeof wwhrsTypeZod>;
+
 const wwhrsDataZod = pcdbProduct.extend({
 	coldWaterSource,
+	wwhrsType: z.optional(wwhrsTypeZod),
 });
 
 export type WwhrsData = z.infer<typeof wwhrsDataZod>;
+
+const preheatedWaterCylinderDataZod = namedWithId
+	.extend(hasPcdbPackagedProduct.shape)
+	.extend({
+		typeOfWaterStorage: z.literal("hotWaterCylinder"),
+		storageCylinderVolume: zodUnit("volume"),
+		dailyEnergyLoss: z.number(),
+		heaterPosition: fraction,
+		coldWaterSource: z.string(),
+	});
+
+export type PreheatedWaterCylinderData = z.infer<typeof preheatedWaterCylinderDataZod>;
+
+const preheatedSmartHotWaterTank = namedWithId.extend({
+	typeOfWaterStorage: z.literal("smartHotWaterTank"),
+	productReference: z.string(),
+	heaterPosition: fraction,
+	coldWaterSource: z.string(),
+});
+
+export type PreheatedSmartHotWaterTankData = z.infer<typeof preheatedSmartHotWaterTank>;
+
+const preheatedWaterStorageDataZod = z.discriminatedUnion("typeOfWaterStorage", [
+	preheatedWaterCylinderDataZod,
+	preheatedSmartHotWaterTank,
+]);
+
+export type PreheatedWaterStorageData = z.infer<typeof preheatedWaterStorageDataZod>;
 
 const hotWaterCylinderDataZod = namedWithId
 	.extend(hasPcdbPackagedProduct.shape)
@@ -1350,6 +1386,7 @@ const hotWaterCylinderDataZod = namedWithId
 		areaOfHeatExchanger: z.number().optional(),
 		heaterPosition: fraction,
 		thermostatPosition: fraction,
+		coldWaterSource: z.string(),
 	});
 
 export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
@@ -1358,6 +1395,7 @@ const smartHotWaterTankDataZod = namedWithId.extend({
 	typeOfWaterStorage: z.literal("smartHotWaterTank"),
 	productReference: z.string(),
 	heaterPosition: fraction,
+	coldWaterSource: z.string(),
 });
 
 export type SmartHotWaterTankData = z.infer<typeof smartHotWaterTankDataZod>;
@@ -1615,6 +1653,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingDetails/shading": shadingDataZod,
 	"dwellingDetails/appliances": appliancesDataZod,
 
+	"domesticHotWater/preheatedWaterStorage": preheatedWaterStorageDataZod,
 	"domesticHotWater/waterStorage": waterStorageDataZod,
 	"domesticHotWater/wwhrs": wwhrsDataZod,
 	"domesticHotWater/heatSources": domesticHotWaterHeatSourceZod,

@@ -13,6 +13,7 @@ describe("windowData Zod schema", () => {
 			solarTransmittance: 0.2,
 			elevationalHeight: 1,
 			numberOpenableParts: "1",
+			freeAreaHeight: 1,
 			curtainsOrBlinds: true,
 			treatmentControls: "manual",
 			treatmentType: "curtains",

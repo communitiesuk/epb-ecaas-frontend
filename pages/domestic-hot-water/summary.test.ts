@@ -6,7 +6,7 @@ import { litrePerSecond } from "~/utils/units/flowRate";
 import { kilowatt, kilowattHoursPerDay } from "~/utils/units/power";
 import { metresSquare } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
-import type { DomesticHotWaterHeatSourceData, EcaasForm, WwhrsData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, EcaasForm, PreheatedSmartHotWaterTankData, PreheatedWaterCylinderData, WwhrsData } from "~/stores/ecaasStore.schema";
 import { celsius } from "~/utils/units/temperature";
 import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 
@@ -47,7 +47,193 @@ describe("Domestic hot water summary", () => {
 		expect(screen.getByRole("heading", { name: "Domestic hot water summary" }));
 	});
 
-	describe("water storage", () => {
+	describe("Pre-heated water cylinder", () => {
+		const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
+
+		const preheatedWaterCylinder: PreheatedWaterCylinderData = {
+			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
+			typeOfWaterStorage: "hotWaterCylinder",
+			name: "Pre-heated water cylinder",
+			storageCylinderVolume: {
+				amount: 5,
+				unit: "litres" as const,
+			},
+			dailyEnergyLoss: 1,
+			heaterPosition: 0.8,
+			coldWaterSource: "mainsWater",
+		};
+
+		const preheatedSmartHotWaterCylinder: PreheatedSmartHotWaterTankData = {
+			id: "c84528bb-f805-4f1e-95d3-2bd17384abcd",
+			typeOfWaterStorage: "smartHotWaterTank",
+			name: "Pre-heated smart water cylinder",
+			productReference: "SMART-HOT-WATER-CYLINDER",
+			heaterPosition: 0.3,
+			coldWaterSource: "mainsWater",
+		};
+
+		const addWaterCylinderData = () => {
+			store.$patch({
+				domesticHotWater: {
+					preheatedWaterStorage: {
+						data: [{ data: preheatedWaterCylinder }],
+					},
+					heatSources: {
+						data: [{
+							data: {
+								isExistingHeatSource: false,
+								id: heatPumpId,
+								name: "Heat pump",
+								typeOfHeatSource: "heatPump",
+							},
+						}],
+					},
+				},
+			});
+		};
+
+		const addSmartWaterCylinderData = () => {
+			store.$patch({
+				domesticHotWater: {
+					preheatedWaterStorage: {
+						data: [{ data: preheatedSmartHotWaterCylinder }],
+					},
+					heatSources: {
+						data: [{
+							data: {
+								id: heatPumpId,
+								name: "Heat pump",
+								typeOfHeatSource: "heatPump",
+								isExistingHeatSource: false,
+							},
+						}],
+					},
+				},
+			});
+		};
+
+		it("displays an empty tab state with link to create when no data exists", async () => {
+			await renderSuspended(Summary);
+
+			expect(screen.getByText("No pre-heated water cylinder added")).not.toBeNull();
+
+			const addWaterStorageLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add pre-heated water cylinder",
+			});
+
+			expect(new URL(addWaterStorageLink.href).pathname).toBe(
+				getUrl("preheatedWaterStorage"),
+			);
+		});
+
+		it("should contain the correct tabs when data exists", async () => {
+			store.$patch({
+				domesticHotWater: {
+					preheatedWaterStorage: {
+						data: [{ data: preheatedWaterCylinder }, { data: preheatedSmartHotWaterCylinder }],
+					},
+				},
+				spaceHeating: {
+					heatSource: {
+						data: [{
+							data: {
+								id: heatPumpId,
+								name: "Heat pump",
+								typeOfHeatSource: "heatPump",
+							},
+						}],
+					},
+				},
+			});
+			await renderSuspended(Summary);
+
+			expect(screen.queryByRole("link", { name: "Pre-heated water cylinders" })).not.toBeNull();
+			expect(screen.queryByRole("link", { name: "Pre-heated smart water cylinders" })).not.toBeNull();
+		});
+
+		it("should display the correct data for the pre-heated water cylinder section when data exists", async () => {
+			addWaterCylinderData();
+			await renderSuspended(Summary);
+
+			const expectedResult = {
+				"Name": "Pre-heated water cylinder",
+				"Storage cylinder volume": `5 ${litre.suffix}`,
+				"Daily standing loss": `1 ${kilowattHoursPerDay.suffix}`,
+				"Heater position in the cylinder": "0.8",
+				"Cold water source": "Mains water",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-preheatedWaterCylinder-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+
+		it("should display an edit link within hot water cylinder when data exists", async () => {
+			addWaterCylinderData();
+			await renderSuspended(Summary);
+			const preheatedWaterCylinderSection = screen.getByTestId("preheatedWaterCylinder");
+			const editLink: HTMLAnchorElement = within(preheatedWaterCylinderSection).getByText("Edit");
+
+			expect(editLink).not.toBeNull();
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water");
+		});
+
+		it("should display the correct data for the smart hot water cylinder section when data exists", async () => {
+			addSmartWaterCylinderData();
+			await renderSuspended(Summary);
+
+			const expectedResult = {
+				"Name": "Pre-heated smart water cylinder",
+				"Product reference": "SMART-HOT-WATER-CYLINDER",
+				"Heater position in the cylinder": "0.3",
+				"Cold water source": "Mains water",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-preheatedSmartWaterCylinder-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+
+		it("should display an edit link within smart hot water cylinder when data exists", async () => {
+			addSmartWaterCylinderData();
+			await renderSuspended(Summary);
+			const smartHotWaterCylinderSection = screen.getByTestId("preheatedSmartWaterCylinder");
+			const editLink: HTMLAnchorElement = within(smartHotWaterCylinderSection).getByText("Edit");
+
+			expect(editLink).not.toBeNull();
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water");
+		});
+
+		it("should display the cold water source when referenced with a WWHRS", async () => {
+			addWaterCylinderData();
+
+			const wwhrs: EcaasForm<WwhrsData> = {
+				data: {
+					id: "6ff16f20-b401-471f-95d0-edbbf91b2a49",
+					name: "WWHRS",
+					coldWaterSource: "mainsWater",
+					productReference: "WWHRS-PR-1",
+				},
+			};
+
+			store.$patch(state => {
+				state.domesticHotWater.preheatedWaterStorage.data[0]!.data.coldWaterSource = wwhrs.data.id;
+				state.domesticHotWater.wwhrs.data.push(wwhrs);
+			});
+
+			await renderSuspended(Summary);
+
+			const lineResult = (await screen.findByTestId(`summary-preheatedWaterCylinder-cold-water-source`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe("Cold water source");
+			expect(lineResult.querySelector("dd")?.textContent).toBe(`${wwhrs.data.name} (WWHRS)`);
+		});
+	});
+
+	describe("Hot water cylinder", () => {
 		const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
 		const hotWaterCylinder: HotWaterCylinderData = {
@@ -62,6 +248,7 @@ describe("Domestic hot water summary", () => {
 			areaOfHeatExchanger: 2.5,
 			heaterPosition: 0.8,
 			thermostatPosition: 0.5,
+			coldWaterSource: "mainsWater",
 		};
 
 		const smartHotWaterCylinder: SmartHotWaterTankData = {
@@ -70,6 +257,7 @@ describe("Domestic hot water summary", () => {
 			name: "Smart hot water cylinder",
 			productReference: "SMART-HOT-WATER-CYLINDER",
 			heaterPosition: 0.3,
+			coldWaterSource: "mainsWater",
 		};
 
 		const addHotWaterCylinderData = () => {
@@ -158,10 +346,11 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Hot water cylinder",
 				"Storage cylinder volume": `5 ${litre.suffix}`,
-				"Daily energy loss": `1 ${kilowattHoursPerDay.suffix}`,
+				"Daily standing loss": `1 ${kilowattHoursPerDay.suffix}`,
 				"Area of heat exchanger installed": `2.5 ${metresSquare.suffix}`,
 				"Heater position in the cylinder": "0.8",
 				"Thermostat position in the cylinder": "0.5",
+				"Cold water source": "Mains water",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -189,6 +378,7 @@ describe("Domestic hot water summary", () => {
 				"Name": "Smart hot water cylinder",
 				"Product reference": "SMART-HOT-WATER-CYLINDER",
 				"Heater position in the cylinder": "0.3",
+				"Cold water source": "Mains water",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -206,6 +396,57 @@ describe("Domestic hot water summary", () => {
 
 			expect(editLink).not.toBeNull();
 			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water");
+		});
+
+		it("should display the cold water source when referenced with a WWHRS", async () => {
+			addHotWaterCylinderData();
+
+			const wwhrs: EcaasForm<WwhrsData> = {
+				data: {
+					id: "6ff16f20-b401-471f-95d0-edbbf91b2a49",
+					name: "WWHRS",
+					coldWaterSource: "mainsWater",
+					productReference: "WWHRS-PR-1",
+				},
+			};
+
+			store.$patch(state => {
+				state.domesticHotWater.waterStorage.data[0]!.data.coldWaterSource = wwhrs.data.id;
+				state.domesticHotWater.wwhrs.data.push(wwhrs);
+			});
+
+			await renderSuspended(Summary);
+
+			const lineResult = (await screen.findByTestId(`summary-hotWaterCylinder-cold-water-source`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe("Cold water source");
+			expect(lineResult.querySelector("dd")?.textContent).toBe(`${wwhrs.data.name} (WWHRS)`);
+		});
+
+		it("should display the cold water source when referenced with a pre-heated water cylinder", async () => {
+			addSmartHotWaterCylinderData();
+
+			const preheatedWaterCylinder: EcaasForm<PreheatedWaterCylinderData> = {
+				data: {
+					name: "Standard water cylinder 1",
+					id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
+					typeOfWaterStorage: "hotWaterCylinder",
+					storageCylinderVolume: unitValue(5, litre),
+					dailyEnergyLoss: 1,
+					heaterPosition: 0.8,
+					coldWaterSource: "mainsWater",
+				},
+			};
+
+			store.$patch(state => {
+				state.domesticHotWater.waterStorage.data[0]!.data.coldWaterSource = preheatedWaterCylinder.data.id;
+				state.domesticHotWater.preheatedWaterStorage.data.push(preheatedWaterCylinder);
+			});
+
+			await renderSuspended(Summary);
+
+			const lineResult = (await screen.findByTestId(`summary-smartHotWaterCylinder-cold-water-source`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe("Cold water source");
+			expect(lineResult.querySelector("dd")?.textContent).toBe(`${preheatedWaterCylinder.data.name} (Pre-heated water cylinder)`);
 		});
 	});
 

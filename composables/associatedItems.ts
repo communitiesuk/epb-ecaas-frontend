@@ -1,5 +1,8 @@
 
-type AssociatedItemType = "wall" | "roof" | "window" | "externalGlazedDoor" | "groundFloor" | "floorAboveUnheatedBasement" | "heatedBasementFloor" | "wwhrs" | "none";
+type AssociatedItemType = "wall" | "roof" | "window" | "externalGlazedDoor" | "groundFloor" | "floorAboveUnheatedBasement" | "heatedBasementFloor" | "wwhrs" | "preheatedWaterStorage" | "waterStorage" | "none";
+
+export const mapOption = (label: string) => (element: EcaasForm<{ id?: string; name: string; }>) =>
+	[element.data.id, `${element.data.name} (${label})`] as [string, string];
 
 export function useAssociatedItems(itemTypes: Array<AssociatedItemType>): [string, string][] {
 	const store = useEcaasStore();
@@ -9,10 +12,7 @@ export function useAssociatedItems(itemTypes: Array<AssociatedItemType>): [strin
 	const { dwellingSpaceWindows } = store.dwellingFabric;
 	const { dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors;
 	const { dwellingSpaceGroundFloor, dwellingSpaceFloorAboveUnheatedBasement, dwellingSpaceFloorOfHeatedBasement } = store.dwellingFabric.dwellingSpaceFloors;
-	const { wwhrs } = store.domesticHotWater;
-
-	const mapOption = (label: string) => (element: EcaasForm<{ id?: string; name: string; }>) =>
-		[element.data.id, `${element.data.name} (${label})`] as [string, string];
+	const { wwhrs, preheatedWaterStorage, waterStorage } = store.domesticHotWater;
 
 	const options = [
 		(itemTypes.includes("wall") ? dwellingSpaceExternalWall.data.map(mapOption("Wall")) : []),
@@ -23,6 +23,8 @@ export function useAssociatedItems(itemTypes: Array<AssociatedItemType>): [strin
 		(itemTypes.includes("floorAboveUnheatedBasement") ? dwellingSpaceFloorAboveUnheatedBasement.data.map(mapOption("Floor above unheated basement")) : []),
 		(itemTypes.includes("heatedBasementFloor") ? dwellingSpaceFloorOfHeatedBasement.data.map(mapOption("Heated basement floor")) : []),
 		(itemTypes.includes("wwhrs") ? wwhrs.data.map(mapOption("WWHRS")) : []),
+		(itemTypes.includes("preheatedWaterStorage") ? preheatedWaterStorage.data.map(mapOption("Pre-heated water cylinder")) : []),
+		(itemTypes.includes("waterStorage") ? waterStorage.data.map(mapOption("Hot water cylinder")) : []),
 	]
 		.flat()
 		.filter(x => x[0] !== undefined)

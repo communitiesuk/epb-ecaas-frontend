@@ -4,6 +4,7 @@ import { wwhrsProductTypeDisplay } from "~/utils/display";
 import { sentenceToLowerCase } from "~/utils/string";
 import type { Product } from "~/pcdb/pcdb.types";
 import WwhrsProductDetailsPage from "~/components/WwhrsProductDetailsPage.vue";
+import type { WwhrsType } from "~/stores/ecaasStore.schema";
 
 definePageMeta({ layout: "one-column" });
 
@@ -38,6 +39,7 @@ const selectProduct = async () => {
 		}
 
 		wwhrsData.productReference = data?.id;
+		wwhrsData.wwhrsType = data?.modelQualifier as WwhrsType;
 	});
 
 	navigateTo(getUrl("wwhrs").replace(":system", `${index}`));

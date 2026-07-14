@@ -360,6 +360,7 @@ describe("infiltration ventilation mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "1",
+			freeAreaHeight: 1,
 			curtainsOrBlinds: true,
 			treatmentType: "blinds",
 			treatmentControls: "manual",

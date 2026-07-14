@@ -2,6 +2,7 @@
 import { hasPackagedProduct, isPackagedProduct, isEcaasForm } from "#imports";
 import type { CustomListItem } from "~/components/CustomList.vue";
 import { useDomesticHotWater } from "~/composables/domesticHotWater";
+import type { ErrorSummaryItem } from "~/composables/errorSummary";
 import formStatus from "~/constants/formStatus";
 import type { DomesticHotWaterHeatSourceData, HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
 
@@ -11,7 +12,7 @@ const page = usePage();
 const store = useEcaasStore();
 const { removeEntry, duplicateEntry } = useDomesticHotWater();
 
-const { heatSources: dhwHeatSources } = store.domesticHotWater;
+const { heatSources: dhwHeatSources, preheatedWaterStorage } = store.domesticHotWater;
 
 const { errorMessages, addError, clearErrors } = useErrorSummary();
 const heatSourceTypesThatCanAddSecond = ["heatNetwork", "heatPump", "heatInterfaceUnit"] as const;
@@ -44,15 +45,30 @@ function isHeatPumpConnectedToExistingHeatNetwork(heatSourceForm: EcaasForm<Dome
 		&& !!heatSourceForm.data.associatedHeatNetworkId;
 }
 
+function isHeatSourceConnectedToPreheatedWaterCylinder() {
+	const coldWaterSources = dhwHeatSources.data.map(x => x.data.coldWaterSource);
+	const preheatedWaterStorageId = preheatedWaterStorage.data[0]?.data.id;
+
+	return (
+		coldWaterSources.length &&
+		preheatedWaterStorageId &&
+		coldWaterSources.includes(preheatedWaterStorageId)
+	);
+}
+
 const heatSourceMaxNumberOfItems = computed(() => {
-	if (dhwHeatSources.data.length !== 1) {
-		return 1;
-	}
 	const firstHeatSource = dhwHeatSources.data[0];
+
+	if (isHeatSourceConnectedToPreheatedWaterCylinder()) {
+		return 2;
+	}
+
 	if (firstHeatSource && isHeatPumpConnectedToExistingHeatNetwork(firstHeatSource)) {
 		return 1;
 	}
+
 	const firstHeatSourceType = firstHeatSource ? getDhwHeatSourceType(firstHeatSource) : undefined;
+
 	return firstHeatSourceType && heatSourceTypesThatCanAddSecond.includes(firstHeatSourceType as typeof heatSourceTypesThatCanAddSecond[number]) ? 2 : 1;
 });
 
@@ -86,6 +102,7 @@ function handleComplete() {
 	store.$patch({
 		domesticHotWater: {
 			waterStorage: { complete: true },
+			preheatedWaterStorage: { complete: true },
 			wwhrs: { complete: true },
 			hotWaterOutlets: { complete: true },
 			pipework: { complete: true },
@@ -97,7 +114,10 @@ function handleComplete() {
 }
 
 const hasIncompleteOrInvalidEntries = () => {
-	if (dhwHeatSources.data.length > 1) return true;
+	if (dhwHeatSources.data.length > heatSourceMaxNumberOfItems.value) {
+		return true;
+	}
+
 	return Object.values(store.domesticHotWater)
 		.some(section => {
 			if (isEcaasForm(section)) {
@@ -113,33 +133,48 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 	return heatSource ? heatSource.data.name : undefined;
 }
 
-function maxHeatSourcesExceeded() {
+function checkMaxHeatSourcesExceeded() {
+	const error: ErrorSummaryItem = {
+		id: "heatSourceLimitExceededError",
+		text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used",
+		disableLink: true,
+	};
+
+	if (dhwHeatSources.data.length === 2) {
+		const coldWaterSources = dhwHeatSources.data.map(x => x.data.coldWaterSource);
+		const preheatedWaterStorageId = preheatedWaterStorage.data[0]?.data.id;
+
+		if (coldWaterSources.length &&
+			preheatedWaterStorageId &&
+			!coldWaterSources.includes(preheatedWaterStorageId)
+		) {
+			addError({
+				id: "heatSourceLimitExceededError",
+				text: "You can only have two heat sources if one is connected to a pre-heated water tank.",
+				disableLink: true,
+			});
+			return;
+		}
+
+		const connectedHeatPump = dhwHeatSources.data.find(isHeatPumpConnectedToExistingHeatNetwork);
+		const heatSourceTypes = dhwHeatSources.data.map(getDhwHeatSourceType);
+		const heatNetworks = store.spaceHeating.heatNetworks.data;
+
+		if (connectedHeatPump && heatNetworks.length >= 1) {
+			addError(error);
+			return;
+		}
+
+		if (heatNetworks.length === 1 && heatSourceTypes.includes("heatPump") || heatSourceTypes.includes("heatInterfaceUnit")) {
+			return;
+		}
+	}
+
 	const hasPackagedHeatSources = dhwHeatSources.data.every(x => isPackagedProduct(x.data) || hasPackagedProduct(x.data));
-	const heatNetworks = store.spaceHeating.heatNetworks.data;
-	if (dhwHeatSources.data.length === 1 && heatNetworks.length > 0) {
-		return false;
 
-		// const connectedHeatPump = dhwHeatSources.data.find(isHeatPumpConnectedToExistingHeatNetwork);
-		// const heatSourceTypes = dhwHeatSources.data.map(getDhwHeatSourceType);
-		// const heatNetworks = heatSourceTypes.filter(type => type === "heatNetwork");
-		// const typeOfHeatSource = heatSourceTypes.find(type => type && type !== "heatNetwork");
-		// if (connectedHeatPump && heatNetworks.length >= 1) {
-		// 	return true;
-		// }
-		// if (heatNetworks.length === 1 && (typeOfHeatSource === "heatPump" || typeOfHeatSource === "heatInterfaceUnit")) {
-		// 	return false;
-		// }
+	if (dhwHeatSources.data.length > 1 && !hasPackagedHeatSources) {
+		addError(error);
 	}
-	
-	if (heatNetworks.length === 0 && dhwHeatSources.data.length < 2) {
-		return false;
-	}
-	
-	return dhwHeatSources.data.length > 1 && !hasPackagedHeatSources;
-}
-
-if (maxHeatSourcesExceeded()) {
-	addError({ id: "heatSourceLimitExceededError", text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used" });
 }
 
 function heatSourceRequiresWaterStorage() {
@@ -181,6 +216,7 @@ const isPointOfUseSelected = computed(() =>
 	}),
 );
 
+checkMaxHeatSourcesExceeded();
 </script>
 
 <template>
@@ -226,7 +262,6 @@ const isPointOfUseSelected = computed(() =>
 				const item: CustomListItem = {
 					name: x.data.name,
 					status: x.complete ? formStatus.complete : formStatus.inProgress,
-					actions: ['edit']
 				};
 
 				return item;
@@ -237,8 +272,29 @@ const isPointOfUseSelected = computed(() =>
 	/>
 
 	<CustomList 
+		id="preheatedWaterStorage"
+		title="Pre-heated water cylinder (optional)"
+		:form-url="`${page?.url!}/preheated-water-storage`"
+		:items="store.domesticHotWater.preheatedWaterStorage.data
+			.filter(x => isEcaasForm(x))
+			.map(x => {
+				const item: CustomListItem = {
+					name: x.data.name,
+					status: x.complete ? formStatus.complete : formStatus.inProgress,
+					actions: ['edit', 'delete']
+				};
+
+				return item;
+			})"
+		:show-status="true"
+		:max-number-of-items="1"
+		@remove="(index: number) => removeEntry('preheatedWaterStorage', index)"
+		@duplicate="(index: number) => duplicateEntry('preheatedWaterStorage', index)"
+	/>
+
+	<CustomList 
 		id="waterStorage"
-		title="Water storage"
+		title="Hot water cylinder (optional)"
 		:form-url="`${page?.url!}/water-storage`"
 		:items="store.domesticHotWater.waterStorage.data
 			.filter(x => isEcaasForm(x))
@@ -263,7 +319,7 @@ const isPointOfUseSelected = computed(() =>
 		@duplicate="(index: number) => duplicateEntry('waterStorage', index)"
 	/>
 
-	<CustomList 
+	<CustomList
 		id="hotWaterOutlets"
 		title="Hot water outlets"
 		:form-url="`${page?.url!}/hot-water-outlets`"

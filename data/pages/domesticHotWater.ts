@@ -44,6 +44,13 @@ const domesticHotWaterPages = [
 		parentId: "domesticHotWater",
 	},
 	{
+		id: "preheatedWaterStorage",
+		title: "Pre-heated water cylinder",
+		url: "/domestic-hot-water/preheated-water-storage",
+		type: "task",
+		parentId: "domesticHotWater",
+	},
+	{
 		id: "waterStorage",
 		title: "Water storage",
 		url: "/domestic-hot-water/water-storage/:waterstorage",

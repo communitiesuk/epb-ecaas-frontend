@@ -15,7 +15,7 @@ interface DwellingDetailSummary {
 	appliances: AppliancesData
 }
 
-const state: DwellingDetailSummary = {
+const house: DwellingDetailSummary = {
 	generalDetails: {
 		typeOfDwelling: "house",
 		storeysInDwelling: 2,
@@ -52,6 +52,26 @@ const state: DwellingDetailSummary = {
 	},
 };
 
+const flat: Partial<DwellingDetailSummary> = {
+	generalDetails: {
+		typeOfDwelling: "flat",
+		storeysInDwelling: 2,
+		storeysInBuilding: 8,
+		buildingLength: 10,
+		buildingWidth: 5,
+		numOfBedrooms: 3,
+		numOfUtilityRooms: 2,
+		numOfBathrooms: 1,
+		numOfHabitableRooms: 4,
+		numOfRoomsWithTappingPoints: 2,
+		numOfWetRooms: 3,
+		fuelType: ["mains_gas", "LPG_bulk"],
+		canExportToGrid: "no_export",
+		isPartGCompliant: true,
+		partOActiveCoolingRequired: false,
+	},
+};
+
 describe("Dwelling details summary", () => {
 	const store = useEcaasStore();
 
@@ -68,11 +88,11 @@ describe("Dwelling details summary", () => {
 		expect(screen.getByRole("link", { name: "Appliances" }));
 	});
 
-	it("should display the correct data for the general details section", async () => {
+	it("should display the correct data for the general details section if a house is selected", async () => {
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
-					data: state.generalDetails,
+					data: house.generalDetails,
 				},
 			},
 		});
@@ -81,7 +101,7 @@ describe("Dwelling details summary", () => {
 
 		const expectedResult = {
 			"Type of dwelling": "House",
-			"Number of storeys in building": "2",
+			"Number of storeys in dwelling": "2",
 			"Building length": "10 m",
 			"Building width": "5 m",
 			"Number of bedrooms": "3",
@@ -89,6 +109,43 @@ describe("Dwelling details summary", () => {
 			"Number of bathrooms": "1",
 			"Number of habitable rooms": "4",
 			"Total number of rooms with tapping points": "2",
+			"Total number of wet rooms": "3",
+			"Energy sources": "Mains gas, LPG (Liquid petroleum gas) - bulk, Electricity",
+			"Can any energy generated on site be exported to the grid?": "No, generated energy can’t be exported to the grid",
+			"Is the dwelling Part G compliant?": "Yes",
+			"Is air conditioning required for the dwelling to be part O compliant?": "No",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-generalDetails-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the general details section if a flat is selected", async () => {
+		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					data: flat.generalDetails,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Type of dwelling": "Flat",
+			"Number of storeys in dwelling": "2",
+			"Number of storeys in building": "8",
+			"Building length": "10 m",
+			"Building width": "5 m",
+			"Number of bedrooms": "3",
+			"Number of utility rooms": "2",
+			"Number of bathrooms": "1",
+			"Number of habitable rooms": "4",
+			"Total number of rooms with tapping points": "2",
+			"Total number of wet rooms": "3",
 			"Energy sources": "Mains gas, LPG (Liquid petroleum gas) - bulk, Electricity",
 			"Can any energy generated on site be exported to the grid?": "No, generated energy can’t be exported to the grid",
 			"Is the dwelling Part G compliant?": "Yes",
@@ -106,7 +163,7 @@ describe("Dwelling details summary", () => {
 		store.$patch({
 			dwellingDetails: {
 				appliances: {
-					data: state.appliances,
+					data: house.appliances,
 				},
 			},
 		});

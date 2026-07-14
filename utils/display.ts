@@ -459,8 +459,8 @@ export const heatEmittingProductTypesDisplay = {
 } as const satisfies Record<HeatEmittingProductType, (plural: boolean) => string>;
 
 export const waterStorageTypes = {
-	"hotWaterCylinder": "Hot water cylinder",
-	"smartHotWaterTank": "Smart hot water tank",
+	"hotWaterCylinder": "Standard water cylinder",
+	"smartHotWaterTank": "Smart water cylinder",
 } as const satisfies Record<WaterStorageType, string>;
 
 export type HotWaterOutletDisplay = "Mixer shower" | "Electric shower" | "Bath" | "Other (basin tap, kitchen sink, etc.)";
@@ -524,7 +524,6 @@ export function displayBoilerLocation(locationType: SchemaBoilerLocationType | u
 
 export const installationTypeOptions: Record<SchemaMechanicalVentilationInstallationType, string> = {
 	in_ceiling: "In the ceiling",
-	in_duct: "In a duct",
 	through_wall: "Through a wall",
 };
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { page } from "~/data/pages/pages";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
-import type { WwhrsProductType } from "~/stores/ecaasStore.schema";
+import type { WwhrsProductType, WwhrsType } from "~/stores/ecaasStore.schema";
 
 definePageMeta({ layout: false });
 
@@ -27,6 +27,7 @@ const selectProduct = async (product: DisplayProduct) => {
 		}
 
 		wwhrsData.productReference = product.id;
+		wwhrsData.wwhrsType = product.modelQualifier as WwhrsType;
 	});
 
 	navigateTo(page("wwhrs").url.replace(":system", `${index}`));

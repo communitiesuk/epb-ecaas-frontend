@@ -3407,7 +3407,6 @@
 												"type": "string",
 												"enum": [
 													"in_ceiling",
-													"in_duct",
 													"through_wall"
 												]
 											},
@@ -3499,6 +3498,14 @@
 											},
 											"measured_air_flow_rate": {
 												"type": "number"
+											},
+											"indicated_duct_size": {
+												"type": "string",
+												"enum": [
+													"125mm_or_larger",
+													"smaller_than_125mm"
+												],
+												"description": "Whether the duct size is 125mm or greater, or less than 125mm. These two options can be standardly referenced as '125mm diameter or 204 x 60mm (rectangular) or larger' and '100mm diameter or 100 x 50mm (rectangular)' respectively, but the cut-off point should be 125mm. This optional field is not passed to the FHS wrapper, but is used as a tiebreak if the referenced product in the HEM database has test data for multiple duct sizes (and therefore is not optional if this is the case)."
 											}
 										},
 										"oneOf": [
@@ -5759,101 +5766,169 @@
 						}
 					},
 					"then": {
-						"required": [
-							"sol_loc",
-							"area_module",
-							"modules",
-							"peak_collector_efficiency",
-							"incidence_angle_modifier",
-							"first_order_hlc",
-							"second_order_hlc",
-							"collector_mass_flow_rate",
-							"power_pump",
-							"power_pump_control",
-							"EnergySupply",
-							"tilt",
-							"orientation360",
-							"solar_loop_piping_hlc"
-						],
-						"properties": {
-							"sol_loc": {
-								"enum": [
-									"OUT",
-									"NHS",
-									"HS"
+						"oneOf": [
+							{
+								"required": [
+									"product_reference",
+									"sol_loc",
+									"area_module",
+									"modules",
+									"collector_mass_flow_rate",
+									"EnergySupply",
+									"tilt",
+									"orientation360",
+									"solar_loop_piping_hlc"
 								],
-								"description": "Location of the main part of the collector loop piping"
+								"properties": {
+									"product_reference": {
+										"description": "A unique reference to a product held within the HEM database (PCDB)",
+										"title": "Reference to the product in the HEM database",
+										"type": "string"
+									},
+									"sol_loc": {
+										"enum": [
+											"OUT",
+											"NHS",
+											"HS"
+										],
+										"description": "Location of the main part of the collector loop piping"
+									},
+									"area_module": {
+										"type": "number",
+										"exclusiveMinimum": 0,
+										"description": "Collector module reference area (unit: m2)"
+									},
+									"modules": {
+										"type": "integer",
+										"minimum": 1,
+										"description": "Number of collector modules installed"
+									},
+									"collector_mass_flow_rate": {
+										"type": "number",
+										"exclusiveMinimum": 0,
+										"description": "Mass flow rate solar loop (unit: kg/s)"
+									},
+									"EnergySupply": {
+										"type": "string",
+										"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
+									},
+									"tilt": {
+										"type": "number",
+										"minimum": 0,
+										"maximum": 90,
+										"description": "Tilt angle (inclination) of the solar thermal panel from horizontal, measured upwards facing, 0 to 90, in degrees. 0=horizontal surface, 90=vertical surface. Needed to calculate solar irradiation at the panel surface."
+									},
+									"orientation360": {
+										"type": "number",
+										"minimum": 0,
+										"maximum": 360,
+										"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+									},
+									"solar_loop_piping_hlc": {
+										"type": "number",
+										"exclusiveMinimum": 0,
+										"description": "Heat loss coefficient of the collector loop piping (unit: W/K)"
+									}
+								}
 							},
-							"area_module": {
-								"type": "number",
-								"exclusiveMinimum": 0,
-								"description": "Collector module reference area (unit: m2)"
-							},
-							"modules": {
-								"type": "integer",
-								"minimum": 1,
-								"description": "Number of collector modules installed"
-							},
-							"peak_collector_efficiency": {
-								"type": "number",
-								"minimum": 0.1,
-								"maximum": 1
-							},
-							"incidence_angle_modifier": {
-								"type": "number",
-								"exclusiveMinimum": 0,
-								"maximum": 1,
-								"description": "Hemispherical incidence angle modifier"
-							},
-							"first_order_hlc": {
-								"type": "number",
-								"exclusiveMinimum": 0,
-								"maximum": 100,
-								"description": "First order heat loss coefficient"
-							},
-							"second_order_hlc": {
-								"type": "number",
-								"minimum": 0,
-								"maximum": 10,
-								"description": "Second order heat loss coefficient"
-							},
-							"collector_mass_flow_rate": {
-								"type": "number",
-								"exclusiveMinimum": 0,
-								"description": "Mass flow rate solar loop (unit: kg/s)"
-							},
-							"power_pump": {
-								"type": "number",
-								"minimum": 0,
-								"maximum": 2
-							},
-							"power_pump_control": {
-								"type": "number",
-								"minimum": 0,
-								"description": "Power of collector pump (unit: kW)"
-							},
-							"EnergySupply": {
-								"type": "string",
-								"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
-							},
-							"tilt": {
-								"type": "number",
-								"minimum": 0,
-								"maximum": 90,
-								"description": "Tilt angle (inclination) of the solar thermal panel from horizontal, measured upwards facing, 0 to 90, in degrees. 0=horizontal surface, 90=vertical surface. Needed to calculate solar irradiation at the panel surface."
-							},
-							"orientation360": {
-								"type": "number",
-								"minimum": 0,
-								"maximum": 360,
-								"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
-							},
-							"solar_loop_piping_hlc": {
-								"type": "number",
-								"exclusiveMinimum": 0,
-								"description": "Heat loss coefficient of the collector loop piping (unit: W/K)"
+							{
+								"required": [
+									"sol_loc",
+									"area_module",
+									"modules",
+									"peak_collector_efficiency",
+									"incidence_angle_modifier",
+									"first_order_hlc",
+									"second_order_hlc",
+									"collector_mass_flow_rate",
+									"power_pump",
+									"power_pump_control",
+									"EnergySupply",
+									"tilt",
+									"orientation360",
+									"solar_loop_piping_hlc"
+								],
+								"properties": {
+									"sol_loc": {
+										"enum": [
+											"OUT",
+											"NHS",
+											"HS"
+										],
+										"description": "Location of the main part of the collector loop piping"
+									},
+									"area_module": {
+										"type": "number",
+										"exclusiveMinimum": 0,
+										"description": "Collector module reference area (unit: m2)"
+									},
+									"modules": {
+										"type": "integer",
+										"minimum": 1,
+										"description": "Number of collector modules installed"
+									},
+									"peak_collector_efficiency": {
+										"type": "number",
+										"minimum": 0.1,
+										"maximum": 1
+									},
+									"incidence_angle_modifier": {
+										"type": "number",
+										"exclusiveMinimum": 0,
+										"maximum": 1,
+										"description": "Hemispherical incidence angle modifier"
+									},
+									"first_order_hlc": {
+										"type": "number",
+										"exclusiveMinimum": 0,
+										"maximum": 100,
+										"description": "First order heat loss coefficient"
+									},
+									"second_order_hlc": {
+										"type": "number",
+										"minimum": 0,
+										"maximum": 10,
+										"description": "Second order heat loss coefficient"
+									},
+									"collector_mass_flow_rate": {
+										"type": "number",
+										"exclusiveMinimum": 0,
+										"description": "Mass flow rate solar loop (unit: kg/s)"
+									},
+									"power_pump": {
+										"type": "number",
+										"minimum": 0,
+										"maximum": 2
+									},
+									"power_pump_control": {
+										"type": "number",
+										"minimum": 0,
+										"description": "Power of collector pump (unit: kW)"
+									},
+									"EnergySupply": {
+										"type": "string",
+										"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
+									},
+									"tilt": {
+										"type": "number",
+										"minimum": 0,
+										"maximum": 90,
+										"description": "Tilt angle (inclination) of the solar thermal panel from horizontal, measured upwards facing, 0 to 90, in degrees. 0=horizontal surface, 90=vertical surface. Needed to calculate solar irradiation at the panel surface."
+									},
+									"orientation360": {
+										"type": "number",
+										"minimum": 0,
+										"maximum": 360,
+										"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+									},
+									"solar_loop_piping_hlc": {
+										"type": "number",
+										"exclusiveMinimum": 0,
+										"description": "Heat loss coefficient of the collector loop piping (unit: W/K)"
+									}
+								}
 							}
-						}
+						]
 					}
 				}
 			]

@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import WaterStorage from "./index.vue";
+import PreheatedWaterStorage from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
 import { litre } from "~/utils/units/volume";
 import { unitValue } from "~/utils/units";
@@ -17,27 +17,25 @@ mockNuxtImport("navigateTo", () => navigateToMock);
 
 vi.mock("uuid");
 
-describe("water storage", () => {
+describe("preheated water storage", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
-	const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
+	const preheatedWaterCylinder: EcaasForm<PreheatedWaterCylinderData> = {
 		data: {
 			name: "Standard water cylinder 1",
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
 			typeOfWaterStorage: "hotWaterCylinder",
 			storageCylinderVolume: unitValue(5, litre),
 			dailyEnergyLoss: 1,
-			areaOfHeatExchanger: 1000,
 			heaterPosition: 0.8,
-			thermostatPosition: 0.5,
 			coldWaterSource: "mainsWater",
 		},
 	};
 
-	const smartHotWaterTank: EcaasForm<SmartHotWaterTankData> = {
+	const preheatedSmartWaterTank: EcaasForm<PreheatedSmartHotWaterTankData> = {
 		data: {
 			typeOfWaterStorage: "smartHotWaterTank",
 			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
@@ -50,7 +48,6 @@ describe("water storage", () => {
 
 	afterEach(() => {
 		store.$reset();
-		navigateToMock.mockReset();
 	});
 
 	const heatPump = {
@@ -89,9 +86,7 @@ describe("water storage", () => {
 		await user.type(screen.getByTestId("name"), " 1");
 		await user.type(screen.getByTestId("storageCylinderVolume"), "5");
 		await user.type(screen.getByTestId("dailyEnergyLoss"), "1");
-		await user.type(screen.getByTestId("areaOfHeatExchanger"), "1000");
 		await user.type(screen.getByTestId("heaterPosition"), "0.8");
-		await user.type(screen.getByTestId("thermostatPosition"), "0.5");
 		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
 		await user.tab();
 	};
@@ -107,11 +102,7 @@ describe("water storage", () => {
 	};
 
 	test("required error messages are displayed when empty form is submitted", async () => {
-		await renderSuspended(WaterStorage, {
-			route: {
-				params: { "waterStorage": "create" },
-			},
-		});
+		await renderSuspended(PreheatedWaterStorage);
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -121,20 +112,15 @@ describe("water storage", () => {
 		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		//hot water cylinder specific
-		// not name, this is filled in by default
-		// expect((await screen.findByTestId("name_error"))).toBeDefined();
+		// standard water cylinder specific
 		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
 		expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
-		expect((await screen.findByTestId("thermostatPosition_error"))).toBeDefined();
 
 		await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		//smart hot water tank specific
-		// not name, this is filled in by default
-		// expect((await screen.findByTestId("name_error"))).toBeDefined();
+		// smart water cylinder specific
 		expect((await screen.findByTestId("selectSmartHotWaterTank_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
 
@@ -142,7 +128,7 @@ describe("water storage", () => {
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
-		await renderSuspended(WaterStorage);
+		await renderSuspended(PreheatedWaterStorage);
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -180,93 +166,70 @@ describe("water storage", () => {
 			},
 		};
 
-		const preheatedWaterCylinder: EcaasForm<PreheatedWaterCylinderData> = {
-			data: {
-				name: "Standard water cylinder 1",
-				id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
-				typeOfWaterStorage: "hotWaterCylinder",
-				storageCylinderVolume: unitValue(5, litre),
-				dailyEnergyLoss: 1,
-				heaterPosition: 0.8,
-				coldWaterSource: "mainsWater",
-			},
-		};
-
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
 					data: [wwhrsDataA, wwhrsDataB, wwhrsDataC],
 				},
-				preheatedWaterStorage: {
-					data: [preheatedWaterCylinder],
-				},
 			},
 		});
 
-		await renderSuspended(WaterStorage);
+		await renderSuspended(PreheatedWaterStorage);
 		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 
 		expect(screen.getByTestId(`coldWaterSource_${wwhrsDataA.data.id}`)).toBeDefined();
 		expect(screen.getByTestId(`coldWaterSource_${wwhrsDataC.data.id}`)).toBeDefined();
 		expect(screen.queryByTestId(`coldWaterSource_${wwhrsDataB.data.id}`)).toBeNull();
-		expect(screen.getByTestId(`coldWaterSource_${preheatedWaterCylinder.data.id}`)).toBeDefined();
 	});
 
-	describe("Hot Water Cylinder", () => {
+	describe("preheated water cylinder", () => {
+		afterEach(() => {
+			store.$reset();
+		});
+
 		test("data is saved to store state when form is valid", async () => {
 			addHeatPumpStoreData();
 
-			vi.mocked(uuidv4).mockReturnValue(hotWaterCylinder.data.id as unknown as Buffer);
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "create" },
-				},
-			});
+			vi.mocked(uuidv4).mockReturnValue(preheatedWaterCylinder.data.id as unknown as Buffer);
+			await renderSuspended(PreheatedWaterStorage);
 
 			await populateValidFormHWC();
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			const { data } = store.domesticHotWater.waterStorage;
+			const { data } = store.domesticHotWater.preheatedWaterStorage;
 
-			expect(data[0]?.data).toEqual(hotWaterCylinder.data);
+			expect(data[0]?.data).toEqual(preheatedWaterCylinder.data);
 			expect(data[0]?.complete).toEqual(true);
 		});
 
 		test("form is prepopulated when data exists in state", async () => {
 			store.$patch({
 				domesticHotWater: {
-					waterStorage: {
-						data: [{ ...hotWaterCylinder }],
+					preheatedWaterStorage: {
+						data: [{ ...preheatedWaterCylinder }],
 					},
 				},
 			});
 
 			addHeatPumpStoreData();
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "0" },
-				},
-			});
+			await renderSuspended(PreheatedWaterStorage);
 
 			expect(
 				(await screen.findByTestId<HTMLInputElement>(`typeOfWaterStorage_hotWaterCylinder`)).checked,
 			).toBe(true);
 
-			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe(hotWaterCylinder.data.name);
+			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe(preheatedWaterCylinder.data.name);
 			expect((await screen.findByTestId<HTMLInputElement>("storageCylinderVolume")).value).toBe(
-				hotWaterCylinder.data.storageCylinderVolume.amount.toString(),
+				preheatedWaterCylinder.data.storageCylinderVolume.amount.toString(),
 			);
-			expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe(hotWaterCylinder.data.dailyEnergyLoss.toString());
-			expect((await screen.findByTestId<HTMLInputElement>("areaOfHeatExchanger")).value).toBe(hotWaterCylinder.data.areaOfHeatExchanger!.toString());
-			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value).toBe(hotWaterCylinder.data.heaterPosition.toString());
-			expect((await screen.findByTestId<HTMLInputElement>("thermostatPosition")).value).toBe(hotWaterCylinder.data.thermostatPosition.toString());
-			expect((await screen.findByTestId<HTMLInputElement>("coldWaterSource_mainsWater")).checked).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe(preheatedWaterCylinder.data.dailyEnergyLoss.toString());
+			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value).toBe(preheatedWaterCylinder.data.heaterPosition.toString());
 		});
 
 		test("navigates to domestic hot water page when valid form is completed", async () => {
 			addHeatPumpStoreData();
-			await renderSuspended(WaterStorage);
+			await renderSuspended(PreheatedWaterStorage);
 
 			await populateValidFormHWC();
 			await user.click(screen.getByTestId("saveAndComplete"));
@@ -274,12 +237,8 @@ describe("water storage", () => {
 			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
 		});
 
-		test("name defaults to 'Hot water cylinder' when Hot Water Cylinder is selected'", async () => {
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "create" },
-				},
-			});
+		test("name defaults to 'Standard water cylinder' when Standard water cylinder is selected'", async () => {
+			await renderSuspended(PreheatedWaterStorage);
 
 			await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 
@@ -290,45 +249,41 @@ describe("water storage", () => {
 
 	describe("Smart Hot Water Tank", () => {
 		test("navigate to pcdb product select page when choose a product button is clicked", async () => {
-			await renderSuspended(WaterStorage, {
+			await renderSuspended(PreheatedWaterStorage, {
 				route: {
-					params: { "waterStorage": "create" },
+					path: "/domestic-hot-water/preheated-water-storage/0",
 				},
 			});
 
 			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
 			await user.click(screen.getByTestId("chooseAProductButton"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/0/smart-hot-water-tank");
+			const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
+			expect(chooseProductButton).toBeDefined();
+			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/preheated-water-storage/0/smart-hot-water-tank");
 		});
 
 		test("data is saved to store state when form is valid", async () => {
 			addHeatPumpStoreData();
 
-			vi.mocked(uuidv4).mockReturnValue(smartHotWaterTank.data.id as unknown as Buffer);
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "create" },
-				},
-			});
+			const mockedId = preheatedSmartWaterTank.data.id as unknown as Buffer;
+			vi.mocked(uuidv4).mockReturnValue(mockedId);
+
+			await renderSuspended(PreheatedWaterStorage);
 
 			await populateValidFormSHWT();
 			store.$patch(state => {
-				(state.domesticHotWater.waterStorage.data[0]!.data as SmartHotWaterTankData)
+				(state.domesticHotWater.preheatedWaterStorage.data[0]!.data as PreheatedSmartHotWaterTankData)
 					.productReference = "42";
 			});
 
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "0" },
-				},
-			});
+			await renderSuspended(PreheatedWaterStorage);
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			const { data } = store.domesticHotWater.waterStorage;
+			const { data } = store.domesticHotWater.preheatedWaterStorage;
 
-			expect(data[0]?.data).toEqual(smartHotWaterTank.data);
+			expect(data[0]?.data).toEqual(preheatedSmartWaterTank.data);
 			expect(data[0]?.complete).toEqual(true);
 		});
 
@@ -343,70 +298,39 @@ describe("water storage", () => {
 
 			store.$patch({
 				domesticHotWater: {
-					waterStorage: {
-						data: [{ ...smartHotWaterTank }],
+					preheatedWaterStorage: {
+						data: [{ ...preheatedSmartWaterTank }],
 					},
 				},
 			});
 
-			addHeatPumpStoreData();
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "0" },
-				},
-			});
+			await renderSuspended(PreheatedWaterStorage);
 
 			expect(
 				(await screen.findByTestId<HTMLInputElement>(`typeOfWaterStorage_smartHotWaterTank`))
 					.checked,
 			).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value)
-				.toBe(smartHotWaterTank.data.name);
+				.toBe(preheatedSmartWaterTank.data.name);
 
 			expect((await screen.findByTestId("productData_productReference")).textContent)
-				.toBe(smartHotWaterTank.data.productReference);
+				.toBe(preheatedSmartWaterTank.data.productReference);
 
 			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value)
-				.toBe(smartHotWaterTank.data.heaterPosition.toString());
-
-			expect((await screen.findByTestId<HTMLInputElement>("coldWaterSource_mainsWater")).checked).toBe(true);
+				.toBe(preheatedSmartWaterTank.data.heaterPosition.toString());
 		});
 
 		test("navigates to domestic hot water page when valid form is completed", async () => {
-			addHeatPumpStoreData();
-
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { waterStorage: "create" },
-				},
-			});
+			await renderSuspended(PreheatedWaterStorage);
 
 			await populateValidFormSHWT();
-
-			store.$patch(state => {
-				(state.domesticHotWater.waterStorage.data[0]!.data as SmartHotWaterTankData)
-					.productReference = "42";
-			});
-
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { waterStorage: "0" },
-				},
-			});
-
-			navigateToMock.mockClear();
-
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
 		});
 
-		test("name defaults to 'Smart water cylinder' when Smart water cylinder is selected'", async () => {
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "create" },
-				},
-			});
+		test("name defaults to 'Smart water cylinder' when Smart Water Cylinder is selected'", async () => {
+			await renderSuspended(PreheatedWaterStorage);
 
 			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
 
@@ -424,19 +348,13 @@ describe("water storage", () => {
 
 			store.$patch({
 				domesticHotWater: {
-					waterStorage: {
-						data: [{ ...smartHotWaterTank }],
+					preheatedWaterStorage: {
+						data: [{ ...preheatedSmartWaterTank }],
 					},
 				},
 			});
-
-			addHeatPumpStoreData();
 	
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterstorage": "0" },
-				},
-			});
+			await renderSuspended(PreheatedWaterStorage);
 	
 			expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 		});

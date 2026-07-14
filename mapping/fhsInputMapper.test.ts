@@ -434,7 +434,7 @@ const expectedFlatInput: FhsInputSchema = {
 	General: {
 		build_type: "flat",
 		storeys_in_building: 6,
-		storey_of_dwelling: 3,
+		storey_of_dwelling: 1,
 		storeys_in_dwelling: 1,
 	},
 	HeatingControlType: "SeparateTempControl",
@@ -930,7 +930,7 @@ const expectedFlatInput: FhsInputSchema = {
 					height: 2,
 					width: 2,
 					base_height: 1,
-					free_area_height: 0,
+					free_area_height: 1,
 					u_value: 0.1,
 					g_value: 0.2,
 					security_risk: true,
@@ -1377,6 +1377,9 @@ describe("FHS input mapper", () => {
 					},
 				}],
 			},
+			preheatedWaterStorage: {
+				...baseForm,
+			},
 			waterStorage: {
 				...baseForm,
 				data: [{
@@ -1393,6 +1396,7 @@ describe("FHS input mapper", () => {
 						areaOfHeatExchanger: 2.5,
 						heaterPosition: 0.1,
 						thermostatPosition: 0.33,
+						coldWaterSource: "mainsWater",
 					},
 				}],
 			},
@@ -1484,7 +1488,7 @@ describe("FHS input mapper", () => {
 				data: {
 					typeOfDwelling: "flat",
 					storeysInDwelling: 1,
-					storeyOfFlat: 3,
+					// storeyOfFlat: 1,
 					storeysInBuilding: 6,
 					numOfBedrooms: 2,
 					numOfBathrooms: 1,
@@ -1966,7 +1970,7 @@ describe("FHS input mapper", () => {
 							openingToFrameRatio: 0.7,
 							midHeightOpenablePart1: 3,
 							maximumOpenableArea: 3,
-							heightOpenableArea: 2,
+							freeAreaHeight: 2,
 							securityRisk: false,
 							uValue: 10,
 							numberOpenableParts: "1",
@@ -2056,6 +2060,7 @@ describe("FHS input mapper", () => {
 						solarTransmittance: 0.2,
 						elevationalHeight: 1,
 						numberOpenableParts: "1",
+						freeAreaHeight: 1,
 						curtainsOrBlinds: true,
 						treatmentType: "curtains",
 						treatmentControls: "manual",
@@ -2240,6 +2245,9 @@ describe("FHS input mapper", () => {
 			wwhrs: {
 				...baseForm,
 			},
+			preheatedWaterStorage: {
+				...baseForm,
+			},
 			waterStorage: {
 				...baseForm,
 				data: [{
@@ -2256,6 +2264,7 @@ describe("FHS input mapper", () => {
 						areaOfHeatExchanger: 2.5,
 						heaterPosition: 0.1,
 						thermostatPosition: 0.33,
+						coldWaterSource: "mainsWater",
 					},
 				}],
 			},

@@ -32,6 +32,7 @@ const tableData: Record<string, string> =
 	"Storage cylinder volume": dim(data.tankVolumeDeclared, "litres"),
 	"Daily energy loss": dim(data.dailyLossesDeclared, "kilowatt hours per day"),
 	"Area of heat exchanger installed": dim(data.heatExchangerSurfaceAreaDeclared, "metres square"),
+	"Model qualifier": show(data.modelQualifier),
 };
 </script>
 

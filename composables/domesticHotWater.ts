@@ -1,13 +1,15 @@
 import { duplicateFormEntry } from "~/utils/duplicateFormEntry";
 import { useMechanicalVentilation } from "./mechanicalVentilation";
+import type { PreheatedWaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
 
 export function useDomesticHotWater() {
 	const store = useEcaasStore();
 	const { removeMechanicalVents } = useMechanicalVentilation();
 	const { removeWaterStorage } = useWaterStorage();
+	const nuxtApp = useNuxtApp();
 
 	type DomesticHotWaterType = keyof typeof store.domesticHotWater;
-	type DomesticHotWaterData = EcaasForm<DomesticHotWaterHeatSourceData> & EcaasForm<WaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData> & EcaasForm<WwhrsData>;
+	type DomesticHotWaterData = EcaasForm<DomesticHotWaterHeatSourceData> & EcaasForm<WaterStorageData> & EcaasForm<PreheatedWaterStorageData> & EcaasForm<HotWaterOutletsData> & EcaasForm<PipeworkData> & EcaasForm<WwhrsData>;
 
 	const { waterStorage, hotWaterOutlets, pipework, heatSources: dhwHeatSources } = store.domesticHotWater; 
 	const { heatSource } = store.spaceHeating;
@@ -71,6 +73,14 @@ export function useDomesticHotWater() {
 				}
 
 				removeWaterStorage(packageProductIds!);
+			}
+
+			if (domesticHotWaterType === "wwhrs" && item) {
+				nuxtApp.callHook("app:wwhrs:removed", (item.data as WwhrsData).id);
+			}
+
+			if (domesticHotWaterType === "preheatedWaterStorage" && item) {
+				nuxtApp.callHook("app:preheatedWaterCylinder:removed", (item.data as PreheatedWaterStorageData).id);
 			}
 		}
 	};

@@ -3,7 +3,7 @@ import DomesticHotWater from "@/pages/domestic-hot-water/index.vue";
 import { screen, within } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import formStatus from "~/constants/formStatus";
-import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, WaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, PreheatedWaterStorageData, WaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
 import HotWaterOutlets from "./hot-water-outlets/[outlet]/index.vue";
 import { litre } from "~/utils/units/volume";
 import { celsius } from "~/utils/units/temperature";
@@ -42,6 +42,21 @@ describe("Domestic hot water", () => {
 		},
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
+	const preheatedStorage1: EcaasForm<PreheatedWaterStorageData> = {
+		data: {
+			name: "Preheated water cylinder",
+			id: "0f3f13fe-6200-49f2-9e4f-91125ae974f3",
+			storageCylinderVolume: {
+				amount: 100,
+				unit: "litres" as const,
+			},
+			dailyEnergyLoss: 69,
+			typeOfWaterStorage: "hotWaterCylinder",
+			heaterPosition: 0.8,
+			coldWaterSource: "mainsWater",
+		},
+	};
+
 	const wwhrs1: EcaasForm<WwhrsData> = {
 		data: {
 			id: "baae7e60-7158-4e13-a14c-2d1c228766de",
@@ -64,6 +79,7 @@ describe("Domestic hot water", () => {
 			areaOfHeatExchanger: 2.5,
 			heaterPosition: 0.8,
 			thermostatPosition: 0.5,
+			coldWaterSource: "mainsWater",
 		},
 	};
 
@@ -92,6 +108,108 @@ describe("Domestic hot water", () => {
 		},
 	};
 
+	describe("WWHRS", () => {
+		test("displays existing wwhrs", async () => {
+			store.$patch({
+				domesticHotWater: {
+					wwhrs: {
+						...baseCompleteForm,
+						data: [wwhrs1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.getByText(wwhrs1.data.name)).toBeDefined();
+		});
+
+		test("wwhrs is removed when remove link is clicked", async () => {
+			store.$patch({
+				domesticHotWater: {
+					wwhrs: {
+						...baseCompleteForm,
+						data: [wwhrs1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.getAllByTestId("wwhrs_items")).toBeDefined();
+
+			await user.click(screen.getByTestId("wwhrs_remove_0"));
+			expect(screen.queryByTestId("wwhrs_items")).toBeNull();
+		});
+
+		test("wwhrs are duplicated when duplicate link is clicked", async () => {
+			store.$patch({
+				domesticHotWater: {
+					wwhrs: {
+						data: [wwhrs1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			await userEvent.click(screen.getByTestId("wwhrs_duplicate_0"));
+			expect(screen.queryAllByTestId("wwhrs_item").length).toBe(2);
+			expect(screen.getByText(wwhrs1.data.name)).toBeDefined();
+			expect(screen.getByText(`${wwhrs1.data.name} (1)`)).toBeDefined();
+		});
+	});
+
+	describe("Preheated water storage", () => {
+		test("displays existing preheated water storage", async () => {
+			store.$patch({
+				domesticHotWater: {
+					preheatedWaterStorage: {
+						...baseCompleteForm,
+						data: [preheatedStorage1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.getByText(preheatedStorage1.data.name)).toBeDefined();
+		});
+
+		test("preheated water storage is removed when remove link is clicked", async () => {
+			store.$patch({
+				domesticHotWater: {
+					preheatedWaterStorage: {
+						...baseCompleteForm,
+						data: [preheatedStorage1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.getAllByTestId("preheatedWaterStorage_items")).toBeDefined();
+
+			await user.click(screen.getByTestId("preheatedWaterStorage_remove_0"));
+			expect(screen.queryByTestId("preheatedWaterStorage_items")).toBeNull();
+		});
+
+		test("only 1 preheated water storage item can be added", async () => {
+			store.$patch({
+				domesticHotWater: {
+					preheatedWaterStorage: {
+						...baseCompleteForm,
+						data: [preheatedStorage1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.queryByTestId("preheatedWaterStorage_add")).toBeNull();
+		});
+	});
+
 	describe("Water storage", () => {
 		const hwStorage2: EcaasForm<SmartHotWaterTankData> = {
 			data: {
@@ -100,6 +218,7 @@ describe("Domestic hot water", () => {
 				typeOfWaterStorage: "smartHotWaterTank",
 				heaterPosition: 0.8,
 				productReference: "SMART-12345",
+				coldWaterSource: "mainsWater",
 			},
 		};
 
@@ -116,6 +235,7 @@ describe("Domestic hot water", () => {
 				areaOfHeatExchanger: 2.5,
 				heaterPosition: 0.8,
 				thermostatPosition: 0.5,
+				coldWaterSource: "mainsWater",
 			},
 		};
 
@@ -397,6 +517,7 @@ describe("Domestic hot water", () => {
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (1)`)).toBeDefined();
 			expect(screen.getByText(`${hwOutlet1.data.name} (1) (2)`)).toBeDefined();
 		});
+
 		test("prevents user completing hot water outlets unless at least one 'other' type is present", async () => {
 			store.$patch({
 				domesticHotWater: {
@@ -604,6 +725,65 @@ describe("Domestic hot water", () => {
 			expect(screen.queryByTestId("heatSources_add")).toBeNull();
 		});
 
+		test("two heat sources can be added if pre-heated water tank and hot water cylinder have been added", async () => {
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [{
+							data: {
+								...heatSource1.data,
+								coldWaterSource: preheatedStorage1.data.id,
+							},
+						}],
+					},
+					preheatedWaterStorage: {
+						data: [preheatedStorage1],
+					},
+					waterStorage: {
+						data: [hwStorage1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.getByTestId("heatSources_add")).toBeDefined();
+
+			store.$patch(state => {
+				state.domesticHotWater.heatSources.data.push({
+					data: {
+						...heatSource1.data,
+						id: "fb62acf2-10b1-4983-bc08-7350f8e4a413",
+						name: "Heat source 2",
+					},
+				});
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.queryByTestId("heatSources_add")).toBeNull();
+		});
+
+		test("two heat sources cannot be added if heat source is not connected to pre-heated water tank", async () => {
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [heatSource1],
+					},
+					preheatedWaterStorage: {
+						data: [preheatedStorage1],
+					},
+					waterStorage: {
+						data: [hwStorage1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+
+			expect(screen.queryByTestId("heatSources_add")).toBeNull();
+		});
+
 		test("heat sources are removed when remove link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
@@ -776,6 +956,7 @@ describe("Domestic hot water", () => {
 					heaterPosition: 0.8,
 					thermostatPosition: 0.5,
 					packagedProductReference: heatPump.productReference,
+					coldWaterSource: "mainsWater",
 				};
 
 				store.$patch({
@@ -1133,6 +1314,40 @@ describe("Domestic hot water", () => {
 			const link = errorSummary.querySelector("a");
 
 			expect(link?.getAttribute("href")).toContain("water-storage");
+		});
+
+		it("displays an error when two heat sources are added without one being connected to a pre-heated water tank", async () => {
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [
+							heatSource1,
+							{
+								data: {
+									...heatSource1.data,
+									id: "fb62acf2-10b1-4983-bc08-7350f8e4a413",
+									name: "Heat source 2",
+								},
+							},
+						],
+					},
+					preheatedWaterStorage: {
+						data: [preheatedStorage1],
+					},
+					waterStorage: {
+						data: [hwStorage1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+
+			expect(errorSummary.textContent).toContain(
+				"You can only have two heat sources if one is connected to a pre-heated water tank.",
+			);
 		});
 
 		it("displays all error messages if there are more than one", async () => {

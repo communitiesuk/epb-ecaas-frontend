@@ -5,10 +5,11 @@ import { getValidationMessages } from "@formkit/validation";
  * @returns Handler for invalid form submission and the populated error messages
  */
 
-type ErrorSummaryItem = {
+export type ErrorSummaryItem = {
 	id: string;
 	text: string | undefined;
 	href?: string;
+	disableLink?: boolean;
 };
 
 export function useErrorSummary() {

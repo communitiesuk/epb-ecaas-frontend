@@ -658,7 +658,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			frame_area_fraction: calculateFrameToOpeningRatio(x.openingToFrameRatio),
 			max_window_open_area: x.maximumOpenableArea,
 			security_risk: x.securityRisk,
-			free_area_height: x.heightOpenableArea,
+			free_area_height: x.freeAreaHeight,
 			shading: [
 				...(x.hasShading ? mapShading(x.shading) : []),
 				...(x.depthOfReveal && x.distanceFromGlassToStartOfReveal
@@ -797,7 +797,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				g_value: x.solarTransmittance,
 				mid_height: midHeight,
 				security_risk: x.securityRisk,
-				free_area_height: 0,
+				free_area_height: x.freeAreaHeight,
 				frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
 				max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
 				window_part_list: mapWindowPartList(x),
