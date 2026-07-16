@@ -1,5 +1,5 @@
 
-export const getHeatSourceDefaultName = (item: HeatSourceFormData): string => {
+export const getHeatSourceDefaultName = (item: HeatSourceFormData | undefined): string => {
 	if (!item?.typeOfHeatSource) return "Heat source";
 	const heatSourceType = item?.typeOfHeatSource;
 

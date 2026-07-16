@@ -6,10 +6,19 @@ export function useWaterStorage() {
 	const removeWaterStorage = (packageProductIds: string[]) => {
 		store.$patch(state => {
 			const waterStorageData = state.domesticHotWater.waterStorage.data;
-			const packageProductIndex = waterStorageData.findIndex(x => packageProductIds.includes(x.data.id!));
+			const preheatedWaterStorageData = state.domesticHotWater.preheatedWaterStorage.data;
+
+			let packageProductIndex = waterStorageData.findIndex(x => packageProductIds.includes(x.data.id!));
 
 			if (packageProductIndex >= 0) {
 				waterStorageData.splice(packageProductIndex, 1);
+				return;
+			}
+
+			packageProductIndex = preheatedWaterStorageData.findIndex(x => packageProductIds.includes(x.data.id!));
+
+			if (packageProductIndex >= 0) {
+				preheatedWaterStorageData.splice(packageProductIndex, 1);
 			}
 		});
 	};

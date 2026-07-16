@@ -63,6 +63,13 @@ describe("heatSource", () => {
 			technologyType: "AirSourceHeatPump",
 		};
 
+		const heatPumpProductWithCylinder: Partial<DisplayProduct> = {
+			id: "1001",
+			brandName: "Brand",
+			technologyType: "AirSourceHeatPump",
+			vesselType: "Integral",
+		};
+
 		beforeEach(() => {
 			mockFetch.mockReturnValue({
 				data: ref(heatPumpProduct),
@@ -971,7 +978,6 @@ describe("heatSource", () => {
 				const backUpBolerInStoreAfterChange = store.spaceHeating.heatSource.data.find(hs => hs.data.id === backupBoiler.id);
 				expect(backUpBolerInStoreAfterChange).toBeUndefined();
 			});
-
 		});
 
 		describe("Heat interface unit", () => {
@@ -1082,6 +1088,7 @@ describe("heatSource", () => {
 
 
 		});
+
 		describe("heat battery", () => {
 			const heatBatteryProduct: Partial<DisplayProduct> = {
 				id: "1000",
@@ -1712,8 +1719,8 @@ describe("heatSource", () => {
 				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("Comes with boiler");
 			});
 
-			test("'Packaged products' displays 'Comes with hot water cylinder' when heat pump product comes packaged with a hot water cylinder", async () => {
-				const hotWaterCylinder: Partial<WaterStorageData> = {
+			test("'Packaged products' displays 'Comes with water cylinder' when heat pump product comes packaged with a water cylinder", async () => {
+				const waterCylinder: Partial<WaterStorageData> = {
 					id: "289bb9c5-6c50-486f-8634-bc89ecfd64a7",
 					name: "Hot water cylinder",
 					typeOfWaterStorage: "hotWaterCylinder",
@@ -1721,7 +1728,8 @@ describe("heatSource", () => {
 
 				const heatPumpWithCylinder: Partial<HeatSourceData> = {
 					...heatPump,
-					packageProductIds: [hotWaterCylinder.id!],
+					packageProductIds: [waterCylinder.id!],
+					packagedWithWaterCylinder: true,
 				};
 
 				store.$patch({
@@ -1732,7 +1740,7 @@ describe("heatSource", () => {
 					},
 					domesticHotWater: {
 						waterStorage: {
-							data: [{ data: hotWaterCylinder }],
+							data: [{ data: waterCylinder }],
 						},
 					},
 				});
@@ -1747,7 +1755,192 @@ describe("heatSource", () => {
 					},
 				});
 
-				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("Comes with hot water cylinder");
+				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("Comes with water cylinder");
+			});
+
+			test("requires configuration of water cylinder when heat pump comes with water cylinder", async () => {
+				const heatPumpWithCylinder: Partial<HeatSourceData> = {
+					...heatPump,
+					packagedWithWaterCylinder: true,
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPumpWithCylinder }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatPumpProductWithCylinder),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				expect(screen.getByTestId("waterCylinderConfiguration")).toBeDefined();
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				expect(screen.getByTestId("waterCylinderConfiguration_error")).toBeDefined();
+			});
+
+			test("selecting hot water cylinder configuration creates a hot water cylinder", async () => {
+				const heatPumpWithCylinder: Partial<HeatSourceData> = {
+					...heatPump,
+					productReference: heatPumpProductWithCylinder.id,
+					packagedWithWaterCylinder: true,
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPumpWithCylinder }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatPumpProductWithCylinder),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("waterCylinderConfiguration_hotWaterCylinder"));
+				await user.click(screen.getByTestId("saveProgress"));
+
+				const hotWaterHeatSources = store.domesticHotWater.heatSources.data;
+				const expectedHotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+					isExistingHeatSource: true,
+					heatSourceId: heatPumpWithCylinder.id,
+				};
+
+				const waterStorageData = store.domesticHotWater.waterStorage.data;
+				const expectedCylinderData: Partial<WaterStorageData> = {
+					name: "Hot water cylinder",
+					typeOfWaterStorage: "hotWaterCylinder",
+					packagedProductReference: heatPumpProductWithCylinder.id,
+				};
+
+				expect(hotWaterHeatSources.length).toBe(1);
+				expect(hotWaterHeatSources[0]?.data).toEqual(expect.objectContaining(expectedHotWaterHeatPump));
+
+				expect(waterStorageData.length).toBe(1);
+				expect(waterStorageData[0]?.data).toEqual(expect.objectContaining(expectedCylinderData));
+			});
+
+			test("selecting pre-heated water cylinder configuration creates a pre-heated water cylinder", async () => {
+				const heatPumpWithCylinder: Partial<HeatSourceData> = {
+					...heatPump,
+					productReference: heatPumpProductWithCylinder.id,
+					packagedWithWaterCylinder: true,
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPumpWithCylinder }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatPumpProductWithCylinder),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("waterCylinderConfiguration_preheatedWaterCylinder"));
+				await user.click(screen.getByTestId("saveProgress"));
+
+				const hotWaterHeatSources = store.domesticHotWater.heatSources.data;
+				const expectedHotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+					isExistingHeatSource: true,
+					heatSourceId: heatPumpWithCylinder.id,
+				};
+
+				const waterStorageData = store.domesticHotWater.preheatedWaterStorage.data;
+				const expectedCylinderData: Partial<PreheatedWaterStorageData> = {
+					name: "Preheated water cylinder",
+					typeOfWaterStorage: "hotWaterCylinder",
+					packagedProductReference: heatPumpProductWithCylinder.id,
+				};
+
+				expect(hotWaterHeatSources.length).toBe(1);
+				expect(hotWaterHeatSources[0]?.data).toEqual(expect.objectContaining(expectedHotWaterHeatPump));
+
+				expect(waterStorageData.length).toBe(1);
+				expect(waterStorageData[0]?.data).toEqual(expect.objectContaining(expectedCylinderData));
+			});
+
+			test("changing heat source clears associated hot water source and cylinder", async () => {
+				const cylinderData: Partial<PreheatedWaterStorageData> = {
+					name: "Preheated water cylinder",
+					typeOfWaterStorage: "hotWaterCylinder",
+					packagedProductReference: heatPumpProductWithCylinder.id,
+				};
+
+				const heatPumpWithCylinder: Partial<HeatSourceData> = {
+					...heatPump,
+					productReference: heatPumpProductWithCylinder.id,
+					packagedWithWaterCylinder: true,
+					waterCylinderConfiguration: "hotWaterCylinder",
+					packageProductIds: [cylinderData.id!],
+				};
+
+				const dhwWithExistingHeatPump: DomesticHotWaterHeatSourceData = {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c62",
+					coldWaterSource: "headerTank",
+					isExistingHeatSource: true,
+					heatSourceId: heatPumpWithCylinder.id!,
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPumpWithCylinder }],
+						},
+					},
+					domesticHotWater: {
+						heatSources: {
+							data: [{ data: dhwWithExistingHeatPump }],
+						},
+						waterStorage: {
+							data: [{ data: cylinderData }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatPumpProductWithCylinder),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+				await user.click(screen.getByTestId("saveProgress"));
+
+				const hotWaterHeatSources = store.domesticHotWater.heatSources.data;
+				const waterStorageData = store.domesticHotWater.waterStorage.data;
+
+				expect(hotWaterHeatSources.length).toBe(0);
+				expect(waterStorageData.length).toBe(0);
 			});
 
 			test("Renders HEM default product warning when default product is selected", async () => {

@@ -240,59 +240,6 @@ describe("Heat pump details", async () => {
 		expect(mechanicalVentildationData[0]?.data).toStrictEqual(expect.objectContaining(expectedData));
 	});
 
-	test("A hot water cylinder is created when a heat pump with vessel type 'Integral' is selected", async () => {
-		// Arrange
-		store.$patch({
-			spaceHeating: {
-				heatSource: {
-					data: [
-						{ data: smallHeatPump },
-					],
-				},
-			},
-		});
-
-		const heatPumpDetails: Partial<HeatPumpProduct> = {
-			id: "1000",
-			brandName: "Test",
-			modelName: "Heat Pump",
-			technologyType: "AirSourceHeatPump",
-			vesselType: "Integral",
-			tankVolumeDeclared: 20,
-			dailyLossesDeclared: 10,
-		};
-
-		mockFetch.mockReturnValueOnce({
-			data: ref(heatPumpDetails),
-		});
-
-		// Act
-		await renderSuspended(ProductDetails);
-		await user.click(screen.getByTestId("selectProductButton"));
-
-		// Assert
-		const waterStorageData = store.domesticHotWater.waterStorage.data;
-		const expectedCylinderData: Partial<WaterStorageData> = {
-			name: "Hot water cylinder",
-			typeOfWaterStorage: "hotWaterCylinder",
-			packagedProductReference: "1000",
-			storageCylinderVolume: unitValue(20, "litres"),
-			dailyEnergyLoss: 10,
-		};
-
-		const hotWaterHeatSources = store.domesticHotWater.heatSources.data;
-		const expectedHotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
-			isExistingHeatSource: true,
-			heatSourceId: smallHeatPump.id,
-		};
-
-		expect(hotWaterHeatSources.length).toBe(1);
-		expect(hotWaterHeatSources[0]?.data).toEqual(expect.objectContaining(expectedHotWaterHeatPump));
-
-		expect(waterStorageData.length).toBe(1);
-		expect(waterStorageData[0]?.data).toStrictEqual(expect.objectContaining(expectedCylinderData));
-	});
-
 	test.skip("Store data updates when heat interface product is selected", async () => {
 		// Arrange
 		mockRoute.mockReturnValue({

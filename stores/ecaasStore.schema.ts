@@ -952,6 +952,9 @@ export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;
 export type TypeOfHeatNetwork = z.infer<typeof typeOfHeatNetwork>;
 export type LocationOfCollectorLoopPipingType = z.infer<typeof typeOfLocationOfLoopPiping>;
 
+const typeOfWaterCylinderConfiguration = z.enum(["hotWaterCylinder", "preheatedWaterCylinder"]);
+export type WaterCylinderConfiguration = z.infer<typeof typeOfWaterCylinderConfiguration>;
+
 export type HeatSourceType =
 	"heatPump" |
 	"boiler" |
@@ -964,18 +967,39 @@ const heatPumpBase = pcdbPackagedProduct.extend({
 	typeOfHeatSource: z.literal("heatPump"),
 	typeOfHeatPump: typeOfHeatPump.optional(),
 	maxFlowTemp: zodUnit("temperature"),
+	tankVolumeDeclared: z.optional(z.number()),
+	dailyLossesDeclared: z.optional(z.number()),
+	heatExchangerSurfaceAreaDeclared: z.optional(z.number()),
 });
 
-const heatPumpDataZod = z.discriminatedUnion("isConnectedToHeatNetwork", [
-	heatPumpBase.extend({
-		isConnectedToHeatNetwork: z.literal(false),
-		energySupply: fuelTypeZod,
-	}),
-	heatPumpBase.extend({
-		isConnectedToHeatNetwork: z.literal(true),
-		associatedHeatNetworkId: z.string().trim().min(1),
-	}),
-]);
+const heatPumpDataZod = nestedDiscriminatedUnion(
+	heatPumpBase,
+	{
+		discriminator: "isConnectedToHeatNetwork",
+		variants: [
+			z.object({
+				isConnectedToHeatNetwork: z.literal(false),
+				energySupply: fuelTypeZod,
+			}),
+			z.object({
+				isConnectedToHeatNetwork: z.literal(true),
+				associatedHeatNetworkId: z.string().trim().min(1),
+			}),
+		] satisfies Tuple,
+	},
+	{
+		discriminator: "packagedWithWaterCylinder",
+		variants: [
+			z.object({
+				packagedWithWaterCylinder: z.optional(z.literal(false)),
+			}),
+			z.object({
+				packagedWithWaterCylinder: z.literal(true),
+				waterCylinderConfiguration: typeOfWaterCylinderConfiguration,
+			}),
+		] satisfies Tuple,
+	},
+);
 
 const boilerBase = pcdbProduct
 	.extend(hasPcdbPackagedProduct.shape)
@@ -1294,16 +1318,34 @@ const solarThermalSystemBase = namedWithId.extend({
 
 const heatPumpHotWaterSourceBase = heatPumpBase.extend(hotWaterHeatSourceExtension);
 
-const heatPumpHotWaterDataZod = z.discriminatedUnion("isConnectedToHeatNetwork", [
-	heatPumpHotWaterSourceBase.extend({
-		isConnectedToHeatNetwork: z.literal(false),
-		energySupply: fuelTypeZod,
-	}),
-	heatPumpHotWaterSourceBase.extend({
-		isConnectedToHeatNetwork: z.literal(true),
-		associatedHeatNetworkId: z.string().trim().min(1),
-	}),
-]);
+const heatPumpHotWaterDataZod = nestedDiscriminatedUnion(
+	heatPumpHotWaterSourceBase,
+	{
+		discriminator: "isConnectedToHeatNetwork",
+		variants: [
+			z.object({
+				isConnectedToHeatNetwork: z.literal(false),
+				energySupply: fuelTypeZod,
+			}),
+			z.object({
+				isConnectedToHeatNetwork: z.literal(true),
+				associatedHeatNetworkId: z.string().trim().min(1),
+			}),
+		] satisfies Tuple,
+	},
+	{
+		discriminator: "packagedWithWaterCylinder",
+		variants: [
+			z.object({
+				packagedWithWaterCylinder: z.optional(z.literal(false)),
+			}),
+			z.object({
+				packagedWithWaterCylinder: z.literal(true),
+				waterCylinderConfiguration: typeOfWaterCylinderConfiguration,
+			}),
+		] satisfies Tuple,
+	},
+);
 
 const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceExtension);
 const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceExtension);
@@ -1337,6 +1379,7 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 	],
 );
 
+export type NewDomesticHotWaterHeatSourceData = z.infer<typeof newHotWaterHeatSourceDataZod>;
 export type DomesticHotWaterHeatSourceData = z.infer<typeof domesticHotWaterHeatSourceZod>;
 
 const wwhrsTypeZod = z.enum(["System A", "System B", "System C"]);

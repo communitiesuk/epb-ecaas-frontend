@@ -5,6 +5,7 @@ import { celsius } from "~/utils/units/temperature";
 import type { UnitValue } from "~/utils/units/types";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { useHeatNetworks } from "~/composables/heatNetworks";
+import { waterCylinderConfigurationDisplay } from "~/utils/display";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -93,5 +94,15 @@ const greaterThanZero = (node: FormKitNode) => {
 			exclusiveRangeFromMin: `Maximum flow temperature must be greater than 0.`,
 		}"
 		:data-field="page == 'domestic hot water' ? 'HotWaterSource.*.HeatSource.*.temp_flow_limit_upper' :  'SpaceHeatSystem.*HeatSource.temp_flow_limit_upper'"
+	/>
+	<FormKit
+		v-if="model.packagedWithWaterCylinder"
+		id="waterCylinderConfiguration"
+		name="waterCylinderConfiguration"
+		type="govRadios"
+		label="Configuration of water cylinder"
+		help="Select whether the water cylinder that comes with the heat pump will be configured as a pre-heated water cylinder or a hot water cylinder"
+		:options="waterCylinderConfigurationDisplay"
+		validation="required"
 	/>
 </template>

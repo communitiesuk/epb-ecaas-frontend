@@ -114,24 +114,25 @@ function getPackagedProductType() {
 	}
 
 	const hasBoiler = isPackagedWithBoiler(packagedIds);
-	const hasHotWaterCylinder = isPackagedWithHotWaterCylinder(packagedIds);
+	const hasWaterCylinder = isPackagedWithWaterCylinder(packagedIds);
 
 	const packagedMechanicalVent = store.infiltrationAndVentilation.mechanicalVentilation.data
 		.find((x) => {
 			const mechanicalVentId = x.data.id;
 			return mechanicalVentId != null && packagedIds.includes(mechanicalVentId);
 		});
+	
 	const hasMechanicalVent = !!packagedMechanicalVent;
 
-	if (hasBoiler || hasHotWaterCylinder || hasMechanicalVent) {
+	if (hasBoiler || hasWaterCylinder || hasMechanicalVent) {
 		const packagedItems: string[] = [];
 
 		if (hasBoiler) {
 			packagedItems.push("boiler");
 		}
 
-		if (hasHotWaterCylinder) {
-			packagedItems.push("hot water cylinder");
+		if (hasWaterCylinder) {
+			packagedItems.push("water cylinder");
 		}
 
 		if (hasMechanicalVent) {
@@ -169,9 +170,9 @@ function isPackagedWithBoiler(packagedIds: string[]) {
 	return packagedIds.some(id => boilerIds.includes(id));
 }
 
-function isPackagedWithHotWaterCylinder(packagedIds: string[]) {
-	const hotWaterCylinderIds = getWaterCylinderIds();
-	return packagedIds.some(id => hotWaterCylinderIds.includes(id));
+function isPackagedWithWaterCylinder(packagedIds: string[]) {
+	const waterCylinderIds = getWaterCylinderIds();
+	return packagedIds.some(id => waterCylinderIds.includes(id));
 }
 
 function isHeatPump(heatSource: { typeOfHeatSource?: string } | undefined): heatSource is HeatSourceData {
@@ -199,8 +200,10 @@ function getBoilerIds() {
 }
 
 function getWaterCylinderIds() {
-	const { domesticHotWater: { waterStorage } } = store;
-	return waterStorage.data
+	const { waterStorage, preheatedWaterStorage } = store.domesticHotWater;
+	const cylinders = [...waterStorage.data, ...preheatedWaterStorage.data];
+
+	return cylinders
 		.filter(x => x.data.typeOfWaterStorage === "hotWaterCylinder")
 		.map(x => x.data.id);
 }

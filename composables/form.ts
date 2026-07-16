@@ -59,6 +59,50 @@ export function useForm() {
 		});
 	};
 
+	const handleAutoSaveElementForm = <T extends object>(
+		newData: T | undefined,
+		initialData: T | undefined,
+		storeData: EcaasFormList<T>,
+		defaultName: string,
+		onPatch: (state: EcaasState, newData: EcaasForm<T>, index: number, prevData?: EcaasForm<T>) => void,
+	) => {
+		const routeParam = route.params[Object.keys(route.params)[0]!];
+		if (initialData === undefined || newData === undefined || routeParam === undefined) {
+			return;
+		}
+
+		if (!hasChangedFields(newData, initialData)) {
+			return;
+		}
+		
+		const index = getStoreIndex(storeData.data as EcaasForm<T>[]);
+		if (routeParam === "create") {
+			// we're about to save, so set the route parameter to the new index
+			// we only expect this to trigger on the first change 
+			// (after that, routeParam is no longer "create")
+			route.params[Object.keys(route.params)[0]!] = index.toString();
+
+			// change the url to reflect this
+			const editItemPath = route.fullPath.replace("create", index.toString());
+			history.replaceState({}, "", editItemPath);
+		}
+
+		store.$patch((state) => {
+			const name = getName(newData, defaultName);
+			const dataToPatch: T = { ...newData, name };
+
+			const elementData: EcaasForm<T> = {
+				data: dataToPatch,
+			};
+
+			const prevData: EcaasForm<T> = {
+				data: initialData,
+			};
+
+			onPatch(state, elementData, index, prevData);
+		});
+	};
+
 	/**
 	 * Watches for changes on an element form model, creating or updating the store accordingly
 	 * @param options
@@ -70,40 +114,11 @@ export function useForm() {
 		onPatch,
 	}: AutoSaveElementFormOptions<T>) => {
 		watch(model, async (newData: PartialExceptName<T> | undefined, initialData: PartialExceptName<T> | undefined) => {
-			const routeParam = route.params[Object.keys(route.params)[0]!];
-			if (initialData === undefined || newData === undefined || routeParam === undefined) {
-				return;
-			}
-			if (!hasChangedFields(newData, initialData)) {
-				return;
-			}
-			
-			const index = getStoreIndex(storeData.data as EcaasForm<T>[]);
-			if (routeParam === "create") {
-				// we're about to save, so set the route parameter to the new index
-				// we only expect this to trigger on the first change 
-				// (after that, routeParam is no longer "create")
-				route.params[Object.keys(route.params)[0]!] = index.toString();
-
-				// change the url to reflect this
-				const editItemPath = route.fullPath.replace("create", index.toString());
-				history.replaceState({}, "", editItemPath);
-			}
-
-			store.$patch((state) => {
-				const name = getName(newData, defaultName);
-				const dataToPatch: PartialExceptName<T> = { ...newData, name };
-
-				const elementData: EcaasForm<T> = {
-					data: dataToPatch as T,
-				};
-
-				onPatch(state, elementData, index);
-			});
+			handleAutoSaveElementForm<T>(newData as T, initialData as T, storeData, defaultName, onPatch);
 		});
 	};
 
-	return { saveToList, getStoreIndex, autoSaveForm, autoSaveElementForm };
+	return { saveToList, getStoreIndex, autoSaveForm, autoSaveElementForm, handleAutoSaveElementForm };
 }
 
 /**
@@ -125,7 +140,7 @@ export interface AutoSaveElementFormOptions<T extends { name: string }> {
 	model: Ref<PartialExceptName<T> | undefined>;
 	storeData: EcaasFormList<T>;
 	defaultName: string;
-	onPatch: (state: EcaasState, newData: EcaasForm<T>, index: number) => void;
+	onPatch: (state: EcaasState, newData: EcaasForm<T>, index: number, prevData?: EcaasForm<T>) => void;
 }
 
 /**

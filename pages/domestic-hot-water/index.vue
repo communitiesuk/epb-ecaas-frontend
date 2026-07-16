@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { hasPackagedProduct, isPackagedProduct, isEcaasForm } from "#imports";
+import { hasPackagedProduct, isEcaasForm } from "#imports";
 import type { CustomListItem } from "~/components/CustomList.vue";
 import { useDomesticHotWater } from "~/composables/domesticHotWater";
 import type { ErrorSummaryItem } from "~/composables/errorSummary";
 import formStatus from "~/constants/formStatus";
-import type { DomesticHotWaterHeatSourceData, HeatSourceData, WaterStorageData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, PreheatedWaterStorageData, WaterStorageData } from "~/stores/ecaasStore.schema";
 
 const title = "Domestic hot water";
 
@@ -15,7 +15,6 @@ const { removeEntry, duplicateEntry } = useDomesticHotWater();
 const { heatSources: dhwHeatSources, preheatedWaterStorage } = store.domesticHotWater;
 
 const { errorMessages, addError, clearErrors } = useErrorSummary();
-const heatSourceTypesThatCanAddSecond = ["heatNetwork", "heatPump", "heatInterfaceUnit"] as const;
 
 function getDhwHeatSourceType(heatSourceForm: EcaasForm<DomesticHotWaterHeatSourceData>): Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: string }>["typeOfHeatSource"] | undefined {
 	if (heatSourceForm.data.isExistingHeatSource) {
@@ -45,31 +44,10 @@ function isHeatPumpConnectedToExistingHeatNetwork(heatSourceForm: EcaasForm<Dome
 		&& !!heatSourceForm.data.associatedHeatNetworkId;
 }
 
-function isHeatSourceConnectedToPreheatedWaterCylinder() {
-	const coldWaterSources = dhwHeatSources.data.map(x => x.data.coldWaterSource);
-	const preheatedWaterStorageId = preheatedWaterStorage.data[0]?.data.id;
-
-	return (
-		coldWaterSources.length &&
-		preheatedWaterStorageId &&
-		coldWaterSources.includes(preheatedWaterStorageId)
-	);
-}
-
 const heatSourceMaxNumberOfItems = computed(() => {
 	const firstHeatSource = dhwHeatSources.data[0];
 
-	if (isHeatSourceConnectedToPreheatedWaterCylinder()) {
-		return 2;
-	}
-
-	if (firstHeatSource && isHeatPumpConnectedToExistingHeatNetwork(firstHeatSource)) {
-		return 1;
-	}
-
-	const firstHeatSourceType = firstHeatSource ? getDhwHeatSourceType(firstHeatSource) : undefined;
-
-	return firstHeatSourceType && heatSourceTypesThatCanAddSecond.includes(firstHeatSourceType as typeof heatSourceTypesThatCanAddSecond[number]) ? 2 : 1;
+	return firstHeatSource && isHeatPumpConnectedToExistingHeatNetwork(firstHeatSource) ? 1 : 2;
 });
 
 function handleComplete() {
@@ -114,7 +92,7 @@ function handleComplete() {
 }
 
 const hasIncompleteOrInvalidEntries = () => {
-	if (dhwHeatSources.data.length > heatSourceMaxNumberOfItems.value) {
+	if ((dhwHeatSources.data.length > heatSourceMaxNumberOfItems.value) || !!errorMessages.value.length) {
 		return true;
 	}
 
@@ -172,7 +150,7 @@ function checkMaxHeatSourcesExceeded() {
 
 	const hasPackagedHeatSources = dhwHeatSources.data.every(x => isPackagedProduct(x.data) || hasPackagedProduct(x.data));
 
-	if (dhwHeatSources.data.length > 1 && !hasPackagedHeatSources) {
+	if (dhwHeatSources.data.length > 2 && !hasPackagedHeatSources) {
 		addError(error);
 	}
 }
@@ -278,10 +256,16 @@ checkMaxHeatSourcesExceeded();
 		:items="store.domesticHotWater.preheatedWaterStorage.data
 			.filter(x => isEcaasForm(x))
 			.map(x => {
+				const preheatedWaterStorage = x as EcaasForm<PreheatedWaterStorageData>;
+
 				const item: CustomListItem = {
 					name: x.data.name,
 					status: x.complete ? formStatus.complete : formStatus.inProgress,
-					actions: ['edit', 'delete']
+					...(hasPackagedProduct(preheatedWaterStorage.data) ? {
+						actions: ['edit']
+					} : {
+						actions: ['edit', 'delete']
+					})
 				};
 
 				return item;

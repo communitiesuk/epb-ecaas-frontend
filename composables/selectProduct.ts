@@ -3,45 +3,30 @@ import { v4 as uuidv4 } from "uuid";
 import type { SchemaMechVentType } from "~/schema/aliases";
 import { useProductData } from "./productData";
 import { EcaasError } from "~/errors.types";
+import { isHotWaterHeatSource } from "~/utils/heatSources";
 
 type HeatSourceSection = "spaceHeating" | "domesticHotWater";
 
 export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSourceProductType: (HeatSourceProductType | TechnologyGroup)) {
 	const store = useEcaasStore();
 
-	const createHotWaterCyliner = (state: EcaasState, source: HeatSourceSection, heatPumpDetails: HeatPumpProduct, heatSourceData: HeatSourceData | DomesticHotWaterHeatSourceData) => {
-
+	const createHotWaterCylinder = (source: HeatSourceSection, heatPumpDetails: HeatPumpProduct, heatSourceData: HeatSourceData | DomesticHotWaterHeatSourceData) => {
 		if (source === "spaceHeating") {
-			const hotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
-				id: uuidv4(),
-				isExistingHeatSource: true,
-				createdAutomatically: true,
-				heatSourceId: heatSourceData.id,
-			};
+			const spaceHeatingHeatSource = heatSourceData as HeatSourceData;
+			
+			if (spaceHeatingHeatSource.typeOfHeatSource === "heatPump") {
+				spaceHeatingHeatSource.tankVolumeDeclared = heatPumpDetails.tankVolumeDeclared;
+				spaceHeatingHeatSource.dailyLossesDeclared = heatPumpDetails.dailyLossesDeclared;
+				spaceHeatingHeatSource.heatExchangerSurfaceAreaDeclared = heatPumpDetails.heatExchangerSurfaceAreaDeclared;
+			}
+		} else {
+			const hotWaterHeatSource = heatSourceData as DomesticHotWaterHeatSourceData;
 
-			state.domesticHotWater.heatSources.data.push({
-				data: hotWaterHeatPump as DomesticHotWaterHeatSourceData,
-			});
-		}
-
-		const hotWaterCylinder: Partial<WaterStorageData> = {
-			id: uuidv4(),
-			typeOfWaterStorage: "hotWaterCylinder",
-			name: "Hot water cylinder",
-			...(heatPumpDetails.tankVolumeDeclared !== undefined ? {
-				storageCylinderVolume: unitValue(heatPumpDetails.tankVolumeDeclared, "litres"),
-			} : {}),
-			dailyEnergyLoss: heatPumpDetails.dailyLossesDeclared,
-			areaOfHeatExchanger: heatPumpDetails.heatExchangerSurfaceAreaDeclared,
-			packagedProductReference: heatPumpDetails.id,
-		};
-
-		state.domesticHotWater.waterStorage.data.push({
-			data: hotWaterCylinder as WaterStorageData,
-		});
-
-		if ("packageProductIds" in heatSourceData && Array.isArray(heatSourceData.packageProductIds)) {
-			heatSourceData.packageProductIds.push(hotWaterCylinder.id!);
+			if (!hotWaterHeatSource.isExistingHeatSource && hotWaterHeatSource.typeOfHeatSource === "heatPump") {
+				hotWaterHeatSource.tankVolumeDeclared = heatPumpDetails.tankVolumeDeclared;
+				hotWaterHeatSource.dailyLossesDeclared = heatPumpDetails.dailyLossesDeclared;
+				hotWaterHeatSource.heatExchangerSurfaceAreaDeclared = heatPumpDetails.heatExchangerSurfaceAreaDeclared;
+			}
 		}
 	};
 
@@ -53,30 +38,9 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 		addBoilerProduct: (newProduct: BoilerProduct) => string,
 		removeBoilerProduct: (id: string) => void,
 	) => {
-		if (!heatSourceData || ("isExistingHeatSource" in heatSourceData && heatSourceData.isExistingHeatSource)) {
+		if (!heatSourceData || (isHotWaterHeatSource(heatSourceData) && heatSourceData.isExistingHeatSource)) {
 			return;
 		}
-
-		// if (heatSourceData.typeOfHeatSource === "heatNetwork") {
-		// 	if (heatSourceData.usesHeatInterfaceUnits && heatSourceProductType === "heatInterfaceUnit") {
-		// 		heatSourceData.heatInterfaceUnitProductReference = product.id;
-		// 		return;
-		// 	}
-
-		// 	if (!heatSourceData.isHeatNetworkInPcdb) return;
-
-		// 	const heatNetwork = products.find(x => x.id === product.id);
-
-		// 	if (heatNetwork) {
-		// 		if ("fifthGHeatNetwork" in product) {
-		// 			heatSourceData.hasBoosterHeatPump = product.fifthGHeatNetwork === 1;
-		// 		} else {
-		// 			useProductData(heatNetwork.id).then((item) => {
-		// 				heatSourceData.hasBoosterHeatPump = !!(item && "fifthGHeatNetwork" in item && item.fifthGHeatNetwork === 1);
-		// 			});
-		// 		}
-		// 	}
-		// }
 
 		if (heatSourceData.typeOfHeatSource === "boiler") {
 			const boilerProduct = product as (DisplayProduct | BoilerProduct);
@@ -158,15 +122,18 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 			if (waterStorage.length || (source === "spaceHeating" && dhwHeatSources.length)) {
 				throw new EcaasError("DHW_HEAT_SOURCE_CONFLICT");
 			}
-			// Necessary because vessel type is not available unless we useProductData
 
 			if (heatPumpProduct.technologyType !== "HybridHeatPump") {
 
 				const createCylinderIfHasVessel = (details: HeatPumpProduct) => {
 					if (!details.vesselType) return;
-					createHotWaterCyliner(state, source, details, heatSourceData);
+
+					createHotWaterCylinder(source, details, heatSourceData);
+					heatSourceData.packagedWithWaterCylinder = true;
 				};
+
 				if (isDisplayProduct(heatPumpProduct)) {
+					// Necessary because vessel type is not available unless we useProductData
 					useProductData(heatPumpProduct.id).then(details => {
 						createCylinderIfHasVessel(details as HeatPumpProduct);
 					});

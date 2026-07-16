@@ -2,7 +2,7 @@ import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
 import Products from "./index.vue";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
-import type { BoilerProduct, DisplayProduct, HeatPumpProduct, PaginatedResult, VesselType } from "~/pcdb/pcdb.types";
+import type { BoilerProduct, DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
 
 describe("Heat source products page", () => {
 	const store = useEcaasStore();
@@ -316,86 +316,6 @@ describe("Heat source products page", () => {
 			typeOfHeatSource: "boiler",
 			typeOfBoiler: "combiBoiler",
 		}));
-	});
-
-	test.each([
-		"Integral",
-		"Separate limiting characteristics",
-		"Separate fixed characteristics",
-	] as const satisfies VesselType[])("a hot water cylinder is created when a heat pump with vessel type '%s' is selected", async (vesselType) => {
-		store.$patch({
-			domesticHotWater: {
-				heatSources: {
-					data: [
-						{ data: heatSource1 },
-					],
-				},
-			},
-		});
-
-		mockRoute.mockReturnValue({
-			params: {
-				heatSource: "0",
-				products: "heat-pump",
-			},
-			path: "/0/heat-pump",
-		});
-
-		const heatPumpProduct: PaginatedResult<DisplayProduct> = {
-			data: [{
-				displayProduct: true,
-				id: "1000",
-				brandName: "Test",
-				modelName: "Heat Pump",
-				technologyType: "AirSourceHeatPump",
-				vesselType,
-			}],
-		};
-
-		const heatPumpDetails: Partial<HeatPumpProduct> = {
-			id: "1000",
-			brandName: "Test",
-			modelName: "Heat Pump",
-			technologyType: "AirSourceHeatPump",
-			vesselType,
-			tankVolumeDeclared: 20,
-			dailyLossesDeclared: 10,
-		};
-
-		mockFetch.mockReturnValueOnce({
-			data: ref(heatPumpProduct),
-		}).mockReturnValueOnce({
-			data: ref(HOT_WATER_HEAT_PUMPS),
-		}).mockReturnValueOnce({
-			data: ref(heatPumpDetails),
-		});
-
-		await renderSuspended(Products);
-
-		await user.click(screen.getByTestId("selectProductButton_0"));
-
-		const waterStorageData = store.domesticHotWater.waterStorage.data;
-		const expectedCylinderData: Partial<WaterStorageData> = {
-			name: "Hot water cylinder",
-			typeOfWaterStorage: "hotWaterCylinder",
-			packagedProductReference: "1000",
-			storageCylinderVolume: unitValue(20, "litres"),
-			dailyEnergyLoss: 10,
-		};
-
-		const hotWaterHeatSources = store.domesticHotWater.heatSources.data;
-		const expectedHotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
-			isExistingHeatSource: false,
-			typeOfHeatSource: "heatPump",
-			typeOfHeatPump: "airSource",
-			productReference: "1000",
-		};
-
-		expect(hotWaterHeatSources.length).toBe(1);
-		expect(hotWaterHeatSources[0]?.data).toEqual(expect.objectContaining(expectedHotWaterHeatPump));
-
-		expect(waterStorageData.length).toBe(1);
-		expect(waterStorageData[0]?.data).toStrictEqual(expect.objectContaining(expectedCylinderData));
 	});
 
 	test("'Back to heat source' navigates user to the heat source at the correct index", async () => {

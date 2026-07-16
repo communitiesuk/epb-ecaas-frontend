@@ -6,6 +6,7 @@ import type { AnyPcdbProduct, Product } from "~/pcdb/pcdb.types";
 import { hasPackagedProduct } from "~/utils/products";
 import PackagedProductInset from "~/components/PackagedProductInset.vue";
 import type { ErrorName } from "~/errors.types";
+import { useHeatSources } from "~/composables/heatSources";
 
 const title = "Heat source";
 const store = useEcaasStore();
@@ -13,6 +14,7 @@ const route = useRoute();
 
 const { autoSaveElementForm, getStoreIndex } = useForm();
 const { getDefaultEnergySupply } = useEnergySupplies();
+const { createWaterCylinder } = useHeatSources();
 
 const heatSourceStoreData = store.spaceHeating.heatSource.data;
 const index = getStoreIndex(heatSourceStoreData);
@@ -65,8 +67,6 @@ const saveForm = () => {
 	navigateTo("/space-heating");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
-
 function removePackagedProducts(packageProductIds: string[]) {
 	store.$patch((state) => {
 		const heatSources = state.spaceHeating.heatSource.data.filter((x) => {
@@ -108,12 +108,15 @@ autoSaveElementForm<HeatSourceData>({
 	model,
 	storeData: store.spaceHeating.heatSource,
 	defaultName: "Heat source",
-	onPatch: (state, newData, index) => {
+	onPatch: (state, newData, index, prevData) => {
+		const existingData = prevData?.data as HeatSourceData;
 		newData.data.id ??= id;
 
 		if (newData.data.typeOfHeatSource === "heatPump" && newData.data.isConnectedToHeatNetwork === false) {
 			newData.data.energySupply ??= getDefaultEnergySupply()!;
 		}
+
+		createWaterCylinder("spaceHeating", state, newData.data, existingData, newData.data);
 
 		state.spaceHeating.heatSource.data[index] = newData;
 		state.spaceHeating.heatSource.complete = false;
@@ -169,7 +172,7 @@ function getHeatSourceTypeHelpText() {
 		return "As a district heat network has been added, the heat source must be a HIU";
 }
 
-const heatSourceOptions = computed<Record<string, string>>(() => {
+const heatSourceOptions = computed(() => {
 	if (isCommunalHeatNetworkWithoutBoosterHeatPump() || isDistrictHeatNetwork()) {
 		return {
 			heatInterfaceUnit: heatSourceTypesWithDisplay.heatInterfaceUnit,
@@ -181,7 +184,7 @@ const heatSourceOptions = computed<Record<string, string>>(() => {
 		};
 	}
 
-	return heatSourceTypesWithDisplay as Record<string, string>;
+	return heatSourceTypesWithDisplay;
 });
 
 
@@ -190,6 +193,8 @@ const boilers = heatSourceStoreData
 	.map(x => [x.data.id, x.data.name] as [string, string]);
 
 const { mounted } = useMounted();
+
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
@@ -232,13 +237,12 @@ const { mounted } = useMounted();
 			id="typeOfHeatSource"
 			type="govRadios"
 			label="Type of heat source"
-			:options="heatSourceOptions"
+			:options="(heatSourceOptions as Record<string, string>)"
 			name="typeOfHeatSource"
 			validation="required"
 			:disabled="hasPackagedProduct(model)"
 			:help="getHeatSourceTypeHelpText()"
 		/>
-
 		<HeatPumpSection
 			v-if="mounted && model?.typeOfHeatSource === 'heatPump'"
 			:model="(model as HeatPumpModelType)"

@@ -46,6 +46,7 @@ const saveForm = (fields: PreheatedWaterStorageData) => {
 					typeOfWaterStorage: fields.typeOfWaterStorage,
 					storageCylinderVolume: fields.storageCylinderVolume,
 					dailyEnergyLoss: fields.dailyEnergyLoss,
+					packagedProductReference: fields.packagedProductReference,
 				},
 				complete: true,
 			};

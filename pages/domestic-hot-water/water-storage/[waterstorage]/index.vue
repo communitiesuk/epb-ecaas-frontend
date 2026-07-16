@@ -50,6 +50,7 @@ const saveForm = (fields: WaterStorageData) => {
 					areaOfHeatExchanger: fields.areaOfHeatExchanger,
 					thermostatPosition: fields.thermostatPosition,
 					coldWaterSource: fields.coldWaterSource,
+					packagedProductReference: fields.packagedProductReference,
 				},
 				complete: true,
 			};

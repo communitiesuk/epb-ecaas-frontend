@@ -683,18 +683,6 @@ describe("Domestic hot water", () => {
 			complete: true,
 		} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
-		// // Can't get href to point to the right thing :(
-
-		// // test("Navigates to water storage create form when add link is clicked", async () => {
-		// // 	await renderSuspended(DomesticHotWater);
-
-		// // 	const addLink = await screen.findByTestId<HTMLAnchorElement>("heatSources_add");
-
-		// // 	expect(new URL(addLink.href).pathname).toBe(
-		// // 		getUrl("heatSourcesCreate"),
-		// // 	);
-		// // });
-
 		test("Displays existing heat source", async () => {
 			store.$patch({
 				domesticHotWater: {
@@ -709,78 +697,19 @@ describe("Domestic hot water", () => {
 			expect(screen.getByText(heatSource1.data.name)).toBeDefined();
 		});
 
-		test("Only one heat source can be added", async () => {
+		test("Up to two heat sources can be added when one isn't connected to a heat network", async () => {
 			await renderSuspended(DomesticHotWater);
 			expect(screen.getByTestId("heatSources_add")).toBeDefined();
 
 			store.$patch({
 				domesticHotWater: {
 					heatSources: {
-						data: [heatSource1],
+						data: [heatSource1, heatSource2],
 					},
 				},
 			});
 
 			await renderSuspended(DomesticHotWater);
-			expect(screen.queryByTestId("heatSources_add")).toBeNull();
-		});
-
-		test("two heat sources can be added if pre-heated water tank and hot water cylinder have been added", async () => {
-			store.$patch({
-				domesticHotWater: {
-					heatSources: {
-						data: [{
-							data: {
-								...heatSource1.data,
-								coldWaterSource: preheatedStorage1.data.id,
-							},
-						}],
-					},
-					preheatedWaterStorage: {
-						data: [preheatedStorage1],
-					},
-					waterStorage: {
-						data: [hwStorage1],
-					},
-				},
-			});
-
-			await renderSuspended(DomesticHotWater);
-
-			expect(screen.getByTestId("heatSources_add")).toBeDefined();
-
-			store.$patch(state => {
-				state.domesticHotWater.heatSources.data.push({
-					data: {
-						...heatSource1.data,
-						id: "fb62acf2-10b1-4983-bc08-7350f8e4a413",
-						name: "Heat source 2",
-					},
-				});
-			});
-
-			await renderSuspended(DomesticHotWater);
-
-			expect(screen.queryByTestId("heatSources_add")).toBeNull();
-		});
-
-		test("two heat sources cannot be added if heat source is not connected to pre-heated water tank", async () => {
-			store.$patch({
-				domesticHotWater: {
-					heatSources: {
-						data: [heatSource1],
-					},
-					preheatedWaterStorage: {
-						data: [preheatedStorage1],
-					},
-					waterStorage: {
-						data: [hwStorage1],
-					},
-				},
-			});
-
-			await renderSuspended(DomesticHotWater);
-
 			expect(screen.queryByTestId("heatSources_add")).toBeNull();
 		});
 
@@ -800,38 +729,6 @@ describe("Domestic hot water", () => {
 			await user.click(screen.getByTestId("heatSources_remove_0"));
 			expect(screen.queryByTestId("heatSources_items")).toBeNull();
 		});
-
-		// it("references to the deleted DHW booster heat pump are removed from all heat network items", async () => {
-
-		// 	const heatNetwork: Partial<HeatSourceData> = {
-		// 		id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-		// 		typeOfHeatSource: "heatNetwork",
-		// 		typeOfHeatNetwork: "communalHeatNetwork",
-		// 		isHeatNetworkInPcdb: true,
-		// 		hasBoosterHeatPump: true,
-		// 		boosterHeatPumpId: boosterHeatPumpHotWater.data.id,
-		// 	};
-
-		// 	store.$patch({
-		// 		domesticHotWater: {
-		// 			heatSources: {
-		// 				data: [boosterHeatPumpHotWater],
-		// 			},
-		// 		},
-		// 		spaceHeating: {
-		// 			heatSource: {
-		// 				data: [{ data: heatNetwork, complete: true }],
-		// 			},
-		// 		},
-		// 	});
-
-		// 	await renderSuspended(DomesticHotWater);
-		// 	await user.click(await screen.findByTestId("heatSources_remove_0"));
-
-		// 	const heatNetworkItem = store.spaceHeating.heatSource.data[0];
-		// 	expect((heatNetworkItem?.data as { boosterHeatPumpId: string }).boosterHeatPumpId).toBe(undefined);
-		// 	expect(heatNetworkItem?.complete).toBe(false);
-		// });
 
 		test("heat sources cannot be duplicated", async () => {
 			store.$patch({
@@ -1497,19 +1394,29 @@ describe("Domestic hot water", () => {
 
 	describe("when imported file contains more than one DHW heat source", () => {
 
-		const extraHeatSource: Partial<DomesticHotWaterHeatSourceData> = {
-			name: "Extra heat source",
+		const extraHeatSource1: Partial<DomesticHotWaterHeatSourceData> = {
+			name: "Extra heat source 1",
 			id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f11111",
 			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
 			heatSourceId: "NEW_HEAT_SOURCE",
 		};
 
+		const extraHeatSource2: Partial<DomesticHotWaterHeatSourceData> = {
+			...extraHeatSource1,
+			name: "Extra heat source 2",
+			id: "cbd55273-0226-48a8-95a6-19e53ad6c4a9",
+		};
+
 		beforeEach(() => {
 			store.$patch({
 				domesticHotWater: {
 					heatSources: {
-						data: [{ data: heatSource1.data, complete: true }, { data: extraHeatSource }],
+						data: [
+							{ data: heatSource1.data, complete: true },
+							{ data: extraHeatSource1 },
+							{ data: extraHeatSource2 },
+						],
 					},
 				},
 			});

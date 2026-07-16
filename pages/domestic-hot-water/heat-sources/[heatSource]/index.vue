@@ -1,18 +1,21 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { getUrl, hasPackagedProduct, type DomesticHotWaterHeatSourceData } from "#imports";
+import { getUrl, hasPackagedProduct, type DomesticHotWaterHeatSourceData, type EcaasForm, type HeatSourceData } from "#imports";
 import { coldWaterSourceOptions, DHWHeatSourceTypesWithDisplay } from "~/utils/display";
 import type { Product, AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { celsius } from "~/utils/units/temperature";
-import type { UnitValue } from "~/utils/units/types";
+import { greaterThanZero } from "~/utils/validation";
+import type { NewDomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
+import { useHeatSources } from "~/composables/heatSources";
 
 const title = "Heat source";
 const store = useEcaasStore();
 const { heatSources: dhwHeatSources } = store.domesticHotWater;
-const { getStoreIndex } = useForm();
-const route = useRoute();
 
+const { getStoreIndex, handleAutoSaveElementForm } = useForm();
+const { createWaterCylinder } = useHeatSources();
 const { mounted } = useMounted();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 const hotWaterHeatSourceStoreData = store.domesticHotWater.heatSources.data;
 const index = getStoreIndex(hotWaterHeatSourceStoreData);
@@ -28,8 +31,6 @@ export type HeatInterfaceUnitModelType = Extract<DomesticHotWaterHeatSourceData,
 export type SolarThermalModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "solarThermalSystem" }>;
 export type ImmersionHeaterModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "immersionHeater" }>;
 export type PointOfUseModelType = Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: "pointOfUse" }>;
-
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 const productBrandName = ref<string | undefined>();
 const packagedProduct = ref<Product | undefined>();
@@ -68,10 +69,9 @@ watch(
 	(newData, initialData) => {
 		if (!newData.heatSourceId) return;
 
-		if (
-			initialData.heatSourceId !== newData.heatSourceId
-		) {
+		if (initialData.heatSourceId !== newData.heatSourceId) {
 			errorMessages.value = [];
+
 			model.value = { 
 				coldWaterSource: initialData.coldWaterSource,
 				isExistingHeatSource: newData.heatSourceId === "NEW_HEAT_SOURCE" ? false : true,
@@ -79,11 +79,14 @@ watch(
 				id: initialData.id,
 			} as DomesticHotWaterHeatSourceData;
 		}
+
 		if (initialData.isExistingHeatSource === false && newData.isExistingHeatSource === false && initialData.typeOfHeatSource !== newData.typeOfHeatSource) {
 			if (initialData.typeOfHeatSource === "heatPump") {
 				removePackagedProducts(initialData.packageProductIds ?? []);
 			}
+
 			errorMessages.value = [];
+
 			model.value = { 
 				coldWaterSource: initialData.coldWaterSource,
 				isExistingHeatSource: false,
@@ -92,30 +95,34 @@ watch(
 				typeOfHeatSource: newData.typeOfHeatSource,
 			} as DomesticHotWaterHeatSourceData;
 		}
+
 		if (model.value.isExistingHeatSource === false && model.value.typeOfHeatSource && model.value && !model.value.name) {
 			model.value.name = getHeatSourceDefaultName(model.value);
 		}
 	},
 );
 
-export interface AutoSaveElementFormOptionsNoName<T> {
-	model: Ref<Partial<T> | undefined>;
-	storeData: EcaasFormList<T>;
-	onPatch: (state: EcaasState, newData: EcaasForm<T>, index: number) => void;
+function getActualHeatSource(dhwHeatSource: DomesticHotWaterHeatSourceData): HeatSourceData | NewDomesticHotWaterHeatSourceData | undefined {
+	if (dhwHeatSource.isExistingHeatSource) {
+		return store.spaceHeating.heatSource.data.find(x => x.data.id === dhwHeatSource.heatSourceId)?.data as HeatSourceData;
+	}
+
+	return dhwHeatSource;
 }
 
-const autoSaveElementFormNoName = <T extends DomesticHotWaterHeatSourceData>({
+export interface AutoSaveElementFormOptionsNoName<T extends DomesticHotWaterHeatSourceData> {
+	model: Ref<T | undefined>;
+	storeData: EcaasFormList<T>;
+	onPatch: (state: EcaasState, newData: EcaasForm<T>, index: number, prevData?: EcaasForm<T>) => void;
+}
+
+const autoSaveElementFormNoName = ({
 	model,
 	storeData,
 	onPatch,
-}: AutoSaveElementFormOptionsNoName<T>) => {
-	watch(model, async (newData: Partial<T> | undefined, initialData: Partial<T> | undefined) => {
-		const routeParam = route.params[Object.keys(route.params)[0]!];
-		if (initialData === undefined || newData === undefined || routeParam === undefined) {
-			return;
-		}
-
-		if (newData.isExistingHeatSource === undefined) {
+}: AutoSaveElementFormOptionsNoName<DomesticHotWaterHeatSourceData>) => {
+	watch(model, async (newData: DomesticHotWaterHeatSourceData | undefined, initialData: DomesticHotWaterHeatSourceData | undefined) => {
+		if (newData?.isExistingHeatSource === undefined) {
 			return;
 		}
 
@@ -123,55 +130,39 @@ const autoSaveElementFormNoName = <T extends DomesticHotWaterHeatSourceData>({
 			&& (newData as { typeOfHeatSource?: string }).typeOfHeatSource === undefined) {
 			return;
 		}
-		
-		if (!hasChangedFields(newData, initialData)) {
-			return;
-		}
-			
-		const index = getStoreIndex(storeData.data as EcaasForm<T>[]);
-		if (routeParam === "create") {
-			// we're about to save, so set the route parameter to the new index
-			// we only expect this to trigger on the first change 
-			// (after that, routeParam is no longer "create")
-			route.params[Object.keys(route.params)[0]!] = index.toString();
 
-			// change the url to reflect this
-			const editItemPath = route.fullPath.replace("create", index.toString());
-			history.replaceState({}, "", editItemPath);
-		}
+		const defaultName = "typeOfHeatSource" in newData ? getHeatSourceDefaultName(newData) : "Heat source";
 
-		store.$patch((state) => {
-			const dataToPatch: Partial<T> = { ...newData };
-
-			const elementData: EcaasForm<T> = {
-				data: dataToPatch as T,
-			};
-
-			if (isPackagedProduct(newData) && newData.coldWaterSource) {
-				const packageProductIndex = state.domesticHotWater.heatSources.data.findIndex(x => newData.packageProductIds?.includes(x.data.id));
-
-				if (packageProductIndex >= 0) {
-					state.domesticHotWater.heatSources.data[packageProductIndex]!.data.coldWaterSource = newData.coldWaterSource;
-				}
-			}
-
-			onPatch(state, elementData, index);
-		});
+		handleAutoSaveElementForm(newData, initialData, storeData, defaultName, onPatch);
 	});
 };
 
-autoSaveElementFormNoName<DomesticHotWaterHeatSourceData>({
+autoSaveElementFormNoName({
 	model,
 	storeData: store.domesticHotWater.heatSources,
-	onPatch: (state, newData, index) => {
+	onPatch: (state, newData, index, prevData) => {
+		const existingData = prevData?.data as DomesticHotWaterHeatSourceData;
 		newData.data.id ??= id;
+
+		const heatSource = getActualHeatSource(newData.data);
+
+		if (isPackagedProduct(newData.data) && newData.data.coldWaterSource) {
+			const packageProductIds = newData.data.packageProductIds;
+			const packageProductIndex = state.domesticHotWater.heatSources.data.findIndex(x => packageProductIds?.includes(x.data.id));
+
+			if (packageProductIndex >= 0) {
+				state.domesticHotWater.heatSources.data[packageProductIndex]!.data.coldWaterSource = newData.data.coldWaterSource;
+			}
+		}
+
+		createWaterCylinder("domesticHotWater", state, heatSource, existingData, newData.data);
+
 		state.domesticHotWater.heatSources.data[index] = newData;
 		state.domesticHotWater.heatSources.complete = false;
 	},
 });
 
 function updateHeatSource(type: string) {
-
 	watch(() => model.value[`${type}` as keyof DomesticHotWaterHeatSourceData],
 		(newHeatSourceSubtype, initialHeatSourceSubtype) => {
 
@@ -179,66 +170,49 @@ function updateHeatSource(type: string) {
 				if ("productReference" in model.value && type !== "typeOfHeatNetwork") {
 					model.value.productReference = "";
 				}
+
 				const defaultName = getHeatSourceDefaultName(model.value);
 				model.value.name = defaultName;
+
 				(store.domesticHotWater.heatSources.data[index]!.data as { name: string }).name = defaultName;
 			}
 		},
 	);
 }
 
-const usedHeatSourceIds = store.domesticHotWater.heatSources.data
-	.map(x => x.data?.heatSourceId)
-	.filter(id => id && id !== "NEW_HEAT_SOURCE");
+function getHeatSourceOptions() {
+	const usedHeatSourceIds = store.domesticHotWater.heatSources.data
+		.map(x => x.data?.heatSourceId)
+		.filter(id => id && id !== "NEW_HEAT_SOURCE");
 
-const currentHeatSourceId = store.domesticHotWater.heatSources.data[index]?.data.heatSourceId;
-const radioOptions = new Map();
+	const currentHeatSourceId = store.domesticHotWater.heatSources.data[index]?.data.heatSourceId;
+	const radioOptions = new Map();
 
-store.spaceHeating.heatSource.data
-	.filter(x => x.data.id !== undefined)
-	.forEach(x => {
-		const id = x.data.id as string;
-		const isUsed = usedHeatSourceIds.includes(id);
-		const isEditingThisOne = id === currentHeatSourceId;
+	store.spaceHeating.heatSource.data
+		.filter(x => x.data.id !== undefined)
+		.forEach(x => {
+			const id = x.data.id as string;
+			const isUsed = usedHeatSourceIds.includes(id);
+			const isEditingThisOne = id === currentHeatSourceId;
 
-		radioOptions.set(
-			id, 
-			isUsed && !isEditingThisOne 
-				? {
-					label: x.data.name + " (already used for water heating)",
-					disabled: true, 
-				} : {
-					label: x.data.name,
-					typeOfHeatSource: x.data.typeOfHeatSource,
-					disabled: false,
-				},
-		);
-	});
+			radioOptions.set(
+				id, 
+				isUsed && !isEditingThisOne 
+					? {
+						label: x.data.name + " (already used for water heating)",
+						disabled: true, 
+					} : {
+						label: x.data.name,
+						typeOfHeatSource: x.data.typeOfHeatSource,
+						disabled: false,
+					},
+			);
+		});
 
-radioOptions.set("NEW_HEAT_SOURCE", "Add a new water heating source");
+	radioOptions.set("NEW_HEAT_SOURCE", "Add a new water heating source");
 
-const domesticHotWaterBoilers = hotWaterHeatSourceStoreData
-	.filter(x => !x.data.isExistingHeatSource && x.data.typeOfHeatSource === "boiler")
-	.map(x => {
-		const dhwBoiler = (x.data as BoilerModelType);
-		return [dhwBoiler.id, dhwBoiler.name] as [string, string];
-	});
-
-const spaceHeatingBoilers = hotWaterHeatSourceStoreData
-	.filter(x => x.data.isExistingHeatSource)
-	.map(x => {
-		const heatSource = store.spaceHeating.heatSource.data
-			.find(hs => hs.data.id === x.data.heatSourceId);
-		
-		if (heatSource?.data.typeOfHeatSource === "boiler") {
-			return [heatSource.data.id, heatSource.data.name] as [string, string];
-		}
-
-		return null;
-	})
-	.filter(x => x !== null);
-
-const allBoilers = [...domesticHotWaterBoilers, ...spaceHeatingBoilers];
+	return radioOptions;
+}
 
 const existingHeatSourceType = computed(() => {
 	const selectedType = radioOptions.get(model?.value.heatSourceId).typeOfHeatSource || "";
@@ -330,6 +304,7 @@ function filterHeatSourceOptions(): Record<string, string> {
 			heatInterfaceUnit,
 		};
 	}
+
 	if (hasHeatPumpOrHIUHeatSource()) {
 		return {
 			heatNetwork: heatNetwork(false),
@@ -338,11 +313,6 @@ function filterHeatSourceOptions(): Record<string, string> {
 	
 	return DHWHeatSourceTypesWithDisplay;
 }
-
-const greaterThanZero = (node: FormKitNode) => {
-	const value = node.value as UnitValue;
-	return value.amount > 0;
-};
 
 const isLinkedToHeatSourceWithCylinder = (): boolean => {
 	if (model.value === undefined || !model.value.isExistingHeatSource) {
@@ -385,6 +355,8 @@ const heatSourceOptions = computed(() => {
 	return result;
 });
 
+const radioOptions = getHeatSourceOptions();
+const allBoilers = useAssociatedItems(["boiler"]);
 const preheatedWaterStorage = useAssociatedItems(["preheatedWaterStorage"]);
 
 const coldWaterSourcesMap = new Map(Object.entries(coldWaterSourceOptions));
@@ -430,7 +402,7 @@ const preheatedWaterStorageMap = new Map(preheatedWaterStorage);
 			id="heatSourceId"
 			type="govRadios"
 			label="Use a previously added heat source"
-			:options="new Map(radioOptions)"
+			:options="radioOptions"
 			name="heatSourceId"
 			validation="required"
 			:disabled="hasPackagedProduct(model) || (model.isExistingHeatSource && model.createdAutomatically)"
