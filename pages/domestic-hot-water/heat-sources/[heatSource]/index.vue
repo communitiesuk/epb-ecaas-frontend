@@ -388,15 +388,6 @@ const preheatedWaterStorageMap = new Map(preheatedWaterStorage);
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="heatSourceErrorSummary" />
-		<FormKit
-			id="coldWaterSource"
-			type="govRadios"
-			label="Cold water source"
-			:options="new Map([...preheatedWaterStorageMap, ...coldWaterSourcesMap])"
-			name="coldWaterSource"
-			validation="required"
-			:disabled="hasPackagedProduct(model)"
-		/>
 		<FormKit 
 			v-if="mounted"
 			id="heatSourceId"
@@ -496,6 +487,15 @@ const preheatedWaterStorageMap = new Map(preheatedWaterStorage);
 					exclusiveRangeFromMin: `Maximum flow temperature must be greater than 0.`,
 				}"
 				:data-field="'HotWaterSource.*.HeatSource.*.temp_flow_limit_upper'"
+			/>
+			<FormKit
+				id="coldWaterSource"
+				type="govRadios"
+				label="Cold water source"
+				:options="new Map([...preheatedWaterStorageMap, ...coldWaterSourcesMap])"
+				name="coldWaterSource"
+				validation="required"
+				:disabled="hasPackagedProduct(model)"
 			/>
 		</template>
 		<HemDefaultProductWarning :brand-names="[productBrandName]" />
