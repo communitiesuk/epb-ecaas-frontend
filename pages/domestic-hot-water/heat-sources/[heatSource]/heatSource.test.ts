@@ -1068,6 +1068,32 @@ describe("Heat pump section", () => {
 		expect(waterStorageData[0]?.data).toEqual(expect.objectContaining(expectedCylinderData));
 	});
 
+	test("selecting pre-heated water cylinder configuration adds pre-heated cylinder to cold water source options", async () => {
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: heatPumpWithCylinder }],
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(heatPumpProductWithCylinder),
+		});
+
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("waterCylinderConfiguration_preheatedWaterCylinder"));
+
+		const preheatedWaterCylinder = store.domesticHotWater.preheatedWaterStorage.data[0]?.data;
+
+		expect(screen.findByTestId(`coldWaterSource_${preheatedWaterCylinder?.id}`)).toBeDefined();
+	});
+
 	test("changing heat source clears associated hot water source and cylinder", async () => {
 		const cylinderData: Partial<PreheatedWaterStorageData> = {
 			name: "Preheated water cylinder",

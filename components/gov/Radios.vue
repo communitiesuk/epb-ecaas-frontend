@@ -6,7 +6,7 @@ interface RadiosProps {
 	name: string;
 	label: string;
 	help?: string;
-	options: Map<string, string | RadioOption>;
+	options: Map<string, string | RadioOption> | Ref<Map<string, string | RadioOption>>;
 	showErrorState: () => boolean;
 	invalid: boolean;
 	showErrorMessage: () => string | undefined;
@@ -20,6 +20,7 @@ interface RadiosProps {
 
 const {
 	id,
+	options,
 	showErrorState,
 	showErrorMessage,
 	help = undefined,
@@ -32,6 +33,9 @@ const { mounted } = useMounted();
 
 const idWithKey = (key: string) => `${id}_${key.replace(/ /g, "_")}`;
 
+const optionsMap = computed(() => {
+	return "value" in options ? options.value : options;
+});
 </script>
 
 <template>
@@ -52,7 +56,7 @@ const idWithKey = (key: string) => `${id}_${key.replace(/ /g, "_")}`;
 				<span class="govuk-visually-hidden">Error:</span> {{ showErrorMessage() }}
 			</p>
 			<div :class="`govuk-radios govuk-radios--small ${classNames?.radios || ``}`" :data-testid="`${id}`" data-module="govuk-radios">
-				<div v-for="key in options.keys()" :key="key" class="govuk-radios__item">
+				<div v-for="key in optionsMap.keys()" :key="key" class="govuk-radios__item">
 					<input
 						:id="idWithKey(key)"
 						class="govuk-radios__input"
@@ -60,21 +64,21 @@ const idWithKey = (key: string) => `${id}_${key.replace(/ /g, "_")}`;
 						:name="name"
 						:value="key"
 						:checked="mounted ? currentValue == key : false"
-						:disabled="(typeof options.get(key) === 'object' ? (options.get(key) as RadioOption).disabled : false) || disabled"
+						:disabled="(typeof optionsMap.get(key) === 'object' ? (optionsMap.get(key) as RadioOption).disabled : false) || disabled"
 						:data-testid="idWithKey(key)"
-						:aria-describedby="typeof options.get(key) === 'object' ? `${idWithKey(key)}_hint` : ''"
+						:aria-describedby="typeof optionsMap.get(key) === 'object' ? `${idWithKey(key)}_hint` : ''"
 						v-bind="attrs"
 						@change="handleInput"
 					>
 					<label 
 						class="govuk-label govuk-radios__label" 
 						:for="idWithKey(key)"
-						:class="{ 'govuk-label--disabled': (options.get(key) as RadioOption).disabled }"
+						:class="{ 'govuk-label--disabled': (optionsMap.get(key) as RadioOption).disabled }"
 					>
-						{{ typeof options.get(key) === 'object' ? (options.get(key) as RadioOption).label : options.get(key) }}
+						{{ typeof optionsMap.get(key) === 'object' ? (optionsMap.get(key) as RadioOption).label : optionsMap.get(key) }}
 					</label>
-					<div v-if="(typeof options.get(key) === 'object')" :id="`${idWithKey(key)}_hint`" class="govuk-hint govuk-radios__hint">
-						{{ (options.get(key)as RadioOption).hint }}
+					<div v-if="(typeof optionsMap.get(key) === 'object')" :id="`${idWithKey(key)}_hint`" class="govuk-hint govuk-radios__hint">
+						{{ (optionsMap.get(key)as RadioOption).hint }}
 					</div>
 				</div>
 			</div>

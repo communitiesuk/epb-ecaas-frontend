@@ -15,7 +15,6 @@ const props = defineProps<{
 const {
 	id,
 	node: { name, props: { disabled } },
-	attrs: { options },
 	label,
 	help,
 } = props.context;
@@ -31,8 +30,10 @@ function handleInput(e: Event) {
 	}
 }
 
-const optionsMap = options instanceof Map ? options : new Map(Object.entries(options));
-
+const optionsMap = computed(() => {
+	const { options } = props.context.attrs;
+	return options instanceof Map ? options : new Map(Object.entries(options));
+});
 </script>
 
 <template>

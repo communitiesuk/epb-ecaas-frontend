@@ -35,6 +35,15 @@ export type PointOfUseModelType = Extract<DomesticHotWaterHeatSourceData, { type
 const productBrandName = ref<string | undefined>();
 const packagedProduct = ref<Product | undefined>();
 
+const preheatedWaterStorage = useAssociatedItems(["preheatedWaterStorage"]);
+const preheatedWaterStorageMap = ref(new Map(preheatedWaterStorage));
+
+const coldWaterSourceOptionsMap = computed(() => {
+	const coldWaterSourcesMap = new Map(Object.entries(coldWaterSourceOptions));
+	
+	return ref(new Map([...preheatedWaterStorageMap.value, ...coldWaterSourcesMap]));
+});
+
 if (hasPackagedProduct(model.value)) {
 	const packagedProductData = await useProductData(model.value.packagedProductReference!);
 	packagedProduct.value = packagedProductData ?? undefined;
@@ -156,6 +165,7 @@ autoSaveElementFormNoName({
 		}
 
 		createWaterCylinder("domesticHotWater", state, heatSource, existingData, newData.data);
+		preheatedWaterStorageMap.value = new Map(useAssociatedItems(["preheatedWaterStorage"]));
 
 		state.domesticHotWater.heatSources.data[index] = newData;
 		state.domesticHotWater.heatSources.complete = false;
@@ -357,10 +367,6 @@ const heatSourceOptions = computed(() => {
 
 const radioOptions = getHeatSourceOptions();
 const allBoilers = useAssociatedItems(["boiler"]);
-const preheatedWaterStorage = useAssociatedItems(["preheatedWaterStorage"]);
-
-const coldWaterSourcesMap = new Map(Object.entries(coldWaterSourceOptions));
-const preheatedWaterStorageMap = new Map(preheatedWaterStorage);
 </script>
 
 <template>
@@ -492,7 +498,7 @@ const preheatedWaterStorageMap = new Map(preheatedWaterStorage);
 				id="coldWaterSource"
 				type="govRadios"
 				label="Cold water source"
-				:options="new Map([...preheatedWaterStorageMap, ...coldWaterSourcesMap])"
+				:options="coldWaterSourceOptionsMap"
 				name="coldWaterSource"
 				validation="required"
 				:disabled="hasPackagedProduct(model)"
