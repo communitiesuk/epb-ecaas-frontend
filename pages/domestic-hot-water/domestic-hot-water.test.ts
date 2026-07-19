@@ -754,7 +754,6 @@ describe("Domestic hot water", () => {
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
-				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
 				maxFlowTemp: unitValue(30, celsius),
 			};
@@ -780,7 +779,6 @@ describe("Domestic hot water", () => {
 					"9e66d667-6c31-4406-9223-7e2249a7fee3",
 					"f6182db2-42e2-4d7e-beb8-de6f9a8f2be9",
 				],
-				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
 				maxFlowTemp: unitValue(30, celsius),
 			};
@@ -1123,7 +1121,6 @@ describe("Domestic hot water", () => {
 					productReference: "HP-12345",
 					typeOfHeatPump: "airSource",
 					maxFlowTemp: unitValue(17, celsius),
-					isConnectedToHeatNetwork: false,
 					energySupply: "electricity",
 				},
 				complete: true,
@@ -1163,8 +1160,7 @@ describe("Domestic hot water", () => {
 					typeOfHeatSource: "heatPump",
 					typeOfHeatPump: "booster",
 					productReference: "HEATPUMP-SMALL",
-					isConnectedToHeatNetwork: false,
-					energySupply: "electricity",
+					associatedHeatNetworkId: "heatNetwork123",
 					maxFlowTemp: unitValue(30, celsius),
 				},
 				complete: true,
@@ -1259,7 +1255,6 @@ describe("Domestic hot water", () => {
 					productReference: "HP-12345",
 					typeOfHeatPump: "airSource",
 					maxFlowTemp: unitValue(17, celsius),
-					isConnectedToHeatNetwork: false,
 					energySupply: "electricity",
 				},
 				complete: true,
@@ -1443,7 +1438,6 @@ describe("Domestic hot water", () => {
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
-				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
 				maxFlowTemp: unitValue(30, celsius),
 			};
@@ -1509,7 +1503,6 @@ describe("Domestic hot water", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
-				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
 				maxFlowTemp: unitValue(30, celsius),
 			};

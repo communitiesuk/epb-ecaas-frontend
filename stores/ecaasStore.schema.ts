@@ -975,15 +975,24 @@ const heatPumpBase = pcdbPackagedProduct.extend({
 const heatPumpDataZod = nestedDiscriminatedUnion(
 	heatPumpBase,
 	{
-		discriminator: "isConnectedToHeatNetwork",
+		discriminator: "typeOfHeatPump",
 		variants: [
 			z.object({
-				isConnectedToHeatNetwork: z.literal(false),
-				energySupply: fuelTypeZod,
+				typeOfHeatPump: z.literal("booster"),
+				associatedHeatNetworkId: z.string().trim().min(1),
 			}),
 			z.object({
-				isConnectedToHeatNetwork: z.literal(true),
-				associatedHeatNetworkId: z.string().trim().min(1),
+				typeOfHeatPump: z.enum([
+					"airSource",
+					"groundSource",
+					"waterSource",
+					"hotWaterOnly",
+					"exhaustAirMev",
+					"exhaustAirMvhr",
+					"exhaustAirMixed",
+					"hybridHeatPump",
+				]),
+				energySupply: fuelTypeZod,
 			}),
 		] satisfies Tuple,
 	},
@@ -1321,15 +1330,24 @@ const heatPumpHotWaterSourceBase = heatPumpBase.extend(hotWaterHeatSourceExtensi
 const heatPumpHotWaterDataZod = nestedDiscriminatedUnion(
 	heatPumpHotWaterSourceBase,
 	{
-		discriminator: "isConnectedToHeatNetwork",
+		discriminator: "typeOfHeatPump",
 		variants: [
 			z.object({
-				isConnectedToHeatNetwork: z.literal(false),
-				energySupply: fuelTypeZod,
+				typeOfHeatPump: z.literal("booster"),
+				associatedHeatNetworkId: z.string().trim().min(1),
 			}),
 			z.object({
-				isConnectedToHeatNetwork: z.literal(true),
-				associatedHeatNetworkId: z.string().trim().min(1),
+				typeOfHeatPump: z.enum([
+					"airSource",
+					"groundSource",
+					"waterSource",
+					"hotWaterOnly",
+					"exhaustAirMev",
+					"exhaustAirMvhr",
+					"exhaustAirMixed",
+					"hybridHeatPump",
+				]),
+				energySupply: fuelTypeZod,
 			}),
 		] satisfies Tuple,
 	},

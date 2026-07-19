@@ -6,7 +6,7 @@ import { litrePerSecond } from "~/utils/units/flowRate";
 import { kilowatt, kilowattHoursPerDay } from "~/utils/units/power";
 import { metresSquare } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
-import type { DomesticHotWaterHeatSourceData, EcaasForm, PreheatedSmartHotWaterTankData, PreheatedWaterCylinderData, WwhrsData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatNetworkData, PreheatedSmartHotWaterTankData, PreheatedWaterCylinderData, WwhrsData } from "~/stores/ecaasStore.schema";
 import { celsius } from "~/utils/units/temperature";
 import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 
@@ -791,6 +791,14 @@ describe("Domestic hot water summary", () => {
 	});
 
 	describe("heat sources", () => {
+		const heatNetworkWithBooster: HeatNetworkData = {
+			id: "hn_id",
+			name: "Heat Network",
+			subHeatNetworkName: "Sub Heat Network Name",
+			productReference: "9999",
+			typeOfHeatNetwork: "communalHeatNetwork",
+			boosterHeatPump: true,
+		};
 
 		const dhwWithNewHeatPump: DomesticHotWaterHeatSourceData = {
 			coldWaterSource: "mainsWater",
@@ -800,10 +808,9 @@ describe("Domestic hot water summary", () => {
 			name: "Booster heat pump",
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "booster",
+			associatedHeatNetworkId: heatNetworkWithBooster.id,
 			productReference: "HEAT_PUMP_SMALL",
 			maxFlowTemp: unitValue(17, celsius),
-			isConnectedToHeatNetwork: false,
-			energySupply: "electricity",
 		};
 
 		const dhwWithNewBoiler: DomesticHotWaterHeatSourceData = {

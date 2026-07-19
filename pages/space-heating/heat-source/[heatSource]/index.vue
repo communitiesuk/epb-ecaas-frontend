@@ -97,6 +97,13 @@ watch(
 				removePackagedProducts(initialData.packageProductIds ?? []);
 			}
 		}
+
+		if (
+			model.value.typeOfHeatSource === "heatPump" &&
+			isCommunalHeatNetworkWithBoosterHeatPump()
+		) {
+			model.value.typeOfHeatPump = "booster";
+		}
 		
 		if (model.value && !model.value.name) {
 			model.value.name = getHeatSourceDefaultName(model.value);
@@ -112,7 +119,7 @@ autoSaveElementForm<HeatSourceData>({
 		const existingData = prevData?.data as HeatSourceData;
 		newData.data.id ??= id;
 
-		if (newData.data.typeOfHeatSource === "heatPump" && newData.data.isConnectedToHeatNetwork === false) {
+		if (newData.data.typeOfHeatSource === "heatPump" && newData.data.typeOfHeatPump != "booster") {
 			newData.data.energySupply ??= getDefaultEnergySupply()!;
 		}
 

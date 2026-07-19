@@ -52,9 +52,12 @@ const { heatNetworkOptions, hasHeatNetworkOptions, defaultAssociatedHeatNetworkI
 		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
 		validation="required"
 	>
+		<GovDetails summary-text="Help with this input">
+			<p class="govuk-body">If you have added a HIU, the heat network needs to be a traditional communal heat network or a district heat network.</p>
+		</GovDetails>	
 		<div v-if="!hasHeatNetworkOptions">
 			<p class="govuk-error-message">No heat networks added.</p>
-			<NuxtLink :to="`${getUrl('heatSourceCreate')}?typeOfHeatSource=heatNetwork`" class="govuk-link gov-radios-add-link">
+			<NuxtLink :to="getUrl('heatNetworksCreate')" class="govuk-link gov-radios-add-link">
 				Click here to add a heat network
 			</NuxtLink>
 		</div>

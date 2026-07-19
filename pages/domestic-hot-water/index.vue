@@ -26,22 +26,29 @@ function getDhwHeatSourceType(heatSourceForm: EcaasForm<DomesticHotWaterHeatSour
 	return heatSourceForm.data.typeOfHeatSource;
 }
 
-function isHeatPumpConnectedToExistingHeatNetwork(heatSourceForm: EcaasForm<DomesticHotWaterHeatSourceData>): boolean {
+function isHeatPumpConnectedToExistingHeatNetwork(
+	heatSourceForm: EcaasForm<DomesticHotWaterHeatSourceData>,
+): boolean {
 	if (heatSourceForm.data.isExistingHeatSource) {
 		const existingHeatSource = store.spaceHeating.heatSource.data.find(
 			x => x.data.id === heatSourceForm.data.heatSourceId,
 		)?.data;
 
-		if (existingHeatSource?.typeOfHeatSource === "heatPump") {
-			const heatpumpData = existingHeatSource as Extract<HeatSourceData, { typeOfHeatSource: "heatPump" }>;
-			return heatpumpData.isConnectedToHeatNetwork === true
-			&& !!heatpumpData.associatedHeatNetworkId;
-		} 
+		if (
+			existingHeatSource?.typeOfHeatSource === "heatPump" &&
+			"associatedHeatNetworkId" in existingHeatSource
+		) {
+			return !!existingHeatSource.associatedHeatNetworkId;
+		}
+
 		return false;
 	}
-	return heatSourceForm.data.typeOfHeatSource === "heatPump"
-		&& heatSourceForm.data.isConnectedToHeatNetwork === true
-		&& !!heatSourceForm.data.associatedHeatNetworkId;
+
+	return (
+		heatSourceForm.data.typeOfHeatSource === "heatPump" &&
+		heatSourceForm.data.typeOfHeatPump === "booster" &&
+		!!heatSourceForm.data.associatedHeatNetworkId
+	);
 }
 
 const heatSourceMaxNumberOfItems = computed(() => {

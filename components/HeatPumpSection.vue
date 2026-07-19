@@ -51,31 +51,36 @@ const greaterThanZero = (node: FormKitNode) => {
 		:page-index="index"
 		@product-loaded="onProductLoaded"
 	/>
-	<FormKit 
+	<!-- <FormKit 
 		id="isConnectedToHeatNetwork"
 		type="govBoolean"
 		:name="'isConnectedToHeatNetwork'"
 		:label="'Is this heat pump connected to a heat network?'"
 		:value="model.isConnectedToHeatNetwork"
-	/>
+	/> -->
 	<FormKit
-		v-if="model.isConnectedToHeatNetwork"
+		v-if="model.typeOfHeatPump === 'booster'"
 		id="associatedHeatNetwork"
 		type="govRadios"
 		label="Associated heat network"
 		help="Select the heat network that this heat pump is connected to"
 		:options="heatNetworkOptions"
+		validation="required"
 		name="associatedHeatNetworkId"
 		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
-	>		<div v-if="!hasHeatNetworkOptions">
-		<p class="govuk-error-message">No heat networks added.</p>
-		<NuxtLink :to="getUrl('spaceHeating')" class="govuk-link gov-radios-add-link">
-			Click here to add a heat network
-		</NuxtLink>
-	</div>
+	>	
+		<GovDetails summary-text="Help with this input">
+			<p class="govuk-body">If you have added a booster heat pump, the heat network needs to be a 5th generation (ambient loop) communal heat network.</p>
+		</GovDetails>	
+		<div v-if="!hasHeatNetworkOptions">
+			<p class="govuk-error-message">No heat networks added.</p>
+			<NuxtLink :to="getUrl('heatNetworksCreate')" class="govuk-link gov-radios-add-link">
+				Click here to add a heat network
+			</NuxtLink>
+		</div>
 	</FormKit>
 	<FieldsEnergySupplies
-		v-if="model.isConnectedToHeatNetwork === false"
+		v-if="model.typeOfHeatPump !== 'booster'"
 		id="energySupply"
 		name="energySupply"
 		label="Energy supply"

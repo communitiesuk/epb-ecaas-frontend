@@ -118,7 +118,6 @@ describe("Space heating summary page", () => {
 				typeOfHeatPump: "airSource",
 				productReference: "HEAT_PUMP_SMALL",
 				maxFlowTemp: unitValue(17, celsius),
-				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
 			};
 			const store = useEcaasStore();
@@ -139,7 +138,6 @@ describe("Space heating summary page", () => {
 				"Product reference": "HEAT_PUMP_SMALL",
 				"Product name": "Mock product",
 				"Maximum flow temperature": `17 ${celsius.suffix}`,
-				"Is connected to a heat network": "No",
 				"Energy supply": "Electricity",
 			};
 
@@ -165,7 +163,6 @@ describe("Space heating summary page", () => {
 				typeOfHeatPump: "booster",
 				productReference: "BOOSTER_PUMP",
 				maxFlowTemp: unitValue(35, celsius),
-				isConnectedToHeatNetwork: true,
 				associatedHeatNetworkId: "network-1",
 			};
 			const store = useEcaasStore();
@@ -189,7 +186,6 @@ describe("Space heating summary page", () => {
 				"Product reference": "BOOSTER_PUMP",
 				"Product name": "Mock product",
 				"Maximum flow temperature": `35 ${celsius.suffix}`,
-				"Is connected to a heat network": "Yes",
 				"Associated heat network": "Heat network 1",
 			};
 

@@ -112,11 +112,17 @@ const heatPumpSummary: SummarySection = {
 	label: "Heat pumps",
 	data:
 		heatPumps.map(({ data: heatSource }) => {
-			const heatNetWorkFields = "isConnectedToHeatNetwork" in heatSource && heatSource.isConnectedToHeatNetwork === true ? {
-				"Associated heat network": store.spaceHeating.heatNetworks.data.find(heatNetwork => heatNetwork.data.id === heatSource.associatedHeatNetworkId)?.data.name ?? emptyValueRendering,
-			} : {
-				"Energy supply": "energySupply" in heatSource && (heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: false }>).energySupply ? energySupplyOptions[(heatSource as Extract<HeatSourceData, { isConnectedToHeatNetwork: false }>).energySupply] : emptyValueRendering,
-			};
+			const heatNetWorkFields = "typeOfHeatPump" in heatSource && heatSource.typeOfHeatPump === "booster"
+				? {
+					"Associated heat network": store.spaceHeating.heatNetworks.data.find(
+						heatNetwork => heatNetwork.data.id === heatSource.associatedHeatNetworkId,
+					)?.data.name ?? emptyValueRendering,
+				}
+				: {
+					"Energy supply": "energySupply" in heatSource && heatSource.energySupply
+						? energySupplyOptions[heatSource.energySupply]
+						: emptyValueRendering,
+				};
 			const summary = {
 				Name: show(heatSource.name),
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
@@ -124,7 +130,6 @@ const heatPumpSummary: SummarySection = {
 				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
 				"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
-				"Is connected to a heat network": "isConnectedToHeatNetwork" in heatSource ? displayBoolean(heatSource.isConnectedToHeatNetwork) : emptyValueRendering,
 				...heatNetWorkFields,
 			};
 			return summary;

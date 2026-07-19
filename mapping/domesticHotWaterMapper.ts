@@ -205,46 +205,6 @@ function getActualHeatSourceFromDHWHeatSource(dhwHeatSource: DomesticHotWaterHea
 	return dhwHeatSource;
 }
 
-function getAssociatedHeatNetwork(state: ResolvedState, associatedHeatNetworkId: string) {
-	return state.spaceHeating.heatNetworks?.find(network => network.id === associatedHeatNetworkId);
-}
-
-function getHeatNetworkFields(
-	state: ResolvedState,
-	associatedHeatNetworkId: string,
-) {
-	const network = getAssociatedHeatNetwork(state, associatedHeatNetworkId);
-
-	if (!network) {
-		throw new Error(
-			`Expected associated heat network ${associatedHeatNetworkId} to exist`,
-		);
-	}
-
-	const heatNetworkTypeMap = {
-		communalHeatNetwork: "communal",
-		sleevedDistrictHeatNetwork: "sleeved DHN",
-		unsleevedDistrictHeatNetwork: "unsleeved DHN",
-	} as const;
-
-	if (!network.name) {
-		throw new Error("Expected associated heat network to have a name");
-	}
-
-	if (!network.subHeatNetworkName) {
-		throw new Error(
-			"Expected associated heat network to have a sub heat network name",
-		);
-	}
-
-	return {
-		is_heat_network: true as const,
-		heat_network_type: heatNetworkTypeMap[network.typeOfHeatNetwork],
-		heat_network_reference: network.name,
-		sub_heat_network_name: network.subHeatNetworkName,
-	};
-}
-
 function mapHeatSourceWet(
 	heatSource: Exclude<
 		ReturnType<typeof getActualHeatSourceFromDHWHeatSource>,
@@ -282,7 +242,7 @@ function mapHeatSourceWet(
 						type: "HeatPump" as const,
 						product_reference: heatSource.productReference,
 						EnergySupply: defaultElectricityEnergySupplyName,
-						...(heatSource.isConnectedToHeatNetwork
+						...(heatSource.typeOfHeatPump === "booster"
 							? getHeatNetworkFields(
 								state,
 								heatSource.associatedHeatNetworkId,

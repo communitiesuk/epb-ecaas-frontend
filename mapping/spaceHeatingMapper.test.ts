@@ -26,7 +26,6 @@ describe("Space heating - heat sources", () => {
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "airSource",
 			productReference: "1234",
-			isConnectedToHeatNetwork: false,
 			energySupply: "electricity",
 			maxFlowTemp: unitValue(30, celsius),
 		};
@@ -37,8 +36,7 @@ describe("Space heating - heat sources", () => {
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "booster",
 			productReference: "5678",
-			isConnectedToHeatNetwork: false,
-			energySupply: "electricity",
+			associatedHeatNetworkId: "heatNetwork123",
 			maxFlowTemp: unitValue(30, celsius),
 		};
 		const store = useEcaasStore();
@@ -74,17 +72,17 @@ describe("Space heating - heat sources", () => {
 					typeOfHeatNetwork: "communalHeatNetwork",
 					productReference: "9999",
 					subHeatNetworkName: "subHeatNetwork1Name",
+					boosterHeatPump: true,
 				};
 
-				const heatPumpConnectedToNetwork: HeatSourceData = {
+				const boosterHeatPumpConnectedToNetwork: HeatSourceData = {
 					id: "heatPump3Id",
 					name: "Heat pump on network",
 					typeOfHeatSource: "heatPump",
-					typeOfHeatPump: "airSource",
+					typeOfHeatPump: "booster",
 					productReference: "9999",
-					isConnectedToHeatNetwork: true,
-					associatedHeatNetworkId: "heatNetwork1Id",
 					maxFlowTemp: unitValue(30, celsius),
+					associatedHeatNetworkId: "heatNetwork1Id",
 				};
 				store.$patch({
 					spaceHeating: {
@@ -93,22 +91,24 @@ describe("Space heating - heat sources", () => {
 							complete: true,
 						},
 						heatSource: {
-							data: [{ data: heatPumpConnectedToNetwork, complete: true }],
+							data: [{ data: boosterHeatPumpConnectedToNetwork, complete: true }],
 							complete: true,
 						},
 					},
 				});
 				const expectedHeatPump: SchemaHeatSourceWetHeatPumpInput = {
 					type: "HeatPump",
-					product_reference: heatPumpConnectedToNetwork.productReference,
-					EnergySupply: defaultElectricityEnergySupplyName,
+					product_reference: "9999",
+					EnergySupply: "mains elec",
 					is_heat_network: true,
 					heat_network_type: "communal",
+					heat_network_reference: "9999",
+					sub_heat_network_name: "subHeatNetwork1Name",
 				};
 				const resolvedState = resolveState(store.$state);
 				const actual = mapHeatPumps(resolvedState);
 				expect(actual).toEqual({
-					[heatPumpConnectedToNetwork.name]: expectedHeatPump,
+					[boosterHeatPumpConnectedToNetwork.name]: expectedHeatPump,
 				});
 			});
 
@@ -134,21 +134,28 @@ describe("Space heating - heat sources", () => {
 				});
 			});
 
-			test("handles multiple heat pumps", () => {
-				const expectedHeatPump1: SchemaHeatSourceWetHeatPumpInput = {
-					type: "HeatPump",
-					product_reference: heatPumpWithProductReference1.productReference,
-					EnergySupply: defaultElectricityEnergySupplyName,
-					is_heat_network: false,
+
+			test("handles multiple heat pumps including a booster heat pump", () => {
+				const heatNetwork: HeatNetworkData = {
+					id: "heatNetwork123",
+					name: "Communal heat network",
+					typeOfHeatNetwork: "communalHeatNetwork",
+					subHeatNetworkName: "subHeatNetwork1Name",
+					productReference: "9999",
+					boosterHeatPump: true,
 				};
-				const expectedHeatPump2: SchemaHeatSourceWetHeatPumpInput = {
-					type: "HeatPump",
-					product_reference: heatPumpWithProductReference2.productReference,
-					EnergySupply: defaultElectricityEnergySupplyName,
-					is_heat_network: false,
-				};
+				
 				store.$patch({
 					spaceHeating: {
+						heatNetworks: {
+							data: [
+								{
+									data: heatNetwork,
+									complete: true,
+								},
+							],
+							complete: true,
+						},
 						heatSource: {
 							data: [
 								{ data: heatPumpWithProductReference1, complete: true },
@@ -158,6 +165,23 @@ describe("Space heating - heat sources", () => {
 						},
 					},
 				});
+
+				const expectedHeatPump1: SchemaHeatSourceWetHeatPumpInput = {
+					type: "HeatPump",
+					product_reference: heatPumpWithProductReference1.productReference,
+					EnergySupply: defaultElectricityEnergySupplyName,
+					is_heat_network: false,
+				};
+
+				const expectedHeatPump2: SchemaHeatSourceWetHeatPumpInput = {
+					type: "HeatPump",
+					product_reference: heatPumpWithProductReference2.productReference,
+					EnergySupply: defaultElectricityEnergySupplyName,
+					is_heat_network: true,
+					heat_network_type: "communal",
+					heat_network_reference: "9999",
+					sub_heat_network_name: "subHeatNetwork1Name",
+				};
 
 				const expectedForSchema = {
 					[heatPumpWithProductReference1.name]: expectedHeatPump1,
@@ -169,6 +193,59 @@ describe("Space heating - heat sources", () => {
 
 				const actual = mapHeatPumps(resolvedState);
 				expect(actual).toEqual(expectedForSchema);
+			});
+
+			test("throws an error when booster heat pump has no associated heat network", () => {
+				const invalidBoosterHeatPump: HeatSourceData = {
+					id: "booster-no-network",
+					name: "Booster heat pump",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "booster",
+					productReference: "BOOSTER-123",
+					maxFlowTemp: unitValue(30, celsius),
+				} as HeatSourceData;
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: invalidBoosterHeatPump, complete: true }],
+							complete: true,
+						},
+					},
+				});
+
+				expect(() => mapHeatPumps(resolveState(store.$state)))
+					.toThrow();
+			});
+
+			test("throws an error when booster heat pump references missing heat network", () => {
+				const boosterHeatPump: HeatSourceData = {
+					id: "booster-id",
+					name: "Booster heat pump",
+					typeOfHeatSource: "heatPump",
+					typeOfHeatPump: "booster",
+					productReference: "BOOSTER-123",
+					associatedHeatNetworkId: "missing-network",
+					maxFlowTemp: unitValue(30, celsius),
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: boosterHeatPump, complete: true }],
+							complete: true,
+						},
+						heatNetworks: {
+							data: [],
+							complete: true,
+						},
+					},
+				});
+
+				expect(() => mapHeatPumps(resolveState(store.$state)))
+					.toThrow(
+						"Expected associated heat network missing-network to exist",
+					);
 			});
 		});
 	});
@@ -390,7 +467,7 @@ describe("Space heating - heat sources", () => {
 			subHeatNetworkName: "shn1",
 		};
 		test("maps HIU connected to heat network", () => {
-			const hiuConnected = { ...hiu, isConnectedToHeatNetwork: true, associatedHeatNetworkId: "hn2" };
+			const hiuConnected = { ...hiu, associatedHeatNetworkId: "hn2" };
 			store.$patch({
 				spaceHeating: {
 					heatNetworks: {
@@ -411,7 +488,7 @@ describe("Space heating - heat sources", () => {
 					is_heat_network: true,
 					heat_network_type: "sleeved DHN",
 					EnergySupply: defaultElectricityEnergySupplyName,
-					heat_network_reference: "hn2",
+					heat_network_reference: "SHDN-123",
 					sub_heat_network_name: heatNetwork.subHeatNetworkName,
 				},
 			};

@@ -56,7 +56,6 @@ const existingHeatPumpSpaceHeating1: HeatSourceData = {
 	typeOfHeatPump: "airSource",
 	productReference: "HEATPUMP-LARGE",
 	maxFlowTemp: unitValue(7, celsius),
-	isConnectedToHeatNetwork: false,
 	energySupply: "electricity",
 };
 const existingHeatPumpSpaceHeating2: HeatSourceData = {
@@ -66,7 +65,6 @@ const existingHeatPumpSpaceHeating2: HeatSourceData = {
 	typeOfHeatPump: "airSource",
 	productReference: "HEATPUMP-LARGE",
 	maxFlowTemp: unitValue(7, celsius),
-	isConnectedToHeatNetwork: false,
 	energySupply: "electricity",
 };
 
@@ -87,7 +85,6 @@ const dhwWithNewHeatPump: DomesticHotWaterHeatSourceData = {
 	typeOfHeatPump: "airSource",
 	productReference: "HEATPUMP-SMALL",
 	maxFlowTemp: unitValue(7, celsius),
-	isConnectedToHeatNetwork: false,
 	energySupply: "electricity",
 };
 
@@ -102,7 +99,6 @@ const hybridHeatPump: DomesticHotWaterHeatSourceData = {
 	productReference: "1000",
 	packageProductIds: ["1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b"],
 	maxFlowTemp: unitValue(7, celsius),
-	isConnectedToHeatNetwork: false,
 	energySupply: "electricity",
 };
 
@@ -159,7 +155,6 @@ describe("Heat Source Page", () => {
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "airSource",
 			productReference: "HEATPUMP-SMALL",
-			isConnectedToHeatNetwork: false,
 			energySupply: "electricity",
 			maxFlowTemp: unitValue(30, celsius),
 		};
@@ -1515,8 +1510,7 @@ describe("Heat Networks", () => {
 		typeOfHeatSource: "heatPump",
 		typeOfHeatPump: "booster",
 		productReference: "HEATPUMP-SMALL",
-		isConnectedToHeatNetwork: false,
-		energySupply: "electricity",
+		associatedHeatNetworkId: "463c94f6-566c-49b2-af27-57e5c68b5c20",
 		maxFlowTemp: unitValue(30, "celsius"),
 	};
 

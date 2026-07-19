@@ -23,7 +23,6 @@ const selectProduct = async (product: DisplayProduct) => {
 		heatNetworkData.boosterHeatPump = product.boosterHeatPump;
 	});
 
-
 	navigateTo(getUrl("heatNetworks").replace(":heatNetwork", `${index}`));
 };
 </script>

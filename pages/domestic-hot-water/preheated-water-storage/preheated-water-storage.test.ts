@@ -60,7 +60,6 @@ describe("preheated water storage", () => {
 			productReference: "1234",
 			typeOfHeatPump: "airSource",
 			typeOfHeatSource: "heatPump",
-			isConnectedToHeatNetwork: false,
 			energySupply: "electricity",
 			maxFlowTemp: unitValue(30, celsius),
 		},
