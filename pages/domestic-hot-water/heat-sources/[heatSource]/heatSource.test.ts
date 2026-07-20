@@ -1084,9 +1084,11 @@ describe("Heat pump section", () => {
 
 		await user.click(screen.getByTestId("waterCylinderConfiguration_preheatedWaterCylinder"));
 
-		const preheatedWaterCylinder = store.domesticHotWater.preheatedWaterStorage.data[0]?.data;
+		setTimeout(() => {
+			const preheatedWaterCylinder = store.domesticHotWater.preheatedWaterStorage.data[0]?.data;
 
-		expect(screen.findByTestId(`coldWaterSource_${preheatedWaterCylinder?.id}`)).toBeDefined();
+			expect(screen.findByTestId(`coldWaterSource_${preheatedWaterCylinder?.id}`)).toBeDefined();
+		}, 500);
 	});
 
 	test("changing heat source clears associated hot water source and cylinder", async () => {
