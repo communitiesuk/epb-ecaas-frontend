@@ -35,6 +35,8 @@ function handleChooseProduct() {
 					typeOfHeatNetwork: model.value.typeOfHeatNetwork,
 					productReference: model.value.productReference,
 					subHeatNetworkName: model.value.subHeatNetworkName,
+					boosterHeatPump: model.value.boosterHeatPump,
+
 				},
 			};
 
@@ -54,12 +56,13 @@ const saveForm = (fields: HeatNetworkData) => {
 				typeOfHeatNetwork: fields.typeOfHeatNetwork,
 				productReference: fields.productReference,
 				subHeatNetworkName: fields.subHeatNetworkName,
+				boosterHeatPump: fields.boosterHeatPump,
 			},
 			complete: true,
 		};
 		heatNetworks.complete = false;
 	});
-
+	
 	navigateTo("/space-heating");
 };
 

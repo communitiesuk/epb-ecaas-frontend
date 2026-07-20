@@ -2153,7 +2153,5 @@ describe("heatSource", () => {
 			expect(heatSourceRadios.length).toBe(1);
 			expect(screen.findByLabelText("Booster heat pump"));
 		});
-
-		
 	});
 });

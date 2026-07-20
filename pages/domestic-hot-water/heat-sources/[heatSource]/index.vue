@@ -64,6 +64,13 @@ function removePackagedProducts(packageProductIds: string[]) {
 	});
 }
 
+function isHeatPumpHeatSource(
+	heatSource: DomesticHotWaterHeatSourceData | undefined,
+): heatSource is HeatPumpModelType {
+	return heatSource?.isExistingHeatSource === false
+		&& heatSource.typeOfHeatSource === "heatPump";
+}
+
 const saveForm = () => {
 	store.$patch((state) => {
 		state.domesticHotWater.heatSources.data[index]!.complete = true;
@@ -103,6 +110,10 @@ watch(
 				id: initialData.id,
 				typeOfHeatSource: newData.typeOfHeatSource,
 			} as DomesticHotWaterHeatSourceData;
+		}
+
+		if (isHeatPumpHeatSource(model.value) && isCommunalHeatNetworkWithBoosterHeatPump()) {
+			model.value.typeOfHeatPump = "booster";
 		}
 
 		if (model.value.isExistingHeatSource === false && model.value.typeOfHeatSource && model.value && !model.value.name) {
