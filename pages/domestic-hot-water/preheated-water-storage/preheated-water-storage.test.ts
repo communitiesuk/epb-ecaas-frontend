@@ -35,17 +35,6 @@ describe("preheated water storage", () => {
 		},
 	};
 
-	const preheatedSmartWaterTank: EcaasForm<PreheatedSmartHotWaterTankData> = {
-		data: {
-			typeOfWaterStorage: "smartHotWaterTank",
-			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
-			name: "Smart water cylinder 1",
-			productReference: "42",
-			heaterPosition: 0.8,
-			coldWaterSource: "mainsWater",
-		},
-	};
-
 	afterEach(() => {
 		store.$reset();
 	});
@@ -90,23 +79,8 @@ describe("preheated water storage", () => {
 		await user.tab();
 	};
 
-	const populateValidFormSHWT = async () => {
-		await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
-		await user.type(screen.getByTestId("name"), " 1");
-		await user.click(screen.getByTestId("chooseAProductButton"));
-		// Have to simulate product selection by directly setting the product reference in the store - the other page won't load in a unit test
-		await user.type(screen.getByTestId("heaterPosition"), "0.8");
-		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
-		await user.tab();
-	};
-
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(PreheatedWaterStorage);
-
-		await user.click(screen.getByTestId("saveAndComplete"));
-
-		//shared properties
-		expect((await screen.findByTestId("typeOfWaterStorage_error"))).toBeDefined();
 
 		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -114,13 +88,6 @@ describe("preheated water storage", () => {
 		// standard water cylinder specific
 		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
 		expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
-		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
-
-		await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
-		await user.click(screen.getByTestId("saveAndComplete"));
-
-		// smart water cylinder specific
-		expect((await screen.findByTestId("selectSmartHotWaterTank_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
 
 		expect((await screen.findByTestId("coldWaterSource_error"))).toBeDefined();
@@ -243,119 +210,6 @@ describe("preheated water storage", () => {
 
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value)
 				.toBe("Standard water cylinder");
-		});
-	});
-
-	describe("Smart Hot Water Tank", () => {
-		test("navigate to pcdb product select page when choose a product button is clicked", async () => {
-			await renderSuspended(PreheatedWaterStorage, {
-				route: {
-					path: "/domestic-hot-water/preheated-water-storage/0",
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
-			await user.click(screen.getByTestId("chooseAProductButton"));
-
-			const chooseProductButton = await screen.findByTestId<HTMLAnchorElement>("chooseAProductButton");
-			expect(chooseProductButton).toBeDefined();
-			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/preheated-water-storage/0/smart-hot-water-tank");
-		});
-
-		test("data is saved to store state when form is valid", async () => {
-			addHeatPumpStoreData();
-
-			const mockedId = preheatedSmartWaterTank.data.id as unknown as Buffer;
-			vi.mocked(uuidv4).mockReturnValue(mockedId);
-
-			await renderSuspended(PreheatedWaterStorage);
-
-			await populateValidFormSHWT();
-			store.$patch(state => {
-				(state.domesticHotWater.preheatedWaterStorage.data[0]!.data as PreheatedSmartHotWaterTankData)
-					.productReference = "42";
-			});
-
-			await renderSuspended(PreheatedWaterStorage);
-
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			const { data } = store.domesticHotWater.preheatedWaterStorage;
-
-			expect(data[0]?.data).toEqual(preheatedSmartWaterTank.data);
-			expect(data[0]?.complete).toEqual(true);
-		});
-
-		test("form is prepopulated when data exists in state", async () => {
-			mockFetch.mockReturnValue({
-				data: ref({
-					brandName: "Test",
-					modelName: "Large Smart Hot Water Tank",
-					modelQualifier: "SHWTLARGE",
-				}),
-			});
-
-			store.$patch({
-				domesticHotWater: {
-					preheatedWaterStorage: {
-						data: [{ ...preheatedSmartWaterTank }],
-					},
-				},
-			});
-
-			await renderSuspended(PreheatedWaterStorage);
-
-			expect(
-				(await screen.findByTestId<HTMLInputElement>(`typeOfWaterStorage_smartHotWaterTank`))
-					.checked,
-			).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("name")).value)
-				.toBe(preheatedSmartWaterTank.data.name);
-
-			expect((await screen.findByTestId("productData_productReference")).textContent)
-				.toBe(preheatedSmartWaterTank.data.productReference);
-
-			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value)
-				.toBe(preheatedSmartWaterTank.data.heaterPosition.toString());
-		});
-
-		test("navigates to domestic hot water page when valid form is completed", async () => {
-			await renderSuspended(PreheatedWaterStorage);
-
-			await populateValidFormSHWT();
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
-		});
-
-		test("name defaults to 'Smart water cylinder' when Smart Water Cylinder is selected'", async () => {
-			await renderSuspended(PreheatedWaterStorage);
-
-			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
-
-			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Smart water cylinder");
-		});
-
-		test("Renders HEM default product warning when default product is selected", async () => {
-			mockFetch.mockReturnValue({
-				data: ref({
-					brandName: "HEM Default",
-					modelName: "Large Smart Hot Water Tank",
-					modelQualifier: "SHWTLARGE",
-				}),
-			});
-
-			store.$patch({
-				domesticHotWater: {
-					preheatedWaterStorage: {
-						data: [{ ...preheatedSmartWaterTank }],
-					},
-				},
-			});
-	
-			await renderSuspended(PreheatedWaterStorage);
-	
-			expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 		});
 	});
 });

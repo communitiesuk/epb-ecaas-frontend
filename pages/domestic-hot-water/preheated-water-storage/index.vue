@@ -3,28 +3,24 @@ import { litre, type Volume } from "~/utils/units/volume";
 import type { PreheatedWaterStorageData, WaterStorageData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
 import { v4 as uuidv4 } from "uuid";
-import { hasPackagedProduct, waterStorageTypes } from "#imports";
-import type { Product, AnyPcdbProduct } from "~/pcdb/pcdb.types";
+import { hasPackagedProduct } from "#imports";
 
 const title = "Preheated water cylinder";
 const store = useEcaasStore();
-const route = useRoute();
 const { autoSaveForm } = useForm();
 
 const { mounted } = useMounted();
 
 const preheatedStoreData = store.domesticHotWater.preheatedWaterStorage.data;
 const preheatedData = preheatedStoreData[0] as EcaasForm<PreheatedWaterStorageData>;
-const model = ref(preheatedData?.data);
+const model = ref<PreheatedWaterStorageData>({
+	...preheatedData?.data,
+	typeOfWaterStorage: "hotWaterCylinder",
+	name: preheatedData?.data.name ?? waterStorageTypes.hotWaterCylinder,
+
+} as PreheatedWaterStorageData);
+
 const id = preheatedData?.data.id ?? uuidv4();
-
-const productBrandName = ref<string | undefined>();
-const packagedProduct = ref<Product | undefined>();
-
-if (hasPackagedProduct(model.value)) {
-	const packagedProductData = await useProductData(model.value.packagedProductReference!);
-	packagedProduct.value = packagedProductData ?? undefined;
-}
 
 const saveForm = (fields: PreheatedWaterStorageData) => {
 	store.$patch((state) => {
@@ -83,13 +79,6 @@ autoSaveForm<PreheatedWaterStorageData>(model, (state, newData) => {
 	state.domesticHotWater.preheatedWaterStorage.data = [newData];
 });
 
-const isProductSelected = () => {
-	if (preheatedData?.data.typeOfWaterStorage !== "smartHotWaterTank") {
-		return false;
-	}
-	return preheatedData?.data.productReference ? true : false;
-};
-
 watch(
 	() => model.value?.typeOfWaterStorage,
 	(newType, oldType) => {
@@ -109,11 +98,9 @@ watch(
 	},
 );
 
-function handleProductLoaded(product: AnyPcdbProduct) {
-	if (hasModelDetails(product)) {
-		productBrandName.value = product.brandName;
-	}
-}
+const waterStorageOptions: Record<Exclude<WaterStorageType, "smartHotWaterTank">, string> = {
+	"hotWaterCylinder": "Standard water cylinder",
+};
 
 const wwhrs = store.domesticHotWater.wwhrs.data
 	.filter(x => x.data.wwhrsType === "System A" || x.data.wwhrsType === "System C")
@@ -128,12 +115,6 @@ const wwhrsMap = new Map(wwhrs);
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<PackagedProductInset
-		v-if="hasPackagedProduct(model) && packagedProduct"
-		:model="model"
-		:packaged-product="packagedProduct"
-		type="hot water cylinder"
-	/>
 	<FormKit
 		v-model="model"
 		type="form"
@@ -147,7 +128,7 @@ const wwhrsMap = new Map(wwhrs);
 				id="typeOfWaterStorage"
 				name="typeOfWaterStorage"
 				type="govRadios"
-				:options="waterStorageTypes"
+				:options="waterStorageOptions"
 				label="Type of pre-heated water cylinder"
 				validation="required"
 				:disabled="hasPackagedProduct(model)"
@@ -160,21 +141,6 @@ const wwhrsMap = new Map(wwhrs);
 				help="Provide a name for this element so that it can be identified later"
 				name="name"
 				validation="required"
-			/>
-			<FormKit
-				v-if="model.typeOfWaterStorage === 'smartHotWaterTank'"
-				id="selectSmartHotWaterTank"
-				type="govPcdbProduct"
-				label="Select a smart hot water tank"
-				name="productReference"
-				:validation-rules="{ isProductSelected }"
-				validation="required | isProductSelected"
-				help="Select the smart hot water tank from the PCDB using the button below."
-				:selected-product-reference="model.productReference"
-				:selected-product-type="model.typeOfWaterStorage"
-				:page-url="route.fullPath"
-				:page-index="0"
-				:on-product-loaded="handleProductLoaded"
 			/>
 			<template v-if="model.typeOfWaterStorage === 'hotWaterCylinder'">
 				<FormKit
@@ -222,7 +188,6 @@ const wwhrsMap = new Map(wwhrs);
 				name="coldWaterSource"
 				validation="required"
 			/>
-			<HemDefaultProductWarning :brand-names="[productBrandName]" />
 			<div class="govuk-button-group">
 				<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 				<GovButton :href="getUrl('domesticHotWater')" secondary>Save progress</GovButton>
