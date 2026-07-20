@@ -88,7 +88,7 @@ const saveForm = (fields: LinearThermalBridgeData) => {
 				reference: fields.reference,
 				...(fields.typeOfThermalBridge === "E5" || fields.typeOfThermalBridge === "E6" || fields.typeOfThermalBridge === "E22" ? {
 					typeOfThermalBridge: fields.typeOfThermalBridge,
-					associatedItemId: fields.associatedItemId,
+					associatedItemId: fields.associatedItemId ?? "none",
 				} : {
 					typeOfThermalBridge: fields.typeOfThermalBridge,
 				}),
@@ -108,15 +108,15 @@ autoSaveElementForm<LinearThermalBridgeData>({
 	onPatch: (state, newData, index) => {
 		if (!newData.data.name) {
 			newData.data.name = getDefaultName(newData.data.typeOfThermalBridge) ?? defaultName;
-			
-			if (newData.data.typeOfThermalBridge === "E6") {
-				newData.data.associatedItemId ??= "none";
-			}
 
 			model.value = {
 				...model.value,
 				name: newData.data.name,
 			};
+		}
+
+		if (newData.data.typeOfThermalBridge === "E6") {
+			newData.data.associatedItemId ??= "none";
 		}
 
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[index] = newData;
