@@ -29,6 +29,13 @@ describe("Heat Networks", () => {
 		},
 	};
 
+	const heatNetworkNoType: Partial<HeatNetworkData> = {
+		id: "heat_network_no_type",
+		name: "Heat Network No Type",
+		productReference: "1000",
+		boosterHeatPump: true,
+	};
+
 	afterEach(() => {
 		store.$reset();
 		//navigateToMock.mockReset();
@@ -238,7 +245,85 @@ describe("Heat Networks", () => {
 		expect((store.spaceHeating.heatNetworks.data.length)).toBe(1);
 		expect((store.spaceHeating.heatNetworks.data[0]?.data.name)).toBe("Heat network");
 	});
-    
+
+	test("shows error message when heat network is added with booster heat pump flag and type of heat network selected is a sleeved district", async () => {
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [{ data: heatNetworkNoType, complete: false }],
+				},
+			},
+		});
+
+		await renderSuspended(HeatNetworks, {
+			route: {
+				params: { "heatNetwork": "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfHeatNetwork_sleevedDistrictHeatNetwork"));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const errorSummary = await screen.findByTestId("heatNetworksErrorSummary");
+		expect(errorSummary.textContent).toContain(
+			"The heat network selected only allows for booster heat pumps as a heat source, and so communal heat network must be selected as the type.",
+		);
+
+		const link = errorSummary.querySelector("a");
+		expect(link?.getAttribute("href")).toContain("typeOfHeatNetwork");
+	});
+
+	test("shows error message when heat network is added with booster heat pump flag and type of heat network selected is a unsleeved district", async () => {
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [{ data: heatNetworkNoType, complete: false }],
+				},
+			},
+		});
+
+		await renderSuspended(HeatNetworks, {
+			route: {
+				params: { "heatNetwork": "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfHeatNetwork_unsleevedDistrictHeatNetwork"));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const errorSummary = await screen.findByTestId("heatNetworksErrorSummary");
+
+		expect(errorSummary.textContent).toContain(
+			"The heat network selected only allows for booster heat pumps as a heat source, and so communal heat network must be selected as the type.",
+		);
+
+		const link = errorSummary.querySelector("a");
+
+		expect(link?.getAttribute("href")).toContain("typeOfHeatNetwork");
+	});
+
+	test("does not show error message when heat network is added with booster heat pump flag and type of heat network selected is a communal", async () => {
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [{ data: heatNetworkNoType, complete: false }],
+				},
+			},
+		});
+
+		await renderSuspended(HeatNetworks, {
+			route: {
+				params: { "heatNetwork": "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfHeatNetwork_communalHeatNetwork"));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(screen.queryByTestId("heatNetworksErrorSummary")).toBeNull();
+		expect(store.spaceHeating.heatNetworks.data[0]?.complete).toBe(true);
+	});
+
 	describe("partially saving data", () => {
 		test("updated heat network form data is automatically saved to store ", async () => {
     
