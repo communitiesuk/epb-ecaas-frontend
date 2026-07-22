@@ -7,6 +7,7 @@ import { productTypeMap, type EcaasForm, type HeatSourceData, type HeatSourcePro
 
 definePageMeta({ layout: false });
 
+const store = useEcaasStore();
 const route = useRoute();
 const pageId = kebabToCamelCase(route.params.products as string);
 
@@ -25,7 +26,29 @@ const { data: { value } } = await useFetch("/api/products", {
 const { title, index, searchModel, searchData } = useProductsPage("heatSource");
 const { selectHeatSourceProduct } = useSelectHeatSourceProduct(value?.data ?? [], heatSourceProductType);
 
-const { pagination } = searchData(value?.data ?? []);
+const heatNetwork = computed(() =>
+	store.spaceHeating.heatNetworks.data[index]?.data,
+);
+
+
+const filteredProducts = computed(() => {
+	const products = value?.data ?? [];
+
+	const requiresBoosterHeatPump =
+		heatNetwork.value?.typeOfHeatNetwork === "communalHeatNetwork" &&
+		heatNetwork.value?.boosterHeatPump === true;
+
+
+	if (requiresBoosterHeatPump) {
+		return products.filter(
+			product => product.technologyType === "BoosterHeatPump",
+		);
+	}
+
+	return products;
+});
+
+const { pagination } = searchData(filteredProducts.value);
 
 const selectProduct = async (product: DisplayProduct) => {
 	const redirectUrl = page("heatSource").url.replace(":heatSource", `${index}`);

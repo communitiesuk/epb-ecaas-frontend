@@ -50,6 +50,13 @@ describe("Heat source products page", () => {
 				technologyType: "HybridHeatPump",
 				boilerProductID: "2000",
 			},
+			{
+				displayProduct: true,
+				id: "1005",
+				brandName: "Test",
+				modelName: "Booster Heat Pump",
+				technologyType: "BoosterHeatPump",
+			},
 		],
 	};
 
@@ -188,48 +195,45 @@ describe("Heat source products page", () => {
 		).toEqual(expect.objectContaining({ needsSpecifiedLocation: false }));
 	});
 
-	// test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
+	test("only shows booster heat pumps when a communal heat network has been added with a booster heat pump flag", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-pump",
+			},
+			path: "/0/heat-pump",
+		});
 
-	// 	mockRoute.mockReturnValue({
-	// 		params: {
-	// 			heatSource: "3",
-	// 			products: "heat-network",
-	// 		},
-	// 		path: "/3/heat-network",
-	// 	});
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [
+						{
+							data: {
+								typeOfHeatNetwork: "communalHeatNetwork",
+								boosterHeatPump: true,
+							},
+						},
+					],
+				},
+			},
+		});
 
-	// 	mockRoute.mockReturnValue({
-	// 		params: {
-	// 			heatSource: "3",
-	// 			products: "heat-network",
-	// 			id: "1000",
-	// 		},
-	// 		path: "/3/heat-network/1000",
-	// 	});
-	// 	const product = {
-	// 		id: "1000",
-	// 		brandName: "Test",
-	// 		modelName: "Heat network",
-	// 		modelQualifier: "HNSMALL",
-	// 		technologyType: "HeatNetworks",
-	// 	};
-	// 	const heatNetworks = {
-	// 		data: [product],
-	// 	};
-	// 	mockFetch.mockReturnValueOnce({
-	// 		data: ref(heatNetworks),
-	// 	});	
-	// 	mockFetch.mockReturnValueOnce({
-	// 		data: ref({
-	// 			...product,
-	// 			fifthGHeatNetwork: 1,
-	// 		}),
-	// 	});	
+		mockFetch
+			.mockReturnValueOnce({
+				data: ref({ ...MOCKED_HEAT_PUMPS }),
+			})
+			.mockReturnValueOnce({
+				data: ref({ data: [] }),
+			});
 
-	// 	await renderSuspended(Products);
-	// 	await user.click(screen.getByTestId("selectProductButton_0"));
-	// 	expect((store.domesticHotWater.heatSources.data[3]!.data as { hasBoosterHeatPump: boolean }).hasBoosterHeatPump).toBe(true);
-	// });
+		await renderSuspended(Products);
+
+		expect(screen.queryByText("Small Heat Pump")).toBeNull();
+		expect(screen.queryByText("Medium Heat Pump")).toBeNull();
+		expect(screen.queryByText("Large Heat Pump")).toBeNull();
+		expect(screen.getByText("Booster Heat Pump")).toBeDefined();
+	});
 
 	test("makes additional fetch for hot water only heat pumps if pageId is heatPump", async () => {
 		mockRoute.mockReturnValue({

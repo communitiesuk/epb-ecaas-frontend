@@ -29,6 +29,7 @@ describe("Heat Network Products Page", () => {
 				technologyType: "HeatNetworks",
 				subheatNetworkName: "Test subnetwork 1",
 				displayProduct: true,
+				boosterHeatPump: false,
 			},
 			{
 				id: "2000",
@@ -37,6 +38,25 @@ describe("Heat Network Products Page", () => {
 				technologyType: "HeatNetworks",
 				subheatNetworkName: "Test subnetwork 2",
 				displayProduct: true,
+				boosterHeatPump: true,
+			},
+			{
+				id: "3000",
+				productId: "3000",
+				subHeatNetworkId: "subnetwork-3000",
+				technologyType: "HeatNetworks",
+				subheatNetworkName: "Test subnetwork 3",
+				displayProduct: true,
+				boosterHeatPump: false,
+			},
+			{
+				id: "4000",
+				productId: "4000",
+				subHeatNetworkId: "subnetwork-4000",
+				technologyType: "HeatNetworks",
+				subheatNetworkName: "Test subnetwork 4",
+				displayProduct: true,
+				boosterHeatPump: true,
 			},
 		],
 	};
@@ -47,15 +67,38 @@ describe("Heat Network Products Page", () => {
 		});
 	});
 
-	const heatNetwork1: Partial<HeatNetworkData> = {
-		id: "463c94f6-566c-49b2-af27-222222222",
-		name: "Heat Network 1",
+	const sleevedDistrictHeatNetwork: Partial<HeatNetworkData> = {
+		id: "463c94f6-566c-49b2-af27-111111122",
+		name: "Sleeved District Heat Network",
 		typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
 	};
-	const heatNetwork2: Partial<HeatNetworkData> = {
+
+	const unsleevedDistrictHeatNetwork: Partial<HeatNetworkData> = {
+		id: "463c94f6-566c-49b2-af27-111111133",
+		name: "Unsleeved District Heat Network",
+		typeOfHeatNetwork: "unsleevedDistrictHeatNetwork",
+	};
+
+	const communalHeatNetwork: Partial<HeatNetworkData> = {
 		id: "463c94f6-566c-49b2-af27-111111111",
-		name: "Heat Network 2",
+		name: "Communal Heat Network",
 		typeOfHeatNetwork: "communalHeatNetwork",
+	};
+
+	const heatInterfaceUnit: Partial<HeatSourceData> = {
+		id: "hiuId",
+		name: "Heat Interface Unit",
+		typeOfHeatSource: "heatInterfaceUnit",
+	};
+
+	const boosterHeatPump: HeatSourceData = {
+		id: "463c94f6-566c-49b2-af27-57e5c68b52222",
+		name: "Booster HP",
+		typeOfHeatSource: "heatPump",
+		typeOfHeatPump: "booster",
+		productReference: "HEATPUMP-SMALL",
+		maxFlowTemp: unitValue(30, "celsius"),
+		associatedHeatNetworkId: "463c94f6-566c-49b2-af27-111111111",
 	};
 
 	beforeEach(() => {
@@ -63,8 +106,7 @@ describe("Heat Network Products Page", () => {
 			spaceHeating: {
 				heatNetworks: {
 					data: [
-						{ data: heatNetwork1 },
-						{ data: heatNetwork2 },
+						{ data: sleevedDistrictHeatNetwork },
 					],
 				},
 			},
@@ -93,17 +135,17 @@ describe("Heat Network Products Page", () => {
 	test("when a user selects a product its product reference gets stored", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				heatNetwork: "1",
+				heatNetwork: "0",
 				products: "heat-network",
 			},
-			path: "/1/heat-network",
+			path: "/0/heat-network",
 		});
 		await renderSuspended(Products);
 
 		await user.click(screen.getByTestId("selectProductButton_1"));
 
 		expect(
-			store.spaceHeating.heatNetworks.data[1]!.data,
+			store.spaceHeating.heatNetworks.data[0]!.data,
 		).toEqual(expect.objectContaining({ productReference: MOCKED_HEAT_NETWORKS.data[1]?.id }));
 	});
 
@@ -129,26 +171,26 @@ describe("Heat Network Products Page", () => {
 	test("'Back to heat network' navigates user to the heat network at the correct index", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				heatNetwork: "1",
+				heatNetwork: "0",
 				products: "heat-network",
 			},
-			path: "/1/heat-network",
+			path: "/0/heat-network",
 		});
 		await renderSuspended(Products);
 		const backButton = screen.getByTestId("backToHeatNetworkButton");
 
 		expect(backButton.getAttribute("href")).toBe(
-			"/space-heating/heat-networks/1",
+			"/space-heating/heat-networks/0",
 		);
 	});
 
 	test("does not render HEM default inset for heat network products", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				heatNetwork: "1",
+				heatNetwork: "0",
 				products: "heat-network",
 			},
-			path: "/1/heat-network",
+			path: "/0/heat-network",
 		});
 
 		await renderSuspended(Products);
@@ -159,10 +201,10 @@ describe("Heat Network Products Page", () => {
 	test("heat network PCDB search and product table is displayed when selecting a heat network product", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				heatNetwork: "1",
+				heatNetwork: "0",
 				products: "heat-network",
 			},
-			path: "/1/heat-network",
+			path: "/0/heat-network",
 		});
 
 		await renderSuspended(Products);
@@ -185,10 +227,10 @@ describe("Heat Network Products Page", () => {
 	
 		mockRoute.mockReturnValue({
 			params: {
-				heatNetwork: "1",
+				heatNetwork: "0",
 				products: "heat-network",
 			},
-			path: "/1/heat-network",
+			path: "/0/heat-network",
 		});
 	
 		mockFetch.mockReturnValue({
@@ -202,51 +244,111 @@ describe("Heat Network Products Page", () => {
 		expect(screen.getByText("Search network or subnetwork")).toBeDefined();
 	});
 
-	// test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
-	// 	mockRoute.mockReturnValue({
-	// 		params: {
-	// 			heatNetworks: "1",
-	// 			products: "heat-network",
-	// 		},
-	// 		path: "/1/heat-network",
-	// 	});
-	
-	// 	mockRoute.mockReturnValue({
-	// 		params: {
-	// 			heatNetwork: "1",
-	// 			products: "heat-network",
-	// 			id: "1000",
-	// 		},
-	// 		path: "/1/heat-network/1000",
-	// 	});
-	
-	// 	const product = {
-	// 		id: "1000",
-	// 		brandName: "Test",
-	// 		modelName: "Heat network",
-	// 		modelQualifier: "HNSMALL",
-	// 		technologyType: "HeatNetworks",
-	// 	};
-	
-	// 	const heatNetworks = {
-	// 		data: [product],
-	// 	};
-	
-	// 	mockFetch.mockReturnValueOnce({
-	// 		data: ref(heatNetworks),
-	// 	});	
-	
-	// 	mockFetch.mockReturnValueOnce({
-	// 		data: ref({
-	// 			...product,
-	// 			fifthGHeatNetwork: 1,
-	// 		}),
-	// 	});	
-	
-	// 	await renderSuspended(Products);
-	// 	await user.click(screen.getByTestId("selectProductButton_0"));
-	// 	expect(store.spaceHeating.heatNetworks.data[1]!.data).toEqual(expect.objectContaining({
-	// 		hasBoosterHeatPump: true,
-	// 	}));
-	// });
+	test("only shows heat networks with booster heat pump flag when booster heat pump exists", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatNetwork: "0",
+				products: "heat-network",
+			},
+			path: "/0/heat-network",
+		});
+
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [
+						{ data: communalHeatNetwork },
+					],
+				},
+				heatSource: {
+					data: [
+						{
+							data: boosterHeatPump,
+							complete: true,
+						},
+					],
+				},
+			},
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.queryByText("Test subnetwork 1")).toBeNull();
+		expect(screen.getByText("Test subnetwork 2")).toBeDefined();
+		expect(screen.queryByText("Test subnetwork 3")).toBeNull();
+		expect(screen.getByText("Test subnetwork 4")).toBeDefined();
+
+	});
+
+	test("only shows heat networks without booster heat pump flag when a HIU exists in space heating", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatNetwork: "0",
+				products: "heat-network",
+			},
+			path: "/0/heat-network",
+		});
+
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [
+						{ data: sleevedDistrictHeatNetwork },
+					],
+				},
+				heatSource: {
+					data: [
+						{
+							data: heatInterfaceUnit,
+							complete: true,
+						},
+					],
+				},
+			},
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.getByText("Test subnetwork 1")).toBeDefined();
+		expect(screen.queryByText("Test subnetwork 2")).toBeNull();
+		expect(screen.getByText("Test subnetwork 3")).toBeDefined();
+		expect(screen.queryByText("Test subnetwork 4")).toBeNull();
+	});
+
+	test("only shows heat networks without booster heat pump flag when a HIU exists in domestic hot water", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatNetwork: "0",
+				products: "heat-network",
+			},
+			path: "/0/heat-network",
+		});
+
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [
+						{ data: sleevedDistrictHeatNetwork },
+					],
+				},
+			},
+			domesticHotWater: {
+				heatSources: {
+					data: [
+						{
+							data: heatInterfaceUnit,
+							complete: true,
+						},
+					],
+				},
+			},
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.getByText("Test subnetwork 1")).toBeDefined();
+		expect(screen.queryByText("Test subnetwork 2")).toBeNull();
+		expect(screen.getByText("Test subnetwork 3")).toBeDefined();
+		expect(screen.queryByText("Test subnetwork 4")).toBeNull();
+	});
 });

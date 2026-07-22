@@ -67,12 +67,6 @@ describe("heatSource", () => {
 			technologyType: "AirSourceHeatPump",
 		};
 
-		const boosterHeatPumpProduct: Partial<DisplayProduct> = {
-			id: "2000",
-			brandName: "Booster Brand",
-			technologyType: "BoosterHeatPump",
-		};
-
 		const heatPumpProductWithCylinder: Partial<DisplayProduct> = {
 			id: "1001",
 			brandName: "Brand",
