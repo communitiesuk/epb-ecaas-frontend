@@ -73,18 +73,6 @@ describe("Heat Network Products Page", () => {
 		typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
 	};
 
-	const unsleevedDistrictHeatNetwork: Partial<HeatNetworkData> = {
-		id: "463c94f6-566c-49b2-af27-111111133",
-		name: "Unsleeved District Heat Network",
-		typeOfHeatNetwork: "unsleevedDistrictHeatNetwork",
-	};
-
-	const communalHeatNetwork: Partial<HeatNetworkData> = {
-		id: "463c94f6-566c-49b2-af27-111111111",
-		name: "Communal Heat Network",
-		typeOfHeatNetwork: "communalHeatNetwork",
-	};
-
 	const heatInterfaceUnit: Partial<HeatSourceData> = {
 		id: "hiuId",
 		name: "Heat Interface Unit",
@@ -99,6 +87,23 @@ describe("Heat Network Products Page", () => {
 		productReference: "HEATPUMP-SMALL",
 		maxFlowTemp: unitValue(30, "celsius"),
 		associatedHeatNetworkId: "463c94f6-566c-49b2-af27-111111111",
+	};
+
+	const dhwBoosterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+		isExistingHeatSource: false,
+		heatSourceId: "NEW_HEAT_SOURCE",
+		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+		name: "Booster Heat Pump",
+		typeOfHeatSource: "heatPump",
+		typeOfHeatPump: "booster",
+	};
+
+	const dhwHeatInterfaceUnit: Partial<DomesticHotWaterHeatSourceData> = {
+		isExistingHeatSource: false,
+		heatSourceId: "NEW_HEAT_SOURCE",
+		id: "463c94f6-566c-49b2-af27-57e5c68b5c22",
+		name: "Heat Interface Unit",
+		typeOfHeatSource: "heatInterfaceUnit",
 	};
 
 	beforeEach(() => {
@@ -244,7 +249,7 @@ describe("Heat Network Products Page", () => {
 		expect(screen.getByText("Search network or subnetwork")).toBeDefined();
 	});
 
-	test("only shows heat networks with booster heat pump flag when booster heat pump exists", async () => {
+	test("only shows heat networks with booster heat pump flag when booster heat pump in space heating exists", async () => {
 		mockRoute.mockReturnValue({
 			params: {
 				heatNetwork: "0",
@@ -255,15 +260,41 @@ describe("Heat Network Products Page", () => {
 
 		store.$patch({
 			spaceHeating: {
-				heatNetworks: {
-					data: [
-						{ data: communalHeatNetwork },
-					],
-				},
 				heatSource: {
 					data: [
 						{
 							data: boosterHeatPump,
+							complete: true,
+						},
+					],
+				},
+			},
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.queryByText("Test subnetwork 1")).toBeNull();
+		expect(screen.getByText("Test subnetwork 2")).toBeDefined();
+		expect(screen.queryByText("Test subnetwork 3")).toBeNull();
+		expect(screen.getByText("Test subnetwork 4")).toBeDefined();
+
+	});
+
+	test("only shows heat networks with booster heat pump flag when booster heat pump in domestic hot water exists", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatNetwork: "0",
+				products: "heat-network",
+			},
+			path: "/0/heat-network",
+		});
+
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [
+						{
+							data: dhwBoosterHeatPump,
 							complete: true,
 						},
 					],
@@ -291,11 +322,6 @@ describe("Heat Network Products Page", () => {
 
 		store.$patch({
 			spaceHeating: {
-				heatNetworks: {
-					data: [
-						{ data: sleevedDistrictHeatNetwork },
-					],
-				},
 				heatSource: {
 					data: [
 						{
@@ -325,18 +351,11 @@ describe("Heat Network Products Page", () => {
 		});
 
 		store.$patch({
-			spaceHeating: {
-				heatNetworks: {
-					data: [
-						{ data: sleevedDistrictHeatNetwork },
-					],
-				},
-			},
 			domesticHotWater: {
 				heatSources: {
 					data: [
 						{
-							data: heatInterfaceUnit,
+							data: dhwHeatInterfaceUnit,
 							complete: true,
 						},
 					],

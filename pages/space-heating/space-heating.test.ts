@@ -86,6 +86,23 @@ describe("space heating", () => {
 			subHeatNetworkName: "Sub Heat Network Name",
 		};
 
+		const dhwBoosterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "Booster Heat Pump",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "booster",
+		};
+
+		const dhwHeatInterfaceUnit: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c22",
+			name: "Heat Interface Unit",
+			typeOfHeatSource: "heatInterfaceUnit",
+		};
+
 		it("should display heat networks section", async () => {
 			await renderSuspended(SpaceHeating);
 
@@ -204,8 +221,6 @@ describe("space heating", () => {
 		});
 
 		test("A heat network cannot be added if a heat source of type heat battery already exists.", async () => {
-
-
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
@@ -219,9 +234,7 @@ describe("space heating", () => {
 			expect(screen.getByText("A heat network cannot be added as it isn't compatible with the heat sources already entered.")).toBeDefined();
 		});
 
-		test("A heat network cannot be added if a heat source of type heat pump already exists and it isn't a booster heat pump.", async () => {
-
-
+		test("A heat network cannot be added if a heat source of type heat pump in space heating already exists and it isn't a booster heat pump.", async () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
@@ -234,6 +247,20 @@ describe("space heating", () => {
 			expect(screen.queryByTestId("heatNetworks_add")).toBeNull();
 			expect(screen.getByText("A heat network cannot be added as it isn't compatible with the heat sources already entered.")).toBeDefined();
 		});
+
+		// test("A heat network cannot be added if a heat source of type heat pump in domestic hot water already exists and it isn't a booster heat pump.", async () => {
+		// 	store.$patch({
+		// 		domesticHotWater: {
+		// 			heatSources: {
+		// 				data: [{ data: dhwBoosterHeatPump, complete: true }],
+		// 			},
+		// 		},
+		// 	});
+
+		// 	await renderSuspended(SpaceHeating);
+		// 	expect(screen.queryByTestId("heatNetworks_add")).toBeNull();
+		// 	expect(screen.getByText("A heat network cannot be added as it isn't compatible with the heat sources already entered.")).toBeDefined();
+		// });
 	});
 
 	describe("heat source", () => {

@@ -20,6 +20,13 @@ const hasBoosterHeatPump = computed(() =>
 			heatSource.data.typeOfHeatSource === "heatPump" &&
 			"typeOfHeatPump" in heatSource.data &&
 			heatSource.data.typeOfHeatPump === "booster",
+	)
+	||
+	store.domesticHotWater.heatSources.data.some(
+		heatSource =>
+			heatSource.data.isExistingHeatSource === false &&
+			heatSource.data.typeOfHeatSource === "heatPump" &&
+			heatSource.data.typeOfHeatPump === "booster",
 	),
 );
 
@@ -29,7 +36,9 @@ const hasHeatInterfaceUnit = computed(() =>
 	)
 	||
 	store.domesticHotWater.heatSources.data.some(
-		heatSource => "typeOfHeatSource" in heatSource.data && heatSource.data.typeOfHeatSource === "heatInterfaceUnit",
+		heatSource =>
+			heatSource.data.isExistingHeatSource === false &&
+			heatSource.data.typeOfHeatSource === "heatInterfaceUnit",
 	),
 );
 

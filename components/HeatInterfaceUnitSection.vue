@@ -46,7 +46,7 @@ const { heatNetworkOptions, hasHeatNetworkOptions, defaultAssociatedHeatNetworkI
 		id="associatedHeatNetwork"
 		type="govRadios"
 		label="Associated heat network"
-		help="Select the heat network that this heat pump is connected to"
+		help="Select the heat network that this HIU is connected to"
 		:options="heatNetworkOptions"
 		name="associatedHeatNetworkId"
 		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
