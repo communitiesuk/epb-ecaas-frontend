@@ -951,6 +951,7 @@ export type TypeOfBoiler = z.infer<typeof typeOfBoiler>;
 export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;
 export type TypeOfHeatNetwork = z.infer<typeof typeOfHeatNetwork>;
 export type LocationOfCollectorLoopPipingType = z.infer<typeof typeOfLocationOfLoopPiping>;
+export type ColdWaterSourceType = z.infer<typeof coldWaterSource>;
 
 const typeOfWaterCylinderConfiguration = z.enum(["hotWaterCylinder", "preheatedWaterCylinder"]);
 export type WaterCylinderConfiguration = z.infer<typeof typeOfWaterCylinderConfiguration>;
@@ -1290,7 +1291,6 @@ export type DomesticHotWater = AssertEachKeyIsPageId<{
 
 const hotWaterHeatSourceExtension = {
 	heatSourceId: z.literal("NEW_HEAT_SOURCE"),
-	coldWaterSource: z.string(),
 	isExistingHeatSource: z.literal(false),
 };
 
@@ -1364,13 +1364,19 @@ const heatPumpHotWaterDataZod = nestedDiscriminatedUnion(
 	},
 );
 
-const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceExtension);
-const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceExtension);
+const hotWaterHeatSourceWithColdWater = z.object({
+	coldWaterSource: z.string(),
+}).extend(hotWaterHeatSourceExtension);
+
+export type HotWaterHeatSourceWithColdWater = z.infer<typeof hotWaterHeatSourceWithColdWater>;
+
+const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceWithColdWater.shape);
+const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceWithColdWater.shape);
 
 const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
 const immersionHeaterHotWaterSourceBase = baseImmersionHeater.extend(hotWaterHeatSourceExtension);
-const pointOfUseHotWaterSourceBase = basePointOfUse.extend(hotWaterHeatSourceExtension);
-const heatInterfaceUnitHotWaterSourceBase = heatInterfaceUnitBase.extend(hotWaterHeatSourceExtension);
+const pointOfUseHotWaterSourceBase = basePointOfUse.extend(hotWaterHeatSourceWithColdWater.shape);
+const heatInterfaceUnitHotWaterSourceBase = heatInterfaceUnitBase.extend(hotWaterHeatSourceWithColdWater.shape);
 
 const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpHotWaterDataZod,
@@ -1387,7 +1393,7 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 		z.object({
 			id: z.uuidv4().readonly(),
 			heatSourceId: z.string(),
-			coldWaterSource: z.string(),
+			coldWaterSource: z.optional(z.string()),
 			isExistingHeatSource: z.literal(true),
 			createdAutomatically: z.literal(true).optional(),
 			maxFlowTemp: zodUnit("temperature").optional(),
@@ -1409,7 +1415,7 @@ const wwhrsDataZod = pcdbProduct.extend({
 
 export type WwhrsData = z.infer<typeof wwhrsDataZod>;
 
-const preheatedWaterCylinderDataZod = namedWithId
+const preheatedWaterStorageDataZod = namedWithId
 	.extend(hasPcdbPackagedProduct.shape)
 	.extend({
 		typeOfWaterStorage: z.literal("hotWaterCylinder"),
@@ -1417,23 +1423,8 @@ const preheatedWaterCylinderDataZod = namedWithId
 		dailyEnergyLoss: z.number(),
 		heaterPosition: fraction,
 		coldWaterSource: z.string(),
+		heatSourceId: z.string(),
 	});
-
-export type PreheatedWaterCylinderData = z.infer<typeof preheatedWaterCylinderDataZod>;
-
-const preheatedSmartHotWaterTank = namedWithId.extend({
-	typeOfWaterStorage: z.literal("smartHotWaterTank"),
-	productReference: z.string(),
-	heaterPosition: fraction,
-	coldWaterSource: z.string(),
-});
-
-export type PreheatedSmartHotWaterTankData = z.infer<typeof preheatedSmartHotWaterTank>;
-
-const preheatedWaterStorageDataZod = z.discriminatedUnion("typeOfWaterStorage", [
-	preheatedWaterCylinderDataZod,
-	preheatedSmartHotWaterTank,
-]);
 
 export type PreheatedWaterStorageData = z.infer<typeof preheatedWaterStorageDataZod>;
 

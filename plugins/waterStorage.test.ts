@@ -1,8 +1,23 @@
 import type { RuntimeNuxtHooks } from "#app";
+import { celsius } from "~/utils/units/temperature";
 
 describe("water storage events", () => {
 	const nuxtApp = useNuxtApp();
 	const store = useEcaasStore();
+
+	const heatPump: EcaasForm<DomesticHotWaterHeatSourceData> = {
+		data: {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "Heat pump 1",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "airSource",
+			productReference: "HEATPUMP-SMALL",
+			maxFlowTemp: unitValue(7, celsius),
+			energySupply: "electricity",
+		},
+	};
 
 	const wwhrs1: EcaasForm<WwhrsData> = {
 		data: {
@@ -25,6 +40,7 @@ describe("water storage events", () => {
 			typeOfWaterStorage: "hotWaterCylinder",
 			heaterPosition: 0.8,
 			coldWaterSource: wwhrs1.data.id,
+			heatSourceId: heatPump.data.id,
 		},
 		complete: true,
 	};
@@ -50,6 +66,9 @@ describe("water storage events", () => {
 	beforeEach(() => {
 		store.$patch({
 			domesticHotWater: {
+				heatSources: {
+					data: [heatPump],
+				},
 				wwhrs: {
 					data: [wwhrs1],
 				},
@@ -98,5 +117,17 @@ describe("water storage events", () => {
 				expect(waterStorage.data[0]?.data.coldWaterSource).toBeUndefined();
 			}, 100);
 		});
+	});
+
+	it("app:hotWaterHeatSource:removed resets heat source field of pre-heated water cylinder if linked heat source is removed", () => {
+		nuxtApp.callHook("app:hotWaterHeatSource:removed", heatPump.data.id);
+
+		setTimeout(() => {
+			const { preheatedWaterStorage } = store.domesticHotWater;
+
+			expect(preheatedWaterStorage.complete).toBe(false);
+			expect(preheatedWaterStorage.data[0]?.complete).toBe(false);
+			expect(preheatedWaterStorage.data[0]?.data.heatSourceId).toBeUndefined();
+		}, 100);
 	});
 });

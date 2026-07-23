@@ -54,6 +54,7 @@ describe("Domestic hot water", () => {
 			typeOfWaterStorage: "hotWaterCylinder",
 			heaterPosition: 0.8,
 			coldWaterSource: "mainsWater",
+			heatSourceId: heatSource1.data.id,
 		},
 	};
 
@@ -661,7 +662,6 @@ describe("Domestic hot water", () => {
 			data: {
 				name: "Solar Thermal System 1",
 				id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bc",
-				coldWaterSource: "headerTank",
 				isExistingHeatSource: false,
 				typeOfHeatSource: "solarThermalSystem",
 				heatSourceId: "NEW_HEAT_SOURCE",
@@ -1022,7 +1022,6 @@ describe("Domestic hot water", () => {
 					heatSourceId: "NEW_HEAT_SOURCE",
 					isExistingHeatSource: false,
 					name: "DHW immersion",
-					coldWaterSource: "mainsWater",
 					power: 49,
 				},
 				complete: true,
@@ -1063,7 +1062,6 @@ describe("Domestic hot water", () => {
 					heatSourceId: "NEW_HEAT_SOURCE",
 					isExistingHeatSource: false,
 					name: "DHW immersion",
-					coldWaterSource: "mainsWater",
 					locationOfCollectorLoopPiping: "heatedSpace",
 					collectorModuleArea: 24,
 					numberOfCollectorModules: 3,
@@ -1115,7 +1113,6 @@ describe("Domestic hot water", () => {
 					heatSourceId: "NEW_HEAT_SOURCE",
 					name: "DHW heatPump",
 					typeOfHeatSource: "heatPump",
-					coldWaterSource: "mainsWater",
 					isExistingHeatSource: false,
 					productReference: "HP-12345",
 					typeOfHeatPump: "airSource",
@@ -1224,7 +1221,12 @@ describe("Domestic hot water", () => {
 						],
 					},
 					preheatedWaterStorage: {
-						data: [preheatedStorage1],
+						data: [{
+							data: {
+								...preheatedStorage1.data,
+								heatSourceId: undefined,
+							},
+						}],
 					},
 					waterStorage: {
 						data: [hwStorage1],
@@ -1249,7 +1251,6 @@ describe("Domestic hot water", () => {
 					heatSourceId: "NEW_HEAT_SOURCE",
 					name: "DHW heatPump",
 					typeOfHeatSource: "heatPump",
-					coldWaterSource: "mainsWater",
 					isExistingHeatSource: false,
 					productReference: "HP-12345",
 					typeOfHeatPump: "airSource",
@@ -1495,7 +1496,6 @@ describe("Domestic hot water", () => {
 		test("when the heat source is a heat pump or HIU, a heat network can be added", async () => {
 			const heatPump: DomesticHotWaterHeatSourceData = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
-				coldWaterSource: "mainsWater",
 				isExistingHeatSource: false,
 				heatSourceId: "NEW_HEAT_SOURCE",
 				name: "Heat pump",

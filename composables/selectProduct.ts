@@ -209,7 +209,6 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 			const addBoilerProduct = (boilerData: BoilerProduct) => {
 				const heatSourceBoiler: Partial<DomesticHotWaterHeatSourceData> = {
 					...createBoiler(boilerData, product.id),
-					coldWaterSource: heatSourceData!.coldWaterSource,
 					isExistingHeatSource: false,
 					heatSourceId: "NEW_HEAT_SOURCE",
 				};

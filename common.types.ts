@@ -21,5 +21,6 @@ declare module "#app" {
 		"app:floor:updated": (floor: GroundFloorData | FloorAboveUnheatedBasementData) => HookResult,
 		"app:wwhrs:removed": (id: string) => HookResult,
 		"app:preheatedWaterCylinder:removed": (id: string) => HookResult,
+		"app:hotWaterHeatSource:removed": (id: string) => HookResult,
 	}
 }

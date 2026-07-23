@@ -6,7 +6,7 @@ import { litrePerSecond } from "~/utils/units/flowRate";
 import { kilowatt, kilowattHoursPerDay } from "~/utils/units/power";
 import { metresSquare } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
-import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatNetworkData, PreheatedSmartHotWaterTankData, PreheatedWaterCylinderData, WwhrsData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatNetworkData, PreheatedWaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
 import { celsius } from "~/utils/units/temperature";
 import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 
@@ -50,7 +50,7 @@ describe("Domestic hot water summary", () => {
 	describe("Pre-heated water cylinder", () => {
 		const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
-		const preheatedWaterCylinder: PreheatedWaterCylinderData = {
+		const preheatedWaterCylinder: PreheatedWaterStorageData = {
 			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
 			typeOfWaterStorage: "hotWaterCylinder",
 			name: "Pre-heated water cylinder",
@@ -61,15 +61,7 @@ describe("Domestic hot water summary", () => {
 			dailyEnergyLoss: 1,
 			heaterPosition: 0.8,
 			coldWaterSource: "mainsWater",
-		};
-
-		const preheatedSmartHotWaterCylinder: PreheatedSmartHotWaterTankData = {
-			id: "c84528bb-f805-4f1e-95d3-2bd17384abcd",
-			typeOfWaterStorage: "smartHotWaterTank",
-			name: "Pre-heated smart water cylinder",
-			productReference: "SMART-HOT-WATER-CYLINDER",
-			heaterPosition: 0.3,
-			coldWaterSource: "mainsWater",
+			heatSourceId: heatPumpId,
 		};
 
 		const addWaterCylinderData = () => {
@@ -85,26 +77,6 @@ describe("Domestic hot water summary", () => {
 								id: heatPumpId,
 								name: "Heat pump",
 								typeOfHeatSource: "heatPump",
-							},
-						}],
-					},
-				},
-			});
-		};
-
-		const addSmartWaterCylinderData = () => {
-			store.$patch({
-				domesticHotWater: {
-					preheatedWaterStorage: {
-						data: [{ data: preheatedSmartHotWaterCylinder }],
-					},
-					heatSources: {
-						data: [{
-							data: {
-								id: heatPumpId,
-								name: "Heat pump",
-								typeOfHeatSource: "heatPump",
-								isExistingHeatSource: false,
 							},
 						}],
 					},
@@ -130,7 +102,7 @@ describe("Domestic hot water summary", () => {
 			store.$patch({
 				domesticHotWater: {
 					preheatedWaterStorage: {
-						data: [{ data: preheatedWaterCylinder }, { data: preheatedSmartHotWaterCylinder }],
+						data: [{ data: preheatedWaterCylinder }],
 					},
 				},
 				spaceHeating: {
@@ -148,7 +120,6 @@ describe("Domestic hot water summary", () => {
 			await renderSuspended(Summary);
 
 			expect(screen.queryByRole("link", { name: "Pre-heated water cylinders" })).not.toBeNull();
-			expect(screen.queryByRole("link", { name: "Pre-heated smart water cylinders" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the pre-heated water cylinder section when data exists", async () => {
@@ -175,34 +146,6 @@ describe("Domestic hot water summary", () => {
 			await renderSuspended(Summary);
 			const preheatedWaterCylinderSection = screen.getByTestId("preheatedWaterCylinder");
 			const editLink: HTMLAnchorElement = within(preheatedWaterCylinderSection).getByText("Edit");
-
-			expect(editLink).not.toBeNull();
-			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water");
-		});
-
-		it("should display the correct data for the smart hot water cylinder section when data exists", async () => {
-			addSmartWaterCylinderData();
-			await renderSuspended(Summary);
-
-			const expectedResult = {
-				"Name": "Pre-heated smart water cylinder",
-				"Product reference": "SMART-HOT-WATER-CYLINDER",
-				"Heater position in the cylinder": "0.3",
-				"Cold water source": "Mains water",
-			};
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-preheatedSmartWaterCylinder-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
-
-		it("should display an edit link within smart hot water cylinder when data exists", async () => {
-			addSmartWaterCylinderData();
-			await renderSuspended(Summary);
-			const smartHotWaterCylinderSection = screen.getByTestId("preheatedSmartWaterCylinder");
-			const editLink: HTMLAnchorElement = within(smartHotWaterCylinderSection).getByText("Edit");
 
 			expect(editLink).not.toBeNull();
 			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water");
@@ -425,7 +368,7 @@ describe("Domestic hot water summary", () => {
 		it("should display the cold water source when referenced with a pre-heated water cylinder", async () => {
 			addSmartHotWaterCylinderData();
 
-			const preheatedWaterCylinder: EcaasForm<PreheatedWaterCylinderData> = {
+			const preheatedWaterCylinder: EcaasForm<PreheatedWaterStorageData> = {
 				data: {
 					name: "Standard water cylinder 1",
 					id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
@@ -434,6 +377,7 @@ describe("Domestic hot water summary", () => {
 					dailyEnergyLoss: 1,
 					heaterPosition: 0.8,
 					coldWaterSource: "mainsWater",
+					heatSourceId: heatPumpId,
 				},
 			};
 
@@ -801,7 +745,6 @@ describe("Domestic hot water summary", () => {
 		};
 
 		const dhwWithNewHeatPump: DomesticHotWaterHeatSourceData = {
-			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
 			heatSourceId: "NEW_HEAT_SOURCE",
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
@@ -868,7 +811,6 @@ describe("Domestic hot water summary", () => {
 		};
 
 		const dhwWithNewSolarThermalSystem: DomesticHotWaterHeatSourceData = {
-			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
 			heatSourceId: "NEW_HEAT_SOURCE",
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c77777",
@@ -895,7 +837,6 @@ describe("Domestic hot water summary", () => {
 		};
 
 		const dhwImmersionHeater: DomesticHotWaterHeatSourceData = {
-			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
 			heatSourceId: "NEW_HEAT_SOURCE",
 			id: "463c94f6-566c-49b2-af27-57e5c888888",
@@ -983,7 +924,6 @@ describe("Domestic hot water summary", () => {
 		});
 
 		const expectedHeatPump = {
-			"Cold water source": "Mains water",
 			Name: "Booster heat pump",
 			"Used for space heating": "No",
 			"Type of heat source": "Heat pump",
@@ -1013,15 +953,6 @@ describe("Domestic hot water summary", () => {
 			"Maximum flow temperature": `32 ${celsius.suffix}`,
 			"Energy supply": "Electricity",
 		};
-		// const expectedHeatNetwork = {
-		// 	"Cold water source": "Mains water",
-		// 	Name: "Heat network 1",
-		// 	"Used for space heating": "No",
-		// 	"Type of heat source": "Heat network",
-		// 	"Type of heat network": "Communal heat network",
-		// 	"Product reference": "HEAT_NETWORK-LARGE",
-		// 	"Sub-heat network name": "Sub Network 1",
-		// };
 		const expectedHeatInterfaceUnit = {
 			"Cold water source": "Mains water",
 			"Name": "Heat interface unit 1",
@@ -1034,7 +965,6 @@ describe("Domestic hot water summary", () => {
 			"Building level losses": "500 W",
 		};
 		const expectedSolarThermalSystem = {
-			"Cold water source": "Mains water",
 			Name: "Solar thermal system",
 			"Used for space heating": "No",
 			"Type of heat source": "Solar thermal system",
@@ -1053,7 +983,6 @@ describe("Domestic hot water summary", () => {
 			"Orientation": `60 ${degrees.suffix}`,
 		};
 		const expectedImmersionHeater = {
-			"Cold water source": "Mains water",
 			Name: "Immersion heater",
 			"Type of heat source": "Immersion heater",
 			"Power": `4 ${kilowatt.suffix}`,
@@ -1071,7 +1000,6 @@ describe("Domestic hot water summary", () => {
 				["heatPumpSummary", expectedHeatPump],
 				["boilerSummary", expectedBoiler],
 				["heatBatterySummary", expectedHeatBattery],
-				// ["heatNetworkSummary", expectedHeatNetwork],
 				["heatInterfaceUnitSummary", expectedHeatInterfaceUnit],
 				["solarThermalSystemSummary", expectedSolarThermalSystem],
 				["immersionHeaterSummary", expectedImmersionHeater],

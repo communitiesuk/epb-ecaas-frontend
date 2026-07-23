@@ -4,6 +4,7 @@ import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { objectFromEntries } from "ts-extras";
 import { useColdWaterSource } from "~/composables/coldWaterSource";
+import type { ColdWaterSourceType } from "~/stores/ecaasStore.schema";
 
 export const defaultColdWaterSourceData: SchemaHeaderTankOrMainsWater = {
 	start_day: 0,
@@ -37,7 +38,7 @@ const coldWaterSourceMap = {
 	mainsWater: "mains water",
 	headerTank: "header tank",
 } as const satisfies Record<
-	DomesticHotWaterHeatSourceData["coldWaterSource"],
+	ColdWaterSourceType,
 	SchemaColdWaterSourceType
 >;
 
@@ -58,7 +59,7 @@ function getOutletHeatSource(state: ResolvedState) {
 	const preheatedWaterSource = state.domesticHotWater.preheatedWaterStorage?.[0];
 
 	const preheatedHeatSource = preheatedWaterSource ? state.domesticHotWater.heatSources
-		.find(x => x.coldWaterSource === preheatedWaterSource?.id) : undefined;
+		.find(x => x.id === preheatedWaterSource.heatSourceId) : undefined;
 
 	if (!dhwHeatSource && !preheatedHeatSource) {
 		throw new Error("No heat source found");
@@ -169,20 +170,25 @@ function mapOthersData(state: ResolvedState) {
 function getDomesticHotWaterHeatSource(state: ResolvedState) {
 	// NOTE: this logic will change upon the redesign of the heat networks section.
 	const preheatedWaterStorage = state.domesticHotWater.preheatedWaterStorage?.[0];
+	const dhwHeatSources = state.domesticHotWater.heatSources;
+	let expectedHeatSourceCount = 1;
 
-	const dhwHeatSources = state.domesticHotWater.heatSources
-		.filter(x =>
-			
-			(preheatedWaterStorage ? x.coldWaterSource !== preheatedWaterStorage.id : true),
-		);
+	const preheatedHeatSource = state.domesticHotWater.heatSources
+		.filter(x => x.id === preheatedWaterStorage?.heatSourceId).length;
 
-	if (dhwHeatSources.length !== 1) {
+	expectedHeatSourceCount += preheatedHeatSource;
+
+	const packagedProductCount = dhwHeatSources.filter(x => isPackagedProduct(x) && x.id !== preheatedWaterStorage?.heatSourceId).length;
+
+	expectedHeatSourceCount += packagedProductCount;
+
+	if (dhwHeatSources.length !== expectedHeatSourceCount) {
 		throw new Error(
-			`Expected exactly one domestic hot water heat source, found ${dhwHeatSources.length}`,
+			`Expected exactly ${expectedHeatSourceCount} domestic hot water heat ${pluralize("source")(expectedHeatSourceCount !== 1)}, found ${dhwHeatSources.length}`,
 		);
 	}
-		
-	return dhwHeatSources[0]!;
+
+	return dhwHeatSources.find(x => x.id !== preheatedWaterStorage?.heatSourceId && !isPackagedProduct(x))!;
 }
 
 /**
@@ -517,7 +523,7 @@ function mapHeatSourceNoWS(
 function mapHotWaterSourcesWithoutWaterStorage(state: ResolvedState) {
 	const preheatedWaterStorage = state.domesticHotWater.preheatedWaterStorage?.[0];
 	const dhwHeatSource = state.domesticHotWater.heatSources
-		.filter(x => preheatedWaterStorage ? x.coldWaterSource !== preheatedWaterStorage?.id : true)[0];
+		.filter(x => preheatedWaterStorage ? x.id !== preheatedWaterStorage.heatSourceId : true)[0];
 
 	if (!preheatedWaterStorage && !dhwHeatSource) {
 		throw new Error("Domestic hot water heat source not found");
@@ -559,7 +565,7 @@ export function mapPreheatedWaterSourceData(state: ResolvedState): Partial<FhsIn
 	}
 
 	const dhwHeatSource = state.domesticHotWater.heatSources
-		.find(x => x.coldWaterSource === preheatedWaterStorage.id);
+		?.find(x => x.id === preheatedWaterStorage.heatSourceId);
 
 	if (!dhwHeatSource) {
 		throw new Error("No heat source connected to pre-heated water cylinder");

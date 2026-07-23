@@ -126,13 +126,10 @@ function checkMaxHeatSourcesExceeded() {
 	};
 
 	if (dhwHeatSources.data.length === 2) {
-		const coldWaterSources = dhwHeatSources.data.map(x => x.data.coldWaterSource);
-		const preheatedWaterStorageId = preheatedWaterStorage.data[0]?.data.id;
+		const preheatedHeatSourceId = preheatedWaterStorage.data[0]?.data.heatSourceId;
+		const preheatedHeatSource = dhwHeatSources.data.find(x => x.data.id === preheatedHeatSourceId);
 
-		if (coldWaterSources.length &&
-			preheatedWaterStorageId &&
-			!coldWaterSources.includes(preheatedWaterStorageId)
-		) {
+		if (!preheatedHeatSource) {
 			addError({
 				id: "heatSourceLimitExceededError",
 				text: "You can only have two heat sources if one is connected to a pre-heated water tank.",

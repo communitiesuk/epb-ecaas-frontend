@@ -2,7 +2,7 @@ export default defineNuxtPlugin(() => {
 	const nuxtApp = useNuxtApp();
 	const store = useEcaasStore();
 
-	const removeColdWaterSource = (id: string) => (waterStorage: EcaasForm<Partial<WaterStorageData> | Partial<PreheatedWaterStorageData> | Partial<DomesticHotWaterHeatSourceData>>) => {
+	const removeColdWaterSource = (id: string) => (waterStorage: EcaasForm<Partial<WaterStorageData> | Partial<PreheatedWaterStorageData> | Partial<Extract<DomesticHotWaterHeatSourceData, "coldWaterSource" | "complete">>>) => {
 		if (waterStorage.data.coldWaterSource === id) {
 			waterStorage.data.coldWaterSource = undefined;
 			waterStorage.complete = false;
@@ -54,9 +54,23 @@ export default defineNuxtPlugin(() => {
 		});
 	};
 
+	const resetPreheatedWaterStorageHeatSource = (id: string) => {
+		store.$patch(state => {
+			const { preheatedWaterStorage } = state.domesticHotWater;
+			const preheatedWaterStorageItem = preheatedWaterStorage.data[0];
+
+			if (preheatedWaterStorageItem?.data.heatSourceId === id) {
+				preheatedWaterStorageItem.data.heatSourceId = undefined;
+				preheatedWaterStorageItem.complete = false;
+				preheatedWaterStorage.complete = false;
+			}
+		});
+	};
+
 	nuxtApp.hook("app:wwhrs:removed", removeColdWaterSources);
 	nuxtApp.hook("app:preheatedWaterCylinder:removed", id => {
 		removeColdWaterSources(id);
 		resetWaterCylinderConfig();
 	});
+	nuxtApp.hook("app:hotWaterHeatSource:removed", resetPreheatedWaterStorageHeatSource);
 });

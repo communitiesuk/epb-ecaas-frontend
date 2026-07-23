@@ -2,6 +2,8 @@ import { v4 as uuidv4 } from "uuid";
 import { isHotWaterHeatSource, isNewHeatSource } from "~/utils/heatSources";
 
 export function useHeatSources() {
+	const store = useEcaasStore();
+
 	function hasChangedFields(
 		heatSource: HeatSourceData | NewDomesticHotWaterHeatSourceData | undefined,
 		existingData: HeatSourceData | NewDomesticHotWaterHeatSourceData,
@@ -157,7 +159,30 @@ export function useHeatSources() {
 		}
 	}
 
+	function canHaveColdWaterSource(heatSource: DomesticHotWaterHeatSourceData): boolean {
+		if (!heatSource.isExistingHeatSource) {
+			const typeOfHeatSource = heatSource.typeOfHeatSource;
+
+			return (
+				typeOfHeatSource === "boiler" ||
+				typeOfHeatSource === "heatBattery" ||
+				typeOfHeatSource === "heatInterfaceUnit" ||
+				typeOfHeatSource === "pointOfUse"
+			);
+		}
+
+		const actualHeatSource = store.spaceHeating.heatSource.data.find(x => x.data.id === heatSource.heatSourceId)?.data;
+		const typeOfHeatSource = actualHeatSource?.typeOfHeatSource;
+
+		return (
+			typeOfHeatSource === "boiler" ||
+			typeOfHeatSource === "heatBattery" ||
+			typeOfHeatSource === "heatInterfaceUnit"
+		);
+	}
+
 	return {
 		createWaterCylinder,
+		canHaveColdWaterSource,
 	};
 }

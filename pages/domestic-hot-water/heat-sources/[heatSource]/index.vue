@@ -13,7 +13,7 @@ const store = useEcaasStore();
 const { heatSources: dhwHeatSources } = store.domesticHotWater;
 
 const { getStoreIndex, handleAutoSaveElementForm } = useForm();
-const { createWaterCylinder } = useHeatSources();
+const { createWaterCylinder, canHaveColdWaterSource } = useHeatSources();
 const { mounted } = useMounted();
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
@@ -88,8 +88,13 @@ watch(
 		if (initialData.heatSourceId !== newData.heatSourceId) {
 			errorMessages.value = [];
 
-			model.value = { 
-				coldWaterSource: initialData.coldWaterSource,
+			model.value = {
+				...(canHaveColdWaterSource(initialData) &&
+					canHaveColdWaterSource(newData) &&
+					"coldWaterSource" in initialData ? {
+						coldWaterSource: initialData.coldWaterSource,
+					} : undefined
+				),
 				isExistingHeatSource: newData.heatSourceId === "NEW_HEAT_SOURCE" ? false : true,
 				heatSourceId: newData.heatSourceId,
 				id: initialData.id,
@@ -103,8 +108,13 @@ watch(
 
 			errorMessages.value = [];
 
-			model.value = { 
-				coldWaterSource: initialData.coldWaterSource,
+			model.value = {
+				...(canHaveColdWaterSource(initialData) &&
+						canHaveColdWaterSource(newData) &&
+						"coldWaterSource" in initialData ? {
+						coldWaterSource: initialData.coldWaterSource,
+					} : undefined
+				),
 				isExistingHeatSource: false,
 				heatSourceId: "NEW_HEAT_SOURCE" ,
 				id: initialData.id,
@@ -165,15 +175,6 @@ autoSaveElementFormNoName({
 		newData.data.id ??= id;
 
 		const heatSource = getActualHeatSource(newData.data);
-
-		if (isPackagedProduct(newData.data) && newData.data.coldWaterSource) {
-			const packageProductIds = newData.data.packageProductIds;
-			const packageProductIndex = state.domesticHotWater.heatSources.data.findIndex(x => packageProductIds?.includes(x.data.id));
-
-			if (packageProductIndex >= 0) {
-				state.domesticHotWater.heatSources.data[packageProductIndex]!.data.coldWaterSource = newData.data.coldWaterSource;
-			}
-		}
 
 		createWaterCylinder("domesticHotWater", state, heatSource, existingData, newData.data);
 		preheatedWaterStorageMap.value = new Map(useAssociatedItems(["preheatedWaterStorage"]));
@@ -506,6 +507,7 @@ const allBoilers = useAssociatedItems(["boiler"]);
 				:data-field="'HotWaterSource.*.HeatSource.*.temp_flow_limit_upper'"
 			/>
 			<FormKit
+				v-if="canHaveColdWaterSource(model)"
 				id="coldWaterSource"
 				type="govRadios"
 				label="Cold water source"

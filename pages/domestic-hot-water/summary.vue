@@ -28,7 +28,7 @@ type SummaryHeatSource = {
 		name: string,
 		heatSourceType: HeatSourceType,
 		isExistingHeatSource: boolean
-		coldWaterSource: string
+		coldWaterSource?: string
 	}
 };
 
@@ -40,16 +40,20 @@ const solarThermalSummaries: Array<SummaryHeatSource | EcaasForm<DomesticHotWate
 
 
 function createItemFromExistingHeatSources(heatSource: EcaasForm<DomesticHotWaterHeatSourceData>) {
-
 	const item = store.spaceHeating.heatSource.data.find(x => x.data.id === heatSource.data.heatSourceId);
+
 	if (item) {
 		return {
 			data: {
 				name: item.data.name,
 				heatSourceType: item.data.typeOfHeatSource!,
 				isExistingHeatSource: true,
-				coldWaterSource: heatSource.data.coldWaterSource ?? undefined,
-				maxFlowTemp: heatSource.data.isExistingHeatSource ? heatSource.data.maxFlowTemp : undefined,
+				...("coldWaterSource" in heatSource.data ? {
+					coldWaterSource: heatSource.data.coldWaterSource,
+				} : undefined),
+				...(heatSource.data.isExistingHeatSource ? {
+					maxFlowTemp: heatSource.data.maxFlowTemp,
+				} : undefined),
 			},
 		};
 	}
@@ -60,7 +64,6 @@ function addHeatSourceToCorrectSummaryList(heatSources: EcaasForm<DomesticHotWat
 		const item = createItemFromExistingHeatSources(heatSource);
 		
 		if (item) {
-
 			if (item.data.heatSourceType === "boiler") {
 				boilerSummaries.push(item);
 			}
@@ -286,7 +289,6 @@ const immersionHeaterSummary: SummarySection = {
 
 			const summary = {
 				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
-				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
 				"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
 				"Power": "power" in heatSource && dim(heatSource.power, "kilowatt"),
 			};
@@ -338,7 +340,6 @@ const { wwhrs, waterStorage, preheatedWaterStorage } = store.domesticHotWater;
 const hotWaterCylinders = waterStorage.data.filter(x => x.data.typeOfWaterStorage === "hotWaterCylinder");
 const smartHotWaterCylinders = waterStorage.data.filter(x => x.data.typeOfWaterStorage === "smartHotWaterTank");
 const preheatedWaterCylinders = preheatedWaterStorage.data.filter(x => x.data.typeOfWaterStorage === "hotWaterCylinder");
-const preheatedSmartWaterCylinders = preheatedWaterStorage.data.filter(x => x.data.typeOfWaterStorage === "smartHotWaterTank");
 
 const { getColdWaterSourceDisplay } = useColdWaterSource();
 
@@ -415,25 +416,8 @@ const preheatedWaterCylinderSummary: SummarySection = {
 	editUrl: getUrl("domesticHotWater"),
 };
 
-const preheatedSmartWaterCylinderSummary: SummarySection = {
-	id: "preheatedSmartWaterCylinder",
-	label: "Pre-heated smart water cylinders",
-	data: preheatedSmartWaterCylinders.map(({ data: smartHWCylData }) => {
-		const coldWaterSource = getColdWaterSourceDisplay(smartHWCylData);
-
-		return {
-			"Name": show(smartHWCylData.name),
-			"Product reference": "productReference" in smartHWCylData ? show(smartHWCylData.productReference) : emptyValueRendering,
-			"Heater position in the cylinder": "heaterPosition" in smartHWCylData ? show(smartHWCylData.heaterPosition) : emptyValueRendering,
-			"Cold water source": displayCamelToSentenceCase(show(coldWaterSource)),
-		};
-	}),
-	editUrl: getUrl("domesticHotWater"),
-};
-
 const preheatedWaterStorageSummarySections: SummarySection[] = [
 	preheatedWaterCylinderSummary,
-	preheatedSmartWaterCylinderSummary,
 ];
 
 const populatedPreheatedWaterStorageSections = getNonEmptySections(preheatedWaterStorageSummarySections);

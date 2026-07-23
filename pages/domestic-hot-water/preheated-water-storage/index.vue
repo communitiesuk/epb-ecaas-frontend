@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { litre, type Volume } from "~/utils/units/volume";
-import type { PreheatedWaterStorageData, WaterStorageData } from "~/stores/ecaasStore.schema";
+import type { PreheatedWaterStorageData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
 import { v4 as uuidv4 } from "uuid";
 import { hasPackagedProduct } from "#imports";
@@ -43,15 +43,7 @@ const saveForm = (fields: PreheatedWaterStorageData) => {
 					storageCylinderVolume: fields.storageCylinderVolume,
 					dailyEnergyLoss: fields.dailyEnergyLoss,
 					packagedProductReference: fields.packagedProductReference,
-				},
-				complete: true,
-			};
-		} else if (fields.typeOfWaterStorage === "smartHotWaterTank") {
-			waterStorageItem = {
-				data: {
-					...commonFields,
-					typeOfWaterStorage: fields.typeOfWaterStorage,
-					productReference: fields.productReference,
+					heatSourceId: fields.heatSourceId,
 				},
 				complete: true,
 			};
@@ -78,25 +70,6 @@ autoSaveForm<PreheatedWaterStorageData>(model, (state, newData) => {
 	newData.data.name ??= waterStorageTypes[storageType];
 	state.domesticHotWater.preheatedWaterStorage.data = [newData];
 });
-
-watch(
-	() => model.value?.typeOfWaterStorage,
-	(newType, oldType) => {
-		if (newType && oldType !== newType) {
-			errorMessages.value = [];
-			const preservedId = model.value?.id;
-			const defaultName = waterStorageTypes[newType];
-
-			const newValue = { 
-				typeOfWaterStorage: newType, 
-				id: preservedId,
-				...(defaultName && { name: defaultName }),
-			} as WaterStorageData;
-
-			model.value = newValue;
-		}
-	},
-);
 
 const waterStorageOptions: Record<Exclude<WaterStorageType, "smartHotWaterTank">, string> = {
 	"hotWaterCylinder": "Standard water cylinder",
@@ -178,6 +151,13 @@ const wwhrsMap = new Map(wwhrs);
 				name="heaterPosition"
 				validation="required | number | min:0 | max:1"
 				help="Enter a number between 0 and 1, rounded to one decimal place. 0 is at the bottom, 1 is at the top."
+			/>
+			<FieldsHotWaterHeatSources
+				id="heatSourceId"
+				name="heatSourceId"
+				label="Heat source"
+				help="Select the relevant heat source that has been added previously"
+				validation="required"
 			/>
 			<FormKit
 				v-if="model.typeOfWaterStorage !== undefined"

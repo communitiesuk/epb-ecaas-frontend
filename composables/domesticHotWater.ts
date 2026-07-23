@@ -1,6 +1,6 @@
 import { duplicateFormEntry } from "~/utils/duplicateFormEntry";
 import { useMechanicalVentilation } from "./mechanicalVentilation";
-import type { PreheatedWaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, PreheatedWaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
 
 export function useDomesticHotWater() {
 	const store = useEcaasStore();
@@ -57,8 +57,14 @@ export function useDomesticHotWater() {
 				store.removeTaggedAssociations()([pipework], waterStorageId, "waterStorage"); 
 			}
 
+			if (domesticHotWaterType === "heatSources" && item) {
+				nuxtApp.callHook("app:hotWaterHeatSource:removed", (item.data as DomesticHotWaterHeatSourceData).id);
+			}
+
 			if (domesticHotWaterType === "heatSources" && item && isPackagedProduct(item.data)) {
 				const { packageProductIds } = item.data;
+
+				
 
 				if (item.data.typeOfHeatPump === "hybridHeatPump") {
 					removeHybridHeatPumpBoilers(packageProductIds![0]!);

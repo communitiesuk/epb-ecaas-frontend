@@ -23,7 +23,7 @@ describe("preheated water storage", () => {
 
 	const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
-	const preheatedWaterCylinder: EcaasForm<PreheatedWaterCylinderData> = {
+	const preheatedWaterCylinder: EcaasForm<PreheatedWaterStorageData> = {
 		data: {
 			name: "Standard water cylinder 1",
 			id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
@@ -32,6 +32,7 @@ describe("preheated water storage", () => {
 			dailyEnergyLoss: 1,
 			heaterPosition: 0.8,
 			coldWaterSource: "mainsWater",
+			heatSourceId: heatPumpId,
 		},
 	};
 
@@ -44,7 +45,6 @@ describe("preheated water storage", () => {
 			id: heatPumpId,
 			name: "Heat pump",
 			isExistingHeatSource: false,
-			coldWaterSource: "headerTank",
 			heatSourceId: "NEW_HEAT_SOURCE",
 			productReference: "1234",
 			typeOfHeatPump: "airSource",
@@ -76,6 +76,7 @@ describe("preheated water storage", () => {
 		await user.type(screen.getByTestId("dailyEnergyLoss"), "1");
 		await user.type(screen.getByTestId("heaterPosition"), "0.8");
 		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
+		await user.click(screen.getByTestId(`heatSourceId_${heatPumpId}`));
 		await user.tab();
 	};
 

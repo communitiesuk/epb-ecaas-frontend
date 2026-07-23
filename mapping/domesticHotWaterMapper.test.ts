@@ -88,7 +88,6 @@ describe("domestic hot water mapper", () => {
 			heatSourceId: "NEW_HEAT_SOURCE",
 			name: "DHW heatPump",
 			typeOfHeatSource: "heatPump",
-			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
 			productReference: "HP-12345",
 			typeOfHeatPump: "airSource",
@@ -104,7 +103,6 @@ describe("domestic hot water mapper", () => {
 			heatSourceId: "NEW_HEAT_SOURCE",
 			name: "DHW HW Only Heat Pump",
 			typeOfHeatSource: "heatPump",
-			coldWaterSource: "headerTank",
 			isExistingHeatSource: false,
 			productReference: "HP-12346",
 			typeOfHeatPump: "hotWaterOnly",
@@ -186,7 +184,6 @@ describe("domestic hot water mapper", () => {
 			heatSourceId: "NEW_HEAT_SOURCE",
 			isExistingHeatSource: false,
 			name: "DHW immersion",
-			coldWaterSource: "mainsWater",
 			power: 49,
 		},
 		complete: true,
@@ -199,7 +196,6 @@ describe("domestic hot water mapper", () => {
 			heatSourceId: "NEW_HEAT_SOURCE",
 			isExistingHeatSource: false,
 			name: "DHW immersion",
-			coldWaterSource: "mainsWater",
 			locationOfCollectorLoopPiping: "heatedSpace",
 			collectorModuleArea: 24,
 			numberOfCollectorModules: 3,
@@ -248,6 +244,7 @@ describe("domestic hot water mapper", () => {
 			dailyEnergyLoss: 40,
 			heaterPosition: 0.2,
 			coldWaterSource: wwhrs.data.id,
+			heatSourceId: heatPump.data.id,
 		},
 		complete: true,
 	};
@@ -350,7 +347,7 @@ describe("domestic hot water mapper", () => {
 							HotWaterSource: {
 								"hw cylinder": {
 									type: "StorageTank",
-									ColdWaterSource: "header tank",
+									ColdWaterSource: "mains water",
 									volume: storageTankWithHeatEx.data.storageCylinderVolume.amount,
 									daily_losses: storageTankWithHeatEx.data.dailyEnergyLoss,
 									heat_exchanger_surface_area: storageTankWithHeatEx.data.areaOfHeatExchanger,
@@ -364,7 +361,7 @@ describe("domestic hot water mapper", () => {
 									},
 								},
 							},
-							ColdWaterSource: coldWaterSourceHeaderTank.ColdWaterSource,
+							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -1127,7 +1124,7 @@ describe("domestic hot water mapper", () => {
 				});
 
 				expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
-					.toThrow("Expected exactly one domestic hot water heat source, found 0");
+					.toThrow("Expected exactly 1 domestic hot water heat source, found 0");
 			});
 
 			it("throws an explicit error when more than one non-heat-network DHW reference heat source exists", async () => {
@@ -1149,7 +1146,7 @@ describe("domestic hot water mapper", () => {
 				});
 
 				expect(() => mapHotWaterSourcesData(resolveState(store.$state)))
-					.toThrow("Expected exactly one domestic hot water heat source, found 2");
+					.toThrow("Expected exactly 1 domestic hot water heat source, found 2");
 			});
 
 			it.each([
@@ -1326,10 +1323,7 @@ describe("domestic hot water mapper", () => {
 		describe("pre-heated water storage", () => {
 			it("maps pre-heated water cylinders to PreHeatedWaterStorage", () => {
 				const heatPumpWithCylinder = {
-					data: {
-						...heatPumpHWOnly.data,
-						coldWaterSource: preheatedTank.data.id,
-					},
+					data: heatPumpHWOnly.data,
 					complete: true,
 				} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
@@ -1343,8 +1337,17 @@ describe("domestic hot water mapper", () => {
 							data: [wwhrs],
 							complete: true,
 						},
+						waterStorage: {
+							data: [storageTank],
+						},
 						preheatedWaterStorage: {
-							data: [preheatedTank],
+							data: [{
+								data: {
+									...preheatedTank.data,
+									heatSourceId: heatPumpWithCylinder.data.id,
+								},
+								complete: true,
+							}],
 							complete: true,
 						},
 					},
@@ -1376,6 +1379,24 @@ describe("domestic hot water mapper", () => {
 			});
 
 			it("maps pre-heated water cylinder cold water source to hot water cylinder", () => {
+				const boilerWithCylinder = {
+					data: {
+						...combiBoiler.data,
+						id: "97316c1f-4ffd-4330-adff-7f826ddf3b7a",
+						coldWaterSource: storageTank.data.id,
+						packagedProductReference: heatPumpHWOnly.data.id,
+					}, 
+					complete: true,
+				} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
+				const heatPumpWithCylinder = {
+					data: {
+						...heatPumpHWOnly.data,
+						packageProductIds: [boilerWithCylinder.data.id],
+					},
+					complete: true,
+				} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
+
 				const hotWaterCylinder: EcaasForm<WaterStorageData> = {
 					data: {
 						...storageTank.data,
@@ -1387,26 +1408,11 @@ describe("domestic hot water mapper", () => {
 				const preheatedCylinder: EcaasForm<PreheatedWaterStorageData> = {
 					data: {
 						...preheatedTank.data,
+						heatSourceId: heatPumpWithCylinder.data.id,
 						coldWaterSource: "mainsWater",
 					},
 					complete: true,
 				};
-
-				const heatPumpWithCylinder = {
-					data: {
-						...heatPumpHWOnly.data,
-						coldWaterSource: preheatedCylinder.data.id,
-					},
-					complete: true,
-				} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
-
-				const boilerWithCylinder = {
-					data: {
-						...combiBoiler.data,
-						coldWaterSource: hotWaterCylinder.data.id,
-					}, 
-					complete: true,
-				} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
 				store.$patch({
 					domesticHotWater: {
@@ -1468,10 +1474,6 @@ describe("domestic hot water mapper", () => {
 			it("throws an error when no heat source is connected to pre-heated water cylinder", () => {
 				store.$patch({
 					domesticHotWater: {
-						heatSources: {
-							data: [heatPump],
-							complete: true,
-						},
 						preheatedWaterStorage: {
 							data: [preheatedTank],
 							complete: true,
@@ -1783,7 +1785,6 @@ describe("domestic hot water mapper", () => {
 						id: heatSourceId,
 						isExistingHeatSource: false,
 						heatSourceId: "NEW_HEAT_SOURCE",
-						coldWaterSource: "mainsWater",
 						typeOfHeatSource: "heatPump",
 						name: "source2",
 						productReference: "HP-67890",
