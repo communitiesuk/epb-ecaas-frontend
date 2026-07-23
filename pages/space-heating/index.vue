@@ -81,32 +81,32 @@ function hasIncompleteEntries() {
 	);
 }
 
-const hasIncompatibleHeatSourceForHeatNetwork = computed(() =>
-	store.spaceHeating.heatSource.data.some((heatSource) => {
+const incompatibleHeatSourceForHeatNetworkMessage = computed(() => {
+	for (const heatSource of store.spaceHeating.heatSource.data) {
 		const data = heatSource.data as HeatSourceData | undefined;
 
 		if (!data) {
-			return false;
+			continue;
 		}
 
 		if (data.typeOfHeatSource === "boiler") {
-			return true;
+			return "A heat network cannot be added as it isn't compatible with the boiler already entered.";
 		}
 
 		if (data.typeOfHeatSource === "heatBattery") {
-			return true;
+			return "A heat network cannot be added as it isn't compatible with the heat battery already entered.";
 		}
 
 		if (
 			data.typeOfHeatSource === "heatPump" &&
 			data.typeOfHeatPump !== "booster"
 		) {
-			return true;
+			return "A heat network cannot be added as it isn't compatible with the heat pump already entered.";
 		}
+	}
 
-		return false;
-	}),
-);
+	return undefined;
+});
 
 </script>
 
@@ -140,11 +140,7 @@ const hasIncompatibleHeatSourceForHeatNetwork = computed(() =>
 		"
 		:show-status="true"
 		:max-number-of-items="1"
-		:conflict-message="
-			hasIncompatibleHeatSourceForHeatNetwork
-				? `A heat network cannot be added as it isn't compatible with the heat sources already entered.`
-				: undefined
-		"
+		:conflict-message="incompatibleHeatSourceForHeatNetworkMessage"
 		@duplicate="(index:number) => handleDuplicate('heatNetworks', index)"
 		@remove="(index:number) => handleRemove('heatNetworks', index)"
 	/>
