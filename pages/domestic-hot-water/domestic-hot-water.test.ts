@@ -385,7 +385,7 @@ describe("Domestic hot water", () => {
 					isExistingHeatSource: false,
 					name: "DHW POU",
 					coldWaterSource: "mainsWater",
-					heaterEfficiency: 0.88,
+					// heaterEfficiency: 0.88,
 				},
 				complete: true,
 			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;

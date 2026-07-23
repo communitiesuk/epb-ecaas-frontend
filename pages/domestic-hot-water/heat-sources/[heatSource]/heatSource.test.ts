@@ -1268,7 +1268,7 @@ describe("Point of use section", () => {
 		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
 		await user.click(screen.getByTestId("typeOfHeatSource_pointOfUse"));
 		await user.click(screen.getByTestId("energySupply_electricity"));
-		await user.type(screen.getByTestId("heaterEfficiency"), "1");
+		// await user.type(screen.getByTestId("heaterEfficiency"), "1");
 
 		await user.tab();
 	};
@@ -1278,7 +1278,7 @@ describe("Point of use section", () => {
 		name: "Point of use",
 		typeOfHeatSource: "pointOfUse",
 		energySupply: "electricity",
-		heaterEfficiency: 0,
+		// heaterEfficiency: 0,
 		coldWaterSource: "headerTank",
 		isExistingHeatSource: false,
 		heatSourceId: "NEW_HEAT_SOURCE",
@@ -1299,7 +1299,7 @@ describe("Point of use section", () => {
 
 		expect(screen.getByTestId("name")).toBeDefined();
 		expect(screen.getByTestId("energySupply")).toBeDefined();
-		expect(screen.getByTestId("heaterEfficiency")).toBeDefined();
+		// expect(screen.getByTestId("heaterEfficiency")).toBeDefined();
 	});
 
 	test("Point of use data is saved to store state when form is valid", async () => {
@@ -1320,7 +1320,7 @@ describe("Point of use section", () => {
 			name: "Point of use",
 			typeOfHeatSource: "pointOfUse",
 			energySupply: "electricity",
-			heaterEfficiency: 1,
+			// heaterEfficiency: 0,
 			heatSourceId: "NEW_HEAT_SOURCE",
 			coldWaterSource: "headerTank",
 			isExistingHeatSource: false,
@@ -1345,7 +1345,7 @@ describe("Point of use section", () => {
 		expect((await screen.findByTestId("typeOfHeatSource_pointOfUse")).hasAttribute("checked"));
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Point of use");
 		expect((await screen.findByTestId("energySupply_electricity")).hasAttribute("checked"));
-		expect((await screen.findByTestId<HTMLInputElement>("heaterEfficiency")).value).toBe("0");
+		// expect((await screen.findByTestId<HTMLInputElement>("heaterEfficiency")).value).toBe("0");
 	});
 
 	test("point of use is updated when data with id exists in store", async () => {
@@ -1386,7 +1386,7 @@ describe("Point of use section", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(await screen.findByTestId("energySupply_error")).toBeDefined();	
-		expect(await screen.findByTestId("heaterEfficiency_error")).toBeDefined();		
+		// expect(await screen.findByTestId("heaterEfficiency_error")).toBeDefined();		
 
 	});
 

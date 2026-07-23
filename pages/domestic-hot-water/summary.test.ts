@@ -912,7 +912,7 @@ describe("Domestic hot water summary", () => {
 			name: "Point of use",
 			typeOfHeatSource: "pointOfUse",
 			energySupply: "electricity",
-			heaterEfficiency: 1,
+			// heaterEfficiency: 1,
 		};
 
 		const heatNetwork1: HeatNetworkData = {
@@ -1064,7 +1064,7 @@ describe("Domestic hot water summary", () => {
 			Name: "Point of use",
 			"Type of heat source": "Point of use",
 			"Energy supply": "Electricity",
-			"Heater efficiency": "1",
+			// "Heater efficiency": "1",
 		};
 
 		it.each(

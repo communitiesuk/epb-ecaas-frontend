@@ -225,7 +225,7 @@ describe("domestic hot water mapper", () => {
 			isExistingHeatSource: false,
 			name: "DHW POU",
 			coldWaterSource: "mainsWater",
-			heaterEfficiency: 0.88,
+			// heaterEfficiency: 0.88,
 		},
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
@@ -668,7 +668,8 @@ describe("domestic hot water mapper", () => {
 							"hw cylinder": {
 								type: "PointOfUse",
 								ColdWaterSource: "mains water",
-								efficiency: pointOfUse.data.heaterEfficiency,
+								// efficiency: pointOfUse.data.heaterEfficiency,
+								efficiency: 1,
 								EnergySupply: defaultElectricityEnergySupplyName,
 							},
 						},
