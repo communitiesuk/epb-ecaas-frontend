@@ -195,46 +195,6 @@ describe("Heat source products page", () => {
 		).toEqual(expect.objectContaining({ needsSpecifiedLocation: false }));
 	});
 
-	test("only shows booster heat pumps when a communal heat network has been added with a booster heat pump flag", async () => {
-		mockRoute.mockReturnValue({
-			params: {
-				heatSource: "0",
-				products: "heat-pump",
-			},
-			path: "/0/heat-pump",
-		});
-
-		store.$patch({
-			spaceHeating: {
-				heatNetworks: {
-					data: [
-						{
-							data: {
-								typeOfHeatNetwork: "communalHeatNetwork",
-								boosterHeatPump: true,
-							},
-						},
-					],
-				},
-			},
-		});
-
-		mockFetch
-			.mockReturnValueOnce({
-				data: ref({ ...MOCKED_HEAT_PUMPS }),
-			})
-			.mockReturnValueOnce({
-				data: ref({ data: [] }),
-			});
-
-		await renderSuspended(Products);
-
-		expect(screen.queryByText("Small Heat Pump")).toBeNull();
-		expect(screen.queryByText("Medium Heat Pump")).toBeNull();
-		expect(screen.queryByText("Large Heat Pump")).toBeNull();
-		expect(screen.getByText("Booster Heat Pump")).toBeDefined();
-	});
-
 	test("makes additional fetch for hot water only heat pumps if pageId is heatPump", async () => {
 		mockRoute.mockReturnValue({
 			params: {

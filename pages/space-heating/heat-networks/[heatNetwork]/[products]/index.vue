@@ -13,53 +13,7 @@ const { data: { value } } = await useFetch("/api/products", {
 	},
 });
 
-
-const hasBoosterHeatPump = computed(() =>
-	store.spaceHeating.heatSource.data.some(
-		heatSource =>
-			heatSource.data.typeOfHeatSource === "heatPump" &&
-			"typeOfHeatPump" in heatSource.data &&
-			heatSource.data.typeOfHeatPump === "booster",
-	)
-	||
-	store.domesticHotWater.heatSources.data.some(
-		heatSource =>
-			heatSource.data.isExistingHeatSource === false &&
-			heatSource.data.typeOfHeatSource === "heatPump" &&
-			heatSource.data.typeOfHeatPump === "booster",
-	),
-);
-
-const hasHeatInterfaceUnit = computed(() =>
-	store.spaceHeating.heatSource.data.some(
-		heatSource => heatSource.data.typeOfHeatSource === "heatInterfaceUnit",
-	)
-	||
-	store.domesticHotWater.heatSources.data.some(
-		heatSource =>
-			heatSource.data.isExistingHeatSource === false &&
-			heatSource.data.typeOfHeatSource === "heatInterfaceUnit",
-	),
-);
-
-
-const filteredProducts = computed(() => {
-	const products = value?.data ?? [];
-
-	if (hasBoosterHeatPump.value) {
-		return products.filter(
-			product => product.boosterHeatPump === true,
-		);
-	} 
-
-	if (hasHeatInterfaceUnit.value) {
-		return products.filter(product => product.boosterHeatPump !== true);
-	}
-	return products;
-});
-
-
-const { pagination } = searchData(filteredProducts.value);
+const { pagination } = searchData(value?.data ?? []);
 
 const selectProduct = async (product: DisplayProduct) => {
 	store.$patch((state) => {

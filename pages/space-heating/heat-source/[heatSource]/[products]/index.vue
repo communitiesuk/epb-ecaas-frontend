@@ -26,29 +26,11 @@ const { data: { value } } = await useFetch("/api/products", {
 const { title, index, searchModel, searchData } = useProductsPage("heatSource");
 const { selectHeatSourceProduct } = useSelectHeatSourceProduct(value?.data ?? [], heatSourceProductType);
 
-const heatNetwork = computed(() =>
-	store.spaceHeating.heatNetworks.data[index]?.data,
-);
+// const heatNetwork = computed(() =>
+// 	store.spaceHeating.heatNetworks.data[index]?.data,
+// );
 
-
-const filteredProducts = computed(() => {
-	const products = value?.data ?? [];
-
-	const requiresBoosterHeatPump =
-		heatNetwork.value?.typeOfHeatNetwork === "communalHeatNetwork" &&
-		heatNetwork.value?.boosterHeatPump === true;
-
-
-	if (requiresBoosterHeatPump) {
-		return products.filter(
-			product => product.technologyType === "BoosterHeatPump",
-		);
-	}
-
-	return products;
-});
-
-const { pagination } = searchData(filteredProducts.value);
+const { pagination } = searchData(value?.data ?? []);
 
 const selectProduct = async (product: DisplayProduct) => {
 	const redirectUrl = page("heatSource").url.replace(":heatSource", `${index}`);

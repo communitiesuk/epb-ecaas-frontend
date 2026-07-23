@@ -428,36 +428,4 @@ describe("Heat source products page", () => {
 		expect(store.domesticHotWater.heatSources.data.length).toBe(1);
 		expect(store.domesticHotWater.waterStorage.data.length).toBe(1);
 	});
-
-	test("only shows booster heat pumps when a communal heat network has been added with a booster heat pump flag", async () => {
-		mockRoute.mockReturnValue({
-			params: {
-				heatSource: "0",
-				products: "heat-pump",
-			},
-			path: "/0/heat-pump",
-		});
-
-		store.$patch({
-			spaceHeating: {
-				heatNetworks: {
-					data: [
-						{
-							data: {
-								typeOfHeatNetwork: "communalHeatNetwork",
-								boosterHeatPump: true,
-							},
-						},
-					],
-				},
-			},
-		});
-
-		await renderSuspended(Products);
-
-		expect(screen.queryByText("Small Heat Pump")).toBeNull();
-		expect(screen.queryByText("Medium Heat Pump")).toBeNull();
-		expect(screen.queryByText("Large Heat Pump")).toBeNull();
-		expect(screen.getByText("Booster Heat Pump")).toBeDefined();
-	});
 });

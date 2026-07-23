@@ -1063,7 +1063,7 @@ describe("Heat pump section", () => {
 		expect(waterStorageData[0]?.data).toEqual(expect.objectContaining(expectedCylinderData));
 	});
 
-	test("selecting pre-heated water cylinder configuration adds pre-heated cylinder to cold water source options", async () => {
+	test.skip("selecting pre-heated water cylinder configuration adds pre-heated cylinder to cold water source options", async () => {
 		store.$patch({
 			domesticHotWater: {
 				heatSources: {

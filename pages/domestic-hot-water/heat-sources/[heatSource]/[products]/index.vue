@@ -33,31 +33,11 @@ if (heatSourceProductType === "heatPump") {
 	}
 }
 
-const heatNetwork = computed(() =>
-	store.spaceHeating.heatNetworks.data[0]?.data,
-);
+// const heatNetwork = computed(() =>
+// 	store.spaceHeating.heatNetworks.data[0]?.data,
+// );
 
-const filteredProducts = computed(() => {
-	const products = value?.data ?? [];
-
-	const requiresBoosterHeatPump =
-		heatNetwork.value?.typeOfHeatNetwork === "communalHeatNetwork" &&
-		heatNetwork.value?.boosterHeatPump === true;
-
-
-	if (requiresBoosterHeatPump) {
-		return products.filter(
-			product => product.technologyType === "BoosterHeatPump",
-		);
-	}
-
-	return products;
-});
-
-window.console.log("ALL PRODUCTS", value?.data);
-window.console.log("FILTERED", filteredProducts.value);
-
-const { pagination } = searchData(filteredProducts.value);
+const { pagination } = searchData(value?.data ?? []);
 
 const selectProduct = async (product: DisplayProduct) => {
 	await selectHotWaterHeatSourceProduct(
