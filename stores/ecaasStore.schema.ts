@@ -1304,7 +1304,6 @@ export type ImmersionHeaterPosition = "top" | "middle" | "bottom";
 const basePointOfUse = namedWithId.extend({
 	typeOfHeatSource: z.literal("pointOfUse"),
 	energySupply: fuelTypeZod.optional(),
-	// heaterEfficiency: z.number(),
 });
 export type DHWHeatSourceType = HeatSourceType | "immersionHeater" | "pointOfUse" | "solarThermalSystem";
 
