@@ -8,8 +8,7 @@ const title = "Heat network";
 const store = useEcaasStore();
 const route = useRoute();
 const { autoSaveElementForm, getStoreIndex } = useForm();
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
-
+const { handleInvalidSubmit, errorMessages, addError, clearErrors } = useErrorSummary();
 
 const heatNetworkStoreData = store.spaceHeating.heatNetworks?.data;
 const index = getStoreIndex(heatNetworkStoreData);
@@ -53,7 +52,48 @@ const typeOfHeatNetworkValidation = (node: FormKitNode) => {
 	);
 };
 
+const incompatibleHeatSourceTypes = [
+	"boiler",
+	"heatBattery",
+	"solarThermalSystem",
+	"immersionHeater",
+	"pointOfUse",
+];
+
+const hasIncompatibleDHWHeatSource = () =>
+	store.domesticHotWater.heatSources.data.some((heatSource) => {
+		const data = heatSource.data;
+
+		if (!data || !("typeOfHeatSource" in data)) {
+			return false;
+		}
+
+		if (
+			incompatibleHeatSourceTypes.includes(data.typeOfHeatSource)
+		) {
+			return true;
+		}
+
+		return (
+			data.typeOfHeatSource === "heatPump" &&
+			data.typeOfHeatPump !== "booster"
+		);
+	});
+
 const saveForm = (fields: HeatNetworkData) => {
+	clearErrors();
+
+	if (hasIncompatibleDHWHeatSource()) {
+		addError({
+			id: "incompatibleHeatSource",
+			text: "A heat network is not compatible with the heat sources that have been added to domestic hot water. The only heat sources possible with a heat network are HIUs or booster heat pumps.",
+			href: "/domestic-hot-water",
+		});
+
+		window.scrollTo(0, 0);
+		return;
+	}
+	
 	store.$patch((state) => {
 		const { heatNetworks } = state.spaceHeating;
 
