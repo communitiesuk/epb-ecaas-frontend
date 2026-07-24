@@ -167,7 +167,6 @@ describe("dwelling fabric mapper", () => {
 			underfloorSpaceThermalResistance: 1,
 			thermalTransmittanceOfWallsAboveGround: 1,
 			ventilationOpeningsArea: 100,
-			windShieldingFactor: "Average",
 		};
 
 		const groundFloorWithHeatedBasement: GroundFloorData = {
@@ -396,7 +395,7 @@ describe("dwelling fabric mapper", () => {
 			thermal_resist_insul: groundFloorWithSuspendedFloor.underfloorSpaceThermalResistance,
 			thermal_transm_walls: groundFloorWithSuspendedFloor.thermalTransmittanceOfWallsAboveGround,
 			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea / 1e6,
-			shield_fact_location: groundFloorWithSuspendedFloor.windShieldingFactor,
+			shield_fact_location: "Average", 
 		};
 
 		expect(groundFloorWithSuspendedFloorElement).toEqual(expectedGroundFloorSuspendedFloor);

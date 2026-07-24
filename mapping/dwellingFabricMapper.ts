@@ -184,7 +184,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					floor_type: x.typeOfGroundFloor,
 					height_upper_surface: x.heightOfFloorUpperSurface / 1000,
 					area_per_perimeter_vent: x.ventilationOpeningsArea / 1e6,
-					shield_fact_location: x.windShieldingFactor,
+					shield_fact_location: "Average", // TODO: Needs to be removed once Alpha 8 is introduced
 					thermal_resist_insul: x.underfloorSpaceThermalResistance,
 					thermal_transm_walls: x.thermalTransmittanceOfWallsAboveGround,
 				};

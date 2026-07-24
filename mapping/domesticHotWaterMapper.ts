@@ -508,7 +508,7 @@ function mapHeatSourceNoWS(
 		case "pointOfUse":
 			mappedHWCylinderBit = {
 				type: "PointOfUse",
-				efficiency: 1,
+				efficiency: 1, // TODO: Needs to be removed once Alpha 8 is introduced
 				EnergySupply: defaultElectricityEnergySupplyName,
 				...commonHWCylinderProps,
 			} as const satisfies FhsInputSchema["HotWaterSource"]["hw cylinder"];

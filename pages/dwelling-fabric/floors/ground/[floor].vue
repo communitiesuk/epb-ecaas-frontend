@@ -47,12 +47,6 @@ const typeOfGroundFloorOptions: Record<ReducedGroundFloorOptions, SnakeToSentenc
 	// Unheated_basement: 'Unheated basement',
 };
 
-const windShieldingFactorOptions: Record<SchemaWindShieldLocation, SnakeToSentenceCase<SchemaWindShieldLocation>> = {
-	Sheltered: "Sheltered",
-	Average: "Average",
-	Exposed: "Exposed",
-};
-
 const saveForm = (fields: GroundFloorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceFloors } = state.dwellingFabric;
@@ -118,7 +112,6 @@ const saveForm = (fields: GroundFloorData) => {
 					underfloorSpaceThermalResistance: fields.underfloorSpaceThermalResistance,
 					thermalTransmittanceOfWallsAboveGround: fields.thermalTransmittanceOfWallsAboveGround,
 					ventilationOpeningsArea: fields.ventilationOpeningsArea,
-					windShieldingFactor: fields.windShieldingFactor,
 				};
 				break;
 			case "Heated_basement":
@@ -419,63 +412,6 @@ const greaterThanZero = (node: FormKitNode) => {
 				validation="required | number">
 				<GovDetails summary-text="Help with this input">
 					<p class="govuk-hint">Often suspended floors require additional ventilation to prevent moisture build up and structural damage. While ventilation is crucial for moisture control, it can lead to heat loss from the building.</p>
-				</GovDetails>
-			</FormKit>
-			<FormKit
-				id="windShieldingFactor"
-				type="govRadios"
-				:options="windShieldingFactorOptions"
-				label="Wind shielding factor"
-				name="windShieldingFactor"
-				help="This refers to how much the external wind conditions impact the airflow and heat loss through the void beneath the suspended floor"
-				validation="required"
-				data-field="Zone.BuildingElement.*.shield_fact_location">
-				<GovDetails summary-text="Help with this input">
-					<table class="govuk-table">
-						<thead class="ovuk-table__head">
-							<tr class="govuk-table__row">
-								<th scope="col" class="govuk-table__header table-header-medium-width">Level of wind shielding</th>
-								<th scope="col" class="govuk-table__header">Description</th>
-								<th scope="col" class="govuk-table__header">Examples</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">Sheltered</td>
-								<td class="govuk-table__cell">This applies to buildings in locations where the ground floor and its perimeter are significantly protected from direct wind exposure.</td>
-								<td class="govuk-table__cell">
-									<ul>
-										<li>Dense urban areas with many tall buildings closely spaced.</li>
-										<li>Buildings surrounded by the substantial windbreaks like mature trees, high walls, or other structures that significantly block airflow at ground level.</li>
-										<li>Deeply recessed or courtyard-like areas where the suspended floor's perimeter is not directly exposed to prevailing winds.</li>
-									</ul>
-								</td>
-							</tr>
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">Average</td>
-								<td class="govuk-table__cell">This represents a typical or moderate level of wind exposure for a building.</td>
-								<td class="govuk-table__cell">
-									<ul>
-										<li>Suburban areas with detached or semi-detached houses, where there are some nearby buildings and vegetation, but not enough to create strong shielding.</li>
-										<li>Buildings on the edge of urban areas where some protection is offered by the urban fabric, but still open to some prevailing winds.</li>
-										<li>Areas with scattered obstructions that offer partial wind protection.</li>
-									</ul>
-								</td>
-							</tr>
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">Exposed</td>
-								<td class="govuk-table__cell">This applies to buildings in highly exposed locations where the ground floor perimeter is directly subjected to strong winds.</td>
-								<td class="govuk-table__cell">
-									<ul>
-										<li>Open countryside or rural areas with no significant windbreaks.</li>
-										<li>Coastal areas or open plains.</li>
-										<li>Buildings on hilltops or at the end of long, unobstructed roads where wind can funnel directly to the property.</li>
-										<li>Isolated buildings without any nearby structures or dense vegetation.</li>
-									</ul>
-								</td>
-							</tr>
-						</tbody>
-					</table>
 				</GovDetails>
 			</FormKit>
 		</template>

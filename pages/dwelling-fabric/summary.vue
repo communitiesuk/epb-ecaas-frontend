@@ -53,7 +53,6 @@ const groundFloorSummary: SummarySection = {
 		const underfloorSpaceThermalResistance = "underfloorSpaceThermalResistance" in x ? dim(x.underfloorSpaceThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 		const thermalTransmittanceOfWallsAboveGround = "thermalTransmittanceOfWallsAboveGround" in x ? dim(x.thermalTransmittanceOfWallsAboveGround, "watts per square metre kelvin") : emptyValueRendering;
 		const ventilationOpeningsArea = "ventilationOpeningsArea" in x ? dim(x.ventilationOpeningsArea, "millimetres square per metre") : emptyValueRendering;
-		const windShieldingFactor = "windShieldingFactor" in x ? show(x.windShieldingFactor) : emptyValueRendering;
 
 		return {
 			"Name": show(x.name),
@@ -74,7 +73,6 @@ const groundFloorSummary: SummarySection = {
 			"Vertical edge insulation thermal resistance": verticalEdgeInsulationThermalResistance,			
 			"Height of the floor upper surface": heightOfFloorUpperSurface ,	
 			"Area of ventilation openings per perimeter": ventilationOpeningsArea,
-			"Wind shielding factor": windShieldingFactor,
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceFloors"),
