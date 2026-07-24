@@ -5,7 +5,6 @@ import { productTypeMap } from "~/stores/ecaasStore.schema";
 
 definePageMeta({ layout: false });
 
-const store = useEcaasStore();
 const { pageId, title, index, searchModel, searchData } = useProductsPage("heatSource");
 
 const heatSourceProductType = pageId as (HeatSourceProductType | TechnologyGroup);

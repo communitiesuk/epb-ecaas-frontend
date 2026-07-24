@@ -5,7 +5,7 @@ export function useHeatNetworks() {
     
 	const heatNetworkOptions = computed(() => {
 		const heatNetworks = store.spaceHeating.heatNetworks.data.filter(networks => {
-			return (networks.data as HeatNetworkData);
+			return networks.data;
 		});
 
 		return Object.fromEntries(heatNetworks.map(network => {

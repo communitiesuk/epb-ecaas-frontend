@@ -7,7 +7,6 @@ import { productTypeMap, type EcaasForm, type HeatSourceData, type HeatSourcePro
 
 definePageMeta({ layout: false });
 
-const store = useEcaasStore();
 const route = useRoute();
 const pageId = kebabToCamelCase(route.params.products as string);
 

@@ -73,13 +73,13 @@ describe("Heat Network Products Page", () => {
 		typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
 	};
 
-	const heatInterfaceUnit: Partial<HeatSourceData> = {
+	const _heatInterfaceUnit: Partial<HeatSourceData> = {
 		id: "hiuId",
 		name: "Heat Interface Unit",
 		typeOfHeatSource: "heatInterfaceUnit",
 	};
 
-	const boosterHeatPump: HeatSourceData = {
+	const _boosterHeatPump: HeatSourceData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b52222",
 		name: "Booster HP",
 		typeOfHeatSource: "heatPump",
@@ -89,7 +89,7 @@ describe("Heat Network Products Page", () => {
 		associatedHeatNetworkId: "463c94f6-566c-49b2-af27-111111111",
 	};
 
-	const dhwBoosterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+	const _dhwBoosterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
 		isExistingHeatSource: false,
 		heatSourceId: "NEW_HEAT_SOURCE",
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
@@ -98,7 +98,7 @@ describe("Heat Network Products Page", () => {
 		typeOfHeatPump: "booster",
 	};
 
-	const dhwHeatInterfaceUnit: Partial<DomesticHotWaterHeatSourceData> = {
+	const _dhwHeatInterfaceUnit: Partial<DomesticHotWaterHeatSourceData> = {
 		isExistingHeatSource: false,
 		heatSourceId: "NEW_HEAT_SOURCE",
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c22",
