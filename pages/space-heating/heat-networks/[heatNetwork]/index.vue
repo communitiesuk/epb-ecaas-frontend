@@ -110,7 +110,7 @@ const saveForm = (fields: HeatNetworkData) => {
 	) {
 		addError({
 			id: "incompatibleBoosterHeatPump",
-			text: "Booster Heat pumps are not compatible with district heat networks, like the one selected. Please replace the heat pump with a HIU.",
+			text: "Booster Heat pumps are not compatible with district heat networks, like the one selected. Please replace the booster heat pump with a HIU.",
 			href: getUrl("spaceHeating"),
 		});
 

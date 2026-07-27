@@ -405,7 +405,7 @@ describe("Heat Networks", () => {
 				);
 
 				expect(errorSummary.textContent).toContain(
-					"Booster Heat pumps are not compatible with district heat networks, like the one selected. Please replace the heat pump with a HIU.",
+					"Booster Heat pumps are not compatible with district heat networks, like the one selected. Please replace the booster heat pump with a HIU.",
 				);
 
 				const link = errorSummary.querySelector("a");
