@@ -31,7 +31,7 @@ describe("Heat Networks", () => {
 
 	const unsleevedDistrictHeatNetwork: EcaasForm<HeatNetworkData> = {
 		data: {
-			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8f",
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r7s",
 			name: "Unsleeved District Heat Network",
 			productReference: "43",
 			typeOfHeatNetwork: "unsleevedDistrictHeatNetwork",
@@ -40,7 +40,7 @@ describe("Heat Networks", () => {
 
 	const communalHeatNetworkWithoutBooster: EcaasForm<HeatNetworkData> = {
 		data: {
-			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8f",
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r9k",
 			name: "Communal Heat Network without Booster",
 			productReference: "44",
 			typeOfHeatNetwork: "communalHeatNetwork",
@@ -49,7 +49,7 @@ describe("Heat Networks", () => {
 
 	const communalHeatNetworkWithBooster: EcaasForm<HeatNetworkData> = {
 		data: {
-			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8f",
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3rl6",
 			name: "Communal Heat Network with Booster",
 			productReference: "45",
 			typeOfHeatNetwork: "communalHeatNetwork",
@@ -69,6 +69,13 @@ describe("Heat Networks", () => {
 		name: "Booster Heat Pump",
 		typeOfHeatSource: "heatPump",
 		typeOfHeatPump: "booster",
+	};
+
+	const heatPump: Partial<HeatSourceData> = {
+		id: "heat_pump_id",
+		name: "Heat Pump",
+		typeOfHeatSource: "heatPump",
+		typeOfHeatPump: "airSource",
 	};
 
 	afterEach(() => {
@@ -252,10 +259,18 @@ describe("Heat Networks", () => {
 	});
 
 	test("does not clear selected product when type of heat network changes", async () => {
+		const traditionalCommunalHeatNetwork: EcaasForm<HeatNetworkData> = {
+			data: {
+				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8t",
+				name: "Traditional Communal Heat Network",
+				productReference: "44",
+				typeOfHeatNetwork: "communalHeatNetwork",
+			},
+		};
 		store.$patch({
 			spaceHeating: {
 				heatNetworks: {
-					data: [communalHeatNetworkWithoutBooster],
+					data: [traditionalCommunalHeatNetwork],
 				},
 			},
 		});
@@ -405,7 +420,7 @@ describe("Heat Networks", () => {
 				);
 
 				expect(errorSummary.textContent).toContain(
-					"Booster Heat pumps are not compatible with district heat networks, like the one selected. Please replace the booster heat pump with a HIU.",
+					"Booster heat pumps are not compatible with district heat networks, like the one selected. Please replace the booster heat pump with a HIU.",
 				);
 
 				const link = errorSummary.querySelector("a");
@@ -445,6 +460,117 @@ describe("Heat Networks", () => {
 			).toBe(true);
 
 			expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
+		});
+
+		it("shows error message when a heat pump exists and a sleeved district heat network is selected", async() => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [sleevedDistrictHeatNetwork], 
+						complete: false,
+					},
+					heatSource: {
+						data: [{ data: heatPump }],
+						complete: true,
+					},
+				},
+			});
+
+			await renderSuspended(HeatNetworks, {
+				route: {
+					params: { "heatNetwork": "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const errorSummary = await screen.findByTestId(
+				"heatNetworksErrorSummary",
+			);
+
+			expect(errorSummary.textContent).toContain(
+				"Heat pumps are not compatible with district heat networks, like the one added. Please replace the heat pump with a HIU.",
+			);
+
+			const link = errorSummary.querySelector("a");
+
+			expect(link).not.toBeNull();
+			expect(link?.getAttribute("href")).toBe("/space-heating");
+		});
+
+		it("shows error message when a heat pump exists and a unsleeved district heat network is selected", async() => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [unsleevedDistrictHeatNetwork], 
+						complete: false,
+					},
+					heatSource: {
+						data: [{ data: heatPump }],
+						complete: true,
+					},
+				},
+			});
+
+			await renderSuspended(HeatNetworks, {
+				route: {
+					params: { "heatNetwork": "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const errorSummary = await screen.findByTestId(
+				"heatNetworksErrorSummary",
+			);
+
+			expect(errorSummary.textContent).toContain(
+				"Heat pumps are not compatible with district heat networks, like the one added. Please replace the heat pump with a HIU.",
+			);
+
+			const link = errorSummary.querySelector("a");
+
+			expect(link).not.toBeNull();
+			expect(link?.getAttribute("href")).toBe("/space-heating");
+		});
+
+		it("shows error message when a heat pump exists and a communal heat network without a booster heat pump flag is selected", async() => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [communalHeatNetworkWithoutBooster], 
+						complete: false,
+					},
+					heatSource: {
+						data: [{ data: heatPump }],
+						complete: true,
+					},
+				},
+			});
+
+			await renderSuspended(HeatNetworks, {
+				route: {
+					params: { "heatNetwork": "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const heatNetwork = store.spaceHeating.heatNetworks.data;
+			window.console.log(heatNetwork);
+
+			const errorSummary = await screen.findByTestId(
+				"heatNetworksErrorSummary",
+			);
+
+			expect(errorSummary.textContent).toContain(
+				"Heat pumps are not compatible with traditional communal heat networks, like the one added. Please replace the heat pump with a HIU.",
+			);
+
+			const link = errorSummary.querySelector("a");
+
+			expect(link).not.toBeNull();
+			expect(link?.getAttribute("href")).toBe("/space-heating");
 		});
 	});
 
