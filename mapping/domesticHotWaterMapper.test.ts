@@ -24,12 +24,6 @@ describe("domestic hot water mapper", () => {
 		},
 	};
 
-	const coldWaterSourceHeaderTank: Pick<FhsInputSchema, "ColdWaterSource"> = {
-		ColdWaterSource: {
-			["header tank"]: defaultColdWaterSourceData,
-		},
-	};
-
 	const heatSourceId = "efa1b2c3-d4e5-6789-0123-456789abcdef";
 	const heatSourceIdInSH = "efa1b2c3-d4e5-6789-0123-456789abcd12";
 
@@ -524,7 +518,7 @@ describe("domestic hot water mapper", () => {
 							HotWaterSource: {
 								"hw cylinder": {
 									type: "StorageTank",
-									ColdWaterSource: "header tank",
+									ColdWaterSource: "mains water",
 									volume: storageTankWithHeatEx.data.storageCylinderVolume.amount,
 									daily_losses: storageTankWithHeatEx.data.dailyEnergyLoss,
 									HeatSource: {
@@ -550,7 +544,7 @@ describe("domestic hot water mapper", () => {
 									heat_network_type: "communal",
 								},
 							},
-							ColdWaterSource: coldWaterSourceHeaderTank.ColdWaterSource,
+							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -1400,6 +1394,7 @@ describe("domestic hot water mapper", () => {
 				const hotWaterCylinder: EcaasForm<WaterStorageData> = {
 					data: {
 						...storageTank.data,
+						areaOfHeatExchanger: 10,
 						coldWaterSource: preheatedTank.data.id,
 					},
 					complete: true,
@@ -1444,23 +1439,15 @@ describe("domestic hot water mapper", () => {
 							ColdWaterSource: "mains water",
 							volume: 30,
 							daily_losses: 40,
+							heat_exchanger_surface_area: 10,
 							HeatSource: {
-								[combiBoiler.data.name]: {
+								[heatPumpWithCylinder.data.name]: {
 									heater_position: hotWaterCylinder.data.heaterPosition,
-									type: "HeatSourceWet",
-									name: combiBoiler.data.name,
-									temp_flow_limit_upper: combiBoiler.data.maxFlowTemp.amount,
+									type: "HeatPump_HWOnly",
 									thermostat_position: storageTank.data.thermostatPosition,
+									product_reference: heatPumpHWOnly.data.productReference,
 								},
 							},
-						},
-					},
-					HeatSourceWet: {
-						[combiBoiler.data.name]: {
-							EnergySupply: "mains elec",
-							is_heat_network: false,
-							product_reference: combiBoiler.data.productReference,
-							type: "Boiler",
 						},
 					},
 					ColdWaterSource: {
@@ -1579,12 +1566,14 @@ describe("domestic hot water mapper", () => {
 						"bath1": {
 							ColdWaterSource: "mains water",
 							size: 70,
+							HotWaterSource: "hw cylinder",
 						},
 					},
 					Other: {
 						"other1": {
 							ColdWaterSource: "mains water",
 							flowrate: 4,
+							HotWaterSource: "hw cylinder",
 						},
 					},
 				},

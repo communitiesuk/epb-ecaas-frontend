@@ -113,19 +113,6 @@ watch(
 	},
 );
 
-watch(
-	() => [model.value?.typeOfHotWaterOutlet, store.domesticHotWater.heatSources.data.length] as const,
-	() => {
-		const heatSources = store.domesticHotWater.heatSources.data;
-		if (heatSources.length === 1 && model.value && model.value.typeOfHotWaterOutlet === "mixedShower") {
-			const heatSourceId = heatSources[0]?.data.id;
-			if ("dhwHeatSourceId" in model.value && heatSourceId) {
-				model.value.dhwHeatSourceId = heatSourceId;
-			}
-		}
-	},
-);
-
 autoSaveElementForm<HotWaterOutletsData>({
 	model,
 	storeData: store.domesticHotWater.hotWaterOutlets,
@@ -142,25 +129,6 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 		productBrandName.value = product.brandName;
 	}
 }
-
-// const isProductSelected = () => {
-// 	if (hotWaterOutletData.data.typeOfHotWaterOutlet !== "mixedShower"
-//         && hotWaterOutletData.data.typeOfHotWaterOutlet !== "electricShower") {
-// 		return false;
-// 	}
-// 	// return hotWaterOutletData?.data.wwhrs.productReference ? true : false;
-// };
-
-const heatSourceOptions = new Map(
-	store.domesticHotWater.heatSources.data.map((e) => [
-		e.data.id,
-		e.data.isExistingHeatSource
-			? store.spaceHeating.heatSource.data
-				.find((x) => x.data.id === e.data.heatSourceId)?.data.name
-                ?? "Invalid existing heat source"
-			: e.data.name,
-	]),
-);
 
 const associatedWwhrs = useAssociatedItems(["wwhrs"]);
 </script>
@@ -201,25 +169,6 @@ const associatedWwhrs = useAssociatedItems(["wwhrs"]);
 			validation="required"
 		/>
 		<template v-if="mounted && model.typeOfHotWaterOutlet === 'mixedShower'">
-			<FormKit
-				id="dhwHeatSourceId"
-				name="dhwHeatSourceId"
-				type="govRadios"
-				label="Hot water source"
-				help="Select the relevant hot water source that has been added previously"
-				validation="required"
-				:options="heatSourceOptions"
-			>
-				<div
-					v-if="!heatSourceOptions.size"
-					data-testid="noHeatSource"
-				>
-					<p class="govuk-error-message">No heat sources added.</p>
-					<NuxtLink :to="getUrl('heatSourcesCreate')" class="govuk-link gov-radios-add-link">
-						Click here to add a heat source
-					</NuxtLink>
-				</div>
-			</FormKit>
 			<FormKit
 				id="coldWaterSource"
 				type="govRadios"

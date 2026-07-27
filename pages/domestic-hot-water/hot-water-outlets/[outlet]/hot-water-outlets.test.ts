@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen, within } from "@testing-library/vue";
+import { screen } from "@testing-library/vue";
 import HotWaterOutlets from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
 import type { Product } from "~/pcdb/pcdb.types.js";
@@ -18,8 +18,6 @@ vi.mock("uuid");
 describe("hot water outlets", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
-
-	const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
 	const wwhrs: EcaasForm<WwhrsData> = {
 		data: {
@@ -77,32 +75,12 @@ describe("hot water outlets", () => {
 		store.$reset();
 	});
 
-	const addHeatPumpStoreData = () => {
-		store.$patch({
-			domesticHotWater: {
-				heatSources: {
-					data: [
-						{
-							data: {
-								id: heatPumpId,
-								name: "Heat pump 1",
-								isExistingHeatSource: false,
-							},
-							complete: true,
-						},
-					],
-				},
-			},
-		});
-	};
-
 	const populateValidFormMS = async () => {
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
 		const nameInput = screen.getByTestId<HTMLInputElement>("name");
 		await user.clear(nameInput);
 		await user.type(nameInput, "Mixer shower 1");
 		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
-		await user.click(screen.getByTestId("dhwHeatSourceId_" + heatPumpId));
 		await user.click(screen.getByTestId("isAirPressureShower_no"));
 		await user.type(screen.getByTestId("flowRate"), "10");
 		await user.click(screen.getByTestId("wwhrs_yes"));
@@ -157,7 +135,6 @@ describe("hot water outlets", () => {
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("coldWaterSource_error"))).toBeDefined();
-		expect((await screen.findByTestId("dhwHeatSourceId_error"))).toBeDefined();
 
 		await user.click(screen.getByTestId("typeOfHotWaterOutlet_electricShower"));
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -267,49 +244,6 @@ describe("hot water outlets", () => {
 		expect(screen.queryByTestId("hotWaterOutletErrorSummary")).toBeNull();
 	});
 
-	test("displays list of heat sources when mixer shower is selected from domestic hot water sources", async () => {
-		addHeatPumpStoreData();
-		await renderSuspended(HotWaterOutlets, {
-			route: {
-				params: { "hotWaterOutlet": "create" },
-			},
-		});
-
-		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
-
-		expect(screen.getByTestId("dhwHeatSourceId_" + heatPumpId)).toBeDefined();
-	});
-
-	test("first heat source is autoselected when only one heat source exists", async () => {
-		addHeatPumpStoreData();
-		await renderSuspended(HotWaterOutlets, {
-			route: {
-				params: { "hotWaterOutlet": "create" },
-			},
-		});
-		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
-		await user.tab();
-
-		const heatSourceSelect = screen.getByTestId<HTMLInputElement>("dhwHeatSourceId_" + heatPumpId);
-		expect(heatSourceSelect.hasAttribute("checked")).toBe(true);
-	});
-
-	test("shows link to add heat source when mixer shower is selected and no heat sources exist", async () => {
-		await renderSuspended(HotWaterOutlets, {
-			route: {
-				params: { "hotWaterOutlet": "create" },
-			},
-		});
-		await user.click(screen.getByTestId("typeOfHotWaterOutlet_mixedShower"));
-
-		expect(screen.getByText("No heat sources added.")).toBeDefined();
-		const heatSourceSection = screen.getByTestId("noHeatSource");
-		expect(heatSourceSection).toBeDefined();
-		const link = within(heatSourceSection).getByRole("link");
-		expect(link).toBeDefined();
-		expect(link.getAttribute("href")).toBe(getUrl("heatSourcesCreate"));
-	});
-
 	test("Renders HEM default product warning when default product is selected", async () => {
 		const product: Partial<Product> = {
 			id: "1000",
@@ -382,8 +316,6 @@ describe("hot water outlets", () => {
 			});
 
 			test("data is saved to store state when form is valid", async () => {
-				addHeatPumpStoreData();
-
 				vi.mocked(uuidv4).mockReturnValue(hotWaterOutlet.data.id as unknown as Buffer);
 				await renderSuspended(HotWaterOutlets, {
 					route: {
@@ -410,7 +342,6 @@ describe("hot water outlets", () => {
 					},
 				});
 
-				addHeatPumpStoreData();
 				await renderSuspended(HotWaterOutlets, {
 					route: {
 						params: { "hotWaterOutlet": "0" },
@@ -422,7 +353,6 @@ describe("hot water outlets", () => {
 				).toBe(true);
 
 				if (type === "mixedShower") {
-					expect(screen.getByTestId<HTMLInputElement>(`dhwHeatSourceId_${heatPumpId}`).checked).toBe(true);
 					expect(screen.getByTestId<HTMLInputElement>("wwhrs_yes").checked).toBe(true);
 					expect(screen.getByTestId<HTMLInputElement>(`associatedWwhrs_${wwhrs.data.id}`).checked).toBe(true);
 				}
@@ -430,7 +360,7 @@ describe("hot water outlets", () => {
 				expect((await screen.findByTestId<HTMLInputElement>(`coldWaterSource_${hotWaterOutlet.data.coldWaterSource}`)).checked).toBe(true);
 
 				(Object.keys(hotWaterOutlet.data))
-					.filter(e => e !== "id" && e !== "typeOfHotWaterOutlet" && !e.startsWith("coldWaterSource") && e !== "dhwHeatSourceId" && e !== "wwhrs" && e !== "associatedWwhrs" && e !== "isAirPressureShower")
+					.filter(e => e !== "id" && e !== "typeOfHotWaterOutlet" && !e.startsWith("coldWaterSource") && e !== "wwhrs" && e !== "associatedWwhrs" && e !== "isAirPressureShower")
 					.forEach(async (key) => {
 						expect((await screen.findByTestId<HTMLInputElement>(key)).value)
 							.toBe(String((hotWaterOutlet.data)[key as (keyof typeof hotWaterOutlet.data)]));
@@ -447,7 +377,6 @@ describe("hot water outlets", () => {
 			});
 
 			test("navigates to domestic hot water page when valid form is completed", async () => {
-				addHeatPumpStoreData();
 				await renderSuspended(HotWaterOutlets);
 
 				await populateValidForm();
@@ -473,7 +402,6 @@ describe("hot water outlets", () => {
 
 		beforeEach(() => {
 			store.$reset();
-			addHeatPumpStoreData();
 		});
 
 		test("air pump product reference field is shown when isAirPressureShower is yes", async () => {
@@ -548,13 +476,13 @@ describe("hot water outlets", () => {
 			const nameInput = screen.getByTestId<HTMLInputElement>("name");
 			await user.clear(nameInput);
 			await user.type(nameInput, "Air powered shower 1");
-			await user.click(screen.getByTestId("dhwHeatSourceId_" + heatPumpId));
 			await user.tab();
 			await user.click(screen.getByTestId("isAirPressureShower_yes"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(await screen.findByTestId("airPressureShowerProductReference_error")).toBeDefined();
 		});
+
 		test("flow rate is not shown when isAirPressureShower is yes", async () => {
 			await renderSuspended(HotWaterOutlets, {
 				route: { params: { "hotWaterOutlet": "create" } },
@@ -565,6 +493,7 @@ describe("hot water outlets", () => {
 
 			expect(screen.queryByTestId("flowRate")).toBeNull();
 		});
+
 		test("flow rate validation error is shown when isAirPressureShower is no and flow rate is not entered", async () => {
 			await renderSuspended(HotWaterOutlets, {
 				route: { params: { "hotWaterOutlet": "create" } },
@@ -574,7 +503,6 @@ describe("hot water outlets", () => {
 			const nameInput = screen.getByTestId<HTMLInputElement>("name");
 			await user.clear(nameInput);
 			await user.type(nameInput, "Mixer shower 1");
-			await user.click(screen.getByTestId("dhwHeatSourceId_" + heatPumpId));
 			await user.tab();
 			await user.click(screen.getByTestId("isAirPressureShower_no"));
 			await user.click(screen.getByTestId("saveAndComplete"));
@@ -619,7 +547,6 @@ describe("hot water outlets", () => {
 				},
 			});
 
-			addHeatPumpStoreData();
 			await renderSuspended(HotWaterOutlets, {
 				route: { params: { "hotWaterOutlet": "0" } },
 			});

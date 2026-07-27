@@ -130,6 +130,7 @@ const expectedHouseInput: FhsInputSchema = {
 			"other": {
 				flowrate: 8,
 				ColdWaterSource: "mains water",
+				HotWaterSource: "hw cylinder",
 			},
 		},
 	},
@@ -465,28 +466,34 @@ const expectedFlatInput: FhsInputSchema = {
 			"small bath name": {
 				ColdWaterSource: "mains water",
 				size: 80,
+				HotWaterSource: "hw cylinder",
 			},
 			"medium bath name": {
 				ColdWaterSource: "mains water",
 				size: 180,
+				HotWaterSource: "hw cylinder",
 			},
 			"large bath name": {
 				ColdWaterSource: "mains water",
 				size: 400,
+				HotWaterSource: "hw cylinder",
 			},
 		},
 		Other: {
 			"kitchen sink name": {
 				ColdWaterSource: "mains water",
 				flowrate: 7.4,
+				HotWaterSource: "hw cylinder",
 			},
 			"bathroom basin name": {
 				ColdWaterSource: "mains water",
 				flowrate: 6.4,
+				HotWaterSource: "hw cylinder",
 			},
 			"cloakroom basin name": {
 				ColdWaterSource: "mains water",
 				flowrate: 6.4,
+				HotWaterSource: "hw cylinder",
 			},
 		},
 	},

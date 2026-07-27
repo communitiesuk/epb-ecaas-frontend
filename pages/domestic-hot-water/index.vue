@@ -2,7 +2,6 @@
 import { hasPackagedProduct, isEcaasForm } from "#imports";
 import type { CustomListItem } from "~/components/CustomList.vue";
 import { useDomesticHotWater } from "~/composables/domesticHotWater";
-import type { ErrorSummaryItem } from "~/composables/errorSummary";
 import formStatus from "~/constants/formStatus";
 import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, PreheatedWaterStorageData, WaterStorageData } from "~/stores/ecaasStore.schema";
 
@@ -119,44 +118,34 @@ function getNameFromSpaceHeatingHeatSource(heatSourceId: string) {
 }
 
 function checkMaxHeatSourcesExceeded() {
-	const error: ErrorSummaryItem = {
+	const heatSourcesExcludingPackaged = dhwHeatSources.data.filter(x => !hasPackagedProduct(x.data));
+
+	if (heatSourcesExcludingPackaged.length <= 1) {
+		return;
+	}
+
+	const preheatedHeatSourceId = preheatedWaterStorage.data[0]?.data.heatSourceId;
+	const preheatedHeatSource = heatSourcesExcludingPackaged.find(x => x.data.id === preheatedHeatSourceId);
+
+	if (preheatedHeatSource) {
+		if (heatSourcesExcludingPackaged.length === 2) {
+			return;
+		}
+
+		addError({
+			id: "heatSourceLimitExceededError",
+			text: "You can only have two heat sources for domestic hot water. Please delete any heat sources that should not be used.",
+			disableLink: true,
+		});
+
+		return;
+	}
+
+	addError({
 		id: "heatSourceLimitExceededError",
-		text: "You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used",
+		text: "You can only have two heat sources if one is connected to a pre-heated water tank.",
 		disableLink: true,
-	};
-
-	if (dhwHeatSources.data.length === 2) {
-		const preheatedHeatSourceId = preheatedWaterStorage.data[0]?.data.heatSourceId;
-		const preheatedHeatSource = dhwHeatSources.data.find(x => x.data.id === preheatedHeatSourceId);
-
-		if (!preheatedHeatSource) {
-			addError({
-				id: "heatSourceLimitExceededError",
-				text: "You can only have two heat sources if one is connected to a pre-heated water tank.",
-				disableLink: true,
-			});
-			return;
-		}
-
-		const connectedHeatPump = dhwHeatSources.data.find(isHeatPumpConnectedToExistingHeatNetwork);
-		const heatSourceTypes = dhwHeatSources.data.map(getDhwHeatSourceType);
-		const heatNetworks = store.spaceHeating.heatNetworks.data;
-
-		if (connectedHeatPump && heatNetworks.length >= 1) {
-			addError(error);
-			return;
-		}
-
-		if (heatNetworks.length === 1 && heatSourceTypes.includes("heatPump") || heatSourceTypes.includes("heatInterfaceUnit")) {
-			return;
-		}
-	}
-
-	const hasPackagedHeatSources = dhwHeatSources.data.every(x => isPackagedProduct(x.data) || hasPackagedProduct(x.data));
-
-	if (dhwHeatSources.data.length > 2 && !hasPackagedHeatSources) {
-		addError(error);
-	}
+	});
 }
 
 function heatSourceRequiresWaterStorage() {

@@ -1244,6 +1244,52 @@ describe("Domestic hot water", () => {
 			);
 		});
 
+		it("displays an error when more than two heat sources are added when one is connected to a pre-heated water tank", async () => {
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [
+							heatSource1,
+							{
+								data: {
+									...heatSource1.data,
+									id: "fb62acf2-10b1-4983-bc08-7350f8e4a413",
+									name: "Heat source 2",
+								},
+							},
+							{
+								data: {
+									...heatSource1.data,
+									id: "0b01ed0b-043c-48ab-8445-fd43bd3a2dc3",
+									name: "Heat source 3",
+								},
+							},
+						],
+					},
+					preheatedWaterStorage: {
+						data: [{
+							data: {
+								...preheatedStorage1.data,
+								heatSourceId: heatSource1.data.id,
+							},
+						}],
+					},
+					waterStorage: {
+						data: [hwStorage1],
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+
+			expect(errorSummary.textContent).toContain(
+				"You can only have two heat sources for domestic hot water. Please delete any heat sources that should not be used.",
+			);
+		});
+
 		it("displays all error messages if there are more than one", async () => {
 			const heatPump = {
 				data: {
@@ -1427,7 +1473,7 @@ describe("Domestic hot water", () => {
 
 			await renderSuspended(DomesticHotWater);
 			expect(screen.getByTestId("domesticHotWaterErrorSummary")).toBeDefined();
-			expect(screen.getByText("You can only have one heat source for domestic hot water. Please delete any heat sources that should not be used")).toBeDefined();
+			expect(screen.getByText("You can only have two heat sources if one is connected to a pre-heated water tank.")).toBeDefined();
 		});
 
 		it("does not display error message when all / both heat sources are packaged", async () => {
