@@ -81,60 +81,37 @@ const hasIncompatibleDHWHeatSource = () =>
 		);
 	});
 
-const getSpaceHeatingHeatPump = () =>
-	store.spaceHeating.heatSource.data.find((heatSource) => {
+const hasSpaceHeatingBoosterHeatPump = () =>
+	store.spaceHeating.heatSource.data.some((heatSource) => {
 		const data = heatSource.data;
 
-		return data.typeOfHeatSource === "heatPump";
+		return (
+			data.typeOfHeatSource === "heatPump" &&
+			"typeOfHeatPump" in data &&
+			data.typeOfHeatPump === "booster"
+		);
 	});
 
-const getSpaceHeatingHeatPumpCompatibilityError = (
+const isHeatNetworkCompatibleWithBoosterHeatPump = (
 	heatNetwork: HeatNetworkData,
 ) => {
-	const heatPump = getSpaceHeatingHeatPump();
-
-	if (!heatPump) {
-		return undefined;
-	}
-
-	const heatPumpData = heatPump.data;
-
-	const isBoosterHeatPump =
-		"typeOfHeatPump" in heatPumpData &&
-		heatPumpData.typeOfHeatPump === "booster";
-
-	const isCommunalHeatNetwork =
-		heatNetwork.typeOfHeatNetwork === "communalHeatNetwork";
-
-	const hasBoosterHeatPumpFlag =
-		heatNetwork.boosterHeatPump === true;
-
-	if (isBoosterHeatPump) {
-		if (isCommunalHeatNetwork && hasBoosterHeatPumpFlag) {
-			return undefined;
-		}
-
-		return "Booster heat pumps are not compatible with district heat networks, like the one selected. Please replace the booster heat pump with a HIU.";
-	}
-
-	if (isCommunalHeatNetwork && !hasBoosterHeatPumpFlag) {
-		return "Heat pumps are not compatible with traditional communal heat networks, like the one added. Please replace the heat pump with a HIU.";
-	}
-
-	return "Heat pumps are not compatible with district heat networks, like the one added. Please replace the heat pump with a HIU.";
+	return (
+		heatNetwork.typeOfHeatNetwork === "communalHeatNetwork" &&
+		heatNetwork.boosterHeatPump === true
+	);
 };
 
 const saveForm = (fields: HeatNetworkData) => {
 	clearErrors();
 
-	const heatPumpCompatibilityError =
-		getSpaceHeatingHeatPumpCompatibilityError(fields);
-
-	if (heatPumpCompatibilityError) {
+	if (
+		hasSpaceHeatingBoosterHeatPump() &&
+	!isHeatNetworkCompatibleWithBoosterHeatPump(fields)
+	) {
 		addError({
-			id: "incompatibleHeatPump",
-			text: heatPumpCompatibilityError,
-			href: "/space-heating",
+			id: "incompatibleBoosterHeatPump",
+			text: "Booster heat pumps are not compatible with district heat networks, like the one selected. Please replace the booster heat pump with a HIU.",
+			href: getUrl("spaceHeating"),
 		});
 
 		window.scrollTo(0, 0);
@@ -286,5 +263,4 @@ autoSaveElementForm<HeatNetworkData>({
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('spaceHeating')" test-id="saveProgress" secondary>Save progress</GovButton>
 		</div>
-	</FormKit>
-</template> 
+	</FormKit></template>
