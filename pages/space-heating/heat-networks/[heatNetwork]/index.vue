@@ -68,9 +68,7 @@ const hasIncompatibleDHWHeatSource = () =>
 			return false;
 		}
 
-		if (
-			incompatibleHeatSourceTypes.includes(data.typeOfHeatSource)
-		) {
+		if (incompatibleHeatSourceTypes.includes(data.typeOfHeatSource)) {
 			return true;
 		}
 
@@ -80,6 +78,13 @@ const hasIncompatibleDHWHeatSource = () =>
 			data.typeOfHeatPump !== "booster"
 		);
 	});
+
+const hasSpaceHeatingHeatSource = (
+	typeOfHeatSource: HeatSourceData["typeOfHeatSource"],
+) =>
+	store.spaceHeating.heatSource.data.some(
+		(heatSource) => heatSource.data.typeOfHeatSource === typeOfHeatSource,
+	);
 
 const hasSpaceHeatingBoosterHeatPump = () =>
 	store.spaceHeating.heatSource.data.some((heatSource) => {
@@ -92,21 +97,18 @@ const hasSpaceHeatingBoosterHeatPump = () =>
 		);
 	});
 
-const isHeatNetworkCompatibleWithBoosterHeatPump = (
+const isCommunalHeatNetworkWithBooster = (
 	heatNetwork: HeatNetworkData,
-) => {
-	return (
-		heatNetwork.typeOfHeatNetwork === "communalHeatNetwork" &&
-		heatNetwork.boosterHeatPump === true
-	);
-};
+) =>
+	heatNetwork.typeOfHeatNetwork === "communalHeatNetwork" &&
+	heatNetwork.boosterHeatPump === true;
 
 const saveForm = (fields: HeatNetworkData) => {
 	clearErrors();
 
 	if (
 		hasSpaceHeatingBoosterHeatPump() &&
-	!isHeatNetworkCompatibleWithBoosterHeatPump(fields)
+		!isCommunalHeatNetworkWithBooster(fields)
 	) {
 		addError({
 			id: "incompatibleBoosterHeatPump",
@@ -118,11 +120,25 @@ const saveForm = (fields: HeatNetworkData) => {
 		return;
 	}
 
+	if (
+		hasSpaceHeatingHeatSource("heatInterfaceUnit") &&
+		isCommunalHeatNetworkWithBooster(fields)
+	) {
+		addError({
+			id: "incompatibleHIU",
+			text: "HIUs are not compatible with 5th generation (ambient loop) communal heat networks, like the one added. Please replace the HIU with a booster heat pump.",
+			href: getUrl("spaceHeating"),
+		});
+
+		window.scrollTo(0, 0);
+		return;
+	}
+
 	if (hasIncompatibleDHWHeatSource()) {
 		addError({
 			id: "incompatibleHeatSource",
 			text: "A heat network is not compatible with the heat sources that have been added to domestic hot water. The only heat sources possible with a heat network are HIUs or booster heat pumps.",
-			href: "/domestic-hot-water",
+			href: getUrl("domesticHotWater"),
 		});
 
 		window.scrollTo(0, 0);

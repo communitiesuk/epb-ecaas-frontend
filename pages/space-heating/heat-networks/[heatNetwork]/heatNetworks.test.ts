@@ -71,11 +71,10 @@ describe("Heat Networks", () => {
 		typeOfHeatPump: "booster",
 	};
 
-	const heatPump: Partial<HeatSourceData> = {
-		id: "heat_pump_id",
-		name: "Heat Pump",
-		typeOfHeatSource: "heatPump",
-		typeOfHeatPump: "airSource",
+	const heatInterfaceUnit: Partial<HeatSourceData> = {
+		id: "hiu_id",
+		name: "Heat Interface Unit",
+		typeOfHeatSource: "heatInterfaceUnit",
 	};
 
 	afterEach(() => {
@@ -460,6 +459,41 @@ describe("Heat Networks", () => {
 			).toBe(true);
 
 			expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
+		});
+
+		it("shows an error message when a HIU exists and a communal heat network with a booster heat pump flag is selected", async() => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: heatInterfaceUnit, complete: false }],
+					},
+					heatNetworks: {
+						data: [communalHeatNetworkWithBooster],
+						complete: false,
+					},
+				},
+			});
+
+			await renderSuspended(HeatNetworks, {
+				route: {
+					params: { heatNetwork: "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const errorSummary = await screen.findByTestId(
+				"heatNetworksErrorSummary",
+			);
+
+			expect(errorSummary.textContent).toContain(
+				"HIUs are not compatible with 5th generation (ambient loop) communal heat networks, like the one added. Please replace the HIU with a booster heat pump.",
+			);
+
+			const link = errorSummary.querySelector("a");
+
+			expect(link).not.toBeNull();
+			expect(link?.getAttribute("href")).toBe("/space-heating");
 		});
 	});
 
