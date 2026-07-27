@@ -182,10 +182,6 @@ function mapEcoDesignController<T extends { ecoDesignControllerClass: string, mi
 	return ecoDesignController;
 }
 
-
-
-
-
 export function mapElectricStorageHeaters(state: ResolvedState): Record<string, SchemaElecStorageHeaterWithProductReference> {
 	const { heatEmitters } = state.spaceHeating as {
 		heatEmitters?: HeatEmittingData[];

@@ -76,12 +76,47 @@ const hasIncompatibleDHWHeatSource = () =>
 
 		return (
 			data.typeOfHeatSource === "heatPump" &&
+			"typeOfHeatPump" in data &&
 			data.typeOfHeatPump !== "booster"
 		);
 	});
 
+const hasSpaceHeatingBoosterHeatPump = () =>
+	store.spaceHeating.heatSource.data.some((heatSource) => {
+		const data = heatSource.data;
+
+		return (
+			data.typeOfHeatSource === "heatPump" &&
+			"typeOfHeatPump" in data &&
+			data.typeOfHeatPump === "booster"
+		);
+	});
+
+const isHeatNetworkCompatibleWithBoosterHeatPump = (
+	heatNetwork: HeatNetworkData,
+) => {
+	return (
+		heatNetwork.typeOfHeatNetwork === "communalHeatNetwork" &&
+		heatNetwork.boosterHeatPump === true
+	);
+};
+
 const saveForm = (fields: HeatNetworkData) => {
 	clearErrors();
+
+	if (
+		hasSpaceHeatingBoosterHeatPump() &&
+	!isHeatNetworkCompatibleWithBoosterHeatPump(fields)
+	) {
+		addError({
+			id: "incompatibleBoosterHeatPump",
+			text: "Booster Heat pumps are not compatible with district heat networks, like the one selected. Please replace the heat pump with a HIU.",
+			href: getUrl("spaceHeating"),
+		});
+
+		window.scrollTo(0, 0);
+		return;
+	}
 
 	if (hasIncompatibleDHWHeatSource()) {
 		addError({
