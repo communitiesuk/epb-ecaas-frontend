@@ -181,8 +181,17 @@ export function useHeatSources() {
 		);
 	}
 
+	function getActualHeatSource(dhwHeatSource: DomesticHotWaterHeatSourceData): HeatSourceData | NewDomesticHotWaterHeatSourceData | undefined {
+		if (dhwHeatSource.isExistingHeatSource) {
+			return store.spaceHeating.heatSource.data.find(x => x.data.id === dhwHeatSource.heatSourceId)?.data as HeatSourceData;
+		}
+
+		return dhwHeatSource;
+	}
+
 	return {
 		createWaterCylinder,
 		canHaveColdWaterSource,
+		getActualHeatSource,
 	};
 }

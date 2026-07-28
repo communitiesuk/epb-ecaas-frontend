@@ -377,23 +377,77 @@ describe("Domestic hot water", () => {
 			expect(pipework.data[1]?.data.waterStorage).toBeUndefined();
 		});
 
-		test("the user should not be able to input a water storage when a point of use heat source is selected error message", async () => {
-			const pointOfUse = {
-				data: {
-					typeOfHeatSource: "pointOfUse",
-					id: "fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
-					heatSourceId: "NEW_HEAT_SOURCE",
-					isExistingHeatSource: false,
-					name: "DHW POU",
-					coldWaterSource: "mainsWater",
-				},
-				complete: true,
-			} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
-
+		test.each([
+			{
+				heatSourceType: "combi boiler",
+				heatSource: {
+					data: {
+						id: "171a20a4-e775-4e51-873c-f1fc536076b1",
+						name: "Combi boiler",
+						typeOfHeatSource: "boiler",
+						typeOfBoiler: "combiBoiler",
+						productReference: "2000",
+						needsSpecifiedLocation: false,
+						maxFlowTemp: unitValue(32, celsius),
+						isExistingHeatSource: false,
+						coldWaterSource: "mainsWater",
+						heatSourceId: "NEW_HEAT_SOURCE",
+					},
+				} satisfies EcaasForm<DomesticHotWaterHeatSourceData>,
+			},
+			{
+				heatSourceType: "heat interface unit",
+				heatSource: {
+					data: {
+						id: "48f2ce5d-f7fc-40dd-8be8-5d7f0bb0d111",
+						coldWaterSource: "mainsWater",
+						isExistingHeatSource: false,
+						heatSourceId: "NEW_HEAT_SOURCE",
+						name: "HIU",
+						typeOfHeatSource: "heatInterfaceUnit",
+						productReference: "HIU_123",
+						associatedHeatNetworkId: "network-1",
+						maxFlowTemp: unitValue(32, celsius),
+						buildingLevelLosses: unitValue(500, "watt"),
+					},
+				} satisfies EcaasForm<DomesticHotWaterHeatSourceData>,
+			},
+			{
+				heatSourceType: "point of use",
+				heatSource: {
+					data: {
+						typeOfHeatSource: "pointOfUse",
+						id: "fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
+						heatSourceId: "NEW_HEAT_SOURCE",
+						isExistingHeatSource: false,
+						name: "DHW POU",
+						coldWaterSource: "mainsWater",
+					},
+				} satisfies EcaasForm<DomesticHotWaterHeatSourceData>,
+			},
+			{
+				heatSourceType: "heat battery",
+				heatSource: {
+					data: {
+						id: "heatBatteryId1",
+						name: "Pcm heat battery",
+						typeOfHeatSource: "heatBattery",
+						typeOfHeatBattery: "heatBatteryPcm",
+						productReference: "1234",
+						maxFlowTemp: unitValue(32, celsius),
+						numberOfUnits: 1,
+						energySupply: "electricity",
+						isExistingHeatSource: false,
+						heatSourceId: "NEW_HEAT_SOURCE",
+						coldWaterSource: "mainsWater",
+					},
+				} satisfies EcaasForm<DomesticHotWaterHeatSourceData>,
+			},
+		])("prevents user from adding water storage when $heatSourceType heat source is added", async ({ heatSourceType, heatSource }) => {
 			store.$patch({
 				domesticHotWater: {
 					heatSources: {
-						data: [pointOfUse],
+						data: [heatSource],
 					},
 				},
 			});
@@ -401,9 +455,11 @@ describe("Domestic hot water", () => {
 			await renderSuspended(DomesticHotWater);
 
 			expect(store.domesticHotWater.waterStorage.data.length).toBe(0);
+			expect(screen.queryByTestId("waterStorage_add")).toBeNull();
+
 			const bodyText = document.querySelector(".govuk-summary-card__content .govuk-body");
 
-			expect(bodyText?.textContent).toBeTruthy();
+			expect(bodyText?.textContent).toBe(`No water storage can be added when '${heatSourceType}' is selected as the heat source.`);
 		});
 	});
 
@@ -937,6 +993,21 @@ describe("Domestic hot water", () => {
 	describe("mark section as complete", () => {
 
 		const addCompleteHotWaterToStore = async () => {
+			const heatPump: EcaasForm<DomesticHotWaterHeatSourceData> = {
+				data: {
+					id: "0fea7c2b-48c1-4d3b-9f56-6d02b8f5c2bb",
+					heatSourceId: "NEW_HEAT_SOURCE",
+					name: "DHW heatPump",
+					typeOfHeatSource: "heatPump",
+					isExistingHeatSource: false,
+					productReference: "HP-12345",
+					typeOfHeatPump: "airSource",
+					maxFlowTemp: unitValue(17, celsius),
+					energySupply: "electricity",
+				},
+				complete: true,
+			};
+
 			const otherOutlet: EcaasForm<HotWaterOutletsData> = {
 				data: {
 					name: "Other outlet for completion",
@@ -954,7 +1025,7 @@ describe("Domestic hot water", () => {
 					wwhrs: { data: [{ ...wwhrs1, complete: true }] },
 					hotWaterOutlets: { data: [{ ...hwOutlet1, complete: true }, otherOutlet] },
 					pipework: { data: [{ ...pipework1, complete: true }] },
-					heatSources: { data: [{ ...heatSource1, complete: true }] },
+					heatSources: { data: [{ ...heatPump, complete: true }] },
 				},
 			});
 		};

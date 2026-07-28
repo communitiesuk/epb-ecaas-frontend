@@ -10,6 +10,7 @@ const title = "Domestic hot water";
 const page = usePage();
 const store = useEcaasStore();
 const { removeEntry, duplicateEntry } = useDomesticHotWater();
+const { getActualHeatSource } = useHeatSources();
 
 const { heatSources: dhwHeatSources, preheatedWaterStorage } = store.domesticHotWater;
 
@@ -180,12 +181,32 @@ function hasReferenceToExistingSpaceHeatingHeatPump(): boolean {
 	});
 }
 
-const isPointOfUseSelected = computed(() =>
-	store.domesticHotWater.heatSources.data.some((heatSource) => {
-		const heatSourceType = getDhwHeatSourceType(heatSource);
-		return heatSourceType === "pointOfUse";
-	}),
-);
+const waterStorageConflictMessage = computed(() => {
+	let incompatibleType: string | undefined;
+
+	store.domesticHotWater.heatSources.data.forEach((heatSource) => {
+		const actualHeatSource = getActualHeatSource(heatSource.data);
+		const heatSourceType = actualHeatSource?.typeOfHeatSource;
+
+		if (heatSourceType === "boiler" && actualHeatSource!.typeOfBoiler === "combiBoiler") {
+			incompatibleType = boilerTypes[actualHeatSource!.typeOfBoiler];
+			return;
+		}
+
+		if (heatSourceType === "heatInterfaceUnit" ||
+			heatSourceType === "heatBattery" ||
+			heatSourceType === "pointOfUse"
+		) {
+			incompatibleType = displayDHWHeatSourceType(heatSourceType);
+		}
+	});
+
+	if (!incompatibleType) {
+		return;
+	}
+
+	return `No water storage can be added when '${incompatibleType.toLowerCase()}' is selected as the heat source.`;
+});
 
 checkMaxHeatSourcesExceeded();
 </script>
@@ -288,9 +309,7 @@ checkMaxHeatSourcesExceeded();
 
 				return item;
 			})"
-		:conflict-message="isPointOfUseSelected 
-			? `No water storage can be added when 'point of use' is selected as the heat source.` 
-			: undefined"
+		:conflict-message="waterStorageConflictMessage"
 		:show-status="true"
 		@remove="(index: number) => removeEntry('waterStorage', index)"
 		@duplicate="(index: number) => duplicateEntry('waterStorage', index)"

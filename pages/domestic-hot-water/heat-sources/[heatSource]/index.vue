@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { getUrl, hasPackagedProduct, type DomesticHotWaterHeatSourceData, type EcaasForm, type HeatSourceData } from "#imports";
+import { getUrl, hasPackagedProduct, type DomesticHotWaterHeatSourceData, type EcaasForm } from "#imports";
 import { coldWaterSourceOptions, DHWHeatSourceTypesWithDisplay } from "~/utils/display";
 import type { Product, AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { celsius } from "~/utils/units/temperature";
 import { greaterThanZero } from "~/utils/validation";
-import type { NewDomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
 import { useHeatSources } from "~/composables/heatSources";
 
 const title = "Heat source";
@@ -13,7 +12,7 @@ const store = useEcaasStore();
 const { heatSources: dhwHeatSources } = store.domesticHotWater;
 
 const { getStoreIndex, handleAutoSaveElementForm } = useForm();
-const { createWaterCylinder, canHaveColdWaterSource } = useHeatSources();
+const { createWaterCylinder, canHaveColdWaterSource, getActualHeatSource } = useHeatSources();
 const { mounted } = useMounted();
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
@@ -131,14 +130,6 @@ watch(
 		}
 	},
 );
-
-function getActualHeatSource(dhwHeatSource: DomesticHotWaterHeatSourceData): HeatSourceData | NewDomesticHotWaterHeatSourceData | undefined {
-	if (dhwHeatSource.isExistingHeatSource) {
-		return store.spaceHeating.heatSource.data.find(x => x.data.id === dhwHeatSource.heatSourceId)?.data as HeatSourceData;
-	}
-
-	return dhwHeatSource;
-}
 
 export interface AutoSaveElementFormOptionsNoName<T extends DomesticHotWaterHeatSourceData> {
 	model: Ref<T | undefined>;
