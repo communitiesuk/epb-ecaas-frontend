@@ -30,7 +30,7 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 		}
 	};
 
-	const selectProduct = (
+	const selectProduct = async (
 		state: EcaasState,
 		source: HeatSourceSection,
 		heatSourceData: HeatSourceData | DomesticHotWaterHeatSourceData | undefined,
@@ -134,7 +134,7 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 
 				if (isDisplayProduct(heatPumpProduct)) {
 					// Necessary because vessel type is not available unless we useProductData
-					useProductData(heatPumpProduct.id).then(details => {
+					useProductData(heatPumpProduct.id, true).then(details => {
 						createCylinderIfHasVessel(details as HeatPumpProduct);
 					});
 				} else {
@@ -164,36 +164,40 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 		getHeatSources: (storeState: EcaasState) => EcaasForm<HeatSourceData>[] | undefined,
 		heatSourceIndex: number,
 	) => {
-		store.$patch((state) => {
-			const heatSources = getHeatSources(state);
-			const heatSourceData = heatSources?.[heatSourceIndex]?.data;
+		return new Promise<void>((resolve, reject) => {
+			store.$patch((state) => {
+				const heatSources = getHeatSources(state);
+				const heatSourceData = heatSources?.[heatSourceIndex]?.data;
 
-			const addBoilerProduct = (boilerData: BoilerProduct) => {
-				const heatSourceBoiler = createBoiler(boilerData, product.id);
+				const addBoilerProduct = (boilerData: BoilerProduct) => {
+					const heatSourceBoiler = createBoiler(boilerData, product.id);
 
-				state.spaceHeating.heatSource.data.splice(heatSourceIndex + 1, 0, {
-					data: heatSourceBoiler as HeatSourceData,
-				});
+					state.spaceHeating.heatSource.data.splice(heatSourceIndex + 1, 0, {
+						data: heatSourceBoiler as HeatSourceData,
+					});
 
-				return heatSourceBoiler.id!;
-			};
+					return heatSourceBoiler.id!;
+				};
 
-			const removeBoilerProduct = (id: string) => {
-				const boilerToRemoveIdx = state.spaceHeating.heatSource.data.findIndex(x => x.data.id === id);
+				const removeBoilerProduct = (id: string) => {
+					const boilerToRemoveIdx = state.spaceHeating.heatSource.data.findIndex(x => x.data.id === id);
 
-				if (boilerToRemoveIdx >= 0) {
-					state.spaceHeating.heatSource.data.splice(boilerToRemoveIdx, 1);
-				}
-			};
+					if (boilerToRemoveIdx >= 0) {
+						state.spaceHeating.heatSource.data.splice(boilerToRemoveIdx, 1);
+					}
+				};
 
-			selectProduct(
-				state,
-				"spaceHeating",
-				heatSourceData,
-				product,
-				addBoilerProduct,
-				removeBoilerProduct,
-			);
+				selectProduct(
+					state,
+					"spaceHeating",
+					heatSourceData,
+					product,
+					addBoilerProduct,
+					removeBoilerProduct,
+				)
+					.then(resolve)
+					.catch(reject);
+			});
 		});
 	};
 
@@ -202,40 +206,44 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 		getHeatSources: (storeState: EcaasState) => EcaasForm<DomesticHotWaterHeatSourceData>[] | undefined,
 		heatSourceIndex: number,
 	) => {
-		store.$patch((state) => {
-			const heatSources = getHeatSources(state);
-			const heatSourceData = heatSources?.[heatSourceIndex]?.data;
+		return new Promise<void>((resolve, reject) => {
+			store.$patch((state) => {
+				const heatSources = getHeatSources(state);
+				const heatSourceData = heatSources?.[heatSourceIndex]?.data;
 
-			const addBoilerProduct = (boilerData: BoilerProduct) => {
-				const heatSourceBoiler: Partial<DomesticHotWaterHeatSourceData> = {
-					...createBoiler(boilerData, product.id),
-					isExistingHeatSource: false,
-					heatSourceId: "NEW_HEAT_SOURCE",
+				const addBoilerProduct = (boilerData: BoilerProduct) => {
+					const heatSourceBoiler: Partial<DomesticHotWaterHeatSourceData> = {
+						...createBoiler(boilerData, product.id),
+						isExistingHeatSource: false,
+						heatSourceId: "NEW_HEAT_SOURCE",
+					};
+
+					state.domesticHotWater.heatSources.data.splice(heatSourceIndex + 1, 0, {
+						data: heatSourceBoiler as DomesticHotWaterHeatSourceData,
+					});
+
+					return heatSourceBoiler.id!;
 				};
 
-				state.domesticHotWater.heatSources.data.splice(heatSourceIndex + 1, 0, {
-					data: heatSourceBoiler as DomesticHotWaterHeatSourceData,
-				});
+				const removeBoilerProduct = (id: string) => {
+					const boilerToRemoveIdx = state.domesticHotWater.heatSources.data.findIndex(x => x.data.id === id);
 
-				return heatSourceBoiler.id!;
-			};
+					if (boilerToRemoveIdx !== -1) {
+						state.domesticHotWater.heatSources.data.splice(boilerToRemoveIdx, 1);
+					}
+				};
 
-			const removeBoilerProduct = (id: string) => {
-				const boilerToRemoveIdx = state.domesticHotWater.heatSources.data.findIndex(x => x.data.id === id);
-
-				if (boilerToRemoveIdx !== -1) {
-					state.domesticHotWater.heatSources.data.splice(boilerToRemoveIdx, 1);
-				}
-			};
-
-			selectProduct(
-				state,
-				"domesticHotWater",
-				heatSourceData,
-				product,
-				addBoilerProduct,
-				removeBoilerProduct,
-			);
+				selectProduct(
+					state,
+					"domesticHotWater",
+					heatSourceData,
+					product,
+					addBoilerProduct,
+					removeBoilerProduct,
+				)
+					.then(resolve)
+					.catch(reject);
+			});
 		});
 	};
 

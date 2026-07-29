@@ -21,6 +21,7 @@ describe("Heat source products page", () => {
 	afterEach(() => {
 		mockFetch.mockReset();
 		mockRoute.mockReset();
+
 		store.$reset();
 	});
 
@@ -68,12 +69,6 @@ describe("Heat source products page", () => {
 		],
 	};
 
-	beforeEach(() => {
-		mockFetch.mockReturnValue({
-			data: ref(MOCKED_HEAT_PUMPS),
-		});
-	});
-
 	const heatSource1: Partial<HeatSourceData> = {
 		id: "463c94f6-566c-49b2-af27-222222222",
 		name: "Heat source 1",
@@ -108,6 +103,10 @@ describe("Heat source products page", () => {
 				},
 			},
 		});
+
+		mockFetch.mockReturnValue({
+			data: ref(MOCKED_HEAT_PUMPS),
+		});
 	});
 
 	afterEach(() => {
@@ -141,6 +140,7 @@ describe("Heat source products page", () => {
 			},
 			path: "/0/heat-pump",
 		});
+
 		await renderSuspended(Products);
 
 		await user.click(screen.getByTestId("selectProductButton_1"));

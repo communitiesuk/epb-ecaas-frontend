@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from "@formkit/core";
-import { showErrorState, getErrorMessage, isPackagedProduct, type HeatSourceData, hasModelDetails } from "#imports";
+import { showErrorState, getErrorMessage, isPackagedProduct, type HeatSourceData, hasModelDetails, type NewDomesticHotWaterHeatSourceData } from "#imports";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
 import { heatPumpTypes } from "~/utils/display";
@@ -89,6 +89,7 @@ watch(props.context, async ({ attrs: {
 
 	productData.value = undefined;
 });
+
 const isHeatPumpSummary = computed(() => isHeatPump(heatSource));
 const isBoilerSummary = computed(() => heatSource?.typeOfHeatSource === "boiler");
 const isMechanicalVentilationSummary = computed(() => ["mvhr", "centralisedContinuousMev", "decentralisedContinuousMev"].includes(selectedProductType ?? ""));
@@ -103,18 +104,19 @@ function getPackagedProductType() {
 	}
 
 	if (!isHeatPumpSummary.value) {
-		return undefined;
+		return;
 	}
 
-	const sourceData = heatSource as { packageProductIds?: string[] } | undefined;
-	const packagedIds = sourceData?.packageProductIds ?? [];
+	const heatPumpHeatSource = heatSource as HeatSourceData | NewDomesticHotWaterHeatSourceData;
 
-	if (!isPackagedProduct(sourceData)) {
-		return "None";
+	if (heatPumpHeatSource.typeOfHeatSource !== "heatPump") {
+		return;
 	}
+
+	const packagedIds = heatPumpHeatSource.packageProductIds ?? [];
 
 	const hasBoiler = isPackagedWithBoiler(packagedIds);
-	const hasWaterCylinder = isPackagedWithWaterCylinder(packagedIds);
+	const hasWaterCylinder = heatPumpHeatSource.packagedWithWaterCylinder;
 
 	const packagedMechanicalVent = store.infiltrationAndVentilation.mechanicalVentilation.data
 		.find((x) => {
@@ -170,11 +172,6 @@ function isPackagedWithBoiler(packagedIds: string[]) {
 	return packagedIds.some(id => boilerIds.includes(id));
 }
 
-function isPackagedWithWaterCylinder(packagedIds: string[]) {
-	const waterCylinderIds = getWaterCylinderIds();
-	return packagedIds.some(id => waterCylinderIds.includes(id));
-}
-
 function isHeatPump(heatSource: { typeOfHeatSource?: string } | undefined): heatSource is HeatSourceData {
 	return heatSource?.typeOfHeatSource === "heatPump";
 }
@@ -199,21 +196,13 @@ function getBoilerIds() {
 	].map(x => x.data.id);
 }
 
-function getWaterCylinderIds() {
-	const { waterStorage, preheatedWaterStorage } = store.domesticHotWater;
-	const cylinders = [...waterStorage.data, ...preheatedWaterStorage.data];
-
-	return cylinders
-		.filter(x => x.data.typeOfWaterStorage === "hotWaterCylinder")
-		.map(x => x.data.id);
-}
-
 function isPackagedWithHeatPump() {
 	const associatedItemId = (heatSource as { id?: string } | undefined)?.id ?? selectedProductReference;
 
 	if (!associatedItemId) {
 		return false;
 	}
+
 	const { spaceHeating: { heatSource: spaceHeatingHeatSource }, domesticHotWater: { heatSources: domesticHotWaterHeatSources } } = store;
 
 	const isPackagedWithSpaceHeatingHeatPump = spaceHeatingHeatSource.data.some(({ data }) => {

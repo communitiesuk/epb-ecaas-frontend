@@ -39,7 +39,8 @@ const selectProduct = async () => {
 		index,
 	);
 
-	navigateTo(getUrl("heatSource").replace(":heatSource", `${index}`));
+	// Allow store to be updated before navigation
+	setTimeout(() => navigateTo(getUrl("heatSource").replace(":heatSource", `${index}`)), 0);
 };
 </script>
 

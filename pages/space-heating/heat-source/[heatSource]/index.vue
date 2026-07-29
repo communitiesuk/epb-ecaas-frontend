@@ -250,16 +250,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:disabled="hasPackagedProduct(model)"
 			:help="getHeatSourceTypeHelpText()"
 		/>
-		<HeatPumpSection
-			v-if="mounted && model?.typeOfHeatSource === 'heatPump'"
-			:model="(model as HeatPumpModelType)"
-			:index="index"
-			:boilers="boilers"
-			add-boiler-page-id="heatSourceCreate"
-			page="space heating"
-			@update-heat-pump-model="updateHeatSource"
-			@product-loaded="handleProductLoaded"
-		/>
+		<ClientOnly>
+			<HeatPumpSection
+				v-if="mounted && model?.typeOfHeatSource === 'heatPump'"
+				:model="(model as HeatPumpModelType)"
+				:index="index"
+				:boilers="boilers"
+				add-boiler-page-id="heatSourceCreate"
+				page="space heating"
+				@update-heat-pump-model="updateHeatSource"
+				@product-loaded="handleProductLoaded"
+			/>
+		</ClientOnly>
 		<BoilerSection
 			v-if="mounted && model?.typeOfHeatSource === 'boiler'"
 			:model="(model as BoilerModelType)"

@@ -41,7 +41,8 @@ const selectProduct = async (product: DisplayProduct) => {
 			index,
 		);
 
-		navigateTo(redirectUrl);
+		// Allow store to be updated before navigation
+		setTimeout(() => navigateTo(redirectUrl), 0);
 	} catch (error) {
 		if (error instanceof EcaasError && error.name === "DHW_HEAT_SOURCE_CONFLICT") {
 			navigateTo(`${redirectUrl}?error=${error.name}`);
