@@ -131,6 +131,8 @@ export function mapHIUs(
 			heatSource.typeOfHeatSource === "heatInterfaceUnit",
 	);
 
+	const dwellingType = state.dwellingDetails.generalSpecifications.typeOfDwelling;
+
 	return objectFromEntries(
 		hius.map((hiu) => {
 
@@ -139,6 +141,16 @@ export function mapHIUs(
 				hiu.associatedHeatNetworkId,
 			);
 
+			// TODO: Update this once Alpha 8 backend is introduced and no longer requires building_level_distribution_losses for houses
+			const buildingLevelDistributionLosses =
+				dwellingType === "house"
+					? 0
+					: typeof hiu.buildingLevelLosses === "object"
+						&& hiu.buildingLevelLosses !== null
+						&& "amount" in hiu.buildingLevelLosses
+						? hiu.buildingLevelLosses.amount
+						: hiu.buildingLevelLosses ?? 0;
+
 			return [
 				hiu.name,
 				{
@@ -146,16 +158,11 @@ export function mapHIUs(
 					product_reference: hiu.productReference ?? undefined,
 
 					building_level_distribution_losses:
-						typeof hiu.buildingLevelLosses === "object"
-						&& hiu.buildingLevelLosses !== null
-						&& "amount" in hiu.buildingLevelLosses
-							? hiu.buildingLevelLosses.amount
-							: hiu.buildingLevelLosses,
+						buildingLevelDistributionLosses,
 
 					...heatNetworkFields,
 
 					EnergySupply: defaultElectricityEnergySupplyName,
-
 				} satisfies SchemaHeatSourceWetHiuInput,
 			];
 		}),

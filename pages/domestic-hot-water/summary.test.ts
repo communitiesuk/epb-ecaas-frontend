@@ -864,6 +864,13 @@ describe("Domestic hot water summary", () => {
 
 		beforeEach(() => {
 			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							typeOfDwelling: "flat",
+						},
+					},
+				},
 				spaceHeating: {
 					heatNetworks: {
 						data: [{ data: heatNetwork1 }],
@@ -1011,6 +1018,143 @@ describe("Domestic hot water summary", () => {
 			await renderSuspended(Summary);
 			await verifyDataInSection(sectionId, expectedData);
 		});
+
+		it("does not display building level losses in hiu summary if type of dwelling is a house", async() => {
+			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
+				"HIU-LARGE": "Mock HIU product",
+			});
+			const heatNetwork: HeatNetworkData = {
+				id: "network-1",
+				name: "Heat network 1",
+				typeOfHeatNetwork: "communalHeatNetwork",
+				productReference: "HEAT_NETWORK_1",
+			};
+			const dhwWithNewHeatInterfaceUnitForHouse: DomesticHotWaterHeatSourceData = {
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c66",
+				name: "Heat interface unit 1",
+				typeOfHeatSource: "heatInterfaceUnit",
+				productReference: "HIU-LARGE",
+				associatedHeatNetworkId: "network-1",
+				maxFlowTemp: unitValue(40, celsius),
+			};
+		
+			const store = useEcaasStore();
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { typeOfDwelling: "house" },
+					},
+				},
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork }],
+					},
+				},
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: dhwWithNewHeatInterfaceUnitForHouse }],
+					},
+				},
+			});
+		
+			await renderSuspended(Summary);
+		
+			const expectedDHWHIUSummary = {
+				"Cold water source": "Mains water",
+				"Name": "Heat interface unit 1",
+				"Used for space heating": "No",
+				"Type of heat source": "Heat interface unit",
+				"Product reference": "HIU-LARGE",
+				"Product name": "Mock HIU product",
+				"Associated heat network": "Heat network 1",
+				"Maximum flow temperature": `40 ${celsius.suffix}`,
+			};
+
+			for (const [key, value] of Object.entries(expectedDHWHIUSummary)) {
+				const lineResult = (await screen.findByTestId(`summary-heatInterfaceUnitSummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+			expect(
+				screen.queryByTestId(
+					"summary-heatInterfaceUnitSummary-building-level-losses",
+				),
+			).toBeNull();
+		});
+		
+		it("does display building level losses in hiu summary if type of dwelling is a flat (not a house)", async() => {
+			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
+				"HIU-LARGE": "Mock HIU product",
+			});
+			const heatNetwork: HeatNetworkData = {
+				id: "network-1",
+				name: "Heat network 1",
+				typeOfHeatNetwork: "communalHeatNetwork",
+				productReference: "HEAT_NETWORK_1",
+			};
+
+			const dhwWithNewHeatInterfaceUnitForFlat: DomesticHotWaterHeatSourceData = {
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c66",
+				name: "Heat interface unit 1",
+				typeOfHeatSource: "heatInterfaceUnit",
+				productReference: "HIU-LARGE",
+				associatedHeatNetworkId: "network-1",
+				maxFlowTemp: unitValue(40, celsius),
+				buildingLevelLosses: unitValue(500, "watt"),
+
+			};
+		
+			const store = useEcaasStore();
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { typeOfDwelling: "flat" },
+					},
+				},
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork }],
+					},
+				},
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: dhwWithNewHeatInterfaceUnitForFlat }],
+					},
+				},
+			});
+		
+			await renderSuspended(Summary);
+		
+			const expectedDHWHIUSummary = {
+				"Cold water source": "Mains water",
+				"Name": "Heat interface unit 1",
+				"Used for space heating": "No",
+				"Type of heat source": "Heat interface unit",
+				"Product reference": "HIU-LARGE",
+				"Product name": "Mock HIU product",
+				"Associated heat network": "Heat network 1",
+				"Maximum flow temperature": `40 ${celsius.suffix}`,
+				"Building level losses": "500 W",
+			};
+		
+			for (const [key, value] of Object.entries(expectedDHWHIUSummary)) {
+				const lineResult = (await screen.findByTestId(`summary-heatInterfaceUnitSummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+			expect(
+				screen.getByTestId(
+					"summary-heatInterfaceUnitSummary-building-level-losses",
+				),
+			).toBeDefined();
+		});
+
 		describe("heat sources with existing space heating heat source", () => {
 			beforeEach(() => {
 				store.$patch({

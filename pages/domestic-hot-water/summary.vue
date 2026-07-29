@@ -23,6 +23,7 @@ const immersionHeaters = heatSources.filter(({ data: x }) => x.isExistingHeatSou
 const pointOfUse = heatSources.filter(({ data: x }) => x.isExistingHeatSource === false && x.typeOfHeatSource === "pointOfUse");
 const hotWaterOutletsAll = store.domesticHotWater.hotWaterOutlets.data;
 const mixedShowerData = hotWaterOutletsAll.filter(x => x.data?.typeOfHotWaterOutlet === "mixedShower") as EcaasForm<MixedShowerData>[];
+
 type SummaryHeatSource = {
 	data: {
 		name: string,
@@ -177,8 +178,14 @@ const heatInterfaceUnitSummary: SummarySection = {
 					"Product name": "productReference" in heatSource && heatSource.productReference ? productNames[heatSource.productReference] : emptyValueRendering,
 					"Associated heat network": associatedHeatNetworkName,
 					"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
-					"Building level losses": "buildingLevelLosses" in heatSource ? dim(heatSource.buildingLevelLosses) : emptyValueRendering,
-				}),
+					...(store.dwellingDetails.generalSpecifications.data.typeOfDwelling === "flat"
+						? {
+							"Building level losses":
+			"buildingLevelLosses" in heatSource
+				? dim(heatSource.buildingLevelLosses)
+				: emptyValueRendering,
+						}
+						: {}) }),
 			};
 			return summary;
 		}) || [],

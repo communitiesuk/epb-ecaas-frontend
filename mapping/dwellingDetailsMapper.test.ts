@@ -14,7 +14,6 @@ describe("dwelling details mapper", () => {
 	const state: GeneralDetailsData = {
 		typeOfDwelling: "flat",
 		storeysInDwelling: 3,
-		// storeyOfFlat: 1,
 		storeysInBuilding: 1,
 		buildingLength: 10,
 		buildingWidth: 20,

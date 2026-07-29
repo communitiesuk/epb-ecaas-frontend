@@ -977,7 +977,41 @@ describe("heatSource", () => {
 				expect(addHeatNetworkLink.getAttribute("href")).toBe("/space-heating/heat-networks/create");
 			});
 
+			test("if dwelling is a house, ensure building level losses section is removed from hiu", async() => {
+				store.$patch({
+					dwellingDetails: {
+						generalSpecifications: {
+							data: { typeOfDwelling: "house" },
+						},
+					},
+				});
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "create" },
+					},
+				});
+				await user.click(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit"));
 
+				expect(screen.queryByTestId("buildingLevelLosses")).toBeNull();
+			});
+
+			test("if dwelling is a flat (not a house), ensure building level losses section is in hiu", async() => {
+				store.$patch({
+					dwellingDetails: {
+						generalSpecifications: {
+							data: { typeOfDwelling: "flat" },
+						},
+					},
+				});
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "create" },
+					},
+				});
+				await user.click(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit"));
+
+				expect(screen.getByTestId("buildingLevelLosses")).toBeDefined();
+			});
 		});
 
 		describe("heat battery", () => {

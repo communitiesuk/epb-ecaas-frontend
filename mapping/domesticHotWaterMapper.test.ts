@@ -585,6 +585,14 @@ describe("domestic hot water mapper", () => {
 			)("maps a $heatSource.data.typeOfHeatSource heat source attached to a $waterStorage.data.typeOfWaterStorage water storage",
 				async ({ heatSource, waterStorage, expected }) => {
 					store.$patch({
+						dwellingDetails: {
+							generalSpecifications: {
+								data: {
+									typeOfDwelling: "flat",
+								},
+								complete: true,
+							},
+						},
 						spaceHeating: {
 							heatNetworks: {
 								data: [heatNetwork],
@@ -690,6 +698,12 @@ describe("domestic hot water mapper", () => {
 			])("maps a $heatSource.data.typeOfHeatSource dhw heat source attached to no water storage",
 				async ({ heatSource, expected }) => {
 					store.$patch({
+						dwellingDetails: {
+							generalSpecifications: {
+								data: { typeOfDwelling: "flat" },
+								complete: true,
+							},
+						},
 						spaceHeating: {
 							heatNetworks: {
 								data: [heatNetwork],
@@ -715,6 +729,53 @@ describe("domestic hot water mapper", () => {
 					expect(mapHotWaterSourcesData(resolveState(store.$state))).toEqual(expected);
 				},
 			);
+
+			// TODO: Remove building_level_distribution_losses from the expected result when Alpha 8 makes this field optional.
+			it("maps building level losses as 0 for a HIU in a house", async () => {
+				store.$patch({
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								typeOfDwelling: "house",
+							},
+							complete: true,
+						},
+					},
+					spaceHeating: {
+						heatNetworks: {
+							data: [heatNetwork],
+							complete: true,
+						},
+					},
+					domesticHotWater: {
+						heatSources: {
+							data: [heatInterfaceUnit],
+							complete: true,
+						},
+						waterStorage: {
+							data: [storageTank],
+							complete: true,
+						},
+						pipework: {
+							data: [],
+							complete: true,
+						},
+					},
+				});
+
+				const result = mapHotWaterSourcesData(resolveState(store.$state));
+
+				expect(result).toEqual(
+					expect.objectContaining({
+						HeatSourceWet: {
+							[heatInterfaceUnit.data.name]: expect.objectContaining({
+								type: "HIU",
+								building_level_distribution_losses: 0,
+							}),
+						},
+					}),
+				);
+			});
 
 			it.each([
 				{
@@ -1057,6 +1118,14 @@ describe("domestic hot water mapper", () => {
 			)("maps a $heatSource.data.typeOfHeatSource dhw heat source attached to a $waterStorage.data.typeOfWaterStorage water storage",
 				async ({ heatSource, dhwHeatSource, waterStorage, expected }) => {
 					store.$patch({
+						dwellingDetails: {
+							generalSpecifications: {
+								data: {
+									typeOfDwelling: "flat",
+								},
+								complete: true,
+							},
+						},
 						spaceHeating: {
 							heatNetworks: {
 								data: [heatNetwork],
@@ -1213,6 +1282,14 @@ describe("domestic hot water mapper", () => {
 			])("maps a $heatSource.data.typeOfHeatSource dhw heat source attached to no water storage",
 				async ({ heatSource, dhwHeatSource, expected }) => {
 					store.$patch({
+						dwellingDetails: {
+							generalSpecifications: {
+								data: {
+									typeOfDwelling: "flat",
+								},
+								complete: true,
+							},
+						},
 						spaceHeating: {
 							heatNetworks: {
 								data: [heatNetwork],

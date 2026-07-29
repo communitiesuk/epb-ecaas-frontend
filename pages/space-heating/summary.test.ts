@@ -321,6 +321,13 @@ describe("Space heating summary page", () => {
 
 			const store = useEcaasStore();
 			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							typeOfDwelling: "flat",
+						},
+					},
+				},
 				spaceHeating: {
 					heatNetworks: {
 						data: [{ data: heatNetwork }],
@@ -349,7 +356,129 @@ describe("Space heating summary page", () => {
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
+
+		it("does not display building level losses in hiu summary if type of dwelling is a house", async() => {
+			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
+				"HIU-LARGE": "Mock HIU product",
+			});
+			const heatNetwork: HeatNetworkData = {
+				id: "network-1",
+				name: "Heat network 1",
+				typeOfHeatNetwork: "communalHeatNetwork",
+				productReference: "HEAT_NETWORK_1",
+			};
+			const hiu: HeatSourceData = {
+				id: "hiu-1",
+				name: "Heat interface unit 1",
+				typeOfHeatSource: "heatInterfaceUnit",
+				productReference: "HIU-LARGE",
+				maxFlowTemp: unitValue(40, celsius),
+				buildingLevelLosses: unitValue(500, "watt"),
+				associatedHeatNetworkId: "network-1",
+			};
+
+			const store = useEcaasStore();
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { typeOfDwelling: "house" },
+					},
+				},
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork }],
+					},
+					heatSource: {
+						data: [{ data: hiu }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedResult = {
+				Name: "Heat interface unit 1",
+				"Type of heat source": "Heat interface unit",
+				"Product reference": "HIU-LARGE",
+				"Product name": "Mock HIU product",
+				"Associated heat network": "Heat network 1",
+				"Maximum flow temperature": `40 ${celsius.suffix}`,
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-heatInterfaceUnitSummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+			expect(
+				screen.queryByTestId(
+					"summary-heatInterfaceUnitSummary-building-level-losses",
+				),
+			).toBeNull();
+		});
+
+		it("does display building level losses in hiu summary if type of dwelling is a flat (not a house)", async() => {
+			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
+				"HIU-LARGE": "Mock HIU product",
+			});
+			const heatNetwork: HeatNetworkData = {
+				id: "network-1",
+				name: "Heat network 1",
+				typeOfHeatNetwork: "communalHeatNetwork",
+				productReference: "HEAT_NETWORK_1",
+			};
+			const hiu: HeatSourceData = {
+				id: "hiu-1",
+				name: "Heat interface unit 1",
+				typeOfHeatSource: "heatInterfaceUnit",
+				productReference: "HIU-LARGE",
+				maxFlowTemp: unitValue(40, celsius),
+				buildingLevelLosses: unitValue(500, "watt"),
+				associatedHeatNetworkId: "network-1",
+			};
+
+			const store = useEcaasStore();
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { typeOfDwelling: "flat" },
+					},
+				},
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork }],
+					},
+					heatSource: {
+						data: [{ data: hiu }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedResult = {
+				Name: "Heat interface unit 1",
+				"Type of heat source": "Heat interface unit",
+				"Product reference": "HIU-LARGE",
+				"Product name": "Mock HIU product",
+				"Associated heat network": "Heat network 1",
+				"Maximum flow temperature": `40 ${celsius.suffix}`,
+				"Building level losses": "500 W",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-heatInterfaceUnitSummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+			expect(
+				screen.getByTestId(
+					"summary-heatInterfaceUnitSummary-building-level-losses",
+				),
+			).toBeDefined();
+		});
 	});
+	
 	describe("Heating control section", () => {
 		const heatingControl: HeatingControlData = {
 			name: "Separate temperature control",

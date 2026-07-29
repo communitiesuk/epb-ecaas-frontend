@@ -1031,7 +1031,7 @@ const heatBatteryBase = pcdbProduct.extend({
 const heatInterfaceUnitBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatInterfaceUnit"),
 	maxFlowTemp: zodUnit("temperature"),
-	buildingLevelLosses: zodUnit("power"),
+	buildingLevelLosses: zodUnit("power").optional(),
 	associatedHeatNetworkId: z.string().trim().min(1),
 });
 

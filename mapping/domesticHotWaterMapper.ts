@@ -211,8 +211,15 @@ function mapHeatSourceWet(
 						type: "HIU" as const,
 						product_reference: heatSource.productReference,
 						EnergySupply: defaultElectricityEnergySupplyName,
+						// TODO: Remove once Alpha 8 backend is implemented and no longer requires building_level_distribution_losses for house HIUs
 						building_level_distribution_losses:
-					heatSource.buildingLevelLosses.amount,
+					state.dwellingDetails.generalSpecifications.typeOfDwelling === "house"
+						? 0
+						: typeof heatSource.buildingLevelLosses === "object"
+							&& heatSource.buildingLevelLosses !== null
+							&& "amount" in heatSource.buildingLevelLosses
+							? heatSource.buildingLevelLosses.amount
+							: heatSource.buildingLevelLosses ?? 0,
 						...getHeatNetworkFields(
 							state,
 							heatSource.associatedHeatNetworkId,

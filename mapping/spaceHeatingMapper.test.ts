@@ -448,6 +448,7 @@ describe("Space heating - heat sources", () => {
 			expect(actual).toEqual(expectedForSchema);
 		});
 	});
+
 	describe("mapHIUs - heat network connection", () => {
 		const store = useEcaasStore();
 		const hiu: HeatSourceData = {
@@ -466,9 +467,16 @@ describe("Space heating - heat sources", () => {
 			productReference: "SHDN-123",
 			subHeatNetworkName: "shn1",
 		};
+
 		test("maps HIU connected to heat network", () => {
 			const hiuConnected = { ...hiu, associatedHeatNetworkId: "hn2" };
 			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { typeOfDwelling: "flat" }, 
+						complete: true,
+					},
+				},
 				spaceHeating: {
 					heatNetworks: {
 						data: [{ data: heatNetwork, complete: true }],
@@ -495,6 +503,44 @@ describe("Space heating - heat sources", () => {
 			const resolvedState = resolveState(store.$state);
 			const actual = mapHIUs(resolvedState);
 			expect(actual).toEqual(expected);
+		});
+
+		// TODO: Remove building_level_distribution_losses from the expected result when Alpha 8 makes this field optional.
+		test("maps building level losses as 0 for an HIU in a house", () => {
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { typeOfDwelling: "house" },
+						complete: true,
+					},
+				},
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork, complete: true }],
+						complete: true,
+					},
+					heatSource: {
+						data: [{ data: hiu, complete: true }],
+						complete: true,
+					},
+				},
+			});
+
+			const resolvedState = resolveState(store.$state);
+			const actual = mapHIUs(resolvedState);
+
+			expect(actual).toEqual({
+				[hiu.name]: {
+					type: "HIU",
+					product_reference: hiu.productReference,
+					building_level_distribution_losses: 0,
+					is_heat_network: true,
+					heat_network_type: "sleeved DHN",
+					EnergySupply: defaultElectricityEnergySupplyName,
+					heat_network_reference: heatNetwork.productReference,
+					sub_heat_network_name: heatNetwork.subHeatNetworkName,
+				},
+			});
 		});
 	});
 });

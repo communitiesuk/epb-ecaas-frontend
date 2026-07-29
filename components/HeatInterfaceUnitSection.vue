@@ -18,6 +18,10 @@ const heatSources = getCombinedHeatSources(store);
 
 const { heatNetworkOptions, hasHeatNetworkOptions, defaultAssociatedHeatNetworkId } = useHeatNetworks();
 
+const dwellingTypeIsNotAHouse = () => {
+	return store.dwellingDetails.generalSpecifications.data.typeOfDwelling !== "house";
+};
+
 </script>
 
 <template>
@@ -67,12 +71,14 @@ const { heatNetworkOptions, hasHeatNetworkOptions, defaultAssociatedHeatNetworkI
 		:page="page"
 		help="Enter the highest flow temperature the HIU is allowed to operate at"
 	/>
-	<FormKit
-		id="buildingLevelLosses"
-		type="govInputWithUnit"
-		label="Building level losses"
-		help="Enter the heat loss that occurs in the pipework within the thermal envelope of a building, specifically apartment blocks, up to the dwelling boundary"
-		name="buildingLevelLosses"
-		:unit="watt"
-	/>
+	<div v-if="dwellingTypeIsNotAHouse()">
+		<FormKit
+			id="buildingLevelLosses"
+			type="govInputWithUnit"
+			label="Building level losses"
+			help="Enter the heat loss that occurs in the pipework within the thermal envelope of a building, specifically apartment blocks, up to the dwelling boundary"
+			name="buildingLevelLosses"
+			:unit="watt"
+		/>
+	</div>
 </template>

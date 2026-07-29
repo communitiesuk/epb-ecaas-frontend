@@ -167,8 +167,14 @@ const heatInterfaceUnitSummary: SummarySection = {
 				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
 				"Associated heat network": associatedHeatNetwork ? associatedHeatNetwork.data.name : emptyValueRendering,
 				"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
-				"Building level losses": "buildingLevelLosses" in heatSource ? dim(heatSource.buildingLevelLosses) : emptyValueRendering,
-			};
+				...(store.dwellingDetails.generalSpecifications.data.typeOfDwelling === "flat"
+					? {
+						"Building level losses":
+			"buildingLevelLosses" in heatSource
+				? dim(heatSource.buildingLevelLosses)
+				: emptyValueRendering,
+					}
+					: {}) };
 			return summary;
 		}) || [],
 	editUrl: spaceHeatingUrl,
