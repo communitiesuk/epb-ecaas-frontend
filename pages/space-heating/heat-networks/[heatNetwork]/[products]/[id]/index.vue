@@ -21,7 +21,7 @@ if (!(heatNetworkType in productTypeMap)) {
 	});
 }
 
-const pageId = `${heatNetworkType}Products1` as PageId;
+const pageId = `${heatNetworkType}Products` as PageId;
 const productType = heatNetworkProductTypeDisplay[heatNetworkType as HeatNetworkProductType];
 
 

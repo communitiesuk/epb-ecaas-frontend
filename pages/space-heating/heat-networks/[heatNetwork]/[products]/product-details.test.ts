@@ -144,30 +144,4 @@ describe("Heat network details", async () => {
 		// Assert
 		expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-networks/0");
 	});
-
-	// test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
-	// 	// Arrange
-	// 	mockRoute.mockReturnValue({
-	// 		params: {
-	// 			heatNetwork: "1",
-	// 			products: "heat-network",
-	// 			id: "1000",
-	// 		},
-	// 		path: "/1/heat-network/1000",
-	// 	});
-
-	// 	mockFetch.mockReturnValue({
-	// 		data: ref({
-	// 			id: "1000",
-	// 			brandName: "Test",
-	// 			modelName: "Heat network",
-	// 			modelQualifier: "HNSMALL",
-	// 			technologyType: "HeatNetworks",
-	// 			fifthGHeatNetwork: 1,
-	// 		}),
-	// 	});	
-	// 	await renderSuspended(ProductDetails);
-	// 	await user.click(screen.getByTestId("selectProductButton"));
-	// 	expect((store.spaceHeating.heatNetworks.data[1]!.data as { hasBoosterHeatPump: boolean }).hasBoosterHeatPump).toBe(true);
-	// });
 });

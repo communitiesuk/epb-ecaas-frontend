@@ -4,7 +4,7 @@ import { generateHeatNetworkSubNetworkDisplayProductCombinations } from "./subhe
 describe("generateHeatNetworkSubNetworkDisplayProductCombinations", () => {
 	it("returns one display product row per testData entry", () => {
 		const item = {
-			productID: "net-1",
+			id: "net-1", 
 			communityHeatNetworkName: "Alpha Network",
 			testData: [
 				{ ID: "td-1", subheatNetworkName: "Sub A" },
@@ -38,7 +38,7 @@ describe("generateHeatNetworkSubNetworkDisplayProductCombinations", () => {
 	});
 	it("returns an empty array when testData is absent", () => {
 		const item = {
-			productID: "net-1",
+			id: "net-1",
 			communityHeatNetworkName: "Alpha Network",
 		};
 
@@ -49,7 +49,7 @@ describe("generateHeatNetworkSubNetworkDisplayProductCombinations", () => {
 
 	it("returns an empty array when testData is an empty array", () => {
 		const item = {
-			productID: "net-1",
+			id: "net-1", 
 			communityHeatNetworkName: "Alpha Network",
 			testData: [],
 		};
@@ -61,7 +61,7 @@ describe("generateHeatNetworkSubNetworkDisplayProductCombinations", () => {
 
 	it("sets boosterHeatPump to true when the heat network has a booster heat pump", () => {
 		const item = {
-			productID: "net-1",
+			id: "net-1",
 			communityHeatNetworkName: "Alpha Network",
 			testData: [
 				{ ID: "td-1", subheatNetworkName: "Sub A" },
