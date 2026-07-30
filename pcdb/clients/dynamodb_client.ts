@@ -185,6 +185,7 @@ const hydrateHeatNetworkItems = async (items: Record<string, unknown>[]) => {
 	}));
 
 	const fetched = (result.Responses?.products ?? []) as Record<string, unknown>[];
+	console.log(fetched)
 	return fetched.length > 0 ? fetched : items;
 };
 

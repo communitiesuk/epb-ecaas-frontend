@@ -5,7 +5,7 @@ export function generateHeatNetworkSubNetworkDisplayProductCombinations(item: Re
 	const testData = Array.isArray(item.testData) ? item.testData as Record<string, unknown>[] : [];
 
 	return testData.map((entry) => {
-		const productId = item?.productID?.toString() ?? "";
+		const productId = item?.id?.toString() ?? "";
 		const subheatNetworkName = entry.subheatNetworkName?.toString() ?? "";
 		const subHeatNetworkId = entry.ID?.toString() ?? entry.id?.toString() ?? "";
 
