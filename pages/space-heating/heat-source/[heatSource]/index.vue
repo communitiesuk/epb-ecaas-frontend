@@ -167,8 +167,12 @@ function isDistrictHeatNetwork() {
 }
 
 function getHeatSourceTypeHelpText() {
+	if (!heatNetwork.value) {
+		return "A heat interface unit cannot be added as there is no heat network";
+	}
+
 	if (isCommunalHeatNetworkWithoutBoosterHeatPump()) {
-		return "As a traditional communal heat network has been added, the heat source must be a HIU";
+		return "As a traditional communal heat network has been added, the heat source must be a heat interface unit";
 	}
 
 	if (isCommunalHeatNetworkWithBoosterHeatPump()) {
@@ -191,9 +195,10 @@ const heatSourceOptions = computed(() => {
 		};
 	}
 
-	return heatSourceTypesWithDisplay;
-});
+	const { heatInterfaceUnit, ...optionsWithoutHIU } = heatSourceTypesWithDisplay;
 
+	return optionsWithoutHIU;
+});
 
 const boilers = heatSourceStoreData
 	.filter(x => x.data.typeOfHeatSource === "boiler")

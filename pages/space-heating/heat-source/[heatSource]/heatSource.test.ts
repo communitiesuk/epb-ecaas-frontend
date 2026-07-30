@@ -764,9 +764,13 @@ describe("heatSource", () => {
 					},
 				});
 
-				Object.keys(heatSourceTypesWithDisplay).forEach(type => {
-					expect(screen.getByTestId<HTMLInputElement>(`typeOfHeatSource_${type}`).disabled).toBe(true);
+				["heatPump", "boiler", "heatBattery"].forEach(type => {
+					expect(
+						screen.getByTestId<HTMLInputElement>(`typeOfHeatSource_${type}`).disabled,
+					).toBe(true);
 				});
+
+				expect(screen.queryByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeNull();
 
 				Object.keys(boilerTypes).forEach(type => {
 					expect(screen.getByTestId<HTMLInputElement>(`typeOfBoiler_${type}`).disabled).toBe(true);
@@ -876,6 +880,18 @@ describe("heatSource", () => {
 				store.$reset();
 			});
 			test("'HeatInterfaceUnitSection' component displays when type of heat source is heat interface unit", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatNetworks: {
+							data: [{
+								data: {
+									typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+								} as Partial<HeatNetworkData>,
+							}],
+						},
+					},
+				});
+				
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
@@ -890,6 +906,18 @@ describe("heatSource", () => {
 				expect(screen.getByTestId("buildingLevelLosses")).toBeDefined();
 			});
 			test("the 'Select a product' element navigates user to the products page", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatNetworks: {
+							data: [{
+								data: {
+									typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+								} as Partial<HeatNetworkData>,
+							}],
+						},
+					},
+				});
+				
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
@@ -965,20 +993,17 @@ describe("heatSource", () => {
 				expect((await screen.findByTestId<HTMLInputElement>("associatedHeatNetwork_1")).checked).toBe(true);
 			});
 
-			test("add heat network link navigates to create heat network page", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-				await user.click(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit"));
-
-				const addHeatNetworkLink = screen.getByRole("link", { name: "Click here to add a heat network" });
-				expect(addHeatNetworkLink.getAttribute("href")).toBe("/space-heating/heat-networks/create");
-			});
-
 			test("if dwelling is a house, ensure building level losses section is removed from hiu", async() => {
 				store.$patch({
+					spaceHeating: {
+						heatNetworks: {
+							data: [{
+								data: {
+									typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+								} as Partial<HeatNetworkData>,
+							}],
+						},
+					},
 					dwellingDetails: {
 						generalSpecifications: {
 							data: { typeOfDwelling: "house" },
@@ -997,6 +1022,15 @@ describe("heatSource", () => {
 
 			test("if dwelling is a flat (not a house), ensure building level losses section is in hiu", async() => {
 				store.$patch({
+					spaceHeating: {
+						heatNetworks: {
+							data: [{
+								data: {
+									typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+								} as Partial<HeatNetworkData>,
+							}],
+						},
+					},
 					dwellingDetails: {
 						generalSpecifications: {
 							data: { typeOfDwelling: "flat" },
@@ -2048,7 +2082,7 @@ describe("heatSource", () => {
 			});
 		});
 	});
-	describe("heat network", () => {
+	describe("heat networks", () => {
 		
 		const communalHeatNetwork: Partial<HeatNetworkData> = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c13",
@@ -2180,6 +2214,47 @@ describe("heatSource", () => {
 			expect(screen.getByTestId("typeOfHeatSource_heatPump")).toBeDefined();
 			expect(heatSourceRadios.length).toBe(1);
 			expect(screen.findByLabelText("Booster heat pump"));
+		});
+
+		test("if a heat network has not been added, the user shouldn't be able to add a heat interface unit", async () => {
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			expect(screen.getByTestId("typeOfHeatSource_heatPump")).toBeDefined();
+			expect(screen.getByTestId("typeOfHeatSource_boiler")).toBeDefined();
+			expect(screen.getByTestId("typeOfHeatSource_heatBattery")).toBeDefined();
+			expect(screen.queryByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeNull();
+		});
+
+		test("if there is no heat network, type of heat source displays correct hint text", async() => {
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			expect(screen.getByText("A heat interface unit cannot be added as there is no heat network")).toBeDefined();
+		});
+
+		test("if there is a heat network, type of heat source does not display the hiu hint text", async() => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: sleevedDistrictHeatNetwork }],
+						complete: true,
+					},
+				},
+			});
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			expect(screen.queryByText("A heat interface unit cannot be added as there is no heat network")).toBeNull();
 		});
 	});
 });
