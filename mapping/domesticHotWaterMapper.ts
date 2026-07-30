@@ -19,7 +19,7 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 	const hotWaterSources = mapHotWaterSourcesData(state);
 	const preheatedWaterSources = mapPreheatedWaterSourceData(state);
 
-	const data: Partial<FhsInputSchema> = { 
+	let data: Partial<FhsInputSchema> = {
 		HotWaterDemand: {
 			Shower: showers,
 			Bath: baths,
@@ -27,10 +27,14 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 		} ,
 		...hotWaterSources,
 		...preheatedWaterSources,
+		...(WWHRS ? { WWHRS } : {}),
 	};
-	if (WWHRS) {
-		data["WWHRS"] = WWHRS;
-	}
+
+	data = {
+		...data,
+		...mapColdWaterSource(data),
+	};
+
 	return data;
 }
 
@@ -378,7 +382,7 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 	const dhwHeatSource = getDomesticHotWaterHeatSource(state);
 
 	if (!dhwHeatSource) {
-		return;
+		throw new Error("No heat source for hot water cylinder");
 	}
 
 	const actualHeatSource = getActualHeatSourceFromDHWHeatSource(dhwHeatSource, state);
@@ -427,13 +431,6 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 			},
 		},
 		...mappedHeatSourceWet,
-		ColdWaterSource: {
-			...mappedWaterStorage.ColdWaterSource === "header tank" ? {
-				["header tank"]: defaultColdWaterSourceData,
-			} : {
-				["mains water"]: defaultColdWaterSourceData,
-			},
-		},
 	} as const satisfies Partial<FhsInputSchema>;
 }
 
@@ -558,7 +555,7 @@ export function mapPreheatedWaterSourceData(state: ResolvedState): Partial<FhsIn
 	}
 
 	const actualHeatSource = getActualHeatSourceFromDHWHeatSource(dhwHeatSource, state);
-	const coldWaterSource = getColdWaterSourceData(dhwHeatSource);
+	const coldWaterSource = getColdWaterSourceData(preheatedWaterStorage);
 
 	if (actualHeatSource.typeOfHeatSource === "pointOfUse") {
 		throw new Error("Cannot have a point of use heat source heating a pre-heated water cylinder or smart water cylinder");
@@ -578,13 +575,6 @@ export function mapPreheatedWaterSourceData(state: ResolvedState): Partial<FhsIn
 				},
 			},
 			...mappedHeatSourceWet,
-			ColdWaterSource: {
-				...coldWaterSource === "header tank" ? {
-					["header tank"]: defaultColdWaterSourceData,
-				} : {
-					["mains water"]: defaultColdWaterSourceData,
-				},
-			},
 		};
 	}
 
@@ -601,6 +591,24 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 		return mapHotWaterSourcesWithWaterStorage(state, waterStorage);
 	}
 };
+
+export function mapColdWaterSource(input: Partial<FhsInputSchema>): Pick<FhsInputSchema, "ColdWaterSource"> {
+	const hotWaterCylinderColdWaterSource = input.HotWaterSource?.["hw cylinder"]?.ColdWaterSource as SchemaColdWaterSourceType | undefined;
+	const preheatedWaterCylinderColdWaterSource = input.PreHeatedWaterSource?.["preheated tank"].ColdWaterSource as SchemaColdWaterSourceType | undefined;
+
+	const coldWaterSource = preheatedWaterCylinderColdWaterSource && hotWaterCylinderColdWaterSource !== "mains water" ?
+		preheatedWaterCylinderColdWaterSource : hotWaterCylinderColdWaterSource;
+
+	return {
+		ColdWaterSource: {
+			...coldWaterSource === "header tank" ? {
+				["header tank"]: defaultColdWaterSourceData,
+			} : {
+				["mains water"]: defaultColdWaterSourceData,
+			},
+		},
+	};
+}
 
 function mapPipework(state: ResolvedState) {
 	const pipeworkEntries = state.domesticHotWater.pipework.map((x): SchemaWaterPipework => {

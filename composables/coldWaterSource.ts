@@ -20,12 +20,6 @@ export function useColdWaterSource() {
 			}
 		}
 
-		const hotWaterCylinder = waterStorage.data[0]?.data;
-
-		if (hotWaterCylinder) {
-			return getColdWaterSource(hotWaterCylinder);
-		}
-
 		return undefined;
 	};
 

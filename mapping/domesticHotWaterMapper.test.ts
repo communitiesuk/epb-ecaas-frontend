@@ -1,5 +1,5 @@
 import type { BathData, DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, PreheatedWaterStorageData, WaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
-import { defaultColdWaterSourceData, mapDomesticHotWaterData, mapHotWaterSourcesData, mapPreheatedWaterSourceData } from "./domesticHotWaterMapper";
+import { defaultColdWaterSourceData, mapColdWaterSource, mapDomesticHotWaterData, mapHotWaterSourcesData, mapPreheatedWaterSourceData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import type { SchemaMixerShower } from "~/schema/api-schema.types";
 import { celsius } from "~/utils/units/temperature";
@@ -21,6 +21,12 @@ describe("domestic hot water mapper", () => {
 	const coldWaterSourceMainsWater: Pick<FhsInputSchema, "ColdWaterSource"> = {
 		ColdWaterSource: {
 			["mains water"]: defaultColdWaterSourceData,
+		},
+	};
+
+	const coldWaterSourceHeaderTank: Pick<FhsInputSchema, "ColdWaterSource"> = {
+		ColdWaterSource: {
+			["header tank"]: defaultColdWaterSourceData,
 		},
 	};
 
@@ -53,6 +59,14 @@ describe("domestic hot water mapper", () => {
 		},
 		complete: true,
 	} as const satisfies EcaasForm<WaterStorageData>;
+
+	const storageTankWithHeaderTank: EcaasForm<WaterStorageData> = {
+		data: {
+			...storageTank.data,
+			coldWaterSource: "headerTank",
+		},
+		complete: true,
+	};
 
 	const storageTankWithHeatEx = {
 		data: {
@@ -243,6 +257,22 @@ describe("domestic hot water mapper", () => {
 		complete: true,
 	};
 
+	const preheatedTankWithMainsWater: EcaasForm<PreheatedWaterStorageData> = {
+		data: {
+			...preheatedTank.data,
+			coldWaterSource: "mainsWater",
+		},
+		complete: true,
+	};
+
+	const preheatedTankWithHeaderTank: EcaasForm<PreheatedWaterStorageData> = {
+		data: {
+			...preheatedTank.data,
+			coldWaterSource: "headerTank",
+		},
+		complete: true,
+	};
+
 	describe("water storage and heat sources", () => {
 		/**
 		These are the permutations that we need to consider, in the format:
@@ -332,7 +362,6 @@ describe("domestic hot water mapper", () => {
 									EnergySupply: "mains elec",
 								},
 							},
-							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -355,7 +384,6 @@ describe("domestic hot water mapper", () => {
 									},
 								},
 							},
-							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -377,7 +405,6 @@ describe("domestic hot water mapper", () => {
 									ColdWaterSource: "mains water",
 								},
 							},
-							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -412,7 +439,6 @@ describe("domestic hot water mapper", () => {
 									},
 								},
 							},
-							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -444,7 +470,6 @@ describe("domestic hot water mapper", () => {
 									number_of_units: heatBattery.data.numberOfUnits,
 								},
 							},
-							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -475,7 +500,6 @@ describe("domestic hot water mapper", () => {
 									EnergySupply: "mains elec",
 								},
 							},
-							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -509,16 +533,15 @@ describe("domestic hot water mapper", () => {
 									sub_heat_network_name: heatNetwork.data.subHeatNetworkName,
 								},
 							},
-							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
-						heatSource: heatInterfaceUnit, waterStorage: storageTank,
+						heatSource: heatInterfaceUnit, waterStorage: storageTankWithHeaderTank,
 						expected: {
 							HotWaterSource: {
 								"hw cylinder": {
 									type: "StorageTank",
-									ColdWaterSource: "mains water",
+									ColdWaterSource: "header tank",
 									volume: storageTankWithHeatEx.data.storageCylinderVolume.amount,
 									daily_losses: storageTankWithHeatEx.data.dailyEnergyLoss,
 									HeatSource: {
@@ -544,7 +567,6 @@ describe("domestic hot water mapper", () => {
 									heat_network_type: "communal",
 								},
 							},
-							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -578,7 +600,6 @@ describe("domestic hot water mapper", () => {
 									heat_network_type: "communal",
 								},
 							},
-							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 				],
@@ -1006,7 +1027,6 @@ describe("domestic hot water mapper", () => {
 									type: "HeatPump",
 								},
 							},
-							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -1041,7 +1061,6 @@ describe("domestic hot water mapper", () => {
 									number_of_units: existingBattery.data.numberOfUnits,
 								},
 							},
-							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					{
@@ -1073,7 +1092,6 @@ describe("domestic hot water mapper", () => {
 									type: "Boiler",
 								},
 							},
-							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 					// HIU in SH
@@ -1111,7 +1129,6 @@ describe("domestic hot water mapper", () => {
 									sub_heat_network_name: heatNetwork.data.subHeatNetworkName,
 								},
 							},
-							ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
 						} as const satisfies Partial<FhsInputSchema>,
 					},
 				],
@@ -1441,9 +1458,6 @@ describe("domestic hot water mapper", () => {
 							},
 						},
 					},
-					ColdWaterSource: {
-						"mains water": defaultColdWaterSourceData,
-					},
 				};
 
 				expect(result).toEqual(expected);
@@ -1527,9 +1541,6 @@ describe("domestic hot water mapper", () => {
 							},
 						},
 					},
-					ColdWaterSource: {
-						"mains water": defaultColdWaterSourceData,
-					},
 				};
 
 				expect(result).toEqual(expected);
@@ -1547,6 +1558,102 @@ describe("domestic hot water mapper", () => {
 
 				expect(() => mapPreheatedWaterSourceData(resolveState(store.$state)))
 					.toThrow("No heat source connected to pre-heated water cylinder");
+			});
+		});
+
+		describe("cold water source", () => {
+			it("maps cold water source from hot water cylinder data", () => {
+				store.$patch({
+					domesticHotWater: {
+						heatSources: {
+							data: [heatPump],
+							complete: true,
+						},
+						waterStorage: {
+							data: [storageTank],
+							complete: true,
+						},
+						pipework: {
+							data: [],
+							complete: true,
+						},
+					},
+				});
+
+				const data: Partial<FhsInputSchema> = mapHotWaterSourcesData(resolveState(store.$state))!;
+
+				const result = mapColdWaterSource(data);
+
+				const expected: Pick<FhsInputSchema, "ColdWaterSource"> = {
+					ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
+				};
+
+				expect(result).toEqual(expected);
+			});
+
+			it("maps cold water source from pre-heated water cylinder data", () => {
+				store.$patch({
+					domesticHotWater: {
+						heatSources: {
+							data: [heatPump],
+							complete: true,
+						},
+						preheatedWaterStorage: {
+							data: [preheatedTankWithHeaderTank],
+							complete: true,
+						},
+						pipework: {
+							data: [],
+							complete: true,
+						},
+					},
+				});
+
+				const data: Partial<FhsInputSchema> = mapPreheatedWaterSourceData(resolveState(store.$state))!;
+
+				const result = mapColdWaterSource(data);
+
+				const expected: Pick<FhsInputSchema, "ColdWaterSource"> = {
+					ColdWaterSource: coldWaterSourceHeaderTank.ColdWaterSource,
+				};
+
+				expect(result).toEqual(expected);
+			});
+
+			it("sets cold water source to 'mains water' when cold water source for hot water cylinder and pre-heated water cylinder are different", () => {
+				store.$patch({
+					domesticHotWater: {
+						heatSources: {
+							data: [heatPump],
+							complete: true,
+						},
+						preheatedWaterStorage: {
+							data: [preheatedTankWithMainsWater],
+							complete: true,
+						},
+						waterStorage: {
+							data: [storageTankWithHeaderTank],
+							complete: true,
+						},
+						pipework: {
+							data: [],
+							complete: true,
+						},
+					},
+				});
+
+				const data: Partial<FhsInputSchema> = {
+					...mapHotWaterSourcesData(resolveState(store.$state)),
+					...mapPreheatedWaterSourceData(resolveState(store.$state)),
+				};
+
+				const result = mapColdWaterSource(data);
+
+				const expected: Pick<FhsInputSchema, "ColdWaterSource"> = {
+					ColdWaterSource: coldWaterSourceMainsWater.ColdWaterSource,
+				};
+
+				expect(result).toEqual(expected);
 			});
 		});
 	});
