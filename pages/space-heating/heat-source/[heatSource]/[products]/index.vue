@@ -7,6 +7,7 @@ import { productTypeMap, type EcaasForm, type HeatSourceData, type HeatSourcePro
 
 definePageMeta({ layout: false });
 
+const store = useEcaasStore();
 const route = useRoute();
 const pageId = kebabToCamelCase(route.params.products as string);
 
@@ -25,11 +26,27 @@ const { data: { value } } = await useFetch("/api/products", {
 const { title, index, searchModel, searchData } = useProductsPage("heatSource");
 const { selectHeatSourceProduct } = useSelectHeatSourceProduct(value?.data ?? [], heatSourceProductType);
 
-// const heatNetwork = computed(() =>
-// 	store.spaceHeating.heatNetworks.data[index]?.data,
-// );
+const heatNetwork = computed(() =>
+	store.spaceHeating.heatNetworks.data[index]?.data,
+);
 
-const { pagination } = searchData(value?.data ?? []);
+const showBoosterHeatPumpInsetText = computed(() =>
+	heatSourceProductType === "heatPump" && !heatNetwork.value,
+);
+
+const filteredProducts = computed(() => {
+	const products = value?.data ?? [];
+
+	if (heatSourceProductType === "heatPump" && !heatNetwork.value) {
+		return products.filter(
+			product => product.technologyType !== "BoosterHeatPump",
+		);
+	}
+
+	return products;
+});
+
+const { pagination } = searchData(filteredProducts.value);
 
 const selectProduct = async (product: DisplayProduct) => {
 	const redirectUrl = page("heatSource").url.replace(":heatSource", `${index}`);
@@ -56,6 +73,13 @@ const selectProduct = async (product: DisplayProduct) => {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<div
+		v-if="showBoosterHeatPumpInsetText"
+		class="govuk-inset-text"
+		data-testid="boosterHeatPumpInset"
+	>
+		No booster heat pumps are shown in this list. They cannot be added as there is no heat network.
+	</div>
 	<ProductSearch :model="searchModel" />
 	<GovProductsTable
 		:products="pagination.getData()"
