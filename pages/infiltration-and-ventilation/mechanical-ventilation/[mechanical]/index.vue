@@ -29,17 +29,30 @@ if (typeof mechanicalVentilationData?.data.airFlowRate === "number") {
 
 const model = ref(mechanicalVentilationData?.data);
 
-const ventTypeOptions: Record<VentType, string> = {
+const ventTypeOptions: Record<MechanicalVentilationType, string> = {
 	MVHR: "MVHR (Mechanical Ventilation with Heat recovery)",
-	["Intermittent MEV"]: "Intermittent MEV (Mechanical Extract Ventilation)",
-	["Centralised continuous MEV"]: "Centralised continuous MEV (Mechanical Extract Ventilation)",
-	["Decentralised continuous MEV"]: "Decentralised continuous MEV (Mechanical Extract Ventilation)",
+	"Centralised MV": "Centralised MV (Centralised Mechanical Ventilation)",
+	"Intermittent MEV": "Intermittent MEV (Mechanical Extract Ventilation)",
+	"Centralised continuous MEV": "Centralised continuous MEV (Mechanical Extract Ventilation)",
+	"Decentralised continuous MEV": "Decentralised continuous MEV (Mechanical Extract Ventilation)",
 };
 
 const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation>> = {
 	inside: "Inside",
 	outside: "Outside",
 };
+
+const ventilationLabel = computed(() =>
+	model.value?.typeOfMechanicalVentilationOptions === "Centralised MV"
+		? "Centralised MV"
+		: "MVHR",
+);
+
+const mvhrLocationLabel = computed(() => `${ventilationLabel.value} location`);
+
+const mvhrLocationHint = computed(
+	() => `Select whether the ${ventilationLabel.value} unit is located inside or outside the thermal envelope`,
+);
 
 const associatedItemOptions = useAssociatedItems(["wall", "roof", "window", "externalGlazedDoor", "none"]);
 const mvhrAssociatedItemOptions = useAssociatedItems(["wall", "roof", "window", "none"]);
@@ -263,7 +276,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				@click="() => updateMechanicalVentilation('typeOfMechanicalVentilationOptions')"
 			/>
 			<FormKit
-				v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR'"
+				v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR' 
+					|| model?.typeOfMechanicalVentilationOptions === 'Centralised MV'"
 				id="selectMvhr"
 				type="govPcdbProduct"
 				label="Select a product"
@@ -306,7 +320,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				:page-index="index"
 			/>
 	
-			<template v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR' || model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV'">
+			<template v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR' || model?.typeOfMechanicalVentilationOptions === 'Centralised MV' ||model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV'">
 				<FormKit
 					id="measuredFanPowerAndAirFlowRateKnown"
 					type="govBoolean"
@@ -353,13 +367,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required"
 				data-field="InfiltrationVentilation.MechanicalVentilation.design_outdoor_air_flow_rate"
 			/>
-			<template v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR'">
+			<template v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR' || model?.typeOfMechanicalVentilationOptions === 'Centralised MV'">
 				<FormKit
 					id="mvhrLocation"
+					:key="model?.typeOfMechanicalVentilationOptions"
 					type="govRadios"
 					:options="mvhrLocationOptions"
-					label="MVHR location"
-					help="Select whether the MVHR unit is located inside or outside the thermal envelope"
+					:label="mvhrLocationLabel"
+					:help="mvhrLocationHint"
 					name="mvhrLocation"
 					validation="required"
 					data-field="InfiltrationVentilation.MechanicalVentilation.mvhr_location"
@@ -471,8 +486,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					validation="required"
 				/>
 			</template>
-			<template v-if="model?.typeOfMechanicalVentilationOptions !== 'MVHR'">
-				<FormKit
+			<template v-if="model?.typeOfMechanicalVentilationOptions !== 'MVHR' && model?.typeOfMechanicalVentilationOptions !== 'Centralised MV'">				<FormKit
 					v-if="associatedItemOptions.length > 1"
 					id="associatedItemId"
 					type="govRadios"
@@ -499,7 +513,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<template
 				v-if="model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV' 
 					|| model?.typeOfMechanicalVentilationOptions === 'Decentralised continuous MEV' 
-					|| model?.typeOfMechanicalVentilationOptions === 'MVHR'"
+					|| model?.typeOfMechanicalVentilationOptions === 'MVHR'
+					|| model?.typeOfMechanicalVentilationOptions === 'Centralised MV'"
 			>
 				<FormKit
 					id="installedUnderApprovedScheme"

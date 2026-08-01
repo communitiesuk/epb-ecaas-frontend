@@ -66,7 +66,8 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 		], x.associatedItemId) : undefined;
 
 		switch (ventType) {
-			case "MVHR": {
+			case "MVHR":
+			case "Centralised MV": {
 				const intakeAssociatedItem = x.associatedItemIdForIntake && x.associatedItemIdForIntake !== "none"
 					? getResolvedTaggedItem([
 						dwellingSpaceExternalWall,

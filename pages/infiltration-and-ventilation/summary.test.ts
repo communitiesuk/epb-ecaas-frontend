@@ -45,6 +45,32 @@ const mvhrData: MechanicalVentilationData = {
 	orientation: 180,
 };
 
+const centralisedMvData: MechanicalVentilationData = {
+	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506h",
+	name: "Centralised MV",
+	typeOfMechanicalVentilationOptions: "Centralised MV",
+	airFlowRate: {
+		amount: 12,
+		unit: "litres per second",
+	},
+	mvhrLocation: "inside",
+	productReference: "1000",
+	midHeightOfAirFlowPathForExhaust: 1.5,
+	orientationOfExhaust: 90,
+	pitchOfExhaust: 10,
+	midHeightOfAirFlowPathForIntake: 1.5,
+	orientationOfIntake: 80,
+	pitchOfIntake: 10,
+	installedUnderApprovedScheme: true,
+	measuredFanPowerAndAirFlowRateKnown: true,
+	measuredFanPower: 20,
+	measuredAirFlowRate: 10,
+	associatedItemId: "none",
+	hasAssociatedItem: false,
+	pitch: 90,
+	orientation: 180,
+}; 
+
 const intermittentMevData: MechanicalVentilationData = {
 	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
 	name: "Mechanical name 1",
@@ -238,6 +264,90 @@ describe("Infiltration and ventilation summary", () => {
 					data: [{
 						data: {
 							...mvhrData,
+							associatedItemIdForIntake: externalWall.id,
+							associatedItemIdForExhaust: roof.id,
+						},
+					}],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Wall, roof or window that the intake is in": "External wall 1 (Wall)",
+			"Orientation of intake": `${externalWall.orientation} ${degrees.suffix}`,
+			"Pitch of intake": `${externalWall.pitch} ${degrees.suffix}`,
+			"Wall, roof or window that the exhaust is in": "Roof 1 (Roof)",
+			"Orientation of exhaust": `${roof.orientation} ${degrees.suffix}`,
+			"Pitch of exhaust": `${roof.pitch} ${degrees.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the mechanical ventilation section when vent type is Centralised MV", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: centralisedMvData },
+					],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+		const expectedResult = {
+			"Name": "Centralised MV",
+			"Type of mechanical ventilation": "Centralised MV",
+			"Design air flow rate": `12 ${litrePerSecond.suffix}`,
+			"Centralised MV location": "Inside",
+			"Product reference": "1000",
+			"Product name": "Vent Product",
+			"Measured fan power": `20 ${watt.suffix}`,
+			"Measured air flow rate": `10 ${litrePerSecond.suffix}`,
+			"Mid-height of airflow path for intake": `1.5 ${metre.suffix}`,
+			"Orientation of intake": `80 ${degrees.suffix}`,
+			"Pitch of intake": `10 ${degrees.suffix}`,
+			"Mid-height of airflow path for exhaust": `1.5 ${metre.suffix}`,
+			"Orientation of exhaust": `90 ${degrees.suffix}`,
+			"Pitch of exhaust": `10 ${degrees.suffix}`,
+			"Orientation of vent": `180 ${degrees.suffix}`,
+			"Pitch of vent": `90 ${degrees.suffix}`,
+			"Is the vent installed under an approved installation scheme?": "Yes",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display associated item orientation and pitch for Centralised MV intake and exhaust", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall }],
+					},
+				},
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceRoofs: {
+						data: [{ data: roof as RoofData }],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						data: {
+							...centralisedMvData,
 							associatedItemIdForIntake: externalWall.id,
 							associatedItemIdForExhaust: roof.id,
 						},
