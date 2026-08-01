@@ -3,7 +3,7 @@ import type { SchemaDuctShape, SchemaDuctType } from "~/schema/aliases";
 import type { DuctworkData, EcaasForm } from "#imports";
 import { getUrl } from "#imports";
 
-const title = "MVHR ductwork";
+const title = "Mechanical ventilation duct";
 const store = useEcaasStore();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 

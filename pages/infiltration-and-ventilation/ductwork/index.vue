@@ -3,7 +3,7 @@ import formStatus from "~/constants/formStatus";
 import { checkMvhrHasDuctwork } from "../../../utils/checkMvhrHasDuctwork";
 import { page as pages } from "~/data/pages/pages";
 
-const title = "MVHR ductwork";
+const title = "Mechanical ventilation ductwork";
 const page = usePage();
 const store = useEcaasStore();
 
@@ -68,9 +68,12 @@ function checkIsComplete() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<div class="govuk-inset-text">
+		<p>Only add ductwork for MVHRs and Centralised MVs</p>
+	</div>
 	<CustomList
 		id="ductwork"
-		title="Ductwork"
+		title="Mechanical ventilation ductwork"
 		:form-url="page?.url!"
 		:items="store.infiltrationAndVentilation.ductwork.data?.map((x) => ({
 			name: x.data.name,

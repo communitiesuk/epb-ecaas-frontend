@@ -109,7 +109,7 @@ const ductworkData = store.infiltrationAndVentilation.ductwork.data;
 
 const ductworkSummary: SummarySection = {
 	id: "ductwork",
-	label: "Ductwork",
+	label: "Mechanical ventilation ductwork",
 	data: ductworkData?.map(({ data: x }) => {
 		const mvhr = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.data.id === x.mvhrUnit);
 

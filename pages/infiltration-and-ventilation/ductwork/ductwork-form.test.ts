@@ -92,7 +92,7 @@ describe("ductwork form", async () => {
 			},
 		});
 		expect(
-			screen.getByRole("heading", { name: "MVHR ductwork" }),
+			screen.getByRole("heading", { name: "Mechanical ventilation duct" }),
 		).toBeDefined();
 	});
 

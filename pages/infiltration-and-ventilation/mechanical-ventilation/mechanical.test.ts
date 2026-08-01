@@ -221,7 +221,7 @@ describe("mechanical ventilation overview", () => {
 				path: "/infiltration-and-ventilation",
 			},
 		});
-		expect(screen.queryByText("MVHR ductwork")).toBeNull();
+		expect(screen.queryByText("Mechanical ventilation ductwork")).toBeNull();
 	});
 
 	it("should duplicate mechanical ventilation object when duplicate button is clicked", async () => {
