@@ -143,44 +143,6 @@ describe("Heat Source Page", () => {
 		expect(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeDefined();
 	});
 
-	test("only allows user to choose heat network when a DHW-only heat pump is already added", async () => {
-		const dhwHeatPump: DomesticHotWaterHeatSourceData = {
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-			name: "DHW Heat pump",
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-			typeOfHeatSource: "heatPump",
-			typeOfHeatPump: "airSource",
-			productReference: "HEATPUMP-SMALL",
-			energySupply: "electricity",
-			maxFlowTemp: unitValue(30, celsius),
-		};
-
-		store.$patch({
-			domesticHotWater: {
-				heatSources: {
-					data: [{ data: dhwHeatPump }],
-				},
-			},
-		});
-
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "create" },
-			},
-		});
-		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
-
-		expect(screen.getByTestId("typeOfHeatSource_heatNetwork")).toBeDefined();
-		expect(screen.queryByTestId("typeOfHeatSource_heatPump")).toBeNull();
-		expect(screen.queryByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeNull();
-		expect(screen.queryByTestId("typeOfHeatSource_boiler")).toBeNull();
-		expect(screen.queryByTestId("typeOfHeatSource_heatBattery")).toBeNull();
-		expect(screen.queryByTestId("typeOfHeatSource_solarThermalSystem")).toBeNull();
-		expect(screen.queryByTestId("typeOfHeatSource_immersionHeater")).toBeNull();
-		expect(screen.queryByTestId("typeOfHeatSource_pointOfUse")).toBeNull();
-	});
-
 	test("should display the base form when no data has been added ", async () => {
 		await renderSuspended(HeatSourceForm, {
 			route: {
@@ -211,6 +173,18 @@ describe("Heat Source Page", () => {
 	});
 
 	test("HeatInterfaceUnitSection displays when type of heat source is heat interface unit", async () => {
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [{
+						data: {
+							name: "Heat Network",
+							typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+						},
+					}],
+				},
+			},
+		});
 		await renderSuspended(HeatSourceForm, {
 			route: {
 				params: { "heatSource": "create" },
@@ -578,6 +552,13 @@ describe("Heat Source Page", () => {
 describe("Boiler section", () => {
 	it("disables input fields when boiler is packaged with a heat pump", async () => {
 		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [{ data: {
+						name: "Heat Network",
+					}, complete: true }],
+				},
+			},
 			domesticHotWater: {
 				heatSources: {
 					data: [
@@ -1578,5 +1559,54 @@ describe("Heat Networks", () => {
 		expect(screen.getByTestId("typeOfHeatSource_heatPump")).toBeDefined();
 		expect(heatSourceRadios.length).toBe(1);
 		expect(screen.getByText("Booster heat pump"));
+	});
+
+	test("if a heat network has not been added in space heating, the user shouldn't be able to add a heat interface unit", async () => {
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "create" },
+			},
+		});
+		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+	
+		expect(screen.getByTestId("typeOfHeatSource_heatPump")).toBeDefined();
+		expect(screen.getByTestId("typeOfHeatSource_boiler")).toBeDefined();
+		expect(screen.getByTestId("typeOfHeatSource_heatBattery")).toBeDefined();
+		expect(screen.queryByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeNull();
+		expect(screen.getByTestId("typeOfHeatSource_solarThermalSystem")).toBeDefined();
+		expect(screen.getByTestId("typeOfHeatSource_immersionHeater")).toBeDefined();
+		expect(screen.getByTestId("typeOfHeatSource_pointOfUse")).toBeDefined();
+	});
+
+	test("if there is no heat network, type of heat source displays correct hint text", async() => {
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+	
+		expect(screen.getByText("A heat interface unit cannot be added as there is no heat network")).toBeDefined();
+	});
+
+	test("if there is a heat network, type of heat source does not display the hiu hint text", async() => {
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [{ data: sleevedDistrictHeatNetwork }],
+					complete: true,
+				},
+			},
+		});
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
+
+		expect(screen.queryByText("A heat interface unit cannot be added as there is no heat network")).toBeNull();
 	});
 });

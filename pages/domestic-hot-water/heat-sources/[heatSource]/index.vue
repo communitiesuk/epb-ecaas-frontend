@@ -263,6 +263,10 @@ function isDistrictHeatNetwork() {
 }
 
 function getHeatSourceTypeHelpText() {
+	if (!hasHeatNetworkHeatSource()) {
+		return "A heat interface unit cannot be added as there is no heat network";
+	}
+
 	if (isCommunalHeatNetworkWithoutBoosterHeatPump()) {
 		return "As a traditional communal heat network has been added, the heat source must be a HIU";
 	}
@@ -296,7 +300,11 @@ function getDhwHeatSourceType(heatSourceForm: EcaasForm<DomesticHotWaterHeatSour
 }
 
 function filterHeatSourceOptions(): Record<string, string> {
-	const { heatPump, heatInterfaceUnit } = DHWHeatSourceTypesWithDisplay;
+	const {
+		heatInterfaceUnit,
+		...optionsWithoutHIU
+	} = DHWHeatSourceTypesWithDisplay;
+
 	const { heatNetwork } = heatNetworkProductTypeDisplay;
 
 	if (isCommunalHeatNetworkWithoutBoosterHeatPump() || isDistrictHeatNetwork()) {
@@ -310,12 +318,9 @@ function filterHeatSourceOptions(): Record<string, string> {
 			heatPump: "Booster heat pump",
 		};
 	}
-	
-	if (hasHeatNetworkHeatSource()) {
-		return {
-			heatPump,
-			heatInterfaceUnit,
-		};
+
+	if (!hasHeatNetworkHeatSource()) {
+		return optionsWithoutHIU;
 	}
 
 	if (hasHeatPumpOrHIUHeatSource()) {
@@ -323,7 +328,7 @@ function filterHeatSourceOptions(): Record<string, string> {
 			heatNetwork: heatNetwork(false),
 		};
 	}
-	
+
 	return DHWHeatSourceTypesWithDisplay;
 }
 
