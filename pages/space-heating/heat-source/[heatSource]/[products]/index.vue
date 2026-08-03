@@ -27,7 +27,7 @@ const { title, index, searchModel, searchData } = useProductsPage("heatSource");
 const { selectHeatSourceProduct } = useSelectHeatSourceProduct(value?.data ?? [], heatSourceProductType);
 
 const heatNetwork = computed(() =>
-	store.spaceHeating.heatNetworks.data[index]?.data,
+	store.spaceHeating.heatNetworks.data[0]?.data,
 );
 
 const showBoosterHeatPumpInsetText = computed(() =>

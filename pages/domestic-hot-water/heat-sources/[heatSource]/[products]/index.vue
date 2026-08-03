@@ -5,6 +5,7 @@ import { productTypeMap } from "~/stores/ecaasStore.schema";
 
 definePageMeta({ layout: false });
 
+const store = useEcaasStore();
 const { pageId, title, index, searchModel, searchData } = useProductsPage("heatSource");
 
 const heatSourceProductType = pageId as (HeatSourceProductType | TechnologyGroup);
@@ -32,11 +33,27 @@ if (heatSourceProductType === "heatPump") {
 	}
 }
 
-// const heatNetwork = computed(() =>
-// 	store.spaceHeating.heatNetworks.data[0]?.data,
-// );
+const heatNetwork = computed(() =>
+	store.spaceHeating.heatNetworks.data[0]?.data,
+);
 
-const { pagination } = searchData(value?.data ?? []);
+const showBoosterHeatPumpInsetText = computed(() =>
+	heatSourceProductType === "heatPump" && !heatNetwork.value,
+);
+
+const filteredProducts = computed(() => {
+	const products = value?.data ?? [];
+
+	if (heatSourceProductType === "heatPump" && !heatNetwork.value) {
+		return products.filter(
+			product => product.technologyType !== "BoosterHeatPump",
+		);
+	}
+
+	return products;
+});
+
+const { pagination } = searchData(filteredProducts.value);
 
 const selectProduct = async (product: DisplayProduct) => {
 	await selectHotWaterHeatSourceProduct(
@@ -55,6 +72,13 @@ const selectProduct = async (product: DisplayProduct) => {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<div
+		v-if="showBoosterHeatPumpInsetText"
+		class="govuk-inset-text"
+		data-testid="boosterHeatPumpInset"
+	>
+		No booster heat pumps are shown in this list. They cannot be added as there is no heat network.
+	</div>
 	<ProductSearch :model="searchModel" />
 	<GovProductsTable
 		:products="pagination.getData()"

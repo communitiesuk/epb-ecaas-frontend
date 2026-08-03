@@ -94,7 +94,6 @@ describe("Heat source products page", () => {
 				heatSource: {
 					data: [
 						{ data: heatSource1 },
-						// { data: heatNetwork1 },
 						{ data: combiBoiler1 },
 					],
 				},
@@ -437,9 +436,9 @@ describe("Heat source products page", () => {
 
 		await renderSuspended(Products);
 
-		expect(screen.queryByText("Small Heat Pump")).toBeDefined();
-		expect(screen.queryByText("Medium Heat Pump")).toBeDefined();
-		expect(screen.queryByText("Large Heat Pump")).toBeDefined();
+		expect(screen.getByText("Small Heat Pump")).toBeDefined();
+		expect(screen.getByText("Medium Heat Pump")).toBeDefined();
+		expect(screen.getByText("Large Heat Pump")).toBeDefined();
 		expect(screen.queryByText("Booster Heat Pump")).toBeNull();
 	});
 
