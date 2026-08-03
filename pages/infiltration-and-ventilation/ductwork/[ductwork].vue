@@ -115,6 +115,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="ductTypeOptions"
 			label="Duct type"
 			name="ductType"
+			help="An MVHR or centralised MV unit should have all of these duct types"
 			validation="required"
 			data-field="InfiltrationVentilation.MechanicalVentilation.duct_type">
 			<GovDetails summary-text="Help with this input">
