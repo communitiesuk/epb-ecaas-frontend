@@ -30,8 +30,8 @@ const mechanicalVentilationSummary: SummarySection = {
 	data: mechanicalVentilationData?.map(({ data }) => {
 		const x = data as MechanicalVentilationData;
 		const isMvhrOrCentralisedMV = x.typeOfMechanicalVentilationOptions === "MVHR" || x.typeOfMechanicalVentilationOptions === "Centralised MV";
-		const mvhrLocation = "mvhrLocation" in x ? displayCamelToSentenceCase(show(x.mvhrLocation)) : emptyValueRendering; 
-		const mvhrLocationLabel = x.typeOfMechanicalVentilationOptions === "Centralised MV"
+		const ventilationLocation = "mvhrLocation" in x ? displayCamelToSentenceCase(show(x.mvhrLocation)) : emptyValueRendering; 
+		const ventilationLocationLabel = x.typeOfMechanicalVentilationOptions === "Centralised MV"
 			? "Centralised MV location"
 			: "MVHR location";
 		const taggedItem = store.getTaggedItem([dwellingSpaceWalls.dwellingSpaceExternalWall, dwellingSpaceWindows, dwellingSpaceRoofs, dwellingSpaceExternalGlazedDoor], x.associatedItemId);
@@ -68,7 +68,7 @@ const mechanicalVentilationSummary: SummarySection = {
 				"Measured air flow rate": dim(x.measuredAirFlowRate, "litres per second"),
 			} : {}),
 			...(isMvhrOrCentralisedMV ? {
-				[mvhrLocationLabel]: mvhrLocation,
+				[ventilationLocationLabel]: ventilationLocation,
 				"Wall, roof or window that the intake is in": x.associatedItemIdForIntake && x.associatedItemIdForIntake !== "none"
 					? mvhrAssociatedItems[x.associatedItemIdForIntake] ?? emptyValueRendering
 					: emptyValueRendering,
@@ -111,14 +111,13 @@ const ductworkSummary: SummarySection = {
 	id: "ductwork",
 	label: "Mechanical ventilation ductwork",
 	data: ductworkData?.map(({ data: x }) => {
-		const mvhr = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.data.id === x.mvhrUnit);
-
+		const mechanicalVentilation = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.data.id === x.mvhrUnit);
 		const internalDiameterOfDuctwork = "internalDiameterOfDuctwork" in x ? dim(x.internalDiameterOfDuctwork, "millimetres") : emptyValueRendering;
 		const externalDiameterOfDuctwork = "externalDiameterOfDuctwork" in x ? dim(x.externalDiameterOfDuctwork, "millimetres") : emptyValueRendering;
 
 		return {
 			"Name": x.name,
-			"MVHR unit": show(mvhr[0]?.data.name),
+			"MVHR or centralised MV unit": show(mechanicalVentilation[0]?.data.name),
 			"Duct type": displayCamelToSentenceCase(show(x.ductType)),
 			"Ductwork cross sectional shape": displayCamelToSentenceCase(show(x.ductworkCrossSectionalShape)),
 			"Internal diameter of ductwork": internalDiameterOfDuctwork, 
@@ -184,7 +183,11 @@ const airPermeabilitySummary: SummarySection = {
 	editUrl: getUrl("airPermeability"),
 };
 
-const numOfMvhrItems = mechanicalVentilationData.filter(x => x.data.typeOfMechanicalVentilationOptions === "MVHR").length;
+const numOfMechanicalVentilationWithDuctworkItems = mechanicalVentilationData.filter(
+	x => x.data.typeOfMechanicalVentilationOptions === "MVHR" ||
+		x.data.typeOfMechanicalVentilationOptions === "Centralised MV",
+).length;
+
 </script>
 
 <template>
@@ -203,7 +206,7 @@ const numOfMvhrItems = mechanicalVentilationData.filter(x => x.data.typeOfMechan
 			</template>
 		</SummaryTab>
 	</GovTabs>
-	<GovTabs v-if="numOfMvhrItems > 0" v-slot="tabProps" :items="getTabItems([ductworkSummary])">
+	<GovTabs v-if="numOfMechanicalVentilationWithDuctworkItems > 0" v-slot="tabProps" :items="getTabItems([ductworkSummary])">
 		<SummaryTab :summary="ductworkSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No ductwork added</h2>

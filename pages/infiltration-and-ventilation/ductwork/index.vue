@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
-import { checkMvhrHasDuctwork } from "../../../utils/checkMvhrHasDuctwork";
+import { checkDuctworkRequirementsMet } from "../../../utils/checkDuctworkRequirementsMet";
 import { page as pages } from "~/data/pages/pages";
 
 const title = "Mechanical ventilation ductwork";
@@ -42,7 +42,7 @@ function handleDuplicate(index: number) {
 }
 
 function handleComplete() {
-	if (checkMvhrHasDuctwork()) {
+	if (checkDuctworkRequirementsMet()) {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: { complete: true },
@@ -57,7 +57,7 @@ function checkIsComplete() {
 	if (!store.infiltrationAndVentilation.ductwork.complete) {
 		return false;
 	}
-	return checkMvhrHasDuctwork();
+	return checkDuctworkRequirementsMet();
 }
 </script>
 
@@ -69,7 +69,7 @@ function checkIsComplete() {
 		{{ title }}
 	</h1>
 	<div class="govuk-inset-text">
-		<p>Only add ductwork for MVHRs and Centralised MVs</p>
+		<p>Only add ductwork for MVHRs and centralised MVs</p>
 	</div>
 	<CustomList
 		id="ductwork"

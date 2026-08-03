@@ -29,7 +29,7 @@ describe("nav bar with ductwork", () => {
 		orientation: 180,
 	};
 
-	it("should not show the mechanical ventilation ductwork link when no mechanical ventilations of type mvhr have been added", async () => {
+	it("should not show the mechanical ventilation ductwork link when no mechanical ventilations of type mvhr or centralised mv have been added", async () => {
 		await renderSuspended(DefaultPage);
 		expect(screen.queryByText("Mechanical ventilation ductwork")).toBeNull();
 
@@ -41,6 +41,20 @@ describe("nav bar with ductwork", () => {
 				mechanicalVentilation: {
 					data: [{
 						data: mechanicalVentilation1,
+					}],
+				},
+			},
+		});
+		await renderSuspended(DefaultPage);
+		expect(screen.getByText("Mechanical ventilation ductwork"));
+	});
+
+	it("should show the mechanical ventilation ductwork link when mechanical ventilations of type Centralised MV have been added", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						data: { ...mechanicalVentilation1, typeOfMechanicalVentilationOptions: "Centralised MV" },
 					}],
 				},
 			},

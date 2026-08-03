@@ -103,10 +103,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="mvhrUnit"
 			type="govRadios"
 			:options="new
-				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data.typeOfMechanicalVentilationOptions === 'MVHR').map((x)=> [x.data.id!, x.data.name]))"
-			label="MVHR unit" 
+				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data.typeOfMechanicalVentilationOptions === 'MVHR' || x.data.typeOfMechanicalVentilationOptions === 'Centralised MV').map((x)=> [x.data.id!, x.data.name]))"
+			label="MVHR or centralised MV unit" 
 			name="mvhrUnit" 
-			help="Select the MVHR unit that this ductwork is attached to"
+			help="Select the MVHR or centralised MV unit that this ductwork is attached to"
 			validation="required" />
 
 		<FormKit

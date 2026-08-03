@@ -224,6 +224,47 @@ describe("mechanical ventilation overview", () => {
 		expect(screen.queryByText("Mechanical ventilation ductwork")).toBeNull();
 	});
 
+	it("should remove the associated ductwork when a Centralised MV mechanical ventilation object is removed", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{
+							data: {
+								...mechanicalVentilation1,
+								typeOfMechanicalVentilationOptions: "Centralised MV",
+							},
+						},
+						{ data: mechanicalVentilation4 },
+					],
+				},
+				ductwork: {
+					data: [
+						{ data: ductwork1 },
+						{ data: ductwork2 },
+						{ data: ductwork3 },
+					],
+				},
+			},
+		});
+		
+		await renderSuspended(MechanicalVentilationOverview);
+		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
+		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([
+			{ data: ductwork3 },
+		]);
+
+		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
+		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([]);
+
+		await renderSuspended(InfiltrationAndVentilationTaskPage, {
+			route: {
+				path: "/infiltration-and-ventilation",
+			},
+		});
+		expect(screen.queryByText("Mechanical ventilation ductwork")).toBeNull();
+	});
+
 	it("should duplicate mechanical ventilation object when duplicate button is clicked", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -284,7 +325,7 @@ describe("mechanical ventilation overview", () => {
 
 	it("should only display warning message when mechanical ventilations of type mvhr have been added", async () => {
 		const warningMessage =
-			"Note if you remove a MVHR this will also remove any associated ductwork";
+			"Note if you remove a MVHR or Centralised MV this will also remove any associated ductwork";
 		await renderSuspended(MechanicalVentilationOverview);
 
 		expect(screen.queryByText(warningMessage)).toBeNull();
@@ -294,6 +335,27 @@ describe("mechanical ventilation overview", () => {
 				mechanicalVentilation: {
 					data: [
 						{ data: mechanicalVentilation1 },
+					],
+				},
+			},
+		});
+		await renderSuspended(MechanicalVentilationOverview);
+
+		expect(screen.getByText(warningMessage)).toBeDefined();
+	});
+
+	it("should only display warning message when mechanical ventilations of type centralised mv have been added", async () => {
+		const warningMessage =
+			"Note if you remove a MVHR or Centralised MV this will also remove any associated ductwork";
+		await renderSuspended(MechanicalVentilationOverview);
+
+		expect(screen.queryByText(warningMessage)).toBeNull();
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: { ...mechanicalVentilation1, typeOfMechanicalVentilationOptions: "Centralised MV" } },
 					],
 				},
 			},

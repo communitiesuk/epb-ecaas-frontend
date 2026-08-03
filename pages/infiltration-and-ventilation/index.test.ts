@@ -35,6 +35,8 @@ describe("the ventilation task page", async () => {
 		orientation: 180,
 	};
 
+
+
 	afterEach(() => {
 		store.$reset();
 	});
@@ -81,6 +83,29 @@ describe("the ventilation task page", async () => {
 				path: "/infiltration-and-ventilation",
 			},
 		});
+		expect(screen.getByText("Mechanical ventilation ductwork")).toBeDefined();
+	});
+
+	it("shows ductwork when there is a Centralised MV mechanical ventilation object", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						data: {
+							...mechanicalVentilation1,
+							typeOfMechanicalVentilationOptions: "Centralised MV",
+						},
+					}],
+				},
+			},
+		});
+
+		await renderSuspended(InfiltrationAndVentilationTaskPage, {
+			route: {
+				path: "/infiltration-and-ventilation",
+			},
+		});
+
 		expect(screen.getByText("Mechanical ventilation ductwork")).toBeDefined();
 	});
 });

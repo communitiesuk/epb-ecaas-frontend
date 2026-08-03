@@ -620,7 +620,7 @@ describe("Infiltration and ventilation summary", () => {
 		}
 	});
 
-	it("should display the correct data for the ductwork section", async () => {
+	it("should display the correct data for the ductwork section if mechanical ventilation of type mvhr has been added", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -639,7 +639,7 @@ describe("Infiltration and ventilation summary", () => {
 		await renderSuspended(Summary);
 		const expectedResult = {
 			"Name": "Ducktwork 1",
-			"MVHR unit": "Mechanical name 1",
+			"MVHR or centralised MV unit": "Mechanical name 1",
 			"Duct type": "Intake",
 			"Ductwork cross sectional shape": "Circular",
 			"Internal diameter of ductwork": `300 ${millimetre.suffix}`,
@@ -659,7 +659,46 @@ describe("Infiltration and ventilation summary", () => {
 		}
 	});
 
-	it("should not display the ductwork section when there are no mechanical ventilations created of type mvhr", async () => {
+	it("should display the correct data for the ductwork section if mechanical ventilation of type centralised mv has been added", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: { ...mvhrData, typeOfMechanicalVentilationOptions: "Centralised MV" } },
+					],
+				},
+				ductwork: {
+					data: [
+						{ data: ductworkData },
+					],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+		const expectedResult = {
+			"Name": "Ducktwork 1",
+			"MVHR or centralised MV unit": "Mechanical name 1",
+			"Duct type": "Intake",
+			"Ductwork cross sectional shape": "Circular",
+			"Internal diameter of ductwork": `300 ${millimetre.suffix}`,
+			"External diameter of ductwork": `1000 ${millimetre.suffix}`,
+			"Length of ductwork": `100 ${metre.suffix}`,
+			"Insulation thickness": `100 ${millimetre.suffix}`,
+			"Thermal conductivity of ductwork insulation": `10 ${wattsPerMeterKelvin.suffix}`,
+			"Surface reflectivity": "Reflective",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+
+			const lineResult = (await screen.findByTestId(`summary-ductwork-${hyphenate(key)}`));
+
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should not display the ductwork section when there are no mechanical ventilations created of type mvhr or centralised mv", async () => {
 		const user = userEvent.setup();
 		store.$patch({
 			infiltrationAndVentilation: {
