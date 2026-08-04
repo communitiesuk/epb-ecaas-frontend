@@ -47,7 +47,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			elevationalHeight: fields.elevationalHeight,
 			openingToFrameRatio: fields.openingToFrameRatio,
 			maximumOpenableArea: fields.maximumOpenableArea,
-			freeAreaHeight: fields.freeAreaHeight ?? fields.height,
+			freeAreaHeight: fields.freeAreaHeight ?? 0,
 			uValue: fields.uValue,
 			depthOfReveal: fields.depthOfReveal,
 			distanceFromGlassToStartOfReveal: fields.distanceFromGlassToStartOfReveal,
