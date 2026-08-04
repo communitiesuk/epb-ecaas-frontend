@@ -67,10 +67,29 @@ export default defineNuxtPlugin(() => {
 		});
 	};
 
-	nuxtApp.hook("app:wwhrs:removed", removeColdWaterSources);
+	const resetHotWaterOutletWwhrs = (id: string) => {
+		store.$patch(state => {
+			const { hotWaterOutlets } = state.domesticHotWater;
+			const mixerShowers = hotWaterOutlets.data.filter(x => x.data.typeOfHotWaterOutlet === "mixedShower").map(x => x as EcaasForm<MixedShowerData>);
+			const mixerShowerWithWwhrs = mixerShowers.find(x => x.data.wwhrs && x.data.associatedWwhrs === id);
+
+			if (mixerShowerWithWwhrs && mixerShowerWithWwhrs.data.wwhrs) {
+				mixerShowerWithWwhrs.data.associatedWwhrs = undefined!;
+				mixerShowerWithWwhrs.complete = false;
+				hotWaterOutlets.complete = false;
+			}
+		});
+	};
+
+	nuxtApp.hook("app:wwhrs:removed", id => {
+		removeColdWaterSources(id);
+		resetHotWaterOutletWwhrs(id);
+	});
+
 	nuxtApp.hook("app:preheatedWaterCylinder:removed", id => {
 		removeColdWaterSources(id);
 		resetWaterCylinderConfig();
 	});
+
 	nuxtApp.hook("app:hotWaterHeatSource:removed", resetPreheatedWaterStorageHeatSource);
 });

@@ -197,7 +197,7 @@ const associatedWwhrs = useAssociatedItems(["wwhrs"]);
 			/>
 		</template>
 		<FormKit
-			v-if="model.typeOfHotWaterOutlet !== 'mixedShower'"
+			v-if="model.typeOfHotWaterOutlet && model.typeOfHotWaterOutlet !== 'mixedShower'"
 			id="coldWaterSource"
 			type="govRadios"
 			label="Cold water source"

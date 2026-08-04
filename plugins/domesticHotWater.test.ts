@@ -63,6 +63,20 @@ describe("water storage events", () => {
 		complete: true,
 	};
 
+	const mixerShower: EcaasForm<HotWaterOutletsData> = {
+		data: {
+			id: "f6231551-81a9-487b-ab59-4bb1200a5749",
+			typeOfHotWaterOutlet: "mixedShower",
+			name: "Mixer shower",
+			coldWaterSource: "mainsWater",
+			isAirPressureShower: false,
+			flowRate: 10,
+			wwhrs: true,
+			associatedWwhrs: wwhrs1.data.id,
+		},
+		complete: true,
+	};
+
 	beforeEach(() => {
 		store.$patch({
 			domesticHotWater: {
@@ -78,6 +92,10 @@ describe("water storage events", () => {
 				},
 				waterStorage: {
 					data: [hwStorage1],
+					complete: true,
+				},
+				hotWaterOutlets: {
+					data: [mixerShower],
 					complete: true,
 				},
 			},
@@ -97,6 +115,19 @@ describe("water storage events", () => {
 			expect(preheatedWaterStorage.complete).toBe(false);
 			expect(preheatedWaterStorage.data[0]?.complete).toBe(false);
 			expect(preheatedWaterStorage.data[0]?.data.coldWaterSource).toBeUndefined();
+		}, 100);
+	});
+
+	it("app:wwhrs:removed resets associated wwhrs of mixer showers", () => {
+		nuxtApp.callHook("app:wwhrs:removed", wwhrs1.data.id);
+
+		setTimeout(() => {
+			const { hotWaterOutlets } = store.domesticHotWater;
+			const savedMixerShower = hotWaterOutlets.data[0] as EcaasForm<MixedShowerData>;
+
+			expect(savedMixerShower.data.wwhrs && savedMixerShower.data.associatedWwhrs === undefined).toBe(true);
+			expect(savedMixerShower.complete).toBe(false);
+			expect(hotWaterOutlets.complete).toBe(false);
 		}, 100);
 	});
 

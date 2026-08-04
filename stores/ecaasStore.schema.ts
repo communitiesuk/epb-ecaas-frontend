@@ -2,7 +2,7 @@ import { standardPitchOption } from "./../utils/pitchOptions";
 import type { TaggedUnion } from "type-fest";
 import type { PageId } from "~/data/pages/pages";
 import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
-import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/schema/aliases";
+import type { FloorType, MassDistributionClass } from "~/schema/aliases";
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { addConstraints, zodUnit } from "~/utils/units/zod";
