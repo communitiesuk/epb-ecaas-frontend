@@ -33,23 +33,17 @@ const saveForm = (fields: PreheatedWaterStorageData) => {
 			coldWaterSource: fields.coldWaterSource,
 		};
 
-		let waterStorageItem: EcaasForm<PreheatedWaterStorageData>;
-
-		if (fields.typeOfWaterStorage === "hotWaterCylinder") {
-			waterStorageItem = {
-				data: {
-					...commonFields,
-					typeOfWaterStorage: fields.typeOfWaterStorage,
-					storageCylinderVolume: fields.storageCylinderVolume,
-					dailyEnergyLoss: fields.dailyEnergyLoss,
-					packagedProductReference: fields.packagedProductReference,
-					heatSourceId: fields.heatSourceId,
-				},
-				complete: true,
-			};
-		} else {
-			throw new Error("Invalid water storage type");
-		}
+		const waterStorageItem: EcaasForm<PreheatedWaterStorageData> = {
+			data: {
+				...commonFields,
+				typeOfWaterStorage: fields.typeOfWaterStorage,
+				storageCylinderVolume: fields.storageCylinderVolume,
+				dailyEnergyLoss: fields.dailyEnergyLoss,
+				packagedProductReference: fields.packagedProductReference,
+				heatSourceId: fields.heatSourceId,
+			},
+			complete: true,
+		};
 
 		preheatedWaterStorage.data[0] = waterStorageItem;
 		preheatedWaterStorage.complete = false;
@@ -70,10 +64,6 @@ autoSaveForm<PreheatedWaterStorageData>(model, (state, newData) => {
 	newData.data.name ??= waterStorageTypes[storageType];
 	state.domesticHotWater.preheatedWaterStorage.data = [newData];
 });
-
-const waterStorageOptions: Record<Exclude<WaterStorageType, "smartHotWaterTank">, string> = {
-	"hotWaterCylinder": "Standard water cylinder",
-};
 
 const wwhrs = store.domesticHotWater.wwhrs.data
 	.filter(x => x.data.wwhrsType === "System A" || x.data.wwhrsType === "System C")
@@ -97,15 +87,6 @@ const wwhrsMap = new Map(wwhrs);
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="waterStorageErrorSummary"/>
 		<template v-if="mounted">
-			<FormKit
-				id="typeOfWaterStorage"
-				name="typeOfWaterStorage"
-				type="govRadios"
-				:options="waterStorageOptions"
-				label="Type of pre-heated water cylinder"
-				validation="required"
-				:disabled="hasPackagedProduct(model)"
-			/>
 			<FormKit
 				v-if="model.typeOfWaterStorage !== undefined"
 				id="name"

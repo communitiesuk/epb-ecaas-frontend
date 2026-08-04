@@ -70,7 +70,6 @@ describe("preheated water storage", () => {
 	};
 
 	const populateValidFormHWC = async () => {
-		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 		await user.type(screen.getByTestId("name"), " 1");
 		await user.type(screen.getByTestId("storageCylinderVolume"), "5");
 		await user.type(screen.getByTestId("dailyEnergyLoss"), "1");
@@ -83,7 +82,6 @@ describe("preheated water storage", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(PreheatedWaterStorage);
 
-		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		// standard water cylinder specific
@@ -142,7 +140,6 @@ describe("preheated water storage", () => {
 		});
 
 		await renderSuspended(PreheatedWaterStorage);
-		await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 
 		expect(screen.getByTestId(`coldWaterSource_${wwhrsDataA.data.id}`)).toBeDefined();
 		expect(screen.getByTestId(`coldWaterSource_${wwhrsDataC.data.id}`)).toBeDefined();
@@ -182,10 +179,6 @@ describe("preheated water storage", () => {
 			addHeatPumpStoreData();
 			await renderSuspended(PreheatedWaterStorage);
 
-			expect(
-				(await screen.findByTestId<HTMLInputElement>(`typeOfWaterStorage_hotWaterCylinder`)).checked,
-			).toBe(true);
-
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe(preheatedWaterCylinder.data.name);
 			expect((await screen.findByTestId<HTMLInputElement>("storageCylinderVolume")).value).toBe(
 				preheatedWaterCylinder.data.storageCylinderVolume.amount.toString(),
@@ -206,8 +199,6 @@ describe("preheated water storage", () => {
 
 		test("name defaults to 'Standard water cylinder' when Standard water cylinder is selected'", async () => {
 			await renderSuspended(PreheatedWaterStorage);
-
-			await user.click(screen.getByTestId("typeOfWaterStorage_hotWaterCylinder"));
 
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value)
 				.toBe("Standard water cylinder");
