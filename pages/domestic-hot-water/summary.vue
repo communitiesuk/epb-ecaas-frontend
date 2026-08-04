@@ -357,6 +357,28 @@ const emptyWaterStorageSummary: SummarySection = {
 	editUrl: getUrl("waterStorageCreate"),
 };
 
+const wwhrsSummary: SummarySection = {
+	id: "wwhrs",
+	label: "Waste water heat recovery systems",
+	data: wwhrs.data.map(({ data: wwhrsData }) => {
+		const coldWaterSource = getColdWaterSourceDisplay(wwhrsData);
+
+		return {
+			"Name": show(wwhrsData.name),
+			"Cold water source": displayCamelToSentenceCase(show(coldWaterSource)),
+			"Product reference": wwhrsData.productReference,
+		};
+	}),
+	editUrl: getUrl("domesticHotWater"),
+};
+
+const emptyWwhrsSummary: SummarySection = {
+	id: "emptyWwhrsSummary",
+	label: "Waste water heat recovery systems",
+	data: [],
+	editUrl: getUrl("wwhrsCreate"),
+};
+
 const hotWaterCylinderSummary: SummarySection = {
 	id: "hotWaterCylinder",
 	label: "Hot water cylinders",
@@ -565,6 +587,20 @@ const pipeworkSummarySections: SummarySection[] = [
 		<template v-for="section, i of populatedHeatSourceSections" :key="i">
 			<SummaryTab :summary="section" :selected="tabProps.currentTab === i"/>
 		</template>
+	</GovTabs>
+
+	<GovTabs v-slot="tabProps" :items="wwhrsSummary.data.length === 0 ? [emptyWwhrsSummary] : getTabItems([wwhrsSummary])">
+		<template v-if="wwhrsSummary.data.length === 0">
+			<SummaryTab :summary="emptyWwhrsSummary" :selected="tabProps.currentTab === 0">
+				<template #empty>
+					<h2 class="govuk-heading-m">No WWHRS added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('wwhrsCreate')">
+						Add WWHRS
+					</NuxtLink>
+				</template>
+			</SummaryTab>
+		</template>
+		<SummaryTab v-if="wwhrsSummary.data.length" :summary="wwhrsSummary" :selected="true"/>
 	</GovTabs>
 
 	<GovTabs v-slot="tabProps" :items="populatedPreheatedWaterStorageSections.length === 0 ? [emptyPreheatedWaterStorageSummary] : getTabItems(populatedPreheatedWaterStorageSections)">

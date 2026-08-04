@@ -47,6 +47,66 @@ describe("Domestic hot water summary", () => {
 		expect(screen.getByRole("heading", { name: "Domestic hot water summary" }));
 	});
 
+	describe("WWHRS", () => {
+		const wwhrs: WwhrsData = {
+			id: "86ff8af4-fc27-4cb6-a0bd-d994ba5a46c9",
+			name: "WWHRS",
+			coldWaterSource: "mainsWater",
+			productReference: "1000",
+		};
+
+		const addWwhrsData = () => {
+			store.$patch({
+				domesticHotWater: {
+					wwhrs: {
+						data: [{ data: wwhrs }],
+					},
+				},
+			});
+		};
+
+		it("displays an empty tab state with link to create when no data exists", async () => {
+			await renderSuspended(Summary);
+
+			expect(screen.getByText("No WWHRS added")).not.toBeNull();
+
+			const addWwhrsLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add WWHRS",
+			});
+
+			expect(new URL(addWwhrsLink.href).pathname).toBe(
+				getUrl("wwhrsCreate"),
+			);
+		});
+
+		it("should display the correct data for the WWHRS section when data exists", async () => {
+			addWwhrsData();
+			await renderSuspended(Summary);
+
+			const expectedResult = {
+				"Name": "WWHRS",
+				"Cold water source": "Mains water",
+				"Product reference": "1000",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-wwhrs-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+
+		it("should display an edit link within WWHRS when data exists", async () => {
+			addWwhrsData();
+			await renderSuspended(Summary);
+			const wwhrsSection = screen.getByTestId("wwhrs");
+			const editLink: HTMLAnchorElement = within(wwhrsSection).getByText("Edit");
+
+			expect(editLink).not.toBeNull();
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water");
+		});
+	});
+
 	describe("Pre-heated water cylinder", () => {
 		const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
