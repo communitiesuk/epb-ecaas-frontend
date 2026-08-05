@@ -146,62 +146,80 @@ describe("preheated water storage", () => {
 		expect(screen.queryByTestId(`coldWaterSource_${wwhrsDataB.data.id}`)).toBeNull();
 	});
 
-	describe("preheated water cylinder", () => {
-		afterEach(() => {
-			store.$reset();
-		});
+	test("point of use and combi boilers are excluded from heat source field", async () => {
+		const pointOfUse: NewDomesticHotWaterHeatSourceData = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "bb5769e2-cc25-4e88-b922-7deba5793b68",
+			typeOfHeatSource: "pointOfUse",
+			name: "Point of use",
+			energySupply: "electricity",
+			coldWaterSource: "mainsWater",
+		};
 
-		test("data is saved to store state when form is valid", async () => {
-			addHeatPumpStoreData();
-
-			vi.mocked(uuidv4).mockReturnValue(preheatedWaterCylinder.data.id as unknown as Buffer);
-			await renderSuspended(PreheatedWaterStorage);
-
-			await populateValidFormHWC();
-
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			const { data } = store.domesticHotWater.preheatedWaterStorage;
-
-			expect(data[0]?.data).toEqual(preheatedWaterCylinder.data);
-			expect(data[0]?.complete).toEqual(true);
-		});
-
-		test("form is prepopulated when data exists in state", async () => {
-			store.$patch({
-				domesticHotWater: {
-					preheatedWaterStorage: {
-						data: [{ ...preheatedWaterCylinder }],
-					},
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: pointOfUse }],
 				},
-			});
-
-			addHeatPumpStoreData();
-			await renderSuspended(PreheatedWaterStorage);
-
-			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe(preheatedWaterCylinder.data.name);
-			expect((await screen.findByTestId<HTMLInputElement>("storageCylinderVolume")).value).toBe(
-				preheatedWaterCylinder.data.storageCylinderVolume.amount.toString(),
-			);
-			expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe(preheatedWaterCylinder.data.dailyEnergyLoss.toString());
-			expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value).toBe(preheatedWaterCylinder.data.heaterPosition.toString());
+			},
 		});
 
-		test("navigates to domestic hot water page when valid form is completed", async () => {
-			addHeatPumpStoreData();
-			await renderSuspended(PreheatedWaterStorage);
+		await renderSuspended(PreheatedWaterStorage);
 
-			await populateValidFormHWC();
-			await user.click(screen.getByTestId("saveAndComplete"));
+		expect(screen.queryByTestId(`heatSourceId_${pointOfUse.id}`)).toBeNull();
+	});
 
-			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
+	test("data is saved to store state when form is valid", async () => {
+		addHeatPumpStoreData();
+
+		vi.mocked(uuidv4).mockReturnValue(preheatedWaterCylinder.data.id as unknown as Buffer);
+		await renderSuspended(PreheatedWaterStorage);
+
+		await populateValidFormHWC();
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const { data } = store.domesticHotWater.preheatedWaterStorage;
+
+		expect(data[0]?.data).toEqual(preheatedWaterCylinder.data);
+		expect(data[0]?.complete).toEqual(true);
+	});
+
+	test("form is prepopulated when data exists in state", async () => {
+		store.$patch({
+			domesticHotWater: {
+				preheatedWaterStorage: {
+					data: [{ ...preheatedWaterCylinder }],
+				},
+			},
 		});
 
-		test("name defaults to 'Standard water cylinder' when Standard water cylinder is selected'", async () => {
-			await renderSuspended(PreheatedWaterStorage);
+		addHeatPumpStoreData();
+		await renderSuspended(PreheatedWaterStorage);
 
-			expect((await screen.findByTestId<HTMLInputElement>("name")).value)
-				.toBe("Standard water cylinder");
-		});
+		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe(preheatedWaterCylinder.data.name);
+		expect((await screen.findByTestId<HTMLInputElement>("storageCylinderVolume")).value).toBe(
+			preheatedWaterCylinder.data.storageCylinderVolume.amount.toString(),
+		);
+		expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe(preheatedWaterCylinder.data.dailyEnergyLoss.toString());
+		expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value).toBe(preheatedWaterCylinder.data.heaterPosition.toString());
+	});
+
+	test("navigates to domestic hot water page when valid form is completed", async () => {
+		addHeatPumpStoreData();
+		await renderSuspended(PreheatedWaterStorage);
+
+		await populateValidFormHWC();
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
+	});
+
+	test("name defaults to 'Standard water cylinder' when Standard water cylinder is selected'", async () => {
+		await renderSuspended(PreheatedWaterStorage);
+
+		expect((await screen.findByTestId<HTMLInputElement>("name")).value)
+			.toBe("Standard water cylinder");
 	});
 });

@@ -139,6 +139,7 @@ const wwhrsMap = new Map(wwhrs);
 				label="Heat source"
 				help="Select the relevant heat source that has been added previously"
 				validation="required"
+				:exclude-types="['combiBoiler', 'pointOfUse']"
 			/>
 			<FormKit
 				v-if="model.typeOfWaterStorage !== undefined"

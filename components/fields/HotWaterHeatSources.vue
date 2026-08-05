@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
 
-defineProps<{
+const props = defineProps<{
 	id: string;
 	name: string;
 	label: string;
@@ -10,6 +10,7 @@ defineProps<{
 	validationRules?: Record<string, (node: FormKitNode) => boolean>;
 	validationMessages?: Record<string, string>;
 	dataField?: string;
+	excludeTypes?: string[];
 }>();
 
 const store = useEcaasStore();
@@ -29,7 +30,19 @@ const heatSourceOptions = [
 			return undefined;
 		}
 
-		return [x.data.id, x.data.name] as [string, string];
+		if (props.excludeTypes &&
+			(props.excludeTypes.includes(x.data.typeOfHeatSource) ||
+			(x.data.typeOfHeatSource === "boiler" && props.excludeTypes.includes(x.data.typeOfBoiler)) ||
+			(x.data.typeOfHeatSource === "heatBattery" && props.excludeTypes.includes(x.data.typeOfHeatBattery)))
+		) {
+			return undefined;
+		}
+
+		if (!props.excludeTypes?.includes(x.data.typeOfHeatSource)) {
+			return [x.data.id, x.data.name] as [string, string];
+		}
+
+		return undefined;
 	}),
 ].flat().filter(x => typeof x !== "undefined");
 </script>
