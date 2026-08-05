@@ -503,7 +503,7 @@ const bathSummary: SummarySection = {
 		return {
 			"Name": show(d.data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
-			"Cold water source": displayCamelToSentenceCase(d.data.coldWaterSource),
+			"Cold water source": displayCamelToSentenceCase(show(d.data.coldWaterSource)),
 			"Size": "size" in d.data ? dim(d.data.size, "litres") : emptyValueRendering,
 		};
 	}),
@@ -518,7 +518,7 @@ const otherOutletsSummary: SummarySection = {
 		return {
 			"Name": show(d.data.name),
 			"Type of hot water outlet": "typeOfHotWaterOutlet" in d.data && d.data.typeOfHotWaterOutlet ? displayCamelToSentenceCase(d.data.typeOfHotWaterOutlet) : emptyValueRendering,
-			"Cold water source": displayCamelToSentenceCase(d.data.coldWaterSource),
+			"Cold water source": displayCamelToSentenceCase(show(d.data.coldWaterSource)),
 			"Flow rate": "flowRate" in d.data ? dim(d.data.flowRate, "litres per second") : emptyValueRendering,
 		};
 	}),
