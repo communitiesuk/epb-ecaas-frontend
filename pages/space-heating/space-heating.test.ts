@@ -86,6 +86,54 @@ describe("space heating", () => {
 			subHeatNetworkName: "Sub Heat Network Name",
 		};
 
+		const dhwHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c13",
+			name: "DHW Heat Pump",
+			typeOfHeatSource: "heatPump",
+		};
+
+		const dhwBoiler: Partial<DomesticHotWaterHeatSourceData> = {
+			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
+			name: "DHW Boiler",
+			heatSourceId: "NEW_HEAT_SOURCE",
+			isExistingHeatSource: false,
+			typeOfHeatSource: "boiler",
+		};
+
+		const dhwHeatBattery: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "DHW Heat Battery",
+			typeOfHeatSource: "heatBattery",
+		};
+
+		const dhwImmersionHeater: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c12",
+			name: "DHW Immersion Heater",
+			typeOfHeatSource: "immersionHeater",
+		};
+
+		const dhwPointOfUse: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c14",
+			name: "DHW Point of Use",
+			typeOfHeatSource: "pointOfUse",
+		};
+
+		const dhwSolarThermalSystem: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c15",
+			name: "DHW Solar Thermal System",
+			typeOfHeatSource: "solarThermalSystem",
+		};
+
 		it("should display heat networks section", async () => {
 			await renderSuspended(SpaceHeating);
 
@@ -188,6 +236,39 @@ describe("space heating", () => {
 			await renderSuspended(SpaceHeating);
 			expect(screen.queryByTestId("heatNetworks_add")).toBeDefined();
 		});
+		it.each([
+			["heat pump", dhwHeatPump],
+			["boiler", dhwBoiler],
+			["heat battery", dhwHeatBattery],
+			["immersion heater", dhwImmersionHeater],
+			["point of use", dhwPointOfUse],
+			["solar thermal system", dhwSolarThermalSystem],
+		])(
+			"shows conflict message in heat networks if a %s has been added in domestic hot water heat sources",
+			async (heatSourceLabel, heatSource) => {
+				store.$patch({
+					domesticHotWater: {
+						heatSources: {
+							data: [{ data: heatSource, complete: true }],
+						},
+					},
+				});
+
+				await renderSuspended(SpaceHeating);
+
+				const conflictMessage = await screen.findByTestId("conflict-message");
+
+				expect(conflictMessage.textContent).toContain(
+					`A heat network cannot be added as it isn't compatible with the ${heatSourceLabel} already entered in`,
+				);
+
+				const link = within(conflictMessage).getByRole("link", {
+					name: "domestic hot water",
+				});
+
+				expect(link.getAttribute("href")).toBe(getUrl("domesticHotWater")); 
+			},
+		);
 	});
 
 	describe("heat source", () => {
@@ -272,59 +353,30 @@ describe("space heating", () => {
 			expect(within(populatedList).queryByText("Heat source 2")).toBeNull();
 		});
 
-		it("shows conflict message if the heat pump added is not compatible with a heat network", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [{ data: heatPump, complete: true }],
+		it.each([
+			["heat pump", heatPump],
+			["boiler", boiler],
+			["heat battery", heatBattery],
+		])(
+			"shows conflict message if a %s added in space heating heat sources is not compatible with a heat network",
+			async (heatSourceLabel, heatSource) => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatSource, complete: true }],
+						},
 					},
-				},
-			});
+				});
 
-			await renderSuspended(SpaceHeating);
+				await renderSuspended(SpaceHeating);
 
-			expect(
-				await screen.findByText(
-					"A heat network cannot be added as it isn't compatible with the heat pump already entered.",
-				),
-			).toBeDefined(); 
-		});
+				const conflictMessage = await screen.findByTestId("conflict-message");
 
-		it("shows conflict message in heat networks if a boiler has been added in heat sources", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [{ data: boiler, complete: true }],
-					},
-				},
-			});
-
-			await renderSuspended(SpaceHeating);
-
-			expect(
-				await screen.findByText(
-					"A heat network cannot be added as it isn't compatible with the boiler already entered.",
-				),
-			).toBeDefined(); 
-		});
-
-		it("shows conflict message in heat networks if a heat battery has been added in heat sources", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [{ data: heatBattery, complete: true }],
-					},
-				},
-			});
-
-			await renderSuspended(SpaceHeating);
-
-			expect(
-				await screen.findByText(
-					"A heat network cannot be added as it isn't compatible with the heat battery already entered.",
-				),
-			).toBeDefined(); 
-		});
+				expect(conflictMessage.textContent).toContain(
+					`A heat network cannot be added as it isn't compatible with the ${heatSourceLabel} already entered.`,
+				);
+			},
+		);
 
 		describe("when a heat source is removed", () => {
 			it("references to the deleted heat source are removed from heat emitters", async () => {

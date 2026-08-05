@@ -15,6 +15,15 @@ export interface SummarySection {
 	stickyFirstColumn?: boolean;
 }
 
+export interface ConflictMessage {
+	beforeLinkText: string;
+	link?: {
+		text: string;
+		url: string;
+	};
+	afterLinkText?: string;
+}
+
 declare module "#app" {
 	interface RuntimeNuxtHooks {
 		"app:floor:removed": (id: string) => HookResult,

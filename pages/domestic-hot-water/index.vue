@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { hasPackagedProduct, isEcaasForm } from "#imports";
 import type { CustomListItem } from "~/components/CustomList.vue";
+import type { ConflictMessage } from "~/common.types";
 import { useDomesticHotWater } from "~/composables/domesticHotWater";
 import formStatus from "~/constants/formStatus";
 import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, PreheatedWaterStorageData, WaterStorageData } from "~/stores/ecaasStore.schema";
@@ -181,19 +182,23 @@ function hasReferenceToExistingSpaceHeatingHeatPump(): boolean {
 	});
 }
 
-const waterStorageConflictMessage = computed(() => {
+const waterStorageConflictMessage = computed<ConflictMessage | undefined>(() => {
 	let incompatibleType: string | undefined;
 
 	store.domesticHotWater.heatSources.data.forEach((heatSource) => {
 		const actualHeatSource = getActualHeatSource(heatSource.data);
 		const heatSourceType = actualHeatSource?.typeOfHeatSource;
 
-		if (heatSourceType === "boiler" && actualHeatSource!.typeOfBoiler === "combiBoiler") {
+		if (
+			heatSourceType === "boiler" &&
+			actualHeatSource!.typeOfBoiler === "combiBoiler"
+		) {
 			incompatibleType = boilerTypes[actualHeatSource!.typeOfBoiler];
 			return;
 		}
 
-		if (heatSourceType === "heatInterfaceUnit" ||
+		if (
+			heatSourceType === "heatInterfaceUnit" ||
 			heatSourceType === "heatBattery" ||
 			heatSourceType === "pointOfUse"
 		) {
@@ -205,7 +210,9 @@ const waterStorageConflictMessage = computed(() => {
 		return;
 	}
 
-	return `No water storage can be added when '${incompatibleType.toLowerCase()}' is selected as the heat source.`;
+	return {
+		beforeLinkText: `No water storage can be added when '${incompatibleType.toLowerCase()}' is selected as the heat source.`,
+	};
 });
 
 checkMaxHeatSourcesExceeded();

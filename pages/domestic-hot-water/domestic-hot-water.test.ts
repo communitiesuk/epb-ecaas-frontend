@@ -457,9 +457,11 @@ describe("Domestic hot water", () => {
 			expect(store.domesticHotWater.waterStorage.data.length).toBe(0);
 			expect(screen.queryByTestId("waterStorage_add")).toBeNull();
 
-			const bodyText = document.querySelector(".govuk-summary-card__content .govuk-body");
+			const conflictMessage = await screen.findByTestId("conflict-message");
 
-			expect(bodyText?.textContent).toBe(`No water storage can be added when '${heatSourceType}' is selected as the heat source.`);
+			expect(conflictMessage.textContent).toContain(
+				`No water storage can be added when '${heatSourceType}' is selected as the heat source.`,
+			);
 		});
 	});
 

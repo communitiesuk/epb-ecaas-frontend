@@ -82,26 +82,30 @@ function hasIncompleteEntries() {
 }
 
 const incompatibleHeatSourceForHeatNetworkMessage = computed(() => {
-	for (const heatSource of store.spaceHeating.heatSource.data) {
-		const data = heatSource.data as HeatSourceData | undefined;
+	for (const source of store.spaceHeating.heatSource.data) {
+		const message = getHeatNetworkConflictMessage(
+			source.data as HeatNetworkCompatibleHeatSource,
+		);
 
-		if (!data) {
+		if (message) {
+			return message;
+		}
+	}
+
+	for (const source of store.domesticHotWater.heatSources.data) {
+		const data = source.data;
+
+		if (!data || !("typeOfHeatSource" in data)) {
 			continue;
 		}
 
-		if (data.typeOfHeatSource === "boiler") {
-			return "A heat network cannot be added as it isn't compatible with the boiler already entered.";
-		}
+		const message = getHeatNetworkConflictMessage(
+			data,
+			"domesticHotWater",
+		);
 
-		if (data.typeOfHeatSource === "heatBattery") {
-			return "A heat network cannot be added as it isn't compatible with the heat battery already entered.";
-		}
-
-		if (
-			data.typeOfHeatSource === "heatPump" &&
-			data.typeOfHeatPump !== "booster"
-		) {
-			return "A heat network cannot be added as it isn't compatible with the heat pump already entered.";
+		if (message) {
+			return message;
 		}
 	}
 
