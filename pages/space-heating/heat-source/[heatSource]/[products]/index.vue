@@ -59,7 +59,7 @@ const selectProduct = async (product: DisplayProduct) => {
 		);
 
 		// Allow store to be updated before navigation
-		setTimeout(() => navigateTo(redirectUrl), 0);
+		setTimeout(() => navigateTo(redirectUrl), 100);
 	} catch (error) {
 		if (error instanceof EcaasError && error.name === "DHW_HEAT_SOURCE_CONFLICT") {
 			navigateTo(`${redirectUrl}?error=${error.name}`);

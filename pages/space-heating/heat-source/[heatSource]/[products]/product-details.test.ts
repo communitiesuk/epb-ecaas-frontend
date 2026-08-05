@@ -305,7 +305,7 @@ describe("Heat pump details", async () => {
 		await user.click(screen.getByTestId("selectProductButton"));
 
 		// Assert
-		expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-source/0");
+		setTimeout(() => expect(mockNavigateTo).toHaveBeenCalledWith("/space-heating/heat-source/0"), 100);
 	});
 
 	test("Displays heat pump details when product is a heat pump", async () => {

@@ -63,7 +63,7 @@ const selectProduct = async (product: DisplayProduct) => {
 	);
 
 	// Allow store to be updated before navigation
-	setTimeout(() => navigateTo(page("heatSources").url.replace(":heatSource", `${index}`)), 0);
+	setTimeout(() => navigateTo(page("heatSources").url.replace(":heatSource", `${index}`)), 100);
 };
 </script>
 

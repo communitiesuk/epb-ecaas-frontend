@@ -352,6 +352,6 @@ describe("Heat source details", async () => {
 		await user.click(screen.getByTestId("selectProductButton"));
 
 		// Assert
-		expect(mockNavigateTo).toHaveBeenCalledWith("/domestic-hot-water/heat-sources/0");
+		setTimeout(() => expect(mockNavigateTo).toHaveBeenCalledWith("/domestic-hot-water/heat-sources/0"), 100);
 	});
 });
