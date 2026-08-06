@@ -12,37 +12,43 @@ const props = defineProps<{
 
 const usesRadiatorColumns = computed(() => props.products.some(product => product.technologyType === "ConvectorRadiator"));
 const usesUnderfloorHeatingColumns = computed(() => props.products.some(product => product.technologyType === "UnderFloorHeating"));
+
 const primaryColumnLabel = computed(() => {
 	if (usesRadiatorColumns.value) return "Type";
 	if (usesUnderfloorHeatingColumns.value) return "System";
 	return "Model";
 });
+
 const secondaryColumnLabel = computed(() => {
 	if (usesRadiatorColumns.value) return "Height (mm)";
 	if (usesUnderfloorHeatingColumns.value) return "Spacing between heating pipes (mm)";
 	return "Model qualifier";
 });
+
 const primarySortField = computed<ProductSortOption>(() => {
 	if (usesRadiatorColumns.value) return "type";
 	if (usesUnderfloorHeatingColumns.value) return "systemName";
 	return "modelName";
 });
+
 const secondarySortField = computed<ProductSortOption>(() => {
 	if (usesRadiatorColumns.value) return "height";
 	if (usesUnderfloorHeatingColumns.value) return "pipeCentres";
 	return "modelQualifier";
 });
+
 const primaryValue = (product: DisplayProduct) => {
 	if (product.technologyType === "ConvectorRadiator") {
 		return product.type ?? "-";
 	}
 
 	if (product.technologyType === "UnderFloorHeating") {
-		return product.systemName ?? "-";
+		return product.systemName ? capitalizeFirstLetter(product.systemName) : "-";
 	}
 
 	return product.modelName ?? "-";
 };
+
 const secondaryValue = (product: DisplayProduct) => {
 	if (product.technologyType === "ConvectorRadiator") {
 		return product.height != null ? `${product.height}` : "-";

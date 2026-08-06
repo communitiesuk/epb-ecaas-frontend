@@ -1,5 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import type { DisplayProduct, PaginatedResult, Product, TechnologyGroup, TechnologyType, VesselType } from "../pcdb.types";
+import type { DisplayProduct, PaginatedResult, Product, TechnologyGroup, TechnologyType, UnderFloorHeatingProduct, VesselType } from "../pcdb.types";
 import type { PcdbClient } from "./client.types";
 import { DynamoDBDocumentClient, BatchGetCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { generateHeatNetworkSubNetworkDisplayProductCombinations } from "../utils/subheatnetwork-combination-display";
@@ -189,12 +189,13 @@ const hydrateHeatNetworkItems = async (items: Record<string, unknown>[]) => {
 };
 
 const hydrateUnderfloorHeatingItems = async (items: Record<string, unknown>[]) => {
-	return await Promise.all(items.map(async (item) => {
+	const underFloorHeatingItems = await Promise.all(items.map(async (item) => {
 		if (hasUnderfloorHeatingDisplayFields(item)) {
 			return item;
 		}
 
-		const key = item.id ?? item.ID;
+		const key = item.id;
+
 		if (key == null) {
 			return item;
 		}
@@ -205,7 +206,20 @@ const hydrateUnderfloorHeatingItems = async (items: Record<string, unknown>[]) =
 		}));
 
 		return (result.Item as Record<string, unknown> | undefined) ?? item;
-	}));
+	})) as UnderFloorHeatingProduct[];
+
+	return underFloorHeatingItems
+		.sort((a, b) => {
+			if (a.systemName < b.systemName) {
+				return -1;
+			}
+
+			if (a.systemName > b.systemName) {
+				return 1;
+			}
+
+			return a.pipeCentres - b.pipeCentres;
+		});
 };
 
 const getProductsByTechnologyType = async (technologyType: TechnologyType, pageSize?: number, startKey?: string) => {
