@@ -427,6 +427,7 @@ export function displayHeatEmitterType(type: HeatEmitterType | undefined): HeatE
 
 export const mechanicalVentilationProductTypesDisplay = {
 	"mvhr": pluralize("MVHR"),
+	"centralisedMv": pluralize("Centralised MV"),
 	"centralisedContinuousMev": pluralize("Centralised continuous MEV"),
 	"decentralisedContinuousMev": pluralize("Decentralised continuous MEV"),
 } as const satisfies Record<MechanicalVentilationProductType, (plural: boolean) => string>;

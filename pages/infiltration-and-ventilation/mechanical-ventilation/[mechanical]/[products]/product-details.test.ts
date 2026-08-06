@@ -126,6 +126,32 @@ describe("Mechanical ventilation details", async () => {
 		expect((await screen.findByTestId("mvhr"))).toBeDefined();
 	});
 
+	test("Displays centralised MV details when product is a centralised MV", async () => {
+		// Arrange
+		mockRoute.mockReturnValue({
+			params: {
+				mechanical: "0",
+				products: "centralised-mv",
+				id: "1002",
+			},
+			path: "/0/centralised-mv/1002",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref({
+				...product,
+				modelName: "Centralised MV",
+				technologyType: "CentralisedMv",
+			}),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		
+		// Assert
+		expect((await screen.findByTestId("centralisedMv"))).toBeDefined();
+	});
+
 	test("Displays MEV details when product is a centralised continuous MEV", async () => {
 		// Arrange
 		mockRoute.mockReturnValue({

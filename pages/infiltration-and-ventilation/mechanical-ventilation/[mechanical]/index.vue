@@ -276,8 +276,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				@click="() => updateMechanicalVentilation('typeOfMechanicalVentilationOptions')"
 			/>
 			<FormKit
-				v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR' 
-					|| model?.typeOfMechanicalVentilationOptions === 'Centralised MV'"
+				v-if="model?.typeOfMechanicalVentilationOptions === 'MVHR'"
 				id="selectMvhr"
 				type="govPcdbProduct"
 				label="Select a product"
@@ -290,6 +289,21 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				:page-url="route.fullPath"
 				:page-index="index"
 				:disabled="hasPackagedProduct(model!)"
+			/>
+
+			<FormKit
+				v-if="model?.typeOfMechanicalVentilationOptions === 'Centralised MV'"
+				id="selectCentralisedMv"
+				type="govPcdbProduct"
+				label="Select a product"
+				name="productReference"
+				validation="required"
+				help="Select the mechanical vent type from the PCDB using the button below"
+				:selected-product-reference="'productReference' in model ? model.productReference : null"
+				:selected-product-type="typeOfMechanicalVentilation.centralisedMv"
+				:heat-source="model"
+				:page-url="route.fullPath"
+				:page-index="index"
 			/>
 			<FormKit
 				v-if=" model?.typeOfMechanicalVentilationOptions === 'Centralised continuous MEV'"

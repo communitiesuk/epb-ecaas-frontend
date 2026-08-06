@@ -316,6 +316,13 @@ export const centralisedMvhrZod = BaseProduct.extend({
 
 export type CentralisedMvhrProduct = z.infer<typeof centralisedMvhrZod>;
 
+export const centralisedMvZod = BaseProduct.extend({
+	technologyType: z.literal("CentralisedMv"),
+	integralOnly: z.nullable(z.number()),
+});
+
+export type CentralisedMvProduct = z.infer<typeof centralisedMvZod>;
+
 export const centralisedContinuousMevZod = BaseProduct.extend({
 	technologyType: z.literal("CentralisedMev"),
 	integralOnly: z.nullable(z.number()),
@@ -423,6 +430,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	convectorRadiatorZod,
 	heatInterfaceUnitZod,
 	centralisedMvhrZod,
+	centralisedMvZod,
 	centralisedContinuousMevZod,
 	decentralisedContinuousMevZod,
 	directElectricHeaterZod,
@@ -471,6 +479,7 @@ const categoryTechnologies = {
 	],
 	mechanicalVentilation: [
 		"CentralisedMvhr",
+		"CentralisedMv",
 		"CentralisedMev",
 		"DecentralisedMev",
 	],

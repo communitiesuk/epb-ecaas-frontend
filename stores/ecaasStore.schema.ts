@@ -972,7 +972,7 @@ const typeOfHeatNetwork = z.enum(["sleevedDistrictHeatNetwork", "unsleevedDistri
 const typeOfHeatBattery = z.enum(["heatBatteryPcm", "heatBatteryDryCore"]);
 const typeOfLocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
 const coldWaterSource = z.enum(["mainsWater", "headerTank"]);
-const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedContinuousMev", "decentralisedContinuousMev"]);
+const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedMv", "centralisedContinuousMev", "decentralisedContinuousMev"]);
 
 export const typeOfColdWaterSource = coldWaterSource.enum;
 
@@ -1145,6 +1145,7 @@ export const productTypeMap = {
 	"smartHotWaterTank": "SmartHotWaterTank",
 	"heatInterfaceUnit": "HeatInterfaceUnit",
 	"mvhr": "CentralisedMvhr",
+	"centralisedMv": "CentralisedMv",
 	"centralisedContinuousMev": "CentralisedMev",
 	"decentralisedContinuousMev": "DecentralisedMev",
 	"instantElectricHeater": "DirectElectricHeaters",
