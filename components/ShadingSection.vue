@@ -22,10 +22,10 @@ const isEditing = computed(() => editIndex.value !== null);
 
 const typeOptionsMap = {
 	"PV": {
-		obstacle: "Obstacle",
-		left_side_fin: "Left side fin",
-		right_side_fin: "Right side fin",
-		overhang: "Overhang",
+		obstacle: "In front of PV array",
+		left_side_fin: "Left of PV array",
+		right_side_fin: "Right of PV array",
+		overhang: "Above PV array",
 		frame_or_reveal: "Frame or reveal",
 	} ,
 	"window": {
@@ -39,10 +39,10 @@ const typeOptions = typeOptionsMap[props.shadingSectionType];
 
 const typeOptionsSummaryMap = {
 	"PV": {
-		obstacle: "Obstacle",
-		left_side_fin: "Left side fin",
-		right_side_fin: "Right side fin",
-		overhang: "Overhang",
+		obstacle: "In front of PV array",
+		left_side_fin: "Left of PV array",
+		right_side_fin: "Right of PV array",
+		overhang: "Above PV array",
 		frame_or_reveal: "Frame / reveal",
 	},
 	"window": {
@@ -76,14 +76,14 @@ const shadingSummaryData = (item: ShadingObjectData) => {
 			if (item.typeOfShading === "obstacle") {
 				return {
 					"Type of shading": typeOptionsSummary[item.typeOfShading as keyof typeof typeOptionsSummary],
-					"Height": `${item.height}m`,
+					"Height of obstacle": `${item.height}m`,
 					"Distance from edge of PV": `${item.distance}m`,
-					"Transparency": `${item.transparency}%`,
+					"Transparency of obstacle": `${item.transparency}%`,
 				};
 			}
 			return {
 				"Type of shading": typeOptionsSummary[item.typeOfShading as keyof typeof typeOptionsSummary],
-				[`Depth of ${sentenceToLowerCase(typeOptions[item.typeOfShading as keyof typeof typeOptions])}`]: `${item.depth}m`,
+				"Width of obstacle": `${item.depth}m`,
 				"Distance from edge of PV": `${item.distance}m`,
 			};
 	}
@@ -142,7 +142,6 @@ const removeShading = (i: number) => {
 	shadingItems.value = updatedItems;
 	writeToStore(updatedItems);
 };
-
 </script>
 
 <template>
@@ -214,7 +213,7 @@ const removeShading = (i: number) => {
 						id="typeOfShading"
 						v-model="formModel.typeOfShading"
 						type="govRadios"
-						label="Type of shading"
+						:label="shadingSectionType === 'PV' ? 'Location of shading' : 'Type of shading'"
 						:options="typeOptions"
 						validation="required"
 					/>
@@ -259,7 +258,10 @@ const removeShading = (i: number) => {
 							:key="`depth-${formModel.typeOfShading}`"
 							v-model="formModel.depth"
 							type="govInputWithSuffix"
-							:label="'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading as keyof typeof typeOptions] as string)"
+							:label="shadingSectionType === 'window' ?
+								'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading as keyof typeof typeOptions] as string) :
+								'Width of obstacle'"
+							:help="shadingSectionType === 'PV' ? 'Measured from the back of the PV array forwards' : undefined"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
