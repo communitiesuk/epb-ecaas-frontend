@@ -2,6 +2,8 @@
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import type { ProductSortOption } from "~/composables/productSearch";
 import HemDefaultProductInset from "../HemDefaultProductInset.vue";
+import { isUnderFloorHeatingDisplayProduct } from "~/utils/underFloorHeating.js";
+import { show } from "~/utils/display.js";
 
 const route = useRoute();
 const props = defineProps<{
@@ -77,6 +79,9 @@ const secondaryValue = (product: DisplayProduct) => {
 					<th scope="col" class="govuk-table__header">
 						<ColumnSort :label="primaryColumnLabel" :field="primarySortField" />
 					</th>
+					<th v-if="usesUnderfloorHeatingColumns" scope="col" class="govuk-table__header govuk-table__header--brand">
+						<ColumnSort label="Finish" field="floorFinishCompatibility" />
+					</th>
 					<th scope="col" class="govuk-table__header govuk-table__header--model-qualifier">
 						<ColumnSort :label="secondaryColumnLabel" :field="secondarySortField" />
 					</th>
@@ -94,6 +99,7 @@ const secondaryValue = (product: DisplayProduct) => {
 					<td class="govuk-table__cell">{{ product.id }}</td>
 					<td v-if="!usesRadiatorColumns && !usesUnderfloorHeatingColumns" class="govuk-table__cell">{{ product.brandName ?? '-' }}</td>
 					<td class="govuk-table__cell">{{ primaryValue(product) }}</td>
+					<td v-if="usesUnderfloorHeatingColumns && isUnderFloorHeatingDisplayProduct(product)" class="govuk-table__cell">{{ show(product.floorFinishCompatibility) }}</td>
 					<td class="govuk-table__cell">{{ secondaryValue(product) }}</td>
 					<td class="govuk-table__cell govuk-table__cell--select">
 						<NuxtLink :to="{ path: `${route.path}/${product.id}`, query: route.query }" class="govuk-link govuk-!-margin-right-3">
