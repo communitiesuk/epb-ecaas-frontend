@@ -254,6 +254,7 @@ const removeShading = (i: number) => {
 					</template>
 					<template v-else-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin' || formModel.typeOfShading === 'overhang'">
 						<FormKit
+							v-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin'"
 							id="shadingDepth"
 							:key="`depth-${formModel.typeOfShading}`"
 							v-model="formModel.depth"
@@ -262,6 +263,16 @@ const removeShading = (i: number) => {
 								'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading as keyof typeof typeOptions] as string) :
 								'Width of obstacle'"
 							:help="shadingSectionType === 'PV' ? 'Measured from the back of the PV array forwards' : undefined"
+							suffix-text="m"
+							validation="required | number | min:0"
+						/>
+						<FormKit
+							v-if="formModel.typeOfShading === 'overhang'"
+							id="shadingDepth"
+							key="depth-overhang"
+							v-model="formModel.depth"
+							type="govInputWithSuffix"
+							label="Depth of overhang"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
@@ -408,11 +419,25 @@ const removeShading = (i: number) => {
 					</template>
 					<template v-else-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin' || formModel.typeOfShading === 'overhang'">
 						<FormKit
+							v-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin'"
 							id="shadingDepth"
 							:key="`depth-${formModel.typeOfShading}`"
 							v-model="formModel.depth"
 							type="govInputWithSuffix"
-							:label="'Depth of ' + sentenceToLowerCase((typeOptions as any)[formModel.typeOfShading] as string)"
+							:label="shadingSectionType === 'window' ?
+								'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading as keyof typeof typeOptions] as string) :
+								'Width of obstacle'"
+							:help="shadingSectionType === 'PV' ? 'Measured from the back of the PV array forwards' : undefined"
+							suffix-text="m"
+							validation="required | number | min:0"
+						/>
+						<FormKit
+							v-if="formModel.typeOfShading === 'overhang'"
+							id="shadingDepth"
+							key="depth-overhang"
+							v-model="formModel.depth"
+							type="govInputWithSuffix"
+							label="Depth of overhang"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
