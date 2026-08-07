@@ -316,8 +316,6 @@ const pointOfUseSummary: SummarySection = {
 				Name: "name" in heatSource ? show(heatSource.name) : emptyValueRendering,
 				"Cold water source": "coldWaterSource" in heatSource && heatSource.coldWaterSource !== undefined ? displayCamelToSentenceCase(heatSource.coldWaterSource) : emptyValueRendering,
 				"Type of heat source": "typeOfHeatSource" in heatSource ? displayDHWHeatSourceType(heatSource.typeOfHeatSource) : emptyValueRendering,
-				"Energy supply": "energySupply" in heatSource && heatSource.energySupply !== undefined ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
-
 			};
 			return summary;
 		}) || [],

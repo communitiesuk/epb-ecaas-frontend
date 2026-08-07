@@ -13,7 +13,6 @@ const store = useEcaasStore();
 const route = useRoute();
 
 const { autoSaveElementForm, getStoreIndex } = useForm();
-const { getDefaultEnergySupply } = useEnergySupplies();
 const { createWaterCylinder } = useHeatSources();
 
 const heatSourceStoreData = store.spaceHeating.heatSource.data;
@@ -118,10 +117,6 @@ autoSaveElementForm<HeatSourceData>({
 	onPatch: (state, newData, index, prevData) => {
 		const existingData = prevData?.data as HeatSourceData;
 		newData.data.id ??= id;
-
-		if (newData.data.typeOfHeatSource === "heatPump" && newData.data.typeOfHeatPump != "booster") {
-			newData.data.energySupply ??= getDefaultEnergySupply()!;
-		}
 
 		createWaterCylinder("spaceHeating", state, newData.data, existingData, newData.data);
 

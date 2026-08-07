@@ -897,7 +897,6 @@ describe("domestic hot water mapper", () => {
 					typeOfHeatPump: "airSource",
 					productReference: "HEATPUMP-LARGE",
 					maxFlowTemp: unitValue(1, celsius),
-					energySupply: "electricity",
 				},
 				complete: true,
 			} as const satisfies EcaasForm<HeatSourceData>;

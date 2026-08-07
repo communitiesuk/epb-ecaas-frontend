@@ -26,7 +26,6 @@ describe("Space heating - heat sources", () => {
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "airSource",
 			productReference: "1234",
-			energySupply: "electricity",
 			maxFlowTemp: unitValue(30, celsius),
 		};
 
@@ -289,7 +288,7 @@ describe("Space heating - heat sources", () => {
 						type: "Boiler",
 						product_reference: boiler1.productReference,
 						specified_location: "internal",
-						EnergySupply: "mains_elec", // todo review
+						EnergySupply: "mains elec", // todo review
 					} as const satisfies SchemaBoilerWithProductReference,
 				};
 				const resolvedState = resolveState(store.$state);
@@ -316,12 +315,12 @@ describe("Space heating - heat sources", () => {
 						type: "Boiler",
 						product_reference: boiler1.productReference,
 						specified_location: "internal",
-						EnergySupply: "mains_elec", //todo review
+						EnergySupply: "mains elec", //todo review
 					} as const satisfies SchemaBoilerWithProductReference,
 					[boiler2.name]: {
 						type: "Boiler",
 						product_reference: boiler2.productReference,
-						EnergySupply: "mains_elec", //todo review
+						EnergySupply: "mains elec", //todo review
 					} as const satisfies SchemaBoilerWithProductReference,
 				};
 

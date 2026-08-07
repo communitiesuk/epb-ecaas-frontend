@@ -912,7 +912,6 @@ describe("Domestic hot water summary", () => {
 			id: "463c94f6-566c-49b2-af27-57e5c9999999",
 			name: "Point of use",
 			typeOfHeatSource: "pointOfUse",
-			energySupply: "electricity",
 		};
 
 		const heatNetwork1: HeatNetworkData = {
@@ -1058,7 +1057,6 @@ describe("Domestic hot water summary", () => {
 			"Cold water source": "Mains water",
 			Name: "Point of use",
 			"Type of heat source": "Point of use",
-			"Energy supply": "Electricity",
 			// "Heater efficiency": "1",
 		};
 

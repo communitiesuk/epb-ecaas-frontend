@@ -79,13 +79,6 @@ const greaterThanZero = (node: FormKitNode) => {
 			</NuxtLink>
 		</div>
 	</FormKit>
-	<FieldsEnergySupplies
-		v-if="model.typeOfHeatPump !== 'booster'"
-		id="energySupply"
-		name="energySupply"
-		label="Energy supply"
-		help="Select the relevant energy supply that has been added previously" />
-
 	<FormKit
 		id="maxFlowTemp"
 		name="maxFlowTemp"
