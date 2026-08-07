@@ -63,6 +63,7 @@ const selectProduct = () => {
 	<h2 class="govuk-caption-l govuk-!-margin-top-0">{{ data?.brandName }}</h2>
 
 	<ProductDetailsMvhr v-if="!!data && mechanicalVentilationType === typeOfMechanicalVentilation.mvhr" :product="data!" />
+	<ProductDetailsCentralisedMv v-if="!!data && mechanicalVentilationType === typeOfMechanicalVentilation.centralisedMv" :product="data!" />
 	<ProductDetailsContinuousMev v-if="!!data && mechanicalVentilationType === typeOfMechanicalVentilation.centralisedContinuousMev" :product="data!" />
 	<ProductDetailsContinuousMev v-if="!!data && mechanicalVentilationType === typeOfMechanicalVentilation.decentralisedContinuousMev" :product="data!" />
 

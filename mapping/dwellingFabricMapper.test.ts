@@ -167,7 +167,6 @@ describe("dwelling fabric mapper", () => {
 			underfloorSpaceThermalResistance: 1,
 			thermalTransmittanceOfWallsAboveGround: 1,
 			ventilationOpeningsArea: 100,
-			windShieldingFactor: "Average",
 		};
 
 		const groundFloorWithHeatedBasement: GroundFloorData = {
@@ -396,7 +395,7 @@ describe("dwelling fabric mapper", () => {
 			thermal_resist_insul: groundFloorWithSuspendedFloor.underfloorSpaceThermalResistance,
 			thermal_transm_walls: groundFloorWithSuspendedFloor.thermalTransmittanceOfWallsAboveGround,
 			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea / 1e6,
-			shield_fact_location: groundFloorWithSuspendedFloor.windShieldingFactor,
+			shield_fact_location: "Average", 
 		};
 
 		expect(groundFloorWithSuspendedFloorElement).toEqual(expectedGroundFloorSuspendedFloor);
@@ -748,7 +747,6 @@ describe("dwelling fabric mapper", () => {
 			id: "roof-id",
 			name: "Roof above heated space",
 			typeOfRoof: "flatAboveHeatedSpace",
-			pitchOption: "custom",
 			pitch: 0,
 			length: 1,
 			width: 1,
@@ -764,7 +762,6 @@ describe("dwelling fabric mapper", () => {
 			id: "roof-unheated-space-id",
 			name: "Roof above unheated space",
 			typeOfRoof: "flatAboveUnheatedSpace",
-			pitchOption: "custom",
 			pitch: 0,
 			length: 1,
 			width: 1,
@@ -781,7 +778,6 @@ describe("dwelling fabric mapper", () => {
 			name: "Roof 2",
 			typeOfRoof: "pitchedInsulatedAtCeiling",
 			pitch: 30,
-			pitchOption: "custom",
 			length: 1,
 			width: 1,
 			elevationalHeightOfElement: 2,
@@ -797,7 +793,6 @@ describe("dwelling fabric mapper", () => {
 			name: "Roof 3",
 			typeOfRoof: "pitchedInsulatedAtRoof",
 			pitch: 30,
-			pitchOption: "custom",
 			length: 1,
 			width: 1,
 			elevationalHeightOfElement: 2,
@@ -991,7 +986,7 @@ describe("dwelling fabric mapper", () => {
 			openingToFrameRatio: 0.3,
 			midHeightOpenablePart1: 1,
 			maximumOpenableArea: 1,
-			heightOpenableArea: 1,
+			freeAreaHeight: 1,
 			uValue: 7,
 			numberOpenableParts: "1",
 			curtainsOrBlinds: true,
@@ -1120,7 +1115,7 @@ describe("dwelling fabric mapper", () => {
 			g_value: externalGlazedDoor.solarTransmittance,
 			frame_area_fraction: 1 - externalGlazedDoor.openingToFrameRatio,
 			max_window_open_area: externalGlazedDoor.maximumOpenableArea,
-			free_area_height: externalGlazedDoor.heightOpenableArea,
+			free_area_height: externalGlazedDoor.freeAreaHeight,
 			window_part_list: [
 				{ mid_height_air_flow_path: midHeight },
 				{ mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
@@ -1215,6 +1210,7 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "1",
+			freeAreaHeight: 1,
 			curtainsOrBlinds: true,
 			treatmentType: "blinds",
 			treatmentControls: "auto_motorised",
@@ -1306,7 +1302,7 @@ describe("dwelling fabric mapper", () => {
 			mid_height: 30 + window.height / 2,
 			frame_area_fraction: 1 - window.openingToFrameRatio,
 			security_risk: false,
-			free_area_height: 0,
+			free_area_height: 1,
 			max_window_open_area: window.maximumOpenableArea,
 			window_part_list: [
 				{
@@ -1357,6 +1353,7 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",
+			freeAreaHeight: 0,
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
 			curtainsOrBlinds: false,
@@ -1411,6 +1408,7 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",
+			freeAreaHeight: 0,
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
 			curtainsOrBlinds: false,
@@ -1463,6 +1461,7 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",
+			freeAreaHeight: 0,
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
 			curtainsOrBlinds: false,

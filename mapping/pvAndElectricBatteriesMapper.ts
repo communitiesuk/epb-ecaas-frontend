@@ -11,16 +11,16 @@ export function mapPvAndElectricBatteriesData(state: ResolvedState): [
 	{ [key: string]: Pick<SchemaEnergySupplyElectricity, "ElectricBattery"> | Pick<SchemaEnergySupplyElectricity, "diverter"> },
 ] {
 	return [
-		mapPvArrayData(state),
+		mapPvData(state),
 		mapElectricBatteryData(state),
 		mapPvDiverterData(state),
 		mapDiverterEnergySupplyData(state),
 	];
 }
 
-export function mapPvArrayData(state: ResolvedState): Pick<FhsInputSchema, "OnSiteGeneration"> {
+export function mapPvData(state: ResolvedState): Pick<FhsInputSchema, "OnSiteGeneration"> {
 	return {
-		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvArrays.map((array) => {
+		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvs.map((array) => {
 			const { name, elevationalHeight, lengthOfPV, widthOfPV, locationOfInverter, inverterPeakPowerAC, inverterPeakPowerDC, inverterType, orientation, peakPower, pitch, ventilationStrategy } = array;
 			return [
 				name,
@@ -36,7 +36,7 @@ export function mapPvArrayData(state: ResolvedState): Pick<FhsInputSchema, "OnSi
 					orientation360: orientation,
 					peak_power: peakPower,
 					pitch,
-					shading: array.hasShading ? maPvArrayShadingData(array.shading) : [],
+					shading: array.hasShading ? maPvShadingData(array.shading) : [],
 					type: "PhotovoltaicSystem",
 					ventilation_strategy: ventilationStrategy,
 				},
@@ -65,7 +65,7 @@ export function mapDiverterEnergySupplyData(state: ResolvedState): { [key: strin
 	return EnergySupply;
 }
 
-export function maPvArrayShadingData(shading: ShadingObjectData[]): SchemaWindowShadingObject[] {
+export function maPvShadingData(shading: ShadingObjectData[]): SchemaWindowShadingObject[] {
 	return shading.map((shadingItem) => {
 		const { typeOfShading } = shadingItem;
 		switch (typeOfShading) {
@@ -142,13 +142,12 @@ export function mapPvDiverterData(state: ResolvedState): Pick<SchemaEnergySupply
 	const existingHeatSources = domesticHotWater.heatSources.filter(x => x.isExistingHeatSource === true).map(x => x.heatSourceId);
 	const heatSourcesFromSpaceHeating = spaceHeating.heatSource.filter(x => existingHeatSources.includes(x.id));
 	const both = [...dhwHeatSource, ...heatSourcesFromSpaceHeating];
-	const heatSourceForDiverter = both.filter(x => x.typeOfHeatSource !== "heatNetwork");
-	if (heatSourceForDiverter.length !== 1) {
-		throw new Error("Expected exactly one non-heat-network heat source for diverter, found " + heatSourceForDiverter.length);
+	if (both.length !== 1) {
+		throw new Error("Expected exactly one non-heat-network heat source for diverter, found " + both.length);
 	}
 	return {
 		diverter: {
-			"HeatSource": heatSourceForDiverter[0]!.name,
+			"HeatSource": both[0]!.name,
 		},
 	};
 }

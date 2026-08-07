@@ -70,6 +70,27 @@ function patchPipework(state: Record<string, unknown>) {
 	}
 }
 
+function patchPvs(state: Record<string, unknown>) {
+	const storeState = state as EcaasState & {
+		pvAndBatteries?: {
+			pvArrays?: EcaasState["pvAndBatteries"]["pvs"];
+			pvs?: EcaasState["pvAndBatteries"]["pvs"];
+		};
+	};
+
+	const pvAndBatteries = storeState.pvAndBatteries;
+	const hasDefaultEmptyPvs = Array.isArray(pvAndBatteries?.pvs?.data)
+		&& pvAndBatteries.pvs.data.length === 0
+		&& pvAndBatteries.pvs.complete === undefined;
+
+	if (!pvAndBatteries || !pvAndBatteries.pvArrays || (!hasDefaultEmptyPvs && pvAndBatteries.pvs)) {
+		return;
+	}
+
+	pvAndBatteries.pvs = pvAndBatteries.pvArrays;
+	delete pvAndBatteries.pvArrays;
+}
+
 /**
  * Handle legacy radiator product references and lengths persisted in old formats
  */
@@ -132,6 +153,7 @@ export function patchState(state: Record<string, unknown>): Record<string, unkno
 	patchLighting(state);
 	patchHotWaterOutlets(state);
 	patchPipework(state);
+	patchPvs(state);
 	patchHeatEmitterIds(state);
 	patchRadiators(state);
 	patchFloorIds(state);

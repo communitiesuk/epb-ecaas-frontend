@@ -2,6 +2,8 @@
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import type { ProductSortOption } from "~/composables/productSearch";
 import HemDefaultProductInset from "../HemDefaultProductInset.vue";
+import { isUnderFloorHeatingDisplayProduct } from "~/utils/underFloorHeating.js";
+import { show } from "~/utils/display.js";
 
 const route = useRoute();
 const props = defineProps<{
@@ -12,37 +14,43 @@ const props = defineProps<{
 
 const usesRadiatorColumns = computed(() => props.products.some(product => product.technologyType === "ConvectorRadiator"));
 const usesUnderfloorHeatingColumns = computed(() => props.products.some(product => product.technologyType === "UnderFloorHeating"));
+
 const primaryColumnLabel = computed(() => {
 	if (usesRadiatorColumns.value) return "Type";
 	if (usesUnderfloorHeatingColumns.value) return "System";
 	return "Model";
 });
+
 const secondaryColumnLabel = computed(() => {
 	if (usesRadiatorColumns.value) return "Height (mm)";
 	if (usesUnderfloorHeatingColumns.value) return "Spacing between heating pipes (mm)";
 	return "Model qualifier";
 });
+
 const primarySortField = computed<ProductSortOption>(() => {
 	if (usesRadiatorColumns.value) return "type";
 	if (usesUnderfloorHeatingColumns.value) return "systemName";
 	return "modelName";
 });
+
 const secondarySortField = computed<ProductSortOption>(() => {
 	if (usesRadiatorColumns.value) return "height";
 	if (usesUnderfloorHeatingColumns.value) return "pipeCentres";
 	return "modelQualifier";
 });
+
 const primaryValue = (product: DisplayProduct) => {
 	if (product.technologyType === "ConvectorRadiator") {
 		return product.type ?? "-";
 	}
 
 	if (product.technologyType === "UnderFloorHeating") {
-		return product.systemName ?? "-";
+		return product.systemName ? capitalizeFirstLetter(product.systemName) : "-";
 	}
 
 	return product.modelName ?? "-";
 };
+
 const secondaryValue = (product: DisplayProduct) => {
 	if (product.technologyType === "ConvectorRadiator") {
 		return product.height != null ? `${product.height}` : "-";
@@ -71,6 +79,9 @@ const secondaryValue = (product: DisplayProduct) => {
 					<th scope="col" class="govuk-table__header">
 						<ColumnSort :label="primaryColumnLabel" :field="primarySortField" />
 					</th>
+					<th v-if="usesUnderfloorHeatingColumns" scope="col" class="govuk-table__header govuk-table__header--brand">
+						<ColumnSort label="Finish" field="floorFinishCompatibility" />
+					</th>
 					<th scope="col" class="govuk-table__header govuk-table__header--model-qualifier">
 						<ColumnSort :label="secondaryColumnLabel" :field="secondarySortField" />
 					</th>
@@ -88,6 +99,7 @@ const secondaryValue = (product: DisplayProduct) => {
 					<td class="govuk-table__cell">{{ product.id }}</td>
 					<td v-if="!usesRadiatorColumns && !usesUnderfloorHeatingColumns" class="govuk-table__cell">{{ product.brandName ?? '-' }}</td>
 					<td class="govuk-table__cell">{{ primaryValue(product) }}</td>
+					<td v-if="usesUnderfloorHeatingColumns && isUnderFloorHeatingDisplayProduct(product)" class="govuk-table__cell">{{ show(product.floorFinishCompatibility) }}</td>
 					<td class="govuk-table__cell">{{ secondaryValue(product) }}</td>
 					<td class="govuk-table__cell govuk-table__cell--select">
 						<NuxtLink :to="{ path: `${route.path}/${product.id}`, query: route.query }" class="govuk-link govuk-!-margin-right-3">

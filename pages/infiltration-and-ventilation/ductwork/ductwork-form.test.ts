@@ -92,7 +92,7 @@ describe("ductwork form", async () => {
 			},
 		});
 		expect(
-			screen.getByRole("heading", { name: "MVHR ductwork" }),
+			screen.getByRole("heading", { name: "Mechanical ventilation duct" }),
 		).toBeDefined();
 	});
 
@@ -105,7 +105,7 @@ describe("ductwork form", async () => {
 
 		const form = within(document.getElementsByTagName("form")[0]!);
 		expect(form.getByText("Name")).toBeDefined();
-		expect(form.getByText("MVHR unit")).toBeDefined();
+		expect(form.getByText("MVHR or centralised MV unit")).toBeDefined();
 		expect(form.getByText("Ductwork cross sectional shape")).toBeDefined();
 		expect(form.getByTestId("ductType_supply")).toBeDefined();
 		expect(form.getByTestId("ductType_extract")).toBeDefined();
@@ -131,6 +131,85 @@ describe("ductwork form", async () => {
 		});
 
 		expect(screen.getByText("MVHR_1")).toBeDefined();
+		expect(screen.getByText("MVHR_2")).toBeDefined();
+	});
+
+	it("should list Centralised MV units previously added", async() => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						data: {
+							name: "CentralisedMV_1",
+							id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506p",
+							typeOfMechanicalVentilationOptions: "Centralised MV",
+						},
+					},
+					{
+						data: {
+							name: "CentralisedMV_2",
+							id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506a",
+							typeOfMechanicalVentilationOptions: "Centralised MV",
+						},
+					}],
+				},
+			},
+		});
+
+		await renderSuspended(Ductwork, {
+			route: {
+				params: { ductwork: "create" },
+			},
+		});
+
+		expect(screen.getByText("CentralisedMV_1")).toBeDefined();
+		expect(screen.getByText("CentralisedMV_2")).toBeDefined();
+	});
+
+	it("should list a combination of MVHR and Centralised MV units previously added", async() => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						data: {
+							name: "MVHR_1",
+							id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
+							typeOfMechanicalVentilationOptions: "MVHR",
+						},
+					},
+					{
+						data: {
+							name: "CentralisedMV_1",
+							id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506p",
+							typeOfMechanicalVentilationOptions: "Centralised MV",
+						},
+					},
+					{
+						data: {
+							name: "MVHR_2",
+							id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
+							typeOfMechanicalVentilationOptions: "MVHR",
+						},
+					},
+					{
+						data: {
+							name: "CentralisedMV_2",
+							id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506a",
+							typeOfMechanicalVentilationOptions: "Centralised MV",
+						},
+					}],
+				},
+			},
+		});
+		await renderSuspended(Ductwork, {
+			route: {
+				params: { ductwork: "create" },
+			},
+		});
+
+		expect(screen.getByText("CentralisedMV_1")).toBeDefined();
+		expect(screen.getByText("MVHR_1")).toBeDefined();
+		expect(screen.getByText("CentralisedMV_2")).toBeDefined();
 		expect(screen.getByText("MVHR_2")).toBeDefined();
 	});
 

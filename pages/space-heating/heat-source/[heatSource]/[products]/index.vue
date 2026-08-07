@@ -7,6 +7,7 @@ import { productTypeMap, type EcaasForm, type HeatSourceData, type HeatSourcePro
 
 definePageMeta({ layout: false });
 
+const store = useEcaasStore();
 const route = useRoute();
 const pageId = kebabToCamelCase(route.params.products as string);
 
@@ -25,7 +26,27 @@ const { data: { value } } = await useFetch("/api/products", {
 const { title, index, searchModel, searchData } = useProductsPage("heatSource");
 const { selectHeatSourceProduct } = useSelectHeatSourceProduct(value?.data ?? [], heatSourceProductType);
 
-const { pagination } = searchData(value?.data ?? []);
+const heatNetwork = computed(() =>
+	store.spaceHeating.heatNetworks.data[0]?.data,
+);
+
+const showBoosterHeatPumpInsetText = computed(() =>
+	heatSourceProductType === "heatPump" && !heatNetwork.value,
+);
+
+const filteredProducts = computed(() => {
+	const products = value?.data ?? [];
+
+	if (heatSourceProductType === "heatPump" && !heatNetwork.value) {
+		return products.filter(
+			product => product.technologyType !== "BoosterHeatPump",
+		);
+	}
+
+	return products;
+});
+
+const { pagination } = searchData(filteredProducts.value);
 
 const selectProduct = async (product: DisplayProduct) => {
 	const redirectUrl = page("heatSource").url.replace(":heatSource", `${index}`);
@@ -37,7 +58,8 @@ const selectProduct = async (product: DisplayProduct) => {
 			index,
 		);
 
-		navigateTo(redirectUrl);
+		// Allow store to be updated before navigation
+		setTimeout(() => navigateTo(redirectUrl), 100);
 	} catch (error) {
 		if (error instanceof EcaasError && error.name === "DHW_HEAT_SOURCE_CONFLICT") {
 			navigateTo(`${redirectUrl}?error=${error.name}`);
@@ -51,31 +73,19 @@ const selectProduct = async (product: DisplayProduct) => {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<template v-if="heatSourceProductType === 'heatNetwork'">
-		<ProductSearch
-			:model="searchModel"
-			:search-options="{
-				networkName: 'Network name',
-				productId: 'Product ID',
-			}"
-			search-term-label="Search network or subnetwork"
-			search-term-placeholder="Enter network or subnetwork"
-		/>
-		<HeatNetworkProductsTable
-			v-if="heatSourceProductType === 'heatNetwork'"
-			:products="pagination.getData()"
-			:total-pages="pagination.totalPages"
-			:on-select-product="selectProduct"
-		/>
-	</template>
-	<template v-else>
-		<ProductSearch :model="searchModel" />
-		<GovProductsTable
-			:products="pagination.getData()"
-			:total-pages="pagination.totalPages"
-			:on-select-product="selectProduct"
-		/>
-	</template>
+	<div
+		v-if="showBoosterHeatPumpInsetText"
+		class="govuk-inset-text"
+		data-testid="boosterHeatPumpInset"
+	>
+		No booster heat pumps are shown in this list. They cannot be added as there is no heat network.
+	</div>
+	<ProductSearch :model="searchModel" />
+	<GovProductsTable
+		:products="pagination.getData()"
+		:total-pages="pagination.totalPages"
+		:on-select-product="selectProduct"
+	/>
 	<GovButton secondary :href="`/space-heating/heat-source/${index}`" test-id="backToHeatSourceButton">
 		Back to heat source
 	</GovButton>

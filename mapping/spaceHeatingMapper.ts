@@ -12,47 +12,51 @@ import type {
 	SchemaEcoDesignControllerNoWeatherCompensator,
 	SchemaEcoDesignControllerWeatherCompensator,
 } from "../schema/api-schema.types";
-import type { SchemaBoilerWithProductReference, SchemaHeatNetworkType, SchemaHeatSourceWetDetails, SchemaHeatSourceWetHeatPumpInput, SchemaHeatSourceWetHiuInput, SchemaSpaceHeatSystem } from "~/schema/aliases";
+import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetDetails, SchemaHeatSourceWetHeatPumpInput, SchemaHeatSourceWetHiuInput, SchemaSpaceHeatSystem } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import { objectFromEntries } from "ts-extras";
 import { asMetres } from "~/utils/units/length";
 
-function getAssociatedHeatNetworkType(associatedHeatNetworkId: string | undefined, state: ResolvedState): SchemaHeatNetworkType {
-	const heatNetworks = state.spaceHeating.heatSource.filter(source => source.typeOfHeatSource === "heatNetwork");
-	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
-	const heatNetorkType = associatedHeatNetwork ? associatedHeatNetwork?.typeOfHeatNetwork : undefined;
-	switch (heatNetorkType) {
-		case "sleevedDistrictHeatNetwork":
-			return "sleeved DHN" as const;
-		case "unsleevedDistrictHeatNetwork":
-			return "unsleeved DHN" as const;
-		case "communalHeatNetwork":
-			return "communal" as const;
-		default:
-			throw new Error(`Unknown heat network type ${heatNetorkType}`);
-	}
-}
+// function getAssociatedHeatNetworkType(associatedHeatNetworkId: string | undefined, state: ResolvedState): SchemaHeatNetworkType {
+// 	const heatNetworks = state.spaceHeating.heatNetworks;
+// 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
+// 	const heatNetworkType = associatedHeatNetwork ? associatedHeatNetwork?.typeOfHeatNetwork : undefined;
+// 	switch (heatNetworkType) {
+// 		case "sleevedDistrictHeatNetwork":
+// 			return "sleeved DHN" as const;
+// 		case "unsleevedDistrictHeatNetwork":
+// 			return "unsleeved DHN" as const;
+// 		case "communalHeatNetwork":
+// 			return "communal" as const;
+// 		default:
+// 			throw new Error(`Unknown heat network type ${heatNetworkType}`);
+// 	}
+// }
 
 export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatPumpInput> {
 	const heatSources = state.spaceHeating.heatSource;
+
 	const heatPumps = heatSources.filter(
 		(heatSource) => heatSource.typeOfHeatSource === "heatPump",
 	);
 
 	return objectFromEntries(
 		heatPumps.map((heatPump) => {
-			const heatNetworkFields = heatPump.isConnectedToHeatNetwork ? {
-				is_heat_network: true as const,
-				heat_network_type: getAssociatedHeatNetworkType(heatPump.associatedHeatNetworkId, state),
-			} : {
-				is_heat_network: false as const,
-			};
+			const heatNetworkFields =
+				heatPump.typeOfHeatPump === "booster"
+					? getHeatNetworkFields(
+						state,
+						heatPump.associatedHeatNetworkId,
+					)
+					: {
+						is_heat_network: false as const,
+					};
+
 			const mappedHeatPump: SchemaHeatSourceWetHeatPumpInput = {
 				type: "HeatPump",
 				product_reference: heatPump.productReference,
 				EnergySupply: defaultElectricityEnergySupplyName,
 				...heatNetworkFields,
-
 			};
 
 			return [
@@ -112,39 +116,55 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 	);
 }
 
-function getSubnetworkName(associatedHeatNetworkId: string | undefined, state: ResolvedState): string | undefined {
-	const heatNetworks = state.spaceHeating.heatSource.filter(source => source.typeOfHeatSource === "heatNetwork");
-	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
-	return associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkName : undefined;
-}
+// function getSubnetworkName(associatedHeatNetworkId: string | undefined, state: ResolvedState): string | undefined {
+// 	const heatNetworks = state.spaceHeating.heatNetworks;
+// 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
+// 	return associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkName : undefined;
+// }
 
-export function mapHIUs(state: ResolvedState): Record<string, SchemaHeatSourceWetHiuInput> {
-	const heatSources = state.spaceHeating.heatSource;
-	const hius = heatSources.filter(
-		(heatSource) => heatSource.typeOfHeatSource === "heatInterfaceUnit",
+export function mapHIUs(
+	state: ResolvedState,
+): Record<string, SchemaHeatSourceWetHiuInput> {
+
+	const hius = state.spaceHeating.heatSource.filter(
+		(heatSource) =>
+			heatSource.typeOfHeatSource === "heatInterfaceUnit",
 	);
+
+	const dwellingType = state.dwellingDetails.generalSpecifications.typeOfDwelling;
+
 	return objectFromEntries(
 		hius.map((hiu) => {
-			const heatNetworkType = hiu.associatedHeatNetworkId ? getAssociatedHeatNetworkType(hiu.associatedHeatNetworkId, state) : undefined;
-			const subHeatNetworkName = hiu.associatedHeatNetworkId ? getSubnetworkName(hiu.associatedHeatNetworkId, state) : undefined;
-			if (!heatNetworkType) {
-				throw new Error(`HIU ${hiu.name} is indicated as being connected to a heat network but no associated heat network was found`);
-			}
+
+			const heatNetworkFields = getHeatNetworkFields(
+				state,
+				hiu.associatedHeatNetworkId,
+			);
+
+			// TODO: Update this once Alpha 8 backend is introduced and no longer requires building_level_distribution_losses for houses
+			const buildingLevelDistributionLosses =
+				dwellingType === "house"
+					? 0
+					: typeof hiu.buildingLevelLosses === "object"
+						&& hiu.buildingLevelLosses !== null
+						&& "amount" in hiu.buildingLevelLosses
+						? hiu.buildingLevelLosses.amount
+						: hiu.buildingLevelLosses ?? 0;
+
 			return [
 				hiu.name,
 				{
 					type: "HIU" as const,
 					product_reference: hiu.productReference ?? undefined,
-					building_level_distribution_losses: typeof hiu.buildingLevelLosses === "object" && hiu.buildingLevelLosses !== null && "amount" in hiu.buildingLevelLosses ? hiu.buildingLevelLosses.amount : hiu.buildingLevelLosses,
-					is_heat_network: true as const,
-					heat_network_type: heatNetworkType,
-					heat_network_reference: hiu.associatedHeatNetworkId,
-					sub_heat_network_name: subHeatNetworkName ?? "",
+
+					building_level_distribution_losses:
+						buildingLevelDistributionLosses,
+
+					...heatNetworkFields,
+
 					EnergySupply: defaultElectricityEnergySupplyName,
-				} as const satisfies SchemaHeatSourceWetHiuInput,
-
+				} satisfies SchemaHeatSourceWetHiuInput,
 			];
-
 		}),
 	);
 }
@@ -168,10 +188,6 @@ function mapEcoDesignController<T extends { ecoDesignControllerClass: string, mi
 	}
 	return ecoDesignController;
 }
-
-
-
-
 
 export function mapElectricStorageHeaters(state: ResolvedState): Record<string, SchemaElecStorageHeaterWithProductReference> {
 	const { heatEmitters } = state.spaceHeating as {

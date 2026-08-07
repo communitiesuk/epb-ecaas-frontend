@@ -26,6 +26,7 @@ const tableData: Record<string, string> = {
 	"First year of manufacture": data?.firstYearOfManufacture ?? "-",
 	"Final year of manufacture": (data?.finalYearOfManufacture ?? "-").replace("current", "Current"),
 	"Integrated with boiler": "Yes",
+	"Model qualifier": show(data.modelQualifier),
 };
 </script>
 

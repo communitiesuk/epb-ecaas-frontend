@@ -122,8 +122,7 @@ const expectedHouseInput: FhsInputSchema = {
 				flowrate: 14,
 				allow_low_flowrate: false,
 				type: "MixerShower",
-				WWHRS: "WWHRS - some-mixer-shower-name-with-wwhrs",
-				WWHRS_configuration: "A",
+				WWHRS: "WWHRS",
 			},
 		},
 		Bath: {},
@@ -131,6 +130,7 @@ const expectedHouseInput: FhsInputSchema = {
 			"other": {
 				flowrate: 8,
 				ColdWaterSource: "mains water",
+				HotWaterSource: "hw cylinder",
 			},
 		},
 	},
@@ -259,7 +259,7 @@ const expectedHouseInput: FhsInputSchema = {
 		},
 	},
 	WWHRS: {
-		"WWHRS - some-mixer-shower-name-with-wwhrs": {
+		"WWHRS": {
 			ColdWaterSource: "mains water",
 			product_reference: "test-product-ref" },
 	},
@@ -325,9 +325,9 @@ const expectedFlatInput: FhsInputSchema = {
 	BuildingLength: 10,
 	BuildingWidth: 20,
 	ColdWaterSource: {
-		"mains water": {
+		["mains water"]: {
 			start_day: 0,
-			temperatures: [3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
+			temperatures: [3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
 			time_series_step: 1,
 		},
 	},
@@ -435,7 +435,7 @@ const expectedFlatInput: FhsInputSchema = {
 	General: {
 		build_type: "flat",
 		storeys_in_building: 6,
-		storey_of_dwelling: 3,
+		storey_of_dwelling: 1,
 		storeys_in_dwelling: 1,
 	},
 	HeatingControlType: "SeparateTempControl",
@@ -466,28 +466,34 @@ const expectedFlatInput: FhsInputSchema = {
 			"small bath name": {
 				ColdWaterSource: "mains water",
 				size: 80,
+				HotWaterSource: "hw cylinder",
 			},
 			"medium bath name": {
 				ColdWaterSource: "mains water",
 				size: 180,
+				HotWaterSource: "hw cylinder",
 			},
 			"large bath name": {
 				ColdWaterSource: "mains water",
 				size: 400,
+				HotWaterSource: "hw cylinder",
 			},
 		},
 		Other: {
 			"kitchen sink name": {
 				ColdWaterSource: "mains water",
 				flowrate: 7.4,
+				HotWaterSource: "hw cylinder",
 			},
 			"bathroom basin name": {
 				ColdWaterSource: "mains water",
 				flowrate: 6.4,
+				HotWaterSource: "hw cylinder",
 			},
 			"cloakroom basin name": {
 				ColdWaterSource: "mains water",
 				flowrate: 6.4,
+				HotWaterSource: "hw cylinder",
 			},
 		},
 	},
@@ -931,7 +937,7 @@ const expectedFlatInput: FhsInputSchema = {
 					height: 2,
 					width: 2,
 					base_height: 1,
-					free_area_height: 0,
+					free_area_height: 1,
 					u_value: 0.1,
 					g_value: 0.2,
 					security_risk: true,
@@ -1264,6 +1270,9 @@ describe("FHS input mapper", () => {
 		};
 
 		const spaceHeating: SpaceHeating = {
+			heatNetworks: {
+				...baseForm,
+			},
 			heatSource: {
 				...baseForm,
 				complete: true,
@@ -1274,7 +1283,6 @@ describe("FHS input mapper", () => {
 						typeOfHeatSource: "heatPump",
 						typeOfHeatPump: "airSource",
 						productReference: "HP-456",
-						isConnectedToHeatNetwork: false,
 						energySupply: "electricity",
 						maxFlowTemp: unitValue(30, celsius),
 					},
@@ -1363,6 +1371,21 @@ describe("FHS input mapper", () => {
 				},
 				],
 			},
+			wwhrs: {
+				...baseForm,
+				data: [{
+					...baseForm,
+					data: {
+						id: "8369926e-41fb-45a3-8c55-fbe729e0419a",
+						name: "WWHRS",
+						coldWaterSource: "mainsWater",
+						productReference: "test-product-ref",
+					},
+				}],
+			},
+			preheatedWaterStorage: {
+				...baseForm,
+			},
 			waterStorage: {
 				...baseForm,
 				data: [{
@@ -1379,6 +1402,7 @@ describe("FHS input mapper", () => {
 						areaOfHeatExchanger: 2.5,
 						heaterPosition: 0.1,
 						thermostatPosition: 0.33,
+						coldWaterSource: "mainsWater",
 					},
 				}],
 			},
@@ -1392,6 +1416,7 @@ describe("FHS input mapper", () => {
 							name: "some-mixer-shower-name",
 							flowRate: 14,
 							typeOfHotWaterOutlet: "mixedShower",
+							coldWaterSource: "mainsWater",
 							wwhrs: false as const,
 							isAirPressureShower: false as const,
 						},
@@ -1403,9 +1428,9 @@ describe("FHS input mapper", () => {
 							name: "some-mixer-shower-name-with-wwhrs",
 							flowRate: 14,
 							typeOfHotWaterOutlet: "mixedShower",
+							coldWaterSource: "mainsWater",
 							wwhrs: true as const,
-							wwhrsType: "instantaneousSystemA" as const,
-							wwhrsProductReference: "test-product-ref",
+							associatedWwhrs: "8369926e-41fb-45a3-8c55-fbe729e0419a",
 							isAirPressureShower: false as const,
 						},
 					},
@@ -1416,6 +1441,7 @@ describe("FHS input mapper", () => {
 							name: "other",
 							flowRate: 8,
 							typeOfHotWaterOutlet: "otherHotWaterOutlet",
+							coldWaterSource: "mainsWater",
 						},
 					},
 				],
@@ -1426,7 +1452,7 @@ describe("FHS input mapper", () => {
 		};
 
 		const pvAndBatteries: PvAndBatteries = {
-			pvArrays: {
+			pvs: {
 				...baseForm,
 			},
 			electricBattery: {
@@ -1468,7 +1494,7 @@ describe("FHS input mapper", () => {
 				data: {
 					typeOfDwelling: "flat",
 					storeysInDwelling: 1,
-					storeyOfFlat: 3,
+					// storeyOfFlat: 1,
 					storeysInBuilding: 6,
 					numOfBedrooms: 2,
 					numOfBathrooms: 1,
@@ -1950,7 +1976,7 @@ describe("FHS input mapper", () => {
 							openingToFrameRatio: 0.7,
 							midHeightOpenablePart1: 3,
 							maximumOpenableArea: 3,
-							heightOpenableArea: 2,
+							freeAreaHeight: 2,
 							securityRisk: false,
 							uValue: 10,
 							numberOpenableParts: "1",
@@ -2040,6 +2066,7 @@ describe("FHS input mapper", () => {
 						solarTransmittance: 0.2,
 						elevationalHeight: 1,
 						numberOpenableParts: "1",
+						freeAreaHeight: 1,
 						curtainsOrBlinds: true,
 						treatmentType: "curtains",
 						treatmentControls: "manual",
@@ -2128,6 +2155,9 @@ describe("FHS input mapper", () => {
 		};
 
 		const spaceHeating: SpaceHeating = {
+			heatNetworks: {
+				...baseForm,
+			},
 			heatSource: {
 				...baseForm,
 				complete: true,
@@ -2139,7 +2169,6 @@ describe("FHS input mapper", () => {
 						typeOfHeatPump: "airSource",
 						productReference: "HP-456",
 						maxFlowTemp: { amount: 18, unit: "celsius" },
-						isConnectedToHeatNetwork: false,
 						energySupply: "electricity",
 					},
 					complete: true,
@@ -2218,6 +2247,12 @@ describe("FHS input mapper", () => {
 					},
 				}],
 			},
+			wwhrs: {
+				...baseForm,
+			},
+			preheatedWaterStorage: {
+				...baseForm,
+			},
 			waterStorage: {
 				...baseForm,
 				data: [{
@@ -2234,6 +2269,7 @@ describe("FHS input mapper", () => {
 						areaOfHeatExchanger: 2.5,
 						heaterPosition: 0.1,
 						thermostatPosition: 0.33,
+						coldWaterSource: "mainsWater",
 					},
 				}],
 			},
@@ -2247,6 +2283,7 @@ describe("FHS input mapper", () => {
 							name: "mixer shower 1 name",
 							flowRate: 14,
 							typeOfHotWaterOutlet: "mixedShower",
+							coldWaterSource: "mainsWater",
 							wwhrs: false as const,
 							isAirPressureShower: false as const,
 						},
@@ -2258,6 +2295,7 @@ describe("FHS input mapper", () => {
 							name: "mixer shower 2 name",
 							flowRate: 12,
 							typeOfHotWaterOutlet: "mixedShower",
+							coldWaterSource: "mainsWater",
 							wwhrs: false as const,
 							isAirPressureShower: false as const,
 						},
@@ -2269,6 +2307,7 @@ describe("FHS input mapper", () => {
 							name: "electric shower 1 name",
 							ratedPower: 20,
 							typeOfHotWaterOutlet: "electricShower",
+							coldWaterSource: "mainsWater",
 						},
 					},
 					{
@@ -2278,6 +2317,7 @@ describe("FHS input mapper", () => {
 							id: "small bath id",
 							size: 80,
 							typeOfHotWaterOutlet: "bath",
+							coldWaterSource: "mainsWater",
 						},
 					},
 					{
@@ -2287,6 +2327,7 @@ describe("FHS input mapper", () => {
 							id: "medium bath id",
 							size: 180,
 							typeOfHotWaterOutlet: "bath",
+							coldWaterSource: "mainsWater",
 						},
 					},
 					{
@@ -2296,6 +2337,7 @@ describe("FHS input mapper", () => {
 							id: "large bath id",
 							size: 400,
 							typeOfHotWaterOutlet: "bath",
+							coldWaterSource: "mainsWater",
 						},
 					},
 					{
@@ -2305,6 +2347,7 @@ describe("FHS input mapper", () => {
 							name: "kitchen sink name",
 							flowRate: 7.4,
 							typeOfHotWaterOutlet: "otherHotWaterOutlet",
+							coldWaterSource: "mainsWater",
 						},
 					},
 					{
@@ -2314,6 +2357,7 @@ describe("FHS input mapper", () => {
 							name: "bathroom basin name",
 							flowRate: 6.4,
 							typeOfHotWaterOutlet: "otherHotWaterOutlet",
+							coldWaterSource: "mainsWater",
 						},
 					},
 					{
@@ -2323,6 +2367,7 @@ describe("FHS input mapper", () => {
 							name: "cloakroom basin name",
 							flowRate: 6.4,
 							typeOfHotWaterOutlet: "otherHotWaterOutlet",
+							coldWaterSource: "mainsWater",
 						},
 					},
 				],
@@ -2363,7 +2408,7 @@ describe("FHS input mapper", () => {
 		};
 
 		const pvAndBatteries: PvAndBatteries = {
-			pvArrays: {
+			pvs: {
 				...baseForm,
 				data: [{
 					...baseForm,

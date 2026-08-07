@@ -66,7 +66,6 @@ const firstError = computed(() => {
 		<p v-if="exportDate" class="govuk-body last-export govuk-!-margin-top-5">This calculation was exported on the {{ exportDate.format('DD/MM/YYYY') }} at {{ exportDate.format('HH:mm') }}.</p>
 		<div class="govuk-!-margin-top-8">
 			<ClientOnly>
-				<!-- use a dry run button until API is ready -->
 				<CalculateButton @loading="showLoading" @stop-loading="hideLoading" @error="handleCalculateError" />
 				<!--<CalculateButtonDryRun @loading="showLoading" @stop-loading="hideLoading" @error="handleCalculateError" />-->
 			</ClientOnly>

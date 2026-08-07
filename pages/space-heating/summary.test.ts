@@ -118,7 +118,6 @@ describe("Space heating summary page", () => {
 				typeOfHeatPump: "airSource",
 				productReference: "HEAT_PUMP_SMALL",
 				maxFlowTemp: unitValue(17, celsius),
-				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
 			};
 			const store = useEcaasStore();
@@ -139,7 +138,6 @@ describe("Space heating summary page", () => {
 				"Product reference": "HEAT_PUMP_SMALL",
 				"Product name": "Mock product",
 				"Maximum flow temperature": `17 ${celsius.suffix}`,
-				"Is connected to a heat network": "No",
 				"Energy supply": "Electricity",
 			};
 
@@ -151,12 +149,12 @@ describe("Space heating summary page", () => {
 		});
 
 		it("displays the correct data for the heat pump summary (connected to heat network)", async () => {
-			const heatNetwork: HeatSourceData = {
+			const heatNetwork: HeatNetworkData = {
 				id: "network-1",
 				name: "Heat network 1",
-				typeOfHeatSource: "heatNetwork",
 				typeOfHeatNetwork: "communalHeatNetwork",
 				productReference: "HEAT_NETWORK_1",
+				boosterHeatPump: true,
 			};
 			const heatPump2: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c22",
@@ -165,14 +163,16 @@ describe("Space heating summary page", () => {
 				typeOfHeatPump: "booster",
 				productReference: "BOOSTER_PUMP",
 				maxFlowTemp: unitValue(35, celsius),
-				isConnectedToHeatNetwork: true,
 				associatedHeatNetworkId: "network-1",
 			};
 			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork }],
+					},
 					heatSource: {
-						data: [{ data: heatNetwork }, { data: heatPump2 }],
+						data: [{ data: heatPump2 }],
 					},
 				},
 			});
@@ -186,7 +186,6 @@ describe("Space heating summary page", () => {
 				"Product reference": "BOOSTER_PUMP",
 				"Product name": "Mock product",
 				"Maximum flow temperature": `35 ${celsius.suffix}`,
-				"Is connected to a heat network": "Yes",
 				"Associated heat network": "Heat network 1",
 			};
 
@@ -238,10 +237,9 @@ describe("Space heating summary page", () => {
 			}
 		});
 		it("displays the correct data for the heat network summary", async () => {
-			const heatNetwork1: HeatSourceData = {
+			const heatNetwork1: HeatNetworkData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Heat network 1",
-				typeOfHeatSource: "heatNetwork",
 				typeOfHeatNetwork: "communalHeatNetwork",
 				productReference: "HEAT_NETWORK-LARGE",
 				subHeatNetworkName: "Sub 2",
@@ -250,7 +248,7 @@ describe("Space heating summary page", () => {
 			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
-					heatSource: {
+					heatNetworks: {
 						data: [{ data: heatNetwork1 }],
 					},
 				},
@@ -260,7 +258,6 @@ describe("Space heating summary page", () => {
 
 			const expectedResult = {
 				Name: "Heat network 1",
-				"Type of heat source": "Heat network",
 				"Type of heat network": "Communal heat network",
 				"Product reference": "HEAT_NETWORK-LARGE",
 				"Sub-heat network name": "Sub 2",
@@ -274,10 +271,9 @@ describe("Space heating summary page", () => {
 		});
 
 		it("renders emptyValueRendering for missing sub-heat network name", async () => {
-			const heatNetwork1: HeatSourceData = {
+			const heatNetwork1: HeatNetworkData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c66",
 				name: "Heat network 2",
-				typeOfHeatSource: "heatNetwork",
 				typeOfHeatNetwork: "communalHeatNetwork",
 				productReference: "HEAT_NETWORK-MEDIUM",
 			};
@@ -285,7 +281,7 @@ describe("Space heating summary page", () => {
 			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
-					heatSource: {
+					heatNetworks: {
 						data: [{ data: heatNetwork1 }],
 					},
 				},
@@ -307,10 +303,9 @@ describe("Space heating summary page", () => {
 			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
 				"HIU-LARGE": "Mock HIU product",
 			});
-			const heatNetwork: HeatSourceData = {
+			const heatNetwork: HeatNetworkData = {
 				id: "network-1",
 				name: "Heat network 1",
-				typeOfHeatSource: "heatNetwork",
 				typeOfHeatNetwork: "communalHeatNetwork",
 				productReference: "HEAT_NETWORK_1",
 			};
@@ -326,9 +321,19 @@ describe("Space heating summary page", () => {
 
 			const store = useEcaasStore();
 			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							typeOfDwelling: "flat",
+						},
+					},
+				},
 				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork }],
+					},
 					heatSource: {
-						data: [{ data: heatNetwork }, { data: hiu }],
+						data: [{ data: hiu }],
 					},
 				},
 			});
@@ -351,7 +356,129 @@ describe("Space heating summary page", () => {
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
+
+		it("does not display building level losses in hiu summary if type of dwelling is a house", async() => {
+			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
+				"HIU-LARGE": "Mock HIU product",
+			});
+			const heatNetwork: HeatNetworkData = {
+				id: "network-1",
+				name: "Heat network 1",
+				typeOfHeatNetwork: "communalHeatNetwork",
+				productReference: "HEAT_NETWORK_1",
+			};
+			const hiu: HeatSourceData = {
+				id: "hiu-1",
+				name: "Heat interface unit 1",
+				typeOfHeatSource: "heatInterfaceUnit",
+				productReference: "HIU-LARGE",
+				maxFlowTemp: unitValue(40, celsius),
+				buildingLevelLosses: unitValue(500, "watt"),
+				associatedHeatNetworkId: "network-1",
+			};
+
+			const store = useEcaasStore();
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { typeOfDwelling: "house" },
+					},
+				},
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork }],
+					},
+					heatSource: {
+						data: [{ data: hiu }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedResult = {
+				Name: "Heat interface unit 1",
+				"Type of heat source": "Heat interface unit",
+				"Product reference": "HIU-LARGE",
+				"Product name": "Mock HIU product",
+				"Associated heat network": "Heat network 1",
+				"Maximum flow temperature": `40 ${celsius.suffix}`,
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-heatInterfaceUnitSummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+			expect(
+				screen.queryByTestId(
+					"summary-heatInterfaceUnitSummary-building-level-losses",
+				),
+			).toBeNull();
+		});
+
+		it("does display building level losses in hiu summary if type of dwelling is a flat (not a house)", async() => {
+			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
+				"HIU-LARGE": "Mock HIU product",
+			});
+			const heatNetwork: HeatNetworkData = {
+				id: "network-1",
+				name: "Heat network 1",
+				typeOfHeatNetwork: "communalHeatNetwork",
+				productReference: "HEAT_NETWORK_1",
+			};
+			const hiu: HeatSourceData = {
+				id: "hiu-1",
+				name: "Heat interface unit 1",
+				typeOfHeatSource: "heatInterfaceUnit",
+				productReference: "HIU-LARGE",
+				maxFlowTemp: unitValue(40, celsius),
+				buildingLevelLosses: unitValue(500, "watt"),
+				associatedHeatNetworkId: "network-1",
+			};
+
+			const store = useEcaasStore();
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { typeOfDwelling: "flat" },
+					},
+				},
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork }],
+					},
+					heatSource: {
+						data: [{ data: hiu }],
+					},
+				},
+			});
+
+			await renderSuspended(SpaceHeatingSummary);
+
+			const expectedResult = {
+				Name: "Heat interface unit 1",
+				"Type of heat source": "Heat interface unit",
+				"Product reference": "HIU-LARGE",
+				"Product name": "Mock HIU product",
+				"Associated heat network": "Heat network 1",
+				"Maximum flow temperature": `40 ${celsius.suffix}`,
+				"Building level losses": "500 W",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-heatInterfaceUnitSummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+			expect(
+				screen.getByTestId(
+					"summary-heatInterfaceUnitSummary-building-level-losses",
+				),
+			).toBeDefined();
+		});
 	});
+	
 	describe("Heating control section", () => {
 		const heatingControl: HeatingControlData = {
 			name: "Separate temperature control",

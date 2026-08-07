@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, ref } from "vue";
 import { getUrl } from "#imports";
 import formatData from "~/utils/format-data";
 import hyphenate from "~/utils/hyphenate";
@@ -8,14 +9,77 @@ export type SummaryData = {
 	[key: string]: string | number | boolean | string[] | SummaryWithLink | undefined;
 };
 
-const props = defineProps<{ data: SummaryData | SummaryData[]; id: string; }>();
 
-const overflow = Array.isArray(props.data) && props.data.length > 3;
+/**
+ * Transposes an array of objects into a 2D array of strings.
+ *
+ * Used by the SummaryList component when the `transposed` prop is `true`.
+ * All values are coerced to strings, so this should only be used with data
+ * that can be meaningfully converted to strings.
+ *
+ * Currently used only for thermal bridging data. If additional data types
+ * require transposition in the future, consider generalising this function.
+ *
+ * @param data - Array of objects to transpose.
+ * @returns A 2D array of strings containing the transposed data.
+ */
+function transposeData(data: SummaryData[]): string[][] {
+	if (!data.length) return [];
+
+	const keys = Object.keys(data[0]!);
+	const transposed: string[][] = [];
+
+	transposed.push(keys);
+
+	for (const row of data) {
+		const newRow: string[] = [];
+		for (const key of keys) {
+			newRow.push(String(row[key]));
+		}
+		transposed.push(newRow);
+	}
+
+	return transposed;
+}
+
+const props = defineProps<{ data: SummaryData | SummaryData[]; id: string; stickyFirstColumn?: boolean; transposed?: boolean }>();
+
+const transposedData = computed(() => {
+	if (!Array.isArray(props.data)) return [];
+
+	return transposeData(props.data);
+});
+
+const overflow = computed(() => {
+	if (!Array.isArray(props.data) || !props.data.length) return false;
+
+	if (props.transposed) {
+		return (transposedData.value[0]?.length ?? 0) > 3;
+	}
+
+	return props.data.length > 3;
+});
+
+const scrollContainer = ref<HTMLElement | null>(null);
+const isHorizontallyScrolled = ref(false);
+
+const updateScrollState = () => {
+	isHorizontallyScrolled.value =
+		(scrollContainer.value?.scrollLeft ?? 0) > 0;
+};
+
 </script>
 
 <template>
-	<div :class="overflow ? 'govuk-summary-list-overflow' : ''">
-		<dl class="govuk-summary-list">
+	<div
+		ref="scrollContainer"
+		:class="[
+			overflow ? 'govuk-summary-list-overflow' : '',
+			overflow && stickyFirstColumn ? 'govuk-summary-list-overflow--sticky-first-column' : '',
+			overflow && stickyFirstColumn && isHorizontallyScrolled ? 'govuk-summary-list-overflow--scrolled' : '',
+		]"
+		@scroll.passive="updateScrollState">
+		<dl v-if="!transposed" class="govuk-summary-list">
 			<template v-if="!Array.isArray(data)">
 				<div
 					v-for="(value, key) in data"
@@ -37,7 +101,7 @@ const overflow = Array.isArray(props.data) && props.data.length > 3;
 					</dd>
 				</div>
 			</template>
-			<template v-if="Array.isArray(data) && data.length">
+			<template v-if="Array.isArray(data) && data.length && !transposed">
 				<template v-for="(key, keyIndex) in Object.keys(data[0]!)" :key="key">
 					<div v-if="data.some(x => x[key] != undefined)" class="govuk-summary-list__row" :data-testid="`summary-${id}-${hyphenate(key as string)}`">
 						<dt class="govuk-summary-list__key" >{{ key }}</dt>
@@ -73,6 +137,23 @@ const overflow = Array.isArray(props.data) && props.data.length > 3;
 				</template>
 			</template>
 		</dl>
+		<table v-else-if="Array.isArray(data) && data.length" class="govuk-summary-list" data-testid="summary-transposed-table">
+			<tbody>
+				<template v-for="(row, rowIndex) in transposedData" :key="`row-${rowIndex}`">
+					<tr class="govuk-summary-list__row" :data-testid="`summary-${id}-row-${rowIndex}`">
+						<template v-for="(cell, cellIndex) in row" :key="`cell-${cellIndex}`">
+							<td
+								:class="[
+									cellIndex === 0 ? 'govuk-summary-list__key' : 'govuk-summary-list__value',
+									rowIndex === 0 ? 'govuk-!-font-weight-bold' : '',
+								]">
+								{{ cell }}
+							</td>
+						</template>
+					</tr>
+				</template>
+			</tbody>
+		</table>
 	</div>
 </template>
 
@@ -83,6 +164,28 @@ const overflow = Array.isArray(props.data) && props.data.length > 3;
 
 		.govuk-summary-list {
 			width: max-content;
+		}
+	}
+
+	.govuk-summary-list-overflow--sticky-first-column {
+		.govuk-summary-list__key {
+			position: sticky;
+			left: 0;
+			z-index: 2;
+			background: #fff;
+		}
+		::after{
+			content: '';
+			position: absolute;
+			inset: 0 0 0 auto;
+			width: 1px;
+			background: transparent;
+		}
+	}
+
+	.govuk-summary-list-overflow--scrolled {
+		.govuk-summary-list__key::after {
+			box-shadow: 1px 0 0 #b1b4b6;
 		}
 	}
 

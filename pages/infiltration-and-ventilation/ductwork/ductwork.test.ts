@@ -57,7 +57,7 @@ describe("ductwork", async () => {
 
 	it("should have the correct heading", async () => {
 		await renderSuspended(DuctworkOverview);
-		expect(screen.getByRole("heading", { name: "MVHR ductwork" }));
+		expect(screen.getByRole("heading", { name: "Mechanical ventilation ductwork", level: 1 }));
 	});
 
 	it("should allow users to remove a ductwork when remove button is clicked", async () => {

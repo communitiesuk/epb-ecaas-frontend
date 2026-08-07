@@ -53,7 +53,6 @@ const groundFloorSummary: SummarySection = {
 		const underfloorSpaceThermalResistance = "underfloorSpaceThermalResistance" in x ? dim(x.underfloorSpaceThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 		const thermalTransmittanceOfWallsAboveGround = "thermalTransmittanceOfWallsAboveGround" in x ? dim(x.thermalTransmittanceOfWallsAboveGround, "watts per square metre kelvin") : emptyValueRendering;
 		const ventilationOpeningsArea = "ventilationOpeningsArea" in x ? dim(x.ventilationOpeningsArea, "millimetres square per metre") : emptyValueRendering;
-		const windShieldingFactor = "windShieldingFactor" in x ? show(x.windShieldingFactor) : emptyValueRendering;
 
 		return {
 			"Name": show(x.name),
@@ -65,8 +64,8 @@ const groundFloorSummary: SummarySection = {
 			"U-value of walls above ground": thermalTransmittanceOfWallsAboveGround,
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
-			"Perimeter": dim(x.perimeter, "metres"),
-			"Thickness of walls at the edge of the floor": dim(x.thicknessOfWalls, "metres"),
+			"Exposed perimeter": dim(x.perimeter, "metres"),
+			"Thickness of walls at the edge of the floor": dim(x.thicknessOfWalls, "millimetres"),
 			"Type of ground floor": displaySnakeToSentenceCase(show(x.typeOfGroundFloor)),
 			"Horizontal edge insulation width": horizontalEdgeInsulationWidth,
 			"Horizontal edge insulation thermal resistance": horizontalEdgeInsulationThermalResistance,
@@ -74,7 +73,6 @@ const groundFloorSummary: SummarySection = {
 			"Vertical edge insulation thermal resistance": verticalEdgeInsulationThermalResistance,			
 			"Height of the floor upper surface": heightOfFloorUpperSurface ,	
 			"Area of ventilation openings per perimeter": ventilationOpeningsArea,
-			"Wind shielding factor": windShieldingFactor,
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceFloors"),
@@ -131,7 +129,7 @@ const floorAboveUnheatedBasementSummary: SummarySection = {
 			"U-value of floor, basement void and ground": dim(x.uValue, "watts per square metre kelvin"),
 			"Thermal resistance of floor only": dim(x.thermalResistance, "square metre kelvin per watt"),
 			"U-value of the foundations": dim(x.thermalTransmittanceOfFoundations, "watts per square metre kelvin"),
-			"Perimeter": dim(x.perimeter, "metres"),
+			"Exposed perimeter": dim(x.perimeter, "metres"),
 			"Depth of the basement floor below ground level": dim(x.depthOfBasementFloor, "metres"),
 			"Height of the basement walls above ground": dim(x.heightOfBasementWalls, "metres"),
 			"U-value of the basement walls above ground": dim(x.thermalTransmittanceOfBasementWalls, "square metre kelvin per watt"),
@@ -262,7 +260,7 @@ const wallOfHeatedBasementSummary: SummarySection = {
 			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
-			"Perimeter": dim(x.perimeter, "metres"),
+			"Exposed perimeter": dim(x.perimeter, "metres"),
 			"Associated floor": associatedFloorName,
 		};
 	}) || [],
@@ -469,6 +467,7 @@ const glazedDoorSummary: SummarySection = {
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Transmittance of solar energy": dim(x.solarTransmittance),
 			"Opening to frame ratio": dim(x.openingToFrameRatio),
+			"Free area height": dim(x.freeAreaHeight, "metres"),
 			"Is this the front door?": displayBoolean(x.isTheFrontDoor),
 			"Curtains or blinds": x.curtainsOrBlinds ? treatmentType : undefined,
 			"Window treatment controls": x.curtainsOrBlinds ? treatmentControls : undefined,
@@ -569,6 +568,7 @@ const windowSummary: SummarySection = {
 			"Security risk": displayBoolean(x.securityRisk),
 			"Number of openable parts": show(x.numberOpenableParts),
 			"Maximum openable area": numberOfOpenableParts >= 1 ? maximumOpenableArea : undefined,
+			"Free area height": dim(x.freeAreaHeight, "metres"),
 			"Mid height of the air flow path for openable part 1": numberOfOpenableParts >= 1 ? midHeightOpenablePart1 : undefined,
 			"Mid height of the air flow path for openable part 2": numberOfOpenableParts >= 2 ? midHeightOpenablePart2 : undefined,
 			"Mid height of the air flow path for openable part 3": numberOfOpenableParts >= 3 ? midHeightOpenablePart3 : undefined,
@@ -592,11 +592,13 @@ const pointThermalBridgesData = store.dwellingFabric.dwellingSpaceThermalBridgin
 const linearThermalBridgesSummary: SummarySection = {
 	id: "dwellingSpaceLinearThermalBridging",
 	label: "Linear thermal bridges",
+	stickyFirstColumn: true,
 	data: linearThermalBridgesData.map(({ data: x }) => {
 		return {
-			"Type of thermal bridge": displayCamelToSentenceCase(show(x.typeOfThermalBridge)),
+			"Name": show(x.name),
 			"Linear thermal transmittance": dim(x.linearThermalTransmittance, "watts per metre kelvin"),
 			"Length of thermal bridge": dim(x.length, "metres"),
+			"Type of thermal bridge": displayCamelToSentenceCase(show(x.typeOfThermalBridge)),
 			"Reference": show(x.reference),
 		};
 	}),
@@ -606,6 +608,7 @@ const linearThermalBridgesSummary: SummarySection = {
 const pointThermalBridgesSummary: SummarySection = {
 	id: "dwellingSpacePointThermalBridging",
 	label: "Point thermal bridges",
+	stickyFirstColumn: false,
 	data: pointThermalBridgesData.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
@@ -799,7 +802,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 	</GovTabs>
 
 	<GovTabs v-slot="tabProps" :items="getTabItems(thermalBridgeSummarySections)">
-		<SummaryTab :summary="linearThermalBridgesSummary" :selected="tabProps.currentTab === 0">
+		<SummaryTab :summary="linearThermalBridgesSummary" :selected="tabProps.currentTab === 0" :transposed="true">
 			<template #empty>
 				<h2 class="govuk-heading-m">No linear thermal bridges added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceLinearThermalBridgesCreate')">
@@ -808,7 +811,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 			</template>
 		</SummaryTab>
 
-		<SummaryTab :summary="pointThermalBridgesSummary" :selected="tabProps.currentTab === 1">
+		<SummaryTab :summary="pointThermalBridgesSummary" :selected="tabProps.currentTab === 1" :transposed="true">
 			<template #empty>
 				<h2 class="govuk-heading-m">No point thermal bridges added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpacePointThermalBridgesCreate')">

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from "@formkit/core";
-import { showErrorState, getErrorMessage, isPackagedProduct, type HeatSourceData, hasModelDetails } from "#imports";
+import { showErrorState, getErrorMessage, isPackagedProduct, type HeatSourceData, hasModelDetails, type NewDomesticHotWaterHeatSourceData } from "#imports";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
 import { heatPumpTypes } from "~/utils/display";
@@ -25,6 +25,7 @@ const {
 		"page-index": index,
 		"emitter-index": emitterIndex,
 		"on-product-loaded": onProductLoaded,
+		"on-choose-product": onChooseProduct,
 	},
 	node: { props: { disabled } },
 } = props.context;
@@ -35,9 +36,10 @@ async function fetchProduct(reference: string) {
 	onProductLoaded?.(productData.value);
 }
 
-function buildProductsPageUrl(url: string, index: number, productType: string, emitterIndex?: number) {
+function buildProductsPageUrl(url: string, index: number | undefined, productType: string, emitterIndex?: number) {
 	const lastUrlSegment = new RegExp("/[^/]*$");
-	const newPath = url.replace(lastUrlSegment, `/${index}`) + "/" + camelToKebabCase(productType ?? "");
+	const indexSegment = index !== undefined ? `/${index}` : "";
+	const newPath = url.replace(lastUrlSegment, indexSegment) + "/" + camelToKebabCase(productType ?? "");
 	const params = new URLSearchParams();
 
 	if (emitterIndex != null) {
@@ -87,6 +89,7 @@ watch(props.context, async ({ attrs: {
 
 	productData.value = undefined;
 });
+
 const isHeatPumpSummary = computed(() => isHeatPump(heatSource));
 const isBoilerSummary = computed(() => heatSource?.typeOfHeatSource === "boiler");
 const isMechanicalVentilationSummary = computed(() => ["mvhr", "centralisedContinuousMev", "decentralisedContinuousMev"].includes(selectedProductType ?? ""));
@@ -101,35 +104,37 @@ function getPackagedProductType() {
 	}
 
 	if (!isHeatPumpSummary.value) {
-		return undefined;
+		return;
 	}
 
-	const sourceData = heatSource as { packageProductIds?: string[] } | undefined;
-	const packagedIds = sourceData?.packageProductIds ?? [];
+	const heatPumpHeatSource = heatSource as HeatSourceData | NewDomesticHotWaterHeatSourceData;
 
-	if (!isPackagedProduct(sourceData)) {
-		return "None";
+	if (heatPumpHeatSource.typeOfHeatSource !== "heatPump") {
+		return;
 	}
+
+	const packagedIds = heatPumpHeatSource.packageProductIds ?? [];
 
 	const hasBoiler = isPackagedWithBoiler(packagedIds);
-	const hasHotWaterCylinder = isPackagedWithHotWaterCylinder(packagedIds);
+	const hasWaterCylinder = heatPumpHeatSource.packagedWithWaterCylinder;
 
 	const packagedMechanicalVent = store.infiltrationAndVentilation.mechanicalVentilation.data
 		.find((x) => {
 			const mechanicalVentId = x.data.id;
 			return mechanicalVentId != null && packagedIds.includes(mechanicalVentId);
 		});
+	
 	const hasMechanicalVent = !!packagedMechanicalVent;
 
-	if (hasBoiler || hasHotWaterCylinder || hasMechanicalVent) {
+	if (hasBoiler || hasWaterCylinder || hasMechanicalVent) {
 		const packagedItems: string[] = [];
 
 		if (hasBoiler) {
 			packagedItems.push("boiler");
 		}
 
-		if (hasHotWaterCylinder) {
-			packagedItems.push("hot water cylinder");
+		if (hasWaterCylinder) {
+			packagedItems.push("water cylinder");
 		}
 
 		if (hasMechanicalVent) {
@@ -167,11 +172,6 @@ function isPackagedWithBoiler(packagedIds: string[]) {
 	return packagedIds.some(id => boilerIds.includes(id));
 }
 
-function isPackagedWithHotWaterCylinder(packagedIds: string[]) {
-	const hotWaterCylinderIds = getWaterCylinderIds();
-	return packagedIds.some(id => hotWaterCylinderIds.includes(id));
-}
-
 function isHeatPump(heatSource: { typeOfHeatSource?: string } | undefined): heatSource is HeatSourceData {
 	return heatSource?.typeOfHeatSource === "heatPump";
 }
@@ -196,19 +196,13 @@ function getBoilerIds() {
 	].map(x => x.data.id);
 }
 
-function getWaterCylinderIds() {
-	const { domesticHotWater: { waterStorage } } = store;
-	return waterStorage.data
-		.filter(x => x.data.typeOfWaterStorage === "hotWaterCylinder")
-		.map(x => x.data.id);
-}
-
 function isPackagedWithHeatPump() {
 	const associatedItemId = (heatSource as { id?: string } | undefined)?.id ?? selectedProductReference;
 
 	if (!associatedItemId) {
 		return false;
 	}
+
 	const { spaceHeating: { heatSource: spaceHeatingHeatSource }, domesticHotWater: { heatSources: domesticHotWaterHeatSources } } = store;
 
 	const isPackagedWithSpaceHeatingHeatPump = spaceHeatingHeatSource.data.some(({ data }) => {
@@ -233,6 +227,11 @@ function isPackagedWithHeatPump() {
 	return isPackagedWithDomesticHotWaterHeatPump;
 }
 
+function handleChooseProduct(event: Event) {
+	event.preventDefault();
+	onChooseProduct?.();
+	navigateTo(productsPageUrl.value);
+}
 
 </script>
 
@@ -246,7 +245,11 @@ function isPackagedWithHeatPump() {
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 			</p>
-			<GovButton v-show="!productData" class="govuk-button__margin-bottom" data-testId="chooseAProductButton" :href="productsPageUrl">
+			<GovButton
+				v-show="!productData"
+				class="govuk-button__margin-bottom"
+				data-testId="chooseAProductButton"
+				@click="handleChooseProduct">
 				Choose a product
 			</GovButton>
 			<div v-if="productData">

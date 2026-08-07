@@ -75,7 +75,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="livingZoneArea"
 			:validation="zodTypeAsFormKitValidation(dwellingPartAreaZod)"
 			data-field="Zone.livingzone_area"
-		/>
+		>
+			<GovDetails summary-text="Help with this input">
+				<p>The Future Homes Standard uses the living zone area to calculate heating use across the dwelling. Therefore, the living areas should cover only the part of the dwelling heated to 'living room temperatures'. This means the living zone area is the living room itself and any rooms open to it, for example open plan living/dining/kitchen arrangements.</p>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="restOfDwellingArea"
 			type="govInputWithSuffix"

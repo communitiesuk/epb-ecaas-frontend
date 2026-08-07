@@ -26,10 +26,7 @@ const emitterTypeOptions = {
 	fanCoil: "Fan coil",
 } as const;
 
-const useUnderfloorHeating: boolean = false; // currently unavailable in PCDB, so hide option until it is
-
-const { underFloorHeating, ...others } = emitterTypeOptions;
-const heatEmitterTypes = useUnderfloorHeating ? emitterTypeOptions : others;
+const heatEmitterTypes = emitterTypeOptions;
 type EmitterType = keyof typeof emitterTypeOptions;
 
 const emitters = computed(() => {
@@ -300,7 +297,7 @@ const saveEmitter = () => {
 						:id="`typeOfHeatEmitter_${i}`"
 						type="govRadios"
 						label="Type of emitter"
-						:help="useUnderfloorHeating ? undefined : 'Please note, underfloor heating is not currently available, but will be in future releases.'"
+						help="Please note, underfloor heating is not currently available, but will be in future releases"
 						:options="heatEmitterTypes"
 						name="typeOfHeatEmitter"
 						validation="required"
@@ -437,7 +434,7 @@ const saveEmitter = () => {
 						id="typeOfHeatEmitter"
 						type="govRadios"
 						label="Type of emitter"
-						:help="useUnderfloorHeating ? undefined : 'Please note, underfloor heating is not currently available, but will be in future releases.'"
+						help="Please note, underfloor heating is not currently available, but will be in future releases."
 						:options="heatEmitterTypes"
 						name="emitterTypeSelection"
 						@input="addEmitter"

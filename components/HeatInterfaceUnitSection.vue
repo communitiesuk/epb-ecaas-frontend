@@ -2,6 +2,7 @@
 import { getUrl, typeOfHeatSource, uniqueName } from "#imports";
 import { watt } from "~/utils/units/power";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
+import { useHeatNetworks } from "~/composables/heatNetworks";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -15,27 +16,12 @@ defineProps<{
 
 const heatSources = getCombinedHeatSources(store);
 
-const heatNetworkOptions = computed(() => {
-	const heatNetworks = heatSources.filter(source => {
-		return (source.data as HeatSourceData).typeOfHeatSource === "heatNetwork";
-	});
+const { heatNetworkOptions, hasHeatNetworkOptions, defaultAssociatedHeatNetworkId } = useHeatNetworks();
 
-	return Object.fromEntries(heatNetworks.map(network => {
-		const networkData = network.data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
-		return [
-			networkData.id,
-			{
-				label: networkData.name,
-				value: networkData.id,
-			},
-		];
-	}));
-});
-const hasHeatNetworkOptions = computed(() => Object.keys(heatNetworkOptions.value).length > 0);
-const defaultAssociatedHeatNetworkId = computed(() => {
-	const optionIds = Object.keys(heatNetworkOptions.value);
-	return optionIds.length === 1 ? optionIds[0] : undefined;
-});
+const dwellingTypeIsNotAHouse = () => {
+	return store.dwellingDetails.generalSpecifications.data.typeOfDwelling !== "house";
+};
+
 </script>
 
 <template>
@@ -64,14 +50,18 @@ const defaultAssociatedHeatNetworkId = computed(() => {
 		id="associatedHeatNetwork"
 		type="govRadios"
 		label="Associated heat network"
-		help="Select the heat network that this heat pump is connected to"
+		help="Select the heat network that this HIU is connected to"
 		:options="heatNetworkOptions"
 		name="associatedHeatNetworkId"
 		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
+		validation="required"
 	>
+		<GovDetails summary-text="Help with this input">
+			<p class="govuk-body">If you have added a HIU, the heat network needs to be a traditional communal heat network or a district heat network.</p>
+		</GovDetails>	
 		<div v-if="!hasHeatNetworkOptions">
 			<p class="govuk-error-message">No heat networks added.</p>
-			<NuxtLink :to="`${getUrl('heatSourceCreate')}?typeOfHeatSource=heatNetwork`" class="govuk-link gov-radios-add-link">
+			<NuxtLink :to="getUrl('heatNetworksCreate')" class="govuk-link gov-radios-add-link">
 				Click here to add a heat network
 			</NuxtLink>
 		</div>
@@ -81,12 +71,14 @@ const defaultAssociatedHeatNetworkId = computed(() => {
 		:page="page"
 		help="Enter the highest flow temperature the HIU is allowed to operate at"
 	/>
-	<FormKit
-		id="buildingLevelLosses"
-		type="govInputWithUnit"
-		label="Building level losses"
-		help="Enter the heat loss that occurs in the pipework within the thermal envelope of a building, specifically apartment blocks, up to the dwelling boundary"
-		name="buildingLevelLosses"
-		:unit="watt"
-	/>
+	<div v-if="dwellingTypeIsNotAHouse()">
+		<FormKit
+			id="buildingLevelLosses"
+			type="govInputWithUnit"
+			label="Building level losses"
+			help="Enter the heat loss that occurs in the pipework within the thermal envelope of a building, specifically apartment blocks, up to the dwelling boundary"
+			name="buildingLevelLosses"
+			:unit="watt"
+		/>
+	</div>
 </template>

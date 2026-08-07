@@ -100,7 +100,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
 				}" />
 			<FieldsSurfaceArea
-				v-if="model?.typeOfInternalFloor === 'heatedSpace' || model?.typeOfInternalFloor === 'unheatedSpace'"
+				v-if="model?.typeOfInternalFloor === 'heatedSpace'"
+				label="Net surface area of the floor"
+				help="Enter the net area of the building element. The area of all large openings should be subtracted before entry, apart from any openings for doors or staircases."
+				:zod="surfaceAreaAdjacentSpaceZod"
+			/>
+			<FieldsSurfaceArea
+				v-else-if="model?.typeOfInternalFloor === 'unheatedSpace'"
 				label="Net surface area of the floor"
 				help="Enter the net area of the building element. The area of all large openings such as for staircases should be subtracted before entry, but not doors."
 				:zod="surfaceAreaAdjacentSpaceZod"
@@ -125,11 +131,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<GovDetails summary-text="Help with this input">
 				<p>For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5
 					(m²·K)/W
-					for when the facing wall is not exposed.</p>
-				<p class="govuk-body">
-					<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
-						Guidance on thermal resistance of unheated spaces (opens in another window)
-					</a>
+					for when the facing wall is not exposed.
 				</p>
 			</GovDetails>
 		</FormKit>

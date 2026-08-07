@@ -279,6 +279,34 @@ export interface components {
             /** @description Required if HeatSource type is HeatPump_HWOnly */
             heat_exchanger_surface_area?: number;
         };
+        SolarThermalSystemWithProductReference: {
+            /** @constant */
+            type: "SolarThermalSystem";
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
+            /**
+             * @description Location of the main part of the collector loop piping
+             * @enum {unknown}
+             */
+            sol_loc: "OUT" | "NHS" | "HS";
+            /** @description Collector module reference area (unit: m2) */
+            area_module: number;
+            /** @description Number of collector modules installed */
+            modules: number;
+            /** @description Mass flow rate solar loop (unit: kg/s) */
+            collector_mass_flow_rate: number;
+            /** @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply */
+            EnergySupply: string;
+            /** @description Tilt angle (inclination) of the solar thermal panel from horizontal, measured upwards facing, 0 to 90, in degrees. 0=horizontal surface, 90=vertical surface. Needed to calculate solar irradiation at the panel surface. */
+            tilt: number;
+            /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+            orientation360: number;
+            /** @description Heat loss coefficient of the collector loop piping (unit: W/K) */
+            solar_loop_piping_hlc: number;
+        };
         HeatSourceWetCommon: {
             /** @enum {unknown} */
             type: "HeatPump" | "Boiler" | "HIU" | "HeatBattery";
@@ -685,7 +713,7 @@ export interface components {
                 pipe_contents: "water" | "glycol25";
             }[];
             HeatSource: {
-                [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
+                [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["SolarThermalSystemWithProductReference"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
             };
             /** @description References a key (e.g., "mains water") in $.ColdWaterSource */
             ColdWaterSource: string;
@@ -1547,7 +1575,7 @@ export interface components {
                         /** @constant */
                         vent_type: "Decentralised continuous MEV";
                         /** @enum {string} */
-                        installation_type: "in_ceiling" | "in_duct" | "through_wall";
+                        installation_type: "in_ceiling" | "through_wall";
                         /**
                          * @description Whether the system is installed in a kitchen or in another wet room that is not a kitchen
                          * @enum {string}
@@ -1574,6 +1602,11 @@ export interface components {
                         vent_type: "Centralised continuous MEV";
                         measured_fan_power?: number;
                         measured_air_flow_rate?: number;
+                        /**
+                         * @description Whether the duct size is 125mm or greater, or less than 125mm. These two options can be standardly referenced as '125mm diameter or 204 x 60mm (rectangular) or larger' and '100mm diameter or 100 x 50mm (rectangular)' respectively, but the cut-off point should be 125mm. This optional field is not passed to the FHS wrapper, but is used as a tiebreak if the referenced product in the HEM database has test data for multiple duct sizes (and therefore is not optional if this is the case).
+                         * @enum {string}
+                         */
+                        indicated_duct_size?: "125mm_or_larger" | "smaller_than_125mm";
                     } & ({
                         /** @description Mid height of air flow path relative to ventilation zone (unit: m) */
                         mid_height_air_flow_path: number;
@@ -1710,6 +1743,34 @@ export interface components {
                     orientation360: number;
                     solar_loop_piping_hlc: number;
                 };
+                SolarThermalSystemWithProductReference: {
+                    /** @constant */
+                    type: "SolarThermalSystem";
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                    /**
+                     * @description Location of the main part of the collector loop piping
+                     * @enum {unknown}
+                     */
+                    sol_loc: "OUT" | "NHS" | "HS";
+                    /** @description Collector module reference area (unit: m2) */
+                    area_module: number;
+                    /** @description Number of collector modules installed */
+                    modules: number;
+                    /** @description Mass flow rate solar loop (unit: kg/s) */
+                    collector_mass_flow_rate: number;
+                    /** @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply */
+                    EnergySupply: string;
+                    /** @description Tilt angle (inclination) of the solar thermal panel from horizontal, measured upwards facing, 0 to 90, in degrees. 0=horizontal surface, 90=vertical surface. Needed to calculate solar irradiation at the panel surface. */
+                    tilt: number;
+                    /** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+                    orientation360: number;
+                    /** @description Heat loss coefficient of the collector loop piping (unit: W/K) */
+                    solar_loop_piping_hlc: number;
+                };
                 /** @description A possible heat source for a hot water tank */
                 HeatSourceWet: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
                     /** @constant */
@@ -1798,7 +1859,7 @@ export interface components {
                         pipe_contents: "water" | "glycol25";
                     }[];
                     HeatSource: {
-                        [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
+                        [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["SolarThermalSystemWithProductReference"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"];
                     };
                     /** @description References a key (e.g., "mains water") in $.ColdWaterSource */
                     ColdWaterSource: string;
@@ -2745,6 +2806,7 @@ export type SchemaSolarThermalSystem = components['schemas']['SolarThermalSystem
 export type SchemaHeatSourceWet = components['schemas']['HeatSourceWet'];
 export type SchemaHeatPumpHwOnly = components['schemas']['HeatPump_HWOnly'];
 export type SchemaTank = components['schemas']['Tank'];
+export type SchemaSolarThermalSystemWithProductReference = components['schemas']['SolarThermalSystemWithProductReference'];
 export type SchemaHeatSourceWetCommon = components['schemas']['HeatSourceWetCommon'];
 export type SchemaScheduleRepeaterEntryForDouble = components['schemas']['ScheduleRepeaterEntryForDouble'];
 export type SchemaScheduleRepeaterValueForDouble = components['schemas']['ScheduleRepeaterValueForDouble'];

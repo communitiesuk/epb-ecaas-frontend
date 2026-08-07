@@ -46,7 +46,7 @@ const doorForState = {
 	solarTransmittance: 0.1,
 	elevationalHeight: 14,
 	openingToFrameRatio: 0.2,
-	heightOpenableArea: 14,
+	freeAreaHeight: 1,
 	maximumOpenableArea: 13,
 	midHeightOpenablePart1: 11,
 	uValue: 10,
@@ -73,6 +73,7 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.type(screen.getByTestId("solarTransmittance"), "0.1");
 	await user.type(screen.getByTestId("elevationalHeight"), "14");
 	await user.click(screen.getByTestId("numberOpenableParts_1"));
+	await user.type(screen.getByTestId("freeAreaHeight"), "1");
 	await user.type(screen.getByTestId("midHeightOpenablePart1"), "11");
 	await user.type(screen.getByTestId("openingToFrameRatio"), "0.2");
 	await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
@@ -333,6 +334,7 @@ describe("external glazed door", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("10");
 			expect((await screen.findByTestId<HTMLInputElement>("openingToFrameRatio")).value).toBe("0.2");
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
+			expect((await screen.findByTestId<HTMLInputElement>("freeAreaHeight")).value).toBe("1");
 			expect((await screen.findByTestId("numberOpenableParts_1")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("securityRisk_no")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("maximumOpenableArea")).value).toBe("13");
@@ -358,7 +360,7 @@ describe("external glazed door", () => {
 				solarTransmittance: 0.1,
 				elevationalHeight: 14,
 				openingToFrameRatio: 0.2,
-				heightOpenableArea: 14,
+				freeAreaHeight: 14,
 				maximumOpenableArea: 13,
 				midHeightOpenablePart1: 11,
 				uValue: 10,
@@ -589,7 +591,6 @@ describe("external glazed door", () => {
 					id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
 					name: "Roof 1",
 					typeOfRoof: "flatAboveHeatedSpace",
-					pitchOption: "0",
 					pitch: 0,
 					length: 1,
 					width: 1,
@@ -1097,7 +1098,7 @@ describe("external glazed door", () => {
 				solarTransmittance: 0.1,
 				elevationalHeight: 14,
 				openingToFrameRatio: 0.2,
-				heightOpenableArea: 14,
+				freeAreaHeight: 14,
 				maximumOpenableArea: 13,
 				midHeightOpenablePart1: 11,
 				uValue: 10,

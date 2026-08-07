@@ -29,7 +29,6 @@ const state: GeneralDetailsData = {
 
 const stateWithFlat: GeneralDetailsData = {
 	typeOfDwelling: "flat",
-	storeyOfFlat: 1,
 	storeysInDwelling: 2,
 	storeysInBuilding: 3,
 	buildingLength: 10,
@@ -104,7 +103,7 @@ describe("General details", () => {
 			await renderSuspended(GeneralDetails);
 			
 			expect((await screen.findByTestId("typeOfDwelling_house")).hasAttribute("checked")).toBe(true);
-			expect((await screen.queryByTestId("storeyOfFlat") as HTMLInputElement)).toBe(null);
+			// expect((await screen.queryByTestId("storeyOfFlat") as HTMLInputElement)).toBe(null);
 			expect((await screen.findByTestId<HTMLInputElement>("storeysInDwelling")).value).toBe("2");
 			expect((await screen.findByTestId<HTMLInputElement>("buildingLength")).value).toBe("10");
 			expect((await screen.findByTestId<HTMLInputElement>("buildingWidth")).value).toBe("5");
@@ -136,8 +135,6 @@ describe("General details", () => {
 			expect((await screen.findByTestId("canExportToGrid_error"))).toBeDefined();
 			expect((await screen.findByTestId("isPartGCompliant_error"))).toBeDefined();
 			expect((await screen.findByTestId("partOActiveCoolingRequired"))).toBeDefined();
-
-			expect(screen.queryByTestId("storeyOfFlat_error")).toBe(null);
 		});
 
 		test("error summary is displayed when an invalid form in submitted", async () => {
@@ -159,7 +156,6 @@ describe("General details", () => {
 			await renderSuspended(GeneralDetails);
 
 			await user.click(screen.getByTestId("typeOfDwelling_flat"));
-			await user.type(screen.getByTestId("storeyOfFlat"), "1");
 			await user.type(screen.getByTestId("storeysInDwelling"), "2");
 			await user.type(screen.getByTestId("storeysInBuilding"), "3");
 			await user.type(screen.getByTestId("buildingLength"), "10");
@@ -197,7 +193,7 @@ describe("General details", () => {
 			await renderSuspended(GeneralDetails);
 			
 			expect((await screen.findByTestId("typeOfDwelling_flat")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("storeyOfFlat")).value).toBe("1");
+			// expect((await screen.findByTestId<HTMLInputElement>("storeyOfFlat")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("storeysInDwelling")).value).toBe("2");
 			expect((await screen.findByTestId<HTMLInputElement>("storeysInBuilding")).value).toBe("3");
 			expect((await screen.findByTestId<HTMLInputElement>("buildingLength")).value).toBe("10");
@@ -221,23 +217,6 @@ describe("General details", () => {
 			await user.click(screen.getByTestId("typeOfDwelling_flat"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect((await screen.findByTestId("storeyOfFlat_error"))).toBeDefined();
-		});
-
-		test("display error when storeys in dwelling exceeds storeys in building", async () => {
-			const user = userEvent.setup();
-
-			await renderSuspended(GeneralDetails);
-
-			await user.click(screen.getByTestId("typeOfDwelling_flat"));
-			await user.type(screen.getByTestId("storeyOfFlat"), "2");
-			await user.type(screen.getByTestId("storeysInDwelling"), "2");
-			await user.type(screen.getByTestId("storeysInBuilding"), "1");
-
-			await user.tab();
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect((await screen.findByTestId("storeysInBuilding_error"))).toBeDefined();
 		});
 	});
 

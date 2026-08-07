@@ -26,7 +26,7 @@ declare module "@formkit/inputs" {
 	interface FormKitInputProps<Props extends FormKitInputs<Props>> {
 		govRadios: {
 			type: "govRadios";
-			options: Record<string, string | RadioOption> | Map<string, string>;
+			options: Record<string, string | RadioOption> | Map<string, string> | Ref<Map<string, string>>;
 			valueType?: "string" | "number";
 			classNames?: Record<string, string>;
 		};

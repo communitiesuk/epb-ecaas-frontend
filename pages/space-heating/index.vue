@@ -27,6 +27,7 @@ function handleDuplicate(spaceHeatingType: SpaceHeatingType, index: number) {
 function handleComplete() {
 	store.$patch({
 		spaceHeating: {
+			heatNetworks: { complete: true },
 			heatSource: { complete: true },
 			heatEmitters: { complete: true },
 			heatingControls: { complete: true },
@@ -39,6 +40,7 @@ function handleComplete() {
 function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
 	if (!heatNetworkId) return;
 	store.$patch((state) => {
+
 		state.spaceHeating.heatSource.data.forEach((heatSource) => {
 			const typeOfHeatSource = heatSource.data?.typeOfHeatSource;
 			if (
@@ -47,18 +49,20 @@ function clearAssociationsWithHeatNetwork(heatNetworkId?: string) {
 			) {
 				(heatSource.data as { associatedHeatNetworkId: string | undefined }).associatedHeatNetworkId = undefined;
 				heatSource.complete = false;
+				state.spaceHeating.heatSource.complete = false;
 			} 
 		});
 	});
 }
 
-function handleRemove(type: "heatSource" | "heatEmitters" | "heatingControls", index: number) {
+function handleRemove(type: "heatNetworks" | "heatSource" | "heatEmitters" | "heatingControls", index: number) {
 	if (type === "heatSource") {
 		duplicationError.value = false;
-		const heatSource = store.spaceHeating.heatSource.data[index];
-		if (heatSource?.data?.typeOfHeatSource === "heatNetwork") {
-			clearAssociationsWithHeatNetwork(heatSource.data.id);
-		}
+	}
+
+	if (type === "heatNetworks") {
+		const heatNetwork = store.spaceHeating.heatNetworks.data[index];
+		clearAssociationsWithHeatNetwork(heatNetwork?.data.id);
 	}
 
 	removeEntry(type, index);
@@ -76,6 +80,38 @@ function hasIncompleteEntries() {
 		items.data.some((item) => (isEcaasForm(item) ? !item.complete : false)),
 	);
 }
+
+const incompatibleHeatSourceForHeatNetworkMessage = computed(() => {
+	for (const source of store.spaceHeating.heatSource.data) {
+		const message = getHeatNetworkConflictMessage(
+			source.data as HeatNetworkCompatibleHeatSource,
+		);
+
+		if (message) {
+			return message;
+		}
+	}
+
+	for (const source of store.domesticHotWater.heatSources.data) {
+		const data = source.data;
+
+		if (!data || !("typeOfHeatSource" in data)) {
+			continue;
+		}
+
+		const message = getHeatNetworkConflictMessage(
+			data,
+			"domesticHotWater",
+		);
+
+		if (message) {
+			return message;
+		}
+	}
+
+	return undefined;
+});
+
 </script>
 
 <template>
@@ -95,6 +131,22 @@ function hasIncompleteEntries() {
 		]"
 		:use-links="false"
 		test-id="duplicationError"
+	/>
+	<CustomList
+		id="heatNetworks"
+		title="Heat networks"
+		:form-url="`${page?.url!}/heat-networks`"
+		:items="
+			store.spaceHeating.heatNetworks.data.map((x) => ({
+				name: x.data?.name,
+				status: x.complete ? formStatus.complete : formStatus.inProgress,
+			}))
+		"
+		:show-status="true"
+		:max-number-of-items="1"
+		:conflict-message="incompatibleHeatSourceForHeatNetworkMessage"
+		@duplicate="(index:number) => handleDuplicate('heatNetworks', index)"
+		@remove="(index:number) => handleRemove('heatNetworks', index)"
 	/>
 	<CustomList
 		id="heatSource"

@@ -2,7 +2,7 @@ import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
 import Products from "./index.vue";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
-import type { BoilerProduct, DisplayProduct, HeatPumpProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import type { BoilerProduct, DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
 
 describe("Heat source products page", () => {
 	const store = useEcaasStore();
@@ -21,6 +21,7 @@ describe("Heat source products page", () => {
 	afterEach(() => {
 		mockFetch.mockReset();
 		mockRoute.mockReset();
+
 		store.$reset();
 	});
 
@@ -58,14 +59,15 @@ describe("Heat source products page", () => {
 				technologyType: "HybridHeatPump",
 				boilerProductID: "2000",
 			},
+			{
+				displayProduct: true,
+				id: "1001",
+				brandName: "Test",
+				modelName: "Booster Heat Pump",
+				technologyType: "BoosterHeatPump",
+			},
 		],
 	};
-
-	beforeEach(() => {
-		mockFetch.mockReturnValue({
-			data: ref(MOCKED_HEAT_PUMPS),
-		});
-	});
 
 	const heatSource1: Partial<HeatSourceData> = {
 		id: "463c94f6-566c-49b2-af27-222222222",
@@ -73,14 +75,11 @@ describe("Heat source products page", () => {
 		typeOfHeatSource: "heatPump",
 	};
 
-	// const heatNetwork1: Partial<HeatSourceData> = {
-	// 	id: "463c94f6-566c-49b2-af27-333333333",
-	// 	name: "Heat network 1",
-	// 	typeOfHeatSource: "heatNetwork",
-	// 	typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
-	// 	usesHeatInterfaceUnits: true,
-	// 	isHeatNetworkInPcdb: true,
-	// };
+	const heatNetwork: Partial<HeatNetworkData> = {
+		id: "463c94f6-566c-49b2-af27-333333333",
+		name: "Sleeved District Heat Network",
+		typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+	};
 
 	const combiBoiler1: Partial<HeatSourceData> = {
 		id: "463c94f6-566c-49b2-af27-444444444",
@@ -95,11 +94,14 @@ describe("Heat source products page", () => {
 				heatSource: {
 					data: [
 						{ data: heatSource1 },
-						// { data: heatNetwork1 },
 						{ data: combiBoiler1 },
 					],
 				},
 			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(MOCKED_HEAT_PUMPS),
 		});
 	});
 
@@ -134,6 +136,7 @@ describe("Heat source products page", () => {
 			},
 			path: "/0/heat-pump",
 		});
+
 		await renderSuspended(Products);
 
 		await user.click(screen.getByTestId("selectProductButton_1"));
@@ -244,135 +247,6 @@ describe("Heat source products page", () => {
 		expect(screen.getByTestId("productsTable")).toBeDefined();
 	});
 
-	test("heat network PCDB search and product table is displayed when selecting a heat network product", async () => {
-		mockRoute.mockReturnValue({
-			params: {
-				heatSource: "1",
-				products: "heat-network",
-			},
-			path: "/1/heat-network",
-		});
-
-		await renderSuspended(Products);
-
-		expect(screen.getByTestId("heatNetworkProductsTable")).toBeDefined();
-		expect(screen.getByText("Search network or subnetwork")).toBeDefined();
-	});
-
-	test("does not render HEM default inset for heat network products", async () => {
-		mockRoute.mockReturnValue({
-			params: {
-				heatSource: "1",
-				products: "heat-network",
-			},
-			path: "/1/heat-network",
-		});
-
-		await renderSuspended(Products);
-
-		expect(screen.queryByTestId("hemDefaultProductInset")).toBeNull();
-	});
-
-	// test("when a heat network product is a fifth generation, hasBoosterHeatPump is set to true", async () => {
-	// 	mockRoute.mockReturnValue({
-	// 		params: {
-	// 			heatSource: "1",
-	// 			products: "heat-network",
-	// 		},
-	// 		path: "/1/heat-network",
-	// 	});
-
-	// 	mockRoute.mockReturnValue({
-	// 		params: {
-	// 			heatSource: "1",
-	// 			products: "heat-network",
-	// 			id: "1000",
-	// 		},
-	// 		path: "/1/heat-network/1000",
-	// 	});
-
-	// 	const product = {
-	// 		id: "1000",
-	// 		brandName: "Test",
-	// 		modelName: "Heat network",
-	// 		modelQualifier: "HNSMALL",
-	// 		technologyType: "HeatNetworks",
-	// 	};
-
-	// 	const heatNetworks = {
-	// 		data: [product],
-	// 	};
-
-	// 	mockFetch.mockReturnValueOnce({
-	// 		data: ref(heatNetworks),
-	// 	});	
-
-	// 	mockFetch.mockReturnValueOnce({
-	// 		data: ref({
-	// 			...product,
-	// 			fifthGHeatNetwork: 1,
-	// 		}),
-	// 	});	
-
-	// 	await renderSuspended(Products);
-	// 	await user.click(screen.getByTestId("selectProductButton_0"));
-	// 	expect(store.spaceHeating.heatSource.data[1]!.data).toEqual(expect.objectContaining({
-	// 		hasBoosterHeatPump: true,
-	// 	}));
-	//});
-	test("a heat network product  gets stored when a heat network is selected", async () => {
-		const heatNetwork: Partial<HeatSourceData> = {
-			id: "463c94f6-566c-49b2-af27-333333333",
-			name: "Heat network 1",
-			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
-		};
-
-		store.$patch({
-			spaceHeating: {
-				heatSource: {
-					data: [
-						{ data: heatNetwork },
-					],
-				},
-			},
-		});
-
-		mockRoute.mockReturnValue({
-			params: {
-				heatSource: "0",
-				products: "heat-network",
-			},
-			path: "/0/heat-network",
-		});
-
-		const heatNetworkProduct: DisplayProduct = {
-			id: "1000",
-			productId: "1000",
-			subHeatNetworkId: "subnetwork-1000",
-			technologyType: "HeatNetworks",
-			subheatNetworkName: "Test subnetwork",
-			displayProduct: true,
-
-		};
-
-		mockFetch.mockReturnValueOnce({
-			data: ref({
-				data: [heatNetworkProduct],
-			}),
-		});
-
-		await renderSuspended(Products);
-
-		await user.click(screen.getByTestId("selectProductButton_0"));
-
-		expect(store.spaceHeating.heatSource.data[0]!.data).toEqual(expect.objectContaining({
-			productReference: heatNetworkProduct.productId,
-			subHeatNetworkName: heatNetworkProduct.subheatNetworkName,
-		}));
-	});
-
-
 	test("a boiler heat source is created when a hybrid heat pump is selected", async () => {
 		store.$patch({
 			spaceHeating: {
@@ -473,78 +347,6 @@ describe("Heat source products page", () => {
 		expect(mechanicalVentildationData[0]?.data).toStrictEqual(expect.objectContaining(expectedData));
 	});
 
-	test("a hot water cylinder is created when a heat pump with vessel type 'Integral' is selected", async () => {
-		store.$patch({
-			spaceHeating: {
-				heatSource: {
-					data: [
-						{ data: heatSource1 },
-					],
-				},
-			},
-		});
-
-		mockRoute.mockReturnValue({
-			params: {
-				heatSource: "0",
-				products: "heat-pump",
-			},
-			path: "/0/heat-pump",
-		});
-
-		const heatPumpProduct: PaginatedResult<DisplayProduct> = {
-			data: [{
-				displayProduct: true,
-				id: "1000",
-				brandName: "Test",
-				modelName: "Heat Pump",
-				technologyType: "AirSourceHeatPump",
-				vesselType: "Integral",
-			}],
-		};
-
-		const heatPumpDetails: Partial<HeatPumpProduct> = {
-			id: "1000",
-			brandName: "Test",
-			modelName: "Heat Pump",
-			technologyType: "AirSourceHeatPump",
-			vesselType: "Integral",
-			tankVolumeDeclared: 20,
-			dailyLossesDeclared: 10,
-		};
-
-		mockFetch.mockReturnValueOnce({
-			data: ref(heatPumpProduct),
-		}).mockReturnValueOnce({
-			data: ref(heatPumpDetails),
-		});
-
-		await renderSuspended(Products);
-
-		await user.click(screen.getByTestId("selectProductButton_0"));
-
-		const waterStorageData = store.domesticHotWater.waterStorage.data;
-		const expectedCylinderData: Partial<WaterStorageData> = {
-			name: "Hot water cylinder",
-			typeOfWaterStorage: "hotWaterCylinder",
-			packagedProductReference: "1000",
-			storageCylinderVolume: unitValue(20, "litres"),
-			dailyEnergyLoss: 10,
-		};
-
-		const hotWaterHeatSources = store.domesticHotWater.heatSources.data;
-		const expectedHotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
-			isExistingHeatSource: true,
-			heatSourceId: heatSource1.id,
-		};
-
-		expect(hotWaterHeatSources.length).toBe(1);
-		expect(hotWaterHeatSources[0]?.data).toEqual(expect.objectContaining(expectedHotWaterHeatPump));
-
-		expect(waterStorageData.length).toBe(1);
-		expect(waterStorageData[0]?.data).toStrictEqual(expect.objectContaining(expectedCylinderData));
-	});
-
 	test("selecting a heat pump with cylinder should throw an error and redirect to the space heating form", async () => {
 		const heatPump: Partial<HeatSourceData> = {
 			id: "463c94f6-566c-49b2-af27-222222222",
@@ -621,5 +423,83 @@ describe("Heat source products page", () => {
 		expect(store.spaceHeating.heatSource.data[0]?.data.productReference).toBeUndefined();
 		expect(store.domesticHotWater.heatSources.data.length).toBe(1);
 		expect(store.domesticHotWater.waterStorage.data.length).toBe(1);
+	});
+
+	test("only shows non booster heat pumps when a heat network has not been added", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-pump",
+			},
+			path: "/0/heat-pump",
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.getByText("Small Heat Pump")).toBeDefined();
+		expect(screen.getByText("Medium Heat Pump")).toBeDefined();
+		expect(screen.getByText("Large Heat Pump")).toBeDefined();
+		expect(screen.queryByText("Booster Heat Pump")).toBeNull();
+	});
+
+	test("shows all heat pump types if a heat network has been added", async () => {
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [{ data: heatNetwork, complete: true }],
+				},
+			},
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-pump",
+			},
+			path: "/0/heat-pump",
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.getByText("Small Heat Pump")).toBeDefined();
+		expect(screen.getByText("Medium Heat Pump")).toBeDefined();
+		expect(screen.getByText("Large Heat Pump")).toBeDefined();
+		expect(screen.getByText("Booster Heat Pump")).toBeDefined();
+	});
+
+	test("displays hint text to explain no booster heat pumps are on products page as no heat network has been added", async () => {
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-pump",
+			},
+			path: "/0/heat-pump",
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.getByText("No booster heat pumps are shown in this list. They cannot be added as there is no heat network.")).toBeDefined();
+	});
+
+	test("does not display hint text to explain no booster heat pumps are on products page if a heat network has been added", async () => {
+		store.$patch({
+			spaceHeating: {
+				heatNetworks: {
+					data: [{ data: heatNetwork, complete: true }],
+				},
+			},
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				heatSource: "0",
+				products: "heat-pump",
+			},
+			path: "/0/heat-pump",
+		});
+
+		await renderSuspended(Products);
+
+		expect(screen.queryByText("No booster heat pumps are shown in this list. They cannot be added as there is no heat network.")).toBeNull();
 	});
 });

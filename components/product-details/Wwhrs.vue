@@ -16,6 +16,7 @@ const tableData: Record<string, string> =
 	"Utilisation factor": show(data.utilisationFactor),
 	"Heat exchanger length": dim(data.heatExchangerLength, "metres"),
 	"Weight of heat exchanger": dim(data.heatExchangerDryWeight, "kilograms"),
+	"Model qualifier": show(data.modelQualifier),
 };
 </script>
 

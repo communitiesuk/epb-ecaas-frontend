@@ -33,6 +33,7 @@ const tableData: Record<string, string> =
 	...(data.technologyType === "RegularBoiler" && {
 		"Standby heat loss": dim(data.heatLossStandby, "kilowatt hours per day"),
 	}),
+	"Model qualifier": show(data.modelQualifier),
 };
 </script>
 

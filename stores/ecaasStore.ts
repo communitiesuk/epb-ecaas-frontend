@@ -26,6 +26,8 @@ export function getInitialState(): EcaasState {
 		},
 		domesticHotWater: {
 			heatSources: { data: [] },
+			wwhrs: { data: [] },
+			preheatedWaterStorage: { data: [] },
 			waterStorage: { data: [] },
 			hotWaterOutlets: { data: [] },
 			pipework: { data: [] },
@@ -63,6 +65,7 @@ export function getInitialState(): EcaasState {
 			dwellingSpaceLighting: { data: [] },
 		},
 		spaceHeating: {
+			heatNetworks: { data: [] },
 			heatSource: { data: [] },
 			heatEmitters: { data: [] },
 			heatingControls: { data: [] },
@@ -71,7 +74,7 @@ export function getInitialState(): EcaasState {
 			airConditioning: { data: [] },
 		},
 		pvAndBatteries: {
-			pvArrays: { data: [] },
+			pvs: { data: [] },
 			electricBattery: { data: [] },
 			diverters: { data: [] },
 		},

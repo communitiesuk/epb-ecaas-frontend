@@ -1,6 +1,6 @@
 import type { SchemaElectricBattery, SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
-import { mapElectricBatteryData, mapPvDiverterData, mapPvArrayData, mapDiverterEnergySupplyData } from "./pvAndElectricBatteriesMapper";
+import { mapElectricBatteryData, mapPvDiverterData, mapPvData, mapDiverterEnergySupplyData } from "./pvAndElectricBatteriesMapper";
 import type { SchemaWindowShadingObject } from "~/schema/aliases";
 
 const baseForm = {
@@ -16,9 +16,9 @@ describe("PV and electric batteries mapper", () => {
 		store.$reset();
 	});
 
-	it("maps PV arrays to the FHS input", () => {
+	it("maps PVs to the FHS input", () => {
 		// Arrange
-		const pvArray1: EcaasForm<PvArrayData> = {
+		const pv1: EcaasForm<PvData> = {
 			data: {
 				name: "Roof",
 				peakPower: 50,
@@ -37,7 +37,7 @@ describe("PV and electric batteries mapper", () => {
 			complete: true,
 		};
 
-		const pvArray2: EcaasForm<PvArrayData> = {
+		const pv2: EcaasForm<PvData> = {
 			data: {
 				name: "Garden",
 				peakPower: 100,
@@ -58,15 +58,15 @@ describe("PV and electric batteries mapper", () => {
 
 		store.$patch({
 			pvAndBatteries: {
-				pvArrays: {
+				pvs: {
 					...baseForm,
-					data: [pvArray1, pvArray2],
+					data: [pv1, pv2],
 				},
 			},
 		});
 
 		// Act
-		const result = mapPvArrayData(resolveState(store.$state));
+		const result = mapPvData(resolveState(store.$state));
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, "OnSiteGeneration"> = {
@@ -414,7 +414,7 @@ describe("PV and electric batteries mapper", () => {
 		expect(energySupply).toEqual({ "Roof": { fuel: "electricity", is_export_capable: false, priority: ["ElectricBattery"] } });
 	});
 	it("maps pv array shading data to the correct form for FHS input", () => {
-		const pvArrayWithShading: EcaasForm<PvArrayData> = {
+		const pvWithShading: EcaasForm<PvData> = {
 			data: {
 				name: "Shaded array",
 				peakPower: 100,
@@ -455,14 +455,14 @@ describe("PV and electric batteries mapper", () => {
 		};
 		store.$patch({
 			pvAndBatteries: {
-				pvArrays: {
-					data: [pvArrayWithShading],
+				pvs: {
+					data: [pvWithShading],
 					complete: true,
 				},
 			},
 		});
 
-		const result = mapPvArrayData(resolveState(store.$state));
+		const result = mapPvData(resolveState(store.$state));
 		const expectedResult: SchemaWindowShadingObject[] = [
 			{
 				type: "obstacle",

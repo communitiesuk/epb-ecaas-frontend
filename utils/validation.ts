@@ -1,4 +1,5 @@
 import type { FormKitFrameworkContext } from "@formkit/core";
+import type { UnitValue } from "./units/types";
 
 export function showErrorState(context: FormKitFrameworkContext): boolean {
 	return context.state.invalid && Object.values(context.messages).some(message => message.visible);
@@ -29,4 +30,9 @@ export function uniqueName<T extends object>(forms: EcaasForm<T>[], opts: { id?:
 
 		return true;
 	};
+};
+
+export function greaterThanZero(node: FormKitNode) {
+	const value = node.value as UnitValue;
+	return value.amount > 0;
 };

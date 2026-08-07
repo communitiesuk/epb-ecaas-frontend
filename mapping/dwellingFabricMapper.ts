@@ -184,7 +184,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					floor_type: x.typeOfGroundFloor,
 					height_upper_surface: x.heightOfFloorUpperSurface / 1000,
 					area_per_perimeter_vent: x.ventilationOpeningsArea / 1e6,
-					shield_fact_location: x.windShieldingFactor,
+					shield_fact_location: "Average", // TODO: Needs to be removed once Alpha 8 is introduced
 					thermal_resist_insul: x.underfloorSpaceThermalResistance,
 					thermal_transm_walls: x.thermalTransmittanceOfWallsAboveGround,
 				};
@@ -658,7 +658,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			frame_area_fraction: calculateFrameToOpeningRatio(x.openingToFrameRatio),
 			max_window_open_area: x.maximumOpenableArea,
 			security_risk: x.securityRisk,
-			free_area_height: x.heightOpenableArea,
+			free_area_height: x.freeAreaHeight,
 			shading: [
 				...(x.hasShading ? mapShading(x.shading) : []),
 				...(x.depthOfReveal && x.distanceFromGlassToStartOfReveal
@@ -782,7 +782,6 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			orientation = associatedElement.orientation!;
 		}
 
-		console.log(state.infiltrationAndVentilation.naturalVentilation);
 		const midHeight = (x.height / 2) + state.infiltrationAndVentilation.naturalVentilation.baseHeightOfVentilationZone;
 
 		return {
@@ -797,7 +796,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				g_value: x.solarTransmittance,
 				mid_height: midHeight,
 				security_risk: x.securityRisk,
-				free_area_height: 0,
+				free_area_height: x.freeAreaHeight,
 				frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
 				max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
 				window_part_list: mapWindowPartList(x),

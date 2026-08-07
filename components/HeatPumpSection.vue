@@ -4,6 +4,8 @@ import type { PageId } from "~/data/pages/pages";
 import { celsius } from "~/utils/units/temperature";
 import type { UnitValue } from "~/utils/units/types";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
+import { useHeatNetworks } from "~/composables/heatNetworks";
+import { waterCylinderConfigurationDisplay } from "~/utils/display";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -19,29 +21,7 @@ const { model, onProductLoaded = undefined } = defineProps<{
 
 const heatSources = getCombinedHeatSources(store);
 
-const heatNetworkOptions = computed(() => {
-	const heatNetworks = heatSources.filter(source => {
-		return (source.data as HeatSourceData).typeOfHeatSource === "heatNetwork";
-	});
-
-	return Object.fromEntries(heatNetworks.map(network => {
-		const networkData = network.data as Extract<HeatSourceData, { typeOfHeatSource: "heatNetwork" }>;
-		return [
-			networkData.id,
-			{
-				label: networkData.name,
-				value: networkData.id,
-			},
-		];
-	}));
-});
-
-const defaultAssociatedHeatNetworkId = computed(() => {
-	const optionIds = Object.keys(heatNetworkOptions.value);
-	return optionIds.length === 1 ? optionIds[0] : undefined;
-});
-
-const hasHeatNetworkOptions = computed(() => Object.keys(heatNetworkOptions.value).length > 0);
+const { heatNetworkOptions, hasHeatNetworkOptions, defaultAssociatedHeatNetworkId } = useHeatNetworks();
 
 const greaterThanZero = (node: FormKitNode) => {
 	const value = node.value as UnitValue;
@@ -71,31 +51,36 @@ const greaterThanZero = (node: FormKitNode) => {
 		:page-index="index"
 		@product-loaded="onProductLoaded"
 	/>
-	<FormKit 
+	<!-- <FormKit 
 		id="isConnectedToHeatNetwork"
 		type="govBoolean"
 		:name="'isConnectedToHeatNetwork'"
 		:label="'Is this heat pump connected to a heat network?'"
 		:value="model.isConnectedToHeatNetwork"
-	/>
+	/> -->
 	<FormKit
-		v-if="model.isConnectedToHeatNetwork"
+		v-if="model.typeOfHeatPump === 'booster'"
 		id="associatedHeatNetwork"
 		type="govRadios"
 		label="Associated heat network"
 		help="Select the heat network that this heat pump is connected to"
 		:options="heatNetworkOptions"
+		validation="required"
 		name="associatedHeatNetworkId"
 		:value="model.associatedHeatNetworkId ?? defaultAssociatedHeatNetworkId"
-	>		<div v-if="!hasHeatNetworkOptions">
-		<p class="govuk-error-message">No heat networks added.</p>
-		<NuxtLink :to="getUrl('spaceHeating')" class="govuk-link gov-radios-add-link">
-			Click here to add a heat network
-		</NuxtLink>
-	</div>
+	>	
+		<GovDetails summary-text="Help with this input">
+			<p class="govuk-body">If you have added a booster heat pump, the heat network needs to be a 5th generation (ambient loop) communal heat network.</p>
+		</GovDetails>	
+		<div v-if="!hasHeatNetworkOptions">
+			<p class="govuk-error-message">No heat networks added.</p>
+			<NuxtLink :to="getUrl('heatNetworksCreate')" class="govuk-link gov-radios-add-link">
+				Click here to add a heat network
+			</NuxtLink>
+		</div>
 	</FormKit>
 	<FieldsEnergySupplies
-		v-if="model.isConnectedToHeatNetwork === false"
+		v-if="model.typeOfHeatPump !== 'booster'"
 		id="energySupply"
 		name="energySupply"
 		label="Energy supply"
@@ -114,5 +99,15 @@ const greaterThanZero = (node: FormKitNode) => {
 			exclusiveRangeFromMin: `Maximum flow temperature must be greater than 0.`,
 		}"
 		:data-field="page == 'domestic hot water' ? 'HotWaterSource.*.HeatSource.*.temp_flow_limit_upper' :  'SpaceHeatSystem.*HeatSource.temp_flow_limit_upper'"
+	/>
+	<FormKit
+		v-if="model.packagedWithWaterCylinder"
+		id="waterCylinderConfiguration"
+		name="waterCylinderConfiguration"
+		type="govRadios"
+		label="Configuration of water cylinder"
+		help="Select whether the water cylinder that comes with the heat pump will be configured as a pre-heated water cylinder or a hot water cylinder"
+		:options="waterCylinderConfigurationDisplay"
+		validation="required"
 	/>
 </template>

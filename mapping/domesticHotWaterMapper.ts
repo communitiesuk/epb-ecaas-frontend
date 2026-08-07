@@ -1,28 +1,40 @@
 import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaOtherWaterUseDetails, SchemaWaterPipework, SchemaStorageTank, SchemaHeatSourceWetDetails, SchemaWWHRS } from "~/schema/aliases";
-import type { SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
-import { defaultColdWaterSourceReference, type FhsInputSchema, type ResolvedState } from "./fhsInputMapper";
+import type { SchemaHeaderTankOrMainsWater, SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { objectFromEntries } from "ts-extras";
-export function makeWWHRSName(name:string) {
-	return `WWHRS - ${name}`;
-} 
+import { useColdWaterSource } from "~/composables/coldWaterSource";
+import type { ColdWaterSourceType, WaterStorageData } from "~/stores/ecaasStore.schema";
+
+export const defaultColdWaterSourceData: SchemaHeaderTankOrMainsWater = {
+	start_day: 0,
+	temperatures: [3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
+	time_series_step: 1,
+};
+
 export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { showers, WWHRS } = mapShowersData(state);
 	const baths = mapBathsData(state);
 	const others = mapOthersData(state);
 	const hotWaterSources = mapHotWaterSourcesData(state);
+	const preheatedWaterSources = mapPreheatedWaterSourceData(state);
 
-	const data: Partial<FhsInputSchema> = { 
+	let data: Partial<FhsInputSchema> = {
 		HotWaterDemand: {
 			Shower: showers,
 			Bath: baths,
 			Other: others,
 		} ,
 		...hotWaterSources,
+		...preheatedWaterSources,
+		...(WWHRS ? { WWHRS } : {}),
 	};
-	if (WWHRS) {
-		data["WWHRS"] = WWHRS;
-	}
+
+	data = {
+		...data,
+		...mapColdWaterSource(data),
+	};
+
 	return data;
 }
 
@@ -30,30 +42,47 @@ const coldWaterSourceMap = {
 	mainsWater: "mains water",
 	headerTank: "header tank",
 } as const satisfies Record<
-	DomesticHotWaterHeatSourceData["coldWaterSource"],
+	ColdWaterSourceType,
 	SchemaColdWaterSourceType
 >;
 
+function getColdWaterSourceData(source: DomesticHotWaterHeatSourceData | PreheatedWaterStorageData | WaterStorageData): SchemaColdWaterSourceType {
+	const { getColdWaterSource } = useColdWaterSource();
+	const coldWaterSource = getColdWaterSource(source);
+
+	if (!coldWaterSource) {
+		throw new Error("No cold water source for heat source");
+	}
+
+	return coldWaterSourceMap[coldWaterSource];
+}
+
 function mapShowersData(state: ResolvedState) {
+	const { wwhrs, hotWaterOutlets } = state.domesticHotWater;
 	let WWHRS: SchemaWWHRS | undefined = undefined;
-	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "mixedShower").map((x): [string, SchemaMixerShower] => {
+
+	const mixedShowerEntries = hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "mixedShower").map((x): [string, SchemaMixerShower] => {
 		const key = x.name;
-		const WWHRS_configuration = {
-			instantaneousSystemA: "A",
-			instantaneousSystemB: "B",
-			instantaneousSystemC: "C",
-		} as const;
-		if (x.wwhrs && x.wwhrsProductReference) {
-			WWHRS ??= {};
-			WWHRS[makeWWHRSName(x.name)] = { product_reference: x.wwhrsProductReference, ColdWaterSource: "mains water" };
+		let associatedWwhrs: WwhrsData | undefined;
+
+		if (x.wwhrs && x.associatedWwhrs) {
+			associatedWwhrs = wwhrs.find(s => s.id === x.associatedWwhrs);
+
+			if (associatedWwhrs) {
+				WWHRS ??= {};
+				WWHRS[associatedWwhrs.name] = {
+					product_reference: associatedWwhrs.productReference,
+					ColdWaterSource: coldWaterSourceMap[associatedWwhrs.coldWaterSource],
+				};
+			}
 		}
+
 		const mixedShower: SchemaMixerShower = {
 			type: "MixerShower",
-			ColdWaterSource: "mains water",
+			ColdWaterSource: coldWaterSourceMap[x.coldWaterSource],
 			HotWaterSource: "hw cylinder",
-			...(x.wwhrs ? {
-				WWHRS: makeWWHRSName(x.name),
-				WWHRS_configuration: WWHRS_configuration[x.wwhrsType],
+			...(x.wwhrs && associatedWwhrs ? {
+				WWHRS: associatedWwhrs.name,
 			} : {}),
 			...(x.isAirPressureShower ? {
 				allow_low_flowrate: true as const,
@@ -71,11 +100,10 @@ function mapShowersData(state: ResolvedState) {
 		const key = x.name;
 		const val: SchemaInstantElecShower = {
 			type: "InstantElecShower",
-			ColdWaterSource: "mains water",
+			ColdWaterSource: coldWaterSourceMap[x.coldWaterSource],
 			rated_power: x.ratedPower,
 			EnergySupply: defaultElectricityEnergySupplyName,
 		};
-
 
 		return [key, val];
 	});
@@ -87,8 +115,9 @@ function mapBathsData(state: ResolvedState) {
 	const bathEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "bath").map((x): [string, SchemaBathDetails] => {
 		const key = x.name;
 		const val: SchemaBathDetails = {
-			ColdWaterSource: "mains water",
+			ColdWaterSource: coldWaterSourceMap[x.coldWaterSource],
 			size: x.size,
+			HotWaterSource: "hw cylinder",
 		};
 
 		return [key, val];
@@ -101,8 +130,9 @@ function mapOthersData(state: ResolvedState) {
 	const otherEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "otherHotWaterOutlet").map((x): [string, SchemaOtherWaterUseDetails] => {
 		const key = x.name;
 		const val: SchemaOtherWaterUseDetails = {
-			ColdWaterSource: "mains water",
+			ColdWaterSource: coldWaterSourceMap[x.coldWaterSource],
 			flowrate: x.flowRate,
+			HotWaterSource: "hw cylinder",
 		};
 
 		return [key, val];
@@ -112,53 +142,56 @@ function mapOthersData(state: ResolvedState) {
 }
 
 /**
- * Gets the DHW heat source reference used for DHW-specific metadata, primarily
- * to read `coldWaterSource` when building hot water source payloads.
- *
- * Assumes the selected non-heat-network DHW entry carries the relevant DHW
- * information needed later in mapping.
+ * Gets the DHW heat source reference used for DHW-specific metadata.
+ * Defaults to the only heat source which is not connected to a pre-heated water cylinder.
+ * Excludes packaged heat sources.
  */
 function getDomesticHotWaterHeatSource(state: ResolvedState) {
-	// NOTE: this logic will change upon the redesign of the heat networks section.
-	const heatSources = state.domesticHotWater.heatSources.filter(x => x.isExistingHeatSource === true || x.typeOfHeatSource !== "heatNetwork");
-	const spaceHeatingHeatSources = (state.spaceHeating.heatSource ?? [])
-		.filter(x => x.typeOfHeatSource !== "heatNetwork").map(x => x.id);
-	const noneHeatNetworkHeatSources = heatSources.filter(x => {
-		if (x.isExistingHeatSource) {
-			return !spaceHeatingHeatSources.includes(x.id);
-		}
-		return true;
-	});
+	const dhwHeatSources = state.domesticHotWater.heatSources;
+	const heatSourcesExcludingPackaged = dhwHeatSources.filter(x => !hasPackagedProduct(x));
+	const packagedHeatSources = dhwHeatSources.filter(x => hasPackagedProduct(x));
+	let expectedHeatSourceCount = 1 + packagedHeatSources.length;
 
-	if (noneHeatNetworkHeatSources.length !== 1) {
-		throw new Error("Expected exactly one non-heat-network heat source, found " + noneHeatNetworkHeatSources.length);
+	if (heatSourcesExcludingPackaged.length === 1) {
+		return heatSourcesExcludingPackaged[0]!;
 	}
-		
-	return noneHeatNetworkHeatSources[0]!;
+
+	if (heatSourcesExcludingPackaged.length > 1) {
+		const preheatedHeatSourceId = state.domesticHotWater.preheatedWaterStorage?.[0]?.heatSourceId;
+		const preheatedHeatSource = heatSourcesExcludingPackaged.find(x => x.id === preheatedHeatSourceId);
+
+		if (preheatedHeatSource) {
+			if (heatSourcesExcludingPackaged.length === 2) {
+				return heatSourcesExcludingPackaged.find(x => x.id !== preheatedHeatSource.heatSourceId)!;
+			}
+
+			expectedHeatSourceCount += 1;
+		}
+	}
+
+	throw new Error(
+		`Expected exactly ${expectedHeatSourceCount} domestic hot water heat ${pluralize("source")(expectedHeatSourceCount !== 1)}, found ${dhwHeatSources.length}`,
+	);
 }
 
 /**
  * Resolves the actual heat source details from either space heating or DHW,
  * depending on where the source was originally created.
  */
-function getActualHeatSourceFromDHWHeatSource(state: ResolvedState) {
-	const { domesticHotWater, spaceHeating } = state;
-	const dhwHeatSources = domesticHotWater.heatSources.filter(x => x.isExistingHeatSource === false);
-	const allHeatSources = [...dhwHeatSources, ...(spaceHeating.heatSource ?? [])];
-	const noneHeatNetworkHeatSources = allHeatSources.filter(x => x.typeOfHeatSource !== "heatNetwork");
-	if (noneHeatNetworkHeatSources.length !== 1) {
-		throw new Error("Expected exactly one non-heat-network heat source, found " + noneHeatNetworkHeatSources.length);
-	}
-	return noneHeatNetworkHeatSources[0]!;
-}
+function getActualHeatSourceFromDHWHeatSource(dhwHeatSource: DomesticHotWaterHeatSourceData, state: ResolvedState) {
+	const { spaceHeating } = state;
 
-function getAssociatedHeatNetwork(state: ResolvedState, associatedHeatNetworkId: string) {
-	const associatedHeatNetwork = state.spaceHeating.heatSource?.find(hs => hs.id === associatedHeatNetworkId);
+	if (dhwHeatSource.isExistingHeatSource) {
+		const heatSource = spaceHeating.heatSource?.find(x => x.id === dhwHeatSource.heatSourceId);
 
-	if (!associatedHeatNetwork) {
-		return state.domesticHotWater.heatSources.find(hs => hs.id === associatedHeatNetworkId);
+		if (!heatSource) {
+			throw new Error("Expected associated space heating heat source");
+		}
+
+		return heatSource;
 	}
-	return associatedHeatNetwork;
+
+	return dhwHeatSource;
 }
 
 function mapHeatSourceWet(
@@ -169,39 +202,34 @@ function mapHeatSourceWet(
 	>,
 	state: ResolvedState,
 ) {
-
 	const batteryTypeMap = {
 		"heatBatteryPcm": "pcm",
 		"heatBatteryDryCore": "dry_core",
 	} as const;
 
-	const heatNetworkFields = "isConnectedToHeatNetwork" in heatSource && heatSource.isConnectedToHeatNetwork ? {
-		is_heat_network: true as const,
-		heat_network_type: "communal" as const, // temp
-	} : { is_heat_network: false as const, EnergySupply: defaultElectricityEnergySupplyName };
 	switch (heatSource.typeOfHeatSource) {
 		case "heatInterfaceUnit":
-			{
-				const associatedHeatNetwork = heatSource.associatedHeatNetworkId ? getAssociatedHeatNetwork(state, heatSource.associatedHeatNetworkId) : undefined;
-				const subHeatNetworkName = associatedHeatNetwork && "subHeatNetworkName" in associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkName : undefined;
-				const associatedHeatNetworkName = associatedHeatNetwork && "name" in associatedHeatNetwork ? associatedHeatNetwork.name : undefined;
-				if (!subHeatNetworkName || !associatedHeatNetworkName) {
-					throw new Error("Expected a sub heat network name, and associated heat network name for a heat interface unit heat source associated with a heat network");
-				}
-				return {
-					HeatSourceWet: {
-						[heatSource.name]: {
-							type: "HIU" as const,
-							product_reference: heatSource.productReference,
-							EnergySupply: defaultElectricityEnergySupplyName,
-							heat_network_type: "communal" as const, // temp
-							heat_network_reference: associatedHeatNetworkName,
-							building_level_distribution_losses: heatSource.buildingLevelLosses.amount,
-							is_heat_network: true as const,
-							sub_heat_network_name: subHeatNetworkName,
-						} as const satisfies SchemaHeatSourceWetDetails,
-					} satisfies FhsInputSchema["HeatSourceWet"],
-				};
+			return {
+				HeatSourceWet: {
+					[heatSource.name]: {
+						type: "HIU" as const,
+						product_reference: heatSource.productReference,
+						EnergySupply: defaultElectricityEnergySupplyName,
+						// TODO: Remove once Alpha 8 backend is implemented and no longer requires building_level_distribution_losses for house HIUs
+						building_level_distribution_losses:
+					state.dwellingDetails.generalSpecifications.typeOfDwelling === "house"
+						? 0
+						: typeof heatSource.buildingLevelLosses === "object"
+							&& heatSource.buildingLevelLosses !== null
+							&& "amount" in heatSource.buildingLevelLosses
+							? heatSource.buildingLevelLosses.amount
+							: heatSource.buildingLevelLosses ?? 0,
+						...getHeatNetworkFields(
+							state,
+							heatSource.associatedHeatNetworkId,
+						),
+					} as const satisfies SchemaHeatSourceWetDetails,
+				} satisfies FhsInputSchema["HeatSourceWet"],
 			};
 		case "heatPump":
 			return {
@@ -210,7 +238,14 @@ function mapHeatSourceWet(
 						type: "HeatPump" as const,
 						product_reference: heatSource.productReference,
 						EnergySupply: defaultElectricityEnergySupplyName,
-						...heatNetworkFields,
+						...(heatSource.typeOfHeatPump === "booster"
+							? getHeatNetworkFields(
+								state,
+								heatSource.associatedHeatNetworkId,
+							)
+							: {
+								is_heat_network: false as const,
+							}),
 					} as const satisfies SchemaHeatSourceWetDetails,
 				} satisfies FhsInputSchema["HeatSourceWet"],
 			};
@@ -245,7 +280,7 @@ function mapHeatSourceWet(
 }
 
 function mapWaterStorageHeatSource(
-	waterStorage: WaterStorageData,
+	waterStorage: WaterStorageData | PreheatedWaterStorageData,
 	dhwHeatSource: DomesticHotWaterHeatSourceData,
 	actualHeatSource: Exclude<
 		ReturnType<typeof getActualHeatSourceFromDHWHeatSource>,
@@ -268,7 +303,7 @@ function mapWaterStorageHeatSource(
 
 	const commonWSHeatSourceProps = {
 		heater_position: waterStorage.heaterPosition,
-		...(waterStorage.typeOfWaterStorage === "hotWaterCylinder"
+		...(waterStorage.typeOfWaterStorage === "hotWaterCylinder" && "thermostatPosition" in waterStorage
 			? { thermostat_position: waterStorage.thermostatPosition }
 			: {}),
 	};
@@ -345,7 +380,13 @@ function mapWaterStorageHeatSource(
 
 function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: WaterStorageData) {
 	const dhwHeatSource = getDomesticHotWaterHeatSource(state);
-	const actualHeatSource = getActualHeatSourceFromDHWHeatSource(state);
+
+	if (!dhwHeatSource) {
+		throw new Error("No heat source for hot water cylinder");
+	}
+
+	const actualHeatSource = getActualHeatSourceFromDHWHeatSource(dhwHeatSource, state);
+	const coldWaterSource = getColdWaterSourceData(waterStorage);
 
 	if (actualHeatSource.typeOfHeatSource === "pointOfUse") {
 		throw new Error("Cannot have a point of use heat source heating a hot water cylinder or smart hot water tank");
@@ -367,7 +408,7 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 	const mappedWaterStorage = waterStorage.typeOfWaterStorage === "hotWaterCylinder"
 		? {
 			type: "StorageTank",
-			ColdWaterSource: coldWaterSourceMap[dhwHeatSource.coldWaterSource],
+			ColdWaterSource: coldWaterSource,
 			volume: waterStorage.storageCylinderVolume.amount,
 			daily_losses: waterStorage.dailyEnergyLoss,
 			...heatExchangerParam,
@@ -375,7 +416,7 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 			type: "SmartHotWaterTank",
 			product_reference: waterStorage.productReference,
 			EnergySupply_pump: defaultElectricityEnergySupplyName,
-			ColdWaterSource: defaultColdWaterSourceReference,
+			ColdWaterSource: "mains water",
 		} as const satisfies Partial<SchemaSmartHotWaterTank>;
 
 	const { mappedWSHeatSource, mappedHeatSourceWet }
@@ -415,10 +456,11 @@ function mapHeatSourceNoWS(
 	>,
 	state: ResolvedState,
 ) {
+	const coldWaterSource = getColdWaterSourceData(dhwHeatSource);
 	let mappedHWCylinderBit, mappedHeatSourceWet;
 
 	const commonHWCylinderProps = {
-		ColdWaterSource: coldWaterSourceMap[dhwHeatSource.coldWaterSource],
+		ColdWaterSource: coldWaterSource,
 	};
 
 	switch (actualHeatSource.typeOfHeatSource) {
@@ -449,7 +491,7 @@ function mapHeatSourceNoWS(
 		case "pointOfUse":
 			mappedHWCylinderBit = {
 				type: "PointOfUse",
-				efficiency: actualHeatSource.heaterEfficiency,
+				efficiency: 1, // TODO: Needs to be removed once Alpha 8 is introduced
 				EnergySupply: defaultElectricityEnergySupplyName,
 				...commonHWCylinderProps,
 			} as const satisfies FhsInputSchema["HotWaterSource"]["hw cylinder"];
@@ -462,13 +504,19 @@ function mapHeatSourceNoWS(
 }
 
 function mapHotWaterSourcesWithoutWaterStorage(state: ResolvedState) {
-	const dhwHeatSource = state.domesticHotWater.heatSources[0];
+	const preheatedWaterStorage = state.domesticHotWater.preheatedWaterStorage?.[0];
+	const dhwHeatSource = state.domesticHotWater.heatSources
+		.filter(x => preheatedWaterStorage ? x.id !== preheatedWaterStorage.heatSourceId : true)[0];
 
-	if (!dhwHeatSource) {
+	if (!preheatedWaterStorage && !dhwHeatSource) {
 		throw new Error("Domestic hot water heat source not found");
 	}
 
-	const actualHeatSource = getActualHeatSourceFromDHWHeatSource(state);
+	if (!dhwHeatSource) {
+		return;
+	}
+
+	const actualHeatSource = getActualHeatSourceFromDHWHeatSource(dhwHeatSource, state);
 
 	if (actualHeatSource.typeOfHeatSource === "solarThermalSystem"
 		|| actualHeatSource.typeOfHeatSource === "immersionHeater"
@@ -492,6 +540,48 @@ function mapHotWaterSourcesWithoutWaterStorage(state: ResolvedState) {
 	} as const satisfies Partial<FhsInputSchema>;
 }
 
+export function mapPreheatedWaterSourceData(state: ResolvedState): Partial<FhsInputSchema> | undefined {
+	const preheatedWaterStorage = state.domesticHotWater.preheatedWaterStorage?.[0];
+
+	if (!preheatedWaterStorage) {
+		return;
+	}
+
+	const dhwHeatSource = state.domesticHotWater.heatSources
+		?.find(x => x.id === preheatedWaterStorage.heatSourceId);
+
+	if (!dhwHeatSource) {
+		throw new Error("No heat source connected to pre-heated water cylinder");
+	}
+
+	const actualHeatSource = getActualHeatSourceFromDHWHeatSource(dhwHeatSource, state);
+	const coldWaterSource = getColdWaterSourceData(preheatedWaterStorage);
+
+	if (actualHeatSource.typeOfHeatSource === "pointOfUse") {
+		throw new Error("Cannot have a point of use heat source heating a pre-heated water cylinder or smart water cylinder");
+	}
+
+	const { mappedWSHeatSource, mappedHeatSourceWet }
+		= mapWaterStorageHeatSource(preheatedWaterStorage, dhwHeatSource, actualHeatSource, state);
+
+	if (preheatedWaterStorage.typeOfWaterStorage === "hotWaterCylinder") {
+		return {
+			PreHeatedWaterSource: {
+				"preheated tank": {
+					ColdWaterSource: coldWaterSource,
+					volume: preheatedWaterStorage.storageCylinderVolume.amount,
+					daily_losses: preheatedWaterStorage.dailyEnergyLoss,
+					HeatSource: mappedWSHeatSource,
+				},
+			},
+			...mappedHeatSourceWet,
+		};
+	}
+
+	// TODO: Map smart pre-heated water cylinders
+	return undefined;
+}
+
 export function mapHotWaterSourcesData(state: ResolvedState) {
 	const waterStorage = state.domesticHotWater.waterStorage[0];
 
@@ -501,6 +591,24 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 		return mapHotWaterSourcesWithWaterStorage(state, waterStorage);
 	}
 };
+
+export function mapColdWaterSource(input: Partial<FhsInputSchema>): Pick<FhsInputSchema, "ColdWaterSource"> {
+	const hotWaterCylinderColdWaterSource = input.HotWaterSource?.["hw cylinder"]?.ColdWaterSource as SchemaColdWaterSourceType | undefined;
+	const preheatedWaterCylinderColdWaterSource = input.PreHeatedWaterSource?.["preheated tank"].ColdWaterSource as SchemaColdWaterSourceType | undefined;
+
+	const coldWaterSource = preheatedWaterCylinderColdWaterSource && hotWaterCylinderColdWaterSource !== "mains water" ?
+		preheatedWaterCylinderColdWaterSource : hotWaterCylinderColdWaterSource;
+
+	return {
+		ColdWaterSource: {
+			...coldWaterSource === "header tank" ? {
+				["header tank"]: defaultColdWaterSourceData,
+			} : {
+				["mains water"]: defaultColdWaterSourceData,
+			},
+		},
+	};
+}
 
 function mapPipework(state: ResolvedState) {
 	const pipeworkEntries = state.domesticHotWater.pipework.map((x): SchemaWaterPipework => {

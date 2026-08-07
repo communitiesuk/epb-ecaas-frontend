@@ -3,7 +3,7 @@ import type { SchemaDuctShape, SchemaDuctType } from "~/schema/aliases";
 import type { DuctworkData, EcaasForm } from "#imports";
 import { getUrl } from "#imports";
 
-const title = "MVHR ductwork";
+const title = "Mechanical ventilation duct";
 const store = useEcaasStore();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
@@ -103,10 +103,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="mvhrUnit"
 			type="govRadios"
 			:options="new
-				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data.typeOfMechanicalVentilationOptions === 'MVHR').map((x)=> [x.data.id!, x.data.name]))"
-			label="MVHR unit" 
+				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data.typeOfMechanicalVentilationOptions === 'MVHR' || x.data.typeOfMechanicalVentilationOptions === 'Centralised MV').map((x)=> [x.data.id!, x.data.name]))"
+			label="MVHR or centralised MV unit" 
 			name="mvhrUnit" 
-			help="Select the MVHR unit that this ductwork is attached to"
+			help="Select the MVHR or centralised MV unit that this ductwork is attached to"
 			validation="required" />
 
 		<FormKit
@@ -115,6 +115,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="ductTypeOptions"
 			label="Duct type"
 			name="ductType"
+			help="An MVHR or centralised MV unit should have all of these duct types"
 			validation="required"
 			data-field="InfiltrationVentilation.MechanicalVentilation.duct_type">
 			<GovDetails summary-text="Help with this input">

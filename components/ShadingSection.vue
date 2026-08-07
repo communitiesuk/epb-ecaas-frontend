@@ -22,10 +22,10 @@ const isEditing = computed(() => editIndex.value !== null);
 
 const typeOptionsMap = {
 	"PV": {
-		obstacle: "Obstacle",
-		left_side_fin: "Left side fin",
-		right_side_fin: "Right side fin",
-		overhang: "Overhang",
+		obstacle: "In front of PV array",
+		left_side_fin: "Left of PV array",
+		right_side_fin: "Right of PV array",
+		overhang: "Above PV array",
 		frame_or_reveal: "Frame or reveal",
 	} ,
 	"window": {
@@ -39,10 +39,10 @@ const typeOptions = typeOptionsMap[props.shadingSectionType];
 
 const typeOptionsSummaryMap = {
 	"PV": {
-		obstacle: "Obstacle",
-		left_side_fin: "Left side fin",
-		right_side_fin: "Right side fin",
-		overhang: "Overhang",
+		obstacle: "In front of PV array",
+		left_side_fin: "Left of PV array",
+		right_side_fin: "Right of PV array",
+		overhang: "Above PV array",
 		frame_or_reveal: "Frame / reveal",
 	},
 	"window": {
@@ -76,14 +76,14 @@ const shadingSummaryData = (item: ShadingObjectData) => {
 			if (item.typeOfShading === "obstacle") {
 				return {
 					"Type of shading": typeOptionsSummary[item.typeOfShading as keyof typeof typeOptionsSummary],
-					"Height": `${item.height}m`,
+					"Height of obstacle": `${item.height}m`,
 					"Distance from edge of PV": `${item.distance}m`,
-					"Transparency": `${item.transparency}%`,
+					"Transparency of obstacle": `${item.transparency}%`,
 				};
 			}
 			return {
 				"Type of shading": typeOptionsSummary[item.typeOfShading as keyof typeof typeOptionsSummary],
-				[`Depth of ${sentenceToLowerCase(typeOptions[item.typeOfShading as keyof typeof typeOptions])}`]: `${item.depth}m`,
+				"Width of obstacle": `${item.depth}m`,
 				"Distance from edge of PV": `${item.distance}m`,
 			};
 	}
@@ -142,12 +142,11 @@ const removeShading = (i: number) => {
 	shadingItems.value = updatedItems;
 	writeToStore(updatedItems);
 };
-
 </script>
 
 <template>
 	<div data-testid="shading-section">
-		<h2 v-if="shadingItems.length" class="govuk-heading-m">Objects that shade the {{props.shadingSectionType === 'PV' ? "PV array" : 'window'}}</h2>
+		<h2 v-if="shadingItems.length" class="govuk-heading-m">Objects that shade the {{props.shadingSectionType}}</h2>
 		<div
 			v-for="(item, i) in shadingItems"
 			:key="i"
@@ -214,7 +213,7 @@ const removeShading = (i: number) => {
 						id="typeOfShading"
 						v-model="formModel.typeOfShading"
 						type="govRadios"
-						label="Type of shading"
+						:label="shadingSectionType === 'PV' ? 'Location of shading' : 'Type of shading'"
 						:options="typeOptions"
 						validation="required"
 					/>
@@ -255,11 +254,25 @@ const removeShading = (i: number) => {
 					</template>
 					<template v-else-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin' || formModel.typeOfShading === 'overhang'">
 						<FormKit
+							v-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin'"
 							id="shadingDepth"
 							:key="`depth-${formModel.typeOfShading}`"
 							v-model="formModel.depth"
 							type="govInputWithSuffix"
-							:label="'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading as keyof typeof typeOptions] as string)"
+							:label="shadingSectionType === 'window' ?
+								'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading as keyof typeof typeOptions] as string) :
+								'Width of obstacle'"
+							:help="shadingSectionType === 'PV' ? 'Measured from the back of the PV array forwards' : undefined"
+							suffix-text="m"
+							validation="required | number | min:0"
+						/>
+						<FormKit
+							v-if="formModel.typeOfShading === 'overhang'"
+							id="shadingDepth"
+							key="depth-overhang"
+							v-model="formModel.depth"
+							type="govInputWithSuffix"
+							label="Depth of overhang"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>
@@ -406,11 +419,25 @@ const removeShading = (i: number) => {
 					</template>
 					<template v-else-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin' || formModel.typeOfShading === 'overhang'">
 						<FormKit
+							v-if="formModel.typeOfShading === 'left_side_fin' || formModel.typeOfShading === 'right_side_fin'"
 							id="shadingDepth"
 							:key="`depth-${formModel.typeOfShading}`"
 							v-model="formModel.depth"
 							type="govInputWithSuffix"
-							:label="'Depth of ' + sentenceToLowerCase((typeOptions as any)[formModel.typeOfShading] as string)"
+							:label="shadingSectionType === 'window' ?
+								'Depth of ' + sentenceToLowerCase(typeOptions[formModel.typeOfShading as keyof typeof typeOptions] as string) :
+								'Width of obstacle'"
+							:help="shadingSectionType === 'PV' ? 'Measured from the back of the PV array forwards' : undefined"
+							suffix-text="m"
+							validation="required | number | min:0"
+						/>
+						<FormKit
+							v-if="formModel.typeOfShading === 'overhang'"
+							id="shadingDepth"
+							key="depth-overhang"
+							v-model="formModel.depth"
+							type="govInputWithSuffix"
+							label="Depth of overhang"
 							suffix-text="m"
 							validation="required | number | min:0"
 						/>

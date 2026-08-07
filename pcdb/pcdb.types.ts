@@ -316,6 +316,13 @@ export const centralisedMvhrZod = BaseProduct.extend({
 
 export type CentralisedMvhrProduct = z.infer<typeof centralisedMvhrZod>;
 
+export const centralisedMvZod = BaseProduct.extend({
+	technologyType: z.literal("CentralisedMv"),
+	integralOnly: z.nullable(z.number()),
+});
+
+export type CentralisedMvProduct = z.infer<typeof centralisedMvZod>;
+
 export const centralisedContinuousMevZod = BaseProduct.extend({
 	technologyType: z.literal("CentralisedMev"),
 	integralOnly: z.nullable(z.number()),
@@ -354,7 +361,7 @@ const heatNetworkZod = BaseProduct.extend({
 	communityHeatNetworkVersionNumber: z.nullable(z.number()),
 	heatSource2: z.nullable(z.string()),
 	numberOfSubheatNetworks: z.nullable(z.number()),
-	fifthGearHeatNetwork: z.nullable(z.number()),
+	boosterHeatPump: z.optional(z.boolean()),
 	heatSource1: z.nullable(z.string()),
 	validityEndDate: z.nullable(z.string()),
 	communityHeatNetworkName: z.nullable(z.string()),
@@ -400,7 +407,7 @@ export const underFloorHeatingZod = z.object({
 	depthOfFloorStructuralMaterial: z.number(),
 	pipeCentres: z.number(),
 	fracConvective: z.number(),
-	ID: z.number(),
+	id: z.number(),
 	systemPerformanceFactor: z.number(),
 	structuralFloorMaterial: z.string(),
 	floorFinishResistance: z.number(),
@@ -423,6 +430,7 @@ export const productSchema = z.discriminatedUnion("technologyType", [
 	convectorRadiatorZod,
 	heatInterfaceUnitZod,
 	centralisedMvhrZod,
+	centralisedMvZod,
 	centralisedContinuousMevZod,
 	decentralisedContinuousMevZod,
 	directElectricHeaterZod,
@@ -471,6 +479,7 @@ const categoryTechnologies = {
 	],
 	mechanicalVentilation: [
 		"CentralisedMvhr",
+		"CentralisedMv",
 		"CentralisedMev",
 		"DecentralisedMev",
 	],
@@ -502,6 +511,7 @@ type DisplayProductBase = {
 	subheatNetworkName?: string;
 	subHeatNetworkId?: string;
 	productId?: string;
+	boosterHeatPump?: boolean;
 };
 
 type StandardDisplayProductBase = DisplayProductBase & {
@@ -548,6 +558,7 @@ type HeatNetworkDisplayProduct = DisplayProductBase & {
 	vesselType?: never;
 	type?: never;
 	height?: never;
+	boosterHeatPump?: boolean;
 };
 
 type UnderFloorHeatingDisplayProductBase = DisplayProductBase & {

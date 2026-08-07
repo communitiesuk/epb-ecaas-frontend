@@ -133,7 +133,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					type="govInputWithSuffix"
 					suffix-text="m²"
 					label="Net surface area of element"
-					help="Enter the net area of the building element. The area of all large openings should be subtracted before entry, but not doors."
+					help="Enter the net area of the building element. The area of all large openings should be subtracted before entry, apart from any openings for doors or staircases."
 					name="surfaceArea"
 					:validation="zodTypeAsFormKitValidation(surfaceAreaAdjacentSpaceZod)"
 					data-field="Zone.BuildingElement.*.area"
@@ -197,11 +197,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</p>
 				<p class="govuk-hint">
 					The maximum thermal resistance of an unheated space is 2.5 (m²·K)/W. This is when the facing wall is not exposed.
-				</p>
-				<p class="govuk-body">
-					<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
-						Guidance on thermal resistance of unheated spaces (opens in another window)
-					</a>
 				</p>
 			</GovDetails>
 		</FormKit>

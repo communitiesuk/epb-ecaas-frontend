@@ -513,7 +513,6 @@ describe("external unglazed door", () => {
 					id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
 					name: "Roof 1",
 					typeOfRoof: "flatAboveHeatedSpace",
-					pitchOption: "0",
 					pitch: 0,
 					length: 1,
 					width: 1,

@@ -1,10 +1,12 @@
 import type { Page } from "./pages.types";
 import { isEmpty } from "ts-extras";
 
-function noMhvrPresent():boolean {
+function noDuctworkRequired():boolean {
 	const store = useEcaasStore();
 
-	return isEmpty(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data?.typeOfMechanicalVentilationOptions === "MVHR"));
+	return isEmpty(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data?.typeOfMechanicalVentilationOptions === "MVHR" 
+		|| x.data.typeOfMechanicalVentilationOptions === "Centralised MV",
+	));
 }
 
 const infiltrationAndVentilationPages = [
@@ -44,6 +46,13 @@ const infiltrationAndVentilationPages = [
 		parentId: "mechanicalVentilationEdit",
 	},
 	{
+		id: "centralisedMvProducts",
+		title: "Select a centralised MV",
+		url: "/infiltration-and-ventilation/mechanical-ventilation/:mechanical/centralised-mv",
+		type: "task",
+		parentId: "mechanicalVentilationEdit",
+	},
+	{
 		id: "centralisedContinuousMevProducts",
 		title: "Select a centralised continuous MEV",
 		url: "/infiltration-and-ventilation/mechanical-ventilation/:mechanical/centralised-continuous-mev",
@@ -59,11 +68,11 @@ const infiltrationAndVentilationPages = [
 	},
 	{
 		id: "ductwork",
-		title: "MVHR ductwork",
+		title: "Mechanical ventilation ductwork",
 		url: "/infiltration-and-ventilation/ductwork",
 		type: "task",
 		parentId: "infiltrationAndVentilation",
-		excludeFromNavigation: noMhvrPresent,
+		excludeFromNavigation: noDuctworkRequired,
 	},
 	{
 		id: "ductworkCreate",

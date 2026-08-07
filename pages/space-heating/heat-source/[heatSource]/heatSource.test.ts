@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen, waitFor } from "@testing-library/vue";
+import { screen } from "@testing-library/vue";
 import HeatSourceForm from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
 import type { BoilerProduct, DisplayProduct, HybridHeatPumpProduct } from "~/pcdb/pcdb.types";
@@ -24,6 +24,7 @@ describe("heatSource", () => {
 	afterEach(() => {
 		store.$reset();
 		mockFetch.mockReset();
+		navigateToMock.mockReset();
 	});
 
 	const boiler1: HeatSourceData = {
@@ -42,29 +43,35 @@ describe("heatSource", () => {
 		typeOfHeatSource: "heatPump",
 		typeOfHeatPump: "booster",
 		productReference: "HEATPUMP-SMALL",
-		isConnectedToHeatNetwork: false,
-		energySupply: "electricity",
 		maxFlowTemp: unitValue(30, "celsius"),
+		associatedHeatNetworkId: "463c94f6-566c-49b2-af27-57e5c68b5c20",
 	};
 
-	test("preselects heat network on create page when typeOfHeatSource query param is heatNetwork", async () => {
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "create" },
-				query: {
-					typeOfHeatSource: "heatNetwork",
-				},
-			},
-		});
+	const boosterHeatPumpWithoutNetwork: Partial<HeatSourceData> = {
+		...boosterHeatPump,
+		associatedHeatNetworkId: undefined,
+	};
 
-		expect((await screen.findByTestId<HTMLInputElement>("typeOfHeatSource_heatNetwork")).checked).toBe(true);
-	});
+	const communalHeatNetworkWithBooster: Partial<HeatNetworkData> = {
+		id: "463c94f6-566c-49b2-af27-57e5c68b5c20",
+		name: "Communal Heat Network with Booster",
+		typeOfHeatNetwork: "communalHeatNetwork",
+		subHeatNetworkName: "Sub Communal Heat Network with Booster",
+		boosterHeatPump: true,
+	};
 
 	describe("heat pump", () => {
 		const heatPumpProduct: Partial<DisplayProduct> = {
 			id: "1000",
 			brandName: "Brand",
 			technologyType: "AirSourceHeatPump",
+		};
+
+		const heatPumpProductWithCylinder: Partial<DisplayProduct> = {
+			id: "1001",
+			brandName: "Brand",
+			technologyType: "AirSourceHeatPump",
+			vesselType: "Integral",
 		};
 
 		beforeEach(() => {
@@ -84,7 +91,6 @@ describe("heatSource", () => {
 			typeOfHeatPump: "airSource",
 			productReference: "HEATPUMP-SMALL",
 			maxFlowTemp: unitValue(7, celsius),
-			isConnectedToHeatNetwork: false,
 			energySupply: "electricity",
 		};
 
@@ -94,7 +100,6 @@ describe("heatSource", () => {
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "airSource",
 			productReference: "HEATPUMP-LARGE",
-			isConnectedToHeatNetwork: false,
 			energySupply: "mains_gas",
 			maxFlowTemp: unitValue(30, "celsius"),
 		};
@@ -107,7 +112,6 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await (user.click(screen.getByTestId("isConnectedToHeatNetwork_no")));
 
 			expect(screen.getByTestId("name")).toBeDefined();
 			expect(screen.queryByTestId("selectHeatPump")).toBeDefined();
@@ -122,11 +126,12 @@ describe("heatSource", () => {
 				},
 			});
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+			await user.click(screen.getByTestId("chooseAProductButton"));
 
-			expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/heat-pump"); //subject to change
+			expect(navigateToMock).toHaveBeenCalledWith("/0/heat-pump"); //subject to change
 		});
 
-		test("heat pump data is saved to store state when form is valid", async () => {
+		test("non-booster heat pump data is saved to store state when form is valid", async () => {
 			vi.mocked(uuidv4).mockReturnValue(heatPump1.id as unknown as Buffer);
 
 			await renderSuspended(HeatSourceForm, {
@@ -142,6 +147,50 @@ describe("heatSource", () => {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Heat pump",
 				typeOfHeatSource: "heatPump",
+				energySupply: "electricity",
+			});
+		});
+
+		test("booster heat pump data is saved to store state when form is valid", async () => {
+			vi.mocked(uuidv4).mockReturnValue(
+				boosterHeatPump.id as unknown as Buffer,
+			);
+
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [
+							{
+								data: communalHeatNetworkWithBooster,
+							},
+						],
+					},
+					heatSource: {
+						data: [
+							{
+								data: boosterHeatPump,
+							},
+						],
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { heatSource: "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const { data } = store.spaceHeating.heatSource;
+
+			expect(data[0]?.data).toMatchObject({
+				id: boosterHeatPump.id,
+				name: "Booster HP",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "booster",
+				associatedHeatNetworkId: communalHeatNetworkWithBooster.id,
 			});
 		});
 
@@ -204,94 +253,33 @@ describe("heatSource", () => {
 			expect(await screen.findByTestId("selectHeatPump_error")).toBeDefined();
 		});
 
-		test("renders multiple heat network options when heat pump is connected and multiple heat networks exist in state", async () => {
+		test("shows add heat network link when booster heat pump is selected and no heat networks exist in store", async () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{
-							data: {
-								id: "1",
-								typeOfHeatSource: "heatNetwork",
-								typeOfHeatNetwork: "communalHeatNetwork",
-								name: "Test heat network",
-							} as HeatSourceData,
-						},
-						{
-							data: {
-								id: "2",
-								typeOfHeatSource: "heatNetwork",
-								typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
-								name: "Test sub heat network",
-							} as HeatSourceData,
-						}],
+						data: [
+							{
+								data: boosterHeatPumpWithoutNetwork,
+							},
+						],
 					},
 				},
 			});
 
 			await renderSuspended(HeatSourceForm, {
 				route: {
-					params: { "heatSource": "create" },
+					params: { heatSource: "0" },
 				},
 			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
-
-			const firstOption = screen.getByTestId<HTMLInputElement>("associatedHeatNetwork_1");
-			const secondOption = screen.getByTestId<HTMLInputElement>("associatedHeatNetwork_2");
-
-			expect(firstOption).toBeDefined();
-			expect(secondOption).toBeDefined();
-			expect(firstOption.checked).toBe(false);
-			expect(secondOption.checked).toBe(false);
-			expect(screen.getByText("Test heat network")).toBeDefined();
-			expect(screen.getByText("Test sub heat network")).toBeDefined();
-		});
-
-		test("automatically selects heat network when heat pump is connected and only one heat network is available in state", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [{
-							data: {
-								id: "1",
-								typeOfHeatSource: "heatNetwork",
-								typeOfHeatNetwork: "communalHeatNetwork",
-								name: "Test heat network",
-							} as HeatSourceData,
-						}],
-					},
-				},
-			});
-
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
-
-			expect((await screen.findByTestId<HTMLInputElement>("associatedHeatNetwork_1")).checked).toBe(true);
-		});
-
-		test("shows add heat network link when heat pump is connected and no heat networks exist", async () => {
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
 
 			expect(screen.getByText("No heat networks added.")).toBeDefined();
+
 			const addHeatNetworkLink = screen.getByRole("link", { name: "Click here to add a heat network" });
-			expect(addHeatNetworkLink.getAttribute("href")).toBe("/space-heating");
+
+			expect(addHeatNetworkLink.getAttribute("href")).toBe("/space-heating/heat-networks/create");
 		});
 
-		test("energy supply field displays when heat pump is not connected to heat network", async () => {
+		test("energy supply field displays when heat pump is not a booster heat pump", async () => {
 			await renderSuspended(HeatSourceForm, {
 				route: {
 					params: { "heatSource": "create" },
@@ -299,23 +287,15 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_no"));
 
 			expect(screen.getByTestId("energySupply")).toBeDefined();
 		});
 
-		test("energy supply is hidden when heat pump is connected to heat network", async () => {
+		test("energy supply is hidden when heat pump is a booster heat pump", async () => {
 			store.$patch({
 				spaceHeating: {
-					heatSource: {
-						data: [{
-							data: {
-								id: "1",
-								typeOfHeatSource: "heatNetwork",
-								typeOfHeatNetwork: "communalHeatNetwork",
-								name: "Test heat network",
-							} as HeatSourceData,
-						}],
+					heatNetworks: {
+						data: [{ data: communalHeatNetworkWithBooster }],
 					},
 				},
 			});
@@ -327,13 +307,37 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
 
 			expect(screen.queryByTestId("energySupply")).toBeNull();
 			expect(screen.getByTestId("associatedHeatNetwork")).toBeDefined();
 		});
 
-		test("automatically selects energy supply when only one energy supply is available in state and heat pump is not connected to heat network", async () => {
+		test("booster heat pump does not display energy supply options when dwelling has multiple fuels", async () => {
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { fuelType: ["electricity", "mains_gas"] },
+					},
+				},
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: communalHeatNetworkWithBooster }],
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { heatSource: "create" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
+
+			expect(screen.queryByTestId("energySupply")).toBeNull();
+		});
+
+		test("automatically selects energy supply when only one energy supply is available in state and heat pump is not a booster heat pump", async () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -349,12 +353,11 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_no"));
 
 			expect((await screen.findByTestId<HTMLInputElement>("energySupply_electricity")).checked).toBe(true);
 		});
 
-		test("renders multiple energy supply options when multiple energy supplies exist in state and heat pump is not connected to heat network", async () => {
+		test("renders multiple energy supply options when multiple energy supplies exist in state and heat pump is not a booster heat pump", async () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -370,7 +373,6 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_no"));
 
 			const electricityOption = screen.getByTestId<HTMLInputElement>("energySupply_electricity");
 			const mainsGasOption = screen.getByTestId<HTMLInputElement>("energySupply_mains_gas");
@@ -400,13 +402,34 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_no"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(await screen.findByTestId("energySupply_error")).toBeDefined();
 		});
 
-		test("heat pump data with selected energy supply is saved to store state when form is valid and not connected to heat network", async () => {
+		test("booster heat pump shows error when no heat network is selected", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: boosterHeatPumpWithoutNetwork }],
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { heatSource: "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(
+				await screen.findByTestId("associatedHeatNetwork_error"),
+			).toBeDefined();
+		});
+
+		test("heat pump data with selected energy supply is saved to store state when form is valid and is not a booster heat pump", async () => {
 			vi.mocked(uuidv4).mockReturnValue(heatPump1.id as unknown as Buffer);
 
 			store.$patch({
@@ -424,7 +447,6 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_no"));
 			await user.click(screen.getByTestId("energySupply_mains_gas"));
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
@@ -441,7 +463,6 @@ describe("heatSource", () => {
 				typeOfHeatPump: "airSource",
 				productReference: "HEATPUMP-SMALL",
 				maxFlowTemp: unitValue(7, celsius),
-				isConnectedToHeatNetwork: false,
 				energySupply: "mains_gas",
 			};
 
@@ -467,26 +488,11 @@ describe("heatSource", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("energySupply_mains_gas")).checked).toBe(true);
 		});
 
-		test("renders multiple heat network options when heat pump is connected and multiple heat networks exist in state", async () => {
+		test("automatically selects heat network when heat pump is a booster heat pump and only one heat network is available in state", async () => {
 			store.$patch({
 				spaceHeating: {
-					heatSource: {
-						data: [{
-							data: {
-								id: "1",
-								typeOfHeatSource: "heatNetwork",
-								typeOfHeatNetwork: "communalHeatNetwork",
-								name: "Test heat network",
-							} as HeatSourceData,
-						},
-						{
-							data: {
-								id: "2",
-								typeOfHeatSource: "heatNetwork",
-								typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
-								name: "Test sub heat network",
-							} as HeatSourceData,
-						}],
+					heatNetworks: {
+						data: [{ data: communalHeatNetworkWithBooster }],
 					},
 				},
 			});
@@ -498,187 +504,8 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
 
-			const firstOption = screen.getByTestId<HTMLInputElement>("associatedHeatNetwork_1");
-			const secondOption = screen.getByTestId<HTMLInputElement>("associatedHeatNetwork_2");
-
-			expect(firstOption).toBeDefined();
-			expect(secondOption).toBeDefined();
-			expect(firstOption.checked).toBe(false);
-			expect(secondOption.checked).toBe(false);
-			expect(screen.getByText("Test heat network")).toBeDefined();
-			expect(screen.getByText("Test sub heat network")).toBeDefined();
-		});
-
-		test("automatically selects heat network when heat pump is connected and only one heat network is available in state", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [{
-							data: {
-								id: "1",
-								typeOfHeatSource: "heatNetwork",
-								typeOfHeatNetwork: "communalHeatNetwork",
-								name: "Test heat network",
-							} as HeatSourceData,
-						}],
-					},
-				},
-			});
-
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
-
-			expect((await screen.findByTestId<HTMLInputElement>("associatedHeatNetwork_1")).checked).toBe(true);
-		});
-
-		test("energy supply field displays when heat pump is not connected to heat network", async () => {
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_no"));
-
-			expect(screen.getByTestId("energySupply")).toBeDefined();
-		});
-
-		test("energy supply is hidden when heat pump is connected to heat network", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [{
-							data: {
-								id: "1",
-								typeOfHeatSource: "heatNetwork",
-								typeOfHeatNetwork: "communalHeatNetwork",
-								name: "Test heat network",
-							} as HeatSourceData,
-						}],
-					},
-				},
-			});
-
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_yes"));
-
-			expect(screen.queryByTestId("energySupply")).toBeNull();
-			expect(screen.getByTestId("associatedHeatNetwork")).toBeDefined();
-		});
-
-		test("automatically selects energy supply when only one energy supply is available in state and heat pump is not connected to heat network", async () => {
-			store.$patch({
-				dwellingDetails: {
-					generalSpecifications: {
-						data: { fuelType: ["electricity"] },
-					},
-				},
-			});
-
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_no"));
-
-			expect((await screen.findByTestId<HTMLInputElement>("energySupply_electricity")).checked).toBe(true);
-		});
-
-		test("renders multiple energy supply options when multiple energy supplies exist in state and heat pump is not connected to heat network", async () => {
-			store.$patch({
-				dwellingDetails: {
-					generalSpecifications: {
-						data: { fuelType: ["electricity", "mains_gas", "LPG_bulk"] },
-					},
-				},
-			});
-
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_no"));
-
-			const electricityOption = screen.getByTestId<HTMLInputElement>("energySupply_electricity");
-			const mainsGasOption = screen.getByTestId<HTMLInputElement>("energySupply_mains_gas");
-			const lpgOption = screen.getByTestId<HTMLInputElement>("energySupply_LPG_bulk");
-
-			expect(electricityOption).toBeDefined();
-			expect(mainsGasOption).toBeDefined();
-			expect(lpgOption).toBeDefined();
-			expect(electricityOption.checked).toBe(false);
-			expect(mainsGasOption.checked).toBe(false);
-			expect(lpgOption.checked).toBe(false);
-		});
-
-		test("required error message is displayed when energy supply is not selected and form is submitted", async () => {
-			store.$patch({
-				dwellingDetails: {
-					generalSpecifications: {
-						data: { fuelType: ["electricity", "mains_gas"] },
-					},
-				},
-			});
-
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_no"));
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(await screen.findByTestId("energySupply_error")).toBeDefined();
-		});
-
-		test("heat pump data with selected energy supply is saved to store state when form is valid and not connected to heat network", async () => {
-			vi.mocked(uuidv4).mockReturnValue(heatPump1.id as unknown as Buffer);
-
-			store.$patch({
-				dwellingDetails: {
-					generalSpecifications: {
-						data: { fuelType: ["electricity", "mains_gas"] },
-					},
-				},
-			});
-
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_no"));
-			await user.click(screen.getByTestId("energySupply_mains_gas"));
-			await user.tab();
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			const { data } = store.spaceHeating.heatSource;
-			expect((data[0]?.data as { energySupply: string }).energySupply).toBe("mains_gas");
+			expect((await screen.findByTestId<HTMLInputElement>("associatedHeatNetwork_463c94f6-566c-49b2-af27-57e5c68b5c20")).checked).toBe(true);
 		});
 
 		test("heat pump data with default energy supply is saved to store state when form is valid and not connected to heat network", async () => {
@@ -691,45 +518,10 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-			await user.click(screen.getByTestId("isConnectedToHeatNetwork_no"));
 			await user.tab();
 
 			const { data } = store.spaceHeating.heatSource;
 			expect((data[0]?.data as { energySupply: string }).energySupply).toBe("electricity");
-		});
-
-		test("energy supply is prepopulated when existing heat pump data with energy supply exists in state", async () => {
-			const heatPumpWithEnergySupply: HeatSourceData = {
-				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-				name: "Heat pump with energy supply",
-				typeOfHeatSource: "heatPump",
-				typeOfHeatPump: "airSource",
-				productReference: "HEATPUMP-SMALL",
-				maxFlowTemp: unitValue(7, celsius),
-				isConnectedToHeatNetwork: false,
-				energySupply: "mains_gas",
-			};
-
-			store.$patch({
-				dwellingDetails: {
-					generalSpecifications: {
-						data: { fuelType: ["electricity", "mains_gas"] },
-					},
-				},
-				spaceHeating: {
-					heatSource: {
-						data: [{ data: heatPumpWithEnergySupply }],
-					},
-				},
-			});
-
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
-
-			expect((await screen.findByTestId<HTMLInputElement>("energySupply_mains_gas")).checked).toBe(true);
 		});
 
 		test("renders error message when domestic hot water heat source conflict error occurs", async () => {
@@ -756,18 +548,6 @@ describe("heatSource", () => {
 		});
 
 		describe("heat pump default name", () => {
-			it("creates a new heat pump with default name", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
-
-				const actualHeatSource = store.spaceHeating.heatSource.data[0]!;
-				expect(actualHeatSource.data.name).toBe("Heat pump");
-			});
 			it("creates a new heat pump with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
@@ -848,7 +628,9 @@ describe("heatSource", () => {
 				});
 				await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
 				await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));
-				expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/combi-boiler");
+				await user.click(screen.getByTestId("chooseAProductButton"));
+
+				expect(navigateToMock).toHaveBeenCalledWith("/0/combi-boiler");
 			});
 
 			test("boiler data is saved to store state when form is valid", async () => {
@@ -982,9 +764,13 @@ describe("heatSource", () => {
 					},
 				});
 
-				Object.keys(heatSourceTypesWithDisplay).forEach(type => {
-					expect(screen.getByTestId<HTMLInputElement>(`typeOfHeatSource_${type}`).disabled).toBe(true);
+				["heatPump", "boiler", "heatBattery"].forEach(type => {
+					expect(
+						screen.getByTestId<HTMLInputElement>(`typeOfHeatSource_${type}`).disabled,
+					).toBe(true);
 				});
+
+				expect(screen.queryByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeNull();
 
 				Object.keys(boilerTypes).forEach(type => {
 					expect(screen.getByTestId<HTMLInputElement>(`typeOfBoiler_${type}`).disabled).toBe(true);
@@ -1040,7 +826,6 @@ describe("heatSource", () => {
 					typeOfHeatPump: "airSource",
 					productReference: "HEATPUMP-SMALL",
 					maxFlowTemp: unitValue(7, celsius),
-					isConnectedToHeatNetwork: false,
 					energySupply: "electricity",
 					packageProductIds: ["1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b"],
 				};
@@ -1088,151 +873,25 @@ describe("heatSource", () => {
 				const backUpBolerInStoreAfterChange = store.spaceHeating.heatSource.data.find(hs => hs.data.id === backupBoiler.id);
 				expect(backUpBolerInStoreAfterChange).toBeUndefined();
 			});
-
 		});
-		describe("heat network", () => {
-			test("'HeatNetworkSection' component displays when type of heat source is heat network", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
 
-				expect(screen.getByTestId("name")).toBeDefined();
-				expect(screen.getByTestId("selectHeatNetwork")).toBeDefined();
-				expect(screen.getByTestId("typeOfHeatNetwork")).toBeDefined();
-			});
-			test("the 'Select a product' element navigates user to the products page", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-
-				expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/heat-network");
-			});
-			test("renders error messages when form is submitted with empty required fields", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-				await user.click(screen.getByTestId("typeOfHeatSource_heatNetwork"));
-				await user.click(screen.getByTestId("saveAndComplete"));
-
-				expect(await screen.findByTestId("selectHeatNetwork_error")).toBeDefined();
-				expect(await screen.findByTestId("typeOfHeatNetwork_error")).toBeDefined();
-			});
-
-			test("does not clear selected product when type of heat network changes", async () => {
-				const heatNetwork: HeatSourceData = {
-					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
-					name: "Test heat network",
-					typeOfHeatSource: "heatNetwork",
-					productReference: "HEATNETWORK_SMALL",
-					typeOfHeatNetwork: "communalHeatNetwork",
-				};
-
-				store.$patch({
-					spaceHeating: {
-						heatSource: {
-							data: [{ data: heatNetwork }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatNetwork_sleevedDistrictHeatNetwork"));
-
-				expect((store.spaceHeating.heatSource.data[0]!.data as HeatSourceData).productReference).toBe("HEATNETWORK_SMALL");
-			});
-			test("navigates to spaceHeating when a valid form is completed", async () => {
-				const heatNetwork: Partial<HeatSourceData> = {
-					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
-					name: "Test heat network",
-					typeOfHeatSource: "heatNetwork",
-					productReference: "HEATNETWORK_SMALL",
-					typeOfHeatNetwork: "communalHeatNetwork",
-				};
-				const heatNetworkProduct: Partial<DisplayProduct> = {
-					id: "1000",
-					technologyType: "HeatNetworks",
-				};
-				mockFetch.mockReturnValue({
-					data: ref(heatNetworkProduct),
-				});
-
-				store.$patch({
-					spaceHeating: {
-						heatSource: {
-							data: [{ data: heatNetwork as HeatSourceData }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
-				await user.click(screen.getByTestId("saveAndComplete"));
-
-				expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
-			});
-
-			test("displays subnetwork name for selected heat network product", async () => {
-				const heatNetwork: Partial<HeatSourceData> = {
-					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
-					name: "Test heat network",
-					typeOfHeatSource: "heatNetwork",
-					productReference: "1000",
-					subHeatNetworkName: "Sub 2",
-					typeOfHeatNetwork: "communalHeatNetwork",
-				};
-
-				mockFetch.mockReturnValue({
-					data: ref({
-						id: "1000",
-						technologyType: "HeatNetworks",
-						communityHeatNetworkName: "Network Alpha",
-						testData: {
-							ID: "td-2",
-							subheatNetworkName: "Sub 2",
-						},
-					}),
-				});
-
-				store.$patch({
-					spaceHeating: {
-						heatSource: {
-							data: [{ data: heatNetwork as HeatSourceData }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
-				await waitFor(() => {
-					expect(screen.getByTestId("pcdbHeatNetworkProductData")).toBeDefined();
-					expect(screen.getByTestId("productData_subHeatNetworkName").textContent).toBe("Sub 2");
-				});
-			});
-		});
 		describe("Heat interface unit", () => {
 			beforeEach(() => {
 				store.$reset();
 			});
 			test("'HeatInterfaceUnitSection' component displays when type of heat source is heat interface unit", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatNetworks: {
+							data: [{
+								data: {
+									typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+								} as Partial<HeatNetworkData>,
+							}],
+						},
+					},
+				});
+				
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
@@ -1247,35 +906,46 @@ describe("heatSource", () => {
 				expect(screen.getByTestId("buildingLevelLosses")).toBeDefined();
 			});
 			test("the 'Select a product' element navigates user to the products page", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatNetworks: {
+							data: [{
+								data: {
+									typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+								} as Partial<HeatNetworkData>,
+							}],
+						},
+					},
+				});
+				
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
 					},
 				});
 				await user.click(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit"));
-
-				expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/heat-interface-unit");
+				await user.click(screen.getByTestId("chooseAProductButton"));
+				expect(navigateToMock).toHaveBeenCalledWith("/0/heat-interface-unit");
 			});
+
 			test("renders multiple heat network options when multiple heat networks exist in state", async () => {
 				store.$patch({
 					spaceHeating: {
-						heatSource: {
+						heatNetworks: {
 							data: [{
 								data: {
 									id: "1",
-									typeOfHeatSource: "heatNetwork",
 									typeOfHeatNetwork: "communalHeatNetwork",
 									name: "Test heat network",
-								} as HeatSourceData,
+								} as HeatNetworkData,
 							},
 
 							{
 								data: {
 									id: "2",
-									typeOfHeatSource: "heatNetwork",
 									typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
 									name: "Test sub heat network",
-								} as HeatSourceData,
+								} as HeatNetworkData,
 							},
 							],
 						},
@@ -1302,14 +972,13 @@ describe("heatSource", () => {
 			test("automatically selects heat network when only one heat network is available in state", async () => {
 				store.$patch({
 					spaceHeating: {
-						heatSource: {
+						heatNetworks: {
 							data: [{
 								data: {
 									id: "1",
-									typeOfHeatSource: "heatNetwork",
 									typeOfHeatNetwork: "communalHeatNetwork",
 									name: "Test heat network",
-								} as HeatSourceData,
+								} as HeatNetworkData,
 							}],
 						},
 					},
@@ -1324,7 +993,23 @@ describe("heatSource", () => {
 				expect((await screen.findByTestId<HTMLInputElement>("associatedHeatNetwork_1")).checked).toBe(true);
 			});
 
-			test("add heat network link navigates to create heat source page with heat network preselected", async () => {
+			test("if dwelling is a house, ensure building level losses section is removed from hiu", async() => {
+				store.$patch({
+					spaceHeating: {
+						heatNetworks: {
+							data: [{
+								data: {
+									typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+								} as Partial<HeatNetworkData>,
+							}],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: { typeOfDwelling: "house" },
+						},
+					},
+				});
 				await renderSuspended(HeatSourceForm, {
 					route: {
 						params: { "heatSource": "create" },
@@ -1332,12 +1017,37 @@ describe("heatSource", () => {
 				});
 				await user.click(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit"));
 
-				const addHeatNetworkLink = screen.getByRole("link", { name: "Click here to add a heat network" });
-				expect(addHeatNetworkLink.getAttribute("href")).toBe("/space-heating/heat-source/create?typeOfHeatSource=heatNetwork");
+				expect(screen.queryByTestId("buildingLevelLosses")).toBeNull();
 			});
 
+			test("if dwelling is a flat (not a house), ensure building level losses section is in hiu", async() => {
+				store.$patch({
+					spaceHeating: {
+						heatNetworks: {
+							data: [{
+								data: {
+									typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+								} as Partial<HeatNetworkData>,
+							}],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: { typeOfDwelling: "flat" },
+						},
+					},
+				});
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "create" },
+					},
+				});
+				await user.click(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit"));
 
+				expect(screen.getByTestId("buildingLevelLosses")).toBeDefined();
+			});
 		});
+
 		describe("heat battery", () => {
 			const heatBatteryProduct: Partial<DisplayProduct> = {
 				id: "1000",
@@ -1414,8 +1124,9 @@ describe("heatSource", () => {
 
 				await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
 				await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
+				await user.click(screen.getByTestId("chooseAProductButton"));
 
-				expect((await screen.findByTestId("chooseAProductButton")).getAttribute("href")).toBe("/0/heat-battery-pcm");
+				expect(navigateToMock).toHaveBeenCalledWith("/0/heat-battery-pcm");
 			});
 
 			test("heat battery data is saved to store state when form is valid", async () => {
@@ -1596,7 +1307,6 @@ describe("heatSource", () => {
 					typeOfHeatSource: "heatPump",
 					typeOfHeatPump: "airSource",
 					productReference: "HEATPUMP-SMALL",
-					isConnectedToHeatNetwork: false,
 					energySupply: "electricity",
 					maxFlowTemp: unitValue(30, "celsius"),
 				};
@@ -1643,7 +1353,6 @@ describe("heatSource", () => {
 					typeOfHeatPump: "airSource",
 					productReference: "HEATPUMP-SMALL",
 					maxFlowTemp: unitValue(7, celsius),
-					isConnectedToHeatNetwork: false,
 					energySupply: "electricity",
 					packageProductIds: ["1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b"],
 				};
@@ -1715,7 +1424,6 @@ describe("heatSource", () => {
 					typeOfHeatPump: "airSource",
 					productReference: "HEATPUMP-SMALL",
 					maxFlowTemp: unitValue(7, celsius),
-					isConnectedToHeatNetwork: false,
 					energySupply: "electricity",
 					packageProductIds: [packagedMechanicalVentilationId],
 				};
@@ -1777,7 +1485,6 @@ describe("heatSource", () => {
 					typeOfHeatPump: "airSource",
 					productReference: "HEATPUMP-SMALL",
 					maxFlowTemp: unitValue(7, celsius),
-					isConnectedToHeatNetwork: false,
 					energySupply: "electricity",
 					packageProductIds: [packagedWaterStorageId],
 				};
@@ -1862,7 +1569,6 @@ describe("heatSource", () => {
 				typeOfHeatPump: "airSource",
 				productReference: "HEATPUMP-SMALL",
 				maxFlowTemp: unitValue(7, celsius),
-				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
 			};
 
@@ -1967,8 +1673,8 @@ describe("heatSource", () => {
 				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("Comes with boiler");
 			});
 
-			test("'Packaged products' displays 'Comes with hot water cylinder' when heat pump product comes packaged with a hot water cylinder", async () => {
-				const hotWaterCylinder: Partial<WaterStorageData> = {
+			test("'Packaged products' displays 'Comes with water cylinder' when heat pump product comes packaged with a water cylinder", async () => {
+				const waterCylinder: Partial<WaterStorageData> = {
 					id: "289bb9c5-6c50-486f-8634-bc89ecfd64a7",
 					name: "Hot water cylinder",
 					typeOfWaterStorage: "hotWaterCylinder",
@@ -1976,7 +1682,8 @@ describe("heatSource", () => {
 
 				const heatPumpWithCylinder: Partial<HeatSourceData> = {
 					...heatPump,
-					packageProductIds: [hotWaterCylinder.id!],
+					packageProductIds: [waterCylinder.id!],
+					packagedWithWaterCylinder: true,
 				};
 
 				store.$patch({
@@ -1987,7 +1694,7 @@ describe("heatSource", () => {
 					},
 					domesticHotWater: {
 						waterStorage: {
-							data: [{ data: hotWaterCylinder }],
+							data: [{ data: waterCylinder }],
 						},
 					},
 				});
@@ -2002,7 +1709,192 @@ describe("heatSource", () => {
 					},
 				});
 
-				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("Comes with hot water cylinder");
+				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("Comes with water cylinder");
+			});
+
+			test("requires configuration of water cylinder when heat pump comes with water cylinder", async () => {
+				const heatPumpWithCylinder: Partial<HeatSourceData> = {
+					...heatPump,
+					packagedWithWaterCylinder: true,
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPumpWithCylinder }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatPumpProductWithCylinder),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				expect(screen.getByTestId("waterCylinderConfiguration")).toBeDefined();
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				expect(screen.getByTestId("waterCylinderConfiguration_error")).toBeDefined();
+			});
+
+			test("selecting hot water cylinder configuration creates a hot water cylinder", async () => {
+				const heatPumpWithCylinder: Partial<HeatSourceData> = {
+					...heatPump,
+					productReference: heatPumpProductWithCylinder.id,
+					packagedWithWaterCylinder: true,
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPumpWithCylinder }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatPumpProductWithCylinder),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("waterCylinderConfiguration_hotWaterCylinder"));
+				await user.click(screen.getByTestId("saveProgress"));
+
+				const hotWaterHeatSources = store.domesticHotWater.heatSources.data;
+				const expectedHotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+					isExistingHeatSource: true,
+					heatSourceId: heatPumpWithCylinder.id,
+				};
+
+				const waterStorageData = store.domesticHotWater.waterStorage.data;
+				const expectedCylinderData: Partial<WaterStorageData> = {
+					name: "Hot water cylinder",
+					typeOfWaterStorage: "hotWaterCylinder",
+					packagedProductReference: heatPumpProductWithCylinder.id,
+				};
+
+				expect(hotWaterHeatSources.length).toBe(1);
+				expect(hotWaterHeatSources[0]?.data).toEqual(expect.objectContaining(expectedHotWaterHeatPump));
+
+				expect(waterStorageData.length).toBe(1);
+				expect(waterStorageData[0]?.data).toEqual(expect.objectContaining(expectedCylinderData));
+			});
+
+			test("selecting pre-heated water cylinder configuration creates a pre-heated water cylinder", async () => {
+				const heatPumpWithCylinder: Partial<HeatSourceData> = {
+					...heatPump,
+					productReference: heatPumpProductWithCylinder.id,
+					packagedWithWaterCylinder: true,
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPumpWithCylinder }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatPumpProductWithCylinder),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("waterCylinderConfiguration_preheatedWaterCylinder"));
+				await user.click(screen.getByTestId("saveProgress"));
+
+				const hotWaterHeatSources = store.domesticHotWater.heatSources.data;
+				const expectedHotWaterHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+					isExistingHeatSource: true,
+					heatSourceId: heatPumpWithCylinder.id,
+				};
+
+				const waterStorageData = store.domesticHotWater.preheatedWaterStorage.data;
+				const expectedCylinderData: Partial<PreheatedWaterStorageData> = {
+					name: "Preheated water cylinder",
+					typeOfWaterStorage: "hotWaterCylinder",
+					packagedProductReference: heatPumpProductWithCylinder.id,
+				};
+
+				expect(hotWaterHeatSources.length).toBe(1);
+				expect(hotWaterHeatSources[0]?.data).toEqual(expect.objectContaining(expectedHotWaterHeatPump));
+
+				expect(waterStorageData.length).toBe(1);
+				expect(waterStorageData[0]?.data).toEqual(expect.objectContaining(expectedCylinderData));
+			});
+
+			test("changing heat source clears associated hot water source and cylinder", async () => {
+				const cylinderData: Partial<PreheatedWaterStorageData> = {
+					name: "Preheated water cylinder",
+					typeOfWaterStorage: "hotWaterCylinder",
+					packagedProductReference: heatPumpProductWithCylinder.id,
+				};
+
+				const heatPumpWithCylinder: Partial<HeatSourceData> = {
+					...heatPump,
+					productReference: heatPumpProductWithCylinder.id,
+					packagedWithWaterCylinder: true,
+					waterCylinderConfiguration: "hotWaterCylinder",
+					packageProductIds: [cylinderData.id!],
+				};
+
+				const dhwWithExistingHeatPump: DomesticHotWaterHeatSourceData = {
+					id: "463c94f6-566c-49b2-af27-57e5c68b5c62",
+					coldWaterSource: "headerTank",
+					isExistingHeatSource: true,
+					heatSourceId: heatPumpWithCylinder.id!,
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatPumpWithCylinder }],
+						},
+					},
+					domesticHotWater: {
+						heatSources: {
+							data: [{ data: dhwWithExistingHeatPump }],
+						},
+						waterStorage: {
+							data: [{ data: cylinderData }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatPumpProductWithCylinder),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
+				await user.click(screen.getByTestId("saveProgress"));
+
+				const hotWaterHeatSources = store.domesticHotWater.heatSources.data;
+				const waterStorageData = store.domesticHotWater.waterStorage.data;
+
+				expect(hotWaterHeatSources.length).toBe(0);
+				expect(waterStorageData.length).toBe(0);
 			});
 
 			test("Renders HEM default product warning when default product is selected", async () => {
@@ -2086,7 +1978,6 @@ describe("heatSource", () => {
 				typeOfHeatSource: "heatPump",
 				typeOfHeatPump: "airSource",
 				productReference: "HEATPUMP-SMALL",
-				isConnectedToHeatNetwork: false,
 				energySupply: "electricity",
 				maxFlowTemp: unitValue(30, "celsius"),
 			};
@@ -2189,6 +2080,181 @@ describe("heatSource", () => {
 				expect(actualHeatSource.data.name).toBe("Heat battery 2");
 				expect(actualHeatSource.data.typeOfHeatSource).toBe("heatBattery");
 			});
+		});
+	});
+	describe("heat networks", () => {
+		
+		const communalHeatNetwork: Partial<HeatNetworkData> = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c13",
+			name: "Communal Heat Network",
+			typeOfHeatNetwork: "communalHeatNetwork",
+			subHeatNetworkName: "Sub Communal Heat Network",
+		};
+
+		const communalHeatNetworkWithBooster: Partial<HeatNetworkData> = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c20",
+			name: "Communal Heat Network with Booster",
+			typeOfHeatNetwork: "communalHeatNetwork",
+			subHeatNetworkName: "Sub Communal Heat Network with Booster",
+			boosterHeatPump: true,
+		};
+
+		const sleevedDistrictHeatNetwork: Partial<HeatNetworkData> = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c15",
+			name: "Sleeved District Heat Network",
+			typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+			subHeatNetworkName: "Sub Sleeved District Heat Network",
+		};
+
+		const unsleevedDistrictHeatNetwork: Partial<HeatNetworkData> = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c17",
+			name: "Unsleeved District Heat Network",
+			typeOfHeatNetwork: "unsleevedDistrictHeatNetwork",
+			subHeatNetworkName: "Sub Unsleeved District Heat Network",
+		};
+	
+		const heatInterfaceUnit: Partial<HeatSourceData> = {
+			id: "hiuId",
+			name: "Heat Interface Unit",
+			typeOfHeatSource: "heatInterfaceUnit",
+		};
+	
+		test("if heat network is a communal heat network without a booster heat pump flag, only show HIU as an option", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: communalHeatNetwork }],
+						complete: true,
+					},
+					heatSource: {
+						data: [{ data: heatInterfaceUnit }],
+					},
+				},
+			});
+			const component = await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+	
+			const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
+			
+			expect(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeDefined();
+			expect(heatSourceRadios.length).toBe(1);
+		});
+
+		test("if heat network is a sleeved district heat network, only show HIU as an option", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: sleevedDistrictHeatNetwork }],
+						complete: true,
+					},
+					heatSource: {
+						data: [{ data: heatInterfaceUnit }],
+					},
+				},
+			});
+			const component = await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+	
+			const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
+			
+			expect(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeDefined();
+			expect(heatSourceRadios.length).toBe(1);
+		});
+
+		test("if heat network is a unsleeved district heat network, only show HIU as an option", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: unsleevedDistrictHeatNetwork }],
+						complete: true,
+					},
+					heatSource: {
+						data: [{ data: heatInterfaceUnit }],
+					},
+				},
+			});
+			const component = await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+	
+			const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
+			
+			expect(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeDefined();
+			expect(heatSourceRadios.length).toBe(1);
+		});
+		
+		test("if heat network is a communal heat network with a booster heat pump flag, only show booster heat pump as an option", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: communalHeatNetworkWithBooster }],
+						complete: true,
+					},
+					heatSource: {
+						data: [{ data: boosterHeatPump }],
+					},
+				},
+			});
+			const component = await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+	
+			const heatSourceRadios = component.container.querySelectorAll("#typeOfHeatSource input[type=radio]");
+			
+			expect(screen.getByTestId("typeOfHeatSource_heatPump")).toBeDefined();
+			expect(heatSourceRadios.length).toBe(1);
+			expect(screen.findByLabelText("Booster heat pump"));
+		});
+
+		test("if a heat network has not been added, the user shouldn't be able to add a heat interface unit", async () => {
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			expect(screen.getByTestId("typeOfHeatSource_heatPump")).toBeDefined();
+			expect(screen.getByTestId("typeOfHeatSource_boiler")).toBeDefined();
+			expect(screen.getByTestId("typeOfHeatSource_heatBattery")).toBeDefined();
+			expect(screen.queryByTestId("typeOfHeatSource_heatInterfaceUnit")).toBeNull();
+		});
+
+		test("if there is no heat network, type of heat source displays correct hint text", async() => {
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			expect(screen.getByText("A heat interface unit cannot be added as there is no heat network")).toBeDefined();
+		});
+
+		test("if there is a heat network, type of heat source does not display the hiu hint text", async() => {
+			store.$patch({
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: sleevedDistrictHeatNetwork }],
+						complete: true,
+					},
+				},
+			});
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { "heatSource": "create" },
+				},
+			});
+
+			expect(screen.queryByText("A heat interface unit cannot be added as there is no heat network")).toBeNull();
 		});
 	});
 });

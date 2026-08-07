@@ -37,13 +37,6 @@ describe("Hot water outlet product details", () => {
 		brandName: "HEM Default",
 	};
 
-	const wwhrsProduct: Partial<Product> = {
-		id: "1000",
-		brandName: "Brand",
-		modelName: "WWHRS",
-		technologyType: "InstantaneousWwhrSystem",
-	};
-
 	beforeEach(() => {
 		store.$patch({
 			domesticHotWater: {
@@ -124,14 +117,6 @@ describe("Hot water outlet product details", () => {
 		expect(productReference).toBe("1000");
 	});
 
-	test("Displays air pressure shower details when product is an air pressure shower", async () => {
-		// Act
-		await renderSuspended(ProductDetails);
-			
-		// Assert
-		expect((await screen.findByTestId("airPressureShower"))).toBeDefined();
-	});
-
 	test("Does not display HEM default inset when product is not HEM Default", async () => {
 		// Act
 		await renderSuspended(ProductDetails);
@@ -151,27 +136,6 @@ describe("Hot water outlet product details", () => {
 
 		// Assert
 		expect((await screen.findByTestId("hemDefaultProductInset"))).toBeDefined();
-	});
-
-	test("Displays WWHRS details when product is a WWHRS", async () => {
-		// Arrange
-		mockRoute.mockReturnValue({
-			params: {
-				outlet: "0",
-				products: "wwhrs",
-			},
-			path: "/0/wwhrs",
-		});
-
-		mockFetch.mockReturnValue({
-			data: ref(wwhrsProduct),
-		});
-
-		// Act
-		await renderSuspended(ProductDetails);
-			
-		// Assert
-		expect((await screen.findByTestId("wwhrs"))).toBeDefined();
 	});
 
 	test("Navigates to hot water outlets page when product is selected", async () => {

@@ -1,7 +1,7 @@
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import Fuse, { type Expression } from "fuse.js";
 
-const productSortOption = ["id", "brandName", "modelName", "modelQualifier", "type", "height", "systemName", "pipeCentres", "communityHeatNetworkName", "subheatNetworkName"] as const;
+const productSortOption = ["id", "brandName", "modelName", "modelQualifier", "type", "height", "systemName", "pipeCentres", "communityHeatNetworkName", "subheatNetworkName", "floorFinishCompatibility"] as const;
 
 export type SearchOption = "productId" | "modelAndBrand" | "networkName";
 export type ProductSortOption = typeof productSortOption[number];

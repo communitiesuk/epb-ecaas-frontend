@@ -36,6 +36,29 @@ describe("mechanical ventilation form", () => {
 		pitchOfIntake: 10,
 	};
 
+	const centralisedMV: Partial<MechanicalVentilationData> = {
+		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506p",
+		name: "Centralised MV",
+		typeOfMechanicalVentilationOptions: "Centralised MV",
+		measuredFanPowerAndAirFlowRateKnown: true,
+		measuredFanPower: 40,
+		measuredAirFlowRate: 10,
+		airFlowRate: unitValue(12, litrePerSecond),
+		mvhrLocation: "inside",
+		associatedItemId: "none",
+		orientation: 45,
+		pitch: 90,
+		associatedItemIdForIntake: "none",
+		associatedItemIdForExhaust: "none",
+		installedUnderApprovedScheme: true,
+		midHeightOfAirFlowPathForExhaust: 1.5,
+		orientationOfExhaust: 90,
+		pitchOfExhaust: 30,
+		midHeightOfAirFlowPathForIntake: 1.5,
+		orientationOfIntake: 80,
+		pitchOfIntake: 10,
+	};
+
 	const mechanicalVentilation2: Partial<MechanicalVentilationData> = {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 2",
@@ -116,6 +139,114 @@ describe("mechanical ventilation form", () => {
 
 		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
 		expect(data[0]?.data).toEqual(expect.objectContaining(mechanicalVentilation1));
+	});
+
+	test("MVHR location label is displayed if type of mechanical ventilation selected is MVHR", async() => {
+		vi.mocked(uuidv4).mockReturnValue("5124f2fe-f15b-4a56-ba5a-1a7751ac506f" as unknown as Buffer);
+
+		await renderSuspended(MechanicalVentilationForm, {
+			route: {
+				params: { mechanical: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId("name"), "MVHR");
+		await user.click(
+			screen.getByTestId("typeOfMechanicalVentilationOptions_MVHR"),
+		);
+
+		expect(screen.getByText("MVHR location")).toBeDefined();
+		expect(screen.queryByText("Centralised MV location")).toBeNull();
+	});
+
+	test("MVHR location hint text is displayed if type of mechanical ventilation selected is MVHR", async() => {
+		vi.mocked(uuidv4).mockReturnValue("5124f2fe-f15b-4a56-ba5a-1a7751ac506f" as unknown as Buffer);
+
+		await renderSuspended(MechanicalVentilationForm, {
+			route: {
+				params: { mechanical: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId("name"), "MVHR");
+		await user.click(
+			screen.getByTestId("typeOfMechanicalVentilationOptions_MVHR"),
+		);
+
+		expect(screen.getByText("Select whether the MVHR unit is located inside or outside the thermal envelope")).toBeDefined();
+		expect(screen.queryByText("Select whether the centralised MV unit is located inside or outside the thermal envelope")).toBeNull();
+	});
+
+	test("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions is Centralised MV", async () => {
+		vi.mocked(uuidv4).mockReturnValue("5124f2fe-f15b-4a56-ba5a-1a7751ac506p" as unknown as Buffer);
+
+		await renderSuspended(MechanicalVentilationForm, {
+			route: {
+				params: { mechanical: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId("name"), "Centralised MV");
+		await user.click(
+			screen.getByTestId("typeOfMechanicalVentilationOptions_Centralised_MV"),
+		);
+		await user.click(screen.getByTestId("measuredFanPowerAndAirFlowRateKnown_yes"));
+		await user.type(screen.getByTestId("measuredFanPower"), "40");
+		await user.type(screen.getByTestId("measuredAirFlowRate"), "10");
+		await user.type(screen.getByTestId("airFlowRate"), "12");
+		await user.click(screen.getByTestId("mvhrLocation_inside"));
+		await user.click(screen.getByTestId("associatedItemId_none"));
+		await user.type(screen.getByTestId("orientation"), "45");
+		await user.type(screen.getByTestId("pitch"), "90");
+		await user.click(screen.getByTestId("associatedItemIdForIntake_none"));
+		await user.click(screen.getByTestId("associatedItemIdForExhaust_none"));
+		await user.click(screen.getByTestId("installedUnderApprovedScheme_yes"));
+		await user.type(screen.getByTestId("midHeightOfAirFlowPathForIntake"), "1.5");
+		await user.type(screen.getByTestId("orientationOfIntake"), "80");
+		await user.type(screen.getByTestId("pitchOfIntake"), "10");
+		await user.type(screen.getByTestId("midHeightOfAirFlowPathForExhaust"), "1.5");
+		await user.type(screen.getByTestId("orientationOfExhaust"), "90");
+		await user.type(screen.getByTestId("pitchOfExhaust"), "30");
+		await user.tab();
+
+		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
+		expect(data[0]?.data).toEqual(expect.objectContaining(centralisedMV));
+	});
+
+	test("Centralised MV location label is displayed if type of mechanical ventilation selected is Centralised MV", async() => {
+		vi.mocked(uuidv4).mockReturnValue("5124f2fe-f15b-4a56-ba5a-1a7751ac506p" as unknown as Buffer);
+
+		await renderSuspended(MechanicalVentilationForm, {
+			route: {
+				params: { mechanical: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId("name"), "Centralised MV");
+		await user.click(
+			screen.getByTestId("typeOfMechanicalVentilationOptions_Centralised_MV"),
+		);
+
+		expect(screen.getByText("Centralised MV location")).toBeDefined();
+		expect(screen.queryByText("MVHR location")).toBeNull();
+	});
+
+	test("Centralised MV location hint text is displayed if type of mechanical ventilation selected is Centralised MV", async() => {
+		vi.mocked(uuidv4).mockReturnValue("5124f2fe-f15b-4a56-ba5a-1a7751ac506p" as unknown as Buffer);
+
+		await renderSuspended(MechanicalVentilationForm, {
+			route: {
+				params: { mechanical: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId("name"), "Centralised MV");
+		await user.click(
+			screen.getByTestId("typeOfMechanicalVentilationOptions_Centralised_MV"),
+		);
+
+		expect(screen.getByText("Select whether the Centralised MV unit is located inside or outside the thermal envelope")).toBeDefined();
+		expect(screen.queryByText("Select whether the MVHR unit is located inside or outside the thermal envelope")).toBeNull();
 	});
 
 	test("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions is Intermittent MEV", async () => {

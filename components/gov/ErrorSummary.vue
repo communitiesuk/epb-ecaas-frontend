@@ -4,7 +4,8 @@ withDefaults(defineProps<{
 	errorList?: Array<{
 		id: string;
 		text: string | undefined;
-		href?: string
+		href?: string;
+		disableLink?: boolean;
 	}>;
 	testId?: string;
 	className?: string;
@@ -43,7 +44,7 @@ const navigateToField = (id: string) => (e: Event) => {
 						<NuxtLink v-if="useLinks && error.href" :to="error.href">
 							{{ error.text }}
 						</NuxtLink>
-						<a v-else-if="useLinks" :href="`#${error.id}`" @click="navigateToField(error.id)">
+						<a v-else-if="useLinks && !error.disableLink" :href="`#${error.id}`" @click="navigateToField(error.id)">
 							{{ error.text }}
 						</a>
 						<span v-else>{{ error.text }}</span>

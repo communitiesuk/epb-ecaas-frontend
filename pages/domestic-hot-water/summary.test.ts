@@ -3,11 +3,10 @@ import Summary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
 import { litre } from "~/utils/units/volume";
 import { litrePerSecond } from "~/utils/units/flowRate";
-import { displayCamelToSentenceCase } from "~/utils/display";
 import { kilowatt, kilowattHoursPerDay } from "~/utils/units/power";
 import { metresSquare } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
-import type { DomesticHotWaterHeatSourceData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatNetworkData, PreheatedWaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
 import { celsius } from "~/utils/units/temperature";
 import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 
@@ -48,7 +47,196 @@ describe("Domestic hot water summary", () => {
 		expect(screen.getByRole("heading", { name: "Domestic hot water summary" }));
 	});
 
-	describe("water storage", () => {
+	describe("WWHRS", () => {
+		const wwhrs: WwhrsData = {
+			id: "86ff8af4-fc27-4cb6-a0bd-d994ba5a46c9",
+			name: "WWHRS",
+			coldWaterSource: "mainsWater",
+			productReference: "1000",
+		};
+
+		const addWwhrsData = () => {
+			store.$patch({
+				domesticHotWater: {
+					wwhrs: {
+						data: [{ data: wwhrs }],
+					},
+				},
+			});
+		};
+
+		it("displays an empty tab state with link to create when no data exists", async () => {
+			await renderSuspended(Summary);
+
+			expect(screen.getByText("No WWHRS added")).not.toBeNull();
+
+			const addWwhrsLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add WWHRS",
+			});
+
+			expect(new URL(addWwhrsLink.href).pathname).toBe(
+				getUrl("wwhrsCreate"),
+			);
+		});
+
+		it("should display the correct data for the WWHRS section when data exists", async () => {
+			addWwhrsData();
+			await renderSuspended(Summary);
+
+			const expectedResult = {
+				"Name": "WWHRS",
+				"Cold water source": "Mains water",
+				"Product reference": "1000",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-wwhrs-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+
+		it("should display an edit link within WWHRS when data exists", async () => {
+			addWwhrsData();
+			await renderSuspended(Summary);
+			const wwhrsSection = screen.getByTestId("wwhrs");
+			const editLink: HTMLAnchorElement = within(wwhrsSection).getByText("Edit");
+
+			expect(editLink).not.toBeNull();
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water");
+		});
+	});
+
+	describe("Pre-heated water cylinder", () => {
+		const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
+
+		const preheatedWaterCylinder: PreheatedWaterStorageData = {
+			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
+			typeOfWaterStorage: "hotWaterCylinder",
+			name: "Pre-heated water cylinder",
+			storageCylinderVolume: {
+				amount: 5,
+				unit: "litres" as const,
+			},
+			dailyEnergyLoss: 1,
+			heaterPosition: 0.8,
+			coldWaterSource: "mainsWater",
+			heatSourceId: heatPumpId,
+		};
+
+		const addWaterCylinderData = () => {
+			store.$patch({
+				domesticHotWater: {
+					preheatedWaterStorage: {
+						data: [{ data: preheatedWaterCylinder }],
+					},
+					heatSources: {
+						data: [{
+							data: {
+								isExistingHeatSource: false,
+								id: heatPumpId,
+								name: "Heat pump",
+								typeOfHeatSource: "heatPump",
+							},
+						}],
+					},
+				},
+			});
+		};
+
+		it("displays an empty tab state with link to create when no data exists", async () => {
+			await renderSuspended(Summary);
+
+			expect(screen.getByText("No pre-heated water cylinder added")).not.toBeNull();
+
+			const addWaterStorageLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add pre-heated water cylinder",
+			});
+
+			expect(new URL(addWaterStorageLink.href).pathname).toBe(
+				getUrl("preheatedWaterStorage"),
+			);
+		});
+
+		it("should contain the correct tabs when data exists", async () => {
+			store.$patch({
+				domesticHotWater: {
+					preheatedWaterStorage: {
+						data: [{ data: preheatedWaterCylinder }],
+					},
+				},
+				spaceHeating: {
+					heatSource: {
+						data: [{
+							data: {
+								id: heatPumpId,
+								name: "Heat pump",
+								typeOfHeatSource: "heatPump",
+							},
+						}],
+					},
+				},
+			});
+			await renderSuspended(Summary);
+
+			expect(screen.queryByRole("link", { name: "Pre-heated water cylinders" })).not.toBeNull();
+		});
+
+		it("should display the correct data for the pre-heated water cylinder section when data exists", async () => {
+			addWaterCylinderData();
+			await renderSuspended(Summary);
+
+			const expectedResult = {
+				"Name": "Pre-heated water cylinder",
+				"Storage cylinder volume": `5 ${litre.suffix}`,
+				"Daily standing loss": `1 ${kilowattHoursPerDay.suffix}`,
+				"Heater position in the cylinder": "0.8",
+				"Cold water source": "Mains water",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-preheatedWaterCylinder-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+
+		it("should display an edit link within hot water cylinder when data exists", async () => {
+			addWaterCylinderData();
+			await renderSuspended(Summary);
+			const preheatedWaterCylinderSection = screen.getByTestId("preheatedWaterCylinder");
+			const editLink: HTMLAnchorElement = within(preheatedWaterCylinderSection).getByText("Edit");
+
+			expect(editLink).not.toBeNull();
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water");
+		});
+
+		it("should display the cold water source when referenced with a WWHRS", async () => {
+			addWaterCylinderData();
+
+			const wwhrs: EcaasForm<WwhrsData> = {
+				data: {
+					id: "6ff16f20-b401-471f-95d0-edbbf91b2a49",
+					name: "WWHRS",
+					coldWaterSource: "mainsWater",
+					productReference: "WWHRS-PR-1",
+				},
+			};
+
+			store.$patch(state => {
+				state.domesticHotWater.preheatedWaterStorage.data[0]!.data.coldWaterSource = wwhrs.data.id;
+				state.domesticHotWater.wwhrs.data.push(wwhrs);
+			});
+
+			await renderSuspended(Summary);
+
+			const lineResult = (await screen.findByTestId(`summary-preheatedWaterCylinder-cold-water-source`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe("Cold water source");
+			expect(lineResult.querySelector("dd")?.textContent).toBe(`${wwhrs.data.name} (WWHRS)`);
+		});
+	});
+
+	describe("Hot water cylinder", () => {
 		const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
 		const hotWaterCylinder: HotWaterCylinderData = {
@@ -63,6 +251,7 @@ describe("Domestic hot water summary", () => {
 			areaOfHeatExchanger: 2.5,
 			heaterPosition: 0.8,
 			thermostatPosition: 0.5,
+			coldWaterSource: "mainsWater",
 		};
 
 		const smartHotWaterCylinder: SmartHotWaterTankData = {
@@ -71,6 +260,7 @@ describe("Domestic hot water summary", () => {
 			name: "Smart hot water cylinder",
 			productReference: "SMART-HOT-WATER-CYLINDER",
 			heaterPosition: 0.3,
+			coldWaterSource: "mainsWater",
 		};
 
 		const addHotWaterCylinderData = () => {
@@ -159,10 +349,11 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Hot water cylinder",
 				"Storage cylinder volume": `5 ${litre.suffix}`,
-				"Daily energy loss": `1 ${kilowattHoursPerDay.suffix}`,
+				"Daily standing loss": `1 ${kilowattHoursPerDay.suffix}`,
 				"Area of heat exchanger installed": `2.5 ${metresSquare.suffix}`,
 				"Heater position in the cylinder": "0.8",
 				"Thermostat position in the cylinder": "0.5",
+				"Cold water source": "Mains water",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -190,6 +381,7 @@ describe("Domestic hot water summary", () => {
 				"Name": "Smart hot water cylinder",
 				"Product reference": "SMART-HOT-WATER-CYLINDER",
 				"Heater position in the cylinder": "0.3",
+				"Cold water source": "Mains water",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -208,6 +400,58 @@ describe("Domestic hot water summary", () => {
 			expect(editLink).not.toBeNull();
 			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water");
 		});
+
+		it("should display the cold water source when referenced with a WWHRS", async () => {
+			addHotWaterCylinderData();
+
+			const wwhrs: EcaasForm<WwhrsData> = {
+				data: {
+					id: "6ff16f20-b401-471f-95d0-edbbf91b2a49",
+					name: "WWHRS",
+					coldWaterSource: "mainsWater",
+					productReference: "WWHRS-PR-1",
+				},
+			};
+
+			store.$patch(state => {
+				state.domesticHotWater.waterStorage.data[0]!.data.coldWaterSource = wwhrs.data.id;
+				state.domesticHotWater.wwhrs.data.push(wwhrs);
+			});
+
+			await renderSuspended(Summary);
+
+			const lineResult = (await screen.findByTestId(`summary-hotWaterCylinder-cold-water-source`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe("Cold water source");
+			expect(lineResult.querySelector("dd")?.textContent).toBe(`${wwhrs.data.name} (WWHRS)`);
+		});
+
+		it("should display the cold water source when referenced with a pre-heated water cylinder", async () => {
+			addSmartHotWaterCylinderData();
+
+			const preheatedWaterCylinder: EcaasForm<PreheatedWaterStorageData> = {
+				data: {
+					name: "Standard water cylinder 1",
+					id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
+					typeOfWaterStorage: "hotWaterCylinder",
+					storageCylinderVolume: unitValue(5, litre),
+					dailyEnergyLoss: 1,
+					heaterPosition: 0.8,
+					coldWaterSource: "mainsWater",
+					heatSourceId: heatPumpId,
+				},
+			};
+
+			store.$patch(state => {
+				state.domesticHotWater.waterStorage.data[0]!.data.coldWaterSource = preheatedWaterCylinder.data.id;
+				state.domesticHotWater.preheatedWaterStorage.data.push(preheatedWaterCylinder);
+			});
+
+			await renderSuspended(Summary);
+
+			const lineResult = (await screen.findByTestId(`summary-smartHotWaterCylinder-cold-water-source`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe("Cold water source");
+			expect(lineResult.querySelector("dd")?.textContent).toBe(`${preheatedWaterCylinder.data.name} (Pre-heated water cylinder)`);
+		});
 	});
 
 	describe("hot water outlets", () => {
@@ -217,6 +461,7 @@ describe("Domestic hot water summary", () => {
 				name: "Mixer shower 1",
 				flowRate: 10,
 				typeOfHotWaterOutlet: "mixedShower",
+				coldWaterSource: "mainsWater",
 				wwhrs: false,
 				isAirPressureShower: false,
 			},
@@ -228,6 +473,7 @@ describe("Domestic hot water summary", () => {
 				name: "Electric shower 1",
 				ratedPower: 10,
 				typeOfHotWaterOutlet: "electricShower",
+				coldWaterSource: "mainsWater",
 			},
 		};
 
@@ -237,6 +483,7 @@ describe("Domestic hot water summary", () => {
 				name: "Bath 1",
 				size: 170,
 				typeOfHotWaterOutlet: "bath",
+				coldWaterSource: "mainsWater",
 			},
 		};
 
@@ -246,6 +493,7 @@ describe("Domestic hot water summary", () => {
 				name: "Basin tap 1",
 				flowRate: 10,
 				typeOfHotWaterOutlet: "otherHotWaterOutlet",
+				coldWaterSource: "mainsWater",
 			},
 		};
 
@@ -334,6 +582,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Mixer shower 1",
 				"Type of hot water outlet": "Mixed shower",
+				"Cold water source": "Mains water",
 				"Flow rate": `10 ${litrePerSecond.suffix}`,
 				"WWHRS installed": "No",
 			};
@@ -368,6 +617,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Partial mixer",
 				"Type of hot water outlet": "Mixed shower",
+				"Cold water source": "-",
 				"Is this an air pressure shower?": "-",
 				"WWHRS installed": "-",
 			};
@@ -393,6 +643,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Electric shower 1",
 				"Type of hot water outlet": "Electric shower",
+				"Cold water source": "Mains water",
 				"Rated power": `10 ${kilowatt.suffix}`,
 			};
 
@@ -417,6 +668,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Bath 1",
 				"Type of hot water outlet": "Bath",
+				"Cold water source": "Mains water",
 				"Size": `170 ${litre.suffix}`,
 			};
 
@@ -441,6 +693,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Basin tap 1",
 				"Type of hot water outlet": "Other hot water outlet",
+				"Cold water source": "Mains water",
 				"Flow rate": `10 ${litrePerSecond.suffix}`,
 			};
 
@@ -452,15 +705,24 @@ describe("Domestic hot water summary", () => {
 		});
 
 		test("displays WWHRS type and product when present for mixer showers", async () => {
+			const wwhrs: EcaasForm<WwhrsData> = {
+				data: {
+					id: "6ff16f20-b401-471f-95d0-edbbf91b2a49",
+					name: "WWHRS",
+					coldWaterSource: "mainsWater",
+					productReference: "WWHRS-PR-1",
+				},
+			};
+
 			const mixerWithWwhrs: EcaasForm<MixedShowerData> = {
 				data: {
 					id: "mixer-wwhrs-1",
 					name: "Mixer with WWHRS",
 					flowRate: 15,
 					typeOfHotWaterOutlet: "mixedShower",
+					coldWaterSource: "mainsWater",
 					wwhrs: true,
-					wwhrsType: "instantaneousSystemA",
-					wwhrsProductReference: "WWHRS-PR-1",
+					associatedWwhrs: wwhrs.data.id,
 					isAirPressureShower: false as const,
 				},
 			};
@@ -468,6 +730,7 @@ describe("Domestic hot water summary", () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: { data: [mixerWithWwhrs] },
+					wwhrs: { data: [wwhrs] },
 					heatSources: { data: [{ data: { id: "heat-1", name: "Heat pump" } }] },
 				},
 			});
@@ -477,12 +740,11 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Mixer with WWHRS",
 				"Type of hot water outlet": "Mixed shower",
+				"Cold water source": "Mains water",
 				"Is this an air pressure shower?": "No",
 				"Flow rate": `15 ${litrePerSecond.suffix}`,
 				"WWHRS installed": "Yes",
-				"WWHRS type": displayCamelToSentenceCase("instantaneousSystemA"),
-				"WWHRS product reference": "WWHRS-PR-1",
-				"WWHRS product": "Mock product",
+				"WWHRS": "WWHRS",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -498,6 +760,7 @@ describe("Domestic hot water summary", () => {
 					id: "mixer-wwhrs-1",
 					name: "Mixer with WWHRS",
 					typeOfHotWaterOutlet: "mixedShower",
+					coldWaterSource: "mainsWater",
 					wwhrs: false,
 					isAirPressureShower: true,
 					airPressureShowerProductReference: "1000",
@@ -516,6 +779,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Mixer with WWHRS",
 				"Type of hot water outlet": "Mixed shower",
+				"Cold water source": "Mains water",
 				"Is this an air pressure shower?": "Yes",
 				"Air pressure shower product reference": "1000",
 				"Air pressure shower product": "Mock product",
@@ -531,19 +795,25 @@ describe("Domestic hot water summary", () => {
 	});
 
 	describe("heat sources", () => {
+		const heatNetworkWithBooster: HeatNetworkData = {
+			id: "hn_id",
+			name: "Heat Network",
+			subHeatNetworkName: "Sub Heat Network Name",
+			productReference: "9999",
+			typeOfHeatNetwork: "communalHeatNetwork",
+			boosterHeatPump: true,
+		};
 
 		const dhwWithNewHeatPump: DomesticHotWaterHeatSourceData = {
-			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
 			heatSourceId: "NEW_HEAT_SOURCE",
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 			name: "Booster heat pump",
 			typeOfHeatSource: "heatPump",
 			typeOfHeatPump: "booster",
+			associatedHeatNetworkId: heatNetworkWithBooster.id,
 			productReference: "HEAT_PUMP_SMALL",
 			maxFlowTemp: unitValue(17, celsius),
-			isConnectedToHeatNetwork: false,
-			energySupply: "electricity",
 		};
 
 		const dhwWithNewBoiler: DomesticHotWaterHeatSourceData = {
@@ -575,17 +845,17 @@ describe("Domestic hot water summary", () => {
 			energySupply: "electricity",
 		};
 
-		const dhwWithNewHeatNetwork: DomesticHotWaterHeatSourceData = {
-			coldWaterSource: "mainsWater",
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-			id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
-			name: "Heat network 1",
-			typeOfHeatSource: "heatNetwork",
-			typeOfHeatNetwork: "communalHeatNetwork",
-			productReference: "HEAT_NETWORK-LARGE",
-			subHeatNetworkName: "Sub Network 1",
-		};
+		// const dhwWithNewHeatNetwork: DomesticHotWaterHeatSourceData = {
+		// 	coldWaterSource: "mainsWater",
+		// 	isExistingHeatSource: false,
+		// 	heatSourceId: "NEW_HEAT_SOURCE",
+		// 	id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+		// 	name: "Heat network 1",
+		// 	typeOfHeatSource: "heatNetwork",
+		// 	typeOfHeatNetwork: "communalHeatNetwork",
+		// 	productReference: "HEAT_NETWORK-LARGE",
+		// 	subHeatNetworkName: "Sub Network 1",
+		// };
 
 		const dhwWithNewHeatInterfaceUnit: DomesticHotWaterHeatSourceData = {
 			coldWaterSource: "mainsWater",
@@ -595,13 +865,12 @@ describe("Domestic hot water summary", () => {
 			name: "Heat interface unit 1",
 			typeOfHeatSource: "heatInterfaceUnit",
 			productReference: "HIU-LARGE",
-			associatedHeatNetworkId: "463c94f6-566c-49b2-af27-57e5c68b5c55",
+			associatedHeatNetworkId: "network-1",
 			maxFlowTemp: unitValue(40, celsius),
 			buildingLevelLosses: unitValue(500, "watt"),
 		};
 
 		const dhwWithNewSolarThermalSystem: DomesticHotWaterHeatSourceData = {
-			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
 			heatSourceId: "NEW_HEAT_SOURCE",
 			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c77777",
@@ -628,7 +897,6 @@ describe("Domestic hot water summary", () => {
 		};
 
 		const dhwImmersionHeater: DomesticHotWaterHeatSourceData = {
-			coldWaterSource: "mainsWater",
 			isExistingHeatSource: false,
 			heatSourceId: "NEW_HEAT_SOURCE",
 			id: "463c94f6-566c-49b2-af27-57e5c888888",
@@ -645,18 +913,36 @@ describe("Domestic hot water summary", () => {
 			name: "Point of use",
 			typeOfHeatSource: "pointOfUse",
 			energySupply: "electricity",
-			heaterEfficiency: 1,
+		};
+
+		const heatNetwork1: HeatNetworkData = {
+			id: "network-1",
+			name: "Heat network 1",
+			typeOfHeatNetwork: "sleevedDistrictHeatNetwork",
+			productReference: "HEAT_NETWORK_1",
 		};
 
 		beforeEach(() => {
 			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							typeOfDwelling: "flat",
+						},
+					},
+				},
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork1 }],
+					},
+				},
 				domesticHotWater: {
 					heatSources: {
 						data: [
 							{ data: dhwWithNewHeatPump },
 							{ data: dhwWithNewBoiler },
 							{ data: dhwWithNewHeatBattery },
-							{ data: dhwWithNewHeatNetwork },
+							// { data: dhwWithNewHeatNetwork },
 							{ data: dhwWithNewHeatInterfaceUnit },
 							{ data: dhwWithNewSolarThermalSystem },
 							{ data: dhwImmersionHeater },
@@ -705,7 +991,6 @@ describe("Domestic hot water summary", () => {
 		});
 
 		const expectedHeatPump = {
-			"Cold water source": "Mains water",
 			Name: "Booster heat pump",
 			"Used for space heating": "No",
 			"Type of heat source": "Heat pump",
@@ -735,15 +1020,6 @@ describe("Domestic hot water summary", () => {
 			"Maximum flow temperature": `32 ${celsius.suffix}`,
 			"Energy supply": "Electricity",
 		};
-		const expectedHeatNetwork = {
-			"Cold water source": "Mains water",
-			Name: "Heat network 1",
-			"Used for space heating": "No",
-			"Type of heat source": "Heat network",
-			"Type of heat network": "Communal heat network",
-			"Product reference": "HEAT_NETWORK-LARGE",
-			"Sub-heat network name": "Sub Network 1",
-		};
 		const expectedHeatInterfaceUnit = {
 			"Cold water source": "Mains water",
 			"Name": "Heat interface unit 1",
@@ -756,7 +1032,6 @@ describe("Domestic hot water summary", () => {
 			"Building level losses": "500 W",
 		};
 		const expectedSolarThermalSystem = {
-			"Cold water source": "Mains water",
 			Name: "Solar thermal system",
 			"Used for space heating": "No",
 			"Type of heat source": "Solar thermal system",
@@ -775,7 +1050,6 @@ describe("Domestic hot water summary", () => {
 			"Orientation": `60 ${degrees.suffix}`,
 		};
 		const expectedImmersionHeater = {
-			"Cold water source": "Mains water",
 			Name: "Immersion heater",
 			"Type of heat source": "Immersion heater",
 			"Power": `4 ${kilowatt.suffix}`,
@@ -785,7 +1059,7 @@ describe("Domestic hot water summary", () => {
 			Name: "Point of use",
 			"Type of heat source": "Point of use",
 			"Energy supply": "Electricity",
-			"Heater efficiency": "1",
+			// "Heater efficiency": "1",
 		};
 
 		it.each(
@@ -793,7 +1067,6 @@ describe("Domestic hot water summary", () => {
 				["heatPumpSummary", expectedHeatPump],
 				["boilerSummary", expectedBoiler],
 				["heatBatterySummary", expectedHeatBattery],
-				["heatNetworkSummary", expectedHeatNetwork],
 				["heatInterfaceUnitSummary", expectedHeatInterfaceUnit],
 				["solarThermalSystemSummary", expectedSolarThermalSystem],
 				["immersionHeaterSummary", expectedImmersionHeater],
@@ -805,16 +1078,155 @@ describe("Domestic hot water summary", () => {
 			await renderSuspended(Summary);
 			await verifyDataInSection(sectionId, expectedData);
 		});
+
+		it("does not display building level losses in hiu summary if type of dwelling is a house", async() => {
+			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
+				"HIU-LARGE": "Mock HIU product",
+			});
+			const heatNetwork: HeatNetworkData = {
+				id: "network-1",
+				name: "Heat network 1",
+				typeOfHeatNetwork: "communalHeatNetwork",
+				productReference: "HEAT_NETWORK_1",
+			};
+			const dhwWithNewHeatInterfaceUnitForHouse: DomesticHotWaterHeatSourceData = {
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c66",
+				name: "Heat interface unit 1",
+				typeOfHeatSource: "heatInterfaceUnit",
+				productReference: "HIU-LARGE",
+				associatedHeatNetworkId: "network-1",
+				maxFlowTemp: unitValue(40, celsius),
+			};
+		
+			const store = useEcaasStore();
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { typeOfDwelling: "house" },
+					},
+				},
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork }],
+					},
+				},
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: dhwWithNewHeatInterfaceUnitForHouse }],
+					},
+				},
+			});
+		
+			await renderSuspended(Summary);
+		
+			const expectedDHWHIUSummary = {
+				"Cold water source": "Mains water",
+				"Name": "Heat interface unit 1",
+				"Used for space heating": "No",
+				"Type of heat source": "Heat interface unit",
+				"Product reference": "HIU-LARGE",
+				"Product name": "Mock HIU product",
+				"Associated heat network": "Heat network 1",
+				"Maximum flow temperature": `40 ${celsius.suffix}`,
+			};
+
+			for (const [key, value] of Object.entries(expectedDHWHIUSummary)) {
+				const lineResult = (await screen.findByTestId(`summary-heatInterfaceUnitSummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+			expect(
+				screen.queryByTestId(
+					"summary-heatInterfaceUnitSummary-building-level-losses",
+				),
+			).toBeNull();
+		});
+		
+		it("does display building level losses in hiu summary if type of dwelling is a flat (not a house)", async() => {
+			mockBatchFetchProducts(mockFetch, "Mock heat network product", {
+				"HIU-LARGE": "Mock HIU product",
+			});
+			const heatNetwork: HeatNetworkData = {
+				id: "network-1",
+				name: "Heat network 1",
+				typeOfHeatNetwork: "communalHeatNetwork",
+				productReference: "HEAT_NETWORK_1",
+			};
+
+			const dhwWithNewHeatInterfaceUnitForFlat: DomesticHotWaterHeatSourceData = {
+				coldWaterSource: "mainsWater",
+				isExistingHeatSource: false,
+				heatSourceId: "NEW_HEAT_SOURCE",
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c66",
+				name: "Heat interface unit 1",
+				typeOfHeatSource: "heatInterfaceUnit",
+				productReference: "HIU-LARGE",
+				associatedHeatNetworkId: "network-1",
+				maxFlowTemp: unitValue(40, celsius),
+				buildingLevelLosses: unitValue(500, "watt"),
+
+			};
+		
+			const store = useEcaasStore();
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: { typeOfDwelling: "flat" },
+					},
+				},
+				spaceHeating: {
+					heatNetworks: {
+						data: [{ data: heatNetwork }],
+					},
+				},
+				domesticHotWater: {
+					heatSources: {
+						data: [{ data: dhwWithNewHeatInterfaceUnitForFlat }],
+					},
+				},
+			});
+		
+			await renderSuspended(Summary);
+		
+			const expectedDHWHIUSummary = {
+				"Cold water source": "Mains water",
+				"Name": "Heat interface unit 1",
+				"Used for space heating": "No",
+				"Type of heat source": "Heat interface unit",
+				"Product reference": "HIU-LARGE",
+				"Product name": "Mock HIU product",
+				"Associated heat network": "Heat network 1",
+				"Maximum flow temperature": `40 ${celsius.suffix}`,
+				"Building level losses": "500 W",
+			};
+		
+			for (const [key, value] of Object.entries(expectedDHWHIUSummary)) {
+				const lineResult = (await screen.findByTestId(`summary-heatInterfaceUnitSummary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+			expect(
+				screen.getByTestId(
+					"summary-heatInterfaceUnitSummary-building-level-losses",
+				),
+			).toBeDefined();
+		});
+
 		describe("heat sources with existing space heating heat source", () => {
 			beforeEach(() => {
 				store.$patch({
 					spaceHeating: {
+						heatNetworks: {
+							data: [{ data: heatNetwork1 }],
+						},
 						heatSource: {
 							data: [
 								{ data: heatPump1 },
 								{ data: boiler1 },
-								{ data: heatBattery1 },
-								{ data: heatNetwork1 },
+								{ data: heatBattery1 },	
 							],
 						},
 					},
@@ -824,7 +1236,7 @@ describe("Domestic hot water summary", () => {
 								{ data: dhwWithExistingHeatPump },
 								{ data: dhwWithExistingBoiler },
 								{ data: dhwWithExistingHeatBattery },
-								{ data: dhwWithExistingHeatNetwork },
+								// { data: dhwWithExistingHeatNetwork },
 							],
 						},
 					},
@@ -845,10 +1257,9 @@ describe("Domestic hot water summary", () => {
 				maxFlowTemp: unitValue(10, celsius),
 			};
 
-			const heatNetwork1: Partial<HeatSourceData> = {
+			const heatNetwork1: Partial<HeatNetworkData> = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c55",
 				name: "Heat network 1",
-				typeOfHeatSource: "heatNetwork",
 				subHeatNetworkName: "Sub Network 1",
 				productReference: "HEAT_NETWORK-LARGE",
 			};
@@ -884,12 +1295,12 @@ describe("Domestic hot water summary", () => {
 				maxFlowTemp: unitValue(20, celsius),
 			};
 
-			const dhwWithExistingHeatNetwork: DomesticHotWaterHeatSourceData = {
-				id: "hn-id",
-				coldWaterSource: "headerTank",
-				isExistingHeatSource: true,
-				heatSourceId: heatNetwork1.id!,
-			};
+			// const dhwWithExistingHeatNetwork: DomesticHotWaterHeatSourceData = {
+			// 	id: "hn-id",
+			// 	coldWaterSource: "headerTank",
+			// 	isExistingHeatSource: true,
+			// 	heatSourceId: heatNetwork1.id!,
+			// };
 
 			const expectedExistingHeatPump = {
 				"Cold water source": "Mains water",
@@ -912,11 +1323,11 @@ describe("Domestic hot water summary", () => {
 				"Maximum flow temperature": `20 ${celsius.suffix}`,
 			};
 
-			const expectedExistingHeatNetwork = {
-				"Cold water source": "Header tank",
-				Name: "Heat network 1",
-				"Used for space heating": "YesView details in space heating summary",
-			};
+			// const expectedExistingHeatNetwork = {
+			// 	"Cold water source": "Header tank",
+			// 	Name: "Heat network 1",
+			// 	"Used for space heating": "YesView details in space heating summary",
+			// };
 
 			it.each(
 				[
@@ -929,10 +1340,10 @@ describe("Domestic hot water summary", () => {
 				await renderSuspended(Summary);
 				await verifyDataInSection(sectionId, expectedData);
 			});
-			it("for the heat network it displays the correct stored data for existing space heating heat source items", async () => {
-				await renderSuspended(Summary);
-				await verifyDataInSection("heatNetworkSummary", expectedExistingHeatNetwork);
-			});
+			// it("for the heat network it displays the correct stored data for existing space heating heat source items", async () => {
+			// 	await renderSuspended(Summary);
+			// 	await verifyDataInSection("heatNetworkSummary", expectedExistingHeatNetwork);
+			// });
 		});
 	});
 });

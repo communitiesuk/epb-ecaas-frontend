@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { bathSizeZod, otherFlowRateZod, ratedPowerShowerZod, showerFlowRateZod, typeOfShowerProduct, type HotWaterOutletsData } from "~/stores/ecaasStore.schema";
-import { getUrl, hotWaterOutletTypes, wwhrsTypes } from "#imports";
+import { coldWaterSourceOptions, getUrl, hotWaterOutletTypes } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import { getHotWaterOutletDefaultName } from "~/utils/getHotWaterOutletDefaultName";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
@@ -27,6 +27,7 @@ const saveForm = (fields: HotWaterOutletsData) => {
 		const commonFields = {
 			name: fields.name,
 			id,
+			coldWaterSource: fields.coldWaterSource,
 		};
 
 		let hotWaterOutletItem: EcaasForm<HotWaterOutletsData>;
@@ -41,8 +42,7 @@ const saveForm = (fields: HotWaterOutletsData) => {
 						...commonFields,
 						typeOfHotWaterOutlet: fields.typeOfHotWaterOutlet,
 						wwhrs: true,
-						wwhrsType: fields.wwhrsType,
-						wwhrsProductReference: fields.wwhrsProductReference,
+						associatedWwhrs: fields.associatedWwhrs,
 						...conditionalOnAirPoweredFields,
 					},
 					complete: true,
@@ -113,19 +113,6 @@ watch(
 	},
 );
 
-watch(
-	() => [model.value?.typeOfHotWaterOutlet, store.domesticHotWater.heatSources.data.length] as const,
-	() => {
-		const heatSources = store.domesticHotWater.heatSources.data;
-		if (heatSources.length === 1 && model.value && model.value.typeOfHotWaterOutlet === "mixedShower") {
-			const heatSourceId = heatSources[0]?.data.id;
-			if ("dhwHeatSourceId" in model.value && heatSourceId) {
-				model.value.dhwHeatSourceId = heatSourceId;
-			}
-		}
-	},
-);
-
 autoSaveElementForm<HotWaterOutletsData>({
 	model,
 	storeData: store.domesticHotWater.hotWaterOutlets,
@@ -143,24 +130,7 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 	}
 }
 
-// const isProductSelected = () => {
-// 	if (hotWaterOutletData.data.typeOfHotWaterOutlet !== "mixedShower"
-//         && hotWaterOutletData.data.typeOfHotWaterOutlet !== "electricShower") {
-// 		return false;
-// 	}
-// 	// return hotWaterOutletData?.data.wwhrs.productReference ? true : false;
-// };
-
-const heatSourceOptions = new Map(
-	store.domesticHotWater.heatSources.data.map((e) => [
-		e.data.id,
-		e.data.isExistingHeatSource
-			? store.spaceHeating.heatSource.data
-				.find((x) => x.data.id === e.data.heatSourceId)?.data.name
-                ?? "Invalid existing heat source"
-			: e.data.name,
-	]),
-);
+const associatedWwhrs = useAssociatedItems(["wwhrs"]);
 </script>
 
 <template>
@@ -168,6 +138,9 @@ const heatSourceOptions = new Map(
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<GovInset>
+		<p>Each outlet should be added separately</p>
+	</GovInset>
 	<GovErrorSummary :error-list="errorMessages" test-id="hotWaterOutletErrorSummary"/>
 	<FormKit
 		v-if="mounted"
@@ -197,24 +170,13 @@ const heatSourceOptions = new Map(
 		/>
 		<template v-if="mounted && model.typeOfHotWaterOutlet === 'mixedShower'">
 			<FormKit
-				id="dhwHeatSourceId"
-				name="dhwHeatSourceId"
+				id="coldWaterSource"
 				type="govRadios"
-				label="Hot water source"
-				help="Select the relevant hot water source that has been added previously"
+				label="Cold water source"
+				:options="coldWaterSourceOptions"
+				name="coldWaterSource"
 				validation="required"
-				:options="heatSourceOptions"
-			>
-				<div
-					v-if="!heatSourceOptions.size"
-					data-testid="noHeatSource"
-				>
-					<p class="govuk-error-message">No heat sources added.</p>
-					<NuxtLink :to="getUrl('heatSourcesCreate')" class="govuk-link gov-radios-add-link">
-						Click here to add a heat source
-					</NuxtLink>
-				</div>
-			</FormKit>
+			/>
 			<FormKit
 				id="isAirPressureShower"
 				name="isAirPressureShower"
@@ -234,7 +196,15 @@ const heatSourceOptions = new Map(
 				@product-loaded="handleProductLoaded"
 			/>
 		</template>
-
+		<FormKit
+			v-if="model.typeOfHotWaterOutlet && model.typeOfHotWaterOutlet !== 'mixedShower'"
+			id="coldWaterSource"
+			type="govRadios"
+			label="Cold water source"
+			:options="coldWaterSourceOptions"
+			name="coldWaterSource"
+			validation="required"
+		/>
 		<FormKit
 			v-if="(model.typeOfHotWaterOutlet === 'mixedShower' && model.isAirPressureShower === false) || model.typeOfHotWaterOutlet === 'otherHotWaterOutlet'"
 			id="flowRate"
@@ -272,24 +242,20 @@ const heatSourceOptions = new Map(
 		/>
 		<FormKit
 			v-if="model.typeOfHotWaterOutlet === 'mixedShower' && model.wwhrs === true"
-			id="wwhrsType"
-			name="wwhrsType"
+			id="associatedWwhrs"
+			name="associatedWwhrs"
 			type="govRadios"
-			:options="wwhrsTypes"
-			label="Type of waste water heat recovery system"
+			:options="new Map(associatedWwhrs)"
+			label="Waste water heat recovery system"
 			validation="required"
-		/>
-		<FieldsSelectPcdbProduct
-			v-if="model.typeOfHotWaterOutlet === 'mixedShower' && model.wwhrs === true"
-			id="selectWwhrsProduct"
-			name="wwhrsProductReference"
-			help="Select the WWHRS type from the PCDB using the button below."
-			:selected-product-reference="model.wwhrsProductReference"
-			:selected-product-type="typeOfShowerProduct.wwhrs"
-			:page-url="route.fullPath"
-			:page-index="index"
-			@product-loaded="handleProductLoaded"
-		/>
+		>
+			<div v-if="!associatedWwhrs.length">
+				<p class="govuk-error-message">No WWHRS added.</p>
+				<NuxtLink :to="getUrl('wwhrsCreate')" class="govuk-link gov-radios-add-link">
+					Click here to add a WWHRS
+				</NuxtLink>
+			</div>
+		</FormKit>
 		<HemDefaultProductWarning :brand-names="[productBrandName]" />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />

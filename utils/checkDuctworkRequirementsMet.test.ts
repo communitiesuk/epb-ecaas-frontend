@@ -1,6 +1,6 @@
-import { checkMvhrHasDuctwork } from "~/utils/checkMvhrHasDuctwork";
+import { checkDuctworkRequirementsMet } from "~/utils/checkDuctworkRequirementsMet";
 
-describe("checkMvhrHasDuctwork", () => {
+describe("checkDuctworkRequirmentsMet", () => {
 	const store = useEcaasStore();
 	const mechanicalVentilationData1: MechanicalVentilationData = {
 		name: "Mechanical name 1",
@@ -111,7 +111,26 @@ describe("checkMvhrHasDuctwork", () => {
 			},
 		});
 
-		expect(checkMvhrHasDuctwork()).toBe(true);
+		expect(checkDuctworkRequirementsMet()).toBe(true);
+	});
+
+	it("should return true if one centralised mv has a ductwork ", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: { ...mechanicalVentilationData1, typeOfMechanicalVentilationOptions: "Centralised MV" } },
+					],
+				},
+				ductwork: {
+					data: [
+						{ data: ductworkData1 },
+					],
+				},
+			},
+		});
+
+		expect(checkDuctworkRequirementsMet()).toBe(true);
 	});
 
 	it("should return false if at least one mvhr does not have a corresponding ductwork", async () => {
@@ -132,10 +151,31 @@ describe("checkMvhrHasDuctwork", () => {
 			},
 		});
 
-		expect(checkMvhrHasDuctwork()).toBe(false);
+		expect(checkDuctworkRequirementsMet()).toBe(false);
 	});
 
-	it("should handle multiple mechanical ventilation objects of different types", async () => {
+	it("should return false if at least one centralised mv does not have a corresponding ductwork", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: { ...mechanicalVentilationData1, typeOfMechanicalVentilationOptions: "Centralised MV" } },
+						{ data: mechanicalVentilationData2 },
+					],
+				},
+				ductwork: {
+					data: [
+						{ data: ductworkData1 },
+						{ data: ductworkData1 },
+					],
+				},
+			},
+		});
+
+		expect(checkDuctworkRequirementsMet()).toBe(false);
+	});
+
+	it("should handle multiple mechanical ventilation objects of different types with a mvhr", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -154,6 +194,28 @@ describe("checkMvhrHasDuctwork", () => {
 				},
 			},
 		});
-		expect(checkMvhrHasDuctwork()).toBe(true);
+		expect(checkDuctworkRequirementsMet()).toBe(true);
+	});
+
+	it("should handle multiple mechanical ventilation objects of different types with a centralised mv", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: { ...mechanicalVentilationData1, typeOfMechanicalVentilationOptions: "Centralised MV" } },
+						{ data: mechanicalVentilationData2 },
+						{ data: mechanicalVentilationData3 },
+					],
+				},
+				ductwork: {
+					data: [
+						{ data: ductworkData1 },
+						{ data: ductworkData1 },
+						{ data: ductworkData2 },
+					],
+				},
+			},
+		});
+		expect(checkDuctworkRequirementsMet()).toBe(true);
 	});
 });

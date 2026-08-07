@@ -48,6 +48,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<GovInset>
+		<p>Only add point thermal bridges where significant heat loss occurs, such as balcony supports and other metal components bridging insulation layers.</p>
+	</GovInset>
 	<FormKit
 		v-model="model"
 		type="form"

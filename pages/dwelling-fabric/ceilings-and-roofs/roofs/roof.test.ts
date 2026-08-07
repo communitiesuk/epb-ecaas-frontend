@@ -20,7 +20,6 @@ describe("roof", () => {
 			id: "ec8e8ec6-0fcb-43dc-81e0-9e2e9afb9e20",
 			name: "Roof 1",
 			typeOfRoof: "flatAboveHeatedSpace",
-			pitchOption: "0",
 			pitch: 0,
 			length: 1,
 			width: 1,
@@ -57,7 +56,6 @@ describe("roof", () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Roof 1");
 		await user.click(screen.getByTestId("typeOfRoof_flatAboveHeatedSpace"));
-		await user.click(screen.getByTestId("pitchOption_0"));
 		await user.type(screen.getByTestId("length"), "1");
 		await user.type(screen.getByTestId("width"), "1");
 		await user.type(screen.getByTestId("elevationalHeightOfElement"), "2");
@@ -104,7 +102,6 @@ describe("roof", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Roof 1");
 		expect((await screen.findByTestId("typeOfRoof_flatAboveHeatedSpace")).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId("pitchOption_0")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("length")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeightOfElement")).value).toBe("2");
@@ -154,24 +151,6 @@ describe("roof", () => {
 		expect((await screen.findByTestId("roofErrorSummary"))).toBeDefined();
 	});
 
-	it("requires pitch option when type of roof is flat", async () => {
-		await renderSuspended(Roof);
-		await user.click(screen.getByTestId("typeOfRoof_flatAboveHeatedSpace"));
-		await user.click(screen.getByTestId("saveAndComplete"));
-
-		expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
-	});
-
-	it("requires pitch when custom pitch option is selected", async () => {
-		await renderSuspended(Roof);
-
-		await user.click(screen.getByTestId("typeOfRoof_flatAboveHeatedSpace"));
-		await user.click(screen.getByTestId("pitchOption_custom"));
-		await user.click(screen.getByTestId("saveAndComplete"));
-
-		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
-	});
-
 	it("saves custom pitch when custom pitch option is selected", async () => {
 		await renderSuspended(Roof, {
 			route: {
@@ -180,7 +159,7 @@ describe("roof", () => {
 		});
 
 		await populateValidForm();
-		await user.click(screen.getByTestId("pitchOption_custom"));
+		await user.click(screen.getByTestId("typeOfRoof_pitchedInsulatedAtRoof"));
 		await user.type(screen.getByTestId("pitch"), "90");
 		await user.tab();
 		await user.click(screen.getByTestId("saveAndComplete"));

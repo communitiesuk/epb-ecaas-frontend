@@ -1,7 +1,7 @@
 import type { Product } from "~/pcdb/pcdb.types";
 
-export async function useProductData(id: string) {
-	const { data } = await useFetch(`/api/products/${id}`);
+export async function useProductData(id: string, clientOnly?: boolean) {
+	const { data } = await useFetch(`/api/products/${id}`, { server: !clientOnly });
 	return data.value as Product | undefined;
 }
 

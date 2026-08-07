@@ -4,7 +4,7 @@ import { generateHeatNetworkSubNetworkDisplayProductCombinations } from "./subhe
 describe("generateHeatNetworkSubNetworkDisplayProductCombinations", () => {
 	it("returns one display product row per testData entry", () => {
 		const item = {
-			productID: "net-1",
+			id: "net-1", 
 			communityHeatNetworkName: "Alpha Network",
 			testData: [
 				{ ID: "td-1", subheatNetworkName: "Sub A" },
@@ -23,6 +23,7 @@ describe("generateHeatNetworkSubNetworkDisplayProductCombinations", () => {
 			technologyType: "HeatNetworks",
 			communityHeatNetworkName: "Alpha Network",
 			subheatNetworkName: "Sub A",
+			boosterHeatPump: false,
 		});
 		expect(result[1]).toEqual({
 			displayProduct: true,
@@ -32,11 +33,12 @@ describe("generateHeatNetworkSubNetworkDisplayProductCombinations", () => {
 			technologyType: "HeatNetworks",
 			communityHeatNetworkName: "Alpha Network",
 			subheatNetworkName: "Sub B",
+			boosterHeatPump: false,
 		});
 	});
 	it("returns an empty array when testData is absent", () => {
 		const item = {
-			productID: "net-1",
+			id: "net-1",
 			communityHeatNetworkName: "Alpha Network",
 		};
 
@@ -47,7 +49,7 @@ describe("generateHeatNetworkSubNetworkDisplayProductCombinations", () => {
 
 	it("returns an empty array when testData is an empty array", () => {
 		const item = {
-			productID: "net-1",
+			id: "net-1", 
 			communityHeatNetworkName: "Alpha Network",
 			testData: [],
 		};
@@ -55,5 +57,30 @@ describe("generateHeatNetworkSubNetworkDisplayProductCombinations", () => {
 		const result = generateHeatNetworkSubNetworkDisplayProductCombinations(item);
 
 		expect(result).toEqual([]);
+	});
+
+	it("sets boosterHeatPump to true when the heat network has a booster heat pump", () => {
+		const item = {
+			id: "net-1",
+			communityHeatNetworkName: "Alpha Network",
+			testData: [
+				{ ID: "td-1", subheatNetworkName: "Sub A" },
+				{ ID: "td-2", subheatNetworkName: "Sub B" },
+			],
+			boosterHeatPump: true,
+		};
+
+		const result = generateHeatNetworkSubNetworkDisplayProductCombinations(item);
+
+		expect(result[0]).toEqual({
+			displayProduct: true,
+			id: "net-1",
+			productId: "net-1",
+			subHeatNetworkId: "td-1",
+			technologyType: "HeatNetworks",
+			communityHeatNetworkName: "Alpha Network",
+			subheatNetworkName: "Sub A",
+			boosterHeatPump: true,
+		});
 	});
 });

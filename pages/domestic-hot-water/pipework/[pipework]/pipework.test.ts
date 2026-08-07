@@ -23,6 +23,7 @@ const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
 		areaOfHeatExchanger: 1000,
 		heaterPosition: 0.8,
 		thermostatPosition: 0.5,
+		coldWaterSource: "mainsWater",
 	},
 };
 

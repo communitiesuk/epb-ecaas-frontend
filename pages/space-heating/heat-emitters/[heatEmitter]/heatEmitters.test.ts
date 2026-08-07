@@ -719,8 +719,9 @@ describe("Heat emitters", () => {
 				},
 			});
 			await user.click(screen.getByTestId("typeOfHeatEmitter_electricStorageHeater"));
+			await user.click(screen.getByTestId("chooseAProductButton"));
 
-			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/electric-storage-heater");
+			expect(navigateToMock).toHaveBeenCalledWith("/0/electric-storage-heater");
 		});
 	});
 
@@ -734,8 +735,9 @@ describe("Heat emitters", () => {
 
 			await user.click(screen.getByTestId("typeOfHeatEmitter_wetDistributionSystem"));
 			await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
+			await user.click(screen.getByTestId("chooseAProductButton"));
 
-			expect(screen.getByTestId("chooseAProductButton").getAttribute("href")).toBe("/0/radiator?emitterIndex=0&sort=type&order=asc");
+			expect(navigateToMock).toHaveBeenCalledWith("/0/radiator?emitterIndex=0&sort=type&order=asc");
 		});
 	});
 

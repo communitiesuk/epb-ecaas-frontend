@@ -72,7 +72,6 @@ const mechVentInstallationLocations = [
 ] as const satisfies SchemaMechanicalVentilationInstallationLocation[];
 const mechVentInstallationTypes = [
 	"in_ceiling",
-	"in_duct",
 	"through_wall",
 ] as const satisfies SchemaMechanicalVentilationInstallationType[];
 const mhvrLocations = ["inside", "outside"] as const satisfies MVHRLocation[];
@@ -97,7 +96,6 @@ const waterPipeContentsTypes = ["water", "glycol25"] as const satisfies SchemaWa
 const waterPipeworkLocations = ["internal", "external"] as const satisfies SchemaWaterPipeworkLocation[];
 const windowTreatmentControls = ["auto_motorised", "manual"] as const satisfies SchemaWindowTreatmentControl[];
 const windowTreatmentTypes = ["blinds", "curtains"] as const satisfies SchemaWindowTreatmentType[];
-const windShieldLocations = ["Sheltered", "Average", "Exposed"] as const satisfies SchemaWindShieldLocation[];
 
 export const applianceTypeZod = zodForTypeOptions(ensureAllUnion<SchemaApplianceType, (typeof applianceTypes)>(applianceTypes));
 export const arealHeatCapacityZod = zodForTypeOptions(ensureAllUnion<SchemaArealHeatCapacity, (typeof arealHeatCapacities)>(arealHeatCapacities));
@@ -130,4 +128,3 @@ export const waterPipeContentsTypeZod = zodForTypeOptions(ensureAllUnion<SchemaW
 export const waterPipeworkLocationZod = zodForTypeOptions(ensureAllUnion<SchemaWaterPipeworkLocation, (typeof waterPipeworkLocations)>(waterPipeworkLocations));
 export const windowTreatmentControlZod = zodForTypeOptions(ensureAllUnion<SchemaWindowTreatmentControl, (typeof windowTreatmentControls)>(windowTreatmentControls));
 export const windowTreatmentTypeZod = zodForTypeOptions(ensureAllUnion<SchemaWindowTreatmentType, (typeof windowTreatmentTypes)>(windowTreatmentTypes));
-export const windShieldLocationZod = zodForTypeOptions(ensureAllUnion<SchemaWindShieldLocation, (typeof windShieldLocations)>(windShieldLocations));

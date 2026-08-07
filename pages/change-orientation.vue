@@ -7,7 +7,7 @@ const store = useEcaasStore();
 const title = "Change orientation of dwelling";
 const banner = useBanner();
 
-const pvs = store.pvAndBatteries.pvArrays;
+const pvs = store.pvAndBatteries.pvs;
 const externalWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
 const roofs = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs;
 const windows = store.dwellingFabric.dwellingSpaceWindows;

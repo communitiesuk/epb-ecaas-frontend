@@ -4,7 +4,7 @@ import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, Schem
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, ShowerProductType, TypeOfBoiler, WaterStorageProductType, WwhrsType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, ShowerProductType, TypeOfBoiler, WaterCylinderConfiguration, WaterStorageProductType, WwhrsProductType } from "~/stores/ecaasStore.schema";
 import type { Split } from "type-fest";
 
 export const emptyValueRendering = "-";
@@ -364,7 +364,6 @@ export const heatSourceProductTypesDisplay = {
 	"hybridHeatPump": pluralize("Hybrid heat pump"),
 	"combiBoiler": pluralize("Combi boiler"),
 	"regularBoiler": pluralize("Regular boiler"),
-	"heatNetwork": pluralize("Heat network"),
 	"heatBatteryPcm": pluralize("PCM heat battery", "ies"),
 	"heatBatteryDryCore": pluralize("Dry core heat battery", "ies"),
 	"heatInterfaceUnit": pluralize("Heat interface unit"),
@@ -373,7 +372,6 @@ export const heatSourceProductTypesDisplay = {
 
 export type BoilerTypeDisplay = "Combi boiler" | "Regular boiler";
 export type BoilerLocationDisplay = "Heated space" | "Unheated space";
-export type HeatNetworkTypeDisplay = "Sleeved district heat network" | "Unsleeved district heat network" | "Communal heat network";
 export type HeatBatteryTypeDisplay = "PCM" | "Dry core";
 export type LocationOfCollectorLoopPipingTypeDisplay = "Outside" | "Heated space" | "Unheated space";
 
@@ -382,7 +380,6 @@ export type HeatSourceTypeDisplay = "Heat pump" | "Boiler" | "Heat network" | "H
 export const heatSourceTypesWithDisplay = {
 	"heatPump": "Heat pump",
 	"boiler": "Boiler",
-	"heatNetwork": "Heat network",
 	"heatBattery": "Heat battery",
 	"heatInterfaceUnit": "Heat interface unit",
 } as const satisfies Record<HeatSourceType, HeatSourceTypeDisplay>;
@@ -404,6 +401,13 @@ export function displayDHWHeatSourceType(type: DHWHeatSourceType | undefined): D
 	return DHWHeatSourceTypesWithDisplay[type!] ?? emptyValueRendering;
 }
 
+export const heatNetworkProductTypeDisplay = {
+	"heatNetwork": pluralize("Heat network"),
+} as const satisfies Record<HeatNetworkProductType, (plural: boolean) => string>;
+
+export type HeatNetworkTypeDisplay = "Sleeved district heat network" | "Unsleeved district heat network" | "Communal heat network";
+
+
 export type HeatEmitterDisplay = "Wet distribution system (Radiators, underfloor heating, etc.)" | "Warm air heater" | "Instant electric heater" | "Electric storage heater";
 
 export const heatEmitterTypes = {
@@ -423,6 +427,7 @@ export function displayHeatEmitterType(type: HeatEmitterType | undefined): HeatE
 
 export const mechanicalVentilationProductTypesDisplay = {
 	"mvhr": pluralize("MVHR"),
+	"centralisedMv": pluralize("Centralised MV"),
 	"centralisedContinuousMev": pluralize("Centralised continuous MEV"),
 	"decentralisedContinuousMev": pluralize("Decentralised continuous MEV"),
 } as const satisfies Record<MechanicalVentilationProductType, (plural: boolean) => string>;
@@ -455,8 +460,8 @@ export const heatEmittingProductTypesDisplay = {
 } as const satisfies Record<HeatEmittingProductType, (plural: boolean) => string>;
 
 export const waterStorageTypes = {
-	"hotWaterCylinder": "Hot water cylinder",
-	"smartHotWaterTank": "Smart hot water tank",
+	"hotWaterCylinder": "Standard water cylinder",
+	"smartHotWaterTank": "Smart water cylinder",
 } as const satisfies Record<WaterStorageType, string>;
 
 export type HotWaterOutletDisplay = "Mixer shower" | "Electric shower" | "Bath" | "Other (basin tap, kitchen sink, etc.)";
@@ -470,8 +475,16 @@ export const hotWaterOutletTypes = {
 
 export const showerProductTypesDisplay = {
 	"airPressureShower": pluralize("Shower"),
-	"wwhrs": pluralize("Waste water heat recovery system"),
 } as const satisfies Record<ShowerProductType, (plural: boolean) => string>;
+
+export const wwhrsProductTypeDisplay = {
+	"wwhrs": pluralize("Waste water heat recovery system"),
+} as const satisfies Record<WwhrsProductType, (plural: boolean) => string>;
+
+export const waterCylinderConfigurationDisplay = {
+	"hotWaterCylinder": "Hot water cylinder",
+	"preheatedWaterCylinder": "Pre-heated water cylinder",
+} as const satisfies Record<WaterCylinderConfiguration, string>;
 
 export function displayHotWaterOutletType(type: HotWaterOutletType | undefined): HotWaterOutletDisplay | typeof emptyValueRendering {
 	if (!type) {
@@ -479,12 +492,6 @@ export function displayHotWaterOutletType(type: HotWaterOutletType | undefined):
 	}
 	return hotWaterOutletTypes[type];
 }
-
-export const wwhrsTypes = {
-	"instantaneousSystemA": "WWHRS instantaneous system A",
-	"instantaneousSystemB": "WWHRS instantaneous system B",
-	"instantaneousSystemC": "WWHRS instantaneous system C",
-} as const satisfies Record<WwhrsType, string>;
 
 // we can get the display form by taking SchemaConvectiveType and
 // splitting off the first fragment before ", " or " ("
@@ -523,7 +530,6 @@ export function displayBoilerLocation(locationType: SchemaBoilerLocationType | u
 
 export const installationTypeOptions: Record<SchemaMechanicalVentilationInstallationType, string> = {
 	in_ceiling: "In the ceiling",
-	in_duct: "In a duct",
 	through_wall: "Through a wall",
 };
 

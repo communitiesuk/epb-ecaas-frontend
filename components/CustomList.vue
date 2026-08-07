@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { GovTagProps } from "~/common.types";
+import type { GovTagProps, ConflictMessage } from "~/common.types";
 
 type CustomListAction = "edit" | "duplicate" | "delete";
 
@@ -21,7 +21,7 @@ const props = defineProps<{
 	onDuplicate?: (index: number) => void;
 	showStatus?: boolean;
 	section?: string;
-	conflictMessage?: string;
+	conflictMessage?: ConflictMessage;
 }>();
 
 function handleRemove(index: number, e: MouseEvent) {
@@ -40,12 +40,21 @@ function canAddMoreItems() {
 }
 
 function routeForAddItem() {
-	return props.maxNumberOfItems === 1 && props.section !== "dHWHeatSources" ? props.formUrl : `${props.formUrl}/create`;
+	if (props.id === "heatNetworks") {
+		return `${props.formUrl}/create`;
+	}
+
+	return props.maxNumberOfItems === 1 && props.section !== "dHWHeatSources"
+		? props.formUrl
+		: `${props.formUrl}/create`;
 }
 
 function routeForEditItem(index: number) {
-	return props.maxNumberOfItems === 1 && props.section !== "dHWHeatSources" ? props.formUrl : `${props.formUrl}/${index}`;
+	if (props.id === "heatNetworks") {
+		return `${props.formUrl}/${index}`;
+	}
 
+	return props.maxNumberOfItems === 1 && props.section !== "dHWHeatSources" ? props.formUrl : `${props.formUrl}/${index}`;
 }
 </script>
 
@@ -68,12 +77,24 @@ function routeForEditItem(index: number) {
 					</li>
 				</ul>
 			</div>
-			<div v-if="conflictMessage" class="govuk-summary-card__content">
+			<div
+				v-if="conflictMessage"
+				class="govuk-summary-card__content"
+				data-testid="conflict-message"
+			>
 				<div class="govuk-body">
-					{{ conflictMessage }}
+					<span>{{ conflictMessage.beforeLinkText }}</span>
+
+					<NuxtLink
+						v-if="conflictMessage.link"
+						:href="conflictMessage.link.url"
+					>
+						{{ conflictMessage.link.text }}
+					</NuxtLink>
+
+					<span>{{ conflictMessage.afterLinkText }}</span>
 				</div>
 			</div>
-
 			<div v-else-if="items && items.length" class="govuk-summary-card__content" :data-testid="`${id}_items`">
 				<dl class="govuk-summary-list">
 					<div

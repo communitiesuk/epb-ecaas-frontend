@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
-import { checkMvhrHasDuctwork } from "../../../utils/checkMvhrHasDuctwork";
+import { checkDuctworkRequirementsMet } from "../../../utils/checkDuctworkRequirementsMet";
 import { page as pages } from "~/data/pages/pages";
 
-const title = "MVHR ductwork";
+const title = "Mechanical ventilation ductwork";
 const page = usePage();
 const store = useEcaasStore();
 
@@ -42,7 +42,7 @@ function handleDuplicate(index: number) {
 }
 
 function handleComplete() {
-	if (checkMvhrHasDuctwork()) {
+	if (checkDuctworkRequirementsMet()) {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: { complete: true },
@@ -57,7 +57,7 @@ function checkIsComplete() {
 	if (!store.infiltrationAndVentilation.ductwork.complete) {
 		return false;
 	}
-	return checkMvhrHasDuctwork();
+	return checkDuctworkRequirementsMet();
 }
 </script>
 
@@ -68,9 +68,12 @@ function checkIsComplete() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<div class="govuk-inset-text">
+		<p>Only add ductwork for MVHRs and centralised MVs</p>
+	</div>
 	<CustomList
 		id="ductwork"
-		title="Ductwork"
+		title="Mechanical ventilation ductwork"
 		:form-url="page?.url!"
 		:items="store.infiltrationAndVentilation.ductwork.data?.map((x) => ({
 			name: x.data.name,

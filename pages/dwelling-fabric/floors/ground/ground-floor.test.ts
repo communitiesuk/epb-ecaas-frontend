@@ -64,7 +64,6 @@ describe("ground floor", () => {
 		underfloorSpaceThermalResistance: 0,
 		thermalTransmittanceOfWallsAboveGround: 0,
 		ventilationOpeningsArea: 0,
-		windShieldingFactor: "Exposed",
 	};
 
 	// const groundFloorWithHeatedBasement: GroundFloorData = {
@@ -339,7 +338,6 @@ describe("ground floor", () => {
 			await user.type(screen.getByTestId("underfloorSpaceThermalResistance"), "0");
 			await user.type(screen.getByTestId("thermalTransmittanceOfWallsAboveGround"), "0");
 			await user.type(screen.getByTestId("ventilationOpeningsArea"), "0");
-			await user.click(screen.getByTestId("windShieldingFactor_Exposed"));
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -371,7 +369,6 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("underfloorSpaceThermalResistance")).value).toBe("0");
 			expect((await screen.findByTestId<HTMLInputElement>("thermalTransmittanceOfWallsAboveGround")).value).toBe("0");
 			expect((await screen.findByTestId<HTMLInputElement>("ventilationOpeningsArea")).value).toBe("0");
-			expect((await screen.findByTestId("windShieldingFactor_Exposed")).hasAttribute("checked")).toBe(true);
 		});
 
 		test("required error messages are displayed when empty form is submitted", async () => {
@@ -385,7 +382,6 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId("underfloorSpaceThermalResistance_error"))).toBeDefined();
 			expect((await screen.findByTestId("thermalTransmittanceOfWallsAboveGround_error"))).toBeDefined();
 			expect((await screen.findByTestId("ventilationOpeningsArea_error"))).toBeDefined();
-			expect((await screen.findByTestId("windShieldingFactor_error"))).toBeDefined();
 		});
 	});
 

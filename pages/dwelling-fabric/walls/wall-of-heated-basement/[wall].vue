@@ -147,10 +147,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Exposed perimeter"
-			help="Enter the length of the basement wall where the basement meets the ground level surface"
+			help="Enter the length of the exposed perimeter of the wall"
 			name="perimeter"
 			:validation="zodTypeAsFormKitValidation(groundPerimeterZod)"
-		/>
+		>
+			<GovDetails summary-text="Help with this input">
+				<p class="govuk-hint">This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings.</p>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			v-if="mounted"
 			id="associatedBasementFloorId"

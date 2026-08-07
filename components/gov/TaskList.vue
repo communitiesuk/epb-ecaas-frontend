@@ -22,7 +22,7 @@ defineProps<{
 	<ul class="govuk-task-list">
 		<li v-for="item in items" :key="item.id" class="govuk-task-list__item govuk-task-list__item--with-link">
 			<div class="govuk-task-list__name-and-hint">
-				<NuxtLink :to="item.url" class="govuk-link govuk-task-list__link">
+				<NuxtLink :to="item.url" class="govuk-link govuk-task-list__link" :data-testid="`taskList_${item.id}`">
 					{{ item.title }}
 				</NuxtLink>
 			</div>

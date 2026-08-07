@@ -2,11 +2,11 @@ import { standardPitchOption } from "./../utils/pitchOptions";
 import type { TaggedUnion } from "type-fest";
 import type { PageId } from "~/data/pages/pages";
 import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
-import type { FloorType, SchemaMechVentType, MassDistributionClass } from "~/schema/aliases";
+import type { FloorType, MassDistributionClass } from "~/schema/aliases";
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { addConstraints, zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, boilerLocationZod, colourZod, ductShapeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, boilerLocationZod, colourZod, ductShapeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, zodLiteralFromUnionType } from "./zod";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
 
 export const fraction = z.number().min(0).max(1);
@@ -75,12 +75,9 @@ const baseGeneralDetails = z.object({
 	partOActiveCoolingRequired: z.boolean(),
 });
 
-export const storeyOfFlatZod = z.int().min(-50).max(199);
-
 const generalDetailsDataZod = z.discriminatedUnion("typeOfDwelling", [
 	baseGeneralDetails.extend({
 		typeOfDwelling: z.literal("flat"),
-		storeyOfFlat: storeyOfFlatZod,
 		storeysInBuilding: z.int().min(1),
 	}),
 	baseGeneralDetails.extend({ typeOfDwelling: z.literal("house") }),
@@ -251,7 +248,6 @@ const groundFloorDataZod = z.union(
 			underfloorSpaceThermalResistance: z.number(),
 			thermalTransmittanceOfWallsAboveGround: z.number(),
 			ventilationOpeningsArea: z.number(),
-			windShieldingFactor: windShieldLocationZod,
 		}),
 		baseGroundFloorData.extend({
 			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Heated_basement">("Heated_basement"),
@@ -412,13 +408,12 @@ const ceilingDataZod = z.discriminatedUnion(
 
 export type CeilingData = z.infer<typeof ceilingDataZod>;
 
-const roofType = z.enum(["flatAboveHeatedSpace", "flatAboveUnheatedSpace", "pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling", "unheatedPitched"]);
+const roofType = z.enum(["flatAboveHeatedSpace", "flatAboveUnheatedSpace", "pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling"]);
 
 export type RoofType = z.infer<typeof roofType>;
 
-const roofDataBaseZod = namedWithId.extend({
+const roofDataZod = namedWithId.extend({
 	typeOfRoof: roofType,
-	pitchOption: z.optional(zeroPitchOption),
 	pitch: z.number().min(0).max(180),
 	orientation: z.optional(orientation),
 	length: heightOpaqueZod,
@@ -428,17 +423,8 @@ const roofDataBaseZod = namedWithId.extend({
 	colour: colourZod,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
+	uValue,
 });
-
-const roofDataZod = z.discriminatedUnion("typeOfRoof", [
-	roofDataBaseZod.extend({
-		typeOfRoof: z.enum(["unheatedPitched"]),
-		uValue,
-	}),
-	roofDataBaseZod.extend({
-		typeOfRoof: z.enum(["pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling", "flatAboveHeatedSpace", "flatAboveUnheatedSpace"]),
-		uValue,
-	})]);
 
 export type RoofData = z.infer<typeof roofDataZod>;
 
@@ -488,7 +474,7 @@ const baseExternalGlazedDoorDataZod = namedWithId.extend({
 	elevationalHeight: baseHeightTransparentZod,
 	openingToFrameRatio: fraction,
 	maximumOpenableArea: maxWindowOpenAreaZod,
-	heightOpenableArea: freeAreaHeightZod,
+	freeAreaHeight: freeAreaHeightZod,
 	depthOfReveal: revealDimensionZod.optional(),
 	distanceFromGlassToStartOfReveal: revealDimensionZod.optional(),
 });
@@ -642,6 +628,7 @@ const baseWindowData = namedWithId.extend({
 	solarTransmittance: gValueZod,
 	elevationalHeight: baseHeightTransparentZod,
 	openingToFrameRatio: fraction,
+	freeAreaHeight: freeAreaHeightZod,
 	depthOfReveal: revealDimensionZod.optional(),
 	distanceFromGlassToStartOfReveal: revealDimensionZod.optional(),
 });
@@ -740,31 +727,54 @@ export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	airPermeability: EcaasForm<AirPermeabilityData>;
 }>;
 
+export const mechanicalVentilationTypes = [
+	"MVHR",
+	"Centralised MV",
+	"Intermittent MEV",
+	"Centralised continuous MEV",
+	"Decentralised continuous MEV",
+] as const;
+
+export type MechanicalVentilationType =
+  typeof mechanicalVentilationTypes[number];
+
 const baseMechanicalVentilationData = namedWithId.extend({
 	airFlowRate: zodUnit("flow rate"),
 	associatedItemId: z.string().trim().min(1).optional(),
 });
 
+const mvhrFields = {
+	installedUnderApprovedScheme: z.boolean(),
+	measuredFanPowerAndAirFlowRateKnown: z.boolean(),
+	mvhrLocation: mvhrLocationZod,
+	associatedItemIdForIntake: z.string().trim().min(1).optional(),
+	associatedItemIdForExhaust: z.string().trim().min(1).optional(),
+	midHeightOfAirFlowPathForIntake: z.number(),
+	orientationOfIntake: orientation,
+	pitchOfIntake: z.number().min(0).max(180),
+	midHeightOfAirFlowPathForExhaust: z.number(),
+	orientationOfExhaust: orientation,
+	pitchOfExhaust: z.number().min(0).max(180),
+};
+
 const baseMvhrData = baseMechanicalVentilationData
 	.extend(pcdbProduct.shape)
 	.extend(hasPcdbPackagedProduct.shape)
 	.extend({
-		typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "MVHR">("MVHR"),
-		installedUnderApprovedScheme: z.boolean(),
-		measuredFanPowerAndAirFlowRateKnown: z.boolean(),
-		mvhrLocation: mvhrLocationZod,
-		associatedItemIdForIntake: z.string().trim().min(1).optional(),
-		associatedItemIdForExhaust: z.string().trim().min(1).optional(),
-		midHeightOfAirFlowPathForIntake: z.number(),
-		orientationOfIntake: orientation,
-		pitchOfIntake: z.number().min(0).max(180),
-		midHeightOfAirFlowPathForExhaust: z.number(),
-		orientationOfExhaust: orientation,
-		pitchOfExhaust: z.number().min(0).max(180),
+		typeOfMechanicalVentilationOptions: z.literal("MVHR"),
+		...mvhrFields,
+	});
+
+const baseCentralisedMvData = baseMechanicalVentilationData
+	.extend(pcdbProduct.shape)
+	.extend(hasPcdbPackagedProduct.shape)
+	.extend({
+		typeOfMechanicalVentilationOptions: z.literal("Centralised MV"),
+		...mvhrFields,
 	});
 
 const intermittentMevData = baseMechanicalVentilationData.extend({
-	typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Intermittent MEV">("Intermittent MEV"),
+	typeOfMechanicalVentilationOptions: z.literal("Intermittent MEV"), 
 	specificFanPower: z.number(),
 	midHeightOfAirFlowPath: z.number(),
 });
@@ -773,7 +783,7 @@ const baseCentralisedContinuousMevData = baseMechanicalVentilationData
 	.extend(pcdbProduct.shape)
 	.extend(hasPcdbPackagedProduct.shape)
 	.extend({
-		typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Centralised continuous MEV">("Centralised continuous MEV"),
+		typeOfMechanicalVentilationOptions: z.literal("Centralised continuous MEV"), 
 		installedUnderApprovedScheme: z.boolean(),
 		measuredFanPowerAndAirFlowRateKnown: z.boolean(),
 		midHeightOfAirFlowPath: z.number(),
@@ -783,7 +793,7 @@ const decentralisedContinuousMevData = baseMechanicalVentilationData
 	.extend(pcdbProduct.shape)
 	.extend(hasPcdbPackagedProduct.shape)
 	.extend({
-		typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Decentralised continuous MEV">("Decentralised continuous MEV"),
+		typeOfMechanicalVentilationOptions: z.literal("Decentralised continuous MEV"), 
 		installedUnderApprovedScheme: z.boolean(),
 		installationType: mechVentInstallationTypeZod,
 		installationLocation: mechVentInstallationLocationZod,
@@ -826,6 +836,13 @@ const mechanicalVentilationDataZod = z.discriminatedUnion("hasAssociatedItem",
 						makeMVWithAssociatedItem(baseMechanicalVentilationData)
 							.extend(baseMvhrData.shape)
 							.extend(baseMeasuredFanPowerAndAirFlowRateKnown),
+						makeMVWithAssociatedItem(baseMechanicalVentilationData)
+							.extend(baseCentralisedMvData.shape)
+							.extend({ measuredFanPowerAndAirFlowRateKnown: z.literal(false) }),
+
+						makeMVWithAssociatedItem(baseMechanicalVentilationData)
+							.extend(baseCentralisedMvData.shape)
+							.extend(baseMeasuredFanPowerAndAirFlowRateKnown),
 					],
 				),
 				makeMVWithAssociatedItem(baseMechanicalVentilationData)
@@ -854,6 +871,12 @@ const mechanicalVentilationDataZod = z.discriminatedUnion("hasAssociatedItem",
 							.extend({ measuredFanPowerAndAirFlowRateKnown: z.literal(false) }),
 						makeMVWithoutAssociatedItem(baseMechanicalVentilationData)
 							.extend(baseMvhrData.shape)
+							.extend(baseMeasuredFanPowerAndAirFlowRateKnown),
+						makeMVWithoutAssociatedItem(baseMechanicalVentilationData)
+							.extend(baseCentralisedMvData.shape)
+							.extend({ measuredFanPowerAndAirFlowRateKnown: z.literal(false) }),
+						makeMVWithoutAssociatedItem(baseMechanicalVentilationData)
+							.extend(baseCentralisedMvData.shape)
 							.extend(baseMeasuredFanPowerAndAirFlowRateKnown),
 					],
 				),
@@ -948,7 +971,10 @@ const typeOfBoiler = z.enum(["combiBoiler", "regularBoiler"]);
 const typeOfHeatNetwork = z.enum(["sleevedDistrictHeatNetwork", "unsleevedDistrictHeatNetwork", "communalHeatNetwork"]);
 const typeOfHeatBattery = z.enum(["heatBatteryPcm", "heatBatteryDryCore"]);
 const typeOfLocationOfLoopPiping = z.enum(["outside", "heatedSpace", "unheatedSpace"]);
-const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedContinuousMev", "decentralisedContinuousMev"]);
+const coldWaterSource = z.enum(["mainsWater", "headerTank"]);
+const _typeOfMechanicalVentilation = z.enum(["mvhr", "centralisedMv", "centralisedContinuousMev", "decentralisedContinuousMev"]);
+
+export const typeOfColdWaterSource = coldWaterSource.enum;
 
 export type HeatSourceSectionPage = "space heating" | "domestic hot water";
 
@@ -957,9 +983,12 @@ export type TypeOfBoiler = z.infer<typeof typeOfBoiler>;
 export type TypeOfHeatBattery = z.infer<typeof typeOfHeatBattery>;
 export type TypeOfHeatNetwork = z.infer<typeof typeOfHeatNetwork>;
 export type LocationOfCollectorLoopPipingType = z.infer<typeof typeOfLocationOfLoopPiping>;
+export type ColdWaterSourceType = z.infer<typeof coldWaterSource>;
+
+const typeOfWaterCylinderConfiguration = z.enum(["hotWaterCylinder", "preheatedWaterCylinder"]);
+export type WaterCylinderConfiguration = z.infer<typeof typeOfWaterCylinderConfiguration>;
 
 export type HeatSourceType =
-	"heatNetwork" |
 	"heatPump" |
 	"boiler" |
 	"heatInterfaceUnit" |
@@ -971,18 +1000,48 @@ const heatPumpBase = pcdbPackagedProduct.extend({
 	typeOfHeatSource: z.literal("heatPump"),
 	typeOfHeatPump: typeOfHeatPump.optional(),
 	maxFlowTemp: zodUnit("temperature"),
+	tankVolumeDeclared: z.optional(z.number()),
+	dailyLossesDeclared: z.optional(z.number()),
+	heatExchangerSurfaceAreaDeclared: z.optional(z.number()),
 });
 
-const heatPumpDataZod = z.discriminatedUnion("isConnectedToHeatNetwork", [
-	heatPumpBase.extend({
-		isConnectedToHeatNetwork: z.literal(false),
-		energySupply: fuelTypeZod,
-	}),
-	heatPumpBase.extend({
-		isConnectedToHeatNetwork: z.literal(true),
-		associatedHeatNetworkId: z.string().trim().min(1),
-	}),
-]);
+const heatPumpDataZod = nestedDiscriminatedUnion(
+	heatPumpBase,
+	{
+		discriminator: "typeOfHeatPump",
+		variants: [
+			z.object({
+				typeOfHeatPump: z.literal("booster"),
+				associatedHeatNetworkId: z.string().trim().min(1),
+			}),
+			z.object({
+				typeOfHeatPump: z.enum([
+					"airSource",
+					"groundSource",
+					"waterSource",
+					"hotWaterOnly",
+					"exhaustAirMev",
+					"exhaustAirMvhr",
+					"exhaustAirMixed",
+					"hybridHeatPump",
+				]),
+				energySupply: fuelTypeZod,
+			}),
+		] satisfies Tuple,
+	},
+	{
+		discriminator: "packagedWithWaterCylinder",
+		variants: [
+			z.object({
+				packagedWithWaterCylinder: z.optional(z.literal(false)),
+			}),
+			z.object({
+				packagedWithWaterCylinder: z.literal(true),
+				waterCylinderConfiguration: typeOfWaterCylinderConfiguration,
+			}),
+		] satisfies Tuple,
+	},
+);
 
 const boilerBase = pcdbProduct
 	.extend(hasPcdbPackagedProduct.shape)
@@ -1005,16 +1064,10 @@ const heatBatteryBase = pcdbProduct.extend({
 	energySupply: fuelTypeZod,
 });
 
-const heatNetworkBase = pcdbProduct.extend({
-	typeOfHeatSource: z.literal("heatNetwork"),
-	typeOfHeatNetwork,
-	subHeatNetworkName: z.string().optional(),
-});
-
 const heatInterfaceUnitBase = pcdbProduct.extend({
 	typeOfHeatSource: z.literal("heatInterfaceUnit"),
 	maxFlowTemp: zodUnit("temperature"),
-	buildingLevelLosses: zodUnit("power"),
+	buildingLevelLosses: zodUnit("power").optional(),
 	associatedHeatNetworkId: z.string().trim().min(1),
 });
 
@@ -1023,13 +1076,11 @@ const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	boilerBase,
 	heatBatteryBase,
 	heatInterfaceUnitBase,
-	heatNetworkBase,
 ]);
 
 const _typeOfHeatSource = z.enum({
 	...typeOfHeatPump.enum,
 	...typeOfBoiler.enum,
-	...z.enum(["heatNetwork"]).enum,
 	...typeOfHeatBattery.enum,
 	...z.enum(["heatInterfaceUnit"]).enum,
 });
@@ -1038,6 +1089,20 @@ export const typeOfHeatSource = _typeOfHeatSource.enum;
 
 export type HeatSourceProductType = z.infer<typeof _typeOfHeatSource>;
 export type HeatSourceData = z.infer<typeof heatSourceDataZod>;
+
+export const heatNetworkDataZod = pcdbProduct.extend({
+	typeOfHeatNetwork,
+	subHeatNetworkName: z.string().optional(),
+	boosterHeatPump: z.boolean().optional(),
+});
+
+export type HeatNetworkData = z.infer<typeof heatNetworkDataZod>;
+
+const _typeOfHeatNetwork = z.enum(["heatNetwork"]);
+
+export const typeOfHeatNetworkProduct = _typeOfHeatNetwork.enum;
+
+export type HeatNetworkProductType = z.infer<typeof _typeOfHeatNetwork>;
 
 const _typeOfWaterStorage = z.enum(["smartHotWaterTank"]);
 
@@ -1049,11 +1114,15 @@ export const typeOfMechanicalVentilation = _typeOfMechanicalVentilation.enum;
 
 export type MechanicalVentilationProductType = z.infer<typeof _typeOfMechanicalVentilation>;
 
-const _typeOfShowerProduct = z.enum(["airPressureShower", "wwhrs"]);
+const _typeOfShowerProduct = z.enum(["airPressureShower"]);
 
 export const typeOfShowerProduct = _typeOfShowerProduct.enum;
 
 export type ShowerProductType = z.infer<typeof _typeOfShowerProduct>;
+
+const _typeOfWwhrs = z.enum(["wwhrs"]);
+
+export type WwhrsProductType = z.infer<typeof _typeOfWwhrs>;
 
 export const productTypeMap = {
 	"airSource": "AirSourceHeatPump",
@@ -1076,13 +1145,14 @@ export const productTypeMap = {
 	"smartHotWaterTank": "SmartHotWaterTank",
 	"heatInterfaceUnit": "HeatInterfaceUnit",
 	"mvhr": "CentralisedMvhr",
+	"centralisedMv": "CentralisedMv",
 	"centralisedContinuousMev": "CentralisedMev",
 	"decentralisedContinuousMev": "DecentralisedMev",
 	"instantElectricHeater": "DirectElectricHeaters",
 	"airPressureShower": "AirPoweredShowers",
 	"wwhrs": "InstantaneousWwhrSystem",
 	"underFloorHeating": "UnderFloorHeating",
-} as const satisfies Record<HeatSourceProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType | ShowerProductType, TechnologyType | string | TechnologyType[]>;
+} as const satisfies Record<HeatSourceProductType | HeatNetworkProductType | HeatEmittingProductType | WaterStorageProductType | MechanicalVentilationProductType | ShowerProductType | WwhrsProductType, TechnologyType | string | TechnologyType[]>;
 
 export type HeatEmitterType =
 	"wetDistributionSystem" |
@@ -1245,6 +1315,8 @@ export type HeatingControlData = z.infer<typeof heatingControlsDataZod>;
 
 export type DomesticHotWater = AssertEachKeyIsPageId<{
 	heatSources: EcaasFormList<DomesticHotWaterHeatSourceData>;
+	wwhrs: EcaasFormList<WwhrsData>;
+	preheatedWaterStorage: EcaasFormList<PreheatedWaterStorageData>;
 	waterStorage: EcaasFormList<WaterStorageData>;
 	hotWaterOutlets: EcaasFormList<HotWaterOutletsData>;
 	pipework: EcaasFormList<PipeworkData>;
@@ -1252,7 +1324,6 @@ export type DomesticHotWater = AssertEachKeyIsPageId<{
 
 const hotWaterHeatSourceExtension = {
 	heatSourceId: z.literal("NEW_HEAT_SOURCE"),
-	coldWaterSource: z.enum(["mainsWater", "headerTank"]),
 	isExistingHeatSource: z.literal(false),
 };
 
@@ -1266,7 +1337,6 @@ export type ImmersionHeaterPosition = "top" | "middle" | "bottom";
 const basePointOfUse = namedWithId.extend({
 	typeOfHeatSource: z.literal("pointOfUse"),
 	energySupply: fuelTypeZod.optional(),
-	heaterEfficiency: z.number(),
 });
 export type DHWHeatSourceType = HeatSourceType | "immersionHeater" | "pointOfUse" | "solarThermalSystem";
 
@@ -1289,32 +1359,63 @@ const solarThermalSystemBase = namedWithId.extend({
 
 const heatPumpHotWaterSourceBase = heatPumpBase.extend(hotWaterHeatSourceExtension);
 
-const heatPumpHotWaterDataZod = z.discriminatedUnion("isConnectedToHeatNetwork", [
-	heatPumpHotWaterSourceBase.extend({
-		isConnectedToHeatNetwork: z.literal(false),
-		energySupply: fuelTypeZod,
-	}),
-	heatPumpHotWaterSourceBase.extend({
-		isConnectedToHeatNetwork: z.literal(true),
-		associatedHeatNetworkId: z.string().trim().min(1),
-	}),
-]);
+const heatPumpHotWaterDataZod = nestedDiscriminatedUnion(
+	heatPumpHotWaterSourceBase,
+	{
+		discriminator: "typeOfHeatPump",
+		variants: [
+			z.object({
+				typeOfHeatPump: z.literal("booster"),
+				associatedHeatNetworkId: z.string().trim().min(1),
+			}),
+			z.object({
+				typeOfHeatPump: z.enum([
+					"airSource",
+					"groundSource",
+					"waterSource",
+					"hotWaterOnly",
+					"exhaustAirMev",
+					"exhaustAirMvhr",
+					"exhaustAirMixed",
+					"hybridHeatPump",
+				]),
+				energySupply: fuelTypeZod,
+			}),
+		] satisfies Tuple,
+	},
+	{
+		discriminator: "packagedWithWaterCylinder",
+		variants: [
+			z.object({
+				packagedWithWaterCylinder: z.optional(z.literal(false)),
+			}),
+			z.object({
+				packagedWithWaterCylinder: z.literal(true),
+				waterCylinderConfiguration: typeOfWaterCylinderConfiguration,
+			}),
+		] satisfies Tuple,
+	},
+);
 
-const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceExtension);
-const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceExtension);
+const hotWaterHeatSourceWithColdWater = z.object({
+	coldWaterSource: z.string(),
+}).extend(hotWaterHeatSourceExtension);
+
+export type HotWaterHeatSourceWithColdWater = z.infer<typeof hotWaterHeatSourceWithColdWater>;
+
+const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceWithColdWater.shape);
+const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceWithColdWater.shape);
 
 const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
-const heatNetworkHotWaterSourceBase = heatNetworkBase.extend(hotWaterHeatSourceExtension);
 const immersionHeaterHotWaterSourceBase = baseImmersionHeater.extend(hotWaterHeatSourceExtension);
-const pointOfUseHotWaterSourceBase = basePointOfUse.extend(hotWaterHeatSourceExtension);
-const heatInterfaceUnitHotWaterSourceBase = heatInterfaceUnitBase.extend(hotWaterHeatSourceExtension);
+const pointOfUseHotWaterSourceBase = basePointOfUse.extend(hotWaterHeatSourceWithColdWater.shape);
+const heatInterfaceUnitHotWaterSourceBase = heatInterfaceUnitBase.extend(hotWaterHeatSourceWithColdWater.shape);
 
 const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpHotWaterDataZod,
 	boilerHotWaterSourceBase,
 	heatBatteryHotWaterSourceBase,
 	solarThermalHotWaterSourceBase,
-	heatNetworkHotWaterSourceBase,
 	immersionHeaterHotWaterSourceBase,
 	pointOfUseHotWaterSourceBase,
 	heatInterfaceUnitHotWaterSourceBase,
@@ -1325,7 +1426,7 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 		z.object({
 			id: z.uuidv4().readonly(),
 			heatSourceId: z.string(),
-			coldWaterSource: z.enum(["mainsWater", "headerTank"]),
+			coldWaterSource: z.optional(z.string()),
 			isExistingHeatSource: z.literal(true),
 			createdAutomatically: z.literal(true).optional(),
 			maxFlowTemp: zodUnit("temperature").optional(),
@@ -1334,7 +1435,31 @@ const domesticHotWaterHeatSourceZod = z.discriminatedUnion("isExistingHeatSource
 	],
 );
 
+export type NewDomesticHotWaterHeatSourceData = z.infer<typeof newHotWaterHeatSourceDataZod>;
 export type DomesticHotWaterHeatSourceData = z.infer<typeof domesticHotWaterHeatSourceZod>;
+
+const wwhrsTypeZod = z.enum(["System A", "System B", "System C"]);
+export type WwhrsType = z.infer<typeof wwhrsTypeZod>;
+
+const wwhrsDataZod = pcdbProduct.extend({
+	coldWaterSource,
+	wwhrsType: z.optional(wwhrsTypeZod),
+});
+
+export type WwhrsData = z.infer<typeof wwhrsDataZod>;
+
+const preheatedWaterStorageDataZod = namedWithId
+	.extend(hasPcdbPackagedProduct.shape)
+	.extend({
+		typeOfWaterStorage: z.literal("hotWaterCylinder"),
+		storageCylinderVolume: zodUnit("volume"),
+		dailyEnergyLoss: z.number(),
+		heaterPosition: fraction,
+		coldWaterSource: z.string(),
+		heatSourceId: z.string(),
+	});
+
+export type PreheatedWaterStorageData = z.infer<typeof preheatedWaterStorageDataZod>;
 
 const hotWaterCylinderDataZod = namedWithId
 	.extend(hasPcdbPackagedProduct.shape)
@@ -1345,6 +1470,7 @@ const hotWaterCylinderDataZod = namedWithId
 		areaOfHeatExchanger: z.number().optional(),
 		heaterPosition: fraction,
 		thermostatPosition: fraction,
+		coldWaterSource: z.string(),
 	});
 
 export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
@@ -1353,6 +1479,7 @@ const smartHotWaterTankDataZod = namedWithId.extend({
 	typeOfWaterStorage: z.literal("smartHotWaterTank"),
 	productReference: z.string(),
 	heaterPosition: fraction,
+	coldWaterSource: z.string(),
 });
 
 export type SmartHotWaterTankData = z.infer<typeof smartHotWaterTankDataZod>;
@@ -1366,10 +1493,11 @@ const waterStorageDataZod = z.discriminatedUnion("typeOfWaterStorage", [
 
 export type WaterStorageData = z.infer<typeof waterStorageDataZod>;
 
-const wwhrsTypeZod = z.enum(["instantaneousSystemA", "instantaneousSystemB", "instantaneousSystemC"]);
-export type WwhrsType = z.infer<typeof wwhrsTypeZod>;
+const hotWaterOutletBase = namedWithId.extend({
+	coldWaterSource,
+});
 
-const mixedShowerBaseZod = namedWithId.extend({
+const mixedShowerBaseZod = hotWaterOutletBase.extend({
 	typeOfHotWaterOutlet: z.literal("mixedShower"),
 });
 
@@ -1389,8 +1517,7 @@ const mixedShowerWwhrsFields = {
 		z.object({ wwhrs: z.literal(false) }),
 		z.object({
 			wwhrs: z.literal(true),
-			wwhrsType: wwhrsTypeZod,
-			wwhrsProductReference: z.string().optional(),
+			associatedWwhrs: z.guid(),
 		}),
 	] satisfies Tuple,
 };
@@ -1405,7 +1532,7 @@ export type MixedShowerData = z.infer<typeof mixedShowerDataZod>;
 
 export const ratedPowerShowerZod = z.number().gt(0).max(30);
 
-const electricShowerDataZod = namedWithId.extend({
+const electricShowerDataZod = hotWaterOutletBase.extend({
 	typeOfHotWaterOutlet: z.literal("electricShower"),
 	ratedPower: ratedPowerShowerZod,
 });
@@ -1414,7 +1541,7 @@ export type ElectricShowerData = z.infer<typeof electricShowerDataZod>;
 
 export const bathSizeZod = z.number().gt(0);
 
-const bathDataZod = namedWithId.extend({
+const bathDataZod = hotWaterOutletBase.extend({
 	typeOfHotWaterOutlet: z.literal("bath"),
 	size: bathSizeZod,
 });
@@ -1423,7 +1550,7 @@ export type BathData = z.infer<typeof bathDataZod>;
 
 export const otherFlowRateZod = z.number().min(0.1).max(15);
 
-const otherHotWaterOutletDataZod = namedWithId.extend({
+const otherHotWaterOutletDataZod = hotWaterOutletBase.extend({
 	typeOfHotWaterOutlet: z.literal("otherHotWaterOutlet"),
 	flowRate: otherFlowRateZod,
 });
@@ -1465,7 +1592,7 @@ export type PipeworkData = z.infer<typeof pipeworkDataZod>;
 // NEW HOT WATER END   =======================================================================
 
 export type PvAndBatteries = AssertFormKeysArePageIds<{
-	pvArrays: EcaasFormList<PvArrayData>;
+	pvs: EcaasFormList<PvData>;
 	electricBattery: EcaasFormList<ElectricBatteryData>;
 	diverters: EcaasFormList<PvDiverterData>;
 }>;
@@ -1474,7 +1601,7 @@ export const peakPowerPvZod = z.number().min(0.001).max(100);
 export const sideLengthPvZod = z.number().gt(0).max(100);
 export const inverterPeakPowerPvZod = z.number().gt(0);
 
-const pvArrayDataZod = z.object({
+const pvDataZod = z.object({
 	name: z.string().trim().min(1),
 	peakPower: peakPowerPvZod,
 	ventilationStrategy: photovoltaicVentilationStrategyZod,
@@ -1490,18 +1617,18 @@ const pvArrayDataZod = z.object({
 	hasShading: z.boolean(),
 });
 
-const pvArrayShadingDataZod = z.discriminatedUnion("hasShading", [
-	pvArrayDataZod.extend({
+const pvShadingDataZod = z.discriminatedUnion("hasShading", [
+	pvDataZod.extend({
 		hasShading: z.literal(false),
 	}),
-	pvArrayDataZod.extend({
+	pvDataZod.extend({
 		hasShading: z.literal(true),
 		shading: z.array(shadingObjectDataZod),
 	}),
 ]);
 
 
-export type PvArrayData = z.infer<typeof pvArrayShadingDataZod>;
+export type PvData = z.infer<typeof pvShadingDataZod>;
 
 export const capacityElectricBatteryZod = z.number().gt(0).max(50);
 
@@ -1543,6 +1670,7 @@ export type UsesPitchComponent = {
 	pitchOption?: PitchOption;
 };
 export type SpaceHeating = AssertEachKeyIsPageId<{
+	heatNetworks: EcaasFormList<HeatNetworkData>,
 	heatSource: EcaasFormList<HeatSourceData>,
 	heatEmitters: EcaasFormList<HeatEmittingData>
 	heatingControls: EcaasFormList<HeatingControlData>
@@ -1609,7 +1737,9 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingDetails/shading": shadingDataZod,
 	"dwellingDetails/appliances": appliancesDataZod,
 
+	"domesticHotWater/preheatedWaterStorage": preheatedWaterStorageDataZod,
 	"domesticHotWater/waterStorage": waterStorageDataZod,
+	"domesticHotWater/wwhrs": wwhrsDataZod,
 	"domesticHotWater/heatSources": domesticHotWaterHeatSourceZod,
 	"domesticHotWater/hotWaterOutlets": hotWaterOutletsDataZod,
 	"domesticHotWater/pipework": pipeworkDataZod,
@@ -1639,11 +1769,12 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"infiltrationAndVentilation/vents": ventDataZod,
 	"infiltrationAndVentilation/naturalVentilation": ventilationDataZod,
 	"infiltrationAndVentilation/airPermeability": airPermeabilityDataZod,
+	"spaceHeating/heatNetworks": heatNetworkDataZod,
 	"spaceHeating/heatSource": heatSourceDataZod,
 	"spaceHeating/heatEmitters": heatEmittingDataZod,
 	"spaceHeating/heatingControls": heatingControlsDataZod,
 	"cooling/airConditioning": airConditioningDataZod,
-	"pvAndBatteries/pvArrays": pvArrayShadingDataZod,
+	"pvAndBatteries/pvs": pvShadingDataZod,
 	"pvAndBatteries/electricBattery": electricBatteryDataZod,
 	"pvAndBatteries/diverters": pvDiverterDataZod,
 };

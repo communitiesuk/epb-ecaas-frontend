@@ -58,8 +58,8 @@ function handleDuplicate(index: number) {
 	}
 }
 
-const mvhrArray = store.infiltrationAndVentilation.mechanicalVentilation.data?.filter(
-	x => x.data.typeOfMechanicalVentilationOptions === "MVHR");
+const mvhrOrCentralisedMVArray = store.infiltrationAndVentilation.mechanicalVentilation.data?.filter(
+	x => x.data.typeOfMechanicalVentilationOptions === "MVHR" || x.data.typeOfMechanicalVentilationOptions === "Centralised MV");
 
 function handleComplete() {
 	store.$patch({
@@ -99,8 +99,8 @@ function handleComplete() {
 		@duplicate="handleDuplicate"
 	/>
 	<p
-		v-if="mvhrArray.length > 0"
-		class="govuk-body">Note if you remove a MVHR this will also remove any associated ductwork</p>
+		v-if="mvhrOrCentralisedMVArray.length > 0"
+		class="govuk-body">Note if you remove a MVHR or Centralised MV this will also remove any associated ductwork</p>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton :href="pages('infiltrationAndVentilation').url" secondary>
 			Return to infiltration and ventilation

@@ -99,13 +99,96 @@ describe("infiltration ventilation mapper", () => {
 		});
 	});
 
+	it("maps mechanical ventilation of type Centralised MV input state to FHS input request", () => {
+		const mechVentCentralisedMV: EcaasForm<MechanicalVentilationData>[] = [{
+			...baseForm,
+			data: {
+				id: "centralised_mv",
+				name: "Centralised MV",
+				typeOfMechanicalVentilationOptions: "Centralised MV",
+				airFlowRate: unitValue(30, litrePerSecond),
+				mvhrLocation: "inside",
+				productReference: "1000",
+				midHeightOfAirFlowPathForExhaust: 1.5,
+				orientationOfExhaust: 90,
+				pitchOfExhaust: 10,
+				midHeightOfAirFlowPathForIntake: 1.5,
+				orientationOfIntake: 80,
+				pitchOfIntake: 10,
+				installedUnderApprovedScheme: true,
+				measuredFanPowerAndAirFlowRateKnown: true,
+				measuredAirFlowRate: 37,
+				measuredFanPower: 12.26,
+				associatedItemId: "none",
+				hasAssociatedItem: false,
+				pitch: 90,
+				orientation: 180,
+			},
+		}];
+
+		// Arrange
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					...baseForm,
+					data: mechVentCentralisedMV,
+				},
+				naturalVentilation: {
+					...baseForm,
+					data: {
+						ventilationZoneHeight: 20,
+						dwellingEnvelopeArea: 20,
+						baseHeightOfVentilationZone: 0,
+						maxRequiredAirChangeRate: 5,
+					},
+				},
+				airPermeability: {
+					...baseForm,
+					data: {
+						testPressure: "Pulse test only",
+						airTightnessTestResult: 2.2,
+					},
+				},
+				vents: {
+					...baseForm,
+				},
+			},
+		});
+
+		// Act
+		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
+
+		// Assert
+		expect(fhsInputData.InfiltrationVentilation).toBeDefined();
+		expect(fhsInputData.InfiltrationVentilation?.MechanicalVentilation).toBeDefined();
+
+		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["Centralised MV"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;
+		expect(firstMechVent).toBeDefined();
+		expect(firstMechVent?.EnergySupply).toBe("mains elec");
+		expect(firstMechVent?.vent_type).toBe("MVHR");
+		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(108);
+		expect(firstMechVent?.mvhr_location).toBe("inside");
+		expect("measured_air_flow_rate" in firstMechVent && firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
+		expect("measured_fan_power" in firstMechVent && firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
+		expect(firstMechVent?.ductwork).toBeDefined();
+		expect(firstMechVent.position_exhaust).toEqual({
+			mid_height_air_flow_path: 1.5,
+			orientation360: 90,
+			pitch: 10,
+		});
+		expect(firstMechVent.position_intake).toEqual({
+			mid_height_air_flow_path: 1.5,
+			orientation360: 80,
+			pitch: 10,
+		});
+	});
+
 	it("maps MVHR intake and exhaust orientation and pitch from associated elements when selected", () => {
 		const externalWallId = "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421";
 		const roofId = "7f2f63b1-6b3f-44d6-8380-f5dc2badc99a";
 		const roofData: Partial<RoofData> = {
 			id: roofId,
 			name: "Roof 1",
-			pitchOption: "custom",
 			pitch: 35,
 			orientation: 140,
 		};
@@ -361,6 +444,7 @@ describe("infiltration ventilation mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "1",
+			freeAreaHeight: 1,
 			curtainsOrBlinds: true,
 			treatmentType: "blinds",
 			treatmentControls: "manual",

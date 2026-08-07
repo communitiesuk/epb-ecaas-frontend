@@ -7,7 +7,7 @@ export function isUnderFloorHeatingProduct(product: AnyPcdbProduct): product is 
 export function asUnderFloorHeatingDisplayProduct(product: UnderFloorHeatingProduct): DisplayProduct {
 	return {
 		displayProduct: true,
-		id: `${product.ID}`,
+		id: `${product.id}`,
 		systemName: product.systemName,
 		floorFinishCompatibility: product.floorFinishCompatibility,
 		pipeCentres: product.pipeCentres,

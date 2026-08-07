@@ -154,12 +154,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="perimeter"
 			type="govInputWithSuffix"
 			suffix-text="m"
-			label="Perimeter"
-			help="Enter the length of the exposed perimeter of the floor. This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings."
+			label="Exposed perimeter"
+			help="Enter the length of the exposed perimeter of the floor above the basement"
 			name="perimeter"
 			:validation="zodTypeAsFormKitValidation(groundPerimeterZod)">
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">The exposed perimeter of the floor is where heat loss may occur, usually at the base of the external walls where they meet the ground floor.</p>
+				<p class="govuk-hint">This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings.</p>
 			</GovDetails>
 		</FormKit>
 		<FormKit
@@ -205,7 +205,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="thicknessOfWalls"
 			type="govInputWithUnit"
 			label="Thickness of walls at the edge of the floor"
-			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 300mm to 800mm."
+			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 30mm to 80mm."
 			name="thicknessOfWalls"
 			:unit="millimetre"
 			:validation="zodTypeAsFormKitValidation(thicknessOfWallsZod)">

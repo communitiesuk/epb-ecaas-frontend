@@ -2,7 +2,7 @@
 import type { WindowData } from "#imports";
 import { getUrl, uniqueName } from "#imports";
 import { v4 as uuidv4 } from "uuid";
-import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod, revealDimensionZod } from "~/stores/ecaasStore.schema";
+import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod, revealDimensionZod, freeAreaHeightZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 
@@ -53,6 +53,7 @@ const saveForm = (fields: WindowData) => {
 			elevationalHeight: fields.elevationalHeight,
 			securityRisk: fields.securityRisk,
 			openingToFrameRatio: fields.openingToFrameRatio,
+			freeAreaHeight: fields.freeAreaHeight ?? 0,
 			depthOfReveal: fields.depthOfReveal,
 			distanceFromGlassToStartOfReveal: fields.distanceFromGlassToStartOfReveal,
 		};
@@ -314,6 +315,20 @@ const writeShadingToStore = (items: ShadingObjectData[]) => {
 				name="maximumOpenableArea"
 				:validation="zodTypeAsFormKitValidation(maxWindowOpenAreaZod)"
 			/>
+			<FormKit
+				id="freeAreaHeight"
+				type="govInputWithSuffix"
+				suffix-text="m"
+				label="Free area height of window opening"
+				help="Enter the vertical height of the section of the window that opens"
+				name="freeAreaHeight"
+				:validation="zodTypeAsFormKitValidation(freeAreaHeightZod)"
+			>
+				<GovDetails summary-text="Help with this input">
+					<p class="govuk-body">This diagrams shows how to measure the free area height of a window.</p>
+					<img src="/img/free_area_height.png" alt="How to measure the free area height of a window">
+				</GovDetails>
+			</FormKit>
 			<FormKit
 				id="midHeightOpenablePart1"
 				type="govInputWithSuffix"
