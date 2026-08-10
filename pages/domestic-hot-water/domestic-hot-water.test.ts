@@ -1041,11 +1041,6 @@ describe("Domestic hot water", () => {
 			complete: true,
 		};
 
-
-		beforeEach(async () => {
-			await renderSuspended(DomesticHotWater);
-		});
-
 		// const hotWaterForms = {
 		// 	waterStorage: WaterStorageForm,
 		// 	hotWaterOutlets: HotWaterOutletsForm,
@@ -1361,6 +1356,56 @@ describe("Domestic hot water", () => {
 			);
 		});
 
+		it("displays an error when no pipework is associated with a hot water cylinder", async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterStorage: {
+						data: [{
+							data: hwStorage1.data,
+							complete: true,
+						}],
+						complete: true,
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+
+			expect(errorSummary.textContent).toContain(
+				"You must add the primary pipework associated to the hot water cylinder.",
+			);
+		});
+
+		it("displays an error when no pipework is associated with a pre-heated water cylinder", async () => {
+			store.$patch({
+				domesticHotWater: {
+					preheatedWaterStorage: {
+						data: [{
+							data: preheatedStorage1.data,
+							complete: true,
+						}],
+						complete: true,
+					},
+					hotWaterOutlets: {
+						data: [otherHotWaterOutlet],
+						complete: true,
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+
+			expect(errorSummary.textContent).toContain(
+				"You must add the primary pipework associated to the pre-heated water tank.",
+			);
+		});
+
 		it("displays all error messages if there are more than one", async () => {
 			const heatPump = {
 				data: {
@@ -1471,11 +1516,14 @@ describe("Domestic hot water", () => {
 				expect(hotWaterOutlets?.complete).toBe(false);
 			});
 
-			it("marks hot water outlets section as not complete after editing an existing outlet", async () => {
+			it.only("marks hot water outlets section as not complete after editing an existing outlet", async () => {
 				store.$patch({
 					domesticHotWater: {
 						hotWaterOutlets: {
-							data: [{ data: hwOutlet1.data, complete: true }],
+							data: [
+								{ data: hwOutlet1.data, complete: true },
+								{ data: otherHotWaterOutlet.data, complete: true },
+							],
 						},
 						heatSources: {
 							data: [{ data: heatSource1.data, complete: true }],

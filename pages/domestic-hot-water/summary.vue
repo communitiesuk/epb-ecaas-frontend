@@ -538,8 +538,7 @@ const emptyHotWaterOutletsSummary: SummarySection = {
 };
 
 const populatedHotWaterOutletsSections = getNonEmptySections(hotWaterOutletsSummarySections);
-
-
+const associatedWaterStorage = useAssociatedItems(["waterStorage", "preheatedWaterStorage"]);
 
 const pipeworkData = store.domesticHotWater.pipework.data;
 const pipeworkSummary: SummarySection = {
@@ -548,6 +547,7 @@ const pipeworkSummary: SummarySection = {
 	data: pipeworkData.map(d => {
 		return {
 			"Name": show(d.data.name),
+			"Water cylinder": associatedWaterStorage.find(x => x[0] === d.data.waterStorage)?.[1],
 			"Location": displayCamelToSentenceCase(show(d.data.location)),
 			"Pipe contents": displayCamelToSentenceCase(show(d.data.pipeContents)),
 			"Internal diameter": dim(d.data.internalDiameter, "millimetres"),

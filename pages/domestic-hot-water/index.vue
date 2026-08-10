@@ -61,18 +61,20 @@ const heatSourceMaxNumberOfItems = computed(() => {
 function handleComplete() {
 	clearErrors();
 
-	const hasOtherHotWaterOutlet = store.domesticHotWater.hotWaterOutlets.data.some(
+	const { waterStorage, preheatedWaterStorage, pipework, hotWaterOutlets } = store.domesticHotWater;
+
+	const hasOtherHotWaterOutlet = hotWaterOutlets.data.some(
 		(outlet) => outlet.data.typeOfHotWaterOutlet === "otherHotWaterOutlet",
 	);
 
-	const hasWaterStorage = store.domesticHotWater.waterStorage.data.length > 0;
+	const hasWaterStorage = waterStorage.data.length > 0;
 
 	if (!hasOtherHotWaterOutlet) {
 		addError({ 
 			id: "hotWaterOutletNoOtherTypeError", 
 			text: "You must add at least one hot water outlet that has the type 'other'", 
-			href: `${page?.url}/hot-water-outlets/create` });
-		
+			href: `${page?.url}/hot-water-outlets/create`,
+		});
 	}
 
 	if (heatSourceRequiresWaterStorage() && !hasWaterStorage) {
@@ -83,6 +85,26 @@ function handleComplete() {
 		});
 	}
 
+	const preheatedWaterCylinders = preheatedWaterStorage.data.map(x => x.data.id);
+
+	if (preheatedWaterCylinders.length && !pipework.data.some(x => preheatedWaterCylinders.includes(x.data.waterStorage))) {
+		addError({
+			id: "preheatedWaterStoragePipeworkRequiredError",
+			text: "You must add the primary pipework associated to the pre-heated water tank.",
+			href: getUrl("pipeworkCreate"),
+		});
+	}
+
+	const hotWaterCylinders = waterStorage.data.map(x => x.data.id);
+
+	if (hotWaterCylinders.length && !pipework.data.some(x => hotWaterCylinders.includes(x.data.waterStorage))) {
+		addError({
+			id: "waterStoragePipeworkRequiredError",
+			text: "You must add the primary pipework associated to the hot water cylinder.",
+			href: getUrl("pipeworkCreate"),
+		});
+	}
+	
 	if (errorMessages.value.length > 0) return;
 
 	store.$patch({

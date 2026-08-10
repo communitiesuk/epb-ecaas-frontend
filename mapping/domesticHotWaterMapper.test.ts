@@ -273,6 +273,22 @@ describe("domestic hot water mapper", () => {
 		complete: true,
 	};
 
+	const pipework: EcaasForm<PipeworkData> = {
+		data: {
+			name: "Pipework Kitchen Sink",
+			waterStorage: storageTank.data.id,
+			internalDiameter: 10,
+			externalDiameter: 10,
+			length: 3,
+			insulationThickness: 5,
+			thermalConductivity: 1,
+			surfaceReflectivity: true,
+			pipeContents: "water",
+			location: "heatedSpace",
+		},
+		complete: true,
+	};
+
 	describe("water storage and heat sources", () => {
 		/**
 		These are the permutations that we need to consider, in the format:
@@ -335,7 +351,7 @@ describe("domestic hot water mapper", () => {
 			it.each(
 				[
 					{
-						heatSource: heatPump, waterStorage: storageTank,
+						heatSource: heatPump, waterStorage: storageTank, pipework,
 						expected: {
 							HotWaterSource: {
 								"hw cylinder": {
@@ -352,6 +368,18 @@ describe("domestic hot water mapper", () => {
 											temp_flow_limit_upper: heatPump.data.maxFlowTemp.amount,
 										},
 									},
+									primary_pipework: [
+										{
+											location: "internal",
+											internal_diameter_mm: 10,
+											external_diameter_mm: 10,
+											pipe_contents: "water",
+											length: 3,
+											insulation_thickness_mm: 5,
+											insulation_thermal_conductivity: 1,
+											surface_reflectivity: true,
+										},
+									],
 								},
 							},
 							HeatSourceWet: {
@@ -604,7 +632,7 @@ describe("domestic hot water mapper", () => {
 					},
 				],
 			)("maps a $heatSource.data.typeOfHeatSource heat source attached to a $waterStorage.data.typeOfWaterStorage water storage",
-				async ({ heatSource, waterStorage, expected }) => {
+				async ({ heatSource, waterStorage, pipework, expected }) => {
 					store.$patch({
 						dwellingDetails: {
 							generalSpecifications: {
@@ -630,7 +658,7 @@ describe("domestic hot water mapper", () => {
 								complete: true,
 							},
 							pipework: {
-								data: [],
+								data: pipework ? [pipework] : [],
 								complete: true,
 							},
 						},
@@ -1437,6 +1465,16 @@ describe("domestic hot water mapper", () => {
 							}],
 							complete: true,
 						},
+						pipework: {
+							data: [{
+								data: {
+									...pipework.data,
+									waterStorage: preheatedTank.data.id,
+								},
+								complete: true,
+							}],
+							complete: true,
+						},
 					},
 				});
 
@@ -1455,6 +1493,18 @@ describe("domestic hot water mapper", () => {
 									product_reference: heatPumpHWOnly.data.productReference,
 								},
 							},
+							primary_pipework: [
+								{
+									location: "internal",
+									internal_diameter_mm: 10,
+									external_diameter_mm: 10,
+									pipe_contents: "water",
+									length: 3,
+									insulation_thickness_mm: 5,
+									insulation_thermal_conductivity: 1,
+									surface_reflectivity: true,
+								},
+							],
 						},
 					},
 				};

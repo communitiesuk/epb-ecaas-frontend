@@ -63,6 +63,8 @@ autoSaveElementForm<PipeworkData>({
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
+const waterStorageOptions = useAssociatedItems(["waterStorage", "preheatedWaterStorage"]);
 </script>
 
 <template>
@@ -95,10 +97,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			v-if="mounted"
 			id="waterStorage"
 			type="govRadios"
-			:options="new Map(store.domesticHotWater.waterStorage.data
-				.filter(x => x.data.id !== undefined)
-				.map(x => [x.data.id as string, x.data.name]))"		
-			label="Hot water cylinder"
+			:options="new Map(waterStorageOptions)"		
+			label="Water cylinder"
 			help="Select a hot water cylinder that this pipework is connected to"
 			name="waterStorage"
 			validation="required">
