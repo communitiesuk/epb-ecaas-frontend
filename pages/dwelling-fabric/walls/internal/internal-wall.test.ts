@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import InternalWall from "./[wall].vue";
 import { v4 as uuidv4 } from "uuid";
 

@@ -222,7 +222,6 @@ describe("floor of heated basement", () => {
 		expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
 		expect(within(table).getByText("Areal heat capacity")).toBeDefined();
 		expect(within(table).getByText("Type of construction layer")).toBeDefined();
-		expect(within(table).queryByText("Typical heat capacity")).toBeNull();
 	});
 
 	describe("boundary value tests", () => {

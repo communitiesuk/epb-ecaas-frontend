@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import InternalFloor from "./[floor].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
