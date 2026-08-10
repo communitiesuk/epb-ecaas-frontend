@@ -1516,14 +1516,12 @@ describe("Domestic hot water", () => {
 				expect(hotWaterOutlets?.complete).toBe(false);
 			});
 
-			it.only("marks hot water outlets section as not complete after editing an existing outlet", async () => {
+			it("marks hot water outlets section as not complete after editing an existing outlet", async () => {
 				store.$patch({
 					domesticHotWater: {
 						hotWaterOutlets: {
-							data: [
-								{ data: hwOutlet1.data, complete: true },
-								{ data: otherHotWaterOutlet.data, complete: true },
-							],
+							data: [{ data: hwOutlet1.data, complete: true }],
+							complete: true,
 						},
 						heatSources: {
 							data: [{ data: heatSource1.data, complete: true }],
