@@ -176,6 +176,17 @@ describe("internal floor", () => {
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors");
 	});
 
+	test("floor areal heat capacity table is not displayed in help with input dropdown", async () => {
+		await renderSuspended(InternalFloor, {
+			route: {
+				params: { floor: "create" },
+			},
+		});
+
+		expect(screen.queryByTestId("floorArealHeatCapacityTable")).toBeNull();
+
+	});
+
 	describe("internal floor section status", () => {
 		test("section is marked as 'not complete' after form is saved and marked as complete", async () => {
 			// Arrange

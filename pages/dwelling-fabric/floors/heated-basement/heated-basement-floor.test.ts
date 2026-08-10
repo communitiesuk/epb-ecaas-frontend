@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen, waitFor } from "@testing-library/vue";
+import { screen, waitFor, within } from "@testing-library/vue";
 import HeatedBasementFloor from "./[floor].vue";
 import { v4 as uuidv4 } from "uuid";
 import { millimetre } from "~/utils/units/length";
@@ -207,6 +207,22 @@ describe("floor of heated basement", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorOfHeatedBasement.complete).not.toBe(true);
+	});
+
+	test("floor areal heat capacity table is displayed in help with input dropdown", async () => {
+		await renderSuspended(HeatedBasementFloor, {
+			route: {
+				params: { floor: "create" },
+			},
+		});
+
+		const table = screen.getByTestId("floorArealHeatCapacityTable");
+
+		expect(table).toBeDefined();
+		expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
+		expect(within(table).getByText("Areal heat capacity")).toBeDefined();
+		expect(within(table).getByText("Type of construction layer")).toBeDefined();
+		expect(within(table).queryByText("Typical heat capacity")).toBeNull();
 	});
 
 	describe("boundary value tests", () => {
