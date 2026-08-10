@@ -8,7 +8,8 @@ defineProps<{
 	label?: string;
 	help?: string;
 	showFloorGuidance?: boolean;
-	showWallGuidance?: boolean
+	showWallGuidance?: boolean;
+	showInternalWallGuidance?: boolean;
 }>();
 
 const arealHeatCapacityOptions = {
@@ -56,16 +57,16 @@ const arealHeatCapacityOptions = {
 				Where an element contains multiple significant layers, the areal heat capacities should be added together. For example, a wall with thin solid brick (&lt;300 mm) would be 240 (very light) and concrete cavity (250–350 mm) would be 450 (light). When these are added together, it is 690 overall (240 + 450 = 690), so it would be classified as Medium.
 			</p>
 			<table
-				class="govuk-table wall-areal-heat-capacity-table"
+				class="govuk-table"
 				data-testid="wallArealHeatCapacityTable"
 			>
 				<thead class="govuk-table__head">
 					<tr class="govuk-table__row">
-						<th scope="col" class="govuk-table__header">Areal heat capacity classification</th>
-						<th scope="col" class="govuk-table__header areal-heat-capacity-column">
+						<th scope="col" class="govuk-table__header govuk-!-width-one-third">Areal heat capacity classification</th>
+						<th scope="col" class="govuk-table__header govuk-!-width-one-third">
 							Areal heat capacity
 						</th>
-						<th scope="col" class="govuk-table__header">Type of construction layer</th>
+						<th scope="col" class="govuk-table__header govuk-!-width-one-third">Type of construction layer</th>
 					</tr>
 				</thead>
 				<tbody class="govuk-table__body">
@@ -119,16 +120,54 @@ const arealHeatCapacityOptions = {
 				</tbody>
 			</table>
 		</GovDetails>
-		<GovDetails v-else-if="showFloorGuidance" summary-text="Help with this input">
-			<p class="govuk-body">The areal heat capacity of a building element is not the same as the kappa value. Kappa values only consider the thermal mass directly exposed to the internal space, whereas the areal heat capacity  takes into account the full thickness of the building element.</p>				
-			<table class="govuk-table floor-areal-heat-capacity-table" data-testid="floorArealHeatCapacityTable">
+		<GovDetails v-else-if="showInternalWallGuidance" summary-text="Help with this input">
+			<p class="govuk-body">For internal walls, this is usually very light</p>				
+			<table
+				class="govuk-table"
+				data-testid="internalWallArealHeatCapacityTable"
+			>
 				<thead class="govuk-table__head">
 					<tr class="govuk-table__row">
-						<th scope="col" class="govuk-table__header">Areal heat capacity classification</th>
-						<th scope="col" class="govuk-table__header areal-heat-capacity-column">
+						<th scope="col" class="govuk-table__header govuk-!-width-one-third" >Areal heat capacity classification</th>
+						<th scope="col" class="govuk-table__header govuk-!-width-one-half">
+							Areal heat capacity of the construction build up
+						</th>
+					</tr>
+				</thead>
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table__header">Very light</th>
+						<td class="govuk-table__cell">240 kJ/(m²·K)</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table__header">Light</th>
+						<td class="govuk-table__cell">450 kJ/(m²·K)</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table__header">Medium</th>
+						<td class="govuk-table__cell">650 kJ/(m²·K)</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table__header">Heavy</th>
+						<td class="govuk-table__cell">850 kJ/(m²·K)</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table__header">Very heavy</th>
+						<td class="govuk-table__cell">1350 kJ/(m²·K)</td>
+					</tr>
+				</tbody>
+			</table>
+		</GovDetails>
+		<GovDetails v-else-if="showFloorGuidance" summary-text="Help with this input">
+			<p class="govuk-body">The areal heat capacity of a building element is not the same as the kappa value. Kappa values only consider the thermal mass directly exposed to the internal space, whereas the areal heat capacity  takes into account the full thickness of the building element.</p>				
+			<table class="govuk-table" data-testid="floorArealHeatCapacityTable">
+				<thead class="govuk-table__head">
+					<tr class="govuk-table__row">
+						<th scope="col" class="govuk-table__header govuk-!-width-one-third">Areal heat capacity classification</th>
+						<th scope="col" class="govuk-table__header govuk-!-width-one-third">
 							Areal heat capacity
 						</th>
-						<th scope="col" class="govuk-table__header">Type of construction layer</th>
+						<th scope="col" class="govuk-table__header govuk-!-width-one-third">Type of construction layer</th>
 					</tr>
 				</thead>
 				<tbody class="govuk-table__body">
@@ -209,32 +248,3 @@ const arealHeatCapacityOptions = {
 		</GovDetails>
 	</FormKit>
 </template>
-
-<style scoped lang="scss">
-:deep(.wall-areal-heat-capacity-table),
-:deep(.floor-areal-heat-capacity-table) {
-	table-layout: fixed;
-	width: 100%;
-}
-
-:deep(.wall-areal-heat-capacity-table th:nth-child(1)),
-:deep(.wall-areal-heat-capacity-table td:nth-child(1)),
-:deep(.floor-areal-heat-capacity-table th:nth-child(1)),
-:deep(.floor-areal-heat-capacity-table td:nth-child(1)) {
-	width: 30%;
-}
-
-:deep(.wall-areal-heat-capacity-table th:nth-child(2)),
-:deep(.wall-areal-heat-capacity-table td:nth-child(2)),
-:deep(.floor-areal-heat-capacity-table th:nth-child(2)),
-:deep(.floor-areal-heat-capacity-table td:nth-child(2)) {
-	width: 30%;
-}
-
-:deep(.wall-areal-heat-capacity-table th:nth-child(3)),
-:deep(.wall-areal-heat-capacity-table td:nth-child(3)),
-:deep(.floor-areal-heat-capacity-table th:nth-child(3)),
-:deep(.floor-areal-heat-capacity-table td:nth-child(3)) {
-	width: 40%;
-}
-</style>
