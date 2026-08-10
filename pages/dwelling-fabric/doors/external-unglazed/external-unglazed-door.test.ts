@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import ExternalUnglazedDoor from "./[door].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -622,5 +622,20 @@ describe("external unglazed door", () => {
 
 			expect(screen.getByTestId("doorBanner")).not.toBeNull();
 		});
+	});
+
+	test("external unglazed door areal heat capacity table is displayed in help with input dropdown", async () => {
+		await renderSuspended(ExternalUnglazedDoor, {
+			route: {
+				params: { door: "create" },
+			},
+		});
+	
+		const table = screen.getByTestId("doorArealHeatCapacityTable");
+	
+		expect(table).toBeDefined();
+		expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
+		expect(within(table).getByText("Areal heat capacity of the construction build up")).toBeDefined();
+		expect(within(table).queryByText("Type of construction layer")).toBeNull();
 	});
 });
