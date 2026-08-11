@@ -129,12 +129,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsUValue v-else help="Enter the U-value of half the thickness of the door build up" />
 			<FieldsArealHeatCapacity 
 				v-if="model.typeOfInternalDoor === 'unheatedSpace'" 
-				help="This is the sum of the heat capacities of the full thickness of the door build up"
+				help="For doors, this is usually very light"
 				:show-door-guidance="true"
 			/>
 			<FieldsArealHeatCapacity 
 				v-else
-				help="This is the sum of the heat capacities of half the thickness of the door build up" 
+				help="For doors, this is usually very light" 
 				:show-door-guidance="true"
 			/>
 			<FieldsMassDistributionClass v-if="model.typeOfInternalDoor === 'unheatedSpace'" help="This is the distribution of mass in the full thickness of the door build up" />

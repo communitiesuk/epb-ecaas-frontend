@@ -16,23 +16,18 @@ defineProps<{
 const arealHeatCapacityOptions = {
 	"Very light": {
 		label: "Very light",
-		hint: "For example, light board or plastic",
 	},
 	"Light": {
 		label: "Light",
-		hint: "For example, 50-100 mm lightweight brick or concrete",
 	},
 	"Medium": {
 		label: "Medium",
-		hint: "For example, 100-200 mm lightweight brick or concrete",
 	},
 	"Heavy": {
 		label: "Heavy",
-		hint: "For example, 70-120 mm solid brick or heavyweight concrete",
 	},
 	"Very heavy": {
 		label: "Very heavy",
-		hint: "For example, more than 120 mm solid brick or heavyweight concrete",
 	},
 } as const satisfies Record<SchemaArealHeatCapacity, RadioOption & { label: SchemaArealHeatCapacity }>;
 
@@ -49,197 +44,10 @@ const arealHeatCapacityOptions = {
 		:options="arealHeatCapacityOptions"
 		data-field="Zone.BuildingElement.*.areal_heat_capacity"
 	>
-		<GovDetails v-if="showWallGuidance" summary-text="Help with this input">
-			<p class="govuk-body govuk-!-margin-bottom-4">
-				Use the table below to determine the areal heat capacity of the element.
-			</p>
-
-			<p class="govuk-body">
-				Where an element contains multiple significant layers, the areal heat capacities should be added together. For example, a wall with thin solid brick (&lt;300 mm) would be 240 (very light) and concrete cavity (250–350 mm) would be 450 (light). When these are added together, it is 690 overall (240 + 450 = 690), so it would be classified as Medium.
-			</p>
-			<table
-				class="govuk-table"
-				data-testid="wallArealHeatCapacityTable"
-			>
-				<thead class="govuk-table__head">
-					<tr class="govuk-table__row">
-						<th scope="col" class="govuk-table__header govuk-!-width-one-third">Areal heat capacity classification</th>
-						<th scope="col" class="govuk-table__header govuk-!-width-one-third">
-							Areal heat capacity
-						</th>
-						<th scope="col" class="govuk-table__header govuk-!-width-one-third">Type of construction layer</th>
-					</tr>
-				</thead>
-				<tbody class="govuk-table__body">
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Very light</th>
-						<td class="govuk-table__cell">240 kJ/(m²·K)</td>
-						<td class="govuk-table__cell">
-							Solid brick walls, less than 300 mm thick<br>
-							Brick cavity walls, less than 350 mm thick<br>
-							Concrete cavity walls, less than 250 mm thick<br>
-							Timber frame walls, less than 350 mm thick
-						</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Light</th>
-						<td class="govuk-table__cell">450 kJ/(m²·K)</td>
-						<td class="govuk-table__cell">
-							Solid brick walls, 300 - 400 mm thick<br>
-							Brick cavity walls, 350 - 450 mm thick<br>
-							Concrete cavity walls, 250 - 350 mm thick<br>
-							Timber frame walls, more than 350 mm thick
-						</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Medium</th>
-						<td class="govuk-table__cell">650 kJ/(m²·K)</td>
-						<td class="govuk-table__cell">
-							Solid brick walls, 400 - 500 mm thick<br>
-							Brick cavity walls, more than 400 mm thick<br>
-							Concrete cavity walls, 350 - 450 mm thick<br>
-							Solid limestone or cob walls, less than 400 mm thick
-						</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Heavy</th>
-						<td class="govuk-table__cell">850 kJ/(m²·K)</td>
-						<td class="govuk-table__cell">
-							Concrete cavity walls, more than 450 mm thick<br>
-							Solid limestone or cob walls, 400 - 500 mm thick<br>
-							Solid granite or sandstone, 300 - 400 mm thick
-						</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Very heavy</th>
-						<td class="govuk-table__cell">1350 kJ/(m²·K)</td>
-						<td class="govuk-table__cell">
-							Solid limestone or cob walls, more than 500 mm thick<br>
-							Solid granite or sandstone, more than 400 mm thick
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</GovDetails>
-		<GovDetails v-else-if="showInternalWallGuidance" summary-text="Help with this input">
-			<p class="govuk-body">For internal walls, this is usually very light</p>				
-			<table
-				class="govuk-table"
-				data-testid="internalWallArealHeatCapacityTable"
-			>
-				<thead class="govuk-table__head">
-					<tr class="govuk-table__row">
-						<th scope="col" class="govuk-table__header govuk-!-width-one-third" >Areal heat capacity classification</th>
-						<th scope="col" class="govuk-table__header govuk-!-width-one-half">
-							Areal heat capacity of the construction build up
-						</th>
-					</tr>
-				</thead>
-				<tbody class="govuk-table__body">
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Very light</th>
-						<td class="govuk-table__cell">240 kJ/(m²·K)</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Light</th>
-						<td class="govuk-table__cell">450 kJ/(m²·K)</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Medium</th>
-						<td class="govuk-table__cell">650 kJ/(m²·K)</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Heavy</th>
-						<td class="govuk-table__cell">850 kJ/(m²·K)</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Very heavy</th>
-						<td class="govuk-table__cell">1350 kJ/(m²·K)</td>
-					</tr>
-				</tbody>
-			</table>
-		</GovDetails>
-		<GovDetails v-else-if="showDoorGuidance" summary-text="Help with this input">
-			<p class="govuk-body">For doors, this is usually very light</p>				
-			<table
-				class="govuk-table"
-				data-testid="doorArealHeatCapacityTable"
-			>
-				<thead class="govuk-table__head">
-					<tr class="govuk-table__row">
-						<th scope="col" class="govuk-table__header govuk-!-width-one-third" >Areal heat capacity classification</th>
-						<th scope="col" class="govuk-table__header govuk-!-width-one-half">
-							Areal heat capacity of the construction build up
-						</th>
-					</tr>
-				</thead>
-				<tbody class="govuk-table__body">
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Very light</th>
-						<td class="govuk-table__cell">240 kJ/(m²·K)</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Light</th>
-						<td class="govuk-table__cell">450 kJ/(m²·K)</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Medium</th>
-						<td class="govuk-table__cell">650 kJ/(m²·K)</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Heavy</th>
-						<td class="govuk-table__cell">850 kJ/(m²·K)</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Very heavy</th>
-						<td class="govuk-table__cell">1350 kJ/(m²·K)</td>
-					</tr>
-				</tbody>
-			</table>
-		</GovDetails>
-		<GovDetails v-else-if="showFloorGuidance" summary-text="Help with this input">
-			<p class="govuk-body">The areal heat capacity of a building element is not the same as the kappa value. Kappa values only consider the thermal mass directly exposed to the internal space, whereas the areal heat capacity  takes into account the full thickness of the building element.</p>				
-			<table class="govuk-table" data-testid="floorArealHeatCapacityTable">
-				<thead class="govuk-table__head">
-					<tr class="govuk-table__row">
-						<th scope="col" class="govuk-table__header govuk-!-width-one-third">Areal heat capacity classification</th>
-						<th scope="col" class="govuk-table__header govuk-!-width-one-third">
-							Areal heat capacity
-						</th>
-						<th scope="col" class="govuk-table__header govuk-!-width-one-third">Type of construction layer</th>
-					</tr>
-				</thead>
-				<tbody class="govuk-table__body">
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Very light</th>
-						<td class="govuk-table__cell">240 kJ/(m²·K)</td>
-						<td class="govuk-table__cell">
-							All timber floors (suspended and exposed)<br>
-							Unreinforced slab with no insulation, 1-4% moisture content</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Light</th>
-						<td class="govuk-table__cell">450 kJ/(m²·K)</td>
-						<td class="govuk-table__cell">Insulated slab, with 50 mm insulation</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Medium</th>
-						<td class="govuk-table__cell">650 kJ/(m²·K)</td>
-						<td class="govuk-table__cell">Not typical for floors</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Heavy</th>
-						<td class="govuk-table__cell">850 kJ/(m²·K)</td>
-						<td class="govuk-table__cell">Not typical for floors</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<th scope="row" class="govuk-table__header">Very heavy</th>
-						<td class="govuk-table__cell">1350 kJ/(m²·K)</td>
-						<td class="govuk-table__cell">Not typical for floors</td>
-					</tr>
-				</tbody>
-			</table>
-		</GovDetails>
+		<FieldsArealHeatCapacityWallArealHeatCapacityGuidance v-if="showWallGuidance" />
+		<FieldsArealHeatCapacityInternalWallArealHeatCapacityGuidance v-else-if="showInternalWallGuidance"/>
+		<FieldsArealHeatCapacityDoorArealHeatCapacityGuidance v-else-if="showDoorGuidance"/>
+		<FieldsArealHeatCapacityFloorArealHeatCapacityGuidance v-else-if="showFloorGuidance"/>
 		<GovDetails v-else summary-text="Help with this input">
 			<p class="govuk-body">The areal heat capacity of a building element is not the same as the kappa value. Kappa values only consider the thermal mass directly exposed to the internal space, whereas the areal heat capacity  takes into account the full thickness of the building element.</p>				
 			<table class="govuk-table">
