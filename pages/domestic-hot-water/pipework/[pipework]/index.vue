@@ -99,14 +99,14 @@ const waterStorageOptions = useAssociatedItems(["waterStorage", "preheatedWaterS
 			type="govRadios"
 			:options="new Map(waterStorageOptions)"		
 			label="Water cylinder"
-			help="Select a hot water cylinder that this pipework is connected to"
+			help="Select a water cylinder that this pipework is connected to"
 			name="waterStorage"
 			validation="required">
 			<div
 				v-if="!store.domesticHotWater.waterStorage.data.length">
-				<p class="govuk-error-message">No hot water cylinder added.</p>
+				<p class="govuk-error-message">No water cylinder added.</p>
 				<NuxtLink :to="getUrl('waterStorageCreate')" class="govuk-link gov-radios-add-link">
-					Click here to add a hot water cylinder
+					Click here to add a water cylinder
 				</NuxtLink>
 			</div>
 		</FormKit>
