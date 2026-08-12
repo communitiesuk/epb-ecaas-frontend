@@ -81,7 +81,7 @@ function handleComplete() {
 		addError({
 			id: "waterStorageRequiredError",
 			text: "Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
-			href: `${page?.url}/water-storage/create`,
+			href: `${page?.url}/hot-water-cylinders/create`,
 		});
 	}
 
@@ -322,7 +322,7 @@ checkMaxHeatSourcesExceeded();
 	<CustomList 
 		id="waterStorage"
 		title="Hot water cylinder (optional)"
-		:form-url="`${page?.url!}/water-storage`"
+		:form-url="`${page?.url!}/hot-water-cylinders`"
 		:items="store.domesticHotWater.waterStorage.data
 			.filter(x => isEcaasForm(x))
 			.map(x => {

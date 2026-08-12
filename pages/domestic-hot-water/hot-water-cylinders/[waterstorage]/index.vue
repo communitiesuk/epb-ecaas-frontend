@@ -7,7 +7,7 @@ import { coldWaterSourceOptions, hasPackagedProduct, waterStorageTypes } from "#
 import type { Product, AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { mapOption } from "~/composables/associatedItems";
 
-const title = "Water storage";
+const title = "Hot water cylinder";
 const store = useEcaasStore();
 const route = useRoute();
 const { autoSaveElementForm, getStoreIndex } = useForm();

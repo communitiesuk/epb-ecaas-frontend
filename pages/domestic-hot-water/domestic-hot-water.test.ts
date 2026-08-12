@@ -1117,7 +1117,7 @@ describe("Domestic hot water", () => {
 
 			const link = errorSummary.querySelector("a");
 
-			expect(link?.getAttribute("href")).toContain("water-storage");
+			expect(link?.getAttribute("href")).toContain("hot-water-cylinders");
 		});
 
 		it("displays an error message showing water storage is required if a solar thermal system heat source has been selected", async () => {
@@ -1169,7 +1169,7 @@ describe("Domestic hot water", () => {
 
 			const link = errorSummary.querySelector("a");
 
-			expect(link?.getAttribute("href")).toContain("water-storage");
+			expect(link?.getAttribute("href")).toContain("hot-water-cylinders");
 		});
 
 		it("displays an error message showing water storage is required if a heat pump heat source has been selected", async () => {
@@ -1211,7 +1211,7 @@ describe("Domestic hot water", () => {
 
 			const link = errorSummary.querySelector("a");
 
-			expect(link?.getAttribute("href")).toContain("water-storage");
+			expect(link?.getAttribute("href")).toContain("hot-water-cylinders");
 		});
 
 		it("displays an error message showing water storage is require if space heating heat pump has been selected", async () => {
@@ -1268,7 +1268,7 @@ describe("Domestic hot water", () => {
 
 			const link = errorSummary.querySelector("a");
 
-			expect(link?.getAttribute("href")).toContain("water-storage");
+			expect(link?.getAttribute("href")).toContain("hot-water-cylinders");
 		});
 
 		it("displays an error when two heat sources are added without one being connected to a pre-heated water tank", async () => {
@@ -1450,7 +1450,7 @@ describe("Domestic hot water", () => {
 			const links = errorSummary.querySelectorAll("a");
 
 			expect(links[0]?.getAttribute("href")).toContain("hot-water-outlets");
-			expect(links[1]?.getAttribute("href")).toContain("water-storage");
+			expect(links[1]?.getAttribute("href")).toContain("hot-water-cylinders");
 		});
 
 		it("does not display error summary when requirements are met", async () => {

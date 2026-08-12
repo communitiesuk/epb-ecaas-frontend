@@ -137,7 +137,7 @@ describe("Diverters", () => {
 		const link = screen.getByRole("link", { name: "Click here to add a hot water cylinder" });
 
 		expect(link).toBeDefined();
-		expect(link.getAttribute("href")).toBe("/domestic-hot-water/water-storage/create");
+		expect(link.getAttribute("href")).toBe("/domestic-hot-water/hot-water-cylinders/create");
 	});
 
 	it("preselects hot water cylinder if there is only one added to store", async () => {
