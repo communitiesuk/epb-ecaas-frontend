@@ -105,7 +105,7 @@ const waterStorageOptions = useAssociatedItems(["waterStorage", "preheatedWaterS
 			<div
 				v-if="!store.domesticHotWater.waterStorage.data.length">
 				<p class="govuk-error-message">No water cylinder added.</p>
-				<NuxtLink :to="getUrl('waterStorageCreate')" class="govuk-link gov-radios-add-link">
+				<NuxtLink :to="getUrl('domesticHotWater')" class="govuk-link gov-radios-add-link">
 					Click here to add a water cylinder
 				</NuxtLink>
 			</div>
