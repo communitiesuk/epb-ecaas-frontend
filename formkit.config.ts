@@ -4,7 +4,7 @@ import { defineFormKitConfig } from "@formkit/vue";
 import FormKitButton from "./components/form-kit/Button.vue";
 import FormKitRadios from "./components/form-kit/Radios.vue";
 import type { RadioOption } from "./components/form-kit/Radios.vue";
-import type { FormKitInputs, FormKitOptionsProp } from "@formkit/inputs";
+import type { FormKitInputs, FormKitOptionsProp, FormKitBaseSlots } from "@formkit/inputs";
 import FormKitDropdown from "./components/form-kit/Dropdown.vue";
 import FormKitInputFloat from "./components/form-kit/InputFloat.vue";
 import FormKitInputInt from "./components/form-kit/InputInt.vue";
@@ -46,6 +46,7 @@ declare module "@formkit/inputs" {
 		govInputWithSuffix: {
 			type: "govInputWithSuffix";
 			suffixText: string;
+			labelClass?: string;
 		};
 		govInputWithUnit: {
 			type: "govInputWithUnit";
@@ -80,6 +81,14 @@ declare module "@formkit/inputs" {
 		};
 		govPcdbProduct: {
 			type: "govPcdbProduct";
+		}
+	}
+
+	interface FormKitInputSlots<Props extends FormKitInputs<Props>> {
+		govRadios: FormKitBaseSlots<Props> & {
+			conditionalOption: {
+				option: string
+			}
 		}
 	}
 }

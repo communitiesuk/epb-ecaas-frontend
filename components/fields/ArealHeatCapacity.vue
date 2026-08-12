@@ -29,8 +29,17 @@ const arealHeatCapacityOptions = {
 	"Very heavy": {
 		label: "Very heavy",
 	},
-} as const satisfies Record<SchemaArealHeatCapacity, RadioOption & { label: SchemaArealHeatCapacity }>;
-
+	"Custom": {
+		label: "Enter specific value",
+		conditionalInput: {
+			label: "Value",
+			type: "govInputInt",
+		},
+	},
+} as const satisfies Record<
+	SchemaArealHeatCapacity | "Custom",
+	RadioOption & { label: SchemaArealHeatCapacity | "Enter specific value" }
+>;
 </script>
 
 <template>
@@ -93,5 +102,16 @@ const arealHeatCapacityOptions = {
 				</tbody>
 			</table>
 		</GovDetails>
+		<template #conditionalOption="{ option }">
+			<FormKit
+				v-if="option === 'Custom'"
+				id="customArealHeatCapacity"
+				name="customArealHeatCapacity"
+				type="govInputWithSuffix"
+				label="Value"
+				suffix-text="mm"
+				label-style=""
+			/>
+		</template>
 	</FormKit>
 </template>

@@ -37,7 +37,7 @@ function handleBlur(e: FocusEvent) {
 
 <template>
 	<div :class="`govuk-form-group ${showErrorState(props.context) ? 'govuk-form-group--error' : ''}`">
-		<label class="govuk-label govuk-label--m" :for="id">
+		<label :class="`govuk-label ${attrs['label-style'] !== undefined ? attrs['label-style'] : 'govuk-label--m'}`" :for="id">
 			{{ label }}
 		</label>
 		<div v-if="help" :id="`${id}_hint`" class="govuk-hint">
