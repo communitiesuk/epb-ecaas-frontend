@@ -114,7 +114,6 @@ const appliancesDataZod = z.object({
 	kitchenExtractorHoodExternal: z.boolean(),
 });
 export type AppliancesData = z.infer<typeof appliancesDataZod>;
-export type ApplianceKey = AppliancesData["applianceType"][number];
 
 export type DwellingDetails = AssertFormKeysArePageIds<{
 	generalSpecifications: EcaasForm<GeneralDetailsData>;

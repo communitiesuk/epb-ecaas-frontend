@@ -4,8 +4,9 @@ import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, Schem
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ApplianceKey, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, ShowerProductType, TypeOfBoiler, WaterCylinderConfiguration, WaterStorageProductType, WwhrsProductType } from "~/stores/ecaasStore.schema";
+import type { AdjacentSpaceType, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, ShowerProductType, TypeOfBoiler, WaterCylinderConfiguration, WaterStorageProductType, WwhrsProductType } from "~/stores/ecaasStore.schema";
 import type { Split } from "type-fest";
+import { applianceTypes } from "~/stores/zod";
 
 export const emptyValueRendering = "-";
 
@@ -137,54 +138,31 @@ export function displayCamelToSentenceCase(value: string): string {
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1);
 }
 
-export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge-freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hob";
-
-export function displayApplianceKey(value: ApplianceKey): ApplianceKeyDisplay {
-	switch (value) {
-		case "Fridge":
-			return "Fridge";
-		case "Freezer":
-			return "Freezer";
-		case "Fridge-Freezer":
-			return "Fridge-freezer";
-		case "Dishwasher":
-			return "Dishwasher";
-		case "Oven":
-			return "Oven";
-		case "Clothes_washing":
-			return "Washing machine";
-		case "Clothes_drying":
-			return "Tumble dryer";
-		case "Hobs":
-			return "Hob";
-		default:
-			value satisfies never;
-			throw new Error(`Missed a appliance key case: ${value}`);
-	}
-}
-// NB. this list is written out to be available at runtime, and could drift from all upstream values over time
-export const applianceKeys: SchemaApplianceType[] = [
-	"Clothes_drying",
-	"Clothes_washing",
-	"Dishwasher",
-	"Freezer",
-	"Fridge",
-	"Fridge-Freezer",
-	"Hobs",
-	"Oven",
-];
+export const appliancesDisplayTypes = { 
+	Oven: "Oven", 
+	Hobs: "Hob", 
+	"Fridge-Freezer": "Fridge-freezer",
+	Fridge: "Fridge",
+	Freezer: "Freezer",
+	Dishwasher: "Dishwasher",
+	Clothes_washing: "Washing machine",
+	Clothes_drying: "Tumble dryer",
+	Microwave: "Microwave",
+	Kettle: "Kettle",
+} as const satisfies Record<SchemaApplianceType, string>;
 
 function isApplianceKey(value: string): value is SchemaApplianceType {
-	return applianceKeys.includes(value as SchemaApplianceType);
+	const applianceType = value as SchemaApplianceType;
+	return applianceTypes.includes(applianceType);
 }
 
-export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): string | ApplianceKeyDisplay {
-	return (isApplianceKey(key)) ? displayApplianceKey(key) : key;
+export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): string {
+	return (isApplianceKey(key)) ? appliancesDisplayTypes[key] : key;
 }
 
-export function displayApplianceType(appliances: ApplianceKey[] | undefined) {
+export function displayApplianceType(appliances: SchemaApplianceType[] | undefined) {
 	if (appliances === undefined) return emptyValueRendering;
-	return appliances.map(appliance => displayApplianceKey(appliance)).join(", ");
+	return appliances.map(appliance => appliancesDisplayTypes[appliance]).join(", ");
 }
 
 type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;

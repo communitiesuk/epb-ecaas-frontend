@@ -2,7 +2,7 @@
 
 import type { UnionToTuple } from "type-fest";
 import * as z from "zod";
-import type { SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour, SchemaConvectiveType, SchemaApplianceType, SchemaFuelType, /*SchemaHeatNetworkType,*/ SchemaRadiatorType, SchemaMechanicalVentilationInstallationType, SchemaMechanicalVentilationInstallationLocation, SchemaBoilerLocationType } from "~/schema/aliases";
+import type { SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour, SchemaConvectiveType, SchemaApplianceType, SchemaFuelType, /*SchemaHeatNetworkType,*/ SchemaRadiatorType, SchemaMechanicalVentilationInstallationType, SchemaMechanicalVentilationInstallationLocation, SchemaBoilerLocationType } from "~/schema/aliases";
 import type { ConciseMassDistributionClass } from "./ecaasStore.schema";
 import type { SchemaPartyWallCavityType, SchemaPartyWallLiningType } from "~/schema/api-schema.types";
 
@@ -29,7 +29,7 @@ export function zodLiteralFromUnionType<T, U extends UnionToTuple<T>[number] & s
 // We need to be able to validate at runtime that a value is a member of such a union, which means declaring real values
 // containing the members. The following both declares these values and also typechecks that no values are missing or incorrect.
 
-const applianceTypes = ["Oven", "Hobs", "Fridge-Freezer", "Dishwasher", "Clothes_washing", "Clothes_drying", "Fridge", "Freezer"] as const satisfies SchemaApplianceType[];
+export const applianceTypes = ["Oven", "Hobs", "Fridge-Freezer", "Dishwasher", "Clothes_washing", "Clothes_drying", "Fridge", "Freezer", "Microwave", "Kettle"] as const satisfies SchemaApplianceType[];
 const arealHeatCapacities = ["Very light", "Light", "Medium", "Heavy", "Very heavy"] as const satisfies SchemaArealHeatCapacity[];
 const batteryLocations = ["inside", "outside"] as const satisfies SchemaBatteryLocation[];
 const boilerLocations = ["internal", "external"] as const satisfies SchemaBoilerLocationType[];

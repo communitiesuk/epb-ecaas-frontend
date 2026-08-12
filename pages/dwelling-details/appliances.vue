@@ -1,23 +1,12 @@
 <script setup lang="ts">
 import { getUrl, type AppliancesData } from "#imports";
-import type { ApplianceKey } from "~/stores/ecaasStore.schema";
+import { appliancesDisplayTypes } from "~/utils/display";
 
 const title = "Appliances";
 const store = useEcaasStore();
 
 const model = ref(store.dwellingDetails.appliances.data);
 const { autoSaveForm } = useForm();
-
-const appliances = { 
-	Oven: "Oven", 
-	Hobs: "Hob", 
-	"Fridge-Freezer": "Fridge-freezer",
-	Fridge: "Fridge",
-	Freezer: "Freezer",
-	Dishwasher: "Dishwasher",
-	Clothes_washing: "Washing machine",
-	Clothes_drying: "Tumble dryer",
-} as const satisfies Record<ApplianceKey, ApplianceKeyDisplay>;
 
 const saveForm = (fields: AppliancesData) => {
 	store.$patch({
@@ -74,7 +63,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="applianceType"
 			label="Select the appliances that will be present in the dwelling"
 			help="Select the appliance if it will be installed by the house builder, or there is a marked space to install one. A fridge or a fridge-freezer must be selected."
-			:options="appliances"
+			:options="appliancesDisplayTypes"
 			:validation-rules="{ isFridgeInChoice }"
 			validation="required | isFridgeInChoice"
 			:validation-messages="{isFridgeInChoice: 'Fridge or Fridge-freezer is required.'}"
