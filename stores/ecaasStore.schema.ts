@@ -878,17 +878,27 @@ const mechanicalVentilationDataZod = z.discriminatedUnion("hasAssociatedItem",
 
 export type MechanicalVentilationData = z.infer<typeof mechanicalVentilationDataZod>;
 
-const ductworkDataZod = named.extend({
+const ductworkDataBase = named.extend({
 	mvhrUnit: z.string(),
 	ductworkCrossSectionalShape: ductShapeZod,
 	ductType: ductTypeZod,
-	internalDiameterOfDuctwork: z.number().min(0).max(1000),
-	externalDiameterOfDuctwork: z.number().min(0).max(1000),
 	insulationThickness: z.number().min(0).max(100),
 	lengthOfDuctwork: z.number().min(0),
 	thermalInsulationConductivityOfDuctwork: z.number().min(0),
 	surfaceReflectivity: z.boolean(),
 });
+
+const ductworkDataZod = z.discriminatedUnion("ductworkCrossSectionalShape", [
+	ductworkDataBase.extend({
+		ductworkCrossSectionalShape: z.literal(ductShapeZod.enum.circular),
+		internalDiameterOfDuctwork: z.number().min(0).max(1000),
+		externalDiameterOfDuctwork: z.number().min(0).max(1000),
+	}),
+	ductworkDataBase.extend({
+		ductworkCrossSectionalShape: z.literal(ductShapeZod.enum.rectangular),
+		internalPerimeterOfDuctwork: z.number(),
+	}),
+]);
 
 export type DuctworkData = z.infer<typeof ductworkDataZod>;
 
