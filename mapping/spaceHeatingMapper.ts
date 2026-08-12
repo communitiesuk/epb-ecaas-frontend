@@ -72,6 +72,7 @@ export function mapBoilers(state: ResolvedState): Record<string, SchemaBoilerWit
 	const boilers = heatSources.filter(
 		(heatSource) => heatSource.typeOfHeatSource === "boiler",
 	);
+	
 	return objectFromEntries(
 		boilers.map((boiler): [string, SchemaBoilerWithProductReference] => {
 			return [
@@ -82,7 +83,7 @@ export function mapBoilers(state: ResolvedState): Record<string, SchemaBoilerWit
 					...("specifiedLocation" in boiler
 						? { specified_location: boiler.specifiedLocation }
 						: {}),
-					EnergySupply: "mains_elec",
+					EnergySupply: boiler.packagedProductReference ? "mains gas" : defaultElectricityEnergySupplyName,
 				} as const satisfies SchemaBoilerWithProductReference,
 			];
 		}),

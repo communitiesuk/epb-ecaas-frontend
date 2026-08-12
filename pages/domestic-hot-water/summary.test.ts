@@ -6,9 +6,10 @@ import { litrePerSecond } from "~/utils/units/flowRate";
 import { kilowatt, kilowattHoursPerDay } from "~/utils/units/power";
 import { metresSquare } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
-import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatNetworkData, PreheatedWaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
+import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatNetworkData, PipeworkData, PreheatedWaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
 import { celsius } from "~/utils/units/temperature";
 import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
+import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity.js";
 
 const { mockFetch, mockNavigateTo } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
@@ -35,6 +36,21 @@ const verifyDataInSection = async (
 
 describe("Domestic hot water summary", () => {
 	const store = useEcaasStore();
+
+	const hotWaterCylinder: HotWaterCylinderData = {
+		id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
+		typeOfWaterStorage: "hotWaterCylinder",
+		name: "Hot water cylinder",
+		storageCylinderVolume: {
+			amount: 5,
+			unit: "litres" as const,
+		},
+		dailyEnergyLoss: 1,
+		areaOfHeatExchanger: 2.5,
+		heaterPosition: 0.8,
+		thermostatPosition: 0.5,
+		coldWaterSource: "mainsWater",
+	};
 
 	beforeEach(() => {
 		store.$reset();
@@ -239,21 +255,6 @@ describe("Domestic hot water summary", () => {
 	describe("Hot water cylinder", () => {
 		const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
-		const hotWaterCylinder: HotWaterCylinderData = {
-			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
-			typeOfWaterStorage: "hotWaterCylinder",
-			name: "Hot water cylinder",
-			storageCylinderVolume: {
-				amount: 5,
-				unit: "litres" as const,
-			},
-			dailyEnergyLoss: 1,
-			areaOfHeatExchanger: 2.5,
-			heaterPosition: 0.8,
-			thermostatPosition: 0.5,
-			coldWaterSource: "mainsWater",
-		};
-
 		const smartHotWaterCylinder: SmartHotWaterTankData = {
 			id: "c84528bb-f805-4f1e-95d3-2bd17384abcd",
 			typeOfWaterStorage: "smartHotWaterTank",
@@ -454,7 +455,7 @@ describe("Domestic hot water summary", () => {
 		});
 	});
 
-	describe("hot water outlets", () => {
+	describe("Hot water outlets", () => {
 		const mixedShower: EcaasForm<MixedShowerData> = {
 			data: {
 				id: "4a93532e-a370-4015-9778-854661bf1627",
@@ -794,6 +795,85 @@ describe("Domestic hot water summary", () => {
 		});
 	});
 
+	describe("Primary pipework", () => {
+		const pipework: PipeworkData = {
+			name: "Pipework Kitchen Sink",
+			waterStorage: hotWaterCylinder.id,
+			internalDiameter: 10,
+			externalDiameter: 10,
+			length: 3,
+			insulationThickness: 5,
+			thermalConductivity: 1,
+			surfaceReflectivity: true,
+			pipeContents: "water",
+			location: "heatedSpace",
+		};
+
+		const addPipeworkData = () => {
+			store.$patch({
+				domesticHotWater: {
+					waterStorage: {
+						data: [{ data: hotWaterCylinder }],
+					},
+					pipework: {
+						data: [{ data: pipework }],
+					},
+				},
+			});
+		};
+
+		it("displays an empty tab state with link to create when no data exists", async () => {
+			await renderSuspended(Summary);
+
+			expect(screen.getByText("No pipework added")).not.toBeNull();
+
+			const addWwhrsLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add pipework",
+			});
+
+			expect(new URL(addWwhrsLink.href).pathname).toBe(
+				getUrl("pipeworkCreate"),
+			);
+		});
+
+		it("should display the correct data for the primary pipework section when data exists", async () => {
+			addPipeworkData();
+			await renderSuspended(Summary);
+
+			const expectedResult = {
+				"Name": "Pipework Kitchen Sink",
+				"Water cylinder": "Hot water cylinder (Hot water cylinder)",
+				"Location": "Heated space",
+				"Pipe contents": "Water",
+				"Internal diameter": "10 mm",
+				"External diameter": "10 mm",
+				"Length": "3 m",
+				"Insulation thickness": "5 mm",
+				"Thermal conductivity": `1 ${wattsPerMeterKelvin.suffix}`,
+				"Surface reflectivity": "Reflective",
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-pipework-${hyphenate(key)}`));
+
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+
+		it("should display an edit link within primary pipework when data exists", async () => {
+			addPipeworkData();
+
+			await renderSuspended(Summary);
+
+			const pipeworkSection = screen.getByTestId("pipework");
+			const editLink: HTMLAnchorElement = within(pipeworkSection).getByText("Edit");
+
+			expect(editLink).not.toBeNull();
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water");
+		});
+	});
+
 	describe("heat sources", () => {
 		const heatNetworkWithBooster: HeatNetworkData = {
 			id: "hn_id",
@@ -912,7 +992,6 @@ describe("Domestic hot water summary", () => {
 			id: "463c94f6-566c-49b2-af27-57e5c9999999",
 			name: "Point of use",
 			typeOfHeatSource: "pointOfUse",
-			energySupply: "electricity",
 		};
 
 		const heatNetwork1: HeatNetworkData = {
@@ -1058,7 +1137,6 @@ describe("Domestic hot water summary", () => {
 			"Cold water source": "Mains water",
 			Name: "Point of use",
 			"Type of heat source": "Point of use",
-			"Energy supply": "Electricity",
 			// "Heater efficiency": "1",
 		};
 

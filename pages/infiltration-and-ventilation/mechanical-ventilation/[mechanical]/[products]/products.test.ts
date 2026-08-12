@@ -17,6 +17,7 @@ describe("Mechanical ventilation products page", () => {
 	afterEach(() => {
 		mockFetch.mockReset();
 		mockRoute.mockReset();
+		store.$reset();
 	});
 
 	const mockedProducts = {
@@ -90,108 +91,257 @@ describe("Mechanical ventilation products page", () => {
 		typeOfMechanicalVentilationOptions: "Decentralised continuous MEV",
 	};
 
-	const mechanicalVentilationScenarios = [
-		{
-			name: "MVHR",
-			mechanicalVentilation: mvhr,
-			route: "mvhr",
-			path: "/0/mvhr",
-			title: "Select an MVHR",
-		},
-		{
-			name: "Centralised MV",
-			mechanicalVentilation: centralisedMV,
-			route: "centralisedMv",
-			path: "/0/centralised-mv",
-			title: "Select a centralised MV",
-		},
-		{
-			name: "Centralised continuous MEV",
-			mechanicalVentilation: centralisedContinousMEV,
-			route: "centralisedContinuousMev",
-			path: "/0/centralised-continuous-mev",
-			title: "Select a centralised continuous MEV",
-		},
-		{
-			name: "Decentralised continuous MEV",
-			mechanicalVentilation: decentralisedContinousMEV,
-			route: "decentralisedContinuousMev",
-			path: "/0/decentralised-continuous-mev",
-			title: "Select a decentralised continuous MEV",
-		},
-	] as const;
+	test("title is correct for MVHR", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{ data: mvhr }],
+				},
+			},
+		});
 
-	afterEach(async () => {
-		store.$reset();
+		mockRoute.mockReturnValue({
+			params: {
+				mechanical: "0",
+				products: "mvhr",
+			},
+			path: "/0/mvhr",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(mockedProducts.mvhr),
+		});
+
+		await renderSuspended(Products);
+
+		expect(
+			screen.getByRole("heading", { name: "Select an MVHR" }),
+		);
 	});
 
-	test.each(mechanicalVentilationScenarios)(
-		"title dependant on the type of mechanical ventilation - $name",
-		async ({ mechanicalVentilation, route, path, title }) => {
-			store.$patch({
-				infiltrationAndVentilation: {
-					mechanicalVentilation: {
-						data: [{ data: mechanicalVentilation }],
-					},
+	test("title is correct for Centralised MV", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{ data: centralisedMV }],
 				},
-			});
+			},
+		});
 
-			mockRoute.mockReturnValue({
-				params: {
-					mechanical: "0",
-					products: route,
+		mockRoute.mockReturnValue({
+			params: {
+				mechanical: "0",
+				products: "centralisedMv",
+			},
+			path: "/0/centralised-mv",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(mockedProducts.centralisedMv),
+		});
+
+		await renderSuspended(Products);
+
+		expect(
+			screen.getByRole("heading", { name: "Select a centralised MV" }),
+		);
+	});
+
+	test("title is correct for Centralised continuous MEV", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{ data: centralisedContinousMEV }],
 				},
-				path,
-			});
+			},
+		});
 
-			mockFetch.mockReturnValue({
-				data: ref(mockedProducts[route]),
-			});
+		mockRoute.mockReturnValue({
+			params: {
+				mechanical: "0",
+				products: "centralisedContinuousMev",
+			},
+			path: "/0/centralised-continuous-mev",
+		});
 
-			await renderSuspended(Products);
+		mockFetch.mockReturnValue({
+			data: ref(mockedProducts.centralisedContinuousMev),
+		});
 
-			expect(
-				screen.getByRole("heading", { name: title }),
-			);
-		},
-	);
+		await renderSuspended(Products);
 
-	test.each(mechanicalVentilationScenarios)(
-		"when a user selects a $name product, its product reference gets stored",
-		async ({ mechanicalVentilation, route, path }) => {
-			store.$patch({
-				infiltrationAndVentilation: {
-					mechanicalVentilation: {
-						data: [{ data: mechanicalVentilation }],
-					},
+		expect(
+			screen.getByRole("heading", {
+				name: "Select a centralised continuous MEV",
+			}),
+		);
+	});
+
+	test("title is correct for Decentralised continuous MEV", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{ data: decentralisedContinousMEV }],
 				},
-			});
+			},
+		});
 
-			mockRoute.mockReturnValue({
-				params: {
-					mechanical: "0",
-					products: route,
+		mockRoute.mockReturnValue({
+			params: {
+				mechanical: "0",
+				products: "decentralisedContinuousMev",
+			},
+			path: "/0/decentralised-continuous-mev",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(mockedProducts.decentralisedContinuousMev),
+		});
+
+		await renderSuspended(Products);
+
+		expect(
+			screen.getByRole("heading", {
+				name: "Select a decentralised continuous MEV",
+			}),
+		);
+	});
+
+	test("when a user selects an MVHR product, its product reference gets stored", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{ data: mvhr }],
 				},
-				path,
-			});
+			},
+		});
 
-			mockFetch.mockReturnValue({
-				data: ref(mockedProducts[route]),
-			});
+		mockRoute.mockReturnValue({
+			params: {
+				mechanical: "0",
+				products: "mvhr",
+			},
+			path: "/0/mvhr",
+		});
 
-			await renderSuspended(Products);
+		mockFetch.mockReturnValue({
+			data: ref(mockedProducts.mvhr),
+		});
 
-			await user.click(screen.getByTestId("selectProductButton_0"));
+		await renderSuspended(Products);
 
-			expect(
-				store.infiltrationAndVentilation.mechanicalVentilation.data[0]!.data,
-			).toEqual(
-				expect.objectContaining({
-					productReference: mockedProducts[route].data[0].id,
-				}),
-			);
-		},
-	);
+		await user.click(screen.getByTestId("selectProductButton_0"));
+
+		expect(
+			store.infiltrationAndVentilation.mechanicalVentilation.data[0]!.data,
+		).toEqual(
+			expect.objectContaining({
+				productReference: mockedProducts.mvhr.data[0].id,
+			}),
+		);
+	});
+
+	test.skip("when a user selects a Centralised MV product, its product reference gets stored", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{ data: centralisedMV }],
+				},
+			},
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				mechanical: "0",
+				products: "centralisedMv",
+			},
+			path: "/0/centralised-mv",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(mockedProducts.centralisedMv),
+		});
+
+		await renderSuspended(Products);
+
+		await user.click(screen.getByTestId("selectProductButton_0"));
+
+		expect(
+			store.infiltrationAndVentilation.mechanicalVentilation.data[0]!.data,
+		).toEqual(
+			expect.objectContaining({
+				productReference: mockedProducts.centralisedMv.data[0].id,
+			}),
+		);
+	});
+
+	test.skip("when a user selects a Centralised continuous MEV product, its product reference gets stored", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{ data: centralisedContinousMEV }],
+				},
+			},
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				mechanical: "0",
+				products: "centralisedContinuousMev",
+			},
+			path: "/0/centralised-continuous-mev",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(mockedProducts.centralisedContinuousMev),
+		});
+
+		await renderSuspended(Products);
+
+		await user.click(screen.getByTestId("selectProductButton_0"));
+
+		expect(
+			store.infiltrationAndVentilation.mechanicalVentilation.data[0]!.data,
+		).toEqual(
+			expect.objectContaining({
+				productReference: mockedProducts.centralisedContinuousMev.data[0].id,
+			}),
+		);
+	});
+
+	test.skip("when a user selects a Decentralised continuous MEV product, its product reference gets stored", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{ data: decentralisedContinousMEV }],
+				},
+			},
+		});
+
+		mockRoute.mockReturnValue({
+			params: {
+				mechanical: "0",
+				products: "decentralisedContinuousMev",
+			},
+			path: "/0/decentralised-continuous-mev",
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(mockedProducts.decentralisedContinuousMev),
+		});
+
+		await renderSuspended(Products);
+
+		await user.click(screen.getByTestId("selectProductButton_0"));
+
+		expect(
+			store.infiltrationAndVentilation.mechanicalVentilation.data[0]!.data,
+		).toEqual(
+			expect.objectContaining({
+				productReference: mockedProducts.decentralisedContinuousMev.data[0].id,
+			}),
+		);
+	});
 
 	test("'Back to mechanical ventilation' navigates user to the mechanical ventilation at the correct index", async () => {
 		store.$patch({

@@ -82,7 +82,7 @@ function removeRefsToFuelType(
 	for (const item of heatSources) {
 		if ("energySupply" in item.data)
 			if (item.data.energySupply === removedFuelType) {
-				item.data.energySupply = undefined;
+				item.data.energySupply = undefined!;
 				item.complete = false;
 			}
 	}

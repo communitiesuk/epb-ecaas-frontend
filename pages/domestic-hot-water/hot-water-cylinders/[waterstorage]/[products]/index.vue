@@ -37,9 +37,9 @@ const selectProduct = (product: DisplayProduct) => {
 	/>
 	<GovButton
 		secondary
-		:href="`/domestic-hot-water/water-storage/${index}`"
+		:href="`/domestic-hot-water/hot-water-cylinders/${index}`"
 		test-id="backToWaterStorageButton"
 	>
-		Back to water storage
+		Back to hot water cylinders
 	</GovButton>
 </template>

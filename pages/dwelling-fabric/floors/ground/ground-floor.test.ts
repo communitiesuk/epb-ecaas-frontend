@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import GroundFloor from "./[floor].vue";
 import { metre, millimetre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units";
@@ -164,6 +164,21 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId("perimeter_error"))).toBeDefined();
 			expect((await screen.findByTestId("thicknessOfWalls_error"))).toBeDefined();
 			expect((await screen.findByTestId("typeOfGroundFloor_error"))).toBeDefined();
+		});
+
+		test("floor areal heat capacity table is displayed in help with input dropdown", async () => {
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" },
+				},
+			});
+
+			const table = screen.getByTestId("floorArealHeatCapacityTable");
+
+			expect(table).toBeDefined();
+			expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
+			expect(within(table).getByText("Areal heat capacity")).toBeDefined();
+			expect(within(table).getByText("Type of construction layer")).toBeDefined();
 		});
 	});
 

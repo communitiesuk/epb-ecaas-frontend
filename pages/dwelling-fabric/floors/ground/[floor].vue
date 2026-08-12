@@ -271,7 +271,11 @@ const greaterThanZero = (node: FormKitNode) => {
 				validation="required | number"
 				data-field="Zone.BuildingElement.*.thermal_transm_walls"/>
 		</template>
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" help="This is the sum of the heat capacities of the full thickness of the floor build-up"/>
+		<FieldsArealHeatCapacity 
+			id="arealHeatCapacity" 
+			name="arealHeatCapacity" 
+			help="This is the sum of the heat capacities of the full thickness of the floor build-up" 
+			:show-floor-guidance="true"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" help="This is the distribution of mass in the full thickness of the floor build up"/>
 		<FormKit
 			id="perimeter"

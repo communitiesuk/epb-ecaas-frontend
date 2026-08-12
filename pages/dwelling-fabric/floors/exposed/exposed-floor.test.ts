@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import ExposedFloor from "./[floor].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -153,6 +153,21 @@ describe("exposed floor", () => {
 
 		// Assert
 		expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete).not.toBe(true);
+	});
+
+	test("floor areal heat capacity table is displayed in help with input dropdown", async () => {
+		await renderSuspended(ExposedFloor, {
+			route: {
+				params: { floor: "create" },
+			},
+		});
+
+		const table = screen.getByTestId("floorArealHeatCapacityTable");
+
+		expect(table).toBeDefined();
+		expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
+		expect(within(table).getByText("Areal heat capacity")).toBeDefined();
+		expect(within(table).getByText("Type of construction layer")).toBeDefined();
 	});
 
 	describe("partially saving data", () => {

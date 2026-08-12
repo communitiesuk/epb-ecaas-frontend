@@ -119,7 +119,7 @@ describe("Heat source products page", () => {
 		const backButton = screen.getByTestId("backToWaterStorageButton");
 
 		expect(backButton.getAttribute("href")).toBe(
-			"/domestic-hot-water/water-storage/1",
+			"/domestic-hot-water/hot-water-cylinders/1",
 		);
 	});
 });

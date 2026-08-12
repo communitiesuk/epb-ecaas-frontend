@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import FloorAboveUnheatedBasement from "./[floor].vue";
 import { millimetre } from "~/utils/units/length";
 import { v4 as uuidv4 } from "uuid";
@@ -199,6 +199,21 @@ describe("floor above unheated basement", () => {
 
 		// Assert
 		expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceFloorAboveUnheatedBasement.complete).not.toBe(true);
+	});
+
+	test("floor areal heat capacity table is displayed in help with input dropdown", async () => {
+		await renderSuspended(FloorAboveUnheatedBasement, {
+			route: {
+				params: { floor: "create" },
+			},
+		});
+
+		const table = screen.getByTestId("floorArealHeatCapacityTable");
+
+		expect(table).toBeDefined();
+		expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
+		expect(within(table).getByText("Areal heat capacity")).toBeDefined();
+		expect(within(table).getByText("Type of construction layer")).toBeDefined();
 	});
 
 	describe("partially saving data", () => {

@@ -63,6 +63,8 @@ autoSaveElementForm<PipeworkData>({
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
+const waterStorageOptions = useAssociatedItems(["waterStorage", "preheatedWaterStorage"]);
 </script>
 
 <template>
@@ -95,18 +97,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			v-if="mounted"
 			id="waterStorage"
 			type="govRadios"
-			:options="new Map(store.domesticHotWater.waterStorage.data
-				.filter(x => x.data.id !== undefined)
-				.map(x => [x.data.id as string, x.data.name]))"		
-			label="Hot water cylinder"
-			help="Select a hot water cylinder that this pipework is connected to"
+			:options="new Map(waterStorageOptions)"		
+			label="Water cylinder"
+			help="Select a water cylinder that this pipework is connected to"
 			name="waterStorage"
 			validation="required">
 			<div
 				v-if="!store.domesticHotWater.waterStorage.data.length">
-				<p class="govuk-error-message">No hot water cylinder added.</p>
-				<NuxtLink :to="getUrl('waterStorageCreate')" class="govuk-link gov-radios-add-link">
-					Click here to add a hot water cylinder
+				<p class="govuk-error-message">No water cylinder added.</p>
+				<NuxtLink :to="getUrl('domesticHotWater')" class="govuk-link gov-radios-add-link">
+					Click here to add a water cylinder
 				</NuxtLink>
 			</div>
 		</FormKit>

@@ -165,6 +165,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="arealHeatCapacity"
 			name="arealHeatCapacity"
 			help="This is the sum of the heat capacities of the full thickness of the construction build up"
+			:show-wall-guidance="true"
+
 		/>
 		<FieldsMassDistributionClass
 			id="massDistributionClass"

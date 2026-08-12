@@ -56,7 +56,6 @@ const existingHeatPumpSpaceHeating1: HeatSourceData = {
 	typeOfHeatPump: "airSource",
 	productReference: "HEATPUMP-LARGE",
 	maxFlowTemp: unitValue(7, celsius),
-	energySupply: "electricity",
 };
 const existingHeatPumpSpaceHeating2: HeatSourceData = {
 	id: "463c94f6-566c-49b2-af27-57e5c68b5c31",
@@ -65,7 +64,6 @@ const existingHeatPumpSpaceHeating2: HeatSourceData = {
 	typeOfHeatPump: "airSource",
 	productReference: "HEATPUMP-LARGE",
 	maxFlowTemp: unitValue(7, celsius),
-	energySupply: "electricity",
 };
 
 const dhwWithExistingHeatPump: DomesticHotWaterHeatSourceData = {
@@ -1210,7 +1208,6 @@ describe("Point of use section", () => {
 	const populateValidPOUForm = async () => {
 		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
 		await user.click(screen.getByTestId("typeOfHeatSource_pointOfUse"));
-		await user.click(screen.getByTestId("energySupply_electricity"));
 		await user.click(screen.getByTestId("coldWaterSource_headerTank"));
 
 		await user.tab();
@@ -1220,7 +1217,6 @@ describe("Point of use section", () => {
 		id: "463c94f6-566c-49b2-af27-57e5c111111",
 		name: "Point of use",
 		typeOfHeatSource: "pointOfUse",
-		energySupply: "electricity",
 		coldWaterSource: "headerTank",
 		isExistingHeatSource: false,
 		heatSourceId: "NEW_HEAT_SOURCE",
@@ -1240,7 +1236,6 @@ describe("Point of use section", () => {
 		await user.click(screen.getByTestId("coldWaterSource_headerTank"));
 
 		expect(screen.getByTestId("name")).toBeDefined();
-		expect(screen.getByTestId("energySupply")).toBeDefined();
 	});
 
 	test("Point of use data is saved to store state when form is valid", async () => {
@@ -1260,7 +1255,6 @@ describe("Point of use section", () => {
 			id: "463c94f6-566c-49b2-af27-57e5c111111",
 			name: "Point of use",
 			typeOfHeatSource: "pointOfUse",
-			energySupply: "electricity",
 			heatSourceId: "NEW_HEAT_SOURCE",
 			coldWaterSource: "headerTank",
 			isExistingHeatSource: false,
@@ -1284,7 +1278,6 @@ describe("Point of use section", () => {
 
 		expect((await screen.findByTestId("typeOfHeatSource_pointOfUse")).hasAttribute("checked"));
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Point of use");
-		expect((await screen.findByTestId("energySupply_electricity")).hasAttribute("checked"));
 	});
 
 	test("point of use is updated when data with id exists in store", async () => {
@@ -1312,20 +1305,6 @@ describe("Point of use section", () => {
 
 		expect(pointOfUse!.id).toBe(pointOfUse1.id);
 		expect((pointOfUse! as { name: string }).name).toBe("Updated point of use");
-	});
-
-	test("required error messages are displayed when invalid form is submitted", async () => {
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "create" },
-			},
-		});
-		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
-		await user.click(screen.getByTestId("typeOfHeatSource_pointOfUse"));
-		await user.click(screen.getByTestId("saveAndComplete"));
-
-		expect(await screen.findByTestId("energySupply_error")).toBeDefined();	
-
 	});
 
 	test("point of use heat source is disabled when a water storage has been selected", async () => {

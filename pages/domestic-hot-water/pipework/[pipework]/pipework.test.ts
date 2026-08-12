@@ -27,6 +27,19 @@ const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
 	},
 };
 
+const preheatedWaterCylinder: EcaasForm<PreheatedWaterStorageData> = {
+	data: {
+		name: "Standard water cylinder 1",
+		id: "c84528bb-f805-4f1e-95d3-2bd1717deca1",
+		typeOfWaterStorage: "hotWaterCylinder",
+		storageCylinderVolume: unitValue(5, litre),
+		dailyEnergyLoss: 1,
+		heaterPosition: 0.8,
+		coldWaterSource: "mainsWater",
+		heatSourceId: "d9d03976-0827-4c3c-997e-ee63b340e5c5",
+	},
+};
+
 const pipework1: EcaasForm<PipeworkData> = {
 	data: {
 		name: "Pipework Kitchen Sink",
@@ -140,6 +153,28 @@ describe("Pipework form", () => {
 		expect((await screen.findByTestId("surfaceReflectivity_yes")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("pipeContents_water")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("location_heatedSpace")).hasAttribute("checked")).toBe(true);
+	});
+
+	test("hot water and pre-heated cylinders can be selected as water storage", async () => {
+		store.$patch({
+			domesticHotWater: {
+				waterStorage: {
+					data: [hotWaterCylinder],
+				},
+				preheatedWaterStorage: {
+					data: [preheatedWaterCylinder],
+				},
+			},
+		});
+
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipework: "create" },
+			},
+		});
+
+		expect(screen.getByTestId(`waterStorage_${hotWaterCylinder.data.id}`)).toBeDefined();
+		expect(screen.getByTestId(`waterStorage_${preheatedWaterCylinder.data.id}`)).toBeDefined();
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {

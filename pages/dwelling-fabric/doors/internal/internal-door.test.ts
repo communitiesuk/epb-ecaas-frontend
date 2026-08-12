@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import InternalDoor from "./[door].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -144,6 +144,23 @@ describe("internal door", () => {
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 		});
+
+		test("heated space internal door areal heat capacity table is displayed in help with input dropdown", async () => {
+			await renderSuspended(InternalDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+
+	
+			const table = screen.getByTestId("doorArealHeatCapacityTable");
+	
+			expect(table).toBeDefined();
+			expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
+			expect(within(table).getByText("Areal heat capacity of the construction build up")).toBeDefined();
+			expect(within(table).queryByText("Type of construction layer")).toBeNull();
+		});
 	});
 
 	describe("when type of internal door is unheated space", () => {
@@ -198,6 +215,23 @@ describe("internal door", () => {
 
 			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 			expect((await screen.findByTestId("thermalResistanceOfAdjacentUnheatedSpace_error"))).toBeDefined();
+		});
+
+		test("unheated space internal door areal heat capacity table is displayed in help with input dropdown", async () => {
+			await renderSuspended(InternalDoor, {
+				route: {
+					params: { door: "create" },
+				},
+			});
+			await user.click(screen.getByTestId("typeOfInternalDoor_unheatedSpace"));
+
+	
+			const table = screen.getByTestId("doorArealHeatCapacityTable");
+	
+			expect(table).toBeDefined();
+			expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
+			expect(within(table).getByText("Areal heat capacity of the construction build up")).toBeDefined();
+			expect(within(table).queryByText("Type of construction layer")).toBeNull();
 		});
 	});
 

@@ -153,7 +153,6 @@ describe("preheated water storage", () => {
 			id: "bb5769e2-cc25-4e88-b922-7deba5793b68",
 			typeOfHeatSource: "pointOfUse",
 			name: "Point of use",
-			energySupply: "electricity",
 			coldWaterSource: "mainsWater",
 		};
 

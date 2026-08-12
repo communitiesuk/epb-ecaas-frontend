@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import InternalWall from "./[wall].vue";
 import { v4 as uuidv4 } from "uuid";
 
@@ -235,6 +235,21 @@ describe("internal wall", () => {
 
 		expect(data[0]?.data.name).toBe("Internal wall 2");
 		expect(data[0]?.data.surfaceAreaOfElement).toBe(10);
+	});
+
+	test("internal wall areal heat capacity table is displayed in help with input dropdown", async () => {
+		await renderSuspended(InternalWall, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
+	
+		const table = screen.getByTestId("internalWallArealHeatCapacityTable");
+	
+		expect(table).toBeDefined();
+		expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
+		expect(within(table).getByText("Areal heat capacity of the construction build up")).toBeDefined();
+		expect(within(table).queryByText("Type of construction layer")).toBeNull();
 	});
 
 	test("partial form data is saved automatically with default name to store", async () => {

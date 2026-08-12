@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import InternalFloor from "./[floor].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -174,6 +174,17 @@ describe("internal floor", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors");
+	});
+
+	test("floor areal heat capacity table is not displayed in help with input dropdown", async () => {
+		await renderSuspended(InternalFloor, {
+			route: {
+				params: { floor: "create" },
+			},
+		});
+
+		expect(screen.queryByTestId("floorArealHeatCapacityTable")).toBeNull();
+
 	});
 
 	describe("internal floor section status", () => {

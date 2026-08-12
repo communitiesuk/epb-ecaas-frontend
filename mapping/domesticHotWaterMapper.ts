@@ -422,12 +422,14 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 	const { mappedWSHeatSource, mappedHeatSourceWet }
 		= mapWaterStorageHeatSource(waterStorage, dhwHeatSource, actualHeatSource, state);
 
+	const pipework = state.domesticHotWater.pipework.filter(x => x.waterStorage === waterStorage.id);
+
 	return {
 		HotWaterSource: {
 			"hw cylinder": {
 				...mappedWaterStorage,
 				HeatSource: mappedWSHeatSource,
-				...mapPipework(state),
+				...mapPipework(pipework),
 			},
 		},
 		...mappedHeatSourceWet,
@@ -533,7 +535,6 @@ function mapHotWaterSourcesWithoutWaterStorage(state: ResolvedState) {
 		HotWaterSource: {
 			"hw cylinder": {
 				...mappedHWCylinderBit,
-				...mapPipework(state),
 			},
 		},
 		...mappedHeatSourceWet,
@@ -564,6 +565,8 @@ export function mapPreheatedWaterSourceData(state: ResolvedState): Partial<FhsIn
 	const { mappedWSHeatSource, mappedHeatSourceWet }
 		= mapWaterStorageHeatSource(preheatedWaterStorage, dhwHeatSource, actualHeatSource, state);
 
+	const pipework = state.domesticHotWater.pipework?.filter(x => x.waterStorage === preheatedWaterStorage.id);
+
 	if (preheatedWaterStorage.typeOfWaterStorage === "hotWaterCylinder") {
 		return {
 			PreHeatedWaterSource: {
@@ -572,6 +575,7 @@ export function mapPreheatedWaterSourceData(state: ResolvedState): Partial<FhsIn
 					volume: preheatedWaterStorage.storageCylinderVolume.amount,
 					daily_losses: preheatedWaterStorage.dailyEnergyLoss,
 					HeatSource: mappedWSHeatSource,
+					...mapPipework(pipework),
 				},
 			},
 			...mappedHeatSourceWet,
@@ -610,8 +614,8 @@ export function mapColdWaterSource(input: Partial<FhsInputSchema>): Pick<FhsInpu
 	};
 }
 
-function mapPipework(state: ResolvedState) {
-	const pipeworkEntries = state.domesticHotWater.pipework.map((x): SchemaWaterPipework => {
+function mapPipework(pipework: PipeworkData[]) {
+	const pipeworkEntries = pipework?.map((x): SchemaWaterPipework => {
 		if (x.location !== "heatedSpace" && x.location !== "unheatedSpace") {
 			throw new Error("invalid location property on pipework");
 		}
@@ -627,7 +631,7 @@ function mapPipework(state: ResolvedState) {
 		};
 	});
 
-	return pipeworkEntries.length !== 0
+	return pipeworkEntries?.length !== 0
 		? { primary_pipework: pipeworkEntries }
 		: {};
 }

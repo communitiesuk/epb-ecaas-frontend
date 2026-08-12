@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import WallToUnheatedSpace from "./[wall].vue";
 import { v4 as uuidv4 } from "uuid";
 
@@ -205,6 +205,21 @@ describe("wall to unheated space", () => {
 
 		expect(data[0]?.data.name).toBe("Wall to unheated space 2");
 		expect(data[0]?.data.surfaceAreaOfElement).toBe(10);
+	});
+
+	test("wall areal heat capacity table is displayed in help with input dropdown", async () => {
+		await renderSuspended(WallToUnheatedSpace, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
+
+		const table = screen.getByTestId("wallArealHeatCapacityTable");
+
+		expect(table).toBeDefined();
+		expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
+		expect(within(table).getByText("Areal heat capacity")).toBeDefined();
+		expect(within(table).getByText("Type of construction layer")).toBeDefined();
 	});
 
 	test("partial form data is saved automatically with default name to store", async () => {

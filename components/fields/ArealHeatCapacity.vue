@@ -7,28 +7,27 @@ defineProps<{
 	name?: string;
 	label?: string;
 	help?: string;
+	showFloorGuidance?: boolean;
+	showWallGuidance?: boolean;
+	showInternalWallGuidance?: boolean;
+	showDoorGuidance?: boolean;
 }>();
 
 const arealHeatCapacityOptions = {
 	"Very light": {
 		label: "Very light",
-		hint: "For example, light board or plastic",
 	},
 	"Light": {
 		label: "Light",
-		hint: "For example, 50-100 mm lightweight brick or concrete",
 	},
 	"Medium": {
 		label: "Medium",
-		hint: "For example, 100-200 mm lightweight brick or concrete",
 	},
 	"Heavy": {
 		label: "Heavy",
-		hint: "For example, 70-120 mm solid brick or heavyweight concrete",
 	},
 	"Very heavy": {
 		label: "Very heavy",
-		hint: "For example, more than 120 mm solid brick or heavyweight concrete",
 	},
 } as const satisfies Record<SchemaArealHeatCapacity, RadioOption & { label: SchemaArealHeatCapacity }>;
 
@@ -45,8 +44,12 @@ const arealHeatCapacityOptions = {
 		:options="arealHeatCapacityOptions"
 		data-field="Zone.BuildingElement.*.areal_heat_capacity"
 	>
-		<GovDetails summary-text="Help with this input">
-			<p class="govuk-body">The areal heat capacity of a building element is not the same as the kappa value. Kappa values only consider the thermal mass directly exposed to the internal space, whereas the areal heat capacity  takes into account the full thickness of the building element.</p>
+		<FieldsArealHeatCapacityWallArealHeatCapacityGuidance v-if="showWallGuidance" />
+		<FieldsArealHeatCapacityInternalWallArealHeatCapacityGuidance v-else-if="showInternalWallGuidance"/>
+		<FieldsArealHeatCapacityDoorArealHeatCapacityGuidance v-else-if="showDoorGuidance"/>
+		<FieldsArealHeatCapacityFloorArealHeatCapacityGuidance v-else-if="showFloorGuidance"/>
+		<GovDetails v-else summary-text="Help with this input">
+			<p class="govuk-body">The areal heat capacity of a building element is not the same as the kappa value. Kappa values only consider the thermal mass directly exposed to the internal space, whereas the areal heat capacity  takes into account the full thickness of the building element.</p>				
 			<table class="govuk-table">
 				<thead class="govuk-table__head">
 					<tr class="govuk-table__row">

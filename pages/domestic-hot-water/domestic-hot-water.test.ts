@@ -811,7 +811,6 @@ describe("Domestic hot water", () => {
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
-				energySupply: "electricity",
 				maxFlowTemp: unitValue(30, celsius),
 			};
 
@@ -836,7 +835,6 @@ describe("Domestic hot water", () => {
 					"9e66d667-6c31-4406-9223-7e2249a7fee3",
 					"f6182db2-42e2-4d7e-beb8-de6f9a8f2be9",
 				],
-				energySupply: "electricity",
 				maxFlowTemp: unitValue(30, celsius),
 			};
 
@@ -1043,11 +1041,6 @@ describe("Domestic hot water", () => {
 			complete: true,
 		};
 
-
-		beforeEach(async () => {
-			await renderSuspended(DomesticHotWater);
-		});
-
 		// const hotWaterForms = {
 		// 	waterStorage: WaterStorageForm,
 		// 	hotWaterOutlets: HotWaterOutletsForm,
@@ -1124,7 +1117,7 @@ describe("Domestic hot water", () => {
 
 			const link = errorSummary.querySelector("a");
 
-			expect(link?.getAttribute("href")).toContain("water-storage");
+			expect(link?.getAttribute("href")).toContain("hot-water-cylinders");
 		});
 
 		it("displays an error message showing water storage is required if a solar thermal system heat source has been selected", async () => {
@@ -1176,7 +1169,7 @@ describe("Domestic hot water", () => {
 
 			const link = errorSummary.querySelector("a");
 
-			expect(link?.getAttribute("href")).toContain("water-storage");
+			expect(link?.getAttribute("href")).toContain("hot-water-cylinders");
 		});
 
 		it("displays an error message showing water storage is required if a heat pump heat source has been selected", async () => {
@@ -1218,7 +1211,7 @@ describe("Domestic hot water", () => {
 
 			const link = errorSummary.querySelector("a");
 
-			expect(link?.getAttribute("href")).toContain("water-storage");
+			expect(link?.getAttribute("href")).toContain("hot-water-cylinders");
 		});
 
 		it("displays an error message showing water storage is require if space heating heat pump has been selected", async () => {
@@ -1275,7 +1268,7 @@ describe("Domestic hot water", () => {
 
 			const link = errorSummary.querySelector("a");
 
-			expect(link?.getAttribute("href")).toContain("water-storage");
+			expect(link?.getAttribute("href")).toContain("hot-water-cylinders");
 		});
 
 		it("displays an error when two heat sources are added without one being connected to a pre-heated water tank", async () => {
@@ -1363,6 +1356,56 @@ describe("Domestic hot water", () => {
 			);
 		});
 
+		it("displays an error when no pipework is associated with a hot water cylinder", async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterStorage: {
+						data: [{
+							data: hwStorage1.data,
+							complete: true,
+						}],
+						complete: true,
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+
+			expect(errorSummary.textContent).toContain(
+				"You must add the primary pipework associated to the hot water cylinder.",
+			);
+		});
+
+		it("displays an error when no pipework is associated with a pre-heated water cylinder", async () => {
+			store.$patch({
+				domesticHotWater: {
+					preheatedWaterStorage: {
+						data: [{
+							data: preheatedStorage1.data,
+							complete: true,
+						}],
+						complete: true,
+					},
+					hotWaterOutlets: {
+						data: [otherHotWaterOutlet],
+						complete: true,
+					},
+				},
+			});
+
+			await renderSuspended(DomesticHotWater);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			const errorSummary = await screen.findByTestId("domesticHotWaterErrorSummary");
+
+			expect(errorSummary.textContent).toContain(
+				"You must add the primary pipework associated to the pre-heated water tank.",
+			);
+		});
+
 		it("displays all error messages if there are more than one", async () => {
 			const heatPump = {
 				data: {
@@ -1407,7 +1450,7 @@ describe("Domestic hot water", () => {
 			const links = errorSummary.querySelectorAll("a");
 
 			expect(links[0]?.getAttribute("href")).toContain("hot-water-outlets");
-			expect(links[1]?.getAttribute("href")).toContain("water-storage");
+			expect(links[1]?.getAttribute("href")).toContain("hot-water-cylinders");
 		});
 
 		it("does not display error summary when requirements are met", async () => {
@@ -1478,6 +1521,7 @@ describe("Domestic hot water", () => {
 					domesticHotWater: {
 						hotWaterOutlets: {
 							data: [{ data: hwOutlet1.data, complete: true }],
+							complete: true,
 						},
 						heatSources: {
 							data: [{ data: heatSource1.data, complete: true }],
@@ -1557,7 +1601,6 @@ describe("Domestic hot water", () => {
 				typeOfHeatPump: "hybridHeatPump",
 				productReference: "1000",
 				packageProductIds: ["171a20a4-e775-4e51-873c-f1fc536076b1"],
-				energySupply: "electricity",
 				maxFlowTemp: unitValue(30, celsius),
 			};
 
