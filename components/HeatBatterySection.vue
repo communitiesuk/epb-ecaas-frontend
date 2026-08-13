@@ -12,6 +12,7 @@ defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatBattery" }>;
 	index: number;
 	page: HeatBatterySectionPage;
+	onIncompatibleEnergySource?: (value: boolean) => void;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
@@ -49,6 +50,7 @@ const emit = defineEmits(["update-heat-battery-model"]);
 			:selected-product-type="model.typeOfHeatBattery"
 			:page-url="route.fullPath"
 			:page-index="index"
+			:on-incompatible-energy-source="onIncompatibleEnergySource"
 			@product-loaded="onProductLoaded"
 		/>
 		<FormKit

@@ -220,6 +220,7 @@ export const heatBatteryPcmZod = BaseProduct.extend({
 	heatStorageKJPerKAbovePhaseTransition: z.nullable(z.number()),
 	velocityInHEXTubeAt1LPerMinMPerS: z.nullable(z.number()),
 	simultaneousChargingAndDischarging: z.nullable(z.number()),
+	fuel: z.optional(fuelTypeZod),
 });
 
 export type HeatBatteryPcmProduct = z.infer<typeof heatBatteryPcmZod>;
@@ -233,6 +234,7 @@ export const heatBatteryDryCoreZod = BaseProduct.extend({
 	ratedPowerInstant: z.nullable(z.number()),
 	electricityStandby: z.nullable(z.number()),
 	pwrIn: z.nullable(z.number()),
+	fuel: z.optional(fuelTypeZod),
 });
 
 export type HeatBatteryDryCoreProduct = z.infer<typeof heatBatteryDryCoreZod>;

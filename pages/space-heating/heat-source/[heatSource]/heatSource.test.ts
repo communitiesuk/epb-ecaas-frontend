@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import HeatSourceForm from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
-import type { BoilerProduct, DisplayProduct, HeatPumpProduct, HybridHeatPumpProduct } from "~/pcdb/pcdb.types";
+import type { BoilerProduct, DisplayProduct, HeatBatteryDryCoreProduct, HeatBatteryPcmProduct, HeatPumpProduct, HybridHeatPumpProduct } from "~/pcdb/pcdb.types";
 import { celsius } from "~/utils/units/temperature";
 import type { ErrorName } from "~/errors.types";
 
@@ -1082,6 +1082,22 @@ describe("heatSource", () => {
 				technologyType: "HeatBatteryPCM",
 			};
 
+			const HeatBatteryPcmProductWithFuelType: Partial<HeatBatteryPcmProduct> = {
+				id: "1000",
+				brandName: "Heat Battery PCM Product",
+				modelName: "Heat Battery PCM Model",
+				technologyType: "HeatBatteryPCM",
+				fuel: "mains_gas",
+			};
+
+			const HeatBatteryDryCoreProductWithFuelType: Partial<HeatBatteryDryCoreProduct> = {
+				id: "1001",
+				brandName: "Heat Battery Dry Core Product",
+				modelName: "Heat Battery Dry Core Model",
+				technologyType: "HeatBatteryDryCore",
+				fuel: "LPG_condition_11F",
+			};
+
 			beforeEach(() => {
 				mockFetch.mockReturnValue({
 					data: ref(heatBatteryProduct),
@@ -1224,6 +1240,127 @@ describe("heatSource", () => {
 				await user.click(screen.getByTestId("saveAndComplete"));
 
 				expect((await screen.findByTestId("typeOfHeatBattery_error"))).toBeDefined();
+			});
+
+			test("shows an error when the selected heat battery pcm product uses an energy source that has not been added to general details", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatBattery1 }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity"],
+							},
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(HeatBatteryPcmProductWithFuelType),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				const error = screen.getByTestId("incompatibleEnergySourceError");
+
+				expect(error).toBeDefined();
+				expect(error.textContent).toContain(
+					"This product uses mains_gas which hasn’t been added as an energy source for this dwelling.",
+				);
+				expect(error.textContent).toContain(
+					"To change this go to",
+				);
+
+				const link = screen.getByRole("link", { name: "Dwelling details" });
+
+				expect(link).toBeDefined();
+				expect(link.getAttribute("href")).toBe("/dwelling-details");
+			});
+
+			test("shows an error when the selected heat battery dry core product uses an energy source that has not been added to general details", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatBattery1 }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity"],
+							},
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(HeatBatteryDryCoreProductWithFuelType),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				const error = screen.getByTestId("incompatibleEnergySourceError");
+
+				expect(error).toBeDefined();
+				expect(error.textContent).toContain(
+					"This product uses LPG_condition_11F which hasn’t been added as an energy source for this dwelling.",
+				);
+				expect(error.textContent).toContain(
+					"To change this go to",
+				);
+
+				const link = screen.getByRole("link", { name: "Dwelling details" });
+
+				expect(link).toBeDefined();
+				expect(link.getAttribute("href")).toBe("/dwelling-details");
+			});
+
+			test("does not show an error when the product fuel has been added to general details", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatBattery1 }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity", "mains_gas"],
+							},
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(HeatBatteryPcmProductWithFuelType),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { heatSource: "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				expect(
+					screen.queryByTestId("incompatibleEnergySourceError"),
+				).toBeNull();
 			});
 		});
 

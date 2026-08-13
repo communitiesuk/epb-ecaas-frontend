@@ -285,6 +285,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:model="(model as HeatBatteryModelType)"
 			:index="index"
 			page="space heating"
+			:on-incompatible-energy-source="handleIncompatibleEnergySource"
 			@update-heat-battery-model="updateHeatSource"
 			@product-loaded="handleProductLoaded"
 		/>

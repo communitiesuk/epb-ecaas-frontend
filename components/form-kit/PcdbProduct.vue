@@ -118,9 +118,15 @@ const showIncompatibleEnergySourceError = computed(() =>
 );
 
 watch(showIncompatibleEnergySourceError, async (showError) => {
-	if (showError) {
-		await nextTick();
+	if (!showError) {
+		return;
+	}
 
+	await nextTick();
+
+	const errorSummary = document.querySelector(".govuk-error-summary");
+
+	if (!errorSummary) {
 		incompatibleEnergySourceError.value?.scrollIntoView({
 			block: "center",
 		});
@@ -282,7 +288,13 @@ function handleChooseProduct(event: Event) {
 
 <template>
 	<div class="govuk-form-group">
-		<div :data-testid="id" :class="`govuk-form-group ${showErrorState(props.context) ? 'govuk-form-group--error' : ''}`">
+		<div
+			:data-testid="id"
+			:class="`govuk-form-group ${
+				showErrorState(props.context) || showIncompatibleEnergySourceError
+					? 'govuk-form-group--error'
+					: ''
+			}`">
 			<label class="govuk-label govuk-label--m">
 				{{ label }}
 			</label>
