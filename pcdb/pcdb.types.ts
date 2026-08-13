@@ -114,6 +114,7 @@ export const heatPumpProductZod = BaseProduct.extend({
 	testData: z.array(heatPumpTestDataZod),
 	technologyType: spaceHeatingHeatPumpProductTypes,
 	technologyGroup: z.literal("heatPump"),
+	fuel: z.optional(fuelTypeZod),
 });
 
 export type HeatPumpProduct = z.infer<typeof heatPumpProductZod>;
@@ -124,7 +125,7 @@ export const hybridHeatPumpProductZod = BaseProduct.extend({
 	minModulationRate55: z.optional(z.number()),
 	minModulationRate35: z.optional(z.number()),
 	tempReturnFeedMax: z.optional(z.number()),
-	fuel: z.optional(z.string()),
+	fuel: z.optional(fuelTypeZod),
 	tempLowerOperatingLimit: z.optional(z.number()),
 	powerOff: z.optional(z.number()),
 	modulatingControl: z.boolean(),
@@ -148,7 +149,7 @@ export type HybridHeatPumpProduct = z.infer<typeof hybridHeatPumpProductZod>;
 export const hotWaterOnlyHeatPumpProductZod = BaseProduct.extend({
 	technologyType: z.literal("HotWaterOnlyHeatPump"),
 	productID: z.number(),
-	fuel: z.string(),
+	fuel: fuelTypeZod,
 	dataType: z.string(),
 	type: z.string(),
 	powerMax: z.number(),

@@ -10,12 +10,13 @@ import { waterCylinderConfigurationDisplay } from "~/utils/display";
 const route = useRoute();
 const store = useEcaasStore();
 
-const { model, onProductLoaded = undefined } = defineProps<{
+const { model, onProductLoaded = undefined, onIncompatibleEnergySource = undefined } = defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatPump" }>;
 	index: number;
 	boilers: [string, string][];
 	addBoilerPageId: PageId;
 	page: HeatSourceSectionPage;
+	onIncompatibleEnergySource?: (value: boolean) => void;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
@@ -49,6 +50,7 @@ const greaterThanZero = (node: FormKitNode) => {
 		:heat-source="model"
 		:page-url="route.fullPath"
 		:page-index="index"
+		:on-incompatible-energy-source="onIncompatibleEnergySource"
 		@product-loaded="onProductLoaded"
 	/>
 	<!-- <FormKit 

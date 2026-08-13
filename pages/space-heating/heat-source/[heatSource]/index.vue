@@ -267,6 +267,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				:boilers="boilers"
 				add-boiler-page-id="heatSourceCreate"
 				page="space heating"
+				:on-incompatible-energy-source="handleIncompatibleEnergySource"
 				@update-heat-pump-model="updateHeatSource"
 				@product-loaded="handleProductLoaded"
 			/>

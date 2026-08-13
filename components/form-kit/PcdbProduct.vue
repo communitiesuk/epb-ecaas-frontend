@@ -110,7 +110,7 @@ const incompatibleEnergySource = computed(() => {
 	const dwellingFuelTypes =
 		store.dwellingDetails.generalSpecifications.data?.fuelType ?? [];
 
-	return !dwellingFuelTypes.includes(fuel as typeof dwellingFuelTypes[number]);
+	return !dwellingFuelTypes.includes(fuel);
 });
 
 const showIncompatibleEnergySourceError = computed(() =>
