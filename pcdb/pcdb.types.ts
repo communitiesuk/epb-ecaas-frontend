@@ -1,6 +1,6 @@
 import * as z from "zod";
 import { objectKeys } from "ts-extras";
-import { heatPumpBackupControlTypeZod, heatPumpSinkTypeZod, heatPumpSourceTypeZod } from "~/stores/zod";
+import { heatPumpBackupControlTypeZod, heatPumpSinkTypeZod, heatPumpSourceTypeZod, fuelTypeZod } from "~/stores/zod";
 
 const IntString = z.string().regex(/^\d+$/);
 
@@ -181,6 +181,7 @@ export const boilerBase = BaseProduct.extend({
 	erpSpaceEfficiencyPerc: z.nullable(z.number()),
 	powerBottomRange: z.nullable(z.number()),
 	burnerControl: z.nullable(z.string()),
+	fuel: z.optional(fuelTypeZod),
 });
 
 export const combiBoilerZod = boilerBase.extend({

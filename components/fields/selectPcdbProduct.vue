@@ -15,6 +15,7 @@ defineProps<{
 	pageIndex?: number;
 	disabled?: boolean;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
+	onIncompatibleEnergySource?: (value: boolean) => void;
 	onChooseProduct?: () => void;
 }>();
 </script>
@@ -37,5 +38,5 @@ defineProps<{
 		:disabled="disabled"
 		:on-product-loaded="onProductLoaded"
 		:on-choose-product="onChooseProduct"
-	/> 
+		:on-incompatible-energy-source="onIncompatibleEnergySource"	/> 
 </template>

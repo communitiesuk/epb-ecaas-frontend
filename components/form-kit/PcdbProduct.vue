@@ -25,6 +25,7 @@ const {
 		"page-index": index,
 		"emitter-index": emitterIndex,
 		"on-product-loaded": onProductLoaded,
+		"on-incompatible-energy-source": onIncompatibleEnergySource,
 		"on-choose-product": onChooseProduct,
 	},
 	node: { props: { disabled } },
@@ -66,6 +67,7 @@ const selectedSubHeatNetwork = ref<string | undefined>(selectedSubHeatNetworkNam
 const productsPageUrl = ref(buildProductsPageUrl(pageUrl, index, selectedProductType ?? "", emitterIndex));
 const productDetailsPageUrl = ref(buildProductDetailsPageUrl(pageUrl, selectedProductType ?? "", selectedProductReference));
 const productData = ref<AnyPcdbProduct | undefined | null>();
+const incompatibleEnergySourceError = ref<HTMLElement | null>(null);
 
 if (selectedProduct.value) {
 	await fetchProduct(selectedProductReference);
@@ -89,6 +91,49 @@ watch(props.context, async ({ attrs: {
 
 	productData.value = undefined;
 });
+
+function getProductFuel(product: AnyPcdbProduct | undefined | null) {
+	if (!product || !("fuel" in product)) {
+		return undefined;
+	}
+
+	return product.fuel;
+}
+
+const incompatibleEnergySource = computed(() => {
+	const fuel = getProductFuel(productData.value);
+
+	if (!fuel) {
+		return false;
+	}
+
+	const dwellingFuelTypes =
+		store.dwellingDetails.generalSpecifications.data?.fuelType ?? [];
+
+	return !dwellingFuelTypes.includes(fuel as typeof dwellingFuelTypes[number]);
+});
+
+const showIncompatibleEnergySourceError = computed(() =>
+	incompatibleEnergySource.value && props.context.state.submitted,
+);
+
+watch(showIncompatibleEnergySourceError, async (showError) => {
+	if (showError) {
+		await nextTick();
+
+		incompatibleEnergySourceError.value?.scrollIntoView({
+			block: "center",
+		});
+	}
+});
+
+watch(
+	incompatibleEnergySource,
+	(value) => {
+		onIncompatibleEnergySource?.(value);
+	},
+	{ immediate: true },
+);
 
 const isHeatPumpSummary = computed(() => isHeatPump(heatSource));
 const isBoilerSummary = computed(() => heatSource?.typeOfHeatSource === "boiler");
@@ -242,6 +287,19 @@ function handleChooseProduct(event: Event) {
 				{{ label }}
 			</label>
 			<div v-if="help" :id="`${id}_hint`" class="govuk-hint">{{ help }}</div>
+			<p
+				v-if="showIncompatibleEnergySourceError"
+				ref="incompatibleEnergySourceError"
+				class="govuk-error-message"
+				data-testid="incompatibleEnergySourceError"
+			>
+				<span class="govuk-visually-hidden">Error:</span>
+				This product uses {{ getProductFuel(productData) }} which hasn’t been added as an energy source for this dwelling.
+				To change this go to
+				<NuxtLink href="/dwelling-details" class="govuk-link govuk-error-link">
+					Dwelling details
+				</NuxtLink>.
+			</p>
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 			</p>
@@ -311,5 +369,9 @@ govuk-list {
 .more-details-link {
 	font-size: 1.1875rem;
 	line-height: 1.3157894737;
+}
+
+.govuk-error-link {
+	color: inherit;
 }
 </style>

@@ -44,6 +44,7 @@ export type HeatInterfaceUnitModelType = Extract<HeatSourceData, { typeOfHeatSou
 
 const productBrandName = ref<string | undefined>();
 const packagedProduct = ref<Product | undefined>();
+const incompatibleEnergySource = ref(false);
 
 if (hasPackagedProduct(model.value)) {
 	const packagedProductData = await useProductData(model.value.packagedProductReference!);
@@ -51,6 +52,10 @@ if (hasPackagedProduct(model.value)) {
 }
 
 const saveForm = () => {
+	if (incompatibleEnergySource.value) {
+		return;
+	}
+
 	store.$patch((state) => {
 		const { heatSource } = state.spaceHeating;
 		const heatSourceItem = heatSource.data[index];
@@ -142,6 +147,10 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 	if (hasModelDetails(product)) {
 		productBrandName.value = product.brandName;
 	}
+}
+
+function handleIncompatibleEnergySource(value: boolean) {
+	incompatibleEnergySource.value = value;
 }
 
 const heatNetwork = computed(() => store.spaceHeating.heatNetworks.data[0]?.data);
@@ -267,9 +276,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:model="(model as BoilerModelType)"
 			:index="index"
 			page="space heating"
+			:on-incompatible-energy-source="handleIncompatibleEnergySource"
 			@update-boiler-model="updateHeatSource"
-			@product-loaded="handleProductLoaded"
-		/>
+			@product-loaded="handleProductLoaded"		/>
 		<HeatBatterySection
 			v-if="mounted && model?.typeOfHeatSource === 'heatBattery'"
 			:model="(model as HeatBatteryModelType)"

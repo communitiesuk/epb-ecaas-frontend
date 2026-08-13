@@ -14,6 +14,7 @@ defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "boiler" }>;
 	index: number;
 	page: HeatSourceSectionPage;
+	onIncompatibleEnergySource?: (value: boolean) => void;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
@@ -63,8 +64,8 @@ const emit = defineEmits(["update-boiler-model"]);
 			:page-url="route.fullPath"
 			:page-index="index"
 			:disabled="hasPackagedProduct(model)"
-			@product-loaded="onProductLoaded"
-		/>
+			:on-incompatible-energy-source="onIncompatibleEnergySource"
+			@product-loaded="onProductLoaded"		/>
 		<FormKit
 			v-if="model.typeOfBoiler && model.needsSpecifiedLocation"
 			id="specifiedLocation"

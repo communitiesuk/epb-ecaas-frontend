@@ -509,6 +509,13 @@ describe("heatSource", () => {
 				boilerLocation: "unknown",
 			};
 
+			const boilerProductWithFuelType: Partial<BoilerProduct> = {
+				id: "1002",
+				brandName: "Boiler",
+				technologyType: "CombiBoiler",
+				fuel: "LPG_bulk",
+			};
+
 			beforeEach(() => {
 				mockFetch.mockReturnValue({
 					data: ref(boilerProduct),
@@ -796,6 +803,83 @@ describe("heatSource", () => {
 				await user.tab();
 				const backUpBolerInStoreAfterChange = store.spaceHeating.heatSource.data.find(hs => hs.data.id === backupBoiler.id);
 				expect(backUpBolerInStoreAfterChange).toBeUndefined();
+			});
+
+			test("shows an error when the selected boiler product uses an energy source that has not been added to general details", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: boiler1 }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity"],
+							},
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(boilerProductWithFuelType),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { "heatSource": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				const error = screen.getByTestId("incompatibleEnergySourceError");
+
+				expect(error).toBeDefined();
+				expect(error.textContent).toContain(
+					"This product uses LPG_bulk which hasn’t been added as an energy source for this dwelling.",
+				);
+				expect(error.textContent).toContain(
+					"To change this go to",
+				);
+
+				const link = screen.getByRole("link", { name: "Dwelling details" });
+
+				expect(link).toBeDefined();
+				expect(link.getAttribute("href")).toBe("/dwelling-details");
+			});
+
+			test("does not show an error when the product fuel has been added to general details", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: boiler1 }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity", "LPG_bulk"],
+							},
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(boilerProduct),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { heatSource: "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				expect(
+					screen.queryByTestId("incompatibleEnergySourceError"),
+				).toBeNull();
 			});
 		});
 
