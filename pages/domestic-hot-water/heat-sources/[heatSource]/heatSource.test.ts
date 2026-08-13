@@ -486,7 +486,6 @@ describe("Heat Source Page", () => {
 			productReference: "100",
 			maxFlowTemp: unitValue(7, celsius),
 			numberOfUnits: 1,
-			energySupply: "electricity",
 		};
 
 		const dhwWithExistingBattery: DomesticHotWaterHeatSourceData = {

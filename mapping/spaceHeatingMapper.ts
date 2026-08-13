@@ -109,7 +109,7 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 					battery_type: heatBatteryTypeMap[heatBattery.typeOfHeatBattery],
 					number_of_units: heatBattery.numberOfUnits,
 					product_reference: heatBattery.productReference,
-					EnergySupply: heatBattery.energySupply,
+					EnergySupply: defaultElectricityEnergySupplyName,
 					is_heat_network: false as const,
 				},
 			];

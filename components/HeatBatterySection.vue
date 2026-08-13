@@ -70,11 +70,7 @@ const emit = defineEmits(["update-heat-battery-model"]);
 			validation="required | isInteger | min:1"
 			:validation-messages="{
 				isInteger: `Number of units must be an integer.`,
-			}" />
-		<FieldsEnergySupplies
-			id="energySupply"
-			name="energySupply"
-			label="Energy supply"
-			help="Select the relevant energy supply that has been added previously" />
+			}"
+		/>
 	</div>
 </template>

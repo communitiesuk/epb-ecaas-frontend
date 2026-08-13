@@ -204,7 +204,6 @@ describe("Space heating summary page", () => {
 				productReference: "HEAT_BATTERY_SMALL",
 				maxFlowTemp: unitValue(32, celsius),
 				numberOfUnits: 1,
-				energySupply: "electricity",
 			};
 			const store = useEcaasStore();
 			store.$patch({
@@ -225,7 +224,6 @@ describe("Space heating summary page", () => {
 				"Product name": "Mock product",
 				"Maximum flow temperature": `32 ${celsius.suffix}`,
 				"Number of units": "1",
-				"Energy supply": "Electricity",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {

@@ -282,19 +282,6 @@ describe("heatSource", () => {
 			expect(addHeatNetworkLink.getAttribute("href")).toBe("/space-heating/heat-networks/create");
 		});
 
-		test("energy supply field displays when heat source is heat battery", async () => {
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
-			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
-
-			expect(screen.getByTestId("energySupply")).toBeDefined();
-		});
-
 		test("energy supply is hidden when heat pump is a booster heat pump", async () => {
 			store.$patch({
 				spaceHeating: {
@@ -341,57 +328,6 @@ describe("heatSource", () => {
 			expect(screen.queryByTestId("energySupply")).toBeNull();
 		});
 
-		test("automatically selects energy supply when only one energy supply is available in state", async () => {
-			store.$patch({
-				dwellingDetails: {
-					generalSpecifications: {
-						data: { fuelType: ["electricity"] },
-					},
-				},
-			});
-
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
-			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
-
-			expect((await screen.findByTestId<HTMLInputElement>("energySupply_electricity")).checked).toBe(true);
-		});
-
-		test("renders multiple energy supply options when multiple energy supplies exist in state", async () => {
-			store.$patch({
-				dwellingDetails: {
-					generalSpecifications: {
-						data: { fuelType: ["electricity", "mains_gas", "LPG_bulk"] },
-					},
-				},
-			});
-
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
-
-			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
-			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
-
-			const electricityOption = screen.getByTestId<HTMLInputElement>("energySupply_electricity");
-			const mainsGasOption = screen.getByTestId<HTMLInputElement>("energySupply_mains_gas");
-			const lpgOption = screen.getByTestId<HTMLInputElement>("energySupply_LPG_bulk");
-
-			expect(electricityOption).toBeDefined();
-			expect(mainsGasOption).toBeDefined();
-			expect(lpgOption).toBeDefined();
-			expect(electricityOption.checked).toBe(false);
-			expect(mainsGasOption.checked).toBe(false);
-			expect(lpgOption.checked).toBe(false);
-		});
-
 		test("required error message is displayed when energy supply is not selected and form is submitted", async () => {
 			store.$patch({
 				dwellingDetails: {
@@ -410,8 +346,6 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
 			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
 			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(await screen.findByTestId("energySupply_error")).toBeDefined();
 		});
 
 		test("booster heat pump shows error when no heat network is selected", async () => {
@@ -1155,17 +1089,9 @@ describe("heatSource", () => {
 			});
 
 			const populateValidHeatBatteryForm = async () => {
-				store.$patch({
-					dwellingDetails: {
-						generalSpecifications: {
-							data: { fuelType: ["mains_gas"] },
-						},
-					},
-				});
 				await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
 				await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
 				await user.type(screen.getByTestId("numberOfUnits"), "1");
-				await user.click(screen.getByTestId("energySupply_mains_gas"));
 			};
 
 			const heatBattery1: HeatSourceData = {
@@ -1176,7 +1102,6 @@ describe("heatSource", () => {
 				productReference: "HEAT_BATTERY_SMALL",
 				maxFlowTemp: unitValue(32, celsius),
 				numberOfUnits: 1,
-				energySupply: "electricity",
 			};
 
 			const heatBattery2: HeatSourceData = {
@@ -1187,7 +1112,6 @@ describe("heatSource", () => {
 				productReference: "HEAT_BATTERY_MEDIUM",
 				maxFlowTemp: unitValue(32, celsius),
 				numberOfUnits: 2,
-				energySupply: "LPG_bulk",
 			};
 
 			test("'HeatBatterySection' component displays when type of heat source is heat battery", async () => {
@@ -1204,7 +1128,6 @@ describe("heatSource", () => {
 				expect(screen.getByTestId("typeOfHeatBattery")).toBeDefined();
 				expect(screen.queryByTestId("selectHeatBattery")).toBeDefined();
 				expect(screen.getByTestId("numberOfUnits")).toBeDefined();
-				expect(screen.getByTestId("energySupply")).toBeDefined();
 			});
 
 			test("the 'Select a product' element navigates user to the products page", async () => {
@@ -1240,17 +1163,11 @@ describe("heatSource", () => {
 					typeOfHeatBattery: "heatBatteryPcm",
 					productReference: "",
 					numberOfUnits: 1,
-					energySupply: "mains_gas",
 				});
 			});
 
 			test("form is prepopulated when data exists in state", async () => {
 				store.$patch({
-					dwellingDetails: {
-						generalSpecifications: {
-							data: { fuelType: ["mains_gas"] },
-						},
-					},
 					spaceHeating: {
 						heatSource: {
 							data: [{ data: heatBattery1 }],
@@ -1268,7 +1185,6 @@ describe("heatSource", () => {
 				expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat battery 1");
 				expect((await screen.findByTestId("typeOfHeatBattery_heatBatteryPcm")).hasAttribute("checked"));
 				expect((await screen.findByTestId<HTMLInputElement>("numberOfUnits")).value).toBe("1");
-				expect((await screen.findByTestId("energySupply_mains_gas")).hasAttribute("checked"));
 			});
 
 			test("heat battery is updated when data with id exists in store", async () => {
@@ -1297,19 +1213,6 @@ describe("heatSource", () => {
 				expect(data[1]!.data.name).toBe("Updated heat battery");
 			});
 
-			test("electricity is always displayed as a energy supply option", async () => {
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
-				await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
-
-				expect(screen.getByTestId("energySupply_electricity")).toBeDefined();
-			});
-
 			test("required error messages are displayed when empty form is submitted", async () => {
 				await renderSuspended(HeatSourceForm, {
 					route: {
@@ -1321,64 +1224,6 @@ describe("heatSource", () => {
 				await user.click(screen.getByTestId("saveAndComplete"));
 
 				expect((await screen.findByTestId("typeOfHeatBattery_error"))).toBeDefined();
-			});
-
-			test("required error messages are displayed when type of heat battery is submitted", async () => {
-				store.$patch({
-					dwellingDetails: {
-						generalSpecifications: {
-							data: { fuelType: ["LPG_bottled", "LPG_bulk", "electricity"] },
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "create" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
-				await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
-				await user.click(screen.getByTestId("saveAndComplete"));
-
-				expect((await screen.findByTestId("selectHeatBattery_error"))).toBeDefined();
-				expect((await screen.findByTestId("numberOfUnits_error"))).toBeDefined();
-				expect((await screen.findByTestId("energySupply_error"))).toBeDefined();
-			});
-
-			test("energy supply is prepopulated when existing source data with energy supply exists in state", async () => {
-				const heatBattery1: HeatSourceData = {
-					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
-					name: "Heat battery 1",
-					typeOfHeatSource: "heatBattery",
-					typeOfHeatBattery: "heatBatteryPcm",
-					productReference: "HEAT_BATTERY_SMALL",
-					maxFlowTemp: unitValue(32, celsius),
-					numberOfUnits: 1,
-					energySupply: "mains_gas",
-				};
-
-				store.$patch({
-					dwellingDetails: {
-						generalSpecifications: {
-							data: { fuelType: ["electricity", "mains_gas"] },
-						},
-					},
-					spaceHeating: {
-						heatSource: {
-							data: [{ data: heatBattery1 }],
-						},
-					},
-				});
-
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
-
-				expect((await screen.findByTestId<HTMLInputElement>("energySupply_mains_gas")).checked).toBe(true);
 			});
 		});
 
@@ -1676,7 +1521,6 @@ describe("heatSource", () => {
 			const heatBattery: HeatSourceData = {
 				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 				name: "Heat battery 1",
-				energySupply: "electricity",
 				typeOfHeatSource: "heatBattery",
 				typeOfHeatBattery: "heatBatteryPcm",
 				productReference: "HEATBATTERY-SMALL",
@@ -2140,7 +1984,6 @@ describe("heatSource", () => {
 				typeOfHeatSource: "heatBattery",
 				typeOfHeatBattery: "heatBatteryDryCore",
 				productReference: "HEATBATTERY-DRY-CORE",
-				energySupply: "electricity",
 				numberOfUnits: 2,
 				maxFlowTemp: unitValue(30, "celsius"),
 			};
@@ -2152,7 +1995,6 @@ describe("heatSource", () => {
 				typeOfHeatBattery: "heatBatteryPcm",
 				productReference: "HEATBATTERY-PCM",
 				numberOfUnits: 4,
-				energySupply: "electricity",
 				maxFlowTemp: unitValue(30, "celsius"),
 			};
 

@@ -436,7 +436,6 @@ describe("Domestic hot water", () => {
 						productReference: "1234",
 						maxFlowTemp: unitValue(32, celsius),
 						numberOfUnits: 1,
-						energySupply: "electricity",
 						isExistingHeatSource: false,
 						heatSourceId: "NEW_HEAT_SOURCE",
 						coldWaterSource: "mainsWater",

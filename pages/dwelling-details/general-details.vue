@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
 import { isInteger } from "~/utils/validation";
-import { getUrl, type DomesticHotWaterHeatSourceData, type EcaasForm, type FuelTypeDisplay, type GeneralDetailsData, type HeatSourceData } from "#imports";
+import { getUrl, type FuelTypeDisplay, type GeneralDetailsData } from "#imports";
 import type { CheckboxOption } from "~/components/form-kit/Checkboxes.vue";
-// import { storeyOfFlatZod } from "~/stores/ecaasStore.schema";
-// import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "General details";
 const store = useEcaasStore();
@@ -69,44 +67,6 @@ const saveForm = (fields: typeof model.value) => {
 
 	navigateTo("/dwelling-details");
 };
-
-function removeRefsToFuelType(
-	heatSources: EcaasForm<
-		Extract<
-			HeatSourceData,
-			{ "typeOfHeatSource": /*"heatNetwork"*/ | "heatBattery" }
-		> | DomesticHotWaterHeatSourceData | SmartHotWaterTankData
-	>[],
-	removedFuelType: SchemaFuelType,
-) {
-	for (const item of heatSources) {
-		if ("energySupply" in item.data)
-			if (item.data.energySupply === removedFuelType) {
-				item.data.energySupply = undefined!;
-				item.complete = false;
-			}
-	}
-}
-
-watch(() => model.value.fuelType, (newFuelTypes, oldFuelTypes) => {
-	if (newFuelTypes === oldFuelTypes || oldFuelTypes === undefined) return;
-	if (newFuelTypes.length > oldFuelTypes.length) return;
-
-	const removedFuel = oldFuelTypes.find(fuel => !newFuelTypes.includes(fuel));
-	const spaceHeatingHeatSources = store.spaceHeating.heatSource.data.filter(({ data: x }) => 
-		// x.typeOfHeatSource === "heatNetwork"|| 
-		x.typeOfHeatSource === "heatBattery") as EcaasForm<Extract<HeatSourceData, { "typeOfHeatSource": /*"heatNetwork"*/ | "heatBattery" }>>[];
-	const dhwHeatSources = store.domesticHotWater.heatSources.data.filter(({ data: x }) => x.isExistingHeatSource === false && (
-		// x.typeOfHeatSource === "heatNetwork" ||
-		x.typeOfHeatSource === "heatBattery" || x.typeOfHeatSource === "pointOfUse"));
-	const dhwWaterStorage = store.domesticHotWater.waterStorage.data.filter(({ data: x }) => x.typeOfWaterStorage === "smartHotWaterTank") as EcaasForm<SmartHotWaterTankData>[];
-
-	if (removedFuel) {
-		removeRefsToFuelType(spaceHeatingHeatSources, removedFuel);
-		removeRefsToFuelType(dhwHeatSources, removedFuel);
-		removeRefsToFuelType(dhwWaterStorage, removedFuel);
-	}
-});
 
 watch(() => model.value.typeOfDwelling, (newType, oldType) => {
 	if (newType === oldType || oldType === undefined) return;

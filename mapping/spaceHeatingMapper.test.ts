@@ -343,7 +343,6 @@ describe("Space heating - heat sources", () => {
 			productReference: "1234",
 			maxFlowTemp: unitValue(32, celsius),
 			numberOfUnits: 1,
-			energySupply: "electricity",
 		};
 
 		const heatBattery2: HeatSourceData = {
@@ -353,7 +352,6 @@ describe("Space heating - heat sources", () => {
 			typeOfHeatBattery: "heatBatteryDryCore",
 			productReference: "5678",
 			numberOfUnits: 2,
-			energySupply: "LPG_bottled",
 			maxFlowTemp: unitValue(30, celsius),
 		};
 
@@ -373,7 +371,7 @@ describe("Space heating - heat sources", () => {
 					battery_type: "pcm",
 					number_of_units: 1,
 					product_reference: heatBattery1.productReference,
-					EnergySupply: "electricity",
+					EnergySupply: defaultElectricityEnergySupplyName,
 					is_heat_network: false,
 				},
 			};
@@ -398,7 +396,7 @@ describe("Space heating - heat sources", () => {
 					type: "HeatBattery",
 					battery_type: "dry_core",
 					number_of_units: 2,
-					EnergySupply: "LPG_bottled",
+					EnergySupply: defaultElectricityEnergySupplyName,
 					product_reference: heatBattery2.productReference,
 					is_heat_network: false,
 				},
@@ -429,14 +427,14 @@ describe("Space heating - heat sources", () => {
 					battery_type: "pcm",
 					number_of_units: 1,
 					product_reference: heatBattery1.productReference,
-					EnergySupply: "electricity",
+					EnergySupply: defaultElectricityEnergySupplyName,
 					is_heat_network: false,
 				},
 				[heatBattery2.name]: {
 					type: "HeatBattery",
 					battery_type: "dry_core",
 					number_of_units: 2,
-					EnergySupply: "LPG_bottled",
+					EnergySupply: defaultElectricityEnergySupplyName,
 					product_reference: heatBattery2.productReference,
 					is_heat_network: false,
 				},

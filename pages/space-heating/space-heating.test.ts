@@ -63,7 +63,6 @@ describe("space heating", () => {
 		productReference: "HEAT_BATTERY_SMALL",
 		maxFlowTemp: unitValue(32, celsius),
 		numberOfUnits: 1,
-		energySupply: "electricity",
 	};
 
 	const heatPump: HeatSourceData = {

@@ -140,7 +140,6 @@ describe("domestic hot water mapper", () => {
 		data: {
 			id: heatSourceId,
 			heatSourceId: "NEW_HEAT_SOURCE",
-			energySupply: "electricity",
 			name: "DHW heatBattery",
 			typeOfHeatSource: "heatBattery",
 			coldWaterSource: "mainsWater",
@@ -985,7 +984,6 @@ describe("domestic hot water mapper", () => {
 					typeOfHeatBattery: "heatBatteryPcm",
 					productReference: "179",
 					numberOfUnits: 1,
-					energySupply: "electricity",
 					maxFlowTemp: unitValue(11, celsius),
 				},
 				complete: true,

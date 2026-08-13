@@ -2,8 +2,7 @@ import GeneralDetails from "./general-details.vue";
 import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
-import type { GeneralDetailsData, HeatSourceData } from "~/stores/ecaasStore.schema";
-import type { SchemaFuelType } from "~/schema/aliases";
+import type { GeneralDetailsData } from "~/stores/ecaasStore.schema";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -88,7 +87,7 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("storeysInDwelling"), "2");
 	
 			expect(store.dwellingDetails.generalSpecifications.data.typeOfDwelling).toBe("house");
-			expect(store.dwellingDetails.generalSpecifications.data.storeysInDwelling).toBe("2");
+			expect(store.dwellingDetails.generalSpecifications.data.storeysInDwelling).toBe(2);
 		});
 
 		test("form is prepopulated when data exists in state", async () => {
@@ -218,64 +217,6 @@ describe("General details", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 		});
-	});
-
-	it("if fuel type is updated, it is removed from all objects which reference it", async () => {
-		const heatBatterySpaceHeating: Partial<HeatSourceData> = {
-			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
-			name: "Heat battery 1",
-			typeOfHeatSource: "heatBattery",
-			typeOfHeatBattery: "heatBatteryPcm",
-			productReference: "HEAT_BATTERY_SMALL",
-			energySupply: "mains_gas",
-		};
-
-		const heatBatteryDHW: Partial<DomesticHotWaterHeatSourceData> = {
-			isExistingHeatSource: false,
-			heatSourceId: "NEW_HEAT_SOURCE",
-			id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
-			name: "Heat source 1",
-			typeOfHeatSource: "heatBattery",
-			typeOfHeatBattery: "heatBatteryPcm",
-			energySupply: "mains_gas",
-		};
-
-		const state: Partial<GeneralDetailsData> = {
-			typeOfDwelling: "house",
-			fuelType: ["mains_gas", "electricity", "LPG_bulk"],
-		};
-
-		store.$patch({
-			dwellingDetails: {
-				generalSpecifications: {
-					data: state,
-				},
-			},
-			spaceHeating: {
-				heatSource: {
-					data: [
-						{ data: heatBatterySpaceHeating },
-					],
-				},
-			},
-			domesticHotWater: {
-				heatSources: {
-					data: [
-						{ data: heatBatteryDHW },
-					],
-				},
-			},
-		});
-		await renderSuspended(GeneralDetails);
-		await user.click(await screen.findByTestId("fuelType_mains_gas"));
-		const spaceHeatBattery = store.spaceHeating.heatSource.data[0];
-		expect((spaceHeatBattery?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
-		expect(spaceHeatBattery?.complete).toBe(false);
-
-
-		const DHWItems = store.domesticHotWater.heatSources.data;
-		expect((DHWItems[0]?.data as { energySupply: SchemaFuelType }).energySupply).toBeUndefined();
-		expect(DHWItems[0]?.complete).toBe(false);
 	});
 
 	it("when type of dwelling is updated from flat to house, updates store so any internal door is not a front door", async () => {

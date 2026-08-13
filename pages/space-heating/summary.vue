@@ -117,12 +117,7 @@ const heatPumpSummary: SummarySection = {
 					"Associated heat network": store.spaceHeating.heatNetworks.data.find(
 						heatNetwork => heatNetwork.data.id === heatSource.associatedHeatNetworkId,
 					)?.data.name ?? emptyValueRendering,
-				}
-				: {
-					"Energy supply": "energySupply" in heatSource && heatSource.energySupply
-						? energySupplyOptions[heatSource.energySupply]
-						: emptyValueRendering,
-				};
+				} : {};
 			const summary = {
 				Name: show(heatSource.name),
 				"Type of heat source": displayHeatSourceType(heatSource.typeOfHeatSource),
@@ -194,7 +189,6 @@ const heatBatterySummary: SummarySection = {
 				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
 				"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 				"Number of units": "numberOfUnits" in heatSource ? heatSource.numberOfUnits : emptyValueRendering,
-				"Energy supply": "energySupply" in heatSource && heatSource.energySupply ? energySupplyOptions[heatSource.energySupply] : emptyValueRendering,
 			};
 			return summary;
 		}) || [],

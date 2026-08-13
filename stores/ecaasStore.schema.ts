@@ -1059,7 +1059,6 @@ const heatBatteryBase = pcdbProduct.extend({
 	typeOfHeatBattery,
 	maxFlowTemp: zodUnit("temperature"),
 	numberOfUnits: z.number(),
-	energySupply: fuelTypeZod,
 });
 
 const heatInterfaceUnitBase = pcdbProduct.extend({
