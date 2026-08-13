@@ -103,7 +103,7 @@ function getProductFuel(product: AnyPcdbProduct | undefined | null) {
 const incompatibleEnergySource = computed(() => {
 	const fuel = getProductFuel(productData.value);
 
-	if (!fuel) {
+	if (!fuel || fuel === "electricity") {
 		return false;
 	}
 

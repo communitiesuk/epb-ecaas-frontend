@@ -81,6 +81,13 @@ describe("heatSource", () => {
 			fuel: "LPG_bulk",
 		};
 
+		const HeatPumpProductWithElectricityFuelType: Partial<HeatPumpProduct> = {
+			id: "1002",
+			brandName: "Brand",
+			technologyType: "AirSourceHeatPump",
+			fuel: "electricity",
+		};
+
 		beforeEach(() => {
 			mockFetch.mockReturnValue({
 				data: ref(heatPumpProduct),
@@ -490,6 +497,39 @@ describe("heatSource", () => {
 			).toBeNull();
 		});
 
+		test("does not show an error when the product fuel is electricity", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: heatPump1 }],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity", "mains_gas"],
+						},
+					},
+				},
+			});
+
+			mockFetch.mockReturnValue({
+				data: ref(HeatPumpProductWithElectricityFuelType),
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { heatSource: "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(
+				screen.queryByTestId("incompatibleEnergySourceError"),
+			).toBeNull();
+		});
+
 		describe("heat pump default name", () => {
 			it("creates a new heat pump with default name", async () => {
 				await renderSuspended(HeatSourceForm, {
@@ -532,6 +572,13 @@ describe("heatSource", () => {
 				brandName: "Boiler",
 				technologyType: "CombiBoiler",
 				fuel: "LPG_bulk",
+			};
+
+			const boilerProductWithElectricityFuelType: Partial<BoilerProduct> = {
+				id: "1003",
+				brandName: "Boiler",
+				technologyType: "CombiBoiler",
+				fuel: "electricity",
 			};
 
 			beforeEach(() => {
@@ -899,6 +946,39 @@ describe("heatSource", () => {
 					screen.queryByTestId("incompatibleEnergySourceError"),
 				).toBeNull();
 			});
+
+			test("does not show an error when the product fuel is electricity", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: boiler1 }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity", "mains_gas"],
+							},
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(boilerProductWithElectricityFuelType),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { heatSource: "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				expect(
+					screen.queryByTestId("incompatibleEnergySourceError"),
+				).toBeNull();
+			});
 		});
 
 		describe("Heat interface unit", () => {
@@ -1096,6 +1176,14 @@ describe("heatSource", () => {
 				modelName: "Heat Battery Dry Core Model",
 				technologyType: "HeatBatteryDryCore",
 				fuel: "LPG_condition_11F",
+			};
+
+			const HeatBatteryProductWithElectricityFuelType: Partial<HeatBatteryDryCoreProduct> = {
+				id: "1002",
+				brandName: "Heat Battery Dry Core Product",
+				modelName: "Heat Battery Dry Core Model",
+				technologyType: "HeatBatteryDryCore",
+				fuel: "electricity",
 			};
 
 			beforeEach(() => {
@@ -1348,6 +1436,39 @@ describe("heatSource", () => {
 
 				mockFetch.mockReturnValue({
 					data: ref(HeatBatteryPcmProductWithFuelType),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { heatSource: "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				expect(
+					screen.queryByTestId("incompatibleEnergySourceError"),
+				).toBeNull();
+			});
+
+			test("does not show an error when the product fuel is electricity", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatBattery1 }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity", "mains_gas"],
+							},
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(HeatBatteryProductWithElectricityFuelType),
 				});
 
 				await renderSuspended(HeatSourceForm, {
