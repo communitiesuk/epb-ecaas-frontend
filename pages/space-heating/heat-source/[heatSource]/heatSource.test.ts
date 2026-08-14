@@ -452,7 +452,7 @@ describe("heatSource", () => {
 
 			expect(error).toBeDefined();
 			expect(error.textContent).toContain(
-				"This product uses LPG_bulk which hasn’t been added as an energy source for this dwelling.",
+				"This product uses LPG (Liquid petroleum gas) - bulk which hasn’t been added as an energy source for this dwelling.",
 			);
 			expect(error.textContent).toContain(
 				"To change this go to",
@@ -462,6 +462,46 @@ describe("heatSource", () => {
 
 			expect(link).toBeDefined();
 			expect(link.getAttribute("href")).toBe("/dwelling-details");
+		});
+
+		test("shows both validation errors and incompatible energy source error", async () => {
+			const heatPumpWithoutMaxFlowTemp: Partial<HeatSourceData> = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+				name: "Heat pump 1",
+				typeOfHeatSource: "heatPump",
+				typeOfHeatPump: "airSource",
+				productReference: "HEATPUMP-SMALL",
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: heatPumpWithoutMaxFlowTemp }],
+					},
+				},
+			});
+
+			mockFetch.mockReturnValue({
+				data: ref(HeatPumpProductWithFuelType),
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { heatSource: "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const errorSummary = await screen.findByTestId("heatSourceErrorSummary");
+
+			expect(errorSummary.textContent).toContain(
+				"Maximum flow temperature is required.",
+			);
+
+			expect(errorSummary.textContent).toContain(
+				"This product uses LPG (Liquid petroleum gas) - bulk which hasn’t been added as an energy source for this dwelling.",
+			);
 		});
 
 		test("does not show an error when the product fuel has been added to general details", async () => {
@@ -902,7 +942,7 @@ describe("heatSource", () => {
 
 				expect(error).toBeDefined();
 				expect(error.textContent).toContain(
-					"This product uses LPG_bulk which hasn’t been added as an energy source for this dwelling.",
+					"This product uses LPG (Liquid petroleum gas) - bulk which hasn’t been added as an energy source for this dwelling.",
 				);
 				expect(error.textContent).toContain(
 					"To change this go to",
@@ -912,6 +952,47 @@ describe("heatSource", () => {
 
 				expect(link).toBeDefined();
 				expect(link.getAttribute("href")).toBe("/dwelling-details");
+			});
+
+			test("shows both validation errors and incompatible energy source error", async () => {
+				const boilerWithoutMaxFlowTemp: Partial<HeatSourceData> = {
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
+					name: "Boiler 1",
+					typeOfHeatSource: "boiler",
+					typeOfBoiler: "combiBoiler",
+					productReference: "BOILER_SMALL",
+					needsSpecifiedLocation: false,
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: boilerWithoutMaxFlowTemp }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(boilerProductWithFuelType),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { heatSource: "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				const errorSummary = await screen.findByTestId("heatSourceErrorSummary");
+
+				expect(errorSummary.textContent).toContain(
+					"Maximum flow temperature is required.",
+				);
+
+				expect(errorSummary.textContent).toContain(
+					"This product uses LPG (Liquid petroleum gas) - bulk which hasn’t been added as an energy source for this dwelling.",
+				);
 			});
 
 			test("does not show an error when the product fuel has been added to general details", async () => {
@@ -1162,7 +1243,7 @@ describe("heatSource", () => {
 				technologyType: "HeatBatteryPCM",
 			};
 
-			const HeatBatteryPcmProductWithFuelType: Partial<HeatBatteryPcmProduct> = {
+			const heatBatteryPcmProductWithFuelType: Partial<HeatBatteryPcmProduct> = {
 				id: "1000",
 				brandName: "Heat Battery PCM Product",
 				modelName: "Heat Battery PCM Model",
@@ -1170,7 +1251,7 @@ describe("heatSource", () => {
 				fuel: "mains_gas",
 			};
 
-			const HeatBatteryDryCoreProductWithFuelType: Partial<HeatBatteryDryCoreProduct> = {
+			const heatBatteryDryCoreProductWithFuelType: Partial<HeatBatteryDryCoreProduct> = {
 				id: "1001",
 				brandName: "Heat Battery Dry Core Product",
 				modelName: "Heat Battery Dry Core Model",
@@ -1178,7 +1259,7 @@ describe("heatSource", () => {
 				fuel: "LPG_condition_11F",
 			};
 
-			const HeatBatteryProductWithElectricityFuelType: Partial<HeatBatteryDryCoreProduct> = {
+			const heatBatteryProductWithElectricityFuelType: Partial<HeatBatteryDryCoreProduct> = {
 				id: "1002",
 				brandName: "Heat Battery Dry Core Product",
 				modelName: "Heat Battery Dry Core Model",
@@ -1347,7 +1428,7 @@ describe("heatSource", () => {
 				});
 
 				mockFetch.mockReturnValue({
-					data: ref(HeatBatteryPcmProductWithFuelType),
+					data: ref(heatBatteryPcmProductWithFuelType),
 				});
 
 				await renderSuspended(HeatSourceForm, {
@@ -1362,7 +1443,7 @@ describe("heatSource", () => {
 
 				expect(error).toBeDefined();
 				expect(error.textContent).toContain(
-					"This product uses mains_gas which hasn’t been added as an energy source for this dwelling.",
+					"This product uses Mains gas which hasn’t been added as an energy source for this dwelling.",
 				);
 				expect(error.textContent).toContain(
 					"To change this go to",
@@ -1391,7 +1472,7 @@ describe("heatSource", () => {
 				});
 
 				mockFetch.mockReturnValue({
-					data: ref(HeatBatteryDryCoreProductWithFuelType),
+					data: ref(heatBatteryDryCoreProductWithFuelType),
 				});
 
 				await renderSuspended(HeatSourceForm, {
@@ -1406,7 +1487,7 @@ describe("heatSource", () => {
 
 				expect(error).toBeDefined();
 				expect(error.textContent).toContain(
-					"This product uses LPG_condition_11F which hasn’t been added as an energy source for this dwelling.",
+					"This product uses LPG - 11F which hasn’t been added as an energy source for this dwelling.",
 				);
 				expect(error.textContent).toContain(
 					"To change this go to",
@@ -1416,6 +1497,47 @@ describe("heatSource", () => {
 
 				expect(link).toBeDefined();
 				expect(link.getAttribute("href")).toBe("/dwelling-details");
+			});
+
+			test("shows both validation errors and incompatible energy source error", async () => {
+				const heatBatteryWithoutMaxFlowTemp: Partial<HeatSourceData> = {
+					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c1111",
+					name: "Heat battery 1",
+					typeOfHeatSource: "heatBattery",
+					typeOfHeatBattery: "heatBatteryPcm",
+					productReference: "HEAT_BATTERY_SMALL",
+					numberOfUnits: 1,
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatBatteryWithoutMaxFlowTemp }],
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatBatteryPcmProductWithFuelType),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { heatSource: "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				const errorSummary = await screen.findByTestId("heatSourceErrorSummary");
+
+				expect(errorSummary.textContent).toContain(
+					"Maximum flow temperature is required.",
+				);
+
+				expect(errorSummary.textContent).toContain(
+					"This product uses Mains gas which hasn’t been added as an energy source for this dwelling.",
+				);
 			});
 
 			test("does not show an error when the product fuel has been added to general details", async () => {
@@ -1435,7 +1557,7 @@ describe("heatSource", () => {
 				});
 
 				mockFetch.mockReturnValue({
-					data: ref(HeatBatteryPcmProductWithFuelType),
+					data: ref(heatBatteryPcmProductWithFuelType),
 				});
 
 				await renderSuspended(HeatSourceForm, {
@@ -1468,7 +1590,7 @@ describe("heatSource", () => {
 				});
 
 				mockFetch.mockReturnValue({
-					data: ref(HeatBatteryProductWithElectricityFuelType),
+					data: ref(heatBatteryProductWithElectricityFuelType),
 				});
 
 				await renderSuspended(HeatSourceForm, {

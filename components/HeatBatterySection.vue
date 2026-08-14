@@ -12,7 +12,7 @@ defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatBattery" }>;
 	index: number;
 	page: HeatBatterySectionPage;
-	onIncompatibleEnergySource?: (value: boolean) => void;
+	onIncompatibleEnergySource?: (value: boolean, fuel?: string) => void;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 

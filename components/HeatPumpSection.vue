@@ -16,7 +16,7 @@ const { model, onProductLoaded = undefined, onIncompatibleEnergySource = undefin
 	boilers: [string, string][];
 	addBoilerPageId: PageId;
 	page: HeatSourceSectionPage;
-	onIncompatibleEnergySource?: (value: boolean) => void;
+	onIncompatibleEnergySource?: (value: boolean, fuel?: string) => void;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 

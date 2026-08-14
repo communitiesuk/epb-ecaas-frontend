@@ -3,7 +3,7 @@ import type { FormKitFrameworkContext } from "@formkit/core";
 import { showErrorState, getErrorMessage, isPackagedProduct, type HeatSourceData, hasModelDetails, type NewDomesticHotWaterHeatSourceData } from "#imports";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
-import { heatPumpTypes } from "~/utils/display";
+import { heatPumpTypes, displayFuelType } from "~/utils/display";
 import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
 
 const store = useEcaasStore();
@@ -100,6 +100,12 @@ function getProductFuel(product: AnyPcdbProduct | undefined | null) {
 	return product.fuel;
 }
 
+const productFuelDisplay = computed(() => {
+	const fuel = getProductFuel(productData.value);
+
+	return fuel ? displayFuelType(fuel) : undefined;
+});
+
 const incompatibleEnergySource = computed(() => {
 	const fuel = getProductFuel(productData.value);
 
@@ -136,7 +142,12 @@ watch(showIncompatibleEnergySourceError, async (showError) => {
 watch(
 	incompatibleEnergySource,
 	(value) => {
-		onIncompatibleEnergySource?.(value);
+		const fuel = getProductFuel(productData.value);
+
+		onIncompatibleEnergySource?.(
+			value,
+			fuel ? displayFuelType(fuel) : undefined,
+		);
 	},
 	{ immediate: true },
 );
@@ -306,7 +317,7 @@ function handleChooseProduct(event: Event) {
 				data-testid="incompatibleEnergySourceError"
 			>
 				<span class="govuk-visually-hidden">Error:</span>
-				This product uses {{ getProductFuel(productData) }} which hasn’t been added as an energy source for this dwelling.
+				This product uses {{ productFuelDisplay }} which hasn’t been added as an energy source for this dwelling.
 				To change this go to
 				<NuxtLink href="/dwelling-details" class="govuk-link govuk-error-link">
 					Dwelling details

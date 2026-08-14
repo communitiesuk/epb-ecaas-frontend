@@ -14,7 +14,7 @@ defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "boiler" }>;
 	index: number;
 	page: HeatSourceSectionPage;
-	onIncompatibleEnergySource?: (value: boolean) => void;
+	onIncompatibleEnergySource?: (value: boolean, fuel?: string) => void;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
