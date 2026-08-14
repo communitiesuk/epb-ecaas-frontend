@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import HeatSourceForm from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
 import type { BoilerProduct, DisplayProduct, HeatBatteryDryCoreProduct, HeatBatteryPcmProduct, HeatPumpProduct, HybridHeatPumpProduct } from "~/pcdb/pcdb.types";
@@ -449,19 +449,20 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const error = screen.getByTestId("incompatibleEnergySourceError");
-
 			expect(error).toBeDefined();
 			expect(error.textContent).toContain(
 				"This product uses LPG (Liquid petroleum gas) - bulk which hasn’t been added as an energy source for this dwelling.",
 			);
-			expect(error.textContent).toContain(
-				"To change this go to",
-			);
 
 			const link = screen.getByRole("link", { name: "Dwelling details" });
-
 			expect(link).toBeDefined();
 			expect(link.getAttribute("href")).toBe("/dwelling-details");
+
+			const errorSummary = screen.getByTestId("heatSourceErrorSummary");
+			const errorSummaryLink = within(errorSummary).getByRole("link", {
+				name: /This product uses LPG \(Liquid petroleum gas\) - bulk/,
+			});
+			expect(errorSummaryLink.getAttribute("href")).toBe("#incompatibleEnergySource");
 		});
 
 		test("shows both validation errors and incompatible energy source error", async () => {
@@ -939,19 +940,20 @@ describe("heatSource", () => {
 				await user.click(screen.getByTestId("saveAndComplete"));
 
 				const error = screen.getByTestId("incompatibleEnergySourceError");
-
 				expect(error).toBeDefined();
 				expect(error.textContent).toContain(
 					"This product uses LPG (Liquid petroleum gas) - bulk which hasn’t been added as an energy source for this dwelling.",
 				);
-				expect(error.textContent).toContain(
-					"To change this go to",
-				);
 
 				const link = screen.getByRole("link", { name: "Dwelling details" });
-
 				expect(link).toBeDefined();
 				expect(link.getAttribute("href")).toBe("/dwelling-details");
+
+				const errorSummary = screen.getByTestId("heatSourceErrorSummary");
+				const errorSummaryLink = within(errorSummary).getByRole("link", {
+					name: /This product uses LPG \(Liquid petroleum gas\) - bulk/,
+				});
+				expect(errorSummaryLink.getAttribute("href")).toBe("#incompatibleEnergySource");
 			});
 
 			test("shows both validation errors and incompatible energy source error", async () => {
@@ -1440,19 +1442,20 @@ describe("heatSource", () => {
 				await user.click(screen.getByTestId("saveAndComplete"));
 
 				const error = screen.getByTestId("incompatibleEnergySourceError");
-
 				expect(error).toBeDefined();
 				expect(error.textContent).toContain(
 					"This product uses Mains gas which hasn’t been added as an energy source for this dwelling.",
 				);
-				expect(error.textContent).toContain(
-					"To change this go to",
-				);
 
 				const link = screen.getByRole("link", { name: "Dwelling details" });
-
 				expect(link).toBeDefined();
 				expect(link.getAttribute("href")).toBe("/dwelling-details");
+
+				const errorSummary = screen.getByTestId("heatSourceErrorSummary");
+				const errorSummaryLink = within(errorSummary).getByRole("link", {
+					name: /This product uses Mains gas/,
+				});
+				expect(errorSummaryLink.getAttribute("href")).toBe("#incompatibleEnergySource");
 			});
 
 			test("shows an error when the selected heat battery dry core product uses an energy source that has not been added to general details", async () => {

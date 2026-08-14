@@ -67,7 +67,6 @@ const selectedSubHeatNetwork = ref<string | undefined>(selectedSubHeatNetworkNam
 const productsPageUrl = ref(buildProductsPageUrl(pageUrl, index, selectedProductType ?? "", emitterIndex));
 const productDetailsPageUrl = ref(buildProductDetailsPageUrl(pageUrl, selectedProductType ?? "", selectedProductReference));
 const productData = ref<AnyPcdbProduct | undefined | null>();
-const incompatibleEnergySourceError = ref<HTMLElement | null>(null);
 
 if (selectedProduct.value) {
 	await fetchProduct(selectedProductReference);
@@ -122,22 +121,6 @@ const incompatibleEnergySource = computed(() => {
 const showIncompatibleEnergySourceError = computed(() =>
 	incompatibleEnergySource.value && props.context.state.submitted,
 );
-
-watch(showIncompatibleEnergySourceError, async (showError) => {
-	if (!showError) {
-		return;
-	}
-
-	await nextTick();
-
-	const errorSummary = document.querySelector(".govuk-error-summary");
-
-	if (!errorSummary) {
-		incompatibleEnergySourceError.value?.scrollIntoView({
-			block: "center",
-		});
-	}
-});
 
 watch(
 	incompatibleEnergySource,
@@ -312,7 +295,7 @@ function handleChooseProduct(event: Event) {
 			<div v-if="help" :id="`${id}_hint`" class="govuk-hint">{{ help }}</div>
 			<p
 				v-if="showIncompatibleEnergySourceError"
-				ref="incompatibleEnergySourceError"
+				id="incompatibleEnergySource"
 				class="govuk-error-message"
 				data-testid="incompatibleEnergySourceError"
 			>

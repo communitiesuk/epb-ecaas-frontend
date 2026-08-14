@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import { getUrl, type HeatSourceData } from "#imports";
-import { heatSourceTypesWithDisplay, displayFuelType } from "~/utils/display";
+import { heatSourceTypesWithDisplay } from "~/utils/display";
 import type { AnyPcdbProduct, Product } from "~/pcdb/pcdb.types";
 import { hasPackagedProduct } from "~/utils/products";
 import PackagedProductInset from "~/components/PackagedProductInset.vue";
 import type { ErrorName } from "~/errors.types";
 import { useHeatSources } from "~/composables/heatSources";
-import type { SchemaFuelType } from "~/schema/aliases";
 
 const title = "Heat source";
 const store = useEcaasStore();
@@ -60,7 +59,6 @@ const addIncompatibleEnergySourceError = () => {
 	addError({
 		id: "incompatibleEnergySource",
 		text: `This product uses ${incompatibleEnergySourceFuel.value} which hasn’t been added as an energy source for this dwelling. To change this go to Dwelling details.`,		
-		href: getUrl("dwellingDetails"),
 	});
 };
 
