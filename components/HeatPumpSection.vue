@@ -53,13 +53,6 @@ const greaterThanZero = (node: FormKitNode) => {
 		:on-incompatible-energy-source="onIncompatibleEnergySource"
 		@product-loaded="onProductLoaded"
 	/>
-	<!-- <FormKit 
-		id="isConnectedToHeatNetwork"
-		type="govBoolean"
-		:name="'isConnectedToHeatNetwork'"
-		:label="'Is this heat pump connected to a heat network?'"
-		:value="model.isConnectedToHeatNetwork"
-	/> -->
 	<FormKit
 		v-if="model.typeOfHeatPump === 'booster'"
 		id="associatedHeatNetwork"

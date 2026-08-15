@@ -92,6 +92,7 @@ watch(props.context, async ({ attrs: {
 });
 
 function getProductFuel(product: AnyPcdbProduct | undefined | null) {
+	
 	if (!product || !("fuel" in product)) {
 		return undefined;
 	}

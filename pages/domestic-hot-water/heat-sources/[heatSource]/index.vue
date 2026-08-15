@@ -14,7 +14,7 @@ const { heatSources: dhwHeatSources } = store.domesticHotWater;
 const { getStoreIndex, handleAutoSaveElementForm } = useForm();
 const { createWaterCylinder, canHaveColdWaterSource, getActualHeatSource } = useHeatSources();
 const { mounted } = useMounted();
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const { handleInvalidSubmit, errorMessages, addError, clearErrors } = useErrorSummary();
 
 const hotWaterHeatSourceStoreData = store.domesticHotWater.heatSources.data;
 const index = getStoreIndex(hotWaterHeatSourceStoreData);
@@ -33,6 +33,8 @@ export type PointOfUseModelType = Extract<DomesticHotWaterHeatSourceData, { type
 
 const productBrandName = ref<string | undefined>();
 const packagedProduct = ref<Product | undefined>();
+const incompatibleEnergySource = ref(false);
+const incompatibleEnergySourceFuel = ref<string | undefined>();
 
 const preheatedWaterStorage = useAssociatedItems(["preheatedWaterStorage"]);
 const preheatedWaterStorageMap = ref(new Map(preheatedWaterStorage));
@@ -63,6 +65,22 @@ function removePackagedProducts(packageProductIds: string[]) {
 	});
 }
 
+const addIncompatibleEnergySourceError = () => {
+	if (!incompatibleEnergySource.value) return;
+
+	addError({
+		id: "incompatibleEnergySource",
+		text: `This product uses ${incompatibleEnergySourceFuel.value} which hasn’t been added as an energy source for this dwelling. To change this go to Dwelling details.`,		
+	});
+};
+
+const handleSubmitInvalid = (node: FormKitNode) => {
+	handleInvalidSubmit(node);
+	addIncompatibleEnergySourceError();
+
+	window.scrollTo(0, 0);
+};
+
 function isHeatPumpHeatSource(
 	heatSource: DomesticHotWaterHeatSourceData | undefined,
 ): heatSource is HeatPumpModelType {
@@ -71,6 +89,14 @@ function isHeatPumpHeatSource(
 }
 
 const saveForm = () => {
+	clearErrors();
+
+	if (incompatibleEnergySource.value) {
+		addIncompatibleEnergySourceError();
+		window.scrollTo(0, 0);
+		return;
+	}
+
 	store.$patch((state) => {
 		state.domesticHotWater.heatSources.data[index]!.complete = true;
 		state.domesticHotWater.heatSources.complete = false;
@@ -351,6 +377,11 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 	}
 }
 
+function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
+	incompatibleEnergySource.value = value;
+	incompatibleEnergySourceFuel.value = fuel;
+}
+
 const hasWaterStorage = computed(() => {
 	return store.domesticHotWater.waterStorage.data.length > 0;
 });
@@ -400,7 +431,7 @@ const allBoilers = useAssociatedItems(["boiler"]);
 		:actions="false"
 		:incomplete-message="false"
 		@submit="saveForm"
-		@submit-invalid="handleInvalidSubmit">
+		@submit-invalid="handleSubmitInvalid">
 		<GovErrorSummary :error-list="errorMessages" test-id="heatSourceErrorSummary" />
 		<FormKit 
 			v-if="mounted"
@@ -441,6 +472,7 @@ const allBoilers = useAssociatedItems(["boiler"]);
 				:boilers="allBoilers"
 				add-boiler-page-id="heatSourcesCreate"
 				page="domestic hot water"
+				:on-incompatible-energy-source="handleIncompatibleEnergySource"
 				@update-heat-pump-model="updateHeatSource"
 				@product-loaded="handleProductLoaded"
 			/>
@@ -450,6 +482,7 @@ const allBoilers = useAssociatedItems(["boiler"]);
 				:model="(model as BoilerModelType)"
 				:index="index"
 				page="domestic hot water"
+				:on-incompatible-energy-source="handleIncompatibleEnergySource"
 				@update-boiler-model="updateHeatSource"
 				@product-loaded="handleProductLoaded"
 			/>
@@ -459,6 +492,7 @@ const allBoilers = useAssociatedItems(["boiler"]);
 				:model="(model as HeatBatteryModelType)"
 				:index="index"
 				page="domestic hot water"
+				:on-incompatible-energy-source="handleIncompatibleEnergySource"
 				@update-heat-battery-model="updateHeatSource"
 				@product-loaded="handleProductLoaded"
 			/>

@@ -1,10 +1,10 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatSourceForm from "./index.vue";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import { v4 as uuidv4 } from "uuid";
 import type { DomesticHotWaterHeatSourceData, HeatNetworkData } from "~/stores/ecaasStore.schema";
-import type { BoilerProduct, DisplayProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
+import type { BoilerProduct, DisplayProduct, HybridHeatPumpProduct, HotWaterOnlyHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 import { celsius } from "~/utils/units/temperature";
 import { litre } from "~/utils/units/volume";
 import type { HeatSourceData, WaterStorageData } from "../../../../stores/ecaasStore.schema";
@@ -85,11 +85,24 @@ const dhwWithNewHeatPump: DomesticHotWaterHeatSourceData = {
 	energySupply: "electricity",
 };
 
+const hotWaterOnlyHeatPump: DomesticHotWaterHeatSourceData = {
+	isExistingHeatSource: false,
+	heatSourceId: "NEW_HEAT_SOURCE",
+	id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+	name: "Hot Water Only",
+	typeOfHeatSource: "heatPump",
+	typeOfHeatPump: "hotWaterOnly",
+	productReference: "1000",
+	packageProductIds: ["1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b"],
+	maxFlowTemp: unitValue(7, celsius),
+	energySupply: "electricity",
+};
+
 const hybridHeatPump: DomesticHotWaterHeatSourceData = {
 	isExistingHeatSource: false,
 	heatSourceId: "NEW_HEAT_SOURCE",
 	id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
-	name: "Heat pump 1",
+	name: "Hybrid Heat Pump",
 	typeOfHeatSource: "heatPump",
 	typeOfHeatPump: "hybridHeatPump",
 	productReference: "1000",
@@ -622,6 +635,20 @@ describe("Heat pump section", () => {
 		vesselType: "Integral",
 	};
 
+	const hotWaterOnlyHeatPumpProductWithFuelType: Partial<HotWaterOnlyHeatPumpProduct> = {
+		id: "1001",
+		brandName: "Brand",
+		technologyType: "HotWaterOnlyHeatPump",
+		fuel: "LPG_condition_11F",
+	};
+
+	const hybridHeatPumpProductWithFuelType: Partial<HybridHeatPumpProduct> = {
+		id: "1000",
+		brandName: "Brand",
+		technologyType: "HybridHeatPump",
+		fuel: "LPG_bottled",
+	};
+
 	const heatPumpWithCylinder: Partial<DomesticHotWaterHeatSourceData> = {
 		...dhwWithNewHeatPump,
 		productReference: heatPumpProductWithCylinder.id,
@@ -1077,6 +1104,263 @@ describe("Heat pump section", () => {
 		const waterStorageData = store.domesticHotWater.waterStorage.data;
 
 		expect(waterStorageData.length).toBe(0);
+	});
+
+	test("shows an error when the selected hot water only heat pump product uses an energy source that has not been added to general details", async () => {
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: hotWaterOnlyHeatPump }],
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["electricity"],
+					},
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(hotWaterOnlyHeatPumpProductWithFuelType),
+		});
+
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const error = screen.getByTestId("incompatibleEnergySourceError");
+		expect(error).toBeDefined();
+		expect(error.textContent).toContain(
+			"This product uses LPG - 11F which hasn’t been added as an energy source for this dwelling.",
+		);
+
+		const link = screen.getByRole("link", { name: "Dwelling details" });
+		expect(link).toBeDefined();
+		expect(link.getAttribute("href")).toBe("/dwelling-details");
+
+		const errorSummary = screen.getByTestId("heatSourceErrorSummary");
+		const errorSummaryLink = within(errorSummary).getByRole("link", {
+			name: /This product uses LPG - 11F/,
+		});
+		expect(errorSummaryLink.getAttribute("href")).toBe("#incompatibleEnergySource");
+	});
+
+	test("shows an error when the selected hybrid heat pump product uses an energy source that has not been added to general details", async () => {
+		const hybridHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "Hybrid Heat Pump",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "hybridHeatPump",
+			productReference: "1002",
+		};
+
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: hybridHeatPump }],
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["electricity"],
+					},
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(hybridHeatPumpProductWithFuelType),
+		});
+
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const error = screen.getByTestId("incompatibleEnergySourceError");
+		expect(error).toBeDefined();
+		expect(error.textContent).toContain(
+			"This product uses LPG (Liquid petroleum gas) - bottled which hasn’t been added as an energy source for this dwelling.",
+		);
+
+		const link = screen.getByRole("link", { name: "Dwelling details" });
+		expect(link).toBeDefined();
+		expect(link.getAttribute("href")).toBe("/dwelling-details");
+
+		const errorSummary = screen.getByTestId("heatSourceErrorSummary");
+		const errorSummaryLink = within(errorSummary).getByRole("link", {
+			name: /This product uses LPG \(Liquid petroleum gas\) - bottled/,
+		});
+		expect(errorSummaryLink.getAttribute("href")).toBe("#incompatibleEnergySource");
+	});
+
+	test("shows both validation errors and incompatible energy source error", async () => {
+		const hotWaterOnlyHeatPumpWithoutMaxFlowTemp: Partial<NewDomesticHotWaterHeatSourceData> = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "Heat pump 1",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "hotWaterOnly",
+			isExistingHeatSource: false,
+			productReference: "HEATPUMP-SMALL",
+		};
+
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: hotWaterOnlyHeatPumpWithoutMaxFlowTemp }],
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(hotWaterOnlyHeatPumpProductWithFuelType),
+		});
+
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { heatSource: "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const errorSummary = await screen.findByTestId("heatSourceErrorSummary");
+
+		expect(errorSummary.textContent).toContain(
+			"Maximum flow temperature is required.",
+		);
+
+		expect(errorSummary.textContent).toContain(
+			"This product uses LPG - 11F which hasn’t been added as an energy source for this dwelling.",
+		);
+	});
+
+	test("does not show an error when the hot water only heat pump product fuel has been added to general details", async () => {
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: hotWaterOnlyHeatPump }],
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["electricity", "LPG_condition_11F"],
+					},
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(hotWaterOnlyHeatPumpProductWithFuelType),
+		});
+
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { heatSource: "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(
+			screen.queryByTestId("incompatibleEnergySourceError"),
+		).toBeNull();
+	});
+
+	test("does not show an error when the hybrid heat pump product fuel has been added to general details", async () => {
+		const hybridHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
+			isExistingHeatSource: false,
+			heatSourceId: "NEW_HEAT_SOURCE",
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
+			name: "Hybrid Heat Pump",
+			typeOfHeatSource: "heatPump",
+			typeOfHeatPump: "hybridHeatPump",
+			productReference: "1002",
+		};
+		
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: hybridHeatPump }],
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["electricity", "LPG_bottled"],
+					},
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(hybridHeatPumpProductWithFuelType),
+		});
+
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { "heatSource": "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(
+			screen.queryByTestId("incompatibleEnergySourceError"),
+		).toBeNull();
+	});
+
+	test("does not show an error when the product fuel is electricity", async () => {
+		const heatPumpProductWithElectricityFuelType: Partial<HotWaterOnlyHeatPumpProduct> = {
+			id: "1001",
+			brandName: "Brand",
+			technologyType: "HotWaterOnlyHeatPump",
+			fuel: "electricity",
+		};
+
+		store.$patch({
+			domesticHotWater: {
+				heatSources: {
+					data: [{ data: hotWaterOnlyHeatPump }],
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["electricity"],
+					},
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(heatPumpProductWithElectricityFuelType),
+		});
+
+		await renderSuspended(HeatSourceForm, {
+			route: {
+				params: { heatSource: "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(
+			screen.queryByTestId("incompatibleEnergySourceError"),
+		).toBeNull();
 	});
 });
 
