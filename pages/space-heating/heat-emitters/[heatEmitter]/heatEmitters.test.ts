@@ -1,9 +1,9 @@
 import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
 import HeatEmitterForm from "./index.vue";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import { millimetre } from "~/utils/units/length";
-import type { DisplayProduct } from "~/pcdb/pcdb.types.js";
+import type { DisplayProduct, ElectricStorageHeaterProduct } from "~/pcdb/pcdb.types.js";
 
 const { navigateToMock, mockFetch } = vi.hoisted(() => ({
 	navigateToMock: vi.fn(),
@@ -47,6 +47,14 @@ const wetDistributionSystemWithEmitters: HeatEmittingData = {
 	],
 };
 
+const electricStorageHeater: HeatEmittingData = {
+	id: "esh_1",
+	name: "Electric Storage Heater ",
+	typeOfHeatEmitter: "electricStorageHeater",
+	productReference: "ESH-123",
+	numOfStorageHeaters: 4,
+};
+
 describe("Heat emitters", () => {
 	const user = userEvent.setup();
 	const store = useEcaasStore();
@@ -61,6 +69,14 @@ describe("Heat emitters", () => {
 		brandName: "Test",
 		modelName: "Fan coil",
 		technologyType: "FanCoils",
+	};
+
+	const electricStorageHeaterProduct: Partial<ElectricStorageHeaterProduct> = {
+		id: "1001",
+		brandName: "Test",
+		modelName: "Electric Storage Heater",
+		technologyType: "StorageHeater",
+		fuel: "mains_gas",
 	};
 
 	beforeEach(() => {
@@ -722,6 +738,164 @@ describe("Heat emitters", () => {
 			await user.click(screen.getByTestId("chooseAProductButton"));
 
 			expect(navigateToMock).toHaveBeenCalledWith("/0/electric-storage-heater");
+		});
+
+		test("shows an error when the selected electric storage heater product uses an energy source that has not been added to general details", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [{ data: electricStorageHeater }],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity"],
+						},
+					},
+				},
+			});
+		
+			mockFetch.mockReturnValue({
+				data: ref(electricStorageHeaterProduct),
+			});
+		
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "0" },
+				},
+			});
+		
+			await user.click(screen.getByTestId("saveAndComplete"));
+		
+			const error = screen.getByTestId("incompatibleEnergySourceError");
+			expect(error).toBeDefined();
+			expect(error.textContent).toContain(
+				"This product uses Mains gas which hasn’t been added as an energy source for this dwelling.",
+			);
+		
+			const link = screen.getByRole("link", { name: "Dwelling details" });
+			expect(link).toBeDefined();
+			expect(link.getAttribute("href")).toBe("/dwelling-details");
+		
+			const errorSummary = screen.getByTestId("heatEmitterErrorSummary");
+			const errorSummaryLink = within(errorSummary).getByRole("link", {
+				name: /This product uses Mains gas/,
+			});
+			expect(errorSummaryLink.getAttribute("href")).toBe("#incompatibleEnergySource");
+		});
+		
+		test("shows both validation errors and incompatible energy source error", async () => {
+			const electricStorageHeaterWithMissingField: Partial<HeatEmittingData> = {
+				id: "esh_1",
+				name: "Electric Storage Heater ",
+				typeOfHeatEmitter: "electricStorageHeater",
+				productReference: "ESH-123",
+			};
+		
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [{ data: electricStorageHeaterWithMissingField }],
+					},
+				},
+			});
+		
+			mockFetch.mockReturnValue({
+				data: ref(electricStorageHeaterProduct),
+			});
+		
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { heatEmitter: "0" },
+				},
+			});
+		
+			await user.click(screen.getByTestId("saveAndComplete"));
+		
+			const errorSummary = await screen.findByTestId("heatEmitterErrorSummary");
+		
+			expect(errorSummary.textContent).toContain(
+				"Number of storage heaters is required.",
+			);
+		
+			expect(errorSummary.textContent).toContain(
+				"This product uses Mains gas which hasn’t been added as an energy source for this dwelling.",
+			);
+		});
+		
+		test("does not show an error when the electric storage heater product fuel has been added to general details", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [{ data: electricStorageHeater }],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity", "mains_gas"],
+						},
+					},
+				},
+			});
+		
+			mockFetch.mockReturnValue({
+				data: ref(electricStorageHeaterProduct),
+			});
+		
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { heatEmitter: "0" },
+				},
+			});
+		
+			await user.click(screen.getByTestId("saveAndComplete"));
+		
+			expect(
+				screen.queryByTestId("incompatibleEnergySourceError"),
+			).toBeNull();
+		});
+		
+		test("does not show an error when the electric storage heater product fuel is electricity", async () => {
+			const electricStorageHeaterProductWithElectricityFuelType: Partial<ElectricStorageHeaterProduct> = {
+				id: "1001",
+				brandName: "Test",
+				modelName: "Electric Storage Heater with Electricity Fuel",
+				technologyType: "StorageHeater",
+				fuel: "electricity",
+			};
+			
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [{ data: electricStorageHeater }],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity", "mains_gas"],
+						},
+					},
+				},
+			});
+		
+			mockFetch.mockReturnValue({
+				data: ref(electricStorageHeaterProductWithElectricityFuelType),
+			});
+		
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { heatEmitter: "0" },
+				},
+			});
+		
+			await user.click(screen.getByTestId("saveAndComplete"));
+		
+			expect(
+				screen.queryByTestId("incompatibleEnergySourceError"),
+			).toBeNull();
 		});
 	});
 

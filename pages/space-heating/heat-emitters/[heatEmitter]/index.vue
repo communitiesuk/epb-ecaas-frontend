@@ -16,6 +16,7 @@ export type ElectricStorageHeaterModelType = Extract<HeatEmittingData, { "typeOf
 const title = "Heat emitters";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
+const { handleInvalidSubmit, errorMessages, addError, clearErrors } = useErrorSummary();
 
 const { mounted } = useMounted();
 
@@ -25,6 +26,9 @@ const index = getStoreIndex(heatEmitterStoreData);
 const heatEmitterData = useItemToEdit("heatEmitter", heatEmitterStoreData);
 const model = ref(heatEmitterData?.data);
 const id = heatEmitterData?.data?.id ?? uuidv4();
+
+const incompatibleEnergySource = ref(false);
+const incompatibleEnergySourceFuel = ref<string | undefined>();
 
 function resetAllHeatEmitterRankings(state: EcaasState) {
 	state.spaceHeating.heatEmitters.data.forEach((heatEmitter) => {
@@ -41,6 +45,14 @@ function markHeatingControlsAsInProgress(state: EcaasState) {
 }
 
 const saveForm = () => {
+	clearErrors();
+
+	if (incompatibleEnergySource.value) {
+		addIncompatibleEnergySourceError();
+		window.scrollTo(0, 0);
+		return;
+	}
+
 	store.$patch((state) => {
 		const { heatEmitters } = state.spaceHeating;
 		const emitter = heatEmitters.data[index];
@@ -53,8 +65,6 @@ const saveForm = () => {
 	});
 	navigateTo("/space-heating");
 };
-
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 watch(
 	() => model.value,
@@ -110,6 +120,28 @@ autoSaveElementForm<HeatEmittingData>({
 		resetAllHeatEmitterRankings(state);
 	},
 });
+
+const addIncompatibleEnergySourceError = () => {
+	if (!incompatibleEnergySource.value) return;
+
+	addError({
+		id: "incompatibleEnergySource",
+		text: `This product uses ${incompatibleEnergySourceFuel.value} which hasn’t been added as an energy source for this dwelling. To change this go to Dwelling details.`,		
+	});
+};
+
+const handleSubmitInvalid = (node: FormKitNode) => {
+	handleInvalidSubmit(node);
+	addIncompatibleEnergySourceError();
+
+	window.scrollTo(0, 0);
+};
+
+function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
+	incompatibleEnergySource.value = value;
+	incompatibleEnergySourceFuel.value = fuel;
+}
+
 </script>
 
 <template>
@@ -124,7 +156,7 @@ autoSaveElementForm<HeatEmittingData>({
 		:actions="false"
 		:incomplete-message="false"
 		@submit="saveForm"
-		@submit-invalid="handleInvalidSubmit">
+		@submit-invalid="handleSubmitInvalid">
 		<FormKit
 			id="typeOfHeatEmitter"
 			type="govRadios"
@@ -144,7 +176,9 @@ autoSaveElementForm<HeatEmittingData>({
 			<ElectricStorageHeaterSection
 				v-if="model?.typeOfHeatEmitter === typeOfHeatEmitter.electricStorageHeater"
 				:model="(model as ElectricStorageHeaterModelType)" 
-				:index="index"/>
+				:index="index"
+				:on-incompatible-energy-source="handleIncompatibleEnergySource"
+			/>
 			<WarmAirHeaterSection
 				v-if="model?.typeOfHeatEmitter === 'warmAirHeater'"
 				:model="(model as WarmAirHeaterModelType)" />

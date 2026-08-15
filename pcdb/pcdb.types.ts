@@ -275,6 +275,7 @@ export const electricStorageHeaterZod = BaseProduct.extend({
 	outputPower: z.nullable(z.number()),
 	highHeatRetention: z.nullable(z.number()),
 	controlType: z.nullable(z.string()),
+	fuel: z.optional(fuelTypeZod),
 });
 
 export type ElectricStorageHeaterProduct = z.infer<typeof electricStorageHeaterZod>;

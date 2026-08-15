@@ -74,14 +74,14 @@ describe("heatSource", () => {
 			vesselType: "Integral",
 		};
 
-		const HeatPumpProductWithFuelType: Partial<HeatPumpProduct> = {
+		const heatPumpProductWithFuelType: Partial<HeatPumpProduct> = {
 			id: "1001",
 			brandName: "Brand",
 			technologyType: "AirSourceHeatPump",
 			fuel: "LPG_bulk",
 		};
 
-		const HeatPumpProductWithElectricityFuelType: Partial<HeatPumpProduct> = {
+		const heatPumpProductWithElectricityFuelType: Partial<HeatPumpProduct> = {
 			id: "1002",
 			brandName: "Brand",
 			technologyType: "AirSourceHeatPump",
@@ -437,7 +437,7 @@ describe("heatSource", () => {
 			});
 
 			mockFetch.mockReturnValue({
-				data: ref(HeatPumpProductWithFuelType),
+				data: ref(heatPumpProductWithFuelType),
 			});
 
 			await renderSuspended(HeatSourceForm, {
@@ -483,7 +483,7 @@ describe("heatSource", () => {
 			});
 
 			mockFetch.mockReturnValue({
-				data: ref(HeatPumpProductWithFuelType),
+				data: ref(heatPumpProductWithFuelType),
 			});
 
 			await renderSuspended(HeatSourceForm, {
@@ -505,7 +505,7 @@ describe("heatSource", () => {
 			);
 		});
 
-		test("does not show an error when the product fuel has been added to general details", async () => {
+		test("does not show an error when the heat pump product fuel has been added to general details", async () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
@@ -522,7 +522,7 @@ describe("heatSource", () => {
 			});
 
 			mockFetch.mockReturnValue({
-				data: ref(HeatPumpProductWithFuelType),
+				data: ref(heatPumpProductWithFuelType),
 			});
 
 			await renderSuspended(HeatSourceForm, {
@@ -538,7 +538,7 @@ describe("heatSource", () => {
 			).toBeNull();
 		});
 
-		test("does not show an error when the product fuel is electricity", async () => {
+		test("does not show an error when the heat pump product fuel is electricity", async () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
@@ -555,7 +555,7 @@ describe("heatSource", () => {
 			});
 
 			mockFetch.mockReturnValue({
-				data: ref(HeatPumpProductWithElectricityFuelType),
+				data: ref(heatPumpProductWithElectricityFuelType),
 			});
 
 			await renderSuspended(HeatSourceForm, {
@@ -997,7 +997,7 @@ describe("heatSource", () => {
 				);
 			});
 
-			test("does not show an error when the product fuel has been added to general details", async () => {
+			test("does not show an error when the boiler product fuel has been added to general details", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
@@ -1030,7 +1030,7 @@ describe("heatSource", () => {
 				).toBeNull();
 			});
 
-			test("does not show an error when the product fuel is electricity", async () => {
+			test("does not show an error when the boiler product fuel is electricity", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
@@ -1543,7 +1543,7 @@ describe("heatSource", () => {
 				);
 			});
 
-			test("does not show an error when the product fuel has been added to general details", async () => {
+			test("does not show an error when the heat battery product fuel has been added to general details", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
@@ -1576,7 +1576,7 @@ describe("heatSource", () => {
 				).toBeNull();
 			});
 
-			test("does not show an error when the product fuel is electricity", async () => {
+			test("does not show an error when the heat battery product fuel is electricity", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
