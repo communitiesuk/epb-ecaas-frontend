@@ -168,7 +168,8 @@ function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
 			<WetDistributionSection
 				v-if="model?.typeOfHeatEmitter === 'wetDistributionSystem'"
 				:model="(model as WetDistributionSystemData)"
-				:index="index" />
+				:index="index"
+			/>
 			<InstantElectricHeaterSection
 				v-if="model?.typeOfHeatEmitter === 'instantElectricHeater'"
 				:model="(model as InstantElectricHeaterModelType)"

@@ -26,6 +26,7 @@ const {
 		"emitter-index": emitterIndex,
 		"on-product-loaded": onProductLoaded,
 		"on-incompatible-energy-source": onIncompatibleEnergySource,
+		"show-incompatible-energy-source-error": showIncompatibleEnergySourceErrorProp,
 		"on-choose-product": onChooseProduct,
 	},
 	node: { props: { disabled } },
@@ -120,7 +121,11 @@ const incompatibleEnergySource = computed(() => {
 });
 
 const showIncompatibleEnergySourceError = computed(() =>
-	incompatibleEnergySource.value && props.context.state.submitted,
+	incompatibleEnergySource.value &&
+	(
+		props.context.state.submitted ||
+		showIncompatibleEnergySourceErrorProp
+	),
 );
 
 watch(

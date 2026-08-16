@@ -258,6 +258,7 @@ export const fancoilZod = BaseProduct.extend({
 	numberOfFanSpeeds: z.nullable(z.number()),
 	numberOfTestPointDeltaT: z.nullable(z.number()),
 	fracConvective: z.nullable(z.number()),
+	fuel: z.optional(fuelTypeZod),
 });
 
 export type FanCoilProduct = z.infer<typeof fancoilZod>;

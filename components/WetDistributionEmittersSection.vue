@@ -9,6 +9,7 @@ import { millimetre, type Length } from "~/utils/units/length";
 
 const props = defineProps<{
 	index: number;
+	onIncompatibleEnergySource?: (value: boolean, fuel?: string) => void;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
@@ -238,11 +239,24 @@ watch(
 );
 
 const saveEmitter = () => {
+	if (incompatibleEnergySource.value) {
+		showIncompatibleEnergySourceError.value = true;
+		return;
+	}
+
 	addingEmitterIndex.value = null;
 	editIndex.value = null;
 	formModel.value = {};
 	clearEmitterIndexFromUrl();
 };
+
+const incompatibleEnergySource = ref(false);
+const showIncompatibleEnergySourceError = ref(false);
+
+function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
+	incompatibleEnergySource.value = value;
+	props.onIncompatibleEnergySource?.(value, fuel);
+}
 </script>
 
 <template>
@@ -349,6 +363,8 @@ const saveEmitter = () => {
 							:page-url="route.fullPath"
 							:page-index="props.index"
 							:emitter-index="i"
+							:on-incompatible-energy-source="handleIncompatibleEnergySource"
+							:show-incompatible-energy-source-error="showIncompatibleEnergySourceError"
 							@product-loaded="onProductLoaded"
 						/>
 						<FormKit

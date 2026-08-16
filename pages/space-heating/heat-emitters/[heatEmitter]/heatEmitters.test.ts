@@ -1,9 +1,9 @@
 import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
 import HeatEmitterForm from "./index.vue";
 import userEvent from "@testing-library/user-event";
-import { screen, within } from "@testing-library/vue";
+import { screen, within, waitFor } from "@testing-library/vue";
 import { millimetre } from "~/utils/units/length";
-import type { DisplayProduct, ElectricStorageHeaterProduct } from "~/pcdb/pcdb.types.js";
+import type { DisplayProduct, ElectricStorageHeaterProduct, FanCoilProduct } from "~/pcdb/pcdb.types.js";
 
 const { navigateToMock, mockFetch } = vi.hoisted(() => ({
 	navigateToMock: vi.fn(),
@@ -47,6 +47,19 @@ const wetDistributionSystemWithEmitters: HeatEmittingData = {
 	],
 };
 
+const wetDistributionSystemWithFanCoilEmitter: HeatEmittingData = {
+	...wetDistributionSystem,
+	emitters: [
+		{
+			id: "emitter2",
+			name: "Emitter 2",
+			typeOfHeatEmitter: "fanCoil",
+			numOfFanCoils: 3,
+			productReference: "1001",
+		},
+	],
+};
+
 const electricStorageHeater: HeatEmittingData = {
 	id: "esh_1",
 	name: "Electric Storage Heater ",
@@ -69,6 +82,14 @@ describe("Heat emitters", () => {
 		brandName: "Test",
 		modelName: "Fan coil",
 		technologyType: "FanCoils",
+	};
+
+	const fanCoilProductWithFuelType: Partial<FanCoilProduct> = {
+		id: "1001",
+		brandName: "Test",
+		modelName: "Fan Coil with Fuel Type",
+		technologyType: "FanCoils",
+		fuel: "LPG_bulk",
 	};
 
 	const electricStorageHeaterProduct: Partial<ElectricStorageHeaterProduct> = {
@@ -680,6 +701,302 @@ describe("Heat emitters", () => {
 
 				expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 			});
+
+			test("shows an error when the selected fan coil product uses an energy source that has not been added to general details", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{ data: wetDistributionSystemWithFanCoilEmitter }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity"],
+							},
+						},
+					},
+				});
+		
+				mockFetch.mockReturnValue({
+					data: ref(fanCoilProductWithFuelType),
+				});
+		
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "0" },
+					},
+				});
+				await user.click(screen.getByTestId("emitter_edit_0"));
+				await user.click(screen.getByTestId("saveEmitter_0"));
+		
+				const error = screen.getByTestId("incompatibleEnergySourceError");
+				expect(error).toBeDefined();
+				expect(error.textContent).toContain(
+					"This product uses LPG (Liquid petroleum gas) - bulk which hasn’t been added as an energy source for this dwelling.",
+				);
+		
+				const link = screen.getByRole("link", { name: "Dwelling details" });
+				expect(link).toBeDefined();
+				expect(link.getAttribute("href")).toBe("/dwelling-details");
+			});
+
+			test("keeps the fan coil editor open when there is an incompatible energy source", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{ data: wetDistributionSystemWithFanCoilEmitter }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity"],
+							},
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(fanCoilProductWithFuelType),
+				});
+
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("emitter_edit_0"));
+				await user.click(screen.getByTestId("saveEmitter_0"));
+
+				expect(screen.getByTestId("numOfFanCoils_0")).toBeDefined();
+				expect(screen.getByTestId("incompatibleEnergySourceError")).toBeDefined();
+			});
+
+			test("does not show incompatible energy source error in the gov error summary when the selected fan coil product uses an energy source that has not been added to general details", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{ data: wetDistributionSystemWithFanCoilEmitter }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity"],
+							},
+						},
+					},
+				});
+		
+				mockFetch.mockReturnValue({
+					data: ref(fanCoilProductWithFuelType),
+				});
+		
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("emitter_edit_0"));
+				await user.click(screen.getByTestId("saveEmitter_0"));
+				await user.click(screen.getByTestId("saveAndComplete"));
+		
+				const errorSummary = screen.queryByTestId("heatEmitterErrorSummary");
+
+				if (errorSummary) {
+					expect(errorSummary.textContent).not.toContain(
+						"This product uses LPG (Liquid petroleum gas) - bulk",
+					);
+				}
+			});
+
+			test("hides the incompatible energy source error when the product becomes compatible with the dwelling energy source", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{ data: wetDistributionSystemWithFanCoilEmitter }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity"],
+							},
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(fanCoilProductWithFuelType),
+				});
+
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("emitter_edit_0"));
+				await user.click(screen.getByTestId("saveEmitter_0"));
+
+				expect(
+					screen.getByTestId("incompatibleEnergySourceError"),
+				).toBeDefined();
+
+				store.$patch({
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity", "LPG_bulk"],
+							},
+						},
+					},
+				});
+
+				await waitFor(() => {
+					expect(
+						screen.queryByTestId("incompatibleEnergySourceError"),
+					).toBeNull();
+				});
+			});
+		
+			test("does not show an error when the fan coil product fuel has been added to general details", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{ data: wetDistributionSystemWithFanCoilEmitter }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity", "LPG_bulk"],
+							},
+						},
+					},
+				});
+		
+				mockFetch.mockReturnValue({
+					data: ref(fanCoilProductWithFuelType),
+				});
+		
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("emitter_edit_0"));
+				await user.click(screen.getByTestId("saveEmitter_0"));
+		
+				expect(
+					screen.queryByTestId("incompatibleEnergySourceError"),
+				).toBeNull();
+			});
+		
+			test("does not show an error when the fan coil product fuel is electricity", async () => {
+				const fanCoilProductWithElectricityFuelType: Partial<FanCoilProduct> = {
+					id: "1001",
+					brandName: "Test",
+					modelName: "Fan Coil with Electricity Fuel",
+					technologyType: "FanCoils",
+					fuel: "electricity",
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{ data: wetDistributionSystemWithFanCoilEmitter }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity", "mains_gas"],
+							},
+						},
+					},
+				});
+		
+				mockFetch.mockReturnValue({
+					data: ref(fanCoilProductWithElectricityFuelType),
+				});
+		
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
+					},
+				});
+				
+				await user.click(screen.getByTestId("emitter_edit_0"));
+				await user.click(screen.getByTestId("saveEmitter_0"));
+		
+				expect(
+					screen.queryByTestId("incompatibleEnergySourceError"),
+				).toBeNull();
+			});
+
+			// test("marks the wet distribution system as incomplete when its fan coil fuel is removed from dwelling details", async () => {
+			// 	const fanCoilProductWithMainsGasFuelType: Partial<FanCoilProduct> = {
+			// 		id: "1001",
+			// 		brandName: "Test",
+			// 		modelName: "Fan Coil with Mains Gas",
+			// 		technologyType: "FanCoils",
+			// 		fuel: "mains_gas",
+			// 	};
+			// 	store.$patch({
+			// 		spaceHeating: {
+			// 			heatEmitters: {
+			// 				data: [{
+			// 					data: wetDistributionSystemWithFanCoilEmitter,
+			// 					complete: true,
+			// 				}],
+			// 			},
+			// 		},
+			// 		dwellingDetails: {
+			// 			generalSpecifications: {
+			// 				data: {
+			// 					fuelType: ["electricity", "mains_gas"],
+			// 				},
+			// 			},
+			// 		},
+			// 	});
+
+			// 	mockFetch.mockReturnValue({
+			// 		data: ref(fanCoilProductWithMainsGasFuelType),
+			// 	});
+
+			// 	await renderSuspended(HeatEmitterForm, {
+			// 		route: {
+			// 			params: { heatEmitter: "0" },
+			// 		},
+			// 	});
+
+			// 	await user.click(screen.getByTestId("emitter_edit_0"));
+
+			// 	store.$patch({
+			// 		dwellingDetails: {
+			// 			generalSpecifications: {
+			// 				data: {
+			// 					fuelType: ["electricity"],
+			// 				},
+			// 			},
+			// 		},
+			// 	});
+
+			// 	await waitFor(() => {
+			// 		expect(
+			// 			store.spaceHeating.heatEmitters.data[0]?.complete,
+			// 		).toBe(false);
+
+			// 		expect(
+			// 			screen.getByTestId("incompatibleEnergySourceError"),
+			// 		).toBeDefined();
+			// 	});
+			// });
 		});
 	});
 
@@ -865,7 +1182,7 @@ describe("Heat emitters", () => {
 				technologyType: "StorageHeater",
 				fuel: "electricity",
 			};
-			
+
 			store.$patch({
 				spaceHeating: {
 					heatEmitters: {
