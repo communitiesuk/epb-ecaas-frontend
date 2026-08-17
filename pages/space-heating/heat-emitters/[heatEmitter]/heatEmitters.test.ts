@@ -774,45 +774,6 @@ describe("Heat emitters", () => {
 				expect(screen.getByTestId("incompatibleEnergySourceError")).toBeDefined();
 			});
 
-			test("does not show incompatible energy source error in the gov error summary when the selected fan coil product uses an energy source that has not been added to general details", async () => {
-				store.$patch({
-					spaceHeating: {
-						heatEmitters: {
-							data: [{ data: wetDistributionSystemWithFanCoilEmitter }],
-						},
-					},
-					dwellingDetails: {
-						generalSpecifications: {
-							data: {
-								fuelType: ["electricity"],
-							},
-						},
-					},
-				});
-		
-				mockFetch.mockReturnValue({
-					data: ref(fanCoilProductWithFuelType),
-				});
-		
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
-
-				await user.click(screen.getByTestId("emitter_edit_0"));
-				await user.click(screen.getByTestId("saveEmitter_0"));
-				await user.click(screen.getByTestId("saveAndComplete"));
-		
-				const errorSummary = screen.queryByTestId("heatEmitterErrorSummary");
-
-				if (errorSummary) {
-					expect(errorSummary.textContent).not.toContain(
-						"This product uses LPG (Liquid petroleum gas) - bulk",
-					);
-				}
-			});
-
 			test("hides the incompatible energy source error when the product becomes compatible with the dwelling energy source", async () => {
 				store.$patch({
 					spaceHeating: {
@@ -937,6 +898,62 @@ describe("Heat emitters", () => {
 				expect(
 					screen.queryByTestId("incompatibleEnergySourceError"),
 				).toBeNull();
+			});
+
+			test("shows both validation errors and incompatible energy source error in error summary", async () => {
+				const wetDistributionSystemWithMissingFields: Partial<HeatEmittingData> = {
+					id: "1234",
+					name: "Wet Distribution System 1",
+					typeOfHeatEmitter: "wetDistributionSystem",
+					heatSource: "heat-pump-id",
+					ecoDesignControllerClass: "1",
+					designTempDiffAcrossEmitters: 10,
+					hasVariableFlowRate: false,
+					percentageRecirculated: 20,
+					emitters: [
+						{
+							id: "fan_coil",
+							name: "Fan Coil",
+							typeOfHeatEmitter: "fanCoil",
+							numOfFanCoils: 3,
+							productReference: "1001",
+						},
+					],
+				};
+			
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{ data: wetDistributionSystemWithMissingFields }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity"],
+							},
+						},
+					},
+				});
+			
+				mockFetch.mockReturnValue({
+					data: ref(fanCoilProductWithFuelType),
+				});
+			
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
+					},
+				});
+			
+				await user.click(screen.getByTestId("emitter_edit_0"));
+				await user.click(screen.getByTestId("saveEmitter_0"));
+				await user.click(screen.getByTestId("saveAndComplete"));
+			
+				const errorSummary = await screen.findByTestId("heatEmitterErrorSummary");
+				expect(errorSummary.textContent).toContain("Design flow rate is required.");
+				expect(errorSummary.textContent).toContain("Design flow temperature is required.");
+				expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn’t been added as an energy source for this dwelling.");
 			});
 
 			// test("marks the wet distribution system as incomplete when its fan coil fuel is removed from dwelling details", async () => {
