@@ -221,8 +221,13 @@ describe("Heat source products page", () => {
 
 		expect(mockFetch).toHaveBeenCalledTimes(2);
 
+		const expectedProducts = [
+			...MOCKED_HEAT_PUMPS.data,
+			...HOT_WATER_HEAT_PUMPS.data,
+		].filter(product => product.technologyType === "BoosterHeatPump");
+
 		expect(screen.queryAllByTestId("productRow")).toHaveLength(
-			MOCKED_HEAT_PUMPS.data.length + HOT_WATER_HEAT_PUMPS.data.length,
+			expectedProducts.length,
 		);
 	});
 
@@ -314,7 +319,7 @@ describe("Heat source products page", () => {
 		expect(screen.queryByText("Booster Heat Pump")).toBeNull();
 	});
 	
-	test("shows all heat pump types if a heat network has been added", async () => {
+	test("only shows booster heat pump types if a heat network has been added", async () => {
 		store.$patch({
 			spaceHeating: {
 				heatNetworks: {
@@ -333,10 +338,10 @@ describe("Heat source products page", () => {
 	
 		await renderSuspended(Products);
 
-		expect(screen.getAllByText("Small Heat Pump")).toBeDefined();
-		expect(screen.getAllByText("Medium Heat Pump")).toBeDefined();
-		expect(screen.getAllByText("Large Heat Pump")).toBeDefined();
-		expect(screen.getAllByText("Hybrid Heat Pump")).toBeDefined();
+		expect(screen.queryAllByText("Small Heat Pump")).toHaveLength(0);
+		expect(screen.queryAllByText("Medium Heat Pump")).toHaveLength(0);
+		expect(screen.queryAllByText("Large Heat Pump")).toHaveLength(0);
+		expect(screen.queryAllByText("Hybrid Heat Pump")).toHaveLength(0);
 		expect(screen.getAllByText("Booster Heat Pump")).toBeDefined();
 	});
 	

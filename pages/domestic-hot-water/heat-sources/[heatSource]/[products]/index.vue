@@ -50,6 +50,12 @@ const filteredProducts = computed(() => {
 		);
 	}
 
+	if (heatSourceProductType === "heatPump" && heatNetwork.value) {
+		return products.filter(
+			product => product.technologyType == "BoosterHeatPump",
+		);
+	}
+
 	return products;
 });
 

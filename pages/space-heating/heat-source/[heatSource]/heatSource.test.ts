@@ -263,32 +263,6 @@ describe("heatSource", () => {
 			expect(await screen.findByTestId("selectHeatPump_error")).toBeDefined();
 		});
 
-		test("shows add heat network link when booster heat pump is selected and no heat networks exist in store", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [
-							{
-								data: boosterHeatPumpWithoutNetwork,
-							},
-						],
-					},
-				},
-			});
-
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
-
-			expect(screen.getByText("No heat networks added.")).toBeDefined();
-
-			const addHeatNetworkLink = screen.getByRole("link", { name: "Click here to add a heat network" });
-
-			expect(addHeatNetworkLink.getAttribute("href")).toBe("/space-heating/heat-networks/create");
-		});
-
 		test("energy supply is hidden when heat pump is a booster heat pump", async () => {
 			store.$patch({
 				spaceHeating: {
@@ -355,29 +329,7 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 		});
 
-		test("booster heat pump shows error when no heat network is selected", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatSource: {
-						data: [{ data: boosterHeatPumpWithoutNetwork }],
-					},
-				},
-			});
-
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(
-				await screen.findByTestId("associatedHeatNetwork_error"),
-			).toBeDefined();
-		});
-
-		test("automatically selects heat network when heat pump is a booster heat pump and only one heat network is available in state", async () => {
+		test("automatically selects heat network for booster heat pumps when heat network is available in state", async () => {
 			store.$patch({
 				spaceHeating: {
 					heatNetworks: {

@@ -442,7 +442,7 @@ describe("Heat source products page", () => {
 		expect(screen.queryByText("Booster Heat Pump")).toBeNull();
 	});
 
-	test("shows all heat pump types if a heat network has been added", async () => {
+	test("only shows booster heat pump types if a heat network has been added", async () => {
 		store.$patch({
 			spaceHeating: {
 				heatNetworks: {
@@ -461,9 +461,9 @@ describe("Heat source products page", () => {
 
 		await renderSuspended(Products);
 
-		expect(screen.getByText("Small Heat Pump")).toBeDefined();
-		expect(screen.getByText("Medium Heat Pump")).toBeDefined();
-		expect(screen.getByText("Large Heat Pump")).toBeDefined();
+		expect(screen.queryByText("Small Heat Pump")).toBeNull();
+		expect(screen.queryByText("Medium Heat Pump")).toBeNull();
+		expect(screen.queryByText("Large Heat Pump")).toBeNull();
 		expect(screen.getByText("Booster Heat Pump")).toBeDefined();
 	});
 
