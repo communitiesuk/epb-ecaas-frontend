@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/nuxt";
 import type { CorrectedJsonApiError } from "~/stores/ecaasStore.schema";
 import type { ErrorObject } from "ajv";
 import { reportCalculateMetric } from "./sentryMetrics";
+import zlib from "zlib";
 
 const ecaasApi = {
 	getToken: async (clientId: string, clientSecret: string) => {
@@ -71,17 +72,23 @@ const ecaasApi = {
 };
 
 function reportErrors(requestData: object, responseErrors: CorrectedJsonApiError[] | string, errorMessage: string): void {
-	let requestBodyWithoutExternalConditions: object;
-
-	if ("ExternalConditions" in requestData) {
-		const { ExternalConditions, ...rest } = requestData;
-		requestBodyWithoutExternalConditions = rest;
-	}
+	const requestAsJsonString = JSON.stringify(requestData);
 			
 	Sentry.withScope(scope => {
 		scope.setExtra("responseErrors", responseErrors);
-		scope.setExtra("requestBody", JSON.stringify(requestData));
-		scope.setExtra("requestBody without External Conditions", JSON.stringify(requestBodyWithoutExternalConditions || requestData));
+		scope.setExtra("requestBody", requestAsJsonString);
+
+		// compress with brotli if we can
+		const bufferForCompression = Buffer.from(requestAsJsonString, "utf-8");
+		zlib.brotliCompress(bufferForCompression, (err, compressedBuffer) => {
+			if (err) {
+				console.log("Unable to compress the request JSON using brotli.");
+				return;
+			}
+
+			scope.setExtra("requestBody with brotli compression in base64", compressedBuffer.toString("base64"));
+		});
+
 		scope.setFingerprint([errorMessage]);
 		Sentry.captureException(new Error(errorMessage));
 	});
