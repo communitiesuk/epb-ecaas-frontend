@@ -922,6 +922,7 @@ describe("Domestic hot water summary", () => {
 			productReference: "HEAT_BATTERY_SMALL",
 			maxFlowTemp: unitValue(32, celsius),
 			numberOfUnits: 1,
+			energySupply: "electricity",
 		};
 
 		// const dhwWithNewHeatNetwork: DomesticHotWaterHeatSourceData = {
@@ -1096,6 +1097,7 @@ describe("Domestic hot water summary", () => {
 			"Product reference": "HEAT_BATTERY_SMALL",
 			"Number of units": "1",
 			"Maximum flow temperature": `32 ${celsius.suffix}`,
+			"Energy supply": "Electricity",
 		};
 		const expectedHeatInterfaceUnit = {
 			"Cold water source": "Mains water",
