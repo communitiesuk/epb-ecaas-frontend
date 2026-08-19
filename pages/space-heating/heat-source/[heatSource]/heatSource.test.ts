@@ -47,11 +47,6 @@ describe("heatSource", () => {
 		associatedHeatNetworkId: "463c94f6-566c-49b2-af27-57e5c68b5c20",
 	};
 
-	const boosterHeatPumpWithoutNetwork: Partial<HeatSourceData> = {
-		...boosterHeatPump,
-		associatedHeatNetworkId: undefined,
-	};
-
 	const communalHeatNetworkWithBooster: Partial<HeatNetworkData> = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c20",
 		name: "Communal Heat Network with Booster",
@@ -1221,6 +1216,13 @@ describe("heatSource", () => {
 				fuel: "electricity",
 			};
 
+			const heatBatteryProductNoFuelType: Partial<HeatBatteryDryCoreProduct> = {
+				id: "1003",
+				brandName: "Heat Battery Dry Core Product",
+				modelName: "Heat Battery Dry Core Model",
+				technologyType: "HeatBatteryDryCore",
+			};
+
 			beforeEach(() => {
 				mockFetch.mockReturnValue({
 					data: ref(heatBatteryProduct),
@@ -1559,6 +1561,98 @@ describe("heatSource", () => {
 				expect(
 					screen.queryByTestId("incompatibleEnergySourceError"),
 				).toBeNull();
+			});
+
+			test("does not show energy supply field when heat battery product has fuel", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatBattery1 }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity"],
+							},
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatBatteryProductWithElectricityFuelType),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { heatSource: "0" },
+					},
+				});
+
+				expect(screen.queryByTestId("energySupply_electricity")).toBeNull();
+			});
+
+			test("shows energy supply field when heat battery product does not have fuel", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatBattery1 }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity"],
+							},
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatBatteryProductNoFuelType),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { heatSource: "0" },
+					},
+				});
+
+				expect(screen.getByTestId("energySupply_electricity")).toBeDefined();
+			});
+
+			test("saves energy supply when heat battery product does not have fuel", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [{ data: heatBattery1 }],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity"],
+							},
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(heatBatteryProductNoFuelType),
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { heatSource: "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("energySupply_electricity"));
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				const savedHeatBattery = store.spaceHeating.heatSource.data[0]?.data as Extract<HeatSourceData, { typeOfHeatSource: "heatBattery" }>;
+
+				expect(savedHeatBattery.energySupply).toBe("electricity");
 			});
 		});
 
@@ -2379,6 +2473,7 @@ describe("heatSource", () => {
 			});
 		});
 	});
+
 	describe("heat networks", () => {
 		
 		const communalHeatNetwork: Partial<HeatNetworkData> = {

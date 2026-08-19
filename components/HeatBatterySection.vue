@@ -8,7 +8,7 @@ const store = useEcaasStore();
 
 type HeatBatterySectionPage = "space heating" | "domestic hot water";
 
-defineProps<{
+const props = defineProps<{
 	model: Extract<HeatSourceData, { "typeOfHeatSource": "heatBattery" }>;
 	index: number;
 	page: HeatBatterySectionPage;
@@ -16,9 +16,19 @@ defineProps<{
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
+const fuel = ref<string | undefined>();
+
 const heatSources = getCombinedHeatSources(store);
 
 const emit = defineEmits(["update-heat-battery-model"]);
+
+const handleProductLoaded = (product: AnyPcdbProduct) => {
+	if (product.technologyType === "HeatBatteryPCM" || product.technologyType === "HeatBatteryDryCore") {
+		fuel.value = product.fuel ?? "";
+	}
+
+	props.onProductLoaded?.(product);
+};
 </script>
 
 <template>
@@ -42,17 +52,19 @@ const emit = defineEmits(["update-heat-battery-model"]);
 			:validation-messages="{
 				uniqueName: 'An element with this name in domestic hot water or space heating already exists. Please enter a unique name.'
 			}" />
-		<FieldsSelectPcdbProduct
-			id="selectHeatBattery"
-			label="Select a heat battery"
-			help="Select the heat battery type from the PCDB using the button below."
-			:selected-product-reference="model.productReference"
-			:selected-product-type="model.typeOfHeatBattery"
-			:page-url="route.fullPath"
-			:page-index="index"
-			:on-incompatible-energy-source="onIncompatibleEnergySource"
-			@product-loaded="onProductLoaded"
-		/>
+		<ClientOnly>
+			<FieldsSelectPcdbProduct
+				id="selectHeatBattery"
+				label="Select a heat battery"
+				help="Select the heat battery type from the PCDB using the button below."
+				:selected-product-reference="model.productReference"
+				:selected-product-type="model.typeOfHeatBattery"
+				:page-url="route.fullPath"
+				:page-index="index"
+				:on-incompatible-energy-source="onIncompatibleEnergySource"
+				@product-loaded="handleProductLoaded"
+			/>
+		</ClientOnly>
 		<FormKit
 			id="maxFlowTemp"
 			name="maxFlowTemp"
@@ -73,6 +85,13 @@ const emit = defineEmits(["update-heat-battery-model"]);
 			:validation-messages="{
 				isInteger: `Number of units must be an integer.`,
 			}"
+		/>
+		<FieldsEnergySupplies
+			v-if="fuel === ''"
+			id="energySupply"
+			name="energySupply"
+			label="Energy supply"
+			help="Select the relevant energy supply that has been added previously"
 		/>
 	</div>
 </template>
