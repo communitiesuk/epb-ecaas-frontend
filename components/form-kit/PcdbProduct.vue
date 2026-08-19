@@ -306,10 +306,10 @@ function handleChooseProduct(event: Event) {
 				data-testid="incompatibleEnergySourceError"
 			>
 				<span class="govuk-visually-hidden">Error:</span>
-				This product uses {{ productFuelDisplay }} which hasn’t been added as an energy source for this dwelling.
+				This product uses {{ productFuelDisplay }} which hasn't been added as an energy source for this dwelling.
 				To change this go to
-				<NuxtLink href="/dwelling-details" class="govuk-link govuk-error-link">
-					Dwelling details
+				<NuxtLink :href="getUrl('generalSpecifications')" class="govuk-link govuk-error-link">
+					General details
 				</NuxtLink>.
 			</p>
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">

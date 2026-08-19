@@ -733,12 +733,12 @@ describe("Heat emitters", () => {
 				const error = screen.getByTestId("incompatibleEnergySourceError");
 				expect(error).toBeDefined();
 				expect(error.textContent).toContain(
-					"This product uses LPG (Liquid petroleum gas) - bulk which hasn’t been added as an energy source for this dwelling.",
+					"This product uses LPG (Liquid petroleum gas) - bulk which hasn't been added as an energy source for this dwelling.",
 				);
 		
-				const link = screen.getByRole("link", { name: "Dwelling details" });
+				const link = screen.getByRole("link", { name: "General details" });
 				expect(link).toBeDefined();
-				expect(link.getAttribute("href")).toBe("/dwelling-details");
+				expect(link.getAttribute("href")).toBe("/dwelling-details/general-details");
 			});
 
 			test("keeps the fan coil editor open when there is an incompatible energy source", async () => {
@@ -953,7 +953,7 @@ describe("Heat emitters", () => {
 				const errorSummary = await screen.findByTestId("heatEmitterErrorSummary");
 				expect(errorSummary.textContent).toContain("Design flow rate is required.");
 				expect(errorSummary.textContent).toContain("Design flow temperature is required.");
-				expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn’t been added as an energy source for this dwelling.");
+				expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn't been added as an energy source for this dwelling.");
 			});
 
 			// test("marks the wet distribution system as incomplete when its fan coil fuel is removed from dwelling details", async () => {
@@ -1105,12 +1105,12 @@ describe("Heat emitters", () => {
 			const error = screen.getByTestId("incompatibleEnergySourceError");
 			expect(error).toBeDefined();
 			expect(error.textContent).toContain(
-				"This product uses Mains gas which hasn’t been added as an energy source for this dwelling.",
+				"This product uses Mains gas which hasn't been added as an energy source for this dwelling.",
 			);
 		
-			const link = screen.getByRole("link", { name: "Dwelling details" });
+			const link = screen.getByRole("link", { name: "General details" });
 			expect(link).toBeDefined();
-			expect(link.getAttribute("href")).toBe("/dwelling-details");
+			expect(link.getAttribute("href")).toBe("/dwelling-details/general-details");
 		
 			const errorSummary = screen.getByTestId("heatEmitterErrorSummary");
 			const errorSummaryLink = within(errorSummary).getByRole("link", {
@@ -1154,7 +1154,7 @@ describe("Heat emitters", () => {
 			);
 		
 			expect(errorSummary.textContent).toContain(
-				"This product uses Mains gas which hasn’t been added as an energy source for this dwelling.",
+				"This product uses Mains gas which hasn't been added as an energy source for this dwelling.",
 			);
 		});
 		

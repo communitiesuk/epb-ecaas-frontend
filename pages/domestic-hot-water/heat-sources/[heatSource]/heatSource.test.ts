@@ -1137,12 +1137,12 @@ describe("Heat pump section", () => {
 		const error = screen.getByTestId("incompatibleEnergySourceError");
 		expect(error).toBeDefined();
 		expect(error.textContent).toContain(
-			"This product uses LPG - 11F which hasn’t been added as an energy source for this dwelling.",
+			"This product uses LPG - 11F which hasn't been added as an energy source for this dwelling.",
 		);
 
-		const link = screen.getByRole("link", { name: "Dwelling details" });
+		const link = screen.getByRole("link", { name: "General details" });
 		expect(link).toBeDefined();
-		expect(link.getAttribute("href")).toBe("/dwelling-details");
+		expect(link.getAttribute("href")).toBe("/dwelling-details/general-details");
 
 		const errorSummary = screen.getByTestId("heatSourceErrorSummary");
 		const errorSummaryLink = within(errorSummary).getByRole("link", {
@@ -1192,12 +1192,12 @@ describe("Heat pump section", () => {
 		const error = screen.getByTestId("incompatibleEnergySourceError");
 		expect(error).toBeDefined();
 		expect(error.textContent).toContain(
-			"This product uses LPG (Liquid petroleum gas) - bottled which hasn’t been added as an energy source for this dwelling.",
+			"This product uses LPG (Liquid petroleum gas) - bottled which hasn't been added as an energy source for this dwelling.",
 		);
 
-		const link = screen.getByRole("link", { name: "Dwelling details" });
+		const link = screen.getByRole("link", { name: "General details" });
 		expect(link).toBeDefined();
-		expect(link.getAttribute("href")).toBe("/dwelling-details");
+		expect(link.getAttribute("href")).toBe("/dwelling-details/general-details");
 
 		const errorSummary = screen.getByTestId("heatSourceErrorSummary");
 		const errorSummaryLink = within(errorSummary).getByRole("link", {
@@ -1243,7 +1243,7 @@ describe("Heat pump section", () => {
 		);
 
 		expect(errorSummary.textContent).toContain(
-			"This product uses LPG - 11F which hasn’t been added as an energy source for this dwelling.",
+			"This product uses LPG - 11F which hasn't been added as an energy source for this dwelling.",
 		);
 	});
 

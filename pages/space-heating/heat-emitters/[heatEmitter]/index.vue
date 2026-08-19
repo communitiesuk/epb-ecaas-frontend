@@ -126,7 +126,7 @@ const addIncompatibleEnergySourceError = () => {
 
 	addError({
 		id: "incompatibleEnergySource",
-		text: `This product uses ${incompatibleEnergySourceFuel.value} which hasn’t been added as an energy source for this dwelling. To change this go to Dwelling details.`,		
+		text: `This product uses ${incompatibleEnergySourceFuel.value} which hasn't been added as an energy source for this dwelling. To change this go to General details.`,		
 	});
 };
 
