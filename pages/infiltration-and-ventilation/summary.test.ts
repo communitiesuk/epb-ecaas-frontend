@@ -253,10 +253,8 @@ describe("Infiltration and ventilation summary", () => {
 						data: [{ data: externalWall }],
 					},
 				},
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [{ data: roof as RoofData }],
-					},
+				dwellingSpaceRoofs: {
+					data: [{ data: roof as RoofData }],
 				},
 			},
 			infiltrationAndVentilation: {
@@ -337,10 +335,8 @@ describe("Infiltration and ventilation summary", () => {
 						data: [{ data: externalWall }],
 					},
 				},
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [{ data: roof as RoofData }],
-					},
+				dwellingSpaceRoofs: {
+					data: [{ data: roof as RoofData }],
 				},
 			},
 			infiltrationAndVentilation: {
@@ -444,10 +440,8 @@ describe("Infiltration and ventilation summary", () => {
 	it("should display associated roof orientation and pitch for Intermittent MEV", async () => {
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [{ data: roof }],
-					},
+				dwellingSpaceRoofs: {
+					data: [{ data: roof }],
 				},
 			},
 			infiltrationAndVentilation: {

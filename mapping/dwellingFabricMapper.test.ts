@@ -737,19 +737,6 @@ describe("dwelling fabric mapper", () => {
 
 	it("maps ceiling and roof input state to FHS input request", () => {
 		// Arrange
-		const ceiling: CeilingData = {
-			id: "ceiling-id",
-			type: "unheatedSpace",
-			name: "Ceiling 1",
-			surfaceArea: 5,
-			uValue: 1,
-			arealHeatCapacity: "Very light",
-			massDistributionClass: "I",
-			pitchOption: "0",
-			pitch: 0,
-			thermalResistanceOfAdjacentUnheatedSpace: 1,
-		};
-
 		const roofAboveHeatedSpace: RoofData = {
 			id: "roof-id",
 			name: "Roof above heated space",
@@ -810,21 +797,15 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 		};
 
-		const ceilingSuffix = " (ceiling)";
-		const roofSuffix = " (roof)";
-
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceCeilings: { ...baseForm, data: [{ ...baseForm, data: ceiling }] },
-					dwellingSpaceRoofs: {
-						...baseForm,
-						data: [
-							{ ...baseForm, data: roofAboveHeatedSpace },
-							{ ...baseForm, data: roofAboveUnheatedSpace },
-							{ ...baseForm, data: roofPitchedInsulatedAtCeiling },
-							{ ...baseForm, data: roofPitchedInsulatedAtRoof }],
-					},
+				dwellingSpaceRoofs: {
+					...baseForm,
+					data: [
+						{ ...baseForm, data: roofAboveHeatedSpace },
+						{ ...baseForm, data: roofAboveUnheatedSpace },
+						{ ...baseForm, data: roofPitchedInsulatedAtCeiling },
+						{ ...baseForm, data: roofPitchedInsulatedAtRoof }],
 				},
 			},
 		});
@@ -832,23 +813,10 @@ describe("dwelling fabric mapper", () => {
 		// Act
 		const fhsInputData = mapCeilingAndRoofData(resolveState(store.$state));
 		// Assert
-		const ceilingElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[ceiling.name + ceilingSuffix]! as BuildingElementAdjacentUnconditionedSpaceSimple;
-		const roofAboveHeatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofAboveHeatedSpace.name + roofSuffix]! as BuildingElementOpaque;
-		const roofAboveUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofAboveUnheatedSpace.name + roofSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
-		const roofPitchedInsulatedAtCeilingElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofPitchedInsulatedAtCeiling.name + roofSuffix] as BuildingElementOpaque;
-		const roofPitchedInsulatedAtRoofElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofPitchedInsulatedAtRoof.name + roofSuffix] as BuildingElementOpaque;
-
-		const expectedCeiling: BuildingElementAdjacentUnconditionedSpaceSimple = {
-			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-			pitch: extractPitch(ceiling),
-			area: ceiling.surfaceArea,
-			u_value: ceiling.uValue,
-			areal_heat_capacity: ceiling.arealHeatCapacity,
-			mass_distribution_class: fullMassDistributionClass(ceiling.massDistributionClass),
-			thermal_resistance_unconditioned_space: ceiling.thermalResistanceOfAdjacentUnheatedSpace,
-		};
-
-		expect(ceilingElement).toEqual(expectedCeiling);
+		const roofAboveHeatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofAboveHeatedSpace.name]! as BuildingElementOpaque;
+		const roofAboveUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofAboveUnheatedSpace.name] as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const roofPitchedInsulatedAtCeilingElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofPitchedInsulatedAtCeiling.name] as BuildingElementOpaque;
+		const roofPitchedInsulatedAtRoofElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofPitchedInsulatedAtRoof.name] as BuildingElementOpaque;
 
 		const expectedFlatRoofAboveHeatedSpace: BuildingElementOpaque = {
 			type: "BuildingElementOpaque",

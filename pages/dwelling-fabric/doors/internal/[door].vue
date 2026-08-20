@@ -16,7 +16,6 @@ const model = ref(doorData?.data);
 const { dwellingSpaceInternalWall } = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpaceWallToUnheatedSpace } = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpacePartyWall } = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
 
@@ -42,13 +41,6 @@ autoSaveElementForm<InternalDoorData>({
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
 	},
-});
-
-const taggedWithCeiling = computed(() => {
-	return store.getTaggedItem(
-		[dwellingSpaceCeilings],
-		model.value?.associatedItemId,
-	) ? true : false;
 });
 
 const tagHasValidPitch = computed(() => {
@@ -165,7 +157,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</FormKit>
 		<FieldsFrontDoor
 			v-if="mounted && model?.typeOfInternalDoor && store.dwellingDetails.generalSpecifications.data.typeOfDwelling === 'flat' &&
-				(taggedWithCeiling === false && tagHasValidPitch || !model?.associatedItemId)"
+				(tagHasValidPitch || !model?.associatedItemId)"
 			:index="index"
 			door-type="Internal"
 		/>

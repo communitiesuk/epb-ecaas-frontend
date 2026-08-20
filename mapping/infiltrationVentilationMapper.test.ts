@@ -226,14 +226,12 @@ describe("infiltration ventilation mapper", () => {
 						}],
 					},
 				},
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
+				dwellingSpaceRoofs: {
+					...baseForm,
+					data: [{
 						...baseForm,
-						data: [{
-							...baseForm,
-							data: roofData as RoofData,
-						}],
-					},
+						data: roofData as RoofData,
+					}],
 				},
 			},
 			infiltrationAndVentilation: {

@@ -29,7 +29,7 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 
 export function mapMechanicalVentilationData(state: ResolvedState) {
 	const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
-	const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+	const { dwellingSpaceRoofs } = state.dwellingFabric;
 	const { dwellingSpaceWindows } = state.dwellingFabric;
 
 	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map((x): [string, SchemaMechanicalVentilation] => {

@@ -22,18 +22,11 @@ const {
 const store = useEcaasStore();
 
 const { dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUnheatedSpace } = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 const options = adjacentSpaceType === "heatedSpace" ? [
 	dwellingSpaceInternalWall.data.map(x => [x.data.id, `${x.data.name} (Wall)`] as [string, string]),
-	dwellingSpaceCeilings.data
-		.filter(x => x.data.type === "heatedSpace")
-		.map(x => [x.data.id, `${x.data.name} (Ceiling)`] as [string, string]),
 ] : [
 	dwellingSpaceWallToUnheatedSpace.data.map(x => [x.data.id, `${x.data.name} (Wall)`] as [string, string]),
-	dwellingSpaceCeilings.data
-		.filter(x => x.data.type === "unheatedSpace")
-		.map(x => [x.data.id, `${x.data.name} (Ceiling)`] as [string, string]),
 	dwellingSpacePartyWall.data.map(x => [x.data.id, `${x.data.name} (Wall)`] as [string, string]),
 ];
 
@@ -58,7 +51,7 @@ const flattenedOptions = options.flat().filter(x => x[0] !== undefined);
 					<NuxtLink :to="getUrl('dwellingSpaceWalls')" class="govuk-link gov-radios-add-link">
 						Click here to add walls
 					</NuxtLink>
-					<NuxtLink :to="getUrl('dwellingSpaceCeilingsAndRoofs')" class="govuk-link gov-radios-add-link">
+					<NuxtLink :to="getUrl('dwellingSpaceFloors')" class="govuk-link gov-radios-add-link">
 						Click here to add ceilings
 					</NuxtLink>
 				</div>

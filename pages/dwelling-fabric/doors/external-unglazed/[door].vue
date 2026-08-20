@@ -30,7 +30,7 @@ const saveForm = () => {
 };
 
 const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 const tagOptions = [
 	...dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),

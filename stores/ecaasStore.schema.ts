@@ -4,7 +4,6 @@ import type { PageId } from "~/data/pages/pages";
 import type { TechnologyType } from "~/pcdb/pcdb.types";
 import type { FloorType, MassDistributionClass } from "~/schema/aliases";
 import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
-import { zeroPitchOption } from "~/utils/pitchOptions";
 import { addConstraints, zodUnit } from "~/utils/units/zod";
 import { standardPitchOption } from "./../utils/pitchOptions";
 import { arealHeatCapacityZod, batteryLocationZod, boilerLocationZod, colourZod, ductShapeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, zodLiteralFromUnionType } from "./zod";
@@ -127,7 +126,7 @@ export interface DwellingFabric {
 	dwellingSpaceZoneParameters: EcaasForm<DwellingSpaceZoneParametersData>;
 	dwellingSpaceFloors: FloorsData;
 	dwellingSpaceWalls: WallsData;
-	dwellingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
+	dwellingSpaceRoofs: EcaasFormList<RoofData>;
 	dwellingSpaceDoors: DoorsData;
 	dwellingSpaceWindows: EcaasFormList<WindowData>;
 	dwellingSpaceThermalBridging: ThermalBridgingData;
@@ -383,34 +382,6 @@ const wallOfHeatedBasementDataZod = namedWithId.extend({
 });
 
 export type WallOfHeatedBasementData = z.infer<typeof wallOfHeatedBasementDataZod>;
-
-export type CeilingsAndRoofsData = AssertFormKeysArePageIds<{
-	dwellingSpaceCeilings: EcaasFormList<CeilingData>;
-	dwellingSpaceRoofs: EcaasFormList<RoofData>;
-}>;
-
-const baseCeilingData = namedWithId.extend({
-	surfaceArea: surfaceAreaAdjacentSpaceZod,
-	arealHeatCapacity: arealHeatCapacityZod,
-	massDistributionClass,
-	pitchOption: zeroPitchOption,
-	pitch: z.optional(z.number().min(0).max(180)),
-	uValue,
-});
-const ceilingDataZod = z.discriminatedUnion(
-	"type",
-	[
-		baseCeilingData.extend({
-			type: z.literal("heatedSpace"),
-		}),
-		baseCeilingData.extend({
-			type: z.literal("unheatedSpace"),
-			thermalResistanceOfAdjacentUnheatedSpace,
-		}),
-	],
-);
-
-export type CeilingData = z.infer<typeof ceilingDataZod>;
 
 const roofType = z.enum(["flatAboveHeatedSpace", "flatAboveUnheatedSpace", "pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling"]);
 
@@ -1757,8 +1728,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceWallToUnheatedSpace": wallsToUnheatedSpaceDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpacePartyWall": partyWallDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceWallOfHeatedBasement": wallOfHeatedBasementDataZod,
-	"dwellingFabric/dwellingSpaceCeilingsAndRoofs/dwellingSpaceCeilings": ceilingDataZod,
-	"dwellingFabric/dwellingSpaceCeilingsAndRoofs/dwellingSpaceRoofs": roofDataZod,
+	"dwellingFabric/dwellingSpaceRoofs": roofDataZod,
 	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceExternalGlazedDoor": externalGlazedDoorData,
 	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceExternalUnglazedDoor": externalUnglazedDoorDataZod,
 	"dwellingFabric/dwellingSpaceDoors/dwellingSpaceInternalDoor": internalDoorDataZod,

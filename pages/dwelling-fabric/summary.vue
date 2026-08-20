@@ -278,29 +278,7 @@ const wallSummarySections: SummarySection[] = [
 	wallOfHeatedBasementSummary,
 ];
 
-const ceilingData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data;
-const roofData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data;
-
-const ceilingSummary: SummarySection = {
-	id: "dwellingSpaceCeilings",
-	label: "Ceilings",
-	data: ceilingData.map(({ data: x }) => {
-		const isCeilingToUnheatedSpace = x.type === "unheatedSpace";
-		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
-
-		return {
-			"Type of ceiling": displayAdjacentSpaceType(x.type, "Ceiling"),
-			"Name": show(x.name),
-			"Pitch": dim(x.pitch, "degrees"),
-			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Areal heat capacity": show(x.arealHeatCapacity),
-			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
-			"Thermal resistance of adjacent unheated space": isCeilingToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
-		};
-	}),
-	editUrl: getUrl("dwellingSpaceCeilingsAndRoofs"),
-};
+const roofData = store.dwellingFabric.dwellingSpaceRoofs.data;
 
 const roofSummary: SummarySection = {
 	id: "dwellingSpaceRoofs",
@@ -330,20 +308,15 @@ const roofSummary: SummarySection = {
 			"Mass distribution class": isTypeOfRoofSelected ? massDistributionClass : undefined,
 		};
 	}),
-	editUrl: getUrl("dwellingSpaceCeilingsAndRoofs"),
+	editUrl: getUrl("dwellingSpaceRoofsAll"),
 };
-
-const ceilingAndRoofSummarySections: SummarySection[] = [
-	ceilingSummary,
-	roofSummary,
-];
 
 const unglazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data;
 const glazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data;
 const internalDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data;
 
 const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 
 const unglazedDoorSummary: SummarySection = {
@@ -488,13 +461,12 @@ const glazedDoorSummary: SummarySection = {
 const { dwellingSpaceInternalWall } = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpaceWallToUnheatedSpace } = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpacePartyWall } = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 const internalDoorSummary: SummarySection = {
 	id: "dwellingSpaceInternalDoors",
 	label: "Internal doors",
 	data: internalDoorData?.map(({ data: x }) => {
-		const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall, dwellingSpaceCeilings], x.associatedItemId);
+		const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall], x.associatedItemId);
 
 		const isInternalDoorToUnheatedSpace = x.typeOfInternalDoor === "unheatedSpace";
 		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;
@@ -744,17 +716,8 @@ const thermalBridgeSummarySections: SummarySection[] = [
 		</SummaryTab>
 	</GovTabs>
 
-	<GovTabs v-slot="tabProps" :items="getTabItems(ceilingAndRoofSummarySections)">
-		<SummaryTab :summary="ceilingSummary" :selected="tabProps.currentTab === 0">
-			<template #empty>
-				<h2 class="govuk-heading-m">No ceilings added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceCeilingsCreate')">
-					Add ceilings
-				</NuxtLink>
-			</template>
-		</SummaryTab>
-
-		<SummaryTab :summary="roofSummary" :selected="tabProps.currentTab === 1">
+	<GovTabs v-slot="tabProps" :items="getTabItems([roofSummary])">
+		<SummaryTab :summary="roofSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No roofs added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceRoofsCreate')">

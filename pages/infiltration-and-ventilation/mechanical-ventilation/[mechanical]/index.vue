@@ -148,7 +148,7 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 			default: {
 				const mvhrAssociatedItems = [
 					...state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data,
-					...state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data,
+					...state.dwellingFabric.dwellingSpaceRoofs.data,
 					...state.dwellingFabric.dwellingSpaceWindows.data,
 				];
 

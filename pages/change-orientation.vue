@@ -9,7 +9,7 @@ const banner = useBanner();
 
 const pvs = store.pvAndBatteries.pvs;
 const externalWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
-const roofs = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs;
+const roofs = store.dwellingFabric.dwellingSpaceRoofs;
 const windows = store.dwellingFabric.dwellingSpaceWindows;
 const { dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor, dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
 

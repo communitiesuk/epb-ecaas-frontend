@@ -2,8 +2,7 @@ type EcaasSectionWithTagging =
 	| WindowData
 	| ExternalWallData
 	| InternalWallData
-	| RoofData
-	| CeilingData;
+	| RoofData;
 
 export const getResolvedTaggedItem = (
 	sections: EcaasSectionWithTagging[][],

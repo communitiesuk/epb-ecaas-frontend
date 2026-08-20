@@ -507,7 +507,6 @@ describe("external unglazed door", () => {
 		});
 
 		test("does not display the 'Is this the front door?' element if an associated item is a flat roof (has no orientation)", async () => {
-
 			const roof: EcaasForm<RoofData> = {
 				data: {
 					id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
@@ -524,12 +523,11 @@ describe("external unglazed door", () => {
 					massDistributionClass: "I",
 				},
 			};
+
 			store.$patch({
 				dwellingFabric: {
-					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceRoofs: {
-							data: [roof],
-						},
+					dwellingSpaceRoofs: {
+						data: [roof],
 					},
 				},
 			});

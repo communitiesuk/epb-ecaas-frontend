@@ -365,10 +365,8 @@ describe("Change orientation", () => {
 			
 				store.$patch({
 					dwellingFabric: {
-						dwellingSpaceCeilingsAndRoofs: {
-							dwellingSpaceRoofs: {
-								data: [{ data: roof }],
-							},
+						dwellingSpaceRoofs: {
+							data: [{ data: roof }],
 						},
 					},
 				});
@@ -376,7 +374,7 @@ describe("Change orientation", () => {
 				await renderSuspended(ChangeOrientation);
 				await updateOrientation("10");
 
-				expect(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[0]?.data.orientation).toBe(270);
+				expect(store.dwellingFabric.dwellingSpaceRoofs.data[0]?.data.orientation).toBe(270);
 			});
 
 			it("windows", async () => {

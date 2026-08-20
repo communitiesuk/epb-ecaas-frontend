@@ -21,7 +21,7 @@ const index = getStoreIndex(windowsData);
 const model = ref(window?.data);
 
 const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 // Build tagging options with "none of the above"
 const tagOptions = [

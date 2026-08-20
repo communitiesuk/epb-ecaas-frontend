@@ -3,7 +3,7 @@ import formStatus from "~/constants/formStatus";
 import { v4 as uuidv4 } from "uuid";
 import { page as pages } from "~/data/pages/pages";
 
-const title = "Floor elements";
+const title = "Floor and ceiling elements";
 const page = usePage();
 const store = useEcaasStore();
 const nuxtApp = useNuxtApp();
