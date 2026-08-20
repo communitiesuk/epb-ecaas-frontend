@@ -47,15 +47,8 @@ function markHeatingControlsAsInProgress(state: EcaasState) {
 const saveForm = () => {
 	clearErrors();
 
-	const heatEmitter = store.spaceHeating.heatEmitters.data[index];
-
-	if (!heatEmitter) {
-		throw new Error("No heat emitter found to save");
-	}
-
-	addValidationErrors();
-
-	if (errorMessages.value.length > 0) {
+	if (incompatibleEnergySource.value) {
+		addIncompatibleEnergySourceError();
 		window.scrollTo(0, 0);
 		return;
 	}
@@ -63,17 +56,13 @@ const saveForm = () => {
 	store.$patch((state) => {
 		const { heatEmitters } = state.spaceHeating;
 		const emitter = heatEmitters.data[index];
-
 		if (!emitter) {
 			throw new Error("No heat emitter found to save");
 		}
 
 		emitter.complete = true;
 		heatEmitters.complete = false;
-		markHeatingControlsAsInProgress(state);
-		resetAllHeatEmitterRankings(state);
 	});
-
 	navigateTo("/space-heating");
 };
 
@@ -132,55 +121,6 @@ autoSaveElementForm<HeatEmittingData>({
 	},
 });
 
-function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
-	incompatibleEnergySource.value = value;
-	incompatibleEnergySourceFuel.value = fuel;
-}
-
-const getIncompleteEmitterErrors = (
-	emitter: WetDistributionSystemModelType["emitters"][number],
-) => {
-	const errors: string[] = [];
-
-	if (!emitter.name) {
-		errors.push("Name is required.");
-	}
-
-	switch (emitter.typeOfHeatEmitter) {
-		case "radiator":
-			if (!emitter.productReference) {
-				errors.push("Product reference is required.");
-			}
-			if (!emitter.length) {
-				errors.push("Length of radiator is required.");
-			}
-			if (!emitter.numOfRadiators) {
-				errors.push("Number of radiators is required.");
-			}
-			break;
-
-		case "fanCoil":
-			if (!emitter.productReference) {
-				errors.push("Product reference is required.");
-			}
-			if (!emitter.numOfFanCoils) {
-				errors.push("Number of fan coils is required.");
-			}
-			break;
-
-		case "underFloorHeating":
-			if (!emitter.productReference) {
-				errors.push("Product reference is required.");
-			}
-			if (!emitter.areaOfUnderFloorHeating) {
-				errors.push("Area of underfloor heating is required.");
-			}
-			break;
-	}
-
-	return errors;
-};
-
 const addIncompatibleEnergySourceError = () => {
 	if (!incompatibleEnergySource.value) return;
 
@@ -190,41 +130,17 @@ const addIncompatibleEnergySourceError = () => {
 	});
 };
 
-const addIncompleteEmitterErrors = () => {
-	const heatEmitter = store.spaceHeating.heatEmitters.data[index];
-
-	if (!heatEmitter) return;
-
-	if (heatEmitter.data.typeOfHeatEmitter !== "wetDistributionSystem") {
-		return;
-	}
-
-	const wetDistribution =
-		heatEmitter.data as WetDistributionSystemModelType;
-
-	wetDistribution.emitters.forEach((emitter) => {
-		const errors = getIncompleteEmitterErrors(emitter);
-
-		errors.forEach((text, errorIndex) => {
-			addError({
-				id: `incompleteEmitter-${emitter.id}-${errorIndex}`,
-				text,
-			});
-		});
-	});
-};
-
-const addValidationErrors = () => {
-	addIncompatibleEnergySourceError();
-	addIncompleteEmitterErrors();
-};
-
 const handleSubmitInvalid = (node: FormKitNode) => {
 	handleInvalidSubmit(node);
-	addValidationErrors();
+	addIncompatibleEnergySourceError();
 
 	window.scrollTo(0, 0);
 };
+
+function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
+	incompatibleEnergySource.value = value;
+	incompatibleEnergySourceFuel.value = fuel;
+}
 
 </script>
 

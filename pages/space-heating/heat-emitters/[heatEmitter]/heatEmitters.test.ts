@@ -104,14 +104,11 @@ describe("Heat emitters", () => {
 		mockFetch.mockReturnValue({
 			data: ref(fanCoilProduct),
 		});
-		navigateToMock.mockReset();
 	});
-
 	afterEach(() => {
 		store.$reset();
 		mockFetch.mockReset();
 	});
-
 	describe("Wet distribution system", () => {
 		test("Wet distribution system section displays when wet distribution system is selected", async () => {
 			await renderSuspended(HeatEmitterForm, {
@@ -959,265 +956,64 @@ describe("Heat emitters", () => {
 				expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn't been added as an energy source for this dwelling.");
 			});
 
-			test("does save and mark as complete when no emitters have been added", async () => {
-				store.$patch({
-					spaceHeating: {
-						heatEmitters: {
-							data: [{ data: wetDistributionSystem, complete: false }],
-							complete: false,
-						},
-					},
-				});
+			// test("marks the wet distribution system as incomplete when its fan coil fuel is removed from dwelling details", async () => {
+			// 	const fanCoilProductWithMainsGasFuelType: Partial<FanCoilProduct> = {
+			// 		id: "1001",
+			// 		brandName: "Test",
+			// 		modelName: "Fan Coil with Mains Gas",
+			// 		technologyType: "FanCoils",
+			// 		fuel: "mains_gas",
+			// 	};
+			// 	store.$patch({
+			// 		spaceHeating: {
+			// 			heatEmitters: {
+			// 				data: [{
+			// 					data: wetDistributionSystemWithFanCoilEmitter,
+			// 					complete: true,
+			// 				}],
+			// 			},
+			// 		},
+			// 		dwellingDetails: {
+			// 			generalSpecifications: {
+			// 				data: {
+			// 					fuelType: ["electricity", "mains_gas"],
+			// 				},
+			// 			},
+			// 		},
+			// 	});
 
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+			// 	mockFetch.mockReturnValue({
+			// 		data: ref(fanCoilProductWithMainsGasFuelType),
+			// 	});
 
-				await user.click(screen.getByTestId("saveAndComplete"));
+			// 	await renderSuspended(HeatEmitterForm, {
+			// 		route: {
+			// 			params: { heatEmitter: "0" },
+			// 		},
+			// 	});
 
-				expect(screen.queryByTestId("heatEmitterErrorSummary")).toBeNull();
-				expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(true);
-			});
+			// 	await user.click(screen.getByTestId("emitter_edit_0"));
 
-			test("does not save and mark as complete when an emitter is incomplete", async () => {
-				const incompleteWetDistribution: HeatEmittingData = {
-					...wetDistributionSystem,
-					emitters: [
-						{
-							id: "emitter1",
-							name: "",
-							typeOfHeatEmitter: "fanCoil",
-						},
-					],
-				};
+			// 	store.$patch({
+			// 		dwellingDetails: {
+			// 			generalSpecifications: {
+			// 				data: {
+			// 					fuelType: ["electricity"],
+			// 				},
+			// 			},
+			// 		},
+			// 	});
 
-				store.$patch({
-					spaceHeating: {
-						heatEmitters: {
-							data: [{
-								data: incompleteWetDistribution,
-								complete: false,
-							}],
-							complete: false,
-						},
-					},
-				});
+			// 	await waitFor(() => {
+			// 		expect(
+			// 			store.spaceHeating.heatEmitters.data[0]?.complete,
+			// 		).toBe(false);
 
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
-
-				await user.click(screen.getByTestId("saveAndComplete"));
-
-				expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
-				expect(navigateToMock).not.toHaveBeenCalledWith("/space-heating");
-			});
-
-			test("shows incomplete emitter validation errors in the gov error summary", async () => {
-				const incompleteWetDistribution: HeatEmittingData = {
-					...wetDistributionSystem,
-					emitters: [
-						{
-							id: "emitter1",
-							name: "",
-							typeOfHeatEmitter: "fanCoil",
-						},
-					],
-				};
-
-				store.$patch({
-					spaceHeating: {
-						heatEmitters: {
-							data: [{
-								data: incompleteWetDistribution,
-								complete: false,
-							}],
-							complete: false,
-						},
-					},
-				});
-
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
-
-				await user.click(screen.getByTestId("saveAndComplete"));
-
-				const errorSummary = await screen.findByTestId("heatEmitterErrorSummary");
-
-				expect(errorSummary.textContent).toContain("Name is required.");
-				expect(errorSummary.textContent).toContain("Number of fan coils is required.");
-			});
-
-			test("shows heat emitter, incomplete emitter and incompatible energy source errors together in the error summary", async () => {
-				const wetDistributionSystemWithMissingFields: Partial<HeatEmittingData> = {
-					id: "1234",
-					name: "Wet Distribution System 1",
-					typeOfHeatEmitter: "wetDistributionSystem",
-					heatSource: "heat-pump-id",
-					ecoDesignControllerClass: "1",
-					designTempDiffAcrossEmitters: 10,
-					hasVariableFlowRate: false,
-					percentageRecirculated: 20,
-					emitters: [
-						{
-							id: "fan_coil",
-							name: "",
-							typeOfHeatEmitter: "fanCoil",
-							productReference: "1001",
-						},
-					],
-				};
-
-				store.$patch({
-					spaceHeating: {
-						heatEmitters: {
-							data: [
-								{
-									data: wetDistributionSystemWithMissingFields,
-									complete: false,
-								},
-							],
-							complete: false,
-						},
-					},
-				});
-
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
-
-				mockFetch.mockReturnValue({
-					data: ref(fanCoilProductWithFuelType),
-				});
-
-				await user.click(screen.getByTestId("emitter_edit_0"));
-				await user.click(screen.getByTestId("saveEmitter_0"));
-				await user.click(screen.getByTestId("saveAndComplete"));
-
-				const errorSummary = await screen.findByTestId("heatEmitterErrorSummary");
-
-				expect(errorSummary.textContent).toContain("Name is required.");
-				expect(errorSummary.textContent).toContain("Number of fan coils is required.");
-				expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn’t been added as an energy source for this dwelling.");
-				expect(errorSummary.textContent).toContain("Design flow temperature is required.");
-				expect(errorSummary.textContent).toContain("Design flow rate is required.");
-			});
-
-			test.skip("keeps an incomplete emitter open when trying to mark the heat emitter page as complete", async () => {
-				const incompleteWetDistribution: HeatEmittingData = {
-					...wetDistributionSystem,
-					emitters: [
-						{
-							id: "emitter1",
-							name: "",
-							typeOfHeatEmitter: "fanCoil",
-						},
-					],
-				};
-
-				store.$patch({
-					spaceHeating: {
-						heatEmitters: {
-							data: [{
-								data: incompleteWetDistribution,
-								complete: false,
-							}],
-							complete: false,
-						},
-					},
-				});
-
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
-
-				await user.click(screen.getByTestId("saveAndComplete"));
-
-				expect(screen.getByTestId("numOfFanCoils_0")).toBeDefined();
-				expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
-				expect(navigateToMock).not.toHaveBeenCalledWith("/space-heating");
-			});
-
-			test.skip("keeps an incomplete emitter open when returning to the page", async () => {
-				const incompleteWetDistribution: HeatEmittingData = {
-					...wetDistributionSystem,
-					emitters: [
-						{
-							id: "emitter1",
-							name: "",
-							typeOfHeatEmitter: "fanCoil",
-						},
-					],
-				};
-
-				store.$patch({
-					spaceHeating: {
-						heatEmitters: {
-							data: [
-								{
-									data: incompleteWetDistribution,
-									complete: false,
-								},
-							],
-							complete: false,
-						},
-					},
-				});
-
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
-
-				expect(screen.getByTestId("numOfFanCoils_0")).toBeDefined();
-			});
-
-			test("does not open a completed emitter when returning to the heat emitter page", async () => {
-				const completeWetDistribution: HeatEmittingData = {
-					...wetDistributionSystem,
-					emitters: [
-						{
-							id: "emitter1",
-							name: "Living room fan coil",
-							typeOfHeatEmitter: "fanCoil",
-							productReference: "product1",
-							numOfFanCoils: 1,
-						},
-					],
-				};
-
-				store.$patch({
-					spaceHeating: {
-						heatEmitters: {
-							data: [{
-								data: completeWetDistribution,
-								complete: true,
-							}],
-							complete: false,
-						},
-					},
-				});
-
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
-
-				expect(screen.queryByTestId("numOfFanCoils_0")).toBeNull();
-			});
+			// 		expect(
+			// 			screen.getByTestId("incompatibleEnergySourceError"),
+			// 		).toBeDefined();
+			// 	});
+			// });
 		});
 	});
 
@@ -1771,18 +1567,17 @@ describe("Heat emitters", () => {
 
 			expect(await screen.findByTestId("heatEmitterErrorSummary")).toBeDefined();
 		});
-
 		it("navigates to space heating on clicking Save progress", async () => {
 			await renderSuspended(HeatEmitterForm, {
 				route: {
-					params: { heatEmitter: "create" },
+					params: { "heatEmitter": "create" },
 				},
 			});
 
 			await user.click(screen.getByTestId("typeOfHeatEmitter_wetDistributionSystem"));
+			await user.click(screen.getByTestId("saveProgress"));
 
-			const saveProgress = screen.getByTestId("saveProgress");
-			expect(saveProgress.getAttribute("href")).toBe("/space-heating");
+			expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
 		});
 
 		it("navigates to space heating when valid form is completed", async () => {
