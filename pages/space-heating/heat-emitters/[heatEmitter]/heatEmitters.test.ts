@@ -1107,7 +1107,7 @@ describe("Heat emitters", () => {
 
 				expect(errorSummary.textContent).toContain("Name is required.");
 				expect(errorSummary.textContent).toContain("Number of fan coils is required.");
-				expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn't been added as an energy source for this dwelling.");
+				expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn’t been added as an energy source for this dwelling.");
 				expect(errorSummary.textContent).toContain("Design flow temperature is required.");
 				expect(errorSummary.textContent).toContain("Design flow rate is required.");
 			});
