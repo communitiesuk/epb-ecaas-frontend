@@ -165,7 +165,7 @@ export function displayApplianceType(appliances: SchemaApplianceType[] | undefin
 	return appliances.map(appliance => appliancesDisplayTypes[appliance]).join(", ");
 }
 
-type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;
+type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>} / ceiling`;
 
 export function adjacentSpaceTypeOptions<T extends string>(element: T): Record<AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>> {
 
@@ -180,7 +180,7 @@ export function displayAdjacentSpaceType<T extends string>(value: AdjacentSpaceT
 		return undefined;
 	}
 
-	return `${element} to ${value === "heatedSpace" ? "heated space" : "unheated space"}`;
+	return `${element} to ${value === "heatedSpace" ? "heated space / ceiling" : "unheated space / ceiling"}`;
 }
 
 export function displayHeaterPosition(position: ImmersionHeaterPosition | undefined): string {
