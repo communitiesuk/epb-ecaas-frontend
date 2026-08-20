@@ -5,6 +5,7 @@ import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
 import { heatPumpTypes, displayFuelType } from "~/utils/display";
 import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
+import { getUrl } from "#imports";
 
 const store = useEcaasStore();
 
