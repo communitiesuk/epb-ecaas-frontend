@@ -604,10 +604,8 @@ describe("external glazed door", () => {
 			};
 			store.$patch({
 				dwellingFabric: {
-					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceRoofs: {
-							data: [roof],
-						},
+					dwellingSpaceRoofs: {
+						data: [roof],
 					},
 				},
 			});

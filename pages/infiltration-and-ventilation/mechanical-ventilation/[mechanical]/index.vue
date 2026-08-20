@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import type { MVHRLocation, VentType } from "~/schema/aliases";
+import type { MVHRLocation } from "~/schema/aliases";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
 import { getUrl, typeOfMechanicalVentilation, uniqueName, type MechanicalVentilationData } from "#imports";
@@ -148,7 +148,7 @@ const saveForm = async (fields: MechanicalVentilationData) => {
 			default: {
 				const mvhrAssociatedItems = [
 					...state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data,
-					...state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data,
+					...state.dwellingFabric.dwellingSpaceRoofs.data,
 					...state.dwellingFabric.dwellingSpaceWindows.data,
 				];
 

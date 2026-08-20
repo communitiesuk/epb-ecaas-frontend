@@ -16,7 +16,7 @@ const index = getStoreIndex(externalGlazedDoorData);
 const doorData = useItemToEdit("door", externalGlazedDoorData);
 const model = ref(doorData?.data);
 const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 const shading = model?.value && "shading" in model.value ? model.value.shading : [];
 

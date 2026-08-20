@@ -11,7 +11,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const { mounted } = useMounted();
 
-const roofs = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data;
+const roofs = store.dwellingFabric.dwellingSpaceRoofs?.data;
 const index = getStoreIndex(roofs);
 const roofData = useItemToEdit("roof", roofs);
 const roofId = roofData?.data.id ?? uuidv4();
@@ -90,7 +90,7 @@ const roofTypeOptions: Record<RoofType, string | RadioOption> = {
 
 const saveForm = (fields: RoofData) => {
 	store.$patch((state) => {
-		const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		const { dwellingSpaceRoofs } = state.dwellingFabric;
 		const index = getStoreIndex(dwellingSpaceRoofs.data);
 		const currentId = roofData?.data.id;
 
@@ -120,12 +120,12 @@ const saveForm = (fields: RoofData) => {
 
 autoSaveElementForm<RoofData>({
 	model,
-	storeData: store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs,
+	storeData: store.dwellingFabric.dwellingSpaceRoofs,
 	defaultName: "Roof",
 	onPatch: (state, newData, index) => {
 		newData.data.id ??= roofId;
-		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[index] = newData;
-		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.complete = false;
+		state.dwellingFabric.dwellingSpaceRoofs.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceRoofs.complete = false;
 	},
 });
 
@@ -173,7 +173,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			:validation-rules="{ uniqueName: uniqueName(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data, { index }) }"
+			:validation-rules="{ uniqueName: uniqueName(store.dwellingFabric.dwellingSpaceRoofs.data, { index }) }"
 			validation="required | uniqueName"
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
@@ -384,7 +384,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</template>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
-			<GovButton :href="getUrl('dwellingSpaceCeilingsAndRoofs')" secondary test-id="saveProgress">Save progress</GovButton>
+			<GovButton :href="getUrl('dwellingSpaceRoofsAll')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

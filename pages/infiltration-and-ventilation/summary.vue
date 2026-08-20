@@ -20,7 +20,7 @@ const mvhrAssociatedItems = Object.fromEntries(useAssociatedItems(["wall", "roof
 const { 
 	dwellingSpaceWindows, 
 	dwellingSpaceWalls, 
-	dwellingSpaceCeilingsAndRoofs: { dwellingSpaceRoofs }, 
+	dwellingSpaceRoofs, 
 	dwellingSpaceDoors: { dwellingSpaceExternalGlazedDoor },
 } = store.dwellingFabric;
 

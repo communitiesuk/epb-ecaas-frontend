@@ -78,7 +78,7 @@ describe("roof", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 		expect(dwellingSpaceRoofs.data[0]).toEqual({ ...roof, complete: true });
 	});
@@ -86,10 +86,8 @@ describe("roof", () => {
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [roof],
-					},
+				dwellingSpaceRoofs: {
+					data: [roof],
 				},
 			},
 		});
@@ -114,10 +112,8 @@ describe("roof", () => {
 	test("form is prepopulted with pitched roof data when data exists in state", async () => {
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [pitchedRoof],
-					},
+				dwellingSpaceRoofs: {
+					data: [pitchedRoof],
 				},
 			},
 		});
@@ -164,7 +160,7 @@ describe("roof", () => {
 		await user.tab();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 		expect(dwellingSpaceRoofs.data[0]!.data.pitch).toEqual(90);
 	});
@@ -196,7 +192,7 @@ describe("roof", () => {
 		await user.tab();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 		expect(dwellingSpaceRoofs.data[0]!.data.pitch).toEqual(90);
 		expect(dwellingSpaceRoofs.data[0]!.data.orientation).toEqual(90);
@@ -226,10 +222,8 @@ describe("roof", () => {
 
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [{ data: roof }],
-					},
+				dwellingSpaceRoofs: {
+					data: [{ data: roof }],
 				},
 				dwellingSpaceDoors: {
 					dwellingSpaceExternalUnglazedDoor: {
@@ -281,11 +275,9 @@ describe("roof", () => {
 	test("roof and roofs section are set as 'not complete' after user edits an item", async () => {
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [{ ...roof, complete: true }],
-						complete: true,
-					},
+				dwellingSpaceRoofs: {
+					data: [{ ...roof, complete: true }],
+					complete: true,
 				},
 			},
 		});
@@ -299,7 +291,7 @@ describe("roof", () => {
 		await user.type(screen.getByTestId("name"), "Roof");
 		await user.tab();
 
-		const roofs = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs;
+		const roofs = store.dwellingFabric.dwellingSpaceRoofs;
 
 		expect(roofs.data[0]!.complete).not.toBe(true);
 		expect(roofs.complete).not.toBe(true);

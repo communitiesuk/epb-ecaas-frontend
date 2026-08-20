@@ -893,24 +893,7 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					u_value: 1,
 				},
-				"ceiling to heated space (ceiling)": {
-					type: "BuildingElementAdjacentConditionedSpace",
-					area: 16,
-					areal_heat_capacity: "Light",
-					mass_distribution_class: "I: Mass concentrated at internal side",
-					pitch: 0,
-					u_value: 1,
-				},
-				"ceiling to unheated space (ceiling)": {
-					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-					area: 20,
-					areal_heat_capacity: "Very light",
-					mass_distribution_class: "IE: Mass divided over internal and external side",
-					pitch: 45,
-					thermal_resistance_unconditioned_space: 2.7,
-					u_value: 2.2,
-				},
-				"roof 1 (roof)": {
+				"roof 1": {
 					pitch: 20,
 					orientation360: 180,
 					height: 2.5,
@@ -1249,13 +1232,8 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 			},
-			dwellingSpaceCeilingsAndRoofs: {
-				dwellingSpaceCeilings: {
-					...baseForm,
-				},
-				dwellingSpaceRoofs: {
-					...baseForm,
-				},
+			dwellingSpaceRoofs: {
+				...baseForm,
 			},
 			dwellingSpaceDoors: {
 				dwellingSpaceExternalUnglazedDoor: {
@@ -1909,60 +1887,26 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 			},
-			dwellingSpaceCeilingsAndRoofs: {
-				dwellingSpaceCeilings: {
+			dwellingSpaceRoofs: {
+				...baseForm,
+				data: [{
 					...baseForm,
-					data: [{
-						...baseForm,
-						data: {
-							id: "26e6be91-d436-4ccf-a106-feddaf625edb",
-							name: "ceiling to heated space",
-							type: "heatedSpace",
-							surfaceArea: 16,
-							arealHeatCapacity: "Light",
-							massDistributionClass: "I",
-							pitchOption: "0",
-							uValue: 1,
-						},
+					data: {
+						id: "85343964-1c5f-416b-b4af-0d16c06d3046",
+						name: "roof 1",
+						typeOfRoof: "flatAboveHeatedSpace",
+						pitch: 20,
+						orientation: 180,
+						length: 2.5,
+						width: 10,
+						elevationalHeightOfElement: 0,
+						surfaceArea: 25,
+						uValue: 0.1,
+						colour: "Dark",
+						arealHeatCapacity: "Very light",
+						massDistributionClass: "I",
 					},
-					{
-						...baseForm,
-						data: {
-							id: "1d60a23a-789e-4843-8da4-ab4b90609280",
-							name: "ceiling to unheated space",
-							type: "unheatedSpace",
-							surfaceArea: 20,
-							arealHeatCapacity: "Very light",
-							massDistributionClass: "IE",
-							pitch: 45,
-							pitchOption: "custom",
-							thermalResistanceOfAdjacentUnheatedSpace: 2.7,
-							uValue: 2.2,
-						},
-					},
-					],
-				},
-				dwellingSpaceRoofs: {
-					...baseForm,
-					data: [{
-						...baseForm,
-						data: {
-							id: "85343964-1c5f-416b-b4af-0d16c06d3046",
-							name: "roof 1",
-							typeOfRoof: "flatAboveHeatedSpace",
-							pitch: 20,
-							orientation: 180,
-							length: 2.5,
-							width: 10,
-							elevationalHeightOfElement: 0,
-							surfaceArea: 25,
-							uValue: 0.1,
-							colour: "Dark",
-							arealHeatCapacity: "Very light",
-							massDistributionClass: "I",
-						},
-					}],
-				},
+				}],
 			},
 			dwellingSpaceDoors: {
 				dwellingSpaceExternalUnglazedDoor: {

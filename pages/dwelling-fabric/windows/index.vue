@@ -85,7 +85,7 @@ function hasIncompleteEntries() {
 
 function getOrientation(windowData: WindowData) {
 	const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
-	const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+	const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 	if (windowData.taggedItem) {
 		const associatedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], windowData.taggedItem);

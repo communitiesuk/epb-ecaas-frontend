@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { centimetre, metre, millimetre, type Length } from "~/utils/units/length";
 import { zodTypeAsFormKitValidation } from "#imports";
-import type { SchemaWindShieldLocation } from "~/schema/aliases";
 import { groundSurfaceAreaZod, groundTotalAreaZod, groundPerimeterZod, heightUpperSurfaceZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
 import { getUrl, type GroundFloorData, uniqueName, unitValue } from "#imports";
 import { v4 as uuidv4 } from "uuid";

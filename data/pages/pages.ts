@@ -17,7 +17,6 @@ const pagesData = [
 	...dwellingDetailsPages,
 	...dwellingFabricPages,
 	...spaceHeatingPages,
-	// ...restOfDwellingPages,
 	...domesticHotWaterPages,
 	...infiltrationAndVentilationPages,
 	...pvAndBatteriesPages,

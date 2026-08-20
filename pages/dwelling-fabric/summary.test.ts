@@ -3,7 +3,7 @@ import Summary from "./summary.vue";
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import type {
-	CeilingsAndRoofsData,
+	RoofData,
 	DoorsData,
 	FloorsData,
 	DwellingSpaceZoneParametersData,
@@ -242,52 +242,37 @@ const wallsData: WallsData = {
 	},
 };
 
-const ceilingsAndRoofsData: CeilingsAndRoofsData = {
-	dwellingSpaceCeilings: {
-		data: [{
-			data: {
-				type: "heatedSpace",
-				name: "Ceiling 1",
-				surfaceArea: 5,
-				arealHeatCapacity: "Very light",
-				massDistributionClass: "I",
-				pitchOption: "custom",
-				pitch: 180,
-			},
-		}],
-	},
-	dwellingSpaceRoofs: {
-		data: [{
-			data: {
-				name: "Flat roof",
-				typeOfRoof: "flatAboveHeatedSpace",
-				pitch: 0,
-				length: 1,
-				width: 1,
-				elevationalHeightOfElement: 2,
-				surfaceArea: 1,
-				uValue: 1,
-				arealHeatCapacity: "Very light",
-				massDistributionClass: "I",
-			},
+const roofsData: EcaasFormList<RoofData> = {
+	data: [{
+		data: {
+			name: "Flat roof",
+			typeOfRoof: "flatAboveHeatedSpace",
+			pitch: 0,
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			uValue: 1,
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
 		},
-		{
-			data: {
-				name: "Pitched roof",
-				typeOfRoof: "pitchedInsulatedAtRoof",
-				pitch: 180,
-				orientation: 30,
-				length: 1,
-				width: 1,
-				elevationalHeightOfElement: 2,
-				surfaceArea: 1,
-				uValue: 1,
-				arealHeatCapacity: "Very light",
-				massDistributionClass: "I",
-			},
-		},
-		],
 	},
+	{
+		data: {
+			name: "Pitched roof",
+			typeOfRoof: "pitchedInsulatedAtRoof",
+			pitch: 180,
+			orientation: 30,
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			uValue: 1,
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+		},
+	},
+	],
 };
 
 const externalGlazedDoorData = {
@@ -1062,51 +1047,21 @@ describe("Dwelling space walls", () => {
 });
 
 describe("dwelling space ceilings and roofs", () => {
-	it("should contain the correct tabs for dwelling space walls", async () => {
+	it("should contain the correct tabs for roofs", async () => {
 		await renderSuspended(Summary);
 
-		expect(screen.getByRole("link", { name: "Ceilings" })).not.toBeNull();
 		expect(screen.getByRole("link", { name: "Roofs" })).not.toBeNull();
-	});
-
-	it("should display the correct data for the ceilings section", async () => {
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceCeilings: ceilingsAndRoofsData.dwellingSpaceCeilings,
-				},
-			},
-		});
-
-		await renderSuspended(Summary);
-
-		const expectedResult = {
-			"Type of ceiling": "Ceiling to heated space",
-			"Name": "Ceiling 1",
-			"Net surface area": `5 ${metresSquare.suffix}`,
-			"Areal heat capacity": "Very light",
-			"Mass distribution class": "Internal",
-			"Pitch": `180 ${degrees.suffix}`,
-		};
-
-
-		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceCeilings-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-		}
 	});
 
 	it("should display the correct data for the roof section", async () => {
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: ceilingsAndRoofsData.dwellingSpaceRoofs,
-				},
+				dwellingSpaceRoofs: roofsData,
 			},
 		});
 
 		await renderSuspended(Summary);
+
 		const expectedFlatRoof = {
 			"Name": "Flat roof",
 			"Type of roof": "Flat above heated space",

@@ -13,7 +13,7 @@ defineProps<{
 const store = useEcaasStore();
 
 const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+const { dwellingSpaceRoofs } = store.dwellingFabric;
 
 const options = [
 	dwellingSpaceExternalWall.data.map(x => [x.data.id, `${x.data.name} (Wall)`] as [string, string]),
