@@ -71,6 +71,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<GovInset>
+		Enter any ceilings adjacent to roofs in the <NuxtLink :href="getUrl('dwellingSpaceRoofsAll')">Roof</NuxtLink> section. This includes ceilings to unheated loft spaces.
+	</GovInset>
 	<FormKit
 		v-model="model"
 		type="form"
@@ -83,7 +86,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="typeOfInternalFloor"
 			type="govRadios"
 			:options="typeOfInternalFloorOptions"
-			label="Type of internal floor"
+			label="Type of internal floor / ceiling"
 			help="This affects the additional inputs needed"
 			name="typeOfInternalFloor"
 			validation="required" />
@@ -102,21 +105,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsSurfaceArea
 				v-if="model?.typeOfInternalFloor === 'heatedSpace'"
 				label="Net surface area of the floor"
-				help="Enter the net area of the building element. The area of all large openings should be subtracted before entry, apart from any openings for doors or staircases."
+				help="The area of all large openings should be subtracted before entry, apart from any openings for doors or staircases"
 				:zod="surfaceAreaAdjacentSpaceZod"
 			/>
 			<FieldsSurfaceArea
 				v-else-if="model?.typeOfInternalFloor === 'unheatedSpace'"
 				label="Net surface area of the floor"
-				help="Enter the net area of the building element. The area of all large openings such as for staircases should be subtracted before entry, but not doors."
+				help="Enter the net area of the building element, subtracting any doors or windows."
 				:zod="surfaceAreaAdjacentSpaceZod"
 			/>
-			<FieldsArealHeatCapacity v-if="model?.typeOfInternalFloor === 'heatedSpace'" help="This is the sum of the heat capacities of half the construction build up. The other half should be input as a ceiling." />
-			<FieldsArealHeatCapacity v-if="model?.typeOfInternalFloor === 'unheatedSpace'" help="This is the sum of the heat capacities of the full thickness of the floor build up" />
-			<FieldsMassDistributionClass v-if="model?.typeOfInternalFloor === 'heatedSpace'" help="This is the mass distribution class of half the construction build up. The other half should be input as a ceiling." />
-			<FieldsMassDistributionClass v-if="model?.typeOfInternalFloor === 'unheatedSpace'" help="This is the distribution of mass for the full thickness of the floor build up" />
-			<FieldsUValue v-if="model?.typeOfInternalFloor === 'heatedSpace'" help="Enter the U-value of half the construction build up. The other half should be input as a ceiling." />
-			<FieldsUValue v-if="model?.typeOfInternalFloor === 'unheatedSpace'" help="Enter the U-value of the full thickness of the floor build-up" />
+			<FieldsArealHeatCapacity help="Typically very light for internal floors/ceilings" />
+			<FieldsMassDistributionClass help="This is the mass distribution class of the full construction build up" />
+			<FieldsUValue help="Enter the U-value of the full construction build up" />
 		</template>
 		<FormKit
 			v-if="mounted&&model?.typeOfInternalFloor === 'unheatedSpace'"

@@ -636,7 +636,7 @@ describe("Dwelling space fabric summary", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Type of internal floor": "Internal floor to heated space",
+			"Type of internal floor": "Internal floor to heated space / ceiling",
 			"Name": "Internal 1",
 			"Net surface area of element": `5 ${metresSquare.suffix}`,
 			"Areal heat capacity": "Very light",
@@ -1454,7 +1454,7 @@ describe("dwelling space doors", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Type": "Internal door to heated space",
+			"Type": "Internal door to heated space / ceiling",
 			"Name": "Internal 1",
 			"Associated wall or ceiling": wallsData.dwellingSpaceInternalWall.data[0]?.data.name,
 			"Net surface area of element": `5 ${metresSquare.suffix}`,
@@ -1493,7 +1493,7 @@ describe("dwelling space doors", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Type": "Internal door to heated space",
+			"Type": "Internal door to heated space / ceiling",
 			"Name": "Internal 1",
 			"Associated wall or ceiling": wallsData.dwellingSpaceInternalWall.data[0]?.data.name,
 			"Pitch": `10 ${degrees.suffix}`,

@@ -113,7 +113,7 @@ function hasIncompleteEntries() {
 	/>
 	<CustomList
 		id="internal"
-		title="Internal floor"
+		title="Internal floor / ceiling"
 		:form-url="`${page?.url!}/internal`"
 		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.data.map(x => ({
 			name: x.data.name,
