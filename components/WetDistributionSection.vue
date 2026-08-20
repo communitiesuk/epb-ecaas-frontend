@@ -110,5 +110,3 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 	<FieldsPercentageRecirculated :model="model" />
 	<HemDefaultProductWarning :brand-names="productBrandNames" />
 </template>
-
-
