@@ -29,6 +29,7 @@ const id = heatEmitterData?.data?.id ?? uuidv4();
 
 const incompatibleEnergySource = ref(false);
 const incompatibleEnergySourceFuel = ref<string | undefined>();
+const wetDistributionSection = ref();
 
 function resetAllHeatEmitterRankings(state: EcaasState) {
 	state.spaceHeating.heatEmitters.data.forEach((heatEmitter) => {
@@ -49,6 +50,11 @@ const saveForm = () => {
 
 	if (incompatibleEnergySource.value) {
 		addIncompatibleEnergySourceError();
+		window.scrollTo(0, 0);
+		return;
+	}
+
+	if (!validateNestedSections()) {
 		window.scrollTo(0, 0);
 		return;
 	}
@@ -137,6 +143,14 @@ const handleSubmitInvalid = (node: FormKitNode) => {
 	window.scrollTo(0, 0);
 };
 
+const validateNestedSections = (): boolean => {
+	if (model.value?.typeOfHeatEmitter === "wetDistributionSystem") {
+		return wetDistributionSection.value?.validateEmitters() ?? true;
+	}
+
+	return true;
+};
+
 function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
 	incompatibleEnergySource.value = value;
 	incompatibleEnergySourceFuel.value = fuel;
@@ -167,6 +181,7 @@ function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
 		<template v-if="mounted">
 			<WetDistributionSection
 				v-if="model?.typeOfHeatEmitter === 'wetDistributionSystem'"
+				ref="wetDistributionSection"
 				:model="(model as WetDistributionSystemData)"
 				:index="index"
 				:on-incompatible-energy-source="handleIncompatibleEnergySource"

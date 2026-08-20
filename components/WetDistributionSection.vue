@@ -12,12 +12,22 @@ defineProps<{
 }>();
 
 const productBrandNames = ref<string[]>([]);
+const wetDistributionEmittersSection = ref();
 
 function handleProductLoaded(product: AnyPcdbProduct) {
 	if (hasModelDetails(product)) {
 		productBrandNames.value.push(product.brandName);
 	}
 }
+
+const validateEmitters = () => {
+	return wetDistributionEmittersSection.value?.validateEmitters() ?? true;
+};
+
+defineExpose({
+	validateEmitters,
+});
+
 </script>
 
 <template>
@@ -35,6 +45,7 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 		data-field="SpaceHeatSystem.*.HeatSource" />
 	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">	
 	<WetDistributionEmittersSection
+		ref="wetDistributionEmittersSection"
 		:index="index"
 		:on-incompatible-energy-source="onIncompatibleEnergySource"
 		@product-loaded="handleProductLoaded"
