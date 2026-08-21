@@ -4,6 +4,7 @@ import { standardPitchOptions, getUrl, uniqueName, type SnakeToSentenceCase } fr
 import type { SchemaPartyWallCavityType, SchemaPartyWallLiningType } from "~/schema/api-schema.types";
 import { surfaceAreaPartyWallZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
+import { squareMeterKelvinPerWatt } from "~/utils/units/thermalConductivity";
 
 const title = "Party wall";
 const store = useEcaasStore();
@@ -47,7 +48,8 @@ const saveForm = (fields: PartyWallData) => {
 				massDistributionClass: fields.massDistributionClass,
 				partyWallCavityType: fields.partyWallCavityType,
 				partyWallLiningType: fields.partyWallLiningType,
-				uValue: fields.uValue,
+				uValueWholeWall: fields.uValueWholeWall,
+				thermalResistanceHalfWall: fields.thermalResistanceHalfWall,
 			},
 			complete: true,
 		};
@@ -113,7 +115,21 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<FieldsUValue
-			help="Enter the U-value of half the construction build up"
+			id="uValueWholeWall"
+			label="U-value of whole wall"
+			help="Enter the U-value of the full wall construction build up"
+			name="uValueWholeWall"
+			data-field="Zone.BuildingElement.*.u_value_whole_wall"
+		/>
+		<FormKit
+			id="thermalResistanceHalfWall"
+			type="govInputWithSuffix"
+			label="Thermal resistance of half wall"
+			help="Enter the thermal resistance of half the wall construction build up"
+			name="thermalResistanceHalfWall"
+			:suffix-text="squareMeterKelvinPerWatt.suffix"
+			:validation="zodTypeAsFormKitValidation(thermalResistancePartyWall)"
+			data-field="Zone.BuildingElement.*.thermal_resistance_construction"
 		/>
 		<FieldsPitch
 			v-if="mounted"

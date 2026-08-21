@@ -354,12 +354,15 @@ export const thermalResistanceCavityZod = z.optional(z.number().gt(0));
 
 export const surfaceAreaPartyWallZod = z.number().gt(0);
 
+export const thermalResistancePartyWall = z.number().min(0.01).max(50);
+
 const partyWallDataZod = namedWithId.extend({
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(60).max(120)),
 	surfaceArea: surfaceAreaPartyWallZod,
 	arealHeatCapacity: arealHeatCapacityZod,
-	uValue,
+	uValueWholeWall: uValue,
+	thermalResistanceHalfWall: thermalResistancePartyWall,
 	massDistributionClass,
 	partyWallCavityType: partyWallCavityTypeZod,
 	partyWallLiningType: z.optional(partyWallLiningTypeZod),
