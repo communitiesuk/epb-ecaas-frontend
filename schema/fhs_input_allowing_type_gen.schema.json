@@ -262,30 +262,28 @@
                             }
                         }
                     },
-                    "allOf": [
+                    "oneOf": [
                         {
-                            "if": {
-                                "properties": {
-                                    "type": {
-                                        "const": "StorageTank"
-                                    }
+                            "required": [
+                                "type"
+                            ],
+                            "properties": {
+                                "type": {
+                                    "const": "StorageTank"
                                 }
                             },
-                            "then": {
-                                "$ref": "#/$defs/StorageTank"
-                            }
+                            "$ref": "#/$defs/StorageTank"
                         },
                         {
-                            "if": {
-                                "properties": {
-                                    "type": {
-                                        "const": "SmartHotWaterTank"
-                                    }
+                            "required": [
+                                "type"
+                            ],
+                            "properties": {
+                                "type": {
+                                    "const": "SmartHotWaterTank"
                                 }
                             },
-                            "then": {
-                                "$ref": "#/$defs/SmartHotWaterTank"
-                            }
+                            "$ref": "#/$defs/SmartHotWaterTank"
                         }
                     ]
                 }
@@ -1078,7 +1076,6 @@
                                                     "type": "object",
                                                     "unevaluatedProperties": false,
                                                     "required": [
-                                                        "cross_section_shape",
                                                         "length",
                                                         "insulation_thermal_conductivity",
                                                         "insulation_thickness_mm",
@@ -1086,12 +1083,6 @@
                                                         "duct_type"
                                                     ],
                                                     "properties": {
-                                                        "cross_section_shape": {
-                                                            "enum": [
-                                                                "circular",
-                                                                "rectangular"
-                                                            ]
-                                                        },
                                                         "duct_perimeter_mm": {
                                                             "type": "number",
                                                             "exclusiveMinimum": 0,

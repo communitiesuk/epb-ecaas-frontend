@@ -395,7 +395,6 @@ describe("dwelling fabric mapper", () => {
 			thermal_resist_insul: groundFloorWithSuspendedFloor.underfloorSpaceThermalResistance,
 			thermal_transm_walls: groundFloorWithSuspendedFloor.thermalTransmittanceOfWallsAboveGround,
 			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea / 1e6,
-			shield_fact_location: "Average", 
 		};
 
 		expect(groundFloorWithSuspendedFloorElement).toEqual(expectedGroundFloorSuspendedFloor);
@@ -441,6 +440,7 @@ describe("dwelling fabric mapper", () => {
 			u_value: internalFloorHeatedSpace.uValue,
 			areal_heat_capacity: internalFloorHeatedSpace.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(internalFloorHeatedSpace.massDistributionClass),
+			is_adjacent_space_within_dwelling: true,
 		};
 
 		expect(internalFloorUnheatedSpaceElement).toEqual(expectedInternalFloorUnheatedSpace);
@@ -669,6 +669,7 @@ describe("dwelling fabric mapper", () => {
 			u_value: internalWall.data.uValue,
 			areal_heat_capacity: internalWall.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(internalWall.data.massDistributionClass),
+			is_adjacent_space_within_dwelling: true,
 		};
 
 		expect(internalWallElement).toEqual(expectedInternalWall);
@@ -677,7 +678,8 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementPartyWall",
 			pitch: partyWallWithLiningType.data.pitch!,
 			area: partyWallWithLiningType.data.surfaceArea,
-			u_value: partyWallWithLiningType.data.uValueWholeWall,
+			u_value_whole_wall: partyWallWithLiningType.data.uValueWholeWall,
+			thermal_resistance_construction: partyWallWithLiningType.data.thermalResistanceHalfWall,
 			areal_heat_capacity: partyWallWithLiningType.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(partyWallWithLiningType.data.massDistributionClass),
 			party_wall_cavity_type: "filled_unsealed",
@@ -690,7 +692,8 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementPartyWall",
 			pitch: partyWallWithoutExtraAttributes.data.pitch!,
 			area: partyWallWithoutExtraAttributes.data.surfaceArea,
-			u_value: partyWallWithoutExtraAttributes.data.uValueWholeWall,
+			u_value_whole_wall: partyWallWithoutExtraAttributes.data.uValueWholeWall,
+			thermal_resistance_construction: partyWallWithoutExtraAttributes.data.thermalResistanceHalfWall,
 			areal_heat_capacity: partyWallWithoutExtraAttributes.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(partyWallWithoutExtraAttributes.data.massDistributionClass),
 			party_wall_cavity_type: "solid",
@@ -1101,26 +1104,24 @@ describe("dwelling fabric mapper", () => {
 			u_value: internalDoorHeatedSpace.uValue,
 			areal_heat_capacity: internalDoorHeatedSpace.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(internalDoorHeatedSpace.massDistributionClass),
+			is_adjacent_space_within_dwelling: false,
 		};
 
 		expect(internalDoorHeatedSpaceElement).toEqual(expectedInternalDoorHeatedSpace);
-		const midHeight = 30 + externalGlazedDoor.height / 2;
-
+		
 		const expectedExternalGlazedDoor: BuildingElementTransparent = {
 			type: "BuildingElementTransparent",
 			pitch: extractPitch(externalWall.data),
 			orientation360: externalWall.data.orientation,
 			height: externalGlazedDoor.height,
 			width: externalGlazedDoor.width,
-			mid_height: midHeight,
 			base_height: externalGlazedDoor.elevationalHeight,
 			g_value: externalGlazedDoor.solarTransmittance,
 			frame_area_fraction: 1 - externalGlazedDoor.openingToFrameRatio,
-			max_window_open_area: externalGlazedDoor.maximumOpenableArea,
-			free_area_height: externalGlazedDoor.freeAreaHeight,
 			window_part_list: [
-				{ mid_height_air_flow_path: midHeight },
-				{ mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
+				// complete as part of EC-1629 to fill this back out
+				// { mid_height_air_flow_path: midHeight },
+				// { mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
 			],
 			shading: [
 				{
@@ -1301,15 +1302,13 @@ describe("dwelling fabric mapper", () => {
 			base_height: window.elevationalHeight,
 			u_value: window.uValue,
 			g_value: window.solarTransmittance,
-			mid_height: 30 + window.height / 2,
 			frame_area_fraction: 1 - window.openingToFrameRatio,
 			security_risk: false,
-			free_area_height: 1,
-			max_window_open_area: window.maximumOpenableArea,
 			window_part_list: [
-				{
-					mid_height_air_flow_path: window.midHeightOpenablePart1,
-				},
+				// complete when doing EC-1629
+				// {
+				// 	mid_height_air_flow_path: window.midHeightOpenablePart1,
+				// },
 			],
 			shading: [
 				{

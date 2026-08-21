@@ -1,6 +1,6 @@
 import { objectFromEntries } from "ts-extras";
 import type { StandardDisplayProduct, TechnologyGroup, TechnologyType } from "~/pcdb/pcdb.types";
-import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, SchemaConvectiveType, SchemaFuelType, SchemaLeaksTestPressure, SchemaRadiatorType, SchemaMechanicalVentilationInstallationLocation, SchemaMechanicalVentilationInstallationType } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, SchemaConvectiveType, SchemaFuelType, SchemaLeaksTestPressure, SchemaMechanicalVentilationInstallationLocation, SchemaMechanicalVentilationInstallationType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
@@ -409,21 +409,6 @@ export const mechanicalVentilationProductTypesDisplay = {
 	"centralisedContinuousMev": pluralize("Centralised continuous MEV"),
 	"decentralisedContinuousMev": pluralize("Decentralised continuous MEV"),
 } as const satisfies Record<MechanicalVentilationProductType, (plural: boolean) => string>;
-
-export type RadiatorDisplay = "Standard" | "Towel radiator";
-
-export const radiatorTypes = {
-	standard: "Standard",
-	towel: "Towel radiator",
-
-} as const satisfies Record<SchemaRadiatorType, RadiatorDisplay>;
-
-export function displayRadiatorType(type: SchemaRadiatorType | undefined): RadiatorDisplay | typeof emptyValueRendering {
-	if (!type) {
-		return emptyValueRendering;
-	}
-	return radiatorTypes[type];
-}
 
 export const waterStorageProductTypeDisplay = {
 	"smartHotWaterTank": pluralize("Smart hot water tank"),

@@ -677,7 +677,6 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
-							radiator_type: "standard",
 							length: asMetres(radiator.length),
 						},
 						{
@@ -736,7 +735,6 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
-							radiator_type: "standard",
 							length: asMetres(radiator.length),
 						},
 						{
@@ -791,7 +789,6 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
-							radiator_type: "standard",
 							length: asMetres(radiator.length),
 						},
 						{
@@ -853,7 +850,6 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
-							radiator_type: "standard",
 							length: asMetres(radiator.length),
 						},
 						{
@@ -891,7 +887,6 @@ describe("Space heating - emitters", () => {
 						{
 							product_reference: radiator.productReference,
 							wet_emitter_type: "radiator",
-							radiator_type: "standard",
 							length: asMetres(radiator.length),
 						},
 						{
@@ -965,19 +960,16 @@ describe("Space heating - emitters", () => {
 				{
 					product_reference: "RAD-456",
 					wet_emitter_type: "radiator",
-					radiator_type: "standard",
 					length: asMetres(unitValue(500,millimetre)),
 				},
 				{
 					product_reference: "RAD-456",
 					wet_emitter_type: "radiator",
-					radiator_type: "standard",
 					length: asMetres(unitValue(500,millimetre)),
 				},
 				{
 					product_reference: "RAD-456",
 					wet_emitter_type: "radiator",
-					radiator_type: "standard",
 					length: asMetres(unitValue(500,millimetre)),
 				},
 			]);

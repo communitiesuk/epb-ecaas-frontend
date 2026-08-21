@@ -573,6 +573,8 @@ export function mapPreheatedWaterSourceData(state: ResolvedState): Partial<FhsIn
 				"preheated tank": {
 					ColdWaterSource: coldWaterSource,
 					volume: preheatedWaterStorage.storageCylinderVolume.amount,
+					init_temp: 20, // placeholder - TODO: replace!!
+					type: "StorageTank", // TODO - presume we will need to add possibility of smart tank here
 					daily_losses: preheatedWaterStorage.dailyEnergyLoss,
 					HeatSource: mappedWSHeatSource,
 					...mapPipework(pipework),

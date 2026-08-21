@@ -165,14 +165,19 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 
 	return mvhrductworks.map((x) => {
 		const val: SchemaMechanicalVentilationDuctwork = {
-			cross_section_shape: x.ductworkCrossSectionalShape,
 			duct_type: x.ductType,
 			insulation_thermal_conductivity: x.thermalInsulationConductivityOfDuctwork,
 			insulation_thickness_mm: x.insulationThickness,
-			internal_diameter_mm: x.internalDiameterOfDuctwork,
-			external_diameter_mm: x.externalDiameterOfDuctwork,
 			length: x.lengthOfDuctwork,
 			reflective: x.surfaceReflectivity,
+			...(x.ductworkCrossSectionalShape === "circular" ? {
+				cross_section_shape: "circular" as const,
+				internal_diameter_mm: x.internalDiameterOfDuctwork,
+				external_diameter_mm: x.externalDiameterOfDuctwork,
+			} : {
+				cross_section_shape: "rectangular" as const,
+				duct_perimeter_mm: 10,
+			}),
 		};
 		return val;
 	});

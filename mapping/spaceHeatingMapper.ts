@@ -342,7 +342,6 @@ function mapEmittersForWetDistribution(emitters: WetDistributionEmitterData[]): 
 			const radiator = {
 				wet_emitter_type: "radiator",
 				product_reference: emitter.productReference,
-				radiator_type: "standard",
 				length: asMetres(emitter.length),
 			} as const satisfies SchemaRadiatorWithProductReference;
 

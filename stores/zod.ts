@@ -2,7 +2,7 @@
 
 import type { UnionToTuple } from "type-fest";
 import * as z from "zod";
-import type { SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour, SchemaConvectiveType, SchemaApplianceType, SchemaFuelType, /*SchemaHeatNetworkType,*/ SchemaRadiatorType, SchemaMechanicalVentilationInstallationType, SchemaMechanicalVentilationInstallationLocation, SchemaBoilerLocationType } from "~/schema/aliases";
+import type { SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour, SchemaConvectiveType, SchemaApplianceType, SchemaFuelType, SchemaMechanicalVentilationInstallationType, SchemaMechanicalVentilationInstallationLocation, SchemaBoilerLocationType } from "~/schema/aliases";
 import type { ConciseMassDistributionClass } from "./ecaasStore.schema";
 import type { SchemaPartyWallCavityType, SchemaPartyWallLiningType } from "~/schema/api-schema.types";
 
@@ -83,10 +83,6 @@ const photovoltaicVentilationStrategies = [
 	"strongly_or_forced_ventilated",
 	"rear_surface_free",
 ] as const satisfies SchemaPhotovoltaicVentilationStrategy[];
-const radiatorTypes = [
-	"standard",
-	"towel",
-] as const satisfies SchemaRadiatorType[];
 const shadingObjectTypes = ["obstacle", "overhang"] as const satisfies SchemaShadingObjectType[];
 const terrainClasses = ["OpenWater", "OpenField", "Suburban", "Urban"] as const satisfies SchemaTerrainClass[];
 const testPressures = ["Standard", "Pulse test only"] as const satisfies SchemaLeaksTestPressure[];
@@ -118,7 +114,6 @@ export const mvhrLocationZod = zodForTypeOptions(ensureAllUnion<MVHRLocation, (t
 export const partyWallCavityTypeZod = zodForTypeOptions(ensureAllUnion<Exclude<SchemaPartyWallCavityType, "defined_resistance">, (typeof partyWallCavityTypes)>(partyWallCavityTypes));
 export const partyWallLiningTypeZod = zodForTypeOptions(ensureAllUnion<SchemaPartyWallLiningType, (typeof partyWallLiningTypes)>(partyWallLiningTypes));
 export const photovoltaicVentilationStrategyZod = zodForTypeOptions(ensureAllUnion<SchemaPhotovoltaicVentilationStrategy, (typeof photovoltaicVentilationStrategies)>(photovoltaicVentilationStrategies));
-export const radiatorTypeZod = zodForTypeOptions(ensureAllUnion<SchemaRadiatorType, (typeof radiatorTypes)>(radiatorTypes));
 export const shadingObjectTypeZod = zodForTypeOptions(ensureAllUnion<SchemaShadingObjectType, (typeof shadingObjectTypes)>(shadingObjectTypes));
 export const terrainClassZod = zodForTypeOptions(ensureAllUnion<SchemaTerrainClass, (typeof terrainClasses)>(terrainClasses));
 export const testPressureZod = zodForTypeOptions(ensureAllUnion<SchemaLeaksTestPressure, (typeof testPressures)>(testPressures));
