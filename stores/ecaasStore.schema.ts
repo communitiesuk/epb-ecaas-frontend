@@ -71,6 +71,7 @@ const baseGeneralDetails = z.object({
 	numOfWetRooms: z.int().min(0),
 	fuelType: z.array(fuelTypeZod),
 	canExportToGrid: z.enum(["yes", "no_export", "no_generation"]),
+	maxPowerExported: addConstraints(zodUnit("power"), { min: 0, max: 100 }).optional(),
 	isPartGCompliant: z.boolean(),
 	partOActiveCoolingRequired: z.boolean(),
 });

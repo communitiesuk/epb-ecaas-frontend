@@ -22,6 +22,7 @@ const state: GeneralDetailsData = {
 	numOfWetRooms: 3,
 	fuelType: ["electricity"],
 	canExportToGrid: "yes",
+	maxPowerExported: { amount: 50, unit: "kilowatt" },
 	isPartGCompliant: true,
 	partOActiveCoolingRequired: false,
 };
@@ -67,6 +68,7 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
 			await user.type(screen.getByTestId("numOfWetRooms"), "3");
 			await user.click(screen.getByTestId("canExportToGrid_yes"));
+			await user.type(screen.getByTestId("maxPowerExported"), "50");
 			await user.click(screen.getByTestId("isPartGCompliant_yes"));
 			await user.click(screen.getByTestId("partOActiveCoolingRequired_no"));
 	
@@ -74,7 +76,6 @@ describe("General details", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			const { data, complete } = store.dwellingDetails.generalSpecifications;
-			
 			expect(data).toEqual(state);
 			expect(complete).toBe(true);
 			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-details");
@@ -102,7 +103,6 @@ describe("General details", () => {
 			await renderSuspended(GeneralDetails);
 			
 			expect((await screen.findByTestId("typeOfDwelling_house")).hasAttribute("checked")).toBe(true);
-			// expect((await screen.queryByTestId("storeyOfFlat") as HTMLInputElement)).toBe(null);
 			expect((await screen.findByTestId<HTMLInputElement>("storeysInDwelling")).value).toBe("2");
 			expect((await screen.findByTestId<HTMLInputElement>("buildingLength")).value).toBe("10");
 			expect((await screen.findByTestId<HTMLInputElement>("buildingWidth")).value).toBe("5");
@@ -145,8 +145,42 @@ describe("General details", () => {
 
 			expect((await screen.findByTestId("generalDetailsErrorSummary"))).toBeDefined();
 		});
-	});
 
+		test("if energy generated on site can be exported to the grid is true, maximum power that can be exported field shows", async() => {
+			const user = userEvent.setup();
+
+			await renderSuspended(GeneralDetails);
+
+			await user.click(screen.getByTestId("canExportToGrid_yes"));
+
+			expect(screen.getByTestId("maxPowerExported")).toBeDefined();
+		});
+
+		test("maximum power that can be exported field is not shown when energy cannot be exported", async () => {
+			await renderSuspended(GeneralDetails);
+
+			expect(screen.queryByTestId("maxPowerExported")).toBeNull();
+
+			await user.click(screen.getByTestId("canExportToGrid_no_export"));
+
+			expect(screen.queryByTestId("maxPowerExported")).toBeNull();
+		});
+
+		test("shows error if maximum power that can be exported exceeds 100 kW", async () => {
+			await renderSuspended(GeneralDetails);
+
+			await user.click(screen.getByTestId("canExportToGrid_yes"));
+			await user.type(screen.getByTestId("maxPowerExported"), "101");
+
+			await user.tab();
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const errorSummary = screen.getByTestId("generalDetailsErrorSummary");
+			expect(errorSummary.textContent).toContain("Maximum power that can be exported must be 100 kilowatts or less.");
+		});
+	});
+	
 	describe("When the type of dwelling is a flat", () => {
 
 		test("data is saved to store state when form is valid", async () => {

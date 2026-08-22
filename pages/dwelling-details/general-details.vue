@@ -3,6 +3,7 @@ import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
 import { isInteger } from "~/utils/validation";
 import { getUrl, type FuelTypeDisplay, type GeneralDetailsData } from "#imports";
 import type { CheckboxOption } from "~/components/form-kit/Checkboxes.vue";
+import { kilowatt, type Power } from "~/utils/units/power";
 
 const title = "General details";
 const store = useEcaasStore();
@@ -40,6 +41,14 @@ const typeOfDwellingOptions: Record<SchemaBuildType, SnakeToSentenceCase<SchemaB
 
 const energyExportToGridOptions = canExportToGridDisplay;
 
+const validPowerExported = (node: FormKitNode) => {
+	const value = node.value as Power | undefined;
+
+	if (!value) return true;
+
+	return value.amount >= 0 && value.amount <= 100;
+};
+
 const saveForm = (fields: typeof model.value) => {
 
 	store.$patch({
@@ -59,6 +68,7 @@ const saveForm = (fields: typeof model.value) => {
 					numOfWetRooms: fields.numOfWetRooms,
 					fuelType: fields.fuelType,
 					canExportToGrid: fields.canExportToGrid,
+					maxPowerExported: fields.maxPowerExported,
 				},
 				complete: true,
 			},
@@ -88,6 +98,12 @@ watch(() => model.value.fuelType, (newType) => {
 			...model.value.fuelType,
 			"electricity",
 		];
+	}
+});
+
+watch(() => model.value.canExportToGrid, (newValue) => {
+	if (newValue !== "yes") {
+		model.value.maxPowerExported = undefined;
 	}
 });
 
@@ -347,6 +363,21 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="canExportToGrid"
 			validation="required"
 			data-field="EnergySupply.*.is_export_capable"
+		/>
+		<FormKit
+			v-if="mounted && model?.canExportToGrid === 'yes'"
+			id="maxPowerExported"
+			type="govInputWithUnit"
+			label="Maximum power that can be exported (optional)"
+			:unit="kilowatt"
+			name="maxPowerExported"
+			hint="The Distribution Network Operator (DNO) may have imposed a limit on the amount of energy generated onsite that can be exported to the grid. If they have, enter it here."
+			:validation-rules="{ validPowerExported }"
+			validation="validPowerExported"
+			:validation-messages="{
+				validPowerExported: `Maximum power that can be exported must be 100 ${kilowatt.name}s or less.`,
+			}"
+			data-field="EnergySupply.*.power_limit_export"
 		/>
 		<FormKit
 			id="isPartGCompliant"

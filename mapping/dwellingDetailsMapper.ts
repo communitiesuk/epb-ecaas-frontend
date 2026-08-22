@@ -90,6 +90,8 @@ export function mapEnergySupplyFuelTypeData(
 					])
 					: [],
 			),
+			// TODO: Map maxPowerExported to power_limit_export when the alpha 9 API schema is released.
+			//power_limit_export: generalDetails.maxPowerExported,
 		},
 	};
 }

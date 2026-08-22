@@ -25,6 +25,7 @@ describe("dwelling details mapper", () => {
 		numOfWetRooms: 3,
 		fuelType: ["mains_gas"],
 		canExportToGrid: "yes",
+		// maxPowerExported: { amount: 50, unit: "kilowatt" },
 		isPartGCompliant: false,
 		partOActiveCoolingRequired: true,
 	};
@@ -47,7 +48,6 @@ describe("dwelling details mapper", () => {
 		// Assert
 		expect(fhsInputData.General.build_type).toBe(state.typeOfDwelling);
 		expect(fhsInputData.General.storeys_in_dwelling).toBe(state.storeysInDwelling);
-		// expect(fhsInputData.General.build_type === "flat" ? fhsInputData.General.storey_of_dwelling : undefined).toBe(state.storeyOfFlat);
 		expect(fhsInputData.BuildingLength).toBe(state.buildingLength);
 		expect(fhsInputData.BuildingWidth).toBe(state.buildingWidth);
 		expect(fhsInputData.NumberOfBedrooms).toBe(state.numOfBedrooms);
@@ -98,7 +98,6 @@ describe("dwelling details mapper", () => {
 			const state: GeneralDetailsData = {
 				typeOfDwelling: "flat",
 				storeysInDwelling: 3,
-				// storeyOfFlat: 1,
 				storeysInBuilding: 1,
 				buildingLength: 10,
 				buildingWidth: 20,
@@ -144,7 +143,6 @@ describe("dwelling details mapper", () => {
 			const state: GeneralDetailsData = {
 				typeOfDwelling: "flat",
 				storeysInDwelling: 3,
-				// storeyOfFlat: 1,
 				storeysInBuilding: 1,
 				buildingLength: 10,
 				buildingWidth: 20,
@@ -189,6 +187,85 @@ describe("dwelling details mapper", () => {
 			};
 
 			expect(fhsInputDataEnergySupply).toEqual(expectedResult);
+		});
+
+		test.skip("maps maximum power exported when energy can be exported to the grid", () => {
+			// Arrange
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						complete: true,
+						data: {
+							...state,
+							canExportToGrid: "yes",
+							maxPowerExported: {
+								amount: 50,
+								unit: "kilowatt",
+							},
+						},
+					},
+				},
+			});
+
+			// Act
+			const result = mapEnergySupplyFuelTypeData(resolveState(store.$state));
+
+			// Assert
+			expect(result.EnergySupply).toEqual({
+				"mains elec": {
+					fuel: "electricity",
+				},
+				mains_gas: {
+					fuel: "mains_gas",
+					power_limit_export: 50,
+				},
+			});
+		});
+
+		test.skip("does not map power_limit_export when no energy can be exported", () => {
+			// Arrange
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						complete: true,
+						data: {
+							...state,
+							canExportToGrid: "no_export",
+							maxPowerExported: undefined,
+						},
+					},
+				},
+			});
+
+			// Act
+			const result = mapEnergySupplyFuelTypeData(resolveState(store.$state));
+
+			// Assert
+			// TODO: Uncomment when alpha 9 adds power_limit_export to the API schema.
+			// expect(result.EnergySupply.mains_gas?.power_limit_export).toBeUndefined();
+		});
+
+		test.skip("does not map power_limit_export when no maximum export power is provided", () => {
+			// Arrange
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						complete: true,
+						data: {
+							...state,
+							canExportToGrid: "yes",
+							maxPowerExported: undefined,
+						},
+					},
+				},
+			});
+
+			// Act
+			const result = mapEnergySupplyFuelTypeData(resolveState(store.$state));
+
+			// Assert
+			// TODO: Uncomment when alpha 9 adds power_limit_export to the API schema.
+			// expect(result.EnergySupply.mains_gas?.power_limit_export).toBeUndefined();
 		});
 	});
 
