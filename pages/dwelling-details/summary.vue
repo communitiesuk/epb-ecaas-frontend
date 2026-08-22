@@ -29,6 +29,7 @@ const generalDetailsSummary: SummarySection = {
 		"Total number of wet rooms": show(generalDetailsData.numOfWetRooms),
 		"Energy sources": displayFuelTypes(generalDetailsData.fuelType),
 		"Can any energy generated on site be exported to the grid?": displayCanExportToGrid(generalDetailsData.canExportToGrid),
+		...(generalDetailsData.canExportToGrid === "yes" ? { "Maximum power that can be exported": dim(generalDetailsData.maxPowerExported?.amount, generalDetailsData.maxPowerExported?.unit) } : {}),
 		"Is the dwelling Part G compliant?": displayBoolean(generalDetailsData.isPartGCompliant),
 		"Is air conditioning required for the dwelling to be part O compliant?": displayBoolean(generalDetailsData.partOActiveCoolingRequired),
 	},

@@ -151,9 +151,8 @@ describe("Get error message", () => {
 });
 
 describe("Is integer", () => {
-	const makeNode = (value: string | number | null | undefined): FormKitNode => ({
-		value,
-	});
+	const makeNode = (value: string | number | null | undefined): FormKitNode =>
+		({ value } as unknown as FormKitNode);
 
 	it("returns true for integer numbers", () => {
 		expect(isInteger(makeNode(0))).toBe(true);

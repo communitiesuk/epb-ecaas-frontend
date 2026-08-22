@@ -2,7 +2,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { standardPitchOptions, getUrl, uniqueName, type SnakeToSentenceCase } from "#imports";
 import type { SchemaPartyWallCavityType, SchemaPartyWallLiningType } from "~/schema/api-schema.types";
-import { surfaceAreaPartyWallZod } from "~/stores/ecaasStore.schema";
+import { surfaceAreaPartyWallZod, thermalResistancePartyWall } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import { squareMeterKelvinPerWatt } from "~/utils/units/thermalConductivity";
 

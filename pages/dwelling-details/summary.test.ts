@@ -123,6 +123,51 @@ describe("Dwelling details summary", () => {
 		}
 	});
 
+	it("should display the correct data for the general details section if a house is selected and can export to grid is true", async () => {
+		const houseWithExportToGridAsTrue: DwellingDetailSummary = {
+			...house,
+			generalDetails: {
+				...house.generalDetails,
+				canExportToGrid: "yes",
+				maxPowerExported: { amount: 50, unit: "kilowatt" },
+			},
+		};
+
+		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					data: houseWithExportToGridAsTrue.generalDetails,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Type of dwelling": "House",
+			"Number of storeys in dwelling": "2",
+			"Building length": "10 m",
+			"Building width": "5 m",
+			"Number of bedrooms": "3",
+			"Number of utility rooms": "2",
+			"Number of bathrooms": "1",
+			"Number of habitable rooms": "4",
+			"Total number of rooms with tapping points": "2",
+			"Total number of wet rooms": "3",
+			"Energy sources": "Mains gas, LPG (Liquid petroleum gas) - bulk, Electricity",
+			"Can any energy generated on site be exported to the grid?": "Yes",
+			"Maximum power that can be exported": "50 kW",
+			"Is the dwelling Part G compliant?": "Yes",
+			"Is air conditioning required for the dwelling to be part O compliant?": "No",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-generalDetails-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
 	it("should display the correct data for the general details section if a flat is selected", async () => {
 		store.$patch({
 			dwellingDetails: {
@@ -148,6 +193,51 @@ describe("Dwelling details summary", () => {
 			"Total number of wet rooms": "3",
 			"Energy sources": "Mains gas, LPG (Liquid petroleum gas) - bulk, Electricity",
 			"Can any energy generated on site be exported to the grid?": "No, generated energy can’t be exported to the grid",
+			"Is the dwelling Part G compliant?": "Yes",
+			"Is air conditioning required for the dwelling to be part O compliant?": "No",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-generalDetails-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the general details section if a flat is selected", async () => {
+		const flatWithExportToGridAsTrue: Partial<DwellingDetailSummary> = {
+			...flat,
+			generalDetails: {
+				...flat.generalDetails,
+				canExportToGrid: "yes",
+				maxPowerExported: { amount: 50, unit: "kilowatt" },
+			} as GeneralDetailsData,
+		};
+		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					data: flatWithExportToGridAsTrue.generalDetails,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Type of dwelling": "Flat",
+			"Number of storeys in dwelling": "2",
+			"Number of storeys in building": "8",
+			"Building length": "10 m",
+			"Building width": "5 m",
+			"Number of bedrooms": "3",
+			"Number of utility rooms": "2",
+			"Number of bathrooms": "1",
+			"Number of habitable rooms": "4",
+			"Total number of rooms with tapping points": "2",
+			"Total number of wet rooms": "3",
+			"Energy sources": "Mains gas, LPG (Liquid petroleum gas) - bulk, Electricity",
+			"Can any energy generated on site be exported to the grid?": "Yes",
+			"Maximum power that can be exported": "50 kW",
 			"Is the dwelling Part G compliant?": "Yes",
 			"Is air conditioning required for the dwelling to be part O compliant?": "No",
 		};
