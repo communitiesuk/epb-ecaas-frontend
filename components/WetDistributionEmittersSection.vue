@@ -250,14 +250,6 @@ const saveEmitter = () => {
 	clearEmitterIndexFromUrl();
 };
 
-const validateEmitters = (): boolean => {
-	return emitters.value.every(isWetDistributionEmitterComplete);
-};
-
-defineExpose({
-	validateEmitters,
-});
-
 const incompatibleEnergySource = ref(false);
 const showIncompatibleEnergySourceError = ref(false);
 
