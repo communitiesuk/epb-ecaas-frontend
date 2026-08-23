@@ -16,7 +16,7 @@ export type ElectricStorageHeaterModelType = Extract<HeatEmittingData, { "typeOf
 const title = "Heat emitters";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
-const { handleInvalidSubmit, errorMessages, addError } = useErrorSummary();
+const { handleInvalidSubmit, errorMessages, addError, clearErrors } = useErrorSummary();
 
 const { mounted } = useMounted();
 
@@ -46,20 +46,15 @@ function markHeatingControlsAsInProgress(state: EcaasState) {
 }
 
 const saveForm = () => {
+	clearErrors();
+
 	if (incompatibleEnergySource.value) {
 		addIncompatibleEnergySourceError();
+		window.scrollTo(0, 0);
+		return;
 	}
 
-	const incompleteEmitterIndexes = getIncompleteEmitterIndexes();
-
-	incompleteEmitterIndexes.forEach((emitterIndex: number) => {
-		addIncompleteEmitterError(emitterIndex);
-	});
-
-	if (
-		incompatibleEnergySource.value ||
-	incompleteEmitterIndexes.length > 0
-	) {
+	if (!validateNestedSections()) {
 		window.scrollTo(0, 0);
 		return;
 	}
@@ -67,7 +62,6 @@ const saveForm = () => {
 	store.$patch((state) => {
 		const { heatEmitters } = state.spaceHeating;
 		const emitter = heatEmitters.data[index];
-
 		if (!emitter) {
 			throw new Error("No heat emitter found to save");
 		}
@@ -75,7 +69,6 @@ const saveForm = () => {
 		emitter.complete = true;
 		heatEmitters.complete = false;
 	});
-
 	navigateTo("/space-heating");
 };
 
@@ -143,42 +136,26 @@ const addIncompatibleEnergySourceError = () => {
 	});
 };
 
+const handleSubmitInvalid = (node: FormKitNode) => {
+	handleInvalidSubmit(node);
+	addIncompatibleEnergySourceError();
+
+	window.scrollTo(0, 0);
+};
+
+const validateNestedSections = (): boolean => {
+	if (model.value?.typeOfHeatEmitter === "wetDistributionSystem") {
+		return wetDistributionSection.value?.validateEmitters() ?? true;
+	}
+
+	return true;
+};
+
 function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
 	incompatibleEnergySource.value = value;
 	incompatibleEnergySourceFuel.value = fuel;
 }
 
-const getIncompleteEmitterIndexes = () => {
-	if (model.value?.typeOfHeatEmitter !== "wetDistributionSystem") {
-		return [];
-	}
-
-	return wetDistributionSection.value?.getIncompleteEmitterIndexes() ?? [];
-};
-
-const addIncompleteEmitterError = (emitterIndex: number) => {
-	const emitter = (model.value as WetDistributionSystemData).emitters[emitterIndex];
-
-	if (!emitter) return;
-
-	addError({
-		id: `emitter-${emitter.id}`,
-		text: `Complete all fields in ${emitter.name} before marking the heat emitters section as complete.`,
-	});
-};
-
-const handleSubmitInvalid = (node: FormKitNode) => {
-	handleInvalidSubmit(node);
-	addIncompatibleEnergySourceError();
-
-	const incompleteEmitterIndexes = getIncompleteEmitterIndexes();
-
-	incompleteEmitterIndexes.forEach((emitterIndex: number) => {
-		addIncompleteEmitterError(emitterIndex);
-	});
-
-	window.scrollTo(0, 0);
-};
 </script>
 
 <template>

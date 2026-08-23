@@ -20,13 +20,14 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 	}
 }
 
-const getIncompleteEmitterIndexes = () => {
-	return wetDistributionEmittersSection.value?.getIncompleteEmitterIndexes() ?? [];
+const validateEmitters = () => {
+	return wetDistributionEmittersSection.value?.validateEmitters() ?? true;
 };
 
 defineExpose({
-	getIncompleteEmitterIndexes,
+	validateEmitters,
 });
+
 </script>
 
 <template>
@@ -120,3 +121,5 @@ defineExpose({
 	<FieldsPercentageRecirculated :model="model" />
 	<HemDefaultProductWarning :brand-names="productBrandNames" />
 </template>
+
+

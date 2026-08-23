@@ -250,18 +250,12 @@ const saveEmitter = () => {
 	clearEmitterIndexFromUrl();
 };
 
-const getIncompleteEmitterIndexes = () => {
-	return emitters.value.reduce<number[]>((indexes, emitter, index) => {
-		if (!isWetDistributionEmitterComplete(emitter)) {
-			indexes.push(index);
-		}
-
-		return indexes;
-	}, []);
+const validateEmitters = (): boolean => {
+	return emitters.value.every(isWetDistributionEmitterComplete);
 };
 
 defineExpose({
-	getIncompleteEmitterIndexes,
+	validateEmitters,
 });
 
 const incompatibleEnergySource = ref(false);
@@ -278,7 +272,6 @@ function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
 		<h2 class="govuk-heading-l">Emitters</h2>
 		<div
 			v-for="(emitter, i) in emitters"
-			:id="`emitter-${emitter.id}`"
 			:key="emitter.id"
 			ref="emitterCards"
 			:data-testid="`emitter-${emitter.id}`"
