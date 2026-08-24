@@ -35,7 +35,7 @@ const expectedHouseInput: FhsInputSchema = {
 		["mains elec"]: {
 			fuel: "electricity",
 			is_export_capable: true,
-			// power_limit_export: 50, TODO: add this in when backend schema updated to Alpha 9
+			power_limit_export: 50,
 		},
 	},
 	Events: {},
@@ -1058,7 +1058,7 @@ describe("FHS input mapper", () => {
 					buildingWidth: 20,
 					fuelType: ["electricity"],
 					canExportToGrid: "yes",
-					// maxPowerExported: { amount: 50, unit: "kilowatt" }, TODO: add this in once backend schema has been updated to Alpha 9
+					maxPowerExported: { amount: 50, unit: "kilowatt" },
 					isPartGCompliant: false,
 					partOActiveCoolingRequired: true,
 				},
