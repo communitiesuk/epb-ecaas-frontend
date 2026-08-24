@@ -1,10 +1,9 @@
-import type { SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaEdgeInsulation, BuildingElementGroundForSchema, BuildingElementPartyWallForSchema } from "~/schema/aliases";
-import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from "deepmerge";
-import { defaultZoneName } from "./common";
-import { asMetres, type Length } from "../utils/units/length";
-import type { SchemaBuildingElementTransparent } from "~/schema/api-schema.types";
 import { arrayIncludes } from "ts-extras";
+import type { BuildingElementGroundForSchema, BuildingElementPartyWallForSchema, SchemaBuildingElement, SchemaEdgeInsulation, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaZoneInput } from "~/schema/aliases";
+import { asMetres, type Length } from "../utils/units/length";
+import { defaultZoneName } from "./common";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 
 function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
@@ -421,8 +420,12 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				thermal_resistance_construction: x.thermalResistanceHalfWall,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
-				party_wall_cavity_type: x.partyWallCavityType,
-				...(arrayIncludes(["unfilled_unsealed", "unfilled_sealed", "filled_unsealed"], x.partyWallCavityType) && { party_wall_lining_type: x.partyWallLiningType }),
+				...(arrayIncludes(["unfilled_unsealed", "unfilled_sealed", "filled_unsealed"], x.partyWallCavityType) ? {
+					party_wall_cavity_type: x.partyWallCavityType,
+					party_wall_lining_type: x.partyWallLiningType!,
+				} : {
+					party_wall_cavity_type: x.partyWallCavityType,
+				}),
 			} as const satisfies BuildingElementPartyWallForSchema,
 		};
 	}) || [];

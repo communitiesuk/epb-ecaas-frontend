@@ -1,10 +1,10 @@
-import { objectEntries, objectFromEntries } from "ts-extras";
-import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
-import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
-import { defaultElectricityEnergySupplyName } from "./common";
-import { asCubicMetresPerHour } from "~/utils/units/flowRate";
+import { objectFromEntries } from "ts-extras";
 import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/aliases";
 import type { SchemaMechVentCommon } from "~/schema/api-schema.types";
+import { asCubicMetresPerHour } from "~/utils/units/flowRate";
+import { defaultElectricityEnergySupplyName } from "./common";
+import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, baseHeightOfVentilationZone } = mapVentilationData(state);
@@ -18,15 +18,7 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 		},
 		ventilation_zone_base_height: baseHeightOfVentilationZone,
 		ach_max_static_calcs: 2, // suggested default
-		MechanicalVentilation: objectFromEntries(objectEntries(mechanicalVentilation).map(([name, mechanicalVentData]) => {
-			return [
-				name,
-				{
-					...mechanicalVentData,
-					...(mechanicalVentData.vent_type === "MVHR" ? { ductwork: mapMvhrDuctworkData(name, state) } : {}),
-				},
-			];
-		})),
+		MechanicalVentilation: mechanicalVentilation,
 		Vents: mapVentsData(state),
 	};
 
@@ -88,7 +80,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					vent_type: "MVHR",
 					...commonFields,
 					mvhr_location: x.mvhrLocation,
-					ductwork: [],
+					ductwork: mapMvhrDuctworkData(x.name, state),
 					position_exhaust: {
 						mid_height_air_flow_path: x.midHeightOfAirFlowPathForExhaust,
 						orientation360: exhaustAssociatedItem?.orientation ?? x.orientationOfExhaust,

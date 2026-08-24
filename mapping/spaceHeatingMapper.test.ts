@@ -1,22 +1,22 @@
-import {
-	mapBoilers,
-	mapHeatBatteries,
-	mapHeatPumps,
-	mapElectricStorageHeaters,
-	mapWarmAirHeater,
-	mapInstantElectricHeaters,
-	mapWetDistributions,
-	mapSpaceHeatSystem,
-	mapHIUs,
-} from "./spaceHeatingMapper";
+import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetHeatPumpInput } from "~/schema/aliases";
+import type { HeatEmittingData, WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
+import { asMetres, millimetre } from "~/utils/units/length";
+import { kilowatt } from "~/utils/units/power";
+import { celsius } from "~/utils/units/temperature";
+import { unitValue } from "~/utils/units/units";
 import type { SchemaElecStorageHeaterWithProductReference, SchemaWetDistribution } from "../schema/api-schema.types";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
-import type { HeatEmittingData, WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
-import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetHeatPumpInput } from "~/schema/aliases";
-import { celsius } from "~/utils/units/temperature";
-import { kilowatt } from "~/utils/units/power";
-import { unitValue } from "~/utils/units/units";
-import { asMetres, millimetre } from "~/utils/units/length";
+import {
+	mapBoilers,
+	mapElectricStorageHeaters,
+	mapHeatBatteries,
+	mapHeatPumps,
+	mapHIUs,
+	mapInstantElectricHeaters,
+	mapSpaceHeatSystem,
+	mapWarmAirHeater,
+	mapWetDistributions,
+} from "./spaceHeatingMapper";
 
 describe("Space heating - heat sources", () => {
 	describe("mapHeatPumps", () => {
@@ -706,6 +706,7 @@ describe("Space heating - emitters", () => {
 					},
 					Zone: defaultZoneName,
 					bypass_fraction_recirculated: wetDistributionSystemEcoDesign.percentageRecirculated / 100,
+					thermal_mass: 1,
 				},
 			} as Record<string, SchemaWetDistribution>;
 			const resolvedState = resolveState(store.$state);
@@ -761,6 +762,7 @@ describe("Space heating - emitters", () => {
 					},
 					Zone: defaultZoneName,
 					bypass_fraction_recirculated: wetDistributionSystemNoEcoDesign.percentageRecirculated / 100,
+					thermal_mass: 1,
 				},
 			} as Record<string, SchemaWetDistribution>;
 			const resolvedState = resolveState(store.$state);
@@ -816,6 +818,7 @@ describe("Space heating - emitters", () => {
 					},
 					Zone: defaultZoneName,
 					bypass_fraction_recirculated: wetDistributionSystemVariableFlow.percentageRecirculated / 100,
+					thermal_mass: 1,
 				},
 			} as Record<string, SchemaWetDistribution>;
 			const resolvedState = resolveState(store.$state);
@@ -879,6 +882,7 @@ describe("Space heating - emitters", () => {
 					},
 					Zone: defaultZoneName,
 					bypass_fraction_recirculated: wetDistributionSystemEcoDesign.percentageRecirculated / 100,
+					thermal_mass: 1,
 				},
 				[wetDistributionSystemNoEcoDesign.name]: {
 					type: "WetDistribution",
@@ -913,6 +917,7 @@ describe("Space heating - emitters", () => {
 					},
 					Zone: defaultZoneName,
 					bypass_fraction_recirculated: wetDistributionSystemNoEcoDesign.percentageRecirculated / 100,
+					thermal_mass: 1,
 				},
 			} as Record<string, SchemaWetDistribution>;
 			const resolvedState = resolveState(store.$state);

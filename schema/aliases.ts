@@ -1,5 +1,5 @@
 import type { Simplify } from "type-fest";
-import type { components, SchemaMassDistributionClass, SchemaBuildingElementGround, SchemaBuildingElementOpaque, SchemaRadiatorWithProductReference, SchemaUfhWithProductReference, SchemaFancoilWithProductReference } from "./api-schema.types";
+import type { components, SchemaBuildingElementGround, SchemaBuildingElementOpaque, SchemaFancoilWithProductReference, SchemaMassDistributionClass, SchemaRadiatorWithProductReference, SchemaUfhWithProductReference } from "./api-schema.types";
 
 // Some aliases to names in the API schema generated types, sometimes for more graceful backwards compatibility
 // as different names get used in the upstream schemas

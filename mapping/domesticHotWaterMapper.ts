@@ -1,10 +1,10 @@
-import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaOtherWaterUseDetails, SchemaWaterPipework, SchemaStorageTank, SchemaHeatSourceWetDetails, SchemaWWHRS } from "~/schema/aliases";
-import type { SchemaHeaderTankOrMainsWater, SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
-import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
-import { defaultElectricityEnergySupplyName } from "./common";
 import { objectFromEntries } from "ts-extras";
 import { useColdWaterSource } from "~/composables/coldWaterSource";
+import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaHeatSourceWetDetails, SchemaOtherWaterUseDetails, SchemaStorageTank, SchemaWaterPipework, SchemaWWHRS } from "~/schema/aliases";
+import type { SchemaHeaderTankOrMainsWater, SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
 import type { ColdWaterSourceType, WaterStorageData } from "~/stores/ecaasStore.schema";
+import { defaultElectricityEnergySupplyName } from "./common";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 export const defaultColdWaterSourceData: SchemaHeaderTankOrMainsWater = {
 	start_day: 0,
@@ -288,14 +288,7 @@ function mapWaterStorageHeatSource(
 	>,
 	state: ResolvedState,
 ) {
-	type WaterStorageHeatSource<T extends SchemaSmartHotWaterTank["HeatSource"][string]["type"]>
-		= Extract<
-			SchemaSmartHotWaterTank["HeatSource"][string],
-			{ type: T }
-		> | Extract<
-			SchemaStorageTank["HeatSource"][string],
-			{ type: T }
-		>;
+	type WaterStorageHeatSource = SchemaSmartHotWaterTank["HeatSource"][string] | SchemaStorageTank["HeatSource"][string];
 
 	const temp_flow_limit_upper = getTempFlowLimitUpper(dhwHeatSource, actualHeatSource);
 
@@ -317,7 +310,7 @@ function mapWaterStorageHeatSource(
 						type: "HeatPump_HWOnly",
 						product_reference: actualHeatSource.productReference,
 						...commonWSHeatSourceProps,
-					} as const satisfies WaterStorageHeatSource<"HeatPump_HWOnly">,
+					} as const satisfies WaterStorageHeatSource,
 				};
 				break;
 			}
@@ -333,7 +326,7 @@ function mapWaterStorageHeatSource(
 					name: actualHeatSource.name,
 					temp_flow_limit_upper,
 					...commonWSHeatSourceProps,
-				} as const satisfies WaterStorageHeatSource<"HeatSourceWet">,
+				} as const satisfies WaterStorageHeatSource,
 			};
 			mappedHeatSourceWet = mapHeatSourceWet(actualHeatSource, state);
 			break;
@@ -357,7 +350,7 @@ function mapWaterStorageHeatSource(
 					orientation360: actualHeatSource.orientation,
 					solar_loop_piping_hlc: actualHeatSource.heatLossCoefficientOfSolarLoopPipe,
 					...commonWSHeatSourceProps,
-				} as const satisfies WaterStorageHeatSource<"SolarThermalSystem">,
+				} as const satisfies WaterStorageHeatSource,
 			};
 			break;
 		case "immersionHeater":
@@ -368,7 +361,7 @@ function mapWaterStorageHeatSource(
 					power: actualHeatSource.power,
 					EnergySupply: defaultElectricityEnergySupplyName,
 					...commonWSHeatSourceProps,
-				} as const satisfies WaterStorageHeatSource<"ImmersionHeater">,
+				} as const satisfies WaterStorageHeatSource,
 			};
 			break;
 		default:

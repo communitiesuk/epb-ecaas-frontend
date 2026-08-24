@@ -1,12 +1,12 @@
 import type { ValidateFunction } from "ajv/dist/2020";
-import { ajv } from "../schema/validator";
-import { mapFhsInputData } from "./fhsInputMapper";
-import type { FhsInputSchema } from "./fhsInputMapper";
-import { resolveState } from "~/stores/resolve";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
-import { centimetre, metre, millimetre } from "../utils/units/length";
+import { resolveState } from "~/stores/resolve";
 import { unitValue } from "~/utils/units";
 import { celsius } from "~/utils/units/temperature";
+import { ajv } from "../schema/validator";
+import { centimetre, metre, millimetre } from "../utils/units/length";
+import type { FhsInputSchema } from "./fhsInputMapper";
+import { mapFhsInputData } from "./fhsInputMapper";
 
 const baseForm = {
 	data: [],
@@ -237,6 +237,7 @@ const expectedHouseInput: FhsInputSchema = {
 			"type": "WetDistribution",
 			"variable_flow": false,
 			"bypass_fraction_recirculated": 0.2,
+			"thermal_mass": 1,
 		},
 		"Warm Air Heater 1 (1)": {
 			"HeatSource": {
