@@ -154,7 +154,7 @@ describe("internal door", () => {
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 
 	
-			const table = screen.getByTestId("doorArealHeatCapacityTable");
+			const table = screen.getByTestId("constructionBuildUpTable");
 	
 			expect(table).toBeDefined();
 			expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();
@@ -226,7 +226,7 @@ describe("internal door", () => {
 			await user.click(screen.getByTestId("typeOfInternalDoor_unheatedSpace"));
 
 	
-			const table = screen.getByTestId("doorArealHeatCapacityTable");
+			const table = screen.getByTestId("constructionBuildUpTable");
 	
 			expect(table).toBeDefined();
 			expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();

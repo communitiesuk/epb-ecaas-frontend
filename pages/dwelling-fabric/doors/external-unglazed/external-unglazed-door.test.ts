@@ -629,7 +629,7 @@ describe("external unglazed door", () => {
 			},
 		});
 	
-		const table = screen.getByTestId("doorArealHeatCapacityTable");
+		const table = screen.getByTestId("constructionBuildUpTable");
 	
 		expect(table).toBeDefined();
 		expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();

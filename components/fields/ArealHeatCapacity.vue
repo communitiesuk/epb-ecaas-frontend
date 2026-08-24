@@ -9,8 +9,7 @@ defineProps<{
 	help?: string;
 	showFloorGuidance?: boolean;
 	showWallGuidance?: boolean;
-	showInternalWallGuidance?: boolean;
-	showDoorGuidance?: boolean;
+	showConstructionBuildUpGuidance?: boolean;
 }>();
 
 const arealHeatCapacityOptions = {
@@ -45,8 +44,7 @@ const arealHeatCapacityOptions = {
 		data-field="Zone.BuildingElement.*.areal_heat_capacity"
 	>
 		<FieldsArealHeatCapacityWallArealHeatCapacityGuidance v-if="showWallGuidance" />
-		<FieldsArealHeatCapacityInternalWallArealHeatCapacityGuidance v-else-if="showInternalWallGuidance"/>
-		<FieldsArealHeatCapacityDoorArealHeatCapacityGuidance v-else-if="showDoorGuidance"/>
+		<FieldsArealHeatCapacityConstructionBuildUpGuidance v-else-if="showConstructionBuildUpGuidance"/>
 		<FieldsArealHeatCapacityFloorArealHeatCapacityGuidance v-else-if="showFloorGuidance"/>
 		<GovDetails v-else summary-text="Help with this input">
 			<p class="govuk-body">The areal heat capacity of a building element is not the same as the kappa value. Kappa values only consider the thermal mass directly exposed to the internal space, whereas the areal heat capacity  takes into account the full thickness of the building element.</p>				

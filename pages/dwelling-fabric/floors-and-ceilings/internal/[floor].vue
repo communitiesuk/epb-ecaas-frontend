@@ -114,7 +114,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Enter the net area of the building element, subtracting any doors or windows."
 				:zod="surfaceAreaAdjacentSpaceZod"
 			/>
-			<FieldsArealHeatCapacity help="Typically very light for internal floors/ceilings" />
+			<FieldsArealHeatCapacity show-construction-build-up-guidance help="Typically very light for internal floors / ceilings" />
 			<FieldsMassDistributionClass help="This is the mass distribution class of the full construction build up" />
 			<FieldsUValue help="Enter the U-value of the full construction build up" />
 		</template>

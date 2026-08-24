@@ -244,7 +244,7 @@ describe("internal wall", () => {
 			},
 		});
 	
-		const table = screen.getByTestId("internalWallArealHeatCapacityTable");
+		const table = screen.getByTestId("constructionBuildUpTable");
 	
 		expect(table).toBeDefined();
 		expect(within(table).getByText("Areal heat capacity classification")).toBeDefined();

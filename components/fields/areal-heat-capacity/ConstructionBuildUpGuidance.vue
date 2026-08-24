@@ -2,7 +2,7 @@
 	<GovDetails summary-text="Help with this input">
 		<table
 			class="govuk-table"
-			data-testid="internalWallArealHeatCapacityTable"
+			data-testid="constructionBuildUpTable"
 		>
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row">

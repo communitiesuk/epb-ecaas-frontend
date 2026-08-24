@@ -118,7 +118,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="arealHeatCapacity"
 			name="arealHeatCapacity"
 			help="For internal walls, this is usually very light"
-			:show-internal-wall-guidance="true"
+			show-construction-build-up-guidance
 		/>
 		<FieldsMassDistributionClass
 			id="massDistributionClass"

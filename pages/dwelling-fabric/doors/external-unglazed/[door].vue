@@ -144,7 +144,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="arealHeatCapacity"
 			name="arealHeatCapacity"
 			help="For doors, this is usually very light"
-			:show-door-guidance="true"
+			show-construction-build-up-guidance
 		/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FieldsFrontDoor
