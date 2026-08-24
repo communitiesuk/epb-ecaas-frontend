@@ -192,12 +192,24 @@ export interface components {
             heater_position: number;
             thermostat_position?: number;
         };
+        HotWaterOnlyHeatPumpWithSeparateTank: {
+            /** @constant */
+            type: "HeatPump_HWOnly";
+            /** @constant */
+            tank_is_integral?: false;
+        };
         HeatPump_HWOnlyTestData: {
             cop_dhw: number;
             hw_tapping_prof_daily_total: number;
             energy_input_measured: number;
             power_standby: number;
             hw_vessel_loss_daily: number;
+        };
+        HotWaterOnlyHeatPumpWithIntegralTank: {
+            /** @constant */
+            type: "HeatPump_HWOnly";
+            /** @constant */
+            tank_is_integral: true;
         };
         /** @description A possible heat source for a hot water tank */
         ImmersionHeater: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
@@ -242,24 +254,24 @@ export interface components {
              * @description A unique reference to a product held within the HEM database (PCDB)
              */
             product_reference: string;
-        } | {
+        } | ({
             /** @constant */
             type: "HeatPump_HWOnly";
             EnergySupply: string;
             power_max: number;
             tank_volume_declared: number;
-            heat_exchanger_surface_area_declared: number;
+            heat_exchanger_surface_area_declared: number | null;
+            tank_is_integral?: boolean;
             daily_losses_declared: number;
             in_use_factor_mismatch: number;
             test_data: {
                 M?: components["schemas"]["HeatPump_HWOnlyTestData"];
                 L?: components["schemas"]["HeatPump_HWOnlyTestData"];
             };
-        });
+        } | components["schemas"]["HotWaterOnlyHeatPumpWithSeparateTank"]));
         Tank: {
             ColdWaterSource: string;
             volume: number;
-            init_temp?: number;
             daily_losses: number;
             primary_pipework?: {
                 /** @enum {unknown} */
@@ -280,8 +292,6 @@ export interface components {
             heat_exchanger_surface_area?: number;
         };
         SolarThermalSystemWithProductReference: {
-            /** @constant */
-            type: "SolarThermalSystem";
             /**
              * Reference to the product in the HEM database
              * @description A unique reference to a product held within the HEM database (PCDB)
@@ -406,7 +416,7 @@ export interface components {
             battery_type: "pcm";
             electricity_circ_pump: number;
             electricity_standby: number;
-            rated_charge_power: number;
+            rated_charge_power?: number;
             max_rated_losses: number;
             number_of_units: number;
             simultaneous_charging_and_discharging: boolean;
@@ -415,12 +425,48 @@ export interface components {
             heat_storage_kJ_per_K_during_Phase_transition: number;
             phase_transition_temperature_upper: number;
             phase_transition_temperature_lower: number;
+            /** @description Water velocity in the battery's heat exchanger tubes at a flow rate of 1 litre/minute, from which the velocity at the operating flow rate is scaled (unit: m/s). */
             velocity_in_HEX_tube_at_1_l_per_min_m_per_s: number;
+            /** @description Slope of the battery heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K, Re being the Reynolds number at 1 litre/minute (unit: W/K). Obtained by fitting the exchanger's measured performance. */
             A: number;
+            /** @description Intercept of the battery heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K (unit: W/K). Obtained by fitting the exchanger's measured performance. */
             B: number;
+            /** @description Internal diameter of the battery heat exchanger's inlet tube, used with the velocity to obtain the Reynolds number (unit: mm). */
             inlet_diameter_m: number;
             max_temperature: number;
+            /** @description Flow rate through the battery's heat exchanger in normal operation (unit: litre/minute). A hydronic charging source may declare its own charging flow rate where the charging circuit differs. */
             flow_rate_l_per_min: number;
+            /** @description Temperature at which the battery is considered fully discharged, used as the state-of-charge zero reference (unit: °C). Required when charging sources are declared. */
+            temp_min_useful?: number;
+            /** @description Named sources that charge the battery, each either a direct electric element or a wet heat source such as a heat pump. Omit to charge by direct electric element at a rated power instead. */
+            HeatSource?: {
+                [key: string]: {
+                    /** @enum {string} */
+                    type: "DirectElectric" | "HeatSourceWet";
+                } & ({
+                    /** @constant */
+                    type: "DirectElectric";
+                    /** @description Rated charging power of the direct electric element (unit: kW). */
+                    rated_charge_power: number;
+                } | {
+                    /** @constant */
+                    type: "HeatSourceWet";
+                    /** @description Name of the HeatSourceWet that charges the battery, such as a heat pump. */
+                    name: string;
+                    /** @description Maximum flow temperature the heat source may be asked for when charging, reflecting the charging circuit's limits (unit: °C). It should exceed the battery's phase change temperature, or the battery stores only sensible heat. */
+                    temp_flow_limit_upper: number;
+                    /** @description Flow rate through the heat exchanger when charging hydronically (unit: litre/minute). */
+                    flow_rate_charging_l_per_min: number;
+                    /** @description Slope of the charging heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K, Re being the Reynolds number at 1 litre/minute (unit: W/K). Obtained by fitting the exchanger's measured performance. It may differ from the battery's own A where charging and discharging use different exchangers. */
+                    A: number;
+                    /** @description Intercept of the charging heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K (unit: W/K). Obtained by fitting the exchanger's measured performance. It may differ from the battery's own B where charging and discharging use different exchangers. */
+                    B: number;
+                    /** @description Water velocity in the charging heat exchanger's tubes at a flow rate of 1 litre/minute, from which the velocity at the charging flow rate is scaled (unit: m/s). */
+                    velocity_in_HEX_tube_at_1_l_per_min_m_per_s: number;
+                    /** @description Internal diameter of the charging heat exchanger's inlet tube, used with the velocity to obtain the Reynolds number (unit: mm). */
+                    inlet_diameter_mm: number;
+                });
+            };
         };
         DryCoreBattery: {
             /** @constant */
@@ -443,12 +489,6 @@ export interface components {
             dry_core_max_output: number[][];
             /** @description Fan power (W) */
             fan_pwr: number;
-            /**
-             * State Of Charge Init
-             * @description State of charge at initialisation of dry core heat storage (ratio). NB. this field is marked for removal, and only a value of 1 is accepted.
-             * @constant
-             */
-            state_of_charge_init: 1;
         };
         ColdWaterSource: {
             /** @enum {unknown} */
@@ -476,14 +516,8 @@ export interface components {
              * @description A unique reference to a product held within the HEM database (PCDB)
              */
             product_reference: string;
-        } & ({
-            /** @constant */
-            radiator_type: "standard";
             length: number;
-        } | {
-            /** @constant */
-            radiator_type: "towel";
-        });
+        };
         Ufh: {
             /** @constant */
             wet_emitter_type: "ufh";
@@ -576,9 +610,10 @@ export interface components {
         MassDistributionClass: "I: Mass concentrated at internal side" | "E: Mass concentrated at external side" | "IE: Mass divided over internal and external side" | "D: Mass equally distributed" | "M: Mass concentrated inside";
         BuildingElementAdjacentCommon: {
             pitch: number;
-            /** @enum {unknown} */
-            areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
+            /** @description Areal heat capacity of the full construction, as a qualitative class or a numeric value in J/(m²·K). */
+            areal_heat_capacity: ("Very light" | "Light" | "Medium" | "Heavy" | "Very heavy") | number;
             mass_distribution_class: components["schemas"]["MassDistributionClass"];
+            /** @description Net area of the element, in m². */
             area: number;
         };
         SlabNoEdgeInsulation: {
@@ -610,11 +645,18 @@ export interface components {
             height_upper_surface: number;
             thermal_transm_walls: number;
             area_per_perimeter_vent: number;
-            /** @enum {unknown} */
-            shield_fact_location: "Sheltered" | "Average" | "Exposed";
             thickness_walls: number;
             thermal_resist_insul: number;
-        };
+            /** @description Whether the underfloor vents are smart air bricks, which close automatically to limit ventilation of the underfloor space when it is not needed. Omit or set false for fixed air bricks. */
+            smart_air_bricks?: boolean;
+            /** @description Whether the underfloor vents were open (true) or closed (false) during the dwelling airtightness pressurisation test. The infiltration adjustment is applied relative to the tested state, so it is required for smart air bricks and meaningless without them. */
+            vents_open_during_airtightness_test?: boolean;
+        } & ({
+            /** @constant */
+            smart_air_bricks: true;
+        } | {
+            vents_open_during_airtightness_test?: unknown;
+        });
         BasementCommon: {
             thickness_walls: number;
             depth_basement_floor: number;
@@ -642,7 +684,7 @@ export interface components {
          * @description Types of party wall cavity configurations
          * @enum {string}
          */
-        PartyWallCavityType: "solid" | "unfilled_unsealed" | "unfilled_sealed" | "filled_sealed" | "filled_unsealed" | "defined_resistance";
+        PartyWallCavityType: "solid" | "unfilled_unsealed" | "unfilled_sealed" | "filled_sealed" | "filled_unsealed";
         WindowShading: ({
             distance: number;
         } & ({
@@ -657,34 +699,10 @@ export interface components {
         }))[];
         /** @enum {string} */
         ApplianceValue: "Not Installed" | "Default";
-        /**
-         * @default Default
-         * @enum {string}
-         */
-        ApplianceValueDefault: "Not Installed" | "Default";
         HeaderTankOrMainsWater: {
             start_day: number;
             temperatures: number[];
             time_series_step: number;
-        };
-        EnergySupplyGas: {
-            /** @enum {unknown} */
-            fuel: "mains_gas";
-        };
-        EnergySupplyElectricity: {
-            /** @constant */
-            fuel: "electricity";
-            priority?: ("ElectricBattery" | "diverter")[];
-            is_export_capable?: boolean;
-            diverter?: {
-                HeatSource: string;
-            };
-            ElectricBattery?: components["schemas"]["ElectricBattery"];
-        };
-        EnergySupplyOther: {
-            /** @enum {unknown} */
-            fuel: "LPG_bulk" | "LPG_bottled" | "LPG_condition_11F";
-            is_export_capable: boolean;
         };
         /** @description A possible hot water source */
         SmartHotWaterTank: {
@@ -718,11 +736,38 @@ export interface components {
             /** @description References a key (e.g., "mains water") in $.ColdWaterSource */
             ColdWaterSource: string;
         } | components["schemas"]["Tank"]);
+        EnergySupplyGas: {
+            /** @enum {unknown} */
+            fuel: "mains_gas";
+        };
+        EnergySupplyElectricity: {
+            /** @constant */
+            fuel: "electricity";
+            priority?: ("ElectricBattery" | "diverter")[];
+            is_export_capable?: boolean;
+            diverter?: {
+                HeatSource: string;
+            };
+            ElectricBattery?: components["schemas"]["ElectricBattery"];
+        } & ({
+            /** @constant */
+            is_export_capable: false;
+            power_limit_export?: unknown;
+        } | {
+            /** @description Maximum AC power exportable to the grid, typically a Distribution Network Operator limit enforced by a G100-compliant export limitation device. Applies to the whole supply: generation surplus and battery discharge share the limit. Generation surplus above the limit is curtailed, and battery discharge is throttled so that unexported energy is retained as charge. Omit for no limit, leaving the inverter's AC capacity as the only ceiling (unit: kW). */
+            power_limit_export?: number;
+        });
+        EnergySupplyOther: {
+            /** @enum {unknown} */
+            fuel: "LPG_bulk" | "LPG_bottled" | "LPG_condition_11F";
+            is_export_capable: boolean;
+        };
         /** @description A possible hot water source */
         PointOfUse: {
             /** @constant */
             type: "PointOfUse";
-            efficiency: number;
+            /** @constant */
+            efficiency: 1;
             EnergySupply: string;
             /** @enum {unknown} */
             ColdWaterSource: "header tank" | "mains water";
@@ -987,7 +1032,7 @@ export interface components {
              * @description A unique reference to a product held within the HEM database (PCDB)
              */
             product_reference: string;
-            building_level_distribution_losses: number;
+            building_level_distribution_losses?: number;
         } | {
             HIU_daily_loss: number;
             power_max: number;
@@ -1155,6 +1200,8 @@ export interface components {
         BuildingElementAdjacentConditionedSpace: components["schemas"]["BuildingElementAdjacentCommon"] & {
             /** @constant */
             type: "BuildingElementAdjacentConditionedSpace";
+            /** @description Is the adjacent space within the dwelling being modelled? */
+            is_adjacent_space_within_dwelling: boolean;
         };
         BuildingElementAdjacentUnconditionedSpace_Simple: components["schemas"]["BuildingElementAdjacentCommon"] & {
             /** @constant */
@@ -1200,12 +1247,11 @@ export interface components {
             pitch: number;
             frame_area_fraction: number;
             g_value: number;
-            free_area_height: number;
-            mid_height: number;
-            max_window_open_area: number;
             security_risk: boolean;
-            window_part_list: {
-                mid_height_air_flow_path: number;
+            window_part_list?: {
+                free_area_height: number;
+                mid_height: number;
+                max_window_open_area: number;
             }[];
             shading: components["schemas"]["WindowShading"];
             treatment?: {
@@ -1239,6 +1285,9 @@ export interface components {
             pitch: number;
             /** @description Type of party wall cavity construction affecting heat loss through air movement */
             party_wall_cavity_type: components["schemas"]["PartyWallCavityType"];
+            /** @description Whole-element (room-to-room) thermal transmittance of the party wall, in W/(m²·K), covering both leaves. Used only for the Building Regulations compliance report; it is not used in the HEM energy calculation, which derives party-wall heat loss from thermal_resistance_construction and party_wall_cavity_type. It is not derivable from those inputs, which describe the construction only to the wall's midpoint, so it is authored by the assessor from the full build-up. Only a sanity range is applied here; the limiting fabric standard is enforced by the compliance report. */
+            u_value_whole_wall: number;
+            u_value?: never;
         } & ({
             /**
              * PartyWallCavityType
@@ -1248,18 +1297,6 @@ export interface components {
             party_wall_cavity_type: "unfilled_unsealed" | "unfilled_sealed" | "filled_unsealed";
             /** @description Type of party wall lining. Required only when party_wall_cavity_type is unfilled_unsealed, unfilled_sealed, or filled_unsealed */
             party_wall_lining_type: components["schemas"]["PartyWallLiningType"];
-        } | {
-            /**
-             * PartyWallCavityType
-             * @description Types of party wall cavity configurations
-             * @constant
-             */
-            party_wall_cavity_type: "defined_resistance";
-            /**
-             * Thermal Resistance Cavity
-             * @description Effective thermal resistance of the party wall cavity (unit: m².K/W). Required only when party_wall_cavity_type is 'defined_resistance'. For other cavity types, this is calculated automatically.
-             */
-            thermal_resistance_cavity: number;
         } | {
             /**
              * PartyWallCavityType
@@ -1303,8 +1340,6 @@ export interface components {
             NumberOfUtilityRooms: number;
             /** @description A bathroom is any room that contains a bath or shower */
             NumberOfBathrooms: number;
-            /** @description Any space containing one or more flush toilets or urinals but not a bath or shower. Multiple cubicles counts as one space as long as there is free circulation of air throughout */
-            NumberOfSanitaryAccommodations: number;
             /** @description A habitable room is any that is not used solely as a kitchen, bathroom, utility, cellar or sanitary accommodation */
             NumberOfHabitableRooms: number;
             /** @enum {unknown} */
@@ -1326,15 +1361,14 @@ export interface components {
             Appliances: {
                 Oven?: components["schemas"]["ApplianceValue"];
                 Hobs?: components["schemas"]["ApplianceValue"];
-                Kettle?: components["schemas"]["ApplianceValueDefault"];
-                Microwave?: components["schemas"]["ApplianceValueDefault"];
-                "Fridge-Freezer"?: components["schemas"]["ApplianceValueDefault"];
+                Kettle?: components["schemas"]["ApplianceValue"];
+                Microwave?: components["schemas"]["ApplianceValue"];
+                "Fridge-Freezer"?: components["schemas"]["ApplianceValue"];
                 Dishwasher?: components["schemas"]["ApplianceValue"];
                 Clothes_washing?: components["schemas"]["ApplianceValue"];
                 Clothes_drying?: components["schemas"]["ApplianceValue"];
                 Fridge?: components["schemas"]["ApplianceValue"];
                 Freezer?: components["schemas"]["ApplianceValue"];
-                Otherdevices?: components["schemas"]["ApplianceValue"];
             };
             ColdWaterSource: {
                 /** @description Potentially incomplete - header tank properties were inferred from example input files */
@@ -1344,7 +1378,12 @@ export interface components {
                 "mains water": components["schemas"]["HeaderTankOrMainsWater"];
             };
             PreHeatedWaterSource?: {
-                "preheated tank": components["schemas"]["Tank"];
+                "preheated tank": {
+                    /** @enum {unknown} */
+                    type: "StorageTank" | "SmartHotWaterTank";
+                    ColdWaterSource: string;
+                    init_temp: number;
+                } & (components["schemas"]["Tank"] | components["schemas"]["SmartHotWaterTank"]);
             };
             EnergySupply: {
                 [key: string]: components["schemas"]["EnergySupplyGas"] | components["schemas"]["EnergySupplyElectricity"] | components["schemas"]["EnergySupplyOther"];
@@ -1489,8 +1528,6 @@ export interface components {
             } & ({
                 /** @constant */
                 build_type: "flat";
-                /** @description What storey of the main building is the flat on? For multi-story flats, enter the lowest storey the unit occupies */
-                storey_of_dwelling: number;
                 /** @description Number of storeys, within the entire building, that contain dwellings. This should be greater than or equal to storeys_in_dwelling. */
                 storeys_in_building: number;
             } | {
@@ -1524,8 +1561,6 @@ export interface components {
                 };
                 MechanicalVentilation?: {
                     [key: string]: ({
-                        design_zone_cooling_covered_by_mech_vent?: number;
-                        design_zone_heating_covered_by_mech_vent?: number;
                         /**
                          * Reference to the product in the HEM database
                          * @description A unique reference to a product held within the HEM database (PCDB)
@@ -1541,18 +1576,27 @@ export interface components {
                         vent_type: "MVHR";
                         /** @enum {unknown} */
                         mvhr_location: "inside" | "outside";
-                        ductwork: {
-                            /** @enum {unknown} */
-                            cross_section_shape: "circular" | "rectangular";
-                            internal_diameter_mm: number;
-                            external_diameter_mm: number;
+                        ductwork: ({
+                            /** @description Cross-sectional perimeter length of rectangular ductwork (unit: mm) */
+                            duct_perimeter_mm?: number;
+                            internal_diameter_mm?: number;
+                            external_diameter_mm?: number;
                             length: number;
                             insulation_thermal_conductivity: number;
                             insulation_thickness_mm: number;
                             reflective: boolean;
                             /** @enum {unknown} */
                             duct_type: "supply" | "extract" | "intake" | "exhaust";
-                        }[];
+                        } & ({
+                            /** @constant */
+                            cross_section_shape: "circular";
+                            duct_perimeter_mm?: never;
+                        } | {
+                            /** @constant */
+                            cross_section_shape: "rectangular";
+                            internal_diameter_mm?: never;
+                            external_diameter_mm?: never;
+                        }))[];
                         measured_fan_power?: number;
                         measured_air_flow_rate?: number;
                         position_intake: {
@@ -1651,7 +1695,7 @@ export interface components {
                     };
                     ThermalBridging: {
                         [key: string]: components["schemas"]["ThermalBridgeLinear"] | components["schemas"]["ThermalBridgePoint"];
-                    } | number;
+                    };
                 };
             };
             $defs: {
@@ -1685,7 +1729,14 @@ export interface components {
                         HeatSource: string;
                     };
                     ElectricBattery?: components["schemas"]["ElectricBattery"];
-                };
+                } & ({
+                    /** @constant */
+                    is_export_capable: false;
+                    power_limit_export?: unknown;
+                } | {
+                    /** @description Maximum AC power exportable to the grid, typically a Distribution Network Operator limit enforced by a G100-compliant export limitation device. Applies to the whole supply: generation surplus and battery discharge share the limit. Generation surplus above the limit is curtailed, and battery discharge is throttled so that unexported energy is retained as charge. Omit for no limit, leaving the inverter's AC capacity as the only ceiling (unit: kW). */
+                    power_limit_export?: number;
+                });
                 ElectricBattery: {
                     capacity: number;
                     charge_discharge_efficiency_round_trip: number;
@@ -1744,8 +1795,6 @@ export interface components {
                     solar_loop_piping_hlc: number;
                 };
                 SolarThermalSystemWithProductReference: {
-                    /** @constant */
-                    type: "SolarThermalSystem";
                     /**
                      * Reference to the product in the HEM database
                      * @description A unique reference to a product held within the HEM database (PCDB)
@@ -1787,20 +1836,21 @@ export interface components {
                      * @description A unique reference to a product held within the HEM database (PCDB)
                      */
                     product_reference: string;
-                } | {
+                } | ({
                     /** @constant */
                     type: "HeatPump_HWOnly";
                     EnergySupply: string;
                     power_max: number;
                     tank_volume_declared: number;
-                    heat_exchanger_surface_area_declared: number;
+                    heat_exchanger_surface_area_declared: number | null;
+                    tank_is_integral?: boolean;
                     daily_losses_declared: number;
                     in_use_factor_mismatch: number;
                     test_data: {
                         M?: components["schemas"]["HeatPump_HWOnlyTestData"];
                         L?: components["schemas"]["HeatPump_HWOnlyTestData"];
                     };
-                });
+                } | components["schemas"]["HotWaterOnlyHeatPumpWithSeparateTank"]));
                 HeatPump_HWOnlyTestData: {
                     cop_dhw: number;
                     hw_tapping_prof_daily_total: number;
@@ -1808,11 +1858,22 @@ export interface components {
                     power_standby: number;
                     hw_vessel_loss_daily: number;
                 };
+                HotWaterOnlyHeatPumpWithSeparateTank: {
+                    /** @constant */
+                    type: "HeatPump_HWOnly";
+                    /** @constant */
+                    tank_is_integral?: false;
+                };
+                HotWaterOnlyHeatPumpWithIntegralTank: {
+                    /** @constant */
+                    type: "HeatPump_HWOnly";
+                    /** @constant */
+                    tank_is_integral: true;
+                };
                 StorageTank: components["schemas"]["Tank"];
                 Tank: {
                     ColdWaterSource: string;
                     volume: number;
-                    init_temp?: number;
                     daily_losses: number;
                     primary_pipework?: {
                         /** @enum {unknown} */
@@ -1868,7 +1929,8 @@ export interface components {
                 PointOfUse: {
                     /** @constant */
                     type: "PointOfUse";
-                    efficiency: number;
+                    /** @constant */
+                    efficiency: 1;
                     EnergySupply: string;
                     /** @enum {unknown} */
                     ColdWaterSource: "header tank" | "mains water";
@@ -2147,7 +2209,7 @@ export interface components {
                     battery_type: "pcm";
                     electricity_circ_pump: number;
                     electricity_standby: number;
-                    rated_charge_power: number;
+                    rated_charge_power?: number;
                     max_rated_losses: number;
                     number_of_units: number;
                     simultaneous_charging_and_discharging: boolean;
@@ -2156,12 +2218,48 @@ export interface components {
                     heat_storage_kJ_per_K_during_Phase_transition: number;
                     phase_transition_temperature_upper: number;
                     phase_transition_temperature_lower: number;
+                    /** @description Water velocity in the battery's heat exchanger tubes at a flow rate of 1 litre/minute, from which the velocity at the operating flow rate is scaled (unit: m/s). */
                     velocity_in_HEX_tube_at_1_l_per_min_m_per_s: number;
+                    /** @description Slope of the battery heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K, Re being the Reynolds number at 1 litre/minute (unit: W/K). Obtained by fitting the exchanger's measured performance. */
                     A: number;
+                    /** @description Intercept of the battery heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K (unit: W/K). Obtained by fitting the exchanger's measured performance. */
                     B: number;
+                    /** @description Internal diameter of the battery heat exchanger's inlet tube, used with the velocity to obtain the Reynolds number (unit: mm). */
                     inlet_diameter_m: number;
                     max_temperature: number;
+                    /** @description Flow rate through the battery's heat exchanger in normal operation (unit: litre/minute). A hydronic charging source may declare its own charging flow rate where the charging circuit differs. */
                     flow_rate_l_per_min: number;
+                    /** @description Temperature at which the battery is considered fully discharged, used as the state-of-charge zero reference (unit: °C). Required when charging sources are declared. */
+                    temp_min_useful?: number;
+                    /** @description Named sources that charge the battery, each either a direct electric element or a wet heat source such as a heat pump. Omit to charge by direct electric element at a rated power instead. */
+                    HeatSource?: {
+                        [key: string]: {
+                            /** @enum {string} */
+                            type: "DirectElectric" | "HeatSourceWet";
+                        } & ({
+                            /** @constant */
+                            type: "DirectElectric";
+                            /** @description Rated charging power of the direct electric element (unit: kW). */
+                            rated_charge_power: number;
+                        } | {
+                            /** @constant */
+                            type: "HeatSourceWet";
+                            /** @description Name of the HeatSourceWet that charges the battery, such as a heat pump. */
+                            name: string;
+                            /** @description Maximum flow temperature the heat source may be asked for when charging, reflecting the charging circuit's limits (unit: °C). It should exceed the battery's phase change temperature, or the battery stores only sensible heat. */
+                            temp_flow_limit_upper: number;
+                            /** @description Flow rate through the heat exchanger when charging hydronically (unit: litre/minute). */
+                            flow_rate_charging_l_per_min: number;
+                            /** @description Slope of the charging heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K, Re being the Reynolds number at 1 litre/minute (unit: W/K). Obtained by fitting the exchanger's measured performance. It may differ from the battery's own A where charging and discharging use different exchangers. */
+                            A: number;
+                            /** @description Intercept of the charging heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K (unit: W/K). Obtained by fitting the exchanger's measured performance. It may differ from the battery's own B where charging and discharging use different exchangers. */
+                            B: number;
+                            /** @description Water velocity in the charging heat exchanger's tubes at a flow rate of 1 litre/minute, from which the velocity at the charging flow rate is scaled (unit: m/s). */
+                            velocity_in_HEX_tube_at_1_l_per_min_m_per_s: number;
+                            /** @description Internal diameter of the charging heat exchanger's inlet tube, used with the velocity to obtain the Reynolds number (unit: mm). */
+                            inlet_diameter_mm: number;
+                        });
+                    };
                 };
                 DryCoreBattery: {
                     /** @constant */
@@ -2184,12 +2282,6 @@ export interface components {
                     dry_core_max_output: number[][];
                     /** @description Fan power (W) */
                     fan_pwr: number;
-                    /**
-                     * State Of Charge Init
-                     * @description State of charge at initialisation of dry core heat storage (ratio). NB. this field is marked for removal, and only a value of 1 is accepted.
-                     * @constant
-                     */
-                    state_of_charge_init: 1;
                 };
                 /** @description A possible wet heat source */
                 HeatSourceWetHIU: components["schemas"]["HeatSourceWetCommon"] & {
@@ -2201,7 +2293,7 @@ export interface components {
                      * @description A unique reference to a product held within the HEM database (PCDB)
                      */
                     product_reference: string;
-                    building_level_distribution_losses: number;
+                    building_level_distribution_losses?: number;
                 } | {
                     HIU_daily_loss: number;
                     power_max: number;
@@ -2337,14 +2429,8 @@ export interface components {
                      * @description A unique reference to a product held within the HEM database (PCDB)
                      */
                     product_reference: string;
-                } & ({
-                    /** @constant */
-                    radiator_type: "standard";
                     length: number;
-                } | {
-                    /** @constant */
-                    radiator_type: "towel";
-                });
+                };
                 Ufh: {
                     /** @constant */
                     wet_emitter_type: "ufh";
@@ -2487,14 +2573,17 @@ export interface components {
                 };
                 BuildingElementAdjacentCommon: {
                     pitch: number;
-                    /** @enum {unknown} */
-                    areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
+                    /** @description Areal heat capacity of the full construction, as a qualitative class or a numeric value in J/(m²·K). */
+                    areal_heat_capacity: ("Very light" | "Light" | "Medium" | "Heavy" | "Very heavy") | number;
                     mass_distribution_class: components["schemas"]["MassDistributionClass"];
+                    /** @description Net area of the element, in m². */
                     area: number;
                 };
                 BuildingElementAdjacentConditionedSpace: components["schemas"]["BuildingElementAdjacentCommon"] & {
                     /** @constant */
                     type: "BuildingElementAdjacentConditionedSpace";
+                    /** @description Is the adjacent space within the dwelling being modelled? */
+                    is_adjacent_space_within_dwelling: boolean;
                 };
                 BuildingElementAdjacentUnconditionedSpace_Simple: components["schemas"]["BuildingElementAdjacentCommon"] & {
                     /** @constant */
@@ -2543,11 +2632,18 @@ export interface components {
                     height_upper_surface: number;
                     thermal_transm_walls: number;
                     area_per_perimeter_vent: number;
-                    /** @enum {unknown} */
-                    shield_fact_location: "Sheltered" | "Average" | "Exposed";
                     thickness_walls: number;
                     thermal_resist_insul: number;
-                };
+                    /** @description Whether the underfloor vents are smart air bricks, which close automatically to limit ventilation of the underfloor space when it is not needed. Omit or set false for fixed air bricks. */
+                    smart_air_bricks?: boolean;
+                    /** @description Whether the underfloor vents were open (true) or closed (false) during the dwelling airtightness pressurisation test. The infiltration adjustment is applied relative to the tested state, so it is required for smart air bricks and meaningless without them. */
+                    vents_open_during_airtightness_test?: boolean;
+                } & ({
+                    /** @constant */
+                    smart_air_bricks: true;
+                } | {
+                    vents_open_during_airtightness_test?: unknown;
+                });
                 BasementCommon: {
                     thickness_walls: number;
                     depth_basement_floor: number;
@@ -2602,6 +2698,9 @@ export interface components {
                     pitch: number;
                     /** @description Type of party wall cavity construction affecting heat loss through air movement */
                     party_wall_cavity_type: components["schemas"]["PartyWallCavityType"];
+                    /** @description Whole-element (room-to-room) thermal transmittance of the party wall, in W/(m²·K), covering both leaves. Used only for the Building Regulations compliance report; it is not used in the HEM energy calculation, which derives party-wall heat loss from thermal_resistance_construction and party_wall_cavity_type. It is not derivable from those inputs, which describe the construction only to the wall's midpoint, so it is authored by the assessor from the full build-up. Only a sanity range is applied here; the limiting fabric standard is enforced by the compliance report. */
+                    u_value_whole_wall: number;
+                    u_value?: never;
                 } & ({
                     /**
                      * PartyWallCavityType
@@ -2611,18 +2710,6 @@ export interface components {
                     party_wall_cavity_type: "unfilled_unsealed" | "unfilled_sealed" | "filled_unsealed";
                     /** @description Type of party wall lining. Required only when party_wall_cavity_type is unfilled_unsealed, unfilled_sealed, or filled_unsealed */
                     party_wall_lining_type: components["schemas"]["PartyWallLiningType"];
-                } | {
-                    /**
-                     * PartyWallCavityType
-                     * @description Types of party wall cavity configurations
-                     * @constant
-                     */
-                    party_wall_cavity_type: "defined_resistance";
-                    /**
-                     * Thermal Resistance Cavity
-                     * @description Effective thermal resistance of the party wall cavity (unit: m².K/W). Required only when party_wall_cavity_type is 'defined_resistance'. For other cavity types, this is calculated automatically.
-                     */
-                    thermal_resistance_cavity: number;
                 } | {
                     /**
                      * PartyWallCavityType
@@ -2637,12 +2724,11 @@ export interface components {
                     pitch: number;
                     frame_area_fraction: number;
                     g_value: number;
-                    free_area_height: number;
-                    mid_height: number;
-                    max_window_open_area: number;
                     security_risk: boolean;
-                    window_part_list: {
-                        mid_height_air_flow_path: number;
+                    window_part_list?: {
+                        free_area_height: number;
+                        mid_height: number;
+                        max_window_open_area: number;
                     }[];
                     shading: components["schemas"]["WindowShading"];
                     treatment?: {
@@ -2751,7 +2837,7 @@ export interface components {
                  * @description Types of party wall cavity configurations
                  * @enum {string}
                  */
-                PartyWallCavityType: "solid" | "unfilled_unsealed" | "unfilled_sealed" | "filled_sealed" | "filled_unsealed" | "defined_resistance";
+                PartyWallCavityType: "solid" | "unfilled_unsealed" | "unfilled_sealed" | "filled_sealed" | "filled_unsealed";
                 /**
                  * PartyWallLiningType
                  * @description Types of party wall lining
@@ -2800,7 +2886,9 @@ export type SchemaJsonApiOnePointOneMeta = components['schemas']['JsonApiOnePoin
 export type SchemaVersions = components['schemas']['Versions'];
 export type SchemaElectricBattery = components['schemas']['ElectricBattery'];
 export type SchemaHotWaterTankHeatSourceCommon = components['schemas']['HotWaterTankHeatSourceCommon'];
+export type SchemaHotWaterOnlyHeatPumpWithSeparateTank = components['schemas']['HotWaterOnlyHeatPumpWithSeparateTank'];
 export type SchemaHeatPumpHwOnlyTestData = components['schemas']['HeatPump_HWOnlyTestData'];
+export type SchemaHotWaterOnlyHeatPumpWithIntegralTank = components['schemas']['HotWaterOnlyHeatPumpWithIntegralTank'];
 export type SchemaImmersionHeater = components['schemas']['ImmersionHeater'];
 export type SchemaSolarThermalSystem = components['schemas']['SolarThermalSystem'];
 export type SchemaHeatSourceWet = components['schemas']['HeatSourceWet'];
@@ -2840,12 +2928,11 @@ export type SchemaPartyWallLiningType = components['schemas']['PartyWallLiningTy
 export type SchemaPartyWallCavityType = components['schemas']['PartyWallCavityType'];
 export type SchemaWindowShading = components['schemas']['WindowShading'];
 export type SchemaApplianceValue = components['schemas']['ApplianceValue'];
-export type SchemaApplianceValueDefault = components['schemas']['ApplianceValueDefault'];
 export type SchemaHeaderTankOrMainsWater = components['schemas']['HeaderTankOrMainsWater'];
+export type SchemaSmartHotWaterTank = components['schemas']['SmartHotWaterTank'];
 export type SchemaEnergySupplyGas = components['schemas']['EnergySupplyGas'];
 export type SchemaEnergySupplyElectricity = components['schemas']['EnergySupplyElectricity'];
 export type SchemaEnergySupplyOther = components['schemas']['EnergySupplyOther'];
-export type SchemaSmartHotWaterTank = components['schemas']['SmartHotWaterTank'];
 export type SchemaPointOfUse = components['schemas']['PointOfUse'];
 export type SchemaHiu = components['schemas']['HIU'];
 export type SchemaCombiBoiler = components['schemas']['CombiBoiler'];

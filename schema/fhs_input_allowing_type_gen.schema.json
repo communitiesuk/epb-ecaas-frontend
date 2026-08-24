@@ -40,7 +40,8 @@
         "NumberOfWetRooms": {
             "type": "integer",
             "minimum": 0,
-            "description": "A wet room is any room used for domestic activities (such as cooking, clothes washing and bathing) that produce significant amounts of airborne moisture, e.g. a kitchen, utility room or bathroom. For the purposes of Part F of the Building Regulations, sanitary accommodation is also regarded as a wet room."
+            "description": "A wet room is any room used for domestic activities (such as cooking, clothes washing and bathing) that produce significant amounts of airborne moisture, e.g. a kitchen, utility room or bathroom. For the purposes of Part F of the Building Regulations, sanitary accommodation is also regarded as a wet room.",
+            "$comment": "Sanitary accommodations are not counted separately for the intermittent mechanical extract minimum: the Part F table 1.1 footnote permits purge ventilation for them in place of a minimum extract rate, so no dedicated input is required."
         },
         "NumberOfHotTappedRooms": {
             "type": "integer",
@@ -56,11 +57,6 @@
             "type": "integer",
             "minimum": 0,
             "description": "A bathroom is any room that contains a bath or shower"
-        },
-        "NumberOfSanitaryAccommodations": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Any space containing one or more flush toilets or urinals but not a bath or shower. Multiple cubicles counts as one space as long as there is free circulation of air throughout"
         },
         "NumberOfHabitableRooms": {
             "type": "integer",
@@ -143,6 +139,7 @@
         },
         "Appliances": {
             "type": "object",
+            "$comment": "following from version of schema allowing if/then conditions: Every listed appliance, including Microwave and Kettle, is given a default during FHS preprocessing. An input need not declare any of them. The accepted values exist only so a user can pin a default ('Default') or opt out ('Not Installed'). Otherdevices is deliberately absent: it is injected as a default like the others, but it represents an unavoidable background load that an assessment must not be able to pin or opt out of, so an input naming it is rejected. The pattern is anchored because patternProperties matches anywhere within a property name, so an unanchored alternation would also accept any name merely containing an appliance name (for example 'Ovenette'), which then reaches preprocessing as an unrecognised appliance. The 'not' constraint forbids only the case where Fridge and Fridge-Freezer are both explicitly 'Not Installed', so at least one cold appliance remains; omitting either or both keys is allowed because both are injected as installed defaults.",
             "unevaluatedProperties": false,
             "properties": {
                 "Oven": {
@@ -152,13 +149,13 @@
                     "$ref": "#/$defs/ApplianceValue"
                 },
                 "Kettle": {
-                    "$ref": "#/$defs/ApplianceValueDefault"
+                    "$ref": "#/$defs/ApplianceValue"
                 },
                 "Microwave": {
-                    "$ref": "#/$defs/ApplianceValueDefault"
+                    "$ref": "#/$defs/ApplianceValue"
                 },
                 "Fridge-Freezer": {
-                    "$ref": "#/$defs/ApplianceValueDefault"
+                    "$ref": "#/$defs/ApplianceValue"
                 },
                 "Dishwasher": {
                     "$ref": "#/$defs/ApplianceValue"
@@ -173,9 +170,6 @@
                     "$ref": "#/$defs/ApplianceValue"
                 },
                 "Freezer": {
-                    "$ref": "#/$defs/ApplianceValue"
-                },
-                "Otherdevices": {
                     "$ref": "#/$defs/ApplianceValue"
                 }
             },
@@ -233,18 +227,33 @@
             "unevaluatedProperties": false,
             "properties": {
                 "preheated tank": {
-                    "$ref": "#/$defs/StorageTank",
+                    "type": "object",
+                    "unevaluatedProperties": false,
                     "properties": {
+                        "type": {
+                            "enum": [
+                                "StorageTank",
+                                "SmartHotWaterTank"
+                            ]
+                        },
                         "ColdWaterSource": {
                             "type": "string",
                             "reference_to": [
                                 "$.cold_water_source",
                                 "$.wwhrs"
                             ]
+                        },
+                        "init_temp": {
+                            "$comment": "Unlike the hot water cylinder, whose initial temperature is standardised by the wrapper, a pre-heated tank starts the simulation at a user-declared temperature.",
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 100
                         }
                     },
                     "required": [
-                        "ColdWaterSource"
+                        "type",
+                        "ColdWaterSource",
+                        "init_temp"
                     ],
                     "not": {
                         "properties": {
@@ -252,7 +261,31 @@
                                 "const": "preheated tank"
                             }
                         }
-                    }
+                    },
+                    "oneOf": [
+                        {
+                            "required": [
+                                "type"
+                            ],
+                            "properties": {
+                                "type": {
+                                    "const": "StorageTank"
+                                }
+                            },
+                            "$ref": "#/$defs/StorageTank"
+                        },
+                        {
+                            "required": [
+                                "type"
+                            ],
+                            "properties": {
+                                "type": {
+                                    "const": "SmartHotWaterTank"
+                                }
+                            },
+                            "$ref": "#/$defs/SmartHotWaterTank"
+                        }
+                    ]
                 }
             },
             "required": [
@@ -498,7 +531,10 @@
                                         }
                                     },
                                     {
-                                        "required": ["heat_network_reference", "sub_heat_network_name"],
+                                        "required": [
+                                            "heat_network_reference",
+                                            "sub_heat_network_name"
+                                        ],
                                         "properties": {
                                             "heat_network_reference": {
                                                 "description": "A unique (product) reference to a heat network held within the HEM database (PCDB)",
@@ -842,18 +878,11 @@
                 {
                     "required": [
                         "build_type",
-                        "storey_of_dwelling",
                         "storeys_in_building"
                     ],
                     "properties": {
                         "build_type": {
                             "const": "flat"
-                        },
-                        "storey_of_dwelling": {
-                            "type": "integer",
-                            "minimum": -50,
-                            "maximum": 199,
-                            "description": "What storey of the main building is the flat on? For multi-story flats, enter the lowest storey the unit occupies"
                         },
                         "storeys_in_building": {
                             "type": "integer",
@@ -995,263 +1024,293 @@
                     "additionalProperties": {
                         "oneOf": [
                             {
-								"type": "object",
+                                "type": "object",
                                 "unevaluatedProperties": false,
-								"required": [
-									"product_reference",
-									"EnergySupply",
+                                "required": [
+                                    "product_reference",
+                                    "EnergySupply",
                                     "design_outdoor_air_flow_rate",
-									"installed_under_approved_scheme"
-								],
-								"properties": {
-									"design_zone_cooling_covered_by_mech_vent": {
-										"type": "number"
-									},
-									"design_zone_heating_covered_by_mech_vent": {
-										"type": "number"
-									},
-									"product_reference": {
-										"description": "A unique reference to a product held within the HEM database (PCDB)",
-										"title": "Reference to the product in the HEM database",
-										"type": "string"
-									},
-									"EnergySupply": {
-										"type": "string"
-									},
-									"design_outdoor_air_flow_rate": {
-										"type": "number",
-										"exclusiveMinimum": 0,
-										"description": "Design outdoor air flow rate (m3/hr)"
-									},
-									"installed_under_approved_scheme": {
-										"type": "boolean",
-										"description": "Whether or not this system was installed under an approved installation scheme"
-									}
-								},
-								"oneOf": [
-									{
-										"required": [
-											"vent_type",
-											"mvhr_location",
-											"ductwork",
-											"position_intake",
-											"position_exhaust"
-										],
-										"properties": {
-											"vent_type": {
-												"const": "MVHR"
-											},
-											"mvhr_location": {
-												"enum": [
-													"inside",
-													"outside"
-												]
-											},
-											"ductwork": {
-												"type": "array",
-												"items": {
-													"type": "object",
-													"unevaluatedProperties": false,
-													"required": [
-														"cross_section_shape",
-														"internal_diameter_mm",
-														"external_diameter_mm",
-														"length",
-														"insulation_thermal_conductivity",
-														"insulation_thickness_mm",
-														"reflective",
-														"duct_type"
-													],
-													"properties": {
-														"cross_section_shape": {
-															"enum": [
-																"circular",
-																"rectangular"
-															]
-														},
-														"internal_diameter_mm": {
-															"type": "number",
-															"minimum": 0,
-															"maximum": 1000
-														},
-														"external_diameter_mm": {
-															"type": "number",
-															"minimum": 0,
-															"maximum": 1000
-														},
-														"length": {
-															"type": "number",
-															"minimum": 0
-														},
-														"insulation_thermal_conductivity": {
-															"type": "number",
-															"minimum": 0
-														},
-														"insulation_thickness_mm": {
-															"type": "number",
-															"minimum": 0,
-															"maximum": 100
-														},
-														"reflective": {
-															"type": "boolean"
-														},
-														"duct_type": {
-															"enum": [
-																"supply",
-																"extract",
-																"intake",
-																"exhaust"
-															]
-														}
-													}
-												}
-											},
+                                    "installed_under_approved_scheme"
+                                ],
+                                "properties": {
+                                    "product_reference": {
+                                        "description": "A unique reference to a product held within the HEM database (PCDB)",
+                                        "title": "Reference to the product in the HEM database",
+                                        "type": "string"
+                                    },
+                                    "EnergySupply": {
+                                        "type": "string"
+                                    },
+                                    "design_outdoor_air_flow_rate": {
+                                        "type": "number",
+                                        "exclusiveMinimum": 0,
+                                        "description": "Design outdoor air flow rate (m3/hr)"
+                                    },
+                                    "installed_under_approved_scheme": {
+                                        "type": "boolean",
+                                        "description": "Whether or not this system was installed under an approved installation scheme"
+                                    }
+                                },
+                                "oneOf": [
+                                    {
+                                        "required": [
+                                            "vent_type",
+                                            "mvhr_location",
+                                            "ductwork",
+                                            "position_intake",
+                                            "position_exhaust"
+                                        ],
+                                        "properties": {
+                                            "vent_type": {
+                                                "const": "MVHR"
+                                            },
+                                            "mvhr_location": {
+                                                "enum": [
+                                                    "inside",
+                                                    "outside"
+                                                ]
+                                            },
+                                            "ductwork": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "unevaluatedProperties": false,
+                                                    "required": [
+                                                        "length",
+                                                        "insulation_thermal_conductivity",
+                                                        "insulation_thickness_mm",
+                                                        "reflective",
+                                                        "duct_type"
+                                                    ],
+                                                    "properties": {
+                                                        "duct_perimeter_mm": {
+                                                            "type": "number",
+                                                            "exclusiveMinimum": 0,
+                                                            "description": "Cross-sectional perimeter length of rectangular ductwork (unit: mm)"
+                                                        },
+                                                        "internal_diameter_mm": {
+                                                            "type": "number",
+                                                            "exclusiveMinimum": 0,
+                                                            "maximum": 1000
+                                                        },
+                                                        "external_diameter_mm": {
+                                                            "type": "number",
+                                                            "exclusiveMinimum": 0,
+                                                            "maximum": 1000
+                                                        },
+                                                        "length": {
+                                                            "type": "number",
+                                                            "minimum": 0
+                                                        },
+                                                        "insulation_thermal_conductivity": {
+                                                            "type": "number",
+                                                            "minimum": 0
+                                                        },
+                                                        "insulation_thickness_mm": {
+                                                            "type": "number",
+                                                            "minimum": 0,
+                                                            "maximum": 100
+                                                        },
+                                                        "reflective": {
+                                                            "type": "boolean"
+                                                        },
+                                                        "duct_type": {
+                                                            "enum": [
+                                                                "supply",
+                                                                "extract",
+                                                                "intake",
+                                                                "exhaust"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "oneOf": [
+                                                        {
+                                                            "required": [
+                                                                "cross_section_shape",
+                                                                "internal_diameter_mm",
+                                                                "external_diameter_mm"
+                                                            ],
+                                                            "properties": {
+                                                                "cross_section_shape": {
+                                                                    "const": "circular"
+                                                                },
+                                                                "duct_perimeter_mm": false
+                                                            }
+                                                        },
+                                                        {
+                                                            "required": [
+                                                                "cross_section_shape",
+                                                                "duct_perimeter_mm"
+                                                            ],
+                                                            "properties": {
+                                                                "cross_section_shape": {
+                                                                    "const": "rectangular"
+                                                                },
+                                                                "internal_diameter_mm": false,
+                                                                "external_diameter_mm": false
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
                                             "measured_fan_power": {
                                                 "type": "number"
                                             },
                                             "measured_air_flow_rate": {
                                                 "type": "number"
                                             },
-											"position_intake": {
-												"type": "object",
-												"properties": {
-													"mid_height_air_flow_path": {
-														"type": "number",
-														"minimum": 1,
-														"maximum": 60,
-														"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
-													},
-													"orientation360": {
-														"type": "number",
-														"minimum": 0,
-														"maximum": 360,
-														"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
-													},
-													"pitch": {
-														"type": "number",
-														"minimum": 0,
-														"maximum": 180,
-														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
-													}
-												},
-												"required": ["mid_height_air_flow_path", "orientation360", "pitch"]
-											},
-											"position_exhaust": {
-												"type": "object",
-												"properties": {
-													"mid_height_air_flow_path": {
-														"type": "number",
-														"minimum": 1,
-														"maximum": 60,
-														"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
-													},
-													"orientation360": {
-														"type": "number",
-														"minimum": 0,
-														"maximum": 360,
-														"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
-													},
-													"pitch": {
-														"type": "number",
-														"minimum": 0,
-														"maximum": 180,
-														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
-													}
-												},
-												"required": ["mid_height_air_flow_path", "orientation360", "pitch"]
-											}
-										}
-									},
-									{
-										"required": [
-											"vent_type",
-											"installation_type",
-											"installation_location"
-										],
-										"properties": {
-											"vent_type": {
-												"type": "string",
-												"const": "Decentralised continuous MEV"
-											},
-											"installation_type": {
-												"type": "string",
-												"enum": [
-													"in_ceiling",
-													"through_wall"
-												]
-											},
-											"installation_location": {
-												"type": "string",
-												"enum": [
-													"kitchen",
-													"other_wet_room"
-												],
-												"description": "Whether the system is installed in a kitchen or in another wet room that is not a kitchen"
-											}
-										},
-										"oneOf": [
-											{
-												"required": [
-													"vent_type",
-													"mid_height_air_flow_path",
-													"orientation360",
-													"pitch"
-												],
-												"properties": {
-													"mid_height_air_flow_path": {
-														"type": "number",
-														"minimum": 1,
-														"maximum": 60,
-														"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
-													},
-													"orientation360": {
-														"type": "number",
-														"minimum": 0,
-														"maximum": 360,
-														"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
-													},
-													"pitch": {
-														"type": "number",
-														"minimum": 0,
-														"maximum": 180,
-														"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
-													}
-												}
-											},
-											{
-												"required": [
-													"position_exhaust"
-												],
-												"properties": {
-													"position_exhaust": {
-														"type": "object",
-														"properties": {
-															"mid_height_air_flow_path": {
-																"type": "number",
-																"minimum": 1,
-																"maximum": 60,
-																"description": "Mid height of air flow path relative to ventilation zone (unit: m)"
-															},
-															"orientation360": {
-																"type": "number",
-																"minimum": 0,
-																"maximum": 360,
-																"description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
-															},
-															"pitch": {
-																"type": "number",
-																"minimum": 0,
-																"maximum": 180,
-																"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
-															}
-														},
-        												"required": ["mid_height_air_flow_path", "orientation360", "pitch"]
-													}
-												}
-											}
-										]
-									},
-									{
+                                            "position_intake": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "mid_height_air_flow_path": {
+                                                        "type": "number",
+                                                        "minimum": 1,
+                                                        "maximum": 60,
+                                                        "description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+                                                    },
+                                                    "orientation360": {
+                                                        "type": "number",
+                                                        "minimum": 0,
+                                                        "maximum": 360,
+                                                        "description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+                                                    },
+                                                    "pitch": {
+                                                        "type": "number",
+                                                        "minimum": 0,
+                                                        "maximum": 180,
+                                                        "description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "mid_height_air_flow_path",
+                                                    "orientation360",
+                                                    "pitch"
+                                                ]
+                                            },
+                                            "position_exhaust": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "mid_height_air_flow_path": {
+                                                        "type": "number",
+                                                        "minimum": 1,
+                                                        "maximum": 60,
+                                                        "description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+                                                    },
+                                                    "orientation360": {
+                                                        "type": "number",
+                                                        "minimum": 0,
+                                                        "maximum": 360,
+                                                        "description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+                                                    },
+                                                    "pitch": {
+                                                        "type": "number",
+                                                        "minimum": 0,
+                                                        "maximum": 180,
+                                                        "description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "mid_height_air_flow_path",
+                                                    "orientation360",
+                                                    "pitch"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "required": [
+                                            "vent_type",
+                                            "installation_type",
+                                            "installation_location"
+                                        ],
+                                        "properties": {
+                                            "vent_type": {
+                                                "type": "string",
+                                                "const": "Decentralised continuous MEV"
+                                            },
+                                            "installation_type": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "in_ceiling",
+                                                    "through_wall"
+                                                ]
+                                            },
+                                            "installation_location": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "kitchen",
+                                                    "other_wet_room"
+                                                ],
+                                                "description": "Whether the system is installed in a kitchen or in another wet room that is not a kitchen"
+                                            }
+                                        },
+                                        "oneOf": [
+                                            {
+                                                "required": [
+                                                    "vent_type",
+                                                    "mid_height_air_flow_path",
+                                                    "orientation360",
+                                                    "pitch"
+                                                ],
+                                                "properties": {
+                                                    "mid_height_air_flow_path": {
+                                                        "type": "number",
+                                                        "minimum": 1,
+                                                        "maximum": 60,
+                                                        "description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+                                                    },
+                                                    "orientation360": {
+                                                        "type": "number",
+                                                        "minimum": 0,
+                                                        "maximum": 360,
+                                                        "description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+                                                    },
+                                                    "pitch": {
+                                                        "type": "number",
+                                                        "minimum": 0,
+                                                        "maximum": 180,
+                                                        "description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "required": [
+                                                    "position_exhaust"
+                                                ],
+                                                "properties": {
+                                                    "position_exhaust": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "mid_height_air_flow_path": {
+                                                                "type": "number",
+                                                                "minimum": 1,
+                                                                "maximum": 60,
+                                                                "description": "Mid height of air flow path relative to ventilation zone (unit: m)"
+                                                            },
+                                                            "orientation360": {
+                                                                "type": "number",
+                                                                "minimum": 0,
+                                                                "maximum": 360,
+                                                                "description": "The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: \u02da)"
+                                                            },
+                                                            "pitch": {
+                                                                "type": "number",
+                                                                "minimum": 0,
+                                                                "maximum": 180,
+                                                                "description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "mid_height_air_flow_path",
+                                                            "orientation360",
+                                                            "pitch"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
                                         "allOf": [
                                             {
                                                 "required": [
@@ -1333,16 +1392,20 @@
                                                                         "description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
                                                                     }
                                                                 },
-        												        "required": ["mid_height_air_flow_path", "orientation360", "pitch"]
+                                                                "required": [
+                                                                    "mid_height_air_flow_path",
+                                                                    "orientation360",
+                                                                    "pitch"
+                                                                ]
                                                             }
                                                         }
                                                     }
                                                 ]
                                             }
                                         ]
-									}
-								]
-							},
+                                    }
+                                ]
+                            },
                             {
                                 "type": "object",
                                 "unevaluatedProperties": false,
@@ -1513,10 +1576,7 @@
                         }
                     },
                     "ThermalBridging": {
-                        "type": [
-                            "object",
-                            "number"
-                        ],
+                        "type": "object",
                         "additionalProperties": {
                             "type": "object",
                             "unevaluatedProperties": false,
@@ -1545,7 +1605,6 @@
         "NumberOfHotTappedRooms",
         "NumberOfUtilityRooms",
         "NumberOfBathrooms",
-        "NumberOfSanitaryAccommodations",
         "NumberOfHabitableRooms",
         "HeatingControlType",
         "KitchenExtractorHoodExternal",
@@ -1656,7 +1715,34 @@
                     "type": "object",
                     "$ref": "#/$defs/ElectricBattery"
                 }
-            }
+            },
+            "$comment": "An export power limit constrains only surplus sent to the grid, so it is meaningful solely on an export-capable supply, and the core model rejects the pairing. An absent is_export_capable is left to the wrapper, which defaults an electricity supply to export-capable, so only an explicit false forbids the limit.",
+            "oneOf": [
+                {
+                    "required": [
+                        "is_export_capable"
+                    ],
+                    "properties": {
+                        "is_export_capable": {
+                            "const": false
+                        },
+                        "power_limit_export": {
+                            "not": {}
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "power_limit_export": {
+                            "$comment": "Upper sanity bound rather than a physical ceiling: the limit is expressed in kW, and entering the same figure in watts (3680 for a typical single-phase G98 connection) would otherwise validate and then never bind, leaving the run to proceed as though unlimited. 100 kW is far above any domestic connection - a 100 A single-phase supply carries roughly 23 kW, three-phase roughly 69 kW - so it rejects the unit slip without rejecting a real installation.",
+                            "description": "Maximum AC power exportable to the grid, typically a Distribution Network Operator limit enforced by a G100-compliant export limitation device. Applies to the whole supply: generation surplus and battery discharge share the limit. Generation surplus above the limit is curtailed, and battery discharge is throttled so that unexported energy is retained as charge. Omit for no limit, leaving the inverter's AC capacity as the only ceiling (unit: kW).",
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "maximum": 100
+                        }
+                    }
+                }
+            ]
         },
         "ElectricBattery": {
             "required": [
@@ -2036,8 +2122,15 @@
                                     "exclusiveMinimum": 0
                                 },
                                 "heat_exchanger_surface_area_declared": {
-                                    "type": "number",
+                                    "type": [
+                                        "number",
+                                        "null"
+                                    ],
                                     "exclusiveMinimum": 0
+                                },
+                                "tank_is_integral": {
+                                    "$comment": "True where the heat pump and store form a single unit that is always installed together, tested to EN 16147 as one appliance, so no heat-exchanger de-rating applies. Defaults to false in the core model, matching a heat pump installed with a separately-supplied store.",
+                                    "type": "boolean"
                                 },
                                 "daily_losses_declared": {
                                     "type": "number",
@@ -2059,7 +2152,18 @@
                                         }
                                     }
                                 }
-                            }
+                            },
+                            "anyOf": [
+                                {
+                                    "$comment": "A separately-supplied store has its installed heat-exchanger area compared against this declared one, so the value must be a positive number. Only the integral case may declare null, where the comparison is skipped and the core never reads it.",
+                                    "$ref": "#/$defs/HotWaterOnlyHeatPumpWithSeparateTank",
+                                    "properties": {
+                                        "heat_exchanger_surface_area_declared": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     ]
                 }
@@ -2098,6 +2202,35 @@
                 }
             }
         },
+        "HotWaterOnlyHeatPumpWithSeparateTank": {
+            "$comment": "A hot-water-only heat pump installed with a separately-supplied store, so its efficiency is de-rated by comparing the installed heat-exchanger area against the tested one. tank_is_integral defaults to false in the core model, so an absent value matches here.",
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "type": {
+                    "const": "HeatPump_HWOnly"
+                },
+                "tank_is_integral": {
+                    "const": false
+                }
+            }
+        },
+        "HotWaterOnlyHeatPumpWithIntegralTank": {
+            "$comment": "A hot-water-only heat pump supplied as a single unit with its store, tested together to EN 16147, so there is no separately installed heat exchanger to compare.",
+            "required": [
+                "type",
+                "tank_is_integral"
+            ],
+            "properties": {
+                "type": {
+                    "const": "HeatPump_HWOnly"
+                },
+                "tank_is_integral": {
+                    "const": true
+                }
+            }
+        },
         "StorageTank": {
             "$ref": "#/$defs/Tank",
             "properties": {
@@ -2107,10 +2240,56 @@
                             "thermostat_position"
                         ]
                     }
+                },
+                "heat_exchanger_surface_area": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
                 }
-            }
+            },
+            "$comment": "The exchanger area is required whenever at least one heat source is a HeatPump_HWOnly installed with a separately-supplied store, and forbidden whenever one is integral to its store. additionalProperties applies its subschema to every property, so 'at least one matches' is expressed by negating 'none matches'. Each 'if' also requires HeatSource: 'properties' constrains only the keys present, so without it a tank missing HeatSource entirely matches both branches, and is told both to supply the exchanger area and to remove it - the latter naming a property it will need once a heat source is given.",
+            "anyOf": [
+                {
+                    "required": [
+                        "HeatSource",
+                        "heat_exchanger_surface_area"
+                    ],
+                    "properties": {
+                        "HeatSource": {
+                            "type": "object",
+                            "not": {
+                                "additionalProperties": {
+                                    "not": {
+                                        "$ref": "#/$defs/HotWaterOnlyHeatPumpWithSeparateTank"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "required": [
+                        "HeatSource"
+                    ],
+                    "properties": {
+                        "HeatSource": {
+                            "type": "object",
+                            "not": {
+                                "additionalProperties": {
+                                    "not": {
+                                        "$ref": "#/$defs/HotWaterOnlyHeatPumpWithIntegralTank"
+                                    }
+                                }
+                            }
+                        },
+                        "heat_exchanger_surface_area": {
+                            "not": {}
+                        }
+                    }
+                }
+            ]
         },
         "Tank": {
+            "$comment": "The initial cylinder temperature (init_temp) is not an input. The wrapper sets it to the maximum setpoint temperature so the cylinder starts the simulation fully heated.",
             "required": [
                 "ColdWaterSource",
                 "volume",
@@ -2130,11 +2309,6 @@
                     "type": "number",
                     "minimum": 1,
                     "maximum": 1000
-                },
-                "init_temp": {
-                    "type": "number",
-                    "minimum": 1,
-                    "maximum": 100
                 },
                 "daily_losses": {
                     "type": "number",
@@ -2364,6 +2538,10 @@
                                 "EnergySupply_pump": {
                                     "type": "string"
                                 },
+                                "heat_exchanger_surface_area": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 0
+                                },
                                 "max_flow_rate_pump_l_per_min": {
                                     "type": "number",
                                     "exclusiveMinimum": 0
@@ -2383,6 +2561,47 @@
                                 "max_flow_rate_pump_l_per_min",
                                 "power_pump_kW",
                                 "temp_usable"
+                            ],
+                            "$comment": "The exchanger area is required whenever at least one heat source is a HeatPump_HWOnly installed with a separately-supplied store, and forbidden whenever one is integral to its store. additionalProperties applies its subschema to every property, so 'at least one matches' is expressed by negating 'none matches'. Each 'if' also requires HeatSource: 'properties' constrains only the keys present, so without it a tank missing HeatSource entirely matches both branches, and is told both to supply the exchanger area and to remove it - the latter naming a property it will need once a heat source is given.",
+                            "anyOf": [
+                                {
+                                    "required": [
+                                        "HeatSource",
+                                        "heat_exchanger_surface_area"
+                                    ],
+                                    "properties": {
+                                        "HeatSource": {
+                                            "type": "object",
+                                            "not": {
+                                                "additionalProperties": {
+                                                    "not": {
+                                                        "$ref": "#/$defs/HotWaterOnlyHeatPumpWithSeparateTank"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "required": [
+                                        "HeatSource"
+                                    ],
+                                    "properties": {
+                                        "HeatSource": {
+                                            "type": "object",
+                                            "not": {
+                                                "additionalProperties": {
+                                                    "not": {
+                                                        "$ref": "#/$defs/HotWaterOnlyHeatPumpWithIntegralTank"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "heat_exchanger_surface_area": {
+                                            "not": {}
+                                        }
+                                    }
+                                }
                             ]
                         }
                     ]
@@ -2403,8 +2622,7 @@
                 },
                 "efficiency": {
                     "type": "number",
-                    "minimum": 0.1,
-                    "maximum": 1
+                    "const": 1
                 },
                 "EnergySupply": {
                     "type": "string"
@@ -3057,7 +3275,9 @@
                     "$ref": "#/$defs/HeatSourceWetCommon"
                 },
                 {
-                    "required": ["type"],
+                    "required": [
+                        "type"
+                    ],
                     "properties": {
                         "type": {
                             "const": "Boiler"
@@ -3067,7 +3287,9 @@
                 {
                     "oneOf": [
                         {
-                            "required": ["product_reference"],
+                            "required": [
+                                "product_reference"
+                            ],
                             "properties": {
                                 "product_reference": {
                                     "description": "A unique reference to a product held within the HEM database (PCDB)",
@@ -3203,12 +3425,12 @@
             }
         },
         "PCMBattery": {
+            "$comment": "rated_charge_power is not required unconditionally: the core model offers two mutually exclusive charging configurations, and it belongs only to the direct electric one. See the conditional below.",
             "required": [
                 "type",
                 "battery_type",
                 "electricity_circ_pump",
                 "electricity_standby",
-                "rated_charge_power",
                 "max_rated_losses",
                 "number_of_units",
                 "simultaneous_charging_and_discharging",
@@ -3277,16 +3499,20 @@
                     "minimum": -273.15
                 },
                 "velocity_in_HEX_tube_at_1_l_per_min_m_per_s": {
+                    "description": "Water velocity in the battery's heat exchanger tubes at a flow rate of 1 litre/minute, from which the velocity at the operating flow rate is scaled (unit: m/s).",
                     "type": "number",
                     "minimum": 0
                 },
                 "A": {
+                    "description": "Slope of the battery heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K, Re being the Reynolds number at 1 litre/minute (unit: W/K). Obtained by fitting the exchanger's measured performance.",
                     "type": "number"
                 },
                 "B": {
+                    "description": "Intercept of the battery heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K (unit: W/K). Obtained by fitting the exchanger's measured performance.",
                     "type": "number"
                 },
                 "inlet_diameter_m": {
+                    "description": "Internal diameter of the battery heat exchanger's inlet tube, used with the velocity to obtain the Reynolds number (unit: mm).",
                     "type": "number"
                 },
                 "max_temperature": {
@@ -3294,8 +3520,103 @@
                     "minimum": -273.15
                 },
                 "flow_rate_l_per_min": {
+                    "description": "Flow rate through the battery's heat exchanger in normal operation (unit: litre/minute). A hydronic charging source may declare its own charging flow rate where the charging circuit differs.",
                     "type": "number",
                     "exclusiveMinimum": 0
+                },
+                "temp_min_useful": {
+                    "description": "Temperature at which the battery is considered fully discharged, used as the state-of-charge zero reference (unit: °C). Required when charging sources are declared.",
+                    "type": "number",
+                    "minimum": -273.15
+                },
+                "HeatSource": {
+                    "$comment": "Charging sources are the core model's alternative to rated_charge_power with a charge control, and the two are mutually exclusive. The wrapper builds each source's control itself, on the same off-peak window used for direct electric charging, with state-of-charge setpoints: a PCM battery only charges once the source exceeds its phase change temperature, so expressing the hysteresis as a temperature would cap the heat source below the point it has to exceed.",
+                    "description": "Named sources that charge the battery, each either a direct electric element or a wet heat source such as a heat pump. Omit to charge by direct electric element at a rated power instead.",
+                    "type": "object",
+                    "minProperties": 1,
+                    "additionalProperties": {
+                        "type": "object",
+                        "unevaluatedProperties": false,
+                        "required": [
+                            "type"
+                        ],
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "DirectElectric",
+                                    "HeatSourceWet"
+                                ]
+                            }
+                        },
+                        "oneOf": [
+                            {
+                                "required": [
+                                    "rated_charge_power",
+                                    "type"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "const": "DirectElectric"
+                                    },
+                                    "rated_charge_power": {
+                                        "description": "Rated charging power of the direct electric element (unit: kW).",
+                                        "type": "number",
+                                        "exclusiveMinimum": 0
+                                    }
+                                }
+                            },
+                            {
+                                "required": [
+                                    "type",
+                                    "name",
+                                    "temp_flow_limit_upper",
+                                    "flow_rate_charging_l_per_min",
+                                    "A",
+                                    "B",
+                                    "velocity_in_HEX_tube_at_1_l_per_min_m_per_s",
+                                    "inlet_diameter_mm"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "const": "HeatSourceWet"
+                                    },
+                                    "name": {
+                                        "description": "Name of the HeatSourceWet that charges the battery, such as a heat pump.",
+                                        "type": "string"
+                                    },
+                                    "temp_flow_limit_upper": {
+                                        "description": "Maximum flow temperature the heat source may be asked for when charging, reflecting the charging circuit's limits (unit: °C). It should exceed the battery's phase change temperature, or the battery stores only sensible heat.",
+                                        "type": "number",
+                                        "minimum": -273.15
+                                    },
+                                    "flow_rate_charging_l_per_min": {
+                                        "description": "Flow rate through the heat exchanger when charging hydronically (unit: litre/minute).",
+                                        "type": "number",
+                                        "exclusiveMinimum": 0
+                                    },
+                                    "A": {
+                                        "description": "Slope of the charging heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K, Re being the Reynolds number at 1 litre/minute (unit: W/K). Obtained by fitting the exchanger's measured performance. It may differ from the battery's own A where charging and discharging use different exchangers.",
+                                        "type": "number"
+                                    },
+                                    "B": {
+                                        "description": "Intercept of the charging heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K (unit: W/K). Obtained by fitting the exchanger's measured performance. It may differ from the battery's own B where charging and discharging use different exchangers.",
+                                        "type": "number"
+                                    },
+                                    "velocity_in_HEX_tube_at_1_l_per_min_m_per_s": {
+                                        "description": "Water velocity in the charging heat exchanger's tubes at a flow rate of 1 litre/minute, from which the velocity at the charging flow rate is scaled (unit: m/s).",
+                                        "type": "number",
+                                        "exclusiveMinimum": 0
+                                    },
+                                    "inlet_diameter_mm": {
+                                        "description": "Internal diameter of the charging heat exchanger's inlet tube, used with the velocity to obtain the Reynolds number (unit: mm).",
+                                        "type": "number",
+                                        "exclusiveMinimum": 0
+                                    }
+                                }
+                            }
+                        ]
+                    }
                 }
             }
         },
@@ -3312,8 +3633,7 @@
                 "number_of_units",
                 "dry_core_min_output",
                 "dry_core_max_output",
-                "fan_pwr",
-                "state_of_charge_init"
+                "fan_pwr"
             ],
             "properties": {
                 "type": {
@@ -3374,12 +3694,6 @@
                 "fan_pwr": {
                     "type": "number",
                     "description": "Fan power (W)"
-                },
-                "state_of_charge_init": {
-                    "description": "State of charge at initialisation of dry core heat storage (ratio). NB. this field is marked for removal, and only a value of 1 is accepted.",
-                    "const": 1.0,
-                    "title": "State Of Charge Init",
-                    "type": "number"
                 }
             }
         },
@@ -3390,7 +3704,9 @@
                     "$ref": "#/$defs/HeatSourceWetCommon"
                 },
                 {
-                    "required": ["type"],
+                    "required": [
+                        "type"
+                    ],
                     "properties": {
                         "type": {
                             "const": "HIU"
@@ -3401,8 +3717,7 @@
                     "oneOf": [
                         {
                             "required": [
-                                "product_reference",
-                                "building_level_distribution_losses"
+                                "product_reference"
                             ],
                             "properties": {
                                 "product_reference": {
@@ -3412,7 +3727,8 @@
                                 },
                                 "building_level_distribution_losses": {
                                     "type": "number",
-                                    "minimum": 0
+                                    "minimum": 0,
+                                    "$comment": "Daily pipework heat loss within an apartment block up to the dwelling boundary; applies to flats only. Required for flats; not permitted for houses, where the wrapper sets it to 0."
                                 }
                             }
                         },
@@ -3484,7 +3800,9 @@
                     },
                     "oneOf": [
                         {
-                            "required": ["product_reference"],
+                            "required": [
+                                "product_reference"
+                            ],
                             "properties": {
                                 "product_reference": {
                                     "description": "A unique reference to a product held within the HEM database (PCDB)",
@@ -3945,38 +4263,16 @@
                     "description": "A unique reference to a product held within the HEM database (PCDB)",
                     "title": "Reference to the product in the HEM database",
                     "type": "string"
+                },
+                "length": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
                 }
             },
             "required": [
                 "wet_emitter_type",
-                "product_reference"
-            ],
-            "oneOf": [
-                {
-                    "required": [
-                        "radiator_type",
-                        "length"
-                    ],
-                    "properties": {
-                        "radiator_type": {
-                            "const": "standard"
-                        },
-                        "length": {
-                            "type": "number",
-                            "exclusiveMinimum": 0
-                        }
-                    }
-                },
-                {
-                    "required": [
-                        "radiator_type"
-                    ],
-                    "properties": {
-                        "radiator_type": {
-                            "const": "towel"
-                        }
-                    }
-                }
+                "product_reference",
+                "length"
             ]
         },
         "Ufh": {
@@ -4319,7 +4615,11 @@
                                     "description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
                                 }
                             },
-                            "required": ["mid_height_air_flow_path", "orientation360", "pitch"]
+                            "required": [
+                                "mid_height_air_flow_path",
+                                "orientation360",
+                                "pitch"
+                            ]
                         },
                         "position_exhaust": {
                             "type": "object",
@@ -4343,7 +4643,11 @@
                                     "description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
                                 }
                             },
-                            "required": ["mid_height_air_flow_path", "orientation360", "pitch"]
+                            "required": [
+                                "mid_height_air_flow_path",
+                                "orientation360",
+                                "pitch"
+                            ]
                         },
                         "measured_fan_power": {
                             "type": "number"
@@ -4411,7 +4715,11 @@
                                     "description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
                                 }
                             },
-                            "required": ["mid_height_air_flow_path", "orientation360", "pitch"]
+                            "required": [
+                                "mid_height_air_flow_path",
+                                "orientation360",
+                                "pitch"
+                            ]
                         }
                     }
                 }
@@ -4462,7 +4770,9 @@
                         },
                         "SFP": {
                             "type": "number",
-                            "description": "Specific fan power, assumed inclusive of any in use factors unless SFP_in_use_factor also provided (unit: W/l/s)"
+                            "description": "Specific fan power, assumed inclusive of any in use factors unless SFP_in_use_factor also provided (unit: W/l/s)",
+                            "$comment": "Lower sanity bound on intermittent extract fan SFP. The lowest intermittent extract fan in the Product Characteristics Database is 0.08 W/l/s; 0.05 leaves headroom for future, more efficient products while rejecting implausibly low manual entries.",
+                            "minimum": 0.05
                         }
                     }
                 }
@@ -4510,18 +4820,29 @@
                     "maximum": 180
                 },
                 "areal_heat_capacity": {
-                    "enum": [
-                        "Very light",
-                        "Light",
-                        "Medium",
-                        "Heavy",
-                        "Very heavy"
+                    "description": "Areal heat capacity of the full construction, as a qualitative class or a numeric value in J/(m²·K).",
+                    "anyOf": [
+                        {
+                            "enum": [
+                                "Very light",
+                                "Light",
+                                "Medium",
+                                "Heavy",
+                                "Very heavy"
+                            ]
+                        },
+                        {
+                            "type": "number",
+                            "minimum": 100,
+                            "maximum": 1000000
+                        }
                     ]
                 },
                 "mass_distribution_class": {
                     "$ref": "#/$defs/MassDistributionClass"
                 },
                 "area": {
+                    "description": "Net area of the element, in m².",
                     "type": "number",
                     "minimum": 0.01,
                     "maximum": 10000
@@ -4535,11 +4856,16 @@
                 },
                 {
                     "required": [
-                        "type"
+                        "type",
+                        "is_adjacent_space_within_dwelling"
                     ],
                     "properties": {
                         "type": {
                             "const": "BuildingElementAdjacentConditionedSpace"
+                        },
+                        "is_adjacent_space_within_dwelling": {
+                            "type": "boolean",
+                            "description": "Is the adjacent space within the dwelling being modelled?"
                         }
                     }
                 }
@@ -4725,7 +5051,6 @@
                 "floor_type",
                 "height_upper_surface",
                 "thermal_transm_walls",
-                "shield_fact_location",
                 "thickness_walls",
                 "thermal_resist_insul",
                 "area_per_perimeter_vent"
@@ -4747,13 +5072,6 @@
                 "area_per_perimeter_vent": {
                     "type": "number"
                 },
-                "shield_fact_location": {
-                    "enum": [
-                        "Sheltered",
-                        "Average",
-                        "Exposed"
-                    ]
-                },
                 "thickness_walls": {
                     "type": "number",
                     "minimum": 0,
@@ -4763,8 +5081,37 @@
                     "type": "number",
                     "minimum": 0,
                     "maximum": 100
+                },
+                "smart_air_bricks": {
+                    "$comment": "The opening pattern is not an input. A smart air brick modulates on measured underfloor humidity and temperature, so a compliance assessment applies one standardised schedule, derived from manufacturer field data for a typical dwelling and supplied by the wrapper.",
+                    "description": "Whether the underfloor vents are smart air bricks, which close automatically to limit ventilation of the underfloor space when it is not needed. Omit or set false for fixed air bricks.",
+                    "type": "boolean"
+                },
+                "vents_open_during_airtightness_test": {
+                    "description": "Whether the underfloor vents were open (true) or closed (false) during the dwelling airtightness pressurisation test. The infiltration adjustment is applied relative to the tested state, so it is required for smart air bricks and meaningless without them.",
+                    "type": "boolean"
                 }
-            }
+            },
+            "oneOf": [
+                {
+                    "required": [
+                        "smart_air_bricks",
+                        "vents_open_during_airtightness_test"
+                    ],
+                    "properties": {
+                        "smart_air_bricks": {
+                            "const": true
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "vents_open_during_airtightness_test": {
+                            "not": {}
+                        }
+                    }
+                }
+            ]
         },
         "BasementCommon": {
             "required": [
@@ -4915,7 +5262,8 @@
                 "mass_distribution_class",
                 "pitch",
                 "type",
-                "party_wall_cavity_type"
+                "party_wall_cavity_type",
+                "u_value_whole_wall"
             ],
             "properties": {
                 "type": {
@@ -4949,7 +5297,15 @@
                 "party_wall_cavity_type": {
                     "$ref": "#/$defs/PartyWallCavityType",
                     "description": "Type of party wall cavity construction affecting heat loss through air movement"
-                }
+                },
+                "u_value_whole_wall": {
+                    "$comment": "Deliberately not cross-checked against party_wall_cavity_type. This is the transmittance of the whole element, covering both leaves, whereas thermal_resistance_construction describes the construction only as far as the wall's midpoint, so the whole-element value carries information the other inputs do not pin down and no cavity type implies a particular value for it. That includes solid and filled_sealed: those describe how the energy calculation treats the element, not the transmittance of the fabric. Tying this value to the cavity type would reject legitimate input. The limiting fabric standard is for the compliance report to enforce; this schema checks internal consistency and physical plausibility only, hence a sanity range and nothing more.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 10,
+                    "description": "Whole-element (room-to-room) thermal transmittance of the party wall, in W/(m²·K), covering both leaves. Used only for the Building Regulations compliance report; it is not used in the HEM energy calculation, which derives party-wall heat loss from thermal_resistance_construction and party_wall_cavity_type. It is not derivable from those inputs, which describe the construction only to the wall's midpoint, so it is authored by the assessor from the full build-up. Only a sanity range is applied here; the limiting fabric standard is enforced by the compliance report."
+                },
+                "u_value": false
             },
             "oneOf": [
                 {
@@ -4976,26 +5332,6 @@
                 },
                 {
                     "required": [
-                        "party_wall_cavity_type",
-                        "thermal_resistance_cavity"
-                    ],
-                    "properties": {
-                        "party_wall_cavity_type": {
-                            "description": "Types of party wall cavity configurations",
-                            "const": "defined_resistance",
-                            "title": "PartyWallCavityType",
-                            "type": "string"
-                        },
-                        "thermal_resistance_cavity": {
-                            "type": "number",
-                            "exclusiveMinimum": 0,
-                            "description": "Effective thermal resistance of the party wall cavity (unit: m\u00b2.K/W). Required only when party_wall_cavity_type is 'defined_resistance'. For other cavity types, this is calculated automatically.",
-                            "title": "Thermal Resistance Cavity"
-                        }
-                    }
-                },
-                {
-                    "required": [
                         "party_wall_cavity_type"
                     ],
                     "properties": {
@@ -5017,15 +5353,11 @@
                 "type",
                 "frame_area_fraction",
                 "g_value",
-                "mid_height",
-                "max_window_open_area",
                 "security_risk",
-                "window_part_list",
                 "shading",
                 "base_height",
                 "height",
                 "width",
-                "free_area_height",
                 "pitch"
             ],
             "properties": {
@@ -5047,34 +5379,32 @@
                     "minimum": 0,
                     "maximum": 1
                 },
-                "free_area_height": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 100
-                },
-                "mid_height": {
-                    "type": "number",
-                    "exclusiveMinimum": 0,
-                    "maximum": 100
-                },
-                "max_window_open_area": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 100
-                },
                 "security_risk": {
                     "type": "boolean"
                 },
                 "window_part_list": {
                     "type": "array",
+                    "minItems": 0,
                     "items": {
                         "type": "object",
                         "unevaluatedProperties": false,
                         "required": [
-                            "mid_height_air_flow_path"
+                            "free_area_height",
+                            "mid_height",
+                            "max_window_open_area"
                         ],
                         "properties": {
-                            "mid_height_air_flow_path": {
+                            "free_area_height": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100
+                            },
+                            "mid_height": {
+                                "type": "number",
+                                "exclusiveMinimum": 0,
+                                "maximum": 100
+                            },
+                            "max_window_open_area": {
                                 "type": "number",
                                 "minimum": 0,
                                 "maximum": 100
@@ -5342,8 +5672,7 @@
                 "unfilled_unsealed",
                 "unfilled_sealed",
                 "filled_sealed",
-                "filled_unsealed",
-                "defined_resistance"
+                "filled_unsealed"
             ],
             "title": "PartyWallCavityType",
             "type": "string"

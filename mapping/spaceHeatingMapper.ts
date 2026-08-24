@@ -1,6 +1,9 @@
-import type { ResolvedState } from "./fhsInputMapper";
-import type { HeatEmittingData, WetDistributionEmitterData } from "../stores/ecaasStore.schema";
+import { objectFromEntries } from "ts-extras";
+import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetDetails, SchemaHeatSourceWetHeatPumpInput, SchemaHeatSourceWetHiuInput, SchemaSpaceHeatSystem } from "~/schema/aliases";
+import { asMetres } from "~/utils/units/length";
 import type {
+	SchemaEcoDesignControllerNoWeatherCompensator,
+	SchemaEcoDesignControllerWeatherCompensator,
 	SchemaElecStorageHeaterWithProductReference,
 	SchemaFancoilWithProductReference,
 	SchemaHeatSourceWetHeatBattery,
@@ -9,13 +12,10 @@ import type {
 	SchemaUfhWithProductReference,
 	SchemaWarmAir,
 	SchemaWetDistribution,
-	SchemaEcoDesignControllerNoWeatherCompensator,
-	SchemaEcoDesignControllerWeatherCompensator,
 } from "../schema/api-schema.types";
-import type { SchemaBoilerWithProductReference, SchemaHeatSourceWetDetails, SchemaHeatSourceWetHeatPumpInput, SchemaHeatSourceWetHiuInput, SchemaSpaceHeatSystem } from "~/schema/aliases";
+import type { HeatEmittingData, WetDistributionEmitterData } from "../stores/ecaasStore.schema";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
-import { objectFromEntries } from "ts-extras";
-import { asMetres } from "~/utils/units/length";
+import type { ResolvedState } from "./fhsInputMapper";
 
 // function getAssociatedHeatNetworkType(associatedHeatNetworkId: string | undefined, state: ResolvedState): SchemaHeatNetworkType {
 // 	const heatNetworks = state.spaceHeating.heatNetworks;
@@ -342,7 +342,6 @@ function mapEmittersForWetDistribution(emitters: WetDistributionEmitterData[]): 
 			const radiator = {
 				wet_emitter_type: "radiator",
 				product_reference: emitter.productReference,
-				radiator_type: "standard",
 				length: asMetres(emitter.length),
 			} as const satisfies SchemaRadiatorWithProductReference;
 
@@ -392,6 +391,9 @@ export function mapWetDistributions(state: ResolvedState): Record<string, Schema
 				HeatSource: getHeatSourceData(state, wds),
 				ecodesign_controller: ecoDesignController,
 				bypass_fraction_recirculated: wds.percentageRecirculated / 100,
+				...(emitters.some(x => x.typeOfHeatEmitter === "radiator") ? {
+					thermal_mass: 1, // TODO: TBC where this should map from
+				} : {}),
 			};
 
 			const data: SchemaWetDistribution = wds.hasVariableFlowRate

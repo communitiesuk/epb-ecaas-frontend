@@ -1,13 +1,12 @@
 import type { ValidateFunction } from "ajv/dist/2020";
-import { ajv } from "../schema/validator";
-import { mapFhsInputData } from "./fhsInputMapper";
-import type { FhsInputSchema } from "./fhsInputMapper";
-import { resolveState } from "~/stores/resolve";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
-import { centimetre, metre, millimetre } from "../utils/units/length";
+import { resolveState } from "~/stores/resolve";
 import { unitValue } from "~/utils/units";
 import { celsius } from "~/utils/units/temperature";
-
+import { ajv } from "../schema/validator";
+import { centimetre, metre, millimetre } from "../utils/units/length";
+import type { FhsInputSchema } from "./fhsInputMapper";
+import { mapFhsInputData } from "./fhsInputMapper";
 
 const baseForm = {
 	data: [],
@@ -194,7 +193,6 @@ const expectedHouseInput: FhsInputSchema = {
 	BuildingWidth: 20,
 	NumberOfBathrooms: 1,
 	NumberOfHabitableRooms: 4,
-	NumberOfSanitaryAccommodations: 1,
 	NumberOfHotTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
 	NumberOfWetRooms: 1,
@@ -229,13 +227,11 @@ const expectedHouseInput: FhsInputSchema = {
 				{
 					"product_reference": "RAD-456",
 					"wet_emitter_type": "radiator",
-					"radiator_type": "standard",
 					"length": 4,
 				},
 				{
 					"product_reference": "RAD-456",
 					"wet_emitter_type": "radiator",
-					"radiator_type": "standard",
 					"length": 4,
 				},
 			],
@@ -243,6 +239,7 @@ const expectedHouseInput: FhsInputSchema = {
 			"type": "WetDistribution",
 			"variable_flow": false,
 			"bypass_fraction_recirculated": 0.2,
+			"thermal_mass": 1,
 		},
 		"Warm Air Heater 1 (1)": {
 			"HeatSource": {
@@ -450,7 +447,6 @@ const expectedFlatInput: FhsInputSchema = {
 	General: {
 		build_type: "flat",
 		storeys_in_building: 6,
-		storey_of_dwelling: 1,
 		storeys_in_dwelling: 1,
 	},
 	HeatingControlType: "SeparateTempControl",
@@ -665,7 +661,6 @@ const expectedFlatInput: FhsInputSchema = {
 	PartO_active_cooling_required: true,
 	NumberOfBathrooms: 1,
 	NumberOfHabitableRooms: 4,
-	NumberOfSanitaryAccommodations: 1,
 	NumberOfHotTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
 	NumberOfWetRooms: 2,
@@ -775,6 +770,7 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: "Medium",
 					mass_distribution_class: "M: Mass concentrated inside",
 					pitch: 180,
+					is_adjacent_space_within_dwelling: true,
 				},
 				"exposed floor 1 (floor)": {
 					height: 5,
@@ -795,7 +791,8 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: "E: Mass concentrated at external side",
 					pitch: 90,
 					type: "BuildingElementPartyWall",
-					u_value: 1,
+					u_value_whole_wall: 1,
+					thermal_resistance_construction: 2.5,
 					party_wall_cavity_type: "solid",
 				},
 				"external wall 1 (wall)": {
@@ -820,6 +817,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 1,
+					is_adjacent_space_within_dwelling: true,
 				},
 				"front door (door)": {
 					area: 3.12,
@@ -839,11 +837,8 @@ const expectedFlatInput: FhsInputSchema = {
 				"external glazed door (door)": {
 					base_height: 0.2,
 					frame_area_fraction: 0.3,
-					free_area_height: 2,
 					g_value: 0.5,
 					height: 3,
-					max_window_open_area: 3,
-					mid_height: 2.5,
 					orientation360: 30,
 					pitch: 45,
 					security_risk: false,
@@ -879,12 +874,12 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 10,
 					width: 1,
 					window_part_list: [
-						{
-							mid_height_air_flow_path: 2.5,
-						},
-						{
-							mid_height_air_flow_path: 3,
-						},
+						// {
+						// 	mid_height_air_flow_path: 2.5,
+						// },
+						// {
+						// 	mid_height_air_flow_path: 3,
+						// },
 					],
 				},
 				"wall to garage (wall)": {
@@ -903,6 +898,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: "I: Mass concentrated at internal side",
 					pitch: 0,
 					u_value: 1,
+					is_adjacent_space_within_dwelling: true,
 				},
 				"ceiling to unheated space (ceiling)": {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
@@ -935,6 +931,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 1,
+					is_adjacent_space_within_dwelling: false, // we're assuming all doors are to an outside corridor for now
 				},
 				"door to garage (door)": {
 					area: 1.4,
@@ -952,16 +949,15 @@ const expectedFlatInput: FhsInputSchema = {
 					height: 2,
 					width: 2,
 					base_height: 1,
-					free_area_height: 1,
 					u_value: 0.1,
 					g_value: 0.2,
 					security_risk: true,
-					mid_height: 2,
-					frame_area_fraction: 0.2, // inverse openingToFrameRatio (1 - 0.8) 
-					max_window_open_area: 1,
-					window_part_list: [{
-						mid_height_air_flow_path: 1,
-					}],
+					frame_area_fraction: 0.2, // inverse openingToFrameRatio (1 - 0.8)
+					window_part_list: [
+						// {
+						// 	mid_height_air_flow_path: 1,
+						// },
+					],
 					shading: [
 						{
 							type: "overhang",

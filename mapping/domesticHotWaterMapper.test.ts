@@ -1481,8 +1481,10 @@ describe("domestic hot water mapper", () => {
 				const expected: Partial<FhsInputSchema> = {
 					PreHeatedWaterSource: {
 						"preheated tank": {
+							type: "StorageTank",
 							ColdWaterSource: "mains water",
 							volume: 30,
+							init_temp: 20,
 							daily_losses: 40,
 							HeatSource: {
 								[heatPumpHWOnly.data.name]: {

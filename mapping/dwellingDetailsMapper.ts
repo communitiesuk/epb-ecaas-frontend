@@ -25,7 +25,6 @@ export type GeneralFieldsFromDwelling = "General" |
 	"NumberOfBedrooms" |
 	"NumberOfUtilityRooms" |
 	"NumberOfBathrooms" |
-	"NumberOfSanitaryAccommodations" |
 	"NumberOfHabitableRooms" |
 	"NumberOfHotTappedRooms" |
 	"NumberOfWetRooms" |
@@ -41,7 +40,6 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 				? {
 					build_type: "flat",
 					storeys_in_dwelling: generalDetails.storeysInDwelling,
-					storey_of_dwelling: 1, // this will need to be removed when schema updated
 					storeys_in_building: generalDetails.storeysInBuilding,
 				}
 				: {
@@ -53,7 +51,6 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 		NumberOfBedrooms: generalDetails.numOfBedrooms,
 		NumberOfUtilityRooms: generalDetails.numOfUtilityRooms,
 		NumberOfBathrooms: generalDetails.numOfBathrooms,
-		NumberOfSanitaryAccommodations: 1, // send a canned value of 1 for this deprecated field
 		NumberOfHabitableRooms: generalDetails.numOfHabitableRooms,
 		NumberOfHotTappedRooms: generalDetails.numOfRoomsWithTappingPoints,
 		NumberOfWetRooms: generalDetails.numOfWetRooms,

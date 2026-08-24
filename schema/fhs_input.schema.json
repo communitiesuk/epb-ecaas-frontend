@@ -41,7 +41,8 @@
 		"NumberOfWetRooms": {
 			"type": "integer",
 			"minimum": 0,
-			"description": "A wet room is any room used for domestic activities (such as cooking, clothes washing and bathing) that produce significant amounts of airborne moisture, e.g. a kitchen, utility room or bathroom. For the purposes of Part F of the Building Regulations, sanitary accommodation is also regarded as a wet room."
+			"description": "A wet room is any room used for domestic activities (such as cooking, clothes washing and bathing) that produce significant amounts of airborne moisture, e.g. a kitchen, utility room or bathroom. For the purposes of Part F of the Building Regulations, sanitary accommodation is also regarded as a wet room.",
+			"$comment": "Sanitary accommodations are not counted separately for the intermittent mechanical extract minimum: the Part F table 1.1 footnote permits purge ventilation for them in place of a minimum extract rate, so no dedicated input is required."
 		},
 		"NumberOfHotTappedRooms": {
 			"type": "integer",
@@ -57,11 +58,6 @@
 			"type": "integer",
 			"minimum": 0,
 			"description": "A bathroom is any room that contains a bath or shower"
-		},
-		"NumberOfSanitaryAccommodations": {
-			"type": "integer",
-			"minimum": 0,
-			"description": "Any space containing one or more flush toilets or urinals but not a bath or shower. Multiple cubicles counts as one space as long as there is free circulation of air throughout"
 		},
 		"NumberOfHabitableRooms": {
 			"type": "integer",
@@ -148,6 +144,7 @@
 		},
 		"Appliances": {
 			"type": "object",
+			"$comment": "Every listed appliance, including Microwave and Kettle, is given a default during FHS preprocessing. An input need not declare any of them. The accepted values exist only so a user can pin a default ('Default') or opt out ('Not Installed'). Otherdevices is deliberately absent: it is injected as a default like the others, but it represents an unavoidable background load that an assessment must not be able to pin or opt out of, so an input naming it is rejected. The pattern is anchored because patternProperties matches anywhere within a property name, so an unanchored alternation would also accept any name merely containing an appliance name (for example 'Ovenette'), which then reaches preprocessing as an unrecognised appliance. The 'not' constraint forbids only the case where Fridge and Fridge-Freezer are both explicitly 'Not Installed', so at least one cold appliance remains; omitting either or both keys is allowed because both are injected as installed defaults.",
 			"unevaluatedProperties": false,
 			"patternProperties": {
 				"Clothes_washing|Clothes_drying|Dishwasher|Fridge|Fridge-Freezer|Freezer|Hobs|Otherdevices|Oven": {
@@ -158,22 +155,18 @@
 				}
 			},
 			"not": {
-				"allOf": [
-					{
-						"properties": {
-							"Fridge": {
-								"const": "Not Installed"
-							}
-						}
+				"required": [
+					"Fridge",
+					"Fridge-Freezer"
+				],
+				"properties": {
+					"Fridge": {
+						"const": "Not Installed"
 					},
-					{
-						"properties": {
-							"Fridge-Freezer": {
-								"const": "Not Installed"
-							}
-						}
+					"Fridge-Freezer": {
+						"const": "Not Installed"
 					}
-				]
+				}
 			}
 		},
 		"ColdWaterSource": {
@@ -207,18 +200,33 @@
 			"unevaluatedProperties": false,
 			"properties": {
 				"preheated tank": {
-					"$ref": "#/$defs/StorageTank",
+					"type": "object",
+					"unevaluatedProperties": false,
 					"properties": {
+						"type": {
+							"enum": [
+								"StorageTank",
+								"SmartHotWaterTank"
+							]
+						},
 						"ColdWaterSource": {
 							"type": "string",
 							"reference_to": [
 								"$.cold_water_source",
 								"$.wwhrs"
 							]
+						},
+						"init_temp": {
+							"$comment": "Unlike the hot water cylinder, whose initial temperature is standardised by the wrapper, a pre-heated tank starts the simulation at a user-declared temperature.",
+							"type": "number",
+							"minimum": 1,
+							"maximum": 100
 						}
 					},
 					"required": [
-						"ColdWaterSource"
+						"type",
+						"ColdWaterSource",
+						"init_temp"
 					],
 					"not": {
 						"properties": {
@@ -226,7 +234,33 @@
 								"const": "preheated tank"
 							}
 						}
-					}
+					},
+					"allOf": [
+						{
+							"if": {
+								"properties": {
+									"type": {
+										"const": "StorageTank"
+									}
+								}
+							},
+							"then": {
+								"$ref": "#/$defs/StorageTank"
+							}
+						},
+						{
+							"if": {
+								"properties": {
+									"type": {
+										"const": "SmartHotWaterTank"
+									}
+								}
+							},
+							"then": {
+								"$ref": "#/$defs/SmartHotWaterTank"
+							}
+						}
+					]
 				}
 			},
 			"required": [
@@ -509,8 +543,7 @@
 									},
 									"efficiency": {
 										"type": "number",
-										"minimum": 0.1,
-										"maximum": 1,
+										"const": 1,
 										"description": "Thermal efficiency of the point-of-use water heater (dimensionless, 0-1)"
 									},
 									"EnergySupply": {
@@ -1607,15 +1640,126 @@
 														"type": "integer",
 														"minimum": 1,
 														"description": "Number of heat battery units"
+													},
+													"temp_min_useful": {
+														"description": "Temperature at which the battery is considered fully discharged, used as the state-of-charge zero reference (unit: °C). Required when charging sources are declared.",
+														"type": "number",
+														"minimum": -273.15
+													},
+													"HeatSource": {
+														"$comment": "Charging sources are the core model's alternative to rated_charge_power with a charge control, and the two are mutually exclusive. The wrapper builds each source's control itself, on the same off-peak window used for direct electric charging, with state-of-charge setpoints: a PCM battery only charges once the source exceeds its phase change temperature, so expressing the hysteresis as a temperature would cap the heat source below the point it has to exceed.",
+														"description": "Named sources that charge the battery, each either a direct electric element or a wet heat source such as a heat pump. Omit to charge by direct electric element at a rated power instead.",
+														"type": "object",
+														"minProperties": 1,
+														"additionalProperties": {
+															"type": "object",
+															"unevaluatedProperties": false,
+															"required": [
+																"type"
+															],
+															"properties": {
+																"type": {
+																	"type": "string",
+																	"enum": [
+																		"DirectElectric",
+																		"HeatSourceWet"
+																	]
+																}
+															},
+															"allOf": [
+																{
+																	"if": {
+																		"required": [
+																			"type"
+																		],
+																		"properties": {
+																			"type": {
+																				"const": "DirectElectric"
+																			}
+																		}
+																	},
+																	"then": {
+																		"required": [
+																			"rated_charge_power"
+																		],
+																		"properties": {
+																			"rated_charge_power": {
+																				"description": "Rated charging power of the direct electric element (unit: kW).",
+																				"type": "number",
+																				"exclusiveMinimum": 0
+																			}
+																		}
+																	}
+																},
+																{
+																	"if": {
+																		"required": [
+																			"type"
+																		],
+																		"properties": {
+																			"type": {
+																				"const": "HeatSourceWet"
+																			}
+																		}
+																	},
+																	"then": {
+																		"$comment": "The charging circuit's heat exchanger and flow characteristics are given separately from the battery's own, because charging and discharging may use different pipework and a different exchanger.",
+																		"required": [
+																			"name",
+																			"temp_flow_limit_upper",
+																			"flow_rate_charging_l_per_min",
+																			"A",
+																			"B",
+																			"velocity_in_HEX_tube_at_1_l_per_min_m_per_s",
+																			"inlet_diameter_mm"
+																		],
+																		"properties": {
+																			"name": {
+																				"description": "Name of the HeatSourceWet that charges the battery, such as a heat pump.",
+																				"type": "string"
+																			},
+																			"temp_flow_limit_upper": {
+																				"description": "Maximum flow temperature the heat source may be asked for when charging, reflecting the charging circuit's limits (unit: °C). It should exceed the battery's phase change temperature, or the battery stores only sensible heat.",
+																				"type": "number",
+																				"minimum": -273.15
+																			},
+																			"flow_rate_charging_l_per_min": {
+																				"description": "Flow rate through the heat exchanger when charging hydronically (unit: litre/minute).",
+																				"type": "number",
+																				"exclusiveMinimum": 0
+																			},
+																			"A": {
+																				"description": "Slope of the charging heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K, Re being the Reynolds number at 1 litre/minute (unit: W/K). Obtained by fitting the exchanger's measured performance. It may differ from the battery's own A where charging and discharging use different exchangers.",
+																				"type": "number"
+																			},
+																			"B": {
+																				"description": "Intercept of the charging heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K (unit: W/K). Obtained by fitting the exchanger's measured performance. It may differ from the battery's own B where charging and discharging use different exchangers.",
+																				"type": "number"
+																			},
+																			"velocity_in_HEX_tube_at_1_l_per_min_m_per_s": {
+																				"description": "Water velocity in the charging heat exchanger's tubes at a flow rate of 1 litre/minute, from which the velocity at the charging flow rate is scaled (unit: m/s).",
+																				"type": "number",
+																				"exclusiveMinimum": 0
+																			},
+																			"inlet_diameter_mm": {
+																				"description": "Internal diameter of the charging heat exchanger's inlet tube, used with the velocity to obtain the Reynolds number (unit: mm).",
+																				"type": "number",
+																				"exclusiveMinimum": 0
+																			}
+																		}
+																	}
+																}
+															]
+														}
 													}
 												},
 												"description": "PCM (Phase Change Material) Heat Battery"
 											},
 											{
+												"$comment": "rated_charge_power is not required unconditionally: the core model offers two mutually exclusive charging configurations, and it belongs only to the direct electric one. See the conditional below.",
 												"required": [
 													"electricity_circ_pump",
 													"electricity_standby",
-													"rated_charge_power",
 													"max_rated_losses",
 													"number_of_units",
 													"simultaneous_charging_and_discharging",
@@ -1695,15 +1839,15 @@
 													},
 													"A": {
 														"type": "number",
-														"description": "Heat battery parameter A (dimensionless)"
+														"description": "Slope of the battery heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K, Re being the Reynolds number at 1 litre/minute (unit: W/K). Obtained by fitting the exchanger's measured performance. (dimensionless)"
 													},
 													"B": {
 														"type": "number",
-														"description": "Heat battery parameter B (dimensionless)"
+														"description": "Intercept of the battery heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K (unit: W/K). Obtained by fitting the exchanger's measured performance. (dimensionless)"
 													},
 													"inlet_diameter_mm": {
 														"type": "number",
-														"description": "Inlet diameter of capillary tubes (unit: mm)"
+														"description": "Internal diameter of the battery heat exchanger's inlet tube, used with the velocity to obtain the Reynolds number (unit: mm)."
 													},
 													"max_temperature": {
 														"type": "number",
@@ -1713,9 +1857,150 @@
 													"flow_rate_l_per_min": {
 														"type": "number",
 														"exclusiveMinimum": 0,
-														"description": "Flow rate through the heat battery (unit: litre/minute)"
+														"description": "Flow rate through the battery's heat exchanger in normal operation (unit: litre/minute). A hydronic charging source may declare its own charging flow rate where the charging circuit differs."
+													},
+													"temp_min_useful": {
+														"description": "Temperature at which the battery is considered fully discharged, used as the state-of-charge zero reference (unit: °C). Required when charging sources are declared.",
+														"type": "number",
+														"minimum": -273.15
+													},
+													"HeatSource": {
+														"$comment": "Charging sources are the core model's alternative to rated_charge_power with a charge control, and the two are mutually exclusive. The wrapper builds each source's control itself, on the same off-peak window used for direct electric charging, with state-of-charge setpoints: a PCM battery only charges once the source exceeds its phase change temperature, so expressing the hysteresis as a temperature would cap the heat source below the point it has to exceed.",
+														"description": "Named sources that charge the battery, each either a direct electric element or a wet heat source such as a heat pump. Omit to charge by direct electric element at a rated power instead.",
+														"type": "object",
+														"minProperties": 1,
+														"additionalProperties": {
+															"type": "object",
+															"unevaluatedProperties": false,
+															"required": [
+																"type"
+															],
+															"properties": {
+																"type": {
+																	"type": "string",
+																	"enum": [
+																		"DirectElectric",
+																		"HeatSourceWet"
+																	]
+																}
+															},
+															"allOf": [
+																{
+																	"if": {
+																		"required": [
+																			"type"
+																		],
+																		"properties": {
+																			"type": {
+																				"const": "DirectElectric"
+																			}
+																		}
+																	},
+																	"then": {
+																		"required": [
+																			"rated_charge_power"
+																		],
+																		"properties": {
+																			"rated_charge_power": {
+																				"description": "Rated charging power of the direct electric element (unit: kW).",
+																				"type": "number",
+																				"exclusiveMinimum": 0
+																			}
+																		}
+																	}
+																},
+																{
+																	"if": {
+																		"required": [
+																			"type"
+																		],
+																		"properties": {
+																			"type": {
+																				"const": "HeatSourceWet"
+																			}
+																		}
+																	},
+																	"then": {
+																		"$comment": "The charging circuit's heat exchanger and flow characteristics are given separately from the battery's own, because charging and discharging may use different pipework and a different exchanger.",
+																		"required": [
+																			"name",
+																			"temp_flow_limit_upper",
+																			"flow_rate_charging_l_per_min",
+																			"A",
+																			"B",
+																			"velocity_in_HEX_tube_at_1_l_per_min_m_per_s",
+																			"inlet_diameter_mm"
+																		],
+																		"properties": {
+																			"name": {
+																				"description": "Name of the HeatSourceWet that charges the battery, such as a heat pump.",
+																				"type": "string"
+																			},
+																			"temp_flow_limit_upper": {
+																				"description": "Maximum flow temperature the heat source may be asked for when charging, reflecting the charging circuit's limits (unit: °C). It should exceed the battery's phase change temperature, or the battery stores only sensible heat.",
+																				"type": "number",
+																				"minimum": -273.15
+																			},
+																			"flow_rate_charging_l_per_min": {
+																				"description": "Flow rate through the heat exchanger when charging hydronically (unit: litre/minute).",
+																				"type": "number",
+																				"exclusiveMinimum": 0
+																			},
+																			"A": {
+																				"description": "Slope of the charging heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K, Re being the Reynolds number at 1 litre/minute (unit: W/K). Obtained by fitting the exchanger's measured performance. It may differ from the battery's own A where charging and discharging use different exchangers.",
+																				"type": "number"
+																			},
+																			"B": {
+																				"description": "Intercept of the charging heat exchanger's conductance correlation UA = A x ln(Re x flow rate) + B, which returns the exchanger's overall heat transfer coefficient in W/K (unit: W/K). Obtained by fitting the exchanger's measured performance. It may differ from the battery's own B where charging and discharging use different exchangers.",
+																				"type": "number"
+																			},
+																			"velocity_in_HEX_tube_at_1_l_per_min_m_per_s": {
+																				"description": "Water velocity in the charging heat exchanger's tubes at a flow rate of 1 litre/minute, from which the velocity at the charging flow rate is scaled (unit: m/s).",
+																				"type": "number",
+																				"exclusiveMinimum": 0
+																			},
+																			"inlet_diameter_mm": {
+																				"description": "Internal diameter of the charging heat exchanger's inlet tube, used with the velocity to obtain the Reynolds number (unit: mm).",
+																				"type": "number",
+																				"exclusiveMinimum": 0
+																			}
+																		}
+																	}
+																}
+															]
+														}
 													}
 												},
+												"allOf": [
+													{
+														"$comment": "Mirrors the core model's own mutual-exclusivity rule, so the conflict is reported here rather than arriving from the core.",
+														"if": {
+															"required": [
+																"HeatSource"
+															]
+														},
+														"then": {
+															"required": [
+																"temp_min_useful"
+															],
+															"properties": {
+																"rated_charge_power": {
+																	"not": {}
+																}
+															}
+														},
+														"else": {
+															"required": [
+																"rated_charge_power"
+															],
+															"properties": {
+																"temp_min_useful": {
+																	"not": {}
+																}
+															}
+														}
+													}
+												],
 												"description": "PCM (Phase Change Material) Heat Battery"
 											}
 										]
@@ -1759,8 +2044,7 @@
 													"number_of_units",
 													"dry_core_min_output",
 													"dry_core_max_output",
-													"fan_pwr",
-													"state_of_charge_init"
+													"fan_pwr"
 												],
 												"properties": {
 													"electricity_circ_pump": {
@@ -1815,12 +2099,6 @@
 													"fan_pwr": {
 														"type": "number",
 														"description": "Fan power (W)"
-													},
-													"state_of_charge_init": {
-														"description": "State of charge at initialisation of dry core heat storage (ratio). NB. this field is marked for removal, and only a value of 1 is accepted.",
-														"const": 1.0,
-														"title": "State Of Charge Init",
-														"type": "number"
 													}
 												}
 											}
@@ -1842,8 +2120,7 @@
 							"oneOf": [
 								{
 									"required": [
-										"product_reference",
-										"building_level_distribution_losses"
+										"product_reference"
 									],
 									"properties": {
 										"product_reference": {
@@ -1854,15 +2131,15 @@
 										"building_level_distribution_losses": {
 											"type": "number",
 											"minimum": 0,
-											"description": "Heat losses from building-level distribution pipework (unit: W)"
+											"description": "Heat losses from building-level distribution pipework (unit: W)",
+											"$comment": "Daily pipework heat loss within an apartment block up to the dwelling boundary; applies to flats only. Required for flats; not permitted for houses, where the wrapper sets it to 0."
 										}
 									}
 								},
 								{
 									"required": [
 										"HIU_daily_loss",
-										"power_max",
-										"building_level_distribution_losses"
+										"power_max"
 									],
 									"properties": {
 										"HIU_daily_loss": {
@@ -1877,7 +2154,8 @@
 										"building_level_distribution_losses": {
 											"type": "number",
 											"minimum": 0,
-											"description": "Heat losses from building-level distribution pipework (unit: W)"
+											"description": "Heat losses from building-level distribution pipework (unit: W)",
+											"$comment": "Daily pipework heat loss within an apartment block up to the dwelling boundary; applies to flats only. Required for flats; not permitted for houses, where the wrapper sets it to 0."
 										}
 									}
 								}
@@ -2473,41 +2751,19 @@
 																	"description": "A unique reference to a product held within the HEM database (PCDB)",
 																	"title": "Reference to the product in the HEM database",
 																	"type": "string"
+																},
+																"length": {
+																	"type": "number",
+																	"exclusiveMinimum": 0,
+																	"description": "The length of the emitter (unit: m)"
 																}
 															},
 															"required": [
-																"product_reference"
+																"product_reference",
+																"length"
 															],
 															"title": "RadiatorWithProductReference",
-															"type": "object",
-															"oneOf": [
-																{
-																	"required": [
-																		"radiator_type",
-																		"length"
-																	],
-																	"properties": {
-																		"radiator_type": {
-																			"const": "standard"
-																		},
-																		"length": {
-																			"type": "number",
-																			"exclusiveMinimum": 0,
-																			"description": "The length of the emitter (unit: m)"
-																		}
-																	}
-																},
-																{
-																	"required": [
-																		"radiator_type"
-																	],
-																	"properties": {
-																		"radiator_type": {
-																			"const": "towel"
-																		}
-																	}
-																}
-															]
+															"type": "object"
 														},
 														{
 															"required": [
@@ -2899,15 +3155,42 @@
 												"type": "array",
 												"contains": {
 													"type": "object",
-													"required": [
-														"n"
-													],
 													"properties": {
-														"n": {
-															"type": "number",
-															"description": "Exponent from characteristic equation of emitters (e.g. derived from BS EN 442 tests)"
+														"wet_emitter_type": {
+															"const": "radiator"
 														}
-													}
+													},
+													"required": [
+														"wet_emitter_type"
+													],
+													"anyOf": [
+														{
+															"required": [
+																"length"
+															],
+															"not": {
+																"required": [
+																	"thermal_mass_per_m"
+																]
+															}
+														},
+														{
+															"not": {
+																"anyOf": [
+																	{
+																		"required": [
+																			"length"
+																		]
+																	},
+																	{
+																		"required": [
+																			"thermal_mass"
+																		]
+																	}
+																]
+															}
+														}
+													]
 												}
 											}
 										}
@@ -2922,6 +3205,40 @@
 												"exclusiveMinimum": 0,
 												"description": "Thermal mass of the emitters, excluding any thermal mass entered under individual radiator/UFH entries and always excluding thermal mass of pipework. (Unit: kWh/K)"
 											}
+										}
+									},
+									"else": {
+										"properties": {
+											"thermal_mass": {
+												"type": "number",
+												"exclusiveMinimum": 0,
+												"description": "Thermal mass of the emitters, excluding any thermal mass entered under individual radiator/UFH entries and always excluding thermal mass of pipework. (Unit: kWh/K)"
+											}
+										}
+									}
+								},
+								{
+									"if": {
+										"properties": {
+											"emitters": {
+												"type": "array",
+												"contains": {
+													"type": "object",
+													"properties": {
+														"wet_emitter_type": {
+															"const": "fancoil"
+														}
+													},
+													"required": [
+														"wet_emitter_type"
+													]
+												}
+											}
+										}
+									},
+									"then": {
+										"properties": {
+											"thermal_mass": false
 										}
 									}
 								}
@@ -3053,16 +3370,9 @@
 			},
 			"then": {
 				"required": [
-					"storey_of_dwelling",
 					"storeys_in_building"
 				],
 				"properties": {
-					"storey_of_dwelling": {
-						"type": "integer",
-						"minimum": -50,
-						"maximum": 199,
-						"description": "What storey of the main building is the flat on? For multi-story flats, enter the lowest storey the unit occupies"
-					},
 					"storeys_in_building": {
 						"type": "integer",
 						"minimum": 1,
@@ -3215,12 +3525,6 @@
 									"installed_under_approved_scheme"
 								],
 								"properties": {
-									"design_zone_cooling_covered_by_mech_vent": {
-										"type": "number"
-									},
-									"design_zone_heating_covered_by_mech_vent": {
-										"type": "number"
-									},
 									"product_reference": {
 										"description": "A unique reference to a product held within the HEM database (PCDB)",
 										"title": "Reference to the product in the HEM database",
@@ -3267,8 +3571,6 @@
 													"unevaluatedProperties": false,
 													"required": [
 														"cross_section_shape",
-														"internal_diameter_mm",
-														"external_diameter_mm",
 														"length",
 														"insulation_thermal_conductivity",
 														"insulation_thickness_mm",
@@ -3283,15 +3585,20 @@
 															],
 															"description": "Whether the cross-section of duct is circular or rectangular (square)"
 														},
+														"duct_perimeter_mm": {
+															"type": "number",
+															"exclusiveMinimum": 0,
+															"description": "Cross-sectional perimeter length of rectangular ductwork (unit: mm)"
+														},
 														"internal_diameter_mm": {
 															"type": "number",
-															"minimum": 0,
+															"exclusiveMinimum": 0,
 															"maximum": 1000,
 															"description": "(unit: mm)"
 														},
 														"external_diameter_mm": {
 															"type": "number",
-															"minimum": 0,
+															"exclusiveMinimum": 0,
 															"maximum": 1000,
 															"description": "(unit: mm)"
 														},
@@ -3322,7 +3629,45 @@
 																"exhaust"
 															]
 														}
-													}
+													},
+													"allOf": [
+														{
+															"if": {
+																"properties": {
+																	"cross_section_shape": {
+																		"const": "circular"
+																	}
+																}
+															},
+															"then": {
+																"required": [
+																	"internal_diameter_mm",
+																	"external_diameter_mm"
+																],
+																"properties": {
+																	"duct_perimeter_mm": false
+																}
+															}
+														},
+														{
+															"if": {
+																"properties": {
+																	"cross_section_shape": {
+																		"const": "rectangular"
+																	}
+																}
+															},
+															"then": {
+																"required": [
+																	"duct_perimeter_mm"
+																],
+																"properties": {
+																	"internal_diameter_mm": false,
+																	"external_diameter_mm": false
+																}
+															}
+														}
+													]
 												},
 												"description": "List of ductworks installed in this ventilation system"
 											},
@@ -3648,8 +3993,6 @@
 														"unevaluatedProperties": false,
 														"required": [
 															"cross_section_shape",
-															"internal_diameter_mm",
-															"external_diameter_mm",
 															"length",
 															"insulation_thermal_conductivity",
 															"insulation_thickness_mm",
@@ -3664,15 +4007,20 @@
 																],
 																"description": "Whether the cross-section of duct is circular or rectangular (square)"
 															},
+															"duct_perimeter_mm": {
+																"type": "number",
+																"exclusiveMinimum": 0,
+																"description": "Cross-sectional perimeter length of rectangular ductwork (unit: mm)"
+															},
 															"internal_diameter_mm": {
 																"type": "number",
-																"minimum": 0,
+																"exclusiveMinimum": 0,
 																"maximum": 1000,
 																"description": "(unit: mm)"
 															},
 															"external_diameter_mm": {
 																"type": "number",
-																"minimum": 0,
+																"exclusiveMinimum": 0,
 																"maximum": 1000,
 																"description": "(unit: mm)"
 															},
@@ -3703,7 +4051,45 @@
 																	"exhaust"
 																]
 															}
-														}
+														},
+														"allOf": [
+															{
+																"if": {
+																	"properties": {
+																		"cross_section_shape": {
+																			"const": "circular"
+																		}
+																	}
+																},
+																"then": {
+																	"required": [
+																		"internal_diameter_mm",
+																		"external_diameter_mm"
+																	],
+																	"properties": {
+																		"duct_perimeter_mm": false
+																	}
+																}
+															},
+															{
+																"if": {
+																	"properties": {
+																		"cross_section_shape": {
+																			"const": "rectangular"
+																		}
+																	}
+																},
+																"then": {
+																	"required": [
+																		"duct_perimeter_mm"
+																	],
+																	"properties": {
+																		"internal_diameter_mm": false,
+																		"external_diameter_mm": false
+																	}
+																}
+															}
+														]
 													}
 												},
 												"position_intake": {
@@ -3818,22 +4204,11 @@
 									},
 									{
 										"if": {
-											"anyOf": [
-												{
-													"properties": {
-														"vent_type": {
-															"const": "Decentralised continuous MEV"
-														}
-													}
-												},
-												{
-													"properties": {
-														"vent_type": {
-															"const": "Intermittent MEV"
-														}
-													}
+											"properties": {
+												"vent_type": {
+													"const": "Decentralised continuous MEV"
 												}
-											]
+											}
 										},
 										"then": {
 											"required": [
@@ -3842,6 +4217,27 @@
 											"properties": {
 												"SFP": {
 													"$ref": "#/$defs/SFP"
+												}
+											}
+										}
+									},
+									{
+										"if": {
+											"properties": {
+												"vent_type": {
+													"const": "Intermittent MEV"
+												}
+											}
+										},
+										"then": {
+											"required": [
+												"SFP"
+											],
+											"properties": {
+												"SFP": {
+													"$ref": "#/$defs/SFP",
+													"$comment": "Lower sanity bound on intermittent extract fan SFP. The lowest intermittent extract fan in the Product Characteristics Database is 0.08 W/l/s; 0.05 leaves headroom for future, more efficient products while rejecting implausibly low manual entries.",
+													"minimum": 0.05
 												}
 											}
 										}
@@ -4070,6 +4466,7 @@
 										]
 									},
 									"then": {
+										"$comment": "the required list here drops the erroneous entry of `is_adjacent_space_within_dwelling` from the upstream schema",
 										"required": [
 											"area",
 											"areal_heat_capacity",
@@ -4084,22 +4481,52 @@
 												"description": "Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: \u02da)"
 											},
 											"areal_heat_capacity": {
-												"enum": [
-													"Very light",
-													"Light",
-													"Medium",
-													"Heavy",
-													"Very heavy"
+												"description": "Areal heat capacity of the full construction, as a qualitative class or a numeric value in J/(m²·K).",
+												"anyOf": [
+													{
+														"enum": [
+															"Very light",
+															"Light",
+															"Medium",
+															"Heavy",
+															"Very heavy"
+														]
+													},
+													{
+														"type": "number",
+														"minimum": 100,
+														"maximum": 1000000
+													}
 												]
 											},
 											"mass_distribution_class": {
 												"$ref": "#/$defs/MassDistributionClass"
 											},
 											"area": {
+												"description": "Net area of the element, in m².",
 												"type": "number",
 												"minimum": 0.01,
-												"maximum": 10000,
-												"description": "Area of the building element (m\u00b2), must be positive"
+												"maximum": 10000
+											}
+										}
+									}
+								},
+								{
+									"if": {
+										"properties": {
+											"type": {
+												"const": "BuildingElementAdjacentConditionedSpace"
+											}
+										}
+									},
+									"then": {
+										"required": [
+											"is_adjacent_space_within_dwelling"
+										],
+										"properties": {
+											"is_adjacent_space_within_dwelling": {
+												"type": "boolean",
+												"description": "Is the adjacent space within the dwelling being modelled?"
 											}
 										}
 									}
@@ -4326,14 +4753,6 @@
 															"type": "number",
 															"description": "Area of ventilation openings per perimeter (unit: m\u00b2/m)"
 														},
-														"shield_fact_location": {
-															"enum": [
-																"Sheltered",
-																"Average",
-																"Exposed"
-															],
-															"description": "Wind shielding factor"
-														},
 														"thickness_walls": {
 															"type": "number",
 															"minimum": 0,
@@ -4345,8 +4764,43 @@
 															"minimum": 0,
 															"maximum": 100,
 															"description": "Thermal resistance of insulation on base of underfloor space, excluding surface resistances (unit: m\u00b2.K/W)"
+														},
+														"smart_air_bricks": {
+															"$comment": "The opening pattern is not an input. A smart air brick modulates on measured underfloor humidity and temperature, so a compliance assessment applies one standardised schedule, derived from manufacturer field data for a typical dwelling and supplied by the wrapper.",
+															"description": "Whether the underfloor vents are smart air bricks, which close automatically to limit ventilation of the underfloor space when it is not needed. Omit or set false for fixed air bricks.",
+															"type": "boolean"
+														},
+														"vents_open_during_airtightness_test": {
+															"description": "Whether the underfloor vents were open (true) or closed (false) during the dwelling airtightness pressurisation test. The infiltration adjustment is applied relative to the tested state, so it is required for smart air bricks and meaningless without them.",
+															"type": "boolean"
 														}
-													}
+													},
+													"allOf": [
+														{
+															"if": {
+																"required": [
+																	"smart_air_bricks"
+																],
+																"properties": {
+																	"smart_air_bricks": {
+																		"const": true
+																	}
+																}
+															},
+															"then": {
+																"required": [
+																	"vents_open_during_airtightness_test"
+																]
+															},
+															"else": {
+																"properties": {
+																	"vents_open_during_airtightness_test": {
+																		"not": {}
+																	}
+																}
+															}
+														}
+													]
 												}
 											},
 											{
@@ -4591,7 +5045,8 @@
 											"mass_distribution_class",
 											"pitch",
 											"type",
-											"party_wall_cavity_type"
+											"party_wall_cavity_type",
+											"u_value_whole_wall"
 										],
 										"properties": {
 											"area": {
@@ -4622,11 +5077,23 @@
 											"party_wall_cavity_type": {
 												"$ref": "#/$defs/PartyWallCavityType",
 												"description": "Type of party wall cavity construction affecting heat loss through air movement"
-											}
+											},
+											"u_value_whole_wall": {
+												"$comment": "Deliberately not cross-checked against party_wall_cavity_type. This is the transmittance of the whole element, covering both leaves, whereas thermal_resistance_construction describes the construction only as far as the wall's midpoint, so the whole-element value carries information the other inputs do not pin down and no cavity type implies a particular value for it. That includes solid and filled_sealed: those describe how the energy calculation treats the element, not the transmittance of the fabric. Tying this value to the cavity type would reject legitimate input. The limiting fabric standard is for the compliance report to enforce; this schema checks internal consistency and physical plausibility only, hence a sanity range and nothing more.",
+												"type": "number",
+												"minimum": 0,
+												"maximum": 10,
+												"description": "Whole-element (room-to-room) thermal transmittance of the party wall, in W/(m²·K), covering both leaves. Used only for the Building Regulations compliance report; it is not used in the HEM energy calculation, which derives party-wall heat loss from thermal_resistance_construction and party_wall_cavity_type. It is not derivable from those inputs, which describe the construction only to the wall's midpoint, so it is authored by the assessor from the full build-up. Only a sanity range is applied here; the limiting fabric standard is enforced by the compliance report."
+											},
+											"u_value": false
 										},
 										"allOf": [
 											{
+												"$comment": "'required' guards the 'if' so it cannot match vacuously when party_wall_cavity_type is absent. Without it, 'properties' constrains nothing, every branch matches, and an element missing its cavity type is also told to supply a lining type - pointing the assessor at a field that may not apply once the cavity type is given.",
 												"if": {
+													"required": [
+														"party_wall_cavity_type"
+													],
 													"anyOf": [
 														{
 															"properties": {
@@ -4662,28 +5129,6 @@
 														}
 													}
 												}
-											},
-											{
-												"if": {
-													"properties": {
-														"party_wall_cavity_type": {
-															"const": "defined_resistance"
-														}
-													}
-												},
-												"then": {
-													"required": [
-														"thermal_resistance_cavity"
-													],
-													"properties": {
-														"thermal_resistance_cavity": {
-															"type": "number",
-															"exclusiveMinimum": 0,
-															"description": "Effective thermal resistance of the party wall cavity (unit: m\u00b2.K/W). Required only when party_wall_cavity_type is 'defined_resistance'. For other cavity types, this is calculated automatically.",
-															"title": "Thermal Resistance Cavity"
-														}
-													}
-												}
 											}
 										]
 									}
@@ -4701,15 +5146,11 @@
 										"required": [
 											"frame_area_fraction",
 											"g_value",
-											"mid_height",
-											"max_window_open_area",
 											"security_risk",
-											"window_part_list",
 											"shading",
 											"base_height",
 											"height",
 											"width",
-											"free_area_height",
 											"pitch"
 										],
 										"properties": {
@@ -4731,41 +5172,35 @@
 												"maximum": 1,
 												"description": "Total solar energy transmittance of the transparent part of the window"
 											},
-											"free_area_height": {
-												"type": "number",
-												"minimum": 0,
-												"maximum": 100,
-												"description": "Height of the openable area, corrected for obstruction due to the window frame of the openable section (unit: m)"
-											},
-											"mid_height": {
-												"type": "number",
-												"exclusiveMinimum": 0,
-												"maximum": 100,
-												"description": "Height of the mid-point of the window, relative to the base of the ventilation zone (unit: m)"
-											},
-											"max_window_open_area": {
-												"type": "number",
-												"minimum": 0,
-												"maximum": 100,
-												"description": "Openable area of the window ignoring the obstructing effect of the frame of the openable part"
-											},
 											"security_risk": {
 												"type": "boolean"
 											},
 											"window_part_list": {
 												"type": "array",
+												"minItems": 0,
 												"items": {
 													"type": "object",
 													"unevaluatedProperties": false,
 													"required": [
-														"mid_height_air_flow_path"
+														"free_area_height",
+														"mid_height",
+														"max_window_open_area"
 													],
 													"properties": {
-														"mid_height_air_flow_path": {
+														"free_area_height": {
 															"type": "number",
 															"minimum": 0,
-															"maximum": 100,
-															"description": "(unit: m)"
+															"maximum": 100
+														},
+														"mid_height": {
+															"type": "number",
+															"exclusiveMinimum": 0,
+															"maximum": 100
+														},
+														"max_window_open_area": {
+															"type": "number",
+															"minimum": 0,
+															"maximum": 100
 														}
 													}
 												}
@@ -4871,10 +5306,7 @@
 						"description": "Dictionary of building elements present in the zone (e.g. walls, floors, windows, etc.)."
 					},
 					"ThermalBridging": {
-						"type": [
-							"object",
-							"number"
-						],
+						"type": "object",
 						"additionalProperties": {
 							"type": "object",
 							"unevaluatedProperties": false,
@@ -5026,7 +5458,6 @@
 		"NumberOfHotTappedRooms",
 		"NumberOfUtilityRooms",
 		"NumberOfBathrooms",
-		"NumberOfSanitaryAccommodations",
 		"NumberOfHabitableRooms",
 		"HeatingControlType",
 		"KitchenExtractorHoodExternal",
@@ -5054,6 +5485,13 @@
 				},
 				"is_export_capable": {
 					"type": "boolean"
+				},
+				"power_limit_export": {
+					"$comment": "Upper sanity bound rather than a physical ceiling: the limit is expressed in kW, and entering the same figure in watts (3680 for a typical single-phase G98 connection) would otherwise validate and then never bind, leaving the run to proceed as though unlimited. 100 kW is far above any domestic connection - a 100 A single-phase supply carries roughly 23 kW, three-phase roughly 69 kW - so it rejects the unit slip without rejecting a real installation.",
+					"description": "Maximum AC power exportable to the grid, typically a Distribution Network Operator limit enforced by a G100-compliant export limitation device. Applies to the whole supply: generation surplus and battery discharge share the limit. Generation surplus above the limit is curtailed, and battery discharge is throttled so that unexported energy is retained as charge. Omit for no limit, leaving the inverter's AC capacity as the only ceiling (unit: kW).",
+					"type": "number",
+					"exclusiveMinimum": 0,
+					"maximum": 100
 				},
 				"ElectricBattery": {
 					"type": "object",
@@ -5115,7 +5553,29 @@
 						}
 					}
 				}
-			}
+			},
+			"$comment": "An export power limit constrains only surplus sent to the grid, so it is meaningful solely on an export-capable supply, and the core model rejects the pairing. An absent is_export_capable is left to the wrapper, which defaults an electricity supply to export-capable, so only an explicit false forbids the limit.",
+			"allOf": [
+				{
+					"if": {
+						"required": [
+							"is_export_capable"
+						],
+						"properties": {
+							"is_export_capable": {
+								"const": false
+							}
+						}
+					},
+					"then": {
+						"properties": {
+							"power_limit_export": {
+								"not": {}
+							}
+						}
+					}
+				}
+			]
 		},
 		"EnergySupplyPriorityEntry": {
 			"enum": [
@@ -5254,8 +5714,7 @@
 				"unfilled_unsealed",
 				"unfilled_sealed",
 				"filled_sealed",
-				"filled_unsealed",
-				"defined_resistance"
+				"filled_unsealed"
 			],
 			"title": "PartyWallCavityType",
 			"type": "string"
@@ -5268,6 +5727,35 @@
 			],
 			"title": "PartyWallLiningType",
 			"type": "string"
+		},
+		"HotWaterOnlyHeatPumpWithSeparateTank": {
+			"$comment": "A hot-water-only heat pump installed with a separately-supplied store, so its efficiency is de-rated by comparing the installed heat-exchanger area against the tested one. tank_is_integral defaults to false in the core model, so an absent value matches here.",
+			"required": [
+				"type"
+			],
+			"properties": {
+				"type": {
+					"const": "HeatPump_HWOnly"
+				},
+				"tank_is_integral": {
+					"const": false
+				}
+			}
+		},
+		"HotWaterOnlyHeatPumpWithIntegralTank": {
+			"$comment": "A hot-water-only heat pump supplied as a single unit with its store, tested together to EN 16147, so there is no separately installed heat exchanger to compare.",
+			"required": [
+				"type",
+				"tank_is_integral"
+			],
+			"properties": {
+				"type": {
+					"const": "HeatPump_HWOnly"
+				},
+				"tank_is_integral": {
+					"const": true
+				}
+			}
 		},
 		"SmartHotWaterTank": {
 			"oneOf": [
@@ -5327,6 +5815,10 @@
 							"type": "string",
 							"description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply"
 						},
+						"heat_exchanger_surface_area": {
+							"type": "number",
+							"exclusiveMinimum": 0
+						},
 						"max_flow_rate_pump_l_per_min": {
 							"type": "number",
 							"exclusiveMinimum": 0,
@@ -5349,6 +5841,60 @@
 						"max_flow_rate_pump_l_per_min",
 						"power_pump_kW",
 						"temp_usable"
+					],
+					"$comment": "The exchanger area is required whenever at least one heat source is a HeatPump_HWOnly installed with a separately-supplied store, and forbidden whenever one is integral to its store. additionalProperties applies its subschema to every property, so 'at least one matches' is expressed by negating 'none matches'. Each 'if' also requires HeatSource: 'properties' constrains only the keys present, so without it a tank missing HeatSource entirely matches both branches, and is told both to supply the exchanger area and to remove it - the latter naming a property it will need once a heat source is given.",
+					"allOf": [
+						{
+							"if": {
+								"required": [
+									"HeatSource"
+								],
+								"properties": {
+									"HeatSource": {
+										"type": "object",
+										"not": {
+											"additionalProperties": {
+												"not": {
+													"$ref": "#/$defs/HotWaterOnlyHeatPumpWithSeparateTank"
+												}
+											}
+										}
+									}
+								}
+							},
+							"then": {
+								"required": [
+									"heat_exchanger_surface_area"
+								]
+							}
+						},
+						{
+							"if": {
+								"required": [
+									"HeatSource"
+								],
+								"properties": {
+									"HeatSource": {
+										"type": "object",
+										"not": {
+											"additionalProperties": {
+												"not": {
+													"$ref": "#/$defs/HotWaterOnlyHeatPumpWithIntegralTank"
+												}
+											}
+										}
+									}
+								}
+							},
+							"then": {
+								"$comment": "Absence is required by forbidding any value for the property, rather than by negating a required list, so that the reported error path names the offending property instead of echoing the whole tank object.",
+								"properties": {
+									"heat_exchanger_surface_area": {
+										"not": {}
+									}
+								}
+							}
+						}
 					]
 				}
 			]
@@ -5363,10 +5909,69 @@
 						]
 					},
 					"description": "Dictionary of heating systems connected to the storage tank"
+				},
+				"heat_exchanger_surface_area": {
+					"type": "number",
+					"exclusiveMinimum": 0
 				}
-			}
+			},
+			"$comment": "The exchanger area is required whenever at least one heat source is a HeatPump_HWOnly installed with a separately-supplied store, and forbidden whenever one is integral to its store. additionalProperties applies its subschema to every property, so 'at least one matches' is expressed by negating 'none matches'. Each 'if' also requires HeatSource: 'properties' constrains only the keys present, so without it a tank missing HeatSource entirely matches both branches, and is told both to supply the exchanger area and to remove it - the latter naming a property it will need once a heat source is given.",
+			"allOf": [
+				{
+					"if": {
+						"required": [
+							"HeatSource"
+						],
+						"properties": {
+							"HeatSource": {
+								"type": "object",
+								"not": {
+									"additionalProperties": {
+										"not": {
+											"$ref": "#/$defs/HotWaterOnlyHeatPumpWithSeparateTank"
+										}
+									}
+								}
+							}
+						}
+					},
+					"then": {
+						"required": [
+							"heat_exchanger_surface_area"
+						]
+					}
+				},
+				{
+					"if": {
+						"required": [
+							"HeatSource"
+						],
+						"properties": {
+							"HeatSource": {
+								"type": "object",
+								"not": {
+									"additionalProperties": {
+										"not": {
+											"$ref": "#/$defs/HotWaterOnlyHeatPumpWithIntegralTank"
+										}
+									}
+								}
+							}
+						}
+					},
+					"then": {
+						"$comment": "Absence is required by forbidding any value for the property, rather than by negating a required list, so that the reported error path names the offending property instead of echoing the whole tank object.",
+						"properties": {
+							"heat_exchanger_surface_area": {
+								"not": {}
+							}
+						}
+					}
+				}
+			]
 		},
 		"Tank": {
+			"$comment": "The initial cylinder temperature (init_temp) is not an input. The wrapper sets it to the maximum setpoint temperature so the cylinder starts the simulation fully heated.",
 			"required": [
 				"ColdWaterSource",
 				"volume",
@@ -5388,12 +5993,6 @@
 					"minimum": 1,
 					"maximum": 1000,
 					"description": "Total volume of tank (unit: litre)"
-				},
-				"init_temp": {
-					"type": "number",
-					"minimum": 1,
-					"maximum": 100,
-					"description": "Initial temperature of the storage tank at the start of simulation (unit: \u02daC)"
 				},
 				"daily_losses": {
 					"type": "number",
@@ -5472,33 +6071,6 @@
 						"$ref": "#/$defs/HeatSource"
 					},
 					"description": "Dictionary of heating systems connected to the storage tank"
-				}
-			},
-			"if": {
-				"properties": {
-					"HeatSource": {
-						"type": "object",
-						"additionalProperties": {
-							"type": "object",
-							"properties": {
-								"type": {
-									"const": "HeatPump_HWOnly"
-								}
-							}
-						}
-					}
-				}
-			},
-			"then": {
-				"required": [
-					"heat_exchanger_surface_area"
-				],
-				"properties": {
-					"heat_exchanger_surface_area": {
-						"type": "number",
-						"exclusiveMinimum": 0,
-						"description": "Surface area of the heat exchanger within the storage tank (unit: m\u00b2)"
-					}
 				}
 			}
 		},
@@ -5618,11 +6190,13 @@
 								}
 							},
 							{
+								"$comment": "heat_exchanger_surface_area_declared is required so the property is always present: the core model requires it regardless, so omitting it here would let the input preprocess and then fail in the core with a bare 'Field required'. It may be null where the store is integral to the heat pump, because no de-rating comparison is made and the value goes unread; the conditional below requires a positive number in the separately-supplied case, where the core does read it.",
 								"required": [
 									"EnergySupply",
 									"power_max",
 									"tank_volume_declared",
 									"daily_losses_declared",
+									"heat_exchanger_surface_area_declared",
 									"in_use_factor_mismatch",
 									"test_data"
 								],
@@ -5642,9 +6216,16 @@
 										"description": "Tank volume stored in the database (unit: litres)"
 									},
 									"heat_exchanger_surface_area_declared": {
-										"type": "number",
+										"type": [
+											"number",
+											"null"
+										],
 										"exclusiveMinimum": 0,
 										"description": "Surface area of heat exchanger stored in the database (unit: m2)"
+									},
+									"tank_is_integral": {
+										"$comment": "True where the heat pump and store form a single unit that is always installed together, tested to EN 16147 as one appliance, so no heat-exchanger de-rating applies. Defaults to false in the core model, matching a heat pump installed with a separately-supplied store.",
+										"type": "boolean"
 									},
 									"daily_losses_declared": {
 										"type": "number",
@@ -5704,6 +6285,19 @@
 								}
 							}
 						]
+					}
+				},
+				{
+					"$comment": "A separately-supplied store has its installed heat-exchanger area compared against this declared one, so the value must be a positive number. Only the integral case may declare null, where the comparison is skipped and the core never reads it.",
+					"if": {
+						"$ref": "#/$defs/HotWaterOnlyHeatPumpWithSeparateTank"
+					},
+					"then": {
+						"properties": {
+							"heat_exchanger_surface_area_declared": {
+								"type": "number"
+							}
+						}
 					}
 				},
 				{

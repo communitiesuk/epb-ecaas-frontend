@@ -1,8 +1,9 @@
-import type { SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaEdgeInsulation, BuildingElementGroundForSchema } from "~/schema/aliases";
-import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from "deepmerge";
-import { defaultZoneName } from "./common";
+import { arrayIncludes } from "ts-extras";
+import type { BuildingElementGroundForSchema, BuildingElementPartyWallForSchema, SchemaBuildingElement, SchemaEdgeInsulation, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaZoneInput } from "~/schema/aliases";
 import { asMetres, type Length } from "../utils/units/length";
+import { defaultZoneName } from "./common";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 
 function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
@@ -184,7 +185,6 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					floor_type: x.typeOfGroundFloor,
 					height_upper_surface: x.heightOfFloorUpperSurface / 1000,
 					area_per_perimeter_vent: x.ventilationOpeningsArea / 1e6,
-					shield_fact_location: "Average", // TODO: Needs to be removed once Alpha 8 is introduced
 					thermal_resist_insul: x.underfloorSpaceThermalResistance,
 					thermal_transm_walls: x.thermalTransmittanceOfWallsAboveGround,
 				};
@@ -258,6 +258,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 			internalFloor = {
 				...commonFields,
 				type: "BuildingElementAdjacentConditionedSpace",
+				is_adjacent_space_within_dwelling: true,
 			};
 		}
 
@@ -402,6 +403,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
+				is_adjacent_space_within_dwelling: true,
 			},
 		};
 	}) || [];
@@ -414,12 +416,17 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				type: "BuildingElementPartyWall",
 				pitch: extractPitch(x),
 				area: x.surfaceArea,
-				u_value: x.uValueWholeWall,
+				u_value_whole_wall: x.uValueWholeWall,
+				thermal_resistance_construction: x.thermalResistanceHalfWall,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
-				party_wall_cavity_type: x.partyWallCavityType,
-				...(["unfilled_unsealed", "unfilled_sealed", "filled_unsealed"].includes(x.partyWallCavityType) && { party_wall_lining_type: x.partyWallLiningType }),
-			},
+				...(arrayIncludes(["unfilled_unsealed", "unfilled_sealed", "filled_unsealed"], x.partyWallCavityType) ? {
+					party_wall_cavity_type: x.partyWallCavityType,
+					party_wall_lining_type: x.partyWallLiningType!,
+				} : {
+					party_wall_cavity_type: x.partyWallCavityType,
+				}),
+			} as const satisfies BuildingElementPartyWallForSchema,
 		};
 	}) || [];
 
@@ -514,6 +521,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 				...commonFields,
 				type: "BuildingElementAdjacentConditionedSpace",
 				u_value: x.uValue,
+				is_adjacent_space_within_dwelling: true,
 			};
 		};
 
@@ -628,6 +636,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				...commonFields,
 				type: "BuildingElementAdjacentConditionedSpace",
 				u_value: x.uValue,
+				is_adjacent_space_within_dwelling: false, // assumption this is something like a flat front door to an external (conditioned) corridor
 			};
 		};
 
@@ -640,25 +649,22 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			x.associatedItemId,
 		)! : undefined;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
-		const midHeight = (x.height / 2) + state.infiltrationAndVentilation.naturalVentilation.baseHeightOfVentilationZone;
 
 		const glazedDoor = {
 			type: "BuildingElementTransparent",
 			pitch: extractPitch(associatedWallRoof ?? x),
 			orientation360: (associatedWallRoof ?? x).orientation!,
 			height: x.height,
-			mid_height: midHeight,
 			width: x.width,
 			base_height: x.elevationalHeight,
 			g_value: x.solarTransmittance,
 			window_part_list: [
-				{ mid_height_air_flow_path: midHeight },
+				// commenting out to be corrected in EC-1629
+				// { mid_height_air_flow_path: midHeight },
 				...mapWindowPartList(x),
 			],
 			frame_area_fraction: calculateFrameToOpeningRatio(x.openingToFrameRatio),
-			max_window_open_area: x.maximumOpenableArea,
 			security_risk: x.securityRisk,
-			free_area_height: x.freeAreaHeight,
 			shading: [
 				...(x.hasShading ? mapShading(x.shading) : []),
 				...(x.depthOfReveal && x.distanceFromGlassToStartOfReveal
@@ -666,12 +672,12 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 					: []),
 			],
 			u_value: x.uValue,
-			treatment: x.curtainsOrBlinds ? [{
+			...(x.curtainsOrBlinds ? { treatment: [{
 				type: x.treatmentType,
 				controls: "manual",
 				trans_red: x.solarTransmittanceReduction,
 				delta_r: x.thermalResistivityIncrease,
-			}] : undefined,
+			}] } : {}),
 		} as const satisfies SchemaBuildingElement;
 
 		return {
@@ -722,38 +728,41 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	} as Pick<FhsInputSchema, "Zone">;
 }
 
-function mapWindowPartList(data: WindowData | ExternalGlazedDoorData): SchemaWindowPart[] {
-	if (data.numberOpenableParts === "1") {
-		return [
-			{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-		];
-	}
-
-	if (data.numberOpenableParts === "2") {
-		return [
-			{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-			{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
-		];
-	}
-
-	if (data.numberOpenableParts === "3") {
-		return [
-			{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-			{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
-			{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
-		];
-	}
-
-	if (data.numberOpenableParts === "4") {
-		return [
-			{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-			{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
-			{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
-			{ mid_height_air_flow_path: data.midHeightOpenablePart4 },
-		];
-	}
-
+function mapWindowPartList(_data: WindowData | ExternalGlazedDoorData): SchemaWindowPart[] {
+	// commenting out for replacement in ticket EC-1629
 	return [];
+
+	// if (data.numberOpenableParts === "1") {
+	// 	return [
+	// 		{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+	// 	];
+	// }
+
+	// if (data.numberOpenableParts === "2") {
+	// 	return [
+	// 		{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+	// 		{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
+	// 	];
+	// }
+
+	// if (data.numberOpenableParts === "3") {
+	// 	return [
+	// 		{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+	// 		{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
+	// 		{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
+	// 	];
+	// }
+
+	// if (data.numberOpenableParts === "4") {
+	// 	return [
+	// 		{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+	// 		{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
+	// 		{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
+	// 		{ mid_height_air_flow_path: data.midHeightOpenablePart4 },
+	// 	];
+	// }
+
+	// return [];
 }
 
 export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
@@ -782,8 +791,6 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			orientation = associatedElement.orientation!;
 		}
 
-		const midHeight = (x.height / 2) + state.infiltrationAndVentilation.naturalVentilation.baseHeightOfVentilationZone;
-
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementTransparent",
@@ -794,11 +801,8 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				base_height: x.elevationalHeight,
 				u_value: x.uValue,
 				g_value: x.solarTransmittance,
-				mid_height: midHeight,
 				security_risk: x.securityRisk,
-				free_area_height: x.freeAreaHeight,
 				frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
-				max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
 				window_part_list: mapWindowPartList(x),
 				shading: [
 					...(x.hasShading ? mapShading(x.shading) : []),
