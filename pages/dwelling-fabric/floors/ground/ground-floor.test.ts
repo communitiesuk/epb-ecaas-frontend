@@ -1,10 +1,10 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
-import GroundFloor from "./[floor].vue";
-import { metre, millimetre } from "~/utils/units/length";
-import { unitValue } from "~/utils/units";
 import { v4 as uuidv4 } from "uuid";
+import { unitValue } from "~/utils/units";
+import { metre, millimetre } from "~/utils/units/length";
+import GroundFloor from "./[floor].vue";
 
 vi.mock("uuid");
 
@@ -64,6 +64,7 @@ describe("ground floor", () => {
 		underfloorSpaceThermalResistance: 0,
 		thermalTransmittanceOfWallsAboveGround: 0,
 		ventilationOpeningsArea: 0,
+		smartAirBricks: true,
 	};
 
 	// const groundFloorWithHeatedBasement: GroundFloorData = {
@@ -353,6 +354,7 @@ describe("ground floor", () => {
 			await user.type(screen.getByTestId("underfloorSpaceThermalResistance"), "0");
 			await user.type(screen.getByTestId("thermalTransmittanceOfWallsAboveGround"), "0");
 			await user.type(screen.getByTestId("ventilationOpeningsArea"), "0");
+			await user.click(screen.getByTestId("smartAirBricks_yes"));
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -384,6 +386,7 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("underfloorSpaceThermalResistance")).value).toBe("0");
 			expect((await screen.findByTestId<HTMLInputElement>("thermalTransmittanceOfWallsAboveGround")).value).toBe("0");
 			expect((await screen.findByTestId<HTMLInputElement>("ventilationOpeningsArea")).value).toBe("0");
+			expect((await screen.findByTestId("smartAirBricks_yes")).hasAttribute("checked")).toBe(true);
 		});
 
 		test("required error messages are displayed when empty form is submitted", async () => {
@@ -397,6 +400,7 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId("underfloorSpaceThermalResistance_error"))).toBeDefined();
 			expect((await screen.findByTestId("thermalTransmittanceOfWallsAboveGround_error"))).toBeDefined();
 			expect((await screen.findByTestId("ventilationOpeningsArea_error"))).toBeDefined();
+			expect((await screen.findByTestId("smartAirBricks_error"))).toBeDefined();
 		});
 	});
 

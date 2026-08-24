@@ -187,6 +187,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					area_per_perimeter_vent: x.ventilationOpeningsArea / 1e6,
 					thermal_resist_insul: x.underfloorSpaceThermalResistance,
 					thermal_transm_walls: x.thermalTransmittanceOfWallsAboveGround,
+					smart_air_bricks: x.smartAirBricks,
 				};
 				break;
 			}

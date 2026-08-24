@@ -1,6 +1,4 @@
-import type { BuildingElementGroundForSchema, BuildingElementOfType, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaEdgeInsulationHorizontal, SchemaEdgeInsulationVertical } from "~/schema/aliases";
-import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
-import { defaultZoneName } from "./common";
+import type { BuildingElementGroundForSchema, BuildingElementOfType, SchemaEdgeInsulationHorizontal, SchemaEdgeInsulationVertical, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint } from "~/schema/aliases";
 import type {
 	DwellingSpaceLightingData,
 	DwellingSpaceZoneParametersData,
@@ -10,6 +8,8 @@ import type {
 	PartyWallData,
 } from "~/stores/ecaasStore.schema";
 import { asMetres, centimetre, metre, millimetre } from "~/utils/units/length";
+import { defaultZoneName } from "./common";
+import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 
 type BuildingElementOpaque = BuildingElementOfType<"BuildingElementOpaque">;
 type BuildingElementAdjacentConditionedSpace = BuildingElementOfType<"BuildingElementAdjacentConditionedSpace">;
@@ -167,6 +167,7 @@ describe("dwelling fabric mapper", () => {
 			underfloorSpaceThermalResistance: 1,
 			thermalTransmittanceOfWallsAboveGround: 1,
 			ventilationOpeningsArea: 100,
+			smartAirBricks: true,
 		};
 
 		const groundFloorWithHeatedBasement: GroundFloorData = {
@@ -395,6 +396,7 @@ describe("dwelling fabric mapper", () => {
 			thermal_resist_insul: groundFloorWithSuspendedFloor.underfloorSpaceThermalResistance,
 			thermal_transm_walls: groundFloorWithSuspendedFloor.thermalTransmittanceOfWallsAboveGround,
 			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea / 1e6,
+			smart_air_bricks: groundFloorWithSuspendedFloor.smartAirBricks,
 		};
 
 		expect(groundFloorWithSuspendedFloorElement).toEqual(expectedGroundFloorSuspendedFloor);
@@ -1537,7 +1539,7 @@ describe("dwelling fabric mapper", () => {
 		// Assert
 		type ThermalBridging = { [key: string]: SchemaThermalBridgingLinearFhs | SchemaThermalBridgingPoint; };
 
-		const thermalBridging = fhsInputData.Zone[defaultZoneName]!.ThermalBridging as ThermalBridging;
+		const thermalBridging = fhsInputData.Zone[defaultZoneName]!.ThermalBridging;
 
 		const linearThermalBridgeElement = thermalBridging[linearThermalBridge.name + bridgeSuffix]! as SchemaThermalBridgingLinearFhs;
 		const pointThermalBridgeElement = thermalBridging[pointThermalBridge.name + bridgeSuffix]! as SchemaThermalBridgingPoint;

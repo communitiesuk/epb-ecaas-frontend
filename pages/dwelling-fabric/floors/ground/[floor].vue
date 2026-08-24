@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { centimetre, metre, millimetre, type Length } from "~/utils/units/length";
-import { zodTypeAsFormKitValidation } from "#imports";
-import { groundSurfaceAreaZod, groundTotalAreaZod, groundPerimeterZod, heightUpperSurfaceZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
-import { getUrl, type GroundFloorData, uniqueName, unitValue } from "#imports";
+import { getUrl, uniqueName, unitValue, zodTypeAsFormKitValidation, type GroundFloorData } from "#imports";
 import { v4 as uuidv4 } from "uuid";
+import { groundPerimeterZod, groundSurfaceAreaZod, groundTotalAreaZod, heightUpperSurfaceZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
+import { centimetre, metre, millimetre, type Length } from "~/utils/units/length";
 
 const title = "Ground floor";
 const store = useEcaasStore();
@@ -111,6 +110,7 @@ const saveForm = (fields: GroundFloorData) => {
 					underfloorSpaceThermalResistance: fields.underfloorSpaceThermalResistance,
 					thermalTransmittanceOfWallsAboveGround: fields.thermalTransmittanceOfWallsAboveGround,
 					ventilationOpeningsArea: fields.ventilationOpeningsArea,
+					smartAirBricks: fields.smartAirBricks,
 				};
 				break;
 			case "Heated_basement":
@@ -269,6 +269,13 @@ const greaterThanZero = (node: FormKitNode) => {
 				name="thermalTransmittanceOfWallsAboveGround"
 				validation="required | number"
 				data-field="Zone.BuildingElement.*.thermal_transm_walls"/>
+			<FormKit
+				id="smartAirBricks"
+				type="govBoolean"
+				label="Does this floor have smart air bricks as the underfloor vents?"
+				name="smartAirBricks"
+				validation="required"
+				data-field="Zone.BuildingElement.*.smart_air_bricks"/>
 		</template>
 		<FieldsArealHeatCapacity 
 			id="arealHeatCapacity" 

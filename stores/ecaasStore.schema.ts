@@ -1,13 +1,13 @@
-import { standardPitchOption } from "./../utils/pitchOptions";
 import type { TaggedUnion } from "type-fest";
-import type { PageId } from "~/data/pages/pages";
-import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
-import type { FloorType, MassDistributionClass } from "~/schema/aliases";
 import * as z from "zod";
+import type { PageId } from "~/data/pages/pages";
+import type { TechnologyType } from "~/pcdb/pcdb.types";
+import type { FloorType, MassDistributionClass } from "~/schema/aliases";
+import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { addConstraints, zodUnit } from "~/utils/units/zod";
+import { standardPitchOption } from "./../utils/pitchOptions";
 import { arealHeatCapacityZod, batteryLocationZod, boilerLocationZod, colourZod, ductShapeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, zodLiteralFromUnionType } from "./zod";
-import type { TechnologyType } from "~/pcdb/pcdb.types";
 
 export const fraction = z.number().min(0).max(1);
 const named = z.object({
@@ -248,6 +248,7 @@ const groundFloorDataZod = z.union(
 			underfloorSpaceThermalResistance: z.number(),
 			thermalTransmittanceOfWallsAboveGround: z.number(),
 			ventilationOpeningsArea: z.number(),
+			smartAirBricks: z.boolean(),
 		}),
 		baseGroundFloorData.extend({
 			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Heated_basement">("Heated_basement"),

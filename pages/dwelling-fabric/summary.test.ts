@@ -1,18 +1,19 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import Summary from "./summary.vue";
-import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import type {
 	CeilingsAndRoofsData,
 	DoorsData,
-	FloorsData,
+	DwellingSpaceLightingData,
 	DwellingSpaceZoneParametersData,
+	ExternalGlazedDoorData,
+	FloorsData,
 	ThermalBridgingData,
 	WallsData,
 	WindowData,
-	DwellingSpaceLightingData,
-	ExternalGlazedDoorData,
 } from "~/stores/ecaasStore.schema";
+import { degrees } from "~/utils/units/angle";
+import { metresSquare } from "~/utils/units/area";
 import { metre, millimetre } from "~/utils/units/length";
 import {
 	squareMeterKelvinPerWatt,
@@ -20,9 +21,8 @@ import {
 	wattsPerMeterKelvin,
 	wattsPerSquareMeterKelvin,
 } from "~/utils/units/thermalConductivity";
-import { degrees } from "~/utils/units/angle";
-import { metresSquare } from "~/utils/units/area";
 import { cubicMetre } from "~/utils/units/volume";
+import Summary from "./summary.vue";
 
 const user = userEvent.setup();
 
@@ -90,6 +90,22 @@ const floorsData: FloorsData = {
 				verticalEdgeInsulationThermalResistance: 2,
 
 
+			},
+		},
+		{
+			data: {
+				name: "Ground 3 suspended floor",
+				surfaceArea: 5,
+				totalArea: 5,
+				uValue: 1,
+				thermalResistance: 1,
+				arealHeatCapacity: "Very light",
+				massDistributionClass: "I",
+				perimeter: 0,
+				thicknessOfWalls: unitValue(30, millimetre),
+				typeOfGroundFloor: "Suspended_floor",
+
+				smartAirBricks: true,
 			},
 		}],
 	},
@@ -632,11 +648,29 @@ describe("Dwelling space fabric summary", () => {
 			"Vertical edge insulation depth": `0.3 ${metre.suffix}`,
 			"Vertical edge insulation thermal resistance": `2 ${squareMeterKelvinPerWatt.suffix}`,
 		};
+
+		const expectedResultSuspendedWithSmartAirBricks = {
+			"Name": "Ground 3 suspended floor",
+			"Net surface area": `5 ${metresSquare.suffix}`,
+			"Total area": `5 ${metresSquare.suffix}`,
+			"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+			"Thermal resistance": `1 ${squareMeterKelvinPerWatt.suffix}`,
+			"Areal heat capacity": "Very light",
+			"Mass distribution class": "Internal",
+			"Exposed perimeter": `0 ${metre.suffix}`,
+			"Thickness of walls at the edge of the floor": `30 ${millimetre.suffix}`,
+			"Type of ground floor": "Suspended floor",
+			"Smart air bricks": "Yes",
+		};
 		for (const [key, value] of Object.entries(expectedResult)) {
 			await assertValueInSummaryColumn(key, value);
 		}
 		for (const [key, value] of Object.entries(expectedResultWithEdgeInsulation)) {
 			await assertValueInSummaryColumn(key, value, 1);
+		}
+
+		for (const [key, value] of Object.entries(expectedResultSuspendedWithSmartAirBricks)) {
+			await assertValueInSummaryColumn(key, value, 2);
 		}
 	});
 

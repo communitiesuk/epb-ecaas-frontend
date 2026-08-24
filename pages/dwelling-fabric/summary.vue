@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { emptyValueRendering, getTabItems, getUrl, type ExternalGlazedDoorData, type WindowData } from "#imports";
 import type { SummarySection } from "~/common.types";
-import { emptyValueRendering, getUrl, getTabItems, type ExternalGlazedDoorData, type WindowData } from "#imports";
 import { displayColour } from "~/utils/display";
 
 const title = "Dwelling fabric summary";
@@ -53,6 +53,7 @@ const groundFloorSummary: SummarySection = {
 		const underfloorSpaceThermalResistance = "underfloorSpaceThermalResistance" in x ? dim(x.underfloorSpaceThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 		const thermalTransmittanceOfWallsAboveGround = "thermalTransmittanceOfWallsAboveGround" in x ? dim(x.thermalTransmittanceOfWallsAboveGround, "watts per square metre kelvin") : emptyValueRendering;
 		const ventilationOpeningsArea = "ventilationOpeningsArea" in x ? dim(x.ventilationOpeningsArea, "millimetres square per metre") : emptyValueRendering;
+		const smartAirBricks = "smartAirBricks" in x ? show(x.smartAirBricks ? "Yes" : "No") : emptyValueRendering;
 
 		return {
 			"Name": show(x.name),
@@ -73,6 +74,7 @@ const groundFloorSummary: SummarySection = {
 			"Vertical edge insulation thermal resistance": verticalEdgeInsulationThermalResistance,			
 			"Height of the floor upper surface": heightOfFloorUpperSurface ,	
 			"Area of ventilation openings per perimeter": ventilationOpeningsArea,
+			"Smart air bricks": smartAirBricks,
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceFloors"),
