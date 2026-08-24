@@ -83,6 +83,7 @@ describe("dwelling details mapper", () => {
 				EnergySupply: {
 					"mains elec": {
 						fuel: "electricity",
+						is_export_capable: true,
 					},
 					"mains_gas": {
 						fuel: "mains_gas",
@@ -130,6 +131,7 @@ describe("dwelling details mapper", () => {
 				EnergySupply: {
 					"mains elec": {
 						fuel: "electricity",
+						is_export_capable: false,
 					},
 				},
 			};
@@ -175,8 +177,9 @@ describe("dwelling details mapper", () => {
 				EnergySupply: {
 					"mains elec": {
 						fuel: "electricity",
+						is_export_capable: false,
 					},
-					mains_gas: {
+					"mains_gas": {
 						fuel: "mains_gas",
 					},
 					"LPG_bulk": {
@@ -189,8 +192,7 @@ describe("dwelling details mapper", () => {
 			expect(fhsInputDataEnergySupply).toEqual(expectedResult);
 		});
 
-		test.skip("maps maximum power exported when energy can be exported to the grid", () => {
-			// Arrange
+		test("maps maximum power exported when energy can be exported to the grid", () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -207,23 +209,21 @@ describe("dwelling details mapper", () => {
 				},
 			});
 
-			// Act
 			const result = mapEnergySupplyFuelTypeData(resolveState(store.$state));
 
-			// Assert
 			expect(result.EnergySupply).toEqual({
 				"mains elec": {
 					fuel: "electricity",
+					is_export_capable: true,
+					power_limit_export: 50,
 				},
 				mains_gas: {
 					fuel: "mains_gas",
-					power_limit_export: 50,
 				},
 			});
 		});
 
-		test.skip("does not map power_limit_export when no energy can be exported", () => {
-			// Arrange
+		test("does not map power_limit_export when energy cannot be exported", () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -237,16 +237,20 @@ describe("dwelling details mapper", () => {
 				},
 			});
 
-			// Act
 			const result = mapEnergySupplyFuelTypeData(resolveState(store.$state));
 
-			// Assert
-			// TODO: Uncomment when alpha 9 adds power_limit_export to the API schema.
-			// expect(result.EnergySupply.mains_gas?.power_limit_export).toBeUndefined();
+			expect(result.EnergySupply).toEqual({
+				"mains elec": {
+					fuel: "electricity",
+					is_export_capable: false,
+				},
+				mains_gas: {
+					fuel: "mains_gas",
+				},
+			});
 		});
 
-		test.skip("does not map power_limit_export when no maximum export power is provided", () => {
-			// Arrange
+		test("does not map power_limit_export when no maximum export power is provided", () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -260,12 +264,17 @@ describe("dwelling details mapper", () => {
 				},
 			});
 
-			// Act
 			const result = mapEnergySupplyFuelTypeData(resolveState(store.$state));
 
-			// Assert
-			// TODO: Uncomment when alpha 9 adds power_limit_export to the API schema.
-			// expect(result.EnergySupply.mains_gas?.power_limit_export).toBeUndefined();
+			expect(result.EnergySupply).toEqual({
+				"mains elec": {
+					fuel: "electricity",
+					is_export_capable: true,
+				},
+				mains_gas: {
+					fuel: "mains_gas",
+				},
+			});
 		});
 	});
 

@@ -1015,6 +1015,44 @@ describe("Heat emitters", () => {
 			// 	});
 			// });
 		});
+
+		test.skip("doesn't mark wet distribution system as complete when an emitter is incomplete", async () => {
+			const incompleteRadiator = {
+				id: "1234",
+				name: "Standard radiator",
+				typeOfHeatEmitter: "radiator" as const,
+			};
+
+			const wetDistributionSystemWithRadiatorEmitter: HeatEmittingData = {
+				...wetDistributionSystem,
+				emitters: [incompleteRadiator],
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [
+							{
+								data: wetDistributionSystemWithRadiatorEmitter,
+								complete: false,
+							},
+						],
+					},
+				},
+			});
+
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { heatEmitter: "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const system = store.spaceHeating.heatEmitters.data[0];
+
+			expect(system?.complete).toBe(false);
+		});
 	});
 
 	describe("Warm air heater", () => {

@@ -35,6 +35,8 @@ const expectedHouseInput: FhsInputSchema = {
 	EnergySupply: {
 		["mains elec"]: {
 			fuel: "electricity",
+			is_export_capable: true,
+			// power_limit_export: 50, TODO: add this in when backend schema updated to Alpha 9
 		},
 	},
 	Events: {},
@@ -346,6 +348,7 @@ const expectedFlatInput: FhsInputSchema = {
 	EnergySupply: {
 		["mains elec"]: {
 			fuel: "electricity",
+			is_export_capable: false,
 			ElectricBattery: {
 				capacity: 12,
 				charge_discharge_efficiency_round_trip: 1,
@@ -1059,6 +1062,7 @@ describe("FHS input mapper", () => {
 					buildingWidth: 20,
 					fuelType: ["electricity"],
 					canExportToGrid: "yes",
+					// maxPowerExported: { amount: 50, unit: "kilowatt" }, TODO: add this in once backend schema has been updated to Alpha 9
 					isPartGCompliant: false,
 					partOActiveCoolingRequired: true,
 				},
@@ -1517,7 +1521,6 @@ describe("FHS input mapper", () => {
 				data: {
 					typeOfDwelling: "flat",
 					storeysInDwelling: 1,
-					// storeyOfFlat: 1,
 					storeysInBuilding: 6,
 					numOfBedrooms: 2,
 					numOfBathrooms: 1,

@@ -65,33 +65,37 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 export function mapEnergySupplyFuelTypeData(
 	state: ResolvedState,
 ): Pick<FhsInputSchema, "EnergySupply"> {
-	const fuelType = state.dwellingDetails.generalSpecifications.fuelType
+	const generalDetails = state.dwellingDetails.generalSpecifications;
+
+	const fuelType = generalDetails.fuelType
 		.filter(x => x !== "electricity");
+
 	// electricity is always required as a fueltype - so its hardcoded into the
 	// EnergySupply object - therefore we filter out electricity so its not added twice
 
-	const canExportToGrid = state.dwellingDetails.generalSpecifications.canExportToGrid === "yes";
+	const canExportToGrid = generalDetails.canExportToGrid === "yes";
+	const maxPowerExported = generalDetails.maxPowerExported?.amount;
 
 	return {
 		EnergySupply: {
 			[defaultElectricityEnergySupplyName]: {
 				fuel: "electricity",
+				is_export_capable: canExportToGrid,
+				...(canExportToGrid && maxPowerExported !== undefined && {
+					power_limit_export: maxPowerExported,
+				}),
 			},
 			...objectFromEntries(
-				fuelType
-					? fuelType.map((fuelType) => [
-						fuelType,
-						{
-							fuel: fuelType,
-							...(["LPG_bulk", "LPG_bottled"].includes(fuelType) && {
-								is_export_capable: canExportToGrid,
-							}),
-						},
-					])
-					: [],
+				fuelType.map((fuelType) => [
+					fuelType,
+					{
+						fuel: fuelType,
+						...(["LPG_bulk", "LPG_bottled"].includes(fuelType) && {
+							is_export_capable: canExportToGrid,
+						}),
+					},
+				]),
 			),
-			// TODO: Map maxPowerExported to power_limit_export when the alpha 9 API schema is released.
-			//power_limit_export: generalDetails.maxPowerExported,
 		},
 	};
 }
