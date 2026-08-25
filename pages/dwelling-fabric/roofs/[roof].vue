@@ -115,7 +115,7 @@ const saveForm = (fields: RoofData) => {
 		dwellingSpaceRoofs.complete = false;
 	});
 
-	navigateTo("/dwelling-fabric/ceilings-and-roofs");
+	navigateTo(getUrl("dwellingSpaceRoofs"));
 };
 
 autoSaveElementForm<RoofData>({

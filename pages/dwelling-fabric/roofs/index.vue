@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { isEcaasForm } from "~/stores/ecaasStore.schema";
-import formStatus from "~/constants/formStatus";
 import { v4 as uuidv4 } from "uuid";
+import formStatus from "~/constants/formStatus";
 import { page as pages } from "~/data/pages/pages";
+import { isEcaasForm } from "~/stores/ecaasStore.schema";
 
 const title = "Roofs";
 const page = usePage();
@@ -89,7 +89,7 @@ const hasIncompleteEntries = () => store.dwellingFabric.dwellingSpaceRoofs.data.
 	<CustomList
 		id="roofs"
 		title="Roofs"
-		:form-url="`${page?.url!}/roofs`"
+		:form-url="page?.url!"
 		:items="store.dwellingFabric.dwellingSpaceRoofs.data.filter(x => isEcaasForm(x)).map(x => ({
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress

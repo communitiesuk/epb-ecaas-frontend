@@ -1,8 +1,8 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import Roof from "./[roof].vue";
 import { v4 as uuidv4 } from "uuid";
+import Roof from "./[roof].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -260,7 +260,7 @@ describe("roof", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/ceilings-and-roofs");
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/roofs");
 	});
 
 	it("navigates to ceilings and roofs page when save progress button is clicked", async () => {
@@ -269,7 +269,7 @@ describe("roof", () => {
 		await user.type(screen.getByTestId("name"), "Test roof");
 		await user.click(screen.getByTestId("saveProgress"));
 
-		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/ceilings-and-roofs");
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/roofs");
 	});
 
 	test("roof and roofs section are set as 'not complete' after user edits an item", async () => {
