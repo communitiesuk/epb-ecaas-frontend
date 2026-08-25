@@ -18,7 +18,7 @@ export function mapLivingSpaceFabricData(
 	const lightingData = mapLightingData(state);
 	const floorData = mapFloorData(state);
 	const wallData = mapWallData(state);
-	const ceilingAndRoofData = mapCeilingAndRoofData(state);
+	const roofData = mapRoofData(state);
 	const doorData = mapDoorData(state);
 	const windowData = mapWindowData(state);
 	const thermalBridgingData = mapThermalBridgingData(state);
@@ -28,7 +28,7 @@ export function mapLivingSpaceFabricData(
 		lightingData,
 		floorData,
 		wallData,
-		ceilingAndRoofData,
+		roofData,
 		doorData,
 		windowData,
 		thermalBridgingData,
@@ -243,7 +243,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 			u_value: x.uValue,
-			pitch: 180,
+			pitch: x.pitch,
 		};
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
 
@@ -494,7 +494,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	} as Pick<FhsInputSchema, "Zone">;
 }
 
-export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
+export function mapRoofData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceRoofs } = state.dwellingFabric;
 
 	const roofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceRoofs.map((x) => {

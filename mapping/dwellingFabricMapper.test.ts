@@ -9,7 +9,7 @@ import type {
 } from "~/stores/ecaasStore.schema";
 import { asMetres, centimetre, metre, millimetre } from "~/utils/units/length";
 import { defaultZoneName } from "./common";
-import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
+import { mapDoorData, mapFloorData, mapLightingData, mapRoofData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 
 type BuildingElementOpaque = BuildingElementOfType<"BuildingElementOpaque">;
 type BuildingElementAdjacentConditionedSpace = BuildingElementOfType<"BuildingElementAdjacentConditionedSpace">;
@@ -815,7 +815,7 @@ describe("dwelling fabric mapper", () => {
 		});
 
 		// Act
-		const fhsInputData = mapCeilingAndRoofData(resolveState(store.$state));
+		const fhsInputData = mapRoofData(resolveState(store.$state));
 		// Assert
 		const roofAboveHeatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofAboveHeatedSpace.name]! as BuildingElementOpaque;
 		const roofAboveUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roofAboveUnheatedSpace.name] as BuildingElementAdjacentUnconditionedSpaceSimple;
@@ -1509,8 +1509,6 @@ describe("dwelling fabric mapper", () => {
 		const fhsInputData = mapThermalBridgingData(resolveState(store.$state));
 
 		// Assert
-		type ThermalBridging = { [key: string]: SchemaThermalBridgingLinearFhs | SchemaThermalBridgingPoint; };
-
 		const thermalBridging = fhsInputData.Zone[defaultZoneName]!.ThermalBridging;
 
 		const linearThermalBridgeElement = thermalBridging[linearThermalBridge.name + bridgeSuffix]! as SchemaThermalBridgingLinearFhs;
