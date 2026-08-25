@@ -1,8 +1,8 @@
-import AirPermeability from "./air-permeability.vue";
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import type { AirPermeabilityData } from "~/stores/ecaasStore.schema";
+import AirPermeability from "./air-permeability.vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -93,5 +93,45 @@ describe("Air permeability", () => {
 		
 		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith("/infiltration-and-ventilation");
+	});
+
+	test("shows smart air bricks open during air tightness test field if smart air bricks set to true for suspended floors", async () => {
+		const groundFloorWithSuspendedFloor: Partial<GroundFloorData> = {
+			typeOfGroundFloor: "Suspended_floor",
+			smartAirBricks: true,
+		};
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceGroundFloor: {
+						data: [{ data: groundFloorWithSuspendedFloor, complete: true }],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(AirPermeability);
+		expect(await screen.findByTestId("smartAirBricksOpen")).toBeDefined();
+	});
+
+	test("does not show smart air bricks open during air tightness test field if smart air bricks are false", async () => {
+		const groundFloorWithFixedAirBricks: Partial<GroundFloorData> = {
+			typeOfGroundFloor: "Suspended_floor",
+			smartAirBricks: false,
+		};
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceGroundFloor: {
+						data: [{ data: groundFloorWithFixedAirBricks, complete: true }],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(AirPermeability);
+
+		expect(screen.queryByTestId("smartAirBricksOpen")).toBeNull();
 	});
 });

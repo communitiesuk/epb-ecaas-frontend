@@ -171,6 +171,9 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 				break;
 			}
 			case "Suspended_floor": {
+				
+				const smartAirBricksOpen = state.infiltrationAndVentilation.airPermeability.smartAirBricksOpen;
+
 				groundFloor = {
 					type: "BuildingElementGround",
 					area: x.surfaceArea,
@@ -187,7 +190,8 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					area_per_perimeter_vent: x.ventilationOpeningsArea / 1e6,
 					thermal_resist_insul: x.underfloorSpaceThermalResistance,
 					thermal_transm_walls: x.thermalTransmittanceOfWallsAboveGround,
-					smart_air_bricks: x.smartAirBricks,
+					smart_air_bricks: x.smartAirBricks ?? false,
+					vents_open_during_airtightness_test: x.smartAirBricks ? smartAirBricksOpen : undefined,
 				};
 				break;
 			}

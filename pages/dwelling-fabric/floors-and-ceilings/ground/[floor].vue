@@ -269,13 +269,6 @@ const greaterThanZero = (node: FormKitNode) => {
 				name="thermalTransmittanceOfWallsAboveGround"
 				validation="required | number"
 				data-field="Zone.BuildingElement.*.thermal_transm_walls"/>
-			<FormKit
-				id="smartAirBricks"
-				type="govBoolean"
-				label="Does this floor have smart air bricks as the underfloor vents?"
-				name="smartAirBricks"
-				validation="required"
-				data-field="Zone.BuildingElement.*.smart_air_bricks"/>
 		</template>
 		<FieldsArealHeatCapacity 
 			id="arealHeatCapacity" 
@@ -424,6 +417,13 @@ const greaterThanZero = (node: FormKitNode) => {
 					<p class="govuk-hint">Often suspended floors require additional ventilation to prevent moisture build up and structural damage. While ventilation is crucial for moisture control, it can lead to heat loss from the building.</p>
 				</GovDetails>
 			</FormKit>
+			<FormKit
+				id="smartAirBricks"
+				type="govBoolean"
+				label="Does this floor have smart air bricks as the underfloor vents?"
+				name="smartAirBricks"
+				validation="required"
+				data-field="Zone.BuildingElement.*.smart_air_bricks"/>
 		</template>
 
 		<template v-if="mounted && model?.typeOfGroundFloor === 'Heated_basement'">

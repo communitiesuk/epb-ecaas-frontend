@@ -324,6 +324,16 @@ describe("dwelling fabric mapper", () => {
 					},
 				},
 			},
+			infiltrationAndVentilation: {
+				airPermeability: {
+					data: {
+						testPressure: "Standard",
+						airTightnessTestResult: 5,
+						smartAirBricksOpen: true,
+					},
+					complete: true,
+				},
+			},
 		});
 
 		const floorSuffix = " (floor)";
@@ -401,9 +411,12 @@ describe("dwelling fabric mapper", () => {
 			thermal_transm_walls: groundFloorWithSuspendedFloor.thermalTransmittanceOfWallsAboveGround,
 			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea / 1e6,
 			smart_air_bricks: groundFloorWithSuspendedFloor.smartAirBricks,
+			vents_open_during_airtightness_test: true,
 		};
 
 		expect(groundFloorWithSuspendedFloorElement).toEqual(expectedGroundFloorSuspendedFloor);
+		expect("vents_open_during_airtightness_test" in groundFloorWithSuspendedFloorElement 
+			&& groundFloorWithSuspendedFloorElement.vents_open_during_airtightness_test).toBe(true);
 
 		const expectedGroundFloorWithThicknessInMillimetres: BuildingElementGroundForSchema = {
 			...expectedGroundFloor,

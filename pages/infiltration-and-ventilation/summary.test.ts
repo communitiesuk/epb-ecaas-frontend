@@ -1,15 +1,15 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import { screen } from "@testing-library/vue";
-import Summary from "./summary.vue";
-import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
-import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
-import { centimetresSquare, metresSquare } from "~/utils/units/area";
-import { metre, millimetre } from "~/utils/units/length";
-import { degrees } from "~/utils/units/angle";
-import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
-import { watt, wattsPerLitrePerSecond } from "~/utils/units/power";
+import { screen } from "@testing-library/vue";
 import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
+import { degrees } from "~/utils/units/angle";
+import { centimetresSquare, metresSquare } from "~/utils/units/area";
+import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
+import { metre, millimetre } from "~/utils/units/length";
+import { watt, wattsPerLitrePerSecond } from "~/utils/units/power";
+import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
+import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
+import Summary from "./summary.vue";
 
 vi.mock("uuid");
 
@@ -869,7 +869,82 @@ describe("Infiltration and ventilation summary", () => {
 		}
 	});
 
-	it("should display the correct data for the air permeability section", async () => {
+	it("should display the correct data for the air permeability section with smart air bricks open during air tightness test as true", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceGroundFloor: {
+						data: [{ data: {
+							typeOfGroundFloor: "Suspended_floor",
+							smartAirBricks: true,
+						} as Partial<GroundFloorData>,
+						}],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				airPermeability: {
+					data: {
+						...airPermeabilityData,
+						smartAirBricksOpen: true, 
+					},
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Type of infiltration pressure test": "Blower door (test pressure is 50Pa)",
+			"Air tightness test result": `1 ${cubicMetrePerHourPerSquareMetre.suffix}`,
+			"Were the smart air bricks open during the air tightness test?": "Yes",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-airPermeability-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the air permeability section with smart air bricks open during air tightness test as false", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceGroundFloor: {
+						data: [{ data: {
+							typeOfGroundFloor: "Suspended_floor",
+							smartAirBricks: true,
+						} as Partial<GroundFloorData>,
+						}],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				airPermeability: {
+					data: {
+						...airPermeabilityData,
+						smartAirBricksOpen: false, 
+					},
+				},
+			},
+		});
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Type of infiltration pressure test": "Blower door (test pressure is 50Pa)",
+			"Air tightness test result": `1 ${cubicMetrePerHourPerSquareMetre.suffix}`,
+			"Were the smart air bricks open during the air tightness test?": "No",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-airPermeability-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the air permeability section if there are no smart air bricks at all", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				airPermeability: {

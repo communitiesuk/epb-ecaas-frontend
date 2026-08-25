@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl, type VentData } from "#imports";
+import type { SummarySection } from "~/common.types";
 import { useProductReferences } from "~/composables/productReferences";
 import { installationLocationOptions, installationTypeOptions } from "~/utils/display";
 
@@ -173,12 +173,26 @@ const ventilationSummary: SummarySection = {
 
 const airPermeabilityData = store.infiltrationAndVentilation.airPermeability.data;
 
+const hasSmartAirBricks = store.dwellingFabric.dwellingSpaceFloors
+	.dwellingSpaceGroundFloor.data
+	.some(
+		x =>
+			x.data.typeOfGroundFloor === "Suspended_floor" &&
+			"smartAirBricks" in x.data &&
+			x.data.smartAirBricks === true,
+	);
+	
 const airPermeabilitySummary: SummarySection = {
 	id: "airPermeability",
 	label: "Air permeability",
 	data: {
 		"Type of infiltration pressure test": displayTypeOfInfiltrationPressureTest(airPermeabilityData.testPressure),
 		"Air tightness test result": dim(airPermeabilityData.airTightnessTestResult, "cubic metres per hour per square metre"),
+		...(hasSmartAirBricks &&
+			airPermeabilityData.smartAirBricksOpen !== undefined && {
+			"Were the smart air bricks open during the air tightness test?":
+					airPermeabilityData.smartAirBricksOpen ? "Yes" : "No",
+		}),
 	},
 	editUrl: getUrl("airPermeability"),
 };

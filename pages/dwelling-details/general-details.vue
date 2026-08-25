@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
-import { isInteger } from "~/utils/validation";
 import { getUrl, type FuelTypeDisplay, type GeneralDetailsData } from "#imports";
 import type { CheckboxOption } from "~/components/form-kit/Checkboxes.vue";
+import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
 import { kilowatt, type Power } from "~/utils/units/power";
+import { isInteger } from "~/utils/validation";
 
 const title = "General details";
 const store = useEcaasStore();
@@ -371,7 +371,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Maximum power that can be exported (optional)"
 			:unit="kilowatt"
 			name="maxPowerExported"
-			hint="The Distribution Network Operator (DNO) may have imposed a limit on the amount of energy generated onsite that can be exported to the grid. If they have, enter it here."
+			help="The Distribution Network Operator (DNO) may have imposed a limit on the amount of energy generated onsite that can be exported to the grid. If they have, enter it here."
 			:validation-rules="{ validPowerExported }"
 			validation="validPowerExported"
 			:validation-messages="{

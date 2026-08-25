@@ -926,6 +926,7 @@ export type VentilationData = z.infer<typeof ventilationDataZod>;
 const airPermeabilityDataZod = z.object({
 	testPressure: testPressureZod,
 	airTightnessTestResult: z.number(),
+	smartAirBricksOpen: z.boolean().optional(),
 });
 
 export type AirPermeabilityData = z.infer<typeof airPermeabilityDataZod>;
