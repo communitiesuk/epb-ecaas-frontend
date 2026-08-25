@@ -2,12 +2,12 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import type {
-	RoofData,
 	DoorsData,
 	DwellingSpaceLightingData,
 	DwellingSpaceZoneParametersData,
 	ExternalGlazedDoorData,
 	FloorsData,
+	RoofData,
 	ThermalBridgingData,
 	WallsData,
 	WindowData,
@@ -645,7 +645,7 @@ describe("Dwelling space fabric summary", () => {
 			"Exposed perimeter": `0 ${metre.suffix}`,
 			"Thickness of walls at the edge of the floor": `30 ${millimetre.suffix}`,
 			"Type of ground floor": "Suspended floor",
-			"Smart air bricks": "Yes",
+			"Does this floor have smart air bricks as the underfloor vents?": "Yes",
 		};
 		for (const [key, value] of Object.entries(expectedResult)) {
 			await assertValueInSummaryColumn(key, value);

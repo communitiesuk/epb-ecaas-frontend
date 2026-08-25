@@ -74,7 +74,7 @@ const groundFloorSummary: SummarySection = {
 			"Vertical edge insulation thermal resistance": verticalEdgeInsulationThermalResistance,			
 			"Height of the floor upper surface": heightOfFloorUpperSurface ,	
 			"Area of ventilation openings per perimeter": ventilationOpeningsArea,
-			"Smart air bricks": smartAirBricks,
+			"Does this floor have smart air bricks as the underfloor vents?": smartAirBricks,
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceFloors"),
