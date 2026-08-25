@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from "uuid";
 import { getUrl, uniqueName, type RoofData } from "#imports";
+import { v4 as uuidv4 } from "uuid";
 import type { RadioOption } from "~/components/form-kit/Radios.vue";
-import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import { heightOpaqueZod, surfaceAreaOpaqueZod, widthOpaqueZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Roof";
 const store = useEcaasStore();
@@ -384,7 +384,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</template>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
-			<GovButton :href="getUrl('dwellingSpaceRoofsAll')" secondary test-id="saveProgress">Save progress</GovButton>
+			<GovButton :href="getUrl('dwellingSpaceRoofs')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

@@ -143,6 +143,43 @@ function patchFloorIds(state: Record<string, unknown>) {
 	dwellingSpaceFloorOfHeatedBasement.data.forEach(floor => floor.data.id ??= uuidv4());
 }
 
+function patchRoofs(state: Record<string, unknown>) {
+	const storeState = state as EcaasState;
+
+	if ("dwellingSpaceCeilingsAndRoofs" in storeState.dwellingFabric) {
+		const ceilingsAndRoofs = storeState.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
+		if (ceilingsAndRoofs && typeof ceilingsAndRoofs === "object") {
+			if ("dwellingSpaceRoofs" in ceilingsAndRoofs) {
+				const roofs = ceilingsAndRoofs.dwellingSpaceRoofs;
+			
+				if (roofs && typeof roofs === "object" &&
+					"data" in roofs &&
+					Array.isArray(roofs.data)
+				) {
+					storeState.dwellingFabric.dwellingSpaceRoofs.data = [
+						...storeState.dwellingFabric.dwellingSpaceRoofs.data,
+						...roofs.data,
+					];
+				}
+			}
+
+			if ("dwellingSpaceCeilings" in ceilingsAndRoofs) {
+				const ceilings = ceilingsAndRoofs.dwellingSpaceCeilings;
+
+				if (ceilings && typeof ceilings === "object" &&
+					"data" in ceilings &&
+					Array.isArray(ceilings.data) &&
+					ceilings.data.length
+				) {
+					storeState.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
+					delete storeState.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+				}
+			}
+		}
+	}
+}
+
 /**
  * Patch state from deprecated properties
  * @param state 
@@ -157,6 +194,7 @@ export function patchState(state: Record<string, unknown>): Record<string, unkno
 	patchHeatEmitterIds(state);
 	patchRadiators(state);
 	patchFloorIds(state);
+	patchRoofs(state);
 
 	return state;
 }

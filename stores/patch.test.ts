@@ -399,4 +399,56 @@ describe("ECaaS store patch", () => {
 		expect(dwellingSpaceFloorAboveUnheatedBasement.data[0]?.data.id).toBeDefined();
 		expect(dwellingSpaceFloorOfHeatedBasement.data[0]?.data.id).toBeDefined();
 	});
+
+	it("patches roof data", () => {
+		const legacyCeilingsAndRoofs: Record<string, unknown> = {
+			"dwellingFabric": {
+				...state.dwellingFabric,
+				"dwellingSpaceCeilingsAndRoofs": {
+					"dwellingSpaceRoofs": {
+						"data": [
+							{
+								"data": {
+									"name": "Roof 1",
+								},
+							},
+						],
+					},
+					"dwellingSpaceCeilings": {
+						"data": [
+							{
+								"data": {
+									"name": "Ceiling 1",
+								},
+							},
+						],
+					},
+				},
+				"dwellingSpaceFloors": {
+					...state.dwellingFabric.dwellingSpaceFloors,
+					"dwellingSpaceInternalFloor": {
+						"data": [
+							{
+								"data": {
+									"name": "Internal floor 1",
+								},
+								"complete": true,
+							},
+						],
+						"complete": true,
+					},
+				},
+			},
+		};
+
+		const patchedState = patchState({
+			...state,
+			...legacyCeilingsAndRoofs,
+		}) as EcaasState;
+
+		const { dwellingSpaceRoofs, dwellingSpaceFloors } = patchedState.dwellingFabric;
+
+		expect(dwellingSpaceRoofs.data.length).toBe(1);
+		expect(dwellingSpaceFloors.dwellingSpaceInternalFloor.complete).toBe(false);
+	});
 });

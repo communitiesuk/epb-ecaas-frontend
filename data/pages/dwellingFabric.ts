@@ -191,7 +191,7 @@ const dwellingFabricPages = [
 		parentId: "dwellingSpaceWalls",
 	},
 	{
-		id: "dwellingSpaceRoofsAll",
+		id: "dwellingSpaceRoofs",
 		title: "Roofs",
 		url: "/dwelling-fabric/roofs",
 		type: "task",
@@ -202,14 +202,14 @@ const dwellingFabricPages = [
 		title: "Roof",
 		url: "/dwelling-fabric/roofs/:roof",
 		type: "task",
-		parentId: "dwellingSpaceRoofsAll",
+		parentId: "dwellingSpaceRoofs",
 	},
 	{
 		id: "dwellingSpaceRoofsCreate",
 		title: "Roof",
 		url: "/dwelling-fabric/roofs/create",
 		type: "task",
-		parentId: "dwellingSpaceRoofsAll",
+		parentId: "dwellingSpaceRoofs",
 	},
 	{
 		id: "dwellingSpaceDoors",

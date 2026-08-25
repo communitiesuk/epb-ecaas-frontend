@@ -76,7 +76,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovInset>
-		Enter any ceilings adjacent to roofs in the <NuxtLink :href="getUrl('dwellingSpaceRoofsAll')">Roof</NuxtLink> section. This includes ceilings to unheated loft spaces.
+		Enter any ceilings adjacent to roofs in the <NuxtLink :href="getUrl('dwellingSpaceRoofs')">Roof</NuxtLink> section. This includes ceilings to unheated loft spaces.
 	</GovInset>
 	<FormKit
 		v-model="model"

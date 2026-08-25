@@ -309,7 +309,7 @@ const roofSummary: SummarySection = {
 			"Mass distribution class": isTypeOfRoofSelected ? massDistributionClass : undefined,
 		};
 	}),
-	editUrl: getUrl("dwellingSpaceRoofsAll"),
+	editUrl: getUrl("dwellingSpaceRoofs"),
 };
 
 const unglazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data;
