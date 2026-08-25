@@ -1767,6 +1767,8 @@ describe("FHS input mapper", () => {
 								massDistributionClass: "IE",
 								thermalResistanceOfAdjacentUnheatedSpace: 1,
 								uValue: 0.5,
+								pitchOption: "180",
+								pitch: 180,
 							},
 						},
 						{
@@ -1778,6 +1780,8 @@ describe("FHS input mapper", () => {
 								arealHeatCapacity: "Medium",
 								massDistributionClass: "M",
 								uValue: 0.5,
+								pitchOption: "180",
+								pitch: 180,
 							},
 						},
 					],

@@ -152,6 +152,8 @@ const baseInternalFloorData = named.extend({
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	uValue,
+	pitchOption: z.enum(["180", "custom"]),
+	pitch: z.number().min(0).max(180),
 });
 
 const internalFloorDataZod = z.discriminatedUnion(

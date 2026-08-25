@@ -25,6 +25,8 @@ const saveForm = (fields: InternalFloorData) => {
 			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 			uValue: fields.uValue,
+			pitchOption: fields.pitchOption,
+			pitch: fields.pitchOption === "180" ? 180 : fields.pitch,
 		};
 
 		let floor: InternalFloorData;
@@ -56,12 +58,14 @@ autoSaveElementForm<InternalFloorData>({
 	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor,
 	defaultName: "Internal floor",
 	onPatch: (state, newData, index) => {
+		const { pitchOption, pitch } = newData.data;
+
+		newData.data.pitch = pitchOption === "180" ? 180 : pitch;
+
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
 	},
 });
-
-
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
@@ -90,7 +94,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="This affects the additional inputs needed"
 			name="typeOfInternalFloor"
 			validation="required" />
-		<template v-if="mounted&&!!model?.typeOfInternalFloor">
+		<template v-if="mounted && !!model?.typeOfInternalFloor">
 			<FormKit
 				id="name"
 				type="govInputText"
@@ -101,7 +105,17 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | uniqueName"
 				:validation-messages="{
 					uniqueName: 'An element with this name already exists. Please enter a unique name.'
-				}" />
+				}"
+			/>
+			<FieldsPitch
+				:options="{
+					'180': '180°',
+					'custom': 'Custom'
+				}"
+				:pitch-option="model.pitchOption"
+				help="Enter the tilt angle of the lower surface. 180° is horizontal."
+				suppress-standard-guidance
+			/>
 			<FieldsSurfaceArea
 				v-if="model?.typeOfInternalFloor === 'heatedSpace'"
 				label="Net surface area of the floor"
@@ -119,7 +133,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsUValue help="Enter the U-value of the full construction build up" />
 		</template>
 		<FormKit
-			v-if="mounted&&model?.typeOfInternalFloor === 'unheatedSpace'"
+			v-if="mounted && model?.typeOfInternalFloor === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"

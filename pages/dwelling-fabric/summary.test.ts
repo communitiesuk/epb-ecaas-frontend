@@ -88,8 +88,6 @@ const floorsData: FloorsData = {
 					unit: "metres" as const,
 				},
 				verticalEdgeInsulationThermalResistance: 2,
-
-
 			},
 		},
 		{
@@ -117,6 +115,8 @@ const floorsData: FloorsData = {
 				surfaceAreaOfElement: 5,
 				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
+				pitchOption: "180",
+				pitch: 180,
 			},
 		}],
 	},
@@ -534,7 +534,7 @@ describe("Dwelling space fabric summary", () => {
 			await renderSuspended(Summary);
 
 			expect(screen.getByRole("link", { name: "Ground floors" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Internal floors" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Internal floors / ceilings" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Exposed floors" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Floors above an unheated basement" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Floors of a heated basement" })).not.toBeNull();
@@ -673,6 +673,7 @@ describe("Dwelling space fabric summary", () => {
 		const expectedResult = {
 			"Type of internal floor": "Internal floor to heated space / ceiling",
 			"Name": "Internal 1",
+			"Pitch": "180 °",
 			"Net surface area of element": `5 ${metresSquare.suffix}`,
 			"Areal heat capacity": "Very light",
 			"Mass distribution class": "Internal",

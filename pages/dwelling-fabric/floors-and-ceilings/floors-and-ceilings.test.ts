@@ -65,6 +65,8 @@ describe("floors", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		uValue: 1,
+		pitchOption: "180",
+		pitch: 180,
 	};
 
 	const internal2: InternalFloorData = {
@@ -74,6 +76,8 @@ describe("floors", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		uValue: 1,
+		pitchOption: "180",
+		pitch: 180,
 	};
 
 	const internal3: InternalFloorData = {
@@ -83,6 +87,8 @@ describe("floors", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		uValue: 1,
+		pitchOption: "180",
+		pitch: 180,
 	};
 
 	const exposed1: ExposedFloorData = {

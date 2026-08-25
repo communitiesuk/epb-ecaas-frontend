@@ -197,6 +197,8 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 			thermalResistanceOfAdjacentUnheatedSpace: 1,
 			uValue: 1,
+			pitchOption: "180",
+			pitch: 180,
 		};
 
 		const internalFloorHeatedSpace: InternalFloorData = {
@@ -206,6 +208,8 @@ describe("dwelling fabric mapper", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			uValue: 1,
+			pitchOption: "180",
+			pitch: 180,
 		};
 
 		const exposedFloor: ExposedFloorData = {

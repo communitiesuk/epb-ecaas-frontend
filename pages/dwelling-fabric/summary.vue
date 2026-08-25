@@ -82,7 +82,7 @@ const groundFloorSummary: SummarySection = {
 
 const internalFloorSummary: SummarySection = {
 	id: "dwellingSpaceInternalFloors",
-	label: "Internal floors",
+	label: "Internal floors / ceilings",
 	data: internalFloorData?.map(({ data: x }) => {
 		const isInternalFloorToUnheatedSpace = x.typeOfInternalFloor === "unheatedSpace";
 		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
@@ -90,6 +90,7 @@ const internalFloorSummary: SummarySection = {
 		return {
 			"Type of internal floor": displayAdjacentSpaceType(x.typeOfInternalFloor, "Internal floor"),
 			"Name": show(x.name),
+			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": show(x.arealHeatCapacity),
@@ -634,9 +635,9 @@ const thermalBridgeSummarySections: SummarySection[] = [
 
 		<SummaryTab :summary="internalFloorSummary" :selected="tabProps.currentTab === 1">
 			<template #empty>
-				<h2 class="govuk-heading-m">No internal floors added</h2>
+				<h2 class="govuk-heading-m">No internal floors / ceilings added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceInternalFloorCreate')">
-					Add internal floors
+					Add internal floors / ceilings
 				</NuxtLink>
 			</template>
 		</SummaryTab>

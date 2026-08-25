@@ -22,12 +22,16 @@ describe("internal floor", () => {
 	const internalFloorHeatedSpace: InternalFloorData = {
 		...baseInternalFloorData,
 		typeOfInternalFloor: "heatedSpace",
+		pitchOption: "180",
+		pitch: 180,
 	};
 
 	const internalFloorWithUnheatedSpace: InternalFloorData = {
 		...baseInternalFloorData,
 		typeOfInternalFloor: "unheatedSpace",
 		thermalResistanceOfAdjacentUnheatedSpace: 0,
+		pitchOption: "180",
+		pitch: 180,
 	};
 
 	afterEach(() => {
@@ -36,6 +40,7 @@ describe("internal floor", () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Internal 1");
+		await user.click(screen.getByTestId("pitchOption_180"));
 		await user.type(screen.getByTestId("surfaceAreaOfElement"), "5");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
