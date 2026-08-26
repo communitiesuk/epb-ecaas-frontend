@@ -1,9 +1,9 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor, within } from "@testing-library/vue";
-import HeatedBasementFloor from "./[floor].vue";
 import { v4 as uuidv4 } from "uuid";
 import { millimetre } from "~/utils/units/length";
+import HeatedBasementFloor from "./[floor].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -181,7 +181,7 @@ describe("floor of heated basement", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		await waitFor(() => {
-			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors");
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors-and-ceilings");
 		});
 	});
 
@@ -393,7 +393,7 @@ describe("floor of heated basement", () => {
 		test("app navigates to floors overview page on clicking Save progress", async () => {
 			await renderSuspended(HeatedBasementFloor);
 			await user.click(screen.getByTestId("saveProgress"));
-			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors");
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors-and-ceilings");
 		});
 	});
 });

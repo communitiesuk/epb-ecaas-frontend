@@ -146,7 +146,7 @@ const saveForm = (fields: GroundFloorData) => {
 		dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
 	});
 
-	navigateTo("/dwelling-fabric/floors");
+	navigateTo(getUrl("dwellingSpaceFloors"));
 };
 
 autoSaveElementForm<GroundFloorData>({

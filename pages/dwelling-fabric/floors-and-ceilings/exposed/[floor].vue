@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
+import { heightOpaqueZod, surfaceAreaOpaqueZod, widthOpaqueZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
-import { heightOpaqueZod, widthOpaqueZod, surfaceAreaOpaqueZod } from "~/stores/ecaasStore.schema";
 
 const title = "Exposed floor";
 const store = useEcaasStore();
@@ -31,7 +31,7 @@ const saveForm = (fields: ExposedFloorData) => {
 		dwellingSpaceExposedFloor.data[index] = { data: floor, complete: true };
 		dwellingSpaceExposedFloor.complete = false;
 	}); 
-	navigateTo("/dwelling-fabric/floors");
+	navigateTo(getUrl("dwellingSpaceFloors"));
 };
 
 autoSaveElementForm<ExposedFloorData>({

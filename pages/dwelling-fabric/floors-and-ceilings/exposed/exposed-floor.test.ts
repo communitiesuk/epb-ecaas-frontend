@@ -126,7 +126,7 @@ describe("exposed floor", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		// Assert
-		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors");
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors-and-ceilings");
 	});
 
 	test("exposed floors section is marked as 'not complete' after form is saved and marked as complete", async () => {
@@ -268,7 +268,7 @@ describe("exposed floor", () => {
 		test("app navigates to floors overview page on clicking Save progress", async () => {
 			await renderSuspended(ExposedFloor);
 			await user.click(screen.getByTestId("saveProgress"));
-			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors");
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors-and-ceilings");
 		});
 	});
 });

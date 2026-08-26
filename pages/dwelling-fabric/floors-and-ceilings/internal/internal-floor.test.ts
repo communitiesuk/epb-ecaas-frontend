@@ -178,7 +178,7 @@ describe("internal floor", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors");
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors-and-ceilings");
 	});
 
 	test("floor areal heat capacity table is not displayed in help with input dropdown", async () => {
@@ -319,7 +319,7 @@ describe("internal floor", () => {
 		test("app navigates to floors overview page on clicking Save progress", async () => {
 			await renderSuspended(InternalFloor);
 			await user.click(screen.getByTestId("saveProgress"));
-			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors");
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors-and-ceilings");
 		});
 	});
 });

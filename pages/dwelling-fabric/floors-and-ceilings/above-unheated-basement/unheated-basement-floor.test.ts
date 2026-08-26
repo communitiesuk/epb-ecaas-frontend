@@ -1,9 +1,9 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
-import FloorAboveUnheatedBasement from "./[floor].vue";
-import { millimetre } from "~/utils/units/length";
 import { v4 as uuidv4 } from "uuid";
+import { millimetre } from "~/utils/units/length";
+import FloorAboveUnheatedBasement from "./[floor].vue";
 
 vi.mock("uuid");
 
@@ -172,7 +172,7 @@ describe("floor above unheated basement", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		// Assert
-		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors");
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors-and-ceilings");
 	});
 
 	test("floor above unheated basement section is marked as 'not complete' after form is saved and marked as complete", async () => {
@@ -339,7 +339,7 @@ describe("floor above unheated basement", () => {
 				},
 			});
 			await user.click(screen.getByTestId("saveProgress"));
-			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors");
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors-and-ceilings");
 		});
 	});
 });

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { getUrl, uniqueName, unitValue, type FloorAboveUnheatedBasementData } from "#imports";
-import { zodTypeAsFormKitValidation } from "#imports";
-import { groundSurfaceAreaZod, groundTotalAreaZod, groundPerimeterZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
-import { millimetre } from "~/utils/units/length";
+import { getUrl, uniqueName, unitValue, zodTypeAsFormKitValidation, type FloorAboveUnheatedBasementData } from "#imports";
 import { v4 as uuidv4 } from "uuid";
+import { groundPerimeterZod, groundSurfaceAreaZod, groundTotalAreaZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
+import { millimetre } from "~/utils/units/length";
 
 const title = "Floor above an unheated basement";
 const store = useEcaasStore();
@@ -48,7 +47,7 @@ const saveForm = (fields: FloorAboveUnheatedBasementData) => {
 		dwellingSpaceFloorAboveUnheatedBasement.data[index] = { data: floor, complete: true };
 		dwellingSpaceFloorAboveUnheatedBasement.complete = false;
 	}); 
-	navigateTo("/dwelling-fabric/floors");
+	navigateTo(getUrl("dwellingSpaceFloors"));
 };
 
 autoSaveElementForm<FloorAboveUnheatedBasementData>({

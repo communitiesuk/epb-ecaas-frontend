@@ -531,7 +531,7 @@ describe("ground floor", () => {
 		test("app navigates to floors overview page on clicking Save progress", async () => {
 			await renderSuspended(GroundFloor);
 			await user.click(screen.getByTestId("saveProgress"));
-			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors");
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/floors-and-ceilings");
 		});
 	});
 });

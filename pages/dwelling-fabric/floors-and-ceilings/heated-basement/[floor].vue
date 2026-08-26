@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { getUrl, uniqueName, unitValue } from "#imports";
 import { v4 as uuidv4 } from "uuid";
-import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import { groundSurfaceAreaZod, groundTotalAreaZod, thicknessOfWallsZod } from "~/stores/ecaasStore.schema";
 import { millimetre } from "~/utils/units/length";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Floor of heated basement";
 const store = useEcaasStore();
@@ -43,7 +43,7 @@ const saveForm = (fields: FloorOfHeatedBasementData) => {
 		dwellingSpaceFloorOfHeatedBasement.data[index] = { data: floor, complete: true };
 		dwellingSpaceFloorOfHeatedBasement.complete = false;
 	}); 
-	navigateTo("/dwelling-fabric/floors");
+	navigateTo(getUrl("dwellingSpaceFloors"));
 };
 
 autoSaveElementForm<FloorOfHeatedBasementData>({

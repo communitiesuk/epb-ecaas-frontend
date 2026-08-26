@@ -50,7 +50,7 @@ const saveForm = (fields: InternalFloorData) => {
 		dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] = { data: floor, complete: true };
 		dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
 	});
-	navigateTo("/dwelling-fabric/floors");
+	navigateTo(getUrl("dwellingSpaceFloors"));
 };
 
 autoSaveElementForm<InternalFloorData>({
