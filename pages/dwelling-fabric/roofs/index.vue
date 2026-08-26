@@ -105,7 +105,7 @@ const hasIncompleteEntries = () => store.dwellingFabric.dwellingSpaceRoofs.data.
 			View summary
 		</GovButton>
 		<CompleteElement
-			:is-complete="!hasIncompleteEntries()"
+			:is-complete="!hasIncompleteEntries() && !!store.dwellingFabric.dwellingSpaceRoofs.complete"
 			:disabled="hasIncompleteEntries()"
 			@completed="handleComplete" />
 	</div>
