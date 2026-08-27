@@ -147,26 +147,40 @@ export type AdjacentSpaceType = typeof adjacentSpaceTypes[number];
 
 export const surfaceAreaAdjacentSpaceZod = z.number().min(0.01).max(10000);
 
-const baseInternalFloorData = named.extend({
-	surfaceAreaOfElement: surfaceAreaAdjacentSpaceZod,
-	arealHeatCapacity: arealHeatCapacityZod,
-	massDistributionClass,
-	uValue,
-	pitchOption: z.enum(["180", "custom"]),
-	pitch: z.number().min(0).max(180),
-});
+const arealHeatCapacityFields = {
+	discriminator: "arealHeatCapacity",
+	variants: [
+		z.object({
+			arealHeatCapacity: z.literal("Custom"),
+			arealHeatCapacityCustom: z.number(),
+		}),
+		z.object({
+			arealHeatCapacity: arealHeatCapacityZod,
+		}),
+	] satisfies Tuple,
+};
 
-const internalFloorDataZod = z.discriminatedUnion(
-	"typeOfInternalFloor",
-	[
-		baseInternalFloorData.extend({
-			typeOfInternalFloor: z.literal("unheatedSpace"),
-			thermalResistanceOfAdjacentUnheatedSpace,
-		}),
-		baseInternalFloorData.extend({
-			typeOfInternalFloor: z.literal("heatedSpace"),
-		}),
-	],
+const internalFloorDataZod = nestedDiscriminatedUnion(
+	named.extend({
+		surfaceAreaOfElement: surfaceAreaAdjacentSpaceZod,
+		massDistributionClass,
+		uValue,
+		pitchOption: z.enum(["180", "custom"]),
+		pitch: z.number().min(0).max(180),
+	}),
+	{
+		discriminator: "typeOfInternalFloor",
+		variants: [
+			z.object({
+				typeOfInternalFloor: z.literal("unheatedSpace"),
+				thermalResistanceOfAdjacentUnheatedSpace,
+			}),
+			z.object({
+				typeOfInternalFloor: z.literal("heatedSpace"),
+			}),
+		],
+	},
+	arealHeatCapacityFields,
 );
 
 export type InternalFloorData = z.infer<typeof internalFloorDataZod>;
@@ -206,65 +220,70 @@ const baseGroundFloorData = namedWithId.extend({
 	thicknessOfWalls: thicknessOfWallsZod,
 });
 
-const slabEdgeInsulationBase = baseGroundFloorData.extend({
-	typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_edge_insulation">("Slab_edge_insulation"),
-});
-
-const horizontalEdgeInsulation = z.object({
-	edgeInsulationType: z.tuple([z.literal("horizontal")]),
-	// TODO constraints have not been put on zodUnit yet!
-	horizontalEdgeInsulationWidth: zodUnit("length"),
-	horizontalEdgeInsulationThermalResistance: z.number(),
-});
-
-const verticalEdgeInsulation = z.object({
-	edgeInsulationType: z.tuple([z.literal("vertical")]),
-	// TODO constraints have not been put on zodUnit yet!
-	verticalEdgeInsulationDepth: zodUnit("length"),
-	verticalEdgeInsulationThermalResistance: z.number(),
-});
-
-const horizontalAndVerticalEdgeInsulation = z.object({
-	edgeInsulationType: z.union([z.tuple([z.literal("horizontal"), z.literal("vertical")]), z.tuple([z.literal("vertical"), z.literal("horizontal")])]),
-	// TODO constraints have not been put on zodUnit yet!
-	horizontalEdgeInsulationWidth: zodUnit("length"),
-	horizontalEdgeInsulationThermalResistance: z.number(),
-	verticalEdgeInsulationDepth: zodUnit("length"),
-	verticalEdgeInsulationThermalResistance: z.number(),
-});
-
 export const heightUpperSurfaceZod = z.number().min(0).max(100);
 
-const groundFloorDataZod = z.union(
-	[
-		slabEdgeInsulationBase.extend(horizontalEdgeInsulation.shape),
-		slabEdgeInsulationBase.extend(verticalEdgeInsulation.shape),
-		slabEdgeInsulationBase.extend(horizontalAndVerticalEdgeInsulation.shape),
-		baseGroundFloorData.extend({
-			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_no_edge_insulation">("Slab_no_edge_insulation"),
-		}),
-		baseGroundFloorData.extend({
-			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Suspended_floor">("Suspended_floor"),
-			heightOfFloorUpperSurface: heightUpperSurfaceZod,
-			underfloorSpaceThermalResistance: z.number(),
-			thermalTransmittanceOfWallsAboveGround: z.number(),
-			ventilationOpeningsArea: z.number(),
-			smartAirBricks: z.boolean(),
-		}),
-		baseGroundFloorData.extend({
-			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Heated_basement">("Heated_basement"),
-			depthOfBasementFloorBelowGround: z.number(),
-			thermalResistanceOfBasementWalls: z.number(),
-		}),
-		baseGroundFloorData.extend({
-			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Unheated_basement">("Unheated_basement"),
-			thermalTransmittanceOfFloorAboveBasement: z.number(),
-			thermalTransmittanceOfWallsAboveGround: z.number(),
-			thermalResistanceOfBasementWalls: z.number(),
-			depthOfBasementFloorBelowGround: z.number(),
-			heightOfBasementWallsAboveGround: z.number(),
-		}),
-	],
+const groundFloorDataZod = nestedDiscriminatedUnion(
+	baseGroundFloorData,
+	{
+		discriminator: "edgeInsulationType",
+		variants: [
+			z.object({
+				edgeInsulationType: z.optional(z.tuple([z.literal(undefined)])),
+			}),
+			z.object({
+				edgeInsulationType: z.tuple([z.literal("horizontal")]),
+				// TODO constraints have not been put on zodUnit yet!
+				horizontalEdgeInsulationWidth: zodUnit("length"),
+				horizontalEdgeInsulationThermalResistance: z.number(),
+			}),
+			z.object({
+				edgeInsulationType: z.tuple([z.literal("vertical")]),
+				// TODO constraints have not been put on zodUnit yet!
+				verticalEdgeInsulationDepth: zodUnit("length"),
+				verticalEdgeInsulationThermalResistance: z.number(),
+			}),
+			z.object({
+				edgeInsulationType: z.tuple([z.literal("horizontal"), z.literal("vertical")]),
+				// TODO constraints have not been put on zodUnit yet!
+				horizontalEdgeInsulationWidth: zodUnit("length"),
+				horizontalEdgeInsulationThermalResistance: z.number(),
+				verticalEdgeInsulationDepth: zodUnit("length"),
+				verticalEdgeInsulationThermalResistance: z.number(),
+			}),
+		],
+	},
+	{
+		discriminator: "typeOfGroundFloor",
+		variants: [
+			z.object({
+				typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_edge_insulation">("Slab_edge_insulation"),
+			}),
+			z.object({
+				typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_no_edge_insulation">("Slab_no_edge_insulation"),
+			}),
+			z.object({
+				typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Suspended_floor">("Suspended_floor"),
+				heightOfFloorUpperSurface: heightUpperSurfaceZod,
+				underfloorSpaceThermalResistance: z.number(),
+				thermalTransmittanceOfWallsAboveGround: z.number(),
+				ventilationOpeningsArea: z.number(),
+				smartAirBricks: z.boolean(),
+			}),
+			z.object({
+				typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Heated_basement">("Heated_basement"),
+				depthOfBasementFloorBelowGround: z.number(),
+				thermalResistanceOfBasementWalls: z.number(),
+			}),
+			z.object({
+				typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Unheated_basement">("Unheated_basement"),
+				thermalTransmittanceOfFloorAboveBasement: z.number(),
+				thermalTransmittanceOfWallsAboveGround: z.number(),
+				thermalResistanceOfBasementWalls: z.number(),
+				depthOfBasementFloorBelowGround: z.number(),
+				heightOfBasementWallsAboveGround: z.number(),
+			}),
+		],
+	},
 );
 
 export type GroundFloorData = z.infer<typeof groundFloorDataZod>;
@@ -330,26 +349,30 @@ const externalWallDataZod = namedWithId.extend({
 
 export type ExternalWallData = z.infer<typeof externalWallDataZod>;
 
-const internalWallDataZod = namedWithId.extend({
-	surfaceAreaOfElement: surfaceAreaAdjacentSpaceZod,
-	arealHeatCapacity: arealHeatCapacityZod,
-	massDistributionClass,
-	pitchOption: standardPitchOption,
-	pitch: z.optional(z.number().min(0).max(180)),
-	uValue,
-});
+const internalWallDataZod = nestedDiscriminatedUnion(
+	namedWithId.extend({
+		surfaceAreaOfElement: surfaceAreaAdjacentSpaceZod,
+		massDistributionClass,
+		pitchOption: standardPitchOption,
+		pitch: z.optional(z.number().min(0).max(180)),
+		uValue,
+	}),
+	arealHeatCapacityFields,
+);
 
 export type InternalWallData = z.infer<typeof internalWallDataZod>;
 
-const wallsToUnheatedSpaceDataZod = namedWithId.extend({
-	surfaceAreaOfElement: surfaceAreaAdjacentSpaceZod,
-	uValue,
-	arealHeatCapacity: arealHeatCapacityZod,
-	massDistributionClass,
-	pitchOption: standardPitchOption,
-	pitch: z.optional(z.number().min(0).max(180)),
-	thermalResistanceOfAdjacentUnheatedSpace,
-});
+const wallsToUnheatedSpaceDataZod = nestedDiscriminatedUnion(
+	namedWithId.extend({
+		surfaceAreaOfElement: surfaceAreaAdjacentSpaceZod,
+		uValue,
+		massDistributionClass,
+		pitchOption: standardPitchOption,
+		pitch: z.optional(z.number().min(0).max(180)),
+		thermalResistanceOfAdjacentUnheatedSpace,
+	}),
+	arealHeatCapacityFields,
+);
 
 export type WallsToUnheatedSpaceData = z.infer<typeof wallsToUnheatedSpaceDataZod>;
 
@@ -554,7 +577,6 @@ export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorData>;
 const baseInternalDoorData = named.extend({
 	associatedItemId: z.guid(),
 	surfaceArea: surfaceAreaAdjacentSpaceZod,
-	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 });
 
@@ -588,6 +610,7 @@ const isTheFrontDoorFields = {
 
 const internalDoorDataZod = nestedDiscriminatedUnion(
 	baseInternalDoorData,
+	arealHeatCapacityFields,
 	typeOfInternalDoorFields,
 	isTheFrontDoorFields,
 );

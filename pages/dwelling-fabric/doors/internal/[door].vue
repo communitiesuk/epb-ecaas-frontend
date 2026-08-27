@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
-import { surfaceAreaAdjacentSpaceZod } from "~/stores/ecaasStore.schema";
+import { surfaceAreaAdjacentSpaceZod, type InternalDoorData } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Internal door";
@@ -19,13 +19,25 @@ const { dwellingSpacePartyWall } = store.dwellingFabric.dwellingSpaceWalls;
 
 const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
 
-const saveForm = () => {
+const saveForm = (fields: InternalDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceInternalDoor: doors } = state.dwellingFabric.dwellingSpaceDoors;
 		const currentDoor = doors.data[index];
+
 		if (!currentDoor) {
 			throw new Error("No internal door found to save");
 		}
+
+		doors.data[index]!.data = {
+			...currentDoor.data,
+			...(fields.arealHeatCapacity === "Custom" ? {
+				arealHeatCapacity: fields.arealHeatCapacity,
+				arealHeatCapacityCustom: fields.arealHeatCapacityCustom,
+			} : {
+				arealHeatCapacity: fields.arealHeatCapacity,
+			}),
+		};
+
 		currentDoor.complete = true;
 		doors.complete = false;
 	});

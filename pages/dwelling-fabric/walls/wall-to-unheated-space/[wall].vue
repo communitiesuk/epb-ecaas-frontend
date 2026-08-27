@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { getUrl, standardPitchOptions, uniqueName, type EcaasForm, type InternalDoorData } from "#imports";
 import { v4 as uuidv4 } from "uuid";
-import { standardPitchOptions, getUrl, uniqueName, type InternalDoorData, type EcaasForm } from "#imports";
-import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 import { surfaceAreaAdjacentSpaceZod } from "~/stores/ecaasStore.schema";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Wall to unheated space";
 const store = useEcaasStore();
@@ -28,7 +28,12 @@ const saveForm = (fields: WallsToUnheatedSpaceData) => {
 				name: fields.name,
 				surfaceAreaOfElement: fields.surfaceAreaOfElement,
 				uValue: fields.uValue,
-				arealHeatCapacity: fields.arealHeatCapacity,
+				...(fields.arealHeatCapacity === "Custom" ? {
+					arealHeatCapacity: fields.arealHeatCapacity,
+					arealHeatCapacityCustom: fields.arealHeatCapacityCustom,
+				} : {
+					arealHeatCapacity: fields.arealHeatCapacity,
+				}),
 				massDistributionClass: fields.massDistributionClass,
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,

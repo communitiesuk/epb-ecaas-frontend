@@ -244,7 +244,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 	const internalFloorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceInternalFloor?.map(x => {
 		const commonFields = {
 			area: x.surfaceAreaOfElement,
-			areal_heat_capacity: x.arealHeatCapacity,
+			areal_heat_capacity: x.arealHeatCapacity === "Custom" ? x.arealHeatCapacityCustom : x.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 			u_value: x.uValue,
 			pitch: x.pitch,
@@ -406,7 +406,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				pitch: extractPitch(x),
 				area: x.surfaceAreaOfElement,
 				u_value: x.uValue,
-				areal_heat_capacity: x.arealHeatCapacity,
+				areal_heat_capacity: x.arealHeatCapacity === "Custom" ? x.arealHeatCapacityCustom : x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				is_adjacent_space_within_dwelling: true,
 			},
@@ -444,7 +444,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				pitch: extractPitch(x),
 				area: x.surfaceAreaOfElement,
 				u_value: x.uValue,
-				areal_heat_capacity: x.arealHeatCapacity,
+				areal_heat_capacity: x.arealHeatCapacity === "Custom" ? x.arealHeatCapacityCustom : x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
 			},
@@ -586,7 +586,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		const commonFields = {
 			pitch: extractPitch(associatedHeatedSpaceElement),
 			area: x.surfaceArea,
-			areal_heat_capacity: x.arealHeatCapacity,
+			areal_heat_capacity: x.arealHeatCapacity === "Custom" ? x.arealHeatCapacityCustom : x.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 		};
 		const nameWithSuffix = suffixName(x.name, doorSuffix);

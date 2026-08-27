@@ -62,7 +62,7 @@ const saveForm = (fields: GroundFloorData) => {
 			thicknessOfWalls: unitValue(fields.thicknessOfWalls.amount, millimetre),
 		};
 
-		let groundFloorData: GroundFloorData;
+		let groundFloorData: GroundFloorData | undefined = undefined;
 
 		switch (fields.typeOfGroundFloor) {
 			case "Slab_edge_insulation":
@@ -85,7 +85,7 @@ const saveForm = (fields: GroundFloorData) => {
 						horizontalEdgeInsulationWidth: fields.horizontalEdgeInsulationWidth,
 						horizontalEdgeInsulationThermalResistance: fields.horizontalEdgeInsulationThermalResistance,
 					};
-				} else {
+				} else if ("verticalEdgeInsulationDepth" in fields) {
 					groundFloorData = {
 						...commonFields,
 						typeOfGroundFloor: "Slab_edge_insulation",
@@ -142,8 +142,10 @@ const saveForm = (fields: GroundFloorData) => {
 			dwellingSpaceFloors.dwellingSpaceGroundFloor = { data: [] };
 		}
 		
-		dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = { data: groundFloorData, complete: true };
-		dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
+		if (groundFloorData) {
+			dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = { data: groundFloorData, complete: true };
+			dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
+		}
 	});
 
 	navigateTo(getUrl("dwellingSpaceFloors"));

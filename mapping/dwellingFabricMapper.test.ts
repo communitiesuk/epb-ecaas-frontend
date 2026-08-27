@@ -686,7 +686,7 @@ describe("dwelling fabric mapper", () => {
 			pitch: internalWall.data.pitch!,
 			area: internalWall.data.surfaceAreaOfElement,
 			u_value: internalWall.data.uValue,
-			areal_heat_capacity: internalWall.data.arealHeatCapacity,
+			areal_heat_capacity: "Very light",
 			mass_distribution_class: fullMassDistributionClass(internalWall.data.massDistributionClass),
 			is_adjacent_space_within_dwelling: true,
 		};
@@ -724,7 +724,7 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 			pitch: wallToUnheatedSpace.data.pitch!,
 			area: wallToUnheatedSpace.data.surfaceAreaOfElement,
-			areal_heat_capacity: wallToUnheatedSpace.data.arealHeatCapacity,
+			areal_heat_capacity: "Very light",
 			mass_distribution_class: fullMassDistributionClass(wallToUnheatedSpace.data.massDistributionClass),
 			thermal_resistance_unconditioned_space: wallToUnheatedSpace.data.thermalResistanceOfAdjacentUnheatedSpace,
 			u_value: wallToUnheatedSpace.data.uValue,

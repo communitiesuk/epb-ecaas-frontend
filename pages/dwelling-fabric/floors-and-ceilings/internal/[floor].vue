@@ -22,7 +22,12 @@ const saveForm = (fields: InternalFloorData) => {
 		const commonFields = {
 			name: fields.name,
 			surfaceAreaOfElement: fields.surfaceAreaOfElement,
-			arealHeatCapacity: fields.arealHeatCapacity,
+			...(fields.arealHeatCapacity === "Custom" ? {
+				arealHeatCapacity: fields.arealHeatCapacity,
+				arealHeatCapacityCustom: fields.arealHeatCapacityCustom,
+			} : {
+				arealHeatCapacity: fields.arealHeatCapacity,
+			}),
 			massDistributionClass: fields.massDistributionClass,
 			uValue: fields.uValue,
 			pitchOption: fields.pitchOption,
