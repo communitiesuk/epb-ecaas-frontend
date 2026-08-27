@@ -1,8 +1,8 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
-import WallToUnheatedSpace from "./[wall].vue";
 import { v4 as uuidv4 } from "uuid";
+import WallToUnheatedSpace from "./[wall].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -31,6 +31,17 @@ describe("wall to unheated space", () => {
 		store.$reset();
 	});
 
+	const populateValidForm = async () => {
+		await user.type(screen.getByTestId("name"), "Wall to unheated space 1");
+		await user.type(screen.getByTestId("surfaceAreaOfElement"), "500");
+		await user.type(screen.getByTestId("uValue"), "10");
+		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
+		await user.click(screen.getByTestId("massDistributionClass_E"));
+		await user.click(screen.getByTestId("pitchOption_90"));
+		await user.type(screen.getByTestId("thermalResistanceOfAdjacentUnheatedSpace"), "1");
+		await user.tab();
+	};
+
 	test("data is saved to store state when form is valid", async () => {
 		vi.mocked(uuidv4).mockReturnValue(state.id as unknown as Buffer);
 
@@ -40,15 +51,7 @@ describe("wall to unheated space", () => {
 			},
 		});
 
-		await user.type(screen.getByTestId("name"), "Wall to unheated space 1");
-		await user.type(screen.getByTestId("surfaceAreaOfElement"), "500");
-		await user.type(screen.getByTestId("uValue"), "10");
-		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
-		await user.click(screen.getByTestId("massDistributionClass_E"));
-		await user.click(screen.getByTestId("pitchOption_90"));
-		await user.type(screen.getByTestId("thermalResistanceOfAdjacentUnheatedSpace"), "1");
-		await user.tab();
-
+		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data = [] } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace || {};
@@ -113,6 +116,35 @@ describe("wall to unheated space", () => {
 		expect((await screen.findByTestId("wallToUnheatedSpaceErrorSummary"))).toBeDefined();
 	});
 
+	it("requires custom areal heat capacity value when custom option is selected", async () => {
+		await renderSuspended(WallToUnheatedSpace, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("arealHeatCapacity_Custom"));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(screen.findByTestId("customArealHeatCapacity_error")).toBeDefined();
+	});
+
+	it("saves custom areal heat capacity value to store when custom option is selected", async () => {
+		await renderSuspended(WallToUnheatedSpace, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
+
+		await populateValidForm();
+		await user.click(screen.getByTestId("arealHeatCapacity_Custom"));
+		await user.type(screen.getByTestId("arealHeatCapacityCustom"), "10");
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const data = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data[0]!.data as Extract<WallsToUnheatedSpaceData, { arealHeatCapacity: "Custom" }>;
+
+		expect(data.arealHeatCapacityCustom).toEqual(10);
+	});
 
 	it("requires pitch when custom pitch option is selected", async () => {
 		await renderSuspended(WallToUnheatedSpace, {

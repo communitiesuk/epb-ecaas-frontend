@@ -103,12 +103,13 @@ const arealHeatCapacityOptions = {
 		<template #conditionalOption="{ option }">
 			<FormKit
 				v-if="option === 'Custom'"
-				id="customArealHeatCapacity"
-				name="customArealHeatCapacity"
+				id="arealHeatCapacityCustom"
+				name="arealHeatCapacityCustom"
 				type="govInputWithSuffix"
 				label="Value"
 				suffix-text="mm"
 				label-style=""
+				validation="required"
 			/>
 		</template>
 	</FormKit>

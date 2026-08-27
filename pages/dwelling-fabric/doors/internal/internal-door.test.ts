@@ -251,6 +251,41 @@ describe("internal door", () => {
 		expect((await screen.findByTestId("internalDoorErrorSummary"))).toBeDefined();
 	});
 
+	it("requires custom areal heat capacity value when custom option is selected", async () => {
+		await renderSuspended(InternalDoor, {
+			route: {
+				params: { door: "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+		await user.click(screen.getByTestId("arealHeatCapacity_Custom"));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(screen.findByTestId("customArealHeatCapacity_error")).toBeDefined();
+	});
+
+	it("saves custom areal heat capacity value to store when custom option is selected", async () => {
+		await renderSuspended(InternalDoor, {
+			route: {
+				params: { door: "create" },
+			},
+		});
+
+		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+		await populateValidForm();
+		await user.click(
+			screen.getByTestId(`associatedItemId_${internalWall.id}`),
+		);
+		await user.click(screen.getByTestId("arealHeatCapacity_Custom"));
+		await user.type(screen.getByTestId("arealHeatCapacityCustom"), "10");
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const data = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[0]!.data as Extract<InternalDoorData, { arealHeatCapacity: "Custom" }>;
+
+		expect(data.arealHeatCapacityCustom).toEqual(10);
+	});
+
 	it("navigates to doors page when valid form is completed", async () => {
 		await renderSuspended(InternalDoor, {
 			route: {

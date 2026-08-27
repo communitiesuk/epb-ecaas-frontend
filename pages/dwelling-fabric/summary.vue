@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { emptyValueRendering, getTabItems, getUrl, type ExternalGlazedDoorData, type WindowData } from "#imports";
+import { emptyValueRendering, getTabItems, getUrl, type ExternalGlazedDoorData, type InternalDoorData, type InternalFloorData, type WindowData } from "#imports";
 import type { SummarySection } from "~/common.types";
 import { displayColour } from "~/utils/display";
 
@@ -86,6 +86,7 @@ const internalFloorSummary: SummarySection = {
 	data: internalFloorData?.map(({ data: x }) => {
 		const isInternalFloorToUnheatedSpace = x.typeOfInternalFloor === "unheatedSpace";
 		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
+		const floor = x as InternalFloorData;
 
 		return {
 			"Type of internal floor": displayAdjacentSpaceType(x.typeOfInternalFloor, "Internal floor"),
@@ -93,7 +94,7 @@ const internalFloorSummary: SummarySection = {
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Areal heat capacity": show(x.arealHeatCapacity),
+			"Areal heat capacity": show(floor.arealHeatCapacity === "Custom" ? floor.arealHeatCapacityCustom : floor.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isInternalFloorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
 		};
@@ -207,7 +208,7 @@ const internalWallSummary: SummarySection = {
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Areal heat capacity": show(x.arealHeatCapacity),
+			"Areal heat capacity": show(x.arealHeatCapacity === "Custom" ? x.arealHeatCapacityCustom : x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 		};
 	}) || [],
@@ -223,7 +224,7 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Areal heat capacity": show(x.arealHeatCapacity),
+			"Areal heat capacity": show(x.arealHeatCapacity === "Custom" ? x.arealHeatCapacityCustom : x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt"),
 		};
@@ -467,6 +468,7 @@ const internalDoorSummary: SummarySection = {
 	id: "dwellingSpaceInternalDoors",
 	label: "Internal doors",
 	data: internalDoorData?.map(({ data: x }) => {
+		const door = x as InternalDoorData;
 		const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall], x.associatedItemId);
 
 		const isInternalDoorToUnheatedSpace = x.typeOfInternalDoor === "unheatedSpace";
@@ -480,7 +482,7 @@ const internalDoorSummary: SummarySection = {
 			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
 			"Net surface area of element": dim(x.surfaceArea, "metres square"),
 			"U-value": uValue,
-			"Areal heat capacity": show(x.arealHeatCapacity),
+			"Areal heat capacity": show(door.arealHeatCapacity === "Custom" ? door.arealHeatCapacityCustom : door.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isInternalDoorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
 			"Is this the front door?": x.isTheFrontDoor ? "Yes" : "No", 
