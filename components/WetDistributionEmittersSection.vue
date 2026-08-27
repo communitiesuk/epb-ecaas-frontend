@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { emitterFloorAreaZod, lengthRadiatorZod, productCountZod, type WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
-import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
-import type { ConvectorRadiatorProduct, Product, AnyPcdbProduct, UnderFloorHeatingProduct } from "~/pcdb/pcdb.types";
+import type { AnyPcdbProduct, ConvectorRadiatorProduct, Product, UnderFloorHeatingProduct } from "~/pcdb/pcdb.types";
+import { emitterFloorAreaZod, lengthRadiatorZod, productCountZod, wetDistributionSystemEmittersFields, type WetDistributionEmitterData } from "~/stores/ecaasStore.schema";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
 import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
 import { millimetre, type Length } from "~/utils/units/length";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const props = defineProps<{
 	index: number;
@@ -37,6 +37,29 @@ const emitters = computed(() => {
 	}
 	return [];
 });
+
+const allEmittersComplete = computed(() => {
+	return (
+		emitters.value.length > 0 &&
+		emitters.value.every(
+			(emitter) =>
+				wetDistributionSystemEmittersFields.safeParse(emitter).success,
+		)
+	);
+});
+
+const emit = defineEmits<{
+	(e: "validity-change", isValid: boolean): void;
+}>();
+
+watch(
+	allEmittersComplete,
+	(isValid) => {
+		emit("validity-change", isValid);
+	},
+	{ immediate: true },
+);
+
 
 const formModel = ref<Record<string, unknown>>({});
 const editIndex = ref<number | null>(null);
@@ -260,7 +283,10 @@ function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
 </script>
 
 <template>
-	<div data-testid="emittersSection">
+	<div
+		id="emittersSection"
+		data-testid="emittersSection"
+	>
 		<h2 class="govuk-heading-l">Emitters</h2>
 		<div
 			v-for="(emitter, i) in emitters"

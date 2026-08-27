@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { getUrl, typeOfHeatEmitter, type WetDistributionSystemData } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 import ElectricStorageHeaterSection from "~/components/ElectricStorageHeaterSection.vue";
 import { heatEmitterTypes } from "../../../../utils/display";
 import { getHeatEmitterDefaultName, type HeatEmitterFormData } from "../../../../utils/getHeatEmitterDefaultName";
-import { getUrl, typeOfHeatEmitter, type WetDistributionSystemData } from "#imports";
 
 export type WetDistributionSystemModelType = Extract<HeatEmittingData, { "typeOfHeatEmitter": "wetDistributionSystem" }>;
 export type RadiatorModelType = Extract<WetDistributionSystemModelType["emitters"][number], { "typeOfHeatEmitter": "radiator" }>;
@@ -29,6 +29,7 @@ const id = heatEmitterData?.data?.id ?? uuidv4();
 
 const incompatibleEnergySource = ref(false);
 const incompatibleEnergySourceFuel = ref<string | undefined>();
+const emittersValid = ref(false);
 
 function resetAllHeatEmitterRankings(state: EcaasState) {
 	state.spaceHeating.heatEmitters.data.forEach((heatEmitter) => {
@@ -46,6 +47,17 @@ function markHeatingControlsAsInProgress(state: EcaasState) {
 
 const saveForm = () => {
 	clearErrors();
+
+	if (!wetDistributionEmittersValid.value) {
+		addError({
+			id: "emitters",
+			text: "Complete all fields in the Emitters section before marking the heat emitters section as complete.",
+			href: "#emittersSection",
+		});
+
+		window.scrollTo(0, 0);
+		return;
+	}
 
 	if (incompatibleEnergySource.value) {
 		addIncompatibleEnergySourceError();
@@ -130,6 +142,14 @@ const addIncompatibleEnergySourceError = () => {
 	});
 };
 
+const wetDistributionEmittersValid = computed(() => {
+	if (model.value?.typeOfHeatEmitter !== "wetDistributionSystem") {
+		return true;
+	}
+
+	return emittersValid.value;
+});
+
 const handleSubmitInvalid = (node: FormKitNode) => {
 	handleInvalidSubmit(node);
 	addIncompatibleEnergySourceError();
@@ -170,6 +190,7 @@ function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
 				:model="(model as WetDistributionSystemData)"
 				:index="index"
 				:on-incompatible-energy-source="handleIncompatibleEnergySource"
+				@emitters-validity-change="emittersValid = $event"
 			/>
 			<InstantElectricHeaterSection
 				v-if="model?.typeOfHeatEmitter === 'instantElectricHeater'"

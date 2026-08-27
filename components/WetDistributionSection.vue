@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { FieldsHeatSources } from "#components";
 import { ecoClasses, ecoDesignControllerOptions } from "#imports";
+import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { tempDiffEmitDsgnWetDistributionZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
-import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 defineProps<{
 	model: WetDistributionSystemData;
 	index: number;
 	onIncompatibleEnergySource?: (value: boolean, fuel?: string) => void;
+}>();
+
+const emit = defineEmits<{
+	(e: "emitters-validity-change", isValid: boolean): void;
 }>();
 
 const productBrandNames = ref<string[]>([]);
@@ -38,6 +42,7 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 		:index="index"
 		:on-incompatible-energy-source="onIncompatibleEnergySource"
 		@product-loaded="handleProductLoaded"
+		@validity-change="emit('emitters-validity-change', $event)"
 	/>	
 	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 	<h2 class="govuk-heading-l">Flow temperature and rate</h2>
@@ -110,5 +115,3 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 	<FieldsPercentageRecirculated :model="model" />
 	<HemDefaultProductWarning :brand-names="productBrandNames" />
 </template>
-
-

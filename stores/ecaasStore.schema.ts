@@ -1239,7 +1239,7 @@ const radiatorSchema = namedWithId.extend({
 });
 export type RadiatorData = z.infer<typeof radiatorSchema>;
 
-const wetDistributionSystemEmittersFields = z.discriminatedUnion("typeOfHeatEmitter", [
+export const wetDistributionSystemEmittersFields = z.discriminatedUnion("typeOfHeatEmitter", [
 	underFloorHeatingSchema,
 	fanCoilSchema,
 	radiatorSchema,

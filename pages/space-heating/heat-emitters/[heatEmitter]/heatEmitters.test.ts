@@ -1,9 +1,9 @@
-import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
-import HeatEmitterForm from "./index.vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen, within, waitFor } from "@testing-library/vue";
-import { millimetre } from "~/utils/units/length";
+import { screen, waitFor, within } from "@testing-library/vue";
 import type { DisplayProduct, ElectricStorageHeaterProduct, FanCoilProduct } from "~/pcdb/pcdb.types.js";
+import { millimetre } from "~/utils/units/length";
+import HeatEmitterForm from "./index.vue";
 
 const { navigateToMock, mockFetch } = vi.hoisted(() => ({
 	navigateToMock: vi.fn(),
@@ -331,7 +331,7 @@ describe("Heat emitters", () => {
 					throw new Error("Emitters field is missing in heat emitter data");
 				}
 			});
-			test.skip("can add an underfloor heating as an emitter", async () => {
+			test("can add an underfloor heating as an emitter", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatEmitters: {
@@ -955,68 +955,9 @@ describe("Heat emitters", () => {
 				expect(errorSummary.textContent).toContain("Design flow temperature is required.");
 				expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn't been added as an energy source for this dwelling.");
 			});
-
-			// test("marks the wet distribution system as incomplete when its fan coil fuel is removed from dwelling details", async () => {
-			// 	const fanCoilProductWithMainsGasFuelType: Partial<FanCoilProduct> = {
-			// 		id: "1001",
-			// 		brandName: "Test",
-			// 		modelName: "Fan Coil with Mains Gas",
-			// 		technologyType: "FanCoils",
-			// 		fuel: "mains_gas",
-			// 	};
-			// 	store.$patch({
-			// 		spaceHeating: {
-			// 			heatEmitters: {
-			// 				data: [{
-			// 					data: wetDistributionSystemWithFanCoilEmitter,
-			// 					complete: true,
-			// 				}],
-			// 			},
-			// 		},
-			// 		dwellingDetails: {
-			// 			generalSpecifications: {
-			// 				data: {
-			// 					fuelType: ["electricity", "mains_gas"],
-			// 				},
-			// 			},
-			// 		},
-			// 	});
-
-			// 	mockFetch.mockReturnValue({
-			// 		data: ref(fanCoilProductWithMainsGasFuelType),
-			// 	});
-
-			// 	await renderSuspended(HeatEmitterForm, {
-			// 		route: {
-			// 			params: { heatEmitter: "0" },
-			// 		},
-			// 	});
-
-			// 	await user.click(screen.getByTestId("emitter_edit_0"));
-
-			// 	store.$patch({
-			// 		dwellingDetails: {
-			// 			generalSpecifications: {
-			// 				data: {
-			// 					fuelType: ["electricity"],
-			// 				},
-			// 			},
-			// 		},
-			// 	});
-
-			// 	await waitFor(() => {
-			// 		expect(
-			// 			store.spaceHeating.heatEmitters.data[0]?.complete,
-			// 		).toBe(false);
-
-			// 		expect(
-			// 			screen.getByTestId("incompatibleEnergySourceError"),
-			// 		).toBeDefined();
-			// 	});
-			// });
 		});
 
-		test.skip("doesn't mark wet distribution system as complete when an emitter is incomplete", async () => {
+		test("doesn't mark wet distribution system as complete when an emitter is incomplete", async () => {
 			const incompleteRadiator = {
 				id: "1234",
 				name: "Standard radiator",
@@ -1052,6 +993,120 @@ describe("Heat emitters", () => {
 			const system = store.spaceHeating.heatEmitters.data[0];
 
 			expect(system?.complete).toBe(false);
+		});
+
+		test("marks wet distribution system as complete when all emitters are complete", async () => {
+			const completeRadiator = {
+				id: "1234",
+				name: "Standard radiator",
+				typeOfHeatEmitter: "radiator" as const,
+				productReference: "1000",
+				length: unitValue(2500, millimetre),		
+				numOfRadiators: 1,
+			};
+
+			const wetDistributionSystemWithRadiatorEmitter: HeatEmittingData = {
+				...wetDistributionSystem,
+				emitters: [completeRadiator],
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [
+							{
+								data: wetDistributionSystemWithRadiatorEmitter,
+								complete: true,
+							},
+						],
+					},
+				},
+			});
+
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { heatEmitter: "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(true);
+		});
+
+		test("doesn't mark wet distribution system as complete when one of multiple emitters is incomplete", async () => {
+			const completeRadiator = {
+				id: "1234",
+				name: "Standard radiator",
+				typeOfHeatEmitter: "radiator" as const,
+				productReference: "1000",
+				length: unitValue(2500, millimetre),		
+				numOfRadiators: 1,
+			};
+		
+			const incompleteFanCoil = {
+				id: "5678",
+				name: "Fan Coil",
+				typeOfHeatEmitter: "fanCoil" as const,
+			};
+
+			const wetDistributionSystemWithEmitters: HeatEmittingData = {
+				...wetDistributionSystem,
+				emitters: [completeRadiator, incompleteFanCoil],
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [
+							{
+								data: wetDistributionSystemWithEmitters,
+								complete: false,
+							},
+						],
+					},
+				},
+			});
+
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { heatEmitter: "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
+		});
+
+		test("doesn't mark wet distribution system as complete when there are no emitters", async () => {
+			const wetDistributionSystemWithNoEmitters: HeatEmittingData = {
+				...wetDistributionSystem,
+				emitters: [],
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [
+							{
+								data: wetDistributionSystemWithNoEmitters,
+								complete: false,
+							},
+						],
+					},
+				},
+			});
+
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { heatEmitter: "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
 		});
 	});
 
