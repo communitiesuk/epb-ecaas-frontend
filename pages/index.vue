@@ -42,6 +42,10 @@ const firstError = computed(() => {
 	}
 	return null;
 });
+
+const isValidationError = computed(() =>
+	firstError.value?.id === "underfloorHeatingAreaError",
+);
 </script>
 
 <template>
@@ -51,13 +55,30 @@ const firstError = computed(() => {
 	<div v-show="!showLoadingIndicator">
 		<div v-if="calculateError">
 			<GovErrorSummary
-				title="Sorry, there's been an error"
+				:title="isValidationError ? 'There is a problem' : `Sorry, there's been an error`"
 				class-name="govuk-!-margin-bottom-5"
 				test-id="resultErrorSummary"
 			>
-				<p class="govuk-body govuk-!-margin-bottom-2">We have noted an unexpected error with the service and we will look into resolving it.</p>
-				<p v-if="firstError?.detail" class="govuk-body govuk-!-margin-bottom-2">{{ firstError.detail }}</p>
-				<p v-if="firstError?.id" class="govuk-body">Error ID: {{ firstError.id }}</p>
+				<p
+					v-if="!isValidationError"
+					class="govuk-body govuk-!-margin-bottom-2"
+				>
+					We have noted an unexpected error with the service and we will look into resolving it.
+				</p>
+
+				<p
+					v-if="firstError?.detail"
+					class="govuk-body govuk-!-margin-bottom-2"
+				>
+					{{ firstError.detail }}
+				</p>
+
+				<p
+					v-if="!isValidationError && firstError?.id"
+					class="govuk-body"
+				>
+					Error ID: {{ firstError.id }}
+				</p>
 			</GovErrorSummary>
 		</div>
 		<NotificationsBanner />

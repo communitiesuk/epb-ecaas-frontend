@@ -22,33 +22,43 @@ const calculate = async () => {
 	let calculateError: CorrectedJsonApiError[] | boolean | undefined;
 
 	try {
-		const inputPayload = mapFhsInputData(resolveState(store.$state));
-
-		console.log(JSON.stringify(inputPayload));
-
-		// nix the stored lastResult before sending a request
 		store.$patch({
 			lastResult: undefined,
 		});
 
-		const response = await $fetch<FhsComplianceResponseIncludingErrors>("/api/check-compliance", {
-			method: "POST",
-			body: inputPayload,
-			async onRequest() {
-				emit("loading");
-			},
-		});
+		const underfloorHeatingAreaError = getUnderfloorHeatingAreaError(
+			store.$state.dwellingFabric.dwellingSpaceFloors,
+			store.$state.spaceHeating.heatEmitters.data ?? [],
+		);
 
-		console.log("Compliance check response", response);
+		if (underfloorHeatingAreaError) {
+			onError([underfloorHeatingAreaError]);
+			return;
+		}
+
+		const inputPayload = mapFhsInputData(resolveState(store.$state));
+
+		const response = await $fetch<FhsComplianceResponseIncludingErrors>(
+			"/api/check-compliance",
+			{
+				method: "POST",
+				body: inputPayload,
+				async onRequest() {
+					emit("loading");
+				},
+			},
+		);
 
 		store.$patch({
-			lastResult: (!("errors" in response)) ? {
-				resultType: "ok",
-				response: response.data,
-			} : {
-				resultType: "err",
-				errors: response.errors,
-			},
+			lastResult: !("errors" in response)
+				? {
+					resultType: "ok",
+					response: response.data,
+				}
+				: {
+					resultType: "err",
+					errors: response.errors,
+				},
 		});
 
 		if ("errors" in response) {
@@ -69,6 +79,7 @@ const calculate = async () => {
 
 	navigateTo("/outputs");
 };
+
 </script>
 
 <template>
