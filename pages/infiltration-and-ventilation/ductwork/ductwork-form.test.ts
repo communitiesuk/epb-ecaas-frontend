@@ -1,9 +1,9 @@
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import Ductwork from "./[ductwork].vue";
-import userEvent from "@testing-library/user-event";
 import { within } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import type { SchemaDuctShape } from "~/schema/aliases";
+import Ductwork from "./[ductwork].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -23,7 +23,7 @@ const populateValidForm = async (ductShape: SchemaDuctShape) => {
 		await user.type(screen.getByTestId("internalDiameterOfDuctwork"), "300");
 		await user.type(screen.getByTestId("externalDiameterOfDuctwork"), "1000");
 	} else {
-		await user.type(screen.getByTestId("internalPerimeterOfDuctwork"), "300");
+		await user.type(screen.getByTestId("internalPerimeterOfDuctwork"), "1000");
 	}
 	
 	await user.type(screen.getByTestId("insulationThickness"), "100");
@@ -131,7 +131,7 @@ describe("ductwork form", async () => {
 		expect(await screen.findByTestId("internalDiameterOfDuctwork")).toBeDefined();
 		expect(await screen.findByTestId("externalDiameterOfDuctwork")).toBeDefined();
 
-		await user.click(screen.getByTestId("ductworkCrossSectionalShape_circular"));
+		await user.click(screen.getByTestId("ductworkCrossSectionalShape_rectangular"));
 
 		expect(await screen.findByTestId("internalPerimeterOfDuctwork")).toBeDefined();
 	});

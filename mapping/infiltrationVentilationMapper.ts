@@ -168,7 +168,7 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 				external_diameter_mm: x.externalDiameterOfDuctwork,
 			} : {
 				cross_section_shape: "rectangular" as const,
-				duct_perimeter_mm: 10,
+				duct_perimeter_mm: x.internalPerimeterOfDuctwork,
 			}),
 		};
 		return val;

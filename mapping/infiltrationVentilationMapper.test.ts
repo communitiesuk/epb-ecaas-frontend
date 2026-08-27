@@ -1,7 +1,7 @@
-import { mapAirPermeabilityData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
-import { litrePerSecond } from "~/utils/units/flowRate";
+import type { SchemaMechanicalVentilation, SchemaMechanicalVentilationDuctwork } from "~/schema/aliases";
 import { unitValue } from "~/utils/units";
-import type { SchemaMechanicalVentilation } from "~/schema/aliases";
+import { litrePerSecond } from "~/utils/units/flowRate";
+import { mapAirPermeabilityData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
 
 const baseForm = {
 	data: [],
@@ -265,21 +265,37 @@ describe("infiltration ventilation mapper", () => {
 	it("maps ductwork input state to FHS input request", () => {
 		// Arrange
 
-		const ductwork: EcaasForm<DuctworkData>[] = [{
-			...baseForm,
-			data: {
-				name: "ductwork 1",
-				mvhrUnit: "bathroom exhaust fan",
-				ductworkCrossSectionalShape: "circular",
-				internalDiameterOfDuctwork: 200,
-				externalDiameterOfDuctwork: 300,
-				lengthOfDuctwork: 10.0,
-				thermalInsulationConductivityOfDuctwork: 0.023,
-				insulationThickness: 100,
-				surfaceReflectivity: false,
-				ductType: "extract",
+		const ductwork: EcaasForm<DuctworkData>[] = [
+			{
+				...baseForm,
+				data: {
+					name: "ductwork 1",
+					mvhrUnit: "bathroom exhaust fan",
+					ductworkCrossSectionalShape: "circular",
+					internalDiameterOfDuctwork: 200,
+					externalDiameterOfDuctwork: 300,
+					lengthOfDuctwork: 10.0,
+					thermalInsulationConductivityOfDuctwork: 0.023,
+					insulationThickness: 100,
+					surfaceReflectivity: false,
+					ductType: "extract",
+				},
 			},
-		}];
+			{
+				...baseForm,
+				data: {
+					name: "ductwork 2",
+					mvhrUnit: "bathroom exhaust fan",
+					ductworkCrossSectionalShape: "rectangular",
+					internalPerimeterOfDuctwork: 1000,
+					lengthOfDuctwork: 10.0,
+					thermalInsulationConductivityOfDuctwork: 0.023,
+					insulationThickness: 100,
+					surfaceReflectivity: false,
+					ductType: "extract",
+				},
+			},
+		];
 
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -313,16 +329,20 @@ describe("infiltration ventilation mapper", () => {
 
 		// Assert
 		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;;
-		const firstDuctwork = firstMechVent.ductwork[0];
+		const firstDuctwork = firstMechVent.ductwork[0] as Extract<SchemaMechanicalVentilationDuctwork, { cross_section_shape: "circular" }>;
+		const secondDuctwork = firstMechVent.ductwork[1] as Extract<SchemaMechanicalVentilationDuctwork, { cross_section_shape: "rectangular" }>;
 
-		expect(firstDuctwork?.cross_section_shape).toBe("circular");
-		expect(firstDuctwork?.internal_diameter_mm).toBe(200);
-		expect(firstDuctwork?.external_diameter_mm).toBe(300);
-		expect(firstDuctwork?.length).toBe(10);
-		expect(firstDuctwork?.insulation_thermal_conductivity).toBe(0.023);
-		expect(firstDuctwork?.insulation_thickness_mm).toBe(100);
-		expect(firstDuctwork?.reflective).toBe(false);
-		expect(firstDuctwork?.duct_type).toBe("extract");
+		expect(firstDuctwork.cross_section_shape).toBe("circular");
+		expect(firstDuctwork.internal_diameter_mm).toBe(200);
+		expect(firstDuctwork.external_diameter_mm).toBe(300);
+		expect(firstDuctwork.length).toBe(10);
+		expect(firstDuctwork.insulation_thermal_conductivity).toBe(0.023);
+		expect(firstDuctwork.insulation_thickness_mm).toBe(100);
+		expect(firstDuctwork.reflective).toBe(false);
+		expect(firstDuctwork.duct_type).toBe("extract");
+
+		expect(secondDuctwork.cross_section_shape).toBe("rectangular");
+		expect(secondDuctwork.duct_perimeter_mm).toBe(1000);
 	});
 
 	it("maps input state for MVHR without ductwork to FHS input request", () => {

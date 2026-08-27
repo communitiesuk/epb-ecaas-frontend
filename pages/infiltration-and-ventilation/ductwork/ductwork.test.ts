@@ -1,10 +1,10 @@
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import DuctworkOverview from "./index.vue";
-import DuctworkForm from "./[ductwork].vue";
 import userEvent from "@testing-library/user-event";
-import type { DuctworkData } from "../../../stores/ecaasStore.schema";
+import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
+import type { DuctworkData } from "../../../stores/ecaasStore.schema";
+import DuctworkForm from "./[ductwork].vue";
+import DuctworkOverview from "./index.vue";
 
 describe("ductwork", async () => {
 	const user = userEvent.setup();
@@ -43,14 +43,14 @@ describe("ductwork", async () => {
 		name: "Ductwork 3",
 		mvhrUnit: "",
 		ductworkCrossSectionalShape: "rectangular",
-		internalDiameterOfDuctwork: 30,
-		externalDiameterOfDuctwork: 100,
+		internalPerimeterOfDuctwork: 1000,
 		ductType: "exhaust",
 		insulationThickness: 100,
 		lengthOfDuctwork: 200,
 		thermalInsulationConductivityOfDuctwork: 1,
 		surfaceReflectivity: true,
 	};
+	
 	afterEach(() => {
 		store.$reset();
 	});
