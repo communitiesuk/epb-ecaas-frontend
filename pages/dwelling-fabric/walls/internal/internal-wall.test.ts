@@ -120,7 +120,7 @@ describe("internal wall", () => {
 		await user.click(screen.getByTestId("arealHeatCapacity_Custom"));
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		expect(screen.findByTestId("customArealHeatCapacity_error")).toBeDefined();
+		expect(screen.getByTestId("arealHeatCapacityCustom_error")).toBeDefined();
 	});
 
 	it("saves custom areal heat capacity value to store when custom option is selected", async () => {
