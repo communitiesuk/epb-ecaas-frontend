@@ -64,7 +64,7 @@ watch(
 const formModel = ref<Record<string, unknown>>({});
 const editIndex = ref<number | null>(null);
 const addingEmitterIndex = ref<number | null>(null);
-const isEditing = computed(() => editIndex.value !== null);
+const isEmitterBeingEdited = computed(() => editIndex.value !== null);
 const showAddForm = ref(false);
 const emitterCards = ref<HTMLElement[]>([]);
 
@@ -190,6 +190,11 @@ const addEmitter = (type: unknown) => {
 };
 
 const removeEmitter = (emitterIndex: number) => {
+
+	if (editIndex.value !== null && editIndex.value !== emitterIndex) {
+		return;
+	}
+
 	store.$patch((state) => {
 		const heatEmitter = state.spaceHeating.heatEmitters.data[props.index];
 		if (heatEmitter && "emitters" in heatEmitter.data) {
@@ -207,6 +212,10 @@ const removeEmitter = (emitterIndex: number) => {
 };
 
 const startEdit = (emitterIndex: number) => {
+	if (editIndex.value !== null) {
+		return;
+	}
+
 	addingEmitterIndex.value = null;
 	editIndex.value = emitterIndex;
 	formModel.value = { ...emitters.value[emitterIndex]! };
@@ -296,14 +305,21 @@ function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
 			class="govuk-summary-card"
 		>
 			<div class="govuk-summary-card__title-wrapper">
-				<h2 v-if="editIndex === i" class="govuk-summary-card__title">{{ isAddEmitterCard(i) ? "Add emitter" : "Edit emitter" }}</h2>
-				<h2 v-else class="govuk-summary-card__title">{{ emitter.name }}</h2>
+				<h2
+					v-if="editIndex === i"
+					class="govuk-summary-card__title"
+					:data-testid="`emitter-editor-${i}`"
+				>
+					{{ isAddEmitterCard(i) ? "Add emitter" : "Edit emitter" }}
+				</h2>				<h2 v-else class="govuk-summary-card__title">{{ emitter.name }}</h2>
 				<ul v-if="editIndex !== i" class="govuk-summary-card__actions">
 					<li class="govuk-summary-card__action">
 						<a
 							href="#"
 							class="govuk-link govuk-body-s"
 							:data-testid="`emitter_edit_${i}`"
+							:aria-disabled="isEmitterBeingEdited"
+							:class="{ 'emitter-action--disabled': isEmitterBeingEdited }"
 							@click.prevent="startEdit(i)"
 						>
 							Edit
@@ -314,6 +330,8 @@ function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
 							href="#"
 							class="govuk-link govuk-body-s"
 							:data-testid="`emitter_remove_${i}`"
+							:aria-disabled="isEmitterBeingEdited"
+							:class="{ 'emitter-action--disabled': isEmitterBeingEdited }"
 							@click.prevent="removeEmitter(i)"
 						>
 							Remove
@@ -446,7 +464,7 @@ function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
 		</div>
 
 		<GovButton
-			v-if="emitters.length > 0 && !showAddForm && !isEditing"
+			v-if="emitters.length > 0 && !showAddForm && !isEmitterBeingEdited"
 			secondary
 			test-id="addEmitterButton"
 			:click="() => { showAddForm = true }"
@@ -454,7 +472,7 @@ function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
 			Add another emitter
 		</GovButton>
 
-		<div v-if="(showAddForm || emitters.length === 0) && !isEditing" class="govuk-summary-card">
+		<div v-if="(showAddForm || emitters.length === 0) && !isEmitterBeingEdited" class="govuk-summary-card">
 			<div class="govuk-summary-card__title-wrapper">
 				<h2 class="govuk-summary-card__title">Add emitter</h2>
 				<ul v-if="emitters.length > 0" class="govuk-summary-card__actions">
@@ -497,5 +515,11 @@ function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
 :deep(.govuk-body--m),
 :deep(.govuk-label--m) {
 	font-size: 1.1875rem !important;
+}
+
+.emitter-action--disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	text-decoration: none;
 }
 </style>
