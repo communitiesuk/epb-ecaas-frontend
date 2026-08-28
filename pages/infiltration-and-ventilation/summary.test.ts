@@ -139,6 +139,18 @@ const ductworkData: DuctworkData = {
 	surfaceReflectivity: true,
 };
 
+const ductworkData2: DuctworkData = {
+	name: "Ducktwork 2",
+	mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
+	ductworkCrossSectionalShape: "rectangular",
+	ductType: "intake",
+	internalPerimeterOfDuctwork: 1000,
+	insulationThickness: 100,
+	lengthOfDuctwork: 100,
+	thermalInsulationConductivityOfDuctwork: 10,
+	surfaceReflectivity: true,
+};
+
 const externalWall: ExternalWallData = {
 	id: "0b77e247-53c5-42b8-9dbd-83cbfc8ccccc",
 	name: "External wall 1",
@@ -677,6 +689,44 @@ describe("Infiltration and ventilation summary", () => {
 			"Ductwork cross sectional shape": "Circular",
 			"Internal diameter of ductwork": `300 ${millimetre.suffix}`,
 			"External diameter of ductwork": `1000 ${millimetre.suffix}`,
+			"Length of ductwork": `100 ${metre.suffix}`,
+			"Insulation thickness": `100 ${millimetre.suffix}`,
+			"Thermal conductivity of ductwork insulation": `10 ${wattsPerMeterKelvin.suffix}`,
+			"Surface reflectivity": "Reflective",
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+
+			const lineResult = (await screen.findByTestId(`summary-ductwork-${hyphenate(key)}`));
+
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correct data for the ductwork section if cross sectional shape is rectangular", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: { ...mvhrData, typeOfMechanicalVentilationOptions: "Centralised MV" } },
+					],
+				},
+				ductwork: {
+					data: [
+						{ data: ductworkData2 },
+					],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+		const expectedResult = {
+			"Name": "Ducktwork 2",
+			"MVHR or centralised MV unit": "Mechanical name 1",
+			"Duct type": "Intake",
+			"Ductwork cross sectional shape": "Rectangular",
+			"Internal perimeter of ductwork": `1000 ${millimetre.suffix}`,
 			"Length of ductwork": `100 ${metre.suffix}`,
 			"Insulation thickness": `100 ${millimetre.suffix}`,
 			"Thermal conductivity of ductwork insulation": `10 ${wattsPerMeterKelvin.suffix}`,

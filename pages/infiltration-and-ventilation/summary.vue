@@ -120,8 +120,12 @@ const ductworkSummary: SummarySection = {
 			"MVHR or centralised MV unit": show(mechanicalVentilation[0]?.data.name),
 			"Duct type": displayCamelToSentenceCase(show(x.ductType)),
 			"Ductwork cross sectional shape": displayCamelToSentenceCase(show(x.ductworkCrossSectionalShape)),
-			"Internal diameter of ductwork": internalDiameterOfDuctwork, 
-			"External diameter of ductwork": externalDiameterOfDuctwork,
+			...(x.ductworkCrossSectionalShape === "circular" ? {
+				"Internal diameter of ductwork": internalDiameterOfDuctwork, 
+				"External diameter of ductwork": externalDiameterOfDuctwork,
+			} : {
+				"Internal perimeter of ductwork": "internalPerimeterOfDuctwork" in x ? dim(x.internalPerimeterOfDuctwork, "millimetres") : emptyValueRendering,
+			}),
 			"Length of ductwork": dim(x.lengthOfDuctwork, "metres"),
 			"Insulation thickness": dim(x.insulationThickness, "millimetres"),
 			"Thermal conductivity of ductwork insulation": dim(x.thermalInsulationConductivityOfDuctwork, "watts per metre kelvin"),
