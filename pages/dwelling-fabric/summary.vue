@@ -94,7 +94,7 @@ const internalFloorSummary: SummarySection = {
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Areal heat capacity": show(floor.arealHeatCapacity === "Custom" ? floor.arealHeatCapacityCustom : floor.arealHeatCapacity),
+			"Areal heat capacity": show(floor.arealHeatCapacity === "Custom" ? dim(floor.arealHeatCapacityCustom, "kilojoules per square metre per kelvin") : floor.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isInternalFloorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
 		};
@@ -208,7 +208,7 @@ const internalWallSummary: SummarySection = {
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Areal heat capacity": show(x.arealHeatCapacity === "Custom" ? x.arealHeatCapacityCustom : x.arealHeatCapacity),
+			"Areal heat capacity": show(x.arealHeatCapacity === "Custom" ? dim(x.arealHeatCapacityCustom, "kilojoules per square metre per kelvin") : x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 		};
 	}) || [],
@@ -224,7 +224,7 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Areal heat capacity": show(x.arealHeatCapacity === "Custom" ? x.arealHeatCapacityCustom : x.arealHeatCapacity),
+			"Areal heat capacity": show(x.arealHeatCapacity === "Custom" ? dim(x.arealHeatCapacityCustom, "kilojoules per square metre per kelvin") : x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt"),
 		};
@@ -482,7 +482,7 @@ const internalDoorSummary: SummarySection = {
 			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
 			"Net surface area of element": dim(x.surfaceArea, "metres square"),
 			"U-value": uValue,
-			"Areal heat capacity": show(door.arealHeatCapacity === "Custom" ? door.arealHeatCapacityCustom : door.arealHeatCapacity),
+			"Areal heat capacity": show(door.arealHeatCapacity === "Custom" ? dim(door.arealHeatCapacityCustom, "kilojoules per square metre per kelvin") : door.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isInternalDoorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
 			"Is this the front door?": x.isTheFrontDoor ? "Yes" : "No", 

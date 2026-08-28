@@ -107,7 +107,7 @@ const arealHeatCapacityOptions = {
 				name="arealHeatCapacityCustom"
 				type="govInputWithSuffix"
 				label="Value"
-				suffix-text="mm"
+				suffix-text="kJ/(m²·K)"
 				label-style=""
 				validation="required"
 			/>
