@@ -13,7 +13,7 @@ const index = getStoreIndex(internalFloorData);
 const floorData = useItemToEdit("floor", internalFloorData);
 const model = ref(floorData?.data);
 
-const typeOfInternalFloorOptions = adjacentSpaceTypeOptions("Internal floor");
+const typeOfInternalFloorOptions = adjacentSpaceTypeOptions("Internal floor / ceiling");
 
 const saveForm = (fields: InternalFloorData) => {
 	store.$patch((state) => {
@@ -123,14 +123,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			/>
 			<FieldsSurfaceArea
 				v-if="model?.typeOfInternalFloor === 'heatedSpace'"
-				label="Net surface area of the floor"
+				label="Net surface area"
 				help="The area of all large openings should be subtracted before entry, apart from any openings for doors or staircases"
 				:zod="surfaceAreaAdjacentSpaceZod"
 			/>
 			<FieldsSurfaceArea
 				v-else-if="model?.typeOfInternalFloor === 'unheatedSpace'"
-				label="Net surface area of the floor"
-				help="Enter the net area of the building element, subtracting any doors or windows."
+				label="Net surface area"
+				help="Enter the net area of the building element, subtracting any doors or windows"
 				:zod="surfaceAreaAdjacentSpaceZod"
 			/>
 			<FieldsArealHeatCapacity show-construction-build-up-guidance help="Typically very light for internal floors / ceilings" />

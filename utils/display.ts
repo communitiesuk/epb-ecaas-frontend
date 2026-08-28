@@ -1,12 +1,12 @@
 import { objectFromEntries } from "ts-extras";
+import type { Split } from "type-fest";
+import { immersionHeaterPositionValues } from "~/mapping/common";
 import type { StandardDisplayProduct, TechnologyGroup, TechnologyType } from "~/pcdb/pcdb.types";
 import type { SchemaApplianceType, SchemaBoilerLocationType, SchemaColour, SchemaConvectiveType, SchemaFuelType, SchemaLeaksTestPressure, SchemaMechanicalVentilationInstallationLocation, SchemaMechanicalVentilationInstallationType } from "~/schema/aliases";
+import type { AdjacentSpaceType, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, ShowerProductType, TypeOfBoiler, WaterCylinderConfiguration, WaterStorageProductType, WwhrsProductType } from "~/stores/ecaasStore.schema";
+import { applianceTypes } from "~/stores/zod";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
-import { immersionHeaterPositionValues } from "~/mapping/common";
-import type { AdjacentSpaceType, ConciseMassDistributionClass, GeneralDetailsData, HeatEmitterType, HeatEmittingProductType, HeatPumpType, HeatSourceProductType, HotWaterOutletType, ImmersionHeaterPosition, MechanicalVentilationProductType, ShowerProductType, TypeOfBoiler, WaterCylinderConfiguration, WaterStorageProductType, WwhrsProductType } from "~/stores/ecaasStore.schema";
-import type { Split } from "type-fest";
-import { applianceTypes } from "~/stores/zod";
 
 export const emptyValueRendering = "-";
 
@@ -165,7 +165,7 @@ export function displayApplianceType(appliances: SchemaApplianceType[] | undefin
 	return appliances.map(appliance => appliancesDisplayTypes[appliance]).join(", ");
 }
 
-type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>} / ceiling`;
+type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;
 
 export function adjacentSpaceTypeOptions<T extends string>(element: T): Record<AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>> {
 
@@ -180,7 +180,7 @@ export function displayAdjacentSpaceType<T extends string>(value: AdjacentSpaceT
 		return undefined;
 	}
 
-	return `${element} to ${value === "heatedSpace" ? "heated space / ceiling" : "unheated space / ceiling"}`;
+	return `${element} to ${value === "heatedSpace" ? "heated space" : "unheated space"}`;
 }
 
 export function displayHeaterPosition(position: ImmersionHeaterPosition | undefined): string {

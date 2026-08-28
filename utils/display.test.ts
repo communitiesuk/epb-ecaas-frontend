@@ -1,4 +1,4 @@
-import { show, dim, renderPercentageValue } from "./display";
+import { dim, renderPercentageValue, show } from "./display";
 
 describe("Show function to make showable value", () => {
 	it("renders a string as-is", () => {
@@ -146,8 +146,8 @@ describe("displayDeliveryEnergyUseKey", () => {
 describe("adjacentSpaceTypeOptions", () => {
 	it("generates options correctly", () => {
 		const expectedOptions = {
-			heatedSpace: "Trash compactor to heated space / ceiling",
-			unheatedSpace: "Trash compactor to unheated space / ceiling",
+			heatedSpace: "Trash compactor to heated space",
+			unheatedSpace: "Trash compactor to unheated space",
 		};
 		expect(adjacentSpaceTypeOptions("Trash compactor")).toStrictEqual(expectedOptions);
 	});
@@ -155,7 +155,7 @@ describe("adjacentSpaceTypeOptions", () => {
 
 describe("displayAdjacentSpaceType", () => {
 	it("displays an adjacent space type correctly if provided", () => {
-		const expectedDisplay = "Trash compactor to heated space / ceiling";
+		const expectedDisplay = "Trash compactor to heated space";
 		expect(displayAdjacentSpaceType("heatedSpace", "Trash compactor")).toBe(expectedDisplay);
 	});
 

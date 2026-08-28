@@ -89,7 +89,7 @@ const internalFloorSummary: SummarySection = {
 		const floor = x as InternalFloorData;
 
 		return {
-			"Type of internal floor": displayAdjacentSpaceType(x.typeOfInternalFloor, "Internal floor"),
+			"Type of internal floor": displayAdjacentSpaceType(x.typeOfInternalFloor, "Internal floor / ceiling"),
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
