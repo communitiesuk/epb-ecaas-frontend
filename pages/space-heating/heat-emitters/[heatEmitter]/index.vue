@@ -48,13 +48,9 @@ function markHeatingControlsAsInProgress(state: EcaasState) {
 const saveForm = () => {
 	clearErrors();
 
-	if (!wetDistributionEmittersValid.value) {
-		addError({
-			id: "emitters",
-			text: "Complete all fields in the Emitters section before marking the heat emitters section as complete.",
-			href: "#emittersSection",
-		});
+	addEmittersError();
 
+	if (!wetDistributionEmittersValid.value) {
 		window.scrollTo(0, 0);
 		return;
 	}
@@ -142,6 +138,15 @@ const addIncompatibleEnergySourceError = () => {
 	});
 };
 
+const addEmittersError = () => {
+	if (!wetDistributionEmittersValid.value) {
+		addError({
+			id: "emittersSection",
+			text: "Complete all fields in the Emitters section before marking the heat emitters section as complete.",
+		});
+	}
+};
+
 const wetDistributionEmittersValid = computed(() => {
 	if (model.value?.typeOfHeatEmitter !== "wetDistributionSystem") {
 		return true;
@@ -152,6 +157,7 @@ const wetDistributionEmittersValid = computed(() => {
 
 const handleSubmitInvalid = (node: FormKitNode) => {
 	handleInvalidSubmit(node);
+	addEmittersError();
 	addIncompatibleEnergySourceError();
 
 	window.scrollTo(0, 0);

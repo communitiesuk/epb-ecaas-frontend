@@ -1158,6 +1158,71 @@ describe("Heat emitters", () => {
 			expect(link?.getAttribute("href")).toBe("#emittersSection");
 		});
 
+		test("shows all parent validation errors, incompatible energy source error and emitters error in error summary when incomplete/incompatible", async () => {
+			const wetDistributionSystemWithIncompleteEmitter: Partial<HeatEmittingData> = {
+				id: "1234",
+				name: "Wet Distribution System 1",
+				typeOfHeatEmitter: "wetDistributionSystem",
+				heatSource: "heat-pump-id",
+				ecoDesignControllerClass: "1",
+				designTempDiffAcrossEmitters: 10,
+				hasVariableFlowRate: false,
+				percentageRecirculated: 20,
+				emitters: [
+					{
+						id: "fan_coil",
+						name: "Fan Coil",
+						typeOfHeatEmitter: "fanCoil",
+						productReference: "1001",
+					},
+				],
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [
+							{
+								data: wetDistributionSystemWithIncompleteEmitter,
+								complete: false,
+							},
+						],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity"],
+						},
+					},
+				},
+			});
+
+			mockFetch.mockReturnValue({
+				data: ref(fanCoilProductWithFuelType),
+			});
+
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { heatEmitter: "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("emitter_edit_0"));
+			await user.click(screen.getByTestId("saveEmitter_0"));
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const errorSummary = await screen.findByTestId("heatEmitterErrorSummary");
+			expect(errorSummary.textContent).toContain("Design flow rate is required.");
+			expect(errorSummary.textContent).toContain("Design flow temperature is required.");
+			expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn't been added as an energy source for this dwelling.");
+			expect(errorSummary.textContent).toContain("Complete all fields in the Emitters section before marking the heat emitters section as complete.");
+
+			const emitterErrorLink = Array.from(errorSummary.querySelectorAll("a")).find((link) => link.textContent?.includes("Complete all fields in the Emitters section"));
+			expect(emitterErrorLink).not.toBeNull();
+			expect(emitterErrorLink?.getAttribute("href")).toBe("#emittersSection");
+		});
+
 		it("disables editing other emitters while an emitter is being edited", async () => {
 			store.$patch({
 				spaceHeating: {
