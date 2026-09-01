@@ -729,7 +729,6 @@ describe("Heat emitters", () => {
 						params: { "heatEmitter": "0" },
 					},
 				});
-				await user.click(screen.getByTestId("emitter_edit_0"));
 				await user.click(screen.getByTestId("saveEmitter_0"));
 		
 				const error = screen.getByTestId("incompatibleEnergySourceError");
@@ -769,7 +768,6 @@ describe("Heat emitters", () => {
 					},
 				});
 
-				await user.click(screen.getByTestId("emitter_edit_0"));
 				await user.click(screen.getByTestId("saveEmitter_0"));
 
 				expect(screen.getByTestId("numOfFanCoils_0")).toBeDefined();
@@ -802,7 +800,6 @@ describe("Heat emitters", () => {
 					},
 				});
 
-				await user.click(screen.getByTestId("emitter_edit_0"));
 				await user.click(screen.getByTestId("saveEmitter_0"));
 
 				expect(
@@ -852,7 +849,6 @@ describe("Heat emitters", () => {
 					},
 				});
 
-				await user.click(screen.getByTestId("emitter_edit_0"));
 				await user.click(screen.getByTestId("saveEmitter_0"));
 		
 				expect(
@@ -894,7 +890,6 @@ describe("Heat emitters", () => {
 					},
 				});
 				
-				await user.click(screen.getByTestId("emitter_edit_0"));
 				await user.click(screen.getByTestId("saveEmitter_0"));
 		
 				expect(
@@ -948,7 +943,6 @@ describe("Heat emitters", () => {
 					},
 				});
 			
-				await user.click(screen.getByTestId("emitter_edit_0"));
 				await user.click(screen.getByTestId("saveEmitter_0"));
 				await user.click(screen.getByTestId("saveAndComplete"));
 			
@@ -1208,7 +1202,6 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await user.click(screen.getByTestId("emitter_edit_0"));
 			await user.click(screen.getByTestId("saveEmitter_0"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -1426,6 +1419,79 @@ describe("Heat emitters", () => {
 			await user.click(screen.getByTestId("emitter_edit_1"));
 
 			expect(screen.getByTestId("numOfFanCoils_1")).toBeDefined();
+		});
+
+		it("automatically opens an incomplete emitter when returning to the page", async () => {
+			const incompleteRadiator = {
+				id: "1234",
+				name: "Radiator",
+				typeOfHeatEmitter: "radiator" as const,
+			};
+
+			const wetDistributionSystemWithIncompleteEmitter: HeatEmittingData = {
+				...wetDistributionSystem,
+				emitters: [incompleteRadiator],
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [
+							{
+								data: wetDistributionSystemWithIncompleteEmitter,
+								complete: false,
+							},
+						],
+					},
+				},
+			});
+
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { heatEmitter: "0" },
+				},
+			});
+
+			expect(screen.getByTestId("emitter-editor-0")).toBeDefined();
+			expect(screen.getByTestId("typeOfHeatEmitter_0")).toBeDefined();
+		});
+
+		it("does not automatically open a complete emitter", async () => {
+			const completeRadiator = {
+				id: "1234",
+				name: "Radiator",
+				typeOfHeatEmitter: "radiator" as const,
+				numOfRadiators: 2,
+				productReference: "1000",
+				length: unitValue(2500, millimetre),
+			};
+
+			const wetDistributionSystemWithCompleteEmitter: HeatEmittingData = {
+				...wetDistributionSystem,
+				emitters: [completeRadiator],
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [
+							{
+								data: wetDistributionSystemWithCompleteEmitter,
+								complete: true,
+							},
+						],
+					},
+				},
+			});
+
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { heatEmitter: "0" },
+				},
+			});
+
+			expect(screen.queryByTestId("emitter-editor-0")).toBeNull();
+			expect(screen.getByTestId("emitter_edit_0")).toBeDefined();
 		});
 	});
 
@@ -1739,14 +1805,7 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await user.click(screen.getByTestId("emitter_edit_0"));
 			await user.click(screen.getByTestId("saveEmitter_0"));
-
-			// TODO: This works as expected in the browser but not for the test
-			// For some reason the outer form's submit handler gets fired even if the emitter form is invalid, setting complete to 'true'
-			// This is occurring since adding ignore="true" to the emitter form as this was causing other issues
-			//const system = store.spaceHeating.heatEmitters.data[0];
-			//expect(system?.complete).toBe(false);
 
 			expect(screen.getByTestId("numOfRadiators_0_error")).toBeDefined();
 			expect(screen.getByTestId("length_0_error")).toBeDefined();
@@ -1776,15 +1835,7 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await user.click(screen.getByTestId("emitter_edit_0"));
-
 			await user.click(screen.getByTestId("saveEmitter_0"));
-
-			// TODO: This works as expected in the browser but not for the test
-			// For some reason the outer form's submit handler gets fired even if the emitter form is invalid, setting complete to 'true'
-			// This is occurring since adding ignore="true" to the emitter form as this was causing other issues
-			//const system = store.spaceHeating.heatEmitters.data[0];
-			//expect(system?.complete).toBe(false);
 
 			expect(screen.findByTestId("numOfFanCoils_0_error")).toBeDefined();
 		});
@@ -1814,14 +1865,7 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await user.click(screen.getByTestId("emitter_edit_0"));
 			await user.click(screen.getByTestId("saveEmitter_0"));
-
-			// TODO: This works as expected in the browser but not for the test
-			// For some reason the outer form's submit handler gets fired even if the emitter form is invalid, setting complete to 'true'
-			// This is occurring since adding ignore="true" to the emitter form as this was causing other issues
-			//const system = store.spaceHeating.heatEmitters.data[0];
-			//expect(system?.complete).toBe(false);
 
 			expect(screen.getByTestId("areaOfUnderFloorHeating_0_error")).toBeDefined();
 		});
@@ -1850,7 +1894,6 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await user.click(screen.getByTestId("emitter_edit_0"));
 			expect(screen.getByTestId("emitterName_0")).toBeDefined();
 			await user.type(screen.getByTestId("numOfRadiators_0"), "3");
 			await user.type(screen.getByTestId("length_0"), "1.2");
@@ -1888,7 +1931,6 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await user.click(screen.getByTestId("emitter_edit_0"));
 			expect(screen.getByTestId("emitterName_0")).toBeDefined();
 			await user.type(screen.getByTestId("numOfFanCoils_0"), "5");
 			await user.tab();
@@ -1924,7 +1966,6 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await user.click(screen.getByTestId("emitter_edit_0"));
 			expect(screen.getByTestId("emitterName_0")).toBeDefined();
 			await user.type(screen.getByTestId("areaOfUnderFloorHeating_0"), "25");
 			await user.tab();
@@ -1964,6 +2005,7 @@ describe("Heat emitters", () => {
 			const system = store.spaceHeating.heatEmitters.data[0];
 			expect(system?.complete).toBe(false);
 		});
+
 		test("shows an error when minFlowRate is greater than maxFlowRate", async () => {
 			await renderSuspended(HeatEmitterForm, {
 				route: {

@@ -68,17 +68,52 @@ const isEmitterBeingEdited = computed(() => editIndex.value !== null);
 const showAddForm = ref(false);
 const emitterCards = ref<HTMLElement[]>([]);
 
-const queryEmitterIndex = route.query.emitterIndex != null ? Number(route.query.emitterIndex) : null;
+const queryEmitterIndex =
+	route.query.emitterIndex != null
+		? Number(route.query.emitterIndex)
+		: null;
+
+const openEmitter = (emitterIndex: number) => {
+	const emitter = emitters.value[emitterIndex];
+
+	if (!emitter) {
+		return;
+	}
+
+	editIndex.value = emitterIndex;
+	formModel.value = { ...emitter };
+};
+
 if (queryEmitterIndex != null && emitters.value[queryEmitterIndex]) {
-	editIndex.value = queryEmitterIndex;
-	formModel.value = { ...emitters.value[queryEmitterIndex] };
+	openEmitter(queryEmitterIndex);
 }
 
 onMounted(() => {
 	if (queryEmitterIndex != null && emitterCards.value[queryEmitterIndex]) {
-		emitterCards.value[queryEmitterIndex].scrollIntoView({ behavior: "instant", block: "start" });
-	}	
+		emitterCards.value[queryEmitterIndex].scrollIntoView({
+			behavior: "instant",
+			block: "start",
+		});
+
+		return;
+	}
+
+	const heatEmitter = store.spaceHeating.heatEmitters.data[props.index];
+
+	if (heatEmitter?.complete) {
+		return;
+	}
+
+	const incompleteEmitterIndex = emitters.value.findIndex(
+		(emitter) =>
+			!wetDistributionSystemEmittersFields.safeParse(emitter).success,
+	);
+
+	if (incompleteEmitterIndex !== -1) {
+		openEmitter(incompleteEmitterIndex);
+	}
 });
+
 const productDetails = ref<Record<string, string[]>>({});
 
 const fetchProductName = async (productReference: string) => {
