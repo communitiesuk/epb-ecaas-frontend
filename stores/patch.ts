@@ -106,9 +106,6 @@ function patchRadiators(state: Record<string, unknown>) {
 		const emittersList = heatEmitter.data.emitters;
 		emittersList.forEach((emitter) => {
 			if (emitter.typeOfHeatEmitter === "radiator") {
-				if (typeof emitter.productReference === "string" && !emitter.productReference.startsWith("CR")) {
-					emitter.productReference = `CR${emitter.productReference}`;
-				}
 				if (typeof emitter.length === "number") {
 					emitter.length = unitValue(emitter.length * 1000, millimetre);
 				}
