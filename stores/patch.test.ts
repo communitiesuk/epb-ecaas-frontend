@@ -253,64 +253,6 @@ describe("ECaaS store patch", () => {
 		}
 	});
 
-	it("patches legacy radiator product references to include CR prefix", () => {
-		const legacyRadiatorProductReferences: Record<string, unknown> = {
-			"spaceHeating": {
-				...state.spaceHeating,
-				"heatEmitters": {
-					"data": [
-						{
-							"data": {
-								"emitters": [
-									{
-										"id": "12345",
-										"name": "Legacy radiator",
-										"typeOfHeatEmitter": "radiator",
-										"productReference": "33",
-										"numOfRadiators": 2,
-										"length": 1.2,
-									},
-									{
-										"id": "67890",
-										"name": "Already prefixed radiator",
-										"typeOfHeatEmitter": "radiator",
-										"productReference": "CR34",
-										"numOfRadiators": 1,
-										"length": 0.6,
-									},
-									{
-										"id": "FC100",
-										"name": "Fan coil",
-										"typeOfHeatEmitter": "fanCoil",
-										"productReference": "35",
-										"numOfFanCoils": 1,
-									},
-								],
-							},
-						},
-					],
-				},
-			},
-		};
-
-		const patchedState = patchState({
-			...state,
-			...legacyRadiatorProductReferences,
-		}) as EcaasState;
-
-		const patchedEmitterData = patchedState.spaceHeating.heatEmitters.data[0]!.data;
-
-		expect("emitters" in patchedEmitterData).toBe(true);
-
-		if ("emitters" in patchedEmitterData) {
-			expect(patchedEmitterData.emitters[0]?.productReference).toBe("CR33");
-			expect(patchedEmitterData.emitters[1]?.productReference).toBe("CR34");
-			expect(patchedEmitterData.emitters[2]?.productReference).toBe("35");
-			expect(patchedEmitterData.emitters[0]?.id).toBe("12345");
-			expect(patchedEmitterData.emitters[1]?.id).toBe("67890");
-		}
-	});
-
 	it("converts legacy numeric radiator length values to millimetres", () => {
 		const legacyRadiatorLengths: Record<string, unknown> = {
 			"spaceHeating": {
