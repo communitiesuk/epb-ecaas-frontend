@@ -1,10 +1,10 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import Roofs from "./index.vue";
 import RoofForm from "./[roof].vue";
+import Roofs from "./index.vue";
 
-import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
+import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
 
 describe("ceilings and roofs", () => {
@@ -104,7 +104,6 @@ describe("ceilings and roofs", () => {
 					solarTransmittance: 0.1,
 					elevationalHeight: 1,
 					numberOpenableParts: "0",
-					freeAreaHeight: 0,
 					openingToFrameRatio: 0.2,
 					curtainsOrBlinds: false,
 					securityRisk: false,
@@ -139,8 +138,8 @@ describe("ceilings and roofs", () => {
 					elevationalHeight: 1,
 					openingToFrameRatio: 0.2,
 					midHeightOpenablePart1: 2,
-					freeAreaHeight: 1,
-					maximumOpenableArea: 1,
+					freeAreaHeightPart1: 1,
+					maximumOpenableAreaPart1: 1,
 					securityRisk: false,
 					uValue: 9,
 					numberOpenableParts: "1",

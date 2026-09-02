@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { getUrl, standardPitchOptions, uniqueName, type ExternalGlazedDoorData } from "#imports";
-import { gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, widthTransparentZod, revealDimensionZod, freeAreaHeightZod } from "~/stores/ecaasStore.schema";
-import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
-import { isFlatRoofItem } from "~/utils/isFlatRoofItem";
 import { v4 as uuidv4 } from "uuid";
+import { freeAreaHeightZod, gValueZod, heightTransparentZod, maxWindowOpenAreaZod, midHeightAirFlowPathZod, revealDimensionZod, widthTransparentZod } from "~/stores/ecaasStore.schema";
+import { isFlatRoofItem } from "~/utils/isFlatRoofItem";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "External glazed door";
 const store = useEcaasStore();
@@ -46,8 +46,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			openingToFrameRatio: fields.openingToFrameRatio,
-			maximumOpenableArea: fields.maximumOpenableArea,
-			freeAreaHeight: fields.freeAreaHeight ?? 0,
 			uValue: fields.uValue,
 			depthOfReveal: fields.depthOfReveal,
 			distanceFromGlassToStartOfReveal: fields.distanceFromGlassToStartOfReveal,
@@ -78,6 +76,8 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				openablePartsFields = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
+					freeAreaHeightPart1: fields.freeAreaHeightPart1,
+					maximumOpenableAreaPart1: fields.maximumOpenableAreaPart1,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
 				} as Extract<ExternalGlazedDoorData, { numberOpenableParts: "1" }>;
 				break;
@@ -85,6 +85,10 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				openablePartsFields = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
+					freeAreaHeightPart1: fields.freeAreaHeightPart1,
+					freeAreaHeightPart2: fields.freeAreaHeightPart2,
+					maximumOpenableAreaPart1: fields.maximumOpenableAreaPart1,
+					maximumOpenableAreaPart2: fields.maximumOpenableAreaPart2,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
 					midHeightOpenablePart2: fields.midHeightOpenablePart2,
 				} as Extract<ExternalGlazedDoorData, { numberOpenableParts: "2" }>;
@@ -93,6 +97,12 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				openablePartsFields = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
+					freeAreaHeightPart1: fields.freeAreaHeightPart1,
+					freeAreaHeightPart2: fields.freeAreaHeightPart2,
+					freeAreaHeightPart3: fields.freeAreaHeightPart3,
+					maximumOpenableAreaPart1: fields.maximumOpenableAreaPart1,
+					maximumOpenableAreaPart2: fields.maximumOpenableAreaPart2,
+					maximumOpenableAreaPart3: fields.maximumOpenableAreaPart3,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
 					midHeightOpenablePart2: fields.midHeightOpenablePart2,
 					midHeightOpenablePart3: fields.midHeightOpenablePart3,
@@ -102,6 +112,14 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				openablePartsFields = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
+					freeAreaHeightPart1: fields.freeAreaHeightPart1,
+					freeAreaHeightPart2: fields.freeAreaHeightPart2,
+					freeAreaHeightPart3: fields.freeAreaHeightPart3,
+					freeAreaHeightPart4: fields.freeAreaHeightPart4,
+					maximumOpenableAreaPart1: fields.maximumOpenableAreaPart1,
+					maximumOpenableAreaPart2: fields.maximumOpenableAreaPart2,
+					maximumOpenableAreaPart3: fields.maximumOpenableAreaPart3,
+					maximumOpenableAreaPart4: fields.maximumOpenableAreaPart4,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
 					midHeightOpenablePart2: fields.midHeightOpenablePart2,
 					midHeightOpenablePart3: fields.midHeightOpenablePart3,
@@ -316,56 +334,113 @@ const tagHasValidPitch = computed(() => {
 			validation="required"
 			data-field="Zone.BuildingElement.*.security_risk"
 		/>
-		<FormKit
-			id="maximumOpenableArea"
-			type="govInputWithSuffix"
-			suffix-text="m²"
-			label="Maximum openable area of door"
-			help="Enter the total area of the gap created when the door is fully open, as defined by Part O"
-			name="maximumOpenableArea"
-			:validation="zodTypeAsFormKitValidation(maxWindowOpenAreaZod)"
-			data-field="Zone.BuildingElement.*.max_window_open_area"
-		/>
 		<template v-if="mounted && !!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
 			<FormKit
-				id="freeAreaHeight"
+				id="maximumOpenableAreaPart1"
+				type="govInputWithSuffix"
+				suffix-text="m²"
+				label="Maximum openable area of door"
+				help="Enter the total area of the gap created when the door is fully open, as defined by Part O"
+				name="maximumOpenableAreaPart1"
+				:validation="zodTypeAsFormKitValidation(maxWindowOpenAreaZod)"
+				data-field="Zone.BuildingElement.*.max_window_open_area"
+			/>
+			<FormKit
+				id="freeAreaHeightPart1"
 				type="govInputWithSuffix"
 				suffix-text="m"
 				label="Free area height of door opening"
 				help="Enter the vertical height of the gap created when the door is open. This is usually the height of the void minus the frame width."
-				name="freeAreaHeight"
+				name="freeAreaHeightPart1"
 				:validation="zodTypeAsFormKitValidation(freeAreaHeightZod)"
 			/>
 			<FormKit
 				id="midHeightOpenablePart1"
 				type="govInputWithSuffix"
 				suffix-text="m"
-				label="Mid height of the air flow path for openable part 1 "
+				label="Mid height of the air flow path for openable part 1"
 				help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the door when fully open"
 				name="midHeightOpenablePart1"
 				:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 			/>
 			<template v-if="model.numberOpenableParts !== '1'">
 				<FormKit
+					id="maximumOpenableAreaPart2"
+					type="govInputWithSuffix"
+					suffix-text="m²"
+					label="Maximum openable area of door"
+					help="Enter the total area of the gap created when the door is fully open, as defined by Part O"
+					name="maximumOpenableAreaPart2"
+					:validation="zodTypeAsFormKitValidation(maxWindowOpenAreaZod)"
+					data-field="Zone.BuildingElement.*.max_window_open_area"
+				/>
+				<FormKit
+					id="freeAreaHeightPart2"
+					type="govInputWithSuffix"
+					suffix-text="m"
+					label="Free area height of door opening"
+					help="Enter the vertical height of the gap created when the door is open. This is usually the height of the void minus the frame width."
+					name="freeAreaHeightPart2"
+					:validation="zodTypeAsFormKitValidation(freeAreaHeightZod)"
+				/>
+				<FormKit
 					id="midHeightOpenablePart2"
 					type="govInputWithSuffix"
 					suffix-text="m"
-					label="Mid height of the air flow path for openable part 2 "
+					label="Mid height of the air flow path for openable part 2"
 					help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the door when fully open"
 					name="midHeightOpenablePart2"
 					:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 				/>
 				<template v-if="model.numberOpenableParts !== '2'">
 					<FormKit
+						id="maximumOpenableAreaPart3"
+						type="govInputWithSuffix"
+						suffix-text="m²"
+						label="Maximum openable area of door"
+						help="Enter the total area of the gap created when the door is fully open, as defined by Part O"
+						name="maximumOpenableAreaPart4"
+						:validation="zodTypeAsFormKitValidation(maxWindowOpenAreaZod)"
+						data-field="Zone.BuildingElement.*.max_window_open_area"
+					/>
+					<FormKit
+						id="freeAreaHeightPart3"
+						type="govInputWithSuffix"
+						suffix-text="m"
+						label="Free area height of door opening"
+						help="Enter the vertical height of the gap created when the door is open. This is usually the height of the void minus the frame width."
+						name="freeAreaHeightPart4"
+						:validation="zodTypeAsFormKitValidation(freeAreaHeightZod)"
+					/>
+					<FormKit
 						id="midHeightOpenablePart3"
 						type="govInputWithSuffix"
 						suffix-text="m"
-						label="Mid height of the air flow path for openable part 3 "
+						label="Mid height of the air flow path for openable part 3"
 						help="Enter the height from the lowest finished floor of the dwelling to the midpoint of the air flow path through this part of the door when fully open"
 						name="midHeightOpenablePart3"
 						:validation="zodTypeAsFormKitValidation(midHeightAirFlowPathZod)"
 					/>
 					<template v-if="model.numberOpenableParts !== '3'">
+						<FormKit
+							id="maximumOpenableAreaPart4"
+							type="govInputWithSuffix"
+							suffix-text="m²"
+							label="Maximum openable area of door"
+							help="Enter the total area of the gap created when the door is fully open, as defined by Part O"
+							name="maximumOpenableAreaPart4"
+							:validation="zodTypeAsFormKitValidation(maxWindowOpenAreaZod)"
+							data-field="Zone.BuildingElement.*.max_window_open_area"
+						/>
+						<FormKit
+							id="freeAreaHeightPart4"
+							type="govInputWithSuffix"
+							suffix-text="m"
+							label="Free area height of door opening"
+							help="Enter the vertical height of the gap created when the door is open. This is usually the height of the void minus the frame width."
+							name="freeAreaHeightPart4"
+							:validation="zodTypeAsFormKitValidation(freeAreaHeightZod)"
+						/>
 						<FormKit
 							id="midHeightOpenablePart4"
 							type="govInputWithSuffix"

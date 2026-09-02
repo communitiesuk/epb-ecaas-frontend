@@ -49,7 +49,6 @@ describe("getResolvedTaggedItem", () => {
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		numberOpenableParts: "0",
-		freeAreaHeight: 0,
 		openingToFrameRatio: 0.2,
 		curtainsOrBlinds: false,
 		securityRisk: false,

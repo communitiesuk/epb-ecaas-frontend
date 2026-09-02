@@ -893,12 +893,11 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 10,
 					width: 1,
 					window_part_list: [
-						// {
-						// 	mid_height_air_flow_path: 2.5,
-						// },
-						// {
-						// 	mid_height_air_flow_path: 3,
-						// },
+						{
+							free_area_height: 2,
+							max_window_open_area: 3,
+							mid_height: 3,
+						},
 					],
 				},
 				"wall to garage (wall)": {
@@ -955,9 +954,11 @@ const expectedFlatInput: FhsInputSchema = {
 					security_risk: true,
 					frame_area_fraction: 0.2, // inverse openingToFrameRatio (1 - 0.8)
 					window_part_list: [
-						// {
-						// 	mid_height_air_flow_path: 1,
-						// },
+						{
+							free_area_height: 1,
+							max_window_open_area: 1,
+							mid_height: 1,
+						},
 					],
 					shading: [
 						{
@@ -1986,8 +1987,8 @@ describe("FHS input mapper", () => {
 							elevationalHeight: 0.2,
 							openingToFrameRatio: 0.7,
 							midHeightOpenablePart1: 3,
-							maximumOpenableArea: 3,
-							freeAreaHeight: 2,
+							maximumOpenableAreaPart1: 3,
+							freeAreaHeightPart1: 2,
 							securityRisk: false,
 							uValue: 10,
 							numberOpenableParts: "1",
@@ -2077,7 +2078,7 @@ describe("FHS input mapper", () => {
 						solarTransmittance: 0.2,
 						elevationalHeight: 1,
 						numberOpenableParts: "1",
-						freeAreaHeight: 1,
+						freeAreaHeightPart1: 1,
 						curtainsOrBlinds: true,
 						treatmentType: "curtains",
 						treatmentControls: "manual",
@@ -2085,7 +2086,7 @@ describe("FHS input mapper", () => {
 						solarTransmittanceReduction: 0.1,
 						midHeightOpenablePart1: 1,
 						openingToFrameRatio: 0.8,
-						maximumOpenableArea: 1,
+						maximumOpenableAreaPart1: 1,
 						depthOfReveal: 200,
 						distanceFromGlassToStartOfReveal: 100,
 						hasShading: true,

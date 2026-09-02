@@ -977,8 +977,8 @@ describe("dwelling fabric mapper", () => {
 			elevationalHeight: 1,
 			openingToFrameRatio: 0.3,
 			midHeightOpenablePart1: 1,
-			maximumOpenableArea: 1,
-			freeAreaHeight: 1,
+			maximumOpenableAreaPart1: 1,
+			freeAreaHeightPart1: 1,
 			uValue: 7,
 			numberOpenableParts: "1",
 			curtainsOrBlinds: true,
@@ -1106,9 +1106,11 @@ describe("dwelling fabric mapper", () => {
 			g_value: externalGlazedDoor.solarTransmittance,
 			frame_area_fraction: 1 - externalGlazedDoor.openingToFrameRatio,
 			window_part_list: [
-				// complete as part of EC-1629 to fill this back out
-				// { mid_height_air_flow_path: midHeight },
-				// { mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
+				{
+					free_area_height: externalGlazedDoor.freeAreaHeightPart1,
+					max_window_open_area: externalGlazedDoor.maximumOpenableAreaPart1,
+					mid_height: externalGlazedDoor.midHeightOpenablePart1,
+				},
 			],
 			shading: [
 				{
@@ -1200,7 +1202,7 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "1",
-			freeAreaHeight: 1,
+			freeAreaHeightPart1: 1,
 			curtainsOrBlinds: true,
 			treatmentType: "blinds",
 			treatmentControls: "auto_motorised",
@@ -1208,7 +1210,7 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittanceReduction: 0.1,
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.3,
-			maximumOpenableArea: 1,
+			maximumOpenableAreaPart1: 1,
 			securityRisk: false,
 			hasShading: true,
 			depthOfReveal: 200,
@@ -1292,10 +1294,11 @@ describe("dwelling fabric mapper", () => {
 			frame_area_fraction: 1 - window.openingToFrameRatio,
 			security_risk: false,
 			window_part_list: [
-				// complete when doing EC-1629
-				// {
-				// 	mid_height_air_flow_path: window.midHeightOpenablePart1,
-				// },
+				{
+					free_area_height: window.freeAreaHeightPart1,
+					max_window_open_area: window.maximumOpenableAreaPart1,
+					mid_height: window.midHeightOpenablePart1,
+				},
 			],
 			shading: [
 				{
@@ -1341,7 +1344,6 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",
-			freeAreaHeight: 0,
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
 			curtainsOrBlinds: false,
@@ -1396,7 +1398,6 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",
-			freeAreaHeight: 0,
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
 			curtainsOrBlinds: false,
@@ -1449,7 +1450,6 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",
-			freeAreaHeight: 0,
 			openingToFrameRatio: 0.3,
 			securityRisk: false,
 			curtainsOrBlinds: false,

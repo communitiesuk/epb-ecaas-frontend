@@ -1,12 +1,12 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import userEvent from "@testing-library/user-event";
-import Doors from "./index.vue";
-import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
-import UnglazedDoorForm from "./external-unglazed/[door].vue";
-import glazedDoorForm from "./external-glazed/[door].vue";
-import internalDoorForm from "./internal/[door].vue";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
+import glazedDoorForm from "./external-glazed/[door].vue";
+import UnglazedDoorForm from "./external-unglazed/[door].vue";
+import Doors from "./index.vue";
+import internalDoorForm from "./internal/[door].vue";
 
 describe("doors", () => {
 	const store = useEcaasStore();
@@ -105,8 +105,6 @@ describe("doors", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			openingToFrameRatio: 0.2,
-			freeAreaHeight: 1,
-			maximumOpenableArea: 1,
 			uValue: 9,
 			numberOpenableParts: "0",
 			curtainsOrBlinds: false,
@@ -128,8 +126,8 @@ describe("doors", () => {
 			elevationalHeight: 1,
 			openingToFrameRatio: 0.2,
 			midHeightOpenablePart1: 2,
-			freeAreaHeight: 1,
-			maximumOpenableArea: 1,
+			freeAreaHeightPart1: 1,
+			maximumOpenableAreaPart1: 1,
 			uValue: 5,
 			numberOpenableParts: "1",
 			curtainsOrBlinds: false,
@@ -151,8 +149,10 @@ describe("doors", () => {
 			openingToFrameRatio: 0.2,
 			midHeightOpenablePart1: 2,
 			midHeightOpenablePart2: 1.2,
-			freeAreaHeight: 1,
-			maximumOpenableArea: 1,
+			freeAreaHeightPart1: 1,
+			freeAreaHeightPart2: 1,
+			maximumOpenableAreaPart1: 1,
+			maximumOpenableAreaPart2: 1,
 			uValue: 4,
 			numberOpenableParts: "2",
 			curtainsOrBlinds: false,

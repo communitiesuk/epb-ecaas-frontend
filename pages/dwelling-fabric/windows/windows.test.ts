@@ -1,10 +1,10 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import userEvent from "@testing-library/user-event";
-import Windows from "./index.vue";
-import WindowsForm from "./[window].vue";
-import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
+import WindowsForm from "./[window].vue";
+import Windows from "./index.vue";
 
 describe("windows", () => {
 	const store = useEcaasStore();
@@ -42,7 +42,6 @@ describe("windows", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "0",
-			freeAreaHeight: 0,
 			openingToFrameRatio: 0.2,
 			curtainsOrBlinds: false,
 			securityRisk: false,

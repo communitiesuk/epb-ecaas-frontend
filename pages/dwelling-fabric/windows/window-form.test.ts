@@ -1,8 +1,8 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import Window from "./[window].vue";
 import { v4 as uuidv4 } from "uuid";
+import Window from "./[window].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -45,10 +45,10 @@ const window1: EcaasForm<WindowData> = {
 		securityRisk: true,
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
-		freeAreaHeight: 1,
+		freeAreaHeightPart1: 1,
 		openingToFrameRatio: 0.8,
 		numberOpenableParts: "1",
-		maximumOpenableArea: 1,
+		maximumOpenableAreaPart1: 1,
 		midHeightOpenablePart1: 1,
 		curtainsOrBlinds: true,
 		treatmentType: "blinds",
@@ -74,8 +74,8 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.type(screen.getByTestId("openingToFrameRatio"), "0.8");
 	await user.click(screen.getByTestId("securityRisk_yes"));
 	await user.click(screen.getByTestId("numberOpenableParts_1"));
-	await user.type(screen.getByTestId("freeAreaHeight"), "1");
-	await user.type(screen.getByTestId("maximumOpenableArea"), "1");
+	await user.type(screen.getByTestId("freeAreaHeightPart1"), "1");
+	await user.type(screen.getByTestId("maximumOpenableAreaPart1"), "1");
 	await user.type(screen.getByTestId("midHeightOpenablePart1"), "1");
 	await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
 	await user.click(screen.getByTestId("treatmentType_blinds"));
@@ -343,8 +343,8 @@ describe("window", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("1");
 			expect((await screen.findByTestId("numberOpenableParts_1")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("freeAreaHeight")).value).toBe("1");
-			expect((await screen.findByTestId<HTMLInputElement>("maximumOpenableArea")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("freeAreaHeightPart1")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("maximumOpenableAreaPart1")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("midHeightOpenablePart1")).value).toBe("1");
 			expect((await screen.findByTestId("treatmentType_blinds")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("treatmentControls_manual")).hasAttribute("checked")).toBe(true);
@@ -365,7 +365,6 @@ describe("window", () => {
 					securityRisk: true,
 					solarTransmittance: 0.1,
 					elevationalHeight: 1,
-					freeAreaHeight: 1,
 					openingToFrameRatio: 0.8,
 					numberOpenableParts: "0",
 					curtainsOrBlinds: true,
@@ -439,8 +438,14 @@ describe("window", () => {
 			await (user.click(screen.getByTestId("saveAndComplete")));
 
 			expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
-			expect((await screen.findByTestId("maximumOpenableArea_error"))).toBeDefined();
-			expect((await screen.findByTestId("freeAreaHeight_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableAreaPart1_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableAreaPart2_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableAreaPart3_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableAreaPart4_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeightPart1_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeightPart2_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeightPart3_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeightPart4_error"))).toBeDefined();
 			expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
 			expect((await screen.findByTestId("midHeightOpenablePart2_error"))).toBeDefined();
 			expect((await screen.findByTestId("midHeightOpenablePart3_error"))).toBeDefined();
