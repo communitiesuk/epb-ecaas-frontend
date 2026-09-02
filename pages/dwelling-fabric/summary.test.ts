@@ -1283,6 +1283,8 @@ describe("dwelling space doors", () => {
 				"Width": `1 ${metre.suffix}`,
 				"Pitch": `72 ${degrees.suffix}`,
 				"Free area height for openable part 1": `2 ${metre.suffix}`,
+				"Maximum openable area for openable part 1": `1 ${metresSquare.suffix}`,
+				"Mid height of the air flow path for openable part 1": `1 ${metre.suffix}`,
 				"Transmittance of solar energy": "0.1",
 				"Elevational height of building element at its base": `1 ${metre.suffix}`,
 				"U-value": `10 ${wattsPerSquareMeterKelvin.suffix}`,

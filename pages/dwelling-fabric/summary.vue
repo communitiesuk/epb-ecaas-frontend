@@ -434,10 +434,18 @@ const glazedDoorSummary: SummarySection = {
 		const thermalResistivityIncrease = "thermalResistivityIncrease" in x ? dim(x.thermalResistivityIncrease, "watts per square metre kelvin") : emptyValueRendering;
 		const solarTransmittanceReduction = "solarTransmittanceReduction" in x ? show(x.solarTransmittanceReduction) : emptyValueRendering;
 		
+		const maximumOpenableAreaPart1 = "maximumOpenableAreaPart1" in x ? dim(x.maximumOpenableAreaPart1, "metres square") : emptyValueRendering;
+		const maximumOpenableAreaPart2 = "maximumOpenableAreaPart2" in x ? dim(x.maximumOpenableAreaPart2, "metres square") : emptyValueRendering;
+		const maximumOpenableAreaPart3 = "maximumOpenableAreaPart3" in x ? dim(x.maximumOpenableAreaPart3, "metres square") : emptyValueRendering;
+		const maximumOpenableAreaPart4 = "maximumOpenableAreaPart4" in x ? dim(x.maximumOpenableAreaPart4, "metres square") : emptyValueRendering;
 		const freeAreaHeightPart1 = "freeAreaHeightPart1" in x ? dim(x.freeAreaHeightPart1, "metres") : emptyValueRendering;
 		const freeAreaHeightPart2 = "freeAreaHeightPart2" in x ? dim(x.freeAreaHeightPart2, "metres") : emptyValueRendering;
 		const freeAreaHeightPart3 = "freeAreaHeightPart3" in x ? dim(x.freeAreaHeightPart3, "metres") : emptyValueRendering;
 		const freeAreaHeightPart4 = "freeAreaHeightPart4" in x ? dim(x.freeAreaHeightPart4, "metres") : emptyValueRendering;
+		const midHeightOpenablePart1 = "midHeightOpenablePart1" in x ? dim(x.midHeightOpenablePart1, "metres") : emptyValueRendering;
+		const midHeightOpenablePart2 = "midHeightOpenablePart2" in x ? dim(x.midHeightOpenablePart2, "metres") : emptyValueRendering;
+		const midHeightOpenablePart3 = "midHeightOpenablePart3" in x ? dim(x.midHeightOpenablePart3, "metres") : emptyValueRendering;
+		const midHeightOpenablePart4 = "midHeightOpenablePart4" in x ? dim(x.midHeightOpenablePart4, "metres") : emptyValueRendering;
 
 		const numberOfOpenableParts = parseInt(x.numberOpenableParts ?? "0");
 
@@ -456,6 +464,14 @@ const glazedDoorSummary: SummarySection = {
 			"Free area height for openable part 2": numberOfOpenableParts >= 1 ? freeAreaHeightPart2 : undefined,
 			"Free area height for openable part 3": numberOfOpenableParts >= 1 ? freeAreaHeightPart3 : undefined,
 			"Free area height for openable part 4": numberOfOpenableParts >= 1 ? freeAreaHeightPart4 : undefined,
+			"Maximum openable area for openable part 1": numberOfOpenableParts >= 1 ? maximumOpenableAreaPart1 : undefined,
+			"Maximum openable area for openable part 2": numberOfOpenableParts >= 2 ? maximumOpenableAreaPart2 : undefined,
+			"Maximum openable area for openable part 3": numberOfOpenableParts >= 3 ? maximumOpenableAreaPart3 : undefined,
+			"Maximum openable area for openable part 4": numberOfOpenableParts >= 4 ? maximumOpenableAreaPart4 : undefined,
+			"Mid height of the air flow path for openable part 1": numberOfOpenableParts >= 1 ? midHeightOpenablePart1 : undefined,
+			"Mid height of the air flow path for openable part 2": numberOfOpenableParts >= 2 ? midHeightOpenablePart2 : undefined,
+			"Mid height of the air flow path for openable part 3": numberOfOpenableParts >= 3 ? midHeightOpenablePart3 : undefined,
+			"Mid height of the air flow path for openable part 4": numberOfOpenableParts == 4 ? midHeightOpenablePart4 : undefined,
 			"Is this the front door?": displayBoolean(x.isTheFrontDoor),
 			"Curtains or blinds": x.curtainsOrBlinds ? treatmentType : undefined,
 			"Window treatment controls": x.curtainsOrBlinds ? treatmentControls : undefined,
