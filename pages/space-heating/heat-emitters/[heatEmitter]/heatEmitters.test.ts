@@ -951,547 +951,546 @@ describe("Heat emitters", () => {
 				expect(errorSummary.textContent).toContain("Design flow temperature is required.");
 				expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn't been added as an energy source for this dwelling.");
 			});
-		});
-
-		test("doesn't mark wet distribution system as complete when an emitter is incomplete", async () => {
-			const incompleteRadiator = {
-				id: "1234",
-				name: "Standard radiator",
-				typeOfHeatEmitter: "radiator" as const,
-			};
-
-			const wetDistributionSystemWithRadiatorEmitter: HeatEmittingData = {
-				...wetDistributionSystem,
-				emitters: [incompleteRadiator],
-			};
-
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [
-							{
-								data: wetDistributionSystemWithRadiatorEmitter,
-								complete: false,
-							},
-						],
-					},
-				},
-			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { heatEmitter: "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			const system = store.spaceHeating.heatEmitters.data[0];
-
-			expect(system?.complete).toBe(false);
-		});
-
-		test("marks wet distribution system as complete when all emitters are complete", async () => {
-			const completeRadiator = {
-				id: "1234",
-				name: "Standard radiator",
-				typeOfHeatEmitter: "radiator" as const,
-				productReference: "1000",
-				length: unitValue(2500, millimetre),		
-				numOfRadiators: 1,
-			};
-
-			const wetDistributionSystemWithRadiatorEmitter: HeatEmittingData = {
-				...wetDistributionSystem,
-				emitters: [completeRadiator],
-			};
-
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [
-							{
-								data: wetDistributionSystemWithRadiatorEmitter,
-								complete: true,
-							},
-						],
-					},
-				},
-			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { heatEmitter: "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(true);
-		});
-
-		test("doesn't mark wet distribution system as complete when one of multiple emitters is incomplete", async () => {
-			const completeRadiator = {
-				id: "1234",
-				name: "Standard radiator",
-				typeOfHeatEmitter: "radiator" as const,
-				productReference: "1000",
-				length: unitValue(2500, millimetre),		
-				numOfRadiators: 1,
-			};
-		
-			const incompleteFanCoil = {
-				id: "5678",
-				name: "Fan Coil",
-				typeOfHeatEmitter: "fanCoil" as const,
-			};
-
-			const wetDistributionSystemWithEmitters: HeatEmittingData = {
-				...wetDistributionSystem,
-				emitters: [completeRadiator, incompleteFanCoil],
-			};
-
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [
-							{
-								data: wetDistributionSystemWithEmitters,
-								complete: false,
-							},
-						],
-					},
-				},
-			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { heatEmitter: "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
-		});
-
-		test("doesn't mark wet distribution system as complete when there are no emitters", async () => {
-			const wetDistributionSystemWithNoEmitters: HeatEmittingData = {
-				...wetDistributionSystem,
-				emitters: [],
-			};
-
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [
-							{
-								data: wetDistributionSystemWithNoEmitters,
-								complete: false,
-							},
-						],
-					},
-				},
-			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { heatEmitter: "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
-		});
-
-		test("shows an error in the gov error summary linking to the emitters section when an emitter is incomplete", async () => {
-			const incompleteRadiator = {
-				id: "1234",
-				name: "Standard radiator",
-				typeOfHeatEmitter: "radiator" as const,
-			};
-
-			const wetDistributionSystemWithRadiatorEmitter: HeatEmittingData = {
-				...wetDistributionSystem,
-				emitters: [incompleteRadiator],
-			};
-
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [
-							{
-								data: wetDistributionSystemWithRadiatorEmitter,
-								complete: false,
-							},
-						],
-					},
-				},
-			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { heatEmitter: "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			const errorSummary = await screen.findByTestId(
-				"heatEmitterErrorSummary",
-			);
-
-			expect(errorSummary.textContent).toContain(
-				"Complete all fields in the Emitters section before marking the heat emitters section as complete.",
-			);
-
-			const link = errorSummary.querySelector("a");
-
-			expect(link).not.toBeNull();
-			expect(link?.getAttribute("href")).toBe("#emittersSection");
-		});
-
-		test("shows all parent validation errors, incompatible energy source error and emitters error in error summary when incomplete/incompatible", async () => {
-			const wetDistributionSystemWithIncompleteEmitter: Partial<HeatEmittingData> = {
-				id: "1234",
-				name: "Wet Distribution System 1",
-				typeOfHeatEmitter: "wetDistributionSystem",
-				heatSource: "heat-pump-id",
-				ecoDesignControllerClass: "1",
-				designTempDiffAcrossEmitters: 10,
-				hasVariableFlowRate: false,
-				percentageRecirculated: 20,
-				emitters: [
-					{
-						id: "fan_coil",
-						name: "Fan Coil",
-						typeOfHeatEmitter: "fanCoil",
-						productReference: "1001",
-					},
-				],
-			};
-
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [
-							{
-								data: wetDistributionSystemWithIncompleteEmitter,
-								complete: false,
-							},
-						],
-					},
-				},
-				dwellingDetails: {
-					generalSpecifications: {
-						data: {
-							fuelType: ["electricity"],
+			test("doesn't mark wet distribution system as complete when an emitter is incomplete", async () => {
+				const incompleteRadiator = {
+					id: "1234",
+					name: "Standard radiator",
+					typeOfHeatEmitter: "radiator" as const,
+				};
+	
+				const wetDistributionSystemWithRadiatorEmitter: HeatEmittingData = {
+					...wetDistributionSystem,
+					emitters: [incompleteRadiator],
+				};
+	
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [
+								{
+									data: wetDistributionSystemWithRadiatorEmitter,
+									complete: false,
+								},
+							],
 						},
 					},
-				},
-			});
-
-			mockFetch.mockReturnValue({
-				data: ref(fanCoilProductWithFuelType),
-			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { heatEmitter: "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("saveEmitter_0"));
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			const errorSummary = await screen.findByTestId("heatEmitterErrorSummary");
-			expect(errorSummary.textContent).toContain("Design flow rate is required.");
-			expect(errorSummary.textContent).toContain("Design flow temperature is required.");
-			expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn't been added as an energy source for this dwelling.");
-			expect(errorSummary.textContent).toContain("Complete all fields in the Emitters section before marking the heat emitters section as complete.");
-
-			const emitterErrorLink = Array.from(errorSummary.querySelectorAll("a")).find((link) => link.textContent?.includes("Complete all fields in the Emitters section"));
-			expect(emitterErrorLink).not.toBeNull();
-			expect(emitterErrorLink?.getAttribute("href")).toBe("#emittersSection");
-		});
-
-		it("disables editing other emitters while an emitter is being edited", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [{
-							data: wetDistributionSystemWithEmitters,
-							complete: true,
-						}],
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
 					},
-				},
+				});
+	
+				await user.click(screen.getByTestId("saveAndComplete"));
+	
+				const system = store.spaceHeating.heatEmitters.data[0];
+	
+				expect(system?.complete).toBe(false);
 			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("emitter_edit_0"));
-
-			const emitter2Edit = screen.getByTestId("emitter_edit_1");
-
-			expect(emitter2Edit.getAttribute("aria-disabled")).toBe("true");
-		});
-
-		it("disables removing other emitters while an emitter is being edited", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [{
-							data: wetDistributionSystemWithEmitters,
-							complete: true,
-						}],
+	
+			test("marks wet distribution system as complete when all emitters are complete", async () => {
+				const completeRadiator = {
+					id: "1234",
+					name: "Standard radiator",
+					typeOfHeatEmitter: "radiator" as const,
+					productReference: "1000",
+					length: unitValue(2500, millimetre),		
+					numOfRadiators: 1,
+				};
+	
+				const wetDistributionSystemWithRadiatorEmitter: HeatEmittingData = {
+					...wetDistributionSystem,
+					emitters: [completeRadiator],
+				};
+	
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [
+								{
+									data: wetDistributionSystemWithRadiatorEmitter,
+									complete: true,
+								},
+							],
+						},
 					},
-				},
-			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("emitter_edit_0"));
-
-			const emitter2Remove = screen.getByTestId("emitter_remove_1");
-
-			expect(emitter2Remove.getAttribute("aria-disabled")).toBe("true");
-		});
-
-		it("keeps the current emitter open when editing another emitter is attempted", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [{
-							data: wetDistributionSystemWithEmitters,
-							complete: true,
-						}],
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
 					},
-				},
+				});
+	
+				await user.click(screen.getByTestId("saveAndComplete"));
+	
+				expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(true);
 			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("emitter_edit_0"));
-
-			await user.click(screen.getByTestId("emitter_edit_1"));
-
-			expect(screen.getByTestId("numOfRadiators_0")).toBeDefined();
-
-			expect(screen.queryByTestId("numOfFanCoils_1")).toBeNull();
-		});
-
-		it("does not remove another emitter while an emitter is being edited", async () => {
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [{
-							data: wetDistributionSystemWithEmitters,
-							complete: true,
-						}],
+	
+			test("doesn't mark wet distribution system as complete when one of multiple emitters is incomplete", async () => {
+				const completeRadiator = {
+					id: "1234",
+					name: "Standard radiator",
+					typeOfHeatEmitter: "radiator" as const,
+					productReference: "1000",
+					length: unitValue(2500, millimetre),		
+					numOfRadiators: 1,
+				};
+			
+				const incompleteFanCoil = {
+					id: "5678",
+					name: "Fan Coil",
+					typeOfHeatEmitter: "fanCoil" as const,
+				};
+	
+				const wetDistributionSystemWithEmitters: HeatEmittingData = {
+					...wetDistributionSystem,
+					emitters: [completeRadiator, incompleteFanCoil],
+				};
+	
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [
+								{
+									data: wetDistributionSystemWithEmitters,
+									complete: false,
+								},
+							],
+						},
 					},
-				},
-			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("emitter_edit_0"));
-
-			await user.click(screen.getByTestId("emitter_remove_1"));
-
-			const system = store.spaceHeating.heatEmitters.data[0]?.data as WetDistributionSystemData;
-
-			expect(system.emitters).toHaveLength(2);
-			expect(system.emitters[1]?.id).toBe("emitter2");
-		});
-
-		it("allows another emitter to be edited after saving the current emitter", async () => {
-			const wetDistributionSystemWithTwoEmitters: HeatEmittingData = {
-				...wetDistributionSystem,
-				emitters: [
-					{
-						id: "emitter1",
-						name: "Emitter 1",
-						typeOfHeatEmitter: "radiator",
-						numOfRadiators: 2,
-						productReference: "1000",
-						length: unitValue(2500, millimetre),
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
 					},
-					{
-						id: "emitter2",
-						name: "Emitter 2",
-						typeOfHeatEmitter: "fanCoil",
-						numOfFanCoils: 3,
-						productReference: "1001",
-					},
-				],
-			};
-
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [{
-							data: wetDistributionSystemWithTwoEmitters,
-							complete: true,
-						}],
-					},
-				},
+				});
+	
+				await user.click(screen.getByTestId("saveAndComplete"));
+	
+				expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
 			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("emitter_edit_0"));
-
-			await user.click(screen.getByTestId("saveEmitter_0"));
-
-			await user.click(screen.getByTestId("emitter_edit_1"));
-
-			expect(screen.getByTestId("emitter-editor-1")).toBeDefined();
-		});
-
-		it("allows another emitter to be edited after cancelling the current emitter", async () => {
-			const wetDistributionSystemWithTwoEmitters: HeatEmittingData = {
-				...wetDistributionSystem,
-				emitters: [
-					{
-						id: "emitter1",
-						name: "Emitter 1",
-						typeOfHeatEmitter: "radiator",
-						numOfRadiators: 2,
-						productReference: "1000",
+	
+			test("doesn't mark wet distribution system as complete when there are no emitters", async () => {
+				const wetDistributionSystemWithNoEmitters: HeatEmittingData = {
+					...wetDistributionSystem,
+					emitters: [],
+				};
+	
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [
+								{
+									data: wetDistributionSystemWithNoEmitters,
+									complete: false,
+								},
+							],
+						},
 					},
-					{
-						id: "emitter2",
-						name: "Emitter 2",
-						typeOfHeatEmitter: "fanCoil",
-						numOfFanCoils: 3,
-						productReference: "1001",
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
 					},
-				],
-			};
-
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [{
-							data: wetDistributionSystemWithTwoEmitters,
-							complete: true,
-						}],
+				});
+	
+				await user.click(screen.getByTestId("saveAndComplete"));
+	
+				expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
+			});
+	
+			test("shows an error in the gov error summary linking to the emitters section when an emitter is incomplete", async () => {
+				const incompleteRadiator = {
+					id: "1234",
+					name: "Standard radiator",
+					typeOfHeatEmitter: "radiator" as const,
+				};
+	
+				const wetDistributionSystemWithRadiatorEmitter: HeatEmittingData = {
+					...wetDistributionSystem,
+					emitters: [incompleteRadiator],
+				};
+	
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [
+								{
+									data: wetDistributionSystemWithRadiatorEmitter,
+									complete: false,
+								},
+							],
+						},
 					},
-				},
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
+					},
+				});
+	
+				await user.click(screen.getByTestId("saveAndComplete"));
+	
+				const errorSummary = await screen.findByTestId(
+					"heatEmitterErrorSummary",
+				);
+	
+				expect(errorSummary.textContent).toContain(
+					"Complete all fields in the Emitters section before marking the heat emitters section as complete.",
+				);
+	
+				const link = errorSummary.querySelector("a");
+	
+				expect(link).not.toBeNull();
+				expect(link?.getAttribute("href")).toBe("#emittersSection");
 			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("emitter_edit_0"));
-
-			expect(screen.getByTestId("emitter_cancel_0")).toBeDefined();
-
-			await user.click(screen.getByTestId("emitter_cancel_0"));
-
-			expect(screen.getByTestId("emitter_edit_0")).toBeDefined();
-			expect(screen.getByTestId("emitter_edit_1")).toBeDefined();
-
-			await user.click(screen.getByTestId("emitter_edit_1"));
-
-			expect(screen.getByTestId("numOfFanCoils_1")).toBeDefined();
-		});
-
-		it("automatically opens an incomplete emitter when returning to the page", async () => {
-			const incompleteRadiator = {
-				id: "1234",
-				name: "Radiator",
-				typeOfHeatEmitter: "radiator" as const,
-			};
-
-			const wetDistributionSystemWithIncompleteEmitter: HeatEmittingData = {
-				...wetDistributionSystem,
-				emitters: [incompleteRadiator],
-			};
-
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [
-							{
-								data: wetDistributionSystemWithIncompleteEmitter,
-								complete: false,
+	
+			test("shows all parent validation errors, incompatible energy source error and emitters error in error summary when incomplete/incompatible", async () => {
+				const wetDistributionSystemWithIncompleteEmitter: Partial<HeatEmittingData> = {
+					id: "1234",
+					name: "Wet Distribution System 1",
+					typeOfHeatEmitter: "wetDistributionSystem",
+					heatSource: "heat-pump-id",
+					ecoDesignControllerClass: "1",
+					designTempDiffAcrossEmitters: 10,
+					hasVariableFlowRate: false,
+					percentageRecirculated: 20,
+					emitters: [
+						{
+							id: "fan_coil",
+							name: "Fan Coil",
+							typeOfHeatEmitter: "fanCoil",
+							productReference: "1001",
+						},
+					],
+				};
+	
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [
+								{
+									data: wetDistributionSystemWithIncompleteEmitter,
+									complete: false,
+								},
+							],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity"],
 							},
-						],
+						},
 					},
-				},
+				});
+	
+				mockFetch.mockReturnValue({
+					data: ref(fanCoilProductWithFuelType),
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
+					},
+				});
+	
+				await user.click(screen.getByTestId("saveEmitter_0"));
+				await user.click(screen.getByTestId("saveAndComplete"));
+	
+				const errorSummary = await screen.findByTestId("heatEmitterErrorSummary");
+				expect(errorSummary.textContent).toContain("Design flow rate is required.");
+				expect(errorSummary.textContent).toContain("Design flow temperature is required.");
+				expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn't been added as an energy source for this dwelling.");
+				expect(errorSummary.textContent).toContain("Complete all fields in the Emitters section before marking the heat emitters section as complete.");
+	
+				const emitterErrorLink = Array.from(errorSummary.querySelectorAll("a")).find((link) => link.textContent?.includes("Complete all fields in the Emitters section"));
+				expect(emitterErrorLink).not.toBeNull();
+				expect(emitterErrorLink?.getAttribute("href")).toBe("#emittersSection");
 			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { heatEmitter: "0" },
-				},
-			});
-
-			expect(screen.getByTestId("emitter-editor-0")).toBeDefined();
-			expect(screen.getByTestId("typeOfHeatEmitter_0")).toBeDefined();
-		});
-
-		it("does not automatically open a complete emitter", async () => {
-			const completeRadiator = {
-				id: "1234",
-				name: "Radiator",
-				typeOfHeatEmitter: "radiator" as const,
-				numOfRadiators: 2,
-				productReference: "1000",
-				length: unitValue(2500, millimetre),
-			};
-
-			const wetDistributionSystemWithCompleteEmitter: HeatEmittingData = {
-				...wetDistributionSystem,
-				emitters: [completeRadiator],
-			};
-
-			store.$patch({
-				spaceHeating: {
-					heatEmitters: {
-						data: [
-							{
-								data: wetDistributionSystemWithCompleteEmitter,
+	
+			it("disables editing other emitters while an emitter is being edited", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{
+								data: wetDistributionSystemWithEmitters,
 								complete: true,
-							},
-						],
+							}],
+						},
 					},
-				},
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "0" },
+					},
+				});
+	
+				await user.click(screen.getByTestId("emitter_edit_0"));
+	
+				const emitter2Edit = screen.getByTestId("emitter_edit_1");
+	
+				expect(emitter2Edit.getAttribute("aria-disabled")).toBe("true");
 			});
-
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { heatEmitter: "0" },
-				},
+	
+			it("disables removing other emitters while an emitter is being edited", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{
+								data: wetDistributionSystemWithEmitters,
+								complete: true,
+							}],
+						},
+					},
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "0" },
+					},
+				});
+	
+				await user.click(screen.getByTestId("emitter_edit_0"));
+	
+				const emitter2Remove = screen.getByTestId("emitter_remove_1");
+	
+				expect(emitter2Remove.getAttribute("aria-disabled")).toBe("true");
 			});
-
-			expect(screen.queryByTestId("emitter-editor-0")).toBeNull();
-			expect(screen.getByTestId("emitter_edit_0")).toBeDefined();
+	
+			it("keeps the current emitter open when editing another emitter is attempted", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{
+								data: wetDistributionSystemWithEmitters,
+								complete: true,
+							}],
+						},
+					},
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "0" },
+					},
+				});
+	
+				await user.click(screen.getByTestId("emitter_edit_0"));
+	
+				await user.click(screen.getByTestId("emitter_edit_1"));
+	
+				expect(screen.getByTestId("numOfRadiators_0")).toBeDefined();
+	
+				expect(screen.queryByTestId("numOfFanCoils_1")).toBeNull();
+			});
+	
+			it("does not remove another emitter while an emitter is being edited", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{
+								data: wetDistributionSystemWithEmitters,
+								complete: true,
+							}],
+						},
+					},
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "0" },
+					},
+				});
+	
+				await user.click(screen.getByTestId("emitter_edit_0"));
+	
+				await user.click(screen.getByTestId("emitter_remove_1"));
+	
+				const system = store.spaceHeating.heatEmitters.data[0]?.data as WetDistributionSystemData;
+	
+				expect(system.emitters).toHaveLength(2);
+				expect(system.emitters[1]?.id).toBe("emitter2");
+			});
+	
+			it("allows another emitter to be edited after saving the current emitter", async () => {
+				const wetDistributionSystemWithTwoEmitters: HeatEmittingData = {
+					...wetDistributionSystem,
+					emitters: [
+						{
+							id: "emitter1",
+							name: "Emitter 1",
+							typeOfHeatEmitter: "radiator",
+							numOfRadiators: 2,
+							productReference: "1000",
+							length: unitValue(2500, millimetre),
+						},
+						{
+							id: "emitter2",
+							name: "Emitter 2",
+							typeOfHeatEmitter: "fanCoil",
+							numOfFanCoils: 3,
+							productReference: "1001",
+						},
+					],
+				};
+	
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{
+								data: wetDistributionSystemWithTwoEmitters,
+								complete: true,
+							}],
+						},
+					},
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "0" },
+					},
+				});
+	
+				await user.click(screen.getByTestId("emitter_edit_0"));
+	
+				await user.click(screen.getByTestId("saveEmitter_0"));
+	
+				await user.click(screen.getByTestId("emitter_edit_1"));
+	
+				expect(screen.getByTestId("emitter-editor-1")).toBeDefined();
+			});
+	
+			it("allows another emitter to be edited after cancelling the current emitter", async () => {
+				const wetDistributionSystemWithTwoEmitters: HeatEmittingData = {
+					...wetDistributionSystem,
+					emitters: [
+						{
+							id: "emitter1",
+							name: "Emitter 1",
+							typeOfHeatEmitter: "radiator",
+							numOfRadiators: 2,
+							productReference: "1000",
+						},
+						{
+							id: "emitter2",
+							name: "Emitter 2",
+							typeOfHeatEmitter: "fanCoil",
+							numOfFanCoils: 3,
+							productReference: "1001",
+						},
+					],
+				};
+	
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{
+								data: wetDistributionSystemWithTwoEmitters,
+								complete: true,
+							}],
+						},
+					},
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { "heatEmitter": "0" },
+					},
+				});
+	
+				await user.click(screen.getByTestId("emitter_edit_0"));
+	
+				expect(screen.getByTestId("emitter_cancel_0")).toBeDefined();
+	
+				await user.click(screen.getByTestId("emitter_cancel_0"));
+	
+				expect(screen.getByTestId("emitter_edit_0")).toBeDefined();
+				expect(screen.getByTestId("emitter_edit_1")).toBeDefined();
+	
+				await user.click(screen.getByTestId("emitter_edit_1"));
+	
+				expect(screen.getByTestId("numOfFanCoils_1")).toBeDefined();
+			});
+	
+			it("automatically opens an incomplete emitter when returning to the page", async () => {
+				const incompleteRadiator = {
+					id: "1234",
+					name: "Radiator",
+					typeOfHeatEmitter: "radiator" as const,
+				};
+	
+				const wetDistributionSystemWithIncompleteEmitter: HeatEmittingData = {
+					...wetDistributionSystem,
+					emitters: [incompleteRadiator],
+				};
+	
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [
+								{
+									data: wetDistributionSystemWithIncompleteEmitter,
+									complete: false,
+								},
+							],
+						},
+					},
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
+					},
+				});
+	
+				expect(screen.getByTestId("emitter-editor-0")).toBeDefined();
+				expect(screen.getByTestId("typeOfHeatEmitter_0")).toBeDefined();
+			});
+	
+			it("does not automatically open a complete emitter", async () => {
+				const completeRadiator = {
+					id: "1234",
+					name: "Radiator",
+					typeOfHeatEmitter: "radiator" as const,
+					numOfRadiators: 2,
+					productReference: "1000",
+					length: unitValue(2500, millimetre),
+				};
+	
+				const wetDistributionSystemWithCompleteEmitter: HeatEmittingData = {
+					...wetDistributionSystem,
+					emitters: [completeRadiator],
+				};
+	
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [
+								{
+									data: wetDistributionSystemWithCompleteEmitter,
+									complete: true,
+								},
+							],
+						},
+					},
+				});
+	
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
+					},
+				});
+	
+				expect(screen.queryByTestId("emitter-editor-0")).toBeNull();
+				expect(screen.getByTestId("emitter_edit_0")).toBeDefined();
+			});
 		});
 	});
 

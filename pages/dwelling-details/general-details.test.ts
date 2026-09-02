@@ -1,13 +1,18 @@
-import GeneralDetails from "./general-details.vue";
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
+import type { FanCoilProduct } from "~/pcdb/pcdb.types.js";
 import type { GeneralDetailsData } from "~/stores/ecaasStore.schema";
+import GeneralDetails from "./general-details.vue";
 
-const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport("navigateTo", () => {
-	return navigateToMock;
-});
+const { navigateToMock, mockFetch } = vi.hoisted(() => ({
+	navigateToMock: vi.fn(),
+	mockFetch: vi.fn(),
+}));
+mockNuxtImport("navigateTo", () => navigateToMock);
+mockNuxtImport("useFetch", () => mockFetch);
+
+vi.mock("uuid");
 
 const state: GeneralDetailsData = {
 	typeOfDwelling: "house",
@@ -43,6 +48,27 @@ const stateWithFlat: GeneralDetailsData = {
 	canExportToGrid: "no_generation",
 	isPartGCompliant: true,
 	partOActiveCoolingRequired: false,
+};
+const wetDistributionSystem: HeatEmittingData = {
+	id: "1234",
+	name: "Wet Distribution System 1",
+	typeOfHeatEmitter: "wetDistributionSystem",
+	heatSource: "heat-pump-id",
+	ecoDesignControllerClass: "1",
+	designFlowTemp: 55,
+	designTempDiffAcrossEmitters: 10,
+	hasVariableFlowRate: false,
+	designFlowRate: 100,
+	percentageRecirculated: 20,
+	emitters: [],
+};
+
+const fanCoilProductWithFuelType: Partial<FanCoilProduct> = {
+	id: "1001",
+	brandName: "Test",
+	modelName: "Fan Coil with Fuel Type",
+	technologyType: "FanCoils",
+	fuel: "LPG_bulk",
 };
 
 describe("General details", () => {
@@ -289,6 +315,53 @@ describe("General details", () => {
 				isTheFrontDoor: undefined, 
 				orientation: undefined,
 			});
+	});
+
+	test("wet distribution section with fan coil emitter is marked incomplete when fuel type needed for fan coil is removed from dwelling details", async () => {
+		const wetDistributionSystemWithFanCoilEmitter: HeatEmittingData = {
+			...wetDistributionSystem,
+			emitters: [
+				{
+					id: "emitter1",
+					name: "Fan Coil",
+					typeOfHeatEmitter: "fanCoil",
+					numOfFanCoils: 3,
+					productReference: "1001",
+				},
+			],
+		};
+	
+		store.$patch({
+			spaceHeating: {
+				heatEmitters: {
+					data: [
+						{
+							data: wetDistributionSystemWithFanCoilEmitter,
+							complete: true,
+						},
+					],
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["LPG_bulk", "electricity"],
+					},
+					complete: true,
+				},
+			},
+		});
+	
+		mockFetch.mockReturnValue({
+			data: ref(fanCoilProductWithFuelType),
+		});
+	
+		await renderSuspended(GeneralDetails);
+		await user.click(screen.getByTestId("fuelType_LPG_bulk"));
+	
+		await nextTick();
+	
+		expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
 	});
 });
 
