@@ -976,9 +976,13 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			openingToFrameRatio: 0.3,
-			midHeightOpenablePart1: 1,
-			maximumOpenableAreaPart1: 1,
-			freeAreaHeightPart1: 1,
+			openableParts: [
+				{
+					maximumOpenableArea: 1,
+					freeAreaHeight: 1,
+					midHeight: 1,
+				},
+			],
 			uValue: 7,
 			numberOpenableParts: "1",
 			curtainsOrBlinds: true,
@@ -1107,9 +1111,9 @@ describe("dwelling fabric mapper", () => {
 			frame_area_fraction: 1 - externalGlazedDoor.openingToFrameRatio,
 			window_part_list: [
 				{
-					free_area_height: externalGlazedDoor.freeAreaHeightPart1,
-					max_window_open_area: externalGlazedDoor.maximumOpenableAreaPart1,
-					mid_height: externalGlazedDoor.midHeightOpenablePart1,
+					free_area_height: externalGlazedDoor.openableParts[0]!.freeAreaHeight,
+					max_window_open_area: externalGlazedDoor.openableParts[0]!.maximumOpenableArea,
+					mid_height: externalGlazedDoor.openableParts[0]!.midHeight,
 				},
 			],
 			shading: [
@@ -1202,15 +1206,19 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			numberOpenableParts: "1",
-			freeAreaHeightPart1: 1,
+			openableParts: [
+				{
+					maximumOpenableArea: 1,
+					freeAreaHeight: 1,
+					midHeight: 1,
+				},
+			],
 			curtainsOrBlinds: true,
 			treatmentType: "blinds",
 			treatmentControls: "auto_motorised",
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,
-			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.3,
-			maximumOpenableAreaPart1: 1,
 			securityRisk: false,
 			hasShading: true,
 			depthOfReveal: 200,
@@ -1295,9 +1303,9 @@ describe("dwelling fabric mapper", () => {
 			security_risk: false,
 			window_part_list: [
 				{
-					free_area_height: window.freeAreaHeightPart1,
-					max_window_open_area: window.maximumOpenableAreaPart1,
-					mid_height: window.midHeightOpenablePart1,
+					free_area_height: window.openableParts[0]!.freeAreaHeight,
+					max_window_open_area: window.openableParts[0]!.maximumOpenableArea,
+					mid_height: window.openableParts[0]!.midHeight,
 				},
 			],
 			shading: [

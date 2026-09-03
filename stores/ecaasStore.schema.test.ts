@@ -18,10 +18,14 @@ describe("windowData Zod schema", () => {
 			treatmentType: "curtains",
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,
-			midHeightOpenablePart1: 1,
+			openableParts: [
+				{
+					midHeight: 1,
+					freeAreaHeight: 1,
+					maximumOpenableArea: 1,
+				},
+			],
 			openingToFrameRatio: 0.8,
-			freeAreaHeightPart1: 1,
-			maximumOpenableAreaPart1: 1,
 			hasShading: false,
 		};
 		expect(

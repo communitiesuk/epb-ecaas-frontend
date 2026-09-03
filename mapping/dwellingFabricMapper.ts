@@ -698,79 +698,11 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 }
 
 function mapWindowPartList(data: WindowData | ExternalGlazedDoorData): SchemaWindowPart[] {
-	// commenting out for replacement in ticket EC-1629
-
-	if (data.numberOpenableParts === "1") {
-		return [
-			{
-				max_window_open_area: data.maximumOpenableAreaPart1,
-				free_area_height: data.freeAreaHeightPart1,
-				mid_height: data.midHeightOpenablePart1,
-			},
-		];
-	}
-
-	if (data.numberOpenableParts === "2") {
-		return [
-			{
-				max_window_open_area: data.maximumOpenableAreaPart1,
-				free_area_height: data.freeAreaHeightPart1,
-				mid_height: data.midHeightOpenablePart1,
-			},
-			{
-				max_window_open_area: data.maximumOpenableAreaPart2,
-				free_area_height: data.freeAreaHeightPart2,
-				mid_height: data.midHeightOpenablePart2,
-			},
-		];
-	}
-
-	if (data.numberOpenableParts === "3") {
-		return [
-			{
-				max_window_open_area: data.maximumOpenableAreaPart1,
-				free_area_height: data.freeAreaHeightPart1,
-				mid_height: data.midHeightOpenablePart1,
-			},
-			{
-				max_window_open_area: data.maximumOpenableAreaPart2,
-				free_area_height: data.freeAreaHeightPart2,
-				mid_height: data.midHeightOpenablePart2,
-			},
-			{
-				max_window_open_area: data.maximumOpenableAreaPart3,
-				free_area_height: data.freeAreaHeightPart3,
-				mid_height: data.midHeightOpenablePart3,
-			},
-		];
-	}
-
-	if (data.numberOpenableParts === "4") {
-		return [
-			{
-				max_window_open_area: data.maximumOpenableAreaPart1,
-				free_area_height: data.freeAreaHeightPart1,
-				mid_height: data.midHeightOpenablePart1,
-			},
-			{
-				max_window_open_area: data.maximumOpenableAreaPart2,
-				free_area_height: data.freeAreaHeightPart2,
-				mid_height: data.midHeightOpenablePart2,
-			},
-			{
-				max_window_open_area: data.maximumOpenableAreaPart3,
-				free_area_height: data.freeAreaHeightPart3,
-				mid_height: data.midHeightOpenablePart3,
-			},
-			{
-				max_window_open_area: data.maximumOpenableAreaPart4,
-				free_area_height: data.freeAreaHeightPart4,
-				mid_height: data.midHeightOpenablePart4,
-			},
-		];
-	}
-
-	return [];
+	return data.openableParts?.map(x => ({
+		max_window_open_area: x.maximumOpenableArea,
+		free_area_height: x.freeAreaHeight,
+		mid_height: x.midHeight,
+	})) ?? [];
 }
 
 export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {

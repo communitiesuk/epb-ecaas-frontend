@@ -477,53 +477,34 @@ const baseExternalGlazedDoorDataZod = namedWithId.extend({
 	distanceFromGlassToStartOfReveal: revealDimensionZod.optional(),
 });
 
+const openablePartsZod = z.object({
+	freeAreaHeight: freeAreaHeightZod,
+	maximumOpenableArea: maxWindowOpenAreaZod,
+	midHeight: midHeightAirFlowPathZod,
+});
+
 const openablePartsFields = {
 	discriminator: "numberOpenableParts",
 	variants: [
 		z.object({
 			numberOpenableParts: z.literal("0"),
+			openableParts: z.optional(openablePartsZod.array().max(0)),
 		}),
 		z.object({
 			numberOpenableParts: z.literal("1"),
-			freeAreaHeightPart1: freeAreaHeightZod,
-			maximumOpenableAreaPart1: maxWindowOpenAreaZod,
-			midHeightOpenablePart1: midHeightAirFlowPathZod,
+			openableParts: openablePartsZod.array().max(1),
 		}),
 		z.object({
 			numberOpenableParts: z.literal("2"),
-			freeAreaHeightPart1: freeAreaHeightZod,
-			freeAreaHeightPart2: freeAreaHeightZod,
-			maximumOpenableAreaPart1: maxWindowOpenAreaZod,
-			maximumOpenableAreaPart2: maxWindowOpenAreaZod,
-			midHeightOpenablePart1: midHeightAirFlowPathZod,
-			midHeightOpenablePart2: midHeightAirFlowPathZod,
+			openableParts: openablePartsZod.array().max(2),
 		}),
 		z.object({
 			numberOpenableParts: z.literal("3"),
-			freeAreaHeightPart1: freeAreaHeightZod,
-			freeAreaHeightPart2: freeAreaHeightZod,
-			freeAreaHeightPart3: freeAreaHeightZod,
-			maximumOpenableAreaPart1: maxWindowOpenAreaZod,
-			maximumOpenableAreaPart2: maxWindowOpenAreaZod,
-			maximumOpenableAreaPart3: maxWindowOpenAreaZod,
-			midHeightOpenablePart1: midHeightAirFlowPathZod,
-			midHeightOpenablePart2: midHeightAirFlowPathZod,
-			midHeightOpenablePart3: midHeightAirFlowPathZod,
+			openableParts: openablePartsZod.array().max(3),
 		}),
 		z.object({
 			numberOpenableParts: z.literal("4"),
-			freeAreaHeightPart1: freeAreaHeightZod,
-			freeAreaHeightPart2: freeAreaHeightZod,
-			freeAreaHeightPart3: freeAreaHeightZod,
-			freeAreaHeightPart4: freeAreaHeightZod,
-			maximumOpenableAreaPart1: maxWindowOpenAreaZod,
-			maximumOpenableAreaPart2: maxWindowOpenAreaZod,
-			maximumOpenableAreaPart3: maxWindowOpenAreaZod,
-			maximumOpenableAreaPart4: maxWindowOpenAreaZod,
-			midHeightOpenablePart1: midHeightAirFlowPathZod,
-			midHeightOpenablePart2: midHeightAirFlowPathZod,
-			midHeightOpenablePart3: midHeightAirFlowPathZod,
-			midHeightOpenablePart4: midHeightAirFlowPathZod,
+			openableParts: openablePartsZod.array().max(4),
 		}),
 	] satisfies Tuple,
 };

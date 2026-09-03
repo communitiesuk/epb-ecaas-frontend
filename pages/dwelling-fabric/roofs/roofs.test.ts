@@ -137,9 +137,13 @@ describe("ceilings and roofs", () => {
 					solarTransmittance: 0.1,
 					elevationalHeight: 1,
 					openingToFrameRatio: 0.2,
-					midHeightOpenablePart1: 2,
-					freeAreaHeightPart1: 1,
-					maximumOpenableAreaPart1: 1,
+					openableParts: [
+						{
+							maximumOpenableArea: 1,
+							freeAreaHeight: 1,
+							midHeight: 2,
+						},
+					],
 					securityRisk: false,
 					uValue: 9,
 					numberOpenableParts: "1",

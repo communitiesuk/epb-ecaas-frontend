@@ -45,11 +45,15 @@ const window1: EcaasForm<WindowData> = {
 		securityRisk: true,
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
-		freeAreaHeightPart1: 1,
+		openableParts: [
+			{
+				freeAreaHeight: 1,
+				maximumOpenableArea: 1,
+				midHeight: 1,
+			},
+		],
 		openingToFrameRatio: 0.8,
 		numberOpenableParts: "1",
-		maximumOpenableAreaPart1: 1,
-		midHeightOpenablePart1: 1,
 		curtainsOrBlinds: true,
 		treatmentType: "blinds",
 		treatmentControls: "manual",
@@ -74,9 +78,9 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.type(screen.getByTestId("openingToFrameRatio"), "0.8");
 	await user.click(screen.getByTestId("securityRisk_yes"));
 	await user.click(screen.getByTestId("numberOpenableParts_1"));
-	await user.type(screen.getByTestId("freeAreaHeightPart1"), "1");
-	await user.type(screen.getByTestId("maximumOpenableAreaPart1"), "1");
-	await user.type(screen.getByTestId("midHeightOpenablePart1"), "1");
+	await user.type(screen.getByTestId("freeAreaHeight_0"), "1");
+	await user.type(screen.getByTestId("maximumOpenableArea_0"), "1");
+	await user.type(screen.getByTestId("midHeightOpenable_0"), "1");
 	await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
 	await user.click(screen.getByTestId("treatmentType_blinds"));
 	await user.click(screen.getByTestId("treatmentControls_manual"));
@@ -343,9 +347,9 @@ describe("window", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 			expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("1");
 			expect((await screen.findByTestId("numberOpenableParts_1")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("freeAreaHeightPart1")).value).toBe("1");
-			expect((await screen.findByTestId<HTMLInputElement>("maximumOpenableAreaPart1")).value).toBe("1");
-			expect((await screen.findByTestId<HTMLInputElement>("midHeightOpenablePart1")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("freeAreaHeight_0")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("maximumOpenableArea_0")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("midHeightOpenable_0")).value).toBe("1");
 			expect((await screen.findByTestId("treatmentType_blinds")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("treatmentControls_manual")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("thermalResistivityIncrease")).value).toBe("1");
@@ -438,18 +442,18 @@ describe("window", () => {
 			await (user.click(screen.getByTestId("saveAndComplete")));
 
 			expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
-			expect((await screen.findByTestId("maximumOpenableAreaPart1_error"))).toBeDefined();
-			expect((await screen.findByTestId("maximumOpenableAreaPart2_error"))).toBeDefined();
-			expect((await screen.findByTestId("maximumOpenableAreaPart3_error"))).toBeDefined();
-			expect((await screen.findByTestId("maximumOpenableAreaPart4_error"))).toBeDefined();
-			expect((await screen.findByTestId("freeAreaHeightPart1_error"))).toBeDefined();
-			expect((await screen.findByTestId("freeAreaHeightPart2_error"))).toBeDefined();
-			expect((await screen.findByTestId("freeAreaHeightPart3_error"))).toBeDefined();
-			expect((await screen.findByTestId("freeAreaHeightPart4_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeightOpenablePart2_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeightOpenablePart3_error"))).toBeDefined();
-			expect((await screen.findByTestId("midHeightOpenablePart4_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_0_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_1_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_2_error"))).toBeDefined();
+			expect((await screen.findByTestId("maximumOpenableArea_3_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeight_0_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeight_1_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeight_2_error"))).toBeDefined();
+			expect((await screen.findByTestId("freeAreaHeight_3_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenable_0_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenable_1_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenable_2_error"))).toBeDefined();
+			expect((await screen.findByTestId("midHeightOpenable_3_error"))).toBeDefined();
 		});
 
 		test("does not require the mid height of more parts than have been selected", async () => {
@@ -458,10 +462,10 @@ describe("window", () => {
 			await user.click(screen.getByTestId("numberOpenableParts_1"));
 			await (user.click(screen.getByTestId("saveAndComplete")));
 
-			expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
-			expect((screen.queryByTestId("midHeightOpenablePart2_error"))).toBeNull();
-			expect((screen.queryByTestId("midHeightOpenablePart3_error"))).toBeNull();
-			expect((screen.queryByTestId("midHeightOpenablePart4_error"))).toBeNull();
+			expect((await screen.findByTestId("midHeightOpenable_0_error"))).toBeDefined();
+			expect((screen.queryByTestId("midHeightOpenable_1_error"))).toBeNull();
+			expect((screen.queryByTestId("midHeightOpenable_2_error"))).toBeNull();
+			expect((screen.queryByTestId("midHeightOpenable_3_error"))).toBeNull();
 		});
 
 		test("displays guidance link to window shading guidance page", async () => {
