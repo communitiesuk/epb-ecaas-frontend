@@ -5,11 +5,13 @@ import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { tempDiffEmitDsgnWetDistributionZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
-defineProps<{
+const store = useEcaasStore();
+
+const props = defineProps<{
 	model: WetDistributionSystemData;
 	index: number;
-	onIncompatibleEnergySource?: (value: boolean, fuel?: string) => void;
-}>();
+	autoOpenIndex?: number | null;
+	onIncompatibleEnergySource?: (value: boolean, fuel?: string, emitterIndex?: number) => void; }>();
 
 const emit = defineEmits<{
 	(e: "emitters-validity-change", isValid: boolean): void;
@@ -22,6 +24,55 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 		productBrandNames.value.push(product.brandName);
 	}
 }
+
+const dwellingFuelTypes = computed(() => store.dwellingDetails.generalSpecifications.data?.fuelType ?? []);
+
+const emitters = computed(() => {
+	const heatEmitter = store.spaceHeating.heatEmitters.data[props.index];
+	if (heatEmitter && "emitters" in heatEmitter.data) {
+		return (heatEmitter.data as { emitters: WetDistributionEmitterData[] }).emitters;
+	}
+	return [];
+});
+
+const incompatibleEmitterFuel = ref<string | null>(null);
+
+async function validateEmittersFuel() {
+	incompatibleEmitterFuel.value = null;
+
+	for (let i = 0; i < emitters.value.length; i++) {
+		const emitter = emitters.value[i];
+		if (!emitter) continue;
+		if (emitter.typeOfHeatEmitter === "fanCoil" && emitter.productReference) {
+			const { data: product } = await useFetch<AnyPcdbProduct>(
+				`/api/products/${encodeURIComponent(emitter.productReference)}`,
+			);
+
+			if (
+				product.value &&
+                "fuel" in product.value &&
+                product.value.fuel &&
+                product.value.fuel !== "electricity" &&
+                !dwellingFuelTypes.value.includes(product.value.fuel)
+			) {
+				incompatibleEmitterFuel.value = displayFuelType(product.value.fuel);
+				props.onIncompatibleEnergySource?.(true, incompatibleEmitterFuel.value, i);
+				return;
+			}
+		}
+	}
+
+	props.onIncompatibleEnergySource?.(false);
+}
+
+watch(
+	[emitters, dwellingFuelTypes],
+	() => {
+		validateEmittersFuel();
+	},
+	{ immediate: true, deep: true },
+);
+
 </script>
 
 <template>
@@ -40,6 +91,7 @@ function handleProductLoaded(product: AnyPcdbProduct) {
 	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">	
 	<WetDistributionEmittersSection
 		:index="index"
+		:auto-open-index="autoOpenIndex"
 		:on-incompatible-energy-source="onIncompatibleEnergySource"
 		@product-loaded="handleProductLoaded"
 		@validity-change="emit('emitters-validity-change', $event)"

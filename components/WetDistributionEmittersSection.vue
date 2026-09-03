@@ -9,7 +9,8 @@ import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const props = defineProps<{
 	index: number;
-	onIncompatibleEnergySource?: (value: boolean, fuel?: string) => void;
+	autoOpenIndex?: number | null;
+	onIncompatibleEnergySource?: (value: boolean, fuel?: string, emitterIndex?: number) => void;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
@@ -60,6 +61,18 @@ watch(
 	{ immediate: true },
 );
 
+watch(
+	() => props.autoOpenIndex,
+	(newIndex) => {
+		if (newIndex != null) {
+			if (newIndex !== editIndex.value) {
+				openEmitter(newIndex);
+			}
+			showIncompatibleEnergySourceError.value = true;
+		}
+	},
+	{ immediate: true },
+);
 
 const formModel = ref<Record<string, unknown>>({});
 const editIndex = ref<number | null>(null);

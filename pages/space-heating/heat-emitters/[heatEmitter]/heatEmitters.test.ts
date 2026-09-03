@@ -1491,6 +1491,45 @@ describe("Heat emitters", () => {
 				expect(screen.queryByTestId("emitter-editor-0")).toBeNull();
 				expect(screen.getByTestId("emitter_edit_0")).toBeDefined();
 			});
+
+			test("prevents saving and completing when a closed emitter card has an incompatible energy source", async () => {
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{
+								data: wetDistributionSystemWithFanCoilEmitter,
+								complete: false,
+							}],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity"],
+							},
+						},
+					},
+				});
+
+				mockFetch.mockReturnValue({
+					data: ref(fanCoilProductWithFuelType),
+				});
+
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
+
+				const errorSummary = await screen.findByTestId("heatEmitterErrorSummary");
+				expect(errorSummary.textContent).toContain(
+					"This product uses LPG (Liquid petroleum gas) - bulk which hasn't been added as an energy source for this dwelling.",
+				);
+			});
 		});
 	});
 
@@ -1593,7 +1632,7 @@ describe("Heat emitters", () => {
 			const errorSummaryLink = within(errorSummary).getByRole("link", {
 				name: /This product uses Mains gas/,
 			});
-			expect(errorSummaryLink.getAttribute("href")).toBe("#incompatibleEnergySource");
+			expect(errorSummaryLink.getAttribute("href")).toBe("#emittersSection");
 		});
 		
 		test("shows both validation errors and incompatible energy source error", async () => {

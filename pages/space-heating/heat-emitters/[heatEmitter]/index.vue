@@ -30,6 +30,7 @@ const id = heatEmitterData?.data?.id ?? uuidv4();
 const incompatibleEnergySource = ref(false);
 const incompatibleEnergySourceFuel = ref<string | undefined>();
 const emittersValid = ref(false);
+const brokenEmitterIndex = ref<number | null>(null);
 
 function resetAllHeatEmitterRankings(state: EcaasState) {
 	state.spaceHeating.heatEmitters.data.forEach((heatEmitter) => {
@@ -48,15 +49,13 @@ function markHeatingControlsAsInProgress(state: EcaasState) {
 const saveForm = () => {
 	clearErrors();
 
-	addEmittersError();
-
-	if (!wetDistributionEmittersValid.value) {
-		window.scrollTo(0, 0);
-		return;
-	}
-
 	if (incompatibleEnergySource.value) {
 		addIncompatibleEnergySourceError();
+	}
+
+	addEmittersError();
+
+	if (!wetDistributionEmittersValid.value || incompatibleEnergySource.value) {
 		window.scrollTo(0, 0);
 		return;
 	}
@@ -133,8 +132,8 @@ const addIncompatibleEnergySourceError = () => {
 	if (!incompatibleEnergySource.value) return;
 
 	addError({
-		id: "incompatibleEnergySource",
-		text: `This product uses ${incompatibleEnergySourceFuel.value} which hasn't been added as an energy source for this dwelling. To change this go to General details.`,		
+		id: "emittersSection",
+		text: `This product uses ${incompatibleEnergySourceFuel.value} which hasn't been added as an energy source for this dwelling. To change this go to General details.`,       
 	});
 };
 
@@ -163,9 +162,15 @@ const handleSubmitInvalid = (node: FormKitNode) => {
 	window.scrollTo(0, 0);
 };
 
-function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
+function handleIncompatibleEnergySource(value: boolean, fuel?: string, emitterIndex?: number) {
 	incompatibleEnergySource.value = value;
 	incompatibleEnergySourceFuel.value = fuel;
+    
+	if (value && emitterIndex !== undefined) {
+		brokenEmitterIndex.value = emitterIndex;
+	} else if (!value) {
+		brokenEmitterIndex.value = null;
+	}
 }
 
 </script>
@@ -195,6 +200,7 @@ function handleIncompatibleEnergySource(value: boolean, fuel?: string) {
 				v-if="model?.typeOfHeatEmitter === 'wetDistributionSystem'"
 				:model="(model as WetDistributionSystemData)"
 				:index="index"
+				:auto-open-index="brokenEmitterIndex"
 				:on-incompatible-energy-source="handleIncompatibleEnergySource"
 				@emitters-validity-change="emittersValid = $event"
 			/>
