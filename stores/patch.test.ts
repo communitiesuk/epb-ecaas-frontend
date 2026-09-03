@@ -393,4 +393,89 @@ describe("ECaaS store patch", () => {
 		expect(dwellingSpaceRoofs.data.length).toBe(1);
 		expect(dwellingSpaceFloors.dwellingSpaceInternalFloor.complete).toBe(false);
 	});
+
+	it("patches window openable parts data", () => {
+		const legacyWindows: Record<string, unknown> = {
+			dwellingFabric: {
+				...state.dwellingFabric,
+				dwellingSpaceWindows: {
+					...state.dwellingFabric.dwellingSpaceWindows,
+					data: [
+						{
+							data: {
+								"midHeightOpenablePart1": 1,
+								"midHeightOpenablePart2": 2,
+								"midHeightOpenablePart3": 3,
+								"midHeightOpenablePart4": 4,
+							},
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+		};
+
+		const patchedState = patchState({
+			...state,
+			...legacyWindows,
+		}) as EcaasState;
+
+		const { dwellingSpaceWindows } = patchedState.dwellingFabric;
+		const { openableParts } = dwellingSpaceWindows.data[0]!.data;
+
+		expect(openableParts![0]!.midHeight).toBe(1);
+		expect(openableParts![1]!.midHeight).toBe(2);
+		expect(openableParts![2]!.midHeight).toBe(3);
+		expect(openableParts![3]!.midHeight).toBe(4);
+
+		expect("midHeightOpenablePart1" in dwellingSpaceWindows.data[0]!.data).toBe(false);
+		expect("midHeightOpenablePart2" in dwellingSpaceWindows.data[0]!.data).toBe(false);
+		expect("midHeightOpenablePart3" in dwellingSpaceWindows.data[0]!.data).toBe(false);
+		expect("midHeightOpenablePart4" in dwellingSpaceWindows.data[0]!.data).toBe(false);
+	});
+
+	it("patches external glazed door openable parts data", () => {
+		const legacyExternalGlazedDoors: Record<string, unknown> = {
+			dwellingFabric: {
+				...state.dwellingFabric,
+				dwellingSpaceDoors: {
+					...state.dwellingFabric.dwellingSpaceDoors,
+					dwellingSpaceExternalGlazedDoor: {
+						...state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor,
+						data: [
+							{
+								data: {
+									"midHeightOpenablePart1": 1,
+									"midHeightOpenablePart2": 2,
+									"midHeightOpenablePart3": 3,
+									"midHeightOpenablePart4": 4,
+								},
+								complete: true,
+							},
+						],
+						complete: true,
+					},
+				},
+			},
+		};
+
+		const patchedState = patchState({
+			...state,
+			...legacyExternalGlazedDoors,
+		}) as EcaasState;
+
+		const { dwellingSpaceExternalGlazedDoor } = patchedState.dwellingFabric.dwellingSpaceDoors;
+		const { openableParts } = dwellingSpaceExternalGlazedDoor.data[0]!.data;
+
+		expect(openableParts![0]!.midHeight).toBe(1);
+		expect(openableParts![1]!.midHeight).toBe(2);
+		expect(openableParts![2]!.midHeight).toBe(3);
+		expect(openableParts![3]!.midHeight).toBe(4);
+
+		expect("midHeightOpenablePart1" in dwellingSpaceExternalGlazedDoor.data[0]!.data).toBe(false);
+		expect("midHeightOpenablePart2" in dwellingSpaceExternalGlazedDoor.data[0]!.data).toBe(false);
+		expect("midHeightOpenablePart3" in dwellingSpaceExternalGlazedDoor.data[0]!.data).toBe(false);
+		expect("midHeightOpenablePart4" in dwellingSpaceExternalGlazedDoor.data[0]!.data).toBe(false);
+	});
 });

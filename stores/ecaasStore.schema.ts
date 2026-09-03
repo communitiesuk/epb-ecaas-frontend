@@ -483,6 +483,8 @@ const openablePartsZod = z.object({
 	midHeight: midHeightAirFlowPathZod,
 });
 
+export type OpenablePartData = z.infer<typeof openablePartsZod>;
+
 const openablePartsFields = {
 	discriminator: "numberOpenableParts",
 	variants: [

@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { millimetre } from "~/utils/units/length";
+import type { EcaasFormList, ExternalGlazedDoorData, OpenablePartData, WindowData } from "./ecaasStore.schema";
 
 /**
  * Copy deprecated packageProductId value to new packageProductIds array
@@ -177,6 +178,44 @@ function patchRoofs(state: Record<string, unknown>) {
 	}
 }
 
+function patchWindows(state: Record<string, unknown>) {
+	const storeState = state as EcaasState;
+	const windows = storeState.dwellingFabric.dwellingSpaceWindows;
+
+	patchOpenableParts(windows);
+}
+
+function patchExternalGlazedDoors(state: Record<string, unknown>) {
+	const storeState = state as EcaasState;
+	const doors = storeState.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor;
+
+	patchOpenableParts(doors);
+}
+
+function patchOpenableParts(section: EcaasFormList<WindowData> | EcaasFormList<ExternalGlazedDoorData>) {
+	section.data.forEach(element => {
+		element.data.openableParts ??= [];
+
+		for (let part = 1; part <= 4; part++) {
+			const key = `midHeightOpenablePart${part}`;
+
+			if (key in element.data) {
+				const dataKey = key as keyof typeof element.data;
+
+				element.data.openableParts.push({
+					midHeight: Number(element.data[dataKey]),
+				} as OpenablePartData);
+
+				element.complete = false;
+				section.complete = false;
+
+				// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+				delete element.data[dataKey];
+			}
+		}
+	});
+}
+
 /**
  * Patch state from deprecated properties
  * @param state 
@@ -192,6 +231,8 @@ export function patchState(state: Record<string, unknown>): Record<string, unkno
 	patchRadiators(state);
 	patchFloorIds(state);
 	patchRoofs(state);
+	patchWindows(state);
+	patchExternalGlazedDoors(state);
 
 	return state;
 }
