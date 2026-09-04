@@ -97,7 +97,7 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zon
 }
 
 export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
-	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor, dwellingSpaceFloorAboveUnheatedBasement, dwellingSpaceFloorOfHeatedBasement } = state.dwellingFabric.dwellingSpaceFloors;
+	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor, dwellingSpaceFloorAboveUnheatedBasement, dwellingSpaceFloorOfHeatedBasement, dwellingSpacePartyFloor } = state.dwellingFabric.dwellingSpaceFloors;
 	const { dwellingSpaceLinearThermalBridges } = state.dwellingFabric.dwellingSpaceThermalBridging;
 	const floorSuffix = "floor";
 
@@ -352,6 +352,22 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 		};
 	}) || [];
 
+	const partyFloorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpacePartyFloor?.map(x => {
+		const nameWithSuffix = suffixName(x.name, floorSuffix);
+
+		return {
+			[nameWithSuffix]: {
+				type: "BuildingElementAdjacentConditionedSpace",
+				pitch: x.pitch,
+				area: x.surfaceArea,
+				areal_heat_capacity: x.arealHeatCapacity,
+				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
+				u_value: x.uValue,
+				is_adjacent_space_within_dwelling: false,
+			},
+		};
+	}) || [];
+
 	return {
 		Zone: {
 			[defaultZoneName]: {
@@ -362,6 +378,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 					...exposedFloorData,
 					...floorAboveUnheatedBasementData,
 					...floorOfHeatedBasementData,
+					...partyFloorData,
 				),
 			} as Partial<SchemaZoneInput>,
 		},

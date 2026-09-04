@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
-import formStatus from "~/constants/formStatus";
-import type { GovTagProps } from "~/common.types";
-import type { Page } from "~/data/pages/pages.types";
-import type { EmptyObject } from "type-fest";
-import pagesData from "~/data/pages/pages";
 import { objectFromEntries } from "ts-extras";
+import type { EmptyObject } from "type-fest";
+import type { GovTagProps } from "~/common.types";
+import formStatus from "~/constants/formStatus";
+import pagesData from "~/data/pages/pages";
+import type { Page } from "~/data/pages/pages.types";
 import { patchState } from "./patch";
 
 type KeysToDeleteCascade = "associatedItemId" | "taggedItem" | "heatSource" | "dhwHeatSourceId" | "waterStorage" | "boosterHeatPumpId";
@@ -39,6 +39,7 @@ export function getInitialState(): EcaasState {
 				dwellingSpaceExposedFloor: { data: [] },
 				dwellingSpaceFloorAboveUnheatedBasement: { data: [] },
 				dwellingSpaceFloorOfHeatedBasement: { data: [] },
+				dwellingSpacePartyFloor: { data: [] },
 			},
 			dwellingSpaceWalls: {
 				dwellingSpaceExternalWall: { data: [] },

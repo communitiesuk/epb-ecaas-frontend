@@ -1,6 +1,6 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
-import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import { createPinia, setActivePinia } from "pinia";
 import formStatus from "~/constants/formStatus";
 import pagesData from "~/data/pages/pages";
@@ -111,6 +111,7 @@ describe("Ecaas Store", () => {
 					dwellingSpaceGroundFloor: { complete: true },
 					dwellingSpaceFloorAboveUnheatedBasement: { complete: true },
 					dwellingSpaceFloorOfHeatedBasement: { complete: true },
+					dwellingSpacePartyFloor: { complete: true },
 				},
 				dwellingSpaceWalls: {
 					dwellingSpaceExternalWall: { complete: true },
@@ -197,6 +198,9 @@ describe("Ecaas Store", () => {
 						complete: true,
 					},
 					dwellingSpaceFloorOfHeatedBasement: {
+						complete: true,
+					},
+					dwellingSpacePartyFloor: {
 						complete: true,
 					},
 				},

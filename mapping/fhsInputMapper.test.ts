@@ -1235,6 +1235,9 @@ describe("FHS input mapper", () => {
 				dwellingSpaceFloorOfHeatedBasement: {
 					...baseForm,
 				},
+				dwellingSpacePartyFloor: {
+					...baseForm,
+				},
 			},
 			dwellingSpaceWalls: {
 				dwellingSpaceExternalWall: {
@@ -1849,6 +1852,10 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 				dwellingSpaceFloorOfHeatedBasement: {
+					...baseForm,
+					data: [],
+				},
+				dwellingSpacePartyFloor: {
 					...baseForm,
 					data: [],
 				},

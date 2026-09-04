@@ -114,6 +114,20 @@ const dwellingFabricPages = [
 		parentId: "dwellingSpaceFloors",
 	},
 	{
+		id: "dwellingSpacePartyFloor",
+		title: "Party floors",
+		url: "/dwelling-fabric/floors-and-ceilings/party/:floor",
+		type: "task",
+		parentId: "dwellingSpaceFloors",
+	},
+	{
+		id: "dwellingSpacePartyFloorCreate",
+		title: "Party floors",
+		url: "/dwelling-fabric/floors-and-ceilings/party/create",
+		type: "task",
+		parentId: "dwellingSpaceFloors",
+	},
+	{
 		id: "dwellingSpaceWalls",
 		title: "Walls",
 		url: "/dwelling-fabric/walls",

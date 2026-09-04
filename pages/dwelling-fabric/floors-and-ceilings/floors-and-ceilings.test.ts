@@ -1,11 +1,11 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import userEvent from "@testing-library/user-event";
-import Floors from "./index.vue";
-import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
-import type { FloorOfHeatedBasementData } from "~/stores/ecaasStore.schema";
+import type { FloorOfHeatedBasementData, PartyFloorData } from "~/stores/ecaasStore.schema";
 import { metre, millimetre } from "~/utils/units/length";
+import Floors from "./index.vue";
 
 describe("floors", () => {
 	const store = useEcaasStore();
@@ -218,6 +218,39 @@ describe("floors", () => {
 		massDistributionClass: "M",
 		depthOfBasementFloor: 2,
 		thicknessOfWalls: unitValue(0.25, millimetre),
+	};
+
+	const party1: PartyFloorData = {
+		id: "a567102f-1871-4178-994f-95d8bb91b29c",
+		name: "Party floor 1",
+		surfaceArea: 5,
+		arealHeatCapacity: "Very light",
+		massDistributionClass: "I",
+		uValue: 1,
+		pitchOption: "0",
+		pitch: 0,
+	};
+
+	const party2: PartyFloorData = {
+		id: "7a85bd40-d063-42dc-8452-e74621d23095",
+		name: "Party floor 2",
+		surfaceArea: 5,
+		arealHeatCapacity: "Very light",
+		massDistributionClass: "I",
+		uValue: 1,
+		pitchOption: "0",
+		pitch: 0,
+	};
+
+	const party3: PartyFloorData = {
+		id: "0ed8380b-d397-4552-b82e-85963eceb805",
+		name: "Party floor 3",
+		surfaceArea: 5,
+		arealHeatCapacity: "Very light",
+		massDistributionClass: "I",
+		uValue: 1,
+		pitchOption: "0",
+		pitch: 0,
 	};
 
 	afterEach(() => {
@@ -728,6 +761,103 @@ describe("floors", () => {
 
 			// Assert
 			expect(screen.getByTestId("floorOfHeatedBasement_status_0").textContent).toBe(
+				formStatus.complete.text,
+			);
+		});
+	});
+
+	describe("party floors / ceilings", () => {
+		test("correct floor is removed when its remove link is clicked", async () => {
+			// Arrange
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpacePartyFloor: {
+							data: [
+								{ data: party1 },
+								{ data: party2 },
+								{ data: party3 },
+							],
+						},
+					},
+				},
+			});
+			await renderSuspended(Floors);
+
+			// Act
+			await user.click(screen.getByTestId("party_remove_1"));
+
+			// Assert
+			const partyFloors = screen.getByTestId("party_items");
+
+			expect(within(partyFloors).getByText("Party floor 1")).toBeDefined();
+			expect(within(partyFloors).getByText("Party floor 3")).toBeDefined();
+		});
+
+		test("correct floor is duplicated when its duplicate link is clicked", async () => {
+			// Arrange
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpacePartyFloor: {
+							data: [{ data: party1 }, { data: party2 }],
+						},
+					},
+				},
+			});
+			await renderSuspended(Floors);
+
+			// Act
+			await userEvent.click(screen.getByTestId("party_duplicate_0"));
+			await userEvent.click(screen.getByTestId("party_duplicate_0"));
+			await userEvent.click(screen.getByTestId("party_duplicate_2"));
+
+			// Assert
+			expect(screen.queryAllByTestId("party_item").length).toBe(5);
+			expect(screen.getByText("Party floor 1")).toBeDefined();
+			expect(screen.getByText("Party floor 1 (1)")).toBeDefined();
+			expect(screen.getByText("Party floor 1 (2)")).toBeDefined();
+			expect(screen.getByText("Party floor 1 (1) (1)")).toBeDefined();
+		});
+
+		test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
+			// Arrange
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpacePartyFloor: {
+							data: [{ data: party1 }],
+						},
+					},
+				},
+			});
+
+			// Act
+			await renderSuspended(Floors);
+
+			// Assert
+			expect(screen.getByTestId("party_status_0").textContent).toBe(
+				formStatus.inProgress.text,
+			);
+		});
+
+		test("a complete indicator is shown when an entry is marked as complete", async () => {
+			// Arrange
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpacePartyFloor: {
+							data: [{ data: party1, complete: true }],
+						},
+					},
+				},
+			});
+
+			// Act
+			await renderSuspended(Floors);
+
+			// Assert
+			expect(screen.getByTestId("party_status_0").textContent).toBe(
 				formStatus.complete.text,
 			);
 		});

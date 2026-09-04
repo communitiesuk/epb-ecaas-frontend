@@ -171,6 +171,20 @@ const floorsData: FloorsData = {
 			},
 		}],
 	},
+	dwellingSpacePartyFloor: {
+		data: [{
+			data: {
+				id: "1a997f84-d070-4835-a74b-ef0135b44a90",
+				name: "Party floor 1",
+				pitchOption: "0",
+				pitch: 0,
+				surfaceArea: 45,
+				arealHeatCapacity: "Medium",
+				massDistributionClass: "I",
+				uValue: 0.25,
+			},
+		}],
+	},
 };
 
 const externalWallId = "47689878-2f16-414f-92c1-64b5cee844f6";
@@ -541,6 +555,7 @@ describe("Dwelling space fabric summary", () => {
 			expect(screen.getByRole("link", { name: "Exposed floors" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Floors above an unheated basement" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Floors of a heated basement" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Party floors / ceilings" })).not.toBeNull();
 		});
 	});
 
@@ -750,6 +765,33 @@ describe("Dwelling space fabric summary", () => {
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-dwellingSpaceFloorOfHeatedBasement-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("should display the correcy data for the party floors / ceilings section", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpacePartyFloor: floorsData.dwellingSpacePartyFloor,
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "Party floor 1",
+			"Pitch": `0 ${degrees.suffix}`,
+			"Net surface area": `45 ${metresSquare.suffix}`,
+			"Areal heat capacity": "Medium",
+			"Mass distribution class": "Internal",
+			"U-value": `0.25 ${wattsPerSquareMeterKelvin.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-dwellingSpacePartyFloor-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 		}

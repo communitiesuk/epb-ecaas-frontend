@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import formStatus from "~/constants/formStatus";
 import { v4 as uuidv4 } from "uuid";
+import formStatus from "~/constants/formStatus";
 import { page as pages } from "~/data/pages/pages";
 
 const title = "Floor and ceiling elements";
@@ -71,6 +71,7 @@ function handleComplete() {
 				dwellingSpaceInternalFloor: { complete: true },
 				dwellingSpaceFloorAboveUnheatedBasement: { complete: true },
 				dwellingSpaceFloorOfHeatedBasement: { complete: true },
+				dwellingSpacePartyFloor: { complete: true },
 			},
 		},
 	});
@@ -159,6 +160,18 @@ function hasIncompleteEntries() {
 		@remove="(index: number) => handleRemove('dwellingSpaceFloorOfHeatedBasement', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceFloorOfHeatedBasement', index)"
 	/>
+	<CustomList
+		id="party"
+		title="Party floors / ceilings"
+		:form-url="`${page.url}/party`"
+		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpacePartyFloor.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
+		@remove="(index: number) => handleRemove('dwellingSpacePartyFloor', index)"
+		@duplicate="(index: number) => handleDuplicate('dwellingSpacePartyFloor', index)"
+	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton :href="pages('dwellingFabric').url" secondary>
 			Return to dwelling fabric
@@ -167,6 +180,5 @@ function hasIncompleteEntries() {
 			View summary
 		</GovButton>
 		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
-
 	</div>
 </template>

@@ -5,6 +5,7 @@ import type {
 	EcaasForm,
 	ExternalUnglazedDoorData,
 	LinearThermalBridgeData,
+	PartyFloorData,
 	PartyWallData,
 } from "~/stores/ecaasStore.schema";
 import { asMetres, centimetre, metre, millimetre } from "~/utils/units/length";
@@ -252,6 +253,16 @@ describe("dwelling fabric mapper", () => {
 			depthOfBasementFloor: 1,
 			thicknessOfWalls: unitValue(20, millimetre),
 		};
+		const partyFloor: PartyFloorData = {
+			id: "0ed8380b-d397-4552-b82e-85963eceb805",
+			name: "Party floor 1",
+			pitchOption: "0",
+			pitch: 0,
+			surfaceArea: 5,
+			arealHeatCapacity: "Very light",
+			massDistributionClass: "I",
+			uValue: 1,
+		};
 		const wallOfHeatedBasement: WallOfHeatedBasementData = {
 			id: "heated-basement-wall-id",
 			name: "Wall of heated basement 1",
@@ -307,6 +318,7 @@ describe("dwelling fabric mapper", () => {
 					dwellingSpaceExposedFloor: { ...baseForm, data: [{ ...baseForm, data: exposedFloor }] },
 					dwellingSpaceFloorAboveUnheatedBasement: { ...baseForm, data: [{ ...baseForm, data: floorAboveUnheatedBasement }] },
 					dwellingSpaceFloorOfHeatedBasement: { ...baseForm, data: [{ ...baseForm, data: floorAboveHeatedBasement }] },
+					dwellingSpacePartyFloor: { ...baseForm, data: [{ ...baseForm, data: partyFloor }] },
 				},
 				dwellingSpaceWalls: {
 					dwellingSpaceWallOfHeatedBasement: { ...baseForm, data: [{ ...baseForm, data: wallOfHeatedBasement }] },
@@ -354,6 +366,7 @@ describe("dwelling fabric mapper", () => {
 		const exposedFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[exposedFloor.name + floorSuffix] as BuildingElementOpaque;
 		const floorAboveUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveUnheatedBasement.name + floorSuffix] as BuildingElementGroundForSchema;
 		const floorAboveHeatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[floorAboveHeatedBasement.name + floorSuffix] as BuildingElementGroundForSchema;
+		const partyFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyFloor.name + floorSuffix] as BuildingElementAdjacentConditionedSpace;
 
 		const expectedGroundFloor: BuildingElementGroundForSchema = {
 			type: "BuildingElementGround",
@@ -522,6 +535,17 @@ describe("dwelling fabric mapper", () => {
 
 		expect(floorAboveHeatedBasementElement).toEqual(expectedFloorOfHeatedBasement);
 
+		const expectedPartyFloor: BuildingElementAdjacentConditionedSpace = {
+			type: "BuildingElementAdjacentConditionedSpace",
+			pitch: partyFloor.pitch,
+			area: partyFloor.surfaceArea,
+			areal_heat_capacity: partyFloor.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(partyFloor.massDistributionClass),
+			u_value: partyFloor.uValue,
+			is_adjacent_space_within_dwelling: false,
+		};
+
+		expect(partyFloorElement).toEqual(expectedPartyFloor);
 	});
 
 	it("maps wall input state to FHS input request", () => {

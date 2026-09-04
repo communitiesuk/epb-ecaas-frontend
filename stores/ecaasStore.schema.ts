@@ -5,7 +5,7 @@ import type { TechnologyType } from "~/pcdb/pcdb.types";
 import type { FloorType, MassDistributionClass } from "~/schema/aliases";
 import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
 import { addConstraints, zodUnit } from "~/utils/units/zod";
-import { standardPitchOption } from "./../utils/pitchOptions";
+import { standardPitchOption, zeroPitchOption } from "./../utils/pitchOptions";
 import { arealHeatCapacityZod, batteryLocationZod, boilerLocationZod, colourZod, ductShapeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, partyWallCavityTypeZod, partyWallLiningTypeZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, windowTreatmentTypeZod, zodLiteralFromUnionType } from "./zod";
 
 export const fraction = z.number().min(0).max(1);
@@ -134,11 +134,12 @@ export interface DwellingFabric {
 }
 
 export interface FloorsData {
-	dwellingSpaceGroundFloor: EcaasFormList<GroundFloorData>,
-	dwellingSpaceInternalFloor: EcaasFormList<InternalFloorData>,
-	dwellingSpaceExposedFloor: EcaasFormList<ExposedFloorData>,
-	dwellingSpaceFloorAboveUnheatedBasement: EcaasFormList<FloorAboveUnheatedBasementData>
-	dwellingSpaceFloorOfHeatedBasement: EcaasFormList<FloorOfHeatedBasementData>
+	dwellingSpaceGroundFloor: EcaasFormList<GroundFloorData>;
+	dwellingSpaceInternalFloor: EcaasFormList<InternalFloorData>;
+	dwellingSpaceExposedFloor: EcaasFormList<ExposedFloorData>;
+	dwellingSpaceFloorAboveUnheatedBasement: EcaasFormList<FloorAboveUnheatedBasementData>;
+	dwellingSpaceFloorOfHeatedBasement: EcaasFormList<FloorOfHeatedBasementData>;
+	dwellingSpacePartyFloor: EcaasFormList<PartyFloorData>;
 }
 
 export const adjacentSpaceTypes = ["heatedSpace", "unheatedSpace"] as const;
@@ -189,6 +190,17 @@ export const surfaceAreaOpaqueZod = z.number().min(0.01).max(10000);
 export const heightOpaqueZod = z.number().min(0.001).max(50);
 export const widthOpaqueZod = z.number().min(0.001).max(100);
 export const baseHeightOpaqueZod = z.number().min(0).max(500);
+
+export const partyFloorDataZod = namedWithId.extend({
+	pitchOption: zeroPitchOption,
+	pitch: z.number().min(0).max(180),
+	surfaceArea: surfaceAreaOpaqueZod,
+	arealHeatCapacity: arealHeatCapacityZod,
+	massDistributionClass,
+	uValue,
+});
+
+export type PartyFloorData = z.infer<typeof partyFloorDataZod>;
 
 export const exposedFloorDataZod = named.extend({
 	pitch: z.number().min(0).max(180),
@@ -1753,6 +1765,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceExposedFloor": exposedFloorDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceGroundFloor": groundFloorDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceInternalFloor": internalFloorDataZod,
+	"dwellingFabric/dwellingSpaceFloors/dwellingSpacePartyFloor": partyFloorDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceFloorAboveUnheatedBasement": floorAboveUnheatedBasementDataZod,
 	"dwellingFabric/dwellingSpaceFloors/dwellingSpaceFloorOfHeatedBasement": floorOfHeatedBasementDataZod,
 	"dwellingFabric/dwellingSpaceWalls/dwellingSpaceExternalWall": externalWallDataZod,
