@@ -1492,7 +1492,7 @@ describe("Heat emitters", () => {
 				expect(screen.getByTestId("emitter_edit_0")).toBeDefined();
 			});
 
-			test("prevents saving and completing when a closed emitter card has an incompatible energy source", async () => {
+			test("prevents saving and completing when a closed emitter card has an incompatible energy source and marks emitters section as incomplete", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatEmitters: {
@@ -1500,6 +1500,7 @@ describe("Heat emitters", () => {
 								data: wetDistributionSystemWithFanCoilEmitter,
 								complete: false,
 							}],
+							complete: false,
 						},
 					},
 					dwellingDetails: {
@@ -1521,9 +1522,12 @@ describe("Heat emitters", () => {
 					},
 				});
 
+				expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
+
 				await user.click(screen.getByTestId("saveAndComplete"));
 
 				expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
+				expect(store.spaceHeating.heatEmitters.complete).toBe(false);
 
 				const errorSummary = await screen.findByTestId("heatEmitterErrorSummary");
 				expect(errorSummary.textContent).toContain(
@@ -1615,7 +1619,7 @@ describe("Heat emitters", () => {
 
 	});
 	describe("Electric Storage Heater", () => {
-		test("Expected fields render when type of warm air heater is selected", async () => {
+		test("Expected fields render when type of electric storage heater is selected", async () => {
 			await renderSuspended(HeatEmitterForm, {
 				route: {
 					params: { "heatEmitter": "create" },
@@ -1643,7 +1647,8 @@ describe("Heat emitters", () => {
 			store.$patch({
 				spaceHeating: {
 					heatEmitters: {
-						data: [{ data: electricStorageHeater }],
+						data: [{ data: electricStorageHeater, complete: false }],
+						complete: false,
 					},
 				},
 				dwellingDetails: {
@@ -1666,6 +1671,9 @@ describe("Heat emitters", () => {
 			});
 		
 			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
+			expect(store.spaceHeating.heatEmitters.complete).toBe(false);
 		
 			const error = screen.getByTestId("incompatibleEnergySourceError");
 			expect(error).toBeDefined();
@@ -1796,6 +1804,8 @@ describe("Heat emitters", () => {
 				screen.queryByTestId("incompatibleEnergySourceError"),
 			).toBeNull();
 		});
+
+		
 	});
 
 	describe("Radiator", () => {

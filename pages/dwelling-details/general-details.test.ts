@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import type { FanCoilProduct } from "~/pcdb/pcdb.types.js";
+import type { BoilerProduct, ElectricStorageHeaterProduct, FanCoilProduct } from "~/pcdb/pcdb.types.js";
 import type { GeneralDetailsData } from "~/stores/ecaasStore.schema";
 import GeneralDetails from "./general-details.vue";
 
@@ -317,7 +317,7 @@ describe("General details", () => {
 			});
 	});
 
-	test("wet distribution section and overall heatEmitters section are marked incomplete when required fuel type is removed", async () => {
+	test("wet distribution section and overall heat emitters section are marked incomplete when required fuel type is removed", async () => {
 		const wetDistributionSystemWithFanCoilEmitter: HeatEmittingData = {
 			...wetDistributionSystem,
 			emitters: [
@@ -360,6 +360,101 @@ describe("General details", () => {
 		await renderSuspended(GeneralDetails);
 		await user.click(screen.getByTestId("fuelType_LPG_bulk"));
 
+		await nextTick();
+
+		expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
+		expect(store.spaceHeating.heatEmitters.complete).toBe(false);
+	});
+
+	test("marks heat source section and boiler as incomplete when required fuel type is removed from general details", async () => {
+		const boilerProductWithLpg: Partial<BoilerProduct> = {
+			id: "2001",
+			brandName: "Test Boiler",
+			modelName: "LPG Combi Boiler",
+			technologyType: "CombiBoiler",
+			fuel: "LPG_bulk",
+		};
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [
+						{
+							data: {
+								id: "hs1",
+								name: "Gas Boiler",
+								typeOfHeatSource: "boiler",
+								typeOfBoiler: "combiBoiler",
+								productReference: "2001",
+							},
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["LPG_bulk", "electricity"],
+					},
+					complete: true,
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(boilerProductWithLpg),
+		});
+
+		await renderSuspended(GeneralDetails);
+		await user.click(screen.getByTestId("fuelType_LPG_bulk"));
+		await nextTick();
+
+		expect(store.spaceHeating.heatSource.data[0]?.complete).toBe(false);
+		expect(store.spaceHeating.heatSource.complete).toBe(false);
+	});
+
+	test("marks heat emitter section and electric storage heater as incomplete when required fuel type is removed from general details", async () => {
+		const electricStorageHeaterWithGas: Partial<ElectricStorageHeaterProduct> = {
+			id: "3001",
+			brandName: "Electric Storage Heater",
+			modelName: "Electric Storage Heater",
+			technologyType: "StorageHeater",
+			fuel: "mains_gas",
+		};
+		store.$patch({
+			spaceHeating: {
+				heatEmitters: {
+					data: [
+						{
+							data: {
+								id: "heat_emitter_1",
+								name: "Electric Storage Heater",
+								typeOfHeatEmitter: "electricStorageHeater",
+								productReference: "3001",
+							},
+							complete: true,
+						},
+					],
+					complete: true,
+				},
+			},
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						fuelType: ["mains_gas", "electricity"],
+					},
+					complete: true,
+				},
+			},
+		});
+
+		mockFetch.mockReturnValue({
+			data: ref(electricStorageHeaterWithGas),
+		});
+
+		await renderSuspended(GeneralDetails);
+		await user.click(screen.getByTestId("fuelType_mains_gas"));
 		await nextTick();
 
 		expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);

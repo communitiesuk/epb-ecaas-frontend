@@ -2,7 +2,6 @@
 import { getUrl, type FuelTypeDisplay, type GeneralDetailsData } from "#imports";
 import type { CheckboxOption } from "~/components/form-kit/Checkboxes.vue";
 import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
-import { invalidateIncompatibleWetDistributionEmitters } from "~/utils/invalidateIncompatibleWetDistributionEmitters";
 import { kilowatt, type Power } from "~/utils/units/power";
 import { isInteger } from "~/utils/validation";
 
@@ -111,7 +110,7 @@ watch(() => model.value.canExportToGrid, (newValue) => {
 autoSaveForm<GeneralDetailsData>(model, async (state, newData) => {
 	state.dwellingDetails.generalSpecifications = newData;
 
-	await invalidateIncompatibleWetDistributionEmitters(
+	await invalidateIncompatibleProducts(
 		state,
 		newData.data?.fuelType ?? [],
 	);

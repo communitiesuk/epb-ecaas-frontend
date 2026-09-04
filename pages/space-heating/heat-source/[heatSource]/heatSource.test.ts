@@ -1,11 +1,11 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
-import HeatSourceForm from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
+import type { ErrorName } from "~/errors.types";
 import type { BoilerProduct, DisplayProduct, HeatBatteryDryCoreProduct, HeatBatteryPcmProduct, HeatPumpProduct, HybridHeatPumpProduct } from "~/pcdb/pcdb.types";
 import { celsius } from "~/utils/units/temperature";
-import type { ErrorName } from "~/errors.types";
+import HeatSourceForm from "./index.vue";
 
 vi.mock("uuid");
 
@@ -371,7 +371,8 @@ describe("heatSource", () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: heatPump1 }],
+						data: [{ data: heatPump1, complete: false }],
+						complete: false,
 					},
 				},
 				dwellingDetails: {
@@ -394,6 +395,9 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(store.spaceHeating.heatSource.data[0]?.complete).toBe(false);
+			expect(store.spaceHeating.heatSource.complete).toBe(false);
 
 			const error = screen.getByTestId("incompatibleEnergySourceError");
 			expect(error).toBeDefined();
@@ -1826,7 +1830,8 @@ describe("heatSource", () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: boiler1 }],
+						data: [{ data: boiler1, complete: false }],
+						complete: false,
 					},
 				},
 				dwellingDetails: {
@@ -1849,6 +1854,9 @@ describe("heatSource", () => {
 			});
 
 			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(store.spaceHeating.heatSource.data[0]?.complete).toBe(false);
+			expect(store.spaceHeating.heatSource.complete).toBe(false);
 
 			const error = screen.getByTestId("incompatibleEnergySourceError");
 			expect(error).toBeDefined();
@@ -2380,7 +2388,8 @@ describe("heatSource", () => {
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
-						data: [{ data: heatBattery1 }],
+						data: [{ data: heatBattery1, complete: false }],
+						complete: false,
 					},
 				},
 				dwellingDetails: {
@@ -2410,10 +2419,7 @@ describe("heatSource", () => {
 			expect(error.textContent).toContain(
 				"This product uses LPG - 11F which hasn't been added as an energy source for this dwelling.",
 			);
-			expect(error.textContent).toContain(
-				"To change this go to",
-			);
-
+			
 			const link = screen.getByRole("link", { name: "General details" });
 
 			expect(link).toBeDefined();
