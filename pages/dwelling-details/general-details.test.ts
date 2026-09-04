@@ -317,7 +317,7 @@ describe("General details", () => {
 			});
 	});
 
-	test("wet distribution section with fan coil emitter is marked incomplete when fuel type needed for fan coil is removed from dwelling details", async () => {
+	test("wet distribution section and overall heatEmitters section are marked incomplete when required fuel type is removed", async () => {
 		const wetDistributionSystemWithFanCoilEmitter: HeatEmittingData = {
 			...wetDistributionSystem,
 			emitters: [
@@ -330,7 +330,7 @@ describe("General details", () => {
 				},
 			],
 		};
-	
+
 		store.$patch({
 			spaceHeating: {
 				heatEmitters: {
@@ -340,6 +340,7 @@ describe("General details", () => {
 							complete: true,
 						},
 					],
+					complete: true,
 				},
 			},
 			dwellingDetails: {
@@ -351,17 +352,18 @@ describe("General details", () => {
 				},
 			},
 		});
-	
+
 		mockFetch.mockReturnValue({
 			data: ref(fanCoilProductWithFuelType),
 		});
-	
+
 		await renderSuspended(GeneralDetails);
 		await user.click(screen.getByTestId("fuelType_LPG_bulk"));
-	
+
 		await nextTick();
-	
+
 		expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
+		expect(store.spaceHeating.heatEmitters.complete).toBe(false);
 	});
 });
 

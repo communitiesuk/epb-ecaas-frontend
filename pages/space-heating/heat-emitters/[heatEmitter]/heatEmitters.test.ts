@@ -1548,6 +1548,55 @@ describe("Heat emitters", () => {
 			expect(screen.getByTestId("convectionFraction")).toBeDefined();
 			expect(screen.getByTestId("numOfWarmAirHeaters")).toBeDefined();
 		});
+
+		test("does not restore complete status to true on mount when emitter is already marked incomplete", async () => {
+			const wetDistributionSystemWithFanCoilEmitter: HeatEmittingData = {
+				...wetDistributionSystem,
+				emitters: [
+					{
+						id: "emitter1",
+						name: "Fan Coil",
+						typeOfHeatEmitter: "fanCoil",
+						numOfFanCoils: 3,
+						productReference: "1001",
+					},
+				],
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [
+							{
+								data: wetDistributionSystemWithFanCoilEmitter,
+								complete: false,
+							},
+						],
+						complete: false,
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity"],
+						},
+					},
+				},
+			});
+
+			mockFetch.mockReturnValue({
+				data: ref(fanCoilProductWithFuelType),
+			});
+
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { heatEmitter: "0" },
+				},
+			});
+
+			expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
+			expect(store.spaceHeating.heatEmitters.complete).toBe(false);
+		});
 	});
 	describe("Instant Electric Heater", () => {
 		test("Expected fields render when type of warm air heater is selected", async () => {

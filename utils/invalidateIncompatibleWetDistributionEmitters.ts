@@ -4,12 +4,16 @@ export async function invalidateIncompatibleWetDistributionEmitters(
 	state: EcaasState,
 	newFuelTypes: string[],
 ) {
+	let stateInvalidated = false;
+
 	for (const heatEmitter of state.spaceHeating.heatEmitters.data) {
 		if (heatEmitter.data.typeOfHeatEmitter !== "wetDistributionSystem") {
 			continue;
 		}
-
-		if (!heatEmitter.complete) {
+		if (
+			!("emitters" in heatEmitter.data) ||
+			!Array.isArray(heatEmitter.data.emitters)
+		) {
 			continue;
 		}
 
@@ -26,19 +30,19 @@ export async function invalidateIncompatibleWetDistributionEmitters(
 
 			if (
 				product.value &&
-				"fuel" in product.value &&
-				product.value.fuel &&
-				product.value.fuel !== "electricity" &&
-				!newFuelTypes.includes(product.value.fuel)
+                "fuel" in product.value &&
+                product.value.fuel &&
+                product.value.fuel !== "electricity" &&
+                !newFuelTypes.includes(product.value.fuel)
 			) {
-				const heatEmitterForm = heatEmitter as {
-					data: WetDistributionSystemData;
-					complete?: boolean;
-				};
-
-				heatEmitterForm.complete = false;
+				heatEmitter.complete = false;
+				stateInvalidated = true;
 				break;
 			}
 		}
+	}
+
+	if (stateInvalidated) {
+		state.spaceHeating.heatEmitters.complete = false;
 	}
 }

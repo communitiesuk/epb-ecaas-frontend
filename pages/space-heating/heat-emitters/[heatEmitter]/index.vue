@@ -118,7 +118,7 @@ autoSaveElementForm<HeatEmittingData>({
 			(newData.data as Record<string, unknown>).emitters = [];
 		}
 		if (existing && "complete" in existing) {
-			newData.complete = existing.complete;
+			newData.complete = state.spaceHeating.heatEmitters.data[index]?.complete ?? false;
 		}
 
 		state.spaceHeating.heatEmitters.data[index] = newData;
