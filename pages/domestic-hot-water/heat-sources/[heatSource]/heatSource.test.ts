@@ -1,13 +1,13 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import HeatSourceForm from "./index.vue";
-import { screen, within } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { screen, within } from "@testing-library/vue";
 import { v4 as uuidv4 } from "uuid";
+import type { BoilerProduct, DisplayProduct, HotWaterOnlyHeatPumpProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 import type { DomesticHotWaterHeatSourceData, HeatNetworkData } from "~/stores/ecaasStore.schema";
-import type { BoilerProduct, DisplayProduct, HybridHeatPumpProduct, HotWaterOnlyHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 import { celsius } from "~/utils/units/temperature";
 import { litre } from "~/utils/units/volume";
 import type { HeatSourceData, WaterStorageData } from "../../../../stores/ecaasStore.schema";
+import HeatSourceForm from "./index.vue";
 
 vi.mock("uuid");
 
@@ -974,7 +974,12 @@ describe("Heat pump section", () => {
 		store.$patch({
 			domesticHotWater: {
 				heatSources: {
-					data: [{ data: heatPumpWithCylinder }],
+					data: [{
+						data: {
+							...heatPumpWithCylinder,
+							heatExchangerSurfaceAreaDeclared: 1,
+						},
+					}],
 				},
 			},
 		});
@@ -997,6 +1002,8 @@ describe("Heat pump section", () => {
 			name: "Hot water cylinder",
 			typeOfWaterStorage: "hotWaterCylinder",
 			packagedProductReference: heatPumpProductWithCylinder.id,
+			areaOfHeatExchangerInPcdb: true,
+			areaOfHeatExchanger: 1,
 		};
 
 		expect(waterStorageData.length).toBe(1);

@@ -1,34 +1,14 @@
-import { heatPumpProductTypesMap, isDisplayProduct, type BoilerProduct, type DisplayProduct, type HeatPumpProduct, type HeatPumpProductTypes, type HybridHeatPumpProduct, type Product, type TechnologyGroup, type TechnologyType } from "~/pcdb/pcdb.types";
 import { v4 as uuidv4 } from "uuid";
-import type { SchemaMechVentType } from "~/schema/aliases";
-import { useProductData } from "./productData";
 import { EcaasError } from "~/errors.types";
+import { heatPumpProductTypesMap, isDisplayProduct, type BoilerProduct, type DisplayProduct, type HeatPumpProduct, type HeatPumpProductTypes, type HybridHeatPumpProduct, type Product, type TechnologyGroup, type TechnologyType } from "~/pcdb/pcdb.types";
+import type { SchemaMechVentType } from "~/schema/aliases";
 import { isHotWaterHeatSource } from "~/utils/heatSources";
+import { useProductData } from "./productData";
 
 type HeatSourceSection = "spaceHeating" | "domesticHotWater";
 
 export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSourceProductType: (HeatSourceProductType | TechnologyGroup)) {
 	const store = useEcaasStore();
-
-	const createHotWaterCylinder = (source: HeatSourceSection, heatPumpDetails: HeatPumpProduct, heatSourceData: HeatSourceData | DomesticHotWaterHeatSourceData) => {
-		if (source === "spaceHeating") {
-			const spaceHeatingHeatSource = heatSourceData as HeatSourceData;
-			
-			if (spaceHeatingHeatSource.typeOfHeatSource === "heatPump") {
-				spaceHeatingHeatSource.tankVolumeDeclared = heatPumpDetails.tankVolumeDeclared;
-				spaceHeatingHeatSource.dailyLossesDeclared = heatPumpDetails.dailyLossesDeclared;
-				spaceHeatingHeatSource.heatExchangerSurfaceAreaDeclared = heatPumpDetails.heatExchangerSurfaceAreaDeclared;
-			}
-		} else {
-			const hotWaterHeatSource = heatSourceData as DomesticHotWaterHeatSourceData;
-
-			if (!hotWaterHeatSource.isExistingHeatSource && hotWaterHeatSource.typeOfHeatSource === "heatPump") {
-				hotWaterHeatSource.tankVolumeDeclared = heatPumpDetails.tankVolumeDeclared;
-				hotWaterHeatSource.dailyLossesDeclared = heatPumpDetails.dailyLossesDeclared;
-				hotWaterHeatSource.heatExchangerSurfaceAreaDeclared = heatPumpDetails.heatExchangerSurfaceAreaDeclared;
-			}
-		}
-	};
 
 	const selectProduct = async (
 		state: EcaasState,
@@ -125,20 +105,22 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 
 			if (heatPumpProduct.technologyType !== "HybridHeatPump") {
 
-				const createCylinderIfHasVessel = (details: HeatPumpProduct) => {
+				const setDataFromProduct = (details: HeatPumpProduct) => {
 					if (!details.vesselType) return;
 
-					createHotWaterCylinder(source, details, heatSourceData);
+					heatSourceData.tankVolumeDeclared = details.tankVolumeDeclared;
+					heatSourceData.dailyLossesDeclared = details.dailyLossesDeclared;
+					heatSourceData.heatExchangerSurfaceAreaDeclared = details.heatExchangerSurfaceAreaDeclared;
 					heatSourceData.packagedWithWaterCylinder = true;
 				};
 
 				if (isDisplayProduct(heatPumpProduct)) {
 					// Necessary because vessel type is not available unless we useProductData
 					useProductData(heatPumpProduct.id, true).then(details => {
-						createCylinderIfHasVessel(details as HeatPumpProduct);
+						setDataFromProduct(details as HeatPumpProduct);
 					});
 				} else {
-					createCylinderIfHasVessel(heatPumpProduct);
+					setDataFromProduct(heatPumpProduct);
 				}
 			}
 		}

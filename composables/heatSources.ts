@@ -108,6 +108,7 @@ export function useHeatSources() {
 						storageCylinderVolume: unitValue(heatSource.tankVolumeDeclared, "litres"),
 					} : {}),
 					dailyEnergyLoss: heatSource.dailyLossesDeclared,
+					areaOfHeatExchangerInPcdb: heatSource.heatExchangerSurfaceAreaDeclared !== undefined,
 					areaOfHeatExchanger: heatSource.heatExchangerSurfaceAreaDeclared,
 					packagedProductReference: heatSource.productReference,
 				};

@@ -1,11 +1,11 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import WaterStorage from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
-import { litre } from "~/utils/units/volume";
 import { unitValue } from "~/utils/units";
 import { celsius } from "~/utils/units/temperature";
+import { litre } from "~/utils/units/volume";
+import WaterStorage from "./index.vue";
 
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
@@ -284,6 +284,30 @@ describe("water storage", () => {
 
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value)
 				.toBe("Standard water cylinder");
+		});
+
+		test("area of heat exchanger field is hidden when value is populated from the PCDB", async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterStorage: {
+						data: [{
+							...hotWaterCylinder,
+							data: {
+								...hotWaterCylinder.data,
+								areaOfHeatExchangerInPcdb: true,
+							},
+						}],
+					},
+				},
+			});
+			
+			await renderSuspended(WaterStorage, {
+				route: {
+					params: { "waterStorage": "0" },
+				},
+			});
+
+			expect(screen.queryByTestId("areaOfHeatExchanger")).toBeNull();
 		});
 	});
 

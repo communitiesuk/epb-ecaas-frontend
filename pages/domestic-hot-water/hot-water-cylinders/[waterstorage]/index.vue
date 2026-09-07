@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { litre, type Volume } from "~/utils/units/volume";
+import { coldWaterSourceOptions, hasPackagedProduct, waterStorageTypes } from "#imports";
+import { v4 as uuidv4 } from "uuid";
+import { mapOption } from "~/composables/associatedItems";
+import type { AnyPcdbProduct, Product } from "~/pcdb/pcdb.types";
 import type { WaterStorageData } from "~/stores/ecaasStore.schema";
 import { getUrl } from "~/utils/page";
-import { v4 as uuidv4 } from "uuid";
-import { coldWaterSourceOptions, hasPackagedProduct, waterStorageTypes } from "#imports";
-import type { Product, AnyPcdbProduct } from "~/pcdb/pcdb.types";
-import { mapOption } from "~/composables/associatedItems";
+import { litre, type Volume } from "~/utils/units/volume";
 
 const title = "Hot water cylinder";
 const store = useEcaasStore();
@@ -47,6 +47,7 @@ const saveForm = (fields: WaterStorageData) => {
 					typeOfWaterStorage: fields.typeOfWaterStorage,
 					storageCylinderVolume: fields.storageCylinderVolume,
 					dailyEnergyLoss: fields.dailyEnergyLoss,
+					areaOfHeatExchangerInPcdb: fields.areaOfHeatExchangerInPcdb,
 					areaOfHeatExchanger: fields.areaOfHeatExchanger,
 					thermostatPosition: fields.thermostatPosition,
 					coldWaterSource: fields.coldWaterSource,
@@ -230,15 +231,15 @@ const preheatedWaterStorageMap = new Map(preheatedWaterStorage);
 				data-field="HotWaterSource['hw cylinder'].daily_losses"
 				:disabled="hasPackagedProduct(model)"
 			/>
+			<FormKit type="hidden" name="areaOfHeatExchangerInPcdb" />
 			<FormKit
-				v-if="model.typeOfWaterStorage === 'hotWaterCylinder' && heatSourceIsHeatPump()"
+				v-if="model.typeOfWaterStorage === 'hotWaterCylinder' && heatSourceIsHeatPump() && !model.areaOfHeatExchangerInPcdb"
 				id="areaOfHeatExchanger"
 				type="govInputWithSuffix"
 				label="Area of heat exchanger installed"
 				suffix-text="m²"
 				name="areaOfHeatExchanger"
 				validation="number"
-				:disabled="hasPackagedProduct(model)"
 			/>
 			<FormKit
 				v-if="model.typeOfWaterStorage !== undefined"
