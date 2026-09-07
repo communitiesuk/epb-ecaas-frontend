@@ -112,6 +112,10 @@ export function useSelectHeatSourceProduct(_products: DisplayProduct[], _heatSou
 					heatSourceData.dailyLossesDeclared = details.dailyLossesDeclared;
 					heatSourceData.heatExchangerSurfaceAreaDeclared = details.heatExchangerSurfaceAreaDeclared;
 					heatSourceData.packagedWithWaterCylinder = true;
+
+					if (heatSourceData.packagedWithWaterCylinder) {
+						heatSourceData.waterCylinderConfiguration = undefined!;
+					}
 				};
 
 				if (isDisplayProduct(heatPumpProduct)) {
