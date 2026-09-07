@@ -160,8 +160,8 @@ export default defineNuxtConfig({
 
 	sentry: {
 		sourceMapsUploadOptions: {
-			org: "energy-performance-of-buildings",
-			project: "ecaas",
+			org: "communitiesuk",
+			project: "epb-check-part-l-frontend",
 			authToken: process.env.SENTRY_AUTH_TOKEN,
 		},
 	},
