@@ -23,6 +23,8 @@ const expectedHouseInput: FhsInputSchema = {
 		"Fridge-Freezer": "Default",
 		"Hobs": "Default",
 		"Oven": "Not Installed",
+		"Microwave": "Not Installed",
+		"Kettle": "Not Installed",
 	},
 	ColdWaterSource: {
 		"mains water": {
@@ -351,6 +353,8 @@ const expectedFlatInput: FhsInputSchema = {
 		"Fridge-Freezer": "Default",
 		"Hobs": "Not Installed",
 		"Oven": "Not Installed",
+		"Microwave": "Not Installed",
+		"Kettle": "Not Installed",
 	},
 	BuildingLength: 10,
 	BuildingWidth: 20,

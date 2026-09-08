@@ -1,8 +1,8 @@
-import type { SchemaShadingSegment, SchemaInfiltrationVentilation, SchemaApplianceType } from "~/schema/aliases";
-import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { objectFromEntries } from "ts-extras";
-import { defaultElectricityEnergySupplyName } from "./common";
+import type { SchemaApplianceType, SchemaInfiltrationVentilation, SchemaShadingSegment } from "~/schema/aliases";
 import { applianceTypes } from "~/stores/zod";
+import { defaultElectricityEnergySupplyName } from "./common";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSchema> {
 	const generalDetailsData = mapGeneralDetailsData(state);
@@ -167,10 +167,7 @@ export function mapAppliancesData(
 			"Default" | "Not Installed"
 		>;
 
-		// TODO: Remove filter after alpha 8 schema update
-		const allowedApplianceTypes = applianceTypes.filter(x => x !== "Microwave" && x !== "Kettle");
-
-		for (const appliance of allowedApplianceTypes) {
+		for (const appliance of applianceTypes) {
 			if (chosenAppliances.includes(appliance)) {
 				appliancesMap[appliance] = "Default";
 			} else {
