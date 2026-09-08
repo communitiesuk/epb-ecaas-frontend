@@ -20,8 +20,6 @@ const saveForm = (fields: PartyFloorData) => {
 		const floor: PartyFloorData = {
 			id: uuidv4(),
 			name: fields.name,
-			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === "0" ? 0 : fields.pitch,
 			surfaceArea: fields.surfaceArea,
 			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
@@ -76,12 +74,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				uniqueName: 'An element with this name already exists. Please enter a unique name.'
 			}"
-		/>
-		<FieldsPitch
-			:pitch-option="model?.pitchOption"
-			:options="zeroPitchOptions()"
-			data-field="Zone.BuildingElement.*.pitch"
-			:suppress-standard-guidance="true"
 		/>
 		<FormKit
 			id="surfaceArea"

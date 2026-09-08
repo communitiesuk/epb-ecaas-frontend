@@ -256,8 +256,6 @@ describe("dwelling fabric mapper", () => {
 		const partyFloor: PartyFloorData = {
 			id: "0ed8380b-d397-4552-b82e-85963eceb805",
 			name: "Party floor 1",
-			pitchOption: "0",
-			pitch: 0,
 			surfaceArea: 5,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
@@ -537,7 +535,7 @@ describe("dwelling fabric mapper", () => {
 
 		const expectedPartyFloor: BuildingElementAdjacentConditionedSpace = {
 			type: "BuildingElementAdjacentConditionedSpace",
-			pitch: partyFloor.pitch,
+			pitch: 180,
 			area: partyFloor.surfaceArea,
 			areal_heat_capacity: partyFloor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(partyFloor.massDistributionClass),

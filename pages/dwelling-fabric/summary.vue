@@ -171,7 +171,6 @@ const partyFloorSummary: SummarySection = {
 	data: partyFloorData?.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
-			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),

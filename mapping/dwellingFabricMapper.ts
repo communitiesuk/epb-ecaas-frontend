@@ -358,7 +358,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementAdjacentConditionedSpace",
-				pitch: x.pitch,
+				pitch: 180,
 				area: x.surfaceArea,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),

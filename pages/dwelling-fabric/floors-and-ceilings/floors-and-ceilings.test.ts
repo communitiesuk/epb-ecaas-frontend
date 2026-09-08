@@ -227,8 +227,6 @@ describe("floors", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		uValue: 1,
-		pitchOption: "0",
-		pitch: 0,
 	};
 
 	const party2: PartyFloorData = {
@@ -238,8 +236,6 @@ describe("floors", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		uValue: 1,
-		pitchOption: "0",
-		pitch: 0,
 	};
 
 	const party3: PartyFloorData = {
@@ -249,8 +245,6 @@ describe("floors", () => {
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		uValue: 1,
-		pitchOption: "0",
-		pitch: 0,
 	};
 
 	afterEach(() => {

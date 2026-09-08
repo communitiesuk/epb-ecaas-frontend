@@ -176,8 +176,6 @@ const floorsData: FloorsData = {
 			data: {
 				id: "1a997f84-d070-4835-a74b-ef0135b44a90",
 				name: "Party floor 1",
-				pitchOption: "0",
-				pitch: 0,
 				surfaceArea: 45,
 				arealHeatCapacity: "Medium",
 				massDistributionClass: "I",
@@ -783,7 +781,6 @@ describe("Dwelling space fabric summary", () => {
 
 		const expectedResult = {
 			"Name": "Party floor 1",
-			"Pitch": `0 ${degrees.suffix}`,
 			"Net surface area": `45 ${metresSquare.suffix}`,
 			"Areal heat capacity": "Medium",
 			"Mass distribution class": "Internal",
