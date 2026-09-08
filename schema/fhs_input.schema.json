@@ -147,7 +147,7 @@
 			"$comment": "Every listed appliance, including Microwave and Kettle, is given a default during FHS preprocessing. An input need not declare any of them. The accepted values exist only so a user can pin a default ('Default') or opt out ('Not Installed'). Otherdevices is deliberately absent: it is injected as a default like the others, but it represents an unavoidable background load that an assessment must not be able to pin or opt out of, so an input naming it is rejected. The pattern is anchored because patternProperties matches anywhere within a property name, so an unanchored alternation would also accept any name merely containing an appliance name (for example 'Ovenette'), which then reaches preprocessing as an unrecognised appliance. The 'not' constraint forbids only the case where Fridge and Fridge-Freezer are both explicitly 'Not Installed', so at least one cold appliance remains; omitting either or both keys is allowed because both are injected as installed defaults.",
 			"unevaluatedProperties": false,
 			"patternProperties": {
-				"Clothes_washing|Clothes_drying|Dishwasher|Fridge|Fridge-Freezer|Freezer|Hobs|Otherdevices|Oven": {
+				"Clothes_washing|Clothes_drying|Dishwasher|Fridge|Fridge-Freezer|Freezer|Hobs|Oven|Microwave|Kettle": {
 					"enum": [
 						"Not Installed",
 						"Default"
