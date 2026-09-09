@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
+import type { SchemaFuelType } from "~/schema/aliases";
 
-defineProps<{
+const props = defineProps<{
 	id: string;
 	name: string;
 	label: string;
@@ -10,9 +11,13 @@ defineProps<{
 	validationRules?: Record<string, (node: FormKitNode) => boolean>;
 	validationMessages?: Record<string, string>;
 	dataField?: string;
+	allowedFuelTypes?: SchemaFuelType[];
 }>();
 
-const { energySupplies, getDefaultEnergySupply } = useEnergySupplies();
+const { energySupplies, getDefaultEnergySupply } = useEnergySupplies(
+	props.allowedFuelTypes,
+);
+
 </script>
 
 <template>

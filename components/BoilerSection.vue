@@ -1,24 +1,38 @@
 <script setup lang="ts">
 import type { HeatSourceData } from "#imports";
 import { uniqueName } from "#imports";
+import type { AnyPcdbProduct, BoilerProduct } from "~/pcdb/pcdb.types";
 import type { SchemaBoilerLocationType } from "~/schema/aliases";
 import { boilerTypes, type BoilerLocationDisplay } from "~/utils/display";
 import { hasPackagedProduct } from "~/utils/products";
 import { celsius } from "~/utils/units/temperature";
-import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 const route = useRoute();
 const store = useEcaasStore();
 
-defineProps<{
-	model: Extract<HeatSourceData, { "typeOfHeatSource": "boiler" }>;
+const props = defineProps<{
+	model: Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
 	index: number;
 	page: HeatSourceSectionPage;
 	onIncompatibleEnergySource?: (value: boolean, fuel?: string) => void;
 	onProductLoaded?: (product: AnyPcdbProduct) => void;
 }>();
 
+const boilerProduct = ref<BoilerProduct>();
+
 const heatSources = getCombinedHeatSources(store);
+
+const handleProductLoaded = (product: AnyPcdbProduct) => {
+	if (product.technologyType === "CombiBoiler" || product.technologyType === "RegularBoiler") {
+		boilerProduct.value = product;
+	}
+
+	props.onProductLoaded?.(product);
+};
+
+const showEnergySource = computed(() => {
+	return boilerProduct.value?.fuel === "LPG_bulk";
+});
 
 const locationOfBoilerOptions = {
 	"internal": "Heated space",
@@ -65,7 +79,7 @@ const emit = defineEmits(["update-boiler-model"]);
 			:page-index="index"
 			:disabled="hasPackagedProduct(model)"
 			:on-incompatible-energy-source="onIncompatibleEnergySource"
-			@product-loaded="onProductLoaded"		/>
+			@product-loaded="handleProductLoaded"		/>
 		<FormKit
 			v-if="model.typeOfBoiler && model.needsSpecifiedLocation"
 			id="specifiedLocation"
@@ -75,6 +89,18 @@ const emit = defineEmits(["update-boiler-model"]);
 			name="locationOfBoiler"
 			validation="required"
 			:disabled="hasPackagedProduct(model)"
+		/>
+		<FieldsEnergySupplies
+			v-if="showEnergySource"
+			id="energySupply"
+			name="energySupply"
+			label="Energy source"
+			help="Select an energy source that has been added previously"
+			:allowed-fuel-types="[
+				'LPG_bulk',
+				'LPG_bottled',
+				'LPG_condition_11F',
+			]"
 		/>
 		<FormKit
 			id="maxFlowTemp"

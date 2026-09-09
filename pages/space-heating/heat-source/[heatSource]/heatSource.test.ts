@@ -1981,8 +1981,104 @@ describe("heatSource", () => {
 				screen.queryByTestId("incompatibleEnergySourceError"),
 			).toBeNull();
 		});
-	});
 
+		test("shows energy source field with available LPG fuel types (from dwelling details) when boiler product has a fuel type of LPG bulk", async() => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: boiler1 }],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity", "LPG_bottled", "LPG_condition_11F"],
+						},
+					},
+				},
+			});
+
+			mockFetch.mockReturnValue({
+				data: ref(boilerProductWithFuelType),
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { heatSource: "0" },
+				},
+			});
+
+			expect(screen.getByTestId("energySupply_LPG_bottled")).toBeDefined();
+			expect(screen.getByTestId("energySupply_LPG_condition_11F")).toBeDefined();
+			expect(screen.queryByTestId("energySupply_electricity")).toBeNull();
+		});
+
+		test("does not show energy source field when boiler product fuel is not LPG bulk", async() => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: boiler1 }],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity", "LPG_bottled", "LPG_condition_11F"],
+						},
+					},
+				},
+			});
+
+			mockFetch.mockReturnValue({
+				data: ref(boilerProductWithElectricityFuelType),
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { heatSource: "0" },
+				},
+			});
+
+			expect(screen.queryByTestId("energySupply_electricity")).toBeNull();
+			expect(screen.queryByTestId("energySupply_LPG_bottled")).toBeNull();
+			expect(screen.queryByTestId("energySupply_LPG_condition_11F")).toBeNull();
+		});
+
+		test("saves selected energy source for a boiler product with an LPG bulk fuel type", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: boiler1 }],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity", "LPG_condition_11F", "LPG_bulk"],
+						},
+					},
+				},
+			});
+
+			mockFetch.mockReturnValue({
+				data: ref(boilerProductWithFuelType),
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { heatSource: "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("energySupply_LPG_condition_11F"));
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const savedBoiler = store.spaceHeating.heatSource.data[0]?.data as Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
+
+			expect(savedBoiler.energySupply).toBe("LPG_condition_11F");
+		});
+	});
+	
 	describe("heat interface unit", () => {
 		beforeEach(() => {
 			store.$reset();
@@ -2417,7 +2513,7 @@ describe("heatSource", () => {
 
 			expect(error).toBeDefined();
 			expect(error.textContent).toContain(
-				"This product uses LPG - 11F which hasn't been added as an energy source for this dwelling.",
+				"This product uses LPG (Liquid petroleum gas) - condition 11F which hasn't been added as an energy source for this dwelling.",
 			);
 			
 			const link = screen.getByRole("link", { name: "General details" });
@@ -2656,3 +2752,4 @@ describe("heatSource", () => {
 		});
 	});
 });
+

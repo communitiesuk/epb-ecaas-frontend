@@ -1,11 +1,10 @@
 <script setup lang="ts">
+import { getErrorMessage, getUrl, hasModelDetails, isPackagedProduct, showErrorState, type HeatSourceData, type NewDomesticHotWaterHeatSourceData } from "#imports";
 import type { FormKitFrameworkContext } from "@formkit/core";
-import { showErrorState, getErrorMessage, isPackagedProduct, type HeatSourceData, hasModelDetails, type NewDomesticHotWaterHeatSourceData } from "#imports";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
-import { heatPumpTypes, displayFuelType } from "~/utils/display";
+import { displayFuelType, heatPumpTypes } from "~/utils/display";
 import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";
-import { getUrl } from "#imports";
 
 const store = useEcaasStore();
 
@@ -36,7 +35,10 @@ const {
 async function fetchProduct(reference: string) {
 	const response = await useFetch<AnyPcdbProduct>(`/api/products/${reference}`);
 	productData.value = response?.data?.value;
-	onProductLoaded?.(productData.value);
+
+	if (productData.value) {
+		onProductLoaded?.(productData.value);
+	}
 }
 
 function buildProductsPageUrl(url: string, index: number | undefined, productType: string, emitterIndex?: number) {

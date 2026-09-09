@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from "uuid";
 import { getUrl, type HeatSourceData } from "#imports";
-import { heatSourceTypesWithDisplay } from "~/utils/display";
-import type { AnyPcdbProduct, Product } from "~/pcdb/pcdb.types";
-import { hasPackagedProduct } from "~/utils/products";
+import { v4 as uuidv4 } from "uuid";
 import PackagedProductInset from "~/components/PackagedProductInset.vue";
-import type { ErrorName } from "~/errors.types";
 import { useHeatSources } from "~/composables/heatSources";
+import type { ErrorName } from "~/errors.types";
+import type { AnyPcdbProduct, Product } from "~/pcdb/pcdb.types";
+import { heatSourceTypesWithDisplay } from "~/utils/display";
+import { hasPackagedProduct } from "~/utils/products";
 
 const title = "Heat source";
 const store = useEcaasStore();

@@ -17,7 +17,7 @@ const fuelTypeOptions = {
 	"mains_gas": "Mains gas",
 	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
 	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
-	"LPG_condition_11F": "LPG - 11F",
+	"LPG_condition_11F": "LPG (Liquid petroleum gas) - condition 11F",
 } as const satisfies Record<SchemaFuelType, FuelTypeDisplay | CheckboxOption>;
 
 const model = ref({

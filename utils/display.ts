@@ -209,13 +209,13 @@ export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressure
 }
 
 
-export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" | "LPG (Liquid petroleum gas) - bottled" | "LPG - 11F" | "Mains gas" | "Electricity";
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas) - bulk" | "LPG (Liquid petroleum gas) - bottled" | "LPG (Liquid petroleum gas) - condition 11F" | "Mains gas" | "Electricity";
 
 export const energySupplyOptions = {
 	"mains_gas": "Mains gas",
 	"LPG_bulk": "LPG (Liquid petroleum gas) - bulk",
 	"LPG_bottled": "LPG (Liquid petroleum gas) - bottled",
-	"LPG_condition_11F": "LPG - 11F",
+	"LPG_condition_11F": "LPG (Liquid petroleum gas) - condition 11F",
 	"electricity": "Electricity",
 } as const satisfies Record<SchemaFuelType, FuelTypeDisplay>;
 
@@ -236,7 +236,7 @@ export function displayFuelType(fuelType: SchemaFuelType): FuelTypeDisplay {
 		case "LPG_bottled":
 			return "LPG (Liquid petroleum gas) - bottled";
 		case "LPG_condition_11F":
-			return "LPG - 11F";
+			return "LPG (Liquid petroleum gas) - condition 11F";
 		case "electricity":
 			return "Electricity";
 		case "mains_gas":

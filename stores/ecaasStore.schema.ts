@@ -1067,6 +1067,7 @@ const boilerBase = pcdbProduct
 		specifiedLocation: z.optional(boilerLocationZod),
 		needsSpecifiedLocation: z.boolean(),
 		maxFlowTemp: zodUnit("temperature"),
+		energySupply: z.optional(fuelTypeZod),
 	});
 
 export type HasPcdbPackagedProduct = z.infer<typeof hasPcdbPackagedProduct>;
