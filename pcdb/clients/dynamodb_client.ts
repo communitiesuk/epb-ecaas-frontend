@@ -1,8 +1,8 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { BatchGetCommand, DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import type { DisplayProduct, PaginatedResult, Product, TechnologyGroup, TechnologyType, UnderFloorHeatingProduct, VesselType } from "../pcdb.types";
-import type { PcdbClient } from "./client.types";
-import { DynamoDBDocumentClient, BatchGetCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { generateHeatNetworkSubNetworkDisplayProductCombinations } from "../utils/subheatnetwork-combination-display";
+import type { PcdbClient } from "./client.types";
 
 const localConfig = {
 	region: "fakeRegion",
@@ -146,7 +146,7 @@ const toDisplayProduct = (item: Record<string, unknown>, fallbackTechnologyType?
 			? { boilerLocation: item.boilerLocation }
 			: {}),
 		...(typeof item.communityHeatNetworkName === "string" ? { communityHeatNetworkName: item.communityHeatNetworkName } : {}),
-		...(item.boilerProductID ? { boilerProductID: item.boilerProductID.toString() } : {}),
+		...(item.boilerProductId ? { boilerProductID: item.boilerProductId.toString() } : {}),
 		...(item.vesselType ? { vesselType: item.vesselType as VesselType } : {}),
 		...(item.boosterHeatPump ? { boosterHeatPump: item.boosterHeatPump as boolean } : {}),
 	};
