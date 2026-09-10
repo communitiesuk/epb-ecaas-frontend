@@ -94,13 +94,15 @@ const emit = defineEmits(["update-boiler-model"]);
 			v-if="showEnergySource"
 			id="energySupply"
 			name="energySupply"
-			label="Energy source"
-			help="Select an energy source that has been added previously"
+			label="LPG Energy source"
+			help="Select an LPG energy source that has been added previously"
 			:allowed-fuel-types="[
 				'LPG_bulk',
 				'LPG_bottled',
 				'LPG_condition_11F',
 			]"
+			empty-message="No LPG energy sources added."
+			empty-link-message="Click here to add an LPG energy source"
 		/>
 		<FormKit
 			id="maxFlowTemp"

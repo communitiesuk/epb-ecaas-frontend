@@ -2077,6 +2077,35 @@ describe("heatSource", () => {
 
 			expect(savedBoiler.energySupply).toBe("LPG_condition_11F");
 		});
+
+		test("energy source field shows custom error if no LPG energy sources have been added in dwelling details", async() => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: boiler1 }],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity"],
+						},
+					},
+				},
+			});
+
+			mockFetch.mockReturnValue({
+				data: ref(boilerProductWithFuelType),
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { heatSource: "0" },
+				},
+			});
+			expect(screen.getByText("No LPG energy sources added.")).toBeDefined();
+			expect(screen.getByRole("link", { name: "Click here to add an LPG energy source" })).toBeDefined();
+		});
 	});
 	
 	describe("heat interface unit", () => {
