@@ -83,7 +83,7 @@ export function mapBoilers(state: ResolvedState): Record<string, SchemaBoilerWit
 					...("specifiedLocation" in boiler
 						? { specified_location: boiler.specifiedLocation }
 						: {}),
-					EnergySupply: boiler.packagedProductReference ? "mains gas" : defaultElectricityEnergySupplyName,
+					EnergySupply: boiler.packagedProductReference ? boiler.energySupply : defaultElectricityEnergySupplyName,
 				} as const satisfies SchemaBoilerWithProductReference,
 			];
 		}),

@@ -1,9 +1,9 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen, within } from "@testing-library/vue";
-import SpaceHeatingSummary from "./summary.vue";
-import { celsius } from "~/utils/units/temperature";
 import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 import { millimetre } from "~/utils/units/length";
+import { celsius } from "~/utils/units/temperature";
+import SpaceHeatingSummary from "./summary.vue";
 
 
 type ExpectedData = { [key: string]: string };
@@ -79,7 +79,7 @@ describe("Space heating summary page", () => {
 				needsSpecifiedLocation: true,
 				specifiedLocation: "internal",
 				maxFlowTemp: unitValue(2, celsius),
-
+				packagedProductReference: undefined,
 			};
 
 			const store = useEcaasStore();

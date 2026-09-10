@@ -16,10 +16,7 @@ const props = defineProps<{
 	emptyLinkMessage?: string;
 }>();
 
-const { energySupplies, getDefaultEnergySupply } = useEnergySupplies(
-	props.allowedFuelTypes,
-);
-
+const { energySupplies, getDefaultEnergySupply } = useEnergySupplies(props.allowedFuelTypes);
 </script>
 
 <template>

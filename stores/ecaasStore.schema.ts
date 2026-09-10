@@ -1070,6 +1070,24 @@ const boilerBase = pcdbProduct
 		energySupply: z.optional(fuelTypeZod),
 	});
 
+const boilerEnergySupply = {
+	discriminator: "packagedProductReference",
+	variants: [
+		z.object({
+			packagedProductReference: z.string(),
+			energySupply: fuelTypeZod,
+		}),
+		z.object({
+			packagedProductReference: z.literal(undefined),
+		}),
+	] satisfies Tuple,
+};
+
+const boilerDataZod = nestedDiscriminatedUnion(
+	boilerBase,
+	boilerEnergySupply,
+);
+
 export type HasPcdbPackagedProduct = z.infer<typeof hasPcdbPackagedProduct>;
 export type PcdbPackagedProduct = z.infer<typeof pcdbPackagedProduct>;
 
@@ -1090,7 +1108,7 @@ const heatInterfaceUnitBase = pcdbProduct.extend({
 
 const heatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpDataZod,
-	boilerBase,
+	boilerDataZod,
 	heatBatteryBase,
 	heatInterfaceUnitBase,
 ]);
@@ -1419,7 +1437,10 @@ const hotWaterHeatSourceWithColdWater = z.object({
 
 export type HotWaterHeatSourceWithColdWater = z.infer<typeof hotWaterHeatSourceWithColdWater>;
 
-const boilerHotWaterSourceBase = boilerBase.extend(hotWaterHeatSourceWithColdWater.shape);
+const boilerHotWaterSourceDataZod = nestedDiscriminatedUnion(
+	boilerBase.extend(hotWaterHeatSourceWithColdWater.shape),
+	boilerEnergySupply,
+);
 const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceWithColdWater.shape);
 
 const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
@@ -1429,7 +1450,7 @@ const heatInterfaceUnitHotWaterSourceBase = heatInterfaceUnitBase.extend(hotWate
 
 const newHotWaterHeatSourceDataZod = z.discriminatedUnion("typeOfHeatSource", [
 	heatPumpHotWaterDataZod,
-	boilerHotWaterSourceBase,
+	boilerHotWaterSourceDataZod,
 	heatBatteryHotWaterSourceBase,
 	solarThermalHotWaterSourceBase,
 	immersionHeaterHotWaterSourceBase,

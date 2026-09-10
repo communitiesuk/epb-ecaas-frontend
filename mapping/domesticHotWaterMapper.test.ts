@@ -1,10 +1,10 @@
-import type { BathData, DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, PreheatedWaterStorageData, WaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
-import { defaultColdWaterSourceData, mapColdWaterSource, mapDomesticHotWaterData, mapHotWaterSourcesData, mapPreheatedWaterSourceData } from "./domesticHotWaterMapper";
-import type { FhsInputSchema } from "./fhsInputMapper";
 import type { SchemaMixerShower } from "~/schema/api-schema.types";
+import type { BathData, DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, PreheatedWaterStorageData, WaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
+import { kilowatt } from "~/utils/units/power";
 import { celsius } from "~/utils/units/temperature";
 import { defaultElectricityEnergySupplyName } from "./common";
-import { kilowatt } from "~/utils/units/power";
+import { defaultColdWaterSourceData, mapColdWaterSource, mapDomesticHotWaterData, mapHotWaterSourcesData, mapPreheatedWaterSourceData } from "./domesticHotWaterMapper";
+import type { FhsInputSchema } from "./fhsInputMapper";
 
 const baseForm = {
 	data: [],
@@ -164,6 +164,7 @@ describe("domestic hot water mapper", () => {
 			productReference: "BOIL-12345",
 			maxFlowTemp: unitValue(32, celsius),
 			needsSpecifiedLocation: false,
+			packagedProductReference: undefined,
 		},
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
@@ -180,6 +181,7 @@ describe("domestic hot water mapper", () => {
 			productReference: "BOIL-12345",
 			maxFlowTemp: unitValue(32, celsius),
 			needsSpecifiedLocation: false,
+			packagedProductReference: undefined,
 		},
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
@@ -948,6 +950,7 @@ describe("domestic hot water mapper", () => {
 					productReference: "174",
 					needsSpecifiedLocation: false,
 					maxFlowTemp: unitValue(5, celsius),
+					packagedProductReference: undefined,
 				},
 				complete: true,
 			} as const satisfies EcaasForm<HeatSourceData>;
@@ -961,6 +964,7 @@ describe("domestic hot water mapper", () => {
 					productReference: "189",
 					needsSpecifiedLocation: false,
 					maxFlowTemp: unitValue(72, celsius),
+					packagedProductReference: undefined,
 				},
 				complete: true,
 			} as const satisfies EcaasForm<HeatSourceData>;
@@ -1519,6 +1523,7 @@ describe("domestic hot water mapper", () => {
 						id: "97316c1f-4ffd-4330-adff-7f826ddf3b7a",
 						coldWaterSource: storageTank.data.id,
 						packagedProductReference: heatPumpHWOnly.data.id,
+						energySupply: "mains_gas",
 					}, 
 					complete: true,
 				} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;

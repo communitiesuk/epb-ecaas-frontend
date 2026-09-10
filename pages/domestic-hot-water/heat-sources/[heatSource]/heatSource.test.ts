@@ -22,22 +22,6 @@ const { mockFetch, navigateToMock } = vi.hoisted(() => ({
 mockNuxtImport("navigateTo", () => navigateToMock);
 mockNuxtImport("useFetch", () => mockFetch);
 
-afterEach(() => {
-	store.$reset();
-	mockFetch.mockReset();
-	navigateToMock.mockReset();
-});
-
-
-
-mockNuxtImport("useFetch", () => mockFetch);
-
-const product: Partial<Product> = {
-	id: "1000",
-	brandName: "HEM Default",
-	modelName: "Model Name",
-};
-
 beforeEach(() => {
 	mockFetch.mockReturnValue({
 		data: ref(product),
@@ -47,7 +31,14 @@ beforeEach(() => {
 afterEach(() => {
 	store.$reset();
 	mockFetch.mockReset();
+	navigateToMock.mockReset();
 });
+
+const product: Partial<Product> = {
+	id: "1000",
+	brandName: "HEM Default",
+	modelName: "Model Name",
+};
 
 const existingHeatPumpSpaceHeating1: HeatSourceData = {
 	id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
@@ -123,6 +114,7 @@ const backupBoiler: DomesticHotWaterHeatSourceData = {
 	needsSpecifiedLocation: true,
 	packagedProductReference: "1000",
 	maxFlowTemp: unitValue(32, celsius),
+	energySupply: "mains_gas",
 };
 
 describe("Heat Source Page", () => {
@@ -482,6 +474,7 @@ describe("Heat Source Page", () => {
 			productReference: "2000",
 			needsSpecifiedLocation: true,
 			maxFlowTemp: unitValue(7, celsius),
+			packagedProductReference: undefined,
 		};
 
 		const dhwWithExistingBoiler: DomesticHotWaterHeatSourceData = {
@@ -623,6 +616,64 @@ describe("Boiler section", () => {
 
 		["internal", "external"].forEach(location => {
 			expect(screen.getByTestId<HTMLInputElement>(`specifiedLocation_${location}`).disabled).toBe(true);
+		});
+	});
+
+	describe("boiler energy supply", () => {
+		const backupBoilerProduct: Partial<BoilerProduct> = {
+			id: "2000",
+			brandName: "Test",
+			modelName: "Hybrid Heat Pump",
+			technologyType: "CombiBoiler",
+		};
+
+		beforeEach(async () => {
+			mockFetch.mockReturnValueOnce({
+				data: ref(backupBoilerProduct),
+			});
+
+			store.$patch({
+				domesticHotWater: {
+					heatSources: {
+						data: [
+							{
+								data: {
+									...backupBoiler,
+									energySupply: undefined,
+								},
+							},
+						],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity", "mains_gas", "LPG_bottled"],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { heatSource: "0" },
+				},
+			});
+		});
+
+		afterEach(() => {
+			mockFetch.mockReset();
+		});
+
+		it("only displays gaseous energy supplies when packaged with a heat pump", async () => {
+			expect(screen.getByTestId("energySupply_mains_gas")).toBeDefined();
+			expect(screen.queryByTestId("energySupply_electricity")).toBeNull();
+		});
+	
+		it("requires energy supply when packaged with a heat pump", async () => {
+			await user.click(screen.getByTestId("saveAndComplete"));
+	
+			expect(screen.getByTestId("energySupply_error")).toBeDefined();
 		});
 	});
 });

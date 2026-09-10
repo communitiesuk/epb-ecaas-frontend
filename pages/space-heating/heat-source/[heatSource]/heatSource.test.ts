@@ -35,6 +35,7 @@ describe("heatSource", () => {
 		productReference: "BOILER_SMALL",
 		needsSpecifiedLocation: false,
 		maxFlowTemp: unitValue(12, celsius),
+		packagedProductReference: undefined,
 	};
 
 	const boosterHeatPump: HeatSourceData = {
@@ -609,6 +610,7 @@ describe("heatSource", () => {
 					needsSpecifiedLocation: true,
 					packagedProductReference: "1000",
 					maxFlowTemp: unitValue(32, celsius),
+					energySupply: "mains_gas",
 				};
 				const heatPump: HeatSourceData = {
 					id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
@@ -1557,6 +1559,7 @@ describe("heatSource", () => {
 			needsSpecifiedLocation: true,
 			specifiedLocation: "external",
 			maxFlowTemp: unitValue(2, celsius),
+			packagedProductReference: undefined,
 		};
 
 		test("'BoilerSection' component displays when type of heat source is boiler", async () => {
@@ -1677,7 +1680,7 @@ describe("heatSource", () => {
 				needsSpecifiedLocation: true,
 				packagedProductReference: "1000",
 				maxFlowTemp: unitValue(32, celsius),
-
+				energySupply: "mains_gas",
 			};
 
 			store.$patch({
@@ -1761,6 +1764,7 @@ describe("heatSource", () => {
 			const actualHeatSource = store.spaceHeating.heatSource.data[0]!;
 			expect(actualHeatSource.data.name).toBe("Combi boiler");
 		});
+
 		it("removes backup boiler packaged with heat pump when heat source is changed from heat pump to another type", async () => {
 			const backupBoiler: HeatSourceData = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8b",
@@ -1771,6 +1775,7 @@ describe("heatSource", () => {
 				needsSpecifiedLocation: true,
 				packagedProductReference: "1000",
 				maxFlowTemp: unitValue(32, celsius),
+				energySupply: "mains_gas",
 			};
 			const heatPump: HeatSourceData = {
 				id: "1b73e247-57c5-26b8-1tbd-83tdkc8c3r8a",
@@ -1980,6 +1985,49 @@ describe("heatSource", () => {
 			expect(
 				screen.queryByTestId("incompatibleEnergySourceError"),
 			).toBeNull();
+		});
+
+		describe("boiler energy supply", () => {
+			beforeEach(async () => {
+				store.$patch({
+					spaceHeating: {
+						heatSource: {
+							data: [
+								{
+									data: {
+										...boiler1,
+										packagedProductReference: "1000",
+									},
+								},
+							],
+						},
+					},
+					dwellingDetails: {
+						generalSpecifications: {
+							data: {
+								fuelType: ["electricity", "mains_gas", "LPG_bottled"],
+							},
+						},
+					},
+				});
+
+				await renderSuspended(HeatSourceForm, {
+					route: {
+						params: { heatSource: "0" },
+					},
+				});
+			});
+
+			test("only displays gaseous energy supplies when packaged with a heat pump", async () => {
+				expect(screen.getByTestId("energySupply_mains_gas")).toBeDefined();
+				expect(screen.queryByTestId("energySupply_electricity")).toBeNull();
+			});
+
+			test("requires energy supply when packaged with a heat pump", async () => {
+				await user.click(screen.getByTestId("saveAndComplete"));
+
+				expect(screen.getByTestId("energySupply_error")).toBeDefined();
+			});
 		});
 
 		test("shows energy source field with available LPG fuel types (from dwelling details) when boiler product has a fuel type of LPG bulk", async() => {

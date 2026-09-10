@@ -4,11 +4,11 @@ import {
 } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
-import SpaceHeating from "./index.vue";
 import formStatus from "~/constants/formStatus";
-import HeatSourceForm from "./heat-source/[heatSource]/index.vue";
-import HeatEmitterForm from "./heat-emitters/[heatEmitter]/index.vue";
 import { celsius } from "~/utils/units/temperature";
+import HeatEmitterForm from "./heat-emitters/[heatEmitter]/index.vue";
+import HeatSourceForm from "./heat-source/[heatSource]/index.vue";
+import SpaceHeating from "./index.vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -32,6 +32,7 @@ describe("space heating", () => {
 		productReference: "BOILER_SMALL",
 		needsSpecifiedLocation: false,
 		maxFlowTemp: unitValue(32, celsius),
+		packagedProductReference: undefined,
 	};
 
 	const heatSource2: HeatSourceData = {
@@ -42,6 +43,7 @@ describe("space heating", () => {
 		productReference: "BOILER_MEDIUM",
 		needsSpecifiedLocation: false,
 		maxFlowTemp: unitValue(32, celsius),
+		packagedProductReference: undefined,
 	};
 
 	const heatSource3: HeatSourceData = {
@@ -53,6 +55,7 @@ describe("space heating", () => {
 		needsSpecifiedLocation: true,
 		specifiedLocation: "internal",
 		maxFlowTemp: unitValue(32, celsius),
+		packagedProductReference: undefined,
 	};
 
 	const heatBattery: HeatSourceData = {
@@ -640,6 +643,7 @@ describe("space heating", () => {
 					packagedProductReference: "1000",
 					needsSpecifiedLocation: false,
 					maxFlowTemp: unitValue(32, celsius),
+					energySupply: "mains_gas",
 				};
 
 				const exhaustAirHeatPump: HeatSourceData = {

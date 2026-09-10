@@ -1,12 +1,12 @@
-import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import DomesticHotWater from "@/pages/domestic-hot-water/index.vue";
-import { screen, within } from "@testing-library/vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
+import { screen, within } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
 import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, PreheatedWaterStorageData, WaterStorageData, WwhrsData } from "~/stores/ecaasStore.schema";
-import HotWaterOutlets from "./hot-water-outlets/[outlet]/index.vue";
-import { litre } from "~/utils/units/volume";
 import { celsius } from "~/utils/units/temperature";
+import { litre } from "~/utils/units/volume";
+import HotWaterOutlets from "./hot-water-outlets/[outlet]/index.vue";
 
 const baseCompleteForm = {
 	data: [],
@@ -39,6 +39,7 @@ describe("Domestic hot water", () => {
 			specifiedLocation: "internal",
 			heatSourceId: "NEW_HEAT_SOURCE",
 			maxFlowTemp: unitValue(12, celsius),
+			packagedProductReference: undefined,
 		},
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
@@ -392,6 +393,7 @@ describe("Domestic hot water", () => {
 						isExistingHeatSource: false,
 						coldWaterSource: "mainsWater",
 						heatSourceId: "NEW_HEAT_SOURCE",
+						packagedProductReference: undefined,
 					},
 				} satisfies EcaasForm<DomesticHotWaterHeatSourceData>,
 			},
@@ -822,6 +824,7 @@ describe("Domestic hot water", () => {
 				packagedProductReference: "1000",
 				needsSpecifiedLocation: false,
 				maxFlowTemp: unitValue(32, celsius),
+				energySupply: "mains_gas",
 			};
 
 			const exhaustAirHeatPump: HeatSourceData = {
@@ -1612,6 +1615,7 @@ describe("Domestic hot water", () => {
 				packagedProductReference: "1000",
 				needsSpecifiedLocation: false,
 				maxFlowTemp: unitValue(32, celsius),
+				energySupply: "mains_gas",
 			};
 
 			store.$patch({
