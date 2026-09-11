@@ -23,7 +23,10 @@ const boilerProduct = ref<BoilerProduct>();
 const heatSources = getCombinedHeatSources(store);
 
 const handleProductLoaded = (product: AnyPcdbProduct) => {
-	if (product.technologyType === "CombiBoiler" || product.technologyType === "RegularBoiler") {
+	if (
+		product.technologyType === "CombiBoiler" ||
+    product.technologyType === "RegularBoiler"
+	) {
 		boilerProduct.value = product;
 	}
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { getTabItems, getUrl, type HeatEmittingData, type WetDistributionEmitterData, type WetDistributionSystemData } from "#imports";
 import type { SummarySection } from "~/common.types";
-import { getTabItems, getUrl, type HeatEmittingData, type WetDistributionSystemData, type WetDistributionEmitterData } from "#imports";
-import { displayBoilerLocation, displayConvectiveType } from "~/utils/display";
 import { useProductReferences } from "~/composables/productReferences";
+import { displayBoilerLocation, displayConvectiveType } from "~/utils/display";
 
 const store = useEcaasStore();
 const title = "Space heating summary";
@@ -38,6 +38,19 @@ const emitterTypeOptions = {
 	underFloorHeating: "Underfloor heating",
 	fanCoil: "Fan coil",
 } as const;
+
+const lpgFuelTypes = [
+	"LPG_bulk",
+	"LPG_bottled",
+	"LPG_condition_11F",
+];
+
+const hasLpgBoiler = boilers.some(
+	({ data: heatSource }) =>
+		"energySupply" in heatSource &&
+		heatSource.energySupply !== undefined &&
+		lpgFuelTypes.includes(heatSource.energySupply),
+);
 
 function formatEmitterRowsForSummary(emitters: WetDistributionEmitterData[]): Record<string, string | number> {
 	const rows: Record<string, string | number> = {};
@@ -100,6 +113,15 @@ const boilerSummary: SummarySection = {
 				"Product reference": "productReference" in heatSource ? heatSource.productReference : emptyValueRendering,
 				"Product name": "productReference" in heatSource && heatSource.productReference ? heatSourceModelNames[heatSource.productReference] : emptyValueRendering,
 				"Location of boiler": "specifiedLocation" in heatSource && heatSource.specifiedLocation ? displayBoilerLocation(heatSource.specifiedLocation) : emptyValueRendering,
+				...(hasLpgBoiler
+					? {
+						"LPG energy source":
+							"energySupply" in heatSource && heatSource.energySupply
+								? lpgFuelTypes.includes(heatSource.energySupply)
+									? energySupplyOptions[heatSource.energySupply]
+									: emptyValueRendering
+								: emptyValueRendering,
+					} : {}),
 				"Maximum flow temperature": "maxFlowTemp" in heatSource ? dim(heatSource.maxFlowTemp) : emptyValueRendering,
 			};
 			return summary;
