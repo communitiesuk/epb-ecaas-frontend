@@ -3,7 +3,13 @@ import yn from "yn";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-	compatibilityDate: "2024-04-03",
+	compatibilityDate: "2025-07-15",
+
+	srcDir: ".",
+
+	dir: {
+		app: "app",
+	},
 
 	rootDir: typeof process.env.EXPLICIT_ROOT_DIR !== "undefined" ? process.env.EXPLICIT_ROOT_DIR : undefined,
 
@@ -115,6 +121,11 @@ export default defineNuxtConfig({
 
 	typescript: {
 		typeCheck: true,
+		tsConfig: {
+			compilerOptions: {
+				types: ["vitest/globals"],
+			},
+		},
 	},
 
 	experimental: {
