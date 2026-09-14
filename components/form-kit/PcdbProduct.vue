@@ -349,6 +349,11 @@ function handleChooseProduct(event: Event) {
 							<li>Brand: <span class="bold">{{ productData.brandName }}</span></li>
 							<li>Model: <span class="bold">{{ productData.modelName }}</span></li>
 							<li>Model Qualifier: <span class="bold">{{ productData.modelQualifier ?? '-' }}</span></li>
+
+							<li v-if="isBoilerProduct(productData)">
+								Fuel: <span class="bold">{{ productFuelDisplay ?? '-' }}</span>
+							</li>
+
 							<li v-if="isHeatPumpSummary">Heat pump type: <span class="bold" data-testid="productData_heatPumpType">{{ getHeatPumpType() }}</span></li>
 							<li v-if="isHeatPumpSummary || isBoilerSummary || isMechanicalVentilationSummary">Packaged products: <span class="bold" data-testid="productData_packagedProducts">{{ getPackagedProductType() }}</span></li>
 						</template>

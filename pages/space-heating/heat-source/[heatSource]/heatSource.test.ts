@@ -1831,6 +1831,40 @@ describe("heatSource", () => {
 			expect(backUpBolerInStoreAfterChange).toBeUndefined();
 		});
 
+		test("displays fuel for a boiler product", async () => {
+			const boilerProductWithLPGFuelType: Partial<BoilerProduct> = {
+				id: "BOILER_SMALL",
+				brandName: "Boiler",
+				modelName: "Small Boiler",
+				technologyType: "CombiBoiler",
+				fuel: "LPG_bulk",
+			};
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: boiler1 }],
+					},
+				},
+			});
+
+			mockFetch.mockReturnValue({
+				data: ref(boilerProductWithLPGFuelType),
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { heatSource: "0" },
+				},
+			});
+
+			const productData = await screen.findByTestId("pcdbProductData");
+			window.console.log(productData.textContent);
+			window.console.log(boilerProductWithLPGFuelType);
+
+			expect(productData.textContent).toContain("Fuel:");
+			expect(productData.textContent).toContain("LPG (Liquid petroleum gas) - bulk");
+		});
+
 		test("shows an error when the selected boiler product uses an energy source that has not been added to general details", async () => {
 			store.$patch({
 				spaceHeating: {
