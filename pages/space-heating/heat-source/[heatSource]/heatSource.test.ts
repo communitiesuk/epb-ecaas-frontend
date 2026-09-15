@@ -2185,7 +2185,7 @@ describe("heatSource", () => {
 					params: { heatSource: "0" },
 				},
 			});
-			expect(screen.getByText("No LPG energy sources added.")).toBeDefined();
+			expect(screen.getByText("No LPG energy sources added")).toBeDefined();
 			expect(screen.getByRole("link", { name: "Click here to add an LPG energy source" })).toBeDefined();
 		});
 	});

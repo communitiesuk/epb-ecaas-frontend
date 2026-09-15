@@ -33,9 +33,8 @@ const handleProductLoaded = (product: AnyPcdbProduct) => {
 	props.onProductLoaded?.(product);
 };
 
-const showEnergySource = computed(() => {
-	return boilerProduct.value?.fuel === "LPG_bulk";
-});
+const showLpgEnergySource = computed(() => boilerProduct.value?.fuel === "LPG_bulk");
+const showGasEnergySource = computed(() => !boilerProduct.value?.fuel && props.model.packagedProductReference);
 
 const locationOfBoilerOptions = {
 	"internal": "Heated space",
@@ -43,8 +42,6 @@ const locationOfBoilerOptions = {
 } as const satisfies Record<SchemaBoilerLocationType, BoilerLocationDisplay>;
 
 const emit = defineEmits(["update-boiler-model"]);
-
-const { energySupplies, getDefaultEnergySupply } = useEnergySupplies(["mains_gas", "LPG_bottled", "LPG_bulk", "LPG_condition_11F"]);
 </script>
 
 <template>
@@ -96,7 +93,7 @@ const { energySupplies, getDefaultEnergySupply } = useEnergySupplies(["mains_gas
 			:disabled="hasPackagedProduct(model)"
 		/>
 		<FieldsEnergySupplies
-			v-if="showEnergySource"
+			v-if="showLpgEnergySource"
 			id="energySupply"
 			name="energySupply"
 			label="LPG Energy source"
@@ -106,8 +103,23 @@ const { energySupplies, getDefaultEnergySupply } = useEnergySupplies(["mains_gas
 				'LPG_bottled',
 				'LPG_condition_11F',
 			]"
-			empty-message="No LPG energy sources added."
+			empty-message="No LPG energy sources added"
 			empty-link-message="Click here to add an LPG energy source"
+		/>
+		<FieldsEnergySupplies
+			v-else-if="showGasEnergySource"
+			id="energySupply"
+			name="energySupply"
+			label="Energy supply"
+			help="Select the relevant energy supply that has been added previously"
+			:allowed-fuel-types="[
+				'mains_gas',
+				'LPG_bulk',
+				'LPG_bottled',
+				'LPG_condition_11F',
+			]"
+			empty-message="No gaseous energy sources added"
+			empty-link-message="Click here to add a gaseous energy source"
 		/>
 		<FormKit
 			id="maxFlowTemp"
@@ -119,18 +131,5 @@ const { energySupplies, getDefaultEnergySupply } = useEnergySupplies(["mains_gas
 			validation="required"
 			:data-field="page == 'domestic hot water' ? 'HotWaterSource.*.HeatSource.*.temp_flow_limit_upper' :  'SpaceHeatSystem.*HeatSource.temp_flow_limit_upper'"
 		/>
-		<ClientOnly>
-			<FormKit
-				v-if="model.packagedProductReference && energySupplies.length"
-				id="energySupply"
-				type="govRadios"
-				:options="new Map(energySupplies)"
-				label="Energy supply"
-				help="Select the relevant energy supply that has been added previously"
-				name="energySupply"
-				:value="getDefaultEnergySupply()"
-				validation="required"
-			/>
-		</ClientOnly>
 	</template>
 </template>
