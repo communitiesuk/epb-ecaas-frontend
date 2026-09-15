@@ -166,7 +166,7 @@ watch(model, (currentModel, prevModel) => {
 			id="taggedItem"
 			name="taggedItem"
 			label="Associated wall or roof"
-			help="Select the wall or roof that this door is in. It should have the same orientation and pitch as the door."
+			help="Select the wall or roof that this window is in. It should have the same orientation and pitch as the window."
 		/>
 		<template v-if="mounted && model && (model.taggedItem === 'none' || tagOptions.length === 1)">
 			<FieldsPitch
