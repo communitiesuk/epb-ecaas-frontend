@@ -152,7 +152,7 @@ describe("Get error message", () => {
 
 describe("Is integer", () => {
 	const makeNode = (value: string | number | null | undefined): FormKitNode =>
-		({ value } as unknown as FormKitNode);
+		(({ value }));
 
 	it("returns true for integer numbers", () => {
 		expect(isInteger(makeNode(0))).toBe(true);
@@ -180,5 +180,45 @@ describe("Is integer", () => {
 		expect(isInteger(makeNode("abc"))).toBe(false);
 		expect(isInteger(makeNode("42abc"))).toBe(false);
 		expect(isInteger(makeNode("abc42"))).toBe(false);
+	});
+});
+
+describe("Format validation message", () => {
+	it("removes the full stop from a one-sentence message", () => {
+		const result = formatValidationMessage("Field is required.");
+
+		expect(result).toBe("Field is required");
+	});
+
+	it("removes the full stop from a required question message", () => {
+		const result = formatValidationMessage(
+			"Can any energy generated on site be exported to the grid? is required.",
+		);
+
+		expect(result).toBe(
+			"Can any energy generated on site be exported to the grid? is required",
+		);
+	});
+
+	it("keeps full stops when the message contains multiple sentences", () => {
+		const result = formatValidationMessage(
+			"The value is invalid. Please enter a valid value.",
+		);
+
+		expect(result).toBe(
+			"The value is invalid. Please enter a valid value.",
+		);
+	});
+
+	it("keeps an exclamation mark", () => {
+		const result = formatValidationMessage("Please select an option!");
+
+		expect(result).toBe("Please select an option!");
+	});
+
+	it("keeps a question mark", () => {
+		const result = formatValidationMessage("Please select an option?");
+
+		expect(result).toBe("Please select an option?");
 	});
 });

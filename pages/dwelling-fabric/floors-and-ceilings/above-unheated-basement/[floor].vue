@@ -138,7 +138,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="thermalResistance"
 			validation="required | number | min:0.00001 | max:50">
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
+				<p class="govuk-body">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
 			</GovDetails>
 		</FormKit>
 		<FormKit
@@ -159,7 +159,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="perimeter"
 			:validation="zodTypeAsFormKitValidation(groundPerimeterZod)">
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings.</p>
+				<p class="govuk-body">This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings</p>
 			</GovDetails>
 		</FormKit>
 		<FormKit
@@ -198,7 +198,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="thermalResistanceOfBasementWalls"
 			validation="required | number">
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
+				<p class="govuk-body">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
 			</GovDetails>
 		</FormKit>
 		<FormKit
@@ -210,7 +210,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:unit="millimetre"
 			:validation="zodTypeAsFormKitValidation(thicknessOfWallsZod)">
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">This is usually measured from the inside surface to the outside surface. If the thickness varies, enter a weighted average.</p>
+				<p class="govuk-body">This is usually measured from the inside surface to the outside surface. If the thickness varies, enter a weighted average.</p>
 			</GovDetails>
 		</FormKit>
 		<div class="govuk-button-group govuk-!-margin-top-6">

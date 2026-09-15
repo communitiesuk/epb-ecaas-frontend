@@ -947,8 +947,8 @@ describe("Heat emitters", () => {
 				await user.click(screen.getByTestId("saveAndComplete"));
 			
 				const errorSummary = await screen.findByTestId("heatEmitterErrorSummary");
-				expect(errorSummary.textContent).toContain("Design flow rate is required.");
-				expect(errorSummary.textContent).toContain("Design flow temperature is required.");
+				expect(errorSummary.textContent).toContain("Design flow rate is required");
+				expect(errorSummary.textContent).toContain("Design flow temperature is required");
 				expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn't been added as an energy source for this dwelling.");
 			});
 			test("doesn't mark wet distribution system as complete when an emitter is incomplete", async () => {
@@ -1204,8 +1204,8 @@ describe("Heat emitters", () => {
 				await user.click(screen.getByTestId("saveAndComplete"));
 	
 				const errorSummary = await screen.findByTestId("heatEmitterErrorSummary");
-				expect(errorSummary.textContent).toContain("Design flow rate is required.");
-				expect(errorSummary.textContent).toContain("Design flow temperature is required.");
+				expect(errorSummary.textContent).toContain("Design flow rate is required");
+				expect(errorSummary.textContent).toContain("Design flow temperature is required");
 				expect(errorSummary.textContent).toContain("This product uses LPG (Liquid petroleum gas) - bulk which hasn't been added as an energy source for this dwelling.");
 				expect(errorSummary.textContent).toContain("Complete all fields in the Emitters section before marking the heat emitters section as complete.");
 	
@@ -1723,7 +1723,7 @@ describe("Heat emitters", () => {
 			const errorSummary = await screen.findByTestId("heatEmitterErrorSummary");
 		
 			expect(errorSummary.textContent).toContain(
-				"Number of storage heaters is required.",
+				"Number of storage heaters is required",
 			);
 		
 			expect(errorSummary.textContent).toContain(

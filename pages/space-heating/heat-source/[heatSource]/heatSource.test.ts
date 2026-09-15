@@ -449,7 +449,7 @@ describe("heatSource", () => {
 			const errorSummary = await screen.findByTestId("heatSourceErrorSummary");
 
 			expect(errorSummary.textContent).toContain(
-				"Maximum flow temperature is required.",
+				"Maximum flow temperature is required",
 			);
 
 			expect(errorSummary.textContent).toContain(
@@ -1947,7 +1947,7 @@ describe("heatSource", () => {
 			const errorSummary = await screen.findByTestId("heatSourceErrorSummary");
 
 			expect(errorSummary.textContent).toContain(
-				"Maximum flow temperature is required.",
+				"Maximum flow temperature is required",
 			);
 
 			expect(errorSummary.textContent).toContain(
@@ -2666,7 +2666,7 @@ describe("heatSource", () => {
 			const errorSummary = await screen.findByTestId("heatSourceErrorSummary");
 
 			expect(errorSummary.textContent).toContain(
-				"Maximum flow temperature is required.",
+				"Maximum flow temperature is required",
 			);
 
 			expect(errorSummary.textContent).toContain(

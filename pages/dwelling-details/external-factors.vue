@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { SchemaTerrainClass, SchemaVentilationShieldClass } from "~/schema/aliases";
 import { getUrl } from "#imports";
+import type { SchemaTerrainClass, SchemaVentilationShieldClass } from "~/schema/aliases";
 
 const title = "External factors";
 const store = useEcaasStore();

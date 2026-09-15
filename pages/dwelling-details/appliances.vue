@@ -66,7 +66,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="appliancesDisplayTypes"
 			:validation-rules="{ isFridgeInChoice }"
 			validation="required | isFridgeInChoice"
-			:validation-messages="{isFridgeInChoice: 'Fridge or Fridge-freezer is required.'}"
+			:validation-messages="{isFridgeInChoice: 'Fridge or Fridge-freezer is required'}"
 		/> 
 		<FormKit
 			id="kitchenExtractorHoodExternal"	

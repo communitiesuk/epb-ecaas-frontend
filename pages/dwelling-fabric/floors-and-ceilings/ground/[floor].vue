@@ -244,7 +244,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			validation="required | number | min:0.00001 | max:50"
 			data-field="Zone.BuildingElement.*.thermal_resistance_floor_construction">
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
+				<p class="govuk-body">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
 			</GovDetails>
 		</FormKit>
 		<template v-if="mounted && model?.typeOfGroundFloor === 'Suspended_floor'">
@@ -253,7 +253,7 @@ const greaterThanZero = (node: FormKitNode) => {
 				type="govInputWithSuffix"
 				suffix-text="(m²·K)/W"
 				label="Thermal resistance of insulation on base of underfloor space"
-				help="Enter the thermal resistance of the insulation installed at the base of the underfloor space. Typically between 0.5 and 2.5 (m²·K)/W"
+				help="Enter the thermal resistance of the insulation installed at the base of the underfloor space. Typically between 0.5 and 2.5 (m²·K)/W."
 				name="underfloorSpaceThermalResistance"
 				validation="required | number"
 				data-field="Zone.BuildingElement.*.thermal_resist_insul"
@@ -267,7 +267,7 @@ const greaterThanZero = (node: FormKitNode) => {
 				type="govInputWithSuffix"
 				suffix-text="W/(m²·K)"
 				label="U-value of walls above ground"
-				help="Enter the U-value of the external walls above ground level. Typically between 0.08 and 0.25 W/(m²·K)"
+				help="Enter the U-value of the external walls above ground level. Typically between 0.08 and 0.25 W/(m²·K)."
 				name="thermalTransmittanceOfWallsAboveGround"
 				validation="required | number"
 				data-field="Zone.BuildingElement.*.thermal_transm_walls"/>
@@ -288,7 +288,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			:validation="zodTypeAsFormKitValidation(groundPerimeterZod)"
 			data-field="Zone.BuildingElement.*.perimeter">
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings.</p>
+				<p class="govuk-body">This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings</p>
 			</GovDetails>
 		</FormKit>
 		<FormKit
@@ -301,7 +301,7 @@ const greaterThanZero = (node: FormKitNode) => {
 			:validation="zodTypeAsFormKitValidation(thicknessOfWallsZod)"
 			data-field="Zone.BuildingElement.*.thickness_walls">
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">This is usually measured from the inside surface to the outside surface.</p>
+				<p class="govuk-body">This is usually measured from the inside surface to the outside surface</p>
 			</GovDetails>
 		</FormKit>
 		<template v-if="mounted && model?.typeOfGroundFloor === 'Slab_edge_insulation'">
@@ -416,7 +416,7 @@ const greaterThanZero = (node: FormKitNode) => {
 				name="ventilationOpeningsArea"
 				validation="required | number">
 				<GovDetails summary-text="Help with this input">
-					<p class="govuk-hint">Often suspended floors require additional ventilation to prevent moisture build up and structural damage. While ventilation is crucial for moisture control, it can lead to heat loss from the building.</p>
+					<p class="govuk-body">Often suspended floors require additional ventilation to prevent moisture build up and structural damage. While ventilation is crucial for moisture control, it can lead to heat loss from the building.</p>
 				</GovDetails>
 			</FormKit>
 			<FormKit

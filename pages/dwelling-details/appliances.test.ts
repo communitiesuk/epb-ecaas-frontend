@@ -1,7 +1,7 @@
-import Appliances from "./appliances.vue";
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
+import Appliances from "./appliances.vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -83,7 +83,7 @@ describe("Appliances", () => {
 		const errorSummary = await screen.findByTestId("appliancesErrorSummary");
 
 		expect(
-			errorSummary.textContent.includes("Fridge or Fridge-freezer is required."),
+			errorSummary.textContent.includes("Fridge or Fridge-freezer is required"),
 		).toBe(true);
 	});
 

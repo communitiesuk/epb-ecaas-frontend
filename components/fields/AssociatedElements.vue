@@ -46,7 +46,7 @@ const flattenedOptions = options.flat().filter(x => x[0] !== undefined);
 			:validation-rules="validationRules"
 			:validation-messages="validationMessages">
 			<div v-if="!flattenedOptions.length">
-				<p class="govuk-error-message">No walls or ceilings added.</p>
+				<p class="govuk-error-message">No walls or ceilings added</p>
 				<div class="gov-radios-add-links">
 					<NuxtLink :to="getUrl('dwellingSpaceWalls')" class="govuk-link gov-radios-add-link">
 						Click here to add walls

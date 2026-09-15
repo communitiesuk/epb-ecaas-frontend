@@ -28,7 +28,7 @@ const {
 		:data-field="dataField">
 		<GovDetails summary-text="Help with this input">
 			<img src="/img/orientation-measurement.png" alt="Orientation measurement">
-			<p class="govuk-hint">{{ detailsCaption }}</p>
+			<p class="govuk-body">{{ detailsCaption }}</p>
 		</GovDetails>
 	</FormKit>
 </template>

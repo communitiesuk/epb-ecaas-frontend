@@ -154,7 +154,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation="zodTypeAsFormKitValidation(groundPerimeterZod)"
 		>
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings.</p>
+				<p class="govuk-body">This should include the perimeter to unconditioned spaces like garages, but not the perimeter to conditioned spaces such as adjacent heated dwellings</p>
 			</GovDetails>
 		</FormKit>
 		<FormKit

@@ -229,11 +229,11 @@ watch(model, (currentModel, prevModel) => {
 					<tbody class="govuk-table__body">
 						<tr class="govuk-table__row">
 							<th scope="row" class="govuk-table__header">0</th>
-							<td class="govuk-table__cell">There is no frame, only glass</td>
+							<td class="govuk-table__cell">There is no frame, only glass.</td>
 						</tr>
 						<tr class="govuk-table__row">
 							<th scope="row" class="govuk-table__header">1</th>
-							<td class="govuk-table__cell">There is no glass</td>
+							<td class="govuk-table__cell">There is no glass.</td>
 						</tr>
 					</tbody>
 				</table>
