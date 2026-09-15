@@ -176,14 +176,13 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 }
 
 export function mapVentsData(state: ResolvedState) {
-	const { dwellingSpaceWindows } = state.dwellingFabric;
-	const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
+	const { dwellingSpaceWindows, dwellingSpaceRoofs, dwellingSpaceWalls: { dwellingSpaceExternalWall } } = state.dwellingFabric;
 
 	const entries = state.infiltrationAndVentilation.vents.map((x): [string, SchemaVent] => {
 		const key = x.name;
 
 		const taggedItem = x.associatedItemId && x.associatedItemId !== "none" ? getResolvedTaggedItem(
-			[dwellingSpaceWindows, dwellingSpaceExternalWall],
+			[dwellingSpaceWindows, dwellingSpaceRoofs, dwellingSpaceExternalWall],
 			x.associatedItemId,
 		) : null;
 
