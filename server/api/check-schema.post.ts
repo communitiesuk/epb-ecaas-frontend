@@ -1,6 +1,5 @@
-import type { CheckSchema } from "../server.types";
 import { ajv, humanReadable } from "~/schema/validator";
-import * as Sentry from "@sentry/nuxt";
+import type { CheckSchema } from "../server.types";
 
 export default defineEventHandler(async (event): Promise<CheckSchema> => {
 	const inputBody = await readBody(event);
@@ -10,7 +9,7 @@ export default defineEventHandler(async (event): Promise<CheckSchema> => {
 	if (!isValid) {
 		const validationErrors = validate.errors!;
 		const readableErrors = humanReadable(validationErrors, inputBody);
-		reportErrors(inputBody, readableErrors, "Schema validation error");
+		reportSchemaCheckErrors(inputBody, readableErrors, "Schema validation error");
 
 		return {
 			success: false,
@@ -21,11 +20,6 @@ export default defineEventHandler(async (event): Promise<CheckSchema> => {
 	}
 });
 
-function reportErrors(requestData: object, validationErrors: string, errorMessage: string) {
-	Sentry.withScope(scope => {
-		scope.setExtra("validationErrors", validationErrors);
-		scope.setExtra("requestBody", JSON.stringify(requestData));
-		scope.setFingerprint([errorMessage]);
-		Sentry.captureException(new Error(errorMessage));
-	});
+function reportSchemaCheckErrors(requestData: object, validationErrors: string, errorMessage: string) {
+	return reportErrors(requestData, validationErrors, errorMessage, "schemaCheck", "schemaCheck");
 }

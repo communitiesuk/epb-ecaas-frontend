@@ -1,12 +1,11 @@
+import type { ErrorObject } from "ajv";
 import { ApiPaths } from "~/schema/api-schema.types";
+import { ajv, humanReadable } from "~/schema/validator";
+import type { CorrectedJsonApiError } from "~/stores/ecaasStore.schema";
 import type { ApiInfoResponse, FhsComplianceResponseIncludingErrors, TokenResponse } from "../server.types";
 import clientSession from "../services/clientSession";
-import { ajv, humanReadable } from "~/schema/validator";
-import * as Sentry from "@sentry/nuxt";
-import type { CorrectedJsonApiError } from "~/stores/ecaasStore.schema";
-import type { ErrorObject } from "ajv";
+import { reportErrors } from "../utils/reportErrors";
 import { reportCalculateMetric } from "./sentryMetrics";
-import zlib from "zlib";
 
 const ecaasApi = {
 	getToken: async (clientId: string, clientSecret: string) => {
@@ -43,7 +42,7 @@ const ecaasApi = {
 		const isValid = validate(data);
 		if (!isValid) {
 			const validationErrors = validate.errors!;
-			reportErrors(data, humanReadable(validationErrors, data), "Schema validation error");
+			reportRequestErrors(data, humanReadable(validationErrors, data), "Schema validation error");
 			return responseForValidationErrors(validate.errors!, data);
 		}
 
@@ -62,7 +61,7 @@ const ecaasApi = {
 		if ("errors" in response) {
 			const errorMessage = response.errors?.[0]?.detail ?? "Unknown error";
 
-			reportErrors(data, response.errors, errorMessage);
+			reportRequestErrors(data, response.errors, errorMessage);
 		};
 
 		reportCalculateMetric(data, "errors" in response);
@@ -71,27 +70,8 @@ const ecaasApi = {
 	},
 };
 
-function reportErrors(requestData: object, responseErrors: CorrectedJsonApiError[] | string, errorMessage: string): void {
-	const requestAsJsonString = JSON.stringify(requestData);
-			
-	Sentry.withScope(scope => {
-		scope.setExtra("responseErrors", responseErrors);
-		scope.setExtra("requestBody", requestAsJsonString);
-
-		// compress with brotli if we can
-		const bufferForCompression = Buffer.from(requestAsJsonString, "utf-8");
-		zlib.brotliCompress(bufferForCompression, (err, compressedBuffer) => {
-			if (err) {
-				console.log("Unable to compress the request JSON using brotli.");
-				return;
-			}
-
-			scope.setExtra("requestBody with brotli compression in base64", compressedBuffer.toString("base64"));
-		});
-
-		scope.setFingerprint([errorMessage]);
-		Sentry.captureException(new Error(errorMessage));
-	});
+function reportRequestErrors(requestData: object, responseErrors: CorrectedJsonApiError[] | string, errorMessage: string): void {
+	return reportErrors(requestData, responseErrors, errorMessage, "request", "response");
 }
 
 function responseForValidationErrors(errors: ErrorObject[], data: object): Promise<FhsComplianceResponseIncludingErrors> {
