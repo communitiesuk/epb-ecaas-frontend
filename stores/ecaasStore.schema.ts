@@ -1249,13 +1249,16 @@ const wetDistributionSystemEmitterDraftSchema = z.object({
 const heatingRank = z.number().int().min(1).optional();
 export const tempDiffEmitDsgnWetDistributionZod = z.number().gt(0).max(70);
 
+// percentageRecirculated is transformed into bypass_fraction_recirculated which has an exclusive maximum of 1, hence this `lt` bound
+export const percentageRecirculatedZod = z.number().min(0).lt(100);
+
 const wetDistributionSystemBase = namedWithId.extend({
 	typeOfHeatEmitter: z.literal("wetDistributionSystem"),
 	heatSource: z.string(),
 	designFlowTemp: z.number(),
 	designTempDiffAcrossEmitters: tempDiffEmitDsgnWetDistributionZod,
 	emitters: z.array(z.union([wetDistributionSystemEmittersFields, wetDistributionSystemEmitterDraftSchema])),
-	percentageRecirculated: z.number().min(0).max(100),
+	percentageRecirculated: percentageRecirculatedZod,
 	heatingRank,
 });
 
