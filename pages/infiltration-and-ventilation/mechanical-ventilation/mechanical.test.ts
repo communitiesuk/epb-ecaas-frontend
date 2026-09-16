@@ -1,9 +1,9 @@
-import { screen } from "@testing-library/vue";
-import userEvent from "@testing-library/user-event";
-import MechanicalVentilationOverview from "./index.vue";
-import MechanicalVentilationForm from "./[mechanical]/index.vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import InfiltrationAndVentilationTaskPage from "../index.vue";
+import MechanicalVentilationForm from "./[mechanical]/index.vue";
+import MechanicalVentilationOverview from "./index.vue";
 
 describe("mechanical ventilation overview", () => {
 	const store = useEcaasStore();
@@ -325,7 +325,7 @@ describe("mechanical ventilation overview", () => {
 
 	it("should only display warning message when mechanical ventilations of type mvhr have been added", async () => {
 		const warningMessage =
-			"Note if you remove a MVHR or Centralised MV this will also remove any associated ductwork";
+			"Note if you remove a MVHR or Centralised MV this will also remove any associated ductwork.";
 		await renderSuspended(MechanicalVentilationOverview);
 
 		expect(screen.queryByText(warningMessage)).toBeNull();
@@ -346,7 +346,7 @@ describe("mechanical ventilation overview", () => {
 
 	it("should only display warning message when mechanical ventilations of type centralised mv have been added", async () => {
 		const warningMessage =
-			"Note if you remove a MVHR or Centralised MV this will also remove any associated ductwork";
+			"Note if you remove a MVHR or Centralised MV this will also remove any associated ductwork.";
 		await renderSuspended(MechanicalVentilationOverview);
 
 		expect(screen.queryByText(warningMessage)).toBeNull();
