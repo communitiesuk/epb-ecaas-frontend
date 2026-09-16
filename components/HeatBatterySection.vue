@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { heatBatteryTypes, uniqueName } from "#imports";
-import { celsius } from "~/utils/units/temperature";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
+import { celsius } from "~/utils/units/temperature";
 
 const route = useRoute();
 const store = useEcaasStore();
@@ -56,7 +56,7 @@ const handleProductLoaded = (product: AnyPcdbProduct) => {
 			<FieldsSelectPcdbProduct
 				id="selectHeatBattery"
 				label="Select a heat battery"
-				help="Select the heat battery type from the PCDB using the button below."
+				help="Select the heat battery type from the PCDB using the button below"
 				:selected-product-reference="model.productReference"
 				:selected-product-type="model.typeOfHeatBattery"
 				:page-url="route.fullPath"

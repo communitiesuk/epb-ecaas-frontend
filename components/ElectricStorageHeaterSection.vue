@@ -27,7 +27,7 @@ defineProps<{
 		label="Select product"
 		name="productReference"
 		validation="required"
-		help="Select the electric storage heater type from the PCDB using the button below."
+		help="Select the electric storage heater type from the PCDB using the button below"
 		:selected-product-reference="model.productReference"
 		:selected-product-type="model.typeOfHeatEmitter"
 		:page-url="route.fullPath"

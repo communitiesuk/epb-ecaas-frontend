@@ -62,7 +62,7 @@ const heatSourceOptions = [
 			:data-field="dataField">
 			<div v-if="!heatSourceOptions.length"
 			>
-				<p class="govuk-error-message">No heat sources added.</p>
+				<p class="govuk-error-message">No heat sources added</p>
 				<NuxtLink :to="getUrl('heatSourcesCreate')" class="govuk-link gov-radios-add-link">
 					Click here to add a heat source
 				</NuxtLink>

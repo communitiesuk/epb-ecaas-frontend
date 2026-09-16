@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { bathSizeZod, otherFlowRateZod, ratedPowerShowerZod, showerFlowRateZod, typeOfShowerProduct, type HotWaterOutletsData } from "~/stores/ecaasStore.schema";
 import { coldWaterSourceOptions, getUrl, hotWaterOutletTypes } from "#imports";
 import { v4 as uuidv4 } from "uuid";
+import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
+import { bathSizeZod, otherFlowRateZod, ratedPowerShowerZod, showerFlowRateZod, typeOfShowerProduct, type HotWaterOutletsData } from "~/stores/ecaasStore.schema";
 import { getHotWaterOutletDefaultName } from "~/utils/getHotWaterOutletDefaultName";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
-import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
 
 const title = "Hot water outlets";
 const store = useEcaasStore();
@@ -188,7 +188,7 @@ const associatedWwhrs = useAssociatedItems(["wwhrs"]);
 				v-if="model.isAirPressureShower === true"
 				id="airPressureShowerProductReference"
 				name="airPressureShowerProductReference"
-				help="Select the shower type from the PCDB using the button below."
+				help="Select the shower type from the PCDB using the button below"
 				:selected-product-reference="model.airPressureShowerProductReference"
 				:selected-product-type="typeOfShowerProduct.airPressureShower"
 				:page-url="route.fullPath"
