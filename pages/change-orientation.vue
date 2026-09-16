@@ -119,10 +119,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					Current orientation of the front door
 				</label>
 				<div id="current-orientation-hint" class="govuk-hint">
-					The door below has been marked as the front door.
+					The door below has been marked as the front door
 				</div>
 				<div v-if="!frontDoorName && frontDoorOrientation === undefined" class="govuk-error-message" :data-testid="`noFrontDoor_error`">
-					<span class="govuk-visually-hidden">Error:</span>No door has been marked as the front door, or the 'door' form has not been marked as complete.
+					<span class="govuk-visually-hidden">Error:</span>No door has been marked as the front door, or the 'door' form has not been marked as complete
 				</div>
 				<div
 					v-else-if="frontDoorName && frontDoorOrientation === undefined"

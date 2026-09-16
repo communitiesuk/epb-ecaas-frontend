@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from "uuid";
-import type { MVHRLocation } from "~/schema/aliases";
-import { litrePerSecond } from "~/utils/units/flowRate";
-import { unitValue } from "~/utils/units";
 import { getUrl, typeOfMechanicalVentilation, uniqueName, type MechanicalVentilationData } from "#imports";
+import { v4 as uuidv4 } from "uuid";
 import { useAssociatedItems } from "~/composables/associatedItems";
-import { installationTypeOptions, installationLocationOptions } from "~/utils/display";
-import type { Product } from "~/pcdb/pcdb.types";
 import { useProductData } from "~/composables/productData";
+import type { Product } from "~/pcdb/pcdb.types";
+import type { MVHRLocation } from "~/schema/aliases";
+import { installationLocationOptions, installationTypeOptions } from "~/utils/display";
 import { hasPackagedProduct } from "~/utils/products";
+import { unitValue } from "~/utils/units";
+import { litrePerSecond } from "~/utils/units/flowRate";
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
@@ -464,7 +464,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					type="govInputWithSuffix"
 					label="Mid-height of air flow path for intake"
 					suffix-text="m"
-					help="Enter the mid-height of the path through which the air flows in the intake, measured from the bottom of the ventilation zone to the middle of the intake."
+					help="Enter the mid-height of the path through which the air flows in the intake, measured from the bottom of the ventilation zone to the middle of the intake"
 					name="midHeightOfAirFlowPathForIntake"
 					validation="required | min:0"
 					data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_intake">
@@ -475,7 +475,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					type="govInputWithSuffix"
 					label="Mid-height of air flow path for exhaust"
 					suffix-text="m"
-					help="Enter the mid-height of the path through which the air flows in the exhaust, measured from the bottom of the ventilation zone to the middle of the exhaust."
+					help="Enter the mid-height of the path through which the air flows in the exhaust, measured from the bottom of the ventilation zone to the middle of the exhaust"
 					name="midHeightOfAirFlowPathForExhaust"
 					validation="required | min:0"
 					data-field="InfiltrationVentilation.MechanicalVentilation.mid_height_of_air_flow_path_for_exhaust">

@@ -2,8 +2,8 @@
 import { v4 as uuidv4 } from "uuid";
 import type { CustomListItem } from "~/components/CustomList.vue";
 import formStatus from "~/constants/formStatus";
-import { hasPackagedProduct } from "~/utils/products";
 import { page as pages } from "~/data/pages/pages";
+import { hasPackagedProduct } from "~/utils/products";
 
 const page = usePage();
 const title = "Mechanical ventilation";
@@ -100,7 +100,7 @@ function handleComplete() {
 	/>
 	<p
 		v-if="mvhrOrCentralisedMVArray.length > 0"
-		class="govuk-body">Note if you remove a MVHR or Centralised MV this will also remove any associated ductwork</p>
+		class="govuk-body">Note if you remove a MVHR or Centralised MV this will also remove any associated ductwork.</p>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton :href="pages('infiltrationAndVentilation').url" secondary>
 			Return to infiltration and ventilation

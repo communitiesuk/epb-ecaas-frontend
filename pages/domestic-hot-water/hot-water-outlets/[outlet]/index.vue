@@ -139,7 +139,7 @@ const associatedWwhrs = useAssociatedItems(["wwhrs"]);
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovInset>
-		<p>Each outlet should be added separately</p>
+		<p>Each outlet should be added separately.</p>
 	</GovInset>
 	<GovErrorSummary :error-list="errorMessages" test-id="hotWaterOutletErrorSummary"/>
 	<FormKit

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
-import { checkDuctworkRequirementsMet } from "../../../utils/checkDuctworkRequirementsMet";
 import { page as pages } from "~/data/pages/pages";
+import { checkDuctworkRequirementsMet } from "../../../utils/checkDuctworkRequirementsMet";
 
 const title = "Mechanical ventilation ductwork";
 const page = usePage();
@@ -69,7 +69,7 @@ function checkIsComplete() {
 		{{ title }}
 	</h1>
 	<div class="govuk-inset-text">
-		<p>Only add ductwork for MVHRs and centralised MVs</p>
+		<p>Only add ductwork for MVHRs and centralised MVs.</p>
 	</div>
 	<CustomList
 		id="ductwork"
