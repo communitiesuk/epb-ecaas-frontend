@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { percentageRecirculatedZod } from "~/stores/ecaasStore.schema";
+
 defineProps<{
 	id?: string;
 	name?: string;
@@ -13,7 +15,7 @@ defineProps<{
 		:name="name ?? 'percentageRecirculated'"
 		type="govInputWithSuffix"
 		:suffix-text="'%'"
-		:validation="'required | number | min:0 | max:100'"
+		:validation="zodTypeAsFormKitValidation(percentageRecirculatedZod)"
 		:label="label ?? 'Percentage recirculated'"
 		:help="help" />
 </template>
