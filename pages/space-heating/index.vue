@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import formStatus from "~/constants/formStatus";
 import type { CustomListItem } from "~/components/CustomList.vue";
-import { hasPackagedProduct } from "~/utils/products";
 import { useSpaceHeating } from "~/composables/spaceHeating";
+import formStatus from "~/constants/formStatus";
 import { EcaasError } from "~/errors.types";
+import { hasPackagedProduct } from "~/utils/products";
 
 const title = "Space heating";
 const page = usePage();
@@ -13,10 +13,29 @@ type SpaceHeatingType = keyof typeof store.spaceHeating;
 
 const { removeEntry, duplicateEntry } = useSpaceHeating();
 const duplicationError = ref(false);
+const underfloorHeatingAreaError = ref<ErrorSummaryItem>();
+
+const errorMessages = computed(() => {
+	const errors: ErrorSummaryItem[] = [];
+
+	if (duplicationError.value) {
+		errors.push({
+			id: "duplicateHeatSource",
+			text: "There is another heat source that has a hot water cylinder attached as a packaged product. This cannot be duplicated as you cannot have multiple hot water heat sources or multiple hot water storage units.",
+		});
+	}
+
+	if (underfloorHeatingAreaError.value) {
+		errors.push(underfloorHeatingAreaError.value);
+	}
+
+	return errors;
+});
 
 function handleDuplicate(spaceHeatingType: SpaceHeatingType, index: number) {
 	try {
 		duplicateEntry(spaceHeatingType, index);
+		duplicationError.value = false;
 	} catch (error: unknown) {
 		if (error instanceof EcaasError && error.name === "DUPLICATION_ERROR") {
 			duplicationError.value = true;
@@ -25,6 +44,17 @@ function handleDuplicate(spaceHeatingType: SpaceHeatingType, index: number) {
 }
 
 function handleComplete() {
+	const error = getUnderfloorHeatingAreaError(
+		store.$state.dwellingFabric.dwellingSpaceFloors,
+		store.$state.spaceHeating.heatEmitters.data ?? [],
+	);
+
+	if (error) {
+		underfloorHeatingAreaError.value = error;
+		window.scrollTo(0, 0);
+		return;
+	}
+	
 	store.$patch({
 		spaceHeating: {
 			heatNetworks: { complete: true },
@@ -122,15 +152,9 @@ const incompatibleHeatSourceForHeatNetworkMessage = computed(() => {
 		{{ title }}
 	</h1>
 	<GovErrorSummary
-		v-if="duplicationError"
-		:error-list="[
-			{
-				id: 'duplicateHeatSource',
-				text: 'There is another heat source that has a hot water cylinder attached as a packaged product. This cannot be duplicated as you cannot have multiple hot water heat sources or multiple hot water storage units.',
-			}
-		]"
-		:use-links="false"
-		test-id="duplicationError"
+		v-if="errorMessages.length"
+		:error-list="errorMessages"
+		test-id="spaceHeatingErrorSummary"
 	/>
 	<CustomList
 		id="heatNetworks"

@@ -864,7 +864,7 @@ describe("space heating", () => {
 					const hotWaterHeatSourcesData = store.domesticHotWater.heatSources.data;
 					const waterStorageData = store.domesticHotWater.waterStorage.data;
 
-					expect((await screen.findByTestId("duplicationError"))).toBeDefined();
+					expect(await screen.findByTestId("spaceHeatingErrorSummary")).toBeDefined();
 					expect(hotWaterHeatSourcesData.length).toBe(1);
 					expect(waterStorageData.length).toBe(1);
 				});

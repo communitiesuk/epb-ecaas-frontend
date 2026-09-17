@@ -26,16 +26,6 @@ const calculate = async () => {
 			lastResult: undefined,
 		});
 
-		const underfloorHeatingAreaError = getUnderfloorHeatingAreaError(
-			store.$state.dwellingFabric.dwellingSpaceFloors,
-			store.$state.spaceHeating.heatEmitters.data ?? [],
-		);
-
-		if (underfloorHeatingAreaError) {
-			onError([underfloorHeatingAreaError]);
-			return;
-		}
-
 		const inputPayload = mapFhsInputData(resolveState(store.$state));
 
 		const response = await $fetch<FhsComplianceResponseIncludingErrors>(

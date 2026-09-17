@@ -241,7 +241,7 @@ describe("getUnderfloorHeatingAreaError", () => {
 			getUnderfloorHeatingAreaError(floors, heatEmitters),
 		).toEqual({
 			id: "underfloorHeatingAreaError",
-			detail: "The area of underfloor heating is larger than the floor area",
+			text: "The area of underfloor heating is larger than the floor area",
 		});
 	});
 

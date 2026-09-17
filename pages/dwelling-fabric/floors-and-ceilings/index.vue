@@ -10,6 +10,8 @@ const nuxtApp = useNuxtApp();
 
 type FloorType = keyof typeof store.dwellingFabric.dwellingSpaceFloors;
 
+const underfloorHeatingAreaError = ref<ErrorSummaryItem>();
+
 function handleRemove(floorType: FloorType, index: number) {
 	const floors = store.dwellingFabric.dwellingSpaceFloors[floorType]?.data;
 
@@ -63,6 +65,19 @@ function handleDuplicate(floorType: FloorType, index: number) {
 }
 
 function handleComplete() {
+	const error = getUnderfloorHeatingAreaError(
+		store.dwellingFabric.dwellingSpaceFloors,
+		store.spaceHeating.heatEmitters.data ?? [],
+	);
+
+	if (error) {
+		underfloorHeatingAreaError.value = error;
+		window.scrollTo(0, 0);
+		return;
+	}
+
+	underfloorHeatingAreaError.value = undefined;
+
 	store.$patch({
 		dwellingFabric: {
 			dwellingSpaceFloors: {
@@ -100,6 +115,11 @@ function hasIncompleteEntries() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<GovErrorSummary
+		v-if="underfloorHeatingAreaError"
+		:error-list="[underfloorHeatingAreaError]"
+		test-id="underfloorHeatingAreaErrorSummary"
+	/>
 	<CustomList
 		id="ground"
 		title="Ground floor"
