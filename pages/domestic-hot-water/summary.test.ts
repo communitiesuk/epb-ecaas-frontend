@@ -908,7 +908,6 @@ describe("Domestic hot water summary", () => {
 			needsSpecifiedLocation: true,
 			specifiedLocation: "external",
 			maxFlowTemp: unitValue(12, celsius),
-			packagedProductReference: undefined,
 		};
 
 		const dhwWithNewHeatBattery: DomesticHotWaterHeatSourceData = {

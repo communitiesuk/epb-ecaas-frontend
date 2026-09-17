@@ -34,7 +34,6 @@ const handleProductLoaded = (product: AnyPcdbProduct) => {
 };
 
 const showLpgEnergySource = computed(() => boilerProduct.value?.fuel === "LPG_bulk");
-const showGasEnergySource = computed(() => !boilerProduct.value?.fuel && props.model.packagedProductReference);
 
 const locationOfBoilerOptions = {
 	"internal": "Heated space",
@@ -71,7 +70,7 @@ const emit = defineEmits(["update-boiler-model"]);
 		/>
 		<FieldsSelectPcdbProduct
 			v-if="model.typeOfBoiler"
-			id="selectBoiler"
+			id="productReference"
 			label="Select a boiler"
 			help="Select the boiler model from the PCDB using the button below"
 			:selected-product-reference="model.productReference"
@@ -107,7 +106,7 @@ const emit = defineEmits(["update-boiler-model"]);
 			empty-link-message="Click here to add an LPG energy source"
 		/>
 		<FieldsEnergySupplies
-			v-else-if="showGasEnergySource"
+			v-else-if="!boilerProduct?.fuel"
 			id="energySupply"
 			name="energySupply"
 			label="Energy supply"
@@ -120,6 +119,14 @@ const emit = defineEmits(["update-boiler-model"]);
 			]"
 			empty-message="No gaseous energy sources added"
 			empty-link-message="Click here to add a gaseous energy source"
+		/>
+		<FormKit
+			v-else
+			id="energySupply"
+			name="energySupply"
+			type="hidden"
+			:value="boilerProduct.fuel"
+			data-testid="energySupply"
 		/>
 		<FormKit
 			id="maxFlowTemp"

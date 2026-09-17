@@ -164,7 +164,6 @@ describe("domestic hot water mapper", () => {
 			productReference: "BOIL-12345",
 			maxFlowTemp: unitValue(32, celsius),
 			needsSpecifiedLocation: false,
-			packagedProductReference: undefined,
 		},
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
@@ -181,7 +180,6 @@ describe("domestic hot water mapper", () => {
 			productReference: "BOIL-12345",
 			maxFlowTemp: unitValue(32, celsius),
 			needsSpecifiedLocation: false,
-			packagedProductReference: undefined,
 		},
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
@@ -951,7 +949,6 @@ describe("domestic hot water mapper", () => {
 					productReference: "174",
 					needsSpecifiedLocation: false,
 					maxFlowTemp: unitValue(5, celsius),
-					packagedProductReference: undefined,
 				},
 				complete: true,
 			} as const satisfies EcaasForm<HeatSourceData>;
@@ -965,7 +962,6 @@ describe("domestic hot water mapper", () => {
 					productReference: "189",
 					needsSpecifiedLocation: false,
 					maxFlowTemp: unitValue(72, celsius),
-					packagedProductReference: undefined,
 				},
 				complete: true,
 			} as const satisfies EcaasForm<HeatSourceData>;

@@ -80,7 +80,6 @@ describe("Space heating summary page", () => {
 				specifiedLocation: "internal",
 				energySupply: "LPG_bottled",
 				maxFlowTemp: unitValue(2, celsius),
-				packagedProductReference: undefined,
 			};
 
 			const store = useEcaasStore();
@@ -130,7 +129,6 @@ describe("Space heating summary page", () => {
 				specifiedLocation: "internal",
 				energySupply: "mains_gas",
 				maxFlowTemp: unitValue(2, celsius),
-				packagedProductReference: undefined,
 			};
 
 			const store = useEcaasStore();
@@ -180,7 +178,6 @@ describe("Space heating summary page", () => {
 				specifiedLocation: "internal",
 				energySupply: "LPG_bulk",
 				maxFlowTemp: unitValue(2, celsius),
-				packagedProductReference: undefined,
 			};
 
 			const boiler2: HeatSourceData = {
@@ -193,7 +190,6 @@ describe("Space heating summary page", () => {
 				specifiedLocation: "internal",
 				energySupply: "mains_gas",
 				maxFlowTemp: unitValue(2, celsius),
-				packagedProductReference: undefined,
 			};
 
 			const store = useEcaasStore();

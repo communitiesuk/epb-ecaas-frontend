@@ -32,7 +32,6 @@ describe("space heating", () => {
 		productReference: "BOILER_SMALL",
 		needsSpecifiedLocation: false,
 		maxFlowTemp: unitValue(32, celsius),
-		packagedProductReference: undefined,
 	};
 
 	const heatSource2: HeatSourceData = {
@@ -43,7 +42,6 @@ describe("space heating", () => {
 		productReference: "BOILER_MEDIUM",
 		needsSpecifiedLocation: false,
 		maxFlowTemp: unitValue(32, celsius),
-		packagedProductReference: undefined,
 	};
 
 	const heatSource3: HeatSourceData = {
@@ -55,7 +53,6 @@ describe("space heating", () => {
 		needsSpecifiedLocation: true,
 		specifiedLocation: "internal",
 		maxFlowTemp: unitValue(32, celsius),
-		packagedProductReference: undefined,
 	};
 
 	const heatBattery: HeatSourceData = {
@@ -1160,11 +1157,15 @@ describe("space heating", () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
-							data: [{ data: boiler, complete: true }],
+							data: [
+								{
+									data: { ...boiler, energySupply: "mains_gas" },
+									complete: true,
+								},
+							],
 						},
 					},
 				});
-
 
 				await renderSuspended(SpaceHeating);
 				await user.click(await screen.findByTestId("markAsCompleteButton"));

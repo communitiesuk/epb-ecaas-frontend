@@ -39,7 +39,6 @@ describe("Domestic hot water", () => {
 			specifiedLocation: "internal",
 			heatSourceId: "NEW_HEAT_SOURCE",
 			maxFlowTemp: unitValue(12, celsius),
-			packagedProductReference: undefined,
 		},
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
@@ -393,7 +392,6 @@ describe("Domestic hot water", () => {
 						isExistingHeatSource: false,
 						coldWaterSource: "mainsWater",
 						heatSourceId: "NEW_HEAT_SOURCE",
-						packagedProductReference: undefined,
 					},
 				} satisfies EcaasForm<DomesticHotWaterHeatSourceData>,
 			},

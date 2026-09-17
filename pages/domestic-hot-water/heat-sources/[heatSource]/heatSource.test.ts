@@ -474,7 +474,6 @@ describe("Heat Source Page", () => {
 			productReference: "2000",
 			needsSpecifiedLocation: true,
 			maxFlowTemp: unitValue(7, celsius),
-			packagedProductReference: undefined,
 		};
 
 		const dhwWithExistingBoiler: DomesticHotWaterHeatSourceData = {

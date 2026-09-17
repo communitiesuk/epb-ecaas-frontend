@@ -262,7 +262,6 @@ describe("Space heating - heat sources", () => {
 				needsSpecifiedLocation: true,
 				specifiedLocation: "internal",
 				maxFlowTemp: unitValue(22, celsius),
-				packagedProductReference: undefined,
 			};
 
 			const boiler2: HeatSourceData = {
@@ -273,7 +272,6 @@ describe("Space heating - heat sources", () => {
 				productReference: "5678",
 				needsSpecifiedLocation: false,
 				maxFlowTemp: unitValue(18, celsius),
-				packagedProductReference: undefined,
 			};
 			
 			test("maps stored boiler data to fit schema", () => {

@@ -35,7 +35,6 @@ describe("heatSource", () => {
 		productReference: "BOILER_SMALL",
 		needsSpecifiedLocation: false,
 		maxFlowTemp: unitValue(12, celsius),
-		packagedProductReference: undefined,
 	};
 
 	const boosterHeatPump: HeatSourceData = {
@@ -1539,6 +1538,13 @@ describe("heatSource", () => {
 			fuel: "electricity",
 		};
 
+		const boilerProductWithMainsGasFuelType: Partial<BoilerProduct> = {
+			id: "1004",
+			brandName: "Boiler",
+			technologyType: "CombiBoiler",
+			fuel: "mains_gas",
+		};
+
 		beforeEach(() => {
 			mockFetch.mockReturnValue({
 				data: ref(boilerProduct),
@@ -1559,7 +1565,6 @@ describe("heatSource", () => {
 			needsSpecifiedLocation: true,
 			specifiedLocation: "external",
 			maxFlowTemp: unitValue(2, celsius),
-			packagedProductReference: undefined,
 		};
 
 		test("'BoilerSection' component displays when type of heat source is boiler", async () => {
@@ -1573,7 +1578,7 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));
 			expect(screen.getByTestId("name")).toBeDefined();
 			expect(screen.getByTestId("typeOfBoiler")).toBeDefined();
-			expect(screen.queryByTestId("selectBoiler")).toBeDefined();
+			expect(screen.queryByTestId("productReference")).toBeDefined();
 		});
 
 		test("the 'Select a product' element navigates user to the products page", async () => {
@@ -1667,7 +1672,7 @@ describe("heatSource", () => {
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect((await screen.findByTestId("selectBoiler_error"))).toBeDefined();
+			expect((await screen.findByTestId("productReference_error"))).toBeDefined();
 		});
 
 		test("disables input fields when boiler is packaged with a heat pump", async () => {
@@ -1858,8 +1863,6 @@ describe("heatSource", () => {
 			});
 
 			const productData = await screen.findByTestId("pcdbProductData");
-			window.console.log(productData.textContent);
-			window.console.log(boilerProductWithLPGFuelType);
 
 			expect(productData.textContent).toContain("Fuel:");
 			expect(productData.textContent).toContain("LPG (Liquid petroleum gas) - bulk");
@@ -2026,14 +2029,12 @@ describe("heatSource", () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {
-							data: [
-								{
-									data: {
-										...boiler1,
-										packagedProductReference: "1000",
-									},
+							data: [{
+								data: {
+									...boiler1,
+									energySupply: undefined,
 								},
-							],
+							}],
 						},
 					},
 					dwellingDetails: {
@@ -2052,15 +2053,17 @@ describe("heatSource", () => {
 				});
 			});
 
-			test("only displays gaseous energy supplies when packaged with a heat pump", async () => {
+			afterEach(() => store.$reset());
+
+			test("only displays gaseous energy supplies when product fuel is undefined", async () => {
 				expect(screen.getByTestId("energySupply_mains_gas")).toBeDefined();
 				expect(screen.queryByTestId("energySupply_electricity")).toBeNull();
 			});
 
-			test("requires energy supply when packaged with a heat pump", async () => {
+			test("requires energy supply when product fuel is undefined", async () => {
 				await user.click(screen.getByTestId("saveAndComplete"));
-
-				expect(screen.getByTestId("energySupply_error")).toBeDefined();
+				
+				expect(await screen.findByTestId("energySupply_error")).toBeDefined();
 			});
 		});
 
@@ -2187,6 +2190,43 @@ describe("heatSource", () => {
 			});
 			expect(screen.getByText("No LPG energy sources added")).toBeDefined();
 			expect(screen.getByRole("link", { name: "Click here to add an LPG energy source" })).toBeDefined();
+		});
+
+		test("saves product fuel as energy supply when defined (and not LPG)", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatSource: {
+						data: [{ data: boiler1 }],
+					},
+				},
+				dwellingDetails: {
+					generalSpecifications: {
+						data: {
+							fuelType: ["electricity", "mains_gas"],
+						},
+					},
+				},
+			});
+
+			mockFetch.mockReturnValue({
+				data: ref(boilerProductWithMainsGasFuelType),
+			});
+
+			await renderSuspended(HeatSourceForm, {
+				route: {
+					params: { heatSource: "0" },
+				},
+			});
+
+			expect(screen.queryByTestId("energySupply_mains_gas")).toBeNull();
+			expect(screen.getByTestId<HTMLInputElement>("energySupply").type).toBe("hidden");
+			expect(screen.getByTestId<HTMLInputElement>("energySupply").value).toBe("mains_gas");
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			const savedBoiler = store.spaceHeating.heatSource.data[0]?.data as Extract<HeatSourceData, { typeOfHeatSource: "boiler" }>;
+
+			expect(savedBoiler.energySupply).toBe("mains_gas");
 		});
 	});
 	

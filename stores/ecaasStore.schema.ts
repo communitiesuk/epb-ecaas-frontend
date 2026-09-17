@@ -232,68 +232,63 @@ const baseGroundFloorData = namedWithId.extend({
 
 export const heightUpperSurfaceZod = z.number().min(0).max(100);
 
-const groundFloorDataZod = nestedDiscriminatedUnion(
-	baseGroundFloorData,
-	{
-		discriminator: "edgeInsulationType",
-		variants: [
-			z.object({
-				edgeInsulationType: z.optional(z.tuple([z.literal(undefined)])),
-			}),
-			z.object({
-				edgeInsulationType: z.tuple([z.literal("horizontal")]),
-				// TODO constraints have not been put on zodUnit yet!
-				horizontalEdgeInsulationWidth: zodUnit("length"),
-				horizontalEdgeInsulationThermalResistance: z.number(),
-			}),
-			z.object({
-				edgeInsulationType: z.tuple([z.literal("vertical")]),
-				// TODO constraints have not been put on zodUnit yet!
-				verticalEdgeInsulationDepth: zodUnit("length"),
-				verticalEdgeInsulationThermalResistance: z.number(),
-			}),
-			z.object({
-				edgeInsulationType: z.tuple([z.literal("horizontal"), z.literal("vertical")]),
-				// TODO constraints have not been put on zodUnit yet!
-				horizontalEdgeInsulationWidth: zodUnit("length"),
-				horizontalEdgeInsulationThermalResistance: z.number(),
-				verticalEdgeInsulationDepth: zodUnit("length"),
-				verticalEdgeInsulationThermalResistance: z.number(),
-			}),
-		],
-	},
-	{
-		discriminator: "typeOfGroundFloor",
-		variants: [
-			z.object({
-				typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_edge_insulation">("Slab_edge_insulation"),
-			}),
-			z.object({
-				typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_no_edge_insulation">("Slab_no_edge_insulation"),
-			}),
-			z.object({
-				typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Suspended_floor">("Suspended_floor"),
-				heightOfFloorUpperSurface: heightUpperSurfaceZod,
-				underfloorSpaceThermalResistance: z.number(),
-				thermalTransmittanceOfWallsAboveGround: z.number(),
-				ventilationOpeningsArea: z.number(),
-				smartAirBricks: z.boolean(),
-			}),
-			z.object({
-				typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Heated_basement">("Heated_basement"),
-				depthOfBasementFloorBelowGround: z.number(),
-				thermalResistanceOfBasementWalls: z.number(),
-			}),
-			z.object({
-				typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Unheated_basement">("Unheated_basement"),
-				thermalTransmittanceOfFloorAboveBasement: z.number(),
-				thermalTransmittanceOfWallsAboveGround: z.number(),
-				thermalResistanceOfBasementWalls: z.number(),
-				depthOfBasementFloorBelowGround: z.number(),
-				heightOfBasementWallsAboveGround: z.number(),
-			}),
-		],
-	},
+const slabEdgeInsulationBase = baseGroundFloorData.extend({
+	typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_edge_insulation">("Slab_edge_insulation"),
+});
+
+const horizontalEdgeInsulation = z.object({
+	edgeInsulationType: z.tuple([z.literal("horizontal")]),
+	// TODO constraints have not been put on zodUnit yet!
+	horizontalEdgeInsulationWidth: zodUnit("length"),
+	horizontalEdgeInsulationThermalResistance: z.number(),
+});
+
+const verticalEdgeInsulation = z.object({
+	edgeInsulationType: z.tuple([z.literal("vertical")]),
+	// TODO constraints have not been put on zodUnit yet!
+	verticalEdgeInsulationDepth: zodUnit("length"),
+	verticalEdgeInsulationThermalResistance: z.number(),
+});
+
+const horizontalAndVerticalEdgeInsulation = z.object({
+	edgeInsulationType: z.union([z.tuple([z.literal("horizontal"), z.literal("vertical")]), z.tuple([z.literal("vertical"), z.literal("horizontal")])]),
+	// TODO constraints have not been put on zodUnit yet!
+	horizontalEdgeInsulationWidth: zodUnit("length"),
+	horizontalEdgeInsulationThermalResistance: z.number(),
+	verticalEdgeInsulationDepth: zodUnit("length"),
+	verticalEdgeInsulationThermalResistance: z.number(),
+});
+
+const groundFloorDataZod = z.union(
+	[
+		slabEdgeInsulationBase.extend(horizontalEdgeInsulation.shape),
+		slabEdgeInsulationBase.extend(verticalEdgeInsulation.shape),
+		slabEdgeInsulationBase.extend(horizontalAndVerticalEdgeInsulation.shape),
+		baseGroundFloorData.extend({
+			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_no_edge_insulation">("Slab_no_edge_insulation"),
+		}),
+		baseGroundFloorData.extend({
+			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Suspended_floor">("Suspended_floor"),
+			heightOfFloorUpperSurface: heightUpperSurfaceZod,
+			underfloorSpaceThermalResistance: z.number(),
+			thermalTransmittanceOfWallsAboveGround: z.number(),
+			ventilationOpeningsArea: z.number(),
+			smartAirBricks: z.boolean(),
+		}),
+		baseGroundFloorData.extend({
+			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Heated_basement">("Heated_basement"),
+			depthOfBasementFloorBelowGround: z.number(),
+			thermalResistanceOfBasementWalls: z.number(),
+		}),
+		baseGroundFloorData.extend({
+			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Unheated_basement">("Unheated_basement"),
+			thermalTransmittanceOfFloorAboveBasement: z.number(),
+			thermalTransmittanceOfWallsAboveGround: z.number(),
+			thermalResistanceOfBasementWalls: z.number(),
+			depthOfBasementFloorBelowGround: z.number(),
+			heightOfBasementWallsAboveGround: z.number(),
+		}),
+	],
 );
 
 export type GroundFloorData = z.infer<typeof groundFloorDataZod>;
@@ -1059,7 +1054,7 @@ const heatPumpDataZod = nestedDiscriminatedUnion(
 	},
 );
 
-const boilerBase = pcdbProduct
+const boilerDataZod = pcdbProduct
 	.extend(hasPcdbPackagedProduct.shape)
 	.extend({
 		typeOfHeatSource: z.literal("boiler"),
@@ -1069,24 +1064,6 @@ const boilerBase = pcdbProduct
 		maxFlowTemp: zodUnit("temperature"),
 		energySupply: z.optional(fuelTypeZod),
 	});
-
-const boilerEnergySupply = {
-	discriminator: "packagedProductReference",
-	variants: [
-		z.object({
-			packagedProductReference: z.string(),
-			energySupply: fuelTypeZod,
-		}),
-		z.object({
-			packagedProductReference: z.literal(undefined),
-		}),
-	] satisfies Tuple,
-};
-
-const boilerDataZod = nestedDiscriminatedUnion(
-	boilerBase,
-	boilerEnergySupply,
-);
 
 export type HasPcdbPackagedProduct = z.infer<typeof hasPcdbPackagedProduct>;
 export type PcdbPackagedProduct = z.infer<typeof pcdbPackagedProduct>;
@@ -1440,10 +1417,7 @@ const hotWaterHeatSourceWithColdWater = z.object({
 
 export type HotWaterHeatSourceWithColdWater = z.infer<typeof hotWaterHeatSourceWithColdWater>;
 
-const boilerHotWaterSourceDataZod = nestedDiscriminatedUnion(
-	boilerBase.extend(hotWaterHeatSourceWithColdWater.shape),
-	boilerEnergySupply,
-);
+const boilerHotWaterSourceDataZod = boilerDataZod.extend(hotWaterHeatSourceWithColdWater.shape);
 const heatBatteryHotWaterSourceBase = heatBatteryBase.extend(hotWaterHeatSourceWithColdWater.shape);
 
 const solarThermalHotWaterSourceBase = solarThermalSystemBase.extend(hotWaterHeatSourceExtension);
