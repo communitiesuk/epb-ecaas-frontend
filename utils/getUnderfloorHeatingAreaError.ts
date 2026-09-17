@@ -61,7 +61,7 @@ export const getUnderfloorHeatingAreaError = (
 	if (underfloorHeatingArea > totalFloorArea) {
 		return {
 			id: "underfloorHeatingAreaError",
-			text: "The area of underfloor heating is larger than the floor area",
+			text: "The underfloor heating area is larger than the floor area (the sum of the net surface areas of all floor elements)",
 		};
 	}
 
