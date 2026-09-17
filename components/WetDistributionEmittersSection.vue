@@ -31,6 +31,10 @@ const emitterTypeOptions = {
 const heatEmitterTypes = emitterTypeOptions;
 type EmitterType = keyof typeof emitterTypeOptions;
 
+const getDefaultEmitterName = (type: unknown): string => {
+	return emitterTypeOptions[type as EmitterType] ?? "";
+};
+
 const emitters = computed(() => {
 	const heatEmitter = store.spaceHeating.heatEmitters.data[props.index];
 	if (heatEmitter && "emitters" in heatEmitter.data) {
@@ -218,7 +222,7 @@ const addEmitter = (type: unknown) => {
 	const newEmitter = {
 		id,
 		typeOfHeatEmitter: type,
-		name: emitterTypeOptions[type as EmitterType] ?? type,
+		name: getDefaultEmitterName(type) || type,
 	};
 
 	store.$patch((state) => {
@@ -292,10 +296,23 @@ const isAddEmitterCard = (emitterIndex: number) => addingEmitterIndex.value === 
 watch(
 	() => formModel.value.typeOfHeatEmitter,
 	(newType, oldType) => {
-		if (oldType && newType !== oldType) {
-			const { id, name } = formModel.value;
-			formModel.value = { id, name, typeOfHeatEmitter: newType };
+		if (newType === oldType) {
+			return;
 		}
+
+		const currentName = formModel.value.name as string | undefined;
+		const oldDefaultName = getDefaultEmitterName(oldType);
+
+		const nameIsAutomatic =
+			!currentName || currentName === oldDefaultName;
+
+		formModel.value = {
+			...formModel.value,
+			typeOfHeatEmitter: newType,
+			...(nameIsAutomatic
+				? { name: getDefaultEmitterName(newType) }
+				: {}),
+		};
 	},
 );
 

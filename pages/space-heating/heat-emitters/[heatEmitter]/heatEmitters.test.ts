@@ -277,6 +277,90 @@ describe("Heat emitters", () => {
 				});
 				expect(screen.getByTestId("emittersSection")).toBeDefined();
 			});
+
+			test("updates the automatic emitter name when the emitter type changes", async () => {
+				const wetDistributionSystemWithEmitter: HeatEmittingData = {
+					...wetDistributionSystem,
+					emitters: [
+						{
+							id: "emitter1",
+							name: "Radiator",
+							typeOfHeatEmitter: "radiator",
+						},
+					],
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{
+								data: wetDistributionSystemWithEmitter,
+								complete: true,
+							}],
+						},
+					},
+				});
+
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("emitter_edit_0"));
+
+				const name = screen.getByTestId("emitterName_0");
+
+				expect((name as HTMLInputElement).value).toBe("Radiator");
+
+				await user.click(screen.getByTestId("typeOfHeatEmitter_0_fanCoil"));
+
+				expect((name as HTMLInputElement).value).toBe("Fan coil");
+			});
+
+			test("preserves a manually entered name when the emitter type changes", async () => {
+				const wetDistributionSystemWithEmitter: HeatEmittingData = {
+					...wetDistributionSystem,
+					emitters: [
+						{
+							id: "emitter1",
+							name: "Radiator",
+							typeOfHeatEmitter: "radiator",
+						},
+					],
+				};
+
+				store.$patch({
+					spaceHeating: {
+						heatEmitters: {
+							data: [{
+								data: wetDistributionSystemWithEmitter,
+								complete: true,
+							}],
+						},
+					},
+				});
+
+				await renderSuspended(HeatEmitterForm, {
+					route: {
+						params: { heatEmitter: "0" },
+					},
+				});
+
+				await user.click(screen.getByTestId("emitter_edit_0"));
+
+				const name = screen.getByTestId("emitterName_0");
+
+				await user.clear(name);
+				await user.type(name, "Living room emitter");
+
+				expect((name as HTMLInputElement).value).toBe("Living room emitter");
+
+				await user.click(screen.getByTestId("typeOfHeatEmitter_0_fanCoil"));
+
+				expect((name as HTMLInputElement).value).toBe("Living room emitter");
+			});
+
 			test("can add a radiator as an emitter", async () => {
 				store.$patch({
 					spaceHeating: {
@@ -484,6 +568,7 @@ describe("Heat emitters", () => {
 					throw new Error("Emitters field is missing in heat emitter data");
 				}
 			});
+
 			test("summary card displays radiator info after saving", async () => {
 				const wetDistributionSystemWithRadiatorEmitter: HeatEmittingData = {
 					...wetDistributionSystem,
