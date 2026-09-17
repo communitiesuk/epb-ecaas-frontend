@@ -478,6 +478,7 @@ function mapHeatSourceNoWS(
 			mappedHWCylinderBit = {
 				type: "CombiBoiler",
 				HeatSourceWet: actualHeatSource.name,
+				product_reference: actualHeatSource.productReference,
 				...commonHWCylinderProps,
 			} as const satisfies FhsInputSchema["HotWaterSource"]["hw cylinder"];
 			mappedHeatSourceWet = mapHeatSourceWet(actualHeatSource, state);

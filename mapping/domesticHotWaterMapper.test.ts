@@ -697,6 +697,7 @@ describe("domestic hot water mapper", () => {
 								type: "CombiBoiler",
 								HeatSourceWet: combiBoiler.data.name,
 								ColdWaterSource: "mains water",
+								product_reference: combiBoiler.data.productReference,
 							},
 						},
 						HeatSourceWet: {
@@ -1287,6 +1288,7 @@ describe("domestic hot water mapper", () => {
 								ColdWaterSource: "mains water",
 								HeatSourceWet: existingCombiBoiler.data.name,
 								type: "CombiBoiler",
+								product_reference: existingCombiBoiler.data.productReference,
 							},
 						},
 						HeatSourceWet: {
