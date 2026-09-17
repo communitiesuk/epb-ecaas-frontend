@@ -17,6 +17,43 @@ const model = ref(thermalBridgeData?.data);
 
 const defaultName = "Linear thermal bridge";
 
+const getDefaultName = (typeOfThermalBridge: SchemaThermalBridgeJunctionType): string | undefined => {
+	const options = junctionTypeOptions.find(o => Object.hasOwn(o, typeOfThermalBridge as PropertyKey)) as Record<string, string>;
+
+	if (options) {
+		return options[typeOfThermalBridge as string]?.split(":")[0];
+	}
+};
+
+watch(
+	() => model.value?.typeOfThermalBridge,
+	(newType, oldType) => {
+		if (!newType) {
+			if (!model.value?.name || model.value.name === (oldType ? getDefaultName(oldType) ?? defaultName : "")) {
+				model.value = {
+					...model.value,
+					name: defaultName,
+				};
+			}
+
+			return;
+		}
+
+		const oldDefaultName = oldType ? getDefaultName(oldType) ?? defaultName : "";
+		const currentName = model.value?.name;
+		const nameIsAutomatic = !currentName || currentName === oldDefaultName;
+
+		if (nameIsAutomatic) {
+			const newName = getDefaultName(newType) ?? defaultName;
+
+			model.value = {
+				...model.value,
+				name: newName,
+			};
+		}
+	},
+);
+
 type StartsWith<T extends string, Prefix extends string> = T extends `${Prefix}${string}` ? T : never;
 
 const junctionTypeOptions = [{
@@ -106,15 +143,6 @@ autoSaveElementForm<LinearThermalBridgeData>({
 	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges,
 	defaultName: "",
 	onPatch: (state, newData, index) => {
-		if (!newData.data.name) {
-			newData.data.name = getDefaultName(newData.data.typeOfThermalBridge) ?? defaultName;
-
-			model.value = {
-				...model.value,
-				name: newData.data.name,
-			};
-		}
-
 		if (newData.data.typeOfThermalBridge === "E6") {
 			newData.data.associatedItemId ??= "none";
 		}
@@ -123,14 +151,6 @@ autoSaveElementForm<LinearThermalBridgeData>({
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
 	},
 });
-
-const getDefaultName = (typeOfThermalBridge: SchemaThermalBridgeJunctionType): string | undefined => {
-	const options = junctionTypeOptions.find(o => Object.hasOwn(o, typeOfThermalBridge as PropertyKey)) as Record<string, string>;
-
-	if (options) {
-		return options[typeOfThermalBridge as string]?.split(":")[0];
-	}
-};
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
