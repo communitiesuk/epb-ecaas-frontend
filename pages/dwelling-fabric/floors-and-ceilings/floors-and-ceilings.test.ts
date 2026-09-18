@@ -857,7 +857,7 @@ describe("floors", () => {
 		});
 	});
 
-	describe("mark section as complete", () => {
+	describe("mark as complete", () => {
 		const addCompleteFloorDataToStore = async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -882,7 +882,7 @@ describe("floors", () => {
 			});
 		};
 
-		test("the 'Mark section as complete' button is disbaled when a floor is incomplete", async () => {
+		test("the 'Mark as complete' button is disbaled when a floor is incomplete", async () => {
 			// Arrange
 			store.$patch({
 				dwellingFabric: {
@@ -908,7 +908,7 @@ describe("floors", () => {
 			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 		});
 
-		test("the 'Mark section as complete' button is enabled when all floors are complete", async () => {
+		test("the 'Mark as complete' button is enabled when all floors are complete", async () => {
 			// Arrange
 			await addCompleteFloorDataToStore();
 

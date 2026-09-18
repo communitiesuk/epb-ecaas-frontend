@@ -1,10 +1,10 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
-import type { VentData } from "~/stores/ecaasStore.schema";
-import Vents from "./index.vue";
-import VentsForm from "./[vent].vue";
 import formStatus from "~/constants/formStatus";
+import type { VentData } from "~/stores/ecaasStore.schema";
+import VentsForm from "./[vent].vue";
+import Vents from "./index.vue";
 
 describe("vents", () => {
 	const store = useEcaasStore();
@@ -148,7 +148,7 @@ describe("vents", () => {
 			formStatus.complete.text,
 		);
 	});
-	describe("mark section as complete", () => {
+	describe("mark as complete", () => {
 		const addCompleteVentsToStore = async () => {
 			store.$patch({
 				infiltrationAndVentilation: {
@@ -170,7 +170,7 @@ describe("vents", () => {
 			store.$reset();
 		});
 
-		it("disables the Mark section as complete button when a vent item is incomplete", async () => {
+		it("disables the Mark as complete button when a vent item is incomplete", async () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					vents: {
@@ -185,7 +185,7 @@ describe("vents", () => {
 			).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all vent items are complete", async () => {
+		it("enables the Mark as complete button when all vent items are complete", async () => {
 			await addCompleteVentsToStore();
 			await renderSuspended(Vents);
 

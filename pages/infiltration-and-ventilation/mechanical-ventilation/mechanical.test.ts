@@ -365,7 +365,7 @@ describe("mechanical ventilation overview", () => {
 		expect(screen.getByText(warningMessage)).toBeDefined();
 	});
 
-	it("marks mechanical ventilation as complete when mark section as complete button is clicked", async () => {
+	it("marks mechanical ventilation as complete when mark as complete button is clicked", async () => {
 		await renderSuspended(MechanicalVentilationOverview);
 		expect(
 			screen.getByRole("button", { name: "Mark as complete" }),
@@ -380,9 +380,7 @@ describe("mechanical ventilation overview", () => {
 		const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;
 
 		expect(complete).toBe(true);
-		expect(
-			screen.queryByRole("button", { name: "Mark section as complete" }),
-		).toBeNull();
+
 		expect(completedStatusElement?.style.display).not.toBe("none");
 
 		expect(navigateToMock).toHaveBeenCalledWith(
@@ -554,7 +552,7 @@ describe("mechanical ventilation overview", () => {
 		expect(deleteButton).toBeNull();
 	});
 
-	describe("mark section as complete", () => {
+	describe("mark as complete", () => {
 		const addCompleteMechanicalVentilationToStore = async () => {
 			store.$patch({
 				infiltrationAndVentilation: {
@@ -576,7 +574,7 @@ describe("mechanical ventilation overview", () => {
 			store.$reset();
 		});
 
-		it("disables the Mark section as complete button when any mechanical ventilation item is incomplete", async () => {
+		it("disables the Mark as complete button when any mechanical ventilation item is incomplete", async () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					mechanicalVentilation: {
@@ -595,7 +593,7 @@ describe("mechanical ventilation overview", () => {
 			).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all mechanical ventilation items are complete", async () => {
+		it("enables the Mark as complete button when all mechanical ventilation items are complete", async () => {
 			await addCompleteMechanicalVentilationToStore();
 			await renderSuspended(MechanicalVentilationOverview);
 

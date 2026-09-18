@@ -1,10 +1,10 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import userEvent from "@testing-library/user-event";
-import Cooling from "./index.vue";
-import AirConditioningForm from "./air-conditioning/[airConditioning].vue";
-import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import type { AirConditioningData } from "~/stores/ecaasStore.schema";
+import AirConditioningForm from "./air-conditioning/[airConditioning].vue";
+import Cooling from "./index.vue";
 
 describe("cooling", () => {
 	const store = useEcaasStore();
@@ -100,8 +100,8 @@ describe("cooling", () => {
 
 		});
 	});
-	describe("mark section as complete", () => {
-		it("marks cooling as complete when mark section as complete button is clicked and disables the mark section as complete button", async () => {
+	describe("mark as complete", () => {
+		it("marks cooling as complete when mark as complete button is clicked and disables the mark as complete button", async () => {
 			await renderSuspended(Cooling);
 
 			expect(screen.getByTestId("markAsCompleteButton").style.display).not.toBe("none");

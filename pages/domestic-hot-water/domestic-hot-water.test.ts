@@ -990,7 +990,7 @@ describe("Domestic hot water", () => {
 		);
 	});
 
-	describe("mark section as complete", () => {
+	describe("mark as complete", () => {
 
 		const addCompleteHotWaterToStore = async () => {
 			const heatPump: EcaasForm<DomesticHotWaterHeatSourceData> = {
@@ -1048,7 +1048,7 @@ describe("Domestic hot water", () => {
 
 		// type SectionKey = keyof typeof store.domesticHotWater;
 
-		it("disables the Mark section as complete button when a section is incomplete", async () => {
+		it("disables the Mark as complete button when a section is incomplete", async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterStorage: { data: [{ ...hwStorage1, complete: false }] },
@@ -1062,7 +1062,7 @@ describe("Domestic hot water", () => {
 			).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all sections are complete", async () => {
+		it("enables the Mark as complete button when all sections are complete", async () => {
 			await addCompleteHotWaterToStore();
 			await renderSuspended(DomesticHotWater);
 
@@ -1580,7 +1580,7 @@ describe("Domestic hot water", () => {
 			});
 		});
 
-		it("disables the mark section as complete button", async () => {
+		it("disables the mark as complete button", async () => {
 
 			await renderSuspended(DomesticHotWater);
 			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();

@@ -470,7 +470,7 @@ describe("doors", () => {
 		});
 	});
 
-	describe("mark section as complete", () => {
+	describe("mark as complete", () => {
 
 		const addCompleteDoorsDataToStore = async () => {
 			store.$patch({
@@ -506,7 +506,7 @@ describe("doors", () => {
 
 		type DoorType = keyof typeof store.dwellingFabric.dwellingSpaceDoors;
 
-		it("disables the Mark section as complete button when a door is incomplete", async () => {
+		it("disables the Mark as complete button when a door is incomplete", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -529,7 +529,7 @@ describe("doors", () => {
 			).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all doors are complete", async () => {
+		it("enables the Mark as complete button when all doors are complete", async () => {
 			await addCompleteDoorsDataToStore();
 
 			await renderSuspended(Doors);
@@ -657,7 +657,7 @@ describe("doors", () => {
 			});
 
 			// skipped test as appears behaviour of button here is in flux
-			it.skip("disables the mark section as complete button when item is incomplete", async () => {
+			it.skip("disables the mark as complete button when item is incomplete", async () => {
 				store.$patch({
 					dwellingFabric: {
 						dwellingSpaceDoors: {
@@ -670,7 +670,7 @@ describe("doors", () => {
 
 				await renderSuspended(Doors);
 				const markAsCompleteButton = screen.getByRole("button", {
-					name: "Mark section as complete",
+					name: "Mark as complete",
 				});
 				expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 			});

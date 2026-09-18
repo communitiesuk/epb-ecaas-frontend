@@ -177,7 +177,7 @@ describe("pv systems and electric battery", () => {
 		});
 	});
 
-	it("disables the mark section as complete button when item is incomplete", async () => {
+	it("disables the mark as complete button when item is incomplete", async () => {
 		store.$patch({
 			pvAndBatteries: {
 				electricBattery: {
@@ -208,7 +208,7 @@ describe("pv systems and electric battery", () => {
 			formStatus.inProgress.text,
 		);
 	});
-	describe("mark section as complete", () => {
+	describe("mark as complete", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
@@ -240,7 +240,7 @@ describe("pv systems and electric battery", () => {
 
 		type SectionKey = keyof typeof store.pvAndBatteries;
 
-		it("disables the Mark section as complete button when a section is incomplete", async () => {
+		it("disables the Mark as complete button when a section is incomplete", async () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvs: { data: [{ ...pv1, complete: false }] },
@@ -254,7 +254,7 @@ describe("pv systems and electric battery", () => {
 			).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all sections are complete", async () => {
+		it("enables the Mark as complete button when all sections are complete", async () => {
 			await addCompletePvAndBatteryToStore();
 			await renderSuspended(PvAndBatteries);
 

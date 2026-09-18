@@ -243,7 +243,7 @@ describe("ceilings and roofs", () => {
 		});
 	});
 
-	describe("mark section as complete", () => {
+	describe("mark as complete", () => {
 		const addCompleteCeilingsAndDoorsDataToStore = async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -260,7 +260,7 @@ describe("ceilings and roofs", () => {
 			store.$reset();
 		});
 
-		it("disables the Mark section as complete button when a roof is incomplete", async () => {
+		it("disables the Mark as complete button when a roof is incomplete", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceRoofs: { data: [{ ...roof1, complete: false }] },
@@ -274,7 +274,7 @@ describe("ceilings and roofs", () => {
 			).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all roofs are complete", async () => {
+		it("enables the Mark as complete button when all roofs are complete", async () => {
 			await addCompleteCeilingsAndDoorsDataToStore();
 
 			await renderSuspended(Roofs);

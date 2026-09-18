@@ -227,9 +227,9 @@ describe("windows", () => {
 		);
 	});
 
-	describe("Mark section as complete", () => {
+	describe("Mark as complete", () => {
 
-		test("disables the Mark section as complete button when window element is incomplete", async () => {
+		test("disables the Mark as complete button when window element is incomplete", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWindows: {
@@ -242,7 +242,7 @@ describe("windows", () => {
 			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
 		});
 
-		test("enables the Mark section as complete button when all window items are complete", async () => {
+		test("enables the Mark as complete button when all window items are complete", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWindows: {

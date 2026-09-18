@@ -1109,7 +1109,7 @@ describe("space heating", () => {
 				};
 			});
 
-			it("disables the mark section as complete button when data is incomplete", async () => {
+			it("disables the mark as complete button when data is incomplete", async () => {
 				store.$patch({
 					spaceHeating: {
 						heatSource: {

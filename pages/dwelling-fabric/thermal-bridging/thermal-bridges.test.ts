@@ -4,8 +4,8 @@ import ThermalBridges from "./index.vue";
 import LinearThermalBridgeForm from "./linear/[bridging].vue";
 import PointThermalBridgeForm from "./point/[bridging].vue";
 
-import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
+import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
 
 describe("thermal bridges", () => {
@@ -345,7 +345,7 @@ describe("thermal bridges", () => {
 		});
 	});
 
-	describe("mark section as complete", () => {
+	describe("mark as complete", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
@@ -371,7 +371,7 @@ describe("thermal bridges", () => {
 			store.$reset();
 		});
 
-		it("disables the Mark section as complete button when a thermal bridge is incomplete", async () => {
+		it("disables the Mark as complete button when a thermal bridge is incomplete", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
@@ -386,7 +386,7 @@ describe("thermal bridges", () => {
 			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all thermal bridges are complete", async () => {
+		it("enables the Mark as complete button when all thermal bridges are complete", async () => {
 			await addThermalBridgingDataToStore();
 
 			await renderSuspended(ThermalBridges);

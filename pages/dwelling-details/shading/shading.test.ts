@@ -1,10 +1,10 @@
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { within } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import { within } from "@testing-library/dom";
-import Shading from "./index.vue";
-import ShadingForm from "./[shading].vue";
-import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import formStatus from "~/constants/formStatus";
+import ShadingForm from "./[shading].vue";
+import Shading from "./index.vue";
 
 describe("shading", () => {
 	const store = useEcaasStore();
@@ -128,9 +128,9 @@ describe("shading", () => {
 		);
 	});
 
-	describe("Mark section as complete", () => {
+	describe("Mark as complete", () => {
 
-		test("disables the Mark section as complete button when shading element is incomplete", async () => {
+		test("disables the Mark as complete button when shading element is incomplete", async () => {
 			store.$patch({
 				dwellingDetails: {
 					shading: {
@@ -143,7 +143,7 @@ describe("shading", () => {
 			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
 		});
 
-		test("enables the Mark section as complete button when all shading items are complete", async () => {
+		test("enables the Mark as complete button when all shading items are complete", async () => {
 
 			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeFalsy();
 		});

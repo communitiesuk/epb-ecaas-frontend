@@ -1,14 +1,14 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import Walls from "./index.vue";
 import ExternalWallForm from "./external/[wall].vue";
+import Walls from "./index.vue";
 import InternalWallForm from "./internal/[wall].vue";
 import PartyWallForm from "./party/[wall].vue";
-import WallToUnheatedForm from "./wall-to-unheated-space/[wall].vue";
 import WallOfHeatedBasementForm from "./wall-of-heated-basement/[wall].vue";
+import WallToUnheatedForm from "./wall-to-unheated-space/[wall].vue";
 
-import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
+import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
 
 describe("walls", () => {
@@ -751,7 +751,7 @@ describe("walls", () => {
 		});
 	});
 
-	describe("mark section as complete", () => {
+	describe("mark as complete", () => {
 
 		const addWallsDataToStore = async () => {
 			store.$patch({
@@ -802,7 +802,7 @@ describe("walls", () => {
 			store.$reset();
 		});
 
-		it("disables the Mark section as complete button when a wall is incomplete", async () => {
+		it("disables the Mark as complete button when a wall is incomplete", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -820,7 +820,7 @@ describe("walls", () => {
 			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
 		});
 
-		it("enables the Mark section as complete button when all walls are complete", async () => {
+		it("enables the Mark as complete button when all walls are complete", async () => {
 			await addWallsDataToStore();
 
 			await renderSuspended(Walls);

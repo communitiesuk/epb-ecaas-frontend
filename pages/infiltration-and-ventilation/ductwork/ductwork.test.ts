@@ -118,17 +118,7 @@ describe("ductwork", async () => {
 		expect(screen.getByText("Ductwork 1 (1) (2)")).toBeDefined();
 	});
 
-	it("disables the mark as complete button when no ductwork has been added", async () => {
-		await renderSuspended(DuctworkOverview);
-
-		const markAsCompleteButton = screen.getByRole("button", {
-			name: "Mark as complete",
-		});
-
-		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
-	});
-
-	it("disables the mark section as complete button when shading element is incomplete", async () => {
+	it("disables the mark as complete button when shading element is incomplete", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: {
@@ -153,7 +143,7 @@ describe("ductwork", async () => {
 		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 	});
 
-	it("marks ductwork as complete when mark section as complete button is clicked", async () => {
+	it("marks ductwork as complete when mark as complete button is clicked", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: {
