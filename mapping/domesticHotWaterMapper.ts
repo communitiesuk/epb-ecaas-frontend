@@ -336,6 +336,7 @@ function mapWaterStorageHeatSource(
 				} as const satisfies WaterStorageHeatSource<"HeatSourceWet">,
 			};
 			mappedHeatSourceWet = mapHeatSourceWet(actualHeatSource, state);
+			console.log("mapped heat source wet", mappedHeatSourceWet);
 			break;
 		case "solarThermalSystem":
 			// SolarThermalSystem
@@ -520,6 +521,8 @@ function mapHotWaterSourcesWithoutWaterStorage(state: ResolvedState) {
 	}
 
 	const actualHeatSource = getActualHeatSourceFromDHWHeatSource(dhwHeatSource, state);
+
+	console.log("actual heat source", actualHeatSource);
 
 	if (actualHeatSource.typeOfHeatSource === "solarThermalSystem"
 		|| actualHeatSource.typeOfHeatSource === "immersionHeater"
