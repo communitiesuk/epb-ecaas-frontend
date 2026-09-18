@@ -368,7 +368,7 @@ describe("mechanical ventilation overview", () => {
 	it("marks mechanical ventilation as complete when mark section as complete button is clicked", async () => {
 		await renderSuspended(MechanicalVentilationOverview);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
 		const completedStatusElement = screen.queryByTestId(
 			"completeSectionCompleted",
@@ -413,7 +413,7 @@ describe("mechanical ventilation overview", () => {
 			store.infiltrationAndVentilation.mechanicalVentilation.complete,
 		).toBe(false);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
 	});
 
@@ -440,7 +440,7 @@ describe("mechanical ventilation overview", () => {
 			store.infiltrationAndVentilation.mechanicalVentilation.complete,
 		).toBe(false);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
 	});
 
@@ -471,7 +471,7 @@ describe("mechanical ventilation overview", () => {
 
 		await renderSuspended(MechanicalVentilationOverview);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
 	});
 
@@ -509,7 +509,7 @@ describe("mechanical ventilation overview", () => {
 
 		await renderSuspended(MechanicalVentilationOverview);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
 	});
 

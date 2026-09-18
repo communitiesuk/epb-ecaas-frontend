@@ -118,6 +118,16 @@ describe("ductwork", async () => {
 		expect(screen.getByText("Ductwork 1 (1) (2)")).toBeDefined();
 	});
 
+	it("disables the mark as complete button when no ductwork has been added", async () => {
+		await renderSuspended(DuctworkOverview);
+
+		const markAsCompleteButton = screen.getByRole("button", {
+			name: "Mark as complete",
+		});
+
+		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
+	});
+
 	it("disables the mark section as complete button when shading element is incomplete", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -138,19 +148,35 @@ describe("ductwork", async () => {
 		await renderSuspended(DuctworkOverview);
 
 		const markAsCompleteButton = screen.getByRole("button", {
-			name: "Mark section as complete",
+			name: "Mark as complete",
 		});
 		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 	});
 
 	it("marks ductwork as complete when mark section as complete button is clicked", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				ductwork: {
+					data: [
+						{
+							data: ductwork1,
+							complete: true,
+						},
+					],
+				},
+			},
+		});
+
 		await renderSuspended(DuctworkOverview);
+
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
+
 		const completedStatusElement = screen.queryByTestId(
 			"completeSectionCompleted",
 		);
+
 		expect(completedStatusElement?.style.display).toBe("none");
 
 		await user.click(screen.getByTestId("markAsCompleteButton"));
@@ -158,15 +184,14 @@ describe("ductwork", async () => {
 		const { complete } = store.infiltrationAndVentilation.ductwork;
 
 		expect(complete).toBe(true);
-		expect(
-			screen.queryByRole("button", { name: "Mark section as complete" }),
-		).toBeNull();
+
 		expect(completedStatusElement?.style.display).not.toBe("none");
 
 		expect(navigateToMock).toHaveBeenCalledWith(
 			"/infiltration-and-ventilation",
 		);
 	});
+
 	it("marks ductwork as not complete when complete button is clicked then user removes a ductwork item", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -187,7 +212,7 @@ describe("ductwork", async () => {
 		await user.click(screen.getByTestId("ductwork_remove_0"));
 		expect(store.infiltrationAndVentilation.ductwork.complete).toBe(false);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
 	});
 
@@ -208,7 +233,7 @@ describe("ductwork", async () => {
 		await user.click(screen.getByTestId("ductwork_duplicate_0"));
 		expect(store.infiltrationAndVentilation.ductwork.complete).toBe(false);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
 	});
 
@@ -237,7 +262,7 @@ describe("ductwork", async () => {
 
 		await renderSuspended(DuctworkOverview);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
+			screen.getByRole("button", { name: "Mark as complete" }),
 		).not.toBeNull();
 	});
 

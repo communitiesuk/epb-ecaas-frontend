@@ -1,12 +1,12 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { within } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
+import formStatus from "~/constants/formStatus";
+import DivertersForm from "./diverters/index.vue";
+import ElectricBatteryForm from "./electric-battery/index.vue";
 import PvAndBatteries from "./index.vue";
 import PvSystemForm from "./pvs/[pv].vue";
-import ElectricBatteryForm from "./electric-battery/index.vue";
-import DivertersForm from "./diverters/index.vue";
-import { screen } from "@testing-library/vue";
-import { within } from "@testing-library/dom";
-import formStatus from "~/constants/formStatus";
 
 const baseForm = {
 	data: [],
@@ -188,7 +188,7 @@ describe("pv systems and electric battery", () => {
 
 		await renderSuspended(PvAndBatteries);
 		const markAsCompleteButton = screen.getByRole("button", {
-			name: "Mark section as complete",
+			name: "Mark as complete",
 		});
 		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 	});

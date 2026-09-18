@@ -1125,7 +1125,7 @@ describe("space heating", () => {
 
 				await renderSuspended(SpaceHeating);
 
-				const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+				const markAsCompleteButton = screen.getByRole("button", { name: "Mark as complete" });
 				expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 			});
 		});
@@ -1181,7 +1181,7 @@ describe("space heating", () => {
 				expect(store.spaceHeating.heatSource?.complete).toBe(false);
 
 				await renderSuspended(SpaceHeating);
-				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+				expect(screen.getByRole("button", { name: "Mark as complete" })).not.toBeNull();
 			});
 		});
 	});

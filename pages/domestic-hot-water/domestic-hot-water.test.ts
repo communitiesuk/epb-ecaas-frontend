@@ -1545,7 +1545,7 @@ describe("Domestic hot water", () => {
 				expect(store.domesticHotWater.hotWaterOutlets?.complete).toBe(false);
 
 				await renderSuspended(DomesticHotWater);
-				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+				expect(screen.getByRole("button", { name: "Mark as complete" })).not.toBeNull();
 			});
 		});
 	});

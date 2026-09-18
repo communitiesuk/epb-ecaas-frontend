@@ -651,7 +651,7 @@ describe("doors", () => {
 					).toBe(false);
 					await renderSuspended(Doors);
 					expect(
-						screen.getByRole("button", { name: "Mark section as complete" }),
+						screen.getByRole("button", { name: "Mark as complete" }),
 					).not.toBeNull();
 				}
 			});
