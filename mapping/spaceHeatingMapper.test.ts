@@ -290,6 +290,7 @@ describe("Space heating - heat sources", () => {
 						product_reference: boiler1.productReference,
 						specified_location: "internal",
 						EnergySupply: "mains elec", // todo review
+						is_heat_network: false,
 					} as const satisfies SchemaBoilerWithProductReference,
 				};
 				const resolvedState = resolveState(store.$state);
@@ -317,11 +318,13 @@ describe("Space heating - heat sources", () => {
 						product_reference: boiler1.productReference,
 						specified_location: "internal",
 						EnergySupply: "mains elec", //todo review
+						is_heat_network: false,
 					} as const satisfies SchemaBoilerWithProductReference,
 					[boiler2.name]: {
 						type: "Boiler",
 						product_reference: boiler2.productReference,
 						EnergySupply: "mains elec", //todo review
+						is_heat_network: false,
 					} as const satisfies SchemaBoilerWithProductReference,
 				};
 
