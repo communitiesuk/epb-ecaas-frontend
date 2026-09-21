@@ -11,5 +11,6 @@ if (environment && sentryDsn) {
 		dsn: sentryDsn,
 		environment: `cpl-frontend-${environment ?? "development"}`,
 		debug: false,
+		tunnel: "/api/tunnel",
 	});
 }

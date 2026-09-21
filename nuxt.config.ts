@@ -101,6 +101,7 @@ export default defineNuxtConfig({
 	runtimeConfig: {
 		public: {
 			environment: process.env.NUXT_PUBLIC_ENVIRONMENT,
+			sentryDsn: "",
 		},
 	},
 
@@ -154,6 +155,15 @@ export default defineNuxtConfig({
 			xXSSProtection: false,
 		},
 		rateLimiter: false,
+	},
+
+	// override XSS checking middleware for report tunnelling
+	routeRules: {
+		"/api/tunnel": {
+			security: {
+				xssValidator: false,
+			},
+		},
 	},
 
 	sentry: {
