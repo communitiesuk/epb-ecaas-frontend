@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import * as Sentry from "@sentry/nuxt";
 import { mapFhsInputData } from "~/mapping/fhsInputMapper";
 import type { FhsComplianceResponseIncludingErrors } from "~/server/server.types";
 import { hasCompleteState } from "~/stores/ecaasStore";
@@ -56,6 +57,7 @@ const calculate = async () => {
 		}
 	} catch (error) {
 		console.error(error);
+		Sentry.captureException(error);
 		calculateError = true;
 	} finally {
 		calculatePending.value = false;
