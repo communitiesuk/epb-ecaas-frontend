@@ -83,6 +83,7 @@ export function mapBoilers(state: ResolvedState): Record<string, SchemaBoilerWit
 					...("specifiedLocation" in boiler
 						? { specified_location: boiler.specifiedLocation }
 						: {}),
+					// EnergySupply is currently required by the schema. The default is expected to be removed in 1.0.0a9.
 					EnergySupply: boiler.energySupply ?? defaultElectricityEnergySupplyName,
 					is_heat_network: false,
 				} as const satisfies SchemaBoilerWithProductReference,
