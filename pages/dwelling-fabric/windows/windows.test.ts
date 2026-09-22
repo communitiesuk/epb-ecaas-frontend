@@ -35,7 +35,7 @@ describe("windows", () => {
 		data: {
 			id: "test-id-1",
 			name: "Window 1",
-			taggedItem: externalWall.id,
+			associatedItemId: externalWall.id,
 			height: 1,
 			width: 1,
 			uValue: 1,
@@ -87,7 +87,7 @@ describe("windows", () => {
 			data: {
 				...window1.data,
 				name: "Window 2",
-				taggedItem: undefined,
+				associatedItemId: undefined,
 				orientation: 90,
 			},
 			complete: true,

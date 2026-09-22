@@ -473,7 +473,7 @@ describe("hasCompleteState function", () => {
 		const window: Partial<WindowData> = {
 			id: "window-id",
 			name: "Window 1",
-			taggedItem: externalWall1.id,
+			associatedItemId: externalWall1.id,
 		};
 
 		test("returns the correct values for a directly tagged top-level item", () => {

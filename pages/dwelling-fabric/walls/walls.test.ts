@@ -184,7 +184,7 @@ describe("walls", () => {
 			const window1: Partial<WindowData> = {
 				id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 				name: "Window 1",
-				taggedItem: external1.id,
+				associatedItemId: external1.id,
 			};
 
 			const externalUnglazed: Partial<ExternalUnglazedDoorData> = {
@@ -232,7 +232,7 @@ describe("walls", () => {
 			expect(vent?.complete).toBe(false);
 
 			const window = store.dwellingFabric.dwellingSpaceWindows.data[0];
-			expect(window?.data.taggedItem).toBeUndefined();
+			expect(window?.data.associatedItemId).toBeUndefined();
 			expect(window?.complete).toBe(false);
 
 			const glazedDoor =

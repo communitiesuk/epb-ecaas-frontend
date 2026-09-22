@@ -527,7 +527,7 @@ const windowSummary: SummarySection = {
 	label: "Windows",
 	data: windowData.map(({ data: x }) => {
 
-		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.taggedItem);
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedItemId);
 		let pitch = emptyValueRendering;
 		let orientation = emptyValueRendering;
 
