@@ -7,7 +7,7 @@ import pagesData from "~/data/pages/pages";
 import type { Page } from "~/data/pages/pages.types";
 import { patchState } from "./patch";
 
-type KeysToDeleteCascade = "associatedItemId" | "taggedItem" | "heatSource" | "dhwHeatSourceId" | "waterStorage" | "boosterHeatPumpId";
+type KeysToDeleteCascade = "associatedItemId" | "heatSource" | "dhwHeatSourceId" | "waterStorage" | "boosterHeatPumpId";
 
 export function getInitialState(): EcaasState {
 	const store: NulledForms<EcaasState> = {
@@ -121,11 +121,13 @@ export const useEcaasStore = defineStore("ecaas", {
 				id: string | undefined,
 			): AssociatedItemValues | undefined => {
 				const topLevelTaggedItem = getTopLevelTaggedItem(sections, id);
+
 				if (topLevelTaggedItem) return topLevelTaggedItem;
 
 				const nestedTaggedItem = getNestedTaggedItem(sections, id);
-				if (nestedTaggedItem && "taggedItem" in nestedTaggedItem) {
-					return this.getTaggedItem(sections, nestedTaggedItem.taggedItem as string);
+
+				if (nestedTaggedItem && "associatedItemId" in nestedTaggedItem && typeof nestedTaggedItem.associatedItemId === "string") {
+					return this.getTaggedItem(sections, nestedTaggedItem.associatedItemId);
 				}
 			};
 		},

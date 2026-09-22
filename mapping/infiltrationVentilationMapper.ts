@@ -176,24 +176,28 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 }
 
 export function mapVentsData(state: ResolvedState) {
-	const { dwellingSpaceWindows, dwellingSpaceRoofs, dwellingSpaceWalls: { dwellingSpaceExternalWall } } = state.dwellingFabric;
+	const { dwellingSpaceWindows, dwellingSpaceWalls: { dwellingSpaceExternalWall }, dwellingSpaceDoors: { dwellingSpaceExternalGlazedDoor }, dwellingSpaceRoofs } = state.dwellingFabric;
 
 	const entries = state.infiltrationAndVentilation.vents.map((x): [string, SchemaVent] => {
 		const key = x.name;
 
 		const taggedItem = x.associatedItemId && x.associatedItemId !== "none" ? getResolvedTaggedItem(
-			[dwellingSpaceWindows, dwellingSpaceRoofs, dwellingSpaceExternalWall],
+			[dwellingSpaceExternalWall, dwellingSpaceWindows, dwellingSpaceExternalGlazedDoor, dwellingSpaceRoofs],
 			x.associatedItemId,
 		) : null;
 
-		const ventOrientation = x.hasAssociatedItem ? taggedItem?.orientation : x.orientation;
+		const ventOrientation = x.hasAssociatedItem ? taggedItem?.orientation ?? 0 : x.orientation;
 		const pitchForm = x.hasAssociatedItem ? taggedItem : x;
+
+		if (!pitchForm) {
+			throw new Error(`Associated item with id ${x.associatedItemId} not found for ${x.name}`);
+		}
 
 		const val: SchemaVent = {
 			area_cm2: x.effectiveVentilationArea,
 			mid_height_air_flow_path: x.midHeightOfZone,
-			orientation360: ventOrientation!,
-			pitch: extractPitch(pitchForm!),
+			orientation360: ventOrientation,
+			pitch: extractPitch(pitchForm),
 		};
 
 		return [key, val];

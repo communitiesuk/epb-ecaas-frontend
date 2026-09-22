@@ -144,6 +144,7 @@ const ventSummary: SummarySection = {
 		const associatedItemName = x.associatedItemId && x.associatedItemId !== "none"
 			? associatedItems[x.associatedItemId] ?? emptyValueRendering
 			: emptyValueRendering;
+
 		const orientation = taggedItem?.orientation ?? (x as { orientation?: number })?.orientation;
 		const pitch = x.hasAssociatedItem === true ? taggedItem?.pitch : x.pitch;
 

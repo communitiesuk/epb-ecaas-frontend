@@ -2085,7 +2085,7 @@ describe("FHS input mapper", () => {
 					data: {
 						id: "0b77e247-53c5-42b8-9dbd-83cbfc8cffff",
 						name: "bedroom window",
-						taggedItem: externalWallId,
+						associatedItemId: externalWallId,
 						height: 2,
 						width: 2,
 						uValue: 0.1,

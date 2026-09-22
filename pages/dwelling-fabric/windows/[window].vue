@@ -29,19 +29,19 @@ const tagOptions = [
 ].filter(x => x[0] !== undefined);
 
 
-if (model.value && model.value.taggedItem === undefined) {
-	model.value.taggedItem = "none";
+if (model.value && model.value.associatedItemId === undefined) {
+	model.value.associatedItemId = "none";
 }
 
 const saveForm = (fields: WindowData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceWindows } = state.dwellingFabric;
-		const shouldSavePitchOrientation = tagOptions.length === 1 || fields.taggedItem === "none";
+		const shouldSavePitchOrientation = tagOptions.length === 1 || fields.associatedItemId === "none";
 
 		const commonFields: Partial<WindowData> = {
 			id: windowId || uuidv4(),
 			name: fields.name,
-			taggedItem: shouldSavePitchOrientation ? undefined : fields.taggedItem,
+			associatedItemId: shouldSavePitchOrientation ? undefined : fields.associatedItemId,
 			pitch: shouldSavePitchOrientation ? fields.pitch : undefined,
 			orientation: shouldSavePitchOrientation ? fields.orientation : undefined,
 			height: fields.height,
@@ -163,12 +163,12 @@ watch(model, (currentModel, prevModel) => {
 			}"
 		/>
 		<FieldsAssociatedWallRoof
-			id="taggedItem"
-			name="taggedItem"
+			id="associatedItemId"
+			name="associatedItemId"
 			label="Associated wall or roof"
 			help="Select the wall or roof that this window is in. It should have the same orientation and pitch as the window."
 		/>
-		<template v-if="mounted && model && (model.taggedItem === 'none' || tagOptions.length === 1)">
+		<template v-if="mounted && model && (model.associatedItemId === 'none' || tagOptions.length === 1)">
 			<FieldsPitch
 				id="pitch"
 				name="pitch"

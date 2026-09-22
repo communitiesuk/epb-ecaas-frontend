@@ -850,7 +850,7 @@ describe("Infiltration and ventilation summary", () => {
 		const window1: Partial<WindowData> = {
 			id: "0b77e247-53c5-42b8-9dbd-83cbfc8ffffff",
 			name: "Window 1",
-			taggedItem: externalWall.id,
+			associatedItemId: externalWall.id,
 		};
 
 		const ventData: Partial<VentData> = {

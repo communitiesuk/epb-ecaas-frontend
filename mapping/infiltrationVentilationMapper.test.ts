@@ -455,7 +455,7 @@ describe("infiltration ventilation mapper", () => {
 		const window: WindowData = {
 			id: "test-id-1",
 			name: "Window 1",
-			taggedItem: externalWallId,
+			associatedItemId: externalWallId,
 			height: 1,
 			width: 1,
 			uValue: 1,

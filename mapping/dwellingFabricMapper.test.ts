@@ -1221,7 +1221,7 @@ describe("dwelling fabric mapper", () => {
 		const window: WindowData = {
 			id: "test-id-1",
 			name: "Window 1",
-			taggedItem: externalWall.data.id,
+			associatedItemId: externalWall.data.id,
 			height: 1,
 			width: 1,
 			uValue: 1,

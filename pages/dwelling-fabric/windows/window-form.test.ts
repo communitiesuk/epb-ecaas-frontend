@@ -38,7 +38,7 @@ const window1: EcaasForm<WindowData> = {
 	data: {
 		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 		name: "Window 1",
-		taggedItem: externalWall.id,
+		associatedItemId: externalWall.id,
 		height: 1,
 		width: 1,
 		uValue: 1,
@@ -68,7 +68,7 @@ const window1: EcaasForm<WindowData> = {
 
 const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.type(screen.getByTestId("name"), "Window 1");
-	await user.click(screen.getByTestId(`taggedItem_${externalWall.id}`));
+	await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
 	await user.type(screen.getByTestId("height"), "1");
 	await user.type(screen.getByTestId("width"), "1");
 	await user.type(screen.getByTestId("uValue"), "1");
@@ -120,7 +120,7 @@ describe("window", () => {
 				},
 			});
 
-			expect(screen.queryByTestId("taggedItem")).toBeNull();
+			expect(screen.queryByTestId("associatedItemId")).toBeNull();
 		});
 
 		test("shows pitch element", async () => {
@@ -218,7 +218,7 @@ describe("window", () => {
 			expect(screen.queryByTestId("orientation_error")).toBeNull();
 
 
-			expect(await screen.findByTestId("taggedItem_error")).toBeDefined();
+			expect(await screen.findByTestId("associatedItemId_error")).toBeDefined();
 		});
 
 		test("Associated wall/roof question has none of the above option", async () => {
@@ -228,7 +228,7 @@ describe("window", () => {
 				},
 			});
 
-			expect(screen.getByTestId("taggedItem_none")).toBeDefined();
+			expect(screen.getByTestId("associatedItemId_none")).toBeDefined();
 		});
 
 		describe("when none of the above is selected for associated item ID", () => {
@@ -239,7 +239,7 @@ describe("window", () => {
 					},
 				});
 
-				await user.click(screen.getByTestId("taggedItem_none"));
+				await user.click(screen.getByTestId("associatedItemId_none"));
 
 				expect(screen.getByTestId("pitch")).toBeDefined();
 			});
@@ -251,7 +251,7 @@ describe("window", () => {
 					},
 				});
 
-				await user.click(screen.getByTestId("taggedItem_none"));
+				await user.click(screen.getByTestId("associatedItemId_none"));
 
 				expect(screen.queryByTestId("orientation")).toBeNull();
 				await user.type(screen.getByTestId("pitch"), "90");
@@ -266,7 +266,7 @@ describe("window", () => {
 					},
 				});
 
-				await user.click(screen.getByTestId("taggedItem_none"));
+				await user.click(screen.getByTestId("associatedItemId_none"));
 
 				await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -339,7 +339,7 @@ describe("window", () => {
 			});
 
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Window 1");
-			expect((await screen.findByTestId(`taggedItem_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId(`associatedItemId_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
@@ -396,7 +396,7 @@ describe("window", () => {
 			});
 
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Window 1");
-			expect((await screen.findByTestId(`taggedItem_none`)).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId(`associatedItemId_none`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("pitch")).value).toBe("72");
 			expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("24");
 		});
@@ -407,7 +407,7 @@ describe("window", () => {
 			await (user.click(screen.getByTestId("saveAndComplete")));
 
 			expect((await screen.findByTestId("name_error"))).toBeDefined();
-			expect((await screen.findByTestId("taggedItem_error"))).toBeDefined();
+			expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
 			expect((await screen.findByTestId("height_error"))).toBeDefined();
 			expect((await screen.findByTestId("width_error"))).toBeDefined();
 			expect((await screen.findByTestId("uValue_error"))).toBeDefined();

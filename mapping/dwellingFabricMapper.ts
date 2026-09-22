@@ -575,6 +575,7 @@ const mapShading = (shadingObjects: ShadingObjectData[]): SchemaWindowShadingObj
 					height: obj.height,
 				}
 				: {
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 					type: shadingTypeNameMap[typeOfShading] as Exclude<SchemaWindowShadingType, "obstacle">,
 					depth: obj.depth,
 					distance: obj.distance,
@@ -593,13 +594,14 @@ function mapFrameOrReveal(depth: number, distance: number): SchemaWindowShadingO
 export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 	const doorSuffix = "door";
-	const { dwellingSpaceInternalWall, dwellingSpaceExternalWall } =
+	const { dwellingSpaceInternalWall, dwellingSpaceExternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall } =
 		state.dwellingFabric.dwellingSpaceWalls;
 	const { dwellingSpaceRoofs } = state.dwellingFabric;
+	const { dwellingSpaceInternalFloor } = state.dwellingFabric.dwellingSpaceFloors;
 
 	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map((x) => {
 		const associatedHeatedSpaceElement = getResolvedTaggedItem(
-			[dwellingSpaceInternalWall],
+			[dwellingSpaceInternalWall, dwellingSpaceInternalFloor, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall],
 			x.associatedItemId,
 		)!;
 		const commonFields = {
@@ -738,13 +740,13 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 		let pitch: number;
 		let orientation: number;
 
-		if (!x.taggedItem) {
+		if (!x.associatedItemId) {
 			pitch = extractPitch(x);
 			orientation = x.orientation!;
 		} else {
 			const associatedElement = getResolvedTaggedItem(
 				[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-				x.taggedItem,
+				x.associatedItemId,
 			)!;
 			pitch = extractPitch(associatedElement);
 			orientation = associatedElement.orientation!;

@@ -42,7 +42,7 @@ describe("getResolvedTaggedItem", () => {
 	const window: WindowData = {
 		id: "window-id",
 		name: "Window 1",
-		taggedItem: externalWall1.id,
+		associatedItemId: externalWall1.id,
 		height: 1,
 		width: 1,
 		uValue: 1,
@@ -85,7 +85,7 @@ describe("getResolvedTaggedItem", () => {
 	test("returns the correct values for a directly tagged top-level item when nested tagged item is set to 'none'", () => {
 		const untaggedWindow: WindowData = {
 			...window,
-			taggedItem: "none",
+			associatedItemId: "none",
 			pitch: 45,
 			orientation: 180,
 		};
