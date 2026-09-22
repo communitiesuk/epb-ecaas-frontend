@@ -618,7 +618,7 @@ const internalDoorDataZod = nestedDiscriminatedUnion(
 export type InternalDoorData = z.infer<typeof internalDoorDataZod>;
 
 const baseWindowData = namedWithId.extend({
-	taggedItem: z.guid().optional(),
+	associatedItemId: z.guid().optional(),
 	pitch: z.number().min(0).max(180).optional(),
 	orientation: z.number().min(0).lt(360).optional(),
 	height: heightTransparentZod,

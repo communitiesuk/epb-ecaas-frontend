@@ -37,7 +37,7 @@ function handleRemove(wallType: WallType, index: number) {
 
 		if (externalWallId) {
 			store.removeTaggedAssociations()([vents, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor], externalWallId);
-			store.removeTaggedAssociations()([dwellingSpaceWindows], externalWallId, "taggedItem");
+			store.removeTaggedAssociations()([dwellingSpaceWindows], externalWallId);
 		}
 		if (internalWallId) {
 			store.removeTaggedAssociations()([dwellingSpaceInternalDoor], internalWallId);

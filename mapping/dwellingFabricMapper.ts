@@ -596,14 +596,14 @@ function mapFrameOrReveal(depth: number, distance: number) {
 export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 	const doorSuffix = "door";
-	const { dwellingSpaceInternalWall, dwellingSpaceExternalWall } =
+	const { dwellingSpaceInternalWall, dwellingSpaceExternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall } =
 		state.dwellingFabric.dwellingSpaceWalls;
 	const { dwellingSpaceCeilings, dwellingSpaceRoofs } =
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map((x) => {
 		const associatedHeatedSpaceElement = getResolvedTaggedItem(
-			[dwellingSpaceInternalWall, dwellingSpaceCeilings],
+			[dwellingSpaceInternalWall, dwellingSpaceCeilings, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall],
 			x.associatedItemId,
 		)!;
 		const commonFields = {
@@ -770,13 +770,13 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 		let pitch: number;
 		let orientation: number;
 
-		if (!x.taggedItem) {
+		if (!x.associatedItemId) {
 			pitch = extractPitch(x);
 			orientation = x.orientation!;
 		} else {
 			const associatedElement = getResolvedTaggedItem(
 				[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-				x.taggedItem,
+				x.associatedItemId,
 			)!;
 			pitch = extractPitch(associatedElement);
 			orientation = associatedElement.orientation!;
