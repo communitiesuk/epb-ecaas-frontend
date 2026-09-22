@@ -92,7 +92,10 @@ function checkIsComplete() {
 		</GovButton>
 		<CompleteElement
 			:is-complete="checkIsComplete()"
-			:disabled="store.infiltrationAndVentilation.ductwork.data?.some(s => !s.complete)"
+			:disabled="
+				!store.infiltrationAndVentilation.ductwork.data?.length ||
+					store.infiltrationAndVentilation.ductwork.data?.some(s => !s.complete)
+			"
 			@completed="handleComplete"
 		/>      
 	</div>
