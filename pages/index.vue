@@ -43,9 +43,10 @@ const firstError = computed(() => {
 	return null;
 });
 
-const isValidationError = computed(() =>
-	firstError.value?.id === "underfloorHeatingAreaError",
+const isMappingError = computed(() =>
+	firstError.value?.id === "mappingError",
 );
+
 </script>
 
 <template>
@@ -55,12 +56,12 @@ const isValidationError = computed(() =>
 	<div v-show="!showLoadingIndicator">
 		<div v-if="calculateError">
 			<GovErrorSummary
-				:title="isValidationError ? 'There is a problem' : `Sorry, there's been an error`"
+				:title="isMappingError ? 'There is a problem' : `Sorry, there's been an error`"
 				class-name="govuk-!-margin-bottom-5"
 				test-id="resultErrorSummary"
 			>
 				<p
-					v-if="!isValidationError"
+					v-if="!isMappingError"
 					class="govuk-body govuk-!-margin-bottom-2"
 				>
 					We have noted an unexpected error with the service and we will look into resolving it.
@@ -74,7 +75,7 @@ const isValidationError = computed(() =>
 				</p>
 
 				<p
-					v-if="!isValidationError && firstError?.id"
+					v-if="!isMappingError && firstError?.id"
 					class="govuk-body"
 				>
 					Error ID: {{ firstError.id }}
