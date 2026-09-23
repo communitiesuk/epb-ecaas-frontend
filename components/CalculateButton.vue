@@ -58,7 +58,15 @@ const calculate = async () => {
 	} catch (error) {
 		console.error(error);
 		Sentry.captureException(error);
-		calculateError = true;
+		
+		if (error instanceof Error) {
+			calculateError = [{
+				id: "mappingError",
+				detail: error.message,
+			}];
+		} else {
+			calculateError = true;
+		}
 	} finally {
 		calculatePending.value = false;
 		emit("stopLoading");

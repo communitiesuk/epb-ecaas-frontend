@@ -42,6 +42,11 @@ const firstError = computed(() => {
 	}
 	return null;
 });
+
+const isMappingError = computed(() =>
+	firstError.value?.id === "mappingError",
+);
+
 </script>
 
 <template>
@@ -51,13 +56,30 @@ const firstError = computed(() => {
 	<div v-show="!showLoadingIndicator">
 		<div v-if="calculateError">
 			<GovErrorSummary
-				title="Sorry, there's been an error"
+				:title="isMappingError ? 'There is a problem' : `Sorry, there's been an error`"
 				class-name="govuk-!-margin-bottom-5"
 				test-id="resultErrorSummary"
 			>
-				<p class="govuk-body govuk-!-margin-bottom-2">We have noted an unexpected error with the service and we will look into resolving it.</p>
-				<p v-if="firstError?.detail" class="govuk-body govuk-!-margin-bottom-2">{{ firstError.detail }}</p>
-				<p v-if="firstError?.id" class="govuk-body">Error ID: {{ firstError.id }}</p>
+				<p
+					v-if="!isMappingError"
+					class="govuk-body govuk-!-margin-bottom-2"
+				>
+					We have noted an unexpected error with the service and we will look into resolving it.
+				</p>
+
+				<p
+					v-if="firstError?.detail"
+					class="govuk-body govuk-!-margin-bottom-2"
+				>
+					{{ firstError.detail }}
+				</p>
+
+				<p
+					v-if="!isMappingError && firstError?.id"
+					class="govuk-body"
+				>
+					Error ID: {{ firstError.id }}
+				</p>
 			</GovErrorSummary>
 		</div>
 		<NotificationsBanner />

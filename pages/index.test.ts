@@ -47,8 +47,25 @@ describe("Homepage", () => {
 		expect((await screen.findByTestId("resultErrorSummary"))).toBeDefined();
 	});
 
-	// skipping while calculate button does not trigger an API request
-	it.skip("shows error summary when API error has occurred", async () => {
+	it("shows mapping error when a client mapping error has occurred", async () => {
+		vi.mocked(hasCompleteState).mockReturnValue(true);
+
+		vi.mocked(mapFhsInputData).mockImplementation(() => {
+			throw Error("Selected hot water heat source requires water storage - no water storage present");
+		});
+
+		await renderSuspended(Index);
+
+		await user.click(screen.getByRole("button", { name: "Calculate" }));
+
+		const errorSummary = await screen.findByTestId("resultErrorSummary");
+
+		expect(errorSummary.textContent).toContain(
+			"Selected hot water heat source requires water storage - no water storage present",
+		);
+	});
+
+	it("shows error summary when API error has occurred", async () => {
 		vi.mocked(hasCompleteState).mockReturnValue(true);
 
 		vi.mocked(mapFhsInputData).mockImplementation(() => {
