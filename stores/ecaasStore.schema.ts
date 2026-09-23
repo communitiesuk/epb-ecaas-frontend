@@ -631,6 +631,30 @@ const baseWindowData = namedWithId.extend({
 	freeAreaHeight: freeAreaHeightZod,
 	depthOfReveal: revealDimensionZod.optional(),
 	distanceFromGlassToStartOfReveal: revealDimensionZod.optional(),
+}).superRefine((val, ctx) => {
+	if (val.associatedItemId && val.associatedItemId !== "none") {
+		return;
+	}
+
+	if (val.pitch === undefined) {
+		ctx.addIssue({
+			code: "invalid_type",
+			message: "Pitch is required",
+			expected: "number",
+			input: val.pitch,
+		});
+
+		return;
+	}
+
+	if (val.pitch > 0 && val.pitch < 180 && val.orientation === undefined) {
+		ctx.addIssue({
+			code: "invalid_type",
+			expected: "number",
+			message: "Orientation is required",
+			input: val.orientation,
+		});
+	}
 });
 
 export const windowDataZod = nestedDiscriminatedUnion(
