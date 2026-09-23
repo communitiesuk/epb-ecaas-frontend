@@ -1,8 +1,8 @@
-import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { objectFromEntries } from "ts-extras";
-import type { SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
 import type { SchemaWindowShadingObject } from "~/schema/aliases";
+import type { SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
 import { defaultElectricityEnergySupplyName } from "./common";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 export function mapPvAndElectricBatteriesData(state: ResolvedState): [
 	Pick<FhsInputSchema, "OnSiteGeneration">,
@@ -36,7 +36,7 @@ export function mapPvData(state: ResolvedState): Pick<FhsInputSchema, "OnSiteGen
 					orientation360: orientation,
 					peak_power: peakPower,
 					pitch,
-					shading: array.hasShading ? maPvShadingData(array.shading) : [],
+					shading: array.hasShading ? mapPvShadingData(array.shading) : [],
 					type: "PhotovoltaicSystem",
 					ventilation_strategy: ventilationStrategy,
 				},
@@ -65,7 +65,7 @@ export function mapDiverterEnergySupplyData(state: ResolvedState): { [key: strin
 	return EnergySupply;
 }
 
-export function maPvShadingData(shading: ShadingObjectData[]): SchemaWindowShadingObject[] {
+export function mapPvShadingData(shading: ShadingObjectData[]): SchemaWindowShadingObject[] {
 	return shading.map((shadingItem) => {
 		const { typeOfShading } = shadingItem;
 		switch (typeOfShading) {
