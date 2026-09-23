@@ -65,7 +65,7 @@ export function mapDiverterEnergySupplyData(state: ResolvedState): { [key: strin
 	return EnergySupply;
 }
 
-export function maPvShadingData(shading: ShadingObjectData[]): SchemaWindowShadingObject[] {
+export function maPvShadingData(shading: ShadingObjectData[]): (SchemaWindowShadingObject | { type: "reveal", distance: number, depth: number })[] {
 	return shading.map((shadingItem) => {
 		const { typeOfShading } = shadingItem;
 		switch (typeOfShading) {

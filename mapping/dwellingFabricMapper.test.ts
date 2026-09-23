@@ -1142,11 +1142,11 @@ describe("dwelling fabric mapper", () => {
 					distance: 9,
 					height: 10,
 				},
-				{
-					type: "reveal",
-					depth: 200,
-					distance: 100,
-				},
+				// {
+				// 	type: "reveal",
+				// 	depth: 200,
+				// 	distance: 100,
+				// },
 			],
 			security_risk: false,
 			u_value: externalGlazedDoor.uValue,
@@ -1331,11 +1331,11 @@ describe("dwelling fabric mapper", () => {
 					distance: 9,
 					height: 10,
 				},
-				{
-					type: "reveal",
-					depth: 200,
-					distance: 100,
-				},
+				// {
+				// 	type: "reveal",
+				// 	depth: 200,
+				// 	distance: 100,
+				// },
 			],
 		};
 		expect(windowElement).toEqual(expectedWindow);

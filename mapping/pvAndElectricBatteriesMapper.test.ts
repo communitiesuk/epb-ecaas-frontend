@@ -463,7 +463,7 @@ describe("PV and electric batteries mapper", () => {
 		});
 
 		const result = mapPvData(resolveState(store.$state));
-		const expectedResult: SchemaWindowShadingObject[] = [
+		const expectedResult: (SchemaWindowShadingObject | { type: "reveal", distance: number, depth: number })[] = [
 			{
 				type: "obstacle",
 				height: 5,

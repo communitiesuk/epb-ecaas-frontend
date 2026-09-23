@@ -1,4 +1,4 @@
-import type { SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaEdgeInsulation, BuildingElementGroundForSchema } from "~/schema/aliases";
+import type { SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaEdgeInsulation, BuildingElementGroundForSchema, SchemaWindowShadingObject } from "~/schema/aliases";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from "deepmerge";
 import { defaultZoneName } from "./common";
@@ -585,13 +585,13 @@ const mapShading = (shadingObjects: ShadingObjectData[]) => {
 		});
 };
 
-function mapFrameOrReveal(depth: number, distance: number) {
-	return {
-		type: shadingTypeNameMap.frame_or_reveal,
-		depth,
-		distance,
-	} as const;
-}
+// function mapFrameOrReveal(depth: number, distance: number): SchemaWindowShadingObject {
+// 	return {
+// 		type: "reveal" as const,
+// 		depth,
+// 		distance,
+// 	} as const;
+// }
 
 export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
@@ -661,9 +661,9 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			free_area_height: x.freeAreaHeight,
 			shading: [
 				...(x.hasShading ? mapShading(x.shading) : []),
-				...(x.depthOfReveal && x.distanceFromGlassToStartOfReveal
-					? [mapFrameOrReveal(x.depthOfReveal, x.distanceFromGlassToStartOfReveal)]
-					: []),
+				// ...(x.depthOfReveal && x.distanceFromGlassToStartOfReveal
+				// 	? [mapFrameOrReveal(x.depthOfReveal, x.distanceFromGlassToStartOfReveal)]
+				// 	: []), // leave out reveal window shading temporarily as this is broken in FHS 1.0.0a7
 			],
 			u_value: x.uValue,
 			treatment: x.curtainsOrBlinds ? [{
@@ -802,10 +802,10 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				window_part_list: mapWindowPartList(x),
 				shading: [
 					...(x.hasShading ? mapShading(x.shading) : []),
-					...(x.depthOfReveal && x.distanceFromGlassToStartOfReveal
-						? [mapFrameOrReveal(x.depthOfReveal, x.distanceFromGlassToStartOfReveal)]
-						: []),
-				],
+					// ...(x.depthOfReveal && x.distanceFromGlassToStartOfReveal
+					// 	? [mapFrameOrReveal(x.depthOfReveal, x.distanceFromGlassToStartOfReveal)]
+					// 	: []),
+				] as SchemaWindowShadingObject[],
 			},
 		};
 	});

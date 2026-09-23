@@ -854,11 +854,11 @@ const expectedFlatInput: FhsInputSchema = {
 							distance: 2,
 							height: 1,
 						},
-						{
-							type: "reveal",
-							depth: 200,
-							distance: 100,
-						},
+						// {
+						// 	type: "reveal",
+						// 	depth: 200,
+						// 	distance: 100,
+						// },
 					],
 					type: "BuildingElementTransparent",
 					u_value: 10,
@@ -969,11 +969,11 @@ const expectedFlatInput: FhsInputSchema = {
 							distance: 2,
 							height: 1,
 						},
-						{
-							type: "reveal",
-							depth: 200,
-							distance: 100,
-						},
+						// {
+						// 	type: "reveal",
+						// 	depth: 200,
+						// 	distance: 100,
+						// },
 					],
 				},
 			},
