@@ -582,13 +582,13 @@ const mapShading = (shadingObjects: ShadingObjectData[]): SchemaWindowShadingObj
 		});
 };
 
-// function mapFrameOrReveal(depth: number, distance: number): SchemaWindowShadingObject {
-// 	return {
-// 		type: "reveal" as const,
-// 		depth,
-// 		distance,
-// 	} as const;
-// }
+function mapFrameOrReveal(depth: number, distance: number): SchemaWindowShadingObject {
+	return {
+		type: "reveal" as const,
+		depth,
+		distance,
+	} as const;
+}
 
 export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
@@ -655,9 +655,9 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			security_risk: x.securityRisk,
 			shading: [
 				...(x.hasShading ? mapShading(x.shading) : []),
-				// ...(x.depthOfReveal && x.distanceFromGlassToStartOfReveal
-				// 	? [mapFrameOrReveal(x.depthOfReveal, x.distanceFromGlassToStartOfReveal)]
-				// 	: []), // leave out reveal window shading temporarily as this is broken in FHS 1.0.0a7
+				...(x.depthOfReveal && x.distanceFromGlassToStartOfReveal
+					? [mapFrameOrReveal(x.depthOfReveal, x.distanceFromGlassToStartOfReveal)]
+					: []),
 			],
 			u_value: x.uValue,
 			...(x.curtainsOrBlinds ? { treatment: [{
@@ -765,10 +765,10 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				window_part_list: mapWindowPartList(x),
 				shading: [
 					...(x.hasShading ? mapShading(x.shading) : []),
-					// ...(x.depthOfReveal && x.distanceFromGlassToStartOfReveal
-					// 	? [mapFrameOrReveal(x.depthOfReveal, x.distanceFromGlassToStartOfReveal)]
-					// 	: []),
-				] as SchemaWindowShadingObject[],
+					...(x.depthOfReveal && x.distanceFromGlassToStartOfReveal
+						? [mapFrameOrReveal(x.depthOfReveal, x.distanceFromGlassToStartOfReveal)]
+						: []),
+				],
 			},
 		};
 	});
