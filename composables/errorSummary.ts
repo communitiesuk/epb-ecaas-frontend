@@ -23,6 +23,10 @@ export function useErrorSummary() {
 		errorMessages.value = [];
 	};
 
+	const scrollToErrors = () => {
+		window.scrollTo(0, 0);
+	};
+
 	const handleInvalidSubmit = (node: FormKitNode) => {
 		const validationErrors = getValidationMessages(node);
 
@@ -37,8 +41,8 @@ export function useErrorSummary() {
 			errorMessages.value = errorMessages.value.concat(errors);
 		});
 
-		window.scrollTo(0, 0);
+		scrollToErrors();
 	};
 
-	return { handleInvalidSubmit, errorMessages, addError, clearErrors };
+	return { handleInvalidSubmit, errorMessages, addError, clearErrors, scrollToErrors };
 }

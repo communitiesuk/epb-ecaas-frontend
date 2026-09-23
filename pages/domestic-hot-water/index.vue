@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { hasPackagedProduct, isEcaasForm } from "#imports";
-import type { CustomListItem } from "~/components/CustomList.vue";
 import type { ConflictMessage } from "~/common.types";
+import type { CustomListItem } from "~/components/CustomList.vue";
 import { useDomesticHotWater } from "~/composables/domesticHotWater";
 import formStatus from "~/constants/formStatus";
 import type { DomesticHotWaterHeatSourceData, EcaasForm, HeatSourceData, PreheatedWaterStorageData, WaterStorageData } from "~/stores/ecaasStore.schema";
@@ -15,7 +15,7 @@ const { getActualHeatSource } = useHeatSources();
 
 const { heatSources: dhwHeatSources, preheatedWaterStorage } = store.domesticHotWater;
 
-const { errorMessages, addError, clearErrors } = useErrorSummary();
+const { errorMessages, addError, clearErrors, scrollToErrors } = useErrorSummary();
 
 function getDhwHeatSourceType(heatSourceForm: EcaasForm<DomesticHotWaterHeatSourceData>): Extract<DomesticHotWaterHeatSourceData, { typeOfHeatSource: string }>["typeOfHeatSource"] | undefined {
 	if (heatSourceForm.data.isExistingHeatSource) {
@@ -80,7 +80,7 @@ function handleComplete() {
 	if (heatSourceRequiresWaterStorage() && !hasWaterStorage) {
 		addError({
 			id: "waterStorageRequiredError",
-			text: "Water storage must be added when the heat source is an immersion heater, solar thermal system or heat pump",
+			text: "Water storage must be added when the heat source is an immersion heater, solar thermal system, heat pump or regular boiler",
 			href: `${page?.url}/hot-water-cylinders/create`,
 		});
 	}
@@ -105,7 +105,10 @@ function handleComplete() {
 		});
 	}
 	
-	if (errorMessages.value.length > 0) return;
+	if (errorMessages.value.length > 0) {
+		scrollToErrors();
+		return;
+	}
 
 	store.$patch({
 		domesticHotWater: {
@@ -182,6 +185,15 @@ function heatSourceRequiresWaterStorage() {
 	const requiresWaterStorage = store.domesticHotWater.heatSources.data.some(
 		(heatSource) => {
 			const heatSourceType = getDhwHeatSourceType(heatSource);
+
+			if (heatSourceType === "boiler") {
+				const actualHeatSource = getActualHeatSource(heatSource.data);
+				return (
+					actualHeatSource?.typeOfHeatSource === "boiler" &&
+					actualHeatSource.typeOfBoiler === "regularBoiler"
+				);
+			}
+			
 			return heatSourceType ? dhwHeatSourcesRequiringWaterStorage.includes(heatSourceType) : false;
 		},
 	);
