@@ -1,6 +1,7 @@
 import merge from "deepmerge";
 import { arrayIncludes } from "ts-extras";
-import type { BuildingElementGroundForSchema, BuildingElementPartyWallForSchema, SchemaBuildingElement, SchemaEdgeInsulation, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaZoneInput } from "~/schema/aliases";
+import type { BuildingElementGroundForSchema, BuildingElementPartyWallForSchema, SchemaBuildingElement, SchemaEdgeInsulation, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaWindowShadingObject, SchemaWindowShadingType, SchemaZoneInput } from "~/schema/aliases";
+import type { TypeOfShading } from "~/stores/ecaasStore.schema";
 import { asMetres, type Length } from "../utils/units/length";
 import { defaultZoneName } from "./common";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
@@ -553,7 +554,7 @@ export function mapRoofData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	} as Pick<FhsInputSchema, "Zone">;
 }
 
-const shadingTypeNameMap = {
+const shadingTypeNameMap: Record<TypeOfShading, SchemaWindowShadingType> = {
 	"obstacle": "obstacle",
 	"left_side_fin": "sidefinleft",
 	"right_side_fin": "sidefinright",
@@ -561,28 +562,29 @@ const shadingTypeNameMap = {
 	"frame_or_reveal": "reveal",
 } as const;
 
-const mapShading = (shadingObjects: ShadingObjectData[]) => {
+const mapShading = (shadingObjects: ShadingObjectData[]): SchemaWindowShadingObject[] => {
 	return shadingObjects
 		.filter(obj => obj.typeOfShading !== "frame_or_reveal")
-		.map(obj => {
-			return obj.typeOfShading === "obstacle"
+		.map((obj): SchemaWindowShadingObject => {
+			const { typeOfShading } = obj;
+			return typeOfShading === "obstacle"
 				? {
-					type: shadingTypeNameMap[obj.typeOfShading],
+					type: "obstacle" as const,
 					transparency: obj.transparency / 100,
 					distance: obj.distance,
 					height: obj.height,
 				}
 				: {
-					type: shadingTypeNameMap[obj.typeOfShading],
+					type: shadingTypeNameMap[typeOfShading] as Exclude<SchemaWindowShadingType, "obstacle">,
 					depth: obj.depth,
 					distance: obj.distance,
 				};
 		});
 };
 
-function mapFrameOrReveal(depth: number, distance: number) {
+function mapFrameOrReveal(depth: number, distance: number): SchemaWindowShadingObject {
 	return {
-		type: shadingTypeNameMap.frame_or_reveal,
+		type: "reveal" as const,
 		depth,
 		distance,
 	} as const;

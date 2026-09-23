@@ -541,8 +541,10 @@ const obstacleShadingDataZod = named.extend({
 	transparency: z.number(),
 });
 
+const typeOfShadingZod = z.enum(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"]);
+
 const otherShadingDataZod = named.extend({
-	typeOfShading: z.enum(["left_side_fin", "right_side_fin", "overhang", "frame_or_reveal"]),
+	typeOfShading: typeOfShadingZod,
 	distance: z.number(),
 	depth: z.number(),
 });
@@ -553,6 +555,8 @@ const shadingObjectDataZod = z.discriminatedUnion("typeOfShading", [
 ]);
 
 export type ShadingObjectData = z.infer<typeof shadingObjectDataZod>;
+
+export type TypeOfShading = ShadingObjectData["typeOfShading"];
 
 const shadingDataFields = {
 	discriminator: "hasShading",

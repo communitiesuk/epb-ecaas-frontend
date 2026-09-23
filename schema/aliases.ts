@@ -56,6 +56,7 @@ export type SchemaWaterPipework = NonNullable<SchemaDefs["Tank"]["primary_pipewo
 export type SchemaWaterPipeworkLocation = NonNullable<SchemaWaterPipework["location"]>;
 export type SchemaWaterPipeContentsType = Exclude<NonNullable<SchemaWaterPipework["pipe_contents"]>, "air">;
 export type SchemaWindowShadingObject = SchemaDefs["BuildingElementTransparent"]["shading"][number];
+export type SchemaWindowShadingType = SchemaWindowShadingObject["type"];
 export type SchemaMechVentType = VentType;
 export type SchemaFuelType = Exclude<FhsSchema["EnergySupply"][string]["fuel"], "gas" | "custom" | "wood" | "gas" | "oil" | "coal">;
 export type SchemaPhotovoltaicVentilationStrategy = OnSiteGenerationVentilationStrategy;
