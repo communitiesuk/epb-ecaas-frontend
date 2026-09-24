@@ -596,11 +596,10 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	const { dwellingSpaceInternalWall, dwellingSpaceExternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall } =
 		state.dwellingFabric.dwellingSpaceWalls;
 	const { dwellingSpaceRoofs } = state.dwellingFabric;
-	const { dwellingSpaceInternalFloor } = state.dwellingFabric.dwellingSpaceFloors;
 
 	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map((x) => {
 		const associatedHeatedSpaceElement = getResolvedTaggedItem(
-			[dwellingSpaceInternalWall, dwellingSpaceInternalFloor, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall],
+			[dwellingSpaceInternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall],
 			x.associatedItemId,
 		)!;
 		const commonFields = {
@@ -734,7 +733,6 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 
 	const windowData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceWindows.map(x => {
 		const nameWithSuffix = suffixName(x.name, windowSuffix);
-
 
 		let pitch: number;
 		let orientation: number;

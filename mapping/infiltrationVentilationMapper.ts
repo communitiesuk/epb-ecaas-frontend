@@ -29,8 +29,7 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 
 export function mapMechanicalVentilationData(state: ResolvedState) {
 	const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
-	const { dwellingSpaceRoofs } = state.dwellingFabric;
-	const { dwellingSpaceWindows } = state.dwellingFabric;
+	const { dwellingSpaceRoofs, dwellingSpaceWindows, dwellingSpaceDoors: { dwellingSpaceExternalGlazedDoor } } = state.dwellingFabric;
 
 	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map((x): [string, SchemaMechanicalVentilation] => {
 		let airFlowRateInCubicMetresPerHour: number;
@@ -55,6 +54,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 			dwellingSpaceExternalWall,
 			dwellingSpaceRoofs,
 			dwellingSpaceWindows,
+			dwellingSpaceExternalGlazedDoor,
 		], x.associatedItemId) : undefined;
 
 		switch (ventType) {
