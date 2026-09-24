@@ -22,12 +22,19 @@ const {
 const store = useEcaasStore();
 
 const { dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUnheatedSpace } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceInternalFloor } = store.dwellingFabric.dwellingSpaceFloors;
 
 const options = adjacentSpaceType === "heatedSpace" ? [
 	dwellingSpaceInternalWall.data.map(x => [x.data.id, `${x.data.name} (Wall)`] as [string, string]),
+	dwellingSpaceInternalFloor.data
+		.filter(x => x.data.typeOfInternalFloor === "heatedSpace")
+		.map(x => [x.data.id, `${x.data.name} (Internal floor / ceiling)`] as [string, string]),
 ] : [
 	dwellingSpaceWallToUnheatedSpace.data.map(x => [x.data.id, `${x.data.name} (Wall)`] as [string, string]),
 	dwellingSpacePartyWall.data.map(x => [x.data.id, `${x.data.name} (Wall)`] as [string, string]),
+	dwellingSpaceInternalFloor.data
+		.filter(x => x.data.typeOfInternalFloor === "unheatedSpace")
+		.map(x => [x.data.id, `${x.data.name} (Internal floor / ceiling)`] as [string, string]),
 ];
 
 const flattenedOptions = options.flat().filter(x => x[0] !== undefined);

@@ -59,6 +59,7 @@ describe("floors", () => {
 	};
 
 	const internal1: InternalFloorData = {
+		id: "a95f3cb2-62cc-405f-9eb6-bee5d6b6b747",
 		typeOfInternalFloor: "heatedSpace",
 		name: "Internal floor 1",
 		surfaceAreaOfElement: 5,
@@ -70,6 +71,7 @@ describe("floors", () => {
 	};
 
 	const internal2: InternalFloorData = {
+		id: "02a83e36-a56e-4a74-b808-f0f96e494c3c",
 		typeOfInternalFloor: "heatedSpace",
 		name: "Internal floor 2",
 		surfaceAreaOfElement: 5,
@@ -81,6 +83,7 @@ describe("floors", () => {
 	};
 
 	const internal3: InternalFloorData = {
+		id: "997c7dba-6458-48a5-b936-eccdfb933e4c",
 		typeOfInternalFloor: "heatedSpace",
 		name: "Internal floor 3",
 		surfaceAreaOfElement: 5,

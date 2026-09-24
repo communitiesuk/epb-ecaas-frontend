@@ -191,6 +191,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		const internalFloorUnheatedSpace: InternalFloorData = {
+			id: "b2127c90-38b2-464c-ba3a-bdc8daae1c5f",
 			typeOfInternalFloor: "unheatedSpace",
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
@@ -203,6 +204,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		const internalFloorHeatedSpace: InternalFloorData = {
+			id: "c70c9862-f536-45b4-9d45-58c5cb612d9c",
 			typeOfInternalFloor: "heatedSpace",
 			name: "Internal 2",
 			surfaceAreaOfElement: 5,

@@ -162,7 +162,7 @@ const arealHeatCapacityFields = {
 };
 
 const internalFloorDataZod = nestedDiscriminatedUnion(
-	named.extend({
+	namedWithId.extend({
 		surfaceAreaOfElement: surfaceAreaAdjacentSpaceZod,
 		massDistributionClass,
 		uValue,

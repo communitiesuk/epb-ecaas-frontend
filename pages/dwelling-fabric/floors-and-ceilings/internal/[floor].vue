@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
+import { v4 as uuidv4 } from "uuid";
 import { surfaceAreaAdjacentSpaceZod } from "~/stores/ecaasStore.schema";
 
 const title = "Internal floor";
@@ -12,6 +13,7 @@ const internalFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpace
 const index = getStoreIndex(internalFloorData);
 const floorData = useItemToEdit("floor", internalFloorData);
 const model = ref(floorData?.data);
+const floorId = floorData?.data.id ?? uuidv4();
 
 const typeOfInternalFloorOptions = adjacentSpaceTypeOptions("Internal floor / ceiling");
 
@@ -20,6 +22,7 @@ const saveForm = (fields: InternalFloorData) => {
 		const { dwellingSpaceFloors } = state.dwellingFabric;
 
 		const commonFields = {
+			id: floorId,
 			name: fields.name,
 			surfaceAreaOfElement: fields.surfaceAreaOfElement,
 			...(fields.arealHeatCapacity === "Custom" ? {

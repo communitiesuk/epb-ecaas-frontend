@@ -1809,6 +1809,7 @@ describe("FHS input mapper", () => {
 						{
 							...baseForm,
 							data: {
+								id: "c70c9862-f536-45b4-9d45-58c5cb612d9c",
 								name: "internal floor 1",
 								typeOfInternalFloor: "unheatedSpace",
 								surfaceAreaOfElement: 6,
@@ -1823,6 +1824,7 @@ describe("FHS input mapper", () => {
 						{
 							...baseForm,
 							data: {
+								id: "a95f3cb2-62cc-405f-9eb6-bee5d6b6b747",
 								name: "internal floor 2",
 								typeOfInternalFloor: "heatedSpace",
 								surfaceAreaOfElement: 4,

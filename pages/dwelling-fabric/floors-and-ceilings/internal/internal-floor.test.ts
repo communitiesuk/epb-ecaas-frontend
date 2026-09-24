@@ -1,12 +1,15 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
+import { v4 as uuidv4 } from "uuid";
 import InternalFloor from "./[floor].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
+
+vi.mock("uuid");
 
 describe("internal floor", () => {
 	const store = useEcaasStore();
@@ -21,6 +24,7 @@ describe("internal floor", () => {
 	};
 	const internalFloorHeatedSpace: InternalFloorData = {
 		...baseInternalFloorData,
+		id: "997c7dba-6458-48a5-b936-eccdfb933e4c",
 		typeOfInternalFloor: "heatedSpace",
 		pitchOption: "180",
 		pitch: 180,
@@ -28,6 +32,7 @@ describe("internal floor", () => {
 
 	const internalFloorWithUnheatedSpace: InternalFloorData = {
 		...baseInternalFloorData,
+		id: "d9c8619f-552b-4a18-bdd5-f01b571e418e",
 		typeOfInternalFloor: "unheatedSpace",
 		thermalResistanceOfAdjacentUnheatedSpace: 0,
 		pitchOption: "180",
@@ -50,6 +55,8 @@ describe("internal floor", () => {
 
 	describe("when type of internal floor is heated space", () => {
 		test("data is saved to store state and marked as complete when form is valid", async () => {
+			vi.mocked(uuidv4).mockReturnValue(internalFloorHeatedSpace.id as unknown as Buffer);
+
 			await renderSuspended(InternalFloor, {
 				route: {
 					params: { floor: "create" },
@@ -107,11 +114,14 @@ describe("internal floor", () => {
 
 	describe("when type of internal floor is unheated space", () => {
 		test("data is saved to store state and marked as complete when form is valid", async () => {
+			vi.mocked(uuidv4).mockReturnValue(internalFloorWithUnheatedSpace.id as unknown as Buffer);
+
 			await renderSuspended(InternalFloor, {
 				route: {
 					params: { floor: "create" },
 				},
 			});
+
 			await user.click(screen.getByTestId("typeOfInternalFloor_unheatedSpace"));
 			await populateValidForm();
 			await user.type(screen.getByTestId("thermalResistanceOfAdjacentUnheatedSpace"), "0");
