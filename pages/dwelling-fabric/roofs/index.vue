@@ -26,7 +26,7 @@ function handleRemove(index: number) {
 
 		if (roofId) {
 			store.removeTaggedAssociations()([dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor], roofId);
-			store.removeTaggedAssociations()([dwellingSpaceWindows], roofId, "taggedItem");
+			store.removeTaggedAssociations()([dwellingSpaceWindows], roofId);
 		}
 	}
 }

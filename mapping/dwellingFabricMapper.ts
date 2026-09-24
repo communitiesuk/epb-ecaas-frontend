@@ -575,7 +575,6 @@ const mapShading = (shadingObjects: ShadingObjectData[]): SchemaWindowShadingObj
 					height: obj.height,
 				}
 				: {
-					// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 					type: shadingTypeNameMap[typeOfShading] as Exclude<SchemaWindowShadingType, "obstacle">,
 					depth: obj.depth,
 					distance: obj.distance,

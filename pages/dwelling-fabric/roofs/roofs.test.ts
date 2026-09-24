@@ -97,7 +97,7 @@ describe("ceilings and roofs", () => {
 				data: {
 					id: "test-id-1",
 					name: "Window 1",
-					taggedItem: roof1.data.id,
+					associatedItemId: roof1.data.id,
 					height: 1,
 					width: 1,
 					uValue: 1,
@@ -177,7 +177,7 @@ describe("ceilings and roofs", () => {
 
 
 			const window = store.dwellingFabric.dwellingSpaceWindows.data[0]?.data;
-			expect(window?.taggedItem).toBeUndefined();
+			expect(window?.associatedItemId).toBeUndefined();
 			const glazedDoor =
 				store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor
 					.data[0]?.data;
