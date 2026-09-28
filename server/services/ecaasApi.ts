@@ -43,7 +43,9 @@ const ecaasApi = {
 		const isValid = validate(data);
 		if (!isValid) {
 			const validationErrors = validate.errors!;
-			reportErrors(data, humanReadable(validationErrors, data), "Schema validation error");
+
+			const humanReadableError = humanReadable(validationErrors, data);
+			reportErrors(data, humanReadableError, `Schema validation error: ${humanReadableError}`);
 			return responseForValidationErrors(validate.errors!, data);
 		}
 
