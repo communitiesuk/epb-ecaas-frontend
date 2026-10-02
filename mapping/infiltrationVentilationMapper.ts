@@ -31,7 +31,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 	const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
 	const { dwellingSpaceRoofs, dwellingSpaceWindows, dwellingSpaceDoors: { dwellingSpaceExternalGlazedDoor } } = state.dwellingFabric;
 
-	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map((x): [string, SchemaMechanicalVentilation] => {
+	const entries = (state.infiltrationAndVentilation.mechanicalVentilation ?? []).map((x): [string, SchemaMechanicalVentilation] => {
 		let airFlowRateInCubicMetresPerHour: number;
 
 		if (typeof x.airFlowRate === "number") {
@@ -178,7 +178,7 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 export function mapVentsData(state: ResolvedState) {
 	const { dwellingSpaceWindows, dwellingSpaceWalls: { dwellingSpaceExternalWall }, dwellingSpaceDoors: { dwellingSpaceExternalGlazedDoor }, dwellingSpaceRoofs } = state.dwellingFabric;
 
-	const entries = state.infiltrationAndVentilation.vents.map((x): [string, SchemaVent] => {
+	const entries = (state.infiltrationAndVentilation.vents ?? []).map((x): [string, SchemaVent] => {
 		const key = x.name;
 
 		const taggedItem = x.associatedItemId && x.associatedItemId !== "none" ? getResolvedTaggedItem(
