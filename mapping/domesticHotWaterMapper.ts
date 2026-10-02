@@ -147,7 +147,7 @@ function mapOthersData(state: ResolvedState) {
  * Excludes packaged heat sources.
  */
 function getDomesticHotWaterHeatSource(state: ResolvedState) {
-	const dhwHeatSources = state.domesticHotWater.heatSources;
+	const dhwHeatSources = state.domesticHotWater.heatSources ?? [];
 	const heatSourcesExcludingPackaged = dhwHeatSources.filter(x => !hasPackagedProduct(x));
 	const packagedHeatSources = dhwHeatSources.filter(x => hasPackagedProduct(x));
 	let expectedHeatSourceCount = 1 + packagedHeatSources.length;
@@ -501,7 +501,7 @@ function mapHeatSourceNoWS(
 
 function mapHotWaterSourcesWithoutWaterStorage(state: ResolvedState) {
 	const preheatedWaterStorage = state.domesticHotWater.preheatedWaterStorage?.[0];
-	const dhwHeatSource = state.domesticHotWater.heatSources
+	const dhwHeatSource = (state.domesticHotWater.heatSources ?? [])
 		.filter(x => preheatedWaterStorage ? x.id !== preheatedWaterStorage.heatSourceId : true)[0];
 
 	if (!preheatedWaterStorage && !dhwHeatSource) {
