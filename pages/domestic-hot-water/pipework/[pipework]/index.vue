@@ -134,7 +134,7 @@ const waterStorageOptions = useAssociatedItems(["waterStorage", "preheatedWaterS
 			label="Internal diameter of pipework"
 			help="Enter the nominal internal width of the pipe. Typically between 13 and 25mm."
 			name="internalDiameter"
-			validation="required | number"
+			:validation="zodTypeAsFormKitValidation(pipeworkDiameterZod)"
 			suffix-text="mm"
 			data-field="HotWaterSource['hw cylinder'].pipework.*.internal_diameter_mm" />
 		<FormKit
@@ -143,7 +143,7 @@ const waterStorageOptions = useAssociatedItems(["waterStorage", "preheatedWaterS
 			label="External diameter of pipework"
 			help="Enter the nominal external width of the pipe. Typically between 15 and 28mm."
 			name="externalDiameter"
-			validation="required | number"
+			:validation="zodTypeAsFormKitValidation(pipeworkDiameterZod)"
 			suffix-text="mm"
 			data-field="HotWaterSource['hw cylinder'].pipework.*.external_diameter_mm" />
 		<FormKit

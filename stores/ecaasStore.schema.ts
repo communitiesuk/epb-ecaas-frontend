@@ -1616,11 +1616,12 @@ export type HotWaterOutletType =
 	"otherHotWaterOutlet";
 
 export const tankPrimaryPipeworkLengthZod = z.number().min(0.05);
+export const pipeworkDiameterZod = z.number().min(5).max(50);
 
 const pipeworkDataZod = z.object({
 	name: z.string().trim().min(1),
-	internalDiameter: z.number(),
-	externalDiameter: z.number(),
+	internalDiameter: pipeworkDiameterZod,
+	externalDiameter: pipeworkDiameterZod,
 	length: tankPrimaryPipeworkLengthZod,
 	insulationThickness: z.number(),
 	thermalConductivity: z.number(),
