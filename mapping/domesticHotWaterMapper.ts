@@ -61,7 +61,7 @@ function mapShowersData(state: ResolvedState) {
 	const { wwhrs, hotWaterOutlets } = state.domesticHotWater;
 	let WWHRS: SchemaWWHRS | undefined = undefined;
 
-	const mixedShowerEntries = hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "mixedShower").map((x): [string, SchemaMixerShower] => {
+	const mixedShowerEntries = (hotWaterOutlets ?? []).filter(x => x.typeOfHotWaterOutlet === "mixedShower").map((x): [string, SchemaMixerShower] => {
 		const key = x.name;
 		let associatedWwhrs: WwhrsData | undefined;
 
@@ -96,7 +96,7 @@ function mapShowersData(state: ResolvedState) {
 		return [key, mixedShower];
 	});
 
-	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "electricShower").map((x): [string, SchemaInstantElecShower] => {
+	const electricShowerEntries = (state.domesticHotWater.hotWaterOutlets ?? []).filter(x => x.typeOfHotWaterOutlet === "electricShower").map((x): [string, SchemaInstantElecShower] => {
 		const key = x.name;
 		const val: SchemaInstantElecShower = {
 			type: "InstantElecShower",
@@ -112,7 +112,7 @@ function mapShowersData(state: ResolvedState) {
 }
 
 function mapBathsData(state: ResolvedState) {
-	const bathEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "bath").map((x): [string, SchemaBathDetails] => {
+	const bathEntries = (state.domesticHotWater.hotWaterOutlets ?? []).filter(x => x.typeOfHotWaterOutlet === "bath").map((x): [string, SchemaBathDetails] => {
 		const key = x.name;
 		const val: SchemaBathDetails = {
 			ColdWaterSource: coldWaterSourceMap[x.coldWaterSource],
@@ -127,7 +127,7 @@ function mapBathsData(state: ResolvedState) {
 }
 
 function mapOthersData(state: ResolvedState) {
-	const otherEntries = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "otherHotWaterOutlet").map((x): [string, SchemaOtherWaterUseDetails] => {
+	const otherEntries = (state.domesticHotWater.hotWaterOutlets ?? []).filter(x => x.typeOfHotWaterOutlet === "otherHotWaterOutlet").map((x): [string, SchemaOtherWaterUseDetails] => {
 		const key = x.name;
 		const val: SchemaOtherWaterUseDetails = {
 			ColdWaterSource: coldWaterSourceMap[x.coldWaterSource],
@@ -415,7 +415,7 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 	const { mappedWSHeatSource, mappedHeatSourceWet }
 		= mapWaterStorageHeatSource(waterStorage, dhwHeatSource, actualHeatSource, state);
 
-	const pipework = state.domesticHotWater.pipework.filter(x => x.waterStorage === waterStorage.id);
+	const pipework = (state.domesticHotWater.pipework ?? []).filter(x => x.waterStorage === waterStorage.id);
 
 	return {
 		HotWaterSource: {
@@ -583,7 +583,7 @@ export function mapPreheatedWaterSourceData(state: ResolvedState): Partial<FhsIn
 }
 
 export function mapHotWaterSourcesData(state: ResolvedState) {
-	const waterStorage = state.domesticHotWater.waterStorage[0];
+	const waterStorage = state.domesticHotWater.waterStorage?.[0];
 
 	if (!waterStorage) {
 		return mapHotWaterSourcesWithoutWaterStorage(state);
