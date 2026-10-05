@@ -1,17 +1,17 @@
 
-body {
+/* body {
     font-family: "Arial";
     color: #0B0C0C;
     background: #F3F2F1;
-}
+} */
 
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
     .modal-dialog {
         width: 700px;
     }
-}
+} */
 
-.modal-content {
+/* .modal-content {
     width: 100% !important;
     margin: 0px auto;
     border: 0px;
@@ -21,9 +21,9 @@ body {
 
 .modal-content-mobile {
     max-width: 350px;
-}
+} */
 
-.modal-content-desktop {
+/* .modal-content-desktop {
     min-width: 700px;
 }
 
@@ -31,9 +31,9 @@ body {
     .modal-content-responsive {
         max-width: 350px;
     }
-}
+} */
 
-@media (min-width: 992px) {
+/* @media (min-width: 992px) {
     .modal-content-responsive {
         min-width: 700px;
     }
@@ -75,7 +75,7 @@ body {
     color: #A3A3A3;
     padding-top: 15px;
     padding-bottom: 15px;
-}
+} */
 
 .banner-customizable {
     height: 90px;
@@ -95,17 +95,16 @@ body {
 }
 
 .label-customizable {
-    /* font-weight: 400; */
     color: #0B0C0C;
     font-size: 16px;
 }
 
-form.cognito-asf::before {
+/* form.cognito-asf::before {
     display: block;
     content: "Sign in to Check Part L Compliance";
     padding: 10px 0 20px;
     font-size: 30px;
-}
+} */
 
 .textDescription-customizable {
     display: none !important
@@ -116,7 +115,6 @@ form.cognito-asf::before {
 }
 
 .submitButton-customizable\:hover {
-    /* color: #fff; */
     background-color: #005A30 !important;
 }
 
@@ -146,7 +144,7 @@ form.cognito-asf::before {
     outline: 4px solid !important;
 }
 
-#signInFormUsername::placeholder, #signInFormPassword::placeholder {
+/* #signInFormUsername::placeholder, #signInFormPassword::placeholder {
      color: transparent; 
     } 
 
@@ -186,7 +184,7 @@ form.cognito-asf > div:nth-of-type(1):has(#signInFormUsername:not(:placeholder-s
 form.cognito-asf > div:nth-of-type(2):has(#signInFormPassword:focus)::before, 
 form.cognito-asf > div:nth-of-type(2):has(#signInFormPassword:not(:placeholder-shown))::before { 
     display: none; 
-}
+} */
 
 .idpButton-customizable {
     width: fit-content !important;

@@ -1,11 +1,11 @@
-import type { Page } from "./pages.types";
+import coolingPages from "./cooling";
 import domesticHotWaterPages from "./domesticHotWater";
 import dwellingDetailsPages from "./dwellingDetails";
-import spaceHeatingPages from "./spaceHeating";
-import infiltrationAndVentilationPages from "./infiltrationAndVentilation";
 import dwellingFabricPages from "./dwellingFabric";
+import infiltrationAndVentilationPages from "./infiltrationAndVentilation";
+import type { Page } from "./pages.types";
 import pvAndBatteriesPages from "./pvAndBatteries";
-import coolingPages from "./cooling";
+import spaceHeatingPages from "./spaceHeating";
 
 const pagesData = [
 	{
@@ -27,6 +27,13 @@ const pagesData = [
 		url: "/outputs",
 		type: "outputs",
 		parentId: "taskList",
+	},
+	{
+		id: "getBrelReport",
+		title: "Get BREL Report",
+		url: "get-brel-report",
+		type: "section",
+		parentId: "outputs",
 	},
 ] as const satisfies Array<Page>;
 

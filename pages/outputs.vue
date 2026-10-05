@@ -13,6 +13,9 @@ const title = "Dwelling compliance results";
 		<ClientOnly>
 			<ResultTabs />
 		</ClientOnly>
-		<GovButton href="/" secondary>Edit input data</GovButton>
+		<div class="govuk-!-margin-top-1 govuk-button-group">
+			<GovButton href="/get-brel-report">Get BREL Report</GovButton>
+			<GovButton href="/" secondary>Edit input data</GovButton>
+		</div>
 	</NuxtLayout>
 </template>
