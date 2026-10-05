@@ -10,6 +10,7 @@ const confirmationOfIdentityOptions = {
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
+	<NuxtLink href="/outputs" class="govuk-back-link" data-testid="backLink">Back to results</NuxtLink>
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
