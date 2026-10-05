@@ -31,7 +31,7 @@ const pagesData = [
 	{
 		id: "getBrelReport",
 		title: "Get BREL Report",
-		url: "get-brel-report",
+		url: "/get-brel-report",
 		type: "section",
 		parentId: "outputs",
 	},
