@@ -1,6 +1,8 @@
 <script setup lang="ts">
 const title = "Get BREL Report";
 
+const { handleInvalidSubmit, errorMessages, addError, clearErrors } = useErrorSummary();
+
 const typeOfReport = ref("");
 
 const reportTypes: Record<string, string> = {
@@ -12,6 +14,24 @@ const confirmationOfIdentityOptions = {
 	confirmation: "I confirm that this is my name and assessor credentials, and I am not making this request on behalf of anyone else.",
 };
 
+//TODO: Add in error messages once connected to Assessor Register
+// const handleAssessorNotRegistered = () => {
+// 	clearErrors();
+
+// 	const message =
+// 		"The assessor name and ID provided don't match our records. You cannot download a BREL report without supplying accurate assessor details.";
+
+// 	addError({
+// 		id: "assessorName",
+// 		text: message,
+// 	});
+
+// 	addError({
+// 		id: "assessorId",
+// 		text: message,
+// 	});
+// };
+
 </script>
 
 <template>
@@ -19,6 +39,10 @@ const confirmationOfIdentityOptions = {
 		<Title>{{ title }}</Title>
 	</Head>
 	<NuxtLink href="/outputs" class="govuk-back-link" data-testid="backLink">Back to results</NuxtLink>
+	<GovErrorSummary
+		:error-list="errorMessages"
+		test-id="getBrelReportErrorSummary"
+	/>
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
@@ -29,6 +53,7 @@ const confirmationOfIdentityOptions = {
 		type="form"
 		:actions="false"
 		:incomplete-message="false"
+		@submit-invalid="handleInvalidSubmit"
 	>
 		<FormKit
 			id="typeOfReport"
