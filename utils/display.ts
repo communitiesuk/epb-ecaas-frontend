@@ -523,8 +523,3 @@ export const coldWaterSourceOptions: Record<string, string> = {
 	headerTank: "Header tank",
 	mainsWater: "Mains water",
 } as const;
-
-export const reportTypes: Record<string, string> = {
-	design: "Design",
-	build: "Build",
-} as const;

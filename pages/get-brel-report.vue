@@ -1,9 +1,17 @@
 <script setup lang="ts">
 const title = "Get BREL Report";
 
+const typeOfReport = ref("");
+
+const reportTypes: Record<string, string> = {
+	design: "Design",
+	build: "Build",
+} as const;
+
 const confirmationOfIdentityOptions = {
 	confirmation: "I confirm that this is my name and assessor credentials, and I am not making this request on behalf of anyone else.",
 };
+
 </script>
 
 <template>
@@ -24,6 +32,7 @@ const confirmationOfIdentityOptions = {
 	>
 		<FormKit
 			id="typeOfReport"
+			v-model="typeOfReport"
 			type="govRadios"
 			:options="reportTypes"
 			label="Type of report"
@@ -45,6 +54,7 @@ const confirmationOfIdentityOptions = {
 			validation="required"
 		/>
 		<FormKit
+			v-if="typeOfReport === 'build'"
 			id="dwellingAddress"
 			type="govInputText"
 			label="Dwelling address"
