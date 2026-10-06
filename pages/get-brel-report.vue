@@ -81,16 +81,9 @@ const confirmationOfIdentityOptions = {
 		<FormKit
 			v-if="typeOfReport === 'build'"
 			id="dwellingAddress"
-			type="govInputText"
+			type="govInputTextArea"
 			label="Dwelling address"
 			name="dwellingAddress"
-			validation="required"
-		/>
-		<FormKit
-			id="showDeliveredEnergyUse"
-			name="showDeliveredEnergyUse"
-			type="govBoolean"
-			label="Show delivered energy use"
 			validation="required"
 		/>
 		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
@@ -116,7 +109,7 @@ const confirmationOfIdentityOptions = {
 			/>
 			<FormKit
 				id="clientAddress"
-				type="govInputText"
+				type="govInputTextArea"
 				label="Client address"
 				name="clientAddress"
 				validation="required"
