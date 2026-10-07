@@ -17,22 +17,6 @@ import type { HeatEmittingData, WetDistributionEmitterData } from "../stores/eca
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import type { ResolvedState } from "./fhsInputMapper";
 
-// function getAssociatedHeatNetworkType(associatedHeatNetworkId: string | undefined, state: ResolvedState): SchemaHeatNetworkType {
-// 	const heatNetworks = state.spaceHeating.heatNetworks;
-// 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
-// 	const heatNetworkType = associatedHeatNetwork ? associatedHeatNetwork?.typeOfHeatNetwork : undefined;
-// 	switch (heatNetworkType) {
-// 		case "sleevedDistrictHeatNetwork":
-// 			return "sleeved DHN" as const;
-// 		case "unsleevedDistrictHeatNetwork":
-// 			return "unsleeved DHN" as const;
-// 		case "communalHeatNetwork":
-// 			return "communal" as const;
-// 		default:
-// 			throw new Error(`Unknown heat network type ${heatNetworkType}`);
-// 	}
-// }
-
 export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatPumpInput> {
 	const heatSources = state.spaceHeating.heatSource;
 
