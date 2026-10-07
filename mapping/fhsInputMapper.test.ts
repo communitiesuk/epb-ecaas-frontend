@@ -241,7 +241,6 @@ const expectedHouseInput: FhsInputSchema = {
 			"type": "WetDistribution",
 			"variable_flow": false,
 			"bypass_fraction_recirculated": 0.2,
-			"thermal_mass": 1,
 		},
 		"Warm Air Heater 1 (1)": {
 			"HeatSource": {

@@ -393,9 +393,6 @@ export function mapWetDistributions(state: ResolvedState): Record<string, Schema
 				HeatSource: getHeatSourceData(state, wds),
 				ecodesign_controller: ecoDesignController,
 				bypass_fraction_recirculated: wds.percentageRecirculated / 100,
-				...(emitters.some(x => x.typeOfHeatEmitter === "radiator") ? {
-					thermal_mass: 1, // TODO: TBC where this should map from
-				} : {}),
 			};
 
 			const data: SchemaWetDistribution = wds.hasVariableFlowRate
