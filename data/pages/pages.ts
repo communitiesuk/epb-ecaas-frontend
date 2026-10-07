@@ -31,8 +31,8 @@ const pagesData = [
 	{
 		id: "getBrelReport",
 		title: "Get BREL Report",
-		url: "get-brel-report",
-		type: "section",
+		url: "/get-brel-report",
+		type: "content",
 		parentId: "outputs",
 	},
 ] as const satisfies Array<Page>;
