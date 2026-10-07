@@ -3163,30 +3163,41 @@
 													"required": [
 														"wet_emitter_type"
 													],
-													"anyOf": [
+													"allOf": [
 														{
-															"required": [
-																"length"
-															],
-															"not": {
-																"required": [
-																	"thermal_mass_per_m"
-																]
-															}
+															"anyOf": [
+																{
+																	"required": [
+																		"length"
+																	],
+																	"not": {
+																		"required": [
+																			"thermal_mass_per_m"
+																		]
+																	}
+																},
+																{
+																	"not": {
+																		"anyOf": [
+																			{
+																				"required": [
+																					"length"
+																				]
+																			},
+																			{
+																				"required": [
+																					"thermal_mass"
+																				]
+																			}
+																		]
+																	}
+																}
+															]
 														},
 														{
 															"not": {
-																"anyOf": [
-																	{
-																		"required": [
-																			"length"
-																		]
-																	},
-																	{
-																		"required": [
-																			"thermal_mass"
-																		]
-																	}
+																"required": [
+																	"product_reference"
 																]
 															}
 														}
@@ -4731,6 +4742,7 @@
 													"required": [
 														"height_upper_surface",
 														"thermal_transm_walls",
+														"shield_fact_location",
 														"thickness_walls",
 														"thermal_resist_insul",
 														"area_per_perimeter_vent"
@@ -5330,6 +5342,7 @@
 										}
 									},
 									"then": {
+										"title": "Linear thermal bridge",
 										"required": [
 											"linear_thermal_transmittance",
 											"length",
@@ -5406,6 +5419,7 @@
 										}
 									},
 									"then": {
+										"title": "Point thermal bridge",
 										"required": [
 											"heat_transfer_coeff"
 										],
