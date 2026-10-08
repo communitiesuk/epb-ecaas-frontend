@@ -103,12 +103,6 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 	);
 }
 
-// function getSubnetworkName(associatedHeatNetworkId: string | undefined, state: ResolvedState): string | undefined {
-// 	const heatNetworks = state.spaceHeating.heatNetworks;
-// 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
-// 	return associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkName : undefined;
-// }
-
 export function mapHIUs(
 	state: ResolvedState,
 ): Record<string, SchemaHeatSourceWetHiuInput> {
