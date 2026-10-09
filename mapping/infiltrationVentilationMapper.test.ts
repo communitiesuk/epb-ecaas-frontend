@@ -523,7 +523,7 @@ describe("infiltration ventilation mapper", () => {
 
 		// Assert
 		const vent = fhsInputData[ventName];
-		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.area_cm2).toBe(1);
 		expect(vent?.mid_height_air_flow_path).toBe(1.5);
 		expect(vent?.orientation360).toBe(180);
 		expect(vent?.pitch).toBe(45);
@@ -574,7 +574,7 @@ describe("infiltration ventilation mapper", () => {
 
 		// Assert
 		const vent = fhsInputData[ventName];
-		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.area_cm2).toBe(1);
 		expect(vent?.mid_height_air_flow_path).toBe(1.5);
 		expect(vent?.orientation360).toBe(180);
 		expect(vent?.pitch).toBe(45);
@@ -625,7 +625,7 @@ describe("infiltration ventilation mapper", () => {
 
 		// Assert
 		const vent = fhsInputData[ventName];
-		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.area_cm2).toBe(1);
 		expect(vent?.mid_height_air_flow_path).toBe(1.5);
 		expect(vent?.orientation360).toBe(180);
 		expect(vent?.pitch).toBe(45);

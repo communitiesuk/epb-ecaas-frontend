@@ -33,7 +33,7 @@ describe("domestic hot water mapper", () => {
 	const heatSourceId = "efa1b2c3-d4e5-6789-0123-456789abcdef";
 	const heatSourceIdInSH = "efa1b2c3-d4e5-6789-0123-456789abcd12";
 
-	const heatNetwork: EcaasForm<HeatNetworkData> = {
+	const heatNetwork = {
 		data: {
 			id: "heat-network-123",
 			name: "Heat Network",
@@ -42,7 +42,7 @@ describe("domestic hot water mapper", () => {
 			subHeatNetworkName: "Sub Heat Network",
 		},
 		complete: true,
-	};
+	} as const satisfies EcaasForm<HeatNetworkData>;
 	// water storage
 
 	// water storage
@@ -232,7 +232,7 @@ describe("domestic hot water mapper", () => {
 		complete: true,
 	} as const satisfies EcaasForm<DomesticHotWaterHeatSourceData>;
 
-	const wwhrs: EcaasForm<WwhrsData> = {
+	const wwhrs = {
 		...baseForm,
 		data: {
 			id: "7947d8c7-5379-4d38-9138-27bf86da3001",
@@ -240,9 +240,9 @@ describe("domestic hot water mapper", () => {
 			coldWaterSource: "mainsWater",
 			productReference: "1000",
 		},
-	};
+	} as const satisfies EcaasForm<WwhrsData>;
 
-	const preheatedTank: EcaasForm<PreheatedWaterStorageData> = {
+	const preheatedTank = {
 		data: {
 			typeOfWaterStorage: "hotWaterCylinder",
 			name: "Pre-heated Water Cylinder",
@@ -254,25 +254,25 @@ describe("domestic hot water mapper", () => {
 			heatSourceId: heatPump.data.id,
 		},
 		complete: true,
-	};
+	} as const satisfies EcaasForm<PreheatedWaterStorageData>;
 
-	const preheatedTankWithMainsWater: EcaasForm<PreheatedWaterStorageData> = {
+	const preheatedTankWithMainsWater = {
 		data: {
 			...preheatedTank.data,
 			coldWaterSource: "mainsWater",
 		},
 		complete: true,
-	};
+	} as const satisfies EcaasForm<PreheatedWaterStorageData>;
 
-	const preheatedTankWithHeaderTank: EcaasForm<PreheatedWaterStorageData> = {
+	const preheatedTankWithHeaderTank = {
 		data: {
 			...preheatedTank.data,
 			coldWaterSource: "headerTank",
 		},
 		complete: true,
-	};
+	} as const satisfies EcaasForm<PreheatedWaterStorageData>;
 
-	const pipework: EcaasForm<PipeworkData> = {
+	const pipework = {
 		data: {
 			name: "Pipework Kitchen Sink",
 			waterStorage: storageTank.data.id,
@@ -286,7 +286,7 @@ describe("domestic hot water mapper", () => {
 			location: "heatedSpace",
 		},
 		complete: true,
-	};
+	} as const satisfies EcaasForm<PipeworkData>;
 
 	describe("water storage and heat sources", () => {
 		/**

@@ -710,7 +710,6 @@ describe("Space heating - emitters", () => {
 					},
 					Zone: defaultZoneName,
 					bypass_fraction_recirculated: wetDistributionSystemEcoDesign.percentageRecirculated / 100,
-					thermal_mass: 1,
 				},
 			} as Record<string, SchemaWetDistribution>;
 			const resolvedState = resolveState(store.$state);
@@ -766,7 +765,6 @@ describe("Space heating - emitters", () => {
 					},
 					Zone: defaultZoneName,
 					bypass_fraction_recirculated: wetDistributionSystemNoEcoDesign.percentageRecirculated / 100,
-					thermal_mass: 1,
 				},
 			} as Record<string, SchemaWetDistribution>;
 			const resolvedState = resolveState(store.$state);
@@ -822,7 +820,6 @@ describe("Space heating - emitters", () => {
 					},
 					Zone: defaultZoneName,
 					bypass_fraction_recirculated: wetDistributionSystemVariableFlow.percentageRecirculated / 100,
-					thermal_mass: 1,
 				},
 			} as Record<string, SchemaWetDistribution>;
 			const resolvedState = resolveState(store.$state);
@@ -886,7 +883,6 @@ describe("Space heating - emitters", () => {
 					},
 					Zone: defaultZoneName,
 					bypass_fraction_recirculated: wetDistributionSystemEcoDesign.percentageRecirculated / 100,
-					thermal_mass: 1,
 				},
 				[wetDistributionSystemNoEcoDesign.name]: {
 					type: "WetDistribution",
@@ -921,7 +917,6 @@ describe("Space heating - emitters", () => {
 					},
 					Zone: defaultZoneName,
 					bypass_fraction_recirculated: wetDistributionSystemNoEcoDesign.percentageRecirculated / 100,
-					thermal_mass: 1,
 				},
 			} as Record<string, SchemaWetDistribution>;
 			const resolvedState = resolveState(store.$state);

@@ -241,7 +241,6 @@ const expectedHouseInput: FhsInputSchema = {
 			"type": "WetDistribution",
 			"variable_flow": false,
 			"bypass_fraction_recirculated": 0.2,
-			"thermal_mass": 1,
 		},
 		"Warm Air Heater 1 (1)": {
 			"HeatSource": {
@@ -1133,7 +1132,7 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						associatedItemId: externalWallId,
-						effectiveVentilationArea: 75,
+						effectiveVentilationArea: 7500,
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
 						hasAssociatedItem: true,
@@ -1710,7 +1709,7 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						associatedItemId: externalWallId,
-						effectiveVentilationArea: 75,
+						effectiveVentilationArea: 7500,
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
 						hasAssociatedItem: true,

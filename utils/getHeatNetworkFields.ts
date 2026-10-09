@@ -1,5 +1,5 @@
-import type { ResolvedState } from "../mapping/fhsInputMapper";
 import type { SchemaHeatNetworkType } from "~/schema/aliases";
+import type { ResolvedState } from "../mapping/fhsInputMapper";
 
 
 function getAssociatedHeatNetwork(
@@ -26,7 +26,7 @@ function getAssociatedHeatNetwork(
 export function getHeatNetworkFields(
 	state: ResolvedState,
 	associatedHeatNetworkId: string | undefined,
-) {
+): { is_heat_network: true, heat_network_type: SchemaHeatNetworkType, heat_network_reference: string, sub_heat_network_name: string } {
 	const network = getAssociatedHeatNetwork(state, associatedHeatNetworkId);
 
 	const heatNetworkTypeMap = {

@@ -20,6 +20,12 @@ export const units = [
 		"dimension": "length",
 	},
 	{
+		"name": "millimetres square",
+		"suffix": "mm²",
+		"multiplier": 1000000,
+		"dimension": "area",
+	},
+	{
 		"name": "metres square",
 		"suffix": "m²",
 		"multiplier": 1,

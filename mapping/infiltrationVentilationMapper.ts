@@ -1,6 +1,7 @@
 import { objectFromEntries } from "ts-extras";
 import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/aliases";
 import type { SchemaMechVentCommon } from "~/schema/api-schema.types";
+import { asCentimetresSquare } from "~/utils/units/area";
 import { asCubicMetresPerHour } from "~/utils/units/flowRate";
 import { defaultElectricityEnergySupplyName } from "./common";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
@@ -194,7 +195,7 @@ export function mapVentsData(state: ResolvedState) {
 		}
 
 		const val: SchemaVent = {
-			area_cm2: x.effectiveVentilationArea,
+			area_cm2: asCentimetresSquare(x.effectiveVentilationArea),
 			mid_height_air_flow_path: x.midHeightOfZone,
 			orientation360: ventOrientation,
 			pitch: extractPitch(pitchForm),

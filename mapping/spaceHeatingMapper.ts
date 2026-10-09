@@ -17,22 +17,6 @@ import type { HeatEmittingData, WetDistributionEmitterData } from "../stores/eca
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 import type { ResolvedState } from "./fhsInputMapper";
 
-// function getAssociatedHeatNetworkType(associatedHeatNetworkId: string | undefined, state: ResolvedState): SchemaHeatNetworkType {
-// 	const heatNetworks = state.spaceHeating.heatNetworks;
-// 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
-// 	const heatNetworkType = associatedHeatNetwork ? associatedHeatNetwork?.typeOfHeatNetwork : undefined;
-// 	switch (heatNetworkType) {
-// 		case "sleevedDistrictHeatNetwork":
-// 			return "sleeved DHN" as const;
-// 		case "unsleevedDistrictHeatNetwork":
-// 			return "unsleeved DHN" as const;
-// 		case "communalHeatNetwork":
-// 			return "communal" as const;
-// 		default:
-// 			throw new Error(`Unknown heat network type ${heatNetworkType}`);
-// 	}
-// }
-
 export function mapHeatPumps(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatPumpInput> {
 	const heatSources = state.spaceHeating.heatSource;
 
@@ -118,12 +102,6 @@ export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHea
 		}),
 	);
 }
-
-// function getSubnetworkName(associatedHeatNetworkId: string | undefined, state: ResolvedState): string | undefined {
-// 	const heatNetworks = state.spaceHeating.heatNetworks;
-// 	const associatedHeatNetwork = heatNetworks?.find(network => network.id === associatedHeatNetworkId);
-// 	return associatedHeatNetwork ? associatedHeatNetwork.subHeatNetworkName : undefined;
-// }
 
 export function mapHIUs(
 	state: ResolvedState,
@@ -393,9 +371,6 @@ export function mapWetDistributions(state: ResolvedState): Record<string, Schema
 				HeatSource: getHeatSourceData(state, wds),
 				ecodesign_controller: ecoDesignController,
 				bypass_fraction_recirculated: wds.percentageRecirculated / 100,
-				...(emitters.some(x => x.typeOfHeatEmitter === "radiator") ? {
-					thermal_mass: 1, // TODO: TBC where this should map from
-				} : {}),
 			};
 
 			const data: SchemaWetDistribution = wds.hasVariableFlowRate
