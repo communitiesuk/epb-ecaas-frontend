@@ -1132,7 +1132,7 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						associatedItemId: externalWallId,
-						effectiveVentilationArea: 75,
+						effectiveVentilationArea: 7500,
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
 						hasAssociatedItem: true,
@@ -1709,7 +1709,7 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						associatedItemId: externalWallId,
-						effectiveVentilationArea: 75,
+						effectiveVentilationArea: 7500,
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
 						hasAssociatedItem: true,

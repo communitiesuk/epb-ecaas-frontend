@@ -956,7 +956,7 @@ export type DuctworkData = z.infer<typeof ductworkDataZod>;
 
 const baseVentDataZod = z.object({
 	name: z.string().trim().min(1),
-	effectiveVentilationArea: z.number().min(1).max(999999),
+	effectiveVentilationArea: z.number().min(1).max(99999990),
 	openingRatio: z.number(),
 	midHeightOfZone: z.number().min(1).max(60),
 	associatedItemId: z.string().trim().min(1).optional(),
