@@ -54,6 +54,7 @@ export function mapZoneParametersData(
 	state: ResolvedState,
 ): Pick<FhsInputSchema, "HeatingControlType" | "Zone" | "GroundFloorArea"> {
 	const { dwellingSpaceZoneParameters } = state.dwellingFabric;
+	const coolingData = state.cooling.airConditioning; // this is currently only made up of air conditioning systems
 	const { heatEmitters } = state.spaceHeating;
 	const spaceHeatingSystemNames = heatEmitters.toSorted((a, b) => (a.heatingRank ?? 0) - (b.heatingRank ?? 0)).flatMap(he => {
 		if (he.typeOfHeatEmitter === "instantElectricHeater" && he.numOfHeaters > 1) {
@@ -68,7 +69,7 @@ export function mapZoneParametersData(
 		Zone: {
 			[defaultZoneName]: {
 				...(spaceHeatingSystemNames.length ? { SpaceHeatSystem: spaceHeatingSystemNames } : {}),
-				// SpaceCoolSystem: dwellingSpaceZoneParameters.spaceCoolingSystemForThisZone?.map(x => x.name),
+				SpaceCoolSystem: coolingData.map(x => x.name) ?? [],
 				volume: dwellingSpaceZoneParameters.volume,
 				livingroom_area: dwellingSpaceZoneParameters.livingZoneArea,
 				restofdwelling_area: dwellingSpaceZoneParameters.restOfDwellingArea,
