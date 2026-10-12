@@ -1,8 +1,9 @@
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
-import Vent from "./[vent].vue";
+import { screen } from "@testing-library/vue";
 import type { VentData } from "~/stores/ecaasStore.schema";
+import { millimetresSquare } from "~/utils/units/area.js";
+import Vent from "./[vent].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -36,7 +37,7 @@ describe("vent", () => {
 	const state: VentData = {
 		name: "Vent 1",
 		associatedItemId: externalWall.id,
-		effectiveVentilationArea: 10,
+		effectiveVentilationArea: unitValue(10, millimetresSquare),
 		openingRatio: 1,
 		midHeightOfZone: 1,
 		hasAssociatedItem: true,

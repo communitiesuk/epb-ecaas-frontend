@@ -14,14 +14,30 @@ describe("AreaUnit", () => {
 	});
 	describe("asCentimetresSquare", () => {
 		test("770 millimitres square is equivalent to 7.7 centimetres square", () => {
-			expect(asCentimetresSquare(770)).toEqual(7.7);
+			const area = unitValue(770, millimetresSquare);
+			expect(asCentimetresSquare(area)).toEqual(7.7);
 		});
 		test("0 millimetres square is equivalent to 0 centimetres square", () => {
-			expect(asCentimetresSquare(0)).toEqual(0);
+			const area = unitValue(0, millimetresSquare);
+			expect(asCentimetresSquare(area)).toEqual(0);
 		});
             
 		test("1000 millimetres square is equivalent to 10 centimetres square", () => {
-			expect(asCentimetresSquare(1000)).toEqual(10);
+			const area = unitValue(1000, millimetresSquare);
+			expect(asCentimetresSquare(area)).toEqual(10);
+		});
+		test("7 metres square is equivalent to 7700 centimetres square", () => {
+			const area = unitValue(7, metresSquare);
+			expect(asCentimetresSquare(area)).toEqual(70000);
+		});
+		test("0 metres square is equivalent to 0 centimetres square", () => {
+			const area = unitValue(0, metresSquare);
+			expect(asCentimetresSquare(area)).toEqual(0);
+		});
+            
+		test("10 metres square is equivalent to 10 centimetres square", () => {
+			const area = unitValue(10, metresSquare);
+			expect(asCentimetresSquare(area)).toEqual(100000);
 		});
 	});
 });

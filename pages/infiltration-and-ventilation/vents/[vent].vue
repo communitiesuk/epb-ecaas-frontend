@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
+import { millimetresSquare } from "~/utils/units/area";
 
 const title = "Vent";
 const store = useEcaasStore();
@@ -105,13 +106,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</template>
 		<FormKit
 			id="effectiveVentilationArea"
-			type="govInputWithSuffix"
+			type="govInputWithUnit"
 			label="Effective ventilation area"
 			help="Use the method outlined in BS EN 13141-1 to measure the equivalent area of background ventilator openings. This is the same as in Part F."
 			name="effectiveVentilationArea"
-			validation="required | number | min:1 | max:9999990"
-			suffix-text="mm²"
-			data-field="InfiltrationVentilation.Vents.area_cm2">
+			:validation="zodTypeAsFormKitValidation(effectiveVentilationAreaZod)"
+			:unit="millimetresSquare"
+			data-field="InfiltrationVentilation.Vents.area_cm2"
+		>
 			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">
 					<thead class="govuk-table__head">

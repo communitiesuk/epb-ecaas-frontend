@@ -1,5 +1,6 @@
 import type { SchemaMechanicalVentilation, SchemaMechanicalVentilationDuctwork } from "~/schema/aliases";
 import { unitValue } from "~/utils/units";
+import { millimetresSquare } from "~/utils/units/area";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { mapAirPermeabilityData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
 
@@ -485,7 +486,7 @@ describe("infiltration ventilation mapper", () => {
 				data: {
 					name: ventName,
 					associatedItemId: window.id,
-					effectiveVentilationArea: 100,
+					effectiveVentilationArea: unitValue(100, millimetresSquare),
 					openingRatio: 0.6,
 					midHeightOfZone: 1.5,
 					hasAssociatedItem: true,
@@ -538,7 +539,7 @@ describe("infiltration ventilation mapper", () => {
 				...baseForm,
 				data: {
 					name: ventName,
-					effectiveVentilationArea: 100,
+					effectiveVentilationArea: unitValue(100, millimetresSquare),
 					openingRatio: 0.6,
 					midHeightOfZone: 1.5,
 					pitch: 45,
@@ -590,7 +591,7 @@ describe("infiltration ventilation mapper", () => {
 				data: {
 					name: ventName,
 					associatedItemId: "none",
-					effectiveVentilationArea: 100,
+					effectiveVentilationArea: unitValue(100, millimetresSquare),
 					openingRatio: 0.6,
 					midHeightOfZone: 1.5,
 					pitch: 45,
