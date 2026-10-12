@@ -14,6 +14,10 @@ const confirmationOfIdentityOptions = {
 	confirmation: "I confirm that this is my name and assessor credentials, and I am not making this request on behalf of anyone else.",
 };
 
+const handleSubmit = async () => {
+	await navigateTo(getUrl("getBrelEmailConfirmation"));
+};
+
 //TODO: Add in error messages once connected to Assessor Register
 // const handleAssessorNotRegistered = () => {
 // 	clearErrors();
@@ -38,7 +42,7 @@ const confirmationOfIdentityOptions = {
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
-	<NuxtLink href="/outputs" class="govuk-back-link" data-testid="backLink">Back to results</NuxtLink>
+	<NuxtLink :href="getUrl('outputs')" class="govuk-back-link" data-testid="backLink">Back to results</NuxtLink>
 	<GovErrorSummary
 		:error-list="errorMessages"
 		test-id="getBrelReportErrorSummary"
@@ -53,6 +57,7 @@ const confirmationOfIdentityOptions = {
 		type="form"
 		:actions="false"
 		:incomplete-message="false"
+		@submit="handleSubmit"
 		@submit-invalid="handleInvalidSubmit"
 	>
 		<FormKit
@@ -153,9 +158,10 @@ const confirmationOfIdentityOptions = {
 			<FormKit
 				type="govButton"
 				label="Get BREL report"
+				test-id="getBrelReport"
 				:ignore="true"
 			/>
-			<GovButton href="/outputs" secondary>
+			<GovButton :href="getUrl('outputs')" secondary>
 				Return to results
 			</GovButton>
 		</div>

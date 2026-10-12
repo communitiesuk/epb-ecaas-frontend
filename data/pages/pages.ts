@@ -28,6 +28,20 @@ const pagesData = [
 		type: "outputs",
 		parentId: "taskList",
 	},
+	{
+		id: "getBrelReport",
+		title: "Get BREL Report",
+		url: "/get-brel-report",
+		type: "outputs",
+		parentId: "taskList",
+	},
+	{
+		id: "getBrelEmailConfirmation",
+		title: "BREL Report sent",
+		url: "/get-brel-email-confirmation",
+		type: "outputs",
+		parentId: "taskList",
+	},
 ] as const satisfies Array<Page>;
 
 // above uses as const so we can export static PageId string union type here
