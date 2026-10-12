@@ -2,6 +2,7 @@ import type { ValidateFunction } from "ajv/dist/2020";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { resolveState } from "~/stores/resolve";
 import { unitValue } from "~/utils/units";
+import { millimetresSquare } from "~/utils/units/area";
 import { celsius } from "~/utils/units/temperature";
 import { ajv } from "../schema/validator";
 import { centimetre, metre, millimetre } from "../utils/units/length";
@@ -1132,7 +1133,7 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						associatedItemId: externalWallId,
-						effectiveVentilationArea: 7500,
+						effectiveVentilationArea: unitValue(7500, millimetresSquare),
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
 						hasAssociatedItem: true,
@@ -1709,7 +1710,7 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						associatedItemId: externalWallId,
-						effectiveVentilationArea: 7500,
+						effectiveVentilationArea: unitValue(7500, millimetresSquare),
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
 						hasAssociatedItem: true,

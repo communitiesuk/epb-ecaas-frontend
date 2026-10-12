@@ -1,3 +1,5 @@
+import { millimetresSquare } from "./units/area";
+
 describe("getResolvedTaggedItem", () => {
 	const externalWall1: ExternalWallData = {
 		id: "ex-wall-id",
@@ -27,7 +29,7 @@ describe("getResolvedTaggedItem", () => {
 	const vent1: VentData = {
 		name: "Vent 1",
 		associatedItemId: externalWall1.id,
-		effectiveVentilationArea: 10,
+		effectiveVentilationArea: unitValue(10, millimetresSquare),
 		openingRatio: 1,
 		midHeightOfZone: 1,
 		hasAssociatedItem: true,

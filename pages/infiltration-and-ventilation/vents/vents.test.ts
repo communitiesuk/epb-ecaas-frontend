@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
 import type { VentData } from "~/stores/ecaasStore.schema";
+import { millimetresSquare } from "~/utils/units/area.js";
 import VentsForm from "./[vent].vue";
 import Vents from "./index.vue";
 
@@ -17,7 +18,7 @@ describe("vents", () => {
 	const vent1: VentData = {
 		name: "Vent 1",
 		associatedItemId: "0b77e247-53c5-42b8-9dbd-83cbfc8c3f4f",
-		effectiveVentilationArea: 10,
+		effectiveVentilationArea: unitValue(10, millimetresSquare),
 		openingRatio: 1,
 		midHeightOfZone: 1,
 		hasAssociatedItem: true,
