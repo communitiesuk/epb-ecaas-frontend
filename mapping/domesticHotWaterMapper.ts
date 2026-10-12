@@ -588,7 +588,7 @@ export function mapPreheatedWaterSourceData(state: ResolvedState): Partial<FhsIn
 }
 
 export function mapHotWaterSourcesData(state: ResolvedState) {
-	const waterStorage = state.domesticHotWater.waterStorage[0];
+	const waterStorage = state.domesticHotWater.waterStorage?.[0];
 
 	if (!waterStorage) {
 		return mapHotWaterSourcesWithoutWaterStorage(state);
