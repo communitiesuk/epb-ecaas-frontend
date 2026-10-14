@@ -918,7 +918,7 @@ describe("dwelling fabric mapper", () => {
 	it("maps door input state to FHS input request", () => {
 		// Arrange
 
-		const externalWall: EcaasForm<ExternalWallData> = {
+		const externalWall = {
 			...baseForm,
 			data: {
 				id: "cbb78615-d2de-482b-a8f1-ce48534aaa05",
@@ -935,9 +935,9 @@ describe("dwelling fabric mapper", () => {
 				massDistributionClass: "I",
 				uValue: 0.3,
 			},
-		};
+		} as const satisfies EcaasForm<ExternalWallData>;
 
-		const internalWall: EcaasForm<InternalWallData> = {
+		const internalWall = {
 			...baseForm,
 			data: {
 				id: "e36223a9-420f-422f-ad3f-ccfcec1455c7",
@@ -949,9 +949,9 @@ describe("dwelling fabric mapper", () => {
 				pitch: 90,
 				uValue: 1,
 			},
-		};
+		} as const satisfies EcaasForm<InternalWallData>;
 
-		const internalDoorUnheatedSpace: InternalDoorData = {
+		const internalDoorUnheatedSpace = {
 			typeOfInternalDoor: "unheatedSpace",
 			name: "Internal 1",
 			isTheFrontDoor: false,
@@ -961,9 +961,9 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 			uValue: 0.001,
 			thermalResistanceOfAdjacentUnheatedSpace: 1,
-		};
+		} as const satisfies InternalDoorData;
 
-		const internalDoorHeatedSpace: InternalDoorData = {
+		const internalDoorHeatedSpace = {
 			typeOfInternalDoor: "heatedSpace",
 			name: "Internal 2",
 			isTheFrontDoor: false,
@@ -972,8 +972,9 @@ describe("dwelling fabric mapper", () => {
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			uValue: 1,
-		};
-		const externalGlazedDoor: ExternalGlazedDoorData = {
+		} as const satisfies InternalDoorData;
+		
+		const externalGlazedDoor = {
 			id: "external-glazed-door-id",
 			name: "External glazed door 1",
 			isTheFrontDoor: false,
@@ -1024,9 +1025,9 @@ describe("dwelling fabric mapper", () => {
 					height: 10,
 				},
 			],
-		};
+		} as const satisfies ExternalGlazedDoorData;
 
-		const externalUnglazedDoor: ExternalUnglazedDoorData = {
+		const externalUnglazedDoor = {
 			name: "External unglazed door 1",
 			isTheFrontDoor: false,
 			associatedItemId: externalWall.data.id,
@@ -1037,7 +1038,7 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 			colour: "Intermediate",
 			uValue: 16,
-		};
+		} as const satisfies ExternalUnglazedDoorData;
 
 		const doorSuffix = " (door)";
 
@@ -1078,23 +1079,23 @@ describe("dwelling fabric mapper", () => {
 		const externalGlazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalGlazedDoor.name + doorSuffix]! as BuildingElementTransparent;
 		const externalUnglazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalUnglazedDoor.name + doorSuffix]! as BuildingElementOpaque;
 
-		const expectedInternalDoorUnheatedSpace: BuildingElementAdjacentUnconditionedSpaceSimple =
+		const expectedInternalDoorUnheatedSpace =
 		{
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-			pitch: extractPitch(internalWall.data),
+			pitch: 90,
 			area: internalDoorUnheatedSpace.surfaceArea,
 			u_value: internalDoorUnheatedSpace.uValue,
 			areal_heat_capacity: internalDoorUnheatedSpace.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(internalDoorUnheatedSpace.massDistributionClass),
 			thermal_resistance_unconditioned_space: internalDoorUnheatedSpace.thermalResistanceOfAdjacentUnheatedSpace,
-		};
+		} as const satisfies BuildingElementAdjacentUnconditionedSpaceSimple;
 
 		expect(internalDoorElement).toEqual(expectedInternalDoorUnheatedSpace);
 
-		const expectedInternalDoorHeatedSpace: BuildingElementAdjacentConditionedSpace =
+		const expectedInternalDoorHeatedSpace =
 		{
 			type: "BuildingElementAdjacentConditionedSpace",
-			pitch: extractPitch(internalWall.data),
+			pitch: 90,
 			area: internalDoorHeatedSpace.surfaceArea,
 			u_value: internalDoorHeatedSpace.uValue,
 			areal_heat_capacity: internalDoorHeatedSpace.arealHeatCapacity,
@@ -1106,7 +1107,7 @@ describe("dwelling fabric mapper", () => {
 
 		const expectedExternalGlazedDoor: BuildingElementTransparent = {
 			type: "BuildingElementTransparent",
-			pitch: extractPitch(externalWall.data),
+			pitch: 90,
 			orientation360: externalWall.data.orientation,
 			height: externalGlazedDoor.height,
 			width: externalGlazedDoor.width,
@@ -1156,14 +1157,14 @@ describe("dwelling fabric mapper", () => {
 				delta_r: externalGlazedDoor.thermalResistivityIncrease,
 				trans_red: externalGlazedDoor.solarTransmittanceReduction,
 			}],
-		};
+		} as const satisfies BuildingElementTransparent;
 
 		expect(externalGlazedDoorElement).toEqual(expectedExternalGlazedDoor);
 
-		const expectedUnglazedDoor: BuildingElementOpaque = {
+		const expectedUnglazedDoor = {
 			area: externalUnglazedDoor.height * externalUnglazedDoor.width,
 			type: "BuildingElementOpaque",
-			pitch: extractPitch(externalWall.data),
+			pitch: 90,
 			orientation360: externalWall.data.orientation,
 			height: externalUnglazedDoor.height,
 			width: externalUnglazedDoor.width,
@@ -1174,7 +1175,7 @@ describe("dwelling fabric mapper", () => {
 			is_unheated_pitched_roof: false,
 			colour: "Intermediate",
 			u_value: externalUnglazedDoor.uValue,
-		};
+		} as const satisfies BuildingElementOpaque;
 
 		expect(externalUnglazedDoorElement).toEqual(expectedUnglazedDoor);
 	});
@@ -1534,9 +1535,13 @@ describe("dwelling fabric mapper", () => {
 		const fhsInputData = mapThermalBridgingData(resolveState(store.$state));
 
 		// Assert
-		type ThermalBridging = { [key: string]: SchemaThermalBridgingLinearFhs | SchemaThermalBridgingPoint; };
+		const thermalBridging = fhsInputData.Zone[defaultZoneName]!.ThermalBridging;
 
-		const thermalBridging = fhsInputData.Zone[defaultZoneName]!.ThermalBridging as ThermalBridging;
+		// narrow by removing possibility thermal bridging is represented as a number
+		if (typeof thermalBridging === "number") {
+			expect.fail("Thermal bridging was unexpectedly represented as a number");
+			return;
+		}
 
 		const linearThermalBridgeElement = thermalBridging[linearThermalBridge.name + bridgeSuffix]! as SchemaThermalBridgingLinearFhs;
 		const pointThermalBridgeElement = thermalBridging[pointThermalBridge.name + bridgeSuffix]! as SchemaThermalBridgingPoint;

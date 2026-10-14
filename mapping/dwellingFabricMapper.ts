@@ -602,12 +602,12 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map((x) => {
-		const associatedHeatedSpaceElement = getResolvedTaggedItem(
+		const pitch = getInheritedPitch(
 			[dwellingSpaceInternalWall, dwellingSpaceCeilings, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall],
 			x.associatedItemId,
 		)!;
 		const commonFields = {
-			pitch: extractPitch(associatedHeatedSpaceElement),
+			pitch,
 			area: x.surfaceArea,
 			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
@@ -635,7 +635,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	});
 
 	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalGlazedDoor.map((x) => {
-		const associatedWallRoof = x.associatedItemId && x.associatedItemId !== "none" ? getResolvedTaggedItem(
+		const associatedWallRoof = x.associatedItemId && x.associatedItemId !== "none" ? getInheritedPitchAndOrientation(
 			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
 			x.associatedItemId,
 		)! : undefined;
@@ -644,8 +644,8 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 
 		const glazedDoor = {
 			type: "BuildingElementTransparent",
-			pitch: extractPitch(associatedWallRoof ?? x),
-			orientation360: (associatedWallRoof ?? x).orientation!,
+			pitch: associatedWallRoof?.pitch ?? extractPitch(x),
+			orientation360: associatedWallRoof?.orientation ?? x.orientation,
 			height: x.height,
 			mid_height: midHeight,
 			width: x.width,
@@ -680,13 +680,13 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	});
 
 	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalUnglazedDoor.map((x) => {
-		const associatedWallRoof = x.associatedItemId && x.associatedItemId !== "none" ? getResolvedTaggedItem(
+		const associatedWallRoof = x.associatedItemId && x.associatedItemId !== "none" ? getInheritedPitchAndOrientation(
 			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
 			x.associatedItemId,
 		)! : undefined;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
-		const pitch = extractPitch(associatedWallRoof ?? x);
+		const pitch = associatedWallRoof?.pitch ?? extractPitch(x);
 
 		return {
 			[nameWithSuffix]: {
@@ -703,7 +703,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				area: x.height * x.width, // this may be removed from the FHS schema shortly (though you could have e.g. arch shaped doors with a different area?)
 				u_value: x.uValue,
 				// orientation360 is not specified if pitch is 0 or 180
-				...((pitch !== 0 && pitch !== 180) ? { orientation360: (associatedWallRoof ?? x).orientation! } : {}),
+				...((pitch !== 0 && pitch !== 180) ? { orientation360: associatedWallRoof?.orientation ?? x.orientation } : {}),
 			},
 		};
 	});
@@ -774,12 +774,13 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			pitch = extractPitch(x);
 			orientation = x.orientation!;
 		} else {
-			const associatedElement = getResolvedTaggedItem(
+			const { pitch: inheritedPitch, orientation: inheritedOrientation } = getInheritedPitchAndOrientation(
 				[dwellingSpaceExternalWall, dwellingSpaceRoofs],
 				x.associatedItemId,
 			)!;
-			pitch = extractPitch(associatedElement);
-			orientation = associatedElement.orientation!;
+
+			pitch = inheritedPitch;
+			orientation = inheritedOrientation;
 		}
 
 		const midHeight = (x.height / 2) + state.infiltrationAndVentilation.naturalVentilation.baseHeightOfVentilationZone;

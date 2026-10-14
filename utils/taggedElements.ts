@@ -7,6 +7,45 @@ type EcaasSectionWithTagging =
 	| RoofData
 	| CeilingData;
 
+export function getInheritedPitchAndOrientation(
+	sections: EcaasSectionWithTagging[][],
+	id: string,
+): { pitch: number, orientation: number } | undefined {
+	const item = getResolvedTaggedItem(sections, id);
+	if (!item) {
+		return undefined;
+	}
+
+	const pitch = extractPitch(item);
+
+	let orientation: number;
+
+	const itemOrientation = item.orientation;
+
+	if (typeof itemOrientation === "undefined") {
+		if (pitch === 180 || pitch === 0) {
+			orientation = 0; // pitch is flat so orientation makes no difference to solar incidence
+		} else {
+			return undefined;
+		}
+	} else {
+		orientation = itemOrientation;
+	}
+	
+	return { pitch, orientation };
+}
+
+export function getInheritedPitch(
+	sections: EcaasSectionWithTagging[][],
+	id: string): number | undefined {
+	const item = getResolvedTaggedItem(sections, id);
+	if (!item) {
+		return undefined;
+	}
+
+	return extractPitch(item);
+}
+
 export const getResolvedTaggedItem = (
 	sections: EcaasSectionWithTagging[][],
 	id: string,
@@ -21,9 +60,9 @@ export const getResolvedTaggedItem = (
 	}
 };
 
-export const extractResolvedSectionItems = <T extends Record<string, unknown>>(
+function extractResolvedSectionItems<T extends Record<string, unknown>>(
 	section: T[],
-): AssociatedItemValues[] => {
+): AssociatedItemValues[] {
 	return (
 		section?.map((x) => {
 			return {
@@ -33,12 +72,12 @@ export const extractResolvedSectionItems = <T extends Record<string, unknown>>(
 			} as AssociatedItemValues;
 		}) ?? []
 	);
-};
+}
 
-export const getResolvedTopLevelTaggedItem = (
+function getResolvedTopLevelTaggedItem(
 	sections: EcaasSectionWithTagging[][],
 	id: string | undefined,
-): AssociatedItemValues | undefined => {
+): AssociatedItemValues | undefined {
 	const items: AssociatedItemValues[][] = [];
 	const sectionsWithoutNestedTaggedItems = sections?.filter(
 		(s) => s !== undefined && s.some((x) => !("associatedItemId" in x) || x.associatedItemId === "none"),
@@ -49,12 +88,13 @@ export const getResolvedTopLevelTaggedItem = (
 	}
 	const taggedItem = items.flat().find((item) => item.id === id);
 	return taggedItem;
-};
+}
 
-export const getResolvedNestedTaggedItem = (
+
+function getResolvedNestedTaggedItem(
 	sections: EcaasSectionWithTagging[][],
 	id: string | undefined,
-) => {
+) {
 	const sectionsWithNestedTaggedItems = sections.filter(
 		(s) => s !== undefined && s.some((x) => "associatedItemId" in x),
 	);
@@ -65,4 +105,4 @@ export const getResolvedNestedTaggedItem = (
 			return taggedItem;
 		}
 	}
-};
+}
