@@ -4,9 +4,10 @@ import { screen } from "@testing-library/vue";
 import type { BoilerProduct, DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
 import Products from "./index.vue";
 
-const { mockFetch, mockRoute } = vi.hoisted(() => ({
+const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
 	mockRoute: vi.fn(),
+	mockNavigateTo: vi.fn(),
 }));
 
 describe("Heat source products page", () => {
@@ -20,6 +21,7 @@ describe("Heat source products page", () => {
 
 	mockNuxtImport("useFetch", () => mockFetch);
 	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	const MOCKED_HEAT_PUMPS: PaginatedResult<DisplayProduct> = {
 		data: [
@@ -126,6 +128,7 @@ describe("Heat source products page", () => {
 
 		mockFetch.mockReset();
 		mockRoute.mockReset();
+		mockNavigateTo.mockReset();
 	});
 
 	test("title dependant on the type of heat source", async () => {
