@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from "uuid";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import HeatNetworks from "./index.vue";
 
-
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
 	navigateToMock: vi.fn(),
