@@ -11,43 +11,49 @@ mockNuxtImport("navigateTo", () => {
 
 vi.mock("uuid");
 
-describe("roof", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
+const roof = {
+	data: {
+		id: "ec8e8ec6-0fcb-43dc-81e0-9e2e9afb9e20",
+		name: "Roof 1",
+		typeOfRoof: "flatAboveHeatedSpace",
+		pitch: 0,
+		length: 1,
+		width: 1,
+		elevationalHeightOfElement: 2,
+		surfaceArea: 1,
+		uValue: 1,
+		colour: "Light",
+		arealHeatCapacity: "Very light",
+		massDistributionClass: "I",
+	},
+} as const satisfies EcaasForm<RoofData>;
 
-	const roof: EcaasForm<RoofData> = {
-		data: {
-			id: "ec8e8ec6-0fcb-43dc-81e0-9e2e9afb9e20",
-			name: "Roof 1",
-			typeOfRoof: "flatAboveHeatedSpace",
-			pitch: 0,
-			length: 1,
-			width: 1,
-			elevationalHeightOfElement: 2,
-			surfaceArea: 1,
-			uValue: 1,
-			colour: "Light",
-			arealHeatCapacity: "Very light",
-			massDistributionClass: "I",
-		},
-	};
-	const pitchedRoof: EcaasForm<RoofData> = {
-		data: {
-			id: "ec8e8ec6-0fcb-43dc-81e0-9e2e9afb9e20",
-			name: "Roof 1",
-			typeOfRoof: "pitchedInsulatedAtRoof",
-			pitch: 30,
-			orientation: 90,
-			length: 1,
-			width: 1,
-			elevationalHeightOfElement: 2,
-			surfaceArea: 1,
-			uValue: 1,
-			colour: "Light",
-			arealHeatCapacity: "Very light",
-			massDistributionClass: "I",
-		},
-	};
+const pitchedRoof = {
+	data: {
+		id: "ec8e8ec6-0fcb-43dc-81e0-9e2e9afb9e20",
+		name: "Roof 1",
+		typeOfRoof: "pitchedInsulatedAtRoof",
+		pitch: 30,
+		orientation: 90,
+		length: 1,
+		width: 1,
+		elevationalHeightOfElement: 2,
+		surfaceArea: 1,
+		uValue: 1,
+		colour: "Light",
+		arealHeatCapacity: "Very light",
+		massDistributionClass: "I",
+	},
+} as const satisfies EcaasForm<RoofData>;
+
+describe("roof", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	const user = userEvent.setup();
 
 	afterEach(() => {
 		store.$reset();
@@ -109,7 +115,7 @@ describe("roof", () => {
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 	});
 
-	test("form is prepopulted with pitched roof data when data exists in state", async () => {
+	test("form is prepopulated with pitched roof data when data exists in state", async () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceRoofs: {

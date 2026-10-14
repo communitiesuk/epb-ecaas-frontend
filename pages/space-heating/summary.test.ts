@@ -25,29 +25,29 @@ const { mockFetch } = vi.hoisted(() => ({
 
 mockNuxtImport("useFetch", () => mockFetch);
 
-
-const store = useEcaasStore();
-beforeEach(() => {
-	store.$reset();
-	mockFetch.mockReset();
-	mockFetch.mockImplementation((url: string, options?: { query?: { ids?: string } }) => {
-		if (url === "/api/products/batch") {
-			const ids = options?.query?.ids
-				?.split(",")
-				.map(id => id.trim())
-				.filter(Boolean) ?? [];
-
-			return {
-				data: ref(ids.map(id => ({ id, modelName: "Mock product" }))),
-			};
-		}
-
-		return { data: ref({ modelName: "Mock product" }) };
-	});
-});
-
-
 describe("Space heating summary page", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+		store.$reset();
+		mockFetch.mockReset();
+		mockFetch.mockImplementation((url: string, options?: { query?: { ids?: string } }) => {
+			if (url === "/api/products/batch") {
+				const ids = options?.query?.ids
+					?.split(",")
+					.map(id => id.trim())
+					.filter(Boolean) ?? [];
+
+				return {
+					data: ref(ids.map(id => ({ id, modelName: "Mock product" }))),
+				};
+			}
+
+			return { data: ref({ modelName: "Mock product" }) };
+		});
+	});
+
 	it("displays the correct title", async () => {
 		await renderSuspended(SpaceHeatingSummary);
 		expect(screen.getByRole("heading", { name: "Space heating summary" }));
@@ -82,7 +82,6 @@ describe("Space heating summary page", () => {
 				maxFlowTemp: unitValue(2, celsius),
 			};
 
-			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
@@ -131,7 +130,6 @@ describe("Space heating summary page", () => {
 				maxFlowTemp: unitValue(2, celsius),
 			};
 
-			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
@@ -191,8 +189,6 @@ describe("Space heating summary page", () => {
 				energySupply: "mains_gas",
 				maxFlowTemp: unitValue(2, celsius),
 			};
-
-			const store = useEcaasStore();
 
 			store.$patch({
 				spaceHeating: {
@@ -259,7 +255,7 @@ describe("Space heating summary page", () => {
 				productReference: "HEAT_PUMP_SMALL",
 				maxFlowTemp: unitValue(17, celsius),
 			};
-			const store = useEcaasStore();
+
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
@@ -303,7 +299,7 @@ describe("Space heating summary page", () => {
 				maxFlowTemp: unitValue(35, celsius),
 				associatedHeatNetworkId: "network-1",
 			};
-			const store = useEcaasStore();
+
 			store.$patch({
 				spaceHeating: {
 					heatNetworks: {
@@ -346,7 +342,7 @@ describe("Space heating summary page", () => {
 				numberOfUnits: 1,
 				energySupply: "electricity",
 			};
-			const store = useEcaasStore();
+			
 			store.$patch({
 				spaceHeating: {
 					heatSource: {
@@ -383,7 +379,6 @@ describe("Space heating summary page", () => {
 				subHeatNetworkName: "Sub 2",
 			};
 
-			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
 					heatNetworks: {
@@ -416,7 +411,6 @@ describe("Space heating summary page", () => {
 				productReference: "HEAT_NETWORK-MEDIUM",
 			};
 
-			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
 					heatNetworks: {
@@ -457,7 +451,6 @@ describe("Space heating summary page", () => {
 				associatedHeatNetworkId: "network-1",
 			};
 
-			const store = useEcaasStore();
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -515,7 +508,6 @@ describe("Space heating summary page", () => {
 				associatedHeatNetworkId: "network-1",
 			};
 
-			const store = useEcaasStore();
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -575,7 +567,6 @@ describe("Space heating summary page", () => {
 				associatedHeatNetworkId: "network-1",
 			};
 
-			const store = useEcaasStore();
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -786,13 +777,6 @@ describe("Space heating summary page", () => {
 	});
 
 	describe("Heat emitters section", () => {
-
-		const store = useEcaasStore();
-
-		beforeEach(() => {
-			store.$reset();
-		});
-
 		const wetDistributionSystem: HeatEmittingData = {
 			id: "wet-dist-1",
 			name: "Wet Distribution 1",

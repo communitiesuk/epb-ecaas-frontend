@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import BulbPage from "./[bulb].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -9,7 +9,12 @@ mockNuxtImport("navigateTo", () => {
 });
 
 describe("bulb page", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const bulbData: EcaasForm<DwellingSpaceLightingData> = {

@@ -12,7 +12,11 @@ const baseForm = {
 };
 
 describe("domestic hot water mapper", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	afterEach(() => {
 		store.$reset();

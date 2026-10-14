@@ -18,7 +18,12 @@ mockNuxtImport("navigateTo", () => navigateToMock);
 vi.mock("uuid");
 
 describe("water storage", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";

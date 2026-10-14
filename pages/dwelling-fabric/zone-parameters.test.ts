@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import userEvent from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
 import ZoneParameters from "./zone-parameters.vue";
-import userEvent from "@testing-library/user-event";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -9,7 +9,12 @@ mockNuxtImport("navigateTo", () => {
 });
 
 describe("zone parameters", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const zoneParametersData: DwellingSpaceZoneParametersData = {
@@ -231,7 +236,12 @@ describe("zone parameters", () => {
 });
 
 describe("Partially saving data", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	afterEach(() => {

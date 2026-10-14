@@ -10,13 +10,9 @@ mockNuxtImport("navigateTo", () => {
 });
 vi.mock("uuid");
 
-const store = useEcaasStore();
 const user = userEvent.setup();
 
-afterEach(() => {
-	store.$reset();
-	navigateToMock.mockReset();
-});
+
 
 const externalWall: ExternalWallData = {
 	id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
@@ -98,6 +94,17 @@ const window2: EcaasForm<WindowData> = {
 };
 
 describe("window", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+		navigateToMock.mockReset();
+	});
+
 	describe("without existing external wall or roof", () => {
 		test("links to add walls and roofs are not displayed", async () => {
 			await renderSuspended(Window, {
@@ -586,7 +593,6 @@ describe("window", () => {
 		});
 
 		test("updated form data is automatically saved to the correct store object when there are multiple windows added", async () => {
-			const store = useEcaasStore();
 			const user = userEvent.setup();
 
 			store.$patch({

@@ -1,6 +1,12 @@
 describe("ECaaS store patch", () => {
-	const store = useEcaasStore();
-	const state = store.$state;
+	let store: ReturnType<typeof useEcaasStore>;
+
+	let state: typeof store.$state;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+		state = store.$state;
+	});
 
 	it("patches packageProductIds with deprecated packageProductId in heat sources", () => {
 		const legacyPackagedProducts: Record<string, unknown> = {

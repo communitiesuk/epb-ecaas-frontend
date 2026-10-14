@@ -1,11 +1,11 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import PreheatedWaterStorage from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
-import { litre } from "~/utils/units/volume";
 import { unitValue } from "~/utils/units";
 import { celsius } from "~/utils/units/temperature";
+import { litre } from "~/utils/units/volume";
+import PreheatedWaterStorage from "./index.vue";
 
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
@@ -18,7 +18,12 @@ mockNuxtImport("navigateTo", () => navigateToMock);
 vi.mock("uuid");
 
 describe("preheated water storage", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";

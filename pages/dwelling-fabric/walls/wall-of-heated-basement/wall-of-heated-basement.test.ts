@@ -1,9 +1,9 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor, within } from "@testing-library/vue";
-import WallOfHeatedBasement from "./[wall].vue";
-import type { WallOfHeatedBasementData } from "~/stores/ecaasStore.schema";
 import { v4 as uuidv4 } from "uuid";
+import type { WallOfHeatedBasementData } from "~/stores/ecaasStore.schema";
+import WallOfHeatedBasement from "./[wall].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -13,7 +13,12 @@ mockNuxtImport("navigateTo", () => {
 vi.mock("uuid");
 
 describe("wall of heated basement", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	beforeEach(() => {

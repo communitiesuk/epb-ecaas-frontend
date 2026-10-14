@@ -1,17 +1,22 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import MechanicalVentilationForm from "./[mechanical]/index.vue";
 import { userEvent } from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import { v4 as uuidv4 } from "uuid";
-import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
+import { litrePerSecond } from "~/utils/units/flowRate";
+import MechanicalVentilationForm from "./[mechanical]/index.vue";
+
+vi.mock("uuid");
+
+const navigateToMock = vi.hoisted(() => vi.fn());
 
 describe("mechanical ventilation form", () => {
 	const user = userEvent.setup();
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
 
-	const navigateToMock = vi.hoisted(() => vi.fn());
-	vi.mock("uuid");
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	const mechanicalVentilation1: Partial<MechanicalVentilationData> = {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",

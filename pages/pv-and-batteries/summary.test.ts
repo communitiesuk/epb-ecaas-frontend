@@ -1,11 +1,21 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen } from "@testing-library/vue";
-import PVAndElectricBatteriesSummary from "./summary.vue";
-import { kilowatt, kilowattHour, kilowattPeak } from "~/utils/units/power";
 import { degrees } from "~/utils/units/angle";
 import { metre } from "~/utils/units/length";
+import { kilowatt, kilowattHour, kilowattPeak } from "~/utils/units/power";
+import PVAndElectricBatteriesSummary from "./summary.vue";
 
 describe("PV and electric batteries summary page", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	it("displays the correct title", async () => {
 		await renderSuspended(PVAndElectricBatteriesSummary);
 		expect(screen.getByRole("heading", { name: "PV and electric batteries summary" }));
@@ -63,7 +73,6 @@ describe("PV and electric batteries summary page", () => {
 		});
 
 		it("displays the correct data for the pv summary", async () => {
-			const store = useEcaasStore();
 			store.$patch({
 				pvAndBatteries: {
 					pvs: {
@@ -96,7 +105,6 @@ describe("PV and electric batteries summary page", () => {
 			}
 		});
 		it("displays the correct data for PV when shading is added", async () => {
-			const store = useEcaasStore();
 			store.$patch({
 				pvAndBatteries: {
 					pvs: {
@@ -175,7 +183,6 @@ describe("PV and electric batteries summary page", () => {
 			}
 		});
 		it("displays transparency for obstacle when non-obstacle shading is added first", async () => {
-			const store = useEcaasStore();
 			store.$patch({
 				pvAndBatteries: {
 					pvs: {
@@ -251,7 +258,6 @@ describe("PV and electric batteries summary page", () => {
 		});
 
 		it("displays the correct data for the electric battery summary", async () => {
-			const store = useEcaasStore();
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {
@@ -282,6 +288,15 @@ describe("PV and electric batteries summary page", () => {
 });
 
 describe("Diverters section", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
 
 	it("displays the diverter tab", async () => {
 		await renderSuspended(PVAndElectricBatteriesSummary);
@@ -303,8 +318,6 @@ describe("Diverters section", () => {
 	});
 
 	it("displays the correct data for the diverters summary", async () => {
-		const store = useEcaasStore();
-
 		const hotWaterCylinderName = "HWC1";
 		const hotWaterCylinderId = "88ea3f45-6f2a-40e2-9117-0541bd8a97f3";
 		const heatPumpName = "HP1";

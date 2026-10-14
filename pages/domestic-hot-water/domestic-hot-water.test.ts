@@ -13,10 +13,16 @@ const baseCompleteForm = {
 	complete: true,
 };
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("Domestic hot water", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;

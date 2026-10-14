@@ -1,9 +1,9 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
-import HeatNetworks from "./index.vue";
-import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import { v4 as uuidv4 } from "uuid";
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import HeatNetworks from "./index.vue";
 
 
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
@@ -17,7 +17,12 @@ mockNuxtImport("navigateTo", () => navigateToMock);
 vi.mock("uuid");
 
 describe("Heat Networks", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const sleevedDistrictHeatNetwork: EcaasForm<HeatNetworkData> = {

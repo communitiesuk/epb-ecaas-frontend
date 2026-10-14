@@ -8,8 +8,17 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+vi.mock("~/composables/banner", () => ({
+	useBanner: () => ref({ type: "update-front-door" }),
+}));
+
 describe("external unglazed door", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const externalWall: ExternalWallData = {
@@ -607,10 +616,7 @@ describe("external unglazed door", () => {
 		});
 
 		test("displays banner when banner is set to 'update-front-door", async () => {
-
-			vi.mock("~/composables/banner", () => ({
-				useBanner: () => ref({ type: "update-front-door" }),
-			}));
+			// mock moved to top level of file
 
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {

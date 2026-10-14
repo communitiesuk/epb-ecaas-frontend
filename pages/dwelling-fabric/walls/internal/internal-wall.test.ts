@@ -12,7 +12,12 @@ mockNuxtImport("navigateTo", () => {
 vi.mock("uuid");
 
 describe("internal wall", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const internalWall: InternalWallData = {

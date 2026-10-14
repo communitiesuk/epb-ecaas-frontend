@@ -7,10 +7,16 @@ import { within } from "@testing-library/dom";
 import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("ceilings and roofs", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;

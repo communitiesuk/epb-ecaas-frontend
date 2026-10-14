@@ -1,13 +1,18 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import type { DisplayProduct } from "~/pcdb/pcdb.types";
-import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
-import ProductDetails from "./[id]/index.vue";
+import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import type { H3Error } from "h3";
-import userEvent from "@testing-library/user-event";
+import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
+import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import ProductDetails from "./[id]/index.vue";
+
+const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	mockRoute: vi.fn(),
+	mockNavigateTo: vi.fn(),
+}));
 
 describe("Heat network details", async () => {
-    
 	const heatNetwork: Partial<HeatNetworkData> = {
 		id: "463c94f6-566c-49b2-af27-333333333",
 		name: "Heat network 1",
@@ -23,14 +28,13 @@ describe("Heat network details", async () => {
 		displayProduct: true,
 	};
     
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-    
-	const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
-		mockFetch: vi.fn(),
-		mockRoute: vi.fn(),
-		mockNavigateTo: vi.fn(),
-	}));
     
 	mockNuxtImport("useFetch", () => mockFetch);
 	mockNuxtImport("useRoute", () => mockRoute);

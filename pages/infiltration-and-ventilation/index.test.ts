@@ -1,7 +1,7 @@
-import InfiltrationAndVentilationTaskPage from "./index.vue";
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { screen } from "@testing-library/vue";
 import { v4 as uuidv4 } from "uuid";
+import InfiltrationAndVentilationTaskPage from "./index.vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -9,7 +9,11 @@ mockNuxtImport("navigateTo", () => {
 });
 
 describe("the ventilation task page", async () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	const mechanicalVentilation1: MechanicalVentilationData = {
 		id: uuidv4(),

@@ -12,7 +12,6 @@ import HeatSourceForm from "./index.vue";
 vi.mock("uuid");
 
 const user = userEvent.setup();
-const store = useEcaasStore();
 
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
 	navigateToMock: vi.fn(),
@@ -29,7 +28,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-	store.$reset();
 	mockFetch.mockReset();
 	navigateToMock.mockReset();
 });
@@ -118,6 +116,16 @@ const backupBoiler: DomesticHotWaterHeatSourceData = {
 };
 
 describe("Heat Source Page", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	test("only allows user to choose a hui when a communal heat network is already added", async () => {
 		const heatNetwork: EcaasForm<HeatNetworkData> = {
 			data: {
@@ -552,6 +560,16 @@ describe("Heat Source Page", () => {
 });
 
 describe("Boiler section", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	it("disables input fields when boiler is packaged with a heat pump", async () => {
 		store.$patch({
 			spaceHeating: {
@@ -678,6 +696,16 @@ describe("Boiler section", () => {
 });
 
 describe("Heat pump section", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	const heatPumpProductWithCylinder: Partial<DisplayProduct> = {
 		id: "1001",
 		brandName: "Brand",
@@ -1422,6 +1450,16 @@ describe("Heat pump section", () => {
 });
 
 describe("Immersion heater section", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	const populateValidImmersionHeaterForm = async () => {
 		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
 		await user.click(screen.getByTestId("typeOfHeatSource_immersionHeater"));
@@ -1535,6 +1573,16 @@ describe("Immersion heater section", () => {
 });
 
 describe("Point of use section", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	beforeEach(() => {
 		store.$patch({
 			dwellingDetails: {
@@ -1728,6 +1776,16 @@ describe("Point of use section", () => {
 });
 
 describe("Heat Networks", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+	
 	const communalHeatNetwork: Partial<HeatNetworkData> = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c13",
 		name: "Communal Heat Network",

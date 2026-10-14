@@ -9,7 +9,12 @@ mockNuxtImport("navigateTo", () => {
 });
 
 describe("exposed floor", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const exposedFloor: ExposedFloorData = {

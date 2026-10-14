@@ -35,7 +35,11 @@ const verifyDataInSection = async (
 };
 
 describe("Domestic hot water summary", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	const hotWaterCylinder: HotWaterCylinderData = {
 		id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",

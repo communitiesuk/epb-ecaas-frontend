@@ -6,10 +6,16 @@ import type { AirConditioningData } from "~/stores/ecaasStore.schema";
 import AirConditioningForm from "./air-conditioning/[airConditioning].vue";
 import Cooling from "./index.vue";
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("cooling", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;

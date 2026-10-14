@@ -6,11 +6,17 @@ import formStatus from "~/constants/formStatus";
 import ShadingForm from "./[shading].vue";
 import Shading from "./index.vue";
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("shading", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
-	const navigateToMock = vi.hoisted(() => vi.fn());
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
 	});
