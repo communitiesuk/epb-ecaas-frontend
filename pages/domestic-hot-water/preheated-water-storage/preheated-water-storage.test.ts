@@ -36,6 +36,7 @@ describe("preheated water storage", () => {
 			storageCylinderVolume: unitValue(5, litre),
 			dailyEnergyLoss: 1,
 			heaterPosition: 0.8,
+			thermostatPosition: 0.5,
 			coldWaterSource: "mainsWater",
 			heatSourceId: heatPumpId,
 		},
@@ -79,6 +80,7 @@ describe("preheated water storage", () => {
 		await user.type(screen.getByTestId("storageCylinderVolume"), "5");
 		await user.type(screen.getByTestId("dailyEnergyLoss"), "1");
 		await user.type(screen.getByTestId("heaterPosition"), "0.8");
+		await user.type(screen.getByTestId("thermostatPosition"), "0.5");
 		await user.click(screen.getByTestId("coldWaterSource_mainsWater"));
 		await user.click(screen.getByTestId(`heatSourceId_${heatPumpId}`));
 		await user.tab();
@@ -93,8 +95,8 @@ describe("preheated water storage", () => {
 		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
 		expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
 		expect((await screen.findByTestId("heaterPosition_error"))).toBeDefined();
-
 		expect((await screen.findByTestId("coldWaterSource_error"))).toBeDefined();
+		expect((await screen.findByTestId("thermostatPosition_error"))).toBeDefined();
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
@@ -208,6 +210,7 @@ describe("preheated water storage", () => {
 		);
 		expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe(preheatedWaterCylinder.data.dailyEnergyLoss.toString());
 		expect((await screen.findByTestId<HTMLInputElement>("heaterPosition")).value).toBe(preheatedWaterCylinder.data.heaterPosition.toString());
+		expect((await screen.findByTestId<HTMLInputElement>("thermostatPosition")).value).toBe(preheatedWaterCylinder.data.thermostatPosition.toString());
 	});
 
 	test("navigates to domestic hot water page when valid form is completed", async () => {
@@ -225,5 +228,43 @@ describe("preheated water storage", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value)
 			.toBe("Standard water cylinder");
+	});
+	describe("Validation",() => {
+		describe("Thermostat position validation", () => { 
+			async function renderWithThermostatPosition(value: string) {
+				await renderSuspended(PreheatedWaterStorage);
+				await user.type(screen.getByTestId("thermostatPosition"), value);
+				await user.tab();
+			}
+
+			test("Thermostat position is is valid between 0 and 1", async () => { 
+				await renderWithThermostatPosition("0.5");
+				expect((await screen.findByTestId<HTMLInputElement>("thermostatPosition")).value).toBe("0.5");
+				const error = screen.queryByTestId("thermostatPosition_error");
+				expect(error).toBeNull();
+			});
+			test("Thermostat position can be 0", async () => {
+				await renderWithThermostatPosition("0");
+				expect((await screen.findByTestId<HTMLInputElement>("thermostatPosition")).value).toBe("0");
+				const error = screen.queryByTestId("thermostatPosition_error");
+				expect(error).toBeNull();
+			});
+			test("Thermostat position can be 1", async () => {
+				await renderWithThermostatPosition("1");
+				expect((await screen.findByTestId<HTMLInputElement>("thermostatPosition")).value).toBe("1");
+				const error = screen.queryByTestId("thermostatPosition_error");
+				expect(error).toBeNull();
+			});
+			test("Thermostat position cannot be less than 0", async () => {
+				await renderWithThermostatPosition("-0.1");
+				const error = screen.getByTestId("thermostatPosition_error");
+				expect(error?.innerText).toContain("Error: Thermostat position in the cylinder must be at least 0.");
+			});
+			test("Thermostat position cannot be greater than 1", async () => {
+				await renderWithThermostatPosition("1.1");
+				const error = screen.getByTestId("thermostatPosition_error");
+				expect(error?.innerText).toContain("Error: Thermostat position in the cylinder must be no more than 1.");
+			});
+		});
 	});
 });

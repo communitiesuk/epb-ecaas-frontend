@@ -35,6 +35,7 @@ const preheatedWaterCylinder: EcaasForm<PreheatedWaterStorageData> = {
 		storageCylinderVolume: unitValue(5, litre),
 		dailyEnergyLoss: 1,
 		heaterPosition: 0.8,
+		thermostatPosition: 0.5,
 		coldWaterSource: "mainsWater",
 		heatSourceId: "d9d03976-0827-4c3c-997e-ee63b340e5c5",
 	},

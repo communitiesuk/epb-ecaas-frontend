@@ -1500,6 +1500,7 @@ const preheatedWaterStorageDataZod = namedWithId
 		storageCylinderVolume: zodUnit("volume"),
 		dailyEnergyLoss: z.number(),
 		heaterPosition: fraction,
+		thermostatPosition: fraction,
 		coldWaterSource: z.string(),
 		heatSourceId: z.string(),
 	});

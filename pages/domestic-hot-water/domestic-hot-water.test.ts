@@ -59,6 +59,7 @@ describe("Domestic hot water", () => {
 			dailyEnergyLoss: 69,
 			typeOfWaterStorage: "hotWaterCylinder",
 			heaterPosition: 0.8,
+			thermostatPosition: 0.5,
 			coldWaterSource: "mainsWater",
 			heatSourceId: heatSource1.data.id,
 		},
