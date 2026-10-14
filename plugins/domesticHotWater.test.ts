@@ -39,6 +39,7 @@ describe("water storage events", () => {
 			dailyEnergyLoss: 69,
 			typeOfWaterStorage: "hotWaterCylinder",
 			heaterPosition: 0.8,
+			thermostatPosition: 0.5,
 			coldWaterSource: wwhrs1.data.id,
 			heatSourceId: heatPump.data.id,
 		},

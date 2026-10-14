@@ -186,6 +186,7 @@ describe("water storage", () => {
 				storageCylinderVolume: unitValue(5, litre),
 				dailyEnergyLoss: 1,
 				heaterPosition: 0.8,
+				thermostatPosition: 0.5,
 				coldWaterSource: "mainsWater",
 				heatSourceId: heatPumpId,
 			},

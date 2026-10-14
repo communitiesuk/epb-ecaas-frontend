@@ -136,6 +136,7 @@ describe("Domestic hot water summary", () => {
 			},
 			dailyEnergyLoss: 1,
 			heaterPosition: 0.8,
+			thermostatPosition: 0.5,
 			coldWaterSource: "mainsWater",
 			heatSourceId: heatPumpId,
 		};
@@ -437,6 +438,7 @@ describe("Domestic hot water summary", () => {
 					storageCylinderVolume: unitValue(5, litre),
 					dailyEnergyLoss: 1,
 					heaterPosition: 0.8,
+					thermostatPosition: 0.5,
 					coldWaterSource: "mainsWater",
 					heatSourceId: heatPumpId,
 				},
