@@ -52,7 +52,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 
 		const ventType = x.typeOfMechanicalVentilationOptions;
 
-		const associatedItem = x.associatedItemId ? getResolvedTaggedItem([
+		const associatedItem = x.associatedItemId ? getInheritedPitchAndOrientation([
 			dwellingSpaceExternalWall,
 			dwellingSpaceRoofs,
 			dwellingSpaceWindows,
@@ -63,7 +63,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 			case "MVHR":
 			case "Centralised MV": {
 				const intakeAssociatedItem = x.associatedItemIdForIntake && x.associatedItemIdForIntake !== "none"
-					? getResolvedTaggedItem([
+					? getInheritedPitchAndOrientation([
 						dwellingSpaceExternalWall,
 						dwellingSpaceRoofs,
 						dwellingSpaceWindows,
@@ -71,7 +71,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					: undefined;
 
 				const exhaustAssociatedItem = x.associatedItemIdForExhaust && x.associatedItemIdForExhaust !== "none"
-					? getResolvedTaggedItem([
+					? getInheritedPitchAndOrientation([
 						dwellingSpaceExternalWall,
 						dwellingSpaceRoofs,
 						dwellingSpaceWindows,
@@ -183,15 +183,16 @@ export function mapVentsData(state: ResolvedState) {
 	const entries = vents.map((x): [string, SchemaVent] => {
 		const key = x.name;
 
-		const taggedItem = x.associatedItemId && x.associatedItemId !== "none" ? getResolvedTaggedItem(
+		const taggedItem = x.associatedItemId && x.associatedItemId !== "none" ? getInheritedPitchAndOrientation(
 			[dwellingSpaceExternalWall, dwellingSpaceWindows, dwellingSpaceExternalGlazedDoor, dwellingSpaceRoofs],
 			x.associatedItemId,
 		) : null;
 
 		const ventOrientation = x.hasAssociatedItem ? taggedItem?.orientation ?? 0 : x.orientation;
-		const pitchForm = x.hasAssociatedItem ? taggedItem : x;
 
-		if (!pitchForm) {
+		const pitch = x.hasAssociatedItem ? taggedItem?.pitch : extractPitch(x);
+
+		if (typeof pitch === "undefined") {
 			throw new Error(`Associated item with id ${x.associatedItemId} not found for ${x.name}`);
 		}
 
@@ -199,7 +200,7 @@ export function mapVentsData(state: ResolvedState) {
 			area_cm2: asCentimetresSquare(x.effectiveVentilationArea),
 			mid_height_air_flow_path: x.midHeightOfZone,
 			orientation360: ventOrientation,
-			pitch: extractPitch(pitchForm),
+			pitch,
 		};
 
 		return [key, val];
