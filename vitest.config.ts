@@ -5,5 +5,6 @@ export default defineVitestConfig({
 		environment: "nuxt",
 		globals: true,
 		exclude: ["**/node_modules/**", "e2e-tests/**"],
+		clearMocks: false,
 	},
 });

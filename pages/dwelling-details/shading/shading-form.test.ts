@@ -1,13 +1,19 @@
-import ShadingForm from "./[shading].vue";
-import type { ShadingData } from "~/stores/ecaasStore.schema";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
+import type { ShadingData } from "~/stores/ecaasStore.schema";
+import ShadingForm from "./[shading].vue";
+
+const navigateToMock = vi.hoisted(() => vi.fn());
 
 describe("shading form", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	const shading1: ShadingData = {
 		name: "Big Tree",

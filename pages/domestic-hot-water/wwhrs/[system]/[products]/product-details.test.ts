@@ -1,19 +1,24 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import type { H3Error } from "h3";
-import ProductDetails from "./[id]/index.vue";
 import { screen } from "@testing-library/vue";
+import type { H3Error } from "h3";
 import type { Product } from "~/pcdb/pcdb.types";
+import ProductDetails from "./[id]/index.vue";
+
+const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	mockRoute: vi.fn(),
+	mockNavigateTo: vi.fn(),
+}));
 
 describe("WWHRS product details", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
+	let store: ReturnType<typeof useEcaasStore>;
 
-	const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
-		mockFetch: vi.fn(),
-		mockRoute: vi.fn(),
-		mockNavigateTo: vi.fn(),
-	}));
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
+	const user = userEvent.setup();
 
 	mockNuxtImport("useFetch", () => mockFetch);
 	mockNuxtImport("useRoute", () => mockRoute);

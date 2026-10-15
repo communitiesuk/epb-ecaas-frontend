@@ -12,7 +12,11 @@ const baseForm = {
 };
 
 describe("domestic hot water mapper", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	afterEach(() => {
 		store.$reset();
@@ -250,6 +254,7 @@ describe("domestic hot water mapper", () => {
 			storageCylinderVolume: { amount: 30, unit: "litres" },
 			dailyEnergyLoss: 40,
 			heaterPosition: 0.2,
+			thermostatPosition: 0.8,
 			coldWaterSource: wwhrs.data.id,
 			heatSourceId: heatPump.data.id,
 		},
@@ -1491,6 +1496,7 @@ describe("domestic hot water mapper", () => {
 							HeatSource: {
 								[heatPumpHWOnly.data.name]: {
 									heater_position: preheatedTank.data.heaterPosition,
+									thermostat_position: preheatedTank.data.thermostatPosition,
 									type: "HeatPump_HWOnly",
 									product_reference: heatPumpHWOnly.data.productReference,
 								},

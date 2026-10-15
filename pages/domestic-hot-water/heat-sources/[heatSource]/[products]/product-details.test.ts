@@ -1,9 +1,15 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
+import type { H3Error } from "h3";
 import type { BoilerProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 import ProductDetails from "./[id]/index.vue";
-import type { H3Error } from "h3";
-import { screen } from "@testing-library/vue";
-import userEvent from "@testing-library/user-event";
+
+const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	mockRoute: vi.fn(),
+	mockNavigateTo: vi.fn(),
+}));
 
 describe("Heat source details", async () => {
 	const smallHeatPump: Partial<DomesticHotWaterHeatSourceData> = {
@@ -38,15 +44,13 @@ describe("Heat source details", async () => {
 		boilerLocation: "unknown",
 	};
 
+	let store: ReturnType<typeof useEcaasStore>;
 
-	const store = useEcaasStore();
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
 	const user = userEvent.setup();
-
-	const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
-		mockFetch: vi.fn(),
-		mockRoute: vi.fn(),
-		mockNavigateTo: vi.fn(),
-	}));
 
 	mockNuxtImport("useFetch", () => mockFetch);
 	mockNuxtImport("useRoute", () => mockRoute);

@@ -1,9 +1,9 @@
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
-import PipeworkForm from "./index.vue";
+import { screen } from "@testing-library/vue";
 import type { EcaasForm, PipeworkData } from "~/stores/ecaasStore.schema";
 import { litre } from "~/utils/units/volume";
+import PipeworkForm from "./index.vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -35,6 +35,7 @@ const preheatedWaterCylinder: EcaasForm<PreheatedWaterStorageData> = {
 		storageCylinderVolume: unitValue(5, litre),
 		dailyEnergyLoss: 1,
 		heaterPosition: 0.8,
+		thermostatPosition: 0.5,
 		coldWaterSource: "mainsWater",
 		heatSourceId: "d9d03976-0827-4c3c-997e-ee63b340e5c5",
 	},
@@ -70,13 +71,7 @@ const pipework2: EcaasForm<PipeworkData> = {
 	},
 };
 
-const store = useEcaasStore();
 const user = userEvent.setup();
-
-afterEach(() => {
-	store.$reset();
-});
-
 
 const populateValidForm = async (pipework: EcaasForm<PipeworkData>) => {
 	await user.type(screen.getByTestId("name"), pipework.data.name);
@@ -92,6 +87,15 @@ const populateValidForm = async (pipework: EcaasForm<PipeworkData>) => {
 };
 
 describe("Pipework form", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
 
 	test("data is saved to store state when form is valid", async () => {
 		store.$patch({
@@ -219,6 +223,16 @@ describe("Pipework form", () => {
 });
 
 describe("partially saving data", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	test("form data is automatically saved to store", async () => {
 
 		await renderSuspended(PipeworkForm, {
@@ -300,7 +314,6 @@ describe("partially saving data", () => {
 	});
 
 	test("updated form data is automatically saved to the correct store object when there are multiple pipeworks added", async () => {
-		const store = useEcaasStore();
 		const user = userEvent.setup();
 
 		store.$patch({

@@ -1,8 +1,8 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
-import ExternalWall from "./[wall].vue";
 import { v4 as uuidv4 } from "uuid";
+import ExternalWall from "./[wall].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -12,7 +12,12 @@ mockNuxtImport("navigateTo", () => {
 vi.mock("uuid");
 
 describe("external wall", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const state: ExternalWallData = {

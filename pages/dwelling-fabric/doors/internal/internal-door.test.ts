@@ -8,8 +8,17 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+vi.mock("~/composables/banner", () => ({
+	useBanner: () => ref({ type: "update-front-door" }),
+}));
+
 describe("internal door", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const internalWall: InternalWallData = {
@@ -473,10 +482,7 @@ describe("internal door", () => {
 		});
 
 		test("displays banner when banner is set to 'update-front-door", async () => {
-
-			vi.mock("~/composables/banner", () => ({
-				useBanner: () => ref({ type: "update-front-door" }),
-			}));
+			// mock declaration is moved to top of file
 
 			await renderSuspended(InternalDoor, {
 				route: {

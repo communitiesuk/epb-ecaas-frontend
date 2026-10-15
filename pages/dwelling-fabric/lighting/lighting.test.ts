@@ -1,8 +1,8 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import { screen } from "@testing-library/vue";
-import Lighting from "./index.vue";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
+import Lighting from "./index.vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -16,14 +16,15 @@ const state: DwellingSpaceLightingData = {
 	efficacy: 120,
 };
 
-const store = useEcaasStore();
 const user = userEvent.setup();
 
-beforeEach(() => {
-	store.$reset();
-});
-
 describe("lighting", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+		store.$reset();
+	});
 
 	test("bulb can be removed from lighting list", async () => {
 		store.$patch({

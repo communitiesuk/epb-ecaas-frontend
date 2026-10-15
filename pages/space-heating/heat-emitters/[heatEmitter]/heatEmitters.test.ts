@@ -70,7 +70,12 @@ const electricStorageHeater: HeatEmittingData = {
 
 describe("Heat emitters", () => {
 	const user = userEvent.setup();
-	const store = useEcaasStore();
+	
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	const radiatorProduct: Partial<DisplayProduct> = {
 		id: "1000",
@@ -1910,12 +1915,6 @@ describe("Heat emitters", () => {
 	});
 
 	describe("Default names", () => {
-		const store = useEcaasStore();
-
-		beforeEach(() => {
-			store.$reset();
-		});
-
 		it.each([
 			["wetDistributionSystem", "Wet distribution"],
 			["warmAirHeater", "Warm air heater"],
@@ -2359,10 +2358,10 @@ describe("Heat emitters", () => {
 			expect(error).toBeDefined();
 			expect(error.textContent).toContain("Design flow temperature must be no more than 120");
 		});
+
 		test("designFlowTemp boundaries are inclusive", async () => {
 			const UPPER_BOUND_FLOW_TEMP = 120;
 			const LOWER_BOUND_FLOW_TEMP = 20;
-			const store = useEcaasStore();
 			const wetDistribution: HeatEmittingData = {
 				id: "1234",
 				name: "Radiator 1",
@@ -2482,9 +2481,9 @@ describe("Heat emitters", () => {
 			expect(store.spaceHeating.heatEmitters.complete).toBe(false);
 		});
 	});
+	
 	describe("Autoselect first heat source", () => {
 		test("first heat source is autoselected when only one heat source exists", async () => {
-			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
 					heatSource: {

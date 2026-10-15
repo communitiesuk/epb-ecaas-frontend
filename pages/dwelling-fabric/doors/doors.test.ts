@@ -8,10 +8,16 @@ import UnglazedDoorForm from "./external-unglazed/[door].vue";
 import Doors from "./index.vue";
 import internalDoorForm from "./internal/[door].vue";
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("doors", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;

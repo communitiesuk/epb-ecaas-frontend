@@ -13,7 +13,16 @@ mockNuxtImport("navigateTo", () => {
 });
 
 describe("floor above unheated basement", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+	
 	const user = userEvent.setup();
 
 	const floorAboveUnheatedBasement: FloorAboveUnheatedBasementData = {

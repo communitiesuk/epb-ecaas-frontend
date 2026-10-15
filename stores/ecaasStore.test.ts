@@ -6,12 +6,14 @@ import formStatus from "~/constants/formStatus";
 import pagesData from "~/data/pages/pages";
 import MechanicalOverview from "~/pages/infiltration-and-ventilation/mechanical-ventilation/index.vue";
 
-const store = useEcaasStore();
-
 describe("Ecaas Store", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
 	beforeEach(() => {
+		store = useEcaasStore();	
 		setActivePinia(createPinia());
 	});
+
 	afterEach(() => {
 		store.$reset();
 	});
@@ -377,7 +379,16 @@ describe("extractPitch", () => {
 });
 
 describe("postEcaasState", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();	
+		setActivePinia(createPinia());
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
 
 	it("should post ecaas state to session endpoint", async () => {
 		global.$fetch = vi.fn() as unknown as typeof global.$fetch;
@@ -402,6 +413,17 @@ describe("postEcaasState", () => {
 });
 
 describe("hasCompleteState function", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();	
+		setActivePinia(createPinia());
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	it("returns false when given an empty state", async () => {
 		const result = hasCompleteState(store);
 

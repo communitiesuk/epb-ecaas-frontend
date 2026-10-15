@@ -7,10 +7,16 @@ import { millimetresSquare } from "~/utils/units/area.js";
 import WindowsForm from "./[window].vue";
 import Windows from "./index.vue";
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("windows", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;

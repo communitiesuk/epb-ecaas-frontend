@@ -150,7 +150,7 @@ const ventSummary: SummarySection = {
 
 		return {
 			"Name": x.name,
-			"Effective ventilation area": dim(x.effectiveVentilationArea, "centimetres square"),
+			"Effective ventilation area": dim(x.effectiveVentilationArea, "millimetres square"),
 			"Mid height of zone": dim(x.midHeightOfZone, "metres"),
 			"Associated wall or window": associatedItemName,
 			"Orientation": orientation !== undefined ? dim(orientation, "degrees") : emptyValueRendering,

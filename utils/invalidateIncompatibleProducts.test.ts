@@ -9,7 +9,11 @@ const { mockFetch } = vi.hoisted(() => ({
 mockNuxtImport("useFetch", () => mockFetch);
 
 describe("invalidateIncompatibleProducts", async () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	beforeEach(() => {
 		mockFetch.mockReturnValue({

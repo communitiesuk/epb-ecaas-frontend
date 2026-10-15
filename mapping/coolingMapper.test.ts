@@ -1,9 +1,13 @@
-import type { FhsInputSchema } from "./fhsInputMapper";
 import { mapSpaceCoolSystems } from "./coolingMapper";
+import type { FhsInputSchema } from "./fhsInputMapper";
 
 
 describe("cooling systems mapper", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	afterEach(() => {
 		store.$reset();

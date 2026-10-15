@@ -11,7 +11,12 @@ mockNuxtImport("navigateTo", () => {
 });
 
 describe("vent", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	afterEach(() => {

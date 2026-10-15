@@ -16,8 +16,12 @@ mockNuxtImport("navigateTo", () => {
 });
 
 describe("space heating", () => {
+	let store: ReturnType<typeof useEcaasStore>;
 
-	const store = useEcaasStore();
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
 	const user = userEvent.setup();
 
 	afterEach(() => {

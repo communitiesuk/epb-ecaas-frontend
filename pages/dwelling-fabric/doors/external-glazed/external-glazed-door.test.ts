@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from "uuid";
 import ExternalGlazedDoor from "./[door].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
-const store = useEcaasStore();
 const user = userEvent.setup();
 
 mockNuxtImport("navigateTo", () => {
@@ -14,10 +13,9 @@ mockNuxtImport("navigateTo", () => {
 
 vi.mock("uuid");
 
-afterEach(() => {
-	store.$reset();
-	navigateToMock.mockReset();
-});
+vi.mock("~/composables/banner", () => ({
+	useBanner: () => ref({ type: "update-front-door" }),
+}));
 
 const externalWall: ExternalWallData = {
 	id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
@@ -91,6 +89,17 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 };
 
 describe("external glazed door", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+		navigateToMock.mockReset();
+	});
+
 	const state: EcaasForm<ExternalGlazedDoorData> = {
 		data: doorForState,
 	};
@@ -287,6 +296,7 @@ describe("external glazed door", () => {
 
 		test("data is saved to store state when form is valid", async () => {
 			vi.mocked(uuidv4).mockReturnValue("mock-uuid" as unknown as Buffer);
+
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { externalGlazed: "create" },
@@ -699,11 +709,6 @@ describe("external glazed door", () => {
 		});
 
 		test("displays banner when banner type is set to 'update-front-door", async () => {
-
-			vi.mock("~/composables/banner", () => ({
-				useBanner: () => ref({ type: "update-front-door" }),
-			}));
-
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
 					params: { door: "create" },

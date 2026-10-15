@@ -1,10 +1,10 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
-import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
-import Outputs from "./outputs.vue";
-import type { SchemaFhsComplianceResponse, SchemaFhsEnergyPerformanceValue } from "~/schema/api-schema.types";
-import type { CorrectedFhsDeliveredEnergyUse } from "~/components/result/DeliveredEnergyUseTab.vue";
+import { screen } from "@testing-library/vue";
 import type { Simplify } from "type-fest";
+import type { CorrectedFhsDeliveredEnergyUse } from "~/components/result/DeliveredEnergyUseTab.vue";
+import type { SchemaFhsComplianceResponse, SchemaFhsEnergyPerformanceValue } from "~/schema/api-schema.types";
+import Outputs from "./outputs.vue";
 
 // overrides because never types are currently generated from the OpenAPI erroneously
 type CorrectedFhsComplianceResponse = Simplify<Omit<SchemaFhsComplianceResponse, "delivered_energy_use" | "energy_use_by_fuel"> & {
@@ -135,10 +135,12 @@ const errors: CorrectedJsonApiError[] = [
 ];
 
 describe("show good response in result tabs", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
 	const user = userEvent.setup();
 
 	beforeEach(() => {
+		store = useEcaasStore();
 		store.$patch({ lastResult: {
 			// using any as escape clause only while never types are being generated from OpenAPI
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -225,9 +227,10 @@ describe("show good response in result tabs", () => {
 });
 
 describe("show error in result tabs", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
 
 	beforeEach(() => {
+		store = useEcaasStore();
 		store.$patch({ lastResult: {
 			errors,
 			resultType: "err",
@@ -257,9 +260,10 @@ describe("show error in result tabs", () => {
 });
 
 describe("shows a message if there is no result but a user has ended up here", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
 
 	beforeEach(() => {
+		store = useEcaasStore();
 		store.$patch({ lastResult: undefined });
 	});
 

@@ -1,9 +1,9 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import HotWaterOutlets from "./index.vue";
 import { v4 as uuidv4 } from "uuid";
 import type { Product } from "~/pcdb/pcdb.types.js";
+import HotWaterOutlets from "./index.vue";
 
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
@@ -16,7 +16,12 @@ mockNuxtImport("navigateTo", () => navigateToMock);
 vi.mock("uuid");
 
 describe("hot water outlets", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const wwhrs: EcaasForm<WwhrsData> = {

@@ -196,9 +196,10 @@ const airPermeabilityData: AirPermeabilityData = {
 };
 
 describe("Infiltration and ventilation summary", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
 
 	beforeEach(() => {
+		store = useEcaasStore();
 		mockFetch.mockReset();
 		mockBatchFetchProducts(mockFetch, "Vent Product");
 	});

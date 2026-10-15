@@ -1,20 +1,27 @@
-import { renderSuspended, mockNuxtImport } from "@nuxt/test-utils/runtime";
-import Products from "./index.vue";
-import { screen } from "@testing-library/vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import type { BoilerProduct, DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import Products from "./index.vue";
+
+const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	mockRoute: vi.fn(),
+	mockNavigateTo: vi.fn(),
+}));
 
 describe("Heat source products page", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
+	let store: ReturnType<typeof useEcaasStore>;
 
-	const { mockFetch, mockRoute } = vi.hoisted(() => ({
-		mockFetch: vi.fn(),
-		mockRoute: vi.fn(),
-	}));
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
+	const user = userEvent.setup();
 
 	mockNuxtImport("useFetch", () => mockFetch);
 	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	const MOCKED_HEAT_PUMPS: PaginatedResult<DisplayProduct> = {
 		data: [
@@ -121,6 +128,7 @@ describe("Heat source products page", () => {
 
 		mockFetch.mockReset();
 		mockRoute.mockReset();
+		mockNavigateTo.mockReset();
 	});
 
 	test("title dependant on the type of heat source", async () => {
