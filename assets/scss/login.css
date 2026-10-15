@@ -43,13 +43,8 @@
     background: #F3F2F1 !important;
     border: 4px solid #D4351C !important;
     color: #D4351C !important;
-    font-size: 0 !important;
+    font-size: 16px !important;
 }
-
-/* .errorMessage-customizable::before {
-    content: "Incorrect username or password";
-    font-size: 16px;
-} */
 
 .inputField-customizable {
     height: 50px !important;
