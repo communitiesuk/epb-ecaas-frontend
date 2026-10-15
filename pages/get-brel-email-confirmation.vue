@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import dayjs from "dayjs";
+import { obfuscateEmail } from "~/utils/obfuscateEmail";
 
 definePageMeta({ layout: false });
 
 const title = "Get BREL Report";
 
-// TODO will need to dynamically add assessor email here with ***
-const email = "ch***@homes.co.uk";
+// TODO will need to dynamically add assessor email here
+const assessorEmail = "joe.bloggs@homes.co.uk";
+const email = obfuscateEmail(assessorEmail);
+
 </script>
 
 <template>
