@@ -46,10 +46,10 @@
     font-size: 0 !important;
 }
 
-.errorMessage-customizable::before {
+/* .errorMessage-customizable::before {
     content: "Incorrect username or password";
     font-size: 16px;
-}
+} */
 
 .inputField-customizable {
     height: 50px !important;
