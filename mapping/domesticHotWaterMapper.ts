@@ -3,7 +3,7 @@ import { useColdWaterSource } from "~/composables/coldWaterSource";
 import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaHeatSourceWetDetails, SchemaOtherWaterUseDetails, SchemaStorageTank, SchemaWaterPipework, SchemaWWHRS } from "~/schema/aliases";
 import type { SchemaHeaderTankOrMainsWater, SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
 import type { ColdWaterSourceType, WaterStorageData } from "~/stores/ecaasStore.schema";
-import { defaultElectricityEnergySupplyName } from "./common";
+import { defaultElectricityEnergySupplyName, toOrientation360 } from "./common";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 export const defaultColdWaterSourceData: SchemaHeaderTankOrMainsWater = {
@@ -347,7 +347,7 @@ function mapWaterStorageHeatSource(
 					power_pump_control: actualHeatSource.powerOfCollectorPumpController.amount,
 					EnergySupply: defaultElectricityEnergySupplyName,
 					tilt: actualHeatSource.pitch,
-					orientation360: actualHeatSource.orientation,
+					orientation360: toOrientation360(actualHeatSource.orientation),
 					solar_loop_piping_hlc: actualHeatSource.heatLossCoefficientOfSolarLoopPipe,
 					...commonWSHeatSourceProps,
 				} as const satisfies WaterStorageHeatSource,

@@ -1,7 +1,7 @@
 import { objectFromEntries } from "ts-extras";
 import type { SchemaWindowShadingObject } from "~/schema/aliases";
 import type { SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
-import { defaultElectricityEnergySupplyName } from "./common";
+import { defaultElectricityEnergySupplyName, toOrientation360 } from "./common";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 export function mapPvAndElectricBatteriesData(state: ResolvedState): [
@@ -33,7 +33,7 @@ export function mapPvData(state: ResolvedState): Pick<FhsInputSchema, "OnSiteGen
 					inverter_peak_power_ac: inverterPeakPowerAC,
 					inverter_peak_power_dc: inverterPeakPowerDC,
 					inverter_type: inverterType,
-					orientation360: orientation,
+					orientation360: toOrientation360(orientation),
 					peak_power: peakPower,
 					pitch,
 					shading: array.hasShading ? mapPvShadingData(array.shading) : [],

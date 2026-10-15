@@ -3,7 +3,7 @@ import { arrayIncludes } from "ts-extras";
 import type { BuildingElementGroundForSchema, BuildingElementPartyWallForSchema, SchemaBuildingElement, SchemaEdgeInsulation, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaWindowShadingObject, SchemaWindowShadingType, SchemaZoneInput } from "~/schema/aliases";
 import type { TypeOfShading } from "~/stores/ecaasStore.schema";
 import { asMetres, type Length } from "../utils/units/length";
-import { defaultZoneName } from "./common";
+import { defaultZoneName, toOrientation360 } from "./common";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 
@@ -411,7 +411,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				is_external_door: false,
 				is_unheated_pitched_roof: false, // this may need to be limited to opaque elements with a pitch <= 60
 				// orientation360 is not specified if pitch is 0 or 180
-				...((pitch !== 0 && pitch !== 180) ? { orientation360: x.orientation } : {}),
+				...((pitch !== 0 && pitch !== 180) ? { orientation360: toOrientation360(x.orientation) } : {}),
 			},
 		};
 	}) || [];
@@ -538,7 +538,7 @@ export function mapRoofData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				is_external_door: false,
 				is_unheated_pitched_roof: x.typeOfRoof === "pitchedInsulatedAtCeiling",
 				// orientation360 is not specified if pitch is 0 or 180
-				...((pitch !== 0 && pitch !== 180) ? { orientation360: x.orientation ?? 0 } : {}),
+				...((pitch !== 0 && pitch !== 180) ? { orientation360: toOrientation360(x.orientation ?? 0) } : {}),
 			},
 		};
 	});
@@ -642,7 +642,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		const glazedDoor = {
 			type: "BuildingElementTransparent",
 			pitch: associatedWallRoof?.pitch ?? extractPitch(x),
-			orientation360: associatedWallRoof?.orientation ?? x.orientation,
+			orientation360: toOrientation360(associatedWallRoof?.orientation ?? x.orientation),
 			height: x.height,
 			width: x.width,
 			base_height: x.elevationalHeight,
@@ -698,7 +698,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				area: x.height * x.width, // this may be removed from the FHS schema shortly (though you could have e.g. arch shaped doors with a different area?)
 				u_value: x.uValue,
 				// orientation360 is not specified if pitch is 0 or 180
-				...((pitch !== 0 && pitch !== 180) ? { orientation360: associatedWallRoof?.orientation ?? x.orientation } : {}),
+				...((pitch !== 0 && pitch !== 180) ? { orientation360: toOrientation360(associatedWallRoof?.orientation ?? x.orientation) } : {}),
 			},
 		};
 	});
@@ -755,7 +755,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			[nameWithSuffix]: {
 				type: "BuildingElementTransparent",
 				pitch,
-				orientation360: orientation,
+				orientation360: toOrientation360(orientation),
 				height: x.height,
 				width: x.width,
 				base_height: x.elevationalHeight,

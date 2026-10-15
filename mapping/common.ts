@@ -11,6 +11,16 @@ export const defaultElectricityEnergySupplyName = "mains elec";
 export const minOutdoorTemp = 0;
 export const maxOutdoorTemp = 15;
 
+/**
+ * The FHS schema requires orientation360 to be an integer (0-360), but orientations
+ * captured in the UI may be decimals, so round to the nearest whole degree.
+ */
+export function toOrientation360(orientation: number): number;
+export function toOrientation360(orientation: number | undefined): number | undefined;
+export function toOrientation360(orientation: number | undefined): number | undefined {
+	return orientation === undefined ? undefined : Math.round(orientation);
+}
+
 export const defaultHeatSourceWetDetails = {
 	type: "HeatPump",
 	EnergySupply: defaultElectricityEnergySupplyName,

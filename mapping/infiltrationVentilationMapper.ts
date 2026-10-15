@@ -3,7 +3,7 @@ import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation, Schema
 import type { SchemaMechVentCommon } from "~/schema/api-schema.types";
 import { asCentimetresSquare } from "~/utils/units/area";
 import { asCubicMetresPerHour } from "~/utils/units/flowRate";
-import { defaultElectricityEnergySupplyName } from "./common";
+import { defaultElectricityEnergySupplyName, toOrientation360 } from "./common";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
@@ -85,12 +85,12 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					ductwork: mapMvhrDuctworkData(x.name, state),
 					position_exhaust: {
 						mid_height_air_flow_path: x.midHeightOfAirFlowPathForExhaust,
-						orientation360: exhaustAssociatedItem?.orientation ?? x.orientationOfExhaust,
+						orientation360: toOrientation360(exhaustAssociatedItem?.orientation ?? x.orientationOfExhaust),
 						pitch: exhaustAssociatedItem?.pitch ?? x.pitchOfExhaust,
 					},
 					position_intake: {
 						mid_height_air_flow_path: x.midHeightOfAirFlowPathForIntake,
-						orientation360: intakeAssociatedItem?.orientation ?? x.orientationOfIntake,
+						orientation360: toOrientation360(intakeAssociatedItem?.orientation ?? x.orientationOfIntake),
 						pitch: intakeAssociatedItem?.pitch ?? x.pitchOfIntake,
 					},
 					installed_under_approved_scheme: x.installedUnderApprovedScheme,
@@ -110,7 +110,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					product_reference: x.productReference,
 					mid_height_air_flow_path: x.midHeightOfAirFlowPath,
 					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
-					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
+					orientation360: toOrientation360(x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation),
 					...(x.measuredFanPowerAndAirFlowRateKnown ? {
 						measured_air_flow_rate: x.measuredAirFlowRate,
 						measured_fan_power: x.measuredFanPower,
@@ -124,7 +124,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					SFP: x.specificFanPower,
 					mid_height_air_flow_path: x.midHeightOfAirFlowPath,
 					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
-					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
+					orientation360: toOrientation360(x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation),
 				} as const satisfies SchemaMechanicalVentilation;
 				break;
 			case "Decentralised continuous MEV":
@@ -137,7 +137,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					product_reference: x.productReference,
 					mid_height_air_flow_path: x.midHeightOfAirFlowPath,
 					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
-					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
+					orientation360: toOrientation360(x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation),
 				} as const satisfies SchemaMechanicalVentilation;
 				break;
 			default:
@@ -199,7 +199,7 @@ export function mapVentsData(state: ResolvedState) {
 		const val: SchemaVent = {
 			area_cm2: asCentimetresSquare(x.effectiveVentilationArea),
 			mid_height_air_flow_path: x.midHeightOfZone,
-			orientation360: ventOrientation,
+			orientation360: toOrientation360(ventOrientation),
 			pitch,
 		};
 
