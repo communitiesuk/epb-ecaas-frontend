@@ -1,11 +1,11 @@
 .banner-customizable {
     height: 90px;
     padding-top: 20px;
-    background-color: #006FC5;
+    background-color: #006FC5 !important;
 }
 
 .logo-customizable {
-    width: 190px
+    width: 190px;
 }
 
 .label-customizable {
@@ -14,11 +14,11 @@
 }
 
 .textDescription-customizable {
-    display: none;
+    display: none !important;
 }
 
 .submitButton-customizable {
-    background: #00703C;
+    background: #00703C !important;
     width: 100%;
     margin-top: 15px;
     height: 40px;
@@ -27,26 +27,26 @@
 }
 
 .submitButton-customizable:hover {
-    background-color: #005A30;
+    background-color: #005A30 !important;
 }
 
 .errorMessage-customizable {
-    padding: 7px;
-    background: #F3F2F1;
-    border: 4px solid #D4351C;
-    color: #D4351C;
-    font-size: 16px;
+    padding: 7px !important;
+    background: #F3F2F1 !important;
+    border: 4px solid #D4351C !important;
+    color: #D4351C !important;
+    font-size: 16px !important;
 }
 
 .inputField-customizable {
-    height: 50px;
-    color: #505A5F;
-    border: 2px solid #0B0C0C;
+    height: 50px !important;
+    color: #505A5F !important;
+    border: 2px solid #0B0C0C !important;
     margin-bottom: 15px;
     font-size: 16px;
 }
 
 .inputField-customizable:focus {
-    border-color: #0B0C0C;
-    outline: 4px solid;
+    border-color: #0B0C0C !important;
+    outline: 4px solid !important;
 }
