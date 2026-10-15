@@ -5,7 +5,8 @@
 }
 
 .logo-customizable {
-    width: 190px;
+    max-width: 40%;
+    max-height: 40%;
 }
 
 .label-customizable {
