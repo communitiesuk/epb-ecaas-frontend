@@ -6,9 +6,11 @@ import type { Product, AnyPcdbProduct } from "~/pcdb/pcdb.types";
 import { celsius } from "~/utils/units/temperature";
 import { greaterThanZero } from "~/utils/validation";
 import { useHeatSources } from "~/composables/heatSources";
+import type { ErrorName } from "~/errors.types";
 
 const title = "Heat source";
 const store = useEcaasStore();
+const route = useRoute();
 const { heatSources: dhwHeatSources } = store.domesticHotWater;
 
 const { getStoreIndex, handleAutoSaveElementForm } = useForm();
@@ -413,6 +415,20 @@ const allBoilers = useAssociatedItems(["boiler"]);
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<GovErrorSummary
+		v-if="(route.query.error as ErrorName) === 'DHW_HEAT_SOURCE_CONFLICT'"
+		:error-list="[
+			{
+				id: 'heatSourceConflictError',
+				text: `
+					There is another heat source that has a hot water cylinder attached as a packaged product.
+					You cannot add another heat source with a hot water cylinder attached as you cannot have multiple
+					hot water heat sources or multiple hot water storage units.`,
+			}
+		]"
+		:use-links="false"
+		test-id="heatSourceConflictError"
+	/>
 	<PackagedProductInset
 		v-if="hasPackagedProduct(model) && packagedProduct"
 		:model="model"
