@@ -23,7 +23,7 @@ describe("Get BREL Report email confirmation page", () => {
 
 		expect(
 			screen.getByText(
-				"The BREL Report will be sent to ch***@homes.co.uk in the next 5 minutes",
+				"The BREL Report will be sent to jo********@homes.co.uk in the next 5 minutes",
 			),
 		).toBeDefined();
 	});

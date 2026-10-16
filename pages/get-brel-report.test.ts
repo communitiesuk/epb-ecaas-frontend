@@ -39,8 +39,8 @@ describe("Get BREL Report", () => {
 		await user.type(screen.getByLabelText(/client organisation/i), "Example Ltd");
 		await user.type(screen.getByLabelText(/client address/i), "1 Example Street");
 
-		await user.type(screen.getByLabelText(/assessor name/i), "Alex Jones");
-		await user.type(screen.getByLabelText(/assessor id/i), "123456");
+		await user.type(screen.getByLabelText(/assessor name/i), "Test Assessor");
+		await user.type(screen.getByLabelText(/assessor id/i), "TEST123");
 
 		await user.click(
 			screen.getByRole("checkbox", {
