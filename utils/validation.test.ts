@@ -1,4 +1,4 @@
-import type { FormKitFrameworkContext } from "@formkit/core";
+import { createNode, type FormKitFrameworkContext } from "@formkit/core";
 
 describe("Show error state", () => {
 	it("returns true when state is invalid", () => {
@@ -152,7 +152,7 @@ describe("Get error message", () => {
 
 describe("Is integer", () => {
 	const makeNode = (value: string | number | null | undefined): FormKitNode =>
-		(({ value }));
+		createNode({ value });
 
 	it("returns true for integer numbers", () => {
 		expect(isInteger(makeNode(0))).toBe(true);
