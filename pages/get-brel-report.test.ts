@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, waitFor } from "@testing-library/vue";
 import GetBrelReport from "./get-brel-report.vue";
 
 const { navigateToMock } = vi.hoisted(() => ({
@@ -17,6 +17,23 @@ describe("Get BREL Report", () => {
 		navigateToMock.mockReset();
 	});
 
+	const populateForm = async () => {
+		await user.click(screen.getByRole("radio", { name: "Design" }));
+
+		await user.type(screen.getByLabelText(/plot reference/i), "Plot 123");
+		await user.type(screen.getByLabelText(/site reference/i), "Site 456");
+
+		await user.type(screen.getByLabelText(/client name/i), "Jane Smith");
+		await user.type(screen.getByLabelText(/client organisation/i), "Example Ltd");
+		await user.type(screen.getByLabelText(/client address/i), "1 Example Street");
+
+		await user.click(
+			screen.getByRole("checkbox", {
+				name: /i confirm that this is my name and assessor credentials/i,
+			}),
+		);
+	};
+
 	it("displays get BREL report form correctly", async () => {
 		await renderSuspended(GetBrelReport);
 	
@@ -30,27 +47,16 @@ describe("Get BREL Report", () => {
 
 		await renderSuspended(GetBrelReport);
 		
-		await user.click(screen.getByRole("radio", { name: "Design" }));
-
-		await user.type(screen.getByLabelText(/plot reference/i), "Plot 123");
-		await user.type(screen.getByLabelText(/site reference/i), "Site 456");
-
-		await user.type(screen.getByLabelText(/client name/i), "Jane Smith");
-		await user.type(screen.getByLabelText(/client organisation/i), "Example Ltd");
-		await user.type(screen.getByLabelText(/client address/i), "1 Example Street");
+		await populateForm();
 
 		await user.type(screen.getByLabelText(/assessor name/i), "Test Assessor");
 		await user.type(screen.getByLabelText(/assessor id/i), "TEST123");
 
-		await user.click(
-			screen.getByRole("checkbox", {
-				name: /i confirm that this is my name and assessor credentials/i,
-			}),
-		);
-
 		await user.click(screen.getByTestId("getBrelReport"));
 		
-		expect(navigateToMock).toHaveBeenCalledWith("/get-brel-email-confirmation");
+		await waitFor(() => {
+			expect(navigateToMock).toHaveBeenCalledWith("/get-brel-email-confirmation");
+		});
 	});
 
 	it("does not show dwelling address for a design report", async () => {
@@ -90,5 +96,179 @@ describe("Get BREL Report", () => {
 		await user.click(screen.getByTestId("getBrelReport"));
 		
 		expect((await screen.findByTestId("getBrelReportErrorSummary"))).toBeDefined();
+	});
+
+	describe("Error Handling for Check Registered Assessor", () => {
+		test("error summary shows invalid assesssor details error when invalid assessor name and id are submitted", async () => {
+			await renderSuspended(GetBrelReport);
+
+			await populateForm();
+
+			await user.type(screen.getByLabelText(/assessor name/i), "Invalid Assessor");
+			await user.type(screen.getByLabelText(/assessor id/i), "INVALID123");
+			
+		
+			await user.click(screen.getByTestId("getBrelReport"));
+
+			const errorSummary = screen.findByTestId("getBrelReportErrorSummary");
+		
+			expect((await errorSummary).textContent).toContain("The assessor name and ID provided don't match our records. You cannot download a BREL report without supplying accurate assessor details.");
+		});
+
+		test("invalid assessor details error is not duplicated in the error summary", async () => {
+			await renderSuspended(GetBrelReport);
+
+			await populateForm();
+
+			await user.type(
+				screen.getByLabelText(/assessor name/i),
+				"Invalid Assessor",
+			);
+			await user.type(
+				screen.getByLabelText(/assessor id/i),
+				"INVALID123",
+			);
+
+			await user.click(screen.getByTestId("getBrelReport"));
+
+			const errorSummary = await screen.findByTestId(
+				"getBrelReportErrorSummary",
+			);
+
+			const errorMessage =
+		"The assessor name and ID provided don't match our records. You cannot download a BREL report without supplying accurate assessor details.";
+
+			const occurrences = errorSummary.textContent
+				?.split(errorMessage).length - 1;
+
+			expect(occurrences).toBe(1);
+		});
+
+		test("error summary shows invalid assesssor details error when an invalid assessor name and a valid assessor id is submitted", async () => {
+			await renderSuspended(GetBrelReport);
+
+			await populateForm();
+
+			await user.type(screen.getByLabelText(/assessor name/i), "Invalid Assessor");
+			await user.type(screen.getByLabelText(/assessor id/i), "TEST123");
+			
+		
+			await user.click(screen.getByTestId("getBrelReport"));
+
+			const errorSummary = screen.findByTestId("getBrelReportErrorSummary");
+		
+			expect((await errorSummary).textContent).toContain("The assessor name and ID provided don't match our records. You cannot download a BREL report without supplying accurate assessor details.");
+		});
+
+		test("error summary shows invalid assesssor details error when an valid assessor name and an invalid assessor id is submitted", async () => {
+			await renderSuspended(GetBrelReport);
+
+			await populateForm();
+
+			await user.type(screen.getByLabelText(/assessor name/i), "Test Assessor");
+			await user.type(screen.getByLabelText(/assessor id/i), "INVALID123");
+			
+		
+			await user.click(screen.getByTestId("getBrelReport"));
+
+			const errorSummary = screen.findByTestId("getBrelReportErrorSummary");
+		
+			expect((await errorSummary).textContent).toContain("The assessor name and ID provided don't match our records. You cannot download a BREL report without supplying accurate assessor details.");
+		});
+
+		test("error summary does not show invalid assesssor details error when an valid assessor name and id are submitted", async () => {
+			await renderSuspended(GetBrelReport);
+
+			await populateForm();
+
+			await user.type(screen.getByLabelText(/assessor name/i), "Test Assessor");
+			await user.type(screen.getByLabelText(/assessor id/i), "TEST123");
+			
+		
+			await user.click(screen.getByTestId("getBrelReport"));
+
+			expect(screen.queryByTestId("getBrelReportErrorSummary")).toBeNull();
+		});
+
+		test("invalid assessor details error shows in assessor name field when invalid assessor name given", async () => {
+			await renderSuspended(GetBrelReport);
+
+			await populateForm();
+
+			await user.type(screen.getByLabelText(/assessor name/i), "Invalid Assessor");
+			await user.type(screen.getByLabelText(/assessor id/i), "TEST123");
+			
+		
+			await user.click(screen.getByTestId("getBrelReport"));
+
+			const error = await screen.findByTestId("assessorName_error");
+			expect(error).toBeDefined();
+			expect(error.textContent).toContain(
+				"The assessor name and ID provided don't match our records. You cannot download a BREL report without supplying accurate assessor details.",
+			);
+		});
+
+		test("invalid assessor details error shows in assessor id field when invalid assessor id given", async () => {
+			await renderSuspended(GetBrelReport);
+
+			await populateForm();
+
+			await user.type(screen.getByLabelText(/assessor name/i), "Test Assessor");
+			await user.type(screen.getByLabelText(/assessor id/i), "INVALID123");
+			
+		
+			await user.click(screen.getByTestId("getBrelReport"));
+
+			const error = await screen.findByTestId("assessorId_error");
+			expect(error).toBeDefined();
+			expect(error.textContent).toContain(
+				"The assessor name and ID provided don't match our records. You cannot download a BREL report without supplying accurate assessor details.",
+			);
+		});
+
+		test("invalid assessor details error shows in assessor name and id field when invalid assessor name and id are given", async () => {
+			await renderSuspended(GetBrelReport);
+
+			await populateForm();
+
+			await user.type(screen.getByLabelText(/assessor name/i), "Invalid Assessor");
+			await user.type(screen.getByLabelText(/assessor id/i), "INVALID123");
+
+			await user.click(screen.getByTestId("getBrelReport"));
+
+			const assessorNameError = await screen.findByTestId("assessorName_error");
+			expect(assessorNameError).toBeDefined();
+			expect(assessorNameError.textContent).toContain(
+				"The assessor name and ID provided don't match our records. You cannot download a BREL report without supplying accurate assessor details.",
+			);
+
+			const assessorIdError = await screen.findByTestId("assessorId_error");
+			expect(assessorIdError).toBeDefined();
+			expect(assessorIdError.textContent).toContain(
+				"The assessor name and ID provided don't match our records. You cannot download a BREL report without supplying accurate assessor details.",
+			);
+		});
+
+		test("invalid assessor details error does not show in assessor name or id field when valid assessor name and id are given", async () => {
+			await renderSuspended(GetBrelReport);
+
+			await populateForm();
+
+			await user.type(screen.getByLabelText(/assessor name/i), "Test Assessor");
+			await user.type(screen.getByLabelText(/assessor id/i), "TEST123");
+			
+		
+			await user.click(screen.getByTestId("getBrelReport"));
+
+			const assessorNameField = screen.getByTestId("assessorName");
+			expect(assessorNameField.textContent).not.toContain(
+				"The assessor name and ID provided don't match our records. You cannot download a BREL report without supplying accurate assessor details.",
+			);
+
+			const assessorIdField = screen.getByTestId("assessorId");
+			expect(assessorIdField.textContent).not.toContain(
+				"The assessor name and ID provided don't match our records. You cannot download a BREL report without supplying accurate assessor details.",
+			);
+		});
 	});
 });
