@@ -1,63 +1,18 @@
-import Diverters from "./index.vue";
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
+import Diverters from "./index.vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-const store = useEcaasStore();
 const user = userEvent.setup();
 
 const hotWaterCylinderId = "88ea3f45-6f2a-40e2-9117-0541bd8a97f3";
 const heatPumpId = "56ddc6ce-7a91-4263-b051-96c7216bb01e";
 const dhwHeatPumpId = "56ddc6ce-7a91-4263-b051-96c7216bb123";
-
-const addHeatPumpAndHotWaterCylinder = () => {
-	store.$patch({
-		spaceHeating: {
-			heatSource: {
-				data: [{
-					data: {
-						name: "HP1",
-						id: heatPumpId,
-						productReference: "HEATPUMP-SMALL",
-					},
-				}],
-			},
-
-		},
-		domesticHotWater: {
-			heatSources: {
-				data: [{
-					data: {
-						id: dhwHeatPumpId,
-						isExistingHeatSource: true,
-						heatSourceId: heatPumpId,
-						coldWaterSource: "mainsWater",
-					},
-				}],
-			},
-			waterStorage: {
-				data: [{
-					data: {
-						name: "HWC1",
-						id: hotWaterCylinderId,
-						storageCylinderVolume: {
-							amount: 1,
-							unit: "litres",
-						},
-						dailyEnergyLoss: 1,
-
-					},
-				}],
-			},
-		},
-		
-	});
-};
 
 const diverter1: EcaasForm<PvDiverterData> = {
 	data: {
@@ -73,10 +28,59 @@ const populateValidForm = async () => {
 };
 
 describe("Diverters", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	afterEach(() => {
 		store.$reset();
 	});
+
+	const addHeatPumpAndHotWaterCylinder = () => {
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [{
+						data: {
+							name: "HP1",
+							id: heatPumpId,
+							productReference: "HEATPUMP-SMALL",
+						},
+					}],
+				},
+
+			},
+			domesticHotWater: {
+				heatSources: {
+					data: [{
+						data: {
+							id: dhwHeatPumpId,
+							isExistingHeatSource: true,
+							heatSourceId: heatPumpId,
+							coldWaterSource: "mainsWater",
+						},
+					}],
+				},
+				waterStorage: {
+					data: [{
+						data: {
+							name: "HWC1",
+							id: hotWaterCylinderId,
+							storageCylinderVolume: {
+								amount: 1,
+								unit: "litres",
+							},
+							dailyEnergyLoss: 1,
+
+						},
+					}],
+				},
+			},
+		
+		});
+	};
 
 	test("data is saved to store state when form is valid", async () => {
 		addHeatPumpAndHotWaterCylinder();

@@ -8,7 +8,12 @@ import PartyFloor from "./[floor].vue";
 vi.mock("uuid");
 
 describe("party floor", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	const partyFloorData: PartyFloorData = {

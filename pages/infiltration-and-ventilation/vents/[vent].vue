@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
+import { millimetresSquare } from "~/utils/units/area";
 
 const title = "Vent";
 const store = useEcaasStore();
@@ -105,13 +106,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</template>
 		<FormKit
 			id="effectiveVentilationArea"
-			type="govInputWithSuffix"
+			type="govInputWithUnit"
 			label="Effective ventilation area"
 			help="Use the method outlined in BS EN 13141-1 to measure the equivalent area of background ventilator openings. This is the same as in Part F."
 			name="effectiveVentilationArea"
-			validation="required | number | min:1 | max:999999"
-			suffix-text="cm²"
-			data-field="InfiltrationVentilation.Vents.area_cm2">
+			:validation="zodTypeAsFormKitValidation(effectiveVentilationAreaZod)"
+			:unit="millimetresSquare"
+			data-field="InfiltrationVentilation.Vents.area_cm2"
+		>
 			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
@@ -128,7 +130,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 								This is a common range for modern trickle vents designed to contribute to background ventilation in
 								habitable rooms. Multiple vents per room might be needed.
 							</td>
-							<td class="govuk-table__cell">40 - 80 cm²</td>
+							<td class="govuk-table__cell">40 - 80 mm²</td>
 						</tr>
 						<tr class="govuk-table__row">
 							<td class="govuk-table__cell">Wall-mounted air brick</td>
@@ -137,7 +139,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 								the grill design and free area. Smaller air bricks might be around 50 to 100 cm², while larger ones can
 								reach 200 cm² or more. Some manufacturers might quote the free area, which would be a higher number.
 							</td>
-							<td class="govuk-table__cell">50 - 200 cm²</td>
+							<td class="govuk-table__cell">50 - 200 mm²</td>
 						</tr>
 					</tbody>
 				</table>

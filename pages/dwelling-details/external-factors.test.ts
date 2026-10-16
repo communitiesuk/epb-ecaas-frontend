@@ -1,8 +1,8 @@
-import ExternalFactors from "./external-factors.vue";
-import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import type { ExternalFactorsData } from "~/stores/ecaasStore.schema";
+import ExternalFactors from "./external-factors.vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -17,7 +17,12 @@ const state: ExternalFactorsData = {
 };
 
 describe("External factors", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	afterEach(() => {

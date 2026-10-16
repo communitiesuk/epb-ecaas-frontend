@@ -13,79 +13,65 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+const user = userEvent.setup();
+
+const groundFloor = {
+	id: "0d5b322a-8bd7-4f45-8027-ebe9f2056e70",
+	name: "Ground 1",
+	surfaceArea: 5,
+	totalArea: 7,
+	uValue: 1,
+	thermalResistance: 1,
+	arealHeatCapacity: "Very light",
+	massDistributionClass: "I",
+	perimeter: 0,
+	thicknessOfWalls: unitValue(80, millimetre),
+	typeOfGroundFloor: "Slab_no_edge_insulation",
+} as const satisfies GroundFloorData;
+
+const groundFloorWithHorizontalEdgeInsulation = {
+	...groundFloor,
+	typeOfGroundFloor: "Slab_edge_insulation",
+	edgeInsulationType: ["horizontal"] as ["horizontal"],
+	horizontalEdgeInsulationWidth: unitValue(1, metre),
+	horizontalEdgeInsulationThermalResistance: 0,
+} as const satisfies GroundFloorData;
+
+const groundFloorWithVerticalEdgeInsulation = {
+	...groundFloor,
+	typeOfGroundFloor: "Slab_edge_insulation",
+	edgeInsulationType: ["vertical"] as ["vertical"],
+	verticalEdgeInsulationDepth: unitValue(1, metre),
+	verticalEdgeInsulationThermalResistance: 0,
+} as const satisfies GroundFloorData;
+
+const groundFloorWithCombinedEdgeInsulation = {
+	...groundFloor,
+	typeOfGroundFloor: "Slab_edge_insulation",
+	edgeInsulationType: ["horizontal", "vertical"] as ["horizontal", "vertical"],
+	horizontalEdgeInsulationWidth: unitValue(1, metre),
+	horizontalEdgeInsulationThermalResistance: 0,
+	verticalEdgeInsulationDepth: unitValue(1, metre),
+	verticalEdgeInsulationThermalResistance: 0,
+} as const satisfies GroundFloorData;
+
+const groundFloorWithSuspendedFloor = {
+	...groundFloor,
+	typeOfGroundFloor: "Suspended_floor",
+	heightOfFloorUpperSurface: 0,
+	underfloorSpaceThermalResistance: 0,
+	thermalTransmittanceOfWallsAboveGround: 0,
+	ventilationOpeningsArea: 0,
+	smartAirBricks: true,
+} as const satisfies GroundFloorData;
+
+vi.mocked(uuidv4).mockReturnValue(groundFloor.id as unknown as Buffer);
+
 describe("ground floor", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
-
-	const groundFloor: GroundFloorData = {
-		id: "0d5b322a-8bd7-4f45-8027-ebe9f2056e70",
-		name: "Ground 1",
-		surfaceArea: 5,
-		totalArea: 7,
-		uValue: 1,
-		thermalResistance: 1,
-		arealHeatCapacity: "Very light",
-		massDistributionClass: "I",
-		perimeter: 0,
-		thicknessOfWalls: unitValue(80, millimetre),
-		typeOfGroundFloor: "Slab_no_edge_insulation",
-	};
-
-	const groundFloorWithHorizontalEdgeInsulation: GroundFloorData = {
-		...groundFloor,
-		typeOfGroundFloor: "Slab_edge_insulation",
-		edgeInsulationType: ["horizontal"] as ["horizontal"],
-		horizontalEdgeInsulationWidth: unitValue(1, metre),
-		horizontalEdgeInsulationThermalResistance: 0,
-	};
-
-	const groundFloorWithVerticalEdgeInsulation: GroundFloorData = {
-		...groundFloor,
-		typeOfGroundFloor: "Slab_edge_insulation",
-		edgeInsulationType: ["vertical"] as ["vertical"],
-		verticalEdgeInsulationDepth: unitValue(1, metre),
-		verticalEdgeInsulationThermalResistance: 0,
-	};
-
-	const groundFloorWithCombinedEdgeInsulation: GroundFloorData = {
-		...groundFloor,
-		typeOfGroundFloor: "Slab_edge_insulation",
-		edgeInsulationType: ["horizontal", "vertical"] as ["horizontal", "vertical"],
-		horizontalEdgeInsulationWidth: unitValue(1, metre),
-		horizontalEdgeInsulationThermalResistance: 0,
-		verticalEdgeInsulationDepth: unitValue(1, metre),
-		verticalEdgeInsulationThermalResistance: 0,
-	};
-
-	const groundFloorWithSuspendedFloor: GroundFloorData = {
-		...groundFloor,
-		typeOfGroundFloor: "Suspended_floor",
-		heightOfFloorUpperSurface: 0,
-		underfloorSpaceThermalResistance: 0,
-		thermalTransmittanceOfWallsAboveGround: 0,
-		ventilationOpeningsArea: 0,
-		smartAirBricks: true,
-	};
-
-	// const groundFloorWithHeatedBasement: GroundFloorData = {
-	// 	...groundFloor,
-	// 	typeOfGroundFloor: "Heated_basement",
-	// 	depthOfBasementFloorBelowGround: 0,
-	// 	thermalResistanceOfBasementWalls: 0
-	// };
-	//
-	// const groundFloorWithUnheatedBasement: GroundFloorData = {
-	// 	...groundFloor,
-	// 	typeOfGroundFloor: "Unheated_basement",
-	// 	thermalTransmittanceOfFloorAboveBasement: 0,
-	// 	thermalTransmittanceOfWallsAboveGround: 0,
-	//  thermalResistanceOfBasementWalls: 0,
-	// 	depthOfBasementFloorBelowGround: 0,
-	// 	heightOfBasementWallsAboveGround: 0
-	// };
+	let store: ReturnType<typeof useEcaasStore>;
 
 	beforeEach(() => {
-		vi.mocked(uuidv4).mockReturnValue(groundFloor.id as unknown as Buffer);
+		store = useEcaasStore();
 	});
 
 	afterEach(() => {

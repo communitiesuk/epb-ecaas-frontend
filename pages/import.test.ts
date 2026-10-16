@@ -1,12 +1,13 @@
-import userEvent from "@testing-library/user-event";
 import { renderSuspended } from "@nuxt/test-utils/runtime";
+import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import Import from "./import.vue";
 
 describe("import page", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
 
 	beforeEach(() => {
+		store = useEcaasStore();
 		store.$patch({
 			...getInitialState(),
 		});

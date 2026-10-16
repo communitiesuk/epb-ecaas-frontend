@@ -31,8 +31,15 @@ vi.mock(import("~/stores/ecaasStore"), async (importOriginal) => {
 
 vi.stubGlobal("$fetch", mocks.$fetch);
 
+vi.mocked(hasCompleteState).mockReturnValue(true);
+
 describe("Homepage", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	beforeEach(() => {
@@ -48,8 +55,6 @@ describe("Homepage", () => {
 	});
 
 	it("shows error summary when client error has occurred", async () => {
-		vi.mocked(hasCompleteState).mockReturnValue(true);
-
 		vi.mocked(mapFhsInputData).mockImplementation(() => {
 			throw Error("Mapping error");
 		});

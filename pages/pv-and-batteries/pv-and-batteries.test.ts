@@ -13,10 +13,16 @@ const baseForm = {
 	complete: true,
 };
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("pv systems and electric battery", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
@@ -208,8 +214,8 @@ describe("pv systems and electric battery", () => {
 			formStatus.inProgress.text,
 		);
 	});
+
 	describe("mark as complete", () => {
-		const store = useEcaasStore();
 		const user = userEvent.setup();
 
 		mockNuxtImport("navigateTo", () => navigateToMock);

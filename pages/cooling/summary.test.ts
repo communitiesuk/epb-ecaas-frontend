@@ -1,8 +1,8 @@
 
 import { renderSuspended } from "@nuxt/test-utils/runtime";
-import spaceHeatingSummary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
 import { kilowatt } from "~/utils/units/power";
+import spaceHeatingSummary from "./summary.vue";
 
 
 type ExpectedData = { [key: string]: string };
@@ -20,9 +20,10 @@ const verifyDataInSection = async (
 };
 
 describe("Cooling section", () => {
+	let store: ReturnType<typeof useEcaasStore>;
 
-	const store = useEcaasStore();
 	beforeEach(() => {
+		store = useEcaasStore();
 		store.$reset();
 	});
 

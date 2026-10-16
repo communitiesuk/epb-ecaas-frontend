@@ -70,7 +70,12 @@ const electricStorageHeater: HeatEmittingData = {
 
 describe("Heat emitters", () => {
 	const user = userEvent.setup();
-	const store = useEcaasStore();
+	
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	const radiatorProduct: Partial<DisplayProduct> = {
 		id: "1000",
@@ -1910,12 +1915,6 @@ describe("Heat emitters", () => {
 	});
 
 	describe("Default names", () => {
-		const store = useEcaasStore();
-
-		beforeEach(() => {
-			store.$reset();
-		});
-
 		it.each([
 			["wetDistributionSystem", "Wet distribution"],
 			["warmAirHeater", "Warm air heater"],
@@ -2269,89 +2268,222 @@ describe("Heat emitters", () => {
 			expect(screen.queryByTestId("heatEmitterErrorSummary")).toBeNull();
 		});
 
-		describe("partially saving data", () => {
-			it("saves updated form data to store automatically", async () => {
-				const validWetDistribtion: HeatEmittingData = {
-					id: "1234",
-					name: "Wet Distribution 1",
-					heatSource: "heat-pump-id",
-					ecoDesignControllerClass: "2",
-					designFlowTemp: 55,
-					minFlowTemp: 45,
-					maxOutdoorTemp: 33,
-					minOutdoorTemp: 2,
-					designTempDiffAcrossEmitters: 10,
-					hasVariableFlowRate: false,
-					designFlowRate: 100,
-					percentageRecirculated: 20,
-					typeOfHeatEmitter: "wetDistributionSystem",
-					emitters: [{
-						id: "emitter1",
-						name: "Radiator 1",
-						typeOfHeatEmitter: "radiator",
-						length: unitValue(1500, millimetre),
-						numOfRadiators: 2,
-						productReference: "product-ref-123",
-					}],
-				};
 
-				store.$patch({
-					spaceHeating: {
-						heatEmitters: {
-							data: [{ data: validWetDistribtion, complete: false }],
-						},
+		test("shows an error when designFlowTemp is lower than minimum 20", async () => {
+			const LOWER_THAN_MIN_FLOW_TEMP = 19;
+			const invalidWetDistribtion: HeatEmittingData = {
+				id: "1234",
+				name: "Wet Distribution 1",
+				heatSource: "heat-pump-id",
+				ecoDesignControllerClass: "2",
+				designFlowTemp: LOWER_THAN_MIN_FLOW_TEMP,
+				minFlowTemp: 45,
+				maxOutdoorTemp: 33,
+				minOutdoorTemp: 2,
+				designTempDiffAcrossEmitters: 10,
+				hasVariableFlowRate: false,
+				designFlowRate: 100,
+				percentageRecirculated: 20,
+				typeOfHeatEmitter: "wetDistributionSystem",
+				emitters: [{
+					id: "emitter1",
+					name: "Radiator 1",
+					typeOfHeatEmitter: "radiator",
+					length: unitValue(1500, millimetre),
+					numOfRadiators: 2,
+					productReference: "product-ref-123",
+				}],
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [{ data: invalidWetDistribtion, complete: false }],
 					},
-				});
-
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
-
-				await user.click(screen.getByTestId("typeOfHeatEmitter_warmAirHeater"));
-
-				const actualHeatEmitter = store.spaceHeating.heatEmitters.data[0]!;
-				expect(actualHeatEmitter.data.typeOfHeatEmitter).toBe("warmAirHeater");
+				},
 			});
+			await renderSuspended(HeatEmitterForm, {
+				route: { params: { "heatEmitter": "0" } },
+			});
+			const input = screen.getByTestId("designFlowTemp");
+			await user.clear(input);
+			await user.type(input, LOWER_THAN_MIN_FLOW_TEMP.toString());
+			await user.tab();
+			const error = await screen.findByTestId("designFlowTemp_error");
+			expect(error).toBeDefined();
+			expect(error.textContent).toContain("Design flow temperature must be at least 20");
+		});
+		test("shows an error when designFlowTemp is higher than maximum 120", async () => {
+			const HIGHER_THAN_MAX_FLOW_TEMP = 121;
+			const invalidWetDistribtionHigh: HeatEmittingData = {
+				id: "1234",
+				name: "Wet Distribution 1",
+				heatSource: "heat-pump-id",
+				ecoDesignControllerClass: "2",
+				designFlowTemp: HIGHER_THAN_MAX_FLOW_TEMP,
+				minFlowTemp: 45,
+				maxOutdoorTemp: 33,
+				minOutdoorTemp: 2,
+				designTempDiffAcrossEmitters: 10,
+				hasVariableFlowRate: false,
+				designFlowRate: 100,
+				percentageRecirculated: 20,
+				typeOfHeatEmitter: "wetDistributionSystem",
+				emitters: [{
+					id: "emitter1",
+					name: "Radiator 1",
+					typeOfHeatEmitter: "radiator",
+					length: unitValue(1500, millimetre),
+					numOfRadiators: 2,
+					productReference: "product-ref-123",
+				}],
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [{ data: invalidWetDistribtionHigh, complete: false }],
+					},
+				},
+			});
+
+			await renderSuspended(HeatEmitterForm, {
+				route: { params: { "heatEmitter": "0" } },
+			});
+			const input = screen.getByTestId("designFlowTemp");
+			await user.clear(input);
+			await user.type(input, HIGHER_THAN_MAX_FLOW_TEMP.toString());
+			await user.tab();
+			const error = await screen.findByTestId("designFlowTemp_error");
+			expect(error).toBeDefined();
+			expect(error.textContent).toContain("Design flow temperature must be no more than 120");
+		});
+
+		test("designFlowTemp boundaries are inclusive", async () => {
+			const UPPER_BOUND_FLOW_TEMP = 120;
+			const LOWER_BOUND_FLOW_TEMP = 20;
 			const wetDistribution: HeatEmittingData = {
 				id: "1234",
 				name: "Radiator 1",
 				heatSource: "heat-pump-id",
 				ecoDesignControllerClass: "1",
-				designFlowTemp: 55,
+				designFlowTemp: LOWER_BOUND_FLOW_TEMP,
 				designTempDiffAcrossEmitters: 10,
 				hasVariableFlowRate: false,
-				designFlowRate: 100,
+				designFlowRate: 20, 
 				percentageRecirculated: 20,
 				emitters: [],
 				typeOfHeatEmitter: "wetDistributionSystem",
 			};
 
-			test("marks section as not complete after editing an existing item", async () => {
-				store.$patch({
-					spaceHeating: {
-						heatEmitters: {
-							data: [{ data: wetDistribution, complete: true }],
-							complete: true,
-						},
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [{ data: wetDistribution, complete: false }],
 					},
-				});
-
-				await renderSuspended(HeatEmitterForm, {
-					route: { params: { "heatEmitter": "0" } },
-				});
-
-				await user.type(screen.getByTestId("name"), " Changed");
-				await user.tab();
-
-				expect(store.spaceHeating.heatEmitters.complete).toBe(false);
+				},
 			});
+
+			await renderSuspended(HeatEmitterForm, {
+				route: { params: { "heatEmitter": "0" } },
+			});
+			let error = screen.queryByTestId("designFlowTemp_error");
+			expect(error).toBeNull();
+
+			const designFlowTempInput = screen.getByTestId("designFlowTemp");
+			await user.clear(designFlowTempInput);
+			await user.type(designFlowTempInput, UPPER_BOUND_FLOW_TEMP.toString());
+			await user.tab();
+
+			await renderSuspended(HeatEmitterForm, {
+				route: { params: { "heatEmitter": "0" } },
+			});
+			error = screen.queryByTestId("designFlowTemp_error");
+			expect(error).toBeNull();
+		});
+	});	
+	describe("partially saving data", () => {
+		it("saves updated form data to store automatically", async () => {
+			const validWetDistribtion: HeatEmittingData = {
+				id: "1234",
+				name: "Wet Distribution 1",
+				heatSource: "heat-pump-id",
+				ecoDesignControllerClass: "2",
+				designFlowTemp: 55,
+				minFlowTemp: 45,
+				maxOutdoorTemp: 33,
+				minOutdoorTemp: 2,
+				designTempDiffAcrossEmitters: 10,
+				hasVariableFlowRate: false,
+				designFlowRate: 100,
+				percentageRecirculated: 20,
+				typeOfHeatEmitter: "wetDistributionSystem",
+				emitters: [{
+					id: "emitter1",
+					name: "Radiator 1",
+					typeOfHeatEmitter: "radiator",
+					length: unitValue(1500, millimetre),
+					numOfRadiators: 2,
+					productReference: "product-ref-123",
+				}],
+			};
+
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [{ data: validWetDistribtion, complete: false }],
+					},
+				},
+			});
+
+			await renderSuspended(HeatEmitterForm, {
+				route: {
+					params: { "heatEmitter": "0" },
+				},
+			});
+
+			await user.click(screen.getByTestId("typeOfHeatEmitter_warmAirHeater"));
+
+			const actualHeatEmitter = store.spaceHeating.heatEmitters.data[0]!;
+			expect(actualHeatEmitter.data.typeOfHeatEmitter).toBe("warmAirHeater");
+		});
+		const wetDistribution: HeatEmittingData = {
+			id: "1234",
+			name: "Radiator 1",
+			heatSource: "heat-pump-id",
+			ecoDesignControllerClass: "1",
+			designFlowTemp: 55,
+			designTempDiffAcrossEmitters: 10,
+			hasVariableFlowRate: false,
+			designFlowRate: 100,
+			percentageRecirculated: 20,
+			emitters: [],
+			typeOfHeatEmitter: "wetDistributionSystem",
+		};
+
+		test("marks section as not complete after editing an existing item", async () => {
+			store.$patch({
+				spaceHeating: {
+					heatEmitters: {
+						data: [{ data: wetDistribution, complete: true }],
+						complete: true,
+					},
+				},
+			});
+
+			await renderSuspended(HeatEmitterForm, {
+				route: { params: { "heatEmitter": "0" } },
+			});
+
+			await user.type(screen.getByTestId("name"), " Changed");
+			await user.tab();
+
+			expect(store.spaceHeating.heatEmitters.complete).toBe(false);
 		});
 	});
+	
 	describe("Autoselect first heat source", () => {
 		test("first heat source is autoselected when only one heat source exists", async () => {
-			const store = useEcaasStore();
 			store.$patch({
 				spaceHeating: {
 					heatSource: {

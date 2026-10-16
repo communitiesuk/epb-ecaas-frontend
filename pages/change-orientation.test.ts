@@ -1,6 +1,6 @@
-import { screen } from "@testing-library/vue";
-import userEvent from "@testing-library/user-event";
 import { renderSuspended } from "@nuxt/test-utils/runtime";
+import userEvent from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
 import ChangeOrientation from "./change-orientation.vue";
 
 
@@ -43,7 +43,11 @@ describe("Change orientation", () => {
 		associatedItemId: wallWithOrientationZero.id,
 	};
 
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	afterEach(() => {
 		store.$reset();

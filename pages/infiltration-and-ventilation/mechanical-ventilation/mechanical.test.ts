@@ -5,11 +5,17 @@ import InfiltrationAndVentilationTaskPage from "../index.vue";
 import MechanicalVentilationForm from "./[mechanical]/index.vue";
 import MechanicalVentilationOverview from "./index.vue";
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("mechanical ventilation overview", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
-	const navigateToMock = vi.hoisted(() => vi.fn());
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
 	});

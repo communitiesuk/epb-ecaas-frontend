@@ -1,18 +1,14 @@
-import { screen } from "@testing-library/vue";
-import PVScreen from "./[pv].vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
+import { screen } from "@testing-library/vue";
+import PVScreen from "./[pv].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-const store = useEcaasStore();
 const user = userEvent.setup();
-afterEach(() => {
-	store.$reset();
-});
 
 const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.type(screen.getByTestId("name"), "PV 1");
@@ -30,6 +26,16 @@ const populateValidForm = async ({ hasShading = false } = {}) => {
 	await user.click(screen.getByTestId(`hasShading_${hasShading ? "yes" : "no"}`));
 };
 describe("PV", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	const pv: EcaasForm<PvData> = {
 		data: {
 			name: "PV 1",
@@ -224,6 +230,16 @@ describe("PV", () => {
 });
 
 describe("PV shading section", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	const pvBaseFields = {
 		name: "PV 1",
 		peakPower: 4,

@@ -6,11 +6,16 @@ import type { DuctworkData } from "../../../stores/ecaasStore.schema";
 import DuctworkForm from "./[ductwork].vue";
 import DuctworkOverview from "./index.vue";
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("ductwork", async () => {
 	const user = userEvent.setup();
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
 
-	const navigateToMock = vi.hoisted(() => vi.fn());
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
 	});

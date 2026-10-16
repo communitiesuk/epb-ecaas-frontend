@@ -35,7 +35,11 @@ const verifyDataInSection = async (
 };
 
 describe("Domestic hot water summary", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	const hotWaterCylinder: HotWaterCylinderData = {
 		id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
@@ -136,6 +140,7 @@ describe("Domestic hot water summary", () => {
 			},
 			dailyEnergyLoss: 1,
 			heaterPosition: 0.8,
+			thermostatPosition: 0.5,
 			coldWaterSource: "mainsWater",
 			heatSourceId: heatPumpId,
 		};
@@ -437,6 +442,7 @@ describe("Domestic hot water summary", () => {
 					storageCylinderVolume: unitValue(5, litre),
 					dailyEnergyLoss: 1,
 					heaterPosition: 0.8,
+					thermostatPosition: 0.5,
 					coldWaterSource: "mainsWater",
 					heatSourceId: heatPumpId,
 				},

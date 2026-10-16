@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import { mockBatchFetchProducts } from "~/test-utils/mockBatchFetchProducts";
 import { degrees } from "~/utils/units/angle";
-import { centimetresSquare, metresSquare } from "~/utils/units/area";
+import { metresSquare, millimetresSquare } from "~/utils/units/area";
 import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
 import { metre, millimetre } from "~/utils/units/length";
 import { watt, wattsPerLitrePerSecond } from "~/utils/units/power";
@@ -177,7 +177,7 @@ const roof: Partial<RoofData> = {
 const ventData: VentData = {
 	name: "Vent 1",
 	associatedItemId: externalWall.id,
-	effectiveVentilationArea: 10,
+	effectiveVentilationArea: unitValue(10, millimetresSquare),
 	openingRatio: 1,
 	midHeightOfZone: 1,
 	hasAssociatedItem: true,
@@ -196,9 +196,10 @@ const airPermeabilityData: AirPermeabilityData = {
 };
 
 describe("Infiltration and ventilation summary", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
 
 	beforeEach(() => {
+		store = useEcaasStore();
 		mockFetch.mockReset();
 		mockBatchFetchProducts(mockFetch, "Vent Product");
 	});
@@ -786,7 +787,7 @@ describe("Infiltration and ventilation summary", () => {
 		const expectedResult = {
 			Name: "Vent 1",
 			"Associated wall or window": "External wall 1 (Wall)",
-			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
+			"Effective ventilation area": `10 ${millimetresSquare.suffix}`,
 			"Mid height of zone": `1 ${metre.suffix}`,
 			Orientation: `0 ${degrees.suffix}`,
 			Pitch: `90 ${degrees.suffix}`,
@@ -823,7 +824,7 @@ describe("Infiltration and ventilation summary", () => {
 		const expectedResult = {
 			Name: "Vent 1",
 			"Associated wall or window": "-",
-			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
+			"Effective ventilation area": `10 ${millimetresSquare.suffix}`,
 			"Mid height of zone": `1 ${metre.suffix}`,
 			Orientation: `0 ${degrees.suffix}`,
 			Pitch: `90 ${degrees.suffix}`,

@@ -2,8 +2,8 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import { v4 as uuidv4 } from "uuid";
-import type { WwhrsData } from "~/stores/ecaasStore.schema";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import type { WwhrsData } from "~/stores/ecaasStore.schema";
 import Wwhrs from "./index.vue";
 
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
@@ -16,7 +16,12 @@ mockNuxtImport("navigateTo", () => navigateToMock);
 vi.mock("uuid");
 
 describe("wwhrs", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
 
 	afterEach(() => {

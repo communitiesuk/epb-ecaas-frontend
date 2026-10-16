@@ -3,9 +3,9 @@ import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import { productTypeMap } from "~/stores/ecaasStore.schema";
 
-describe("Products page", () => {
-	const mockRoute = vi.hoisted(() => vi.fn());
+const mockRoute = vi.hoisted(() => vi.fn());
 
+describe("Products page", () => {
 	mockNuxtImport("useRoute", () => mockRoute);
 
 	beforeEach(() => {

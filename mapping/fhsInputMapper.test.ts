@@ -2,6 +2,7 @@ import type { ValidateFunction } from "ajv/dist/2020";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { resolveState } from "~/stores/resolve";
 import { unitValue } from "~/utils/units";
+import { millimetresSquare } from "~/utils/units/area";
 import { celsius } from "~/utils/units/temperature";
 import { ajv } from "../schema/validator";
 import { centimetre, metre, millimetre } from "../utils/units/length";
@@ -199,13 +200,13 @@ const expectedHouseInput: FhsInputSchema = {
 	NumberOfUtilityRooms: 1,
 	NumberOfWetRooms: 1,
 	SpaceCoolSystem: {
-		// "some-aircon-unit-name": {
-		// 	type: "AirConditioning",
-		// 	EnergySupply: "mains elec",
-		// 	cooling_capacity: 60,
-		// 	efficiency: 4,
-		// 	frac_convective: 0.2,
-		// },
+		"some-air-conditioning-unit-name": {
+			type: "AirConditioning",
+			EnergySupply: "mains elec",
+			cooling_capacity: 60,
+			efficiency: 4,
+			frac_convective: 0.2,
+		},
 	},
 	SpaceHeatSystem: {
 		"Wet distribution system": {
@@ -241,7 +242,6 @@ const expectedHouseInput: FhsInputSchema = {
 			"type": "WetDistribution",
 			"variable_flow": false,
 			"bypass_fraction_recirculated": 0.2,
-			"thermal_mass": 1,
 		},
 		"Warm Air Heater 1 (1)": {
 			"HeatSource": {
@@ -334,6 +334,7 @@ const expectedHouseInput: FhsInputSchema = {
 					efficacy: 120,
 				}],
 			},
+			SpaceCoolSystem: ["some-air-conditioning-unit-name"],
 			SpaceHeatSystem: ["Warm Air Heater 1", "Wet distribution system"],
 			ThermalBridging: {},
 			volume: 300,
@@ -994,6 +995,7 @@ const expectedFlatInput: FhsInputSchema = {
 					],
 				},
 			},
+			SpaceCoolSystem: [],
 			SpaceHeatSystem: ["Warm Air Heater 1", "UFH System"],
 			ThermalBridging: {
 				"linear thermal bridge (bridge)": {
@@ -1041,7 +1043,11 @@ expect.extend({
 });
 
 describe("FHS input mapper", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	afterEach(() => store.$reset());
 
@@ -1133,7 +1139,7 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						associatedItemId: externalWallId,
-						effectiveVentilationArea: 75,
+						effectiveVentilationArea: unitValue(7500, millimetresSquare),
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
 						hasAssociatedItem: true,
@@ -1397,11 +1403,12 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: [{
 					data: {
-						name: "some-aircon-unit-name",
+						name: "some-air-conditioning-unit-name",
 						coolingCapacity: 60,
 						seasonalEnergyEfficiencyRatio: 4,
 						convectionFraction: 0.2,
 					},
+					complete: true,
 				}],
 			},
 		};
@@ -1517,9 +1524,9 @@ describe("FHS input mapper", () => {
 			domesticHotWater,
 			dwellingFabric,
 			infiltrationAndVentilation,
+			cooling,
 			spaceHeating,
 			pvAndBatteries,
-			cooling,
 		};
 
 		const expectedResult: FhsInputSchema = expectedHouseInput;
@@ -1710,7 +1717,7 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						associatedItemId: externalWallId,
-						effectiveVentilationArea: 75,
+						effectiveVentilationArea: unitValue(7500, millimetresSquare),
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
 						hasAssociatedItem: true,
@@ -1743,9 +1750,6 @@ describe("FHS input mapper", () => {
 					livingZoneArea: 80,
 					groundFloorArea: 60,
 					restOfDwellingArea: 20,
-					// spaceHeatingSystemForThisZone: "instant elec heater 1",
-					// spaceCoolingSystemForThisZone: [],
-					// spaceHeatControlSystemForThisZone: []
 				},
 			},
 			dwellingSpaceLighting: {

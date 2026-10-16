@@ -30,6 +30,7 @@ const saveForm = (fields: PreheatedWaterStorageData) => {
 			name: fields.name,
 			id,
 			heaterPosition: fields.heaterPosition,
+			thermostatPosition: fields.thermostatPosition,
 			coldWaterSource: fields.coldWaterSource,
 		};
 
@@ -132,6 +133,15 @@ const wwhrsMap = new Map(wwhrs);
 				name="heaterPosition"
 				validation="required | number | min:0 | max:1"
 				help="Enter a number between 0 and 1, rounded to one decimal place. 0 is at the bottom, 1 is at the top."
+			/>
+			<FormKit
+				v-if="model.typeOfWaterStorage === 'hotWaterCylinder'"
+				id="thermostatPosition"
+				type="govInputFloat"
+				label="Thermostat position in the cylinder"
+				name="thermostatPosition"
+				:validation="zodTypeAsFormKitValidation(fraction)"
+				help="Enter a number between 0 and 1, rounded to the nearest 1 decimal place"
 			/>
 			<FieldsHotWaterHeatSources
 				id="heatSourceId"

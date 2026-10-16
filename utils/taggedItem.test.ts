@@ -1,7 +1,8 @@
 describe("extractSectionItems", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
 
 	beforeEach(() => {
+		store = useEcaasStore();
 		store.$reset();
 	});
 

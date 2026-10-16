@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import Summary from "./summary.vue";
 import { screen } from "@testing-library/vue";
 import hyphenate from "../../utils/hyphenate";
+import Summary from "./summary.vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -73,7 +73,11 @@ const flat: Partial<DwellingDetailSummary> = {
 };
 
 describe("Dwelling details summary", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	afterEach(() => {
 		store.$reset();

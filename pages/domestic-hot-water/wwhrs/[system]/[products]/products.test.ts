@@ -1,17 +1,22 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import Products from "./index.vue";
 import { screen } from "@testing-library/vue";
 import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import Products from "./index.vue";
+
+const { mockFetch, mockRoute } = vi.hoisted(() => ({
+	mockFetch: vi.fn(),
+	mockRoute: vi.fn(),
+}));
 
 describe("WWHRS products page", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
 	const user = userEvent.setup();
-	
-	const { mockFetch, mockRoute } = vi.hoisted(() => ({
-		mockFetch: vi.fn(),
-		mockRoute: vi.fn(),
-	}));
 
 	mockNuxtImport("useFetch", () => mockFetch);
 	mockNuxtImport("useRoute", () => mockRoute);

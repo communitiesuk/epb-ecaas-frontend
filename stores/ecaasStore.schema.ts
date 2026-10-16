@@ -954,9 +954,11 @@ const ductworkDataZod = z.discriminatedUnion("ductworkCrossSectionalShape", [
 
 export type DuctworkData = z.infer<typeof ductworkDataZod>;
 
+export const effectiveVentilationAreaZod = addConstraints(zodUnit("area"), { min: 1, max: 9999990 });
+
 const baseVentDataZod = z.object({
 	name: z.string().trim().min(1),
-	effectiveVentilationArea: z.number().min(1).max(999999),
+	effectiveVentilationArea: effectiveVentilationAreaZod,
 	openingRatio: z.number(),
 	midHeightOfZone: z.number().min(1).max(60),
 	associatedItemId: z.string().trim().min(1).optional(),
@@ -1289,6 +1291,7 @@ const wetDistributionSystemEmitterDraftSchema = z.object({
 
 const heatingRank = z.number().int().min(1).optional();
 export const tempDiffEmitDsgnWetDistributionZod = z.number().gt(0).max(70);
+export const designFlowTempWetDistributionZod = z.number().min(20).max(120);
 
 // percentageRecirculated is transformed into bypass_fraction_recirculated which has an exclusive maximum of 1, hence this `lt` bound
 export const percentageRecirculatedZod = z.number().min(0).lt(100);
@@ -1497,6 +1500,7 @@ const preheatedWaterStorageDataZod = namedWithId
 		storageCylinderVolume: zodUnit("volume"),
 		dailyEnergyLoss: z.number(),
 		heaterPosition: fraction,
+		thermostatPosition: fraction,
 		coldWaterSource: z.string(),
 		heatSourceId: z.string(),
 	});

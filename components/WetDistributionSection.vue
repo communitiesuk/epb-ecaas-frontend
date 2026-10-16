@@ -152,7 +152,7 @@ watch(
 		type="govInputWithSuffix"
 		label="Design flow temperature"
 		name="designFlowTemp"
-		validation="required | number"
+		:validation="zodTypeAsFormKitValidation(designFlowTempWetDistributionZod)"
 		suffix-text="°C"
 		help="Enter the temperature at which water is delivered to the heating system during the coldest expected conditions. Typically between 35 and 55 °C." />
 	<FormKit

@@ -9,14 +9,19 @@ import HeatSourceForm from "./index.vue";
 
 vi.mock("uuid");
 
-describe("heatSource", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
+const { mockFetch, navigateToMock } = vi.hoisted(() => ({
+	navigateToMock: vi.fn(),
+	mockFetch: vi.fn(),
+}));
 
-	const { mockFetch, navigateToMock } = vi.hoisted(() => ({
-		navigateToMock: vi.fn(),
-		mockFetch: vi.fn(),
-	}));
+describe("heatSource", () => {
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+
+	const user = userEvent.setup();
 
 	mockNuxtImport("navigateTo", () => navigateToMock);
 	mockNuxtImport("useFetch", () => mockFetch);

@@ -1,11 +1,14 @@
 import type { SchemaShadingObject } from "~/schema/aliases";
-import { mapAppliancesData, mapDistantShadingData, mapEnergySupplyFuelTypeData, mapExternalFactorsData, mapGeneralDetailsData } from "./dwellingDetailsMapper";
 import { resolveState } from "~/stores/resolve";
+import { mapAppliancesData, mapDistantShadingData, mapEnergySupplyFuelTypeData, mapExternalFactorsData, mapGeneralDetailsData } from "./dwellingDetailsMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 
 describe("dwelling details mapper", () => {
+	let store: ReturnType<typeof useEcaasStore>;
 
-	const store = useEcaasStore();
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	afterEach(() => {
 		store.$reset();

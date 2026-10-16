@@ -1,5 +1,6 @@
 import type { SchemaMechanicalVentilation, SchemaMechanicalVentilationDuctwork } from "~/schema/aliases";
 import { unitValue } from "~/utils/units";
+import { millimetresSquare } from "~/utils/units/area";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { mapAirPermeabilityData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
 
@@ -35,7 +36,11 @@ describe("infiltration ventilation mapper", () => {
 		},
 	}];
 
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	afterEach(() => {
 		store.$reset();
@@ -485,7 +490,7 @@ describe("infiltration ventilation mapper", () => {
 				data: {
 					name: ventName,
 					associatedItemId: window.id,
-					effectiveVentilationArea: 100,
+					effectiveVentilationArea: unitValue(100, millimetresSquare),
 					openingRatio: 0.6,
 					midHeightOfZone: 1.5,
 					hasAssociatedItem: true,
@@ -523,7 +528,7 @@ describe("infiltration ventilation mapper", () => {
 
 		// Assert
 		const vent = fhsInputData[ventName];
-		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.area_cm2).toBe(1);
 		expect(vent?.mid_height_air_flow_path).toBe(1.5);
 		expect(vent?.orientation360).toBe(180);
 		expect(vent?.pitch).toBe(45);
@@ -538,7 +543,7 @@ describe("infiltration ventilation mapper", () => {
 				...baseForm,
 				data: {
 					name: ventName,
-					effectiveVentilationArea: 100,
+					effectiveVentilationArea: unitValue(100, millimetresSquare),
 					openingRatio: 0.6,
 					midHeightOfZone: 1.5,
 					pitch: 45,
@@ -574,7 +579,7 @@ describe("infiltration ventilation mapper", () => {
 
 		// Assert
 		const vent = fhsInputData[ventName];
-		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.area_cm2).toBe(1);
 		expect(vent?.mid_height_air_flow_path).toBe(1.5);
 		expect(vent?.orientation360).toBe(180);
 		expect(vent?.pitch).toBe(45);
@@ -590,7 +595,7 @@ describe("infiltration ventilation mapper", () => {
 				data: {
 					name: ventName,
 					associatedItemId: "none",
-					effectiveVentilationArea: 100,
+					effectiveVentilationArea: unitValue(100, millimetresSquare),
 					openingRatio: 0.6,
 					midHeightOfZone: 1.5,
 					pitch: 45,
@@ -625,7 +630,7 @@ describe("infiltration ventilation mapper", () => {
 
 		// Assert
 		const vent = fhsInputData[ventName];
-		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.area_cm2).toBe(1);
 		expect(vent?.mid_height_air_flow_path).toBe(1.5);
 		expect(vent?.orientation360).toBe(180);
 		expect(vent?.pitch).toBe(45);

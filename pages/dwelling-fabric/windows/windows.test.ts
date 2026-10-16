@@ -3,13 +3,20 @@ import { within } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import formStatus from "~/constants/formStatus";
+import { millimetresSquare } from "~/utils/units/area.js";
 import WindowsForm from "./[window].vue";
 import Windows from "./index.vue";
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("windows", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
@@ -149,7 +156,7 @@ describe("windows", () => {
 			data: {
 				name: "Vent 1",
 				associatedItemId: window2.data.id,
-				effectiveVentilationArea: 10,
+				effectiveVentilationArea: unitValue(10, millimetresSquare),
 				openingRatio: 1,
 				midHeightOfZone: 1,
 				hasAssociatedItem: true,

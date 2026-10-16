@@ -7,10 +7,16 @@ import type { FloorOfHeatedBasementData, PartyFloorData } from "~/stores/ecaasSt
 import { metre, millimetre } from "~/utils/units/length";
 import Floors from "./index.vue";
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("floors", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;

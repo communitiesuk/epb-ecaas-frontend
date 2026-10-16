@@ -79,6 +79,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		domesticHotWaterData,
 		pvData,
 		events,
+		coolingData,
 	]);
 
 	console.log(fhsInput);

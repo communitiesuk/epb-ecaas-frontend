@@ -36,7 +36,11 @@ const populateValidForm = async (ductShape: SchemaDuctShape) => {
 };
 
 describe("ductwork form", async () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
 
 	const addStoreData = () => {
 		store.$patch({

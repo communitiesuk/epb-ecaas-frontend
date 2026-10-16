@@ -13,10 +13,16 @@ const baseCompleteForm = {
 	complete: true,
 };
 
+const navigateToMock = vi.hoisted(() => vi.fn());
+
 describe("Domestic hot water", () => {
-	const store = useEcaasStore();
+	let store: ReturnType<typeof useEcaasStore>;
+
+	beforeEach(() => {
+		store = useEcaasStore();
+	});
+	
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
@@ -53,6 +59,7 @@ describe("Domestic hot water", () => {
 			dailyEnergyLoss: 69,
 			typeOfWaterStorage: "hotWaterCylinder",
 			heaterPosition: 0.8,
+			thermostatPosition: 0.5,
 			coldWaterSource: "mainsWater",
 			heatSourceId: heatSource1.data.id,
 		},

@@ -10,16 +10,19 @@ describe("syncCacheToLocalStorage", () => {
 		) as unknown as typeof global.$fetch);
 	}
 
-	const getItemSpy = vi.spyOn(localStorage, "getItem");
-	const setItemSpy = vi.spyOn(localStorage, "setItem");
-	const fetchSpy = vi.spyOn(global, "$fetch");
+	let getItemSpy: ReturnType<typeof vi.spyOn>;
+	let setItemSpy: ReturnType<typeof vi.spyOn>;
+	let fetchSpy: ReturnType<typeof vi.spyOn>;
 
 	beforeEach(() => {
+		getItemSpy = vi.spyOn(localStorage, "getItem");
+		setItemSpy = vi.spyOn(localStorage, "setItem");
+		fetchSpy = vi.spyOn(global, "$fetch");
 		localStorage.clear();
-		getItemSpy.mockClear();
-		getItemSpy.mockReset();
-		setItemSpy.mockClear();
-		fetchSpy.mockClear();
+	});
+
+	afterEach(() => {
+		vi.restoreAllMocks();
 	});
 
 	it("should return if local storage has ecaas data", async () => {
@@ -52,17 +55,4 @@ describe("syncCacheToLocalStorage", () => {
 		expect(fetchSpy).toHaveBeenCalledTimes(1);
 		expect(setItemSpy).not.toHaveBeenCalled();
 	});
-
-	//try assigning the console to a variable
-
-	// it("should log an error if fetch fails", async () => {
-	// 	const consoleSpy = vi.spyOn(console, "error");
-	// 	global.$fetch = vi.fn(() => {
-	// 		return Promise.reject("Network error");
-	// 	}) as unknown as typeof global.$fetch;
-	// 	await syncCacheToLocalStorage();
-
-	// 	expect(consoleSpy).toHaveBeenCalledWith("Failed to fetch data: Network error");
-	// 	expect(setItemSpy).not.toHaveBeenCalled();
-	// });
 });
