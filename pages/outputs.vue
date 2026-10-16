@@ -2,6 +2,9 @@
 definePageMeta({ layout: false });
 
 const title = "Dwelling compliance results";
+
+// TODO: Enable when BREL reports are ready to be released
+const isBrelReportEnabled = false;
 </script>
 
 <template>
@@ -14,7 +17,7 @@ const title = "Dwelling compliance results";
 			<ResultTabs />
 		</ClientOnly>
 		<div class="govuk-!-margin-top-1 govuk-button-group">
-			<GovButton href="/get-brel-report">Get BREL Report</GovButton>
+			<GovButton v-if="isBrelReportEnabled" href="/get-brel-report">Get BREL Report</GovButton>
 			<GovButton href="/" secondary>Edit input data</GovButton>
 		</div>
 	</NuxtLayout>
