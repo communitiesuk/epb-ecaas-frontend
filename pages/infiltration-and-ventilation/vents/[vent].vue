@@ -137,7 +137,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							<td class="govuk-table__cell">
 								Air bricks are generally larger and provide more airflow. The effective area depends significantly on
 								the grill design and free area. Smaller air bricks might be around 5000 to 10,000 mm², while larger ones can
-								reach 20000 mm² or more. Some manufacturers might quote the free area, which would be a higher number.
+								reach 20,000 mm² or more. Some manufacturers might quote the free area, which would be a higher number.
 							</td>
 							<td class="govuk-table__cell">5000 - 20,000 mm²</td>
 						</tr>
