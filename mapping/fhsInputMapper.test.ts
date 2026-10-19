@@ -302,7 +302,7 @@ const expectedHouseInput: FhsInputSchema = {
 					efficacy: 120,
 				}],
 			},
-			SpaceCoolSystem: ["some-air-conditioning-unit-name"],
+			SpaceCoolSystem: "some-air-conditioning-unit-name",
 			SpaceHeatSystem: ["Warm Air Heater 1", "Wet distribution system"],
 			ThermalBridging: {},
 			volume: 300,
@@ -655,7 +655,22 @@ const expectedFlatInput: FhsInputSchema = {
 	NumberOfHotTappedRooms: 2,
 	NumberOfUtilityRooms: 1,
 	NumberOfWetRooms: 2,
-	SpaceCoolSystem: {},
+	SpaceCoolSystem: {
+		"some-air-conditioning-unit-name-1": {
+			type: "AirConditioning",
+			EnergySupply: "mains elec",
+			cooling_capacity: 60,
+			efficiency: 4,
+			frac_convective: 0.2,
+		},
+		"some-air-conditioning-unit-name-2": {
+			type: "AirConditioning",
+			EnergySupply: "mains elec",
+			cooling_capacity: 60,
+			efficiency: 4,
+			frac_convective: 0.2,
+		},
+	},
 	SpaceHeatSystem: {
 		"UFH System": {
 			"EnergySupply": "mains elec",
@@ -978,7 +993,10 @@ const expectedFlatInput: FhsInputSchema = {
 					],
 				},
 			},
-			SpaceCoolSystem: [],
+			SpaceCoolSystem: [
+				"some-air-conditioning-unit-name-1",
+				"some-air-conditioning-unit-name-2",
+			],
 			SpaceHeatSystem: ["Warm Air Heater 1", "UFH System"],
 			ThermalBridging: {
 				"linear thermal bridge (bridge)": {
@@ -2228,6 +2246,27 @@ describe("FHS input mapper", () => {
 		const cooling: Cooling = {
 			airConditioning: {
 				...baseForm,
+				data: [
+					{
+						...baseForm,
+						data: {
+							name: "some-air-conditioning-unit-name-1",
+							convectionFraction: 0.2,
+							coolingCapacity: 60,
+							seasonalEnergyEfficiencyRatio: 4,
+						},
+					},
+					{
+						...baseForm,
+						data: {
+							
+							name: "some-air-conditioning-unit-name-2",
+							convectionFraction: 0.2,
+							coolingCapacity: 60,
+							seasonalEnergyEfficiencyRatio: 4,
+						},
+					},
+				],
 			},
 		};
 

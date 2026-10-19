@@ -57,6 +57,15 @@ describe("dwelling fabric mapper", () => {
 					complete: true,
 				},
 			},
+			cooling: {
+				airConditioning: {
+					data: [
+						{ data: { name: "cooling system 1", coolingCapacity: 4, seasonalEnergyEfficiencyRatio: 1, convectionFraction: 1 }, complete: true },
+						{ data: { name: "cooling system 2", coolingCapacity: 4, seasonalEnergyEfficiencyRatio: 1, convectionFraction: 1 }, complete: true },
+					],
+					complete: true,
+				},
+			},
 		});
 
 		const heatSystemsNamesSortedByRank = ["wds 1", "ieh 1", "ieh 2"];
@@ -69,6 +78,80 @@ describe("dwelling fabric mapper", () => {
 		expect(fhsInputData.Zone[defaultZoneName]?.livingroom_area).toBe(state.livingZoneArea);
 		expect(fhsInputData.Zone[defaultZoneName]?.restofdwelling_area).toBe(state.restOfDwellingArea);
 		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatSystem).toEqual(heatSystemsNamesSortedByRank);
+		expect(fhsInputData.Zone[defaultZoneName]?.SpaceCoolSystem).toEqual(["cooling system 1", "cooling system 2"]);
+	});
+
+	it("maps single heating and cooling system names as strings", () => {
+		store.$patch({
+			spaceHeating: {
+				heatEmitters: {
+					data: [{
+						data: { name: "single heat system", typeOfHeatEmitter: "wetDistributionSystem", heatingRank: 1 },
+						complete: true,
+					}],
+					complete: true,
+				},
+			},
+			cooling: {
+				airConditioning: {
+					data: [{
+						data: { name: "single cool system", coolingCapacity: 4, seasonalEnergyEfficiencyRatio: 1, convectionFraction: 1 },
+						complete: true,
+					}],
+					complete: true,
+				},
+			},
+			dwellingFabric: {
+				dwellingSpaceZoneParameters: {
+					data: {
+						volume: 10,
+						livingZoneArea: 5,
+						groundFloorArea: 8,
+						restOfDwellingArea: 0,
+					},
+					complete: true,
+				},
+			},
+		});
+
+		const fhsInputData = mapZoneParametersData(resolveState(store.$state));
+
+		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatSystem).toBe("single heat system");
+		expect(fhsInputData.Zone[defaultZoneName]?.SpaceCoolSystem).toBe("single cool system");
+	});
+
+	it("omits heating and cooling system names when there are no systems", () => {
+		store.$patch({
+			spaceHeating: {
+				heatEmitters: {
+					data: [],
+					complete: true,
+				},
+			},
+			cooling: {
+				airConditioning: {
+					data: [],
+					complete: true,
+				},
+			},
+			dwellingFabric: {
+				dwellingSpaceZoneParameters: {
+					data: {
+						volume: 10,
+						livingZoneArea: 5,
+						groundFloorArea: 8,
+						restOfDwellingArea: 0,
+					},
+					complete: true,
+				},
+			},
+		});
+
+		const fhsInputData = mapZoneParametersData(resolveState(store.$state));
+		const zone = fhsInputData.Zone[defaultZoneName];
+
+		expect(zone).not.toHaveProperty("SpaceHeatSystem");
+		expect(zone).not.toHaveProperty("SpaceCoolSystem");
 	});
 
 	it("maps lighting input state to FHS input request", () => {
