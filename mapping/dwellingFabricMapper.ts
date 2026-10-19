@@ -533,7 +533,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 }
 
 export function mapRoofData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
-	const { dwellingSpaceRoofs } = state.dwellingFabric;
+	const dwellingSpaceRoofs = state.dwellingFabric?.dwellingSpaceRoofs ?? [];
 
 	const roofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceRoofs.map((x) => {
 		const pitch = x.pitch;
