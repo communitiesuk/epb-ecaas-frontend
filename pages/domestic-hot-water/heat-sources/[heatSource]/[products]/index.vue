@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { page } from "~/data/pages/pages";
+import { EcaasError } from "~/errors.types";
 import { technologyGroups, type DisplayProduct, type TechnologyGroup } from "~/pcdb/pcdb.types";
 import { productTypeMap } from "~/stores/ecaasStore.schema";
 
@@ -62,14 +63,22 @@ const filteredProducts = computed(() => {
 const { pagination } = searchData(filteredProducts.value);
 
 const selectProduct = async (product: DisplayProduct) => {
-	await selectHotWaterHeatSourceProduct(
-		{ ...product, id: product.id.toString() },
-		(state) => state.domesticHotWater.heatSources.data,
-		index,
-	);
+	const redirectUrl = page("heatSources").url.replace(":heatSource", `${index}`);
 
-	// Allow store to be updated before navigation
-	setTimeout(() => navigateTo(page("heatSources").url.replace(":heatSource", `${index}`)), 100);
+	try {
+		await selectHotWaterHeatSourceProduct(
+			{ ...product, id: product.id.toString() },
+			(state) => state.domesticHotWater.heatSources.data,
+			index,
+		);
+
+		// Allow store to be updated before navigation
+		setTimeout(() => navigateTo(redirectUrl), 100);
+	} catch (error) {
+		if (error instanceof EcaasError && error.name === "DHW_HEAT_SOURCE_CONFLICT") {
+			navigateTo(`${redirectUrl}?error=${error.name}`);
+		}
+	}
 };
 </script>
 
