@@ -184,7 +184,7 @@ describe("Products service", () => {
 			});
 
 			// Act
-			const result = await dynamodbClient.getProduct<Record<string, unknown>>("693014", { includeTestData: false });
+			const result = await dynamodbClient.getProduct<"HybridHeatPump">("693014", { includeTestData: false });
 
 			// Assert
 			expect(result).toStrictEqual({

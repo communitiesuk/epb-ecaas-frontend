@@ -240,7 +240,7 @@ describe("Heat pump details", async () => {
 		const heatSources = store.spaceHeating.heatSource.data;
 
 		expect(heatSources.length).toBe(1);
-		expect(heatSources[0]?.data.packageProductIds).toStrictEqual([]);
+		expect((heatSources[0]?.data as { packageProductIds?: string[] }).packageProductIds).toStrictEqual([]);
 	});
 
 	test("A mechanical ventilation entry is created when an exhaust air heat pump is selected", async () => {
