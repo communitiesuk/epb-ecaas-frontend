@@ -18,7 +18,7 @@ const email = obfuscateEmail(assessorEmail);
 			<Title>{{ title }}</Title>
 		</Head>
 		<div class="govuk-grid-column-three-quarters">
-			<NuxtLink href="/outputs" class="govuk-back-link" data-testid="backLink">Back to results</NuxtLink>
+			<NuxtLink href="/outputs" class="govuk-back-link govuk-!-margin-bottom-6 govuk-!-margin-top-0" data-testid="backLink">Back to results</NuxtLink>
 
 			<h2 class="govuk-heading-l">{{ title }}</h2>
 			<GovPanel title="BREL Report sent" data-testid="getBrelEmailConfirmationPanel" class="email-confirmation-panel">

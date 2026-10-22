@@ -34,6 +34,7 @@ const pagesData = [
 		url: "/get-brel-report",
 		type: "outputs",
 		parentId: "taskList",
+		excludeFromNavigation: () => true,
 	},
 	{
 		id: "getBrelEmailConfirmation",
@@ -41,6 +42,7 @@ const pagesData = [
 		url: "/get-brel-email-confirmation",
 		type: "outputs",
 		parentId: "taskList",
+		excludeFromNavigation: () => true,
 	},
 ] as const satisfies Array<Page>;
 

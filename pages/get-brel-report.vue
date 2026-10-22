@@ -63,7 +63,7 @@ const handleSubmit = async () => {
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
-	<NuxtLink :href="getUrl('outputs')" class="govuk-back-link" data-testid="backLink">
+	<NuxtLink :href="getUrl('outputs')" class="govuk-back-link govuk-!-margin-bottom-6 govuk-!-margin-top-0" data-testid="backLink">
 		Back to results
 	</NuxtLink>
 
@@ -123,7 +123,7 @@ const handleSubmit = async () => {
 		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
 		<fieldset class="govuk-fieldset section-spacing">
-			<legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+			<legend class="govuk-fieldset__legend govuk-fieldset__legend--l govuk-!-margin-bottom-6">
 				<h2 class="govuk-fieldset__heading">Client details</h2>
 			</legend>
 			<FormKit
@@ -152,7 +152,7 @@ const handleSubmit = async () => {
 		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
 		<fieldset id="assessorDetails" class="govuk-fieldset section-spacing">
-			<legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+			<legend class="govuk-fieldset__legend govuk-fieldset__legend--l govuk-!-margin-bottom-6">
 				<h2 class="govuk-fieldset__heading">Assessor details</h2>
 			</legend>
 			<FormKit
