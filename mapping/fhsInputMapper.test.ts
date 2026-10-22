@@ -335,7 +335,7 @@ const expectedHouseInput: FhsInputSchema = {
 				}],
 			},
 			SpaceCoolSystem: "some-air-conditioning-unit-name",
-			SpaceHeatSystem: ["Warm Air Heater 1", "Wet distribution system"],
+			SpaceHeatSystem: ["Warm Air Heater 1 (1)", "Warm Air Heater 1 (2)", "Wet distribution system"],
 			ThermalBridging: {},
 			volume: 300,
 			livingroom_area: 50,
@@ -1014,7 +1014,7 @@ const expectedFlatInput: FhsInputSchema = {
 				"some-air-conditioning-unit-name-1",
 				"some-air-conditioning-unit-name-2",
 			],
-			SpaceHeatSystem: ["Warm Air Heater 1", "UFH System"],
+			SpaceHeatSystem: ["Warm Air Heater 1 (1)", "Warm Air Heater 1 (2)", "UFH System"],
 			ThermalBridging: {
 				"linear thermal bridge (bridge)": {
 					junction_type: "E3",
