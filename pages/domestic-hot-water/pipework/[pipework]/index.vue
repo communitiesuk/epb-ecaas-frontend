@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
 import type { SchemaWaterPipeContentsType } from "~/schema/aliases";
-import { tankPrimaryPipeworkLengthZod } from "~/stores/ecaasStore.schema";
+import { pipeworkDiameterZod, tankPrimaryPipeworkLengthZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 

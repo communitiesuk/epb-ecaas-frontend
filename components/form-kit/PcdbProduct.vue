@@ -2,6 +2,7 @@
 import { getErrorMessage, getUrl, hasModelDetails, isPackagedProduct, showErrorState, type HeatSourceData, type NewDomesticHotWaterHeatSourceData } from "#imports";
 import type { FormKitFrameworkContext } from "@formkit/core";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
+import { isBoilerProduct } from "~/utils/boiler";
 import { isConvectorRadiatorProduct } from "~/utils/convectorRadiator";
 import { displayFuelType, heatPumpTypes } from "~/utils/display";
 import { isUnderFloorHeatingProduct } from "~/utils/underFloorHeating";

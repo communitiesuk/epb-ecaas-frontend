@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { getUrl, uniqueName } from "#imports";
+import { effectiveVentilationAreaZod } from "~/stores/ecaasStore.schema";
 import { millimetresSquare } from "~/utils/units/area";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Vent";
 const store = useEcaasStore();

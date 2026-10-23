@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { litre, type Volume } from "~/utils/units/volume";
-import type { PreheatedWaterStorageData } from "~/stores/ecaasStore.schema";
-import { getUrl } from "~/utils/page";
-import { v4 as uuidv4 } from "uuid";
 import { hasPackagedProduct } from "#imports";
+import { v4 as uuidv4 } from "uuid";
+import { fraction, type PreheatedWaterStorageData } from "~/stores/ecaasStore.schema";
+import { getUrl } from "~/utils/page";
+import { litre, type Volume } from "~/utils/units/volume";
+import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const title = "Preheated water cylinder";
 const store = useEcaasStore();

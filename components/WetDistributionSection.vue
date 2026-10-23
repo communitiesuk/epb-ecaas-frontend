@@ -2,7 +2,7 @@
 import { FieldsHeatSources } from "#components";
 import { ecoClasses, ecoDesignControllerOptions } from "#imports";
 import type { AnyPcdbProduct } from "~/pcdb/pcdb.types";
-import { tempDiffEmitDsgnWetDistributionZod } from "~/stores/ecaasStore.schema";
+import { designFlowTempWetDistributionZod, tempDiffEmitDsgnWetDistributionZod } from "~/stores/ecaasStore.schema";
 import { zodTypeAsFormKitValidation } from "~/utils/zodToFormKitValidation";
 
 const store = useEcaasStore();
