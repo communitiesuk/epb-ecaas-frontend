@@ -50,11 +50,19 @@ function calculatePsiValue(linearThermalBridges: LinearThermalBridgeData[]) {
 	return totalLength === 0 ? 0 : psiWithLengths / totalLength;
 }
 
+function singleOrArray(items: string[]): string | string[] {
+	if (items.length === 1) {
+		return items[0] as string;
+	}
+	return items;
+}
+
 export function mapZoneParametersData(
 	state: ResolvedState,
 ): Pick<FhsInputSchema, "HeatingControlType" | "Zone" | "GroundFloorArea"> {
 	const { dwellingSpaceZoneParameters } = state.dwellingFabric;
 	const coolingData = state.cooling?.airConditioning ?? []; // this is currently only made up of air conditioning systems
+	const spaceCoolingSystemNames = coolingData.map(x => x.name);
 	const { heatEmitters } = state.spaceHeating;
 	const spaceHeatingSystemNames = heatEmitters.toSorted((a, b) => (a.heatingRank ?? 0) - (b.heatingRank ?? 0)).flatMap(he => {
 		if (he.typeOfHeatEmitter === "instantElectricHeater" && he.numOfHeaters > 1) {
@@ -63,17 +71,24 @@ export function mapZoneParametersData(
 		return [he.name];
 	});
 
+	const zone = {
+		volume: dwellingSpaceZoneParameters.volume,
+		livingroom_area: dwellingSpaceZoneParameters.livingZoneArea,
+		restofdwelling_area: dwellingSpaceZoneParameters.restOfDwellingArea,
+	} as Partial<SchemaZoneInput>;
+
+	if (spaceHeatingSystemNames.length) {
+		zone.SpaceHeatSystem = singleOrArray(spaceHeatingSystemNames);
+	}
+	if (spaceCoolingSystemNames.length) {
+		zone.SpaceCoolSystem = singleOrArray(spaceCoolingSystemNames);
+	}
+
 	return {
 		HeatingControlType: "SeparateTempControl", // sending this as a default value while we are only sending one zone
 		GroundFloorArea: dwellingSpaceZoneParameters.groundFloorArea,
 		Zone: {
-			[defaultZoneName]: {
-				...(spaceHeatingSystemNames.length ? { SpaceHeatSystem: spaceHeatingSystemNames } : {}),
-				SpaceCoolSystem: coolingData.map(x => x.name),
-				volume: dwellingSpaceZoneParameters.volume,
-				livingroom_area: dwellingSpaceZoneParameters.livingZoneArea,
-				restofdwelling_area: dwellingSpaceZoneParameters.restOfDwellingArea,
-			} as Partial<SchemaZoneInput>,
+			[defaultZoneName]: zone,
 		},
 	} as Pick<FhsInputSchema, "HeatingControlType" | "Zone">;
 }
@@ -518,7 +533,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 }
 
 export function mapRoofData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
-	const { dwellingSpaceRoofs } = state.dwellingFabric;
+	const dwellingSpaceRoofs = state.dwellingFabric?.dwellingSpaceRoofs ?? [];
 
 	const roofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceRoofs.map((x) => {
 		const pitch = x.pitch;

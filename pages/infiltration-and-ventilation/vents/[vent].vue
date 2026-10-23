@@ -132,16 +132,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 								This is a common range for modern trickle vents designed to contribute to background ventilation in
 								habitable rooms. Multiple vents per room might be needed.
 							</td>
-							<td class="govuk-table__cell">40 - 80 mm²</td>
+							<td class="govuk-table__cell">4,000 - 8,000 mm²</td>
 						</tr>
 						<tr class="govuk-table__row">
 							<td class="govuk-table__cell">Wall-mounted air brick</td>
 							<td class="govuk-table__cell">
 								Air bricks are generally larger and provide more airflow. The effective area depends significantly on
-								the grill design and free area. Smaller air bricks might be around 50 to 100 cm², while larger ones can
-								reach 200 cm² or more. Some manufacturers might quote the free area, which would be a higher number.
+								the grill design and free area. Smaller air bricks might be around 5,000 to 10,000 mm², while larger ones can
+								reach 20,000 mm² or more. Some manufacturers might quote the free area, which would be a higher number.
 							</td>
-							<td class="govuk-table__cell">50 - 200 mm²</td>
+							<td class="govuk-table__cell">5,000 - 20,000 mm²</td>
 						</tr>
 					</tbody>
 				</table>
