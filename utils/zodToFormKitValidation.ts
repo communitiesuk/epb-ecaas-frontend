@@ -86,18 +86,32 @@ export function zodTypeAsFormKitValidation(schema: z.ZodTypeAny): string {
 		}
 	} else if (s instanceof z.ZodNumber) {
 		rules.push(isUnitSchema ? "zodUnitNumber" : "number");
-		const { minimum, exclusiveMinimum, maximum, exclusiveMaximum } = s._zod.bag;
-		if (typeof minimum !== "undefined") {
+		let minimum: number;
+		let minimumIsExclusive: boolean;
+		let maximum: number;
+		let maximumIsExclusive: boolean;
+		const checks = s._def.checks as ($ZodCheckGreaterThan | $ZodCheckLessThan)[];
+		checks.forEach(({ _zod: { def: { check, value, inclusive } } }) => {
+			if (check == "greater_than") {
+				minimum = value;
+				minimumIsExclusive = !inclusive;
+			}
+			if (check == "less_than") {
+				maximum = value;
+				maximumIsExclusive = !inclusive;
+			}
+		});
+		if (typeof minimum !== "undefined" && minimumIsExclusive === false) {
 			rules.push(`${isUnitSchema ? "zodUnitMin" : "min"}:${minimum}`);
 		}
-		if (typeof exclusiveMinimum !== "undefined") {
-			rules.push(`${isUnitSchema ? "zodUnitGreaterThan" : "min"}:${isUnitSchema ? exclusiveMinimum : exclusiveMinimum + smallFraction}`);
+		if (typeof minimum !== "undefined" && minimumIsExclusive) {
+			rules.push(`${isUnitSchema ? "zodUnitGreaterThan" : "min"}:${isUnitSchema ? minimum : minimum + smallFraction}`);
 		}
-		if (typeof maximum !== "undefined" && maximum < 9000000000000000) {
+		if (typeof maximum !== "undefined" && maximum < 9000000000000000 && maximumIsExclusive === false) {
 			rules.push(`${isUnitSchema ? "zodUnitMax" : "max"}:${maximum}`);
 		}
-		if (typeof exclusiveMaximum !== "undefined") {
-			rules.push(`${isUnitSchema ? "zodUnitLessThan" : "max"}:${isUnitSchema ? exclusiveMaximum : exclusiveMaximum - smallFraction}`);
+		if (typeof maximum !== "undefined" && maximumIsExclusive) {
+			rules.push(`${isUnitSchema ? "zodUnitLessThan" : "max"}:${isUnitSchema ? maximum : maximum - smallFraction}`);
 		}
 	} else if (s instanceof z.ZodEnum) {
 		const vals = s instanceof z.ZodEnum ? (s as unknown as SchemaWithDef<"values", ArrayLike<unknown>>)._def.values as string[] : Object.values((s as unknown as SchemaWithDef<"values", ArrayLike<unknown>>)._def.values);
