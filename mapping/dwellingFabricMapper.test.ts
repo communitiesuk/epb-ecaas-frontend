@@ -125,6 +125,68 @@ describe("dwelling fabric mapper", () => {
 		expect(fhsInputData.Zone[defaultZoneName]?.SpaceCoolSystem).toBe("single cool system");
 	});
 
+	it("expands multiple warm air heaters with suffixed names", () => {
+		store.$patch({
+			spaceHeating: {
+				heatEmitters: {
+					data: [{
+						data: {
+							name: "Warm air heater",
+							typeOfHeatEmitter: "warmAirHeater",
+							heatingRank: 1,
+							numOfWarmAirHeaters: 2,
+							designTempDiffAcrossEmitters: 5,
+							heatSource: "boiler",
+							convectionFraction: 1,
+						},
+						complete: true,
+					}],
+					complete: true,
+				},
+			},
+			dwellingFabric: {
+				dwellingSpaceZoneParameters: {
+					data: { volume: 10, livingZoneArea: 5, groundFloorArea: 8, restOfDwellingArea: 0 },
+					complete: true,
+				},
+			},
+		});
+
+		const fhsInputData = mapZoneParametersData(resolveState(store.$state));
+		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatSystem).toEqual(["Warm air heater (1)", "Warm air heater (2)"]);
+	});
+
+	it("uses bare name for a single warm air heater", () => {
+		store.$patch({
+			spaceHeating: {
+				heatEmitters: {
+					data: [{
+						data: {
+							name: "Warm air heater",
+							typeOfHeatEmitter: "warmAirHeater",
+							heatingRank: 1,
+							numOfWarmAirHeaters: 1,
+							designTempDiffAcrossEmitters: 5,
+							heatSource: "boiler",
+							convectionFraction: 1,
+						},
+						complete: true,
+					}],
+					complete: true,
+				},
+			},
+			dwellingFabric: {
+				dwellingSpaceZoneParameters: {
+					data: { volume: 10, livingZoneArea: 5, groundFloorArea: 8, restOfDwellingArea: 0 },
+					complete: true,
+				},
+			},
+		});
+
+		const fhsInputData = mapZoneParametersData(resolveState(store.$state));
+		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatSystem).toBe("Warm air heater");
+	});
+
 	it("omits heating and cooling system names when there are no systems", () => {
 		store.$patch({
 			spaceHeating: {
