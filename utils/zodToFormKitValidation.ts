@@ -86,11 +86,11 @@ export function zodTypeAsFormKitValidation(schema: z.ZodTypeAny): string {
 		}
 	} else if (s instanceof z.ZodNumber) {
 		rules.push(isUnitSchema ? "zodUnitNumber" : "number");
-		let minimum: number;
-		let minimumIsExclusive: boolean;
-		let maximum: number;
-		let maximumIsExclusive: boolean;
-		const checks = s._def.checks as ($ZodCheckGreaterThan | $ZodCheckLessThan)[];
+		let minimum = undefined;
+		let minimumIsExclusive = undefined;
+		let maximum = undefined;
+		let maximumIsExclusive = undefined;
+		const checks = s._def.checks as unknown as { _zod: { def: { check: "greater_than" | "less_than", value: number, inclusive: boolean } } }[];
 		checks.forEach(({ _zod: { def: { check, value, inclusive } } }) => {
 			if (check == "greater_than") {
 				minimum = value;
