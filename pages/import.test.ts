@@ -34,9 +34,9 @@ describe("import page", () => {
 	const user = userEvent.setup();
 
 	const renderAndUploadFile = async (file: File) => {
-		await renderSuspended(Import);
+		const { container } = await renderSuspended(Import);
 
-		const input = screen.getByLabelText("Upload a JSON file");
+		const input = container.querySelector('input[type="file"]') as HTMLInputElement;
 
 		return user.upload(input, file);
 	};
