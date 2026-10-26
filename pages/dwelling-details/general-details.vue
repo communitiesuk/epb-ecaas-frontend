@@ -135,6 +135,14 @@ autoSaveForm<GeneralDetailsData>(model, (state, newData) => {
 	state.dwellingDetails.generalSpecifications = newData;
 });
 
+watch(() => model.value.partOActiveCoolingRequired, (isCoolingRequired) => {
+	const airConditioning = store.cooling.airConditioning;
+
+	if (isCoolingRequired && airConditioning.complete && airConditioning.data.length === 0) {
+		airConditioning.complete = false;
+	}
+});
+
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 </script>
