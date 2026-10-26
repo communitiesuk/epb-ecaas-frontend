@@ -3,6 +3,7 @@ import { arrayIncludes } from "ts-extras";
 import type { BuildingElementGroundForSchema, BuildingElementPartyWallForSchema, SchemaBuildingElement, SchemaEdgeInsulation, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaWindowShadingObject, SchemaWindowShadingType, SchemaZoneInput } from "~/schema/aliases";
 import type { TypeOfShading } from "~/stores/ecaasStore.schema";
 import { asMetres, type Length } from "../utils/units/length";
+import { suffixWithNumber } from "~/utils/duplicateFormEntry";
 import { defaultZoneName } from "./common";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
@@ -67,6 +68,9 @@ export function mapZoneParametersData(
 	const spaceHeatingSystemNames = heatEmitters.toSorted((a, b) => (a.heatingRank ?? 0) - (b.heatingRank ?? 0)).flatMap(he => {
 		if (he.typeOfHeatEmitter === "instantElectricHeater" && he.numOfHeaters > 1) {
 			return Array.from({ length: he.numOfHeaters }, (_, i) => `${he.name} ${i + 1}`);
+		}
+		if (he.typeOfHeatEmitter === "warmAirHeater" && he.numOfWarmAirHeaters > 1) {
+			return Array.from({ length: he.numOfWarmAirHeaters }, (_, i) => suffixWithNumber(he.name, i + 1));
 		}
 		return [he.name];
 	});
