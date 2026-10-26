@@ -18,10 +18,10 @@ export function reportErrors(validatedData: object, validatorErrors: unknown, er
 			contentType: "application/json",
 		});
 
-		// Clear attachments
-		// Sentry.getCurrentScope().clearAttachments();
-
 		scope.setFingerprint([error instanceof Error ? error.message : error]);
 		Sentry.captureException(error instanceof Error ? error : new Error(error));
+		
+		// Clear attachments
+		Sentry.getCurrentScope().clearAttachments();
 	});
 }
