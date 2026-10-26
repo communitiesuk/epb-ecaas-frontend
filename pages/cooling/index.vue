@@ -38,14 +38,14 @@ function handleDuplicate(index: number) {
 	}
 }
 
-function validatePartOActiveCoolingRequired() {
-	return !store.dwellingDetails.generalSpecifications.data?.partOActiveCoolingRequired || store.cooling.airConditioning.data.length > 0;
-}
+
 
 function handleComplete() {
 	clearErrors();
-
-	if (!validatePartOActiveCoolingRequired()) {
+	const { partOActiveCoolingRequired } = store.dwellingDetails.generalSpecifications.data;
+	const hasAirConditioning = store.cooling.airConditioning.data.length > 0;
+	const nonCompliant = partOActiveCoolingRequired && !hasAirConditioning;
+	if (nonCompliant) {
 		addError({
 			id: "coolingSystemRequired",
 			text: "You must add an air conditioning system if air conditioning is required for the dwelling to be part O compliant.",
