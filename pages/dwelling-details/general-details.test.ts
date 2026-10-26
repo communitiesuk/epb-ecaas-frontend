@@ -465,5 +465,56 @@ describe("General details", () => {
 		expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
 		expect(store.spaceHeating.heatEmitters.complete).toBe(false);
 	});
-});
 
+	test("marks cooling as incomplete when active cooling becomes required and no air conditioning is entered", async () => {
+		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					data: { partOActiveCoolingRequired: false },
+				},
+			},
+			cooling: {
+				airConditioning: {
+					data: [],
+					complete: true,
+				},
+			},
+		});
+
+		await renderSuspended(GeneralDetails);
+		await user.click(screen.getByTestId("partOActiveCoolingRequired_yes"));
+		await nextTick();
+
+		expect(store.cooling.airConditioning.complete).toBe(false);
+	});
+
+	test("keeps cooling complete when active cooling becomes required and an air conditioning system is entered", async () => {
+		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					data: { partOActiveCoolingRequired: false },
+				},
+			},
+			cooling: {
+				airConditioning: {
+					data: [{
+						data: {
+							name: "Air conditioner",
+							coolingCapacity: 1,
+							seasonalEnergyEfficiencyRatio: 1,
+							convectionFraction: 1,
+						},
+						complete: true,
+					}],
+					complete: true,
+				},
+			},
+		});
+
+		await renderSuspended(GeneralDetails);
+		await user.click(screen.getByTestId("partOActiveCoolingRequired_yes"));
+		await nextTick();
+
+		expect(store.cooling.airConditioning.complete).toBe(true);
+	});
+});
