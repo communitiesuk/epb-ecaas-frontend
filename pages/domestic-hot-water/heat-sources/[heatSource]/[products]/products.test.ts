@@ -10,6 +10,8 @@ const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
 	mockNavigateTo: vi.fn(),
 }));
 
+const DHW_HEAT_SOURCE_BASE_PATH = "/domestic-hot-water/heat-sources";
+
 describe("Heat source products page", () => {
 	let store: ReturnType<typeof useEcaasStore>;
 
@@ -20,7 +22,14 @@ describe("Heat source products page", () => {
 	const user = userEvent.setup();
 
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => {
+		const route = mockRoute();
+
+		// Mocked paths are relative to the heat sources
+		// The Router expects the full path to be valid  else it emits a warning
+		// route.path is the path passed to the router, so we need to prefix the base path
+		return reactive({ ...route, path: `${DHW_HEAT_SOURCE_BASE_PATH}${route?.path ?? ""}` });
+	});
 	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	const MOCKED_HEAT_PUMPS: PaginatedResult<DisplayProduct> = {
@@ -134,7 +143,7 @@ describe("Heat source products page", () => {
 	test("title dependant on the type of heat source", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				pump: "0",
+				heatSource: "0",
 				products: "heat-pump",
 			},
 			path: "/0/heat-pump",
