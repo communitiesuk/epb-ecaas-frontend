@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import type { H3Error } from "h3";
 import type { Product } from "~/pcdb/pcdb.types";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath.ts";
 import ProductDetails from "./[id]/index.vue";
 
 const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
@@ -10,7 +11,7 @@ const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
 	mockRoute: vi.fn(),
 	mockNavigateTo: vi.fn(),
 }));
-
+const SPACE_HEATING_HEAT_EMITTERS_PATH = "/space-heating/heat-emitters";
 describe("Heat pump details", async () => {
 	const wetDistributionSystem: Partial<HeatEmittingData> = {
 		name: "Wet distribution system 1",
@@ -49,7 +50,7 @@ describe("Heat pump details", async () => {
 	const user = userEvent.setup();
 
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(SPACE_HEATING_HEAT_EMITTERS_PATH, mockRoute));
 	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	beforeEach(() => {

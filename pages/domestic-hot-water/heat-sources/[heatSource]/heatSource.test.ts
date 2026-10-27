@@ -11,6 +11,8 @@ import HeatSourceForm from "./index.vue";
 
 vi.mock("uuid");
 
+// The router only resolves links against full page paths
+// so to prevent validation warnings we use full path routes rather than params
 const heatSourceRoute = (index: string) => `/domestic-hot-water/heat-sources/${index}`;
 
 const user = userEvent.setup();

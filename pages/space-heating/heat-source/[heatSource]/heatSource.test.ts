@@ -7,6 +7,10 @@ import type { BoilerProduct, DisplayProduct, HeatBatteryDryCoreProduct, HeatBatt
 import { celsius } from "~/utils/units/temperature";
 import HeatSourceForm from "./index.vue";
 
+// The router only resolves links against full page paths
+// so to prevent validation warnings we use full path routes rather than params
+const spaceHeatingHeatSourceRoute = (index: string) => `/space-heating/heat-source/${index}`;
+
 vi.mock("uuid");
 
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
@@ -185,11 +189,7 @@ describe("heatSource", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -213,11 +213,7 @@ describe("heatSource", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			expect((await screen.findByTestId("typeOfHeatSource_heatPump")).hasAttribute("checked"));
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat pump 1");
@@ -233,11 +229,7 @@ describe("heatSource", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.clear(screen.getByTestId("name"));
 			await user.type(screen.getByTestId("name"), "Updated heat pump");
@@ -393,11 +385,7 @@ describe("heatSource", () => {
 				data: ref(heatPumpProductWithFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -442,11 +430,7 @@ describe("heatSource", () => {
 				data: ref(heatPumpProductWithFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -481,11 +465,7 @@ describe("heatSource", () => {
 				data: ref(heatPumpProductWithFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -514,11 +494,7 @@ describe("heatSource", () => {
 				data: ref(heatPumpProductWithElectricityFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -588,11 +564,7 @@ describe("heatSource", () => {
 					},
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
 
@@ -656,11 +628,7 @@ describe("heatSource", () => {
 						},
 					},
 				});
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 				const backupBoilerInStoreBeforeChange = store.spaceHeating.heatSource.data.find(hs => hs.data.id === backupBoiler.id);
 				expect(backupBoilerInStoreBeforeChange).toBeDefined();
 
@@ -717,11 +685,7 @@ describe("heatSource", () => {
 					},
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				const packagedMechVentBeforeChange = store.infiltrationAndVentilation.mechanicalVentilation.data.find(item => item.data.id === packagedMechanicalVentilationId);
 				expect(packagedMechVentBeforeChange).toBeDefined();
@@ -776,11 +740,7 @@ describe("heatSource", () => {
 					},
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				const packagedWaterStorageBeforeChange = store.domesticHotWater.waterStorage.data.find(item => item.data.id === packagedWaterStorageId);
 				expect(packagedWaterStorageBeforeChange).toBeDefined();
@@ -850,11 +810,7 @@ describe("heatSource", () => {
 					data: ref(heatBatteryProduct),
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryDryCore"));
 
@@ -879,11 +835,7 @@ describe("heatSource", () => {
 					data: ref(heatBatteryProduct),
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				expect(await screen.findByTestId("pcdbProductData")).toBeDefined();
 			});
@@ -901,11 +853,7 @@ describe("heatSource", () => {
 					data: ref(heatPumpProduct),
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("None");
 			});
@@ -929,11 +877,7 @@ describe("heatSource", () => {
 					data: ref(heatPumpProduct),
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("Comes with boiler");
 			});
@@ -968,11 +912,7 @@ describe("heatSource", () => {
 					data: ref(heatPumpProduct),
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				expect((await screen.findByTestId("productData_packagedProducts")).innerText).toBe("Comes with water cylinder");
 			});
@@ -995,11 +935,7 @@ describe("heatSource", () => {
 					data: ref(heatPumpProductWithCylinder),
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				expect(screen.getByTestId("waterCylinderConfiguration")).toBeDefined();
 
@@ -1027,11 +963,7 @@ describe("heatSource", () => {
 					data: ref(heatPumpProductWithCylinder),
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				await user.click(screen.getByTestId("waterCylinderConfiguration_hotWaterCylinder"));
 				await user.click(screen.getByTestId("saveProgress"));
@@ -1075,11 +1007,7 @@ describe("heatSource", () => {
 					data: ref(heatPumpProductWithCylinder),
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				await user.click(screen.getByTestId("waterCylinderConfiguration_preheatedWaterCylinder"));
 				await user.click(screen.getByTestId("saveProgress"));
@@ -1146,11 +1074,7 @@ describe("heatSource", () => {
 					data: ref(heatPumpProductWithCylinder),
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
 				await user.click(screen.getByTestId("saveProgress"));
@@ -1178,11 +1102,7 @@ describe("heatSource", () => {
 					}),
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 			});
@@ -1254,11 +1174,7 @@ describe("heatSource", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -1307,11 +1223,7 @@ describe("heatSource", () => {
 					},
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 				await user.click(screen.getByTestId("typeOfHeatSource_heatPump"));
 
@@ -1329,11 +1241,7 @@ describe("heatSource", () => {
 					},
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "1" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("1") });
 
 				await user.click(screen.getByTestId("typeOfHeatSource_heatBattery"));
 				await user.tab();
@@ -1596,7 +1504,7 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfBoiler_combiBoiler"));
 			await user.click(screen.getByTestId("chooseAProductButton"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/0/combi-boiler");
+			expect(navigateToMock).toHaveBeenCalledWith("/space-heating/heat-source/0/combi-boiler");
 		});
 
 		test("boiler data is saved to store state when form is valid", async () => {
@@ -1628,11 +1536,7 @@ describe("heatSource", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			expect((await screen.findByTestId("typeOfHeatSource_boiler")).hasAttribute("checked"));
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Boiler 1");
@@ -1648,11 +1552,7 @@ describe("heatSource", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "1" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("1") });
 
 			await user.clear(screen.getByTestId("name"));
 			await user.type(screen.getByTestId("name"), "Updated boiler");
@@ -1724,11 +1624,7 @@ describe("heatSource", () => {
 				data: ref(backupBoilerProduct),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			["heatPump", "boiler", "heatBattery"].forEach(type => {
 				expect(
@@ -1827,11 +1723,7 @@ describe("heatSource", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "1" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("1") });
 			const backUpBolerInStoreBeforeChange = store.spaceHeating.heatSource.data.find(hs => hs.data.id === backupBoiler.id);
 			expect(backUpBolerInStoreBeforeChange).toBeDefined();
 			await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
@@ -1861,11 +1753,7 @@ describe("heatSource", () => {
 				data: ref(boilerProductWithLPGFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			const productData = await screen.findByTestId("pcdbProductData");
 
@@ -1894,11 +1782,7 @@ describe("heatSource", () => {
 				data: ref(boilerProductWithFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -1944,11 +1828,7 @@ describe("heatSource", () => {
 				data: ref(boilerProductWithFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -1983,11 +1863,7 @@ describe("heatSource", () => {
 				data: ref(boilerProductWithFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -2016,11 +1892,7 @@ describe("heatSource", () => {
 				data: ref(boilerProductWithElectricityFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -2051,11 +1923,7 @@ describe("heatSource", () => {
 					},
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { heatSource: "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 			});
 
 			afterEach(() => store.$reset());
@@ -2092,11 +1960,7 @@ describe("heatSource", () => {
 				data: ref(boilerProductWithFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			expect(screen.getByTestId("energySupply_LPG_bottled")).toBeDefined();
 			expect(screen.getByTestId("energySupply_LPG_condition_11F")).toBeDefined();
@@ -2123,11 +1987,7 @@ describe("heatSource", () => {
 				data: ref(boilerProductWithElectricityFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			expect(screen.queryByTestId("energySupply_electricity")).toBeNull();
 			expect(screen.queryByTestId("energySupply_LPG_bottled")).toBeNull();
@@ -2154,11 +2014,7 @@ describe("heatSource", () => {
 				data: ref(boilerProductWithFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("energySupply_LPG_condition_11F"));
 			await user.click(screen.getByTestId("saveAndComplete"));
@@ -2188,11 +2044,7 @@ describe("heatSource", () => {
 				data: ref(boilerProductWithFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 			expect(screen.getByText("No LPG energy sources added")).toBeDefined();
 			expect(screen.getByRole("link", { name: "Click here to add an LPG energy source" })).toBeDefined();
 		});
@@ -2217,11 +2069,7 @@ describe("heatSource", () => {
 				data: ref(boilerProductWithMainsGasFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			expect(screen.queryByTestId("energySupply_mains_gas")).toBeNull();
 			expect(screen.getByTestId<HTMLInputElement>("energySupply").type).toBe("hidden");
@@ -2285,7 +2133,7 @@ describe("heatSource", () => {
 			});
 			await user.click(screen.getByTestId("typeOfHeatSource_heatInterfaceUnit"));
 			await user.click(screen.getByTestId("chooseAProductButton"));
-			expect(navigateToMock).toHaveBeenCalledWith("/0/heat-interface-unit");
+			expect(navigateToMock).toHaveBeenCalledWith("/space-heating/heat-source/0/heat-interface-unit");
 		});
 
 		test("renders multiple heat network options when multiple heat networks exist in state", async () => {
@@ -2506,7 +2354,7 @@ describe("heatSource", () => {
 			await user.click(screen.getByTestId("typeOfHeatBattery_heatBatteryPcm"));
 			await user.click(screen.getByTestId("chooseAProductButton"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/0/heat-battery-pcm");
+			expect(navigateToMock).toHaveBeenCalledWith("/space-heating/heat-source/0/heat-battery-pcm");
 		});
 
 		test("heat battery data is saved to store state when form is valid", async () => {
@@ -2540,11 +2388,7 @@ describe("heatSource", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			expect((await screen.findByTestId("typeOfHeatSource_heatBattery")).hasAttribute("checked"));
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat battery 1");
@@ -2561,11 +2405,7 @@ describe("heatSource", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "1" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("1") });
 
 			await user.clear(screen.getByTestId("name"));
 			await user.type(screen.getByTestId("name"), "Updated heat battery");
@@ -2611,11 +2451,7 @@ describe("heatSource", () => {
 				data: ref(heatBatteryPcmProductWithFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -2657,11 +2493,7 @@ describe("heatSource", () => {
 				data: ref(heatBatteryDryCoreProductWithFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -2700,11 +2532,7 @@ describe("heatSource", () => {
 				data: ref(heatBatteryPcmProductWithFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -2739,11 +2567,7 @@ describe("heatSource", () => {
 				data: ref(heatBatteryPcmProductWithFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -2772,11 +2596,7 @@ describe("heatSource", () => {
 				data: ref(heatBatteryProductWithElectricityFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -2805,11 +2625,7 @@ describe("heatSource", () => {
 				data: ref(heatBatteryProductWithElectricityFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			expect(screen.queryByTestId("energySupply_electricity")).toBeNull();
 		});
@@ -2834,11 +2650,7 @@ describe("heatSource", () => {
 				data: ref(heatBatteryProductNoFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			expect(screen.getByTestId("energySupply_electricity")).toBeDefined();
 		});
@@ -2863,11 +2675,7 @@ describe("heatSource", () => {
 				data: ref(heatBatteryProductNoFuelType),
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: spaceHeatingHeatSourceRoute("0") });
 
 			await user.click(screen.getByTestId("energySupply_electricity"));
 			await user.click(screen.getByTestId("saveAndComplete"));
