@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import type { BoilerProduct, DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath";
 import Products from "./index.vue";
 
 const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
@@ -22,14 +23,7 @@ describe("Heat source products page", () => {
 	const user = userEvent.setup();
 
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => () => {
-		const route = mockRoute();
-
-		// Mocked paths are relative to the heat sources
-		// The Router expects the full path to be valid  else it emits a warning
-		// route.path is the path passed to the router, so we need to prefix the base path
-		return reactive({ ...route, path: `${DHW_HEAT_SOURCE_BASE_PATH}${route?.path ?? ""}` });
-	});
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(DHW_HEAT_SOURCE_BASE_PATH, mockRoute));
 	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	const MOCKED_HEAT_PUMPS: PaginatedResult<DisplayProduct> = {

@@ -7,6 +7,10 @@ import { celsius } from "~/utils/units/temperature";
 import { litre } from "~/utils/units/volume";
 import WaterStorage from "./index.vue";
 
+// The router only resolves links against full page paths
+// so to prevent validation warnings we use full path routes rather than params
+const waterStorageRoute = (index: string) => `/domestic-hot-water/hot-water-cylinders/${index}`;
+
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
 	navigateToMock: vi.fn(),
@@ -248,11 +252,7 @@ describe("water storage", () => {
 			});
 
 			addHeatPumpStoreData();
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "0" },
-				},
-			});
+			await renderSuspended(WaterStorage, { route: waterStorageRoute("0") });
 
 			expect(
 				(await screen.findByTestId<HTMLInputElement>(`typeOfWaterStorage_hotWaterCylinder`)).checked,
@@ -307,11 +307,7 @@ describe("water storage", () => {
 				},
 			});
 			
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "0" },
-				},
-			});
+			await renderSuspended(WaterStorage, { route: waterStorageRoute("0") });
 
 			expect(screen.queryByTestId("areaOfHeatExchanger")).toBeNull();
 		});
@@ -328,7 +324,7 @@ describe("water storage", () => {
 			await user.click(screen.getByTestId("typeOfWaterStorage_smartHotWaterTank"));
 			await user.click(screen.getByTestId("chooseAProductButton"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/0/smart-hot-water-tank");
+			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-cylinders/0/smart-hot-water-tank");
 		});
 
 		test("data is saved to store state when form is valid", async () => {
@@ -347,11 +343,7 @@ describe("water storage", () => {
 					.productReference = "42";
 			});
 
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "0" },
-				},
-			});
+			await renderSuspended(WaterStorage, { route: waterStorageRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -379,11 +371,7 @@ describe("water storage", () => {
 			});
 
 			addHeatPumpStoreData();
-			await renderSuspended(WaterStorage, {
-				// Using string route instead of object with params
-				// as ther router needs to know the full path for proper navigation validation
-				route: "domestic-hot-water/hot-water-cylinders/0",
-			});
+			await renderSuspended(WaterStorage, { route: waterStorageRoute("0") });
 
 			expect(
 				(await screen.findByTestId<HTMLInputElement>(`typeOfWaterStorage_smartHotWaterTank`))
@@ -417,11 +405,7 @@ describe("water storage", () => {
 					.productReference = "42";
 			});
 
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { waterStorage: "0" },
-				},
-			});
+			await renderSuspended(WaterStorage, { route: waterStorageRoute("0") });
 
 			navigateToMock.mockClear();
 
@@ -461,11 +445,7 @@ describe("water storage", () => {
 
 			addHeatPumpStoreData();
 	
-			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterstorage": "0" },
-				},
-			});
+			await renderSuspended(WaterStorage, { route: waterStorageRoute("0") });
 	
 			expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 		});

@@ -51,7 +51,7 @@ const selectProduct = async () => {
 		{{ productType ? `Back to ${sentenceToLowerCase(productType(true))}` : 'Back' }}
 	</NuxtLink>
 
-	<WwhrsProductDetailsPage :product="(data as Product)" />
+	<WwhrsProductDetailsPage v-if="wwhrsProduct" :product="(data as Product)" />
 
 	<div class="govuk-button-group">
 		<GovButton

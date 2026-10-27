@@ -2,12 +2,15 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath";
 import Products from "./index.vue";
 
 const { mockFetch, mockRoute } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
 	mockRoute: vi.fn(),
 }));
+
+const DHW_WWHRS_BASE_PATH = "/domestic-hot-water/wwhrs";
 
 describe("WWHRS products page", () => {
 	let store: ReturnType<typeof useEcaasStore>;
@@ -19,7 +22,7 @@ describe("WWHRS products page", () => {
 	const user = userEvent.setup();
 
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(DHW_WWHRS_BASE_PATH, mockRoute));
 
 	const wwhrs: Partial<WwhrsData> = {
 		id: "12992f88-498c-455f-b3bf-c6f0ab0b8138",
