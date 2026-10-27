@@ -380,9 +380,9 @@ describe("water storage", () => {
 
 			addHeatPumpStoreData();
 			await renderSuspended(WaterStorage, {
-				route: {
-					params: { "waterStorage": "0" },
-				},
+				// Using string route instead of object with params
+				// as ther router needs to know the full path for proper navigation validation
+				route: "domestic-hot-water/hot-water-cylinders/0",
 			});
 
 			expect(
