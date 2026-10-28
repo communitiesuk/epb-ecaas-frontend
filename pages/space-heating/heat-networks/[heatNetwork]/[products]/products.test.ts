@@ -2,7 +2,10 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath.ts";
 import Products from "./index.vue";
+
+const SPACE_HEATING_HEAT_NETWORKS_PATH = "/space-heating/heat-networks";
 
 const { mockFetch, mockRoute } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
@@ -19,7 +22,7 @@ describe("Heat Network Products Page", () => {
 	const user = userEvent.setup();
 
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(SPACE_HEATING_HEAT_NETWORKS_PATH, mockRoute));
 
 	afterEach(() => {
 		mockFetch.mockReset();

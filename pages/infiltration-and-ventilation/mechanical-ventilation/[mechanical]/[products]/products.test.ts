@@ -1,13 +1,15 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath.ts";
 import Products from "./index.vue";
+
+const INFILTRATION_AND_VENTILATION_MECHANICAL_VENTILATION_PATH = "/infiltration-and-ventilation/mechanical-ventilation";
 
 const { mockFetch, mockRoute } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
 	mockRoute: vi.fn(),
 }));
-
 describe("Mechanical ventilation products page", () => {
 	let store: ReturnType<typeof useEcaasStore>;
 
@@ -18,7 +20,7 @@ describe("Mechanical ventilation products page", () => {
 	const user = userEvent.setup();
 
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(INFILTRATION_AND_VENTILATION_MECHANICAL_VENTILATION_PATH, mockRoute));
 
 	afterEach(() => {
 		mockFetch.mockReset();
