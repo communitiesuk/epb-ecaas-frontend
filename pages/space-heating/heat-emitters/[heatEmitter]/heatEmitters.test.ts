@@ -5,6 +5,8 @@ import type { DisplayProduct, ElectricStorageHeaterProduct, FanCoilProduct } fro
 import { millimetre } from "~/utils/units/length";
 import HeatEmitterForm from "./index.vue";
 
+const heatEmittersRoute = (index: string) => `/space-heating/heat-emitters/${index}`;
+
 const { navigateToMock, mockFetch } = vi.hoisted(() => ({
 	navigateToMock: vi.fn(),
 	mockFetch: vi.fn(),
@@ -68,6 +70,10 @@ const electricStorageHeater: HeatEmittingData = {
 	numOfStorageHeaters: 4,
 };
 
+beforeEach(() => {
+	navigateToMock.mockClear();
+	mockFetch.mockClear();
+});
 describe("Heat emitters", () => {
 	const user = userEvent.setup();
 	
@@ -117,9 +123,7 @@ describe("Heat emitters", () => {
 	describe("Wet distribution system", () => {
 		test("Wet distribution system section displays when wet distribution system is selected", async () => {
 			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
+				route: heatEmittersRoute("create"),
 			});
 			await user.click(screen.getByTestId("typeOfHeatEmitter_wetDistributionSystem"));
 
@@ -127,9 +131,7 @@ describe("Heat emitters", () => {
 		});
 		test("Expected fields render when type of wet distribution system is selected", async () => {
 			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
+				route: heatEmittersRoute("create"),
 			});
 
 			expect(screen.queryByTestId("name")).toBeNull();
@@ -160,11 +162,7 @@ describe("Heat emitters", () => {
 			["7", true],
 			["8", false],
 		])("When Eco design controller class is %s, min flow temp & min/max outdoor temp displayed is %b", async (num, expectToBeDisplayed) => {
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 			await user.click(screen.getByTestId("typeOfHeatEmitter_wetDistributionSystem"));
 
 			expect(screen.queryByTestId("minFlowTemp")).toBeNull();
@@ -185,11 +183,7 @@ describe("Heat emitters", () => {
 		});
 
 		test("Min/Max flow rate options shows when variable flow rate is yes", async () => {
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 			await user.click(screen.getByTestId("typeOfHeatEmitter_wetDistributionSystem"));
 
 			expect(screen.queryByTestId("minFlowRate")).toBeNull();
@@ -201,11 +195,7 @@ describe("Heat emitters", () => {
 			expect(screen.getByTestId("maxFlowRate")).toBeDefined();
 		});
 		test("Design flow rate option shows when variable flow rate is no", async () => {
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 			await user.click(screen.getByTestId("typeOfHeatEmitter_wetDistributionSystem"));
 
 			expect(screen.queryByTestId("designFlowRate")).toBeNull();
@@ -224,11 +214,7 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			expect((await screen.findByTestId("typeOfHeatEmitter_wetDistributionSystem")).hasAttribute("checked"));
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Wet Distribution System 1");
@@ -243,11 +229,7 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			await user.clear(screen.getByTestId("name"));
 			await user.type(screen.getByTestId("name"), "Updated Wet Distribution System");
@@ -275,11 +257,7 @@ describe("Heat emitters", () => {
 					},
 
 				});
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 				expect(screen.getByTestId("emittersSection")).toBeDefined();
 			});
 
@@ -306,11 +284,7 @@ describe("Heat emitters", () => {
 					},
 				});
 
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 				await user.click(screen.getByTestId("emitter_edit_0"));
 
@@ -346,11 +320,7 @@ describe("Heat emitters", () => {
 					},
 				});
 
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 				await user.click(screen.getByTestId("emitter_edit_0"));
 
@@ -379,11 +349,7 @@ describe("Heat emitters", () => {
 						},
 					},
 				});
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 				await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
 				const system = store.spaceHeating.heatEmitters.data[0]!.data as WetDistributionSystemData;
 				if ("emitters" in system) {
@@ -406,11 +372,7 @@ describe("Heat emitters", () => {
 						},
 					},
 				});
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 				await user.click(screen.getByTestId("typeOfHeatEmitter_fanCoil"));
 				const system = store.spaceHeating.heatEmitters.data[0]!.data as WetDistributionSystemData;
 				if ("emitters" in system) {
@@ -433,11 +395,7 @@ describe("Heat emitters", () => {
 						},
 					},
 				});
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 				await user.click(screen.getByTestId("typeOfHeatEmitter_underFloorHeating"));
 				const system = store.spaceHeating.heatEmitters.data[0]!.data as WetDistributionSystemData;
 				if ("emitters" in system) {
@@ -461,11 +419,7 @@ describe("Heat emitters", () => {
 						},
 					},
 				});
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 				await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
 				expect(await screen.findByText("Add emitter")).toBeDefined();
 				await user.click(screen.getByTestId("emitter_cancel_0"));
@@ -487,11 +441,7 @@ describe("Heat emitters", () => {
 					},
 				});
 
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 				expect(screen.getByTestId("emitter-emitter1")).toBeDefined();
 				expect(screen.getByTestId("emitter-emitter2")).toBeDefined();
@@ -523,11 +473,7 @@ describe("Heat emitters", () => {
 					},
 
 				});
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 				expect(screen.getByTestId("emitter-emitter1")).toBeDefined();
 				expect(screen.getByTestId("emitter-emitter2")).toBeDefined();
 			});
@@ -551,11 +497,7 @@ describe("Heat emitters", () => {
 						},
 					},
 				});
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 				await user.click(screen.getByTestId("emitter_edit_0"));
 				expect(screen.getByTestId("numOfRadiators_0")).toBeDefined();
 				expect(screen.getByTestId("length_0")).toBeDefined();
@@ -594,11 +536,7 @@ describe("Heat emitters", () => {
 						},
 					},
 				});
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 				await user.click(screen.getByTestId("emitter_edit_0"));
 				await user.type(screen.getByTestId("numOfRadiators_0"), "2");
 				await user.type(screen.getByTestId("length_0"), "1500");
@@ -633,11 +571,7 @@ describe("Heat emitters", () => {
 						},
 					},
 				});
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 				await user.click(screen.getByTestId("emitter_edit_0"));
 				expect(screen.getByTestId("numOfFanCoils_0")).toBeDefined();
 				await user.type(screen.getByTestId("numOfFanCoils_0"), "3");
@@ -672,11 +606,7 @@ describe("Heat emitters", () => {
 						},
 					},
 				});
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 				await user.click(screen.getByTestId("emitter_edit_0"));
 				await user.type(screen.getByTestId("numOfFanCoils_0"), "3");
 				await user.tab();
@@ -709,11 +639,7 @@ describe("Heat emitters", () => {
 						},
 					},
 				});
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 				await user.click(screen.getByTestId("emitter_edit_0"));
 				expect(screen.getByTestId("areaOfUnderFloorHeating_0")).toBeDefined();
 				await user.type(screen.getByTestId("areaOfUnderFloorHeating_0"), "50");
@@ -750,14 +676,10 @@ describe("Heat emitters", () => {
 					},
 				});
 
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 				await user.click(screen.getByTestId("emitter_edit_0"));
-
+			
 				expect(screen.getByTestId<HTMLInputElement>("emitterName_0").value).toBe("My radiator");
 				expect(screen.getByTestId<HTMLInputElement>("typeOfHeatEmitter_0_radiator").hasAttribute("checked")).toBe(true);
 				expect(screen.getByTestId<HTMLInputElement>("numOfRadiators_0").value).toBe("4");
@@ -785,11 +707,7 @@ describe("Heat emitters", () => {
 					}),
 				});
 
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 				expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 			});
@@ -814,11 +732,7 @@ describe("Heat emitters", () => {
 					data: ref(fanCoilProductWithFuelType),
 				});
 		
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 				await user.click(screen.getByTestId("saveEmitter_0"));
 		
 				const error = screen.getByTestId("incompatibleEnergySourceError");
@@ -852,11 +766,7 @@ describe("Heat emitters", () => {
 					data: ref(fanCoilProductWithFuelType),
 				});
 
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 				await user.click(screen.getByTestId("saveEmitter_0"));
 
@@ -884,11 +794,7 @@ describe("Heat emitters", () => {
 					data: ref(fanCoilProductWithFuelType),
 				});
 
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 				await user.click(screen.getByTestId("saveEmitter_0"));
 
@@ -933,11 +839,7 @@ describe("Heat emitters", () => {
 					data: ref(fanCoilProductWithFuelType),
 				});
 		
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 				await user.click(screen.getByTestId("saveEmitter_0"));
 		
@@ -974,11 +876,7 @@ describe("Heat emitters", () => {
 					data: ref(fanCoilProductWithElectricityFuelType),
 				});
 		
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 				
 				await user.click(screen.getByTestId("saveEmitter_0"));
 		
@@ -1027,11 +925,7 @@ describe("Heat emitters", () => {
 					data: ref(fanCoilProductWithFuelType),
 				});
 			
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 			
 				await user.click(screen.getByTestId("saveEmitter_0"));
 				await user.click(screen.getByTestId("saveAndComplete"));
@@ -1066,11 +960,7 @@ describe("Heat emitters", () => {
 					},
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				await user.click(screen.getByTestId("saveAndComplete"));
 	
@@ -1107,11 +997,7 @@ describe("Heat emitters", () => {
 					},
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				await user.click(screen.getByTestId("saveAndComplete"));
 	
@@ -1152,11 +1038,7 @@ describe("Heat emitters", () => {
 					},
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				await user.click(screen.getByTestId("saveAndComplete"));
 	
@@ -1182,11 +1064,7 @@ describe("Heat emitters", () => {
 					},
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				await user.click(screen.getByTestId("saveAndComplete"));
 	
@@ -1218,11 +1096,7 @@ describe("Heat emitters", () => {
 					},
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				await user.click(screen.getByTestId("saveAndComplete"));
 	
@@ -1284,11 +1158,7 @@ describe("Heat emitters", () => {
 					data: ref(fanCoilProductWithFuelType),
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				await user.click(screen.getByTestId("saveEmitter_0"));
 				await user.click(screen.getByTestId("saveAndComplete"));
@@ -1316,11 +1186,7 @@ describe("Heat emitters", () => {
 					},
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				await user.click(screen.getByTestId("emitter_edit_0"));
 	
@@ -1341,11 +1207,7 @@ describe("Heat emitters", () => {
 					},
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				await user.click(screen.getByTestId("emitter_edit_0"));
 	
@@ -1366,11 +1228,7 @@ describe("Heat emitters", () => {
 					},
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				await user.click(screen.getByTestId("emitter_edit_0"));
 	
@@ -1393,11 +1251,7 @@ describe("Heat emitters", () => {
 					},
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				await user.click(screen.getByTestId("emitter_edit_0"));
 	
@@ -1442,11 +1296,7 @@ describe("Heat emitters", () => {
 					},
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				await user.click(screen.getByTestId("emitter_edit_0"));
 	
@@ -1489,11 +1339,7 @@ describe("Heat emitters", () => {
 					},
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { "heatEmitter": "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				await user.click(screen.getByTestId("emitter_edit_0"));
 	
@@ -1534,11 +1380,7 @@ describe("Heat emitters", () => {
 					},
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				expect(screen.getByTestId("emitter-editor-0")).toBeDefined();
 				expect(screen.getByTestId("typeOfHeatEmitter_0")).toBeDefined();
@@ -1572,11 +1414,7 @@ describe("Heat emitters", () => {
 					},
 				});
 	
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 	
 				expect(screen.queryByTestId("emitter-editor-0")).toBeNull();
 				expect(screen.getByTestId("emitter_edit_0")).toBeDefined();
@@ -1606,11 +1444,7 @@ describe("Heat emitters", () => {
 					data: ref(fanCoilProductWithFuelType),
 				});
 
-				await renderSuspended(HeatEmitterForm, {
-					route: {
-						params: { heatEmitter: "0" },
-					},
-				});
+				await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 				expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
 
@@ -1629,11 +1463,7 @@ describe("Heat emitters", () => {
 
 	describe("Warm air heater", () => {
 		test("Expected fields render when type of warm air heater is selected", async () => {
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 			await user.click(screen.getByTestId("typeOfHeatEmitter_warmAirHeater"));
 
 			expect(screen.getByTestId("name")).toBeDefined();
@@ -1682,11 +1512,7 @@ describe("Heat emitters", () => {
 				data: ref(fanCoilProductWithFuelType),
 			});
 
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { heatEmitter: "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			expect(store.spaceHeating.heatEmitters.data[0]?.complete).toBe(false);
 			expect(store.spaceHeating.heatEmitters.complete).toBe(false);
@@ -1694,11 +1520,7 @@ describe("Heat emitters", () => {
 	});
 	describe("Instant Electric Heater", () => {
 		test("Expected fields render when type of warm air heater is selected", async () => {
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 			await user.click(screen.getByTestId("typeOfHeatEmitter_instantElectricHeater"));
 
 			expect(screen.getByTestId("name")).toBeDefined();
@@ -1710,11 +1532,7 @@ describe("Heat emitters", () => {
 	});
 	describe("Electric Storage Heater", () => {
 		test("Expected fields render when type of electric storage heater is selected", async () => {
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 			await user.click(screen.getByTestId("typeOfHeatEmitter_electricStorageHeater"));
 			expect(screen.getByTestId("name")).toBeDefined();
 			expect(screen.getByTestId("selectElectricStorageHeater")).toBeDefined();
@@ -1722,15 +1540,11 @@ describe("Heat emitters", () => {
 		});
 
 		test("the 'Select a product' element navigates user to the products page", async () => {
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 			await user.click(screen.getByTestId("typeOfHeatEmitter_electricStorageHeater"));
 			await user.click(screen.getByTestId("chooseAProductButton"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/0/electric-storage-heater");
+			expect(navigateToMock).toHaveBeenCalledWith("/space-heating/heat-emitters/0/electric-storage-heater");
 		});
 
 		test("shows an error when the selected electric storage heater product uses an energy source that has not been added to general details", async () => {
@@ -1754,11 +1568,7 @@ describe("Heat emitters", () => {
 				data: ref(electricStorageHeaterProduct),
 			});
 		
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 		
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -1802,11 +1612,7 @@ describe("Heat emitters", () => {
 				data: ref(electricStorageHeaterProduct),
 			});
 		
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { heatEmitter: "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 		
 			await user.click(screen.getByTestId("saveAndComplete"));
 		
@@ -1841,11 +1647,7 @@ describe("Heat emitters", () => {
 				data: ref(electricStorageHeaterProduct),
 			});
 		
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { heatEmitter: "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 		
 			await user.click(screen.getByTestId("saveAndComplete"));
 		
@@ -1882,11 +1684,7 @@ describe("Heat emitters", () => {
 				data: ref(electricStorageHeaterProductWithElectricityFuelType),
 			});
 		
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { heatEmitter: "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 		
 			await user.click(screen.getByTestId("saveAndComplete"));
 		
@@ -1900,17 +1698,13 @@ describe("Heat emitters", () => {
 
 	describe("Radiator", () => {
 		test("the 'Select a product' element adds the default radiator sort query", async () => {
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 
 			await user.click(screen.getByTestId("typeOfHeatEmitter_wetDistributionSystem"));
 			await user.click(screen.getByTestId("typeOfHeatEmitter_radiator"));
 			await user.click(screen.getByTestId("chooseAProductButton"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/0/radiator?emitterIndex=0&sort=type&order=asc");
+			expect(navigateToMock).toHaveBeenCalledWith("/space-heating/heat-emitters/0/radiator?emitterIndex=0&sort=type&order=asc");
 		});
 	});
 
@@ -1921,11 +1715,7 @@ describe("Heat emitters", () => {
 			["instantElectricHeater", "Instant electric heater"],
 			["electricStorageHeater", "Electric storage heater"],
 		])("sets default name when %s type is selected", async (type, expectedName) => {
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 
 			await user.click(screen.getByTestId(`typeOfHeatEmitter_${type}`));
 			const actualHeatEmitter = store.spaceHeating.heatEmitters.data[0]!;
@@ -1950,11 +1740,7 @@ describe("Heat emitters", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -1980,11 +1766,7 @@ describe("Heat emitters", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			await user.click(screen.getByTestId("saveEmitter_0"));
 
@@ -2010,11 +1792,7 @@ describe("Heat emitters", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			await user.click(screen.getByTestId("saveEmitter_0"));
 
@@ -2040,11 +1818,7 @@ describe("Heat emitters", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			await user.click(screen.getByTestId("saveEmitter_0"));
 
@@ -2069,11 +1843,7 @@ describe("Heat emitters", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			expect(screen.getByTestId("emitterName_0")).toBeDefined();
 			await user.type(screen.getByTestId("numOfRadiators_0"), "3");
@@ -2106,11 +1876,7 @@ describe("Heat emitters", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			expect(screen.getByTestId("emitterName_0")).toBeDefined();
 			await user.type(screen.getByTestId("numOfFanCoils_0"), "5");
@@ -2141,11 +1907,7 @@ describe("Heat emitters", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			expect(screen.getByTestId("emitterName_0")).toBeDefined();
 			await user.type(screen.getByTestId("areaOfUnderFloorHeating_0"), "25");
@@ -2175,11 +1937,7 @@ describe("Heat emitters", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			await user.click(screen.getByTestId("emitter_edit_0"));
 
@@ -2188,11 +1946,7 @@ describe("Heat emitters", () => {
 		});
 
 		test("shows an error when minFlowRate is greater than maxFlowRate", async () => {
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 			await user.click(screen.getByTestId("typeOfHeatEmitter_wetDistributionSystem"));
 			await user.click(screen.getByTestId("hasVariableFlowRate_yes"));
 			await user.type(screen.getByTestId("minFlowRate"), "10");
@@ -2202,17 +1956,10 @@ describe("Heat emitters", () => {
 
 			expect(await screen.findByTestId("heatEmitterErrorSummary")).toBeDefined();
 		});
-		it("navigates to space heating on clicking Save progress", async () => {
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+		it("links to space heating from Save progress", async () => {
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 
-			await user.click(screen.getByTestId("typeOfHeatEmitter_wetDistributionSystem"));
-			await user.click(screen.getByTestId("saveProgress"));
-
-			expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
+			expect(screen.getByTestId("saveProgress").getAttribute("href")).toBe("/space-heating");
 		});
 
 		it("navigates to space heating when valid form is completed", async () => {
@@ -2231,11 +1978,7 @@ describe("Heat emitters", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -2243,22 +1986,14 @@ describe("Heat emitters", () => {
 		});
 
 		test("error summary is displayed when an invalid form in submitted", async () => {
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(await screen.findByTestId("heatEmitterErrorSummary")).toBeDefined();
 		});
 
 		test("error summary is removed from display when type of heat emitter is updated", async () => {
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 			await user.click(screen.getByTestId("typeOfHeatEmitter_wetDistributionSystem"));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -2302,9 +2037,7 @@ describe("Heat emitters", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatEmitterForm, {
-				route: { params: { "heatEmitter": "0" } },
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 			const input = screen.getByTestId("designFlowTemp");
 			await user.clear(input);
 			await user.type(input, LOWER_THAN_MIN_FLOW_TEMP.toString());
@@ -2347,9 +2080,7 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await renderSuspended(HeatEmitterForm, {
-				route: { params: { "heatEmitter": "0" } },
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 			const input = screen.getByTestId("designFlowTemp");
 			await user.clear(input);
 			await user.type(input, HIGHER_THAN_MAX_FLOW_TEMP.toString());
@@ -2384,9 +2115,7 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await renderSuspended(HeatEmitterForm, {
-				route: { params: { "heatEmitter": "0" } },
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 			let error = screen.queryByTestId("designFlowTemp_error");
 			expect(error).toBeNull();
 
@@ -2395,9 +2124,7 @@ describe("Heat emitters", () => {
 			await user.type(designFlowTempInput, UPPER_BOUND_FLOW_TEMP.toString());
 			await user.tab();
 
-			await renderSuspended(HeatEmitterForm, {
-				route: { params: { "heatEmitter": "0" } },
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 			error = screen.queryByTestId("designFlowTemp_error");
 			expect(error).toBeNull();
 		});
@@ -2436,11 +2163,7 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "0" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			await user.click(screen.getByTestId("typeOfHeatEmitter_warmAirHeater"));
 
@@ -2471,9 +2194,7 @@ describe("Heat emitters", () => {
 				},
 			});
 
-			await renderSuspended(HeatEmitterForm, {
-				route: { params: { "heatEmitter": "0" } },
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("0") });
 
 			await user.type(screen.getByTestId("name"), " Changed");
 			await user.tab();
@@ -2493,11 +2214,7 @@ describe("Heat emitters", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatEmitterForm, {
-				route: {
-					params: { "heatEmitter": "create" },
-				},
-			});
+			await renderSuspended(HeatEmitterForm, { route: heatEmittersRoute("create") });
 			await user.click(screen.getByTestId("typeOfHeatEmitter_wetDistributionSystem"));
 			await user.tab();
 			const heatSourceSelect = screen.getByTestId<HTMLSelectElement>("heatSource_hs1");
