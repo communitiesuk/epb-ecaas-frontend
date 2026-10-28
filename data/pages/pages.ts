@@ -31,9 +31,18 @@ const pagesData = [
 	{
 		id: "getBrelReport",
 		title: "Get BREL Report",
-		url: "get-brel-report",
-		type: "section",
-		parentId: "outputs",
+		url: "/get-brel-report",
+		type: "outputs",
+		parentId: "taskList",
+		excludeFromNavigation: () => true,
+	},
+	{
+		id: "getBrelEmailConfirmation",
+		title: "BREL Report sent",
+		url: "/get-brel-email-confirmation",
+		type: "outputs",
+		parentId: "taskList",
+		excludeFromNavigation: () => true,
 	},
 ] as const satisfies Array<Page>;
 

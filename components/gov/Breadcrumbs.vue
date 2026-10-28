@@ -7,7 +7,7 @@ const route = useRoute();
 const getBreadcrumbs = (id: string | undefined, breadcrumbs: Array<Page>): Array<Page> => {
 	const currentPage = pagesData.find(page => page.id === id);
 
-	if (!currentPage) {
+	if (!currentPage || currentPage.excludeFromNavigation?.()) {
 		return breadcrumbs;
 	}
 
