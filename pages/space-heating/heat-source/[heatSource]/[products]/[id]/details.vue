@@ -7,8 +7,8 @@ const router = useRouter();
 const { params, query } = useRoute();
 
 const heatSourceType = kebabToCamelCase(params.products as string);
-
-if (!(heatSourceType in productTypeMap) && !technologyGroups.includes(heatSourceType as TechnologyGroup)) {
+const validHeatSourceType = (heatSourceType in productTypeMap) || technologyGroups.includes(heatSourceType as TechnologyGroup);
+if (!validHeatSourceType) {
 	throw createError({
 		statusCode: 404,
 		statusMessage: "Product type not found",
@@ -26,7 +26,7 @@ const backUrl = getUrl("heatSource")
 		Back to heat source
 	</NuxtLink>
 
-	<ProductDetailsPage :product="(data as Product)" :heat-source-type="heatSourceType" />
+	<ProductDetailsPage v-if="validHeatSourceType" :product="(data as Product)" :heat-source-type="heatSourceType" />
 
 	<div class="govuk-button-group">
 		<GovButton
