@@ -1,9 +1,21 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen } from "@testing-library/vue";
-
 import GetBrelEmailConfirmation from "./get-brel-email-confirmation.vue";
 
+const { navigateToMock } = vi.hoisted(() => ({
+	navigateToMock: vi.fn(),
+}));
+
+mockNuxtImport("navigateTo", () => navigateToMock);
+
 describe("Get BREL Report email confirmation page", () => {
+	beforeEach(() => {
+		navigateToMock.mockReset();
+
+		const emailState = useState<string | null>("brel-assessor-email");
+		emailState.value = "test.assessor@homes.co.uk";
+	});
+
 	it("displays the page title", async () => {
 		await renderSuspended(GetBrelEmailConfirmation);
 
@@ -17,13 +29,15 @@ describe("Get BREL Report email confirmation page", () => {
 		expect(screen.getByText("BREL Report sent")).toBeDefined();
 	});
 
-	// TODO update this once email fetched dynamically
-	it("displays the masked assessor email", async () => {
+	it("displays the dynamic masked assessor email", async () => {
+		const emailState = useState<string | null>("brel-assessor-email");
+		emailState.value = "test.assessor@homes.co.uk";
+
 		await renderSuspended(GetBrelEmailConfirmation);
 
 		expect(
 			screen.getByText(
-				"The BREL Report will be sent to jo********@homes.co.uk in the next 5 minutes",
+				/The BREL Report will be sent to .*@homes\.co\.uk in the next 5 minutes/i,
 			),
 		).toBeDefined();
 	});
@@ -52,5 +66,14 @@ describe("Get BREL Report email confirmation page", () => {
 		const returnToResultsButton = screen.getByTestId("returnToResultsButton");
 		expect(returnToResultsButton).toBeDefined();
 		expect(returnToResultsButton.getAttribute("href")).toBe("/outputs");
+	});
+
+	it("redirects back to the form if no assessor email is stored in state", async () => {
+		const emailState = useState<string | null>("brel-assessor-email");
+		emailState.value = null;
+
+		await renderSuspended(GetBrelEmailConfirmation);
+
+		expect(navigateToMock).toHaveBeenCalledWith("/get-brel-report");
 	});
 });

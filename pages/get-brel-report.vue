@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { FormKitNode } from "@formkit/core";
+
 const title = "Get BREL Report";
 
 const { handleInvalidSubmit, errorMessages, clearErrors } = useErrorSummary();
@@ -11,19 +13,17 @@ const reportTypes: Record<string, string> = {
 } as const;
 
 const confirmationOfIdentityOptions = {
-	confirmation: "I confirm that this is my name and assessor credentials, and I am not making this request on behalf of anyone else.",
+	confirmation:
+        "I confirm that this is my name and assessor credentials, and I am not making this request on behalf of anyone else.",
 };
-
-// TODO: Replace mock data with an API call to verify assessor credentials against the register when available
-const mockRegisteredAssessors = [
-	{
-		name: "Test Assessor",
-		id: "TEST123",
-	},
-];
 
 const assessorNotRegisteredMessage =
     "The assessor name and ID provided don't match our records. You cannot download a BREL report without supplying accurate assessor details.";
+
+const assessorNoEmailMessage =
+    "We found your details on the register, but there is no email address linked to your account. Please update your email address via your scheme provider.";
+
+const currentAssessorErrorMessage = ref(assessorNotRegisteredMessage);
 
 interface BrelReportFormData {
 	typeOfReport: string;
@@ -38,19 +38,52 @@ interface BrelReportFormData {
 	confirmationOfIdentity: string[];
 }
 
-// TODO: Update validation rule when access to the assessor register endpoint is available
-const assessorIsRegistered = (node: FormKitNode) => {
+const confirmedAssessorEmail = useState<string | null>("brel-assessor-email", () => null);
+
+onMounted(() => {
+	confirmedAssessorEmail.value = null;
+});
+
+const assessorIsRegistered = async (node: FormKitNode): Promise<boolean> => {
 	const formData = node.at("$root")?.value as BrelReportFormData | undefined;
 
-	if (!formData?.assessorName || !formData?.assessorId) {
+	if (!formData?.assessorName?.trim() || !formData?.assessorId?.trim()) {
 		return true;
 	}
 
-	return mockRegisteredAssessors.some(
-		(assessor) =>
-			assessor.name.trim().toLowerCase() === formData.assessorName.trim().toLowerCase() &&
-            assessor.id.trim().toUpperCase() === formData.assessorId.trim().toUpperCase(),
-	);
+	confirmedAssessorEmail.value = null;
+
+	try {
+		const response = await $fetch<{
+			isValid: boolean;
+			reason: "NOT_FOUND" | "NO_EMAIL" | null;
+			email: string | null;
+		}>("/api/assessors/verify", {
+			method: "POST",
+			body: {
+				name: formData.assessorName,
+				id: formData.assessorId,
+			},
+		});
+
+		if (response.isValid && response.email) {
+			confirmedAssessorEmail.value = response.email;
+			return true;
+		}
+
+		if (response.reason === "NO_EMAIL") {
+			currentAssessorErrorMessage.value = assessorNoEmailMessage;
+		} else {
+			currentAssessorErrorMessage.value = assessorNotRegisteredMessage;
+		}
+
+		confirmedAssessorEmail.value = null;
+		return false;
+	} catch {
+		currentAssessorErrorMessage.value = assessorNotRegisteredMessage;
+		confirmedAssessorEmail.value = null;
+		return false;
+	}
 };
 
 const handleSubmit = async () => {
@@ -163,7 +196,7 @@ const handleSubmit = async () => {
 				validation="required|assessorIsRegistered"
 				validation-visibility="submit"
 				:validation-rules="{ assessorIsRegistered }"
-				:validation-messages="{ assessorIsRegistered: assessorNotRegisteredMessage }"
+				:validation-messages="{ assessorIsRegistered: currentAssessorErrorMessage }"
 			/>
 			<FormKit
 				id="assessorId"
@@ -173,7 +206,7 @@ const handleSubmit = async () => {
 				validation="required|assessorIsRegistered"
 				validation-visibility="submit"
 				:validation-rules="{ assessorIsRegistered }"
-				:validation-messages="{ assessorIsRegistered: assessorNotRegisteredMessage }"
+				:validation-messages="{ assessorIsRegistered: currentAssessorErrorMessage }"
 			/>
 			<FormKit
 				id="confirmationOfIdentity"

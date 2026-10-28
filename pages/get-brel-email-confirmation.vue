@@ -6,10 +6,15 @@ definePageMeta({ layout: false });
 
 const title = "Get BREL Report";
 
-// TODO will need to dynamically add assessor email here
-const assessorEmail = "joe.bloggs@homes.co.uk";
-const email = obfuscateEmail(assessorEmail);
+const assessorEmailState = useState<string | null>("brel-assessor-email");
 
+if (!assessorEmailState.value) {
+	await navigateTo(getUrl("getBrelReport"));
+}
+
+const email = computed(() =>
+	assessorEmailState.value ? obfuscateEmail(assessorEmailState.value) : "",
+);
 </script>
 
 <template>
@@ -18,11 +23,13 @@ const email = obfuscateEmail(assessorEmail);
 			<Title>{{ title }}</Title>
 		</Head>
 		<div class="govuk-grid-column-three-quarters">
-			<NuxtLink href="/outputs" class="govuk-back-link govuk-!-margin-bottom-6 govuk-!-margin-top-0" data-testid="backLink">Back to results</NuxtLink>
+			<NuxtLink href="/outputs" class="govuk-back-link govuk-!-margin-bottom-6 govuk-!-margin-top-0" data-testid="backLink">
+				Back to results
+			</NuxtLink>
 
 			<h2 class="govuk-heading-l">{{ title }}</h2>
 			<GovPanel title="BREL Report sent" data-testid="getBrelEmailConfirmationPanel" class="email-confirmation-panel">
-				<p>The BREL Report will be sent to {{ email }} in the next 5 minutes</p>
+				<p v-if="email">The BREL Report will be sent to {{ email }} in the next 5 minutes</p>
 				<p>{{ dayjs().format("DD/MM/YYYY HH:mm") }}</p>
 			</GovPanel>
 			<div class="info-text">
@@ -36,14 +43,14 @@ const email = obfuscateEmail(assessorEmail);
 						support@epb.gov.uk
 					</a>.</p>
 			</div>
-			<GovButton href="/outputs" data-testid="returnToResultsButton" secondary>Return to results</GovButton>
+			<GovButton href="/outputs" data-testid="returnToResultsButton" secondary>
+				Return to results
+			</GovButton>
 		</div>
 	</NuxtLayout>
-
 </template>
 
 <style scoped lang="scss">
-
 .email-confirmation-panel {
     margin-bottom: 40px;
 }
@@ -54,6 +61,5 @@ const email = obfuscateEmail(assessorEmail);
 
 .govuk-back-link {
     margin-bottom: 25px;
-
 }
 </style>
