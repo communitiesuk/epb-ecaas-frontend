@@ -2,8 +2,9 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
 import { v4 as uuidv4 } from "uuid";
-import type { DisplayProduct } from "~/pcdb/pcdb.types";
 import HeatNetworks from "./index.vue";
+
+const heatNetworksRoute = (id: string) => `/space-heating/heat-networks/${id}`;
 
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
@@ -20,6 +21,7 @@ describe("Heat Networks", () => {
 
 	beforeEach(() => {
 		store = useEcaasStore();
+		navigateToMock.mockReset();
 	});
 	
 	const user = userEvent.setup();
@@ -83,7 +85,6 @@ describe("Heat Networks", () => {
 
 	afterEach(() => {
 		store.$reset();
-		//navigateToMock.mockReset();
 	});
 
 	const populateValidForm = async () => {
@@ -95,9 +96,7 @@ describe("Heat Networks", () => {
 
 	test("heat networks displays form correctly", async () => {
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "create" },
-			},
+			route: heatNetworksRoute("create"),
 		});
 		await populateValidForm();
 
@@ -111,9 +110,7 @@ describe("Heat Networks", () => {
 		vi.mocked(uuidv4).mockReturnValue(sleevedDistrictHeatNetwork.data.id as unknown as Buffer);
 
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "create" },
-			},
+			route: heatNetworksRoute("create"),
 		});
 
 		await populateValidForm();
@@ -123,9 +120,7 @@ describe("Heat Networks", () => {
 		});
 
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "0" },
-			},
+			route: heatNetworksRoute("0"),
 		});
 
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -154,9 +149,7 @@ describe("Heat Networks", () => {
 		});
     
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "0" },
-			},
+			route: heatNetworksRoute("0"),
 		});
 		
 		expect((await screen.getByTestId<HTMLInputElement>("name")).value).toBe(sleevedDistrictHeatNetwork.data.name);
@@ -166,30 +159,30 @@ describe("Heat Networks", () => {
 	});
 
 	it("navigates to space heating when valid form is completed", async () => {
-		const heatNetworkProduct: Partial<DisplayProduct> = {
-			id: "1000",
-			technologyType: "HeatNetworks",
-		};
-		mockFetch.mockReturnValue({
-			data: ref(heatNetworkProduct),
-		});
-	
+		vi.mocked(uuidv4).mockReturnValue(sleevedDistrictHeatNetwork.data.id as unknown as Buffer);
+
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "0" },
-			},
+			route: heatNetworksRoute("create"),
 		});
-	
+
+		await populateValidForm();
+		store.$patch(state => {
+			(state.spaceHeating.heatNetworks.data[0]!.data as HeatNetworkData)
+				.productReference = "42";
+		});
+
+		await renderSuspended(HeatNetworks, {
+			route: heatNetworksRoute("0"),
+		});
+
 		await user.click(screen.getByTestId("saveAndComplete"));
-	
-		expect(navigateToMock).toHaveBeenCalledWith("/space-heating");
+
+		expect(navigateToMock).lastCalledWith("/space-heating");
 	});
     
 	test("required error messages are displayed when empty heat network form is submitted", async () => {
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "create" },
-			},
+			route: heatNetworksRoute("create"),
 		});
     
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -201,9 +194,7 @@ describe("Heat Networks", () => {
     
 	test("error summary is displayed when an invalid heat network form is submitted", async () => {
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "create" },
-			},
+			route: heatNetworksRoute("create"),
 		});
     
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -212,13 +203,15 @@ describe("Heat Networks", () => {
 	});
 
 	test("the 'Select a product' element navigates user to the products page", async () => {
+		
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "create" },
-			},
+			route: heatNetworksRoute("create"),
 		});
+		await populateValidForm();
 	
-		expect(navigateToMock).toHaveBeenCalledWith("/0/heat-network");	
+		const selectProductLink = screen.getByTestId("selectHeatNetwork");
+		await user.click(selectProductLink);
+		expect(navigateToMock).toHaveBeenCalledWith(`/space-heating/heat-networks/0/heat-network`);
 	});
 
 	test("displays subnetwork name for selected heat network product", async () => {
@@ -251,9 +244,7 @@ describe("Heat Networks", () => {
 		});
 	
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "0" },
-			},
+			route: heatNetworksRoute("0"),
 		});
 		await waitFor(() => {
 			expect(screen.getByTestId("pcdbHeatNetworkProductData")).toBeDefined();
@@ -279,9 +270,7 @@ describe("Heat Networks", () => {
 		});
 
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "0" },
-			},
+			route: heatNetworksRoute("0"),
 		});
 
 		await user.click(screen.getByTestId("typeOfHeatNetwork_sleevedDistrictHeatNetwork"));
@@ -291,9 +280,7 @@ describe("Heat Networks", () => {
 
 	test("creates a heat network with default name when 'choose a product' is selected", async () => {
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "create" },
-			},
+			route: heatNetworksRoute("create"),
 		});
 		await user.click(screen.getByTestId("chooseAProductButton"));
 
@@ -311,9 +298,7 @@ describe("Heat Networks", () => {
 		});
 
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "0" },
-			},
+			route: heatNetworksRoute("0"),
 		});
 
 		await user.click(screen.getByTestId("typeOfHeatNetwork_sleevedDistrictHeatNetwork"));
@@ -338,9 +323,7 @@ describe("Heat Networks", () => {
 		});
 
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "0" },
-			},
+			route: heatNetworksRoute("0"),
 		});
 
 		await user.click(screen.getByTestId("typeOfHeatNetwork_unsleevedDistrictHeatNetwork"));
@@ -367,9 +350,7 @@ describe("Heat Networks", () => {
 		});
 
 		await renderSuspended(HeatNetworks, {
-			route: {
-				params: { "heatNetwork": "0" },
-			},
+			route: heatNetworksRoute("0"),
 		});
 
 		await user.click(screen.getByTestId("typeOfHeatNetwork_communalHeatNetwork"));
@@ -411,9 +392,7 @@ describe("Heat Networks", () => {
 				});
 
 				await renderSuspended(HeatNetworks, {
-					route: {
-						params: { heatNetwork: "0" },
-					},
+					route: heatNetworksRoute("0"),
 				});
 
 				await user.click(screen.getByTestId("saveAndComplete"));
@@ -447,9 +426,7 @@ describe("Heat Networks", () => {
 			});
 
 			await renderSuspended(HeatNetworks, {
-				route: {
-					params: { heatNetwork: "0" },
-				},
+				route: heatNetworksRoute("0"),
 			});
 
 			await user.click(screen.getByTestId("saveAndComplete"));
@@ -479,9 +456,7 @@ describe("Heat Networks", () => {
 			});
 
 			await renderSuspended(HeatNetworks, {
-				route: {
-					params: { heatNetwork: "0" },
-				},
+				route: heatNetworksRoute("0"),
 			});
 
 			await user.click(screen.getByTestId("saveAndComplete"));
