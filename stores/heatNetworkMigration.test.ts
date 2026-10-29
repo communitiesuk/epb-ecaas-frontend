@@ -1,16 +1,22 @@
 import { patchLegacySubHeatNetworkNames } from "./heatNetworkMigration";
 
+import { afterEach, beforeEach, vi } from "vitest";
+
 const mocks = vi.hoisted(() => ({
-	$fetch: vi.fn(),
+	$fetch: vi.fn().mockResolvedValue({}),
 }));
 
-vi.stubGlobal("$fetch", mocks.$fetch);
+beforeEach(() => {
+	mocks.$fetch.mockReset();
+	vi.stubGlobal("$fetch", mocks.$fetch);
+});
+
+afterEach(() => {
+	vi.unstubAllGlobals();
+});
+
 
 describe("patchLegacySubHeatNetworkNames", () => {
-	beforeEach(() => {
-		mocks.$fetch.mockReset();
-	});
-
 	test("fetches and stores subHeatNetworkName when legacy subHeatNetworkId exists", async () => {
 		const state = {
 			spaceHeating: {
