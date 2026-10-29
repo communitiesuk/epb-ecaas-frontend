@@ -10,7 +10,15 @@ const { navigateToMock, fetchMock } = vi.hoisted(() => ({
 }));
 
 mockNuxtImport("navigateTo", () => navigateToMock);
-vi.stubGlobal("$fetch", fetchMock);
+
+beforeEach(() => {
+	fetchMock.mockReset();
+	vi.stubGlobal("$fetch", fetchMock);
+});
+
+afterEach(() => {
+	vi.unstubAllGlobals();
+});
 
 describe("Get BREL Report", () => {
 	const user = userEvent.setup();
@@ -30,7 +38,6 @@ describe("Get BREL Report", () => {
 
 	beforeEach(() => {
 		navigateToMock.mockReset();
-		fetchMock.mockReset();
 
 		fetchMock.mockImplementation(async (_url: string, options?: FetchMockOptions) => {
 			const body = options?.body;
