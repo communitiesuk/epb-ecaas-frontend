@@ -2214,7 +2214,6 @@
 									"properties": {
 										"flowrate": {
 											"type": "number",
-											"minimum": 8,
 											"maximum": 15
 										},
 										"allow_low_flowrate": {
