@@ -1,9 +1,3 @@
-
-const baseForm = {
-	data: [],
-	complete: true as const,
-};
-
 const externalWall1 = {
 	id: "ex-wall-id",
 	name: "External wall 1",

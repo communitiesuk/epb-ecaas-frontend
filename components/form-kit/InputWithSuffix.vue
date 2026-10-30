@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { getErrorMessage, showErrorState } from "#imports";
 import type { FormKitFrameworkContext } from "@formkit/core";
-import { showErrorState, getErrorMessage } from "#imports";
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
@@ -58,7 +58,7 @@ function handleBlur(e: FocusEvent) {
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 				v-bind="props.context.attrs"
 				:disabled="!!disabled"
-				@change="handleInput"
+				@input="handleInput"
 				@blur="handleBlur"
 			>
 			<div class="govuk-input__suffix" aria-hidden="true">{{attrs['suffix-text']}}</div>

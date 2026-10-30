@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import type { DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath";
 import Products from "./index.vue";
 
 const { mockFetch, mockRoute } = vi.hoisted(() => ({
@@ -9,13 +10,15 @@ const { mockFetch, mockRoute } = vi.hoisted(() => ({
 	mockRoute: vi.fn(),
 }));
 
+const DHW_HOT_WATER_OUTLETS_BASE_PATH = "/domestic-hot-water/hot-water-outlets";
+
 describe("Hot water outlet products page", () => {
 	let store: ReturnType<typeof useEcaasStore>;
 
 	const user = userEvent.setup();
 
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(DHW_HOT_WATER_OUTLETS_BASE_PATH, mockRoute));
 
 	const airPressureShower: Partial<HotWaterOutletsData> = {
 		typeOfHotWaterOutlet: "mixedShower",

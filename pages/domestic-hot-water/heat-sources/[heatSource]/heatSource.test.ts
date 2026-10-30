@@ -11,6 +11,10 @@ import HeatSourceForm from "./index.vue";
 
 vi.mock("uuid");
 
+// The router only resolves links against full page paths
+// so to prevent validation warnings we use full path routes rather than params
+const heatSourceRoute = (index: string) => `/domestic-hot-water/heat-sources/${index}`;
+
 const user = userEvent.setup();
 
 const { mockFetch, navigateToMock } = vi.hoisted(() => ({
@@ -227,11 +231,7 @@ describe("Heat Source Page", () => {
 			},
 		});
 		
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`));
 		
@@ -320,11 +320,7 @@ describe("Heat Source Page", () => {
 			},
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		[createdHeatPump.heatSourceId, "NEW_HEAT_SOURCE"].forEach(option => {
 			expect(screen.getByTestId<HTMLInputElement>(`heatSourceId_${option}`).disabled).toBe(true);
@@ -365,11 +361,7 @@ describe("Heat Source Page", () => {
 			},
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		expect(screen.getByTestId("spaceHeatingHeatSourceWithCylinderInset")).toBeDefined();
 	});
@@ -461,11 +453,7 @@ describe("Heat Source Page", () => {
 						heatSources: { data: [{ data: heatSource }] },
 					} });
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 				await user.click(screen.getByTestId("saveAndComplete"));
 				const nameError = await screen.findByTestId("name_error");
@@ -523,11 +511,7 @@ describe("Heat Source Page", () => {
 					},
 				});
 
-				await renderSuspended(HeatSourceForm, {
-					route: {
-						params: { "heatSource": "0" },
-					},
-				});
+				await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 				expect(screen.getByTestId("maxFlowTemp")).toBeDefined();
 			});
@@ -549,11 +533,7 @@ describe("Heat Source Page", () => {
 			}),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		expect((await screen.findByTestId("hemDefaultProductWarning"))).toBeDefined();
 	});
@@ -609,11 +589,7 @@ describe("Boiler section", () => {
 			data: ref(backupBoilerProduct),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		Object.keys(coldWaterSourceOptions).forEach(option => {
 			expect(screen.getByTestId<HTMLInputElement>(`coldWaterSource_${option}`).disabled).toBe(true);
@@ -671,11 +647,7 @@ describe("Boiler section", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { heatSource: "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 		});
 
 		afterEach(() => {
@@ -778,11 +750,7 @@ describe("Heat pump section", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 			expect((await screen.findByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`)).hasAttribute("checked")).toBe(true);
 		});
@@ -801,11 +769,7 @@ describe("Heat pump section", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 			expect((await screen.findByTestId(`heatSourceId_${existingHeatPumpSpaceHeating1.id}`)).hasAttribute("checked")).toBe(true);
 		});
@@ -842,16 +806,12 @@ describe("Heat pump section", () => {
 		});
 
 		test("the 'Select a product' element navigates user to the products page", async () => {
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "create" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("create") });
 			await populateValidHeatPumpForm();
 
 			await user.click(screen.getByTestId("chooseAProductButton"));
 
-			expect(navigateToMock).toHaveBeenCalledWith("/0/heat-pump");
+			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/heat-sources/0/heat-pump");
 
 		});
 
@@ -886,11 +846,7 @@ describe("Heat pump section", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 			expect((await screen.findByTestId("typeOfHeatSource_heatPump")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat pump 1");
@@ -906,11 +862,7 @@ describe("Heat pump section", () => {
 				},
 			});
 
-			await renderSuspended(HeatSourceForm, {
-				route: {
-					params: { "heatSource": "0" },
-				},
-			});
+			await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 			await user.clear(screen.getByTestId("name"));
 			await user.type(screen.getByTestId("name"), "Updated heat pump");
@@ -1007,11 +959,7 @@ describe("Heat pump section", () => {
 				},
 			},
 		});
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "1" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("1") });
 		const backUpBolerInStoreBeforeChange = store.domesticHotWater.heatSources.data.find(hs => hs.data.id === backupBoiler.id);
 		expect(backUpBolerInStoreBeforeChange).toBeDefined();
 		await user.click(screen.getByTestId("heatSourceId_NEW_HEAT_SOURCE"));
@@ -1035,11 +983,7 @@ describe("Heat pump section", () => {
 			data: ref(heatPumpProductWithCylinder),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		expect(screen.getByTestId("waterCylinderConfiguration")).toBeDefined();
 
@@ -1066,11 +1010,7 @@ describe("Heat pump section", () => {
 			data: ref(heatPumpProductWithCylinder),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("waterCylinderConfiguration_hotWaterCylinder"));
 		await user.click(screen.getByTestId("saveProgress"));
@@ -1101,11 +1041,7 @@ describe("Heat pump section", () => {
 			data: ref(heatPumpProductWithCylinder),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("waterCylinderConfiguration_preheatedWaterCylinder"));
 		await user.click(screen.getByTestId("saveProgress"));
@@ -1134,11 +1070,7 @@ describe("Heat pump section", () => {
 			data: ref(heatPumpProductWithCylinder),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("waterCylinderConfiguration_preheatedWaterCylinder"));
 
@@ -1177,11 +1109,7 @@ describe("Heat pump section", () => {
 			data: ref(heatPumpProductWithCylinder),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("typeOfHeatSource_boiler"));
 		await user.click(screen.getByTestId("saveProgress"));
@@ -1211,11 +1139,7 @@ describe("Heat pump section", () => {
 			data: ref(hotWaterOnlyHeatPumpProductWithFuelType),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -1266,11 +1190,7 @@ describe("Heat pump section", () => {
 			data: ref(hybridHeatPumpProductWithFuelType),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -1313,11 +1233,7 @@ describe("Heat pump section", () => {
 			data: ref(hotWaterOnlyHeatPumpProductWithFuelType),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { heatSource: "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -1352,11 +1268,7 @@ describe("Heat pump section", () => {
 			data: ref(hotWaterOnlyHeatPumpProductWithFuelType),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { heatSource: "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -1395,11 +1307,7 @@ describe("Heat pump section", () => {
 			data: ref(hybridHeatPumpProductWithFuelType),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -1435,11 +1343,7 @@ describe("Heat pump section", () => {
 			data: ref(heatPumpProductWithElectricityFuelType),
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { heatSource: "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -1519,11 +1423,7 @@ describe("Immersion heater section", () => {
 			},
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		expect((await screen.findByTestId("typeOfHeatSource_immersionHeater")).hasAttribute("checked"));
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Immersion heater");
@@ -1540,11 +1440,7 @@ describe("Immersion heater section", () => {
 		});
 
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.clear(screen.getByTestId("name"));
 		await user.type(screen.getByTestId("name"), "Updated immersion heater");
@@ -1658,11 +1554,7 @@ describe("Point of use section", () => {
 			},
 		});
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		expect((await screen.findByTestId("typeOfHeatSource_pointOfUse")).hasAttribute("checked"));
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Point of use");
@@ -1678,11 +1570,7 @@ describe("Point of use section", () => {
 		});
 
 
-		await renderSuspended(HeatSourceForm, {
-			route: {
-				params: { "heatSource": "0" },
-			},
-		});
+		await renderSuspended(HeatSourceForm, { route: heatSourceRoute("0") });
 
 		await user.clear(screen.getByTestId("name"));
 		await user.type(screen.getByTestId("name"), "Updated point of use");

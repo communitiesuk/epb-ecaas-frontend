@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import type { BoilerProduct, DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath";
 import Products from "./index.vue";
 
 const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
@@ -9,6 +10,8 @@ const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
 	mockRoute: vi.fn(),
 	mockNavigateTo: vi.fn(),
 }));
+
+const DHW_HEAT_SOURCE_BASE_PATH = "/domestic-hot-water/heat-sources";
 
 describe("Heat source products page", () => {
 	let store: ReturnType<typeof useEcaasStore>;
@@ -20,7 +23,7 @@ describe("Heat source products page", () => {
 	const user = userEvent.setup();
 
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(DHW_HEAT_SOURCE_BASE_PATH, mockRoute));
 	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	const MOCKED_HEAT_PUMPS: PaginatedResult<DisplayProduct> = {
@@ -134,7 +137,7 @@ describe("Heat source products page", () => {
 	test("title dependant on the type of heat source", async () => {
 		mockRoute.mockReturnValue({
 			params: {
-				pump: "0",
+				heatSource: "0",
 				products: "heat-pump",
 			},
 			path: "/0/heat-pump",

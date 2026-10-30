@@ -4,8 +4,12 @@ import { screen } from "@testing-library/vue";
 import type { H3Error } from "h3";
 import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
 import type { DisplayProduct } from "~/pcdb/pcdb.types";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath.ts";
 import ProductDetails from "./[id]/index.vue";
 
+const SPACE_HEATING_HEAT_NETWORKS_PATH = "/space-heating/heat-networks";
+
+	
 const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
 	mockFetch: vi.fn(),
 	mockRoute: vi.fn(),
@@ -35,9 +39,8 @@ describe("Heat network details", async () => {
 	});
 	
 	const user = userEvent.setup();
-    
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(SPACE_HEATING_HEAT_NETWORKS_PATH, mockRoute));
 	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	const route: Partial<RouteLocationNormalizedLoadedGeneric> = {

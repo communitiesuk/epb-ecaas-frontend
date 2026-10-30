@@ -1,12 +1,18 @@
-import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
-const fillGeneralDetailsForm = async (page: Page) => {
-	//navigate to General details page
+const resetState = async (page: Page) => {
+	await page.goto("/");
+	await page.waitForLoadState("networkidle");
+	await page.evaluate(() => localStorage.clear());
+};
+const navigateToGeneralDetails = async (page: Page) => {
 	await page.getByTestId("taskList_dwellingDetails").click();
-	await page.getByTestId("taskList_generalSpecifications").click();
-
-	//fill out General details form 
+	await page.getByTestId("taskList_generalSpecifications").click(); 
+	await page.waitForLoadState("networkidle");
+	
+};
+const fillGeneralDetailsForm = async (page: Page) => {
 	await page.getByTestId("typeOfDwelling_house").click();
 	await page.getByTestId("storeysInDwelling").fill("2");
 	await page.getByTestId("buildingLength").fill("12");
@@ -23,17 +29,12 @@ const fillGeneralDetailsForm = async (page: Page) => {
 
 	//save form
 	await page.getByTestId("saveAndComplete").click();
-};
-
-const getLocalStorage = async (page: Page) => {
-	return await page.evaluate(() => {
-		const ecaasLocalStorage = localStorage.getItem("ecaas");
-		return JSON.parse(ecaasLocalStorage!);
-	});
+	await page.waitForLoadState("networkidle");
 };
 
 test.beforeEach(async ({ page }) => {
-	await page.goto("/");
+	await resetState(page);
+	await navigateToGeneralDetails(page);
 	await fillGeneralDetailsForm(page);
 });
 
@@ -45,10 +46,7 @@ test.describe("General details form data persistence", () => {
 
 		await expect(page.getByTestId("typeOfDwelling_house")).toBeChecked();
 		await expect(page.getByTestId("storeysInDwelling")).toHaveValue("2");
-
-		// Including this field sometimes causes tests to fail for some reason
-		//await expect(page.getByTestId("buildingLength")).toHaveValue("12");
-
+		await expect(page.getByTestId("buildingLength")).toHaveValue("12");
 		await expect(page.getByTestId("buildingWidth")).toHaveValue("11");
 		await expect(page.getByTestId("numOfBedrooms")).toHaveValue("3");
 		await expect(page.getByTestId("numOfUtilityRooms")).toHaveValue("1");
@@ -69,10 +67,7 @@ test.describe("General details form data persistence", () => {
 
 		await expect(page.getByTestId("typeOfDwelling_house")).toBeChecked();
 		await expect(page.getByTestId("storeysInDwelling")).toHaveValue("2");
-
-		// Including this field sometimes causes tests to fail for some reason
-		//await expect(page.getByTestId("buildingLength")).toHaveValue("12");
-
+		await expect(page.getByTestId("buildingLength")).toHaveValue("12");
 		await expect(page.getByTestId("buildingWidth")).toHaveValue("11");
 		await expect(page.getByTestId("numOfBedrooms")).toHaveValue("3");
 		await expect(page.getByTestId("numOfUtilityRooms")).toHaveValue("1");
@@ -87,17 +82,17 @@ test.describe("General details form data persistence", () => {
 	});
 
 	test.skip("should persist data when local storage is cleared and page is reloaded", async ({ page }) => {
+		// I dont think this should be the case
 
 		await page.evaluate(() => localStorage.clear());
 
-		expect(await getLocalStorage(page)).toBeNull();
-
 		await page.reload();
-		await page.click('a[href="/dwelling-details/general-details"]');
-
+		await page.waitForLoadState("networkidle");
+		// form is populated with previously entered data
 		await expect(page.getByTestId("typeOfDwelling_house")).toBeChecked();
 		await expect(page.getByTestId("storeysInDwelling")).toHaveValue("2");
-		await expect(page.getByTestId("buildingLength")).toHaveValue("12");
+		expect(page.getByTestId("buildingLength")).toBeEditable();
+		//await expect(page.getByTestId("buildingLength")).toHaveValue("12");
 		await expect(page.getByTestId("buildingWidth")).toHaveValue("11");
 		await expect(page.getByTestId("numOfBedrooms")).toHaveValue("3");
 		await expect(page.getByTestId("numOfUtilityRooms")).toHaveValue("1");

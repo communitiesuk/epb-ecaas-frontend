@@ -171,12 +171,14 @@ describe("shading form", () => {
 		await user.clear(screen.getByTestId("name"));
 
 		await user.type(screen.getByTestId("name"), "Small Tree");
-		await user.type(screen.getByTestId("startAngle"), "10");
+		await user.clear(screen.getByTestId("startAngle"));
+		await user.type(screen.getByTestId("startAngle"), "20");
+		await user.tab();
 
 		const { data } = store.dwellingDetails.shading;
 
 		expect(data[0]?.data.name).toBe("Small Tree");
-		expect(data[0]?.data.startAngle).toBe(10);
+		expect(data[0]?.data.startAngle).toBe(20);
 	});
 	
 	test("partial form data is saved automatically with default name to store when adding new heater", async () => {
@@ -187,6 +189,8 @@ describe("shading form", () => {
 		});
 		
 		await user.type(screen.getByTestId("startAngle"), "10");
+		await user.tab();
+
 		await user.type(screen.getByTestId("endAngle"), "20");
 		await user.tab();
 

@@ -119,6 +119,28 @@ describe("cooling", () => {
 			expect(screen.queryByTestId("completeSectionCompleted")?.style.display).not.toBe("none");
 			expect(navigateToMock).toHaveBeenCalledWith("/");
 		});
+		it("shows an error when marking as complete with no cooling items and active cooling is required", async () => {
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: { data: { partOActiveCoolingRequired: true } },
+				},
+				cooling: {
+					airConditioning: {
+						data: [],
+					},
+				},
+			});
+
+			await renderSuspended(Cooling);
+
+			expect(screen.queryByTestId("coolingErrorSummary")).toBeNull();
+
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+
+			expect(await screen.findByTestId("coolingErrorSummary")).toBeDefined();
+			expect(screen.getByTestId("coolingErrorSummary").textContent).toContain("You must add an air conditioning system if air conditioning is required for the dwelling to be part O compliant.");
+			expect(store.cooling.airConditioning.complete).not.toBe(true);
+		});
 
 		describe("after section has been marked as complete", () => {
 			const addCoolingDataToStore = async () => {

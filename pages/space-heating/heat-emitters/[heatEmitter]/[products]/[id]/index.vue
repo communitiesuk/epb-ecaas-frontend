@@ -14,7 +14,8 @@ const { params, query } = useRoute();
 
 const heatEmittingType = kebabToCamelCase(params.products as string);
 
-if (!(heatEmittingType in productTypeMap)) {
+const validHeatEmittingType = heatEmittingType in productTypeMap;
+if (!validHeatEmittingType) {
 	throw createError({
 		statusCode: 404,
 		statusMessage: "Product type not found",
@@ -62,7 +63,7 @@ const selectProduct = () => {
 		{{ productType ? `Back to ${sentenceToLowerCase(productType(true))}` : 'Back' }}
 	</NuxtLink>
 
-	<HeatEmitterProductDetailsPage :product="(data as AnyPcdbProduct)" :heat-emitting-type="heatEmittingType" />
+	<HeatEmitterProductDetailsPage v-if="validHeatEmittingType" :product="(data as AnyPcdbProduct)" :heat-emitting-type="heatEmittingType" />
 
 	<div class="govuk-button-group">
 		<GovButton

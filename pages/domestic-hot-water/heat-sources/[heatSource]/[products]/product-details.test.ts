@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, waitFor } from "@testing-library/vue";
 import type { H3Error } from "h3";
 import type { BoilerProduct, HybridHeatPumpProduct, Product } from "~/pcdb/pcdb.types";
 import ProductDetails from "./[id]/index.vue";
@@ -356,6 +356,9 @@ describe("Heat source details", async () => {
 		await user.click(screen.getByTestId("selectProductButton"));
 
 		// Assert
-		setTimeout(() => expect(mockNavigateTo).toHaveBeenCalledWith("/domestic-hot-water/heat-sources/0"), 100);
+		await waitFor(() => {
+			expect(mockNavigateTo).toHaveBeenCalledWith("/domestic-hot-water/heat-sources/0");
+		});
 	});
 });
+		

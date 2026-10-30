@@ -29,7 +29,14 @@ vi.mock(import("~/stores/ecaasStore"), async (importOriginal) => {
 	};
 });
 
-vi.stubGlobal("$fetch", mocks.$fetch);
+beforeEach(() => {
+	mocks.$fetch.mockReset();
+	vi.stubGlobal("$fetch", mocks.$fetch);
+});
+
+afterEach(() => {
+	vi.unstubAllGlobals();
+});
 
 vi.mocked(hasCompleteState).mockReturnValue(true);
 

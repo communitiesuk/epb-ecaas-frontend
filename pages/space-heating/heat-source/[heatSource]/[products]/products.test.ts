@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import type { BoilerProduct, DisplayProduct, PaginatedResult } from "~/pcdb/pcdb.types";
+import { mockReactiveRouteWithPath } from "~/test-utils/mockReactiveRouteWithPath.ts";
 import Products from "./index.vue";
 
 const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
@@ -9,7 +10,7 @@ const { mockFetch, mockRoute, mockNavigateTo } = vi.hoisted(() => ({
 	mockRoute: vi.fn(),
 	mockNavigateTo: vi.fn(),
 }));
-
+const SPACE_HEATING_HEAT_SOURCE_PATH = "/space-heating/heat-source";
 describe("Heat source products page", () => {
 	let store: ReturnType<typeof useEcaasStore>;
 
@@ -20,7 +21,7 @@ describe("Heat source products page", () => {
 	const user = userEvent.setup();
 
 	mockNuxtImport("useFetch", () => mockFetch);
-	mockNuxtImport("useRoute", () => mockRoute);
+	mockNuxtImport("useRoute", () => () => mockReactiveRouteWithPath(SPACE_HEATING_HEAT_SOURCE_PATH, mockRoute));
 	mockNuxtImport("navigateTo", () => mockNavigateTo);
 
 	afterEach(() => {

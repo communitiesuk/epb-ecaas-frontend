@@ -4,6 +4,7 @@ import formStatus from "~/constants/formStatus";
 const title = "Cooling";
 const page = usePage();
 const store = useEcaasStore();
+const { errorMessages, addError, clearErrors } = useErrorSummary();
 
 function handleRemove(index: number) {
 	const { data } = store.cooling.airConditioning;
@@ -37,7 +38,22 @@ function handleDuplicate(index: number) {
 	}
 }
 
+
+
 function handleComplete() {
+	clearErrors();
+	const { partOActiveCoolingRequired } = store.dwellingDetails.generalSpecifications.data;
+	const hasAirConditioning = store.cooling.airConditioning.data.length > 0;
+	const nonCompliant = partOActiveCoolingRequired && !hasAirConditioning;
+	if (nonCompliant) {
+		addError({
+			id: "coolingSystemRequired",
+			text: "You must add an air conditioning system if air conditioning is required for the dwelling to be part O compliant.",
+			disableLink: true,
+		});
+		return;
+	}
+
 	store.$patch({
 		cooling: {
 			airConditioning: { complete: true },
@@ -56,6 +72,11 @@ function handleComplete() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<GovErrorSummary
+		v-if="errorMessages.length > 0"
+		:error-list="errorMessages"
+		test-id="coolingErrorSummary"
+	/>
 	<CustomList
 		id="airConditioning"
 		title="Air conditioning systems"

@@ -109,8 +109,8 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					installed_under_approved_scheme: x.installedUnderApprovedScheme,
 					product_reference: x.productReference,
 					mid_height_air_flow_path: x.midHeightOfAirFlowPath,
-					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
-					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
+					pitch: x.hasAssociatedItem ? associatedItem!.pitch : x.pitch,
+					orientation360: x.hasAssociatedItem ? associatedItem!.orientation : x.orientation,
 					...(x.measuredFanPowerAndAirFlowRateKnown ? {
 						measured_air_flow_rate: x.measuredAirFlowRate,
 						measured_fan_power: x.measuredFanPower,
@@ -123,8 +123,8 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					...commonFields,
 					SFP: x.specificFanPower,
 					mid_height_air_flow_path: x.midHeightOfAirFlowPath,
-					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
-					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
+					pitch: x.hasAssociatedItem ? associatedItem!.pitch : x.pitch,
+					orientation360: x.hasAssociatedItem ? associatedItem!.orientation : x.orientation,
 				} as const satisfies SchemaMechanicalVentilation;
 				break;
 			case "Decentralised continuous MEV":
@@ -136,8 +136,8 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					installed_under_approved_scheme: x.installedUnderApprovedScheme,
 					product_reference: x.productReference,
 					mid_height_air_flow_path: x.midHeightOfAirFlowPath,
-					pitch: x.hasAssociatedItem ? associatedItem!.pitch! : x.pitch,
-					orientation360: x.hasAssociatedItem ? associatedItem!.orientation! : x.orientation,
+					pitch: x.hasAssociatedItem ? associatedItem!.pitch : x.pitch,
+					orientation360: x.hasAssociatedItem ? associatedItem!.orientation : x.orientation,
 				} as const satisfies SchemaMechanicalVentilation;
 				break;
 			default:
