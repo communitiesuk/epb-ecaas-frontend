@@ -1,3 +1,4 @@
+import { setup } from "@nuxt/test-utils/e2e";
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
@@ -10,7 +11,6 @@ const mocks = vi.hoisted(() => {
 	return {
 		hasCompleteState: vi.fn(),
 		mapFhsInputData: vi.fn(),
-		$fetch: vi.fn(),
 	};
 });
 
@@ -29,9 +29,8 @@ vi.mock(import("~/stores/ecaasStore"), async (importOriginal) => {
 	};
 });
 
-beforeEach(() => {
-	mocks.$fetch.mockReset();
-	vi.stubGlobal("$fetch", mocks.$fetch);
+beforeEach(async () => {
+	await setup();
 });
 
 afterEach(() => {
@@ -51,10 +50,6 @@ describe("Homepage", () => {
 
 	beforeEach(() => {
 		vi.clearAllMocks();
-
-		mocks.$fetch.mockResolvedValue({
-			data: {},
-		});
 	});
 
 	afterEach(() => {

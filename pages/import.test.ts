@@ -1,7 +1,5 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
-import Import from "./import.vue";
 
 describe("import page", () => {
 	let store: ReturnType<typeof useEcaasStore>;
@@ -39,8 +37,6 @@ describe("import page", () => {
 	const user = userEvent.setup();
 
 	const renderAndUploadFile = async (file: File) => {
-		const { container } = await renderSuspended(Import);
-
 		// GOV.UK Frontend hides the native input, renames its id to "<id>-input" and points the label at its own button
 		expect(screen.getByLabelText("Upload a JSON file").tagName).toBe("BUTTON");
 		const input = document.getElementById("import-input")!;
