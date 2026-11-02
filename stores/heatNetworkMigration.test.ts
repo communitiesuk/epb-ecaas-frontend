@@ -1,20 +1,15 @@
+import { mockNuxtImport } from "@nuxt/test-utils/runtime";
 import { patchLegacySubHeatNetworkNames } from "./heatNetworkMigration";
 
-import { afterEach, beforeEach, vi } from "vitest";
-
 const mocks = vi.hoisted(() => ({
-	$fetch: vi.fn().mockResolvedValue({}),
+	$fetch: vi.fn(),
 }));
+
+mockNuxtImport("$fetch", () => mocks.$fetch);
 
 beforeEach(() => {
 	mocks.$fetch.mockReset();
-	vi.stubGlobal("$fetch", mocks.$fetch);
 });
-
-afterEach(() => {
-	vi.unstubAllGlobals();
-});
-
 
 describe("patchLegacySubHeatNetworkNames", () => {
 	test("fetches and stores subHeatNetworkName when legacy subHeatNetworkId exists", async () => {

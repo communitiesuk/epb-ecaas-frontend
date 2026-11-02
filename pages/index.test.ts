@@ -1,5 +1,4 @@
-import { setup } from "@nuxt/test-utils/e2e";
-import { renderSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import type { FhsInputSchema } from "~/mapping/fhsInputMapper";
@@ -11,6 +10,7 @@ const mocks = vi.hoisted(() => {
 	return {
 		hasCompleteState: vi.fn(),
 		mapFhsInputData: vi.fn(),
+		$fetch: vi.fn(),
 	};
 });
 
@@ -29,13 +29,7 @@ vi.mock(import("~/stores/ecaasStore"), async (importOriginal) => {
 	};
 });
 
-beforeEach(async () => {
-	await setup();
-});
-
-afterEach(() => {
-	vi.unstubAllGlobals();
-});
+mockNuxtImport("$fetch", () => mocks.$fetch);
 
 vi.mocked(hasCompleteState).mockReturnValue(true);
 
@@ -50,6 +44,10 @@ describe("Homepage", () => {
 
 	beforeEach(() => {
 		vi.clearAllMocks();
+
+		mocks.$fetch.mockResolvedValue({
+			data: {},
+		});
 	});
 
 	afterEach(() => {
@@ -93,20 +91,18 @@ describe("Homepage", () => {
 			return {} as FhsInputSchema;
 		});
 
-		vi.mocked(global.$fetch<FhsComplianceResponseIncludingErrors>).mockReturnValue(new Promise((resolve) => {
-			resolve({
-				errors: [{
-					id: "testId",
-					detail: "API error",
-				}],
-				meta: {
-					hem_version: "",
-					hem_version_date: "",
-					fhs_version: "",
-					fhs_version_date: "",
-				},
-			});
-		}));
+		mocks.$fetch.mockResolvedValue({
+			errors: [{
+				id: "testId",
+				detail: "API error",
+			}],
+			meta: {
+				hem_version: "",
+				hem_version_date: "",
+				fhs_version: "",
+				fhs_version_date: "",
+			},
+		} satisfies FhsComplianceResponseIncludingErrors);
 
 		await renderSuspended(Index);
 

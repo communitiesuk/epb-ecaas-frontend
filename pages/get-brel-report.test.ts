@@ -11,13 +11,10 @@ const { navigateToMock, fetchMock } = vi.hoisted(() => ({
 
 mockNuxtImport("navigateTo", () => navigateToMock);
 
+mockNuxtImport("$fetch", () => fetchMock);
+
 beforeEach(() => {
 	fetchMock.mockReset();
-	vi.stubGlobal("$fetch", fetchMock);
-});
-
-afterEach(() => {
-	vi.unstubAllGlobals();
 });
 
 describe("Get BREL Report", () => {
