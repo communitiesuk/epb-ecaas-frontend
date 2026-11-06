@@ -34,13 +34,23 @@ export const dynamodbClient: PcdbClient = {
 	},
 };
 
+// DynamoDB stores the hybrid heat pump boiler reference as `boilerProductId`,
+// but the app's product types expect `boilerProductID`.
+const normaliseProduct = <T extends Record<string, unknown> | undefined>(item: T): T => {
+	if (item && item.boilerProductId != null && item.boilerProductID == null) {
+		item.boilerProductID = item.boilerProductId.toString();
+		delete item.boilerProductId;
+	}
+	return item;
+};
+
 const getProduct = async (id: string, { includeTestData = false, testDataId }: GetProductOptions) => {
 	const result = await docClient.send(new GetCommand({
 		TableName: "products",
 		Key: { id },
 	}));
 
-	const { Item } = result;
+	const Item = normaliseProduct(result.Item);
 
 	if (!includeTestData && !testDataId) {
 		delete Item?.testData;
@@ -79,7 +89,7 @@ const getProductsByIds = async (ids: string[]): Promise<Product[]> => {
 				},
 			}));
 
-			products.push(...((result.Responses?.products ?? []) as Record<string, unknown>[]));
+			products.push(...((result.Responses?.products ?? []) as Record<string, unknown>[]).map(normaliseProduct));
 			pendingKeys = (result.UnprocessedKeys?.products?.Keys as { id: string }[] | undefined) ?? [];
 		}
 	}

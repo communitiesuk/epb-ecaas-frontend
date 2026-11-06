@@ -197,6 +197,52 @@ describe("Heat pump details", async () => {
 		}));
 	});
 
+	test("Selecting a hybrid heat pump does not add a boiler when the boiler product cannot be loaded", async () => {
+		// Arrange
+		const hybridHeatPump: Partial<HeatSourceData> = {
+			id: "463c94f6-566c-49b2-af27-555555555",
+			name: "Hybrid heat pump",
+			typeOfHeatSource: "heatPump",
+		};
+
+		store.$patch({
+			spaceHeating: {
+				heatSource: {
+					data: [
+						{ data: hybridHeatPump },
+					],
+				},
+			},
+		});
+
+		const hybridHeatPumpProduct: Partial<HybridHeatPumpProduct> = {
+			id: "1000",
+			brandName: "Test",
+			modelName: "Hybrid heat pump",
+			technologyType: "HybridHeatPump",
+			technologyGroup: "heatPump",
+			boilerProductID: "2000",
+		};
+
+		mockFetch.mockReturnValueOnce({
+			data: ref(hybridHeatPumpProduct),
+		});
+
+		mockFetch.mockReturnValueOnce({
+			data: ref(null),
+		});
+
+		// Act
+		await renderSuspended(ProductDetails);
+		await user.click(screen.getByTestId("selectProductButton"));
+
+		// Assert
+		const heatSources = store.spaceHeating.heatSource.data;
+
+		expect(heatSources.length).toBe(1);
+		expect((heatSources[0]?.data as { packageProductIds?: string[] }).packageProductIds).toStrictEqual([]);
+	});
+
 	test("A mechanical ventilation entry is created when an exhaust air heat pump is selected", async () => {
 		// Arrange
 		const exhaustAirHeatPump: Partial<HeatSourceData> = {
