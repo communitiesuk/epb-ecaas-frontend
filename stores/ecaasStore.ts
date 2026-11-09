@@ -169,15 +169,15 @@ export const useEcaasStore = defineStore("ecaas", {
 		},
 		revalidate() {
 			const patchedState = patchState(this.$state as unknown as Record<string, unknown>);
-			patchLegacySubHeatNetworkNames(patchedState).then(() => {
-				const { newState: newValidatedState } = revalidateState(patchedState);
+			
+			const { newState: newValidatedState } = revalidateState(patchedState);
 
-				this.$patch({
-					...getInitialState(),
-					...newValidatedState,
-					lastResult: undefined,
-				});
+			this.$patch({
+				...getInitialState(),
+				...newValidatedState,
+				lastResult: undefined,
 			});
+			
 		},
 	},
 	persist: {

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import dayjs from "dayjs";
-import type { Dayjs } from "dayjs";
 import { useBanner } from "#imports";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { getInitialState } from "~/stores/ecaasStore";
 import { clearLastExportDate } from "~/utils/exportDate";
 
@@ -46,7 +46,6 @@ const doImport = (_event: Event) => {
 
 		errorMessage.value = null;
 
-		await patchLegacySubHeatNetworkNames(fileState);
 		const { newState: newValidatedState, changed: revalidationCausedUpdate } = revalidateState(fileState);
 		fileState = newValidatedState as EcaasState;
 
