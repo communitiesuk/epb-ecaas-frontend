@@ -169,6 +169,27 @@ describe("Products service", () => {
 			// Assert
 			expect(result).toStrictEqual(productFromTestData);
 		});
+
+		it("Maps DynamoDB boilerProductId to boilerProductID for hybrid heat pumps", async () => {
+			ddbMock.on(GetCommand, {
+				TableName: "products",
+				Key: { id: "693014" },
+			}).resolves({
+				Item: {
+					id: "693014",
+					technologyType: "HybridHeatPump",
+					boilerProductId: 2000,
+				},
+			});
+
+			const result = await dynamodbClient.getProduct("693014", { includeTestData: false });
+
+			expect(result).toStrictEqual({
+				id: "693014",
+				technologyType: "HybridHeatPump",
+				boilerProductID: "2000",
+			});
+		});
 	});
 
 	describe("Get product batch", () => {

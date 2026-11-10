@@ -42,6 +42,11 @@ const getProduct = async (id: string, { includeTestData = false, testDataId }: G
 
 	const { Item } = result;
 
+	if (Item && Item.boilerProductId != null && Item.boilerProductID == null) {
+		Item.boilerProductID = Item.boilerProductId.toString();
+		delete Item.boilerProductId;
+	}
+
 	if (!includeTestData && !testDataId) {
 		delete Item?.testData;
 		delete Item?.testDataEN14825;
