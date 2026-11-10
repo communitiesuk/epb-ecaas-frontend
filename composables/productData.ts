@@ -12,5 +12,5 @@ export async function useProductDetails(id: string, testDataId?: string): Promis
 		},
 	});
 
-	return data as Product | undefined;
+	return data;
 }
