@@ -9,9 +9,7 @@ const { onError } = defineProps<{ onError: (errors?: CorrectedJsonApiError[] | b
 const store = useEcaasStore();
 const calculatePending = ref(false);
 
-const formIsComplete = hasCompleteState(store.$state);
-
-const isDisabled = calculatePending.value || !formIsComplete;
+const isDisabled = computed(() => calculatePending.value || !hasCompleteState(store.$state));
 
 const emit = defineEmits<{
 	loading: [],
