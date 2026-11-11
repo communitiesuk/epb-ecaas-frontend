@@ -138,10 +138,10 @@ export function mapPvDiverterData(state: ResolvedState): Pick<SchemaEnergySupply
 		return {};
 	}
 
-	const dhwHeatSources = domesticHotWater.heatSources ?? [];
+	const dhwHeatSources = domesticHotWater.heatSources;
 	const dhwHeatSource = dhwHeatSources.filter(x => x.isExistingHeatSource === false);
 	const existingHeatSources = dhwHeatSources.filter(x => x.isExistingHeatSource === true).map(x => x.heatSourceId);
-	const heatSourcesFromSpaceHeating = (spaceHeating.heatSource ?? []).filter(x => existingHeatSources.includes(x.id));
+	const heatSourcesFromSpaceHeating = spaceHeating.heatSource.filter(x => existingHeatSources.includes(x.id));
 	const both = [...dhwHeatSource, ...heatSourcesFromSpaceHeating];
 	if (both.length !== 1) {
 		throw new Error("Expected exactly one non-heat-network heat source for diverter, found " + both.length);

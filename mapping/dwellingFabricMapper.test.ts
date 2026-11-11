@@ -515,7 +515,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		expect(groundFloorWithSuspendedFloorElement).toEqual(expectedGroundFloorSuspendedFloor);
-		expect("vents_open_during_airtightness_test" in groundFloorWithSuspendedFloorElement 
+		expect("vents_open_during_airtightness_test" in groundFloorWithSuspendedFloorElement
 			&& groundFloorWithSuspendedFloorElement.vents_open_during_airtightness_test).toBe(true);
 
 		const expectedGroundFloorWithThicknessInMillimetres: BuildingElementGroundForSchema = {
@@ -761,6 +761,7 @@ describe("dwelling fabric mapper", () => {
 				dwellingSpaceFloors: {
 					dwellingSpaceFloorOfHeatedBasement: { ...baseForm, data: [floorOfHeatedBasement] },
 				},
+				dwellingSpaceThermalBridging: { dwellingSpaceLinearThermalBridges: { ...baseForm, data: [] }, dwellingSpacePointThermalBridges: { ...baseForm, data: [] } },
 			},
 		});
 
@@ -1076,7 +1077,7 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 			uValue: 1,
 		} as const satisfies InternalDoorData;
-		
+
 		const externalGlazedDoor = {
 			id: "external-glazed-door-id",
 			name: "External glazed door 1",
@@ -1187,31 +1188,31 @@ describe("dwelling fabric mapper", () => {
 		const externalUnglazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalUnglazedDoor.name + doorSuffix]! as BuildingElementOpaque;
 
 		const expectedInternalDoorUnheatedSpace =
-		{
-			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-			pitch: 90,
-			area: internalDoorUnheatedSpace.surfaceArea,
-			u_value: internalDoorUnheatedSpace.uValue,
-			areal_heat_capacity: internalDoorUnheatedSpace.arealHeatCapacity,
-			mass_distribution_class: fullMassDistributionClass(internalDoorUnheatedSpace.massDistributionClass),
-			thermal_resistance_unconditioned_space: internalDoorUnheatedSpace.thermalResistanceOfAdjacentUnheatedSpace,
-		} as const satisfies BuildingElementAdjacentUnconditionedSpaceSimple;
+			{
+				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+				pitch: 90,
+				area: internalDoorUnheatedSpace.surfaceArea,
+				u_value: internalDoorUnheatedSpace.uValue,
+				areal_heat_capacity: internalDoorUnheatedSpace.arealHeatCapacity,
+				mass_distribution_class: fullMassDistributionClass(internalDoorUnheatedSpace.massDistributionClass),
+				thermal_resistance_unconditioned_space: internalDoorUnheatedSpace.thermalResistanceOfAdjacentUnheatedSpace,
+			} as const satisfies BuildingElementAdjacentUnconditionedSpaceSimple;
 
 		expect(internalDoorElement).toEqual(expectedInternalDoorUnheatedSpace);
 
 		const expectedInternalDoorHeatedSpace =
-		{
-			type: "BuildingElementAdjacentConditionedSpace",
-			pitch: 90,
-			area: internalDoorHeatedSpace.surfaceArea,
-			u_value: internalDoorHeatedSpace.uValue,
-			areal_heat_capacity: internalDoorHeatedSpace.arealHeatCapacity,
-			mass_distribution_class: fullMassDistributionClass(internalDoorHeatedSpace.massDistributionClass),
-			is_adjacent_space_within_dwelling: false,
-		} as const satisfies BuildingElementAdjacentConditionedSpace;
+			{
+				type: "BuildingElementAdjacentConditionedSpace",
+				pitch: 90,
+				area: internalDoorHeatedSpace.surfaceArea,
+				u_value: internalDoorHeatedSpace.uValue,
+				areal_heat_capacity: internalDoorHeatedSpace.arealHeatCapacity,
+				mass_distribution_class: fullMassDistributionClass(internalDoorHeatedSpace.massDistributionClass),
+				is_adjacent_space_within_dwelling: false,
+			} as const satisfies BuildingElementAdjacentConditionedSpace;
 
 		expect(internalDoorHeatedSpaceElement).toEqual(expectedInternalDoorHeatedSpace);
-		
+
 		const expectedExternalGlazedDoor = {
 			type: "BuildingElementTransparent",
 			pitch: 90,

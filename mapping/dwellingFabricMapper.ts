@@ -61,7 +61,7 @@ export function mapZoneParametersData(
 	state: ResolvedState,
 ): Pick<FhsInputSchema, "HeatingControlType" | "Zone" | "GroundFloorArea"> {
 	const { dwellingSpaceZoneParameters } = state.dwellingFabric;
-	const coolingData = state.cooling?.airConditioning ?? []; // this is currently only made up of air conditioning systems
+	const coolingData = state.cooling.airConditioning; // this is currently only made up of air conditioning systems
 	const spaceCoolingSystemNames = coolingData.map(x => x.name);
 	const { heatEmitters } = state.spaceHeating;
 	const spaceHeatingSystemNames = heatEmitters.toSorted((a, b) => (a.heatingRank ?? 0) - (b.heatingRank ?? 0)).flatMap(he => {
@@ -151,7 +151,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 
 		let groundFloor: BuildingElementGroundForSchema;
 
-		const groundFloorThermalBridges = dwellingSpaceLinearThermalBridges?.filter(b => b.typeOfThermalBridge === "E5" && b.associatedItemId === x.id) ?? [];
+		const groundFloorThermalBridges = dwellingSpaceLinearThermalBridges.filter(b => b.typeOfThermalBridge === "E5" && b.associatedItemId === x.id);
 
 		switch (x.typeOfGroundFloor) {
 			case "Slab_edge_insulation": {
@@ -188,7 +188,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 				break;
 			}
 			case "Suspended_floor": {
-				
+
 				const smartAirBricksOpen = state.infiltrationAndVentilation.airPermeability.smartAirBricksOpen;
 
 				groundFloor = {
@@ -309,7 +309,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 
 	const floorAboveUnheatedBasementData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceFloorAboveUnheatedBasement?.map(x => {
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
-		const floorAboveUnheatedBasementThermalBridges = dwellingSpaceLinearThermalBridges?.filter(b => b.typeOfThermalBridge === "E6" && b.associatedItemId === x.id) ?? [];
+		const floorAboveUnheatedBasementThermalBridges = dwellingSpaceLinearThermalBridges.filter(b => b.typeOfThermalBridge === "E6" && b.associatedItemId === x.id);
 
 		return {
 			[nameWithSuffix]: {
@@ -347,7 +347,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Zone">
 			throw new Error(`No wall of heated basement found associated with floor of heated basement with id ${x.id}`);
 		}
 
-		const floorOfUnheatedBasementThermalBridges = dwellingSpaceLinearThermalBridges?.filter(b => b.typeOfThermalBridge === "E22" && b.associatedItemId === x.id) ?? [];
+		const floorOfUnheatedBasementThermalBridges = dwellingSpaceLinearThermalBridges.filter(b => b.typeOfThermalBridge === "E22" && b.associatedItemId === x.id);
 
 		return {
 			[nameWithSuffix]: {
@@ -494,7 +494,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			throw new Error(`Wall of heated basement '${wall.name}' references floor ID '${wall.associatedBasementFloorId}' which does not exist`);
 		};
 
-		const floorOfUnheatedBasementThermalBridges = dwellingSpaceLinearThermalBridges?.filter(b => b.typeOfThermalBridge === "E22" && b.associatedItemId === floorOfHeatedBasement.id) ?? [];
+		const floorOfUnheatedBasementThermalBridges = dwellingSpaceLinearThermalBridges.filter(b => b.typeOfThermalBridge === "E22" && b.associatedItemId === floorOfHeatedBasement.id);
 
 		return {
 			[nameWithSuffix]: {
@@ -533,7 +533,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 }
 
 export function mapRoofData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
-	const dwellingSpaceRoofs = state.dwellingFabric?.dwellingSpaceRoofs ?? [];
+	const dwellingSpaceRoofs = state.dwellingFabric.dwellingSpaceRoofs;
 
 	const roofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceRoofs.map((x) => {
 		const pitch = x.pitch;
@@ -676,12 +676,14 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 					: []),
 			],
 			u_value: x.uValue,
-			...(x.curtainsOrBlinds ? { treatment: [{
-				type: x.treatmentType,
-				controls: "manual",
-				trans_red: x.solarTransmittanceReduction,
-				delta_r: x.thermalResistivityIncrease,
-			}] } : {}),
+			...(x.curtainsOrBlinds ? {
+				treatment: [{
+					type: x.treatmentType,
+					controls: "manual",
+					trans_red: x.solarTransmittanceReduction,
+					delta_r: x.thermalResistivityIncrease,
+				}],
+			} : {}),
 		} as const satisfies SchemaBuildingElement;
 
 		return {
