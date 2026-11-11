@@ -24,7 +24,7 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 			Shower: showers,
 			Bath: baths,
 			Other: others,
-		} ,
+		},
 		...hotWaterSources,
 		...preheatedWaterSources,
 		...(WWHRS ? { WWHRS } : {}),
@@ -60,8 +60,9 @@ function getColdWaterSourceData(source: DomesticHotWaterHeatSourceData | Preheat
 function mapShowersData(state: ResolvedState) {
 	const { wwhrs, hotWaterOutlets } = state.domesticHotWater;
 	let WWHRS: SchemaWWHRS | undefined = undefined;
+	const mixedShowers = hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "mixedShower");
 
-	const mixedShowerEntries = (hotWaterOutlets ?? []).filter(x => x.typeOfHotWaterOutlet === "mixedShower").map((x): [string, SchemaMixerShower] => {
+	const mixedShowerEntries = mixedShowers.map((x): [string, SchemaMixerShower] => {
 		const key = x.name;
 		let associatedWwhrs: WwhrsData | undefined;
 
@@ -95,8 +96,8 @@ function mapShowersData(state: ResolvedState) {
 
 		return [key, mixedShower];
 	});
-
-	const electricShowerEntries = (state.domesticHotWater.hotWaterOutlets ?? []).filter(x => x.typeOfHotWaterOutlet === "electricShower").map((x): [string, SchemaInstantElecShower] => {
+	const electricShowers = hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "electricShower");
+	const electricShowerEntries = electricShowers.map((x): [string, SchemaInstantElecShower] => {
 		const key = x.name;
 		const val: SchemaInstantElecShower = {
 			type: "InstantElecShower",
@@ -107,12 +108,13 @@ function mapShowersData(state: ResolvedState) {
 
 		return [key, val];
 	});
-	
+
 	return { showers: objectFromEntries([...mixedShowerEntries, ...electricShowerEntries]), WWHRS };
 }
 
 function mapBathsData(state: ResolvedState) {
-	const bathEntries = (state.domesticHotWater.hotWaterOutlets ?? []).filter(x => x.typeOfHotWaterOutlet === "bath").map((x): [string, SchemaBathDetails] => {
+	const baths = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "bath");
+	const bathEntries = baths.map((x): [string, SchemaBathDetails] => {
 		const key = x.name;
 		const val: SchemaBathDetails = {
 			ColdWaterSource: coldWaterSourceMap[x.coldWaterSource],
@@ -127,7 +129,8 @@ function mapBathsData(state: ResolvedState) {
 }
 
 function mapOthersData(state: ResolvedState) {
-	const otherEntries = (state.domesticHotWater.hotWaterOutlets ?? []).filter(x => x.typeOfHotWaterOutlet === "otherHotWaterOutlet").map((x): [string, SchemaOtherWaterUseDetails] => {
+	const other = state.domesticHotWater.hotWaterOutlets.filter(x => x.typeOfHotWaterOutlet === "otherHotWaterOutlet");
+	const otherEntries = other.map((x): [string, SchemaOtherWaterUseDetails] => {
 		const key = x.name;
 		const val: SchemaOtherWaterUseDetails = {
 			ColdWaterSource: coldWaterSourceMap[x.coldWaterSource],
@@ -147,7 +150,7 @@ function mapOthersData(state: ResolvedState) {
  * Excludes packaged heat sources.
  */
 function getDomesticHotWaterHeatSource(state: ResolvedState) {
-	const dhwHeatSources = state.domesticHotWater.heatSources ?? [];
+	const dhwHeatSources = state.domesticHotWater.heatSources;
 	const heatSourcesExcludingPackaged = dhwHeatSources.filter(x => !hasPackagedProduct(x));
 	const packagedHeatSources = dhwHeatSources.filter(x => hasPackagedProduct(x));
 	let expectedHeatSourceCount = 1 + packagedHeatSources.length;
@@ -217,13 +220,13 @@ function mapHeatSourceWet(
 						EnergySupply: defaultElectricityEnergySupplyName,
 						// TODO: Remove once Alpha 8 backend is implemented and no longer requires building_level_distribution_losses for house HIUs
 						building_level_distribution_losses:
-					state.dwellingDetails.generalSpecifications.typeOfDwelling === "house"
-						? 0
-						: typeof heatSource.buildingLevelLosses === "object"
-							&& heatSource.buildingLevelLosses !== null
-							&& "amount" in heatSource.buildingLevelLosses
-							? heatSource.buildingLevelLosses.amount
-							: heatSource.buildingLevelLosses ?? 0,
+							state.dwellingDetails.generalSpecifications.typeOfDwelling === "house"
+								? 0
+								: typeof heatSource.buildingLevelLosses === "object"
+									&& heatSource.buildingLevelLosses !== null
+									&& "amount" in heatSource.buildingLevelLosses
+									? heatSource.buildingLevelLosses.amount
+									: heatSource.buildingLevelLosses ?? 0,
 						...getHeatNetworkFields(
 							state,
 							heatSource.associatedHeatNetworkId,
@@ -415,7 +418,7 @@ function mapHotWaterSourcesWithWaterStorage(state: ResolvedState, waterStorage: 
 	const { mappedWSHeatSource, mappedHeatSourceWet }
 		= mapWaterStorageHeatSource(waterStorage, dhwHeatSource, actualHeatSource, state);
 
-	const pipework = (state.domesticHotWater.pipework ?? []).filter(x => x.waterStorage === waterStorage.id);
+	const pipework = state.domesticHotWater.pipework.filter(x => x.waterStorage === waterStorage.id);
 
 	return {
 		HotWaterSource: {
@@ -501,7 +504,7 @@ function mapHeatSourceNoWS(
 
 function mapHotWaterSourcesWithoutWaterStorage(state: ResolvedState) {
 	const preheatedWaterStorage = state.domesticHotWater.preheatedWaterStorage?.[0];
-	const dhwHeatSource = (state.domesticHotWater.heatSources ?? [])
+	const dhwHeatSource = state.domesticHotWater.heatSources
 		.filter(x => preheatedWaterStorage ? x.id !== preheatedWaterStorage.heatSourceId : true)[0];
 
 	if (!preheatedWaterStorage && !dhwHeatSource) {
