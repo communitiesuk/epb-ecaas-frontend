@@ -1444,7 +1444,7 @@ export interface components {
                      * @enum {unknown}
                      */
                     heat_network_type: "sleeved DHN" | "unsleeved DHN" | "communal";
-                    EnergySupply: string | {
+                    EnergySupply?: string | {
                         name: string;
                         is_export_capable: boolean;
                         factor: {

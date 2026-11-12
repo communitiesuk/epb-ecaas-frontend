@@ -838,8 +838,7 @@
 						}
 					},
 					"required": [
-						"heat_network_type",
-						"EnergySupply"
+						"heat_network_type"
 					],
 					"dependentRequired": {
 						"heat_network_reference": ["product_reference"],

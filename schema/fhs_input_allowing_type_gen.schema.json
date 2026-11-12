@@ -532,7 +532,6 @@
                                 },
                                 "required": [
                                     "heat_network_type",
-                                    "EnergySupply",
                                     "heat_network_reference",
                                     "sub_heat_network_name"
                                 ]
