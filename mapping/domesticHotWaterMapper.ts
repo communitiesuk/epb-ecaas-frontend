@@ -1,6 +1,6 @@
 import { objectFromEntries } from "ts-extras";
 import { useColdWaterSource } from "~/composables/coldWaterSource";
-import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaHeatSourceWetDetails, SchemaOtherWaterUseDetails, SchemaStorageTank, SchemaWaterPipework, SchemaWWHRS } from "~/schema/aliases";
+import type { SchemaBathDetails, SchemaColdWaterSourceType, SchemaOtherWaterUseDetails, SchemaStorageTank, SchemaWaterPipework, SchemaWWHRS } from "~/schema/aliases";
 import type { SchemaHeaderTankOrMainsWater, SchemaInstantElecShower, SchemaMixerShower, SchemaSmartHotWaterTank } from "~/schema/api-schema.types";
 import type { ColdWaterSourceType, WaterStorageData } from "~/stores/ecaasStore.schema";
 import { defaultElectricityEnergySupplyName } from "./common";
@@ -204,7 +204,7 @@ function mapHeatSourceWet(
 		| { typeOfHeatSource: "immersionHeater" }
 	>,
 	state: ResolvedState,
-) {
+): Pick<FhsInputSchema, "HeatSourceWet"> | undefined {
 	const batteryTypeMap = {
 		"heatBatteryPcm": "pcm",
 		"heatBatteryDryCore": "dry_core",
@@ -231,8 +231,8 @@ function mapHeatSourceWet(
 							state,
 							heatSource.associatedHeatNetworkId,
 						),
-					} as const satisfies SchemaHeatSourceWetDetails,
-				} satisfies FhsInputSchema["HeatSourceWet"],
+					},
+				},
 			};
 		case "heatPump":
 			return {
@@ -249,8 +249,8 @@ function mapHeatSourceWet(
 							: {
 								is_heat_network: false as const,
 							}),
-					} as const satisfies SchemaHeatSourceWetDetails,
-				} satisfies FhsInputSchema["HeatSourceWet"],
+					},
+				},
 			};
 		case "boiler":
 			return {
@@ -262,23 +262,43 @@ function mapHeatSourceWet(
 							? { specified_location: heatSource.specifiedLocation }
 							: {}),
 						EnergySupply: defaultElectricityEnergySupplyName,
-						is_heat_network: false,
-					} as const satisfies SchemaHeatSourceWetDetails,
-				} satisfies FhsInputSchema["HeatSourceWet"],
+						is_heat_network: false as const,
+					},
+				},
 			};
-		case "heatBattery":
-			return {
-				HeatSourceWet: {
-					[heatSource.name]: {
-						type: "HeatBattery" as const,
-						product_reference: heatSource.productReference,
-						EnergySupply: defaultElectricityEnergySupplyName,
-						battery_type: batteryTypeMap[heatSource.typeOfHeatBattery],
-						number_of_units: heatSource.numberOfUnits,
-						is_heat_network: false, // TODO implement correct logic when HNs implemented
-					} as const satisfies SchemaHeatSourceWetDetails,
-				} satisfies FhsInputSchema["HeatSourceWet"],
-			};
+		case "heatBattery": {
+			const batteryType = batteryTypeMap[heatSource.typeOfHeatBattery];
+			// bizarrely, creating this conditional on battery type but returning exactly the same thing for each option makes TypeScript happy here
+			// condense the conditional into one return statement and it gets confused
+			// so that's why both clauses below are identical
+			if (batteryType === "pcm") {
+				return {
+					HeatSourceWet: {
+						[heatSource.name]: {
+							type: "HeatBattery" as const,
+							product_reference: heatSource.productReference,
+							EnergySupply: defaultElectricityEnergySupplyName,
+							battery_type: batteryType,
+							number_of_units: heatSource.numberOfUnits,
+							is_heat_network: false as const,
+						},
+					},
+				};
+			} else {
+				return {
+					HeatSourceWet: {
+						[heatSource.name]: {
+							type: "HeatBattery" as const,
+							product_reference: heatSource.productReference,
+							EnergySupply: defaultElectricityEnergySupplyName,
+							battery_type: batteryType,
+							number_of_units: heatSource.numberOfUnits,
+							is_heat_network: false as const,
+						},
+					},
+				};
+			}
+		}
 	}
 }
 
@@ -535,10 +555,10 @@ function mapHotWaterSourcesWithoutWaterStorage(state: ResolvedState) {
 			},
 		},
 		...mappedHeatSourceWet,
-	} as const satisfies Partial<FhsInputSchema>;
+	} as const satisfies Pick<FhsInputSchema, "HotWaterSource">;
 }
 
-export function mapPreheatedWaterSourceData(state: ResolvedState): Partial<FhsInputSchema> | undefined {
+export function mapPreheatedWaterSourceData(state: ResolvedState): Pick<FhsInputSchema, "PreHeatedWaterSource"> | undefined {
 	const preheatedWaterStorage = state.domesticHotWater.preheatedWaterStorage?.[0];
 
 	if (!preheatedWaterStorage) {

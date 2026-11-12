@@ -100,4 +100,4 @@ type SchemaWWHRSKnownValue = {
 	product_reference: string;
 	ColdWaterSource: SchemaColdWaterSourceType;
 };
-export type SchemaWWHRS = Record<string, SchemaWWHRSKnownValue>; 
+export type SchemaWWHRS = Record<string, SchemaWWHRSKnownValue>;

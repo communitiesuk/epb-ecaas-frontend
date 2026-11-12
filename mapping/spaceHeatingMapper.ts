@@ -6,7 +6,7 @@ import type {
 	SchemaEcoDesignControllerWeatherCompensator,
 	SchemaElecStorageHeaterWithProductReference,
 	SchemaFancoilWithProductReference,
-	SchemaHeatSourceWetHeatBattery,
+	SchemaHeatBatteryWithProductReference,
 	SchemaInstantElecHeater,
 	SchemaRadiatorWithProductReference,
 	SchemaUfhWithProductReference,
@@ -76,7 +76,7 @@ export function mapBoilers(state: ResolvedState): Record<string, SchemaBoilerWit
 	);
 }
 
-export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHeatSourceWetHeatBattery> {
+export function mapHeatBatteries(state: ResolvedState): Record<string, SchemaHeatBatteryWithProductReference> {
 	const heatSources = state.spaceHeating.heatSource;
 	const heatBatteries = heatSources.filter(
 		(heatSource) => heatSource.typeOfHeatSource === "heatBattery",

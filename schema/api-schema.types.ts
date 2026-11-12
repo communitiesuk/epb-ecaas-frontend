@@ -254,6 +254,8 @@ export interface components {
              * @description A unique reference to a product held within the HEM database (PCDB)
              */
             product_reference: string;
+            /** @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used. */
+            EnergySupply?: string;
         } | ({
             /** @constant */
             type: "HeatPump_HWOnly";
@@ -320,7 +322,7 @@ export interface components {
         HeatSourceWetCommon: {
             /** @enum {unknown} */
             type: "HeatPump" | "Boiler" | "HIU" | "HeatBattery";
-            EnergySupply: string;
+            EnergySupply?: string;
         };
         /** ScheduleRepeaterEntryForDouble */
         ScheduleRepeaterEntryForDouble: number | null;
@@ -400,15 +402,20 @@ export interface components {
         HeatBatteryWithProductReference: {
             /** @constant */
             type: "HeatBattery";
-            /** @enum {string} */
-            battery_type: "pcm" | "dry_core";
             /**
              * Reference to the product in the HEM database
              * @description A unique reference to a product held within the HEM database (PCDB)
              */
             product_reference: string;
             number_of_units: number;
-        };
+            EnergySupply?: string;
+        } & ({
+            /** @constant */
+            battery_type: "pcm";
+        } | {
+            /** @constant */
+            battery_type: "dry_core";
+        });
         PCMBattery: {
             /** @constant */
             type: "HeatBattery";
@@ -797,6 +804,8 @@ export interface components {
              * @description References a key (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1') in $.HeatSourceWet
              */
             HeatSourceWet: string;
+            /** @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used. */
+            EnergySupply?: string;
         } | {
             /** @enum {unknown} */
             ColdWaterSource: "header tank" | "mains water";
@@ -870,6 +879,8 @@ export interface components {
             boiler?: {
                 cost_schedule_hybrid: components["schemas"]["BoilerCostScheduleHybrid"];
             };
+            /** @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used. */
+            EnergySupply?: string;
         } | {
             /** @constant */
             type: "HeatPump";
@@ -1012,6 +1023,8 @@ export interface components {
              * @enum {unknown}
              */
             specified_location?: "internal" | "external";
+            /** @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used. */
+            EnergySupply?: string;
         } | {
             EnergySupply_aux: string;
             rated_power: number;
@@ -1102,6 +1115,8 @@ export interface components {
             n_units: number;
             /** @description The zone where the unit(s) is/are installed. References a key in $.Zone. */
             Zone: string;
+            /** @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used. */
+            EnergySupply?: string;
         };
         InstantElecHeater: {
             /** @constant */
@@ -1451,7 +1466,7 @@ export interface components {
                 } | {
                     /** @constant */
                     is_heat_network?: false;
-                    EnergySupply: string;
+                    EnergySupply?: string;
                 }) & (components["schemas"]["HeatSourceWetHeatPump"] | components["schemas"]["HeatSourceWetBoiler"] | components["schemas"]["HeatSourceWetHeatBattery"] | components["schemas"]["HeatSourceWetHIU"]);
             };
             HotWaterDemand?: {
@@ -1839,6 +1854,8 @@ export interface components {
                      * @description A unique reference to a product held within the HEM database (PCDB)
                      */
                     product_reference: string;
+                    /** @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used. */
+                    EnergySupply?: string;
                 } | ({
                     /** @constant */
                     type: "HeatPump_HWOnly";
@@ -1963,6 +1980,8 @@ export interface components {
                      * @description References a key (e.g., 'boiler', 'hp', 'HeatNetwork', 'hb1') in $.HeatSourceWet
                      */
                     HeatSourceWet: string;
+                    /** @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used. */
+                    EnergySupply?: string;
                 } | {
                     /** @enum {unknown} */
                     ColdWaterSource: "header tank" | "mains water";
@@ -2012,7 +2031,7 @@ export interface components {
                 HeatSourceWetCommon: {
                     /** @enum {unknown} */
                     type: "HeatPump" | "Boiler" | "HIU" | "HeatBattery";
-                    EnergySupply: string;
+                    EnergySupply?: string;
                 };
                 /** @description A possible wet heat source */
                 HeatSourceWetHeatPump: components["schemas"]["HeatSourceWetCommon"] & ({
@@ -2041,6 +2060,8 @@ export interface components {
                     boiler?: {
                         cost_schedule_hybrid: components["schemas"]["BoilerCostScheduleHybrid"];
                     };
+                    /** @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used. */
+                    EnergySupply?: string;
                 } | {
                     /** @constant */
                     type: "HeatPump";
@@ -2183,6 +2204,8 @@ export interface components {
                      * @enum {unknown}
                      */
                     specified_location?: "internal" | "external";
+                    /** @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used. */
+                    EnergySupply?: string;
                 } | {
                     EnergySupply_aux: string;
                     rated_power: number;
@@ -2201,15 +2224,20 @@ export interface components {
                 HeatBatteryWithProductReference: {
                     /** @constant */
                     type: "HeatBattery";
-                    /** @enum {string} */
-                    battery_type: "pcm" | "dry_core";
                     /**
                      * Reference to the product in the HEM database
                      * @description A unique reference to a product held within the HEM database (PCDB)
                      */
                     product_reference: string;
                     number_of_units: number;
-                };
+                    EnergySupply?: string;
+                } & ({
+                    /** @constant */
+                    battery_type: "pcm";
+                } | {
+                    /** @constant */
+                    battery_type: "dry_core";
+                });
                 PCMBattery: {
                     /** @constant */
                     type: "HeatBattery";
@@ -2370,6 +2398,8 @@ export interface components {
                     n_units: number;
                     /** @description The zone where the unit(s) is/are installed. References a key in $.Zone. */
                     Zone: string;
+                    /** @description References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used. */
+                    EnergySupply?: string;
                 };
                 InstantElecHeater: {
                     /** @constant */

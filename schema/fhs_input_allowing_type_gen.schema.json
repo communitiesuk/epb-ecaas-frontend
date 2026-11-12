@@ -538,9 +538,6 @@
                                 ]
                             },
                             {
-                                "required": [
-                                    "EnergySupply"
-                                ],
                                 "properties": {
                                     "is_heat_network": {
                                         "const": false
@@ -2079,6 +2076,10 @@
                                     "description": "A unique reference to a product held within the HEM database (PCDB)",
                                     "title": "Reference to the product in the HEM database",
                                     "type": "string"
+                                },
+                                "EnergySupply": {
+                                    "type": "string",
+                                    "description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used."
                                 }
                             }
                         },
@@ -2679,6 +2680,10 @@
                             "reference_to": "$.heat_source_wet",
                             "title": "Heatsourcewet",
                             "type": "string"
+                        },
+                        "EnergySupply": {
+                            "type": "string",
+                            "description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used."
                         }
                     }
                 },
@@ -2795,8 +2800,7 @@
         },
         "HeatSourceWetCommon": {
             "required": [
-                "type",
-                "EnergySupply"
+                "type"
             ],
             "properties": {
                 "type": {
@@ -2876,6 +2880,10 @@
                                     "required": [
                                         "cost_schedule_hybrid"
                                     ]
+                                },
+                                "EnergySupply": {
+                                    "type": "string",
+                                    "description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used."
                                 }
                             },
                             "required": [
@@ -2900,7 +2908,8 @@
                                 "power_crankcase_heater",
                                 "power_off",
                                 "test_data_EN14825",
-                                "time_constant_onoff_operation"
+                                "time_constant_onoff_operation",
+                                "EnergySupply"
                             ],
                             "properties": {
                                 "type": {
@@ -3296,6 +3305,10 @@
                                         "internal",
                                         "external"
                                     ]
+                                },
+                                "EnergySupply": {
+                                    "type": "string",
+                                    "description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used."
                                 }
                             }
                         },
@@ -3310,7 +3323,8 @@
                                 "electricity_circ_pump",
                                 "electricity_part_load",
                                 "electricity_full_load",
-                                "electricity_standby"
+                                "electricity_standby",
+                                "EnergySupply"
                             ],
                             "properties": {
                                 "EnergySupply_aux": {
@@ -3391,20 +3405,12 @@
         "HeatBatteryWithProductReference": {
             "required": [
                 "type",
-                "battery_type",
                 "product_reference",
                 "number_of_units"
             ],
             "properties": {
                 "type": {
                     "const": "HeatBattery"
-                },
-                "battery_type": {
-                    "type": "string",
-                    "enum": [
-                        "pcm",
-                        "dry_core"
-                    ]
                 },
                 "product_reference": {
                     "description": "A unique reference to a product held within the HEM database (PCDB)",
@@ -3414,8 +3420,34 @@
                 "number_of_units": {
                     "type": "integer",
                     "minimum": 1
+                },
+                "EnergySupply": {
+                    "type": "string"
                 }
-            }
+            },
+            "oneOf": [
+                {
+                    "required": [
+                        "battery_type",
+                        "EnergySupply"
+                    ],
+                    "properties": {
+                        "battery_type": {
+                            "const": "pcm"
+                        }
+                    }
+                },
+                {
+                    "required": [
+                        "battery_type"
+                    ],
+                    "properties": {
+                        "battery_type": {
+                            "const": "dry_core"
+                        }
+                    }
+                }
+            ]
         },
         "PCMBattery": {
             "$comment": "rated_charge_power is not required unconditionally: the core model offers two mutually exclusive charging configurations, and it belongs only to the direct electric one. See the conditional below.",
@@ -3437,7 +3469,8 @@
                 "inlet_diameter_m",
                 "A",
                 "B",
-                "flow_rate_l_per_min"
+                "flow_rate_l_per_min",
+                "EnergySupply"
             ],
             "properties": {
                 "type": {
@@ -3698,7 +3731,8 @@
                 },
                 {
                     "required": [
-                        "type"
+                        "type",
+                        "EnergySupply"
                     ],
                     "properties": {
                         "type": {
@@ -3983,6 +4017,10 @@
                 "Zone": {
                     "type": "string",
                     "description": "The zone where the unit(s) is/are installed. References a key in $.Zone."
+                },
+                "EnergySupply": {
+                    "type": "string",
+                    "description": "References a key (e.g., 'mains elec', 'mains gas') in $.EnergySupply. It is encouraged that this reference be explicitly provided here if possible. If provided, this energy supply reference will be checked for fuel compatibility with the fuel indicated within the HEM database (PCDB). If not provided, an energy supply will be inferred from the fuel indicated by the product data in the PCDB, and a) if the fuel is not electricity, and there is not exactly one unambiguous energy supply provided to select, an error will be returned; and b) if the fuel is electricity, the implied main electricity supply will be used."
                 }
             }
         },
